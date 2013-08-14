@@ -1,751 +1,1867 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from exprod5og105.obsmtp.com ([64.18.0.180]:43085 "EHLO
-	exprod5og105.obsmtp.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754225Ab3HMJSu (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 05:18:50 -0400
-Received: by mail-lb0-f182.google.com with SMTP id v20so5502497lbc.41
-        for <devicetree@vger.kernel.org>; Tue, 13 Aug 2013 02:18:48 -0700 (PDT)
-From: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
-Subject: [PATCH v2] iio: add Bosch BMA180 acceleration sensor driver
-Date: Tue, 13 Aug 2013 12:09:16 +0300
-Message-Id: <1376384956-16720-1-git-send-email-o.v.kravchenko@globallogic.com>
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:52635 "EHLO
+	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751399Ab3HNEqq (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 00:46:46 -0400
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v5 09/13] [media] exynos5-fimc-is: Add the hardware pipeline control
+Date: Wed, 14 Aug 2013 10:16:10 +0530
+Message-Id: <1376455574-15560-10-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1376455574-15560-1-git-send-email-arun.kk@samsung.com>
+References: <1376455574-15560-1-git-send-email-arun.kk@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, jic23@cam.ac.uk, o.v.kravchenko@globallogic.com, denis.ciocca@st.com, srinivas.pandruvada@linux.intel.com, lars@metafoo.de
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds IIO driver for Bosch BMA180 triaxial
-acceleration sensor.
-http://omapworld.com/BMA180_111_1002839.pdf
+This patch adds the crucial hardware pipeline control for the
+fimc-is driver. All the subdev nodes will call this pipeline
+interfaces to reach the hardware. Responsibilities of this module
+involves configuring and maintaining the hardware pipeline involving
+multiple sub-ips like ISP, DRC, Scalers, ODC, 3DNR, FD etc.
 
-Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+Signed-off-by: Kilyeon Im <kilyeon.im@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
- .../devicetree/bindings/iio/accel/bma180.txt       |   35 ++
- drivers/iio/accel/Kconfig                          |   12 +
- drivers/iio/accel/Makefile                         |    2 +
- drivers/iio/accel/bma180.c                         |  635 ++++++++++++++++++++
- 4 files changed, 684 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/bma180.txt
- create mode 100644 drivers/iio/accel/bma180.c
+ .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1692 ++++++++++++++++++++
+ .../media/platform/exynos5-is/fimc-is-pipeline.h   |  128 ++
+ 2 files changed, 1820 insertions(+)
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/bma180.txt b/Documentation/devicetree/bindings/iio/accel/bma180.txt
+diff --git a/drivers/media/platform/exynos5-is/fimc-is-pipeline.c b/drivers/media/platform/exynos5-is/fimc-is-pipeline.c
 new file mode 100644
-index 0000000..e08780b
+index 0000000..7d91469
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/bma180.txt
-@@ -0,0 +1,35 @@
-+* Bosch BMA180 triaxial acceleration sensor
-+
-+http://omapworld.com/BMA180_111_1002839.pdf
-+
-+Required properties:
-+
-+  - compatible : should be "bosch,bma180"
-+  - reg : the I2C address of the sensor
-+
-+Optional properties:
-+
-+  - interrupt-parent : should be the phandle for the interrupt controller
-+
-+  - interrupts : interrupt mapping for GPIO IRQ, it should by configured with
-+		flags IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING
-+
-+  - bosch,resolution : ADC resolution. Must be 130, 190, 250, 380, 500,
-+		990 or 1980 mcg/LSB only
-+
-+  - bosch,bandwidth : select bandwidth frequency. Must be 10, 20, 40, 75,
-+		150 or 300 Hz only
-+
-+  - bosch,mode : 0 - select low noise mode, 1 - select low power mode
-+
-+Example:
-+
-+bma180@40 {
-+	compatible = "bosch,bma180";
-+	reg = <0x40>;
-+	interrupt-parent = <&gpio6>;
-+	interrupts = <18 (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING)>;
-+	bosch,bandwidth = <300>;
-+	bosch,resolution = <250>;
-+	bosch,mode = <0>;
-+};
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index 719d83f..bd9d581 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -3,6 +3,18 @@
- #
- menu "Accelerometers"
- 
-+config BMA180
-+	tristate "Bosch BMA180 3-Axis Accelerometer Driver"
-+	depends on I2C
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	help
-+	  Say Y here if you want to build a driver for the Bosch BMA180
-+	  triaxial acceleration sensor.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called bma180.
-+
- config HID_SENSOR_ACCEL_3D
- 	depends on HID_SENSOR_HUB
- 	select IIO_BUFFER
-diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
-index 87d8fa2..eb09d72 100644
---- a/drivers/iio/accel/Makefile
-+++ b/drivers/iio/accel/Makefile
-@@ -2,6 +2,8 @@
- # Makefile for industrial I/O accelerometer drivers
- #
- 
-+obj-$(CONFIG_BMA180)	+= bma180.o
-+
- obj-$(CONFIG_HID_SENSOR_ACCEL_3D) += hid-sensor-accel-3d.o
- 
- obj-$(CONFIG_IIO_ST_ACCEL_3AXIS) += st_accel.o
-diff --git a/drivers/iio/accel/bma180.c b/drivers/iio/accel/bma180.c
-new file mode 100644
-index 0000000..61ffe31
---- /dev/null
-+++ b/drivers/iio/accel/bma180.c
-@@ -0,0 +1,635 @@
++++ b/drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+@@ -0,0 +1,1692 @@
 +/*
-+ * bma180.c - IIO driver for Bosch BMA180 triaxial acceleration sensor
++ * Samsung EXYNOS5 FIMC-IS (Imaging Subsystem) driver
++*
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ * Arun Kumar K <arun.kk@samsung.com>
++ * Kil-yeon Lim <kilyeon.im@samsung.com>
 + *
-+ * Copyright 2013 Oleksandr Kravchenko <x0199363@ti.com>
-+ *
-+ * This file is subject to the terms and conditions of version 2 of
-+ * the GNU General Public License.  See the file COPYING in the main
-+ * directory of this archive for more details.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
 +
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
++#include "fimc-is.h"
++#include "fimc-is-pipeline.h"
++#include "fimc-is-metadata.h"
++#include "fimc-is-regs.h"
++#include "fimc-is-cmd.h"
++#include <media/videobuf2-dma-contig.h>
 +#include <linux/delay.h>
-+#include <linux/of.h>
-+#include <linux/bitops.h>
-+#include <linux/slab.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
 +
-+#define BMA180_DRV_NAME "bma180"
-+#define BMA180_IRQ_NAME "bma180_event"
-+
-+/* Register set */
-+#define BMA180_CHIP_ID		0x00 /* Need to distinguish BMA180 from other */
-+#define BMA180_ACC_X_LSB	0x02 /* First of 6 registers of accel data */
-+#define BMA180_CTRL_REG0	0x0d
-+#define BMA180_RESET		0x10
-+#define BMA180_BW_TCS		0x20
-+#define BMA180_CTRL_REG3	0x21
-+#define BMA180_TCO_Z		0x30
-+#define BMA180_OFFSET_LSB1	0x35
-+
-+/* BMA180_CTRL_REG0 bits */
-+#define BMA180_DIS_WAKE_UP	BIT(0) /* Disable wake up mode */
-+#define BMA180_SLEEP		BIT(1) /* 1 - chip will sleep */
-+#define BMA180_EE_W		BIT(4) /* Unlock writing to addr from 0x20 */
-+#define BMA180_RESET_INT	BIT(6) /* Reset pending interrupts */
-+
-+/* BMA180_CTRL_REG3 bits */
-+#define BMA180_NEW_DATA_INT	BIT(1) /* Intr every new accel data is ready */
-+
-+/* BMA180_OFFSET_LSB1 skipping mode bit */
-+#define BMA180_SMP_SKIP		BIT(0)
-+
-+/* Bit masks for registers bit fields */
-+#define BMA180_RANGE		0x0e /* Range of measured accel values*/
-+#define BMA180_BW		0xf0 /* Accel bandwidth */
-+#define BMA180_MODE_CONFIG	0x03 /* Config operation modes */
-+
-+/* We have to write this value in reset register to do soft reset */
-+#define BMA180_RESET_VAL	0xb6
-+
-+/* Chip operation modes */
-+#define BMA180_LOW_NOISE	0x00
-+#define BMA180_LOW_POWER	0x03
-+
-+/* Default config values. Will use if doesn't exist in devtree */
-+#define BMA180_DEF_BW		20
-+#define BMA180_DEF_SCALE	250
-+
-+/* Available values */
-+#define BMA180_BW_AVAILABLE	"10 20 40 75 150 300"
-+#define BMA180_SCALE_AVAILABLE \
-+	"0.000130 0.000190 0.000250 0.000380 0.000500 0.000990 0.001980"
-+
-+struct bma180_data {
-+	struct i2c_client *client;
-+	struct iio_trigger *trig;
-+	struct mutex mutex;
-+	int sleep_state;
-+	int scale;
-+	int bw;
-+	int mode;
-+	char *buff;
-+};
-+
-+enum bma180_axis {
-+	AXIS_X,
-+	AXIS_Y,
-+	AXIS_Z,
-+};
-+
-+static int bw_table[] = { 10, 20, 40, 75, 150, 300 }; /* Hz */
-+static int scale_table[] = { 130, 190, 250, 380, 500, 990, 1980 }; /* mcg/LSB */
-+
-+static int bma180_get_acc_reg(struct bma180_data *data, enum bma180_axis axis)
-+{
-+	u8 reg = BMA180_ACC_X_LSB + axis * 2;
-+	int ret;
-+
-+	if (data->sleep_state)
-+		return -EBUSY;
-+
-+	ret = i2c_smbus_read_word_data(data->client, reg);
-+	if (ret < 0)
-+		dev_err(&data->client->dev,
-+			"failed to read accel_%c registers\n", 'x' + axis);
-+
-+	return ret;
-+}
-+
-+static int bma180_set_bits(struct bma180_data *data, u8 reg, u8 mask, u8 val)
-+{
-+	int ret = i2c_smbus_read_byte_data(data->client, reg);
-+	u8 reg_val = (ret & ~mask) | (val << (ffs(mask) - 1));
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return i2c_smbus_write_byte_data(data->client, reg, reg_val);
-+}
-+
-+static int bma180_reset_intr(struct bma180_data *data)
-+{
-+	int ret = bma180_set_bits(data, BMA180_CTRL_REG0, BMA180_RESET_INT, 1);
-+
-+	if (ret)
-+		dev_err(&data->client->dev, "failed to reset interrupt\n");
-+
-+	return ret;
-+}
-+
-+static int bma180_set_new_data_intr_state(struct bma180_data *data, int state)
-+{
-+	u8 reg_val = state ? BMA180_NEW_DATA_INT : 0x00;
-+	int ret = i2c_smbus_write_byte_data(data->client, BMA180_CTRL_REG3,
-+			reg_val);
-+
-+	if (ret)
-+		goto err;
-+	ret = bma180_reset_intr(data);
-+	if (ret)
-+		goto err;
-+
-+	return 0;
-+
-+err:
-+	dev_err(&data->client->dev,
-+		"failed to set new data interrupt state %d\n", state);
-+	return ret;
-+}
-+
-+static int bma180_set_sleep_state(struct bma180_data *data, int state)
-+{
-+	int ret = bma180_set_bits(data, BMA180_CTRL_REG0, BMA180_SLEEP, state);
-+
-+	if (ret) {
-+		dev_err(&data->client->dev,
-+			"failed to set sleep state %d\n", state);
-+		return ret;
-+	}
-+	data->sleep_state = state;
-+
-+	return 0;
-+}
-+
-+static int bma180_set_ee_writing_state(struct bma180_data *data, int state)
-+{
-+	int ret = bma180_set_bits(data, BMA180_CTRL_REG0, BMA180_EE_W, state);
-+
-+	if (ret)
-+		dev_err(&data->client->dev,
-+			"failed to set ee writing state %d\n", state);
-+
-+	return ret;
-+}
-+
-+static int bma180_set_bw(struct bma180_data *data, int val)
-+{
-+	int ret, i;
-+
-+	if (data->sleep_state)
-+		return -EBUSY;
-+
-+	for (i = 0; i < ARRAY_SIZE(bw_table); ++i) {
-+		if (bw_table[i] == val) {
-+			ret = bma180_set_bits(data,
-+					BMA180_BW_TCS, BMA180_BW, i);
-+			if (ret) {
-+				dev_err(&data->client->dev,
-+					"failed to set bandwidth\n");
-+				return ret;
-+			}
-+			data->bw = val;
-+			return 0;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int bma180_set_scale(struct bma180_data *data, int val)
-+{
-+	int ret, i;
-+
-+	if (data->sleep_state)
-+		return -EBUSY;
-+
-+	for (i = 0; i < ARRAY_SIZE(scale_table); ++i)
-+		if (scale_table[i] == val) {
-+			ret = bma180_set_bits(data,
-+					BMA180_OFFSET_LSB1, BMA180_RANGE, i);
-+			if (ret) {
-+				dev_err(&data->client->dev,
-+					"failed to set scale\n");
-+				return ret;
-+			}
-+			data->scale = val;
-+			return 0;
-+		}
-+
-+	return -EINVAL;
-+}
-+
-+static int bma180_soft_reset(struct bma180_data *data)
-+{
-+	int ret = i2c_smbus_write_byte_data(data->client,
-+			BMA180_RESET, BMA180_RESET_VAL);
-+
-+	if (ret)
-+		dev_err(&data->client->dev, "failed to reset the chip\n");
-+
-+	return ret;
-+}
-+
-+static int bma180_chip_init(struct bma180_data *data)
-+{
-+	/* Try to read chip_id register. It must return 0x03. */
-+	int ret = i2c_smbus_read_byte_data(data->client, BMA180_CHIP_ID);
-+
-+	if (ret < 0)
-+		goto err;
-+	if (ret != 0x03) {
-+		ret = -ENODEV;
-+		goto err;
-+	}
-+
-+	ret = bma180_soft_reset(data);
-+	if (ret)
-+		goto err;
-+	/*
-+	 * No serial transaction should occur within minimum 10 us
-+	 * after soft_reset command
-+	 */
-+	msleep(20);
-+
-+	ret = bma180_set_bits(data, BMA180_CTRL_REG0, BMA180_DIS_WAKE_UP, 1);
-+	if (ret)
-+		goto err;
-+	ret = bma180_set_ee_writing_state(data, 1);
-+	if (ret)
-+		goto err;
-+	ret = bma180_set_new_data_intr_state(data, 0);
-+	if (ret)
-+		goto err;
-+	ret = bma180_set_bw(data, data->bw);
-+	if (ret)
-+		goto err;
-+	ret = bma180_set_scale(data, data->scale);
-+	if (ret)
-+		goto err;
-+	ret = bma180_set_bits(data, BMA180_TCO_Z, BMA180_MODE_CONFIG,
-+			data->mode ? BMA180_LOW_POWER : BMA180_LOW_NOISE);
-+	if (ret)
-+		goto err;
-+	ret = bma180_set_bits(data, BMA180_OFFSET_LSB1, BMA180_SMP_SKIP, 1);
-+	if (ret)
-+		goto err;
-+
-+	return 0;
-+
-+err:
-+	dev_err(&data->client->dev, "failed to init the chip\n");
-+	return ret;
-+}
-+
-+static void bma180_chip_disable(struct bma180_data *data)
-+{
-+	if (bma180_set_new_data_intr_state(data, 0))
-+		goto err;
-+	if (bma180_set_ee_writing_state(data, 0))
-+		goto err;
-+	if (bma180_set_sleep_state(data, 1))
-+		goto err;
-+
-+	return;
-+
-+err:
-+	dev_err(&data->client->dev, "failed to disable the chip\n");
-+}
-+
-+static ssize_t bma180_read_bw_config(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct bma180_data *data = iio_priv(indio_dev);
-+
-+	return sprintf(buf, "%d\n", data->bw);
-+}
-+
-+static ssize_t bma180_write_bw_config(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t len)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct bma180_data *data = iio_priv(indio_dev);
-+	long val;
-+	int ret = kstrtol(buf, 10, &val);
-+
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&data->mutex);
-+	ret = bma180_set_bw(data, val);
-+	mutex_unlock(&data->mutex);
-+
-+	return ret ? ret : len;
-+}
-+
-+static IIO_DEVICE_ATTR(bandwidth, S_IRUGO | S_IWUSR, bma180_read_bw_config,
-+		bma180_write_bw_config, 0);
-+static IIO_CONST_ATTR(bandwidth_available, BMA180_BW_AVAILABLE);
-+static IIO_CONST_ATTR(scale_available, BMA180_SCALE_AVAILABLE);
-+
-+static struct attribute *bma180_attributes[] = {
-+	&iio_dev_attr_bandwidth.dev_attr.attr,
-+	&iio_const_attr_bandwidth_available.dev_attr.attr,
-+	&iio_const_attr_scale_available.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group bma180_attrs_group = {
-+	.attrs = bma180_attributes,
-+};
-+
-+static int bma180_read_raw(struct iio_dev *indio_dev,
-+		struct iio_chan_spec const *chan, int *val, int *val2,
-+		long mask)
-+{
-+	struct bma180_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&data->mutex);
-+		if (iio_buffer_enabled(indio_dev))
-+			ret = -EBUSY;
-+		else
-+			ret = bma180_get_acc_reg(data, chan->scan_index);
-+		mutex_unlock(&data->mutex);
-+		if (ret < 0)
-+			return ret;
-+		*val = (s16)ret >> chan->scan_type.shift;
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		*val = 0;
-+		*val2 = data->scale;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int bma180_write_raw(struct iio_dev *indio_dev,
-+		struct iio_chan_spec const *chan, int val, int val2, long mask)
-+{
-+	struct bma180_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (mask != IIO_CHAN_INFO_SCALE || val)
-+		return -EINVAL;
-+
-+	mutex_lock(&data->mutex);
-+	ret = bma180_set_scale(data, val2);
-+	mutex_unlock(&data->mutex);
-+
-+	return ret;
-+}
-+
-+static int bma180_update_scan_mode(struct iio_dev *indio_dev,
-+		const unsigned long *scan_mask)
-+{
-+	struct bma180_data *data = iio_priv(indio_dev);
-+
-+	kfree(data->buff);
-+	data->buff = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);
-+	if (!data->buff)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+static const struct iio_info bma180_info = {
-+	.attrs			= &bma180_attrs_group,
-+	.read_raw		= bma180_read_raw,
-+	.write_raw		= bma180_write_raw,
-+	.update_scan_mode	= bma180_update_scan_mode,
-+	.driver_module		= THIS_MODULE,
-+};
-+
-+#define BMA180_CHANNEL(_index) {				\
-+	.type = IIO_ACCEL,					\
-+	.indexed = 1,						\
-+	.channel = (_index),					\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+	.scan_index = (_index),					\
-+	.scan_type = IIO_ST('s', 14, 16, 2),			\
-+}
-+
-+static const struct iio_chan_spec bma180_channels[] = {
-+	BMA180_CHANNEL(AXIS_X),
-+	BMA180_CHANNEL(AXIS_Y),
-+	BMA180_CHANNEL(AXIS_Z),
-+	IIO_CHAN_SOFT_TIMESTAMP(4),
-+};
-+
-+static irqreturn_t bma180_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct bma180_data *data = iio_priv(indio_dev);
-+	int bit, ret, i = 0;
-+
-+	mutex_lock(&data->mutex);
-+	if (indio_dev->scan_timestamp) {
-+		ret = indio_dev->scan_bytes / sizeof(s64) - 1;
-+		((s64 *)data->buff)[ret] = iio_get_time_ns();
-+	}
-+
-+	for_each_set_bit(bit, indio_dev->buffer->scan_mask,
-+			 indio_dev->masklength) {
-+		ret = bma180_get_acc_reg(data, bit);
-+		if (ret < 0)
-+			goto err;
-+		((s16 *)data->buff)[i++] = ret;
-+	}
-+	mutex_unlock(&data->mutex);
-+
-+	iio_push_to_buffers(indio_dev, (u8 *)data->buff);
-+err:
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int bma180_data_rdy_trigger_set_state(struct iio_trigger *trig,
-+		bool state)
-+{
-+	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
-+	struct bma180_data *data = iio_priv(indio_dev);
-+
-+	return bma180_set_new_data_intr_state(data, state);
-+}
-+
-+static int bma180_trig_try_reen(struct iio_trigger *trig)
-+{
-+	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
-+	struct bma180_data *data = iio_priv(indio_dev);
-+
-+	return bma180_reset_intr(data);
-+}
-+
-+static const struct iio_trigger_ops bma180_trigger_ops = {
-+	.set_trigger_state = bma180_data_rdy_trigger_set_state,
-+	.try_reenable = bma180_trig_try_reen,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int bma180_probe(struct i2c_client *client,
-+		const struct i2c_device_id *id)
-+{
-+	struct bma180_data *data;
-+	struct iio_dev *indio_dev;
-+	struct iio_trigger *trig;
-+	struct device_node *np = client->dev.of_node;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	data->client = client;
-+
-+	if (of_property_read_u32(np, "bosch,bandwidth", &data->bw))
-+		data->bw = BMA180_DEF_BW;
-+	if (of_property_read_u32(np, "bosch,resolution", &data->scale))
-+		data->scale = BMA180_DEF_SCALE;
-+	of_property_read_u32(np, "bosch,mode", &data->mode);
-+
-+	ret = bma180_chip_init(data);
-+	if (ret < 0)
-+		goto err_1;
-+
-+	mutex_init(&data->mutex);
-+
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->channels = bma180_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(bma180_channels);
-+	indio_dev->name = BMA180_DRV_NAME;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->info = &bma180_info;
-+
-+	trig = iio_trigger_alloc("%s-dev%d", indio_dev->name, indio_dev->id);
-+	if (!trig) {
-+		ret = -ENOMEM;
-+		goto err_1;
-+	}
-+
-+	ret = devm_request_irq(&client->dev, client->irq,
-+			iio_trigger_generic_data_rdy_poll,
-+			IRQF_TRIGGER_RISING, BMA180_IRQ_NAME, trig);
-+	if (ret) {
-+		dev_err(&client->dev, "unable to request IRQ\n");
-+		goto err_2;
-+	}
-+
-+	trig->dev.parent = &client->dev;
-+	trig->ops = &bma180_trigger_ops;
-+	iio_trigger_set_drvdata(trig, indio_dev);
-+	data->trig = trig;
-+	indio_dev->trig = trig;
-+
-+	ret = iio_trigger_register(trig);
-+	if (ret)
-+		goto err_2;
-+
-+	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-+			bma180_trigger_handler, NULL);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "unable to setup iio triggered buffer\n");
-+		goto err_3;
-+	}
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "unable to register iio device\n");
-+		goto err_4;
-+	}
-+
-+	return 0;
-+
-+err_4:
-+	iio_triggered_buffer_cleanup(indio_dev);
-+err_3:
-+	iio_trigger_unregister(trig);
-+err_2:
-+	iio_trigger_free(trig);
-+err_1:
-+	bma180_chip_disable(data);
-+
-+	return ret;
-+}
-+
-+static int bma180_remove(struct i2c_client *client)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct bma180_data *data = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+	iio_triggered_buffer_cleanup(indio_dev);
-+	iio_trigger_unregister(data->trig);
-+	iio_trigger_free(data->trig);
-+	kfree(data->buff);
-+
-+	mutex_lock(&data->mutex);
-+	bma180_chip_disable(data);
-+	mutex_unlock(&data->mutex);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int bma180_suspend(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct bma180_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	mutex_lock(&data->mutex);
-+	ret = bma180_set_sleep_state(data, 1);
-+	mutex_unlock(&data->mutex);
-+
-+	return ret;
-+}
-+
-+static int bma180_resume(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct bma180_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	mutex_lock(&data->mutex);
-+	ret = bma180_set_sleep_state(data, 0);
-+	mutex_unlock(&data->mutex);
-+
-+	return ret;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(bma180_pm_ops, bma180_suspend, bma180_resume);
-+#define BMA180_PM_OPS (&bma180_pm_ops)
-+#else
-+#define BMA180_PM_OPS NULL
-+#endif
-+
-+static struct i2c_device_id bma180_id[] = {
-+	{ BMA180_DRV_NAME, 0 },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(i2c, bma180_id);
-+
-+static struct i2c_driver bma180_driver = {
-+	.driver = {
-+		.name	= BMA180_DRV_NAME,
-+		.owner	= THIS_MODULE,
-+		.pm	= BMA180_PM_OPS,
++/* Default setting values */
++#define DEFAULT_PREVIEW_STILL_WIDTH		1280
++#define DEFAULT_PREVIEW_STILL_HEIGHT		720
++#define DEFAULT_CAPTURE_VIDEO_WIDTH		1920
++#define DEFAULT_CAPTURE_VIDEO_HEIGHT		1080
++#define DEFAULT_CAPTURE_STILL_WIDTH		2560
++#define DEFAULT_CAPTURE_STILL_HEIGHT		1920
++#define DEFAULT_CAPTURE_STILL_CROP_WIDTH	2560
++#define DEFAULT_CAPTURE_STILL_CROP_HEIGHT	1440
++#define DEFAULT_PREVIEW_VIDEO_WIDTH		640
++#define DEFAULT_PREVIEW_VIDEO_HEIGHT		480
++
++/* Init params for pipeline devices */
++static const struct sensor_param init_sensor_param = {
++	.frame_rate = {
++		.frame_rate = 30,
 +	},
-+	.probe		= bma180_probe,
-+	.remove		= bma180_remove,
-+	.id_table	= bma180_id,
 +};
 +
-+module_i2c_driver(bma180_driver);
++static const struct isp_param init_isp_param = {
++	.control = {
++		.cmd = CONTROL_COMMAND_START,
++		.bypass = CONTROL_BYPASS_DISABLE,
++	},
++	.otf_input = {
++		.cmd = OTF_INPUT_COMMAND_DISABLE,
++		.width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
++		.format = OTF_INPUT_FORMAT_BAYER,
++		.bitwidth = OTF_INPUT_BIT_WIDTH_10BIT,
++		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
++		.frametime_max = 33333,
++	},
++	.dma1_input = {
++		.cmd = DMA_INPUT_COMMAND_DISABLE,
++	},
++	.dma2_input = {
++		.cmd = DMA_INPUT_COMMAND_DISABLE,
++	},
++	.aa = {
++		.cmd = ISP_AA_COMMAND_START,
++		.target = ISP_AA_TARGET_AF | ISP_AA_TARGET_AE |
++						ISP_AA_TARGET_AWB,
++		.mode = ISP_AF_CONTINUOUS,
++	},
++	.flash = {
++		.cmd = ISP_FLASH_COMMAND_DISABLE,
++		.redeye = ISP_FLASH_REDEYE_DISABLE,
++	},
++	.awb = {
++		.cmd = ISP_AWB_COMMAND_AUTO,
++	},
++	.effect = {
++		.cmd = ISP_IMAGE_EFFECT_DISABLE,
++	},
++	.iso = {
++		.cmd = ISP_ISO_COMMAND_AUTO,
++	},
++	.adjust = {
++		.cmd = ISP_ADJUST_COMMAND_AUTO,
++	},
++	.metering = {
++		.cmd = ISP_METERING_COMMAND_CENTER,
++		.win_width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.win_height = DEFAULT_CAPTURE_STILL_HEIGHT,
++	},
++	.afc = {
++		.cmd = ISP_AFC_COMMAND_AUTO,
++	},
++	.otf_output = {
++		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
++		.format = OTF_OUTPUT_FORMAT_YUV444,
++		.bitwidth = OTF_OUTPUT_BIT_WIDTH_12BIT,
++		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
++	},
++	.dma1_output = {
++		.cmd = DMA_OUTPUT_COMMAND_DISABLE,
++		.width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
++		.format = DMA_INPUT_FORMAT_YUV444,
++		.bitwidth = DMA_INPUT_BIT_WIDTH_8BIT,
++		.plane = 1,
++		.order = DMA_INPUT_ORDER_YCBCR,
++	},
++	.dma2_output = {
++		.cmd = DMA_OUTPUT_COMMAND_DISABLE,
++		.width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
++		.format = DMA_OUTPUT_FORMAT_BAYER,
++		.bitwidth = DMA_OUTPUT_BIT_WIDTH_12BIT,
++		.plane = 1,
++		.order = DMA_OUTPUT_ORDER_GB_BG,
++		.dma_out_mask = 0xffffffff,
++	},
++};
 +
-+MODULE_AUTHOR("Kravchenko Oleksandr <x0199363@ti.com>");
-+MODULE_AUTHOR("Texas Instruments, Inc.");
-+MODULE_DESCRIPTION("Bosch BMA180 triaxial acceleration sensor");
-+MODULE_LICENSE("GPL");
++static const struct drc_param init_drc_param = {
++	.control = {
++		.cmd = CONTROL_COMMAND_START,
++		.bypass = CONTROL_BYPASS_ENABLE,
++	},
++	.otf_input = {
++		.cmd = OTF_INPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
++		.format = OTF_INPUT_FORMAT_YUV444,
++		.bitwidth = OTF_INPUT_BIT_WIDTH_12BIT,
++		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
++	},
++	.dma_input = {
++		.cmd = DMA_INPUT_COMMAND_DISABLE,
++		.width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
++		.format = DMA_INPUT_FORMAT_YUV444,
++		.bitwidth = DMA_INPUT_BIT_WIDTH_8BIT,
++		.plane = 1,
++		.order = DMA_INPUT_ORDER_YCBCR,
++	},
++	.otf_output = {
++		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
++		.format = OTF_OUTPUT_FORMAT_YUV444,
++		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
++		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
++	},
++};
++
++static const struct scalerc_param init_scalerc_param = {
++	.control = {
++		.cmd = CONTROL_COMMAND_START,
++		.bypass = CONTROL_BYPASS_ENABLE,
++	},
++	.otf_input = {
++		.cmd = OTF_INPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
++		.format = OTF_INPUT_FORMAT_YUV444,
++		.bitwidth = OTF_INPUT_BIT_WIDTH_12BIT,
++		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
++	},
++	.input_crop = {
++		.cmd = OTF_INPUT_COMMAND_ENABLE,
++		.crop_width = DEFAULT_CAPTURE_STILL_CROP_WIDTH,
++		.crop_height = DEFAULT_CAPTURE_STILL_CROP_HEIGHT,
++		.in_width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.in_height = DEFAULT_CAPTURE_STILL_HEIGHT,
++		.out_width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.out_height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++	},
++	.output_crop = {
++		.cmd = SCALER_CROP_COMMAND_DISABLE,
++		.crop_width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.crop_height = DEFAULT_CAPTURE_STILL_HEIGHT,
++		.format = DMA_OUTPUT_FORMAT_YUV420,
++	},
++	.otf_output = {
++		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++		.format = OTF_OUTPUT_FORMAT_YUV444,
++		.bitwidth = OTF_OUTPUT_BIT_WIDTH_8BIT,
++		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
++	},
++	.dma_output = {
++		.cmd = DMA_OUTPUT_COMMAND_DISABLE,
++		.width = DEFAULT_CAPTURE_STILL_WIDTH,
++		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
++		.format = DMA_OUTPUT_FORMAT_YUV420,
++		.bitwidth = DMA_OUTPUT_BIT_WIDTH_8BIT,
++		.plane = 3,
++		.order = DMA_OUTPUT_ORDER_NONE,
++		.dma_out_mask = 0xffff,
++	},
++};
++
++static const struct odc_param init_odc_param = {
++	.control = {
++		.cmd = CONTROL_COMMAND_START,
++		.bypass = CONTROL_BYPASS_ENABLE,
++		.err = CONTROL_ERROR_NONE,
++	},
++	.otf_input = {
++		.cmd = OTF_INPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++		.format = OTF_INPUT_FORMAT_YUV444,
++		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
++		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
++	},
++	.otf_output = {
++		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++		.format = OTF_OUTPUT_FORMAT_YUV422,
++		.bitwidth = OTF_OUTPUT_BIT_WIDTH_8BIT,
++		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
++	},
++};
++
++static const struct dis_param init_dis_param = {
++	.control = {
++		.cmd = CONTROL_COMMAND_START,
++		.bypass = CONTROL_BYPASS_ENABLE,
++	},
++	.otf_input = {
++		.cmd = OTF_INPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++		.format = OTF_INPUT_FORMAT_YUV422,
++		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
++		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
++	},
++	.otf_output = {
++		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++		.format = OTF_OUTPUT_FORMAT_YUV422,
++		.bitwidth = OTF_OUTPUT_BIT_WIDTH_8BIT,
++		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
++	},
++};
++static const struct tdnr_param init_tdnr_param = {
++	.control = {
++		.cmd = CONTROL_COMMAND_START,
++		.bypass = CONTROL_BYPASS_ENABLE,
++	},
++	.otf_input = {
++		.cmd = OTF_INPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++		.format = OTF_INPUT_FORMAT_YUV422,
++		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
++		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
++	},
++	.otf_output = {
++		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++		.format = OTF_OUTPUT_FORMAT_YUV444,
++		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
++		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
++	},
++	.dma_output = {
++		.cmd = DMA_OUTPUT_COMMAND_DISABLE,
++		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++		.format = DMA_OUTPUT_FORMAT_YUV420,
++		.bitwidth = DMA_OUTPUT_BIT_WIDTH_8BIT,
++		.plane = 2,
++		.order = DMA_OUTPUT_ORDER_CBCR,
++		.dma_out_mask = 0xffff,
++	},
++};
++
++static const struct scalerp_param init_scalerp_param = {
++	.control = {
++		.cmd = CONTROL_COMMAND_START,
++		.bypass = CONTROL_BYPASS_ENABLE,
++	},
++	.otf_input = {
++		.cmd = OTF_INPUT_COMMAND_ENABLE,
++		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++		.format = OTF_INPUT_FORMAT_YUV444,
++		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
++		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
++	},
++	.input_crop = {
++		.cmd = OTF_INPUT_COMMAND_ENABLE,
++		.crop_width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.crop_height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++		.in_width = DEFAULT_CAPTURE_VIDEO_WIDTH,
++		.in_height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
++		.out_width = DEFAULT_PREVIEW_STILL_WIDTH,
++		.out_height = DEFAULT_PREVIEW_STILL_HEIGHT,
++	},
++	.output_crop = {
++		.cmd = SCALER_CROP_COMMAND_DISABLE,
++		.crop_width = DEFAULT_PREVIEW_STILL_WIDTH,
++		.crop_height = DEFAULT_PREVIEW_STILL_HEIGHT,
++		.format = OTF_OUTPUT_FORMAT_YUV420,
++	},
++	.otf_output = {
++		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
++		.width = DEFAULT_PREVIEW_STILL_WIDTH,
++		.height = DEFAULT_PREVIEW_STILL_HEIGHT,
++		.format = OTF_INPUT_FORMAT_YUV444,
++		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
++		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
++	},
++	.dma_output = {
++		.cmd = DMA_OUTPUT_COMMAND_DISABLE,
++		.width = DEFAULT_PREVIEW_STILL_WIDTH,
++		.height = DEFAULT_PREVIEW_STILL_HEIGHT,
++		.format = OTF_OUTPUT_FORMAT_YUV420,
++		.bitwidth = DMA_OUTPUT_BIT_WIDTH_8BIT,
++		.plane = 3,
++		.order = DMA_OUTPUT_ORDER_NONE,
++		.dma_out_mask = 0xffff,
++	},
++};
++
++static const struct fd_param init_fd_param = {
++	.control = {
++		.cmd = CONTROL_COMMAND_STOP,
++		.bypass = CONTROL_BYPASS_DISABLE,
++	},
++	.otf_input = {
++		.cmd = OTF_INPUT_COMMAND_ENABLE,
++		.width = DEFAULT_PREVIEW_STILL_WIDTH,
++		.height = DEFAULT_PREVIEW_STILL_HEIGHT,
++		.format = OTF_INPUT_FORMAT_YUV444,
++		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
++		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
++	},
++	.dma_input = {
++		.cmd = DMA_INPUT_COMMAND_DISABLE,
++	},
++	.config = {
++		.cmd = FD_CONFIG_COMMAND_MAXIMUM_NUMBER |
++			FD_CONFIG_COMMAND_ROLL_ANGLE |
++			FD_CONFIG_COMMAND_YAW_ANGLE |
++			FD_CONFIG_COMMAND_SMILE_MODE |
++			FD_CONFIG_COMMAND_BLINK_MODE |
++			FD_CONFIG_COMMAND_EYES_DETECT |
++			FD_CONFIG_COMMAND_MOUTH_DETECT |
++			FD_CONFIG_COMMAND_ORIENTATION |
++			FD_CONFIG_COMMAND_ORIENTATION_VALUE,
++		.max_number = CAMERA2_MAX_FACES,
++		.roll_angle = FD_CONFIG_ROLL_ANGLE_FULL,
++		.yaw_angle = FD_CONFIG_YAW_ANGLE_45_90,
++		.smile_mode = FD_CONFIG_SMILE_MODE_DISABLE,
++		.blink_mode = FD_CONFIG_BLINK_MODE_DISABLE,
++		.eye_detect = FD_CONFIG_EYES_DETECT_ENABLE,
++		.mouth_detect = FD_CONFIG_MOUTH_DETECT_DISABLE,
++		.orientation = FD_CONFIG_ORIENTATION_DISABLE,
++	},
++};
++
++static int fimc_is_pipeline_create_subdevs(struct fimc_is_pipeline *pipeline)
++{
++	struct fimc_is *is = pipeline->is;
++	int ret;
++
++	/* ISP */
++	ret = fimc_is_isp_subdev_create(&pipeline->isp,
++			is->alloc_ctx, pipeline);
++	if (ret)
++		return ret;
++
++	/* SCC scaler */
++	ret = fimc_is_scaler_subdev_create(&pipeline->scaler[SCALER_SCC],
++			SCALER_SCC, is->alloc_ctx, pipeline);
++	if (ret)
++		return ret;
++
++	/* SCP scaler */
++	ret = fimc_is_scaler_subdev_create(&pipeline->scaler[SCALER_SCP],
++			SCALER_SCP, is->alloc_ctx, pipeline);
++	if (ret)
++		return ret;
++
++	return ret;
++}
++
++static int fimc_is_pipeline_unregister_subdevs(struct fimc_is_pipeline *p)
++{
++	fimc_is_isp_subdev_destroy(&p->isp);
++	fimc_is_scaler_subdev_destroy(&p->scaler[SCALER_SCC]);
++	fimc_is_scaler_subdev_destroy(&p->scaler[SCALER_SCP]);
++
++	return 0;
++}
++
++int fimc_is_pipeline_init(struct fimc_is_pipeline *pipeline,
++			unsigned int instance, void *is_ctx)
++{
++	struct fimc_is *is = is_ctx;
++	unsigned int i;
++	int ret;
++
++	if (test_bit(PIPELINE_INIT, &pipeline->state))
++		return -EINVAL;
++
++	/* Initialize context variables */
++	pipeline->instance = instance;
++	pipeline->is = is;
++	pipeline->dev = &is->pdev->dev;
++	pipeline->minfo = &is->minfo;
++	pipeline->state = 0;
++	pipeline->force_down = false;
++	for (i = 0; i < FIMC_IS_NUM_COMPS; i++)
++		pipeline->comp_state[i] = 0;
++
++	spin_lock_init(&pipeline->slock_buf);
++	init_waitqueue_head(&pipeline->wait_q);
++	mutex_init(&pipeline->pipe_lock);
++	mutex_init(&pipeline->pipe_scl_lock);
++
++	ret = fimc_is_pipeline_create_subdevs(pipeline);
++	if (ret) {
++		dev_err(pipeline->dev, "Subdev creation failed\n");
++		return -EINVAL;
++	}
++
++	set_bit(PIPELINE_INIT, &pipeline->state);
++	return 0;
++}
++
++int fimc_is_pipeline_destroy(struct fimc_is_pipeline *pipeline)
++{
++	if (!pipeline)
++		return -EINVAL;
++
++	if (!test_bit(PIPELINE_INIT, &pipeline->state))
++		return -EINVAL;
++	return fimc_is_pipeline_unregister_subdevs(pipeline);
++}
++
++static int fimc_is_pipeline_initmem(struct fimc_is_pipeline *pipeline)
++{
++	struct fimc_is_meminfo *minfo = pipeline->minfo;
++	unsigned int offset;
++
++	/* Allocate fw memory */
++	minfo->fw.vaddr = dma_alloc_coherent(pipeline->dev,
++			FIMC_IS_A5_MEM_SIZE + FIMC_IS_A5_SEN_SIZE,
++			&minfo->fw.paddr, GFP_KERNEL);
++	if (minfo->fw.vaddr == NULL)
++		return -ENOMEM;
++	minfo->fw.size = FIMC_IS_A5_MEM_SIZE + FIMC_IS_A5_SEN_SIZE;
++
++	/* FW memory should be 64MB aligned */
++	if ((u32)minfo->fw.paddr & FIMC_IS_FW_BASE_MASK) {
++		dev_err(pipeline->dev, "FW memory not 64MB aligned\n");
++		dma_free_coherent(pipeline->dev, minfo->fw.size,
++				minfo->fw.vaddr,
++				minfo->fw.paddr);
++		return -EIO;
++	}
++
++	/* Assigning memory regions */
++	offset = FIMC_IS_A5_MEM_SIZE - FIMC_IS_REGION_SIZE;
++	minfo->region.paddr = minfo->fw.paddr + offset;
++	minfo->region.vaddr = minfo->fw.vaddr + offset;
++	pipeline->is_region = (struct is_region *)minfo->region.vaddr;
++
++	minfo->shared.paddr = minfo->fw.paddr +
++		(unsigned int)((void *)&pipeline->is_region->shared[0] -
++		 minfo->fw.vaddr);
++	minfo->shared.vaddr = minfo->fw.vaddr +
++		(unsigned int)((void *)&pipeline->is_region->shared[0] -
++		 minfo->fw.vaddr);
++
++	/* Allocate shot buffer */
++	minfo->shot.vaddr = dma_alloc_coherent(pipeline->dev,
++			sizeof(struct camera2_shot),
++			&minfo->shot.paddr, GFP_KERNEL);
++	if (minfo->shot.vaddr == NULL) {
++		dma_free_coherent(pipeline->dev, minfo->fw.size,
++				minfo->fw.vaddr,
++				minfo->fw.paddr);
++		return -ENOMEM;
++	}
++	minfo->shot.size = sizeof(struct camera2_shot);
++
++	return 0;
++}
++
++static void fimc_is_pipeline_freemem(struct fimc_is_pipeline *pipeline)
++{
++	struct fimc_is_meminfo *minfo = pipeline->minfo;
++	if (minfo->fw.vaddr)
++		dma_free_coherent(pipeline->dev, minfo->fw.size,
++				minfo->fw.vaddr,
++				minfo->fw.paddr);
++	if (minfo->shot.vaddr)
++		dma_free_coherent(pipeline->dev, minfo->shot.size,
++				minfo->shot.vaddr,
++				minfo->shot.paddr);
++}
++
++static int fimc_is_pipeline_load_firmware(struct fimc_is_pipeline *pipeline)
++{
++	const struct firmware *fw_blob;
++	struct fimc_is *is = pipeline->is;
++	int ret;
++
++	ret = request_firmware(&fw_blob, is->drvdata->fw_name, &is->pdev->dev);
++	if (ret) {
++		dev_err(pipeline->dev, "Firmware file not found\n");
++		return -EINVAL;
++	}
++	if (fw_blob->size > FIMC_IS_A5_MEM_SIZE + FIMC_IS_A5_SEN_SIZE) {
++		dev_err(pipeline->dev, "Firmware file too big\n");
++		release_firmware(fw_blob);
++		return -ENOMEM;
++	}
++
++	memcpy(pipeline->minfo->fw.vaddr, fw_blob->data, fw_blob->size);
++	wmb();
++	release_firmware(fw_blob);
++
++	return 0;
++}
++
++static void fimc_is_pipeline_forcedown(struct fimc_is_pipeline *pipeline,
++		bool on)
++{
++	struct fimc_is *is = pipeline->is;
++	if (on) {
++		pmu_is_write(0x0, is, PMUREG_ISP_ARM_OPTION);
++		pmu_is_write(0x1cf82000, is, PMUREG_ISP_LOW_POWER_OFF);
++		pipeline->force_down = true;
++	} else {
++		pmu_is_write(0xffffffff, is, PMUREG_ISP_ARM_OPTION);
++		pmu_is_write(0x8, is, PMUREG_ISP_LOW_POWER_OFF);
++		pipeline->force_down = false;
++	}
++}
++
++static int fimc_is_pipeline_wait_timeout(struct fimc_is_pipeline *pipeline,
++					int on)
++{
++	struct fimc_is *is = pipeline->is;
++	u32 timeout = FIMC_IS_A5_TIMEOUT;
++
++	while ((pmu_is_read(is, PMUREG_ISP_ARM_STATUS) & 0x1) != on) {
++		if (timeout == 0)
++			return -ETIME;
++		timeout--;
++		udelay(1);
++	}
++	return 0;
++}
++
++static int fimc_is_pipeline_power(struct fimc_is_pipeline *pipeline, int on)
++{
++	int ret = 0;
++	struct fimc_is *is = pipeline->is;
++	struct device *dev = &is->pdev->dev;
++
++	if (on) {
++		/* force poweroff setting */
++		if (pipeline->force_down)
++			fimc_is_pipeline_forcedown(pipeline, false);
++
++		/* FIMC-IS local power enable */
++		ret = pm_runtime_get_sync(dev);
++		if (ret)
++			return ret;
++
++		/* A5 start address setting */
++		writel(pipeline->minfo->fw.paddr, is->interface.regs + BBOAR);
++
++		/* A5 power on*/
++		pmu_is_write(0x1, is, PMUREG_ISP_ARM_CONFIGURATION);
++
++		/* enable A5 */
++		pmu_is_write(0x00018000, is, PMUREG_ISP_ARM_OPTION);
++		ret = fimc_is_pipeline_wait_timeout(pipeline, on);
++		if (ret)
++			dev_err(pipeline->dev, "A5 power on failed\n");
++	} else {
++		/* disable A5 */
++		pmu_is_write(0x10000, is, PMUREG_ISP_ARM_OPTION);
++
++		/* A5 power off*/
++		pmu_is_write(0x0, is, PMUREG_ISP_ARM_CONFIGURATION);
++
++		/* Check A5 power off status register */
++		ret = fimc_is_pipeline_wait_timeout(pipeline, on);
++		if (ret) {
++			dev_err(pipeline->dev, "A5 power off failed\n");
++			fimc_is_pipeline_forcedown(pipeline, true);
++		}
++
++		pmu_is_write(0x0, is, PMUREG_CMU_RESET_ISP_SYS_PWR_REG);
++
++		/* FIMC-IS local power down */
++		pm_runtime_put_sync(dev);
++	}
++
++	return ret;
++}
++
++static int fimc_is_pipeline_load_setfile(struct fimc_is_pipeline *pipeline,
++		unsigned int setfile_addr,
++		unsigned char *setfile_name)
++{
++	struct fimc_is *is = pipeline->is;
++	const struct firmware *fw_blob;
++	int ret;
++
++	ret = request_firmware(&fw_blob, setfile_name, &is->pdev->dev);
++	if (ret) {
++		dev_err(pipeline->dev, "Setfile %s not found\n", setfile_name);
++		return ret;
++	}
++
++	memcpy(pipeline->minfo->fw.vaddr + setfile_addr,
++			fw_blob->data, fw_blob->size);
++	wmb();
++	release_firmware(fw_blob);
++
++	return 0;
++}
++
++static int fimc_is_pipeline_setfile(struct fimc_is_pipeline *pipeline)
++{
++	struct fimc_is *is = pipeline->is;
++	struct fimc_is_sensor *sensor = pipeline->sensor;
++	int ret;
++	unsigned int setfile_addr;
++
++	/* Get setfile addr from HW */
++	ret = fimc_is_itf_get_setfile_addr(&is->interface,
++			pipeline->instance, &setfile_addr);
++	if (ret) {
++		dev_err(pipeline->dev, "Get setfile addr failed\n");
++		return ret;
++	}
++
++	if (!sensor->drvdata->setfile_name)
++		return -EINVAL;
++
++	/* Load setfile */
++	ret = fimc_is_pipeline_load_setfile(pipeline, setfile_addr,
++			sensor->drvdata->setfile_name);
++	if (ret) {
++		dev_err(pipeline->dev, "Load setfile failed\n");
++		return ret;
++	}
++
++	/* Send HW command */
++	ret = fimc_is_itf_load_setfile(&is->interface, pipeline->instance);
++	if (ret) {
++		dev_err(pipeline->dev, "HW Load setfile failed\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int fimc_is_pipeline_isp_setparams(struct fimc_is_pipeline *pipeline,
++		unsigned int enable)
++{
++	struct isp_param *isp_param = &pipeline->is_region->parameter.isp;
++	struct fimc_is *is = pipeline->is;
++	unsigned long index[2] = {0};
++	unsigned int sensor_width, sensor_height, scc_width, scc_height;
++	unsigned int crop_x, crop_y, isp_width, isp_height;
++	unsigned int sensor_ratio, output_ratio;
++	int ret;
++
++	/* Crop calculation */
++	sensor_width = pipeline->sensor->width;
++	sensor_height = pipeline->sensor->height;
++	scc_width = pipeline->scaler[SCALER_SCC].width;
++	scc_height = pipeline->scaler[SCALER_SCC].height;
++	isp_width = sensor_width;
++	isp_height = sensor_height;
++	crop_x = crop_y = 0;
++
++	sensor_ratio = sensor_width * 1000 / sensor_height;
++	output_ratio = scc_width * 1000 / scc_height;
++
++	if (sensor_ratio == output_ratio) {
++		isp_width = sensor_width;
++		isp_height = sensor_height;
++	} else if (sensor_ratio < output_ratio) {
++		isp_height = (sensor_width * scc_height) / scc_width;
++		isp_height = ALIGN(isp_height, 2);
++		crop_y = ((sensor_height - isp_height) >> 1) & ~1U;
++	} else {
++		isp_width = (sensor_height * scc_width) / scc_height;
++		isp_width = ALIGN(isp_width, 4);
++		crop_x =  ((sensor_width - isp_width) >> 1) & ~1U;
++	}
++	pipeline->isp_width = isp_width;
++	pipeline->isp_height = isp_height;
++
++	isp_param->otf_output.cmd = OTF_OUTPUT_COMMAND_ENABLE;
++	isp_param->otf_output.width = pipeline->sensor->width;
++	isp_param->otf_output.height = pipeline->sensor->height;
++	isp_param->otf_output.format = OTF_OUTPUT_FORMAT_YUV444;
++	isp_param->otf_output.bitwidth = OTF_OUTPUT_BIT_WIDTH_12BIT;
++	isp_param->otf_output.order = OTF_INPUT_ORDER_BAYER_GR_BG;
++	__set_bit(PARAM_ISP_OTF_OUTPUT, index);
++
++	isp_param->dma1_output.cmd = DMA_OUTPUT_COMMAND_DISABLE;
++	__set_bit(PARAM_ISP_DMA1_OUTPUT, index);
++
++	isp_param->dma2_output.cmd = DMA_OUTPUT_COMMAND_DISABLE;
++	__set_bit(PARAM_ISP_DMA2_OUTPUT, index);
++
++	if (enable)
++		isp_param->control.bypass = CONTROL_BYPASS_DISABLE;
++	else
++		isp_param->control.bypass = CONTROL_BYPASS_ENABLE;
++	isp_param->control.cmd = CONTROL_COMMAND_START;
++	isp_param->control.run_mode = 1;
++	__set_bit(PARAM_ISP_CONTROL, index);
++
++	isp_param->dma1_input.cmd = DMA_INPUT_COMMAND_BUF_MNGR;
++	isp_param->dma1_input.width = sensor_width;
++	isp_param->dma1_input.height = sensor_height;
++	isp_param->dma1_input.dma_crop_offset_x = crop_x;
++	isp_param->dma1_input.dma_crop_offset_y = crop_y;
++	isp_param->dma1_input.dma_crop_width = isp_width;
++	isp_param->dma1_input.dma_crop_height = isp_height;
++	isp_param->dma1_input.bayer_crop_offset_x = 0;
++	isp_param->dma1_input.bayer_crop_offset_y = 0;
++	isp_param->dma1_input.bayer_crop_width = 0;
++	isp_param->dma1_input.bayer_crop_height = 0;
++	isp_param->dma1_input.user_min_frametime = 0;
++	isp_param->dma1_input.user_max_frametime = 66666;
++	isp_param->dma1_input.wide_frame_gap = 1;
++	isp_param->dma1_input.frame_gap = 4096;
++	isp_param->dma1_input.line_gap = 45;
++	isp_param->dma1_input.order = DMA_INPUT_ORDER_GR_BG;
++	isp_param->dma1_input.plane = 1;
++	isp_param->dma1_input.buffer_number = 1;
++	isp_param->dma1_input.buffer_address = 0;
++	isp_param->dma1_input.reserved[1] = 0;
++	isp_param->dma1_input.reserved[2] = 0;
++	if (pipeline->isp.fmt->fourcc == V4L2_PIX_FMT_SGRBG8)
++		isp_param->dma1_input.bitwidth = DMA_INPUT_BIT_WIDTH_8BIT;
++	else if (pipeline->isp.fmt->fourcc == V4L2_PIX_FMT_SGRBG10)
++		isp_param->dma1_input.bitwidth = DMA_INPUT_BIT_WIDTH_10BIT;
++	else
++		isp_param->dma1_input.bitwidth = DMA_INPUT_BIT_WIDTH_12BIT;
++	__set_bit(PARAM_ISP_DMA1_INPUT, index);
++
++	index[0] = 0xffffffff;
++	index[1] = 0xffffffff;
++
++	wmb();
++	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
++			index[0], index[1]);
++	if (ret) {
++		dev_err(pipeline->dev, "%s failed\n", __func__);
++		return -EINVAL;
++	}
++
++	set_bit(COMP_ENABLE, &pipeline->comp_state[IS_ISP]);
++
++	return 0;
++}
++
++static int fimc_is_pipeline_drc_setparams(struct fimc_is_pipeline *pipeline,
++		unsigned int enable)
++{
++	struct drc_param *drc_param = &pipeline->is_region->parameter.drc;
++	struct fimc_is *is = pipeline->is;
++	int ret;
++	unsigned long index[2] = {0};
++
++	if (enable)
++		drc_param->control.bypass = CONTROL_BYPASS_DISABLE;
++	else
++		drc_param->control.bypass = CONTROL_BYPASS_ENABLE;
++	__set_bit(PARAM_DRC_CONTROL, index);
++
++	drc_param->otf_input.cmd = OTF_INPUT_COMMAND_ENABLE;
++	drc_param->otf_input.width = pipeline->isp_width;
++	drc_param->otf_input.height = pipeline->isp_height;
++	__set_bit(PARAM_DRC_OTF_INPUT, index);
++
++	drc_param->otf_output.cmd = OTF_OUTPUT_COMMAND_ENABLE;
++	drc_param->otf_output.width = pipeline->isp_width;
++	drc_param->otf_output.height = pipeline->isp_height;
++	__set_bit(PARAM_DRC_OTF_OUTPUT, index);
++
++	wmb();
++	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
++			index[0], index[1]);
++	if (ret) {
++		dev_err(pipeline->dev, "%s failed\n", __func__);
++		return -EINVAL;
++	}
++	if (enable)
++		set_bit(COMP_ENABLE, &pipeline->comp_state[IS_DRC]);
++	else
++		clear_bit(COMP_ENABLE, &pipeline->comp_state[IS_DRC]);
++
++	return 0;
++}
++
++static int fimc_is_pipeline_scc_setparams(struct fimc_is_pipeline *pipeline,
++		unsigned int enable)
++{
++	struct scalerc_param *scc_param =
++		&pipeline->is_region->parameter.scalerc;
++	struct fimc_is *is = pipeline->is;
++	int ret;
++	unsigned long index[2] = {0};
++	unsigned int scc_width, scc_height;
++
++	scc_width = pipeline->scaler[SCALER_SCC].width;
++	scc_height = pipeline->scaler[SCALER_SCC].height;
++
++	if (enable)
++		scc_param->control.bypass = CONTROL_BYPASS_DISABLE;
++	else
++		scc_param->control.bypass = CONTROL_BYPASS_ENABLE;
++	__set_bit(PARAM_SCALERC_CONTROL, index);
++
++	scc_param->otf_input.cmd = OTF_INPUT_COMMAND_ENABLE;
++	scc_param->otf_input.width = pipeline->isp_width;
++	scc_param->otf_input.height = pipeline->isp_height;
++	__set_bit(PARAM_SCALERC_OTF_INPUT, index);
++
++	/* SCC OUTPUT */
++	scc_param->input_crop.cmd = SCALER_CROP_COMMAND_ENABLE;
++	scc_param->input_crop.pos_x = 0;
++	scc_param->input_crop.pos_y = 0;
++	scc_param->input_crop.crop_width = pipeline->isp_width;
++	scc_param->input_crop.crop_height = pipeline->isp_height;
++	scc_param->input_crop.in_width = pipeline->isp_width;
++	scc_param->input_crop.in_height = pipeline->isp_height;
++	scc_param->input_crop.out_width = scc_width;
++	scc_param->input_crop.out_height = scc_height;
++	__set_bit(PARAM_SCALERC_INPUT_CROP, index);
++
++	scc_param->output_crop.cmd = SCALER_CROP_COMMAND_DISABLE;
++	scc_param->output_crop.pos_x = 0;
++	scc_param->output_crop.pos_y = 0;
++	scc_param->output_crop.crop_width = scc_width;
++	scc_param->output_crop.crop_height = scc_height;
++	__set_bit(PARAM_SCALERC_OUTPUT_CROP, index);
++
++	scc_param->otf_output.cmd = OTF_OUTPUT_COMMAND_ENABLE;
++	scc_param->otf_output.width = scc_width;
++	scc_param->otf_output.height = scc_height;
++	__set_bit(PARAM_SCALERC_OTF_OUTPUT, index);
++
++	scc_param->dma_output.width = scc_width;
++	scc_param->dma_output.height = scc_height;
++	__set_bit(PARAM_SCALERC_DMA_OUTPUT, index);
++
++	wmb();
++	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
++			index[0], index[1]);
++	if (ret) {
++		dev_err(pipeline->dev, "%s failed\n", __func__);
++		return -EINVAL;
++	}
++	set_bit(COMP_ENABLE, &pipeline->comp_state[IS_SCC]);
++	return 0;
++}
++
++static int fimc_is_pipeline_odc_setparams(struct fimc_is_pipeline *pipeline,
++		unsigned int enable)
++{
++	struct odc_param *odc_param = &pipeline->is_region->parameter.odc;
++	struct fimc_is *is = pipeline->is;
++	int ret;
++	unsigned long index[2] = {0};
++	unsigned int scc_width, scc_height;
++
++	scc_width = pipeline->scaler[SCALER_SCC].width;
++	scc_height = pipeline->scaler[SCALER_SCC].height;
++
++	if (enable)
++		odc_param->control.bypass = CONTROL_BYPASS_DISABLE;
++	else
++		odc_param->control.bypass = CONTROL_BYPASS_ENABLE;
++	__set_bit(PARAM_ODC_CONTROL, index);
++
++	odc_param->otf_input.width = scc_width;
++	odc_param->otf_input.height = scc_height;
++	__set_bit(PARAM_ODC_OTF_INPUT, index);
++
++	odc_param->otf_output.width = scc_width;
++	odc_param->otf_output.height = scc_height;
++	__set_bit(PARAM_ODC_OTF_OUTPUT, index);
++
++	wmb();
++	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
++			index[0], index[1]);
++	if (ret) {
++		dev_err(pipeline->dev, "%s failed\n", __func__);
++		return -EINVAL;
++	}
++	if (enable)
++		set_bit(COMP_ENABLE, &pipeline->comp_state[IS_ODC]);
++	else
++		clear_bit(COMP_ENABLE, &pipeline->comp_state[IS_ODC]);
++
++	return 0;
++}
++
++static int fimc_is_pipeline_dis_setparams(struct fimc_is_pipeline *pipeline,
++		unsigned int enable)
++{
++	struct dis_param *dis_param = &pipeline->is_region->parameter.dis;
++	struct fimc_is *is = pipeline->is;
++	int ret;
++	unsigned long index[2] = {0};
++	unsigned int scc_width, scc_height;
++
++	scc_width = pipeline->scaler[SCALER_SCC].width;
++	scc_height = pipeline->scaler[SCALER_SCC].height;
++
++	if (enable)
++		dis_param->control.bypass = CONTROL_BYPASS_DISABLE;
++	else
++		dis_param->control.bypass = CONTROL_BYPASS_ENABLE;
++	__set_bit(PARAM_DIS_CONTROL, index);
++
++	/* DIS INPUT */
++	dis_param->otf_input.width = scc_width;
++	dis_param->otf_input.height = scc_height;
++	__set_bit(PARAM_DIS_OTF_INPUT, index);
++
++	/* DIS OUTPUT */
++	dis_param->otf_output.width = scc_width;
++	dis_param->otf_output.height = scc_height;
++	__set_bit(PARAM_DIS_OTF_OUTPUT, index);
++
++	wmb();
++	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
++			index[0], index[1]);
++	if (ret) {
++		dev_err(pipeline->dev, "%s failed\n", __func__);
++		return -EINVAL;
++	}
++	if (enable)
++		set_bit(COMP_ENABLE, &pipeline->comp_state[IS_DIS]);
++	else
++		clear_bit(COMP_ENABLE, &pipeline->comp_state[IS_DIS]);
++
++	return 0;
++}
++
++static int fimc_is_pipeline_3dnr_setparams(struct fimc_is_pipeline *pipeline,
++		unsigned int enable)
++{
++	struct tdnr_param *tdnr_param = &pipeline->is_region->parameter.tdnr;
++	struct fimc_is *is = pipeline->is;
++	int ret;
++	unsigned long index[2] = {0};
++	unsigned int scc_width, scc_height;
++
++	scc_width = pipeline->scaler[SCALER_SCC].width;
++	scc_height = pipeline->scaler[SCALER_SCC].height;
++
++	if (enable)
++		tdnr_param->control.bypass = CONTROL_BYPASS_DISABLE;
++	else
++		tdnr_param->control.bypass = CONTROL_BYPASS_ENABLE;
++	__set_bit(PARAM_TDNR_CONTROL, index);
++
++	tdnr_param->otf_input.width = scc_width;
++	tdnr_param->otf_input.height = scc_height;
++	__set_bit(PARAM_TDNR_OTF_INPUT, index);
++
++	tdnr_param->dma_output.width = scc_width;
++	tdnr_param->dma_output.height = scc_height;
++	__set_bit(PARAM_TDNR_DMA_OUTPUT, index);
++
++	tdnr_param->otf_output.width = scc_width;
++	tdnr_param->otf_output.height = scc_height;
++	__set_bit(PARAM_TDNR_OTF_OUTPUT, index);
++
++	wmb();
++	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
++			index[0], index[1]);
++	if (ret) {
++		dev_err(pipeline->dev, "%s failed\n", __func__);
++		return -EINVAL;
++	}
++	if (enable)
++		set_bit(COMP_ENABLE, &pipeline->comp_state[IS_TDNR]);
++	else
++		clear_bit(COMP_ENABLE, &pipeline->comp_state[IS_TDNR]);
++
++	return 0;
++}
++
++static int fimc_is_pipeline_scp_setparams(struct fimc_is_pipeline *pipeline,
++		unsigned int enable)
++{
++	struct scalerp_param *scp_param =
++		&pipeline->is_region->parameter.scalerp;
++	struct fimc_is *is = pipeline->is;
++	int ret;
++	unsigned long index[2] = {0};
++	unsigned int scc_width, scc_height;
++	unsigned int scp_width, scp_height;
++
++	scc_width = pipeline->scaler[SCALER_SCC].width;
++	scc_height = pipeline->scaler[SCALER_SCC].height;
++	scp_width = pipeline->scaler[SCALER_SCP].width;
++	scp_height = pipeline->scaler[SCALER_SCP].height;
++
++	if (enable)
++		scp_param->control.bypass = CONTROL_BYPASS_DISABLE;
++	else
++		scp_param->control.bypass = CONTROL_BYPASS_ENABLE;
++	__set_bit(PARAM_SCALERP_CONTROL, index);
++
++	/* SCP Input */
++	scp_param->otf_input.width = scc_width;
++	scp_param->otf_input.height = scc_height;
++	__set_bit(PARAM_SCALERP_OTF_INPUT, index);
++
++	/* SCP Output */
++	scp_param->input_crop.cmd = SCALER_CROP_COMMAND_ENABLE;
++	scp_param->input_crop.pos_x = 0;
++	scp_param->input_crop.pos_y = 0;
++	scp_param->input_crop.crop_width = scc_width;
++	scp_param->input_crop.crop_height = scc_height;
++	scp_param->input_crop.in_width = scc_width;
++	scp_param->input_crop.in_height = scc_height;
++	scp_param->input_crop.out_width = scp_width;
++	scp_param->input_crop.out_height = scp_height;
++	__set_bit(PARAM_SCALERP_INPUT_CROP, index);
++
++	scp_param->output_crop.cmd = SCALER_CROP_COMMAND_DISABLE;
++	__set_bit(PARAM_SCALERP_OUTPUT_CROP, index);
++
++	scp_param->otf_output.width = scp_width;
++	scp_param->otf_output.height = scp_height;
++	__set_bit(PARAM_SCALERP_OTF_OUTPUT, index);
++
++	scp_param->dma_output.width = scp_width;
++	scp_param->dma_output.height = scp_height;
++	__set_bit(PARAM_SCALERP_DMA_OUTPUT, index);
++
++	wmb();
++	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
++			index[0], index[1]);
++	if (ret) {
++		dev_err(pipeline->dev, "%s failed\n", __func__);
++		return -EINVAL;
++	}
++	set_bit(COMP_ENABLE, &pipeline->comp_state[IS_SCP]);
++
++	return 0;
++}
++
++static int fimc_is_pipeline_fd_setparams(struct fimc_is_pipeline *pipeline,
++		unsigned int enable)
++{
++	struct fd_param *fd_param = &pipeline->is_region->parameter.fd;
++	struct fimc_is *is = pipeline->is;
++	int ret;
++	unsigned long index[2] = {0};
++
++	if (enable)
++		fd_param->control.bypass = CONTROL_BYPASS_DISABLE;
++	else
++		fd_param->control.bypass = CONTROL_BYPASS_ENABLE;
++	__set_bit(PARAM_FD_CONTROL, index);
++
++	fd_param->otf_input.width = pipeline->scaler[SCALER_SCP].width;
++	fd_param->otf_input.height = pipeline->scaler[SCALER_SCP].height;
++	__set_bit(PARAM_FD_OTF_INPUT, index);
++
++	wmb();
++	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
++			index[0], index[1]);
++	if (ret) {
++		dev_err(pipeline->dev, "%s failed\n", __func__);
++		return -EINVAL;
++	}
++	if (enable)
++		set_bit(COMP_ENABLE, &pipeline->comp_state[IS_FD]);
++	else
++		clear_bit(COMP_ENABLE, &pipeline->comp_state[IS_FD]);
++
++	return 0;
++}
++
++void fimc_is_pipeline_buf_lock(struct fimc_is_pipeline *pipeline)
++{
++	spin_lock_irqsave(&pipeline->slock_buf, pipeline->slock_flags);
++}
++
++void fimc_is_pipeline_buf_unlock(struct fimc_is_pipeline *pipeline)
++{
++	spin_unlock_irqrestore(&pipeline->slock_buf, pipeline->slock_flags);
++}
++
++int fimc_is_pipeline_setparams(struct fimc_is_pipeline *pipeline)
++{
++	int ret;
++
++	/* Enabling basic components in pipeline */
++	ret = fimc_is_pipeline_isp_setparams(pipeline, true);
++	if (!ret)
++		ret = fimc_is_pipeline_drc_setparams(pipeline, false);
++	if (!ret)
++		ret = fimc_is_pipeline_scc_setparams(pipeline, true);
++	if (!ret)
++		ret = fimc_is_pipeline_odc_setparams(pipeline, false);
++	if (!ret)
++		ret = fimc_is_pipeline_dis_setparams(pipeline, false);
++	if (!ret)
++		ret = fimc_is_pipeline_3dnr_setparams(pipeline, false);
++	if (!ret)
++		ret = fimc_is_pipeline_scp_setparams(pipeline, true);
++	if (!ret)
++		ret = fimc_is_pipeline_fd_setparams(pipeline, false);
++	if (ret)
++		dev_err(pipeline->dev, "Pipeline setparam failed\n");
++
++	return ret;
++}
++
++int fimc_is_pipeline_scaler_start(struct fimc_is_pipeline *pipeline,
++		enum fimc_is_scaler_id scaler_id,
++		unsigned int num_bufs,
++		unsigned int num_planes)
++{
++	struct fimc_is *is = pipeline->is;
++	struct scalerp_param *scp_param =
++		&pipeline->is_region->parameter.scalerp;
++	struct scalerc_param *scc_param =
++		&pipeline->is_region->parameter.scalerc;
++	struct param_dma_output *dma_output;
++	const struct fimc_is_fmt *fmt;
++	unsigned int region_index;
++	unsigned long *comp_state;
++	int ret;
++	unsigned int pipe_start_flag = 0;
++	unsigned int i, buf_mask = 0;
++	unsigned long index[2] = {0};
++
++	if (!test_bit(PIPELINE_OPEN, &pipeline->state)) {
++		dev_err(pipeline->dev, "Pipeline not opened.\n");
++		return -EINVAL;
++	}
++
++	mutex_lock(&pipeline->pipe_scl_lock);
++
++	if (test_bit(PIPELINE_START, &pipeline->state)) {
++		/*
++		 * Pipeline is started.
++		 * Stop it now to set params and start again
++		 */
++		ret = fimc_is_pipeline_stop(pipeline);
++		if (ret) {
++			dev_err(pipeline->dev, "Not able to stop pipeline\n");
++			goto exit;
++		}
++		pipe_start_flag = 1;
++	}
++
++	if (scaler_id == SCALER_SCC) {
++		dma_output = &scc_param->dma_output;
++		region_index = FIMC_IS_SCC_REGION_INDEX;
++		comp_state = &pipeline->comp_state[IS_SCC];
++		fmt = pipeline->scaler[SCALER_SCC].fmt;
++		__set_bit(PARAM_SCALERC_DMA_OUTPUT, index);
++	} else {
++		dma_output = &scp_param->dma_output;
++		comp_state = &pipeline->comp_state[IS_SCP];
++		fmt = pipeline->scaler[SCALER_SCC].fmt;
++		region_index = FIMC_IS_SCP_REGION_INDEX;
++		__set_bit(PARAM_SCALERP_DMA_OUTPUT, index);
++	}
++
++	for (i = 0; i < num_bufs; i++)
++		buf_mask |= BIT(i);
++
++	dma_output->cmd = DMA_OUTPUT_COMMAND_ENABLE;
++	dma_output->dma_out_mask = buf_mask;
++	dma_output->buffer_number = num_bufs;
++	dma_output->plane = num_planes;
++	if ((fmt->fourcc == V4L2_PIX_FMT_YUV420M) ||
++			(fmt->fourcc == V4L2_PIX_FMT_NV12M))
++		dma_output->format = DMA_OUTPUT_FORMAT_YUV420;
++	else if (fmt->fourcc == V4L2_PIX_FMT_NV16)
++		dma_output->format = DMA_OUTPUT_FORMAT_YUV422;
++
++	dma_output->buffer_address = pipeline->minfo->shared.paddr +
++				region_index * sizeof(unsigned int);
++
++	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
++			index[0], index[1]);
++	if (ret)
++		dev_err(pipeline->dev, "fimc_is_itf_set_param is fail\n");
++	else
++		set_bit(COMP_START, comp_state);
++
++	if (pipe_start_flag) {
++		ret = fimc_is_pipeline_start(pipeline);
++		if (ret)
++			dev_err(pipeline->dev,
++				"Not able to start pipeline back\n");
++	}
++exit:
++	mutex_unlock(&pipeline->pipe_scl_lock);
++	return ret;
++}
++
++int fimc_is_pipeline_scaler_stop(struct fimc_is_pipeline *pipeline,
++		enum fimc_is_scaler_id scaler_id)
++{
++	struct fimc_is *is = pipeline->is;
++	struct scalerp_param *scp_param =
++		&pipeline->is_region->parameter.scalerp;
++	struct scalerc_param *scc_param =
++		&pipeline->is_region->parameter.scalerc;
++	struct param_dma_output *dma_output;
++	unsigned int pipe_start_flag = 0;
++	unsigned long index[2] = {0};
++	unsigned long *comp_state;
++	int ret;
++
++	if (!test_bit(PIPELINE_OPEN, &pipeline->state))
++		return -EINVAL;
++
++	mutex_lock(&pipeline->pipe_scl_lock);
++
++	if (test_bit(PIPELINE_START, &pipeline->state)) {
++		/*
++		 * Pipeline is started.
++		 * Stop it now to set params and start again
++		 */
++		ret = fimc_is_pipeline_stop(pipeline);
++		if (ret) {
++			dev_err(pipeline->dev, "Not able to stop pipeline\n");
++			goto exit;
++		}
++		pipe_start_flag = 1;
++	}
++
++	comp_state = (scaler_id == SCALER_SCC) ?
++		&pipeline->comp_state[IS_SCC] : &pipeline->comp_state[IS_SCP];
++
++	if (!test_bit(COMP_START, comp_state)) {
++		ret = 0;
++		goto exit;
++	}
++
++	if (scaler_id == SCALER_SCC) {
++		dma_output = &scc_param->dma_output;
++		__set_bit(PARAM_SCALERC_DMA_OUTPUT, index);
++	} else {
++		dma_output = &scp_param->dma_output;
++		__set_bit(PARAM_SCALERP_DMA_OUTPUT, index);
++	}
++	dma_output->cmd = DMA_OUTPUT_COMMAND_DISABLE;
++
++	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
++			index[0], index[1]);
++	if (ret)
++		dev_err(pipeline->dev, "fimc_is_itf_set_param is fail\n");
++	else
++		clear_bit(COMP_START, comp_state);
++
++	if (pipe_start_flag) {
++		ret = fimc_is_pipeline_start(pipeline);
++		if (ret)
++			dev_err(pipeline->dev,
++				"Not able to start pipeline back\n");
++	}
++exit:
++	mutex_unlock(&pipeline->pipe_scl_lock);
++	return ret;
++}
++
++void fimc_is_pipeline_config_shot(struct fimc_is_pipeline *pipeline)
++{
++	struct camera2_shot *shot =
++		(struct camera2_shot *)pipeline->minfo->shot.vaddr;
++
++	shot->magicnumber = FIMC_IS_MAGIC_NUMBER;
++
++	shot->ctl.aa.mode = AA_CONTROL_AUTO;
++	shot->ctl.aa.ae_mode = AA_AEMODE_ON;
++}
++
++int fimc_is_pipeline_shot(struct fimc_is_pipeline *pipeline)
++{
++	struct fimc_is *is = pipeline->is;
++	int ret;
++	unsigned int rcount, i;
++	struct camera2_shot *shot = pipeline->minfo->shot.vaddr;
++	struct fimc_is_buf *scc_buf, *scp_buf, *bayer_buf;
++
++	if (!test_bit(PIPELINE_START, &pipeline->state))
++		return -EINVAL;
++
++	if (test_bit(PIPELINE_RUN, &pipeline->state))
++		return -EBUSY;
++
++	fimc_is_pipeline_buf_lock(pipeline);
++
++	if (list_empty(&pipeline->isp.wait_queue)) {
++		/* No more bayer buffers */
++		wake_up(&pipeline->wait_q);
++		fimc_is_pipeline_buf_unlock(pipeline);
++		return 0;
++	}
++
++	set_bit(PIPELINE_RUN, &pipeline->state);
++
++	/* Get bayer input buffer */
++	bayer_buf = fimc_is_isp_wait_queue_get(&pipeline->isp);
++	if (!bayer_buf) {
++		fimc_is_pipeline_buf_unlock(pipeline);
++		goto err_exit;
++	}
++	fimc_is_isp_run_queue_add(&pipeline->isp, bayer_buf);
++
++	/* Get SCC buffer */
++	if (test_bit(COMP_START, &pipeline->comp_state[IS_SCC]) &&
++		!list_empty(&pipeline->scaler[SCALER_SCC].wait_queue)) {
++		scc_buf = fimc_is_scaler_wait_queue_get(
++				&pipeline->scaler[SCALER_SCC]);
++		if (scc_buf) {
++			fimc_is_scaler_run_queue_add(
++					&pipeline->scaler[SCALER_SCC],
++					scc_buf);
++			for (i = 0; i < 3; i++)
++				shot->uctl.scaler_ud.scc_target_address[i] =
++							scc_buf->paddr[i];
++			set_bit(COMP_RUN, &pipeline->comp_state[IS_SCC]);
++		}
++	} else {
++		dev_dbg(pipeline->dev, "No SCC buffer available\n");
++		for (i = 0; i < 3; i++)
++			shot->uctl.scaler_ud.scc_target_address[i] = 0;
++	}
++
++	/* Get SCP buffer */
++	if (test_bit(COMP_START, &pipeline->comp_state[IS_SCP]) &&
++		!list_empty(&pipeline->scaler[SCALER_SCP].wait_queue)) {
++		scp_buf = fimc_is_scaler_wait_queue_get(
++				&pipeline->scaler[SCALER_SCP]);
++		if (scp_buf) {
++			fimc_is_scaler_run_queue_add(
++					&pipeline->scaler[SCALER_SCP],
++					scp_buf);
++			for (i = 0; i < 3; i++)
++				shot->uctl.scaler_ud.scp_target_address[i] =
++							scp_buf->paddr[i];
++			set_bit(COMP_RUN, &pipeline->comp_state[IS_SCP]);
++		}
++	} else {
++		dev_dbg(pipeline->dev, "No SCP buffer available\n");
++		for (i = 0; i < 3; i++)
++			shot->uctl.scaler_ud.scp_target_address[i] = 0;
++	}
++	fimc_is_pipeline_buf_unlock(pipeline);
++
++	/* Send shot command */
++	pipeline->fcount++;
++	rcount = pipeline->fcount;
++	shot->ctl.request.framecount = pipeline->fcount;
++	dev_dbg(pipeline->dev,
++		"Shot command fcount : %d, Bayer addr : 0x%08x\n",
++		pipeline->fcount, bayer_buf->paddr[0]);
++	ret = fimc_is_itf_shot_nblk(&is->interface, pipeline->instance,
++			bayer_buf->paddr[0],
++			pipeline->minfo->shot.paddr,
++			pipeline->fcount,
++			rcount);
++	if (ret) {
++		dev_err(pipeline->dev, "Shot command failed\n");
++		goto err_exit;
++	}
++	return 0;
++
++err_exit:
++	clear_bit(PIPELINE_RUN, &pipeline->state);
++	clear_bit(COMP_RUN, &pipeline->comp_state[IS_SCC]);
++	clear_bit(COMP_RUN, &pipeline->comp_state[IS_SCP]);
++	return -EINVAL;
++}
++
++int fimc_is_pipeline_start(struct fimc_is_pipeline *pipeline)
++{
++	int ret = 0;
++	struct fimc_is *is = pipeline->is;
++
++	/* Check if open or not */
++	if (!test_bit(PIPELINE_OPEN, &pipeline->state)) {
++		dev_err(pipeline->dev, "Pipeline not open\n");
++		return -EINVAL;
++	}
++
++	mutex_lock(&pipeline->pipe_lock);
++
++	/* Check if already started */
++	if (test_bit(PIPELINE_START, &pipeline->state))
++		goto err_exit;
++
++	/* Set pipeline component params */
++	ret = fimc_is_pipeline_setparams(pipeline);
++	if (ret) {
++		dev_err(pipeline->dev, "Set params failed\n");
++		goto err_exit;
++	}
++
++	/* Send preview still command */
++	ret = fimc_is_itf_preview_still(&is->interface, pipeline->instance);
++	if (ret) {
++		dev_err(pipeline->dev, "Preview still command failed\n");
++		goto err_exit;
++	}
++
++	/* Confiture shot memory to A5 */
++	ret = fimc_is_itf_cfg_mem(&is->interface, pipeline->instance,
++			pipeline->minfo->shot.paddr,
++			sizeof(struct camera2_shot));
++	if (ret) {
++		dev_err(pipeline->dev, "Config A5 mem failed\n");
++		goto err_exit;
++	}
++
++	/* Set shot params */
++	fimc_is_pipeline_config_shot(pipeline);
++
++	/* Process ON command */
++	ret = fimc_is_itf_process_on(&is->interface, pipeline->instance);
++	if (ret) {
++		dev_err(pipeline->dev, "Process on failed\n");
++		goto err_exit;
++	}
++
++	/* Stream ON */
++	ret = fimc_is_itf_stream_on(&is->interface, pipeline->instance);
++	if (ret) {
++		dev_err(pipeline->dev, "Stream On failed\n");
++		goto err_exit;
++	}
++
++	/* Set state to START */
++	set_bit(PIPELINE_START, &pipeline->state);
++
++	mutex_unlock(&pipeline->pipe_lock);
++	return 0;
++
++err_exit:
++	mutex_unlock(&pipeline->pipe_lock);
++	return ret;
++}
++
++int fimc_is_pipeline_stop(struct fimc_is_pipeline *pipeline)
++{
++	int ret;
++	struct fimc_is *is = pipeline->is;
++
++	mutex_lock(&pipeline->pipe_lock);
++
++	/* Check if started */
++	if (!test_bit(PIPELINE_OPEN, &pipeline->state) ||
++		!test_bit(PIPELINE_START, &pipeline->state)) {
++		ret = -EINVAL;
++		goto err_exit;
++	}
++
++	/* Wait if any operation is in progress */
++	ret = wait_event_timeout(pipeline->wait_q,
++			!test_bit(PIPELINE_RUN, &pipeline->state),
++			FIMC_IS_COMMAND_TIMEOUT);
++	if (!ret) {
++		dev_err(pipeline->dev, "Pipeline timeout");
++		ret = -EBUSY;
++		goto err_exit;
++	}
++
++	/* Wait for scaler operations if any to complete */
++	ret = wait_event_timeout(pipeline->scaler[SCALER_SCC].event_q,
++			!test_bit(COMP_RUN, &pipeline->comp_state[IS_SCC]),
++			FIMC_IS_COMMAND_TIMEOUT);
++	if (!ret) {
++		dev_err(pipeline->dev, "SCC timeout");
++		ret = -EBUSY;
++		goto err_exit;
++	}
++	ret = wait_event_timeout(pipeline->scaler[SCALER_SCP].event_q,
++			!test_bit(COMP_RUN, &pipeline->comp_state[IS_SCP]),
++			FIMC_IS_COMMAND_TIMEOUT);
++	if (!ret) {
++		dev_err(pipeline->dev, "SCP timeout");
++		ret = -EBUSY;
++		goto err_exit;
++	}
++
++	/* Process OFF */
++	ret = fimc_is_itf_process_off(&is->interface, pipeline->instance);
++	if (ret) {
++		dev_err(pipeline->dev, "Process off failed\n");
++		ret = -EINVAL;
++		goto err_exit;
++	}
++
++	/* Stream OFF */
++	ret = fimc_is_itf_stream_off(&is->interface, pipeline->instance);
++	if (ret) {
++		dev_err(pipeline->dev, "Stream Off failed\n");
++		ret = -EINVAL;
++		goto err_exit;
++	}
++
++	/* Clear state */
++	clear_bit(PIPELINE_START, &pipeline->state);
++
++err_exit:
++	mutex_unlock(&pipeline->pipe_lock);
++	return ret;
++}
++
++int fimc_is_pipeline_open(struct fimc_is_pipeline *pipeline,
++			struct fimc_is_sensor *sensor)
++{
++	struct fimc_is *is = pipeline->is;
++	struct is_region *region;
++	int ret;
++
++	if (!sensor)
++		return -EINVAL;
++
++	mutex_lock(&pipeline->pipe_lock);
++
++	if (test_bit(PIPELINE_OPEN, &pipeline->state)) {
++		dev_err(pipeline->dev, "Pipeline already open\n");
++		ret = -EINVAL;
++		goto err_exit;
++	}
++
++	pipeline->fcount = 0;
++	pipeline->sensor = sensor;
++
++	if (is->num_pipelines == 0) {
++		/* Init memory */
++		ret = fimc_is_pipeline_initmem(pipeline);
++		if (ret) {
++			dev_err(pipeline->dev, "Pipeline memory init failed\n");
++			goto err_exit;
++		}
++
++		/* Load firmware */
++		ret = fimc_is_pipeline_load_firmware(pipeline);
++		if (ret) {
++			dev_err(pipeline->dev, "Firmware load failed\n");
++			goto err_fw;
++		}
++
++		/* Power ON */
++		ret = fimc_is_pipeline_power(pipeline, 1);
++		if (ret) {
++			dev_err(pipeline->dev, "A5 power on failed\n");
++			goto err_fw;
++		}
++
++		/* Wait for FW Init to complete */
++		ret = fimc_is_itf_wait_init_state(&is->interface);
++		if (ret) {
++			dev_err(pipeline->dev, "FW init failed\n");
++			goto err_fw;
++		}
++	}
++
++	/* Open Sensor */
++	region = pipeline->is_region;
++	ret = fimc_is_itf_open_sensor(&is->interface,
++			pipeline->instance,
++			sensor->drvdata->id,
++			sensor->i2c_bus,
++			pipeline->minfo->shared.paddr);
++	if (ret) {
++		dev_err(pipeline->dev, "Open sensor failed\n");
++		goto err_exit;
++	}
++
++	if (is->num_pipelines == 0) {
++		/* Copy init params to FW region */
++		memset(&region->parameter, 0x0, sizeof(struct is_param_region));
++
++		memcpy(&region->parameter.sensor, &init_sensor_param,
++				sizeof(struct sensor_param));
++		memcpy(&region->parameter.isp, &init_isp_param,
++				sizeof(struct isp_param));
++		memcpy(&region->parameter.drc, &init_drc_param,
++				sizeof(struct drc_param));
++		memcpy(&region->parameter.scalerc, &init_scalerc_param,
++				sizeof(struct scalerc_param));
++		memcpy(&region->parameter.odc, &init_odc_param,
++				sizeof(struct odc_param));
++		memcpy(&region->parameter.dis, &init_dis_param,
++				sizeof(struct dis_param));
++		memcpy(&region->parameter.tdnr, &init_tdnr_param,
++				sizeof(struct tdnr_param));
++		memcpy(&region->parameter.scalerp, &init_scalerp_param,
++				sizeof(struct scalerp_param));
++		memcpy(&region->parameter.fd, &init_fd_param,
++				sizeof(struct fd_param));
++		wmb();
++	}
++
++	/* Load setfile */
++	ret = fimc_is_pipeline_setfile(pipeline);
++	if (ret)
++		goto err_exit;
++
++	/* Stream off */
++	ret = fimc_is_itf_stream_off(&is->interface, pipeline->instance);
++	if (ret)
++		goto err_exit;
++
++	/* Process off */
++	ret = fimc_is_itf_process_off(&is->interface, pipeline->instance);
++	if (ret)
++		goto err_exit;
++
++	/* Set state to OPEN */
++	set_bit(PIPELINE_OPEN, &pipeline->state);
++	is->num_pipelines++;
++
++	mutex_unlock(&pipeline->pipe_lock);
++	return 0;
++
++err_fw:
++	fimc_is_pipeline_freemem(pipeline);
++err_exit:
++	mutex_unlock(&pipeline->pipe_lock);
++	return ret;
++}
++
++int fimc_is_pipeline_close(struct fimc_is_pipeline *pipeline)
++{
++	int ret;
++	struct fimc_is *is = pipeline->is;
++
++	mutex_lock(&pipeline->pipe_lock);
++
++	if (!test_bit(PIPELINE_OPEN, &pipeline->state)) {
++		dev_err(pipeline->dev, "Pipeline not opened\n");
++		ret = -EINVAL;
++		goto err_exit;
++	}
++
++	if (test_bit(PIPELINE_START, &pipeline->state)) {
++		dev_err(pipeline->dev, "Cannot close pipeline when its started\n");
++		ret = -EINVAL;
++		goto err_exit;
++	}
++
++	is->num_pipelines--;
++	if (is->num_pipelines == 0) {
++		/* FW power off command */
++		ret = fimc_is_itf_power_down(&is->interface,
++					pipeline->instance);
++		if (ret)
++			dev_err(pipeline->dev, "FW power down error\n");
++
++		/* Pipeline power off*/
++		fimc_is_pipeline_power(pipeline, 0);
++
++		/* Free memory */
++		fimc_is_pipeline_freemem(pipeline);
++	}
++
++	clear_bit(PIPELINE_OPEN, &pipeline->state);
++	mutex_unlock(&pipeline->pipe_lock);
++	return 0;
++
++err_exit:
++	mutex_unlock(&pipeline->pipe_lock);
++	return ret;
++}
+diff --git a/drivers/media/platform/exynos5-is/fimc-is-pipeline.h b/drivers/media/platform/exynos5-is/fimc-is-pipeline.h
+new file mode 100644
+index 0000000..4759cb4
+--- /dev/null
++++ b/drivers/media/platform/exynos5-is/fimc-is-pipeline.h
+@@ -0,0 +1,128 @@
++/*
++ * Samsung EXYNOS5 FIMC-IS (Imaging Subsystem) driver
++ *
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ *  Arun Kumar K <arun.kk@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#ifndef FIMC_IS_PIPELINE_H_
++#define FIMC_IS_PIPELINE_H_
++
++#include "fimc-is-core.h"
++#include "fimc-is-sensor.h"
++#include "fimc-is-isp.h"
++#include "fimc-is-scaler.h"
++
++#define FIMC_IS_A5_MEM_SIZE		0x00a00000
++#define FIMC_IS_A5_SEN_SIZE		0x00100000
++#define FIMC_IS_REGION_SIZE		0x5000
++#define FIMC_IS_SETFILE_SIZE		0xc0d8
++#define FIMC_IS_TDNR_MEM_SIZE		(1920 * 1080 * 4)
++#define FIMC_IS_DEBUG_REGION_ADDR	0x00840000
++#define FIMC_IS_SHARED_REGION_ADDR	0x008c0000
++#define FIMC_IS_A5_TIMEOUT		1000
++
++#define FIMC_IS_SCP_REGION_INDEX	400
++#define FIMC_IS_SCC_REGION_INDEX	447
++
++#define MAX_ODC_INTERNAL_BUF_WIDTH	2560  /* 4808 in HW */
++#define MAX_ODC_INTERNAL_BUF_HEIGHT	1920  /* 3356 in HW */
++#define SIZE_ODC_INTERNAL_BUF \
++	(MAX_ODC_INTERNAL_BUF_WIDTH * MAX_ODC_INTERNAL_BUF_HEIGHT * 3)
++
++#define MAX_DIS_INTERNAL_BUF_WIDTH	2400
++#define MAX_DIS_INTERNAL_BUF_HEIGHT	1360
++#define SIZE_DIS_INTERNAL_BUF \
++	(MAX_DIS_INTERNAL_BUF_WIDTH * MAX_DIS_INTERNAL_BUF_HEIGHT * 2)
++
++#define MAX_3DNR_INTERNAL_BUF_WIDTH	1920
++#define MAX_3DNR_INTERNAL_BUF_HEIGHT	1088
++#define SIZE_DNR_INTERNAL_BUF \
++	(MAX_3DNR_INTERNAL_BUF_WIDTH * MAX_3DNR_INTERNAL_BUF_HEIGHT * 2)
++
++#define NUM_ODC_INTERNAL_BUF		2
++#define NUM_DIS_INTERNAL_BUF		5
++#define NUM_DNR_INTERNAL_BUF		2
++
++#define FIMC_IS_FW_BASE_MASK		((1 << 26) - 1)
++
++#define FIMC_IS_NUM_COMPS		8
++
++#define FIMC_IS_MAGIC_NUMBER		0x23456789
++
++enum pipeline_state {
++	PIPELINE_INIT,
++	PIPELINE_OPEN,
++	PIPELINE_START,
++	PIPELINE_RUN,
++};
++
++enum is_components {
++	IS_ISP,
++	IS_DRC,
++	IS_SCC,
++	IS_ODC,
++	IS_DIS,
++	IS_TDNR,
++	IS_SCP,
++	IS_FD
++};
++
++enum component_state {
++	COMP_ENABLE,
++	COMP_START,
++	COMP_RUN
++};
++
++struct fimc_is_pipeline {
++	unsigned long		state;
++	unsigned long		comp_state[FIMC_IS_NUM_COMPS];
++	bool			force_down;
++	unsigned int		instance;
++	/* Locks the isp / scaler buffers */
++	spinlock_t		slock_buf;
++	unsigned long		slock_flags;
++	wait_queue_head_t	wait_q;
++	/* For locking pipeline ops */
++	struct mutex		pipe_lock;
++	/* For locking scaler ops in pipeline */
++	struct mutex		pipe_scl_lock;
++
++	struct fimc_is_meminfo	*minfo;
++	struct is_region	*is_region;
++	struct device		*dev;
++
++	struct fimc_is		*is;
++	struct fimc_is_sensor	*sensor;
++	struct fimc_is_isp	isp;
++	struct fimc_is_scaler	scaler[FIMC_IS_NUM_SCALERS];
++
++	unsigned int		fcount;
++	unsigned int		isp_width;
++	unsigned int		isp_height;
++};
++
++void fimc_is_pipeline_buf_lock(struct fimc_is_pipeline *pipeline);
++void fimc_is_pipeline_buf_unlock(struct fimc_is_pipeline *pipeline);
++int fimc_is_pipeline_setparams(struct fimc_is_pipeline *pipeline);
++int fimc_is_pipeline_scaler_start(struct fimc_is_pipeline *pipeline,
++		enum fimc_is_scaler_id scaler_id,
++		unsigned int num_bufs,
++		unsigned int num_planes);
++int fimc_is_pipeline_scaler_stop(struct fimc_is_pipeline *pipeline,
++		enum fimc_is_scaler_id scaler_id);
++void fimc_is_pipeline_config_shot(struct fimc_is_pipeline *pipeline);
++int fimc_is_pipeline_shot(struct fimc_is_pipeline *pipeline);
++int fimc_is_pipeline_start(struct fimc_is_pipeline *pipeline);
++int fimc_is_pipeline_stop(struct fimc_is_pipeline *pipeline);
++int fimc_is_pipeline_init(struct fimc_is_pipeline *pipeline,
++			unsigned int instance, void *is_ctx);
++int fimc_is_pipeline_destroy(struct fimc_is_pipeline *pipeline);
++int fimc_is_pipeline_open(struct fimc_is_pipeline *pipeline,
++			struct fimc_is_sensor *sensor);
++int fimc_is_pipeline_close(struct fimc_is_pipeline *pipeline);
++
++#endif
 -- 
 1.7.9.5
 
