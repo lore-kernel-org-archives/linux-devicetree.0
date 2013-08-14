@@ -1,104 +1,52 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v3 0/9] ARM: dts: exynos: add support for hdmi subsystem
-Date: Wed, 14 Aug 2013 13:26:03 +0200
-Message-ID: <6563414.jg5Jd3ZBY4@amdc1227>
-References: <1374737677-3215-1-git-send-email-rahul.sharma@samsung.com>
- <112701ce98d6$aaed8840$00c898c0$@org>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] ARM: davinci: serial: platform code cleanup
+Date: Wed, 14 Aug 2013 11:27:09 +0000
+Message-ID: <520B698D.60203@ti.com>
+References: <1371633342-1210-1-git-send-email-prakash.pm@ti.com>
+	<1371633342-1210-6-git-send-email-prakash.pm@ti.com>
+	<51ED0534.2080408@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <112701ce98d6$aaed8840$00c898c0$@org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: 'Rahul Sharma' <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com, r.sh.open@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <51ED0534.2080408-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 of August 2013 19:11:39 Kukjin Kim wrote:
-> Rahul Sharma wrote:
-> > Common properties for I2C and Hdmi Subsystem is moved to exynos5
-> > dtsi file. It also adds Device tree nodes and clocks information
-> > for exynos5420 and exynos5250 SoCs. It adds pinctrl node for hdmi
-> > hpd gpio and update binding documents.
-> > 
-> > This set is based on kukjin's for-next branch at
-> > http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
-> > 
-> > v3:
-> > 1) Rebase to kgene for-next based on 3.11-rc1.
-> > 2) Changes clock numbers as per updated clocks file for
-> > exyno5250 and exynos5420.
-> > 3) Dropped Sachin patch as already got merged.
-> > 
-> > v2:
-> > 1) Added patch for moving common i2c properties to exynos5.dtsi
-> > 2) Added patch for moving common hdmi, mixer properties to exynos5.dtsi
-> > 3) moved hpd pinctrl node to board file.
-> > 4) Added Sachin's patch to update binding document for hdmi with hpd
-> > information.
-> > 
-> > Andrew Bresticker (1):
-> >   ARM: dts: exynos5420: add i2c device nodes
-> > 
-> > Rahul Sharma (7):
-> >   ARM: dts: exynos5250: add clocks to hdmi dt node
-> >   ARM: dts: exynos5250: move common i2c properties to exynos5 dtsi
-> >   ARM: dts: exynos5250: move common hdmi properties to exynos5 dtsi
-> >   ARM: dts: exynos5420: add dt nodes for hdmi subsystem
-> >   ARM: dts: exynos5420: add clocks for hdmi subsystem
-> >   ARM: dts: exynos5420: add hdmi hpd gpio pinctrl node
-> >   of/documentation: update with clock information for exynos hdmi
-> >   
-> >     subsystem
-> > 
-> > Sean Paul (1):
-> >   ARM: dts: exynos5250: add mixer clocks to mixer node
-> >  
-> >  .../devicetree/bindings/video/exynos_hdmi.txt      |   14 +++++-
-> >  .../devicetree/bindings/video/exynos_mixer.txt     |    4 ++
-> >  arch/arm/boot/dts/cros5250-common.dtsi             |    2 +-
-> >  arch/arm/boot/dts/exynos5.dtsi                     |   48
-> 
-> ++++++++++++++++++++
-> 
-> >  arch/arm/boot/dts/exynos5250-arndale.dts           |    8 +++-
-> >  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   10 +++-
-> >  arch/arm/boot/dts/exynos5250-snow.dts              |    8 ++++
-> >  arch/arm/boot/dts/exynos5250.dtsi                  |   36
-> >  +++------------ arch/arm/boot/dts/exynos5420-smdk5420.dts          | 
-> >   31 +++++++++++++ arch/arm/boot/dts/exynos5420.dtsi                 
-> >  |   46
-> 
-> +++++++++++++++++++
-> 
-> >  10 files changed, 174 insertions(+), 33 deletions(-)
-> > 
-> > --
-> > 1.7.10.4
-> 
-> See my comments about making common stuff for exynos5 SoCs.
+Hi Prakash,
 
-I agree.
-
-> And please don't use title like following,
+On Monday 22 July 2013 10:11 AM, Sekhar Nori wrote:
+> On Wednesday 19 June 2013 02:45 PM, Manjunathappa, Prakash wrote:
+>> 1) "struct davinci_uart_config" is introduced to specify
+>>    UART ports brought out or enabled on the board. But
+>>    none of the boards use them for that purpose, so clean
+>>    it up.
+>> 2) Have pointer to platform device as a argument for
+>>    davinci_serial_init(), no need of serial_dev in
+>>    struct soc_info now.
+>> 3) No need of davinci_serial_setup_clk(), not called from
+>>    multiple places, hence reduce function call overhead.
 > 
-> 'ARM: dts: exynos0000: ....'.
+> 1) and 2) are related but 3) can be moved into a different patch - this
+> patch will otherwise be doing too many things (hint for that is a vague
+> headline and too many items to list in description)
 > 
-> Because the relatively long prefix of title can cover _real_ title, So
-> just 'ARM: dts: .... in exynos000' is better.
+> Can you respin just this patch based on v3.12/soc branch of my tree?
 
-Well, I tend to disagree on this. The ARM: dts: <platform name>: prefix is 
-commonly used in arch/arm/boot/dts (see git log --oneline 
-arch/arm/boot/dts).
+Since I did not get a response to this and the window for v3.12 is
+closing fast, I went ahead and did the split myself. Here is the result:
 
-As long as we don't cross the ~75 characters boundary in patch subject, I 
-don't think this is any problem.
+https://git.kernel.org/cgit/linux/kernel/git/nsekhar/linux-davinci.git/log/?h=v3.12/soc
 
-> 
-> One more, devicetree(at)vger.kernel.org is right for dt ml.
-+1
-
-Also it is nice to Cc the device tree maintainers.
-
-Best regards,
-Tomasz
+Thanks,
+Sekhar
