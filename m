@@ -1,102 +1,65 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from iolanthe.rowland.org ([192.131.102.54]:45647 "HELO
-	iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1758587Ab3HNTjV (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 15:39:21 -0400
-Date: Wed, 14 Aug 2013 15:39:20 -0400 (EDT)
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: Non-enumerable devices on USB and other enumerable buses
-In-Reply-To: <20130814184643.GL2401@sirena.org.uk>
-Message-ID: <Pine.LNX.4.44L0.1308141514440.1701-100000@iolanthe.rowland.org>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:36275 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1760026Ab3HNSt3 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 14:49:29 -0400
+Date: Wed, 14 Aug 2013 19:49:16 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130814184916.GM2401@sirena.org.uk>
+References: <Pine.LNX.4.44L0.1308141209410.1701-100000@iolanthe.rowland.org>
+ <520BB0B4.4090400@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="L5nTHegdhbHhzmSD"
+Content-Disposition: inline
+In-Reply-To: <520BB0B4.4090400@wwwdotorg.org>
+Subject: Re: Non-enumerable devices on USB and other enumerable buses
 Sender: devicetree-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 14 Aug 2013, Mark Brown wrote:
 
-> On Wed, Aug 14, 2013 at 02:35:07PM -0400, Alan Stern wrote:
-> > On Wed, 14 Aug 2013, Mark Brown wrote:
-> 
-> > > What I'm proposing is that we have a way of telling buses that devices
-> > > exist via a mechanism other than their actually being visible on the bus
-> > > at the current time.  If you're doing that the driver can be running
-> > > prior to the hardware being there, just like it does with all the
-> > > non-enumerable buses.
-> 
-> > This may work for other buses, but it isn't feasible for USB.  Not only
-> > do many of the drivers need to communicate with their device during
-> > their probe routine, the subsystem itself needs to communicate with the
-> > device before many of the important data structures can be constructed.  
-> > Without these structures, the device can't be bound to a driver.  We 
-> > wouldn't even know which driver to bind it to!
-> 
-> The identification information for the device would of course have to be
-> provided as part of registering that the device was going to appear -
-> I'd expect to provide the same information that's read out of the
-> hardware during enumeration, with enumeration checking to see if it
-> knows about the device already.
+--L5nTHegdhbHhzmSD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I don't see the point of all this.  Obviously the device can't be used
-until it physically appears on the bus.  What benefit do you get from
-registering it and making it available to userspace before that?
+On Wed, Aug 14, 2013 at 10:30:44AM -0600, Stephen Warren wrote:
+> On 08/14/2013 10:14 AM, Alan Stern wrote:
 
-> > My impression is that much of what you want could be handled by a
-> > platform callback invoked when a particular bus -- i.e., one whose
-> > upstream controller is a particular platform device -- is registered.  
-> > Is that correct?  For example, in the USB case, the on-board hub's
-> > GPIOs could be set when the USB bus is registered (or perhaps when the
-> > bus's root hub is registered).
-> 
-> That sort of bodge is probably adequate for basic "power this on" stuff
-> but it's not going to scale to a general solution, especially where the
-> driver wants to use some of the information at runtime.  Currently
-> systems are doing things like bodging callbacks into controller drivers
-> which is basically what you're talking about here.
+> > No, no -- this is exactly the point I was trying to make.  The on-board
+> > hub _won't_ appear on the USB bus until the GPIOs are set.  Therefore
+> > the callback to set the GPIOs needs to be at a different place, not
+> > when the device appears.
 
-Well, basic "power this on" stuff is pretty much all we have discussed 
-in this thread so far.  What other sorts of things are going to be 
-needed for a general solution?
+> The device Mark was talking about is the controller end of the bus (EHCI
+> controller, or hub's downstream port) not the device end of the bus (any
+> USB device's upstream port).
 
-> > > It means that there are situations where a driver wants to take the
-> > > hardware offline but still offer services to userspace which will
-> > > require the hardware to be brought on line again.  The fact that this is
-> > > a very generic thing is exactly why I'm raising this as a generic issue.
-> 
-> > This is a separate issue, more or less independent of whether the
-> > platform needs to carry out special actions for the device in question.  
-> > If you're suggesting these off-line/on-line transitions are appropriate
-> > places for a platform hook, then yes, that makes sense.
-> 
-> I think in the general case it's the same issue - grab all the resources
-> and enable them at probe time is the simplest implementation but it's
-> not the only one by a long stretch.
+Actually it genuinely is a hub - it's not part of the controller, though
+the startup does need to be synchronised with the controller.  It ends
+up parenting some other devices but that's not suchan issue.
 
-Now I'm getting confused.  It seems we're talking about at least three
-very different things here:
+--L5nTHegdhbHhzmSD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-     A: Devising a mechanism for platform code to do things involving
-	devices that are dynamically registered on discoverable buses.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
-     B: Telling the subsystem and driver code for a discoverable bus
-	that a particular device is present before it has been 
-	detected.
+iQIcBAEBAgAGBQJSC9EpAAoJELSic+t+oim9FoEP/2XDDCmr+Ar/CvIhzmYn1tRp
+uGXnDvTzQ203SyEOhldvG03P1aCprrvdbhy5gBCPMGiAOctaoom4WdEk6IPKqqi6
+AD5/Ev8xeNLlJsJlZvZBaN6qAzMWe9RfMjl1hNvIbG982aR+ym25psicAlq1mtww
+GvCnZ2Gd7e1Sp8bK87Z+z7HA3V/ztQFoTfPDrhg/TCfb8iI7LiyOTOddCEECfBfO
+CDuDcio4XQHy70E79xg7/0HRyALcmd2u4ATdGz1hnJKNUuuISKWKxtrWbDY7aDK/
+Hnt/M6lhPDGkskuTbCRKBd80cwAgVlmcl1vXpVtiltpy+Vo9+7fnGh7VNg0OboXv
+DfGozA7moV5qAHNeld/rGeiAb8ZeSe+ddjJ8Ah/HGWWz/nEHIrV4lmsmpMNCt3qO
+zmdOQ3HdEe8ynUdKoVzppnT7r/DvaPfCeRmfsu0Ahrb53dw+na7KmlzI55kGFpXO
+nEOedH5KgsTecC9dnv711raOtTnbuKTzbMp/ETqBWg/xvI+ZtiHOZoqo+ZBn/v7q
+xpJVW4MyVCcpTQMFMNOanyB6zAqEXBkm6UXWB0qTuIn1A3DVCKOpodTBQnThfAQo
+TbheBJ4E/BnQFvSdRE3VWlngUFtdXzoHTZ9k65rlpP4ko4jr/jOgVZB8+6YKc8+U
+r1Ojc+2CSmTRa8apE/rU
+=C0RF
+-----END PGP SIGNATURE-----
 
-     C: Implementing a mechanism whereby drivers can take a device
-	off-line while still pretending to userspace that the device
-	is still present, by bringing it back on-line as needed.
-
-I don't see much connection between these things.  Perhaps you can
-explain in more detail.
-
-(BTW, it's worth mentioning that C has already been done, in the form
-of runtime PM.  The difference may be that you propose to take the
-device so far off-line that it disappears from the bus.  AFAICS, this
-would be purely a private matter to be arranged between the subsystem
-and the driver; it does not need to be handled at the level of the
-device-model or PM core.)
-
-Alan Stern
-
+--L5nTHegdhbHhzmSD--
