@@ -1,76 +1,132 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:50670 "EHLO
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:46301 "EHLO
 	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750974Ab3HNX7t (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 19:59:49 -0400
-Date: Thu, 15 Aug 2013 00:59:29 +0100
+	with ESMTP id S1750929Ab3HNXzk (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 19:55:40 -0400
+Date: Thu, 15 Aug 2013 00:55:19 +0100
 From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130814235929.GT2401@sirena.org.uk>
+Message-ID: <20130814235519.GS2401@sirena.org.uk>
 References: <20130814184643.GL2401@sirena.org.uk>
  <Pine.LNX.4.44L0.1308141514440.1701-100000@iolanthe.rowland.org>
- <A2CA0424C0A6F04399FB9E1CD98E030458DE9E22@US01WEMBX2.internal.synopsys.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/CHBEyLWSSL2QXIQ"
+	protocol="application/pgp-signature"; boundary="TegBI+r9roYdcP94"
 Content-Disposition: inline
-In-Reply-To: <A2CA0424C0A6F04399FB9E1CD98E030458DE9E22@US01WEMBX2.internal.synopsys.com>
+In-Reply-To: <Pine.LNX.4.44L0.1308141514440.1701-100000@iolanthe.rowland.org>
 Subject: Re: Non-enumerable devices on USB and other enumerable buses
 Sender: devicetree-owner@vger.kernel.org
-To: Paul Zimmerman <Paul.Zimmerman@synopsys.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 
---/CHBEyLWSSL2QXIQ
+--TegBI+r9roYdcP94
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 14, 2013 at 08:16:56PM +0000, Paul Zimmerman wrote:
+On Wed, Aug 14, 2013 at 03:39:20PM -0400, Alan Stern wrote:
 
-> Mark's original complaint about USB was this:
->=20
-> > the device).  The hub needs to be "plugged" into the SoC after the SoC
-> > USB controller has started with some GPIOs so we need to tell the system
-> > that the hub exists and needs to be synchronised with the USB controlle=
-r.
+> I don't see the point of all this.  Obviously the device can't be used
+> until it physically appears on the bus.  What benefit do you get from
+> registering it and making it available to userspace before that?
 
-> This sounds to me like the normal discovery mechanism for USB isn't getti=
-ng
-> kicked off because no Connect Status Change is being triggered on the root
-> port when the hub is brought online using the GPIOs. Maybe the port has
-> been runtime suspended because no device was attached originally?
+Two things.  One is that some devices have the ability to perform useful
+functions when powered down sufficiently that they can't run a complex
+bus, providing notification when they need to wake up (or being woken up
+if the power on comes from userspace).  The other is that then userspace
+can just see the device and start using it when it needs it without
+having to have a mechanism to discover that there's something there with
+manual power control.
 
-> So maybe the only thing needed for USB is a way to tell the parent port to
-> frob its port control bits to try to determine if a device is now present.
-> (set Wake on Connect Enable? Do a Port Reset? Cycle the Port Power bit if
-> possible?)
+This can also be an issue in cases where we compose multiple physical
+devices into composite ones for userspace (embedded audio and video do
+this a lot for example).  A given bit of hardware may only be useful in
+some circumstances.
 
-No, that's not required in this case - the case is the opposite one to
-the one you describe.  Host starting first then hub works fine, if the
-host does go into a low power mode it seems to notice the hub appearing
-just fine.  Hub then host fails for some reason which I don't know.
+> Well, basic "power this on" stuff is pretty much all we have discussed=20
+> in this thread so far.  What other sorts of things are going to be=20
+> needed for a general solution?
 
---/CHBEyLWSSL2QXIQ
+If you look elsewhere at the stuff I've been saying about Slimbus that's
+the nastiest case I'm aware of in terms of the bus itself - that's got
+the devices with low power modes that do useful things with the device
+(and bus) mostly powered off and things like that.  Things like activity
+detection of various kinds where the device is monitoring for activity
+in a low power state.
+
+I've also mentioned the devices that need platform data which is a part
+of this too; one reason for knowing that the device is there before it
+appears is so that we can pass platform data/DT/whatever to it.
+
+> Now I'm getting confused.  It seems we're talking about at least three
+> very different things here:
+
+>      A: Devising a mechanism for platform code to do things involving
+> 	devices that are dynamically registered on discoverable buses.
+
+If we need random platform code then we're failing, half the point of
+things like DT and ACPI is to avoid writing random board code.  we do
+want to pass data to devices for their drivers to use but having to have
+random bits of per board code would be really sad.
+
+>      B: Telling the subsystem and driver code for a discoverable bus
+> 	that a particular device is present before it has been=20
+> 	detected.
+
+>      C: Implementing a mechanism whereby drivers can take a device
+> 	off-line while still pretending to userspace that the device
+> 	is still present, by bringing it back on-line as needed.
+
+> I don't see much connection between these things.  Perhaps you can
+> explain in more detail.
+
+I think the solutions for these overlap so much they're the same thing.
+The situation we're in in in your case B is just the idle case for
+condition C - if we know about the device before it's been detected then
+if it's been removed we just go back into the situation where we know
+about it but it isn't powered.
+
+> (BTW, it's worth mentioning that C has already been done, in the form
+> of runtime PM.  The difference may be that you propose to take the
+> device so far off-line that it disappears from the bus.  AFAICS, this
+> would be purely a private matter to be arranged between the subsystem
+> and the driver; it does not need to be handled at the level of the
+> device-model or PM core.)
+
+Actually runtime PM is actually already used for completely offlining
+devices on buses that are too blind to notice - it's only an issue on
+buses that can notice insertion and removal and want to do something
+about it.  The use cases I'm describing already happen in mainline today
+for devices on the dumber buses.
+
+I think if we've got something which the hardware engineers can do on
+multiple buses then they probably will so we should have at least a
+pattern for how it's going to work over multiple buses rather than
+having to handle different models for different buses.  I'll try to have
+a think about what that pattern might be at some point (in my copious
+free time).
+
+--TegBI+r9roYdcP94
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.20 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSDBneAAoJELSic+t+oim9rasP/3tP6EPWBOv8CENfJ2Q4Co/O
-kAmnoODKiwsn6Ha+ifucsHp43f1PomVqjYhW6BDqO3yJApsXqbtQY1kQqjkEAQRm
-YDARUby0AbMQNRK8HnwnXWiDeJV3+1Ze6sI8/aqWnLtUfThjSswqxEQRVy1LgwXN
-6SB1HiQLDDvPvVRIXs84bbvG18KR3VaOmPS+ViqDePKE51jXHFXU5CjlEWzPziGB
-qhG6YWRpIIfxBpYm3mM5Z9Ze9aKo3oKzgP27gVMtRwVTE1Yr0UdbXO7OgO0xNkBk
-btWZfHOSE9i1gQ55maJxUilaRoUOgal2p2LylY2SGdZUx3vVh5ySRNJUPRn/Z5gU
-tghpYe3FejH+ZbYurUsv7teCnsHHWBs2Wme8kFK5QCtM2SORrr0HIgup7w2PvV4L
-kiZlXkJE/HapIrYZs0wAOYO0FE9hXE8RSnChOUMZa+anQcLH/OI3uvagZZjJ0VAh
-upqJpGf6ydwFdABpSDjqdihsDQsfns+IDQO6feHidPPCI7hSyxdAOa4HYQv7UQtV
-w45L6DdudUKW1aXQbu4iiNYL2muCuDwF3dE66Sm4a+ds3QSK6qobLxDPeVQeGZ4L
-5AZbejAvIRGK9r16w1fqBB4PGZes4QlGJKjOAbqR/UlxXkwt42IOujRM7zyMF7E1
-VSCItsT1BKBAc/I6hCY7
-=jJ3E
+iQIcBAEBAgAGBQJSDBjkAAoJELSic+t+oim9Xw4P/iLwgpfVn03B9OGPl8t0nxly
+cAPmm5qSC8dBWPFYDYIfxkg7tcwfM0CLEls7hDzo+2IOUlHlDWgpyIVdNXxgx+Q7
+OzrH9+ldA0oRXh2cp1DMGNVsmGVxPY1mmbCXB1OR33pls24jpuuUV3SZhHZqHyvB
+2lB3+uKuO1DGOg47y0aPFosA/w1wJSa38j0tsKUzpznOR9ztIADbNP9mrhUR0twd
+GTXpe4ZX0fRm8F8vnlhkPtR5MGXT43k61OcV83Q7m74FPOowWBcY2BGLhdmtvY9Z
+qa0YZSlEqI0nlXxxdWMrrQcrYdmvZWKoV4jCAnLdx7oe91t3qZ6FZXMhkyrbDAYW
+gDfEHe713DxBcD8ZvsPw0oqRVS/4vVTmv+zVzoXqNV1OUjkB2lp14IC3vLO26TA+
+5ZxqiPQlq58yfZyZyy3BYAe0AL3qHN4Gc7j3xnH2L5uZmv3gn/XFi/TrKPMCONVf
+HDsm4we9bGZf142cINmr2r3x0kYPyzV1oGgXPmIqvf+2o3VswHESgzB7IOGPKKzG
+oF5ZqdYG7D1Qj60meiDVK75tTc9WbASU79PpqBJLjD9vmX9H4jVf96fRIPYtG7kE
+3ACbJEolfL7XnQ/yPtSzHWvYzeET0YK0BADtPjd5a8P0KP10ZdCp4Hp+I66gZSla
+gWtSUt7iEZREJZMfVU5A
+=5cs0
 -----END PGP SIGNATURE-----
 
---/CHBEyLWSSL2QXIQ--
+--TegBI+r9roYdcP94--
