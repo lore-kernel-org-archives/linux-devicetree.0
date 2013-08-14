@@ -1,72 +1,39 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp.codeaurora.org ([198.145.11.231]:52689 "EHLO
-	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754803Ab3HAOKQ convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 10:10:16 -0400
-Subject: Re: [PATCH] hwspinlock/msm: Add support for Qualcomm MSM HW Mutex block
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-From: Kumar Gala <galak@codeaurora.org>
-In-Reply-To: <9EB1A821-7137-4812-B58A-20F669BCA7DD@codeaurora.org>
-Date: Thu, 1 Aug 2013 09:10:30 -0500
-Content-Transfer-Encoding: 8BIT
-Message-Id: <0A09DA0F-86B4-4961-88E2-64FA0A4D380D@codeaurora.org>
-References: <1375128719-23642-1-git-send-email-galak@codeaurora.org> <E9700EA7-7154-46C5-9258-03F030DF69F6@codeaurora.org> <20130729214035.GC8868@codeaurora.org> <9EB1A821-7137-4812-B58A-20F669BCA7DD@codeaurora.org>
+Received: from mail-pa0-f43.google.com ([209.85.220.43]:44785 "EHLO
+	mail-pa0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1759911Ab3HNLlg (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 07:41:36 -0400
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v3 3/4] ARM: dts: Update 5250 MFC node
+Date: Wed, 14 Aug 2013 17:11:36 +0530
+Message-Id: <1376480497-17572-4-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1376480497-17572-1-git-send-email-arun.kk@samsung.com>
+References: <1376480497-17572-1-git-send-email-arun.kk@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Eric Holmberg <eholmber@codeaurora.org>
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, k.debski@samsung.com, s.nawrocki@samsung.com, sachin.kamat@linaro.org, arun.kk@samsung.com
 List-ID: <devicetree@vger.kernel.org>
 
+The patch adds the MFC clock entry for the 5250 SoC.
 
-On Jul 29, 2013, at 4:54 PM, Kumar Gala wrote:
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+---
+ arch/arm/boot/dts/exynos5250.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
 
-> 
-> On Jul 29, 2013, at 4:40 PM, Stephen Boyd wrote:
-> 
->> On 07/29, Kumar Gala wrote:
->>>> diff --git a/Documentation/devicetree/bindings/arm/msm/tcsr-mutex.txt b/Documentation/devicetree/bindings/arm/msm/tcsr-mutex.txt
->>>> new file mode 100644
->>>> index 0000000..ddd6889
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/arm/msm/tcsr-mutex.txt
->> 
->> Maybe this should go under a new hwspinlock directory?
-> 
-> Will look for Ohad to comment on this.
-> 
->> 
->>>> @@ -0,0 +1,20 @@
->>>> +Qualcomm MSM Hardware Mutex Block:
->>>> +
->>>> +The hardware block provides mutexes utilized between different processors
->>>> +on the SoC as part of the communication protocol used by these processors.
->>>> +
->>>> +Required properties:
->>>> +- compatible: should be "qcom,tcsr-mutex"
->>>> +- reg: Should contain registers location and length of mutex registers
->>>> +- reg-names:
->>>> +	"mutex-base"  - string to identify mutex registers
->>>> +- qcom,num-locks: the number of locks/mutexes supported
->>>> +
->>>> +Example:
->>>> +
->>>> +	qcom,tcsr-mutex@fd484000 {
->> 
->> Maybe it should be hw-mutex@fd484000?
-> 
-> again, will look for Ohad to make some comment on this.
-> 
->>>> +		compatible = "qcom,tcsr-mutex";
->>>> +		reg = <0xfd484000 0x1000>;
->>>> +		reg-names = "mutex-base";
->>>> +		qcom,num-locks = <32>;
->>>> +	};
-
-Ohad, ping.
-
-- k
-
---
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 88589b7..7c7b0d2 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -176,6 +176,8 @@
+ 		reg = <0x11000000 0x10000>;
+ 		interrupts = <0 96 0>;
+ 		samsung,power-domain = <&pd_mfc>;
++		clocks = <&clock 266>;
++		clock-names = "mfc";
+ 	};
+ 
+ 	rtc {
+-- 
+1.7.9.5
 
