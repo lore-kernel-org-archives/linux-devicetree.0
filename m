@@ -1,80 +1,46 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-bk0-f52.google.com ([209.85.214.52]:51744 "EHLO
-	mail-bk0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754408Ab3HPWYg (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 16 Aug 2013 18:24:36 -0400
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [RFC 1/4] driver core: Register SoC bus after platform bus
-Date: Fri, 16 Aug 2013 22:39:20 +0200
-Message-Id: <1376685563-1053-2-git-send-email-treding@nvidia.com>
-In-Reply-To: <1376685563-1053-1-git-send-email-treding@nvidia.com>
-References: <1376685563-1053-1-git-send-email-treding@nvidia.com>
+Received: from mail-oa0-f46.google.com ([209.85.219.46]:51135 "EHLO
+	mail-oa0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758558Ab3HNTQT (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 15:16:19 -0400
+Received: by mail-oa0-f46.google.com with SMTP id l10so13723084oag.33
+        for <devicetree@vger.kernel.org>; Wed, 14 Aug 2013 12:16:19 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <52026F0B.6020705@wwwdotorg.org>
+References: <1374702089-2832-1-git-send-email-hanumant@codeaurora.org>
+	<CACRpkdZLFD-KAvZdUUvQKje3vAH1D0EJMW9PSK8VSp3Xs4eiGA@mail.gmail.com>
+	<51F82BCC.1080409@codeaurora.org>
+	<51F82E9F.9010309@wwwdotorg.org>
+	<51F853BF.9040007@codeaurora.org>
+	<51F8556A.1010300@wwwdotorg.org>
+	<51F85690.9060701@codeaurora.org>
+	<51F88BAC.2020001@wwwdotorg.org>
+	<51F969A5.5020405@codeaurora.org>
+	<51F97C47.5020202@wwwdotorg.org>
+	<51F9A934.404@codeaurora.org>
+	<52018A8D.70608@codeaurora.org>
+	<52026F0B.6020705@wwwdotorg.org>
+Date: Wed, 14 Aug 2013 21:16:18 +0200
+Message-ID: <CACRpkdbWmb2Kmj8NVBpJh4zumpq-=z=hFnRY9uWrARi5uSfwOQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: msm: Add support for MSM TLMM pinmux
+From: Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Hanumant Singh <hanumant@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, "Bird, Tim" <Tim.Bird@sonymobile.com>, ext Tony Lindgren <tony@atomide.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Instead of registering the SoC bus as a core initcall, call it directly
-from driver_init() to make it explicit when it is called. This is done
-in preparation for early device registration support.
+On Wed, Aug 7, 2013 at 6:00 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 08/06/2013 05:45 PM, Hanumant Singh wrote:
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/base/base.h |  5 +++++
- drivers/base/init.c |  1 +
- drivers/base/soc.c  | 11 +----------
- 3 files changed, 7 insertions(+), 10 deletions(-)
+>> Any comments on this?
+>
+> No. As I said, I personally want to see all the pingroups defined in the
+> pinctrl driver. But, if someone else acks/... the patches without it, I
+> probably won't nack it.
 
-diff --git a/drivers/base/base.h b/drivers/base/base.h
-index 2cbc677..77e0722 100644
---- a/drivers/base/base.h
-+++ b/drivers/base/base.h
-@@ -99,6 +99,11 @@ extern int hypervisor_init(void);
- static inline int hypervisor_init(void) { return 0; }
- #endif
- extern int platform_bus_init(void);
-+#ifdef CONFIG_SOC_BUS
-+extern int soc_bus_init(void);
-+#else
-+static inline int soc_bus_init(void) { return 0; }
-+#endif
- extern void cpu_dev_init(void);
- 
- struct kobject *virtual_device_parent(struct device *dev);
-diff --git a/drivers/base/init.c b/drivers/base/init.c
-index c16f0b8..a4c4090 100644
---- a/drivers/base/init.c
-+++ b/drivers/base/init.c
-@@ -31,6 +31,7 @@ void __init driver_init(void)
- 	 * core core pieces.
- 	 */
- 	platform_bus_init();
-+	soc_bus_init();
- 	cpu_dev_init();
- 	memory_dev_init();
- }
-diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-index 72b5e72..ea116f4 100644
---- a/drivers/base/soc.c
-+++ b/drivers/base/soc.c
-@@ -166,16 +166,7 @@ void soc_device_unregister(struct soc_device *soc_dev)
- 	device_unregister(&soc_dev->dev);
- }
- 
--static int __init soc_bus_register(void)
-+int __init soc_bus_init(void)
- {
- 	return bus_register(&soc_bus_type);
- }
--core_initcall(soc_bus_register);
--
--static void __exit soc_bus_unregister(void)
--{
--	ida_destroy(&soc_ida);
--
--	bus_unregister(&soc_bus_type);
--}
--module_exit(soc_bus_unregister);
--- 
-1.8.3.4
+I agree with Stephen that I want to see the groups defined in a
+(per-SoC) in-kernel driver, not as DT data.
 
+Yours,
+Linus Walleij
