@@ -1,53 +1,37 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from co9ehsobe004.messaging.microsoft.com ([207.46.163.27]:43973
-	"EHLO co9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754079Ab3HLLvq (ORCPT
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:51893 "EHLO
+	mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751014Ab3HNPTL (ORCPT
 	<rfc822;devicetree@vger.kernel.org>);
-	Mon, 12 Aug 2013 07:51:46 -0400
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v4 0/2] Add freescale S/PDIF CPU DAI and machine drivers
-Date: Mon, 12 Aug 2013 20:01:08 +0800
-Message-ID: <1376308870-14232-1-git-send-email-b42378@freescale.com>
+	Wed, 14 Aug 2013 11:19:11 -0400
+Date: Wed, 14 Aug 2013 17:18:51 +0200 (CEST)
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: question about netif_rx
+In-Reply-To: <CAKoUAr==Ex=XAJe4=4R+BY5QaNXKMjM4EsHYbppbXOyROi2NAw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.02.1308141713290.2257@hadrien>
+References: <alpine.DEB.2.02.1308111151210.2072@localhost6.localdomain6> <20130811155640.GA10070@electric-eye.fr.zoreil.com> <alpine.DEB.2.02.1308111811440.2072@localhost6.localdomain6> <20130813052036.GA11640@electric-eye.fr.zoreil.com>
+ <alpine.DEB.2.02.1308130828550.1997@localhost6.localdomain6> <CAJJAcocQ59Kc9a1b=jrNSc1akLLN_74yKANMEmLVmvxoRjX4hw@mail.gmail.com> <20130813204131.GA4696@electric-eye.fr.zoreil.com> <CAKoUAr==Ex=XAJe4=4R+BY5QaNXKMjM4EsHYbppbXOyROi2NAw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de
-Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com
+To: Rami Rosen <roszenrami@gmail.com>
+Cc: Francois Romieu <romieu@fr.zoreil.com>, David Shwatrz <dshwatrz@gmail.com>, Julia Lawall <julia.lawall@lip6.fr>, grant.likely@linaro.org, rob.herring@calxeda.com, Netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Changelog:
-v3->v4:
- * Use regmap for CPU DAI driver.
- * Use individual clock source for 32KHz, 44KHz, 48KHz playback.
- * Determine clock source configuration from 'clocks' entry.
- * Added imx53 to compatible list, merged imx6q and imx6dl in the list.
- * Improve the algorism of reverse_bits().
- * Dropped the unneeded clk_put().
-v2->v3:
- * Removed a wrong tag from the commit of patch-1.
-v1->v2:
- * Dropped one applied patch for spdif dummy codec drivers.
- * Use generic DMA DT binding.
- * Let spdif controller driver calculate the clock div.
- * Added one optional clock source for spdif tx.
- * Reivsed documentation accordingly.
+On Wed, 14 Aug 2013, Rami Rosen wrote:
 
-Nicolin Chen (2):
-  ASoC: fsl: Add S/PDIF CPU DAI driver
-  ASoC: fsl: Add S/PDIF machine driver
+> Hi,
+> BTW, this is not the only NAPI issue here. When looking into cleanup
+> of resources in this driver, a call to netif_napi_del() is missing
+> (though there is a call to  napi_disable(), which is not enough for
+> proper cleanup).
 
- .../devicetree/bindings/sound/fsl,spdif.txt        |  100 ++
- .../devicetree/bindings/sound/imx-audio-spdif.txt  |   29 +
- sound/soc/fsl/Kconfig                              |   14 +
- sound/soc/fsl/Makefile                             |    4 +
- sound/soc/fsl/fsl_spdif.c                          | 1350 ++++++++++++++++++++
- sound/soc/fsl/fsl_spdif.h                          |  223 ++++
- sound/soc/fsl/imx-spdif.c                          |  134 ++
- 7 files changed, 1854 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.txt
- create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
- create mode 100644 sound/soc/fsl/fsl_spdif.c
- create mode 100644 sound/soc/fsl/fsl_spdif.h
- create mode 100644 sound/soc/fsl/imx-spdif.c
+Actually, netif_napi_del seems to be quite underused.  At least
+approximately, I would assume that every file that uses netif_napi_add
+should use netif_napi_del at least once, and possible more times.  But I
+find 118 .c files that use netif_napi_add, and only 35 that use
+netif_napi_del.
 
+Are there some cases where it might not be needed?
 
+julia
