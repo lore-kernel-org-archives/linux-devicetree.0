@@ -1,503 +1,98 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: [PATCH v2 2/2] drm/bridge: Add PTN3460 bridge driver
-Date: Wed, 14 Aug 2013 16:47:38 -0400
-Message-ID: <1376513258-25703-3-git-send-email-seanpaul@chromium.org>
-References: <1376513258-25703-1-git-send-email-seanpaul@chromium.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1376513258-25703-1-git-send-email-seanpaul@chromium.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org, robdclark@gmail.com, daniel@ffwll.ch, airlied@linux.ie, marcheu@chromium.org
-Cc: Sean Paul <seanpaul@chromium.org>
+From: Russ Dill <Russ.Dill@ti.com>
+Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
+Date: Wed, 14 Aug 2013 15:21:20 -0700
+Message-ID: <CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
+References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
+	<1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>
+Cc: Kevin Hilman <khilman@deeprootsystems.com>, devicetree@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a drm_bridge driver for the PTN3460 DisplayPort to LVDS
-bridge chip.
+On Wed, Aug 14, 2013 at 6:38 AM, Jan L=C3=BCbbe <jlu@pengutronix.de> wr=
+ote:
+> On Tue, 2013-08-13 at 15:20 -0700, Russ Dill wrote:
+>> The purpose and method of executing these sequences is left up to ea=
+ch
+>> platform. In the case of the am33xx, the CM3 firmware writes out the
+>> simple I2C sequences.
+>>
+>> Each sequence is a series of I2C write commands. The first byte is t=
+he
+>> length of the write, the second byte the I2C device to address, and
+>> the following bytes are the message.
+>
+>>         /* Set OPP100 (1.10V) for VDD core */
+>>         wake_sequence =3D /bits/ 8 <
+>>                 0x02 0x2d 0x25 0x2b /* Set VDD2 to 1.1V */
+>>         >;
+>>
+>>         tps: tps@2d {
+>>                 reg =3D <0x2d>;
+>>         };
+>
+>> In the above example, the sequence "0x25 0x1f" is written to the I2C
+>> device at address 0x2d (the TPS65910 PMIC). The PMIC interprets that
+>> as a write to a register at address 0x25.
+>
+>> I'd really like to get some feedback on the devicetree bindings.
+>
+> Shouldn't the TPS driver know how to generate this sequence? It seems
+> fragile to do voltage adjustments behind the back of the regulator
+> framework and the TPS driver. The wake-sequence values should match t=
+he
+> (in-memory) regulator configuration on resume (which may have been
+> changed by DVFS).
 
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
----
- .../devicetree/bindings/drm/bridge/ptn3460.txt     |  27 ++
- drivers/gpu/drm/Kconfig                            |   2 +
- drivers/gpu/drm/Makefile                           |   1 +
- drivers/gpu/drm/bridge/Kconfig                     |   5 +
- drivers/gpu/drm/bridge/Makefile                    |   3 +
- drivers/gpu/drm/bridge/ptn3460.c                   | 349 +++++++++++++++++++++
- include/drm/bridge/ptn3460.h                       |  36 +++
- 7 files changed, 423 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
- create mode 100644 drivers/gpu/drm/bridge/Kconfig
- create mode 100644 drivers/gpu/drm/bridge/Makefile
- create mode 100644 drivers/gpu/drm/bridge/ptn3460.c
- create mode 100644 include/drm/bridge/ptn3460.h
+The sequence is both PMIC specific and board specific. Additionally,
+the PMICs used aren't am335x specific. It would be nice to have the
+regulator framework and the driver write all this out, but the
+sequence is written out by the Cortex-M3 processor running some PM
+firmware. Even if the code was changed to run on the A8, it'd have to
+run from a small piece of SRAM.
 
-diff --git a/Documentation/devicetree/bindings/drm/bridge/ptn3460.txt b/Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
-new file mode 100644
-index 0000000..c1cd329
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
-@@ -0,0 +1,27 @@
-+ptn3460-bridge bindings
-+
-+Required properties:
-+	- compatible: "nxp,ptn3460"
-+	- reg: i2c address of the bridge
-+	- powerdown-gpio: OF device-tree gpio specification
-+	- reset-gpio: OF device-tree gpio specification
-+	- edid-emulation: The EDID emulation entry to use
-+		+-------+------------+------------------+
-+		| Value | Resolution | Description      |
-+		|   0   |  1024x768  | NXP Generic      |
-+		|   1   |  1920x1080 | NXP Generic      |
-+		|   2   |  1920x1080 | NXP Generic      |
-+		|   3   |  1600x900  | Samsung LTM200KT |
-+		|   4   |  1920x1080 | Samsung LTM230HT |
-+		|   5   |  1366x768  | NXP Generic      |
-+		|   6   |  1600x900  | ChiMei M215HGE   |
-+		+-------+------------+------------------+
-+
-+Example:
-+	ptn3460-bridge@20 {
-+		compatible = "nxp,ptn3460";
-+		reg = <0x20>;
-+		powerdown-gpio = <&gpy2 5 1 0 0>;
-+		reset-gpio = <&gpx1 5 1 0 0>;
-+		edid-emulation = <5>;
-+	};
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index a7c54c8..6105a34 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -223,3 +223,5 @@ source "drivers/gpu/drm/omapdrm/Kconfig"
- source "drivers/gpu/drm/tilcdc/Kconfig"
- 
- source "drivers/gpu/drm/qxl/Kconfig"
-+
-+source "drivers/gpu/drm/bridge/Kconfig"
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index d943b94..c2ae293 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -55,3 +55,4 @@ obj-$(CONFIG_DRM_OMAP)	+= omapdrm/
- obj-$(CONFIG_DRM_TILCDC)	+= tilcdc/
- obj-$(CONFIG_DRM_QXL) += qxl/
- obj-y			+= i2c/
-+obj-y			+= bridge/
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-new file mode 100644
-index 0000000..27a83b5
---- /dev/null
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -0,0 +1,5 @@
-+config DRM_PTN3460
-+	tristate "PTN3460 DP/LVDS bridge"
-+	depends on DRM && I2C
-+	---help---
-+	  Adds the driver for the NXP PTN3460 DP/LVDS bridge chip.
-diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-new file mode 100644
-index 0000000..b4733e1
---- /dev/null
-+++ b/drivers/gpu/drm/bridge/Makefile
-@@ -0,0 +1,3 @@
-+ccflags-y := -Iinclude/drm
-+
-+obj-$(CONFIG_DRM_PTN3460) += ptn3460.o
-diff --git a/drivers/gpu/drm/bridge/ptn3460.c b/drivers/gpu/drm/bridge/ptn3460.c
-new file mode 100644
-index 0000000..a9e5c1a
---- /dev/null
-+++ b/drivers/gpu/drm/bridge/ptn3460.c
-@@ -0,0 +1,349 @@
-+/*
-+ * NXP PTN3460 DP/LVDS bridge driver
-+ *
-+ * Copyright (C) 2013 Google, Inc.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/i2c.h>
-+#include <linux/gpio.h>
-+#include <linux/delay.h>
-+
-+#include "drmP.h"
-+#include "drm_edid.h"
-+#include "drm_crtc.h"
-+#include "drm_crtc_helper.h"
-+
-+#include "bridge/ptn3460.h"
-+
-+#define PTN3460_EDID_ADDR			0x0
-+#define PTN3460_EDID_EMULATION_ADDR		0x84
-+#define PTN3460_EDID_ENABLE_EMULATION		0
-+#define PTN3460_EDID_EMULATION_SELECTION	1
-+#define PTN3460_EDID_SRAM_LOAD_ADDR		0x85
-+
-+struct ptn3460_bridge {
-+	struct drm_connector connector;
-+	struct i2c_client *client;
-+	struct drm_encoder *encoder;
-+	struct drm_bridge *bridge;
-+	struct edid *edid;
-+	int gpio_pd_n;
-+	int gpio_rst_n;
-+	u32 edid_emulation;
-+	bool enabled;
-+};
-+
-+static int ptn3460_read_bytes(struct ptn3460_bridge *ptn_bridge, char addr,
-+		u8 *buf, int len)
-+{
-+	int ret;
-+
-+	ret = i2c_master_send(ptn_bridge->client, &addr, 1);
-+	if (ret <= 0) {
-+		DRM_ERROR("Failed to send i2c command, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = i2c_master_recv(ptn_bridge->client, buf, len);
-+	if (ret <= 0) {
-+		DRM_ERROR("Failed to recv i2c data, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ptn3460_write_byte(struct ptn3460_bridge *ptn_bridge, char addr,
-+		char val)
-+{
-+	int ret;
-+	char buf[2];
-+
-+	buf[0] = addr;
-+	buf[1] = val;
-+
-+	ret = i2c_master_send(ptn_bridge->client, buf, ARRAY_SIZE(buf));
-+	if (ret <= 0) {
-+		DRM_ERROR("Failed to send i2c command, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ptn3460_select_edid(struct ptn3460_bridge *ptn_bridge)
-+{
-+	int ret;
-+	char val;
-+
-+	/* Load the selected edid into SRAM (accessed at PTN3460_EDID_ADDR) */
-+	ret = ptn3460_write_byte(ptn_bridge, PTN3460_EDID_SRAM_LOAD_ADDR,
-+			ptn_bridge->edid_emulation);
-+	if (ret) {
-+		DRM_ERROR("Failed to transfer edid to sram, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Enable EDID emulation and select the desired EDID */
-+	val = 1 << PTN3460_EDID_ENABLE_EMULATION |
-+		ptn_bridge->edid_emulation << PTN3460_EDID_EMULATION_SELECTION;
-+
-+	ret = ptn3460_write_byte(ptn_bridge, PTN3460_EDID_EMULATION_ADDR, val);
-+	if (ret) {
-+		DRM_ERROR("Failed to write edid value, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void ptn3460_pre_enable(struct drm_bridge *bridge)
-+{
-+	struct ptn3460_bridge *ptn_bridge = bridge->driver_private;
-+	int ret;
-+
-+	if (ptn_bridge->enabled)
-+		return;
-+
-+	if (gpio_is_valid(ptn_bridge->gpio_pd_n))
-+		gpio_set_value(ptn_bridge->gpio_pd_n, 1);
-+
-+	if (gpio_is_valid(ptn_bridge->gpio_rst_n)) {
-+		gpio_set_value(ptn_bridge->gpio_rst_n, 0);
-+		udelay(10);
-+		gpio_set_value(ptn_bridge->gpio_rst_n, 1);
-+	}
-+
-+	/*
-+	 * There's a bug in the PTN chip where it falsely asserts hotplug before
-+	 * it is fully functional. We're forced to wait for the maximum start up
-+	 * time specified in the chip's datasheet to make sure we're really up.
-+	 */
-+	msleep(90);
-+
-+	ret = ptn3460_select_edid(ptn_bridge);
-+	if (ret)
-+		DRM_ERROR("Select edid failed ret=%d\n", ret);
-+
-+	ptn_bridge->enabled = true;
-+}
-+
-+static void ptn3460_enable(struct drm_bridge *bridge)
-+{
-+}
-+
-+static void ptn3460_disable(struct drm_bridge *bridge)
-+{
-+	struct ptn3460_bridge *ptn_bridge = bridge->driver_private;
-+
-+	if (!ptn_bridge->enabled)
-+		return;
-+
-+	ptn_bridge->enabled = false;
-+
-+	if (gpio_is_valid(ptn_bridge->gpio_rst_n))
-+		gpio_set_value(ptn_bridge->gpio_rst_n, 1);
-+
-+	if (gpio_is_valid(ptn_bridge->gpio_pd_n))
-+		gpio_set_value(ptn_bridge->gpio_pd_n, 0);
-+}
-+
-+static void ptn3460_post_disable(struct drm_bridge *bridge)
-+{
-+}
-+
-+void ptn3460_bridge_destroy(struct drm_bridge *bridge)
-+{
-+	struct ptn3460_bridge *ptn_bridge = bridge->driver_private;
-+
-+	drm_bridge_cleanup(bridge);
-+	if (gpio_is_valid(ptn_bridge->gpio_pd_n))
-+		gpio_free(ptn_bridge->gpio_pd_n);
-+	if (gpio_is_valid(ptn_bridge->gpio_rst_n))
-+		gpio_free(ptn_bridge->gpio_rst_n);
-+	/* Nothing else to free, we've got devm allocated memory */
-+}
-+
-+struct drm_bridge_funcs ptn3460_bridge_funcs = {
-+	.pre_enable = ptn3460_pre_enable,
-+	.enable = ptn3460_enable,
-+	.disable = ptn3460_disable,
-+	.post_disable = ptn3460_post_disable,
-+	.destroy = ptn3460_bridge_destroy,
-+};
-+
-+int ptn3460_get_modes(struct drm_connector *connector)
-+{
-+	struct ptn3460_bridge *ptn_bridge;
-+	u8 *edid;
-+	int ret, num_modes;
-+	bool power_off;
-+
-+	ptn_bridge = container_of(connector, struct ptn3460_bridge, connector);
-+
-+	if (ptn_bridge->edid)
-+		return drm_add_edid_modes(connector, ptn_bridge->edid);
-+
-+	power_off = !ptn_bridge->enabled;
-+	ptn3460_pre_enable(ptn_bridge->bridge);
-+
-+	edid = kmalloc(EDID_LENGTH, GFP_KERNEL);
-+	if (!edid) {
-+		DRM_ERROR("Failed to allocate edid\n");
-+		return 0;
-+	}
-+
-+	ret = ptn3460_read_bytes(ptn_bridge, PTN3460_EDID_ADDR, edid,
-+			EDID_LENGTH);
-+	if (ret) {
-+		kfree(edid);
-+		num_modes = 0;
-+		goto out;
-+	}
-+
-+	ptn_bridge->edid = (struct edid *)edid;
-+	drm_mode_connector_update_edid_property(connector, ptn_bridge->edid);
-+
-+	num_modes = drm_add_edid_modes(connector, ptn_bridge->edid);
-+
-+out:
-+	if (power_off)
-+		ptn3460_disable(ptn_bridge->bridge);
-+
-+	return num_modes;
-+}
-+
-+static int ptn3460_mode_valid(struct drm_connector *connector,
-+		struct drm_display_mode *mode)
-+{
-+	return MODE_OK;
-+}
-+
-+struct drm_encoder *ptn3460_best_encoder(struct drm_connector *connector)
-+{
-+	struct ptn3460_bridge *ptn_bridge;
-+
-+	ptn_bridge = container_of(connector, struct ptn3460_bridge, connector);
-+
-+	return ptn_bridge->encoder;
-+}
-+
-+struct drm_connector_helper_funcs ptn3460_connector_helper_funcs = {
-+	.get_modes = ptn3460_get_modes,
-+	.mode_valid = ptn3460_mode_valid,
-+	.best_encoder = ptn3460_best_encoder,
-+};
-+
-+enum drm_connector_status ptn3460_detect(struct drm_connector *connector,
-+		bool force)
-+{
-+	return connector_status_connected;
-+}
-+
-+void ptn3460_connector_destroy(struct drm_connector *connector)
-+{
-+	drm_connector_cleanup(connector);
-+}
-+
-+struct drm_connector_funcs ptn3460_connector_funcs = {
-+	.dpms = drm_helper_connector_dpms,
-+	.fill_modes = drm_helper_probe_single_connector_modes,
-+	.detect = ptn3460_detect,
-+	.destroy = ptn3460_connector_destroy,
-+};
-+
-+int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
-+		struct i2c_client *client, struct device_node *node)
-+{
-+	int ret;
-+	struct drm_bridge *bridge;
-+	struct ptn3460_bridge *ptn_bridge;
-+
-+	bridge = devm_kzalloc(dev->dev, sizeof(*bridge), GFP_KERNEL);
-+	if (!bridge) {
-+		DRM_ERROR("Failed to allocate drm bridge\n");
-+		return -ENOMEM;
-+	}
-+
-+	ptn_bridge = devm_kzalloc(dev->dev, sizeof(*ptn_bridge), GFP_KERNEL);
-+	if (!ptn_bridge) {
-+		DRM_ERROR("Failed to allocate ptn bridge\n");
-+		return -ENOMEM;
-+	}
-+
-+	ptn_bridge->client = client;
-+	ptn_bridge->encoder = encoder;
-+	ptn_bridge->bridge = bridge;
-+	ptn_bridge->gpio_pd_n = of_get_named_gpio(node, "powerdown-gpio", 0);
-+	if (gpio_is_valid(ptn_bridge->gpio_pd_n)) {
-+		ret = gpio_request_one(ptn_bridge->gpio_pd_n,
-+				GPIOF_OUT_INIT_HIGH, "PTN3460_PD_N");
-+		if (ret) {
-+			DRM_ERROR("Request powerdown-gpio failed (%d)\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	ptn_bridge->gpio_rst_n = of_get_named_gpio(node, "reset-gpio", 0);
-+	if (gpio_is_valid(ptn_bridge->gpio_rst_n)) {
-+		/*
-+		 * Request the reset pin low to avoid the bridge being
-+		 * initialized prematurely
-+		 */
-+		ret = gpio_request_one(ptn_bridge->gpio_rst_n,
-+				GPIOF_OUT_INIT_LOW, "PTN3460_RST_N");
-+		if (ret) {
-+			DRM_ERROR("Request reset-gpio failed (%d)\n", ret);
-+			gpio_free(ptn_bridge->gpio_pd_n);
-+			return ret;
-+		}
-+	}
-+
-+	ret = of_property_read_u32(node, "edid-emulation",
-+			&ptn_bridge->edid_emulation);
-+	if (ret) {
-+		DRM_ERROR("Can't read edid emulation value\n");
-+		goto err;
-+	}
-+
-+	ret = drm_bridge_init(dev, bridge, &ptn3460_bridge_funcs);
-+	if (ret) {
-+		DRM_ERROR("Failed to initialize bridge with drm\n");
-+		goto err;
-+	}
-+
-+	bridge->driver_private = ptn_bridge;
-+	encoder->bridge = bridge;
-+
-+	ret = drm_connector_init(dev, &ptn_bridge->connector,
-+			&ptn3460_connector_funcs, DRM_MODE_CONNECTOR_LVDS);
-+	if (ret) {
-+		DRM_ERROR("Failed to initialize connector with drm\n");
-+		goto err;
-+	}
-+	drm_connector_helper_add(&ptn_bridge->connector,
-+			&ptn3460_connector_helper_funcs);
-+	drm_sysfs_connector_add(&ptn_bridge->connector);
-+	drm_mode_connector_attach_encoder(&ptn_bridge->connector, encoder);
-+
-+	return 0;
-+
-+err:
-+	if (gpio_is_valid(ptn_bridge->gpio_pd_n))
-+		gpio_free(ptn_bridge->gpio_pd_n);
-+	if (gpio_is_valid(ptn_bridge->gpio_rst_n))
-+		gpio_free(ptn_bridge->gpio_rst_n);
-+	return ret;
-+}
-diff --git a/include/drm/bridge/ptn3460.h b/include/drm/bridge/ptn3460.h
-new file mode 100644
-index 0000000..157ffa1
---- /dev/null
-+++ b/include/drm/bridge/ptn3460.h
-@@ -0,0 +1,36 @@
-+/*
-+ * Copyright (C) 2013 Google, Inc.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _DRM_BRIDGE_PTN3460_H_
-+#define _DRM_BRIDGE_PTN3460_H_
-+
-+struct drm_device;
-+struct drm_encoder;
-+struct i2c_client;
-+struct device_node;
-+
-+#ifdef CONFIG_DRM_PTN3460
-+
-+int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
-+		struct i2c_client *client, struct device_node *node);
-+#else
-+
-+int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
-+		struct i2c_client *client, struct device_node *node)
-+{
-+	return 0;
-+}
-+
-+#endif
-+
-+#endif
--- 
-1.8.3
+As far as DVFS, I'm not aware of any DVFS implementations that muck
+with VDD CORE.
 
+> The CM3 driver needs to figure out where the core regulator is connec=
+ted
+> using using either DT or the regulator framework and ask the TPS (via=
+ a
+> new interface) for register writes for sleep/wake sequences. Then tho=
+se
+> sequences will actually match the correct voltages configured using
+> DT/DVFS.
+
+That seems like it'd add a lot of complexity to the regulator
+subsystem, as well as all the PMIC and other I2C regulators that any
+users of these device tree properties may end up using for not a lot
+of gain. There would be two separate code paths for any used
+I2C regulator or PMIC for setting voltages.
+
+> Regards,
+> Jan
+> --
+> Pengutronix e.K.                           |                         =
+    |
+> Industrial Linux Solutions                 | http://www.pengutronix.d=
+e/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0=
+    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5=
+555 |
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
