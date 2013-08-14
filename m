@@ -1,334 +1,197 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56297 "EHLO mail.gnudd.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932404Ab3HGKXT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:23:19 -0400
-Date: Wed, 7 Aug 2013 12:16:41 +0200
-From: Alessandro Rubini <rubini@gnudd.com>
-Subject: [PATCH 02/26] DMA: PL330: use prefix in reg names to build under
- x86
-Message-ID: <68d6ec88a6d5ce4f9034b00a5dac4b2a5e22d849.1375867291.git.rubini@gnudd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+Received: from smtp97.ord1c.emailsrvr.com ([108.166.43.97]:43955 "EHLO
+	smtp97.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754413Ab3HNSXf (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Wed, 14 Aug 2013 14:23:35 -0400
+From: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Subject: [PATCH v4 2/3] sata, highbank: set tx_atten override bits
+Date: Wed, 14 Aug 2013 13:23:31 -0500
+Message-Id: <1376504612-17340-2-git-send-email-mark.langsdorf@calxeda.com>
+In-Reply-To: <1376504612-17340-1-git-send-email-mark.langsdorf@calxeda.com>
+References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
+ <1376504612-17340-1-git-send-email-mark.langsdorf@calxeda.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Davide Ciminaghi <ciminaghi@gnudd.com>, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com, sergei.shtylyov@cogentembedded.com
+Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This driver would not compile if ARM_AMBA is selected under x86,
-because "CS" and "DS" are already defined there.  But AMBA
-is used in the x86 world by a PCI-to-AMBA bridge, to be submitted.
+Some board designs do not drive the SATA transmit lines within the
+specification. The ECME can provide override settings, on a per board
+basis, to bring the transmit lines within spec. Read those settings
+from the DTB and program them in.
 
-The patch just adds the "PL330_" prefix to all registers,
-so it can be built by randomconfig after ARM_AMBA appears within x86.
-No other technical changes have been performed.
-The patch was build-tested only.
+At the time of submission, no production hardware requires this patch.
 
-Signed-off-by: Alessandro Rubini <rubini@gnudd.com>
-Link: http://lkml.kernel.org/r/1355146956-6009-2-git-send-email-ciminaghi@gnudd.com
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
-[Davide Ciminaghi <ciminaghi@gnudd.com>: only registers prefixed]
-Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
-Acked-by: Jassi Brar <jassisinghbrar@gmail.com>
-Signed-off-by: H. Peter Anvin <hpa@linux.intel.com>
-
-Conflicts:
-
-	drivers/dma/pl330.c
+Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
 ---
- drivers/dma/pl330.c |  107 ++++++++++++++++++++++++++-------------------------
- 1 files changed, 54 insertions(+), 53 deletions(-)
+Changes from v3
+	Edited the commit message to describe the hardware impact.
+	Renumbered the patch series since the first two got accepted.
+Changes from v2
+	None.
+Changes from v1
+	Clarified that the array is a u32 array.
+	Added an example in the bindings.
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 4ad13eb..da67bee 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -71,7 +71,7 @@ enum pl330_reqtype {
+ .../devicetree/bindings/ata/sata_highbank.txt      |  4 ++
+ drivers/ata/sata_highbank.c                        | 58 +++++++++++++++++-----
+ 2 files changed, 49 insertions(+), 13 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
+index e7a6f28..c84833e 100644
+--- a/Documentation/devicetree/bindings/ata/sata_highbank.txt
++++ b/Documentation/devicetree/bindings/ata/sata_highbank.txt
+@@ -20,6 +20,9 @@ Optional properties:
+ 			indicator lights using the indicated GPIOs
+ - calxeda,led-order : a u32 array that map port numbers to offsets within the
+ 			SGPIO bitstream.
++- calxeda,tx-atten  : a u32 array that contains TX attenuation override
++			codes, one per port. The upper 3 bytes are always
++			0 and thus ignored.
+ 
+ Example:
+         sata@ffe08000 {
+@@ -31,4 +34,5 @@ Example:
+ 					&combophy0 2 &combophy0 3>;
+ 		calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
+ 		calxeda,led-order = <4 0 1 2 3>;
++		calxeda,tx-atten = <0xff 22 0xff 0xff 23>;
+         };
+diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
+index 8b40025..a7c8038 100644
+--- a/drivers/ata/sata_highbank.c
++++ b/drivers/ata/sata_highbank.c
+@@ -46,14 +46,19 @@
+ #define CR_BUSY				0x0001
+ #define CR_START			0x0001
+ #define CR_WR_RDN			0x0002
++#define CPHY_TX_INPUT_STS		0x2001
+ #define CPHY_RX_INPUT_STS		0x2002
+-#define CPHY_SATA_OVERRIDE	 	0x4000
+-#define CPHY_OVERRIDE			0x2005
++#define CPHY_SATA_TX_OVERRIDE		0x8000
++#define CPHY_SATA_RX_OVERRIDE	 	0x4000
++#define CPHY_TX_OVERRIDE		0x2004
++#define CPHY_RX_OVERRIDE		0x2005
+ #define SPHY_LANE			0x100
+ #define SPHY_HALF_RATE			0x0001
+ #define CPHY_SATA_DPLL_MODE		0x0700
+ #define CPHY_SATA_DPLL_SHIFT		8
+ #define CPHY_SATA_DPLL_RESET		(1 << 11)
++#define CPHY_SATA_TX_ATTEN		0x1c00
++#define CPHY_SATA_TX_ATTEN_SHIFT	10
+ #define CPHY_PHY_COUNT			6
+ #define CPHY_LANE_COUNT			4
+ #define CPHY_PORT_COUNT			(CPHY_PHY_COUNT * CPHY_LANE_COUNT)
+@@ -66,6 +71,7 @@ struct phy_lane_info {
+ 	void __iomem *phy_base;
+ 	u8 lane_mapping;
+ 	u8 phy_devs;
++	u8 tx_atten;
  };
+ static struct phy_lane_info port_data[CPHY_PORT_COUNT];
  
- /* Register and Bit field Definitions */
--#define DS			0x0
-+#define PL330_DS		0x0
- #define DS_ST_STOP		0x0
- #define DS_ST_EXEC		0x1
- #define DS_ST_CMISS		0x2
-@@ -85,33 +85,33 @@ enum pl330_reqtype {
- #define DS_ST_FLTCMP		0xe
- #define DS_ST_FAULT		0xf
+@@ -76,7 +82,6 @@ static DEFINE_SPINLOCK(sgpio_lock);
+ #define SGPIO_PINS			3
+ #define SGPIO_PORTS			8
  
--#define DPC			0x4
--#define INTEN			0x20
--#define ES			0x24
--#define INTSTATUS		0x28
--#define INTCLR			0x2c
--#define FSM			0x30
--#define FSC			0x34
--#define FTM			0x38
-+#define PL330_DPC		0x4
-+#define PL330_INTEN		0x20
-+#define PL330_ES		0x24
-+#define PL330_INTSTATUS		0x28
-+#define PL330_INTCLR		0x2c
-+#define PL330_FSM		0x30
-+#define PL330_FSC		0x34
-+#define PL330_FTM		0x38
+-/* can be cast as an ahci_host_priv for compatibility with most functions */
+ struct ecx_plat_data {
+ 	u32		n_ports;
+ 	unsigned	sgpio_gpio[SGPIO_PINS];
+@@ -259,8 +264,27 @@ static void highbank_cphy_disable_overrides(u8 sata_port)
+ 	if (unlikely(port_data[sata_port].phy_base == NULL))
+ 		return;
+ 	tmp = combo_phy_read(sata_port, CPHY_RX_INPUT_STS + lane * SPHY_LANE);
+-	tmp &= ~CPHY_SATA_OVERRIDE;
+-	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
++	tmp &= ~CPHY_SATA_RX_OVERRIDE;
++	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
++}
++
++static void cphy_override_tx_attenuation(u8 sata_port, u32 val)
++{
++	u8 lane = port_data[sata_port].lane_mapping;
++	u32 tmp;
++
++	if (val & 0x8)
++		return;
++
++	tmp = combo_phy_read(sata_port, CPHY_TX_INPUT_STS + lane * SPHY_LANE);
++	tmp &= ~CPHY_SATA_TX_OVERRIDE;
++	combo_phy_write(sata_port, CPHY_TX_OVERRIDE + lane * SPHY_LANE, tmp);
++
++	tmp |= CPHY_SATA_TX_OVERRIDE;
++	combo_phy_write(sata_port, CPHY_TX_OVERRIDE + lane * SPHY_LANE, tmp);
++
++	tmp |= (val << CPHY_SATA_TX_ATTEN_SHIFT) & CPHY_SATA_TX_ATTEN;
++	combo_phy_write(sata_port, CPHY_TX_OVERRIDE + lane * SPHY_LANE, tmp);
+ }
  
- #define _FTC			0x40
--#define FTC(n)			(_FTC + (n)*0x4)
-+#define PL330_FTC(n)		(_FTC + (n)*0x4)
+ static void cphy_override_rx_mode(u8 sata_port, u32 val)
+@@ -268,21 +292,21 @@ static void cphy_override_rx_mode(u8 sata_port, u32 val)
+ 	u8 lane = port_data[sata_port].lane_mapping;
+ 	u32 tmp;
+ 	tmp = combo_phy_read(sata_port, CPHY_RX_INPUT_STS + lane * SPHY_LANE);
+-	tmp &= ~CPHY_SATA_OVERRIDE;
+-	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
++	tmp &= ~CPHY_SATA_RX_OVERRIDE;
++	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
  
- #define _CS			0x100
--#define CS(n)			(_CS + (n)*0x8)
-+#define PL330_CS(n)		(_CS + (n)*0x8)
- #define CS_CNS			(1 << 21)
+-	tmp |= CPHY_SATA_OVERRIDE;
+-	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
++	tmp |= CPHY_SATA_RX_OVERRIDE;
++	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
  
- #define _CPC			0x104
--#define CPC(n)			(_CPC + (n)*0x8)
-+#define PL330_CPC(n)		(_CPC + (n)*0x8)
+ 	tmp &= ~CPHY_SATA_DPLL_MODE;
+ 	tmp |= val << CPHY_SATA_DPLL_SHIFT;
+-	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
++	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
  
- #define _SA			0x400
--#define SA(n)			(_SA + (n)*0x20)
-+#define PL330_SA(n)		(_SA + (n)*0x20)
+ 	tmp |= CPHY_SATA_DPLL_RESET;
+-	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
++	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
  
- #define _DA			0x404
--#define DA(n)			(_DA + (n)*0x20)
-+#define PL330_DA(n)		(_DA + (n)*0x20)
+ 	tmp &= ~CPHY_SATA_DPLL_RESET;
+-	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
++	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
  
- #define _CC			0x408
--#define CC(n)			(_CC + (n)*0x20)
-+#define PL330_CC(n)		(_CC + (n)*0x20)
+ 	msleep(15);
+ }
+@@ -299,16 +323,20 @@ static void highbank_cphy_override_lane(u8 sata_port)
+ 						lane * SPHY_LANE);
+ 	} while ((tmp & SPHY_HALF_RATE) && (k++ < 1000));
+ 	cphy_override_rx_mode(sata_port, 3);
++	cphy_override_tx_attenuation(sata_port, port_data[sata_port].tx_atten);
+ }
  
- #define CC_SRCINC		(1 << 0)
- #define CC_DSTINC		(1 << 14)
-@@ -132,24 +132,24 @@ enum pl330_reqtype {
- #define CC_SWAP_SHFT		28
- 
- #define _LC0			0x40c
--#define LC0(n)			(_LC0 + (n)*0x20)
-+#define PL330_LC0(n)		(_LC0 + (n)*0x20)
- 
- #define _LC1			0x410
--#define LC1(n)			(_LC1 + (n)*0x20)
-+#define PL330_LC1(n)		(_LC1 + (n)*0x20)
- 
--#define DBGSTATUS		0xd00
-+#define PL330_DBGSTATUS		0xd00
- #define DBG_BUSY		(1 << 0)
- 
--#define DBGCMD			0xd04
--#define DBGINST0		0xd08
--#define DBGINST1		0xd0c
-+#define PL330_DBGCMD		0xd04
-+#define PL330_DBGINST0		0xd08
-+#define PL330_DBGINST1		0xd0c
- 
--#define CR0			0xe00
--#define CR1			0xe04
--#define CR2			0xe08
--#define CR3			0xe0c
--#define CR4			0xe10
--#define CRD			0xe14
-+#define PL330_CR0		0xe00
-+#define PL330_CR1		0xe04
-+#define PL330_CR2		0xe08
-+#define PL330_CR3		0xe0c
-+#define PL330_CR4		0xe10
-+#define PL330_CRD		0xe14
- 
- #define PERIPH_ID		0xfe0
- #define PERIPH_REV_SHIFT	20
-@@ -1006,7 +1006,7 @@ static bool _until_dmac_idle(struct pl330_thread *thrd)
+ static int highbank_initialize_phys(struct device *dev, void __iomem *addr)
+ {
+ 	struct device_node *sata_node = dev->of_node;
+-	int phy_count = 0, phy, port = 0;
++	int phy_count = 0, phy, port = 0, i;
+ 	void __iomem *cphy_base[CPHY_PHY_COUNT];
+ 	struct device_node *phy_nodes[CPHY_PHY_COUNT];
++	u32 tx_atten[CPHY_PORT_COUNT];
++
+ 	memset(port_data, 0, sizeof(struct phy_lane_info) * CPHY_PORT_COUNT);
+ 	memset(phy_nodes, 0, sizeof(struct device_node*) * CPHY_PHY_COUNT);
++	memset(tx_atten, 0xff, CPHY_PORT_COUNT);
  
  	do {
- 		/* Until Manager is Idle */
--		if (!(readl(regs + DBGSTATUS) & DBG_BUSY))
-+		if (!(readl(regs + PL330_DBGSTATUS) & DBG_BUSY))
- 			break;
- 
- 		cpu_relax();
-@@ -1029,10 +1029,10 @@ static inline void _execute_DBGINSN(struct pl330_thread *thrd,
- 		val |= (1 << 0);
- 		val |= (thrd->id << 8); /* Channel Number */
- 	}
--	writel(val, regs + DBGINST0);
-+	writel(val, regs + PL330_DBGINST0);
- 
- 	val = *((u32 *)&insn[2]);
--	writel(val, regs + DBGINST1);
-+	writel(val, regs + PL330_DBGINST1);
- 
- 	/* If timed out due to halted state-machine */
- 	if (_until_dmac_idle(thrd)) {
-@@ -1041,7 +1041,7 @@ static inline void _execute_DBGINSN(struct pl330_thread *thrd,
- 	}
- 
- 	/* Get going */
--	writel(0, regs + DBGCMD);
-+	writel(0, regs + PL330_DBGCMD);
+ 		u32 tmp;
+@@ -336,6 +364,10 @@ static int highbank_initialize_phys(struct device *dev, void __iomem *addr)
+ 		of_node_put(phy_data.np);
+ 		port += 1;
+ 	} while (port < CPHY_PORT_COUNT);
++	of_property_read_u32_array(sata_node, "calxeda,tx-atten",
++				tx_atten, port);
++	for (i = 0; i < port; i++)
++		port_data[i].tx_atten = (u8) tx_atten[i];
+ 	return 0;
  }
  
- /*
-@@ -1066,9 +1066,9 @@ static inline u32 _state(struct pl330_thread *thrd)
- 	u32 val;
- 
- 	if (is_manager(thrd))
--		val = readl(regs + DS) & 0xf;
-+		val = readl(regs + PL330_DS) & 0xf;
- 	else
--		val = readl(regs + CS(thrd->id)) & 0xf;
-+		val = readl(regs + PL330_CS(thrd->id)) & 0xf;
- 
- 	switch (val) {
- 	case DS_ST_STOP:
-@@ -1135,7 +1135,8 @@ static void _stop(struct pl330_thread *thrd)
- 	_emit_KILL(0, insn);
- 
- 	/* Stop generating interrupts for SEV */
--	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
-+	writel(readl(regs + PL330_INTEN) & ~(1 << thrd->ev),
-+	       regs + PL330_INTEN);
- 
- 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
- }
-@@ -1174,7 +1175,7 @@ static bool _trigger(struct pl330_thread *thrd)
- 
- 	if (r->cfg)
- 		ns = r->cfg->nonsecure ? 1 : 0;
--	else if (readl(regs + CS(thrd->id)) & CS_CNS)
-+	else if (readl(regs + PL330_CS(thrd->id)) & CS_CNS)
- 		ns = 1;
- 	else
- 		ns = 0;
-@@ -1190,7 +1191,7 @@ static bool _trigger(struct pl330_thread *thrd)
- 	_emit_GO(0, insn, &go);
- 
- 	/* Set to generate interrupts for SEV */
--	writel(readl(regs + INTEN) | (1 << thrd->ev), regs + INTEN);
-+	writel(readl(regs + PL330_INTEN) | (1 << thrd->ev), regs + PL330_INTEN);
- 
- 	/* Only manager can execute GO */
- 	_execute_DBGINSN(thrd, insn, true);
-@@ -1565,7 +1566,7 @@ static int pl330_submit_req(void *ch_id, struct pl330_req *r)
- 
- 		ccr = _prepare_ccr(r->cfg);
- 	} else {
--		ccr = readl(regs + CC(thrd->id));
-+		ccr = readl(regs + PL330_CC(thrd->id));
- 	}
- 
- 	/* If this req doesn't have valid xfer settings */
-@@ -1642,7 +1643,7 @@ static void pl330_dotask(unsigned long data)
- 
- 			_stop(thrd);
- 
--			if (readl(regs + FSC) & (1 << thrd->id))
-+			if (readl(regs + PL330_FSC) & (1 << thrd->id))
- 				err = PL330_ERR_FAIL;
- 			else
- 				err = PL330_ERR_ABORT;
-@@ -1687,13 +1688,13 @@ static int pl330_update(const struct pl330_info *pi)
- 
- 	spin_lock_irqsave(&pl330->lock, flags);
- 
--	val = readl(regs + FSM) & 0x1;
-+	val = readl(regs + PL330_FSM) & 0x1;
- 	if (val)
- 		pl330->dmac_tbd.reset_mngr = true;
- 	else
- 		pl330->dmac_tbd.reset_mngr = false;
- 
--	val = readl(regs + FSC) & ((1 << pi->pcfg.num_chan) - 1);
-+	val = readl(regs + PL330_FSC) & ((1 << pi->pcfg.num_chan) - 1);
- 	pl330->dmac_tbd.reset_chan |= val;
- 	if (val) {
- 		int i = 0;
-@@ -1701,8 +1702,8 @@ static int pl330_update(const struct pl330_info *pi)
- 			if (val & (1 << i)) {
- 				dev_info(pi->dev,
- 					"Reset Channel-%d\t CS-%x FTC-%x\n",
--						i, readl(regs + CS(i)),
--						readl(regs + FTC(i)));
-+						i, readl(regs + PL330_CS(i)),
-+						readl(regs + PL330_FTC(i)));
- 				_stop(&pl330->channels[i]);
- 			}
- 			i++;
-@@ -1710,7 +1711,7 @@ static int pl330_update(const struct pl330_info *pi)
- 	}
- 
- 	/* Check which event happened i.e, thread notified */
--	val = readl(regs + ES);
-+	val = readl(regs + PL330_ES);
- 	if (pi->pcfg.num_events < 32
- 			&& val & ~((1 << pi->pcfg.num_events) - 1)) {
- 		pl330->dmac_tbd.reset_dmac = true;
-@@ -1722,12 +1723,12 @@ static int pl330_update(const struct pl330_info *pi)
- 	for (ev = 0; ev < pi->pcfg.num_events; ev++) {
- 		if (val & (1 << ev)) { /* Event occurred */
- 			struct pl330_thread *thrd;
--			u32 inten = readl(regs + INTEN);
-+			u32 inten = readl(regs + PL330_INTEN);
- 			int active;
- 
- 			/* Clear the event */
- 			if (inten & (1 << ev))
--				writel(1 << ev, regs + INTCLR);
-+				writel(1 << ev, regs + PL330_INTCLR);
- 
- 			ret = 1;
- 
-@@ -1934,41 +1935,41 @@ static void read_dmac_config(struct pl330_info *pi)
- 	void __iomem *regs = pi->base;
- 	u32 val;
- 
--	val = readl(regs + CRD) >> CRD_DATA_WIDTH_SHIFT;
-+	val = readl(regs + PL330_CRD) >> CRD_DATA_WIDTH_SHIFT;
- 	val &= CRD_DATA_WIDTH_MASK;
- 	pi->pcfg.data_bus_width = 8 * (1 << val);
- 
--	val = readl(regs + CRD) >> CRD_DATA_BUFF_SHIFT;
-+	val = readl(regs + PL330_CRD) >> CRD_DATA_BUFF_SHIFT;
- 	val &= CRD_DATA_BUFF_MASK;
- 	pi->pcfg.data_buf_dep = val + 1;
- 
--	val = readl(regs + CR0) >> CR0_NUM_CHANS_SHIFT;
-+	val = readl(regs + PL330_CR0) >> CR0_NUM_CHANS_SHIFT;
- 	val &= CR0_NUM_CHANS_MASK;
- 	val += 1;
- 	pi->pcfg.num_chan = val;
- 
--	val = readl(regs + CR0);
-+	val = readl(regs + PL330_CR0);
- 	if (val & CR0_PERIPH_REQ_SET) {
- 		val = (val >> CR0_NUM_PERIPH_SHIFT) & CR0_NUM_PERIPH_MASK;
- 		val += 1;
- 		pi->pcfg.num_peri = val;
--		pi->pcfg.peri_ns = readl(regs + CR4);
-+		pi->pcfg.peri_ns = readl(regs + PL330_CR4);
- 	} else {
- 		pi->pcfg.num_peri = 0;
- 	}
- 
--	val = readl(regs + CR0);
-+	val = readl(regs + PL330_CR0);
- 	if (val & CR0_BOOT_MAN_NS)
- 		pi->pcfg.mode |= DMAC_MODE_NS;
- 	else
- 		pi->pcfg.mode &= ~DMAC_MODE_NS;
- 
--	val = readl(regs + CR0) >> CR0_NUM_EVENTS_SHIFT;
-+	val = readl(regs + PL330_CR0) >> CR0_NUM_EVENTS_SHIFT;
- 	val &= CR0_NUM_EVENTS_MASK;
- 	val += 1;
- 	pi->pcfg.num_events = val;
- 
--	pi->pcfg.irq_ns = readl(regs + CR3);
-+	pi->pcfg.irq_ns = readl(regs + PL330_CR3);
- }
- 
- static inline void _reset_thread(struct pl330_thread *thrd)
 -- 
-1.7.7.2
+1.8.1.2
+
