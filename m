@@ -1,54 +1,96 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:57639 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758655Ab3HNPrY (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 11:47:24 -0400
-Message-ID: <520BA687.4030905@wwwdotorg.org>
-Date: Wed, 14 Aug 2013 09:47:19 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
+Received: from metis.ext.pengutronix.de ([92.198.50.35]:51254 "EHLO
+	metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752803Ab3HNMTr (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 08:19:47 -0400
+Date: Wed, 14 Aug 2013 14:19:37 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [alsa-devel] [PATCH v4 resent 1/2] ASoC: fsl: Add S/PDIF CPU
+ DAI driver
+Message-ID: <20130814121937.GY26614@pengutronix.de>
+References: <cover.1376309076.git.b42378@freescale.com>
+ <51808310dd97d2a35a28766ed7309f269521cafd.1376309076.git.b42378@freescale.com>
+ <20130814075017.GE2324@pengutronix.de>
+ <20130814084801.GH31651@MrMyself>
+ <20130814095652.GX26614@pengutronix.de>
+ <20130814102346.GK31651@MrMyself>
 MIME-Version: 1.0
-Subject: Re: [alsa-devel] [PATCH v4 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
-References: <1376308870-14232-1-git-send-email-b42378@freescale.com> <1376308870-14232-2-git-send-email-b42378@freescale.com> <CAOMZO5A7noEb98yuCPY6o2mf-FikFcMYiDLpg3huPKHMO7Fwdw@mail.gmail.com> <20130814032658.GA16915@S2101-09.ap.freescale.net> <20130814053016.GF31651@MrMyself> <20130814063931.GB31141@S2101-09.ap.freescale.net> <20130814063444.GG31651@MrMyself> <20130814081445.GC31141@S2101-09.ap.freescale.net>
-In-Reply-To: <20130814081445.GC31141@S2101-09.ap.freescale.net>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20130814102346.GK31651@MrMyself>
 Sender: devicetree-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Nicolin Chen <b42378@freescale.com>, Fabio Estevam <festevam@gmail.com>, broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, timur@tabi.org, rob.herring@calxeda.com
+To: Nicolin Chen <b42378@freescale.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, timur@tabi.org, rob.herring@calxeda.com, broonie@kernel.org, p.zabel@pengutronix.de, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/14/2013 02:14 AM, Shawn Guo wrote:
-> On Wed, Aug 14, 2013 at 02:34:45PM +0800, Nicolin Chen wrote:
->> On Wed, Aug 14, 2013 at 02:39:33PM +0800, Shawn Guo wrote:
->>> We only need to maintain those versions that require different
->>> programming model in the list.  For example, if S/PDIF on Vybrid
->>> is completely compatible with imx6q one and uses the exactly same
->>> programming model, we do not need to maintain a compatible string
->>> for Vybrid S/PDIF at all.  Instead, we only need to have something
->>> like below in Vybrid dts file, and S/PDIF driver will just work for it.
->>>
->>> 	compatible = "fsl,vf600-spdif", "fsl,imx6q-spdif";
->>>
->>> Shawn
->>
->> Clear. Thank you for the explain.
->>
->> Then I think I can merely remain "fsl,imx6q-spdif" here,
->> because all other cases should be completely compatible
->> with this one. They are only different in the clock source
->> names list, which's already being specified in dts file.
->>
->> Please correct me if you think this still isn't proper.
+On Wed, Aug 14, 2013 at 06:23:46PM +0800, Nicolin Chen wrote:
+> Hi,
+> 
+> > > Surely, if I misunderstand your point, please correct me. And
+> > > if you have any sage idea, please guide me.
+> > 
+> > Something like this:
+> > 
+> > clocks = <&clks 197>, <&clks 3>, <&clks 197>, <&clks 107>, <&clks SPDIF_EXT>,
+> >          <&clks 118>, <&clks 62>, <&clks 139>, <&clks MLB_PHY>
+> > clock-names = "core", "rxtx0", "rxtx1", "rxtx2", "rxtx3", "rxtx4", "rxtx5", "rxtx6", "rxtx7"
+> > 
+> > This describes the different input clocks to the spdif core and also
+> > gives a hint to the array index (rxtx_n_) to use.
+> 
+> Thank you for the idea, and..hmm..I'm a bit confused.. Is this really
+> a nicer way?
 
-If the clock source name list is different, then it needs a different
-compatible value, so that each compatible value can specify which clock
-names are required.
+Yes, since the clk names are not an API. Exposing them to the devicetree
+is not an option. The fact that the names are defined in
+arch/arm/mach-imx/clk-imx6q.c and are used in the spdif driver makes
+this really clear.
 
-Also, the compatible value itself should always include the exact HW
-that's present (most specific HW version), as well as any other HW it's
-compatible with.
+> 
+> Actually the rx clock list and tx clock list are totally different.
+> So doing this I have to list, in the maximum case, 24 (8 + 16) clock
+> phandles for these two lists. And plussing another 6 I've listed in
+> this binding doc -- thus there are totally 30 clock phanldes. But
+> the 24 of 30 are only used to get two indexes.
 
-> And we generally prefer to use the soc that firstly integrates the IP to
-> name the compatible.  For IMX series, I think imx35 is the one, so we
-> would name it "fsl,imx35-spdif".
+The spdif core has 8 input clocks which have to be described in the
+devicetree. Nobody says the mapping which clock name corresponds to
+which bit combination has to be in the devicetree.
 
+Look at the possible clocks:
+
+0000 if (DPLL Locked) SPDIF_RxClk else extal
+0001 if (DPLL Locked) SPDIF_RxClk else spdif_clk
+0010 if (DPLL Locked) SPDIF_RxClk else asrc_clk
+0011 if (DPLL Locked) SPDIF_RxClk else spdif_extclk
+0100 if (DPLL Locked) SPDIF_Rxclk else esai_hckt
+0101 extal_clk
+0110 spdif_clk
+0111 asrc_clk
+1000 spdif_extclk
+1001 esai_hckt
+1010 if (DPLL Locked) SPDIF_RxClk else mlb_clk
+1011 if (DPLL Locked) SPDIF_RxClk else mlb_phy_clk
+1100 mkb_clk
+1101 mlb_phy_clk
+
+Only half of them actually are clocks. "if (DPLL Locked) SPDIF_RxClk
+else ..." is not a clock. Every sane hardware developer would have
+introduced a mux with 8 entries and an additional "Use DPLL if possible"
+bit. Now this is not the case here so we have to live with it and
+maintain the above table in the driver. And another one for the i.MX35
+and still another one for i.MX53.
+
+> 
+> I think I need a little help here to understand why this is better.
+
+As said, the clock names are not an API. Nobody changing clk-imx6q.c
+expects to break devicetree bindings.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
