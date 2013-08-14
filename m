@@ -1,67 +1,82 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [PATCH V6 1/4] ARM: dts: Add DP PHY node to exynos5250.dtsi
-Date: Wed, 14 Aug 2013 17:21:48 +0900
-Message-ID: <10ab01ce98c7$522567a0$f67036e0$@org>
-References: <003e01ce7c7a$e519a300$af4ce900$@samsung.com>
+From: Gururaja Hebbar <gururaja.hebbar@ti.com>
+Subject: Re: [PATCH v4 2/4] ARM: dts: add AM33XX vdd core opp50 suspend for
+ Beaglebone.
+Date: Wed, 14 Aug 2013 14:29:52 +0530
+Message-ID: <520B4708.3040108@ti.com>
+References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
+ <1376432412-8509-3-git-send-email-Russ.Dill@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <003e01ce7c7a$e519a300$af4ce900$@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Jingoo Han' <jg1.han@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-media@vger.kernel.org, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, 'Tomi Valkeinen' <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org, 'Hui Wang' <jason77.wang@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1376432412-8509-3-git-send-email-Russ.Dill@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russ Dill <Russ.Dill@ti.com>
+Cc: Kevin Hilman <khilman@deeprootsystems.com>, devicetree@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Jingoo Han wrote:
+On 8/14/2013 3:50 AM, Russ Dill wrote:
+> Changes since v1:
+> * Rebased onto new am335x PM branch
 > 
-> Add PHY provider node for the DP PHY.
+> This adds a sleep and wake sequence to set the VDD core voltage to the
+> OPP50 level, 0.950V. This saves power during suspend. The sequences are
+> specific to the Beaglebone layout and PMIC, the TPS65217. The sequences
+> are written out by the Cortex-M3.
 > 
-> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> Acked-by: Felipe Balbi <balbi@ti.com>
-
-Acked-by: Kukjin Kim <kgene.kim@samsung.com>
-
-Thanks,
-Kukjin
-
+> Signed-off-by: Russ Dill <Russ.Dill@ti.com>
 > ---
->  arch/arm/boot/dts/exynos5250.dtsi |   13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
+>  arch/arm/boot/dts/am335x-bone.dts | 25 ++++++++++++++++++++++++-
+>  1 file changed, 24 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
-> b/arch/arm/boot/dts/exynos5250.dtsi
-> index fc9fb3d..c326c06 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -616,6 +616,12 @@
->  		interrupts = <0 94 0>;
->  	};
-> 
-> +	dp_phy: video-phy@10040720 {
-> +		compatible = "samsung,exynos5250-dp-video-phy";
-> +		reg = <0x10040720 4>;
-> +		#phy-cells = <0>;
-> +	};
+> diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+> index 444b4ed..3f6528d 100644
+> --- a/arch/arm/boot/dts/am335x-bone.dts
+> +++ b/arch/arm/boot/dts/am335x-bone.dts
+> @@ -127,10 +127,33 @@
+>  			status = "okay";
+>  			clock-frequency = <400000>;
+>  
+> +			/* Set OPP50 (0.95V) for VDD core */
+> +			sleep_sequence = /bits/ 8 <
+
+For user readability, can you mention the PMIC used here as a comment?
+
+> +				0x02 0x24 0x0b 0x6d /* Password unlock 1 */
+> +				0x02 0x24 0x10 0x02 /* Set DCDC3 to 0.95V */
+> +				0x02 0x24 0x0b 0x6d /* Password unlock 2 */
+> +				0x02 0x24 0x10 0x02 /* Set DCDC3 to 0.95V */
+> +				0x02 0x24 0x0b 0x6c /* Password unlock 1 */
+> +				0x02 0x24 0x11 0x86 /* Apply DCDC changes */
+> +				0x02 0x24 0x0b 0x6c /* Password unlock 2 */
+> +				0x02 0x24 0x11 0x86 /* Apply DCDC changes */
+> +			>;
 > +
->  	dp-controller {
->  		compatible = "samsung,exynos5-dp";
->  		reg = <0x145b0000 0x1000>;
-> @@ -623,11 +629,8 @@
->  		interrupt-parent = <&combiner>;
->  		#address-cells = <1>;
->  		#size-cells = <0>;
+> +			/* Set OPP100 (1.10V) for VDD core */
+> +			wake_sequence = /bits/ 8 <
+> +				0x02 0x24 0x0b 0x6d /* Password unlock 1 */
+> +				0x02 0x24 0x10 0x08 /* Set DCDC3 to 1.1V */
+> +				0x02 0x24 0x0b 0x6d /* Password unlock 2 */
+> +				0x02 0x24 0x10 0x08 /* Set DCDC3 to 1.1V */
+> +				0x02 0x24 0x0b 0x6c /* Password unlock 1 */
+> +				0x02 0x24 0x11 0x86 /* Apply DCDC changes */
+> +				0x02 0x24 0x0b 0x6c /* Password unlock 2 */
+> +				0x02 0x24 0x11 0x86 /* Apply DCDC changes */
+> +			>;
+> +
+>  			tps: tps@24 {
+>  				reg = <0x24>;
+>  			};
 > -
-> -		dptx-phy {
-> -			reg = <0x10040720>;
-> -			samsung,enable-mask = <1>;
-> -		};
-> +		phys = <&dp_phy>;
-> +		phy-names = "dp";
+>  		};
 >  	};
+>  
 > 
->  	fimd {
-> --
-> 1.7.10.4
