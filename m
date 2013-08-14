@@ -1,32 +1,34 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH RFC v2 1/2] max77693: added device tree support
-Date: Wed, 14 Aug 2013 17:04:02 +0100
-Message-ID: <20130814160402.GH4046@lee--X1>
-References: <1361288177-14452-1-git-send-email-a.hajda@samsung.com>
- <1361288177-14452-2-git-send-email-a.hajda@samsung.com>
- <20130408152122.GU24058@zurbaran>
- <51E64BA8.30205@samsung.com>
- <520BA3C9.8050606@samsung.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH 2/4] clk: exynos-audss: allow input clocks to be specified
+ in device tree
+Date: Wed, 14 Aug 2013 13:11:18 -0700
+Message-ID: <CAL1qeaFZH+3D26Vis4rUqCKK6Un-eHBv1wckYpPR-fac_gz6qA@mail.gmail.com>
+References: <1373458313-18970-1-git-send-email-padma.v@samsung.com>
+	<1373458313-18970-3-git-send-email-padma.v@samsung.com>
+	<1610421.OFFn8rqlxt@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <520BA3C9.8050606@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1610421.OFFn8rqlxt@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, Padma Venkat <padma.kvr@gmail.com>, sbkim73@samsung.com, "broonie@kernel.org" <broonie@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-> I have no response from Samuel regarding this patch.
-> Could you take care of it, I can rebase it again if necessary.
+Hi Tomasz,
 
-Yes, please rebase onto v3.11-rc5 and resubmit.
+> Well, this is basically how it should be done, but in current state of
+> clock core I can see a problem: can we really rely on the order of clock
+> initialization? I mean, we can't defer initialization of particular clock
+> controller until all external clocks it needs are available, because there
+> is no probing involved here.
 
-Thanks.
+Right, we can't.  The reason I added the device-tree lookup of input
+clocks was because Exynos5420 has different names for several of the
+input clocks to the audio block.  We already need a separate
+compatibility string because of the ADMA clock, so we could just use
+that to determine the parent clock names.  It's not ideal, but it's a
+workaround for the initialization order issue.  Thoughts?
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Thanks,
+Andrew
