@@ -1,53 +1,113 @@
-Return-Path: <swarren@wwwdotorg.org>
-Message-ID: <520C023A.5050204@wwwdotorg.org>
-Date: Wed, 14 Aug 2013 16:18:34 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH Resend 2/2] usb: phy: samsung: Update usbphy documentation
-References: <1376479377-15732-1-git-send-email-sachin.kamat@linaro.org> <1376479377-15732-2-git-send-email-sachin.kamat@linaro.org>
-In-Reply-To: <1376479377-15732-2-git-send-email-sachin.kamat@linaro.org>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: devicetree@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob@landley.net, robherring2@gmail.com
+Return-Path: <sachin.kamat@linaro.org>
+Return-Path: <sachin.kamat@linaro.org>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH Resend 2/2] usb: phy: samsung: Update usbphy documentation
+Date: Wed, 14 Aug 2013 16:52:57 +0530
+Message-Id: <1376479377-15732-2-git-send-email-sachin.kamat@linaro.org>
+In-Reply-To: <1376479377-15732-1-git-send-email-sachin.kamat@linaro.org>
+References: <1376479377-15732-1-git-send-email-sachin.kamat@linaro.org>
+To: devicetree@vger.kernel.org
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, robherring2@gmail.com, sachin.kamat@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/14/2013 05:22 AM, Sachin Kamat wrote:
-> Updated the documentation as per the latest driver implementation.
-> While at it also fixed some trivial typos.
+Updated the documentation as per the latest driver implementation.
+While at it also fixed some trivial typos.
 
-> diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Acked-by: Felipe Balbi <balbi@ti.com>
+---
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |   48 ++++++++++----------
+ 1 file changed, 23 insertions(+), 25 deletions(-)
 
-> +- clocks : Clock IDs array as required by the controller.
-> +- clock-names : names of clocks listed in clocks property in the same order
-> +	       as requested by the controller driver.
-
-This is wrong. The DT binding must specify the set of required
-clock-names, not the driver; bindings must be self-contained. Also, the
-order shouldn't matter, since everything should be looked up by name;
-all that matters is the entries in clocks/clock-names match.
-
->  Optional properties:
-> -- #address-cells: should be '1' when usbphy node has a child node with 'reg'
-> +- #address-cellsi : should be '1' when usbphy node has a child node with 'reg'
->  		  property.
-
-Type "cellsi".
-
-What should the value be if there is no child node? In other words, I
-think just delete the text "when usbphy node has a child node with 'reg'
-property.". Same for size-cells.
-
-> -- #size-cells: should be '1' when usbphy node has a child node with 'reg'
-> +- #size-cells : should be '1' when usbphy node has a child node with 'reg'
->  	       property.
-
-I don't think it's worth changing the binding doc just to add a space
-before the colon... It looks better the first way, although
-unfortunately many DT binding docs have the extra space.
-
-> +- clocks : Clock IDs array as required by the controller.
-> +- clock-names : names of clocks correseponding to IDs in the clock property
->  	       as requested by the controller driver.
-
-May as well s/correseponding/corresponding/.
+diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+index 33fd354..62e6f17 100644
+--- a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
++++ b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+@@ -1,34 +1,32 @@
+ SAMSUNG USB-PHY controllers
+ 
+-** Samsung's usb 2.0 phy transceiver
++** Samsung's USB 2.0 phy transceiver
+ 
+-The Samsung's usb 2.0 phy transceiver is used for controlling
+-usb 2.0 phy for s3c-hsotg as well as ehci-s5p and ohci-exynos
+-usb controllers across Samsung SOCs.
++The Samsung's USB 2.0 phy transceiver is used for controlling
++USB 2.0 phy for s3c-hsotg as well as ehci-s5p and ohci-exynos
++USB controllers across Samsung SOCs.
+ TODO: Adding the PHY binding with controller(s) according to the under
+ development generic PHY driver.
+ 
+ Required properties:
+ 
+-Exynos4210:
+-- compatible : should be "samsung,exynos4210-usb2phy"
+-- reg : base physical address of the phy registers and length of memory mapped
+-	region.
+-- clocks: Clock IDs array as required by the controller.
+-- clock-names: names of clock correseponding IDs clock property as requested
+-	       by the controller driver.
+-
+-Exynos5250:
+-- compatible : should be "samsung,exynos5250-usb2phy"
++- compatible : value should be one among the following:
++	(a) "samsung,s3c64xx-usb2phy" for S3C64xx SoCs
++	(b) "samsung,exynos4210-usb2phy" for Exynos4210 SoC
++	(c) "samsung,exynos4x12-usb2phy" for Exynos4x12 SoCs
++	(d) "samsung,exynos5250-usb2phy" for Exynos5250 SoC
+ - reg : base physical address of the phy registers and length of memory mapped
+ 	region.
++- clocks : Clock IDs array as required by the controller.
++- clock-names : names of clocks listed in clocks property in the same order
++	       as requested by the controller driver.
+ 
+ Optional properties:
+-- #address-cells: should be '1' when usbphy node has a child node with 'reg'
++- #address-cellsi : should be '1' when usbphy node has a child node with 'reg'
+ 		  property.
+-- #size-cells: should be '1' when usbphy node has a child node with 'reg'
++- #size-cells : should be '1' when usbphy node has a child node with 'reg'
+ 	       property.
+-- ranges: allows valid translation between child's address space and parent's
++- ranges : allows valid translation between child's address space and parent's
+ 	  address space.
+ 
+ - The child node 'usbphy-sys' to the node 'usbphy' is for the system controller
+@@ -63,10 +61,10 @@ Example:
+ 	};
+ 
+ 
+-** Samsung's usb 3.0 phy transceiver
++** Samsung's USB 3.0 phy transceiver
+ 
+-Starting exynso5250, Samsung's SoC have usb 3.0 phy transceiver
+-which is used for controlling usb 3.0 phy for dwc3-exynos usb 3.0
++Starting Exynos5250, Samsung's SoC have USB 3.0 phy transceiver
++which is used for controlling USB 3.0 phy for dwc3-exynos USB 3.0
+ controllers across Samsung SOCs.
+ 
+ Required properties:
+@@ -75,16 +73,16 @@ Exynos5250:
+ - compatible : should be "samsung,exynos5250-usb3phy"
+ - reg : base physical address of the phy registers and length of memory mapped
+ 	region.
+-- clocks: Clock IDs array as required by the controller.
+-- clock-names: names of clocks correseponding to IDs in the clock property
++- clocks : Clock IDs array as required by the controller.
++- clock-names : names of clocks correseponding to IDs in the clock property
+ 	       as requested by the controller driver.
+ 
+ Optional properties:
+-- #address-cells: should be '1' when usbphy node has a child node with 'reg'
++- #address-cells : should be '1' when usbphy node has a child node with 'reg'
+ 		  property.
+-- #size-cells: should be '1' when usbphy node has a child node with 'reg'
++- #size-cells : should be '1' when usbphy node has a child node with 'reg'
+ 	       property.
+-- ranges: allows valid translation between child's address space and parent's
++- ranges : allows valid translation between child's address space and parent's
+ 	  address space.
+ 
+ - The child node 'usbphy-sys' to the node 'usbphy' is for the system controller
+-- 
+1.7.9.5
