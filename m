@@ -1,108 +1,66 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from arroyo.ext.ti.com ([192.94.94.40]:58157 "EHLO arroyo.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755844Ab3HWXSG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 23 Aug 2013 19:18:06 -0400
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: [RFC PATCH 04/14] hwmon: tmp102: expose to thermal fw via DT nodes
-Date: Fri, 23 Aug 2013 19:15:45 -0400
-Message-ID: <1377299755-5134-5-git-send-email-eduardo.valentin@ti.com>
-In-Reply-To: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
-References: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Received: from mail-pd0-f171.google.com ([209.85.192.171]:58482 "EHLO
+	mail-pd0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751383Ab3HNErA (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 00:47:00 -0400
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v5 12/13] V4L: s5k6a3: Change sensor min/max resolutions
+Date: Wed, 14 Aug 2013 10:16:13 +0530
+Message-Id: <1376455574-15560-13-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1376455574-15560-1-git-send-email-arun.kk@samsung.com>
+References: <1376455574-15560-1-git-send-email-arun.kk@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com
-Cc: durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, Jean Delvare <khali@linux-fr.org>
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds to tmp102 temperature sensor the possibility
-to expose itself as thermal zone device, registered on the
-thermal framework.
+s5k6a3 sensor has actual pixel resolution of 1408x1402 against
+the active resolution 1392x1392. The real resolution is needed
+when raw sensor SRGB data is dumped to memory by fimc-lite.
 
-The thermal zone is built only if a device tree node
-describing a thermal zone for this sensor is present
-inside the tmp102 DT node. Otherwise, the driver behavior
-will be the same.
-
-Cc: Jean Delvare <khali@linux-fr.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: lm-sensors@lm-sensors.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
- drivers/hwmon/tmp102.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/media/i2c/s5k6a3.c |   19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
-index d7b47ab..0f1e44a 100644
---- a/drivers/hwmon/tmp102.c
-+++ b/drivers/hwmon/tmp102.c
-@@ -27,6 +27,8 @@
- #include <linux/mutex.h>
- #include <linux/device.h>
- #include <linux/jiffies.h>
-+#include <linux/thermal.h>
-+#include <linux/of.h>
+diff --git a/drivers/media/i2c/s5k6a3.c b/drivers/media/i2c/s5k6a3.c
+index ccbb4fc..34c3165 100644
+--- a/drivers/media/i2c/s5k6a3.c
++++ b/drivers/media/i2c/s5k6a3.c
+@@ -25,10 +25,12 @@
+ #include <media/v4l2-async.h>
+ #include <media/v4l2-subdev.h>
  
- #define	DRIVER_NAME "tmp102"
+-#define S5K6A3_SENSOR_MAX_WIDTH		1392
+-#define S5K6A3_SENSOR_MAX_HEIGHT	1392
+-#define S5K6A3_SENSOR_MIN_WIDTH		32
+-#define S5K6A3_SENSOR_MIN_HEIGHT	32
++#define S5K6A3_SENSOR_MAX_WIDTH		1408
++#define S5K6A3_SENSOR_MAX_HEIGHT	1402
++#define S5K6A3_SENSOR_ACTIVE_WIDTH	1392
++#define S5K6A3_SENSOR_ACTIVE_HEIGHT	1392
++#define S5K6A3_SENSOR_MIN_WIDTH		(32 + 16)
++#define S5K6A3_SENSOR_MIN_HEIGHT	(32 + 10)
  
-@@ -50,6 +52,7 @@
+ #define S5K6A3_DEF_PIX_WIDTH		1296
+ #define S5K6A3_DEF_PIX_HEIGHT		732
+@@ -107,10 +109,11 @@ static void s5k6a3_try_format(struct v4l2_mbus_framefmt *mf)
  
- struct tmp102 {
- 	struct device *hwmon_dev;
-+	struct thermal_zone_device *tz;
- 	struct mutex lock;
- 	u16 config_orig;
- 	unsigned long last_update;
-@@ -93,6 +96,15 @@ static struct tmp102 *tmp102_update_device(struct i2c_client *client)
- 	return tmp102;
+ 	fmt = find_sensor_format(mf);
+ 	mf->code = fmt->code;
+-	v4l_bound_align_image(&mf->width, S5K6A3_SENSOR_MIN_WIDTH,
+-			      S5K6A3_SENSOR_MAX_WIDTH, 0,
+-			      &mf->height, S5K6A3_SENSOR_MIN_HEIGHT,
+-			      S5K6A3_SENSOR_MAX_HEIGHT, 0, 0);
++	v4l_bound_align_image(&mf->width,
++			S5K6A3_SENSOR_MIN_WIDTH, S5K6A3_SENSOR_MAX_WIDTH, 0,
++			&mf->height,
++			S5K6A3_SENSOR_MIN_HEIGHT, S5K6A3_SENSOR_MAX_HEIGHT, 0,
++			0);
  }
  
-+static int tmp102_read_temp(void *dev, unsigned long *temp)
-+{
-+	struct tmp102 *tmp102 = tmp102_update_device(to_i2c_client(dev));
-+
-+	*temp = tmp102->temp[0];
-+
-+	return 0;
-+}
-+
- static ssize_t tmp102_show_temp(struct device *dev,
- 				struct device_attribute *attr,
- 				char *buf)
-@@ -204,10 +216,23 @@ static int tmp102_probe(struct i2c_client *client,
- 		goto fail_remove_sysfs;
- 	}
- 
-+	if (of_find_property(client->dev.of_node, "monitored-zones", NULL)) {
-+		tmp102->tz = thermal_zone_of_device_register(&client->dev, 0,
-+							     false, /* -hwmon */
-+							     &client->dev,
-+							     tmp102_read_temp);
-+		if (IS_ERR(tmp102->tz)) {
-+			status = PTR_ERR(tmp102->tz);
-+			goto exit_hwmon;
-+		}
-+	}
-+
- 	dev_info(&client->dev, "initialized\n");
- 
- 	return 0;
- 
-+exit_hwmon:
-+	hwmon_device_unregister(tmp102->hwmon_dev);
- fail_remove_sysfs:
- 	sysfs_remove_group(&client->dev.kobj, &tmp102_attr_group);
- fail_restore_config:
-@@ -220,6 +245,7 @@ static int tmp102_remove(struct i2c_client *client)
- {
- 	struct tmp102 *tmp102 = i2c_get_clientdata(client);
- 
-+	thermal_zone_device_unregister(tmp102->tz);
- 	hwmon_device_unregister(tmp102->hwmon_dev);
- 	sysfs_remove_group(&client->dev.kobj, &tmp102_attr_group);
- 
+ static struct v4l2_mbus_framefmt *__s5k6a3_get_format(
 -- 
-1.8.2.1.342.gfa7285d
+1.7.9.5
 
