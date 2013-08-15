@@ -1,50 +1,38 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
-Date: Thu, 15 Aug 2013 10:00:40 +0200
-Message-ID: <1376553640.3889.70.camel@coredoba.hi.pengutronix.de>
-References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
-	 <1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
-	 <CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: [PATCH 0/3] of: add update device node status via cmdline feature
+Date: Thu, 15 Aug 2013 18:55:30 +0800
+Message-ID: <1376564133-11286-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russ Dill <Russ.Dill@ti.com>
-Cc: Kevin Hilman <khilman@deeprootsystems.com>, devicetree@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-08-14 at 15:21 -0700, Russ Dill wrote:
-> > The CM3 driver needs to figure out where the core regulator is connected
-> > using using either DT or the regulator framework and ask the TPS (via a
-> > new interface) for register writes for sleep/wake sequences. Then those
-> > sequences will actually match the correct voltages configured using
-> > DT/DVFS.
-> 
-> That seems like it'd add a lot of complexity to the regulator
-> subsystem, as well as all the PMIC and other I2C regulators that any
-> users of these device tree properties may end up using for not a lot
-> of gain. There would be two separate code paths for any used
-> I2C regulator or PMIC for setting voltages.
+We meet some boards having a lot of pin conflicts between different devices,
+only one of them can be enabled to run at one time.
 
-Yes, it would be additional complexity, but it would avoid duplicating
-information which is already in the DT (location&address of the PMIC,
-type of pmic) and in the kernel (how to program voltages for a given
-regulator). As DT is supposed to describe the hardware, duplicate
-information should be unnecessary.
+e.g. imx6q sabreauto board, i2c, spi, weim, flexcan, uart and etc involved
+with pin conflict.
 
-One different way to look at this is that the CM3 firmware is a separate
-consumer of the DT. DT being OS-indepentent, the CM3 firmware should be
-able to get all the information it needs from the DT (maybe with help
-from the CM3 driver).
+Instead of changing dts manually or adding a lot dts files according to
+different device availability, we provide feature to dynamically update the
+device node status via command line, then those devices involved with
+pin conflict can be enabled or disabled dynamically.
 
-Regards,
-Jan 
+It's conveniently to use and can save a lot dts board files, also can
+permenantly fix the pin conflicts issue.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+The patch series is based on v3.11-rc5.
 
+Dong Aisheng (3):
+  of: add device node status update APIs
+  of: add update device node status via cmdline feature
+  of: add node status update via name format with cmdline
+
+ Documentation/kernel-parameters.txt |   10 +++
+ drivers/of/base.c                   |  107 +++++++++++++++++++++++++++++++++
+ drivers/of/fdt.c                    |  111 +++++++++++++++++++++++++++++++++++
+ include/linux/of.h                  |   13 ++++
+ 4 files changed, 241 insertions(+), 0 deletions(-)
