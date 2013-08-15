@@ -1,59 +1,40 @@
-From: Rob Herring <robherring2@gmail.com>
+From: Grant Likely <grant.likely@linaro.org>
 Subject: Re: [PATCH 0/3] of: add update device node status via cmdline feature
-Date: Thu, 15 Aug 2013 07:37:04 -0500
-Message-ID: <520CCB70.8090908@gmail.com>
+Date: Thu, 15 Aug 2013 13:45:48 +0100
+Message-ID: <CACxGe6tMm=u1jFKUQ59+cj-rYkLLAZUqMhsXamyi-wwpWaOGvw@mail.gmail.com>
 References: <1376564133-11286-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1376564133-11286-1-git-send-email-b29396@freescale.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Dong Aisheng <b29396@freescale.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/15/2013 05:55 AM, Dong Aisheng wrote:
+On Thu, Aug 15, 2013 at 11:55 AM, Dong Aisheng <b29396@freescale.com> wrote:
 > We meet some boards having a lot of pin conflicts between different devices,
 > only one of them can be enabled to run at one time.
-> 
+>
 > e.g. imx6q sabreauto board, i2c, spi, weim, flexcan, uart and etc involved
 > with pin conflict.
-> 
+>
 > Instead of changing dts manually or adding a lot dts files according to
 > different device availability, we provide feature to dynamically update the
 > device node status via command line, then those devices involved with
 > pin conflict can be enabled or disabled dynamically.
-> 
-> It's conveniently to use and can save a lot dts board files, also can
-> permenantly fix the pin conflicts issue.
 
-This doesn't scale either with updating of lots devices or when the next
-person comes along and wants to edit another property.
+Ugh, no. If there are dynamic conflicts, then the driver really should
+be responsible for handling them. ie. if the driver isn't able to get
+the resource it needs because they don't exist, then driver probe
+should fail.
 
-This is something u-boot is perfectly capable of handling and updating
-status is something lots of boards already do.
+Except in very excpetional circumstances (ie. firmware workarounds)
+the kernel needs to treat the device tree as immutable*. The tree
+passed in at boot should not be manipulated at runtime.
 
-Rob
+* There are powerpc platforms that modify the FDT at runtime; but in
+those cases it is in response to firmware changing the data, not the
+kernel.
 
-> 
-> The patch series is based on v3.11-rc5.
-> 
-> Dong Aisheng (3):
->   of: add device node status update APIs
->   of: add update device node status via cmdline feature
->   of: add node status update via name format with cmdline
-> 
->  Documentation/kernel-parameters.txt |   10 +++
->  drivers/of/base.c                   |  107 +++++++++++++++++++++++++++++++++
->  drivers/of/fdt.c                    |  111 +++++++++++++++++++++++++++++++++++
->  include/linux/of.h                  |   13 ++++
->  4 files changed, 241 insertions(+), 0 deletions(-)
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+g.
