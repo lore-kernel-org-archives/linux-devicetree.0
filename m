@@ -1,39 +1,27 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-bk0-f43.google.com ([209.85.214.43]:44157 "EHLO
-	mail-bk0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754146Ab3IABBD (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sat, 31 Aug 2013 21:01:03 -0400
+Received: from avon.wwwdotorg.org ([70.85.31.133]:39724 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756256Ab3HOPhy (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 15 Aug 2013 11:37:54 -0400
+Message-ID: <520CF5CF.6040205@wwwdotorg.org>
+Date: Thu, 15 Aug 2013 09:37:51 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Date: Sun, 1 Sep 2013 09:01:00 +0800
-Message-ID: <CAPgLHd90UyPGVLUdMV2domFKKDG5inKsXKxcOpvCDbVt-A_t-w@mail.gmail.com>
-Subject: [PATCH -next] spi/qspi: fix missing unlock on error in ti_qspi_start_transfer_one()
-From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: tegra: add Mic Jack to Beaver device tree
+References: <1376512027-28245-1-git-send-email-swarren@wwwdotorg.org>
+In-Reply-To: <1376512027-28245-1-git-send-email-swarren@wwwdotorg.org>
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On 08/14/2013 02:27 PM, Stephen Warren wrote:
+> From: Stephen Warren <swarren@nvidia.com>
+> 
+> This enables the microphone input jack, and hence allows audio to be
+> captured as well as played back.
 
-Add the missing unlock before return from function ti_qspi_start_transfer_one()
-in the error handling case.
-
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- drivers/spi/spi-ti-qspi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
-index 136d71e..e12d962 100644
---- a/drivers/spi/spi-ti-qspi.c
-+++ b/drivers/spi/spi-ti-qspi.c
-@@ -376,6 +376,7 @@ static int ti_qspi_start_transfer_one(struct spi_master *master,
- 		ret = qspi_transfer_msg(qspi, t);
- 		if (ret) {
- 			dev_dbg(qspi->dev, "transfer message failed\n");
-+			mutex_unlock(&qspi->list_lock);
- 			return -EINVAL;
- 		}
- 
-
+I've applied this series to Tegra's for-3.12/dt branch, with patch 2/2's
+subject line fixed to s/Cardhu/Dalmore/.
