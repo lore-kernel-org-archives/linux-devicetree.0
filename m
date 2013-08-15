@@ -1,39 +1,55 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 0/3] of: add update device node status via cmdline feature
-Date: Thu, 15 Aug 2013 13:46:12 +0100
-Message-ID: <CACxGe6tdvdFsAHjEZK8fuHNEgV+JW8K2GfLN0gD3HfSopb4Kfw@mail.gmail.com>
-References: <1376564133-11286-1-git-send-email-b29396@freescale.com> <520CCB70.8090908@gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v10] i2c: exynos5: add High Speed I2C controller driver
+Date: Thu, 15 Aug 2013 15:12:26 +0200
+Message-ID: <20130815131226.GI17155@katana>
+References: <1354021236-28596-2-git-send-email-ch.naveen@samsung.com>
+ <1371638905-30633-1-git-send-email-ch.naveen@samsung.com>
+ <3925484.kHD24rQYyy@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="CD/aTaZybdUisKIc"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <520CCB70.8090908@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <3925484.kHD24rQYyy@amdc1227>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Dong Aisheng <b29396@freescale.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, naveenkrishna.ch@gmail.com, kgene.kim@samsung.com, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, taeggyun.ko@samsung.com, balbi@ti.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 15, 2013 at 1:37 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On 08/15/2013 05:55 AM, Dong Aisheng wrote:
->> We meet some boards having a lot of pin conflicts between different devices,
->> only one of them can be enabled to run at one time.
->>
->> e.g. imx6q sabreauto board, i2c, spi, weim, flexcan, uart and etc involved
->> with pin conflict.
->>
->> Instead of changing dts manually or adding a lot dts files according to
->> different device availability, we provide feature to dynamically update the
->> device node status via command line, then those devices involved with
->> pin conflict can be enabled or disabled dynamically.
->>
->> It's conveniently to use and can save a lot dts board files, also can
->> permenantly fix the pin conflicts issue.
->
-> This doesn't scale either with updating of lots devices or when the next
-> person comes along and wants to edit another property.
->
-> This is something u-boot is perfectly capable of handling and updating
-> status is something lots of boards already do.
 
-+1
+--CD/aTaZybdUisKIc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-g.
+On Mon, Jul 01, 2013 at 12:25:19PM +0200, Tomasz Figa wrote:
+> Hi Naveen,
+>=20
+> Looks mostly good, but see some comments inline.
+
+Ping?
+
+
+--CD/aTaZybdUisKIc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSDNO5AAoJEBQN5MwUoCm2EMkQAK9DlXI0LeKYmHLIM1Hq7sN3
+pUrztsLfAWW8z366FWVGn0WGQltfkal5m2cLsARjRA64q9MVsap82G5FQ24xsMOp
+cZQz9wo3m6SpfKlOjHoiPqmdoHTJ7wElewUt49dv2kVLdT3KHdRVLf+QZMhmVIjW
+3+MwKCjem+5d340MNMw4a6D4hEHF9J5nbITfkXCpjG+Ek/CBnvZxqQjci1C6JQjt
+BpvyWVta+36xKuuwfvqx2QYjWAaiypHGU6gNOJEPbsaiPGBoewk+ycDvWhzQi8U1
+TpxPzP9lOWkZECSWS1z+5yHEG3uZeQk4ifyeQpVMMjpqIH9OsuTbVAGq3szch/mY
+GomZMnQ6ZUCt2N78SCc5fnFRxesGVKK77KoJE/gOptWURJiu5XUICa6p0cgsNwnp
+gBioQAgoPc/aShpHZWO3GB0sB4yOLbk5QQntL6ClocHx94h8We0j+M7w7sSf8d/I
+wHOIp9P1mA4timswcodzLyd82dgo14bna9utmlOZiP63aoQayz/fmBF8lmJpCBWt
+GtYR3ph2rAiQjFmI6GWX5tZqqWEBl3ZuZKKaBJYt/vDB6XXVKWg68P/iOSe+hrNe
+ueHusK6Rf4VWztprdkpZvPyUPrAfpt2WTs7w4n5UdEi+TlFEkwzTv36AOQat03tG
+4Rvvhst6WrcObAL2h92o
+=QJEZ
+-----END PGP SIGNATURE-----
+
+--CD/aTaZybdUisKIc--
