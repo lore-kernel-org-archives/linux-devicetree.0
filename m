@@ -1,42 +1,50 @@
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Subject: [PATCH v4 5/5] ARM: davinci: da850: add OF_DEV_AUXDATA entry for eth0.
-Date: Thu, 15 Aug 2013 11:31:37 +0530
-Message-ID: <1376546497-26931-6-git-send-email-prabhakar.csengg@gmail.com>
-References: <1376546497-26931-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1376546497-26931-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
+Date: Thu, 15 Aug 2013 10:00:40 +0200
+Message-ID: <1376553640.3889.70.camel@coredoba.hi.pengutronix.de>
+References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
+	 <1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
+	 <CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russ Dill <Russ.Dill@ti.com>
+Cc: Kevin Hilman <khilman@deeprootsystems.com>, devicetree@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+On Wed, 2013-08-14 at 15:21 -0700, Russ Dill wrote:
+> > The CM3 driver needs to figure out where the core regulator is connected
+> > using using either DT or the regulator framework and ask the TPS (via a
+> > new interface) for register writes for sleep/wake sequences. Then those
+> > sequences will actually match the correct voltages configured using
+> > DT/DVFS.
+> 
+> That seems like it'd add a lot of complexity to the regulator
+> subsystem, as well as all the PMIC and other I2C regulators that any
+> users of these device tree properties may end up using for not a lot
+> of gain. There would be two separate code paths for any used
+> I2C regulator or PMIC for setting voltages.
 
-Add OF_DEV_AUXDATA for eth0  driver in da850 board dt
-file to use emac clock.
+Yes, it would be additional complexity, but it would avoid duplicating
+information which is already in the DT (location&address of the PMIC,
+type of pmic) and in the kernel (how to program voltages for a given
+regulator). As DT is supposed to describe the hardware, duplicate
+information should be unnecessary.
 
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
----
- Changes for V2: none
- Changes for V3: none
- Changes for v4: none
+One different way to look at this is that the CM3 firmware is a separate
+consumer of the DT. DT being OS-indepentent, the CM3 firmware should be
+able to get all the information it needs from the DT (maybe with help
+from the CM3 driver).
 
- arch/arm/mach-davinci/da8xx-dt.c |    3 +++
- 1 file changed, 3 insertions(+)
+Regards,
+Jan 
 
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-index d172563..caa9202 100644
---- a/arch/arm/mach-davinci/da8xx-dt.c
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -44,6 +44,9 @@ static struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
- 	OF_DEV_AUXDATA("ns16550a", 0x01d0c000, "serial8250.1", NULL),
- 	OF_DEV_AUXDATA("ns16550a", 0x01d0d000, "serial8250.2", NULL),
- 	OF_DEV_AUXDATA("ti,davinci_mdio", 0x01e24000, "davinci_mdio.0", NULL),
-+	OF_DEV_AUXDATA("ti,davinci-dm6467-emac", 0x01e20000, "davinci_emac.1",
-+		       NULL),
-+
- 	{}
- };
- 
 -- 
-1.7.9.5
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
