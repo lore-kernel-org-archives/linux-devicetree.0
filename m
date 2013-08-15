@@ -1,96 +1,58 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pb0-f53.google.com ([209.85.160.53]:60636 "EHLO
-	mail-pb0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751387Ab3HNEqz (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 00:46:55 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v5 11/13] [media] exynos5-is: Add Kconfig and Makefile
-Date: Wed, 14 Aug 2013 10:16:12 +0530
-Message-Id: <1376455574-15560-12-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1376455574-15560-1-git-send-email-arun.kk@samsung.com>
-References: <1376455574-15560-1-git-send-email-arun.kk@samsung.com>
+Received: from am1ehsobe005.messaging.microsoft.com ([213.199.154.208]:6387
+	"EHLO am1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1756194Ab3HOLhi (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Thu, 15 Aug 2013 07:37:38 -0400
+From: Nicolin Chen <b42378@freescale.com>
+Subject: [PATCH v5 0/2] Add freescale S/PDIF CPU DAI and machine drivers
+Date: Thu, 15 Aug 2013 19:26:38 +0800
+Message-ID: <cover.1376565456.git.b42378@freescale.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, s.hauer@pengutronix.de
+Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-Adds Kconfig and Makefile for exynos5-is driver files.
+Changelog:
+v4->v5:
+ * Dropped rx/tx-clksrc-names DT bindings.
+ * Use standard clock binding instead to pass the clock source list.
+ * Update the compatible list by using "imx35", the first SoC that has spdif.
+v3->v4:
+ * Use regmap for CPU DAI driver.
+ * Use individual clock source for 32KHz, 44KHz, 48KHz playback.
+ * Determine clock source configuration from 'clocks' entry.
+ * Added imx53 to compatible list, merged imx6q and imx6dl in the list.
+ * Improve the algorism of reverse_bits().
+ * Dropped the unneeded clk_put().
+v2->v3:
+ * Removed a wrong tag from the commit of patch-1.
+v1->v2:
+ * Dropped one applied patch for spdif dummy codec drivers.
+ * Use generic DMA DT binding.
+ * Let spdif controller driver calculate the clock div.
+ * Added one optional clock source for spdif tx.
+ * Reivsed documentation accordingly.
 
-Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- drivers/media/platform/Kconfig             |    1 +
- drivers/media/platform/Makefile            |    1 +
- drivers/media/platform/exynos5-is/Kconfig  |   20 ++++++++++++++++++++
- drivers/media/platform/exynos5-is/Makefile |    7 +++++++
- 4 files changed, 29 insertions(+)
- create mode 100644 drivers/media/platform/exynos5-is/Kconfig
- create mode 100644 drivers/media/platform/exynos5-is/Makefile
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 08de865..4b0475e 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -123,6 +123,7 @@ config VIDEO_S3C_CAMIF
- 
- source "drivers/media/platform/soc_camera/Kconfig"
- source "drivers/media/platform/exynos4-is/Kconfig"
-+source "drivers/media/platform/exynos5-is/Kconfig"
- source "drivers/media/platform/s5p-tv/Kconfig"
- 
- endif # V4L_PLATFORM_DRIVERS
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index eee28dd..40bf09f 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_VIDEO_SAMSUNG_S5P_TV)	+= s5p-tv/
- 
- obj-$(CONFIG_VIDEO_SAMSUNG_S5P_G2D)	+= s5p-g2d/
- obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC)	+= exynos-gsc/
-+obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_CAMERA) += exynos5-is/
- 
- obj-$(CONFIG_BLACKFIN)                  += blackfin/
- 
-diff --git a/drivers/media/platform/exynos5-is/Kconfig b/drivers/media/platform/exynos5-is/Kconfig
-new file mode 100644
-index 0000000..b67d11a
---- /dev/null
-+++ b/drivers/media/platform/exynos5-is/Kconfig
-@@ -0,0 +1,20 @@
-+config VIDEO_SAMSUNG_EXYNOS5_CAMERA
-+	bool "Samsung Exynos5 SoC Camera Media Device driver"
-+	depends on VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API && PM_RUNTIME
-+	depends on VIDEO_SAMSUNG_EXYNOS4_IS
-+	help
-+	  This is a V4L2 media device driver for Exynos5 SoC series
-+	  camera subsystem.
-+
-+if VIDEO_SAMSUNG_EXYNOS5_CAMERA
-+
-+config VIDEO_SAMSUNG_EXYNOS5_FIMC_IS
-+	tristate "Samsung Exynos5 SoC FIMC-IS driver"
-+	depends on I2C && OF
-+	depends on VIDEO_EXYNOS4_FIMC_IS
-+	select VIDEOBUF2_DMA_CONTIG
-+	help
-+	  This is a V4L2 driver for Samsung Exynos5 SoC series Imaging
-+	  Subsystem known as FIMC-IS.
-+
-+endif #VIDEO_SAMSUNG_EXYNOS5_MDEV
-diff --git a/drivers/media/platform/exynos5-is/Makefile b/drivers/media/platform/exynos5-is/Makefile
-new file mode 100644
-index 0000000..6cdb037
---- /dev/null
-+++ b/drivers/media/platform/exynos5-is/Makefile
-@@ -0,0 +1,7 @@
-+ccflags-y += -Idrivers/media/platform/exynos4-is
-+exynos5-fimc-is-objs := fimc-is-core.o fimc-is-isp.o fimc-is-scaler.o
-+exynos5-fimc-is-objs += fimc-is-pipeline.o fimc-is-interface.o fimc-is-sensor.o
-+exynos-mdevice-objs := exynos5-mdev.o
-+
-+obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_FIMC_IS) += exynos5-fimc-is.o
-+obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_CAMERA) += exynos-mdevice.o
--- 
-1.7.9.5
+Nicolin Chen (2):
+  ASoC: fsl: Add S/PDIF CPU DAI driver
+  ASoC: fsl: Add S/PDIF machine driver
+
+ .../devicetree/bindings/sound/fsl,spdif.txt        |   76 ++
+ .../devicetree/bindings/sound/imx-audio-spdif.txt  |   29 +
+ sound/soc/fsl/Kconfig                              |   14 +
+ sound/soc/fsl/Makefile                             |    4 +
+ sound/soc/fsl/fsl_spdif.c                          | 1336 ++++++++++++++++++++
+ sound/soc/fsl/fsl_spdif.h                          |  224 ++++
+ sound/soc/fsl/imx-spdif.c                          |  134 ++
+ 7 files changed, 1817 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
+ create mode 100644 sound/soc/fsl/fsl_spdif.c
+ create mode 100644 sound/soc/fsl/fsl_spdif.h
+ create mode 100644 sound/soc/fsl/imx-spdif.c
+
 
