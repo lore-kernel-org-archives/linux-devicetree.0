@@ -1,133 +1,157 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:57663 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758246Ab3HORL3 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 15 Aug 2013 13:11:29 -0400
-Date: Thu, 15 Aug 2013 18:10:48 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130815171048.GC30073@sirena.org.uk>
-References: <20130814235519.GS2401@sirena.org.uk>
- <Pine.LNX.4.44L0.1308151013350.1210-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hOcCNbCCxyk/YU74"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1308151013350.1210-100000@iolanthe.rowland.org>
+Received: from iolanthe.rowland.org ([192.131.102.54]:54773 "HELO
+	iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1757786Ab3HOOmC (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 15 Aug 2013 10:42:02 -0400
+Date: Thu, 15 Aug 2013 10:42:00 -0400 (EDT)
+From: Alan Stern <stern@rowland.harvard.edu>
 Subject: Re: Non-enumerable devices on USB and other enumerable buses
+In-Reply-To: <20130814235519.GS2401@sirena.org.uk>
+Message-ID: <Pine.LNX.4.44L0.1308151013350.1210-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
+To: Mark Brown <broonie@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+On Thu, 15 Aug 2013, Mark Brown wrote:
 
---hOcCNbCCxyk/YU74
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Wed, Aug 14, 2013 at 03:39:20PM -0400, Alan Stern wrote:
+> 
+> > I don't see the point of all this.  Obviously the device can't be used
+> > until it physically appears on the bus.  What benefit do you get from
+> > registering it and making it available to userspace before that?
+> 
+> Two things.  One is that some devices have the ability to perform useful
+> functions when powered down sufficiently that they can't run a complex
+> bus, providing notification when they need to wake up (or being woken up
+> if the power on comes from userspace).  The other is that then userspace
+> can just see the device and start using it when it needs it without
+> having to have a mechanism to discover that there's something there with
+> manual power control.
+> 
+> This can also be an issue in cases where we compose multiple physical
+> devices into composite ones for userspace (embedded audio and video do
+> this a lot for example).  A given bit of hardware may only be useful in
+> some circumstances.
+> 
+> > Well, basic "power this on" stuff is pretty much all we have discussed 
+> > in this thread so far.  What other sorts of things are going to be 
+> > needed for a general solution?
+> 
+> If you look elsewhere at the stuff I've been saying about Slimbus that's
+> the nastiest case I'm aware of in terms of the bus itself - that's got
+> the devices with low power modes that do useful things with the device
+> (and bus) mostly powered off and things like that.  Things like activity
+> detection of various kinds where the device is monitoring for activity
+> in a low power state.
 
-On Thu, Aug 15, 2013 at 10:42:00AM -0400, Alan Stern wrote:
-> On Thu, 15 Aug 2013, Mark Brown wrote:
+Okay.  Previously we agreed that a device on one of these buses could
+remain off-line except when the system needs to bring it to full power.  
+To me, discovery and enumeration on the bus seem like a legitimate 
+need.
 
-> So why not bring the device to full power as soon as possible during
-> boot, and have it registered on the bus in the usual way?  Once that's
-> done, the ordinary runtime PM mechanism will allow the device to go
-> back off-line.
+So why not bring the device to full power as soon as possible during
+boot, and have it registered on the bus in the usual way?  Once that's
+done, the ordinary runtime PM mechanism will allow the device to go
+back off-line.
 
-That could be done, and is likely to happen anyway as a result of device
-initialisation.  I'm not sure it buys much to force it to happen
-immediately, though.
+> I've also mentioned the devices that need platform data which is a part
+> of this too; one reason for knowing that the device is there before it
+> appears is so that we can pass platform data/DT/whatever to it.
 
-> > I've also mentioned the devices that need platform data which is a part
-> > of this too; one reason for knowing that the device is there before it
-> > appears is so that we can pass platform data/DT/whatever to it.
+Can you pass this "whatever" data to the device as part of the initial 
+bring-it-to-full-power procedure?
 
-> Can you pass this "whatever" data to the device as part of the initial=20
-> bring-it-to-full-power procedure?
+By the way, you mentioned something earlier that some of this platform
+data might duplicate information that could be discovered through the
+usual bus probing mechanisms (for example, USB descriptors).  IMO
+that's a bad idea.  Not only is it wasteful, it also has the potential
+for causing confusion if the two sets of data should disagree for any
+reason.  When possible, it's always better to get info about the 
+hardware from the hardware itself.
 
-It is often going to be required as part of the bring it to full power
-procedure.
+> > Now I'm getting confused.  It seems we're talking about at least three
+> > very different things here:
+> 
+> >      A: Devising a mechanism for platform code to do things involving
+> > 	devices that are dynamically registered on discoverable buses.
+> 
+> If we need random platform code then we're failing, half the point of
+> things like DT and ACPI is to avoid writing random board code.  we do
+> want to pass data to devices for their drivers to use but having to have
+> random bits of per board code would be really sad.
 
-> By the way, you mentioned something earlier that some of this platform
-> data might duplicate information that could be discovered through the
-> usual bus probing mechanisms (for example, USB descriptors).  IMO
-> that's a bad idea.  Not only is it wasteful, it also has the potential
+At the level of abstraction in this discussion, there's no need to 
+discriminate between code and data.  Just imagine that I simply wrote 
+"platform", meaning platform code and/or data.
 
-If you check the discussion it pretty much consisted of everyone saying
-that duplicating enumerable information was a terrible idea.
+> >      B: Telling the subsystem and driver code for a discoverable bus
+> > 	that a particular device is present before it has been 
+> > 	detected.
+> 
+> >      C: Implementing a mechanism whereby drivers can take a device
+> > 	off-line while still pretending to userspace that the device
+> > 	is still present, by bringing it back on-line as needed.
+> 
+> > I don't see much connection between these things.  Perhaps you can
+> > explain in more detail.
+> 
+> I think the solutions for these overlap so much they're the same thing.
+> The situation we're in in in your case B is just the idle case for
+> condition C - if we know about the device before it's been detected then
+> if it's been removed we just go back into the situation where we know
+> about it but it isn't powered.
 
-> > >      A: Devising a mechanism for platform code to do things involving
-> > > 	devices that are dynamically registered on discoverable buses.
+I imagine that teaching a subsystem to know about a device before it 
+has been detected would require significant changes.  My suggestion -- 
+powering up the device, detecting it, and then powering it back down -- 
+fits in very cleanly with existing designs and would require 
+comparatively little work.  Case B then becomes unnecessary; all the 
+important stuff will be handled under Case C.
 
-> > If we need random platform code then we're failing, half the point of
-> > things like DT and ACPI is to avoid writing random board code.  we do
-> > want to pass data to devices for their drivers to use but having to have
-> > random bits of per board code would be really sad.
+> > (BTW, it's worth mentioning that C has already been done, in the form
+> > of runtime PM.  The difference may be that you propose to take the
+> > device so far off-line that it disappears from the bus.  AFAICS, this
+> > would be purely a private matter to be arranged between the subsystem
+> > and the driver; it does not need to be handled at the level of the
+> > device-model or PM core.)
+> 
+> Actually runtime PM is actually already used for completely offlining
+> devices on buses that are too blind to notice - it's only an issue on
+> buses that can notice insertion and removal and want to do something
+> about it.  The use cases I'm describing already happen in mainline today
+> for devices on the dumber buses.
 
-> At the level of abstraction in this discussion, there's no need to=20
-> discriminate between code and data.  Just imagine that I simply wrote=20
-> "platform", meaning platform code and/or data.
+Which means eliminating case B will be all that much easier for these 
+buses.
 
-There's a big difference between random glue outside the drivers and
-something the drivers know about themselves, it's important to be clear
-on this.  Bodges for this often involve writing a bit of board code that
-the drivers don't know anything about.
+> I think if we've got something which the hardware engineers can do on
+> multiple buses then they probably will so we should have at least a
+> pattern for how it's going to work over multiple buses rather than
+> having to handle different models for different buses.  I'll try to have
+> a think about what that pattern might be at some point (in my copious
+> free time).
 
-> > >      B: Telling the subsystem and driver code for a discoverable bus
-> > > 	that a particular device is present before it has been=20
-> > > 	detected.
+There's one important factor to keep in mind: Are devices on the bus
+physically removable?  If not, the situation is pretty straightforward.  
+You just remember that the device used to be present, and reuse the old
+data structures when it reappears.
 
-> > I think the solutions for these overlap so much they're the same thing.
-> > The situation we're in in in your case B is just the idle case for
-> > condition C - if we know about the device before it's been detected then
-> > if it's been removed we just go back into the situation where we know
-> > about it but it isn't powered.
+If devices are removable then things are a lot more complicated.  The 
+usb-storage driver used to do what you are talking about, back in the 
+days of the 2.4 kernels.  When a mass-storage device was unplugged, 
+the driver would remember it and reuse the data structures when the 
+device was plugged back in and reprobed.  Linus himself told us this 
+was a mistake, so we removed the feature.
 
-> I imagine that teaching a subsystem to know about a device before it=20
-> has been detected would require significant changes.  My suggestion --=20
-> powering up the device, detecting it, and then powering it back down --=
-=20
-> fits in very cleanly with existing designs and would require=20
-> comparatively little work.  Case B then becomes unnecessary; all the=20
-> important stuff will be handled under Case C.
+The USB subsystem now supports this feature in a very limited form.  
+If the hardware session gets dropped while the computer is suspended,
+then at resume time the system will try to verify that the device
+present at that bus address is the same device that was there before
+the suspend.  If it is, we will continue to use it as if the connection
+had never dropped.
 
-To be honest I don't see how that helps much if you're going to handle
-the case where platform data is required to enumerate the device.  You
-need to know about the device prior to enumeration in order to get the
-platform data to the driver when it does enumerate and you can't
-enumerate it until you do that anyway.  A bus could insist on this if it
-needed the information from enumeration for some reason but really it
-seems like an implementation detail.
+Alan Stern
 
-> There's one important factor to keep in mind: Are devices on the bus
-> physically removable?  If not, the situation is pretty straightforward. =
-=20
-> You just remember that the device used to be present, and reuse the old
-> data structures when it reappears.
-
-Not the ones I'm talking about, though other removable devices may
-possibly be present on the same bus.  My interest is in the case where
-we know the chip is there because we can see it soldered to the board.
-
---hOcCNbCCxyk/YU74
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSDQuVAAoJELSic+t+oim9GA0QAJO3b97ssUI5FEJeIQ0G+5q/
-RInxbO8Iabigq7VXVV1OJ7TyvMSgN6nuJLl8kSRUUIw6KBh6Pmm+40wwJikT3Bas
-abp+y+LRzhJH3lrvw9WP1ba41sRKKUu2jIT+df8AigWRCXPDpQubZJcZnVl1w213
-pTX2pqH8GxOVlLdY10AzAK5qAhPdwS2WsJSc8g3Pjd+4fnFXMj3TiJcOyzCY26Q+
-NjHtAzqBcgxeTddgQVVYKEEdm/+z1D2YzHnvo7WF0EspFaPse98T3YIlZWduwLXB
-94MqTvZ6LYZrJI/sThzQY9neGkQOQpZtOYNYGaO/m4iKvZn9wPNQ4SvV+WI2ofvH
-NNpXQt/Uuikq2CSHPUcBiv66+ChlHjkWrS0JUOw5BBlj1mAtWdO/L0MWedpcdN0H
-AW6FZkSKEouXEIdr1nxDKzj2M+MMvtBXFXNkIVUfBWmFegcN4ZY6Jwg7vlqOY4rK
-ZD7HVEYSCsHnCQQNJi4bFwgYRBlb3EFOZoWanrxLOKf/0XcB4v6scAFnJ+t1LU9e
-zsZF2ApG+4UoPSAIJULw3TVrjhxRkERRAWcAKm2sAv/njlFNWQKCAxJKoFWN+WQs
-HRRicMZov2Y2nzt2KHbIo4N4wlP6LNeMSNjep1wDVzixCD+SNCM4mSmPc4LxEBYn
-qrz3atwWcOUua0mFeMlg
-=f6FC
------END PGP SIGNATURE-----
-
---hOcCNbCCxyk/YU74--
