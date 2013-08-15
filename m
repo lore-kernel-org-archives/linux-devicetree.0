@@ -1,46 +1,57 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v4 5/5] ARM: davinci: da850: add OF_DEV_AUXDATA entry
- for eth0.
-Date: Thu, 15 Aug 2013 23:31:58 +0400
-Message-ID: <520D2CAE.3090501@cogentembedded.com>
-References: <1376546497-26931-1-git-send-email-prabhakar.csengg@gmail.com> <1376546497-26931-6-git-send-email-prabhakar.csengg@gmail.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v2 2/2] drm/bridge: Add PTN3460 bridge driver
+Date: Thu, 15 Aug 2013 15:32:58 -0400
+Message-ID: <CAOw6vbLukpMkDHivB54uMnMvmRU6=qq2hodgE9Jxj5oSpjQHxQ@mail.gmail.com>
+References: <1376513258-25703-1-git-send-email-seanpaul@chromium.org>
+ <1376513258-25703-3-git-send-email-seanpaul@chromium.org> <20130815152812.GF16951@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1376546497-26931-6-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130815152812.GF16951@ulmo>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, robdclark@gmail.com, Daniel Vetter <daniel@ffwll.ch>, Dave Airlie <airlied@linux.ie>, =?ISO-8859-1?Q?St=E9phane_Marchesin?= <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, Aug 15, 2013 at 11:28 AM, Thierry Reding
+<thierry.reding@gmail.com> wrote:
+> On Wed, Aug 14, 2013 at 04:47:38PM -0400, Sean Paul wrote:
+> [...]
+>> +int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
+>> +             struct i2c_client *client, struct device_node *node)
+> [...]
+>> +     ptn_bridge->gpio_pd_n = of_get_named_gpio(node, "powerdown-gpio", 0);
+>
+> of_get_named_gpio() can return -EPROBE_DEFER and I wonder how you handle
+> that in the driver that uses ptn3460_init(). Since you pass in an
+> initialized drm_device, you'd need to undo all of that in case of
+> -EPROBE_DEFER. Well I guess you'd have to do that in case of any error,
+> but it makes things difficult to handle for drivers.
+>
+> For instance on Tegra we pretty much delay DRM initialization until all
+> required subdevices (there are quite a few) have been probed, so if we
+> wanted to use this function we'd have to call it after all drivers have
+> been probed because only then do we have access to a struct drm_device.
+> That will cause other problems, however, because at that point we can't
+> defer probing anymore.
+>
 
-On 15-08-2013 10:01, Lad, Prabhakar wrote:
+I suppose I could add another init that performs the deferrable tasks
+(ptn3460_init_deferrable or something). This would be called before
+drm init has been started from one of the probe functions.
+Alternatively, I could set this up as a standalone i2c driver and do
+this stuff in the probe. Any other options?
 
-> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Adding another init call adds yet another thing the drm driver has to
+do to use this bridge. Making the ptn driver standalone requires you
+to set things up such that drm init is dependent on ptn probe running
+successfully. I'm not sure which is more desirable.
 
-> Add OF_DEV_AUXDATA for eth0  driver in da850 board dt
-> file to use emac clock.
+Practically speaking, do you expect to call drm_init before the gpio
+is available?
 
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-[...]
+Sean
 
-> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-> index d172563..caa9202 100644
-> --- a/arch/arm/mach-davinci/da8xx-dt.c
-> +++ b/arch/arm/mach-davinci/da8xx-dt.c
-> @@ -44,6 +44,9 @@ static struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
->   	OF_DEV_AUXDATA("ns16550a", 0x01d0c000, "serial8250.1", NULL),
->   	OF_DEV_AUXDATA("ns16550a", 0x01d0d000, "serial8250.2", NULL),
->   	OF_DEV_AUXDATA("ti,davinci_mdio", 0x01e24000, "davinci_mdio.0", NULL),
-> +	OF_DEV_AUXDATA("ti,davinci-dm6467-emac", 0x01e20000, "davinci_emac.1",
-> +		       NULL),
-> +
 
-    Empty line hardly needed here.
 
->   	{}
->   };
-
-WBR, Sergei
+> Thierry
