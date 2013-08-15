@@ -1,58 +1,96 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 1/3] misc: Add crossbar driver
-Date: Thu, 15 Aug 2013 16:26:53 -0400
-Message-ID: <520D398D.9040806@ti.com>
-References: <51E83A4F.5080904@ti.com> <CACRpkdY3nQaWimTwB-Zt-8+Q_KZr8a0rpB1SUQq=AuoG4bAYnQ@mail.gmail.com> <51ED2385.60108@ti.com> <51ED5C66.1010407@ti.com> <51EFFBE1.4090505@ti.com> <51F0031B.1050307@ti.com> <51F00530.9090703@ti.com> <51F02069.3050207@ti.com> <51F0223E.4050008@ti.com> <51F0240F.3050507@ti.com> <20130813081003.GU7656@atomide.com> <520A02BA.4090805@ti.com> <CACRpkda+m82PYJsExLM6JLsLa8-bVhdvy_r_+-uKfVT2NG7Cbg@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 2/2] drm/bridge: Add PTN3460 bridge driver
+Date: Thu, 15 Aug 2013 22:42:08 +0200
+Message-ID: <20130815204207.GA24507@ulmo>
+References: <1376513258-25703-1-git-send-email-seanpaul@chromium.org>
+ <1376513258-25703-3-git-send-email-seanpaul@chromium.org>
+ <20130815152812.GF16951@ulmo>
+ <CAOw6vbLukpMkDHivB54uMnMvmRU6=qq2hodgE9Jxj5oSpjQHxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda+m82PYJsExLM6JLsLa8-bVhdvy_r_+-uKfVT2NG7Cbg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAOw6vbLukpMkDHivB54uMnMvmRU6=qq2hodgE9Jxj5oSpjQHxQ@mail.gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Sricharan R <r.sricharan@ti.com>, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rajendra Nayak <rnayak@ti.com>, Felipe Balbi <balbi@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>
+To: Sean Paul <seanpaul@chromium.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, robdclark@gmail.com, Daniel Vetter <daniel@ffwll.ch>, Dave Airlie <airlied@linux.ie>, =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 August 2013 04:01 PM, Linus Walleij wrote:
-> On Tue, Aug 13, 2013 at 11:56 AM, Sricharan R <r.sricharan@ti.com> wrote:
-> 
->>  Initially irqchip was discussed, but we also have a DMA crossbar
->>  to map the dma-requests. Since both irq/dma crossbars should be handled,
->>  pinctrl was suggested as the appropriate place to handle this.
-> 
-> I think it is better to use irqchip.
->
-Did you happen to read the thread why irqchip is in-appropriate
-for such an IP. As I said earlier, an IRQ-chip always need a
-real IRQ link (even for the chained one) to the primary irqchip.
 
-This IP is just dummy IP makes the connections for the primary
-irqchip(read GIC). And its use only limited to make the
-connection between the peripheral IRQ event to the GIC IRQ line.
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't see how you can make this happen with an irqchip
-infrastructure.
+On Thu, Aug 15, 2013 at 03:32:58PM -0400, Sean Paul wrote:
+> On Thu, Aug 15, 2013 at 11:28 AM, Thierry Reding
+> <thierry.reding@gmail.com> wrote:
+> > On Wed, Aug 14, 2013 at 04:47:38PM -0400, Sean Paul wrote:
+> > [...]
+> >> +int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
+> >> +             struct i2c_client *client, struct device_node *node)
+> > [...]
+> >> +     ptn_bridge->gpio_pd_n =3D of_get_named_gpio(node, "powerdown-gpi=
+o", 0);
+> >
+> > of_get_named_gpio() can return -EPROBE_DEFER and I wonder how you handle
+> > that in the driver that uses ptn3460_init(). Since you pass in an
+> > initialized drm_device, you'd need to undo all of that in case of
+> > -EPROBE_DEFER. Well I guess you'd have to do that in case of any error,
+> > but it makes things difficult to handle for drivers.
+> >
+> > For instance on Tegra we pretty much delay DRM initialization until all
+> > required subdevices (there are quite a few) have been probed, so if we
+> > wanted to use this function we'd have to call it after all drivers have
+> > been probed because only then do we have access to a struct drm_device.
+> > That will cause other problems, however, because at that point we can't
+> > defer probing anymore.
+> >
+>=20
+> I suppose I could add another init that performs the deferrable tasks
+> (ptn3460_init_deferrable or something). This would be called before
+> drm init has been started from one of the probe functions.
+> Alternatively, I could set this up as a standalone i2c driver and do
+> this stuff in the probe. Any other options?
 
-If you have a idea to make that work, we can go with that
-since for time being we can ignore the DMA event related need
-of this IP.
- 
-> For DMA there is already an arbiter mechanism for arbitration of
-> virtual channels over physical channels, this is not much different,
-> the DMA might need some different tweaking but should be solved
-> in that subsystem I think.
->
-Sure. The IP won't be limited to DMA and IRQ lines but any other events
-like gpio etc in future.
- 
-> I don't see any way to really abstract this pretty simple crossbar
-> for reuse across subsystems.
-> 
-This exactly the reason, i am against idea of over-engineering the
-simple IP whose only job is to make the physical wire connection
-in software where as this is generally done in RTL by default on
-most of the SOCs.
+My point was that in those cases you don't have access to the DRM device
+yet since you haven't called drm_init() yet.
 
-Regards,
-Santosh
+> Adding another init call adds yet another thing the drm driver has to
+> do to use this bridge. Making the ptn driver standalone requires you
+> to set things up such that drm init is dependent on ptn probe running
+> successfully. I'm not sure which is more desirable.
+>=20
+> Practically speaking, do you expect to call drm_init before the gpio
+> is available?
 
+No, not really, but I won't know that the GPIO is available until I
+actually call of_get_named_gpio_flags().
+
+But perhaps we should cross that bridge when we get to it.
+
+Thierry
+
+--PNTmBPCT7hxwcZjr
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSDT0fAAoJEN0jrNd/PrOhEhEQALN0AxVIrZeaWnQ31+fQgDII
+QLunTwu3UtoT0G6UzMbG/ckFSmeTAuO7Emls6+fQrVCN53T3u4tT5bub2jJSo7mO
+IwO3DskMiXpFezAjGrJjOIPMW6AkEo9ATKqC/QuIvptsIHPeGsMByfxvvXAk6/mr
+ZYPihPHE9jvvTUD1TuydpiIUgQY5M2XldgGqu+d+tQLDeFq2a8JzCjOX2VooVIEN
+I7qF2HGY3B5vS4kiIAhKP58PNa4zmMmg1ASQeBRJj4IEGQDX+Rvu0N25zy5PVGX6
+MZNBG1GTpeb6u9/xkhL/Hk2GENl+OaNP9W/NkvDdaNFkcLAs8mDAP2oLSLPMy6Rn
+bbEdZ1y5NsK4waPfMdubO6CbwrvMvardjSpPLORc5C2d8zm4Wz1HDlMjNz8hyIaw
+Re9p4MjhVru6grMAW0cQPswpkxG+LvQLUM61sCO05WzQiQUYc8dcdq41/JgtIqGJ
+fry92Sk71xGpmEhtGwb4SF0CKw5R39sFfEqGls0K7JInB6jeU4159JxJBSuab5Jq
+Qx7S7HMyNyiXH98Sj3D++HVcALu231ztFDuxoo3O6ShgKU8pBq02x8isdaDB2MJ7
+MTDvYax6QFqIJz4KJM7WNp2qR4i4GHQyvV95l/7EPw1c563FnNBkYme5v0LXUbhP
+Yrw7U6a5DSvUF0n/WA3W
+=A7GZ
+-----END PGP SIGNATURE-----
+
+--PNTmBPCT7hxwcZjr--
