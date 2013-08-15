@@ -1,77 +1,80 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ozlabs.org ([203.10.76.45]:42719 "EHLO ozlabs.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752063Ab3HPAJG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 15 Aug 2013 20:09:06 -0400
-Date: Fri, 16 Aug 2013 09:59:09 +1000
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [RFC] Best practices for hardware shipping device trees
-Message-ID: <20130815235909.GA11437@voom.fritz.box>
-References: <20130814151345.GA2983@bill-the-cat>
- <520BB3E6.7000205@wwwdotorg.org>
- <20130814182502.GC2983@bill-the-cat>
- <alpine.LFD.2.03.1308142030020.14472@syhkavp.arg>
- <520C3840.4040309@ti.com>
- <alpine.LFD.2.03.1308142227050.14472@syhkavp.arg>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:38121 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751481Ab3HOWel (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 15 Aug 2013 18:34:41 -0400
+Message-ID: <520D577B.2080903@wwwdotorg.org>
+Date: Thu, 15 Aug 2013 16:34:35 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.03.1308142227050.14472@syhkavp.arg>
+Subject: Re: [RFC] Best practices for hardware shipping device trees
+References: <20130814151345.GA2983@bill-the-cat> <520BB3E6.7000205@wwwdotorg.org> <20130814182502.GC2983@bill-the-cat> <alpine.LFD.2.03.1308142030020.14472@syhkavp.arg> <520C3840.4040309@ti.com> <alpine.LFD.2.03.1308142227050.14472@syhkavp.arg> <20130815145310.GE2983@bill-the-cat> <520CF3F9.5050708@wwwdotorg.org> <20130815163713.GA9190@bill-the-cat> <520D108A.8060605@wwwdotorg.org> <20130815185659.GC9190@bill-the-cat>
+In-Reply-To: <20130815185659.GC9190@bill-the-cat>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Tom Rini <trini@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, cross-distro@lists.linaro.org, Mark Rutland <Mark.Rutland@arm.com>, devicetree@vger.kernel.org, Tom Rini <tom.rini@gmail.com>, Ian Campbell <ian.campbell@citrix.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>
+To: Tom Rini <trini@ti.com>
+Cc: Tom Rini <tom.rini@gmail.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, cross-distro@lists.linaro.org, Mark Rutland <Mark.Rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
+On 08/15/2013 12:56 PM, Tom Rini wrote:
+> On Thu, Aug 15, 2013 at 11:31:54AM -0600, Stephen Warren wrote:
+>> On 08/15/2013 10:37 AM, Tom Rini wrote:
+>>> On Thu, Aug 15, 2013 at 09:30:01AM -0600, Stephen Warren wrote:
+...
+>>>> We certainly expect U-Boot to update the DT that's passed to the kernel,
+>>>> for:
+>> ...
+>>>> * Possibly to add a "simplefb" node, until the kernel has LCD panel
+>>>> support (CDF).
+>>>
+>>> Can we talk about that last one more?  That sounds like some sort of
+>>> temporary binding.  Or am I using the terms wrong?  But, it sounds like
+>>> we're saying add whatever nodes might be missing?
+> [snip useful explanation of what simplefb is]
+>> simplefb information could get into DT in a couple ways:
+>>
+>> 1) The DTB for the platform could include the simplefb node right from
+>> the start.
+>>
+>> This model would be appropriate for more permanent use of simplefb,
+>> since the node appears in the orignial DT.
+>>
+>> In this case, the bootloader would at least have to fill in the physical
+>> memory address of the frame-buffer that it allocated. If the display is
+>> device with variable resolution, rather than a fixed built-in LCD, the
+>> bootloader would also have to fill in the resolution properties.
+>>
+>> 2) The DTB for the platform doesn't include the simplefb node.
+>>
+>> This would be appropriate for platforms that use simplefb as a temporary
+>> step until complete OS support for the display HW is present, so a real
+>> driver can be used. This prevents DTBs from ever having the
+>> soon-to-be-removed simplefb node encoded into them.
+>>
+>> In this case, the bootloader would have to add a completely new simplefb
+>> node to the DT, and fill in all the properties.
+> 
+> OK, now why wouldn't the right thing to do here be to #1 and later in
+> time, the DT is updated when the better drivers are merged in?
+> 
+> I don't think it's strictly a bad thing to say that firmware/bootloader
+> is allowed to construct temporary nodes, but we should make it clear
+> when that's an OK practice.  Yes?
 
---Kj7319i9nmIyA2yE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For systems where simplefb is a transitional measure (i.e. where it
+would eventually make sense to define a complete binding for the HW),
+I'd prefer to avoid churn in the *.dts files by never including the
+simplefb node in them, but rather adding it dynamically. In other words,
+we don't add something to the file just to take it away later.
 
-On Wed, Aug 14, 2013 at 10:57:36PM -0400, Nicolas Pitre wrote:
-> On Wed, 14 Aug 2013, Tom Rini wrote:
-> > On 08/14/2013 08:37 PM, Nicolas Pitre wrote:
-> > > On Wed, 14 Aug 2013, Tom Rini wrote:
-[snip]
-> Well, the hard guideline should require that the DTB be updateable and=20
-> not linked with nor generated by the bootloader or firmware.  That=20
-> implies some storage separate from the bootloader but this doesn't need=
-=20
-> to be a filesystem.
+That's the logic behind why I wrote separate "add node" and "fill in
+node" functions for the simplefb in U-Boot.
 
-Wait, what!?
+One thing that's slightly different about simplefb is that the node
+isn't useful without the bootloader filling in some information, which
+generally isn't true of DT content.
 
-Much as I think a bunch of the current problems have been caused by
-being overly keen to push the dtb into firmware, we shouldn't *ban*
-the original Open Firmware model of the device tree, where it is
-generated by the firmware and consumed by the OS.
+It'd certainly be technically possible to just add the simplefb node
+into DT in all cases, then swap it out later when something else came along.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---Kj7319i9nmIyA2yE
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSDWtNAAoJEGw4ysog2bOSRsIP/iR7V1q8/z093HH7Ckco1+jb
-6hB7gaUSo1x5/D5k4Ar0BdTPx307mMexzkiHoduLpgeZ1aDr2aBd4G6cJOAG8pV6
-k1FFWRmwQprJnTZ5O48yI6/rEo3r13NlHnp+xlmH6Fm524qE7V12B1ozP7NolD43
-43MdFI3D/Gxq76TgbJov2oT1xXrHVGa3BpN87Faje8Fql5xjcFRSJ8krM/LgC3xV
-FMcw37laFXcoKiDDO5kwIbzAZPW8IpvlmIsuDqjBMsDCfutmfjmc89fKZem3QoLi
-wENUVjwKVge6q0vzSls5bqFTsgaeLx2AZ8vvmToWzc3juuju3mf6YNbKaBRukyyh
-U96lTbBU3PVBmtv0mcq9JI37xbtDvOPxxcLy6F1usjxPH+UuB6xEy2eBA5kXlLVB
-wbl/DCFx/pMcXUDLV19ZwkHT/o7NBCAe0J4Wn3EuS5rff05tu1qh6I37Lkw7iy9u
-tR/y6s/mxCmtTxUlTgi/lbu0XBBJfacPNAPJhbiQjPSH+dqn5YPiqpvzuAyLOTMn
-AMMTpZScGNUVCmNK5zNcTcQVJnzQikYRS9pb01F5QJ3JLbPuFRpEhpGihx3Y1OII
-+/y2mxAasdSPfaPcU6bT4joFcX5MSpag2tCUmw70ocSjXMblWAP54UpcBZLY+Zcy
-ir5YcLjSNRGZBlZ5e4g6
-=P1Jp
------END PGP SIGNATURE-----
-
---Kj7319i9nmIyA2yE--
