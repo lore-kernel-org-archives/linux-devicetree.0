@@ -1,231 +1,104 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: [PATCH 3/3] of: add node status update via name format with cmdline
-Date: Thu, 15 Aug 2013 18:55:33 +0800
-Message-ID: <1376564133-11286-4-git-send-email-b29396@freescale.com>
-References: <1376564133-11286-1-git-send-email-b29396@freescale.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFC PATCH] pwm: atmel-pwm: add pwm controller driver
+Date: Thu, 15 Aug 2013 13:13:52 +0200
+Message-ID: <20130815111351.GA14418@ulmo>
+References: <1371804355-8071-1-git-send-email-voice.shen@atmel.com>
+ <51D523FD.7040409@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1376564133-11286-1-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============4690591058816510007=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51D523FD.7040409@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The node full patch is a bit long to use in the command line to
-update the device node status, so we add a more convenient way to
-simply use device node name in device tree.
 
-e.g:
-formerly:
-fdt.enable=/soc/aips-bus@02100000/i2c@021a8000,/soc/aips-bus@02100000/weim@021b8000
-fdt.disable=/soc/aips-bus@02100000/weim@021b8000
-now:
-fdt.enable=i2c@021a8000,weim@021b8000
-fdt.disable=weim@021b8000
+--===============4690591058816510007==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Disposition: inline
 
-Signed-off-by: Dong Aisheng <b29396@freescale.com>
----
- Documentation/kernel-parameters.txt |    3 +-
- drivers/of/base.c                   |   33 +++++++++++++++++
- drivers/of/fdt.c                    |   66 ++++++++++++++++++++++++++++------
- include/linux/of.h                  |    8 ++++
- 4 files changed, 97 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-index 65f3be2..7fbdb86 100644
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -900,10 +900,11 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
- 	fdt.disable=
- 			[KNL,FDT]
- 			update device tree node status before populating devices
--			Format: fdt.<enable|disable>=<path>[,<path>]
-+			Format: fdt.<enable|disable>=<path|node>[,<path|node>]
- 			enable    := update the device node to a enabled state
- 			disable   := update the device node to a disabled state
- 			<path>    := node path or node full name in device tree
-+			<node>	  := node name in device tree
- 
- 	floppy=		[HW]
- 			See Documentation/blockdev/floppy.txt.
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index f944a54..b072722 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -20,6 +20,7 @@
- #include <linux/ctype.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/spinlock.h>
- #include <linux/slab.h>
- #include <linux/proc_fs.h>
-@@ -514,6 +515,38 @@ struct device_node *of_find_node_by_name(struct device_node *from,
- EXPORT_SYMBOL(of_find_node_by_name);
- 
- /**
-+ *	of_find_node_by_name_and_reg - Find a node by its "name" and "reg" property
-+ *	@from:	The node to start searching from or NULL, the node
-+ *		you pass will not be searched, only the next one
-+ *		will; typically, you pass what the previous call
-+ *		returned. of_node_put() will be called on it
-+ *	@name:	The name string to match against
-+ *	@reg:	The reg address to match against
-+ *
-+ *	Returns a node pointer with refcount incremented, use
-+ *	of_node_put() on it when done.
-+ */
-+struct device_node *of_find_node_by_name_and_reg(struct device_node *from,
-+	const char *name, resource_size_t reg)
-+{
-+	struct device_node *np;
-+	struct resource res;
-+
-+	while ((np = of_find_node_by_name(from, name)) != NULL) {
-+		if (!of_address_to_resource(np, 0, &res))
-+			if ((res.start == reg) && of_node_get(np)) {
-+				pr_debug("find node %s 0x%x: %s\n", name,
-+						reg, np->full_name);
-+				break;
-+			}
-+		from = np;
-+	}
-+
-+	return np;
-+}
-+EXPORT_SYMBOL(of_find_node_by_name_and_reg);
-+
-+/**
-  *	of_find_node_by_type - Find a node by its "device_type" property
-  *	@from:	The node to start searching from, or NULL to start searching
-  *		the entire device tree. The node you pass will not be
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 423624b..27ad6ae 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -718,21 +718,52 @@ void __init unflatten_device_tree(void)
- 	of_alias_scan(early_init_dt_alloc_memory_arch);
- }
- 
-+static int of_flat_update_node_by_name(const char *s, bool enable)
-+{
-+	char node[256];
-+	char *r, *p;
-+	struct device_node *np;
-+	unsigned long reg;
-+
-+	if (!s)
-+		return -EINVAL;
-+
-+	p = strchr(s, '@');
-+	strncpy(node, s, p - s);
-+	node[p - s] = '\0';
-+	r = p + 1;
-+	if (kstrtoul(r, 16, &reg))
-+		return -EINVAL;
-+
-+	np = of_find_node_by_name_and_reg(NULL, node, reg);
-+	if (!np) {
-+		pr_debug("%s: unable to find node %s\n", __func__, s);
-+		return -ENODEV;
-+	}
-+
-+	return enable ? of_node_status_enable(np) :
-+			of_node_status_disable(np);
-+}
-+
- /*
-  * The format for the command line is as follows:
-  *
-- * fdt.<enable|disable>=<path>[,<path>]
-+ * fdt.<enable|disable>=<path|node>[,<path|node>]
-  * enable    := update the device node to a enabled state
-  * disable   := update the device node to a disabled state
-  * <path>    := node path or node full name in device tree
-+ * <node>    := node name in device tree
-  *
-  * e.g:
-  *	fdt.enable=/soc/aips-bus@02100000/i2c@021a8000,/soc/aips-bus@02100000/weim@021b8000
-  *	fdt.disable=/soc/aips-bus@02100000/weim@021b8000
-+ *	or
-+ *	fdt.enable=i2c@021a8000,weim@021b8000
-+ *	fdt.disable=weim@021b8000
-  */
- static int __init __of_flat_parse_param(char *s, bool enable)
- {
--	char path[256], *p;
-+	char node[256], *p;
- 
- 	if (!s)
- 		return 0;
-@@ -742,20 +773,31 @@ static int __init __of_flat_parse_param(char *s, bool enable)
- 		p = strchr(s, ',');
- 		if (p != NULL) {
- 			BUG_ON((p - s) >= 256);
--			strncpy(path, s, p - s);
--			path[p - s] = '\0';
--			if (enable)
--				of_node_status_enable_by_path(path);
--			else
--				of_node_status_disable_by_path(path);
-+			strncpy(node, s, p - s);
-+			node[p - s] = '\0';
-+			if (*s != '/') {
-+				/* device tree node name */
-+				of_flat_update_node_by_name(node, enable);
-+			} else {
-+				/* device tree node full path*/
-+				if (enable)
-+					of_node_status_enable_by_path(node);
-+				else
-+					of_node_status_disable_by_path(node);
-+			}
-+
- 			/* search for next node */
- 			s = p + 1;
- 		} else {
- 			/* last node */
--			if (enable)
--				of_node_status_enable_by_path(s);
--			else
--				of_node_status_disable_by_path(s);
-+			if (*s != '/') {
-+				of_flat_update_node_by_name(s, enable);
-+			} else {
-+				if (enable)
-+					of_node_status_enable_by_path(s);
-+				else
-+					of_node_status_disable_by_path(s);
-+			}
- 			break;
- 		}
- 	}
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 61b35fe..7dd3da0 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -170,6 +170,8 @@ extern struct device_node *of_find_node_by_name(struct device_node *from,
- #define for_each_node_by_name(dn, name) \
- 	for (dn = of_find_node_by_name(NULL, name); dn; \
- 	     dn = of_find_node_by_name(dn, name))
-+extern struct device_node *of_find_node_by_name_and_reg(struct device_node *from,
-+	const char *name, resource_size_t reg);
- extern struct device_node *of_find_node_by_type(struct device_node *from,
- 	const char *type);
- #define for_each_node_by_type(dn, type) \
-@@ -361,6 +363,12 @@ static inline struct device_node *of_find_node_by_name(struct device_node *from,
- 	return NULL;
- }
- 
-+static inline struct device_node *of_find_node_by_name_and_reg(
-+	struct device_node *from, const char *name, resource_size_t reg)
-+{
-+	return NULL;
-+}
-+
- static inline struct device_node *of_get_parent(const struct device_node *node)
- {
- 	return NULL;
--- 
-1.7.1
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jul 04, 2013 at 03:27:57PM +0800, Bo Shen wrote:
+> Hi All,
+>=20
+> On 6/21/2013 16:45, Bo Shen wrote:
+> >add atmel pwm controller driver based on PWM framework
+> >
+> >this is basic function implementation of pwm controller
+> >it can work with pwm based led and backlight
+> >
+> >Signed-off-by: Bo Shen <voice.shen@atmel.com>
+> >---
+> >  .../devicetree/bindings/pwm/atmel-pwm.txt          |   19 ++
+> >  drivers/pwm/Kconfig                                |    9 +
+> >  drivers/pwm/Makefile                               |    1 +
+> >  drivers/pwm/pwm-atmel.c                            |  326 ++++++++++++=
+++++++++
+> >  4 files changed, 355 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+> >  create mode 100644 drivers/pwm/pwm-atmel.c
+>=20
+> Does this patch can be applied? If yes, I will send out the formal
+> patch without RFC in subject. If no, please help review this patch
+> and give your comments.
+
+Hi,
+
+Sorry I seem to have completely missed this. Can you please resend the
+patch to my new email address and Cc linux-pwm@vger.kernel.org. That
+will make sure that I see and can review it.
+
+Thanks,
+Thierry
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSDLfvAAoJEN0jrNd/PrOhknYQAKVD1g6hjnzSZItuyFeXv+3W
+MI2b4mAft7E11pKu+rYErQclb40oeVi7OPptBLiHYu1q+yyqOyhM/gvB0elcVTPN
+HaEAbULpCv4U2StkXHD6bBlLA9aBnaA1SlQSsBOpOK4UAXR45G+dSf40CYz7XrRu
+UZliniimeaszKxauMEFXdnpBKiaXYgP/Lelpo0tCclOR7rSNWbnoHiA52QKXlGLU
+/MlYNl2AfaMj0J8uEG8/cLH2HswID55k8jj0pH4wbJ8oP1ccdW562FNWIXcCNQfg
+TN+hWOI4OyqARlQ1N4AzzbnU4I37qLE1ZvJGmK6RbOJJ8au9xlnzeoXMsVwlY6jD
+/zbr07Z+GDrncd30/0rynBSyOeA6K+lVMQaFL8JohnPrnmGsK2R93eYfzjAKXgUM
+g4yC3Dwl4Om/uaswqRVEzLnL98fJ5xJ6PEgoO2jxIZBs1iQlfyj8mLai1Cr/b7Vb
+0/p9AA3zxFZdB1a53hnmCVnCYbV0WxTsLiNCRteltFVGXNJISkmls0b0kp2cS/lz
+/biOo3dZADP9lppa0K4evAS4NBtrz9g8AszON4vpbbYzBCvnQlCXC5LgbOgfJSg9
+D1CjlR0vOPtCh6KiGi7HxM/BX+orPLyua2ztWMUH//uhPVOaoZu3NvoL1rg6tQDu
+griVBch1oqupxonv3XXL
+=Wny8
+-----END PGP SIGNATURE-----
+
+--X1bOJ3K7DJ5YkBrT--
+
+
+--===============4690591058816510007==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4690591058816510007==--
