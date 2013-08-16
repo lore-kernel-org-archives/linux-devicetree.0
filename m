@@ -1,61 +1,101 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56288 "EHLO mail.gnudd.com"
+Received: from bear.ext.ti.com ([192.94.94.41]:51061 "EHLO bear.ext.ti.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932458Ab3HGKXI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:23:08 -0400
-Date: Wed, 7 Aug 2013 12:16:30 +0200
-From: Alessandro Rubini <rubini@gnudd.com>
-Subject: [PATCH 01/26] x86: fix warning for sta2x11
-Message-ID: <ecfa93f64262f5428da9400740f86786ff04d346.1375867291.git.rubini@gnudd.com>
+	id S1751062Ab3HPWJy convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 16 Aug 2013 18:09:54 -0400
+From: "Etheridge, Darren" <detheridge@ti.com>
+Subject: RE: [RFC 1/1] video: da8xx-fb: adding dt support
+Date: Fri, 16 Aug 2013 20:11:27 +0000
+Message-ID: <1A80A2FD7F34484786E5DF71F3968B6940F788CC@DLEE10.ent.ti.com>
+References: <1375992936-16755-1-git-send-email-detheridge@ti.com>
+ <1375992936-16755-2-git-send-email-detheridge@ti.com>
+ <CA+V-a8uSd7cypG=zTPyfkdq_xSdxHeGpoRu497U8C-3ZUsfu5w@mail.gmail.com>
+In-Reply-To: <CA+V-a8uSd7cypG=zTPyfkdq_xSdxHeGpoRu497U8C-3ZUsfu5w@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Davide Ciminaghi <ciminaghi@gnudd.com>, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, "plagnioj@jcrosoft.com" <plagnioj@jcrosoft.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "Mohammed, Afzal" <afzal@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The .free fied of struct dma_map_ops features a prototype that is
-different from what lib/swiotlb.c offers. The new "attrs" argument in
-dma_ops.free is missing from the generic implementation.
+From: Prabhakar Lad [mailto:prabhakar.csengg@gmail.com]
+> Sent: Thursday, August 08, 2013 11:07 PM
+> Subject: Re: [RFC 1/1] video: da8xx-fb: adding dt support
+> 
+> Hi Darren,
+> 
+> Thanks for the patch, below are few nits!
+> 
+Prabhakar,
 
-This removes the build warning by providing a function that just calls
-swiotlb_free_coherent() without passing "attrs".
+Thanks for reviewing, somehow I missed your reply so sorry about late response.
 
-The real solution, in my opinion, would be adding "attrs" as argument
-to swiotlb_free_coherent() and remove this new empty function as well
-as the identical ones found in other 6 files within arch.
+> On Fri, Aug 9, 2013 at 1:45 AM, Darren Etheridge <detheridge@ti.com>
+> wrote:
+> > Enhancing driver to enable probe triggered by a corresponding dt entry.
+> >
+<snip>
+> > +
+> > +       cfg = devm_kzalloc(&dev->dev, sizeof(struct fb_videomode),
+> GFP_KERNEL);
+> > +       if (!cfg) {
+> > +               dev_err(&dev->dev, "memory allocation failed\n");
+> 
+> devm_* api will print the message if allocation has failed, please remove the
+> above err statement and also similarly below.
 
-Signed-off-by: Alessandro Rubini <rubini@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
----
- arch/x86/pci/sta2x11-fixup.c |    9 ++++++++-
- 1 files changed, 8 insertions(+), 1 deletions(-)
+Will fix.
 
-diff --git a/arch/x86/pci/sta2x11-fixup.c b/arch/x86/pci/sta2x11-fixup.c
-index 9d8a509..5c24ccb 100644
---- a/arch/x86/pci/sta2x11-fixup.c
-+++ b/arch/x86/pci/sta2x11-fixup.c
-@@ -180,10 +180,17 @@ static void *sta2x11_swiotlb_alloc_coherent(struct device *dev,
- 	return vaddr;
- }
- 
-+static void sta2x11_swiotlb_free_coherent(struct device *dev, size_t size,
-+					  void *vaddr, dma_addr_t dma_addr,
-+					  struct dma_attrs *attrs)
-+{
-+	swiotlb_free_coherent(dev, size, vaddr, dma_addr);
-+}
-+
- /* We have our own dma_ops: the same as swiotlb but from alloc (above) */
- static struct dma_map_ops sta2x11_dma_ops = {
- 	.alloc = sta2x11_swiotlb_alloc_coherent,
--	.free = swiotlb_free_coherent,
-+	.free = sta2x11_swiotlb_free_coherent,
- 	.map_page = swiotlb_map_page,
- 	.unmap_page = swiotlb_unmap_page,
- 	.map_sg = swiotlb_map_sg_attrs,
--- 
-1.7.7.2
+<snip>
+
+> > +               lcdc_info = devm_kzalloc(&dev->dev,
+> > +                                        sizeof(struct fb_videomode),
+> > +                                        GFP_KERNEL);
+> > +               if (!lcdc_info) {
+> > +                       dev_err(&dev->dev, "memory allocation
+> > + failed\n");
+> ditto
+
+Will fix
+
+<snip>
+
+> > @@ -1390,7 +1439,7 @@ static int fb_probe(struct platform_device
+> *device)
+> >         par->dev = &device->dev;
+> >         par->lcdc_clk = tmp_lcdc_clk;
+> >         par->lcdc_clk_rate = clk_get_rate(par->lcdc_clk);
+> > -       if (fb_pdata->panel_power_ctrl) {
+> > +       if (fb_pdata && fb_pdata->panel_power_ctrl) {
+> >                 par->panel_power_ctrl = fb_pdata->panel_power_ctrl;
+> >                 par->panel_power_ctrl(1);
+> 
+> What happens to this data in DT case ?
+>
+
+Good find,  right now we don't do any power control in the DT case - this is something that needs to be addressed.
+
+>
+ > >         }
+> > @@ -1638,6 +1687,17 @@ static int fb_resume(struct platform_device
+> > *dev)  #define fb_resume NULL  #endif
+> >
+> > +static const struct of_device_id da8xx_fb_of_match[] = {
+> > +       /*
+> > +        * this driver supports version 1 and version 2 of the
+> > +        * Texas Instruments lcd controller (lcdc) hardware block
+> > +        */
+> > +       {.compatible = "ti,da830-lcdc", },
+> > +       {.compatible = "ti,am3352-lcdc", },
+> > +       {},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, da8xx_fb_of_match);
+> > +
+> you can bound this structure and the macro in IS_ENABLED(CONFIG_OF)
+
+Ok will look at that.
+
+Thanks,
+Darren
