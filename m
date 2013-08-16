@@ -1,113 +1,80 @@
-Return-Path: <sachin.kamat@linaro.org>
-Return-Path: <sachin.kamat@linaro.org>
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH Resend 2/2] usb: phy: samsung: Update usbphy documentation
-Date: Wed, 14 Aug 2013 16:52:57 +0530
-Message-Id: <1376479377-15732-2-git-send-email-sachin.kamat@linaro.org>
-In-Reply-To: <1376479377-15732-1-git-send-email-sachin.kamat@linaro.org>
-References: <1376479377-15732-1-git-send-email-sachin.kamat@linaro.org>
-To: devicetree@vger.kernel.org
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, robherring2@gmail.com, sachin.kamat@linaro.org
+Return-Path: <devicetree-owner@vger.kernel.org>
+Received: from mail-bk0-f48.google.com ([209.85.214.48]:44392 "EHLO
+	mail-bk0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752010Ab3HPWQq (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 16 Aug 2013 18:16:46 -0400
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [RFC 4/4] OF: Add device pointer to struct device_node
+Date: Fri, 16 Aug 2013 22:39:23 +0200
+Message-Id: <1376685563-1053-5-git-send-email-treding@nvidia.com>
+In-Reply-To: <1376685563-1053-1-git-send-email-treding@nvidia.com>
+References: <1376685563-1053-1-git-send-email-treding@nvidia.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Updated the documentation as per the latest driver implementation.
-While at it also fixed some trivial typos.
-
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-Acked-by: Felipe Balbi <balbi@ti.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- .../devicetree/bindings/usb/samsung-usbphy.txt     |   48 ++++++++++----------
- 1 file changed, 23 insertions(+), 25 deletions(-)
+ drivers/of/device.c   |  2 ++
+ drivers/of/platform.c | 10 +---------
+ include/linux/of.h    |  2 ++
+ 3 files changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-index 33fd354..62e6f17 100644
---- a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-+++ b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-@@ -1,34 +1,32 @@
- SAMSUNG USB-PHY controllers
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index f685e55..8f8e715 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -63,6 +63,8 @@ int of_device_add(struct platform_device *ofdev)
+ 	if (!ofdev->dev.parent)
+ 		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
  
--** Samsung's usb 2.0 phy transceiver
-+** Samsung's USB 2.0 phy transceiver
++	ofdev->dev.of_node->dev = &ofdev->dev;
++
+ 	return device_add(&ofdev->dev);
+ }
  
--The Samsung's usb 2.0 phy transceiver is used for controlling
--usb 2.0 phy for s3c-hsotg as well as ehci-s5p and ohci-exynos
--usb controllers across Samsung SOCs.
-+The Samsung's USB 2.0 phy transceiver is used for controlling
-+USB 2.0 phy for s3c-hsotg as well as ehci-s5p and ohci-exynos
-+USB controllers across Samsung SOCs.
- TODO: Adding the PHY binding with controller(s) according to the under
- development generic PHY driver.
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index b0d1ff8..0ae68bd 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -31,11 +31,6 @@ const struct of_device_id of_default_bus_match_table[] = {
+ 	{} /* Empty terminated list */
+ };
  
- Required properties:
- 
--Exynos4210:
--- compatible : should be "samsung,exynos4210-usb2phy"
--- reg : base physical address of the phy registers and length of memory mapped
--	region.
--- clocks: Clock IDs array as required by the controller.
--- clock-names: names of clock correseponding IDs clock property as requested
--	       by the controller driver.
+-static int of_dev_node_match(struct device *dev, void *data)
+-{
+-	return dev->of_node == data;
+-}
 -
--Exynos5250:
--- compatible : should be "samsung,exynos5250-usb2phy"
-+- compatible : value should be one among the following:
-+	(a) "samsung,s3c64xx-usb2phy" for S3C64xx SoCs
-+	(b) "samsung,exynos4210-usb2phy" for Exynos4210 SoC
-+	(c) "samsung,exynos4x12-usb2phy" for Exynos4x12 SoCs
-+	(d) "samsung,exynos5250-usb2phy" for Exynos5250 SoC
- - reg : base physical address of the phy registers and length of memory mapped
- 	region.
-+- clocks : Clock IDs array as required by the controller.
-+- clock-names : names of clocks listed in clocks property in the same order
-+	       as requested by the controller driver.
+ /**
+  * of_find_device_by_node - Find the platform_device associated with a node
+  * @np: Pointer to device tree node
+@@ -44,10 +39,7 @@ static int of_dev_node_match(struct device *dev, void *data)
+  */
+ struct platform_device *of_find_device_by_node(struct device_node *np)
+ {
+-	struct device *dev;
+-
+-	dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
+-	return dev ? to_platform_device(dev) : NULL;
++	return np->dev ? to_platform_device(np->dev) : NULL;
+ }
+ EXPORT_SYMBOL(of_find_device_by_node);
  
- Optional properties:
--- #address-cells: should be '1' when usbphy node has a child node with 'reg'
-+- #address-cellsi : should be '1' when usbphy node has a child node with 'reg'
- 		  property.
--- #size-cells: should be '1' when usbphy node has a child node with 'reg'
-+- #size-cells : should be '1' when usbphy node has a child node with 'reg'
- 	       property.
--- ranges: allows valid translation between child's address space and parent's
-+- ranges : allows valid translation between child's address space and parent's
- 	  address space.
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 17ce8a6..e583a6d 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -65,6 +65,8 @@ struct device_node {
+ 	unsigned int unique_id;
+ 	struct of_irq_controller *irq_trans;
+ #endif
++
++	struct device *dev;
+ };
  
- - The child node 'usbphy-sys' to the node 'usbphy' is for the system controller
-@@ -63,10 +61,10 @@ Example:
- 	};
- 
- 
--** Samsung's usb 3.0 phy transceiver
-+** Samsung's USB 3.0 phy transceiver
- 
--Starting exynso5250, Samsung's SoC have usb 3.0 phy transceiver
--which is used for controlling usb 3.0 phy for dwc3-exynos usb 3.0
-+Starting Exynos5250, Samsung's SoC have USB 3.0 phy transceiver
-+which is used for controlling USB 3.0 phy for dwc3-exynos USB 3.0
- controllers across Samsung SOCs.
- 
- Required properties:
-@@ -75,16 +73,16 @@ Exynos5250:
- - compatible : should be "samsung,exynos5250-usb3phy"
- - reg : base physical address of the phy registers and length of memory mapped
- 	region.
--- clocks: Clock IDs array as required by the controller.
--- clock-names: names of clocks correseponding to IDs in the clock property
-+- clocks : Clock IDs array as required by the controller.
-+- clock-names : names of clocks correseponding to IDs in the clock property
- 	       as requested by the controller driver.
- 
- Optional properties:
--- #address-cells: should be '1' when usbphy node has a child node with 'reg'
-+- #address-cells : should be '1' when usbphy node has a child node with 'reg'
- 		  property.
--- #size-cells: should be '1' when usbphy node has a child node with 'reg'
-+- #size-cells : should be '1' when usbphy node has a child node with 'reg'
- 	       property.
--- ranges: allows valid translation between child's address space and parent's
-+- ranges : allows valid translation between child's address space and parent's
- 	  address space.
- 
- - The child node 'usbphy-sys' to the node 'usbphy' is for the system controller
+ #define MAX_PHANDLE_ARGS 8
 -- 
-1.7.9.5
+1.8.3.4
+
