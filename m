@@ -1,39 +1,80 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pa0-f43.google.com ([209.85.220.43]:44785 "EHLO
-	mail-pa0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759911Ab3HNLlg (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 07:41:36 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v3 3/4] ARM: dts: Update 5250 MFC node
-Date: Wed, 14 Aug 2013 17:11:36 +0530
-Message-Id: <1376480497-17572-4-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1376480497-17572-1-git-send-email-arun.kk@samsung.com>
-References: <1376480497-17572-1-git-send-email-arun.kk@samsung.com>
+Received: from mail-bk0-f52.google.com ([209.85.214.52]:51744 "EHLO
+	mail-bk0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754408Ab3HPWYg (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 16 Aug 2013 18:24:36 -0400
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [RFC 1/4] driver core: Register SoC bus after platform bus
+Date: Fri, 16 Aug 2013 22:39:20 +0200
+Message-Id: <1376685563-1053-2-git-send-email-treding@nvidia.com>
+In-Reply-To: <1376685563-1053-1-git-send-email-treding@nvidia.com>
+References: <1376685563-1053-1-git-send-email-treding@nvidia.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, k.debski@samsung.com, s.nawrocki@samsung.com, sachin.kamat@linaro.org, arun.kk@samsung.com
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The patch adds the MFC clock entry for the 5250 SoC.
+Instead of registering the SoC bus as a core initcall, call it directly
+from driver_init() to make it explicit when it is called. This is done
+in preparation for early device registration support.
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- arch/arm/boot/dts/exynos5250.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/base/base.h |  5 +++++
+ drivers/base/init.c |  1 +
+ drivers/base/soc.c  | 11 +----------
+ 3 files changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 88589b7..7c7b0d2 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -176,6 +176,8 @@
- 		reg = <0x11000000 0x10000>;
- 		interrupts = <0 96 0>;
- 		samsung,power-domain = <&pd_mfc>;
-+		clocks = <&clock 266>;
-+		clock-names = "mfc";
- 	};
+diff --git a/drivers/base/base.h b/drivers/base/base.h
+index 2cbc677..77e0722 100644
+--- a/drivers/base/base.h
++++ b/drivers/base/base.h
+@@ -99,6 +99,11 @@ extern int hypervisor_init(void);
+ static inline int hypervisor_init(void) { return 0; }
+ #endif
+ extern int platform_bus_init(void);
++#ifdef CONFIG_SOC_BUS
++extern int soc_bus_init(void);
++#else
++static inline int soc_bus_init(void) { return 0; }
++#endif
+ extern void cpu_dev_init(void);
  
- 	rtc {
+ struct kobject *virtual_device_parent(struct device *dev);
+diff --git a/drivers/base/init.c b/drivers/base/init.c
+index c16f0b8..a4c4090 100644
+--- a/drivers/base/init.c
++++ b/drivers/base/init.c
+@@ -31,6 +31,7 @@ void __init driver_init(void)
+ 	 * core core pieces.
+ 	 */
+ 	platform_bus_init();
++	soc_bus_init();
+ 	cpu_dev_init();
+ 	memory_dev_init();
+ }
+diff --git a/drivers/base/soc.c b/drivers/base/soc.c
+index 72b5e72..ea116f4 100644
+--- a/drivers/base/soc.c
++++ b/drivers/base/soc.c
+@@ -166,16 +166,7 @@ void soc_device_unregister(struct soc_device *soc_dev)
+ 	device_unregister(&soc_dev->dev);
+ }
+ 
+-static int __init soc_bus_register(void)
++int __init soc_bus_init(void)
+ {
+ 	return bus_register(&soc_bus_type);
+ }
+-core_initcall(soc_bus_register);
+-
+-static void __exit soc_bus_unregister(void)
+-{
+-	ida_destroy(&soc_ida);
+-
+-	bus_unregister(&soc_bus_type);
+-}
+-module_exit(soc_bus_unregister);
 -- 
-1.7.9.5
+1.8.3.4
 
