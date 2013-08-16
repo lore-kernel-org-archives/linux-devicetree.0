@@ -1,18 +1,18 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:36353 "EHLO
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:39411 "EHLO
 	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752947Ab3HPWrO (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 16 Aug 2013 18:47:14 -0400
-Date: Fri, 16 Aug 2013 23:46:54 +0100
+	with ESMTP id S1754403Ab3HPWSV (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 16 Aug 2013 18:18:21 -0400
+Date: Fri, 16 Aug 2013 21:00:09 +0100
 From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130816224654.GV30073@sirena.org.uk>
-References: <20130816200009.GU30073@sirena.org.uk>
- <Pine.LNX.4.44L0.1308161625520.1532-100000@iolanthe.rowland.org>
+Message-ID: <20130816200009.GU30073@sirena.org.uk>
+References: <20130816183934.GQ30073@sirena.org.uk>
+ <Pine.LNX.4.44L0.1308161457300.1532-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6qFdnjy6dKaiDX/E"
+	protocol="application/pgp-signature"; boundary="tn/+KOyBVBGpvvUM"
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1308161625520.1532-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1308161457300.1532-100000@iolanthe.rowland.org>
 Subject: Re: Non-enumerable devices on USB and other enumerable buses
 Sender: devicetree-owner@vger.kernel.org
 To: Alan Stern <stern@rowland.harvard.edu>
@@ -20,62 +20,63 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@ca
 List-ID: <devicetree@vger.kernel.org>
 
 
---6qFdnjy6dKaiDX/E
+--tn/+KOyBVBGpvvUM
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 16, 2013 at 04:39:47PM -0400, Alan Stern wrote:
+On Fri, Aug 16, 2013 at 03:27:58PM -0400, Alan Stern wrote:
 > On Fri, 16 Aug 2013, Mark Brown wrote:
 
-> > The device in this context is a running instance of the driver.
+> >  or those for getting platform data to a device when it
+> > does enumerate.
 
-> It's kind of difficult to understand what you're saying.  Obviously the
-> literal meaning is not what you had in mind, because a device can't be
-> a driver (or even a running instance of a driver).  Maybe you meant
-> that the word "device" above should have been the word "driver".
+> ?  I can't make any sense out of that comment.  For one thing, why do
+> you need to send platform data to a device?  (It's obvious that a
+> _driver_ would need to use platform data; it's not so clear that a
+> _device_ would.)
 
-I don't think using device to refer to an instance of the running driver
-is that obscure a usage to be honest...
+The device in this context is a running instance of the driver.
 
-> So you seem to be saying that significant modifications would be needed=
-=20
-> to get platform information to the driver.  I don't see why.  Lots and=20
-> lots of drivers use platform information right now.
+> > > (The second proposal also has the advantage that the power-on code ma=
+y=20
+> > > be shared between the driver and the subsystem.)
 
-> Besides, you need to get the platform information to the driver in any=20
-> case, no matter how you decide to solve the chicken-and-egg problem. =20
-> It shouldn't be a factor in deciding which solution to use.
+> > Can you explain in more detail please, I don't follow?
 
-It's not that this is hard, it's that I don't see how if you already
-have some concept of the device in the kernel data structures (which you
-must have in order to be able to provide platform data when it's needed)
-anything is gained by not using that when dealing with bootstrapping
-issues.
+> Let's say the subsystem powers up the device when the bus is first
+> registered, so that the device can be detected and enumerated.  Let's
+> also say that the driver wants to power-off and power-on the device
+> from time to time, as part of normal runtime PM.  Then instead of
+> having its own power-on routine (which would be code duplication), the
+> driver can simply call the subsystem's power-on routine.  (Of course,
+> this would mean that the routine would no longer be run-once.)
 
-Anyway, I think it's time to try to implement something rather than talk
-about it.
+Oh, OK.  I don't think that's a meaningful difference, the driver is
+going to have the code and be able to reuse it one way or another
+anyway.  In many cases if the device has been in a low power idle mode a
+slightly difference sequence would be needed anyway.
 
---6qFdnjy6dKaiDX/E
+--tn/+KOyBVBGpvvUM
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.20 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSDqvaAAoJELSic+t+oim9HAYP/1C8U3l0mluWUZu3I26nQY1X
-hXu9D/4seUH/AUamUFIoxdo+4BiWYSc7ChsVLdzaArKwQrlRyoOdqqlWts6eqHVA
-dOY0eoxbiuPQ7nGhlPurm/LCtBWWgvHZ9ry5enZLD69gyHwpL8NhS35LXNGPMed2
-bJ2P04w/JZ2NlQOS0Vlzu+VKXug77L3ph8vQxbsZsm4tEWKLj5gjRUjHlnZy1gbt
-NUuzJQnii08imdfO/u85DsS2Jhgk3guEuTqlNAoGSqtMc4tnCtXIcNXLsXefPata
-+RcsgsDajgCVicP3moHSuMJf40987T4wp9TMzk+kGSyGlAnFIFMqj3bo4jbFoDtF
-18+lse7g8+ZjwEthTxfYcyWoyh03zwpLqq+AIWLGrHcjW2vKqG4C4XC8z6uAPSIT
-7VyVhboWAOpgzj9OL+st6b5ATRxilb3ugLpLvxcmnfFeP1ksvOEkuUDOXHKWkQ9E
-kId08flHisXqMmfByPzDucQYxDZPeEVIBVz+PnWIbudtqO6EfKEQJD0L+WsE9d0+
-qLhulUdLt3qY39yMG4OQ0FYEcisJvfpaB7gW2jQnj6YCzIL9I2Te191Sujrp+6QG
-If/oo+6ee4QAk7nwvAbBVRrc2na5t4YJk+8kjIwNqQ4+PSwz2kfdOod1W2Z8yqZ4
-IzECHx8jBvLowYTfVTCI
-=jugJ
+iQIcBAEBAgAGBQJSDoTGAAoJELSic+t+oim9amYQAI3sV5dIqWFg9D0m1NJXOQxc
+K21hwDTPrNrMYfd/o613WaBBw1jdTdtmQH7qvw68E+X1iWydxQwS+De+kSbHMll+
+DEZVBf0wwDR7PDO8Hqud9F3jbjDJZXciNNpbAAHxq7fTQqTyM9LNXU+aOAv/tayz
+KEZWUtiAMHMecMJYK/jDxRWIirhMgdvbOyvIlOWR/gSR/dmgm+n4luYF6amiDV/P
+7yH3Pcl6R8UbIh0X7LHN2Y9nBumSQrqvPFtBH1qOpKME0tHvkG3IrZH/3xrZkVyZ
+Awhg7dw/pIjndmmtnQge8zyh26IXQ2F5EqSb2K4TqQDKx9Aftk0D0nxOij6iO3Cl
+L93rlGe0s/6yq1LymaZm4oScxL6FHuY+kFtTwJyhMRXa2bgYotsLTg1epvvFwxs3
+N09mCrrKZJwZdRaPsxOyg0fQ8rfGD6s0w04sE1zuxeSyxdKxoooTaCga8HE1zNi2
+ays2KOixIT7Kfugz66fFqHnqXYKw5XWZOtMUzqhhJWrq0am4ESqIPWrexiS9Wqme
+H6VQjHjau9/VrOxhqzTOLpGNueiSwzUIvuqEd7r1pqT2tX9gP03amI/iJWjnefgg
+QlVwJpE1e+gA7Sp0jCu5NMqZXi2mYZlcdfVF98e5Hm1IJB4dlq1O+2OvFgLbgG6Q
+9NN8bZPxW3pHfIJWfMt3
+=+9X3
 -----END PGP SIGNATURE-----
 
---6qFdnjy6dKaiDX/E--
+--tn/+KOyBVBGpvvUM--
