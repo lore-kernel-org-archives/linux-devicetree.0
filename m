@@ -1,35 +1,94 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12]:57814 "EHLO
+Received: from mail.linuxfoundation.org ([140.211.169.12]:57675 "EHLO
 	mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751911Ab3HQAku (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 16 Aug 2013 20:40:50 -0400
-Date: Fri, 16 Aug 2013 15:35:23 -0700
+	with ESMTP id S1755250Ab3HQAKu (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 16 Aug 2013 20:10:50 -0400
+Date: Fri, 16 Aug 2013 14:06:37 -0700
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Subject: Re: [RFC 2/4] driver core: Allow early registration of devices
-Message-ID: <20130816223523.GA31247@kroah.com>
+Message-ID: <20130816210637.GC2198@kroah.com>
 References: <1376685563-1053-1-git-send-email-treding@nvidia.com>
  <1376685563-1053-3-git-send-email-treding@nvidia.com>
- <20130816210637.GC2198@kroah.com>
- <20130816215530.GA14464@mithrandir>
- <CACxGe6uhiKY7a0+aViEamwKbE2tJicVc8CMZChBUaf+KYTs5rw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACxGe6uhiKY7a0+aViEamwKbE2tJicVc8CMZChBUaf+KYTs5rw@mail.gmail.com>
+In-Reply-To: <1376685563-1053-3-git-send-email-treding@nvidia.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Aug 16, 2013 at 11:20:55PM +0100, Grant Likely wrote:
-> Also, for the devices that are created early, is it really appropriate
-> to use APIs that require a struct device? I could easily argue that
-> anything done at early boot should only be the bare minimum to allow
-> the kernel to get to initcalls, and so mucking about with devices is
-> inappropriate because it really messes with the assumptions made in
-> the design of the driver model.
+On Fri, Aug 16, 2013 at 10:39:21PM +0200, Thierry Reding wrote:
+> +static DEFINE_MUTEX(device_early_mutex);
+> +static LIST_HEAD(device_early_list);
+> +static bool device_is_early = true;
+> +
+> +/*
+> + * Keep a list of early registered devices so that they can be fully
+> + * registered at a later point in time.
+> + */
+> +static void device_early_add(struct device *dev)
 
-I agree, this could get really messy, really fast, and be a place that
-people abuse quite easily.
+__init?
+
+> +{
+> +	mutex_lock(&device_early_mutex);
+> +	list_add_tail(&dev->p->early, &device_early_list);
+> +	mutex_unlock(&device_early_mutex);
+> +}
+> +
+> +/*
+> + * Mark the early device registration phase as completed.
+> + */
+> +int __init device_early_init(void)
+> +{
+> +	device_is_early = false;
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Fixup platform devices instantiated from device tree. The problem is
+> + * that since early registration happens before interrupt controllers
+> + * have been setup, the OF core code won't know how to map interrupts.
+> + */
+> +int __init platform_device_early_fixup(struct platform_device *pdev)
+
+This shouldn't be in this file, because:
+
+> +/*
+> + * Fully register early devices.
+> + */
+> +int __init device_early_done(void)
+> +{
+> +	struct device_private *private;
+> +
+> +	list_for_each_entry(private, &device_early_list, early) {
+> +		struct device *dev = private->device;
+> +		int err;
+> +
+> +		if (dev->bus == &platform_bus_type) {
+
+Why special case the platform bus?  We are trying to move things off of
+the platform bus, don't make it harder to do that :)
+
+> +			struct platform_device *pdev = to_platform_device(dev);
+> +
+> +			err = platform_device_early_fixup(pdev);
+> +			if (err < 0)
+> +				dev_err(&pdev->dev,
+> +					"failed to fixup device %s: %d\n",
+> +					dev_name(&pdev->dev), err);
+> +		}
+
+You should just have a bus callback that can be made here that, if
+present, can be called.  That way any bus can handle this type of thing,
+not just the platform one.
+
+
+Not that I really like the whole idea anyway, but I doubt there's much I
+can do about it...
+
+thanks,
 
 greg k-h
