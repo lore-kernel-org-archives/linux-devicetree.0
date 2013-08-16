@@ -1,105 +1,50 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pd0-f177.google.com ([209.85.192.177]:63776 "EHLO
-	mail-pd0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754415Ab3HQVO2 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sat, 17 Aug 2013 17:14:28 -0400
-Received: by mail-pd0-f177.google.com with SMTP id y10so3502151pdj.36
-        for <devicetree@vger.kernel.org>; Sat, 17 Aug 2013 14:14:28 -0700 (PDT)
-Date: Sat, 17 Aug 2013 14:14:23 -0700
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v4 1/4] mtd: nand: gpio: Add DT property to automatically
- determine bus width
-Message-ID: <20130817211423.GF11210@norris.computersforpeace.net>
-References: <1376637583-12485-1-git-send-email-shc_work@mail.ru>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:52671 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754223Ab3HPWtw (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 16 Aug 2013 18:49:52 -0400
+Message-ID: <520EAC8D.5080802@wwwdotorg.org>
+Date: Fri, 16 Aug 2013 16:49:49 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1376637583-12485-1-git-send-email-shc_work@mail.ru>
+Subject: Re: [alsa-devel] [PATCH v4 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
+References: <1376308870-14232-1-git-send-email-b42378@freescale.com> <1376308870-14232-2-git-send-email-b42378@freescale.com> <CAOMZO5A7noEb98yuCPY6o2mf-FikFcMYiDLpg3huPKHMO7Fwdw@mail.gmail.com> <20130814032658.GA16915@S2101-09.ap.freescale.net> <20130814053016.GF31651@MrMyself> <20130814063931.GB31141@S2101-09.ap.freescale.net> <20130814063444.GG31651@MrMyself> <20130814081445.GC31141@S2101-09.ap.freescale.net> <520BA687.4030905@wwwdotorg.org> <20130815021823.GA1846@MrMyself> <20130815092428.GI16915@S2101-09.ap.freescale.net>
+In-Reply-To: <20130815092428.GI16915@S2101-09.ap.freescale.net>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Nicolin Chen <b42378@freescale.com>, Fabio Estevam <festevam@gmail.com>, broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, timur@tabi.org, rob.herring@calxeda.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Aug 16, 2013 at 11:19:42AM +0400, Alexander Shiyan wrote:
-> This patch adds a property to automatically determine the NAND
-> bus width. This property works if the bus width is not specified
-> explicitly.
+On 08/15/2013 03:24 AM, Shawn Guo wrote:
+> On Thu, Aug 15, 2013 at 10:18:23AM +0800, Nicolin Chen wrote:
+>> Hi Stephen,
+>>
+>> On Wed, Aug 14, 2013 at 09:47:19AM -0600, Stephen Warren wrote:
+>>> If the clock source name list is different, then it needs a different
+>>> compatible value, so that each compatible value can specify which clock
+>>> names are required.
+>>>
+>>> Also, the compatible value itself should always include the exact HW
+>>> that's present (most specific HW version), as well as any other HW it's
+>>> compatible with.
+>>  
+>> Thank you for the comments. Yes, I did so in v1-v3, but after rethinking
+>> about the situation (Actually both the HW version and the clock mux itself
+>> are same, just the clock sources connecting to the mux might be different),
+>> so I decided to do this by abstracting the driver from those source info
+>> and letting DT binding to pass such information. Because I think putting 
+>> the clock sources into the driver differed by compatible value would make
+>> the driver more like SoC-specified, not the ideal way -- SoC-independent,
+>> since the clock sources are based on SoC design, not on itself.
 > 
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-> ---
->  .../devicetree/bindings/mtd/gpio-control-nand.txt        |  2 ++
->  drivers/mtd/nand/gpio.c                                  | 16 ++++++++++++----
->  2 files changed, 14 insertions(+), 4 deletions(-)
+> +1
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-> index 36ef07d..91070d0 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-> @@ -19,6 +19,8 @@ Optional properties:
->    defaults to 1 byte.
->  - chip-delay : chip dependent delay for transferring data from array to
->    read registers (tR).  If not present then a default of 20us is used.
-> +- gpio-control-nand,bank-width-auto : Device bus width is determined
-> +  automatically if "bank-width" is omitted (Boolean).
->  - gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
->    location used to guard against bus reordering with regards to accesses to
->    the GPIO's and the NAND flash data bus.  If present, then after changing
-> diff --git a/drivers/mtd/nand/gpio.c b/drivers/mtd/nand/gpio.c
-> index e826f89..8eea181 100644
-> --- a/drivers/mtd/nand/gpio.c
-> +++ b/drivers/mtd/nand/gpio.c
-> @@ -116,6 +116,10 @@ static int gpio_nand_get_config_of(const struct device *dev,
->  			dev_err(dev, "invalid bank-width %u\n", val);
->  			return -EINVAL;
->  		}
-> +	} else {
+> It's pretty much the differences at SoC integration level not the IP
+> itself, and it just happens to be handled in a register of the IP.
 
-Combine with the 'if' and make it 'else if'.
+OK, if the difference are the sources of the clocks and not the set of
+clocks, then there's no issue. I can't remember what triggered my
+comments above, but obviously it wasn't clear that this was the case.
 
-> +		if (of_get_property(dev->of_node,
-> +				    "gpio-control-nand,bank-width-auto", NULL))
-
-of_property_read_bool()
-
-> +			plat->options |= NAND_BUSWIDTH_AUTO;
->  	}
->  
->  	plat->gpio_rdy = of_get_gpio(dev->of_node, 0);
-> @@ -223,6 +227,14 @@ static int gpio_nand_probe(struct platform_device *pdev)
->  	if (IS_ERR(chip->IO_ADDR_R))
->  		return PTR_ERR(chip->IO_ADDR_R);
->  
-> +	ret = gpio_nand_get_config(&pdev->dev, &gpiomtd->plat);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (resource_size(res) < 2)
-> +		gpiomtd->plat.options &= ~(NAND_BUSWIDTH_16 |
-> +					   NAND_BUSWIDTH_AUTO);
-
-I can't quite figure out what the significance of resource_size(res) < 2
-is. It doesn't quite match my reading of the device-tree documentation.
-Maybe I'm being dense. Is the resource provided as either an 8-bit IO
-address (length=1) or 16-bit IO address (length=2)?
-
-> +
->  	res = gpio_nand_get_io_sync(pdev);
->  	if (res) {
->  		gpiomtd->io_sync = devm_ioremap_resource(&pdev->dev, res);
-> @@ -230,10 +242,6 @@ static int gpio_nand_probe(struct platform_device *pdev)
->  			return PTR_ERR(gpiomtd->io_sync);
->  	}
->  
-> -	ret = gpio_nand_get_config(&pdev->dev, &gpiomtd->plat);
-> -	if (ret)
-> -		return ret;
-> -
->  	ret = devm_gpio_request(&pdev->dev, gpiomtd->plat.gpio_nce, "NAND NCE");
->  	if (ret)
->  		return ret;
-
-I can fixup the first 2 without a resend. Depending on your response to
-the third comment, I'll apply this.
-
-Thanks,
-Brian
