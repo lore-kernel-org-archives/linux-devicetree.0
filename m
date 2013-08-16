@@ -1,59 +1,46 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v4 5/5] ARM: davinci: da850: add OF_DEV_AUXDATA entry for eth0.
-Date: Fri, 16 Aug 2013 09:38:27 +0530
-Message-ID: <CA+V-a8uOHkS7sQVd442kZVD-v+p9hXp1cf+s-NW1_-xP-NXiqQ@mail.gmail.com>
-References: <1376546497-26931-1-git-send-email-prabhakar.csengg@gmail.com>
- <1376546497-26931-6-git-send-email-prabhakar.csengg@gmail.com> <520D2CAE.3090501@cogentembedded.com>
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH v10] i2c: exynos5: add High Speed I2C controller driver
+Date: Fri, 16 Aug 2013 10:28:23 +0530
+Message-ID: <CAHfPSqBnj2OTHdbnW3SCRf7SL1maMsWau1+9DWFLYRBM+1HOJQ@mail.gmail.com>
+References: <1354021236-28596-2-git-send-email-ch.naveen@samsung.com>
+ <1371638905-30633-1-git-send-email-ch.naveen@samsung.com> <3925484.kHD24rQYyy@amdc1227>
+ <20130815131226.GI17155@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <520D2CAE.3090501@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, LAK <linux-arm-kernel@lists.infradead.org>, netdev@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130815131226.GI17155@katana>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Tomasz Figa <t.figa@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Kukjin Kim <kgene.kim@samsung.com>, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, taeggyun.ko@samsung.com, balbi@ti.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On 15 August 2013 18:42, Wolfram Sang <wsa@the-dreams.de> wrote:
+> On Mon, Jul 01, 2013 at 12:25:19PM +0200, Tomasz Figa wrote:
+>> Hi Naveen,
+>>
+>> Looks mostly good, but see some comments inline.
+>
+> Ping?
+Hello Wolfram,
 
-On Fri, Aug 16, 2013 at 1:01 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Hello.
->
->
-> On 15-08-2013 10:01, Lad, Prabhakar wrote:
->
->> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
->
->
->> Add OF_DEV_AUXDATA for eth0  driver in da850 board dt
->> file to use emac clock.
->
->
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->
-> [...]
->
->
->> diff --git a/arch/arm/mach-davinci/da8xx-dt.c
->> b/arch/arm/mach-davinci/da8xx-dt.c
->> index d172563..caa9202 100644
->> --- a/arch/arm/mach-davinci/da8xx-dt.c
->> +++ b/arch/arm/mach-davinci/da8xx-dt.c
->> @@ -44,6 +44,9 @@ static struct of_dev_auxdata da850_auxdata_lookup[]
->> __initdata = {
->>         OF_DEV_AUXDATA("ns16550a", 0x01d0c000, "serial8250.1", NULL),
->>         OF_DEV_AUXDATA("ns16550a", 0x01d0d000, "serial8250.2", NULL),
->>         OF_DEV_AUXDATA("ti,davinci_mdio", 0x01e24000, "davinci_mdio.0",
->> NULL),
->> +       OF_DEV_AUXDATA("ti,davinci-dm6467-emac", 0x01e20000,
->> "davinci_emac.1",
->> +                      NULL),
->> +
->
->
->    Empty line hardly needed here.
->
-Ah my bad, will fix and repost.
+I made a patch fixing your comments and from Thomas Figa as well.
 
-Regards,
---Prabhakar Lad
+Meanwhile, we hit a random crash in exynos5_i2c_irq function.
+The "len" variable being is still being near the FIFO_MAX after this condition
+ len = HSI2C_FIFO_MAX - fifo_level;
+ +             if (len > i2c->msg->len)
+ +                     len = i2c->msg->len;
+
+Once, we fix this problem. i planned to rebase and submit.
+
+Is it okey with you?
+
+Thanks,
+Naveen
+>
+
+
+
+-- 
+Shine bright,
+(: Nav :)
