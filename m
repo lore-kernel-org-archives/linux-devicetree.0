@@ -1,91 +1,55 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 1/3] misc: Add crossbar driver
-Date: Thu, 15 Aug 2013 17:14:45 -0400
-Message-ID: <520D44C5.6080205@ti.com>
-References: <51E83A4F.5080904@ti.com>
- <CACRpkdY3nQaWimTwB-Zt-8+Q_KZr8a0rpB1SUQq=AuoG4bAYnQ@mail.gmail.com>
- <51ED2385.60108@ti.com> <51ED5C66.1010407@ti.com> <51EFFBE1.4090505@ti.com>
- <51F0031B.1050307@ti.com> <51F00530.9090703@ti.com> <51F02069.3050207@ti.com>
- <51F0223E.4050008@ti.com> <51F0240F.3050507@ti.com>
- <20130813081003.GU7656@atomide.com> <520A02BA.4090805@ti.com>
- <CACRpkda+m82PYJsExLM6JLsLa8-bVhdvy_r_+-uKfVT2NG7Cbg@mail.gmail.com>
- <520D398D.9040806@ti.com>
- <CACRpkdYeo1y-HhftkRWgwyq8o-NVuJ978Uq+ON880LHhUxC=hg@mail.gmail.com>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v4 4/5] ARM: davinci: da850: add DT node for eth0.
+Date: Fri, 16 Aug 2013 09:37:31 +0530
+Message-ID: <CA+V-a8tDUE8Ni2CbJchA0rnTY3OijBuLK6L=OtH_FDXupOn9tg@mail.gmail.com>
+References: <1376546497-26931-1-git-send-email-prabhakar.csengg@gmail.com>
+ <1376546497-26931-5-git-send-email-prabhakar.csengg@gmail.com> <520D2C50.4040902@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdYeo1y-HhftkRWgwyq8o-NVuJ978Uq+ON880LHhUxC=hg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Nishanth Menon <nm@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rajendra Nayak <rnayak@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Sricharan R <r.sricharan@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <520D2C50.4040902@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, LAK <linux-arm-kernel@lists.infradead.org>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 August 2013 04:51 PM, Linus Walleij wrote:
-> On Thu, Aug 15, 2013 at 10:26 PM, Santosh Shilimkar
-> <santosh.shilimkar@ti.com> wrote:
->> On Thursday 15 August 2013 04:01 PM, Linus Walleij wrote:
->>> On Tue, Aug 13, 2013 at 11:56 AM, Sricharan R <r.sricharan@ti.com> wrote:
->>>
->>>>  Initially irqchip was discussed, but we also have a DMA crossbar
->>>>  to map the dma-requests. Since both irq/dma crossbars should be handled,
->>>>  pinctrl was suggested as the appropriate place to handle this.
->>>
->>> I think it is better to use irqchip.
->>>
->> Did you happen to read the thread why irqchip is in-appropriate
->> for such an IP.
-> 
-> Sorry I don't understand what thread that is... can you point me there?
-> My previous statement on this issue what this:
-> http://marc.info/?l=linux-kernel&m=137442541628641&w=2
-> 
-It was discussed in couple of threads but the main point was the
-need of a link needed for the irqchip.
+Hi Sergei,
 
->> As I said earlier, an IRQ-chip always need a
->> real IRQ link (even for the chained one) to the primary irqchip.
->>
->> This IP is just dummy IP makes the connections for the primary
->> irqchip(read GIC). And its use only limited to make the
->> connection between the peripheral IRQ event to the GIC IRQ line.
->>
->> I don't see how you can make this happen with an irqchip
->> infrastructure.
-> 
-> I think my post above describes this.
-> 
-Sorry for being dumb but I don't think cascaded irqchip examples
-like GPIO and cross-bars are same. If you take an example of
-GPIO irqchip, it always have a physical connection even if it
-is 1 IRQ line for (32 logical/sparse IRQs). That goes with
-other MFD examples too.
+On Fri, Aug 16, 2013 at 1:00 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Hello.
+>
+>
+> On 15-08-2013 10:01, Lad, Prabhakar wrote:
+>
+>> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+>
+>
+>> Add eth0 device tree node information and pinmux for mii to da850 by
+>> providing interrupt details and local mac address of eth0.
+>
+>
+>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>
+> [...]
+>
+>
+>> @@ -226,6 +242,20 @@
+>>                         #size-cells = <0>;
+>>                         reg = <0x224000 0x1000>;
+>>                 };
+>> +               eth0: emac@1e20000 {
+>
+>
+>    According to the ePAPR spec[1] section 2.2.2, the node should be named
+> "ethernet".
+>
+Thanks for pointing it, I'll fix and repost it.
 
-So may be I am still missing something in your proposal.
+Regards,
+--Prabhakar Lad
 
->>> I don't see any way to really abstract this pretty simple crossbar
->>> for reuse across subsystems.
->>>
->> This exactly the reason, i am against idea of over-engineering the
->> simple IP whose only job is to make the physical wire connection
->> in software where as this is generally done in RTL by default on
->> most of the SOCs.
-> 
-> Well, it was made accessible by software, and if someone has a
-> usecase that requires this do be done dynamically, i.e. not just
-> being set up by firmware and never touched, and that use case
-> is valid, then I guess we need to do something...
-> 
-> I think it was mentioned in the thread that there is really such
-> a usecase?
-> 
-Actually there is no practical usecase but one but one can manufacture
-it ;-)
+> [1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
+>
+> WBR, Sergei
+>
