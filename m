@@ -1,71 +1,52 @@
-From: Loh Tien Hock <thloh@altera.com>
-Subject: Re: FW: [PATCH 1/1] drivers/gpio: Altera soft IP GPIO driver
-Date: Fri, 16 Aug 2013 23:47:51 +0800
-Message-ID: <CAJKo0K4njKYvh3qMq-A23FFeu2rUJwj76FT61tXTjoPb0ZJXtw@mail.gmail.com>
-References: <1373267079-15843-1-git-send-email-thloh@altera.com>
- <CACRpkdYf_EHwcysQadtOBt2_OXmZbW9CuwOGDBF-JhnNzAd=Bg@mail.gmail.com>
- <CAJKo0K5mycRyd4i9FBa+kg2s7byF4rNgRrjE1Tuv-sTHUpTFiQ@mail.gmail.com>
- <CACRpkdY-er9k6kZh436vmR9V-yivSZ8yu+PuP-jEq3kz__1a0g@mail.gmail.com>
- <CAJKo0K5kBPtLpODjoOgf=JXzVDf9pkpB4QTZ-h8shhHXyx6oZg@mail.gmail.com>
- <CACRpkdbthw=-bdP=QugKhgyuQUV5_uV==AeBneZSqyk7Hs6muQ@mail.gmail.com>
- <0BB3B561D7068A4E89FD8E9ABFB538BEB3B6A29252@PG-ITMSG03.altera.priv.altera.com>
- <CAJKo0K5qnYpO5D-qOd6ygHDqvfCJB+3GmC+AwhytmQ2bMPyN1g@mail.gmail.com> <CACRpkdZtCTnjszts03nmNBd-TcMhgYVTpTYzQtH0fW74Pvf-Bg@mail.gmail.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] ARM: davinci: da850: add DT node for ethernet
+Date: Fri, 16 Aug 2013 21:38:50 +0530
+Message-ID: <520E4E92.7070902@ti.com>
+References: <1376662262-21795-1-git-send-email-prabhakar.csengg@gmail.com>
+	<1376662262-21795-2-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZtCTnjszts03nmNBd-TcMhgYVTpTYzQtH0fW74Pvf-Bg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1376662262-21795-2-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 16, 2013 at 11:46 PM, Linus Walleij
-<linus.walleij@linaro.org> wrote:
-> On Fri, Aug 16, 2013 at 5:06 PM, Loh Tien Hock <thloh@altera.com> wrote:
->>> On Mon, Jul 29, 2013 at 6:24 PM, Loh Tien Hock <thloh@altera.com> wrote:
->>>> On Tue, Jul 30, 2013 at 12:11 AM, Linus Walleij
->
->>>> We still need to compare the altera_gc->edge_type to the expected ones
->>>> (so that we don't allow incorrect configuration, eg. the GPIO is
->>>> configured as rising, but set_type tries to set falling).
->>>> So we should compare it with magic numbers, instead of custom defines
->>>> like the example below?
->>>>                if (type == IRQ_TYPE_EDGE_RISING &&
->>>>                        altera_gc->edge_type == 0)
->>>>                        return 0;
->>>
->>> And why can't altera_gc->edge_type use exactly the same enumerators so it becomes:
->>>
->>> (type == IRQ_TYPE_EDGE_RISING &&
->>> altera_gc->edge_type == IRQ_TYPE_EDGE_RISING)
->>>
->>> ?
->>
->> We're unable to do that because the tool that generates the dts file
->> had the number that way, and if we were to change to code to your
->> suggestion, the tool needs to be changed and it will break backward
->> compatibility.
->
-> Sorry? The values used in DTS bindings are decided on the mailing
-> list devicetree@vger.kernel.org, not by your proprietary tools. This
-> should have been discussed with the apropriate authorities *before*
-> implementing funny tools, DT bindings are not owned or defined by
-> any one company.
->
-> Please study this binding include:
-> include/dt-bindings/interrupt-controller/irq.h:
->
-> #define IRQ_TYPE_NONE           0
-> #define IRQ_TYPE_EDGE_RISING    1
-> #define IRQ_TYPE_EDGE_FALLING   2
-> #define IRQ_TYPE_EDGE_BOTH      (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING)
-> #define IRQ_TYPE_LEVEL_HIGH     4
-> #define IRQ_TYPE_LEVEL_LOW      8
->
-> Please use this binding, nothing else.
->
+On 8/16/2013 7:41 PM, Lad, Prabhakar wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Add ethernet device tree node information and pinmux for mii to da850 by
+> providing interrupt details and local mac address.
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/da850-evm.dts |    5 +++++
+>  arch/arm/boot/dts/da850.dtsi    |   30 ++++++++++++++++++++++++++++++
+>  2 files changed, 35 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+> index 1f8cfdd..44f3fbc 100644
+> --- a/arch/arm/boot/dts/da850-evm.dts
+> +++ b/arch/arm/boot/dts/da850-evm.dts
+> @@ -96,6 +96,11 @@
+>  			pinctrl-0 = <&mdio_pins>;
+>  			bus_freq = <2200000>;
+>  		};
+> +		ethernet: emac@1e20000 {
 
-OK, I'll see to it.
+You misunderstood what Sergei said. This should be:
 
-> Yours,
-> Linus Walleij
+	eth0: ethernet@1e20000 {
+
+Thanks,
+Sekhar
