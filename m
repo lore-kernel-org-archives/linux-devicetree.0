@@ -1,85 +1,76 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from devils.ext.ti.com ([198.47.26.153]:37538 "EHLO
-	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754751Ab3HBGwg (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 02:52:36 -0400
-Message-ID: <51FB5719.7050209@ti.com>
-Date: Fri, 2 Aug 2013 12:22:09 +0530
-From: Sourav Poddar <sourav.poddar@ti.com>
+Received: from iolanthe.rowland.org ([192.131.102.54]:41199 "HELO
+	iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1751467Ab3HTPvt (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 11:51:49 -0400
+Date: Fri, 16 Aug 2013 15:27:58 -0400 (EDT)
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: Non-enumerable devices on USB and other enumerable buses
+In-Reply-To: <20130816183934.GQ30073@sirena.org.uk>
+Message-ID: <Pine.LNX.4.44L0.1308161457300.1532-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] drivers: mtd: devices: make m25p80 dt adapted.
-References: <1375426170-31609-1-git-send-email-sourav.poddar@ti.com>
-In-Reply-To: <1375426170-31609-1-git-send-email-sourav.poddar@ti.com>
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, balbi@ti.com, pekon@ti.com, linux-omap@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-+ correct device tree mailing list
-On Friday 02 August 2013 12:19 PM, Sourav Poddar wrote:
-> This patch helps gettimg m25p80 probed through dt.
-> To get the id of the exact flash type supported for dt case,
-> data->type is getting parsed from dt entry.
->
-> Signed-off-by: Sourav Poddar<sourav.poddar@ti.com>
-> ---
->   drivers/mtd/devices/m25p80.c |   22 +++++++++++++++++++++-
->   1 files changed, 21 insertions(+), 1 deletions(-)
->
-> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-> index 33098bf..cbfb9b3 100644
-> --- a/drivers/mtd/devices/m25p80.c
-> +++ b/drivers/mtd/devices/m25p80.c
-> @@ -855,6 +855,13 @@ static const struct spi_device_id m25p_ids[] = {
->   };
->   MODULE_DEVICE_TABLE(spi, m25p_ids);
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id m25p_dt_ids[] = {
-> +	{ .compatible = "m25p80", },
-> +	{ /* sentinel */ }
-> +};
-> +#endif
-> +
->   static const struct spi_device_id *jedec_probe(struct spi_device *spi)
->   {
->   	int			tmp;
-> @@ -909,6 +916,7 @@ static int m25p_probe(struct spi_device *spi)
->   	unsigned			i;
->   	struct mtd_part_parser_data	ppdata;
->   	struct device_node __maybe_unused *np = spi->dev.of_node;
-> +	int len;
->
->   #ifdef CONFIG_MTD_OF_PARTS
->   	if (!of_device_is_available(np))
-> @@ -920,7 +928,18 @@ static int m25p_probe(struct spi_device *spi)
->   	 * a chip ID, try the JEDEC id commands; they'll work for most
->   	 * newer chips, even if we don't recognize the particular chip.
->   	 */
-> -	data = spi->dev.platform_data;
-> +	if (!np) {
-> +		data = spi->dev.platform_data;
-> +	} else {
-> +		data = devm_kzalloc(&spi->dev, sizeof(*data), GFP_KERNEL);
-> +		if (!data)
-> +			return -ENOMEM;
-> +
-> +		data->type = (char *) of_get_property(np, "type",&len);
-> +		if (!data->type || strlen(data->type)>  len)
-> +			return -ENODEV;
-> +	}
-> +
->   	if (data&&  data->type) {
->   		const struct spi_device_id *plat_id;
->
-> @@ -1098,6 +1117,7 @@ static struct spi_driver m25p80_driver = {
->   	.driver = {
->   		.name	= "m25p80",
->   		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(m25p_dt_ids),
->   	},
->   	.id_table	= m25p_ids,
->   	.probe	= m25p_probe,
+On Fri, 16 Aug 2013, Mark Brown wrote:
+
+> > The difficulty with the first proposal is that subsystems aren't
+> > designed to allow that sort of thing.  They expect to be able to
+> > communicate with the devices they manage, during enumeration and
+> > probing at least.  The difficulty with the second proposal is that it
+> > requires duplicating the power-on code.
+> 
+> > My feeling is that the second answer involves less work and less
+> > complexity than the first.  Both proposals require additional
+> > "run-once" code (to do the partial instantiations or the initial
+> > power-ons), but the first proposal also requires the subsystem's 
+> > detection and enumeration routines to be adjusted so that they can work 
+> > even when the device is incommunicado.
+> 
+> Right, but like I say I'm not sure that the modifications required are
+> substantially different to those for handling a device powering up and
+> down on the bus
+
+I believe they are.  At the very least, a larger set of modifications
+would be needed, because the subsystem's device-init and enumeration
+routines would have to be changed to work with a powered-down device,
+as would the driver's probe routine.  Whereas handling a device
+powering up and down on the bus merely requires the subsystem's
+connection-change routine to be modified.
+
+>  or those for getting platform data to a device when it
+> does enumerate.
+
+?  I can't make any sense out of that comment.  For one thing, why do
+you need to send platform data to a device?  (It's obvious that a
+_driver_ would need to use platform data; it's not so clear that a
+_device_ would.)
+
+But even assuming you really do need to send platform data to the
+device when it enumerates, don't the subsystem and driver already take
+care of sending this data?  If they didn't then presumably the device
+wouldn't be usable.  Therefore it seems that _no_ modifications should
+be needed for this purpose.
+
+>  I'd also not be so sure about the run once code, that
+> is only the case for devices that can't completely idle themselves at
+> runtime.
+> 
+> > (The second proposal also has the advantage that the power-on code may 
+> > be shared between the driver and the subsystem.)
+> 
+> Can you explain in more detail please, I don't follow?
+
+Let's say the subsystem powers up the device when the bus is first
+registered, so that the device can be detected and enumerated.  Let's
+also say that the driver wants to power-off and power-on the device
+from time to time, as part of normal runtime PM.  Then instead of
+having its own power-on routine (which would be code duplication), the
+driver can simply call the subsystem's power-on routine.  (Of course,
+this would mean that the routine would no longer be run-once.)
+
+Alan Stern
 
