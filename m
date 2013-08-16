@@ -1,37 +1,73 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] ARM: davinci: fix clock lookup for mdio device
-Date: Fri, 16 Aug 2013 18:05:00 +0530
-Message-ID: <520E1C74.7080101@ti.com>
-References: <1376546497-26931-1-git-send-email-prabhakar.csengg@gmail.com>
-	<1376546497-26931-2-git-send-email-prabhakar.csengg@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Fri, 16 Aug 2013 15:12:16 +0200
+Message-ID: <CACRpkdbthw=-bdP=QugKhgyuQUV5_uV==AeBneZSqyk7Hs6muQ@mail.gmail.com>
+References: <1373267079-15843-1-git-send-email-thloh@altera.com>
+	<CACRpkdYf_EHwcysQadtOBt2_OXmZbW9CuwOGDBF-JhnNzAd=Bg@mail.gmail.com>
+	<CAJKo0K5mycRyd4i9FBa+kg2s7byF4rNgRrjE1Tuv-sTHUpTFiQ@mail.gmail.com>
+	<CACRpkdY-er9k6kZh436vmR9V-yivSZ8yu+PuP-jEq3kz__1a0g@mail.gmail.com>
+	<CAJKo0K5kBPtLpODjoOgf=JXzVDf9pkpB4QTZ-h8shhHXyx6oZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1376546497-26931-2-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAJKo0K5kBPtLpODjoOgf=JXzVDf9pkpB4QTZ-h8shhHXyx6oZg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Loh Tien Hock <thloh@altera.com>
+Cc: Tien Hock Loh <thloh.linux@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 August 2013 11:31 AM, Lad, Prabhakar wrote:
-> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> This patch removes the clock alias for mdio device and adds a entry
-> in clock lookup table, this entry can now be used by both DT and NON
-> DT case.
-> 
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Mon, Jul 29, 2013 at 6:24 PM, Loh Tien Hock <thloh@altera.com> wrote:
+> On Tue, Jul 30, 2013 at 12:11 AM, Linus Walleij
 
-Queuing for v3.12
+>>>>> +static int altera_gpio_irq_set_type(struct irq_data *d,
+>>>>> +                               unsigned int type)
+>>>>> +{
+>>>>> +       struct altera_gpio_chip *altera_gc = irq_data_get_irq_chip_data(d);
+>>>>> +
+>>>>> +       if (type == IRQ_TYPE_NONE)
+>>>>> +               return 0;
+>>>>> +
+>>>>> +       if (altera_gc->level_trigger) {
+>>>>> +               if (type == IRQ_TYPE_LEVEL_HIGH)
+>>>>> +                       return 0;
+>>>>> +       } else {
+>>>>> +               if (type == IRQ_TYPE_EDGE_RISING &&
+>>>>> +                       altera_gc->edge_type == ALTERA_IRQ_RISING)
+>>>>> +                       return 0;
+>>>>> +               else if (type == IRQ_TYPE_EDGE_FALLING &&
+>>>>> +                       altera_gc->edge_type == ALTERA_IRQ_FALLING)
+>>>>> +                       return 0;
+>>>>> +               else if (type == IRQ_TYPE_EDGE_BOTH &&
+>>>>> +                       altera_gc->edge_type == ALTERA_IRQ_BOTH)
+>>>>> +                       return 0;
+>>>>
+>>>> I don't quite realize why you need the local version of
+>>>> the IRQflag at all. Just store the standard edge indicator
+>>>> in an unsigned long?
+>>>
+>>> I don't understand the comment. Can you elaborate further?
+>>
+>> I misunderstood it for the above reason. But get rid of the
+>> custom ALTERA_IRQ_* defines and just use the standard
+>> definitions for IRQ_TYPE_*, the local defines does not add
+>> anything useful.
+>
+> We still need to compare the altera_gc->edge_type to the expected ones
+> (so that we don't allow incorrect configuration, eg. the GPIO is
+> configured as rising, but set_type tries to set falling).
+> So we should compare it with magic numbers, instead of custom defines
+> like the example below?
+>                if (type == IRQ_TYPE_EDGE_RISING &&
+>                        altera_gc->edge_type == 0)
+>                        return 0;
 
-Thanks,
-Sekhar
+And why can't altera_gc->edge_type use exactly the same enumerators
+so it becomes:
+
+(type == IRQ_TYPE_EDGE_RISING &&
+altera_gc->edge_type == IRQ_TYPE_EDGE_RISING)
+
+?
+
+Yours,
+Linus Walleij
