@@ -1,47 +1,185 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from metis.ext.pengutronix.de ([92.198.50.35]:43404 "EHLO
-	metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753415Ab3HQOxi (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sat, 17 Aug 2013 10:53:38 -0400
-Date: Sat, 17 Aug 2013 16:53:16 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
+Received: from mail-bk0-f51.google.com ([209.85.214.51]:47915 "EHLO
+	mail-bk0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753055Ab3HQM4R (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 17 Aug 2013 08:56:17 -0400
+Received: by mail-bk0-f51.google.com with SMTP id mx10so961691bkb.10
+        for <devicetree@vger.kernel.org>; Sat, 17 Aug 2013 05:56:16 -0700 (PDT)
+From: Tomasz Figa <tomasz.figa@gmail.com>
 Subject: Re: [PATCH v5 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
-Message-ID: <20130817145316.GT26614@pengutronix.de>
-References: <cover.1376565456.git.b42378@freescale.com>
- <20130816095357.GA4694@MrMyself>
- <20130816101151.GQ26614@pengutronix.de>
- <2805432.jMVhHxhr1m@flatron>
+Date: Sat, 17 Aug 2013 14:56:11 +0200
+Message-ID: <2362958.X2QCBUPAyI@flatron>
+In-Reply-To: <20130816044330.GD1846@MrMyself>
+References: <cover.1376565456.git.b42378@freescale.com> <2188999.03O3zirCAO@flatron> <20130816044330.GD1846@MrMyself>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2805432.jMVhHxhr1m@flatron>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Nicolin Chen <b42378@freescale.com>, ian.campbell@citrix.com, pawel.moll@arm.com, galak@codeaurora.org, broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, swarren@wwwdotorg.org, mark.rutland@arm.com
+To: Nicolin Chen <b42378@freescale.com>
+Cc: ian.campbell@citrix.com, pawel.moll@arm.com, galak@codeaurora.org, broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, s.hauer@pengutronix.de, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, swarren@wwwdotorg.org, mark.rutland@arm.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat, Aug 17, 2013 at 02:28:04PM +0200, Tomasz Figa wrote:
-> > > > Also I would make this option required. Use a dummy clock for mux
-> > > > inputs that are grounded for a specific SoC.
-> > > 
-> > > Some clocks are not from CCM and we haven't defined in imx6q-clk.txt,
-> > > so in most cases we can't provide a phandle for them, eg: spdif_ext.
-> > > I think it's a bit hard to force it to be 'required'. An 'optional'
-> > > looks more flexible to me and a default one is ensured even if it's
-> > > missing.
-> > 
-> > <&clks 0> is the dummy clock. This can be used for all input clocks not
-> > defined by the SoC.
+Hi Nicolin,
+
+On Friday 16 of August 2013 12:43:31 Nicolin Chen wrote:
+> Hi Tomasz,
 > 
-> Where does this assumption come from? Is it documented anywhere?
+>    Thank you for the comments.
 
-This is how all i.MX clock bindings currently are. See
-Documentation/devicetree/bindings/clock/imx*-clock.txt
+You're welcome.
 
-Sascha
+>    I'll revise them in v6.
+>    And below is my reply for you comments.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks for your reply.
+
+> On Thu, Aug 15, 2013 at 02:18:22PM +0200, Tomasz Figa wrote:
+> > > +  - clock-names : Includes the following entries:
+> > > +	name		type		comments
+> > > +	"core"		Required	The core clock of spdif controller
+> > > +
+> > > +	"rx"		Optional	Rx clock source for spdif record.
+> > > +					If absent, will use core clock.
+> > > +
+> > > +	"tx"		Optional	Tx clock source for spdif 
+playback.
+> > > +					If absent, will use core clock.
+> > > +
+> > > +	"tx-32000"	Optional	Tx clock source for 32000Hz sample 
+rate
+> > > +					playback. If absent, will use tx 
+clock.
+> > > +
+> > > +	"tx-44100"	Optional	Tx clock source for 44100Hz sample 
+rate
+> > > +					playback. If absent, will use tx 
+clock.
+> > > +
+> > > +	"tx-48000"	Optional	Tx clock source for 48000Hz sample 
+rate
+> > > +					playback. If absent, will use tx 
+clock.
+> > > +
+> > > +	"src<0-7>"	Optional	Clock source list for tx and rx 
+clock
+> > > +					to look up their clock source 
+indexes.
+> > > +					This clock list should be 
+identical to
+> > > +					the list of TxClk_Source bit value 
+of
+> > > +					register SPDIF_STC. If absent or 
+failed
+> > > +					to look up, tx and rx clock would 
+then
+> > > +					ignore the "rx", "tx" "tx-32000",
+> > > +					"tx-44100", "tx-48000" clock 
+phandles
+> > > +					and select the core clock as 
+default
+> > > +					tx and rx clock.
+> > 
+> > I suspect a little abuse of clocks property here. From the description
+> > of "core" and "src<0-7>" clocks I assume that the IP can have up to 9
+> > clock inputs - core clock and up to 8 extra source clocks. Is it
+> > correct?
+> > 
+> > If yes, this makes the "tx", "rx" and "tx-*" clocks describe
+> > configuration, not hardware. IMHO it should be up to the driver which
+> > source clocks to use for tx and rx channels and for each sampling
+> > rate.
+> 
+> First, you are right that all the properties you just commented are
+> software configurations. And I got the point that device tree now
+> can't allow any software configuration even if the actual hardware
+> connection will depend on it.
+> 
+> If so, I would like to remove those abused clocks and also drop the
+> unused clocks in src<0-7>, then just remain those needed clocks src.
+> I think that can be plausible because there'll be no more clock abuse
+> and the driver will be able to get the source index from the name
+> 'src<num>'.
+
+OK.
+
+> And you are right about the 9 clock inputs, just there're not only 9
+> inputs but also an extra external clock from S/PDIF transmitter via
+> coaxial cable or optical fiber -- RxCLK. Please check the following
+> list:
+> 
+> 0000 if (DPLL Locked) SPDIF_RxClk else extal
+> 0001 if (DPLL Locked) SPDIF_RxClk else spdif_clk
+> 0010 if (DPLL Locked) SPDIF_RxClk else asrc_clk
+> 0011 if (DPLL Locked) SPDIF_RxClk else spdif_extclk
+> 0100 if (DPLL Locked) SPDIF_Rxclk else esai_hckt
+> 0101 extal_clk
+> 0110 spdif_clk
+> 0111 asrc_clk
+> 1000 spdif_extclk
+> 1001 esai_hckt
+> 1010 if (DPLL Locked) SPDIF_RxClk else mlb_clk
+> 1011 if (DPLL Locked) SPDIF_RxClk else mlb_phy_clk
+> 1100 mkb_clk
+> 1101 mlb_phy_clk
+
+Could you explain what the above values are? If they are values written to 
+a 4-bit mux that selects RX clock source, then all the 16 clocks should be 
+specified from device tree, even if they are duplicated.
+
+Are the clock names you used above names of clock inputs of the S/PDIF 
+block or names of SoC-wide clocks?
+
+Can the assignment of clock inputs change? For example on one SoC
+
+0000 if (DPLL Locked) SPDIF_RxClk else extal_clk
+0001 if (DPLL Locked) SPDIF_RxClk else spdif_clk
+...
+0101 extal_clk
+0110 spdif_clk
+...
+
+and on another
+
+0000 if (DPLL Locked) SPDIF_RxClk else spdif_clk
+0001 if (DPLL Locked) SPDIF_RxClk else extal_clk
+...
+0101 extal_clk
+0110 spdif_clk
+...
+
+(notice the swapped 0000 and 0001 inputs)
+
+Same goes for the TX mux. If it is a 3-bit, 8-input mux, then it should be 
+described in device tree separately, as it is different than the 4-bit, 
+16-input RX mux.
+
+> When (DPLL Locked) condition matches, the rx clock can ignore the 8
+> input clocks from clock mux then use the external one from a S/PDIF
+> transmitter.
+
+What happens if the "DPLL locked" condition doesn't match? When this can 
+happen?
+
+> So for the below part:
+> > > +Optional properties:
+> > > +
+> > > +  - rx-clksrc-lock: This is a boolean property. If present,
+> > > ClkSrc_Sel
+> > > bit +  of SPDIF_SRPC would be set a clock source that cares DPLL
+> > > locked
+> > > condition. +
+> > 
+> > This again looks like software configuration, not hardware
+> > description.
+> > Could you elaborate a bit more on meaning of this property?
+> 
+> I think the rx-clksrc-lock property should be included in DT as well,
+> since it's exactly a available clock source for rx. But I guess I just
+> need to figure out a better way or a more elaborated description.
+
+I still don't understand the meaning of this property. Could you explain 
+it please?
+
+Best regards,
+Tomasz
+
