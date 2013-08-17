@@ -1,166 +1,90 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from [216.32.181.183] ([216.32.181.183]:7283 "EHLO
-	ch1outboundpool.messaging.microsoft.com" rhost-flags-FAIL-FAIL-OK-OK)
-	by vger.kernel.org with ESMTP id S1750720Ab3HSDJ1 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Sun, 18 Aug 2013 23:09:27 -0400
-Date: Mon, 19 Aug 2013 11:07:44 +0800
-From: Nicolin Chen <b42378@freescale.com>
-Subject: Re: [PATCH v6 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
-Message-ID: <20130819030743.GA10544@MrMyself>
-References: <cover.1376657643.git.b42378@freescale.com>
- <df3c09cd5679649b144bb45dfd5fc746628266d4.1376657643.git.b42378@freescale.com>
- <6A3DF150A5B70D4F9B66A25E3F7C888D07114BC3@039-SN2MPN1-013.039d.mgd.msft.net>
+Received: from mail-bk0-f50.google.com ([209.85.214.50]:52013 "EHLO
+	mail-bk0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753574Ab3HQPiT (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 17 Aug 2013 11:38:19 -0400
+Received: by mail-bk0-f50.google.com with SMTP id mz11so950116bkb.23
+        for <devicetree@vger.kernel.org>; Sat, 17 Aug 2013 08:38:18 -0700 (PDT)
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v5 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
+Date: Sat, 17 Aug 2013 17:38:13 +0200
+Message-ID: <4160853.4nuiPWXiMi@flatron>
+In-Reply-To: <20130817151409.GW26614@pengutronix.de>
+References: <cover.1376565456.git.b42378@freescale.com> <2362958.X2QCBUPAyI@flatron> <20130817151409.GW26614@pengutronix.de>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <6A3DF150A5B70D4F9B66A25E3F7C888D07114BC3@039-SN2MPN1-013.039d.mgd.msft.net>
 Sender: devicetree-owner@vger.kernel.org
-To: Bhushan Bharat-R65777 <R65777@freescale.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "festevam@gmail.com" <festevam@gmail.com>, "timur@tabi.org" <timur@tabi.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Nicolin Chen <b42378@freescale.com>, ian.campbell@citrix.com, pawel.moll@arm.com, galak@codeaurora.org, broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, swarren@wwwdotorg.org, mark.rutland@arm.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Bhushan,
-
-   Thank you for the comments :)
-   I'll fix some in v7.
-
-   Here is my some replies to you.
-
-On Sat, Aug 17, 2013 at 02:24:19AM +0800, Bhushan Bharat-R65777 wrote:
-> > This patch add S/PDIF controller driver for Freescale SoC.
+On Saturday 17 of August 2013 17:14:09 Sascha Hauer wrote:
+> On Sat, Aug 17, 2013 at 02:56:11PM +0200, Tomasz Figa wrote:
+> > Hi Nicolin,
+> > 
+> > > First, you are right that all the properties you just commented are
+> > > software configurations. And I got the point that device tree now
+> > > can't allow any software configuration even if the actual hardware
+> > > connection will depend on it.
+> > > 
+> > > If so, I would like to remove those abused clocks and also drop the
+> > > unused clocks in src<0-7>, then just remain those needed clocks src.
+> > > I think that can be plausible because there'll be no more clock
+> > > abuse
+> > > and the driver will be able to get the source index from the name
+> > > 'src<num>'.
+> > 
+> > OK.
+> > 
+> > > And you are right about the 9 clock inputs, just there're not only 9
+> > > inputs but also an extra external clock from S/PDIF transmitter via
+> > > coaxial cable or optical fiber -- RxCLK. Please check the following
+> > > list:
+> > > 
+> > > 0000 if (DPLL Locked) SPDIF_RxClk else extal
+> > > 0001 if (DPLL Locked) SPDIF_RxClk else spdif_clk
+> > > 0010 if (DPLL Locked) SPDIF_RxClk else asrc_clk
+> > > 0011 if (DPLL Locked) SPDIF_RxClk else spdif_extclk
+> > > 0100 if (DPLL Locked) SPDIF_Rxclk else esai_hckt
+> > > 0101 extal_clk
+> > > 0110 spdif_clk
+> > > 0111 asrc_clk
+> > > 1000 spdif_extclk
+> > > 1001 esai_hckt
+> > > 1010 if (DPLL Locked) SPDIF_RxClk else mlb_clk
+> > > 1011 if (DPLL Locked) SPDIF_RxClk else mlb_phy_clk
+> > > 1100 mkb_clk
+> > > 1101 mlb_phy_clk
+> > 
+> > Could you explain what the above values are? If they are values
+> > written to a 4-bit mux that selects RX clock source, then all the 16
+> > clocks should be specified from device tree, even if they are
+> > duplicated.
 > 
-> Please give some more description of the driver?
+> The S/PDIF core can recover the clock for the tx signal from the rx
+> signal. So if you have an S/PDIF input signal, then the DPLL will be
+> locked and the SPDIF_RxClk can be used for tx. So the above are really 8
+> clocks and one "If DPLL locked, use it" bit.
 
-I've referred some ASoC drivers, all of them seem to be brief as mine.
-So I'm not sure what else information I should provide here. It's already
-kinda okay to me.
+Yes, I'm aware of this and the solution you proposed is fully acceptable, 
+but it complicates the driver a bit.
 
+If you look at the mux inputs above, you can see that there is no single 
+bit that specifies "if DPLL locked, use it" mode. Instead the conditional 
+clock sources are mixed with fixed clock sources, without a linear 
+translation to 0-7 range, which would have to be hardcoded in the driver.
 
-> > +struct spdif_mixer_control {
-> > +	/* buffer ptrs for writer */
-> > +	u32 upos;
-> > +	u32 qpos;
-> 
-> They does not look like pointer?
+I guess it's a matter of preference, but if the IP has a RX clock 
+selection mux that has 16 inputs, the natural representation in device 
+tree that comes to my mind is 16 clocks - one for each input of the mux. 
+One might choose to abstract this as 8 clocks, though, since each clock is 
+duplicated.
 
-They are more like offsets to get the correspond pointer.
-But I'll change the confusing comments.
-
-
-> > +/* U/Q Channel receive register full */
-> > +static void spdif_irq_uqrx_full(struct fsl_spdif_priv *spdif_priv, char name)
-> > +{
-> > +	struct spdif_mixer_control *ctrl = &spdif_priv->fsl_spdif_control;
-> > +	struct regmap *regmap = spdif_priv->regmap;
-> > +	struct platform_device *pdev = spdif_priv->pdev;
-> > +	u32 *pos, size, val, reg;
-> > +
-> > +	switch (name) {
-> > +	case 'U':
-> > +		pos = &ctrl->upos;
-> > +		size = SPDIF_UBITS_SIZE;
-> > +		reg = REG_SPDIF_SRU;
-> > +		break;
-> > +	case 'Q':
-> > +		pos = &ctrl->qpos;
-> > +		size = SPDIF_QSUB_SIZE;
-> > +		reg = REG_SPDIF_SRQ;
-> > +		break;
-> > +	default:
-> > +		return;
-> 
-> Should return error.
-
-IMHO, this should be fine. It's a void type function and being used
-in the isr(). The params 'name' is totally controlled by driver itself,
-so basically we don't need to worry about the default path.
-
-> > +	if (*pos >= size * 2) {
-> > +		*pos = 0;
-> > +	} else if (unlikely((*pos % size) + 3 > size)) {
-> > +		dev_err(&pdev->dev, "User bit receivce buffer overflow\n");
-> > +		return;
-> 
-> Should return error.
-
-Ditto, it's being used in isr(), we don't need to detect the return value,
-just use dev_err() to warn users and let the driver clear the irq.
-
-
-> > +/* U/Q Channel framing error */
-> > +static void spdif_irq_uq_err(struct fsl_spdif_priv *spdif_priv)
-> > +{
-> > +	struct spdif_mixer_control *ctrl = &spdif_priv->fsl_spdif_control;
-> > +	struct regmap *regmap = spdif_priv->regmap;
-> > +	struct platform_device *pdev = spdif_priv->pdev;
-> > +	u32 val;
-> > +
-> > +	dev_dbg(&pdev->dev, "isr: U/Q Channel framing error\n");
-> > +
-> > +	/* read U/Q data and do buffer reset */
-> > +	regmap_read(regmap, REG_SPDIF_SRU, &val);
-> > +	regmap_read(regmap, REG_SPDIF_SRQ, &val);
-> 
-> Above prints says read u/q data and buffer reset, what is buffer reset? Is that read on clear?
-
-That's the behavior needed by IP, according to the reference manual:
-"U Channel receive register full, can't be cleared with reg. IntClear.
-To clear it, read from U Rx reg." and "Q Channel receive register full,
-can't be cleared with reg. IntClear. To clear it, read from Q Rx reg."
-
-
-> > +static void spdif_softreset(struct fsl_spdif_priv *spdif_priv)
-> > +{
-> > +	struct regmap *regmap = spdif_priv->regmap;
-> > +	u32 val, cycle = 1000;
-> > +
-> > +	regmap_write(regmap, REG_SPDIF_SCR, SCR_SOFT_RESET);
-> > +	regcache_sync(regmap);
-> > +
-> > +	/* RESET bit would be cleared after finishing its reset procedure */
-> > +	do {
-> > +		regmap_read(regmap, REG_SPDIF_SCR, &val);
-> > +	} while ((val & SCR_SOFT_RESET) && cycle--);
-> 
-> What if reset is not cleared and timeout happen? 
-
-We here suppose the reset bit would be cleared -- "The software reset
-will last 8 cycles." from RM, so if this happened to be a failure, the
-whole IP module won't be normally working as well.
-
-Well, but I don't mind to put here an extra failed return to make it
-clear. 
-
-
-> > +static u8 reverse_bits(u8 input)
-> > +{
-> > +	u8 tmp = input;
-> > +
-> > +	tmp = ((tmp & 0b10101010) >> 1) | ((tmp << 1) & 0b10101010);
-> > +	tmp = ((tmp & 0b11001100) >> 2) | ((tmp << 2) & 0b11001100);
-> > +	tmp = ((tmp & 0b11110000) >> 4) | ((tmp << 4) & 0b11110000);
-> 
-> What is this logic, can the hardcoding be removed and some description on above calculation?
-
-This was provided by Philipp Zabel in his review at patch v3.
-It's pretty clear to me that it just reverses the bits for u8.
-I don't think this logic has any problem and the mask here 
-doesn't look like any hardcode to me.
-
-
-> > +static bool fsl_spdif_volatile_reg(struct device *dev, unsigned int reg)
-> > +{
-> > +	/* Sync all registers after reset */
-> 
-> Where us sync :) ?
-
-The "return true" would do that. For volatile registers, if no "return true"
-here, the whole regmap would use the value in cache, while for some bits
-we need to trace its true value from the physical registers not from cache.
-
+In this particular case, the driver would have to know which mux inputs 
+can use DPLL anyway, so some hardcoding in the driver is still going to 
+take place, so I guess both solutions are equally right.
 
 Best regards,
-Nicolin Chen
-
+Tomasz
 
