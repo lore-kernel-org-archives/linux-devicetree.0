@@ -1,30 +1,54 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp.codeaurora.org ([198.145.11.231]:35749 "EHLO
-	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754880Ab3HEUlx convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 16:41:53 -0400
-Received: from [192.168.1.103] (99-51-185-173.lightspeed.austtx.sbcglobal.net [99.51.185.173])
-	(using TLSv1 with cipher AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: galak@smtp.codeaurora.org)
-	by smtp.codeaurora.org (Postfix) with ESMTPSA id DF33D13EEDF
-	for <devicetree@vger.kernel.org>; Mon,  5 Aug 2013 20:41:52 +0000 (UTC)
-From: Kumar Gala <galak@codeaurora.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Subject: memory carveout standard binding?
-Date: Mon, 5 Aug 2013 15:41:51 -0500
-Message-Id: <3FEFE719-68A6-4DE4-97FF-317DA22F3B52@codeaurora.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
+Received: from saturn.retrosnub.co.uk ([178.18.118.26]:59571 "EHLO
+	saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754272Ab3HQT3p (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 17 Aug 2013 15:29:45 -0400
+Message-ID: <520FDD33.2070605@kernel.org>
+Date: Sat, 17 Aug 2013 21:29:39 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH v4 1/2] staging: iio: Documentation sysfs-bus-iio add
+ power_mode
+References: <1376655125-13421-1-git-send-email-o.v.kravchenko@globallogic.com>
+In-Reply-To: <1376655125-13421-1-git-send-email-o.v.kravchenko@globallogic.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+To: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, jic23@cam.ac.uk, denis.ciocca@st.com, srinivas.pandruvada@linux.intel.com, lars@metafoo.de
 List-ID: <devicetree@vger.kernel.org>
 
-I remember some discussion about trying to have some standardize means for describe memory carveouts for specific purpose like graphics or multiprocessor communication.  I was wondering if that went anywhere or if someone can point me at references to the online discussion.
+On 08/16/13 13:12, Oleksandr Kravchenko wrote:
+> Add description about in_accelX_power_mode and
+> in_accel_power_mode_available.
+> 
+Right now this is very much chip specific so it wants to go in
+sysfs-bus-iio-accel-bma180  If / when it turns up in lots of parts
+we can discuss whether it is a good general purpose interface
+or not.
 
-- k
 
---
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+> Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index dda81ff..1a333f3 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -792,3 +792,13 @@ Contact:	linux-iio@vger.kernel.org
+>  Description:
+>  		This attribute is used to read the amount of quadrature error
+>  		present in the device at a given time.
+> +
+> +What:		/sys/.../iio:deviceX/in_accelX_power_mode
+> +KernelVersion:	3.11
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Specifies the chip power mode.
+> +		low_noise: reduce noise level from ADC,
+> +		low_power: enable low current consumption.
+> +		For a list of available output power modes read
+> +		in_accel_power_mode_available.
+> 
