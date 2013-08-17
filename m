@@ -1,43 +1,105 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from fallback4.mail.ru ([94.100.176.42]:36715 "EHLO
-	fallback4.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754361Ab3HQV2H (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sat, 17 Aug 2013 17:28:07 -0400
-Received: from f169.i.mail.ru (f169.i.mail.ru [94.100.178.88])
-	by fallback4.mail.ru (mPOP.Fallback_MX) with ESMTP id 135B610403D
-	for <devicetree@vger.kernel.org>; Sun, 18 Aug 2013 01:28:04 +0400 (MSK)
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2NCAxLzRdIG10ZDogbmFuZDogZ3BpbzogQWRkIERUIHBy?=
- =?UTF-8?B?b3BlcnR5IHRvIGF1dG9tYXRpY2FsbHkgZGV0ZXJtaW5lIGJ1cyB3aWR0aA==?=
-Mime-Version: 1.0
-Date: Sun, 18 Aug 2013 01:27:30 +0400
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Message-ID: <1376774850.432505683@f169.i.mail.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-In-Reply-To: <20130817211423.GF11210@norris.computersforpeace.net>
+Received: from mail-pd0-f177.google.com ([209.85.192.177]:63776 "EHLO
+	mail-pd0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754415Ab3HQVO2 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 17 Aug 2013 17:14:28 -0400
+Received: by mail-pd0-f177.google.com with SMTP id y10so3502151pdj.36
+        for <devicetree@vger.kernel.org>; Sat, 17 Aug 2013 14:14:28 -0700 (PDT)
+Date: Sat, 17 Aug 2013 14:14:23 -0700
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v4 1/4] mtd: nand: gpio: Add DT property to automatically
+ determine bus width
+Message-ID: <20130817211423.GF11210@norris.computersforpeace.net>
 References: <1376637583-12485-1-git-send-email-shc_work@mail.ru>
- <20130817211423.GF11210@norris.computersforpeace.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1376637583-12485-1-git-send-email-shc_work@mail.ru>
 Sender: devicetree-owner@vger.kernel.org
-To: =?UTF-8?B?QnJpYW4gTm9ycmlz?= <computersforpeace@gmail.com>
-Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ian.campbell@citrix.com>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>, =?UTF-8?B?QXJ0ZW0gQml0eXV0c2tpeQ==?= <artem.bityutskiy@linux.intel.com>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring@calxeda.com>, linux-mtd@lists.infradead.org, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@linaro.org>, =?UTF-8?B?RGF2aWQgV29vZGhvdXNl?= <dwmw2@infradead.org>
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-PiBPbiBGcmksIEF1ZyAxNiwgMjAxMyBhdCAxMToxOTo0MkFNICswNDAwLCBBbGV4YW5kZXIgU2hp
-eWFuIHdyb3RlOgo+ID4gVGhpcyBwYXRjaCBhZGRzIGEgcHJvcGVydHkgdG8gYXV0b21hdGljYWxs
-eSBkZXRlcm1pbmUgdGhlIE5BTkQKPiA+IGJ1cyB3aWR0aC4gVGhpcyBwcm9wZXJ0eSB3b3JrcyBp
-ZiB0aGUgYnVzIHdpZHRoIGlzIG5vdCBzcGVjaWZpZWQKPiA+IGV4cGxpY2l0bHkuCj4gPiAKPiA+
-IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRlciBTaGl5YW4gPHNoY193b3JrQG1haWwucnU+ClsuLi5d
-Cj4gPiArCWlmIChyZXNvdXJjZV9zaXplKHJlcykgPCAyKQo+ID4gKwkJZ3Bpb210ZC0+cGxhdC5v
-cHRpb25zICY9IH4oTkFORF9CVVNXSURUSF8xNiB8Cj4gPiArCQkJCQkgICBOQU5EX0JVU1dJRFRI
-X0FVVE8pOwo+IAo+IEkgY2FuJ3QgcXVpdGUgZmlndXJlIG91dCB3aGF0IHRoZSBzaWduaWZpY2Fu
-Y2Ugb2YgcmVzb3VyY2Vfc2l6ZShyZXMpIDwgMgo+IGlzLiBJdCBkb2Vzbid0IHF1aXRlIG1hdGNo
-IG15IHJlYWRpbmcgb2YgdGhlIGRldmljZS10cmVlIGRvY3VtZW50YXRpb24uCj4gTWF5YmUgSSdt
-IGJlaW5nIGRlbnNlLiBJcyB0aGUgcmVzb3VyY2UgcHJvdmlkZWQgYXMgZWl0aGVyIGFuIDgtYml0
-IElPCj4gYWRkcmVzcyAobGVuZ3RoPTEpIG9yIDE2LWJpdCBJTyBhZGRyZXNzIChsZW5ndGg9Mik/
-CgpTaXplIGluIGJ5dGVzLCBzbyB0aGlzIGlzIGp1c3QgYSBmYXVsdCBwcm90ZWN0IGZvciBsZW5n
-dGg9PTEgJiYgKGJ1c3c9PTE2IHx8IGJ1c3c9PWF1dG8pLgpEbyB5b3UgdGhpbmsgaXQncyBub3Qg
-bmVjZXNzYXJ5PwoKWy4uLl0KPiBJIGNhbiBmaXh1cCB0aGUgZmlyc3QgMiB3aXRob3V0IGEgcmVz
-ZW5kLiBEZXBlbmRpbmcgb24geW91ciByZXNwb25zZSB0bwo+IHRoZSB0aGlyZCBjb21tZW50LCBJ
-J2xsIGFwcGx5IHRoaXMuCgpJJ2xsIHByZWZlciB0byByZXNlbmQgYWxsIGluIG5leHQgZmV3IGRh
-eXMuClRoYW5rcy4KCi0tLQo=
+On Fri, Aug 16, 2013 at 11:19:42AM +0400, Alexander Shiyan wrote:
+> This patch adds a property to automatically determine the NAND
+> bus width. This property works if the bus width is not specified
+> explicitly.
+> 
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+> ---
+>  .../devicetree/bindings/mtd/gpio-control-nand.txt        |  2 ++
+>  drivers/mtd/nand/gpio.c                                  | 16 ++++++++++++----
+>  2 files changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> index 36ef07d..91070d0 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> @@ -19,6 +19,8 @@ Optional properties:
+>    defaults to 1 byte.
+>  - chip-delay : chip dependent delay for transferring data from array to
+>    read registers (tR).  If not present then a default of 20us is used.
+> +- gpio-control-nand,bank-width-auto : Device bus width is determined
+> +  automatically if "bank-width" is omitted (Boolean).
+>  - gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
+>    location used to guard against bus reordering with regards to accesses to
+>    the GPIO's and the NAND flash data bus.  If present, then after changing
+> diff --git a/drivers/mtd/nand/gpio.c b/drivers/mtd/nand/gpio.c
+> index e826f89..8eea181 100644
+> --- a/drivers/mtd/nand/gpio.c
+> +++ b/drivers/mtd/nand/gpio.c
+> @@ -116,6 +116,10 @@ static int gpio_nand_get_config_of(const struct device *dev,
+>  			dev_err(dev, "invalid bank-width %u\n", val);
+>  			return -EINVAL;
+>  		}
+> +	} else {
+
+Combine with the 'if' and make it 'else if'.
+
+> +		if (of_get_property(dev->of_node,
+> +				    "gpio-control-nand,bank-width-auto", NULL))
+
+of_property_read_bool()
+
+> +			plat->options |= NAND_BUSWIDTH_AUTO;
+>  	}
+>  
+>  	plat->gpio_rdy = of_get_gpio(dev->of_node, 0);
+> @@ -223,6 +227,14 @@ static int gpio_nand_probe(struct platform_device *pdev)
+>  	if (IS_ERR(chip->IO_ADDR_R))
+>  		return PTR_ERR(chip->IO_ADDR_R);
+>  
+> +	ret = gpio_nand_get_config(&pdev->dev, &gpiomtd->plat);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (resource_size(res) < 2)
+> +		gpiomtd->plat.options &= ~(NAND_BUSWIDTH_16 |
+> +					   NAND_BUSWIDTH_AUTO);
+
+I can't quite figure out what the significance of resource_size(res) < 2
+is. It doesn't quite match my reading of the device-tree documentation.
+Maybe I'm being dense. Is the resource provided as either an 8-bit IO
+address (length=1) or 16-bit IO address (length=2)?
+
+> +
+>  	res = gpio_nand_get_io_sync(pdev);
+>  	if (res) {
+>  		gpiomtd->io_sync = devm_ioremap_resource(&pdev->dev, res);
+> @@ -230,10 +242,6 @@ static int gpio_nand_probe(struct platform_device *pdev)
+>  			return PTR_ERR(gpiomtd->io_sync);
+>  	}
+>  
+> -	ret = gpio_nand_get_config(&pdev->dev, &gpiomtd->plat);
+> -	if (ret)
+> -		return ret;
+> -
+>  	ret = devm_gpio_request(&pdev->dev, gpiomtd->plat.gpio_nce, "NAND NCE");
+>  	if (ret)
+>  		return ret;
+
+I can fixup the first 2 without a resend. Depending on your response to
+the third comment, I'll apply this.
+
+Thanks,
+Brian
