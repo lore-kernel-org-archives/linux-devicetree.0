@@ -1,64 +1,64 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v5 1/2] ARM: davinci: da850: add DT node for ethernet
-Date: Fri, 16 Aug 2013 22:46:15 +0400
-Message-ID: <520E7377.1080808@cogentembedded.com>
-References: <1376662262-21795-1-git-send-email-prabhakar.csengg@gmail.com> <1376662262-21795-2-git-send-email-prabhakar.csengg@gmail.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH v3 0/9] ARM: dts: exynos: add support for hdmi subsystem
+Date: Mon, 19 Aug 2013 04:16:13 +0900
+Message-ID: <52111D7D.3060108@samsung.com>
+References: <1374737677-3215-1-git-send-email-rahul.sharma@samsung.com> <112701ce98d6$aaed8840$00c898c0$@org> <6563414.jg5Jd3ZBY4@amdc1227>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1376662262-21795-2-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <6563414.jg5Jd3ZBY4@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, 'Rahul Sharma' <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com, r.sh.open@gmail.com, 'Russell King' <rmk+kernel@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 08/14/13 20:26, Tomasz Figa wrote:
 
-On 08/16/2013 06:11 PM, Lad, Prabhakar wrote:
-
-> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-
-> Add ethernet device tree node information and pinmux for mii to da850 by
-> providing interrupt details and local mac address.
-
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> ---
->   arch/arm/boot/dts/da850-evm.dts |    5 +++++
->   arch/arm/boot/dts/da850.dtsi    |   30 ++++++++++++++++++++++++++++++
->   2 files changed, 35 insertions(+)
-
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index 1f8cfdd..44f3fbc 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -96,6 +96,11 @@
->   			pinctrl-0 = <&mdio_pins>;
->   			bus_freq = <2200000>;
->   		};
-> +		ethernet: emac@1e20000 {
-
-    Why label the node in the board file too?
-
-> +			status = "okay";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&mii_pins>;
-> +		};
->   	};
->   	nand_cs3@62000000 {
->   		status = "okay";
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index d5138b4..a5d30d9 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
 [...]
-> @@ -226,6 +242,20 @@
->   			#size-cells = <0>;
->   			reg = <0x224000 0x1000>;
->   		};
-> +		ethernet: emac@1e20000 {
 
-    I said node should be named "ethernet", not labelled. You're the second 
-person that doesn't know the difference between the two. :-)
+>> See my comments about making common stuff for exynos5 SoCs.
+>
+> I agree.
+>
+>> And please don't use title like following,
+>>
+>> 'ARM: dts: exynos0000: ....'.
+>>
+>> Because the relatively long prefix of title can cover _real_ title, So
+>> just 'ARM: dts: .... in exynos000' is better.
+>
+> Well, I tend to disagree on this. The ARM: dts:<platform name>: prefix is
+> commonly used in arch/arm/boot/dts (see git log --oneline
+> arch/arm/boot/dts).
+>
+Hmm...it is not entirely true...
 
-WBR, Sergei
+> As long as we don't cross the ~75 characters boundary in patch subject, I
+> don't think this is any problem.
+>
+Let's see.
+
+If we use the 'platform name' in prefixe for dt file,
+
+"ARM: dts: exynos0000: add support for something"
+or
+"ARM: dts: universal_c210: add support for something"
+or
+"ARM: dts: exynos0000-pinctrl: add support for something"
+...
+most of them should spend over half of 75 characters as a prefix 
+including 'add support for' in subject and in addition, there is '[PATCH 
+v0 00/00]' in the email subject.
+
+(+ Russell)
+
+I remember there were discussions about subject and at that time the 
+result was that keyword should be shown ahead as possible in subject. 
+But we are still using too long word as a prefix...
+
+One more note, even my e-mail client shows just 40~50 characters for 
+subject because of relatively not big enough resolution and pre-read 
+window and so on ;)
+
+Kukjin
