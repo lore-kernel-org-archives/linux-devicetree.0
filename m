@@ -1,59 +1,40 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:36441 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752746Ab3HVKjZ (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 06:39:25 -0400
-Date: Thu, 22 Aug 2013 11:39:20 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130822103920.GC26118@sirena.org.uk>
-References: <CAPgLHd_XJpihjFyozW0f01zj03mJQTzPN02=pdBuYfwckDWvGg@mail.gmail.com>
+Received: from mail-bk0-f53.google.com ([209.85.214.53]:55161 "EHLO
+	mail-bk0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752192Ab3HRILN (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sun, 18 Aug 2013 04:11:13 -0400
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Lg8eXa+brxrbjAbR"
-Content-Disposition: inline
-In-Reply-To: <CAPgLHd_XJpihjFyozW0f01zj03mJQTzPN02=pdBuYfwckDWvGg@mail.gmail.com>
-Subject: Re: [PATCH -next] spi: spi-efm32: remove redundant dev_err call in
- efm32_spi_probe()
+Date: Sun, 18 Aug 2013 16:11:12 +0800
+Message-ID: <CAPgLHd_XJpihjFyozW0f01zj03mJQTzPN02=pdBuYfwckDWvGg@mail.gmail.com>
+Subject: [PATCH -next] spi: spi-efm32: remove redundant dev_err call in efm32_spi_probe()
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+To: broonie@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
---Lg8eXa+brxrbjAbR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There is a error message within devm_ioremap_resource
+already, so remove the dev_err call to avoid redundant
+error message.
 
-On Sun, Aug 18, 2013 at 04:11:12PM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->=20
-> There is a error message within devm_ioremap_resource
-> already, so remove the dev_err call to avoid redundant
-> error message.
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/spi/spi-efm32.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Applied, thanks.
+diff --git a/drivers/spi/spi-efm32.c b/drivers/spi/spi-efm32.c
+index ba38452..dbfef3d 100644
+--- a/drivers/spi/spi-efm32.c
++++ b/drivers/spi/spi-efm32.c
+@@ -396,7 +396,6 @@ static int efm32_spi_probe(struct platform_device *pdev)
+ 	ddata->base = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(ddata->base)) {
+ 		ret = PTR_ERR(ddata->base);
+-		dev_err(&pdev->dev, "failed to remap memory\n");
+ 		goto err;
+ 	}
+ 
 
---Lg8eXa+brxrbjAbR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSFepVAAoJELSic+t+oim9J5wP/1Cz/4tWXpDJQSZR1y0Hqj3a
-uh9hBpHtXrRuQtUsdsU1dkjtmkA0ixb3aOgv3uOaQJOtBS8Gwbu67/KdqfkQwgs3
-GHhwnn3EHw+OhBpA2wZxd2s9L5cpLa9JScDH4UhKmh71tlNZXcU3h3H7AcNl3tEU
-LQjidU6l6XofdyaF9vCrtKbOLkvzR2JHHGnt1VBgsZ2r2bCFHw0e+ApT/wMF8sAC
-gJUNasAdyG4/anqrl1tWV4O9hQAiuFra8dfEK2TPWHdM6fbKAJ26ZpfqnJJQbu0F
-IOBF1Q94cKeMtzQ69jlpEM++oTuXjMrG34NXa3qV3rp0KRLeiYOum55ywZf4XgsP
-Ve3YBWja35Dqsy1X7uDKjEtNNM77zeDLDNLKlNScR1rGbh04jpbgz+l7xJIgiPDu
-aa16j5I9/UsYABOzhM2CpUu7ockFkS9Z6HsHBDJbM7EAnCOM8v+uqPiWHPSB4ZTo
-JMpvMwkqpOu36uCdAocNLxG1nK+vjIGS4OU4SBNxDzVY723mFgUDDKguku+DcQGb
-WxYt8ZRkOaVPbZUiw8xQ5zXYvdGmSK2hD7hytnOMyy+RMxOhME8NzKlPwZ5+L6Pa
-lD5xVDBAUiqY9rReLA2ImC5IXPV+V9eMVM2HvHNmvgIJRpbJPvmp6TLv/8YDNhIa
-nvw6lGxruMyMQkXHmvui
-=xge3
------END PGP SIGNATURE-----
-
---Lg8eXa+brxrbjAbR--
