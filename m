@@ -1,64 +1,40 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v3 0/9] ARM: dts: exynos: add support for hdmi subsystem
-Date: Mon, 19 Aug 2013 04:16:13 +0900
-Message-ID: <52111D7D.3060108@samsung.com>
-References: <1374737677-3215-1-git-send-email-rahul.sharma@samsung.com> <112701ce98d6$aaed8840$00c898c0$@org> <6563414.jg5Jd3ZBY4@amdc1227>
+Subject: Re: [PATCH 3/4] ARM: dts: Correct the /include entry on exynos5420
+ dtsi file
+Date: Mon, 19 Aug 2013 04:54:06 +0900
+Message-ID: <5211265E.7030808@samsung.com>
+References: <1373458313-18970-1-git-send-email-padma.v@samsung.com> <1373458313-18970-4-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <6563414.jg5Jd3ZBY4@amdc1227>
+In-Reply-To: <1373458313-18970-4-git-send-email-padma.v@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, 'Rahul Sharma' <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com, r.sh.open@gmail.com, 'Russell King' <rmk+kernel@arm.linux.org.uk>
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com, mturquette@linaro.org, dianders@chromium.org, abrestic@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/14/13 20:26, Tomasz Figa wrote:
-
-[...]
-
->> See my comments about making common stuff for exynos5 SoCs.
+On 07/10/13 21:11, Padmavathi Venna wrote:
+> This patch corrects the /include to #include on exynos5420
 >
-> I agree.
+> Signed-off-by: Padmavathi Venna<padma.v@samsung.com>
+> ---
+>   arch/arm/boot/dts/exynos5420.dtsi |    2 +-
+>   1 files changed, 1 insertions(+), 1 deletions(-)
 >
->> And please don't use title like following,
->>
->> 'ARM: dts: exynos0000: ....'.
->>
->> Because the relatively long prefix of title can cover _real_ title, So
->> just 'ARM: dts: .... in exynos000' is better.
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index 8c54c4b..da55160 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -14,7 +14,7 @@
+>    */
 >
-> Well, I tend to disagree on this. The ARM: dts:<platform name>: prefix is
-> commonly used in arch/arm/boot/dts (see git log --oneline
-> arch/arm/boot/dts).
+>   #include "exynos5.dtsi"
+> -/include/ "exynos5420-pinctrl.dtsi"
+> +#include "exynos5420-pinctrl.dtsi"
+>   / {
+>   	compatible = "samsung,exynos5420";
 >
-Hmm...it is not entirely true...
+Applied, thanks.
 
-> As long as we don't cross the ~75 characters boundary in patch subject, I
-> don't think this is any problem.
->
-Let's see.
-
-If we use the 'platform name' in prefixe for dt file,
-
-"ARM: dts: exynos0000: add support for something"
-or
-"ARM: dts: universal_c210: add support for something"
-or
-"ARM: dts: exynos0000-pinctrl: add support for something"
-...
-most of them should spend over half of 75 characters as a prefix 
-including 'add support for' in subject and in addition, there is '[PATCH 
-v0 00/00]' in the email subject.
-
-(+ Russell)
-
-I remember there were discussions about subject and at that time the 
-result was that keyword should be shown ahead as possible in subject. 
-But we are still using too long word as a prefix...
-
-One more note, even my e-mail client shows just 40~50 characters for 
-subject because of relatively not big enough resolution and pre-read 
-window and so on ;)
-
-Kukjin
+- Kukjin
