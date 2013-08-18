@@ -1,52 +1,57 @@
-MIME-Version: 1.0
-In-Reply-To: <521246D8.9040506@wwwdotorg.org>
-References: <1375798370-2231-1-git-send-email-ldewangan@nvidia.com>
-	<52014E50.6030508@wwwdotorg.org>
-	<5203D138.4030107@nvidia.com>
-	<20130808171331.GA6960@core.coreip.homeip.net>
-	<5203D487.5020507@wwwdotorg.org>
-	<20130812171504.GA31418@core.coreip.homeip.net>
-	<52092299.4080104@wwwdotorg.org>
-	<52123152.9070408@nvidia.com>
-	<521246D8.9040506@wwwdotorg.org>
-Date: Mon, 19 Aug 2013 17:35:10 -0500
-Message-ID: <CAL_Jsq+Ur8szL=kwtvBq+JzSk_DY=i6g3iBZ0Uu9baordm2-9A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] include: dt-binding: input: create a DT header
- defining key codes.
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Stephen Warren <swarren@nvidia.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>
+Return-Path: <devicetree-owner@vger.kernel.org>
+Received: from georges.telenet-ops.be ([195.130.137.68]:46832 "EHLO
+	georges.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754069Ab3HRLBp (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sun, 18 Aug 2013 07:01:45 -0400
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v2] of_net.h: Make of_get_phy_mode() return int i.s.o. const int
+Date: Sun, 18 Aug 2013 13:01:30 +0200
+Message-Id: <1376823690-29179-1-git-send-email-geert@linux-m68k.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Aug 19, 2013 at 11:24 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 08/19/2013 08:53 AM, Laxman Dewangan wrote:
->> On Monday 12 August 2013 11:29 PM, Stephen Warren wrote:
->>> On 08/12/2013 11:15 AM, Dmitry Torokhov wrote:
->>>>>
->>>>> Device tree files can only include headers in include/dt-bindings.
->>>>> Eventually/soon, all the DT files and the headers in the dt-bindings/
->>>>> directory will be split out into a separate git tree, which does not
->>>>> have access to include/uapi, or indeed any other Linux kernel header
->>>>> files.
->>>> OK, that makes it easier for me - please merge through whatever tree
->>>> that owns include/dt-bindings.
->>> Are there any objections to my taking both patches through the Tegra
->>> tree? Patch 2/2 depends on 1/2 and is Tegra-specific. This should work
->>> out fine unless anyone else wants to use the new header this kernel
->>> cycle; if they do, this should go into a topic branch in the DT tree
->>> that I can pull into the Tegra tree.
->>
->> Hi Stephen,
->> Just wanted to check if you are taking this on Tegra tree. I want to
->> post some more cleanups on other dts file  to use dt-binding include for
->> key code otherwise I will defer for next kernel version.
->
-> At this time, I assume this will go through the DT repo/branch. Rob?
+include/linux/of_net.h:16: warning: type qualifiers ignored on function return type
 
-Applied.
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+v2: update the actual function in drivers/of/of_net.c.
 
-It is available here:
-git://sources.calxeda.com/kernel/linux.git for-grant
+ drivers/of/of_net.c    |    2 +-
+ include/linux/of_net.h |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Rob
+diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+index ea174c8..8f9be2e 100644
+--- a/drivers/of/of_net.c
++++ b/drivers/of/of_net.c
+@@ -39,7 +39,7 @@ static const char *phy_modes[] = {
+  * The function gets phy interface string from property 'phy-mode',
+  * and return its index in phy_modes table, or errno in error case.
+  */
+-const int of_get_phy_mode(struct device_node *np)
++int of_get_phy_mode(struct device_node *np)
+ {
+ 	const char *pm;
+ 	int err, i;
+diff --git a/include/linux/of_net.h b/include/linux/of_net.h
+index 61bf53b..34597c8 100644
+--- a/include/linux/of_net.h
++++ b/include/linux/of_net.h
+@@ -9,10 +9,10 @@
+ 
+ #ifdef CONFIG_OF_NET
+ #include <linux/of.h>
+-extern const int of_get_phy_mode(struct device_node *np);
++extern int of_get_phy_mode(struct device_node *np);
+ extern const void *of_get_mac_address(struct device_node *np);
+ #else
+-static inline const int of_get_phy_mode(struct device_node *np)
++static inline int of_get_phy_mode(struct device_node *np)
+ {
+ 	return -ENODEV;
+ }
+-- 
+1.7.9.5
+
