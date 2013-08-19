@@ -1,85 +1,106 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-bk0-f52.google.com ([209.85.214.52]:55643 "EHLO
-	mail-bk0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751024Ab3HSUKr (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 16:10:47 -0400
-Date: Mon, 19 Aug 2013 22:10:43 +0200
+Received: from mail-bk0-f45.google.com ([209.85.214.45]:35852 "EHLO
+	mail-bk0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751117Ab3HSUEk (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 16:04:40 -0400
+Date: Mon, 19 Aug 2013 22:04:36 +0200
 From: Thierry Reding <thierry.reding@gmail.com>
 Subject: Re: [RFC 2/4] driver core: Allow early registration of devices
-Message-ID: <20130819201042.GB5191@mithrandir>
+Message-ID: <20130819200435.GA5191@mithrandir>
 References: <1376685563-1053-1-git-send-email-treding@nvidia.com>
- <1376685563-1053-3-git-send-email-treding@nvidia.com>
- <20130816210637.GC2198@kroah.com>
  <20130816215530.GA14464@mithrandir>
- <20130816220807.GA6848@kroah.com>
- <20130817111747.GB1536@mithrandir>
- <5212757F.2080107@wwwdotorg.org>
+ <CACxGe6uhiKY7a0+aViEamwKbE2tJicVc8CMZChBUaf+KYTs5rw@mail.gmail.com>
+ <3558931.NyoikKT8ha@flatron>
+ <521276BE.4090208@wwwdotorg.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
+	protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
 Content-Disposition: inline
-In-Reply-To: <5212757F.2080107@wwwdotorg.org>
+In-Reply-To: <521276BE.4090208@wwwdotorg.org>
 Sender: devicetree-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Hiroshi Doyu <hdoyu@nvidia.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Hiroshi Doyu <hdoyu@nvidia.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
 
---V0207lvV8h4k8FAm
+--fUYQa+Pmc3FrFX/N
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 19, 2013 at 01:43:59PM -0600, Stephen Warren wrote:
-> On 08/17/2013 05:17 AM, Thierry Reding wrote:
+On Mon, Aug 19, 2013 at 01:49:18PM -0600, Stephen Warren wrote:
+> On 08/17/2013 04:26 AM, Tomasz Figa wrote:
 > ...
-> > Well, the most obvious cases where early initialization is needed
-> > are interrupt controllers and clocks.
+> > Please correct me if I'm wrong, but to get to initcalls you need a time=
+r.=20
+> > However a timer driver might need interrupts (to tick) and clocks (to g=
+et=20
+> > the frequency).
+> >=20
+> > At least this is what happens on the platforms I work with. They don't=
+=20
+> > need any special early registration method, though. We just special cas=
+e=20
+> > those drivers, as Thierry pointed, so they don't use device based APIs.
+> >=20
+> > However if we consider a more complex setup, let's say that the timer=
+=20
+> > driver needs to access some special registers, which are shared with ot=
+her=20
+> > drivers as well (again not a completely exotic case, as I already met t=
+his=20
+> > when working with timer and PWM drivers for older Samsung platforms and=
+=20
+> > had to hack things a bit). One would suggest using regmap here, but it =
+is=20
+> > a device based API.
 >=20
-> ... and IOMMUs, which apparently need to initialize before any devices
-> whose transactions are routed through the IOMMU, in order to set
-> themselves up as the IOMMU for the relevant devices.
+> To take this even further, I'm not sure there's a particular reason why
+> the timer has to have an internal clock source driven from the same chip
+> clock input as the CPU itself. What if there's a separate clock input,
+> whose source chip has an enable input, which is connected to a GPIO,
+> which is driven by an I2C-based GPIO expander? Admittedly that's a
+> pretty crazy HW design, but I doubt it's much other than an accident
+> that it doesn't exist in practice, given the probable lack of feedback
+> cycle from Linux SW internals to all board designers.
 >=20
-> It's possible that the CPU-visible bus structure isn't a strict
-> inverse/reverse of the device-visible bus-structure. A device may have
-> CPU-visible registers on one bus segment, but inject master
-> transactions onto an unrelated bus segment. So it may not be as simple
-> as making a bus driver for the bus segment affected by the IOMMU, and
-> having that driver trigger instantiation of all its children.
+> It seems like the best solution here is to make the generic case fully
+> capable. Perhaps initcalls shouldn't depend on a timer at all, or should
+> be split into sets that require certain services, and those services can
+> appear dynamically, and when they do, the relevant initcalls that were
+> held off by lack of a certain feature all get triggered.
 
-Well, perhaps that can be handled via deferred probing? The only thing
-preventing that right now is that drivers aren't actively aware of the
-IOMMUs existence. If we can make it a requirement that each driver
-needing the services of an IOMMU actively requests that service, then
-deferred probing should be able to deal with it.
+But that's pretty much a special case of deferred probing, isn't it?
 
-That doesn't necessarily mean that drivers need to be doing it manually.
-It strikes me as the kind of thing that could easily be done by the
-core. In fact I've been thinking of doing something similar to resolve
-devicetree IRQ references at probe time, rather than at device creation
-time to remove the need for interrupt chips to register early.
+If we make it any more specific than deferred probing we'll end up with
+a set of statically defined features that drivers need to check instead
+of directly requesting the resources they need. Maintaining that list
+will probably be manageable, but how will that handle cases where for
+instance two drivers announce the same services and one driver depends
+on that service? It'll be difficult to find out if the provider of the
+service is the right one.
 
 Thierry
 
---V0207lvV8h4k8FAm
+--fUYQa+Pmc3FrFX/N
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.20 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSEnvCAAoJEN0jrNd/PrOhx6sP/i5FSrqgy3YdWLhdwy0AMNye
-MQ32TX1AdfrmcyBCiOgFQLg48BC/Ig8Si0I5HUe8emKlaB8pXbmkfo8IJ//OEqA7
-uwJuVoggE+Nqxyl/ycWOohQQexacBJH1ry7SBT32q2zyDJhHxk3PFnpV3SR8Wicx
-ByyXk1w/LG9ghD8xLERGfrTk7fUF/6GTntj1KpN3Jnbo20jXwGFv1+RxXB19IDgc
-HKB4QI6LJvC8+PPb9Osk0im76bHYE9blHKmwCMVba21dzloakfWlM47ti0MAuuMD
-fhncKj1Nt/cm1CovKy+ENrDttkkcCHib/5R7P9EU4xPAriGCMcNX5SmQiGvov47J
-El1SYcQa0q+3WMPEbnKcqhxvDGLvy1L4FpOdV/wqs7myEllJ2JSDdvwe79CwxXRf
-KMAd7wOv7/CLrDuBlUEwNfp4WxNC1KThFe05Nzqq9r9Aqmd/gJcYDrvJKuoS9I8R
-BQvWVI2fco2LDY9GnMZAw/X2oZvp2HKFcy57AZEstAMmm51VWvwGgwBObl/l5Ze1
-lky3ydmWlBVcoQVVnUBE20Nf1BHWbtTw7ETlfVcfj+ZzUm5ZKfioe/4d4MBLGun/
-YFaFIPh5uOomhAsp6N0vDWFlgKSVFZX78WIUuHVh8If98dYlTUlJd2UjYbEXjxkW
-QQM2EwJPL1RLi1OkI4RX
-=AQID
+iQIcBAEBAgAGBQJSEnpTAAoJEN0jrNd/PrOhJKQP/1/fbv+1crpGtEpkD/SsnwWP
+zyD+Nkah2KgOsf3pk/ksNsllJCqI0SN4gS9ky0gIj7i8AwyQrtM82h5Oqk3VXxh4
+JpWBIk49bGrAIwCRRTRJq9J6YLxmZjQBJIlo1J4fuqubmw9kVPDID9S0dtKUovoF
+3wWiYjmtaRTs0FFYzw7jjqthZJ3a+AJjKV78+vGjbFztVwP0FCli0RijIBM0VTn+
+x4RX3j0+mdYcKyDNBk0anCsq2YIhQK4R15zxNk8c8tjrsPeM5fbjQSNvVqPBA6kd
+QYnlrG6pvf8IdkZ4NIf4JSLCJQJG/+VCMBElIED21QlZtSWBPOGEfAI2Mh4ZlDEE
+AZ0kqqB835qmVHQNLq12pEWJsArgpulEG4zf78bqPjSoxehQ4RdH3In+lgqUL0Yv
+elqdGJBCuLjsNDHWpEOaT01JdTLrs2jIT3LXF+uXkfs2DXU72WGw6I9pGGOzi8kb
+OMa+W92urlGqUomHNViXWZ+35gX32ZbmsTBGID0+Z5WETyyx3BZBorEUIigFJDQH
+S4Tn060KvibxqcFgG+o5O/pRNQ4bJDSyE9UfSE5TZbdcgFi0hfCKTTMNsJUol+PM
+hbBBCnfSyHBQP4adQvqLYTgGMEhpv7e6zBz/+2ppqkqIGqPa75fGp3hZL4pu4bai
+oruXTNWu1xhWPJqjMd6E
+=o0Sg
 -----END PGP SIGNATURE-----
 
---V0207lvV8h4k8FAm--
+--fUYQa+Pmc3FrFX/N--
