@@ -1,37 +1,38 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pb0-f47.google.com ([209.85.160.47]:62119 "EHLO
-	mail-pb0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751622Ab3HBAw6 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 20:52:58 -0400
-Received: by mail-pb0-f47.google.com with SMTP id rr4so50151pbb.34
-        for <devicetree@vger.kernel.org>; Thu, 01 Aug 2013 17:52:57 -0700 (PDT)
-From: Julius Werner <jwerner@chromium.org>
-Subject: [PATCH 0/3] usb: phy-samsung-usb: Simplify and cleanup
-Date: Thu,  1 Aug 2013 17:52:03 -0700
-Message-Id: <1375404726-26264-1-git-send-email-jwerner@chromium.org>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:57894 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751258Ab3HSVKA (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 17:10:00 -0400
+Message-ID: <521289A3.5040705@wwwdotorg.org>
+Date: Mon, 19 Aug 2013 15:09:55 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH v4 1/4] mtd: nand: gpio: Add DT property to automatically
+ determine bus width
+References: <1376637583-12485-1-git-send-email-shc_work@mail.ru>
+In-Reply-To: <1376637583-12485-1-git-send-email-shc_work@mail.ru>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Julius Werner <jwerner@chromium.org>
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series cleans up and simplifies some of the Samsung USB PHY
-driver code. It changes the PMU register handling to carry the register
-address directly in the device tree and avoid a lot of special-cased
-address arithmatic in the code. Then it removes the USB_PHY_TYPE
-HOST/DEVICE distinction which was only needed for those removed parts.
+On 08/16/2013 01:19 AM, Alexander Shiyan wrote:
+> This patch adds a property to automatically determine the NAND
+> bus width. This property works if the bus width is not specified
+> explicitly.
 
-Julius Werner (3):
-  usb: phy-samsung-usb: Simplify PMU register handling
-  usb: phy-samsung-usb: trivial: rename pmuregs variable
-  usb: phy-samsung-usb: Remove USB_PHY_TYPE from Samsung PHY driver
+> diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
 
- arch/arm/boot/dts/exynos5250.dtsi  |  4 +--
- drivers/usb/phy/phy-samsung-usb.c  | 51 +++++++++-----------------------------
- drivers/usb/phy/phy-samsung-usb.h  | 34 ++++++-------------------
- drivers/usb/phy/phy-samsung-usb2.c | 34 +++++++------------------
- drivers/usb/phy/phy-samsung-usb3.c | 13 +++-------
- 5 files changed, 34 insertions(+), 102 deletions(-)
+> +- gpio-control-nand,bank-width-auto : Device bus width is determined
+> +  automatically if "bank-width" is omitted (Boolean).
 
--- 
-1.7.12.4
+How would a driver determine the bank width automatically; is there some
+obvious way a driver should do this based on the/a NAND specification?
+Is there more than one way this auto-detection could occur, and if so,
+which of those methods is this property indicating will work?
+
+I'd rather expect the property description include details of the
+auto-detection mechanism that the DT states will work.
 
