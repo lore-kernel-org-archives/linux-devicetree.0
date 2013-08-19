@@ -1,86 +1,79 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pd0-f176.google.com ([209.85.192.176]:65092 "EHLO
-	mail-pd0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752685Ab3HBPCv (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 11:02:51 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [RFC v3 02/13] [media] exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings documentation
-Date: Fri,  2 Aug 2013 20:32:31 +0530
-Message-Id: <1375455762-22071-3-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1375455762-22071-1-git-send-email-arun.kk@samsung.com>
-References: <1375455762-22071-1-git-send-email-arun.kk@samsung.com>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:60925 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751368Ab3HSLpy (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 07:45:54 -0400
+Date: Mon, 19 Aug 2013 12:45:22 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130819114522.GC30073@sirena.org.uk>
+References: <cover.1376901081.git.b42378@freescale.com>
+ <e7ceef74714bb4ead624b333ee3969225b4c5cb5.1376901081.git.b42378@freescale.com>
+ <20130819092458.GE3719@e106331-lin.cambridge.arm.com>
+ <20130819095042.GA11402@MrMyself>
+ <20130819100143.GH3719@e106331-lin.cambridge.arm.com>
+ <20130819105201.GB30073@sirena.org.uk>
+ <20130819113121.GL3719@e106331-lin.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="o9w4P0ZCTVHZJ0iX"
+Content-Disposition: inline
+In-Reply-To: <20130819113121.GL3719@e106331-lin.cambridge.arm.com>
+Subject: Re: [PATCH v7 2/2] ASoC: fsl: Add S/PDIF machine driver
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Nicolin Chen <b42378@freescale.com>, "lars@metafoo.de" <lars@metafoo.de>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "timur@tabi.org" <timur@tabi.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "R65777@freescale.com" <R65777@freescale.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The patch adds the DT binding documentation for Samsung
-Exynos5 SoC series imaging subsystem (FIMC-IS).
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
----
- .../devicetree/bindings/media/exynos5-fimc-is.txt  |   52 ++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+--o9w4P0ZCTVHZJ0iX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
-new file mode 100644
-index 0000000..49a373a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
-@@ -0,0 +1,52 @@
-+Samsung EXYNOS5 SoC series Imaging Subsystem (FIMC-IS)
-+------------------------------------------------------
-+
-+The camera subsystem on Samsung Exynos5 SoC has some changes relative
-+to previous SoC versions. Exynos5 has almost similar MIPI-CSIS and
-+FIMC-LITE IPs but has a much improved version of FIMC-IS which can
-+handle sensor controls and camera post-processing operations. The
-+Exynos5 FIMC-IS has a dedicated ARM Cortex A5 processor, many
-+post-processing blocks (ISP, DRC, FD, ODC, DIS, 3DNR) and two
-+dedicated scalers (SCC and SCP).
-+
-+fimc-is node
-+------------
-+
-+Required properties:
-+
-+- compatible        : must be "samsung,exynos5250-fimc-is"
-+- reg               : physical base address and size of the memory mapped
-+                      registers
-+- interrupt-parent  : Parent interrupt controller
-+- interrupts        : fimc-is interrupt to the parent combiner
-+- clocks            : list of clock specifiers, corresponding to entries in
-+                      clock-names property;
-+- clock-names       : must contain "isp", "mcu_isp", "isp_div0", "isp_div1",
-+                      "isp_divmpwm", "mcu_isp_div0", "mcu_isp_div1" entries,
-+                      matching entries in the clocks property.
-+
-+pmu subnode
-+-----------
-+
-+Required properties:
-+ - reg : should contain PMU physical base address and size of the memory
-+         mapped registers.
-+
-+i2c-isp (ISP I2C bus controller) nodes
-+------------------------------------------
-+
-+Required properties:
-+
-+- compatible	: should be "samsung,exynos4212-i2c-isp" for Exynos4212,
-+		  Exynos4412 and Exynos5250 SoCs;
-+- reg		: physical base address and length of the registers set;
-+- clocks	: must contain gate clock specifier for this controller;
-+- clock-names	: must contain "i2c_isp" entry.
-+
-+For the above nodes it is required to specify a pinctrl state named "default",
-+according to the pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt.
-+
-+Device tree nodes of the image sensors' controlled directly by the FIMC-IS
-+firmware must be child nodes of their corresponding ISP I2C bus controller node.
-+The data link of these image sensors must be specified using the common video
-+interfaces bindings, defined in video-interfaces.txt.
--- 
-1.7.9.5
+On Mon, Aug 19, 2013 at 12:31:21PM +0100, Mark Rutland wrote:
+> On Mon, Aug 19, 2013 at 11:52:01AM +0100, Mark Brown wrote:
 
+> > This is intended to allow userspace to distinguish between systems that
+> > are electrically identical but physically distinct, for example when
+> > multiple systems are derived from the same reference design.
+
+> I see. Surely if there's some meaning imparted to userspace by the model
+> name, there's a contract there that we should document (the set of valid
+> model names and what they correspond to)?
+
+In theory I guess.  In practice I doubt many people will bother and I'd
+expect zero productive result from those that do.
+
+> I'm not sure I understand why userspace needs to know what the system is
+> if we've adequately described how it's wired and what its capabilities
+> are. However, I'm not at all familiar with the way we handle audio, so
+> please forgive my naivety there :)
+
+The physical form of the system can have a substantial impact on how
+people want to configure it at runtime even if there is no software
+visible difference.  Coefficients can be chosen to work with plastics,
+or volumes adjusted for expected user positioning with respect to the
+hardware for example.
+
+--o9w4P0ZCTVHZJ0iX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSEgVPAAoJELSic+t+oim9ksAP/2Bgg1B+z3G9u3ScZp230xoo
+4d6MJq8MBUH4TeuaJcrt8lXt4yYB4Tu66gYEDnUYaCnCNp3rjWYTkjAPmrtOEFds
+0QuAx1wDTASRbpGPELimQol/IyxcGRxDkffFoWpnkK5tGRn/30oINEK7NPEub7sU
+96E2BuGEgzLA3r2YPQKcfb9tqzKFeNBJD3G25h4GQd7tRU1UCMGhj2XXOIU1vsDI
+KM3Zea0/2M/mqBRv0k6SucDmD+yIyAyJjpRcn6zeqVgBdZDm+P3CfhfDOiNA0pOU
+Vs0HMlo48MbN1Mfpg8oRCvIiwCOxtpV8otx3CZGE6S49+pipNT7FcRPa+mWJFgqa
+F7sECi3habGmihKMWXE24y4d5/f+CCkK0y3XgVj+YSNBsufk9WSSiyyNx616w7DG
+a0DIHXBKRrkgDssJ7oCmmJiU1n9m0166l2DY5ZnLwi7kxYnVnJZ0zmZcTiH1HxCA
+dCnMmM0sdYg546yHr/8M+icec6HivmmUsYxPwjeOZ0hmSv7TVdd4xdH9YEbV703N
+Z6g5pnrOGTdu56z8FThmcNCjVAC8wVDMwb1mHm2r269AUg97V088ZZfYjBdphmJo
+77cowAdSM8FFl2AMqx5igLUFqglTR3Nrivx2OTzlzQUs2jIfD5Ma4gzxSW5NWY8T
+2Vv7Xs86czSoFW0w1onQ
+=5Tdu
+-----END PGP SIGNATURE-----
+
+--o9w4P0ZCTVHZJ0iX--
