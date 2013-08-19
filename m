@@ -1,13 +1,13 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from [213.199.154.187] ([213.199.154.187]:2616 "EHLO
-	db8outboundpool.messaging.microsoft.com" rhost-flags-FAIL-FAIL-OK-OK)
-	by vger.kernel.org with ESMTP id S1751565Ab3HSMAS (ORCPT
+Received: from mail-db9lp0251.outbound.messaging.microsoft.com ([213.199.154.251]:2052
+	"EHLO db9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1750810Ab3HSIZC (ORCPT
 	<rfc822;devicetree@vger.kernel.org>);
-	Mon, 19 Aug 2013 08:00:18 -0400
+	Mon, 19 Aug 2013 04:25:02 -0400
 From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v8 0/2] Add freescale S/PDIF CPU DAI and machine drivers
-Date: Mon, 19 Aug 2013 20:08:47 +0800
-Message-ID: <cover.1376912873.git.b42378@freescale.com>
+Subject: [PATCH v7 0/2] Add freescale S/PDIF CPU DAI and machine drivers
+Date: Mon, 19 Aug 2013 16:35:20 +0800
+Message-ID: <cover.1376901081.git.b42378@freescale.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
@@ -16,10 +16,6 @@ Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.
 List-ID: <devicetree@vger.kernel.org>
 
 Changelog:
-v7->v8:
- * Revised DT binding doc.
- * Revised dev_err() error msg.
- * Check return value of clk_set_rate().
 v6->v7:
  * Removed extra comma in array.
  * Revised some comments.
@@ -55,14 +51,14 @@ Nicolin Chen (2):
   ASoC: fsl: Add S/PDIF CPU DAI driver
   ASoC: fsl: Add S/PDIF machine driver
 
- .../devicetree/bindings/sound/fsl,spdif.txt        |   54 +
+ .../devicetree/bindings/sound/fsl,spdif.txt        |   56 +
  .../devicetree/bindings/sound/imx-audio-spdif.txt  |   29 +
  sound/soc/fsl/Kconfig                              |   14 +
  sound/soc/fsl/Makefile                             |    4 +
- sound/soc/fsl/fsl_spdif.c                          | 1281 ++++++++++++++++++++
+ sound/soc/fsl/fsl_spdif.c                          | 1277 ++++++++++++++++++++
  sound/soc/fsl/fsl_spdif.h                          |  224 ++++
  sound/soc/fsl/imx-spdif.c                          |  134 ++
- 7 files changed, 1740 insertions(+), 0 deletions(-)
+ 7 files changed, 1738 insertions(+), 0 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.txt
  create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
  create mode 100644 sound/soc/fsl/fsl_spdif.c
