@@ -1,66 +1,56 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:44507 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750839Ab3HSQCN (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 12:02:13 -0400
-Date: Mon, 19 Aug 2013 17:01:30 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130819160130.GD30073@sirena.org.uk>
-References: <20130816224654.GV30073@sirena.org.uk>
- <Pine.LNX.4.44L0.1308162117240.24059-100000@netrider.rowland.org>
- <CACVXFVPFqHLQRpd0QBzoVapqHtKqrfGvWT0_nhXeFqjQVRsp5Q@mail.gmail.com>
+Received: from mail-ve0-f181.google.com ([209.85.128.181]:42866 "EHLO
+	mail-ve0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751334Ab3HSMRy (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 08:17:54 -0400
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JGq01gMRpXZxBGpH"
-Content-Disposition: inline
-In-Reply-To: <CACVXFVPFqHLQRpd0QBzoVapqHtKqrfGvWT0_nhXeFqjQVRsp5Q@mail.gmail.com>
+In-Reply-To: <Pine.LNX.4.44L0.1308162117240.24059-100000@netrider.rowland.org>
+References: <20130816224654.GV30073@sirena.org.uk>
+	<Pine.LNX.4.44L0.1308162117240.24059-100000@netrider.rowland.org>
+Date: Mon, 19 Aug 2013 20:17:53 +0800
+Message-ID: <CACVXFVPFqHLQRpd0QBzoVapqHtKqrfGvWT0_nhXeFqjQVRsp5Q@mail.gmail.com>
 Subject: Re: Non-enumerable devices on USB and other enumerable buses
+From: Ming Lei <tom.leiming@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Ming Lei <tom.leiming@gmail.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-usb <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
+On Sat, Aug 17, 2013 at 9:29 AM, Alan Stern <stern@rowland.harvard.edu> wrote:
+> On Fri, 16 Aug 2013, Mark Brown wrote:
+>
+>> > Besides, you need to get the platform information to the driver in any
+>> > case, no matter how you decide to solve the chicken-and-egg problem.
+>> > It shouldn't be a factor in deciding which solution to use.
+>>
+>> It's not that this is hard, it's that I don't see how if you already
+>> have some concept of the device in the kernel data structures (which you
+>> must have in order to be able to provide platform data when it's needed)
+>> anything is gained by not using that when dealing with bootstrapping
+>> issues.
+>
+> I agree.  In fact, there's no choice but to use this device concept
+> during startup.  Otherwise there's no way to get the platform data to
+> the driver when it is needed, because there's no way to tell which
+> device the data applies to.  The question is how elaborate the concept
+> needs to be and how it gets used.
+>
+> Aong those lines, I would like to point out that the device concept
+> embodied in the kernel's data structures can be pretty thin.  For
+> example, it might be little more than a port number or bus address.
 
---JGq01gMRpXZxBGpH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Maybe the principle behind drivers/usb/core/usb-acpi.c is helpful
+for the problem, and DT may refer to ACPI to describe on-board
+USB devices, and the way to retrieve platform data too.
 
-On Mon, Aug 19, 2013 at 08:17:53PM +0800, Ming Lei wrote:
-> On Sat, Aug 17, 2013 at 9:29 AM, Alan Stern <stern@rowland.harvard.edu> wrote:
+>> Anyway, I think it's time to try to implement something rather than talk
+>> about it.
+>
+> Hopefully this discussion has given you some ideas for alternative
+> approachs, or at least helped to solidify your ideas.
 
-> > Aong those lines, I would like to point out that the device concept
-> > embodied in the kernel's data structures can be pretty thin.  For
-> > example, it might be little more than a port number or bus address.
 
-> Maybe the principle behind drivers/usb/core/usb-acpi.c is helpful
-> for the problem, and DT may refer to ACPI to describe on-board
-> USB devices, and the way to retrieve platform data too.
-
-I can't parse this at all well - why would DT want to refer to ACPI, do
-you mean people may wish to look at the code as an example?  As Grant
-noted DT already has some mechanisms for enumerable buses which looking
-at the code appears to be broadly what that's doing.
-
---JGq01gMRpXZxBGpH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSEkFXAAoJELSic+t+oim9ZGUP/2B3dNHHkAtNIXAzK9WcLXv6
-4smmEHzKQtcpuN6xAZdZk3tFFCHg94i2n2yKkmRaCvw+3OxYKdBN2MRQU0tyYVJJ
-oK+/eXn3ODpYdXZouH1cw7WFSxY72jVIZDvEMvvVlKE9RbYE1Q/lpeFpV9BxAZ0s
-8tHYdN7w19hO7cS8/kzT8hULAv902ptrDNsq1ftbMNub2WUKaCZVKBuv52N0/DiE
-14Pi/VKvNRlMIrMyg8eKmVeBkL+h0RBglOZtqWOayBNflIbcF+0IHZZwtIrqIrHl
-4NkOMC0RoDEF+AqTNJ+owdQl+Sve0iu9D+8jr2EVRa0Qbhg4Jt+Lti1ZWzQWQyzM
-i7YjcwZG57n0b/5iMq94pOkNucNkdWTv/BQCSagtMDBL5ob8FH/SpPq/+ADSJjvj
-qoLZYSyAtYOfvDGXxFpqr3HRZLi6bRS4KLTrtzH/+w0ISURA27X04RxZxNd2/9yf
-p/ZVRHE6yjh9NukBAHZXRWsJZ/aOn4eYzXBF+1ACiNjY0p5CfS7+qgY12yZX8Yr7
-x9Ywd3qMOnU4hYL+eB+GWj0mpRVIcYk0I5/JuauaAdDQ5YXvq9ElMeEkDbu+JGmB
-wO9D81uB2ZQ9IPcQ2QtQZ4iGbF8+1wAm9JuMHKnDb6RVAFpScRoeXbwqnQfwZc99
-dKHpHpD8m68OGsHKrr8A
-=apVX
------END PGP SIGNATURE-----
-
---JGq01gMRpXZxBGpH--
+Thanks,
+-- 
+Ming Lei
