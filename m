@@ -1,55 +1,39 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db8lp0185.outbound.messaging.microsoft.com ([213.199.154.185]:3270
-	"EHLO db8outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754717Ab3HEV6b (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 17:58:31 -0400
-From: <dinguyen@altera.com>
-Subject: [RESEND PATCH 1/4] arm: socfpga: Enable ARM_TWD for socfpga
-Date: Mon, 5 Aug 2013 16:58:42 -0500
-Message-ID: <1375739925-9110-2-git-send-email-dinguyen@altera.com>
-In-Reply-To: <1375739925-9110-1-git-send-email-dinguyen@altera.com>
-References: <1375739925-9110-1-git-send-email-dinguyen@altera.com>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:33863 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750925Ab3HSVLW (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 17:11:22 -0400
+Message-ID: <521289F7.8090503@wwwdotorg.org>
+Date: Mon, 19 Aug 2013 15:11:19 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [PATCH v4 4/4] mtd: nand: gpio: Add support for multichip devices
+References: <1376637583-12485-1-git-send-email-shc_work@mail.ru> <1376637583-12485-2-git-send-email-shc_work@mail.ru>
+In-Reply-To: <1376637583-12485-2-git-send-email-shc_work@mail.ru>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: dinh.linux@gmail.com
-Cc: Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, Pavel Machek <pavel@denx.de>, Jack Mitchell <jack.mitchell@dbbroadcast.co.uk>
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Dinh Nguyen <dinguyen@altera.com>
+On 08/16/2013 01:19 AM, Alexander Shiyan wrote:
+> This patch adds support for multichip NAND devices controlled through GPIOs.
+> To implement this, the properties of tree have been renamed. All current
+> boards and DTS files converted to use an updated driver. Also driver
+> temporarily keep support for DTS files which use the previous names scheme.
 
-Update Kconfig to enable TWD.
+> diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
 
-Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-Tested-by: Jack Mitchell <jack.mitchell@dbbroadcast.co.uk>
-Reviewed-by: Pavel Machek <pavel@denx.de>
-CC: Arnd Bergmann <arnd@arndb.de>
-CC: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ian.campbell@citrix.com>
-Cc: devicetree@vger.kernel.org
-Cc: Pavel Machek <pavel@denx.de>
-Cc: Jack Mitchell <jack.mitchell@dbbroadcast.co.uk>
----
- arch/arm/mach-socfpga/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+> -- gpios : specifies the gpio pins to control the NAND device.  nwp is an
+> -  optional gpio and may be set to 0 if not present.
+> +- ale-gpios : specifies the ALE gpio pin.
+> +- cle-gpios : specifies the CLE gpio pin.
+> +- nwp-gpios : specifies the NWP gpio pin (Optional).
+> +- nce-gpios : specifies the NCE gpio pin or several NCE GPIOs for multichip NAND.
+> +- rdy-gpios : specifies the RDY gpio pin or several RDY GPIOs for multichip NAND.
 
-diff --git a/arch/arm/mach-socfpga/Kconfig b/arch/arm/mach-socfpga/Kconfig
-index dd86db4..efad818 100644
---- a/arch/arm/mach-socfpga/Kconfig
-+++ b/arch/arm/mach-socfpga/Kconfig
-@@ -11,6 +11,7 @@ config ARCH_SOCFPGA
- 	select GENERIC_CLOCKEVENTS
- 	select GPIO_PL061 if GPIOLIB
- 	select HAVE_ARM_SCU
-+	select HAVE_ARM_TWD if LOCAL_TIMERS
- 	select HAVE_SMP
- 	select MFD_SYSCON
- 	select SPARSE_IRQ
--- 
-1.7.9.5
+Why not put the nwp-gpios into the "Optional properties" section of the
+document?
 
-
+Documenting the deprecated properties is good; thanks!
