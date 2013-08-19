@@ -1,51 +1,52 @@
-Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ch1ehsobe003.messaging.microsoft.com ([216.32.181.183]:9865
-	"EHLO ch1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1760170Ab3HNUe7 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Wed, 14 Aug 2013 16:34:59 -0400
-From: <dinguyen@altera.com>
-Subject: [PATCHv2 1/2] of: add vendor prefix for Altera Corp.
-Date: Wed, 14 Aug 2013 15:34:46 -0500
-Message-ID: <1376512487-12002-1-git-send-email-dinguyen@altera.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: dinh.linux@gmail.com
-Cc: Dinh Nguyen <dinguyen@altera.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org
+In-Reply-To: <521246D8.9040506@wwwdotorg.org>
+References: <1375798370-2231-1-git-send-email-ldewangan@nvidia.com>
+	<52014E50.6030508@wwwdotorg.org>
+	<5203D138.4030107@nvidia.com>
+	<20130808171331.GA6960@core.coreip.homeip.net>
+	<5203D487.5020507@wwwdotorg.org>
+	<20130812171504.GA31418@core.coreip.homeip.net>
+	<52092299.4080104@wwwdotorg.org>
+	<52123152.9070408@nvidia.com>
+	<521246D8.9040506@wwwdotorg.org>
+Date: Mon, 19 Aug 2013 17:35:10 -0500
+Message-ID: <CAL_Jsq+Ur8szL=kwtvBq+JzSk_DY=i6g3iBZ0Uu9baordm2-9A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] include: dt-binding: input: create a DT header
+ defining key codes.
+From: Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Stephen Warren <swarren@nvidia.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Dinh Nguyen <dinguyen@altera.com>
+On Mon, Aug 19, 2013 at 11:24 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 08/19/2013 08:53 AM, Laxman Dewangan wrote:
+>> On Monday 12 August 2013 11:29 PM, Stephen Warren wrote:
+>>> On 08/12/2013 11:15 AM, Dmitry Torokhov wrote:
+>>>>>
+>>>>> Device tree files can only include headers in include/dt-bindings.
+>>>>> Eventually/soon, all the DT files and the headers in the dt-bindings/
+>>>>> directory will be split out into a separate git tree, which does not
+>>>>> have access to include/uapi, or indeed any other Linux kernel header
+>>>>> files.
+>>>> OK, that makes it easier for me - please merge through whatever tree
+>>>> that owns include/dt-bindings.
+>>> Are there any objections to my taking both patches through the Tegra
+>>> tree? Patch 2/2 depends on 1/2 and is Tegra-specific. This should work
+>>> out fine unless anyone else wants to use the new header this kernel
+>>> cycle; if they do, this should go into a topic branch in the DT tree
+>>> that I can pull into the Tegra tree.
+>>
+>> Hi Stephen,
+>> Just wanted to check if you are taking this on Tegra tree. I want to
+>> post some more cleanups on other dts file  to use dt-binding include for
+>> key code otherwise I will defer for next kernel version.
+>
+> At this time, I assume this will go through the DT repo/branch. Rob?
 
-Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ian.campbell@citrix.com>
-Cc: devicetree@vger.kernel.org
+Applied.
 
-v2:
-- Deprecate "ALTR" in a separate patch
----
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 1 file changed, 1 insertion(+)
+It is available here:
+git://sources.calxeda.com/kernel/linux.git for-grant
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 366ce9b..ea95767 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -7,6 +7,7 @@ ad	Avionic Design GmbH
- adi	Analog Devices, Inc.
- aeroflexgaisler	Aeroflex Gaisler AB
- ak	Asahi Kasei Corp.
-+altr	Altera Corp.
- amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
- apm	Applied Micro Circuits Corporation (APM)
- arm	ARM Ltd.
--- 
-1.7.9.5
-
-
+Rob
