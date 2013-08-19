@@ -1,74 +1,46 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from nbd.name ([46.4.11.11]:34547 "EHLO nbd.name"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S933971Ab3HHJqH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 8 Aug 2013 05:46:07 -0400
-From: John Crispin <blogic@openwrt.org>
-Subject: [PATCH 1/2] DT: Add documentation for gpio-ralink
-Date: Thu,  8 Aug 2013 11:38:52 +0200
-Message-Id: <1375954733-30675-1-git-send-email-blogic@openwrt.org>
+Received: from www.linutronix.de ([62.245.132.108]:50509 "EHLO
+	Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750851Ab3HSROa (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 13:14:30 -0400
+Message-ID: <52125271.404@linutronix.de>
+Date: Mon, 19 Aug 2013 19:14:25 +0200
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/3] of: add vendor prefix for Mentor Graphics
+References: <1376572427-17689-1-git-send-email-bigeasy@linutronix.de> <520EAD1D.2090802@wwwdotorg.org> <520F41F0.8080707@linutronix.de> <52123EAA.10507@wwwdotorg.org>
+In-Reply-To: <52123EAA.10507@wwwdotorg.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, John Crispin <blogic@openwrt.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-usb@vger.kernel.org, Felipe Balbi <balbi@ti.com>, sergei.shtylyov@cogentembedded.com, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Describe gpio-ralink binding.
+On 08/19/2013 05:50 PM, Stephen Warren wrote:
+>>>> arch/arm/boot/dts/am33xx.dtsi:375:					compatible = "mg,musbmhdrc";
+>>>> arch/arm/boot/dts/am33xx.dtsi:430:					compatible = "mg,musbmhdrc";
+>>>
+>>>> arch/arm/boot/dts/dbx5x0.dtsi:181:				"mentor,musb";
+>>>
+>>> Should both be documented? Should the bindings for those devices be
+>>> unified on one vendor prefix, with the old one perhaps still documented
+>>> as deprecated depending on how long it's been around?
+>>
+>> I wasn't aware of the dbx5x0 mentor,usb binding. As far as the am33xx
+>> is concerned, it has been prepared for the next merge window and can be
+>> changed.
+> 
+> OK, changing it to mentor, seems simplest and most convenient then.
 
-Signed-off-by: John Crispin <blogic@openwrt.org>
-Cc: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
----
- .../devicetree/bindings/gpio/gpio-ralink.txt       |   40 ++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-ralink.txt
+Okay.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-ralink.txt b/Documentation/devicetree/bindings/gpio/gpio-ralink.txt
-new file mode 100644
-index 0000000..b4acf02
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-ralink.txt
-@@ -0,0 +1,40 @@
-+Ralink SoC GPIO controller bindings
-+
-+Required properties:
-+- compatible:
-+  - "ralink,rt2880-gpio" for Ralink controllers
-+- #gpio-cells : Should be two.
-+  - first cell is the pin number
-+  - second cell is used to specify optional parameters (unused)
-+- gpio-controller : Marks the device node as a GPIO controller
-+- reg : Physical base address and length of the controller's registers
-+- interrupt-parent: phandle to the INTC device node
-+- interrupts : Specify the INTC interrupt number
-+- ralink,num-gpios : Specify the number of GPIOs
-+- ralink,register-map : The register layout depends on the GPIO bank and actual
-+		SoC type. Register offsets need to be in this order.
-+		[ INT, EDGE, RENA, FENA, DATA, DIR, POL, SET, RESET, TOGGLE ]
-+
-+Optional properties:
-+- ralink,gpio-base : Specify the GPIO chips base number
-+
-+Example:
-+
-+	gpio0: gpio@600 {
-+		compatible = "ralink,rt5350-gpio", "ralink,rt2880-gpio";
-+
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+
-+		reg = <0x600 0x34>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <6>;
-+
-+		ralink,gpio-base = <0>;
-+		ralink,num-gpios = <24>;
-+		ralink,register-map = [ 00 04 08 0c
-+				20 24 28 2c
-+				30 34 ];
-+
-+	};
--- 
-1.7.10.4
+>> However the mentor,usb binding isn't documented either.
+> 
+> Presumably you can just adjust this patch to document it.
 
+Okay. That means if we stick to that hierarchy given my dbx5x0 (which
+makes sense after thinking for a while) I'm going to shift my devices a
+little to fit this. Once this is done I document it and post patches.
+
+Sebastian
