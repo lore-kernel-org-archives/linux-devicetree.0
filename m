@@ -1,52 +1,66 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:56535 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750826Ab3HSQAN (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 12:00:13 -0400
-Message-ID: <52123EAA.10507@wwwdotorg.org>
-Date: Mon, 19 Aug 2013 09:50:02 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] of: add vendor prefix for Mentor Graphics
-References: <1376572427-17689-1-git-send-email-bigeasy@linutronix.de> <520EAD1D.2090802@wwwdotorg.org> <520F41F0.8080707@linutronix.de>
-In-Reply-To: <520F41F0.8080707@linutronix.de>
-Content-Type: text/plain; charset=ISO-8859-1
+Received: from perches-mx.perches.com ([206.117.179.246]:60082 "EHLO
+	labridge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1753722Ab3HSCur (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Sun, 18 Aug 2013 22:50:47 -0400
+Message-ID: <1376880644.2027.35.camel@joe-AO722>
+Subject: Re: [PATCH 2/2] drivers: block :swim3: fixed the errors on coding
+ style
+From: Joe Perches <joe@perches.com>
+Date: Sun, 18 Aug 2013 19:50:44 -0700
+In-Reply-To: <1376854740-17580-1-git-send-email-write2thiagu@gmail.com>
+References: <1376854740-17580-1-git-send-email-write2thiagu@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-usb@vger.kernel.org, Felipe Balbi <balbi@ti.com>, sergei.shtylyov@cogentembedded.com, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+To: Thiagarajan Thangavel <write2thiagu@gmail.com>
+Cc: grant.likely@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/17/2013 03:27 AM, Sebastian Andrzej Siewior wrote:
-> On 08/17/2013 12:52 AM, Stephen Warren wrote:
->> On 08/15/2013 07:13 AM, Sebastian Andrzej Siewior wrote:
->>> This prefix is currently used for the musb driver.
->>
->>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->>
->>> +mg	Mentor Graphics
->>
->> It's slightly short; I would have preferred "mentor" I think. but I
->> guess it's fine.
->>
->> I see that both values are already used though:
->>
->>> arch/arm/boot/dts/am33xx.dtsi:375:					compatible = "mg,musbmhdrc";
->>> arch/arm/boot/dts/am33xx.dtsi:430:					compatible = "mg,musbmhdrc";
->>
->>> arch/arm/boot/dts/dbx5x0.dtsi:181:				"mentor,musb";
->>
->> Should both be documented? Should the bindings for those devices be
->> unified on one vendor prefix, with the old one perhaps still documented
->> as deprecated depending on how long it's been around?
-> 
-> I wasn't aware of the dbx5x0 mentor,usb binding. As far as the am33xx
-> is concerned, it has been prepared for the next merge window and can be
-> changed.
+On Mon, 2013-08-19 at 01:09 +0530, Thiagarajan Thangavel wrote:
+> Fixed the coding style errors
+[]
+> diff --git a/drivers/block/swim3.c b/drivers/block/swim3.c
+[]
+> @@ -783,7 +783,7 @@ static irqreturn_t swim3_interrupt(int irq, void *dev_id)
+>  				act(fs);
+>  			} else {
+>  				swim3_err("Error %sing block %ld (err=%x)\n",
+> -				       rq_data_dir(req) == WRITE ? "writ" : "read",
+> +				rq_data_dir(req) == WRITE ? "writ" : "read",
 
-OK, changing it to mentor, seems simplest and most convenient then.
+This looks worse to me.
 
-> However the mentor,usb binding isn't documented either.
+My preference would be to align the arguments to the open
+parenthesis and to use full words instead:
 
-Presumably you can just adjust this patch to document it.
+				swim3_err("Error %s block %ld (err=%x)\n",
+					  rq_data_dir(req) == WRITE ? "writing" : "reading",
+					  (long)blk_rq_pos(req), err);
+
+> @@ -894,7 +894,18 @@ static int fd_eject(struct floppy_state *fs)
+[]
+> -static struct floppy_struct floppy_type = { 2880, 18, 2, 80, 0, 0x1B, 0x00, 0xCF, 0x6C, NULL };	/*  7 1.44MB 3.5"   */
+> +static struct floppy_struct floppy_type = {
+> +	2880,
+> +	18,
+> +	2,
+> +	80,
+> +	0,
+> +	0x1B,
+> +	0x00,
+> +	0xCF,
+> +	0x6C,
+> +	NULL
+> +};	/*  7 1.44MB 3.5"   */
+
+These changes are unattractive to me.
+I don't find much wrong with the original though
+I would probably have written it as:
+
+static struct floppy_struct floppy_type = {	/* 7 1.44MB 3.5" */
+	2880, 18, 2, 80, 0, 0x1B, 0x00, 0xCF, 0x6C, NULL
+};
+
 
