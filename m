@@ -1,226 +1,251 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from perceval.ideasonboard.com ([95.142.166.194]:43952 "EHLO
-	perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751467Ab3HHK5d (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 8 Aug 2013 06:57:33 -0400
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [3/3] gpio: pcf857x: Add OF support
-Date: Thu, 08 Aug 2013 12:58:38 +0200
-Message-ID: <2793476.ZrasnaE7Ld@avalon>
-In-Reply-To: <1375123145-31648-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1375123145-31648-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Received: from mail-ea0-f172.google.com ([209.85.215.172]:43362 "EHLO
+	mail-ea0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751169Ab3HSUgz (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 16:36:55 -0400
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH] irqchip: add DesignWare APB ICTL interrupt controller
+Date: Mon, 19 Aug 2013 22:36:47 +0200
+Message-Id: <1376944607-20322-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hello,
+This adds an irqchip driver and corresponding devicetree binding for the
+secondary interrupt controllers based on Synopsys DesignWare IP dw_apb_ictl.
 
-I'd like to get this patch set in v3.12. If there's no objection, Linus, could 
-you please take it in your tree ?
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Note: This single patch is separated from an RFC for initial support of
+Marvell Armada 1500 [1]. The RFC needs some more work, while this driver is
+fairly self-contained.
 
-On Monday 29 July 2013 20:39:05 Laurent Pinchart wrote:
-> Add DT bindings for the pcf857x-compatible chips and parse the device
-> tree node in the driver.
-> 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> 
-> ---
-> .../devicetree/bindings/gpio/gpio-pcf857x.txt      | 69 ++++++++++++++++++++
-> drivers/gpio/gpio-pcf857x.c                        | 57 +++++++++++++++---
-> 2 files changed, 117 insertions(+), 9 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt new file mode
-> 100644
-> index 0000000..575b05e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> @@ -0,0 +1,69 @@
-> +* PCF857x-compatible I/O expanders
-> +
-> +The PCF857x-compatible chips have "quasi-bidirectional" I/O pins that can
-> be +driven high by a pull-up current source or driven low to ground. This
-> combines +the direction and output level into a single bit per pin, which
-> can't be read +back. We can't actually know at initialization time whether
-> a pin is configured +(a) as output and driving the signal low/high, or (b)
-> as input and reporting a +low/high value, without knowing the last value
-> written since the chip came out +of reset (if any). The only reliable
-> solution for setting up pin direction is +thus to do it explicitly.
-> +
-> +Required Properties:
-> +
-> +  - compatible: should be one of the following.
-> +    - "maxim,max7328": For the Maxim MAX7378
-> +    - "maxim,max7329": For the Maxim MAX7329
-> +    - "nxp,pca8574": For the NXP PCA8574
-> +    - "nxp,pca8575": For the NXP PCA8575
-> +    - "nxp,pca9670": For the NXP PCA9670
-> +    - "nxp,pca9671": For the NXP PCA9671
-> +    - "nxp,pca9672": For the NXP PCA9672
-> +    - "nxp,pca9673": For the NXP PCA9673
-> +    - "nxp,pca9674": For the NXP PCA9674
-> +    - "nxp,pca9675": For the NXP PCA9675
-> +    - "nxp,pcf8574": For the NXP PCF8574
-> +    - "nxp,pcf8574a": For the NXP PCF8574A
-> +    - "nxp,pcf8575": For the NXP PCF8575
-> +    - "ti,tca9554": For the TI TCA9554
-> +
-> +  - reg: I2C slave address.
-> +
-> +  - gpio-controller: Marks the device node as a gpio controller.
-> +  - #gpio-cells: Should be 2. The first cell is the GPIO number and the
-> second +    cell specifies GPIO flags, as defined in
-> <dt-bindings/gpio/gpio.h>. Only the +    GPIO_ACTIVE_HIGH and
-> GPIO_ACTIVE_LOW flags are supported.
-> +
-> +Optional Properties:
-> +
-> +  - pins-initial-state: Bitmask that specifies the initial state of each
-> pin. +  When a bit is set to zero, the corresponding pin will be
-> initialized to the +  input (pulled-up) state. When the  bit is set to one,
-> the pin will be +  initialized the the low-level output state. If the
-> property is not specified +  all pins will be initialized to the input
-> state.
-> +
-> +  The I/O expander can detect input state changes, and thus optionally act
-> as +  an interrupt controller. When interrupts support is desired all the
-> following +  properties must be set. For more information please see the
-> interrupt +  controller device tree bindings documentation available at
-> +  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
-> +
-> +  - interrupt-controller: Identifies the node as an interrupt controller.
-> +  - #interrupt-cells: Number of cells to encode an interrupt source, shall
-> be 2. +  - interrupt-parent: phandle of the parent interrupt controller. + 
-> - interrupts: Interrupt specifier for the controllers interrupt. +
-> +
-> +Please refer to gpio.txt in this directory for details of the common GPIO
-> +bindings used by client devices.
-> +
-> +Example: PCF8575 I/O expander node
-> +
-> +	pcf8575: gpio@20 {
-> +		compatible = "nxp,pcf8575";
-> +		reg = <0x20>;
-> +		interrupt-parent = <&irqpin2>;
-> +		interrupts = <3 0>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
-> index 070e81f..50a90f1 100644
-> --- a/drivers/gpio/gpio-pcf857x.c
-> +++ b/drivers/gpio/gpio-pcf857x.c
-> @@ -26,6 +26,8 @@
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
->  #include <linux/workqueue.h>
-> @@ -50,6 +52,27 @@ static const struct i2c_device_id pcf857x_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, pcf857x_id);
-> 
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id pcf857x_of_table[] = {
-> +	{ .compatible = "nxp,pcf8574", .data = (void *)8 },
-> +	{ .compatible = "nxp,pcf8574a", .data = (void *)8 },
-> +	{ .compatible = "nxp,pca8574", .data = (void *)8 },
-> +	{ .compatible = "nxp,pca9670", .data = (void *)8 },
-> +	{ .compatible = "nxp,pca9672", .data = (void *)8 },
-> +	{ .compatible = "nxp,pca9674", .data = (void *)8 },
-> +	{ .compatible = "nxp,pcf8575", .data = (void *)16 },
-> +	{ .compatible = "nxp,pca8575", .data = (void *)16 },
-> +	{ .compatible = "nxp,pca9671", .data = (void *)16 },
-> +	{ .compatible = "nxp,pca9673", .data = (void *)16 },
-> +	{ .compatible = "nxp,pca9675", .data = (void *)16 },
-> +	{ .compatible = "maxim,max7328", .data = (void *)8 },
-> +	{ .compatible = "maxim,max7329", .data = (void *)8 },
-> +	{ .compatible = "ti,tca9554", .data = (void *)8 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, pcf857x_of_table);
-> +#endif
-> +
->  /*
->   * The pcf857x, pca857x, and pca967x chips only expose one read and one
->   * write register.  Writing a "one" bit (to match the reset state) lets
-> @@ -257,14 +280,29 @@ fail:
->  static int pcf857x_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
-> -	struct pcf857x_platform_data	*pdata;
-> +	struct pcf857x_platform_data	*pdata = client->dev.platform_data;
-> +	struct device_node		*np = client->dev.of_node;
->  	struct pcf857x			*gpio;
-> +	unsigned int			n_latch = 0;
-> +	unsigned int			ngpio;
->  	int				status;
-> 
-> -	pdata = client->dev.platform_data;
-> -	if (!pdata) {
-> +#ifdef CONFIG_OF
-> +	if (np) {
-> +		const struct of_device_id *of_id;
-> +
-> +		of_id = of_match_device(pcf857x_of_table, &client->dev);
-> +		ngpio = (unsigned int)of_id->data;
-> +	} else
-> +#endif
-> +		ngpio = id->driver_data;
-> +
-> +	if (pdata)
-> +		n_latch = pdata->n_latch;
-> +	else if (IS_ENABLED(CONFIG_OF) && np)
-> +		of_property_read_u32(np, "pins-initial-state", &n_latch);
-> +	else
->  		dev_dbg(&client->dev, "no platform data\n");
-> -	}
-> 
->  	/* Allocate, initialize, and register this gpio_chip. */
->  	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
-> @@ -282,7 +320,7 @@ static int pcf857x_probe(struct i2c_client *client,
->  	gpio->chip.set			= pcf857x_set;
->  	gpio->chip.direction_input	= pcf857x_input;
->  	gpio->chip.direction_output	= pcf857x_output;
-> -	gpio->chip.ngpio		= id->driver_data;
-> +	gpio->chip.ngpio		= ngpio;
-> 
->  	/* enable gpio_to_irq() if platform has settings */
->  	if (client->irq) {
-> @@ -357,11 +395,11 @@ static int pcf857x_probe(struct i2c_client *client,
->  	 * may cause transient glitching since it can't know the last value
->  	 * written (some pins may need to be driven low).
->  	 *
-> -	 * Using pdata->n_latch avoids that trouble.  When left initialized
-> -	 * to zero, our software copy of the "latch" then matches the chip's
-> -	 * all-ones reset state.  Otherwise it flags pins to be driven low.
-> +	 * Using n_latch avoids that trouble.  When left initialized to zero,
-> +	 * our software copy of the "latch" then matches the chip's all-ones
-> +	 * reset state.  Otherwise it flags pins to be driven low.
->  	 */
-> -	gpio->out = pdata ? ~pdata->n_latch : ~0;
-> +	gpio->out = ~n_latch;
->  	gpio->status = gpio->out;
-> 
->  	status = gpiochip_add(&gpio->chip);
-> @@ -423,6 +461,7 @@ static struct i2c_driver pcf857x_driver = {
->  	.driver = {
->  		.name	= "pcf857x",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(pcf857x_of_table),
->  	},
->  	.probe	= pcf857x_probe,
->  	.remove	= pcf857x_remove,
+[1] http://lists-archives.com/linux-kernel/27893855-arm-initial-support-for-marvell-armada-1500.html
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ .../interrupt-controller/snps,dw-apb-ictl.txt      |   29 ++++
+ drivers/irqchip/Kconfig                            |    4 +
+ drivers/irqchip/Makefile                           |    1 +
+ drivers/irqchip/irq-dw-apb-ictl.c                  |  139 ++++++++++++++++++++
+ 4 files changed, 173 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+ create mode 100644 drivers/irqchip/irq-dw-apb-ictl.c
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+new file mode 100644
+index 0000000..7ccd1ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+@@ -0,0 +1,29 @@
++Synopsys DesignWare APB interrupt controller (dw_apb_ictl)
++
++Synopsys DesignWare provides interrupt controller IP for APB known as
++dw_apb_ictl. The IP is used as secondary interrupt controller in some SoCs with
++APB bus, e.g. Marvell Armada 1500.
++
++Required properties:
++- compatible: shall be "snps,dw-apb-ictl"
++- reg: base address of interrupt registers starting with ENABLE_LOW register
++- interrupt-controller: identifies the node as an interrupt controller
++- #interrupt-cells: number of cells to encode an interrupt source, shall be 1
++- interrupts: interrupt reference to primary interrupt controller
++- interrupt-parent: (optional) reference specific primary interrupt controller
++
++The interrupt sources map to the corresponding bits in the interrupt
++registers, i.e.
++- 0 maps to bit 0 of low interrupts,
++- 1 maps to bit 1 of low interrupts,
++- 32 maps to bit 0 of high interrupts, and so on.
++
++Example:
++	aic: interrupt-controller@3000 {
++		compatible = "snps,dw-apb-ictl";
++		reg = <0x3000 0xc00>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++	};
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 1fea003..f38164c 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -30,6 +30,10 @@ config ARM_VIC_NR
+ 	  The maximum number of VICs available in the system, for
+ 	  power management.
+ 
++config DW_APB_ICTL
++	bool
++	select IRQ_DOMAIN
++
+ config ORION_IRQCHIP
+ 	bool
+ 	select IRQ_DOMAIN
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index e65c41a..54164e1 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_SPEAR3XX)		+= spear-shirq.o
+ obj-$(CONFIG_ARM_GIC)			+= irq-gic.o
+ obj-$(CONFIG_ARM_NVIC)			+= irq-nvic.o
+ obj-$(CONFIG_ARM_VIC)			+= irq-vic.o
++obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
+ obj-$(CONFIG_SIRF_IRQ)			+= irq-sirfsoc.o
+ obj-$(CONFIG_RENESAS_INTC_IRQPIN)	+= irq-renesas-intc-irqpin.o
+ obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
+diff --git a/drivers/irqchip/irq-dw-apb-ictl.c b/drivers/irqchip/irq-dw-apb-ictl.c
+new file mode 100644
+index 0000000..3af7d30
+--- /dev/null
++++ b/drivers/irqchip/irq-dw-apb-ictl.c
+@@ -0,0 +1,139 @@
++/*
++ * Synopsys DW APB ICTL irqchip driver.
++ *
++ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++
++#include "irqchip.h"
++
++#define APB_INT_ENABLE_L	0x00
++#define APB_INT_ENABLE_H	0x04
++#define APB_INT_MASK_L		0x08
++#define APB_INT_MASK_H		0x0c
++#define APB_INT_FINALSTATUS_L	0x30
++#define APB_INT_FINALSTATUS_H	0x34
++
++static void dw_apb_ictl_handler(unsigned int irq, struct irq_desc *desc)
++{
++	struct irq_chip *chip = irq_get_chip(irq);
++	struct irq_chip_generic *gc = irq_get_handler_data(irq);
++	struct irq_domain *d = gc->private;
++	u32 stat;
++	int n;
++
++	chained_irq_enter(chip, desc);
++
++	for (n = 0; n < gc->num_ct; n++) {
++		stat = readl_relaxed(gc->reg_base +
++				     APB_INT_FINALSTATUS_L + 4 * n);
++		while (stat) {
++			u32 hwirq = ffs(stat) - 1;
++			generic_handle_irq(irq_find_mapping(d,
++					    gc->irq_base + hwirq + 32 * n));
++			stat &= ~(1 << hwirq);
++		}
++	}
++
++	chained_irq_exit(chip, desc);
++}
++
++static int __init dw_apb_ictl_init(struct device_node *np,
++				   struct device_node *parent)
++{
++	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
++	struct resource r;
++	struct irq_domain *domain;
++	struct irq_chip_generic *gc;
++	void __iomem *iobase;
++	int ret, nrirqs, irq;
++	u32 reg;
++
++	/* Map the parent interrupt for the chained handler */
++	irq = irq_of_parse_and_map(np, 0);
++	if (irq <= 0) {
++		pr_err("%s: unable to parse irq\n", np->name);
++		return -EINVAL;
++	}
++
++	ret = of_address_to_resource(np, 0, &r);
++	if (ret) {
++		pr_err("%s: unable to get resource\n", np->name);
++		return ret;
++	}
++
++	if (!request_mem_region(r.start, resource_size(&r), np->name)) {
++		pr_err("%s: unable to request mem region\n", np->name);
++		return -ENOMEM;
++	}
++
++	iobase = ioremap(r.start, resource_size(&r));
++	if (!iobase) {
++		pr_err("%s: unable to map resource\n", np->name);
++		return -ENOMEM;
++	}
++
++	/*
++	 * DW IP can be configured to allow 2-64 irqs. We can determine
++	 * the number of irqs supported by writing into enable register
++	 * and look for bits not set, as corresponding flip-flops will
++	 * have been removed by sythesis tool.
++	 */
++
++	/* mask and enable all interrupts */
++	writel(~0, iobase + APB_INT_MASK_L);
++	writel(~0, iobase + APB_INT_MASK_H);
++	writel(~0, iobase + APB_INT_ENABLE_L);
++	writel(~0, iobase + APB_INT_ENABLE_H);
++
++	reg = readl(iobase + APB_INT_ENABLE_H);
++	if (reg)
++		nrirqs = 32 + fls(reg);
++	else
++		nrirqs = fls(readl(iobase + APB_INT_ENABLE_L));
++
++	domain = irq_domain_add_linear(np, nrirqs,
++				       &irq_generic_chip_ops, NULL);
++	if (!domain) {
++		pr_err("%s: unable to add irq domain\n", np->name);
++		return -ENOMEM;
++	}
++
++	ret = irq_alloc_domain_generic_chips(domain, 32, (nrirqs > 32) ? 2 : 1,
++					     np->name, handle_level_irq, clr, 0,
++					     IRQ_GC_INIT_MASK_CACHE);
++	if (ret) {
++		pr_err("%s: unable to alloc irq domain gc\n", np->name);
++		return ret;
++	}
++
++	gc = irq_get_domain_generic_chip(domain, 0);
++	gc->private = domain;
++	gc->reg_base = iobase;
++
++	gc->chip_types[0].regs.mask = APB_INT_MASK_L;
++	gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
++	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
++
++	if (nrirqs > 32) {
++		gc->chip_types[1].regs.mask = APB_INT_MASK_H;
++		gc->chip_types[1].chip.irq_mask = irq_gc_mask_set_bit;
++		gc->chip_types[1].chip.irq_unmask = irq_gc_mask_clr_bit;
++	}
++
++	irq_set_handler_data(irq, gc);
++	irq_set_chained_handler(irq, dw_apb_ictl_handler);
++
++	return 0;
++}
++IRQCHIP_DECLARE(dw_apb_ictl,
++		"snps,dw-apb-ictl", dw_apb_ictl_init);
 -- 
-Regards,
-
-Laurent Pinchart
+1.7.10.4
 
