@@ -1,55 +1,51 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:40463 "EHLO
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:40166 "EHLO
 	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751170Ab3HSLbZ (ORCPT
+	by vger.kernel.org with ESMTP id S1751223Ab3HSLPz (ORCPT
 	<rfc822;devicetree@vger.kernel.org>);
-	Mon, 19 Aug 2013 07:31:25 -0400
-Date: Mon, 19 Aug 2013 12:31:21 +0100
+	Mon, 19 Aug 2013 07:15:55 -0400
+Date: Mon, 19 Aug 2013 12:15:52 +0100
 From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH v7 2/2] ASoC: fsl: Add S/PDIF machine driver
-Message-ID: <20130819113121.GL3719@e106331-lin.cambridge.arm.com>
+Message-ID: <20130819111552.GK3719@e106331-lin.cambridge.arm.com>
 References: <cover.1376901081.git.b42378@freescale.com>
  <e7ceef74714bb4ead624b333ee3969225b4c5cb5.1376901081.git.b42378@freescale.com>
  <20130819092458.GE3719@e106331-lin.cambridge.arm.com>
  <20130819095042.GA11402@MrMyself>
  <20130819100143.GH3719@e106331-lin.cambridge.arm.com>
- <20130819105201.GB30073@sirena.org.uk>
+ <20130819102105.GC11402@MrMyself>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20130819105201.GB30073@sirena.org.uk>
+In-Reply-To: <20130819102105.GC11402@MrMyself>
 Sender: devicetree-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Nicolin Chen <b42378@freescale.com>, "lars@metafoo.de" <lars@metafoo.de>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "timur@tabi.org" <timur@tabi.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "R65777@freescale.com" <R65777@freescale.com>
+To: Nicolin Chen <b42378@freescale.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "timur@tabi.org" <timur@tabi.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "R65777@freescale.com" <R65777@freescale.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Aug 19, 2013 at 11:52:01AM +0100, Mark Brown wrote:
+On Mon, Aug 19, 2013 at 11:21:06AM +0100, Nicolin Chen wrote:
 > On Mon, Aug 19, 2013 at 11:01:43AM +0100, Mark Rutland wrote:
-> > On Mon, Aug 19, 2013 at 10:50:43AM +0100, Nicolin Chen wrote:
+> > > At least they are separate drivers as I mentioned in the commit comments.
+> > 
+> > I'm not sure that the boundary of Linux drivers should necessarily
+> > determine the way we carve up the description of IP blocks, though
+> > presumably it's a pretty sensible way of carving it up or we wouldn't
+> > have done it.
 > 
-> > > The phrase "user-visible" is being used in many current docs, I don't 
-> > > dare to change it unless a sage gives me a suggestion.
-> 
-> > I can see that there is entrenched usage, but this really seems to be
-> > embedding Linux-specific implementation details into the dt. I don't see
-> > why the driver cannot select a sensible name, but perhaps I'm missing
-> > something.
-> 
-> > Mark, is there any reason we need to handle the user-visible name of the
-> > device this way?
-> 
-> This is intended to allow userspace to distinguish between systems that
-> are electrically identical but physically distinct, for example when
-> multiple systems are derived from the same reference design.
+> I'm not sure if I understand your point correctly. But in fact the IP driver
+> is not being carved up. The spdif-transmitter and spdif-receiver are basically
+> dummy codec drivers. All the IP-related codes are implemented in fsl_spdif.c,
+> the PATCH 1/2 you just reviewed.
 
-I see. Surely if there's some meaning imparted to userspace by the model
-name, there's a contract there that we should document (the set of valid
-model names and what they correspond to)?
+I see. Sorry for the noise there, that's an artifact of my not full
+understanding of the ASoC bindings.
 
-I'm not sure I understand why userspace needs to know what the system is
-if we've adequately described how it's wired and what its capabilities
-are. However, I'm not at all familiar with the way we handle audio, so
-please forgive my naivety there :)
+> 
+> > Is there any public documentation on the i.MX S/PDIF hardware block(s)?
+> 
+> http://cache.freescale.com/files/32bit/doc/ref_manual/IMX6DQRM.pdf
+> 
 
-Thanks,
+Cheers!
+
 Mark.
