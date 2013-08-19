@@ -1,50 +1,47 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:47073 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751054Ab3HSVSm (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 17:18:42 -0400
-Message-ID: <52128BAD.6020903@wwwdotorg.org>
-Date: Mon, 19 Aug 2013 15:18:37 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
-MIME-Version: 1.0
+Received: from mail-ee0-f50.google.com ([74.125.83.50]:58961 "EHLO
+	mail-ee0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751310Ab3HSMCg (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 08:02:36 -0400
+Received: by mail-ee0-f50.google.com with SMTP id d51so2121627eek.9
+        for <devicetree@vger.kernel.org>; Mon, 19 Aug 2013 05:02:35 -0700 (PDT)
+Date: Mon, 19 Aug 2013 13:02:30 +0100
+From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH v2] max77693: added device tree support
-References: <20130819104409.GA21520@lee--X1> <1376912426-14747-1-git-send-email-a.hajda@samsung.com>
+Message-ID: <20130819120230.GB21520@lee--X1>
+References: <20130819104409.GA21520@lee--X1>
+ <1376912426-14747-1-git-send-email-a.hajda@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <1376912426-14747-1-git-send-email-a.hajda@samsung.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/19/2013 05:40 AM, Andrzej Hajda wrote:
 > max77693 mfd main device uses only wakeup field
 > from max77693_platform_data. This field is mapped
 > to wakeup-source common property in device tree.
+> 
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>
+> ---
+>  Documentation/devicetree/bindings/mfd/max77693.txt |  2 +
+>  drivers/mfd/max77693.c                             | 50 ++++++++++++++++------
+>  2 files changed, 39 insertions(+), 13 deletions(-)
 
-> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
+Well, I know this patch has been sat on the MLs for some time now, so
+anyone who wanted to have a say have has plenty of opportunity and the
+patch looks good to me now, so:
 
->  Optional properties:
->  - regulators : The regulators of max77693 have to be instantiated under subnod
->    named "regulators" using the following format.
-> +- wakeup-source : Indicates if the device can wakeup the system from the sleep
-> +  state.
+Applied, thanks.
 
-Does the property mean "can" or "should"?
-
-"Can" implies that the property means something about the HW. What
-exactly does it mean; perhaps that some specific output pin of the chip
-has been wired to an input IRQ/GPIO of the SoC or PMIC that (can) wake
-up the system? If so, which pin, signal, ...? Also, doesn't this also
-depend on the SoC itself supporting its input IRQ/GPIO as a wakeup
-source, so isn't some co-ordination required between the SoC and chip,
-such that this property doesn't mean "can wakeup the system", but simply
-"a signal is routed to the SoC, so perhaps it can wakeup the system".
-
-"Should" implies policy, which probably shouldn't be represented in
-device tree, since DT should describe the HW and not how it should be used.
-
-Finally, if there was already a binding for max77693.txt, I don't think
-the patch subject "added device tree support" is entirely accurate; this
-change to the binding document seems to be more about adding a new
-feature than adding DT support to the driver...
+-- 
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
