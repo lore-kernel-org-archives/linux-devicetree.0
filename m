@@ -1,131 +1,171 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:34528 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S968170Ab3HIQ57 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 12:57:59 -0400
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V4 1/4] gpio: clean up gpio-ranges documentation
-Date: Fri,  9 Aug 2013 10:57:46 -0600
-Message-Id: <1376067469-8811-1-git-send-email-swarren@wwwdotorg.org>
+Received: from mail-we0-f179.google.com ([74.125.82.179]:34876 "EHLO
+	mail-we0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750852Ab3HSKRO (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 06:17:14 -0400
+MIME-Version: 1.0
+In-Reply-To: <1376894399-2766-1-git-send-email-yuvaraj.cd@samsung.com>
+References: <1376894399-2766-1-git-send-email-yuvaraj.cd@samsung.com>
+Date: Mon, 19 Aug 2013 15:47:12 +0530
+Message-ID: <CAGm_ybiRQZ7zgNNxsjixDDJ84a5=o+PWwLZrnowp5wK=xoobxg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
+From: Vikas Sajjan <sajjan.linux@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@kernel.crashing.org>, Stephen Warren <swarren@nvidia.com>
+To: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, sunil joshi <joshi@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Stephen Warren <swarren@nvidia.com>
+Hi Yuvaraj,
 
-This change makes documentation of the the gpio-ranges property shorter
-and more succinct, more consistent with the style of the rest of the
-document, and not mention Linux-specifics such as the API
-pinctrl_request_gpio(); DT binding documents should be OS independant
-where at all possible. As part of this, the gpio-ranges property's format
-is described in BNF form, in order to match the rest of the document.
+On Mon, Aug 19, 2013 at 12:09 PM, Yuvaraj Kumar C D
+<yuvaraj.cd@gmail.com> wrote:
+> This patch adds the device tree node entries for exynos5420 SOC.
+> Exynos5420 has a different version of DWMMC controller,so a new
+> compatible string is used to distinguish it from the prior SOC's.
+>
+> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+> ---
+>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   41 ++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5420.dtsi                  |   33 ++++++++++++++++
+>  3 files changed, 76 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> index 6d1c098..84cd56f 100644
+> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> @@ -16,6 +16,8 @@ Required Properties:
+>           specific extensions.
+>         - "samsung,exynos5250-dw-mshc": for controllers with Samsung Exynos5250
+>           specific extensions.
+> +       - "samsung,exynos5420-dw-mshc": for controllers with Samsung Exynos5420
+> +         specific extensions.
+>
+>  * samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
+>    unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
+> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> index 08607df..4530700 100644
+> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> @@ -30,4 +30,45 @@
+>                         clock-frequency = <24000000>;
+>                 };
+>         };
+> +
+> +       dwmmc0@12200000 {
+> +               num-slots = <1>;
+> +               broken-cd;
+> +               bypass-smu;
+> +               supports-highspeed;
+> +               fifo-depth = <0x80>;
+> +               card-detect-delay = <200>;
+> +               samsung,dw-mshc-ciu-div = <3>;
+> +               samsung,dw-mshc-sdr-timing = <0 4>;
+> +               samsung,dw-mshc-ddr-timing = <0 2>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+> +
+> +               slot@0 {
+> +                       reg = <0>;
+> +                       bus-width = <8>;
+> +               };
+> +       };
 
-This change also deprecates the #gpio-range-cells property. Such
-properties are useful when one node references a second node, and that
-second node dictates the format of the reference. However, that is not
-the case here; the definition of gpio-ranges itself always dictates its
-format entirely, and hence the value #gpio-range-cells must always be 3,
-and hence there is no point requiring any referenced node to include
-this property. The only remaining need for this property is to ensure
-compatibility of DTs with older SW that was written to support the
-previous version of the binding.
+with these bindings if the MMC is operational, then IMHO its better to
+make its status as "okay".
 
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
----
-v4:
-* Mention #gpio-range-cells as being deprecated, rather than removing all
-  documentation of that property. This allows DTs to be written in a
-  backwards-compatible way if desired, and also allows older DTs to be
-  interpreted fully using the latest documentation.
-v3:
-* Mention BNF in commit description.
-* Fixed typo.
-* Dropped patch that removed the deprecated property from *.dts, since
-  it's required to boot older kernels.
+> +
+> +       dwmmc1@12210000 {
+> +               status = "disabled";
+> +       };
+> +
+> +       dwmmc2@12220000 {
 
-Patches 2-4 need to be applied in the same branch, since they all build
-upon each-other.
----
- Documentation/devicetree/bindings/gpio/gpio.txt | 55 ++++++++++++++-----------
- 1 file changed, 30 insertions(+), 25 deletions(-)
+ ditto.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index d933af3..6cec6ff 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -75,23 +75,36 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
- 		gpio-controller;
- 	};
- 
--2.1) gpio-controller and pinctrl subsystem
--------------------------------------------
-+2.1) gpio- and pin-controller interaction
-+-----------------------------------------
- 
--gpio-controller on a SOC might be tightly coupled with the pinctrl
--subsystem, in the sense that the pins can be used by other functions
--together with optional gpio feature.
-+Some or all of the GPIOs provided by a GPIO controller may be routed to pins
-+on the package via a pin controller. This allows muxing those pins between
-+GPIO and other functions.
- 
--While the pin allocation is totally managed by the pin ctrl subsystem,
--gpio (under gpiolib) is still maintained by gpio drivers. It may happen
--that different pin ranges in a SoC is managed by different gpio drivers.
-+It is useful to represent which GPIOs correspond to which pins on which pin
-+controllers. The gpio-ranges property described below represents this, and
-+contains information structures as follows:
- 
--This makes it logical to let gpio drivers announce their pin ranges to
--the pin ctrl subsystem and call 'pinctrl_request_gpio' in order to
--request the corresponding pin before any gpio usage.
-+	gpio-range-list ::= <single-gpio-range> [gpio-range-list]
-+	single-gpio-range ::=
-+			<pinctrl-phandle> <gpio-base> <pinctrl-base> <count>
-+	gpio-phandle : phandle to pin controller node.
-+	gpio-base : Base GPIO ID in the GPIO controller
-+	pinctrl-base : Base pinctrl pin ID in the pin controller
-+	count : The number of GPIOs/pins in this range
- 
--For this, the gpio controller can use a pinctrl phandle and pins to
--announce the pinrange to the pin ctrl subsystem. For example,
-+The "pin controller node" mentioned above must conform to the bindings
-+described in ../pinctrl/pinctrl-bindings.txt.
-+
-+Previous versions of this binding required all pin controller nodes that
-+were referenced by any gpio-ranges property to contain a property named
-+#gpio-range-cells with value <3>. This requirement is now deprecated.
-+However, that property may still exist in older device trees for
-+compatibility reasons, and would still be required even in new device
-+trees that need to be compatible with older software.
-+
-+Example:
- 
- 	qe_pio_e: gpio-controller@1460 {
- 		#gpio-cells = <2>;
-@@ -99,16 +112,8 @@ announce the pinrange to the pin ctrl subsystem. For example,
- 		reg = <0x1460 0x18>;
- 		gpio-controller;
- 		gpio-ranges = <&pinctrl1 0 20 10>, <&pinctrl2 10 50 20>;
-+	};
- 
--    }
--
--where,
--   &pinctrl1 and &pinctrl2 is the phandle to the pinctrl DT node.
--
--   Next values specify the base pin and number of pins for the range
--   handled by 'qe_pio_e' gpio. In the given example from base pin 20 to
--   pin 29 under pinctrl1 with gpio offset 0 and pin 50 to pin 69 under
--   pinctrl2 with gpio offset 10 is handled by this gpio controller.
--
--The pinctrl node must have "#gpio-range-cells" property to show number of
--arguments to pass with phandle from gpio controllers node.
-+Here, a single GPIO controller has GPIOs 0..9 routed to pin controller
-+pinctrl1's pins 20..29, and GPIOs 10..19 routed to pin controller pinctrl2's
-+pins 50..59.
--- 
-1.8.1.5
+> +               num-slots = <1>;
+> +               supports-highspeed;
+> +               fifo-depth = <0x80>;
+> +               card-detect-delay = <200>;
+> +               samsung,dw-mshc-ciu-div = <3>;
+> +               samsung,dw-mshc-sdr-timing = <2 3>;
+> +               samsung,dw-mshc-ddr-timing = <1 2>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+> +
+> +               slot@0 {
+> +                       reg = <0>;
+> +                       bus-width = <4>;
+> +               };
+> +       };
+> +
+>  };
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index 9e90d1e..8559aa8 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -19,6 +19,9 @@
+>         compatible = "samsung,exynos5420";
+>
+>         aliases {
+> +               mshc0 = &dwmmc_0;
+> +               mshc1 = &dwmmc_1;
+> +               mshc2 = &dwmmc_2;
+>                 pinctrl0 = &pinctrl_0;
+>                 pinctrl1 = &pinctrl_1;
+>                 pinctrl2 = &pinctrl_2;
+> @@ -65,6 +68,36 @@
+>                 #clock-cells = <1>;
+>         };
+>
+> +       dwmmc_0: dwmmc0@12200000 {
+> +               compatible = "samsung,exynos5420-dw-mshc";
+> +               interrupts = <0 75 0>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               reg = <0x12200000 0x2000>;
+> +               clocks = <&clock 351>, <&clock 132>;
+> +               clock-names = "biu", "ciu";
 
+with these bindings if the MMC is NOT operational yet, then IMHO its
+better to make its status as "disabled".
+
+> +       };
+> +
+> +       dwmmc_1: dwmmc1@12210000 {
+> +               compatible = "samsung,exynos5420-dw-mshc";
+> +               interrupts = <0 76 0>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               reg = <0x12210000 0x2000>;
+> +               clocks = <&clock 352>, <&clock 133>;
+> +               clock-names = "biu", "ciu";
+
+ditto.
+
+> +       };
+> +
+> +       dwmmc_2: dwmmc2@12220000 {
+> +               compatible = "samsung,exynos5420-dw-mshc";
+> +               interrupts = <0 77 0>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               reg = <0x12220000 0x2000>;
+> +               clocks = <&clock 353>, <&clock 134>;
+> +               clock-names = "biu", "ciu";
+
+ditto.
+
+> +       };
+> +
+>         mct@101C0000 {
+>                 compatible = "samsung,exynos4210-mct";
+>                 reg = <0x101C0000 0x800>;
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
