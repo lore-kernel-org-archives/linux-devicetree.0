@@ -1,104 +1,96 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from bear.ext.ti.com ([192.94.94.41]:51161 "EHLO bear.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754122Ab3HWXRX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 23 Aug 2013 19:17:23 -0400
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: [RFC PATCH 00/14] RFCv2: device thermal limits represented in device tree nodes
-Date: Fri, 23 Aug 2013 19:15:41 -0400
-Message-ID: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:28632 "EHLO
+	mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751033Ab3HTL7u (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 07:59:50 -0400
+Message-id: <52135A32.70305@samsung.com>
+Date: Tue, 20 Aug 2013 13:59:46 +0200
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+MIME-version: 1.0
+Subject: Re: [PATCH v6 02/13] [media] exynos5-fimc-is: Add Exynos5 FIMC-IS
+ device tree bindings documentation
+References: <1376644845-10422-1-git-send-email-arun.kk@samsung.com>
+ <1376644845-10422-3-git-send-email-arun.kk@samsung.com>
+In-reply-to: <1376644845-10422-3-git-send-email-arun.kk@samsung.com>
+Content-type: text/plain; charset=ISO-8859-1
+Content-transfer-encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com
-Cc: durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello all,
+Cc: Pawel, Kumar
 
-First of all, apologize for the very late answer. But I am resuming this work.
+On 08/16/2013 11:20 AM, Arun Kumar K wrote:
+> The patch adds the DT binding documentation for Samsung
+> Exynos5 SoC series imaging subsystem (FIMC-IS).
+> 
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  .../devicetree/bindings/media/exynos5-fimc-is.txt  |   47 ++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+> new file mode 100644
+> index 0000000..bc279b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+> @@ -0,0 +1,47 @@
+> +Samsung EXYNOS5 SoC series Imaging Subsystem (FIMC-IS)
+> +------------------------------------------------------
+> +
+> +The camera subsystem on Samsung Exynos5 SoC has some changes relative
+> +to previous SoC versions. Exynos5 has almost similar MIPI-CSIS and
+> +FIMC-LITE IPs but has a much improved version of FIMC-IS which can
+> +handle sensor controls and camera post-processing operations. The
+> +Exynos5 FIMC-IS has a dedicated ARM Cortex A5 processor, many
+> +post-processing blocks (ISP, DRC, FD, ODC, DIS, 3DNR) and two
+> +dedicated scalers (SCC and SCP).
+> +
+> +fimc-is node
+> +------------
+> +
+> +Required properties:
+> +
+> +- compatible        : must be "samsung,exynos5250-fimc-is"
+> +- reg               : physical base address and size of the memory mapped
+> +                      registers
+> +- interrupt-parent  : parent interrupt controller
+> +- interrupts        : fimc-is interrupt to the parent interrupt controller
+> +- clocks            : list of clock specifiers, corresponding to entries in
+> +                      clock-names property;
+> +- clock-names       : must contain "isp", "mcu_isp", "isp_div0", "isp_div1",
+> +                      "isp_divmpwm", "mcu_isp_div0", "mcu_isp_div1" entries,
+> +                      matching entries in the clocks property.
+> +- samsung,pmu       : phandle to the fimc-is pmu node describing the register
+> +                      base and size for FIMC-IS PMU.
 
-This RFC is about describing hardware thermal limits using device tree.
+As this is a phandle to the whole SoC Power Management Unit I would amend
+this to something like:
 
-Based on the discussion on the first RFC:
-http://lkml.org/lkml/2013/7/22/319
+- samsung,pmu       : phandle to the Power Management Unit (PMU) node.
 
-I have changed the code and the device tree bindings as follows:
-1. Now bindings may have several thermal zones per device (req. by Wei Ni)
-2. The constants used are now using C preprocessor macros (as per Stephen suggestion)
-3. Improved the bindings to have a better representation of links between
-involved entities (thermal zone, cooling devices, sensors), as suggested
-by Pawel and Mark.
-4. Couple of changes in code, as per previous reviews.
-5. Removed policies from DT bindings.
+> +
+> +i2c-isp (ISP I2C bus controller) nodes
+> +------------------------------------------
+> +
+> +Required properties:
+> +
+> +- compatible	: should be "samsung,exynos4212-i2c-isp" for Exynos4212,
+> +		  Exynos4412 and Exynos5250 SoCs;
+> +- reg		: physical base address and length of the registers set;
+> +- clocks	: must contain gate clock specifier for this controller;
+> +- clock-names	: must contain "i2c_isp" entry.
+> +
+> +For the i2c-isp node, it is required to specify a pinctrl state named "default",
+> +according to the pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt.
+> +
+> +Device tree nodes of the image sensors controlled directly by the FIMC-IS
+> +firmware must be child nodes of their corresponding ISP I2C bus controller node.
+> +The data link of these image sensors must be specified using the common video
+> +interfaces bindings, defined in video-interfaces.txt.
 
-In summary, based on the discussion of the first RFC, now the idea is
-to have thermal zones nodes describing the thermal zones
-and the hardware limits. Then sensor devices nodes will point to
-thermal zones via phandles and cooling device will also point to
-thermal zone via phandles.
-
-So, I am also posting the patch series to dt mailing list as requested.
-
-Please refer to patch 02/14 to a documentation of what I am proposing.
-
-This patch series includes:
-a. Required changes in cpufreq-cpu0 driver so that it loads cooling device
-when requested.
-b. The thermal zone builder based on thermal bindings
-c. Changes in sensor drivers (as examples)
-d. Changes in device tree DTS files (as examples)
-
-This patch series depends on the fixes I sent to linux-pm:
-http://lkml.org/lkml/2013/8/23/572
-
-In the above link you will find also the request to have a flag to
-determine if virtual hwmon device will be created, based on thermal device.
-
-All best,
-
-Eduardo Valentin (14):
-  cpufreq: cpufreq-cpu0: add dt node parsing for 'cooling-zones'
-  drivers: thermal: introduce device tree parser
-  hwmon: lm75: expose to thermal fw via DT nodes
-  hwmon: tmp102: expose to thermal fw via DT nodes
-  thermal: ti-soc-thermal: use thermal DT infrastructure
-  arm: dts: add omap4 CPU thermal data
-  arm: dts: add omap4430 thermal data
-  arm: dts: add omap4460 thermal data
-  arm: dts: point to cooling-zones on omap4430 cpu node
-  arm: dts: point to cooling-zones on omap4460 cpu node
-  arm: dts: add omap5 GPU thermal data
-  arm: dts: add omap5 CORE thermal data
-  arm: dts: add omap5 thermal data
-  arm: dts: point to cooling-zones on omap5 cpu node
-
- .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   |   4 +
- .../devicetree/bindings/thermal/thermal.txt        | 160 +++++++
- arch/arm/boot/dts/omap4-cpu-thermal.dtsi           |  40 ++
- arch/arm/boot/dts/omap443x.dtsi                    |   6 +
- arch/arm/boot/dts/omap4460.dtsi                    |   6 +
- arch/arm/boot/dts/omap5-core-thermal.dtsi          |  27 ++
- arch/arm/boot/dts/omap5-gpu-thermal.dtsi           |  27 ++
- arch/arm/boot/dts/omap5.dtsi                       |  10 +
- drivers/cpufreq/cpufreq-cpu0.c                     |  12 +
- drivers/hwmon/lm75.c                               |  31 ++
- drivers/hwmon/tmp102.c                             |  26 ++
- drivers/thermal/Kconfig                            |  13 +
- drivers/thermal/Makefile                           |   1 +
- drivers/thermal/thermal_dt.c                       | 473 +++++++++++++++++++++
- drivers/thermal/ti-soc-thermal/ti-thermal-common.c |  52 ++-
- include/dt-bindings/thermal/thermal.h              |  27 ++
- include/linux/thermal.h                            |   3 +
- 17 files changed, 907 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
- create mode 100644 arch/arm/boot/dts/omap4-cpu-thermal.dtsi
- create mode 100644 arch/arm/boot/dts/omap5-core-thermal.dtsi
- create mode 100644 arch/arm/boot/dts/omap5-gpu-thermal.dtsi
- create mode 100644 drivers/thermal/thermal_dt.c
- create mode 100644 include/dt-bindings/thermal/thermal.h
-
--- 
-1.8.2.1.342.gfa7285d
-
+Thanks,
+Sylwester
