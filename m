@@ -1,13 +1,13 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ns.mm-sol.com ([212.124.72.66]:37451 "EHLO extserv.mm-sol.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751221Ab3HTP1g (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Tue, 20 Aug 2013 11:27:36 -0400
-Message-ID: <1377012381.26268.42.camel@iivanov-dev.int.mm-sol.com>
+Received: from service87.mimecast.com ([91.220.42.44]:60102 "EHLO
+	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751013Ab3HTPGH convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 11:06:07 -0400
+Message-ID: <1377011163.31445.30.camel@hornet>
 Subject: Re: [PATCH v4 2/3] usb: phy: Add Qualcomm SS-USB and HS-USB drivers
  for DWC3 core
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Date: Tue, 20 Aug 2013 18:26:21 +0300
+From: Pawel Moll <pawel.moll@arm.com>
+Date: Tue, 20 Aug 2013 16:06:03 +0100
 In-Reply-To: <8691FDFE-326E-4198-838A-202D9EC988E1@codeaurora.org>
 References: <1376992565-22292-1-git-send-email-iivanov@mm-sol.com>
 	 <1376992565-22292-3-git-send-email-iivanov@mm-sol.com>
@@ -18,15 +18,15 @@ References: <1376992565-22292-1-git-send-email-iivanov@mm-sol.com>
 	 <20130820143319.GG26587@radagast>
 	 <1377010458.26268.30.camel@iivanov-dev.int.mm-sol.com>
 	 <8691FDFE-326E-4198-838A-202D9EC988E1@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 To: Kumar Gala <galak@codeaurora.org>
-Cc: balbi@ti.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, Paul Zimmerman <paul.zimmerman@synopsys.com>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, "balbi@ti.com" <balbi@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Rutland <Mark.Rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "idos@codeaurora.org" <idos@codeaurora.org>, "mgautam@codeaurora.org" <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Paul Zimmerman <paul.zimmerman@synopsys.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, 2013-08-20 at 10:01 -0500, Kumar Gala wrote: 
+On Tue, 2013-08-20 at 16:01 +0100, Kumar Gala wrote:
 > On Aug 20, 2013, at 9:54 AM, Ivan T. Ivanov wrote:
 > 
 > > 
@@ -81,13 +81,11 @@ On Tue, 2013-08-20 at 10:01 -0500, Kumar Gala wrote:
 > 
 > I think the question is how does SW access them?
 
-"USB QSCRATCH Hardware registers" don't ask me what is this :-)
-or like Pawel says: "it depends on the SOC" .
+I afraid the answer may be: "it depends on the SOC". In my past I had to
+initialize a (SATA) PHY by implementing a software JTAG state machine,
+as the PHY's registers were not memory mapped *at all*. And the IP
+itself came from Synopsys, Cadence or yet another EDA company...
 
-Ivan
-
-> 
-> - k
-> 
+Paweł
 
 
