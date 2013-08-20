@@ -1,82 +1,56 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pd0-f174.google.com ([209.85.192.174]:40597 "EHLO
-	mail-pd0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751301Ab3HNEqN (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 00:46:13 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v5 02/13] [media] exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings documentation
-Date: Wed, 14 Aug 2013 10:16:03 +0530
-Message-Id: <1376455574-15560-3-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1376455574-15560-1-git-send-email-arun.kk@samsung.com>
-References: <1376455574-15560-1-git-send-email-arun.kk@samsung.com>
+Received: from mailout4.samsung.com ([203.254.224.34]:30755 "EHLO
+	mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751062Ab3HTOp6 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 10:45:58 -0400
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH/RFC v5 0/2] gp2ap020a00f ambient light/proximity sensor
+Date: Tue, 20 Aug 2013 16:45:20 +0200
+Message-id: <1377009920-5088-1-git-send-email-j.anaszewski@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: linux-iio@vger.kernel.org
+Cc: devicetree@vger.kernel.org, jic23@kernel.org, kyungmin.park@samsung.com, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The patch adds the DT binding documentation for Samsung
-Exynos5 SoC series imaging subsystem (FIMC-IS).
+This driver supports:
+ - reading channels in 'one shot' mode through read_raw callback,
+ - four events - rising and falling ambient light events and
+   rising and falling proximity roc events.
+ - triggers for all the three channels (triggers can't be enabled
+   simultaneosly with proximity detection event)
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- .../devicetree/bindings/media/exynos5-fimc-is.txt  |   47 ++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+This is a follow-up of the previous series and it includes
+following improvements:
+  - switched over to "auto calculation" mode for ambient light
+    measurement - it tells the device to automatically convert
+    illuminance output value to lux units
+  - added checking if the event state to be set is legal
+  - removed superfluous !! on test_bit result assignment
+  - precluding enabling proximity events if any of the
+    proximity thresholds isn't greater than 0
+  - precluding writing 0 to the proximity threshold value
+    sysfs attributes
+  - got rid of the warning upon call to the iio_trigger_poll
+  - removed interrupt-parent property from DT bindings
+    documentation file
+  - changed the description of the interrupts property
+    in the DT binding documentation file
 
-diff --git a/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
-new file mode 100644
-index 0000000..bfd36df
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
-@@ -0,0 +1,47 @@
-+Samsung EXYNOS5 SoC series Imaging Subsystem (FIMC-IS)
-+------------------------------------------------------
-+
-+The camera subsystem on Samsung Exynos5 SoC has some changes relative
-+to previous SoC versions. Exynos5 has almost similar MIPI-CSIS and
-+FIMC-LITE IPs but has a much improved version of FIMC-IS which can
-+handle sensor controls and camera post-processing operations. The
-+Exynos5 FIMC-IS has a dedicated ARM Cortex A5 processor, many
-+post-processing blocks (ISP, DRC, FD, ODC, DIS, 3DNR) and two
-+dedicated scalers (SCC and SCP).
-+
-+fimc-is node
-+------------
-+
-+Required properties:
-+
-+- compatible        : must be "samsung,exynos5250-fimc-is"
-+- reg               : physical base address and size of the memory mapped
-+                      registers
-+- interrupt-parent  : parent interrupt controller
-+- interrupts        : fimc-is interrupt to the parent combiner
-+- clocks            : list of clock specifiers, corresponding to entries in
-+                      clock-names property;
-+- clock-names       : must contain "isp", "mcu_isp", "isp_div0", "isp_div1",
-+                      "isp_divmpwm", "mcu_isp_div0", "mcu_isp_div1" entries,
-+                      matching entries in the clocks property.
-+- pmu               : phandle to the fimc-is pmu node describing the register
-+                      base and size for FIMC-IS PMU.
-+
-+i2c-isp (ISP I2C bus controller) nodes
-+------------------------------------------
-+
-+Required properties:
-+
-+- compatible	: should be "samsung,exynos4212-i2c-isp" for Exynos4212,
-+		  Exynos4412 and Exynos5250 SoCs;
-+- reg		: physical base address and length of the registers set;
-+- clocks	: must contain gate clock specifier for this controller;
-+- clock-names	: must contain "i2c_isp" entry.
-+
-+For the i2c-isp node, it is required to specify a pinctrl state named "default",
-+according to the pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt.
-+
-+Device tree nodes of the image sensors' controlled directly by the FIMC-IS
-+firmware must be child nodes of their corresponding ISP I2C bus controller node.
-+The data link of these image sensors must be specified using the common video
-+interfaces bindings, defined in video-interfaces.txt.
+Thanks,
+Jacek Anaszewski
+
+Jacek Anaszewski (2):
+  DT: Add documentation for gp2ap020a00f sensor
+  iio: gp2ap020a00f: Add a driver for the device
+
+ .../devicetree/bindings/iio/light/gp2ap020a00f.txt |   17 +
+ drivers/iio/light/Kconfig                          |   12 +
+ drivers/iio/light/Makefile                         |    1 +
+ drivers/iio/light/gp2ap020a00f.c                   | 1446 ++++++++++++++++++++
+ 4 files changed, 1476 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt
+ create mode 100644 drivers/iio/light/gp2ap020a00f.c
+
 -- 
-1.7.9.5
+1.7.5.4
 
