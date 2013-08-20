@@ -1,31 +1,74 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:39558 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751763Ab3HTTOL (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 15:14:11 -0400
-Date: Tue, 20 Aug 2013 20:13:39 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130820191339.GT30073@sirena.org.uk>
-References: <1377004456-26318-1-git-send-email-ldewangan@nvidia.com>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:47285 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751255Ab3HTQsO (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 12:48:14 -0400
+Message-ID: <52139DC9.4040803@wwwdotorg.org>
+Date: Tue, 20 Aug 2013 10:48:09 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UKUpI6lZ3P7mfoqz"
-Content-Disposition: inline
-In-Reply-To: <1377004456-26318-1-git-send-email-ldewangan@nvidia.com>
 Subject: Re: [PATCH V3] regulator: palmas: add support for external control
  of rails
+References: <1377004456-26318-1-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1377004456-26318-1-git-send-email-ldewangan@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: sameo@linux.intel.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com
+Cc: broonie@kernel.org, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com
 List-ID: <devicetree@vger.kernel.org>
 
+On 08/20/2013 07:14 AM, Laxman Dewangan wrote:
+> Palmas rails like LDOs, SMPSs, REGENs, SYSENs can be enable and disable
+> by register programming through I2C communication as well as it can be
+> enable/disable with the external control input ENABLE1, ENABLE2 and NSLEEP.
+> 
+> Add support for configuring these rails to be controlled by external control
+> inputs. This is require to configure the rail's control register as well as
+> configuration of resource register.
+> 
+> Provide the external input names through parameter "roof-floor". Updated the
+> DT binding document to details different value of the roof-floor.
 
---UKUpI6lZ3P7mfoqz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
 
-On Tue, Aug 20, 2013 at 06:44:15PM +0530, Laxman Dewangan wrote:
+The binding changes look reasonable and backwards-compatible, so they're
+good. Just one nit:
 
+(In the example, I assume:)
+>  			regulator-always-on;
+>  			regulator-boot-on;
+>  			ti,warm-reset;
+> -			ti,roof-floor;
+> +			ti,roof-floor = 0x1; /* ENABLE1 control */
+
+You need <> around the value, so better:
+
+			ti,roof-floor = <0x1>; /* ENABLE1 control */
+
+or better:
+
+			ti,roof-floor = <1>; /* ENABLE1 control */
+
+(even better might be a header file that defines names for those
+constants...)
+
+> diff --git a/drivers/regulator/palmas-regulator.c b/drivers/regulator/palmas-regulator.c
+
+> @@ -746,9 +854,24 @@ static void palmas_dt_to_pdata(struct device *dev,
+>  			of_property_read_bool(palmas_matches[idx].of_node,
+>  					     "ti,warm-reset");
+>  
+> -		pdata->reg_init[idx]->roof_floor =
+> -			of_property_read_bool(palmas_matches[idx].of_node,
+> -					      "ti,roof-floor");
+> +		ret = of_property_read_u32(palmas_matches[idx].of_node,
+> +					      "ti,roof-floor", &prop);
+> +		/* EINVAL: Property not found */
+> +		if (ret != -EINVAL) {
+> +			int econtrol;
+> +
+> +			/* use default value, when no value is specified */
 > +			econtrol = PALMAS_EXT_CONTROL_NSLEEP;
 > +			if (!ret) {
 > +				if (prop == 1)
@@ -35,29 +78,9 @@ On Tue, Aug 20, 2013 at 06:44:15PM +0530, Laxman Dewangan wrote:
 > +				else if (prop == 3)
 > +					econtrol = PALMAS_EXT_CONTROL_NSLEEP;
 
-Since Stephen identified an issue as well...  this looks like a switch
-statement.   Otherwise this looks fine.
+Should probably at least WARN() here if the value is invalid?
 
---UKUpI6lZ3P7mfoqz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +			}
+> +			pdata->reg_init[idx]->roof_floor = econtrol;
+> +		}
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSE7/fAAoJELSic+t+oim9Zp8P/RPggDonvpxfdWC3oLWcesPN
-rBlNSB5f+wqhepuWSB+szOICnNWwZyE6VSdzrjspJ+HOyL0mZLcS8OX3B9g5UZd1
-dN1a2e31DrFsVzc6Pez8tBU5WmdP2I25Hi6HZz7Xw6p55CtKzEjf5wMCDy9Ogw1U
-pymdmheNRQ9wGuh3oKqwzyp7iVo5cqZmpL4TCWC5i2iXDptBhLFWr7XwrqAaNkZt
-FbmA3/5f2doYre0yh+FVcIF0Rf0h4sZkctyDKBKH2xDh9PwCTIPT8JDamvIhJgot
-U5UfjveH22gTFkT02exssgDePbshBXGz7wFGF3I/QXDPTSmVQZiQ+sdYbaIjdwpH
-m9b5KceaigC51QL1BB8EQfTBhzRM1AndMwJdZ4tb9atewk9u1ZOKFej/2cTg4rfE
-Wl5r4JSu9HKz+gahbLsAOG4OSl8jhISvH/Iw3TkX9SkkgmgG7ftO0EviT0GoDRtT
-1/1cfUQANF7198H2clpVZ0LFgAlIfkiJpNITB5TgLXsL/MoSYtv9KIudDftoSvxo
-4NBJfIP6b6RcDvBRK2OcZpK/lMbFjXU+S0kvlY/pR6Kl8oYkyKCPZByyLFqz6nCo
-DgFiAvQHml13JAe1EKMxdNh5jMlvo9ClgxmvFWOrHk1KGjxOdopUuLvTNdAwyblh
-J7eGaMTXYCIl6rCF45tz
-=0Adl
------END PGP SIGNATURE-----
-
---UKUpI6lZ3P7mfoqz--
