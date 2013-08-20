@@ -1,31 +1,61 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH v5 0/4] mtd:nand:omap2: clean-up of supported ECC schemes
-Date: Tue, 20 Aug 2013 17:02:29 +0300
-Message-ID: <1377007349.2089.566.camel@sauron.fi.intel.com>
-References: <1373748891-7779-1-git-send-email-pekon@ti.com>
-	 <20980858CB6D3A4BAE95CA194937D5E73E9F781B@DBDE04.ent.ti.com>
-Reply-To: dedekind1@gmail.com
+From: Russ Dill <Russ.Dill@ti.com>
+Subject: Re: [PATCH v4 1/4] ARM: OMAP2+: AM33XX: I2C Sleep/wake sequence support
+Date: Tue, 20 Aug 2013 09:33:19 -0700
+Message-ID: <CA+Bv8XaPU6N3KztAPFZb8OMMg8Tc+Kv5hf1Utz7QS=NCRdO3Rg@mail.gmail.com>
+References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
+	<1376432412-8509-2-git-send-email-Russ.Dill@ti.com>
+	<520B595F.2040207@ti.com>
+	<CA+Bv8XZ-QGhVV1mK=rRekOZzaTDN-Y9YkWYYoEc8EtvP0JouEA@mail.gmail.com>
+	<5211B201.2000401@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73E9F781B@DBDE04.ent.ti.com>
+In-Reply-To: <5211B201.2000401@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, "tony@atomide.com" <tony@atomide.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+To: Gururaja Hebbar <gururaja.hebbar@ti.com>
+Cc: Kevin Hilman <khilman@deeprootsystems.com>, devicetree@vger.kernel.org, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2013-08-20 at 13:20 +0000, Gupta, Pekon wrote:
-> Hi Artem, Brian,
+On Sun, Aug 18, 2013 at 10:49 PM, Gururaja Hebbar
+<gururaja.hebbar@ti.com> wrote:
+>
+> On 8/15/2013 4:04 AM, Russ Dill wrote:
+> > On Wed, Aug 14, 2013 at 3:18 AM, Gururaja Hebbar <gururaja.hebbar@ti.com> wrote:
+> >> On 8/14/2013 3:50 AM, Russ Dill wrote:
+> >>> Changes since v1:
+> >>> * Rebased onto new am335x PM branch
+> >>> * Changed to use 5th param register
+>
+> >>
+>
+> [snip]
+> [snip]
+>
+> >>> +
+> >>> +     wkup_m3_reset_data_pos();
+> >>> +     if (am33xx_i2c_sleep_sequence) {
+> >>> +             pos = wkup_m3_copy_data(am33xx_i2c_sleep_sequence,
+> >>> +                                             i2c_sleep_sequence_sz);
+> >>
+> >> Why do we need to copy this data (same constant data) on every iteration?
+> >
+> > Because the CM3 firmware is reset after each suspend/resume cycle. The
+> > firmware reset handler reinitializes the DMEM.
+>
+> Well in that why can't the i2c payload be copied to UMEM?
+>
+> Thanks & regards
+> Gururaja
+>
 
-I'll try to go through old e-mails now, and especially ubi/ubifs ones,
-including yours, and I'll let Brian handle your patches, if I can? :-)
+I've given this some thought, and gone back and forth a bit. UMEM is a
+bit more complicated because the linker decides what should go where.
+Also, it may be that in the future, either the PM for am335x or am43xx
+will be writing different sequences depending on the suspend
+mode/options.
 
-I checked them, and they looked good to me:
+Is there a specific aspect of copying the data each suspend cycle that
+you are trying to fix? Is it just that the data could only be copied
+once? Or is it the latency of the copy?
 
-Signed-off-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-
--- 
-Best Regards,
-Artem Bityutskiy
-
+Thanks!
