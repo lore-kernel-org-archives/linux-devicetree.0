@@ -1,149 +1,49 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail1.g1.pair.com ([66.39.3.162]:34321 "EHLO mail1.g1.pair.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750826Ab3HAEkC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 1 Aug 2013 00:40:02 -0400
-From: Sean Cross <xobs@kosagi.com>
-Subject: [PATCH] net/phy: micrel: Add OF configuration support
-Date: Thu,  1 Aug 2013 04:16:41 +0000
-Message-Id: <1375330601-3609-2-git-send-email-xobs@kosagi.com>
-In-Reply-To: <1375330601-3609-1-git-send-email-xobs@kosagi.com>
-References: <1375330601-3609-1-git-send-email-xobs@kosagi.com>
+Received: from smtp.codeaurora.org ([198.145.11.231]:39474 "EHLO
+	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751487Ab3HTOvt convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 10:51:49 -0400
+Subject: Re: [PATCH v3] hwspinlock/msm: Add support for Qualcomm MSM HW Mutex block
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+From: Kumar Gala <galak@codeaurora.org>
+In-Reply-To: <1376910775.3157.1.camel@hornet>
+Date: Tue, 20 Aug 2013 09:51:55 -0500
+Content-Transfer-Encoding: 8BIT
+Message-Id: <E7A4BEAB-CBFD-41BF-A6DE-981F74FDB2CF@codeaurora.org>
+References: <1376507361-26907-1-git-send-email-galak@codeaurora.org> <1376573746.18617.45.camel@hornet> <520EADBC.9090608@wwwdotorg.org> <1376910775.3157.1.camel@hornet>
 Sender: devicetree-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Sean Cross <xobs@kosagi.com>
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, "ohad@wizery.com" <ohad@wizery.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Eric Holmberg <eholmber@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Some boards require custom PHY configuration, for example due to trace
-length differences.  Add the ability to configure these registers in
-order to get the PHY to function on boards that need it.
 
-Because PHYs are auto-detected based on MDIO device IDs, allow PHY
-configuration to be specified in the parent Ethernet device node if no
-PHY device node is present.
+On Aug 19, 2013, at 6:12 AM, Pawel Moll wrote:
 
-Signed-off-by: Sean Cross <xobs@kosagi.com>
----
- .../devicetree/bindings/net/micrel-phy.txt         |   20 +++++++
- drivers/net/phy/micrel.c                           |   57 ++++++++++++++++++++
- 2 files changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/micrel-phy.txt
+> On Fri, 2013-08-16 at 23:54 +0100, Stephen Warren wrote:
+>> Indeed, I tend to think that reg-names is a bad idea.
+>> 
+>> IIRC, the rule for "reg" is that entries must always have a defined
+>> order, so that it can always be accessed by integer index. 
+> 
+> First time I hear about that rule, really...
+> 
+>> And given
+>> that's true, allowing for reg-names just creates confusion since it
+>> implies you can look up the index in reg-names and then read reg at that
+>> index.
+> 
+> I actually believe that named resources leave less are for error than
+> indexed ones. And this is the message I remember being "spread" in the
+> times of static platform devices.
+> 
+> Pawel
 
-diff --git a/Documentation/devicetree/bindings/net/micrel-phy.txt b/Documentation/devicetree/bindings/net/micrel-phy.txt
-new file mode 100644
-index 0000000..97c1ef2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/micrel-phy.txt
-@@ -0,0 +1,20 @@
-+Micrel KS8737, KSZ8041, KSZ8001, KS8721, KSZ8081, KSZ8091, KSZ8061, KSZ9021,
-+KSZ9031, Ethernet PHYs, and KSZ8873MLL and KSZ886X Ethernet switches.
-+
-+Some boards require special tuning values, particularly when it comes to
-+clock delays.  You can specify clock delay values by adding
-+micrel-specific properties to an Ethernet OF device node.
-+
-+Optional properties:
-+- micrel,clk-control-pad-skew : Timing offset for the MII clock line
-+- micrel,rx-data-pad-skew : Timing offset for the RX MII pad
-+- micrel,tx-data-pad-skew : Timing offset for the TX MII pad
-+
-+Example:
-+	&enet {
-+		micrel,clk-control-pad-skew = <0xf0f0>;
-+		micrel,rx-data-pad-skew = <0x0000>;
-+		micrel,tx-data-pad-skew = <0xffff>;
-+		status = "okay";
-+	};
-+
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 2510435..0abe821 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -25,6 +25,7 @@
- #include <linux/module.h>
- #include <linux/phy.h>
- #include <linux/micrel_phy.h>
-+#include <linux/of.h>
- 
- /* Operation Mode Strap Override */
- #define MII_KSZPHY_OMSO				0x16
-@@ -53,6 +54,25 @@
- #define KS8737_CTRL_INT_ACTIVE_HIGH		(1 << 14)
- #define KSZ8051_RMII_50MHZ_CLK			(1 << 7)
- 
-+/* Write/read to/from extended registers */
-+#define MII_KSZPHY_EXTREG                       0x0b
-+#define KSZPHY_EXTREG_WRITE                     0x8000
-+
-+#define MII_KSZPHY_EXTREG_WRITE                 0x0c
-+#define MII_KSZPHY_EXTREG_READ                  0x0d
-+
-+/* Write/read to/from extended registers */
-+#define MII_KSZPHY_EXTREG                       0x0b
-+#define KSZPHY_EXTREG_WRITE                     0x8000
-+
-+#define MII_KSZPHY_EXTREG_WRITE                 0x0c
-+#define MII_KSZPHY_EXTREG_READ                  0x0d
-+
-+/* Extended registers */
-+#define MII_KSZPHY_CLK_CONTROL_PAD_SKEW         0x104
-+#define MII_KSZPHY_RX_DATA_PAD_SKEW             0x105
-+#define MII_KSZPHY_TX_DATA_PAD_SKEW             0x106
-+
- static int ksz_config_flags(struct phy_device *phydev)
- {
- 	int regval;
-@@ -65,6 +85,13 @@ static int ksz_config_flags(struct phy_device *phydev)
- 	return 0;
- }
- 
-+static int kszphy_extended_write(struct phy_device *phydev,
-+                                 u32 regnum, u16 val)
-+{
-+	phy_write(phydev, MII_KSZPHY_EXTREG, KSZPHY_EXTREG_WRITE | regnum);
-+	return phy_write(phydev, MII_KSZPHY_EXTREG_WRITE, val);
-+}
-+
- static int kszphy_ack_interrupt(struct phy_device *phydev)
- {
- 	/* bit[7..0] int status, which is a read and clear register. */
-@@ -121,6 +148,36 @@ static int ks8737_config_intr(struct phy_device *phydev)
- 
- static int kszphy_config_init(struct phy_device *phydev)
- {
-+	struct device *dev = &phydev->dev;
-+	struct device_node *of_node = dev->of_node;
-+
-+	if (!of_node && dev->parent->of_node)
-+		of_node = dev->parent->of_node;
-+
-+	if (of_node) {
-+		u32 val;
-+
-+		if (!of_property_read_u32(of_node,
-+					  "micrel,clk-control-pad-skew",
-+					  &val))
-+			kszphy_extended_write(phydev,
-+					      MII_KSZPHY_CLK_CONTROL_PAD_SKEW,
-+					      val);
-+
-+		if (!of_property_read_u32(of_node,
-+					  "micrel,rx-data-pad-skew",
-+					  &val))
-+			kszphy_extended_write(phydev,
-+					      MII_KSZPHY_RX_DATA_PAD_SKEW,
-+					      val);
-+
-+		if (!of_property_read_u32(of_node,
-+					  "micrel,tx-data-pad-skew",
-+					  &val))
-+			kszphy_extended_write(phydev,
-+					      MII_KSZPHY_TX_DATA_PAD_SKEW,
-+					      val);
-+	}
- 	return 0;
- }
- 
+I can understand that reg-names being optional for older bindings to ensure backwards compat, but for newer ones agree that it is less error prone.  This is something we should try to come to some agreement on.
+
+- k
+
 -- 
-1.7.9.5
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
