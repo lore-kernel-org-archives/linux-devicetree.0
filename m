@@ -1,65 +1,71 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from caramon.arm.linux.org.uk ([78.32.30.218]:42133 "EHLO
-	caramon.arm.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751348Ab3HTUyr (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 16:54:47 -0400
-Date: Tue, 20 Aug 2013 21:54:26 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Received: from mo.fixstars.hdemail.jp ([176.34.54.138]:51119 "EHLO
+	mo.fixstars.hdemail.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751451Ab3HTPPP (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 11:15:15 -0400
+Message-ID: <ed58bd5b910baee6aa4c53752a45ecbc.squirrel@webmail.fixstars.com>
+In-Reply-To: <52131A1D.2060907@codeaurora.org>
+References: <1376920566-20325-1-git-send-email-mita@fixstars.com>
+    <1376922720.2069.10.camel@dabdike.int.hansenpartnership.com>
+    <52131A1D.2060907@codeaurora.org>
+Date: Wed, 21 Aug 2013 00:03:50 +0900
 Subject: Re: [PATCH 1/2] ufs-pltfrm: initialize DMA mask for device-tree
-	probed device
-Message-ID: <20130820205426.GD17845@n2100.arm.linux.org.uk>
-References: <1376920566-20325-1-git-send-email-mita@fixstars.com> <1376922720.2069.10.camel@dabdike.int.hansenpartnership.com> <52131A1D.2060907@codeaurora.org> <ed58bd5b910baee6aa4c53752a45ecbc.squirrel@webmail.fixstars.com>
+ probed device
+From: "Akinobu Mita" <mita@fixstars.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed58bd5b910baee6aa4c53752a45ecbc.squirrel@webmail.fixstars.com>
+Content-Type: text/plain;charset=iso-2022-jp
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Akinobu Mita <mita@fixstars.com>
-Cc: Sujit Reddy Thumma <sthumma@codeaurora.org>, James Bottomley <james.bottomley@hansenpartnership.com>, linux-scsi@vger.kernel.org, Vinayak Holikatti <vinholikatti@gmail.com>, Santosh Y <santoshsy@gmail.com>, devicetree@vger.kernel.org
+To: Sujit Reddy Thumma <sthumma@codeaurora.org>
+Cc: James Bottomley <james.bottomley@hansenpartnership.com>, Akinobu Mita <mita@fixstars.com>, linux-scsi@vger.kernel.org, Vinayak Holikatti <vinholikatti@gmail.com>, Santosh Y <santoshsy@gmail.com>, devicetree@vger.kernel.org, Russell King <rmk+kernel@arm.linux.org.uk>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Aug 21, 2013 at 12:03:50AM +0900, Akinobu Mita wrote:
-> The discussion in that thread is useful.  Also, I found that Russell King
-> proposed replacing the boilerplate by using dma_coerce_mask_and_coherent()
-> in his patch set "Preview of DMA mask changes".
-> https://patchwork.kernel.org/patch/2837359/
+> On 8/19/2013 8:02 PM, James Bottomley wrote:
+>> On Mon, 2013-08-19 at 22:56 +0900, Akinobu Mita wrote:
+>>> The device-tree probed device for ARM doesn't have dev->dma_mask.
+>>> So dma_set_mask() for the device doesn't succeed.  The popular trick
+>>> for this is - dev->dma_mask = &dev->coherent_dma_mask;
+>>>
+>>> Currently there is no dma_set_mask() call in ufs-pltfrm, but the
+>>> forthcoming fix needs proper DMA mask setting in ufs core driver.  So
+>>> initializing dev->dma_mask as described above is required.
+>>>
+>>> Signed-off-by: Akinobu Mita <mita@fixstars.com>
+>>> Cc: Sujit Reddy Thumma <sthumma@codeaurora.org>
+>>> Cc: Vinayak Holikatti <vinholikatti@gmail.com>
+>>> Cc: Santosh Y <santoshsy@gmail.com>
+>>> Cc: "James E.J. Bottomley" <JBottomley@parallels.com>
+>>> Cc: linux-scsi@vger.kernel.org
+>>> ---
+>>>   drivers/scsi/ufs/ufshcd-pltfrm.c | 3 +++
+>>>   1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c
+>>> b/drivers/scsi/ufs/ufshcd-pltfrm.c
+>>> index 94ba40c..c780840 100644
+>>> --- a/drivers/scsi/ufs/ufshcd-pltfrm.c
+>>> +++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+>>> @@ -122,6 +122,9 @@ static int ufshcd_pltfrm_probe(struct
+>>> platform_device *pdev)
+>>>   goto out;
+>>>   }
+>>>
+>>> +if (!dev->dma_mask)
+>>> +dev->dma_mask = &dev->coherent_dma_mask;
+>>> +
+>>
+>> If the DMA mask is NULL, it means there's buggy platform code somewhere;
+>> I'm not sure we should be hacking a fix in a SCSI driver.
+>
+> Yes, ideally DT core should do this, there are patches lying around but
+> are not converged. Adding devicetree@vger.kernel.org to see if someone
+> has better suggestions.
+>
+> Recent additions to kernel with similar hacks -
+> https://patchwork.kernel.org/patch/2537021/
 
-That is an attempt to pull all that stuff into one central place so we
-don't have loads of drivers dealing with it in their own way.
+The discussion in that thread is useful.  Also, I found that Russell King
+proposed replacing the boilerplate by using dma_coerce_mask_and_coherent()
+in his patch set "Preview of DMA mask changes".
+https://patchwork.kernel.org/patch/2837359/
 
-As far as I can gather from those who deal with DT, such as Arnd, is that
-they believe it to be wrong that the DT code sets up the DMA masks, and
-they think that stuff will break if the DT code does set these pointers
-up.
-
-The big problem which we have is we have a whole bunch of drivers which
-don't bother at all with the DMA set mask functions (because they've been
-fiddling with the mask directly) and sorting that mess out is going to be
-pretty damn difficult.
-
-So, the above series is all about bringing stuff to a central place where
-we can then start thinking about changing the behaviour and not have to
-patch lots of drivers throughout the tree for every change that's made.
-
-The way I envision the change happening is this:
-
-1. Introduce the notion of mask coercion (drivers forcing the mask to a
-   particular value.)
-
-2. Add dma_set_mask() and similar functions to these drivers incrementally.
-
-3. Move the initialization of the mask up to the device creation level
-   (iow, the DT code) and out of the drivers (this can be done by
-   adding it to the DT code, and removing it from the mask coercion code.)
-
-4. Remove dma_coerce_mask_and_coherent() from the kernel once complete.
-
-So, why bother with dma_coerce_mask_and_coherent()?  Not only does it
-centralise the "hack" but it also provides a means to identify drivers
-which need work and/or have been missed (you just have to grep for the
-direct assignments to the DMA masks.)  Not only that but once the hack
-is centralised, it removes some of the variability in the drivers, and
-provides a step where we can allow things to be tested hopefully without
-causing any regressions.
-
-At least that's the theory.
