@@ -1,177 +1,79 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from [207.46.163.28] ([207.46.163.28]:54875 "EHLO
-	co9outboundpool.messaging.microsoft.com" rhost-flags-FAIL-FAIL-OK-OK)
-	by vger.kernel.org with ESMTP id S1751254Ab3HTCcT (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Mon, 19 Aug 2013 22:32:19 -0400
-Date: Tue, 20 Aug 2013 10:21:35 +0800
-From: Nicolin Chen <b42378@freescale.com>
-Subject: Re: [PATCH v8 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
-Message-ID: <20130820022134.GA13169@MrMyself>
-References: <cover.1376912873.git.b42378@freescale.com>
- <a5b34243c0323e7692fab6a52a7adf4e3e8a5844.1376912873.git.b42378@freescale.com>
- <20130819123449.GE31036@pengutronix.de>
+Received: from mail-pd0-f170.google.com ([209.85.192.170]:40186 "EHLO
+	mail-pd0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751629Ab3HTAGc convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 20:06:32 -0400
+Received: by mail-pd0-f170.google.com with SMTP id x10so5941493pdj.1
+        for <devicetree@vger.kernel.org>; Mon, 19 Aug 2013 17:06:32 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20130819123449.GE31036@pengutronix.de>
+Content-Transfer-Encoding: 8BIT
+From: Mike Turquette <mturquette@linaro.org>
+In-Reply-To: <20130819093543.GF3719@e106331-lin.cambridge.arm.com>
+References: <cover.1376565456.git.b42378@freescale.com> <2805432.jMVhHxhr1m@flatron>
+ <20130817145316.GT26614@pengutronix.de> <8770601.066pCcRnTh@flatron>
+ <20130819093543.GF3719@e106331-lin.cambridge.arm.com>
+Message-ID: <20130820000625.4443.23018@quantum>
+Subject: Re: [PATCH v5 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
+Date: Mon, 19 Aug 2013 17:06:25 -0700
 Sender: devicetree-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, tomasz.figa@gmail.com, swarren@wwwdotorg.org, mark.rutland@arm.com, R65777@freescale.com
+To: Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Nicolin Chen <b42378@freescale.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, Pawel Moll <Pawel.Moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "broonie@kernel.org" <broonie@kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "timur@tabi.org" <timur@tabi.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Thank you Sascha, I'll revise them all in v9
+Quoting Mark Rutland (2013-08-19 02:35:43)
+> On Sat, Aug 17, 2013 at 04:17:18PM +0100, Tomasz Figa wrote:
+> > On Saturday 17 of August 2013 16:53:16 Sascha Hauer wrote:
+> > > On Sat, Aug 17, 2013 at 02:28:04PM +0200, Tomasz Figa wrote:
+> > > > > > > Also I would make this option required. Use a dummy clock for
+> > > > > > > mux
+> > > > > > > inputs that are grounded for a specific SoC.
+> > > > > > 
+> > > > > > Some clocks are not from CCM and we haven't defined in
+> > > > > > imx6q-clk.txt,
+> > > > > > so in most cases we can't provide a phandle for them, eg:
+> > > > > > spdif_ext.
+> > > > > > I think it's a bit hard to force it to be 'required'. An
+> > > > > > 'optional'
+> > > > > > looks more flexible to me and a default one is ensured even if
+> > > > > > it's
+> > > > > > missing.
+> > > > > 
+> > > > > <&clks 0> is the dummy clock. This can be used for all input clocks
+> > > > > not
+> > > > > defined by the SoC.
+> > > > 
+> > > > Where does this assumption come from? Is it documented anywhere?
+> > > 
+> > > This is how all i.MX clock bindings currently are. See
+> > > Documentation/devicetree/bindings/clock/imx*-clock.txt
+> > 
+> > OK, thanks.
+> > 
+> > I guess we need some discussion on dummy clocks vs skipped clocks. I think 
+> > we want some consistency on this, don't we?
+> > 
+> > If we really need a dummy clock, then we might also want a generic way to 
+> > specify it.
+> 
+> What do we actually mean by a "dummy clock"? We already have bindings
+> for "fixed-clock" and co friends describe relatively simple
+> preconfigured clocks.
 
-On Mon, Aug 19, 2013 at 02:34:49PM +0200, Sascha Hauer wrote:
-> Hi Nicolas,
-> 
-> Some misc other comments inline.
-> 
-> On Mon, Aug 19, 2013 at 08:08:48PM +0800, Nicolin Chen wrote:
-> > This patch implements a device-tree-only CPU DAI driver for Freescale
-> > +
-> > +struct fsl_spdif_priv {
-> > +	struct spdif_mixer_control fsl_spdif_control;
-> > +	struct snd_soc_dai_driver cpu_dai_drv;
-> > +	struct platform_device *pdev;
-> > +	struct regmap *regmap;
-> > +	atomic_t dpll_locked;
-> 
-> You don't need an atomic_t to track a bool variable. Use a plain bool or
-> int instead.
-> 
-> > +	u8 txclk_div[SPDIF_TXRATE_MAX];
-> > +	u8 txclk_src[SPDIF_TXRATE_MAX];
-> > +	u8 rxclk_src;
-> > +	struct clk *txclk[SPDIF_TXRATE_MAX];
-> > +	struct clk *rxclk;
-> > +	struct snd_dmaengine_dai_dma_data dma_params_tx;
-> > +	struct snd_dmaengine_dai_dma_data dma_params_rx;
-> > +
-> > +	/* The name space will be allocated dynamically */
-> > +	char name[0];
-> > +};
-> > +
-> > +
-> > +#ifdef DEBUG
-> > +static void dumpregs(struct fsl_spdif_priv *spdif_priv)
-> > +{
-> > +	struct regmap *regmap = spdif_priv->regmap;
-> > +	struct platform_device *pdev = spdif_priv->pdev;
-> > +	u32 val, i;
-> > +	int ret;
-> > +
-> > +	/* Valid address set of SPDIF is {[0x0-0x38], 0x44, 0x50} */
-> > +	for (i = 0 ; i <= REG_SPDIF_STC; i += 4) {
-> > +		ret = regmap_read(regmap, REG_SPDIF_SCR + i, &val);
-> > +		if (!ret)
-> > +			dev_dbg(&pdev->dev, "REG 0x%02x = 0x%06x\n", i, val);
-> > +	}
-> > +}
-> > +#else
-> > +static void dumpregs(struct fsl_spdif_priv *spdif_priv) {}
-> > +#endif
-> 
-> Is this needed? regmap provides a register dump in debugfs.
-> 
-> > +
-> > +static int spdif_clk_set_rate(struct clk *clk, unsigned long rate)
-> > +{
-> > +	unsigned long rate_actual;
-> > +
-> > +	rate_actual = clk_round_rate(clk, rate);
-> > +	return clk_set_rate(clk, rate_actual);
-> > +}
-> 
-> clk_round_rate returns the rate which clk_set_rate would set if called
-> with the same rate. The clk_round_rate() is unnecessary.
-> 
-> > +
-> > +	dev_dbg(&pdev->dev, "expected clock rate = %d\n",
-> > +			(int)(64 * sample_rate * div));
-> > +	dev_dbg(&pdev->dev, "acutal clock rate = %d\n",
-> > +			(int)clk_get_rate(spdif_priv->txclk[rate]));
-> 
-> s/acutal/actual/
-> 
-> Also please use %ld instead of casting the unsigned long to int.
-> 
-> > +
-> > +	dev_dbg(&pdev->dev, "FreqMeas: %d\n", (int)freqmeas);
-> > +	dev_dbg(&pdev->dev, "BusclkFreq: %d\n", (int)busclk_freq);
-> > +	dev_dbg(&pdev->dev, "RxRate: %d\n", (int)tmpval64);
-> 
-> Get rid of the casts
-> 
-> > +
-> > +	spdif_priv = devm_kzalloc(&pdev->dev,
-> > +			sizeof(struct fsl_spdif_priv) + strlen(np->name) + 1, GFP_KERNEL);
-> > +	if (!spdif_priv) {
-> > +		dev_err(&pdev->dev, "could not allocate DAI object\n");
-> 
-> Please drop this message. You'll never see it.
-> 
-> > +
-> > +	for (i = 0; i < SPDIF_TXRATE_MAX; i++) {
-> > +		ret = fsl_spdif_probe_txclk(spdif_priv, i);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	/* Prepare rx/tx clock */
-> > +	clk_prepare(spdif_priv->rxclk);
-> > +	for (i = 0; i < SPDIF_TXRATE_MAX; i++)
-> > +		clk_prepare(spdif_priv->txclk[i]);
-> 
-> Why do you prepare all clocks instead of the one you actually use? Also,
-> no need to do this here. You can use clk_prepare_enable instead where
-> you have clk_enable now.
-> 
-> > +
-> > +/* SPDIF rx clock source */
-> > +enum spdif_rxclk_src {
-> > +	SRPC_CLKSRC_0 = 0,
-> > +	SRPC_CLKSRC_1,
-> > +	SRPC_CLKSRC_2,
-> > +	SRPC_CLKSRC_3,
-> > +	SRPC_CLKSRC_4,
-> > +	SRPC_CLKSRC_5,
-> > +	SRPC_CLKSRC_6,
-> > +	SRPC_CLKSRC_7,
-> > +	SRPC_CLKSRC_8,
-> > +	SRPC_CLKSRC_9,
-> > +	SRPC_CLKSRC_10,
-> > +	SRPC_CLKSRC_11,
-> > +	SRPC_CLKSRC_12,
-> > +	SRPC_CLKSRC_13,
-> > +	SRPC_CLKSRC_14,
-> > +	SRPC_CLKSRC_15,
-> > +};
-> 
-> These are unused and look unnecessary.
-> 
-> > +
-> > +/* SPDIF tx clksrc */
-> > +enum spdif_txclk_src {
-> > +	STC_TXCLK_SRC_0 = 0,
-> > +	STC_TXCLK_SRC_1,
-> > +	STC_TXCLK_SRC_2,
-> > +	STC_TXCLK_SRC_3,
-> > +	STC_TXCLK_SRC_4,
-> > +	STC_TXCLK_SRC_5,
-> > +	STC_TXCLK_SRC_6,
-> > +	STC_TXCLK_SRC_7,
-> > +};
-> 
-> Also unused.
-> 
-> Sascha
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
+Some platforms have a fake clock which defines noops callbacks and
+basically doesn't do anything. This is analogous to the dummy regulator
+implementation. A central one could be registered by the clock core, as
+is done by the regulator core.
 
+I'll add this to the todo list.
 
+Regards,
+Mike
+
+> 
+> If a clock isn't actually wired, we shouldn't describe it at all, or
+> we're describing what Linux wants to think rather than what the hardware
+> actually is. That can easily be handled with clock-names.
+> 
+> Thanks,
+> Mark.
