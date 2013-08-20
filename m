@@ -1,58 +1,78 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from comal.ext.ti.com ([198.47.26.152]:50368 "EHLO comal.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752192Ab3HUOcW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 21 Aug 2013 10:32:22 -0400
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 1/5] arm: omap5: dts: fix reg property size
-Date: Wed, 21 Aug 2013 20:01:30 +0530
-Message-ID: <1377095494-15380-2-git-send-email-kishon@ti.com>
-In-Reply-To: <1377095494-15380-1-git-send-email-kishon@ti.com>
-References: <1377095494-15380-1-git-send-email-kishon@ti.com>
+Received: from mail-db9lp0248.outbound.messaging.microsoft.com ([213.199.154.248]:5600
+	"EHLO db9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751862Ab3HTEVv (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Tue, 20 Aug 2013 00:21:51 -0400
+From: Nicolin Chen <b42378@freescale.com>
+Subject: [PATCH v9 0/2] Add freescale S/PDIF CPU DAI and machine drivers
+Date: Tue, 20 Aug 2013 12:32:41 +0800
+Message-ID: <cover.1376972170.git.b42378@freescale.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, balbi@ti.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, linux@arm.linux.org.uk, javier.martinez@collabora.co.uk, devicetree@vger.kernel.org, kishon@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+To: broonie@kernel.org, s.hauer@pengutronix.de
+Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, tomasz.figa@gmail.com, swarren@wwwdotorg.org, mark.rutland@arm.com, R65777@freescale.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Felipe Balbi <balbi@ti.com>
+Changelog:
+v8->v9:
+ * Use bool instead of atomic_t.
+ * Use clk_prepare_enable() instead.
+ * Dropped dumpregs().
+ * Dropped unnecessary clk_round_rate().
+ * Dropped unused clock source enum.
+ * Revised dev_err() message.
+v7->v8:
+ * Revised DT binding doc.
+ * Revised dev_err() error msg.
+ * Check return value of clk_set_rate().
+v6->v7:
+ * Removed extra comma in array.
+ * Revised some comments.
+ * Added some dev_err().
+ * Check the return value of soft reset.
+ * Use bitrev8() instead of extra reverse_bits().
+ * Use cache_bypass as default for regmap.
+v5->v6:
+ * Sorted out rxtx clk source in DT binding.
+ * Use devm_xxxx() functions.
+ * Use platform_get_resource() instead.
+v4->v5:
+ * Dropped rx/tx-clksrc-names DT bindings.
+ * Use standard clock binding instead to pass the clock source list.
+ * Update the compatible list by using "imx35", the first SoC that has spdif.
+v3->v4:
+ * Use regmap for CPU DAI driver.
+ * Use individual clock source for 32KHz, 44KHz, 48KHz playback.
+ * Determine clock source configuration from 'clocks' entry.
+ * Added imx53 to compatible list, merged imx6q and imx6dl in the list.
+ * Improve the algorism of reverse_bits().
+ * Dropped the unneeded clk_put().
+v2->v3:
+ * Removed a wrong tag from the commit of patch-1.
+v1->v2:
+ * Dropped one applied patch for spdif dummy codec drivers.
+ * Use generic DMA DT binding.
+ * Let spdif controller driver calculate the clock div.
+ * Added one optional clock source for spdif tx.
+ * Reivsed documentation accordingly.
+Nicolin Chen (2):
+  ASoC: fsl: Add S/PDIF CPU DAI driver
+  ASoC: fsl: Add S/PDIF machine driver
 
-USB3 block has a 64KiB space, another 64KiB is
-used for the wrapper.
+ .../devicetree/bindings/sound/fsl,spdif.txt        |   54 +
+ .../devicetree/bindings/sound/imx-audio-spdif.txt  |   29 +
+ sound/soc/fsl/Kconfig                              |   14 +
+ sound/soc/fsl/Makefile                             |    4 +
+ sound/soc/fsl/fsl_spdif.c                          | 1236 ++++++++++++++++++++
+ sound/soc/fsl/fsl_spdif.h                          |  191 +++
+ sound/soc/fsl/imx-spdif.c                          |  134 +++
+ 7 files changed, 1662 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
+ create mode 100644 sound/soc/fsl/fsl_spdif.c
+ create mode 100644 sound/soc/fsl/fsl_spdif.h
+ create mode 100644 sound/soc/fsl/imx-spdif.c
 
-Without this change, resource_size() will get
-confused and driver won't probe because size
-will be negative.
-
-Signed-off-by: Felipe Balbi <balbi@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/omap5.dtsi |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index e643620..5c99f19 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -637,7 +637,7 @@
- 		omap_dwc3@4a020000 {
- 			compatible = "ti,dwc3";
- 			ti,hwmods = "usb_otg_ss";
--			reg = <0x4a020000 0x1000>;
-+			reg = <0x4a020000 0x10000>;
- 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -645,7 +645,7 @@
- 			ranges;
- 			dwc3@4a030000 {
- 				compatible = "synopsys,dwc3";
--				reg = <0x4a030000 0x1000>;
-+				reg = <0x4a030000 0x10000>;
- 				interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
- 				usb-phy = <&usb2_phy>, <&usb3_phy>;
- 				tx-fifo-resize;
--- 
-1.7.10.4
 
