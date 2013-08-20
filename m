@@ -1,14 +1,14 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ns.mm-sol.com ([212.124.72.66]:49252 "EHLO extserv.mm-sol.com"
+Received: from ns.mm-sol.com ([212.124.72.66]:56815 "EHLO extserv.mm-sol.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751728Ab3HUNbB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 21 Aug 2013 09:31:01 -0400
+	id S1750875Ab3HTJ5X (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Tue, 20 Aug 2013 05:57:23 -0400
 From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v5 1/3] usb: dwc3: msm: Add device tree binding information
-Date: Wed, 21 Aug 2013 16:29:44 +0300
-Message-Id: <1377091786-5613-2-git-send-email-iivanov@mm-sol.com>
-In-Reply-To: <1377091786-5613-1-git-send-email-iivanov@mm-sol.com>
-References: <1377091786-5613-1-git-send-email-iivanov@mm-sol.com>
+Subject: [PATCH v4 1/3] usb: dwc3: msm: Add device tree binding information
+Date: Tue, 20 Aug 2013 12:56:03 +0300
+Message-Id: <1376992565-22292-2-git-send-email-iivanov@mm-sol.com>
+In-Reply-To: <1376992565-22292-1-git-send-email-iivanov@mm-sol.com>
+References: <1376992565-22292-1-git-send-email-iivanov@mm-sol.com>
 Sender: devicetree-owner@vger.kernel.org
 To: balbi@ti.com
 Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
@@ -30,17 +30,17 @@ Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
 
 diff --git a/Documentation/devicetree/bindings/usb/msm-ssusb.txt b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
 new file mode 100644
-index 0000000..f57ba8d
+index 0000000..cacbd3b
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
 @@ -0,0 +1,104 @@
 +MSM SuperSpeed DWC3 USB SoC controller
 +
 +
-+MSM DW Highspeed USB PHY
-+========================
++DWC3 Highspeed USB PHY
++======================
 +Required properities :
-+- compatible : sould be "qcom,dw-hsphy";
++- compatible : sould be "qcom,dwc3-hsphy";
 +- reg : offset and length of the register set in the memory map
 +- clocks : phandles to clock instances of the device tree nodes
 +- clock-names :
@@ -54,10 +54,10 @@ index 0000000..f57ba8d
 +	"vbus" : vbus supply for host mode
 +	"vddcx" : vdd supply for HS-PHY digital circuit operation
 +
-+MSM DW Superspeed USB PHY
-+=========================
++DWC3 Superspeed USB PHY
++=======================
 +Required properities :
-+- compatible : sould be "qcom,dw-ssphy";
++- compatible : sould be "qcom,dwc3-ssphy";
 +- reg : offset and length of the register set in the memory map
 +- clocks : phandles to clock instances of the device tree nodes
 +- clock-names :
@@ -68,8 +68,8 @@ index 0000000..f57ba8d
 +	"v1p8" : 1.8v supply for SS-PHY
 +	"vddcx" : vdd supply for SS-PHY digital circuit operation
 +
-+MSM DWC3 controller wrapper
-+===========================
++DWC3 controller wrapper
++=======================
 +Required properties :
 +- compatible : should be "qcom,dwc3"
 +- reg : offset and length of the register set in the memory map
@@ -93,8 +93,8 @@ index 0000000..f57ba8d
 +
 +Example device nodes:
 +
-+	dw_hsphy: phy@f92f8800 {
-+		compatible = "qcom,dw-hsphy";
++	dwc3_hsphy: phy@f92f8800 {
++		compatible = "qcom,dwc3-hsphy";
 +		reg = <0xf92f8800 0x30>;
 +
 +		clocks = <&cxo>, <&usb2a_phy_sleep_cxc>;
@@ -106,8 +106,8 @@ index 0000000..f57ba8d
 +		v3p3-supply = <&supply>;
 +	};
 +
-+	dw_ssphy: phy@f92f8830 {
-+		compatible = "qcom,dw-ssphy";
++	dwc3_ssphy: phy@f92f8830 {
++		compatible = "qcom,dwc3-ssphy";
 +		reg = <0xf92f8830 0x30>;
 +
 +		clocks = <&cxo>, <&usb30_mock_utmi_cxc>;
@@ -134,7 +134,7 @@ index 0000000..f57ba8d
 +			compatible = "snps,dwc3";
 +			reg = <0xf9200000 0xcd00>;
 +			interrupts = <0 131 0>;
-+			usb-phy = <&dw_hsphy>, <&dw_ssphy>;
++			usb-phy = <&dwc3_hsphy>, <&dwc3_ssphy>;
 +			tx-fifo-resize;
 +		};
 +	};
