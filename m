@@ -1,74 +1,151 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pb0-f49.google.com ([209.85.160.49]:41733 "EHLO
-	mail-pb0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751810Ab3HTPfC (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 11:35:02 -0400
-Date: Tue, 20 Aug 2013 08:34:56 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] iio: adc: Add bindigs documentation for twl6030 GPADC
-Message-ID: <20130820153456.GA12618@roeck-us.net>
-References: <1376911765-7821-1-git-send-email-oleksandr.kozaruk@ti.com>
- <20130820091228.GW3719@e106331-lin.cambridge.arm.com>
+Received: from exprod5og111.obsmtp.com ([64.18.0.22]:39868 "EHLO
+	exprod5og111.obsmtp.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750901Ab3HTLkw (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 07:40:52 -0400
+Received: by mail-qa0-f47.google.com with SMTP id o19so2411080qap.6
+        for <devicetree@vger.kernel.org>; Tue, 20 Aug 2013 04:40:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <20130820091228.GW3719@e106331-lin.cambridge.arm.com>
+References: <1376911765-7821-1-git-send-email-oleksandr.kozaruk@ti.com>
+	<20130820091228.GW3719@e106331-lin.cambridge.arm.com>
+Date: Tue, 20 Aug 2013 14:40:50 +0300
+Message-ID: <CAPb7_mt7K7SK7RXerKJKMhsTQZPZ7AKx0pxQLvWawVV9GK-+oA@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: Add bindigs documentation for twl6030 GPADC
+From: Oleksandr Kozaruk <oleksandr.kozaruk@globallogic.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
 To: Mark Rutland <mark.rutland@arm.com>
-Cc: Oleksandr Kozaruk <oleksandr.kozaruk@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Guenter Roeck <linux@roeck-us.net>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Aug 20, 2013 at 10:12:28AM +0100, Mark Rutland wrote:
+Hi Mark,
+
+On Tue, Aug 20, 2013 at 12:12 PM, Mark Rutland <mark.rutland@arm.com> wrote:
 > Hi Oleksandr,
-> 
+>
 > [Adding Jonathan Cameron and Guenter Roeck to Cc]
-> 
+>
 > Apologies for the delay replying to this. In attempting to verify this
 > made sense I went and read the IIO bindings documentation, and I'm
 > somewhat confused by the model.
-> 
+>
 > As far as I can see, the only consumer of IIO channels is the
 > "iio-hwmon" binding, which seems to be a binding for Linux-specific
 > infrastructure rather than any actual device. This runs counter to the
-
-In respect to "iio-hwmon", I think you may actually be correct; we should
-have found a better means to describe the system.
-The intend was to describe that a set of adc inputs is connected
-to a set of voltages or temperature sensors.
-
-Is there a better way ? I am sure there is, but I have no idea what
-it might be, nor do I have the time to find out.
-
-However, I think that the "io-channels" property is well defined.
-
-"gpios" describes a group of gpio pins which have a common purpose.
-"io-channels" describes a group of io channels (or, ultimately, pins)
-which have a common purpose. So this is not really linux specific,
-unless other operating systems don't see the need of describing a group
-of io channels as single entity. But then the same could be claimed
-about groups of gpio pins.
-
 > way DT is supposed to function (describing the hardware rather than how
 > it's used). As far as I can see, this linkage is described because only
 > a subset of the ADCs on the device are actually wired to something?
-> 
-Is that a problem ? I would think that the same is true for many chips
-with multiple inputs and/or outputs.
-
+>
 > I also see a couple of IIO bindings ("adi,adf435x*, and "adi,ad7303")
 > which don't describe any iio channel cells at all, so I'm somewhat
 > confused by what the IIO channels actually represent, and why they must
 > be consumed elsewhere. As far as I can see, an IIO channel represents a
 > single ADC's registers in an IIO device, so I'm not sure why this must
 > be exported via the channel concept -- it's not physically wired.
-> 
-I am sure there would be some other means to describe the same,
-so I would agree that it does not _have_ to be the way it is.
 
-Question is if there is a better way. Again, "io-channels" describes
-a group of io channels with a common purpose. Sure, that does not _have_
-to be described as a single property, but then I could argue that the same
-is true for "gpios" and probably many other properties.
+The GPADC was used by battery driver and thermal subsystem.
+In our local pre-DT branch battery driver reads channels 1 (battery
+temperature),
+7 (battery voltage), and 8 (battery backup voltage)
 
-Thanks,
-Guenter
+I'm guessing a consumer would be in some_board.dts, and describe it as
+    battery_consumer {
+            ....
+            io-channels = <&adc 1>, <&adc 7>, <&adc 8>;
+            ...
+    }
+
+The purpose of the channels is not arbitrary but dedicated to certain functions
+in twl6030.
+
+Regards,
+Sasha.
+
+>
+> Have I misunderstood something here?
+>
+> Thanks,
+> Mark.
+>
+> On Mon, Aug 19, 2013 at 12:29:25PM +0100, Oleksandr Kozaruk wrote:
+>> Add required documentation for twl6030 GPADC device tree
+>> bindings.
+>>
+>> Signed-off-by: Oleksandr Kozaruk <oleksandr.kozaruk@ti.com>
+>> ---
+>>  .../devicetree/bindings/iio/adc/twl6030-gpadc.txt  | 45 ++++++++++++++++++++++
+>>  1 file changed, 45 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/twl6030-gpadc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/twl6030-gpadc.txt b/Documentation/devicetree/bindings/iio/adc/twl6030-gpadc.txt
+>> new file mode 100644
+>> index 0000000..6cd3ef3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/twl6030-gpadc.txt
+>> @@ -0,0 +1,45 @@
+>> +Texas Instruments twl6030/twl6032 GPADC device driver
+>> +
+>> +Required properties:
+>> +     - compatible: must be "ti,twl6030-gpadc" for TWL6030 or
+>> +       "ti,twl6032-gpadc" for TWL6032
+>> +     - interrupts: interrupt number associated with it
+>> +     - #io-channel-cells: must be <1> - multiple IIO outputs are present
+>> +       iio consumers can use following io-channels:
+>> +             twl6030:
+>> +                     0 - battery type
+>> +                     1 - battery temperature resistor value
+>> +                     2 - audio accessory/general purpose
+>> +                     3 - general purpose
+>> +                     4 - temperature/general purpose
+>> +                     5 - general purpose
+>> +                     6 - general purpose
+>> +                     7 - main battery
+>> +                     8 - backup battery
+>> +                     9 - charger input
+>> +                     10 - VBUS
+>> +                     11 - VBUS charging current
+>> +                     14 - USB ID
+>> +             twl6032:
+>> +                     0 - battery type
+>> +                     1 - battery temperature resistor value
+>> +                     2 - audio accessory/general purpose
+>> +                     3 - temperature with external diode/general purpose
+>> +                     4 - temperature/general purpose
+>> +                     5 - general purpose
+>> +                     6 - general purpose
+>> +                     7 - system supply
+>> +                     8 - backup battery
+>> +                     9 - charger input
+>> +                     10 - VBUS
+>> +                     11 - VBUS charging current
+>> +                     14 - USB ID
+>> +                     17 - battery charging current
+>> +                     18 - battery voltage
+>> +
+>> +Example:
+>> +     adc {
+>> +             compatible = "ti,twl6030-gpadc";
+>> +             interrupts = <3>;
+>> +             #io-channel-cells = <1>;
+>> +     };
+>> --
+>> 1.8.1.2
+>>
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
+
+
+-- 
+Regards,
+Oleksandr Kozaruk | embedded developer
+GlobalLogic
+M +38.067.944.7905
+www.globallogic.com
+
+http://www.globallogic.com/email_disclaimer.txt
