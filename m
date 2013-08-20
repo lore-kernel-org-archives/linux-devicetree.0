@@ -1,483 +1,285 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pd0-f169.google.com ([209.85.192.169]:54598 "EHLO
-	mail-pd0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752304Ab3HUGf7 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 02:35:59 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v7 13/13] V4L: Add driver for s5k4e5 image sensor
-Date: Wed, 21 Aug 2013 12:04:40 +0530
-Message-Id: <1377066881-5423-14-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
-References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
+Received: from www.linutronix.de ([62.245.132.108]:57179 "EHLO
+	Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751367Ab3HTQgQ (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 12:36:16 -0400
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 04/11] usb: usb: dsps: update device tree bindings
+Date: Tue, 20 Aug 2013 18:35:46 +0200
+Message-Id: <1377016553-26478-5-git-send-email-bigeasy@linutronix.de>
+In-Reply-To: <1377016553-26478-1-git-send-email-bigeasy@linutronix.de>
+References: <1377016553-26478-1-git-send-email-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: Felipe Balbi <balbi@ti.com>
+Cc: linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds subdev driver for Samsung S5K4E5 raw image sensor.
-Like s5k6a3, it is also another fimc-is firmware controlled
-sensor. This minimal sensor driver doesn't do any I2C communications
-as its done by ISP firmware. It can be updated if needed to a
-regular sensor driver by adding the I2C communication.
+The support for both am335x-USB instances required changes to the device
+tree bindings. This patch reflects these changes in the bindings
+document.
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+v3…v4:
+- remove the child node for USB. This is driver specific on won't be
+  reflected in the device tree
+- use the "mentor" prefix instead of "mg".
+- use "dr_mode" istead of "mg,port-mode" for the port mode. The former
+  is used by a few other drivers.
+
+v2…v3:
+- use proper usb-phy nodes in evm, bone and evmsk device tree.
+
+v1…v2:
+- use mg prefix for the Metor Graphics specific attributes
+- use power in mA not in mA/2 as specifed in the USB2.0 specification
+- use usbX-phy instead of usbX_phy
+- use dma-controller instead of dma
+
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Ian Campbell <ian.campbell@citrix.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- .../devicetree/bindings/media/i2c/s5k4e5.txt       |   43 +++
- drivers/media/i2c/Kconfig                          |    8 +
- drivers/media/i2c/Makefile                         |    1 +
- drivers/media/i2c/s5k4e5.c                         |  361 ++++++++++++++++++++
- 4 files changed, 413 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/s5k4e5.txt
- create mode 100644 drivers/media/i2c/s5k4e5.c
+ .../devicetree/bindings/usb/am33xx-usb.txt         | 222 ++++++++++++++++++---
+ 1 file changed, 192 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/s5k4e5.txt b/Documentation/devicetree/bindings/media/i2c/s5k4e5.txt
-new file mode 100644
-index 0000000..5af462c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/s5k4e5.txt
-@@ -0,0 +1,43 @@
-+* Samsung S5K4E5 Raw Image Sensor
+diff --git a/Documentation/devicetree/bindings/usb/am33xx-usb.txt b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+index dc9dc8c..20c2ff2 100644
+--- a/Documentation/devicetree/bindings/usb/am33xx-usb.txt
++++ b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+@@ -1,35 +1,197 @@
+-AM33XX MUSB GLUE
+- - compatible : Should be "ti,musb-am33xx"
+- - reg : offset and length of register sets, first usbss, then for musb instances
+- - interrupts : usbss, musb instance interrupts in order
+- - ti,hwmods : must be "usb_otg_hs"
+- - multipoint : Should be "1" indicating the musb controller supports
+-   multipoint. This is a MUSB configuration-specific setting.
+- - num-eps : Specifies the number of endpoints. This is also a
+-   MUSB configuration-specific setting. Should be set to "16"
+- - ram-bits : Specifies the ram address size. Should be set to "12"
+- - port0-mode : Should be "3" to represent OTG. "1" signifies HOST and "2"
+-   represents PERIPHERAL.
+- - port1-mode : Should be "1" to represent HOST. "3" signifies OTG and "2"
+-   represents PERIPHERAL.
+- - power : Should be "250". This signifies the controller can supply up to
+-   500mA when operating in host mode.
++  AM33xx MUSB
++~~~~~~~~~~~~~~~
++- compatible: ti,am33xx-usb
++- reg: offset and length of the usbss register sets
++- ti,hwmods : must be "usb_otg_hs"
 +
-+S5K4E5 is a raw image sensor with maximum resolution of 2560x1920
-+pixels. Data transfer is carried out via MIPI CSI-2 port and controls
-+via I2C bus.
++The glue layer contains multiple child nodes. It is required the have
++at least a control module node, USB node and a PHY node. The second USB
++node and its PHY node is optional. The DMA node is also optional.
 +
-+Required Properties:
-+- compatible	: must be "samsung,s5k4e5"
-+- reg		: I2C device address
-+- gpios		: reset gpio pin
-+- clocks	: clock specifier for the clock-names property
-+- clock-names	: must contain "mclk" entry
-+- svdda-supply	: core voltage supply
-+- svddio-supply	: I/O voltage supply
++Reset module
++~~~~~~~~~~~~
++- compatible: ti,am335x-usb-ctrl-module
++- reg: offset and length of the "USB control registers" in the "Control
++  Module" block. A second offset and length for the USB wake up control
++  in the same memory block.
++- reg-names: "phy_ctrl" for the "USB control registers" and "wakeup" for
++  the USB wake up control register.
 +
-+Optional Properties:
-+- clock-frequency : operating frequency for the sensor
-+                    default value will be taken if not provided.
++USB PHY
++~~~~~~~
++compatible: ti,am335x-usb-phy
++reg: offset and length of the "USB PHY" register space
++ti,ctrl_mod: reference to the "reset module" node
++reg-names: phy
++The PHY should have a "phy" alias numbered properly in the alias
++node.
 +
-+The device node should be added to respective control bus controller
-+(e.g. I2C0) nodes and linked to the csis port node, using the common
-+video interfaces bindings, defined in video-interfaces.txt.
++USB
++~~~
++- compatible: ti,musb-am33xx
++- reg: offset and length of "USB Controller Registers", and offset and
++  length of "USB Core" register space.
++- reg-names: control for the ""USB Controller Registers" and "mc" for
++  "USB Core" register space
++- interrupts: USB interrupt number
++- interrupt-names: mc
++- dr_mode: Should be one of "host", "peripheral" or "otg".
++- mentor,multipoint: Should be "1" indicating the musb controller supports
++  multipoint. This is a MUSB configuration-specific setting.
++- mentor,num-eps: Specifies the number of endpoints. This is also a
++  MUSB configuration-specific setting. Should be set to "16"
++- mentor,ram-bits: Specifies the ram address size. Should be set to "12"
++- mentor,power: Should be "500". This signifies the controller can supply up to
++  500mA when operating in host mode.
++- phys: reference to the USB phy
++- dmas: specifies the dma channels
++- dma-names: specifies the names of the channels. Use "rxN" for receive
++  and "txN" for transmit endpoints. N specifies the endpoint number.
 +
-+Example:
++The controller should have an "usb" alias numbered properly in the alias
++node.
 +
-+	i2c-isp@13130000 {
-+		s5k4e5@20 {
-+			compatible = "samsung,s5k4e5";
-+			reg = <0x20>;
-+			gpios = <&gpx1 2 1>;
-+			clock-frequency = <24000000>;
-+			clocks = <&clock 129>;
-+			clock-names = "mclk";
-+			svdda-supply = <...>;
-+			svddio-supply = <...>;
-+			port {
-+				is_s5k4e5_ep: endpoint {
-+					data-lanes = <1 2 3 4>;
-+					remote-endpoint = <&csis0_ep>;
-+				};
-+			};
-+		};
-+	};
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index f7e9147..271028b 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -572,6 +572,14 @@ config VIDEO_S5K6A3
- 	  This is a V4L2 sensor-level driver for Samsung S5K6A3 raw
- 	  camera sensor.
++DMA
++~~~
++- compatible: ti,am3359-cppi41
++- reg: offset and length of the following register spaces: USBSS, USB
++  CPPI DMA Controller, USB CPPI DMA Scheduler, USB Queue Manager
++- reg-names: glue, controller, scheduler, queuemgr
++- #dma-cells: should be set to 2. The first number represents the
++  endpoint number (0 … 14 for endpoints 1 … 15 on instance 0 and 15 … 29
++  for endpoints 1 … 15 on instance 1). The second number is 0 for RX and
++  1 for TX transfers.
++- #dma-channels: should be set to 30 representing the 15 endpoints for
++  each USB instance.
  
-+config VIDEO_S5K4E5
-+	tristate "Samsung S5K4E5 sensor support"
-+	depends on MEDIA_CAMERA_SUPPORT
-+	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API && OF
-+	---help---
-+	  This is a V4L2 sensor-level driver for Samsung S5K4E5 raw
-+	  camera sensor.
+ Example:
++~~~~~~~~
++The following example contains all the nodes as used on am335x-evm:
 +
- config VIDEO_S5K4ECGX
-         tristate "Samsung S5K4ECGX sensor support"
-         depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index cf3cf03..0aeed8e 100644
---- a/drivers/media/i2c/Makefile
-+++ b/drivers/media/i2c/Makefile
-@@ -65,6 +65,7 @@ obj-$(CONFIG_VIDEO_SR030PC30)	+= sr030pc30.o
- obj-$(CONFIG_VIDEO_NOON010PC30)	+= noon010pc30.o
- obj-$(CONFIG_VIDEO_S5K6AA)	+= s5k6aa.o
- obj-$(CONFIG_VIDEO_S5K6A3)	+= s5k6a3.o
-+obj-$(CONFIG_VIDEO_S5K4E5)	+= s5k4e5.o
- obj-$(CONFIG_VIDEO_S5K4ECGX)	+= s5k4ecgx.o
- obj-$(CONFIG_VIDEO_S5C73M3)	+= s5c73m3/
- obj-$(CONFIG_VIDEO_ADP1653)	+= adp1653.o
-diff --git a/drivers/media/i2c/s5k4e5.c b/drivers/media/i2c/s5k4e5.c
-new file mode 100644
-index 0000000..0a6ece6
---- /dev/null
-+++ b/drivers/media/i2c/s5k4e5.c
-@@ -0,0 +1,361 @@
-+/*
-+ * Samsung S5K4E5 image sensor driver
-+ *
-+ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-+ * Author: Arun Kumar K <arun.kk@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/errno.h>
-+#include <linux/gpio.h>
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_gpio.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+#include <linux/videodev2.h>
-+#include <media/v4l2-async.h>
-+#include <media/v4l2-subdev.h>
-+
-+#define S5K4E5_SENSOR_MAX_WIDTH		2576
-+#define S5K4E5_SENSOR_MAX_HEIGHT	1930
-+
-+#define S5K4E5_SENSOR_ACTIVE_WIDTH	2560
-+#define S5K4E5_SENSOR_ACTIVE_HEIGHT	1920
-+
-+#define S5K4E5_SENSOR_MIN_WIDTH		(32 + 16)
-+#define S5K4E5_SENSOR_MIN_HEIGHT	(32 + 10)
-+
-+#define S5K4E5_DEF_WIDTH		1296
-+#define S5K4E5_DEF_HEIGHT		732
-+
-+#define S5K4E5_DRV_NAME			"S5K4E5"
-+#define S5K4E5_CLK_NAME			"mclk"
-+
-+#define S5K4E5_NUM_SUPPLIES		2
-+
-+#define S5K4E5_DEF_CLK_FREQ		24000000
-+
-+/**
-+ * struct s5k4e5 - s5k4e5 sensor data structure
-+ * @dev: pointer to this I2C client device structure
-+ * @subdev: the image sensor's v4l2 subdev
-+ * @pad: subdev media source pad
-+ * @supplies: image sensor's voltage regulator supplies
-+ * @gpio_reset: GPIO connected to the sensor's reset pin
-+ * @lock: mutex protecting the structure's members below
-+ * @format: media bus format at the sensor's source pad
-+ */
-+struct s5k4e5 {
-+	struct device *dev;
-+	struct v4l2_subdev subdev;
-+	struct media_pad pad;
-+	struct regulator_bulk_data supplies[S5K4E5_NUM_SUPPLIES];
-+	int gpio_reset;
-+	struct mutex lock;
-+	struct v4l2_mbus_framefmt format;
-+	struct clk *clock;
-+	u32 clock_frequency;
++aliases {
++	usb0 = &usb0;
++	usb1 = &usb1;
++	phy0 = &usb0_phy;
++	phy1 = &usb1_phy;
 +};
+ 
+-usb@47400000  {
+-	compatible = "ti,musb-am33xx";
+-	reg = <0x47400000 0x1000	/* usbss */
+-	       0x47401000 0x800		/* musb instance 0 */
+-	       0x47401800 0x800>;	/* musb instance 1 */
+-	interrupts = <17		/* usbss */
+-		      18		/* musb instance 0 */
+-		      19>;		/* musb instance 1 */
+-	multipoint = <1>;
+-	num-eps = <16>;
+-	ram-bits = <12>;
+-	port0-mode = <3>;
+-	port1-mode = <3>;
+-	power = <250>;
++usb: usb@47400000 {
++	compatible = "ti,am33xx-usb";
++	reg = <0x47400000 0x1000>;
++	ranges;
++	#address-cells = <1>;
++	#size-cells = <1>;
+ 	ti,hwmods = "usb_otg_hs";
 +
-+static const char * const s5k4e5_supply_names[] = {
-+	"svdda",
-+	"svddio"
-+};
++	ctrl_mod: control@44e10000 {
++		compatible = "ti,am335x-usb-ctrl-module";
++		reg = <0x44e10620 0x10
++			0x44e10648 0x4>;
++		reg-names = "phy_ctrl", "wakeup";
++	};
 +
-+static inline struct s5k4e5 *sd_to_s5k4e5(struct v4l2_subdev *sd)
-+{
-+	return container_of(sd, struct s5k4e5, subdev);
-+}
++	usb0_phy: usb-phy@47401300 {
++		compatible = "ti,am335x-usb-phy";
++		reg = <0x47401300 0x100>;
++		reg-names = "phy";
++		ti,ctrl_mod = <&ctrl_mod>;
++	};
 +
-+static const struct v4l2_mbus_framefmt s5k4e5_formats[] = {
-+	{
-+		.code = V4L2_MBUS_FMT_SGRBG10_1X10,
-+		.colorspace = V4L2_COLORSPACE_SRGB,
-+		.field = V4L2_FIELD_NONE,
-+	}
-+};
++	usb0: usb@47401000 {
++		compatible = "ti,musb-am33xx";
++		reg = <0x47401400 0x400
++			0x47401000 0x200>;
++		reg-names = "mc", "control";
 +
-+static const struct v4l2_mbus_framefmt *find_sensor_format(
-+	struct v4l2_mbus_framefmt *mf)
-+{
-+	int i;
++		interrupts = <18>;
++		interrupt-names = "mc";
++		dr_mode = "otg"
++		mentor,multipoint = <1>;
++		mentor,num-eps = <16>;
++		mentor,ram-bits = <12>;
++		mentor,power = <500>;
++		phys = <&usb0_phy>;
 +
-+	for (i = 0; i < ARRAY_SIZE(s5k4e5_formats); i++)
-+		if (mf->code == s5k4e5_formats[i].code)
-+			return &s5k4e5_formats[i];
++		dmas = <&cppi41dma  0 0 &cppi41dma  1 0
++			&cppi41dma  2 0 &cppi41dma  3 0
++			&cppi41dma  4 0 &cppi41dma  5 0
++			&cppi41dma  6 0 &cppi41dma  7 0
++			&cppi41dma  8 0 &cppi41dma  9 0
++			&cppi41dma 10 0 &cppi41dma 11 0
++			&cppi41dma 12 0 &cppi41dma 13 0
++			&cppi41dma 14 0 &cppi41dma  0 1
++			&cppi41dma  1 1 &cppi41dma  2 1
++			&cppi41dma  3 1 &cppi41dma  4 1
++			&cppi41dma  5 1 &cppi41dma  6 1
++			&cppi41dma  7 1 &cppi41dma  8 1
++			&cppi41dma  9 1 &cppi41dma 10 1
++			&cppi41dma 11 1 &cppi41dma 12 1
++			&cppi41dma 13 1 &cppi41dma 14 1>;
++		dma-names =
++			"rx1", "rx2", "rx3", "rx4", "rx5", "rx6", "rx7",
++			"rx8", "rx9", "rx10", "rx11", "rx12", "rx13",
++			"rx14", "rx15",
++			"tx1", "tx2", "tx3", "tx4", "tx5", "tx6", "tx7",
++			"tx8", "tx9", "tx10", "tx11", "tx12", "tx13",
++			"tx14", "tx15";
++	};
 +
-+	return &s5k4e5_formats[0];
-+}
++	usb1_phy: usb-phy@47401b00 {
++		compatible = "ti,am335x-usb-phy";
++		reg = <0x47401b00 0x100>;
++		reg-names = "phy";
++		ti,ctrl_mod = <&ctrl_mod>;
++	};
 +
-+static int s5k4e5_enum_mbus_code(struct v4l2_subdev *sd,
-+				  struct v4l2_subdev_fh *fh,
-+				  struct v4l2_subdev_mbus_code_enum *code)
-+{
-+	if (code->index >= ARRAY_SIZE(s5k4e5_formats))
-+		return -EINVAL;
++	usb1: usb@47401800 {
++		compatible = "ti,musb-am33xx";
++		reg = <0x47401c00 0x400
++			0x47401800 0x200>;
++		reg-names = "mc", "control";
++		interrupts = <19>;
++		interrupt-names = "mc";
++		dr_mode = "host"
++		mentor,multipoint = <1>;
++		mentor,num-eps = <16>;
++		mentor,ram-bits = <12>;
++		mentor,power = <500>;
++		phys = <&usb1_phy>;
 +
-+	code->code = s5k4e5_formats[code->index].code;
-+	return 0;
-+}
++		dmas = <&cppi41dma 15 0 &cppi41dma 16 0
++			&cppi41dma 17 0 &cppi41dma 18 0
++			&cppi41dma 19 0 &cppi41dma 20 0
++			&cppi41dma 21 0 &cppi41dma 22 0
++			&cppi41dma 23 0 &cppi41dma 24 0
++			&cppi41dma 25 0 &cppi41dma 26 0
++			&cppi41dma 27 0 &cppi41dma 28 0
++			&cppi41dma 29 0 &cppi41dma 15 1
++			&cppi41dma 16 1 &cppi41dma 17 1
++			&cppi41dma 18 1 &cppi41dma 19 1
++			&cppi41dma 20 1 &cppi41dma 21 1
++			&cppi41dma 22 1 &cppi41dma 23 1
++			&cppi41dma 24 1 &cppi41dma 25 1
++			&cppi41dma 26 1 &cppi41dma 27 1
++			&cppi41dma 28 1 &cppi41dma 29 1>;
++		dma-names =
++			"rx1", "rx2", "rx3", "rx4", "rx5", "rx6", "rx7",
++			"rx8", "rx9", "rx10", "rx11", "rx12", "rx13",
++			"rx14", "rx15",
++			"tx1", "tx2", "tx3", "tx4", "tx5", "tx6", "tx7",
++			"tx8", "tx9", "tx10", "tx11", "tx12", "tx13",
++			"tx14", "tx15";
++	};
 +
-+static void s5k4e5_try_format(struct v4l2_mbus_framefmt *mf)
-+{
-+	const struct v4l2_mbus_framefmt *fmt;
-+
-+	fmt = find_sensor_format(mf);
-+	mf->code = fmt->code;
-+	v4l_bound_align_image(&mf->width,
-+			S5K4E5_SENSOR_MIN_WIDTH, S5K4E5_SENSOR_MAX_WIDTH, 0,
-+			&mf->height,
-+			S5K4E5_SENSOR_MIN_HEIGHT, S5K4E5_SENSOR_MAX_HEIGHT, 0,
-+			0);
-+}
-+
-+static struct v4l2_mbus_framefmt *__s5k4e5_get_format(
-+		struct s5k4e5 *sensor, struct v4l2_subdev_fh *fh,
-+		u32 pad, enum v4l2_subdev_format_whence which)
-+{
-+	if (which == V4L2_SUBDEV_FORMAT_TRY)
-+		return fh ? v4l2_subdev_get_try_format(fh, pad) : NULL;
-+
-+	return &sensor->format;
-+}
-+
-+static int s5k4e5_set_fmt(struct v4l2_subdev *sd,
-+				  struct v4l2_subdev_fh *fh,
-+				  struct v4l2_subdev_format *fmt)
-+{
-+	struct s5k4e5 *sensor = sd_to_s5k4e5(sd);
-+	struct v4l2_mbus_framefmt *mf;
-+
-+	s5k4e5_try_format(&fmt->format);
-+
-+	mf = __s5k4e5_get_format(sensor, fh, fmt->pad, fmt->which);
-+	if (mf) {
-+		mutex_lock(&sensor->lock);
-+		if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE)
-+			*mf = fmt->format;
-+		mutex_unlock(&sensor->lock);
-+	}
-+	return 0;
-+}
-+
-+static int s5k4e5_get_fmt(struct v4l2_subdev *sd,
-+				  struct v4l2_subdev_fh *fh,
-+				  struct v4l2_subdev_format *fmt)
-+{
-+	struct s5k4e5 *sensor = sd_to_s5k4e5(sd);
-+	struct v4l2_mbus_framefmt *mf;
-+
-+	mf = __s5k4e5_get_format(sensor, fh, fmt->pad, fmt->which);
-+
-+	mutex_lock(&sensor->lock);
-+	fmt->format = *mf;
-+	mutex_unlock(&sensor->lock);
-+	return 0;
-+}
-+
-+static struct v4l2_subdev_pad_ops s5k4e5_pad_ops = {
-+	.enum_mbus_code	= s5k4e5_enum_mbus_code,
-+	.get_fmt	= s5k4e5_get_fmt,
-+	.set_fmt	= s5k4e5_set_fmt,
-+};
-+
-+static int s5k4e5_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	struct v4l2_mbus_framefmt *format = v4l2_subdev_get_try_format(fh, 0);
-+
-+	*format		= s5k4e5_formats[0];
-+	format->width	= S5K4E5_DEF_WIDTH;
-+	format->height	= S5K4E5_DEF_HEIGHT;
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_internal_ops s5k4e5_sd_internal_ops = {
-+	.open = s5k4e5_open,
-+};
-+
-+static int s5k4e5_s_power(struct v4l2_subdev *sd, int on)
-+{
-+	struct s5k4e5 *sensor = sd_to_s5k4e5(sd);
-+	int gpio = sensor->gpio_reset;
-+	int ret = 0;
-+
-+	if (on) {
-+		sensor->clock = clk_get(sensor->dev, S5K4E5_CLK_NAME);
-+		if (IS_ERR(sensor->clock))
-+			return PTR_ERR(sensor->clock);
-+
-+		ret = clk_set_rate(sensor->clock, sensor->clock_frequency);
-+		if (ret < 0)
-+			goto clk_put;
-+
-+		ret = pm_runtime_get(sensor->dev);
-+		if (ret < 0)
-+			goto clk_put;
-+
-+		ret = regulator_bulk_enable(S5K4E5_NUM_SUPPLIES,
-+					    sensor->supplies);
-+		if (ret < 0)
-+			goto rpm_put;
-+
-+		ret = clk_prepare_enable(sensor->clock);
-+		if (ret < 0)
-+			goto reg_dis;
-+
-+		if (gpio_is_valid(gpio)) {
-+			gpio_set_value(gpio, 1);
-+			usleep_range(600, 800);
-+			gpio_set_value(gpio, 0);
-+			usleep_range(10000, 11000);
-+			gpio_set_value(gpio, 1);
-+		}
-+
-+		/* Delay needed for the sensor initialization */
-+		msleep(20);
-+	} else {
-+		if (gpio_is_valid(gpio))
-+			gpio_set_value(gpio, 0);
-+
-+		clk_disable_unprepare(sensor->clock);
-+reg_dis:
-+		regulator_bulk_disable(S5K4E5_NUM_SUPPLIES,
-+						sensor->supplies);
-+rpm_put:
-+		pm_runtime_put(sensor->dev);
-+clk_put:
-+		clk_put(sensor->clock);
-+	}
-+	return ret;
-+}
-+
-+static struct v4l2_subdev_core_ops s5k4e5_core_ops = {
-+	.s_power = s5k4e5_s_power,
-+};
-+
-+static struct v4l2_subdev_ops s5k4e5_subdev_ops = {
-+	.core = &s5k4e5_core_ops,
-+	.pad = &s5k4e5_pad_ops,
-+};
-+
-+static int s5k4e5_probe(struct i2c_client *client,
-+				const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct s5k4e5 *sensor;
-+	struct v4l2_subdev *sd;
-+	int gpio, i, ret;
-+
-+	sensor = devm_kzalloc(dev, sizeof(*sensor), GFP_KERNEL);
-+	if (!sensor)
-+		return -ENOMEM;
-+
-+	mutex_init(&sensor->lock);
-+	sensor->gpio_reset = -EINVAL;
-+	sensor->clock = ERR_PTR(-EINVAL);
-+	sensor->dev = dev;
-+
-+	gpio = of_get_gpio_flags(dev->of_node, 0, NULL);
-+	if (gpio_is_valid(gpio)) {
-+		ret = devm_gpio_request_one(dev, gpio, GPIOF_OUT_INIT_LOW,
-+							S5K4E5_DRV_NAME);
-+		if (ret < 0)
-+			return ret;
-+	}
-+	sensor->gpio_reset = gpio;
-+
-+	if (of_property_read_u32(dev->of_node, "clock-frequency",
-+				 &sensor->clock_frequency)) {
-+		/* Fallback to default value */
-+		sensor->clock_frequency = S5K4E5_DEF_CLK_FREQ;
-+	}
-+
-+	for (i = 0; i < S5K4E5_NUM_SUPPLIES; i++)
-+		sensor->supplies[i].supply = s5k4e5_supply_names[i];
-+
-+	ret = devm_regulator_bulk_get(&client->dev, S5K4E5_NUM_SUPPLIES,
-+				      sensor->supplies);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Defer probing if the clock is not available yet */
-+	sensor->clock = clk_get(dev, S5K4E5_CLK_NAME);
-+	if (IS_ERR(sensor->clock))
-+		return -EPROBE_DEFER;
-+
-+	sd = &sensor->subdev;
-+	v4l2_i2c_subdev_init(sd, client, &s5k4e5_subdev_ops);
-+	sensor->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+
-+	sensor->format.code = s5k4e5_formats[0].code;
-+	sensor->format.width = S5K4E5_DEF_WIDTH;
-+	sensor->format.height = S5K4E5_DEF_HEIGHT;
-+
-+	sensor->pad.flags = MEDIA_PAD_FL_SOURCE;
-+	ret = media_entity_init(&sd->entity, 1, &sensor->pad, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	pm_runtime_no_callbacks(dev);
-+	pm_runtime_enable(dev);
-+
-+	ret = v4l2_async_register_subdev(sd);
-+
-+	/*
-+	 * Don't hold reference to the clock to avoid circular dependency
-+	 * between the subdev and the host driver, in case the host is
-+	 * a supplier of the clock.
-+	 * clk_get()/clk_put() will be called in s_power callback.
-+	 */
-+	clk_put(sensor->clock);
-+
-+	return ret;
-+}
-+
-+static int s5k4e5_remove(struct i2c_client *client)
-+{
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+
-+	v4l2_async_unregister_subdev(sd);
-+	media_entity_cleanup(&sd->entity);
-+	return 0;
-+}
-+
-+static const struct i2c_device_id s5k4e5_ids[] = {
-+	{ }
-+};
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id s5k4e5_of_match[] = {
-+	{ .compatible = "samsung,s5k4e5" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, s5k4e5_of_match);
-+#endif
-+
-+static struct i2c_driver s5k4e5_driver = {
-+	.driver = {
-+		.of_match_table	= of_match_ptr(s5k4e5_of_match),
-+		.name		= S5K4E5_DRV_NAME,
-+		.owner		= THIS_MODULE,
-+	},
-+	.probe		= s5k4e5_probe,
-+	.remove		= s5k4e5_remove,
-+	.id_table	= s5k4e5_ids,
-+};
-+
-+module_i2c_driver(s5k4e5_driver);
-+
-+MODULE_DESCRIPTION("S5K4E5 image sensor subdev driver");
-+MODULE_AUTHOR("Arun Kumar K <arun.kk@samsung.com>");
-+MODULE_LICENSE("GPL v2");
++	cppi41dma: dma-controller@07402000 {
++		compatible = "ti,am3359-cppi41";
++		reg =  <0x47400000 0x1000
++			0x47402000 0x1000
++			0x47403000 0x1000
++			0x47404000 0x4000>;
++		reg-names = "glue", "controller", "scheduler", "queuemgr";
++		interrupts = <17>;
++		interrupt-names = "glue";
++		#dma-cells = <2>;
++		#dma-channels = <30>;
++		#dma-requests = <256>;
++	};
+ };
 -- 
-1.7.9.5
+1.8.4.rc2
 
