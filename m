@@ -1,99 +1,79 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
-Date: Tue, 20 Aug 2013 07:26:32 -0500
-Message-ID: <20130820122632.GS26587@radagast>
-References: <20130720220006.GA7977@kroah.com> <520A2100.6000709@ti.com>
- <520AB0F0.8010106@gmail.com> <2128883.KpgODjXPJQ@flatron>
- <520B9C9E.8010002@ti.com> <5211ACE9.3040302@ti.com>
-Reply-To: balbi@ti.com
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v5 0/4] mtd:nand:omap2: clean-up of supported ECC schemes
+Date: Tue, 20 Aug 2013 13:20:22 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9F781B@DBDE04.ent.ti.com>
+References: <1373748891-7779-1-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6784016741301035164=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5211ACE9.3040302@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, Tomasz Figa <t.figa@samsung.com>, nsekhar@ti.com, Tomasz Figa <tomasz.figa@gmail.com>, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, Alan Stern <stern@rowland.harvard.edu>, grant.likely@linaro.org, linux-media@vger.kernel.org, george.cherian@ti.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, akpm@linux-foundation.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1373748891-7779-1-git-send-email-pekon@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "dedekind1@gmail.com" <dedekind1@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, "tony@atomide.com" <tony@atomide.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
---===============6784016741301035164==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MET8MpPxp2u2c48q"
-Content-Disposition: inline
-
---MET8MpPxp2u2c48q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Aug 19, 2013 at 10:58:09AM +0530, Kishon Vijay Abraham I wrote:
-> >> So maybe let's stop solving an already solved problem and just state t=
-hat=20
-> >> you need to explicitly assign device ID to use this framework?
-> >=20
-> > Felipe,
-> > Can we have it the way I had in my v10 patch series till we find a bett=
-er way?
-> > I think this *non-dt* stuff shouldn't be blocking as most of the users =
-are dt only?
-
-I don't have a lot of things against it, but preventing driver authors
-to use PLATFORM_DEVID_AUTO just to use the framework is likely going to
-piss some people off.
-
-Perhaps we can start with this approach and fix things later ? At least
-it ungates all the PHY drivers which are depending on this framework
-(quite a few already). If everybody agrees with this approach, I'd be ok
-with it too.
-
-cheers
-
---=20
-balbi
-
---MET8MpPxp2u2c48q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSE2B4AAoJEIaOsuA1yqREd3gP+wRMRCFi5PMZScsqh3zwf+14
-Cq/VFvWySbx+P+bh4TS9scGnTq+AaFlrrWjiYaPSWKy7teJcvSj+Y8+o+W3VVkeX
-9yzuhSbHnJzBjxqpyEzb1hqtfkiCTQc8HcH/YkIj/yoszIrr3HHz+NgTmXjpcum3
-szWpw9gPRo9AT9caOhaDU91bSc8PdZc9mBzPgw7WUfJrf008SfUmhKiOpzvNfht2
-nN/mp250zfFDZHHu5fRMWhfUH6+uVYEYM+P8IZMwA0Dvne0RYEuE7Pps8a0M9/dx
-E/RS7I7TDphIC/CtuNkaUFyHXZGg4CVSXJF42iAI0vFy9jIvoXtzgrVcxXPgGV7P
-FX0KHzGK/0k91zH/zRmVUgqXX5l7OrjzrFeh5UAYlkbhM98PoruwBmwAnDQ1z9Xy
-VWKS6N1qUOA/D3zL1HqQpQ6scXYSXmcNju4oVU6aLgxvnMK/8uLX9FwhrOeZhzdN
-HHJ7Va7l2VqYug3eq8uAvBaD/VeDnCdQem/tjQfew9P2J29pcrmVzqPRYxAylduZ
-hKs/bL5X5/Pzlj4Ox6dGYk/UKfN5ZgphUDd9TW9dagMGX/WGELPi86xsAgwXHu7R
-FPf4PeQbfkld1qj1KU+PWCFhspFVMqn/p2kb8NV/HPR/f42I82NUuGNjAFoYxbnf
-yQuryiSSHIxte8/C3LK/
-=iA/Q
------END PGP SIGNATURE-----
-
---MET8MpPxp2u2c48q--
-
-
---===============6784016741301035164==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6784016741301035164==--
+SGkgQXJ0ZW0sIEJyaWFuLA0KDQo+IA0KPiBDaGFuZ2VzIHY0IC0+IHY1DQo+IC0gUmViYXNlZCB0
+byBsaW51eC1uZXh0DQo+IElNUE9SVEFOVDogTmVlZCB0byByZXZlcnQgY29tbWl0IGZiMTU4NWIs
+IFtQQVRDSCAyLzRdIHBhcnQgb2YgcHJldmlvdXMNCj4gdmVyc2lvbg0KPiAJaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10ZC8yMDEzLUp1bHkvMDQ3NDQxLmh0bWwN
+Cj4gDQo+IC0gU3dhcHBlZCBQQVRDSC0xICYgUEFUQ0gtMiB0byBtYWludGFpbiBiaXNlY3RpYmls
+aXR5ICYgY29tcGlsYXRpb24NCj4gZGVwZW5kZW5jeQ0KPiAJaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvcGlwZXJtYWlsL2xpbnV4LW10ZC8yMDEzLUp1bHkvMDQ3NDYxLmh0bWwNCj4gDQo+IC0g
+UEFUQ0gtMjogcmUtb3JkZXJlZCBjYWxsIHRvIGlzX2VsbV9wcmVzZW50KCkgZm9yIGxhdGVyIHVw
+ZGF0ZXMgRUxNIGRyaXZlcg0KPiAJLSBkcm9wcGVkIGNoYW5nZXMgaW4gaW5jbHVkZS9saW51eC9w
+bGF0Zm9ybV9kYXRhL2VsbS5oIChub3QNCj4gbmVlZGVkKQ0KPiAtIFBBVENILTM6IHJlLW9yZGVy
+ZWQgY2FsbCB0byBpc19lbG1fcHJlc2VudCgpIGZvciBsYXRlciB1cGRhdGVzIEVMTSBkcml2ZXIN
+Cj4gLSBSZS1mb3JtYXRlZCBwYXRjaCBkZXNjcmlwdGlvbiAocmVwbGFjZWQgdGFicyB3aXRoIHdo
+aXRlLXNwYWNlcykNCj4gDQo+IA0KPiBDaGFuZ2VzIHYzIC0+IHY0DQo+IChSZXNlbnQgd2l0aCBD
+QzogZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcpDQo+IC0gW1BhdGNoIDEvM10g
+cmVtb3ZlZCBNVERfTkFORF9PTUFQX0JDSDggJg0KPiBNVERfTkFORF9PTUFQX0JDSDQgZnJvbSBu
+YW5kL0tjb25maWcNCj4gCUVDQyBzY2hlbWUgc2VsZWN0YWJsZSB2aWEgbmFuZCBEVCAobmFuZC1l
+Y2Mtb3B0KS4NCj4gLSBbKl0gcmViYXNlZCBmb3IgbDItbXRkLmdpdA0KPiANCj4gDQo+IENoYW5n
+ZXMgdjIgLT4gdjMNCj4gKFJlc2VudCB3aXRoIEF1dGhvciBOYW1lIGZpeGVkKQ0KPiAtIFBBVENI
+LTE6IHJlLWFycmFuZ2VkIGNvZGUgdG8gcmVtb3ZlIHJlZHVuZGFuY3ksIGFkZGVkDQo+IE5BTkRf
+QlVTV0lEVEhfQVVUTw0KPiAtIFBBVENILTI6IHVwZGF0ZWQgbmFuZC1lY2Mtb3B0IERUIG1hcHBp
+bmcgYW5kIERvY3VtZW50YXRpb24NCj4gLSBQQVRDSC0zOiBjb2RlLWNsZWFuaW5nICsgY2hhbmdl
+cyB0byBtYXRjaCBQQVRDSC0xDQo+IC0gUEFUQ0gtNCA8RFJPUFBFRD4gdXBkYXRlIERUIGF0dHJp
+YnV0ZSBmb3IgdGksbmFuZC1lY2Mtb3B0DQo+IAktIHJlY2VpdmVkIGZlZWRiYWNrIHRvIGtlZXAg
+RFQgbWFwcGluZyBpbmRlcGVuZGVudCBvZiBsaW51eGlzbQ0KPiAtIFBBVENILTQ6PE5FVz4gOiBB
+Uk06IGR0czogQU0zM3h4OiB1cGRhdGVkIGRlZmF1bHQgRUNDIHNjaGVtZSBpbiBuYW5kLQ0KPiBl
+Y2Mtb3B0DQo+IAktIGluZGVwZW5kZW50IHBhdGNoIGZvciBBTTMzNXgtZXZtLmR0cyB1cGRhdGUg
+YmFzZWQgb24gUEFUQ0gtMg0KPiANCj4gDQo+IENoYW5nZXMgdjEgLT4gdjINCj4gCWFkZGVkIAlb
+UEFUQ0ggMy80XSBhbmQgW1BBVENIIDQvNF0NCj4gDQo+IA0KPiBQYXRjaGVzIGluIHRoaXMgc2Vy
+aWVzOg0KPiBbUEFUQ0ggMS80XS0+W1BBVENIIHY1IDIvNF06IGNsZWFuLXVwIGFuZCBvcHRpbWl6
+YXRpb24gZm9yIHN1cHBvcnRlZCBFQ0MNCj4gc2NoZW1lcy4NCj4gW1BBVENIIDIvNF0tPltQQVRD
+SCB2NSAxLzRdOiBhZGQgc2VwYXJhdGUgRFQgb3B0aW9ucyBlYWNoIHN1cHBvcnRlZCBFQ0MNCj4g
+c2NoZW1lLg0KPiBbUEFUQ0ggMy80XTogdXBkYXRlIEJDSDQgRUNDIGltcGxlbWVudGF0aW9uICh1
+c2luZyBFTE0gb3IgdXNpbmcgbGliL2JjaC5oKQ0KPiBbUEFUQ0ggNC80XTogQVJNOiBkdHM6IEFN
+MzN4eDogdXBkYXRlZCBkZWZhdWx0IEVDQyBzY2hlbWUgaW4gbmFuZC1lY2MtDQo+IG9wdA0KPiAN
+Cj4gQWZ0ZXIgdGhpcyBwYXRjaCBzZXJpZXMsIG9tYXAyLW5hbmQgZHJpdmVyIHdpbGwgc3VwcG9y
+dHMgZm9sbG93aW5nIEVDQw0KPiBzY2hlbWVzOg0KPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0rDQo+IHwgRUND
+IHNjaGVtZSAgICAgICAgICAgICAgICAgICAgICAgICAgICB8RUNDIGNhbGN1bGF0aW9ufEVycm9y
+IGRldGVjdGlvbnwNCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSst
+LS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tKw0KPiB8T01BUF9FQ0NfSEFNTUlOR19DT0RF
+X0RFRkFVTFQgICAgICAgICAgfFMvVyAgICAgICAgICAgIHxTL1cgICAgICAgICAgICB8DQo+IHxP
+TUFQX0VDQ19IQU1NSU5HX0NPREVfSFcgICAgICAgICAgICAgICB8SC9XIChHUE1DKSAgICAgfFMv
+VyAgICAgICAgICAgIHwNCj4gfE9NQVBfRUNDX0hBTU1JTkdfQ09ERV9IV19ST01DT0RFICAgICAg
+IHxIL1cgKEdQTUMpICAgICB8Uy9XDQo+IHwNCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tKw0KPiB8T01BUF9F
+Q0NfQkNINF9DT0RFX0hXX0RFVEVDVElPTl9TVyAgICAgfEgvVyAoR1BNQykgICAgIHxTL1cNCj4g
+KGxpYi9iY2guaCl8DQo+IHxPTUFQX0VDQ19CQ0g0X0NPREVfSFcgICAgICAgICAgICAgICAgICB8
+SC9XIChHUE1DKSAgICAgfEgvVyAoRUxNKSAgICAgIHwNCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tKw0KPiB8
+T01BUF9FQ0NfQkNIOF9DT0RFX0hXX0RFVEVDVElPTl9TVyAgICAgfEgvVyAoR1BNQykgICAgIHxT
+L1cNCj4gKGxpYi9iY2guaCl8DQo+IHxPTUFQX0VDQ19CQ0g4X0NPREVfSFcgICAgICAgICAgICAg
+ICAgICB8SC9XIChHUE1DKSAgICAgfEgvVyAoRUxNKSAgICAgIHwNCj4gKy0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0t
+Kw0KPiAtIFNlbGVjdGlvbiBvZiBPTUFQX0VDQ19CQ0h4X0NPREVfSFdfREVURUNUSU9OX1NXIHJl
+cXVpcmVzLA0KPiAJS2NvbmZpZzogQ09ORklHX01URF9OQU5EX0VDQ19CQ0g6IGVuYWJsZXMgUy9X
+IGJhc2VkIEJDSA0KPiBFQ0MgYWxnb3JpdGhtLg0KPiANCj4gLSBTZWxlY3Rpb24gb2YgT01BUF9F
+Q0NfQkNIeF9DT0RFX0hXIHJlcXVpcmVzLA0KPiAJS2NvbmZpZzogQ09ORklHX01URF9OQU5EX09N
+QVBfQkNIOiBlbmFibGVzIEVMTSBIL1cNCj4gbW9kdWxlLg0KPiANCg0KUmVxdWVzdCB0byBwbGVh
+c2UgcGljay11cCB0aGlzIHBhdGNoIHNlcmllcywgYXMgZm9sbG93aW5nIHR3byBtb3JlDQpwYXRj
+aCBzZXJpZXMgcXVldWVkIHVwIGRlcGVuZGluZyBvbiB0aGlzLg0KDQpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtbXRkLzIwMTMtSnVseS8wNDc1MzguaHRtbA0KDQpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtbXRkLzIwMTMtSnVseS8w
+NDc1NjIuaHRtbA0KDQoNCndpdGggcmVnYXJkcywgcGVrb24NCg==
