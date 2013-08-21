@@ -1,59 +1,81 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mailout3.w1.samsung.com ([210.118.77.13]:42013 "EHLO
-	mailout3.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751087Ab3HSKzl (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 06:55:41 -0400
-Message-id: <5211F99A.6070902@samsung.com>
-Date: Mon, 19 Aug 2013 12:55:22 +0200
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-MIME-version: 1.0
-Subject: Re: [PATCH/RFC v4 3/3] DT: Add documentation for gp2ap020a00f sensor
-References: <1376658760-3459-1-git-send-email-j.anaszewski@samsung.com>
- <1376659687.11176.3.camel@hornet>
-In-reply-to: <1376659687.11176.3.camel@hornet>
-Content-type: text/plain; charset=UTF-8
-Content-transfer-encoding: 7bit
+Received: from bear.ext.ti.com ([192.94.94.41]:60865 "EHLO bear.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752290Ab3HUOco (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 21 Aug 2013 10:32:44 -0400
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 5/5] arm: omap2plus_defconfig: enable dwc3 and dependencies
+Date: Wed, 21 Aug 2013 20:01:34 +0530
+Message-ID: <1377095494-15380-6-git-send-email-kishon@ti.com>
+In-Reply-To: <1377095494-15380-1-git-send-email-kishon@ti.com>
+References: <1377095494-15380-1-git-send-email-kishon@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jic23@kernel.org" <jic23@kernel.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Rutland <Mark.Rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>
+To: bcousson@baylibre.com, tony@atomide.com, balbi@ti.com
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, linux@arm.linux.org.uk, javier.martinez@collabora.co.uk, devicetree@vger.kernel.org, kishon@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/16/2013 03:28 PM, Pawel Moll wrote:
-> On Fri, 2013-08-16 at 14:12 +0100, Jacek Anaszewski wrote:
->> diff --git a/Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt b/Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt
->> new file mode 100644
->> index 0000000..e4f377d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt
->> @@ -0,0 +1,20 @@
->> +* Sharp GP2AP020A00F I2C Proximity/ALS sensor
->> +
->> +Required properties:
->> +
->> +  - compatible : should be "sharp,gp2ap020a00f"
->> +  - reg : the I2C address of the light sensor
->> +  - interrupt-parent : phandle to the parent interrupt controller
->> +  - interrupts : should be INT interrupt pin
+From: Felipe Balbi <balbi@ti.com>
 
-This seems a bit misleading, perhaps:
+DWC3 enables USB3 functionality for OMAP5 boards,
+it's safe to enable those drivers in omap2plus_defconfig.
 
-interrupts : should be interrupt number the INT pin interrupt is routed to
+Signed-off-by: Felipe Balbi <balbi@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/configs/omap2plus_defconfig |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-?
-> Any particular reason for the interrupt-parent being required? Couldn't
-> it be inherited, as is happens in most cases?
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index 5339e6a..aed3cce 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -81,6 +81,7 @@ CONFIG_CMA=y
+ CONFIG_CONNECTOR=y
+ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
++CONFIG_OMAP_OCP2SCP=y
+ CONFIG_MTD=y
+ CONFIG_MTD_CMDLINE_PARTS=y
+ CONFIG_MTD_CHAR=y
+@@ -167,9 +168,11 @@ CONFIG_THERMAL_GOV_USER_SPACE=y
+ CONFIG_CPU_THERMAL=y
+ CONFIG_OMAP_WATCHDOG=y
+ CONFIG_TWL4030_WATCHDOG=y
++CONFIG_MFD_PALMAS=y
+ CONFIG_MFD_TPS65217=y
+ CONFIG_MFD_TPS65910=y
+ CONFIG_TWL6040_CORE=y
++CONFIG_REGULATOR_PALMAS=y
+ CONFIG_REGULATOR_TWL4030=y
+ CONFIG_REGULATOR_TPS65023=y
+ CONFIG_REGULATOR_TPS6507X=y
+@@ -222,10 +225,14 @@ CONFIG_USB_MON=y
+ CONFIG_USB_WDM=y
+ CONFIG_USB_STORAGE=y
+ CONFIG_USB_LIBUSUAL=y
++CONFIG_USB_DWC3=m
++CONFIG_USB_DWC3_OMAP=m
+ CONFIG_USB_TEST=y
+ CONFIG_USB_PHY=y
+ CONFIG_NOP_USB_XCEIV=y
+ CONFIG_USB_GADGET=y
++CONFIG_OMAP_USB2=y
++CONFIG_OMAP_USB3=y
+ CONFIG_USB_GADGET_DEBUG=y
+ CONFIG_USB_GADGET_DEBUG_FILES=y
+ CONFIG_USB_GADGET_DEBUG_FS=y
+@@ -258,6 +265,8 @@ CONFIG_TI_THERMAL=y
+ CONFIG_OMAP4_THERMAL=y
+ CONFIG_OMAP5_THERMAL=y
+ CONFIG_DRA752_THERMAL=y
++CONFIG_EXTCON=y
++CONFIG_EXTCON_PALMAS=y
+ CONFIG_EXT2_FS=y
+ CONFIG_EXT3_FS=y
+ # CONFIG_EXT3_FS_XATTR is not set
+-- 
+1.7.10.4
 
-I think this was intended for the cases when the sensor is connected
-to a GPIO and the GPIO interrupt controller is used. For example on
-the Exynos SoCs with each GPIO bank is associated separate interrupt
-controller instance (see arch/arm/boot/dts/exynos4210-pinctrl.dtsi
-for details). Thus one of those interrupt controllers need to be
-selected by dts, rather than inheriting the GIC.
-
-I'm not sure if "interrupt-parent" needs to be part of DT binding of
-this sensor device. Perhaps it could be an optional property or should
-it be dropped completely ? I guess it should be considered as part
-of the interrupt controller binding ?
-
-Thanks,
-Sylwester
