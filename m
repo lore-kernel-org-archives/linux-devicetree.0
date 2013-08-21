@@ -1,252 +1,66 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db8lp0189.outbound.messaging.microsoft.com ([213.199.154.189]:27034
-	"EHLO db8outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750810Ab3HSIZJ (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Mon, 19 Aug 2013 04:25:09 -0400
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v7 2/2] ASoC: fsl: Add S/PDIF machine driver
-Date: Mon, 19 Aug 2013 16:35:22 +0800
-Message-ID: <e7ceef74714bb4ead624b333ee3969225b4c5cb5.1376901081.git.b42378@freescale.com>
-In-Reply-To: <cover.1376901081.git.b42378@freescale.com>
-References: <cover.1376901081.git.b42378@freescale.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:50603 "EHLO
+	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752196Ab3HUGfx (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 02:35:53 -0400
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v7 12/13] V4L: s5k6a3: Change sensor min/max resolutions
+Date: Wed, 21 Aug 2013 12:04:39 +0530
+Message-Id: <1377066881-5423-13-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
+References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, s.hauer@pengutronix.de
-Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, tomasz.figa@gmail.com, swarren@wwwdotorg.org, mark.rutland@arm.com, R65777@freescale.com
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch implements a device-tree-only machine driver for Freescale
-i.MX series Soc. It works with spdif_transmitter/spdif_receiver and
-fsl_spdif.c drivers.
+s5k6a3 sensor has actual pixel resolution of 1408x1402 against
+the active resolution 1392x1392. The real resolution is needed
+when raw sensor SRGB data is dumped to memory by fimc-lite.
 
-Signed-off-by: Nicolin Chen <b42378@freescale.com>
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
- .../devicetree/bindings/sound/imx-audio-spdif.txt  |   29 +++++
- sound/soc/fsl/Kconfig                              |   11 ++
- sound/soc/fsl/Makefile                             |    2 +
- sound/soc/fsl/imx-spdif.c                          |  134 ++++++++++++++++++++
- 4 files changed, 176 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
- create mode 100644 sound/soc/fsl/imx-spdif.c
+ drivers/media/i2c/s5k6a3.c |   19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt b/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
-new file mode 100644
-index 0000000..9a3fa26
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
-@@ -0,0 +1,29 @@
-+Freescale i.MX audio complex with S/PDIF transceiver
-+
-+Required properties:
-+
-+  - compatible : "fsl,imx-audio-spdif"
-+
-+  - model : The user-visible name of this sound complex
-+
-+  - spdif-controller : The phandle of the i.MX S/PDIF controller
-+
-+
-+Optional properties:
-+
-+  - spdif-transmitter : The phandle of the spdif-transmitter dummy codec
-+
-+  - spdif-receiver : The phandle of the spdif-receiver dummy codec
-+
-+* Note: At least one of these two properties should be set in the DT binding.
-+
-+
-+Example:
-+
-+sound-spdif {
-+	compatible = "fsl,imx-audio-spdif";
-+	model = "imx-spdif";
-+	spdif-controller = <&spdif>;
-+	spdif-transmitter = <&spdif_tx_codec>;
-+	spdif-receiver = <&spdif_rx_codec>;
-+};
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index cd088cc..a708380 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -193,6 +193,17 @@ config SND_SOC_IMX_SGTL5000
- 	  Say Y if you want to add support for SoC audio on an i.MX board with
- 	  a sgtl5000 codec.
+diff --git a/drivers/media/i2c/s5k6a3.c b/drivers/media/i2c/s5k6a3.c
+index ccbb4fc..34c3165 100644
+--- a/drivers/media/i2c/s5k6a3.c
++++ b/drivers/media/i2c/s5k6a3.c
+@@ -25,10 +25,12 @@
+ #include <media/v4l2-async.h>
+ #include <media/v4l2-subdev.h>
  
-+config SND_SOC_IMX_SPDIF
-+	tristate "SoC Audio support for i.MX boards with S/PDIF"
-+	select SND_SOC_IMX_PCM_DMA
-+	select SND_SOC_FSL_SPDIF
-+	select SND_SOC_FSL_UTILS
-+	select SND_SOC_SPDIF
-+	help
-+	  SoC Audio support for i.MX boards with S/PDIF
-+	  Say Y if you want to add support for SoC audio on an i.MX board with
-+	  a S/DPDIF.
-+
- config SND_SOC_IMX_MC13783
- 	tristate "SoC Audio support for I.MX boards with mc13783"
- 	depends on MFD_MC13783 && ARM
-diff --git a/sound/soc/fsl/Makefile b/sound/soc/fsl/Makefile
-index 4b5970e..e2aaff7 100644
---- a/sound/soc/fsl/Makefile
-+++ b/sound/soc/fsl/Makefile
-@@ -45,6 +45,7 @@ snd-soc-mx27vis-aic32x4-objs := mx27vis-aic32x4.o
- snd-soc-wm1133-ev1-objs := wm1133-ev1.o
- snd-soc-imx-sgtl5000-objs := imx-sgtl5000.o
- snd-soc-imx-wm8962-objs := imx-wm8962.o
-+snd-soc-imx-spdif-objs :=imx-spdif.o
- snd-soc-imx-mc13783-objs := imx-mc13783.o
+-#define S5K6A3_SENSOR_MAX_WIDTH		1392
+-#define S5K6A3_SENSOR_MAX_HEIGHT	1392
+-#define S5K6A3_SENSOR_MIN_WIDTH		32
+-#define S5K6A3_SENSOR_MIN_HEIGHT	32
++#define S5K6A3_SENSOR_MAX_WIDTH		1408
++#define S5K6A3_SENSOR_MAX_HEIGHT	1402
++#define S5K6A3_SENSOR_ACTIVE_WIDTH	1392
++#define S5K6A3_SENSOR_ACTIVE_HEIGHT	1392
++#define S5K6A3_SENSOR_MIN_WIDTH		(32 + 16)
++#define S5K6A3_SENSOR_MIN_HEIGHT	(32 + 10)
  
- obj-$(CONFIG_SND_SOC_EUKREA_TLV320) += snd-soc-eukrea-tlv320.o
-@@ -53,4 +54,5 @@ obj-$(CONFIG_SND_SOC_MX27VIS_AIC32X4) += snd-soc-mx27vis-aic32x4.o
- obj-$(CONFIG_SND_MXC_SOC_WM1133_EV1) += snd-soc-wm1133-ev1.o
- obj-$(CONFIG_SND_SOC_IMX_SGTL5000) += snd-soc-imx-sgtl5000.o
- obj-$(CONFIG_SND_SOC_IMX_WM8962) += snd-soc-imx-wm8962.o
-+obj-$(CONFIG_SND_SOC_IMX_SPDIF) += snd-soc-imx-spdif.o
- obj-$(CONFIG_SND_SOC_IMX_MC13783) += snd-soc-imx-mc13783.o
-diff --git a/sound/soc/fsl/imx-spdif.c b/sound/soc/fsl/imx-spdif.c
-new file mode 100644
-index 0000000..893f3d1
---- /dev/null
-+++ b/sound/soc/fsl/imx-spdif.c
-@@ -0,0 +1,134 @@
-+/*
-+ * Copyright (C) 2013 Freescale Semiconductor, Inc.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <sound/soc.h>
-+
-+struct imx_spdif_data {
-+	struct snd_soc_dai_link dai[2];
-+	struct snd_soc_card card;
-+};
-+
-+static int imx_spdif_audio_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *spdif_np, *codec_tx_np, *codec_rx_np;
-+	struct platform_device *spdif_pdev;
-+	struct imx_spdif_data *data;
-+	int ret = 0, num_links = 0;
-+
-+	spdif_np = of_parse_phandle(np, "spdif-controller", 0);
-+	if (!spdif_np) {
-+		dev_err(&pdev->dev, "failed to find spdif-controller\n");
-+		ret = -EINVAL;
-+		goto fail;
-+	}
-+
-+	spdif_pdev = of_find_device_by_node(spdif_np);
-+	if (!spdif_pdev) {
-+		dev_err(&pdev->dev, "failed to find S/PDIF device\n");
-+		ret = -EINVAL;
-+		goto fail;
-+	}
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data) {
-+		dev_err(&pdev->dev, "failed to allocate memory\n");
-+		ret = -ENOMEM;
-+		goto fail;
-+	}
-+
-+	codec_tx_np = of_parse_phandle(np, "spdif-transmitter", 0);
-+	if (codec_tx_np) {
-+		data->dai[num_links].name = "S/PDIF TX";
-+		data->dai[num_links].stream_name = "S/PDIF PCM Playback";
-+		data->dai[num_links].codec_dai_name = "dit-hifi";
-+		data->dai[num_links].codec_of_node = codec_tx_np;
-+		data->dai[num_links].cpu_of_node = spdif_np;
-+		data->dai[num_links].platform_of_node = spdif_np;
-+		num_links++;
-+	}
-+
-+	codec_rx_np = of_parse_phandle(np, "spdif-receiver", 0);
-+	if (codec_rx_np) {
-+		data->dai[num_links].name = "S/PDIF RX";
-+		data->dai[num_links].stream_name = "S/PDIF PCM Capture";
-+		data->dai[num_links].codec_dai_name = "dir-hifi";
-+		data->dai[num_links].codec_of_node = codec_rx_np;
-+		data->dai[num_links].cpu_of_node = spdif_np;
-+		data->dai[num_links].platform_of_node = spdif_np;
-+		num_links++;
-+	}
-+
-+	if (!num_links) {
-+		dev_err(&pdev->dev, "no enabled S/PDIF DAI link\n");
-+		goto fail;
-+	}
-+
-+	data->card.dev = &pdev->dev;
-+	data->card.num_links = num_links;
-+	data->card.dai_link = data->dai;
-+
-+	ret = snd_soc_of_parse_card_name(&data->card, "model");
-+	if (ret)
-+		goto fail;
-+
-+	ret = snd_soc_register_card(&data->card);
-+	if (ret) {
-+		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+fail:
-+	if (codec_tx_np)
-+		of_node_put(codec_tx_np);
-+	if (codec_rx_np)
-+		of_node_put(codec_rx_np);
-+	if (spdif_np)
-+		of_node_put(spdif_np);
-+
-+	return ret;
-+}
-+
-+static int imx_spdif_audio_remove(struct platform_device *pdev)
-+{
-+	struct imx_spdif_data *data = platform_get_drvdata(pdev);
-+
-+	snd_soc_unregister_card(&data->card);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id imx_spdif_dt_ids[] = {
-+	{ .compatible = "fsl,imx-audio-spdif", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, imx_spdif_dt_ids);
-+
-+static struct platform_driver imx_spdif_driver = {
-+	.driver = {
-+		.name = "imx-spdif",
-+		.owner = THIS_MODULE,
-+		.of_match_table = imx_spdif_dt_ids,
-+	},
-+	.probe = imx_spdif_audio_probe,
-+	.remove = imx_spdif_audio_remove,
-+};
-+
-+module_platform_driver(imx_spdif_driver);
-+
-+MODULE_AUTHOR("Freescale Semiconductor, Inc.");
-+MODULE_DESCRIPTION("Freescale i.MX S/PDIF machine driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:imx-spdif");
+ #define S5K6A3_DEF_PIX_WIDTH		1296
+ #define S5K6A3_DEF_PIX_HEIGHT		732
+@@ -107,10 +109,11 @@ static void s5k6a3_try_format(struct v4l2_mbus_framefmt *mf)
+ 
+ 	fmt = find_sensor_format(mf);
+ 	mf->code = fmt->code;
+-	v4l_bound_align_image(&mf->width, S5K6A3_SENSOR_MIN_WIDTH,
+-			      S5K6A3_SENSOR_MAX_WIDTH, 0,
+-			      &mf->height, S5K6A3_SENSOR_MIN_HEIGHT,
+-			      S5K6A3_SENSOR_MAX_HEIGHT, 0, 0);
++	v4l_bound_align_image(&mf->width,
++			S5K6A3_SENSOR_MIN_WIDTH, S5K6A3_SENSOR_MAX_WIDTH, 0,
++			&mf->height,
++			S5K6A3_SENSOR_MIN_HEIGHT, S5K6A3_SENSOR_MAX_HEIGHT, 0,
++			0);
+ }
+ 
+ static struct v4l2_mbus_framefmt *__s5k6a3_get_format(
 -- 
-1.7.1
-
+1.7.9.5
 
