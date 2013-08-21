@@ -1,58 +1,146 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from am1ehsobe005.messaging.microsoft.com ([213.199.154.208]:6387
-	"EHLO am1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1756194Ab3HOLhi (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Thu, 15 Aug 2013 07:37:38 -0400
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v5 0/2] Add freescale S/PDIF CPU DAI and machine drivers
-Date: Thu, 15 Aug 2013 19:26:38 +0800
-Message-ID: <cover.1376565456.git.b42378@freescale.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Received: from mail-pb0-f42.google.com ([209.85.160.42]:34015 "EHLO
+	mail-pb0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752357Ab3HUGe2 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 02:34:28 -0400
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v7 00/13] Exynos5 IS driver
+Date: Wed, 21 Aug 2013 12:04:27 +0530
+Message-Id: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, s.hauer@pengutronix.de
-Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-Changelog:
-v4->v5:
- * Dropped rx/tx-clksrc-names DT bindings.
- * Use standard clock binding instead to pass the clock source list.
- * Update the compatible list by using "imx35", the first SoC that has spdif.
-v3->v4:
- * Use regmap for CPU DAI driver.
- * Use individual clock source for 32KHz, 44KHz, 48KHz playback.
- * Determine clock source configuration from 'clocks' entry.
- * Added imx53 to compatible list, merged imx6q and imx6dl in the list.
- * Improve the algorism of reverse_bits().
- * Dropped the unneeded clk_put().
-v2->v3:
- * Removed a wrong tag from the commit of patch-1.
-v1->v2:
- * Dropped one applied patch for spdif dummy codec drivers.
- * Use generic DMA DT binding.
- * Let spdif controller driver calculate the clock div.
- * Added one optional clock source for spdif tx.
- * Reivsed documentation accordingly.
+The patch series add support for Exynos5 camera subsystem. It
+re-uses mipi-csis and fimc-lite from exynos4-is and adds a new
+media device and fimc-is device drivers for exynos5.
+The media device supports asynchronos subdev registration for the
+fimc-is sensors and is tested on top of the patch series from Sylwester
+for exynos4-is [1].
 
+[1] http://www.mail-archive.com/linux-media@vger.kernel.org/msg64653.html
 
-Nicolin Chen (2):
-  ASoC: fsl: Add S/PDIF CPU DAI driver
-  ASoC: fsl: Add S/PDIF machine driver
+Changes from v6
+---------------
+- Addressed DT binding doc review comments from Sylwester
+http://www.mail-archive.com/linux-media@vger.kernel.org/msg65771.html
+http://www.mail-archive.com/linux-media@vger.kernel.org/msg65772.html
 
- .../devicetree/bindings/sound/fsl,spdif.txt        |   76 ++
- .../devicetree/bindings/sound/imx-audio-spdif.txt  |   29 +
- sound/soc/fsl/Kconfig                              |   14 +
- sound/soc/fsl/Makefile                             |    4 +
- sound/soc/fsl/fsl_spdif.c                          | 1336 ++++++++++++++++++++
- sound/soc/fsl/fsl_spdif.h                          |  224 ++++
- sound/soc/fsl/imx-spdif.c                          |  134 ++
- 7 files changed, 1817 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.txt
- create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
- create mode 100644 sound/soc/fsl/fsl_spdif.c
- create mode 100644 sound/soc/fsl/fsl_spdif.h
- create mode 100644 sound/soc/fsl/imx-spdif.c
+Changes from v5
+---------------
+- Addressed review comments from Sylwester
+http://www.mail-archive.com/linux-media@vger.kernel.org/msg65578.html
+http://www.mail-archive.com/linux-media@vger.kernel.org/msg65605.html
 
+Changes from v4
+---------------
+- Addressed all review comments from Sylwester
+- Added separate PMU node as suggested by Stephen Warren
+- Added phandle based discovery of subdevs instead of node name
+
+Changes from v3
+---------------
+- Dropped the RFC tag
+- Addressed all review comments from Sylwester and Sachin
+- Removed clock provider for media dev
+- Added s5k4e5 sensor devicetree binding doc
+
+Changes from v2
+---------------
+- Added exynos5 media device driver from Shaik to this series
+- Added ISP pipeline support in media device driver
+- Based on Sylwester's latest exynos4-is development
+- Asynchronos registration of sensor subdevs
+- Made independent IS-sensor support
+- Add s5k4e5 sensor driver
+- Addressed review comments from Sylwester, Hans, Andrzej, Sachin
+
+Changes from v1
+---------------
+- Addressed all review comments from Sylwester
+- Made sensor subdevs as independent i2c devices
+- Lots of cleanup
+- Debugfs support added
+- Removed PMU global register access
+
+Arun Kumar K (12):
+  [media] exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings
+    documentation
+  [media] exynos5-fimc-is: Add driver core files
+  [media] exynos5-fimc-is: Add common driver header files
+  [media] exynos5-fimc-is: Add register definition and context header
+  [media] exynos5-fimc-is: Add isp subdev
+  [media] exynos5-fimc-is: Add scaler subdev
+  [media] exynos5-fimc-is: Add sensor interface
+  [media] exynos5-fimc-is: Add the hardware pipeline control
+  [media] exynos5-fimc-is: Add the hardware interface module
+  [media] exynos5-is: Add Kconfig and Makefile
+  V4L: s5k6a3: Change sensor min/max resolutions
+  V4L: Add driver for s5k4e5 image sensor
+
+Shaik Ameer Basha (1):
+  [media] exynos5-is: Adding media device driver for exynos5
+
+ .../devicetree/bindings/media/exynos5-fimc-is.txt  |   46 +
+ .../bindings/media/exynos5250-camera.txt           |  126 ++
+ .../devicetree/bindings/media/i2c/s5k4e5.txt       |   43 +
+ drivers/media/i2c/Kconfig                          |    8 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/s5k4e5.c                         |  361 +++++
+ drivers/media/i2c/s5k6a3.c                         |   19 +-
+ drivers/media/platform/Kconfig                     |    1 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/exynos5-is/Kconfig          |   20 +
+ drivers/media/platform/exynos5-is/Makefile         |    7 +
+ drivers/media/platform/exynos5-is/exynos5-mdev.c   | 1210 ++++++++++++++
+ drivers/media/platform/exynos5-is/exynos5-mdev.h   |  126 ++
+ drivers/media/platform/exynos5-is/fimc-is-cmd.h    |  187 +++
+ drivers/media/platform/exynos5-is/fimc-is-core.c   |  413 +++++
+ drivers/media/platform/exynos5-is/fimc-is-core.h   |  132 ++
+ drivers/media/platform/exynos5-is/fimc-is-err.h    |  257 +++
+ .../media/platform/exynos5-is/fimc-is-interface.c  |  810 ++++++++++
+ .../media/platform/exynos5-is/fimc-is-interface.h  |  125 ++
+ drivers/media/platform/exynos5-is/fimc-is-isp.c    |  534 ++++++
+ drivers/media/platform/exynos5-is/fimc-is-isp.h    |   90 ++
+ .../media/platform/exynos5-is/fimc-is-metadata.h   |  767 +++++++++
+ drivers/media/platform/exynos5-is/fimc-is-param.h  | 1159 ++++++++++++++
+ .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1692 ++++++++++++++++++++
+ .../media/platform/exynos5-is/fimc-is-pipeline.h   |  128 ++
+ drivers/media/platform/exynos5-is/fimc-is-regs.h   |  105 ++
+ drivers/media/platform/exynos5-is/fimc-is-scaler.c |  472 ++++++
+ drivers/media/platform/exynos5-is/fimc-is-scaler.h |  106 ++
+ drivers/media/platform/exynos5-is/fimc-is-sensor.c |   45 +
+ drivers/media/platform/exynos5-is/fimc-is-sensor.h |   65 +
+ drivers/media/platform/exynos5-is/fimc-is.h        |  160 ++
+ 31 files changed, 9208 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+ create mode 100644 Documentation/devicetree/bindings/media/exynos5250-camera.txt
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/s5k4e5.txt
+ create mode 100644 drivers/media/i2c/s5k4e5.c
+ create mode 100644 drivers/media/platform/exynos5-is/Kconfig
+ create mode 100644 drivers/media/platform/exynos5-is/Makefile
+ create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.c
+ create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-cmd.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-err.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-metadata.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-param.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-regs.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is.h
+
+-- 
+1.7.9.5
 
