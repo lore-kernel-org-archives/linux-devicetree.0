@@ -1,56 +1,77 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-ob0-f169.google.com ([209.85.214.169]:55007 "EHLO
-	mail-ob0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753111Ab3HUXAO (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 19:00:14 -0400
-Received: by mail-ob0-f169.google.com with SMTP id wc20so2178736obb.28
-        for <devicetree@vger.kernel.org>; Wed, 21 Aug 2013 16:00:14 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <201308211521.21129.poeschel@lemonage.de>
-References: <1376387195-27469-1-git-send-email-larsi@wh2.tu-dresden.de>
-	<9241298.URG9CVQFmF@flatron>
-	<5212737A.1030904@wwwdotorg.org>
-	<201308211521.21129.poeschel@lemonage.de>
-Date: Thu, 22 Aug 2013 01:00:14 +0200
-Message-ID: <CACRpkdZLZv7LA8rN-MyUaB9jYMyxb1Sw0LyqFHUAec1GnHzE+g@mail.gmail.com>
+Received: from smtp1-1.goneo.de ([212.90.139.81]:33759 "EHLO smtp1-1.goneo.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751492Ab3HUNVc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 21 Aug 2013 09:21:32 -0400
+From: Lars Poeschel <poeschel@lemonage.de>
 Subject: Re: [PATCH v2] RFC: interrupt consistency check for OF GPIO IRQs
-From: Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset=ISO-8859-1
+Date: Wed, 21 Aug 2013 15:21:21 +0200
+References: <1376387195-27469-1-git-send-email-larsi@wh2.tu-dresden.de> <9241298.URG9CVQFmF@flatron> <5212737A.1030904@wwwdotorg.org>
+In-Reply-To: <5212737A.1030904@wwwdotorg.org>
+MIME-Version: 1.0
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Message-Id: <201308211521.21129.poeschel@lemonage.de>
 Sender: devicetree-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <tomasz.figa@gmail.com>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, galak@codeaurora.org, Pawel Moll <pawel.moll@arm.com>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, mark.rutland@arm.com, ian.campbell@citrix.com, galak@codeaurora.org, pawel.moll@arm.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Aug 21, 2013 at 3:21 PM, Lars Poeschel <poeschel@lemonage.de> wrote:
-> On Monday 19 August 2013 at 21:35:22, Stephen Warren wrote:
->> On 08/17/2013 03:59 AM, Tomasz Figa wrote:
+On Monday 19 August 2013 at 21:35:22, Stephen Warren wrote:
+> On 08/17/2013 03:59 AM, Tomasz Figa wrote:
+> > [Ccing DT maintainers, as they may have some ideas as well]
+> > 
+> > On Saturday 17 of August 2013 02:16:11 Linus Walleij wrote:
+> >> On Thu, Aug 15, 2013 at 11:53 AM, Tomasz Figa <tomasz.figa@gmail.com>  
+wrote:
+> ...
+> 
+> >>> This is the biggest problem of this patch. It assumes that there is
+> >>> only a single and shared GPIO/interrupt specification scheme, which
+> >>> might not be true.
+> >>> 
+> >>> First of all, almost all interrupt bindings have an extra,
+> >>> semi-generic
+> >>> flags field as last cell in the specifier. Now there can be more
+> >>> than one>
+> >>> 
+> >>> cell used to index GPIOs and interrupts, for example:
+> >>>         interrupts = <1 3 8>
+> >>> 
+> >>> which could mean: bank 1, pin 3, low level triggered.
+> >> 
+> >> You are right, but:
+> >> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> >> Specifies how to handle the one-celled and two-celled versions.
+> >> 
+> >> And nothing else is specified. So it's not overly complex.
+> > 
+> > The documentation states that:
+> > 	It is the responsibility of the interrupt controller's binding to
+> > 	define the length and format of the interrupt specifier.
+> > 
+> > Then two _example_ formats follow, preceded by following statement:
+> > 	The following two variants are commonly used:
+> > I already know a variant which uses three (Exynos combiner) and four
+> > (S3C24xx interrupt controller) cells. They are not pin controllers,
+> > but you can't stop anyone from adopting similar or even more complex
+> > specifiers formats for their hardware, especially when it matches
+> > more closely the interrupt/pin layout used in their hardware.
+> 
+> Yes, the binding doc interrupts.txt mentioned above does not specify
+> *the* one-/two-cell format, but *a* common/possible one- and two-cell
+> format. There's no strict reason that all interrupt controllers have to
+> use those exact formats. The only way to parse interrupt specifiers is
+> to ask the driver for the the interrupt controller code to parse the
+> property.
 
->> > Then two _example_ formats follow, preceded by following statement:
->> >     The following two variants are commonly used:
->> > I already know a variant which uses three (Exynos combiner) and four
->> > (S3C24xx interrupt controller) cells. They are not pin controllers,
->> > but you can't stop anyone from adopting similar or even more complex
->> > specifiers formats for their hardware, especially when it matches
->> > more closely the interrupt/pin layout used in their hardware.
->>
->> Yes, the binding doc interrupts.txt mentioned above does not specify
->> *the* one-/two-cell format, but *a* common/possible one- and two-cell
->> format. There's no strict reason that all interrupt controllers have to
->> use those exact formats. The only way to parse interrupt specifiers is
->> to ask the driver for the the interrupt controller code to parse the
->> property.
->
-> I agree with you. I also understand the interrupts.txt binding doc as it
-> lists only a common/possible cell format, but it's purpose is not to
-> restrict it to this.
->
-> I send an updated patch, that uses the drivers xlate function to parse the
-> interrupt property in a few minutes.
+I agree with you. I also understand the interrupts.txt binding doc as it 
+lists only a common/possible cell format, but it's purpose is not to 
+restrict it to this.
 
-Thanks that you take this on a spin, I've been busy...
+I send an updated patch, that uses the drivers xlate function to parse the 
+interrupt property in a few minutes.
 
-(I also agree with the other comments here, let's see if we can
-figure this out!)
-
-Yours,
-Linus Walleij
+Thanks for clarifying this,
+Lars
