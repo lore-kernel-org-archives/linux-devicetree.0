@@ -1,140 +1,155 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-qa0-f51.google.com ([209.85.216.51]:45726 "EHLO
-	mail-qa0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754712Ab3HPWVQ (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 16 Aug 2013 18:21:16 -0400
-Received: by mail-qa0-f51.google.com with SMTP id f11so785754qae.3
-        for <devicetree@vger.kernel.org>; Fri, 16 Aug 2013 15:21:15 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20130816215530.GA14464@mithrandir>
-References: <1376685563-1053-1-git-send-email-treding@nvidia.com>
- <1376685563-1053-3-git-send-email-treding@nvidia.com> <20130816210637.GC2198@kroah.com>
- <20130816215530.GA14464@mithrandir>
-From: Grant Likely <grant.likely@linaro.org>
-Date: Fri, 16 Aug 2013 23:20:55 +0100
-Message-ID: <CACxGe6uhiKY7a0+aViEamwKbE2tJicVc8CMZChBUaf+KYTs5rw@mail.gmail.com>
-Subject: Re: [RFC 2/4] driver core: Allow early registration of devices
-Content-Type: text/plain; charset=ISO-8859-1
+Received: from mail-pb0-f44.google.com ([209.85.160.44]:34183 "EHLO
+	mail-pb0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752462Ab3HUGfZ (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 02:35:25 -0400
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v7 08/13] [media] exynos5-fimc-is: Add sensor interface
+Date: Wed, 21 Aug 2013 12:04:35 +0530
+Message-Id: <1377066881-5423-9-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
+References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Aug 16, 2013 at 10:55 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Fri, Aug 16, 2013 at 02:06:37PM -0700, Greg Kroah-Hartman wrote:
->> On Fri, Aug 16, 2013 at 10:39:21PM +0200, Thierry Reding wrote:
->> > +static DEFINE_MUTEX(device_early_mutex);
->> > +static LIST_HEAD(device_early_list);
->> > +static bool device_is_early = true;
->> > +
->> > +/*
->> > + * Keep a list of early registered devices so that they can be fully
->> > + * registered at a later point in time.
->> > + */
->> > +static void device_early_add(struct device *dev)
->>
->> __init?
->
-> Yes.
->
->> > +{
->> > +   mutex_lock(&device_early_mutex);
->> > +   list_add_tail(&dev->p->early, &device_early_list);
->> > +   mutex_unlock(&device_early_mutex);
->> > +}
->> > +
->> > +/*
->> > + * Mark the early device registration phase as completed.
->> > + */
->> > +int __init device_early_init(void)
->> > +{
->> > +   device_is_early = false;
->> > +
->> > +   return 0;
->> > +}
->> > +
->> > +/*
->> > + * Fixup platform devices instantiated from device tree. The problem is
->> > + * that since early registration happens before interrupt controllers
->> > + * have been setup, the OF core code won't know how to map interrupts.
->> > + */
->> > +int __init platform_device_early_fixup(struct platform_device *pdev)
->>
->> This shouldn't be in this file, because:
->>
->> > +/*
->> > + * Fully register early devices.
->> > + */
->> > +int __init device_early_done(void)
->> > +{
->> > +   struct device_private *private;
->> > +
->> > +   list_for_each_entry(private, &device_early_list, early) {
->> > +           struct device *dev = private->device;
->> > +           int err;
->> > +
->> > +           if (dev->bus == &platform_bus_type) {
->>
->> Why special case the platform bus?  We are trying to move things off of
->> the platform bus, don't make it harder to do that :)
->
-> I heard about that, but I must have missed the thread where this was
-> discussed. Can you point me to it?
->
->> > +                   struct platform_device *pdev = to_platform_device(dev);
->> > +
->> > +                   err = platform_device_early_fixup(pdev);
->> > +                   if (err < 0)
->> > +                           dev_err(&pdev->dev,
->> > +                                   "failed to fixup device %s: %d\n",
->> > +                                   dev_name(&pdev->dev), err);
->> > +           }
->>
->> You should just have a bus callback that can be made here that, if
->> present, can be called.  That way any bus can handle this type of thing,
->> not just the platform one.
->
-> You mean something like an .early_fixup() in struct bus_type? That would
-> indeed be much cleaner. As I mentioned this is a very early prototype
-> and this particular hunk exists specifically to fixup the platform
-> devices created by the device tree helpers so that the kernel actually
-> boots to the login prompt.
->
->> Not that I really like the whole idea anyway, but I doubt there's much I
->> can do about it...
->
-> Well, getting feedback from you and others is precisely the reason why I
-> wanted to post this early. There must be a reason why you don't like it,
-> so perhaps you can share your thoughts and we can mould this into
-> something that you'd be more comfortable with.
->
-> To be honest I don't particularly like it either. It's very hackish for
-> core code. But on the other hand there are a few device/driver ordering
-> problems that this (or something similar) would help solve. I'm
-> certainly open to discuss alternatives and perhaps there's a much
-> cleaner way to solve the problem.
+Some sensors to be used with fimc-is are exclusively controlled
+by the fimc-is firmware. This minimal sensor driver provides
+the required info for the firmware to configure the sensors
+sitting on I2C bus.
 
-And on that note, I think we're all in agreement that it's ugly!
-Looking at it now, I don't think it is the right approach.
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+ drivers/media/platform/exynos5-is/fimc-is-sensor.c |   45 ++++++++++++++
+ drivers/media/platform/exynos5-is/fimc-is-sensor.h |   65 ++++++++++++++++++++
+ 2 files changed, 110 insertions(+)
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.h
 
-In the big scheme of things, there really aren't a lot of devices that
-will need this functionality. Something I don't have a good handle on
-is the set of devices needed to be created early. Yes, some of the
-clocks and power rails need to be set up, but do all of them? Yes, the
-interrupts need to be set up, but was of_irq_init() a mistake?
-Cascaded interrupt controllers really could be normal devices if there
-isn't anything critical for early boot connected to them (ie. the
-timer). If irq references were changed to be parsed at .probe() time
-instead of device registration time, the deferred probe would have
-everything needed to make sure the interrupt controllers get probed
-before the users.
+diff --git a/drivers/media/platform/exynos5-is/fimc-is-sensor.c b/drivers/media/platform/exynos5-is/fimc-is-sensor.c
+new file mode 100644
+index 0000000..475f1c3
+--- /dev/null
++++ b/drivers/media/platform/exynos5-is/fimc-is-sensor.c
+@@ -0,0 +1,45 @@
++/*
++ * Samsung EXYNOS5250 FIMC-IS (Imaging Subsystem) driver
++ *
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ * Author: Arun Kumar K <arun.kk@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include "fimc-is-sensor.h"
++
++static const struct sensor_drv_data s5k6a3_drvdata = {
++	.id		= FIMC_IS_SENSOR_ID_S5K6A3,
++	.open_timeout	= S5K6A3_OPEN_TIMEOUT,
++	.setfile_name	= "exynos5_s5k6a3_setfile.bin",
++};
++
++static const struct sensor_drv_data s5k4e5_drvdata = {
++	.id		= FIMC_IS_SENSOR_ID_S5K4E5,
++	.open_timeout	= S5K4E5_OPEN_TIMEOUT,
++	.setfile_name	= "exynos5_s5k4e5_setfile.bin",
++};
++
++static const struct of_device_id fimc_is_sensor_of_ids[] = {
++	{
++		.compatible	= "samsung,s5k6a3",
++		.data		= &s5k6a3_drvdata,
++	},
++	{
++		.compatible	= "samsung,s5k4e5",
++		.data		= &s5k4e5_drvdata,
++	},
++	{  }
++};
++
++const struct sensor_drv_data *exynos5_is_sensor_get_drvdata(
++			struct device_node *node)
++{
++	const struct of_device_id *of_id;
++
++	of_id = of_match_node(fimc_is_sensor_of_ids, node);
++	return of_id ? of_id->data : NULL;
++}
+diff --git a/drivers/media/platform/exynos5-is/fimc-is-sensor.h b/drivers/media/platform/exynos5-is/fimc-is-sensor.h
+new file mode 100644
+index 0000000..0ba5733
+--- /dev/null
++++ b/drivers/media/platform/exynos5-is/fimc-is-sensor.h
+@@ -0,0 +1,65 @@
++/*
++ * Samsung EXYNOS4x12 FIMC-IS (Imaging Subsystem) driver
++ *
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ * Author: Arun Kumar K <arun.kk@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#ifndef FIMC_IS_SENSOR_H_
++#define FIMC_IS_SENSOR_H_
++
++#include <linux/of.h>
++#include <linux/types.h>
++
++#define S5K6A3_OPEN_TIMEOUT		2000 /* ms */
++#define S5K6A3_SENSOR_WIDTH		1392
++#define S5K6A3_SENSOR_HEIGHT		1392
++
++#define S5K4E5_OPEN_TIMEOUT		2000 /* ms */
++#define S5K4E5_SENSOR_WIDTH		2560
++#define S5K4E5_SENSOR_HEIGHT		1920
++
++#define SENSOR_WIDTH_PADDING		16
++#define SENSOR_HEIGHT_PADDING		10
++
++enum fimc_is_sensor_id {
++	FIMC_IS_SENSOR_ID_S5K3H2 = 1,
++	FIMC_IS_SENSOR_ID_S5K6A3,
++	FIMC_IS_SENSOR_ID_S5K4E5,
++	FIMC_IS_SENSOR_ID_S5K3H7,
++	FIMC_IS_SENSOR_ID_CUSTOM,
++	FIMC_IS_SENSOR_ID_END
++};
++
++struct sensor_drv_data {
++	enum fimc_is_sensor_id id;
++	/* sensor open timeout in ms */
++	unsigned short open_timeout;
++	char *setfile_name;
++};
++
++/**
++ * struct fimc_is_sensor - fimc-is sensor data structure
++ * @drvdata: a pointer to the sensor's parameters data structure
++ * @i2c_bus: ISP I2C bus index (0...1)
++ * @width: sensor active width
++ * @height: sensor active height
++ * @pixel_width: sensor effective pixel width (width + padding)
++ * @pixel_height: sensor effective pixel height (height + padding)
++ */
++struct fimc_is_sensor {
++	const struct sensor_drv_data *drvdata;
++	unsigned int i2c_bus;
++	unsigned int width;
++	unsigned int height;
++	unsigned int pixel_width;
++	unsigned int pixel_height;
++};
++
++const struct sensor_drv_data *exynos5_is_sensor_get_drvdata(
++			struct device_node *node);
++
++#endif /* FIMC_IS_SENSOR_H_ */
+-- 
+1.7.9.5
 
-Also, for the devices that are created early, is it really appropriate
-to use APIs that require a struct device? I could easily argue that
-anything done at early boot should only be the bare minimum to allow
-the kernel to get to initcalls, and so mucking about with devices is
-inappropriate because it really messes with the assumptions made in
-the design of the driver model.
-
-g.
