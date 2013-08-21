@@ -1,66 +1,42 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mms1.broadcom.com ([216.31.210.17]:3528 "EHLO mms1.broadcom.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752098Ab3HUOa1 convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 10:30:27 -0400
-From: "Christian Daudt" <csd@broadcom.com>
-Subject: RE: [patch] mmc: sdhci-bcm-kona: '|' vs '&' typo
-Date: Wed, 21 Aug 2013 14:30:11 +0000
-Message-ID: <400A4C8D93A8FA4CAECDE394033FA86A2AD236D7@SJEXCHMB09.corp.ad.broadcom.com>
+Received: from userp1040.oracle.com ([156.151.31.81]:45298 "EHLO
+	userp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751382Ab3HUJO0 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 05:14:26 -0400
+Date: Wed, 21 Aug 2013 12:14:07 +0300
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [patch] mmc: sdhci-bcm-kona: '|' vs '&' typo
+Message-ID: <20130821091407.GX4713@mwanda>
 References: <20130821082423.GA5240@elgon.mountain>
-In-Reply-To: <20130821082423.GA5240@elgon.mountain>
-Content-Language: en-US
+ <52148115.3050703@bfs.de>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52148115.3050703@bfs.de>
 Sender: devicetree-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>, Chris Ball <cjb@laptop.org>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+To: walter harms <wharms@bfs.de>
+Cc: Chris Ball <cjb@laptop.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Christian Daudt <csd@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Dan,
- Good catch. This fix is already in the "ARM: mmc: fix NONREMOVABLE test in sdhci-bcm-kona" patch that is part of the git pull request sent to armsoc yesterday:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-August/193422.html
+On Wed, Aug 21, 2013 at 10:57:57AM +0200, walter harms wrote:
+> 
+> 
+> Am 21.08.2013 10:24, schrieb Dan Carpenter:
+> > The intent was to test if a flag was set.  In the current code the
+> > conditions are always true.
+> 
+> I guess that it worked before ...
+> That leaves the Question: are the tests needed at all ?
 
- Thanks,
-   Csd
+It's flagging everything as broken, and I presume that isn't good.
+But on the other hand, these changes do occasionally break things
+because now a lot of new untested code is used.  It really is a good
+idea for someone to test this.
 
------Original Message-----
-From: Dan Carpenter [mailto:dan.carpenter@oracle.com] 
-Sent: Wednesday, August 21, 2013 1:24 AM
-To: Chris Ball
-Cc: Grant Likely; Rob Herring; Christian Daudt; Arnd Bergmann; linux-mmc@vger.kernel.org; devicetree@vger.kernel.org; kernel-janitors@vger.kernel.org
-Subject: [patch] mmc: sdhci-bcm-kona: '|' vs '&' typo
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > ---
+> > Static checker stuff.  Untested.
 
-The intent was to test if a flag was set.  In the current code the
-conditions are always true.
-
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-Static checker stuff.  Untested.
-
-diff --git a/drivers/mmc/host/sdhci-bcm-kona.c b/drivers/mmc/host/sdhci-bcm-kona.c
-index 87175f9..9ffac0b 100644
---- a/drivers/mmc/host/sdhci-bcm-kona.c
-+++ b/drivers/mmc/host/sdhci-bcm-kona.c
-@@ -263,7 +263,7 @@ static int __init sdhci_bcm_kona_probe(struct platform_device *pdev)
- 		(mmc_gpio_get_cd(host->mmc) != -ENOSYS) ? 'Y' : 'N',
- 		(mmc_gpio_get_ro(host->mmc) != -ENOSYS) ? 'Y' : 'N');
- 
--	if (host->mmc->caps | MMC_CAP_NONREMOVABLE)
-+	if (host->mmc->caps & MMC_CAP_NONREMOVABLE)
- 		host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
- 
- 	dev_dbg(dev, "is_8bit=%c\n",
-@@ -282,7 +282,7 @@ static int __init sdhci_bcm_kona_probe(struct platform_device *pdev)
- 	}
- 
- 	/* if device is eMMC, emulate card insert right here */
--	if (host->mmc->caps | MMC_CAP_NONREMOVABLE) {
-+	if (host->mmc->caps & MMC_CAP_NONREMOVABLE) {
- 		ret = sdhci_bcm_kona_sd_card_emulate(host, 1);
- 		if (ret) {
- 			dev_err(dev,
-
+regards,
+dan carpenter
 
