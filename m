@@ -1,44 +1,63 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from co1ehsobe005.messaging.microsoft.com ([216.32.180.188]:9633
-	"EHLO co1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752116Ab3HUXdz (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Wed, 21 Aug 2013 19:33:55 -0400
-Message-ID: <1377128031.5029.75.camel@snotra.buserror.net>
-Subject: Re: [PATCH v7 1/3] DMA: Freescale: revise device tree binding
- document
-From: Scott Wood <scottwood@freescale.com>
-Date: Wed, 21 Aug 2013 18:33:51 -0500
-In-Reply-To: <52154976.2010204@wwwdotorg.org>
-References: <1375094944-3343-1-git-send-email-hongbo.zhang@freescale.com>
-	  <1375094944-3343-2-git-send-email-hongbo.zhang@freescale.com>
-	  <5215402E.70007@wwwdotorg.org>
-	 <1377125156.5029.40.camel@snotra.buserror.net>
-	 <52154976.2010204@wwwdotorg.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from avon.wwwdotorg.org ([70.85.31.133]:41314 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752867Ab3HUXM5 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 19:12:57 -0400
+Message-ID: <52154976.2010204@wwwdotorg.org>
+Date: Wed, 21 Aug 2013 17:12:54 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH v7 1/3] DMA: Freescale: revise device tree binding document
+References: <1375094944-3343-1-git-send-email-hongbo.zhang@freescale.com>  <1375094944-3343-2-git-send-email-hongbo.zhang@freescale.com>  <5215402E.70007@wwwdotorg.org> <1377125156.5029.40.camel@snotra.buserror.net>
+In-Reply-To: <1377125156.5029.40.camel@snotra.buserror.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
+To: Scott Wood <scottwood@freescale.com>
 Cc: hongbo.zhang@freescale.com, vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 2013-08-21 at 17:12 -0600, Stephen Warren wrote:
-> OK, if there's some alternative run-time way of enabling chip-specific
-> quirking, it's probably fine to remove the extra compatible values.
+On 08/21/2013 04:45 PM, Scott Wood wrote:
+> On Wed, 2013-08-21 at 16:33 -0600, Stephen Warren wrote:
+>> On 07/29/2013 04:49 AM, hongbo.zhang@freescale.com wrote:
+>>> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+>>>
+>>> This patch updates the discription of each type of DMA controller and its
+>>> channels, it is preparation for adding another new DMA controller binding, it
+>>> also fixes some defects of indent for text alignment at the same time.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+>>
+>>> -- compatible        : compatible list, contains 2 entries, first is
+>>> -		 "fsl,CHIP-dma", where CHIP is the processor
+>>> -		 (mpc8349, mpc8360, etc.) and the second is
+>>> -		 "fsl,elo-dma"
+>>> +- compatible        : must include "fsl,elo-dma"
+>>
+>> Why remove the list of supported compatible values. Lately it seems that
+>> we're moving towards listing more/all the values rather than removing
+>> their documentation...
 > 
-> Now, that does rather assume that this DMA IP block will only ever be
-> used within SoCs that have that SVR concept, but perhaps if that's ever
-> not the case, we can simply go back to requiring extra compatible values
-> in those specific cases?
+> Previous versions had language that required fsl,CHIP-dma for 83xx (and
+> maybe 85xx?) but not the new chip.  I asked for it to be consistent.
+> The reason that 83xx still has fsl,CHIP-dma is not because of anything
+> special to 83xx, but that most other chips with this device have been
+> converted to dtsi and it's much more of a pain to specify the specific
+> SoC in that context.  The existing language does not match actual device
+> trees when it comes to 85xx.
+> 
+> Plus, the exact SoC name is of dubious value for integrated devices.  It
+> doesn't uniquely identify the hardware because different versions of the
+> SoC could have different versions of the subdevice.  As such, on our
+> chips we've been moving away from including a compatible that specifies
+> the exact SoC.  If it turns out we made a mistake in naming different
+> versions of the device, or if there are errata, the exact SoC can still
+> be determined at runtime using SVR.
 
-The only situation I can see where SVR would be absent is if we were to
-integrate this device into an ARM chip, in which case I'd expect there
-to be some equivalent way to find the SoC identification.  If the driver
-knows what SoC version it expects, it will know the way that that SoC
-advertises its version.
+OK, if there's some alternative run-time way of enabling chip-specific
+quirking, it's probably fine to remove the extra compatible values.
 
--Scott
-
-
-
+Now, that does rather assume that this DMA IP block will only ever be
+used within SoCs that have that SVR concept, but perhaps if that's ever
+not the case, we can simply go back to requiring extra compatible values
+in those specific cases?
