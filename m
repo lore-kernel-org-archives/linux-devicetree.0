@@ -1,17 +1,17 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-ob0-f182.google.com ([209.85.214.182]:57620 "EHLO
-	mail-ob0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752865Ab3HUXgP (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 19:36:15 -0400
-Received: by mail-ob0-f182.google.com with SMTP id wo10so2231242obc.27
-        for <devicetree@vger.kernel.org>; Wed, 21 Aug 2013 16:36:15 -0700 (PDT)
+Received: from mail-ob0-f170.google.com ([209.85.214.170]:42732 "EHLO
+	mail-ob0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752845Ab3HUX1R (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 19:27:17 -0400
+Received: by mail-ob0-f170.google.com with SMTP id eh20so2207175obb.1
+        for <devicetree@vger.kernel.org>; Wed, 21 Aug 2013 16:27:17 -0700 (PDT)
 MIME-Version: 1.0
 In-Reply-To: <521548E3.6010703@wwwdotorg.org>
 References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de>
 	<1507189.CRWvzVJqTV@flatron>
 	<521548E3.6010703@wwwdotorg.org>
-Date: Thu, 22 Aug 2013 01:36:15 +0200
-Message-ID: <CACRpkdYUeyVZcN1-jOzg0zo4eSJK1S+M5fJ0FcMsgwaPKW4Obw@mail.gmail.com>
+Date: Thu, 22 Aug 2013 01:27:17 +0200
+Message-ID: <CACRpkdbVYfBS5L+0ejfbTBwPbD9HFB1kV8qnS7DdSydRccxDmg@mail.gmail.com>
 Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
 From: Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset=ISO-8859-1
@@ -21,40 +21,27 @@ Cc: Tomasz Figa <tomasz.figa@gmail.com>, Lars Poeschel <larsi@wh2.tu-dresden.de>
 List-ID: <devicetree@vger.kernel.org>
 
 On Thu, Aug 22, 2013 at 1:10 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-[Me]
->>> check if these in turn reference the interrupt-controller, and
->>> if they do, loop over the interrupts used by that child and
->>> perform gpio_request() and gpio_direction_input() on these,
->>> making them unreachable from the GPIO side.
+>> On Wednesday 21 of August 2013 15:38:54 Lars Poeschel wrote:
+
+>>> To solve this dilemma, perform an interrupt consistency check
+>>> when adding a GPIO chip: if the chip is both gpio-controller and
+>>> interrupt-controller, walk all children of the device tree,
 >
-> What about bindings that require a GPIO to be specified, yet don't allow
-> an IRQ to be specified, and the driver internally does perform
-> gpio_to_irq() on it? I don't think one can detect that case.
+> It seems a little odd to solve this only for DT. What about the non-DT case?
 
-This is still allowed. Consumers that prefer to have a GPIO
-passed and convert it to IRQ by that call can still do so,
-they will know what they're doing and will not cause the
-double-command situation that we're trying to solve.
+DT is the hardware configuration system that lets you request
+the same resource in two ways, i.e. it allows one and the same
+node to be both gpio-controller and interrupt-controller, and
+start handing out the same line as both GPIO and IRQ
+independently.
 
-> Isn't it better to have the IRQ chip's .request() operation convert the
-> IRQ to a GPIO if relevant (which it can do since it has specific
-> knowledge of the HW) and take ownership of the GPIO at that level?
+I asked if ACPI had this ambiguity, and the answer appears to
+be either "no" (which I suspect) or just "nobody knows" :-/
 
-We tried this in the OMAP case, but apart from that the OMAP
-driver blew up so we had to revert the patches, it also means
-the same code needs to go into each and every driver
-instead of solving the dilemma centrally like this.
-
-> I vaguely recall seeing patches along those lines before, but there must
-> have been some other problem pointed out...
-
-You bet. It turns out these patches break the case which you
-just described above, whereas this patch does not.
-
-OMAP had drivers that used gpio_to_irq() *and* it had drivers
-that used the GPIO controller node as interrupt parent.
-So when they fixes .request() as per above, the latter started
-working properly whereas the former started breaking.
+In either way, checking the consistency of ACPI IRQs vs
+GPIOs will be fundamentally different, should it have the same
+problem, and does it appear we can certainly refactor this to
+be shared, should there be something to gain from.
 
 Yours,
 Linus Walleij
