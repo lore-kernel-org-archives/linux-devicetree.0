@@ -1,136 +1,72 @@
-From: Wim Van Sebroeck <wim@iguana.be>
-Subject: Re: [PATCH v10 04/12] watchdog: add Palmas Watchdog support
-Date: Tue, 20 Aug 2013 22:31:03 +0200
-Message-ID: <20130820203103.GA20762@spo001.leaseweb.com>
-References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk> <1363964122-19201-5-git-send-email-ian@slimlogic.co.uk>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v5 2/4] mtd:nand:omap2: clean-up BCHx_HW and BCHx_SW
+ ECC configurations in device_probe
+Date: Tue, 20 Aug 2013 18:26:42 -0700
+Message-ID: <20130821012642.GC28382@ld-irv-0074.broadcom.com>
+References: <1373748891-7779-1-git-send-email-pekon@ti.com>
+ <1373748891-7779-3-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1363964122-19201-5-git-send-email-ian@slimlogic.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Lartey <ian@slimlogic.co.uk>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, sfr@canb.auug.org.au, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
+In-Reply-To: <1373748891-7779-3-git-send-email-pekon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pekon Gupta <pekon@ti.com>
+Cc: dedekind1@gmail.com, dwmw2@infradead.org, arnd@arndb.de, olof@lixom.net, mugunthanvnm@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, benoit.cousson@linaro.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ian,
-
-> +static int palmas_wdt_set_timeout(struct watchdog_device *wdt, unsigned timeout)
-> +{
-> +	struct palmas_wdt *driver_data = watchdog_get_drvdata(wdt);
-> +
-> +	if (timeout < 1 || timeout > 128) {
-> +		dev_warn(driver_data->dev,
-> +			"Timeout can only be in the range [1-128] seconds");
-> +		return -EINVAL;
-> +	}
-> +	driver_data->timer_margin = fls(timeout) - 1;
-> +	return 0;
-> +}
-
-The core can test this also with the .min_timeout and .max_timeout fields of the watchdog_device.
-
-> +
-> +static const struct watchdog_info palmas_wdt_info = {
-> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-> +	.identity = "Palmas Watchdog",
-> +	.firmware_version = 0,
-> +};
-> +
-> +static const struct watchdog_ops palmas_wdt_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = palmas_wdt_enable,
-> +	.stop = palmas_wdt_disable,
-> +	.ping = palmas_wdt_enable,
-
-Since .ping is the same as .start you don't need to add .ping .
-
-> +	.set_timeout = palmas_wdt_set_timeout,
-> +};
-> +
-> +static int palmas_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
-> +	struct palmas_wdt *driver_data;
-> +	struct watchdog_device *palmas_wdt;
-> +	int ret = 0;
-> +
-> +	driver_data = devm_kzalloc(&pdev->dev, sizeof(*driver_data),
-> +				   GFP_KERNEL);
-> +	if (!driver_data) {
-> +		dev_err(&pdev->dev, "Unable to alloacate watchdog device\n");
-> +		ret = -ENOMEM;
-> +		goto err;
-> +	}
-> +
-> +	driver_data->palmas = palmas;
-> +
-> +	palmas_wdt = &driver_data->wdt;
-> +
-> +	palmas_wdt->info = &palmas_wdt_info;
-> +	palmas_wdt->ops = &palmas_wdt_ops;
-> +	watchdog_set_nowayout(palmas_wdt, nowayout);
-> +	watchdog_set_drvdata(palmas_wdt, driver_data);
-
-
-I think you want a watchdog_init_timeout(struct watchdog_device *wdd, unsigned int timeout_parm, struct device *dev); here.
-And also make sure that the watchdog isn't running.
-
-> +
-> +	ret = watchdog_register_device(&driver_data->wdt);
-> +	if (ret) {
-> +		platform_set_drvdata(pdev, NULL);
-> +		goto err;
-> +	}
-> +
-> +	dev_set_drvdata(&pdev->dev, driver_data);
-> +
-> +	return 0;
-> +err:
-> +	return ret;
-> +}
-> +
-> +static int palmas_wdt_remove(struct platform_device *pdev)
-> +{
-> +	struct palmas_wdt *driver_data = dev_get_drvdata(&pdev->dev);
-> +
-> +	watchdog_unregister_device(&driver_data->wdt);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct of_device_id of_palmas_match_tbl[] = {
-> +	{ .compatible = "ti,palmas-wdt", },
-> +	{ .compatible = "ti,twl6035-wdt", },
-> +	{ .compatible = "ti,twl6036-wdt", },
-> +	{ .compatible = "ti,twl6037-wdt", },
-> +	{ .compatible = "ti,tps65913-wdt", },
-> +	{ .compatible = "ti,tps65914-wdt", },
-> +	{ .compatible = "ti,tps80036-wdt", },
-> +	{ /* end */ }
-> +};
-> +
-> +static struct platform_driver palmas_wdt_driver = {
-> +	.probe = palmas_wdt_probe,
-> +	.remove = palmas_wdt_remove,
-> +	.driver = {
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = of_palmas_match_tbl,
-> +		.name = "palmas-wdt",
-> +	},
-> +};
-> +
-> +module_platform_driver(palmas_wdt_driver);
-> +
-> +MODULE_AUTHOR("Graeme Gregory <gg@slimlogic.co.uk>");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:palmas-wdt");
-> +MODULE_DEVICE_TABLE(of, of_palmas_match_tbl);
-> -- 
-> 1.7.0.4
+On Sun, Jul 14, 2013 at 02:24:49AM +0530, Pekon Gupta wrote:
+> ECC scheme on NAND devices can be implemented in multiple ways.Some using
+> Software algorithm, while others using in-build Hardware engines.
+> omap2-nand driver currently supports following flavours of ECC schemes.
 > 
+> +---------------------------------------+---------------+---------------+
+> | ECC scheme                            |ECC calculation|Error detection|
+> +---------------------------------------+---------------+---------------+
+> |OMAP_ECC_HAMMING_CODE_DEFAULT          |S/W            |S/W            |
+> |OMAP_ECC_HAMMING_CODE_HW               |H/W (GPMC)     |S/W            |
+> |OMAP_ECC_HAMMING_CODE_HW_ROMCODE       |H/W (GPMC)     |S/W            |
+> +---------------------------------------+---------------+---------------+
+> |(requires CONFIG_MTD_NAND_ECC_BCH)     |               |               |
+> |OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W            |
+> +---------------------------------------+---------------+---------------+
+> |(requires CONFIG_MTD_NAND_OMAP_BCH)    |               |               |
+> |OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
+> +---------------------------------------+---------------+---------------+
+> 
+> This patch
+> - separates the configurations for various ECC schemes.
+> - fixes dependency issues based on Kconfig options.
+> - cleans up redundant code
+> 
+> Signed-off-by: Pekon Gupta <pekon@ti.com>
+> ---
+>  drivers/mtd/nand/omap2.c | 505 +++++++++++++++++++++++------------------------
+>  1 file changed, 249 insertions(+), 256 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> index daa3dfc..ea857cc 100644
+> --- a/drivers/mtd/nand/omap2.c
+> +++ b/drivers/mtd/nand/omap2.c
 
-If you can add the devicetree bindings Documentation and the Kconfig patch together with the revised version of this patch into a single patch then we can complete the review.
+[...]
 
-Kind regards,
-Wim.
+> @@ -2075,11 +2066,13 @@ out_release_mem_region:
+>  		free_irq(info->gpmc_irq_fifo, info);
+>  	release_mem_region(info->phys_base, info->mem_size);
+>  out_free_info:
+> +	omap3_free_bch(&info->mtd);
+>  	kfree(info);
+>  
+>  	return err;
+>  }
+>  
+> +
+
+Extra blank line?
+
+>  static int omap_nand_remove(struct platform_device *pdev)
+>  {
+>  	struct mtd_info *mtd = platform_get_drvdata(pdev);
+
+Brian
