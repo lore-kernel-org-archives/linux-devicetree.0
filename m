@@ -1,1864 +1,484 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pd0-f174.google.com ([209.85.192.174]:63826 "EHLO
-	mail-pd0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932190Ab3HGJEh (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 05:04:37 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v4 09/13] [media] exynos5-fimc-is: Add the hardware pipeline control
-Date: Wed,  7 Aug 2013 14:33:57 +0530
-Message-Id: <1375866242-18084-10-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1375866242-18084-1-git-send-email-arun.kk@samsung.com>
-References: <1375866242-18084-1-git-send-email-arun.kk@samsung.com>
+Received: from perceval.ideasonboard.com ([95.142.166.194]:56243 "EHLO
+	perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752819Ab3HUVFt (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 17:05:49 -0400
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC 00/22] OMAPDSS: DT support
+Date: Wed, 21 Aug 2013 23:07:02 +0200
+Message-ID: <2305295.bk1TpuGLMv@avalon>
+In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the crucial hardware pipeline control for the
-fimc-is driver. All the subdev nodes will call this pipeline
-interfaces to reach the hardware. Responsibilities of this module
-involves configuring and maintaining the hardware pipeline involving
-multiple sub-ips like ISP, DRC, Scalers, ODC, 3DNR, FD etc.
+Hi Tomi,
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-Signed-off-by: Kilyeon Im <kilyeon.im@samsung.com>
----
- .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1691 ++++++++++++++++++++
- .../media/platform/exynos5-is/fimc-is-pipeline.h   |  127 ++
- 2 files changed, 1818 insertions(+)
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
+I'm back from holidays and have finally found time to review your patch set.
 
-diff --git a/drivers/media/platform/exynos5-is/fimc-is-pipeline.c b/drivers/media/platform/exynos5-is/fimc-is-pipeline.c
-new file mode 100644
-index 0000000..e37ce56
---- /dev/null
-+++ b/drivers/media/platform/exynos5-is/fimc-is-pipeline.c
-@@ -0,0 +1,1691 @@
-+/*
-+ * Samsung EXYNOS5 FIMC-IS (Imaging Subsystem) driver
-+*
-+ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-+ * Arun Kumar K <arun.kk@samsung.com>
-+ * Kil-yeon Lim <kilyeon.im@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include "fimc-is.h"
-+#include "fimc-is-pipeline.h"
-+#include "fimc-is-metadata.h"
-+#include "fimc-is-regs.h"
-+#include "fimc-is-cmd.h"
-+#include <media/videobuf2-dma-contig.h>
-+#include <linux/delay.h>
-+
-+/* Default setting values */
-+#define DEFAULT_PREVIEW_STILL_WIDTH		1280
-+#define DEFAULT_PREVIEW_STILL_HEIGHT		720
-+#define DEFAULT_CAPTURE_VIDEO_WIDTH		1920
-+#define DEFAULT_CAPTURE_VIDEO_HEIGHT		1080
-+#define DEFAULT_CAPTURE_STILL_WIDTH		2560
-+#define DEFAULT_CAPTURE_STILL_HEIGHT		1920
-+#define DEFAULT_CAPTURE_STILL_CROP_WIDTH	2560
-+#define DEFAULT_CAPTURE_STILL_CROP_HEIGHT	1440
-+#define DEFAULT_PREVIEW_VIDEO_WIDTH		640
-+#define DEFAULT_PREVIEW_VIDEO_HEIGHT		480
-+
-+/* Init params for pipeline devices */
-+static const struct sensor_param init_sensor_param = {
-+	.frame_rate = {
-+		.frame_rate = 30,
-+	},
-+};
-+
-+static const struct isp_param init_isp_param = {
-+	.control = {
-+		.cmd = CONTROL_COMMAND_START,
-+		.bypass = CONTROL_BYPASS_DISABLE,
-+	},
-+	.otf_input = {
-+		.cmd = OTF_INPUT_COMMAND_DISABLE,
-+		.width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+		.format = OTF_INPUT_FORMAT_BAYER,
-+		.bitwidth = OTF_INPUT_BIT_WIDTH_10BIT,
-+		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
-+		.frametime_max = 33333,
-+	},
-+	.dma1_input = {
-+		.cmd = DMA_INPUT_COMMAND_DISABLE,
-+	},
-+	.dma2_input = {
-+		.cmd = DMA_INPUT_COMMAND_DISABLE,
-+	},
-+	.aa = {
-+		.cmd = ISP_AA_COMMAND_START,
-+		.target = ISP_AA_TARGET_AF | ISP_AA_TARGET_AE |
-+						ISP_AA_TARGET_AWB,
-+		.mode = ISP_AF_CONTINUOUS,
-+	},
-+	.flash = {
-+		.cmd = ISP_FLASH_COMMAND_DISABLE,
-+		.redeye = ISP_FLASH_REDEYE_DISABLE,
-+	},
-+	.awb = {
-+		.cmd = ISP_AWB_COMMAND_AUTO,
-+	},
-+	.effect = {
-+		.cmd = ISP_IMAGE_EFFECT_DISABLE,
-+	},
-+	.iso = {
-+		.cmd = ISP_ISO_COMMAND_AUTO,
-+	},
-+	.adjust = {
-+		.cmd = ISP_ADJUST_COMMAND_AUTO,
-+	},
-+	.metering = {
-+		.cmd = ISP_METERING_COMMAND_CENTER,
-+		.win_width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.win_height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+	},
-+	.afc = {
-+		.cmd = ISP_AFC_COMMAND_AUTO,
-+	},
-+	.otf_output = {
-+		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+		.format = OTF_OUTPUT_FORMAT_YUV444,
-+		.bitwidth = OTF_OUTPUT_BIT_WIDTH_12BIT,
-+		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
-+	},
-+	.dma1_output = {
-+		.cmd = DMA_OUTPUT_COMMAND_DISABLE,
-+		.width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+		.format = DMA_INPUT_FORMAT_YUV444,
-+		.bitwidth = DMA_INPUT_BIT_WIDTH_8BIT,
-+		.plane = 1,
-+		.order = DMA_INPUT_ORDER_YCBCR,
-+	},
-+	.dma2_output = {
-+		.cmd = DMA_OUTPUT_COMMAND_DISABLE,
-+		.width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+		.format = DMA_OUTPUT_FORMAT_BAYER,
-+		.bitwidth = DMA_OUTPUT_BIT_WIDTH_12BIT,
-+		.plane = 1,
-+		.order = DMA_OUTPUT_ORDER_GB_BG,
-+		.dma_out_mask = 0xFFFFFFFF,
-+	},
-+};
-+
-+static const struct drc_param init_drc_param = {
-+	.control = {
-+		.cmd = CONTROL_COMMAND_START,
-+		.bypass = CONTROL_BYPASS_ENABLE,
-+	},
-+	.otf_input = {
-+		.cmd = OTF_INPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+		.format = OTF_INPUT_FORMAT_YUV444,
-+		.bitwidth = OTF_INPUT_BIT_WIDTH_12BIT,
-+		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
-+	},
-+	.dma_input = {
-+		.cmd = DMA_INPUT_COMMAND_DISABLE,
-+		.width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+		.format = DMA_INPUT_FORMAT_YUV444,
-+		.bitwidth = DMA_INPUT_BIT_WIDTH_8BIT,
-+		.plane = 1,
-+		.order = DMA_INPUT_ORDER_YCBCR,
-+	},
-+	.otf_output = {
-+		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+		.format = OTF_OUTPUT_FORMAT_YUV444,
-+		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
-+		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
-+	},
-+};
-+
-+static const struct scalerc_param init_scalerc_param = {
-+	.control = {
-+		.cmd = CONTROL_COMMAND_START,
-+		.bypass = CONTROL_BYPASS_ENABLE,
-+	},
-+	.otf_input = {
-+		.cmd = OTF_INPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+		.format = OTF_INPUT_FORMAT_YUV444,
-+		.bitwidth = OTF_INPUT_BIT_WIDTH_12BIT,
-+		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
-+	},
-+	.input_crop = {
-+		.cmd = OTF_INPUT_COMMAND_ENABLE,
-+		.crop_width = DEFAULT_CAPTURE_STILL_CROP_WIDTH,
-+		.crop_height = DEFAULT_CAPTURE_STILL_CROP_HEIGHT,
-+		.in_width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.in_height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+		.out_width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.out_height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+	},
-+	.output_crop = {
-+		.cmd = SCALER_CROP_COMMAND_DISABLE,
-+		.crop_width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.crop_height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+		.format = DMA_OUTPUT_FORMAT_YUV420,
-+	},
-+	.otf_output = {
-+		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+		.format = OTF_OUTPUT_FORMAT_YUV444,
-+		.bitwidth = OTF_OUTPUT_BIT_WIDTH_8BIT,
-+		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
-+	},
-+	.dma_output = {
-+		.cmd = DMA_OUTPUT_COMMAND_DISABLE,
-+		.width = DEFAULT_CAPTURE_STILL_WIDTH,
-+		.height = DEFAULT_CAPTURE_STILL_HEIGHT,
-+		.format = DMA_OUTPUT_FORMAT_YUV420,
-+		.bitwidth = DMA_OUTPUT_BIT_WIDTH_8BIT,
-+		.plane = 3,
-+		.order = DMA_OUTPUT_ORDER_NONE,
-+		.dma_out_mask = 0xffff,
-+	},
-+};
-+
-+static const struct odc_param init_odc_param = {
-+	.control = {
-+		.cmd = CONTROL_COMMAND_START,
-+		.bypass = CONTROL_BYPASS_ENABLE,
-+		.err = CONTROL_ERROR_NONE,
-+	},
-+	.otf_input = {
-+		.cmd = OTF_INPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+		.format = OTF_INPUT_FORMAT_YUV444,
-+		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
-+		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
-+	},
-+	.otf_output = {
-+		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+		.format = OTF_OUTPUT_FORMAT_YUV422,
-+		.bitwidth = OTF_OUTPUT_BIT_WIDTH_8BIT,
-+		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
-+	},
-+};
-+
-+static const struct dis_param init_dis_param = {
-+	.control = {
-+		.cmd = CONTROL_COMMAND_START,
-+		.bypass = CONTROL_BYPASS_ENABLE,
-+	},
-+	.otf_input = {
-+		.cmd = OTF_INPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+		.format = OTF_INPUT_FORMAT_YUV422,
-+		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
-+		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
-+	},
-+	.otf_output = {
-+		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+		.format = OTF_OUTPUT_FORMAT_YUV422,
-+		.bitwidth = OTF_OUTPUT_BIT_WIDTH_8BIT,
-+		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
-+	},
-+};
-+static const struct tdnr_param init_tdnr_param = {
-+	.control = {
-+		.cmd = CONTROL_COMMAND_START,
-+		.bypass = CONTROL_BYPASS_ENABLE,
-+	},
-+	.otf_input = {
-+		.cmd = OTF_INPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+		.format = OTF_INPUT_FORMAT_YUV422,
-+		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
-+		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
-+	},
-+	.otf_output = {
-+		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+		.format = OTF_OUTPUT_FORMAT_YUV444,
-+		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
-+		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
-+	},
-+	.dma_output = {
-+		.cmd = DMA_OUTPUT_COMMAND_DISABLE,
-+		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+		.format = DMA_OUTPUT_FORMAT_YUV420,
-+		.bitwidth = DMA_OUTPUT_BIT_WIDTH_8BIT,
-+		.plane = 2,
-+		.order = DMA_OUTPUT_ORDER_CBCR,
-+		.dma_out_mask = 0xffff,
-+	},
-+};
-+
-+static const struct scalerp_param init_scalerp_param = {
-+	.control = {
-+		.cmd = CONTROL_COMMAND_START,
-+		.bypass = CONTROL_BYPASS_ENABLE,
-+	},
-+	.otf_input = {
-+		.cmd = OTF_INPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+		.format = OTF_INPUT_FORMAT_YUV444,
-+		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
-+		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
-+	},
-+	.input_crop = {
-+		.cmd = OTF_INPUT_COMMAND_ENABLE,
-+		.crop_width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.crop_height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+		.in_width = DEFAULT_CAPTURE_VIDEO_WIDTH,
-+		.in_height = DEFAULT_CAPTURE_VIDEO_HEIGHT,
-+		.out_width = DEFAULT_PREVIEW_STILL_WIDTH,
-+		.out_height = DEFAULT_PREVIEW_STILL_HEIGHT,
-+	},
-+	.output_crop = {
-+		.cmd = SCALER_CROP_COMMAND_DISABLE,
-+		.crop_width = DEFAULT_PREVIEW_STILL_WIDTH,
-+		.crop_height = DEFAULT_PREVIEW_STILL_HEIGHT,
-+		.format = OTF_OUTPUT_FORMAT_YUV420,
-+	},
-+	.otf_output = {
-+		.cmd = OTF_OUTPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_PREVIEW_STILL_WIDTH,
-+		.height = DEFAULT_PREVIEW_STILL_HEIGHT,
-+		.format = OTF_INPUT_FORMAT_YUV444,
-+		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
-+		.order = OTF_OUTPUT_ORDER_BAYER_GR_BG,
-+	},
-+	.dma_output = {
-+		.cmd = DMA_OUTPUT_COMMAND_DISABLE,
-+		.width = DEFAULT_PREVIEW_STILL_WIDTH,
-+		.height = DEFAULT_PREVIEW_STILL_HEIGHT,
-+		.format = OTF_OUTPUT_FORMAT_YUV420,
-+		.bitwidth = DMA_OUTPUT_BIT_WIDTH_8BIT,
-+		.plane = 3,
-+		.order = DMA_OUTPUT_ORDER_NONE,
-+		.dma_out_mask = 0xffff,
-+	},
-+};
-+
-+static const struct fd_param init_fd_param = {
-+	.control = {
-+		.cmd = CONTROL_COMMAND_STOP,
-+		.bypass = CONTROL_BYPASS_DISABLE,
-+	},
-+	.otf_input = {
-+		.cmd = OTF_INPUT_COMMAND_ENABLE,
-+		.width = DEFAULT_PREVIEW_STILL_WIDTH,
-+		.height = DEFAULT_PREVIEW_STILL_HEIGHT,
-+		.format = OTF_INPUT_FORMAT_YUV444,
-+		.bitwidth = OTF_INPUT_BIT_WIDTH_8BIT,
-+		.order = OTF_INPUT_ORDER_BAYER_GR_BG,
-+	},
-+	.dma_input = {
-+		.cmd = DMA_INPUT_COMMAND_DISABLE,
-+	},
-+	.config = {
-+		.cmd = FD_CONFIG_COMMAND_MAXIMUM_NUMBER |
-+			FD_CONFIG_COMMAND_ROLL_ANGLE |
-+			FD_CONFIG_COMMAND_YAW_ANGLE |
-+			FD_CONFIG_COMMAND_SMILE_MODE |
-+			FD_CONFIG_COMMAND_BLINK_MODE |
-+			FD_CONFIG_COMMAND_EYES_DETECT |
-+			FD_CONFIG_COMMAND_MOUTH_DETECT |
-+			FD_CONFIG_COMMAND_ORIENTATION |
-+			FD_CONFIG_COMMAND_ORIENTATION_VALUE,
-+		.max_number = CAMERA2_MAX_FACES,
-+		.roll_angle = FD_CONFIG_ROLL_ANGLE_FULL,
-+		.yaw_angle = FD_CONFIG_YAW_ANGLE_45_90,
-+		.smile_mode = FD_CONFIG_SMILE_MODE_DISABLE,
-+		.blink_mode = FD_CONFIG_BLINK_MODE_DISABLE,
-+		.eye_detect = FD_CONFIG_EYES_DETECT_ENABLE,
-+		.mouth_detect = FD_CONFIG_MOUTH_DETECT_DISABLE,
-+		.orientation = FD_CONFIG_ORIENTATION_DISABLE,
-+	},
-+};
-+
-+static int fimc_is_pipeline_create_subdevs(struct fimc_is_pipeline *pipeline)
-+{
-+	struct fimc_is *is = pipeline->is;
-+	int ret;
-+
-+	/* ISP */
-+	ret = fimc_is_isp_subdev_create(&pipeline->isp,
-+			is->alloc_ctx, pipeline);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* SCC scaler */
-+	ret = fimc_is_scaler_subdev_create(&pipeline->scaler[SCALER_SCC],
-+			SCALER_SCC, is->alloc_ctx, pipeline);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* SCP scaler */
-+	ret = fimc_is_scaler_subdev_create(&pipeline->scaler[SCALER_SCP],
-+			SCALER_SCP, is->alloc_ctx, pipeline);
-+	if (ret < 0)
-+		return ret;
-+
-+	return ret;
-+}
-+
-+static int fimc_is_pipeline_unregister_subdevs(struct fimc_is_pipeline *p)
-+{
-+	fimc_is_isp_subdev_destroy(&p->isp);
-+	fimc_is_scaler_subdev_destroy(&p->scaler[SCALER_SCC]);
-+	fimc_is_scaler_subdev_destroy(&p->scaler[SCALER_SCP]);
-+
-+	return 0;
-+}
-+
-+int fimc_is_pipeline_init(struct fimc_is_pipeline *pipeline,
-+			unsigned int instance, void *is_ctx)
-+{
-+	struct fimc_is *is = is_ctx;
-+	unsigned int i;
-+	int ret;
-+
-+	if (test_bit(PIPELINE_INIT, &pipeline->state))
-+		return -EINVAL;
-+
-+	/* Initialize context variables */
-+	pipeline->instance = instance;
-+	pipeline->is = is;
-+	pipeline->dev = &is->pdev->dev;
-+	pipeline->minfo = &is->minfo;
-+	pipeline->state = 0;
-+	pipeline->force_down = false;
-+	for (i = 0; i < FIMC_IS_NUM_COMPS; i++)
-+		pipeline->comp_state[i] = 0;
-+
-+	spin_lock_init(&pipeline->slock_buf);
-+	init_waitqueue_head(&pipeline->wait_q);
-+	mutex_init(&pipeline->pipe_lock);
-+	mutex_init(&pipeline->pipe_scl_lock);
-+
-+	ret = fimc_is_pipeline_create_subdevs(pipeline);
-+	if (ret) {
-+		dev_err(pipeline->dev, "Subdev creation failed\n");
-+		return -EINVAL;
-+	}
-+
-+	set_bit(PIPELINE_INIT, &pipeline->state);
-+	return 0;
-+}
-+
-+int fimc_is_pipeline_destroy(struct fimc_is_pipeline *pipeline)
-+{
-+	if (!pipeline)
-+		return -EINVAL;
-+
-+	if (!test_bit(PIPELINE_INIT, &pipeline->state))
-+		return -EINVAL;
-+	return fimc_is_pipeline_unregister_subdevs(pipeline);
-+}
-+
-+static int fimc_is_pipeline_initmem(struct fimc_is_pipeline *pipeline)
-+{
-+	struct fimc_is_meminfo *minfo = pipeline->minfo;
-+	unsigned int offset;
-+
-+	/* Allocate fw memory */
-+	minfo->fw.vaddr = dma_alloc_coherent(pipeline->dev,
-+			FIMC_IS_A5_MEM_SIZE + FIMC_IS_A5_SEN_SIZE,
-+			&minfo->fw.paddr, GFP_KERNEL);
-+	if (minfo->fw.vaddr == NULL)
-+		return -ENOMEM;
-+	minfo->fw.size = FIMC_IS_A5_MEM_SIZE + FIMC_IS_A5_SEN_SIZE;
-+
-+	/* FW memory should be 64MB aligned */
-+	if ((u32)minfo->fw.paddr & FIMC_IS_FW_BASE_MASK) {
-+		dev_err(pipeline->dev, "FW memory not 64MB aligned.\n");
-+		dma_free_coherent(pipeline->dev, minfo->fw.size,
-+				minfo->fw.vaddr,
-+				minfo->fw.paddr);
-+		return -EIO;
-+	}
-+
-+	/* Assigning memory regions */
-+	offset = FIMC_IS_A5_MEM_SIZE - FIMC_IS_REGION_SIZE;
-+	minfo->region.paddr = minfo->fw.paddr + offset;
-+	minfo->region.vaddr = minfo->fw.vaddr + offset;
-+	pipeline->is_region = (struct is_region *)minfo->region.vaddr;
-+
-+	minfo->shared.paddr = minfo->fw.paddr +
-+		(unsigned int)((void *)&pipeline->is_region->shared[0] -
-+		 minfo->fw.vaddr);
-+	minfo->shared.vaddr = minfo->fw.vaddr +
-+		(unsigned int)((void *)&pipeline->is_region->shared[0] -
-+		 minfo->fw.vaddr);
-+
-+	/* Allocate shot buffer */
-+	minfo->shot.vaddr = dma_alloc_coherent(pipeline->dev,
-+			sizeof(struct camera2_shot),
-+			&minfo->shot.paddr, GFP_KERNEL);
-+	if (minfo->shot.vaddr == NULL) {
-+		dma_free_coherent(pipeline->dev, minfo->fw.size,
-+				minfo->fw.vaddr,
-+				minfo->fw.paddr);
-+		return -ENOMEM;
-+	}
-+	minfo->shot.size = sizeof(struct camera2_shot);
-+
-+	return 0;
-+}
-+
-+static void fimc_is_pipeline_freemem(struct fimc_is_pipeline *pipeline)
-+{
-+	struct fimc_is_meminfo *minfo = pipeline->minfo;
-+	if (minfo->fw.vaddr)
-+		dma_free_coherent(pipeline->dev, minfo->fw.size,
-+				minfo->fw.vaddr,
-+				minfo->fw.paddr);
-+	if (minfo->shot.vaddr)
-+		dma_free_coherent(pipeline->dev, minfo->shot.size,
-+				minfo->shot.vaddr,
-+				minfo->shot.paddr);
-+}
-+
-+static int fimc_is_pipeline_load_firmware(struct fimc_is_pipeline *pipeline)
-+{
-+	const struct firmware *fw_blob;
-+	struct fimc_is *is = pipeline->is;
-+	int ret;
-+
-+	ret = request_firmware(&fw_blob, is->drvdata->fw_name, &is->pdev->dev);
-+	if (ret != 0) {
-+		dev_err(pipeline->dev, "Firmware file not found\n");
-+		return -EINVAL;
-+	}
-+	if (fw_blob->size > FIMC_IS_A5_MEM_SIZE + FIMC_IS_A5_SEN_SIZE) {
-+		dev_err(pipeline->dev, "Firmware file too big.\n");
-+		release_firmware(fw_blob);
-+		return -ENOMEM;
-+	}
-+
-+	memcpy(pipeline->minfo->fw.vaddr, fw_blob->data, fw_blob->size);
-+	wmb();
-+	release_firmware(fw_blob);
-+
-+	return 0;
-+}
-+
-+static void fimc_is_pipeline_forcedown(struct fimc_is_pipeline *pipeline,
-+		bool on)
-+{
-+	struct fimc_is *is = pipeline->is;
-+	if (on) {
-+		pmu_is_write(0x0, is, PMUREG_ISP_ARM_OPTION);
-+		pmu_is_write(0x1cf82000, is, PMUREG_ISP_LOW_POWER_OFF);
-+		pipeline->force_down = true;
-+	} else {
-+		pmu_is_write(0xffffffff, is, PMUREG_ISP_ARM_OPTION);
-+		pmu_is_write(0x8, is, PMUREG_ISP_LOW_POWER_OFF);
-+		pipeline->force_down = false;
-+	}
-+}
-+
-+static int fimc_is_pipeline_power(struct fimc_is_pipeline *pipeline, int on)
-+{
-+	int ret = 0;
-+	u32 timeout;
-+	struct fimc_is *is = pipeline->is;
-+	struct device *dev = &is->pdev->dev;
-+
-+	if (on) {
-+		/* force poweroff setting */
-+		if (pipeline->force_down)
-+			fimc_is_pipeline_forcedown(pipeline, false);
-+
-+		/* FIMC-IS local power enable */
-+		ret = pm_runtime_get_sync(dev);
-+		if (ret)
-+			return ret;
-+
-+		/* A5 start address setting */
-+		writel(pipeline->minfo->fw.paddr, is->interface.regs + BBOAR);
-+
-+		/* A5 power on*/
-+		pmu_is_write(0x1, is, PMUREG_ISP_ARM_CONFIGURATION);
-+
-+		/* enable A5 */
-+		pmu_is_write(0x00018000, is, PMUREG_ISP_ARM_OPTION);
-+		timeout = 1000;
-+		while ((pmu_is_read(is, PMUREG_ISP_ARM_STATUS) & 0x1) != 0x1) {
-+			if (timeout == 0)
-+				dev_err(pipeline->dev, "A5 power on failed\n");
-+			timeout--;
-+			udelay(1);
-+		}
-+	} else {
-+		/* disable A5 */
-+		pmu_is_write(0x10000, is, PMUREG_ISP_ARM_OPTION);
-+		/* A5 power off*/
-+		pmu_is_write(0x0, is, PMUREG_ISP_ARM_CONFIGURATION);
-+
-+		/* Check A5 power off status register */
-+		timeout = 1000;
-+		while (pmu_is_read(is, PMUREG_ISP_ARM_STATUS) & 0x1) {
-+			if (timeout == 0) {
-+				dev_err(pipeline->dev, "A5 power off failed\n");
-+				fimc_is_pipeline_forcedown(pipeline, true);
-+			}
-+			timeout--;
-+			udelay(1);
-+		}
-+
-+		pmu_is_write(0x0, is, PMUREG_CMU_RESET_ISP_SYS_PWR_REG);
-+
-+		/* FIMC-IS local power down */
-+		pm_runtime_put_sync(dev);
-+	}
-+
-+	return ret;
-+}
-+
-+static int fimc_is_pipeline_load_setfile(struct fimc_is_pipeline *pipeline,
-+		unsigned int setfile_addr,
-+		unsigned char *setfile_name)
-+{
-+	struct fimc_is *is = pipeline->is;
-+	const struct firmware *fw_blob;
-+	int ret;
-+
-+	ret = request_firmware(&fw_blob, setfile_name, &is->pdev->dev);
-+	if (ret != 0) {
-+		dev_err(pipeline->dev, "Setfile %s not found\n", setfile_name);
-+		return -EINVAL;
-+	}
-+
-+	memcpy(pipeline->minfo->fw.vaddr + setfile_addr,
-+			fw_blob->data, fw_blob->size);
-+	wmb();
-+	release_firmware(fw_blob);
-+
-+	return 0;
-+}
-+
-+static int fimc_is_pipeline_setfile(struct fimc_is_pipeline *pipeline)
-+{
-+	struct fimc_is *is = pipeline->is;
-+	struct fimc_is_sensor *sensor = pipeline->sensor;
-+	int ret;
-+	unsigned int setfile_addr;
-+
-+	/* Get setfile addr from HW */
-+	ret = fimc_is_itf_get_setfile_addr(&is->interface,
-+			pipeline->instance, &setfile_addr);
-+	if (ret < 0) {
-+		dev_err(pipeline->dev, "Get setfile addr failed.\n");
-+		return ret;
-+	}
-+
-+	if (!sensor->drvdata->setfile_name)
-+		return -EINVAL;
-+
-+	/* Load setfile */
-+	ret = fimc_is_pipeline_load_setfile(pipeline, setfile_addr,
-+			sensor->drvdata->setfile_name);
-+	if (ret < 0) {
-+		dev_err(pipeline->dev, "Load setfile failed.\n");
-+		return ret;
-+	}
-+
-+	/* Send HW command */
-+	ret = fimc_is_itf_load_setfile(&is->interface, pipeline->instance);
-+	if (ret < 0) {
-+		dev_err(pipeline->dev, "HW Load setfile failed.\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int fimc_is_pipeline_isp_setparams(struct fimc_is_pipeline *pipeline,
-+		unsigned int enable)
-+{
-+	struct isp_param *isp_param = &pipeline->is_region->parameter.isp;
-+	struct fimc_is *is = pipeline->is;
-+	unsigned long index[2] = {0};
-+	unsigned int sensor_width, sensor_height, scc_width, scc_height;
-+	unsigned int crop_x, crop_y, isp_width, isp_height;
-+	unsigned int sensor_ratio, output_ratio;
-+	int ret;
-+
-+	/* Crop calculation */
-+	sensor_width = pipeline->sensor->width;
-+	sensor_height = pipeline->sensor->height;
-+	scc_width = pipeline->scaler[SCALER_SCC].width;
-+	scc_height = pipeline->scaler[SCALER_SCC].height;
-+	isp_width = sensor_width;
-+	isp_height = sensor_height;
-+	crop_x = crop_y = 0;
-+
-+	sensor_ratio = sensor_width * 1000 / sensor_height;
-+	output_ratio = scc_width * 1000 / scc_height;
-+
-+	if (sensor_ratio == output_ratio) {
-+		isp_width = sensor_width;
-+		isp_height = sensor_height;
-+	} else if (sensor_ratio < output_ratio) {
-+		isp_height = (sensor_width * scc_height) / scc_width;
-+		isp_height = ALIGN(isp_height, 2);
-+		crop_y = ((sensor_height - isp_height) >> 1) & ~1U;
-+	} else {
-+		isp_width = (sensor_height * scc_width) / scc_height;
-+		isp_width = ALIGN(isp_width, 4);
-+		crop_x =  ((sensor_width - isp_width) >> 1) & ~1U;
-+	}
-+	pipeline->isp_width = isp_width;
-+	pipeline->isp_height = isp_height;
-+
-+	isp_param->otf_output.cmd = OTF_OUTPUT_COMMAND_ENABLE;
-+	isp_param->otf_output.width = pipeline->sensor->width;
-+	isp_param->otf_output.height = pipeline->sensor->height;
-+	isp_param->otf_output.format = OTF_OUTPUT_FORMAT_YUV444;
-+	isp_param->otf_output.bitwidth = OTF_OUTPUT_BIT_WIDTH_12BIT;
-+	isp_param->otf_output.order = OTF_INPUT_ORDER_BAYER_GR_BG;
-+	__set_bit(PARAM_ISP_OTF_OUTPUT, index);
-+
-+	isp_param->dma1_output.cmd = DMA_OUTPUT_COMMAND_DISABLE;
-+	__set_bit(PARAM_ISP_DMA1_OUTPUT, index);
-+
-+	isp_param->dma2_output.cmd = DMA_OUTPUT_COMMAND_DISABLE;
-+	__set_bit(PARAM_ISP_DMA2_OUTPUT, index);
-+
-+	if (enable)
-+		isp_param->control.bypass = CONTROL_BYPASS_DISABLE;
-+	else
-+		isp_param->control.bypass = CONTROL_BYPASS_ENABLE;
-+	isp_param->control.cmd = CONTROL_COMMAND_START;
-+	isp_param->control.run_mode = 1;
-+	__set_bit(PARAM_ISP_CONTROL, index);
-+
-+	isp_param->dma1_input.cmd = DMA_INPUT_COMMAND_BUF_MNGR;
-+	isp_param->dma1_input.width = sensor_width;
-+	isp_param->dma1_input.height = sensor_height;
-+	isp_param->dma1_input.dma_crop_offset_x = crop_x;
-+	isp_param->dma1_input.dma_crop_offset_y = crop_y;
-+	isp_param->dma1_input.dma_crop_width = isp_width;
-+	isp_param->dma1_input.dma_crop_height = isp_height;
-+	isp_param->dma1_input.bayer_crop_offset_x = 0;
-+	isp_param->dma1_input.bayer_crop_offset_y = 0;
-+	isp_param->dma1_input.bayer_crop_width = 0;
-+	isp_param->dma1_input.bayer_crop_height = 0;
-+	isp_param->dma1_input.user_min_frametime = 0;
-+	isp_param->dma1_input.user_max_frametime = 66666;
-+	isp_param->dma1_input.wide_frame_gap = 1;
-+	isp_param->dma1_input.frame_gap = 4096;
-+	isp_param->dma1_input.line_gap = 45;
-+	isp_param->dma1_input.order = DMA_INPUT_ORDER_GR_BG;
-+	isp_param->dma1_input.plane = 1;
-+	isp_param->dma1_input.buffer_number = 1;
-+	isp_param->dma1_input.buffer_address = 0;
-+	isp_param->dma1_input.reserved[1] = 0;
-+	isp_param->dma1_input.reserved[2] = 0;
-+	if (pipeline->isp.fmt->fourcc == V4L2_PIX_FMT_SGRBG8)
-+		isp_param->dma1_input.bitwidth = DMA_INPUT_BIT_WIDTH_8BIT;
-+	else if (pipeline->isp.fmt->fourcc == V4L2_PIX_FMT_SGRBG10)
-+		isp_param->dma1_input.bitwidth = DMA_INPUT_BIT_WIDTH_10BIT;
-+	else
-+		isp_param->dma1_input.bitwidth = DMA_INPUT_BIT_WIDTH_12BIT;
-+	__set_bit(PARAM_ISP_DMA1_INPUT, index);
-+
-+	index[0] = 0xFFFFFFFF;
-+	index[1] = 0xFFFFFFFF;
-+
-+	wmb();
-+	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
-+			index[0], index[1]);
-+	if (ret) {
-+		dev_err(pipeline->dev, "%s failed\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	set_bit(COMP_ENABLE, &pipeline->comp_state[IS_ISP]);
-+
-+	return 0;
-+}
-+
-+static int fimc_is_pipeline_drc_setparams(struct fimc_is_pipeline *pipeline,
-+		unsigned int enable)
-+{
-+	struct drc_param *drc_param = &pipeline->is_region->parameter.drc;
-+	struct fimc_is *is = pipeline->is;
-+	int ret;
-+	unsigned long index[2] = {0};
-+
-+	if (enable)
-+		drc_param->control.bypass = CONTROL_BYPASS_DISABLE;
-+	else
-+		drc_param->control.bypass = CONTROL_BYPASS_ENABLE;
-+	__set_bit(PARAM_DRC_CONTROL, index);
-+
-+	drc_param->otf_input.cmd = OTF_INPUT_COMMAND_ENABLE;
-+	drc_param->otf_input.width = pipeline->isp_width;
-+	drc_param->otf_input.height = pipeline->isp_height;
-+	__set_bit(PARAM_DRC_OTF_INPUT, index);
-+
-+	drc_param->otf_output.cmd = OTF_OUTPUT_COMMAND_ENABLE;
-+	drc_param->otf_output.width = pipeline->isp_width;
-+	drc_param->otf_output.height = pipeline->isp_height;
-+	__set_bit(PARAM_DRC_OTF_OUTPUT, index);
-+
-+	wmb();
-+	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
-+			index[0], index[1]);
-+	if (ret) {
-+		dev_err(pipeline->dev, "%s failed\n", __func__);
-+		return -EINVAL;
-+	}
-+	if (enable)
-+		set_bit(COMP_ENABLE, &pipeline->comp_state[IS_DRC]);
-+	else
-+		clear_bit(COMP_ENABLE, &pipeline->comp_state[IS_DRC]);
-+
-+	return 0;
-+}
-+
-+static int fimc_is_pipeline_scc_setparams(struct fimc_is_pipeline *pipeline,
-+		unsigned int enable)
-+{
-+	struct scalerc_param *scc_param =
-+		&pipeline->is_region->parameter.scalerc;
-+	struct fimc_is *is = pipeline->is;
-+	int ret;
-+	unsigned long index[2] = {0};
-+	unsigned int scc_width, scc_height;
-+
-+	scc_width = pipeline->scaler[SCALER_SCC].width;
-+	scc_height = pipeline->scaler[SCALER_SCC].height;
-+
-+	if (enable)
-+		scc_param->control.bypass = CONTROL_BYPASS_DISABLE;
-+	else
-+		scc_param->control.bypass = CONTROL_BYPASS_ENABLE;
-+	__set_bit(PARAM_SCALERC_CONTROL, index);
-+
-+	scc_param->otf_input.cmd = OTF_INPUT_COMMAND_ENABLE;
-+	scc_param->otf_input.width = pipeline->isp_width;
-+	scc_param->otf_input.height = pipeline->isp_height;
-+	__set_bit(PARAM_SCALERC_OTF_INPUT, index);
-+
-+	/* SCC OUTPUT */
-+	scc_param->input_crop.cmd = SCALER_CROP_COMMAND_ENABLE;
-+	scc_param->input_crop.pos_x = 0;
-+	scc_param->input_crop.pos_y = 0;
-+	scc_param->input_crop.crop_width = pipeline->isp_width;
-+	scc_param->input_crop.crop_height = pipeline->isp_height;
-+	scc_param->input_crop.in_width = pipeline->isp_width;
-+	scc_param->input_crop.in_height = pipeline->isp_height;
-+	scc_param->input_crop.out_width = scc_width;
-+	scc_param->input_crop.out_height = scc_height;
-+	__set_bit(PARAM_SCALERC_INPUT_CROP, index);
-+
-+	scc_param->output_crop.cmd = SCALER_CROP_COMMAND_DISABLE;
-+	scc_param->output_crop.pos_x = 0;
-+	scc_param->output_crop.pos_y = 0;
-+	scc_param->output_crop.crop_width = scc_width;
-+	scc_param->output_crop.crop_height = scc_height;
-+	__set_bit(PARAM_SCALERC_OUTPUT_CROP, index);
-+
-+	scc_param->otf_output.cmd = OTF_OUTPUT_COMMAND_ENABLE;
-+	scc_param->otf_output.width = scc_width;
-+	scc_param->otf_output.height = scc_height;
-+	__set_bit(PARAM_SCALERC_OTF_OUTPUT, index);
-+
-+	scc_param->dma_output.width = scc_width;
-+	scc_param->dma_output.height = scc_height;
-+	__set_bit(PARAM_SCALERC_DMA_OUTPUT, index);
-+
-+	wmb();
-+	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
-+			index[0], index[1]);
-+	if (ret) {
-+		dev_err(pipeline->dev, "%s failed\n", __func__);
-+		return -EINVAL;
-+	}
-+	set_bit(COMP_ENABLE, &pipeline->comp_state[IS_SCC]);
-+	return 0;
-+}
-+
-+static int fimc_is_pipeline_odc_setparams(struct fimc_is_pipeline *pipeline,
-+		unsigned int enable)
-+{
-+	struct odc_param *odc_param = &pipeline->is_region->parameter.odc;
-+	struct fimc_is *is = pipeline->is;
-+	int ret;
-+	unsigned long index[2] = {0};
-+	unsigned int scc_width, scc_height;
-+
-+	scc_width = pipeline->scaler[SCALER_SCC].width;
-+	scc_height = pipeline->scaler[SCALER_SCC].height;
-+
-+	if (enable)
-+		odc_param->control.bypass = CONTROL_BYPASS_DISABLE;
-+	else
-+		odc_param->control.bypass = CONTROL_BYPASS_ENABLE;
-+	__set_bit(PARAM_ODC_CONTROL, index);
-+
-+	odc_param->otf_input.width = scc_width;
-+	odc_param->otf_input.height = scc_height;
-+	__set_bit(PARAM_ODC_OTF_INPUT, index);
-+
-+	odc_param->otf_output.width = scc_width;
-+	odc_param->otf_output.height = scc_height;
-+	__set_bit(PARAM_ODC_OTF_OUTPUT, index);
-+
-+	wmb();
-+	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
-+			index[0], index[1]);
-+	if (ret) {
-+		dev_err(pipeline->dev, "%s failed\n", __func__);
-+		return -EINVAL;
-+	}
-+	if (enable)
-+		set_bit(COMP_ENABLE, &pipeline->comp_state[IS_ODC]);
-+	else
-+		clear_bit(COMP_ENABLE, &pipeline->comp_state[IS_ODC]);
-+
-+	return 0;
-+}
-+
-+static int fimc_is_pipeline_dis_setparams(struct fimc_is_pipeline *pipeline,
-+		unsigned int enable)
-+{
-+	struct dis_param *dis_param = &pipeline->is_region->parameter.dis;
-+	struct fimc_is *is = pipeline->is;
-+	int ret;
-+	unsigned long index[2] = {0};
-+	unsigned int scc_width, scc_height;
-+
-+	scc_width = pipeline->scaler[SCALER_SCC].width;
-+	scc_height = pipeline->scaler[SCALER_SCC].height;
-+
-+	if (enable)
-+		dis_param->control.bypass = CONTROL_BYPASS_DISABLE;
-+	else
-+		dis_param->control.bypass = CONTROL_BYPASS_ENABLE;
-+	__set_bit(PARAM_DIS_CONTROL, index);
-+
-+	/* DIS INPUT */
-+	dis_param->otf_input.width = scc_width;
-+	dis_param->otf_input.height = scc_height;
-+	__set_bit(PARAM_DIS_OTF_INPUT, index);
-+
-+	/* DIS OUTPUT */
-+	dis_param->otf_output.width = scc_width;
-+	dis_param->otf_output.height = scc_height;
-+	__set_bit(PARAM_DIS_OTF_OUTPUT, index);
-+
-+	wmb();
-+	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
-+			index[0], index[1]);
-+	if (ret) {
-+		dev_err(pipeline->dev, "%s failed\n", __func__);
-+		return -EINVAL;
-+	}
-+	if (enable)
-+		set_bit(COMP_ENABLE, &pipeline->comp_state[IS_DIS]);
-+	else
-+		clear_bit(COMP_ENABLE, &pipeline->comp_state[IS_DIS]);
-+
-+	return 0;
-+}
-+
-+static int fimc_is_pipeline_3dnr_setparams(struct fimc_is_pipeline *pipeline,
-+		unsigned int enable)
-+{
-+	struct tdnr_param *tdnr_param = &pipeline->is_region->parameter.tdnr;
-+	struct fimc_is *is = pipeline->is;
-+	int ret;
-+	unsigned long index[2] = {0};
-+	unsigned int scc_width, scc_height;
-+
-+	scc_width = pipeline->scaler[SCALER_SCC].width;
-+	scc_height = pipeline->scaler[SCALER_SCC].height;
-+
-+	if (enable)
-+		tdnr_param->control.bypass = CONTROL_BYPASS_DISABLE;
-+	else
-+		tdnr_param->control.bypass = CONTROL_BYPASS_ENABLE;
-+	__set_bit(PARAM_TDNR_CONTROL, index);
-+
-+	tdnr_param->otf_input.width = scc_width;
-+	tdnr_param->otf_input.height = scc_height;
-+	__set_bit(PARAM_TDNR_OTF_INPUT, index);
-+
-+	tdnr_param->dma_output.width = scc_width;
-+	tdnr_param->dma_output.height = scc_height;
-+	__set_bit(PARAM_TDNR_DMA_OUTPUT, index);
-+
-+	tdnr_param->otf_output.width = scc_width;
-+	tdnr_param->otf_output.height = scc_height;
-+	__set_bit(PARAM_TDNR_OTF_OUTPUT, index);
-+
-+	wmb();
-+	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
-+			index[0], index[1]);
-+	if (ret) {
-+		dev_err(pipeline->dev, "%s failed\n", __func__);
-+		return -EINVAL;
-+	}
-+	if (enable)
-+		set_bit(COMP_ENABLE, &pipeline->comp_state[IS_TDNR]);
-+	else
-+		clear_bit(COMP_ENABLE, &pipeline->comp_state[IS_TDNR]);
-+
-+	return 0;
-+}
-+
-+static int fimc_is_pipeline_scp_setparams(struct fimc_is_pipeline *pipeline,
-+		unsigned int enable)
-+{
-+	struct scalerp_param *scp_param =
-+		&pipeline->is_region->parameter.scalerp;
-+	struct fimc_is *is = pipeline->is;
-+	int ret;
-+	unsigned long index[2] = {0};
-+	unsigned int scc_width, scc_height;
-+	unsigned int scp_width, scp_height;
-+
-+	scc_width = pipeline->scaler[SCALER_SCC].width;
-+	scc_height = pipeline->scaler[SCALER_SCC].height;
-+	scp_width = pipeline->scaler[SCALER_SCP].width;
-+	scp_height = pipeline->scaler[SCALER_SCP].height;
-+
-+	if (enable)
-+		scp_param->control.bypass = CONTROL_BYPASS_DISABLE;
-+	else
-+		scp_param->control.bypass = CONTROL_BYPASS_ENABLE;
-+	__set_bit(PARAM_SCALERP_CONTROL, index);
-+
-+	/* SCP Input */
-+	scp_param->otf_input.width = scc_width;
-+	scp_param->otf_input.height = scc_height;
-+	__set_bit(PARAM_SCALERP_OTF_INPUT, index);
-+
-+	/* SCP Output */
-+	scp_param->input_crop.cmd = SCALER_CROP_COMMAND_ENABLE;
-+	scp_param->input_crop.pos_x = 0;
-+	scp_param->input_crop.pos_y = 0;
-+	scp_param->input_crop.crop_width = scc_width;
-+	scp_param->input_crop.crop_height = scc_height;
-+	scp_param->input_crop.in_width = scc_width;
-+	scp_param->input_crop.in_height = scc_height;
-+	scp_param->input_crop.out_width = scp_width;
-+	scp_param->input_crop.out_height = scp_height;
-+	__set_bit(PARAM_SCALERP_INPUT_CROP, index);
-+
-+	scp_param->output_crop.cmd = SCALER_CROP_COMMAND_DISABLE;
-+	__set_bit(PARAM_SCALERP_OUTPUT_CROP, index);
-+
-+	scp_param->otf_output.width = scp_width;
-+	scp_param->otf_output.height = scp_height;
-+	__set_bit(PARAM_SCALERP_OTF_OUTPUT, index);
-+
-+	scp_param->dma_output.width = scp_width;
-+	scp_param->dma_output.height = scp_height;
-+	__set_bit(PARAM_SCALERP_DMA_OUTPUT, index);
-+
-+	wmb();
-+	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
-+			index[0], index[1]);
-+	if (ret) {
-+		dev_err(pipeline->dev, "%s failed\n", __func__);
-+		return -EINVAL;
-+	}
-+	set_bit(COMP_ENABLE, &pipeline->comp_state[IS_SCP]);
-+
-+	return 0;
-+}
-+
-+static int fimc_is_pipeline_fd_setparams(struct fimc_is_pipeline *pipeline,
-+		unsigned int enable)
-+{
-+	struct fd_param *fd_param = &pipeline->is_region->parameter.fd;
-+	struct fimc_is *is = pipeline->is;
-+	int ret;
-+	unsigned long index[2] = {0};
-+
-+	if (enable)
-+		fd_param->control.bypass = CONTROL_BYPASS_DISABLE;
-+	else
-+		fd_param->control.bypass = CONTROL_BYPASS_ENABLE;
-+	__set_bit(PARAM_FD_CONTROL, index);
-+
-+	fd_param->otf_input.width = pipeline->scaler[SCALER_SCP].width;
-+	fd_param->otf_input.height = pipeline->scaler[SCALER_SCP].height;
-+	__set_bit(PARAM_FD_OTF_INPUT, index);
-+
-+	wmb();
-+	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
-+			index[0], index[1]);
-+	if (ret) {
-+		dev_err(pipeline->dev, "%s failed\n", __func__);
-+		return -EINVAL;
-+	}
-+	if (enable)
-+		set_bit(COMP_ENABLE, &pipeline->comp_state[IS_FD]);
-+	else
-+		clear_bit(COMP_ENABLE, &pipeline->comp_state[IS_FD]);
-+
-+	return 0;
-+}
-+
-+void fimc_is_pipeline_buf_lock(struct fimc_is_pipeline *pipeline)
-+{
-+	spin_lock_irqsave(&pipeline->slock_buf, pipeline->slock_flags);
-+}
-+
-+void fimc_is_pipeline_buf_unlock(struct fimc_is_pipeline *pipeline)
-+{
-+	spin_unlock_irqrestore(&pipeline->slock_buf, pipeline->slock_flags);
-+}
-+
-+int fimc_is_pipeline_setparams(struct fimc_is_pipeline *pipeline)
-+{
-+	int ret;
-+
-+	/* Enabling basic components in pipeline */
-+	ret = fimc_is_pipeline_isp_setparams(pipeline, true);
-+	if (!ret)
-+		ret = fimc_is_pipeline_drc_setparams(pipeline, false);
-+	if (!ret)
-+		ret = fimc_is_pipeline_scc_setparams(pipeline, true);
-+	if (!ret)
-+		ret = fimc_is_pipeline_odc_setparams(pipeline, false);
-+	if (!ret)
-+		ret = fimc_is_pipeline_dis_setparams(pipeline, false);
-+	if (!ret)
-+		ret = fimc_is_pipeline_3dnr_setparams(pipeline, false);
-+	if (!ret)
-+		ret = fimc_is_pipeline_scp_setparams(pipeline, true);
-+	if (!ret)
-+		ret = fimc_is_pipeline_fd_setparams(pipeline, false);
-+	if (ret)
-+		dev_err(pipeline->dev, "Pipeline setparam failed.\n");
-+
-+	return ret;
-+}
-+
-+int fimc_is_pipeline_scaler_start(struct fimc_is_pipeline *pipeline,
-+		enum fimc_is_scaler_id scaler_id,
-+		unsigned int num_bufs,
-+		unsigned int num_planes)
-+{
-+	struct fimc_is *is = pipeline->is;
-+	struct scalerp_param *scp_param =
-+		&pipeline->is_region->parameter.scalerp;
-+	struct scalerc_param *scc_param =
-+		&pipeline->is_region->parameter.scalerc;
-+	struct param_dma_output *dma_output;
-+	const struct fimc_is_fmt *fmt;
-+	unsigned int region_index;
-+	unsigned long *comp_state;
-+	int ret;
-+	unsigned int pipe_start_flag = 0;
-+	unsigned int i, buf_mask = 0;
-+	unsigned long index[2] = {0};
-+
-+	if (!test_bit(PIPELINE_OPEN, &pipeline->state)) {
-+		dev_err(pipeline->dev, "Pipeline not opened.\n");
-+		return -EINVAL;
-+	}
-+
-+	mutex_lock(&pipeline->pipe_scl_lock);
-+
-+	if (test_bit(PIPELINE_START, &pipeline->state)) {
-+		/*
-+		 * Pipeline is started.
-+		 * Stop it now to set params and start again
-+		 */
-+		ret = fimc_is_pipeline_stop(pipeline);
-+		if (ret) {
-+			dev_err(pipeline->dev, "Not able to stop pipeline\n");
-+			goto exit;
-+		}
-+		pipe_start_flag = 1;
-+	}
-+
-+	if (scaler_id == SCALER_SCC) {
-+		dma_output = &scc_param->dma_output;
-+		region_index = FIMC_IS_SCC_REGION_INDEX;
-+		comp_state = &pipeline->comp_state[IS_SCC];
-+		fmt = pipeline->scaler[SCALER_SCC].fmt;
-+		__set_bit(PARAM_SCALERC_DMA_OUTPUT, index);
-+	} else {
-+		dma_output = &scp_param->dma_output;
-+		comp_state = &pipeline->comp_state[IS_SCP];
-+		fmt = pipeline->scaler[SCALER_SCC].fmt;
-+		region_index = FIMC_IS_SCP_REGION_INDEX;
-+		__set_bit(PARAM_SCALERP_DMA_OUTPUT, index);
-+	}
-+
-+	for (i = 0; i < num_bufs; i++)
-+		buf_mask |= BIT(i);
-+
-+	dma_output->cmd = DMA_OUTPUT_COMMAND_ENABLE;
-+	dma_output->dma_out_mask = buf_mask;
-+	dma_output->buffer_number = num_bufs;
-+	dma_output->plane = num_planes;
-+	if ((fmt->fourcc == V4L2_PIX_FMT_YUV420M) ||
-+			(fmt->fourcc == V4L2_PIX_FMT_NV12M))
-+		dma_output->format = DMA_OUTPUT_FORMAT_YUV420;
-+	else if (fmt->fourcc == V4L2_PIX_FMT_NV16)
-+		dma_output->format = DMA_OUTPUT_FORMAT_YUV422;
-+
-+	dma_output->buffer_address = pipeline->minfo->shared.paddr +
-+				region_index * sizeof(unsigned int);
-+
-+	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
-+			index[0], index[1]);
-+	if (ret)
-+		dev_err(pipeline->dev, "fimc_is_itf_set_param is fail\n");
-+	else
-+		set_bit(COMP_START, comp_state);
-+
-+	if (pipe_start_flag) {
-+		ret = fimc_is_pipeline_start(pipeline);
-+		if (ret) {
-+			dev_err(pipeline->dev,
-+					"Not able to start pipeline back\n");
-+			goto exit;
-+		}
-+	}
-+
-+exit:
-+	mutex_unlock(&pipeline->pipe_scl_lock);
-+	return ret;
-+}
-+
-+int fimc_is_pipeline_scaler_stop(struct fimc_is_pipeline *pipeline,
-+		enum fimc_is_scaler_id scaler_id)
-+{
-+	struct fimc_is *is = pipeline->is;
-+	struct scalerp_param *scp_param =
-+		&pipeline->is_region->parameter.scalerp;
-+	struct scalerc_param *scc_param =
-+		&pipeline->is_region->parameter.scalerc;
-+	struct param_dma_output *dma_output;
-+	unsigned int pipe_start_flag = 0;
-+	unsigned long index[2] = {0};
-+	unsigned long *comp_state;
-+	int ret;
-+
-+	if (!test_bit(PIPELINE_OPEN, &pipeline->state))
-+		return -EINVAL;
-+
-+	mutex_lock(&pipeline->pipe_scl_lock);
-+
-+	if (test_bit(PIPELINE_START, &pipeline->state)) {
-+		/*
-+		 * Pipeline is started.
-+		 * Stop it now to set params and start again
-+		 */
-+		ret = fimc_is_pipeline_stop(pipeline);
-+		if (ret) {
-+			dev_err(pipeline->dev, "Not able to stop pipeline\n");
-+			goto exit;
-+		}
-+		pipe_start_flag = 1;
-+	}
-+
-+	comp_state = (scaler_id == SCALER_SCC) ?
-+		&pipeline->comp_state[IS_SCC] : &pipeline->comp_state[IS_SCP];
-+
-+	if (!test_bit(COMP_START, comp_state)) {
-+		ret = 0;
-+		goto exit;
-+	}
-+
-+	if (scaler_id == SCALER_SCC) {
-+		dma_output = &scc_param->dma_output;
-+		__set_bit(PARAM_SCALERC_DMA_OUTPUT, index);
-+	} else {
-+		dma_output = &scp_param->dma_output;
-+		__set_bit(PARAM_SCALERP_DMA_OUTPUT, index);
-+	}
-+	dma_output->cmd = DMA_OUTPUT_COMMAND_DISABLE;
-+
-+	ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
-+			index[0], index[1]);
-+	if (ret < 0)
-+		dev_err(pipeline->dev, "fimc_is_itf_set_param is fail\n");
-+	else
-+		clear_bit(COMP_START, comp_state);
-+
-+	if (pipe_start_flag) {
-+		ret = fimc_is_pipeline_start(pipeline);
-+		if (ret) {
-+			dev_err(pipeline->dev,
-+					"Not able to start pipeline back\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+exit:
-+	mutex_unlock(&pipeline->pipe_scl_lock);
-+	return ret;
-+}
-+
-+void fimc_is_pipeline_config_shot(struct fimc_is_pipeline *pipeline)
-+{
-+	struct camera2_shot *shot =
-+		(struct camera2_shot *)pipeline->minfo->shot.vaddr;
-+
-+	shot->magicnumber = FIMC_IS_MAGIC_NUMBER;
-+
-+	shot->ctl.aa.mode = AA_CONTROL_AUTO;
-+	shot->ctl.aa.ae_mode = AA_AEMODE_ON;
-+}
-+
-+int fimc_is_pipeline_shot(struct fimc_is_pipeline *pipeline)
-+{
-+	struct fimc_is *is = pipeline->is;
-+	int ret;
-+	unsigned int rcount, i;
-+	struct camera2_shot *shot = pipeline->minfo->shot.vaddr;
-+	struct fimc_is_buf *scc_buf, *scp_buf, *bayer_buf;
-+
-+	if (!test_bit(PIPELINE_START, &pipeline->state))
-+		return -EINVAL;
-+
-+	if (test_bit(PIPELINE_RUN, &pipeline->state))
-+		return -EBUSY;
-+
-+	fimc_is_pipeline_buf_lock(pipeline);
-+
-+	if (list_empty(&pipeline->isp.wait_queue)) {
-+		/* No more bayer buffers */
-+		wake_up(&pipeline->wait_q);
-+		fimc_is_pipeline_buf_unlock(pipeline);
-+		return 0;
-+	}
-+
-+	set_bit(PIPELINE_RUN, &pipeline->state);
-+
-+	/* Get bayer input buffer */
-+	bayer_buf = fimc_is_isp_wait_queue_get(&pipeline->isp);
-+	if (!bayer_buf) {
-+		fimc_is_pipeline_buf_unlock(pipeline);
-+		goto err_exit;
-+	}
-+	fimc_is_isp_run_queue_add(&pipeline->isp, bayer_buf);
-+
-+	/* Get SCC buffer */
-+	if (test_bit(COMP_START, &pipeline->comp_state[IS_SCC]) &&
-+		!list_empty(&pipeline->scaler[SCALER_SCC].wait_queue)) {
-+		scc_buf = fimc_is_scaler_wait_queue_get(
-+				&pipeline->scaler[SCALER_SCC]);
-+		if (scc_buf) {
-+			fimc_is_scaler_run_queue_add(
-+					&pipeline->scaler[SCALER_SCC],
-+					scc_buf);
-+			for (i = 0; i < 3; i++)
-+				shot->uctl.scaler_ud.scc_target_address[i] =
-+							scc_buf->paddr[i];
-+			set_bit(COMP_RUN, &pipeline->comp_state[IS_SCC]);
-+		}
-+	} else {
-+		dev_dbg(pipeline->dev, "No SCC buffer available\n");
-+		for (i = 0; i < 3; i++)
-+			shot->uctl.scaler_ud.scc_target_address[i] = 0;
-+	}
-+
-+	/* Get SCP buffer */
-+	if (test_bit(COMP_START, &pipeline->comp_state[IS_SCP]) &&
-+		!list_empty(&pipeline->scaler[SCALER_SCP].wait_queue)) {
-+		scp_buf = fimc_is_scaler_wait_queue_get(
-+				&pipeline->scaler[SCALER_SCP]);
-+		if (scp_buf) {
-+			fimc_is_scaler_run_queue_add(
-+					&pipeline->scaler[SCALER_SCP],
-+					scp_buf);
-+			for (i = 0; i < 3; i++)
-+				shot->uctl.scaler_ud.scp_target_address[i] =
-+							scp_buf->paddr[i];
-+			set_bit(COMP_RUN, &pipeline->comp_state[IS_SCP]);
-+		}
-+	} else {
-+		dev_dbg(pipeline->dev, "No SCP buffer available\n");
-+		for (i = 0; i < 3; i++)
-+			shot->uctl.scaler_ud.scp_target_address[i] = 0;
-+	}
-+	fimc_is_pipeline_buf_unlock(pipeline);
-+
-+	/* Send shot command */
-+	pipeline->fcount++;
-+	rcount = pipeline->fcount;
-+	shot->ctl.request.framecount = pipeline->fcount;
-+	dev_dbg(pipeline->dev,
-+		"Shot command fcount : %d, Bayer addr : 0x%08x\n",
-+		pipeline->fcount, bayer_buf->paddr[0]);
-+	ret = fimc_is_itf_shot_nblk(&is->interface, pipeline->instance,
-+			bayer_buf->paddr[0],
-+			pipeline->minfo->shot.paddr,
-+			pipeline->fcount,
-+			rcount);
-+	if (ret < 0) {
-+		dev_err(pipeline->dev, "Shot command failed.\n");
-+		goto err_exit;
-+	}
-+	return 0;
-+
-+err_exit:
-+	clear_bit(PIPELINE_RUN, &pipeline->state);
-+	clear_bit(COMP_RUN, &pipeline->comp_state[IS_SCC]);
-+	clear_bit(COMP_RUN, &pipeline->comp_state[IS_SCP]);
-+	return -EINVAL;
-+}
-+
-+int fimc_is_pipeline_start(struct fimc_is_pipeline *pipeline)
-+{
-+	int ret = 0;
-+	struct fimc_is *is = pipeline->is;
-+
-+	/* Check if open or not */
-+	if (!test_bit(PIPELINE_OPEN, &pipeline->state)) {
-+		dev_err(pipeline->dev, "Pipeline not open.\n");
-+		return -EINVAL;
-+	}
-+
-+	mutex_lock(&pipeline->pipe_lock);
-+
-+	/* Check if already started */
-+	if (test_bit(PIPELINE_START, &pipeline->state))
-+		goto err_exit;
-+
-+	/* Set pipeline component params */
-+	ret = fimc_is_pipeline_setparams(pipeline);
-+	if (ret < 0) {
-+		dev_err(pipeline->dev, "Set params failed\n");
-+		goto err_exit;
-+	}
-+
-+	/* Send preview still command */
-+	ret = fimc_is_itf_preview_still(&is->interface, pipeline->instance);
-+	if (ret) {
-+		dev_err(pipeline->dev, "Preview still command failed\n");
-+		goto err_exit;
-+	}
-+
-+	/* Confiture shot memory to A5 */
-+	ret = fimc_is_itf_cfg_mem(&is->interface, pipeline->instance,
-+			pipeline->minfo->shot.paddr,
-+			sizeof(struct camera2_shot));
-+	if (ret < 0) {
-+		dev_err(pipeline->dev, "Config A5 mem failed.\n");
-+		goto err_exit;
-+	}
-+
-+	/* Set shot params */
-+	fimc_is_pipeline_config_shot(pipeline);
-+
-+	/* Process ON command */
-+	ret = fimc_is_itf_process_on(&is->interface, pipeline->instance);
-+	if (ret) {
-+		dev_err(pipeline->dev, "Process on failed\n");
-+		goto err_exit;
-+	}
-+
-+	/* Stream ON */
-+	ret = fimc_is_itf_stream_on(&is->interface, pipeline->instance);
-+	if (ret < 0) {
-+		dev_err(pipeline->dev, "Stream On failed.\n");
-+		goto err_exit;
-+	}
-+
-+	/* Set state to START */
-+	set_bit(PIPELINE_START, &pipeline->state);
-+
-+	mutex_unlock(&pipeline->pipe_lock);
-+	return 0;
-+
-+err_exit:
-+	mutex_unlock(&pipeline->pipe_lock);
-+	return ret;
-+}
-+
-+int fimc_is_pipeline_stop(struct fimc_is_pipeline *pipeline)
-+{
-+	int ret;
-+	struct fimc_is *is = pipeline->is;
-+
-+	mutex_lock(&pipeline->pipe_lock);
-+
-+	/* Check if started */
-+	if (!test_bit(PIPELINE_OPEN, &pipeline->state) ||
-+		!test_bit(PIPELINE_START, &pipeline->state)) {
-+		ret = -EINVAL;
-+		goto err_exit;
-+	}
-+
-+	/* Wait if any operation is in progress */
-+	ret = wait_event_timeout(pipeline->wait_q,
-+			!test_bit(PIPELINE_RUN, &pipeline->state),
-+			FIMC_IS_COMMAND_TIMEOUT);
-+	if (!ret) {
-+		dev_err(pipeline->dev, "Pipeline timeout");
-+		ret = -EBUSY;
-+		goto err_exit;
-+	}
-+
-+	/* Wait for scaler operations if any to complete */
-+	ret = wait_event_timeout(pipeline->scaler[SCALER_SCC].event_q,
-+			!test_bit(COMP_RUN, &pipeline->comp_state[IS_SCC]),
-+			FIMC_IS_COMMAND_TIMEOUT);
-+	if (!ret) {
-+		dev_err(pipeline->dev, "SCC timeout");
-+		ret = -EBUSY;
-+		goto err_exit;
-+	}
-+	ret = wait_event_timeout(pipeline->scaler[SCALER_SCP].event_q,
-+			!test_bit(COMP_RUN, &pipeline->comp_state[IS_SCP]),
-+			FIMC_IS_COMMAND_TIMEOUT);
-+	if (!ret) {
-+		dev_err(pipeline->dev, "SCP timeout");
-+		ret = -EBUSY;
-+		goto err_exit;
-+	}
-+
-+
-+	/* Process OFF */
-+	ret = fimc_is_itf_process_off(&is->interface, pipeline->instance);
-+	if (ret) {
-+		dev_err(pipeline->dev, "Process off failed\n");
-+		ret = -EINVAL;
-+		goto err_exit;
-+	}
-+
-+	/* Stream OFF */
-+	ret = fimc_is_itf_stream_off(&is->interface, pipeline->instance);
-+	if (ret < 0) {
-+		dev_err(pipeline->dev, "Stream Off failed.\n");
-+		ret = -EINVAL;
-+		goto err_exit;
-+	}
-+
-+	/* Clear state */
-+	clear_bit(PIPELINE_START, &pipeline->state);
-+
-+err_exit:
-+	mutex_unlock(&pipeline->pipe_lock);
-+	return ret;
-+}
-+
-+int fimc_is_pipeline_open(struct fimc_is_pipeline *pipeline,
-+			struct fimc_is_sensor *sensor)
-+{
-+	struct fimc_is *is = pipeline->is;
-+	struct is_region *region;
-+	int ret;
-+
-+	if (!sensor)
-+		return -EINVAL;
-+
-+	mutex_lock(&pipeline->pipe_lock);
-+
-+	if (test_bit(PIPELINE_OPEN, &pipeline->state)) {
-+		dev_err(pipeline->dev, "Pipeline already open.\n");
-+		ret = -EINVAL;
-+		goto err_exit;
-+	}
-+
-+	pipeline->fcount = 0;
-+	pipeline->sensor = sensor;
-+
-+	if (is->num_pipelines == 0) {
-+		/* Init memory */
-+		ret = fimc_is_pipeline_initmem(pipeline);
-+		if (ret < 0) {
-+			dev_err(pipeline->dev, "Pipeline memory init failed.\n");
-+			goto err_exit;
-+		}
-+
-+		/* Load firmware */
-+		ret = fimc_is_pipeline_load_firmware(pipeline);
-+		if (ret < 0) {
-+			dev_err(pipeline->dev, "Firmware load failed.\n");
-+			goto err_fw;
-+		}
-+
-+		/* Power ON */
-+		ret = fimc_is_pipeline_power(pipeline, 1);
-+		if (ret < 0) {
-+			dev_err(pipeline->dev, "A5 power on failed.\n");
-+			goto err_fw;
-+		}
-+
-+		/* Wait for FW Init to complete */
-+		ret = fimc_is_itf_wait_init_state(&is->interface);
-+		if (ret < 0) {
-+			dev_err(pipeline->dev, "FW init failed.\n");
-+			goto err_fw;
-+		}
-+	}
-+
-+	/* Open Sensor */
-+	region = pipeline->is_region;
-+	ret = fimc_is_itf_open_sensor(&is->interface,
-+			pipeline->instance,
-+			sensor->drvdata->id,
-+			sensor->i2c_bus,
-+			pipeline->minfo->shared.paddr);
-+	if (ret < 0) {
-+		dev_err(pipeline->dev, "Open sensor failed\n");
-+		goto err_exit;
-+	}
-+
-+	if (is->num_pipelines == 0) {
-+		/* Copy init params to FW region */
-+		memset(&region->parameter, 0x0, sizeof(struct is_param_region));
-+
-+		memcpy(&region->parameter.sensor, &init_sensor_param,
-+				sizeof(struct sensor_param));
-+		memcpy(&region->parameter.isp, &init_isp_param,
-+				sizeof(struct isp_param));
-+		memcpy(&region->parameter.drc, &init_drc_param,
-+				sizeof(struct drc_param));
-+		memcpy(&region->parameter.scalerc, &init_scalerc_param,
-+				sizeof(struct scalerc_param));
-+		memcpy(&region->parameter.odc, &init_odc_param,
-+				sizeof(struct odc_param));
-+		memcpy(&region->parameter.dis, &init_dis_param,
-+				sizeof(struct dis_param));
-+		memcpy(&region->parameter.tdnr, &init_tdnr_param,
-+				sizeof(struct tdnr_param));
-+		memcpy(&region->parameter.scalerp, &init_scalerp_param,
-+				sizeof(struct scalerp_param));
-+		memcpy(&region->parameter.fd, &init_fd_param,
-+				sizeof(struct fd_param));
-+	}
-+
-+	/* Load setfile */
-+	ret = fimc_is_pipeline_setfile(pipeline);
-+	if (ret < 0)
-+		goto err_exit;
-+
-+	/* Stream off */
-+	ret = fimc_is_itf_stream_off(&is->interface, pipeline->instance);
-+	if (ret < 0)
-+		goto err_exit;
-+
-+	/* Process off */
-+	ret = fimc_is_itf_process_off(&is->interface, pipeline->instance);
-+	if (ret < 0)
-+		goto err_exit;
-+
-+	/* Set state to OPEN */
-+	set_bit(PIPELINE_OPEN, &pipeline->state);
-+	is->num_pipelines++;
-+
-+	mutex_unlock(&pipeline->pipe_lock);
-+	return 0;
-+
-+err_fw:
-+	fimc_is_pipeline_freemem(pipeline);
-+err_exit:
-+	mutex_unlock(&pipeline->pipe_lock);
-+	return ret;
-+}
-+
-+int fimc_is_pipeline_close(struct fimc_is_pipeline *pipeline)
-+{
-+	int ret;
-+	struct fimc_is *is = pipeline->is;
-+
-+	mutex_lock(&pipeline->pipe_lock);
-+
-+	if (!test_bit(PIPELINE_OPEN, &pipeline->state)) {
-+		dev_err(pipeline->dev, "Pipeline not opened\n");
-+		ret = -EINVAL;
-+		goto err_exit;
-+	}
-+
-+	if (test_bit(PIPELINE_START, &pipeline->state)) {
-+		dev_err(pipeline->dev, "Cannot close pipeline when its started\n");
-+		ret = -EINVAL;
-+		goto err_exit;
-+	}
-+
-+	is->num_pipelines--;
-+	if (is->num_pipelines == 0) {
-+		/* FW power off command */
-+		ret = fimc_is_itf_power_down(&is->interface,
-+					pipeline->instance);
-+		if (ret)
-+			dev_err(pipeline->dev, "FW power down error\n");
-+
-+		/* Pipeline power off*/
-+		fimc_is_pipeline_power(pipeline, 0);
-+
-+		/* Free memory */
-+		fimc_is_pipeline_freemem(pipeline);
-+	}
-+
-+	clear_bit(PIPELINE_OPEN, &pipeline->state);
-+	mutex_unlock(&pipeline->pipe_lock);
-+	return 0;
-+
-+err_exit:
-+	mutex_unlock(&pipeline->pipe_lock);
-+	return ret;
-+}
-diff --git a/drivers/media/platform/exynos5-is/fimc-is-pipeline.h b/drivers/media/platform/exynos5-is/fimc-is-pipeline.h
-new file mode 100644
-index 0000000..aa89787
---- /dev/null
-+++ b/drivers/media/platform/exynos5-is/fimc-is-pipeline.h
-@@ -0,0 +1,127 @@
-+/*
-+ * Samsung EXYNOS5 FIMC-IS (Imaging Subsystem) driver
-+ *
-+ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-+ *  Arun Kumar K <arun.kk@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#ifndef FIMC_IS_PIPELINE_H_
-+#define FIMC_IS_PIPELINE_H_
-+
-+#include "fimc-is-core.h"
-+#include "fimc-is-sensor.h"
-+#include "fimc-is-isp.h"
-+#include "fimc-is-scaler.h"
-+
-+#define FIMC_IS_A5_MEM_SIZE		0x00a00000
-+#define FIMC_IS_A5_SEN_SIZE		0x00100000
-+#define FIMC_IS_REGION_SIZE		0x5000
-+#define FIMC_IS_SETFILE_SIZE		0xc0d8
-+#define FIMC_IS_TDNR_MEM_SIZE		(1920 * 1080 * 4)
-+#define FIMC_IS_DEBUG_REGION_ADDR	0x00840000
-+#define FIMC_IS_SHARED_REGION_ADDR	0x008c0000
-+
-+#define FIMC_IS_SCP_REGION_INDEX	400
-+#define FIMC_IS_SCC_REGION_INDEX	447
-+
-+#define MAX_ODC_INTERNAL_BUF_WIDTH	2560  /* 4808 in HW */
-+#define MAX_ODC_INTERNAL_BUF_HEIGHT	1920  /* 3356 in HW */
-+#define SIZE_ODC_INTERNAL_BUF \
-+	(MAX_ODC_INTERNAL_BUF_WIDTH * MAX_ODC_INTERNAL_BUF_HEIGHT * 3)
-+
-+#define MAX_DIS_INTERNAL_BUF_WIDTH	2400
-+#define MAX_DIS_INTERNAL_BUF_HEIGHT	1360
-+#define SIZE_DIS_INTERNAL_BUF \
-+	(MAX_DIS_INTERNAL_BUF_WIDTH * MAX_DIS_INTERNAL_BUF_HEIGHT * 2)
-+
-+#define MAX_3DNR_INTERNAL_BUF_WIDTH	1920
-+#define MAX_3DNR_INTERNAL_BUF_HEIGHT	1088
-+#define SIZE_DNR_INTERNAL_BUF \
-+	(MAX_3DNR_INTERNAL_BUF_WIDTH * MAX_3DNR_INTERNAL_BUF_HEIGHT * 2)
-+
-+#define NUM_ODC_INTERNAL_BUF		2
-+#define NUM_DIS_INTERNAL_BUF		5
-+#define NUM_DNR_INTERNAL_BUF		2
-+
-+#define FIMC_IS_FW_BASE_MASK		((1 << 26) - 1)
-+
-+#define FIMC_IS_NUM_COMPS		8
-+
-+#define FIMC_IS_MAGIC_NUMBER		0x23456789
-+
-+enum pipeline_state {
-+	PIPELINE_INIT,
-+	PIPELINE_OPEN,
-+	PIPELINE_START,
-+	PIPELINE_RUN,
-+};
-+
-+enum is_components {
-+	IS_ISP,
-+	IS_DRC,
-+	IS_SCC,
-+	IS_ODC,
-+	IS_DIS,
-+	IS_TDNR,
-+	IS_SCP,
-+	IS_FD
-+};
-+
-+enum component_state {
-+	COMP_ENABLE,
-+	COMP_START,
-+	COMP_RUN
-+};
-+
-+struct fimc_is_pipeline {
-+	unsigned long		state;
-+	unsigned long		comp_state[FIMC_IS_NUM_COMPS];
-+	bool			force_down;
-+	unsigned int		instance;
-+	/* Locks the isp / scaler buffers */
-+	spinlock_t		slock_buf;
-+	unsigned long		slock_flags;
-+	wait_queue_head_t	wait_q;
-+	/* For locking pipeline ops */
-+	struct mutex		pipe_lock;
-+	/* For locking scaler ops in pipeline */
-+	struct mutex		pipe_scl_lock;
-+
-+	struct fimc_is_meminfo	*minfo;
-+	struct is_region	*is_region;
-+	struct device		*dev;
-+
-+	struct fimc_is		*is;
-+	struct fimc_is_sensor	*sensor;
-+	struct fimc_is_isp	isp;
-+	struct fimc_is_scaler	scaler[FIMC_IS_NUM_SCALERS];
-+
-+	unsigned int		fcount;
-+	unsigned int		isp_width;
-+	unsigned int		isp_height;
-+};
-+
-+void fimc_is_pipeline_buf_lock(struct fimc_is_pipeline *pipeline);
-+void fimc_is_pipeline_buf_unlock(struct fimc_is_pipeline *pipeline);
-+int fimc_is_pipeline_setparams(struct fimc_is_pipeline *pipeline);
-+int fimc_is_pipeline_scaler_start(struct fimc_is_pipeline *pipeline,
-+		enum fimc_is_scaler_id scaler_id,
-+		unsigned int num_bufs,
-+		unsigned int num_planes);
-+int fimc_is_pipeline_scaler_stop(struct fimc_is_pipeline *pipeline,
-+		enum fimc_is_scaler_id scaler_id);
-+void fimc_is_pipeline_config_shot(struct fimc_is_pipeline *pipeline);
-+int fimc_is_pipeline_shot(struct fimc_is_pipeline *pipeline);
-+int fimc_is_pipeline_start(struct fimc_is_pipeline *pipeline);
-+int fimc_is_pipeline_stop(struct fimc_is_pipeline *pipeline);
-+int fimc_is_pipeline_init(struct fimc_is_pipeline *pipeline,
-+			unsigned int instance, void *is_ctx);
-+int fimc_is_pipeline_destroy(struct fimc_is_pipeline *pipeline);
-+int fimc_is_pipeline_open(struct fimc_is_pipeline *pipeline,
-+			struct fimc_is_sensor *sensor);
-+int fimc_is_pipeline_close(struct fimc_is_pipeline *pipeline);
-+
-+#endif
+On Friday 09 August 2013 11:38:45 Tomi Valkeinen wrote:
+> Hi,
+> 
+> This is an RFC for OMAP Display DT support. The patches work fine, at least
+> for me, but they are not perfect. I mostly don't have any clear questions
+> about specific issues, but I would like to get feedback on the selected
+> approaches in general, and also ideas how to proceed with the series.
+> 
+> This series contains the following:
+> 
+> DT support for the following OMAP's display subsystem devices:
+> - DSS
+> - DISPC
+> - DPI
+> - HDMI
+> - VENC
+> - DSI
+> - (DBI/RFBI DT is not yet implemented)
+> 
+> DT support for the following external display devices:
+> - panel-dsi-cm (Generic DSI command mode panel)
+> - encoder-tfp410 (DPI-to-DVI encoder)
+> - connector-dvi
+> - encoder-tpd12s015 (HDMI level-shifter & ESD protection)
+> - hdmi-connector
+> - panel-dpi (Generic DPI panel)
+> - connector-analog-tv (S-Video & Composite)
+> 
+> DT support for the following boards:
+> - OMAP4 PandaBoard
+> - OMAP4 SDP
+> - OMAP3 BeagleBoard
+> - OMAP3 Overo with Palo43 LCD expansion-board
+> 
+> The patches are not final, and many contain quite brief descriptions.
+> Binding descriptions are also still missing. The code and bindings in the
+> patches should be pretty straightforward, though.
+> 
+> The series is based on v3.11-rc2 + a couple of non-DSS fixes. The series
+> can also be found from:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git
+> work/dss-dev-model-dt
+> 
+> Vocabulary
+> ==========
+> 
+> Display Entity - a hardware entity that takes one or more video streams as
+> input and outputs one or more video streams.
+> 
+> Upstream Entity - A display entity in the "upstream" side of the video
+> stream, i.e. closer to the original video source.
+> 
+> Downstream Entity - A display entity in the "downstream" side of the video
+> stream, i.e. closer to the panel or monitor.
+> 
+> Video pipeline - A chain of multiple display entities, starting from the
+> SoC, going to the display device the user sees.
+> 
+> Display or Panel - A display entity showing the pixels to the user
+> 
+> Encoder - A display entity that takes video as an input and (usually)
+> outputs it in some other format.
+> 
+> Connector - HDMI/DVI/etc Connector on the board, to which an external
+> monitor is connected.
+> 
+> About Stable DT Bindings
+> ========================
+> 
+> Generally speaking, the DT bindings should be stable. This brings the
+> following problems:
+> 
+> We already have DT bindings for some OMAP4 and OMAP3 boards, and OMAP4
+> boards do not even have board files anymore. There are no display bindings
+> for those OMAP4 boards, but the display support is currently enabled as a
+> hack, by calling board-file-like code to add the display devices for the
+> selected boards. So, when we add the display bindings, we should still
+> support the current DT files which do not have the display bindings. Which
+> would mean that we'd need to keep the hacky code forever. Considering the
+> fact that the hacky code does not work quite correct in all cases, I don't
+> see keeping it as a very good option.
+> 
+> CDF (Common Display Framework) is in the works, and will most likely have
+> different or more detailed bindings. Moving to CDF would mean we'd somehow
+> need to still support the old OMAP bindings. In theory the display DT
+> bindings should stay the same, as they represent the HW, not any SW
+> constructs, but in practice I find it hard to believe the OMAP display
+> bindings would be so perfect that there would be no need for changes.
+> 
+> We most likely should somehow represent DSS clock tree in DT. That is not a
+> simple task, and when we manage to do it, it again means supporting the DT
+> files without clock tree data.
+> 
+> All in all, I'm a bit scared to push the display bindings, as it's already
+> clear there are changes coming. Then again, supporting the current hack for
+> OMAP4 based boards is not nice at all, and has issues, so it would be really
+> nice to get OMAP4 boards use proper display bindings.
+
+Getting bindings right on the very first try is a very difficult, if not 
+impossible, task. We now have dedicated DT bindings reviewers and maintainers 
+to help here, and all DT bindings in mainline will likely go through extensive 
+review in the not too distant future. I don't know if there has been any 
+formal agreement on that, but one idea that seemed generally well approved was 
+to first mark new DT bindings as experimental before promoting them to stable.
+
+On the other hand, having experimental bindings in mainline should help 
+stabilizing them, but that's obviously not a reason not to think them properly 
+from the start.
+
+> General description of the DT bindings
+> ======================================
+> 
+> All the display entities are represented as DT nodes of their own, and have
+> a matching Linux driver. The display entities are organized by their control
+> bus; that is, if a display entity is not controlled via any bus, it's a
+> platform device, and if, say, it's controlled via i2c device, it's an i2c
+> device.
+
+I very much like that approach, and I think it's generally agreed upon.
+
+> The exception to the above are DSI and DBI. DSI and DBI are combined control
+> and video busses, but the use of the busses for control purposes is not
+> independent of the video stream. Also, the the busses are, in practice,
+> one-to-one links. And last, DSI and DBI display entities are often also
+> controllable via, say, i2c. For these reasons there is no real Linux bus
+> for DSI and DBI and thus the DSI and DBI devices are either platform
+> devices or i2c devices.
+
+That's something I'm less convinced about, but I don't have a too strong 
+feeling. The best implementation should get to mainline, I won't nack this 
+architecture just for theoretical reasons.
+
+> The display entities are connected via "video-source" property. The video-
+> source points to the upstream display entity where the video data comes
+> from, and a chain of display entities thus form a full video pipeline. All
+> video pipelines end with either a panel or a connector.
+
+This is the part that bothers me the most, as I find it too limiting. In a 
+purely linear pipeline entities will have at most one video source, but linear 
+pipelines won't be enough for the future (and are actually not enough today 
+already). We need to support entities with more than one sink pad in the DT 
+bindings.
+
+I've posted the third version of the Common Display Framework RFC 
+(https://lwn.net/Articles/563157/). While not formally documented, the DT 
+bindings are described in the cover letter. They're based on the V4L2 DT 
+bindings and can express arbitrary display pipelines in DT. The patch set also 
+provides helper functions to parse the DT bindings.
+
+Could you please have a look at the bindings and tell me whether you can use 
+them for the OMAPDSS (even if you don't use the CDF helpers to start with) ?
+
+> All the data related to a display entity, and how it is connected on the
+> given board, is defined in the DT node of the display entity. This means
+> that the DT node of the upstream entity does not have to be modified when
+> adding support for new boards.
+>
+> As an example, consider OMAP3's DPI and two boards using it for panels.
+> omap3.dtsi contains a node for the DPI, and the board dts files contain
+> nodes for their panels. The board dts files do not change anything in the
+> included DPI node. So:
+> 
+> omap3.dtsi:
+> 
+> dpi: encoder@0 {
+> 	compatible = "ti,omap3-dpi";
+> };
+> 
+> omap3-board1.dts:
+> 
+> 	lcd0: display@0 {
+> 		compatible = "samsung,lte430wq-f0c", "panel-dpi";
+> 		video-source = <&dpi>;
+> 		data-lines = <24>;
+> 	};
+> 
+> omap3-board2.dts:
+> 
+> 	lcd0: display@0 {
+> 		compatible = "samsung,lte430wq-f0c", "panel-dpi";
+> 		video-source = <&dpi>;
+> 		data-lines = <16>;
+> 	};
+> 
+> The logic here is that the boards may have multiple panels that are
+> connected to the same source, even if the panels can only be used one at a
+> time. Each panel may thus have different properties for the bus, like the
+> number of data-lines.
+> 
+> Video bus properties
+> ====================
+> 
+> One question I've been pondering for a long time is related to the bus
+> between two display entities. As an example, DPI (parallel RGB) requires
+> configuring the number of datalines used. As described above, the properties
+> of the video bus are represented in the downstream entity.
+> 
+> This approach has one drawback: how to represent features specific to the
+> upstream entity? Say, if OMAP's DSI has a bus-related foo-feature, which can
+> be used in some scenarios, the only place where this foo-feature can be
+> specified is the OMAP DSI's properties. Not in the DSI Panel's properties,
+> which in the current model contains properties related to the bus.
+> 
+> So Laurent has proposed to use V4L2-like ports, as described in
+> Documentation/devicetree/bindings/media/video-interfaces.txt. I have not
+> implemented such feature for OMAP DSS for the following reasons:
+> 
+> - The current supported displays we use work fine with the current method
+> - If I were to implement such system, it'd most certainly be different than
+>   what CDF will have.
+> 
+> That said, the port based approach does sound good, and it would also remove
+> the design issue with OMAP DPI and SDI modules as described later. So maybe
+> I should just go forward with it and hope that CDF will do it in similar
+> manner.
+
+I believe we should go for the port-based approach, even if you don't use the 
+CDF helpers (possibly at first only).
+
+> DSI Module ID
+> =============
+> 
+> On OMAP4 we have two DSI modules. To configure the clock routing and pin
+> muxing, we need to know the hardware module ID for the DSI device, i.e. is
+> this Linux platform device DSI1 or DSI2. The same issue exists with other
+> SoCs with multiple outputs of the same kind.
+> 
+> With non-DT case, we used the platform device's ID directly. With DT, that
+> doesn't work. I don't currently have a good solution for this, so as a
+> temporary solution the DSI driver contains a table, from which it can find
+> the HW module ID by using the device's base address.
+
+You could add two output ports to the DSS, one for each DSI, and link the DSI 
+modules to the DSS output ports in DT. That would represent the hardware 
+topology, and would allow the DSI driver to know its ID based on the DSS 
+output port it's connected to. It's still a bit hackish in the sense that the 
+DSI driver will use information provided by the DSS (the output port number), 
+but not more than the current method.
+
+> I believe, but I am not totally sure, that we can remove the concept of DSI
+> module ID if we have a good representation of the DSS clock tree and DSI pin
+> muxing in DT. The clock tree is probably a huge undertaking, but the pin
+> muxing should be much easier. However, pinmuxing also is some
+> complications, like the pins requiring a regulator to be enabled.
+>
+> Display names and aliases
+> =========================
+> 
+> With the board-file based model each display was given a name in the board
+> file. Additionally, each display was given an alias in the style "displayX",
+> where X is in incrementing number.
+> 
+> The name could be used by the user to see which display device is what, i.e.
+> on Pandaboard there are displays names "dvi" and "hdmi".
+> 
+> The DT bindings do not have such a name. It would be simple to add a
+> "nickname" property to each display node, but it just looked rather ugly so
+> I have left it out.
+> 
+> Additionally, as there's no clear order in which the displays are created,
+> and thus the number in "displayX" alias could change semi-randomly, I added
+> the displays to "aliases" node. This keeps the display number the same over
+> boots, and also gives us some way to define a default display, i.e. which
+> display to use initially if the user has not specified it.
+> 
+> omapdss virtual device
+> ======================
+> 
+> In addition to the DSS devices matching to DSS hardware modules, we have a
+> "virtual" omapdss device which does not match to any actual HW module. The
+> device is there mostly for legacy reasons, but it has also allowed us to
+> easily pass platform callbacks. The same device is also present in DT
+> solution. It is created in code, and not present in DT bindings.
+> 
+> Obviously, this omapdss virtual device is on the hack side, and nobody would
+> mind if it would disappear.
+> 
+> The following data is passed via omapdss device's platform data:
+> 
+> - OMAP DSS version. In theory, the DSS revision registers should tell us
+>   which features the HW supports. In practice, the HW people have not
+>   bothered to change the revision number each time they've made changes. So
+>   we pass a DSS version from the platform code, based on OMAP revision
+>   number.
+> 
+> - omap_dss_set_min_bus_tput() and omap_pm_get_dev_context_loss_count() to
+>   manage PM
+> 
+> - DSI pin muxing functions.
+> 
+> I have some ideas how to deduce the DSS version by poking to certain DSS
+> registers, but it is not yet tested so I don't know if it will work.
+
+That might be a stupid question, but can't you just encode the version in the 
+compatible string of the DSS DT node (the one currently compatible with 
+"ti,omap[34]-dss") ?
+
+Version information might also need to be split/duplicated in several of the 
+DSS DT nodes. A quick grep through the driver source code shows that the 
+version is used by the submodules to infer SoC glue information. For instance 
+dsi_get_channel() uses the version to find the DSI module channel ID. That 
+information could possibly be retrieved from the links between the DSS DT 
+nodes.
+
+> We could do altogether without omap_pm_get_dev_context_loss_count(), so that
+> should be removable with some work. I am not sure if
+> omap_dss_set_min_bus_tput() is supported via standard PM calls or not.
+> 
+> However, the use of set_min_bus_tput() is actually a hack, as we're not
+> really setting min bus tput. What we want to do is prevent OPP50. DSS clocks
+> have different maximums on OPP100 and OPP50. So if DSS uses a clock over
+> OPP50 limit, OPP50 cannot be entered. We prevent OPP50 by setting an
+> arbitrarily high min bus tput.
+> 
+> The DSI pin muxing should also be solvable with DT based solution, but is
+> not the most trivial task and needs some work.
+> 
+> So, I presume that at some point we can remove the omapdss device, but in
+> the current solution it exists for the above reasons.
+> 
+> DSS submodules in DT bindings
+> =============================
+> 
+> The OMAP DSS modules are accessed via L4 or L3, and in that sense they
+> should be on the same level in the DT bindings. However, we do not have them
+> in the same level, but there is a main "dss" node, under which all the
+> other DSS modules reside. The main reason for this is that the main DSS
+> device needs to be enabled for the other modules to work properly, and
+> having this structure makes runtime PM handle enabling DSS automatically.
+> 
+> If I recall right, somebody (Paul?) mentioned that in the hardware there is
+> actually some DSS internal bus, and thus the DT structure is good in that
+> sense also.
+> 
+> We also have nodes (and matching Linux devices) for DPI and SDI. Neither of
+> them are actuall a separate IP block in the hardware, but are really more
+> parts of DSS and maybe DISPC. They are still represented in the same way as
+> the other DSS modules, to have similar architecture for all DSS outputs. But
+> as they do not have an address-space of their own, the DT nodes use 0 and 1
+> as "addresses", i.e. "dpi: encoder@0".
+> 
+> That is rather ugly, and maybe could use some cleaning up. A V4L2 port style
+> approach would probably allow us to add DPI and SDI ports as part of DSS.
+
+I think that would really be a good idea. The DPI and SDI code could be moved 
+to the DSS module (it can of course still be kept in separate files as today), 
+and the DISPC (if I'm not mistaken) entity would just have several output 
+ports.
+
+> Some of the DSS modules are actually a combination of multiple smaller
+> modules. For example, the DSI module contains DSI protocol, DSI PHY and DSI
+> PLL modules, each in their own address space. These could perhaps be
+> presented as separate DT nodes and Linux devices, but I am not sure if that
+> is a good approach or not.
+
+What are the chances that one of those block will be upgraded and/or replaced 
+independently of the others in the future (I know it's a tricky question) ? It 
+might not be worth it going to a too fine-grained approach at the moment, but 
+we need to make sure that the DT bindings will allow an easy path forward if 
+needed.
+
+> DT Node Names
+> =============
+> 
+> I have used the following naming conventions with DT nodes:
+> 
+> - Panels are named "display"
+> - Connectors are named "connector"
+> - Encoders are named "encoder"
+> - DSS and DISPC are "dss" and "dispc", as they don't really match any of the
+> above
+> 
+> When appropriate, the address part of the node is the base address, as in
+> "dsi1: encoder@58004000". For platform devices, I have used an increasing
+> number for the address, as in "tpd12s015: encoder@1".
+> 
+> Final words
+> ===========
+> 
+> So as is evident, I have things in my mind that should be improved. Maybe
+> the most important question for short term future is:
+> 
+> Can we add DSS DT bindings for OMAP4 as unstable bindings? It would give us
+> some proper testing of the related code, and would also allow us to remove
+> the related hacks (which don't even work quite right). However, I have no
+> idea yet when the unstable DSS bindings would turn stable.
+> 
+> If we shouldn't add the bindings as unstable, when should the bindings be
+> added? Wait until CDF is in the mainline, and use that?
+
+What about using the CDF bindings, without waiting for CDF to be in mainline ? 
+I believe the bindings should be upstreamed as unstable to start with anyway.
+
+> I have not explained every piece of DSS in detail, as that would result in a
+> book instead of this email, so feel free to ask for more details about any
+> part.
+> 
+> And last but not least (for me, at least =), I'm on vacation for the next
+> two weeks, so answers may be delayed.
+
+Enjoy your holidays and recharge your batteries, you will need energy when 
+you'll come back :-)
+
+> Tomi Valkeinen (22):
+>   ARM: OMAP: remove DSS DT hack
+>   OMAPDSS: remove DT hacks for regulators
+>   ARM: OMAP2+: add omapdss_init_of()
+>   OMAPDSS: if dssdev->name==NULL, use alias
+>   OMAPDSS: get dssdev->alias from DT alias
+>   OMAPFB: clean up default display search
+>   OMAPFB: search for default display with DT alias
+>   OMAPDSS: Add DT support to DSS, DISPC, DPI, HDMI, VENC
+>   OMAPDSS: Add DT support to DSI
+>   ARM: omap3.dtsi: add omapdss information
+>   ARM: omap4.dtsi: add omapdss information
+>   ARM: omap4-panda.dts: add display information
+>   ARM: omap4-sdp.dts: add display information
+>   ARM: omap3-tobi.dts: add lcd (TEST)
+>   ARM: omap3-beagle.dts: add display information
+>   OMAPDSS: panel-dsi-cm: Add DT support
+>   OMAPDSS: encoder-tfp410: Add DT support
+>   OMAPDSS: connector-dvi: Add DT support
+>   OMAPDSS: encoder-tpd12s015: Add DT support
+>   OMAPDSS: hdmi-connector: Add DT support
+>   OMAPDSS: panel-dpi: Add DT support
+>   OMAPDSS: connector-analog-tv: Add DT support
+> 
+>  arch/arm/boot/dts/omap3-beagle.dts                 | 29 ++++++++
+>  arch/arm/boot/dts/omap3-tobi.dts                   | 33 ++++++++
+>  arch/arm/boot/dts/omap3.dtsi                       | 43 +++++++++++
+>  arch/arm/boot/dts/omap4-panda-common.dtsi          | 48 ++++++++++++
+>  arch/arm/boot/dts/omap4-sdp.dts                    | 70 +++++++++++++++++
+>  arch/arm/boot/dts/omap4.dtsi                       | 59 +++++++++++++++
+>  arch/arm/mach-omap2/board-generic.c                | 13 +---
+>  arch/arm/mach-omap2/common.h                       |  2 +
+>  arch/arm/mach-omap2/display.c                      | 34 +++++++++
+>  arch/arm/mach-omap2/dss-common.c                   | 23 ------
+>  arch/arm/mach-omap2/dss-common.h                   |  2 -
+>  .../video/omap2/displays-new/connector-analog-tv.c | 70 +++++++++++++++++
+>  drivers/video/omap2/displays-new/connector-dvi.c   | 49 ++++++++++++
+>  drivers/video/omap2/displays-new/connector-hdmi.c  | 36 +++++++++
+>  drivers/video/omap2/displays-new/encoder-tfp410.c  | 54 ++++++++++++++
+>  .../video/omap2/displays-new/encoder-tpd12s015.c   | 62 +++++++++++++++
+>  drivers/video/omap2/displays-new/panel-dpi.c       | 75 +++++++++++++++++++
+>  drivers/video/omap2/displays-new/panel-dsi-cm.c    | 87 +++++++++++++++++++
+>  drivers/video/omap2/dss/dispc.c                    |  7 ++
+>  drivers/video/omap2/dss/display.c                  | 23 +++++-
+>  drivers/video/omap2/dss/dpi.c                      |  8 ++
+>  drivers/video/omap2/dss/dsi.c                      | 58 +++++++++++++--
+>  drivers/video/omap2/dss/dss.c                      | 10 +++
+>  drivers/video/omap2/dss/hdmi.c                     | 11 +--
+>  drivers/video/omap2/dss/venc.c                     |  7 ++
+>  drivers/video/omap2/omapfb/omapfb-main.c           | 67 ++++++++++++-----
+>  26 files changed, 915 insertions(+), 65 deletions(-)
+
 -- 
-1.7.9.5
+Regards,
+
+Laurent Pinchart
 
