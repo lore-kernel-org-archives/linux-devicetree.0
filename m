@@ -1,57 +1,50 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pd0-f173.google.com ([209.85.192.173]:42912 "EHLO
-	mail-pd0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753666Ab3HRTjO (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sun, 18 Aug 2013 15:39:14 -0400
-From: Thiagarajan Thangavel <write2thiagu@gmail.com>
-Subject: [PATCH 2/2] drivers: block :swim3: fixed the errors on coding style
-Date: Mon, 19 Aug 2013 01:09:00 +0530
-Message-Id: <1376854740-17580-1-git-send-email-write2thiagu@gmail.com>
+Received: from mail-oa0-f44.google.com ([209.85.219.44]:37581 "EHLO
+	mail-oa0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751963Ab3HUWtm (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 18:49:42 -0400
+Received: by mail-oa0-f44.google.com with SMTP id l20so2183003oag.3
+        for <devicetree@vger.kernel.org>; Wed, 21 Aug 2013 15:49:42 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <1377016827-26827-2-git-send-email-bigeasy@linutronix.de>
+References: <1377016827-26827-1-git-send-email-bigeasy@linutronix.de>
+	<1377016827-26827-2-git-send-email-bigeasy@linutronix.de>
+Date: Thu, 22 Aug 2013 00:49:42 +0200
+Message-ID: <CACRpkdYtz1_hugbeVyWc83KLHMy6o11LgonBX5=S3Rvz1NBbiw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt: dbx5x0: remove mentor,musb binding
+From: Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: grant.likely@linaro.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Lee Jones <lee.jones@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Fixed the coding style errors
+On Tue, Aug 20, 2013 at 6:40 PM, Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
 
-Signed-off-by: Thiagarajan Thangavel <write2thiagu@gmail.com>
----
- drivers/block/swim3.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+> The "mentor,musb" binding isn't documented so I was about to document
+> it.
+> The node is missing a few properties for configuration like
+> "multipoint", "dyn_fifo", "num_eps" or "ram_bits". However I am not sure
+> "missing" is the right word here because some of those informations
+> might be obtained from the chip itself but it is not done (yet).
+> Further the ePARP 2.3.1 says the matching goes from left to right taking
+> the fist match. Right now there is jus a driver for
+> "stericsson,db8500-musb" and none for "mentor,musb". I'm not 100% that
+> it is simply possible to have a generic since even for DMA we have
+> ifdefs in the driver between "generic mentor dma" and "ux500 dma" and I
+> mean within musb and not the dma code.
+>
+> For that reason (that I am not sure a generic musb binding is possible and
+> how its binding / required properties will look like) and the reason that
+> we have here a minor binding without a driver to look at I suggest to
+> remove that binding.
+> If the majority of people prefer to keep this binding I'm curious how
+> the documentation of the binding should look like.
+>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-diff --git a/drivers/block/swim3.c b/drivers/block/swim3.c
-index a473e25..89c9a85 100644
---- a/drivers/block/swim3.c
-+++ b/drivers/block/swim3.c
-@@ -783,7 +783,7 @@ static irqreturn_t swim3_interrupt(int irq, void *dev_id)
- 				act(fs);
- 			} else {
- 				swim3_err("Error %sing block %ld (err=%x)\n",
--				       rq_data_dir(req) == WRITE ? "writ" : "read",
-+				rq_data_dir(req) == WRITE ? "writ" : "read",
- 				       (long)blk_rq_pos(req), err);
- 				swim3_end_request(fs, -EIO, 0);
- 				fs->state = idle;
-@@ -894,7 +894,18 @@ static int fd_eject(struct floppy_state *fs)
- 	return err;
- }
- 
--static struct floppy_struct floppy_type = { 2880, 18, 2, 80, 0, 0x1B, 0x00, 0xCF, 0x6C, NULL };	/*  7 1.44MB 3.5"   */
-+static struct floppy_struct floppy_type = {
-+	2880,
-+	18,
-+	2,
-+	80,
-+	0,
-+	0x1B,
-+	0x00,
-+	0xCF,
-+	0x6C,
-+	NULL
-+};	/*  7 1.44MB 3.5"   */
- 
- static int floppy_locked_ioctl(struct block_device *bdev, fmode_t mode,
- 			unsigned int cmd, unsigned long param)
--- 
-1.7.9.5
+Patch applied to my ux500-devicetree branch.
 
+Yours,
+Linus Walleij
