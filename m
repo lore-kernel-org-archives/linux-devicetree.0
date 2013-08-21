@@ -1,34 +1,42 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:38768 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751810Ab3HURk7 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 13:40:59 -0400
-Message-ID: <5214FBA8.5000603@wwwdotorg.org>
-Date: Wed, 21 Aug 2013 11:40:56 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
+Received: from smtp1-1.goneo.de ([212.90.139.81]:52127 "EHLO smtp1-1.goneo.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751550Ab3HUPUH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 21 Aug 2013 11:20:07 -0400
+Subject: [PATCH] of: add vendor prefix for Microchip Technology Inc
+From: Lars Poeschel <poeschel@lemonage.de>
+Date: Wed, 21 Aug 2013 17:19:57 +0200
 MIME-Version: 1.0
-Subject: Re: [PATCH] of: add vendor prefix for Microchip Technology Inc
-References: <201308211719.57748.poeschel@lemonage.de>
-In-Reply-To: <201308211719.57748.poeschel@lemonage.de>
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
+Message-Id: <201308211719.57748.poeschel@lemonage.de>
 Sender: devicetree-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: rob.herring@calxeda.com, Pawel Moll <Pawel.Moll@arm.com>, mark.rutland@arm.com, ian.campbell@citrix.com, rob@landley.net, Grant Likely <grant.likely@linaro.org>, arnd@arndb.de, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: rob.herring@calxeda.com, Pawel Moll <Pawel.Moll@arm.com>, mark.rutland@arm.com, Stephen Warren <swarren@wwwdotorg.org>, ian.campbell@citrix.com, rob@landley.net, Grant Likely <grant.likely@linaro.org>, arnd@arndb.de, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/21/2013 09:19 AM, Lars Poeschel wrote:
-> Trivial patch to add Microchip Technology Inc. to the list
-> of devicetree vendor prefixes, as it is already used in
-> Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+Trivial patch to add Microchip Technology Inc. to the list
+of devicetree vendor prefixes, as it is already used in
+Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
 
-Oh dear. Perhaps it can be legacy-ified...
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt 
+b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 366ce9b..b3b2ad7 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -36,6 +36,7 @@ linux	Linux-specific binding
+ lsi	LSI Corp. (LSI Logic)
+ marvell	Marvell Technology Group Ltd.
+ maxim	Maxim Integrated Products
++mcp	Microchip Technology Inc.
+ mosaixtech	Mosaix Technologies, Inc.
+ national	National Semiconductor
+ nintendo	Nintendo
+-- 
+1.7.10.4
 
-> +mcp	Microchip Technology Inc.
-
-If I saw "mcp," in a *.dts file, I wouldn't immediately think "Microchip".
-
-Their stock ticker appears to be MCHP, so I'd suggest either "mchp" or
-"microchip" instead; that latter being my personal preference.
