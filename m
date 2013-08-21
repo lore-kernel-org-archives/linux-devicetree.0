@@ -1,111 +1,56 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db8lp0184.outbound.messaging.microsoft.com ([213.199.154.184]:12410
-	"EHLO db8outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754559Ab3HWUIf (ORCPT
+Received: from tx2ehsobe004.messaging.microsoft.com ([65.55.88.14]:9238 "EHLO
+	tx2outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752100Ab3HUG70 (ORCPT
 	<rfc822;devicetree@vger.kernel.org>);
-	Fri, 23 Aug 2013 16:08:35 -0400
-Date: Fri, 23 Aug 2013 15:08:27 -0500
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [v3] powerpc/mpc85xx: Update the clock device tree nodes
-Message-ID: <20130823200827.GA29737@home.buserror.net>
-References: <1370480811-13700-1-git-send-email-Yuantian.Tang@freescale.com>
+	Wed, 21 Aug 2013 02:59:26 -0400
+Message-ID: <5214653E.4080105@freescale.com>
+Date: Wed, 21 Aug 2013 14:59:10 +0800
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1370480811-13700-1-git-send-email-Yuantian.Tang@freescale.com>
+Subject: Re: [PATCH v7 0/3] DMA: Freescale: Add support for 8-channel DMA
+ engine
+References: <1375094944-3343-1-git-send-email-hongbo.zhang@freescale.com> <20130729105901.GI29095@intel.com> <521329EA.3050900@freescale.com> <20130820081522.GC5810@intel.com>
+In-Reply-To: <20130820081522.GC5810@intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: tang yuantian <Yuantian.Tang@freescale.com>
-Cc: galak@kernel.crashing.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+To: Vinod Koul <vinod.koul@intel.com>, devicetree@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com
+Cc: djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Jun 06, 2013 at 09:06:51AM +0800, tang yuantian wrote:
-> From: Tang Yuantian <yuantian.tang@freescale.com>
-> 
-> The following SoCs will be affected: p2041, p3041, p4080,
-> p5020, p5040, b4420, b4860, t4240
-> 
-> Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
-> Signed-off-by: Li Yang <leoli@freescale.com>
-> 
-> ---
-> v3:
-> 	- fix typo
-> v2:
-> 	- add t4240, b4420, b4860 support
-> 	- remove pll/4 clock from p2041, p3041 and p5020 board
-> 
->  arch/powerpc/boot/dts/fsl/b4420si-post.dtsi |  32 ++++++++-
->  arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi  |   2 +
->  arch/powerpc/boot/dts/fsl/b4860si-post.dtsi |  32 ++++++++-
->  arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi  |   4 ++
->  arch/powerpc/boot/dts/fsl/p2041si-post.dtsi |  54 ++++++++++++++-
->  arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi  |   4 ++
->  arch/powerpc/boot/dts/fsl/p3041si-post.dtsi |  54 ++++++++++++++-
->  arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi  |   4 ++
->  arch/powerpc/boot/dts/fsl/p4080si-post.dtsi | 100 +++++++++++++++++++++++++++-
->  arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi  |   8 +++
->  arch/powerpc/boot/dts/fsl/p5020si-post.dtsi |  38 ++++++++++-
->  arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi  |   2 +
->  arch/powerpc/boot/dts/fsl/p5040si-post.dtsi |  54 ++++++++++++++-
->  arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi  |   4 ++
->  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi |  77 ++++++++++++++++++++-
->  arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi  |  12 ++++
->  16 files changed, 473 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/powerpc/boot/dts/fsl/b4420si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4420si-post.dtsi
-> index 5a6615d..b69d6e5 100644
-> --- a/arch/powerpc/boot/dts/fsl/b4420si-post.dtsi
-> +++ b/arch/powerpc/boot/dts/fsl/b4420si-post.dtsi
-> @@ -85,7 +85,37 @@
->  	};
->  
->  	clockgen: global-utilities@e1000 {
-> -		compatible = "fsl,b4420-clockgen", "fsl,qoriq-clockgen-2.0";
-> +		compatible = "fsl,b4420-clockgen", "fsl,qoriq-clockgen-2.0",
-> +				   "fixed-clock";
-> +		clock-output-names = "sysclk";
-> +		#clock-cells = <0>;
+Hi DT maintainers,
+Rob Herring, Pawel Moll, Mark Rutland, Stephen Warren, Ian Campbell, 
+could you please have a look at [1/3] and [2/3] of these patch set.
+These patches have been fully reviewed by Scott Wood, and the DMA 
+maintainer Vinod needs a Acted-by: from DT maintainers.
+Thanks.
 
-Does U-Boot fill in clock-frequency here?
+On 08/20/2013 04:15 PM, Vinod Koul wrote:
+> On Tue, Aug 20, 2013 at 04:33:46PM +0800, Hongbo Zhang wrote:
+>> On 07/29/2013 06:59 PM, Vinod Koul wrote:
+>>> On Mon, Jul 29, 2013 at 06:49:01PM +0800, hongbo.zhang@freescale.com wrote:
+>>>> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+>>>>
+>>>> Hi Vinod, Dan, Scott and Leo, please have a look at these V7 patches.
+>>> The dma relates changes look okay to me.
+>>>
+>>> I need someone to review and ACK the DT bindings.
+>>>
+>>> ~Vinod
+>> Vinod,
+>> Are you using this tree?
+>> http://git.infradead.org/users/vkoul/slave-dma.git
+> Yes
+>
+>> Did you merge these patches?
+> No
+>
+> As I said I would like someone who know DT and dma binding to ack them. I see
+> devicetree ML has been cced, can Arnd or someone else review these...
+>
+> ~Vinod
+>
 
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pll0: pll0@800 {
-> +			#clock-cells = <1>;
-> +			reg = <0x800>;
-> +			compatible = "fsl,core-pll-clock";
-> +			clocks = <&clockgen>;
-> +			clock-output-names = "pll0", "pll0-div2", "pll0-div4";
-> +		};
-> +		pll1: pll1@820 {
-> +			#clock-cells = <1>;
-> +			reg = <0x820>;
-> +			compatible = "fsl,core-pll-clock";
-> +			clocks = <&clockgen>;
-> +			clock-output-names = "pll1", "pll1-div2", "pll1-div4";
-> +		};
 
-Please leave a blank line between properties and nodes, and between
-nodes.
-
-What does reg represent?  Where is the binding for this?
-
-The compatible is too vague.
-
-> +		mux0: mux0@0 {
-> +			#clock-cells = <0>;
-> +			reg = <0x0>;
-> +			compatible = "fsl,core-mux-clock";
-> +			clocks = <&pll0 0>, <&pll0 1>, <&pll0 2>,
-> +				 <&pll1 0>, <&pll1 1>, <&pll1 2>;
-> +			clock-names = "pll0_0", "pll0_1", "pll0_2",
-> +				"pll1_0", "pll1_1", "pll1_2";
-> +			clock-output-names = "cmux0";
-> +		};
-
-What does reg represent?  Where is the binding for this?
-
-The compatible is too vague.
-
--Scott
 
