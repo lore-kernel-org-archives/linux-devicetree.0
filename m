@@ -1,486 +1,589 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:8339 "EHLO
-	hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751004Ab3HTM72 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 08:59:28 -0400
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V3] regulator: palmas: add support for external control of rails
-Date: Tue, 20 Aug 2013 18:44:15 +0530
-Message-ID: <1377004456-26318-1-git-send-email-ldewangan@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Received: from mail-pd0-f173.google.com ([209.85.192.173]:36030 "EHLO
+	mail-pd0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752438Ab3HUGeu (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 02:34:50 -0400
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v7 03/13] [media] exynos5-fimc-is: Add driver core files
+Date: Wed, 21 Aug 2013 12:04:30 +0530
+Message-Id: <1377066881-5423-4-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
+References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, sameo@linux.intel.com
-Cc: swarren@wwwdotorg.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com, Laxman Dewangan <ldewangan@nvidia.com>
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-Palmas rails like LDOs, SMPSs, REGENs, SYSENs can be enable and disable
-by register programming through I2C communication as well as it can be
-enable/disable with the external control input ENABLE1, ENABLE2 and NSLEEP.
+This driver is for the FIMC-IS IP available in Samsung Exynos5
+SoC onwards. This patch adds the core files for the new driver.
 
-Add support for configuring these rails to be controlled by external control
-inputs. This is require to configure the rail's control register as well as
-configuration of resource register.
-
-Provide the external input names through parameter "roof-floor". Updated the
-DT binding document to details different value of the roof-floor.
-
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+Signed-off-by: Kilyeon Im <kilyeon.im@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
-Changes from V1:
-- Fix typos: palams ->palmas
-Changes from V2:
-- Make roof-floor with optional argument. If no argument then assume
-  NSLEEP control.
+ drivers/media/platform/exynos5-is/fimc-is-core.c |  413 ++++++++++++++++++++++
+ drivers/media/platform/exynos5-is/fimc-is-core.h |  132 +++++++
+ 2 files changed, 545 insertions(+)
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.h
 
-PS: This patch was part of series (3/3)
-	regulator: palmas: add support for external control of rail
-Patch 1/3 and 2/3 is already applied as 1/3 is in the regulator tree and
-Patch 2/3 is in the mfd tree by Samuel.
-This patch (was 3/3) very much depends on the 2/3 for compilation and hence
-it need to go on same tree as 2/3 to avoid any compilation error.
-
- .../devicetree/bindings/regulator/palmas-pmic.txt  |   12 ++-
- drivers/regulator/palmas-regulator.c               |  153 +++++++++++++++++++-
- 2 files changed, 156 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-index 875639a..381ab34 100644
---- a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-+++ b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-@@ -26,11 +26,17 @@ Optional nodes:
- 
- 	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
- 	       smps45, smps457, smps7 depending on variant, smps6, smps[8-9],
--	       smps10_out2, smps10_out1, do[1-9], ldoln, ldousb.
-+	       smps10_out2, smps10_out1, ldo[1-9], ldoln, ldousb.
- 
- 	       Optional sub-node properties:
- 	       ti,warm-reset - maintain voltage during warm reset(boolean)
--	       ti,roof-floor - control voltage selection by pin(boolean)
-+	       ti,roof-floor - This takes as optional argument on platform supporting
-+	       the rail from desired external control. If there is no argument then
-+	       it will be assume that it is controlled by NSLEEP pin.
-+	       The valid value for external pins are:
-+			ENABLE1 then 1,
-+			ENABLE2 then 2 or
-+			NSLEEP then 3.
- 	       ti,mode-sleep - mode to adopt in pmic sleep 0 - off, 1 - auto,
- 	       2 - eco, 3 - forced pwm
- 	       ti,smps-range - OTP has the wrong range set for the hardware so override
-@@ -61,7 +67,7 @@ pmic {
- 			regulator-always-on;
- 			regulator-boot-on;
- 			ti,warm-reset;
--			ti,roof-floor;
-+			ti,roof-floor = 0x1; /* ENABLE1 control */
- 			ti,mode-sleep = <0>;
- 			ti,smps-range = <1>;
- 		};
-diff --git a/drivers/regulator/palmas-regulator.c b/drivers/regulator/palmas-regulator.c
-index 488dfe7..a1b38de 100644
---- a/drivers/regulator/palmas-regulator.c
-+++ b/drivers/regulator/palmas-regulator.c
-@@ -33,6 +33,7 @@ struct regs_info {
- 	u8	vsel_addr;
- 	u8	ctrl_addr;
- 	u8	tstep_addr;
-+	int	sleep_id;
- };
- 
- static const struct regs_info palmas_regs_info[] = {
-@@ -42,6 +43,7 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS12_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS12_CTRL,
- 		.tstep_addr	= PALMAS_SMPS12_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS12,
- 	},
- 	{
- 		.name		= "SMPS123",
-@@ -49,12 +51,14 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS12_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS12_CTRL,
- 		.tstep_addr	= PALMAS_SMPS12_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS12,
- 	},
- 	{
- 		.name		= "SMPS3",
- 		.sname		= "smps3-in",
- 		.vsel_addr	= PALMAS_SMPS3_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS3_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS3,
- 	},
- 	{
- 		.name		= "SMPS45",
-@@ -62,6 +66,7 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS45_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS45_CTRL,
- 		.tstep_addr	= PALMAS_SMPS45_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS45,
- 	},
- 	{
- 		.name		= "SMPS457",
-@@ -69,6 +74,7 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS45_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS45_CTRL,
- 		.tstep_addr	= PALMAS_SMPS45_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS45,
- 	},
- 	{
- 		.name		= "SMPS6",
-@@ -76,12 +82,14 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS6_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS6_CTRL,
- 		.tstep_addr	= PALMAS_SMPS6_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS6,
- 	},
- 	{
- 		.name		= "SMPS7",
- 		.sname		= "smps7-in",
- 		.vsel_addr	= PALMAS_SMPS7_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS7_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS7,
- 	},
- 	{
- 		.name		= "SMPS8",
-@@ -89,108 +97,128 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS8_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS8_CTRL,
- 		.tstep_addr	= PALMAS_SMPS8_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS8,
- 	},
- 	{
- 		.name		= "SMPS9",
- 		.sname		= "smps9-in",
- 		.vsel_addr	= PALMAS_SMPS9_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS9_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS9,
- 	},
- 	{
- 		.name		= "SMPS10_OUT2",
- 		.sname		= "smps10-in",
- 		.ctrl_addr	= PALMAS_SMPS10_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS10,
- 	},
- 	{
- 		.name		= "SMPS10_OUT1",
- 		.sname		= "smps10-out2",
- 		.ctrl_addr	= PALMAS_SMPS10_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS10,
- 	},
- 	{
- 		.name		= "LDO1",
- 		.sname		= "ldo1-in",
- 		.vsel_addr	= PALMAS_LDO1_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO1_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO1,
- 	},
- 	{
- 		.name		= "LDO2",
- 		.sname		= "ldo2-in",
- 		.vsel_addr	= PALMAS_LDO2_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO2_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO2,
- 	},
- 	{
- 		.name		= "LDO3",
- 		.sname		= "ldo3-in",
- 		.vsel_addr	= PALMAS_LDO3_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO3_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO3,
- 	},
- 	{
- 		.name		= "LDO4",
- 		.sname		= "ldo4-in",
- 		.vsel_addr	= PALMAS_LDO4_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO4_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO4,
- 	},
- 	{
- 		.name		= "LDO5",
- 		.sname		= "ldo5-in",
- 		.vsel_addr	= PALMAS_LDO5_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO5_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO5,
- 	},
- 	{
- 		.name		= "LDO6",
- 		.sname		= "ldo6-in",
- 		.vsel_addr	= PALMAS_LDO6_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO6_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO6,
- 	},
- 	{
- 		.name		= "LDO7",
- 		.sname		= "ldo7-in",
- 		.vsel_addr	= PALMAS_LDO7_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO7_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO7,
- 	},
- 	{
- 		.name		= "LDO8",
- 		.sname		= "ldo8-in",
- 		.vsel_addr	= PALMAS_LDO8_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO8_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO8,
- 	},
- 	{
- 		.name		= "LDO9",
- 		.sname		= "ldo9-in",
- 		.vsel_addr	= PALMAS_LDO9_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO9_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO9,
- 	},
- 	{
- 		.name		= "LDOLN",
- 		.sname		= "ldoln-in",
- 		.vsel_addr	= PALMAS_LDOLN_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDOLN_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDOLN,
- 	},
- 	{
- 		.name		= "LDOUSB",
- 		.sname		= "ldousb-in",
- 		.vsel_addr	= PALMAS_LDOUSB_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDOUSB_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDOUSB,
- 	},
- 	{
- 		.name		= "REGEN1",
- 		.ctrl_addr	= PALMAS_REGEN1_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_REGEN1,
- 	},
- 	{
- 		.name		= "REGEN2",
- 		.ctrl_addr	= PALMAS_REGEN2_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_REGEN2,
- 	},
- 	{
- 		.name		= "REGEN3",
- 		.ctrl_addr	= PALMAS_REGEN3_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_REGEN3,
- 	},
- 	{
- 		.name		= "SYSEN1",
- 		.ctrl_addr	= PALMAS_SYSEN1_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SYSEN1,
- 	},
- 	{
- 		.name		= "SYSEN2",
- 		.ctrl_addr	= PALMAS_SYSEN2_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SYSEN2,
- 	},
- };
- 
-@@ -484,6 +512,17 @@ static struct regulator_ops palmas_ops_smps = {
- 	.set_ramp_delay		= palmas_smps_set_ramp_delay,
- };
- 
-+static struct regulator_ops palmas_ops_ext_control_smps = {
-+	.set_mode		= palmas_set_mode_smps,
-+	.get_mode		= palmas_get_mode_smps,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.list_voltage		= palmas_list_voltage_smps,
-+	.map_voltage		= palmas_map_voltage_smps,
-+	.set_voltage_time_sel	= palma_smps_set_voltage_smps_time_sel,
-+	.set_ramp_delay		= palmas_smps_set_ramp_delay,
+diff --git a/drivers/media/platform/exynos5-is/fimc-is-core.c b/drivers/media/platform/exynos5-is/fimc-is-core.c
+new file mode 100644
+index 0000000..6910581
+--- /dev/null
++++ b/drivers/media/platform/exynos5-is/fimc-is-core.c
+@@ -0,0 +1,413 @@
++/*
++ * Samsung EXYNOS5 FIMC-IS (Imaging Subsystem) driver
++*
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ * Arun Kumar K <arun.kk@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/bug.h>
++#include <linux/ctype.h>
++#include <linux/device.h>
++#include <linux/debugfs.h>
++#include <linux/delay.h>
++#include <linux/errno.h>
++#include <linux/err.h>
++#include <linux/firmware.h>
++#include <linux/fs.h>
++#include <linux/gpio.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/list.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/of_address.h>
++#include <linux/of_platform.h>
++#include <linux/of_irq.h>
++#include <linux/pinctrl/consumer.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <linux/videodev2.h>
++
++#include <media/v4l2-device.h>
++#include <media/v4l2-ioctl.h>
++#include <media/v4l2-mem2mem.h>
++#include <media/v4l2-of.h>
++#include <media/videobuf2-core.h>
++#include <media/videobuf2-dma-contig.h>
++
++#include "fimc-is.h"
++#include "fimc-is-i2c.h"
++
++#define CLK_MCU_ISP_DIV0_FREQ	(200 * 1000000)
++#define CLK_MCU_ISP_DIV1_FREQ	(100 * 1000000)
++#define CLK_ISP_DIV0_FREQ	(134 * 1000000)
++#define CLK_ISP_DIV1_FREQ	(68 * 1000000)
++#define CLK_ISP_DIVMPWM_FREQ	(34 * 1000000)
++
++static const char * const fimc_is_clock_name[] = {
++	[IS_CLK_ISP]		= "isp",
++	[IS_CLK_MCU_ISP]	= "mcu_isp",
++	[IS_CLK_ISP_DIV0]	= "isp_div0",
++	[IS_CLK_ISP_DIV1]	= "isp_div1",
++	[IS_CLK_ISP_DIVMPWM]	= "isp_divmpwm",
++	[IS_CLK_MCU_ISP_DIV0]	= "mcu_isp_div0",
++	[IS_CLK_MCU_ISP_DIV1]	= "mcu_isp_div1",
 +};
 +
- static struct regulator_ops palmas_ops_smps10 = {
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.enable			= regulator_enable_regmap,
-@@ -519,12 +558,37 @@ static struct regulator_ops palmas_ops_ldo = {
- 	.map_voltage		= regulator_map_voltage_linear,
- };
- 
-+static struct regulator_ops palmas_ops_ext_control_ldo = {
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
-+};
-+
- static struct regulator_ops palmas_ops_extreg = {
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- };
- 
-+static struct regulator_ops palmas_ops_ext_control_extreg = {
-+};
-+
-+static int palmas_regulator_config_external(struct palmas *palmas, int id,
-+		struct palmas_reg_init *reg_init)
++static void fimc_is_put_clocks(struct fimc_is *is)
 +{
-+	int sleep_id = palmas_regs_info[id].sleep_id;
-+	int ret;
++	int i;
 +
-+	ret = palmas_ext_control_req_config(palmas, sleep_id,
-+					reg_init->roof_floor, true);
-+	if (ret < 0)
-+		dev_err(palmas->dev,
-+			"Ext control config for regulator %d failed %d\n",
-+			id, ret);
++	for (i = 0; i < IS_CLK_MAX_NUM; i++) {
++		if (IS_ERR(is->clock[i]))
++			continue;
++		clk_unprepare(is->clock[i]);
++		clk_put(is->clock[i]);
++		is->clock[i] = ERR_PTR(-EINVAL);
++	}
++}
++
++static int fimc_is_get_clocks(struct fimc_is *is)
++{
++	struct device *dev = &is->pdev->dev;
++	int i, ret;
++
++	for (i = 0; i < IS_CLK_MAX_NUM; i++) {
++		is->clock[i] = clk_get(dev, fimc_is_clock_name[i]);
++		if (IS_ERR(is->clock[i]))
++			goto err;
++		ret = clk_prepare(is->clock[i]);
++		if (ret < 0) {
++			clk_put(is->clock[i]);
++			is->clock[i] = ERR_PTR(-EINVAL);
++			goto err;
++		}
++	}
++	return 0;
++err:
++	fimc_is_put_clocks(is);
++	pr_err("Failed to get clock: %s\n", fimc_is_clock_name[i]);
++	return -ENXIO;
++}
++
++static int fimc_is_configure_clocks(struct fimc_is *is)
++{
++	int i, ret;
++
++	for (i = 0; i < IS_CLK_MAX_NUM; i++)
++		is->clock[i] = ERR_PTR(-EINVAL);
++
++	ret = fimc_is_get_clocks(is);
++	if (ret)
++		return ret;
++
++	/* Set rates */
++	ret = clk_set_rate(is->clock[IS_CLK_MCU_ISP_DIV0],
++			CLK_MCU_ISP_DIV0_FREQ);
++	if (ret)
++		return ret;
++	ret = clk_set_rate(is->clock[IS_CLK_MCU_ISP_DIV1],
++			CLK_MCU_ISP_DIV1_FREQ);
++	if (ret)
++		return ret;
++	ret = clk_set_rate(is->clock[IS_CLK_ISP_DIV0], CLK_ISP_DIV0_FREQ);
++	if (ret)
++		return ret;
++	ret = clk_set_rate(is->clock[IS_CLK_ISP_DIV1], CLK_ISP_DIV1_FREQ);
++	if (ret)
++		return ret;
++	ret = clk_set_rate(is->clock[IS_CLK_ISP_DIVMPWM],
++			CLK_ISP_DIVMPWM_FREQ);
 +	return ret;
 +}
 +
- /*
-  * setup the hardware based sleep configuration of the SMPS/LDO regulators
-  * from the platform data. This is different to the software based control
-@@ -583,7 +647,22 @@ static int palmas_smps_init(struct palmas *palmas, int id,
- 			return ret;
- 	}
- 
-+	if (reg_init->roof_floor && (id != PALMAS_REG_SMPS10_OUT1) &&
-+			(id != PALMAS_REG_SMPS10_OUT2)) {
-+		/* Enable externally controlled regulator */
-+		addr = palmas_regs_info[id].ctrl_addr;
-+		ret = palmas_smps_read(palmas, addr, &reg);
-+		if (ret < 0)
-+			return ret;
- 
-+		if (!(reg & PALMAS_SMPS12_CTRL_MODE_ACTIVE_MASK)) {
-+			reg |= SMPS_CTRL_MODE_ON;
-+			ret = palmas_smps_write(palmas, addr, reg);
-+			if (ret < 0)
++static void fimc_is_pipelines_destroy(struct fimc_is *is)
++{
++	int i;
++
++	for (i = 0; i < is->drvdata->num_instances; i++)
++		fimc_is_pipeline_destroy(&is->pipeline[i]);
++}
++
++static int fimc_is_parse_sensor_config(struct fimc_is *is, unsigned int index,
++						struct device_node *node)
++{
++	struct fimc_is_sensor *sensor = &is->sensor[index];
++	u32 tmp = 0;
++	int ret;
++
++	sensor->drvdata = exynos5_is_sensor_get_drvdata(node);
++	if (!sensor->drvdata) {
++		dev_err(&is->pdev->dev, "no driver data found for: %s\n",
++							 node->full_name);
++		return -EINVAL;
++	}
++
++	node = v4l2_of_get_next_endpoint(node, NULL);
++	if (!node)
++		return -ENXIO;
++
++	node = v4l2_of_get_remote_port(node);
++	if (!node)
++		return -ENXIO;
++
++	/* Use MIPI-CSIS channel id to determine the ISP I2C bus index. */
++	ret = of_property_read_u32(node, "reg", &tmp);
++	if (ret < 0) {
++		dev_err(&is->pdev->dev, "reg property not found at: %s\n",
++							 node->full_name);
++		return ret;
++	}
++
++	sensor->i2c_bus = tmp - FIMC_INPUT_MIPI_CSI2_0;
++	return 0;
++}
++
++static int fimc_is_parse_sensor(struct fimc_is *is)
++{
++	struct device_node *i2c_bus, *child;
++	int ret, index = 0;
++
++	for_each_compatible_node(i2c_bus, NULL, FIMC_IS_I2C_COMPATIBLE) {
++		for_each_available_child_of_node(i2c_bus, child) {
++			ret = fimc_is_parse_sensor_config(is, index, child);
++
++			if (ret < 0 || index >= FIMC_IS_NUM_SENSORS) {
++				of_node_put(child);
 +				return ret;
-+		}
-+		return palmas_regulator_config_external(palmas, id, reg_init);
-+	}
- 	return 0;
- }
- 
-@@ -614,6 +693,20 @@ static int palmas_ldo_init(struct palmas *palmas, int id,
- 	if (ret)
- 		return ret;
- 
-+	if (reg_init->roof_floor) {
-+		/* Enable externally controlled regulator */
-+		addr = palmas_regs_info[id].ctrl_addr;
-+		ret = palmas_update_bits(palmas, PALMAS_LDO_BASE,
-+				addr, PALMAS_LDO1_CTRL_MODE_ACTIVE,
-+				PALMAS_LDO1_CTRL_MODE_ACTIVE);
-+		if (ret < 0) {
-+			dev_err(palmas->dev,
-+				"LDO Register 0x%02x update failed %d\n",
-+				addr, ret);
-+			return ret;
-+		}
-+		return palmas_regulator_config_external(palmas, id, reg_init);
-+	}
- 	return 0;
- }
- 
-@@ -636,6 +729,21 @@ static int palmas_extreg_init(struct palmas *palmas, int id,
- 			addr, ret);
- 		return ret;
- 	}
-+
-+	if (reg_init->roof_floor) {
-+		/* Enable externally controlled regulator */
-+		addr = palmas_regs_info[id].ctrl_addr;
-+		ret = palmas_update_bits(palmas, PALMAS_RESOURCE_BASE,
-+				addr, PALMAS_REGEN1_CTRL_MODE_ACTIVE,
-+				PALMAS_REGEN1_CTRL_MODE_ACTIVE);
-+		if (ret < 0) {
-+			dev_err(palmas->dev,
-+				"Resource Register 0x%02x update failed %d\n",
-+				addr, ret);
-+			return ret;
-+		}
-+		return palmas_regulator_config_external(palmas, id, reg_init);
-+	}
- 	return 0;
- }
- 
-@@ -746,9 +854,24 @@ static void palmas_dt_to_pdata(struct device *dev,
- 			of_property_read_bool(palmas_matches[idx].of_node,
- 					     "ti,warm-reset");
- 
--		pdata->reg_init[idx]->roof_floor =
--			of_property_read_bool(palmas_matches[idx].of_node,
--					      "ti,roof-floor");
-+		ret = of_property_read_u32(palmas_matches[idx].of_node,
-+					      "ti,roof-floor", &prop);
-+		/* EINVAL: Property not found */
-+		if (ret != -EINVAL) {
-+			int econtrol;
-+
-+			/* use default value, when no value is specified */
-+			econtrol = PALMAS_EXT_CONTROL_NSLEEP;
-+			if (!ret) {
-+				if (prop == 1)
-+					econtrol = PALMAS_EXT_CONTROL_ENABLE1;
-+				else if (prop == 2)
-+					econtrol = PALMAS_EXT_CONTROL_ENABLE2;
-+				else if (prop == 3)
-+					econtrol = PALMAS_EXT_CONTROL_NSLEEP;
 +			}
-+			pdata->reg_init[idx]->roof_floor = econtrol;
++			index++;
 +		}
- 
- 		ret = of_property_read_u32(palmas_matches[idx].of_node,
- 				"ti,mode-sleep", &prop);
-@@ -875,6 +998,8 @@ static int palmas_regulators_probe(struct platform_device *pdev)
- 			ret = palmas_smps_init(palmas, id, reg_init);
- 			if (ret)
- 				goto err_unregister_regulator;
-+		} else {
-+			reg_init = NULL;
- 		}
- 
- 		/* Register the regulators */
-@@ -919,7 +1044,11 @@ static int palmas_regulators_probe(struct platform_device *pdev)
- 			if (reg & PALMAS_SMPS12_VOLTAGE_RANGE)
- 				pmic->range[id] = 1;
- 
--			pmic->desc[id].ops = &palmas_ops_smps;
-+			if (reg_init && reg_init->roof_floor)
-+				pmic->desc[id].ops =
-+						&palmas_ops_ext_control_smps;
-+			else
-+				pmic->desc[id].ops = &palmas_ops_smps;
- 			pmic->desc[id].n_voltages = PALMAS_SMPS_NUM_VOLTAGES;
- 			pmic->desc[id].vsel_reg =
- 					PALMAS_BASE_TO_REG(PALMAS_SMPS_BASE,
-@@ -962,6 +1091,10 @@ static int palmas_regulators_probe(struct platform_device *pdev)
- 
- 	/* Start this loop from the id left from previous loop */
- 	for (; id < PALMAS_NUM_REGS; id++) {
-+		if (pdata && pdata->reg_init[id])
-+			reg_init = pdata->reg_init[id];
-+		else
-+			reg_init = NULL;
- 
- 		/* Miss out regulators which are not available due
- 		 * to alternate functions.
-@@ -975,7 +1108,11 @@ static int palmas_regulators_probe(struct platform_device *pdev)
- 
- 		if (id < PALMAS_REG_REGEN1) {
- 			pmic->desc[id].n_voltages = PALMAS_LDO_NUM_VOLTAGES;
--			pmic->desc[id].ops = &palmas_ops_ldo;
-+			if (reg_init && reg_init->roof_floor)
-+				pmic->desc[id].ops =
-+					&palmas_ops_ext_control_ldo;
-+			else
-+				pmic->desc[id].ops = &palmas_ops_ldo;
- 			pmic->desc[id].min_uV = 900000;
- 			pmic->desc[id].uV_step = 50000;
- 			pmic->desc[id].linear_min_sel = 1;
-@@ -999,7 +1136,11 @@ static int palmas_regulators_probe(struct platform_device *pdev)
- 			}
- 		} else {
- 			pmic->desc[id].n_voltages = 1;
--			pmic->desc[id].ops = &palmas_ops_extreg;
-+			if (reg_init && reg_init->roof_floor)
-+				pmic->desc[id].ops =
-+					&palmas_ops_ext_control_extreg;
-+			else
-+				pmic->desc[id].ops = &palmas_ops_extreg;
- 			pmic->desc[id].enable_reg =
- 					PALMAS_BASE_TO_REG(PALMAS_RESOURCE_BASE,
- 						palmas_regs_info[id].ctrl_addr);
++	}
++	return 0;
++}
++
++static void *fimc_is_get_drvdata(struct platform_device *pdev);
++
++static int fimc_is_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	struct fimc_is *is;
++	void __iomem *regs;
++	struct device_node *node;
++	int irq, ret;
++	int i;
++
++	dev_dbg(dev, "FIMC-IS Probe Enter\n");
++
++	if (!pdev->dev.of_node)
++		return -ENODEV;
++
++	is = devm_kzalloc(&pdev->dev, sizeof(*is), GFP_KERNEL);
++	if (!is)
++		return -ENOMEM;
++
++	is->pdev = pdev;
++
++	is->drvdata = fimc_is_get_drvdata(pdev);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	regs = devm_ioremap_resource(dev, res);
++	if (IS_ERR(regs))
++		return PTR_ERR(regs);
++
++	/* Get the PMU base */
++	node = of_parse_phandle(dev->of_node, "samsung,pmu", 0);
++	if (!node)
++		return -ENODEV;
++	is->pmu_regs = of_iomap(node, 0);
++	if (!is->pmu_regs)
++		return -ENOMEM;
++
++	irq = irq_of_parse_and_map(dev->of_node, 0);
++	if (irq < 0) {
++		dev_err(dev, "Failed to get IRQ\n");
++		return irq;
++	}
++
++	ret = fimc_is_configure_clocks(is);
++	if (ret < 0) {
++		dev_err(dev, "clocks configuration failed\n");
++		goto err_clk;
++	}
++
++	platform_set_drvdata(pdev, is);
++	pm_runtime_enable(dev);
++
++	ret = pm_runtime_get_sync(dev);
++	if (ret < 0)
++		goto err_pm;
++
++	is->alloc_ctx = vb2_dma_contig_init_ctx(dev);
++	if (IS_ERR(is->alloc_ctx)) {
++		ret = PTR_ERR(is->alloc_ctx);
++		goto err_vb;
++	}
++
++	/* Get IS-sensor contexts */
++	ret = fimc_is_parse_sensor(is);
++	if (ret < 0)
++		goto err_vb;
++
++	/* Initialize FIMC Pipeline */
++	for (i = 0; i < is->drvdata->num_instances; i++) {
++		ret = fimc_is_pipeline_init(&is->pipeline[i], i, is);
++		if (ret < 0)
++			goto err_sd;
++	}
++
++	/* Initialize FIMC Interface */
++	ret = fimc_is_interface_init(&is->interface, regs, irq);
++	if (ret < 0)
++		goto err_sd;
++
++	pm_runtime_put(dev);
++
++	dev_dbg(dev, "FIMC-IS registered successfully\n");
++
++	return 0;
++
++err_sd:
++	fimc_is_pipelines_destroy(is);
++err_vb:
++	vb2_dma_contig_cleanup_ctx(is->alloc_ctx);
++err_pm:
++	pm_runtime_put(dev);
++err_clk:
++	fimc_is_put_clocks(is);
++
++	return ret;
++}
++
++int fimc_is_clk_enable(struct fimc_is *is)
++{
++	int ret;
++
++	ret = clk_enable(is->clock[IS_CLK_ISP]);
++	if (ret)
++		return ret;
++	ret = clk_enable(is->clock[IS_CLK_MCU_ISP]);
++	return ret;
++}
++
++void fimc_is_clk_disable(struct fimc_is *is)
++{
++	clk_disable(is->clock[IS_CLK_ISP]);
++	clk_disable(is->clock[IS_CLK_MCU_ISP]);
++}
++
++static int fimc_is_pm_resume(struct device *dev)
++{
++	struct fimc_is *is = dev_get_drvdata(dev);
++	int ret;
++
++	ret = fimc_is_clk_enable(is);
++	if (ret < 0) {
++		dev_err(dev, "Could not enable clocks\n");
++		return ret;
++	}
++	return 0;
++}
++
++static int fimc_is_pm_suspend(struct device *dev)
++{
++	struct fimc_is *is = dev_get_drvdata(dev);
++
++	fimc_is_clk_disable(is);
++	return 0;
++}
++
++static int fimc_is_runtime_resume(struct device *dev)
++{
++	return fimc_is_pm_resume(dev);
++}
++
++static int fimc_is_runtime_suspend(struct device *dev)
++{
++	return fimc_is_pm_suspend(dev);
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int fimc_is_resume(struct device *dev)
++{
++	/* TODO */
++	return 0;
++}
++
++static int fimc_is_suspend(struct device *dev)
++{
++	/* TODO */
++	return 0;
++}
++#endif /* CONFIG_PM_SLEEP */
++
++static int fimc_is_remove(struct platform_device *pdev)
++{
++	struct fimc_is *is = platform_get_drvdata(pdev);
++	struct device *dev = &pdev->dev;
++
++	pm_runtime_disable(dev);
++	pm_runtime_set_suspended(dev);
++	fimc_is_pipelines_destroy(is);
++	vb2_dma_contig_cleanup_ctx(is->alloc_ctx);
++	fimc_is_put_clocks(is);
++	return 0;
++}
++
++static const struct dev_pm_ops fimc_is_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(fimc_is_suspend, fimc_is_resume)
++	SET_RUNTIME_PM_OPS(fimc_is_runtime_suspend, fimc_is_runtime_resume,
++			   NULL)
++};
++
++static struct fimc_is_drvdata exynos5250_drvdata = {
++	.num_instances	= 1,
++	.fw_name	= "exynos5_fimc_is_fw.bin",
++};
++
++static const struct of_device_id exynos5_fimc_is_match[] = {
++	{
++		.compatible = "samsung,exynos5250-fimc-is",
++		.data = &exynos5250_drvdata,
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, exynos5_fimc_is_match);
++
++static void *fimc_is_get_drvdata(struct platform_device *pdev)
++{
++	struct fimc_is_drvdata *driver_data = NULL;
++
++	if (pdev->dev.of_node) {
++		const struct of_device_id *match;
++		match = of_match_node(exynos5_fimc_is_match,
++				pdev->dev.of_node);
++		if (match)
++			driver_data = (struct fimc_is_drvdata *)match->data;
++	}
++	return driver_data;
++}
++
++static struct platform_driver fimc_is_driver = {
++	.probe		= fimc_is_probe,
++	.remove		= fimc_is_remove,
++	.driver = {
++		.name	= FIMC_IS_DRV_NAME,
++		.owner	= THIS_MODULE,
++		.pm	= &fimc_is_pm_ops,
++		.of_match_table = exynos5_fimc_is_match,
++	}
++};
++module_platform_driver(fimc_is_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Arun Kumar K <arun.kk@samsung.com>");
++MODULE_DESCRIPTION("Samsung Exynos5 (FIMC-IS) Imaging Subsystem driver");
+diff --git a/drivers/media/platform/exynos5-is/fimc-is-core.h b/drivers/media/platform/exynos5-is/fimc-is-core.h
+new file mode 100644
+index 0000000..cb0d916
+--- /dev/null
++++ b/drivers/media/platform/exynos5-is/fimc-is-core.h
+@@ -0,0 +1,132 @@
++/*
++ * Samsung EXYNOS5 FIMC-IS (Imaging Subsystem) driver
++ *
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ *  Arun Kumar K <arun.kk@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#ifndef FIMC_IS_CORE_H_
++#define FIMC_IS_CORE_H_
++
++#include <asm/barrier.h>
++#include <linux/bug.h>
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/errno.h>
++#include <linux/firmware.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/irqreturn.h>
++#include <linux/kernel.h>
++#include <linux/list.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/sched.h>
++#include <linux/sizes.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/types.h>
++#include <linux/videodev2.h>
++
++#include <media/media-entity.h>
++#include <media/s5p_fimc.h>
++#include <media/videobuf2-core.h>
++#include <media/v4l2-ctrls.h>
++#include <media/v4l2-device.h>
++#include <media/v4l2-mem2mem.h>
++#include <media/v4l2-mediabus.h>
++
++#define FIMC_IS_DRV_NAME		"exynos5-fimc-is"
++
++#define FIMC_IS_COMMAND_TIMEOUT		(3 * HZ)
++#define FIMC_IS_STARTUP_TIMEOUT		(3 * HZ)
++#define FIMC_IS_SHUTDOWN_TIMEOUT	(10 * HZ)
++
++#define FW_SHARED_OFFSET		(0x8c0000)
++#define DEBUG_CNT			(500 * 1024)
++#define DEBUG_OFFSET			(0x840000)
++#define DEBUGCTL_OFFSET			(0x8bd000)
++#define DEBUG_FCOUNT			(0x8c64c0)
++
++#define FIMC_IS_MAX_INSTANCES		1
++
++#define FIMC_IS_NUM_SENSORS		2
++#define FIMC_IS_NUM_PIPELINES		1
++
++#define FIMC_IS_MAX_PLANES		3
++#define FIMC_IS_NUM_SCALERS		2
++
++enum fimc_is_clks {
++	IS_CLK_ISP,
++	IS_CLK_MCU_ISP,
++	IS_CLK_ISP_DIV0,
++	IS_CLK_ISP_DIV1,
++	IS_CLK_ISP_DIVMPWM,
++	IS_CLK_MCU_ISP_DIV0,
++	IS_CLK_MCU_ISP_DIV1,
++	IS_CLK_MAX_NUM
++};
++
++/* Video capture states */
++enum fimc_is_video_state {
++	STATE_INIT,
++	STATE_BUFS_ALLOCATED,
++	STATE_RUNNING,
++};
++
++enum fimc_is_scaler_id {
++	SCALER_SCC,
++	SCALER_SCP
++};
++
++enum fimc_is_sensor_pos {
++	SENSOR_CAM0,
++	SENSOR_CAM1
++};
++
++struct fimc_is_buf {
++	struct vb2_buffer vb;
++	struct list_head list;
++	unsigned int paddr[FIMC_IS_MAX_PLANES];
++};
++
++struct fimc_is_memory {
++	/* physical base address */
++	dma_addr_t paddr;
++	/* virtual base address */
++	void *vaddr;
++	/* total length */
++	unsigned int size;
++};
++
++struct fimc_is_meminfo {
++	struct fimc_is_memory	fw;
++	struct fimc_is_memory	shot;
++	struct fimc_is_memory	region;
++	struct fimc_is_memory	shared;
++};
++
++struct fimc_is_drvdata {
++	unsigned int	num_instances;
++	char		*fw_name;
++};
++
++/**
++ * struct fimc_is_fmt - the driver's internal color format data
++ * @name: format description
++ * @fourcc: the fourcc code for this format
++ * @depth: number of bytes per pixel
++ * @num_planes: number of planes for this color format
++ */
++struct fimc_is_fmt {
++	char		*name;
++	unsigned int	fourcc;
++	unsigned int	depth[FIMC_IS_MAX_PLANES];
++	unsigned int	num_planes;
++};
++
++#endif
 -- 
-1.7.1.1
+1.7.9.5
 
