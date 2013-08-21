@@ -1,76 +1,72 @@
-From: Dong Aisheng <b29396@freescale.com>
+From: Rob Herring <robherring2@gmail.com>
 Subject: Re: [PATCH 0/3] of: add update device node status via cmdline feature
-Date: Wed, 21 Aug 2013 20:47:23 +0800
-Message-ID: <20130821124722.GB17748@b29396-Latitude-E6410>
+Date: Wed, 21 Aug 2013 08:23:05 -0500
+Message-ID: <CAL_JsqLa1RkL0MaOCbjYbuQW7+8EKqX8RMfypN=i5UTKaF47=A@mail.gmail.com>
 References: <1376564133-11286-1-git-send-email-b29396@freescale.com>
- <520CCB70.8090908@gmail.com>
+	<520CCB70.8090908@gmail.com>
+	<20130821124722.GB17748@b29396-Latitude-E6410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <520CCB70.8090908@gmail.com>
+In-Reply-To: <20130821124722.GB17748@b29396-Latitude-E6410>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, rob@landley.net, Rob Herring <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 15, 2013 at 07:37:04AM -0500, Rob Herring wrote:
-> On 08/15/2013 05:55 AM, Dong Aisheng wrote:
-> > We meet some boards having a lot of pin conflicts between different devices,
-> > only one of them can be enabled to run at one time.
-> > 
-> > e.g. imx6q sabreauto board, i2c, spi, weim, flexcan, uart and etc involved
-> > with pin conflict.
-> > 
-> > Instead of changing dts manually or adding a lot dts files according to
-> > different device availability, we provide feature to dynamically update the
-> > device node status via command line, then those devices involved with
-> > pin conflict can be enabled or disabled dynamically.
-> > 
-> > It's conveniently to use and can save a lot dts board files, also can
-> > permenantly fix the pin conflicts issue.
-> 
-> This doesn't scale either with updating of lots devices or when the next
-> person comes along and wants to edit another property.
-> 
+On Wed, Aug 21, 2013 at 7:47 AM, Dong Aisheng <b29396@freescale.com> wrote:
+> On Thu, Aug 15, 2013 at 07:37:04AM -0500, Rob Herring wrote:
+>> On 08/15/2013 05:55 AM, Dong Aisheng wrote:
+>> > We meet some boards having a lot of pin conflicts between different devices,
+>> > only one of them can be enabled to run at one time.
+>> >
+>> > e.g. imx6q sabreauto board, i2c, spi, weim, flexcan, uart and etc involved
+>> > with pin conflict.
+>> >
+>> > Instead of changing dts manually or adding a lot dts files according to
+>> > different device availability, we provide feature to dynamically update the
+>> > device node status via command line, then those devices involved with
+>> > pin conflict can be enabled or disabled dynamically.
+>> >
+>> > It's conveniently to use and can save a lot dts board files, also can
+>> > permenantly fix the pin conflicts issue.
+>>
+>> This doesn't scale either with updating of lots devices or when the next
+>> person comes along and wants to edit another property.
+>>
+>
+> I'm not sure about other property.
+> But we update it did cause by the real requirement, not arbitrary.
+> Or we can try to find another better way to avoid it.
+>
+>> This is something u-boot is perfectly capable of handling and updating
+>> status is something lots of boards already do.
+>>
+>
+> How does uboot handle this according to our needs?
+> Also dynamically update the device node status with uboot command?
+> Can you help point out an example for me to check?
+>
 
-I'm not sure about other property.
-But we update it did cause by the real requirement, not arbitrary.
-Or we can try to find another better way to avoid it.
+Here's an example adding a status property with u-boot commands:
 
-> This is something u-boot is perfectly capable of handling and updating
-> status is something lots of boards already do.
-> 
+Highbank #fdt print /soc/ethernet
+ethernet@fff50000 {
+        compatible = "calxeda,hb-xgmac";
+        reg = <0xfff50000 0x00001000>;
+        interrupts = <0x00000000 0x0000004d 0x00000004 0x00000000
+0x0000004e 0x00000004 0x00000000 0x0000004f 0x00000004>;
+        dma-coherent;
+};
+Highbank #fdt set /soc/ethernet status okay
+Highbank #fdt print /soc/ethernet
+ethernet@fff50000 {
+        status = "okay";
+        compatible = "calxeda,hb-xgmac";
+        reg = <0xfff50000 0x00001000>;
+        interrupts = <0x00000000 0x0000004d 0x00000004 0x00000000
+0x0000004e 0x00000004 0x00000000 0x0000004f 0x00000004>;
+        dma-coherent;
+};
 
-How does uboot handle this according to our needs?
-Also dynamically update the device node status with uboot command?
-Can you help point out an example for me to check?
-
-Regards
-Dong Aisheng
-
-> Rob
-> 
-> > 
-> > The patch series is based on v3.11-rc5.
-> > 
-> > Dong Aisheng (3):
-> >   of: add device node status update APIs
-> >   of: add update device node status via cmdline feature
-> >   of: add node status update via name format with cmdline
-> > 
-> >  Documentation/kernel-parameters.txt |   10 +++
-> >  drivers/of/base.c                   |  107 +++++++++++++++++++++++++++++++++
-> >  drivers/of/fdt.c                    |  111 +++++++++++++++++++++++++++++++++++
-> >  include/linux/of.h                  |   13 ++++
-> >  4 files changed, 241 insertions(+), 0 deletions(-)
-> > 
-> > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > 
-> 
-> 
+Rob
