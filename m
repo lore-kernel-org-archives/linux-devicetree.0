@@ -1,49 +1,37 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:46601 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751523Ab3HUQKL (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 12:10:11 -0400
-Message-ID: <5214E65F.50101@wwwdotorg.org>
-Date: Wed, 21 Aug 2013 10:10:07 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
-MIME-Version: 1.0
+Received: from spinics.net ([68.183.106.108]:39577 "EHLO spinics.net"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752045Ab3HUCys (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Tue, 20 Aug 2013 22:54:48 -0400
+Received: from amd.spinics.net (amd [10.77.2.2])
+	by spinics.net (8.13.8/8.13.8) with ESMTP id r7L2Vxwf023022
+	for <devicetree@vger.kernel.org>; Tue, 20 Aug 2013 19:31:59 -0700
+Received: from amd.spinics.net (localhost.localdomain [127.0.0.1])
+	by amd.spinics.net (8.14.7/8.14.5) with ESMTP id r7L2VxAR009653
+	for <devicetree@vger.kernel.org>; Tue, 20 Aug 2013 19:31:59 -0700
+Received: (from root@localhost)
+	by amd.spinics.net (8.14.7/8.14.7/Submit) id r7L2VxkR009652
+	for devicetree@vger.kernel.org; Tue, 20 Aug 2013 19:31:59 -0700
+From: ellis@spinics.net
+Message-Id: <201308210231.r7L2VxkR009652@amd.spinics.net>
 Subject: Re: [Device-tree] mailing list responsiveness and discoverability
-References: <CAN8TOE_8f_vhCAhRaBGXk9=F8=-2YtY5eSNgypSuxiL5z-B-=Q@mail.gmail.com>
+Date: Tue, 20 Aug 2013 19:31:59 -0700 (PDT)
 In-Reply-To: <CAN8TOE_8f_vhCAhRaBGXk9=F8=-2YtY5eSNgypSuxiL5z-B-=Q@mail.gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/20/2013 08:25 PM, Brian Norris wrote:
-> Hello device tree maintainers,
+> (3) Archives: Archives for devicetree@vger.kernel.org are not easy to
+> find. I recently subscribed to the mailing list, so general
+> device-tree activity doesn't get lost in oblivion (to me). But if no
+> one has done so yet, I'd like to see this mailing list archived on at
+> least one of gmane (gmane has the old devicetree list and not the new
+> one.), marc.info (I "devicetree" is this the new one?), etc. and
+> linked at:
 > 
-> I (sub)maintain the Linux MTD subsystem and hang out on the
-> linux-mtd@infradead.org mailing list. I have been seeing an increasing
-> number of submissions that involve device-tree changes. Many of these
-> changes are ill thought out and may even cause ABI breakage.
-> 
-> According to discussions I've seen on LKML, you want to see better
-> bindings merged into the kernel, and you want to maintain more control
-> over the acceptance of bindings in general. However, I see a few
-> problems that have inhibited this.
-> 
-> (1) Mailing list change: it just so happens that you recently moved
-> your mailing list to @vger.kernel.org. Some people are still CC'ing
-> the old one (if they CC any DT list at all). I'm not sure what can be
-> done about this, exactly. Perhaps a forwarding rule + a warning
-> response would have been better for a transition period, rather than
-> just shutting down and rejecting from the old one.
+> http://vger.kernel.org/vger-lists.html#devicetree
 
-Indeed.
-
-> (2) Responsiveness: when we finally do CC devicetree@vger.kernel.org,
-> I don't see much feedback, even for those which (when I get around to
-> reviewing them myself) look like they have obvious issues that
-> device-tree maintainers should care about.
-
-The problem here is that the mail volume is extremely high. Even keeping
-up with the content that I'm explicitly CC'd on is difficult, let alone
-the stuff that goes to the list that doesn't CC the binding maintainers.
+http://www.spinics.net/lists/devicetree/
