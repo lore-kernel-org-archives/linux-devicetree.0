@@ -1,85 +1,98 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db9lp0248.outbound.messaging.microsoft.com ([213.199.154.248]:57638
-	"EHLO db9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753061Ab3HVLlA (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Thu, 22 Aug 2013 07:41:00 -0400
-Date: Thu, 22 Aug 2013 19:40:28 +0800
-From: Nicolin Chen <b42378@freescale.com>
-Subject: Re: [PATCH v10 2/2] ASoC: fsl: Add S/PDIF machine driver
-Message-ID: <20130822114027.GA4258@MrMyself>
-References: <cover.1377054540.git.b42378@freescale.com>
- <e9cf5e37f858dea78319720f007f66c8c063885f.1377054540.git.b42378@freescale.com>
- <52150763.8020707@wwwdotorg.org>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:45254 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752484Ab3HUWO5 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 18:14:57 -0400
+Message-ID: <52153BDC.8020702@wwwdotorg.org>
+Date: Wed, 21 Aug 2013 16:14:52 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <52150763.8020707@wwwdotorg.org>
+Subject: Re: [PATCH v10 2/2] ASoC: fsl: Add S/PDIF machine driver
+References: <cover.1377054540.git.b42378@freescale.com> <e9cf5e37f858dea78319720f007f66c8c063885f.1377054540.git.b42378@freescale.com> <52150763.8020707@wwwdotorg.org> <2125663.4przPy426h@flatron>
+In-Reply-To: <2125663.4przPy426h@flatron>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: broonie@kernel.org, s.hauer@pengutronix.de, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, tomasz.figa@gmail.com, mark.rutland@arm.com, R65777@freescale.com
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Nicolin Chen <b42378@freescale.com>, broonie@kernel.org, s.hauer@pengutronix.de, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, mark.rutland@arm.com, R65777@freescale.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Stephen,
-
-On Wed, Aug 21, 2013 at 12:30:59PM -0600, Stephen Warren wrote:
-> I still don't think those two properties are correct.
+On 08/21/2013 12:54 PM, Tomasz Figa wrote:
+> On Wednesday 21 of August 2013 12:30:59 Stephen Warren wrote:
+>> On 08/20/2013 09:13 PM, Nicolin Chen wrote:
+>>> This patch implements a device-tree-only machine driver for Freescale
+>>> i.MX series Soc. It works with spdif_transmitter/spdif_receiver and
+>>> fsl_spdif.c drivers.
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
+>>> b/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
+>>>
+>>> +Optional properties:
+>>> +
+>>> +  - spdif-transmitter : The phandle of the spdif-transmitter codec
+>>> +
+>>> +  - spdif-receiver : The phandle of the spdif-receiver codec
+>>> +
+>>> +* Note: At least one of these two properties should be set in the DT
+>>> binding.
+>> I still don't think those two properties are correct.
+>>
+>> Exactly what node will those phandles point at?
 > 
-> Exactly what node will those phandles point at?
+> Imagine following setup:
 > 
-> There definitely should not be a DT node for any "dummy CODEC",
-> irrespective of whether this binding calls the other node a "CODEC" or a
-> "dummy CODEC".
+>   ________              ________________
+>  |        |     RX     | Microphone DSP |   Analog mic input
+>  | S/PDIF | <--------< |________________| <-------------------
+>  |        |             ________________
+>  |  DAI   | >--------> | Amplifier      | >-------------------
+>  |________|     TX     |________________|   Speakers output
 > 
-> If these properties are to contain phandles, it would be acceptable for
-> the referenced node to be:
+> As you see in the diagram, the S/PDIF interface of the SoC can be 
+> connected to some external devices that can perform sound processing or 
+> simply handle the physical layer.
 > 
-> * A node representing the physical connector/jack on the board.
+> I'd say that normally both RX and TX lines would be connected to a single 
+> codec chip that has multiple blocks inside, like sound processing, 
+> amplifier, mixer, etc., but nothing stops you from making a crazy setup, 
+> when RX and TX lines are connected to different chips.
+
+That's much rarer with S/PDIF than I2S though right? Usually I'd expect
+the S/PDIF controller to simply be routed out to a jack/connector on the
+board, or perhaps to an internal HDMI encoder.
+
+But the point of my question was more that the binding should fully
+describe the type of object/node that the phandle should reference. The
+type of the node would then imply what kind of operations could be
+performed on that other node's driver by this node's driver. If the set
+of operations is undefined, that's bad. If the set of operations is
+NULL, there's probably no need to reference the node.
+
+>> There definitely should not be a DT node for any "dummy CODEC",
+>> irrespective of whether this binding calls the other node a "CODEC" or a
+>> "dummy CODEC".
 > 
-> * A node representing some other IP block on the board, such as an HDMI
-> encoder/display-controller
+> I agree. Instead if no chip connected to particular line is specified in 
+> device tree, it's responsibility of Linux sound core to handle this 
+> properly by adding a dummy codec or whatever.
 > 
-> I think those options are unlikely in general, so I think instead these
-> properties should just be Boolean indicating that "something" is
-> connector to the S/PDIF RX/TX, without specifying what that "something"
-> is. It doesn't matter what at least in the connector/jack case, although
-> perhaps it does in the HDMI encoder/display-controller?
+>> If these properties are to contain phandles, it would be acceptable for
+>> the referenced node to be:
+>>
+>> * A node representing the physical connector/jack on the board.
+>>
+>> * A node representing some other IP block on the board, such as an HDMI
+>> encoder/display-controller
+>>
+>> I think those options are unlikely in general
+> 
+> Why? You usually codec SoC DAIs to some external chips.
 
-Documentation/devicetree/bindings/sound/spdif-receiver.txt
-If I understand correctly, this doc for the dummy codec should be invalid?
+It's unlikely the phandle would reference a connector/jack since we
+(thus far at least) haven't created DT nodes for them. If we do put
+jacks/connectors into DT, then referencing them is fine.
 
-But this patch, the spdif machine driver, is based on this codec driver,
-pls check the following code:
-
-164 +       codec_rx_np = of_parse_phandle(np, "spdif-receiver", 0);
-165 +       if (codec_rx_np) {
-169 +               data->dai[num_links].codec_of_node = codec_rx_np;
-173 +       }
-
-Accordingly, the binding I planned to add in DT:
-
-27 +       spdif_rx_codec: spdif-receiver {
-28 +               compatible = "linux,spdif-dir";
-29 +       };
-30 +
-31 +       sound-spdif {
-32 +               compatible = "fsl,imx-audio-spdif",
-33 +                          "fsl,imx-sabreauto-spdif";
-34 +               model = "imx-spdif";
-35 +               spdif-controller = <&spdif>;
-37 +               spdif-receiver = <&spdif_rx_codec>;
-38 +       };
-
-
-So if the DT can't allow me to include this codec node, how could I
-handle it in the current baseline.
-
-Could you please directly provide me a nicer means? Or maybe just an
-eclectic way for everyone, since it doesn't look like we have a perfect
-solution right now.
-
-Thank you so much.
-Nicolin
-
-
-
+In the "other IP block" case, it may be worth referencing the device,
+although as I mentioned above, we need to describe exactly what is
+expected from that other device interface-wise.
