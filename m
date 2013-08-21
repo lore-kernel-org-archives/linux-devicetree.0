@@ -1,72 +1,73 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v5 2/4] mtd:nand:omap2: clean-up BCHx_HW and BCHx_SW
- ECC configurations in device_probe
-Date: Tue, 20 Aug 2013 18:26:42 -0700
-Message-ID: <20130821012642.GC28382@ld-irv-0074.broadcom.com>
-References: <1373748891-7779-1-git-send-email-pekon@ti.com>
- <1373748891-7779-3-git-send-email-pekon@ti.com>
+From: Gururaja Hebbar <gururaja.hebbar@ti.com>
+Subject: Re: [PATCH v4 1/4] ARM: OMAP2+: AM33XX: I2C Sleep/wake sequence support
+Date: Wed, 21 Aug 2013 13:59:56 +0530
+Message-ID: <52147A84.8030704@ti.com>
+References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com> <1376432412-8509-2-git-send-email-Russ.Dill@ti.com> <520B595F.2040207@ti.com> <CA+Bv8XZ-QGhVV1mK=rRekOZzaTDN-Y9YkWYYoEc8EtvP0JouEA@mail.gmail.com> <5211B201.2000401@ti.com> <CA+Bv8XaPU6N3KztAPFZb8OMMg8Tc+Kv5hf1Utz7QS=NCRdO3Rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1373748891-7779-3-git-send-email-pekon@ti.com>
+In-Reply-To: <CA+Bv8XaPU6N3KztAPFZb8OMMg8Tc+Kv5hf1Utz7QS=NCRdO3Rg@mail.gmail.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: dedekind1@gmail.com, dwmw2@infradead.org, arnd@arndb.de, olof@lixom.net, mugunthanvnm@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, benoit.cousson@linaro.org, linux-omap@vger.kernel.org
+To: Russ Dill <Russ.Dill@ti.com>
+Cc: Kevin Hilman <khilman@deeprootsystems.com>, devicetree@vger.kernel.org, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 14, 2013 at 02:24:49AM +0530, Pekon Gupta wrote:
-> ECC scheme on NAND devices can be implemented in multiple ways.Some using
-> Software algorithm, while others using in-build Hardware engines.
-> omap2-nand driver currently supports following flavours of ECC schemes.
+On 8/20/2013 10:03 PM, Russ Dill wrote:
+> On Sun, Aug 18, 2013 at 10:49 PM, Gururaja Hebbar
+> <gururaja.hebbar@ti.com> wrote:
+>>
+>> On 8/15/2013 4:04 AM, Russ Dill wrote:
+>>> On Wed, Aug 14, 2013 at 3:18 AM, Gururaja Hebbar <gururaja.hebbar@ti.com> wrote:
+>>>> On 8/14/2013 3:50 AM, Russ Dill wrote:
+>>>>> Changes since v1:
+>>>>> * Rebased onto new am335x PM branch
+>>>>> * Changed to use 5th param register
+>>
+>>>>
+>>
+>> [snip]
+>> [snip]
+>>
+>>>>> +
+>>>>> +     wkup_m3_reset_data_pos();
+>>>>> +     if (am33xx_i2c_sleep_sequence) {
+>>>>> +             pos = wkup_m3_copy_data(am33xx_i2c_sleep_sequence,
+>>>>> +                                             i2c_sleep_sequence_sz);
+>>>>
+>>>> Why do we need to copy this data (same constant data) on every iteration?
+>>>
+>>> Because the CM3 firmware is reset after each suspend/resume cycle. The
+>>> firmware reset handler reinitializes the DMEM.
+>>
+>> Well in that why can't the i2c payload be copied to UMEM?
+>>
+>> Thanks & regards
+>> Gururaja
+>>
 > 
-> +---------------------------------------+---------------+---------------+
-> | ECC scheme                            |ECC calculation|Error detection|
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_HAMMING_CODE_DEFAULT          |S/W            |S/W            |
-> |OMAP_ECC_HAMMING_CODE_HW               |H/W (GPMC)     |S/W            |
-> |OMAP_ECC_HAMMING_CODE_HW_ROMCODE       |H/W (GPMC)     |S/W            |
-> +---------------------------------------+---------------+---------------+
-> |(requires CONFIG_MTD_NAND_ECC_BCH)     |               |               |
-> |OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W            |
-> +---------------------------------------+---------------+---------------+
-> |(requires CONFIG_MTD_NAND_OMAP_BCH)    |               |               |
-> |OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
-> +---------------------------------------+---------------+---------------+
+> I've given this some thought, and gone back and forth a bit. UMEM is a
+> bit more complicated because the linker decides what should go where.
+
+but linker doesn't know about the copy and the location we are doing at
+runtime.
+
+> Also, it may be that in the future, either the PM for am335x or am43xx
+> will be writing different sequences depending on the suspend
+> mode/options.
+
+still these info will be coming from DT and can be copied to UMEM. only
+issue could be space.
+
 > 
-> This patch
-> - separates the configurations for various ECC schemes.
-> - fixes dependency issues based on Kconfig options.
-> - cleans up redundant code
+> Is there a specific aspect of copying the data each suspend cycle that
+> you are trying to fix? Is it just that the data could only be copied
+> once? Or is it the latency of the copy?
+
+Copy latency on every iterations is what worries me. it will surely add
+a delay for suspend.
+
 > 
-> Signed-off-by: Pekon Gupta <pekon@ti.com>
-> ---
->  drivers/mtd/nand/omap2.c | 505 +++++++++++++++++++++++------------------------
->  1 file changed, 249 insertions(+), 256 deletions(-)
+> Thanks!
 > 
-> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-> index daa3dfc..ea857cc 100644
-> --- a/drivers/mtd/nand/omap2.c
-> +++ b/drivers/mtd/nand/omap2.c
 
-[...]
-
-> @@ -2075,11 +2066,13 @@ out_release_mem_region:
->  		free_irq(info->gpmc_irq_fifo, info);
->  	release_mem_region(info->phys_base, info->mem_size);
->  out_free_info:
-> +	omap3_free_bch(&info->mtd);
->  	kfree(info);
->  
->  	return err;
->  }
->  
-> +
-
-Extra blank line?
-
->  static int omap_nand_remove(struct platform_device *pdev)
->  {
->  	struct mtd_info *mtd = platform_get_drvdata(pdev);
-
-Brian
