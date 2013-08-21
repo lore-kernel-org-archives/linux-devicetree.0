@@ -1,210 +1,623 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56395 "EHLO mail.gnudd.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932456Ab3HGK0V (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:26:21 -0400
-Date: Wed, 7 Aug 2013 12:19:42 +0200
-From: Davide Ciminaghi <ciminaghi@gnudd.com>
-Subject: [PATCH 13/26] drivers/amba/pci-amba.c: use devicetree for amba
- device creation.
-Message-ID: <941f70ce8d4ee1fbb617fb58e27cefeebbb31b29.1375867291.git.rubini@gnudd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+Received: from mail-pa0-f53.google.com ([209.85.220.53]:37502 "EHLO
+	mail-pa0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752017Ab3HUGfT (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 02:35:19 -0400
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v7 07/13] [media] exynos5-fimc-is: Add scaler subdev
+Date: Wed, 21 Aug 2013 12:04:34 +0530
+Message-Id: <1377066881-5423-8-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
+References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-The following scheme applies for each pci-amba device within the
-devicetree:
+FIMC-IS has two hardware scalers named as scaler-codec and
+scaler-preview. This patch adds the common code handling the
+video nodes and subdevs of both the scalers.
 
-	* sta2x11 pci express port (pci id = 0xcc17)
-	  |
-	  |
-	  * pci-amba bridge node (pci id = 0xcc18)
-	    |
-	    +-------+
-	    |	    |
-	    |	    * amba-bus node (ranges, interrupt-map)
-	    |	      |
-	    |	      ...
-	    ...	      |
-	    |	      * amba side of pci-amba device
-	    |
-	    |
-	    * pci side of pci-amba device
-
-As far as the sta2x11 is concerned, there are 4 pci-amba bridge nodes (one
-for each pci express endpoint).
-A pci-amba bridge node contains an amba bus and all the pci side parts of
-the pci-amba devices attached to the same pci express endpoint.
-Finally, each child node of the amba bus represents the amba side of a
-pci-amba device.
-
-Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+Signed-off-by: Kilyeon Im <kilyeon.im@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
- drivers/amba/pci-amba.c |  126 ++++++++++++++++++++++++++++++++++++++++------
- 1 files changed, 109 insertions(+), 17 deletions(-)
+ drivers/media/platform/exynos5-is/fimc-is-scaler.c |  472 ++++++++++++++++++++
+ drivers/media/platform/exynos5-is/fimc-is-scaler.h |  106 +++++
+ 2 files changed, 578 insertions(+)
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.h
 
-diff --git a/drivers/amba/pci-amba.c b/drivers/amba/pci-amba.c
-index 8ce526a..e56717b 100644
---- a/drivers/amba/pci-amba.c
-+++ b/drivers/amba/pci-amba.c
-@@ -12,42 +12,134 @@
- #include <linux/slab.h>
- #include <linux/irq.h>
- #include <linux/sizes.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
+diff --git a/drivers/media/platform/exynos5-is/fimc-is-scaler.c b/drivers/media/platform/exynos5-is/fimc-is-scaler.c
+new file mode 100644
+index 0000000..82ba867
+--- /dev/null
++++ b/drivers/media/platform/exynos5-is/fimc-is-scaler.c
+@@ -0,0 +1,472 @@
++/*
++ * Samsung EXYNOS5250 FIMC-IS (Imaging Subsystem) driver
++ *
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ *  Arun Kumar K <arun.kk@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <media/v4l2-ioctl.h>
++#include <media/videobuf2-dma-contig.h>
++
++#include "fimc-is.h"
++
++#define IS_SCALER_DRV_NAME "fimc-is-scaler"
++
++static const struct fimc_is_fmt formats[] = {
++	{
++		.name           = "YUV 4:2:0 3p MultiPlanar",
++		.fourcc         = V4L2_PIX_FMT_YUV420M,
++		.depth		= {8, 2, 2},
++		.num_planes     = 3,
++	},
++	{
++		.name           = "YUV 4:2:0 2p MultiPlanar",
++		.fourcc         = V4L2_PIX_FMT_NV12M,
++		.depth		= {8, 4},
++		.num_planes     = 2,
++	},
++	{
++		.name           = "YUV 4:2:2 1p MultiPlanar",
++		.fourcc         = V4L2_PIX_FMT_NV16,
++		.depth		= {16},
++		.num_planes     = 1,
++	},
++};
++#define NUM_FORMATS ARRAY_SIZE(formats)
++
++static const struct fimc_is_fmt *find_format(struct v4l2_format *f)
++{
++	unsigned int i;
++
++	for (i = 0; i < NUM_FORMATS; i++) {
++		if (formats[i].fourcc == f->fmt.pix_mp.pixelformat)
++			return &formats[i];
++	}
++	return NULL;
++}
++
++static int scaler_video_capture_start_streaming(struct vb2_queue *vq,
++					unsigned int count)
++{
++	struct fimc_is_scaler *ctx = vb2_get_drv_priv(vq);
++	int ret;
++
++	ret = fimc_is_pipeline_scaler_start(ctx->pipeline,
++			ctx->scaler_id,
++			vq->num_buffers,
++			ctx->fmt->num_planes);
++	if (ret) {
++		v4l2_err(&ctx->subdev, "Scaler start failed.\n");
++		return -EINVAL;
++	}
++
++	set_bit(STATE_RUNNING, &ctx->capture_state);
++	return 0;
++}
++
++static int scaler_video_capture_stop_streaming(struct vb2_queue *vq)
++{
++	struct fimc_is_scaler *ctx = vb2_get_drv_priv(vq);
++	struct fimc_is_buf *buf;
++	int ret;
++
++	ret = fimc_is_pipeline_scaler_stop(ctx->pipeline, ctx->scaler_id);
++	if (ret)
++		v4l2_info(&ctx->subdev, "Scaler already stopped.\n");
++
++	/* Release un-used buffers */
++	while (!list_empty(&ctx->wait_queue)) {
++		buf = fimc_is_scaler_wait_queue_get(ctx);
++		vb2_buffer_done(&buf->vb, VB2_BUF_STATE_ERROR);
++	}
++	while (!list_empty(&ctx->run_queue)) {
++		buf = fimc_is_scaler_run_queue_get(ctx);
++		vb2_buffer_done(&buf->vb, VB2_BUF_STATE_ERROR);
++	}
++
++	clear_bit(STATE_RUNNING, &ctx->capture_state);
++	return 0;
++}
++
++static int scaler_video_capture_queue_setup(struct vb2_queue *vq,
++			const struct v4l2_format *pfmt,
++			unsigned int *num_buffers, unsigned int *num_planes,
++			unsigned int sizes[], void *allocators[])
++{
++	struct fimc_is_scaler *ctx = vb2_get_drv_priv(vq);
++	const struct fimc_is_fmt *fmt = ctx->fmt;
++	unsigned int wh;
++	int i;
++
++	if (!fmt)
++		return -EINVAL;
++
++	*num_planes = fmt->num_planes;
++	wh = ctx->width * ctx->height;
++
++	for (i = 0; i < *num_planes; i++) {
++		allocators[i] = ctx->alloc_ctx;
++		sizes[i] = (wh * fmt->depth[i]) / 8;
++	}
++	return 0;
++}
++
++static int scaler_video_capture_buffer_init(struct vb2_buffer *vb)
++{
++	struct vb2_queue *vq = vb->vb2_queue;
++	struct fimc_is_scaler *ctx = vb2_get_drv_priv(vq);
++	struct fimc_is_buf *buf = container_of(vb, struct fimc_is_buf, vb);
++	const struct fimc_is_fmt *fmt;
++	int i;
++
++	fmt = ctx->fmt;
++	for (i = 0; i < fmt->num_planes; i++)
++		buf->paddr[i] = vb2_dma_contig_plane_dma_addr(vb, i);
++
++	return 0;
++}
++
++static int scaler_video_capture_buffer_prepare(struct vb2_buffer *vb)
++{
++	struct vb2_queue *vq = vb->vb2_queue;
++	struct fimc_is_scaler *ctx = vb2_get_drv_priv(vq);
++	int i;
++
++	for (i = 0; i < ctx->fmt->num_planes; i++) {
++		unsigned long size = (ctx->width * ctx->height *
++					ctx->fmt->depth[i]) / 8;
++
++		if (vb2_plane_size(vb, i) < size) {
++			v4l2_err(&ctx->subdev,
++				 "User buffer too small (%ld < %ld)\n",
++				 vb2_plane_size(vb, i), size);
++			return -EINVAL;
++		}
++		vb2_set_plane_payload(vb, i, size);
++	}
++
++	return 0;
++}
++
++static void scaler_video_capture_buffer_queue(struct vb2_buffer *vb)
++{
++	struct vb2_queue *vq = vb->vb2_queue;
++	struct fimc_is_scaler *ctx = vb2_get_drv_priv(vq);
++	struct fimc_is_buf *buf = container_of(vb, struct fimc_is_buf, vb);
++
++	/* Add buffer to the wait queue */
++	fimc_is_pipeline_buf_lock(ctx->pipeline);
++	fimc_is_scaler_wait_queue_add(ctx, buf);
++	fimc_is_pipeline_buf_unlock(ctx->pipeline);
++}
++
++static const struct vb2_ops scaler_video_capture_qops = {
++	.queue_setup		= scaler_video_capture_queue_setup,
++	.buf_init		= scaler_video_capture_buffer_init,
++	.buf_prepare		= scaler_video_capture_buffer_prepare,
++	.buf_queue		= scaler_video_capture_buffer_queue,
++	.wait_prepare		= vb2_ops_wait_prepare,
++	.wait_finish		= vb2_ops_wait_finish,
++	.start_streaming	= scaler_video_capture_start_streaming,
++	.stop_streaming		= scaler_video_capture_stop_streaming,
++};
++
++static const struct v4l2_file_operations scaler_video_capture_fops = {
++	.owner		= THIS_MODULE,
++	.open		= v4l2_fh_open,
++	.release	= vb2_fop_release,
++	.poll		= vb2_fop_poll,
++	.unlocked_ioctl	= video_ioctl2,
++	.mmap		= vb2_fop_mmap,
++};
 +
 +/*
-+  Length of an interrupt map row:
-+  Child unit address (amba node, length is 1) +
-+  Child interrupt specifier (amba node, length is 1) +
-+  Interrupt parent (phandle, length is 1) +
-+  Parent unit address (parent is msi controller, length is 1)
-+  Parent interrupt specifier (parent is msi controller, length is 1)
-+*/
-+#define IMAP_ROW_LEN (1 + 1 + 1 + 1 + 1)
- 
- static int pci_amba_probe(struct pci_dev *pdev,
- 			  const struct pci_device_id *id)
- {
- 	struct amba_device *adev;
-+	int i, ret, len;
-+	struct device_node *n, *node, *pci_amba_bridge, *amba_bus = NULL,
-+		*amba_node = NULL;
-+	const void *p;
- 	char *name;
--	int ret;
-+	struct property *newimap;
-+	u32 *newv, *ptr;
-+	const u32 *reg;
-+	int found;
- 
- 	pci_enable_msi(pdev);
- 	ret = pci_enable_device(pdev);
- 	if (ret)
- 		return ret;
- 
--	/* Create a name: each of them must be different */
-+	/* This bridge can host both APB and AHB devices, so set master */
-+	pci_set_master(pdev);
-+
-+	node = pdev->dev.of_node;
-+	if (!node)
-+		return -EINVAL;
-+
-+	/* Get a reference to the pci amba bridge (our pci parent) */
-+	pci_amba_bridge = of_get_parent(node);
-+	if (!pci_amba_bridge)
-+		return -EINVAL;
-+	if (of_node_cmp(pci_amba_bridge->type, "pci"))
-+		return -EINVAL;
-+
-+	/* Look for the relevant amba bus node */
-+	for_each_child_of_node(pci_amba_bridge, n) {
-+		if (of_device_is_compatible(n, "arm,amba-bus")) {
-+			amba_bus = n;
-+			break;
-+		}
-+	}
-+	of_node_put(pci_amba_bridge);
-+	if (!amba_bus)
-+		return -ENODEV;
-+
-+	/*
-+	   Now find out what the relevant amba device is by looking for
-+	   a resource with the same initial address of this pci device's BAR0
-+	*/
-+	for_each_child_of_node(amba_bus, n) {
-+		struct resource r;
-+		if (of_address_to_resource(n, 0, &r))
-+			continue;
-+		if (r.start == pdev->resource[0].start) {
-+			amba_node = n;
-+			break;
-+		}
-+	}
-+	if (!amba_node)
-+		return -ENODEV;
-+
-+	/* Create a unique name for the device */
- 	name = devm_kzalloc(&pdev->dev, strlen(dev_name(&pdev->dev)) + 6,
--		GFP_KERNEL);
-+			    GFP_KERNEL);
- 	sprintf(name, "amba-%s", dev_name(&pdev->dev));
- 
--	/* Simply build an amba device and register it */
--	adev = amba_device_alloc(name,  pdev->resource[0].start, SZ_4K);
--	if (!adev)
--		return -ENOMEM;
--	adev->irq[0] = pdev->irq;
-+	/*
-+	  Since we're dealing with MSI IRQs, the value of a device's IRQ
-+	  number is known at runtime only. Update the amba bus interrupt
-+	  map to fix things up.
-+	*/
-+	if (of_get_property(amba_node, "interrupts", NULL)) {
-+		p = of_get_property(amba_bus, "interrupt-map", &len);
-+		if (!p)
-+			/* No amba bus interrupt-map property */
-+			return -EINVAL;
- 
--	/* This bridge can host both APB and AHB devices, so set master */
--	pci_set_master(pdev);
--	if (pdev->vendor == PCI_VENDOR_ID_STMICRO) {
--		/* Under sta2x11, DMA is there but limited to 512M */
--		adev->dma_mask = SZ_512M - 1;
--		adev->dev.coherent_dma_mask = SZ_512M - 1;
-+		newimap = devm_kzalloc(&pdev->dev, sizeof(*newimap),
-+				       GFP_KERNEL);
-+		if (!newimap)
-+			return -ENOMEM;
-+
-+		newimap->name = kstrdup("interrupt-map", GFP_KERNEL);
-+		if (!newimap->name)
-+			return -ENOMEM;
-+
-+		newv = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
-+		if (!newv) {
-+			kfree(newimap->name);
-+			return -ENOMEM;
-+		}
-+
-+		newimap->value = newv;
-+		newimap->length = len;
-+		memcpy(newv, p, len);
-+		for (ptr = newv, i = 0, found = 0;
-+		     i < len/sizeof(u32);
-+		     ptr += IMAP_ROW_LEN, i += IMAP_ROW_LEN) {
-+			reg = of_get_property(amba_node, "reg", NULL);
-+			if (ptr[0] == reg[0]) {
-+				ptr[IMAP_ROW_LEN - 1] = cpu_to_be32(pdev->irq);
-+				found = 1;
-+				break;
-+			}
-+		}
-+		if (!found) {
-+			pr_err("Could not update amba irq\n");
-+			return -EINVAL;
-+		}
-+		of_update_property(amba_bus, newimap);
- 	}
- 
--	adev->dev.platform_data = pdev->dev.platform_data;
-+	/* And finally create the amba device */
-+	adev = of_amba_device_create(n, name, NULL, NULL, &pdev->resource[0]);
- 	pci_set_drvdata(pdev, adev);
--
--	return amba_device_add(adev, &pdev->resource[0]);
++ * Video node ioctl operations
++ */
++static int scaler_querycap_capture(struct file *file, void *priv,
++					struct v4l2_capability *cap)
++{
++	strncpy(cap->driver, IS_SCALER_DRV_NAME, sizeof(cap->driver) - 1);
++	strncpy(cap->card, IS_SCALER_DRV_NAME, sizeof(cap->card) - 1);
++	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:%s",
++			IS_SCALER_DRV_NAME);
++	cap->device_caps = V4L2_CAP_STREAMING;
++	cap->capabilities = cap->device_caps | V4L2_CAP_DEVICE_CAPS;
 +	return 0;
- };
- 
- static void pci_amba_remove(struct pci_dev *pdev)
++}
++
++static int scaler_enum_fmt_mplane(struct file *file, void *priv,
++				     struct v4l2_fmtdesc *f)
++{
++	const struct fimc_is_fmt *fmt;
++
++	if (f->index >= NUM_FORMATS)
++		return -EINVAL;
++
++	fmt = &formats[f->index];
++	strlcpy(f->description, fmt->name, sizeof(f->description));
++	f->pixelformat = fmt->fourcc;
++	return 0;
++}
++
++static int scaler_g_fmt_mplane(struct file *file, void *priv,
++				  struct v4l2_format *f)
++{
++	struct fimc_is_scaler *ctx = video_drvdata(file);
++	struct v4l2_pix_format_mplane *pixm = &f->fmt.pix_mp;
++	const struct fimc_is_fmt *fmt = ctx->fmt;
++	int i;
++
++	for (i = 0; i < fmt->num_planes; i++) {
++		struct v4l2_plane_pix_format *plane_fmt = &pixm->plane_fmt[i];
++		plane_fmt->bytesperline = (ctx->width * fmt->depth[i]) / 8;
++		plane_fmt->sizeimage = plane_fmt->bytesperline * ctx->height;
++		memset(plane_fmt->reserved, 0, sizeof(plane_fmt->reserved));
++	}
++
++	pixm->num_planes = fmt->num_planes;
++	pixm->pixelformat = fmt->fourcc;
++	pixm->width = ctx->width;
++	pixm->height = ctx->height;
++	pixm->field = V4L2_FIELD_NONE;
++	pixm->colorspace = V4L2_COLORSPACE_JPEG;
++	memset(pixm->reserved, 0, sizeof(pixm->reserved));
++
++	return 0;
++}
++
++static int scaler_try_fmt_mplane(struct file *file, void *priv,
++				  struct v4l2_format *f)
++{
++	const struct fimc_is_fmt *fmt;
++	struct v4l2_pix_format_mplane *pixm = &f->fmt.pix_mp;
++	u32 i;
++
++	fmt = find_format(f);
++	if (!fmt)
++		fmt = &formats[0];
++
++	v4l_bound_align_image(&pixm->width, SCALER_MIN_WIDTH,
++			SCALER_MAX_WIDTH, 0,
++			&pixm->height, SCALER_MIN_HEIGHT,
++			SCALER_MAX_HEIGHT, 0, 0);
++
++	for (i = 0; i < fmt->num_planes; i++) {
++		struct v4l2_plane_pix_format *plane_fmt = &pixm->plane_fmt[i];
++
++		plane_fmt->bytesperline = (pixm->width * fmt->depth[i]) / 8;
++		plane_fmt->sizeimage = (pixm->width * pixm->height *
++					fmt->depth[i]) / 8;
++		memset(plane_fmt->reserved, 0, sizeof(plane_fmt->reserved));
++	}
++	pixm->num_planes = fmt->num_planes;
++	pixm->pixelformat = fmt->fourcc;
++	pixm->colorspace = V4L2_COLORSPACE_JPEG;
++	pixm->field = V4L2_FIELD_NONE;
++	memset(pixm->reserved, 0, sizeof(pixm->reserved));
++
++	return 0;
++}
++
++static int scaler_s_fmt_mplane(struct file *file, void *priv,
++				struct v4l2_format *f)
++{
++	struct fimc_is_scaler *ctx = video_drvdata(file);
++	const struct fimc_is_fmt *fmt;
++	struct v4l2_pix_format_mplane *pixm = &f->fmt.pix_mp;
++	int ret;
++
++	ret = scaler_try_fmt_mplane(file, priv, f);
++	if (ret)
++		return ret;
++
++	/* Get format type */
++	fmt = find_format(f);
++	if (!fmt) {
++		fmt = &formats[0];
++		pixm->pixelformat = fmt->fourcc;
++		pixm->num_planes = fmt->num_planes;
++	}
++
++	/* Save values to context */
++	ctx->fmt = fmt;
++	ctx->width = pixm->width;
++	ctx->height = pixm->height;
++	set_bit(STATE_INIT, &ctx->capture_state);
++	return 0;
++}
++
++static int scaler_reqbufs(struct file *file, void *priv,
++		struct v4l2_requestbuffers *reqbufs)
++{
++	struct fimc_is_scaler *ctx = video_drvdata(file);
++	int ret;
++
++	reqbufs->count = max_t(u32, FIMC_IS_SCALER_REQ_BUFS_MIN,
++			reqbufs->count);
++	ret = vb2_reqbufs(&ctx->vbq, reqbufs);
++	if (ret) {
++		v4l2_err(&ctx->subdev, "vb2 req buffers failed\n");
++		return ret;
++	}
++
++	if (reqbufs->count < FIMC_IS_SCALER_REQ_BUFS_MIN) {
++		reqbufs->count = 0;
++		vb2_reqbufs(&ctx->vbq, reqbufs);
++		return -ENOMEM;
++	}
++	set_bit(STATE_BUFS_ALLOCATED, &ctx->capture_state);
++	return 0;
++}
++
++static const struct v4l2_ioctl_ops scaler_video_capture_ioctl_ops = {
++	.vidioc_querycap		= scaler_querycap_capture,
++	.vidioc_enum_fmt_vid_cap_mplane	= scaler_enum_fmt_mplane,
++	.vidioc_try_fmt_vid_cap_mplane	= scaler_try_fmt_mplane,
++	.vidioc_s_fmt_vid_cap_mplane	= scaler_s_fmt_mplane,
++	.vidioc_g_fmt_vid_cap_mplane	= scaler_g_fmt_mplane,
++	.vidioc_reqbufs			= scaler_reqbufs,
++	.vidioc_querybuf		= vb2_ioctl_querybuf,
++	.vidioc_qbuf			= vb2_ioctl_qbuf,
++	.vidioc_dqbuf			= vb2_ioctl_dqbuf,
++	.vidioc_expbuf			= vb2_ioctl_expbuf,
++	.vidioc_streamon		= vb2_ioctl_streamon,
++	.vidioc_streamoff		= vb2_ioctl_streamoff,
++};
++
++static int scaler_subdev_registered(struct v4l2_subdev *sd)
++{
++	struct fimc_is_scaler *ctx = v4l2_get_subdevdata(sd);
++	struct vb2_queue *q = &ctx->vbq;
++	struct video_device *vfd = &ctx->vfd;
++	int ret;
++
++	mutex_init(&ctx->video_lock);
++
++	memset(vfd, 0, sizeof(*vfd));
++	if (ctx->scaler_id == SCALER_SCC)
++		snprintf(vfd->name, sizeof(vfd->name), "fimc-is-scaler.codec");
++	else
++		snprintf(vfd->name, sizeof(vfd->name),
++				"fimc-is-scaler.preview");
++
++	vfd->fops = &scaler_video_capture_fops;
++	vfd->ioctl_ops = &scaler_video_capture_ioctl_ops;
++	vfd->v4l2_dev = sd->v4l2_dev;
++	vfd->release = video_device_release_empty;
++	vfd->lock = &ctx->video_lock;
++	vfd->queue = q;
++	vfd->vfl_dir = VFL_DIR_RX;
++	set_bit(V4L2_FL_USE_FH_PRIO, &vfd->flags);
++
++	memset(q, 0, sizeof(*q));
++	q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
++	q->io_modes = VB2_MMAP | VB2_DMABUF;
++	q->timestamp_type = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
++	q->ops = &scaler_video_capture_qops;
++	q->mem_ops = &vb2_dma_contig_memops;
++	q->buf_struct_size = sizeof(struct fimc_is_buf);
++	q->drv_priv = ctx;
++
++	ret = vb2_queue_init(q);
++	if (ret < 0)
++		return ret;
++
++	ctx->vd_pad.flags = MEDIA_PAD_FL_SINK;
++	ret = media_entity_init(&vfd->entity, 1, &ctx->vd_pad, 0);
++	if (ret < 0)
++		return ret;
++
++	video_set_drvdata(vfd, ctx);
++
++	ret = video_register_device(vfd, VFL_TYPE_GRABBER, -1);
++	if (ret < 0) {
++		media_entity_cleanup(&vfd->entity);
++		return ret;
++	}
++
++	v4l2_info(sd->v4l2_dev, "Registered %s as /dev/%s\n",
++		  vfd->name, video_device_node_name(vfd));
++	return 0;
++}
++
++static void scaler_subdev_unregistered(struct v4l2_subdev *sd)
++{
++	struct fimc_is_scaler *ctx = v4l2_get_subdevdata(sd);
++
++	if (ctx && video_is_registered(&ctx->vfd))
++		video_unregister_device(&ctx->vfd);
++}
++
++static const struct v4l2_subdev_internal_ops scaler_subdev_internal_ops = {
++	.registered = scaler_subdev_registered,
++	.unregistered = scaler_subdev_unregistered,
++};
++
++static struct v4l2_subdev_ops scaler_subdev_ops;
++
++int fimc_is_scaler_subdev_create(struct fimc_is_scaler *ctx,
++		enum fimc_is_scaler_id scaler_id,
++		struct vb2_alloc_ctx *alloc_ctx,
++		struct fimc_is_pipeline *pipeline)
++{
++	struct v4l2_ctrl_handler *handler = &ctx->ctrl_handler;
++	struct v4l2_subdev *sd = &ctx->subdev;
++	int ret;
++
++	ctx->scaler_id = scaler_id;
++	ctx->alloc_ctx = alloc_ctx;
++	ctx->pipeline = pipeline;
++	ctx->fmt = &formats[0];
++	ctx->width = SCALER_DEF_WIDTH;
++	ctx->height = SCALER_DEF_HEIGHT;
++	init_waitqueue_head(&ctx->event_q);
++	INIT_LIST_HEAD(&ctx->wait_queue);
++	INIT_LIST_HEAD(&ctx->run_queue);
++
++	/* Initialize scaler subdev */
++	v4l2_subdev_init(sd, &scaler_subdev_ops);
++	sd->owner = THIS_MODULE;
++	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
++	if (scaler_id == SCALER_SCC)
++		snprintf(sd->name, sizeof(sd->name), "fimc-is-scc");
++	else
++		snprintf(sd->name, sizeof(sd->name), "fimc-is-scp");
++
++	ctx->subdev_pads[SCALER_SD_PAD_SINK].flags = MEDIA_PAD_FL_SINK;
++	ctx->subdev_pads[SCALER_SD_PAD_SRC_FIFO].flags = MEDIA_PAD_FL_SOURCE;
++	ctx->subdev_pads[SCALER_SD_PAD_SRC_DMA].flags = MEDIA_PAD_FL_SOURCE;
++	ret = media_entity_init(&sd->entity, ISP_SD_PADS_NUM,
++			ctx->subdev_pads, 0);
++	if (ret < 0)
++		return ret;
++
++	ret = v4l2_ctrl_handler_init(handler, 1);
++	if (handler->error)
++		goto err_ctrl;
++
++	sd->ctrl_handler = handler;
++	sd->internal_ops = &scaler_subdev_internal_ops;
++	v4l2_set_subdevdata(sd, ctx);
++
++	return 0;
++err_ctrl:
++	media_entity_cleanup(&sd->entity);
++	v4l2_ctrl_handler_free(handler);
++	return ret;
++}
++
++void fimc_is_scaler_subdev_destroy(struct fimc_is_scaler *ctx)
++{
++	struct v4l2_subdev *sd = &ctx->subdev;
++
++	v4l2_device_unregister_subdev(sd);
++	media_entity_cleanup(&sd->entity);
++	v4l2_ctrl_handler_free(&ctx->ctrl_handler);
++	v4l2_set_subdevdata(sd, NULL);
++}
++
+diff --git a/drivers/media/platform/exynos5-is/fimc-is-scaler.h b/drivers/media/platform/exynos5-is/fimc-is-scaler.h
+new file mode 100644
+index 0000000..97a9d0d
+--- /dev/null
++++ b/drivers/media/platform/exynos5-is/fimc-is-scaler.h
+@@ -0,0 +1,106 @@
++/*
++ * Samsung EXYNOS4x12 FIMC-IS (Imaging Subsystem) driver
++ *
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ *  Arun Kumar K <arun.kk@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#ifndef FIMC_IS_SCALER_H_
++#define FIMC_IS_SCALER_H_
++
++#include <linux/sizes.h>
++#include <linux/io.h>
++#include <linux/irqreturn.h>
++#include <linux/platform_device.h>
++#include <linux/sched.h>
++#include <linux/spinlock.h>
++#include <linux/types.h>
++#include <linux/videodev2.h>
++
++#include <media/media-entity.h>
++#include <media/videobuf2-core.h>
++#include <media/v4l2-device.h>
++#include <media/v4l2-mediabus.h>
++#include <media/s5p_fimc.h>
++
++#include "fimc-is-core.h"
++
++#define SCALER_SD_PAD_SINK	0
++#define SCALER_SD_PAD_SRC_FIFO	1
++#define SCALER_SD_PAD_SRC_DMA	2
++#define SCALER_SD_PADS_NUM	3
++
++#define SCALER_MAX_BUFS		32
++#define SCALER_MAX_PLANES	3
++
++#define FIMC_IS_SCALER_REQ_BUFS_MIN	2
++
++#define SCALER_DEF_WIDTH	1280
++#define SCALER_DEF_HEIGHT	720
++#define SCALER_MAX_WIDTH	4808
++#define SCALER_MAX_HEIGHT	3356
++#define SCALER_MIN_WIDTH	32
++#define SCALER_MIN_HEIGHT	32
++
++/**
++ * struct fimc_is_scaler - fimc-is scaler structure
++ * @vfd: video device node
++ * @fh: v4l2 file handle
++ * @alloc_ctx: videobuf2 memory allocator context
++ * @subdev: fimc-is-scaler subdev
++ * @vd_pad: media pad for the output video node
++ * @subdev_pads: the subdev media pads
++ * @ctrl_handler: v4l2 control handler
++ * @video_lock: video lock mutex
++ * @event_q: notifies scaler events
++ * @pipeline: pipeline instance for this scaler context
++ * @scaler_id: distinguishes scaler preview or scaler codec
++ * @vbq: vb2 buffers queue for ISP output video node
++ * @wait_queue: list holding buffers waiting to be queued to HW
++ * @wait_queue_cnt: wait queue number of buffers
++ * @run_queue: list holding buffers queued to HW
++ * @run_queue_cnt: run queue number of buffers
++ * @capture_bufs: scaler capture buffers array
++ * @fmt: capture plane format for scaler
++ * @width: user configured output width
++ * @height: user configured output height
++ * @capture_state: state of the capture video node operations
++ */
++struct fimc_is_scaler {
++	struct video_device		vfd;
++	struct v4l2_fh			fh;
++	struct vb2_alloc_ctx		*alloc_ctx;
++	struct v4l2_subdev		subdev;
++	struct media_pad		vd_pad;
++	struct media_pad		subdev_pads[SCALER_SD_PADS_NUM];
++	struct v4l2_mbus_framefmt	subdev_fmt;
++	struct v4l2_ctrl_handler	ctrl_handler;
++
++	struct mutex		video_lock;
++	wait_queue_head_t	event_q;
++
++	struct fimc_is_pipeline	*pipeline;
++	enum fimc_is_scaler_id	scaler_id;
++
++	struct vb2_queue	vbq;
++	struct list_head	wait_queue;
++	unsigned int		wait_queue_cnt;
++	struct list_head	run_queue;
++	unsigned int		run_queue_cnt;
++
++	const struct fimc_is_fmt *fmt;
++	unsigned int		width;
++	unsigned int		height;
++	unsigned long		capture_state;
++};
++
++int fimc_is_scaler_subdev_create(struct fimc_is_scaler *ctx,
++		enum fimc_is_scaler_id scaler_id,
++		struct vb2_alloc_ctx *alloc_ctx,
++		struct fimc_is_pipeline *pipeline);
++void fimc_is_scaler_subdev_destroy(struct fimc_is_scaler *scaler);
++
++#endif /* FIMC_IS_SCALER_H_ */
 -- 
-1.7.7.2
+1.7.9.5
+
