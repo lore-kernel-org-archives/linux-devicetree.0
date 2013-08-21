@@ -1,72 +1,42 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 0/3] of: add update device node status via cmdline feature
-Date: Wed, 21 Aug 2013 08:23:05 -0500
-Message-ID: <CAL_JsqLa1RkL0MaOCbjYbuQW7+8EKqX8RMfypN=i5UTKaF47=A@mail.gmail.com>
-References: <1376564133-11286-1-git-send-email-b29396@freescale.com>
-	<520CCB70.8090908@gmail.com>
-	<20130821124722.GB17748@b29396-Latitude-E6410>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH V3 1/2] tps6507x-ts: Add DT support
+Date: Wed, 21 Aug 2013 09:20:49 -0700
+Message-ID: <20130821162049.GA28359@core.coreip.homeip.net>
+References: <1369126458-24872-1-git-send-email-manishv.b@ti.com>
+ <1369126458-24872-2-git-send-email-manishv.b@ti.com>
+ <CA+V-a8u1BEXMHHso80NdP4FX_au2mnUEtzqYyJXg_vA9JvSJbA@mail.gmail.com>
+ <CAKDJKT45=BUcx5q8bHL=xzHQ0aAhE=cwGy4EK8MWRfpiKVzt0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130821124722.GB17748@b29396-Latitude-E6410>
+Content-Disposition: inline
+In-Reply-To: <CAKDJKT45=BUcx5q8bHL=xzHQ0aAhE=cwGy4EK8MWRfpiKVzt0g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, rob@landley.net, Rob Herring <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Manish Badarkhe <badarkhe.manish@gmail.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>, dlos <davinci-linux-open-source@linux.davincidsp.com>, LDOC <linux-doc@vger.kernel.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2013 at 7:47 AM, Dong Aisheng <b29396@freescale.com> wrote:
-> On Thu, Aug 15, 2013 at 07:37:04AM -0500, Rob Herring wrote:
->> On 08/15/2013 05:55 AM, Dong Aisheng wrote:
->> > We meet some boards having a lot of pin conflicts between different devices,
->> > only one of them can be enabled to run at one time.
->> >
->> > e.g. imx6q sabreauto board, i2c, spi, weim, flexcan, uart and etc involved
->> > with pin conflict.
->> >
->> > Instead of changing dts manually or adding a lot dts files according to
->> > different device availability, we provide feature to dynamically update the
->> > device node status via command line, then those devices involved with
->> > pin conflict can be enabled or disabled dynamically.
->> >
->> > It's conveniently to use and can save a lot dts board files, also can
->> > permenantly fix the pin conflicts issue.
->>
->> This doesn't scale either with updating of lots devices or when the next
->> person comes along and wants to edit another property.
->>
->
-> I'm not sure about other property.
-> But we update it did cause by the real requirement, not arbitrary.
-> Or we can try to find another better way to avoid it.
->
->> This is something u-boot is perfectly capable of handling and updating
->> status is something lots of boards already do.
->>
->
-> How does uboot handle this according to our needs?
-> Also dynamically update the device node status with uboot command?
-> Can you help point out an example for me to check?
->
+Hi Manish,
 
-Here's an example adding a status property with u-boot commands:
+On Tue, Aug 20, 2013 at 12:25:32PM +0530, Manish Badarkhe wrote:
+> Hi Prabhakar,
+> 
+> On Tue, Aug 20, 2013 at 11:44 AM, Prabhakar Lad
+> >
+> > All the three above properties as per the documentation  above
+> > are optional, but the code here makes them required property.
+> > May be what you can do is if property is not defined make it as
+> > zero as per documentation.
+> 
+> I already taken care of this as per Dmitry's comment but not yet
+> posted patch series as
+> there is discussion going on populating child node's properties.
 
-Highbank #fdt print /soc/ethernet
-ethernet@fff50000 {
-        compatible = "calxeda,hb-xgmac";
-        reg = <0xfff50000 0x00001000>;
-        interrupts = <0x00000000 0x0000004d 0x00000004 0x00000000
-0x0000004e 0x00000004 0x00000000 0x0000004f 0x00000004>;
-        dma-coherent;
-};
-Highbank #fdt set /soc/ethernet status okay
-Highbank #fdt print /soc/ethernet
-ethernet@fff50000 {
-        status = "okay";
-        compatible = "calxeda,hb-xgmac";
-        reg = <0xfff50000 0x00001000>;
-        interrupts = <0x00000000 0x0000004d 0x00000004 0x00000000
-0x0000004e 0x00000004 0x00000000 0x0000004f 0x00000004>;
-        dma-coherent;
-};
+Please post the series using find node properties (as they were). We can
+discuss if MFD devices should be automatically attaching parents OF data
+to child devices they are creating later.
 
-Rob
+Thanks.
+
+-- 
+Dmitry
