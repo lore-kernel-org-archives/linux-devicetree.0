@@ -1,480 +1,669 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from eu1sys200aog105.obsmtp.com ([207.126.144.119]:54198 "EHLO
-	eu1sys200aog105.obsmtp.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1758532Ab3HNSBA (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Wed, 14 Aug 2013 14:01:00 -0400
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: [PATCH] media: st-rc: Add ST remote control driver
-Date: Wed, 14 Aug 2013 18:27:01 +0100
-Message-Id: <1376501221-22416-1-git-send-email-srinivas.kandagatla@st.com>
+Received: from mail-pd0-f169.google.com ([209.85.192.169]:60424 "EHLO
+	mail-pd0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752389Ab3HUGfM (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 02:35:12 -0400
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v7 06/13] [media] exynos5-fimc-is: Add isp subdev
+Date: Wed, 21 Aug 2013 12:04:33 +0530
+Message-Id: <1377066881-5423-7-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
+References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@st.com>
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+fimc-is driver takes video data input from the ISP video node
+which is added in this patch. This node accepts Bayer input
+buffers which is given from the IS sensors.
 
-This patch adds support to ST RC driver, which is basically a IR/UHF
-receiver and transmitter. This IP is common across all the ST parts for
-settop box platforms. IRB is embedded in ST COMMS IP block.
-It supports both Rx & Tx functionality.
-
-In this driver adds only Rx functionality via LIRC codec.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+Signed-off-by: Kilyeon Im <kilyeon.im@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
-Hi Chehab,
+ drivers/media/platform/exynos5-is/fimc-is-isp.c |  534 +++++++++++++++++++++++
+ drivers/media/platform/exynos5-is/fimc-is-isp.h |   90 ++++
+ 2 files changed, 624 insertions(+)
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.h
 
-This is a very simple rc driver for IRB controller found in STi ARM CA9 SOCs.
-STi ARM SOC support went in 3.11 recently.
-This driver is a raw driver which feeds data to lirc codec for the user lircd
-to decode the keys.
-
-This patch is based on git://linuxtv.org/media_tree.git master branch.
-
-Comments?
-
-Thanks,
-srini
-
- Documentation/devicetree/bindings/media/st-rc.txt |   18 +
- drivers/media/rc/Kconfig                          |   10 +
- drivers/media/rc/Makefile                         |    1 +
- drivers/media/rc/st_rc.c                          |  371 +++++++++++++++++++++
- 4 files changed, 400 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/st-rc.txt
- create mode 100644 drivers/media/rc/st_rc.c
-
-diff --git a/Documentation/devicetree/bindings/media/st-rc.txt b/Documentation/devicetree/bindings/media/st-rc.txt
+diff --git a/drivers/media/platform/exynos5-is/fimc-is-isp.c b/drivers/media/platform/exynos5-is/fimc-is-isp.c
 new file mode 100644
-index 0000000..57f9ee8
+index 0000000..882c291
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/st-rc.txt
-@@ -0,0 +1,18 @@
-+Device-Tree bindings for ST IR and UHF receiver
-+
-+Required properties:
-+	- compatible: should be "st,rc".
-+	- st,uhfmode: boolean property to indicate if reception is in UHF.
-+	- reg: base physical address of the controller and length of memory
-+	mapped  region.
-+	- interrupts: interrupt number to the cpu. The interrupt specifier
-+	format depends on the interrupt controller parent.
-+
-+Example node:
-+
-+	rc: rc@fe518000 {
-+		compatible	= "st,rc";
-+		reg		= <0xfe518000 0x234>;
-+		interrupts	=  <0 203 0>;
-+	};
-+
-diff --git a/drivers/media/rc/Kconfig b/drivers/media/rc/Kconfig
-index 5a79c33..548a705 100644
---- a/drivers/media/rc/Kconfig
-+++ b/drivers/media/rc/Kconfig
-@@ -321,4 +321,14 @@ config IR_GPIO_CIR
- 	   To compile this driver as a module, choose M here: the module will
- 	   be called gpio-ir-recv.
- 
-+config RC_ST
-+	tristate "ST remote control receiver"
-+	depends on ARCH_STI && LIRC
-+	help
-+	 Say Y here if you want support for ST remote control driver
-+	 which allows both IR and UHF RX. IR RX receiver is the default mode.
-+	 The driver passes raw pluse and space information to the LIRC decoder.
-+
-+	 If you're not sure, select N here.
-+
- endif #RC_DEVICES
-diff --git a/drivers/media/rc/Makefile b/drivers/media/rc/Makefile
-index 56bacf0..f4eb32c 100644
---- a/drivers/media/rc/Makefile
-+++ b/drivers/media/rc/Makefile
-@@ -30,3 +30,4 @@ obj-$(CONFIG_RC_LOOPBACK) += rc-loopback.o
- obj-$(CONFIG_IR_GPIO_CIR) += gpio-ir-recv.o
- obj-$(CONFIG_IR_IGUANA) += iguanair.o
- obj-$(CONFIG_IR_TTUSBIR) += ttusbir.o
-+obj-$(CONFIG_RC_ST) += st_rc.o
-diff --git a/drivers/media/rc/st_rc.c b/drivers/media/rc/st_rc.c
-new file mode 100644
-index 0000000..712a2fb
---- /dev/null
-+++ b/drivers/media/rc/st_rc.c
-@@ -0,0 +1,371 @@
++++ b/drivers/media/platform/exynos5-is/fimc-is-isp.c
+@@ -0,0 +1,534 @@
 +/*
-+ * Copyright (C) 2013 STMicroelectronics Limited
-+ * Author: Srinivas Kandagatla <srinivas.kandagatla@st.com>
++ * Samsung EXYNOS5250 FIMC-IS (Imaging Subsystem) driver
++ *
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ *  Arun Kumar K <arun.kk@samsung.com>
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
-+#include <linux/kernel.h>
-+#include <linux/clk.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <media/rc-core.h>
-+#include <linux/pinctrl/consumer.h>
 +
-+struct st_rc_device {
-+	struct device			*dev;
-+	int				irq;
-+	int				irq_wake;
-+	struct clk			*sys_clock;
-+	void				*base;	/* Register base address */
-+	void				*rx_base;/* RX Register base address */
-+	struct rc_dev			*rdev;
-+	bool				overclocking;
-+	int				sample_mult;
-+	int				sample_div;
-+	bool				rxuhfmode;
++#include <media/v4l2-ioctl.h>
++#include <media/videobuf2-dma-contig.h>
++
++#include "fimc-is.h"
++
++#define ISP_DRV_NAME "fimc-is-isp"
++
++static const struct fimc_is_fmt formats[] = {
++	{
++		.name           = "Bayer GR-BG 8bits",
++		.fourcc         = V4L2_PIX_FMT_SGRBG8,
++		.depth		= { 8 },
++		.num_planes     = 1,
++	},
++	{
++		.name           = "Bayer GR-BG 10bits",
++		.fourcc         = V4L2_PIX_FMT_SGRBG10,
++		.depth		= { 16 },
++		.num_planes     = 1,
++	},
++	{
++		.name           = "Bayer GR-BG 12bits",
++		.fourcc         = V4L2_PIX_FMT_SGRBG12,
++		.depth		= { 16 },
++		.num_planes     = 1,
++	},
++};
++#define NUM_FORMATS ARRAY_SIZE(formats)
++
++static const struct fimc_is_fmt *find_format(struct v4l2_format *f)
++{
++	unsigned int i;
++
++	for (i = 0; i < NUM_FORMATS; i++)
++		if (formats[i].fourcc == f->fmt.pix_mp.pixelformat)
++			return &formats[i];
++	return NULL;
++}
++
++static int isp_video_output_start_streaming(struct vb2_queue *vq,
++					unsigned int count)
++{
++	struct fimc_is_isp *isp = vb2_get_drv_priv(vq);
++
++	set_bit(STATE_RUNNING, &isp->output_state);
++	return 0;
++}
++
++static int isp_video_output_stop_streaming(struct vb2_queue *vq)
++{
++	struct fimc_is_isp *isp = vb2_get_drv_priv(vq);
++	struct fimc_is_buf *buf;
++
++	/* Release unused buffers */
++	while (!list_empty(&isp->wait_queue)) {
++		buf = fimc_is_isp_wait_queue_get(isp);
++		vb2_buffer_done(&buf->vb, VB2_BUF_STATE_ERROR);
++	}
++	while (!list_empty(&isp->run_queue)) {
++		buf = fimc_is_isp_run_queue_get(isp);
++		vb2_buffer_done(&buf->vb, VB2_BUF_STATE_ERROR);
++	}
++
++	clear_bit(STATE_RUNNING, &isp->output_state);
++	return 0;
++}
++
++static int isp_video_output_queue_setup(struct vb2_queue *vq,
++			const struct v4l2_format *pfmt,
++			unsigned int *num_buffers, unsigned int *num_planes,
++			unsigned int sizes[], void *allocators[])
++{
++	struct fimc_is_isp *isp = vb2_get_drv_priv(vq);
++	const struct fimc_is_fmt *fmt = isp->fmt;
++	unsigned int wh, i;
++
++	if (!fmt)
++		return -EINVAL;
++
++	*num_planes = fmt->num_planes;
++	wh = isp->width * isp->height;
++
++	for (i = 0; i < *num_planes; i++) {
++		allocators[i] = isp->alloc_ctx;
++		sizes[i] = (wh * fmt->depth[i]) / 8;
++	}
++	return 0;
++}
++
++static int isp_video_output_buffer_init(struct vb2_buffer *vb)
++{
++	struct fimc_is_buf *buf = container_of(vb, struct fimc_is_buf, vb);
++
++	buf->paddr[0] = vb2_dma_contig_plane_dma_addr(vb, 0);
++	return 0;
++}
++
++static int isp_video_output_buffer_prepare(struct vb2_buffer *vb)
++{
++	struct vb2_queue *vq = vb->vb2_queue;
++	struct fimc_is_isp *isp = vb2_get_drv_priv(vq);
++	unsigned long size;
++
++	size = (isp->width * isp->height * isp->fmt->depth[0]) / 8;
++	if (vb2_plane_size(vb, 0) < size) {
++		v4l2_err(&isp->subdev, "User buffer too small (%ld < %ld)\n",
++			 vb2_plane_size(vb, 0), size);
++		return -EINVAL;
++	}
++	vb2_set_plane_payload(vb, 0, size);
++
++	return 0;
++}
++
++static void isp_video_output_buffer_queue(struct vb2_buffer *vb)
++{
++	struct vb2_queue *vq = vb->vb2_queue;
++	struct fimc_is_isp *isp = vb2_get_drv_priv(vq);
++	struct fimc_is_buf *buf = container_of(vb, struct fimc_is_buf, vb);
++
++	fimc_is_pipeline_buf_lock(isp->pipeline);
++	fimc_is_isp_wait_queue_add(isp, buf);
++	fimc_is_pipeline_buf_unlock(isp->pipeline);
++
++	/* Call shot command */
++	fimc_is_pipeline_shot(isp->pipeline);
++}
++
++static const struct vb2_ops isp_video_output_qops = {
++	.queue_setup	 = isp_video_output_queue_setup,
++	.buf_init	 = isp_video_output_buffer_init,
++	.buf_prepare	 = isp_video_output_buffer_prepare,
++	.buf_queue	 = isp_video_output_buffer_queue,
++	.wait_prepare	 = vb2_ops_wait_prepare,
++	.wait_finish	 = vb2_ops_wait_finish,
++	.start_streaming = isp_video_output_start_streaming,
++	.stop_streaming	 = isp_video_output_stop_streaming,
 +};
 +
-+/* Registers */
-+#define IRB_SAMPLE_RATE_COMM	0x64	/* sample freq divisor*/
-+#define IRB_CLOCK_SEL		0x70	/* clock select       */
-+#define IRB_CLOCK_SEL_STATUS	0x74	/* clock status       */
-+/* IRB IR/UHF receiver registers */
-+#define IRB_RX_ON               0x40	/* pulse time capture */
-+#define IRB_RX_SYS              0X44	/* sym period capture */
-+#define IRB_RX_INT_EN           0x48	/* IRQ enable (R/W)   */
-+#define IRB_RX_INT_STATUS       0x4C	/* IRQ status (R/W)   */
-+#define IRB_RX_EN               0x50	/* Receive enablei    */
-+#define IRB_MAX_SYM_PERIOD      0x54	/* max sym value      */
-+#define IRB_RX_INT_CLEAR        0x58	/* overrun status     */
-+#define IRB_RX_STATUS           0x6C	/* receive status     */
-+#define IRB_RX_NOISE_SUPPR      0x5C	/* noise suppression  */
-+#define IRB_RX_POLARITY_INV     0x68	/* polarity inverter  */
++static const struct v4l2_file_operations isp_video_output_fops = {
++	.owner		= THIS_MODULE,
++	.open		= v4l2_fh_open,
++	.release	= vb2_fop_release,
++	.poll		= vb2_fop_poll,
++	.unlocked_ioctl	= video_ioctl2,
++	.mmap		= vb2_fop_mmap,
++};
 +
-+/* IRQ set: Enable full FIFO                 1  -> bit  3;
-+ *          Enable overrun IRQ               1  -> bit  2;
-+ *          Enable last symbol IRQ           1  -> bit  1:
-+ *          Enable RX interrupt              1  -> bit  0;
++/*
++ * Video node ioctl operations
 + */
-+#define IRB_RX_INTS		0x0f
-+#define IRB_RX_OVERRUN_INT	0x04
-+ /* maximum symbol period (microsecs),timeout to detect end of symbol train */
-+#define MAX_SYMB_TIME		0x5000
-+#define IRB_SAMPLE_FREQ		10000000
-+#define	IRB_FIFO_NOT_EMPTY	0xff00
-+#define IRB_OVERFLOW		0x4
-+#define IRB_TIMEOUT		0xffff
-+#define IR_ST_NAME "st-rc"
-+
-+static void st_rc_send_lirc_timeout(struct rc_dev *rdev)
++static int isp_querycap_output(struct file *file, void *priv,
++					struct v4l2_capability *cap)
 +{
-+	DEFINE_IR_RAW_EVENT(ev);
-+	ev.timeout = true;
-+	ev.pulse = false;
-+	ir_raw_event_store(rdev, &ev);
++	strncpy(cap->driver, ISP_DRV_NAME, sizeof(cap->driver) - 1);
++	strncpy(cap->card, ISP_DRV_NAME, sizeof(cap->card) - 1);
++	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:%s",
++			ISP_DRV_NAME);
++	cap->device_caps = V4L2_CAP_STREAMING;
++	cap->capabilities = cap->device_caps | V4L2_CAP_DEVICE_CAPS;
++	return 0;
 +}
++
++static int isp_enum_fmt_mplane(struct file *file, void *priv,
++				     struct v4l2_fmtdesc *f)
++{
++	const struct fimc_is_fmt *fmt;
++
++	if (f->index >= NUM_FORMATS)
++		return -EINVAL;
++
++	fmt = &formats[f->index];
++	strlcpy(f->description, fmt->name, sizeof(f->description));
++	f->pixelformat = fmt->fourcc;
++
++	return 0;
++}
++
++static int isp_g_fmt_mplane(struct file *file, void *fh,
++				  struct v4l2_format *f)
++{
++	struct fimc_is_isp *isp = video_drvdata(file);
++	struct v4l2_pix_format_mplane *pixm = &f->fmt.pix_mp;
++	struct v4l2_plane_pix_format *plane_fmt = &pixm->plane_fmt[0];
++	const struct fimc_is_fmt *fmt = isp->fmt;
++
++	plane_fmt->bytesperline = (isp->width * fmt->depth[0]) / 8;
++	plane_fmt->sizeimage = plane_fmt->bytesperline * isp->height;
++	memset(plane_fmt->reserved, 0, sizeof(plane_fmt->reserved));
++
++	pixm->num_planes = fmt->num_planes;
++	pixm->pixelformat = fmt->fourcc;
++	pixm->width = isp->width;
++	pixm->height = isp->height;
++	pixm->field = V4L2_FIELD_NONE;
++	pixm->colorspace = V4L2_COLORSPACE_JPEG;
++	memset(pixm->reserved, 0, sizeof(pixm->reserved));
++
++	return 0;
++}
++
++static int isp_try_fmt_mplane(struct file *file, void *fh,
++		struct v4l2_format *f)
++{
++	const struct fimc_is_fmt *fmt;
++	struct v4l2_pix_format_mplane *pixm = &f->fmt.pix_mp;
++	struct v4l2_plane_pix_format *plane_fmt = &pixm->plane_fmt[0];
++
++	fmt = find_format(f);
++	if (!fmt)
++		fmt = (struct fimc_is_fmt *) &formats[0];
++
++	v4l_bound_align_image(&pixm->width,
++			ISP_MIN_WIDTH + SENSOR_WIDTH_PADDING,
++			ISP_MAX_WIDTH + SENSOR_WIDTH_PADDING, 0,
++			&pixm->height,
++			ISP_MIN_HEIGHT + SENSOR_HEIGHT_PADDING,
++			ISP_MAX_HEIGHT + SENSOR_HEIGHT_PADDING, 0,
++			0);
++
++	plane_fmt->bytesperline = (pixm->width * fmt->depth[0]) / 8;
++	plane_fmt->sizeimage = (pixm->width * pixm->height *
++				fmt->depth[0]) / 8;
++	memset(plane_fmt->reserved, 0, sizeof(plane_fmt->reserved));
++
++	pixm->num_planes = fmt->num_planes;
++	pixm->pixelformat = fmt->fourcc;
++	pixm->colorspace = V4L2_COLORSPACE_JPEG;
++	pixm->field = V4L2_FIELD_NONE;
++	memset(pixm->reserved, 0, sizeof(pixm->reserved));
++
++	return 0;
++}
++
++static int isp_s_fmt_mplane(struct file *file, void *priv,
++		struct v4l2_format *f)
++{
++	struct fimc_is_isp *isp = video_drvdata(file);
++	const struct fimc_is_fmt *fmt;
++	struct v4l2_pix_format_mplane *pixm = &f->fmt.pix_mp;
++	int ret;
++
++	ret = isp_try_fmt_mplane(file, priv, f);
++	if (ret)
++		return ret;
++
++	/* Get format type */
++	fmt = find_format(f);
++	if (!fmt) {
++		fmt = &formats[0];
++		pixm->pixelformat = fmt->fourcc;
++		pixm->num_planes = fmt->num_planes;
++	}
++
++	isp->fmt = fmt;
++	isp->width = pixm->width;
++	isp->height = pixm->height;
++	isp->size_image = pixm->plane_fmt[0].sizeimage;
++	set_bit(STATE_INIT, &isp->output_state);
++	return 0;
++}
++
++static int isp_reqbufs(struct file *file, void *priv,
++		struct v4l2_requestbuffers *reqbufs)
++{
++	struct fimc_is_isp *isp = video_drvdata(file);
++	int ret;
++
++	reqbufs->count = max_t(u32, FIMC_IS_ISP_REQ_BUFS_MIN, reqbufs->count);
++	ret = vb2_reqbufs(&isp->vbq, reqbufs);
++	if (ret) {
++		v4l2_err(&isp->subdev, "vb2 req buffers failed\n");
++		return ret;
++	}
++
++	if (reqbufs->count < FIMC_IS_ISP_REQ_BUFS_MIN) {
++		reqbufs->count = 0;
++		vb2_reqbufs(&isp->vbq, reqbufs);
++		return -ENOMEM;
++	}
++	set_bit(STATE_BUFS_ALLOCATED, &isp->output_state);
++	return 0;
++}
++
++static const struct v4l2_ioctl_ops isp_video_output_ioctl_ops = {
++	.vidioc_querycap		= isp_querycap_output,
++	.vidioc_enum_fmt_vid_out_mplane	= isp_enum_fmt_mplane,
++	.vidioc_try_fmt_vid_out_mplane	= isp_try_fmt_mplane,
++	.vidioc_s_fmt_vid_out_mplane	= isp_s_fmt_mplane,
++	.vidioc_g_fmt_vid_out_mplane	= isp_g_fmt_mplane,
++	.vidioc_reqbufs			= isp_reqbufs,
++	.vidioc_querybuf		= vb2_ioctl_querybuf,
++	.vidioc_qbuf			= vb2_ioctl_qbuf,
++	.vidioc_dqbuf			= vb2_ioctl_dqbuf,
++	.vidioc_streamon		= vb2_ioctl_streamon,
++	.vidioc_streamoff		= vb2_ioctl_streamoff,
++};
++
++static int isp_subdev_registered(struct v4l2_subdev *sd)
++{
++	struct fimc_is_isp *isp = v4l2_get_subdevdata(sd);
++	struct vb2_queue *q = &isp->vbq;
++	struct video_device *vfd = &isp->vfd;
++	int ret;
++
++	mutex_init(&isp->video_lock);
++
++	memset(vfd, 0, sizeof(*vfd));
++	snprintf(vfd->name, sizeof(vfd->name), "fimc-is-isp.output");
++
++	vfd->fops = &isp_video_output_fops;
++	vfd->ioctl_ops = &isp_video_output_ioctl_ops;
++	vfd->v4l2_dev = sd->v4l2_dev;
++	vfd->release = video_device_release_empty;
++	vfd->lock = &isp->video_lock;
++	vfd->queue = q;
++	vfd->vfl_dir = VFL_DIR_TX;
++	set_bit(V4L2_FL_USE_FH_PRIO, &vfd->flags);
++
++	memset(q, 0, sizeof(*q));
++	q->type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
++	q->io_modes = VB2_MMAP | VB2_DMABUF;
++	q->timestamp_type = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
++	q->ops = &isp_video_output_qops;
++	q->mem_ops = &vb2_dma_contig_memops;
++	q->buf_struct_size = sizeof(struct fimc_is_buf);
++	q->drv_priv = isp;
++
++	ret = vb2_queue_init(q);
++	if (ret < 0)
++		return ret;
++
++	isp->vd_pad.flags = MEDIA_PAD_FL_SINK;
++	ret = media_entity_init(&vfd->entity, 1, &isp->vd_pad, 0);
++	if (ret < 0)
++		return ret;
++
++	video_set_drvdata(vfd, isp);
++
++	ret = video_register_device(vfd, VFL_TYPE_GRABBER, -1);
++	if (ret < 0) {
++		media_entity_cleanup(&vfd->entity);
++		return ret;
++	}
++
++	v4l2_info(sd->v4l2_dev, "Registered %s as /dev/%s\n",
++		  vfd->name, video_device_node_name(vfd));
++	return 0;
++}
++
++static void isp_subdev_unregistered(struct v4l2_subdev *sd)
++{
++	struct fimc_is_isp *isp = v4l2_get_subdevdata(sd);
++
++	if (isp && video_is_registered(&isp->vfd))
++		video_unregister_device(&isp->vfd);
++}
++
++static const struct v4l2_subdev_internal_ops isp_subdev_internal_ops = {
++	.registered = isp_subdev_registered,
++	.unregistered = isp_subdev_unregistered,
++};
++
++static struct fimc_is_sensor *fimc_is_get_sensor(struct fimc_is *is,
++		int sensor_id)
++{
++	int i;
++
++	for (i = 0; i < FIMC_IS_NUM_SENSORS; i++) {
++		if (is->sensor[i].drvdata->id == sensor_id)
++			return &is->sensor[i];
++	}
++	return NULL;
++}
++
++static int isp_s_power(struct v4l2_subdev *sd, int on)
++{
++	struct fimc_is_isp *isp = v4l2_get_subdevdata(sd);
++	struct fimc_is *is = isp->pipeline->is;
++	struct v4l2_subdev *sensor_sd = isp->sensor_sd;
++	struct fimc_is_sensor *sensor;
++	const struct sensor_drv_data *sdata;
++	int ret;
++
++	if (!sensor_sd)
++		return -EINVAL;
++
++	if (on) {
++		ret = pm_runtime_get_sync(&is->pdev->dev);
++		if (ret < 0)
++			return ret;
++
++		sdata = exynos5_is_sensor_get_drvdata(sensor_sd->dev->of_node);
++		sensor = fimc_is_get_sensor(is, sdata->id);
++
++		ret = fimc_is_pipeline_open(isp->pipeline, sensor);
++		if (ret)
++			v4l2_err(&isp->subdev, "Pipeline open failed\n");
++	} else {
++		ret = fimc_is_pipeline_close(isp->pipeline);
++		if (ret)
++			v4l2_err(&isp->subdev, "Pipeline close failed\n");
++		pm_runtime_put_sync(&is->pdev->dev);
++	}
++
++	return ret;
++}
++
++static struct v4l2_subdev_core_ops isp_core_ops = {
++	.s_power = isp_s_power,
++};
++
++static int isp_s_stream(struct v4l2_subdev *sd, int enable)
++{
++	struct fimc_is_isp *isp = v4l2_get_subdevdata(sd);
++	struct fimc_is *is = isp->pipeline->is;
++	struct v4l2_subdev *sensor_sd = isp->sensor_sd;
++	struct v4l2_subdev_format fmt;
++	const struct sensor_drv_data *sdata;
++	struct fimc_is_sensor *sensor;
++	int ret;
++
++	if (!sensor_sd)
++		return -EINVAL;
++
++	if (enable) {
++		sdata = exynos5_is_sensor_get_drvdata(sensor_sd->dev->of_node);
++		sensor = fimc_is_get_sensor(is, sdata->id);
++		/* Retrieve the sensor format */
++		fmt.pad = 0;
++		fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
++		ret = v4l2_subdev_call(sensor_sd, pad, get_fmt, NULL, &fmt);
++		if (ret)
++			return ret;
++
++		sensor->width = fmt.format.width - SENSOR_WIDTH_PADDING;
++		sensor->height = fmt.format.height - SENSOR_HEIGHT_PADDING;
++		sensor->pixel_width = fmt.format.width;
++		sensor->pixel_height = fmt.format.height;
++
++		/* Check sensor resolution match */
++		if ((sensor->pixel_width != isp->width) ||
++			(sensor->pixel_height != isp->height)) {
++			v4l2_err(sd, "Resolution mismatch\n");
++			return -EPIPE;
++		}
++
++		ret = fimc_is_pipeline_start(isp->pipeline);
++		if (ret)
++			v4l2_err(sd, "Pipeline start failed.\n");
++	} else {
++		ret = fimc_is_pipeline_stop(isp->pipeline);
++		if (ret)
++			v4l2_err(sd, "Pipeline stop failed.\n");
++	}
++
++	return ret;
++}
++
++static const struct v4l2_subdev_video_ops isp_video_ops = {
++	.s_stream       = isp_s_stream,
++};
++
++static struct v4l2_subdev_ops isp_subdev_ops = {
++	.core = &isp_core_ops,
++	.video = &isp_video_ops,
++};
++
++int fimc_is_isp_subdev_create(struct fimc_is_isp *isp,
++		struct vb2_alloc_ctx *alloc_ctx,
++		struct fimc_is_pipeline *pipeline)
++{
++	struct v4l2_ctrl_handler *handler = &isp->ctrl_handler;
++	struct v4l2_subdev *sd = &isp->subdev;
++	int ret;
++
++	isp->alloc_ctx = alloc_ctx;
++	isp->pipeline = pipeline;
++	isp->fmt = &formats[1];
++	INIT_LIST_HEAD(&isp->wait_queue);
++	INIT_LIST_HEAD(&isp->run_queue);
++	isp->width = ISP_DEF_WIDTH;
++	isp->height = ISP_DEF_HEIGHT;
++
++	v4l2_subdev_init(sd, &isp_subdev_ops);
++	sd->owner = THIS_MODULE;
++	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
++	snprintf(sd->name, sizeof(sd->name), ISP_DRV_NAME);
++
++	isp->subdev_pads[ISP_SD_PAD_SINK_DMA].flags = MEDIA_PAD_FL_SINK;
++	isp->subdev_pads[ISP_SD_PAD_SINK_OTF].flags = MEDIA_PAD_FL_SINK;
++	isp->subdev_pads[ISP_SD_PAD_SRC].flags = MEDIA_PAD_FL_SOURCE;
++	ret = media_entity_init(&sd->entity, ISP_SD_PADS_NUM,
++			isp->subdev_pads, 0);
++	if (ret < 0)
++		return ret;
++
++	ret = v4l2_ctrl_handler_init(handler, 1);
++	if (handler->error)
++		goto err_ctrl;
++
++	sd->ctrl_handler = handler;
++	sd->internal_ops = &isp_subdev_internal_ops;
++	v4l2_set_subdevdata(sd, isp);
++
++	return 0;
++
++err_ctrl:
++	media_entity_cleanup(&sd->entity);
++	v4l2_ctrl_handler_free(handler);
++	return ret;
++}
++
++void fimc_is_isp_subdev_destroy(struct fimc_is_isp *isp)
++{
++	struct v4l2_subdev *sd = &isp->subdev;
++
++	v4l2_device_unregister_subdev(sd);
++	media_entity_cleanup(&sd->entity);
++	v4l2_ctrl_handler_free(&isp->ctrl_handler);
++	v4l2_set_subdevdata(sd, NULL);
++}
++
+diff --git a/drivers/media/platform/exynos5-is/fimc-is-isp.h b/drivers/media/platform/exynos5-is/fimc-is-isp.h
+new file mode 100644
+index 0000000..fdb6d86
+--- /dev/null
++++ b/drivers/media/platform/exynos5-is/fimc-is-isp.h
+@@ -0,0 +1,90 @@
++/*
++ * Samsung EXYNOS4x12 FIMC-IS (Imaging Subsystem) driver
++ *
++ * Copyright (C) 2012 Samsung Electronics Co., Ltd.
++ *  Arun Kumar K <arun.kk@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#ifndef FIMC_IS_ISP_H_
++#define FIMC_IS_ISP_H_
++
++#include "fimc-is-core.h"
++#include "fimc-is-pipeline.h"
++
++#define FIMC_IS_ISP_REQ_BUFS_MIN	2
++
++#define ISP_SD_PAD_SINK_DMA	0
++#define ISP_SD_PAD_SINK_OTF	1
++#define ISP_SD_PAD_SRC		2
++#define ISP_SD_PADS_NUM		3
++
++#define ISP_DEF_WIDTH		1296
++#define ISP_DEF_HEIGHT		732
++
++#define ISP_MAX_WIDTH		4808
++#define ISP_MAX_HEIGHT		3356
++#define ISP_MIN_WIDTH		32
++#define ISP_MIN_HEIGHT		32
++
++#define ISP_MAX_BUFS		2
 +
 +/**
-+ * RX graphical example to better understand the difference between ST IR block
-+ * output and standard definition used by LIRC (and most of the world!)
-+ *
-+ *           mark                                     mark
-+ *      |-IRB_RX_ON-|                            |-IRB_RX_ON-|
-+ *      ___  ___  ___                            ___  ___  ___             _
-+ *      | |  | |  | |                            | |  | |  | |             |
-+ *      | |  | |  | |         space 0            | |  | |  | |   space 1   |
-+ * _____| |__| |__| |____________________________| |__| |__| |_____________|
-+ *
-+ *      |--------------- IRB_RX_SYS -------------|------ IRB_RX_SYS -------|
-+ *
-+ *      |------------- encoding bit 0 -----------|---- encoding bit 1 -----|
-+ *
-+ * ST hardware returns mark (IRB_RX_ON) and total symbol time (IRB_RX_SYS), so
-+ * convert to standard mark/space we have to calculate space=(IRB_RX_SYS-mark)
-+ * The mark time represents the amount of time the carrier (usually 36-40kHz)
-+ * is detected.The above examples shows Pulse Width Modulation encoding where
-+ * bit 0 is represented by space>mark.
++ * struct fimc_is_isp - ISP context
++ * @vfd: video device node
++ * @fh: v4l2 file handle
++ * @alloc_ctx: videobuf2 memory allocator context
++ * @subdev: fimc-is-isp subdev
++ * @vd_pad: media pad for the output video node
++ * @subdev_pads: the subdev media pads
++ * @ctrl_handler: v4l2 control handler
++ * @video_lock: video lock mutex
++ * @sensor_sd: sensor subdev used with this isp instance
++ * @pipeline: pipeline instance for this isp context
++ * @vbq: vb2 buffers queue for ISP output video node
++ * @wait_queue: list holding buffers waiting to be queued to HW
++ * @wait_queue_cnt: wait queue number of buffers
++ * @run_queue: list holding buffers queued to HW
++ * @run_queue_cnt: run queue number of buffers
++ * @output_bufs: isp output buffers array
++ * @out_buf_cnt: number of output buffers in use
++ * @fmt: output plane format for isp
++ * @width: user configured input width
++ * @height: user configured input height
++ * @size_image: image size in bytes
++ * @output_state: state of the output video node operations
 + */
++struct fimc_is_isp {
++	struct video_device		vfd;
++	struct v4l2_fh			fh;
++	struct vb2_alloc_ctx		*alloc_ctx;
++	struct v4l2_subdev		subdev;
++	struct media_pad		vd_pad;
++	struct media_pad		subdev_pads[ISP_SD_PADS_NUM];
++	struct v4l2_ctrl_handler	ctrl_handler;
++	struct mutex			video_lock;
 +
-+static irqreturn_t st_rc_rx_interrupt(int irq, void *data)
-+{
-+	unsigned int symbol, mark = 0;
-+	struct st_rc_device *dev = data;
-+	int last_symbol = 0;
-+	u32 status;
-+	DEFINE_IR_RAW_EVENT(ev);
++	struct v4l2_subdev		*sensor_sd;
++	struct fimc_is_pipeline		*pipeline;
 +
-+	if (dev->irq_wake)
-+		pm_wakeup_event(dev->dev, 0);
++	struct vb2_queue		vbq;
++	struct list_head		wait_queue;
++	unsigned int			wait_queue_cnt;
++	struct list_head		run_queue;
++	unsigned int			run_queue_cnt;
 +
-+	status  = readl(dev->rx_base + IRB_RX_STATUS);
-+
-+	while (status & (IRB_FIFO_NOT_EMPTY | IRB_OVERFLOW)) {
-+		u32 int_status = readl(dev->rx_base + IRB_RX_INT_STATUS);
-+		if (unlikely(int_status & IRB_RX_OVERRUN_INT)) {
-+			/* discard the entire collection in case of errors!  */
-+			dev_info(dev->dev, "IR RX overrun\n");
-+			writel(IRB_RX_OVERRUN_INT,
-+					dev->rx_base + IRB_RX_INT_CLEAR);
-+			continue;
-+		}
-+
-+		symbol = readl(dev->rx_base + IRB_RX_SYS);
-+		mark = readl(dev->rx_base + IRB_RX_ON);
-+
-+		if (symbol == IRB_TIMEOUT)
-+			last_symbol = 1;
-+
-+		 /* Ignore any noise */
-+		if ((mark > 2) && (symbol > 1)) {
-+			symbol -= mark;
-+			if (dev->overclocking) { /* adjustments to timings */
-+				symbol *= dev->sample_mult;
-+				symbol /= dev->sample_div;
-+				mark *= dev->sample_mult;
-+				mark /= dev->sample_div;
-+			}
-+
-+			ev.duration = US_TO_NS(mark);
-+			ev.pulse = true;
-+			ir_raw_event_store(dev->rdev, &ev);
-+
-+			if (!last_symbol) {
-+				ev.duration = US_TO_NS(symbol);
-+				ev.pulse = false;
-+				ir_raw_event_store(dev->rdev, &ev);
-+			} else  {
-+				st_rc_send_lirc_timeout(dev->rdev);
-+				ir_raw_event_handle(dev->rdev);
-+			}
-+		}
-+		last_symbol = 0;
-+		status  = readl(dev->rx_base + IRB_RX_STATUS);
-+	}
-+
-+	writel(IRB_RX_INTS, dev->rx_base + IRB_RX_INT_CLEAR);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void st_rc_hardware_init(struct st_rc_device *dev)
-+{
-+	int baseclock, freqdiff;
-+	unsigned int rx_max_symbol_per = MAX_SYMB_TIME;
-+	unsigned int rx_sampling_freq_div;
-+
-+	clk_prepare_enable(dev->sys_clock);
-+	baseclock = clk_get_rate(dev->sys_clock);
-+
-+	/* IRB input pins are inverted internally from high to low. */
-+	writel(1, dev->rx_base + IRB_RX_POLARITY_INV);
-+
-+	rx_sampling_freq_div = baseclock / IRB_SAMPLE_FREQ;
-+	writel(rx_sampling_freq_div, dev->base + IRB_SAMPLE_RATE_COMM);
-+
-+	freqdiff = baseclock - (rx_sampling_freq_div * IRB_SAMPLE_FREQ);
-+	if (freqdiff) { /* over clocking, workout the adjustment factors */
-+		dev->overclocking = true;
-+		dev->sample_mult = 1000;
-+		dev->sample_div = baseclock / (10000 * rx_sampling_freq_div);
-+		rx_max_symbol_per = (rx_max_symbol_per * 1000)/dev->sample_div;
-+	}
-+
-+	writel(rx_max_symbol_per, dev->rx_base + IRB_MAX_SYM_PERIOD);
-+}
-+
-+static int st_rc_remove(struct platform_device *pdev)
-+{
-+	struct st_rc_device *rc_dev = platform_get_drvdata(pdev);
-+	clk_disable_unprepare(rc_dev->sys_clock);
-+	rc_unregister_device(rc_dev->rdev);
-+	return 0;
-+}
-+
-+static int st_rc_open(struct rc_dev *rdev)
-+{
-+	struct st_rc_device *dev = rdev->priv;
-+	unsigned long flags;
-+	local_irq_save(flags);
-+	/* enable interrupts and receiver */
-+	writel(IRB_RX_INTS, dev->rx_base + IRB_RX_INT_EN);
-+	writel(0x01, dev->rx_base + IRB_RX_EN);
-+	local_irq_restore(flags);
-+
-+	return 0;
-+}
-+
-+static void st_rc_close(struct rc_dev *rdev)
-+{
-+	struct st_rc_device *dev = rdev->priv;
-+	/* disable interrupts and receiver */
-+	writel(0x00, dev->rx_base + IRB_RX_EN);
-+	writel(0x00, dev->rx_base + IRB_RX_INT_EN);
-+}
-+
-+static int st_rc_probe(struct platform_device *pdev)
-+{
-+	int ret = -EINVAL;
-+	struct rc_dev *rdev;
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	struct st_rc_device *rc_dev;
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	rc_dev = devm_kzalloc(dev, sizeof(struct st_rc_device), GFP_KERNEL);
-+	rdev = rc_allocate_device();
-+
-+	if (!rc_dev || !rdev)
-+		return -ENOMEM;
-+
-+	if (np)
-+		rc_dev->rxuhfmode = of_property_read_bool(np, "st,uhfmode");
-+
-+	rc_dev->sys_clock = devm_clk_get(dev, NULL);
-+	if (IS_ERR(rc_dev->sys_clock)) {
-+		dev_err(dev, "System clock not found\n");
-+		ret = PTR_ERR(rc_dev->sys_clock);
-+		goto err;
-+	}
-+
-+	rc_dev->irq = platform_get_irq(pdev, 0);
-+	if (rc_dev->irq < 0) {
-+		ret = rc_dev->irq;
-+		goto clkerr;
-+	}
-+
-+	ret = -ENODEV;
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		goto clkerr;
-+
-+	rc_dev->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(rc_dev->base))
-+		goto clkerr;
-+
-+	if (rc_dev->rxuhfmode)
-+		rc_dev->rx_base = rc_dev->base + 0x40;
-+	else
-+		rc_dev->rx_base = rc_dev->base;
-+
-+	rc_dev->dev = dev;
-+	platform_set_drvdata(pdev, rc_dev);
-+	st_rc_hardware_init(rc_dev);
-+
-+	rdev->driver_type = RC_DRIVER_IR_RAW;
-+	rdev->allowed_protos = RC_TYPE_LIRC;
-+	rdev->priv = rc_dev;
-+	rdev->open = st_rc_open;
-+	rdev->close = st_rc_close;
-+	rdev->driver_name = IR_ST_NAME;
-+	rdev->map_name = RC_MAP_LIRC;
-+	rdev->input_name = "ST Remote Control Receiver";
-+
-+	/* enable wake via this device */
-+	device_set_wakeup_capable(dev, true);
-+	device_set_wakeup_enable(dev, true);
-+
-+	ret = rc_register_device(rdev);
-+	if (ret < 0)
-+		goto clkerr;
-+
-+	rc_dev->rdev = rdev;
-+	if (devm_request_irq(dev, rc_dev->irq, st_rc_rx_interrupt,
-+			IRQF_NO_SUSPEND, IR_ST_NAME, rc_dev) < 0) {
-+		dev_err(dev, "IRQ %d register failed\n", rc_dev->irq);
-+		ret = -EINVAL;
-+		goto rcerr;
-+	}
-+
-+	/* for LIRC_MODE_MODE2 or LIRC_MODE_PULSE or LIRC_MODE_RAW
-+	 * lircd expects a long space first before a signal train to sync. */
-+	st_rc_send_lirc_timeout(rdev);
-+
-+	dev_info(dev, "setup in %s mode\n", rc_dev->rxuhfmode ? "UHF" : "IR");
-+
-+	return ret;
-+rcerr:
-+	rc_unregister_device(rdev);
-+	rdev = NULL;
-+clkerr:
-+	clk_disable_unprepare(rc_dev->sys_clock);
-+err:
-+	rc_free_device(rdev);
-+	dev_err(dev, "Unable to register device (%d)\n", ret);
-+	return ret;
-+}
-+
-+#ifdef CONFIG_PM
-+static int st_rc_suspend(struct device *dev)
-+{
-+	struct st_rc_device *rc_dev = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev)) {
-+		if (!enable_irq_wake(rc_dev->irq))
-+			rc_dev->irq_wake = 1;
-+		else
-+			return -EINVAL;
-+	} else {
-+		pinctrl_pm_select_sleep_state(dev);
-+		writel(0x00, rc_dev->rx_base + IRB_RX_EN);
-+		writel(0x00, rc_dev->rx_base + IRB_RX_INT_EN);
-+		clk_disable_unprepare(rc_dev->sys_clock);
-+	}
-+
-+	return 0;
-+}
-+
-+static int st_rc_resume(struct device *dev)
-+{
-+	struct st_rc_device *rc_dev = dev_get_drvdata(dev);
-+	struct rc_dev	*rdev = rc_dev->rdev;
-+
-+	if (rc_dev->irq_wake) {
-+		disable_irq_wake(rc_dev->irq);
-+		rc_dev->irq_wake = 0;
-+	} else {
-+		pinctrl_pm_select_default_state(dev);
-+		st_rc_hardware_init(rc_dev);
-+		if (rdev->users) {
-+			writel(IRB_RX_INTS, rc_dev->rx_base + IRB_RX_INT_EN);
-+			writel(0x01, rc_dev->rx_base + IRB_RX_EN);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(st_rc_pm_ops, st_rc_suspend, st_rc_resume);
-+#endif
-+
-+#ifdef CONFIG_OF
-+static struct of_device_id st_rc_match[] = {
-+	{ .compatible = "st,rc", },
-+	{},
++	const struct fimc_is_fmt	*fmt;
++	unsigned int			width;
++	unsigned int			height;
++	unsigned int			size_image;
++	unsigned long			output_state;
 +};
 +
-+MODULE_DEVICE_TABLE(of, st_rc_match);
-+#endif
++int fimc_is_isp_subdev_create(struct fimc_is_isp *isp,
++		struct vb2_alloc_ctx *alloc_ctx,
++		struct fimc_is_pipeline *pipeline);
++void fimc_is_isp_subdev_destroy(struct fimc_is_isp *isp);
 +
-+static struct platform_driver st_rc_driver = {
-+	.driver = {
-+		.name = IR_ST_NAME,
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(st_rc_match),
-+#ifdef CONFIG_PM
-+		.pm     = &st_rc_pm_ops,
-+#endif
-+	},
-+	.probe = st_rc_probe,
-+	.remove = st_rc_remove,
-+};
-+
-+module_platform_driver(st_rc_driver);
-+
-+MODULE_DESCRIPTION("RC Transceiver driver for STMicroelectronics platforms");
-+MODULE_AUTHOR("STMicroelectronics (R&D) Ltd");
-+MODULE_LICENSE("GPL");
++#endif /* FIMC_IS_ISP_H_ */
 -- 
-1.7.6.5
+1.7.9.5
 
