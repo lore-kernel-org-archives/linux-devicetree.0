@@ -1,79 +1,45 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db9lp0253.outbound.messaging.microsoft.com ([213.199.154.253]:11105
-	"EHLO db9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753020Ab3HUWqG (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Wed, 21 Aug 2013 18:46:06 -0400
-Message-ID: <1377125156.5029.40.camel@snotra.buserror.net>
-Subject: Re: [PATCH v7 1/3] DMA: Freescale: revise device tree binding
- document
-From: Scott Wood <scottwood@freescale.com>
-Date: Wed, 21 Aug 2013 17:45:56 -0500
-In-Reply-To: <5215402E.70007@wwwdotorg.org>
-References: <1375094944-3343-1-git-send-email-hongbo.zhang@freescale.com>
-	 <1375094944-3343-2-git-send-email-hongbo.zhang@freescale.com>
-	 <5215402E.70007@wwwdotorg.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from avon.wwwdotorg.org ([70.85.31.133]:54075 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752864Ab3HUWdV (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 18:33:21 -0400
+Message-ID: <5215402E.70007@wwwdotorg.org>
+Date: Wed, 21 Aug 2013 16:33:18 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH v7 1/3] DMA: Freescale: revise device tree binding document
+References: <1375094944-3343-1-git-send-email-hongbo.zhang@freescale.com> <1375094944-3343-2-git-send-email-hongbo.zhang@freescale.com>
+In-Reply-To: <1375094944-3343-2-git-send-email-hongbo.zhang@freescale.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: hongbo.zhang@freescale.com, vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: hongbo.zhang@freescale.com
+Cc: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 2013-08-21 at 16:33 -0600, Stephen Warren wrote:
-> On 07/29/2013 04:49 AM, hongbo.zhang@freescale.com wrote:
-> > From: Hongbo Zhang <hongbo.zhang@freescale.com>
-> > 
-> > This patch updates the discription of each type of DMA controller and its
-> > channels, it is preparation for adding another new DMA controller binding, it
-> > also fixes some defects of indent for text alignment at the same time.
+On 07/29/2013 04:49 AM, hongbo.zhang@freescale.com wrote:
+> From: Hongbo Zhang <hongbo.zhang@freescale.com>
 > 
-> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> 
-> > -- compatible        : compatible list, contains 2 entries, first is
-> > -		 "fsl,CHIP-dma", where CHIP is the processor
-> > -		 (mpc8349, mpc8360, etc.) and the second is
-> > -		 "fsl,elo-dma"
-> > +- compatible        : must include "fsl,elo-dma"
-> 
-> Why remove the list of supported compatible values. Lately it seems that
-> we're moving towards listing more/all the values rather than removing
-> their documentation...
+> This patch updates the discription of each type of DMA controller and its
+> channels, it is preparation for adding another new DMA controller binding, it
+> also fixes some defects of indent for text alignment at the same time.
 
-Previous versions had language that required fsl,CHIP-dma for 83xx (and
-maybe 85xx?) but not the new chip.  I asked for it to be consistent.
-The reason that 83xx still has fsl,CHIP-dma is not because of anything
-special to 83xx, but that most other chips with this device have been
-converted to dtsi and it's much more of a pain to specify the specific
-SoC in that context.  The existing language does not match actual device
-trees when it comes to 85xx.
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
 
-Plus, the exact SoC name is of dubious value for integrated devices.  It
-doesn't uniquely identify the hardware because different versions of the
-SoC could have different versions of the subdevice.  As such, on our
-chips we've been moving away from including a compatible that specifies
-the exact SoC.  If it turns out we made a mistake in naming different
-versions of the device, or if there are errata, the exact SoC can still
-be determined at runtime using SVR.
+> -- compatible        : compatible list, contains 2 entries, first is
+> -		 "fsl,CHIP-dma", where CHIP is the processor
+> -		 (mpc8349, mpc8360, etc.) and the second is
+> -		 "fsl,elo-dma"
+> +- compatible        : must include "fsl,elo-dma"
 
-> > -- ranges		: Should be defined as specified in 1) to describe the
-> > -		  DMA controller channels.
-> > +- ranges            : describes the mapping between the address space of the
-> > +                      DMA channels and the address space of the DMA controller
-> 
-> What is "the address space of the DMA controller". Perhaps this should
-> say "the CPU-visible address space" instead?
+Why remove the list of supported compatible values. Lately it seems that
+we're moving towards listing more/all the values rather than removing
+their documentation...
 
-It's translating from the addresses used in the child nodes to a CCSR
-offset.  It's really just a convenience for the readability and
-macro-ability of the device tree that we do this translation at all,
-versus having an empty ranges and using CCSR offsets in the children.
+> -- ranges		: Should be defined as specified in 1) to describe the
+> -		  DMA controller channels.
+> +- ranges            : describes the mapping between the address space of the
+> +                      DMA channels and the address space of the DMA controller
 
-It's not about translating between the DMA controller's view and the
-CPU's view or anything like that.
-
--Scott
-
-
-
+What is "the address space of the DMA controller". Perhaps this should
+say "the CPU-visible address space" instead?
