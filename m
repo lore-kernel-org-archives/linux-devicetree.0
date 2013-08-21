@@ -1,52 +1,32 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail1.bemta3.messagelabs.com ([195.245.230.164]:26168 "EHLO
-	mail1.bemta3.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753702Ab3HVHiY (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Thu, 22 Aug 2013 03:38:24 -0400
-Date: Thu, 22 Aug 2013 09:37:42 +0200
-From: Johannes Thumshirn <johannes.thumshirn@men.de>
-Subject: Re: [PATCH] documentation/devicetree: Move DT bindigns from gpio to
- watchdog
-Message-ID: <20130822073740.GA3717@jtlinux>
-References: <1377088929-23694-1-git-send-email-johannes.thumshirn@men.de>
- <5214FA08.7090502@wwwdotorg.org>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:50284 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751663Ab3HUReE (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 13:34:04 -0400
+Message-ID: <5214FA08.7090502@wwwdotorg.org>
+Date: Wed, 21 Aug 2013 11:34:00 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <5214FA08.7090502@wwwdotorg.org>
+Subject: Re: [PATCH] documentation/devicetree: Move DT bindigns from gpio
+ to watchdog
+References: <1377088929-23694-1-git-send-email-johannes.thumshirn@men.de>
+In-Reply-To: <1377088929-23694-1-git-send-email-johannes.thumshirn@men.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Johannes Thumshirn <johannes.thumshirn@men.de>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: Johannes Thumshirn <johannes.thumshirn@men.de>
+Cc: Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Aug 21, 2013 at 11:34:00AM -0600, Stephen Warren wrote:
-> On 08/21/2013 06:42 AM, Johannes Thumshirn wrote:
-> > I accidently put the devicetree bindings for the MEN A21 watchdog driver in
-> > Documentation/devicetree/bindings/gpio instead of
-> > Documentation/devicetree/bindings/watchdog, this patch addresses this error.
->
-> The rename sounds fine, so that part,
-> Acked-by: Stephen Warren <swarren@nvidia.com>
->
-> However, the binding itself doesn't look right; it appears to have a
-> single "gpios" property rather than using separate named xxx-gpios
-> properties for different things...
+On 08/21/2013 06:42 AM, Johannes Thumshirn wrote:
+> I accidently put the devicetree bindings for the MEN A21 watchdog driver in
+> Documentation/devicetree/bindings/gpio instead of
+> Documentation/devicetree/bindings/watchdog, this patch addresses this error.
 
-Ok, so I'll need something like the following?
+The rename sounds fine, so that part,
+Acked-by: Stephen Warren <swarren@nvidia.com>
 
-watchdog {
-	compatible ="men,a021-wdt";
-	enable-gpios = <&gpio3 9 1>; /* WD_EN */
-	fast-gpios = <&gpio3 10 1>;  /* WD_FAST */
-	trig-gpios = <&gpio3 11 1>;  /* WD_TRIG */
-	rst0-gpio = <&gpio3 6 1>;    /* RST_CAUSE[0] */
-	rst1-gpio = <&gpio3 7 1>;    /* RST_CAUSE[1] */
-	rst2-gpio = <&gpio3 8 1>;    /* RST_CAUSE[2] */
-};
+However, the binding itself doesn't look right; it appears to have a
+single "gpios" property rather than using separate named xxx-gpios
+properties for different things...
 
-Or is there something like of_get_named_gpios(...) so I can put all 3 rst-gpios
-into one property? A quick grep only revealed of_get_named_gpio(...).
-
-Thanks,
-Johannes
