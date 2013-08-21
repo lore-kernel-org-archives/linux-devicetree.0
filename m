@@ -1,150 +1,76 @@
 From: Dong Aisheng <b29396@freescale.com>
 Subject: Re: [PATCH 0/3] of: add update device node status via cmdline feature
-Date: Wed, 21 Aug 2013 20:37:09 +0800
-Message-ID: <20130821123708.GA17748@b29396-Latitude-E6410>
+Date: Wed, 21 Aug 2013 20:47:23 +0800
+Message-ID: <20130821124722.GB17748@b29396-Latitude-E6410>
 References: <1376564133-11286-1-git-send-email-b29396@freescale.com>
- <CACxGe6tMm=u1jFKUQ59+cj-rYkLLAZUqMhsXamyi-wwpWaOGvw@mail.gmail.com>
+ <520CCB70.8090908@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACxGe6tMm=u1jFKUQ59+cj-rYkLLAZUqMhsXamyi-wwpWaOGvw@mail.gmail.com>
+In-Reply-To: <520CCB70.8090908@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robherring2@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 15, 2013 at 01:45:48PM +0100, Grant Likely wrote:
-> On Thu, Aug 15, 2013 at 11:55 AM, Dong Aisheng <b29396@freescale.com> wrote:
+On Thu, Aug 15, 2013 at 07:37:04AM -0500, Rob Herring wrote:
+> On 08/15/2013 05:55 AM, Dong Aisheng wrote:
 > > We meet some boards having a lot of pin conflicts between different devices,
 > > only one of them can be enabled to run at one time.
-> >
+> > 
 > > e.g. imx6q sabreauto board, i2c, spi, weim, flexcan, uart and etc involved
 > > with pin conflict.
-> >
+> > 
 > > Instead of changing dts manually or adding a lot dts files according to
 > > different device availability, we provide feature to dynamically update the
 > > device node status via command line, then those devices involved with
 > > pin conflict can be enabled or disabled dynamically.
+> > 
+> > It's conveniently to use and can save a lot dts board files, also can
+> > permenantly fix the pin conflicts issue.
 > 
-> Ugh, no. If there are dynamic conflicts, then the driver really should
-> be responsible for handling them. ie. if the driver isn't able to get
-> the resource it needs because they don't exist, then driver probe
-> should fail.
-> 
-
-Detect pin confliction in driver is not our purpose.
-The real requirement is to flexibly decide which device involved in confliction
-is enabled when booting kernel since only one of them can be running at one time,
-not detect them.
-
-Before using device tree, we defined kernel param in mach code ourself to fix
-this issue.
-e.g. i2c and spi are conflicted.
-We add kernel boot param i2c3_en to decide whether enable i2c3 or spi.
-Then user can test devices flexibly as they want.
-
-After switch to device tree, since this part of work actually is soc independent,
-we move it into the dt core to let the kernel provide such feature.
-Then everyone else can also use it if needed.
-
-If do not provide such features in kernel, we may have to do it either in mach-code
-which may cause a lot of code duplication, or board dts file which cause add a lot
-duplicated board dts files.
-e.g. there are 11 devices involved with pin confliction in imx6q sabreauto board.
-i2c3, ecspi1, weim_nor, uart3, gpmi, can1, enet, tunner, satellite, mipi, csi.
-Some of them are combined conflicted.(e.g i2c3, ecspi1, weim_nor all conflict with EIM_D18)
-One simple way to use board dts to fix this issue may be add 11 more board dts files
-with one common board dts with all those device disabled by default.
-It may be:
-imx6q-sabreauto.dts
-imx6q-sabreauto-with-i2c3.dts
-imx6q-sabreauto-with-ecspi1.dts
-imx6q-sabreauto-with-weim-nor.dts
-imx6q-sabreauto-with-uart3.dts
-imx6q-sabreauto-with-gpmi.dts
-imx6q-sabreauto-with-can1.dts
-imx6q-sabreauto-with-enet.dts
-imx6q-sabreauto-with-tunner.dts
-imx6q-sabreauto-with-satellite.dts
-imx6q-sabreauto-with-mipi.dts
-imx6q-sabreauto-with-csi.dts
-
-We may also reduce them by combine some of them.
-e.g.
-imx6q-sabreauto-with-i2c3-uart3-can1-tunner-mipi.dts
-imx6q-sabreauto-with-ecspi1-gpmi-enet-satellite-csi.dts
-imx6q-sabreauto-with-weim-nor-*.dts
-....
-The defect is the combination and name is arbitrary and may
-cause dts file name changed usually.
-
-The common issue of above two way is that 1) it bloats the device tree,
-add a lot of duplicated dts files with the same board
-2) the fix is out of control and not permanent.
-If any new board having more conflict devices, we have to add these new board dts
-separately and figure out the combination again.
-e.g. for imx6q arm2 board, it also has conflicted devices flexcan, gpmi, sd and etc.
-So i'm not sure if you can accept this way.
-
-By comparing adding dts file, if the kernel provides such feature, we do not have
-to add these duplicated board dts files, only one board dts file with all conflicted
-devices disable by default and let user decide which device is enabled flexibly with
-kernel command line. And the fix is also permanently, not depends on hw design
-and how many device conflicted.
-
-Also in our case, it's pin confliction. However, it works for other conflict type
-as well that only one can work which may also exist on other platforms.
-
-> Except in very excpetional circumstances (ie. firmware workarounds)
-> the kernel needs to treat the device tree as immutable*. The tree
-> passed in at boot should not be manipulated at runtime.
+> This doesn't scale either with updating of lots devices or when the next
+> person comes along and wants to edit another property.
 > 
 
-I understand the tree passed should be treated as inmmutable at most time.
-But now we did have this requirement and this is caused by real hw design.
-I'm not sure if our case can be treated as an excpetional circumstances,
-but it does look like a excpetional to me.
+I'm not sure about other property.
+But we update it did cause by the real requirement, not arbitrary.
+Or we can try to find another better way to avoid it.
 
-so i wonder if kernel could provide such feature and let user to decide whether
-to use since it is valuable.
-
-BTW, except the pin confliction, freescale imx6q soc can also be fused
-with different IP availability.
-
-That means the same imx6q sabreauto board, if the soc chip is with different fuse,
-the device availability may be different.
-e.g. 
-imx6q(a) sabreauto with enet enabled.
-imx6q(b) sabreauto with enet disabled.
-
-We probably may still want to dynamically update the device node status by reading
-the fuse map before populating platform devices since if the IP is not exist,
-creating it's device is unreasonable.
-
-The devices involved with fused devices for imx6sdl are:
-"pxp", "ovg", "dsi_csi2", "enet", "mlb",
-"epdc", "hdmi", "pcie", "sata", "dtcp",
-"2d", "3d", "vpu", "divx3", "rv",
-"sorensen",
-
-> * There are powerpc platforms that modify the FDT at runtime; but in
-> those cases it is in response to firmware changing the data, not the
-> kernel.
+> This is something u-boot is perfectly capable of handling and updating
+> status is something lots of boards already do.
 > 
 
-I'm not very clear about the case in response to firmware changing the data.
-Can you help give a example?
-Then i can understand the difference between our case and the exception you said.
-
-However, i did saw many exist code calling of_property_* API to change the device tree
-in kernel, although not clear about their purpose. But,
-e.g
-arch/powerpc/platforms/85xx/p1022_ds.c
-In these file, it also disable device node dynamically by commandline.
-If kernel has this feature, these code can be removed.
-arch/arm/mach-omap2/timer.c
-also disable the node...
+How does uboot handle this according to our needs?
+Also dynamically update the device node status with uboot command?
+Can you help point out an example for me to check?
 
 Regards
 Dong Aisheng
+
+> Rob
+> 
+> > 
+> > The patch series is based on v3.11-rc5.
+> > 
+> > Dong Aisheng (3):
+> >   of: add device node status update APIs
+> >   of: add update device node status via cmdline feature
+> >   of: add node status update via name format with cmdline
+> > 
+> >  Documentation/kernel-parameters.txt |   10 +++
+> >  drivers/of/base.c                   |  107 +++++++++++++++++++++++++++++++++
+> >  drivers/of/fdt.c                    |  111 +++++++++++++++++++++++++++++++++++
+> >  include/linux/of.h                  |   13 ++++
+> >  4 files changed, 241 insertions(+), 0 deletions(-)
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> 
+> 
