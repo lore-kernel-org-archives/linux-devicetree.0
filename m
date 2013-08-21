@@ -1,110 +1,150 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [RFC PATCH 1/3] of: provide a binding for the 'fixed-link' property
-Date: Wed, 21 Aug 2013 12:46:46 +0100
-Message-ID: <CAGVrzcY4yY9YafYhewGtAKCwGgzi_KEhSaHQj4v+SsS3QY8ANg@mail.gmail.com>
-References: <1373902450-11857-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130812063806.GD2324@pengutronix.de> <20130812101649.743c08aa@skate> <20130812083746.GM26614@pengutronix.de>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: Re: [PATCH 0/3] of: add update device node status via cmdline feature
+Date: Wed, 21 Aug 2013 20:37:09 +0800
+Message-ID: <20130821123708.GA17748@b29396-Latitude-E6410>
+References: <1376564133-11286-1-git-send-email-b29396@freescale.com>
+ <CACxGe6tMm=u1jFKUQ59+cj-rYkLLAZUqMhsXamyi-wwpWaOGvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20130812083746.GM26614@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Lior Amsalem <alior@marvell.com>, netdev <netdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6tMm=u1jFKUQ59+cj-rYkLLAZUqMhsXamyi-wwpWaOGvw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2013/8/12 Sascha Hauer <s.hauer@pengutronix.de>:
-> On Mon, Aug 12, 2013 at 10:16:49AM +0200, Thomas Petazzoni wrote:
->> Dear Sascha Hauer,
->>
->> On Mon, 12 Aug 2013 08:38:06 +0200, Sascha Hauer wrote:
->>
->> > > This patch adds:
->> > >
->> > >  * A documentation for the Device Tree property "fixed-link".
->> > >
->> > >  * A of_phy_register_fixed_link() OF helper, which provided an OF node
->> > >    that contains a "fixed-link" property, registers the corresponding
->> > >    fixed PHY.
->> > >
->> > >  * Removes the warning on the of_phy_connect_fixed_link() that says
->> > >    new drivers should not use it, since Grant Likely indicated that
->> > >    this "fixed-link" property is indeed the way to go.
->> > >
->> >
->> > Any progress with this series?
->>
->> I am not sure there really was a consensus yet on what the DT binding
->> looks like. As soon as there is a consensus, I'm definitely willing to
->> make progress on this series.
->>
->> > We have more and more boards here with exactly the same problem as
->> > Thomas has. For reasons stated below I don't like this binding, but
->> > still it would solve my problem.
->>
->> Ok.
->>
->> > > +Example:
->> > > +
->> > > +ethernet@0 {
->> > > + ...
->> > > + fixed-link = <1 1 1000 0 0>;
->> > > + ...
->> > > +};
->> >
->> > I must say I don't like this binding at all for two reasons.
->>
->> As I explained, this binding was chosen for this RFC for two reasons:
->>
->>  * It's the binding used on PowerPC platforms to represent fixed links.
->>  * It allows to encode all the informations into a single property,
->>    which avoids the need for a separate DT node for a "fake PHY", which
->>    isn't a representation of the hardware.
->
-> The fake phy is avoided by making the other side of the link what it
-> really is: An ethernet switch. I'm currently not aware of a situation
-> where a fixed link is needed and the other side is not a switch.
+On Thu, Aug 15, 2013 at 01:45:48PM +0100, Grant Likely wrote:
+> On Thu, Aug 15, 2013 at 11:55 AM, Dong Aisheng <b29396@freescale.com> wrote:
+> > We meet some boards having a lot of pin conflicts between different devices,
+> > only one of them can be enabled to run at one time.
+> >
+> > e.g. imx6q sabreauto board, i2c, spi, weim, flexcan, uart and etc involved
+> > with pin conflict.
+> >
+> > Instead of changing dts manually or adding a lot dts files according to
+> > different device availability, we provide feature to dynamically update the
+> > device node status via command line, then those devices involved with
+> > pin conflict can be enabled or disabled dynamically.
+> 
+> Ugh, no. If there are dynamic conflicts, then the driver really should
+> be responsible for handling them. ie. if the driver isn't able to get
+> the resource it needs because they don't exist, then driver probe
+> should fail.
+> 
 
-There is such hardware out there, some platforms have a MoCA PHY which
-is responsible for the signaling/control path while the data-path can
-be connected to a slightly modified Ethernet MAC.
+Detect pin confliction in driver is not our purpose.
+The real requirement is to flexibly decide which device involved in confliction
+is enabled when booting kernel since only one of them can be running at one time,
+not detect them.
 
-> And I
-> can't think of a situation in which the other side of the other side of
-> the fixed link really is pure 'virtual', I mean there always must be
-> something connected, right?
+Before using device tree, we defined kernel param in mach code ourself to fix
+this issue.
+e.g. i2c and spi are conflicted.
+We add kernel boot param i2c3_en to decide whether enable i2c3 or spi.
+Then user can test devices flexibly as they want.
 
-I agree, there is something on the other end in every case.
+After switch to device tree, since this part of work actually is soc independent,
+we move it into the dt core to let the kernel provide such feature.
+Then everyone else can also use it if needed.
 
->
->>
->> > First the positional arguments make it impossible to add optional
->> > arguments to the link.
->> >
->> > Second the other side of the link is most likely a switch. Once this
->> > switch has its own node in the devicetree it seems like having a phandle
->> > to the switch here would be better.
->>
->> So, in other words, what you're suggesting is something like:
->>
->>       ethernet@0 {
->>               reg = <...>;
->>               interrupt = <...>;
->>               phy = <&phy0>;
->>               phy0: phy@0 {
->>                       fixed-link;
->>                       speed = <1000>;
->>                       full-duplex;
->>                       ...
->>               };
->>       };
->
-> Yes, this looks good. ePAPR suggests naming the phy property
-> "phy-handle" instead of just "phy", but that's just details. In case the
-> phy really is a switch the phandle could just point to a i2c device instead
-> of the ethernet node.
+If do not provide such features in kernel, we may have to do it either in mach-code
+which may cause a lot of code duplication, or board dts file which cause add a lot
+duplicated board dts files.
+e.g. there are 11 devices involved with pin confliction in imx6q sabreauto board.
+i2c3, ecspi1, weim_nor, uart3, gpmi, can1, enet, tunner, satellite, mipi, csi.
+Some of them are combined conflicted.(e.g i2c3, ecspi1, weim_nor all conflict with EIM_D18)
+One simple way to use board dts to fix this issue may be add 11 more board dts files
+with one common board dts with all those device disabled by default.
+It may be:
+imx6q-sabreauto.dts
+imx6q-sabreauto-with-i2c3.dts
+imx6q-sabreauto-with-ecspi1.dts
+imx6q-sabreauto-with-weim-nor.dts
+imx6q-sabreauto-with-uart3.dts
+imx6q-sabreauto-with-gpmi.dts
+imx6q-sabreauto-with-can1.dts
+imx6q-sabreauto-with-enet.dts
+imx6q-sabreauto-with-tunner.dts
+imx6q-sabreauto-with-satellite.dts
+imx6q-sabreauto-with-mipi.dts
+imx6q-sabreauto-with-csi.dts
 
-I do like this representation better than the existing fixed-link property.
---
-Florian
+We may also reduce them by combine some of them.
+e.g.
+imx6q-sabreauto-with-i2c3-uart3-can1-tunner-mipi.dts
+imx6q-sabreauto-with-ecspi1-gpmi-enet-satellite-csi.dts
+imx6q-sabreauto-with-weim-nor-*.dts
+....
+The defect is the combination and name is arbitrary and may
+cause dts file name changed usually.
+
+The common issue of above two way is that 1) it bloats the device tree,
+add a lot of duplicated dts files with the same board
+2) the fix is out of control and not permanent.
+If any new board having more conflict devices, we have to add these new board dts
+separately and figure out the combination again.
+e.g. for imx6q arm2 board, it also has conflicted devices flexcan, gpmi, sd and etc.
+So i'm not sure if you can accept this way.
+
+By comparing adding dts file, if the kernel provides such feature, we do not have
+to add these duplicated board dts files, only one board dts file with all conflicted
+devices disable by default and let user decide which device is enabled flexibly with
+kernel command line. And the fix is also permanently, not depends on hw design
+and how many device conflicted.
+
+Also in our case, it's pin confliction. However, it works for other conflict type
+as well that only one can work which may also exist on other platforms.
+
+> Except in very excpetional circumstances (ie. firmware workarounds)
+> the kernel needs to treat the device tree as immutable*. The tree
+> passed in at boot should not be manipulated at runtime.
+> 
+
+I understand the tree passed should be treated as inmmutable at most time.
+But now we did have this requirement and this is caused by real hw design.
+I'm not sure if our case can be treated as an excpetional circumstances,
+but it does look like a excpetional to me.
+
+so i wonder if kernel could provide such feature and let user to decide whether
+to use since it is valuable.
+
+BTW, except the pin confliction, freescale imx6q soc can also be fused
+with different IP availability.
+
+That means the same imx6q sabreauto board, if the soc chip is with different fuse,
+the device availability may be different.
+e.g. 
+imx6q(a) sabreauto with enet enabled.
+imx6q(b) sabreauto with enet disabled.
+
+We probably may still want to dynamically update the device node status by reading
+the fuse map before populating platform devices since if the IP is not exist,
+creating it's device is unreasonable.
+
+The devices involved with fused devices for imx6sdl are:
+"pxp", "ovg", "dsi_csi2", "enet", "mlb",
+"epdc", "hdmi", "pcie", "sata", "dtcp",
+"2d", "3d", "vpu", "divx3", "rv",
+"sorensen",
+
+> * There are powerpc platforms that modify the FDT at runtime; but in
+> those cases it is in response to firmware changing the data, not the
+> kernel.
+> 
+
+I'm not very clear about the case in response to firmware changing the data.
+Can you help give a example?
+Then i can understand the difference between our case and the exception you said.
+
+However, i did saw many exist code calling of_property_* API to change the device tree
+in kernel, although not clear about their purpose. But,
+e.g
+arch/powerpc/platforms/85xx/p1022_ds.c
+In these file, it also disable device node dynamically by commandline.
+If kernel has this feature, these code can be removed.
+arch/arm/mach-omap2/timer.c
+also disable the node...
+
+Regards
+Dong Aisheng
