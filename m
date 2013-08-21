@@ -1,55 +1,39 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:38907 "EHLO
+Received: from avon.wwwdotorg.org ([70.85.31.133]:34923 "EHLO
 	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752285Ab3HUSbE (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 14:31:04 -0400
-Message-ID: <52150763.8020707@wwwdotorg.org>
-Date: Wed, 21 Aug 2013 12:30:59 -0600
+	with ESMTP id S1751537Ab3HUQIN (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 12:08:13 -0400
+Message-ID: <5214E5E8.1000102@wwwdotorg.org>
+Date: Wed, 21 Aug 2013 10:08:08 -0600
 From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v10 2/2] ASoC: fsl: Add S/PDIF machine driver
-References: <cover.1377054540.git.b42378@freescale.com> <e9cf5e37f858dea78319720f007f66c8c063885f.1377054540.git.b42378@freescale.com>
-In-Reply-To: <e9cf5e37f858dea78319720f007f66c8c063885f.1377054540.git.b42378@freescale.com>
+Subject: Re: [alsa-devel] [PATCH v8 2/2] ASoC: fsl: Add S/PDIF machine driver
+References: <cover.1376912873.git.b42378@freescale.com> <ca3061d70ab8bf59afc59031fa7befcfaed26d51.1376912873.git.b42378@freescale.com> <5212908E.6050104@wwwdotorg.org> <20130820001858.GF30073@sirena.org.uk> <52138FDE.3080007@wwwdotorg.org> <20130820190701.GR30073@sirena.org.uk> <5213C94D.7050304@wwwdotorg.org> <20130820222810.GU30073@sirena.org.uk> <20130821021801.GA6177@MrMyself>
+In-Reply-To: <20130821021801.GA6177@MrMyself>
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 To: Nicolin Chen <b42378@freescale.com>
-Cc: broonie@kernel.org, s.hauer@pengutronix.de, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, tomasz.figa@gmail.com, mark.rutland@arm.com, R65777@freescale.com
+Cc: Mark Brown <broonie@kernel.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, festevam@gmail.com, s.hauer@pengutronix.de, timur@tabi.org, rob.herring@calxeda.com, tomasz.figa@gmail.com, p.zabel@pengutronix.de, R65777@freescale.com, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/20/2013 09:13 PM, Nicolin Chen wrote:
-> This patch implements a device-tree-only machine driver for Freescale
-> i.MX series Soc. It works with spdif_transmitter/spdif_receiver and
-> fsl_spdif.c drivers.
+On 08/20/2013 08:18 PM, Nicolin Chen wrote:
+> On Tue, Aug 20, 2013 at 11:28:10PM +0100, Mark Brown wrote:
+>> On Tue, Aug 20, 2013 at 01:53:49PM -0600, Stephen Warren wrote:
+>>> On 08/20/2013 01:07 PM, Mark Brown wrote:
+>>
+>>>> The point is that it might turn into a more correct binding
+>>>> depending on what the S/PDIF device actually is.
+>>
+>>> There's *never* an object on the board called a "dummy codec".
+>>
+>> Oh, is that what you're talking about?  Yes, that makes sense.  I had
+>> been responding to the comments about the transceivers.
+> 
+> I'll remove the 'dummy' words in the next version from the binding doc.
 
-> diff --git a/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt b/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
-
-> +Optional properties:
-> +
-> +  - spdif-transmitter : The phandle of the spdif-transmitter codec
-> +
-> +  - spdif-receiver : The phandle of the spdif-receiver codec
-> +
-> +* Note: At least one of these two properties should be set in the DT binding.
-
-I still don't think those two properties are correct.
-
-Exactly what node will those phandles point at?
-
-There definitely should not be a DT node for any "dummy CODEC",
-irrespective of whether this binding calls the other node a "CODEC" or a
-"dummy CODEC".
-
-If these properties are to contain phandles, it would be acceptable for
-the referenced node to be:
-
-* A node representing the physical connector/jack on the board.
-
-* A node representing some other IP block on the board, such as an HDMI
-encoder/display-controller
-
-I think those options are unlikely in general, so I think instead these
-properties should just be Boolean indicating that "something" is
-connector to the S/PDIF RX/TX, without specifying what that "something"
-is. It doesn't matter what at least in the connector/jack case, although
-perhaps it does in the HDMI encoder/display-controller?
+I think the word "CODEC" is also problematic in this context, since
+whatever is connector to the S/PDIF output path may not be a CODEC.
+That's why I suggested some more generic property names that IIRC
+concentrated on enabling rx/tx rather than indicating what was actually
+connected to the S/PDIF controller.
