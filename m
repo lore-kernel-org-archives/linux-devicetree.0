@@ -1,96 +1,24 @@
-Return-Path: <sachin.kamat@linaro.org>
-Return-Path: <sachin.kamat@linaro.org>
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH Resend 1/2] usb: samsung: Update Exynos ehci/ohci bindings documentation
-Date: Wed, 14 Aug 2013 16:52:56 +0530
-Message-Id: <1376479377-15732-1-git-send-email-sachin.kamat@linaro.org>
-To: devicetree@vger.kernel.org
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, robherring2@gmail.com, sachin.kamat@linaro.org
+Return-Path: <devicetree-owner@vger.kernel.org>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:51172 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751743Ab3HURhR (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 13:37:17 -0400
+Message-ID: <5214FACA.5090805@wwwdotorg.org>
+Date: Wed, 21 Aug 2013 11:37:14 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH/RFC v6 1/2] DT: Add documentation for gp2ap020a00f sensor
+References: <1377097580-4492-1-git-send-email-j.anaszewski@samsung.com>
+In-Reply-To: <1377097580-4492-1-git-send-email-j.anaszewski@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, jic23@kernel.org, kyungmin.park@samsung.com, s.nawrocki@samsung.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com
 List-ID: <devicetree@vger.kernel.org>
 
-Updated the document as per the latest implementation.
-While at it also fixed some trivial typos.
+On 08/21/2013 09:06 AM, Jacek Anaszewski wrote:
+> This patch adds device tree binding documentation
+> for the gp2ap020a00f proximity/als sensor.
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
- .../devicetree/bindings/usb/exynos-usb.txt         |   38 +++++++++++---------
- 1 file changed, 21 insertions(+), 17 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-index d967ba1..16a2c0f 100644
---- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-@@ -5,13 +5,15 @@ The device node has following properties.
- 
- EHCI
- Required properties:
-- - compatible: should be "samsung,exynos4210-ehci" for USB 2.0
--   EHCI controller in host mode.
-- - reg: physical base address of the controller and length of memory mapped
-+ - compatible : should be one of the following for USB 2.0 EHCI controller
-+		in host mode:
-+	(a) "samsung,exynos5440-ehci" for Exynos5440 SoC
-+	(b) "samsung,exynos4210-ehci" for all other Exynos4 and 5 SoCs
-+ - reg : physical base address of the controller and length of memory mapped
-    region.
-- - interrupts: interrupt number to the cpu.
-- - clocks: from common clock binding: handle to usb clock.
-- - clock-names: from common clock binding: Shall be "usbhost".
-+ - interrupts : interrupt number to the CPU.
-+ - clocks : from common clock binding: handle to USB clock.
-+ - clock-names : from common clock binding: Shall be "usbhost".
- 
- Optional properties:
-  - samsung,vbus-gpio:  if present, specifies the GPIO that
-@@ -23,7 +25,7 @@ Example:
- 		compatible = "samsung,exynos4210-ehci";
- 		reg = <0x12110000 0x100>;
- 		interrupts = <0 71 0>;
--		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
-+		samsung,vbus-gpio = <&gpx2 6 0>;
- 
- 		clocks = <&clock 285>;
- 		clock-names = "usbhost";
-@@ -31,13 +33,15 @@ Example:
- 
- OHCI
- Required properties:
-- - compatible: should be "samsung,exynos4210-ohci" for USB 2.0
--   OHCI companion controller in host mode.
-- - reg: physical base address of the controller and length of memory mapped
-+ - compatible : should be one of the following for USB 2.0 OHCI companion
-+		controller in host mode:
-+	(a) "samsung,exynos5440-ohci" for Exynos5440 SoC
-+	(b) "samsung,exynos4210-ohci" for all other Exynos4 and 5 SoCs
-+ - reg : physical base address of the controller and length of memory mapped
-    region.
-- - interrupts: interrupt number to the cpu.
-- - clocks: from common clock binding: handle to usb clock.
-- - clock-names: from common clock binding: Shall be "usbhost".
-+ - interrupts : interrupt number to the CPU.
-+ - clocks : from common clock binding: handle to USB clock.
-+ - clock-names : from common clock binding: Shall be "usbhost".
- 
- Example:
- 	usb@12120000 {
-@@ -51,14 +55,14 @@ Example:
- 
- DWC3
- Required properties:
-- - compatible: should be "samsung,exynos5250-dwusb3" for USB 3.0 DWC3
-+ - compatible : should be "samsung,exynos5250-dwusb3" for USB 3.0 DWC3
- 	       controller.
-  - #address-cells, #size-cells : should be '1' if the device has sub-nodes
- 				 with 'reg' property.
-- - ranges: allows valid 1:1 translation between child's address space and
-+ - ranges : allows valid 1:1 translation between child's address space and
- 	   parent's address space
-- - clocks: Clock IDs array as required by the controller.
-- - clock-names: names of clocks correseponding to IDs in the clock property
-+ - clocks : Clock IDs array as required by the controller.
-+ - clock-names : names of clocks corresponding to IDs in the clock property
- 
- Sub-nodes:
- The dwc3 core should be added as subnode to Exynos dwc3 glue.
--- 
-1.7.9.5
+Acked-by: Stephen Warren <swarren@nvidia.com>
