@@ -1,145 +1,58 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:36944 "EHLO
-	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750894Ab3HSImo (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Mon, 19 Aug 2013 04:42:44 -0400
-Date: Mon, 19 Aug 2013 09:42:27 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: passing two interrupts two an I2C driver
-Message-ID: <20130819084227.GC3719@e106331-lin.cambridge.arm.com>
-References: <520E3B8F.9010800@samsung.com>
- <520E7417.3090606@wwwdotorg.org>
+Received: from comal.ext.ti.com ([198.47.26.152]:50368 "EHLO comal.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752192Ab3HUOcW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 21 Aug 2013 10:32:22 -0400
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 1/5] arm: omap5: dts: fix reg property size
+Date: Wed, 21 Aug 2013 20:01:30 +0530
+Message-ID: <1377095494-15380-2-git-send-email-kishon@ti.com>
+In-Reply-To: <1377095494-15380-1-git-send-email-kishon@ti.com>
+References: <1377095494-15380-1-git-send-email-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <520E7417.3090606@wwwdotorg.org>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>, "lars@metafoo.de" <lars@metafoo.de>, "l.czerwinski@samsung.com" <l.czerwinski@samsung.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>
+To: bcousson@baylibre.com, tony@atomide.com, balbi@ti.com
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, linux@arm.linux.org.uk, javier.martinez@collabora.co.uk, devicetree@vger.kernel.org, kishon@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Aug 16, 2013 at 07:48:55PM +0100, Stephen Warren wrote:
-> On 08/16/2013 08:47 AM, Jacek Anaszewski wrote:
-> > Hi all,
-> > 
-> > I'd like to consult the implementation of DT binding for the I2C device
-> > that exposes two interrupt pins (INT1 and INT2). Both pins can be
-> > configured to generate either data ready interrupts or event interrupts.
-> > I want to implement DT binding that will handle also the situation
-> > when only one of the interrupt sources is routed from the device
-> > to the CPU.
-> > 
-> > Below is my implementation using interrupt-map:
-> 
-> > +  - interrupt-parent : phandle to the interrupt map subnode
-> 
-> When using interrupt-parent to point at an interrupt map, I believe you
-> usually just point at the current node; there's no need to a child node.
-> 
-> > +  - interrupts : interrupt mapping for LPS331AP interrupt sources:
-> > +                2 sources: 0 - data ready, 1 - threshold event
-> 
-> > +  - irq-map : irq sub-node defining interrupt map
-> > +             (all properties listed below are required):
-> 
-> So, this node isn't required.
-> 
-> > +      - #interrupt-cells : should be 1
-> 
-> > +      - #address-cells : should be 0
-> > +      - #size-cells : should be 0
-> 
-> There are no addressed entities in this node, so I don't see why those
-> two properties are needed.
-> 
-> > +      - interrupt-map : table of entries consisting of three child elements:
-> > +         - unit_interrupt_specifier - 0 : data ready, 1 : threshold event
-> > +         - interrupt parent phandle
-> > +         - parent unit interrupt specifier consisiting of two elements:
-> > +             - index of the interrupt within the controller
-> > +             - flags : should be 0
-> 
-> It's up to the binding for the node referenced by the phandle to define
-> how many cells need be present for "flags", and their meaning. This
-> binding shouldn't attempt to describe those. Equally, the concept of
-> interrupt-map should be defined elsewwere (e.g.
-> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt);
-> it's a generic that shouldn't need duplication in each binding that uses
-> interrupts.
-> 
-> > +Example:
-> > +
-> > +lps331ap@5d {
-> > +       compatible = "st,lps331ap";
-> > +       reg = <0x5d>;
-> > +       drdy-int-pin = /bits/ 8 <2>;
-> > +       interrupt-parent = <&irq_map>;
-> > +       interrupts = <0>, <1>;
-> > +
-> > +       irq_map: irq-map {
-> > +               #interrupt-cells = <1>;
-> > +               #address-cells = <0>;
-> > +               #size-cells = <0>;
-> > +               interrupt-map = <0 &gpf0 5 0>;
-> > +       };
-> > +};
-> > 
-> > And here is how the driver uses this information:
-> > 
-> >  - if interrupt-map is empty then the driver configures
-> >    itself to work without interrupt support
-> 
-> The presence or lack of interrupt support should be driven by the
-> presence of the interrupts property. interrupt-map should only be used
-> (if present) to assist in the parsing of the interrupts property.
-> 
-> >  - if only one interrupt source is available then the driver
-> >    configures the device to generate data ready interrupts on
-> >    the corresponding INTx pin (in this case the driver must know which
-> >    of the device pins is routed to the cpu -
-> >    st,data-ready-interrupt-pin property conveys this information)
-> >  - if both interrupt sources are available then the driver configures
-> >    the device to generate data ready interrupts on the interrupt pin
-> >    corresponding to the interrupt source with index 0 and event
-> >    interrupts to the interrupt source with index 1.
-> >
-> > This solution seems to be a little awkward so I'd like to ask
-> > if there is any neater way to handle presented requirements.
-> > The solution must facilitate passing information about two
-> > interrupt sources two the I2C driver. I have been unable to find
-> > similar solution in the kernel so far.
-> 
-> Indeed. I think it would be better to work as follows:
-> 
-> interrupts: contains one or two interrupt specifiers. The first entry
-> always defines the data ready interrupt. The second entry, if present,
-> defines the threshold event interrupt. This at least allows the
-> following combinations to be very simple expressed:
-> 
-> * no interrrupts
-> * just data
-> * both data and threshold (assuming they're routed to the same parent)
-> 
-> (you could swap the order if it's likely to be more common to have just
-> a threshold interrupt without any data interrupt).
-> 
-> In order to allow the presence of a threshold interrupt but no data
-> interrupt, then I think you would need interrupt-map:
-> 
-> lps331ap: lps331ap@5d {
-> 	compatible = "st,lps331ap";
-> 	reg = <0x5d>;
-> 	interrupt-parent = <&lps331ap>;
-> 	interrupts = <0>, <1>;
-> 	interrupt-map =	<0 0>, /* nowhere */
-> 			<1 &gpf0 6 0>;
-> };
+From: Felipe Balbi <balbi@ti.com>
 
-The interrupt-names property exists for this purpose (describing
-interrupts which may or may not be present). Describing a nonexistent
-interrupt and mapping it nowhere feels like a hack to me when we can
-describe exactly what's present.
+USB3 block has a 64KiB space, another 64KiB is
+used for the wrapper.
 
-Thanks,
-Mark.
+Without this change, resource_size() will get
+confused and driver won't probe because size
+will be negative.
+
+Signed-off-by: Felipe Balbi <balbi@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/boot/dts/omap5.dtsi |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index e643620..5c99f19 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -637,7 +637,7 @@
+ 		omap_dwc3@4a020000 {
+ 			compatible = "ti,dwc3";
+ 			ti,hwmods = "usb_otg_ss";
+-			reg = <0x4a020000 0x1000>;
++			reg = <0x4a020000 0x10000>;
+ 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -645,7 +645,7 @@
+ 			ranges;
+ 			dwc3@4a030000 {
+ 				compatible = "synopsys,dwc3";
+-				reg = <0x4a030000 0x1000>;
++				reg = <0x4a030000 0x10000>;
+ 				interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+ 				usb-phy = <&usb2_phy>, <&usb3_phy>;
+ 				tx-fifo-resize;
+-- 
+1.7.10.4
+
