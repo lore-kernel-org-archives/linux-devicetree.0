@@ -1,172 +1,64 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56325 "EHLO mail.gnudd.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932491Ab3HGKXv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:23:51 -0400
-Date: Wed, 7 Aug 2013 12:17:14 +0200
-From: Alessandro Rubini <rubini@gnudd.com>
-Subject: [PATCH 05/26] drivers/amba: add support for a PCI bridge
-Message-ID: <4de65075884a2e91111690e9b83882aefd0fa6d2.1375867291.git.rubini@gnudd.com>
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:49704 "EHLO
+	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752185Ab3HUKJe (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Wed, 21 Aug 2013 06:09:34 -0400
+Date: Wed, 21 Aug 2013 11:09:20 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH/RFC v5 1/2] DT: Add documentation for gp2ap020a00f
+ sensor
+Message-ID: <20130821100920.GA4278@e106331-lin.cambridge.arm.com>
+References: <1377010033-5190-1-git-send-email-j.anaszewski@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+In-Reply-To: <1377010033-5190-1-git-send-email-j.anaszewski@samsung.com>
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Davide Ciminaghi <ciminaghi@gnudd.com>, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jic23@kernel.org" <jic23@kernel.org>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This is a PCI driver that registers AMBA devices for the range of
-supported devices.  It is currently used by STA2X11, which exports
-AMBA peripherals under PCIe.  The original AMBA drivers work with no
-changes or minimal ones.
+On Tue, Aug 20, 2013 at 03:47:13PM +0100, Jacek Anaszewski wrote:
+> This patch adds device tree binding documentation
+> for the gp2ap020a00f proximity/als sensor.
+> 
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  .../devicetree/bindings/iio/light/gp2ap020a00f.txt |   17 +++++++++++++++++
+>  1 files changed, 17 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt b/Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt
+> new file mode 100644
+> index 0000000..a92fccd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt
+> @@ -0,0 +1,17 @@
+> +* Sharp GP2AP020A00F I2C Proximity/ALS sensor
+> +
+> +Required properties:
+> +
+> +  - compatible : should be "sharp,gp2ap020a00f"
+> +  - reg : the I2C slave address of the light sensor
+> +  - interrupts : should be interrupt line number the INT pin is routed to
 
-Signed-off-by: Alessandro Rubini <rubini@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
-Cc: Russell King <linux@arm.linux.org.uk>
----
- drivers/Kconfig         |    2 +
- drivers/amba/Kconfig    |   10 +++++
- drivers/amba/Makefile   |    1 +
- drivers/amba/pci-amba.c |   93 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 106 insertions(+), 0 deletions(-)
- create mode 100644 drivers/amba/Kconfig
- create mode 100644 drivers/amba/pci-amba.c
+Nit: DT talks in terms of "interrupt specifiers", which are
+interrupt-controller specific descriptions of interrupts. This could be
+reworded as:
 
-diff --git a/drivers/Kconfig b/drivers/Kconfig
-index aa43b91..5603bc3 100644
---- a/drivers/Kconfig
-+++ b/drivers/Kconfig
-@@ -166,4 +166,6 @@ source "drivers/reset/Kconfig"
- 
- source "drivers/fmc/Kconfig"
- 
-+source "drivers/amba/Kconfig"
-+
- endmenu
-diff --git a/drivers/amba/Kconfig b/drivers/amba/Kconfig
-new file mode 100644
-index 0000000..b5b5aca
---- /dev/null
-+++ b/drivers/amba/Kconfig
-@@ -0,0 +1,10 @@
-+
-+config PCI_AMBA
-+	tristate "PCI-to-AMBA bridge"
-+	depends on ARM_AMBA && PCI
-+	---help---
-+	  This compiles a PCI driver that registers AMBA devices, so
-+	  the respective AMBA driver can be used unchanged if you have
-+	  a PCI to amba bridge. This is required for STA2X11 support.
-+
-+	  If uncertain, choose N.
-diff --git a/drivers/amba/Makefile b/drivers/amba/Makefile
-index 66e81c2..d30e947 100644
---- a/drivers/amba/Makefile
-+++ b/drivers/amba/Makefile
-@@ -1,2 +1,3 @@
- obj-$(CONFIG_ARM_AMBA)		+= bus.o
-+obj-$(CONFIG_PCI_AMBA)		+= pci-amba.o
- obj-$(CONFIG_TEGRA_AHB)		+= tegra-ahb.o
-diff --git a/drivers/amba/pci-amba.c b/drivers/amba/pci-amba.c
-new file mode 100644
-index 0000000..8ce526a
---- /dev/null
-+++ b/drivers/amba/pci-amba.c
-@@ -0,0 +1,93 @@
-+/*
-+ * Support for AMBA devices (both APB and AHB) behind a PCI bridge
-+ * Copyright 2012 ST Microelectronics (Alessandro Rubini)
-+ * GNU GPL version 2.
-+ */
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/amba/bus.h>
-+#include <linux/pci.h>
-+#include <linux/pci_ids.h>
-+#include <linux/slab.h>
-+#include <linux/irq.h>
-+#include <linux/sizes.h>
-+
-+static int pci_amba_probe(struct pci_dev *pdev,
-+			  const struct pci_device_id *id)
-+{
-+	struct amba_device *adev;
-+	char *name;
-+	int ret;
-+
-+	pci_enable_msi(pdev);
-+	ret = pci_enable_device(pdev);
-+	if (ret)
-+		return ret;
-+
-+	/* Create a name: each of them must be different */
-+	name = devm_kzalloc(&pdev->dev, strlen(dev_name(&pdev->dev)) + 6,
-+		GFP_KERNEL);
-+	sprintf(name, "amba-%s", dev_name(&pdev->dev));
-+
-+	/* Simply build an amba device and register it */
-+	adev = amba_device_alloc(name,  pdev->resource[0].start, SZ_4K);
-+	if (!adev)
-+		return -ENOMEM;
-+	adev->irq[0] = pdev->irq;
-+
-+	/* This bridge can host both APB and AHB devices, so set master */
-+	pci_set_master(pdev);
-+	if (pdev->vendor == PCI_VENDOR_ID_STMICRO) {
-+		/* Under sta2x11, DMA is there but limited to 512M */
-+		adev->dma_mask = SZ_512M - 1;
-+		adev->dev.coherent_dma_mask = SZ_512M - 1;
-+	}
-+
-+	adev->dev.platform_data = pdev->dev.platform_data;
-+	pci_set_drvdata(pdev, adev);
-+
-+	return amba_device_add(adev, &pdev->resource[0]);
-+};
-+
-+static void pci_amba_remove(struct pci_dev *pdev)
-+{
-+	struct amba_device *adev = pci_get_drvdata(pdev);
-+	amba_device_unregister(adev);
-+	pci_disable_msi(pdev);
-+}
-+
-+static DEFINE_PCI_DEVICE_TABLE(pci_amba_table) = {
-+	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_UART_HWFC)},
-+	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_UART_NO_HWFC)},
-+	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_SOC_DMA)},
-+	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_I2C)},
-+	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_SPI_HS)},
-+	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_SDIO_EMMC)},
-+	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_SDIO)},
-+	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_AUDIO_ROUTER_DMA)},
-+	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_AUDIO_ROUTER_MSPS)},
-+	{0,}
-+};
-+
-+static struct pci_driver pci_amba_driver = {
-+	.name		= "pci-amba",
-+	.id_table	= pci_amba_table,
-+	.probe		= pci_amba_probe,
-+	.remove		= pci_amba_remove,
-+};
-+
-+static int __init pci_amba_init(void)
-+{
-+	return pci_register_driver(&pci_amba_driver);
-+}
-+
-+static void __exit pci_amba_exit(void)
-+{
-+	pci_unregister_driver(&pci_amba_driver);
-+}
-+
-+module_init(pci_amba_init);
-+module_exit(pci_amba_exit);
-+
-+MODULE_LICENSE("GPL");
--- 
-1.7.7.2
+ - interrupts : an interrupt specifier for the sole interrupt generated
+                by the device
+
+> +  - vled-supply : VLED power supply, as covered in ../regulator/regulator.txt
+
+You don't seem to have mentioned this is part of the unit, as discussed
+last time [1]. As not all light sensors have embedded LEDs, for clarity
+it would be worth mentioning that this is part of the unit.
+
+Thanks,
+Mark.
+
+[1] http://marc.info/?l=linux-iio&m=137707379614385&w=2
