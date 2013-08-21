@@ -1,25 +1,23 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from service87.mimecast.com ([91.220.42.44]:39343 "EHLO
+Received: from service87.mimecast.com ([91.220.42.44]:36337 "EHLO
 	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751722Ab3HUMhI convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 08:37:08 -0400
-Message-ID: <1377088624.10707.23.camel@hornet>
+	with ESMTP id S1751463Ab3HUMes convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 08:34:48 -0400
+Message-ID: <1377088482.10707.22.camel@hornet>
 Subject: Re: passing two interrupts two an I2C driver
 From: Pawel Moll <pawel.moll@arm.com>
-Date: Wed, 21 Aug 2013 13:37:04 +0100
+Date: Wed, 21 Aug 2013 13:34:42 +0100
+In-Reply-To: <5214AA52.2060209@samsung.com>
 References: <520E3B8F.9010800@samsung.com> <520E7417.3090606@wwwdotorg.org>
 	 <20130819084227.GC3719@e106331-lin.cambridge.arm.com>
 	 <5214AA52.2060209@samsung.com>
-In-Reply-To: <5214AA52.2060209@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>, "lars@metafoo.de" <lars@metafoo.de>, "l.czerwinski@samsung.com" <l.czerwinski@samsung.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>, "lars@metafoo.de" <lars@metafoo.de>, "l.czerwinski@samsung.com" <l.czerwinski@samsung.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
-
-[resending, this time really copying Wolfram and linux-i2c...]
 
 On Wed, 2013-08-21 at 12:53 +0100, Jacek Anaszewski wrote:
 >  From what I've figured out in order to obtain the interrupt id
@@ -60,6 +58,5 @@ I've copied Wolfram and the I2C mailing list in hope of them shedding
 some light at the matter.
 
 Pawel
-
 
 
