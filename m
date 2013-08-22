@@ -1,63 +1,64 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mailout1.samsung.com ([203.254.224.24]:30517 "EHLO
-	mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753600Ab3HWKCX (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 06:02:23 -0400
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v4 0/7] ARM: dts: add support for exynos hdmi subsystem
-Date: Fri, 23 Aug 2013 15:54:14 +0530
-Message-id: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:32785 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752466Ab3HVMah (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 08:30:37 -0400
+Date: Thu, 22 Aug 2013 13:30:04 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130822123004.GG26118@sirena.org.uk>
+References: <1376216117-5864-1-git-send-email-wangyuhang2014@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="d3slIU+tL1lDaIh/"
+Content-Disposition: inline
+In-Reply-To: <1376216117-5864-1-git-send-email-wangyuhang2014@gmail.com>
+Subject: Re: [PATCH v3 1/2]spi: DUAL and QUAD support
 Sender: devicetree-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+To: wangyuhang <wangyuhang2014@gmail.com>
+Cc: sourav.poddar@ti.com, pekon@ti.com, tpiepho@gmail.com, spi-devel-general@lists.sourceforge.net, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-It adds Device tree nodes and clocks information for HDMI subsystem
-for exynos5420 and exynos5250 SoCs. It adds pinctrl node for hdmi
-hpd gpio and update binding documents.
 
-This set is based on kukjin's for-next branch at
-http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
+--d3slIU+tL1lDaIh/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-v4:
-1) Remove the movement of common properties to Exynos5.dtsi for
-I2C and hdmi subsystem.
-2) Change the title of the patches.
+On Sun, Aug 11, 2013 at 06:15:17PM +0800, wangyuhang wrote:
 
-v3:
-1) Rebase to kgene for-next based on 3.11-rc1.
-2) Changes clock numbers as per updated clocks file for
-exyno5250 and exynos5420.
-3) Dropped Sachin patch as already got merged.
+Applied, this looks good thanks.  A few coding style issues which I'll
+fix up myself but one thing:
 
-v2:
-1) Added patch for moving common i2c properties to exynos5.dtsi
-2) Added patch for moving common hdmi, mixer properties to exynos5.dtsi
-3) moved hpd pinctrl node to board file.
-4) Added Sachin's patch to update binding document for hdmi with hpd
-information.
+> fix the previous patch some mistake below:
+> 1. DT in slave node, use "spi-tx-nbits = <1/2/4>" in place of using
+>    "spi-tx-dual, spi-tx-quad" directly, same to rx. So correct the
+>    previous way to get the property in @of_register_spi_devices().
 
-Andrew Bresticker (1):
-  ARM: dts: add i2c device nodes for Exynos5420
+This new DT stuff needs to be reviewed on the devicetree list and
+documented in the generic SPI bindings.  Can you please send a patch
+doing that?
 
-Rahul Sharma (5):
-  ARM: dts: add clocks to hdmi dt node for exynos5250
-  ARM: dts: add dt nodes for hdmi subsystem for exynos5420
-  ARM: dts: add clocks for hdmi subsystem for exynos5420
-  ARM: dts: add hdmi hpd gpio pinctrl node for exynos5420
-  of/documentation: update with clock information for exynos hdmi
-    subsystem
+Please also note that the SPI list moved to vger.
 
-Sean Paul (1):
-  ARM: dts: add mixer clocks to mixer node for Exynos5250
+--d3slIU+tL1lDaIh/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
- .../devicetree/bindings/video/exynos_hdmi.txt      |   14 +++-
- .../devicetree/bindings/video/exynos_mixer.txt     |    4 ++
- arch/arm/boot/dts/exynos5250.dtsi                  |    8 ++-
- arch/arm/boot/dts/exynos5420-smdk5420.dts          |   30 ++++++++
- arch/arm/boot/dts/exynos5420.dtsi                  |   76 ++++++++++++++++++++
- 5 files changed, 128 insertions(+), 4 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
--- 
-1.7.10.4
+iQIcBAEBAgAGBQJSFgRJAAoJELSic+t+oim9Y4cP/A+tI6TPBpRCfdJMK2tXx6Lp
+yV/gHFnf8xRuI71AeybCZD6Qzw6v2NiUf+YtZsturgmK1h44jKUzq9NwsEtw2/xA
+yuO4RwEqrtpZY/gTNCYilkRWuDJJf7ySZWG4srhUqV97qP8ygcemmpxG3e9Kcboh
+xfFMDPo0mFlup7qnz9Q/9gPBVEjgqq0h35yDUM/s7yuHmfwMex71TMCfpnABUejn
+DYldEmyqaM0BVi/kfyKrhiXm7E+FIQ1udsKrVyoCSkP5cJZ/pF7342FSKqi+8d/Q
+ATrJM4jCUlE2ILs6RD5E91+Z0p0oUPHD/iLKLs2JeGhEr0tBUteaAwDh2XgP88dn
+CceEKl3eeAk6ofOncaw7YFhsdc13gzU3JNLW4Dzy6bLJ63hIxK7G5V2oiWMi/GWK
+kLn73kHVNIQKDR6DgCqYkDQh4yDLqeIx5TFjiUQgesW+gna8+uqIDSQ9vEcWwRWX
+isMA4nzHCCejBCMrnt0cNKgdKDdz/QGSY7ThVuurLt11hSTfKRlPcV522cZKzB6j
+q3Q40SZ8dMQ1lNPN2y+NMFSmsQ4+B1NLX8aYbJYaU6yDkhDqsIf/JAfSpg3HvXYR
+LhpsrX2W8Oc9KCSaBEy1bXIUT0JQbPLPyEEMFJ8aJy0zPlhW9DLzfASpBXlC8O02
+F65cIZ4cUcARp1ReJJYE
+=1RbE
+-----END PGP SIGNATURE-----
 
+--d3slIU+tL1lDaIh/--
