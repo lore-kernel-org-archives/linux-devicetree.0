@@ -1,66 +1,151 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from vaxjo.synopsys.com ([198.182.60.75]:43976 "EHLO
-	vaxjo.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753841Ab3HVVYw (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 17:24:52 -0400
-From: Paul Zimmerman <Paul.Zimmerman@synopsys.com>
-Subject: RE: [PATCH v4 2/3] usb: phy: Add Qualcomm SS-USB and HS-USB drivers
+Received: from bear.ext.ti.com ([192.94.94.41]:38814 "EHLO bear.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752804Ab3HVUmQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Thu, 22 Aug 2013 16:42:16 -0400
+Date: Thu, 22 Aug 2013 15:41:30 -0500
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v4 2/3] usb: phy: Add Qualcomm SS-USB and HS-USB drivers
  for DWC3 core
-Date: Thu, 22 Aug 2013 21:24:49 +0000
-Message-ID: <A2CA0424C0A6F04399FB9E1CD98E030458DECB7C@US01WEMBX2.internal.synopsys.com>
-References: <1376992565-22292-1-git-send-email-iivanov@mm-sol.com>
-	 <1376992565-22292-3-git-send-email-iivanov@mm-sol.com>
-	 <20130820122907.GU26587@radagast>
-	 <1377005543.26268.22.camel@iivanov-dev.int.mm-sol.com>
-	 <20130820133712.GC26587@radagast>
-	 <1377007751.26268.27.camel@iivanov-dev.int.mm-sol.com>
-	 <20130820143319.GG26587@radagast>
-	 <1377010458.26268.30.camel@iivanov-dev.int.mm-sol.com>
-	 <8691FDFE-326E-4198-838A-202D9EC988E1@codeaurora.org>
- <1377012381.26268.42.camel@iivanov-dev.int.mm-sol.com>
-In-Reply-To: <1377012381.26268.42.camel@iivanov-dev.int.mm-sol.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Message-ID: <20130822204130.GP28420@radagast>
+Reply-To: <balbi@ti.com>
+References: <1377005543.26268.22.camel@iivanov-dev.int.mm-sol.com>
+ <20130820133712.GC26587@radagast>
+ <1377007751.26268.27.camel@iivanov-dev.int.mm-sol.com>
+ <20130820143319.GG26587@radagast>
+ <1377010458.26268.30.camel@iivanov-dev.int.mm-sol.com>
+ <8691FDFE-326E-4198-838A-202D9EC988E1@codeaurora.org>
+ <1377011163.31445.30.camel@hornet>
+ <1377018092.31445.42.camel@hornet>
+ <1377090364.15070.13.camel@iivanov-dev.int.mm-sol.com>
+ <68B25A45-443C-4CC0-9933-80A3D290B557@codeaurora.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pzbqGaOtRNiVr7w4"
+Content-Disposition: inline
+In-Reply-To: <68B25A45-443C-4CC0-9933-80A3D290B557@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>
-Cc: "balbi@ti.com" <balbi@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "idos@codeaurora.org" <idos@codeaurora.org>, "mgautam@codeaurora.org" <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Paul Zimmerman <paul.zimmerman@synopsys.com>
+To: Kumar Gala <galak@codeaurora.org>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Pawel Moll <pawel.moll@arm.com>, "balbi@ti.com" <balbi@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Rutland <Mark.Rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "idos@codeaurora.org" <idos@codeaurora.org>, "mgautam@codeaurora.org" <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Paul Zimmerman <paul.zimmerman@synopsys.com>
 List-ID: <devicetree@vger.kernel.org>
 
-PiBGcm9tOiBJdmFuIFQuIEl2YW5vdiBbbWFpbHRvOmlpdmFub3ZAbW0tc29sLmNvbV0NCj4gU2Vu
-dDogVHVlc2RheSwgQXVndXN0IDIwLCAyMDEzIDg6MjYgQU0NCj4gDQo+IE9uIFR1ZSwgMjAxMy0w
-OC0yMCBhdCAxMDowMSAtMDUwMCwgS3VtYXIgR2FsYSB3cm90ZToNCj4gPiBPbiBBdWcgMjAsIDIw
-MTMsIGF0IDk6NTQgQU0sIEl2YW4gVC4gSXZhbm92IHdyb3RlOg0KPiA+DQo+ID4gPg0KPiA+ID4g
-SGksDQo+ID4gPg0KPiA+ID4gT24gVHVlLCAyMDEzLTA4LTIwIGF0IDA5OjMzIC0wNTAwLCBGZWxp
-cGUgQmFsYmkgd3JvdGU6DQo+ID4gPj4gT24gVHVlLCBBdWcgMjAsIDIwMTMgYXQgMDU6MDk6MTFQ
-TSArMDMwMCwgSXZhbiBULiBJdmFub3Ygd3JvdGU6DQo+ID4gPj4+DQo+ID4gPj4+IE9uIFR1ZSwg
-MjAxMy0wOC0yMCBhdCAwODozNyAtMDUwMCwgRmVsaXBlIEJhbGJpIHdyb3RlOg0KPiA+ID4+Pj4N
-Cj4gPiA+Pj4+IE9uIFR1ZSwgQXVnIDIwLCAyMDEzIGF0IDA0OjMyOjIzUE0gKzAzMDAsIEl2YW4g
-VC4gSXZhbm92IHdyb3RlOg0KPiA+ID4+Pj4+DQo+ID4gPj4+Pj4gSSB0aGluayB0aGV5IGFyZSBT
-TlBTIERlc2lnbldhcmUgUEhZJ3MsIGFkZGl0aW9uYWxseQ0KPiA+ID4+Pj4+IHdyYXBwZWQgd2l0
-aCBRdWFsY29tbSBsb2dpYy4gSSBjb3VsZCBzdWJzdGl0dXRlICJkd2MzIg0KPiA+ID4+Pj4+IHdp
-dGgganVzdCAiZHciLCB3aGljaCB3aWxsIGJlIG1vcmUgY29ycmVjdC4NCj4gPiA+Pj4+DQo+ID4g
-Pj4+PiBhbHJpZ2h0LCB0aGFuayB5b3UuIExldCdzIGFkZCBQYXVsIHRvIHRoZSBsb29wIHNpbmNl
-IGhlIG1pZ2h0IGhhdmUgdmVyeQ0KPiA+ID4+Pj4gZ29vZCBpbnNpZ2h0IGluIHRoZSBzeW5vcHN5
-cyBQSFlzLg0KPiA+ID4+Pj4NCj4gPiA+Pj4+IG1lbnRhbCBub3RlOiBpZiBhbnkgb3RoZXIgcGxh
-dGZvcm0gc2hvd3MgdXAgd2l0aCBTeW5vcHN5cyBQSFksIGFzayB0aGVtDQo+ID4gPj4+PiB0byB1
-c2UgdGhpcyBkcml2ZXIgaW5zdGVhZCA6LSkNCj4gPiA+Pj4NCj4gPiA+Pj4gSSByZWFsbHkgZG91
-YnQgdGhhdCB0aGlzIHdpbGwgYmkgcG9zc2libGUuIENvbnRyb2wgb2YgdGhlIFBIWSdzIGlzDQo+
-ID4gPj4+IG5vdCBkaXJlY3RseSB0cm91Z2ggVUxQSSwgVVRNSSBvciBQSVBFMyBpbnRlcmZhY2Vz
-LCBidXQgdHJvdWdoDQo+ID4gPj4+IFFTQ1JBVENIIHJlZ2lzdGVycywgd2hpY2ggb2YgY291cnNl
-IGlzIGhpZ2hseSBRdWFsY29tbSBzcGVjaWZpYy4NCj4gPiA+Pg0KPiA+ID4+IGlzbid0IGl0IGEg
-bWVtb3J5IG1hcHBlZCBJUCA/IGRvZXNuJ3Qgc3lub3BzeXMgcHJvdmlkZSB0aGVpciBvd24gc2V0
-IG9mDQo+ID4gPj4gcmVnaXN0ZXJzID8NCj4gPiA+DQo+ID4gPiBGcm9tIHdoYXQgSSBzZWUgaXQg
-aXMgbm90IGRpcmVjdGx5IG1hcHBlZC4gSG93IFFTQ1JBVENIIHdyaXRlIGFuZA0KPiA+ID4gcmVh
-ZHMgdHJhbnNhY3Rpb25zIGFyZSB0cmFuc2xhdGVkIHRvIERXIElQIGlzIHVuY2xlYXIgdG8gbWUu
-DQo+ID4NCj4gPg0KPiA+IEkgdGhpbmsgdGhlIHF1ZXN0aW9uIGlzIGhvdyBkb2VzIFNXIGFjY2Vz
-cyB0aGVtPw0KPiANCj4gIlVTQiBRU0NSQVRDSCBIYXJkd2FyZSByZWdpc3RlcnMiIGRvbid0IGFz
-ayBtZSB3aGF0IGlzIHRoaXMgOi0pDQo+IG9yIGxpa2UgUGF3ZWwgc2F5czogIml0IGRlcGVuZHMg
-b24gdGhlIFNPQyIgLg0KDQpUbyBhbnN3ZXIgdGhlIHF1ZXN0aW9uICJkb2Vzbid0IHN5bm9wc3lz
-IHByb3ZpZGUgdGhlaXIgb3duIHNldCBvZg0KcmVnaXN0ZXJzIiwgd2UgcHJvdmlkZSByZWdpc3Rl
-cnMgaW4gb3VyIFVTQiBjb3JlcyB0byBhY2Nlc3MgdGhlIFBIWXMNCnRocm91Z2ggSTJDLCBVTFBJ
-L1VUTUksIG9yIFBJUEUzIGludGVyZmFjZXMuIEJ1dCBpZiBzb21lb25lIHdhbnRzIHRvIHVzZQ0K
-b3VyIFBIWSB3aXRoIHNvbWUgb3RoZXIgY29udHJvbGxlciB0aGF0IGRvZXNuJ3QgcHJvdmlkZSB0
-aGF0LCB0aGVuIHRoZXkNCm1heSBuZWVkIHRvIGltcGxlbWVudCB0aGVpciBvd24gcmVnaXN0ZXIg
-c2V0LCBhcyBRdWFsY29tbSBoYXMgYXBwYXJlbnRseQ0KZG9uZS4NCg0KLS0gDQpQYXVsDQoNCg==
+--pzbqGaOtRNiVr7w4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Aug 21, 2013 at 10:13:28AM -0500, Kumar Gala wrote:
+>=20
+> On Aug 21, 2013, at 8:06 AM, Ivan T. Ivanov wrote:
+>=20
+> > On Tue, 2013-08-20 at 18:01 +0100, Pawel Moll wrote:=20
+> >> On Tue, 2013-08-20 at 16:06 +0100, Pawel Moll wrote:
+> >>> On Tue, 2013-08-20 at 16:01 +0100, Kumar Gala wrote:
+> >>>> On Aug 20, 2013, at 9:54 AM, Ivan T. Ivanov wrote:
+> >>>>=20
+> >>>>>=20
+> >>>>> Hi,=20
+> >>>>>=20
+> >>>>> On Tue, 2013-08-20 at 09:33 -0500, Felipe Balbi wrote:=20
+> >>>>>> On Tue, Aug 20, 2013 at 05:09:11PM +0300, Ivan T. Ivanov wrote:
+> >>>>>>> Hi,
+> >>>>>>>=20
+> >>>>>>> On Tue, 2013-08-20 at 08:37 -0500, Felipe Balbi wrote:=20
+> >>>>>>>> Hi,
+> >>>>>>>>=20
+> >>>>>>>> On Tue, Aug 20, 2013 at 04:32:23PM +0300, Ivan T. Ivanov wrote:
+> >>>>>>>>>> On Tue, Aug 20, 2013 at 12:56:04PM +0300, Ivan T. Ivanov wrote:
+> >>>>>>>>>>> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> >>>>>>>>>>>=20
+> >>>>>>>>>>> These drivers handles control and configuration of the HS
+> >>>>>>>>>>> and SS USB PHY transceivers. They are part of the driver
+> >>>>>>>>>>> which manage Synopsys DesignWare USB3 controller stack
+> >>>>>>>>>>> inside Qualcomm SoC's.
+> >>>>>>>>>>>=20
+> >>>>>>>>>>> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> >>>>>>>>>>> ---
+> >>>>>>>>>>> drivers/usb/phy/Kconfig           |   11 ++
+> >>>>>>>>>>> drivers/usb/phy/Makefile          |    2 +
+> >>>>>>>>>>> drivers/usb/phy/phy-msm-dwc3-hs.c |  327 ++++++++++++++++++++=
+++++++++++++
+> >>>>>>>>>>> drivers/usb/phy/phy-msm-dwc3-ss.c |  374 ++++++++++++++++++++=
++++++++++++++++++
+> >>>>>>>>>>=20
+> >>>>>>>>>> please rename these PHY drivers, they have nothing to do with =
+DWC3. PHYs
+> >>>>>>>>>> don't care about the USB controller.
+> >>>>>>>>>=20
+> >>>>>>>>> I think they are SNPS DesignWare PHY's, additionally
+> >>>>>>>>> wrapped with Qualcomm logic. I could substitute "dwc3"
+> >>>>>>>>> with just "dw", which will be more correct.
+> >>>>>>>>=20
+> >>>>>>>> alright, thank you. Let's add Paul to the loop since he might ha=
+ve very
+> >>>>>>>> good insight in the synopsys PHYs.
+> >>>>>>>>=20
+> >>>>>>>> mental note: if any other platform shows up with Synopsys PHY, a=
+sk them
+> >>>>>>>> to use this driver instead :-)
+> >>>>>>>=20
+> >>>>>>> I really doubt that this will bi possible. Control of the PHY's is
+> >>>>>>> not directly trough ULPI, UTMI or PIPE3 interfaces, but trough
+> >>>>>>> QSCRATCH registers, which of course is highly Qualcomm specific.
+> >>>>>>=20
+> >>>>>> isn't it a memory mapped IP ? doesn't synopsys provide their own s=
+et of
+> >>>>>> registers ?
+> >>>>>=20
+> >>>>> From what I see it is not directly mapped. How QSCRATCH write and
+> >>>>> reads transactions are translated to DW IP is unclear to me.
+> >>>>=20
+> >>>>=20
+> >>>> I think the question is how does SW access them?
+> >>>=20
+> >>> I afraid the answer may be: "it depends on the SOC". In my past I had=
+ to
+> >>> initialize a (SATA) PHY by implementing a software JTAG state machine,
+> >>> as the PHY's registers were not memory mapped *at all*. And the IP
+> >>> itself came from Synopsys, Cadence or yet another EDA company...
+> >>=20
+> >> Having said all that... If the PHY's spec at least defined layout of t=
+he
+> >> registers in question and driver was using regmap API to talk to the
+> >> device (initially regmap-mmio), it has some chances to become universa=
+l.
+> >> The SOCs designed like "my" one would have to provide a custom regmap
+> >> implementation.
+> >=20
+> > Sound reasonable. Unfortunately I don't have PHY's IP spec.=20
+>=20
+> Looking into this it appears that the register wrapper around the IP
+> is most likely highly specific to qualcomm as I'm not seeing a
+> register interface around the DWC HS PHY.
+
+Then it's set, we'll go with this driver :-)
+
+--=20
+balbi
+
+--pzbqGaOtRNiVr7w4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSFnd6AAoJEIaOsuA1yqRELxkQAIy2huhKZMMuoua7XhQVV2LD
+3yCZDPLNBsmdbKFRNcnI0pv7m1flJjy4cjCG33Yu38pv1JKC4f17wC32a5rWMtec
+VcEAQwUU6jJYF+BALvKkntu4bxMIlwIrw6G1ZGhzdOvfpBt305CtfbSu/A0DUcFh
+gZJHbiDe+SOH2kdY9O+TL1qbUXBAX04TdAvzA2IQ+cfyG0o/5f39sHoQ/oXiLja1
+JXcEvXg0xNcYYEZTMft+CeaJ0F0q8F1lFpE89+NkRaSiJIESFQimStxb9BDN3BTe
+Nnt1ypQLDKZq8LtmRVEwsBr4UOyTnzMSisLrPnnV28B8XVfYxwkvRCVU/xJrkQXe
+ucZbq77Vp4B0YHkZyglSrtRnn8wAdlc2HPXVtdUftYKQtGo5iDgHlKt/mI9xDzCM
+ynOYN/UN7UhOqAS/SUoTa8Z3Q+N/RUypGfwLTy7WoTHlyMG/Xc9yHzZphHqK0SgE
+851NhpGpbMFGz6sm7l/R+pwUYbW/pZhaqVsm7qWigacFvpgdNOkQuuU8gpSn862F
+VLlgRE0gKV051eXfjhSQXTHM2Gc05uTWXywYv+b2sIU/IL8yMTBT6ANYbQS9uK3t
+f78SqvbEf8FZQcXGj7KzSatOEqwSnkrI1PIOIvQNxSJLVWgNXHaQmWx827r8ufTv
+AIfEwOsdw4kPVuKSXI4j
+=WR9r
+-----END PGP SIGNATURE-----
+
+--pzbqGaOtRNiVr7w4--
