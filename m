@@ -1,54 +1,61 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mailout3.samsung.com ([203.254.224.33]:50833 "EHLO
-	mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751915Ab3HUPGh (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 11:06:37 -0400
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH/RFC v6 1/2] DT: Add documentation for gp2ap020a00f sensor
-Date: Wed, 21 Aug 2013 17:06:20 +0200
-Message-id: <1377097580-4492-1-git-send-email-j.anaszewski@samsung.com>
+Received: from arroyo.ext.ti.com ([192.94.94.40]:33667 "EHLO arroyo.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753853Ab3HVFOy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Thu, 22 Aug 2013 01:14:54 -0400
+Message-ID: <52159E37.90501@ti.com>
+Date: Thu, 22 Aug 2013 10:44:31 +0530
+From: George Cherian <george.cherian@ti.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/2] extcon: extcon-dra7xx: Add extcon driver for USB
+ ID detection
+References: <1376648029-30659-1-git-send-email-george.cherian@ti.com> <1376648029-30659-2-git-send-email-george.cherian@ti.com> <52127284.6030506@wwwdotorg.org> <521312CC.8060003@ti.com> <52139F0F.6090507@wwwdotorg.org> <5214BB6C.3060903@ti.com> <5214FA64.3040902@wwwdotorg.org>
+In-Reply-To: <5214FA64.3040902@wwwdotorg.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org
-Cc: devicetree@vger.kernel.org, jic23@kernel.org, kyungmin.park@samsung.com, s.nawrocki@samsung.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, Jacek Anaszewski <j.anaszewski@samsung.com>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: balbi@ti.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, bcousson@baylibre.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds device tree binding documentation
-for the gp2ap020a00f proximity/als sensor.
+On 8/21/2013 11:05 PM, Stephen Warren wrote:
+> On 08/21/2013 07:06 AM, George Cherian wrote:
+>> Hi Stephen,
+>>
+>> On 8/20/2013 10:23 PM, Stephen Warren wrote:
+>>>>> ID pins are connected to pcf8575, and the pcf8575's interrupt line is
+>>>>> inturn connected to
+>>>>> gpio bank6 pin 11, we use this gpio interrupt to detect the ID pin
+>>>> change.
+>>> In that case, the PCF8575 node needs to be a GPIO controller and an IRQ
+>>> controller, as does the driver for the PCF8575. This binding should have
+>>> a single entry in the gpios property, and the driver can call
+>>> gpio_to_irq() on that so it knows which IRQ to request.
+>> You meant some thing like this?
+>>
+>>         pcf_usb: pcf8575@21 {
+>>                  compatible = "ti,pcf8575";
+>>                  reg = <0x21>;
+>>                  gpio-controller;
+>>                  #gpio-cells = <2>;
+>>                  interrupt-parent = <&gpio6>;
+>>                  interrupts = <11 2>;
+>>                  interrupt-controller;
+>>                  #interrupt-cells = <2>;
+>>       };
+>>
+>>       usb_vid_gpio {
+>>                  compatible = "ti,dra7xx-usb";
+>>                  gpios = <&pcf_usb 1 0>;
+>>       };
+> Yes.
+>
+> Except that the compatible value for the usb_vid_gpio node still looks
+> wrong, since I think that node isn't anything to do with any particular SoC.
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- .../devicetree/bindings/iio/light/gp2ap020a00f.txt |   21 ++++++++++++++++++++
- 1 files changed, 21 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt
+Yes will fix that too in v2.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt b/Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt
-new file mode 100644
-index 0000000..9231c82
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/gp2ap020a00f.txt
-@@ -0,0 +1,21 @@
-+* Sharp GP2AP020A00F I2C Proximity/ALS sensor
-+
-+The proximity detector sensor requires power supply
-+for its built-in led. It is also defined by this binding.
-+
-+Required properties:
-+
-+  - compatible : should be "sharp,gp2ap020a00f"
-+  - reg : the I2C slave address of the light sensor
-+  - interrupts : interrupt specifier for the sole interrupt generated
-+		 by the device
-+  - vled-supply : VLED power supply, as covered in ../regulator/regulator.txt
-+
-+Example:
-+
-+gp2ap020a00f@39 {
-+	compatible = "sharp,gp2ap020a00f";
-+	reg = <0x39>;
-+	interrupts = <2 0>;
-+	vled-supply = <...>;
-+};
+
 -- 
-1.7.5.4
+-George
 
