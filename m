@@ -1,173 +1,136 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from bear.ext.ti.com ([192.94.94.41]:54486 "EHLO bear.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753923Ab3HVH5u (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 22 Aug 2013 03:57:50 -0400
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH v5 1/4] ARM: OMAP2+: cleaned-up DT support of various
- ECC schemes
-Date: Thu, 22 Aug 2013 07:56:57 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9F9E94@DBDE04.ent.ti.com>
+Received: from mail-pd0-f180.google.com ([209.85.192.180]:49664 "EHLO
+	mail-pd0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753187Ab3HVEze (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 00:55:34 -0400
+Received: by mail-pd0-f180.google.com with SMTP id y10so1382520pdj.11
+        for <devicetree@vger.kernel.org>; Wed, 21 Aug 2013 21:55:34 -0700 (PDT)
+Date: Wed, 21 Aug 2013 21:54:52 -0700
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v5 1/4] ARM: OMAP2+: cleaned-up DT support of various ECC
+ schemes
+Message-ID: <20130822045452.GA5151@quad.lixom.net>
 References: <1373748891-7779-1-git-send-email-pekon@ti.com>
  <1373748891-7779-2-git-send-email-pekon@ti.com>
- <20130822045452.GA5151@quad.lixom.net>
-In-Reply-To: <20130822045452.GA5151@quad.lixom.net>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1373748891-7779-2-git-send-email-pekon@ti.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, "zonque@gmail.com" <zonque@gmail.com>
-Cc: "dedekind1@gmail.com" <dedekind1@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "N, Mugunthan V" <mugunthanvnm@ti.com>, "tony@atomide.com" <tony@atomide.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Pekon Gupta <pekon@ti.com>
+Cc: dedekind1@gmail.com, dwmw2@infradead.org, arnd@arndb.de, mugunthanvnm@ti.com, tony@atomide.com, benoit.cousson@linaro.org, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-PiANCj4gT24gU3VuLCBKdWwgMTQsIDIwMTMgYXQgMDI6MjQ6NDhBTSArMDUzMCwgUGVrb24gR3Vw
-dGEgd3JvdGU6DQo+ID4gRUNDIHNjaGVtZSBvbiBOQU5EIGRldmljZXMgY2FuIGJlIGltcGxlbWVu
-dGVkIGluIG11bHRpcGxlIHdheXMuU29tZQ0KPiB1c2luZw0KPiA+IFNvZnR3YXJlIGFsZ29yaXRo
-bSwgd2hpbGUgb3RoZXJzIHVzaW5nIGluLWJ1aWxkIEhhcmR3YXJlIGVuZ2luZXMuDQo+ID4gb21h
-cDItbmFuZCBkcml2ZXIgY3VycmVudGx5IHN1cHBvcnRzIGZvbGxvd2luZyBmbGF2b3VycyBvZiBF
-Q0Mgc2NoZW1lcywNCj4gPiBzZWxlY3RhYmxlIHZpYSBEVEIuDQo+ID4NCj4gPiArLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0t
-LS0tLS0rDQo+ID4gfCBFQ0Mgc2NoZW1lICAgICAgICAgICAgICAgICAgICAgICAgICAgIHxFQ0Mg
-Y2FsY3VsYXRpb258RXJyb3IgZGV0ZWN0aW9ufA0KPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLSsNCj4gPiB8
-T01BUF9FQ0NfSEFNTUlOR19DT0RFX0RFRkFVTFQgICAgICAgICAgfFMvVyAgICAgICAgICAgIHxT
-L1cgICAgICAgICAgICB8DQo+ID4gfE9NQVBfRUNDX0hBTU1JTkdfQ09ERV9IVyAgICAgICAgICAg
-ICAgIHxIL1cgKEdQTUMpICAgICB8Uy9XICAgICAgICAgICAgfA0KPiA+IHxPTUFQX0VDQ19IQU1N
-SU5HX0NPREVfSFdfUk9NQ09ERSAgICAgICB8SC9XIChHUE1DKSAgICAgfFMvVw0KPiB8DQo+ID4g
-Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0r
-LS0tLS0tLS0tLS0tLS0tKw0KPiA+IHwocmVxdWlyZXMgQ09ORklHX01URF9OQU5EX0VDQ19CQ0gp
-ICAgICB8ICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgIHwNCj4gPiB8T01BUF9FQ0NfQkNI
-OF9DT0RFX0hXX0RFVEVDVElPTl9TVyAgICAgfEgvVyAoR1BNQykgICAgIHxTL1cNCj4gfA0KPiA+
-ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0t
-Ky0tLS0tLS0tLS0tLS0tLSsNCj4gPiB8KHJlcXVpcmVzIENPTkZJR19NVERfTkFORF9PTUFQX0JD
-SCkgICAgfCAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICB8DQo+ID4gfE9NQVBfRUNDX0JD
-SDhfQ09ERV9IVyAgICAgICAgICAgICAgICAgIHxIL1cgKEdQTUMpICAgICB8SC9XIChFTE0pICAg
-ICAgfA0KPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0t
-LS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLSsNCj4gPg0KPiA+IFNlbGVjdGlvbiBvZiBzb21lIEVD
-QyBzY2hlbWVzIGFsc28gcmVxdWlyZSBlbmFibGluZyBmb2xsb3dpbmcgS2NvbmZpZw0KPiBvcHRp
-b25zLg0KPiA+IFRoaXMgd2FzIGRvbmUgdG8gb3B0aW1pemUgZm9vdHByaW50IG9mIG9tYXAyLW5h
-bmQgZHJpdmVyLg0KPiA+IC1LY29uZmlnOkNPTkZJR19NVERfTkFORF9FQ0NfQkNICWVuYWJsZXMg
-Uy9XIGJhc2VkIEJDSCBFQ0MNCj4gYWxnb3JpdGhtDQo+ID4gLUtjb25maWc6Q09ORklHX01URF9O
-QU5EX09NQVBfQkNICWVuYWJsZXMgSC9XIGJhc2VkIEJDSCBFQ0MNCj4gYWxnb3JpdGhtDQo+ID4N
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBQZWtvbiBHdXB0YSA8cGVrb25AdGkuY29tPg0KPiA+IC0tLQ0K
-PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtYy1uYW5kLnR4dCAgICAgICAgICB8
-IDQ1DQo+ICsrKysrKysrKysrKysrKystLS0tLS0NCj4gPiAgYXJjaC9hcm0vbWFjaC1vbWFwMi9n
-cG1jLmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAxNCArKysrLS0tDQo+ID4gIGluY2x1ZGUv
-bGludXgvcGxhdGZvcm1fZGF0YS9tdGQtbmFuZC1vbWFwMi5oICAgICAgIHwgMjIgKysrKysrKy0t
-LS0NCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA1NyBpbnNlcnRpb25zKCspLCAyNCBkZWxldGlvbnMo
-LSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbXRkL2dwbWMtbmFuZC50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbXRkL2dwbWMtbmFuZC50eHQNCj4gPiBpbmRleCBkZjMzOGNiLi5jNjU1MWI2IDEwMDY0NA0K
-PiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtYy1uYW5k
-LnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3Bt
-Yy1uYW5kLnR4dA0KPiA+IEBAIC0xNywxNyArMTcsNDIgQEAgUmVxdWlyZWQgcHJvcGVydGllczoN
-Cj4gPg0KPiA+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+DQo+ID4gLSAtIG5hbmQtYnVzLXdp
-ZHRoOiAJCVNldCB0aGlzIG51bWVyaWMgdmFsdWUgdG8gMTYgaWYgdGhlIGhhcmR3YXJlDQo+ID4g
-LQkJCQlpcyB3aXJlZCB0aGF0IHdheS4gSWYgbm90IHNwZWNpZmllZCwgYSBidXMNCj4gPiAtCQkJ
-CXdpZHRoIG9mIDggaXMgYXNzdW1lZC4NCj4gPiArIC0gbmFuZC1idXMtd2lkdGg6IAkJRGV0ZXJt
-aW5lcyBkYXRhLXdpZHRoIG9mIHRoZSBjb25uZWN0ZWQNCj4gZGV2aWNlDQo+ID4gKwkJCQl4MTYg
-PSAiMTYiDQo+ID4gKwkJCQl4OCAgPSAiOCIgKGRlZmF1bHQpDQo+IA0KPiBUaGlzIGNoYW5nZSBk
-b2Vzbid0IGxvb2sgbGlrZSBhbiBpbXByb3ZlbWVudCB0byBtZS4NCj4gDQpbUGVrb25dOiBBY2Nl
-cHRlZC4gSSdsbCBkcm9wIHRoaXMuIEhvd2V2ZXIsIHRoaXMgaXMgbm90IGEgbmV3IGJpbmRpbmcu
-DQpJIHdhcyBqdXN0IGVsYWJvcmF0aW5nICYgZm9ybWF0dGluZyB0aGUgZGVzY3JpcHRpb24gYmVj
-YXVzZSBjb2RlIGFsbG93cyBvbmx5DQp0d28gdmFsdWVzICIxNiIgb3IgIjgiLg0KDQoNCj4gPiAt
-IC0gdGksbmFuZC1lY2Mtb3B0OgkJQSBzdHJpbmcgc2V0dGluZyB0aGUgRUNDIGxheW91dCB0byB1
-c2UuIE9uZSBvZjoNCj4gPg0KPiA+IC0JCSJzdyIJCVNvZnR3YXJlIG1ldGhvZCAoZGVmYXVsdCkN
-Cj4gPiAtCQkiaHciCQlIYXJkd2FyZSBtZXRob2QNCj4gPiAtCQkiaHctcm9tY29kZSIJZ3BtYyBo
-YW1taW5nIG1vZGUgbWV0aG9kICYgcm9tY29kZQ0KPiBsYXlvdXQNCj4gPiAtCQkiYmNoNCIJCTQt
-Yml0IEJDSCBlY2MgY29kZQ0KPiA+IC0JCSJiY2g4IgkJOC1iaXQgQkNIIGVjYyBjb2RlDQo+ID4g
-KyAtIHRpLG5hbmQtZWNjLW9wdDoJCURldGVybWluZXMgdGhlIEVDQyBzY2hlbWUgdXNlZCBieSBk
-cml2ZXIuDQo+ID4gKwkJCQlJdCBjYW4gYmUgYW55IG9mIHRoZSBmb2xsb3dpbmcgc3RyaW5nczoN
-Cj4gDQo+IFRoZSBkZXZpY2UgdHJlZSBzaG91bGQgZGVmaW5lIHRoZSBoYXJkd2FyZSwgbm90IGNv
-bmZpZ3VyZSB0aGUgc29mdHdhcmUuDQo+IA0KPiBBbHNvLCBpZiBpdCBkZWZpbmVzIHRoZSBzY2hl
-bWUgdGhlbiB5b3Ugc2hvdWxkIHByb2JhYmx5IGNhbGwgaXQgc29tZXRoaW5nIGxpa2UNCj4gInRp
-LG5hbmQtZWNjLXNjaGVtZSIgaW5zdGVhZC4NCj4gDQpbUGVrb25dOiBBZ2FpbiwgdGksbmFuZC1l
-Y2Mtb3B0IGlzIG5vdCBuZXcgRFQgYmluZGluZywgVGhpcyB3YXMgYWRkZWQgaW4NCglDb21taXQg
-YmM2YjFlN2I4NmY1ZDhlNGE2ZmMxYzAxODllNjRiYmE0MDc3ZWZlMA0KCURhbmllbCBNYWNrIDx6
-b25xdWVAZ21haWwuY29tPg0KCUFSTTogT01BUDogZ3BtYzogYWRkIERUIGJpbmRpbmdzIGZvciBH
-UE1DIHRpbWluZ3MgYW5kIE5BTkQNCkkganVzdCBleHBhbmRlZCBpdHMgb3B0aW9ucy4uDQoNCkFs
-c28gSSdsbCB0cnkgdG8gZXhwbGFpbiBob3cgYmVsb3cgZWNjLXNjaGVtZSBzZWxlY3Rpb24gaXMg
-bGlua2VkIHRvIFRJIEhhcmR3YXJlLg0KVEkgU29DIHVzZXMgdHdvIHNlcGFyYXRlIEgvVyBlbmdp
-bmVzIGZvciBjYWxjdWxhdGluZyBhbmQgY29ycmVjdGluZyBFQ0MuDQooYSkgR1BNQzogR2VuZXJh
-bCBQdXJwb3NlIE1lbW9yeSBDb250cm9sbGVyIHdoaWNoIGNhbGN1bGF0ZXMgRUNDIGFsc28uDQoo
-YikgRUxNOiBFcnJvciBMb2NhdG9yIE1vZHVsZSB3aGljaCBqdXN0IGxvY2F0ZXMgZXJyb3JzIGlu
-IEJDSHggY29kZSBvbmx5Lg0KDQoqUmVhc29uLTEqOiBBbGwgT01BUCBwbGF0Zm9ybXMgaGF2ZSAo
-YSkgR1BNQyBoL3cgZW5naW5lLCBidXQgc29tZSANCmxlZ2FjeSBPTUFQICBwbGF0Zm9ybXMgZG8g
-bm90IGhhdmUgKGIpIEVMTSBoL3cgZW5naW5lLiBTdWNoIG9sZGVyIA0KcGxhdGZvcm1zIHVzZSBT
-L1cgbGliL2JjaC5jIGxpYnJhcmllcyBmb3IgRUNDIGVycm9yIGRldGVjdGlvbi4NClRoZXJlZm9y
-ZSBpbi1vcmRlciB0byBrZWVwIHRoZSBkcml2ZXIgY29uc2lzdGVudCBmb3IgYWxsIHBsYXRmb3Jt
-cyB3ZSANCm5lZWRlZCB0byBrZWVwIHNvIG1hbnkgRUNDIG9wdGlvbnMgYWxpdmUuIExpa2UgYmVs
-b3cgeW91IHdvdWxkIHNlZQ0KdHdvIHZlcnNpb25zIG9mIEJDSDggYW5kIEJDSDQNCi0gYmNoOF9j
-b2RlX2h3IChzdXBwb3J0ZWQgb24gbmV3IGRldmljZXMgd2l0aCBFTE0gaC93IGVuZ2luZSkNCi0g
-YmNoOF9jb2RlX2h3X2RldGVjdGlvbl9zdyAoa2VwdCBmb3IgbGVnYWN5IGRldmljZXMpDQoNCipS
-ZWFzb24tMio6IEFsc28gSC9XIEVDQyBzY2hlbWVzIGhhdmUgZGlmZmVyZW50IEVDQyBsYXlvdXQs
-IHdoaWNoIGlzDQpjb21wYXRpYmxlIHRvIFJPTSBjb2RlLiBUaHVzIGVuZC10by1lbmQgTkFORCBi
-b290IHdvdWxkIHdvcmsNCm9ubHkgd2l0aCB4eF9jb2RlX2h3IHNjaGVtZXMgb25seS4NCg0KSGVu
-Y2UgRUNDIHNlbGVjdGlvbiBpcyBkZXBlbmRlbnQgb24gSC9XLCBoZW5jZSBwdXQgYXMgRFQgYmlu
-ZGluZy4NCkJ1dCBJIGFncmVlIGdvaW5nIGZvcndhcmQgd2Ugc2hvdWxkIGRlcHJlY2F0ZSBtb3N0
-IG9mIGxlZ2FjeSBvcHRpb25zDQp3aGVuIHRoZXJlIGlzIGNvbW1vbiBIL1cgcGxhdGZvcm0gZm9y
-IGFsbCBkZXZpY2VzLg0KDQoNCj4gPiArDQo+ID4gKwkiaGFtbWluZ19jb2RlX3N3IgkJMS1iaXQg
-SGFtbWluZyBFQ0MNCj4gPiArCQkJCQktIEVDQyBjYWxjdWxhdGlvbiBpbiBzb2Z0d2FyZQ0KPiA+
-ICsJCQkJCS0gRXJyb3IgZGV0ZWN0aW9uIGluIHNvZnR3YXJlDQo+ID4gKw0KPiA+ICsJImhhbW1p
-bmdfY29kZV9odyIJCTEtYml0IEhhbW1pbmcgRUNDDQo+ID4gKwkJCQkJLSBFQ0MgY2FsY3VsYXRp
-b24gaW4gaGFyZHdhcmUNCj4gPiArCQkJCQktIEVycm9yIGRldGVjdGlvbiBpbiBzb2Z0d2FyZQ0K
-PiANCj4gQnp6dC4gU2FtZSBoZXJlLiBJdCByZWFsbHkgZG9lc24ndCBtYXR0ZXIgdG8gdGhlIGhh
-cmR3YXJlIGlmIHRoZSBFQ0MgaXMNCj4gY2FsY3VsYXRlZCBpbiBIVyBvciBTVywgYW5kIGl0IGRv
-ZXNuJ3QgYmVsb25nIGluIHRoZSBkZXZpY2UgdHJlZS4NCg0KW1Bla29uXTogTm90IGEgbmV3IGJp
-bmRpbmdzIG9wdGlvbiBqdXN0IHJlbmFtZWQsIGFuZCBrZXB0IGZvciBsZWdhY3kNCiBjb21wYXRp
-YmlsaXR5IChwbGVhc2UgcmVmZXIgY2hhbmdlIGRpZmYgYmVsb3cpDQo+ID4gLQkJInN3IgkJU29m
-dHdhcmUgbWV0aG9kIChkZWZhdWx0KQ0KCXJlbmFtZWQgdG8gImhhbW1pbmdfY29kZV9zdyINCg0K
-PiA+IC0JCSJodyIJCUhhcmR3YXJlIG1ldGhvZCANCglyZW5hbWVkIHRvICJoYW1taW5nX2NvZGVf
-aHciDQoNCg0KPiA+ICsNCj4gPiArCSJoYW1taW5nX2NvZGVfaHdfcm9tY29kZSIJMS1iaXQgSGFt
-bWluZyBFQ0MNCj4gPiArCQkJCQktIEVDQyBjYWxjdWxhdGlvbiBpbiBoYXJkd2FyZQ0KPiA+ICsJ
-CQkJCS0gRXJyb3IgZGV0ZWN0aW9uIGluIHNvZnR3YXJlDQo+ID4gKwkJCQkJLSBFQ0MgbGF5b3V0
-IGNvbXBhdGlibGUgdG8gUk9NIGNvZGUNCj4gPiArDQo+ID4gKwkiYmNoOF9od19jb2RlX2RldGVj
-dGlvbl9zdyIJOC1iaXQgQkNIIEVDQw0KPiA+ICsJCQkJCS0gRUNDIGNhbGN1bGF0aW9uIGluIGhh
-cmR3YXJlDQo+ID4gKwkJCQkJLSBFcnJvciBkZXRlY3Rpb24gaW4gc29mdHdhcmUNCj4gPiArCQkJ
-CQktIGRlcGVuZHMgb24NCj4gQ09ORklHX01URF9OQU5EX0VDQ19CQ0gNCj4gDQo+IENvbmZpZ3Vy
-YXRpb24gb3B0aW9ucyBkb24ndCBiZWxvbmcgaW4gaGVyZSBlaXRoZXIuDQo+IA0KW1Bla29uXTog
-QXMgZXhwbGFpbmVkIGFib3ZlLCBsZWdhY3kgcGxhdGZvcm1zIGRvIG5vdCBoYXZlIEVMTSBoL3cu
-DQpTbyB0aGV5IGRlcGVuZCBvbiBsaWIvYmNoLmMgbGlicmFyaWVzIGZvciBFQ0MgZGV0ZWN0aW9u
-LiBCdXQgdGhhdCBibG9hdHMNCnRoZSBkcml2ZXIgY29kZS1mb290cHJpbnQgYSBsb3QsIGp1c3Qg
-dG8gbWFpbnRhaW4gY29tcGF0aWJpbGl0eSBmb3IgbGVnYWN5DQpkZXZpY2UgcGxhdGZvcm1zLiBU
-aGVyZWZvcmUgSSBoYWQgdG8gdXNlIEtDb25maWdzIHRvIGtlZXAgZHJpdmVyDQpjb2RlLWZvb3Rw
-cmludCBzbWFsbC4NCg0KSSBjYW4gcmVtb3ZlIEtDb25maWcgZnJvbSBkb2N1bWVudGF0aW9uLCBi
-dXQgdGhlbiBpdCB3b3VsZCBjb25mdXNlDQp0aGUgdXNlcnMgd2hlbiB0aGV5IGdldCBOQU5EIHBy
-b2JpbmcgZXJyb3JzIGJlY2F1c2U6DQotIGJjaHhfaHdfY29kZSByZXF1aXJlcyBFTE0gaC93IGVu
-Z2luZSwgd2hpY2ggaXMgbm90IHByZXNlbnQgb24gDQoJbGVnYWN5IGRldmljZXMuDQotICBiY2h4
-X2h3X2NvZGVfZGV0ZWN0aW9uX3N3IHJlcXVpcmVzIGxpYi9iY2guYyB3aGljaCBpcyBvbmx5DQoJ
-IGVuYWJsZWQgYnkgQ09ORklHX01URF9OQU5EX0VDQ19CQ0guDQoNCldpbGwgcmVtb3ZpbmcgS0Nv
-bmZpZyBmcm9tIERUIERvY3VtZW50YXRpb24gYmUgYWNjZXB0YWJsZSA/DQoNCj4gPiArDQo+ID4g
-KwkiYmNoOF9jb2RlX2h3IiAgICAgICAgICAgICAJOC1iaXQgQkNIIEVDQw0KPiA+ICsJCQkJCS0g
-RUNDIGNhbGN1bGF0aW9uIGluIGhhcmR3YXJlDQo+ID4gKwkJCQkJLSBFcnJvciBkZXRlY3Rpb24g
-aW4gaGFyZHdhcmUNCj4gPiArCQkJCQktIGRlcGVuZHMgb24NCj4gQ09ORklHX01URF9OQU5EX09N
-QVBfQkNIDQo+ID4gKwkJCQkJLSByZXF1aXJlcyA8ZWxtX2lkPiB0byBiZSBzcGVjaWZpZWQNCj4g
-DQo+IFNvbWUgb2YgdGhlIGFib3ZlIGNsZWFybHkgc2hvdWxkbid0IGJlIGRlc2NyaWJlZCBpbiB0
-aGUgZGV2aWNlIHRyZWUgYXQgYWxsLCBidXQNCj4gaXQncyBhbHNvIG5vdCB2ZXJ5IGNvbnZlbmll
-bnQgdG8gZGVzY3JpYmUgdGhlbSBhcyBzdHJpbmdzLiBTaW5jZSB5b3UgaGF2ZQ0KPiBhIGJpbmRp
-bmcsIGl0J3MgcHJvYmFibHkgZWFzaWVyIHRvIGdpdmUgdGhlbSBpbnRlZ2VyIHZhbHVlcyBhbmQg
-anVzdCBkZWZpbmUNCj4gd2hhdCB0aG9zZSBtZWFuLg0KPiANCltQZWtvbl06IERvIHlvdSBtZWFu
-IHNvbWV0aGluZyBsaWtlIGJlbG93ID8NCnRpLG5hbmQtZWNjLXNjaGVtZShuKSAgd2hlcmUgJ24n
-IG1lYW5zDQoJMCA9PSAgMS1iaXQgSGFtbWluZyBpbiBTL1cNCgkxID09ICAxLWJpdCBIYW1taW5n
-IGluIEgvVw0KCTIgPT0gIEJDSDQgd2l0aCBTL1cgZGV0ZWN0aW9uDQoJMyA9PSAgQkNINCBhbGwg
-aW4gSC9XDQoJNCA9PSAgQkNIOCB3aXRoIFMvVyBkZXRlY3Rpb24NCgk1ID09ICBCQ0g4IGFsbCBp
-biBIL1cNCg0KPiA+ICsNCj4gPiArDQo+ID4gKyAtIGVsbV9pZDoJCQlTcGVjaWZpZXMgZWxtIGRl
-dmljZSBub2RlLiBUaGlzIGlzIHJlcXVpcmVkIHRvDQo+ID4gKwkJCQlzdXBwb3J0IHNvbWUgQkNI
-IEVDQyBzY2hlbWVzIG1lbnRpb25lZA0KPiBhYm92ZS4NCj4gDQo+IFVzZSBkYXNoZXMgaW5zdGVh
-ZCBvZiB1bmRlcnNjb3JlcyBmb3IgcHJvcGVydGllcy4gaWYgYWxsIG90aGVyIHByb3BlcnRpZXMg
-YXJlDQo+IHByZXBlbmRlZCB3aXRoICJ0aSwiLCB0aGVuIHNvIHNob3VsZCB0aGlzLg0KPiANCltQ
-ZWtvbl06IEFjY2VwdGVkLiBCdXQgYWdhaW4gdGhpcyBpcyBub3QgbmV3IERUIGJpbmRpbmcuIEl0
-IHdhcyBhZGRlZCBpbg0KCUNvbW1pdCA5N2M3OTRhMWUzN2IxY2ExMjhlZjM4ZjE3YzA2OTE4NmJm
-YTVmYjFiDQoJUGhpbGlwIEF2aW5hc2ggPGF2aW5hc2hwaGlsaXBAdGkuY29tPg0KCWdwbWM6IEFk
-ZCBkZXZpY2UgdHJlZSBkb2N1bWVudGF0aW9uIGZvciBlbG0gaGFuZGxlDQoNCj4gV2hhdCdzIGFu
-IEVMTSBkZXZpY2Ugbm9kZT8gSG93IGlzIGl0IHNwZWNpZmllZD8gQSBwaGFuZGxlPw0KPiANCltQ
-ZWtvbl06IEVMTSBpcyBhIERUIG5vZGUgc3BlY2lmaWVkIGluIHNvYy5kdHNpIChiZWNhdXNlIEVM
-TSBpcyBub3QNCiBwcmVzZW50IGluICBsZWdhY3kgZGV2aWNlcykuIEV4YW1wbGUgUGxlYXNlIHJl
-ZmVyOg0KJEtFUk5FTC9hcmNoL2FybS9ib290L2R0cy9hbTMzeHguZHRzaQ0KDQoNCj4gDQo+IA0K
-PiAtT2xvZg0KDQpbUGVrb25dOiBUaGFua3MgbXVjaCBmb3IgcmV2aWV3Lg0KSSBoYXZlIGFjY2Vw
-dGVkIHNvbWUgZmVlZGJhY2tzLCBhbmQgZ2l2ZW4gcmVhc29ucyBmb3Igb3RoZXJzLi4NCkluLWNh
-c2UgeW91IGFyZSBjb252aW5jZWQsIEknbGwgc2VuZCBhbm90aGVyIHZlcnNpb24gb2YgcGF0Y2gg
-d2l0aA0KYWxsIGZlZWRiYWNrcyB0YWtlbiBpbi4gDQpTbywgcmVxdWVzdCB5b3UgdG8gcmUtcmV2
-aWV3IGJhc2VkIG9uIHJlYXNvbnMgbWVudGlvbmVkLg0KDQoNCndpdGggcmVnYXJkcywgcGVrb24N
-Cg==
+On Sun, Jul 14, 2013 at 02:24:48AM +0530, Pekon Gupta wrote:
+> ECC scheme on NAND devices can be implemented in multiple ways.Some using
+> Software algorithm, while others using in-build Hardware engines.
+> omap2-nand driver currently supports following flavours of ECC schemes,
+> selectable via DTB.
+> 
+> +---------------------------------------+---------------+---------------+
+> | ECC scheme                            |ECC calculation|Error detection|
+> +---------------------------------------+---------------+---------------+
+> |OMAP_ECC_HAMMING_CODE_DEFAULT          |S/W            |S/W            |
+> |OMAP_ECC_HAMMING_CODE_HW               |H/W (GPMC)     |S/W            |
+> |OMAP_ECC_HAMMING_CODE_HW_ROMCODE       |H/W (GPMC)     |S/W            |
+> +---------------------------------------+---------------+---------------+
+> |(requires CONFIG_MTD_NAND_ECC_BCH)     |               |               |
+> |OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W            |
+> +---------------------------------------+---------------+---------------+
+> |(requires CONFIG_MTD_NAND_OMAP_BCH)    |               |               |
+> |OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
+> +---------------------------------------+---------------+---------------+
+> 
+> Selection of some ECC schemes also require enabling following Kconfig options.
+> This was done to optimize footprint of omap2-nand driver.
+> -Kconfig:CONFIG_MTD_NAND_ECC_BCH	enables S/W based BCH ECC algorithm
+> -Kconfig:CONFIG_MTD_NAND_OMAP_BCH	enables H/W based BCH ECC algorithm
+> 
+> Signed-off-by: Pekon Gupta <pekon@ti.com>
+> ---
+>  .../devicetree/bindings/mtd/gpmc-nand.txt          | 45 ++++++++++++++++------
+>  arch/arm/mach-omap2/gpmc.c                         | 14 ++++---
+>  include/linux/platform_data/mtd-nand-omap2.h       | 22 +++++++----
+>  3 files changed, 57 insertions(+), 24 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> index df338cb..c6551b6 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> @@ -17,17 +17,42 @@ Required properties:
+>  
+>  Optional properties:
+>  
+> - - nand-bus-width: 		Set this numeric value to 16 if the hardware
+> -				is wired that way. If not specified, a bus
+> -				width of 8 is assumed.
+> + - nand-bus-width: 		Determines data-width of the connected device
+> +				x16 = "16"
+> +				x8  = "8" (default)
+
+This change doesn't look like an improvement to me.
+
+> - - ti,nand-ecc-opt:		A string setting the ECC layout to use. One of:
+>  
+> -		"sw"		Software method (default)
+> -		"hw"		Hardware method
+> -		"hw-romcode"	gpmc hamming mode method & romcode layout
+> -		"bch4"		4-bit BCH ecc code
+> -		"bch8"		8-bit BCH ecc code
+> + - ti,nand-ecc-opt:		Determines the ECC scheme used by driver.
+> +				It can be any of the following strings:
+
+The device tree should define the hardware, not configure the software.
+
+Also, if it defines the scheme then you should probably call it something like
+"ti,nand-ecc-scheme" instead.
+
+> +
+> +	"hamming_code_sw"		1-bit Hamming ECC
+> +					- ECC calculation in software
+> +					- Error detection in software
+> +
+> +	"hamming_code_hw"		1-bit Hamming ECC
+> +					- ECC calculation in hardware
+> +					- Error detection in software
+
+Bzzt. Same here. It really doesn't matter to the hardware if the ECC is
+calculated in HW or SW, and it doesn't belong in the device tree.
+> +
+> +	"hamming_code_hw_romcode"	1-bit Hamming ECC
+> +					- ECC calculation in hardware
+> +					- Error detection in software
+> +					- ECC layout compatible to ROM code
+> +
+> +	"bch8_hw_code_detection_sw"	8-bit BCH ECC
+> +					- ECC calculation in hardware
+> +					- Error detection in software
+> +					- depends on CONFIG_MTD_NAND_ECC_BCH
+
+Configuration options don't belong in here either.
+
+> +
+> +	"bch8_code_hw"             	8-bit BCH ECC
+> +					- ECC calculation in hardware
+> +					- Error detection in hardware
+> +					- depends on CONFIG_MTD_NAND_OMAP_BCH
+> +					- requires <elm_id> to be specified
+
+Some of the above clearly shouldn't be described in the device tree at all, but
+it's also not very convenient to describe them as strings. Since you have
+a binding, it's probably easier to give them integer values and just define
+what those mean.
+
+> +
+> +
+> + - elm_id:			Specifies elm device node. This is required to
+> +				support some BCH ECC schemes mentioned above.
+
+Use dashes instead of underscores for properties. if all other properties are
+prepended with "ti,", then so should this.
+
+What's an ELM device node? How is it specified? A phandle?
+
+
+
+-Olof
