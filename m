@@ -1,59 +1,42 @@
-Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ns.mm-sol.com ([212.124.72.66]:41230 "EHLO extserv.mm-sol.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932328Ab3HNNBP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 14 Aug 2013 09:01:15 -0400
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v3 0/3] DWC3 USB support for Qualcomm platform
-Date: Wed, 14 Aug 2013 15:59:40 +0300
-Message-Id: <1376485183-2664-1-git-send-email-iivanov@mm-sol.com>
-Sender: devicetree-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <52157368.1000801@gmail.com>
+Date: Wed, 21 Aug 2013 21:11:52 -0500
+From: Rob Herring <robherring2@gmail.com>
+MIME-Version: 1.0
+Subject: [GIT PULL] Devicetree fix for 3.11
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Wladislav Wiebe <wladislav.kw@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Hi Linus,
 
-Hi,
+Please pull this single fix for a missing memory initialization in DT 
+unflattening code.
 
-These patches add basic support for USB3.0 controllers found
-on MSM platforms. USB3.0 core is based on Synopsys DesignWare 
-SuperSpeed IP. 
+Rob
 
-Changes since v2:
-* Several improvements in devicetree bindings description
-* Disable regulators in glue layer if there is error during 
-  ioremap.
+The following changes since commit d4e4ab86bcba5a72779c43dc1459f71fea3d89c8:
 
-Changes since first version:
-* Split devicetree bindings description file to separate patch
-* Address comments for device bindings description
-* Fix typo in 'gdsc' requlator name.
+  Linux 3.11-rc5 (2013-08-11 18:04:20 -0700)
 
-Generated on top of Felipe 'testing' branch.
+are available in the git repository at:
 
-Regards,
-Ivan
+  git://sources.calxeda.com/kernel/linux.git tags/devicetree-fixes-for-3.11
 
-Ivan T. Ivanov (3):
-  usb: dwc3: msm: Add device tree binding information
-  usb: phy: Add Qualcomm SS-USB and HS-USB drivers for DWC3 core
-  usb: dwc3: Add Qualcomm DWC3 glue layer driver
+for you to fetch changes up to 9e40127526e857fa3f29d51e83277204fbdfc6ba:
 
- .../devicetree/bindings/usb/msm-ssusb.txt          |  108 ++++++
- drivers/usb/dwc3/Kconfig                           |    8 +
- drivers/usb/dwc3/Makefile                          |    1 +
- drivers/usb/dwc3/dwc3-msm.c                        |  169 +++++++++
- drivers/usb/phy/Kconfig                            |   11 +
- drivers/usb/phy/Makefile                           |    2 +
- drivers/usb/phy/phy-msm-dwc3-hs.c                  |  336 +++++++++++++++++
- drivers/usb/phy/phy-msm-dwc3-ss.c                  |  383 ++++++++++++++++++++
- 8 files changed, 1018 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/msm-ssusb.txt
- create mode 100644 drivers/usb/dwc3/dwc3-msm.c
- create mode 100644 drivers/usb/phy/phy-msm-dwc3-hs.c
- create mode 100644 drivers/usb/phy/phy-msm-dwc3-ss.c
+  of: fdt: fix memory initialization for expanded DT (2013-08-21 20:05:49 -0500)
 
--- 
-1.7.9.5
+----------------------------------------------------------------
+For DT unflattening, add missing memory initialization. This is needed
+for arches like PPC that use memblock_alloc. This appears to have been
+an issue for some time, but is a somewhat limited usecase of OF_DYNAMIC.
 
+----------------------------------------------------------------
+Wladislav Wiebe (1):
+      of: fdt: fix memory initialization for expanded DT
+
+ drivers/of/fdt.c | 2 ++
+ 1 file changed, 2 insertions(+)
