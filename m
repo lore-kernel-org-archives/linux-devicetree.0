@@ -1,63 +1,55 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-we0-f173.google.com ([74.125.82.173]:37873 "EHLO
-	mail-we0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752298Ab3HLLCB (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 07:02:01 -0400
-Message-ID: <5208C04A.5000303@gmail.com>
-Date: Mon, 12 Aug 2013 13:00:26 +0200
-From: Wladislav Wiebe <wladislav.kw@gmail.com>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:49969 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752292Ab3HVJqN (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 05:46:13 -0400
+Date: Thu, 22 Aug 2013 10:45:44 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130822094544.GN26118@sirena.org.uk>
+References: <cover.1377054540.git.b42378@freescale.com>
+ <03182ed7464c156ec6345194d3f7ec920f753c2f.1377054540.git.b42378@freescale.com>
 MIME-Version: 1.0
-Subject: [PATCH 1/1] of: fdt: fix memory initialization for expanded DT
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ncX6roZrNNHXnAbh"
+Content-Disposition: inline
+In-Reply-To: <03182ed7464c156ec6345194d3f7ec920f753c2f.1377054540.git.b42378@freescale.com>
+Subject: Re: [PATCH v10 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
 Sender: devicetree-owner@vger.kernel.org
-To: grant.likely@linaro.org, rob.herring@calxeda.com, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+To: Nicolin Chen <b42378@freescale.com>
+Cc: s.hauer@pengutronix.de, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, tomasz.figa@gmail.com, swarren@wwwdotorg.org, mark.rutland@arm.com, R65777@freescale.com
 List-ID: <devicetree@vger.kernel.org>
 
-Already existing property flags are filled wrong for properties created from
-initial FDT. This could cause problems if this DYNAMIC device-tree functions
-are used later, i.e. properties are attached/detached/replaced. Simply dumping
-flags from the running system show, that some initial static (not allocated via
-kzmalloc()) nodes are marked as dynamic.
 
-I putted some debug extensions to property_proc_show(..) :
-..
-+       if (OF_IS_DYNAMIC(pp))
-+               pr_err("DEBUG: xxx : OF_IS_DYNAMIC\n");
-+       if (OF_IS_DETACHED(pp))
-+               pr_err("DEBUG: xxx : OF_IS_DETACHED\n");
+--ncX6roZrNNHXnAbh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-when you operate on the nodes (e.g.: ~$ cat /proc/device-tree/*some_node*) you
-will see that those flags are filled wrong, basically in most cases it will dump
-a DYNAMIC or DETACHED status, which is in not true.
-(BTW. this OF_IS_DETACHED is a own define for debug purposes which which just
-make a test_bit(OF_DETACHED, &x->_flags)
+On Wed, Aug 21, 2013 at 11:13:16AM +0800, Nicolin Chen wrote:
+> This patch implements a device-tree-only CPU DAI driver for Freescale
+> S/PDIF controller that supports stereo playback and record feature.
 
-If nodes are dynamic kernel is allowed to kfree() them. But it will crash
-attempting to do so on the nodes from FDT -- they are not allocated via
-kzmalloc().
+Applied, thanks.
 
-Signed-off-by: Wladislav Wiebe <wladislav.kw@gmail.com>
----
- drivers/of/fdt.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+--ncX6roZrNNHXnAbh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 6bb7cf2..b10ba00 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -392,6 +392,8 @@ static void __unflatten_device_tree(struct boot_param_header *blob,
- 	mem = (unsigned long)
- 		dt_alloc(size + 4, __alignof__(struct device_node));
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
-+	memset((void *)mem, 0, size);
-+
- 	((__be32 *)mem)[size / 4] = cpu_to_be32(0xdeadbeef);
+iQIcBAEBAgAGBQJSFd3FAAoJELSic+t+oim9kQgP/jDdirjb2Fn6NIfXMXDpTmjT
+Lk2cjI5V6CIT5bhAwMhyStETq4vabJZkqNrURenq7y8yxd7dIcTzI8lDcdMR2iFS
+DgifVBvOnhvpo2JYhbgcPiM4q/rwXgveN/j/0mmsyx92VzA+7AMoAGrJ9Bzy6paF
+WEJ6cGv2ccLSMbIlJyYzjVhASZhZe98KFvQg6c+qU0I+muu1f6x2gk/7YsXhpEAy
+kPhGesXZW6JDrXa76FjzyPi92VksvtFrIsTy6w4qD/g+O2DjE1Acp4MMLSHPAmZo
+YvUjEzJhwL1FC7d/rRkEiS2PJHpvYIaIWL6XMJDGv5ARet7xGwOPKxz2tSCG8kPg
+I0/DvhTYWFHs4gPQGWLHM1uNrhdeWJXbQPS6XXgFh9FbTaai80JqWIjnTKfWntpr
++Z3UJy5BQ6z6mCUSspAPo9J7diVRe9gmZRHgWzrv000n483qpGufVmCEIRKBf0gR
++cWfkgXUwXxsUrILWuc1gNlENm67y1a8azsQDo6DLnQoXhZZ0NkQQzs8XeyAZlqQ
+tjal+J2FggpRu0ZBkZhhuEvPEcOBxIxjmQw9qOGdQ6jN7KE7D8RZpd4yoWMtjWer
+vfvwV1Z9ulKyL+YfwEwpIitzCUeMp59RQltV4FPc+ji3L3vWrrYIKZ8Kxvy+SeBm
+2NUR8bPu+Gtqgqu5S/sS
+=n3i2
+-----END PGP SIGNATURE-----
 
- 	pr_debug("  unflattening %lx...\n", mem);
--- 
-1.7.1
-
-
-
+--ncX6roZrNNHXnAbh--
