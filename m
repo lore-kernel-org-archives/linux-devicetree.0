@@ -1,209 +1,57 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pd0-f176.google.com ([209.85.192.176]:33619 "EHLO
-	mail-pd0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753167Ab3HBAxH (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 20:53:07 -0400
-Received: by mail-pd0-f176.google.com with SMTP id q10so50144pdj.21
-        for <devicetree@vger.kernel.org>; Thu, 01 Aug 2013 17:53:06 -0700 (PDT)
-From: Julius Werner <jwerner@chromium.org>
-Subject: [PATCH 3/3] usb: phy-samsung-usb: Remove USB_PHY_TYPE from Samsung PHY driver
-Date: Thu,  1 Aug 2013 17:52:06 -0700
-Message-Id: <1375404726-26264-4-git-send-email-jwerner@chromium.org>
-In-Reply-To: <1375404726-26264-1-git-send-email-jwerner@chromium.org>
-References: <1375404726-26264-1-git-send-email-jwerner@chromium.org>
+Received: from smtp1.goneo.de ([212.90.139.80]:37620 "EHLO smtp1.goneo.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751988Ab3HVJEB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Thu, 22 Aug 2013 05:04:01 -0400
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH] of: add vendor prefix for Microchip Technology Inc
+Date: Thu, 22 Aug 2013 11:03:49 +0200
+References: <201308211719.57748.poeschel@lemonage.de> <201308220947.29715.poeschel@lemonage.de> <CAGVrzcZ2bOxJxxheNXkQ9x1TLOeQW1UzbFz5sc6=Gg6Cv+2Q_Q@mail.gmail.com>
+In-Reply-To: <CAGVrzcZ2bOxJxxheNXkQ9x1TLOeQW1UzbFz5sc6=Gg6Cv+2Q_Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <201308221103.49328.poeschel@lemonage.de>
 Sender: devicetree-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Julius Werner <jwerner@chromium.org>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Since the PMU register handling was simplified, the last reason to
-differentiate between HOST and DEVICE PHYs in the Samsung USB PHY driver
-has disappeared. This patch removes that variable and reworks
-surrounding code to live without it to make the driver a little smaller
-and cleaner.
+On Thursday 22 August 2013 at 09:52:49, Florian Fainelli wrote:
+> Hello,
+> 
+> 2013/8/22 Lars Poeschel <poeschel@lemonage.de>:
+> > On Wednesday 21 August 2013 at 19:40:56, Stephen Warren wrote:
+> >> On 08/21/2013 09:19 AM, Lars Poeschel wrote:
+> >> > Trivial patch to add Microchip Technology Inc. to the list
+> >> > of devicetree vendor prefixes, as it is already used in
+> >> > Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+> >> 
+> >> Oh dear. Perhaps it can be legacy-ified...
+> >> 
+> >> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >> > 
+> >> > +mcp        Microchip Technology Inc.
+> >> 
+> >> If I saw "mcp," in a *.dts file, I wouldn't immediately think
+> >> "Microchip".
+> >> 
+> >> Their stock ticker appears to be MCHP, so I'd suggest either "mchp"
+> >> or "microchip" instead; that latter being my personal preference.
+> > 
+> > Any other opinions?
+> > If there are other voices who don't like it, we can change it. There
+> > is no in-tree dts file using this yet.
+> > How can a renaming be done? Would that involve changing the drivers
+> > (and module) name too? Or do we have the difference between "mcp" in
+> > the drivers name and "microchip" for device tree properties? In the
+> > latter case, I'd vote against it - if anyone cares. ;-)
+> 
+> We have recently had an interesting debate for the Broadcom vendor
+> prefix, so in light of this debate, I would go for the full name
+> directly and use "microchip". That said, this does not necessarily
+> mean that drivers containing "mcp" in their files/filenames must also
+> be renamed.
 
-Signed-off-by: Julius Werner <jwerner@chromium.org>
----
- drivers/usb/phy/phy-samsung-usb.c  | 23 +++--------------------
- drivers/usb/phy/phy-samsung-usb.h  |  7 +------
- drivers/usb/phy/phy-samsung-usb2.c | 19 +++----------------
- drivers/usb/phy/phy-samsung-usb3.c |  7 -------
- 4 files changed, 7 insertions(+), 49 deletions(-)
-
-diff --git a/drivers/usb/phy/phy-samsung-usb.c b/drivers/usb/phy/phy-samsung-usb.c
-index fa382c9..32c5264 100644
---- a/drivers/usb/phy/phy-samsung-usb.c
-+++ b/drivers/usb/phy/phy-samsung-usb.c
-@@ -27,7 +27,6 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
--#include <linux/usb/samsung_usb_phy.h>
- 
- #include "phy-samsung-usb.h"
- 
-@@ -101,7 +100,7 @@ EXPORT_SYMBOL_GPL(samsung_usbphy_set_isolation_4210);
- /*
-  * Configure the mode of working of usb-phy here: HOST/DEVICE.
-  */
--void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy)
-+void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy, bool device_mode)
- {
- 	u32 reg;
- 
-@@ -112,31 +111,15 @@ void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy)
- 
- 	reg = readl(sphy->sysreg);
- 
--	if (sphy->phy_type == USB_PHY_TYPE_DEVICE)
-+	if (device_mode)
- 		reg &= ~EXYNOS_USB20PHY_CFG_HOST_LINK;
--	else if (sphy->phy_type == USB_PHY_TYPE_HOST)
-+	else
- 		reg |= EXYNOS_USB20PHY_CFG_HOST_LINK;
- 
- 	writel(reg, sphy->sysreg);
- }
- EXPORT_SYMBOL_GPL(samsung_usbphy_cfg_sel);
- 
--/*
-- * PHYs are different for USB Device and USB Host.
-- * This make sure that correct PHY type is selected before
-- * any operation on PHY.
-- */
--int samsung_usbphy_set_type(struct usb_phy *phy,
--				enum samsung_usb_phy_type phy_type)
--{
--	struct samsung_usbphy *sphy = phy_to_sphy(phy);
--
--	sphy->phy_type = phy_type;
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(samsung_usbphy_set_type);
--
- int samsung_usbphy_rate_to_clksel_64xx(struct samsung_usbphy *sphy,
- 							unsigned long rate)
- {
-diff --git a/drivers/usb/phy/phy-samsung-usb.h b/drivers/usb/phy/phy-samsung-usb.h
-index f2e9c4a..0c0d7d1 100644
---- a/drivers/usb/phy/phy-samsung-usb.h
-+++ b/drivers/usb/phy/phy-samsung-usb.h
-@@ -285,8 +285,6 @@ struct samsung_usbphy_drvdata {
-  * @sysreg: USB2.0 PHY_CFG register memory base
-  * @ref_clk_freq: reference clock frequency selection
-  * @drv_data: driver data available for different SoCs
-- * @phy_type: Samsung SoCs specific phy types:	#HOST
-- *						#DEVICE
-  * @phy_usage: usage count for phy
-  * @lock: lock for phy operations
-  */
-@@ -300,7 +298,6 @@ struct samsung_usbphy {
- 	void __iomem	*sysreg;
- 	int		ref_clk_freq;
- 	const struct samsung_usbphy_drvdata *drv_data;
--	enum samsung_usb_phy_type phy_type;
- 	atomic_t	phy_usage;
- 	spinlock_t	lock;
- };
-@@ -326,9 +323,7 @@ static inline const struct samsung_usbphy_drvdata
- extern int samsung_usbphy_parse_dt(struct samsung_usbphy *sphy);
- extern void samsung_usbphy_set_isolation_4210(struct samsung_usbphy *sphy,
- 								bool on);
--extern void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy);
--extern int samsung_usbphy_set_type(struct usb_phy *phy,
--					enum samsung_usb_phy_type phy_type);
-+extern void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy, bool dev_mode);
- extern int samsung_usbphy_get_refclk_freq(struct samsung_usbphy *sphy);
- extern int samsung_usbphy_rate_to_clksel_64xx(struct samsung_usbphy *sphy,
- 							unsigned long rate);
-diff --git a/drivers/usb/phy/phy-samsung-usb2.c b/drivers/usb/phy/phy-samsung-usb2.c
-index c2c83d4..eb215a1 100644
---- a/drivers/usb/phy/phy-samsung-usb2.c
-+++ b/drivers/usb/phy/phy-samsung-usb2.c
-@@ -27,7 +27,6 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/usb/otg.h>
--#include <linux/usb/samsung_usb_phy.h>
- #include <linux/platform_data/samsung-usbphy.h>
- 
- #include "phy-samsung-usb.h"
-@@ -283,13 +282,13 @@ static int samsung_usb2phy_init(struct usb_phy *phy)
- 
- 	spin_lock_irqsave(&sphy->lock, flags);
- 
-+	/* Selecting Host/OTG mode; After reset USB2.0PHY_CFG: HOST */
- 	if (host) {
--		/* setting default phy-type for USB 2.0 */
- 		if (!strstr(dev_name(host->controller), "ehci") ||
- 				!strstr(dev_name(host->controller), "ohci"))
--			samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_HOST);
-+			samsung_usbphy_cfg_sel(sphy, false);
- 	} else {
--		samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_DEVICE);
-+		samsung_usbphy_cfg_sel(sphy, true);
- 	}
- 
- 	/* Disable phy isolation */
-@@ -298,9 +297,6 @@ static int samsung_usb2phy_init(struct usb_phy *phy)
- 	else if (sphy->drv_data->set_isolation)
- 		sphy->drv_data->set_isolation(sphy, false);
- 
--	/* Selecting Host/OTG mode; After reset USB2.0PHY_CFG: HOST */
--	samsung_usbphy_cfg_sel(sphy);
--
- 	/* Initialize usb phy registers */
- 	sphy->drv_data->phy_enable(sphy);
- 
-@@ -332,15 +328,6 @@ static void samsung_usb2phy_shutdown(struct usb_phy *phy)
- 
- 	spin_lock_irqsave(&sphy->lock, flags);
- 
--	if (host) {
--		/* setting default phy-type for USB 2.0 */
--		if (!strstr(dev_name(host->controller), "ehci") ||
--				!strstr(dev_name(host->controller), "ohci"))
--			samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_HOST);
--	} else {
--		samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_DEVICE);
--	}
--
- 	/* De-initialize usb phy registers */
- 	sphy->drv_data->phy_disable(sphy);
- 
-diff --git a/drivers/usb/phy/phy-samsung-usb3.c b/drivers/usb/phy/phy-samsung-usb3.c
-index 6259a35..ac05d91 100644
---- a/drivers/usb/phy/phy-samsung-usb3.c
-+++ b/drivers/usb/phy/phy-samsung-usb3.c
-@@ -24,7 +24,6 @@
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/of.h>
--#include <linux/usb/samsung_usb_phy.h>
- #include <linux/platform_data/samsung-usbphy.h>
- 
- #include "phy-samsung-usb.h"
-@@ -178,9 +177,6 @@ static int samsung_usb3phy_init(struct usb_phy *phy)
- 
- 	spin_lock_irqsave(&sphy->lock, flags);
- 
--	/* setting default phy-type for USB 3.0 */
--	samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_DEVICE);
--
- 	/* Disable phy isolation */
- 	if (sphy->drv_data->set_isolation)
- 		sphy->drv_data->set_isolation(sphy, false);
-@@ -213,9 +209,6 @@ static void samsung_usb3phy_shutdown(struct usb_phy *phy)
- 
- 	spin_lock_irqsave(&sphy->lock, flags);
- 
--	/* setting default phy-type for USB 3.0 */
--	samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_DEVICE);
--
- 	/* De-initialize usb phy registers */
- 	sphy->drv_data->phy_disable(sphy);
- 
--- 
-1.7.12.4
-
+Ok, I'll provide a little patch series doing it that way.
