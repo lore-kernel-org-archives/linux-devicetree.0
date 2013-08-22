@@ -1,69 +1,41 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from perceval.ideasonboard.com ([95.142.166.194]:41986 "EHLO
-	perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751492Ab3HSXEI (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 19:04:08 -0400
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 2/3] gpio: pcf857x: Remove pdata argument to pcf857x_irq_domain_init()
-Date: Tue, 20 Aug 2013 01:04:53 +0200
-Message-Id: <1376953494-9684-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-In-Reply-To: <1376953494-9684-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1376953494-9684-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Received: from devils.ext.ti.com ([198.47.26.153]:52468 "EHLO
+	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753902Ab3HVV0W (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 17:26:22 -0400
+From: Darren Etheridge <detheridge@ti.com>
+Subject: [RFC v2 0/1] Adding DT support to video/da8xx-fb.c
+Date: Thu, 22 Aug 2013 16:21:40 -0500
+Message-ID: <1377206501-30519-1-git-send-email-detheridge@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+To: devicetree@vger.kernel.org, tomi.valkeinen@ti.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org, detheridge@ti.com
+Cc: afzal@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-The argument is not used, remove it. No board registers a pcf857x device
-with an IRQ without specifying platform data, IRQ domain registration
-behaviour is thus not affected by this change.
+This is part of a larger series of patches to upgrade the da8xx-fb.c driver
+to support the Texas Instruments AM335x device.  As part of this upgrade
+we also want to add devicetree support for both the original da8xx and the
+am335x.  Tomi Valkeinen has reviewed the fbdev changes but he suggested
+that it was prudent to extract the dt pieces and run it through the
+devicetree mailing list for review.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- drivers/gpio/gpio-pcf857x.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+v2: incorporates -
+	* review comment changes from Prabhakar Lad
+	* changes the .compatible naming to match that of the exiting drm 
+		driver for am335x devices.
+	* Renames the devicetree bindings documentation file to match the
+		actual driver filename
 
-diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
-index ea9f3580..070e81f 100644
---- a/drivers/gpio/gpio-pcf857x.c
-+++ b/drivers/gpio/gpio-pcf857x.c
-@@ -223,7 +223,6 @@ static void pcf857x_irq_domain_cleanup(struct pcf857x *gpio)
- }
- 
- static int pcf857x_irq_domain_init(struct pcf857x *gpio,
--				   struct pcf857x_platform_data *pdata,
- 				   struct i2c_client *client)
- {
- 	int status;
-@@ -286,8 +285,8 @@ static int pcf857x_probe(struct i2c_client *client,
- 	gpio->chip.ngpio		= id->driver_data;
- 
- 	/* enable gpio_to_irq() if platform has settings */
--	if (pdata && client->irq) {
--		status = pcf857x_irq_domain_init(gpio, pdata, client);
-+	if (client->irq) {
-+		status = pcf857x_irq_domain_init(gpio, client);
- 		if (status < 0) {
- 			dev_err(&client->dev, "irq_domain init failed\n");
- 			goto fail;
-@@ -388,7 +387,7 @@ fail:
- 	dev_dbg(&client->dev, "probe error %d for '%s'\n",
- 			status, client->name);
- 
--	if (pdata && client->irq)
-+	if (client->irq)
- 		pcf857x_irq_domain_cleanup(gpio);
- 
- 	return status;
-@@ -411,7 +410,7 @@ static int pcf857x_remove(struct i2c_client *client)
- 		}
- 	}
- 
--	if (pdata && client->irq)
-+	if (client->irq)
- 		pcf857x_irq_domain_cleanup(gpio);
- 
- 	status = gpiochip_remove(&gpio->chip);
--- 
-1.8.1.5
+Thanks,
+Darren
+
+Darren Etheridge (1):
+  video: da8xx-fb: adding dt support
+
+ .../devicetree/bindings/video/da8xx-fb.txt         |   42 ++++++++++++
+ drivers/video/da8xx-fb.c                           |   66 +++++++++++++++++++-
+ 2 files changed, 105 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/da8xx-fb.txt
 
