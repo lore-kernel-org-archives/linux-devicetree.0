@@ -1,98 +1,93 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 1/3] misc: Add crossbar driver
-Date: Thu, 22 Aug 2013 09:45:49 -0400
-Message-ID: <5216160D.5000308@ti.com>
-References: <51E83A4F.5080904@ti.com> <CACRpkdY3nQaWimTwB-Zt-8+Q_KZr8a0rpB1SUQq=AuoG4bAYnQ@mail.gmail.com> <51ED2385.60108@ti.com> <51ED5C66.1010407@ti.com> <51EFFBE1.4090505@ti.com> <51F0031B.1050307@ti.com> <51F00530.9090703@ti.com> <51F02069.3050207@ti.com> <51F0223E.4050008@ti.com> <51F0240F.3050507@ti.com> <20130813081003.GU7656@atomide.com> <520A02BA.4090805@ti.com> <CACRpkda+m82PYJsExLM6JLsLa8-bVhdvy_r_+-uKfVT2NG7Cbg@mail.gmail.com> <520D398D.9040806@ti.com> <CACRpkdYeo1y-HhftkRWgwyq8o-NVuJ978Uq+ON880LHhUxC=hg@mail.gmail.com> <520D44C5.6080205@ti.com> <CACRpkdagSHxzV3=427O9iftNxM+N=w9aPds=iDvGQPoG3H-cWw@mail.gmail.com> <5215F6F6.9060703@ti.com>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] ARM: dts: add reference voltage property for MXS
+ LRADC
+Date: Thu, 22 Aug 2013 17:41:02 +0100
+Message-ID: <1377189662.2626.4.camel@hornet>
+References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com>
+	 <1374501843-19651-3-git-send-email-hector.palacios@digi.com>
+	 <520AA3CD.1040008@kernel.org> <1376491467.18617.41.camel@hornet>
+	 <52153B8E.7050309@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5215F6F6.9060703@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rajendra Nayak <rnayak@ti.com>, Felipe Balbi <balbi@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52153B8E.7050309-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 22 August 2013 07:33 AM, Sricharan R wrote:
-> Hi Linus,
-> 
-> On Thursday 22 August 2013 02:40 AM, Linus Walleij wrote:
->> On Thu, Aug 15, 2013 at 11:14 PM, Santosh Shilimkar
->> <santosh.shilimkar@ti.com> wrote:
->>> On Thursday 15 August 2013 04:51 PM, Linus Walleij wrote:
->> (...)
->>>> Sorry I don't understand what thread that is... can you point me there?
->>>> My previous statement on this issue what this:
->>>> http://marc.info/?l=linux-kernel&m=137442541628641&w=2
->> (...)
->>>>> I don't see how you can make this happen with an irqchip
->>>>> infrastructure.
->>>> I think my post above describes this.
->>>>
->>> Sorry for being dumb but I don't think cascaded irqchip examples
->>> like GPIO and cross-bars are same. If you take an example of
->>> GPIO irqchip, it always have a physical connection even if it
->>> is 1 IRQ line for (32 logical/sparse IRQs). That goes with
->>> other MFD examples too.
->>>
->>> So may be I am still missing something in your proposal.
->> Why does it matter if it is a GPIO or MFD or whatever?
->> The point is that the IRQ line passes thru something else,
->> and this we model as an irqdomain.
->>
->> Anyway here is a silicon cascaded IRQ chip:
->> arch/arm/mach-versatile/core.c
->> See versatile_init_irq():
->>
->> __vic_init(VA_VIC_BASE, IRQ_VIC_START, ~0, 0, np);
->> (...)
->> fpga_irq_init(VA_SIC_BASE, "SIC", IRQ_SIC_START,
->>                 IRQ_VICSOURCE31, PIC_VALID, np);
->>
->> The VIC in the versatile has the SIC cascaded from one of
->> its IRQ lines. Both the VIC and SIC (fpga IRQ) are
->> using irqdomains so the SIC spawns a child irqdomain
->> from IRQ 31 (last IRQ) of the VIC.
->  Ok, this is a typical example of irqchip cascaded.
->> The difference with a crossbar is that it can software-config
->> which IRQ goes where, and does not have a callback
->> to clear interrupts or anything like that, it just passes them
->> thru. But it is best modeled as an irqdomain IMO.
-> We can model crossbar as irqchip and gic as its interrupt parent
-> and peripherals to have crossbar as interrupt-parent.
->    
->  peripherals will do request_irq(crossbar_number)
->               |
->               |
->  crossbar_unmask()
->               |
->               |
->  maps crossbar number<->  to interrupt number and
->  calls request_irq(int_no, crossbar_handler,..)
-> 
->  
->  crossbar_handler(interrupt number)
->             |
->             |
->  get crossbar number from interrupt number
->             |
->             |
->  handle_irq(crossbar_domain(crossbar number))
->                                                                              
-> 
-> So this means a extra dummy handler.
-Its not optimal to go through the dummy call stack on
-fast path but considering its not going to eat too many
-instructions, its fine to have dummy handler. We should
-try this out.
 
-> Also the concern is by modelling it as irqchip, we will have
-> to find a different solution for DMA crossbar.
-> 
-DMAEngine has a notion of logical channel and that was actually
-used in the EDMA support series by Matt [1]
-We can do something similar to handle that scenario.
+On Wed, 2013-08-21 at 23:13 +0100, Alexandre Belloni wrote:
+> You are not so wrong. There is indeed actually only one reference
+> voltage (and that is 1.85V). But, before feeding the voltage to the A=
+DC
+> channels, you sometimes have a divider. Then, after the channel muxin=
+g,
+> you can add a by 2 divider.
+>=20
+> Mandatory ascii art:
+>=20
+>             +-----+
+>             |     |
+>    +-ch1--->|     |
+>             |     |
+>             |     |
+>             |     |     +-----+
+>    +-ch2--->|     |     |     |
+>             | MUX |++-->| ADC +----------->
+>      ch3    |     | |   |     |
+>     +----+  |     | |   +-----+
+>     |    |  |     | |      |
+>   +-> :4 +->|     | |  +---+--+
+>     |    |  |     | |  |      |
+>     +----+  |     | +->|  :2  |
+>             +-----+    |      |
+>                        +------+
+>=20
+>
+> So, from my point of view, the divider that is before the mux (the by=
+ 4
+> divider on channel 3 on my drawing) is not part of the the ADC, it is
+> not fixed by that IP. And indeed, that changed between the i.mx23 and
+> i.mx28 while the IP is the same.
 
+Let me a couple of additional questions, hope you don't mind:
 
-[1] https://lkml.org/lkml/2013/6/18/56
+1. Is the channel defined as: input *and* the reference voltage? Or,
+does the mux switch both of them at the same time?
 
+2. Is the mux controlled (so the channel selected) by a control registe=
+r
+"integral" to the ADC?
+
+3. Is the reference voltage generated "inside" the SOC? Or does it come
+from an external source?
+
+4. How is the "LRADC" IP actually documented? Does the spec clearly say
+that it has 8 voltage reference inputs?
+
+> So, the two solutions you suggest are:
+> 1/ using a fixed-regulator phandle per channel
+> 2/ hard-coding the dividers in the driver using the compatible string=
+ to
+> know which divider is on which channel.
+>=20
+> I feel that solution 2 is less future proof but at the same time, I
+> don't believe we will see that IP in another chip in the future.
+
+If we were to follow the spirit of "how is it wired" to the letter, you
+should really use 8 supplies, but I appreciate that it can be
+troublesome (or maybe not? it's just 2 dtsi files after all ;-). So
+maybe, as the compatible values explicitly mention the SOC names, you
+just want to hardcode the voltage levels in the driver itself (probably
+as data for the match array)? This of course assume that the reference
+source is internal. Shortly speaking - I believe that you should have
+phandles to regulators or nothing at all there :-) A de-facto-constant
+list of SOC-specific numbers seems the worst option.
+
+Thanks!
+
+Pawel
+
+Pawe=C5=82
