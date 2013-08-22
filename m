@@ -1,77 +1,56 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from arroyo.ext.ti.com ([192.94.94.40]:57472 "EHLO arroyo.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756278Ab3HAOF0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 1 Aug 2013 10:05:26 -0400
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 2/7] usb: phy: omap-usb2: Don't use omap_get_control_dev()
-Date: Thu, 1 Aug 2013 17:05:10 +0300
-Message-ID: <1375365915-21380-3-git-send-email-rogerq@ti.com>
-In-Reply-To: <1375365915-21380-1-git-send-email-rogerq@ti.com>
-References: <1375365915-21380-1-git-send-email-rogerq@ti.com>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:33228 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752077Ab3HVUUy (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 16:20:54 -0400
+Message-ID: <521672A1.6010202@wwwdotorg.org>
+Date: Thu, 22 Aug 2013 14:20:49 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [PATCH] documentation/devicetree: Move DT bindigns from gpio
+ to watchdog
+References: <1377088929-23694-1-git-send-email-johannes.thumshirn@men.de> <5214FA08.7090502@wwwdotorg.org> <20130822073740.GA3717@jtlinux>
+In-Reply-To: <20130822073740.GA3717@jtlinux>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: tony@atomide.com, kishon@ti.com, george.cherian@ti.com, dmurphy@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: Johannes Thumshirn <johannes.thumshirn@men.de>
+Cc: Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-omap_get_control_dev() is being deprecated as it doesn't support
-multiple instances. As control device is present only from OMAP4
-onwards which supports DT only, we use phandles to get the
-reference to the control device.
+On 08/22/2013 01:37 AM, Johannes Thumshirn wrote:
+> On Wed, Aug 21, 2013 at 11:34:00AM -0600, Stephen Warren wrote:
+>> On 08/21/2013 06:42 AM, Johannes Thumshirn wrote:
+>>> I accidently put the devicetree bindings for the MEN A21 watchdog driver in
+>>> Documentation/devicetree/bindings/gpio instead of
+>>> Documentation/devicetree/bindings/watchdog, this patch addresses this error.
+>>
+>> The rename sounds fine, so that part,
+>> Acked-by: Stephen Warren <swarren@nvidia.com>
+>>
+>> However, the binding itself doesn't look right; it appears to have a
+>> single "gpios" property rather than using separate named xxx-gpios
+>> properties for different things...
+> 
+> Ok, so I'll need something like the following?
+> 
+> watchdog {
+> 	compatible ="men,a021-wdt";
+> 	enable-gpios = <&gpio3 9 1>; /* WD_EN */
+> 	fast-gpios = <&gpio3 10 1>;  /* WD_FAST */
+> 	trig-gpios = <&gpio3 11 1>;  /* WD_TRIG */
+> 	rst0-gpio = <&gpio3 6 1>;    /* RST_CAUSE[0] */
+> 	rst1-gpio = <&gpio3 7 1>;    /* RST_CAUSE[1] */
+> 	rst2-gpio = <&gpio3 8 1>;    /* RST_CAUSE[2] */
+> };
 
-As we don't support non-DT boot, we just bail out on probe
-if device node is not present.
+Yes, that looks more like what I'd expect, albeit I'd probably expect to
+see a rst-gpio property with 3 entries.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/usb/phy/phy-omap-usb2.c |   16 +++++++++++++---
- 1 files changed, 13 insertions(+), 3 deletions(-)
+> Or is there something like of_get_named_gpios(...) so I can put all 3 rst-gpios
+> into one property? A quick grep only revealed of_get_named_gpio(...).
 
-diff --git a/drivers/usb/phy/phy-omap-usb2.c b/drivers/usb/phy/phy-omap-usb2.c
-index 376b367..77e0cf4 100644
---- a/drivers/usb/phy/phy-omap-usb2.c
-+++ b/drivers/usb/phy/phy-omap-usb2.c
-@@ -28,6 +28,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/delay.h>
- #include <linux/usb/omap_control_usb.h>
-+#include <linux/of_platform.h>
- 
- /**
-  * omap_usb2_set_comparator - links the comparator present in the sytem with
-@@ -124,6 +125,8 @@ static int omap_usb2_probe(struct platform_device *pdev)
- 	struct omap_usb			*phy;
- 	struct usb_otg			*otg;
- 	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *control_node;
-+	struct platform_device *control_pdev;
- 
- 	if (!node)
- 		return -ENODEV;
-@@ -148,11 +151,18 @@ static int omap_usb2_probe(struct platform_device *pdev)
- 	phy->phy.otg		= otg;
- 	phy->phy.type		= USB_PHY_TYPE_USB2;
- 
--	phy->control_dev = omap_get_control_dev();
--	if (IS_ERR(phy->control_dev)) {
--		dev_dbg(&pdev->dev, "Failed to get control device\n");
-+	control_node = of_parse_phandle(node, "ctrl-module", 0);
-+	if (!control_node) {
-+		dev_err(&pdev->dev, "Failed to get control device phandle\n");
- 		return -ENODEV;
- 	}
-+	control_pdev = of_find_device_by_node(control_node);
-+	if (!control_pdev) {
-+		dev_err(&pdev->dev, "Failed to get control device\n");
-+		return -ENODEV;
-+	}
-+
-+	phy->control_dev = &control_pdev->dev;
- 
- 	phy->is_suspended	= 1;
- 	omap_control_usb_phy_power(phy->control_dev, 0);
--- 
-1.7.4.1
+The availablity of APIs within Linux shouldn't impact the binding
+definitions. I would imagine it's easy enough to add
+of_get_named_gpio_by_index() or similar to Linux.
 
