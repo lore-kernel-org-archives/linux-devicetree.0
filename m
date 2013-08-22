@@ -1,71 +1,206 @@
-Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:51507 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752011Ab3HVNT5 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 09:19:57 -0400
-Date: Thu, 22 Aug 2013 14:19:23 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130822131923.GJ26118@sirena.org.uk>
-References: <520E3B8F.9010800@samsung.com>
- <520E7417.3090606@wwwdotorg.org>
- <20130819084227.GC3719@e106331-lin.cambridge.arm.com>
- <5214AA52.2060209@samsung.com>
- <1377088624.10707.23.camel@hornet>
- <20130821175446.GI26118@sirena.org.uk>
- <1377163408.10707.29.camel@hornet>
- <20130822112619.GD26118@sirena.org.uk>
- <1377171844.10707.32.camel@hornet>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <52160802.2070201@gmail.com>
+Date: Thu, 22 Aug 2013 07:45:54 -0500
+From: Rob Herring <robherring2@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3NJww9yp20AXRsxZ"
-Content-Disposition: inline
-In-Reply-To: <1377171844.10707.32.camel@hornet>
 Subject: Re: passing two interrupts two an I2C driver
-Sender: devicetree-owner@vger.kernel.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Mark Rutland <Mark.Rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>, "lars@metafoo.de" <lars@metafoo.de>, "l.czerwinski@samsung.com" <l.czerwinski@samsung.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+References: <520E3B8F.9010800@samsung.com> <520E7417.3090606@wwwdotorg.org> <20130819084227.GC3719@e106331-lin.cambridge.arm.com> <5212433E.4090802@wwwdotorg.org> <20130820084454.GT3719@e106331-lin.cambridge.arm.com> <52139873.1040703@wwwdotorg.org> <20130821085433.GZ3719@e106331-lin.cambridge.arm.com>
+In-Reply-To: <20130821085433.GZ3719@e106331-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Jacek Anaszewski <j.anaszewski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>, "lars@metafoo.de" <lars@metafoo.de>, "l.czerwinski@samsung.com" <l.czerwinski@samsung.com>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
+On 08/21/2013 03:54 AM, Mark Rutland wrote:
+> On Tue, Aug 20, 2013 at 05:25:23PM +0100, Stephen Warren wrote:
+>> On 08/20/2013 02:44 AM, Mark Rutland wrote:
+>>> On Mon, Aug 19, 2013 at 05:09:34PM +0100, Stephen Warren wrote:
+>>>> On 08/19/2013 02:42 AM, Mark Rutland wrote:
+>>>>> On Fri, Aug 16, 2013 at 07:48:55PM +0100, Stephen Warren wrote:
+>>>>>> On 08/16/2013 08:47 AM, Jacek Anaszewski wrote:
+>>>>>>> Hi all,
+>>>>>>>
+>>>>>>> I'd like to consult the implementation of DT binding for the I2C device
+>>>>>>> that exposes two interrupt pins (INT1 and INT2). Both pins can be
+>>>>>>> configured to generate either data ready interrupts or event interrupts.
+>>>>>>> I want to implement DT binding that will handle also the situation
+>>>>>>> when only one of the interrupt sources is routed from the device
+>>>>>>> to the CPU.
+>>>>>>>
+>>>>>>> Below is my implementation using interrupt-map:
+>>>>>>
+>>>>>>> +  - interrupt-parent : phandle to the interrupt map subnode
+>>>>>>
+>>>>>> When using interrupt-parent to point at an interrupt map, I believe you
+>>>>>> usually just point at the current node; there's no need to a child node.
+>>>>>>
+>>>>>>> +  - interrupts : interrupt mapping for LPS331AP interrupt sources:
+>>>>>>> +                2 sources: 0 - data ready, 1 - threshold event
+>>>>>>
+>>>>>>> +  - irq-map : irq sub-node defining interrupt map
+>>>>>>> +             (all properties listed below are required):
+>>>>>>
+>>>>>> So, this node isn't required.
+>>>>>>
+>>>>>>> +      - #interrupt-cells : should be 1
+>>>>>>
+>>>>>>> +      - #address-cells : should be 0
+>>>>>>> +      - #size-cells : should be 0
+>>>>>>
+>>>>>> There are no addressed entities in this node, so I don't see why those
+>>>>>> two properties are needed.
+>>>>>>
+>>>>>>> +      - interrupt-map : table of entries consisting of three child elements:
+>>>>>>> +         - unit_interrupt_specifier - 0 : data ready, 1 : threshold event
+>>>>>>> +         - interrupt parent phandle
+>>>>>>> +         - parent unit interrupt specifier consisiting of two elements:
+>>>>>>> +             - index of the interrupt within the controller
+>>>>>>> +             - flags : should be 0
+>>>>>>
+>>>>>> It's up to the binding for the node referenced by the phandle to define
+>>>>>> how many cells need be present for "flags", and their meaning. This
+>>>>>> binding shouldn't attempt to describe those. Equally, the concept of
+>>>>>> interrupt-map should be defined elsewwere (e.g.
+>>>>>> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt);
+>>>>>> it's a generic that shouldn't need duplication in each binding that uses
+>>>>>> interrupts.
+>>>>>>
+>>>>>>> +Example:
+>>>>>>> +
+>>>>>>> +lps331ap@5d {
+>>>>>>> +       compatible = "st,lps331ap";
+>>>>>>> +       reg = <0x5d>;
+>>>>>>> +       drdy-int-pin = /bits/ 8 <2>;
+>>>>>>> +       interrupt-parent = <&irq_map>;
+>>>>>>> +       interrupts = <0>, <1>;
+>>>>>>> +
+>>>>>>> +       irq_map: irq-map {
+>>>>>>> +               #interrupt-cells = <1>;
+>>>>>>> +               #address-cells = <0>;
+>>>>>>> +               #size-cells = <0>;
+>>>>>>> +               interrupt-map = <0 &gpf0 5 0>;
+>>>>>>> +       };
+>>>>>>> +};
+>>>>>>>
+>>>>>>> And here is how the driver uses this information:
+>>>>>>>
+>>>>>>>  - if interrupt-map is empty then the driver configures
+>>>>>>>    itself to work without interrupt support
+>>>>>>
+>>>>>> The presence or lack of interrupt support should be driven by the
+>>>>>> presence of the interrupts property. interrupt-map should only be used
+>>>>>> (if present) to assist in the parsing of the interrupts property.
+>>>>>>
+>>>>>>>  - if only one interrupt source is available then the driver
+>>>>>>>    configures the device to generate data ready interrupts on
+>>>>>>>    the corresponding INTx pin (in this case the driver must know which
+>>>>>>>    of the device pins is routed to the cpu -
+>>>>>>>    st,data-ready-interrupt-pin property conveys this information)
+>>>>>>>  - if both interrupt sources are available then the driver configures
+>>>>>>>    the device to generate data ready interrupts on the interrupt pin
+>>>>>>>    corresponding to the interrupt source with index 0 and event
+>>>>>>>    interrupts to the interrupt source with index 1.
+>>>>>>>
+>>>>>>> This solution seems to be a little awkward so I'd like to ask
+>>>>>>> if there is any neater way to handle presented requirements.
+>>>>>>> The solution must facilitate passing information about two
+>>>>>>> interrupt sources two the I2C driver. I have been unable to find
+>>>>>>> similar solution in the kernel so far.
+>>>>>>
+>>>>>> Indeed. I think it would be better to work as follows:
+>>>>>>
+>>>>>> interrupts: contains one or two interrupt specifiers. The first entry
+>>>>>> always defines the data ready interrupt. The second entry, if present,
+>>>>>> defines the threshold event interrupt. This at least allows the
+>>>>>> following combinations to be very simple expressed:
+>>>>>>
+>>>>>> * no interrrupts
+>>>>>> * just data
+>>>>>> * both data and threshold (assuming they're routed to the same parent)
+>>>>>>
+>>>>>> (you could swap the order if it's likely to be more common to have just
+>>>>>> a threshold interrupt without any data interrupt).
+>>>>>>
+>>>>>> In order to allow the presence of a threshold interrupt but no data
+>>>>>> interrupt, then I think you would need interrupt-map:
+>>>>>>
+>>>>>> lps331ap: lps331ap@5d {
+>>>>>> 	compatible = "st,lps331ap";
+>>>>>> 	reg = <0x5d>;
+>>>>>> 	interrupt-parent = <&lps331ap>;
+>>>>>> 	interrupts = <0>, <1>;
+>>>>>> 	interrupt-map =	<0 0>, /* nowhere */
+>>>>>> 			<1 &gpf0 6 0>;
+>>>>>> };
+>>>>>
+>>>>> The interrupt-names property exists for this purpose (describing
+>>>>> interrupts which may or may not be present). Describing a nonexistent
+>>>>> interrupt and mapping it nowhere feels like a hack to me when we can
+>>>>> describe exactly what's present.
+>>>>
+>>>> But the rules for interrupts basically precludes the useful use of
+>>>> interrupt-names.
+>>>>
+>>>> The interrupts property was introduced long before interrupt-names. As
+>>>> such, the rule was always that entries in interrupts had to appear at a
+>>>> specific index in the property, in other words, the property had to be
+>>>> in a specific order, and there's no way of missing entries out.
+>>>
+>>> Ok, so for bindings that existed before reg-names, and never mentioned
+>>> reg-names, indexed accesses to reg entries must always be used.
+>>>
+>>>> The interrupt-names property was added much later and more as a
+>>>> documentation for the order in *.dts than as the primary lookup key.
+>>>> Even with an interrupt-names property present, the order of entries in
+>>>> interrupts is still fixed.
+>>>>
+>>>> So, using interrupt-names doesn't allow you to have optional entries in
+>>>> interrupts, nor re-order the property. We really should not have added
+>>>> interrupt-names, since it gives false impressions.
+>>>
+>>> I'm not sure why that has to be true for new bindings. The new bindings
+>>> were never used before the existence of reg-names, so it doesn't seem so
+>>> bad for the new bindings to require the use of reg-names, or to define
+>>> some optional usage of reg-names.
+>>
+>> IIRC, the argument put forth was that OSs may assume a complete lack of
+>> the reg-names property and only allow looking up reg values by index,
+>> and hence making use of reg-names would prohibit those OSs from
+>> supporting new bindings. Although that said, quite why reg-names was
+>> then allowed as a property I don't know. IIRC, another argument was that
+>> we didn't want to force people into the overhead of parsing via
+>> reg-names when a simple index could be used instead, so reg had to
+>> always have a defined order even if reg-names was allowed.
+>>
+>> On the assumption that reg-names wasn't retro-fitted to any "old"
+>> bindings that originally just documents reg and not reg-names, then I
+>> suppose we could say:
+>>
+>> If a binding defines reg-names, either reg-names or hard-coded indices
+>> may be used to find entries in reg. Otherwise, only hard-coded indices
+>> may be allowed.
+>>
+>> But I'm worried that people will see reg-names and assume they can put
+>> entries in arbitrary order...
+> 
+> We should fix the binding documents to make clear which bindings require
+> their reg properties at fixed indexes, and those which allow for
+> arbitrarily ordered named reg entries. Named reg entries are really
+> useful for blocks with optional components, and given we have drivers
+> using them, they're already mandatory for some bindings.
 
---3NJww9yp20AXRsxZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No, we should fix the bindings that have arbitrarily ordered reg
+properties. There is no obvious reg examples of this that I see from a
+quick scan of dts files.
 
-On Thu, Aug 22, 2013 at 12:44:04PM +0100, Pawel Moll wrote:
-> On Thu, 2013-08-22 at 12:26 +0100, Mark Brown wrote:
+There is this questionable use of "empty" for interrupt-names:
 
-> > Yes, that's probably the most straightforward thing - we'd need to
-> > either have the bindings specify which interrupt must be first for
-> > reading i2c->irq or just have the drivers always do a name based lookup
-> > if there's more than one interrupt.
+arch/arm/boot/dts/imx23.dtsi:
+	interrupts = <0 14 20 0
+			13 13 13 13>;
+	interrupt-names = "empty", "ssp0", "ssp1", "empty",
+			"gpmi0", "gpmi1", "gpmi2", "gpmi3";
 
-> ... or make sure that of_i2c_register_devices() does *not* set i2c->irq
-> (or rather: set it to 0) when there is more than one interrupt in the
-> tree...
 
-Yes, that'd be a really good idea if the drivers are always getting the
-interrupts by name, provides a backup.
-
---3NJww9yp20AXRsxZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSFg/YAAoJELSic+t+oim9gbEQAJoZoZ4nn5LOR9tEPktUmhcD
-eV1kgDY9q0lJse4NQyJp9rzid+6pqqWhUnmA1h38MhDX+UQWHlrAQE6jhjH4wL/T
-mwZQDTXvt8YN8g3iMrW6kaZhpwXg3tqcKF2GSICL2eTwdS1gIVb039Z9dfjKqeFt
-UG+JplhBpfDgQm+qN3JfxYwhVAjLISzx6EMcB7YxNECrlXj4uJiiunGhTb+TNhSi
-gsTUumMcJDtNlkV03pfBK8KQBHaGCnPZpg7Xojz8Y3+rQW0s2e5zz2Htqu9RVD8U
-Ttx1Y3sX/OF8XVR6bOWooWmPTU7Zj3ZoeRwURZXUdgE3gcoxrTMwATkcF1WSbcr2
-TRP4i+jgknCgt8AeqZkQe8W0TTdW6ftQkks5fn9e+INsxbfymmJD+dRv+48j5HBu
-3gwXxquDgj1KMNF62EDabD/bCW3PReVFoo79QPlYrUT2EPGES9v8dmdkvxDp8zM0
-B+RijOluu729Ey3tW2dsii4dOpTrPt4YWkuvR2xCMVUeuE5DL18DYQ74Iu1HrF7K
-RUlarGOMGx5jnCVKzrR2UWvkGoovQROIZ8XEQxY5Uf8lv9exiQf/Wdk3DN65GG7e
-q72+LxBWj7viwPikSeN+XOvzAiv2MJLGMQSdgEFWDKFtQ44Na4YYQrCWzgAqXjCE
-pe0i87kl5mhHCBHmzp3/
-=BMWY
------END PGP SIGNATURE-----
-
---3NJww9yp20AXRsxZ--
+Rob
