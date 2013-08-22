@@ -1,80 +1,47 @@
-Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-bk0-f48.google.com ([209.85.214.48]:44392 "EHLO
-	mail-bk0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752010Ab3HPWQq (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 16 Aug 2013 18:16:46 -0400
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [RFC 4/4] OF: Add device pointer to struct device_node
-Date: Fri, 16 Aug 2013 22:39:23 +0200
-Message-Id: <1376685563-1053-5-git-send-email-treding@nvidia.com>
-In-Reply-To: <1376685563-1053-1-git-send-email-treding@nvidia.com>
-References: <1376685563-1053-1-git-send-email-treding@nvidia.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <swarren@wwwdotorg.org>
+Message-ID: <521673FB.3040904@wwwdotorg.org>
+Date: Thu, 22 Aug 2013 14:26:35 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
+MIME-Version: 1.0
+Subject: Re: passing two interrupts two an I2C driver
+References: <520E3B8F.9010800@samsung.com> <520E7417.3090606@wwwdotorg.org> <20130819084227.GC3719@e106331-lin.cambridge.arm.com> <5212433E.4090802@wwwdotorg.org> <20130820084454.GT3719@e106331-lin.cambridge.arm.com> <52139873.1040703@wwwdotorg.org> <20130821085433.GZ3719@e106331-lin.cambridge.arm.com> <52160802.2070201@gmail.com>
+In-Reply-To: <52160802.2070201@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jacek Anaszewski <j.anaszewski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>, "lars@metafoo.de" <lars@metafoo.de>, "l.czerwinski@samsung.com" <l.czerwinski@samsung.com>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/of/device.c   |  2 ++
- drivers/of/platform.c | 10 +---------
- include/linux/of.h    |  2 ++
- 3 files changed, 5 insertions(+), 9 deletions(-)
+On 08/22/2013 06:45 AM, Rob Herring wrote:
+> On 08/21/2013 03:54 AM, Mark Rutland wrote:
+...
+>> We should fix the binding documents to make clear which bindings require
+>> their reg properties at fixed indexes, and those which allow for
+>> arbitrarily ordered named reg entries. Named reg entries are really
+>> useful for blocks with optional components, and given we have drivers
+>> using them, they're already mandatory for some bindings.
+> 
+> No, we should fix the bindings that have arbitrarily ordered reg
+> properties. There is no obvious reg examples of this that I see from a
+> quick scan of dts files.
+> 
+> There is this questionable use of "empty" for interrupt-names:
+> 
+> arch/arm/boot/dts/imx23.dtsi:
+> 	interrupts = <0 14 20 0
+> 			13 13 13 13>;
+> 	interrupt-names = "empty", "ssp0", "ssp1", "empty",
+> 			"gpmi0", "gpmi1", "gpmi2", "gpmi3";
+> 
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index f685e55..8f8e715 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -63,6 +63,8 @@ int of_device_add(struct platform_device *ofdev)
- 	if (!ofdev->dev.parent)
- 		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
- 
-+	ofdev->dev.of_node->dev = &ofdev->dev;
-+
- 	return device_add(&ofdev->dev);
- }
- 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index b0d1ff8..0ae68bd 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -31,11 +31,6 @@ const struct of_device_id of_default_bus_match_table[] = {
- 	{} /* Empty terminated list */
- };
- 
--static int of_dev_node_match(struct device *dev, void *data)
--{
--	return dev->of_node == data;
--}
--
- /**
-  * of_find_device_by_node - Find the platform_device associated with a node
-  * @np: Pointer to device tree node
-@@ -44,10 +39,7 @@ static int of_dev_node_match(struct device *dev, void *data)
-  */
- struct platform_device *of_find_device_by_node(struct device_node *np)
- {
--	struct device *dev;
--
--	dev = bus_find_device(&platform_bus_type, NULL, np, of_dev_node_match);
--	return dev ? to_platform_device(dev) : NULL;
-+	return np->dev ? to_platform_device(np->dev) : NULL;
- }
- EXPORT_SYMBOL(of_find_device_by_node);
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 17ce8a6..e583a6d 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -65,6 +65,8 @@ struct device_node {
- 	unsigned int unique_id;
- 	struct of_irq_controller *irq_trans;
- #endif
-+
-+	struct device *dev;
- };
- 
- #define MAX_PHANDLE_ARGS 8
--- 
-1.8.3.4
+Well, there's been an assertion that bindings that define an ordered
+interrupts property shouldn't have a interrupt-names property, and
+bindings that define interrupt-names entries explicitly don't require a
+specific order of entries in the interrupts property.
 
+I assume from your statement, you don't agree, and think that interrupts
+must always be in a specific order, even if interrupt-names exists?
+
+If so, that'd make interrupt-names at least a bit useless and at worst
+horribly misleading, since people will assume it defines the order and
+that the order can be arbitrary.
