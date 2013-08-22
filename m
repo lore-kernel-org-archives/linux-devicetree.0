@@ -1,61 +1,73 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db8lp0189.outbound.messaging.microsoft.com ([213.199.154.189]:11779
-	"EHLO db8outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754786Ab3HEV6c (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 17:58:32 -0400
-From: <dinguyen@altera.com>
-Subject: [RESEND PATCH 0/4] Enable ethernet support for SOCFPGA
-Date: Mon, 5 Aug 2013 16:58:41 -0500
-Message-ID: <1375739925-9110-1-git-send-email-dinguyen@altera.com>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:52115 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754005Ab3HVUGE (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 16:06:04 -0400
+Date: Thu, 22 Aug 2013 21:05:58 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130822200558.GV26118@sirena.org.uk>
+References: <cover.1377054540.git.b42378@freescale.com>
+ <e9cf5e37f858dea78319720f007f66c8c063885f.1377054540.git.b42378@freescale.com>
+ <52150763.8020707@wwwdotorg.org>
+ <20130822114027.GA4258@MrMyself>
+ <52166CF0.9080402@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1MV0VfA6Y2yiVCnw"
+Content-Disposition: inline
+In-Reply-To: <52166CF0.9080402@wwwdotorg.org>
+Subject: Re: [PATCH v10 2/2] ASoC: fsl: Add S/PDIF machine driver
 Sender: devicetree-owner@vger.kernel.org
-To: dinh.linux@gmail.com
-Cc: Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pavel Machek <pavel@denx.de>, Jack Mitchell <jack.mitchell@dbbroadcast.co.uk>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Nicolin Chen <b42378@freescale.com>, s.hauer@pengutronix.de, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, tomasz.figa@gmail.com, mark.rutland@arm.com, R65777@freescale.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Dinh Nguyen <dinguyen@altera.com>
 
-Hello,
+--1MV0VfA6Y2yiVCnw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-These 4 patches are meant to enable ethernet and SD/MMC for the SOCFPGA
-platform.
+On Thu, Aug 22, 2013 at 01:56:32PM -0600, Stephen Warren wrote:
+> On 08/22/2013 05:40 AM, Nicolin Chen wrote:
 
-patch (1/4): Adds select ARM_TWD for the platform
-patch (2/4): Add platform specific initialization for the ethernet controller.
-patch (3/4): Commit 25c83b5c2 added "snps,phy-addr" for getting the PHY addr.
-        Set the ethernet clocks to be emac_0_clk and emac_1_clk so it be gated.
-patch (4/4): Update defconfig to support SD/MMC, ethernet, EXT3 and NFS.
+> > Documentation/devicetree/bindings/sound/spdif-receiver.txt
+> > If I understand correctly, this doc for the dummy codec should be invalid?
 
-Thanks,
+> Yes, I'm not convinced that binding is a good idea; it describes
+> something that often doesn't actually exist in HW. (Sometimes there's a
+> real S/PDIF receiving device on board, but sometimes there's nothing
+> except a jack/connector).
 
-Dinh Nguyen (4):
-  arm: socfpga: Enable ARM_TWD for socfpga
-  arm: socfpga: Add platform initialization for ethernet
-  ARM: socfpga: dts: Fix entries for the ethernet entries.
-  arm: socfpga: Add support for SD/MMC and ethernet to defconfig
+> It'd be useful if other DT binding maintainers could weigh in on this to
+> confirm/deny my thoughts.
 
- arch/arm/boot/dts/socfpga.dtsi         |    4 +-
- arch/arm/boot/dts/socfpga_cyclone5.dts |    2 +-
- arch/arm/configs/socfpga_defconfig     |    8 +++
- arch/arm/mach-socfpga/Kconfig          |    1 +
- arch/arm/mach-socfpga/core.h           |    8 +++
- arch/arm/mach-socfpga/socfpga.c        |   85 +++++++++++++++++++++++++++++++-
- 6 files changed, 104 insertions(+), 4 deletions(-)
+I think the binding should be changed to replace the word "dummy" with
+"generic" and perhaps some verbiage about not requiring software
+configuration.  I think given the unidirectional nature of S/PDIF it's
+reasonable to represent a jack like this - the hardware can't generally
+tell if there's anything at the other end of the link anyway, for all
+pratical purposes the transmit end just has to blindly send.
 
-CC: Arnd Bergmann <arnd@arndb.de>
-CC: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ian.campbell@citrix.com>
-Cc: devicetree@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Pavel Machek <pavel@denx.de>
-Cc: Jack Mitchell <jack.mitchell@dbbroadcast.co.uk>
+--1MV0VfA6Y2yiVCnw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-1.7.9.5
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
+iQIcBAEBAgAGBQJSFm8iAAoJELSic+t+oim9XT8P/jmtdNchB0XJLs8+fq1fdxS1
+I1YqGnJD4wnRuDGeIkfwz8YR0bd1a+aoiHZTp9CUDWG8tw7awihtZNo74socvriy
+MY9RImLETAGmrsyghYuziU1oV3qvc3hDoH9J66LRRgMEEJIS36KVReyZJ0wh9vpr
+TM8K6WaPkxa8Dr0MxYjrMi0hLTm6TiPPfPZs68H3eIl9wrHcpAFWY96T2OX84XOM
+IbqY6cCEsjNCRbMhEhtj1r6Di5h7AfPsuOf8rXPYVX1nYinpj1ybIY6q1YGgP8xl
+MlaSPUyW6p3jQtgmt/v/Wt5qZOUOVhl/5sp4t65KuoCKnlQ3PB0sC+tBLcmM8URH
+hZ+PDFBKdWumuF7cPrULBBzBsIfCHiTQ2kFCwW4e+Nxg3s1YqYBcwpDA18u7xPLC
+3CLDPsMvAgXQjG0n6/PRAvlaR0bIaoueWi+kKQYu2od6ix+iTYz3UquOTfx801h4
+sabUZDiF3lRQaLhsJNAlzugIcxK8B7UC5uOFRDI0/r26o6MWP4uoGb7Cbx1RDuuP
+wHSLkoW1wmftH+vqXOYPRa9lVFd891VT/Rgdj6DNX3jVp+1lhF/EZ4Iph6xJZlHa
+hqOFDHfvSI+6plyypppJR1tc1yrHZ14echmmEsUDdXDY//HlvFsBjNvjZISlMMoR
+fDNNnuFqdskrYYDtloc6
+=HclX
+-----END PGP SIGNATURE-----
 
+--1MV0VfA6Y2yiVCnw--
