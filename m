@@ -1,37 +1,53 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db8lp0188.outbound.messaging.microsoft.com ([213.199.154.188]:5546
-	"EHLO db8outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752312Ab3HWDSK (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Thu, 22 Aug 2013 23:18:10 -0400
-Message-ID: <5216D461.4010604@freescale.com>
-Date: Fri, 23 Aug 2013 11:17:53 +0800
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
+Received: from muin.pair.com ([209.68.1.55]:52596 "EHLO muin.pair.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753105Ab3HVAgZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 21 Aug 2013 20:36:25 -0400
 MIME-Version: 1.0
-Subject: Re: [PATCH v7 2/3] DMA: Freescale: Add new 8-channel DMA engine device
- tree nodes
-References: <1375094944-3343-1-git-send-email-hongbo.zhang@freescale.com>  <1375094944-3343-3-git-send-email-hongbo.zhang@freescale.com>  <521541EE.4010303@wwwdotorg.org> <1377126028.5029.52.camel@snotra.buserror.net> <52154A34.4020405@wwwdotorg.org>
-In-Reply-To: <52154A34.4020405@wwwdotorg.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1377127873.5029.72.camel@snotra.buserror.net>
+References: <1375094944-3343-1-git-send-email-hongbo.zhang@freescale.com>
+	<1375094944-3343-3-git-send-email-hongbo.zhang@freescale.com>
+	<521541EE.4010303@wwwdotorg.org>
+	<1377125827.5029.50.camel@snotra.buserror.net>
+	<52154A22.4090809@wwwdotorg.org>
+	<1377127873.5029.72.camel@snotra.buserror.net>
+Date: Wed, 21 Aug 2013 19:27:52 -0500
+Message-ID: <CAOZdJXXvyFQZqyKjDerESB7RmZ9J76R40xLtNGfTd1Wv=W-bow@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] DMA: Freescale: Add new 8-channel DMA engine
+ device tree nodes
+From: Timur Tabi <timur@tabi.org>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Scott Wood <scottwood@freescale.com>, vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Scott Wood <scottwood@freescale.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, hongbo.zhang@freescale.com, lkml <linux-kernel@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, djbw@fb.com, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/22/2013 07:16 AM, Stephen Warren wrote:
-> On 08/21/2013 05:00 PM, Scott Wood wrote:
->> On Wed, 2013-08-21 at 16:40 -0600, Stephen Warren wrote:
->>> On 07/29/2013 04:49 AM, hongbo.zhang@freescale.com wrote:
->>>> +        - reg               : <registers mapping for channel>
->>>> +        - interrupts        : <interrupt mapping for DMA channel IRQ>
->>> s/interrupts/specifier/
->> Do you mean s/interrupt mapping/interrupt specifier/?
->>
->> And probably s/registers mapping/register specifier/ as well.
-> Yup.
+On Wed, Aug 21, 2013 at 6:31 PM, Scott Wood <scottwood@freescale.com> wrote:
 >
-OK, I will update these descriptions.
+>> > Other than "this is how the existing binding works and we're not going
+>> > to break compatibility", it allows the OS more flexibility to choose
+>> > whether to bind to controllers or directly to the channels.  Sometimes a
+>> > channel will be labelled with a different compatible if it has a fixed
+>> > purpose such as being connected to audio hardware (e.g. mpc8610_hpcd.dts
+>> > where some channels are "fsl,ssi-dma-channel").
+>>
+>> That sounds terribly like encoding policy into DT rather than it being a
+>> HW description.
+>
+> It is hardware description.  Those DMA channels are physically wired
+> into the audio hardware.  Other DMA channels in the same system aren't.
 
+Well, not quite.  Technically the DMA channel can be dynamically
+assigned to the SSI, but there are limits.  At the time the code was
+written, there was no way to reserve a DMA channel from the generic
+DMA driver, and I didn't want to have to depend on that driver either.
+ Using the device tree forced a specific pair of channels to be
+assigned to each SSI.  The audio driver has code to program the SoC to
+route whichever DMA channels are assigned, but it assumes that the
+device tree has a valid assignment.
 
-
+I believe the generic DMA driver can now accept DMA channel
+reservations, but I don't think it works both ways.  That is, if the
+audio driver loads first, I don't think there's a clean way to tell
+the DMA driver which channels have already been taken by the audio
+driver.
