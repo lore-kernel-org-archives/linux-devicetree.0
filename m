@@ -1,122 +1,105 @@
-From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] ARM: dts: add reference voltage property for MXS
- LRADC
-Date: Thu, 22 Aug 2013 10:05:33 +0200
-Message-ID: <5215C64D.3040004@digi.com>
-References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com>  <1374501843-19651-3-git-send-email-hector.palacios@digi.com>  <520AA3CD.1040008@kernel.org> <1376491467.18617.41.camel@hornet> <52153B8E.7050309@free-electrons.com>
+From: Sricharan R <r.sricharan@ti.com>
+Subject: Re: [PATCH 1/3] misc: Add crossbar driver
+Date: Thu, 22 Aug 2013 17:03:10 +0530
+Message-ID: <5215F6F6.9060703@ti.com>
+References: <51E83A4F.5080904@ti.com>
+ <CACRpkdY3nQaWimTwB-Zt-8+Q_KZr8a0rpB1SUQq=AuoG4bAYnQ@mail.gmail.com>
+ <51ED2385.60108@ti.com> <51ED5C66.1010407@ti.com> <51EFFBE1.4090505@ti.com>
+ <51F0031B.1050307@ti.com> <51F00530.9090703@ti.com> <51F02069.3050207@ti.com>
+ <51F0223E.4050008@ti.com> <51F0240F.3050507@ti.com>
+ <20130813081003.GU7656@atomide.com> <520A02BA.4090805@ti.com>
+ <CACRpkda+m82PYJsExLM6JLsLa8-bVhdvy_r_+-uKfVT2NG7Cbg@mail.gmail.com>
+ <520D398D.9040806@ti.com>
+ <CACRpkdYeo1y-HhftkRWgwyq8o-NVuJ978Uq+ON880LHhUxC=hg@mail.gmail.com>
+ <520D44C5.6080205@ti.com>
+ <CACRpkdagSHxzV3=427O9iftNxM+N=w9aPds=iDvGQPoG3H-cWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52153B8E.7050309-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdagSHxzV3=427O9iftNxM+N=w9aPds=iDvGQPoG3H-cWw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Nishanth Menon <nm@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rajendra Nayak <rnayak@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Alexandre,
+Hi Linus,
 
-On 08/22/2013 12:13 AM, Alexandre Belloni wrote:
-> Hi Pawel,
->
-> On 14/08/2013 16:44, Pawel Moll wrote:
->> On Tue, 2013-08-13 at 22:23 +0100, Jonathan Cameron wrote:
->>> On 07/22/13 15:04, Hector Palacios wrote:
->>>> Some LRADC channels have fixed pre-dividers so they can measure
->>>> different voltages at full scale. The reference voltage allows to
->>>> expose a scaling attribute through the IIO sysfs so that a user can
->>>> compute the real voltage out of a measured sample value.
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
->>>> index 4688205..6ec485c 100644
->>>> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
->>>> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
->>>> @@ -1,9 +1,12 @@
->>>>   * Freescale i.MX28 LRADC device driver
->>>>
->>>>   Required properties:
->>>> -- compatible: Should be "fsl,imx28-lradc"
->>>> +- compatible: "fsl,imx28-lradc", "fsl,imx23-lradc"
->>>>   - reg: Address and length of the register set for the device
->>>>   - interrupts: Should contain the LRADC interrupts
->>>> +- fsl,vref: Reference voltage (in mV) for each LRADC channel. This is the
->>>> +	    maximum voltage that can be measured at full scale in each channel
->>>> +	    considering fixed pre-dividers.
+On Thursday 22 August 2013 02:40 AM, Linus Walleij wrote:
+> On Thu, Aug 15, 2013 at 11:14 PM, Santosh Shilimkar
+> <santosh.shilimkar@ti.com> wrote:
+>> On Thursday 15 August 2013 04:51 PM, Linus Walleij wrote:
+> (...)
+>>> Sorry I don't understand what thread that is... can you point me there?
+>>> My previous statement on this issue what this:
+>>> http://marc.info/?l=linux-kernel&m=137442541628641&w=2
+> (...)
+>>>> I don't see how you can make this happen with an irqchip
+>>>> infrastructure.
+>>> I think my post above describes this.
+>>>
+>> Sorry for being dumb but I don't think cascaded irqchip examples
+>> like GPIO and cross-bars are same. If you take an example of
+>> GPIO irqchip, it always have a physical connection even if it
+>> is 1 IRQ line for (32 logical/sparse IRQs). That goes with
+>> other MFD examples too.
 >>
->> So, let me try to rephrase what I read above.
->>
->> There's an ADC with X channels. And there's a reference voltage source
->> (one?). Now, each of the ADC channels have a (different?) voltage
->> divider, taking the voltage from the reference source and feeding it to
->> the ADC comparator. How much am I wrong?
->>
+>> So may be I am still missing something in your proposal.
+> Why does it matter if it is a GPIO or MFD or whatever?
+> The point is that the IRQ line passes thru something else,
+> and this we model as an irqdomain.
 >
-> You are not so wrong. There is indeed actually only one reference
-> voltage (and that is 1.85V). But, before feeding the voltage to the ADC
-> channels, you sometimes have a divider. Then, after the channel muxing,
-> you can add a by 2 divider.
+> Anyway here is a silicon cascaded IRQ chip:
+> arch/arm/mach-versatile/core.c
+> See versatile_init_irq():
 >
-> Mandatory ascii art:
+> __vic_init(VA_VIC_BASE, IRQ_VIC_START, ~0, 0, np);
+> (...)
+> fpga_irq_init(VA_SIC_BASE, "SIC", IRQ_SIC_START,
+>                 IRQ_VICSOURCE31, PIC_VALID, np);
 >
->              +-----+
->              |     |
->     +-ch1--->|     |
->              |     |
->              |     |
->              |     |     +-----+
->     +-ch2--->|     |     |     |
->              | MUX |++-->| ADC +----------->
->       ch3    |     | |   |     |
->      +----+  |     | |   +-----+
->      |    |  |     | |      |
->    +-> :4 +->|     | |  +---+--+
->      |    |  |     | |  |      |
->      +----+  |     | +->|  :2  |
->              +-----+    |      |
->                         +------+
->
->
->> If I'm not wrong at all, I'd say that the reference source could be
->> described as a standard fixed regulator
->> (Documentation/devicetree/bindings/regulator/fixed-regulator.txt) and
->> the ADC node should have some king of "reference-supply" phandle to the
->> regulator node. Now, if the dividers factors are *really* fixed, the
->> driver could know about them and calculate the effective reference
->> voltage on its own, couldn't it?
->>
->> Let me repeat the "DT standard disclaimer": the tree, in general, should
->> describe the way components are *wired up*, not much more.
->>
->
-> So, from my point of view, the divider that is before the mux (the by 4
-> divider on channel 3 on my drawing) is not part of the the ADC, it is
-> not fixed by that IP. And indeed, that changed between the i.mx23 and
-> i.mx28 while the IP is the same.
+> The VIC in the versatile has the SIC cascaded from one of
+> its IRQ lines. Both the VIC and SIC (fpga IRQ) are
+> using irqdomains so the SIC spawns a child irqdomain
+> from IRQ 31 (last IRQ) of the VIC.
+ Ok, this is a typical example of irqchip cascaded.
+> The difference with a crossbar is that it can software-config
+> which IRQ goes where, and does not have a callback
+> to clear interrupts or anything like that, it just passes them
+> thru. But it is best modeled as an irqdomain IMO.
+We can model crossbar as irqchip and gic as its interrupt parent
+and peripherals to have crossbar as interrupt-parent.
+   
+ peripherals will do request_irq(crossbar_number)
+              |
+              |
+ crossbar_unmask()
+              |
+              |
+ maps crossbar number<->  to interrupt number and
+ calls request_irq(int_no, crossbar_handler,..)
 
-The dividers only make sense and affect the ADC, so whether they should be considered 
-part of the ADC IP or not is a philosophical question.
-In my opinion, the different dividers between the i.mx23 and i.mx28 channels are the 
-kind of hardware differences that fit nicely in the DeviceTree, describing the hardware.
+ 
+ crossbar_handler(interrupt number)
+            |
+            |
+ get crossbar number from interrupt number
+            |
+            |
+ handle_irq(crossbar_domain(crossbar number))
+                                                                             
 
-> So, the two solutions you suggest are:
-> 1/ using a fixed-regulator phandle per channel
+So this means a extra dummy handler.
+Also the concern is by modelling it as irqchip, we will have
+to find a different solution for DMA crossbar.
 
-Since the dividers only affect and have meaning on the ADC channels, creating a 
-regulator for each channel that has a different divider looks to me like an overworked 
-solution. These are not real voltage sources. They are just indicators of the maximum 
-reference voltage that an ADC channel can measure.
-
-> 2/ hard-coding the dividers in the driver using the compatible string to
-> know which divider is on which channel.
->
-> I feel that solution 2 is less future proof but at the same time, I
-> don't believe we will see that IP in another chip in the future.
-
-This was what I originally submitted but it then looked like it would better fit in 
-the DeviceTree. The spear-adc seemed to use a similar approach:
-
-http://permalink.gmane.org/gmane.linux.kernel.iio/7994
-
-Best regards,
---
-Hector Palacios
+Regards,
+ Sricharan
