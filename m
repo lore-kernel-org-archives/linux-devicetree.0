@@ -1,106 +1,82 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] ARM: dts: add reference voltage property for MXS
- LRADC
-Date: Thu, 22 Aug 2013 00:13:34 +0200
-Message-ID: <52153B8E.7050309@free-electrons.com>
-References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com>  <1374501843-19651-3-git-send-email-hector.palacios@digi.com>  <520AA3CD.1040008@kernel.org> <1376491467.18617.41.camel@hornet>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v3 0/5] clk: dt: bindings for mux, divider & gate clocks
+Date: Wed, 21 Aug 2013 21:14:48 -0700
+Message-ID: <20130822041448.8231.16182@quantum>
+References: <1371795256-16703-1-git-send-email-mturquette@linaro.org>
+ <51E8586C.7040808@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1376491467.18617.41.camel@hornet>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51E8586C.7040808@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Cc: linux-kernel@vger.kernel.org, =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, devicetree-discuss@lists.ozlabs.org, Tero Kristo <t-kristo@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pawel,
-
-On 14/08/2013 16:44, Pawel Moll wrote:
-> On Tue, 2013-08-13 at 22:23 +0100, Jonathan Cameron wrote:
->> On 07/22/13 15:04, Hector Palacios wrote:
->>> Some LRADC channels have fixed pre-dividers so they can measure
->>> different voltages at full scale. The reference voltage allows to
->>> expose a scaling attribute through the IIO sysfs so that a user can
->>> compute the real voltage out of a measured sample value.
->>>
->>> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
->>> index 4688205..6ec485c 100644
->>> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
->>> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
->>> @@ -1,9 +1,12 @@
->>>  * Freescale i.MX28 LRADC device driver
->>>  
->>>  Required properties:
->>> -- compatible: Should be "fsl,imx28-lradc"
->>> +- compatible: "fsl,imx28-lradc", "fsl,imx23-lradc"
->>>  - reg: Address and length of the register set for the device
->>>  - interrupts: Should contain the LRADC interrupts
->>> +- fsl,vref: Reference voltage (in mV) for each LRADC channel. This is the
->>> +	    maximum voltage that can be measured at full scale in each channel
->>> +	    considering fixed pre-dividers.
+Quoting Stephen Boyd (2013-07-18 14:04:44)
+> On 06/20/13 23:14, Mike Turquette wrote:
+> > This series introduces binding definitions for common register-mapped
+> > clock multiplexer, divider and gate IP blocks along with the
+> > corresponding setup functions for matching DT data.  The bindings are
+> > similar to the struct definitions but please don't hold that against the
+> > binding: the struct definitions closely model the hardware register
+> > layout.
 > 
-> So, let me try to rephrase what I read above.
+> I know there was some discussion about clock bindings and how they
+> should and should not be done at Linaro Connect Europe last week. Can
+> someone in that discussion reply to the mailing list with what came out
+> of that? I only have second hand knowledge about the discussion so it
+> would be good for me and others to know what was discussed. I'm
+> especially curious because the arm soc update etherpad[1] says "DT
+> describes what HW is (location, type, attributes), not how HW works
+> (register descriptions, bitmasks, etc)." but these proposed generic
+> clock bindings are describing registers and bitmasks.
+
+Hi Stephen,
+
+I just happened across a to-do list note telling me to respond to this
+email. Better late than never.
+
+The meeting you're referring to did not focus on clock provider bindings
+as much as it focused on a pair of standard clock attributes that could
+be referenced by clock consumers. They are "assigned-clock-parent" and
+"assigned-clock-rate". The usage scribbled on the white board[1] was
+something like:
+
+mux: mux {
+	clocks = <&clock-foo>, <&clock-bar>;
+};
+
+uart: uart {
+	clocks = <&mux>;
+	assigned-clock-parent = <1>;
+};
+
+In the example above assigned-clock-parent uses the index of the mux,
+but I prefer the following:
+
+uart: uart {
+	clocks = <&mux>;
+	assigned-clock-parent = <&clock-bar>;
+};
+
+This is a way to establish initial configuration from the consumer's
+perspective. Similarly something can be done for the clock rate with
+assigned-clock-rate.
+
+With all of that said this is consumer-level stuff. We'll definitely
+talk about the clock provider DT bindings at the ARM Summit, which is
+what you discuss above.
+
+Regards,
+Mike
+
+[1] https://plus.google.com/u/0/107457854652287465481/posts/cvRveAupUpa
+
 > 
-> There's an ADC with X channels. And there's a reference voltage source
-> (one?). Now, each of the ADC channels have a (different?) voltage
-> divider, taking the voltage from the reference source and feeding it to
-> the ADC comparator. How much am I wrong?
+> [1] http://pad.linaro.org/p/LCE13_ARM_SOC_Tree_Consolidation_Update
 > 
-
-You are not so wrong. There is indeed actually only one reference
-voltage (and that is 1.85V). But, before feeding the voltage to the ADC
-channels, you sometimes have a divider. Then, after the channel muxing,
-you can add a by 2 divider.
-
-Mandatory ascii art:
-
-            +-----+
-            |     |
-   +-ch1--->|     |
-            |     |
-            |     |
-            |     |     +-----+
-   +-ch2--->|     |     |     |
-            | MUX |++-->| ADC +----------->
-     ch3    |     | |   |     |
-    +----+  |     | |   +-----+
-    |    |  |     | |      |
-  +-> :4 +->|     | |  +---+--+
-    |    |  |     | |  |      |
-    +----+  |     | +->|  :2  |
-            +-----+    |      |
-                       +------+
-
-
-> If I'm not wrong at all, I'd say that the reference source could be
-> described as a standard fixed regulator
-> (Documentation/devicetree/bindings/regulator/fixed-regulator.txt) and
-> the ADC node should have some king of "reference-supply" phandle to the
-> regulator node. Now, if the dividers factors are *really* fixed, the
-> driver could know about them and calculate the effective reference
-> voltage on its own, couldn't it?
-> 
-> Let me repeat the "DT standard disclaimer": the tree, in general, should
-> describe the way components are *wired up*, not much more.
-> 
-
-So, from my point of view, the divider that is before the mux (the by 4
-divider on channel 3 on my drawing) is not part of the the ADC, it is
-not fixed by that IP. And indeed, that changed between the i.mx23 and
-i.mx28 while the IP is the same.
-
-So, the two solutions you suggest are:
-1/ using a fixed-regulator phandle per channel
-2/ hard-coding the dividers in the driver using the compatible string to
-know which divider is on which channel.
-
-I feel that solution 2 is less future proof but at the same time, I
-don't believe we will see that IP in another chip in the future.
-
-Are my explanations clear enough to take a decision ?
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> hosted by The Linux Foundation
