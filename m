@@ -1,89 +1,84 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mailout1.samsung.com ([203.254.224.24]:26253 "EHLO
-	mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753471Ab3HWE6J (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 00:58:09 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:37657 "EHLO
+	mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752465Ab3HVFZ3 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 01:25:29 -0400
 From: Jingoo Han <jg1.han@samsung.com>
 References: <000401ce9739$e0a65410$a1f2fc30$@samsung.com>
- <20130812105638.GA12042@ulmo>
-In-reply-to: <20130812105638.GA12042@ulmo>
+ <CAK9yfHwEPEfhMCWGbDWK2NQE2zAgmsQc6_Dn498pRP4UX6sYmQ@mail.gmail.com>
+In-reply-to: <CAK9yfHwEPEfhMCWGbDWK2NQE2zAgmsQc6_Dn498pRP4UX6sYmQ@mail.gmail.com>
 Subject: Re: [PATCH] PCI: exynos: add support for MSI
-Date: Fri, 23 Aug 2013 13:58:07 +0900
-Message-id: <002e01ce9fbd$5b728430$12578c90$%han@samsung.com>
+Date: Thu, 22 Aug 2013 14:25:26 +0900
+Message-id: <000101ce9ef8$024f1be0$06ed53a0$%han@samsung.com>
 MIME-version: 1.0
 Content-type: text/plain; charset=us-ascii
 Content-transfer-encoding: 7bit
 Content-language: ko
 Sender: devicetree-owner@vger.kernel.org
-To: 'Thierry Reding' <thierry.reding@gmail.com>
-Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
+To: 'Sachin Kamat' <sachin.kamat@linaro.org>
+Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Monday, August 12, 2013 7:57 PM, Thierry Reding wrote:
-> On Mon, Aug 12, 2013 at 05:56:47PM +0900, Jingoo Han wrote:
-> [...]
-> > diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-> > index 855d4a7..9ef1c95 100644
-> > --- a/arch/arm/mach-exynos/Kconfig
-> > +++ b/arch/arm/mach-exynos/Kconfig
-> > @@ -93,6 +93,7 @@ config SOC_EXYNOS5440
-> >  	default y
-> >  	depends on ARCH_EXYNOS5
-> >  	select ARCH_HAS_OPP
-> > +	select ARCH_SUPPORTS_MSI
+On Monday, August 12, 2013 6:13 PM, Sachin Kamat wrote:
+> On 12 August 2013 14:26, Jingoo Han <jg1.han@samsung.com> wrote:
+> > This patch adds support for Message Signaled Interrupt in the
+> > Exynops PCIe diver using Synopsys designware PCIe core IP.
 > 
-> This symbol goes away in Thomas Petazzoni's MSI patch series which is
-> targetted at 3.12, so I don't think you should add that here.
+> s/Exynops PCIe diver/Exynos PCIe driver
 
-OK, I see.
-I will remove ARCH_SUPPORTS_MSI.
+OK, I will fix this typo.
+
+> > Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
+> > Signed-off-by: Srikanth T Shivanand <ts.srikanth@samsung.com>
+> > Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+> > Cc: Pratyush Anand <pratyush.anand@st.com>
+> > Cc: Mohit KUMAR <Mohit.KUMAR@st.com>
+> > ---
+> >  arch/arm/boot/dts/exynos5440.dtsi  |    2 +
+> >  arch/arm/mach-exynos/Kconfig       |    1 +
+> >  drivers/pci/host/pci-exynos.c      |   60 ++++++++++
+> >  drivers/pci/host/pcie-designware.c |  213 ++++++++++++++++++++++++++++++++++++
+> >  drivers/pci/host/pcie-designware.h |    8 ++
+> >  5 files changed, 284 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+> > index 586134e..3746835 100644
+> > --- a/arch/arm/boot/dts/exynos5440.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5440.dtsi
+> > @@ -249,6 +249,7 @@
+> >                 interrupt-map-mask = <0 0 0 0>;
+> >                 interrupt-map = <0x0 0 &gic 53>;
+> >                 num-lanes = <4>;
+> > +               msi-base = <200>;
+> 
+> Please update the bindings documentation too.
+
+OK, I will updated the bindings documentation.
 
 [.....]
 
-> > +#endif
-> > +
-> >  static void exynos_pcie_enable_interrupts(struct pcie_port *pp)
-> >  {
-> >  	exynos_pcie_enable_irq_pulse(pp);
 > > +#ifdef CONFIG_PCI_MSI
-> > +	exynos_pcie_msi_init(pp);
-> > +#endif
-> >  	return;
-> >  }
-> 
-> Instead of the whole #ifdef business above, can't you just use something
-> like this in exynos_pcie_enable_interrupts():
-> 
-> 	if (IS_ENABLED(CONFIG_PCI_MSI))
-> 		exynos_pcie_msi_init(pp);
-> 
-> Now you can drop the #ifdef guards and the compiler will throw away all
-> the related code automatically if PCI_MSI is not selected because the
-> functions are all static and unused. This has the advantage of compiling
-> all the code whether or not PCI_MSI is selected or not, therefore
-> increasing compile coverage of the driver.
-
-OK, I see.
-I will use 'if IS_ENABLED(CONFIG_PCI_MSI))', and remove #ifdef guards.
-
-[.....]
-
-> > +
-> > +void arch_teardown_msi_irq(unsigned int irq)
+> > +static void exynos_pcie_clear_irq_level(struct pcie_port *pp)
 > > +{
-> > +	clear_irq(irq);
-> > +}
+> > +       u32 val;
+> > +       struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
+> > +       void __iomem *elbi_base = exynos_pcie->elbi_base;
+> > +
+> > +       val = readl(elbi_base + PCIE_IRQ_LEVEL);
+> > +       writel(val, elbi_base + PCIE_IRQ_LEVEL);
 > 
-> And we've reworked this largely so that drivers no longer provide arch_*
-> functions because that prevents multi-platform support. So I think you
-> need to port this to the new msi_chip infrastructure that's being
-> introduced in 3.12.
+> Sorry, I did not get this. Writing the value read from the same
+> register without any operation.
 
-OK, I have looked at the new msi_chip infrastructure made by Thomas Petazzoni.
-I will use this msi_chip.
+It was intended to clear the bits by writing 1 of each bit.
+But I will remove this function.
 
-I really appreciate your comment. :)
-Thank you.
+My coworker, Srikanth T Shivanand found that this function is
+unnecessary. This is because PCIE_IRQ_LEVEL register is read-only
+register. Also, PCIE_IRQ_LEVEL register is already cleared before
+this function is called.
+
+Thank you for your comment.
 
 Best regards,
 Jingoo Han
