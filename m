@@ -1,64 +1,52 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:32785 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752466Ab3HVMah (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 08:30:37 -0400
-Date: Thu, 22 Aug 2013 13:30:04 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130822123004.GG26118@sirena.org.uk>
-References: <1376216117-5864-1-git-send-email-wangyuhang2014@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="d3slIU+tL1lDaIh/"
-Content-Disposition: inline
-In-Reply-To: <1376216117-5864-1-git-send-email-wangyuhang2014@gmail.com>
-Subject: Re: [PATCH v3 1/2]spi: DUAL and QUAD support
+Received: from mailout4.samsung.com ([203.254.224.34]:24228 "EHLO
+	mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754988Ab3HWKCd (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 06:02:33 -0400
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v4 6/7] ARM: dts: add hdmi hpd gpio pinctrl node for exynos5420
+Date: Fri, 23 Aug 2013 15:54:20 +0530
+Message-id: <1377253461-20851-7-git-send-email-rahul.sharma@samsung.com>
+In-reply-to: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com>
+References: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: wangyuhang <wangyuhang2014@gmail.com>
-Cc: sourav.poddar@ti.com, pekon@ti.com, tpiepho@gmail.com, spi-devel-general@lists.sourceforge.net, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
+Add pinctrl node for hdmi-hpd gpio pin to exynos5420
+device tree files.
 
---d3slIU+tL1lDaIh/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+---
+ arch/arm/boot/dts/exynos5420-smdk5420.dts |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-On Sun, Aug 11, 2013 at 06:15:17PM +0800, wangyuhang wrote:
+diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+index 7dbf1fa..681337e 100644
+--- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
++++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+@@ -61,9 +61,20 @@
+ 		};
+ 	};
+ 
++	pinctrl@13400000 {
++		hdmi_hpd_irq: hdmi-hpd-irq {
++			samsung,pins = "gpx3-7";
++			samsung,pin-function = <0>;
++			samsung,pin-pud = <1>;
++			samsung,pin-drv = <0>;
++		};
++	};
++
+ 	hdmi@14530000 {
+ 		status = "okay";
+ 		hpd-gpio = <&gpx3 7 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&hdmi_hpd_irq>;
+ 	};
+ 
+ 	mixer@14450000 {
+-- 
+1.7.10.4
 
-Applied, this looks good thanks.  A few coding style issues which I'll
-fix up myself but one thing:
-
-> fix the previous patch some mistake below:
-> 1. DT in slave node, use "spi-tx-nbits = <1/2/4>" in place of using
->    "spi-tx-dual, spi-tx-quad" directly, same to rx. So correct the
->    previous way to get the property in @of_register_spi_devices().
-
-This new DT stuff needs to be reviewed on the devicetree list and
-documented in the generic SPI bindings.  Can you please send a patch
-doing that?
-
-Please also note that the SPI list moved to vger.
-
---d3slIU+tL1lDaIh/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSFgRJAAoJELSic+t+oim9Y4cP/A+tI6TPBpRCfdJMK2tXx6Lp
-yV/gHFnf8xRuI71AeybCZD6Qzw6v2NiUf+YtZsturgmK1h44jKUzq9NwsEtw2/xA
-yuO4RwEqrtpZY/gTNCYilkRWuDJJf7ySZWG4srhUqV97qP8ygcemmpxG3e9Kcboh
-xfFMDPo0mFlup7qnz9Q/9gPBVEjgqq0h35yDUM/s7yuHmfwMex71TMCfpnABUejn
-DYldEmyqaM0BVi/kfyKrhiXm7E+FIQ1udsKrVyoCSkP5cJZ/pF7342FSKqi+8d/Q
-ATrJM4jCUlE2ILs6RD5E91+Z0p0oUPHD/iLKLs2JeGhEr0tBUteaAwDh2XgP88dn
-CceEKl3eeAk6ofOncaw7YFhsdc13gzU3JNLW4Dzy6bLJ63hIxK7G5V2oiWMi/GWK
-kLn73kHVNIQKDR6DgCqYkDQh4yDLqeIx5TFjiUQgesW+gna8+uqIDSQ9vEcWwRWX
-isMA4nzHCCejBCMrnt0cNKgdKDdz/QGSY7ThVuurLt11hSTfKRlPcV522cZKzB6j
-q3Q40SZ8dMQ1lNPN2y+NMFSmsQ4+B1NLX8aYbJYaU6yDkhDqsIf/JAfSpg3HvXYR
-LhpsrX2W8Oc9KCSaBEy1bXIUT0JQbPLPyEEMFJ8aJy0zPlhW9DLzfASpBXlC8O02
-F65cIZ4cUcARp1ReJJYE
-=1RbE
------END PGP SIGNATURE-----
-
---d3slIU+tL1lDaIh/--
