@@ -1,42 +1,43 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from aserp1040.oracle.com ([141.146.126.69]:18200 "EHLO
-	aserp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752896Ab3HVM6m (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 08:58:42 -0400
-Date: Thu, 22 Aug 2013 15:58:39 +0300
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch] dma: mv_xor: error handling fix in mv_xor_channel_add()
-Message-ID: <20130822125839.GC2543@elgon.mountain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Received: from mailout3.samsung.com ([203.254.224.33]:54131 "EHLO
+	mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754713Ab3HWKCZ (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 06:02:25 -0400
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v4 1/7] ARM: dts: add mixer clocks to mixer node for Exynos5250
+Date: Fri, 23 Aug 2013 15:54:15 +0530
+Message-id: <1377253461-20851-2-git-send-email-rahul.sharma@samsung.com>
+In-reply-to: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com>
+References: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Dan Williams <djbw@fb.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Sean Paul <seanpaul@chromium.org>, Rahul Sharma <rahul.sharma@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-We haven't allocated the dma buffer at this point and also if we
-"goto err_free_dma;" then it leads to a NULL dereference.  Just return
-directly.
+From: Sean Paul <seanpaul@chromium.org>
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+This patch adds the mixer clocks to the mixer node in the
+exynos 5250 dts file.
+
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 ---
-I can't compile this file.
+ arch/arm/boot/dts/exynos5250.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index d9a2677..0e9e835 100644
---- a/drivers/dma/mv_xor.c
-+++ b/drivers/dma/mv_xor.c
-@@ -1029,10 +1029,8 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 	struct dma_device *dma_dev;
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 1eec646..dcb6c03 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -622,6 +622,8 @@
+ 		compatible = "samsung,exynos5250-mixer";
+ 		reg = <0x14450000 0x10000>;
+ 		interrupts = <0 94 0>;
++		clocks = <&clock 343>, <&clock 136>;
++		clock-names = "mixer", "sclk_hdmi";
+ 	};
  
- 	mv_chan = devm_kzalloc(&pdev->dev, sizeof(*mv_chan), GFP_KERNEL);
--	if (!mv_chan) {
--		ret = -ENOMEM;
--		goto err_free_dma;
--	}
-+	if (!mv_chan)
-+		return ERR_PTR(-ENOMEM);
- 
- 	mv_chan->idx = idx;
- 	mv_chan->irq = irq;
+ 	dp_phy: video-phy@10040720 {
+-- 
+1.7.10.4
+
