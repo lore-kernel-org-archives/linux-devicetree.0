@@ -1,43 +1,34 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from perceval.ideasonboard.com ([95.142.166.194]:43218 "EHLO
-	perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755252Ab3HWXi5 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 19:38:57 -0400
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 3/3] gpio: pcf857x: Add OF support
-Date: Sat, 24 Aug 2013 01:40:13 +0200
-Message-ID: <1519389.gne8KHTcP5@avalon>
-In-Reply-To: <CACRpkdYvP6yCiQMQFpzaerrcvFug4rNWALPSDvkTidmz8_PovQ@mail.gmail.com>
-References: <1376953494-9684-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1376953494-9684-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CACRpkdYvP6yCiQMQFpzaerrcvFug4rNWALPSDvkTidmz8_PovQ@mail.gmail.com>
+Received: from mail-oa0-f53.google.com ([209.85.219.53]:62172 "EHLO
+	mail-oa0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755789Ab3HWRyF (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 13:54:05 -0400
+Received: by mail-oa0-f53.google.com with SMTP id k18so1105661oag.26
+        for <devicetree@vger.kernel.org>; Fri, 23 Aug 2013 10:54:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <1376953494-9684-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1376953494-9684-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1376953494-9684-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Date: Fri, 23 Aug 2013 19:54:03 +0200
+Message-ID: <CACRpkdYvP6yCiQMQFpzaerrcvFug4rNWALPSDvkTidmz8_PovQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] gpio: pcf857x: Add OF support
+From: Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Linus,
+On Tue, Aug 20, 2013 at 1:04 AM, Laurent Pinchart
+<laurent.pinchart+renesas@ideasonboard.com> wrote:
 
-On Friday 23 August 2013 19:54:03 Linus Walleij wrote:
-> On Tue, Aug 20, 2013 at 1:04 AM, Laurent Pinchart wrote:
-> > Add DT bindings for the pcf857x-compatible chips and parse the device
-> > tree node in the driver.
-> > 
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> 
-> I'm holding this until I get some reaction from the device tree reviewers,
-> or until I get unpatient, whichever comes first.
+> Add DT bindings for the pcf857x-compatible chips and parse the device
+> tree node in the driver.
+>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-Will you get unpatient before the end of the v3.12 merge window ? ;-)
+I'm holding this until I get some reaction from the device tree reviewers,
+or until I get unpatient, whichever comes first. It looks good to me.
 
-> It looks good to me.
-
-Thanks.
-
--- 
-Regards,
-
-Laurent Pinchart
-
+Yours,
+Linus Walleij
