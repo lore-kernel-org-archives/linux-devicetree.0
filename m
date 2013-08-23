@@ -1,73 +1,224 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56411 "EHLO mail.gnudd.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932707Ab3HGK0r (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:26:47 -0400
-Date: Wed, 7 Aug 2013 12:17:58 +0200
-From: Davide Ciminaghi <ciminaghi@gnudd.com>
-Subject: [PATCH 09/26] kernel irqdomain: export irq_domain_disassociate()
-Message-ID: <5e52d3c54b1fd6838feb54cfea65bd9cc8e544d3.1375867291.git.rubini@gnudd.com>
+Received: from devils.ext.ti.com ([198.47.26.153]:51828 "EHLO
+	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756088Ab3HWSWC (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 14:22:02 -0400
+From: Darren Etheridge <detheridge@ti.com>
+Subject: [PATCH v3 1/1] video: da8xx-fb: adding dt support
+Date: Fri, 23 Aug 2013 13:17:02 -0500
+Message-ID: <1377281822-29659-2-git-send-email-detheridge@ti.com>
+In-Reply-To: <1377281822-29659-1-git-send-email-detheridge@ti.com>
+References: <1377281822-29659-1-git-send-email-detheridge@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To: prabhakar.csengg@gmail.com, devicetree@vger.kernel.org, tomi.valkeinen@ti.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org, detheridge@ti.com
+Cc: afzal@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-irq_create_of_mapping() requires an irqdomain to be registered for each
-interrupt controller node.
-While extending devicetree usage on x86 to devices with MSI irqs, [at
-least] an msi interrupt controller node had to be added together with the
-relevant irqdomain.
-Registering a nomap irqdomain for each msi controller and adding irqs to
-such domain in native_setup_msi_irqs() via irq_domain_associate() looked
-like the simplest and safest solution to the problem, but then of course
-irq_domain_disassociate() must be called by native_teardown_msi_irq().
+Enhancing driver to enable probe triggered by a corresponding dt entry.
 
-Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
+Add da8xx-fb.txt documentation to devicetree section.
+
+Obtain fb_videomode details for the connected lcd panel using the
+display timing details present in DT.
+
+Ensure that platform data is present before checking whether platform
+callback is present (the one used to control backlight). So far this
+was not an issue as driver was purely non-DT triggered, but now DT
+support has been added this check must be performed.
+
+v2: squashing multiple commits from Afzal Mohammed (afzal@ti.com)
+v3: remove superfluous cast
+v4: expose both ti,am3352-lcdc and ti,da830-lcdc for .compatible
+	as driver can use enhanced features of all version of the
+	silicon block.
+v5: addressed review comments from Prabhakar Lad
+v6: Changed the .compatible naming to match the existing drm bindings
+	for am33xx devices
+v7: clarify which compatible to use in the documentation for DA850
+
+Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Darren Etheridge <detheridge@ti.com>
 ---
- include/linux/irqdomain.h |    3 +++
- kernel/irq/irqdomain.c    |    3 ++-
- 2 files changed, 5 insertions(+), 1 deletions(-)
+ .../devicetree/bindings/video/da8xx-fb.txt         |   42 ++++++++++++
+ drivers/video/da8xx-fb.c                           |   66 +++++++++++++++++++-
+ 2 files changed, 105 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/da8xx-fb.txt
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index c983ed1..b7f0df4 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -172,6 +172,9 @@ extern int irq_domain_associate(struct irq_domain *domain, unsigned int irq,
- extern void irq_domain_associate_many(struct irq_domain *domain,
- 				      unsigned int irq_base,
- 				      irq_hw_number_t hwirq_base, int count);
-+extern void irq_domain_disassociate(struct irq_domain *domain,
-+				    unsigned int irq);
+diff --git a/Documentation/devicetree/bindings/video/da8xx-fb.txt b/Documentation/devicetree/bindings/video/da8xx-fb.txt
+new file mode 100644
+index 0000000..d86afe7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/da8xx-fb.txt
+@@ -0,0 +1,42 @@
++TI LCD Controller on DA830/DA850/AM335x SoC's
 +
++Required properties:
++- compatible:
++	DA830, DA850 - "ti,da8xx-tilcdc"
++	AM335x SoC's - "ti,am33xx-tilcdc"
++- reg: Address range of lcdc register set
++- interrupts: lcdc interrupt
++- display-timings: typical videomode of lcd panel, represented as child.
++  Refer Documentation/devicetree/bindings/video/display-timing.txt for
++  display timing binding details. If multiple videomodes are mentioned
++  in display timings node, typical videomode has to be mentioned as the
++  native mode or it has to be first child (driver cares only for native
++  videomode).
++
++Recommended properties:
++- ti,hwmods: Name of the hwmod associated to the LCDC
++
++Example for am335x SoC's:
++
++lcdc@4830e000 {
++	compatible = "ti,am33xx-tilcdc";
++	reg =  <0x4830e000 0x1000>;
++	interrupts = <36>;
++	ti,hwmods = "lcdc";
++	status = "okay";
++	display-timings {
++		800x480p62 {
++			clock-frequency = <30000000>;
++			hactive = <800>;
++			vactive = <480>;
++			hfront-porch = <39>;
++			hback-porch = <39>;
++			hsync-len = <47>;
++			vback-porch = <29>;
++			vfront-porch = <13>;
++			vsync-len = <2>;
++			hsync-active = <1>;
++			vsync-active = <1>;
++		};
++	};
++};
+diff --git a/drivers/video/da8xx-fb.c b/drivers/video/da8xx-fb.c
+index ea9771f..1d9aff1 100644
+--- a/drivers/video/da8xx-fb.c
++++ b/drivers/video/da8xx-fb.c
+@@ -36,6 +36,7 @@
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+ #include <linux/lcm.h>
++#include <video/of_display_timing.h>
+ #include <video/da8xx-fb.h>
+ #include <asm/div64.h>
  
- extern unsigned int irq_create_mapping(struct irq_domain *host,
- 				       irq_hw_number_t hwirq);
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 706724e..a33e29c 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -230,7 +230,7 @@ void irq_set_default_host(struct irq_domain *domain)
- }
- EXPORT_SYMBOL_GPL(irq_set_default_host);
+@@ -1297,12 +1298,54 @@ static struct fb_ops da8xx_fb_ops = {
+ 	.fb_blank = cfb_blank,
+ };
  
--static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
-+void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
++static struct lcd_ctrl_config *da8xx_fb_create_cfg(struct platform_device *dev)
++{
++	struct lcd_ctrl_config *cfg;
++
++	cfg = devm_kzalloc(&dev->dev, sizeof(struct fb_videomode), GFP_KERNEL);
++	if (!cfg)
++		return NULL;
++
++	/* default values */
++
++	if (lcd_revision == LCD_VERSION_1)
++		cfg->bpp = 16;
++	else
++		cfg->bpp = 32;
++
++	/*
++	 * For panels so far used with this LCDC, below statement is sufficient.
++	 * For new panels, if required, struct lcd_ctrl_cfg fields to be updated
++	 * with additional/modified values. Those values would have to be then
++	 * obtained from dt(requiring new dt bindings).
++	 */
++
++	cfg->panel_shade = COLOR_ACTIVE;
++
++	return cfg;
++}
++
+ static struct fb_videomode *da8xx_fb_get_videomode(struct platform_device *dev)
  {
- 	struct irq_data *irq_data = irq_get_irq_data(irq);
- 	irq_hw_number_t hwirq;
-@@ -265,6 +265,7 @@ static void irq_domain_disassociate(struct irq_domain *domain, unsigned int irq)
- 		mutex_unlock(&revmap_trees_mutex);
- 	}
- }
-+EXPORT_SYMBOL(irq_domain_disassociate);
+ 	struct da8xx_lcdc_platform_data *fb_pdata = dev->dev.platform_data;
+ 	struct fb_videomode *lcdc_info;
++	struct device_node *np = dev->dev.of_node;
+ 	int i;
  
- int irq_domain_associate(struct irq_domain *domain, unsigned int virq,
- 			 irq_hw_number_t hwirq)
++	if (np) {
++		lcdc_info = devm_kzalloc(&dev->dev,
++					 sizeof(struct fb_videomode),
++					 GFP_KERNEL);
++		if (!lcdc_info)
++			return NULL;
++
++		if (of_get_fb_videomode(np, lcdc_info, OF_USE_NATIVE_MODE)) {
++			dev_err(&dev->dev, "timings not available in DT\n");
++			return NULL;
++		}
++		return lcdc_info;
++	}
++
+ 	for (i = 0, lcdc_info = known_lcd_panels;
+ 		i < ARRAY_SIZE(known_lcd_panels); i++, lcdc_info++) {
+ 		if (strcmp(fb_pdata->type, lcdc_info->name) == 0)
+@@ -1331,7 +1374,7 @@ static int fb_probe(struct platform_device *device)
+ 	int ret;
+ 	unsigned long ulcm;
+ 
+-	if (fb_pdata == NULL) {
++	if (fb_pdata == NULL && !device->dev.of_node) {
+ 		dev_err(&device->dev, "Can not get platform data\n");
+ 		return -ENOENT;
+ 	}
+@@ -1371,7 +1414,10 @@ static int fb_probe(struct platform_device *device)
+ 		break;
+ 	}
+ 
+-	lcd_cfg = (struct lcd_ctrl_config *)fb_pdata->controller_data;
++	if (device->dev.of_node)
++		lcd_cfg = da8xx_fb_create_cfg(device);
++	else
++		lcd_cfg = fb_pdata->controller_data;
+ 
+ 	if (!lcd_cfg) {
+ 		ret = -EINVAL;
+@@ -1390,7 +1436,7 @@ static int fb_probe(struct platform_device *device)
+ 	par->dev = &device->dev;
+ 	par->lcdc_clk = tmp_lcdc_clk;
+ 	par->lcdc_clk_rate = clk_get_rate(par->lcdc_clk);
+-	if (fb_pdata->panel_power_ctrl) {
++	if (fb_pdata && fb_pdata->panel_power_ctrl) {
+ 		par->panel_power_ctrl = fb_pdata->panel_power_ctrl;
+ 		par->panel_power_ctrl(1);
+ 	}
+@@ -1638,6 +1684,19 @@ static int fb_resume(struct platform_device *dev)
+ #define fb_resume NULL
+ #endif
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id da8xx_fb_of_match[] = {
++	/*
++	 * this driver supports version 1 and version 2 of the
++	 * Texas Instruments lcd controller (lcdc) hardware block
++	 */
++	{.compatible = "ti,da8xx-tilcdc", },
++	{.compatible = "ti,am33xx-tilcdc", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, da8xx_fb_of_match);
++#endif
++
+ static struct platform_driver da8xx_fb_driver = {
+ 	.probe = fb_probe,
+ 	.remove = fb_remove,
+@@ -1646,6 +1705,7 @@ static struct platform_driver da8xx_fb_driver = {
+ 	.driver = {
+ 		   .name = DRIVER_NAME,
+ 		   .owner = THIS_MODULE,
++		   .of_match_table = of_match_ptr(da8xx_fb_of_match),
+ 		   },
+ };
+ 
 -- 
-1.7.7.2
+1.7.0.4
+
