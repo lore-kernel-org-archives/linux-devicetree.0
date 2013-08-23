@@ -1,47 +1,108 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14078 "EHLO
-	hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755774Ab3HMHTR (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 03:19:17 -0400
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 1/3] regulator: palmas: Update the DT binding doc for smps10 out1 and out2
-Date: Tue, 13 Aug 2013 13:03:43 +0530
-Message-ID: <1376379225-10604-2-git-send-email-ldewangan@nvidia.com>
-In-Reply-To: <1376379225-10604-1-git-send-email-ldewangan@nvidia.com>
-References: <1376379225-10604-1-git-send-email-ldewangan@nvidia.com>
+Received: from arroyo.ext.ti.com ([192.94.94.40]:58157 "EHLO arroyo.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755844Ab3HWXSG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 23 Aug 2013 19:18:06 -0400
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [RFC PATCH 04/14] hwmon: tmp102: expose to thermal fw via DT nodes
+Date: Fri, 23 Aug 2013 19:15:45 -0400
+Message-ID: <1377299755-5134-5-git-send-email-eduardo.valentin@ti.com>
+In-Reply-To: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
+References: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, sameo@linux.intel.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com, swarren@wwwdotorg.org, Laxman Dewangan <ldewangan@nvidia.com>
+To: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com
+Cc: durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, Jean Delvare <khali@linux-fr.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Palams regulator SMPS10 is splitted into two regulator SMPS10-OUT1 and
-SMPS10-OUT2 to match with hw behavior. With this regulator name got
-changed in driver.
+This patch adds to tmp102 temperature sensor the possibility
+to expose itself as thermal zone device, registered on the
+thermal framework.
 
-Update the DT binding document to match with driver.
+The thermal zone is built only if a device tree node
+describing a thermal zone for this sensor is present
+inside the tmp102 DT node. Otherwise, the driver behavior
+will be the same.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Jean Delvare <khali@linux-fr.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: lm-sensors@lm-sensors.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
 ---
- .../devicetree/bindings/regulator/palmas-pmic.txt  |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/hwmon/tmp102.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-index 30b0581..794d13d 100644
---- a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-+++ b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-@@ -25,8 +25,8 @@ Optional nodes:
- 	       Additional custom properties  are listed below.
+diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
+index d7b47ab..0f1e44a 100644
+--- a/drivers/hwmon/tmp102.c
++++ b/drivers/hwmon/tmp102.c
+@@ -27,6 +27,8 @@
+ #include <linux/mutex.h>
+ #include <linux/device.h>
+ #include <linux/jiffies.h>
++#include <linux/thermal.h>
++#include <linux/of.h>
  
- 	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
--	       smps45, smps457, smps7 depending on variant, smps6, smps[8-10],
--	       ldo[1-9], ldoln, ldousb.
-+	       smps45, smps457, smps7 depending on variant, smps6, smps[8-9],
-+	       mps10_out2, smps10_out1, do[1-9], ldoln, ldousb.
+ #define	DRIVER_NAME "tmp102"
  
- 	       Optional sub-node properties:
- 	       ti,warm-reset - maintain voltage during warm reset(boolean)
+@@ -50,6 +52,7 @@
+ 
+ struct tmp102 {
+ 	struct device *hwmon_dev;
++	struct thermal_zone_device *tz;
+ 	struct mutex lock;
+ 	u16 config_orig;
+ 	unsigned long last_update;
+@@ -93,6 +96,15 @@ static struct tmp102 *tmp102_update_device(struct i2c_client *client)
+ 	return tmp102;
+ }
+ 
++static int tmp102_read_temp(void *dev, unsigned long *temp)
++{
++	struct tmp102 *tmp102 = tmp102_update_device(to_i2c_client(dev));
++
++	*temp = tmp102->temp[0];
++
++	return 0;
++}
++
+ static ssize_t tmp102_show_temp(struct device *dev,
+ 				struct device_attribute *attr,
+ 				char *buf)
+@@ -204,10 +216,23 @@ static int tmp102_probe(struct i2c_client *client,
+ 		goto fail_remove_sysfs;
+ 	}
+ 
++	if (of_find_property(client->dev.of_node, "monitored-zones", NULL)) {
++		tmp102->tz = thermal_zone_of_device_register(&client->dev, 0,
++							     false, /* -hwmon */
++							     &client->dev,
++							     tmp102_read_temp);
++		if (IS_ERR(tmp102->tz)) {
++			status = PTR_ERR(tmp102->tz);
++			goto exit_hwmon;
++		}
++	}
++
+ 	dev_info(&client->dev, "initialized\n");
+ 
+ 	return 0;
+ 
++exit_hwmon:
++	hwmon_device_unregister(tmp102->hwmon_dev);
+ fail_remove_sysfs:
+ 	sysfs_remove_group(&client->dev.kobj, &tmp102_attr_group);
+ fail_restore_config:
+@@ -220,6 +245,7 @@ static int tmp102_remove(struct i2c_client *client)
+ {
+ 	struct tmp102 *tmp102 = i2c_get_clientdata(client);
+ 
++	thermal_zone_device_unregister(tmp102->tz);
+ 	hwmon_device_unregister(tmp102->hwmon_dev);
+ 	sysfs_remove_group(&client->dev.kobj, &tmp102_attr_group);
+ 
 -- 
-1.7.1.1
+1.8.2.1.342.gfa7285d
 
