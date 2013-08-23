@@ -1,119 +1,69 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pb0-f48.google.com ([209.85.160.48]:47577 "EHLO
-	mail-pb0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750766Ab3HBPCk (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 11:02:40 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [RFC v3 00/13] Exynos5 IS driver
-Date: Fri,  2 Aug 2013 20:32:29 +0530
-Message-Id: <1375455762-22071-1-git-send-email-arun.kk@samsung.com>
+Received: from mailout4.samsung.com ([203.254.224.34]:24239 "EHLO
+	mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754992Ab3HWKCf (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 06:02:35 -0400
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v4 7/7] of/documentation: update with clock information for
+ exynos hdmi subsystem
+Date: Fri, 23 Aug 2013 15:54:21 +0530
+Message-id: <1377253461-20851-8-git-send-email-rahul.sharma@samsung.com>
+In-reply-to: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com>
+References: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The patch series add support for Exynos5 camera subsystem. It
-re-uses mipi-csis and fimc-lite from exynos4-is and adds a new
-media device and fimc-is device drivers for exynos5.
-The media device supports asynchronos subdev registration for the
-fimc-is sensors and is based on the patch series from Sylwester
-for exynos4-is [1].
+Adding information about clocks to the binding documentation
+for exynos mixer and hdmi.
 
-[1] http://www.mail-archive.com/linux-media@vger.kernel.org/msg64653.html
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+---
+ Documentation/devicetree/bindings/video/exynos_hdmi.txt  |   14 +++++++++++++-
+ Documentation/devicetree/bindings/video/exynos_mixer.txt |    4 ++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-Changes from v2
----------------
-- Added exynos5 media device driver from Shaik to this series
-- Added ISP pipeline support in media device driver
-- Based on Sylwester's latest exynos4-is development
-- Asynchronos registration of sensor subdevs
-- Made independent IS-sensor support
-- Add s5k4e5 sensor driver
-- Addressed review comments from Sylwester, Hans, Andrzej, Sachin
-
-Changes from v1
----------------
-- Addressed all review comments from Sylwester
-- Made sensor subdevs as independent i2c devices
-- Lots of cleanup
-- Debugfs support added
-- Removed PMU global register access
-
-Arun Kumar K (12):
-  [media] exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings
-    documentation
-  [media] exynos5-fimc-is: Add driver core files
-  [media] exynos5-fimc-is: Add common driver header files
-  [media] exynos5-fimc-is: Add register definition and context header
-  [media] exynos5-fimc-is: Add isp subdev
-  [media] exynos5-fimc-is: Add scaler subdev
-  [media] exynos5-fimc-is: Add sensor interface
-  [media] exynos5-fimc-is: Add the hardware pipeline control
-  [media] exynos5-fimc-is: Add the hardware interface module
-  [media] exynos5-is: Add Kconfig and Makefile
-  V4L: s5k6a3: Change sensor min/max resolutions
-  V4L: Add driver for s5k4e5 image sensor
-
-Shaik Ameer Basha (1):
-  [media] exynos5-is: Adding media device driver for exynos5
-
- .../devicetree/bindings/media/exynos5-fimc-is.txt  |   52 +
- .../devicetree/bindings/media/exynos5-mdev.txt     |  153 ++
- drivers/media/i2c/Kconfig                          |    8 +
- drivers/media/i2c/Makefile                         |    1 +
- drivers/media/i2c/s5k4e5.c                         |  362 ++++
- drivers/media/i2c/s5k6a3.c                         |   14 +-
- drivers/media/platform/Kconfig                     |    1 +
- drivers/media/platform/Makefile                    |    1 +
- drivers/media/platform/exynos5-is/Kconfig          |   19 +
- drivers/media/platform/exynos5-is/Makefile         |    7 +
- drivers/media/platform/exynos5-is/exynos5-mdev.c   | 1471 +++++++++++++++
- drivers/media/platform/exynos5-is/exynos5-mdev.h   |  199 ++
- drivers/media/platform/exynos5-is/fimc-is-cmd.h    |  187 ++
- drivers/media/platform/exynos5-is/fimc-is-core.c   |  394 ++++
- drivers/media/platform/exynos5-is/fimc-is-core.h   |  122 ++
- drivers/media/platform/exynos5-is/fimc-is-err.h    |  257 +++
- .../media/platform/exynos5-is/fimc-is-interface.c  |  861 +++++++++
- .../media/platform/exynos5-is/fimc-is-interface.h  |  128 ++
- drivers/media/platform/exynos5-is/fimc-is-isp.c    |  509 +++++
- drivers/media/platform/exynos5-is/fimc-is-isp.h    |   93 +
- .../media/platform/exynos5-is/fimc-is-metadata.h   |  767 ++++++++
- drivers/media/platform/exynos5-is/fimc-is-param.h  | 1212 ++++++++++++
- .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1961 ++++++++++++++++++++
- .../media/platform/exynos5-is/fimc-is-pipeline.h   |  129 ++
- drivers/media/platform/exynos5-is/fimc-is-regs.h   |  105 ++
- drivers/media/platform/exynos5-is/fimc-is-scaler.c |  458 +++++
- drivers/media/platform/exynos5-is/fimc-is-scaler.h |  112 ++
- drivers/media/platform/exynos5-is/fimc-is-sensor.c |   46 +
- drivers/media/platform/exynos5-is/fimc-is-sensor.h |   69 +
- drivers/media/platform/exynos5-is/fimc-is.h        |  153 ++
- 30 files changed, 9847 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
- create mode 100644 Documentation/devicetree/bindings/media/exynos5-mdev.txt
- create mode 100644 drivers/media/i2c/s5k4e5.c
- create mode 100644 drivers/media/platform/exynos5-is/Kconfig
- create mode 100644 drivers/media/platform/exynos5-is/Makefile
- create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.c
- create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-cmd.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.c
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-err.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.c
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.c
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-metadata.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-param.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-regs.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.c
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.c
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.h
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is.h
-
+diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+index 323983b..94aaa7d 100644
+--- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
++++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+@@ -12,7 +12,19 @@ Required properties:
+ 	a) phandle of the gpio controller node.
+ 	b) pin number within the gpio controller.
+ 	c) optional flags and pull up/down.
+-
++- clocks: list of clock IDs from SoC clock driver.
++	a) hdmi: It is required for gate operation on aclk_200_disp1 clock
++		which clocks the display1 block.
++	b) sclk_hdmi: It is required for gate operation on sclk_hdmi clock
++		which clocks hdmi IP.
++	c) sclk_pixel: Parent for mux mout_hdmi.
++	d) sclk_hdmiphy: Parent for mux mout_hdmi.
++	e) mout_hdmi: It is required by the driver to switch between the 2
++		parents i.e. sclk_pixel and sclk_hdmiphy. If hdmiphy is stable
++		after configuration, parent is set to sclk_hdmiphy else
++		sclk_pixel.
++- clock-names: aliases as per driver requirements for above clock IDs:
++	"hdmi", "sclk_hdmi", "sclk_pixel", "sclk_hdmiphy" and "mout_hdmi".
+ Example:
+ 
+ 	hdmi {
+diff --git a/Documentation/devicetree/bindings/video/exynos_mixer.txt b/Documentation/devicetree/bindings/video/exynos_mixer.txt
+index 3334b0a..94b40b6 100644
+--- a/Documentation/devicetree/bindings/video/exynos_mixer.txt
++++ b/Documentation/devicetree/bindings/video/exynos_mixer.txt
+@@ -10,6 +10,10 @@ Required properties:
+ - reg: physical base address of the mixer and length of memory mapped
+ 	region.
+ - interrupts: interrupt number to the cpu.
++- clocks: list of clock IDs from SoC clock driver.
++	a) mixer: It is required for gate operation on aclk_200_disp1 clock
++		which clocks the display1 block.
++	b) sclk_hdmi: Parent for mux mout_mixer.
+ 
+ Example:
+ 
 -- 
-1.7.9.5
+1.7.10.4
 
