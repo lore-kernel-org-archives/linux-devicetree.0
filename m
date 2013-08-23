@@ -1,37 +1,43 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-oa0-f41.google.com ([209.85.219.41]:53012 "EHLO
-	mail-oa0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757017Ab3HOTzt (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 15 Aug 2013 15:55:49 -0400
-Received: by mail-oa0-f41.google.com with SMTP id j6so1348691oag.14
-        for <devicetree@vger.kernel.org>; Thu, 15 Aug 2013 12:55:48 -0700 (PDT)
+Received: from comal.ext.ti.com ([198.47.26.152]:36707 "EHLO comal.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755762Ab3HWSVp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 23 Aug 2013 14:21:45 -0400
+From: Darren Etheridge <detheridge@ti.com>
+Subject: [PATCH v3 0/1] Adding DT support to video/da8xx-fb.c
+Date: Fri, 23 Aug 2013 13:17:01 -0500
+Message-ID: <1377281822-29659-1-git-send-email-detheridge@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1376412156-3899-1-git-send-email-dinguyen@altera.com>
-References: <1376412156-3899-1-git-send-email-dinguyen@altera.com>
-Date: Thu, 15 Aug 2013 21:55:48 +0200
-Message-ID: <CACRpkdZkyeA5ExvHQPExNBq5qB1hDHON32TO63BmtVrRxDxhXw@mail.gmail.com>
-Subject: Re: [RFC] phy: micrel: Convert micrel PHY driver to use OF
-From: Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@altera.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Dinh Nguyen <dinh.linux@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Richard Cochran <richardcochran@gmail.com>, Felipe Balbi <balbi@ti.com>, "David S. Miller" <davem@davemloft.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>
+To: prabhakar.csengg@gmail.com, devicetree@vger.kernel.org, tomi.valkeinen@ti.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org, detheridge@ti.com
+Cc: afzal@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Aug 13, 2013 at 6:42 PM,  <dinguyen@altera.com> wrote:
+This is part of a larger series of patches to upgrade the da8xx-fb.c driver
+to support the Texas Instruments AM335x device.  As part of this upgrade
+we also want to add devicetree support for both the original da8xx and the
+am335x.  Tomi Valkeinen has reviewed the fbdev changes but he suggested
+that it was prudent to extract the dt pieces and run it through the
+devicetree mailing list for review.
 
-> From: Dinh Nguyen <dinguyen@altera.com>
->
-> Convert the Micrel PHY driver to use OF. This initial patch is only
-> the beginning of an idea to convert the PHY driver to device tree.
->
-> Signed-of-by: Dinh Nguyen <dinguyen@altera.com>
+v2: incorporates -
+	* review comment changes from Prabhakar Lad
+	* changes the .compatible naming to match that of the exiting drm 
+		driver for am335x devices.
+	* Renames the devicetree bindings documentation file to match the
+		actual driver filename
+v3: updated documentation to make clear which compatible to use for DA850 
+	SoC devices.
 
-This is full of device tree stuff so please copy it to
-devicetree@vger.kernel.org.
+Thanks,
+Darren
 
-It seems to add quite a few compatible strings so these should
-be added to the bindings doc, or is it already?
+Darren Etheridge (1):
+  video: da8xx-fb: adding dt support
 
-Yours,
-Linus Walleij
+ .../devicetree/bindings/video/da8xx-fb.txt         |   42 ++++++++++++
+ drivers/video/da8xx-fb.c                           |   66 +++++++++++++++++++-
+ 2 files changed, 105 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/da8xx-fb.txt
+
