@@ -1,105 +1,94 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-wg0-f48.google.com ([74.125.82.48]:51802 "EHLO
-	mail-wg0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755187Ab3HXGfi (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sat, 24 Aug 2013 02:35:38 -0400
-MIME-Version: 1.0
-In-Reply-To: <7099911.E9MGK44AOv@flatron>
-References: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com>
-	<1377253461-20851-5-git-send-email-rahul.sharma@samsung.com>
-	<7099911.E9MGK44AOv@flatron>
-Date: Sat, 24 Aug 2013 12:05:36 +0530
-Message-ID: <CAPdUM4N9cBfJFL1XMXug+QjbCdgq9b9u6u6ViH3Rc4Bh-5MOOQ@mail.gmail.com>
+Received: from mail-bk0-f49.google.com ([209.85.214.49]:37575 "EHLO
+	mail-bk0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755517Ab3HWTsl (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 15:48:41 -0400
+From: Tomasz Figa <tomasz.figa@gmail.com>
 Subject: Re: [PATCH v4 4/7] ARM: dts: add dt nodes for exynos5420 hdmi subsystem
-From: Rahul Sharma <r.sh.open@gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1
+Date: Fri, 23 Aug 2013 21:48:34 +0200
+Message-ID: <7099911.E9MGK44AOv@flatron>
+In-Reply-To: <1377253461-20851-5-git-send-email-rahul.sharma@samsung.com>
+References: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com> <1377253461-20851-5-git-send-email-rahul.sharma@samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, "sw0312.kim" <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, sunil joshi <joshi@samsung.com>
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-> Hi Rahul,
->
-> Please see my comments inline.
->
-> On Friday 23 of August 2013 15:54:18 Rahul Sharma wrote:
->> Add hdmi, mixer, ddc device tree nodes for Exynos 5420 SoC.
->>
->> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos5420-smdk5420.dts |   19 +++++++++++++++++++
->>  arch/arm/boot/dts/exynos5420.dtsi         |   14 ++++++++++++++
->>  2 files changed, 33 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> b/arch/arm/boot/dts/exynos5420-smdk5420.dts index bafba25..7dbf1fa
->> 100644
->> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> @@ -61,4 +61,23 @@
->>               };
->>       };
->>
->> +     hdmi@14530000 {
->> +             status = "okay";
->> +             hpd-gpio = <&gpx3 7 0>;
->> +     };
->> +
->> +     mixer@14450000 {
->> +             status = "okay";
->> +     };
->> +
->> +     i2c_2: i2c@12C80000 {
->> +             samsung,i2c-sda-delay = <100>;
->> +             samsung,i2c-max-bus-freq = <66000>;
->> +             status = "okay";
->> +
->> +             hdmiddc@50 {
->> +                     compatible = "samsung,exynos4210-hdmiddc";
->> +                     reg = <0x50>;
->> +             };
->> +     };
->>  };
->
-> You should separate above board-specific changes from this patch and
-> squash it with patch 6/7, adjusting patch subject and description
-> appropriately.
->
->> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
->> b/arch/arm/boot/dts/exynos5420.dtsi index 05dee86..7c6214d 100644
->> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> @@ -274,4 +274,18 @@
->>               pinctrl-0 = <&i2c3_bus>;
->>               status = "disabled";
->>       };
->> +
->> +     hdmi@14530000 {
->> +             compatible = "samsung,exynos4212-hdmi";
->> +             reg = <0x14530000 0x70000>;
->> +             interrupts = <0 95 0>;
->> +             status = "disabled";
->> +     };
->> +
->> +     mixer@14450000 {
->> +             compatible = "samsung,exynos5420-mixer";
->> +             reg = <0x14450000 0x10000>;
->> +             interrupts = <0 94 0>;
->> +             status = "disabled";
->
-> This node looks like a candidate to be enabled here on SoC level, since it
-> does not require any board specific information.
->
+Hi Rahul,
 
-Hi Tomasz,
+Please see my comments inline.
 
-Both hdmi and mixer should be enabled at same time. Mixer don't
-but hdmi needs hpd gpio information which is board dependent. Thats
-why I kept them disabled in SoC file. What you say?
+On Friday 23 of August 2013 15:54:18 Rahul Sharma wrote:
+> Add hdmi, mixer, ddc device tree nodes for Exynos 5420 SoC.
+> 
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts |   19 +++++++++++++++++++
+>  arch/arm/boot/dts/exynos5420.dtsi         |   14 ++++++++++++++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> b/arch/arm/boot/dts/exynos5420-smdk5420.dts index bafba25..7dbf1fa
+> 100644
+> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> @@ -61,4 +61,23 @@
+>  		};
+>  	};
+> 
+> +	hdmi@14530000 {
+> +		status = "okay";
+> +		hpd-gpio = <&gpx3 7 0>;
+> +	};
+> +
+> +	mixer@14450000 {
+> +		status = "okay";
+> +	};
+> +
+> +	i2c_2: i2c@12C80000 {
+> +		samsung,i2c-sda-delay = <100>;
+> +		samsung,i2c-max-bus-freq = <66000>;
+> +		status = "okay";
+> +
+> +		hdmiddc@50 {
+> +			compatible = "samsung,exynos4210-hdmiddc";
+> +			reg = <0x50>;
+> +		};
+> +	};
+>  };
 
-Regards,
-Rahul Sharma.
+You should separate above board-specific changes from this patch and 
+squash it with patch 6/7, adjusting patch subject and description 
+appropriately.
 
-> Best regards,
-> Tomasz
->
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
+> b/arch/arm/boot/dts/exynos5420.dtsi index 05dee86..7c6214d 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -274,4 +274,18 @@
+>  		pinctrl-0 = <&i2c3_bus>;
+>  		status = "disabled";
+>  	};
+> +
+> +	hdmi@14530000 {
+> +		compatible = "samsung,exynos4212-hdmi";
+> +		reg = <0x14530000 0x70000>;
+> +		interrupts = <0 95 0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	mixer@14450000 {
+> +		compatible = "samsung,exynos5420-mixer";
+> +		reg = <0x14450000 0x10000>;
+> +		interrupts = <0 94 0>;
+> +		status = "disabled";
+
+This node looks like a candidate to be enabled here on SoC level, since it 
+does not require any board specific information.
+
+Best regards,
+Tomasz
+
