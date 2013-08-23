@@ -1,501 +1,780 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16132 "EHLO
-	hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751336Ab3HUKcP (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 06:32:15 -0400
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V4] regulator: palmas: add support for external control of rails
-Date: Wed, 21 Aug 2013 16:18:16 +0530
-Message-ID: <1377082096-22296-1-git-send-email-ldewangan@nvidia.com>
+Received: from comal.ext.ti.com ([198.47.26.152]:48690 "EHLO comal.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755063Ab3HWXRm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 23 Aug 2013 19:17:42 -0400
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [RFC PATCH 02/14] drivers: thermal: introduce device tree parser
+Date: Fri, 23 Aug 2013 19:15:43 -0400
+Message-ID: <1377299755-5134-3-git-send-email-eduardo.valentin@ti.com>
+In-Reply-To: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
+References: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, sameo@linux.intel.com
-Cc: swarren@wwwdotorg.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com, Laxman Dewangan <ldewangan@nvidia.com>
+To: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com
+Cc: durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Palmas rails like LDOs, SMPSs, REGENs, SYSENs can be enable and disable
-by register programming through I2C communication as well as it can be
-enable/disable with the external control input ENABLE1, ENABLE2 and NSLEEP.
+In order to be able to build thermal policies
+based on generic sensors, like I2C device, that
+can be places in different points on different boards,
+there is a need to have a way to feed board dependent
+data into the thermal framework.
 
-Add support for configuring these rails to be controlled by external control
-inputs. This is require to configure the rail's control register as well as
-configuration of resource register.
+This patch introduces a thermal data parser for device
+tree. The parsed data is used to build thermal zones
+and thermal binding parameters. The output data
+can then be used to deploy thermal policies.
 
-Provide the external input names through parameter "roof-floor". Updated the
-DT binding document to details different value of the roof-floor.
+This patch adds also documentation regarding this
+API and how to define tree nodes to use
+this infrastructure.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
 ---
-Changes from V1:
-- Fix typos: palams ->palmas
-Changes from V2:
-- Make roof-floor with optional argument. If no argument then assume
-  NSLEEP control.
-Changes from V3:
-- Nit changes..
-- print warn() if invalid option for roof-floor.
-- use siwtch-case for property value checking.
+ .../devicetree/bindings/thermal/thermal.txt        | 160 +++++++
+ drivers/thermal/Kconfig                            |  13 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/thermal_dt.c                       | 473 +++++++++++++++++++++
+ include/dt-bindings/thermal/thermal.h              |  27 ++
+ include/linux/thermal.h                            |   3 +
+ 6 files changed, 677 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
+ create mode 100644 drivers/thermal/thermal_dt.c
+ create mode 100644 include/dt-bindings/thermal/thermal.h
 
-PS: This patch was part of series (3/3)
-        regulator: palmas: add support for external control of rail
-Patch 1/3 and 2/3 is already applied as 1/3 is in the regulator tree and
-Patch 2/3 is in the mfd tree by Samuel.
-This patch (was 3/3) very much depends on the 2/3 for compilation and hence
-it need to go on same tree as 2/3 to avoid any compilation error.
-
- .../devicetree/bindings/regulator/palmas-pmic.txt  |   12 +-
- drivers/regulator/palmas-regulator.c               |  164 +++++++++++++++++++-
- 2 files changed, 167 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-index 875639a..42e6b6b 100644
---- a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-+++ b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-@@ -26,11 +26,17 @@ Optional nodes:
- 
- 	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
- 	       smps45, smps457, smps7 depending on variant, smps6, smps[8-9],
--	       smps10_out2, smps10_out1, do[1-9], ldoln, ldousb.
-+	       smps10_out2, smps10_out1, ldo[1-9], ldoln, ldousb.
- 
- 	       Optional sub-node properties:
- 	       ti,warm-reset - maintain voltage during warm reset(boolean)
--	       ti,roof-floor - control voltage selection by pin(boolean)
-+	       ti,roof-floor - This takes as optional argument on platform supporting
-+	       the rail from desired external control. If there is no argument then
-+	       it will be assume that it is controlled by NSLEEP pin.
-+	       The valid value for external pins are:
-+			ENABLE1 then 1,
-+			ENABLE2 then 2 or
-+			NSLEEP then 3.
- 	       ti,mode-sleep - mode to adopt in pmic sleep 0 - off, 1 - auto,
- 	       2 - eco, 3 - forced pwm
- 	       ti,smps-range - OTP has the wrong range set for the hardware so override
-@@ -61,7 +67,7 @@ pmic {
- 			regulator-always-on;
- 			regulator-boot-on;
- 			ti,warm-reset;
--			ti,roof-floor;
-+			ti,roof-floor = <1>; /* ENABLE1 control */
- 			ti,mode-sleep = <0>;
- 			ti,smps-range = <1>;
- 		};
-diff --git a/drivers/regulator/palmas-regulator.c b/drivers/regulator/palmas-regulator.c
-index 488dfe7..3c08e1b 100644
---- a/drivers/regulator/palmas-regulator.c
-+++ b/drivers/regulator/palmas-regulator.c
-@@ -33,6 +33,7 @@ struct regs_info {
- 	u8	vsel_addr;
- 	u8	ctrl_addr;
- 	u8	tstep_addr;
-+	int	sleep_id;
- };
- 
- static const struct regs_info palmas_regs_info[] = {
-@@ -42,6 +43,7 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS12_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS12_CTRL,
- 		.tstep_addr	= PALMAS_SMPS12_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS12,
- 	},
- 	{
- 		.name		= "SMPS123",
-@@ -49,12 +51,14 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS12_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS12_CTRL,
- 		.tstep_addr	= PALMAS_SMPS12_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS12,
- 	},
- 	{
- 		.name		= "SMPS3",
- 		.sname		= "smps3-in",
- 		.vsel_addr	= PALMAS_SMPS3_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS3_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS3,
- 	},
- 	{
- 		.name		= "SMPS45",
-@@ -62,6 +66,7 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS45_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS45_CTRL,
- 		.tstep_addr	= PALMAS_SMPS45_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS45,
- 	},
- 	{
- 		.name		= "SMPS457",
-@@ -69,6 +74,7 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS45_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS45_CTRL,
- 		.tstep_addr	= PALMAS_SMPS45_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS45,
- 	},
- 	{
- 		.name		= "SMPS6",
-@@ -76,12 +82,14 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS6_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS6_CTRL,
- 		.tstep_addr	= PALMAS_SMPS6_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS6,
- 	},
- 	{
- 		.name		= "SMPS7",
- 		.sname		= "smps7-in",
- 		.vsel_addr	= PALMAS_SMPS7_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS7_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS7,
- 	},
- 	{
- 		.name		= "SMPS8",
-@@ -89,108 +97,128 @@ static const struct regs_info palmas_regs_info[] = {
- 		.vsel_addr	= PALMAS_SMPS8_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS8_CTRL,
- 		.tstep_addr	= PALMAS_SMPS8_TSTEP,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS8,
- 	},
- 	{
- 		.name		= "SMPS9",
- 		.sname		= "smps9-in",
- 		.vsel_addr	= PALMAS_SMPS9_VOLTAGE,
- 		.ctrl_addr	= PALMAS_SMPS9_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS9,
- 	},
- 	{
- 		.name		= "SMPS10_OUT2",
- 		.sname		= "smps10-in",
- 		.ctrl_addr	= PALMAS_SMPS10_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS10,
- 	},
- 	{
- 		.name		= "SMPS10_OUT1",
- 		.sname		= "smps10-out2",
- 		.ctrl_addr	= PALMAS_SMPS10_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SMPS10,
- 	},
- 	{
- 		.name		= "LDO1",
- 		.sname		= "ldo1-in",
- 		.vsel_addr	= PALMAS_LDO1_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO1_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO1,
- 	},
- 	{
- 		.name		= "LDO2",
- 		.sname		= "ldo2-in",
- 		.vsel_addr	= PALMAS_LDO2_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO2_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO2,
- 	},
- 	{
- 		.name		= "LDO3",
- 		.sname		= "ldo3-in",
- 		.vsel_addr	= PALMAS_LDO3_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO3_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO3,
- 	},
- 	{
- 		.name		= "LDO4",
- 		.sname		= "ldo4-in",
- 		.vsel_addr	= PALMAS_LDO4_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO4_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO4,
- 	},
- 	{
- 		.name		= "LDO5",
- 		.sname		= "ldo5-in",
- 		.vsel_addr	= PALMAS_LDO5_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO5_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO5,
- 	},
- 	{
- 		.name		= "LDO6",
- 		.sname		= "ldo6-in",
- 		.vsel_addr	= PALMAS_LDO6_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO6_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO6,
- 	},
- 	{
- 		.name		= "LDO7",
- 		.sname		= "ldo7-in",
- 		.vsel_addr	= PALMAS_LDO7_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO7_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO7,
- 	},
- 	{
- 		.name		= "LDO8",
- 		.sname		= "ldo8-in",
- 		.vsel_addr	= PALMAS_LDO8_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO8_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO8,
- 	},
- 	{
- 		.name		= "LDO9",
- 		.sname		= "ldo9-in",
- 		.vsel_addr	= PALMAS_LDO9_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDO9_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDO9,
- 	},
- 	{
- 		.name		= "LDOLN",
- 		.sname		= "ldoln-in",
- 		.vsel_addr	= PALMAS_LDOLN_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDOLN_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDOLN,
- 	},
- 	{
- 		.name		= "LDOUSB",
- 		.sname		= "ldousb-in",
- 		.vsel_addr	= PALMAS_LDOUSB_VOLTAGE,
- 		.ctrl_addr	= PALMAS_LDOUSB_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_LDOUSB,
- 	},
- 	{
- 		.name		= "REGEN1",
- 		.ctrl_addr	= PALMAS_REGEN1_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_REGEN1,
- 	},
- 	{
- 		.name		= "REGEN2",
- 		.ctrl_addr	= PALMAS_REGEN2_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_REGEN2,
- 	},
- 	{
- 		.name		= "REGEN3",
- 		.ctrl_addr	= PALMAS_REGEN3_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_REGEN3,
- 	},
- 	{
- 		.name		= "SYSEN1",
- 		.ctrl_addr	= PALMAS_SYSEN1_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SYSEN1,
- 	},
- 	{
- 		.name		= "SYSEN2",
- 		.ctrl_addr	= PALMAS_SYSEN2_CTRL,
-+		.sleep_id	= PALMAS_EXTERNAL_REQSTR_ID_SYSEN2,
- 	},
- };
- 
-@@ -484,6 +512,17 @@ static struct regulator_ops palmas_ops_smps = {
- 	.set_ramp_delay		= palmas_smps_set_ramp_delay,
- };
- 
-+static struct regulator_ops palmas_ops_ext_control_smps = {
-+	.set_mode		= palmas_set_mode_smps,
-+	.get_mode		= palmas_get_mode_smps,
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.list_voltage		= palmas_list_voltage_smps,
-+	.map_voltage		= palmas_map_voltage_smps,
-+	.set_voltage_time_sel	= palma_smps_set_voltage_smps_time_sel,
-+	.set_ramp_delay		= palmas_smps_set_ramp_delay,
+diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+new file mode 100644
+index 0000000..af20ab0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+@@ -0,0 +1,160 @@
++----------------------------------------
++Thermal Framework Device Tree descriptor
++----------------------------------------
++
++This file describes how to define a thermal structure using device tree.
++A thermal structure includes thermal zones and their components, such
++as name, trip points, polling intervals and cooling devices binding
++descriptors. A binding descriptor may contain information on how to
++react, with a cooling stepped action or a weight on a fair share.
++The target of device tree thermal descriptors is to describe only
++the hardware thermal aspects, not how the system must control or which
++algorithm or policy must take place. It follows a description of each
++type of device tree node.
++
++****
++trip
++****
++
++The trip node is a node to describe a point in the temperature domain
++in which the system takes an action. This node describes just the point,
++not the action.
++
++A node describing a trip must contain:
++- temperature: the trip temperature level, in milliCelsius.
++- hysteresis: a (low) hysteresis value on 'temperature'. This is a relative
++value, in milliCelsius.
++- type: the trip type. Here is the type mapping:
++	THERMAL_TRIP_ACTIVE
++	THERMAL_TRIP_PASSIVE
++	THERMAL_TRIP_HOT
++	THERMAL_TRIP_CRITICAL
++
++**********
++bind_param
++**********
++
++The bind_param node is a node to describe how cooling devices get assigned
++to trip points of the zone. The cooling devices are expected to be loaded
++in the target system.
++
++A node describing a bind_param must contain:
++- cooling_device: A string with the cooling device name.
++- weight: The 'influence' of a particular cooling device on this zone.
++             This is on a percentage scale. The sum of all these weights
++             (for a particular zone) cannot exceed 100.
++- trip_mask: This is a bit mask that gives the binding relation between
++               this thermal zone and cdev, for a particular trip point.
++               If nth bit is set, then the cdev and thermal zone are bound
++               for trip point n.
++- limits: An array integers consisting of 2-tuples items, and each item means
++  lower and upper state limits, like <min-state max-state>.
++
++**************************
++temperature sensor devices
++**************************
++
++Temperature sensor devices have to be linked to a specific thermal zone.
++This is done by means of the 'monitored-zones' list.
++- monitored-zones: A list of thermal zones phandles, identifying which
++thermal zones the temperature sensor device is used to monitor.
++
++************
++thermal_zone
++************
++
++The thermal_zone node is the node containing all the required info
++for describing a thermal zone, including its cdev bindings. The thermal_zone
++node must contain, apart from its own properties, one node containing
++trip nodes and one node containing all the zone bind parameters.
++
++Required properties:
++- mask: Bit string: If 'n'th bit is set, then trip point 'n' is writeable.
++
++- passive_delay: number of milliseconds to wait between polls when
++  performing passive cooling.
++
++- polling_delay: number of milliseconds to wait between polls when checking.
++
++- #thermal-cells: An integer that is used to specify how many cells compose
++  sensor ids.
++
++Below is an example:
++cpu_thermal: thermal_zone {
++            #thermal-cells = <1>;
++            mask = <0x03>; /* trips writability */
++            passive_delay = <250>; /* milliseconds */
++            polling_delay = <1000>; /* milliseconds */
++            trips {
++                    alert@100000{
++                            temperature = <100000>; /* milliCelsius */
++                            hysteresis = <0>; /* milliCelsius */
++                            type = <THERMAL_TRIP_PASSIVE>;
++                    };
++                    crit@125000{
++                            temperature = <125000>; /* milliCelsius */
++                            hysteresis = <0>; /* milliCelsius */
++                            type = <THERMAL_TRIP_CRITICAL>;
++                    };
++            };
++            bind_params {
++                    action@0{
++                            cooling_device = "thermal-cpufreq";
++                            weight = <100>; /* percentage */
++                            mask = <0x01>;
++			    limits = <
++			      /* lower-state		upper-state */
++				1			THERMAL_NO_LIMITS
++				THERMAL_NO_LIMITS	THERMAL_NO_LIMITS
++			    >;
++                    };
++            };
 +};
 +
- static struct regulator_ops palmas_ops_smps10 = {
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.enable			= regulator_enable_regmap,
-@@ -519,12 +558,37 @@ static struct regulator_ops palmas_ops_ldo = {
- 	.map_voltage		= regulator_map_voltage_linear,
- };
- 
-+static struct regulator_ops palmas_ops_ext_control_ldo = {
-+	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
-+	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
-+	.list_voltage		= regulator_list_voltage_linear,
-+	.map_voltage		= regulator_map_voltage_linear,
++sensor: adc@0xFFFF {
++	...
++	monitored-zones = <&cpu_thermal 0>;
 +};
 +
- static struct regulator_ops palmas_ops_extreg = {
- 	.is_enabled		= regulator_is_enabled_regmap,
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- };
- 
-+static struct regulator_ops palmas_ops_ext_control_extreg = {
++cpu@0 {
++	...
++	cooling-zones = <&cpu_thermal>;
 +};
 +
-+static int palmas_regulator_config_external(struct palmas *palmas, int id,
-+		struct palmas_reg_init *reg_init)
++In the example above, the ADC sensor at address 0xFFFF is used to monitor
++the zone 'cpu_thermal' using its the sensor 0. The cpu@0 device is also linked
++to the same thermal zone 'cpu_thermal' as a cooling device.
++
++***************
++cpufreq-cooling
++***************
++
++The generic cpu cooling (freq clipping) can be loaded by the
++generic cpufreq-cpu0 driver in case the device tree node informs
++this need.
++
++In order to load the cpufreq cooling device, it is possible to
++inform that the cpu needs cooling by adding the list of thermal zones
++in the 'cooling-zones' property at the cpu0 phandle.
++
++Example:
++	cpus {
++		cpu@0 {
++			operating-points = <
++				/* kHz    uV */
++				800000  1313000
++				1008000 1375000
++			>;
++			cooling-zones = <&cpu_thermal>;
++		};
++	...
++	};
++
++The above will cause the cpufreq-cpu0 driver to understand that
++the cpu will need passive cooling and while probing that node it will
++also load the cpufreq cpu cooling device in that system.
++
++However, be advised that this flag will not describe what needs to
++be done or how the cpufreq cooling device will be used. In order to
++accomplish this, one needs to write a phandle for a thermal zone, as
++described in the section 'thermal_zone'.
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 7fb16bc..753f0dc 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -29,6 +29,19 @@ config THERMAL_HWMON
+ 	  Say 'Y' here if you want all thermal sensors to
+ 	  have hwmon sysfs interface too.
+ 
++config THERMAL_OF
++	bool
++	prompt "APIs to parse thermal data out of device tree"
++	depends on OF
++	default y
++	help
++	  This options provides helpers to add the support to
++	  read and parse thermal data definitions out of the
++	  device tree blob.
++
++	  Say 'Y' here if you need to build thermal infrastructure
++	  based on device tree.
++
+ choice
+ 	prompt "Default Thermal governor"
+ 	default THERMAL_DEFAULT_GOV_STEP_WISE
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index 24cb894..eedb273 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -7,6 +7,7 @@ thermal_sys-y			+= thermal_core.o
+ 
+ # interface to/from other layers providing sensors
+ thermal_sys-$(CONFIG_THERMAL_HWMON)		+= thermal_hwmon.o
++thermal_sys-$(CONFIG_THERMAL_OF)		+= thermal_dt.o
+ 
+ # governors
+ thermal_sys-$(CONFIG_THERMAL_GOV_FAIR_SHARE)	+= fair_share.o
+diff --git a/drivers/thermal/thermal_dt.c b/drivers/thermal/thermal_dt.c
+new file mode 100644
+index 0000000..cc35485
+--- /dev/null
++++ b/drivers/thermal/thermal_dt.c
+@@ -0,0 +1,473 @@
++/*
++ *  thermal_dt.c - Generic Thermal Management device tree support.
++ *
++ *  Copyright (C) 2013 Texas Instruments
++ *  Copyright (C) 2013 Eduardo Valentin <eduardo.valentin@ti.com>
++ *  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; version 2 of the License.
++ *
++ *  This program is distributed in the hope that it will be useful, but
++ *  WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License along
++ *  with this program; if not, write to the Free Software Foundation, Inc.,
++ *  59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
++ *
++ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++ */
++#include <linux/thermal.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <linux/of_device.h>
++#include <linux/of_platform.h>
++#include <linux/err.h>
++#include <linux/export.h>
++#include <linux/string.h>
++
++struct __thermal_bind_params {
++	char cooling_device[THERMAL_NAME_LENGTH];
++};
++
++static
++int thermal_of_match(struct thermal_zone_device *tz,
++		     struct thermal_cooling_device *cdev);
++
++static int thermal_of_populate_bind_params(struct device *dev,
++					   struct device_node *node,
++					   struct __thermal_bind_params *__tbp,
++					   struct thermal_bind_params *tbp,
++					   int ntrips)
 +{
-+	int sleep_id = palmas_regs_info[id].sleep_id;
++	const char *cdev_name;
++	u32 *limits;
 +	int ret;
++	u32 prop;
 +
-+	ret = palmas_ext_control_req_config(palmas, sleep_id,
-+					reg_init->roof_floor, true);
-+	if (ret < 0)
-+		dev_err(palmas->dev,
-+			"Ext control config for regulator %d failed %d\n",
-+			id, ret);
-+	return ret;
++	ret = of_property_read_u32(node, "weight", &prop);
++	if (ret < 0) {
++		dev_err(dev, "missing weight property\n");
++		return ret;
++	}
++	tbp->weight = prop;
++
++	ret = of_property_read_u32(node, "mask", &prop);
++	if (ret < 0) {
++		dev_err(dev, "missing mask property\n");
++		return ret;
++	}
++	tbp->trip_mask = prop;
++
++	/* this will allow us to bind with cooling devices */
++	tbp->match = thermal_of_match;
++
++	ret = of_property_read_string(node, "cooling_device", &cdev_name);
++	if (ret < 0) {
++		dev_err(dev, "missing cooling_device property\n");
++		return ret;
++	}
++	strncpy(__tbp->cooling_device, cdev_name,
++		sizeof(__tbp->cooling_device));
++
++	limits = kzalloc(ntrips * sizeof(*limits) * 2, GFP_KERNEL);
++	if (!limits) {
++		dev_err(dev, "not enough mem for reading limits\n");
++		return -ENOMEM;
++	}
++	ret = of_property_read_u32_array(node, "limits", limits, 2 * ntrips);
++	if (!ret) {
++		int i = ntrips;
++
++		tbp->binding_limits = devm_kzalloc(dev,
++						   ntrips * 2 *
++						   sizeof(*tbp->binding_limits),
++						   GFP_KERNEL);
++		if (!tbp->binding_limits) {
++			dev_err(dev, "not enough mem for storing limits\n");
++			return -ENOMEM;
++		}
++		while (i--)
++			tbp->binding_limits[i] = limits[i];
++	}
++	kfree(limits);
++
++	return 0;
 +}
 +
- /*
-  * setup the hardware based sleep configuration of the SMPS/LDO regulators
-  * from the platform data. This is different to the software based control
-@@ -583,7 +647,22 @@ static int palmas_smps_init(struct palmas *palmas, int id,
- 			return ret;
- 	}
- 
-+	if (reg_init->roof_floor && (id != PALMAS_REG_SMPS10_OUT1) &&
-+			(id != PALMAS_REG_SMPS10_OUT2)) {
-+		/* Enable externally controlled regulator */
-+		addr = palmas_regs_info[id].ctrl_addr;
-+		ret = palmas_smps_read(palmas, addr, &reg);
-+		if (ret < 0)
-+			return ret;
- 
-+		if (!(reg & PALMAS_SMPS12_CTRL_MODE_ACTIVE_MASK)) {
-+			reg |= SMPS_CTRL_MODE_ON;
-+			ret = palmas_smps_write(palmas, addr, reg);
-+			if (ret < 0)
-+				return ret;
-+		}
-+		return palmas_regulator_config_external(palmas, id, reg_init);
-+	}
- 	return 0;
- }
- 
-@@ -614,6 +693,20 @@ static int palmas_ldo_init(struct palmas *palmas, int id,
- 	if (ret)
- 		return ret;
- 
-+	if (reg_init->roof_floor) {
-+		/* Enable externally controlled regulator */
-+		addr = palmas_regs_info[id].ctrl_addr;
-+		ret = palmas_update_bits(palmas, PALMAS_LDO_BASE,
-+				addr, PALMAS_LDO1_CTRL_MODE_ACTIVE,
-+				PALMAS_LDO1_CTRL_MODE_ACTIVE);
-+		if (ret < 0) {
-+			dev_err(palmas->dev,
-+				"LDO Register 0x%02x update failed %d\n",
-+				addr, ret);
-+			return ret;
-+		}
-+		return palmas_regulator_config_external(palmas, id, reg_init);
-+	}
- 	return 0;
- }
- 
-@@ -636,6 +729,21 @@ static int palmas_extreg_init(struct palmas *palmas, int id,
- 			addr, ret);
- 		return ret;
- 	}
++struct __thermal_trip {
++	unsigned long int temperature;
++	unsigned long int hysteresis;
++	enum thermal_trip_type type;
++};
 +
-+	if (reg_init->roof_floor) {
-+		/* Enable externally controlled regulator */
-+		addr = palmas_regs_info[id].ctrl_addr;
-+		ret = palmas_update_bits(palmas, PALMAS_RESOURCE_BASE,
-+				addr, PALMAS_REGEN1_CTRL_MODE_ACTIVE,
-+				PALMAS_REGEN1_CTRL_MODE_ACTIVE);
-+		if (ret < 0) {
-+			dev_err(palmas->dev,
-+				"Resource Register 0x%02x update failed %d\n",
-+				addr, ret);
-+			return ret;
-+		}
-+		return palmas_regulator_config_external(palmas, id, reg_init);
-+	}
- 	return 0;
- }
- 
-@@ -746,9 +854,35 @@ static void palmas_dt_to_pdata(struct device *dev,
- 			of_property_read_bool(palmas_matches[idx].of_node,
- 					     "ti,warm-reset");
- 
--		pdata->reg_init[idx]->roof_floor =
--			of_property_read_bool(palmas_matches[idx].of_node,
--					      "ti,roof-floor");
-+		ret = of_property_read_u32(palmas_matches[idx].of_node,
-+					      "ti,roof-floor", &prop);
-+		/* EINVAL: Property not found */
-+		if (ret != -EINVAL) {
-+			int econtrol;
++static
++int thermal_of_populate_trip(struct device *dev,
++			     struct device_node *node,
++			     struct __thermal_trip *trip)
++{
++	int ret;
++	int prop;
 +
-+			/* use default value, when no value is specified */
-+			econtrol = PALMAS_EXT_CONTROL_NSLEEP;
-+			if (!ret) {
-+				switch (prop) {
-+				case 1:
-+					econtrol = PALMAS_EXT_CONTROL_ENABLE1;
-+					break;
-+				case 2:
-+					econtrol = PALMAS_EXT_CONTROL_ENABLE2;
-+					break;
-+				case 3:
-+					econtrol = PALMAS_EXT_CONTROL_NSLEEP;
-+					break;
-+				default:
-+					WARN_ON(1);
-+					dev_warn(dev,
-+					"%s: Invalid roof-floor option: %u\n",
-+					     palmas_matches[idx].name, prop);
-+					break;
-+				}
-+			}
-+			pdata->reg_init[idx]->roof_floor = econtrol;
++	ret = of_property_read_u32(node, "temperature", &prop);
++	if (ret < 0) {
++		dev_err(dev, "missing temperature property\n");
++		return ret;
++	}
++	trip->temperature = prop;
++
++	ret = of_property_read_u32(node, "hysteresis", &prop);
++	if (ret < 0) {
++		dev_err(dev, "missing hysteresis property\n");
++		return ret;
++	}
++	trip->hysteresis = prop;
++
++	ret = of_property_read_u32(node, "type", &prop);
++	if (ret < 0) {
++		dev_err(dev, "missing type property\n");
++		return ret;
++	}
++	trip->type = prop;
++
++	return 0;
++}
++
++struct __thermal_zone_device {
++	enum thermal_device_mode mode;
++	int passive_delay;
++	int polling_delay;
++	int mask;
++	int ntrips;
++	char type[THERMAL_NAME_LENGTH];
++	struct __thermal_trip *trips;
++	struct __thermal_bind_params *bind_params;
++	struct thermal_bind_params *tbps;
++	struct thermal_zone_params zone_params;
++	int (*get_temp)(void *, unsigned long *);
++	void *devdata;
++};
++
++static struct __thermal_zone_device *
++thermal_of_build_thermal_zone(struct device *dev, struct device_node *node)
++{
++	struct device_node *child, *gchild;
++	struct __thermal_zone_device *tz;
++	int ret, i;
++	u32 prop;
++
++	if (!node) {
++		dev_err(dev, "no thermal zone node\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	tz = devm_kzalloc(dev, sizeof(*tz), GFP_KERNEL);
++	if (!tz) {
++		dev_err(dev, "not enough memory for thermal of zone\n");
++		return ERR_PTR(-ENOMEM);
++	}
++
++	ret = of_property_read_u32(node, "passive_delay", &prop);
++	if (ret < 0) {
++		dev_err(dev, "missing passive_delay property\n");
++		return ERR_PTR(ret);
++	}
++	tz->passive_delay = prop;
++
++	ret = of_property_read_u32(node, "polling_delay", &prop);
++	if (ret < 0) {
++		dev_err(dev, "missing polling_delay property\n");
++		return ERR_PTR(ret);
++	}
++	tz->polling_delay = prop;
++
++	ret = of_property_read_u32(node, "mask", &prop);
++	if (ret < 0) {
++		dev_err(dev, "missing mask property\n");
++		return ERR_PTR(ret);
++	}
++	tz->mask = prop;
++
++	/* assume node name as our zone type */
++	strncpy(tz->type, node->name, sizeof(tz->type));
++
++	/* default policy */
++	strncpy(tz->zone_params.governor_name, "step_wise",
++		sizeof(tz->zone_params.governor_name));
++
++	/* trips */
++	child = of_find_node_by_name(node, "trips");
++
++	/* No trips provided */
++	if (!child)
++		goto finish;
++
++	tz->ntrips = of_get_child_count(child);
++	tz->trips = devm_kzalloc(dev, tz->ntrips * sizeof(*tz->trips),
++				 GFP_KERNEL);
++	if (!tz->trips)
++		return ERR_PTR(-ENOMEM);
++	i = 0;
++	for_each_child_of_node(child, gchild)
++		thermal_of_populate_trip(dev, gchild, &tz->trips[i++]);
++
++	/* bind_params */
++	child = of_find_node_by_name(node, "bind_params");
++
++	/* No binding info */
++	if (!child)
++		goto finish;
++
++	tz->zone_params.num_tbps = of_get_child_count(child);
++	tz->bind_params = devm_kzalloc(dev,
++				       tz->zone_params.num_tbps *
++						sizeof(*tz->bind_params),
++				       GFP_KERNEL);
++	if (!tz->bind_params)
++		return ERR_PTR(-ENOMEM);
++	tz->zone_params.tbp = devm_kzalloc(dev,
++					   tz->zone_params.num_tbps *
++						sizeof(*tz->zone_params.tbp),
++					   GFP_KERNEL);
++	if (!tz->zone_params.tbp)
++		return ERR_PTR(-ENOMEM);
++	i = 0;
++	for_each_child_of_node(child, gchild) {
++		thermal_of_populate_bind_params(dev, gchild,
++						&tz->bind_params[i],
++						&tz->zone_params.tbp[i],
++						tz->ntrips);
++		i++;
++	}
++
++finish:
++	tz->mode = THERMAL_DEVICE_ENABLED;
++
++	return tz;
++}
++
++static
++int thermal_of_match(struct thermal_zone_device *tz,
++		     struct thermal_cooling_device *cdev)
++{
++	struct __thermal_zone_device *data = tz->devdata;
++	int i;
++
++	for (i = 0; i < data->zone_params.num_tbps; i++) {
++		if (!strncmp(data->bind_params[i].cooling_device,
++			     cdev->type,
++			     strlen(data->bind_params[i].cooling_device)) &&
++		    (data->zone_params.tbp[i].trip_mask & (1 << i)))
++			return 0;
++	}
++
++	return -EINVAL;
++}
++
++static
++int of_thermal_get_temp(struct thermal_zone_device *tz,
++			unsigned long *temp)
++{
++	struct __thermal_zone_device *data = tz->devdata;
++
++	return data->get_temp(data->devdata, temp);
++}
++
++static
++int of_thermal_get_mode(struct thermal_zone_device *tz,
++			enum thermal_device_mode *mode)
++{
++	struct __thermal_zone_device *data = tz->devdata;
++
++	*mode = data->mode;
++
++	return 0;
++}
++
++static
++int of_thermal_set_mode(struct thermal_zone_device *tz,
++			enum thermal_device_mode mode)
++{
++	struct __thermal_zone_device *data = tz->devdata;
++
++	mutex_lock(&tz->lock);
++
++	if (mode == THERMAL_DEVICE_ENABLED)
++		tz->polling_delay = data->polling_delay;
++	else
++		tz->polling_delay = 0;
++
++	mutex_unlock(&tz->lock);
++
++	data->mode = mode;
++	thermal_zone_device_update(tz);
++
++	return 0;
++}
++
++static
++int of_thermal_get_trip_type(struct thermal_zone_device *tz, int trip,
++			     enum thermal_trip_type *type)
++{
++	struct __thermal_zone_device *data = tz->devdata;
++
++	if (trip >= data->ntrips || trip < 0)
++		return -EDOM;
++
++	*type = data->trips[trip].type;
++
++	return 0;
++}
++
++static
++int of_thermal_get_trip_temp(struct thermal_zone_device *tz, int trip,
++			     unsigned long *temp)
++{
++	struct __thermal_zone_device *data = tz->devdata;
++
++	if (trip >= data->ntrips || trip < 0)
++		return -EDOM;
++
++	*temp = data->trips[trip].temperature;
++
++	return 0;
++}
++
++static
++int of_thermal_set_trip_temp(struct thermal_zone_device *tz, int trip,
++			     unsigned long temp)
++{
++	struct __thermal_zone_device *data = tz->devdata;
++
++	if (trip >= data->ntrips || trip < 0)
++		return -EDOM;
++
++	/* thermal fw should take care of data->mask & (1 << trip) */
++	data->trips[trip].temperature = temp;
++
++	return 0;
++}
++
++static
++int of_thermal_get_trip_hyst(struct thermal_zone_device *tz, int trip,
++			     unsigned long *hyst)
++{
++	struct __thermal_zone_device *data = tz->devdata;
++
++	if (trip >= data->ntrips || trip < 0)
++		return -EDOM;
++
++	*hyst = data->trips[trip].hysteresis;
++
++	return 0;
++}
++
++static
++int of_thermal_set_trip_hyst(struct thermal_zone_device *tz, int trip,
++			     unsigned long hyst)
++{
++	struct __thermal_zone_device *data = tz->devdata;
++
++	if (trip >= data->ntrips || trip < 0)
++		return -EDOM;
++
++	/* thermal fw should take care of data->mask & (1 << trip) */
++	data->trips[trip].hysteresis = hyst;
++
++	return 0;
++}
++
++static int
++of_thermal_get_crit_temp(struct thermal_zone_device *tz, unsigned long *temp)
++{
++	struct __thermal_zone_device *data = tz->devdata;
++	int i;
++
++	for (i = 0; i < data->ntrips; i++)
++		if (data->trips[i].type == THERMAL_TRIP_CRITICAL) {
++			*temp = data->trips[i].temperature;
++			return 0;
 +		}
++
++	return -EINVAL;
++}
++
++static const
++struct thermal_zone_device_ops of_thermal_ops = {
++	.get_temp = of_thermal_get_temp,
++	.get_mode = of_thermal_get_mode,
++	.set_mode = of_thermal_set_mode,
++	.get_trip_type = of_thermal_get_trip_type,
++	.get_trip_temp = of_thermal_get_trip_temp,
++	.set_trip_temp = of_thermal_set_trip_temp,
++	.get_trip_hyst = of_thermal_get_trip_hyst,
++	.set_trip_hyst = of_thermal_set_trip_hyst,
++	.get_crit_temp = of_thermal_get_crit_temp,
++};
++
++/**
++ * thermal_zone_of_device_register() - registers a thermal zone based on DT
++ * @device: a valid struct device pointer containing device tree node
++ *          with thermal_zone descriptor.
++ * @data: a private pointer (owned by the caller) that will be passed
++ *        back, when a temperature reading is needed.
++ * @get_temp: a pointer to a function that returns the thermal zone
++ *            temperature.
++ * @add_hwmon:	a boolean to indicate if the thermal to hwmon sysfs interface
++ *		is required. When add_hwmon == true, a hwmon sysfs interface
++ *		will be created. When add_hwmon == false, nothing will be done
++ *
++ * This function will parse the device tree node associated with the
++ * @dev struct and will attempt to build a thermal zone device based
++ * upon the thermal data provided and described by DT.
++ *
++ * The thermal zone temperature is provided by the @get_temp function
++ * pointer. When called, it will have the private pointer @data back.
++ *
++ * Return: On success returns a valid struct thermal_zone_device,
++ * otherwise, it returns a corresponding ERR_PTR(). Caller must
++ * check the return value with help of IS_ERR() helper.
++ */
++struct thermal_zone_device *
++thermal_zone_of_device_register(struct device *dev, int id, bool add_hwmon,
++			void *data, int (*get_temp)(void *, unsigned long *))
++{
++	struct __thermal_zone_device *tz;
++	struct thermal_zone_device_ops *ops;
++	struct of_phandle_args thermal_spec;
++	int ret;
++
++	ret = of_parse_phandle_with_args(dev->of_node,
++					 "monitored-zones",
++					 "#thermal-cells",
++					 id,
++					 &thermal_spec);
++	if (ret) {
++		dev_err(dev, "unable to find desired monitored zone %d\n", id);
++		return ERR_PTR(ret);
++	}
++
++	tz = thermal_of_build_thermal_zone(dev, thermal_spec.np);
++	if (IS_ERR(tz)) {
++		dev_err(dev, "failed to build thermal zone\n");
++		return ERR_CAST(tz);
++	}
++	ops = devm_kzalloc(dev, sizeof(*ops), GFP_KERNEL);
++	if (!ops) {
++		dev_err(dev, "no memory available for thermal ops\n");
++		return ERR_PTR(-ENOMEM);
++	}
++	memcpy(ops, &of_thermal_ops, sizeof(*ops));
++	tz->get_temp = get_temp;
++	tz->devdata = data;
++
++	return thermal_zone_device_register(tz->type, tz->ntrips, tz->mask, tz,
++					    ops, &tz->zone_params,
++					    tz->passive_delay,
++					    tz->polling_delay,
++					    add_hwmon);
++}
++EXPORT_SYMBOL_GPL(thermal_zone_of_device_register);
+diff --git a/include/dt-bindings/thermal/thermal.h b/include/dt-bindings/thermal/thermal.h
+new file mode 100644
+index 0000000..6dd6ccd
+--- /dev/null
++++ b/include/dt-bindings/thermal/thermal.h
+@@ -0,0 +1,27 @@
++/*
++ * This header provides constants for most thermal bindings.
++ *
++ * Copyright (C) 2013 Texas Instruments
++ *	Eduardo Valentin <eduardo.valentin@ti.com>
++ *
++ * GPLv2 only
++ */
++
++#ifndef _DT_BINDINGS_THERMAL_THERMAL_H
++#define _DT_BINDINGS_THERMAL_THERMAL_H
++
++/*
++ * Here are the thermal trip types. This must
++ * match with enum thermal_trip_type at
++ * include/linux/thermal.h
++ */
++#define THERMAL_TRIP_ACTIVE		0
++#define THERMAL_TRIP_PASSIVE		1
++#define THERMAL_TRIP_HOT		2
++#define THERMAL_TRIP_CRITICAL		3
++
++/* On cooling devices upper and lower limits */
++#define THERMAL_NO_LIMIT		(-1UL)
++
++#endif
++
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index 7c2769c..501b2fe 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -234,6 +234,9 @@ struct thermal_genl_event {
+ };
  
- 		ret = of_property_read_u32(palmas_matches[idx].of_node,
- 				"ti,mode-sleep", &prop);
-@@ -875,6 +1009,8 @@ static int palmas_regulators_probe(struct platform_device *pdev)
- 			ret = palmas_smps_init(palmas, id, reg_init);
- 			if (ret)
- 				goto err_unregister_regulator;
-+		} else {
-+			reg_init = NULL;
- 		}
- 
- 		/* Register the regulators */
-@@ -919,7 +1055,11 @@ static int palmas_regulators_probe(struct platform_device *pdev)
- 			if (reg & PALMAS_SMPS12_VOLTAGE_RANGE)
- 				pmic->range[id] = 1;
- 
--			pmic->desc[id].ops = &palmas_ops_smps;
-+			if (reg_init && reg_init->roof_floor)
-+				pmic->desc[id].ops =
-+						&palmas_ops_ext_control_smps;
-+			else
-+				pmic->desc[id].ops = &palmas_ops_smps;
- 			pmic->desc[id].n_voltages = PALMAS_SMPS_NUM_VOLTAGES;
- 			pmic->desc[id].vsel_reg =
- 					PALMAS_BASE_TO_REG(PALMAS_SMPS_BASE,
-@@ -962,6 +1102,10 @@ static int palmas_regulators_probe(struct platform_device *pdev)
- 
- 	/* Start this loop from the id left from previous loop */
- 	for (; id < PALMAS_NUM_REGS; id++) {
-+		if (pdata && pdata->reg_init[id])
-+			reg_init = pdata->reg_init[id];
-+		else
-+			reg_init = NULL;
- 
- 		/* Miss out regulators which are not available due
- 		 * to alternate functions.
-@@ -975,7 +1119,11 @@ static int palmas_regulators_probe(struct platform_device *pdev)
- 
- 		if (id < PALMAS_REG_REGEN1) {
- 			pmic->desc[id].n_voltages = PALMAS_LDO_NUM_VOLTAGES;
--			pmic->desc[id].ops = &palmas_ops_ldo;
-+			if (reg_init && reg_init->roof_floor)
-+				pmic->desc[id].ops =
-+					&palmas_ops_ext_control_ldo;
-+			else
-+				pmic->desc[id].ops = &palmas_ops_ldo;
- 			pmic->desc[id].min_uV = 900000;
- 			pmic->desc[id].uV_step = 50000;
- 			pmic->desc[id].linear_min_sel = 1;
-@@ -999,7 +1147,11 @@ static int palmas_regulators_probe(struct platform_device *pdev)
- 			}
- 		} else {
- 			pmic->desc[id].n_voltages = 1;
--			pmic->desc[id].ops = &palmas_ops_extreg;
-+			if (reg_init && reg_init->roof_floor)
-+				pmic->desc[id].ops =
-+					&palmas_ops_ext_control_extreg;
-+			else
-+				pmic->desc[id].ops = &palmas_ops_extreg;
- 			pmic->desc[id].enable_reg =
- 					PALMAS_BASE_TO_REG(PALMAS_RESOURCE_BASE,
- 						palmas_regs_info[id].ctrl_addr);
+ /* Function declarations */
++struct thermal_zone_device
++*thermal_zone_of_device_register(struct device *, int id, bool add_hwmon,
++	void *data, int (*get_temp) (void *, unsigned long *));
+ struct thermal_zone_device *thermal_zone_device_register(const char *, int, int,
+ 		void *, const struct thermal_zone_device_ops *,
+ 		const struct thermal_zone_params *, int, int, bool);
 -- 
-1.7.1.1
+1.8.2.1.342.gfa7285d
 
