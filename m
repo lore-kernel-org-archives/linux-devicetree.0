@@ -1,114 +1,42 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from devils.ext.ti.com ([198.47.26.153]:35463 "EHLO
-	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755844Ab3HWXRr (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 19:17:47 -0400
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: [RFC PATCH 03/14] hwmon: lm75: expose to thermal fw via DT nodes
-Date: Fri, 23 Aug 2013 19:15:44 -0400
-Message-ID: <1377299755-5134-4-git-send-email-eduardo.valentin@ti.com>
-In-Reply-To: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
-References: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
+Received: from mail-bk0-f47.google.com ([209.85.214.47]:59592 "EHLO
+	mail-bk0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753454Ab3HWCrP (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 22:47:15 -0400
 MIME-Version: 1.0
-Content-Type: text/plain
+Date: Fri, 23 Aug 2013 10:47:13 +0800
+Message-ID: <CAPgLHd_cnp+Gm8vSwhB+dmV+bk7Wz8Qh7VbJmY=KdrmfS55fNg@mail.gmail.com>
+Subject: [PATCH -next] iio: adc: twl6030-gpadc: fix error return code in twl6030_gpadc_read_raw()
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com
-Cc: durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, Jean Delvare <khali@linux-fr.org>
+To: jic23@cam.ac.uk, grant.likely@linaro.org, rob.herring@calxeda.com, oleksandr.kozaruk@ti.com, gg@slimlogic.co.uk, balajitk@ti.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds to lm75 temperature sensor the possibility
-to expose itself as thermal zone device, registered on the
-thermal framework.
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-The thermal zone is built only if a device tree node
-describing a thermal zone for this sensor is present
-inside the lm75 DT node. Otherwise, the driver behavior
-will be the same.
+Fix to return -EINTR in the error handling case instead
+of 0 (ret is assigned after goto, which has no effect),
+as done elsewhere in this function.
 
-Cc: Jean Delvare <khali@linux-fr.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: lm-sensors@lm-sensors.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 ---
- drivers/hwmon/lm75.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/iio/adc/twl6030-gpadc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-index c03b490..dc55908 100644
---- a/drivers/hwmon/lm75.c
-+++ b/drivers/hwmon/lm75.c
-@@ -27,6 +27,8 @@
- #include <linux/hwmon-sysfs.h>
- #include <linux/err.h>
- #include <linux/mutex.h>
-+#include <linux/thermal.h>
-+#include <linux/of.h>
- #include "lm75.h"
- 
- 
-@@ -70,6 +72,7 @@ static const u8 LM75_REG_TEMP[3] = {
- /* Each client has this additional data */
- struct lm75_data {
- 	struct device		*hwmon_dev;
-+	struct thermal_zone_device	*tz;
- 	struct mutex		update_lock;
- 	u8			orig_conf;
- 	u8			resolution;	/* In bits, between 9 and 12 */
-@@ -92,6 +95,19 @@ static struct lm75_data *lm75_update_device(struct device *dev);
- 
- /* sysfs attributes for hwmon */
- 
-+static int lm75_read_temp(void *dev, unsigned long *temp)
-+{
-+	struct lm75_data *data = lm75_update_device(dev);
-+
-+	if (IS_ERR(data))
-+		return PTR_ERR(data);
-+
-+	*temp = ((data->temp[0] >> (16 - data->resolution)) * 1000) >>
-+			(data->resolution - 8);
-+
-+	return 0;
-+}
-+
- static ssize_t show_temp(struct device *dev, struct device_attribute *da,
- 			 char *buf)
- {
-@@ -271,11 +287,25 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		goto exit_remove;
+diff --git a/drivers/iio/adc/twl6030-gpadc.c b/drivers/iio/adc/twl6030-gpadc.c
+index a558516..0ea96c0 100644
+--- a/drivers/iio/adc/twl6030-gpadc.c
++++ b/drivers/iio/adc/twl6030-gpadc.c
+@@ -537,8 +537,8 @@ static int twl6030_gpadc_read_raw(struct iio_dev *indio_dev,
+ 		ret = -ETIMEDOUT;
+ 		goto err;
+ 	} else if (timeout < 0) {
+-		goto err;
+ 		ret = -EINTR;
++		goto err;
  	}
  
-+	if (of_find_property(client->dev.of_node, "monitored-zones", NULL)) {
-+		data->tz = thermal_zone_of_device_register(&client->dev,
-+							   0,
-+							   false, /* -hwmon */
-+							   &client->dev,
-+							   lm75_read_temp);
-+		if (IS_ERR(data->tz)) {
-+			status = PTR_ERR(data->tz);
-+			goto exit_hwmon;
-+		}
-+	}
-+
- 	dev_info(&client->dev, "%s: sensor '%s'\n",
- 		 dev_name(data->hwmon_dev), client->name);
- 
- 	return 0;
- 
-+exit_hwmon:
-+	hwmon_device_unregister(data->hwmon_dev);
- exit_remove:
- 	sysfs_remove_group(&client->dev.kobj, &lm75_group);
- 	return status;
-@@ -285,6 +315,7 @@ static int lm75_remove(struct i2c_client *client)
- {
- 	struct lm75_data *data = i2c_get_clientdata(client);
- 
-+	thermal_zone_device_unregister(data->tz);
- 	hwmon_device_unregister(data->hwmon_dev);
- 	sysfs_remove_group(&client->dev.kobj, &lm75_group);
- 	lm75_write_value(client, LM75_REG_CONF, data->orig_conf);
--- 
-1.8.2.1.342.gfa7285d
+ 	switch (mask) {
 
