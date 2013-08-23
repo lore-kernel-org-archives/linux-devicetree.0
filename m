@@ -1,81 +1,63 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from devils.ext.ti.com ([198.47.26.153]:48790 "EHLO
-	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755648Ab3HAOF2 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 10:05:28 -0400
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 3/7] usb: phy: omap-usb3: Don't use omap_get_control_dev()
-Date: Thu, 1 Aug 2013 17:05:11 +0300
-Message-ID: <1375365915-21380-4-git-send-email-rogerq@ti.com>
-In-Reply-To: <1375365915-21380-1-git-send-email-rogerq@ti.com>
-References: <1375365915-21380-1-git-send-email-rogerq@ti.com>
+Received: from webmail.solarflare.com ([12.187.104.25]:6773 "EHLO
+	webmail.solarflare.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753435Ab3HWMoi (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 08:44:38 -0400
+Message-ID: <1377261869.3364.3.camel@bwh-desktop.uk.level5networks.com>
+Subject: Re: [patch] net/fec: "u32" is more explicit than "unsigned long"
+From: Ben Hutchings <bhutchings@solarflare.com>
+Date: Fri, 23 Aug 2013 13:44:29 +0100
+In-Reply-To: <20130823094920.GP31293@elgon.mountain>
+References: <20130823094920.GP31293@elgon.mountain>
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: tony@atomide.com, kishon@ti.com, george.cherian@ti.com, dmurphy@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Fabio Estevam <fabio.estevam@freescale.com>, Frank Li <Frank.Li@freescale.com>, Jim Baxter <jim_baxter@mentor.com>, Fugang Duan <B38611@freescale.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-omap_get_control_dev() is being deprecated as it doesn't support
-multiple instances. As control device is present only from OMAP4
-onwards which supports DT only, we use phandles to get the
-reference to the control device.
+On Fri, 2013-08-23 at 12:49 +0300, Dan Carpenter wrote:
+> tmpaddr[] is a six byte array.  We want to set the first four bytes on
+> the first line and the remaining two on the next line.  The code assumes
+> that "unsigned long" is 32 bits and obviously that's not true on 64 bit
+> arches.  It's better to just use u32 instead.
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> This is a static checker thing and I can't compile this file.
+> 
+> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+> index fdf9307..422b125 100644
+> --- a/drivers/net/ethernet/freescale/fec_main.c
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> @@ -1100,9 +1100,9 @@ static void fec_get_mac(struct net_device *ndev)
+>  	 * 4) FEC mac registers set by bootloader
+>  	 */
+>  	if (!is_valid_ether_addr(iap)) {
+> -		*((unsigned long *) &tmpaddr[0]) =
+> +		*((u32 *) &tmpaddr[0]) =
+>  			be32_to_cpu(readl(fep->hwp + FEC_ADDR_LOW));
+> -		*((unsigned short *) &tmpaddr[4]) =
+> +		*((u16 *) &tmpaddr[4]) =
+>  			be16_to_cpu(readl(fep->hwp + FEC_ADDR_HIGH) >> 16);
+>  		iap = &tmpaddr[0];
+>  	}
 
-As we don't support non-DT boot, we just bail out on probe
-if device node is not present.
+This code also seems to have CPU vs big-endian byte order the wrong way
+round.  readl() returns bytes in native order whereas we always store
+MAC addresses in network (big-endian) order.  So I think it should be
+doing:
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/usb/phy/phy-omap-usb3.c |   20 +++++++++++++++++---
- 1 files changed, 17 insertions(+), 3 deletions(-)
+		*((__be32 *) &tmpaddr[0]) =
+			cpu_to_be32(readl(fep->hwp + FEC_ADDR_LOW));
+		*((__be16 *) &tmpaddr[4]) =
+			cpu_to_be16(readl(fep->hwp + FEC_ADDR_HIGH) >> 16);
 
-diff --git a/drivers/usb/phy/phy-omap-usb3.c b/drivers/usb/phy/phy-omap-usb3.c
-index 4a7f27c..bad032e 100644
---- a/drivers/usb/phy/phy-omap-usb3.c
-+++ b/drivers/usb/phy/phy-omap-usb3.c
-@@ -26,6 +26,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/delay.h>
- #include <linux/usb/omap_control_usb.h>
-+#include <linux/of_platform.h>
- 
- #define	PLL_STATUS		0x00000004
- #define	PLL_GO			0x00000008
-@@ -198,6 +199,12 @@ static int omap_usb3_probe(struct platform_device *pdev)
- {
- 	struct omap_usb			*phy;
- 	struct resource			*res;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *control_node;
-+	struct platform_device *control_pdev;
-+
-+	if (!node)
-+		return -ENODEV;
- 
- 	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
- 	if (!phy) {
-@@ -239,11 +246,18 @@ static int omap_usb3_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	phy->control_dev = omap_get_control_dev();
--	if (IS_ERR(phy->control_dev)) {
--		dev_dbg(&pdev->dev, "Failed to get control device\n");
-+	control_node = of_parse_phandle(node, "ctrl-module", 0);
-+	if (!control_node) {
-+		dev_err(&pdev->dev, "Failed to get control device phandle\n");
- 		return -ENODEV;
- 	}
-+	control_pdev = of_find_device_by_node(control_node);
-+	if (!control_pdev) {
-+		dev_err(&pdev->dev, "Failed to get control device\n");
-+		return -ENODEV;
-+	}
-+
-+	phy->control_dev = &control_pdev->dev;
- 
- 	omap_control_usb_phy_power(phy->control_dev, 0);
- 	usb_add_phy_dev(&phy->phy);
+Ben.
+
 -- 
-1.7.4.1
+Ben Hutchings, Staff Engineer, Solarflare
+Not speaking for my employer; that's the marketing department's job.
+They asked us to note that Solarflare product names are trademarked.
 
