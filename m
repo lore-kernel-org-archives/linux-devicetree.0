@@ -1,89 +1,189 @@
 From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v5] media: i2c: tvp7002: add OF support
-Date: Fri, 23 Aug 2013 19:25:23 +0200
-Message-ID: <52179B03.8090402@samsung.com>
-References: <1376202321-25175-1-git-send-email-prabhakar.csengg@gmail.com>
- <BD586D1F-DC60-46A7-AB20-EEC959380CA6@codeaurora.org>
+Subject: Re: [PATCH v3 2/2] media: i2c: adv7343: add OF support
+Date: Fri, 23 Aug 2013 20:03:19 +0200
+Message-ID: <5217A3E7.50706@samsung.com>
+References: <1374301266-26726-1-git-send-email-prabhakar.csengg@gmail.com>
+ <1374301266-26726-3-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <BD586D1F-DC60-46A7-AB20-EEC959380CA6@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1374301266-26726-3-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/13/2013 03:00 AM, Kumar Gala wrote:
-> On Aug 11, 2013, at 1:25 AM, Lad, Prabhakar wrote:
+Cc: DT binding maintainers
+
+On 07/20/2013 08:21 AM, Lad, Prabhakar wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 > 
->> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
->>
->> add OF support for the tvp7002 driver.
->>
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->> ---
+> add OF support for the adv7343 driver.
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> ---
 [...]
->> .../devicetree/bindings/media/i2c/tvp7002.txt      |   53 ++++++++++++++++
->> drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
->> 2 files changed, 113 insertions(+), 7 deletions(-)
->> create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->> new file mode 100644
->> index 0000000..5f28b5d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->> @@ -0,0 +1,53 @@
->> +* Texas Instruments TV7002 video decoder
->> +
->> +The TVP7002 device supports digitizing of video and graphics signal in RGB and
->> +YPbPr color space.
->> +
->> +Required Properties :
->> +- compatible : Must be "ti,tvp7002"
->> +
->> +Optional Properties:
+>  .../devicetree/bindings/media/i2c/adv7343.txt      |   48 ++++++++++++++++++++
+>  drivers/media/i2c/adv7343.c                        |   46 ++++++++++++++++++-
+>  2 files changed, 93 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7343.txt
 > 
-> 
->> +- hsync-active: HSYNC Polarity configuration for the bus. Default value when
->> +  this property is not specified is <0>.
->> +
->> +- vsync-active: VSYNC Polarity configuration for the bus. Default value when
->> +  this property is not specified is <0>.
->> +
->> +- pclk-sample: Clock polarity of the bus. Default value when this property is
->> +  not specified is <0>.
->> +
->> +- sync-on-green-active: Active state of Sync-on-green signal property of the
->> +  endpoint.
->> +  0 = Normal Operation (Active Low, Default)
->> +  1 = Inverted operation
-> 
-> These seems better than what you have in video-interfaces.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+> new file mode 100644
+> index 0000000..5653bc2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+> @@ -0,0 +1,48 @@
+> +* Analog Devices adv7343 video encoder
+> +
+> +The ADV7343 are high speed, digital-to-analog video encoders in a 64-lead LQFP
+> +package. Six high speed, 3.3 V, 11-bit video DACs provide support for composite
+> +(CVBS), S-Video (Y-C), and component (YPrPb/RGB) analog outputs in standard
+> +definition (SD), enhanced definition (ED), or high definition (HD) video
+> +formats.
+> +
+> +Required Properties :
+> +- compatible: Must be "adi,adv7343"
+> +
+> +Optional Properties :
+> +- adi,power-mode-sleep-mode: on enable the current consumption is reduced to
+> +			      micro ampere level. All DACs and the internal PLL
+> +			      circuit are disabled.
 
-We probably should specify default values in in the common binding description.
-Then duplication could be avoided. Not sure if it's not too late for this, all
-drivers would need to have same default values.
+Sorry for getting back so late to this. I realize this is already queued in 
+the media tree. But this binding doesn't look good enough to me. I think it 
+will need to be corrected during upcoming -rc period.
 
-What's normal and what's inverted depends on a particular device.
+It might be hard to figure out only from the chip's datasheet what
+adi,power-mode-sleep-mode really refers to. AFAICS it is for assigning some
+value to a specific register. If we really need to specify register values
+in the device tree then it would probably make sense to describe to which
+register this apply. Now the name looks like derived from some structure
+member name in the Linux driver of the device.
 
->> +- field-even-active: Active-high Field ID output polarity control of the bus.
->> +  Under normal operation, the field ID output is set to logic 1 for an odd field
->> +  (field 1) and set to logic 0 for an even field (field 0).
->> +  0 = Normal Operation (Active Low, Default)
->> +  1 = FID output polarity inverted
->> +
-> 
-> Why the duplication if this is covered in video-interfaces.txt?
+> +- adi,power-mode-pll-ctrl: PLL and oversampling control. This control allows
+> +			   internal PLL 1 circuit to be powered down and the
+> +			   oversampling to be switched off.
 
-Yes, it would be better to avoid redefining these properties in each specific 
-device's binding. Presumably, for easier matching of DT properties with the
-hardware's description, we could only say in device specific document which
-value of a property corresponds to "normal" and which to "inverted" operation ?
- 
->> +For further reading of port node refer Documentation/devicetree/bindings/media/
->> +video-interfaces.txt.
+Similar comments applies to this property.
+
+> +- ad,adv7343-power-mode-dac: array configuring the power on/off DAC's 1..6,
+> +			      0 = OFF and 1 = ON, Default value when this
+> +			      property is not specified is <0 0 0 0 0 0>.
+
+Name of the property is incorrect here. It has changed to "adi,dac-enable".
+
+> +- ad,adv7343-sd-config-dac-out: array configure SD DAC Output's 1 and 2, 0 = OFF
+> +				 and 1 = ON, Default value when this property is
+> +				 not specified is <0 0>.
+
+Similarly, "adi,sd-dac-enable.
+
+> +Example:
+> +
+> +i2c0@1c22000 {
+> +	...
+> +	...
+> +
+> +	adv7343@2a {
+> +		compatible = "adi,adv7343";
+> +		reg = <0x2a>;
+> +
+> +		port {
+> +			adv7343_1: endpoint {
+> +					adi,power-mode-sleep-mode;
+> +					adi,power-mode-pll-ctrl;
+> +					/* Use DAC1..3, DAC6 */
+> +					adi,dac-enable = <1 1 1 0 0 1>;
+> +					/* Use SD DAC output 1 */
+> +					adi,sd-dac-enable = <1 0>;
+> +			};
+> +		};
+> +	};
+> +	...
+> +};
+> diff --git a/drivers/media/i2c/adv7343.c b/drivers/media/i2c/adv7343.c
+> index f0238fb..aeb56c5 100644
+> --- a/drivers/media/i2c/adv7343.c
+> +++ b/drivers/media/i2c/adv7343.c
+> @@ -30,6 +30,7 @@
+>  #include <media/v4l2-async.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-of.h>
+>  
+>  #include "adv7343_regs.h"
+>  
+> @@ -399,6 +400,40 @@ static int adv7343_initialize(struct v4l2_subdev *sd)
+>  	return err;
+>  }
+>  
+> +static struct adv7343_platform_data *
+> +adv7343_get_pdata(struct i2c_client *client)
+> +{
+> +	struct adv7343_platform_data *pdata;
+> +	struct device_node *np;
+> +
+> +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
+> +		return client->dev.platform_data;
+> +
+> +	np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+> +	if (!np)
+> +		return NULL;
+> +
+> +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		goto done;
+> +
+> +	pdata->mode_config.sleep_mode =
+> +			of_property_read_bool(np, "adi,power-mode-sleep-mode");
+> +
+> +	pdata->mode_config.pll_control =
+> +			of_property_read_bool(np, "adi,power-mode-pll-ctrl");
+> +
+> +	of_property_read_u32_array(np, "adi,dac-enable",
+> +				   pdata->mode_config.dac, 6);
+> +
+> +	of_property_read_u32_array(np, "adi,sd-dac-enable",
+> +				   pdata->sd_config.sd_dac_out, 2);
+> +
+> +done:
+> +	of_node_put(np);
+> +	return pdata;
+> +}
+> +
+>  static int adv7343_probe(struct i2c_client *client,
+>  				const struct i2c_device_id *id)
+>  {
+> @@ -417,7 +452,7 @@ static int adv7343_probe(struct i2c_client *client,
+>  		return -ENOMEM;
+>  
+>  	/* Copy board specific information here */
+> -	state->pdata = client->dev.platform_data;
+> +	state->pdata = adv7343_get_pdata(client);
+>  
+>  	state->reg00	= 0x80;
+>  	state->reg01	= 0x00;
+> @@ -483,8 +518,17 @@ static const struct i2c_device_id adv7343_id[] = {
+>  
+>  MODULE_DEVICE_TABLE(i2c, adv7343_id);
+>  
+> +#if IS_ENABLED(CONFIG_OF)
+> +static const struct of_device_id adv7343_of_match[] = {
+> +	{.compatible = "adi,adv7343", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, adv7343_of_match);
+> +#endif
+> +
+>  static struct i2c_driver adv7343_driver = {
+>  	.driver = {
+> +		.of_match_table = of_match_ptr(adv7343_of_match),
+>  		.owner	= THIS_MODULE,
+>  		.name	= "adv7343",
+>  	},
+
 
 -- 
 Sylwester Nawrocki
