@@ -1,96 +1,104 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pa0-f45.google.com ([209.85.220.45]:47441 "EHLO
-	mail-pa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752196Ab3HUGfq (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 02:35:46 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v7 11/13] [media] exynos5-is: Add Kconfig and Makefile
-Date: Wed, 21 Aug 2013 12:04:38 +0530
-Message-Id: <1377066881-5423-12-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
-References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
+Received: from bear.ext.ti.com ([192.94.94.41]:51161 "EHLO bear.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754122Ab3HWXRX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 23 Aug 2013 19:17:23 -0400
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [RFC PATCH 00/14] RFCv2: device thermal limits represented in device tree nodes
+Date: Fri, 23 Aug 2013 19:15:41 -0400
+Message-ID: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com
+Cc: durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Adds Kconfig and Makefile for exynos5-is driver files.
+Hello all,
 
-Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- drivers/media/platform/Kconfig             |    1 +
- drivers/media/platform/Makefile            |    1 +
- drivers/media/platform/exynos5-is/Kconfig  |   20 ++++++++++++++++++++
- drivers/media/platform/exynos5-is/Makefile |    7 +++++++
- 4 files changed, 29 insertions(+)
- create mode 100644 drivers/media/platform/exynos5-is/Kconfig
- create mode 100644 drivers/media/platform/exynos5-is/Makefile
+First of all, apologize for the very late answer. But I am resuming this work.
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 08de865..4b0475e 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -123,6 +123,7 @@ config VIDEO_S3C_CAMIF
- 
- source "drivers/media/platform/soc_camera/Kconfig"
- source "drivers/media/platform/exynos4-is/Kconfig"
-+source "drivers/media/platform/exynos5-is/Kconfig"
- source "drivers/media/platform/s5p-tv/Kconfig"
- 
- endif # V4L_PLATFORM_DRIVERS
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index eee28dd..40bf09f 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_VIDEO_SAMSUNG_S5P_TV)	+= s5p-tv/
- 
- obj-$(CONFIG_VIDEO_SAMSUNG_S5P_G2D)	+= s5p-g2d/
- obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC)	+= exynos-gsc/
-+obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_CAMERA) += exynos5-is/
- 
- obj-$(CONFIG_BLACKFIN)                  += blackfin/
- 
-diff --git a/drivers/media/platform/exynos5-is/Kconfig b/drivers/media/platform/exynos5-is/Kconfig
-new file mode 100644
-index 0000000..b67d11a
---- /dev/null
-+++ b/drivers/media/platform/exynos5-is/Kconfig
-@@ -0,0 +1,20 @@
-+config VIDEO_SAMSUNG_EXYNOS5_CAMERA
-+	bool "Samsung Exynos5 SoC Camera Media Device driver"
-+	depends on VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API && PM_RUNTIME
-+	depends on VIDEO_SAMSUNG_EXYNOS4_IS
-+	help
-+	  This is a V4L2 media device driver for Exynos5 SoC series
-+	  camera subsystem.
-+
-+if VIDEO_SAMSUNG_EXYNOS5_CAMERA
-+
-+config VIDEO_SAMSUNG_EXYNOS5_FIMC_IS
-+	tristate "Samsung Exynos5 SoC FIMC-IS driver"
-+	depends on I2C && OF
-+	depends on VIDEO_EXYNOS4_FIMC_IS
-+	select VIDEOBUF2_DMA_CONTIG
-+	help
-+	  This is a V4L2 driver for Samsung Exynos5 SoC series Imaging
-+	  Subsystem known as FIMC-IS.
-+
-+endif #VIDEO_SAMSUNG_EXYNOS5_MDEV
-diff --git a/drivers/media/platform/exynos5-is/Makefile b/drivers/media/platform/exynos5-is/Makefile
-new file mode 100644
-index 0000000..6cdb037
---- /dev/null
-+++ b/drivers/media/platform/exynos5-is/Makefile
-@@ -0,0 +1,7 @@
-+ccflags-y += -Idrivers/media/platform/exynos4-is
-+exynos5-fimc-is-objs := fimc-is-core.o fimc-is-isp.o fimc-is-scaler.o
-+exynos5-fimc-is-objs += fimc-is-pipeline.o fimc-is-interface.o fimc-is-sensor.o
-+exynos-mdevice-objs := exynos5-mdev.o
-+
-+obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_FIMC_IS) += exynos5-fimc-is.o
-+obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_CAMERA) += exynos-mdevice.o
+This RFC is about describing hardware thermal limits using device tree.
+
+Based on the discussion on the first RFC:
+http://lkml.org/lkml/2013/7/22/319
+
+I have changed the code and the device tree bindings as follows:
+1. Now bindings may have several thermal zones per device (req. by Wei Ni)
+2. The constants used are now using C preprocessor macros (as per Stephen suggestion)
+3. Improved the bindings to have a better representation of links between
+involved entities (thermal zone, cooling devices, sensors), as suggested
+by Pawel and Mark.
+4. Couple of changes in code, as per previous reviews.
+5. Removed policies from DT bindings.
+
+In summary, based on the discussion of the first RFC, now the idea is
+to have thermal zones nodes describing the thermal zones
+and the hardware limits. Then sensor devices nodes will point to
+thermal zones via phandles and cooling device will also point to
+thermal zone via phandles.
+
+So, I am also posting the patch series to dt mailing list as requested.
+
+Please refer to patch 02/14 to a documentation of what I am proposing.
+
+This patch series includes:
+a. Required changes in cpufreq-cpu0 driver so that it loads cooling device
+when requested.
+b. The thermal zone builder based on thermal bindings
+c. Changes in sensor drivers (as examples)
+d. Changes in device tree DTS files (as examples)
+
+This patch series depends on the fixes I sent to linux-pm:
+http://lkml.org/lkml/2013/8/23/572
+
+In the above link you will find also the request to have a flag to
+determine if virtual hwmon device will be created, based on thermal device.
+
+All best,
+
+Eduardo Valentin (14):
+  cpufreq: cpufreq-cpu0: add dt node parsing for 'cooling-zones'
+  drivers: thermal: introduce device tree parser
+  hwmon: lm75: expose to thermal fw via DT nodes
+  hwmon: tmp102: expose to thermal fw via DT nodes
+  thermal: ti-soc-thermal: use thermal DT infrastructure
+  arm: dts: add omap4 CPU thermal data
+  arm: dts: add omap4430 thermal data
+  arm: dts: add omap4460 thermal data
+  arm: dts: point to cooling-zones on omap4430 cpu node
+  arm: dts: point to cooling-zones on omap4460 cpu node
+  arm: dts: add omap5 GPU thermal data
+  arm: dts: add omap5 CORE thermal data
+  arm: dts: add omap5 thermal data
+  arm: dts: point to cooling-zones on omap5 cpu node
+
+ .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   |   4 +
+ .../devicetree/bindings/thermal/thermal.txt        | 160 +++++++
+ arch/arm/boot/dts/omap4-cpu-thermal.dtsi           |  40 ++
+ arch/arm/boot/dts/omap443x.dtsi                    |   6 +
+ arch/arm/boot/dts/omap4460.dtsi                    |   6 +
+ arch/arm/boot/dts/omap5-core-thermal.dtsi          |  27 ++
+ arch/arm/boot/dts/omap5-gpu-thermal.dtsi           |  27 ++
+ arch/arm/boot/dts/omap5.dtsi                       |  10 +
+ drivers/cpufreq/cpufreq-cpu0.c                     |  12 +
+ drivers/hwmon/lm75.c                               |  31 ++
+ drivers/hwmon/tmp102.c                             |  26 ++
+ drivers/thermal/Kconfig                            |  13 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/thermal_dt.c                       | 473 +++++++++++++++++++++
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c |  52 ++-
+ include/dt-bindings/thermal/thermal.h              |  27 ++
+ include/linux/thermal.h                            |   3 +
+ 17 files changed, 907 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
+ create mode 100644 arch/arm/boot/dts/omap4-cpu-thermal.dtsi
+ create mode 100644 arch/arm/boot/dts/omap5-core-thermal.dtsi
+ create mode 100644 arch/arm/boot/dts/omap5-gpu-thermal.dtsi
+ create mode 100644 drivers/thermal/thermal_dt.c
+ create mode 100644 include/dt-bindings/thermal/thermal.h
+
 -- 
-1.7.9.5
+1.8.2.1.342.gfa7285d
 
