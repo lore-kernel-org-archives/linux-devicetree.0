@@ -1,43 +1,72 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mailout3.samsung.com ([203.254.224.33]:54131 "EHLO
-	mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754713Ab3HWKCZ (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 06:02:25 -0400
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v4 1/7] ARM: dts: add mixer clocks to mixer node for Exynos5250
-Date: Fri, 23 Aug 2013 15:54:15 +0530
-Message-id: <1377253461-20851-2-git-send-email-rahul.sharma@samsung.com>
-In-reply-to: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com>
-References: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com>
+Received: from mail-we0-f180.google.com ([74.125.82.180]:52490 "EHLO
+	mail-we0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753350Ab3HWHc1 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 03:32:27 -0400
+MIME-Version: 1.0
+In-Reply-To: <1377206501-30519-2-git-send-email-detheridge@ti.com>
+References: <1377206501-30519-1-git-send-email-detheridge@ti.com> <1377206501-30519-2-git-send-email-detheridge@ti.com>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Date: Fri, 23 Aug 2013 13:02:06 +0530
+Message-ID: <CA+V-a8vyD57-WM7JusQ28RwyLP0Y7DZg+GrS4kro=Ck7Qv28Eg@mail.gmail.com>
+Subject: Re: [PATCH] video: da8xx-fb: adding dt support
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Sean Paul <seanpaul@chromium.org>, Rahul Sharma <rahul.sharma@samsung.com>
+To: Darren Etheridge <detheridge@ti.com>
+Cc: devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, plagnioj@jcrosoft.com, LFBDEV <linux-fbdev@vger.kernel.org>, afzal@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Sean Paul <seanpaul@chromium.org>
+Hi Darren,
 
-This patch adds the mixer clocks to the mixer node in the
-exynos 5250 dts file.
+Thanks for the patch.
 
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- arch/arm/boot/dts/exynos5250.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+On Fri, Aug 23, 2013 at 2:51 AM, Darren Etheridge <detheridge@ti.com> wrote:
+> Enhancing driver to enable probe triggered by a corresponding dt entry.
+>
+> Add da8xx-fb.txt documentation to devicetree section.
+>
+> Obtain fb_videomode details for the connected lcd panel using the
+> display timing details present in DT.
+>
+> Ensure that platform data is present before checking whether platform
+> callback is present (the one used to control backlight). So far this
+> was not an issue as driver was purely non-DT triggered, but now DT
+> support has been added this check must be performed.
+>
+> v2: squashing multiple commits from Afzal Mohammed (afzal@ti.com)
+> v3: remove superfluous cast
+> v4: expose both ti,am3352-lcdc and ti,da830-lcdc for .compatible
+>         as driver can use enhanced features of all version of the
+>         silicon block.
+> v5: addressed review comments from Prabhakar Lad
+> v6: Changed the .compatible naming to match the existing drm bindings
+>         for am33xx devices
+>
+> Signed-off-by: Darren Etheridge <detheridge@ti.com>
+> ---
+>  .../devicetree/bindings/video/da8xx-fb.txt         |   42 ++++++++++++
+>  drivers/video/da8xx-fb.c                           |   66 +++++++++++++++++++-
+>  2 files changed, 105 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/video/da8xx-fb.txt
+>
+> diff --git a/Documentation/devicetree/bindings/video/da8xx-fb.txt b/Documentation/devicetree/bindings/video/da8xx-fb.txt
+> new file mode 100644
+> index 0000000..575bb4b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/da8xx-fb.txt
+> @@ -0,0 +1,42 @@
+> +TI LCD Controller on DA830/DA850/AM335x SoC's
+> +
+> +Required properties:
+> +- compatible:
+> +       DA830 - "ti,da8xx-tilcdc"
+> +       AM335x SoC's - "ti,am33xx-tilcdc"
 
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 1eec646..dcb6c03 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -622,6 +622,8 @@
- 		compatible = "samsung,exynos5250-mixer";
- 		reg = <0x14450000 0x10000>;
- 		interrupts = <0 94 0>;
-+		clocks = <&clock 343>, <&clock 136>;
-+		clock-names = "mixer", "sclk_hdmi";
- 	};
- 
- 	dp_phy: video-phy@10040720 {
--- 
-1.7.10.4
+what about DA850 ?
 
+Rest of the patch looks good, with that change you can add my,
+
+Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+
+Regards,
+--Prabhakar Lad
