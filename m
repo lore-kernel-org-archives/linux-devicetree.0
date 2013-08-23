@@ -1,50 +1,50 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp2-1.goneo.de ([212.90.139.83]:47987 "EHLO smtp2-1.goneo.de"
+Received: from smtp2-1.goneo.de ([212.90.139.83]:51113 "EHLO smtp2-1.goneo.de"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752943Ab3HWJv0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 23 Aug 2013 05:51:26 -0400
+	id S1752943Ab3HWJkv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 23 Aug 2013 05:40:51 -0400
 From: Lars Poeschel <poeschel@lemonage.de>
 Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Fri, 23 Aug 2013 11:51:18 +0200
-References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de> <CACRpkdbVYfBS5L+0ejfbTBwPbD9HFB1kV8qnS7DdSydRccxDmg@mail.gmail.com> <52167A35.2010109@wwwdotorg.org>
-In-Reply-To: <52167A35.2010109@wwwdotorg.org>
+Date: Fri, 23 Aug 2013 11:40:44 +0200
+References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de> <CACRpkdYUeyVZcN1-jOzg0zo4eSJK1S+M5fJ0FcMsgwaPKW4Obw@mail.gmail.com> <52167E5D.6060802@wwwdotorg.org>
+In-Reply-To: <52167E5D.6060802@wwwdotorg.org>
 MIME-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Message-Id: <201308231151.18075.poeschel@lemonage.de>
+Message-Id: <201308231140.44923.poeschel@lemonage.de>
 Sender: devicetree-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, galak@codeaurora.org, Pawel Moll <pawel.moll@arm.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thursday 22 August 2013 at 22:53:09, Stephen Warren wrote:
-> On 08/21/2013 05:27 PM, Linus Walleij wrote:
-> > On Thu, Aug 22, 2013 at 1:10 AM, Stephen Warren <swarren@wwwdotorg.org> 
-wrote:
-> >>> On Wednesday 21 of August 2013 15:38:54 Lars Poeschel wrote:
-> >>>> To solve this dilemma, perform an interrupt consistency check
-> >>>> when adding a GPIO chip: if the chip is both gpio-controller and
-> >>>> interrupt-controller, walk all children of the device tree,
-> >> 
-> >> It seems a little odd to solve this only for DT. What about the
-> >> non-DT case?
+On Thursday 22 August 2013 at 23:10:53, Stephen Warren wrote:
+> On 08/21/2013 05:36 PM, Linus Walleij wrote:
+> > On Thu, Aug 22, 2013 at 1:10 AM, Stephen Warren
+> > <swarren@wwwdotorg.org> wrote: [Me]
 > > 
-> > DT is the hardware configuration system that lets you request
-> > the same resource in two ways, i.e. it allows one and the same
-> > node to be both gpio-controller and interrupt-controller, and
-> > start handing out the same line as both GPIO and IRQ
-> > independently.
+> >>>> check if these in turn reference the interrupt-controller, and
+> >>>> if they do, loop over the interrupts used by that child and
+> >>>> perform gpio_request() and gpio_direction_input() on these,
+> >>>> making them unreachable from the GPIO side.
+> >> 
+> >> What about bindings that require a GPIO to be specified, yet don't
+> >> allow an IRQ to be specified, and the driver internally does perform
+> >> gpio_to_irq() on it? I don't think one can detect that case.
+> > 
+> > This is still allowed. Consumers that prefer to have a GPIO
+> > passed and convert it to IRQ by that call can still do so,
+> > they will know what they're doing and will not cause the
+> > double-command situation that we're trying to solve.
 > 
-> Huh? What stops systems using board files and platform data from having
-> this issue?
+> Why not? There are certainly drivers in the kernel which request a GPIO
+> as both a GPIO and as an (dual-edge) interrupt, so that they can read
+> the GPIO input whenever the IRQ goes off, in order to determine the pin
+> state. This is safer against high-latency or lost interrupts.
 
-I am not 100% sure, Linus knows better.
-I think nothing stops them from having this issue, but board files are 
-gentle and request the GPIO before doing gpio_to_irq, because they know 
-that they are using a gpio based interrupt.
-
-You can read the whole story here:
-http://www.mail-archive.com/linux-omap@vger.kernel.org/msg91405.html
-Things get interesting after the first mail from Alexander Holler, who is 
-the first having a problem with the patch in the link.
+This is the point! They REQUEST the GPIO. They can then do whatever they 
+like with this GPIO then, even additionally use it as interrupt.
+In the devicetree case the interrupts are not requested. This is what we 
+are trying to address with the patch. The device using this interrupt has 
+no idea where this interrupt comes from. Is it a gpio-interrupt or not? 
+Does it have to request a gpio before using this interrupt or not?
