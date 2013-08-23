@@ -1,55 +1,111 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 1/3] misc: Add crossbar driver
-Date: Fri, 23 Aug 2013 15:44:46 -0400
-Message-ID: <5217BBAE.2030703@ti.com>
-References: <51E83A4F.5080904@ti.com>
- <CACRpkdY3nQaWimTwB-Zt-8+Q_KZr8a0rpB1SUQq=AuoG4bAYnQ@mail.gmail.com>
- <51ED2385.60108@ti.com> <51ED5C66.1010407@ti.com> <51EFFBE1.4090505@ti.com>
- <51F0031B.1050307@ti.com> <51F00530.9090703@ti.com> <51F02069.3050207@ti.com>
- <51F0223E.4050008@ti.com> <51F0240F.3050507@ti.com>
- <20130813081003.GU7656@atomide.com> <520A02BA.4090805@ti.com>
- <CACRpkda+m82PYJsExLM6JLsLa8-bVhdvy_r_+-uKfVT2NG7Cbg@mail.gmail.com>
- <520D398D.9040806@ti.com>
- <CACRpkdYeo1y-HhftkRWgwyq8o-NVuJ978Uq+ON880LHhUxC=hg@mail.gmail.com>
- <520D44C5.6080205@ti.com>
- <CACRpkdagSHxzV3=427O9iftNxM+N=w9aPds=iDvGQPoG3H-cWw@mail.gmail.com>
- <5215F6F6.9060703@ti.com> <5216E966.5020902@ti.com> <5216FD0C.3090709@ti.com>
- <521702E2.5000102@ti.com> <521706D9.9070001@ti.com> <521719D8.7060506@ti.com>
- <521765DC.2000609@ti.com> <52178D98.8020202@ti.com>
- <CACRpkdapqEVShaAekzr6TPW1U7d_y1=Gu6ixT6VS1=D1M-QjBA@mail.gmail.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [RFC PATCH 01/14] cpufreq: cpufreq-cpu0: add dt node parsing for 'cooling-zones'
+Date: Fri, 23 Aug 2013 19:15:42 -0400
+Message-ID: <1377299755-5134-2-git-send-email-eduardo.valentin@ti.com>
+References: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdapqEVShaAekzr6TPW1U7d_y1=Gu6ixT6VS1=D1M-QjBA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Nishanth Menon <nm@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rajendra Nayak <rnayak@ti.com>, Sekhar Nori <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Sricharan R <r.sricharan@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com
+Cc: durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Viresh Kumar <viresh.kumar@linaro.org>, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 23 August 2013 03:06 PM, Linus Walleij wrote:
-> On Fri, Aug 23, 2013 at 6:28 PM, Sekhar Nori <nsekhar@ti.com> wrote:
->> On 8/23/2013 7:08 PM, Santosh Shilimkar wrote:
-> 
->>> The whole point we are moving to domain is not have any default
->>> mapping(connection done) at DT level. Rather DT only specifies the
->>> peripherals and their cross-bar connection ID(i.e cross-bar IRQ line).
->>> This will be the driver input as a IRQ line from DT. The cross-bar
->>> driver needs to map any of the free list available on *request* only.
->>
->> Right, the mapping can be done on request. That will be cleaner.
-> 
-> I like where this design is going now :-)
-> 
-Sure and thanks for good discussion. Debates are useful
+This patch changes the cpufreq-cpu0 driver to consider if
+a cpu needs cooling (with cpufreq). In case the cooling is needed,
+it can be flagged at the cpu0 device tree node, with the list
+of zones property 'cooling-zones'.
 
-regards,
-Santosh
+In case this list of zones is present, the driver will
+load a cpufreq cooling device in the system. The cpufreq-cpu0
+driver is not interested in determining how the system should
+be using the cooling device. The driver is responsible
+only of loading the cooling device.
+
+Describing how the cooling device will be used can be
+accomplished by setting up a thermal zone that references
+and is composed by the cpufreq cooling device.
+
+Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: cpufreq@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org
+Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+---
+ Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt |  4 ++++
+ drivers/cpufreq/cpufreq-cpu0.c                             | 12 ++++++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+index 051f764..add50f7 100644
+--- a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
++++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+@@ -15,6 +15,9 @@ Optional properties:
+ - clock-latency: Specify the possible maximum transition latency for clock,
+   in unit of nanoseconds.
+ - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
++- cooling-zones: A list of thermal zones phandles. The generic cpu
++  cooling (freq clipping) is loaded by the generic cpufreq-cpu0 driver
++  in case the device tree node has this list.
+ 
+ Examples:
+ 
+@@ -33,6 +36,7 @@ cpus {
+ 			198000  850000
+ 		>;
+ 		clock-latency = <61036>; /* two CLK32 periods */
++		cooling-zones = <&cpu_thermal>;
+ 	};
+ 
+ 	cpu@1 {
+diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
+index ad1fde2..ede6487 100644
+--- a/drivers/cpufreq/cpufreq-cpu0.c
++++ b/drivers/cpufreq/cpufreq-cpu0.c
+@@ -20,6 +20,9 @@
+ #include <linux/platform_device.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/slab.h>
++#include <linux/thermal.h>
++#include <linux/cpu_cooling.h>
++#include <linux/cpumask.h>
+ 
+ static unsigned int transition_latency;
+ static unsigned int voltage_tolerance; /* in percentage */
+@@ -28,6 +31,7 @@ static struct device *cpu_dev;
+ static struct clk *cpu_clk;
+ static struct regulator *cpu_reg;
+ static struct cpufreq_frequency_table *freq_table;
++static struct thermal_cooling_device *cdev;
+ 
+ static int cpu0_verify_speed(struct cpufreq_policy *policy)
+ {
+@@ -268,6 +272,13 @@ static int cpu0_cpufreq_probe(struct platform_device *pdev)
+ 		goto out_free_table;
+ 	}
+ 
++	/*
++	 * For now, just loading the cooling device;
++	 * thermal DT code takes care of matching them.
++	 */
++	if (of_find_property(np, "cooling-zones", NULL))
++		cdev = cpufreq_cooling_register(cpu_present_mask);
++
+ 	of_node_put(np);
+ 	of_node_put(parent);
+ 	return 0;
+@@ -283,6 +294,7 @@ out_put_parent:
+ 
+ static int cpu0_cpufreq_remove(struct platform_device *pdev)
+ {
++	cpufreq_cooling_unregister(cdev);
+ 	cpufreq_unregister_driver(&cpu0_cpufreq_driver);
+ 	opp_free_cpufreq_table(cpu_dev, &freq_table);
+ 
+-- 
+1.8.2.1.342.gfa7285d
