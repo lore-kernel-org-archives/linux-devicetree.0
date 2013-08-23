@@ -1,45 +1,43 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail1.g1.pair.com ([66.39.3.162]:62679 "EHLO mail1.g1.pair.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751782Ab3HUCDO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Tue, 20 Aug 2013 22:03:14 -0400
-From: Sean Cross <xobs@kosagi.com>
-Subject: [PATCH v6] Add OF bindings to Micrel ksz9021 PHY
-Date: Wed, 21 Aug 2013 01:46:11 +0000
-Message-Id: <1377049572-30752-1-git-send-email-xobs@kosagi.com>
+Received: from mail-bk0-f49.google.com ([209.85.214.49]:56668 "EHLO
+	mail-bk0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753359Ab3HWC7R (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 22:59:17 -0400
+MIME-Version: 1.0
+Date: Fri, 23 Aug 2013 10:59:15 +0800
+Message-ID: <CAPgLHd_uc8t_Q7QAq+FzdMZjo0VRYfqXMfk=zy5O+LwWhhGsTQ@mail.gmail.com>
+Subject: [PATCH -next] dma: cppi41: fix error return code in cppi41_dma_probe()
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>, Duan Fugang-B38611 <B38611@freescale.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: David Miller <davem@davemloft.net>, "stephen@networkplumber.org" <stephen@networkplumber.org>, Steven Rostedt <rostedt@goodmis.org>, Sean Cross <xobs@kosagi.com>
+To: vinod.koul@intel.com, djbw@fb.com, grant.likely@linaro.org, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Some boards require custom parameters be passed to the Micrel PHY.
-Allow these boards to specify custom timing parameters in the device
-tree node.
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Changes since v5:
- - Add -ps suffix to OF keys, indicating picoseconds
- - Minor formatting changes to bring in line with coding style
+Fix to return -EINVAL in the irq parse and map error handling
+case instead of 0, as done elsewhere in this function.
 
-Changes since v4:
- - Add an example of parameters on an mdio bus
- - Specify values in picoseconds rather than as register values
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/dma/cppi41.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-v4 was accidentally unchanged from v3
-
-Changes since v2:
- - limited the scope to just ksz9021 rather than all PHYs
-
-Changes since v1:
- - removed redefinition of registers and addresses 
-
-Sean Cross (1):
-  net/phy: micrel: Add OF configuration support for ksz9021
-
- .../devicetree/bindings/net/micrel-ksz9021.txt     |   49 ++++++++++
- drivers/net/phy/micrel.c                           |  103 +++++++++++++++++++-
- 2 files changed, 151 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/net/micrel-ksz9021.txt
-
--- 
-1.7.9.5
+diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
+index 5dcebca..49ea05a 100644
+--- a/drivers/dma/cppi41.c
++++ b/drivers/dma/cppi41.c
+@@ -973,8 +973,10 @@ static int cppi41_dma_probe(struct platform_device *pdev)
+ 		goto err_chans;
+ 
+ 	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+-	if (!irq)
++	if (!irq) {
++		ret = -EINVAL;
+ 		goto err_irq;
++	}
+ 
+ 	cppi_writel(USBSS_IRQ_PD_COMP, cdd->usbss_mem + USBSS_IRQ_ENABLER);
+ 
 
