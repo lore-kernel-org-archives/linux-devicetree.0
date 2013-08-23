@@ -1,10 +1,10 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from nasmtp02.atmel.com ([204.2.163.16]:30575 "EHLO
-	nasmtp02.atmel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753630Ab3HWD62 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 23:58:28 -0400
-Message-ID: <5216DCB0.7050909@atmel.com>
-Date: Fri, 23 Aug 2013 11:53:20 +0800
+Received: from eusmtp01.atmel.com ([212.144.249.242]:30521 "EHLO
+	eusmtp01.atmel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753223Ab3HWDyZ (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 23:54:25 -0400
+Message-ID: <5216DCE6.60109@atmel.com>
+Date: Fri, 23 Aug 2013 11:54:14 +0800
 From: Josh Wu <josh.wu@atmel.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH -next] mtd: atmel_nand: fix error return code in atmel_nand_probe()
@@ -17,6 +17,8 @@ To: Wei Yongjun <weiyj.lk@gmail.com>
 Cc: dwmw2@infradead.org, grant.likely@linaro.org, rob.herring@calxeda.com, artem.bityutskiy@linux.intel.com, plagnioj@jcrosoft.com, jg1.han@samsung.com, yongjun_wei@trendmicro.com.cn, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+Hi, Wei Yongjun
+
 On 8/23/2013 10:50 AM, Wei Yongjun wrote:
 > From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 >
@@ -25,7 +27,7 @@ On 8/23/2013 10:50 AM, Wei Yongjun wrote:
 >
 > Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Thank you for catch this. And
+Thank you for catch this and
 Acked-by: Josh Wu <josh.wu@atmel.com>
 
 > ---
@@ -46,3 +48,5 @@ Acked-by: Josh Wu <josh.wu@atmel.com>
 >   
 >
 
+Best Regards,
+Josh Wu
