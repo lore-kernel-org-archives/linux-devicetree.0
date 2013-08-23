@@ -1,79 +1,53 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: Re: [PATCH 4/6] DT: MIPS: ralink: add RT2880 dts files
-Date: Fri, 23 Aug 2013 11:44:49 -0700
-Message-ID: <5217ADA1.4070100@gmail.com>
-References: <1365843026-11015-1-git-send-email-blogic@openwrt.org> <1365843026-11015-4-git-send-email-blogic@openwrt.org> <5217AB25.3050106@cogentembedded.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3] misc: Add crossbar driver
+Date: Fri, 23 Aug 2013 21:06:39 +0200
+Message-ID: <CACRpkdapqEVShaAekzr6TPW1U7d_y1=Gu6ixT6VS1=D1M-QjBA@mail.gmail.com>
+References: <51E83A4F.5080904@ti.com>
+	<CACRpkdY3nQaWimTwB-Zt-8+Q_KZr8a0rpB1SUQq=AuoG4bAYnQ@mail.gmail.com>
+	<51ED2385.60108@ti.com>
+	<51ED5C66.1010407@ti.com>
+	<51EFFBE1.4090505@ti.com>
+	<51F0031B.1050307@ti.com>
+	<51F00530.9090703@ti.com>
+	<51F02069.3050207@ti.com>
+	<51F0223E.4050008@ti.com>
+	<51F0240F.3050507@ti.com>
+	<20130813081003.GU7656@atomide.com>
+	<520A02BA.4090805@ti.com>
+	<CACRpkda+m82PYJsExLM6JLsLa8-bVhdvy_r_+-uKfVT2NG7Cbg@mail.gmail.com>
+	<520D398D.9040806@ti.com>
+	<CACRpkdYeo1y-HhftkRWgwyq8o-NVuJ978Uq+ON880LHhUxC=hg@mail.gmail.com>
+	<520D44C5.6080205@ti.com>
+	<CACRpkdagSHxzV3=427O9iftNxM+N=w9aPds=iDvGQPoG3H-cWw@mail.gmail.com>
+	<5215F6F6.9060703@ti.com>
+	<5216E966.5020902@ti.com>
+	<5216FD0C.3090709@ti.com>
+	<521702E2.5000102@ti.com>
+	<521706D9.9070001@ti.com>
+	<521719D8.7060506@ti.com>
+	<521765DC.2000609@ti.com>
+	<52178D98.8020202@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <5217AB25.3050106@cogentembedded.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: John Crispin <blogic@openwrt.org>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52178D98.8020202@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Sricharan R <r.sricharan@ti.com>, Rajendra Nayak <rnayak@ti.com>, Nishanth Menon <nm@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Thomas Gleixner <tglx@linutronix.de>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/23/2013 11:34 AM, Sergei Shtylyov wrote:
-> On 04/13/2013 12:50 PM, John Crispin wrote:
->
->> Add a dtsi file for RT2880 SoC and a sample dts file.
->
->     You forgot to mention Kconfig entry...
->
->> Signed-off-by: John Crispin <blogic@openwrt.org>
-> [...]
->
->> diff --git a/arch/mips/ralink/dts/Makefile
->> b/arch/mips/ralink/dts/Makefile
->> index 1a69fb3..f635a01 100644
->> --- a/arch/mips/ralink/dts/Makefile
->> +++ b/arch/mips/ralink/dts/Makefile
->> @@ -1 +1,2 @@
->> +obj-$(CONFIG_DTB_RT2880_EVAL) := rt2880_eval.dtb.o
->>   obj-$(CONFIG_DTB_RT305X_EVAL) := rt3052_eval.dtb.o
->> diff --git a/arch/mips/ralink/dts/rt2880.dtsi
->> b/arch/mips/ralink/dts/rt2880.dtsi
->> new file mode 100644
->> index 0000000..182afde
->> --- /dev/null
->> +++ b/arch/mips/ralink/dts/rt2880.dtsi
->> @@ -0,0 +1,58 @@
->> +/ {
->> +    #address-cells = <1>;
->> +    #size-cells = <1>;
->> +    compatible = "ralink,rt2880-soc";
->> +
->> +    cpus {
->> +        cpu@0 {
->> +            compatible = "mips,mips4KEc";
->> +        };
->> +    };
->> +
->> +    cpuintc: cpuintc@0 {
->
->     According to ePAPR spec [1], the node name should be
-> "interrupt-controller".
->
->> +        #address-cells = <0>;
->> +        #interrupt-cells = <1>;
->> +        interrupt-controller;
->> +        compatible = "mti,cpu-interrupt-controller";
->
->     So, it's "mips" or "mti"?
+On Fri, Aug 23, 2013 at 6:28 PM, Sekhar Nori <nsekhar@ti.com> wrote:
+> On 8/23/2013 7:08 PM, Santosh Shilimkar wrote:
 
-I agree that it should be consistent.  vendor-prefixes.txt doesn't have 
-an entry for MIPS, so ...
+>> The whole point we are moving to domain is not have any default
+>> mapping(connection done) at DT level. Rather DT only specifies the
+>> peripherals and their cross-bar connection ID(i.e cross-bar IRQ line).
+>> This will be the driver input as a IRQ line from DT. The cross-bar
+>> driver needs to map any of the free list available on *request* only.
+>
+> Right, the mapping can be done on request. That will be cleaner.
 
-Isn't this the CP0 interrupt controller?  I wonder if something like:
+I like where this design is going now :-)
 
-"mips,r4k-cp0-interrupt-controller" might be more descriptive.
-
-David Daney
+Yours,
+Linus Walleij
