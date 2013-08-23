@@ -1,81 +1,80 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pb0-f42.google.com ([209.85.160.42]:33917 "EHLO
-	mail-pb0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752410Ab3HUGek (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 02:34:40 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v7 02/13] [media] exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings documentation
-Date: Wed, 21 Aug 2013 12:04:29 +0530
-Message-Id: <1377066881-5423-3-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
-References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:44964 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754586Ab3HWUzu (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 16:55:50 -0400
+Message-ID: <5217CC4D.2080905@wwwdotorg.org>
+Date: Fri, 23 Aug 2013 14:55:41 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
+References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de> <CACRpkdZgFMH07_W2eUWsgsUMXAJA1paEimAds=-XeViZaYySLA@mail.gmail.com> <5217BD74.5030801@wwwdotorg.org> <1551491.9oAMd0jnLN@flatron>
+In-Reply-To: <1551491.9oAMd0jnLN@flatron>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The patch adds the DT binding documentation for Samsung
-Exynos5 SoC series imaging subsystem (FIMC-IS).
+On 08/23/2013 01:55 PM, Tomasz Figa wrote:
+> On Friday 23 of August 2013 13:52:20 Stephen Warren wrote:
+>> On 08/23/2013 12:45 PM, Linus Walleij wrote:
+>>> On Thu, Aug 22, 2013 at 11:10 PM, Stephen Warren 
+> <swarren@wwwdotorg.org> wrote:
+>>>> On 08/21/2013 05:36 PM, Linus Walleij wrote:
+>>>>> On Thu, Aug 22, 2013 at 1:10 AM, Stephen Warren
+>>>>> <swarren@wwwdotorg.org> wrote: [Me]
+>>>>>
+>>>>>>>> check if these in turn reference the interrupt-controller, and
+>>>>>>>> if they do, loop over the interrupts used by that child and
+>>>>>>>> perform gpio_request() and gpio_direction_input() on these,
+>>>>>>>> making them unreachable from the GPIO side.
+>>>>>>
+>>>>>> What about bindings that require a GPIO to be specified, yet don't
+>>>>>> allow an IRQ to be specified, and the driver internally does
+>>>>>> perform gpio_to_irq() on it? I don't think one can detect that
+>>>>>> case.
+>>>>>
+>>>>> This is still allowed. Consumers that prefer to have a GPIO
+>>>>> passed and convert it to IRQ by that call can still do so,
+>>>>> they will know what they're doing and will not cause the
+>>>>> double-command situation that we're trying to solve.
+>>>>
+>>>> Why not? There are certainly drivers in the kernel which request a
+>>>> GPIO
+>>>> as both a GPIO and as an (dual-edge) interrupt, so that they can read
+>>>> the GPIO input whenever the IRQ goes off, in order to determine the
+>>>> pin
+>>>> state. This is safer against high-latency or lost interrupts.
+>>>
+>>> Yes? Are we talking past each other here?
+>>>
+>>> This is a perfectly OK thing to do as long as it is done like
+>>> this:
+>>>
+>>> request_gpio(gpio);
+>>> gpio_direction_input(gpio);
+>>> request_irq(gpio_to_irq(gpio));
+>>
+>> But I'm not aware that there's a rule saying it's illegal to:
+>>
+>> request_irq(gpio_to_irq(gpio));
+>> request_gpio(gpio);
+>> gpio_direction_input(gpio);
+> 
+> Well, at least on Samsung platforms it is illegal to do so, because 
+> gpio_direction_input() would override the interrupt+input function set by 
+> setup done in request_irq() with normal input function, thus breaking the 
+> interrupt.
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- .../devicetree/bindings/media/exynos5-fimc-is.txt  |   46 ++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+Assuming that Linux has no general rule that requires a specific order,
+isn't that simply a bug in the Samsung platforms? After all, a
+completely generic cross-platform driver, which could touch both GPIO
+and IRQ, would be written to any Linux-imposed rules, not any
+Samsung-platform-imposed rules.
 
-diff --git a/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
-new file mode 100644
-index 0000000..5611401
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
-@@ -0,0 +1,46 @@
-+Samsung EXYNOS5 SoC series Imaging Subsystem (FIMC-IS)
-+------------------------------------------------------
-+
-+The camera subsystem on Samsung Exynos5 SoC has some changes relative
-+to previous SoC versions. Exynos5 has almost similar MIPI-CSIS and
-+FIMC-LITE IPs but has a much improved version of FIMC-IS which can
-+handle sensor controls and camera post-processing operations. The
-+Exynos5 FIMC-IS has a dedicated ARM Cortex A5 processor, many
-+post-processing blocks (ISP, DRC, FD, ODC, DIS, 3DNR) and two
-+dedicated scalers (SCC and SCP).
-+
-+fimc-is node
-+------------
-+
-+Required properties:
-+
-+- compatible        : must be "samsung,exynos5250-fimc-is"
-+- reg               : physical base address and size of the memory mapped
-+                      registers
-+- interrupt-parent  : parent interrupt controller
-+- interrupts        : fimc-is interrupt to the parent interrupt controller
-+- clocks            : list of clock specifiers, corresponding to entries in
-+                      clock-names property
-+- clock-names       : must contain "isp", "mcu_isp", "isp_div0", "isp_div1",
-+                      "isp_divmpwm", "mcu_isp_div0", "mcu_isp_div1" entries,
-+                      matching entries in the clocks property
-+- samsung,pmu       : phandle to the Power Management Unit (PMU) node
-+
-+i2c-isp (ISP I2C bus controller) nodes
-+------------------------------------------
-+
-+Required properties:
-+
-+- compatible	: should be "samsung,exynos4212-i2c-isp" for Exynos4212,
-+		  Exynos4412 and Exynos5250 SoCs
-+- reg		: physical base address and length of the registers set
-+- clocks	: must contain gate clock specifier for this controller
-+- clock-names	: must contain "i2c_isp" entry
-+
-+For the i2c-isp node, it is required to specify a pinctrl state named "default",
-+according to the pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt.
-+
-+Device tree nodes of the image sensors controlled directly by the FIMC-IS
-+firmware must be child nodes of their corresponding ISP I2C bus controller node.
-+The data link of these image sensors must be specified using the common video
-+interfaces bindings, defined in video-interfaces.txt.
--- 
-1.7.9.5
+> We are still to implement some sanity check to disallow (or ignore) this 
+> if the pin is already configured as an interrupt.
 
+OK good, so it sounds like this is a temporary issue.
