@@ -1,143 +1,51 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ns.mm-sol.com ([212.124.72.66]:56815 "EHLO extserv.mm-sol.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750875Ab3HTJ5X (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Tue, 20 Aug 2013 05:57:23 -0400
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v4 1/3] usb: dwc3: msm: Add device tree binding information
-Date: Tue, 20 Aug 2013 12:56:03 +0300
-Message-Id: <1376992565-22292-2-git-send-email-iivanov@mm-sol.com>
-In-Reply-To: <1376992565-22292-1-git-send-email-iivanov@mm-sol.com>
-References: <1376992565-22292-1-git-send-email-iivanov@mm-sol.com>
+Received: from mail-bk0-f47.google.com ([209.85.214.47]:41246 "EHLO
+	mail-bk0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755710Ab3HWUgR (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 16:36:17 -0400
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v3 2/2] max77693: added device tree support
+Date: Fri, 23 Aug 2013 22:36:10 +0200
+Message-ID: <2068495.b8bxEK36PI@flatron>
+In-Reply-To: <20130823141433.GI25856@e106331-lin.cambridge.arm.com>
+References: <1377104014-21910-1-git-send-email-a.hajda@samsung.com> <1377104014-21910-3-git-send-email-a.hajda@samsung.com> <20130823141433.GI25856@e106331-lin.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Hi Mark,
 
-MSM USB3.0 core wrapper consist of USB3.0 IP from Synopsys
-(SNPS) and HS, SS PHY's control and configuration registers.
+On Friday 23 of August 2013 15:14:33 Mark Rutland wrote:
+> On Wed, Aug 21, 2013 at 05:53:34PM +0100, Andrzej Hajda wrote:
+> > This patch adds only of_match_table.
+> > There are no device specific properties.
+> 
+> Could you clarify what functionality this enables and what it doesn't,
+> please?
 
-It could operate in device mode (SS, HS, FS) and host
-mode (SS, HS, FS, LS).
+This patch simply adds explicit OF match table for this device. Before, 
+the driver could be matched only by a fallback to i2c_device_id table.
 
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
----
- .../devicetree/bindings/usb/msm-ssusb.txt          |  104 ++++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/msm-ssusb.txt
+> This doesn't seem to enable support for the regulators described in the
+> binding [1] (which from the looks of it needs proof-reading and possibly
+> rework).
+> 
+> Are there any changes we might need in future to either support new
+> functionality or to generalise the binding. e.g. do we need a regulator
+> for the LED?
+> 
+> Given the binding has never been supported, are we happy now that it
+> best represents the hardware, or are there avenues of improvement
+> *before* it becomes ABI?
 
-diff --git a/Documentation/devicetree/bindings/usb/msm-ssusb.txt b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
-new file mode 100644
-index 0000000..cacbd3b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
-@@ -0,0 +1,104 @@
-+MSM SuperSpeed DWC3 USB SoC controller
-+
-+
-+DWC3 Highspeed USB PHY
-+======================
-+Required properities :
-+- compatible : sould be "qcom,dwc3-hsphy";
-+- reg : offset and length of the register set in the memory map
-+- clocks : phandles to clock instances of the device tree nodes
-+- clock-names :
-+	"xo" : External reference clock 19 MHz
-+	"sleep_a" : Sleep clock, used when USB3 core goes into low
-+	power mode (U3).
-+<supply-name>-supply : phandle to the regulator device tree node
-+Required "supply-name" are:
-+	"v1p8" : 1.8v supply for HSPHY
-+	"v3p3" : 3.3v supply for HSPHY
-+	"vbus" : vbus supply for host mode
-+	"vddcx" : vdd supply for HS-PHY digital circuit operation
-+
-+DWC3 Superspeed USB PHY
-+=======================
-+Required properities :
-+- compatible : sould be "qcom,dwc3-ssphy";
-+- reg : offset and length of the register set in the memory map
-+- clocks : phandles to clock instances of the device tree nodes
-+- clock-names :
-+	"xo" : External reference clock 19 MHz
-+	"ref" : Reference clock - used in host mode.
-+<supply-name>-supply : phandle to the regulator device tree node
-+Required "supply-name" are:
-+	"v1p8" : 1.8v supply for SS-PHY
-+	"vddcx" : vdd supply for SS-PHY digital circuit operation
-+
-+DWC3 controller wrapper
-+=======================
-+Required properties :
-+- compatible : should be "qcom,dwc3"
-+- reg : offset and length of the register set in the memory map
-+	offset and length of the TCSR register for routing USB
-+	signals to either picoPHY0 or picoPHY1.
-+- clocks : phandles to clock instances of the device tree nodes
-+- clock-names :
-+	"core" : Master/Core clock, have to be >= 125 MHz for SS
-+	operation and >= 60MHz for HS operation
-+	"iface" : System bus AXI clock
-+	"sleep" : Sleep clock, used when USB3 core goes into low
-+	power mode (U3).
-+	"utmi" : Generated by HS-PHY. Used to clock the low power
-+	parts of thr HS Link layer.
-+Optional properties :
-+- gdsc-supply : phandle to the globally distributed switch controller
-+  regulator node to the USB controller.
-+Required child node:
-+A child node must exist to represent the core DWC3 IP block. The name of
-+the node is not important. The content of the node is defined in dwc3.txt.
-+
-+Example device nodes:
-+
-+	dwc3_hsphy: phy@f92f8800 {
-+		compatible = "qcom,dwc3-hsphy";
-+		reg = <0xf92f8800 0x30>;
-+
-+		clocks = <&cxo>, <&usb2a_phy_sleep_cxc>;
-+		clock-names = "xo", "sleep_a";
-+
-+		vbus-supply = <&supply>;
-+		vddcx-supply = <&supply>;
-+		v1p8-supply = <&supply>;
-+		v3p3-supply = <&supply>;
-+	};
-+
-+	dwc3_ssphy: phy@f92f8830 {
-+		compatible = "qcom,dwc3-ssphy";
-+		reg = <0xf92f8830 0x30>;
-+
-+		clocks = <&cxo>, <&usb30_mock_utmi_cxc>;
-+		clock-names = "xo", "ref";
-+
-+		vddcx-supply = <&supply>;
-+		v1p8-supply = <&supply>;
-+	};
-+
-+	usb@fd4ab000 {
-+		compatible = "qcom,dwc3";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0xfd4ab000 0x4>;
-+
-+		clocks = <&usb30_master_cxc>, <&sys_noc_usb3_axi_cxc>,
-+				<&usb30_sleep_cxc>, <&usb30_mock_utmi_cxc>;
-+		clock-names = "core", "iface", "sleep", "utmi";
-+
-+		gdsc-supply = <&supply>;
-+
-+		ranges;
-+		dwc3@f9200000 {
-+			compatible = "snps,dwc3";
-+			reg = <0xf9200000 0xcd00>;
-+			interrupts = <0 131 0>;
-+			usb-phy = <&dwc3_hsphy>, <&dwc3_ssphy>;
-+			tx-fifo-resize;
-+		};
-+	};
--- 
-1.7.9.5
+Well, documentation of the binding has been present in kernel tree since 
+June, but I too think that we should review it and make sure it makes 
+sense. I'll try to get some information on this chip at work, on Monday.
+
+Best regards,
+Tomasz
 
