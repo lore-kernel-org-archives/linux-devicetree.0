@@ -1,251 +1,91 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-ea0-f172.google.com ([209.85.215.172]:43362 "EHLO
-	mail-ea0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751169Ab3HSUgz (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 16:36:55 -0400
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH] irqchip: add DesignWare APB ICTL interrupt controller
-Date: Mon, 19 Aug 2013 22:36:47 +0200
-Message-Id: <1376944607-20322-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Received: from mail-bk0-f50.google.com ([209.85.214.50]:46478 "EHLO
+	mail-bk0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753107Ab3HWJZX (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 05:25:23 -0400
+Date: Fri, 23 Aug 2013 11:24:57 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] pwm: renesas-tpu: Add DT support
+Message-ID: <20130823092456.GK3535@ulmo>
+References: <1374791261-9850-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20130814094436.GD2084@ulmo>
+ <1966878.F7c9U0lHrH@avalon>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HcXnUX77nabWBLF4"
+Content-Disposition: inline
+In-Reply-To: <1966878.F7c9U0lHrH@avalon>
 Sender: devicetree-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This adds an irqchip driver and corresponding devicetree binding for the
-secondary interrupt controllers based on Synopsys DesignWare IP dw_apb_ictl.
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
----
-Note: This single patch is separated from an RFC for initial support of
-Marvell Armada 1500 [1]. The RFC needs some more work, while this driver is
-fairly self-contained.
+--HcXnUX77nabWBLF4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] http://lists-archives.com/linux-kernel/27893855-arm-initial-support-for-marvell-armada-1500.html
+On Wed, Aug 21, 2013 at 01:36:38PM +0200, Laurent Pinchart wrote:
+> Hi Thierry,
+>=20
+> On Wednesday 14 August 2013 11:44:36 Thierry Reding wrote:
+> > On Fri, Jul 26, 2013 at 12:27:41AM +0200, Laurent Pinchart wrote:
+> > > Specify DT bindings for the TPU PWM controller and add OF support to =
+the
+> > > driver.
+> > >=20
+> > > Signed-off-by: Laurent Pinchart
+> > > <laurent.pinchart+renesas@ideasonboard.com>
+> > > ---
+> > >=20
+> > >  .../devicetree/bindings/pwm/renesas,tpu-pwm.txt    | 28 ++++++++++++=
++++
+> > >  drivers/pwm/pwm-renesas-tpu.c                      | 41 ++++++++++++=
++----
+> > >  2 files changed, 62 insertions(+), 7 deletions(-)
+> > >  create mode 100644
+> > >  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt>=20
+> > > This patch depends on the "[PATCH v2 0/4] Add PWM polarity flag macro=
+ for
+> > > DT" series that is scheduled for merge in the PWM tree, and should th=
+us
+> > > go in via the same tree.
+> > >=20
+> > > The code has been tested on an Armadillo800EVA with additional platfo=
+rm
+> > > patches that I'm going to submit next.
+> >=20
+> > Applied, thanks.
+>=20
+> Thank you. I can't find the patches in git://gitorious.org/linux-pwm/linu=
+x-
+> pwm.git, have you applied them elsewhere ?
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- .../interrupt-controller/snps,dw-apb-ictl.txt      |   29 ++++
- drivers/irqchip/Kconfig                            |    4 +
- drivers/irqchip/Makefile                           |    1 +
- drivers/irqchip/irq-dw-apb-ictl.c                  |  139 ++++++++++++++++++++
- 4 files changed, 173 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
- create mode 100644 drivers/irqchip/irq-dw-apb-ictl.c
+Sorry, I had applied the patch, but forgotten to push it out. Should be
+there now.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
-new file mode 100644
-index 0000000..7ccd1ba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
-@@ -0,0 +1,29 @@
-+Synopsys DesignWare APB interrupt controller (dw_apb_ictl)
-+
-+Synopsys DesignWare provides interrupt controller IP for APB known as
-+dw_apb_ictl. The IP is used as secondary interrupt controller in some SoCs with
-+APB bus, e.g. Marvell Armada 1500.
-+
-+Required properties:
-+- compatible: shall be "snps,dw-apb-ictl"
-+- reg: base address of interrupt registers starting with ENABLE_LOW register
-+- interrupt-controller: identifies the node as an interrupt controller
-+- #interrupt-cells: number of cells to encode an interrupt source, shall be 1
-+- interrupts: interrupt reference to primary interrupt controller
-+- interrupt-parent: (optional) reference specific primary interrupt controller
-+
-+The interrupt sources map to the corresponding bits in the interrupt
-+registers, i.e.
-+- 0 maps to bit 0 of low interrupts,
-+- 1 maps to bit 1 of low interrupts,
-+- 32 maps to bit 0 of high interrupts, and so on.
-+
-+Example:
-+	aic: interrupt-controller@3000 {
-+		compatible = "snps,dw-apb-ictl";
-+		reg = <0x3000 0xc00>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 1fea003..f38164c 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -30,6 +30,10 @@ config ARM_VIC_NR
- 	  The maximum number of VICs available in the system, for
- 	  power management.
- 
-+config DW_APB_ICTL
-+	bool
-+	select IRQ_DOMAIN
-+
- config ORION_IRQCHIP
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index e65c41a..54164e1 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_SPEAR3XX)		+= spear-shirq.o
- obj-$(CONFIG_ARM_GIC)			+= irq-gic.o
- obj-$(CONFIG_ARM_NVIC)			+= irq-nvic.o
- obj-$(CONFIG_ARM_VIC)			+= irq-vic.o
-+obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
- obj-$(CONFIG_SIRF_IRQ)			+= irq-sirfsoc.o
- obj-$(CONFIG_RENESAS_INTC_IRQPIN)	+= irq-renesas-intc-irqpin.o
- obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
-diff --git a/drivers/irqchip/irq-dw-apb-ictl.c b/drivers/irqchip/irq-dw-apb-ictl.c
-new file mode 100644
-index 0000000..3af7d30
---- /dev/null
-+++ b/drivers/irqchip/irq-dw-apb-ictl.c
-@@ -0,0 +1,139 @@
-+/*
-+ * Synopsys DW APB ICTL irqchip driver.
-+ *
-+ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+#include "irqchip.h"
-+
-+#define APB_INT_ENABLE_L	0x00
-+#define APB_INT_ENABLE_H	0x04
-+#define APB_INT_MASK_L		0x08
-+#define APB_INT_MASK_H		0x0c
-+#define APB_INT_FINALSTATUS_L	0x30
-+#define APB_INT_FINALSTATUS_H	0x34
-+
-+static void dw_apb_ictl_handler(unsigned int irq, struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = irq_get_chip(irq);
-+	struct irq_chip_generic *gc = irq_get_handler_data(irq);
-+	struct irq_domain *d = gc->private;
-+	u32 stat;
-+	int n;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	for (n = 0; n < gc->num_ct; n++) {
-+		stat = readl_relaxed(gc->reg_base +
-+				     APB_INT_FINALSTATUS_L + 4 * n);
-+		while (stat) {
-+			u32 hwirq = ffs(stat) - 1;
-+			generic_handle_irq(irq_find_mapping(d,
-+					    gc->irq_base + hwirq + 32 * n));
-+			stat &= ~(1 << hwirq);
-+		}
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static int __init dw_apb_ictl_init(struct device_node *np,
-+				   struct device_node *parent)
-+{
-+	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-+	struct resource r;
-+	struct irq_domain *domain;
-+	struct irq_chip_generic *gc;
-+	void __iomem *iobase;
-+	int ret, nrirqs, irq;
-+	u32 reg;
-+
-+	/* Map the parent interrupt for the chained handler */
-+	irq = irq_of_parse_and_map(np, 0);
-+	if (irq <= 0) {
-+		pr_err("%s: unable to parse irq\n", np->name);
-+		return -EINVAL;
-+	}
-+
-+	ret = of_address_to_resource(np, 0, &r);
-+	if (ret) {
-+		pr_err("%s: unable to get resource\n", np->name);
-+		return ret;
-+	}
-+
-+	if (!request_mem_region(r.start, resource_size(&r), np->name)) {
-+		pr_err("%s: unable to request mem region\n", np->name);
-+		return -ENOMEM;
-+	}
-+
-+	iobase = ioremap(r.start, resource_size(&r));
-+	if (!iobase) {
-+		pr_err("%s: unable to map resource\n", np->name);
-+		return -ENOMEM;
-+	}
-+
-+	/*
-+	 * DW IP can be configured to allow 2-64 irqs. We can determine
-+	 * the number of irqs supported by writing into enable register
-+	 * and look for bits not set, as corresponding flip-flops will
-+	 * have been removed by sythesis tool.
-+	 */
-+
-+	/* mask and enable all interrupts */
-+	writel(~0, iobase + APB_INT_MASK_L);
-+	writel(~0, iobase + APB_INT_MASK_H);
-+	writel(~0, iobase + APB_INT_ENABLE_L);
-+	writel(~0, iobase + APB_INT_ENABLE_H);
-+
-+	reg = readl(iobase + APB_INT_ENABLE_H);
-+	if (reg)
-+		nrirqs = 32 + fls(reg);
-+	else
-+		nrirqs = fls(readl(iobase + APB_INT_ENABLE_L));
-+
-+	domain = irq_domain_add_linear(np, nrirqs,
-+				       &irq_generic_chip_ops, NULL);
-+	if (!domain) {
-+		pr_err("%s: unable to add irq domain\n", np->name);
-+		return -ENOMEM;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(domain, 32, (nrirqs > 32) ? 2 : 1,
-+					     np->name, handle_level_irq, clr, 0,
-+					     IRQ_GC_INIT_MASK_CACHE);
-+	if (ret) {
-+		pr_err("%s: unable to alloc irq domain gc\n", np->name);
-+		return ret;
-+	}
-+
-+	gc = irq_get_domain_generic_chip(domain, 0);
-+	gc->private = domain;
-+	gc->reg_base = iobase;
-+
-+	gc->chip_types[0].regs.mask = APB_INT_MASK_L;
-+	gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
-+	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
-+
-+	if (nrirqs > 32) {
-+		gc->chip_types[1].regs.mask = APB_INT_MASK_H;
-+		gc->chip_types[1].chip.irq_mask = irq_gc_mask_set_bit;
-+		gc->chip_types[1].chip.irq_unmask = irq_gc_mask_clr_bit;
-+	}
-+
-+	irq_set_handler_data(irq, gc);
-+	irq_set_chained_handler(irq, dw_apb_ictl_handler);
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(dw_apb_ictl,
-+		"snps,dw-apb-ictl", dw_apb_ictl_init);
--- 
-1.7.10.4
+Thierry
 
+--HcXnUX77nabWBLF4
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSFypoAAoJEN0jrNd/PrOhcUAQAJXiycSNGlm8q7Ba8vv+y22C
+xDG2SV7iudXsH4EZXCJkSyR3OKZRnIJUyU/mZ5AuVnGn+yeDLyigV6Anh17WHHQO
+bX/eLdY+A2YXsZExkpHuM5qx6WVffby2dwET8WsxB9U/25CtoU0nfnh6VKxZ4r+5
+tWee1JyeSrS0RyQYLKKarakwIqr9ia1kL66lzUL4BjU7k1deKt4//jiJ4LttqMej
+392BjF/AVHaHv9YLd7IlL1zXHwpLnu4QYbzKBC0WkLgsNABYtRY++Jyy8ITzFszU
+Jap3GFzV839Lx1ZYI+ausPZ/VQDlJ3HVU3Rvm9RGUpCjfJl2qC5afT6CNi2xecLe
+42vldQrMCAWx4APF2C4bdMKx7RzPx/+X3fEhVA4kOTVl6A6fFyA8Fk0BaRB6yznS
+8SjVCdov4+P7ISyOhsIG+jMJLGp4eW2BrmOsgdn9cuGpaZswVz8Py15GNpGN6Pq5
+WqSytrcLjclo0svfhph6Cn5cEYIWJNdZ6M69EVwxOK6y97E9cch4Oy/iaX7zV1JU
+8CUNW1M/dIpASu8XhTWIhZDFKKdpoSYtPdeZU6/y/FLTjqPP3IBt8fAYiHnZAPJV
+RRKrAhd1NgitASammnSoR54hgMc6hk0BTOgLpHBqetpAesSydLNodqn/SrJdmc/x
+XEXLTv0wG3vTfPrIKg4E
+=iJrV
+-----END PGP SIGNATURE-----
+
+--HcXnUX77nabWBLF4--
