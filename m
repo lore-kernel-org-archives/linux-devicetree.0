@@ -1,73 +1,33 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:59487 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751080Ab3HSTbW (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 15:31:22 -0400
-Message-ID: <52127284.6030506@wwwdotorg.org>
-Date: Mon, 19 Aug 2013 13:31:16 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
+Received: from mail-pa0-f44.google.com ([209.85.220.44]:49921 "EHLO
+	mail-pa0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754107Ab3HXEoU (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 24 Aug 2013 00:44:20 -0400
+Received: by mail-pa0-f44.google.com with SMTP id fz6so1423927pac.3
+        for <devicetree@vger.kernel.org>; Fri, 23 Aug 2013 21:44:19 -0700 (PDT)
+Date: Fri, 23 Aug 2013 21:44:10 -0700
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH -next] mtd: atmel_nand: fix error return code in
+ atmel_nand_probe()
+Message-ID: <20130824044410.GA19575@brian-ubuntu>
+References: <CAPgLHd8an7_iEV1eTNGFmQ8B4CM=FGu0jrov_A=L9JRJ8AFKPA@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] extcon: extcon-dra7xx: Add extcon driver for USB
- ID detection
-References: <1376648029-30659-1-git-send-email-george.cherian@ti.com> <1376648029-30659-2-git-send-email-george.cherian@ti.com>
-In-Reply-To: <1376648029-30659-2-git-send-email-george.cherian@ti.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPgLHd8an7_iEV1eTNGFmQ8B4CM=FGu0jrov_A=L9JRJ8AFKPA@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: balbi@ti.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, bcousson@baylibre.com
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: dwmw2@infradead.org, grant.likely@linaro.org, rob.herring@calxeda.com, artem.bityutskiy@linux.intel.com, josh.wu@atmel.com, plagnioj@jcrosoft.com, jg1.han@samsung.com, devicetree@vger.kernel.org, yongjun_wei@trendmicro.com.cn, linux-mtd@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/16/2013 04:13 AM, George Cherian wrote:
-> Adding extcon driver for USB ID detection to dynamically
-> configure USB Host/Peripheral mode.
+On Fri, Aug 23, 2013 at 10:50:36AM +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> 
+> Fix to return a negative error code from the error handling
+> case instead of 0, as done elsewhere in this function.
+> 
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-dra7xx.txt b/Documentation/devicetree/bindings/extcon/extcon-dra7xx.txt
+Pushed to l2-mtd.git. Thanks!
 
-> +EXTCON FOR DRA7xx
-> +
-> +Required Properties:
-
-Please at lest explain what a DRA7xxx is, and the purpose of the HW
-module this binding describes.
-
-> + - compatible : Should be "ti,dra7xx-usb"
-
-If this is a USB VID detector rather than a full USB host controller,
-then "usb" in the binding is a bit over-reaching. Perhaps "-usb-vid" or
-"-usb-vid-detector" would be more accurate.
-
-> + - gpios : phandle to ID pin and interrupt gpio.
-
-This isn't just a phandle; it's phandle+args, or a GPIO specifier. Some
-reference should be made to ../gpio/gpio.txt for the format.
-
-Why does the interrupt line need to be included in a list of GPIOs?
-
-If the DRA7xxx is a VID detector, why does it even need/have any GPIOs
-associated with it; surely it has a dedicated VID input pin. Can you
-provide more details re: how the HW is structured.
-
-> +Optional Properties:
-> +  - interrupt-parent : interrupt controller phandle
-> +  - interrupts : interrupt number
-> +
-> +
-
-It's typical insert the following between those two blank lines:
-
-Example:
-
-... or delete one of the blank lines.
-
-> +dra7x_extcon1 {
-> +		compatible = "ti,dra7xx-usb";
-> +		gpios = <&pcf_usb 1 0>,
-> +			<&gpio6 11 2>;
-> +		interrupt-parent = <&gpio6>;
-> +		interrupts = <11>;
-> +	};
-> +
-
-No need for that trailing blank line.
-
+Brian
