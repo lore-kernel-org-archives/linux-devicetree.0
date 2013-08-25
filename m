@@ -1,75 +1,120 @@
-From: boris brezillon <b.brezillon@overkiz.com>
-Subject: Re: [RFC PATCH 0/3] pinctrl: at91: add support for generic pinconf
-Date: Sat, 24 Aug 2013 23:43:14 +0200
-Message-ID: <521928F2.4060605@overkiz.com>
-References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/3] gpio: pcf857x: Add OF support
+Date: Sun, 25 Aug 2013 02:15:18 +0200
+Message-ID: <11480687.DR76avTJMu@avalon>
+References: <1376953494-9684-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1688346.YLZnUtEaXr@avalon> <2417846.CRj8QejgZy@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2417846.CRj8QejgZy@flatron>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, swarren@wwwdotorg.org, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.com, galak@codeaurora.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On 24/08/2013 23:32, Boris BREZILLON wrote:
-> Hello,
->
-> This patch series is an attempt to add support for generic pin config
-> syntax to at91 pinctrl driver.
->
-> My primary goal is to add support for output configuration from dt definition.
-> This is needed to fully move at91rm9200ek board to dt (other boards may have
-> the same needs).
-> This board use a pin to drive an external switch which select between 2
-> functionnalities:
->   - mmc interface
->   - spi interface
-> The pin level is currently configured in the board init (init_machine) function
-> based on user config choices (CONFIG_MTD_AT91_DATAFLASH_CARD).
->
-> Instead of adding a new flag to the current (native) pin config binding, I
-> tried to add support for the generic pin config used by some pinctrl drivers
-> (i.e. rockchip).
->
-> Is this the right way to do this or should I add a new at91 native flags for
-> output config (OUTPUT_HIGH/LOW) ?
->
-> The second patch introduce a new config parameter to add a glitch filter on a
-> specific pin.
-The first patch, not the second.
-> Glitch filter is similar to bounce filter (or debounce) but with a smaller
-> delay (expressed in nsecs ?).
->
-> I'm not sure this is the right approach.
-> Maybe we should reuse the debounce parameter and add a flag to specify the delay
-> unit (usec or nsec).
->
-> What do you think ?
->
-> The third patch migrate sama5 dt boards to the new generic config syntax.
->
-> Please feel free to share your thoughts.
->
-> Best Regards,
->
-> Boris
->
->
-> Boris BREZILLON (3):
->    pinctrl: add new generic pinconf config for deglitch filter
->    pinctrl: at91: add support for generic pinconf
->    ARM: at91/dt: move sama5 to generic pinconf
->
->   .../bindings/pinctrl/atmel,at91-pinctrl.txt        |   43 ++-
->   .../bindings/pinctrl/pinctrl-bindings.txt          |    1 +
->   arch/arm/boot/dts/sama5d3.dtsi                     |  363 ++++++++++----------
->   arch/arm/boot/dts/sama5d3xdm.dtsi                  |    2 +-
->   arch/arm/boot/dts/sama5d3xmb.dtsi                  |   12 +-
->   drivers/pinctrl/Kconfig                            |    2 +-
->   drivers/pinctrl/pinconf-generic.c                  |    2 +
->   drivers/pinctrl/pinctrl-at91.c                     |  265 +++++++++++++-
->   include/linux/pinctrl/pinconf-generic.h            |    5 +
->   9 files changed, 494 insertions(+), 201 deletions(-)
->
+Hi Tomasz,
+
+On Saturday 24 August 2013 16:13:11 Tomasz Figa wrote:
+> On Saturday 24 of August 2013 02:54:07 Laurent Pinchart wrote:
+> > On Saturday 24 August 2013 02:41:59 Tomasz Figa wrote:
+> > > On Tuesday 20 of August 2013 01:04:54 Laurent Pinchart wrote:
+> > > > Add DT bindings for the pcf857x-compatible chips and parse the
+> > > > device tree node in the driver.
+> > > > 
+> > > > Signed-off-by: Laurent Pinchart
+> > > > <laurent.pinchart+renesas@ideasonboard.com> ---
+> > > > 
+> > > >  .../devicetree/bindings/gpio/gpio-pcf857x.txt      | 71 +++++++++++++
+> > > >  drivers/gpio/gpio-pcf857x.c                        | 57 ++++++++++---
+> > > >  2 files changed, 119 insertions(+), 9 deletions(-)
+> > > >  create mode 100644
+
+[snip]
+
+> > > > diff --git a/drivers/gpio/gpio-pcf857x.c
+> > > > b/drivers/gpio/gpio-pcf857x.c
+> > > > index 070e81f..50a90f1 100644
+> > > > --- a/drivers/gpio/gpio-pcf857x.c
+> > > > +++ b/drivers/gpio/gpio-pcf857x.c
+> > 
+> > [snip]
+> > 
+> > > > @@ -50,6 +52,27 @@ static const struct i2c_device_id pcf857x_id[] =
+> > > > {
+> > > > 
+> > > >  };
+> > > >  MODULE_DEVICE_TABLE(i2c, pcf857x_id);
+> > > > 
+> > > > +#ifdef CONFIG_OF
+> > > > +static const struct of_device_id pcf857x_of_table[] = {
+> > > > +	{ .compatible = "nxp,pcf8574", .data = (void *)8 },
+> > > > +	{ .compatible = "nxp,pcf8574a", .data = (void *)8 },
+> > > > +	{ .compatible = "nxp,pca8574", .data = (void *)8 },
+> > > > +	{ .compatible = "nxp,pca9670", .data = (void *)8 },
+> > > > +	{ .compatible = "nxp,pca9672", .data = (void *)8 },
+> > > > +	{ .compatible = "nxp,pca9674", .data = (void *)8 },
+> > > > +	{ .compatible = "nxp,pcf8575", .data = (void *)16 },
+> > > > +	{ .compatible = "nxp,pca8575", .data = (void *)16 },
+> > > > +	{ .compatible = "nxp,pca9671", .data = (void *)16 },
+> > > > +	{ .compatible = "nxp,pca9673", .data = (void *)16 },
+> > > > +	{ .compatible = "nxp,pca9675", .data = (void *)16 },
+> > > > +	{ .compatible = "maxim,max7328", .data = (void *)8 },
+> > > > +	{ .compatible = "maxim,max7329", .data = (void *)8 },
+> > > > +	{ .compatible = "ti,tca9554", .data = (void *)8 },
+> > > > +	{ }
+> > > > +};
+> > > > +MODULE_DEVICE_TABLE(of, pcf857x_of_table);
+> > > > +#endif
+> > > > +
+> > > > 
+> > > >  /*
+> > > >   * The pcf857x, pca857x, and pca967x chips only expose one read and
+> > > >   * one write register.  Writing a "one" bit (to match the reset
+> > > > @@ -257,14 +280,29 @@ fail:
+> > > >  static int pcf857x_probe(struct i2c_client *client,
+> > > >  			 const struct i2c_device_id *id)
+> > > >  {
+> > > > -	struct pcf857x_platform_data	*pdata;
+> > > > +	struct pcf857x_platform_data	*pdata = client->dev.platform_data;
+> > > > +	struct device_node		*np = client->dev.of_node;
+ > > >  	struct pcf857x			*gpio;
+> > > > +	unsigned int			n_latch = 0;
+> > > > +	unsigned int			ngpio;
+> > > >  	int				status;
+> > > > 
+> > > > -	pdata = client->dev.platform_data;
+> > > > -	if (!pdata) {
+> > > > +#ifdef CONFIG_OF
+> > > > +	if (np) {
+> > > 
+> > > Wouldn't if (IS_ENABLED(CONFIG_OF) && np) be sufficient here, without
+> > > the #ifdef? You would have to move the match table out of the #ifdef
+> > > in this case, though...
+> > 
+> > That's the exact reason why I've used #ifdef CONFIG_OF here, I didn't
+> > want to add the overhead of the pcf857x_of_table when CONFIG_OF isn't
+> > defined.
+> 
+> I'm not sure if I remember correctly, but I think there was something said
+> in one of discussions some time ago, that we should be moving away from
+> ifdef'ing such things, in favour of just having them compiled
+> unconditionally.
+
+There seems to be a general consensus to favor if (IS_ENABLED(CONFIG_OF)) 
+instead of #ifdef CONFIG_OF when possible. I'm not sure what the opinion is 
+regarding using conditional compilation to avoid compiling unnecessary data 
+tables in. I would vote for using it (there's no need to bloat the kernel 
+unnecessarily on non-OF platforms), but I'll conform to whatever is decided to 
+be best.
+
+> [Adding DT maintainers on Cc for more opinions.]
+
+I'll resubmit the patch with the DT bindings documentation fixed, and will 
+submit yet another version if I need to remove the #ifdef.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
