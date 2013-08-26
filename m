@@ -1,255 +1,172 @@
-From: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
-Subject: [PATCH RFC 5/5] ARM: s5pv210: Migrate clock handling to Common Clock
- Framework
-Date: Mon, 26 Aug 2013 13:38:34 +0200
-Message-ID: <1377517114-20222-6-git-send-email-m.krawczuk@partner.samsung.com>
-References: <1377517114-20222-1-git-send-email-m.krawczuk@partner.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1377517114-20222-1-git-send-email-m.krawczuk@partner.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kgene.kim@samsung.com
-Cc: kyungmin.park@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, mturquette@linaro.org, thomas.abraham@linaro.org, t.stanislaws@samsung.com, m.chehab@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samung.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: pci-mvebu driver on km_kirkwood
+Date: Mon, 26 Aug 2013 14:02:01 +0200
+Message-ID: <20130826120200.GA15842@ulmo>
+References: <51DD88A4.1030506@keymile.com> <20130731100359.3e789236@skate>
+ <51F8CA44.4080802@keymile.com> <20130731110045.2dc84981@skate>
+ <20130731205034.GA17615@obsidianresearch.com>
+ <20130809140140.GA14990@ulmo> <521B1F6A.1090304@keymile.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============3398670303689587771=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <521B1F6A.1090304@keymile.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gerlando Falauto <gerlando.falauto@keymile.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Longchamp,
+ Valentin" <Valentin.Longchamp@keymile.com>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Andrew Lunn <andrew@lunn.ch>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch migrates the s5pv210 platform to use new clock driver
-using Common Clock Framework.
 
-Signed-off-by: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
----
- arch/arm/mach-s5pv210/Kconfig         |  9 +++++++++
- arch/arm/mach-s5pv210/Makefile        |  4 ++--
- arch/arm/mach-s5pv210/common.c        | 22 ++++++++++++++++++++++
- arch/arm/mach-s5pv210/common.h        | 13 +++++++++++++
- arch/arm/mach-s5pv210/mach-aquila.c   |  1 +
- arch/arm/mach-s5pv210/mach-goni.c     |  3 ++-
- arch/arm/mach-s5pv210/mach-smdkc110.c |  1 +
- arch/arm/mach-s5pv210/mach-smdkv210.c |  1 +
- arch/arm/mach-s5pv210/mach-torbreck.c |  1 +
- arch/arm/plat-samsung/Kconfig         |  2 +-
- arch/arm/plat-samsung/init.c          |  2 --
- 11 files changed, 53 insertions(+), 6 deletions(-)
+--===============3398670303689587771==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Content-Disposition: inline
 
-diff --git a/arch/arm/mach-s5pv210/Kconfig b/arch/arm/mach-s5pv210/Kconfig
-index caaedaf..ad4546e 100644
---- a/arch/arm/mach-s5pv210/Kconfig
-+++ b/arch/arm/mach-s5pv210/Kconfig
-@@ -15,6 +15,7 @@ config CPU_S5PV210
- 	select S5P_PM if PM
- 	select S5P_SLEEP if PM
- 	select SAMSUNG_DMADEV
-+	select S5P_CLOCK if !COMMON_CLK
- 	help
- 	  Enable S5PV210 CPU support
- 
-@@ -69,6 +70,14 @@ config S5PV210_SETUP_USB_PHY
- 	help
- 	  Common setup code for USB PHY controller
- 
-+config COMMON_CLK_S5PV210
-+	bool "Common Clock Framework support"
-+	default y
-+	select COMMON_CLK
-+	help
-+	  Enable this option to use new clock driver
-+	  based on Common Clock Framework.
-+
- menu "S5PC110 Machines"
- 
- config MACH_AQUILA
-diff --git a/arch/arm/mach-s5pv210/Makefile b/arch/arm/mach-s5pv210/Makefile
-index 1c4e419..0c67fe2 100644
---- a/arch/arm/mach-s5pv210/Makefile
-+++ b/arch/arm/mach-s5pv210/Makefile
-@@ -12,8 +12,8 @@ obj-				:=
- 
- # Core
- 
--obj-y				+= common.o clock.o
--
-+obj-y					+= common.o
-+obj-$(CONFIG_S5P_CLOCK)			+= clock.o
- obj-$(CONFIG_PM)		+= pm.o
- 
- obj-y				+= dma.o
-diff --git a/arch/arm/mach-s5pv210/common.c b/arch/arm/mach-s5pv210/common.c
-index 26027a2..3c3dd05 100644
---- a/arch/arm/mach-s5pv210/common.c
-+++ b/arch/arm/mach-s5pv210/common.c
-@@ -34,7 +34,13 @@
- #include <mach/regs-clock.h>
- 
- #include <plat/cpu.h>
-+
-+#ifdef CONFIG_S5P_CLOCK
- #include <plat/clock.h>
-+#else
-+#include <linux/clk-provider.h>
-+#endif
-+
- #include <plat/devs.h>
- #include <plat/sdhci.h>
- #include <plat/adc-core.h>
-@@ -50,6 +56,19 @@
- 
- #include "common.h"
- 
-+/* External clock frequency */
-+static unsigned long xxti_f, xusbxti_f;
-+
-+void __init s5pv210_set_xxti_freq(unsigned long freq)
-+{
-+	xxti_f = freq;
-+}
-+
-+void __init s5pv210_set_xusbxti_freq(unsigned long freq)
-+{
-+	xusbxti_f = freq;
-+}
-+
- static const char name_s5pv210[] = "S5PV210/S5PC110";
- 
- static struct cpu_table cpu_ids[] __initdata = {
-@@ -229,12 +248,14 @@ void __init s5pv210_map_io(void)
- 
- void __init s5pv210_init_clocks(int xtal)
- {
-+#ifdef CONFIG_S5P_CLOCK
- 	printk(KERN_DEBUG "%s: initializing clocks\n", __func__);
- 
- 	s3c24xx_register_baseclocks(xtal);
- 	s5p_register_clocks(xtal);
- 	s5pv210_register_clocks();
- 	s5pv210_setup_clocks();
-+#endif
- }
- 
- void __init s5pv210_init_irq(void)
-@@ -248,6 +269,7 @@ void __init s5pv210_init_irq(void)
- 	vic[3] = ~0;
- 
- 	s5p_init_irq(vic, ARRAY_SIZE(vic));
-+	s5pv210_clk_init(NULL, xxti_f, xusbxti_f, S3C_VA_SYS);
- }
- 
- struct bus_type s5pv210_subsys = {
-diff --git a/arch/arm/mach-s5pv210/common.h b/arch/arm/mach-s5pv210/common.h
-index fe1beb5..2db2a15 100644
---- a/arch/arm/mach-s5pv210/common.h
-+++ b/arch/arm/mach-s5pv210/common.h
-@@ -14,6 +14,19 @@
- 
- #include <linux/reboot.h>
- 
-+void s5pv210_set_xxti_freq(unsigned long freq);
-+void s5pv210_set_xusbxti_freq(unsigned long freq);
-+
-+#ifdef CONFIG_COMMON_CLK_S5PV210
-+void s5pv210_clk_init(struct device_node *np,
-+			    unsigned long xxti_f, unsigned long xusbxti_f,
-+			    void __iomem *reg_base);
-+#else
-+static inline void s5pv210_clk_init(struct device_node *np,
-+			    unsigned long xxti_f, unsigned long xusbxti_f,
-+			    void __iomem *reg_base) {}
-+#endif
-+
- void s5pv210_init_io(struct map_desc *mach_desc, int size);
- void s5pv210_init_irq(void);
- 
-diff --git a/arch/arm/mach-s5pv210/mach-aquila.c b/arch/arm/mach-s5pv210/mach-aquila.c
-index ad40ab0..e37a311 100644
---- a/arch/arm/mach-s5pv210/mach-aquila.c
-+++ b/arch/arm/mach-s5pv210/mach-aquila.c
-@@ -646,6 +646,7 @@ static void __init aquila_map_io(void)
- {
- 	s5pv210_init_io(NULL, 0);
- 	s3c24xx_init_clocks(24000000);
-+	s5pv210_set_xusbxti_freq(24000000);
- 	s3c24xx_init_uarts(aquila_uartcfgs, ARRAY_SIZE(aquila_uartcfgs));
- 	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
- }
-diff --git a/arch/arm/mach-s5pv210/mach-goni.c b/arch/arm/mach-s5pv210/mach-goni.c
-index 309b5ad..a306c3b 100644
---- a/arch/arm/mach-s5pv210/mach-goni.c
-+++ b/arch/arm/mach-s5pv210/mach-goni.c
-@@ -946,7 +946,8 @@ static void __init goni_sound_init(void)
- static void __init goni_map_io(void)
- {
- 	s5pv210_init_io(NULL, 0);
--	s3c24xx_init_clocks(clk_xusbxti.rate);
-+	s3c24xx_init_clocks(24000000);
-+	s5pv210_set_xusbxti_freq(24000000);
- 	s3c24xx_init_uarts(goni_uartcfgs, ARRAY_SIZE(goni_uartcfgs));
- 	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
- }
-diff --git a/arch/arm/mach-s5pv210/mach-smdkc110.c b/arch/arm/mach-s5pv210/mach-smdkc110.c
-index 7c0ed07..89563ed 100644
---- a/arch/arm/mach-s5pv210/mach-smdkc110.c
-+++ b/arch/arm/mach-s5pv210/mach-smdkc110.c
-@@ -119,6 +119,7 @@ static void __init smdkc110_map_io(void)
- {
- 	s5pv210_init_io(NULL, 0);
- 	s3c24xx_init_clocks(24000000);
-+	s5pv210_set_xusbxti_freq(24000000);
- 	s3c24xx_init_uarts(smdkv210_uartcfgs, ARRAY_SIZE(smdkv210_uartcfgs));
- 	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
- }
-diff --git a/arch/arm/mach-s5pv210/mach-smdkv210.c b/arch/arm/mach-s5pv210/mach-smdkv210.c
-index 6d72bb99..ff4a470 100644
---- a/arch/arm/mach-s5pv210/mach-smdkv210.c
-+++ b/arch/arm/mach-s5pv210/mach-smdkv210.c
-@@ -285,6 +285,7 @@ static void __init smdkv210_map_io(void)
- {
- 	s5pv210_init_io(NULL, 0);
- 	s3c24xx_init_clocks(clk_xusbxti.rate);
-+	s5pv210_set_xusbxti_freq(24000000);
- 	s3c24xx_init_uarts(smdkv210_uartcfgs, ARRAY_SIZE(smdkv210_uartcfgs));
- 	samsung_set_timer_source(SAMSUNG_PWM2, SAMSUNG_PWM4);
- }
-diff --git a/arch/arm/mach-s5pv210/mach-torbreck.c b/arch/arm/mach-s5pv210/mach-torbreck.c
-index 579afe8..c131cd2 100644
---- a/arch/arm/mach-s5pv210/mach-torbreck.c
-+++ b/arch/arm/mach-s5pv210/mach-torbreck.c
-@@ -105,6 +105,7 @@ static void __init torbreck_map_io(void)
- {
- 	s5pv210_init_io(NULL, 0);
- 	s3c24xx_init_clocks(24000000);
-+	s5pv210_set_xusbxti_freq(24000000);
- 	s3c24xx_init_uarts(torbreck_uartcfgs, ARRAY_SIZE(torbreck_uartcfgs));
- 	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
- }
-diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-index 7dfba93..2a98613 100644
---- a/arch/arm/plat-samsung/Kconfig
-+++ b/arch/arm/plat-samsung/Kconfig
-@@ -91,7 +91,7 @@ config SAMSUNG_CLKSRC
- 	  used by newer systems such as the S3C64XX.
- 
- config S5P_CLOCK
--	def_bool (ARCH_S5P64X0 || ARCH_S5PC100 || ARCH_S5PV210)
-+	def_bool (ARCH_S5P64X0 || ARCH_S5PC100)
- 	help
- 	  Support common clock part for ARCH_S5P and ARCH_EXYNOS SoCs
- 
-diff --git a/arch/arm/plat-samsung/init.c b/arch/arm/plat-samsung/init.c
-index 50a3ea0..915e87f 100644
---- a/arch/arm/plat-samsung/init.c
-+++ b/arch/arm/plat-samsung/init.c
-@@ -63,7 +63,6 @@ void __init s3c_init_cpu(unsigned long idcode,
- 	if (cpu->map_io)
- 		cpu->map_io();
- }
--
- /* s3c24xx_init_clocks
-  *
-  * Initialise the clock subsystem and associated information from the
-@@ -86,7 +85,6 @@ void __init s3c24xx_init_clocks(int xtal)
- 	else
- 		(cpu->init_clocks)(xtal);
- }
--
- /* uart management */
- #if IS_ENABLED(CONFIG_SAMSUNG_ATAGS)
- static int nr_uarts __initdata = 0;
--- 
-1.8.1.2
+
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Aug 26, 2013 at 11:27:06AM +0200, Gerlando Falauto wrote:
+> Hi guys [particularly Jason and Thierry],
+>=20
+> sorry for the prolonged silence, here I am back again...
+>=20
+> On 08/09/2013 04:01 PM, Thierry Reding wrote:
+> >On Wed, Jul 31, 2013 at 02:50:34PM -0600, Jason Gunthorpe wrote:
+> >>On Wed, Jul 31, 2013 at 11:00:45AM +0200, Thomas Petazzoni wrote:
+> >>
+> >>>>Actually, the main reason for trying to use this driver was because I
+> >>>>wanted to model a PCIe *device* within the device tree, so to expose =
+its
+> >>>>GPIOs and IRQs to be referenced (through phandles) from other device
+> >>>>tree nodes. The way I understand it, turns out this is not the way to
+> >>>>go, as PCI/PCIe are essentially enumerated busses, so you're not
+> >>>>supposed to -and it's not a trivial task to- put any information about
+> >>>>real devices within the device tree.
+> >>>>Do you have any suggestion about that?
+> >>>
+> >>>Indeed, PCI/PCIe devices are enumerated dynamically, so they are not
+> >>>listed in the Device Tree, so there's no way to "attach" more
+> >>>information to them.
+> >>>
+> >>>Device Tree people, any suggestion about the above question?
+> >>
+> >>No, that isn't true.
+> >>
+> >>Device tree can include the discovered PCI devices, you have to use
+> >>the special reg encoding and all that weirdness, but it does work. The
+> >>of_node will be attached to the struct pci device automatically.
+>=20
+> So you mean that, assuming I knew the topology, I could populate the
+> device tree in advance (e.g. statically), so that it already
+> includes *devices* which will be further discovered during probing?
+> Or else you mean the {firmware,u-boot} can do that prior to starting the =
+OS?
+> If either of the above is true, could you please suggest some
+> example (or some way to get one)?
+> I assume the "reg" property (and the after-"@" node name) will need
+> to encode (at least) the device number, is that right?
+>=20
+> I tried reading the "PCI Bus Binding to Open Firmware" but I could
+> not make complete sense out of it...
+
+You can find an example of this here:
+
+	https://gitorious.org/thierryreding/linux/commit/b85c03d73288f6e376fc158ce=
+ac30f29680b4192
+
+It's been quite some time that I've actually tested that, but it used to
+work properly. What you basically need to do is represent the whole bus
+hierarchy within the DT. In the above example there's the top-level root
+port (pci@1,0), which provides a bus (1) on which there's a switch named
+pci@0,0. That switch provides another bus (2) on which more devices are
+listed (pci@[012345],0). Those are all downstream ports providing
+separate busses again and have a single device attached to them.
+
+You can pretty much arbitrarily nest nodes that way to represent any
+hierarchy you want. The tricky part is to get the node numbering right
+but `lspci -t' helps quite a bit with that.
+
+> >>It is useful for exactly the reason stated - you can describe GPIOs,
+> >>I2C busses, etc, etc in DT and then upon load of the PCI driver engage
+> >>the DT code to populate and connect all that downstream
+> >>infrastructure.
+>=20
+> I'm not 100% sure I made myself clear though.
+> What I would like to do is to have *other* parts of the device tree
+> be able to reference (i.e., connect to, through phandles) a PCI
+> device (because it provides a GPIO, for instance).
+> Is that also what you mean?
+
+Yes. In the example above you'll see that there's actually a GPIO
+controller (pci@1,0/pci@0,0/pci@2,0/pci@0,0), so you could simply
+associate a phandle with it, as in:
+
+	gpioext: pci@0,0 {
+		...
+	};
+
+And then hook up other devices to it using the regular notation:
+
+	foo {
+		...
+		enable-gpios =3D <&gpioext 0 0>;
+		...
+	};
+
+That's not done in this example but I've actually used something very
+similar to that on an x86 platform to hook up the reset pin of an I2C
+touchscreen controller to a GPIO controller, where both the I2C and
+GPIO controllers were on the PCI bus.
+
+I can't find that snippet right now, but I can look more thoroughly if
+the above doesn't help you at all.
+
+Thierry
+
+--k+w/mQv8wyuph6w0
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSG0O4AAoJEN0jrNd/PrOhEKMQAKWWQ+p6GLVaqeumVegGC/j9
+vsy05gjNY5HkqZXO4tA65P7mfFZLzEGmk9xLPcuJGPsbFXzmioyYCqmWbybG+835
+fSQI+uBB4fHrkbfPQ4Imdx8SA8xuxUslWIUs5jX/0Y6lAFylJK9a0ry6m+LkXEEO
+WNiSPGlbAtf8p4DCjkOBDhLHlyNsq89VUHfs8wcfhm0wdh5az0G13hR1zi0AWvGy
+iZVoddS5tsCmRPygbu2Z2iC4bPnkkwOoim+KhiYTVOBo2a5291UfG2BHugVn1XUS
+RB6XOdiOjJ0fw0tPpp6WnpuwPKls6Vt4q2ietlGuYQUQz4f/02wZEXZeSsMKBqQf
+EWUGTIeg0eaIKH+hJNjgP8OjQ/LaXVv5xquFoEG7/NBBFD8xPj6g+yoRb0bwmW8S
+FNmsNCtizLZ5VwzkDlkjdRoUrCKi9rqm+aidmJApNT8NlEe0dr+NI7QJIS5GJxz1
+l5SJeoOItkRBkOTylIqrSWcUPzRODl3Yko7TXx12e/A1WuvcgiKpUj6q98YqdLgV
++MDglMwEJZ3Ai5fbB5Tp6m9biuLeIuiRWhBD4THM2LXK7V0OFM5HYgwF65RV8S6J
+4HzZtXMhQPcCokqDchsVbNo/8O1ULGFdPAJPKNpfLyt0fP9p5bJ9gRaxNc+UtUhq
+vfcxs5RPHzcS0XZqRfW7
+=TQ/o
+-----END PGP SIGNATURE-----
+
+--k+w/mQv8wyuph6w0--
+
+
+--===============3398670303689587771==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3398670303689587771==--
