@@ -1,11 +1,18 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: [PATCH 0/2] ARM: dts: dra7-evm: add support for sd, eMMC
-Date: Mon, 26 Aug 2013 19:23:36 +0530
-Message-ID: <1377525218-7655-1-git-send-email-balajitk@ti.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 7/7] watchdog: orion: Update device-tree binding
+ documentation
+Date: Mon, 26 Aug 2013 10:00:09 -0400
+Message-ID: <20130826140009.GH13964@titan.lakedaemon.net>
+References: <1377182518-12554-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1377182518-12554-8-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130823012621.GD13964@titan.lakedaemon.net>
+ <20130823100450.GA2389@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130823100450.GA2389@localhost>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,18 +22,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bcousson@baylibre.com, devicetree@vger.kernel.org
-Cc: tony@atomide.com, nm@ti.com, linux-omap@vger.kernel.org, Balaji T K <balajitk@ti.com>, linux-arm-kernel@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, swarren@wwwdotorg.org, wim@iguana.be, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add mmc1, mmc2 dt node to dra7-evm
+On Fri, Aug 23, 2013 at 07:04:51AM -0300, Ezequiel Garcia wrote:
+> On Thu, Aug 22, 2013 at 09:26:21PM -0400, Jason Cooper wrote:
+> > On Thu, Aug 22, 2013 at 11:41:58AM -0300, Ezequiel Garcia wrote:
+> > > Change the 'reg' property meaning, by defining three required cells.
+> > > It's important to note this commit breaks DT-compatibility for this
+> > > device.
+> > > 
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/watchdog/orion-wdt.txt | 9 +++++++--
+> > >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
+> > > index 5dc8d30..bb7f1a2 100644
+> > > --- a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
+> > > +++ b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
+> > > @@ -3,7 +3,10 @@
+> > >  Required Properties:
+> > >  
+> > >  - Compatibility : "marvell,orion-wdt"
+> > > -- reg		: Address of the timer registers
+> > > +- reg		: Three cells are required.
+> > > +		  First  cell contains the global timer control register.
+> > > +		  Second cell contains the watchdog counter register.
+> > > +		  Third  cell contains the RSTOUT register.
+> > >  
+> > >  Optional properties:
+> > >  
+> > > @@ -13,7 +16,9 @@ Example:
+> > >  
+> > >  	wdt@20300 {
+> > >  		compatible = "marvell,orion-wdt";
+> > > -		reg = <0x20300 0x28>;
+> > > +		reg = <0x20300 0x4
+> > > +		       0x20324 0x4
+> > > +		       0x20108 0x4>;
+> > 
+> > I don't like this.  It reaches outside of the wdt register.  I think a
+> > more clean way to do this is to do a provider/consumer relationship as
+> > in reset.txt.  eg, here you would retain the original reg binding, and
+> > add a reset phandle.
+> > 
+> 
+> Mmm... I can't see how this fits a reset-controller usage.
 
-Balaji T K (2):
-  ARM: dts: dra7-evm: Add mmc1 node for micro-sd support
-  ARM: dts: dra7-evm: Add mmc2 node for eMMC support
+Sorry, I wasn't clear.  'as in reset.txt' should have probably been
+'similar to reset.txt'.
 
- arch/arm/boot/dts/dra7-evm.dts |   20 ++++++++++++++++++++
- 1 files changed, 20 insertions(+), 0 deletions(-)
+> The watchdog simply "enables" the RSTOUT bit that allows the whole SoC
+> to be reset when the watchdog counter expires.
 
--- 
-1.7.5.4
+right.
+
+> The reset-controller seems to be meant to send reset signals to devices,
+> which is not this case.
+
+yes, I was thinking (and drinking) of a node for the whole register
+(0x20108), with an eventual driver.  Then the phandle in the wdt node.
+This hypothetical driver could also incorporate the CPU_SOFT_RESET
+(0x2010c) register from orion5x...
+
+> What am I missing?
+
+A suitable application of alcohol and Sun. :)
+
+thx,
+
+Jason.
