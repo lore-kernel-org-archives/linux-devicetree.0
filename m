@@ -1,97 +1,70 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 7/7] watchdog: orion: Update device-tree binding
- documentation
-Date: Mon, 26 Aug 2013 10:00:09 -0400
-Message-ID: <20130826140009.GH13964@titan.lakedaemon.net>
-References: <1377182518-12554-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1377182518-12554-8-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130823012621.GD13964@titan.lakedaemon.net>
- <20130823100450.GA2389@localhost>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Mon, 26 Aug 2013 16:04:55 +0200
+Message-ID: <201308261604.55827.poeschel@lemonage.de>
+References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de> <201308261256.00870.poeschel@lemonage.de> <521B3C03.8080508@gaisler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130823100450.GA2389@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, swarren@wwwdotorg.org, wim@iguana.be, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <521B3C03.8080508@gaisler.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andreas Larsson <andreas@gaisler.com>
+Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, grant.likely@linaro.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, ian.campbell@citrix.com, galak@codeaurora.org, pawel.moll@arm.com, tomasz.figa@gmail.com, swarren@wwwdotorg.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2013 at 07:04:51AM -0300, Ezequiel Garcia wrote:
-> On Thu, Aug 22, 2013 at 09:26:21PM -0400, Jason Cooper wrote:
-> > On Thu, Aug 22, 2013 at 11:41:58AM -0300, Ezequiel Garcia wrote:
-> > > Change the 'reg' property meaning, by defining three required cells.
-> > > It's important to note this commit breaks DT-compatibility for this
-> > > device.
-> > > 
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/watchdog/orion-wdt.txt | 9 +++++++--
-> > >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-> > > index 5dc8d30..bb7f1a2 100644
-> > > --- a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-> > > +++ b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-> > > @@ -3,7 +3,10 @@
-> > >  Required Properties:
-> > >  
-> > >  - Compatibility : "marvell,orion-wdt"
-> > > -- reg		: Address of the timer registers
-> > > +- reg		: Three cells are required.
-> > > +		  First  cell contains the global timer control register.
-> > > +		  Second cell contains the watchdog counter register.
-> > > +		  Third  cell contains the RSTOUT register.
-> > >  
-> > >  Optional properties:
-> > >  
-> > > @@ -13,7 +16,9 @@ Example:
-> > >  
-> > >  	wdt@20300 {
-> > >  		compatible = "marvell,orion-wdt";
-> > > -		reg = <0x20300 0x28>;
-> > > +		reg = <0x20300 0x4
-> > > +		       0x20324 0x4
-> > > +		       0x20108 0x4>;
+On Monday 26 August 2013 at 13:29:07, Andreas Larsson wrote:
+> On 2013-08-26 12:56, Lars Poeschel wrote:
+> > Hi Andreas!
 > > 
-> > I don't like this.  It reaches outside of the wdt register.  I think a
-> > more clean way to do this is to do a provider/consumer relationship as
-> > in reset.txt.  eg, here you would retain the original reg binding, and
-> > add a reset phandle.
+> > On Thursday 22 August 2013 at 15:16:18, Andreas Larsson wrote:
+> >> On 2013-08-21 15:38, Lars Poeschel wrote:
+> >>> +static void of_gpio_scan_irq_lines(const struct device_node *const
+> >>> node, +				   struct device_node *const gcn,
+> >>> +				   struct irq_domain *const irq_domain,
+> >>> +				   const u32 intsize,
+> >>> +				   const struct gpio_chip * const gc,
+> >>> +				   bool request)
+> >>> +{
+> >>> +	struct device_node *child;
+> >>> +	struct device_node *irq_parent;
+> >>> +	const __be32 *intspec;
+> >>> +	u32 intlen;
+> >>> +	int ret;
+> >>> +	int i;
+> >>> +	irq_hw_number_t hwirq;
+> >>> +	unsigned int type;
+> >>> +
+> >>> +	if (node == NULL)
+> >>> +		return;
+> >>> +
+> >>> +	for_each_child_of_node(node, child) {
+> >>> +		of_gpio_scan_irq_lines(child, gcn, irq_domain, intsize, gc,
+> >>> +				       request);
+> >>> +		/* Check if we have an IRQ parent, else continue */
+> >>> +		irq_parent = of_irq_find_parent(child);
+> >> 
+> >> Hi!
+> >> 
+> >> This call to of_irq_find_parent breaks gpiolib-of for SPARC due to
+> >> the fact that the function is undefined when !defined(CONFIG_OF_IRQ)
+> >> && defined(CONFIG_OF).
+> >> 
+> >> Defining the empty of_irq_find_parent in include/linux/of_irq.h when
+> >> !defined(CONFIG_OF_IRQ) instead of the current case when
+> >> !defined(CONFIG_OF) would solve the immediate compilation problem.
 > > 
+> > Is this a bug and should be fixed ?
 > 
-> Mmm... I can't see how this fits a reset-controller usage.
+> Well, at least as soon as anyone tries to use in a context that does not
+> exclude SPARC it creates a bug, so I would say so. There is no reason
+> for SPARC to fall between the chairs. This is the first case I am aware
+> of that triggers this.
 
-Sorry, I wasn't clear.  'as in reset.txt' should have probably been
-'similar to reset.txt'.
+I also think this should be fixed.
+Are you able to do a patch that fixes this and submit to the relevant 
+people?
 
-> The watchdog simply "enables" the RSTOUT bit that allows the whole SoC
-> to be reset when the watchdog counter expires.
-
-right.
-
-> The reset-controller seems to be meant to send reset signals to devices,
-> which is not this case.
-
-yes, I was thinking (and drinking) of a node for the whole register
-(0x20108), with an eventual driver.  Then the phandle in the wdt node.
-This hypothetical driver could also incorporate the CPU_SOFT_RESET
-(0x2010c) register from orion5x...
-
-> What am I missing?
-
-A suitable application of alcohol and Sun. :)
-
-thx,
-
-Jason.
+Regards,
+Lars
