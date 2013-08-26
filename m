@@ -1,86 +1,43 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v2 5/7] ARM: dts: Update DP controller DT Node for Exynos5
- based SoCs
-Date: Mon, 26 Aug 2013 11:57:26 +0900
-Message-ID: <002d01cea207$ff2c57d0$fd850770$%han@samsung.com>
-References: <1375183178-8201-1-git-send-email-vikas.sajjan@linaro.org>
- <1375183178-8201-6-git-send-email-vikas.sajjan@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC PATCH 01/14] cpufreq: cpufreq-cpu0: add dt node parsing for 'cooling-zones'
+Date: Mon, 26 Aug 2013 10:12:33 +0530
+Message-ID: <CAKohpomuFWyH6ss4_L-0j9WyXtsZEygWrFLYXE6Oj_AD-DJUjA@mail.gmail.com>
+References: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
+	<1377299755-5134-2-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1375183178-8201-6-git-send-email-vikas.sajjan@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Vikas Sajjan' <vikas.sajjan@linaro.org>, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, t.figa@samsung.com, devicetree@vger.kernel.org, inki.dae@samsung.com, ajaynumb@gmail.com, patches@linaro.org, linaro-kernel@lists.linaro.org, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1377299755-5134-2-git-send-email-eduardo.valentin@ti.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Guenter Roeck <linux@roeck-us.net>, Zhang Rui <rui.zhang@intel.com>, wni@nvidia.com, "R, Durgadoss" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lm-sensors@lm-sensors.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 30, 2013 8:20 PM, Vikas Sajjan wrote:
+On 24 August 2013 04:45, Eduardo Valentin <eduardo.valentin@ti.com> wrote:
+> diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
+> index ad1fde2..ede6487 100644
+> --- a/drivers/cpufreq/cpufreq-cpu0.c
+> +++ b/drivers/cpufreq/cpufreq-cpu0.c
+> @@ -20,6 +20,9 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/slab.h>
+> +#include <linux/thermal.h>
+> +#include <linux/cpu_cooling.h>
+> +#include <linux/cpumask.h>
+
+In alphabetical order please..
+
+> @@ -268,6 +272,13 @@ static int cpu0_cpufreq_probe(struct platform_device *pdev)
+>                 goto out_free_table;
+>         }
 >
-> Moves the properties of DP controller to exynos5.dtsi which are common
-> across exynos5 SoCs like Exynos5250 and Exynos5420.
-> 
-> The PHY DP Node is based on Jingoo Han's <jg1.han@samsung.com> patch at
-> https://patchwork.linuxtv.org/patch/19189/
-> 
-> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
-> ---
->  arch/arm/boot/dts/exynos5.dtsi            |   11 +++++++++++
->  arch/arm/boot/dts/exynos5250-arndale.dts  |    3 ++-
->  arch/arm/boot/dts/exynos5250-smdk5250.dts |    3 ++-
->  arch/arm/boot/dts/exynos5250.dtsi         |   21 +++++++++------------
->  4 files changed, 24 insertions(+), 14 deletions(-)
->  
+> +       /*
+> +        * For now, just loading the cooling device;
+> +        * thermal DT code takes care of matching them.
+> +        */
+> +       if (of_find_property(np, "cooling-zones", NULL))
+> +               cdev = cpufreq_cooling_register(cpu_present_mask);
 
-[....]
-
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 238bdb2..1c017dc 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -614,20 +614,17 @@
->  		interrupts = <0 94 0>;
->  	};
-> 
-> -	dp-controller {
-> -		compatible = "samsung,exynos5-dp";
-> -		reg = <0x145b0000 0x1000>;
-> -		interrupts = <10 3>;
-> -		interrupt-parent = <&combiner>;
-> +	dp_phy: video-phy@10040720 {
-> +		compatible = "samsung,exynos5250-dp-video-phy";
-> +		reg = <0x10040720 4>;
-> +		#phy-cells = <0>;
-> +	};
-
-Oops!!!
-
-This patch should be reverted.
-Or, fix patch should be re-sent.
-'dp phy' driver is not yet merged to mainline kernel.
-
-
-> +
-> +	dp-controller@145b0000 {
->  		clocks = <&clock 342>;
->  		clock-names = "dp";
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -
-> -		dptx-phy {
-> -			reg = <0x10040720>;
-> -			samsung,enable-mask = <1>;
-> -		};
-> +		phys = <&dp_phy>;
-> +		phy-names = "dp";
->  	};
-
-Thus, 'dptx-phy' node should be used until dp phy driver is merged.
-
-Vikas Sajjan,
-Please test your patch on real boards when you send your patch.
-
-
-Best regards,
-Jingoo Han
+Should we check if it passed or failed? And if failed Atleast flag an
+appropriate message?
