@@ -1,89 +1,44 @@
-From: Joel Fernandes <joelf@ti.com>
-Subject: Re: [PATCH] ARM: dts: add AM33XX EDMA support
-Date: Mon, 26 Aug 2013 11:40:49 -0500
-Message-ID: <521B8511.3030809@ti.com>
-References: <1377284808-32412-1-git-send-email-bigeasy@linutronix.de> <521B12DD.8010505@baylibre.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCHv4 1/4] arm: dts: Add clock entries for timers in SOCFPGA
+Date: Mon, 26 Aug 2013 10:43:09 -0600
+Message-ID: <521B859D.5010609@wwwdotorg.org>
+References: <1377189026-16656-1-git-send-email-dinguyen@altera.com>
+ <1377301176.7061.2.camel@linux-builds1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <521B12DD.8010505@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, tony@atomide.com, santosh.shilimkar@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Matt Porter <matt@ohporter.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1377301176.7061.2.camel@linux-builds1>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dinh Nguyen <dinguyen@altera.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dinh.linux@gmail.com, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@denx.de>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <rob.herring@calxeda.com>, John Stultz <john.stultz@linaro.org>, Olof Johansson <olof@lixom.net>, Jamie Iles <jamie@jamieiles.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
-
-On 08/26/2013 03:33 AM, Benoit Cousson wrote:
-> Hi Sebastian,
+On 08/23/2013 05:39 PM, Dinh Nguyen wrote:
+> Hi Stephen,
 > 
-> Is this patch different from that one:
-> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg92176.html
+> On Thu, 2013-08-22 at 11:30 -0500, Dinh Nguyen wrote:
+>> From: Dinh Nguyen <dinguyen@altera.com>
+>>
+>> Set the correct clock entries for the the timers, and also clean up
+>> the timer entries for SOCFPGA by removing timer<n> in the timer entry.
+...
+> Not sure if you our Ack for:
+> [
+> PATCHv4 2/4] arm: dts: Change dw-apb-timer-osc and dw-apb-timer-sp to
+> just dw-apb-timer
 > 
-> Lokesh just pointed me this patch because it was missing for the SHAM/AES series
-> from Mark Greer.
-> 
-> Bottom-line, I've just applied the original one along with a second one that was
-> adding EDMA in SPI.
+> applies to this one too. But just in case, can I get your Ack for this
+> one too?
 
-Sebastian just submitted another version of the patch [1]. This is the latest
-version of the EDMA DT patch. If its ok, could you use this patch? You could
-ignore all earlier versions.
-
-[1] http://www.spinics.net/lists/arm-kernel/msg269712.html
-
-Thanks,
-
--Joel
-
-> Regards,
-> Benoit
-> 
-> 
-> On 23/08/2013 21:06, Sebastian Andrzej Siewior wrote:
->> From: Matt Porter <mdp@ti.com>
->>
->> Adds AM33XX EDMA support to the am33xx.dtsi as documented in
->> Documentation/devicetree/bindings/dma/ti-edma.txt
->>
->> Joel: Drop DT entries that are non-hardware-description for now as discussed
->> in [1]
->>
->> [1] https://patchwork.kernel.org/patch/2226761/
->>
->> Signed-off-by: Matt Porter <mporter@ti.com>
->> Signed-off-by: Joel A Fernandes <joelagnel@ti.com>
->> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->> ---
->> Could someone please pick this up?
->>
->>   arch/arm/boot/dts/am33xx.dtsi | 12 ++++++++++++
->>   1 file changed, 12 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
->> index 38b446b..784f774 100644
->> --- a/arch/arm/boot/dts/am33xx.dtsi
->> +++ b/arch/arm/boot/dts/am33xx.dtsi
->> @@ -96,6 +96,18 @@
->>               reg = <0x48200000 0x1000>;
->>           };
->>
->> +        edma: edma@49000000 {
->> +            compatible = "ti,edma3";
->> +            ti,hwmods = "tpcc", "tptc0", "tptc1", "tptc2";
->> +            reg =    <0x49000000 0x10000>,
->> +                <0x44e10f90 0x10>;
->> +            interrupts = <12 13 14>;
->> +            #dma-cells = <1>;
->> +            dma-channels = <64>;
->> +            ti,edma-regions = <4>;
->> +            ti,edma-slots = <256>;
->> +        };
->> +
->>           gpio0: gpio@44e07000 {
->>               compatible = "ti,omap4-gpio";
->>               ti,hwmods = "gpio1";
->>
-> 
-
+I only reviewed the binding changes, not the DT file changes themselves;
+I don't really want to set a precedent for that, or it'll increase the
+review volume too much.
