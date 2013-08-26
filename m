@@ -1,116 +1,139 @@
-From: Gerlando Falauto <gerlando.falauto@keymile.com>
-Subject: Re: pci-mvebu driver on km_kirkwood
-Date: Mon, 26 Aug 2013 11:27:06 +0200
-Message-ID: <521B1F6A.1090304@keymile.com>
-References: <51DD88A4.1030506@keymile.com> <20130731100359.3e789236@skate>
- <51F8CA44.4080802@keymile.com> <20130731110045.2dc84981@skate>
- <20130731205034.GA17615@obsidianresearch.com> <20130809140140.GA14990@ulmo>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH 1/2] spi: dual and quad support(device tree)
+Date: Mon, 26 Aug 2013 09:29:55 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9FAA82@DBDE04.ent.ti.com>
+References: <1377496080-14356-1-git-send-email-wangyuhang2014@gmail.com>
+ <20980858CB6D3A4BAE95CA194937D5E73E9FA914@DBDE04.ent.ti.com>
+ <CAHSAbzPBTAs=A4SMMojNFG969hukaf=+iAv0xLoQ13Mo0W=J+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130809140140.GA14990@ulmo>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Longchamp,
- Valentin" <Valentin.Longchamp@keymile.com>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Andrew Lunn <andrew@lunn.ch>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CAHSAbzPBTAs=A4SMMojNFG969hukaf=+iAv0xLoQ13Mo0W=J+g@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: yuhang wang <wangyuhang2014@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar,
+ Sourav" <sourav.poddar@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi guys [particularly Jason and Thierry],
+> Hi, Pekon
+> 
+> 2013/8/26 Gupta, Pekon <pekon@ti.com>:
+> >>
+> >> Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/spi/spi-bus.txt |   14
+> ++++++++++++++
+> >>  1 file changed, 14 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> >> b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> >> index 296015e..145ba96 100644
+> >> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> >> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> >> @@ -55,6 +55,20 @@ contain the following properties.
+> >>               chip select active high
+> >>  - spi-3wire       - (optional) Empty property indicating device requires
+> >>                   3-wire mode.
+> >> +- spi-tx-nbits    - (optional) Number of bits used for MOSI(writting)
+> >> +- spi-rx-nbits    - (optional) Number of bits used for MISO(reading)
+> >> +
+> >> +So if for example the slave has 4 wires for writting and 2 wires for
+> reading,
+> >> +and the spi-tx/rx-nbits property should be set as follows:
+> >> +
+> >> +spi-tx-nbits = <4>;
+> >> +spi-rx-nbits = <2>;
+> >
+> > [Pekon]: there is a problem here...
+> > spi-tx-nbit = <4> suggests that SPI device support QUAD writes, but it does
+> > not indicate whether DUAL writes are supported by device or not.
+> > So, In my view having either of the following implementation could help
+> > in specifying capabilities independently and clearly.
+> > *Implementation-1 Boolean*
+> > spi-tx-quad = <true | false>
+> > spi-tx-dual = <true | false>
+> > spi-tx-single = <true | false>
+> > Same way for Rx..
+> > spi-rx-quad = <true | false>
+> > spi-rx-dual = <true | false>
+> > spi-rx-single = <true | false>
+> >
+> > *Implementation-2 Multi-option*
+> > spi-quad = <tx-only | rx-only | duplex>
+> > spi-dual = <tx-only | rx-only | duplex>
+> > spi-single = <tx-only | rx-only | full-duplex | half-duplex>
+> >
+> Not exactly,  spi-tx-nbit = <4> suggests that SPI device will use QUAD
+> writes, not support QUAD writes. There is no need to set what mode
+> slave supports, user just set the certain mode slave will work in.
+> 
+[Pekon]: Wait.. I think there is some mis-match in our understandings.. 
+(a) struct spi_device->mode determines capabilities spi_device can support
+(b) And, when user (here m25p80 like flash driver) puts a spi_transfer, then
+it specifies whether to use spi_transfer->tx_nbits = 4 or not.. 
+And you are using DT binding to specify (a) correct ?
 
-sorry for the prolonged silence, here I am back again...
+Now, how would you specify following configuration, using DT ?
+	spi_device->mode = SPI_TX_SINGLE | SPI_TX_QUAD. (but not dual)
+so that driver
+- driver give error,
+	when m25p80 driver uses spi_transfer->tx-nbits = 2
+- But allow, 
+	when m25p80 driver uses spi_transfer->tx-nbits = 1 or
+	when m25p80 driver uses spi_transfer->tx-nbits = 4
 
-On 08/09/2013 04:01 PM, Thierry Reding wrote:
-> On Wed, Jul 31, 2013 at 02:50:34PM -0600, Jason Gunthorpe wrote:
->> On Wed, Jul 31, 2013 at 11:00:45AM +0200, Thomas Petazzoni wrote:
->>
->>>> Actually, the main reason for trying to use this driver was because I
->>>> wanted to model a PCIe *device* within the device tree, so to expose its
->>>> GPIOs and IRQs to be referenced (through phandles) from other device
->>>> tree nodes. The way I understand it, turns out this is not the way to
->>>> go, as PCI/PCIe are essentially enumerated busses, so you're not
->>>> supposed to -and it's not a trivial task to- put any information about
->>>> real devices within the device tree.
->>>> Do you have any suggestion about that?
->>>
->>> Indeed, PCI/PCIe devices are enumerated dynamically, so they are not
->>> listed in the Device Tree, so there's no way to "attach" more
->>> information to them.
->>>
->>> Device Tree people, any suggestion about the above question?
->>
->> No, that isn't true.
->>
->> Device tree can include the discovered PCI devices, you have to use
->> the special reg encoding and all that weirdness, but it does work. The
->> of_node will be attached to the struct pci device automatically.
+> >> +
+> >> +Now the value that spi-tx-nbits and spi-rx-nbits can receive is only
+> >> +1(single), 2(dual) and 4(quad). If you don't set spi-tx-nbits or spi-rx-nbits,
+> >> +spi_device mode will be set in single(1 wire) as default. Another point, if
+> >> +property:spi-3wire is set, spi-tx/rx-nbits is forbidden to set to <2 or 4>,
+> >> +otherwise, an errro will return.
+> >>
+> > [Pekon]: Also, instead of having separate binding for 'spi-3wire', it can be
+> > moved under as spi-single = <half-duplex>.
+> > Full-duplex = Tx and Rx operate on independent channels and
+> concurrently.
+> > Half-duplex = Tx and Rx use same bi-directional channel for transmission
+> >         one by one
+> >
+> Actually, spi-3wire can be regarded as a part of spi-single, but
+> corrected as what you said, there will be some inconvenient.
+> 1,the driver that has already used spi-3wire need a big change.
+> 2,there have to be a complexed check in spi framework if set like:
+>  spi-quad = <tx-only | rx-only | duplex>
+>  spi-dual = <tx-only | rx-only | duplex>
+>  spi-single = <tx-only | rx-only | full-duplex | half-duplex>
+> 
+[Pekon]: No, I'm not asking you to update logic in all drivers,
+just the DT bindings. Something like this..
+@@ -872,46 +872,42 @@ static void of_register_spi_devices(struct spi_master *master)
+ 		/* Device DUAL/QUAD mode */
+ 		prop = of_get_property(nc, "spi-single", &len);
+		if (prop == HALF_DUPLEX)
+			spi->mode |= SPI_3WIRE;
 
-So you mean that, assuming I knew the topology, I could populate the 
-device tree in advance (e.g. statically), so that it already includes 
-*devices* which will be further discovered during probing?
-Or else you mean the {firmware,u-boot} can do that prior to starting the OS?
-If either of the above is true, could you please suggest some example 
-(or some way to get one)?
-I assume the "reg" property (and the after-"@" node name) will need to 
-encode (at least) the device number, is that right?
+So, you set the same spi->mode[SPI_3WIRE] bit, thus other drivers are not
+impacted. And you can deprecate the older "spi-3wire" binding.
 
-I tried reading the "PCI Bus Binding to Open Firmware" but I could not 
-make complete sense out of it...
+with regards, pekon
 
->> On server/etc DT platforms the firmware will do PCI discovery and
->> resource assignment then dump all those results into DT for the OS to
->> reference.
->>
->> This is a major reason why we wanted to see the standard PCI DT be
->> used for Marvell/etc, the existing infrastructure for this is
->> valuable.
->>
->> AFAIK, Thierry has tested this on tegra, and I am doing it on Kirkwood
->> (though not yet with the new driver).
-
-Could you please give a pointer to some example of this? I'm not quite 
-sure I understand what you guys are talking about.
-
->>
->> It is useful for exactly the reason stated - you can describe GPIOs,
->> I2C busses, etc, etc in DT and then upon load of the PCI driver engage
->> the DT code to populate and connect all that downstream
->> infrastructure.
-
-I'm not 100% sure I made myself clear though.
-What I would like to do is to have *other* parts of the device tree be 
-able to reference (i.e., connect to, through phandles) a PCI device 
-(because it provides a GPIO, for instance).
-Is that also what you mean?
-
-> Obviously this doesn't work in general purpose systems because the PCI
-> hierarchy needs to be hardcoded in the DT. If you start adding and
-> removing PCI devices that will likely change the hierarchy and break
-> this matching of PCI device to DT node.
-
-Yes, I guess in that case (if ever) we would need some other way that 
-the device number (is that the same as the physical slot?) to specify a 
-particular "hotplug" device (i.e. maybe a serial number or so)?
-But that's definitely out of scope here.
-
->
-> It's quite unlikely to have a need to hook up GPIOs or IRQs via DT in a
-> general purpose system, though, so I don't really see that being a big
-> problem.
-
-Agreed.
-
->
-> Thierry
-
-Thanks again for your patience...
-
-Gerlando
+> >>  If a gpio chipselect is used for the SPI slave the gpio number will be
+> passed
+> >>  via the cs_gpio
+> >> --
+> >> 1.7.9.5
+> >
+> > with regards, pekon
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
