@@ -1,72 +1,94 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH v2] ARM: dts: add AM33XX EDMA support
-Date: Mon, 26 Aug 2013 10:36:16 +0200
-Message-ID: <521B1380.3030908@baylibre.com>
-References: <1377505784-9820-1-git-send-email-bigeasy@linutronix.de>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: [PATCH V7 0/3] Generic PHY driver for the Exynos SoC DP PHY
+Date: Mon, 26 Aug 2013 17:55:29 +0900
+Message-ID: <003e01cea23a$03aac850$0b0058f0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1377505784-9820-1-git-send-email-bigeasy@linutronix.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: tony@atomide.com, santosh.shilimkar@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Kishon Vijay Abraham I' <kishon@ti.com>
+Cc: 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-fbdev@vger.kernel.org, 'devicetree' <devicetree@vger.kernel.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-- minus all the TI emails which are not working anymore :-(
+This patch series adds a simple driver for the Samsung Exynos SoC
+series DP transmitter PHY, using the generic PHY framework [1].
+Previously the DP PHY used an internal DT node to control the PHY
+power enable bit.
 
-I've just sent my previous email too soon...
+These patches was tested on Exynos5250.
 
-Now the patch is different :-) I'll take that one.
+This PATCH v7 follows:
+ * PATCH v6, sent on July, 9th 2013
+ * PATCH v5, sent on July, 8th 2013
+ * PATCH v4, sent on July, 2nd 2013
+ * PATCH v3, sent on July, 1st 2013
+ * PATCH v2, sent on June, 28th 2013
+ * PATCH v1, sent on June, 28th 2013
 
-Thanks,
-Benoit
+Changes from v6:
+  * Re-based on git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
 
+Changes from v5:
+  * Re-based on git://gitorious.org/linuxphy/linuxphy.git
 
-On 26/08/2013 10:29, Sebastian Andrzej Siewior wrote:
-> From: Matt Porter <mdp@ti.com>
->
-> Adds AM33XX EDMA support to the am33xx.dtsi as documented in
-> Documentation/devicetree/bindings/dma/ti-edma.txt
->
-> Joel: Drop DT entries that are non-hardware-description for now as discussed in [1]
->
-> [1] https://patchwork.kernel.org/patch/2226761/
->
-> Signed-off-by: Matt Porter <mporter@ti.com>
-> Signed-off-by: Joel A Fernandes <joelagnel@ti.com>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
-> Could someone please pick this up?
->
-> v1..v2:
-> 	- s/edma@/dma-controller@/
->
->   arch/arm/boot/dts/am33xx.dtsi | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index 38b446b..784f774 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -96,6 +96,18 @@
->   			reg = <0x48200000 0x1000>;
->   		};
->
-> +		edma: dma-controller@49000000 {
-> +			compatible = "ti,edma3";
-> +			ti,hwmods = "tpcc", "tptc0", "tptc1", "tptc2";
-> +			reg =	<0x49000000 0x10000>,
-> +				<0x44e10f90 0x10>;
-> +			interrupts = <12 13 14>;
-> +			#dma-cells = <1>;
-> +			dma-channels = <64>;
-> +			ti,edma-regions = <4>;
-> +			ti,edma-slots = <256>;
-> +		};
-> +
->   		gpio0: gpio@44e07000 {
->   			compatible = "ti,omap4-gpio";
->   			ti,hwmods = "gpio1";
->
+Changes from v4:
+  * Marked original bindings as deprecated in 'exynos_dp.txt'
+  * Fixed typo of commit message.
+  * Added Tomasz Figa's Reviewed-by.
 
+Changes from v3:
+  * Added OF dependancy.
+  * Removed redundant local variable 'void __iomem *addr'.
+  * Removed unnecessary dev_set_drvdata().
+  * Added a patch that remove non-DT support for Exynos
+    Display Port driver.
+  * Removed unnecessary 'struct exynos_dp_platdata'.
+  * Kept supporting the original bindings for DT compatibility.
+
+Changes from v2:
+  * Removed redundant spinlock
+  * Removed 'struct phy' from 'struct exynos_dp_video_phy'
+  * Updated 'samsung-phy.txt', instead of creating
+    'samsung,exynos5250-dp-video-phy.txt'.
+  * Removed unnecessary additional specifier from 'phys'
+    DT property.
+  * Added 'phys', 'phy-names' properties to 'exynos_dp.txt' file.
+  * Added Felipe Balbi's Acked-by.
+
+Changes from v1:
+  * Replaced exynos_dp_video_phy_xlate() with of_phy_simple_xlate(),
+    as Kishon Vijay Abraham I guided.
+  * Set the value of phy-cells as 0, because the phy_provider implements
+    only one PHY.
+  * Removed unnecessary header include.
+  * Added '#ifdef CONFIG_OF' and of_match_ptr macro.
+
+This series depends on the generic PHY framework [1]. These patches
+refer to Sylwester Nawrocki's patches about Exynos MIPI [2].
+
+[1] http://lwn.net/Articles/564188/
+[2] http://www.spinics.net/lists/linux-samsung-soc/msg20098.html
+
+Jingoo Han (3):
+  phy: Add driver for Exynos DP PHY
+  video: exynos_dp: remove non-DT support for Exynos Display Port
+  video: exynos_dp: Use the generic PHY driver
+
+ .../devicetree/bindings/phy/samsung-phy.txt        |    7 ++
+ .../devicetree/bindings/video/exynos_dp.txt        |   17 +--
+ drivers/phy/Kconfig                                |    7 ++
+ drivers/phy/Makefile                               |    7 +-
+ drivers/phy/phy-exynos-dp-video.c                  |  111 ++++++++++++++++
+ drivers/video/exynos/Kconfig                       |    2 +-
+ drivers/video/exynos/exynos_dp_core.c              |  132 ++++++--------------
+ drivers/video/exynos/exynos_dp_core.h              |  110 ++++++++++++++++
+ drivers/video/exynos/exynos_dp_reg.c               |    2 -
+ include/video/exynos_dp.h                          |  131 -------------------
+ 10 files changed, 286 insertions(+), 240 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/samsung-phy.txt
+ create mode 100644 drivers/phy/phy-exynos-dp-video.c
+ delete mode 100644 include/video/exynos_dp.h
+--
+1.7.10.4
