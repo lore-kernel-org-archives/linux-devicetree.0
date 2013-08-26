@@ -1,28 +1,107 @@
-From: Huang Shijie <b32955@freescale.com>
-Subject: Re: [PATCH v2 5/8] spi: Add Freescale QuadSpi driver
-Date: Mon, 26 Aug 2013 14:21:33 +0800
-Message-ID: <521AF3ED.1020507@freescale.com>
-References: <1377492102-23543-1-git-send-email-b32955@freescale.com> <1377492102-23543-6-git-send-email-b32955@freescale.com> <521AF162.9000308@ti.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: Re: [PATCH v2 4/8] mtd: m25p80: add the DDR quad-read support
+Date: Mon, 26 Aug 2013 11:52:09 +0530
+Message-ID: <521AF411.8000107@ti.com>
+References: <1377492102-23543-1-git-send-email-b32955@freescale.com> <1377492102-23543-5-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <521AF162.9000308@ti.com>
+In-Reply-To: <1377492102-23543-5-git-send-email-b32955@freescale.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
+To: Huang Shijie <b32955@freescale.com>
 Cc: broonie@kernel.org, B20596@freescale.com, computersforpeace@gmail.com, b44548@freescale.com, dedekind1@gmail.com, linux-doc@vger.kernel.org, b18965@freescale.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, shawn.guo@linaro.org, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-=E4=BA=8E 2013=E5=B9=B408=E6=9C=8826=E6=97=A5 14:10, Sourav Poddar =E5=86=
-=99=E9=81=93:
-> There is a generic chipselect spi binding available. You should use=20
-> that, rather
-> than defining your own binding.=20
-yes. you are right.
-
-it seems i have to send out another version.
-
-thanks
-Huang Shijie
+Hi,
+On Monday 26 August 2013 10:11 AM, Huang Shijie wrote:
+> This patch adds the DDR quad read support by:
+>
+> (1) Add the relative commands:
+>        OPCODE_DDRQIOR, OPCODE_4DDRQIOR
+>
+> (2) add the "m25p,ddr-quad-read" property for the m25p80 driver
+>      If the dts has the "m25p,ddr-quad-read" property, the kernel will
+>      set the Quad bit of the configuration register, and when the
+>      setting suceedes, we will set the read opcode with the right
+>      spi nor command.
+>
+> Signed-off-by: Huang Shijie<b32955@freescale.com>
+> ---
+>   Documentation/devicetree/bindings/mtd/m25p80.txt |    5 +++++
+>   drivers/mtd/devices/m25p80.c                     |   21 ++++++++++++++++-----
+>   include/linux/mtd/spi-nor.h                      |    2 ++
+>   3 files changed, 23 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mtd/m25p80.txt b/Documentation/devicetree/bindings/mtd/m25p80.txt
+> index b33313f..a01c6b7 100644
+> --- a/Documentation/devicetree/bindings/mtd/m25p80.txt
+> +++ b/Documentation/devicetree/bindings/mtd/m25p80.txt
+> @@ -22,6 +22,11 @@ Optional properties:
+>                      all chips and support for it can not be detected at runtime.
+>                      Refer to your chips' datasheet to check if this is supported
+>                      by your chip.
+> +- m25p,ddr-quad-read : Use the "ddr quad read" opcode to read data from the chip
+> +                   instead of the usual "read" opcode. This opcode is not
+> +                   supported by all chips and support for it can not be detected
+> +                   at runtime. Refer to your chips' datasheet to check if this
+> +                   is supported by your chip.
+>   Example:
+>
+>   	flash: m25p80@0 {
+> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+> index 0645c9f..32ccdc7 100644
+> --- a/drivers/mtd/devices/m25p80.c
+> +++ b/drivers/mtd/devices/m25p80.c
+> @@ -913,7 +913,8 @@ static void m25p80_check_quad_read(struct m25p *flash, struct device_node *np)
+>   	int ret;
+>   	int sr_cr;
+>
+> -	if (of_property_read_bool(np, "m25p,quad-read")) {
+> +	if (of_property_read_bool(np, "m25p,quad-read")
+> +		|| of_property_read_bool(np, "m25p,ddr-quad-read")) {
+>   		/* The configuration register is set by the second byte. */
+>   		sr_cr = CR_QUAD<<  8;
+>
+> @@ -927,10 +928,20 @@ static void m25p80_check_quad_read(struct m25p *flash, struct device_node *np)
+>   		if (!(ret>  0&&  (ret&  CR_QUAD)))
+>   			return;
+>
+> -		if (flash->mtd.size<= SZ_16M)
+> -			flash->read_opcode = OPCODE_QIOR;
+> -		else
+> -			flash->read_opcode = OPCODE_4QIOR;
+> +		if (of_property_read_bool(np, "m25p,quad-read")) {
+> +			if (flash->mtd.size<= SZ_16M)
+> +				flash->read_opcode = OPCODE_QIOR;
+> +			else
+> +				flash->read_opcode = OPCODE_4QIOR;
+> +			return;
+> +		}
+> +
+> +		if (of_property_read_bool(np, "m25p,ddr-quad-read")) {
+> +			if (flash->mtd.size<= SZ_16M)
+> +				flash->read_opcode = OPCODE_DDRQIOR;
+> +			else
+> +				flash->read_opcode = OPCODE_4DDRQIOR;
+> +		}
+I remember this getting asked in some other thread also...
+Quad read need dummy bits before reading out the data, what happens
+when the controller does not have LUT feature.  ?
+>   	}
+>   }
+>
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index e6c3309..a985336 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -42,6 +42,8 @@
+>   #define	OPCODE_BRWR		0x17	/* Bank register write */
+>   #define	OPCODE_QIOR		0xeb	/* Quad read */
+>   #define	OPCODE_4QIOR		0xec	/* Quad read (4-byte)*/
+> +#define	OPCODE_DDRQIOR		0xed	/* DDR Quad read */
+> +#define	OPCODE_4DDRQIOR		0xee	/* DDR Quad read (4-byte)*/
+>   #define	OPCODE_RDCR		0x35	/* Read configuration register */
+>
+>   /* Status Register bits. */
 
