@@ -1,74 +1,125 @@
-From: Xiubo Li-B47053 <B47053@freescale.com>
-Subject: RE: [PATCH 4/4] Documentation: Add device tree bindings for
- Freescale FTM PWM
-Date: Mon, 26 Aug 2013 05:46:26 +0000
-Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F827E41E2@039-SN2MPN1-012.039d.mgd.msft.net>
-References: <1377054462-6283-1-git-send-email-Li.Xiubo@freescale.com>
- <1377054462-6283-5-git-send-email-Li.Xiubo@freescale.com>
- <1473340.OXSHEp7d4P@flatron>
- <1DD289F6464F0949A2FCA5AA6DC23F827D2244@039-SN2MPN1-013.039d.mgd.msft.net>
- <20130822062610.GR31036@pengutronix.de> <20130823073612.GB3535@ulmo>
+From: wangyuhang <wangyuhang2014@gmail.com>
+Subject: [PATCH 2/2] spi: dual and quad support(device tree)
+Date: Mon, 26 Aug 2013 13:48:00 +0800
+Message-ID: <1377496080-14356-2-git-send-email-wangyuhang2014@gmail.com>
+References: <1377496080-14356-1-git-send-email-wangyuhang2014@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130823073612.GB3535@ulmo>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Guo Shawn-R65073 <r65073@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1377496080-14356-1-git-send-email-wangyuhang2014@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: broonie@kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+Cc: sourav.poddar@ti.com, pekon@ti.com, wangyuhang <wangyuhang2014@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+fix one thing in patch:
+commit id:f477b7fb13df2b843997559ff34e87d054ba6538
+
+change property spi-tx-nbits and spi-rx-nbits to optional.
+If User don't set spi-tx-nbits or spi-rx-nbits, spi device mode
+should be regarded as SINGLE, not return an error.
+
+Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
+---
+ drivers/spi/spi.c |   68 +++++++++++++++++++++++++----------------------------
+ 1 file changed, 32 insertions(+), 36 deletions(-)
+
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 50f7fc3..46a55f0 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -872,46 +872,42 @@ static void of_register_spi_devices(struct spi_master *master)
+ 		/* Device DUAL/QUAD mode */
+ 		prop = of_get_property(nc, "spi-tx-nbits", &len);
+ 		if (!prop || len < sizeof(*prop)) {
+-			dev_err(&master->dev, "%s has no 'spi-tx-nbits' property\n",
+-				nc->full_name);
+-			spi_dev_put(spi);
+-			continue;
+-		}
+-		switch (be32_to_cpup(prop)) {
+-		case SPI_NBITS_SINGLE:
+-			break;
+-		case SPI_NBITS_DUAL:
+-			spi->mode |= SPI_TX_DUAL;
+-			break;
+-		case SPI_NBITS_QUAD:
+-			spi->mode |= SPI_TX_QUAD;
+-			break;
+-		default:
+-			dev_err(&master->dev, "spi-tx-nbits value is not supported\n");
+-			spi_dev_put(spi);
+-			continue;
++			/* set tx mode in SINGLE as default */
++		} else {
++			switch (be32_to_cpup(prop)) {
++			case SPI_NBITS_SINGLE:
++				break;
++			case SPI_NBITS_DUAL:
++				spi->mode |= SPI_TX_DUAL;
++				break;
++			case SPI_NBITS_QUAD:
++				spi->mode |= SPI_TX_QUAD;
++				break;
++			default:
++				dev_err(&master->dev,
++					"spi-tx-nbits value is not supported\n");
++				spi_dev_put(spi);
++				continue;
+ 		}
+ 
+ 		prop = of_get_property(nc, "spi-rx-nbits", &len);
+ 		if (!prop || len < sizeof(*prop)) {
+-			dev_err(&master->dev, "%s has no 'spi-rx-nbits' property\n",
+-				nc->full_name);
+-			spi_dev_put(spi);
+-			continue;
+-		}
+-		switch (be32_to_cpup(prop)) {
+-		case SPI_NBITS_SINGLE:
+-			break;
+-		case SPI_NBITS_DUAL:
+-			spi->mode |= SPI_RX_DUAL;
+-			break;
+-		case SPI_NBITS_QUAD:
+-			spi->mode |= SPI_RX_QUAD;
+-			break;
+-		default:
+-			dev_err(&master->dev, "spi-rx-nbits value is not supported\n");
+-			spi_dev_put(spi);
+-			continue;
++			/* set rx mode in SINGLE as default */
++		} else {
++			switch (be32_to_cpup(prop)) {
++			case SPI_NBITS_SINGLE:
++				break;
++			case SPI_NBITS_DUAL:
++				spi->mode |= SPI_RX_DUAL;
++				break;
++			case SPI_NBITS_QUAD:
++				spi->mode |= SPI_RX_QUAD;
++				break;
++			default:
++				dev_err(&master->dev,
++					"spi-rx-nbits value is not supported\n");
++				spi_dev_put(spi);
++				continue;
+ 		}
+ 
+ 		/* Device speed */
+-- 
+1.7.9.5
 
 
-> Subject: Re: [PATCH 4/4] Documentation: Add device tree bindings for
-> Freescale FTM PWM
-> 
-> On Thu, Aug 22, 2013 at 08:26:10AM +0200, Sascha Hauer wrote:
-> > On Thu, Aug 22, 2013 at 02:55:42AM +0000, Xiubo Li-B47053 wrote:
-> > > Hi Tomasz,
-> > >
-> > > Thanks for your comments.
-> > >
-> > >
-> > > > Could you explain meaning of this property more precisely? I'm
-> > > > interested especially how is this related to the PWM IP block and
-> boards.
-> > > >
-> > >
-> > > Yes.
-> > > There are 8 channels most. While the pinctrls of 4th and 5th
-> > > channels could be used by uart's Rx and Tx, then these 2 channels
-> > > won't be used for pwm output, so there will be 6 channels available
-> by the pwm.
-> > > Thus, the pwm chip will register only 6 pwms(6 channels)
-> > > most("fsl,pwm-channel-orders = {0 1 2 3 6 7}").And also the "fsl,pwm-
-> channel-number" will be 6.
-> >
-> > If the chip has eight PWMs I would register all of them. If some of
-> > them are not routed out by the pinmux then just nothing happens if you
-> > use them. In a sane devicetree they won't be referenced anyway when
-> > they are not routed out of the SoC.
-> 
-> In that case, shouldn't this be hooked up to the pinctrl subsystem as
-> well? As I understand the above, the logical thing would be for each PWM
-> channel's .request() operation to configure the pinmuxing appropriately.
-> And if it can't be configured as necessary then .request() should return
-> an error (or propagate the error from the pinctrl subsystem).
-> 
-
-That's maybe better, if so, the pinctrl configuration must be split into two steps:
-1, get the channel pinctrl "active" and "idle" states by callig pinctrl_lookup_state() in .request().
-2, select the proper state in .enable()/.disable().
-
-
-
-
-Thanks very much.
-
---
-Best Regards.
-Xiubo
-
-
-
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
