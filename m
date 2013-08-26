@@ -1,70 +1,74 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v2 7/9] watchdog: orion: Update device-tree binding
- documentation
-Date: Mon, 26 Aug 2013 10:08:43 -0400
-Message-ID: <20130826140843.GI13964@titan.lakedaemon.net>
-References: <1377295942-5955-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1377295942-5955-8-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv5 01/31] CLK: clkdev: add support for looking up clocks
+ from DT
+Date: Mon, 26 Aug 2013 17:36:15 +0300
+Message-ID: <521B67DF.4000005@ti.com>
+References: <1375460751-23676-1-git-send-email-t-kristo@ti.com> <1375460751-23676-2-git-send-email-t-kristo@ti.com> <20130803183143.GE23053@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1377295942-5955-8-git-send-email-ezequiel.garcia@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, swarren@wwwdotorg.org, wim@iguana.be, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130803183143.GE23053@n2100.arm.linux.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2013 at 07:12:20PM -0300, Ezequiel Garcia wrote:
-> Change the 'reg' property meaning, by defining two required cells.
-> It's important to note this commit breaks DT-compatibility for this
-> device.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-> ---
->  Documentation/devicetree/bindings/watchdog/orion-wdt.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-> index 5dc8d30..a74c9c8 100644
-> --- a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-> @@ -3,7 +3,9 @@
->  Required Properties:
->  
->  - Compatibility : "marvell,orion-wdt"
-> -- reg		: Address of the timer registers
-> +- reg		: Two cells are required:
-> +		  First  cell contains the global timer control register.
-> +		  Second cell contains the watchdog counter register.
->  
->  Optional properties:
->  
-> @@ -13,7 +15,8 @@ Example:
->  
->  	wdt@20300 {
->  		compatible = "marvell,orion-wdt";
-> -		reg = <0x20300 0x28>;
-> +		reg = <0x20300 0x4
+On 08/03/2013 09:31 PM, Russell King - ARM Linux wrote:
+> On Fri, Aug 02, 2013 at 07:25:20PM +0300, Tero Kristo wrote:
+>> +
+>> +	if (cl)
+>> +		return cl;
+>> +
+>> +	/* If clock was not found, attempt to look-up from DT */
+>> +	node = of_find_node_by_name(NULL, con_id);
+>
+> This is utterly broken if you're looking up purely by a connection ID.
+> Please, go back and read clk_get()'s documentation in linux/clk.h.
+> It's spelt out very plainly there.
+>
+> NAK.
+>
 
+Hi Russell,
 
-> +		       0x20324 0x4>;
+After looking at this a bit more, it seems difficult to get rid of the 
+clk_get -> of_clk_get conversion, however based on this comment I am 
+somewhat stuck. Do you think it would be acceptable if I change the 
+implementation of this patch to work like this:
 
-Is there a reason we're going this route over adding a new compatible
-string? iow, why can't we keep this knowledge in the driver and have a
-"marvell,armada-wdt" or similar compat string that the orion-wdt driver
-also serves?
+1) both dev_id + con_id defined:
+    a) search for device node named dev_id
+    b) check clock-names for matching con_id
+    c) return matching clock
 
-thx,
+    Example in kernel:
+       clocksource-nomadik-mtu.c :
+           clk_get_sys("mtu0", "apb_pclk");
 
-Jason.
+       ste-nomadik-snt8815.dts:
+         mtu0: mtu@101e2000 {
+                 /* Nomadik system timer */
+                 compatible = "st,nomadik-mtu";
+                 reg = <0x101e2000 0x1000>;
+                 interrupt-parent = <&vica>;
+                 interrupts = <4>;
+                 clocks = <&timclk>, <&pclk>;
+                 clock-names = "timclk", "apb_pclk";
+         };
+
+2) dev_id = NULL, con_id defined (current patch implementation, most of 
+the OMAP clocks use this approach):
+    a) search for a device node named con_id
+    b) return corresponding clock from the node
+
+Alternatively I must implement a regression and break some of the OMAP 
+drivers with this set, and also implement omap internal clk_get 
+functionality (basically adding a similar wrapper that I have 
+implemented in this patch) under mach-omap2 to get some basic OMAP infra 
+to work properly (namely, hwmod.) I can probably avoid part of this by 
+adding more beef to the *.dts files for the critical parts to get boot 
+working at least.
+
+-Tero
+
