@@ -1,17 +1,15 @@
 From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH 1/2] spi: dual and quad support(device tree)
-Date: Mon, 26 Aug 2013 12:37:05 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9FABE7@DBDE04.ent.ti.com>
+Subject: RE: [PATCH 2/2] spi: dual and quad support(device tree)
+Date: Mon, 26 Aug 2013 12:50:25 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9FAC0C@DBDE04.ent.ti.com>
 References: <1377496080-14356-1-git-send-email-wangyuhang2014@gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73E9FA914@DBDE04.ent.ti.com>
- <CAHSAbzPBTAs=A4SMMojNFG969hukaf=+iAv0xLoQ13Mo0W=J+g@mail.gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73E9FAA82@DBDE04.ent.ti.com>
- <CAHSAbzPh9H=Yz5J8UykLqx==k1RaHB7UVuZ23c7pQ0W9MUwXng@mail.gmail.com>
+ <1377496080-14356-2-git-send-email-wangyuhang2014@gmail.com>
+ <20980858CB6D3A4BAE95CA194937D5E73E9FA932@DBDE04.ent.ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CAHSAbzPh9H=Yz5J8UykLqx==k1RaHB7UVuZ23c7pQ0W9MUwXng@mail.gmail.com>
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73E9FA932@DBDE04.ent.ti.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
@@ -22,162 +20,158 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
 Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: yuhang wang <wangyuhang2014@gmail.com>
+To: wangyuhang <wangyuhang2014@gmail.com>
 Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar,
  Sourav" <sourav.poddar@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 > 
-> Hi, Pekon
-> 
-> 2013/8/26 Gupta, Pekon <pekon@ti.com>:
-> >> Hi, Pekon
-> >>
-> >> 2013/8/26 Gupta, Pekon <pekon@ti.com>:
-> >> >>
-> >> >> Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
-> >> >> ---
-> >> >>  Documentation/devicetree/bindings/spi/spi-bus.txt |   14
-> >> ++++++++++++++
-> >> >>  1 file changed, 14 insertions(+)
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> >> >> b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> >> >> index 296015e..145ba96 100644
-> >> >> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> >> >> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> >> >> @@ -55,6 +55,20 @@ contain the following properties.
-> >> >>               chip select active high
-> >> >>  - spi-3wire       - (optional) Empty property indicating device requires
-> >> >>                   3-wire mode.
-> >> >> +- spi-tx-nbits    - (optional) Number of bits used for MOSI(writting)
-> >> >> +- spi-rx-nbits    - (optional) Number of bits used for MISO(reading)
-> >> >> +
-> >> >> +So if for example the slave has 4 wires for writting and 2 wires for
-> >> reading,
-> >> >> +and the spi-tx/rx-nbits property should be set as follows:
-> >> >> +
-> >> >> +spi-tx-nbits = <4>;
-> >> >> +spi-rx-nbits = <2>;
-> >> >
-> >> > [Pekon]: there is a problem here...
-> >> > spi-tx-nbit = <4> suggests that SPI device support QUAD writes, but it
-> does
-> >> > not indicate whether DUAL writes are supported by device or not.
-> >> > So, In my view having either of the following implementation could help
-> >> > in specifying capabilities independently and clearly.
-> >> > *Implementation-1 Boolean*
-> >> > spi-tx-quad = <true | false>
-> >> > spi-tx-dual = <true | false>
-> >> > spi-tx-single = <true | false>
-> >> > Same way for Rx..
-> >> > spi-rx-quad = <true | false>
-> >> > spi-rx-dual = <true | false>
-> >> > spi-rx-single = <true | false>
-> >> >
-> >> > *Implementation-2 Multi-option*
-> >> > spi-quad = <tx-only | rx-only | duplex>
-> >> > spi-dual = <tx-only | rx-only | duplex>
-> >> > spi-single = <tx-only | rx-only | full-duplex | half-duplex>
-> >> >
-> >> Not exactly,  spi-tx-nbit = <4> suggests that SPI device will use QUAD
-> >> writes, not support QUAD writes. There is no need to set what mode
-> >> slave supports, user just set the certain mode slave will work in.
-> >>
-> > [Pekon]: Wait.. I think there is some mis-match in our understandings..
-> > (a) struct spi_device->mode determines capabilities spi_device can support
-> > (b) And, when user (here m25p80 like flash driver) puts a spi_transfer, then
-> > it specifies whether to use spi_transfer->tx_nbits = 4 or not..
-> > And you are using DT binding to specify (a) correct ?
 > >
-> > Now, how would you specify following configuration, using DT ?
-> >         spi_device->mode = SPI_TX_SINGLE | SPI_TX_QUAD. (but not dual)
-> > so that driver
-> > - driver give error,
-> >         when m25p80 driver uses spi_transfer->tx-nbits = 2
-> > - But allow,
-> >         when m25p80 driver uses spi_transfer->tx-nbits = 1 or
-> >         when m25p80 driver uses spi_transfer->tx-nbits = 4
+> > fix one thing in patch:
+> > commit id:f477b7fb13df2b843997559ff34e87d054ba6538
 > >
-> >> >> +
-> >> >> +Now the value that spi-tx-nbits and spi-rx-nbits can receive is only
-> >> >> +1(single), 2(dual) and 4(quad). If you don't set spi-tx-nbits or spi-rx-
-> nbits,
-> >> >> +spi_device mode will be set in single(1 wire) as default. Another
-> point, if
-> >> >> +property:spi-3wire is set, spi-tx/rx-nbits is forbidden to set to <2 or
-> 4>,
-> >> >> +otherwise, an errro will return.
-> >> >>
-> >> > [Pekon]: Also, instead of having separate binding for 'spi-3wire', it can
-> be
-> >> > moved under as spi-single = <half-duplex>.
-> >> > Full-duplex = Tx and Rx operate on independent channels and
-> >> concurrently.
-> >> > Half-duplex = Tx and Rx use same bi-directional channel for transmission
-> >> >         one by one
-> >> >
-> >> Actually, spi-3wire can be regarded as a part of spi-single, but
-> >> corrected as what you said, there will be some inconvenient.
-> >> 1,the driver that has already used spi-3wire need a big change.
-> >> 2,there have to be a complexed check in spi framework if set like:
-> >>  spi-quad = <tx-only | rx-only | duplex>
-> >>  spi-dual = <tx-only | rx-only | duplex>
-> >>  spi-single = <tx-only | rx-only | full-duplex | half-duplex>
-> >>
-> > [Pekon]: No, I'm not asking you to update logic in all drivers,
-> > just the DT bindings. Something like this..
+> > change property spi-tx-nbits and spi-rx-nbits to optional.
+> > If User don't set spi-tx-nbits or spi-rx-nbits, spi device mode
+> > should be regarded as SINGLE, not return an error.
+> >
+> > Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
+> > ---
+> >  drivers/spi/spi.c |   68 +++++++++++++++++++++++++------------------------
+> --
+> > --
+> >  1 file changed, 32 insertions(+), 36 deletions(-)
+> >
+> > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> > index 50f7fc3..46a55f0 100644
+> > --- a/drivers/spi/spi.c
+> > +++ b/drivers/spi/spi.c
 > > @@ -872,46 +872,42 @@ static void of_register_spi_devices(struct
-> spi_master *master)
-> >                 /* Device DUAL/QUAD mode */
-> >                 prop = of_get_property(nc, "spi-single", &len);
-> >                 if (prop == HALF_DUPLEX)
-> >                         spi->mode |= SPI_3WIRE;
-> >
-> > So, you set the same spi->mode[SPI_3WIRE] bit, thus other drivers are not
-> > impacted. And you can deprecate the older "spi-3wire" binding.
-> >
+> > spi_master *master)
+> >  		/* Device DUAL/QUAD mode */
+> >  		prop = of_get_property(nc, "spi-tx-nbits", &len);
+> >  		if (!prop || len < sizeof(*prop)) {
+> > -			dev_err(&master->dev, "%s has no 'spi-tx-nbits'
+> > property\n",
+> > -				nc->full_name);
+> > -			spi_dev_put(spi);
+> > -			continue;
+> > -		}
+> > -		switch (be32_to_cpup(prop)) {
+> > -		case SPI_NBITS_SINGLE:
+> > -			break;
+> > -		case SPI_NBITS_DUAL:
+> > -			spi->mode |= SPI_TX_DUAL;
+> > -			break;
+> > -		case SPI_NBITS_QUAD:
+> > -			spi->mode |= SPI_TX_QUAD;
+> > -			break;
+> > -		default:
+> > -			dev_err(&master->dev, "spi-tx-nbits value is not
+> > supported\n");
+> > -			spi_dev_put(spi);
+> > -			continue;
+> > +			/* set tx mode in SINGLE as default */
+[Pekon]: I think you should explicitly set, and not trust spi->mode defaults.
+	spi->mode |= SPI_TX_SINGLE;
 > 
-> OK, I got it. Logically it is better. But there are some difficulties
-> in Implementation.
-> 1. The property (spi-quad spi-dual spi-single) should be optional,
-> user can don't set any of these three properties. Then spi-3wire can
-> not be specified. Or if you want to set these properties as required,
-> all the spi slave (at least DT) should be changed.
-
-[Pekon]: Nope you don't need to change anything.
-Even today, there is an explicitly DT binding called 'spi-3wire' to enable
-this mode. Instead of it I'm proposing to use 'spi-tx-max-nbit = 0' 
-or 'spi-rx-max-nbit = 0', and deprecate 'spi-3wire'.
-
-So only those DTS need to be updated which use 'spi-3wire'
-And, I havn't found any DTS with spi-3wire :-)
-	grep -i 3wire arch/*/boot/dts/* -r 
-
-Refer: Documentation/devicetree/bindings/spi/spi-bus.txt
-- spi-3wire       - (optional) Empty property indicating device requires
-    		    3-wire mode.
-
-> 2. Add property like (spi-quad spi-dual spi-single) will make the
-> check in spi framework a little complicated.
->   example:
->   1)if one of these three is duplex, the other can not be set.
->   2)there can not be the same value in either of the three.
->   3)all three can not be set at the same time.
->   .....
-> If in the future, more wires transfer is supported, you have to add
-> properties, then the check will be more complex.
-> So I still need some good aproaches to specify spi-3wire.
+> > +		} else {
+> > +			switch (be32_to_cpup(prop)) {
+> > +			case SPI_NBITS_SINGLE:
+> > +				break;
+> > +			case SPI_NBITS_DUAL:
+> > +				spi->mode |= SPI_TX_DUAL;
+> > +				break;
+> > +			case SPI_NBITS_QUAD:
+> > +				spi->mode |= SPI_TX_QUAD;
+> > +				break;
 > 
-[Pekon]: Anyways this proposal is invalid, bcoz I mis-understood
- ur patch earlier. So no issues here..
+[Pekon]: And there please check for spi_master->mode_bits
+before setting spi_device->mode.
+spi_device->mode should be sub-set of spi_master->mode_bits.
+Example: 
+switch (be32_to_cpup(prop)) {
+	case SPI_NBITS_SINGLE:
+		if (spi_master->mode_bits & SPI_TX_SINGLE)
+			spi-mode |= SPI_TX_SINGLE;
+		else
+			pr_err("SPI controller does not support SPI_TX_SINGLE\n");
+	break;
+	case SPI_NBITS_DUAL:
+		if (spi_master->mode_bits & SPI_TX_DUAL)
+			spi-mode |= SPI_TX_DUAL;
+		else
+			pr_err("SPI controller does not support SPI_TX_DUAL\n");
+	break;
+	case SPI_NBITS_QUAD:
+		if (spi_master->mode_bits & SPI_TX_QUAD)
+			spi-mode |= SPI_TX_QUAD;
+		else
+			pr_err("SPI controller does not support SPI_TX_QUAD\n");
+	break;
+}
+This way you will do initial compatibility check between the
+device and controller right at the probe, and you don't have
+to worry about it later.
+
+
+> 	spi->mode |= SPI_TX_QUAD;
+> or
+> 	spi->mode |= SPI_TX_QUAD | SPI_TX_DUAL;
+> 
+> 
+> > +			default:
+> > +				dev_err(&master->dev,
+> > +					"spi-tx-nbits value is not
+> > supported\n");
+> > +				spi_dev_put(spi);
+> > +				continue;
+> >  		}
 > >
-> >> >>  If a gpio chipselect is used for the SPI slave the gpio number will be
-> >> passed
-> >> >>  via the cs_gpio
-> >> >> --
-> >> >> 1.7.9.5
-> >> >
+> >  		prop = of_get_property(nc, "spi-rx-nbits", &len);
+> >  		if (!prop || len < sizeof(*prop)) {
+> > -			dev_err(&master->dev, "%s has no 'spi-rx-nbits'
+> > property\n",
+> > -				nc->full_name);
+> > -			spi_dev_put(spi);
+> > -			continue;
+> > -		}
+> > -		switch (be32_to_cpup(prop)) {
+> > -		case SPI_NBITS_SINGLE:
+> > -			break;
+> > -		case SPI_NBITS_DUAL:
+> > -			spi->mode |= SPI_RX_DUAL;
+> > -			break;
+> > -		case SPI_NBITS_QUAD:
+> > -			spi->mode |= SPI_RX_QUAD;
+> > -			break;
+> > -		default:
+> > -			dev_err(&master->dev, "spi-rx-nbits value is not
+> > supported\n");
+> > -			spi_dev_put(spi);
+> > -			continue;
+> > +			/* set rx mode in SINGLE as default */
+> > +		} else {
+> > +			switch (be32_to_cpup(prop)) {
+> > +			case SPI_NBITS_SINGLE:
+> > +				break;
+> > +			case SPI_NBITS_DUAL:
+> > +				spi->mode |= SPI_RX_DUAL;
+> > +				break;
+> > +			case SPI_NBITS_QUAD:
+> > +				spi->mode |= SPI_RX_QUAD;
+> > +				break;
+> > +			default:
+> > +				dev_err(&master->dev,
+> > +					"spi-rx-nbits value is not
+> > supported\n");
+> > +				spi_dev_put(spi);
+> > +				continue;
+> >  		}
+> >
+> >  		/* Device speed */
+> > --
+> > 1.7.9.5
+> 
 
 with regards, pekon
 ______________________________________________________
