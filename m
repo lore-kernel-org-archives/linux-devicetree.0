@@ -1,129 +1,95 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH v4 4/7] ARM: dts: add dt nodes for exynos5420 hdmi subsystem
-Date: Mon, 26 Aug 2013 10:42:11 +0530
-Message-ID: <CAPdUM4OFoNvBHm3smLoOY9J6KNUs_gJo+E=TkMu45J+b-ioyRQ@mail.gmail.com>
-References: <1377253461-20851-1-git-send-email-rahul.sharma@samsung.com>
-	<7099911.E9MGK44AOv@flatron>
-	<CAPdUM4N9cBfJFL1XMXug+QjbCdgq9b9u6u6ViH3Rc4Bh-5MOOQ@mail.gmail.com>
-	<3791850.fQhgslc95O@flatron>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v4 3/5] net: ethernet: cpsw: introduce ti,am3352-cpsw
+ compatible string
+Date: Mon, 26 Aug 2013 05:22:54 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9FA84F@DBDE04.ent.ti.com>
+References: <1377267365-24057-1-git-send-email-zonque@gmail.com>
+ <1377267365-24057-4-git-send-email-zonque@gmail.com>
+ <52177052.1030308@ti.com> <52178E20.5040404@gmail.com>
+ <52179448.1020906@ti.com> <52179AA5.3060408@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <3791850.fQhgslc95O@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, "sw0312.kim" <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, sunil joshi <joshi@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52179AA5.3060408@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "N, Mugunthan V" <mugunthanvnm@ti.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, Daniel Mack <zonque@gmail.com>, "Nori, Sekhar" <nsekhar@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "Gerlach,
+ Dave" <d-gerlach@ti.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "Bedia, Vaibhav" <vaibhav.bedia@ti.com>, "ujhelyi.m@gmail.com" <ujhelyi.m@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24 August 2013 20:02, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On Saturday 24 of August 2013 12:05:36 Rahul Sharma wrote:
->> > Hi Rahul,
->> >
->> > Please see my comments inline.
->> >
->> > On Friday 23 of August 2013 15:54:18 Rahul Sharma wrote:
->> >> Add hdmi, mixer, ddc device tree nodes for Exynos 5420 SoC.
->> >>
->> >> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->> >> ---
->> >>
->> >>  arch/arm/boot/dts/exynos5420-smdk5420.dts |   19 +++++++++++++++++++
->> >>  arch/arm/boot/dts/exynos5420.dtsi         |   14 ++++++++++++++
->> >>  2 files changed, 33 insertions(+)
->> >>
->> >> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >> b/arch/arm/boot/dts/exynos5420-smdk5420.dts index bafba25..7dbf1fa
->> >> 100644
->> >> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >> @@ -61,4 +61,23 @@
->> >>
->> >>               };
->> >>
->> >>       };
->> >>
->> >> +     hdmi@14530000 {
->> >> +             status = "okay";
->> >> +             hpd-gpio = <&gpx3 7 0>;
->> >> +     };
->> >> +
->> >> +     mixer@14450000 {
->> >> +             status = "okay";
->> >> +     };
->> >> +
->> >> +     i2c_2: i2c@12C80000 {
->> >> +             samsung,i2c-sda-delay = <100>;
->> >> +             samsung,i2c-max-bus-freq = <66000>;
->> >> +             status = "okay";
->> >> +
->> >> +             hdmiddc@50 {
->> >> +                     compatible = "samsung,exynos4210-hdmiddc";
->> >> +                     reg = <0x50>;
->> >> +             };
->> >> +     };
->> >>
->> >>  };
->> >
->> > You should separate above board-specific changes from this patch and
->> > squash it with patch 6/7, adjusting patch subject and description
->> > appropriately.
->> >
->> >> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
->> >> b/arch/arm/boot/dts/exynos5420.dtsi index 05dee86..7c6214d 100644
->> >> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> >> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> >> @@ -274,4 +274,18 @@
->> >>
->> >>               pinctrl-0 = <&i2c3_bus>;
->> >>               status = "disabled";
->> >>
->> >>       };
->> >>
->> >> +
->> >> +     hdmi@14530000 {
->> >> +             compatible = "samsung,exynos4212-hdmi";
->> >> +             reg = <0x14530000 0x70000>;
->> >> +             interrupts = <0 95 0>;
->> >> +             status = "disabled";
->> >> +     };
->> >> +
->> >> +     mixer@14450000 {
->> >> +             compatible = "samsung,exynos5420-mixer";
->> >> +             reg = <0x14450000 0x10000>;
->> >> +             interrupts = <0 94 0>;
->> >> +             status = "disabled";
->> >
->> > This node looks like a candidate to be enabled here on SoC level,
->> > since it does not require any board specific information.
->>
->> Hi Tomasz,
->>
->> Both hdmi and mixer should be enabled at same time. Mixer don't
->> but hdmi needs hpd gpio information which is board dependent. Thats
->> why I kept them disabled in SoC file. What you say?
->
-> Hmm, is it a hardware restriction? I mean, if HDMI is not enabled, is it
-> impossible to enable mixer and use it for some purposes? I don't know much
-> about the Exynos HDMI subsystem, so sorry for the noise if this is
-> obvious.
-
-Hi Tomasz,
-
-No, It is not a hardware restriction. Mixer can be probed independently
-but there is NO usecase where mixer can be used without hdmi
-enabled. Mixer output is hardwired to hdmi block in SoC.
-
->
-> What I have in mind is that device tree should describe the hardware,
-> regardless of use case. This is, all the hardware that can possibly
-> operate should be listed as operational.
-
-I understand your point. We can keep mixer enabled in DTSI.
-
-regards,
-Rahul Sharma.
-
->
-> Best regards,
-> Tomasz
->
+PiANCj4gT24gRnJpZGF5IDIzIEF1Z3VzdCAyMDEzIDEwOjI2IFBNLCBTYW50b3NoIFNoaWxpbWth
+ciB3cm90ZToNCj4gPiBPbiBGcmlkYXkgMjMgQXVndXN0IDIwMTMgMTI6MzAgUE0sIERhbmllbCBN
+YWNrIHdyb3RlOg0KPiA+PiBPbiAyMy4wOC4yMDEzIDE2OjIzLCBTYW50b3NoIFNoaWxpbWthciB3
+cm90ZToNCj4gPj4+IE9uIEZyaWRheSAyMyBBdWd1c3QgMjAxMyAxMDoxNiBBTSwgRGFuaWVsIE1h
+Y2sgd3JvdGU6DQo+ID4+Pj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGNwc3df
+b2ZfbXRhYmxlW10gPSB7DQo+ID4+Pj4gKwl7DQo+ID4+Pj4gKwkJLmNvbXBhdGlibGUJPSAidGks
+YW0zMzUyLWNwc3ciLA0KPiA+Pj4gSSBkaWRuJ3Qgbm90aWNlIHRoaXMgZWFybGllciwgYnV0IGNh
+bid0IHlvdSB1c2UgdGhlIElQIHZlcnNpb24NCj4gPj4+IGFzIGEgY29tcGF0aWJsZSBpbnN0ZWFk
+IG9mIHVzaW5nIGEgU09DIG5hbWUuIFdoYXRzIHJlYWxseSBTT0Mgc3BlY2lmaWMNCj4gPj4+IG9u
+IHRoaXMgSVAgPyBTb3JyeSBpIGhhdmUgbWlzc2VkIGFueSBlYXJsaWVyIGRpc2N1c3Npb24gb24g
+dGhpcyBidXQNCj4gPj4+IHRoaXMgYXBwcm9hY2ggZG9lc24ndCBzZWVtIGdvb2QuIEl0cyBsaWtl
+IGFkZGluZyBTT0MgY2hlY2tzIGluIHRoZQ0KPiA+Pj4gZHJpdmVyIHN1YnN5c3RlbS4NCj4gPj4g
+QXMgSSBhbHJlYWR5IG1lbnRpb25lZCBpbiB0aGUgY292ZXIgbGV0dGVyIGFuZCBpbiB0aGUgY29t
+bWl0IG1lc3NhZ2UsIEkNCj4gPj4ganVzdCBkb24ndCBrbm93IHdoaWNoIGNyaXRlcmlhIG1ha2Vz
+IG1vc3Qgc2Vuc2UgaGVyZS4NCj4gPj4NCj4gPj4gT24gYSBnZW5lcmFsIG5vdGUsIEkgd291bGQg
+c2F5IHRoYXQgY2hhbmNlcyB0aGF0IHRoaXMgZXhhY3RseSBJUCBjb3JlDQo+ID4+IHdpdGggdGhl
+IHNhbWUgdmVyc2lvbiBudW1iZXIgd2lsbCBhcHBlYXIgb24gc29tZSBvdGhlciBzaWxpY29uIHdo
+aWNoDQo+ID4+IGRvZXNuJ3Qgc3VwcG9ydCB0aGUgY29udHJvbCBtb2RlIHJlZ2lzdGVyIGluIGFu
+IEFNMzN4eCBmYXNoaW9uLCBpcyBub3QNCj4gPj4gbmVjZXNzYXJpbHkgbmVnbGlnaWJsZS4NCj4g
+Pj4NCj4gPj4gU28gd2hhdCB0aGF0IG5ldyBjb21wYXRpYmxlIHN0cmluZyBkZW5vdGVzIGlzIHRo
+ZSBjcHN3IGluIGEgdmVyc2lvbiBhcw0KPiA+PiBmb3VuZCBvbiBhbTMzNTIgU29Dcywgd2hpY2gg
+aXMgYWN0dWFsbHkgZXhhY3RseSB3aGF0IGl0IGRvZXMuDQo+ID4+DQo+ID4+IEkgZG9uJ3QgaGF2
+ZSBhIHN0cm9uZyBvcGluaW9uIGhlcmUsIGJ1dCBzZWUgeW91ciBwb2ludC4gSSBqdXN0IGRvbid0
+DQo+ID4+IGhhdmUgYSBiZXR0ZXIgaWRlYSBvbiBob3cgdG8gdHJlYXQgdGhhdC4NCj4gPj4NCj4g
+PiBTbyBqdXN0IHN0aWNrIHRoZSBJUCB2ZXJzaW9uIG9yIGNhbGwgaXQgY3Bzdy12MS4uLiBjcHN3
+LXYyIGV0Yy4NCj4gPiBUaGF0IHdheSBpZiBpbiBmdXR1cmUgaWYgc29tZW9uZSB1c2VzIHRob3Nl
+IGZlYXR1cmVzLCB0aGV5IGNhbiB1c2UNCj4gPiB0aGlzIGNvbXBhdGlibGUgaWYgdGhleSBkb24n
+dCB0aGV5IHVzZSB0aGUgb25lIHdoaWNoIHN1aXRlcyB0aGF0DQo+ID4gU09DLg0KPiA+DQo+IFdl
+IGNhbm5vdCBtYXAgY29udHJvbCBtb2R1bGUgcmVnaXN0ZXIgd2l0aCBDUFNXIElQIHZlcnNpb24g
+YXMgYm90aCBjb21lcw0KPiBmcm9tIGRpZmZlcmVudCBkZXNpZ24gdGVhbSBhbmQgQ1BTVyBpcCB2
+ZXJzaW9uIGNhbiBiZSBzYW1lIGFjcm9zcyBTb0MNCj4gYW5kIGdtaWkgc2VsIHJlZ2lzdGVyIGRl
+ZmluaXRpb24gY2FuIGJlIGRpZmZlcmVudC4gQ29udHJvbCBtb2R1bGUNCj4gZGVmaW5lcyBtYXkg
+dmFyeSBpbiBkaWZmZXJlbnQgU29DIGFzIHBlciBTb0MgcmVxdWlyZW1lbnRzLg0KPiANCj4gQWRk
+aW5nIFBla29uIEd1cHRhIHdobyBoYWQgd29ya2VkIGluIFNpbGljb24gdGVhbSBiZWZvcmUuDQo+
+IA0KW1Bla29uXTogTXkgb3BpbmlvbiBoZXJlLi4NClVuaWZvcm1pdHkgaW4gY29udHJvbCBtb2R1
+bGUgY2Fubm90IGJlIGd1YXJhbnRlZWQsIG5laXRoZXIgaW4gcmVnaXN0ZXINCm9mZnNldHMgbm9y
+IHRoZWlyIGZ1bmN0aW9uYWxpdHkuIFVuaWZvcm1pdHkgaXMgdXN1YWxseSBtYWludGFpbmVkIHRp
+bGwgdGhlDQpwb2ludCBzYW1lIHBlcnNvbiBpcyB3cml0aW5nIHRoZSBzcGVjLCBvciBpdOKAmXMg
+YSBkZXJpdmF0aXZlIGRldmljZS4NCkNvbnRyb2wtbW9kdWxlIHNob3VsZCBub3QgYmUgY2F0ZWdv
+cml6ZWQgYXMgSVAsIGluc3RlYWQgaXTigJlzIGEgZ3JvdXAgb2YNCm1pc2NlbGxhbmVvdXMgbG9n
+aWMgdXN1YWxseSBjb25zaXN0aW5nIG9mIGZvbGxvd2luZzoNCihhKSBTb0MgYnVnLWZpeGVzIGFj
+cm9zcyBzaWxpY29uIHJldmlzaW9ucy4NCihiKSBTb0Mgc3BlY2lmaWMgbG9naWMgbGlrZSBkZXZp
+Y2VfdHlwZSwgSlRBRy1JRC4NCihjKSBJUCBidWcgZml4ZXMgd2hpY2ggY291bGQgbm90IGJlIGFj
+Y29tbW9kYXRlZCBpbiBJUCBhZGRyZXNzLW1hcC4NCihkKSBJUCBsb2dpYyB3aGljaCBkZXBlbmRz
+IG9uIFNvQyBjb25maWd1cmF0aW9ucy4NCg0KRHVlIHRvIHRoaXMgdW4tZGV0ZXJtaW5pc3RpYyBj
+b21wb3NpdGlvbiBvZiBjb250cm9sLW1vZHVsZSwgaGF2aW5nIA0KYSBkZWRpY2F0ZWQgZHJpdmVy
+IGZvciBjb250cm9sIG1vZHVsZSBtaWdodCBub3Qgd29yayBlaXRoZXIsIGFzIGl0DQpoYXMgdG8g
+YmUgdXBkYXRlZCB8IHJlLXdyaXR0ZW4gZm9yIGV2ZXJ5IG5ldyBkZXZpY2UuDQoNClNvLCBGb2xs
+b3dpbmcgY2FuIGJlIHVzZWQgYXMgZ3VpZGVsaW5lIHRvIGRldGVybWluZSBjb21wYXRpYmlsaXR5
+DQpzdHJpbmcgZm9yIERUIGJpbmRpbmdzLi4NCi0gSWYgYmluZGluZyBtYXBzIHRvIChhKSBhbmQg
+KGMpLCAuaS5lLiwgYnVnLWZpeGVzIGZvciBTb0Mgb3IgSVAsIA0KIHRoZW4gaXRzIG1vc3QgbGlr
+ZWx5IHRoYXQgdGhlc2Ugd291bGQgY2hhbmdlIGVpdGhlciBpbiBuZXh0IHNpbGljb24NCiByZXZp
+c2lvbiBvciBpbiBuZXh0IGRldmljZXMuIEhlbmNlIHN1Y2ggYmluZGluZ3Mgc2hvdWxkIHVzZSAq
+bm90Kg0KIHVzZSBJUCBjb21wYXRpYmlsaXR5IHN0cmluZ3MsIHRoZXkgX21heV8gdXNlIFNvQy1u
+YW1lIGJhc2VkDQogY29tcGF0aWJpbGl0eSBzdHJpbmcuDQoNCi0gRWxzZSBpZiBiaW5kaW5nIG1h
+cHMgdG8gKGIpLC5pLmUuLCBTb0Mgc3BlY2lmaWMgY29uZmlndXJhdGlvbnMuDQogdGhlbiB0aGVp
+ciBvZmZzZXRzIGFuZCBmdW5jdGlvbmFsaXR5IHNob3VsZCByZW1haW4gc2FtZSBhY3Jvc3MgdGhl
+DQogZmFtaWx5IG9mIGRldmljZXMgYXQtbGVhc3QsIHNvIGl0IHNob3VsZCB1c2UgU29DLW5hbWUg
+YmFzZWQNCiBjb21wYXRpYmlsaXR5IHN0cmluZy4NCi0gQW5kIGlmIGJpbmRpbmcgbWFwcyB0byAo
+ZCksIC5pLmUuLCBJUCBmZWF0dXJlIGJ1dCBkZXBlbmRpbmcgb24gU29DDQogVGhlbiBpdCBjYW4g
+dXNlIElQIGJhc2VkIGNvbXBhdGliaWxpdHkgc3RyaW5nLCBhbG9uZyB3aXRoIElQIHZlcnNpb24u
+DQoNCihzYW1lIGFwcHJvYWNoIGNhbiBiZSB1c2VkIGZvciBDUFNXIGJpbmRpbmcgdXNlZCBoZXJl
+LA0KDQp3aXRoIHJlZ2FyZHMsIHBla29uDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
