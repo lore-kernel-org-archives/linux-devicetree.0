@@ -1,52 +1,38 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH -next] dma: cppi41: fix error return code in
- cppi41_dma_probe()
-Date: Mon, 26 Aug 2013 14:00:28 +0530
-Message-ID: <20130826083028.GL2748@intel.com>
-References: <CAPgLHd_uc8t_Q7QAq+FzdMZjo0VRYfqXMfk=zy5O+LwWhhGsTQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPgLHd_uc8t_Q7QAq+FzdMZjo0VRYfqXMfk=zy5O+LwWhhGsTQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>, Felipe Balbi <balbi@ti.com>
-Cc: djbw@fb.com, grant.likely@linaro.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v5 1/6] ARM: dts: add mixer clocks to mixer node for Exynos5250
+Date: Mon, 26 Aug 2013 15:08:16 +0530
+Message-ID: <1377509901-9467-2-git-send-email-rahul.sharma@samsung.com>
+References: <1377509901-9467-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1377509901-9467-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Sean Paul <seanpaul@chromium.org>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2013 at 10:59:15AM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-> 
-> Fix to return -EINVAL in the irq parse and map error handling
-> case instead of 0, as done elsewhere in this function.
-> 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+From: Sean Paul <seanpaul@chromium.org>
 
-This need to go thru USB tree
+This patch adds the mixer clocks to the mixer node in the
+exynos 5250 dts file.
 
-Acked-by Vinod Koul <vinod.koul@intel.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+---
+ arch/arm/boot/dts/exynos5250.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
 
-~Vinod
-> ---
->  drivers/dma/cppi41.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
-> index 5dcebca..49ea05a 100644
-> --- a/drivers/dma/cppi41.c
-> +++ b/drivers/dma/cppi41.c
-> @@ -973,8 +973,10 @@ static int cppi41_dma_probe(struct platform_device *pdev)
->  		goto err_chans;
->  
->  	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
-> -	if (!irq)
-> +	if (!irq) {
-> +		ret = -EINVAL;
->  		goto err_irq;
-> +	}
->  
->  	cppi_writel(USBSS_IRQ_PD_COMP, cdd->usbss_mem + USBSS_IRQ_ENABLER);
->  
-> 
-
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 1eec646..dcb6c03 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -622,6 +622,8 @@
+ 		compatible = "samsung,exynos5250-mixer";
+ 		reg = <0x14450000 0x10000>;
+ 		interrupts = <0 94 0>;
++		clocks = <&clock 343>, <&clock 136>;
++		clock-names = "mixer", "sclk_hdmi";
+ 	};
+ 
+ 	dp_phy: video-phy@10040720 {
 -- 
+1.7.10.4
