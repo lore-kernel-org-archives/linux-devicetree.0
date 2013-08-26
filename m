@@ -1,48 +1,63 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC PATCH 2/3] pinctrl: at91: add support for generic pinconf
-Date: Mon, 26 Aug 2013 10:53:54 -0600
-Message-ID: <521B8822.50304@wwwdotorg.org>
-References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com> <1377380259-11290-1-git-send-email-b.brezillon@overkiz.com>
+Subject: Re: [PATCH V3] gpio: New driver for LSI ZEVIO SoCs
+Date: Mon, 26 Aug 2013 10:57:34 -0600
+Message-ID: <521B88FE.4070000@wwwdotorg.org>
+References: <1375879989-18606-1-git-send-email-fabian@ritter-vogt.de> <5217BB73.8050907@wwwdotorg.org> <op.w2d04ftpu7prd4@fabians-laptop.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1377380259-11290-1-git-send-email-b.brezillon@overkiz.com>
+In-Reply-To: <op.w2d04ftpu7prd4@fabians-laptop.fritz.box>
 Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Fabian Vogt <fabian@ritter-vogt.de>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, grant.likely@linaro.org, pawel.moll@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/24/2013 03:37 PM, Boris BREZILLON wrote:
-> Add support for generic pin configuration to pinctrl-at91 driver.
+On 08/25/2013 01:44 PM, Fabian Vogt wrote:
+> Hi,
+> 
+>> On 08/07/2013 06:53 AM, Fabian Vogt wrote:
+>>> This driver supports the GPIO controller found in LSI ZEVIO SoCs.
+>>> It has been successfully tested on a TI nspire CX calculator.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-zevio.txt
+>>> b/Documentation/devicetree/bindings/gpio/gpio-zevio.txt
+>>
+>>> +Zevio GPIO controller
+>>> +
+>>> +Required properties:
+>>> +- compatible = "lsi,zevio-gpio"
+>>
+>> Is there only one zevio chip, or a series? Is "zevio" the full name of
+>> the chip, including any version number?
+>
+> We don't know, it's a relableled chip with
+> TI-NSPIRE / L9A0702 / TI-NS2006A-0 / LSI LOGIC / ZEVIO / U 0714 /
+> WYJ14052-1
+> on it. But this driver should match the other drivers (lsi,zevio-intc,
+> lsi,zevio-timer).
 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+OK, I guess that's fine then. I suppose if we find "zevio2" chips, we
+can always use that for the compatible value later.
 
->  Required properties for iomux controller:
-> -- compatible: "atmel,at91rm9200-pinctrl"
-> +- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinctrl".
+>>> +- reg = <BASEADDR SIZE>
+>>> +- #gpio-cells = <2>
+>>> +- gpio-controller;
+>>> +
+>>> +Optional:
+>>> +- #ngpios = <32>: Number of GPIOs. Defaults to 32 if absent
+>>
+>> Perhaps one can derive that from the compatible value? The fact this
+>> property exists implies there's more than one zevio chip, so perhaps
+>> each should have an explicit compatible value described above?
+>
+> I added it just for someone who maybe needs it. It's only two lines and
+> maybe
+> it'll be helpful for someone. We don't know whether some similiar or
+> this controller
+> exist in different configurations (pin count, section sice, register
+> layout).
+> Also I hate hardcoded values which require a recompile to change..
 
-You seem to also be adding a second chip name to the list here, which is
-more than the patch subject/description imply you're doing...
-
-> +  Add "generic-pinconf" to the compatible string list to use the generic pin
-> +  configuration syntax.
-
-"generic-pinconf" is too generic of a compatible value for this binding
-to define.
-
-Instead, I think you want to either:
-
-a)
-
-Use compatible="atmel,at91rm9200-pinctrl" for the old binding,
-use compatible="atmel,at91rm9200-pinctrl-generic" for the new binding
-
-or:
-
-b)
-
-Define Boolean property atmel,generic-pinconf (perhaps a better name
-could be chosen?). If it's not present, parse the node assuming the old
-binding. If it is present, parse the node assuming the new binding.
+If there's no reason for this property, I think we should remove it.
 
