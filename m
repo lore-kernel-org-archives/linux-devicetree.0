@@ -1,78 +1,127 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: SHMobile Compatibility String Inconsistencies
-Date: Mon, 26 Aug 2013 18:08:52 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1308261750340.1767@axis700.grange>
-References: <20130822054639.GE11086@verge.net.au> <20130823021111.GA2792@voom.redhat.com>
- <1721850.l3ebodSrXr@avalon> <20130824021323.GC5181@verge.net.au>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH RFC 3/5] ARM: samsung: add clock setup for FIMC and FIMD
+Date: Mon, 26 Aug 2013 18:19:18 +0200
+Message-ID: <1445676.NMCyFEC5q4@amdc1032>
+References: <1377517114-20222-1-git-send-email-m.krawczuk@partner.samsung.com>
+ <1377517114-20222-4-git-send-email-m.krawczuk@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130824021323.GC5181@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Gibson <david@gibson.dropbear.id.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1377517114-20222-4-git-send-email-m.krawczuk@partner.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+Cc: kgene.kim@samsung.com, kyungmin.park@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, mturquette@linaro.org, thomas.abraham@linaro.org, t.stanislaws@samsung.com, m.chehab@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samung.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 24 Aug 2013, Simon Horman wrote:
 
-> On Fri, Aug 23, 2013 at 01:31:31PM +0200, Laurent Pinchart wrote:
-> > Hi David,
-> > 
-> > On Friday 23 August 2013 12:11:11 David Gibson wrote:
-> > > On Thu, Aug 22, 2013 at 02:46:40PM +0900, Simon Horman wrote:
-> > > > Hi Laurent, Hi Guennadi, Hi All,
-> > > > 
-> > > > Olof has brought to my attention that there is some inconsistency
-> > > > in the way that compatibility strings for SHMobile are named and he
-> > > > has asked us to clean things up for v3.12.
-> > > > 
-> > > > Looking through arch/arm/boot/dts/ I see that we have:
-> > > > 
-> > > > 1. {gpio,pfc}-r8aXXXX and;
+Hi,
 
-Add shdma-<soc> to the above
-
-> > > > 2. r8aXXXX-sdhi
-> > > > 
-> > > > The inconsistency that Olof has asked us to resolve is that we
-> > > > should either use r8aXXXX- or -r8aXXXX. Not both.
-
-Given the 3:1 score the choice seems rather simple to me. So, if we do
-have to make those consistent, let's change SDHI.
-
-> > > > It seems to me that neither option is inherently better than the other
-> > > > so we should just choose the path of least resistance to make things
-> > > > consistent.
-> > > > 
-> > > > Laurent, Guennadi, do you have any opinions on if it would
-> > > > be easier to change the GPIO and PFC compatibility strings;
-> > > > or to change the SDHI compatibility strings?
-> > > > 
-> > > > Ideally I would like you to come to some sort of consensus and send
-> > > > patches.
-> > > 
-> > > So, by all means clean this up in the dts.
-> > > 
-> > > BUT, in keeping with the recent discussions on improving the DT
-> > > process, the corresponding drivers must continue to recognize both
-> > > forms, so that old DTs will still work correctly.
-> > 
-> > Given the early state of DT support in arm/mach-shmobile, I'm pretty sure we 
-> > have no DT-based systems in the wild. The old compatibility string could in my 
-> > opinion just be dropped.
+On Monday, August 26, 2013 01:38:32 PM Mateusz Krawczuk wrote:
+> This patch adds code that sets correct parents and rates for clocks
+> used by FIMC and FIMD on Goni board.
 > 
-> I tend to agree, though I don't mind either way.
+> Signed-off-by: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+> ---
+>  arch/arm/mach-s5pv210/mach-goni.c | 48 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+> 
+> diff --git a/arch/arm/mach-s5pv210/mach-goni.c b/arch/arm/mach-s5pv210/mach-goni.c
+> index e5cd9fb..309b5ad 100644
+> --- a/arch/arm/mach-s5pv210/mach-goni.c
+> +++ b/arch/arm/mach-s5pv210/mach-goni.c
+> @@ -55,6 +55,7 @@
+>  #include <media/s5p_fimc.h>
+>  #include <media/noon010pc30.h>
+>  
+> +#include <linux/clk.h>
+>  #include "common.h"
+>  
+>  /* Following are default values for UCON, ULCON and UFCON UART registers */
+> @@ -195,6 +196,49 @@ static struct platform_device goni_spi_gpio = {
+>  	},
+>  };
+>  
+> +static void set_fimd_clock(void)
 
-So, what path should we choose? I see 2 SDHI users in your current "devel" 
-brunch: sh73a0 (kzm9g) and r8a73a4 (ape6evm). Should we make a single 
-patch, changing the driver and both users and push it via ARM with Chris' 
-ack or shall we add new compats, switch .dtsi's, remove old compats - over 
-2 kernel versions? Can we still get anything for this into 3.12 or is it 
-too late? Would it be a "fix" enough for -rc2 / late -rc1?
+It can be marked as __init.
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+> +{
+> +	struct clk *lcd_clk, *parent_clk;
+> +
+> +	lcd_clk = clk_get(NULL, "sclk_fimd");
+> +	parent_clk = clk_get(NULL, "mout_mpll");
+> +	clk_set_parent(lcd_clk, parent_clk);
+> +	clk_set_rate(lcd_clk, clk_get_rate(parent_clk)/3);
+> +
+> +	clk_put(parent_clk);
+> +	clk_put(lcd_clk);
+> +}
+> +
+> +static void set_fimc_clock(void)
+
+ditto
+
+> +{
+> +	struct clk *cam0_clk, *cam1_clk, *fimc2_clk, *fimc1_clk,
+> +			*fimc0_clk, *parent_clk, *vpll_clk, *csis_clk;
+> +
+> +	parent_clk = clk_get(NULL, "mout_mpll");
+> +	vpll_clk = clk_get(NULL, "mout_vpll");
+> +	cam0_clk = clk_get(NULL, "mout_cam0");
+> +	cam1_clk = clk_get(NULL, "mout_cam1");
+> +	fimc2_clk = clk_get(NULL, "mout_fimc2");
+> +	fimc1_clk = clk_get(NULL, "mout_fimc1");
+> +	fimc0_clk = clk_get(NULL, "mout_fimc0");
+> +	csis_clk = clk_get(NULL, "mout_csis");
+
+Shouldn't you check clk_get() return value with IS_ERR()?
+
+You can do one big check here and than just do clk_put() if !IS_ERR(), i.e.
+
+if (IS_ERR(parent_clk) || IS_ERR(vpll_clk) || ...)
+...
+
+clk_set_parent()
+...
+
+if (!IS_ERR(parent_clk))
+	clk_put(parent_clk);
+...
+
+> +	clk_set_parent(cam0_clk, vpll_clk);
+> +	clk_set_parent(cam1_clk, vpll_clk);
+> +	clk_set_parent(fimc2_clk, parent_clk);
+> +	clk_set_parent(fimc1_clk, parent_clk);
+> +	clk_set_parent(fimc0_clk, parent_clk);
+> +	clk_set_parent(csis_clk, parent_clk);
+> +
+> +	clk_put(parent_clk);
+> +	clk_put(vpll_clk);
+> +	clk_put(cam0_clk);
+> +	clk_put(cam1_clk);
+> +	clk_put(fimc2_clk);
+> +	clk_put(fimc1_clk);
+> +	clk_put(fimc0_clk);
+> +}
+> +
+>  /* KEYPAD */
+>  static uint32_t keymap[] __initdata = {
+>  	/* KEY(row, col, keycode) */
+> @@ -931,6 +975,10 @@ static void __init goni_machine_init(void)
+>  	s3c_i2c2_set_platdata(&i2c2_data);
+>  	i2c_register_board_info(2, i2c2_devs, ARRAY_SIZE(i2c2_devs));
+>  
+> +	/* FIMD AND FIMC set clock config */
+> +	set_fimd_clock();
+> +	set_fimc_clock();
+> +
+>  	/* PMIC */
+>  	goni_pmic_init();
+>  	i2c_register_board_info(AP_I2C_GPIO_PMIC_BUS_4, i2c_gpio_pmic_devs,
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
