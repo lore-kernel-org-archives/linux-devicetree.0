@@ -1,316 +1,43 @@
-From: boris brezillon <b.brezillon@overkiz.com>
-Subject: Re: [RFC PATCH 2/3] pinctrl: at91: add support for generic pinconf
-Date: Mon, 26 Aug 2013 21:48:50 +0200
-Message-ID: <521BB122.2010109@overkiz.com>
-References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com> <1377380259-11290-1-git-send-email-b.brezillon@overkiz.com> <20130826175333.GF18627@ns203013.ovh.net> <521BA235.1090104@overkiz.com> <20130826191843.GG18627@ns203013.ovh.net>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 4/4] Documentation: Add device tree bindings for Freescale
+ FTM PWM
+Date: Mon, 26 Aug 2013 14:01:17 -0600
+Message-ID: <521BB40D.7040001@wwwdotorg.org>
+References: <1377054462-6283-1-git-send-email-Li.Xiubo@freescale.com> <1377054462-6283-5-git-send-email-Li.Xiubo@freescale.com> <1473340.OXSHEp7d4P@flatron> <1DD289F6464F0949A2FCA5AA6DC23F827D2244@039-SN2MPN1-013.039d.mgd.msft.net> <20130822062610.GR31036@pengutronix.de> <20130823073612.GB3535@ulmo> <5217B807.7020800@wwwdotorg.org> <1DD289F6464F0949A2FCA5AA6DC23F827E11AC@039-SN2MPN1-012.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130826191843.GG18627@ns203013.ovh.net>
+In-Reply-To: <1DD289F6464F0949A2FCA5AA6DC23F827E11AC@039-SN2MPN1-012.039d.mgd.msft.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Xiubo Li-B47053 <B47053@freescale.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Guo Shawn-R65073 <r65073@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 26/08/2013 21:18, Jean-Christophe PLAGNIOL-VILLARD a =E9crit :
-> On 20:45 Mon 26 Aug     , boris brezillon wrote:
->> Hello Jean-Christophe,
+On 08/25/2013 11:35 PM, Xiubo Li-B47053 wrote:
+>> Subject: Re: [PATCH 4/4] Documentation: Add device tree bindings for
+...
+>>> Why do you need to manipulate the pinctrl to en/disable a channel?
 >>
->> Le 26/08/2013 19:53, Jean-Christophe PLAGNIOL-VILLARD a =E9crit :
->>> On 23:37 Sat 24 Aug     , Boris BREZILLON wrote:
->>>> Add support for generic pin configuration to pinctrl-at91 driver.
->>>>
->>>> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
->>>> ---
->>>>   .../bindings/pinctrl/atmel,at91-pinctrl.txt        |   43 +++-
->>>>   drivers/pinctrl/Kconfig                            |    2 +-
->>>>   drivers/pinctrl/pinctrl-at91.c                     |  265 ++++++=
-++++++++++++--
->>>>   3 files changed, 289 insertions(+), 21 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-=
-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinc=
-trl.txt
->>>> index 7ccae49..7a7c0c4 100644
->>>> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl=
-=2Etxt
->>>> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl=
-=2Etxt
->>>> @@ -18,7 +18,9 @@ mode) this pin can work on and the 'config' conf=
-igures various pad settings
->>>>   such as pull-up, multi drive, etc.
->>>>   Required properties for iomux controller:
->>>> -- compatible: "atmel,at91rm9200-pinctrl"
->>>> +- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pin=
-ctrl".
->>>> +  Add "generic-pinconf" to the compatible string list to use the =
-generic pin
->>>> +  configuration syntax.
->>>>   - atmel,mux-mask: array of mask (periph per bank) to describe if=
- a pin can be
->>>>     configured in this periph mode. All the periph and bank need t=
-o be describe.
->>>> @@ -83,6 +85,11 @@ Required properties for pin configuration node:
->>>>     setting. The format is atmel,pins =3D <PIN_BANK PIN_BANK_NUM P=
-ERIPH CONFIG>.
->>>>     The PERIPH 0 means gpio, PERIPH 1 is periph A, PERIPH 2 is per=
-iph B...
->>>>     PIN_BANK 0 is pioA, PIN_BANK 1 is pioB...
->>>> +  Dependending on the presence of the "generic-pinconf" string in=
- the
->>>> +  compatible property the 4th cell is:
->>>> +   * a phandle referencing a generic pin config node (refer to
->>>> +     pinctrl-bindings.txt)
->>>> +   * an integer defining the pin config (see the following descri=
-ption)
->>>>   Bits used for CONFIG:
->>>>   PULL_UP		(1 << 0): indicate this pin need a pull up.
->>>> @@ -132,6 +139,40 @@ pinctrl@fffff400 {
->>>>   	};
->>>>   };
->>>> +or
->>>> +
->>>> +pinctrl@fffff400 {
->>>> +	#address-cells =3D <1>;
->>>> +	#size-cells =3D <1>;
->>>> +	ranges;
->>>> +	compatible =3D "atmel,at91rm9200-pinctrl", "generic-pinconf", "s=
-imple-bus";
->>> nack your break the backword compatibility
->>>
->>> if we use a old kernel with this new dt nothing will work
->>> as the old kernel will never known the the "generic-pinconf" means =
-anything
->> Your're right, I didn't think of this case (old kernel with new dt).
+>> This is because in Vybrid VF610 TOWER board, there are 4 leds, and each
+>> led's one point(diode's positive pole) is connected to 3.3V, and the
+>> other point is connected to pwm's one channel. When the 4 pinctrls are
+>> configured as enable at the same time, the 4 pinctrls is low valtage, and
+>> the 4 leds will be lighted up as default, then when you enable/disable
+>> one led will effects others.
 >>
->>> if we want to use generic-pinconf support you *CAN NOT* use atmel,a=
-t91rm9200-pinctrl
->>> in the compatible
->> What about using "atmel,at91xx-pinconf" instead of
->> "atmel,at91xx-pinctrl" to notify
->> the generic pinconf compatibility (as done by single pinctrl driver)=
- ?
-> no as the rm9200 IP and sam9x5 IP are only partially compatible
-> you MUST distinguish them
-
-What I meant is use the "-pinctrl" and "-pinconf" suffixes to=20
-differentiate between native and generic
-pinconf bindings and keep the IP names as it is right now (replace xx=20
-with the IP name) to differentiate
-the IP versions.
-
-This gives us the following compatible strings:
-
-"atmel,at91rm9200-pinctrl"
-"atmel,at91rm9200-pinconf"
-"atmel,at91sam9x5-pinctrl"
-"atmel,at91sam9x5-pinconf"
-
->>>> +	reg =3D <0xfffff400 0x600>;
->>>> +
->>>> +	atmel,mux-mask =3D <
->>>> +	      /*    A         B     */
->>>> +	       0xffffffff 0xffc00c3b  /* pioA */
->>>> +	       0xffffffff 0x7fff3ccf  /* pioB */
->>>> +	       0xffffffff 0x007fffff  /* pioC */
->>>> +	      >;
->>>> +
->>>> +	pcfg_none: pcfg_none {
->>>> +		bias-disable;
->>>> +	};
->>>> +
->>>> +	pcfg_pull_up: pcfg_pull_up {
->>>> +		bias-pullup;
->>>> +	};
->>>> +
->>>> +	/* shared pinctrl settings */
->>>> +	dbgu {
->>>> +		pinctrl_dbgu: dbgu-0 {
->>>> +			atmel,pins =3D
->>>> +				<1 14 0x1 &pcfg_none		/* PB14 periph A */
->>>> +				 1 15 0x1 &pcfg_pull_up>;	/* PB15 periph A with pullup */
->>>> +		};
->>>> +	};
->>>> +};
->>>> +
->>>>   dbgu: serial@fffff200 {
->>>>   	compatible =3D "atmel,at91sam9260-usart";
->>>>   	reg =3D <0xfffff200 0x200>;
->>>> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
->>>> index bdb1a87..55a4f2c 100644
->>>> --- a/drivers/pinctrl/Kconfig
->>>> +++ b/drivers/pinctrl/Kconfig
->>>> @@ -54,7 +54,7 @@ config PINCTRL_AT91
->>>>   	depends on OF
->>>>   	depends on ARCH_AT91
->>>>   	select PINMUX
->>>> -	select PINCONF
->>>> +	select GENERIC_PINCONF
->>>>   	help
->>>>   	  Say Y here to enable the at91 pinctrl driver
->>>> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinc=
-trl-at91.c
->>>> index 7cce066..1994dd2 100644
->>>> --- a/drivers/pinctrl/pinctrl-at91.c
->>>> +++ b/drivers/pinctrl/pinctrl-at91.c
->>>> @@ -23,6 +23,7 @@
->>>>   #include <linux/gpio.h>
->>>>   #include <linux/pinctrl/machine.h>
->>>>   #include <linux/pinctrl/pinconf.h>
->>>> +#include <linux/pinctrl/pinconf-generic.h>
->>>>   #include <linux/pinctrl/pinctrl.h>
->>>>   #include <linux/pinctrl/pinmux.h>
->>>>   /* Since we request GPIOs from ourself */
->>>> @@ -32,6 +33,7 @@
->>>>   #include <mach/at91_pio.h>
->>>>   #include "core.h"
->>>> +#include "pinconf.h"
->>>>   #define MAX_NB_GPIO_PER_BANK	32
->>>> @@ -85,6 +87,21 @@ enum at91_mux {
->>>>   	AT91_MUX_PERIPH_D =3D 4,
->>>>   };
->>>> +struct at91_generic_pinconf {
->>>> +	unsigned long	*configs;
->>>> +	unsigned int	nconfigs;
->>>> +};
->>>> +
->>>> +enum at91_pinconf_type {
->>>> +	AT91_PINCONF_NATIVE,
->>>> +	AT91_PINCONF_GENERIC,
->>>> +};
->>>> +
->>>> +union at91_pinconf {
->>>> +	unsigned long			native;
->>>> +	struct at91_generic_pinconf	generic;
->>>> +};
->>>> +
->>>>   /**
->>>>    * struct at91_pmx_pin - describes an At91 pin mux
->>>>    * @bank: the bank of the pin
->>>> @@ -93,10 +110,11 @@ enum at91_mux {
->>>>    * @conf: the configuration of the pin: PULL_UP, MULTIDRIVE etc.=
-=2E.
->>>>    */
->>>>   struct at91_pmx_pin {
->>>> -	uint32_t	bank;
->>>> -	uint32_t	pin;
->>>> -	enum at91_mux	mux;
->>>> -	unsigned long	conf;
->>>> +	uint32_t		bank;
->>>> +	uint32_t		pin;
->>>> +	enum at91_mux		mux;
->>>> +	enum at91_pinconf_type	conftype;
->>>> +	union at91_pinconf	conf;
->>>>   };
->>>>   /**
->>>> @@ -278,8 +296,16 @@ static int at91_dt_node_to_map(struct pinctrl=
-_dev *pctldev,
->>>>   		new_map[i].type =3D PIN_MAP_TYPE_CONFIGS_PIN;
->>>>   		new_map[i].data.configs.group_or_pin =3D
->>>>   				pin_get_name(pctldev, grp->pins[i]);
->>>> -		new_map[i].data.configs.configs =3D &grp->pins_conf[i].conf;
->>>> -		new_map[i].data.configs.num_configs =3D 1;
->>>> +		if (!pctldev->desc->confops->is_generic) {
->>>> +			new_map[i].data.configs.configs =3D
->>>> +				&grp->pins_conf[i].conf.native;
->>>> +			new_map[i].data.configs.num_configs =3D 1;
->>>> +		} else {
->>>> +			new_map[i].data.configs.configs =3D
->>>> +				grp->pins_conf[i].conf.generic.configs;
->>>> +			new_map[i].data.configs.num_configs =3D
->>>> +				grp->pins_conf[i].conf.generic.nconfigs;
->>>> +		}
->>>>   	}
->>>>   	dev_dbg(pctldev->dev, "maps: function %s group %s num %d\n",
->>>> @@ -325,7 +351,7 @@ static void at91_mux_disable_interrupt(void __=
-iomem *pio, unsigned mask)
->>>>   static unsigned at91_mux_get_pullup(void __iomem *pio, unsigned =
-pin)
->>>>   {
->>>> -	return (readl_relaxed(pio + PIO_PUSR) >> pin) & 0x1;
->>>> +	return !((readl_relaxed(pio + PIO_PUSR) >> pin) & 0x1);
->>>>   }
->>>>   static void at91_mux_set_pullup(void __iomem *pio, unsigned mask=
-, bool on)
->>>> @@ -407,6 +433,16 @@ static enum at91_mux at91_mux_get_periph(void=
- __iomem *pio, unsigned mask)
->>>>   	return select + 1;
->>>>   }
->>>> +static bool at91_mux_get_output(void __iomem *pio, unsigned pin)
->>>> +{
->>>> +	return (readl_relaxed(pio + PIO_OSR) >> pin) & 0x1;
->>>> +}
->>>> +
->>>> +static void at91_mux_set_output(void __iomem *pio, unsigned mask,=
- bool is_on)
->>>> +{
->>>> +	__raw_writel(mask, pio + (is_on ? PIO_OER : PIO_ODR));
->>>> +}
->>>> +
->>>>   static bool at91_mux_get_deglitch(void __iomem *pio, unsigned pi=
-n)
->>>>   {
->>>>   	return (__raw_readl(pio + PIO_IFSR) >> pin) & 0x1;
->>>> @@ -445,7 +481,7 @@ static void at91_mux_pio3_set_debounce(void __=
-iomem *pio, unsigned mask,
->>>>   static bool at91_mux_pio3_get_pulldown(void __iomem *pio, unsign=
-ed pin)
->>>>   {
->>>> -	return (__raw_readl(pio + PIO_PPDSR) >> pin) & 0x1;
->>>> +	return !((__raw_readl(pio + PIO_PPDSR) >> pin) & 0x1);
->>>>   }
->>>>   static void at91_mux_pio3_set_pulldown(void __iomem *pio, unsign=
-ed mask, bool is_on)
->>>> @@ -492,12 +528,17 @@ static struct at91_pinctrl_mux_ops at91sam9x=
-5_ops =3D {
->>>>   static void at91_pin_dbg(const struct device *dev, const struct =
-at91_pmx_pin *pin)
->>>>   {
->>>>   	if (pin->mux) {
->>>> -		dev_dbg(dev, "pio%c%d configured as periph%c with conf =3D 0x%l=
-u\n",
->>>> -			pin->bank + 'A', pin->pin, pin->mux - 1 + 'A', pin->conf);
->>>> +		dev_dbg(dev, "pio%c%d configured as periph%c",
->>>> +			pin->bank + 'A', pin->pin, pin->mux - 1 + 'A');
->>>>   	} else {
->>>> -		dev_dbg(dev, "pio%c%d configured as gpio with conf =3D 0x%lu\n"=
-,
->>>> -			pin->bank + 'A', pin->pin, pin->conf);
->>>> +		dev_dbg(dev, "pio%c%d configured as gpio",
->>>> +			pin->bank + 'A', pin->pin);
->>>>   	}
->>>> +
->>>> +	if (pin->conftype =3D=3D AT91_PINCONF_NATIVE)
->>>> +		dev_dbg(dev, " with conf =3D 0x%lu\n", pin->conf.native);
->>>> +	else
->>>> +		dev_dbg(dev, "\n");
->>> do not change debug output
->> I do not change the debug output for the native pinconf binding, but
->> I cannot print the config as
->> a single interger in hex format if the generic pinconf is used.
->> I must translate each config entry to a "property=3Dvalue" string, o=
-r
->> translate the generic config
->> array to a single native config integer.
+>> These pinctrls are belong to pwm, and I don't think led or other customer
+>> could control them directly.
+>> So, here I authorize the 4 pinctrls to each channel controls.
 >>
->> Do you have something easier in mind ?
-> no but I do not want to brake current automatic test tools
->
-> propose something with this in mind
-Okay.
+> "
+> For the reason above, I have to control the pinctrls separately.
+> 
+> If all the pinctrls set as default state, the 8 pinctrls must be controlled together.
+> And the 4 leds will all be lighted up as default and will influence each other.
 
-If I understand it correctly you want to have the same traces for both=20
-pinconf dt-bindings
-(generic and native).
-
-I am right ?
-
-If so, this only leaves us the 2nd solution: convert generic pinconf to=
-=20
-native pinconf before printing.
-
->
-> Best Regards,
-> J.
+Sorry, that still doesn't make much sense. Either way though, having
+separate pinctrl setup for a single device isn't going to work. You'll
+either need to have all combinations of 4 (8?) PWMs represented as
+pinctrl states(!), or register separate PWM devices so that they get
+independant pinctrl states.
