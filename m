@@ -1,64 +1,59 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Mon, 26 Aug 2013 13:29:07 +0200
-Message-ID: <521B3C03.8080508@gaisler.com>
-References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de> <52160F22.2080701@gaisler.com> <201308261256.00870.poeschel@lemonage.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201308261256.00870.poeschel@lemonage.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, grant.likely@linaro.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, ian.campbell@citrix.com, galak@codeaurora.org, pawel.moll@arm.com, tomasz.figa@gmail.com, swarren@wwwdotorg.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+From: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+Subject: [PATCH RFC 0/5] ARM: s5pv210: move to common clk framework
+Date: Mon, 26 Aug 2013 13:38:29 +0200
+Message-ID: <1377517114-20222-1-git-send-email-m.krawczuk@partner.samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: kgene.kim@samsung.com
+Cc: kyungmin.park@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, mturquette@linaro.org, thomas.abraham@linaro.org, t.stanislaws@samsung.com, m.chehab@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samung.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2013-08-26 12:56, Lars Poeschel wrote:
-> Hi Andreas!
->
-> On Thursday 22 August 2013 at 15:16:18, Andreas Larsson wrote:
->> On 2013-08-21 15:38, Lars Poeschel wrote:
->>> +static void of_gpio_scan_irq_lines(const struct device_node *const
->>> node, +				   struct device_node *const gcn,
->>> +				   struct irq_domain *const irq_domain,
->>> +				   const u32 intsize,
->>> +				   const struct gpio_chip * const gc,
->>> +				   bool request)
->>> +{
->>> +	struct device_node *child;
->>> +	struct device_node *irq_parent;
->>> +	const __be32 *intspec;
->>> +	u32 intlen;
->>> +	int ret;
->>> +	int i;
->>> +	irq_hw_number_t hwirq;
->>> +	unsigned int type;
->>> +
->>> +	if (node == NULL)
->>> +		return;
->>> +
->>> +	for_each_child_of_node(node, child) {
->>> +		of_gpio_scan_irq_lines(child, gcn, irq_domain, intsize, gc,
->>> +				       request);
->>> +		/* Check if we have an IRQ parent, else continue */
->>> +		irq_parent = of_irq_find_parent(child);
->>
->> Hi!
->>
->> This call to of_irq_find_parent breaks gpiolib-of for SPARC due to the
->> fact that the function is undefined when !defined(CONFIG_OF_IRQ) &&
->> defined(CONFIG_OF).
->>
->> Defining the empty of_irq_find_parent in include/linux/of_irq.h when
->> !defined(CONFIG_OF_IRQ) instead of the current case when
->> !defined(CONFIG_OF) would solve the immediate compilation problem.
->
-> Is this a bug and should be fixed ?
+This patch series is the new s5pv210 clock implementation
+(using common clk framework).
 
-Well, at least as soon as anyone tries to use in a context that does not 
-exclude SPARC it creates a bug, so I would say so. There is no reason 
-for SPARC to fall between the chairs. This is the first case I am aware 
-of that triggers this.
+This implementation is compatible with device tree definition and board files.
 
-Cheers,
-Andreas
+This patch series is based on linux-next and has been tested on goni and aquila 
+boards using board file.
+
+This patch series require adding new registration method
+for PLL45xx and PLL46xx, which is included in this patch series:
+clk: samsung: pll: Use new registration method for PLL46xx
+http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg21653.html
+clk: samsung: pll: Use new registration method for PLL45xx
+http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg21652.html
+clk: samsung: exynos4: Rename exynos4_plls to exynos4x12_plls
+http://www.spinics.net/lists/arm-kernel/msg268486.html
+
+Mateusz Krawczuk (5):
+  media: s5p-tv: Fix sdo driver to work with CCF
+  media: s5p-tv: Fix mixer driver to work with CCF
+  ARM: samsung: add clock setup for FIMC and FIMD
+  clk: samsung: Add clock driver for s5pc110/s5pv210
+  ARM: s5pv210: Migrate clock handling to Common Clock Framework
+
+ .../bindings/clock/samsung,s5pv210-clock.txt       |  72 ++
+ arch/arm/mach-s5pv210/Kconfig                      |   9 +
+ arch/arm/mach-s5pv210/Makefile                     |   4 +-
+ arch/arm/mach-s5pv210/common.c                     |  22 +
+ arch/arm/mach-s5pv210/common.h                     |  13 +
+ arch/arm/mach-s5pv210/mach-aquila.c                |   1 +
+ arch/arm/mach-s5pv210/mach-goni.c                  |  51 +-
+ arch/arm/mach-s5pv210/mach-smdkc110.c              |   1 +
+ arch/arm/mach-s5pv210/mach-smdkv210.c              |   1 +
+ arch/arm/mach-s5pv210/mach-torbreck.c              |   1 +
+ arch/arm/plat-samsung/Kconfig                      |   2 +-
+ arch/arm/plat-samsung/init.c                       |   2 -
+ drivers/clk/samsung/Makefile                       |   3 +-
+ drivers/clk/samsung/clk-s5pv210.c                  | 732 +++++++++++++++++++++
+ drivers/media/platform/s5p-tv/mixer_drv.c          |  33 +-
+ drivers/media/platform/s5p-tv/sdo_drv.c            |  44 +-
+ include/dt-bindings/clock/samsung,s5pv210-clock.h  | 221 +++++++
+ 17 files changed, 1189 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,s5pv210-clock.txt
+ create mode 100644 drivers/clk/samsung/clk-s5pv210.c
+ create mode 100644 include/dt-bindings/clock/samsung,s5pv210-clock.h
+
+-- 
+1.8.1.2
+
