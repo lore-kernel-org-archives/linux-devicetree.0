@@ -1,27 +1,58 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 0/2] net/cadence/macb: add support for dt phy definition
-Date: Mon, 26 Aug 2013 16:04:50 -0400 (EDT)
-Message-ID: <20130826.160450.2176892065062148718.davem@davemloft.net>
-References: <1377186980-21902-1-git-send-email-b.brezillon@overkiz.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v5 4/6] ARM: dts: add dt nodes for exynos5420 hdmi subsystem
+Date: Tue, 27 Aug 2013 01:29:48 +0200
+Message-ID: <1957834.igXyqAoa6C@flatron>
+References: <1377509901-9467-1-git-send-email-rahul.sharma@samsung.com> <1377509901-9467-5-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377186980-21902-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: b.brezillon@overkiz.com
-Cc: nicolas.ferre@atmel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, linux@arm.linux.org.uk, f.fainelli@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1377509901-9467-5-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Date: Thu, 22 Aug 2013 17:56:20 +0200
+Hi Rahul,
 
-> This patch series adds support for ethernet phy definition using device
-> tree.
+On Monday 26 of August 2013 15:08:19 Rahul Sharma wrote:
+> Add hdmi, mixer, ddc device tree nodes for Exynos 5420 SoC.
 > 
-> This may help in moving some at91 boards to dt (some of them define an
-> interrupt pin).
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts |   15 +++++++++++++++
+>  arch/arm/boot/dts/exynos5420.dtsi         |   19 +++++++++++++++++++
+>  2 files changed, 34 insertions(+)
 > 
-> Tested on samad31ek.
+> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> b/arch/arm/boot/dts/exynos5420-smdk5420.dts index bafba25..140565f
+> 100644
+> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> @@ -61,4 +61,19 @@
+>  		};
+>  	};
+> 
+> +	hdmi@14530000 {
+> +		status = "okay";
+> +		hpd-gpio = <&gpx3 7 0>;
+> +	};
+> +
+> +	i2c_2: i2c@12C80000 {
+> +		samsung,i2c-sda-delay = <100>;
+> +		samsung,i2c-max-bus-freq = <66000>;
+> +		status = "okay";
+> +
+> +		hdmiddc@50 {
+> +			compatible = "samsung,exynos4210-hdmiddc";
+> +			reg = <0x50>;
+> +		};
+> +	};
+>  };
 
-Series applied to net-next, thanks.
+As I mentioned in my reply for previous version of this patch, changes 
+done to this board dts file should be moved to next patch instead and its 
+subject appropriately modified.
+
+Best regards,
+Tomasz
