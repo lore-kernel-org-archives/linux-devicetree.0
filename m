@@ -1,95 +1,94 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH v4 3/5] net: ethernet: cpsw: introduce ti,am3352-cpsw
- compatible string
-Date: Mon, 26 Aug 2013 05:22:54 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9FA84F@DBDE04.ent.ti.com>
-References: <1377267365-24057-1-git-send-email-zonque@gmail.com>
- <1377267365-24057-4-git-send-email-zonque@gmail.com>
- <52177052.1030308@ti.com> <52178E20.5040404@gmail.com>
- <52179448.1020906@ti.com> <52179AA5.3060408@ti.com>
+From: Vikas Sajjan <vikas.sajjan@linaro.org>
+Subject: Re: [PATCH v6 0/3] Add RTC DT node to Exynos5420 SoC and Fix RTC DT
+ node name for Exynos5250
+Date: Mon, 26 Aug 2013 10:53:17 +0530
+Message-ID: <CAD025yR+wc6rPC_MUPM-zLbNYaTHfwdrXoYP1-bMKoJ_QXDRwA@mail.gmail.com>
+References: <1377176343-24859-1-git-send-email-vikas.sajjan@linaro.org>
+ <2046167.RNzj0dOWkj@amdc1227> <CAGm_ybgdC8B==GpCiDwnmWzV+L5hDFWr0ZP3tMq2MHWp-p9E1w@mail.gmail.com>
+ <521A3DAD.4030301@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52179AA5.3060408@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "N, Mugunthan V" <mugunthanvnm@ti.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, Daniel Mack <zonque@gmail.com>, "Nori, Sekhar" <nsekhar@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "Gerlach,
- Dave" <d-gerlach@ti.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "Bedia, Vaibhav" <vaibhav.bedia@ti.com>, "ujhelyi.m@gmail.com" <ujhelyi.m@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <521A3DAD.4030301@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Vikas Sajjan <sajjan.linux@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Patch Tracking <patches@linaro.org>, linaro-kernel@lists.linaro.org, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-PiANCj4gT24gRnJpZGF5IDIzIEF1Z3VzdCAyMDEzIDEwOjI2IFBNLCBTYW50b3NoIFNoaWxpbWth
-ciB3cm90ZToNCj4gPiBPbiBGcmlkYXkgMjMgQXVndXN0IDIwMTMgMTI6MzAgUE0sIERhbmllbCBN
-YWNrIHdyb3RlOg0KPiA+PiBPbiAyMy4wOC4yMDEzIDE2OjIzLCBTYW50b3NoIFNoaWxpbWthciB3
-cm90ZToNCj4gPj4+IE9uIEZyaWRheSAyMyBBdWd1c3QgMjAxMyAxMDoxNiBBTSwgRGFuaWVsIE1h
-Y2sgd3JvdGU6DQo+ID4+Pj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGNwc3df
-b2ZfbXRhYmxlW10gPSB7DQo+ID4+Pj4gKwl7DQo+ID4+Pj4gKwkJLmNvbXBhdGlibGUJPSAidGks
-YW0zMzUyLWNwc3ciLA0KPiA+Pj4gSSBkaWRuJ3Qgbm90aWNlIHRoaXMgZWFybGllciwgYnV0IGNh
-bid0IHlvdSB1c2UgdGhlIElQIHZlcnNpb24NCj4gPj4+IGFzIGEgY29tcGF0aWJsZSBpbnN0ZWFk
-IG9mIHVzaW5nIGEgU09DIG5hbWUuIFdoYXRzIHJlYWxseSBTT0Mgc3BlY2lmaWMNCj4gPj4+IG9u
-IHRoaXMgSVAgPyBTb3JyeSBpIGhhdmUgbWlzc2VkIGFueSBlYXJsaWVyIGRpc2N1c3Npb24gb24g
-dGhpcyBidXQNCj4gPj4+IHRoaXMgYXBwcm9hY2ggZG9lc24ndCBzZWVtIGdvb2QuIEl0cyBsaWtl
-IGFkZGluZyBTT0MgY2hlY2tzIGluIHRoZQ0KPiA+Pj4gZHJpdmVyIHN1YnN5c3RlbS4NCj4gPj4g
-QXMgSSBhbHJlYWR5IG1lbnRpb25lZCBpbiB0aGUgY292ZXIgbGV0dGVyIGFuZCBpbiB0aGUgY29t
-bWl0IG1lc3NhZ2UsIEkNCj4gPj4ganVzdCBkb24ndCBrbm93IHdoaWNoIGNyaXRlcmlhIG1ha2Vz
-IG1vc3Qgc2Vuc2UgaGVyZS4NCj4gPj4NCj4gPj4gT24gYSBnZW5lcmFsIG5vdGUsIEkgd291bGQg
-c2F5IHRoYXQgY2hhbmNlcyB0aGF0IHRoaXMgZXhhY3RseSBJUCBjb3JlDQo+ID4+IHdpdGggdGhl
-IHNhbWUgdmVyc2lvbiBudW1iZXIgd2lsbCBhcHBlYXIgb24gc29tZSBvdGhlciBzaWxpY29uIHdo
-aWNoDQo+ID4+IGRvZXNuJ3Qgc3VwcG9ydCB0aGUgY29udHJvbCBtb2RlIHJlZ2lzdGVyIGluIGFu
-IEFNMzN4eCBmYXNoaW9uLCBpcyBub3QNCj4gPj4gbmVjZXNzYXJpbHkgbmVnbGlnaWJsZS4NCj4g
-Pj4NCj4gPj4gU28gd2hhdCB0aGF0IG5ldyBjb21wYXRpYmxlIHN0cmluZyBkZW5vdGVzIGlzIHRo
-ZSBjcHN3IGluIGEgdmVyc2lvbiBhcw0KPiA+PiBmb3VuZCBvbiBhbTMzNTIgU29Dcywgd2hpY2gg
-aXMgYWN0dWFsbHkgZXhhY3RseSB3aGF0IGl0IGRvZXMuDQo+ID4+DQo+ID4+IEkgZG9uJ3QgaGF2
-ZSBhIHN0cm9uZyBvcGluaW9uIGhlcmUsIGJ1dCBzZWUgeW91ciBwb2ludC4gSSBqdXN0IGRvbid0
-DQo+ID4+IGhhdmUgYSBiZXR0ZXIgaWRlYSBvbiBob3cgdG8gdHJlYXQgdGhhdC4NCj4gPj4NCj4g
-PiBTbyBqdXN0IHN0aWNrIHRoZSBJUCB2ZXJzaW9uIG9yIGNhbGwgaXQgY3Bzdy12MS4uLiBjcHN3
-LXYyIGV0Yy4NCj4gPiBUaGF0IHdheSBpZiBpbiBmdXR1cmUgaWYgc29tZW9uZSB1c2VzIHRob3Nl
-IGZlYXR1cmVzLCB0aGV5IGNhbiB1c2UNCj4gPiB0aGlzIGNvbXBhdGlibGUgaWYgdGhleSBkb24n
-dCB0aGV5IHVzZSB0aGUgb25lIHdoaWNoIHN1aXRlcyB0aGF0DQo+ID4gU09DLg0KPiA+DQo+IFdl
-IGNhbm5vdCBtYXAgY29udHJvbCBtb2R1bGUgcmVnaXN0ZXIgd2l0aCBDUFNXIElQIHZlcnNpb24g
-YXMgYm90aCBjb21lcw0KPiBmcm9tIGRpZmZlcmVudCBkZXNpZ24gdGVhbSBhbmQgQ1BTVyBpcCB2
-ZXJzaW9uIGNhbiBiZSBzYW1lIGFjcm9zcyBTb0MNCj4gYW5kIGdtaWkgc2VsIHJlZ2lzdGVyIGRl
-ZmluaXRpb24gY2FuIGJlIGRpZmZlcmVudC4gQ29udHJvbCBtb2R1bGUNCj4gZGVmaW5lcyBtYXkg
-dmFyeSBpbiBkaWZmZXJlbnQgU29DIGFzIHBlciBTb0MgcmVxdWlyZW1lbnRzLg0KPiANCj4gQWRk
-aW5nIFBla29uIEd1cHRhIHdobyBoYWQgd29ya2VkIGluIFNpbGljb24gdGVhbSBiZWZvcmUuDQo+
-IA0KW1Bla29uXTogTXkgb3BpbmlvbiBoZXJlLi4NClVuaWZvcm1pdHkgaW4gY29udHJvbCBtb2R1
-bGUgY2Fubm90IGJlIGd1YXJhbnRlZWQsIG5laXRoZXIgaW4gcmVnaXN0ZXINCm9mZnNldHMgbm9y
-IHRoZWlyIGZ1bmN0aW9uYWxpdHkuIFVuaWZvcm1pdHkgaXMgdXN1YWxseSBtYWludGFpbmVkIHRp
-bGwgdGhlDQpwb2ludCBzYW1lIHBlcnNvbiBpcyB3cml0aW5nIHRoZSBzcGVjLCBvciBpdOKAmXMg
-YSBkZXJpdmF0aXZlIGRldmljZS4NCkNvbnRyb2wtbW9kdWxlIHNob3VsZCBub3QgYmUgY2F0ZWdv
-cml6ZWQgYXMgSVAsIGluc3RlYWQgaXTigJlzIGEgZ3JvdXAgb2YNCm1pc2NlbGxhbmVvdXMgbG9n
-aWMgdXN1YWxseSBjb25zaXN0aW5nIG9mIGZvbGxvd2luZzoNCihhKSBTb0MgYnVnLWZpeGVzIGFj
-cm9zcyBzaWxpY29uIHJldmlzaW9ucy4NCihiKSBTb0Mgc3BlY2lmaWMgbG9naWMgbGlrZSBkZXZp
-Y2VfdHlwZSwgSlRBRy1JRC4NCihjKSBJUCBidWcgZml4ZXMgd2hpY2ggY291bGQgbm90IGJlIGFj
-Y29tbW9kYXRlZCBpbiBJUCBhZGRyZXNzLW1hcC4NCihkKSBJUCBsb2dpYyB3aGljaCBkZXBlbmRz
-IG9uIFNvQyBjb25maWd1cmF0aW9ucy4NCg0KRHVlIHRvIHRoaXMgdW4tZGV0ZXJtaW5pc3RpYyBj
-b21wb3NpdGlvbiBvZiBjb250cm9sLW1vZHVsZSwgaGF2aW5nIA0KYSBkZWRpY2F0ZWQgZHJpdmVy
-IGZvciBjb250cm9sIG1vZHVsZSBtaWdodCBub3Qgd29yayBlaXRoZXIsIGFzIGl0DQpoYXMgdG8g
-YmUgdXBkYXRlZCB8IHJlLXdyaXR0ZW4gZm9yIGV2ZXJ5IG5ldyBkZXZpY2UuDQoNClNvLCBGb2xs
-b3dpbmcgY2FuIGJlIHVzZWQgYXMgZ3VpZGVsaW5lIHRvIGRldGVybWluZSBjb21wYXRpYmlsaXR5
-DQpzdHJpbmcgZm9yIERUIGJpbmRpbmdzLi4NCi0gSWYgYmluZGluZyBtYXBzIHRvIChhKSBhbmQg
-KGMpLCAuaS5lLiwgYnVnLWZpeGVzIGZvciBTb0Mgb3IgSVAsIA0KIHRoZW4gaXRzIG1vc3QgbGlr
-ZWx5IHRoYXQgdGhlc2Ugd291bGQgY2hhbmdlIGVpdGhlciBpbiBuZXh0IHNpbGljb24NCiByZXZp
-c2lvbiBvciBpbiBuZXh0IGRldmljZXMuIEhlbmNlIHN1Y2ggYmluZGluZ3Mgc2hvdWxkIHVzZSAq
-bm90Kg0KIHVzZSBJUCBjb21wYXRpYmlsaXR5IHN0cmluZ3MsIHRoZXkgX21heV8gdXNlIFNvQy1u
-YW1lIGJhc2VkDQogY29tcGF0aWJpbGl0eSBzdHJpbmcuDQoNCi0gRWxzZSBpZiBiaW5kaW5nIG1h
-cHMgdG8gKGIpLC5pLmUuLCBTb0Mgc3BlY2lmaWMgY29uZmlndXJhdGlvbnMuDQogdGhlbiB0aGVp
-ciBvZmZzZXRzIGFuZCBmdW5jdGlvbmFsaXR5IHNob3VsZCByZW1haW4gc2FtZSBhY3Jvc3MgdGhl
-DQogZmFtaWx5IG9mIGRldmljZXMgYXQtbGVhc3QsIHNvIGl0IHNob3VsZCB1c2UgU29DLW5hbWUg
-YmFzZWQNCiBjb21wYXRpYmlsaXR5IHN0cmluZy4NCi0gQW5kIGlmIGJpbmRpbmcgbWFwcyB0byAo
-ZCksIC5pLmUuLCBJUCBmZWF0dXJlIGJ1dCBkZXBlbmRpbmcgb24gU29DDQogVGhlbiBpdCBjYW4g
-dXNlIElQIGJhc2VkIGNvbXBhdGliaWxpdHkgc3RyaW5nLCBhbG9uZyB3aXRoIElQIHZlcnNpb24u
-DQoNCihzYW1lIGFwcHJvYWNoIGNhbiBiZSB1c2VkIGZvciBDUFNXIGJpbmRpbmcgdXNlZCBoZXJl
-LA0KDQp3aXRoIHJlZ2FyZHMsIHBla29uDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Kukjin,
+
+On 25 August 2013 22:53, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> On 08/23/13 11:49, Vikas Sajjan wrote:
+>>
+>> Hi Kukjin,
+>>
+>> On Thu, Aug 22, 2013 at 6:37 PM, Tomasz Figa<t.figa@samsung.com>  wrote:
+>>>
+>>> Hi Vikas,
+>>>
+>>> On Thursday 22 of August 2013 18:29:00 Vikas Sajjan wrote:
+>>>>
+>>>> This patchset does the following 3 things:
+>>>>   1) Fixes the RTC DT node name for Exynos5250
+>>>>   2) Update the "status" property of RTC DT node for Exynos5250 SoC
+>>>>   3) Adds RTC DT node to Exynos5420 SoC
+>>>>
+>>>> changes since v5:
+>>>>        - Fixed the RTC DT node name for Exynos5250 board files also,
+>>>>        because otherwise it breaks RTC support in bisections.
+>>>>
+>>>> changes since v4:
+>>>>        - removed "status" property of RTC DT node from exynos5250 board
+>>>> dts
+>>>> files
+>>>>
+>>>> changes since v3:
+>>>>        - split the 5250 related modifications into 2 separate patch as
+>>>>        suggested by Tomasz Figa<t.figa@samsung.com>
+>>>>
+>>>> changes since v2:
+>>>>        - split the 5250 related modifications into a separate patch.
+>>>>        - placed the RTC node as per the alphabetical order in the DTS
+>>>> file as
+>>>>        suggested by Kukjin Kim<kgene@kernel.org>.
+>>>>
+>>>> changes since v1:
+>>>>        - made DT node status as "okay" in the dtsi file itself.
+>>>>
+>>>> Vikas Sajjan (3):
+>>>>    ARM: dts: Fix the RTC DT node name for Exynos5250
+>>>>    ARM: dts: Update the "status" property of RTC DT node for Exynos5250
+>>>>      SoC
+>>>>    ARM: dts: Add RTC DT node to Exynos5420 SoC
+>>>>
+>>>>   arch/arm/boot/dts/exynos5.dtsi           |    2 +-
+>>>>   arch/arm/boot/dts/exynos5250-arndale.dts |    4 ----
+>>>>   arch/arm/boot/dts/exynos5250-snow.dts    |    4 ----
+>>>>   arch/arm/boot/dts/exynos5250.dtsi        |    3 ++-
+>>>>   arch/arm/boot/dts/exynos5420.dtsi        |    6 ++++++
+>>>>   5 files changed, 9 insertions(+), 10 deletions(-)
+>>>
+>>>
+>>> Looks good to me now.
+>>>
+>>> Reviewed-by: Tomasz Figa<t.figa@samsung.com>
+>>
+>>
+>>
+>> Can you apply this patchset.
+>>
+>
+> Applied this whole series.
+
+Thanks.
+
+
+>
+> Thanks,
+> Kukjin
+
+
+
+-- 
+Thanks and Regards
+ Vikas Sajjan
