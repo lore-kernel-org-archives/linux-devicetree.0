@@ -1,179 +1,50 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH 2/2] spi: dual and quad support(device tree)
-Date: Mon, 26 Aug 2013 12:50:25 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9FAC0C@DBDE04.ent.ti.com>
-References: <1377496080-14356-1-git-send-email-wangyuhang2014@gmail.com>
- <1377496080-14356-2-git-send-email-wangyuhang2014@gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73E9FA932@DBDE04.ent.ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 2/2] ARM: at91/dt: define phy available on sama5d3
+ mother board
+Date: Mon, 26 Aug 2013 17:21:12 +0400
+Message-ID: <521B5648.3020608@cogentembedded.com>
+References: <1377520431-21807-1-git-send-email-b.brezillon@overkiz.com> <1377520540-21884-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73E9FA932@DBDE04.ent.ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: wangyuhang <wangyuhang2014@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar,
- Sourav" <sourav.poddar@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1377520540-21884-1-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon@overkiz.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> 
-> >
-> > fix one thing in patch:
-> > commit id:f477b7fb13df2b843997559ff34e87d054ba6538
-> >
-> > change property spi-tx-nbits and spi-rx-nbits to optional.
-> > If User don't set spi-tx-nbits or spi-rx-nbits, spi device mode
-> > should be regarded as SINGLE, not return an error.
-> >
-> > Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
-> > ---
-> >  drivers/spi/spi.c |   68 +++++++++++++++++++++++++------------------------
-> --
-> > --
-> >  1 file changed, 32 insertions(+), 36 deletions(-)
-> >
-> > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> > index 50f7fc3..46a55f0 100644
-> > --- a/drivers/spi/spi.c
-> > +++ b/drivers/spi/spi.c
-> > @@ -872,46 +872,42 @@ static void of_register_spi_devices(struct
-> > spi_master *master)
-> >  		/* Device DUAL/QUAD mode */
-> >  		prop = of_get_property(nc, "spi-tx-nbits", &len);
-> >  		if (!prop || len < sizeof(*prop)) {
-> > -			dev_err(&master->dev, "%s has no 'spi-tx-nbits'
-> > property\n",
-> > -				nc->full_name);
-> > -			spi_dev_put(spi);
-> > -			continue;
-> > -		}
-> > -		switch (be32_to_cpup(prop)) {
-> > -		case SPI_NBITS_SINGLE:
-> > -			break;
-> > -		case SPI_NBITS_DUAL:
-> > -			spi->mode |= SPI_TX_DUAL;
-> > -			break;
-> > -		case SPI_NBITS_QUAD:
-> > -			spi->mode |= SPI_TX_QUAD;
-> > -			break;
-> > -		default:
-> > -			dev_err(&master->dev, "spi-tx-nbits value is not
-> > supported\n");
-> > -			spi_dev_put(spi);
-> > -			continue;
-> > +			/* set tx mode in SINGLE as default */
-[Pekon]: I think you should explicitly set, and not trust spi->mode defaults.
-	spi->mode |= SPI_TX_SINGLE;
-> 
-> > +		} else {
-> > +			switch (be32_to_cpup(prop)) {
-> > +			case SPI_NBITS_SINGLE:
-> > +				break;
-> > +			case SPI_NBITS_DUAL:
-> > +				spi->mode |= SPI_TX_DUAL;
-> > +				break;
-> > +			case SPI_NBITS_QUAD:
-> > +				spi->mode |= SPI_TX_QUAD;
-> > +				break;
-> 
-[Pekon]: And there please check for spi_master->mode_bits
-before setting spi_device->mode.
-spi_device->mode should be sub-set of spi_master->mode_bits.
-Example: 
-switch (be32_to_cpup(prop)) {
-	case SPI_NBITS_SINGLE:
-		if (spi_master->mode_bits & SPI_TX_SINGLE)
-			spi-mode |= SPI_TX_SINGLE;
-		else
-			pr_err("SPI controller does not support SPI_TX_SINGLE\n");
-	break;
-	case SPI_NBITS_DUAL:
-		if (spi_master->mode_bits & SPI_TX_DUAL)
-			spi-mode |= SPI_TX_DUAL;
-		else
-			pr_err("SPI controller does not support SPI_TX_DUAL\n");
-	break;
-	case SPI_NBITS_QUAD:
-		if (spi_master->mode_bits & SPI_TX_QUAD)
-			spi-mode |= SPI_TX_QUAD;
-		else
-			pr_err("SPI controller does not support SPI_TX_QUAD\n");
-	break;
-}
-This way you will do initial compatibility check between the
-device and controller right at the probe, and you don't have
-to worry about it later.
+Hello.
 
+On 26-08-2013 16:35, Boris BREZILLON wrote:
 
-> 	spi->mode |= SPI_TX_QUAD;
-> or
-> 	spi->mode |= SPI_TX_QUAD | SPI_TX_DUAL;
-> 
-> 
-> > +			default:
-> > +				dev_err(&master->dev,
-> > +					"spi-tx-nbits value is not
-> > supported\n");
-> > +				spi_dev_put(spi);
-> > +				continue;
-> >  		}
-> >
-> >  		prop = of_get_property(nc, "spi-rx-nbits", &len);
-> >  		if (!prop || len < sizeof(*prop)) {
-> > -			dev_err(&master->dev, "%s has no 'spi-rx-nbits'
-> > property\n",
-> > -				nc->full_name);
-> > -			spi_dev_put(spi);
-> > -			continue;
-> > -		}
-> > -		switch (be32_to_cpup(prop)) {
-> > -		case SPI_NBITS_SINGLE:
-> > -			break;
-> > -		case SPI_NBITS_DUAL:
-> > -			spi->mode |= SPI_RX_DUAL;
-> > -			break;
-> > -		case SPI_NBITS_QUAD:
-> > -			spi->mode |= SPI_RX_QUAD;
-> > -			break;
-> > -		default:
-> > -			dev_err(&master->dev, "spi-rx-nbits value is not
-> > supported\n");
-> > -			spi_dev_put(spi);
-> > -			continue;
-> > +			/* set rx mode in SINGLE as default */
-> > +		} else {
-> > +			switch (be32_to_cpup(prop)) {
-> > +			case SPI_NBITS_SINGLE:
-> > +				break;
-> > +			case SPI_NBITS_DUAL:
-> > +				spi->mode |= SPI_RX_DUAL;
-> > +				break;
-> > +			case SPI_NBITS_QUAD:
-> > +				spi->mode |= SPI_RX_QUAD;
-> > +				break;
-> > +			default:
-> > +				dev_err(&master->dev,
-> > +					"spi-rx-nbits value is not
-> > supported\n");
-> > +				spi_dev_put(spi);
-> > +				continue;
-> >  		}
-> >
-> >  		/* Device speed */
-> > --
-> > 1.7.9.5
-> 
+> This patch describe the phy used on atmel sama5d3 mother board:
+>   - phy address
+>   - phy interrupt pin
 
-with regards, pekon
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+> ---
+>   arch/arm/boot/dts/sama5d3xmb.dtsi |    8 ++++++++
+>   1 file changed, 8 insertions(+)
+
+> diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
+> index 8a9e05d..e9521d5 100644
+> --- a/arch/arm/boot/dts/sama5d3xmb.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
+> @@ -81,6 +81,14 @@
+>
+>   			macb1: ethernet@f802c000 {
+>   				phy-mode = "rmii";
+> +
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				phy0: ethernet-phy@0 {
+
+    Address part of the node name doesn't match the "reg" property.
+
+> +					interrupt-parent = <&pioE>;
+> +					interrupts = <30 IRQ_TYPE_EDGE_FALLING>;
+> +					reg = <1>;
+> +				};
+
+WBR, Sergei
