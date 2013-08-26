@@ -1,89 +1,86 @@
-From: Tang Yuantian-B29983 <B29983@freescale.com>
-Subject: RE: [v3] powerpc/mpc85xx: Update the clock device tree nodes
-Date: Mon, 26 Aug 2013 02:42:30 +0000
-Message-ID: <D07C73A334FF604B95B3CBD2A545D07B1503BE58@039-SN2MPN1-012.039d.mgd.msft.net>
-References: <1370480811-13700-1-git-send-email-Yuantian.Tang@freescale.com>
- <20130823200827.GA29737@home.buserror.net>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v2 5/7] ARM: dts: Update DP controller DT Node for Exynos5
+ based SoCs
+Date: Mon, 26 Aug 2013 11:57:26 +0900
+Message-ID: <002d01cea207$ff2c57d0$fd850770$%han@samsung.com>
+References: <1375183178-8201-1-git-send-email-vikas.sajjan@linaro.org>
+ <1375183178-8201-6-git-send-email-vikas.sajjan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20130823200827.GA29737@home.buserror.net>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Wood Scott-B07421 <B07421@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1375183178-8201-6-git-send-email-vikas.sajjan@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Vikas Sajjan' <vikas.sajjan@linaro.org>, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, t.figa@samsung.com, devicetree@vger.kernel.org, inki.dae@samsung.com, ajaynumb@gmail.com, patches@linaro.org, linaro-kernel@lists.linaro.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-> >
-> >  	clockgen: global-utilities@e1000 {
-> > -		compatible = "fsl,b4420-clockgen", "fsl,qoriq-clockgen-2.0";
-> > +		compatible = "fsl,b4420-clockgen", "fsl,qoriq-clockgen-2.0",
-> > +				   "fixed-clock";
-> > +		clock-output-names = "sysclk";
-> > +		#clock-cells = <0>;
+On Tuesday, July 30, 2013 8:20 PM, Vikas Sajjan wrote:
+>
+> Moves the properties of DP controller to exynos5.dtsi which are common
+> across exynos5 SoCs like Exynos5250 and Exynos5420.
 > 
-> Does U-Boot fill in clock-frequency here?
+> The PHY DP Node is based on Jingoo Han's <jg1.han@samsung.com> patch at
+> https://patchwork.linuxtv.org/patch/19189/
 > 
-Yes, clock-frequency will be filled by uboot.
-You suggested we'd better not add it here.
+> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+> ---
+>  arch/arm/boot/dts/exynos5.dtsi            |   11 +++++++++++
+>  arch/arm/boot/dts/exynos5250-arndale.dts  |    3 ++-
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts |    3 ++-
+>  arch/arm/boot/dts/exynos5250.dtsi         |   21 +++++++++------------
+>  4 files changed, 24 insertions(+), 14 deletions(-)
+>  
 
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		pll0: pll0@800 {
-> > +			#clock-cells = <1>;
-> > +			reg = <0x800>;
-> > +			compatible = "fsl,core-pll-clock";
-> > +			clocks = <&clockgen>;
-> > +			clock-output-names = "pll0", "pll0-div2", "pll0-div4";
-> > +		};
-> > +		pll1: pll1@820 {
-> > +			#clock-cells = <1>;
-> > +			reg = <0x820>;
-> > +			compatible = "fsl,core-pll-clock";
-> > +			clocks = <&clockgen>;
-> > +			clock-output-names = "pll1", "pll1-div2", "pll1-div4";
-> > +		};
-> 
-> Please leave a blank line between properties and nodes, and between nodes.
-> 
-OK, will add.
+[....]
 
-> What does reg represent?  Where is the binding for this?
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index 238bdb2..1c017dc 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -614,20 +614,17 @@
+>  		interrupts = <0 94 0>;
+>  	};
 > 
-> The compatible is too vague.
-Reg is register offset. I should have had a binding document.
-About the compatible, you should pointed it out earlier in SDK review.
-It is too later to change since the clock driver is merged for months although 
-I sent this patch first.
-Besides, it is not too bad because other arch use the similar name.
+> -	dp-controller {
+> -		compatible = "samsung,exynos5-dp";
+> -		reg = <0x145b0000 0x1000>;
+> -		interrupts = <10 3>;
+> -		interrupt-parent = <&combiner>;
+> +	dp_phy: video-phy@10040720 {
+> +		compatible = "samsung,exynos5250-dp-video-phy";
+> +		reg = <0x10040720 4>;
+> +		#phy-cells = <0>;
+> +	};
 
-Regards,
-Yuantian
+Oops!!!
 
-> 
-> > +		mux0: mux0@0 {
-> > +			#clock-cells = <0>;
-> > +			reg = <0x0>;
-> > +			compatible = "fsl,core-mux-clock";
-> > +			clocks = <&pll0 0>, <&pll0 1>, <&pll0 2>,
-> > +				 <&pll1 0>, <&pll1 1>, <&pll1 2>;
-> > +			clock-names = "pll0_0", "pll0_1", "pll0_2",
-> > +				"pll1_0", "pll1_1", "pll1_2";
-> > +			clock-output-names = "cmux0";
-> > +		};
-> 
-> What does reg represent?  Where is the binding for this?
-> 
-> The compatible is too vague.
-> 
-> -Scott
+This patch should be reverted.
+Or, fix patch should be re-sent.
+'dp phy' driver is not yet merged to mainline kernel.
+
+
+> +
+> +	dp-controller@145b0000 {
+>  		clocks = <&clock 342>;
+>  		clock-names = "dp";
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		dptx-phy {
+> -			reg = <0x10040720>;
+> -			samsung,enable-mask = <1>;
+> -		};
+> +		phys = <&dp_phy>;
+> +		phy-names = "dp";
+>  	};
+
+Thus, 'dptx-phy' node should be used until dp phy driver is merged.
+
+Vikas Sajjan,
+Please test your patch on real boards when you send your patch.
+
+
+Best regards,
+Jingoo Han
