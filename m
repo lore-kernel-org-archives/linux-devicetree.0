@@ -1,98 +1,52 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: SHMobile Compatibility String Inconsistencies
-Date: Mon, 26 Aug 2013 17:16:28 +1000
-Message-ID: <20130826071628.GA9120@voom.fritz.box>
-References: <20130822054639.GE11086@verge.net.au>
- <20130823021111.GA2792@voom.redhat.com>
- <1721850.l3ebodSrXr@avalon>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH -next] dma: cppi41: fix error return code in
+ cppi41_dma_probe()
+Date: Mon, 26 Aug 2013 14:00:28 +0530
+Message-ID: <20130826083028.GL2748@intel.com>
+References: <CAPgLHd_uc8t_Q7QAq+FzdMZjo0VRYfqXMfk=zy5O+LwWhhGsTQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1721850.l3ebodSrXr@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <CAPgLHd_uc8t_Q7QAq+FzdMZjo0VRYfqXMfk=zy5O+LwWhhGsTQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>, Felipe Balbi <balbi@ti.com>
+Cc: djbw@fb.com, grant.likely@linaro.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 23, 2013 at 10:59:15AM +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> 
+> Fix to return -EINVAL in the irq parse and map error handling
+> case instead of 0, as done elsewhere in this function.
+> 
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
---0OAP2g/MAC+5xKAE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This need to go thru USB tree
 
-On Fri, Aug 23, 2013 at 01:31:31PM +0200, Laurent Pinchart wrote:
-> Hi David,
->=20
-> On Friday 23 August 2013 12:11:11 David Gibson wrote:
-> > On Thu, Aug 22, 2013 at 02:46:40PM +0900, Simon Horman wrote:
-> > > Hi Laurent, Hi Guennadi, Hi All,
-> > >=20
-> > > Olof has brought to my attention that there is some inconsistency
-> > > in the way that compatibility strings for SHMobile are named and he
-> > > has asked us to clean things up for v3.12.
-> > >=20
-> > > Looking through arch/arm/boot/dts/ I see that we have:
-> > >=20
-> > > 1. {gpio,pfc}-r8aXXXX and;
-> > > 2. r8aXXXX-sdhi
-> > >=20
-> > > The inconsistency that Olof has asked us to resolve is that we
-> > > should either use r8aXXXX- or -r8aXXXX. Not both.
-> > >=20
-> > > It seems to me that neither option is inherently better than the other
-> > > so we should just choose the path of least resistance to make things
-> > > consistent.
-> > >=20
-> > > Laurent, Guennadi, do you have any opinions on if it would
-> > > be easier to change the GPIO and PFC compatibility strings;
-> > > or to change the SDHI compatibility strings?
-> > >=20
-> > > Ideally I would like you to come to some sort of consensus and send
-> > > patches.
-> >=20
-> > So, by all means clean this up in the dts.
-> >=20
-> > BUT, in keeping with the recent discussions on improving the DT
-> > process, the corresponding drivers must continue to recognize both
-> > forms, so that old DTs will still work correctly.
->=20
-> Given the early state of DT support in arm/mach-shmobile, I'm pretty sure=
- we=20
-> have no DT-based systems in the wild. The old compatibility string could =
-in my=20
-> opinion just be dropped.
+Acked-by Vinod Koul <vinod.koul@intel.com>
 
-Hm, well, ok.  Just remember to always err on the side of broad
-compatiblity.  We've become sloppy with incompatible DT updates and
-its caused us a bunch of grief.
+~Vinod
+> ---
+>  drivers/dma/cppi41.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
+> index 5dcebca..49ea05a 100644
+> --- a/drivers/dma/cppi41.c
+> +++ b/drivers/dma/cppi41.c
+> @@ -973,8 +973,10 @@ static int cppi41_dma_probe(struct platform_device *pdev)
+>  		goto err_chans;
+>  
+>  	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+> -	if (!irq)
+> +	if (!irq) {
+> +		ret = -EINVAL;
+>  		goto err_irq;
+> +	}
+>  
+>  	cppi_writel(USBSS_IRQ_PD_COMP, cdd->usbss_mem + USBSS_IRQ_ENABLER);
+>  
+> 
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---0OAP2g/MAC+5xKAE
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSGwDMAAoJEGw4ysog2bOSDPAQANDA+43iaZl/3TTWBmqAHtra
-dOoZ4noFda2SAt1yRyBRKX87i6LCcciUiTC0kRtZ9OTEUGiqtFB1uo3VV2PtXryS
-pKqrDLyDj2aZTod/OR4afoZq4xwQDGEyqP+2pJhZvj+2z+rpL3qwQbxcLqeL//I7
-oO2a/Qz05I+lvzMidpG7Iejv5EMyLtRQMtxaJw8xfL3ETp9j0RqkPwKwTFYp+9tv
-0mZIUqwAx7szq3r98FZ+MrdnvSlUxbVHkmhwIK6gmp9iFybIK2QL5V/f303K6Nfl
-YxiCMNCdBRgLxRqXaem5ieZ3e/gNI/glQIxI2I1cgvcfahN2fZ2rUb2hiTSVCpBu
-93JUIq/RDANx/6RniDL0NXRv5QEnFrAvZbaxoz8Wbpsp+ZTrfCSECv4zKiAG+gXt
-iKICuEyD7nbId9u49mPhKUi39TFykQIWSTO6btb0Om2j5UOS0j2w5eX9ykir421f
-N0ixu8cEJ1eYiObLNr2a+s96cuCdWYTU5RQiUVAcsPp1c8/iWSB7DuY9w1sNqC5B
-8djwFEl5RWORhdO1T84FwaQrCvVxZGs4fkAgofNmlNy2I2d4AjJJ+T/rfRiuJYp2
-/diJ3/lb4z4eKopD/2WjZLNih5fEe9b/0S0uwZnNDHR8Klj0KJ1FYGtyEA21Da5F
-UXB5c+kQulOIIP+jMqVA
-=YKMH
------END PGP SIGNATURE-----
-
---0OAP2g/MAC+5xKAE--
+-- 
