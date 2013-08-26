@@ -1,16 +1,15 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4] extcon: palmas: Added a new compatible type *ti,
- palmas-usb-vid*
-Date: Mon, 26 Aug 2013 17:33:19 +0530
-Message-ID: <521B4407.2090600@ti.com>
-References: <1377160283-26934-1-git-send-email-kishon@ti.com>
- <5216798E.8070900@wwwdotorg.org> <52174755.8030506@ti.com>
- <5217B54E.8070009@wwwdotorg.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v6 2/4] drivers: of: add function to scan fdt nodes given
+ by path
+Date: Mon, 26 Aug 2013 07:09:17 -0500
+Message-ID: <CAL_JsqLVi0Nku1Qfui0c-Sst47wBQeKQOW2qjKXg8h4QthYH7g@mail.gmail.com>
+References: <1376924669-28873-1-git-send-email-m.szyprowski@samsung.com>
+ <1376924669-28873-3-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5217B54E.8070009@wwwdotorg.org>
+In-Reply-To: <1376924669-28873-3-git-send-email-m.szyprowski@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,45 +19,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, george.cherian@ti.com, linux@arm.linux.org.uk, ian.campbell@citrix.com, pawel.moll@arm.com, linux-doc@vger.kernel.org, tony@atomide.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, cw00.choi@samsung.com, myungjoo.ham@samsung.com, balbi@ti.com, rob@landley.net, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Laura Abbott <lauraa@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Marc <marc.ceeeee@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Nishanth Peethambaran <nishanth.p@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 24 August 2013 12:47 AM, Stephen Warren wrote:
-> On 08/23/2013 05:28 AM, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On Friday 23 August 2013 02:20 AM, Stephen Warren wrote:
->>> On 08/22/2013 02:31 AM, Kishon Vijay Abraham I wrote:
->>>> The Palmas device contains only a USB VBUS-ID detector, so added a
->>>> compatible type *ti,palmas-usb-vid*. Didn't remove the existing compatible
->>>> types for backward compatibility.
->>>
->>>> diff --git a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
->>>
->>>>  PALMAS USB COMPARATOR
->>>>  Required Properties:
->>>> - - compatible : Should be "ti,palmas-usb" or "ti,twl6035-usb"
->>>> + - compatible : Should be "ti,palmas-usb-vid". "ti,twl6035-usb" and
->>>> +   "ti,palmas-usb" is deprecated and is kept for backward compatibility.
->>>
->>> So this defines one new value and deprecates the two old values.
->>
->> yeah.
->>>
->>> Why isn't a new "ti,twl6035-usb-vid" entry useful? Don't you still need
->>
->> yeah, it should be added too.
->>> SoC-specific compatible values so the driver can enable any SoC-specific
->>> bug-fixes/workarounds later if needed?
->>
->> hmm.. Palmas is external to SoC. So not sure if adding SoC specific compatible
->> values is such a good idea.
-> 
-> In this case, but SoC, I meant the Palmas chip rather than the
-> application processor. Is twl6035 a name for Palmas or something else?
+On Mon, Aug 19, 2013 at 10:04 AM, Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+> Add a function to scan the flattened device-tree starting from the
+> node given by the path. It is used to extract information (like reserved
+> memory), which is required on early boot before we can unflatten the tree.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Acked-by: Michal Nazarewicz <mina86@mina86.com>
+> Acked-by: Tomasz Figa <t.figa@samsung.com>
 
-yeah, tw6035 is a name for palmas.
-
-Thanks
-Kishon
+Reviewed-by: Rob Herring <rob.herring@calxeda.com>
