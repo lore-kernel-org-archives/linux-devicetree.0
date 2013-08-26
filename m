@@ -1,13 +1,11 @@
 From: wangyuhang <wangyuhang2014@gmail.com>
-Subject: [PATCH 2/2] spi: dual and quad support(device tree)
-Date: Mon, 26 Aug 2013 13:48:00 +0800
-Message-ID: <1377496080-14356-2-git-send-email-wangyuhang2014@gmail.com>
-References: <1377496080-14356-1-git-send-email-wangyuhang2014@gmail.com>
+Subject: [PATCH 1/2] spi: dual and quad support(device tree)
+Date: Mon, 26 Aug 2013 13:47:59 +0800
+Message-ID: <1377496080-14356-1-git-send-email-wangyuhang2014@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1377496080-14356-1-git-send-email-wangyuhang2014@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
@@ -21,101 +19,43 @@ To: broonie@kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, l
 Cc: sourav.poddar@ti.com, pekon@ti.com, wangyuhang <wangyuhang2014@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-fix one thing in patch:
-commit id:f477b7fb13df2b843997559ff34e87d054ba6538
-
-change property spi-tx-nbits and spi-rx-nbits to optional.
-If User don't set spi-tx-nbits or spi-rx-nbits, spi device mode
-should be regarded as SINGLE, not return an error.
+Add spi-tx-nbits and spi-rx-nbits for spi slave node.
+ spi-tx-nbits:Number of bits used for MOSI(writting)
+ spi-rx-nbits:Number of bits used for MISO(reading)
+Support for spi-tx/rx-nbits in SPI framework has been picked[1].
+[1]: http://comments.gmane.org/gmane.linux.kernel.spi.devel/14420
+Commit Id:f477b7fb13df2b843997559ff34e87d054ba6538
 
 Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
 ---
- drivers/spi/spi.c |   68 +++++++++++++++++++++++++----------------------------
- 1 file changed, 32 insertions(+), 36 deletions(-)
+ Documentation/devicetree/bindings/spi/spi-bus.txt |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 50f7fc3..46a55f0 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -872,46 +872,42 @@ static void of_register_spi_devices(struct spi_master *master)
- 		/* Device DUAL/QUAD mode */
- 		prop = of_get_property(nc, "spi-tx-nbits", &len);
- 		if (!prop || len < sizeof(*prop)) {
--			dev_err(&master->dev, "%s has no 'spi-tx-nbits' property\n",
--				nc->full_name);
--			spi_dev_put(spi);
--			continue;
--		}
--		switch (be32_to_cpup(prop)) {
--		case SPI_NBITS_SINGLE:
--			break;
--		case SPI_NBITS_DUAL:
--			spi->mode |= SPI_TX_DUAL;
--			break;
--		case SPI_NBITS_QUAD:
--			spi->mode |= SPI_TX_QUAD;
--			break;
--		default:
--			dev_err(&master->dev, "spi-tx-nbits value is not supported\n");
--			spi_dev_put(spi);
--			continue;
-+			/* set tx mode in SINGLE as default */
-+		} else {
-+			switch (be32_to_cpup(prop)) {
-+			case SPI_NBITS_SINGLE:
-+				break;
-+			case SPI_NBITS_DUAL:
-+				spi->mode |= SPI_TX_DUAL;
-+				break;
-+			case SPI_NBITS_QUAD:
-+				spi->mode |= SPI_TX_QUAD;
-+				break;
-+			default:
-+				dev_err(&master->dev,
-+					"spi-tx-nbits value is not supported\n");
-+				spi_dev_put(spi);
-+				continue;
- 		}
+diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+index 296015e..145ba96 100644
+--- a/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -55,6 +55,20 @@ contain the following properties.
+     		chip select active high
+ - spi-3wire       - (optional) Empty property indicating device requires
+     		    3-wire mode.
++- spi-tx-nbits    - (optional) Number of bits used for MOSI(writting)
++- spi-rx-nbits    - (optional) Number of bits used for MISO(reading)
++
++So if for example the slave has 4 wires for writting and 2 wires for reading,
++and the spi-tx/rx-nbits property should be set as follows:
++
++spi-tx-nbits = <4>;
++spi-rx-nbits = <2>;
++
++Now the value that spi-tx-nbits and spi-rx-nbits can receive is only
++1(single), 2(dual) and 4(quad). If you don't set spi-tx-nbits or spi-rx-nbits,
++spi_device mode will be set in single(1 wire) as default. Another point, if
++property:spi-3wire is set, spi-tx/rx-nbits is forbidden to set to <2 or 4>,
++otherwise, an errro will return.
  
- 		prop = of_get_property(nc, "spi-rx-nbits", &len);
- 		if (!prop || len < sizeof(*prop)) {
--			dev_err(&master->dev, "%s has no 'spi-rx-nbits' property\n",
--				nc->full_name);
--			spi_dev_put(spi);
--			continue;
--		}
--		switch (be32_to_cpup(prop)) {
--		case SPI_NBITS_SINGLE:
--			break;
--		case SPI_NBITS_DUAL:
--			spi->mode |= SPI_RX_DUAL;
--			break;
--		case SPI_NBITS_QUAD:
--			spi->mode |= SPI_RX_QUAD;
--			break;
--		default:
--			dev_err(&master->dev, "spi-rx-nbits value is not supported\n");
--			spi_dev_put(spi);
--			continue;
-+			/* set rx mode in SINGLE as default */
-+		} else {
-+			switch (be32_to_cpup(prop)) {
-+			case SPI_NBITS_SINGLE:
-+				break;
-+			case SPI_NBITS_DUAL:
-+				spi->mode |= SPI_RX_DUAL;
-+				break;
-+			case SPI_NBITS_QUAD:
-+				spi->mode |= SPI_RX_QUAD;
-+				break;
-+			default:
-+				dev_err(&master->dev,
-+					"spi-rx-nbits value is not supported\n");
-+				spi_dev_put(spi);
-+				continue;
- 		}
- 
- 		/* Device speed */
+ If a gpio chipselect is used for the SPI slave the gpio number will be passed
+ via the cs_gpio
 -- 
 1.7.9.5
 
