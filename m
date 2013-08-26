@@ -1,131 +1,78 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH RFC 2/5] media: s5p-tv: Fix mixer driver to work with CCF
-Date: Mon, 26 Aug 2013 18:03:59 +0200
-Message-ID: <6152934.i30tL7314f@amdc1032>
-References: <1377517114-20222-1-git-send-email-m.krawczuk@partner.samsung.com>
- <1377517114-20222-3-git-send-email-m.krawczuk@partner.samsung.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: SHMobile Compatibility String Inconsistencies
+Date: Mon, 26 Aug 2013 18:08:52 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1308261750340.1767@axis700.grange>
+References: <20130822054639.GE11086@verge.net.au> <20130823021111.GA2792@voom.redhat.com>
+ <1721850.l3ebodSrXr@avalon> <20130824021323.GC5181@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1377517114-20222-3-git-send-email-m.krawczuk@partner.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
-Cc: kgene.kim@samsung.com, kyungmin.park@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, mturquette@linaro.org, thomas.abraham@linaro.org, t.stanislaws@samsung.com, m.chehab@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samung.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20130824021323.GC5181@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Gibson <david@gibson.dropbear.id.au>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Sat, 24 Aug 2013, Simon Horman wrote:
 
-Hi,
+> On Fri, Aug 23, 2013 at 01:31:31PM +0200, Laurent Pinchart wrote:
+> > Hi David,
+> > 
+> > On Friday 23 August 2013 12:11:11 David Gibson wrote:
+> > > On Thu, Aug 22, 2013 at 02:46:40PM +0900, Simon Horman wrote:
+> > > > Hi Laurent, Hi Guennadi, Hi All,
+> > > > 
+> > > > Olof has brought to my attention that there is some inconsistency
+> > > > in the way that compatibility strings for SHMobile are named and he
+> > > > has asked us to clean things up for v3.12.
+> > > > 
+> > > > Looking through arch/arm/boot/dts/ I see that we have:
+> > > > 
+> > > > 1. {gpio,pfc}-r8aXXXX and;
 
-On Monday, August 26, 2013 01:38:31 PM Mateusz Krawczuk wrote:
-> Replace clk_enable by clock_enable_prepare and clk_disable with clk_disable_unprepare.
-> Clock prepare is required by Clock Common Framework, and old clock driver didn`t support it.
-> Without it Common Clock Framework prints a warning.
+Add shdma-<soc> to the above
+
+> > > > 2. r8aXXXX-sdhi
+> > > > 
+> > > > The inconsistency that Olof has asked us to resolve is that we
+> > > > should either use r8aXXXX- or -r8aXXXX. Not both.
+
+Given the 3:1 score the choice seems rather simple to me. So, if we do
+have to make those consistent, let's change SDHI.
+
+> > > > It seems to me that neither option is inherently better than the other
+> > > > so we should just choose the path of least resistance to make things
+> > > > consistent.
+> > > > 
+> > > > Laurent, Guennadi, do you have any opinions on if it would
+> > > > be easier to change the GPIO and PFC compatibility strings;
+> > > > or to change the SDHI compatibility strings?
+> > > > 
+> > > > Ideally I would like you to come to some sort of consensus and send
+> > > > patches.
+> > > 
+> > > So, by all means clean this up in the dts.
+> > > 
+> > > BUT, in keeping with the recent discussions on improving the DT
+> > > process, the corresponding drivers must continue to recognize both
+> > > forms, so that old DTs will still work correctly.
+> > 
+> > Given the early state of DT support in arm/mach-shmobile, I'm pretty sure we 
+> > have no DT-based systems in the wild. The old compatibility string could in my 
+> > opinion just be dropped.
 > 
-> Signed-off-by: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
-> ---
->  drivers/media/platform/s5p-tv/mixer_drv.c | 33 +++++++++++++++++++++++++------
->  1 file changed, 27 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/platform/s5p-tv/mixer_drv.c b/drivers/media/platform/s5p-tv/mixer_drv.c
-> index 51805a5..f889591 100644
-> --- a/drivers/media/platform/s5p-tv/mixer_drv.c
-> +++ b/drivers/media/platform/s5p-tv/mixer_drv.c
-> @@ -345,21 +345,42 @@ fail:
->  
->  static int mxr_runtime_resume(struct device *dev)
->  {
-> +	int ret = 0;
+> I tend to agree, though I don't mind either way.
 
-There is no need to initialize it to 0 here.
+So, what path should we choose? I see 2 SDHI users in your current "devel" 
+brunch: sh73a0 (kzm9g) and r8a73a4 (ape6evm). Should we make a single 
+patch, changing the driver and both users and push it via ARM with Chris' 
+ack or shall we add new compats, switch .dtsi's, remove old compats - over 
+2 kernel versions? Can we still get anything for this into 3.12 or is it 
+too late? Would it be a "fix" enough for -rc2 / late -rc1?
 
->  	struct mxr_device *mdev = to_mdev(dev);
->  	struct mxr_resources *res = &mdev->res;
->  
->  	mxr_dbg(mdev, "resume - start\n");
->  	mutex_lock(&mdev->mutex);
->  	/* turn clocks on */
-> -	clk_enable(res->mixer);
-> -	clk_enable(res->vp);
-> -	clk_enable(res->sclk_mixer);
-> +	ret = clk_prepare_enable(res->mixer);
-> +	if (ret < 0) {
-> +		dev_err(dev, "clk_prepare_enable(mixer) failed\n");
-
-There is no consistency in the error messages between patch #1 and #2.
-
-How's about changing error messages in the patch #2 to use
-
-"%s: Failed to prepare and enable mixer clock!", __func__
-
-form?
-
-> +		goto fail;
-> +	}
-> +	ret = clk_prepare_enable(res->vp);
-> +	if (ret < 0) {
-> +		dev_err(dev, "clk_prepare_enable(vp) failed\n");
-> +		goto fail_mixer;
-> +	}
-> +	ret = clk_prepare_enable(res->sclk_mixer);
-> +	if (ret < 0) {
-> +		dev_err(dev, "clk_prepare_enable(sclk_mixer) failed\n");
-> +		goto fail_vp;
-> +	}
->  	/* apply default configuration */
->  	mxr_reg_reset(mdev);
->  	mxr_dbg(mdev, "resume - finished\n");
-
-While at it the above mxr_dbg() can be moved outside the mutex lock.
-
->  	mutex_unlock(&mdev->mutex);
->  	return 0;
-> +fail_vp:
-> +	clk_disable_unprepare(res->vp);
-> +fail_mixer:
-> +	clk_disable_unprepare(res->mixer);
-> +fail:
-> +	mutex_unlock(&mdev->mutex);
-> +	dev_info(dev, "resume failed\n");
-
-Shouldn't it be dev_err()?
-
-Please also add mxr_dbg(mdev, "resume - finished\n") call here
-to match the earlier mxr_dbg(mdev, "resume - start\n") one.
-
-> +	return ret;
->  }
->  
->  static int mxr_runtime_suspend(struct device *dev)
-> @@ -369,9 +390,9 @@ static int mxr_runtime_suspend(struct device *dev)
->  	mxr_dbg(mdev, "suspend - start\n");
->  	mutex_lock(&mdev->mutex);
->  	/* turn clocks off */
-> -	clk_disable(res->sclk_mixer);
-> -	clk_disable(res->vp);
-> -	clk_disable(res->mixer);
-> +	clk_disable_unprepare(res->sclk_mixer);
-> +	clk_disable_unprepare(res->vp);
-> +	clk_disable_unprepare(res->mixer);
->  	mutex_unlock(&mdev->mutex);
->  	mxr_dbg(mdev, "suspend - finished\n");
->  	return 0;
-
-While at this driver please note that currently it defines its own macros to
-use instead of dev_err(), dev_warn() and dev_info().
-
-drivers/media/platform/s5p-tv/mixer.h:
-...
-#define mxr_err(mdev, fmt, ...)  dev_err(mdev->dev, fmt, ##__VA_ARGS__)
-#define mxr_warn(mdev, fmt, ...) dev_warn(mdev->dev, fmt, ##__VA_ARGS__)
-#define mxr_info(mdev, fmt, ...) dev_info(mdev->dev, fmt, ##__VA_ARGS__)
-...
-
-Since your patch adds dev_err() and dev_info() instances it would be a good
-thing to remove mxr_*() macros in the preparatory patch.
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
