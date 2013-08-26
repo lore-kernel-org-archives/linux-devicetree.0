@@ -1,154 +1,154 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH 1/2] spi: dual and quad support(device tree)
-Date: Mon, 26 Aug 2013 09:45:13 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9FAACE@DBDE04.ent.ti.com>
-References: <1377496080-14356-1-git-send-email-wangyuhang2014@gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73E9FA914@DBDE04.ent.ti.com>
- <CAHSAbzPBTAs=A4SMMojNFG969hukaf=+iAv0xLoQ13Mo0W=J+g@mail.gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73E9FAA82@DBDE04.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73E9FAA82@DBDE04.ent.ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: yuhang wang <wangyuhang2014@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar,
- Sourav" <sourav.poddar@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+From: Lars Poeschel <larsi@wh2.tu-dresden.de>
+Subject: [PATCH V2 1/2] gpio: mcp23s08: rename the device tree property
+Date: Mon, 26 Aug 2013 11:46:24 +0200
+Message-ID: <1377510385-8149-1-git-send-email-larsi@wh2.tu-dresden.de>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: poeschel@lemonage.de, grant.likely@linaro.org, linus.walleij@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, arnd@arndb.de, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> 
-> > Hi, Pekon
-> >
-> > 2013/8/26 Gupta, Pekon <pekon@ti.com>:
-> > >>
-> > >> Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
-> > >> ---
-> > >>  Documentation/devicetree/bindings/spi/spi-bus.txt |   14
-> > ++++++++++++++
-> > >>  1 file changed, 14 insertions(+)
-> > >>
-> > >> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > >> b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > >> index 296015e..145ba96 100644
-> > >> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > >> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > >> @@ -55,6 +55,20 @@ contain the following properties.
-> > >>               chip select active high
-> > >>  - spi-3wire       - (optional) Empty property indicating device requires
-> > >>                   3-wire mode.
-> > >> +- spi-tx-nbits    - (optional) Number of bits used for MOSI(writting)
-> > >> +- spi-rx-nbits    - (optional) Number of bits used for MISO(reading)
-> > >> +
-> > >> +So if for example the slave has 4 wires for writting and 2 wires for
-> > reading,
-> > >> +and the spi-tx/rx-nbits property should be set as follows:
-> > >> +
-> > >> +spi-tx-nbits = <4>;
-> > >> +spi-rx-nbits = <2>;
-> > >
-[Pekon]: Oh.. Sorry.. I mis-understood your patch here.. 
-So here 'spi-tx-nbits' and 'spi-rx-nbits' specify how many data-channels
-are actually connected on board to a spi_device.. correct ?
+From: Lars Poeschel <poeschel@lemonage.de>
 
-And, m25p30 driver will determine what to put in spi_transfer->tx_nbits
-based on different flash commands .. Correct ?
+The device tree property should be more descriptive.
+microchip seems more reasonable than mcp. The old mcp
+prefix is still supported but marked as deprecated.
+Users of mcp have to switch to the microchip prefix.
 
-In that sense.. its your approach is correct..
-But then please use different binding names, something like below..
-	s/spi-tx-nbits/spi-tx-max-width
-	s/spi-rx-nbits/spi-rx-max-width
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+---
+ .../devicetree/bindings/gpio/gpio-mcp23s08.txt     |   20 ++++++----
+ drivers/gpio/gpio-mcp23s08.c                       |   41 ++++++++++++++++----
+ 2 files changed, 46 insertions(+), 15 deletions(-)
 
------------------------------------------------
-> > > [Pekon]: there is a problem here...
-> > > spi-tx-nbit = <4> suggests that SPI device support QUAD writes, but it
-> does
-> > > not indicate whether DUAL writes are supported by device or not.
-> > > So, In my view having either of the following implementation could help
-> > > in specifying capabilities independently and clearly.
-> > > *Implementation-1 Boolean*
-> > > spi-tx-quad = <true | false>
-> > > spi-tx-dual = <true | false>
-> > > spi-tx-single = <true | false>
-> > > Same way for Rx..
-> > > spi-rx-quad = <true | false>
-> > > spi-rx-dual = <true | false>
-> > > spi-rx-single = <true | false>
-> > >
-> > > *Implementation-2 Multi-option*
-> > > spi-quad = <tx-only | rx-only | duplex>
-> > > spi-dual = <tx-only | rx-only | duplex>
-> > > spi-single = <tx-only | rx-only | full-duplex | half-duplex>
-> > >
-> > Not exactly,  spi-tx-nbit = <4> suggests that SPI device will use QUAD
-> > writes, not support QUAD writes. There is no need to set what mode
-> > slave supports, user just set the certain mode slave will work in.
-> >
------------------------------------------------
-My above comment is more for DT binding for spi_master (master DT node)
-probed by controller driver, which can have multiple capabilities.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+index 629d0ef..31d3ad3 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+@@ -3,10 +3,12 @@ Microchip MCP2308/MCP23S08/MCP23017/MCP23S17 driver for
+ 
+ Required properties:
+ - compatible : Should be
+-    - "mcp,mcp23s08" for  8 GPIO SPI version
+-    - "mcp,mcp23s17" for 16 GPIO SPI version
+-    - "mcp,mcp23008" for  8 GPIO I2C version or
+-    - "mcp,mcp23017" for 16 GPIO I2C version of the chip
++    - "microchip,mcp23s08" for  8 GPIO SPI version
++    - "microchip,mcp23s17" for 16 GPIO SPI version
++    - "microchip,mcp23008" for  8 GPIO I2C version or
++    - "microchip,mcp23017" for 16 GPIO I2C version of the chip
++    NOTE: Do not use the old mcp prefix any more. It is deprecated and will be
++    removed.
+ - #gpio-cells : Should be two.
+   - first cell is the pin number
+   - second cell is used to specify flags. Flags are currently unused.
+@@ -15,10 +17,10 @@ Required properties:
+         SPI uses this to specify the chipselect line which the chip is
+         connected to. The driver and the SPI variant of the chip support
+         multiple chips on the same chipselect. Have a look at
+-        mcp,spi-present-mask below.
++        microchip,spi-present-mask below.
+ 
+ Required device specific properties (only for SPI chips):
+-- mcp,spi-present-mask : This is a present flag, that makes only sense for SPI
++- microchip,spi-present-mask : This is a present flag, that makes only sense for SPI
+         chips - as the name suggests. Multiple SPI chips can share the same
+         SPI chipselect. Set a bit in bit0-7 in this mask to 1 if there is a
+         chip connected with the corresponding spi address set. For example if
+@@ -26,11 +28,13 @@ Required device specific properties (only for SPI chips):
+         which is 0x08. mcp23s08 chip variant only supports bits 0-3. It is not
+         possible to mix mcp23s08 and mcp23s17 on the same chipselect. Set at
+         least one bit to 1 for SPI chips.
++    NOTE: Do not use the old mcp prefix any more. It is deprecated and will be
++    removed.
+ - spi-max-frequency = The maximum frequency this chip is able to handle
+ 
+ Example I2C:
+ gpiom1: gpio@20 {
+-        compatible = "mcp,mcp23017";
++        compatible = "microchip,mcp23017";
+         gpio-controller;
+         #gpio-cells = <2>;
+         reg = <0x20>;
+@@ -38,7 +42,7 @@ gpiom1: gpio@20 {
+ 
+ Example SPI:
+ gpiom1: gpio@0 {
+-        compatible = "mcp,mcp23s17";
++        compatible = "microchip,mcp23s17";
+         gpio-controller;
+         #gpio-cells = <2>;
+         spi-present-mask = <0x01>;
+diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
+index 6a4470b..2f94f0f 100644
+--- a/drivers/gpio/gpio-mcp23s08.c
++++ b/drivers/gpio/gpio-mcp23s08.c
+@@ -483,10 +483,21 @@ fail:
+ #ifdef CONFIG_SPI_MASTER
+ static struct of_device_id mcp23s08_spi_of_match[] = {
+ 	{
+-		.compatible = "mcp,mcp23s08", .data = (void *) MCP_TYPE_S08,
++		.compatible = "microchip,mcp23s08",
++		.data = (void *) MCP_TYPE_S08,
+ 	},
+ 	{
+-		.compatible = "mcp,mcp23s17", .data = (void *) MCP_TYPE_S17,
++		.compatible = "microchip,mcp23s17",
++		.data = (void *) MCP_TYPE_S17,
++	},
++/* NOTE: The use of the mcp prefix is deprecated and will be removed. */
++	{
++		.compatible = "mcp,mcp23s08",
++		.data = (void *) MCP_TYPE_S08,
++	},
++	{
++		.compatible = "mcp,mcp23s17",
++		.data = (void *) MCP_TYPE_S17,
+ 	},
+ 	{ },
+ };
+@@ -496,10 +507,21 @@ MODULE_DEVICE_TABLE(of, mcp23s08_spi_of_match);
+ #if IS_ENABLED(CONFIG_I2C)
+ static struct of_device_id mcp23s08_i2c_of_match[] = {
+ 	{
+-		.compatible = "mcp,mcp23008", .data = (void *) MCP_TYPE_008,
++		.compatible = "microchip,mcp23008",
++		.data = (void *) MCP_TYPE_008,
++	},
++	{
++		.compatible = "microchip,mcp23017",
++		.data = (void *) MCP_TYPE_017,
+ 	},
++/* NOTE: The use of the mcp prefix is deprecated and will be removed. */
+ 	{
+-		.compatible = "mcp,mcp23017", .data = (void *) MCP_TYPE_017,
++		.compatible = "mcp,mcp23008",
++		.data = (void *) MCP_TYPE_008,
++	},
++	{
++		.compatible = "mcp,mcp23017",
++		.data = (void *) MCP_TYPE_017,
+ 	},
+ 	{ },
+ };
+@@ -621,10 +643,15 @@ static int mcp23s08_probe(struct spi_device *spi)
+ 	if (match) {
+ 		type = (int)match->data;
+ 		status = of_property_read_u32(spi->dev.of_node,
+-				"mcp,spi-present-mask", &spi_present_mask);
++			    "microchip,spi-present-mask", &spi_present_mask);
+ 		if (status) {
+-			dev_err(&spi->dev, "DT has no spi-present-mask\n");
+-			return -ENODEV;
++			status = of_property_read_u32(spi->dev.of_node,
++				    "mcp,spi-present-mask", &spi_present_mask);
++			if (status) {
++				dev_err(&spi->dev,
++					"DT has no spi-present-mask\n");
++				return -ENODEV;
++			}
+ 		}
+ 		if ((spi_present_mask <= 0) || (spi_present_mask >= 256)) {
+ 			dev_err(&spi->dev, "invalid spi-present-mask\n");
+-- 
+1.7.10.4
 
-I think you havn't added anything for that .. neither checks for that..
-Do you plan to have a patch for that too ?
-
-
-> > >> +
-> > >> +Now the value that spi-tx-nbits and spi-rx-nbits can receive is only
-> > >> +1(single), 2(dual) and 4(quad). If you don't set spi-tx-nbits or spi-rx-
-> nbits,
-> > >> +spi_device mode will be set in single(1 wire) as default. Another point,
-> if
-> > >> +property:spi-3wire is set, spi-tx/rx-nbits is forbidden to set to <2 or 4>,
-> > >> +otherwise, an errro will return.
-> > >>
-> > > [Pekon]: Also, instead of having separate binding for 'spi-3wire', it can be
-> > > moved under as spi-single = <half-duplex>.
-> > > Full-duplex = Tx and Rx operate on independent channels and
-> > concurrently.
-> > > Half-duplex = Tx and Rx use same bi-directional channel for transmission
-> > >         one by one
-> > >
-> > Actually, spi-3wire can be regarded as a part of spi-single, but
-> > corrected as what you said, there will be some inconvenient.
-> > 1,the driver that has already used spi-3wire need a big change.
-> > 2,there have to be a complexed check in spi framework if set like:
-> >  spi-quad = <tx-only | rx-only | duplex>
-> >  spi-dual = <tx-only | rx-only | duplex>
-> >  spi-single = <tx-only | rx-only | full-duplex | half-duplex>
-> >
-> [Pekon]: No, I'm not asking you to update logic in all drivers,
-> just the DT bindings. Something like this..
-> @@ -872,46 +872,42 @@ static void of_register_spi_devices(struct
-> spi_master *master)
->  		/* Device DUAL/QUAD mode */
->  		prop = of_get_property(nc, "spi-single", &len);
-> 		if (prop == HALF_DUPLEX)
-> 			spi->mode |= SPI_3WIRE;
-> 
-> So, you set the same spi->mode[SPI_3WIRE] bit, thus other drivers are not
-> impacted. And you can deprecate the older "spi-3wire" binding.
-> 
-> with regards, pekon
-> 
-> > >>  If a gpio chipselect is used for the SPI slave the gpio number will be
-> > passed
-> > >>  via the cs_gpio
-> > >> --
-> > >> 1.7.9.5
-> > >
-> > > with regards, pekon
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
