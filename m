@@ -1,145 +1,91 @@
-From: Gerlando Falauto <gerlando.falauto@keymile.com>
-Subject: Re: pci-mvebu driver on km_kirkwood
-Date: Mon, 26 Aug 2013 16:49:23 +0200
-Message-ID: <521B6AF3.9070909@keymile.com>
-References: <51DD88A4.1030506@keymile.com> <20130731100359.3e789236@skate>
- <51F8CA44.4080802@keymile.com> <20130731110045.2dc84981@skate>
- <20130731205034.GA17615@obsidianresearch.com> <20130809140140.GA14990@ulmo>
- <521B1F6A.1090304@keymile.com> <20130826120200.GA15842@ulmo>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v6 0/8] phy: omap-usb: Support multiple instances and new types
+Date: Mon, 26 Aug 2013 18:08:25 +0300
+Message-ID: <1377529713-19762-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130826120200.GA15842@ulmo>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Longchamp,
- Valentin" <Valentin.Longchamp@keymile.com>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Andrew Lunn <andrew@lunn.ch>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: balbi@ti.com, bcousson@baylibre.com
+Cc: tony@atomide.com, george.cherian@ti.com, kishon@ti.com, bigeasy@linutronix.de, sergei.shtylyov@cogentembedded.com, thomas.langer@lantiq.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Hi,
 
-On 08/26/2013 02:02 PM, Thierry Reding wrote:
-> On Mon, Aug 26, 2013 at 11:27:06AM +0200, Gerlando Falauto wrote:
->> Hi guys [particularly Jason and Thierry],
->>
->> sorry for the prolonged silence, here I am back again...
->>
->> On 08/09/2013 04:01 PM, Thierry Reding wrote:
->>> On Wed, Jul 31, 2013 at 02:50:34PM -0600, Jason Gunthorpe wrote:
->>>> On Wed, Jul 31, 2013 at 11:00:45AM +0200, Thomas Petazzoni wrote:
->>>>
->>>>>> Actually, the main reason for trying to use this driver was because I
->>>>>> wanted to model a PCIe *device* within the device tree, so to expose its
->>>>>> GPIOs and IRQs to be referenced (through phandles) from other device
->>>>>> tree nodes. The way I understand it, turns out this is not the way to
->>>>>> go, as PCI/PCIe are essentially enumerated busses, so you're not
->>>>>> supposed to -and it's not a trivial task to- put any information about
->>>>>> real devices within the device tree.
->>>>>> Do you have any suggestion about that?
->>>>>
->>>>> Indeed, PCI/PCIe devices are enumerated dynamically, so they are not
->>>>> listed in the Device Tree, so there's no way to "attach" more
->>>>> information to them.
->>>>>
->>>>> Device Tree people, any suggestion about the above question?
->>>>
->>>> No, that isn't true.
->>>>
->>>> Device tree can include the discovered PCI devices, you have to use
->>>> the special reg encoding and all that weirdness, but it does work. The
->>>> of_node will be attached to the struct pci device automatically.
->>
->> So you mean that, assuming I knew the topology, I could populate the
->> device tree in advance (e.g. statically), so that it already
->> includes *devices* which will be further discovered during probing?
->> Or else you mean the {firmware,u-boot} can do that prior to starting the OS?
->> If either of the above is true, could you please suggest some
->> example (or some way to get one)?
->> I assume the "reg" property (and the after-"@" node name) will need
->> to encode (at least) the device number, is that right?
->>
->> I tried reading the "PCI Bus Binding to Open Firmware" but I could
->> not make complete sense out of it...
->
-> You can find an example of this here:
->
-> 	https://gitorious.org/thierryreding/linux/commit/b85c03d73288f6e376fc158ceac30f29680b4192
->
+This patchset does the following:
 
-Thanks for your precious feedback. Unfortunately gitorious' servers are 
-offline right now... :-(
+* Get rid of omap_control_usb platform data as we support DT only.
 
-> It's been quite some time that I've actually tested that, but it used to
-> work properly. What you basically need to do is represent the whole bus
-> hierarchy within the DT. In the above example there's the top-level root
-> port (pci@1,0), which provides a bus (1) on which there's a switch named
-> pci@0,0. That switch provides another bus (2) on which more devices are
-> listed (pci@[012345],0). Those are all downstream ports providing
-> separate busses again and have a single device attached to them.
->
-> You can pretty much arbitrarily nest nodes that way to represent any
-> hierarchy you want. The tricky part is to get the node numbering right
-> but `lspci -t' helps quite a bit with that.
+* Restructure and add support for new PHY types. We now support the follwing
+four types
 
-One last question though... what does then the numbering ("@a,b") stand 
-for? I assume if the output of a plain (i.e. no params) 'lspci' is
+ TYPE_OMAP - if it has otghs_control mailbox register (e.g. on OMAP4)
+ TYPE_USB2 - if it has Power down bit in control_dev_conf register. e.g. USB2 PHY
+ TYPE_USB3 - if it has DPLL and individual Rx & Tx power control. e.g. USB3 PHY or SATA PHY
+ TYPE_DRA7 - if it has both power down and power aux registers. e.g. USB2 PHY on DRA7
 
-bb:dd.f (bus:device.function)
+* Get rid of "ti,type" DT property and introduce compatible strings for each type.
 
-I should only have a "pci@dd,f" node, with the bus numbering being 
-imposed by the hierarchy after an actual probing, right?
-So the actual bus number is never listed in the device tree (whereas the 
-"@device,function" is). Is that right?
+* Have only one power control API "omap_control_usb_phy_power()" instead of a
+different one for each PHY type.
 
->>>> It is useful for exactly the reason stated - you can describe GPIOs,
->>>> I2C busses, etc, etc in DT and then upon load of the PCI driver engage
->>>> the DT code to populate and connect all that downstream
->>>> infrastructure.
->>
->> I'm not 100% sure I made myself clear though.
->> What I would like to do is to have *other* parts of the device tree
->> be able to reference (i.e., connect to, through phandles) a PCI
->> device (because it provides a GPIO, for instance).
->> Is that also what you mean?
->
-> Yes. In the example above you'll see that there's actually a GPIO
-> controller (pci@1,0/pci@0,0/pci@2,0/pci@0,0), so you could simply
-> associate a phandle with it, as in:
->
-> 	gpioext: pci@0,0 {
-> 		...
-> 	};
->
-> And then hook up other devices to it using the regular notation:
->
-> 	foo {
-> 		...
-> 		enable-gpios = <&gpioext 0 0>;
-> 		...
-> 	};
->
-> That's not done in this example but I've actually used something very
-> similar to that on an x86 platform to hook up the reset pin of an I2C
-> touchscreen controller to a GPIO controller, where both the I2C and
-> GPIO controllers were on the PCI bus.
->
-> I can't find that snippet right now, but I can look more thoroughly if
-> the above doesn't help you at all.
->
-> Thierry
->
+* Get rid of omap_get_control_dev() so that we can support multiple instances
+of the control device. We take advantage of the fact that omap control USB device
+is only present on OMAP4 onwards and hence only supports DT boot. The users
+of control USB device can get a reference to it from the device node's phandle.
 
-I guess I'll have to wait until gitorious.org actually does come back 
-up... then you'll definitely hear from me again. :-)
+Patches are based on balbi/next.
 
-Thanks!
-Gerlando
+Smoke tested on OMAP4 panda with MUSB in gadget mode (g_zero).
+
+You can find the patches in branch
+ usb-control-module
+in git tree
+ git://github.com/rogerq/linux.git
+
+v6:
+- addressed review comment about usage of control_usb before allocation.
+
+v5:
+- fixed whitespace alignment issues.
+
+v4:
+- removed "ti,has-mailbox" from omap-usb binding document example.
+
+v3:
+- return -EINVAL instead of -ENODEV on probe failure.
+- pass device type data through of_device_id table.
+- get rid of "ti,mailbox" property and "has_mailbox" from musb platform data.
+
+v2:
+- get rid of "ti,type" property and introduce compatible strings for each device type.
+
+cheers,
+-roger
+
+---
+Roger Quadros (8):
+  usb: phy: omap-control: Get rid of platform data
+  usb: phy: omap: Add new device types and remove
+    omap_control_usb3_phy_power()
+  usb: phy: omap-usb2: Don't use omap_get_control_dev()
+  usb: phy: omap-usb3: Don't use omap_get_control_dev()
+  usb: musb: omap2430: Don't use omap_get_control_dev()
+  usb: phy: omap: get rid of omap_get_control_dev()
+  ARM: dts: omap4: update omap-control-usb nodes
+  ARM: dts: omap5: update omap-control-usb node
+
+ Documentation/devicetree/bindings/usb/omap-usb.txt |   33 ++--
+ arch/arm/boot/dts/omap4.dtsi                       |   20 ++-
+ arch/arm/boot/dts/omap5.dtsi                       |   20 ++-
+ drivers/usb/musb/omap2430.c                        |   25 ++-
+ drivers/usb/phy/phy-omap-control.c                 |  210 +++++++++++---------
+ drivers/usb/phy/phy-omap-usb2.c                    |   26 ++-
+ drivers/usb/phy/phy-omap-usb3.c                    |   32 +++-
+ include/linux/usb/musb.h                           |    2 -
+ include/linux/usb/omap_control_usb.h               |   33 ++--
+ 9 files changed, 226 insertions(+), 175 deletions(-)
+
+-- 
+1.7.4.1
+
