@@ -1,56 +1,90 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 7/9] watchdog: orion: Update device-tree binding
+Subject: Re: [PATCH RFC v2 3/5] spmi: add generic SPMI controller binding
  documentation
-Date: Tue, 27 Aug 2013 15:44:41 -0600
-Message-ID: <521D1DC9.5040409@wwwdotorg.org>
-References: <1377295942-5955-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1377295942-5955-8-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130826140843.GI13964@titan.lakedaemon.net>
- <20130827083603.GA2286@localhost>
+Date: Tue, 27 Aug 2013 15:55:19 -0600
+Message-ID: <521D2047.8030300@wwwdotorg.org>
+References: <cover.1377202730.git.joshc@codeaurora.org> <e42576b69ef3d4e624fbfa2f32f6f79a931b55d6.1377202730.git.joshc@codeaurora.org> <5217DB0C.7000101@wwwdotorg.org> <20130827170120.GR4035@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130827083603.GA2286@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, wim@iguana.be, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20130827170120.GR4035@joshc.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Sagar Dharia <sdharia@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Michael Bohan <mbohan@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2013 02:36 AM, Ezequiel Garcia wrote:
-> On Mon, Aug 26, 2013 at 10:08:43AM -0400, Jason Cooper wrote:
->> On Fri, Aug 23, 2013 at 07:12:20PM -0300, Ezequiel Garcia wrote:
->>> Change the 'reg' property meaning, by defining two required cells.
->>> It's important to note this commit breaks DT-compatibility for this
->>> device.
->>>
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
->>> ---
->>>  Documentation/devicetree/bindings/watchdog/orion-wdt.txt | 7 +++++--
->>>  1 file changed, 5 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
->>> index 5dc8d30..a74c9c8 100644
->>> --- a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
->>> +++ b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
->>> @@ -3,7 +3,9 @@
->>>  Required Properties:
->>>  
->>>  - Compatibility : "marvell,orion-wdt"
->>> -- reg		: Address of the timer registers
->>> +- reg		: Two cells are required:
->>> +		  First  cell contains the global timer control register.
->>> +		  Second cell contains the watchdog counter register.
+On 08/27/2013 11:01 AM, Josh Cartwright wrote:
+...
+> If we want to ensure for the generic bindings that we are fulling
+> characterizing/describing the SPMI bus, then we'll additionally need to
+> tackle an additional identified assumption:
+> 
+>   4. One master per SPMI bus.  (The SPMI spec allows for up to 4
+>      masters)
+> 
+> On the Snapdragon 800 series, there exists only one software-controlled
+> master, but it is conceivably possible to have a setup with two
+> software-controlled masters on the same SPMI bus.
+> 
+> This necessarily means that the description of the slaves and the
+> masters will need to be decoupled; I'm imagining a generic binding
+> supporting multiple masters would look something like this:
 
-BTW, you don't have 2 cells here, but 4 cells (assuming typical
-#address-cells and #size-cells values). Instead, you have 2 register
-specifiers.
+Is there a need to represent the other masters in the DT? Sure they're
+there in HW, but if there's no specific way for the
+CPU-to-which-the-DT-applies to actually interact with those other
+masters (except perhaps by experiencing some arbitration delays) then
+presumably there's no need to represent the other masters in DT?
+
+> 	master0: master@0 {
+> 		compatible = "...";
+> 		#spmi-master-cells = <0>;
+> 		spmi-mid = <0>;
+> 
+> 		...
+> 	};
+> 
+> 	master2: master@2 {
+> 		compatible = "...";
+> 		#spmi-master-cells = <0>;
+> 		spmi-mid = <2>;
+> 
+> 		...
+> 	};
+> 
+> 	spmi_bus {
+> 		compatible = "...";
+> 
+> 		spmi-masters = <&master0 &master2>;
+> 
+> 		foo@0 {
+> 			compatible = "...";
+> 			reg = <0 ...>;
+> 		};
+> 
+> 		foo@8 {
+> 			compatible = "...";
+> 			reg = <8 ...>;
+> 		};
+> 	};
+> 
+> (This will also necessitate a change in the underlying SPMI driver
+> model, in the current implementation, a SPMI master 'owns' a particular
+> device.  This is not a valid assumption to make.)
+> 
+> Would this property-containing-phandle-vector be considered the
+> canonical way of representing nodes with multiple parents in the device
+> tree?
+
+I don't think I've seen anything like this before, although that
+in-and-of-itself doesn't make it wrong.
+
+Another approach might be to encode master-vs-slave into a cell in the
+reg property? Something like:
+
+cell 0 - address type (0: master, 1: unique ID, 2: group ID, ...)
+cell 1 - address value
+
+I haven't thought much about that; perhaps there are disadvantages doing
+that.
