@@ -1,56 +1,67 @@
-From: Archit Taneja <archit@ti.com>
-Subject: Re: [PATCH v2] gpio: Enable pcf857x GPIO expander for Device Tree
-Date: Tue, 27 Aug 2013 12:30:18 +0530
-Message-ID: <521C4E82.9040309@ti.com>
-References: <1370527523-1030-1-git-send-email-archit@ti.com> <1377498081-16358-1-git-send-email-archit@ti.com> <CACRpkda5Q-Zs8A2VFPvMc9519QWJ3EH08g4Do0se6BcLEg+rug@mail.gmail.com> <7142087.DRSP8TfuKN@avalon>
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] pinctrl: pinctrl-single: Convert to devm_ioremap_resource()
+Date: Tue, 27 Aug 2013 12:35:34 +0530
+Message-ID: <1377587134-8967-1-git-send-email-manishv.b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <7142087.DRSP8TfuKN@avalon>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 August 2013 12:17 PM, Laurent Pinchart wrote:
-> On Tuesday 27 August 2013 05:20:45 Linus Walleij wrote:
->> On Mon, Aug 26, 2013 at 8:21 AM, Archit Taneja <archit@ti.com> wrote:
->>> Add code to parse the GPIO expander Device Tree node and extract platform
->>> data out of it, and populate the struct 'pcf857x_platform_data'
->>> maintained by the driver. This enables devices to reference the gpio
->>> expander from Device Tree.
->>>
->>> Add DT binding info in Documentation.
->>>
->>> Signed-off-by: Archit Taneja <archit@ti.com>
->>> ---
->>> - v2 posted after quite a while, sorry for the delay!
->>>
->>> Changes in v2:
->>> - second gpeio-cell description corrected in Documentation
->>> - interrupt controller description removed for now, will be added in a
->>>    follow up patch
->>> - n_latch description updated
->
-> And it seems that the patch conflicts with
->
-> https://lkml.org/lkml/2013/8/26/248
->
-> :-/
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b-l0cyMroinI0@public.gmane.org>
 
-:/
+Convert devm_request_mem_region() and devm_ioremap() to
+devm_ioremap_resource() which provides more consistent
+error handling to manage resource.
 
->
-> If we end up merging this one, I'd like to at least rename the DT n-latch
-> property to pin-initial-states as in my patch and update the documentation, as
-> I find it more explicit.
+Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b-l0cyMroinI0@public.gmane.org>
+---
+:100644 100644 7323cca... b0fef18... M	drivers/pinctrl/pinctrl-single.c
+ drivers/pinctrl/pinctrl-single.c |   21 +++------------------
+ 1 file changed, 3 insertions(+), 18 deletions(-)
 
-I think your patch is cleaner and more descriptive. The only thing which 
-I am not clear about in your patch is the extra work done in getting 
-ngpio, that should be available in i2c_device_id pointer argument in 
-probe(id points to the array pcf857x_id already available in the driver 
-with the number of gpios for each chip variant).
-
-Archit
-
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 7323cca..b0fef18 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -1556,24 +1556,9 @@ static int pcs_probe(struct platform_device *pdev)
+ 						  "pinctrl-single,bit-per-mux");
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		dev_err(pcs->dev, "could not get resource\n");
+-		return -ENODEV;
+-	}
+-
+-	pcs->res = devm_request_mem_region(pcs->dev, res->start,
+-			resource_size(res), DRIVER_NAME);
+-	if (!pcs->res) {
+-		dev_err(pcs->dev, "could not get mem_region\n");
+-		return -EBUSY;
+-	}
+-
+-	pcs->size = resource_size(pcs->res);
+-	pcs->base = devm_ioremap(pcs->dev, pcs->res->start, pcs->size);
+-	if (!pcs->base) {
+-		dev_err(pcs->dev, "could not ioremap\n");
+-		return -ENODEV;
+-	}
++	pcs->base = devm_ioremap_resource(pcs->dev, res);
++	if (IS_ERR(pcs->base))
++		return PTR_ERR(pcs->base);
+ 
+ 	INIT_RADIX_TREE(&pcs->pgtree, GFP_KERNEL);
+ 	INIT_RADIX_TREE(&pcs->ftree, GFP_KERNEL);
+-- 
+1.7.9.5
