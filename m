@@ -1,139 +1,50 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 00/15] Armada 370/XP watchdog support
-Date: Tue, 27 Aug 2013 11:06:51 -0400
-Message-ID: <20130827150651.GF19598@titan.lakedaemon.net>
-References: <1377614079-10000-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Chen Guangyu-B42378 <B42378@freescale.com>
+Subject: Re: [PATCH v11] ASoC: fsl: Add S/PDIF machine driver
+Date: Tue, 27 Aug 2013 15:15:37 +0000
+Message-ID: <E31481825E4C03459FC878EE97CB2EFD0CC5C0C4@039-SN2MPN1-022.039d.mgd.msft.net>
+References: <fac39ed91818630e03f81a5f0cf9ddde0e6a3c3a.1377244995.git.b42378@freescale.com>
+ <5217B32C.5070300@wwwdotorg.org> <20130823191353.GK25263@sirena.org.uk>
+ <20130827020107.GB3758@MrMyself>,<20130827145016.GW10783@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1377614079-10000-1-git-send-email-ezequiel.garcia@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, wim@iguana.be, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20130827145016.GW10783@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "lars@metafoo.de" <lars@metafoo.de>, Stephen Warren <swarren@wwwdotorg.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Ezequiel,
+Oh, I didn't mean to push this. Sorry that I wasn't aware of it.
 
-it's a good idea to Cc devicetree ML on the coverletter so that folks
-can have the context at hand.
+I'll be more patient next time.
 
-thx,
+Best regards,
+Nicolin Chen
+________________________________________
+From: Mark Brown [broonie@kernel.org]
+Sent: Tuesday, August 27, 2013 10:50 PM
+To: Chen Guangyu-B42378
+Cc: Stephen Warren; mark.rutland@arm.com; devicetree@vger.kernel.org; alsa-devel@alsa-project.org; lars@metafoo.de; s.hauer@pengutronix.de; tomasz.figa@gmail.com; rob.herring@calxeda.com; p.zabel@pengutronix.de; shawn.guo@linaro.org; linuxppc-dev@lists.ozlabs.org
+Subject: Re: [alsa-devel] [PATCH v11] ASoC: fsl: Add S/PDIF machine driver
 
-Jason.
+On Tue, Aug 27, 2013 at 10:01:08AM +0800, Nicolin Chen wrote:
 
-On Tue, Aug 27, 2013 at 11:34:24AM -0300, Ezequiel Garcia wrote:
-> This patchset adds support for Armada 370/XP SoC watchdog using the
-> orion-wdt driver. Several issues were blocking this addition, each
-> of which has timely discussed and (at least initially) agreed.
-> 
-> Namely, the issues are:
-> 
-> * Handling of clock input differences, which was related
->   to Armada 370/XP clocksource reference 25 MHz issue.
->   This is already solved by the work in [1] (merge pending).
-> 
-> * Shared register handling. It was agreed to introduce an atomic
->   read/modify API for such accesses [2]. Once the API is merged we'll use
->   it to access the timer control register shared between clocksource
->   and watchdog drivers.
-> 
-> * Watchdog RSTOUT enable. It was decided [3] that this was better
->   handled at each machine initialization (and so this patchset
->   does such change). This change allows to remove the mach-specific
->   header in orion-wdt,  allowing multiplatform build.
-> 
-> The current patchset is based and superseeds the previous v2 on
-> Orion watchdog:
-> 
->   http://www.spinics.net/lists/arm-kernel/msg269526.html
-> 
-> However, this is a new patchset that allow to support Armada 370/XP
-> watchdog.
-> 
-> Patches 1-5 removes and reworks the orion-wdt to allow to remove the
-> mach-specific header.
-> 
-> Patches 6-9 adds the infrastructure required to support multiple SoCs
-> in the orion-wdt driver, and then uses it to support Armada 370 and
-> Armada XP.
-> 
-> Patches 9-15 completes the support by updating the devicetree binding
-> documentation, devicetree files, and default configuration.
-> 
-> This series is based in v3.11-rc6 and has been tested on:
-> 
->  * Kirkwood Openblocks A6
->  * Armada XP Openblocks AX3
->  * Armada 370 Mirabox
-> 
-> (I must thank Plat'home for donating those beatiful boxes!)
-> 
-> [1] http://comments.gmane.org/gmane.linux.ports.arm.kernel/261861
-> [2] http://lwn.net/Articles/564709/
-> [3] http://www.spinics.net/lists/arm-kernel/msg269994.html
-> 
-> Thanks!
-> 
-> Ezequiel Garcia (15):
->   watchdog: orion: Remove unneeded BRIDGE_CAUSE clear
->   ARM: orion: Assert watchdog RSTOUT enable bit
->   ARM: mvebu: Add watchdog RSTOUT enable in system-controller init
->   watchdog: orion: Remove RSTOUT bit enable/disable
->   watchdog: orion: Allow to build in any Orion platform
->   watchdog: orion: Introduce an orion_watchdog device structure
->   watchdog: orion: Introduce per-compatible of_device_id data
->   watchdog: orion: Add per-compatible clock initialization
->   watchdog: orion: Add support for Armada 370 and Armada XP SoC
->   ARM: mvebu: Add RSTOUT cell to system-controller DT node
->   ARM: mvebu: Enable Armada 370/XP watchdog in the devicetree
->   watchdog: orion: Rename device-tree binding documentation
->   watchdog: orion: Add other compatibles to devicetree binding
->   ARM: mvebu: system-controller: Add second reg cell devicetree
->     specification
->   ARM: mvebu: Enable watchdog in defconfig
-> 
->  .../bindings/arm/mvebu-system-controller.txt       |   7 +-
->  .../devicetree/bindings/watchdog/marvel.txt        |  19 --
->  .../devicetree/bindings/watchdog/orion-wdt.txt     |  34 +++
->  arch/arm/boot/dts/armada-370-xp.dtsi               |   4 +
->  arch/arm/boot/dts/armada-370.dtsi                  |   7 +-
->  arch/arm/boot/dts/armada-xp.dtsi                   |   8 +-
->  arch/arm/configs/mvebu_defconfig                   |   3 +
->  arch/arm/mach-dove/board-dt.c                      |   2 +
->  arch/arm/mach-dove/common.c                        |   2 +
->  arch/arm/mach-dove/include/mach/bridge-regs.h      |   1 +
->  arch/arm/mach-kirkwood/board-dt.c                  |   2 +
->  arch/arm/mach-kirkwood/common.c                    |   2 +
->  arch/arm/mach-kirkwood/include/mach/bridge-regs.h  |   1 +
->  arch/arm/mach-mv78xx0/common.c                     |   2 +
->  arch/arm/mach-mv78xx0/include/mach/bridge-regs.h   |   1 +
->  arch/arm/mach-mvebu/system-controller.c            |  22 ++
->  arch/arm/mach-orion5x/board-dt.c                   |   4 +
->  arch/arm/mach-orion5x/common.c                     |   2 +
->  arch/arm/mach-orion5x/include/mach/bridge-regs.h   |   1 +
->  arch/arm/plat-orion/common.c                       |   5 +
->  arch/arm/plat-orion/include/plat/common.h          |   1 +
->  drivers/watchdog/Kconfig                           |   2 +-
->  drivers/watchdog/orion_wdt.c                       | 244 +++++++++++++++------
->  23 files changed, 283 insertions(+), 93 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/marvel.txt
->  create mode 100644 Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-> 
-> -- 
-> 1.8.1.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> On Fri, Aug 23, 2013 at 08:13:53PM +0100, Mark Brown wrote:
+
+> I think this patch hasn't been applied yet, already been acked though.
+> Is there any problem in it?
+
+You've allowed less than one working day for a response here - Monday
+was a holiday in the UK.  Something like a week is normally a minimum
+for this sort of thing, especially in a case like this where there has
+been extensive discussion.
