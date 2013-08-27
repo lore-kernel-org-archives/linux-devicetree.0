@@ -1,41 +1,57 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Tue, 27 Aug 2013 16:38:24 -0400
-Message-ID: <521D0E40.3010302@ti.com>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <521D0964.2080209@wwwdotorg.org>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH 3/5] drivers: thermal: make usage of CONFIG_THERMAL_HWMON optional
+Date: Tue, 27 Aug 2013 23:17:38 +0200
+Message-ID: <8131326.8QGX41MW6c@vostro.rjw.lan>
+References: <1377295396-17289-1-git-send-email-eduardo.valentin@ti.com> <4832825.8PCMQe7StP@vostro.rjw.lan> <521CEF61.6040504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <521D0964.2080209@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, poeschel@lemonage.de, grant.likely@linaro.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, ian.campbell@citrix.com, galak@codeaurora.org, pawel.moll@arm.com, tomasz.figa@gmail.com, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, Rajendra Nayak <rnayak@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <521CEF61.6040504@ti.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: linux-pm@vger.kernel.org, rui.zhang@intel.com, linux-kernel@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, Peter Feuerer <peter@piie.net>, platform-driver-x86@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 August 2013 04:17 PM, Stephen Warren wrote:
-> On 08/26/2013 08:07 AM, Lars Poeschel wrote:
->> From: Linus Walleij <linus.walleij@linaro.org>
->>
->> Currently the kernel is ambigously treating GPIOs and interrupts
->> from a GPIO controller: GPIOs and interrupts are treated as
->> orthogonal. This unfortunately makes it unclear how to actually
->> retrieve and request a GPIO line or interrupt from a GPIO
->> controller in the device tree probe path.
+On Tuesday, August 27, 2013 02:26:41 PM Eduardo Valentin wrote:
+> On 23-08-2013 19:08, Rafael J. Wysocki wrote:
+> > On Friday, August 23, 2013 06:03:14 PM Eduardo Valentin wrote:
+> >> When registering a new thermal_device, the thermal framework
+> >> will always add a hwmon sysfs interface.
+> >>
+> >> This patch adds a flag to make this behavior optional. Now
+> >> when registering a new thermal device, the caller needs
+> >> to say if the hwmon interface is required.
+> >>
+> >> In order to keep same behavior as of today, all current
+> >> calls will by default create the hwmon interface.
+> > 
+> > Well, instead of modifying all of the callers this way, why don't
+> > you add new versions taking the additional argument as, for example,
+> > 
+> > thermal_zone_device_register_full()
+> > 
+> > and redefine the old ones as static inline wrappers, for example
+> > 
+> > static inline struct thermal_zone_device *thermal_zone_device_register(args)
+> > {
+> > 	return thermal_zone_device_register_full(args, true);
+> > }
+> > 
+> > ?
 > 
-> I still think that this patch is the wrong approach. Instead, the logic
-> should be hooked into gpio_request() and request_irq(). This patch only
-> addresses DT, and ignores anything else, hence doesn't seem like the
-> right level of abstraction to plug in, since the issue is not related to DT.
+> Yeah, that is another way to go and I thought of doing it like that. I
+> just could not come out with a good API naming:
 > 
-On the issue, Rajendra cooked up a patch [1] to handle the issue at
-irqdomain level which was shot down after further discussion. It might
-be useful for the discussion here. Ofcourse it was also targeted to
-solve only DT issue.
+> thermal_zone_device_register_full(all args)
+> 
+> thermal_zone_device_register(args) /* on hwmon == true */
+> thermal_zone_device_register_no_hwmon(args) /* on hwmon == false */
+> 
+> Would this sound reasonable naming?
 
-Regards,
-Santosh
+Yeah, sounds good to me.
 
-[1]
-"[PATCH] irqdomain: Do a gpio_request in case of a gpio irq_chip"
-http://www.mail-archive.com/linux-omap@vger.kernel.org/msg83451.html
+Thanks,
+Rafael
+
