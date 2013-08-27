@@ -1,140 +1,201 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH RFC v2 3/5] spmi: add generic SPMI controller binding
- documentation
-Date: Tue, 27 Aug 2013 12:01:20 -0500
-Message-ID: <20130827170120.GR4035@joshc.qualcomm.com>
-References: <cover.1377202730.git.joshc@codeaurora.org>
- <e42576b69ef3d4e624fbfa2f32f6f79a931b55d6.1377202730.git.joshc@codeaurora.org>
- <5217DB0C.7000101@wwwdotorg.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v5 1/4] ARM: OMAP2+: cleaned-up DT support of various ECC
+ schemes
+Date: Tue, 27 Aug 2013 10:04:42 -0700
+Message-ID: <20130827170442.GB22852@quad.lixom.net>
+References: <1373748891-7779-1-git-send-email-pekon@ti.com>
+ <1373748891-7779-2-git-send-email-pekon@ti.com>
+ <20130822045452.GA5151@quad.lixom.net>
+ <20980858CB6D3A4BAE95CA194937D5E73E9F9E94@DBDE04.ent.ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5217DB0C.7000101@wwwdotorg.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Josh Cartwright <joshc@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Sagar Dharia <sdharia@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Michael Bohan <mbohan@codeaurora.org>, devicetree@vger.kernel.org
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73E9F9E94@DBDE04.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Gupta, Pekon" <pekon@ti.com>
+Cc: "zonque@gmail.com" <zonque@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "N, Mugunthan V" <mugunthanvnm@ti.com>, "tony@atomide.com" <tony@atomide.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Stephen-
+On Thu, Aug 22, 2013 at 07:56:57AM +0000, Gupta, Pekon wrote:
+> > This change doesn't look like an improvement to me.
+> > 
+> [Pekon]: Accepted. I'll drop this. However, this is not a new binding.
+> I was just elaborating & formatting the description because code allows only
+> two values "16" or "8".
 
-Thanks for the comments.
+No need to prefix your replies with [Pekon]. Based on quotation level it's easy
+to see who said what.
 
-On Fri, Aug 23, 2013 at 03:58:36PM -0600, Stephen Warren wrote:
-> On 08/22/2013 01:59 PM, Josh Cartwright wrote:
-> > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> > ---
-> > I'm introducing this as an RFC, because there are set of assumptions
-> > made in this binding spec, that currently hold true for the supported
-> > controller/addressing scheme for the Snapdragon 800 series, but don't
-> > necessarily hold true for SPMI in general.
+> > > - - ti,nand-ecc-opt:		A string setting the ECC layout to use. One of:
+> > >
+> > > -		"sw"		Software method (default)
+> > > -		"hw"		Hardware method
+> > > -		"hw-romcode"	gpmc hamming mode method & romcode
+> > layout
+> > > -		"bch4"		4-bit BCH ecc code
+> > > -		"bch8"		8-bit BCH ecc code
+> > > + - ti,nand-ecc-opt:		Determines the ECC scheme used by driver.
+> > > +				It can be any of the following strings:
 > > 
-> >   1. No use of Group Slave Identifiers (GSIDs)
-> >      (SPMI allows for a slave to belong to zero or more groups specified
-> >      by GSID, however this feature isn't currently implemented)
+> > The device tree should define the hardware, not configure the software.
 > > 
-> >   2. No specification of Master Identifier (MID)
-> >      (A "system integrator" allocates to each master a 2-bit MID, this
-> >      currently isn't being specified, as it isn't needed by software for
-> >      the PMIC Arb; not sure if this is of use to other SPMI controllers)
+> > Also, if it defines the scheme then you should probably call it something like
+> > "ti,nand-ecc-scheme" instead.
 > > 
-> >   3. Single SPMI master per controller
-> > 
-> > Effectively, only a subset of possible SPMI configurations are specified
-> > in this document.
-> > 
-> > So, if it's considered necessary to provide a generic SPMI binding
-> > specification, is it acceptable to only define a subset at this time,
-> > expanding only when necessary, or shall I expand the definition to at
-> > least address 1 & 2, even though they are of no use in the current
-> > implementation?
+> [Pekon]: Again, ti,nand-ecc-opt is not new DT binding, This was added in
+> 	Commit bc6b1e7b86f5d8e4a6fc1c0189e64bba4077efe0
+> 	Daniel Mack <zonque@gmail.com>
+> 	ARM: OMAP: gpmc: add DT bindings for GPMC timings and NAND
+> I just expanded its options..
+
+Yes, but it's not describing hardware.
+
+If anything, the device entry should somehow describe the various ecc options
+that the hardware implements (if you can't derive that from the compatible
+value, which I think you can?).
+
+> Also I'll try to explain how below ecc-scheme selection is linked to TI Hardware.
+> TI SoC uses two separate H/W engines for calculating and correcting ECC.
+> (a) GPMC: General Purpose Memory Controller which calculates ECC also.
+> (b) ELM: Error Locator Module which just locates errors in BCHx code only.
 > 
-> It's best to define the whole thing from the start if possible. It's
-> easier to ensure the whole binding is consistent, and nothing has been
-> left out.
+> *Reason-1*: All OMAP platforms have (a) GPMC h/w engine, but some 
+> legacy OMAP  platforms do not have (b) ELM h/w engine. Such older 
+> platforms use S/W lib/bch.c libraries for ECC error detection.
 
-That makes sense.  I think I'll go down this route for v3 of this
-patchset:
+Ok, so then you just need a binary "elm-engine" property to indicate
+that the hardware does have the engine.
 
-For #1 above, extend the 'reg' property of a slave node to include the
-group slave ID's in which the slave is a member.  The first 'reg' entry
-will remain the slave's Unique Slave Identifier (USID) as before.
+> Therefore in-order to keep the driver consistent for all platforms we 
+> needed to keep so many ECC options alive. Like below you would see
+> two versions of BCH8 and BCH4
+> - bch8_code_hw (supported on new devices with ELM h/w engine)
+> - bch8_code_hw_detection_sw (kept for legacy devices)
 
-For #2, add additional required 'spmi-mid' property in the
-controller/master node that describes the 2-bit Master Identifier (MID).
+All you need to specify is what ECC format is used. I.e. BCH8. Whether the
+hardware or software will be used to calculate the checksums and detect/correct
+errors is a driver decision, and not something that the device tree needs to
+specify.
 
-For #3, rename the SPMI API's s/controller/master/.  The current
-controller/master terminology difference is confusing and unnecessary.
+> *Reason-2*: Also H/W ECC schemes have different ECC layout, which is
+> compatible to ROM code. Thus end-to-end NAND boot would work
+> only with xx_code_hw schemes only.
 
-> However, it's probably OK to define a subset binding initially and then
-> expand it later, as long as some thought it put into how it can be
-> expanded in a way that is 100% compatible: old DTs will still operate
-> with new kernels and perhaps even new DTs will still operate with old
-> kernels.
+So you should describe what the layout in use is. Wouldn't it be
+possible to make the software handle the same layout as the hardware
+engine if needed? I.e. the decision of using HW or SW is not a property
+of the hardware and shouldn't be described in the device tree.
+
+> Hence ECC selection is dependent on H/W, hence put as DT binding.
+> But I agree going forward we should deprecate most of legacy options
+> when there is common H/W platform for all devices.
+> 
+> 
+> > > +
+> > > +	"hamming_code_sw"		1-bit Hamming ECC
+> > > +					- ECC calculation in software
+> > > +					- Error detection in software
+> > > +
+> > > +	"hamming_code_hw"		1-bit Hamming ECC
+> > > +					- ECC calculation in hardware
+> > > +					- Error detection in software
+> > 
+> > Bzzt. Same here. It really doesn't matter to the hardware if the ECC is
+> > calculated in HW or SW, and it doesn't belong in the device tree.
+> 
+> [Pekon]: Not a new bindings option just renamed, and kept for legacy
+>  compatibility (please refer change diff below)
+
+Same arguments as above.
+
+> > > -		"sw"		Software method (default)
+> 	renamed to "hamming_code_sw"
+> 
+> > > -		"hw"		Hardware method 
+> 	renamed to "hamming_code_hw"
+> 
+> 
+> > > +
+> > > +	"hamming_code_hw_romcode"	1-bit Hamming ECC
+> > > +					- ECC calculation in hardware
+> > > +					- Error detection in software
+> > > +					- ECC layout compatible to ROM code
+> > > +
+> > > +	"bch8_hw_code_detection_sw"	8-bit BCH ECC
+> > > +					- ECC calculation in hardware
+> > > +					- Error detection in software
+> > > +					- depends on
+> > CONFIG_MTD_NAND_ECC_BCH
+> > 
+> > Configuration options don't belong in here either.
+> > 
+> [Pekon]: As explained above, legacy platforms do not have ELM h/w.
+> So they depend on lib/bch.c libraries for ECC detection. But that bloats
+> the driver code-footprint a lot, just to maintain compatibility for legacy
+> device platforms. Therefore I had to use KConfigs to keep driver
+> code-footprint small.
 >
-> That said, if the thought is put in to ensure that's possible, it's
-> probably just as easy to define the whole binding from the start.
+> I can remove KConfig from documentation, but then it would confuse
+> the users when they get NAND probing errors because:
+> - bchx_hw_code requires ELM h/w engine, which is not present on 
+> 	legacy devices.
+> -  bchx_hw_code_detection_sw requires lib/bch.c which is only
+> 	 enabled by CONFIG_MTD_NAND_ECC_BCH.
+> 
+> Will removing KConfig from DT Documentation be acceptable ?
 
-That all makes sense.
+Yes, please remove it. Bindings documentation should not document kernel config
+options.
 
-If we want to ensure for the generic bindings that we are fulling
-characterizing/describing the SPMI bus, then we'll additionally need to
-tackle an additional identified assumption:
+> > > +
+> > > +	"bch8_code_hw"             	8-bit BCH ECC
+> > > +					- ECC calculation in hardware
+> > > +					- Error detection in hardware
+> > > +					- depends on
+> > CONFIG_MTD_NAND_OMAP_BCH
+> > > +					- requires <elm_id> to be specified
+> > 
+> > Some of the above clearly shouldn't be described in the device tree at all, but
+> > it's also not very convenient to describe them as strings. Since you have
+> > a binding, it's probably easier to give them integer values and just define
+> > what those mean.
+> > 
+> [Pekon]: Do you mean something like below ?
+> ti,nand-ecc-scheme(n)  where 'n' means
+> 	0 ==  1-bit Hamming in S/W
+> 	1 ==  1-bit Hamming in H/W
+> 	2 ==  BCH4 with S/W detection
+> 	3 ==  BCH4 all in H/W
+> 	4 ==  BCH8 with S/W detection
+> 	5 ==  BCH8 all in H/W
 
-  4. One master per SPMI bus.  (The SPMI spec allows for up to 4
-     masters)
+Well, see above -- I think you can just describe the properties of the hardware
+and make the driver pick appropriate setup based on it.
 
-On the Snapdragon 800 series, there exists only one software-controlled
-master, but it is conceivably possible to have a setup with two
-software-controlled masters on the same SPMI bus.
+> > > + - elm_id:			Specifies elm device node. This is required to
+> > > +				support some BCH ECC schemes mentioned
+> > above.
+> > 
+> > Use dashes instead of underscores for properties. if all other properties are
+> > prepended with "ti,", then so should this.
+> > 
+> [Pekon]: Accepted. But again this is not new DT binding. It was added in
+> 	Commit 97c794a1e37b1ca128ef38f17c069186bfa5fb1b
+> 	Philip Avinash <avinashphilip@ti.com>
+> 	gpmc: Add device tree documentation for elm handle
 
-This necessarily means that the description of the slaves and the
-masters will need to be decoupled; I'm imagining a generic binding
-supporting multiple masters would look something like this:
+Since you are revising the binding, this is the time to change it.
 
-	master0: master@0 {
-		compatible = "...";
-		#spmi-master-cells = <0>;
-		spmi-mid = <0>;
+> > What's an ELM device node? How is it specified? A phandle?
+> > 
+> [Pekon]: ELM is a DT node specified in soc.dtsi (because ELM is not
+>  present in  legacy devices). Example Please refer:
+> $KERNEL/arch/arm/boot/dts/am33xx.dtsi
 
-		...
-	};
+What I meant with a question like that is: Please document how it's specified.
+It's not clear from reading it, since I had to ask.
 
-	master2: master@2 {
-		compatible = "...";
-		#spmi-master-cells = <0>;
-		spmi-mid = <2>;
 
-		...
-	};
 
-	spmi_bus {
-		compatible = "...";
-
-		spmi-masters = <&master0 &master2>;
-
-		foo@0 {
-			compatible = "...";
-			reg = <0 ...>;
-		};
-
-		foo@8 {
-			compatible = "...";
-			reg = <8 ...>;
-		};
-	};
-
-(This will also necessitate a change in the underlying SPMI driver
-model, in the current implementation, a SPMI master 'owns' a particular
-device.  This is not a valid assumption to make.)
-
-Would this property-containing-phandle-vector be considered the
-canonical way of representing nodes with multiple parents in the device
-tree?
-
-Thanks,
-  Josh
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+-Olof
