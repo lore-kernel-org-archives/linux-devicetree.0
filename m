@@ -1,69 +1,73 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2] gpio: Enable pcf857x GPIO expander for Device Tree
-Date: Tue, 27 Aug 2013 09:58:05 +0200
-Message-ID: <1469857.rVNB2R9T3s@avalon>
-References: <1370527523-1030-1-git-send-email-archit@ti.com> <7142087.DRSP8TfuKN@avalon> <521C4E82.9040309@ti.com>
+From: yuhang wang <wangyuhang2014@gmail.com>
+Subject: Re: [PATCH V2 1/2] spi: dual and quad support(device tree)
+Date: Tue, 27 Aug 2013 15:56:16 +0800
+Message-ID: <CAHSAbzMjLiY14bX-FLj0nsVg2fPge21jWPZBDUybC6YeGNk7Ow@mail.gmail.com>
+References: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
+ <20980858CB6D3A4BAE95CA194937D5E73E9FAEF9@DBDE04.ent.ti.com>
+ <CAHSAbzMFJMav4VrBEmMx1bsmDXs4pW0wPg9B212aVnDy9p+gtQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <521C4E82.9040309@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Archit Taneja <archit@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CAHSAbzMFJMav4VrBEmMx1bsmDXs4pW0wPg9B212aVnDy9p+gtQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: "Gupta, Pekon" <pekon@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar,
+ Sourav" <sourav.poddar@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Archit,
+Hi, Pekon
 
-On Tuesday 27 August 2013 12:30:18 Archit Taneja wrote:
-> On Tuesday 27 August 2013 12:17 PM, Laurent Pinchart wrote:
-> > On Tuesday 27 August 2013 05:20:45 Linus Walleij wrote:
-> >> On Mon, Aug 26, 2013 at 8:21 AM, Archit Taneja <archit@ti.com> wrote:
-> >>> Add code to parse the GPIO expander Device Tree node and extract
-> >>> platform
-> >>> data out of it, and populate the struct 'pcf857x_platform_data'
-> >>> maintained by the driver. This enables devices to reference the gpio
-> >>> expander from Device Tree.
-> >>> 
-> >>> Add DT binding info in Documentation.
-> >>> 
-> >>> Signed-off-by: Archit Taneja <archit@ti.com>
-> >>> ---
-> >>> - v2 posted after quite a while, sorry for the delay!
-> >>> 
-> >>> Changes in v2:
-> >>> - second gpeio-cell description corrected in Documentation
-> >>> - interrupt controller description removed for now, will be added in a
-> >>> 
-> >>>    follow up patch
-> >>> 
-> >>> - n_latch description updated
-> > 
-> > And it seems that the patch conflicts with
-> > 
-> > https://lkml.org/lkml/2013/8/26/248
-> > 
-> > :-/
+What about the comment below, do I still need to check the mode before setting.
+
+>> You missed out comments provided earlier..
+>> http://lists.infradead.org/pipermail/linux-mtd/2013-August/048374.html
+>>
+>> Remember .. this compatibility check is between spi_device->mode
+>> v/s spi_master->mode_bits. This is different from ur V3 patch
+>> which checks for spi_transfer->tx_nbits v/s spi_device->mode.
+>>
+>> + if ((xfer->tx_nbits == SPI_NBITS_DUAL) &&
+>> + !(spi->mode & (SPI_TX_DUAL | SPI_TX_QUAD)))
+>> + return -EINVAL;
+>> + if ((xfer->tx_nbits == SPI_NBITS_QUAD) &&
+>> + !(spi->mode & SPI_TX_QUAD))
+>> + return -EINVAL;
+>>
+>>
+> Sorry for my mis-understanding. But here I want to regard DUAL / QUAD
+> mode just as other mode, such as CPHA, CPOL and so on. To other mode,
+> spi framework didn't do such check, example:
+> ---------------------------------------------------------------------------------
+> /* Mode (clock phase/polarity/etc.) */
+> if (of_find_property(nc, "spi-cpha", NULL))
+>     spi->mode |= SPI_CPHA;
+> if (of_find_property(nc, "spi-cpol", NULL))
+>     spi->mode |= SPI_CPOL;
+> ---------------------------------------------------------------------------------
 >
-> :/
+> Spi framework do this check in spi_setup as follow:
+> ---------------------------------------------------------------------------------
+> bad_bits = spi->mode & ~spi->master->mode_bits;
+> if (bad_bits) {
+>     dev_err(&spi->dev, "setup: unsupported mode bits %x\n",
+>           bad_bits);
+>     return -EINVAL;
+> }
+> ---------------------------------------------------------------------------------
+> So to keep that consistant, I don't think it is necessary to add the
+> check when setting the mode.
 >
-> > If we end up merging this one, I'd like to at least rename the DT n-latch
-> > property to pin-initial-states as in my patch and update the
-> > documentation, as I find it more explicit.
-> 
-> I think your patch is cleaner and more descriptive.
+> Best regards
 
-Thank you.
-
-> The only thing which I am not clear about in your patch is the extra work
-> done in getting ngpio, that should be available in i2c_device_id pointer
-> argument in probe(id points to the array pcf857x_id already available in the
-> driver with the number of gpios for each chip variant).
-
-You're right. I'll fix that and repost.
-
--- 
-Regards,
-
-Laurent Pinchart
-
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
