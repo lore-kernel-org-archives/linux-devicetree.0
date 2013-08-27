@@ -1,76 +1,92 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH v2 7/9] watchdog: orion: Update device-tree binding
- documentation
-Date: Tue, 27 Aug 2013 05:36:04 -0300
-Message-ID: <20130827083603.GA2286@localhost>
-References: <1377295942-5955-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1377295942-5955-8-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130826140843.GI13964@titan.lakedaemon.net>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH V2 1/2] spi: dual and quad support(device tree)
+Date: Tue, 27 Aug 2013 08:37:46 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9FAFEE@DBDE04.ent.ti.com>
+References: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
+ <20980858CB6D3A4BAE95CA194937D5E73E9FAEF9@DBDE04.ent.ti.com>
+ <CAHSAbzMFJMav4VrBEmMx1bsmDXs4pW0wPg9B212aVnDy9p+gtQ@mail.gmail.com>
+ <CAHSAbzMjLiY14bX-FLj0nsVg2fPge21jWPZBDUybC6YeGNk7Ow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130826140843.GI13964@titan.lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, swarren@wwwdotorg.org, wim@iguana.be, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CAHSAbzMjLiY14bX-FLj0nsVg2fPge21jWPZBDUybC6YeGNk7Ow@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: yuhang wang <wangyuhang2014@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar,
+ Sourav" <sourav.poddar@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMjYsIDIwMTMgYXQgMTA6MDg6NDNBTSAtMDQwMCwgSmFzb24gQ29vcGVyIHdy
-b3RlOgo+IE9uIEZyaSwgQXVnIDIzLCAyMDEzIGF0IDA3OjEyOjIwUE0gLTAzMDAsIEV6ZXF1aWVs
-IEdhcmNpYSB3cm90ZToKPiA+IENoYW5nZSB0aGUgJ3JlZycgcHJvcGVydHkgbWVhbmluZywgYnkg
-ZGVmaW5pbmcgdHdvIHJlcXVpcmVkIGNlbGxzLgo+ID4gSXQncyBpbXBvcnRhbnQgdG8gbm90ZSB0
-aGlzIGNvbW1pdCBicmVha3MgRFQtY29tcGF0aWJpbGl0eSBmb3IgdGhpcwo+ID4gZGV2aWNlLgo+
-ID4gCj4gPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiA+IFNpZ25lZC1vZmYtYnk6
-IEV6ZXF1aWVsIEdhcmNpYSA8ZXplcXVpZWwuZ2FyY2lhQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+
-IC0tLQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9vcmlv
-bi13ZHQudHh0IHwgNyArKysrKy0tCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
-KSwgMiBkZWxldGlvbnMoLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9vcmlvbi13ZHQudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL29yaW9uLXdkdC50eHQKPiA+IGluZGV4IDVkYzhk
-MzAuLmE3NGM5YzggMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3Mvd2F0Y2hkb2cvb3Jpb24td2R0LnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL29yaW9uLXdkdC50eHQKPiA+IEBAIC0zLDcgKzMsOSBA
-QAo+ID4gIFJlcXVpcmVkIFByb3BlcnRpZXM6Cj4gPiAgCj4gPiAgLSBDb21wYXRpYmlsaXR5IDog
-Im1hcnZlbGwsb3Jpb24td2R0Igo+ID4gLS0gcmVnCQk6IEFkZHJlc3Mgb2YgdGhlIHRpbWVyIHJl
-Z2lzdGVycwo+ID4gKy0gcmVnCQk6IFR3byBjZWxscyBhcmUgcmVxdWlyZWQ6Cj4gPiArCQkgIEZp
-cnN0ICBjZWxsIGNvbnRhaW5zIHRoZSBnbG9iYWwgdGltZXIgY29udHJvbCByZWdpc3Rlci4KPiA+
-ICsJCSAgU2Vjb25kIGNlbGwgY29udGFpbnMgdGhlIHdhdGNoZG9nIGNvdW50ZXIgcmVnaXN0ZXIu
-Cj4gPiAgCj4gPiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICAKPiA+IEBAIC0xMyw3ICsxNSw4
-IEBAIEV4YW1wbGU6Cj4gPiAgCj4gPiAgCXdkdEAyMDMwMCB7Cj4gPiAgCQljb21wYXRpYmxlID0g
-Im1hcnZlbGwsb3Jpb24td2R0IjsKPiA+IC0JCXJlZyA9IDwweDIwMzAwIDB4Mjg+Owo+ID4gKwkJ
-cmVnID0gPDB4MjAzMDAgMHg0Cj4gCj4gCj4gPiArCQkgICAgICAgMHgyMDMyNCAweDQ+Owo+IAo+
-IElzIHRoZXJlIGEgcmVhc29uIHdlJ3JlIGdvaW5nIHRoaXMgcm91dGUgb3ZlciBhZGRpbmcgYSBu
-ZXcgY29tcGF0aWJsZQo+IHN0cmluZz8KCldlbGwsIGl0IHNlZW1lZCB0byBtZSB0aGF0IHRoaXMg
-cmVnaXN0ZXIgc3BsaXR0aW5nIHdhcyBtb3JlIGRldmljZS10cmVlaXNoOgppdCBwcmV2ZW50cyB5
-b3UgZnJvbSBmaXhpbmcgeW91ciBkcml2ZXIsIGFkZGluZyBhIG5ldyBjb21wYXRpYmxlLXN0cmlu
-ZywKYW5kIHJlYnVpbGRpbmcgYSBrZXJuZWwgZWFjaCB0aW1lIGEgbmV3IFNvQyBhcHBlYXJzIHdp
-dGggYSBkaWZmZXJlbnQgb2Zmc2V0CmJldHdlZW4gcmVnaXN0ZXJzLgoKSW5zdGVhZCwgYW5kIHRy
-eWluZyB0byBmb2xsb3cgdGhlIERULXByZWFjaGVycywgd2Ugd291bGQganVzdCBjaGFuZ2UgdGhl
-CiJyZWciIHZhbHVlcyBhbmQgLWJhbmchLSBoYXZlIGZvcndhcmQtY29tcGF0aWJpbGl0eSA6LSkK
-ClRoYXQgc2FpZC4uLgoKPiBpb3csIHdoeSBjYW4ndCB3ZSBrZWVwIHRoaXMga25vd2xlZGdlIGlu
-IHRoZSBkcml2ZXIgYW5kIGhhdmUgYQo+ICJtYXJ2ZWxsLGFybWFkYS13ZHQiIG9yIHNpbWlsYXIg
-Y29tcGF0IHN0cmluZyB0aGF0IHRoZSBvcmlvbi13ZHQgZHJpdmVyCj4gYWxzbyBzZXJ2ZXM/Cj4g
-CgouLi4gd2Ugc3RpbGwgbmVlZCBuZXcgY29tcGF0aWJsZSBzdHJpbmdzIGZvciBhcm1hZGEteHAt
-d2R0IGFuZAphcm1hZGEtMzcwLXdkdCwgZm9yIHRoZXkgaGF2ZSBkaWZmZXJlbmNlcyBiZXR3ZWVu
-IGVhY2ggb3RoZXIKYW5kIHdpdGggdGhlIG9yaW9uLXdkdDoKCiogVGhlIGNsb2NrIGlucHV0IGlz
-IG9idGFpbmVkIGluIGEgZGlmZmVyZW50IHdheSBpbiBlYWNoIGNhc2UKCiogVGhlIHdhdGNoZG9n
-IGVuYWJsZSBiaXQgaW5zaWRlIHRoZSB0aW1lciBjb250cm9sIHJlZ2lzdGVyCiAgaXMgYXQgYSBk
-aWZmZXJlbnQgbG9jYXRpb24uCgpTbywgdGhpbmtpbmcgYWJvdXQgdGhpcyBhZ2FpbiwgcGVyaGFw
-cyB3ZSBzaG91bGQgc2ltcGx5IGxldCBhbG9uZSB0aGUKInJlZyIgcHJvcGVydHkgYW5kIGFkZCB0
-aGUgd2F0Y2hkb2cgY291bnRlciBvZmZzZXQgYXMgeWV0IGFub3RoZXIgZmllbGQKaW4gdGhlIGNv
-bXBhdGlibGUtZGF0YT8KCldoYXQgZG8geW91IHRoaW5rPwotLSAKRXplcXVpZWwgR2FyY8OtYSwg
-RnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBFbmdpbmVl
-cmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+> 
+> Hi, Pekon
+> 
+> What about the comment below, do I still need to check the mode before
+> setting.
+> 
+I would suggest so :-)
+ (a) 'mode == CPHA, CPOL'
+(b) 'mode==SPI_TX_QUAD | SPI_TX_DUAL'
+
+Though I would have suggested to add compatibility checks for both (a)
+and (b), so that all mis-matches are identified during device probe.
+But, as you patch newly adds (b), it would look complete if it adds
+compatibility for at-least (b).
+
+But if you are not keen, its okay. For your current patch..
+
+Acked-by: Pekon Gupta <pekon@ti.com>
+
+
+with regards, pekon
+
+> >> You missed out comments provided earlier..
+> >> http://lists.infradead.org/pipermail/linux-mtd/2013-August/048374.html
+> >>
+> >> Remember .. this compatibility check is between spi_device->mode
+> >> v/s spi_master->mode_bits. This is different from ur V3 patch
+> >> which checks for spi_transfer->tx_nbits v/s spi_device->mode.
+> >>
+> >> + if ((xfer->tx_nbits == SPI_NBITS_DUAL) &&
+> >> + !(spi->mode & (SPI_TX_DUAL | SPI_TX_QUAD)))
+> >> + return -EINVAL;
+> >> + if ((xfer->tx_nbits == SPI_NBITS_QUAD) &&
+> >> + !(spi->mode & SPI_TX_QUAD))
+> >> + return -EINVAL;
+> >>
+> >>
+> > Sorry for my mis-understanding. But here I want to regard DUAL / QUAD
+> > mode just as other mode, such as CPHA, CPOL and so on. To other mode,
+> > spi framework didn't do such check, example:
+> > ---------------------------------------------------------------------------------
+> > /* Mode (clock phase/polarity/etc.) */
+> > if (of_find_property(nc, "spi-cpha", NULL))
+> >     spi->mode |= SPI_CPHA;
+> > if (of_find_property(nc, "spi-cpol", NULL))
+> >     spi->mode |= SPI_CPOL;
+> > ---------------------------------------------------------------------------------
+> >
+> > Spi framework do this check in spi_setup as follow:
+> > ---------------------------------------------------------------------------------
+> > bad_bits = spi->mode & ~spi->master->mode_bits;
+> > if (bad_bits) {
+> >     dev_err(&spi->dev, "setup: unsupported mode bits %x\n",
+> >           bad_bits);
+> >     return -EINVAL;
+> > }
+> > ---------------------------------------------------------------------------------
+> > So to keep that consistant, I don't think it is necessary to add the
+> > check when setting the mode.
+> >
+> > Best regards
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
