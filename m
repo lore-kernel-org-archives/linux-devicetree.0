@@ -1,38 +1,48 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: [PATCH 2/2] ARM: dts: add watchdog device tree node for exynos5420
-Date: Tue, 27 Aug 2013 18:15:18 +0530
-Message-ID: <1377607518-21882-3-git-send-email-l.krishna@samsung.com>
-References: <1377607518-21882-1-git-send-email-l.krishna@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1377607518-21882-1-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, devicetree@vger.kernel.org, t.figa@samsung.com
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH] net/cadence/macb: fix invalid 0 return if no phy is discovered on mii init
+Date: Tue, 27 Aug 2013 14:36:14 +0200
+Message-ID: <1377606974-21240-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, "David S. Miller" <davem@davemloft.net>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>
 List-Id: devicetree@vger.kernel.org
 
-Add watchdog device tree node for exynos5420
+Replace misleading -1 (-EPERM) by a more appropriate return code (-ENXIO)
+in macb_mii_probe function.
+Save macb_mii_probe return before branching to err_out_unregister to avoid
+erronous 0 return.
 
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 ---
- arch/arm/boot/dts/exynos5420.dtsi |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/cadence/macb.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index d537cd7..9fadc23 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -186,6 +186,12 @@
- 		status = "okay";
- 	};
+diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+index fe06ab0..7660c45 100644
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -276,7 +276,7 @@ static int macb_mii_probe(struct net_device *dev)
+ 	phydev = phy_find_first(bp->mii_bus);
+ 	if (!phydev) {
+ 		netdev_err(dev, "no PHY found\n");
+-		return -1;
++		return -ENXIO;
+ 	}
  
-+	watchdog@101D0000 {
-+		clocks = <&clock 316>;
-+		clock-names = "watchdog";
-+		status = "okay";
-+	};
-+
- 	serial@12C00000 {
- 		clocks = <&clock 257>, <&clock 128>;
- 		clock-names = "uart", "clk_uart_baud0";
+ 	pdata = dev_get_platdata(&bp->pdev->dev);
+@@ -379,9 +379,9 @@ int macb_mii_init(struct macb *bp)
+ 	if (err)
+ 		goto err_out_free_mdio_irq;
+ 
+-	if (macb_mii_probe(bp->dev) != 0) {
++	err = macb_mii_probe(bp->dev);
++	if (err)
+ 		goto err_out_unregister_bus;
+-	}
+ 
+ 	return 0;
+ 
 -- 
-1.7.10.4
+1.7.9.5
