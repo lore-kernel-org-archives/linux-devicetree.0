@@ -1,52 +1,43 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC PATCH 2/3] pinctrl: at91: add support for generic pinconf
-Date: Mon, 26 Aug 2013 21:54:18 -0600
-Message-ID: <521C22EA.1050908@wwwdotorg.org>
-References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com> <1377380259-11290-1-git-send-email-b.brezillon@overkiz.com> <20130826175333.GF18627@ns203013.ovh.net> <521BA235.1090104@overkiz.com>
+Subject: Re: [RFC PATCH 1/3] pinctrl: add new generic pinconf config for deglitch
+ filter
+Date: Mon, 26 Aug 2013 21:55:51 -0600
+Message-ID: <521C2347.4080702@wwwdotorg.org>
+References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com> <1377380109-11247-1-git-send-email-b.brezillon@overkiz.com> <521B875E.1010605@wwwdotorg.org> <521B89D1.6010902@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <521BA235.1090104@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <521B89D1.6010902@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
 To: boris brezillon <b.brezillon@overkiz.com>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/26/2013 12:45 PM, boris brezillon wrote:
-> Hello Jean-Christophe,
->=20
-> Le 26/08/2013 19:53, Jean-Christophe PLAGNIOL-VILLARD a =E9crit :
->> On 23:37 Sat 24 Aug     , Boris BREZILLON wrote:
->>> Add support for generic pin configuration to pinctrl-at91 driver.
-=2E..
->>> a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-=2E..
->>> configures various pad settings
->>>   such as pull-up, multi drive, etc.
->>>     Required properties for iomux controller:
->>> -- compatible: "atmel,at91rm9200-pinctrl"
->>> +- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinc=
-trl".
->>> +  Add "generic-pinconf" to the compatible string list to use the
->>> generic pin
-=2E..
->>> +pinctrl@fffff400 {
->>> +    #address-cells =3D <1>;
->>> +    #size-cells =3D <1>;
->>> +    ranges;
->>> +    compatible =3D "atmel,at91rm9200-pinctrl", "generic-pinconf",
->>> "simple-bus";
->> nack your break the backword compatibility
->>
->> if we use a old kernel with this new dt nothing will work
->> as the old kernel will never known the the "generic-pinconf" means
->> anything
->=20
-> Your're right, I didn't think of this case (old kernel with new dt).
+On 08/26/2013 11:01 AM, boris brezillon wrote:
+> Hello Stephen,
+> 
+> On 26/08/2013 18:50, Stephen Warren wrote:
+>> On 08/24/2013 03:35 PM, Boris BREZILLON wrote:
+>>> Add a new parameter to support deglitch filter configuration.
+>>> A deglitch filter works like a debounce filter but with a smaller
+>>> delay (nanoseconds).
+>> Why not use the existing debounce property, just with a small delay
+>> specified. It seems like that's exactly what the property is for?
+> That's one of the question I asked in my cover letter :-)
+> 
+> Indeed the at91 deglitch filter delay is not configurable and is statically
+> assigned to half a master clk cycle (if master clk = 133MHz -> 8 ns).
+> The debounce property argument is currently expressed in usecs.
+> 
+> This will result in always selecting the debounce filter (which is also
+> available on at91 SoCs) over the deglitch filter.
+> 
+> Could we add a flag in the deglitch argument to specify the delay unit
+> (nsecs or usecs) ?
 
-Well, just to be clear: If a new DT uses a new compatible value of any
-kind, be it adding "generic-pinconf" or switching to "foo-yyy" rather
-than "foo-yyy", it won't be compatible... That somewhat implies that yo=
-u
-can't ever replace an old binding with something new.
+If the value is hard-coded in HW, why not use non-zero (or 1) to enable
+and zero to disable?
+
+(this kind of thing is why I'm not convinced that generic pinconf works
+so well... What if we need psecs in the future?)
