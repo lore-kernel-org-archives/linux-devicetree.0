@@ -1,80 +1,153 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v5 0/6] ARM: dts: add support for exynos hdmi subsystem
-Date: Tue, 27 Aug 2013 01:42:39 +0200
-Message-ID: <3096714.XGeJNyPCXd@flatron>
-References: <1377509901-9467-1-git-send-email-rahul.sharma@samsung.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH v3] dt: update PSCI binding documentation for v0.2
+Date: Mon, 26 Aug 2013 19:50:33 -0500
+Message-ID: <1377564633-31638-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1377509901-9467-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <Ian.Campbell@citrix.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Rob Herring <rob.herring@calxeda.com>, Matt Sealey <neko@bakuhatsu.net>, Dave Martin <Dave.Martin@arm.com>, Christoffer Dall <christoffer.dall@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+From: Rob Herring <rob.herring@calxeda.com>
 
-On Monday 26 of August 2013 15:08:15 Rahul Sharma wrote:
-> It adds Device tree nodes and clocks information for HDMI subsystem
-> for exynos5420 and exynos5250 SoCs. It adds pinctrl node for hdmi
-> hpd gpio and update binding documents.
-> 
-> This set is based on kukjin's for-next branch at
-> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
-> 
-> v5:
-> 1) Merged Clock addition patch to DT nmde addition patch.
-> 2) Add dout_pixel clock for hdmi in place of sclk_pixel.
-> 3) Enable mixer node in soc dtsi file.
-> 
-> v4:
-> 1) Remove the movement of common properties to Exynos5.dtsi for
-> I2C and hdmi subsystem.
-> 2) Change the title of the patches.
-> 
-> v3:
-> 1) Rebase to kgene for-next based on 3.11-rc1.
-> 2) Changes clock numbers as per updated clocks file for
-> exyno5250 and exynos5420.
-> 3) Dropped Sachin patch as already got merged.
-> 
-> v2:
-> 1) Added patch for moving common i2c properties to exynos5.dtsi
-> 2) Added patch for moving common hdmi, mixer properties to exynos5.dtsi
-> 3) moved hpd pinctrl node to board file.
-> 4) Added Sachin's patch to update binding document for hdmi with hpd
-> information.
-> 
-> 
-> 
-> Andrew Bresticker (1):
->   ARM: dts: add i2c device nodes for Exynos5420
-> 
-> Rahul Sharma (4):
->   ARM: dts: add clocks to hdmi dt node for exynos5250
->   ARM: dts: add dt nodes for hdmi subsystem for exynos5420
->   ARM: dts: add hdmi hpd gpio pinctrl node for exynos5420
->   of/documentation: update with clock information for exynos hdmi
->     subsystem
-> 
-> Sean Paul (1):
->   ARM: dts: add mixer clocks to mixer node for Exynos5250
-> 
->  .../devicetree/bindings/video/exynos_hdmi.txt      |   14 +++-
->  .../devicetree/bindings/video/exynos_mixer.txt     |    4 ++
->  arch/arm/boot/dts/exynos5250.dtsi                  |    8 ++-
->  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   26 +++++++
->  arch/arm/boot/dts/exynos5420.dtsi                  |   75
-> ++++++++++++++++++++ 5 files changed, 123 insertions(+), 4 deletions(-)
+The PSCI spec from ARM has been updated to 0.2 version. Update the
+binding document to reflect the spec changes. For the binding, the
+major changes are the addition of psci_version, affinity_info,
+migrate_info_type, migrate_info_up_cpu, system_reset and system_off
+functions. The recommended function ID numbering has also changed.
 
-Except patches 4-6, which I have commented on, for the series:
+This update also defines 32 and 64 bit calling conventions. The calling
+convention is defined on a per function ID basis.
 
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Cc: Dave Martin <Dave.Martin@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <Ian.Campbell@citrix.com>
+Cc: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>
+Cc: Christoffer Dall <christoffer.dall@linaro.org>,
+Cc: Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
+Cc: Matt Sealey <neko@bakuhatsu.net>
+Cc: devicetree@vger.kernel.org
+---
+v3: This version implements Mark's suggested binding with -32 and -64 suffixes.
 
-Also one minor comment: It would be better if you updated the 
-documentation as first patch. This would make all the following patches to 
-be based on already existing documentation.
+ Documentation/devicetree/bindings/arm/psci.txt | 62 +++++++++++++++++++-------
+ 1 file changed, 46 insertions(+), 16 deletions(-)
 
-Best regards,
-Tomasz
+diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
+index 433afe9..209bb04 100644
+--- a/Documentation/devicetree/bindings/arm/psci.txt
++++ b/Documentation/devicetree/bindings/arm/psci.txt
+@@ -1,16 +1,17 @@
+ * Power State Coordination Interface (PSCI)
+ 
+ Firmware implementing the PSCI functions described in ARM document number
+-ARM DEN 0022A ("Power State Coordination Interface System Software on ARM
++ARM DEN 0022B ("Power State Coordination Interface System Software on ARM
+ processors") can be used by Linux to initiate various CPU-centric power
+ operations.
+ 
+-Issue A of the specification describes functions for CPU suspend, hotplug
+-and migration of secure software.
++Issue B of the specification describes functions for CPU suspend, hotplug,
++migration of secure software, and system level reset and powerdown.
+ 
+ Functions are invoked by trapping to the privilege level of the PSCI
+ firmware (specified as part of the binding below) and passing arguments
+-in a manner similar to that specified by AAPCS:
++as defined in ARM document "SMC Calling Convention" (ARM DEN 0028) in a manner
++similar to that specified by AAPCS:
+ 
+ 	 r0		=> 32-bit Function ID / return value
+ 	{r1 - r3}	=> Parameters
+@@ -21,10 +22,10 @@ to #0.
+ 
+ Main node required properties:
+ 
+- - compatible    : Must be "arm,psci"
++ - compatible    : Must contain "arm,psci-0.2" or "arm,psci"
+ 
+- - method        : The method of calling the PSCI firmware. Permitted
+-                   values are:
++ - method        : The method defines the calling convention for the PSCI
++                   firmware. Permitted values are:
+ 
+                    "smc" : SMC #0, with the register assignments specified
+ 		           in this binding.
+@@ -32,24 +33,53 @@ Main node required properties:
+                    "hvc" : HVC #0, with the register assignments specified
+ 		           in this binding.
+ 
++ - psci_version  : Function ID for PSCI_VERSION operation. Required for
++                   "arm,psci-0.2" compatible version or later.
++
+ Main node optional properties:
+ 
+- - cpu_suspend   : Function ID for CPU_SUSPEND operation
++ - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
++
++ - cpu_off                : Function ID for CPU_OFF operation
++
++ - cpu_on[-<32|64]        : Function ID for CPU_ON operation
++
++ - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
+ 
+- - cpu_off       : Function ID for CPU_OFF operation
++ - migrate[-<32|64]       : Function ID for MIGRATE operation
+ 
+- - cpu_on        : Function ID for CPU_ON operation
++ - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
+ 
+- - migrate       : Function ID for MIGRATE operation
++ - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
+ 
++ - system_reset           : Function ID for SYSTEM_RESET operation
++
++ - system_off             : Function ID for SYSTEM_OFF operation
++
++Some function IDs support 32-bit and 64-bit calling conventions. If no size is
++specified, then the 32-bit calling convention is used. Therefore, all function
++IDs for 64-bit calling convention are required to have "-64" suffix. Use of the
++"-32" suffix is recommended, but not required for backwards compatibility.
+ 
+ Example:
+ 
+ 	psci {
+-		compatible	= "arm,psci";
++		compatible	= "arm,psci-0.2";
+ 		method		= "smc";
+-		cpu_suspend	= <0x95c10000>;
+-		cpu_off		= <0x95c10001>;
+-		cpu_on		= <0x95c10002>;
+-		migrate		= <0x95c10003>;
++		psci_version	= <0x84000000>;
++		cpu_suspend-32	= <0x84000001>;
++		cpu_suspend-64	= <0xc4000001>;
++		cpu_off		= <0x84000002>;
++		cpu_on-32	= <0x84000003>;
++		cpu_on-64	= <0xc4000003>;
++		affinity_info-32 = <0x84000004>; 
++		affinity_info-64 = <0xc4000004>; 
++		migrate-32	= <0x84000005>;
++		migrate-64	= <0xc4000005>;
++		migrate_info_type = <0x84000006>;
++		migrate_info_up_cpu-32 = <0x84000007>;
++		migrate_info_up_cpu-64 = <0xc4000007>;
++		system_off	= <0x84000008>; 
++		system_reset	= <0x84000009>; 
+ 	};
++
+-- 
+1.8.1.2
