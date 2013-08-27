@@ -1,57 +1,117 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [patch] net/fec: "u32" is more explicit than "unsigned long"
-Date: Tue, 27 Aug 2013 14:51:44 -0400 (EDT)
-Message-ID: <20130827.145144.478588680902912563.davem@davemloft.net>
-References: <20130823094920.GP31293@elgon.mountain>
-	<1377261869.3364.3.camel@bwh-desktop.uk.level5networks.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] usb: dwc3: core: clarify usb-phy array binding
+Date: Tue, 27 Aug 2013 13:53:29 -0500
+Message-ID: <20130827185329.GT3005@radagast>
+References: <1376062832-23288-1-git-send-email-galak@codeaurora.org>
+ <20130809162848.GW27325@e106331-lin.cambridge.arm.com>
+ <1A03353A-9299-4D73-9786-4ECBC1DD4E05@codeaurora.org>
+ <20130812180553.GD27954@radagast>
+ <20130813133410.GO27165@e106331-lin.cambridge.arm.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1377261869.3364.3.camel@bwh-desktop.uk.level5networks.com>
-Sender: netdev-owner@vger.kernel.org
-To: bhutchings@solarflare.com
-Cc: dan.carpenter@oracle.com, grant.likely@linaro.org, rob.herring@calxeda.com, fabio.estevam@freescale.com, Frank.Li@freescale.com, jim_baxter@mentor.com, B38611@freescale.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HBIh8aIvd1vDZWkD"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130813133410.GO27165@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Felipe Balbi <balbi@ti.com>, Kumar Gala <galak@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ben Hutchings <bhutchings@solarflare.com>
-Date: Fri, 23 Aug 2013 13:44:29 +0100
+--HBIh8aIvd1vDZWkD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Fri, 2013-08-23 at 12:49 +0300, Dan Carpenter wrote:
->> tmpaddr[] is a six byte array.  We want to set the first four bytes on
->> the first line and the remaining two on the next line.  The code assumes
->> that "unsigned long" is 32 bits and obviously that's not true on 64 bit
->> arches.  It's better to just use u32 instead.
->> 
->> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
->> ---
->> This is a static checker thing and I can't compile this file.
->> 
->> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
->> index fdf9307..422b125 100644
->> --- a/drivers/net/ethernet/freescale/fec_main.c
->> +++ b/drivers/net/ethernet/freescale/fec_main.c
->> @@ -1100,9 +1100,9 @@ static void fec_get_mac(struct net_device *ndev)
->>  	 * 4) FEC mac registers set by bootloader
->>  	 */
->>  	if (!is_valid_ether_addr(iap)) {
->> -		*((unsigned long *) &tmpaddr[0]) =
->> +		*((u32 *) &tmpaddr[0]) =
->>  			be32_to_cpu(readl(fep->hwp + FEC_ADDR_LOW));
->> -		*((unsigned short *) &tmpaddr[4]) =
->> +		*((u16 *) &tmpaddr[4]) =
->>  			be16_to_cpu(readl(fep->hwp + FEC_ADDR_HIGH) >> 16);
->>  		iap = &tmpaddr[0];
->>  	}
-> 
-> This code also seems to have CPU vs big-endian byte order the wrong way
-> round.  readl() returns bytes in native order whereas we always store
-> MAC addresses in network (big-endian) order.  So I think it should be
-> doing:
-> 
-> 		*((__be32 *) &tmpaddr[0]) =
-> 			cpu_to_be32(readl(fep->hwp + FEC_ADDR_LOW));
-> 		*((__be16 *) &tmpaddr[4]) =
-> 			cpu_to_be16(readl(fep->hwp + FEC_ADDR_HIGH) >> 16);
+Hi,
 
-Dan please resubmit with Ben's suggested changes, thanks.
+On Tue, Aug 13, 2013 at 02:34:10PM +0100, Mark Rutland wrote:
+> On Mon, Aug 12, 2013 at 07:05:53PM +0100, Felipe Balbi wrote:
+> > On Fri, Aug 09, 2013 at 01:42:15PM -0500, Kumar Gala wrote:
+> > >=20
+> > > On Aug 9, 2013, at 11:28 AM, Mark Rutland wrote:
+> > >=20
+> > > > On Fri, Aug 09, 2013 at 04:40:32PM +0100, Kumar Gala wrote:
+> > > >> The binding spec wasn't clear that the order of the phandles in the
+> > > >> usb-phy array has meaning.  Clarify this point in the binding that
+> > > >> it should be <USB2-HS-PHY, USB3-SS-PHY>.
+> > > >>=20
+> > > >> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+> > > >> ---
+> > > >> Documentation/devicetree/bindings/usb/dwc3.txt | 4 +++-
+> > > >> 1 file changed, 3 insertions(+), 1 deletion(-)
+> > > >>=20
+> > > >> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Docu=
+mentation/devicetree/bindings/usb/dwc3.txt
+> > > >> index 7a95c65..8a9770b 100644
+> > > >> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > >> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > >> @@ -6,7 +6,9 @@ Required properties:
+> > > >>  - compatible: must be "synopsys,dwc3"
+> > > >>  - reg : Address and length of the register set for the device
+> > > >>  - interrupts: Interrupts used by the dwc3 controller.
+> > > >> - - usb-phy : array of phandle for the PHY device
+> > > >> + - usb-phy : array of phandle for the PHY device.  The first elem=
+ent
+> > > >> +   in the array is expected to be a handle to the USB2/HS PHY and
+> > > >> +   the second element is expected to be a handle to the USB3/SS P=
+HY
+> > > >=20
+> > > > Just to check - it's not valid to have a USB3 phy without a USB2 ph=
+y?
+> > >=20
+> > > Don't know, hopefully Felipe will chime in on that.
+> >=20
+> > that'd be a really non-standard implementation. Per-spec, USB3 is
+> > *always* backwards compatible with USB2.
+>=20
+> I'm slightly confused here. From a quick look at the driver, it expects
+> two separate phys to be present -- one handling only USB2, and one
+> handling USB3 (with USB2 backwards compatibility).
+>=20
+> So it's not physically possible for someone to just wire up a single phy
+> to the device, either USB2-only or USB3?
+
+of course it is :-) In fact, TI has done it. But it causes a whole bunch
+of other problems to support that sort of model. For one, in some
+systems, a clock generated by the USB3 PHY is backfed into the IP and if
+USB3 PHY isn't running, the dwc3 IP won't start.
+
+I even wrote a patch making USB3 PHY optional, but didn't push it
+exactly because it broke some other systems and I can't guarantee users
+won't mess up their DTS/pdata.
+
+> You can describe the USB2-only case in the dt by only listing the first
+> phy (though the driver won't support it as it expects both to be
+> present), but it's impossible to describe that you've wired up a single
+> phy that's USB3 capable.
+
+you might be right there...
+
+--=20
+balbi
+
+--HBIh8aIvd1vDZWkD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSHPWpAAoJEIaOsuA1yqREyn8QALOcf71vhEBNM4k7VoHYQWWw
+15VgvCrbaYPu/iFinRGWI+FPOUoJQ+w/1DdAH+N80hEYKHcqg7w6PjbAzhW0hDQL
+LNyWaq0jl4N84aRghCngdObZc3WwZqwFb/wDHjxMWSA0fNdqs9/bn9baahyH5+He
+OrMfMAu+J4xEQO5C6i63/PCO7X7GwFA4nPu3qXhG8ncyBs+jWwdz2n933l8w6+sj
+pxo5GG5T6o8+HUuNlyfha8Ye4rUmMBYZy/1j24POOTIYppX394U0mfiJleQWTI6e
+WklNpz7lJUA7b32F8YDQB6El4sL7xlFe7yTh0m2NFEqfvTDsb6yc+3kQ5n0lE+/4
+JJkDi4NICRGZdDxRQmUVLcIRUzLbqIXvV6Lj6T8+YeOeeek35f99/SR9+UHXLdpM
+1s4rq6UZlfH1rsUeY2st+t0LPgZCrTGbhuUGhWkk1ZQfqa6Ig2Km1mmQQOo5Z9IP
+0pKLgCt2oVnjm3uKobIzGsqCqmbV1Eu98xHPvlRpae/ikoBjsIz04rfy5K+DngjJ
+28AVenyt8SfjONJwAuPXfDGypQDQp3eZTuc2NaDXd7KBEDnMbNqgSTqzwmSZ3AeB
+aE29RsF2f8hSGkI3fv8V1XTQuvKTVZ4rdf+TTOagIMpVCIqYJqjCos348QmsuVOv
+ncjyYo1N3P8Rcipw6I4z
+=zVOg
+-----END PGP SIGNATURE-----
+
+--HBIh8aIvd1vDZWkD--
