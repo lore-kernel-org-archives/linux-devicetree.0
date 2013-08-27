@@ -1,36 +1,39 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH RFC 3/5] ARM: samsung: add clock setup for FIMC and FIMD
-Date: Tue, 27 Aug 2013 12:07:32 +0900
-Message-ID: <000201cea2d2$92a43530$b7ec9f90$%han@samsung.com>
-References: <1377517114-20222-1-git-send-email-m.krawczuk@partner.samsung.com>
- <1377517114-20222-4-git-send-email-m.krawczuk@partner.samsung.com>
- <1445676.NMCyFEC5q4@amdc1032> <521BA070.2000800@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] gpio: Enable pcf857x GPIO expander for Device Tree
+Date: Tue, 27 Aug 2013 05:20:45 +0200
+Message-ID: <CACRpkda5Q-Zs8A2VFPvMc9519QWJ3EH08g4Do0se6BcLEg+rug@mail.gmail.com>
+References: <1370527523-1030-1-git-send-email-archit@ti.com>
+	<1377498081-16358-1-git-send-email-archit@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <521BA070.2000800@gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Mateusz Krawczuk' <m.krawczuk@partner.samsung.com>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>
-Cc: 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, kgene.kim@samsung.com, kyungmin.park@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, mturquette@linaro.org, thomas.abraham@linaro.org, t.stanislaws@samsung.com, m.chehab@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samung.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1377498081-16358-1-git-send-email-archit@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Archit Taneja <archit@ti.com>
+Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, August 27, 2013 3:38 AM, Sylwester Nawrocki wrote:
-> On 08/26/2013 06:19 PM, Bartlomiej Zolnierkiewicz wrote:
-> > On Monday, August 26, 2013 01:38:32 PM Mateusz Krawczuk wrote:
-> >> This patch adds code that sets correct parents and rates for clocks
-> >> used by FIMC and FIMD on Goni board.
-> 
-> This patch is supposed to be a workaround to make the display and camera
-> subsystem working even without properly configured parent clocks in the
-> boot-loader, right ? And as such it doesn't really belong to this series
-> and has been written primarily for the clocks testing purposes ?
-> I think it can be dropped in the next iteration of this series.
-> 
+On Mon, Aug 26, 2013 at 8:21 AM, Archit Taneja <archit@ti.com> wrote:
 
-Agreed. :-)
-This patch can be dropped next.
+> Add code to parse the GPIO expander Device Tree node and extract platform data
+> out of it, and populate the struct 'pcf857x_platform_data' maintained by the
+> driver. This enables devices to reference the gpio expander from Device Tree.
+>
+> Add DT binding info in Documentation.
+>
+> Signed-off-by: Archit Taneja <archit@ti.com>
+> ---
+> - v2 posted after quite a while, sorry for the delay!
+>
+> Changes in v2:
+> - second gpeio-cell description corrected in Documentation
+> - interrupt controller description removed for now, will be added in a follow
+>   up patch
+> - n_latch description updated
 
-Best regards,
-Jingoo Han
+The devicetree portions of this patch needs to be reviewed by
+devicetree@vger.kernel.org, so please repost including that
+list.
+
+Yours,
+Linus Walleij
