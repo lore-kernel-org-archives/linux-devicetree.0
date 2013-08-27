@@ -1,133 +1,246 @@
-From: wangyuhang <wangyuhang2014@gmail.com>
-Subject: [PATCH V2 1/2] spi: dual and quad support(device tree)
-Date: Tue, 27 Aug 2013 08:50:02 +0800
-Message-ID: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH] clk: samsung: pll: Use new registration method for
+ PLL6552 and PLL6553
+Date: Mon, 26 Aug 2013 18:14:22 -0700
+Message-ID: <20130827011422.8231.95092@quantum>
+References: <1374536965-3545-1-git-send-email-tomasz.figa@gmail.com>
+ <158901ce9b34$c0ac8720$42059560$@org> <20130820002258.4443.34197@quantum>
+ <1856348.DCxTucbm8V@flatron>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: broonie@kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
-Cc: sourav.poddar@ti.com, pekon@ti.com, wangyuhang <wangyuhang2014@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1856348.DCxTucbm8V@flatron>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, =?utf-8?q?=27Heiko_St=C3=BCbner=27?= <heiko@sntech.de>, 'Arnd Bergmann' <arnd@arndb.de>, gregkh@linuxfoundation.org, 'Tomasz Figa' <t.figa@samsung.com>, linux-usb@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, stern@rowland.harvard.edu, 'Mark Brown' <broonie@kernel.org>, 'Olof Johansson' <olof@lixom.net>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-fix two things in patch:
-commit id:f477b7fb13df2b843997559ff34e87d054ba6538
+Quoting Tomasz Figa (2013-08-20 17:33:21)
+> This patch modifies PLL6552 and PLL6553 clock drivers to use recently
+> added common Samsung PLL registration method.
+> 
+> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
 
-1.change the name of property: spi-tx-nbits and spi-rx-nbits to
-spi-tmax-nbits and spi-rmax-nbits, aimed to make that name different
-from the member of spi_transfer(tx_nbits and rx_nbits). using tmax
-and rmax here to describe that it is the max transfer bits that the
-members in spi_transfer(tx_nbits and rx_nbits) can reach.
-2.change property spi-tmax-nbits and spi-rmax-nbits to optional.
-If User don't set spi-tmax-nbits or spi-rmax-nbits, spi device mode
-should be regarded as SINGLE, not return an error. In such case, user
-don't have to modify the old dts files to fit the new spi framework.
+Sigh. This change won't apply on top of clk-next-s3c64xx since it
+requires Yadwinder's change (amongst) others.
 
-Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
----
- drivers/spi/spi.c |   72 +++++++++++++++++++++++++----------------------------
- 1 file changed, 34 insertions(+), 38 deletions(-)
+The best I could do was spin out another topic branch with the relevant
+changes and apply this patch on top. It is a subset of clk-next but it
+is almost entirely Samsung patches:
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 50f7fc3..8d191f2 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -870,48 +870,44 @@ static void of_register_spi_devices(struct spi_master *master)
- 			spi->mode |= SPI_3WIRE;
- 
- 		/* Device DUAL/QUAD mode */
--		prop = of_get_property(nc, "spi-tx-nbits", &len);
-+		prop = of_get_property(nc, "spi-tmax-nbits", &len);
- 		if (!prop || len < sizeof(*prop)) {
--			dev_err(&master->dev, "%s has no 'spi-tx-nbits' property\n",
--				nc->full_name);
--			spi_dev_put(spi);
--			continue;
--		}
--		switch (be32_to_cpup(prop)) {
--		case SPI_NBITS_SINGLE:
--			break;
--		case SPI_NBITS_DUAL:
--			spi->mode |= SPI_TX_DUAL;
--			break;
--		case SPI_NBITS_QUAD:
--			spi->mode |= SPI_TX_QUAD;
--			break;
--		default:
--			dev_err(&master->dev, "spi-tx-nbits value is not supported\n");
--			spi_dev_put(spi);
--			continue;
-+			/* set tx mode in SINGLE as default */
-+		} else {
-+			switch (be32_to_cpup(prop)) {
-+			case SPI_NBITS_SINGLE:
-+				break;
-+			case SPI_NBITS_DUAL:
-+				spi->mode |= SPI_TX_DUAL;
-+				break;
-+			case SPI_NBITS_QUAD:
-+				spi->mode |= SPI_TX_QUAD;
-+				break;
-+			default:
-+				dev_err(&master->dev,
-+					"spi-tmax-nbits value is not supported\n");
-+				spi_dev_put(spi);
-+				continue;
- 		}
- 
--		prop = of_get_property(nc, "spi-rx-nbits", &len);
-+		prop = of_get_property(nc, "spi-rmax-nbits", &len);
- 		if (!prop || len < sizeof(*prop)) {
--			dev_err(&master->dev, "%s has no 'spi-rx-nbits' property\n",
--				nc->full_name);
--			spi_dev_put(spi);
--			continue;
--		}
--		switch (be32_to_cpup(prop)) {
--		case SPI_NBITS_SINGLE:
--			break;
--		case SPI_NBITS_DUAL:
--			spi->mode |= SPI_RX_DUAL;
--			break;
--		case SPI_NBITS_QUAD:
--			spi->mode |= SPI_RX_QUAD;
--			break;
--		default:
--			dev_err(&master->dev, "spi-rx-nbits value is not supported\n");
--			spi_dev_put(spi);
--			continue;
-+			/* set rx mode in SINGLE as default */
-+		} else {
-+			switch (be32_to_cpup(prop)) {
-+			case SPI_NBITS_SINGLE:
-+				break;
-+			case SPI_NBITS_DUAL:
-+				spi->mode |= SPI_RX_DUAL;
-+				break;
-+			case SPI_NBITS_QUAD:
-+				spi->mode |= SPI_RX_QUAD;
-+				break;
-+			default:
-+				dev_err(&master->dev,
-+					"spi-rmax-nbits value is not supported\n");
-+				spi_dev_put(spi);
-+				continue;
- 		}
- 
- 		/* Device speed */
--- 
-1.7.9.5
+git://git.linaro.org/people/mturquette/linux.git clk-next-s3c64xx-delta
 
+Kukjin & Tomasz, let me know if this OK for you to add as a dependency
+to the Samsung tree. If it is I will merge it into clk-next, but I want
+your OK that this branch is OK for you to take.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Regards,
+Mike
+
+> ---
+>  drivers/clk/samsung/clk-pll.c | 105 +++++-------------------------------------
+>  drivers/clk/samsung/clk-pll.h |   6 +--
+>  2 files changed, 13 insertions(+), 98 deletions(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
+> index 0775554..7572d1d 100644
+> --- a/drivers/clk/samsung/clk-pll.c
+> +++ b/drivers/clk/samsung/clk-pll.c
+> @@ -441,9 +441,6 @@ struct clk * __init samsung_clk_register_pll46xx(const char *name,
+>   * PLL6552 Clock Type
+>   */
+>  
+> -#define PLL6552_LOCK_REG       0x00
+> -#define PLL6552_CON_REG                0x0c
+> -
+>  #define PLL6552_MDIV_MASK      0x3ff
+>  #define PLL6552_PDIV_MASK      0x3f
+>  #define PLL6552_SDIV_MASK      0x7
+> @@ -451,21 +448,14 @@ struct clk * __init samsung_clk_register_pll46xx(const char *name,
+>  #define PLL6552_PDIV_SHIFT     8
+>  #define PLL6552_SDIV_SHIFT     0
+>  
+> -struct samsung_clk_pll6552 {
+> -       struct clk_hw hw;
+> -       void __iomem *reg_base;
+> -};
+> -
+> -#define to_clk_pll6552(_hw) container_of(_hw, struct samsung_clk_pll6552, hw)
+> -
+>  static unsigned long samsung_pll6552_recalc_rate(struct clk_hw *hw,
+>                                                 unsigned long parent_rate)
+>  {
+> -       struct samsung_clk_pll6552 *pll = to_clk_pll6552(hw);
+> +       struct samsung_clk_pll *pll = to_clk_pll(hw);
+>         u32 mdiv, pdiv, sdiv, pll_con;
+>         u64 fvco = parent_rate;
+>  
+> -       pll_con = __raw_readl(pll->reg_base + PLL6552_CON_REG);
+> +       pll_con = __raw_readl(pll->con_reg);
+>         mdiv = (pll_con >> PLL6552_MDIV_SHIFT) & PLL6552_MDIV_MASK;
+>         pdiv = (pll_con >> PLL6552_PDIV_SHIFT) & PLL6552_PDIV_MASK;
+>         sdiv = (pll_con >> PLL6552_SDIV_SHIFT) & PLL6552_SDIV_MASK;
+> @@ -480,48 +470,10 @@ static const struct clk_ops samsung_pll6552_clk_ops = {
+>         .recalc_rate = samsung_pll6552_recalc_rate,
+>  };
+>  
+> -struct clk * __init samsung_clk_register_pll6552(const char *name,
+> -                                       const char *pname, void __iomem *base)
+> -{
+> -       struct samsung_clk_pll6552 *pll;
+> -       struct clk *clk;
+> -       struct clk_init_data init;
+> -
+> -       pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+> -       if (!pll) {
+> -               pr_err("%s: could not allocate pll clk %s\n", __func__, name);
+> -               return NULL;
+> -       }
+> -
+> -       init.name = name;
+> -       init.ops = &samsung_pll6552_clk_ops;
+> -       init.parent_names = &pname;
+> -       init.num_parents = 1;
+> -
+> -       pll->hw.init = &init;
+> -       pll->reg_base = base;
+> -
+> -       clk = clk_register(NULL, &pll->hw);
+> -       if (IS_ERR(clk)) {
+> -               pr_err("%s: failed to register pll clock %s\n", __func__,
+> -                               name);
+> -               kfree(pll);
+> -       }
+> -
+> -       if (clk_register_clkdev(clk, name, NULL))
+> -               pr_err("%s: failed to register lookup for %s", __func__, name);
+> -
+> -       return clk;
+> -}
+> -
+>  /*
+>   * PLL6553 Clock Type
+>   */
+>  
+> -#define PLL6553_LOCK_REG       0x00
+> -#define PLL6553_CON0_REG       0x0c
+> -#define PLL6553_CON1_REG       0x10
+> -
+>  #define PLL6553_MDIV_MASK      0xff
+>  #define PLL6553_PDIV_MASK      0x3f
+>  #define PLL6553_SDIV_MASK      0x7
+> @@ -531,22 +483,15 @@ struct clk * __init samsung_clk_register_pll6552(const char *name,
+>  #define PLL6553_SDIV_SHIFT     0
+>  #define PLL6553_KDIV_SHIFT     0
+>  
+> -struct samsung_clk_pll6553 {
+> -       struct clk_hw hw;
+> -       void __iomem *reg_base;
+> -};
+> -
+> -#define to_clk_pll6553(_hw) container_of(_hw, struct samsung_clk_pll6553, hw)
+> -
+>  static unsigned long samsung_pll6553_recalc_rate(struct clk_hw *hw,
+>                                                 unsigned long parent_rate)
+>  {
+> -       struct samsung_clk_pll6553 *pll = to_clk_pll6553(hw);
+> +       struct samsung_clk_pll *pll = to_clk_pll(hw);
+>         u32 mdiv, pdiv, sdiv, kdiv, pll_con0, pll_con1;
+>         u64 fvco = parent_rate;
+>  
+> -       pll_con0 = __raw_readl(pll->reg_base + PLL6553_CON0_REG);
+> -       pll_con1 = __raw_readl(pll->reg_base + PLL6553_CON1_REG);
+> +       pll_con0 = __raw_readl(pll->con_reg);
+> +       pll_con1 = __raw_readl(pll->con_reg + 0x4);
+>         mdiv = (pll_con0 >> PLL6553_MDIV_SHIFT) & PLL6553_MDIV_MASK;
+>         pdiv = (pll_con0 >> PLL6553_PDIV_SHIFT) & PLL6553_PDIV_MASK;
+>         sdiv = (pll_con0 >> PLL6553_SDIV_SHIFT) & PLL6553_SDIV_MASK;
+> @@ -563,40 +508,6 @@ static const struct clk_ops samsung_pll6553_clk_ops = {
+>         .recalc_rate = samsung_pll6553_recalc_rate,
+>  };
+>  
+> -struct clk * __init samsung_clk_register_pll6553(const char *name,
+> -                                       const char *pname, void __iomem *base)
+> -{
+> -       struct samsung_clk_pll6553 *pll;
+> -       struct clk *clk;
+> -       struct clk_init_data init;
+> -
+> -       pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+> -       if (!pll) {
+> -               pr_err("%s: could not allocate pll clk %s\n", __func__, name);
+> -               return NULL;
+> -       }
+> -
+> -       init.name = name;
+> -       init.ops = &samsung_pll6553_clk_ops;
+> -       init.parent_names = &pname;
+> -       init.num_parents = 1;
+> -
+> -       pll->hw.init = &init;
+> -       pll->reg_base = base;
+> -
+> -       clk = clk_register(NULL, &pll->hw);
+> -       if (IS_ERR(clk)) {
+> -               pr_err("%s: failed to register pll clock %s\n", __func__,
+> -                               name);
+> -               kfree(pll);
+> -       }
+> -
+> -       if (clk_register_clkdev(clk, name, NULL))
+> -               pr_err("%s: failed to register lookup for %s", __func__, name);
+> -
+> -       return clk;
+> -}
+> -
+>  /*
+>   * PLL2550x Clock Type
+>   */
+> @@ -732,6 +643,12 @@ static void __init _samsung_clk_register_pll(struct samsung_pll_clock *pll_clk,
+>                 else
+>                         init.ops = &samsung_pll36xx_clk_ops;
+>                 break;
+> +       case pll_6552:
+> +               init.ops = &samsung_pll6552_clk_ops;
+> +               break;
+> +       case pll_6553:
+> +               init.ops = &samsung_pll6553_clk_ops;
+> +               break;
+>         default:
+>                 pr_warn("%s: Unknown pll type for pll clk %s\n",
+>                         __func__, pll_clk->name);
+> diff --git a/drivers/clk/samsung/clk-pll.h b/drivers/clk/samsung/clk-pll.h
+> index 2f70e88..cd11037 100644
+> --- a/drivers/clk/samsung/clk-pll.h
+> +++ b/drivers/clk/samsung/clk-pll.h
+> @@ -17,6 +17,8 @@ enum samsung_pll_type {
+>         pll_36xx,
+>         pll_2550,
+>         pll_2650,
+> +       pll_6552,
+> +       pll_6553,
+>  };
+>  
+>  #define PLL_35XX_RATE(_rate, _m, _p, _s)                       \
+> @@ -64,10 +66,6 @@ extern struct clk * __init samsung_clk_register_pll45xx(const char *name,
+>  extern struct clk * __init samsung_clk_register_pll46xx(const char *name,
+>                         const char *pname, const void __iomem *con_reg,
+>                         enum pll46xx_type type);
+> -extern struct clk *samsung_clk_register_pll6552(const char *name,
+> -                       const char *pname, void __iomem *base);
+> -extern struct clk *samsung_clk_register_pll6553(const char *name,
+> -                       const char *pname, void __iomem *base);
+>  extern struct clk * __init samsung_clk_register_pll2550x(const char *name,
+>                         const char *pname, const void __iomem *reg_base,
+>                         const unsigned long offset);
+> -- 
+> 1.8.3.2
