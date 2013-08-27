@@ -1,73 +1,117 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH 13/15] watchdog: orion: Add other compatibles to devicetree
- binding
-Date: Tue, 27 Aug 2013 11:34:37 -0300
-Message-ID: <1377614079-10000-14-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1377614079-10000-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: boris brezillon <b.brezillon@overkiz.com>
+Subject: Re: [PATCH] pinctrl: at91: add support for OUTPUT config
+Date: Tue, 27 Aug 2013 17:01:47 +0200
+Message-ID: <521CBF5B.1050009@overkiz.com>
+References: <1377615082-16808-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1377614079-10000-1-git-send-email-ezequiel.garcia@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, wim@iguana.be, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1377615082-16808-1-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon@overkiz.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Jiri Kosina <jkosina@suse.cz>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the newly supported compatible-strings for Armada 370 and Armada
-XP SoC. In addition, specify the required clock inputs for each supported
-compatible:
- * orion-wdt and armada-370 requires a single clock phandle
- * armada-xp requires two clock phandles with clock-names "nbclk" and "fixed".
+This was tested on sama5d31ek.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
----
- .../devicetree/bindings/watchdog/orion-wdt.txt          | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+On 27/08/2013 16:51, Boris BREZILLON wrote:
+> Add support for pin output control through the pinctrl config:
+>   - support enabling/disabling output on a given pin
+>   - support output level setting (high or low)
+>
+> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+> ---
+>   .../bindings/pinctrl/atmel,at91-pinctrl.txt        |    2 ++
+>   drivers/pinctrl/pinctrl-at91.c                     |   22 ++++++++++++++++++++
+>   include/dt-bindings/pinctrl/at91.h                 |    2 ++
+>   3 files changed, 26 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> index cf7c7bc..5a22e0d 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> @@ -90,6 +90,8 @@ MULTIDRIVE	(1 << 1): indicate this pin need to be configured as multidrive.
+>   DEGLITCH	(1 << 2): indicate this pin need deglitch.
+>   PULL_DOWN	(1 << 3): indicate this pin need a pull down.
+>   DIS_SCHMIT	(1 << 4): indicate this pin need to disable schmit trigger.
+> +OUTPUT		(1 << 5): indicate this pin need to be configured as an output.
+> +OUTPUT_VAL	(0x1 << 6): output val (1 = high, 0 = low)
+>   DEBOUNCE	(1 << 16): indicate this pin need debounce.
+>   DEBOUNCE_VAL	(0x3fff << 17): debounce val.
+>   
+> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+> index 19afb9a..1578a0d 100644
+> --- a/drivers/pinctrl/pinctrl-at91.c
+> +++ b/drivers/pinctrl/pinctrl-at91.c
+> @@ -61,6 +61,9 @@ static int gpio_banks;
+>   #define DEGLITCH	(1 << 2)
+>   #define PULL_DOWN	(1 << 3)
+>   #define DIS_SCHMIT	(1 << 4)
+> +#define OUTPUT		(1 << 5)
+> +#define OUTPUT_VAL_SHIFT	6
+> +#define OUTPUT_VAL	(0x1 << OUTPUT_VAL_SHIFT)
+>   #define DEBOUNCE	(1 << 16)
+>   #define DEBOUNCE_VAL_SHIFT	17
+>   #define DEBOUNCE_VAL	(0x3fff << DEBOUNCE_VAL_SHIFT)
+> @@ -333,6 +336,19 @@ static void at91_mux_set_pullup(void __iomem *pio, unsigned mask, bool on)
+>   	writel_relaxed(mask, pio + (on ? PIO_PUER : PIO_PUDR));
+>   }
+>   
+> +static bool at91_mux_get_output(void __iomem *pio, unsigned pin, bool *val)
+> +{
+> +	*val = (readl_relaxed(pio + PIO_ODSR) >> pin) & 0x1;
+> +	return (readl_relaxed(pio + PIO_OSR) >> pin) & 0x1;
+> +}
+> +
+> +static void at91_mux_set_output(void __iomem *pio, unsigned mask, bool is_on,
+> +				bool val)
+> +{
+> +	writel_relaxed(mask, pio + (val ? PIO_SODR : PIO_CODR));
+> +	writel_relaxed(mask, pio + (is_on ? PIO_OER : PIO_ODR));
+> +}
+> +
+>   static unsigned at91_mux_get_multidrive(void __iomem *pio, unsigned pin)
+>   {
+>   	return (readl_relaxed(pio + PIO_MDSR) >> pin) & 0x1;
+> @@ -712,6 +728,7 @@ static int at91_pinconf_get(struct pinctrl_dev *pctldev,
+>   	void __iomem *pio;
+>   	unsigned pin;
+>   	int div;
+> +	bool out;
+>   
+>   	dev_dbg(info->dev, "%s:%d, pin_id=%d, config=0x%lx", __func__, __LINE__, pin_id, *config);
+>   	pio = pin_to_controller(info, pin_to_bank(pin_id));
+> @@ -732,6 +749,9 @@ static int at91_pinconf_get(struct pinctrl_dev *pctldev,
+>   	if (info->ops->get_schmitt_trig && info->ops->get_schmitt_trig(pio, pin))
+>   		*config |= DIS_SCHMIT;
+>   
+> +	if (at91_mux_get_output(pio, pin, &out))
+> +		*config |= OUTPUT | (out << OUTPUT_VAL_SHIFT);
+> +
+>   	return 0;
+>   }
+>   
+> @@ -749,6 +769,8 @@ static int at91_pinconf_set(struct pinctrl_dev *pctldev,
+>   	if (config & PULL_UP && config & PULL_DOWN)
+>   		return -EINVAL;
+>   
+> +	at91_mux_set_output(pio, mask, config & OUTPUT,
+> +			    (config & OUTPUT_VAL) >> OUTPUT_VAL_SHIFT);
+>   	at91_mux_set_pullup(pio, mask, config & PULL_UP);
+>   	at91_mux_set_multidrive(pio, mask, config & MULTI_DRIVE);
+>   	if (info->ops->set_deglitch)
+> diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
+> index d7988b4..9fd4d48 100644
+> --- a/include/dt-bindings/pinctrl/at91.h
+> +++ b/include/dt-bindings/pinctrl/at91.h
+> @@ -15,6 +15,8 @@
+>   #define AT91_PINCTRL_DEGLITCH		(1 << 2)
+>   #define AT91_PINCTRL_PULL_DOWN		(1 << 3)
+>   #define AT91_PINCTRL_DIS_SCHMIT		(1 << 4)
+> +#define AT91_PINCTRL_OUTPUT		(1 << 5)
+> +#define AT91_PINCTRL_OUTPUT_VAL(x)	((x & 0x1) << 6)
+>   #define AT91_PINCTRL_DEBOUNCE		(1 << 16)
+>   #define AT91_PINCTRL_DEBOUNCE_VA(x)	(x << 17)
+>   
 
-diff --git a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-index 5dc8d30..a6e6602 100644
---- a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-@@ -2,9 +2,23 @@
- 
- Required Properties:
- 
--- Compatibility : "marvell,orion-wdt"
-+- Compatibility : "marvell,orion-wdt",
-+		  "marvell,armada-370-wdt"
-+		  "marvell,armada-xp-wdt"
- - reg		: Address of the timer registers
- 
-+Clocks required for compatibles = "marvell,orion-wdt",
-+				  "marvell,armada-370-wdt"
-+
-+- clocks	: Must contain a single entry describing
-+		  the clock input.
-+
-+Clocks required for compatible = "marvell,armada-xp-wdt":
-+- clocks	: Must contain an entry for each entry in clock-names.
-+- clock-names	: Must include the following entries:
-+		  "nbclk" (L2/coherency fabric clock),
-+		  "fixed" (Reference 25 MHz fixed-clock).
-+
- Optional properties:
- 
- - timeout-sec	: Contains the watchdog timeout in seconds
-@@ -16,4 +30,5 @@ Example:
- 		reg = <0x20300 0x28>;
- 		timeout-sec = <10>;
- 		status = "okay";
-+		clocks = <&gate_clk 7>;
- 	};
--- 
-1.8.1.5
