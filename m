@@ -1,70 +1,80 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH v5 4/6] ARM: dts: add dt nodes for exynos5420 hdmi subsystem
-Date: Tue, 27 Aug 2013 09:26:37 +0530
-Message-ID: <CAPdUM4MaEZsHfFpxv=5nx6tfzv+FhucEdc8-8Ygmx+LKtG=SUg@mail.gmail.com>
-References: <1377509901-9467-1-git-send-email-rahul.sharma@samsung.com>
-	<1377509901-9467-5-git-send-email-rahul.sharma@samsung.com>
-	<1957834.igXyqAoa6C@flatron>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC PATCH 2/3] pinctrl: at91: add support for generic pinconf
+Date: Mon, 26 Aug 2013 21:57:35 -0600
+Message-ID: <521C23AF.2060309@wwwdotorg.org>
+References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com> <1377380259-11290-1-git-send-email-b.brezillon@overkiz.com> <521B8822.50304@wwwdotorg.org> <521B8D9B.5020809@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1957834.igXyqAoa6C@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, "sw0312.kim" <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, sunil joshi <joshi@samsung.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <521B8D9B.5020809@overkiz.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: boris brezillon <b.brezillon@overkiz.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 27 August 2013 04:59, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Rahul,
->
-> On Monday 26 of August 2013 15:08:19 Rahul Sharma wrote:
->> Add hdmi, mixer, ddc device tree nodes for Exynos 5420 SoC.
+On 08/26/2013 11:17 AM, boris brezillon wrote:
+> On 26/08/2013 18:53, Stephen Warren wrote:
+>> On 08/24/2013 03:37 PM, Boris BREZILLON wrote:
+>>> Add support for generic pin configuration to pinctrl-at91 driver.
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>>> b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>>>   Required properties for iomux controller:
+>>> -- compatible: "atmel,at91rm9200-pinctrl"
+>>> +- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinctrl".
+>> You seem to also be adding a second chip name to the list here, which is
+>> more than the patch subject/description imply you're doing...
+> 
+> This is an update of the documentation:
+> "atmel,at91sam9x5-pinctrl" compatible is already used in the pinctrl
+> driver but the documention
+> was not updated.
+> 
+> But I agree, this should not be part of this series.
+> 
+>>> +  Add "generic-pinconf" to the compatible string list to use the
+>>> generic pin
+>>> +  configuration syntax.
+>> "generic-pinconf" is too generic of a compatible value for this binding
+>> to define.
 >>
->> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos5420-smdk5420.dts |   15 +++++++++++++++
->>  arch/arm/boot/dts/exynos5420.dtsi         |   19 +++++++++++++++++++
->>  2 files changed, 34 insertions(+)
+>> Instead, I think you want to either:
 >>
->> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> b/arch/arm/boot/dts/exynos5420-smdk5420.dts index bafba25..140565f
->> 100644
->> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> @@ -61,4 +61,19 @@
->>               };
->>       };
+>> a)
 >>
->> +     hdmi@14530000 {
->> +             status = "okay";
->> +             hpd-gpio = <&gpx3 7 0>;
->> +     };
->> +
->> +     i2c_2: i2c@12C80000 {
->> +             samsung,i2c-sda-delay = <100>;
->> +             samsung,i2c-max-bus-freq = <66000>;
->> +             status = "okay";
->> +
->> +             hdmiddc@50 {
->> +                     compatible = "samsung,exynos4210-hdmiddc";
->> +                     reg = <0x50>;
->> +             };
->> +     };
->>  };
->
-> As I mentioned in my reply for previous version of this patch, changes
-> done to this board dts file should be moved to next patch instead and its
-> subject appropriately modified.
->
+>> Use compatible="atmel,at91rm9200-pinctrl" for the old binding,
+>> use compatible="atmel,at91rm9200-pinctrl-generic" for the new binding
+>>
+>> or:
+>>
+>> b)
+>>
+>> Define Boolean property atmel,generic-pinconf (perhaps a better name
+>> could be chosen?). If it's not present, parse the node assuming the old
+>> binding. If it is present, parse the node assuming the new binding.
+>>
+> Okay.
+> 
+> I thought this property string could be generic as it may concern other
+> drivers too
+> (in order to keep compatibility with old dt ABI and add support the
+> generic pinconf binding).
+> 
+> Anyway, I prefer the first proposition.
+> 
+> pinctrl single driver is already using these names:
+> 
+> |compatible = "pinctrl-single" for non generic pinconf binding
+> ||compatible = "pinconf-single" ||for generic pinconf binding|
+> 
+> So I think we should use something similar:
+> 
+> |compatible = "atmel,at91xx-pinctrl" for non generic pinconf binding
+> ||compatible = "|||atmel,at91xx-|pinconf" ||for generic pinconf binding|
+> 
+> What do you think ?
 
-Hi Tomasz,
-
-Sorry. I missed that. I will move the hpd-gpio related change to patch 5.
-I will spin off a new patch for Hdmi ddc related additions.
-
-regards,
-Rahul Sharma.
-
-> Best regards,
-> Tomasz
->
+Hmmm. It is a little odd to switch out the compatible value and invent a
+new binding for the same HW. Isn't it possible to define both sets of
+properties in the binding, and have drivers look for either?
