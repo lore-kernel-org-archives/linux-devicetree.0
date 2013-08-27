@@ -1,161 +1,40 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH V2 1/2] spi: dual and quad support(device tree)
-Date: Tue, 27 Aug 2013 04:09:08 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9FAEF9@DBDE04.ent.ti.com>
-References: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: wangyuhang <wangyuhang2014@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar,
- Sourav" <sourav.poddar@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+From: Sujit Reddy Thumma <sthumma@codeaurora.org>
+Subject: [PATCH V2 0/3] scsi: ufs: Add support for clock and regulator initializaiton
+Date: Tue, 27 Aug 2013 09:48:10 +0530
+Message-ID: <1377577093-10068-1-git-send-email-sthumma@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinayak Holikatti <vinholikatti@gmail.com>, Santosh Y <santoshsy@gmail.com>
+Cc: "James E.J. Bottomley" <JBottomley@parallels.com>, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, Sujit Reddy Thumma <sthumma@codeaurora.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> 
-> fix two things in patch:
-> commit id:f477b7fb13df2b843997559ff34e87d054ba6538
-> 
-> 1.change the name of property: spi-tx-nbits and spi-rx-nbits to
-> spi-tmax-nbits and spi-rmax-nbits, aimed to make that name different
-> from the member of spi_transfer(tx_nbits and rx_nbits). using tmax
-> and rmax here to describe that it is the max transfer bits that the
-> members in spi_transfer(tx_nbits and rx_nbits) can reach.
-> 2.change property spi-tmax-nbits and spi-rmax-nbits to optional.
-> If User don't set spi-tmax-nbits or spi-rmax-nbits, spi device mode
-> should be regarded as SINGLE, not return an error. In such case, user
-> don't have to modify the old dts files to fit the new spi framework.
-> 
-> Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
-> ---
->  drivers/spi/spi.c |   72 +++++++++++++++++++++++++--------------------------
-> --
->  1 file changed, 34 insertions(+), 38 deletions(-)
-> 
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index 50f7fc3..8d191f2 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -870,48 +870,44 @@ static void of_register_spi_devices(struct
-> spi_master *master)
->  			spi->mode |= SPI_3WIRE;
-> 
->  		/* Device DUAL/QUAD mode */
-> -		prop = of_get_property(nc, "spi-tx-nbits", &len);
-> +		prop = of_get_property(nc, "spi-tmax-nbits", &len);
->  		if (!prop || len < sizeof(*prop)) {
-> -			dev_err(&master->dev, "%s has no 'spi-tx-nbits'
-> property\n",
-> -				nc->full_name);
-> -			spi_dev_put(spi);
-> -			continue;
-> -		}
-> -		switch (be32_to_cpup(prop)) {
-> -		case SPI_NBITS_SINGLE:
-> -			break;
-> -		case SPI_NBITS_DUAL:
-> -			spi->mode |= SPI_TX_DUAL;
-> -			break;
-> -		case SPI_NBITS_QUAD:
-> -			spi->mode |= SPI_TX_QUAD;
-> -			break;
-> -		default:
-> -			dev_err(&master->dev, "spi-tx-nbits value is not
-> supported\n");
-> -			spi_dev_put(spi);
-> -			continue;
-> +			/* set tx mode in SINGLE as default */
-> +		} else {
-> +			switch (be32_to_cpup(prop)) {
-> +			case SPI_NBITS_SINGLE:
-> +				break;
-> +			case SPI_NBITS_DUAL:
-> +				spi->mode |= SPI_TX_DUAL;
-> +				break;
-> +			case SPI_NBITS_QUAD:
-> +				spi->mode |= SPI_TX_QUAD;
-> +				break;
-> +			default:
-> +				dev_err(&master->dev,
-> +					"spi-tmax-nbits value is not
-> supported\n");
-> +				spi_dev_put(spi);
-> +				continue;
->  		}
-> 
-> -		prop = of_get_property(nc, "spi-rx-nbits", &len);
-> +		prop = of_get_property(nc, "spi-rmax-nbits", &len);
->  		if (!prop || len < sizeof(*prop)) {
-> -			dev_err(&master->dev, "%s has no 'spi-rx-nbits'
-> property\n",
-> -				nc->full_name);
-> -			spi_dev_put(spi);
-> -			continue;
-> -		}
-> -		switch (be32_to_cpup(prop)) {
-> -		case SPI_NBITS_SINGLE:
-> -			break;
-> -		case SPI_NBITS_DUAL:
-> -			spi->mode |= SPI_RX_DUAL;
-> -			break;
-> -		case SPI_NBITS_QUAD:
-> -			spi->mode |= SPI_RX_QUAD;
-> -			break;
-> -		default:
-> -			dev_err(&master->dev, "spi-rx-nbits value is not
-> supported\n");
-> -			spi_dev_put(spi);
-> -			continue;
-> +			/* set rx mode in SINGLE as default */
-> +		} else {
-> +			switch (be32_to_cpup(prop)) {
-> +			case SPI_NBITS_SINGLE:
-> +				break;
-> +			case SPI_NBITS_DUAL:
-> +				spi->mode |= SPI_RX_DUAL;
-> +				break;
-> +			case SPI_NBITS_QUAD:
-> +				spi->mode |= SPI_RX_QUAD;
-> +				break;
-> +			default:
-> +				dev_err(&master->dev,
-> +					"spi-rmax-nbits value is not
-> supported\n");
-> +				spi_dev_put(spi);
-> +				continue;
->  		}
-> 
->  		/* Device speed */
-> --
-> 1.7.9.5
+UFS HCI specificaiton allows the hardware vendors to have vendor specific
+configurations using a dedicated register space. Most of these register
+configurations are unique to each controller. The generic UFSHCD exports
+a set of useful vendor operations that can be used to configure the host
+controller. In addition, the vendor specific operations can also be used
+to control the power supply of controller and Uni-Pro h/w blocks.
 
-You missed out comments provided earlier..
-http://lists.infradead.org/pipermail/linux-mtd/2013-August/048374.html
+This patchset adds support for vendor specific initialization, regulator
+and clock initialization based on device-tree properties.
 
-Remember .. this compatibility check is between spi_device->mode
-v/s spi_master->mode_bits. This is different from ur V3 patch
-which checks for spi_transfer->tx_nbits v/s spi_device->mode.
+Changes from v1:
+ - Rebased on scsi-misc.
+ - Minor code fixes.
 
-+ if ((xfer->tx_nbits == SPI_NBITS_DUAL) &&
-+ !(spi->mode & (SPI_TX_DUAL | SPI_TX_QUAD)))
-+ return -EINVAL;
-+ if ((xfer->tx_nbits == SPI_NBITS_QUAD) &&
-+ !(spi->mode & SPI_TX_QUAD))
-+ return -EINVAL;
+Sujit Reddy Thumma (3):
+  scsi: ufs: Allow vendor specific initialization
+  scsi: ufs: Add regulator enable support
+  scsi: ufs: Add clock initialization support
 
+ .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  37 ++
+ drivers/scsi/ufs/ufs.h                             |  25 ++
+ drivers/scsi/ufs/ufshcd-pci.c                      |   8 +-
+ drivers/scsi/ufs/ufshcd-pltfrm.c                   | 195 +++++++++-
+ drivers/scsi/ufs/ufshcd.c                          | 429 +++++++++++++++++++--
+ drivers/scsi/ufs/ufshcd.h                          |  55 ++-
+ 6 files changed, 713 insertions(+), 36 deletions(-)
 
-with regards, pekon
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
