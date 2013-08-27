@@ -1,31 +1,41 @@
-From: Julius Werner <jwerner@chromium.org>
-Subject: Re: [PATCH 1/3 v5] usb: phy-samsung-usb: Simplify PMU register handling
-Date: Tue, 27 Aug 2013 13:27:48 -0700
-Message-ID: <CAODwPW8KG2ZxOFf936H233g35KVPjDp+f8e3qgkd4Z7NN9RAtQ@mail.gmail.com>
-References: <1375812017-6287-1-git-send-email-jwerner@chromium.org>
-	<20130808092615.GF14648@e106331-lin.cambridge.arm.com>
-	<CAODwPW-j=JjunZU3zewrE1_-WoW-RXLmKVQypzxmo_BOYjc3VA@mail.gmail.com>
-	<1729120.r596vOTlMW@flatron>
-	<CAODwPW_W9gu+nwNzpq3sfcOCDkyppu6K8C9+S8OZt_A0qHqNEg@mail.gmail.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 27 Aug 2013 16:38:24 -0400
+Message-ID: <521D0E40.3010302@ti.com>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <521D0964.2080209@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAODwPW_W9gu+nwNzpq3sfcOCDkyppu6K8C9+S8OZt_A0qHqNEg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Julius Werner <jwerner@chromium.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Kukjin Kim <kgene.kim@samsung.com>, Felipe Balbi <balbi@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <521D0964.2080209@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, poeschel@lemonage.de, grant.likely@linaro.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, ian.campbell@citrix.com, galak@codeaurora.org, pawel.moll@arm.com, tomasz.figa@gmail.com, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-*Ping!*
+On Tuesday 27 August 2013 04:17 PM, Stephen Warren wrote:
+> On 08/26/2013 08:07 AM, Lars Poeschel wrote:
+>> From: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> Currently the kernel is ambigously treating GPIOs and interrupts
+>> from a GPIO controller: GPIOs and interrupts are treated as
+>> orthogonal. This unfortunately makes it unclear how to actually
+>> retrieve and request a GPIO line or interrupt from a GPIO
+>> controller in the device tree probe path.
+> 
+> I still think that this patch is the wrong approach. Instead, the logic
+> should be hooked into gpio_request() and request_irq(). This patch only
+> addresses DT, and ignores anything else, hence doesn't seem like the
+> right level of abstraction to plug in, since the issue is not related to DT.
+> 
+On the issue, Rajendra cooked up a patch [1] to handle the issue at
+irqdomain level which was shot down after further discussion. It might
+be useful for the discussion here. Ofcourse it was also targeted to
+solve only DT issue.
 
-Are there still unanswered concerns left with this patch? I hope my
-prior mails could clear up why I think that the PMU register
-description in the device tree for a specific PHY is represents the
-hardware more accurately after my patch, and my analysis of the
-Exynos4 situation currently not being implemented (and therefore not
-needing to be addressed by this patch) was correct. Please let me know
-if you have further objections... and if not, could we agree to have
-this picked up somewhere?
+Regards,
+Santosh
 
-Thanks,
-Julius
+[1]
+"[PATCH] irqdomain: Do a gpio_request in case of a gpio irq_chip"
+http://www.mail-archive.com/linux-omap@vger.kernel.org/msg83451.html
