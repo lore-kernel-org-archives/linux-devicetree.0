@@ -1,34 +1,118 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC v1 0/5] ARM: Initial support for Marvell Armada 1500
-Date: Tue, 27 Aug 2013 21:38:53 +0200
-Message-ID: <2660767.3xDXT08nY0@wuerfel>
-References: <1376682098-10580-1-git-send-email-sebastian.hesselbarth@gmail.com> <20130827161958.5e71890d@skate>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v4 2/3] usb: phy: Add Qualcomm SS-USB and HS-USB drivers
+ for DWC3 core
+Date: Tue, 27 Aug 2013 14:58:59 -0500
+Message-ID: <20130827195859.GF3005@radagast>
+References: <1376992565-22292-3-git-send-email-iivanov@mm-sol.com>
+ <20130820122907.GU26587@radagast>
+ <1377005543.26268.22.camel@iivanov-dev.int.mm-sol.com>
+ <20130820133712.GC26587@radagast>
+ <1377007751.26268.27.camel@iivanov-dev.int.mm-sol.com>
+ <20130820143319.GG26587@radagast>
+ <1377010458.26268.30.camel@iivanov-dev.int.mm-sol.com>
+ <8691FDFE-326E-4198-838A-202D9EC988E1@codeaurora.org>
+ <1377012381.26268.42.camel@iivanov-dev.int.mm-sol.com>
+ <A2CA0424C0A6F04399FB9E1CD98E030458DECB7C@US01WEMBX2.internal.synopsys.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130827161958.5e71890d@skate>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8hYiR1SWmJV79WGg"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <A2CA0424C0A6F04399FB9E1CD98E030458DECB7C@US01WEMBX2.internal.synopsys.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Paul Zimmerman <Paul.Zimmerman@synopsys.com>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, "balbi@ti.com" <balbi@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "idos@codeaurora.org" <idos@codeaurora.org>, "mgautam@codeaurora.org" <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.ke>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 August 2013 16:19:58 Thomas Petazzoni wrote:
-> 
-> Also, to help us understand the organization of the family of SOCs, I
-> asked a few informations to Marvell, and here is what I could collect:
-> 
-> """
-> BGxname         CPU core        codename        L2 cache controller     internal name
-> BG2             PJ4B            Armada1500      Tauros3                 MV88DE3100
-> BG2-CT          Cortex-A9       N/A             PL310                   N/A
-> BG3             Cortex-A15      N/A             CA15 integrated         N/A
-> """
+--8hYiR1SWmJV79WGg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My guess is that BG2-CT is Armada1500-mini aka MV88DE3005, i.e. the chip
-used in the chromecast.
-At least that is what gets used in the chromecast kernel sources, but it's
-also possible that there are UP and SMP versions of BG2-CT and that
-DE3005 is only the former.
+Hi,
 
-	Arnd
+On Thu, Aug 22, 2013 at 09:24:49PM +0000, Paul Zimmerman wrote:
+> > From: Ivan T. Ivanov [mailto:iivanov@mm-sol.com]
+> > Sent: Tuesday, August 20, 2013 8:26 AM
+> >=20
+> > On Tue, 2013-08-20 at 10:01 -0500, Kumar Gala wrote:
+> > > On Aug 20, 2013, at 9:54 AM, Ivan T. Ivanov wrote:
+> > >
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Tue, 2013-08-20 at 09:33 -0500, Felipe Balbi wrote:
+> > > >> On Tue, Aug 20, 2013 at 05:09:11PM +0300, Ivan T. Ivanov wrote:
+> > > >>>
+> > > >>> On Tue, 2013-08-20 at 08:37 -0500, Felipe Balbi wrote:
+> > > >>>>
+> > > >>>> On Tue, Aug 20, 2013 at 04:32:23PM +0300, Ivan T. Ivanov wrote:
+> > > >>>>>
+> > > >>>>> I think they are SNPS DesignWare PHY's, additionally
+> > > >>>>> wrapped with Qualcomm logic. I could substitute "dwc3"
+> > > >>>>> with just "dw", which will be more correct.
+> > > >>>>
+> > > >>>> alright, thank you. Let's add Paul to the loop since he might ha=
+ve very
+> > > >>>> good insight in the synopsys PHYs.
+> > > >>>>
+> > > >>>> mental note: if any other platform shows up with Synopsys PHY, a=
+sk them
+> > > >>>> to use this driver instead :-)
+> > > >>>
+> > > >>> I really doubt that this will bi possible. Control of the PHY's is
+> > > >>> not directly trough ULPI, UTMI or PIPE3 interfaces, but trough
+> > > >>> QSCRATCH registers, which of course is highly Qualcomm specific.
+> > > >>
+> > > >> isn't it a memory mapped IP ? doesn't synopsys provide their own s=
+et of
+> > > >> registers ?
+> > > >
+> > > > From what I see it is not directly mapped. How QSCRATCH write and
+> > > > reads transactions are translated to DW IP is unclear to me.
+> > >
+> > >
+> > > I think the question is how does SW access them?
+> >=20
+> > "USB QSCRATCH Hardware registers" don't ask me what is this :-)
+> > or like Pawel says: "it depends on the SOC" .
+>=20
+> To answer the question "doesn't synopsys provide their own set of
+> registers", we provide registers in our USB cores to access the PHYs
+> through I2C, ULPI/UTMI, or PIPE3 interfaces. But if someone wants to use
+> our PHY with some other controller that doesn't provide that, then they
+> may need to implement their own register set, as Qualcomm has apparently
+> done.
+
+thanks for clarifying. that pretty much hinders writing any sort of
+generic drivers for Synopsys' PHYs though :-s
+
+But I guess that's alright.
+
+--=20
+balbi
+
+--8hYiR1SWmJV79WGg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSHQUDAAoJEIaOsuA1yqREE5AP/2ZZ5zmei7G9/mOyYAwyr3/z
+79+Q+X/YxO2IKZSGZvH7fEyIbIsVBGq1BxFJTOyhkg6EyHkZixZeUotzMcMtcNB9
+OsSkZTlVNLGa737/U0FAHwG9xLXrL3pHKiZepuZ3V2ch/2MlCY1IQn2BmBjfsrC+
+PNHEjYyn1266O6r2JVJuiHv3sWyUI1cIbDn8d8jJG2pvbAAuEhmkgWMHZkSFvtco
+MrORQpW4beCZAYPtdsukl4jllXIa1Uu+J0+ff5ViHzTZxK4xGpYIQU3smLkU/F52
+hWdqr/gfsWSQa3/sHn6zJEaoQW/HlySAOaD6SzHCoLFUoemDqYkg0w0HPBRS8+lP
+g4ON6lvPywt0xOTzrgbGRp+OORnVwQOuKnfAI16aio/NZPsuIJKP8ECrVYjVno1b
+kkzg7x6i6ziSZ3iYimuN3w6hEG+RoK9qe/eCgmi8SuenpifOtdhjl7QexgAx5gC6
+j4Ux4/bGtg0oawzqfAuh87aC1XRn1EZjEHQWo8VH8iVbIWbLIH5NcAaq5U6EqraF
+4YLMOFGIjMgp8y+MAaIilZqiyBrRz24p+om1riZQOWLlYZZjjJPunhWI5BmA71mT
+3LMdpnJLLYceHQjgBPm2WSyvwFqMSiNzicmPpgY8312/utPUX5KkBv3J1/nIeFge
+39L0sMFx6xf3DhMmYM5F
+=OD97
+-----END PGP SIGNATURE-----
+
+--8hYiR1SWmJV79WGg--
