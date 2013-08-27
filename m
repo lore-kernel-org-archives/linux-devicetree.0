@@ -1,188 +1,113 @@
-From: yuhang wang <wangyuhang2014@gmail.com>
-Subject: Re: [PATCH V2 1/2] spi: dual and quad support(device tree)
-Date: Tue, 27 Aug 2013 12:58:31 +0800
-Message-ID: <CAHSAbzMFJMav4VrBEmMx1bsmDXs4pW0wPg9B212aVnDy9p+gtQ@mail.gmail.com>
-References: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73E9FAEF9@DBDE04.ent.ti.com>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH v5 6/6] of/documentation: update with clock information
+ for exynos hdmi subsystem
+Date: Tue, 27 Aug 2013 10:35:36 +0530
+Message-ID: <CAPdUM4OKB00KuB+_Go8b0bGJthy1tXF-RuCVyCOLpKRbUtP_Sg@mail.gmail.com>
+References: <1377509901-9467-1-git-send-email-rahul.sharma@samsung.com>
+	<1377509901-9467-7-git-send-email-rahul.sharma@samsung.com>
+	<9840790.B5asg6Si2U@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73E9FAEF9@DBDE04.ent.ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar,
- Sourav" <sourav.poddar@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <9840790.B5asg6Si2U@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, "sw0312.kim" <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Pekon
-
-2013/8/27 Gupta, Pekon <pekon@ti.com>:
+On 27 August 2013 05:10, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Rahul,
+>
+> On Monday 26 of August 2013 15:08:21 Rahul Sharma wrote:
+>> Adding information about clocks to the binding documentation
+>> for exynos mixer and hdmi.
 >>
->> fix two things in patch:
->> commit id:f477b7fb13df2b843997559ff34e87d054ba6538
->>
->> 1.change the name of property: spi-tx-nbits and spi-rx-nbits to
->> spi-tmax-nbits and spi-rmax-nbits, aimed to make that name different
->> from the member of spi_transfer(tx_nbits and rx_nbits). using tmax
->> and rmax here to describe that it is the max transfer bits that the
->> members in spi_transfer(tx_nbits and rx_nbits) can reach.
->> 2.change property spi-tmax-nbits and spi-rmax-nbits to optional.
->> If User don't set spi-tmax-nbits or spi-rmax-nbits, spi device mode
->> should be regarded as SINGLE, not return an error. In such case, user
->> don't have to modify the old dts files to fit the new spi framework.
->>
->> Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
+>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 >> ---
->>  drivers/spi/spi.c |   72 +++++++++++++++++++++++++--------------------------
->> --
->>  1 file changed, 34 insertions(+), 38 deletions(-)
+>>  Documentation/devicetree/bindings/video/exynos_hdmi.txt  |   14
+>> +++++++++++++- Documentation/devicetree/bindings/video/exynos_mixer.txt
+>> |    4 ++++ 2 files changed, 17 insertions(+), 1 deletion(-)
 >>
->> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
->> index 50f7fc3..8d191f2 100644
->> --- a/drivers/spi/spi.c
->> +++ b/drivers/spi/spi.c
->> @@ -870,48 +870,44 @@ static void of_register_spi_devices(struct
->> spi_master *master)
->>                       spi->mode |= SPI_3WIRE;
+>> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>> b/Documentation/devicetree/bindings/video/exynos_hdmi.txt index
+>> 323983b..94aaa7d 100644
+>> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>> @@ -12,7 +12,19 @@ Required properties:
+>>       a) phandle of the gpio controller node.
+>>       b) pin number within the gpio controller.
+>>       c) optional flags and pull up/down.
+>> -
+>> +- clocks: list of clock IDs from SoC clock driver.
+>> +     a) hdmi: It is required for gate operation on aclk_200_disp1 clock
+>> +             which clocks the display1 block.
+>
+> Isn't aclk_200_disp1 a name specific to Exynos5 SoCs? AFAIK this binding
+> is also used for other SoCs, including Exynos4 and probably S5PV210, so it
+> should be written to either be SoC-agnostic or account for all supported
+> SoCs. What about following descriptions:
+>
+> Gate of HDMI IP block bus clock.
+>
+>> +     b) sclk_hdmi: It is required for gate operation on sclk_hdmi clock
+>> +             which clocks hdmi IP.
+>
+> Gate of HDMI special clock.
+>
+>> +     c) sclk_pixel: Parent for mux mout_hdmi.
+>
+> Pixel special clock, one of two possible inputs of HDMI clock mux.
+>
+>> +     d) sclk_hdmiphy: Parent for mux mout_hdmi.
+>
+> HDMI PHY clock output, one of two possible inputs of HDMI clock mux.
+>
+>> +     e) mout_hdmi: It is required by the driver to switch between the 2
+>> +             parents i.e. sclk_pixel and sclk_hdmiphy. If hdmiphy is
+> stable
+>> +             after configuration, parent is set to sclk_hdmiphy else
+>> +             sclk_pixel.
+>
+> HDMI clock mux, used to select between clock generated by HDMI PHY and
+> alternative clock source that can be used until HDMI PHY is set up.
+>
+>> +- clock-names: aliases as per driver requirements for above clock IDs:
+>> +     "hdmi", "sclk_hdmi", "sclk_pixel", "sclk_hdmiphy" and "mout_hdmi".
+>>  Example:
 >>
->>               /* Device DUAL/QUAD mode */
->> -             prop = of_get_property(nc, "spi-tx-nbits", &len);
->> +             prop = of_get_property(nc, "spi-tmax-nbits", &len);
->>               if (!prop || len < sizeof(*prop)) {
->> -                     dev_err(&master->dev, "%s has no 'spi-tx-nbits'
->> property\n",
->> -                             nc->full_name);
->> -                     spi_dev_put(spi);
->> -                     continue;
->> -             }
->> -             switch (be32_to_cpup(prop)) {
->> -             case SPI_NBITS_SINGLE:
->> -                     break;
->> -             case SPI_NBITS_DUAL:
->> -                     spi->mode |= SPI_TX_DUAL;
->> -                     break;
->> -             case SPI_NBITS_QUAD:
->> -                     spi->mode |= SPI_TX_QUAD;
->> -                     break;
->> -             default:
->> -                     dev_err(&master->dev, "spi-tx-nbits value is not
->> supported\n");
->> -                     spi_dev_put(spi);
->> -                     continue;
->> +                     /* set tx mode in SINGLE as default */
->> +             } else {
->> +                     switch (be32_to_cpup(prop)) {
->> +                     case SPI_NBITS_SINGLE:
->> +                             break;
->> +                     case SPI_NBITS_DUAL:
->> +                             spi->mode |= SPI_TX_DUAL;
->> +                             break;
->> +                     case SPI_NBITS_QUAD:
->> +                             spi->mode |= SPI_TX_QUAD;
->> +                             break;
->> +                     default:
->> +                             dev_err(&master->dev,
->> +                                     "spi-tmax-nbits value is not
->> supported\n");
->> +                             spi_dev_put(spi);
->> +                             continue;
->>               }
->>
->> -             prop = of_get_property(nc, "spi-rx-nbits", &len);
->> +             prop = of_get_property(nc, "spi-rmax-nbits", &len);
->>               if (!prop || len < sizeof(*prop)) {
->> -                     dev_err(&master->dev, "%s has no 'spi-rx-nbits'
->> property\n",
->> -                             nc->full_name);
->> -                     spi_dev_put(spi);
->> -                     continue;
->> -             }
->> -             switch (be32_to_cpup(prop)) {
->> -             case SPI_NBITS_SINGLE:
->> -                     break;
->> -             case SPI_NBITS_DUAL:
->> -                     spi->mode |= SPI_RX_DUAL;
->> -                     break;
->> -             case SPI_NBITS_QUAD:
->> -                     spi->mode |= SPI_RX_QUAD;
->> -                     break;
->> -             default:
->> -                     dev_err(&master->dev, "spi-rx-nbits value is not
->> supported\n");
->> -                     spi_dev_put(spi);
->> -                     continue;
->> +                     /* set rx mode in SINGLE as default */
->> +             } else {
->> +                     switch (be32_to_cpup(prop)) {
->> +                     case SPI_NBITS_SINGLE:
->> +                             break;
->> +                     case SPI_NBITS_DUAL:
->> +                             spi->mode |= SPI_RX_DUAL;
->> +                             break;
->> +                     case SPI_NBITS_QUAD:
->> +                             spi->mode |= SPI_RX_QUAD;
->> +                             break;
->> +                     default:
->> +                             dev_err(&master->dev,
->> +                                     "spi-rmax-nbits value is not
->> supported\n");
->> +                             spi_dev_put(spi);
->> +                             continue;
->>               }
->>
->>               /* Device speed */
->> --
->> 1.7.9.5
+>>       hdmi {
+>> diff --git a/Documentation/devicetree/bindings/video/exynos_mixer.txt
+>> b/Documentation/devicetree/bindings/video/exynos_mixer.txt index
+>> 3334b0a..94b40b6 100644
+>> --- a/Documentation/devicetree/bindings/video/exynos_mixer.txt
+>> +++ b/Documentation/devicetree/bindings/video/exynos_mixer.txt
+>> @@ -10,6 +10,10 @@ Required properties:
+>>  - reg: physical base address of the mixer and length of memory mapped
+>>       region.
+>>  - interrupts: interrupt number to the cpu.
+>> +- clocks: list of clock IDs from SoC clock driver.
+>> +     a) mixer: It is required for gate operation on aclk_200_disp1
+> clock
 >
-> You missed out comments provided earlier..
-> http://lists.infradead.org/pipermail/linux-mtd/2013-August/048374.html
+> Gate of Mixer IP bus clock.
 >
-> Remember .. this compatibility check is between spi_device->mode
-> v/s spi_master->mode_bits. This is different from ur V3 patch
-> which checks for spi_transfer->tx_nbits v/s spi_device->mode.
+>> +             which clocks the display1 block.
+>> +     b) sclk_hdmi: Parent for mux mout_mixer.
 >
-> + if ((xfer->tx_nbits == SPI_NBITS_DUAL) &&
-> + !(spi->mode & (SPI_TX_DUAL | SPI_TX_QUAD)))
-> + return -EINVAL;
-> + if ((xfer->tx_nbits == SPI_NBITS_QUAD) &&
-> + !(spi->mode & SPI_TX_QUAD))
-> + return -EINVAL;
+> I'm not sure why this clock is needed here. Could you explain what role it
+> plays in functioning of the Mixer IP?
 >
->
-Sorry for my mis-understanding. But here I want to regard DUAL / QUAD
-mode just as other mode, such as CPHA, CPOL and so on. To other mode,
-spi framework didn't do such check, example:
----------------------------------------------------------------------------------
-/* Mode (clock phase/polarity/etc.) */
-if (of_find_property(nc, "spi-cpha", NULL))
-    spi->mode |= SPI_CPHA;
-if (of_find_property(nc, "spi-cpol", NULL))
-    spi->mode |= SPI_CPOL;
----------------------------------------------------------------------------------
+I have done above rephrasing.
 
-Spi framework do this check in spi_setup as follow:
----------------------------------------------------------------------------------
-bad_bits = spi->mode & ~spi->master->mode_bits;
-if (bad_bits) {
-    dev_err(&spi->dev, "setup: unsupported mode bits %x\n",
-          bad_bits);
-    return -EINVAL;
-}
----------------------------------------------------------------------------------
-So to keep that consistant, I don't think it is necessary to add the
-check when setting the mode.
+For exynos4 socs, sclk_mixer can have sclk_hdmi or sclk_dac as inputs.
+mout_mixer
+is configured to select sclk_hdmi. I am not sure that how sclk_mixer
+is utilized inside
+mixer hardware.
 
-Best regards
+regards,
+Rahul Sharma.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> Best regards,
+> Tomasz
+>
