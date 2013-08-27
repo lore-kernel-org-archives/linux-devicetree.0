@@ -1,153 +1,70 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v3] dt: update PSCI binding documentation for v0.2
-Date: Mon, 26 Aug 2013 19:50:33 -0500
-Message-ID: <1377564633-31638-1-git-send-email-robherring2@gmail.com>
+From: wangyuhang <wangyuhang2014@gmail.com>
+Subject: [PATCH V2 2/2] spi: dual and quad support(device tree)
+Date: Tue, 27 Aug 2013 08:50:03 +0800
+Message-ID: <1377564603-4030-2-git-send-email-wangyuhang2014@gmail.com>
+References: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <Ian.Campbell@citrix.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Rob Herring <rob.herring@calxeda.com>, Matt Sealey <neko@bakuhatsu.net>, Dave Martin <Dave.Martin@arm.com>, Christoffer Dall <christoffer.dall@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: broonie@kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+Cc: sourav.poddar@ti.com, pekon@ti.com, wangyuhang <wangyuhang2014@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+Add spi-tmax-nbits and spi-rmax-nbits for spi slave node.
+Modify the related dt document(spi-bus.txt)
+ spi-tmax-nbits:Max number of bits slave will use for MOSI(writting)
+ spi-rmax-nbits:Max number of bits slave will use for MISO(reading)
+Support for spi-tx/rmax-nbits in SPI framework has been picked[1].
+[1]: http://comments.gmane.org/gmane.linux.kernel.spi.devel/14420
+Commit Id:f477b7fb13df2b843997559ff34e87d054ba6538
 
-The PSCI spec from ARM has been updated to 0.2 version. Update the
-binding document to reflect the spec changes. For the binding, the
-major changes are the addition of psci_version, affinity_info,
-migrate_info_type, migrate_info_up_cpu, system_reset and system_off
-functions. The recommended function ID numbering has also changed.
-
-This update also defines 32 and 64 bit calling conventions. The calling
-convention is defined on a per function ID basis.
-
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Dave Martin <Dave.Martin@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <Ian.Campbell@citrix.com>
-Cc: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-Cc: Christoffer Dall <christoffer.dall@linaro.org>,
-Cc: Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
-Cc: Matt Sealey <neko@bakuhatsu.net>
-Cc: devicetree@vger.kernel.org
+Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
 ---
-v3: This version implements Mark's suggested binding with -32 and -64 suffixes.
+ Documentation/devicetree/bindings/spi/spi-bus.txt |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
- Documentation/devicetree/bindings/arm/psci.txt | 62 +++++++++++++++++++-------
- 1 file changed, 46 insertions(+), 16 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
-index 433afe9..209bb04 100644
---- a/Documentation/devicetree/bindings/arm/psci.txt
-+++ b/Documentation/devicetree/bindings/arm/psci.txt
-@@ -1,16 +1,17 @@
- * Power State Coordination Interface (PSCI)
- 
- Firmware implementing the PSCI functions described in ARM document number
--ARM DEN 0022A ("Power State Coordination Interface System Software on ARM
-+ARM DEN 0022B ("Power State Coordination Interface System Software on ARM
- processors") can be used by Linux to initiate various CPU-centric power
- operations.
- 
--Issue A of the specification describes functions for CPU suspend, hotplug
--and migration of secure software.
-+Issue B of the specification describes functions for CPU suspend, hotplug,
-+migration of secure software, and system level reset and powerdown.
- 
- Functions are invoked by trapping to the privilege level of the PSCI
- firmware (specified as part of the binding below) and passing arguments
--in a manner similar to that specified by AAPCS:
-+as defined in ARM document "SMC Calling Convention" (ARM DEN 0028) in a manner
-+similar to that specified by AAPCS:
- 
- 	 r0		=> 32-bit Function ID / return value
- 	{r1 - r3}	=> Parameters
-@@ -21,10 +22,10 @@ to #0.
- 
- Main node required properties:
- 
-- - compatible    : Must be "arm,psci"
-+ - compatible    : Must contain "arm,psci-0.2" or "arm,psci"
- 
-- - method        : The method of calling the PSCI firmware. Permitted
--                   values are:
-+ - method        : The method defines the calling convention for the PSCI
-+                   firmware. Permitted values are:
- 
-                    "smc" : SMC #0, with the register assignments specified
- 		           in this binding.
-@@ -32,24 +33,53 @@ Main node required properties:
-                    "hvc" : HVC #0, with the register assignments specified
- 		           in this binding.
- 
-+ - psci_version  : Function ID for PSCI_VERSION operation. Required for
-+                   "arm,psci-0.2" compatible version or later.
+diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+index 296015e..211336c 100644
+--- a/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -55,6 +55,22 @@ contain the following properties.
+     		chip select active high
+ - spi-3wire       - (optional) Empty property indicating device requires
+     		    3-wire mode.
++- spi-tmax-nbits  - (optional) Max number of bits slave will use for
++    		    MOSI(writting)
++- spi-rmax-nbits  - (optional) Max number of bits slave will use for
++    		    MISO(reading)
 +
- Main node optional properties:
- 
-- - cpu_suspend   : Function ID for CPU_SUSPEND operation
-+ - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
++So if for example the slave has 4 wires for writting and 2 wires for reading,
++and the spi-tx/rx-nbits property should be set as follows:
 +
-+ - cpu_off                : Function ID for CPU_OFF operation
++spi-tmax-nbits = <4>;
++spi-rmax-nbits = <2>;
 +
-+ - cpu_on[-<32|64]        : Function ID for CPU_ON operation
-+
-+ - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
++Now the value that spi-tmax-nbits and spi-rmax-nbits can receive is only
++1(single), 2(dual) and 4(quad). If you don't set spi-tmax-nbits or spi-rmax-nbits,
++spi_device mode will be set in single(1 wire) as default. Another point, if
++property:spi-3wire is set, spi-t/rmax-nbits is forbidden to set to <2 or 4>,
++otherwise, an errro will return.
  
-- - cpu_off       : Function ID for CPU_OFF operation
-+ - migrate[-<32|64]       : Function ID for MIGRATE operation
- 
-- - cpu_on        : Function ID for CPU_ON operation
-+ - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
- 
-- - migrate       : Function ID for MIGRATE operation
-+ - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
- 
-+ - system_reset           : Function ID for SYSTEM_RESET operation
-+
-+ - system_off             : Function ID for SYSTEM_OFF operation
-+
-+Some function IDs support 32-bit and 64-bit calling conventions. If no size is
-+specified, then the 32-bit calling convention is used. Therefore, all function
-+IDs for 64-bit calling convention are required to have "-64" suffix. Use of the
-+"-32" suffix is recommended, but not required for backwards compatibility.
- 
- Example:
- 
- 	psci {
--		compatible	= "arm,psci";
-+		compatible	= "arm,psci-0.2";
- 		method		= "smc";
--		cpu_suspend	= <0x95c10000>;
--		cpu_off		= <0x95c10001>;
--		cpu_on		= <0x95c10002>;
--		migrate		= <0x95c10003>;
-+		psci_version	= <0x84000000>;
-+		cpu_suspend-32	= <0x84000001>;
-+		cpu_suspend-64	= <0xc4000001>;
-+		cpu_off		= <0x84000002>;
-+		cpu_on-32	= <0x84000003>;
-+		cpu_on-64	= <0xc4000003>;
-+		affinity_info-32 = <0x84000004>; 
-+		affinity_info-64 = <0xc4000004>; 
-+		migrate-32	= <0x84000005>;
-+		migrate-64	= <0xc4000005>;
-+		migrate_info_type = <0x84000006>;
-+		migrate_info_up_cpu-32 = <0x84000007>;
-+		migrate_info_up_cpu-64 = <0xc4000007>;
-+		system_off	= <0x84000008>; 
-+		system_reset	= <0x84000009>; 
- 	};
-+
+ If a gpio chipselect is used for the SPI slave the gpio number will be passed
+ via the cs_gpio
 -- 
-1.8.1.2
+1.7.9.5
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
