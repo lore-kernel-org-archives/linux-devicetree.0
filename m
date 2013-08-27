@@ -1,31 +1,31 @@
-From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: [patch] iio: adc: twl6030-gpadc: returning success instead of error
-Date: Tue, 27 Aug 2013 04:19:02 +0300
-Message-ID: <20130827011902.GC17061@elgon.mountain>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [patch] ab8500-charger: we print an unintended error message
+Date: Tue, 27 Aug 2013 04:19:42 +0300
+Message-ID: <20130827011942.GD17061@elgon.mountain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <kernel-janitors-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Oleksandr Kozaruk <oleksandr.kozaruk-l0cyMroinI0@public.gmane.org>, Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Anton Vorontsov <anton@enomsg.org>
+Cc: David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-I've moved the goto down a line after we set the error code.
+There is a missing break statement here, so we print an error message
+that the USB type is invalid.  The original code still works fine
+though except for the error message.
 
-Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-diff --git a/drivers/iio/adc/twl6030-gpadc.c b/drivers/iio/adc/twl6030-gpadc.c
-index a558516..0ea96c0 100644
---- a/drivers/iio/adc/twl6030-gpadc.c
-+++ b/drivers/iio/adc/twl6030-gpadc.c
-@@ -537,8 +537,8 @@ static int twl6030_gpadc_read_raw(struct iio_dev *indio_dev,
- 		ret = -ETIMEDOUT;
- 		goto err;
- 	} else if (timeout < 0) {
--		goto err;
- 		ret = -EINTR;
-+		goto err;
- 	}
- 
- 	switch (mask) {
+diff --git a/drivers/power/ab8500_charger.c b/drivers/power/ab8500_charger.c
+index f098fda..a4c4a10 100644
+--- a/drivers/power/ab8500_charger.c
++++ b/drivers/power/ab8500_charger.c
+@@ -774,6 +774,7 @@ static int ab8500_charger_max_usb_curr(struct ab8500_charger *di,
+ 		di->max_usb_in_curr.usb_type_max = USB_CH_IP_CUR_LVL_0P5;
+ 		dev_dbg(di->dev, "USB Type - 0x%02x MaxCurr: %d", link_status,
+ 				di->max_usb_in_curr.usb_type_max);
++		break;
+ 	case USB_STAT_NOT_VALID_LINK:
+ 		dev_err(di->dev, "USB Type invalid - try charging anyway\n");
+ 		di->max_usb_in_curr.usb_type_max = USB_CH_IP_CUR_LVL_0P5;
