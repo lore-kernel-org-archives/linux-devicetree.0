@@ -1,47 +1,73 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V2 2/2] of: add vendor prefix for Microchip Technology
- Inc
-Date: Tue, 27 Aug 2013 15:17:06 +0100
-Message-ID: <20130827141706.GM19893@e106331-lin.cambridge.arm.com>
-References: <1377510385-8149-1-git-send-email-larsi@wh2.tu-dresden.de>
- <1377510385-8149-2-git-send-email-larsi@wh2.tu-dresden.de>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [RFC v1 0/5] ARM: Initial support for Marvell Armada 1500
+Date: Tue, 27 Aug 2013 16:19:58 +0200
+Message-ID: <20130827161958.5e71890d@skate>
+References: <1376682098-10580-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1377510385-8149-2-git-send-email-larsi@wh2.tu-dresden.de>
+In-Reply-To: <1376682098-10580-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Poeschel <larsi@wh2.tu-dresden.de>
-Cc: "poeschel@lemonage.de" <poeschel@lemonage.de>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "arnd@arndb.de" <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 26, 2013 at 10:46:25AM +0100, Lars Poeschel wrote:
-> From: Lars Poeschel <poeschel@lemonage.de>
-> 
-> Trivial patch to add Microchip Technology Inc. to the list
-> of devicetree vendor prefixes.
-> 
-> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+Dear Sebastian Hesselbarth,
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+On Fri, 16 Aug 2013 21:41:33 +0200, Sebastian Hesselbarth wrote:
+> This is a RFC adding initial support for the Marvell Armada 1500
+> (88DE3100) found on various consumer devices (Chromecast, GoogleTV).
+> 
+> Actually, it is a two-fold RFC also raising discussions on mach-mvebu
+> cleanup roadmap to allow other SoCs to hop into it. While mach-mvebu
+> originally was created to add support for Armada 370/XP and merge
+> existing Marvell Orion familiy into it, I am not so sure about
+> Armada 1500 fits that well (the mbus has gone!).
 
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 366ce9b..4cdfbe8 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -36,6 +36,7 @@ linux	Linux-specific binding
->  lsi	LSI Corp. (LSI Logic)
->  marvell	Marvell Technology Group Ltd.
->  maxim	Maxim Integrated Products
-> +microchip	Microchip Technology Inc.
->  mosaixtech	Mosaix Technologies, Inc.
->  national	National Semiconductor
->  nintendo	Nintendo
-> -- 
-> 1.7.10.4
-> 
-> 
+After talking a bit with engineers within Marvell that work on this
+SoC, I'm inclined to think that using mach-mvebu for this family of SoC
+is not a good idea.
+
+The reasons are:
+
+ * This family of SoC is architecturally completely different from the
+   family of Orion SoC: they use completely different hardware blocks
+   (i.e none of the plat-orion stuff would apply, and none of the
+   Orion device drivers would be useful), they don't use the MBus
+   mechanism, etc. They are really a different family of SoC, almost as
+   if they were coming from a different SoC company.
+
+ * The SMP and power management code, as well as all the "glue"
+   platform code that typically sits in mach-<foo> is going to be
+   substantially, if not completely different from the one in
+   mach-mvebu. I already believe doing all the "glue" platform code in
+   mach-mvebu for all of Kirkwood, Dove, 370/XP, Orion5x and MV78xx0 is
+   going to be a challenge, so I'd suggest to not add to this challenge
+   a completely separate family of SOCs.
+
+The codename used for those Armada 1500 SOCs is "Berlin", so a name
+like mach-berlin, or mach-mvberlin (if we want to keep 'mv' to identify
+the founder) seems like a good name.
+
+Also, to help us understand the organization of the family of SOCs, I
+asked a few informations to Marvell, and here is what I could collect:
+
+"""
+BGxname		CPU core	codename	L2 cache controller	internal name
+BG2		PJ4B		Armada1500	Tauros3			MV88DE3100
+BG2-CT		Cortex-A9	N/A		PL310			N/A
+BG3		Cortex-A15	N/A		CA15 integrated		N/A
+"""
+
+As was told that the Armada X or MV88DEx names are not used during
+development, and what Marvell is really using are the BGxx names.
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
