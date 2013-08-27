@@ -1,288 +1,90 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v7] s5k5baf: add camera sensor driver
-Date: Tue, 27 Aug 2013 13:52:04 +0200
-Message-ID: <1424546.lJXUZLPMUj@avalon>
-References: <1377096091-7284-1-git-send-email-a.hajda@samsung.com> <1544715.uKei6kdjbJ@avalon> <521B4B4D.50209@samsung.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v5] gpio: pcf857x: Add OF support
+Date: Tue, 27 Aug 2013 13:55 +0200
+Message-ID: <1830640.BeoA2uHWDI@amdc1227>
+References: <1377590559-14279-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <2063335.Uqxok8bYMn@flatron> <521C63A0.10902@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <521B4B4D.50209@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <521C63A0.10902@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Archit Taneja <archit@ti.com>, Tomasz Figa <tomasz.figa@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrejz,
-
-On Monday 26 August 2013 14:34:21 Andrzej Hajda wrote:
-> On 08/23/2013 02:53 PM, Laurent Pinchart wrote:
-> > On Wednesday 21 August 2013 16:41:31 Andrzej Hajda wrote:
-> >> Driver for Samsung S5K5BAF UXGA 1/5" 2M CMOS Image Sensor
-> >> with embedded SoC ISP.
-> >> The driver exposes the sensor as two V4L2 subdevices:
-> >> - S5K5BAF-CIS - pure CMOS Image Sensor, fixed 1600x1200 format,
-> >>   no controls.
-> >> 
-> >> - S5K5BAF-ISP - Image Signal Processor, formats up to 1600x1200,
-> >>   pre/post ISP cropping, downscaling via selection API, controls.
-> >> 
-> >> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> >> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> >> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> >> ---
-> >> Hi,
-> >> 
-> >> This patch incorporates Stephen's suggestions, thanks.
-> >> 
-> >> Regards
-> >> Andrzej
-> >> 
-> >> v7
-> >> - changed description of 'clock-frequency' DT property
-> >> 
-> >> v6
-> >> - endpoint node presence is now optional,
-> >> - added asynchronous subdev registration support and clock
-> >> 
-> >>   handling,
-> >> 
-> >> - use named gpios in DT bindings
-> >> 
-> >> v5
-> >> - removed hflip/vflip device tree properties
-> >> 
-> >> v4
-> >> - GPL changed to GPLv2,
-> >> - bitfields replaced by u8,
-> >> - cosmetic changes,
-> >> - corrected s_stream flow,
-> >> - gpio pins are no longer exported,
-> >> - added I2C addresses to subdev names,
-> >> - CIS subdev registration postponed after
-> >> 
-> >>   succesfull HW initialization,
-> >> 
-> >> - added enums for pads,
-> >> - selections are initialized only during probe,
-> >> - default resolution changed to 1600x1200,
-> >> - state->error pattern removed from few other functions,
-> >> - entity link creation moved to registered callback.
-> >> 
-> >> v3:
-> >> - narrowed state->error usage to i2c and power errors,
-> >> - private gain controls replaced by red/blue balance user controls,
-> >> - added checks to devicetree gpio node parsing
-> >> 
-> >> v2:
-> >> - lower-cased driver name,
-> >> - removed underscore from regulator names,
-> >> - removed platform data code,
-> >> - v4l controls grouped in anonymous structs,
-> >> - added s5k5baf_clear_error function,
-> >> - private controls definitions moved to uapi header file,
-> >> - added v4l2-controls.h reservation for private controls,
-> >> - corrected subdev registered/unregistered code,
-> >> - .log_status sudbev op set to v4l2 helper,
-> >> - moved entity link creation to probe routines,
-> >> - added cleanup on error to probe function.
-> >> ---
-> >> 
-> >>  .../devicetree/bindings/media/samsung-s5k5baf.txt  |   59 +
-> >>  MAINTAINERS                                        |    7 +
-> >>  drivers/media/i2c/Kconfig                          |    7 +
-> >>  drivers/media/i2c/Makefile                         |    1 +
-> >>  drivers/media/i2c/s5k5baf.c                        | 2045 ++++++++++++++
-> >>  5 files changed, 2119 insertions(+)
-> >>  create mode 100644
-> >> 
-> >> Documentation/devicetree/bindings/media/samsung-s5k5baf.txt create mode
-> >> 100644 drivers/media/i2c/s5k5baf.c
+On Tuesday 27 of August 2013 14:00:24 Archit Taneja wrote:
+> Hi,
+> 
+> On Tuesday 27 August 2013 01:44 PM, Tomasz Figa wrote:
+> > Hi Laurent,
 > > 
-> > [snip]
+> > On Tuesday 27 of August 2013 10:02:39 Laurent Pinchart wrote:
+> >> Add DT bindings for the pcf857x-compatible chips and parse the device
+> >> tree node in the driver.
+> >> 
+> >> Signed-off-by: Laurent Pinchart
+> >> <laurent.pinchart+renesas@ideasonboard.com> ---
+> >> 
+> >>   .../devicetree/bindings/gpio/gpio-pcf857x.txt      | 71
+> >> 
+> >> ++++++++++++++++++++++ drivers/gpio/gpio-pcf857x.c
+> >> 
+> >>    | 44 +++++++++++--- 2 files changed, 107 insertions(+), 8
+> >> 
+> >> deletions(-)
+> >> 
+> >>   create mode 100644
+> >> 
+> >> Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+> >> 
+> >> Changes since v4:
+> >> 
+> >> - Don't try to get ngpio from of_device_id data, we already get it
+> >> from
+> >> 
+> >>    i2c_device_id
 > > 
-> >> diff --git a/drivers/media/i2c/s5k5baf.c b/drivers/media/i2c/s5k5baf.c
-> >> new file mode 100644
-> >> index 0000000..f21d9f1
-> >> --- /dev/null
-> >> +++ b/drivers/media/i2c/s5k5baf.c
-
-[snip]
-
-> >> +static void s5k5baf_write_arr_seq(struct s5k5baf *state, u16 addr,
-> >> +				  u16 count, const u16 *seq)
-> >> +{
-> >> +	struct i2c_client *c = v4l2_get_subdevdata(&state->sd);
-> >> +	u16 buf[count + 1];
-> >> +	int ret, n;
-> >> +
-> >> +	s5k5baf_i2c_write(state, REG_CMDWR_ADDR, addr);
-> >> +	if (state->error)
-> >> +		return;
+> > Hmm, I'm not sure how this is supposed to work.
 > > 
-> > I would have a preference for returning an error directly from the write
-> > function instead of storing it in state->error, that would be more
-> > explicit. The same is true for all read/write functions.
+> > How does the I2C core resolve OF compatible name to particular entry in
+> > id_table? I believe it simply passes NULL as the second argument of
+> > .probe() if the device is instantiated based on OF compatible string
+> > and
+> > not one in the legacy ID table.
 > 
-> I have introduced state->error to avoid code bloat. With this 'pattern'
-> error is checked in about 10 places in the code, of course without
-> scarifying code correctness.
-> Replacing this pattern with classic 'return error directly from function'
-> would result with adding error checks after all calls to i2c i/o functions
-> and after calls to many functions which those i2c i/o calls contains.
-> According to my rough estimates it is about 70 places.
+> It doesn't pass the second argument as NULL. If you look at
+> i2c_device_probe() in drivers/i2c/i2c-core.c, the second argument to
+> probe is passed as: i2c_match_id(driver->id_table, client)
 > 
-> Similar pattern is used already in v4l2_ctrl_handler::error.
-> 
-> >> +	buf[0] = __constant_htons(REG_CMD_BUF);
-> >> +	for (n = 1; n <= count; ++n)
-> >> +		buf[n] = htons(*seq++);
-> > 
-> > cpu_to_be16()/be16_to_cpu() here as well ?
-> 
-> OK
-> 
-> >> +
-> >> +	n *= 2;
-> >> +	ret = i2c_master_send(c, (char *)buf, n);
-> >> +	v4l2_dbg(3, debug, c, "i2c_write_seq(count=%d): %*ph\n", count,
-> >> +		 min(2 * count, 64), seq - count);
-> >> +
-> >> +	if (ret != n) {
-> >> +		v4l2_err(c, "i2c_write_seq: error during transfer (%d)\n", ret);
-> >> +		state->error = ret;
-> >> +	}
-> >> +}
+> This will extract the i2c_device_id pointer from the id_table.
 
-[snip]
+Yes, there is a chance that it will not return NULL, but I think that 
+relying on this is rather flawed.
 
-> >> +static int s5k5baf_hw_set_video_bus(struct s5k5baf *state)
-> >> +{
-> >> +	u16 en_packets;
-> >> +
-> >> +	switch (state->bus_type) {
-> >> +	case V4L2_MBUS_CSI2:
-> >> +		en_packets = EN_PACKETS_CSI2;
-> >> +		break;
-> >> +	case V4L2_MBUS_PARALLEL:
-> >> +		en_packets = 0;
-> >> +		break;
-> >> +	default:
-> >> +		v4l2_err(&state->sd, "unknown video bus: %d\n",
-> >> +			 state->bus_type);
-> >> +		return -EINVAL;
-> > 
-> > Can this happen ?
-> 
-> Yes, in case of incorrect DT bindings.
+If you look at the whole code path, you can see that it's only a 
+coincidence that this works. See the execution flow:
+ - I2C adapter driver calls of_i2c_register_devices(),
+ - of_i2c_register_devices() calls of_modalias_node() for every device on 
+this bus,
+ - of_modalias_node() stores the second substring of compatible string 
+separated by a comma, if there is one or the whole compatible otherwise to 
+the output buffer (type field of i2c_board_info struct, as passed by 
+of_i2c_register_devices()),
+ - of_i2c_register_devices() then calls i2c_new_device() with the resulting 
+info struct,
+ - i2c_new_device() takes info->type and copies its contents to client-
+>name,
+ - then a bit later, I2C core calls i2c_match_id(), which does matching of 
+client->name against id_table of the driver and the resulting i2c_device_id 
+entry (or NULL) is then passed to driver's .probe() callback.
 
-Shouldn't it be caught at probe time instead then ?
+So if it happens that compatible is not equal to "<vendor>,<ID from legacy 
+I2C table>", then the matching will fail and NULL will be passed.
 
-> >> +	};
-> >> +
-> >> +	s5k5baf_write_seq(state, REG_OIF_EN_MIPI_LANES,
-> >> +			  state->nlanes, en_packets, 1);
-> >> +
-> >> +	return s5k5baf_clear_error(state);
-> >> +}
-> > 
-> > [snip]
-> > 
-> >> +static int s5k5baf_s_stream(struct v4l2_subdev *sd, int on)
-> >> +{
-> >> +	struct s5k5baf *state = to_s5k5baf(sd);
-> >> +	int ret;
-> >> +
-> >> +	if (state->streaming == !!on)
-> >> +		return 0;
-> >> +
-> >> +	mutex_lock(&state->lock);
-> > 
-> > Shouldn't the lock protect the state->streaming check above ?
-> 
-> Yes, will be corrected.
-> 
-> >> +	if (on) {
-> >> +		s5k5baf_hw_set_config(state);
-> >> +		ret = s5k5baf_hw_set_crop_rects(state);
-> >> +		if (ret < 0)
-> >> +			goto out;
-> >> +		s5k5baf_hw_set_stream(state, 1);
-> >> +		s5k5baf_i2c_write(state, 0xb0cc, 0x000b);
-> >> +	} else {
-> >> +		s5k5baf_hw_set_stream(state, 0);
-> >> +	}
-> >> +	ret = s5k5baf_clear_error(state);
-> >> +	if (!ret)
-> >> +		state->streaming = !state->streaming;
-> >> +
-> >> +out:
-> >> +	mutex_unlock(&state->lock);
-> >> +
-> >> +	return ret;
-> >> +}
+[CCing Wolfram and Grant, as they should now more about this behavior and 
+whether it's intentional or no]
 
-[snip]
-
-> >> +static int s5k5baf_registered(struct v4l2_subdev *sd)
-> >> +{
-> >> +	struct s5k5baf *state = to_s5k5baf(sd);
-> >> +	int ret;
-> >> +
-> >> +	ret = v4l2_device_register_subdev(sd->v4l2_dev, &state->cis_sd);
-> >> +	if (ret < 0)
-> >> +		v4l2_err(sd, "failed to register subdev %s\n",
-> >> +			 state->cis_sd.name);
-> >> +	else
-> >> +		ret = media_entity_create_link(&state->cis_sd.entity, PAD_CIS,
-> >> +					       &state->sd.entity, PAD_CIS,
-> >> +					       MEDIA_LNK_FL_IMMUTABLE |
-> >> +					       MEDIA_LNK_FL_ENABLED);
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +static void s5k5baf_unregistered(struct v4l2_subdev *sd)
-> >> +{
-> >> +	struct s5k5baf *state = to_s5k5baf(sd);
-> >> +	v4l2_device_unregister_subdev(&state->cis_sd);
-> > 
-> > The unregistered operation is called from v4l2_device_unregister_subdev().
-> > Calling it again will be a no-op, the function will return immediately.
-> > You can thus get rid of the unregistered operation completely.
-> > 
-> > Similarly, the registered operation is called from
-> > v4l2_device_register_subdev(). You can get rid of it as well and just
-> > create the link in the probe function.
-> 
-> The sensor exposes two subdevs: s5k5baf_cis and s5k5baf_isp.
-> v4l2_device is not aware of it - he registers only the subdev bound to
-> i2c client - isp.
-> The registration of cis subdev is performed by the sensor in .registered
-> callback. Without .registered callback cis subdev will not be registered.
-
-You're right, my bad. I had overlooked that, I thought you were registering 
-the ISP subdev. Could you please add a comment to the .registered() handler to 
-document this ?
-
-> This is similar solution to smiapp and s5c73m3 drivers.
-> 
-> Regarding .unregistered callback, it seems that removing it would not harm -
-> there should be added only check in .registered to avoid its re-
-> registration. On the other hand IMO if sensor driver is responsible for
-> registration it should be responsible for unregistration of subdev, what do
-> you think about it?
-
-I agree.
-
-> And about links: v4l2_device_unregister_subdev calls
-> media_entity_remove_links,
-> so in case device is re-registered driver should re-create them.
-> 
-> >> +}
-
-[snip]
-
--- 
-Regards,
-
-Laurent Pinchart
+Best regards,
+Tomasz
