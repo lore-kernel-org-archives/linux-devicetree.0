@@ -1,46 +1,73 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH] ARM: at91/at91-pinctrl documentation: add missing sam9x5
- compatible string
-Date: Tue, 27 Aug 2013 16:57:28 +0200
-Message-ID: <521CBE58.9060402@atmel.com>
-References: <1377609965-22154-1-git-send-email-b.brezillon@overkiz.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: [PATCH 13/15] watchdog: orion: Add other compatibles to devicetree
+ binding
+Date: Tue, 27 Aug 2013 11:34:37 -0300
+Message-ID: <1377614079-10000-14-git-send-email-ezequiel.garcia@free-electrons.com>
+References: <1377614079-10000-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1377609965-22154-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Richard Genoud <richard.genoud@gmail.com>, Jiri Kosina <jkosina@suse.cz>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1377614079-10000-1-git-send-email-ezequiel.garcia@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, wim@iguana.be, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27/08/2013 15:26, Boris BREZILLON :
-> Add missing "atmel,at91sam9x5-pinctrl" compatible string to the
-> documentation.
->
-> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+Add the newly supported compatible-strings for Armada 370 and Armada
+XP SoC. In addition, specify the required clock inputs for each supported
+compatible:
+ * orion-wdt and armada-370 requires a single clock phandle
+ * armada-xp requires two clock phandles with clock-names "nbclk" and "fixed".
 
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+---
+ .../devicetree/bindings/watchdog/orion-wdt.txt          | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-> ---
->   .../bindings/pinctrl/atmel,at91-pinctrl.txt        |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> index 648d60e..cf7c7bc 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-> @@ -18,7 +18,7 @@ mode) this pin can work on and the 'config' configures various pad settings
->   such as pull-up, multi drive, etc.
->
->   Required properties for iomux controller:
-> -- compatible: "atmel,at91rm9200-pinctrl"
-> +- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinctrl"
->   - atmel,mux-mask: array of mask (periph per bank) to describe if a pin can be
->     configured in this periph mode. All the periph and bank need to be describe.
->
->
-
-
+diff --git a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
+index 5dc8d30..a6e6602 100644
+--- a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
+@@ -2,9 +2,23 @@
+ 
+ Required Properties:
+ 
+-- Compatibility : "marvell,orion-wdt"
++- Compatibility : "marvell,orion-wdt",
++		  "marvell,armada-370-wdt"
++		  "marvell,armada-xp-wdt"
+ - reg		: Address of the timer registers
+ 
++Clocks required for compatibles = "marvell,orion-wdt",
++				  "marvell,armada-370-wdt"
++
++- clocks	: Must contain a single entry describing
++		  the clock input.
++
++Clocks required for compatible = "marvell,armada-xp-wdt":
++- clocks	: Must contain an entry for each entry in clock-names.
++- clock-names	: Must include the following entries:
++		  "nbclk" (L2/coherency fabric clock),
++		  "fixed" (Reference 25 MHz fixed-clock).
++
+ Optional properties:
+ 
+ - timeout-sec	: Contains the watchdog timeout in seconds
+@@ -16,4 +30,5 @@ Example:
+ 		reg = <0x20300 0x28>;
+ 		timeout-sec = <10>;
+ 		status = "okay";
++		clocks = <&gate_clk 7>;
+ 	};
 -- 
-Nicolas Ferre
+1.8.1.5
