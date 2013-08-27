@@ -1,90 +1,209 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v5] gpio: pcf857x: Add OF support
-Date: Tue, 27 Aug 2013 13:55 +0200
-Message-ID: <1830640.BeoA2uHWDI@amdc1227>
-References: <1377590559-14279-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <2063335.Uqxok8bYMn@flatron> <521C63A0.10902@ti.com>
+From: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
+Subject: Re: [PATCH V4] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
+Date: Tue, 27 Aug 2013 17:32:52 +0530
+Message-ID: <CAKuRcOLK0PjcVKFxUZ9hedVScKe1K+QYE1g57CZ5JOE=AmFJow@mail.gmail.com>
+References: <1377595351-30233-1-git-send-email-yuvaraj.cd@samsung.com>
+	<20130827110145.GG19893@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <521C63A0.10902@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Archit Taneja <archit@ti.com>, Tomasz Figa <tomasz.figa@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, grant.likely@secretlab.ca
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130827110145.GG19893@e106331-lin.cambridge.arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "dianders@chromium.org" <dianders@chromium.org>, "cjb@laptop.org" <cjb@laptop.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 of August 2013 14:00:24 Archit Taneja wrote:
-> Hi,
-> 
-> On Tuesday 27 August 2013 01:44 PM, Tomasz Figa wrote:
-> > Hi Laurent,
-> > 
-> > On Tuesday 27 of August 2013 10:02:39 Laurent Pinchart wrote:
-> >> Add DT bindings for the pcf857x-compatible chips and parse the device
-> >> tree node in the driver.
-> >> 
-> >> Signed-off-by: Laurent Pinchart
-> >> <laurent.pinchart+renesas@ideasonboard.com> ---
-> >> 
-> >>   .../devicetree/bindings/gpio/gpio-pcf857x.txt      | 71
-> >> 
-> >> ++++++++++++++++++++++ drivers/gpio/gpio-pcf857x.c
-> >> 
-> >>    | 44 +++++++++++--- 2 files changed, 107 insertions(+), 8
-> >> 
-> >> deletions(-)
-> >> 
-> >>   create mode 100644
-> >> 
-> >> Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> >> 
-> >> Changes since v4:
-> >> 
-> >> - Don't try to get ngpio from of_device_id data, we already get it
-> >> from
-> >> 
-> >>    i2c_device_id
-> > 
-> > Hmm, I'm not sure how this is supposed to work.
-> > 
-> > How does the I2C core resolve OF compatible name to particular entry in
-> > id_table? I believe it simply passes NULL as the second argument of
-> > .probe() if the device is instantiated based on OF compatible string
-> > and
-> > not one in the legacy ID table.
-> 
-> It doesn't pass the second argument as NULL. If you look at
-> i2c_device_probe() in drivers/i2c/i2c-core.c, the second argument to
-> probe is passed as: i2c_match_id(driver->id_table, client)
-> 
-> This will extract the i2c_device_id pointer from the id_table.
-
-Yes, there is a chance that it will not return NULL, but I think that 
-relying on this is rather flawed.
-
-If you look at the whole code path, you can see that it's only a 
-coincidence that this works. See the execution flow:
- - I2C adapter driver calls of_i2c_register_devices(),
- - of_i2c_register_devices() calls of_modalias_node() for every device on 
-this bus,
- - of_modalias_node() stores the second substring of compatible string 
-separated by a comma, if there is one or the whole compatible otherwise to 
-the output buffer (type field of i2c_board_info struct, as passed by 
-of_i2c_register_devices()),
- - of_i2c_register_devices() then calls i2c_new_device() with the resulting 
-info struct,
- - i2c_new_device() takes info->type and copies its contents to client-
->name,
- - then a bit later, I2C core calls i2c_match_id(), which does matching of 
-client->name against id_table of the driver and the resulting i2c_device_id 
-entry (or NULL) is then passed to driver's .probe() callback.
-
-So if it happens that compatible is not equal to "<vendor>,<ID from legacy 
-I2C table>", then the matching will fail and NULL will be passed.
-
-[CCing Wolfram and Grant, as they should now more about this behavior and 
-whether it's intentional or no]
-
-Best regards,
-Tomasz
+On Tue, Aug 27, 2013 at 4:31 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Tue, Aug 27, 2013 at 10:22:31AM +0100, Yuvaraj Kumar C D wrote:
+>> This patch adds the device tree node entries for exynos5420 SOC.
+>> Exynos5420 has a different version of DWMMC controller,so a new
+>> compatible string is used to distinguish it from the prior SOC's.
+>>
+>> This patch depends on
+>>       mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
+>>
+>> changes since V3:
+>>       1.change fifo-depth size from 0x80 to 0x40
+>>       2.Move the below properties
+>>               a.card-detect-delay
+>>               b.samsung,dw-mshc-ciu-div
+>>               c.samsung,dw-mshc-sdr-timing
+>>               d.samsung,dw-mshc-ddr-timing
+>>       from SOC dts to board dts file as suggested by Doug Anderson
+>>
+>> changes since V2:
+>>       1.dropped num-slots property from node as its not required
+>>         if number of card slots available is 1.
+>>
+>>       2.Move the below properties
+>>               a.fifo-depth
+>>               b.card-detect-delay
+>>               c.samsung,dw-mshc-ciu-div
+>>               d.samsung,dw-mshc-sdr-timing
+>>               e.samsung,dw-mshc-ddr-timing
+>>       from board dts to SOC dts,as these are not board specific properties.
+>>
+>>       3.Updated the binding document exynos-dw-mshc.txt.
+>>
+>> changes since V1:
+>>       1.disable node by status = disabled in SOC file
+>>       2.enable node by status = okay in board specific file
+>>
+>> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+>> ---
+>>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    4 ++
+>>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   34 +++++++++++++++++
+>>  arch/arm/boot/dts/exynos5420.dtsi                  |   39 ++++++++++++++++++++
+>>  3 files changed, 77 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> index 6d1c098..25368e8 100644
+>> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> @@ -16,6 +16,8 @@ Required Properties:
+>>         specific extensions.
+>>       - "samsung,exynos5250-dw-mshc": for controllers with Samsung Exynos5250
+>>         specific extensions.
+>> +     - "samsung,exynos5420-dw-mshc": for controllers with Samsung Exynos5420
+>> +       specific extensions.
+>>
+>>  * samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
+>>    unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
+>> @@ -31,6 +33,8 @@ Required Properties:
+>>    data rate mode operation. Refer notes below for the order of the cells and the
+>>    valid values.
+>>
+>> +* bypass-smu: Bypass Security Management Unit of eMMC channel 0 and channel 1.
+>> +
+>
+> Could you elaborate on why this is needed?
+Exynos5420  Mobile Storage Host controller has a Security Management
+Unit (SMU) for
+channel 0 and channel 1 (mainly for eMMC). This binding property
+requires to add a quirk
+to bypass SMU as it is not being used yet.
+>
+> Is the SMU broken or not present in some hardware revisions?
+SMU is only present in channel 0 and channel 1,but not in channel 2.So
+to distinguish this,
+bypass-smu property has been added as quirks in the channel.
+>
+>>    Notes for the sdr-timing and ddr-timing values:
+>>
+>>      The order of the cells should be
+>
+> On an unrelated note, I see the binding in mainline defines a gpios
+> property that doesn't seem to be used anywhere. Am I missing something,
+> or do we just not have support for that part of the binding?
+Yes,This document has been little outdated.I will update and post a
+separate patch.
+>
+> Thanks,
+> Mark.
+>
+>> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> index bafba25..576066c 100644
+>> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> @@ -31,6 +31,40 @@
+>>               };
+>>       };
+>>
+>> +     dwmmc0@12200000 {
+>> +             status = "okay";
+>> +             broken-cd;
+>> +             bypass-smu;
+>> +             supports-highspeed;
+>> +             card-detect-delay = <200>;
+>> +             samsung,dw-mshc-ciu-div = <3>;
+>> +             samsung,dw-mshc-sdr-timing = <0 4>;
+>> +             samsung,dw-mshc-ddr-timing = <0 2>;
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>> +
+>> +             slot@0 {
+>> +                     reg = <0>;
+>> +                     bus-width = <8>;
+>> +             };
+>> +     };
+>> +
+>> +     dwmmc2@12220000 {
+>> +             status = "okay";
+>> +             supports-highspeed;
+>> +             card-detect-delay = <200>;
+>> +             samsung,dw-mshc-ciu-div = <3>;
+>> +             samsung,dw-mshc-sdr-timing = <2 3>;
+>> +             samsung,dw-mshc-ddr-timing = <1 2>;
+>> +             pinctrl-names = "default";
+>> +             pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+>> +
+>> +             slot@0 {
+>> +                     reg = <0>;
+>> +                     bus-width = <4>;
+>> +             };
+>> +     };
+>> +
+>>       dp-controller@145B0000 {
+>>               pinctrl-names = "default";
+>>               pinctrl-0 = <&dp_hpd>;
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index d537cd7..3893f45 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -22,6 +22,9 @@
+>>       compatible = "samsung,exynos5420";
+>>
+>>       aliases {
+>> +             mshc0 = &dwmmc_0;
+>> +             mshc1 = &dwmmc_1;
+>> +             mshc2 = &dwmmc_2;
+>>               pinctrl0 = &pinctrl_0;
+>>               pinctrl1 = &pinctrl_1;
+>>               pinctrl2 = &pinctrl_2;
+>> @@ -84,6 +87,42 @@
+>>               clock-names = "mfc";
+>>       };
+>>
+>> +     dwmmc_0: dwmmc0@12200000 {
+>> +             compatible = "samsung,exynos5420-dw-mshc";
+>> +             interrupts = <0 75 0>;
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             reg = <0x12200000 0x2000>;
+>> +             clocks = <&clock 351>, <&clock 132>;
+>> +             clock-names = "biu", "ciu";
+>> +             fifo-depth = <0x40>;
+>> +             status = "disabled";
+>> +     };
+>> +
+>> +     dwmmc_1: dwmmc1@12210000 {
+>> +             compatible = "samsung,exynos5420-dw-mshc";
+>> +             interrupts = <0 76 0>;
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             reg = <0x12210000 0x2000>;
+>> +             clocks = <&clock 352>, <&clock 133>;
+>> +             clock-names = "biu", "ciu";
+>> +             fifo-depth = <0x40>;
+>> +             status = "disabled";
+>> +     };
+>> +
+>> +     dwmmc_2: dwmmc2@12220000 {
+>> +             compatible = "samsung,exynos5420-dw-mshc";
+>> +             interrupts = <0 77 0>;
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             reg = <0x12220000 0x2000>;
+>> +             clocks = <&clock 353>, <&clock 134>;
+>> +             clock-names = "biu", "ciu";
+>> +             fifo-depth = <0x40>;
+>> +             status = "disabled";
+>> +     };
+>> +
+>>       mct@101C0000 {
+>>               compatible = "samsung,exynos4210-mct";
+>>               reg = <0x101C0000 0x800>;
+>> --
+>> 1.7.9.5
+>>
+>>
