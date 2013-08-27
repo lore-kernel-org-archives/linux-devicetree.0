@@ -1,90 +1,57 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [RFC 2/2] usb: dwc3: Add Qualcomm DWC3 glue layer driver
-Date: Tue, 27 Aug 2013 13:46:58 -0500
-Message-ID: <20130827184658.GS3005@radagast>
-References: <1375789991-30041-1-git-send-email-iivanov@mm-sol.com>
- <1375789991-30041-3-git-send-email-iivanov@mm-sol.com>
- <20130809132349.GC12041@radagast>
- <1376064558.7709.31.camel@iivanov-dev.int.mm-sol.com>
- <20130812182439.GG27954@radagast>
- <1376472497.2132.6.camel@iivanov-dev.int.mm-sol.com>
-Reply-To: <balbi@ti.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [patch] net/fec: "u32" is more explicit than "unsigned long"
+Date: Tue, 27 Aug 2013 14:51:44 -0400 (EDT)
+Message-ID: <20130827.145144.478588680902912563.davem@davemloft.net>
+References: <20130823094920.GP31293@elgon.mountain>
+	<1377261869.3364.3.camel@bwh-desktop.uk.level5networks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2KGcTUzwJ+J1jnia"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1376472497.2132.6.camel@iivanov-dev.int.mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: balbi@ti.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1377261869.3364.3.camel@bwh-desktop.uk.level5networks.com>
+Sender: netdev-owner@vger.kernel.org
+To: bhutchings@solarflare.com
+Cc: dan.carpenter@oracle.com, grant.likely@linaro.org, rob.herring@calxeda.com, fabio.estevam@freescale.com, Frank.Li@freescale.com, jim_baxter@mentor.com, B38611@freescale.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---2KGcTUzwJ+J1jnia
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: Ben Hutchings <bhutchings@solarflare.com>
+Date: Fri, 23 Aug 2013 13:44:29 +0100
 
-On Wed, Aug 14, 2013 at 12:28:17PM +0300, Ivan T. Ivanov wrote:
->=20
-> Hi,=20
->=20
-> On Mon, 2013-08-12 at 13:24 -0500, Felipe Balbi wrote:=20
-> > On Fri, Aug 09, 2013 at 07:09:18PM +0300, Ivan T. Ivanov wrote:
-> > > Hi,=20
-> > >=20
-> > > On Fri, 2013-08-09 at 16:23 +0300, Felipe Balbi wrote:
-> > > > Hi,
-> > > >=20
-> > > > On Tue, Aug 06, 2013 at 02:53:11PM +0300, Ivan T. Ivanov wrote:
-> > > > > diff --git a/drivers/usb/dwc3/dwc3-msm.c b/drivers/usb/dwc3/dwc3-=
-msm.c
-> > > > > new file mode 100644
-> > > > > index 0000000..e509abc
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/usb/dwc3/dwc3-msm.c
-> > > > > @@ -0,0 +1,175 @@
-> > > > > +#undef CONFIG_REGULATOR
-> > > >=20
-> > > > why ??????
-> > > >=20
-> > >=20
-> > > 1. This shows that driver is still not fully tested=20
-> > >    Regulators support is still missing in the MSM
-> > > 2. Helps me to load driver successfully.=20
-> >=20
-> > Then remove all the regulator-related code from this.
->=20
-> I would like to keep them. I will just remove #undef line.=20
-> Code will continue to build fine. And once regulators drivers=20
-> are upstreamed this driver 'will not' require further
-> modifications.
+> On Fri, 2013-08-23 at 12:49 +0300, Dan Carpenter wrote:
+>> tmpaddr[] is a six byte array.  We want to set the first four bytes on
+>> the first line and the remaining two on the next line.  The code assumes
+>> that "unsigned long" is 32 bits and obviously that's not true on 64 bit
+>> arches.  It's better to just use u32 instead.
+>> 
+>> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+>> ---
+>> This is a static checker thing and I can't compile this file.
+>> 
+>> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+>> index fdf9307..422b125 100644
+>> --- a/drivers/net/ethernet/freescale/fec_main.c
+>> +++ b/drivers/net/ethernet/freescale/fec_main.c
+>> @@ -1100,9 +1100,9 @@ static void fec_get_mac(struct net_device *ndev)
+>>  	 * 4) FEC mac registers set by bootloader
+>>  	 */
+>>  	if (!is_valid_ether_addr(iap)) {
+>> -		*((unsigned long *) &tmpaddr[0]) =
+>> +		*((u32 *) &tmpaddr[0]) =
+>>  			be32_to_cpu(readl(fep->hwp + FEC_ADDR_LOW));
+>> -		*((unsigned short *) &tmpaddr[4]) =
+>> +		*((u16 *) &tmpaddr[4]) =
+>>  			be16_to_cpu(readl(fep->hwp + FEC_ADDR_HIGH) >> 16);
+>>  		iap = &tmpaddr[0];
+>>  	}
+> 
+> This code also seems to have CPU vs big-endian byte order the wrong way
+> round.  readl() returns bytes in native order whereas we always store
+> MAC addresses in network (big-endian) order.  So I think it should be
+> doing:
+> 
+> 		*((__be32 *) &tmpaddr[0]) =
+> 			cpu_to_be32(readl(fep->hwp + FEC_ADDR_LOW));
+> 		*((__be16 *) &tmpaddr[4]) =
+> 			cpu_to_be16(readl(fep->hwp + FEC_ADDR_HIGH) >> 16);
 
-fair enough.
-
---=20
-balbi
-
---2KGcTUzwJ+J1jnia
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSHPQiAAoJEIaOsuA1yqREzzgP/1xZM/lS8jUehIde9h9hoptE
-G2E9c8fhLtBGdktTWIO53BxzkWpc2yAXePzdwh3EM/bIbtaVtgL7Yih9NxlszRXf
-Qzgf3IwcWy0LricvG5/diKAOFrdqgSYqZiLq6pDDpsh2vt0flWTHjQXFrGXjn2gx
-NK6AgWPhuenwtJrg8GRNOV/I9u+WzknxDM4hh/ft9uiEOk3vaXbVRWVcWaCB2KTm
-DN/tuTxqqYEO5glVCRQK2GhYqrjAiOKXkbNv12/3A20c7jLN4SnUJtFP5iUD0+BP
-BHcK3xD28GvojNibSA1ZBOLCTqbuHhoHAKPd54Szt7TmbofgD+9ykWxmFEPyg+JL
-4xk+UXd03iQVjVFFgtLDRZ/WubutmryNDNob6gxCFJDbxTOum41KW9SsDp7lVZc7
-3MecSBH11K7lDskl3l8d4wxt13KWNEOuWr0yxlXepVVbrpEQWPSpJq/vRxuGN3Ci
-3pVTcLYSiczJfgF0d3PpzqMgNK16z0gxFPJ0DFJVPyYk2JSUL7HXAQIz3X9AnxCM
-XaAgU32bV6++r2KX6TMQzyXdQjf85/hi1axl0HbRLYTbFJHXekqT2j7LyjCFRUmZ
-+aLB+fKZg+Y5bpQsv5vvABqAmebsLZ0StWoOcwRd2/Bgsj5j/+DaOcQylxsj4rIM
-zvrdbxSpmBu3j0wSL0Th
-=+AaF
------END PGP SIGNATURE-----
-
---2KGcTUzwJ+J1jnia--
+Dan please resubmit with Ben's suggested changes, thanks.
