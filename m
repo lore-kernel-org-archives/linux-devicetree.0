@@ -1,62 +1,146 @@
-From: Johannes Thumshirn <johannes.thumshirn@men.de>
-Subject: [RFC][PATCH v2] documentation/devicetree: Move DT bindigns from gpio to watchdog
-Date: Tue, 27 Aug 2013 13:10:37 +0200
-Message-ID: <1377601837-18989-1-git-send-email-johannes.thumshirn@men.de>
-References: <521672A1.6010202@wwwdotorg.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v8 1/3] DMA: Freescale: revise device tree binding
+ document
+Date: Tue, 27 Aug 2013 12:25:09 +0100
+Message-ID: <20130827112509.GH19893@e106331-lin.cambridge.arm.com>
+References: <1377600123-5746-1-git-send-email-hongbo.zhang@freescale.com>
+ <1377600123-5746-2-git-send-email-hongbo.zhang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <521672A1.6010202@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Landley <rob@landley.net>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1377600123-5746-2-git-send-email-hongbo.zhang@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "hongbo.zhang@freescale.com" <hongbo.zhang@freescale.com>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-I accidently put the devicetree bindings for the MEN A21 watchdog driver in
-Documentation/devicetree/bindings/gpio instead of
-Documentation/devicetree/bindings/watchdog, this patch addresses this error.
+On Tue, Aug 27, 2013 at 11:42:01AM +0100, hongbo.zhang@freescale.com wrote:
+> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+> 
+> This patch updates the discription of each type of DMA controller and its
+> channels, it is preparation for adding another new DMA controller binding, it
+> also fixes some defects of indent for text alignment at the same time.
+> 
+> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+> ---
+>  .../devicetree/bindings/powerpc/fsl/dma.txt        |   62 +++++++++-----------
+>  1 file changed, 27 insertions(+), 35 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+> index 2a4b4bc..ddf17af 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+> @@ -1,33 +1,29 @@
+> -* Freescale 83xx DMA Controller
+> +* Freescale DMA Controllers
+>  
+> -Freescale PowerPC 83xx have on chip general purpose DMA controllers.
+> +** Freescale Elo DMA Controller
+> +   This is a little-endian DMA controller, used in Freescale mpc83xx series
+> +   chips such as mpc8315, mpc8349, mpc8379 etc.
+>  
+>  Required properties:
+>  
+> -- compatible        : compatible list, contains 2 entries, first is
+> -		 "fsl,CHIP-dma", where CHIP is the processor
+> -		 (mpc8349, mpc8360, etc.) and the second is
+> -		 "fsl,elo-dma"
+> -- reg               : <registers mapping for DMA general status reg>
+> -- ranges		: Should be defined as specified in 1) to describe the
+> -		  DMA controller channels.
+> +- compatible        : must include "fsl,elo-dma"
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@men.de>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ian.campbell@citrix.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Wim Van Sebroeck <wim@iguana.be>
-Cc: Guenter Roeck <linux@roeck-us.net>
----
- Changes to v1:
- - Use named gpios, as suggested by Stephen Warren
+We should list the other values that may be in the list also, unless
+they are really of no consequence, in which case their presence in dt is
+questionable.
 
- .../bindings/{gpio => watchdog}/men-a021-wdt.txt   |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
- rename Documentation/devicetree/bindings/{gpio => watchdog}/men-a021-wdt.txt (61%)
+> +- reg               : <registers specifier for DMA general status reg>
+> +- ranges            : describes the mapping between the address space of the
+> +                      DMA channels and the address space of the DMA controller
+>  - cell-index        : controller index.  0 for controller @ 0x8100
+> -- interrupts        : <interrupt mapping for DMA IRQ>
+> +- interrupts        : <interrupt specifier for DMA IRQ>
+>  - interrupt-parent  : optional, if needed for interrupt mapping
+>  
+> -
+>  - DMA channel nodes:
+> -        - compatible        : compatible list, contains 2 entries, first is
+> -			 "fsl,CHIP-dma-channel", where CHIP is the processor
+> -			 (mpc8349, mpc8350, etc.) and the second is
+> -			 "fsl,elo-dma-channel". However, see note below.
+> -        - reg               : <registers mapping for channel>
+> +        - compatible        : must include "fsl,elo-dma-channel"
+> +                              However, see note below.
 
-diff --git a/Documentation/devicetree/bindings/gpio/men-a021-wdt.txt b/Documentation/devicetree/bindings/watchdog/men-a021-wdt.txt
-similarity index 61%
-rename from Documentation/devicetree/bindings/gpio/men-a021-wdt.txt
-rename to Documentation/devicetree/bindings/watchdog/men-a021-wdt.txt
-index 370dee3..0008f28 100644
---- a/Documentation/devicetree/bindings/gpio/men-a021-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/men-a021-wdt.txt
-@@ -16,10 +16,10 @@ Optional properties:
- Example:
- 	watchdog {
- 		compatible ="men,a021-wdt";
--		gpios = <&gpio3 9  1	/* WD_EN */
--			 &gpio3 10 1	/* WD_FAST */
--			 &gpio3 11 1	/* WD_TRIG */
--			 &gpio3 6  1	/* RST_CAUSE[0] */
--			 &gpio3 7  1	/* RST_CAUSE[1] */
--			 &gpio3 8  1>;	/* RST_CAUSE[2] */
-+		enable-gpio = <&gpio3 9 1>; /* WD_EN */
-+		fast-gpio = <&gpio3 10 1>;  /* WD_FAST */
-+		trig-gpio = <&gpio3 11 1>;  /* WD_TRIG */
-+		rst-gpios = <&gpio3 6 1     /* RST_CAUSE[0] */
-+			     &gpio3 7 1     /* RST_CAUSE[1] */
-+			     &gpio3 8 1>;   /* RST_CAUSE[2] */
- 	};
---
-1.7.9.5
+Again, I think we should list the other entries that may be in the list.
+Otherwise it's not clear what the binding defines. Similarly for the
+other compatible list definitions below...
 
+> +        - reg               : <registers specifier for channel>
+>          - cell-index        : dma channel index starts at 0.
+
+I realise you haven't changed it, but it's unclear what the cell-index
+property is (and somewhat confusingly there seem to be multiple
+defnitions). It might be worth clarifying it while performing the other
+cleanup.
+
+>  
+>  Optional properties:
+> -        - interrupts        : <interrupt mapping for DMA channel IRQ>
+> -			  (on 83xx this is expected to be identical to
+> -			   the interrupts property of the parent node)
+> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
+> +                              (on 83xx this is expected to be identical to
+> +                              the interrupts property of the parent node)
+>          - interrupt-parent  : optional, if needed for interrupt mapping
+>  
+>  Example:
+> @@ -70,30 +66,26 @@ Example:
+>  		};
+>  	};
+>  
+> -* Freescale 85xx/86xx DMA Controller
+> -
+> -Freescale PowerPC 85xx/86xx have on chip general purpose DMA controllers.
+> +** Freescale EloPlus DMA Controller
+> +   This is DMA controller with extended addresses and chaining, mainly used in
+> +   Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as mpc8540, mpc8641
+> +   p4080, bsc9131 etc.
+>  
+>  Required properties:
+>  
+> -- compatible        : compatible list, contains 2 entries, first is
+> -		 "fsl,CHIP-dma", where CHIP is the processor
+> -		 (mpc8540, mpc8540, etc.) and the second is
+> -		 "fsl,eloplus-dma"
+> -- reg               : <registers mapping for DMA general status reg>
+> +- compatible        : must include "fsl,eloplus-dma"
+> +- reg               : <registers specifier for DMA general status reg>
+>  - cell-index        : controller index.  0 for controller @ 0x21000,
+>                                           1 for controller @ 0xc000
+> -- ranges		: Should be defined as specified in 1) to describe the
+> -		  DMA controller channels.
+> +- ranges            : describes the mapping between the address space of the
+> +                      DMA channels and the address space of the DMA controller
+>  
+>  - DMA channel nodes:
+> -        - compatible        : compatible list, contains 2 entries, first is
+> -			 "fsl,CHIP-dma-channel", where CHIP is the processor
+> -			 (mpc8540, mpc8560, etc.) and the second is
+> -			 "fsl,eloplus-dma-channel". However, see note below.
+> +        - compatible        : must include "fsl,eloplus-dma-channel"
+> +                              However, see note below.
+>          - cell-index        : dma channel index starts at 0.
+> -        - reg               : <registers mapping for channel>
+> -        - interrupts        : <interrupt mapping for DMA channel IRQ>
+> +        - reg               : <registers specifier for channel>
+> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
+>          - interrupt-parent  : optional, if needed for interrupt mapping
+>  
+>  Example:
+> -- 
+> 1.7.9.5
+
+Thanks,
+Mark.
