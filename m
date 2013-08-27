@@ -1,189 +1,198 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 3/3] gpio: pcf857x: Add OF support
-Date: Tue, 27 Aug 2013 12:50:40 +0200
-Message-ID: <2048253.b587MQDRGG@avalon>
-References: <1376953494-9684-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <2417846.CRj8QejgZy@flatron> <20130827103949.GF19893@e106331-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V4] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
+Date: Tue, 27 Aug 2013 12:01:45 +0100
+Message-ID: <20130827110145.GG19893@e106331-lin.cambridge.arm.com>
+References: <1377595351-30233-1-git-send-email-yuvaraj.cd@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20130827103949.GF19893@e106331-lin.cambridge.arm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, Pawel Moll <Pawel.Moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1377595351-30233-1-git-send-email-yuvaraj.cd@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "dianders@chromium.org" <dianders@chromium.org>, "cjb@laptop.org" <cjb@laptop.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Tuesday 27 August 2013 11:39:49 Mark Rutland wrote:
-> On Sat, Aug 24, 2013 at 03:13:11PM +0100, Tomasz Figa wrote:
-> > On Saturday 24 of August 2013 02:54:07 Laurent Pinchart wrote:
-> > > On Saturday 24 August 2013 02:41:59 Tomasz Figa wrote:
-> > > > On Tuesday 20 of August 2013 01:04:54 Laurent Pinchart wrote:
-> > > > > Add DT bindings for the pcf857x-compatible chips and parse the
-> > > > > device tree node in the driver.
-> > > > > 
-> > > > > Signed-off-by: Laurent Pinchart
-> > > > > <laurent.pinchart+renesas@ideasonboard.com>
-> > > > > ---
-> > > > > 
-> > > > >  .../devicetree/bindings/gpio/gpio-pcf857x.txt      | 71 +++++++++++
-> > > > >  drivers/gpio/gpio-pcf857x.c                        | 57 +++++++++--
-> > > > >  2 files changed, 119 insertions(+), 9 deletions(-)
-> > > > >  create mode 100644
-> > > > > Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> > > > > 
-> > > > > diff --git a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> > > > > b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt new file
-> > > > > mode 100644
-> > > > > index 0000000..df94462
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> > > > > @@ -0,0 +1,71 @@
-> > > 
-> > > [snip]
-> > > 
-> > > > > +  - pins-initial-state: Bitmask that specifies the initial state of
-> > > > > +    each pin. When a bit is set to zero, the corresponding pin will
-> > > > > be
-> > > > > +    initialized to the input (pulled-up) state. When the  bit is
-> > > > > set to +    one, the pin will be initialized the the low-level
-> > > > > output state. If +    the property is not specified all pins will
-> > > > > be initialized to the +    input state.
-> > > > 
-> > > > Hmm, do you actually need to know whether those pins are outputs or
-> > > > inputs before they get used for first time? I believe any driver
-> > > > using GPIO will call gpio_direction_{in,out}put() before it starts
-> > > > using the pin, which will initialize the pin to a known state.
-> > > > 
-> > > > What I'd suggest is making the driver handle this by having a bit mask
-> > > > that marks states of pins as defined and flagging all pins as
-> > > > undefined by default. Then any call to gpio_direction_output() or
-> > > > _input() would mark it as defined and direction of the pin could be
-> > > > stored in internal driver structures.
-> > > 
-> > > The problem is that all pins are controlled through a single I2C write.
-> > > Setting the direction of a pin will set the direction of all other pins.
-> > > I thus need to know what the initial settings are to avoid glitches.
+On Tue, Aug 27, 2013 at 10:22:31AM +0100, Yuvaraj Kumar C D wrote:
+> This patch adds the device tree node entries for exynos5420 SOC.
+> Exynos5420 has a different version of DWMMC controller,so a new
+> compatible string is used to distinguish it from the prior SOC's.
 > 
-> I guess it's not possible to read the initial state from the hardware?
-
-I wish. Unfortunately it can only be written.
-
-> > Oh, that's a funny hardware, isn't it? :)
-> > 
-> > Well, I guess it can't be helped then. Sorry for the noise.
-> > 
-> > > > > +  The I/O expander can detect input state changes, and thus
-> > > > > optionally 
-> > > > > +  act as an interrupt controller. When interrupts support is
-> > > > > desired
-> > > > 
-> > > > I don't like this statement. Device tree should represent what the
-> > > > device allows you to do, not what you want the device to do.
-> > > > 
-> > > > My opinion on this is that if the chip supports interrupts then it
-> > > > should always be an interrupt-controller (unless its interrupt pin is
-> > > > not wired on the board, but this still conforms to what I wrote
-> > > > above).
-> > > 
-> > > I agree. What about the following text then ?
-> > > 
-> > > The I/O expander can detect input state changes, and thus optionally act
-> > > as an interrupt controller. When the expander interrupt pin is
-> > > connected all the following properties must be set. For more
-> > > information please see the interrupt controller device tree bindings
-> > > documentation available at
-> > > Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
-> > 
-> > Sounds good.
-> > 
-> > > > > diff --git a/drivers/gpio/gpio-pcf857x.c
-> > > > > b/drivers/gpio/gpio-pcf857x.c
-> > > > > index 070e81f..50a90f1 100644
-> > > > > --- a/drivers/gpio/gpio-pcf857x.c
-> > > > > +++ b/drivers/gpio/gpio-pcf857x.c
-> > > 
-> > > [snip]
-> > > 
-> > > > > @@ -50,6 +52,27 @@ static const struct i2c_device_id pcf857x_id[] =
-> > > > > {
-> > > > > 
-> > > > >  };
-> > > > >  MODULE_DEVICE_TABLE(i2c, pcf857x_id);
-> > > > > 
-> > > > > +#ifdef CONFIG_OF
-> > > > > +static const struct of_device_id pcf857x_of_table[] = {
-> > > > > +	{ .compatible = "nxp,pcf8574", .data = (void *)8 },
-> > > > > +	{ .compatible = "nxp,pcf8574a", .data = (void *)8 },
-> > > > > +	{ .compatible = "nxp,pca8574", .data = (void *)8 },
-> > > > > +	{ .compatible = "nxp,pca9670", .data = (void *)8 },
-> > > > > +	{ .compatible = "nxp,pca9672", .data = (void *)8 },
-> > > > > +	{ .compatible = "nxp,pca9674", .data = (void *)8 },
-> > > > > +	{ .compatible = "nxp,pcf8575", .data = (void *)16 },
-> > > > > +	{ .compatible = "nxp,pca8575", .data = (void *)16 },
-> > > > > +	{ .compatible = "nxp,pca9671", .data = (void *)16 },
-> > > > > +	{ .compatible = "nxp,pca9673", .data = (void *)16 },
-> > > > > +	{ .compatible = "nxp,pca9675", .data = (void *)16 },
-> > > > > +	{ .compatible = "maxim,max7328", .data = (void *)8 },
-> > > > > +	{ .compatible = "maxim,max7329", .data = (void *)8 },
-> > > > > +	{ .compatible = "ti,tca9554", .data = (void *)8 },
-> > > > > +	{ }
-> > > > > +};
-> > > > > +MODULE_DEVICE_TABLE(of, pcf857x_of_table);
-> > > > > +#endif
-> > > > > +
-> > > > > 
-> > > > >  /*
-> > > > >  
-> > > > >   * The pcf857x, pca857x, and pca967x chips only expose one read and
-> > > > >   one
-> > > > >   * write register.  Writing a "one" bit (to match the reset state)
-> > > > >   lets
-> > > > > 
-> > > > > @@ -257,14 +280,29 @@ fail:
-> > > > >  static int pcf857x_probe(struct i2c_client *client,
-> > > > >  
-> > > > >  			 const struct i2c_device_id *id)
-> > > > >  
-> > > > >  {
-> > > > > 
-> > > > > -	struct pcf857x_platform_data	*pdata;
-> > > > > +	struct pcf857x_platform_data	*pdata = client-
-> > >
-> > >dev.platform_data;
-> > >
-> > > > > +	struct device_node		*np = client->dev.of_node;
-> > > > > 
-> > > > >  	struct pcf857x			*gpio;
-> > > > > 
-> > > > > +	unsigned int			n_latch = 0;
-> > > > > +	unsigned int			ngpio;
-> > > > > 
-> > > > >  	int				status;
-> > > > > 
-> > > > > -	pdata = client->dev.platform_data;
-> > > > > -	if (!pdata) {
-> > > > > +#ifdef CONFIG_OF
-> > > > > +	if (np) {
-> > > > 
-> > > > Wouldn't if (IS_ENABLED(CONFIG_OF) && np) be sufficient here, without
-> > > > the #ifdef? You would have to move the match table out of the #ifdef
-> > > > in this case, though...
-> > > 
-> > > That's the exact reason why I've used #ifdef CONFIG_OF here, I didn't
-> > > want to add the overhead of the pcf857x_of_table when CONFIG_OF isn't
-> > > defined.
-> > 
-> > I'm not sure if I remember correctly, but I think there was something said
-> > in one of discussions some time ago, that we should be moving away from
-> > ifdef'ing such things, in favour of just having them compiled
-> > unconditionally.
+> This patch depends on
+> 	mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
 > 
-> I was also under this impression, but I have no strong feelings either way.
+> changes since V3:
+> 	1.change fifo-depth size from 0x80 to 0x40
+> 	2.Move the below properties
+> 		a.card-detect-delay
+> 		b.samsung,dw-mshc-ciu-div
+> 		c.samsung,dw-mshc-sdr-timing
+> 		d.samsung,dw-mshc-ddr-timing
+> 	from SOC dts to board dts file as suggested by Doug Anderson
+> 
+> changes since V2:
+> 	1.dropped num-slots property from node as its not required
+> 	  if number of card slots available is 1.
+> 
+> 	2.Move the below properties
+> 		a.fifo-depth
+> 		b.card-detect-delay
+> 		c.samsung,dw-mshc-ciu-div
+> 		d.samsung,dw-mshc-sdr-timing
+> 		e.samsung,dw-mshc-ddr-timing
+> 	from board dts to SOC dts,as these are not board specific properties.
+> 
+> 	3.Updated the binding document exynos-dw-mshc.txt.
+> 
+> changes since V1:
+> 	1.disable node by status = disabled in SOC file
+> 	2.enable node by status = okay in board specific file
+> 
+> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+> ---
+>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    4 ++
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   34 +++++++++++++++++
+>  arch/arm/boot/dts/exynos5420.dtsi                  |   39 ++++++++++++++++++++
+>  3 files changed, 77 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> index 6d1c098..25368e8 100644
+> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> @@ -16,6 +16,8 @@ Required Properties:
+>  	  specific extensions.
+>  	- "samsung,exynos5250-dw-mshc": for controllers with Samsung Exynos5250
+>  	  specific extensions.
+> +	- "samsung,exynos5420-dw-mshc": for controllers with Samsung Exynos5420
+> +	  specific extensions.
+>  
+>  * samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
+>    unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
+> @@ -31,6 +33,8 @@ Required Properties:
+>    data rate mode operation. Refer notes below for the order of the cells and the
+>    valid values.
+>  
+> +* bypass-smu: Bypass Security Management Unit of eMMC channel 0 and channel 1.
+> +
 
--- 
-Regards,
+Could you elaborate on why this is needed?
 
-Laurent Pinchart
+Is the SMU broken or not present in some hardware revisions?
 
+>    Notes for the sdr-timing and ddr-timing values:
+>  
+>      The order of the cells should be
+
+On an unrelated note, I see the binding in mainline defines a gpios
+property that doesn't seem to be used anywhere. Am I missing something,
+or do we just not have support for that part of the binding?
+
+Thanks,
+Mark.
+
+> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> index bafba25..576066c 100644
+> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> @@ -31,6 +31,40 @@
+>  		};
+>  	};
+>  
+> +	dwmmc0@12200000 {
+> +		status = "okay";
+> +		broken-cd;
+> +		bypass-smu;
+> +		supports-highspeed;
+> +		card-detect-delay = <200>;
+> +		samsung,dw-mshc-ciu-div = <3>;
+> +		samsung,dw-mshc-sdr-timing = <0 4>;
+> +		samsung,dw-mshc-ddr-timing = <0 2>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+> +
+> +		slot@0 {
+> +			reg = <0>;
+> +			bus-width = <8>;
+> +		};
+> +	};
+> +
+> +	dwmmc2@12220000 {
+> +		status = "okay";
+> +		supports-highspeed;
+> +		card-detect-delay = <200>;
+> +		samsung,dw-mshc-ciu-div = <3>;
+> +		samsung,dw-mshc-sdr-timing = <2 3>;
+> +		samsung,dw-mshc-ddr-timing = <1 2>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+> +
+> +		slot@0 {
+> +			reg = <0>;
+> +			bus-width = <4>;
+> +		};
+> +	};
+> +
+>  	dp-controller@145B0000 {
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&dp_hpd>;
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index d537cd7..3893f45 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -22,6 +22,9 @@
+>  	compatible = "samsung,exynos5420";
+>  
+>  	aliases {
+> +		mshc0 = &dwmmc_0;
+> +		mshc1 = &dwmmc_1;
+> +		mshc2 = &dwmmc_2;
+>  		pinctrl0 = &pinctrl_0;
+>  		pinctrl1 = &pinctrl_1;
+>  		pinctrl2 = &pinctrl_2;
+> @@ -84,6 +87,42 @@
+>  		clock-names = "mfc";
+>  	};
+>  
+> +	dwmmc_0: dwmmc0@12200000 {
+> +		compatible = "samsung,exynos5420-dw-mshc";
+> +		interrupts = <0 75 0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x12200000 0x2000>;
+> +		clocks = <&clock 351>, <&clock 132>;
+> +		clock-names = "biu", "ciu";
+> +		fifo-depth = <0x40>;
+> +		status = "disabled";
+> +	};
+> +
+> +	dwmmc_1: dwmmc1@12210000 {
+> +		compatible = "samsung,exynos5420-dw-mshc";
+> +		interrupts = <0 76 0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x12210000 0x2000>;
+> +		clocks = <&clock 352>, <&clock 133>;
+> +		clock-names = "biu", "ciu";
+> +		fifo-depth = <0x40>;
+> +		status = "disabled";
+> +	};
+> +
+> +	dwmmc_2: dwmmc2@12220000 {
+> +		compatible = "samsung,exynos5420-dw-mshc";
+> +		interrupts = <0 77 0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x12220000 0x2000>;
+> +		clocks = <&clock 353>, <&clock 134>;
+> +		clock-names = "biu", "ciu";
+> +		fifo-depth = <0x40>;
+> +		status = "disabled";
+> +	};
+> +
+>  	mct@101C0000 {
+>  		compatible = "samsung,exynos4210-mct";
+>  		reg = <0x101C0000 0x800>;
+> -- 
+> 1.7.9.5
+> 
+> 
