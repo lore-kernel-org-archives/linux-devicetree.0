@@ -1,150 +1,115 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 09/33] ARM: ux500: Supply the I2C clocks lookup to the
- DBX500 DT
-Date: Tue, 27 Aug 2013 15:08:05 +0100
-Message-ID: <20130827140805.GB10210@lee--X1>
-References: <20130820093034.GL31036@pengutronix.de>
- <20130822133730.GB23152@e106331-lin.cambridge.arm.com>
- <20130822141900.GB17154@lee--X1>
- <20130822151723.GE23152@e106331-lin.cambridge.arm.com>
- <20130822154116.GC17154@lee--X1>
- <20130822211912.GE31036@pengutronix.de>
- <20130823075607.GD17154@lee--X1>
- <20130823165539.GD7015@e106331-lin.cambridge.arm.com>
- <20130827080635.GC6152@lee--X1>
- <20130827134621.GJ19893@e106331-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH V4] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
+Date: Tue, 27 Aug 2013 15:09:49 +0100
+Message-ID: <20130827140949.GK19893@e106331-lin.cambridge.arm.com>
+References: <1377595351-30233-1-git-send-email-yuvaraj.cd@samsung.com>
+ <20130827110145.GG19893@e106331-lin.cambridge.arm.com>
+ <CAKuRcOLK0PjcVKFxUZ9hedVScKe1K+QYE1g57CZ5JOE=AmFJow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130827134621.GJ19893@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <CAKuRcOLK0PjcVKFxUZ9hedVScKe1K+QYE1g57CZ5JOE=AmFJow@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "dianders@chromium.org" <dianders@chromium.org>, "cjb@laptop.org" <cjb@laptop.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 Aug 2013, Mark Rutland wrote:
+On Tue, Aug 27, 2013 at 01:02:52PM +0100, Yuvaraj Kumar wrote:
+> On Tue, Aug 27, 2013 at 4:31 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Tue, Aug 27, 2013 at 10:22:31AM +0100, Yuvaraj Kumar C D wrote:
+> >> This patch adds the device tree node entries for exynos5420 SOC.
+> >> Exynos5420 has a different version of DWMMC controller,so a new
+> >> compatible string is used to distinguish it from the prior SOC's.
+> >>
+> >> This patch depends on
+> >>       mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
+> >>
+> >> changes since V3:
+> >>       1.change fifo-depth size from 0x80 to 0x40
+> >>       2.Move the below properties
+> >>               a.card-detect-delay
+> >>               b.samsung,dw-mshc-ciu-div
+> >>               c.samsung,dw-mshc-sdr-timing
+> >>               d.samsung,dw-mshc-ddr-timing
+> >>       from SOC dts to board dts file as suggested by Doug Anderson
+> >>
+> >> changes since V2:
+> >>       1.dropped num-slots property from node as its not required
+> >>         if number of card slots available is 1.
+> >>
+> >>       2.Move the below properties
+> >>               a.fifo-depth
+> >>               b.card-detect-delay
+> >>               c.samsung,dw-mshc-ciu-div
+> >>               d.samsung,dw-mshc-sdr-timing
+> >>               e.samsung,dw-mshc-ddr-timing
+> >>       from board dts to SOC dts,as these are not board specific properties.
+> >>
+> >>       3.Updated the binding document exynos-dw-mshc.txt.
+> >>
+> >> changes since V1:
+> >>       1.disable node by status = disabled in SOC file
+> >>       2.enable node by status = okay in board specific file
+> >>
+> >> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+> >> ---
+> >>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    4 ++
+> >>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   34 +++++++++++++++++
+> >>  arch/arm/boot/dts/exynos5420.dtsi                  |   39 ++++++++++++++++++++
+> >>  3 files changed, 77 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> >> index 6d1c098..25368e8 100644
+> >> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> >> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> >> @@ -16,6 +16,8 @@ Required Properties:
+> >>         specific extensions.
+> >>       - "samsung,exynos5250-dw-mshc": for controllers with Samsung Exynos5250
+> >>         specific extensions.
+> >> +     - "samsung,exynos5420-dw-mshc": for controllers with Samsung Exynos5420
+> >> +       specific extensions.
+> >>
+> >>  * samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
+> >>    unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
+> >> @@ -31,6 +33,8 @@ Required Properties:
+> >>    data rate mode operation. Refer notes below for the order of the cells and the
+> >>    valid values.
+> >>
+> >> +* bypass-smu: Bypass Security Management Unit of eMMC channel 0 and channel 1.
+> >> +
+> >
+> > Could you elaborate on why this is needed?
+> Exynos5420  Mobile Storage Host controller has a Security Management
+> Unit (SMU) for
+> channel 0 and channel 1 (mainly for eMMC). This binding property
+> requires to add a quirk
+> to bypass SMU as it is not being used yet.
 
-> On Tue, Aug 27, 2013 at 09:06:35AM +0100, Lee Jones wrote:
-> > On Fri, 23 Aug 2013, Mark Rutland wrote:
-> >=20
-> > > On Fri, Aug 23, 2013 at 08:56:07AM +0100, Lee Jones wrote:
-> > > > I had a short chat with Rob last night about this. I'm going to=
- loop
-> > > > him in to the conversation, as he wrote the binding.
-> > > >=20
-> > > > > > When most of the other clocks that we deal with are being r=
-equested,
-> > > > > > they rely on being index zero:
-> > > > > >=20
-> > > > > >   drivers/i2c/busses/i2c-nomadik.c: dev->clk =3D clk_get(&a=
-dev->dev, NULL);
-> > > > >=20
-> > > > > Look at drivers/clk/clkdev.c, there's some fuzzy matching
-> > > > > involved when you pass NULL as connection id.
-> > > >=20
-> > > > Yes, I've been looking at that. This is why it works currently.=
- I
-> > > > think I need to change all of the drivers to specify which cloc=
-k they
-> > > > want. At the moment that 'fuzzy matching' is what's saving us. =
-If
-> > > > anyone were to change our DTS file to match what the binding sa=
-ys,
-> > > > then it would cease to work. I'm guessing this is the same for =
-all
-> > > > other DTS files too:
-> > >=20
-> > > I think if anything, the binding document(s) should be updated to
-> > > describe that apb_pclk is referred to by name, and the names of t=
-he
-> > > other clocks should be described in the specific device bindings.=
- We can
-> > > then modify the drivers which grab clock 0 to explicitly grab the=
- first
-> > > clock by name, and backwards compatibility should not be broken.
-> > >=20
-> > > I don't believe any other OS has implemented the common clock bin=
-dings,
-> > > and we've never supported the binding as described. Let's correct=
- the
-> > > de-facto standard into a standard by decree.
-> >=20
-> > I think we need to respect, or at least take into consideration the
-> > reason for the original 'de-facto' standard. Other OSes shouldn't b=
-e
-> > forced to provide a named clock request in order to obtain
-> > 'apb_pclk'. If the binding says it should be first, then perhaps we
-> > should do just that. It's simply a matter of naming all subsequent
-> > clocks related to AMBA devices.
->=20
-> Ideally, yes. However, we have to be careful to not break compatibili=
-ty.
->=20
-> I took a look at existing primecell drivers and what they do. The
-> situation isn't so bad (with the exception of the
-> half-dt/half-platform-code mess):
->=20
-> * Some don't deal with clocks at all (no clk* in the driver). pl320 i=
-s
->   in the ecx-common dtsi with only apb_pclk but has no binding
->   defined. Some have no clocks defined in the dt and are presumably f=
-ew
->   clocks by platform data or are non-functional.
->=20
->   I'm not sure how these DTs are going to be supported if and when we
->   remove the platform data they depend upon. If we're really going to=
- do
->   that, then they are clearly not supported as-is long term.
->=20
-> * The pl022 driver grabs the first clock to figure out the rate of th=
-e
->   spi bus (assuming it is SSPCLK). The SSPCLK input is not defined in
->   the binding. The ste-u300 dts has two clock-names, "apb_pclk" and
->   "spi_clk" (in that order), but they refer to the same clock.
->=20
->   Given the existing driver simply grabs the first clock and they're
->   both the same, we could re-order the names and make the driver grab
->   the second clock. That wouldn't break backwards compatibility with =
-the
->   sole dts file we have using the binding, though this assumes no-one
->   else has a dt lying around with different clocks.
->=20
-> * pl010 grabs the first clock given to it to figure out the uart rate
->   (assuming it is UARTCLK), but it's only in integratorap.dts, withou=
-t
->   clocks, and is presumably fed by platform data. There is no binding
->   document.
->=20
->   pl011 grabs the first clock given to figure out the UART rate
->   (assuming it is UARTCLK). The binding explicitly states it's only
->   given apb_pclk, despite UARTCLK and PCLK being separate inputs to t=
-he
->   IP block.
->=20
->   These two bindings don't describe the hardware, and should be fixed=
-=2E
->   The only way I can think to make this work without breaknig backwar=
-ds
->   compatibility would be to try to grab the second clock and then fal=
-l
->   back to the first if there isn't one. The other option is to break
->   backwards compatibility, but I'm not sure that's much of an option.
->=20
-> * pl111 has no driver or binding in mainline, but appears in dts file=
-s.
->   Those dts files clcdclk and apb_pclk, in that order. We could fix
->   those before a driver starts using them.
->=20
-> If you think those suggestions are OK, I can put together a series to
-> fix this.
+When you say it's not being used _yet_, what do you mean? That the
+driver doesn't have support for it, but will in future?
 
-I think we need to hear from Rob before we proceed tbh, as he is the
-original author and should have a chance to voice his opinion.
+Can the driver not just choose to bypass it entirely for now, regardless
+of what's in the dt? Do we need to bypass it in future for some reason?
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+I don't see why this needs to be in the dt.
+
+> >
+> > Is the SMU broken or not present in some hardware revisions?
+> SMU is only present in channel 0 and channel 1,but not in channel 2.So
+> to distinguish this,
+> bypass-smu property has been added as quirks in the channel.
+> >
+> >>    Notes for the sdr-timing and ddr-timing values:
+> >>
+> >>      The order of the cells should be
+> >
+> > On an unrelated note, I see the binding in mainline defines a gpios
+> > property that doesn't seem to be used anywhere. Am I missing something,
+> > or do we just not have support for that part of the binding?
+> Yes,This document has been little outdated.I will update and post a
+> separate patch.
+
+Cheers!
+
+Mark.
