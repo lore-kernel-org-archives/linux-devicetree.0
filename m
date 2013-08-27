@@ -1,164 +1,288 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v8 2/3] DMA: Freescale: Add new 8-channel DMA engine
- device tree nodes
-Date: Tue, 27 Aug 2013 12:35:34 +0100
-Message-ID: <20130827113534.GI19893@e106331-lin.cambridge.arm.com>
-References: <1377600123-5746-1-git-send-email-hongbo.zhang@freescale.com>
- <1377600123-5746-3-git-send-email-hongbo.zhang@freescale.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v7] s5k5baf: add camera sensor driver
+Date: Tue, 27 Aug 2013 13:52:04 +0200
+Message-ID: <1424546.lJXUZLPMUj@avalon>
+References: <1377096091-7284-1-git-send-email-a.hajda@samsung.com> <1544715.uKei6kdjbJ@avalon> <521B4B4D.50209@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1377600123-5746-3-git-send-email-hongbo.zhang@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "hongbo.zhang@freescale.com" <hongbo.zhang@freescale.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <521B4B4D.50209@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 27, 2013 at 11:42:02AM +0100, hongbo.zhang@freescale.com wrote:
-> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+Hi Andrejz,
+
+On Monday 26 August 2013 14:34:21 Andrzej Hajda wrote:
+> On 08/23/2013 02:53 PM, Laurent Pinchart wrote:
+> > On Wednesday 21 August 2013 16:41:31 Andrzej Hajda wrote:
+> >> Driver for Samsung S5K5BAF UXGA 1/5" 2M CMOS Image Sensor
+> >> with embedded SoC ISP.
+> >> The driver exposes the sensor as two V4L2 subdevices:
+> >> - S5K5BAF-CIS - pure CMOS Image Sensor, fixed 1600x1200 format,
+> >>   no controls.
+> >> 
+> >> - S5K5BAF-ISP - Image Signal Processor, formats up to 1600x1200,
+> >>   pre/post ISP cropping, downscaling via selection API, controls.
+> >> 
+> >> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> >> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> >> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> >> ---
+> >> Hi,
+> >> 
+> >> This patch incorporates Stephen's suggestions, thanks.
+> >> 
+> >> Regards
+> >> Andrzej
+> >> 
+> >> v7
+> >> - changed description of 'clock-frequency' DT property
+> >> 
+> >> v6
+> >> - endpoint node presence is now optional,
+> >> - added asynchronous subdev registration support and clock
+> >> 
+> >>   handling,
+> >> 
+> >> - use named gpios in DT bindings
+> >> 
+> >> v5
+> >> - removed hflip/vflip device tree properties
+> >> 
+> >> v4
+> >> - GPL changed to GPLv2,
+> >> - bitfields replaced by u8,
+> >> - cosmetic changes,
+> >> - corrected s_stream flow,
+> >> - gpio pins are no longer exported,
+> >> - added I2C addresses to subdev names,
+> >> - CIS subdev registration postponed after
+> >> 
+> >>   succesfull HW initialization,
+> >> 
+> >> - added enums for pads,
+> >> - selections are initialized only during probe,
+> >> - default resolution changed to 1600x1200,
+> >> - state->error pattern removed from few other functions,
+> >> - entity link creation moved to registered callback.
+> >> 
+> >> v3:
+> >> - narrowed state->error usage to i2c and power errors,
+> >> - private gain controls replaced by red/blue balance user controls,
+> >> - added checks to devicetree gpio node parsing
+> >> 
+> >> v2:
+> >> - lower-cased driver name,
+> >> - removed underscore from regulator names,
+> >> - removed platform data code,
+> >> - v4l controls grouped in anonymous structs,
+> >> - added s5k5baf_clear_error function,
+> >> - private controls definitions moved to uapi header file,
+> >> - added v4l2-controls.h reservation for private controls,
+> >> - corrected subdev registered/unregistered code,
+> >> - .log_status sudbev op set to v4l2 helper,
+> >> - moved entity link creation to probe routines,
+> >> - added cleanup on error to probe function.
+> >> ---
+> >> 
+> >>  .../devicetree/bindings/media/samsung-s5k5baf.txt  |   59 +
+> >>  MAINTAINERS                                        |    7 +
+> >>  drivers/media/i2c/Kconfig                          |    7 +
+> >>  drivers/media/i2c/Makefile                         |    1 +
+> >>  drivers/media/i2c/s5k5baf.c                        | 2045 ++++++++++++++
+> >>  5 files changed, 2119 insertions(+)
+> >>  create mode 100644
+> >> 
+> >> Documentation/devicetree/bindings/media/samsung-s5k5baf.txt create mode
+> >> 100644 drivers/media/i2c/s5k5baf.c
+> > 
+> > [snip]
+> > 
+> >> diff --git a/drivers/media/i2c/s5k5baf.c b/drivers/media/i2c/s5k5baf.c
+> >> new file mode 100644
+> >> index 0000000..f21d9f1
+> >> --- /dev/null
+> >> +++ b/drivers/media/i2c/s5k5baf.c
+
+[snip]
+
+> >> +static void s5k5baf_write_arr_seq(struct s5k5baf *state, u16 addr,
+> >> +				  u16 count, const u16 *seq)
+> >> +{
+> >> +	struct i2c_client *c = v4l2_get_subdevdata(&state->sd);
+> >> +	u16 buf[count + 1];
+> >> +	int ret, n;
+> >> +
+> >> +	s5k5baf_i2c_write(state, REG_CMDWR_ADDR, addr);
+> >> +	if (state->error)
+> >> +		return;
+> > 
+> > I would have a preference for returning an error directly from the write
+> > function instead of storing it in state->error, that would be more
+> > explicit. The same is true for all read/write functions.
 > 
-> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch adds
-> the device tree nodes for them.
+> I have introduced state->error to avoid code bloat. With this 'pattern'
+> error is checked in about 10 places in the code, of course without
+> scarifying code correctness.
+> Replacing this pattern with classic 'return error directly from function'
+> would result with adding error checks after all calls to i2c i/o functions
+> and after calls to many functions which those i2c i/o calls contains.
+> According to my rough estimates it is about 70 places.
 > 
-> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
-> ---
->  .../devicetree/bindings/powerpc/fsl/dma.txt        |   66 ++++++++++++++++
->  arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
->  arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   81 ++++++++++++++++++++
->  arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   81 ++++++++++++++++++++
->  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
->  5 files changed, 232 insertions(+), 4 deletions(-)
->  create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->  create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
+> Similar pattern is used already in v4l2_ctrl_handler::error.
 > 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> index ddf17af..10fd031 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> @@ -126,6 +126,72 @@ Example:
->                 };
->         };
+> >> +	buf[0] = __constant_htons(REG_CMD_BUF);
+> >> +	for (n = 1; n <= count; ++n)
+> >> +		buf[n] = htons(*seq++);
+> > 
+> > cpu_to_be16()/be16_to_cpu() here as well ?
 > 
-> +** Freescale Elo3 DMA Controller
-> +   This is EloPlus controller with 8 channels, used in Freescale Txxx and Bxxx
-> +   series chips, such as t1040, t4240, b4860.
-> +
-> +Required properties:
-> +
-> +- compatible        : must include "fsl,elo3-dma"
-> +- reg               : <registers specifier for DMA general status reg>
-> +- ranges            : describes the mapping between the address space of the
-> +                      DMA channels and the address space of the DMA controller
-> +
-> +- DMA channel nodes:
-> +        - compatible        : must include "fsl,eloplus-dma-channel"
-> +        - reg               : <registers specifier for channel>
-> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
-> +        - interrupt-parent  : optional, if needed for interrupt mapping
-> +
-> +Example:
-> +dma@100300 {
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +       compatible = "fsl,elo3-dma";
-> +       reg = <0x100300 0x4 0x100600 0x4>;
-
-Is that one reg entry where #size-cells=2 and #address-cells=2?
-
-That's what the binding implies (given it only describes a single reg
-entry).
-
-if it's two entries, we should make that explicit (both in the binding
-and example):
-
-	reg = <0x100300 0x4>,
-	      <0x100600 0x4>;
-
-> +       ranges = <0x0 0x100100 0x500>;
-
-If it is one reg entry then the example ranges property isn't big enough
-to contain the parent-bus-address.
-
-> +       dma-channel@0 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x0 0x80>;
-> +               interrupts = <28 2 0 0>;
-> +       };
-> +       dma-channel@80 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x80 0x80>;
-> +               interrupts = <29 2 0 0>;
-> +       };
-> +       dma-channel@100 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x100 0x80>;
-> +               interrupts = <30 2 0 0>;
-> +       };
-> +       dma-channel@180 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x180 0x80>;
-> +               interrupts = <31 2 0 0>;
-> +       };
-> +       dma-channel@300 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x300 0x80>;
-> +               interrupts = <76 2 0 0>;
-> +       };
-> +       dma-channel@380 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x380 0x80>;
-> +               interrupts = <77 2 0 0>;
-> +       };
-> +       dma-channel@400 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x400 0x80>;
-> +               interrupts = <78 2 0 0>;
-> +       };
-> +       dma-channel@480 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x480 0x80>;
-> +               interrupts = <79 2 0 0>;
-> +       };
-> +};
-> +
->  Note on DMA channel compatible properties: The compatible property must say
->  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
->  driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
-> diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-> index 7399154..ea53ea1 100644
-> --- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-> +++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-> @@ -223,13 +223,13 @@
->                 reg = <0xe2000 0x1000>;
->         };
+> OK
 > 
-> -/include/ "qoriq-dma-0.dtsi"
-> +/include/ "elo3-dma-0.dtsi"
->         dma@100300 {
->                 fsl,iommu-parent = <&pamu0>;
->                 fsl,liodn-reg = <&guts 0x580>; /* DMA1LIODNR */
->         };
+> >> +
+> >> +	n *= 2;
+> >> +	ret = i2c_master_send(c, (char *)buf, n);
+> >> +	v4l2_dbg(3, debug, c, "i2c_write_seq(count=%d): %*ph\n", count,
+> >> +		 min(2 * count, 64), seq - count);
+> >> +
+> >> +	if (ret != n) {
+> >> +		v4l2_err(c, "i2c_write_seq: error during transfer (%d)\n", ret);
+> >> +		state->error = ret;
+> >> +	}
+> >> +}
+
+[snip]
+
+> >> +static int s5k5baf_hw_set_video_bus(struct s5k5baf *state)
+> >> +{
+> >> +	u16 en_packets;
+> >> +
+> >> +	switch (state->bus_type) {
+> >> +	case V4L2_MBUS_CSI2:
+> >> +		en_packets = EN_PACKETS_CSI2;
+> >> +		break;
+> >> +	case V4L2_MBUS_PARALLEL:
+> >> +		en_packets = 0;
+> >> +		break;
+> >> +	default:
+> >> +		v4l2_err(&state->sd, "unknown video bus: %d\n",
+> >> +			 state->bus_type);
+> >> +		return -EINVAL;
+> > 
+> > Can this happen ?
 > 
-> -/include/ "qoriq-dma-1.dtsi"
-> +/include/ "elo3-dma-1.dtsi"
->         dma@101300 {
->                 fsl,iommu-parent = <&pamu0>;
->                 fsl,liodn-reg = <&guts 0x584>; /* DMA2LIODNR */
-> diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
-> new file mode 100644
-> index 0000000..69a3277
-> --- /dev/null
-> +++ b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
-> @@ -0,0 +1,81 @@
-> +/*
-> + * QorIQ DMA device tree stub [ controller @ offset 0x100000 ]
+> Yes, in case of incorrect DT bindings.
 
-Copy-pasted?
+Shouldn't it be caught at probe time instead then ?
 
-Presumably should be "Elo3 DMA devicetree stub", or similar?
+> >> +	};
+> >> +
+> >> +	s5k5baf_write_seq(state, REG_OIF_EN_MIPI_LANES,
+> >> +			  state->nlanes, en_packets, 1);
+> >> +
+> >> +	return s5k5baf_clear_error(state);
+> >> +}
+> > 
+> > [snip]
+> > 
+> >> +static int s5k5baf_s_stream(struct v4l2_subdev *sd, int on)
+> >> +{
+> >> +	struct s5k5baf *state = to_s5k5baf(sd);
+> >> +	int ret;
+> >> +
+> >> +	if (state->streaming == !!on)
+> >> +		return 0;
+> >> +
+> >> +	mutex_lock(&state->lock);
+> > 
+> > Shouldn't the lock protect the state->streaming check above ?
+> 
+> Yes, will be corrected.
+> 
+> >> +	if (on) {
+> >> +		s5k5baf_hw_set_config(state);
+> >> +		ret = s5k5baf_hw_set_crop_rects(state);
+> >> +		if (ret < 0)
+> >> +			goto out;
+> >> +		s5k5baf_hw_set_stream(state, 1);
+> >> +		s5k5baf_i2c_write(state, 0xb0cc, 0x000b);
+> >> +	} else {
+> >> +		s5k5baf_hw_set_stream(state, 0);
+> >> +	}
+> >> +	ret = s5k5baf_clear_error(state);
+> >> +	if (!ret)
+> >> +		state->streaming = !state->streaming;
+> >> +
+> >> +out:
+> >> +	mutex_unlock(&state->lock);
+> >> +
+> >> +	return ret;
+> >> +}
 
-Similarly for elo3-dma-1.dtsi.
+[snip]
 
-Thanks,
-Mark.
+> >> +static int s5k5baf_registered(struct v4l2_subdev *sd)
+> >> +{
+> >> +	struct s5k5baf *state = to_s5k5baf(sd);
+> >> +	int ret;
+> >> +
+> >> +	ret = v4l2_device_register_subdev(sd->v4l2_dev, &state->cis_sd);
+> >> +	if (ret < 0)
+> >> +		v4l2_err(sd, "failed to register subdev %s\n",
+> >> +			 state->cis_sd.name);
+> >> +	else
+> >> +		ret = media_entity_create_link(&state->cis_sd.entity, PAD_CIS,
+> >> +					       &state->sd.entity, PAD_CIS,
+> >> +					       MEDIA_LNK_FL_IMMUTABLE |
+> >> +					       MEDIA_LNK_FL_ENABLED);
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static void s5k5baf_unregistered(struct v4l2_subdev *sd)
+> >> +{
+> >> +	struct s5k5baf *state = to_s5k5baf(sd);
+> >> +	v4l2_device_unregister_subdev(&state->cis_sd);
+> > 
+> > The unregistered operation is called from v4l2_device_unregister_subdev().
+> > Calling it again will be a no-op, the function will return immediately.
+> > You can thus get rid of the unregistered operation completely.
+> > 
+> > Similarly, the registered operation is called from
+> > v4l2_device_register_subdev(). You can get rid of it as well and just
+> > create the link in the probe function.
+> 
+> The sensor exposes two subdevs: s5k5baf_cis and s5k5baf_isp.
+> v4l2_device is not aware of it - he registers only the subdev bound to
+> i2c client - isp.
+> The registration of cis subdev is performed by the sensor in .registered
+> callback. Without .registered callback cis subdev will not be registered.
+
+You're right, my bad. I had overlooked that, I thought you were registering 
+the ISP subdev. Could you please add a comment to the .registered() handler to 
+document this ?
+
+> This is similar solution to smiapp and s5c73m3 drivers.
+> 
+> Regarding .unregistered callback, it seems that removing it would not harm -
+> there should be added only check in .registered to avoid its re-
+> registration. On the other hand IMO if sensor driver is responsible for
+> registration it should be responsible for unregistration of subdev, what do
+> you think about it?
+
+I agree.
+
+> And about links: v4l2_device_unregister_subdev calls
+> media_entity_remove_links,
+> so in case device is re-registered driver should re-create them.
+> 
+> >> +}
+
+[snip]
+
+-- 
+Regards,
+
+Laurent Pinchart
