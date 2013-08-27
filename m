@@ -1,499 +1,99 @@
-From: Subhash Jadavani <subhashj@codeaurora.org>
-Subject: Re: [PATCH V2 2/3] scsi: ufs: Add regulator enable support
-Date: Tue, 27 Aug 2013 13:47:37 +0530
-Message-ID: <521C60A1.5090202@codeaurora.org>
-References: <1377577093-10068-1-git-send-email-sthumma@codeaurora.org> <1377577093-10068-3-git-send-email-sthumma@codeaurora.org>
+From: boris brezillon <b.brezillon@overkiz.com>
+Subject: Re: [RFC PATCH 1/3] pinctrl: add new generic pinconf config for deglitch
+ filter
+Date: Tue, 27 Aug 2013 10:28:16 +0200
+Message-ID: <521C6320.4070303@overkiz.com>
+References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com> <1377380109-11247-1-git-send-email-b.brezillon@overkiz.com> <521B875E.1010605@wwwdotorg.org> <521B89D1.6010902@overkiz.com> <521C2347.4080702@wwwdotorg.org> <521C4451.1060908@overkiz.com> <521C587E.6050706@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1377577093-10068-3-git-send-email-sthumma@codeaurora.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Sujit Reddy Thumma <sthumma@codeaurora.org>
-Cc: Vinayak Holikatti <vinholikatti@gmail.com>, Santosh Y <santoshsy@gmail.com>, "James E.J. Bottomley" <JBottomley@parallels.com>, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <521C587E.6050706@atmel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-Looks good to me.
-Reviewed-by: Subhash Jadavani <subhashj@codeaurora.org>
-
-On 8/27/2013 9:48 AM, Sujit Reddy Thumma wrote:
-> UFS devices are powered by at most three external power supplies -
-> - VCC - The flash memory core power supply, 2.7V to 3.6V or 1.70V to 1.95V
-> - VCCQ - The controller and I/O power supply, 1.1V to 1.3V
-> - VCCQ2 - Secondary controller and/or I/O power supply, 1.65V to 1.95V
+On 27/08/2013 09:42, Nicolas Ferre wrote:
+> On 27/08/2013 08:16, boris brezillon :
+>> On 27/08/2013 05:55, Stephen Warren wrote:
+>>> On 08/26/2013 11:01 AM, boris brezillon wrote:
+>>>> Hello Stephen,
+>>>>
+>>>> On 26/08/2013 18:50, Stephen Warren wrote:
+>>>>> On 08/24/2013 03:35 PM, Boris BREZILLON wrote:
+>>>>>> Add a new parameter to support deglitch filter configuration.
+>>>>>> A deglitch filter works like a debounce filter but with a smaller
+>>>>>> delay (nanoseconds).
+>>>>> Why not use the existing debounce property, just with a small delay
+>>>>> specified. It seems like that's exactly what the property is for?
+>>>> That's one of the question I asked in my cover letter :-)
+>>>>
+>>>> Indeed the at91 deglitch filter delay is not configurable and is 
+>>>> statically
+>>>> assigned to half a master clk cycle (if master clk = 133MHz -> 8 ns).
+>>>> The debounce property argument is currently expressed in usecs.
+>>>>
+>>>> This will result in always selecting the debounce filter (which is 
+>>>> also
+>>>> available on at91 SoCs) over the deglitch filter.
+>>>>
+>>>> Could we add a flag in the deglitch argument to specify the delay unit
+>>>> (nsecs or usecs) ?
+>>> If the value is hard-coded in HW, why not use non-zero (or 1) to enable
+>>> and zero to disable?
+>>
+>> Indeed at91 pins support both deglitch and debounce filter and I have to
+>> choose
+>> between the two given the argument value (in usec).
+>>
+>> Here's what I can do:
+>>
+>> if (arg >= 1/2 * slowclock)    /* debounce case */
+>>       /* choose debounce filter and configure the delay
+>>           according to the given argument value */
+>> else                                          /* deglitch case */
+>>       /* choose deglitch filter */
+>>
+>>
+>> Slow clock is running at 32KHz which gives a 30 usec clock cycle.
 >
-> For some devices VCCQ or VCCQ2 are optional as they can be
-> generated using internal LDO inside the UFS device.
+> I am not in favor for this kind of complicated heuristic. Deglitch and 
+> Debounce filters are different features in at91 (even if they pursuit 
+> the same goal). So I do prefer to let the user choose which feature is 
+> preferred for his application and add a different flag.
 >
-> Add DT bindings for voltage regulators that can be controlled
-> from host driver.
 >
-> Signed-off-by: Sujit Reddy Thumma <sthumma@codeaurora.org>
-> ---
->   .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  24 +++
->   drivers/scsi/ufs/ufs.h                             |  25 +++
->   drivers/scsi/ufs/ufshcd-pltfrm.c                   | 100 +++++++++++
->   drivers/scsi/ufs/ufshcd.c                          | 193 ++++++++++++++++++++-
->   drivers/scsi/ufs/ufshcd.h                          |   3 +
->   5 files changed, 342 insertions(+), 3 deletions(-)
+>>> (this kind of thing is why I'm not convinced that generic pinconf works
+>>> so well... What if we need psecs in the future?)
+>>
+>> Should I keep the at91 native pinconf binding and add the missing flags
+>> to this binding
+>> (OUTPUT configuration flags) ?
+>>
+>> This was another question I asked in my cover letter: wether or not the
+>> generic pinconf
+>> binding should be used.
 >
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> index 20468b2..65e3117 100644
-> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -8,9 +8,33 @@ Required properties:
->   - interrupts        : <interrupt mapping for UFS host controller IRQ>
->   - reg               : <registers mapping>
->   
-> +Optional properties:
-> +- vcc-supply            : phandle to VCC supply regulator node
-> +- vccq-supply           : phandle to VCCQ supply regulator node
-> +- vccq2-supply          : phandle to VCCQ2 supply regulator node
-> +- vcc-supply-1p8        : For embedded UFS devices, valid VCC range is 1.7-1.95V
-> +                          or 2.7-3.6V. This boolean property when set, specifies
-> +			  to use low voltage range of 1.7-1.95V. Note for external
-> +			  UFS cards this property is invalid and valid VCC range is
-> +			  always 2.7-3.6V.
-> +- vcc-max-microamp      : specifies max. load that can be drawn from vcc supply
-> +- vccq-max-microamp     : specifies max. load that can be drawn from vccq supply
-> +- vccq2-max-microamp    : specifies max. load that can be drawn from vccq2 supply
-> +
-> +Note: If above properties are not defined it can be assumed that the supply
-> +regulators are always on.
-> +
->   Example:
->   	ufshc@0xfc598000 {
->   		compatible = "jedec,ufs-1.1";
->   		reg = <0xfc598000 0x800>;
->   		interrupts = <0 28 0>;
-> +
-> +		vcc-supply = <&xxx_reg1>;
-> +		vcc-supply-1p8;
-> +		vccq-supply = <&xxx_reg2>;
-> +		vccq2-supply = <&xxx_reg3>;
-> +		vcc-max-microamp = 500000;
-> +		vccq-max-microamp = 200000;
-> +		vccq2-max-microamp = 200000;
->   	};
-> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-> index bce09a6..7db080e 100644
-> --- a/drivers/scsi/ufs/ufs.h
-> +++ b/drivers/scsi/ufs/ufs.h
-> @@ -325,4 +325,29 @@ struct ufs_query_res {
->   	struct utp_upiu_query upiu_res;
->   };
->   
-> +#define UFS_VREG_VCC_MIN_UV	   2700000 /* uV */
-> +#define UFS_VREG_VCC_MAX_UV	   3600000 /* uV */
-> +#define UFS_VREG_VCC_1P8_MIN_UV    1700000 /* uV */
-> +#define UFS_VREG_VCC_1P8_MAX_UV    1950000 /* uV */
-> +#define UFS_VREG_VCCQ_MIN_UV	   1100000 /* uV */
-> +#define UFS_VREG_VCCQ_MAX_UV	   1300000 /* uV */
-> +#define UFS_VREG_VCCQ2_MIN_UV	   1650000 /* uV */
-> +#define UFS_VREG_VCCQ2_MAX_UV	   1950000 /* uV */
-> +
-> +struct ufs_vreg {
-> +	struct regulator *reg;
-> +	const char *name;
-> +	bool enabled;
-> +	int min_uV;
-> +	int max_uV;
-> +	int min_uA;
-> +	int max_uA;
-> +};
-> +
-> +struct ufs_vreg_info {
-> +	struct ufs_vreg *vcc;
-> +	struct ufs_vreg *vccq;
-> +	struct ufs_vreg *vccq2;
-> +};
-> +
->   #endif /* End of Header */
-> diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-> index 9c94052..cbdf5f3 100644
-> --- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-> +++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-> @@ -52,6 +52,99 @@ static struct ufs_hba_variant_ops *get_variant_ops(struct device *dev)
->   	return NULL;
->   }
->   
-> +#define MAX_PROP_SIZE 32
-> +static int ufshcd_populate_vreg(struct device *dev, const char *name,
-> +		struct ufs_vreg **out_vreg)
-> +{
-> +	int ret = 0;
-> +	char prop_name[MAX_PROP_SIZE];
-> +	struct ufs_vreg *vreg = NULL;
-> +	struct device_node *np = dev->of_node;
-> +
-> +	if (!np) {
-> +		dev_err(dev, "%s: non DT initialization\n", __func__);
-> +		goto out;
-> +	}
-> +
-> +	snprintf(prop_name, MAX_PROP_SIZE, "%s-supply", name);
-> +	if (!of_parse_phandle(np, prop_name, 0)) {
-> +		dev_info(dev, "%s: Unable to find %s regulator, assuming enabled\n",
-> +				__func__, prop_name);
-> +		goto out;
-> +	}
-> +
-> +	vreg = devm_kzalloc(dev, sizeof(*vreg), GFP_KERNEL);
-> +	if (!vreg) {
-> +		dev_err(dev, "No memory for %s regulator\n", name);
-> +		goto out;
-> +	}
-> +
-> +	vreg->name = kstrdup(name, GFP_KERNEL);
-> +
-> +	snprintf(prop_name, MAX_PROP_SIZE, "%s-max-microamp", name);
-> +	ret = of_property_read_u32(np, prop_name, &vreg->max_uA);
-> +	if (ret) {
-> +		dev_err(dev, "%s: unable to find %s err %d\n",
-> +				__func__, prop_name, ret);
-> +		goto out_free;
-> +	}
-> +
-> +	vreg->min_uA = 0;
-> +	if (!strcmp(name, "vcc")) {
-> +		if (of_property_read_bool(np, "vcc-supply-1p8")) {
-> +			vreg->min_uV = UFS_VREG_VCC_1P8_MIN_UV;
-> +			vreg->max_uV = UFS_VREG_VCC_1P8_MAX_UV;
-> +		} else {
-> +			vreg->min_uV = UFS_VREG_VCC_MIN_UV;
-> +			vreg->max_uV = UFS_VREG_VCC_MAX_UV;
-> +		}
-> +	} else if (!strcmp(name, "vccq")) {
-> +		vreg->min_uV = UFS_VREG_VCCQ_MIN_UV;
-> +		vreg->max_uV = UFS_VREG_VCCQ_MAX_UV;
-> +	} else if (!strcmp(name, "vccq2")) {
-> +		vreg->min_uV = UFS_VREG_VCCQ2_MIN_UV;
-> +		vreg->max_uV = UFS_VREG_VCCQ2_MAX_UV;
-> +	}
-> +
-> +	goto out;
-> +
-> +out_free:
-> +	devm_kfree(dev, vreg);
-> +	vreg = NULL;
-> +out:
-> +	if (!ret)
-> +		*out_vreg = vreg;
-> +	return ret;
-> +}
-> +
-> +/**
-> + * ufshcd_parse_regulator_info - get regulator info from device tree
-> + * @hba: per adapter instance
-> + *
-> + * Get regulator info from device tree for vcc, vccq, vccq2 power supplies.
-> + * If any of the supplies are not defined it is assumed that they are always-on
-> + * and hence return zero. If the property is defined but parsing is failed
-> + * then return corresponding error.
-> + */
-> +static int ufshcd_parse_regulator_info(struct ufs_hba *hba)
-> +{
-> +	int err;
-> +	struct device *dev = hba->dev;
-> +	struct ufs_vreg_info *info = &hba->vreg_info;
-> +
-> +	err = ufshcd_populate_vreg(dev, "vcc", &info->vcc);
-> +	if (err)
-> +		goto out;
-> +
-> +	err = ufshcd_populate_vreg(dev, "vccq", &info->vccq);
-> +	if (err)
-> +		goto out;
-> +
-> +	err = ufshcd_populate_vreg(dev, "vccq2", &info->vccq2);
-> +out:
-> +	return err;
-> +}
-> +
->   #ifdef CONFIG_PM
->   /**
->    * ufshcd_pltfrm_suspend - suspend power management function
-> @@ -172,6 +265,13 @@ static int ufshcd_pltfrm_probe(struct platform_device *pdev)
->   
->   	hba->vops = get_variant_ops(&pdev->dev);
->   
-> +	err = ufshcd_parse_regulator_info(hba);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "%s: regulator init failed %d\n",
-> +				__func__, err);
-> +		goto out;
-> +	}
-> +
->   	pm_runtime_set_active(&pdev->dev);
->   	pm_runtime_enable(&pdev->dev);
->   
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 743696a..e520b15 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -59,6 +59,16 @@
->   /* Expose the flag value from utp_upiu_query.value */
->   #define MASK_QUERY_UPIU_FLAG_LOC 0xFF
->   
-> +#define ufshcd_toggle_vreg(_dev, _vreg, _on)				\
-> +	({                                                              \
-> +		int _ret;                                               \
-> +		if (_on)                                                \
-> +			_ret = ufshcd_enable_vreg(_dev, _vreg);         \
-> +		else                                                    \
-> +			_ret = ufshcd_disable_vreg(_dev, _vreg);        \
-> +		_ret;                                                   \
-> +	})
-> +
->   enum {
->   	UFSHCD_MAX_CHANNEL	= 0,
->   	UFSHCD_MAX_ID		= 1,
-> @@ -2826,6 +2836,153 @@ static struct scsi_host_template ufshcd_driver_template = {
->   	.can_queue		= UFSHCD_CAN_QUEUE,
->   };
->   
-> +static int ufshcd_config_vreg(struct device *dev,
-> +		struct ufs_vreg *vreg, bool on)
-> +{
-> +	int ret = 0;
-> +	struct regulator *reg = vreg->reg;
-> +	const char *name = vreg->name;
-> +	int min_uV, uA_load;
-> +
-> +	BUG_ON(!vreg);
-> +
-> +	if (regulator_count_voltages(reg) > 0) {
-> +		min_uV = on ? vreg->min_uV : 0;
-> +		ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
-> +		if (ret) {
-> +			dev_err(dev, "%s: %s set voltage failed, err=%d\n",
-> +					__func__, name, ret);
-> +			goto out;
-> +		}
-> +
-> +		uA_load = on ? vreg->max_uA : 0;
-> +		ret = regulator_set_optimum_mode(reg, uA_load);
-> +		if (ret >= 0) {
-> +			/*
-> +			 * regulator_set_optimum_mode() returns new regulator
-> +			 * mode upon success.
-> +			 */
-> +			ret = 0;
-> +		} else {
-> +			dev_err(dev, "%s: %s set optimum mode(uA_load=%d) failed, err=%d\n",
-> +					__func__, name, uA_load, ret);
-> +			goto out;
-> +		}
-> +	}
-> +out:
-> +	return ret;
-> +}
-> +
-> +static int ufshcd_enable_vreg(struct device *dev, struct ufs_vreg *vreg)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!vreg || vreg->enabled)
-> +		goto out;
-> +
-> +	ret = ufshcd_config_vreg(dev, vreg, true);
-> +	if (!ret)
-> +		ret = regulator_enable(vreg->reg);
-> +
-> +	if (!ret)
-> +		vreg->enabled = true;
-> +	else
-> +		dev_err(dev, "%s: %s enable failed, err=%d\n",
-> +				__func__, vreg->name, ret);
-> +out:
-> +	return ret;
-> +}
-> +
-> +static int ufshcd_disable_vreg(struct device *dev, struct ufs_vreg *vreg)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!vreg || !vreg->enabled)
-> +		goto out;
-> +
-> +	ret = regulator_disable(vreg->reg);
-> +
-> +	if (!ret) {
-> +		/* ignore errors on applying disable config */
-> +		ufshcd_config_vreg(dev, vreg, false);
-> +		vreg->enabled = false;
-> +	} else {
-> +		dev_err(dev, "%s: %s disable failed, err=%d\n",
-> +				__func__, vreg->name, ret);
-> +	}
-> +out:
-> +	return ret;
-> +}
-> +
-> +static int ufshcd_setup_vreg(struct ufs_hba *hba, bool on)
-> +{
-> +	int ret = 0;
-> +	struct device *dev = hba->dev;
-> +	struct ufs_vreg_info *info = &hba->vreg_info;
-> +
-> +	if (!info)
-> +		goto out;
-> +
-> +	ret = ufshcd_toggle_vreg(dev, info->vcc, on);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = ufshcd_toggle_vreg(dev, info->vccq, on);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = ufshcd_toggle_vreg(dev, info->vccq2, on);
-> +	if (ret)
-> +		goto out;
-> +
-> +out:
-> +	if (ret) {
-> +		ufshcd_toggle_vreg(dev, info->vccq2, false);
-> +		ufshcd_toggle_vreg(dev, info->vccq, false);
-> +		ufshcd_toggle_vreg(dev, info->vcc, false);
-> +	}
-> +	return ret;
-> +}
-> +
-> +static int ufshcd_get_vreg(struct device *dev, struct ufs_vreg *vreg)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!vreg)
-> +		goto out;
-> +
-> +	vreg->reg = devm_regulator_get(dev, vreg->name);
-> +	if (IS_ERR(vreg->reg)) {
-> +		ret = PTR_ERR(vreg->reg);
-> +		dev_err(dev, "%s: %s get failed, err=%d\n",
-> +				__func__, vreg->name, ret);
-> +	}
-> +out:
-> +	return ret;
-> +}
-> +
-> +static int ufshcd_init_vreg(struct ufs_hba *hba)
-> +{
-> +	int ret = 0;
-> +	struct device *dev = hba->dev;
-> +	struct ufs_vreg_info *info = &hba->vreg_info;
-> +
-> +	if (!info)
-> +		goto out;
-> +
-> +	ret = ufshcd_get_vreg(dev, info->vcc);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = ufshcd_get_vreg(dev, info->vccq);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = ufshcd_get_vreg(dev, info->vccq2);
-> +out:
-> +	return ret;
-> +}
-> +
->   static int ufshcd_variant_hba_init(struct ufs_hba *hba)
->   {
->   	int err = 0;
-> @@ -2881,6 +3038,36 @@ static void ufshcd_variant_hba_exit(struct ufs_hba *hba)
->   		hba->vops->exit(hba);
->   }
->   
-> +static int ufshcd_hba_init(struct ufs_hba *hba)
-> +{
-> +	int err;
-> +
-> +	err = ufshcd_init_vreg(hba);
-> +	if (err)
-> +		goto out;
-> +
-> +	err = ufshcd_setup_vreg(hba, true);
-> +	if (err)
-> +		goto out;
-> +
-> +	err = ufshcd_variant_hba_init(hba);
-> +	if (err)
-> +		goto out_disable_vreg;
-> +
-> +	goto out;
-> +
-> +out_disable_vreg:
-> +	ufshcd_setup_vreg(hba, false);
-> +out:
-> +	return err;
-> +}
-> +
-> +static void ufshcd_hba_exit(struct ufs_hba *hba)
-> +{
-> +	ufshcd_variant_hba_exit(hba);
-> +	ufshcd_setup_vreg(hba, false);
-> +}
-> +
->   /**
->    * ufshcd_suspend - suspend power management function
->    * @hba: per adapter instance
-> @@ -2966,7 +3153,7 @@ void ufshcd_remove(struct ufs_hba *hba)
->   
->   	scsi_host_put(hba->host);
->   
-> -	ufshcd_variant_hba_exit(hba);
-> +	ufshcd_hba_exit(hba);
->   }
->   EXPORT_SYMBOL_GPL(ufshcd_remove);
->   
-> @@ -3029,7 +3216,7 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
->   	hba->mmio_base = mmio_base;
->   	hba->irq = irq;
->   
-> -	err = ufshcd_variant_hba_init(hba);
-> +	err = ufshcd_hba_init(hba);
->   	if (err)
->   		goto out_error;
->   
-> @@ -3115,7 +3302,7 @@ out_remove_scsi_host:
->   	scsi_remove_host(hba->host);
->   out_disable:
->   	scsi_host_put(host);
-> -	ufshcd_variant_hba_exit(hba);
-> +	ufshcd_hba_exit(hba);
->   out_error:
->   	return err;
->   }
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> index 72acbc7..f66e58c 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -52,6 +52,7 @@
->   #include <linux/pm_runtime.h>
->   #include <linux/clk.h>
->   #include <linux/completion.h>
-> +#include <linux/regulator/consumer.h>
->   
->   #include <asm/irq.h>
->   #include <asm/byteorder.h>
-> @@ -218,6 +219,7 @@ struct ufs_hba_variant_ops {
->    * @saved_uic_err: sticky UIC error mask
->    * @dev_cmd: ufs device management command information
->    * @auto_bkops_enabled: to track whether bkops is enabled in device
-> + * @vreg_info: UFS device voltage regulator information
->    */
->   struct ufs_hba {
->   	void __iomem *mmio_base;
-> @@ -276,6 +278,7 @@ struct ufs_hba {
->   	struct ufs_dev_cmd dev_cmd;
->   
->   	bool auto_bkops_enabled;
-> +	struct ufs_vreg_info vreg_info;
->   };
->   
->   #define ufshcd_writel(hba, val, reg)	\
+> The question is: how much this "generic" pinconf is... well... 
+> generic! And it is not a answer I can give.
+> On the other hand, if the "generic" is not going to overcome the 
+> native pinctrl, I do not feel like switching to this at the cost of 
+> changing the whole dtsi/dts entries that we already have.
+>
+> So, it is more to Linus and Stephen to give us clues about this...
 
+Okay.
+
+I'll propose a new patch series adding native support for OUTPUT 
+configuration of at91 pins (add OUTPUT_HIGH/LOW),
+and put this series in stand-by until a clear decision is made about 
+generic pinconf.
+
+Thanks,
+
+Best Regards,
+
+Boris
+>
+> Bye,
