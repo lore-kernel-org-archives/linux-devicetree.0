@@ -1,131 +1,181 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH V4] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
-Date: Tue, 27 Aug 2013 15:01:38 +0200
-Message-ID: <4043486.2T4HEilLdr@amdc1227>
-References: <1377595351-30233-1-git-send-email-yuvaraj.cd@samsung.com>
- <20130827110145.GG19893@e106331-lin.cambridge.arm.com>
- <CAKuRcOLK0PjcVKFxUZ9hedVScKe1K+QYE1g57CZ5JOE=AmFJow@mail.gmail.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [RFC PATCH 01/14] cpufreq: cpufreq-cpu0: add dt node parsing
+ for 'cooling-zones'
+Date: Tue, 27 Aug 2013 09:05:48 -0400
+Message-ID: <521CA42C.9040106@ti.com>
+References: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com> <1377299755-5134-2-git-send-email-eduardo.valentin@ti.com> <20130827092931.GB19893@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAKuRcOLK0PjcVKFxUZ9hedVScKe1K+QYE1g57CZ5JOE=AmFJow@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "dianders@chromium.org" <dianders@chromium.org>, "cjb@laptop.org" <cjb@laptop.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="dEF9eMqXhooVnkhejDaH0qBEGe22GqquO"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20130827092931.GB19893@e106331-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "wni@nvidia.com" <wni@nvidia.com>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Viresh Kumar <viresh.kumar@linaro.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yuvaraj,
+--dEF9eMqXhooVnkhejDaH0qBEGe22GqquO
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Tuesday 27 of August 2013 17:32:52 Yuvaraj Kumar wrote:
-> On Tue, Aug 27, 2013 at 4:31 PM, Mark Rutland <mark.rutland@arm.com> 
-wrote:
-> > On Tue, Aug 27, 2013 at 10:22:31AM +0100, Yuvaraj Kumar C D wrote:
-> >> This patch adds the device tree node entries for exynos5420 SOC.
-> >> Exynos5420 has a different version of DWMMC controller,so a new
-> >> compatible string is used to distinguish it from the prior SOC's.
-> >> 
-> >> This patch depends on
-> >> 
-> >>       mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
-> >> 
-> >> changes since V3:
-> >>       1.change fifo-depth size from 0x80 to 0x40
-> >>       2.Move the below properties
-> >>       
-> >>               a.card-detect-delay
-> >>               b.samsung,dw-mshc-ciu-div
-> >>               c.samsung,dw-mshc-sdr-timing
-> >>               d.samsung,dw-mshc-ddr-timing
-> >>       
-> >>       from SOC dts to board dts file as suggested by Doug Anderson
-> >> 
-> >> changes since V2:
-> >>       1.dropped num-slots property from node as its not required
-> >>       
-> >>         if number of card slots available is 1.
-> >>       
-> >>       2.Move the below properties
-> >>       
-> >>               a.fifo-depth
-> >>               b.card-detect-delay
-> >>               c.samsung,dw-mshc-ciu-div
-> >>               d.samsung,dw-mshc-sdr-timing
-> >>               e.samsung,dw-mshc-ddr-timing
-> >>       
-> >>       from board dts to SOC dts,as these are not board specific
-> >>       properties.
-> >>       
-> >>       3.Updated the binding document exynos-dw-mshc.txt.
-> >> 
-> >> changes since V1:
-> >>       1.disable node by status = disabled in SOC file
-> >>       2.enable node by status = okay in board specific file
-> >> 
-> >> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
-> >> ---
-> >> 
-> >>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    4 ++
-> >>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   34
-> >>  +++++++++++++++++ arch/arm/boot/dts/exynos5420.dtsi                 
-> >>  |   39 ++++++++++++++++++++ 3 files changed, 77 insertions(+)
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> >> b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt index
-> >> 6d1c098..25368e8 100644
-> >> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> >> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> >> 
-> >> @@ -16,6 +16,8 @@ Required Properties:
-> >>         specific extensions.
-> >>       
-> >>       - "samsung,exynos5250-dw-mshc": for controllers with Samsung
-> >>       Exynos5250
-> >>       
-> >>         specific extensions.
-> >> 
-> >> +     - "samsung,exynos5420-dw-mshc": for controllers with Samsung
-> >> Exynos5420 +       specific extensions.
-> >> 
-> >>  * samsung,dw-mshc-ciu-div: Specifies the divider value for the card
-> >>  interface>>  
-> >>    unit (ciu) clock. This property is applicable only for Exynos5
-> >>    SoC's and
-> >> 
-> >> @@ -31,6 +33,8 @@ Required Properties:
-> >>    data rate mode operation. Refer notes below for the order of the
-> >>    cells and the valid values.
-> >> 
-> >> +* bypass-smu: Bypass Security Management Unit of eMMC channel 0 and
-> >> channel 1. +
-> > 
-> > Could you elaborate on why this is needed?
-> 
-> Exynos5420  Mobile Storage Host controller has a Security Management
-> Unit (SMU) for
-> channel 0 and channel 1 (mainly for eMMC). This binding property
-> requires to add a quirk
-> to bypass SMU as it is not being used yet.
+Hey Mark,
 
-This looks like a configuration property, not hardware description to me 
-then. If presence of SMU depends on particular channel, then either the 
-property should be "snps,has-smu" or something like this, to indicate that 
-particular channel supports it and it's up to the driver how to handle this 
-feature.
+On 27-08-2013 05:29, Mark Rutland wrote:
+> On Sat, Aug 24, 2013 at 12:15:42AM +0100, Eduardo Valentin wrote:
+>> This patch changes the cpufreq-cpu0 driver to consider if
+>> a cpu needs cooling (with cpufreq). In case the cooling is needed,
+>> it can be flagged at the cpu0 device tree node, with the list
+>> of zones property 'cooling-zones'.
+>>
+>> In case this list of zones is present, the driver will
+>> load a cpufreq cooling device in the system. The cpufreq-cpu0
+>> driver is not interested in determining how the system should
+>> be using the cooling device. The driver is responsible
+>> only of loading the cooling device.
+>>
+>> Describing how the cooling device will be used can be
+>> accomplished by setting up a thermal zone that references
+>> and is composed by the cpufreq cooling device.
+>>
+>> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+>> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+>> Cc: Grant Likely <grant.likely@linaro.org>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: cpufreq@vger.kernel.org
+>> Cc: linux-pm@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: devicetree-discuss@lists.ozlabs.org
+>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt |  4 ++++
+>>  drivers/cpufreq/cpufreq-cpu0.c                             | 12 +++++=
++++++++
+>>  2 files changed, 16 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.tx=
+t b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+>> index 051f764..add50f7 100644
+>> --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+>> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+>> @@ -15,6 +15,9 @@ Optional properties:
+>>  - clock-latency: Specify the possible maximum transition latency for =
+clock,
+>>    in unit of nanoseconds.
+>>  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.=
 
-> > Is the SMU broken or not present in some hardware revisions?
-> 
-> SMU is only present in channel 0 and channel 1,but not in channel 2.So
-> to distinguish this,
-> bypass-smu property has been added as quirks in the channel.
+>> +- cooling-zones: A list of thermal zones phandles. The generic cpu
+>> +  cooling (freq clipping) is loaded by the generic cpufreq-cpu0 drive=
+r
+>> +  in case the device tree node has this list.
+>=20
+> Bindings should not describe the behaviour of any kernel (and for that
+> reason I'm not very keen on the current cpufreq-cpu0 binding document).=
 
-Also a good question is what you mean with "channel". Is it the whole mshc 
-entity having compatible property or its subnodes aka slots?
+>=20
 
-If it's the former and channel 2 does not have SMU, making it compatible 
-with "samsung,exynos5250-dw-mshc", then it should be marked as such. In 
-this case the ideal solution would be to determine the SMU quirk only by 
-compatible value.
+Right.
 
-Best regards,
-Tomasz
+> Bindings should simply describe the hardware. This addition could
+> instead be:
+>=20
+>  - cooling-zones: a list of thermal zone phandles.
+>=20
+
+OK. This works for me.
+
+> However, as the thermal zone binding doesn't seem to have appeared by
+> this patch, it should get moved later anyway...
+
+Yeah, I will reorder them.
+
+>=20
+> Thanks,
+> Mark.
+>=20
+>> =20
+>>  Examples:
+>> =20
+>> @@ -33,6 +36,7 @@ cpus {
+>>  			198000  850000
+>>  		>;
+>>  		clock-latency =3D <61036>; /* two CLK32 periods */
+>> +		cooling-zones =3D <&cpu_thermal>;
+>>  	};
+>> =20
+>>  	cpu@1 {
+>> diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-=
+cpu0.c
+>> index ad1fde2..ede6487 100644
+>> --- a/drivers/cpufreq/cpufreq-cpu0.c
+>> +++ b/drivers/cpufreq/cpufreq-cpu0.c
+>> @@ -20,6 +20,9 @@
+>>  #include <linux/platform_device.h>
+>>  #include <linux/regulator/consumer.h>
+>>  #include <linux/slab.h>
+>> +#include <linux/thermal.h>
+>> +#include <linux/cpu_cooling.h>
+>> +#include <linux/cpumask.h>
+>> =20
+>>  static unsigned int transition_latency;
+>>  static unsigned int voltage_tolerance; /* in percentage */
+>> @@ -28,6 +31,7 @@ static struct device *cpu_dev;
+>>  static struct clk *cpu_clk;
+>>  static struct regulator *cpu_reg;
+>>  static struct cpufreq_frequency_table *freq_table;
+>> +static struct thermal_cooling_device *cdev;
+>> =20
+>>  static int cpu0_verify_speed(struct cpufreq_policy *policy)
+>>  {
+>> @@ -268,6 +272,13 @@ static int cpu0_cpufreq_probe(struct platform_dev=
+ice *pdev)
+>>  		goto out_free_table;
+>>  	}
+>> =20
+>> +	/*
+>> +	 * For now, just loading the cooling device;
+>> +	 * thermal DT code takes care of matching them.
+>> +	 */
+>> +	if (of_find_property(np, "cooling-zones", NULL))
+>> +		cdev =3D cpufreq_cooling_register(cpu_present_mask);
+>> +
+>>  	of_node_put(np);
+>>  	of_node_put(parent);
+>>  	return 0;
+>> @@ -283,6 +294,7 @@ out_put_parent:
+>> =20
+>>  static int cpu0_cpufreq_remove(struct platform_device *pdev)
+>>  {
+>> +	cpufreq_cooling_unregister(cdev);
+>>  	cpufreq_unregister_driver(&cpu0_cpufreq_driver);
+>>  	opp_free_cpufreq_table(cpu_dev, &freq_table);
+>> =20
+>> --=20
+>> 1.8.2.1.342.gfa7285d
+>>
+>>
+>=20
+>=20
+
+
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
+
+
+--dEF9eMqXhooVnkhejDaH0qBEGe22GqquO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlIcpC8ACgkQCXcVR3XQvP2UWwD/Uc/7/BMsPH+BLxQhO029UPkY
+COUU5OzGeUCHWYTBq1oA/jri/5Iz8kwhmlDmWV5foCvNs3nwIPUB1GypnW39oHqs
+=7l2Y
+-----END PGP SIGNATURE-----
+
+--dEF9eMqXhooVnkhejDaH0qBEGe22GqquO--
