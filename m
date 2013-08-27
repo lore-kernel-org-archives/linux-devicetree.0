@@ -1,80 +1,80 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 3/3] gpio: pcf857x: Add OF support
-Date: Tue, 27 Aug 2013 15:44:26 +0100
-Message-ID: <20130827144426.GO19893@e106331-lin.cambridge.arm.com>
-References: <1376953494-9684-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <2417846.CRj8QejgZy@flatron>
- <20130827103949.GF19893@e106331-lin.cambridge.arm.com>
- <2048253.b587MQDRGG@avalon>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v11] ASoC: fsl: Add S/PDIF machine driver
+Date: Tue, 27 Aug 2013 15:50:16 +0100
+Message-ID: <20130827145016.GW10783@sirena.org.uk>
+References: <fac39ed91818630e03f81a5f0cf9ddde0e6a3c3a.1377244995.git.b42378@freescale.com>
+ <5217B32C.5070300@wwwdotorg.org>
+ <20130823191353.GK25263@sirena.org.uk>
+ <20130827020107.GB3758@MrMyself>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2048253.b587MQDRGG@avalon>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, Pawel Moll <Pawel.Moll@arm.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: multipart/mixed; boundary="===============1489042899997331065=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20130827020107.GB3758@MrMyself>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Nicolin Chen <b42378@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, Stephen Warren <swarren@wwwdotorg.org>, s.hauer@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, p.zabel@pengutronix.de, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 27, 2013 at 11:50:40AM +0100, Laurent Pinchart wrote:
-> Hi Mark,
-> 
-> On Tuesday 27 August 2013 11:39:49 Mark Rutland wrote:
-> > On Sat, Aug 24, 2013 at 03:13:11PM +0100, Tomasz Figa wrote:
-> > > On Saturday 24 of August 2013 02:54:07 Laurent Pinchart wrote:
-> > > > On Saturday 24 August 2013 02:41:59 Tomasz Figa wrote:
-> > > > > On Tuesday 20 of August 2013 01:04:54 Laurent Pinchart wrote:
-> > > > > > Add DT bindings for the pcf857x-compatible chips and parse the
-> > > > > > device tree node in the driver.
-> > > > > > 
-> > > > > > Signed-off-by: Laurent Pinchart
-> > > > > > <laurent.pinchart+renesas@ideasonboard.com>
-> > > > > > ---
-> > > > > > 
-> > > > > >  .../devicetree/bindings/gpio/gpio-pcf857x.txt      | 71 +++++++++++
-> > > > > >  drivers/gpio/gpio-pcf857x.c                        | 57 +++++++++--
-> > > > > >  2 files changed, 119 insertions(+), 9 deletions(-)
-> > > > > >  create mode 100644
-> > > > > > Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> > > > > > 
-> > > > > > diff --git a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> > > > > > b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt new file
-> > > > > > mode 100644
-> > > > > > index 0000000..df94462
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> > > > > > @@ -0,0 +1,71 @@
-> > > > 
-> > > > [snip]
-> > > > 
-> > > > > > +  - pins-initial-state: Bitmask that specifies the initial state of
-> > > > > > +    each pin. When a bit is set to zero, the corresponding pin will
-> > > > > > be
-> > > > > > +    initialized to the input (pulled-up) state. When the  bit is
-> > > > > > set to +    one, the pin will be initialized the the low-level
-> > > > > > output state. If +    the property is not specified all pins will
-> > > > > > be initialized to the +    input state.
-> > > > > 
-> > > > > Hmm, do you actually need to know whether those pins are outputs or
-> > > > > inputs before they get used for first time? I believe any driver
-> > > > > using GPIO will call gpio_direction_{in,out}put() before it starts
-> > > > > using the pin, which will initialize the pin to a known state.
-> > > > > 
-> > > > > What I'd suggest is making the driver handle this by having a bit mask
-> > > > > that marks states of pins as defined and flagging all pins as
-> > > > > undefined by default. Then any call to gpio_direction_output() or
-> > > > > _input() would mark it as defined and direction of the pin could be
-> > > > > stored in internal driver structures.
-> > > > 
-> > > > The problem is that all pins are controlled through a single I2C write.
-> > > > Setting the direction of a pin will set the direction of all other pins.
-> > > > I thus need to know what the initial settings are to avoid glitches.
-> > 
-> > I guess it's not possible to read the initial state from the hardware?
-> 
-> I wish. Unfortunately it can only be written.
 
-What a shame :(
+--===============1489042899997331065==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RCcFxJ34+mAtH0DM"
+Content-Disposition: inline
 
-Thanks,
-Mark.
+
+--RCcFxJ34+mAtH0DM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Aug 27, 2013 at 10:01:08AM +0800, Nicolin Chen wrote:
+
+> On Fri, Aug 23, 2013 at 08:13:53PM +0100, Mark Brown wrote:
+
+> I think this patch hasn't been applied yet, already been acked though.
+> Is there any problem in it?
+
+You've allowed less than one working day for a response here - Monday
+was a holiday in the UK.  Something like a week is normally a minimum
+for this sort of thing, especially in a case like this where there has
+been extensive discussion.
+
+--RCcFxJ34+mAtH0DM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSHLylAAoJELSic+t+oim9qW4P/jCJvkmyqb+IE8WCJcGSDuzs
+V9TruCMPHsZzAdU7B7Lx6clAYgM4C2bF/MZ2647/OutOvjz8BbgZc5m52ABy9Cs2
+CJHqn9e3TxgFKGMPSRKZdhriN6x/219ziwgjYp4WmMa2CDpMb+wG2Z+sdafCehHd
+p1WqSahsA3WRIVYI+2/kghJW2KCTCkbBtmw7Bu0PiIII25GEgSjhQ3JFn22QRr8N
+QClG+rZjaUyCLZ/G93wYmu6mgjU677OtwEPm99CpbZk2rwcvH6ahA7QG7wJxyGrZ
+LlSbMYswvHpf2K6GcoR+q1rSdvPHWbtOBwGpv4GcTsTHGkfyMdvhvKkbpL2y7u+A
+STJWR+Yu6mmRH7ehMuaq242G2p3QoG8dMa0i1vgAr/6Wqwz7nbSjO+cmPFjzVTvb
+3tc4Gh4wFNUSziIIxgTLIu5dmxuFV/hKqYfo5ijt3sqskoKNytK1qBYEUa0Wudh7
+O3QkM1nnoOuM9arSRCX2sc43qPf6wn514lxpw0a5yMAvJz8ZDR+0xzrHRyfcRZKl
+Urf4HNiduTa56lvQon0bJWcIPpXWskxPKQ48MYmLc2bTQCcMaFEpGIQn9Fh2/lYj
+qqsaIHnZXimf8px4YMGy/eGS36rKkQx2OP+KXVhvIFXmVUVJrpk4xXz9pPqYwd0l
+qBy2puhTYnQRlS3DqgDo
+=sBeY
+-----END PGP SIGNATURE-----
+
+--RCcFxJ34+mAtH0DM--
+
+--===============1489042899997331065==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1489042899997331065==--
