@@ -1,33 +1,68 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH] ARM: at91/dt: fix phy address to match the reg register
-Date: Tue, 27 Aug 2013 14:04:56 +0200
-Message-ID: <1377605096-20903-1-git-send-email-b.brezillon@overkiz.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] pinctrl: pinctrl-single: Convert to devm_ioremap_resource()
+Date: Tue, 27 Aug 2013 16:19:18 +0400
+Message-ID: <521C9946.70009@cogentembedded.com>
+References: <1377587134-8967-1-git-send-email-manishv.b@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1377587134-8967-1-git-send-email-manishv.b@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>
+To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Cc: davinci-linux-open-source@linux.davincidsp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Fix phy0 address to match the reg porperty defined in phy0 node.
+Hello.
 
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- arch/arm/boot/dts/sama5d3xmb.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 27-08-2013 11:05, Vishwanathrao Badarkhe, Manish wrote:
 
-diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
-index e9521d5..dba739b 100644
---- a/arch/arm/boot/dts/sama5d3xmb.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
-@@ -84,7 +84,7 @@
- 
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				phy0: ethernet-phy@0 {
-+				phy0: ethernet-phy@1 {
- 					interrupt-parent = <&pioE>;
- 					interrupts = <30 IRQ_TYPE_EDGE_FALLING>;
- 					reg = <1>;
--- 
-1.7.9.5
+> From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+
+> Convert devm_request_mem_region() and devm_ioremap() to
+> devm_ioremap_resource() which provides more consistent
+> error handling to manage resource.
+
+> Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
+> ---
+> :100644 100644 7323cca... b0fef18... M	drivers/pinctrl/pinctrl-single.c
+>   drivers/pinctrl/pinctrl-single.c |   21 +++------------------
+>   1 file changed, 3 insertions(+), 18 deletions(-)
+
+> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+> index 7323cca..b0fef18 100644
+> --- a/drivers/pinctrl/pinctrl-single.c
+> +++ b/drivers/pinctrl/pinctrl-single.c
+> @@ -1556,24 +1556,9 @@ static int pcs_probe(struct platform_device *pdev)
+>   						  "pinctrl-single,bit-per-mux");
+>
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!res) {
+> -		dev_err(pcs->dev, "could not get resource\n");
+> -		return -ENODEV;
+> -	}
+> -
+> -	pcs->res = devm_request_mem_region(pcs->dev, res->start,
+> -			resource_size(res), DRIVER_NAME);
+> -	if (!pcs->res) {
+
+    Is pcs->res used anywhere else?
+
+> -		dev_err(pcs->dev, "could not get mem_region\n");
+> -		return -EBUSY;
+> -	}
+> -
+> -	pcs->size = resource_size(pcs->res);
+
+    Is pcs->size used anywhere else?
+
+> -	pcs->base = devm_ioremap(pcs->dev, pcs->res->start, pcs->size);
+> -	if (!pcs->base) {
+> -		dev_err(pcs->dev, "could not ioremap\n");
+> -		return -ENODEV;
+> -	}
+> +	pcs->base = devm_ioremap_resource(pcs->dev, res);
+> +	if (IS_ERR(pcs->base))
+> +		return PTR_ERR(pcs->base);
+
+WBR, Sergei
