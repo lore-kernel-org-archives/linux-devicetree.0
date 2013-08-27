@@ -1,39 +1,78 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH 12/15] watchdog: orion: Rename device-tree binding
- documentation
-Date: Tue, 27 Aug 2013 11:34:36 -0300
-Message-ID: <1377614079-10000-13-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1377614079-10000-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv5 2/3] ARM: socfpga: dts: Add support for SD/MMC
+Date: Tue, 27 Aug 2013 17:31:22 +0200
+Message-ID: <20130827153122.GH24795@pengutronix.de>
+References: <1377272686-13253-1-git-send-email-dinguyen@altera.com>
+ <1377272686-13253-2-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1377614079-10000-1-git-send-email-ezequiel.garcia@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, wim@iguana.be, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1377272686-13253-2-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinguyen@altera.com
+Cc: dinh.linux@gmail.com, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Name this file to something a bit more judicious.
+Hi!
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
----
- Documentation/devicetree/bindings/watchdog/{marvel.txt => orion-wdt.txt} | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/watchdog/{marvel.txt => orion-wdt.txt} (100%)
+On Fri, Aug 23, 2013 at 10:44:45AM -0500, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
+> 
+> Add bindings for SD/MMC for SOCFPGA.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+> Cc: Jaehoon Chung <jh80.chung@samsung.com>
+> Cc: Seungwon Jeon <tgih.jun@samsung.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ian.campbell@citrix.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+> CC: linux-arm-kernel@lists.infradead.org
+> 
+> v5:
+> - Add "altr,ciu-clk-offset" that represents the necessary offset
+>   and shift values in the sysmgr phandle. This is used to set
+>   the correct CIU clock values.
+> 
+> v4:
+> - Add a complete binding example in documentations
+> - Add a phandle entry for "altr,sysmgr" which links the system
+>   manager to the SD/MMC IP block that controls the SDR timings.
+> - Split up patches
+>         1/3 - Add syscon binding to sys-mgr node
+>         2/3 - DTS bindings and documentation for SD/MMC on SOCFPGA
+>         3/3 - Driver changes to use the bindings
+> 
+> v3:
+> - Explicitly reference synopsis-dw-mshc.txt for base bindings
+> - Remove "dw-mshc-ciu-div" as driver can get clock information dts "ciu" entry
+> - Fixed indentation issue
+> 
+> v2:
+> - Remove bus-width and extra line in documentation
+> - Merge bindings example into a single node in documentation
+> ---
 
-diff --git a/Documentation/devicetree/bindings/watchdog/marvel.txt b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/watchdog/marvel.txt
-rename to Documentation/devicetree/bindings/watchdog/orion-wdt.txt
+You should put your changelogs here and not above the ---
+AFAIK nobody cares for the development history of a patch once it is applied.
+
+>  .../devicetree/bindings/mmc/socfpga-dw-mshc.txt    |   63 ++++++++++++++++++++
+>  arch/arm/boot/dts/socfpga.dtsi                     |   11 ++++
+>  arch/arm/boot/dts/socfpga_cyclone5.dts             |   14 +++++
+>  arch/arm/boot/dts/socfpga_vt.dts                   |   14 +++++
+>  4 files changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+> 
+
+Regards,
+Steffen
+
 -- 
-1.8.1.5
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
