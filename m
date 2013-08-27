@@ -1,79 +1,131 @@
-From: ManishBadarkhe <manishv.b@ti.com>
-Subject: Re: [PATCH] pinctrl: pinctrl-single: Convert to devm_ioremap_resource()
-Date: Tue, 27 Aug 2013 18:29:21 +0530
-Message-ID: <521CA2A9.5060200@ti.com>
-References: <1377587134-8967-1-git-send-email-manishv.b@ti.com> <521C9946.70009@cogentembedded.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH V4] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
+Date: Tue, 27 Aug 2013 15:01:38 +0200
+Message-ID: <4043486.2T4HEilLdr@amdc1227>
+References: <1377595351-30233-1-git-send-email-yuvaraj.cd@samsung.com>
+ <20130827110145.GG19893@e106331-lin.cambridge.arm.com>
+ <CAKuRcOLK0PjcVKFxUZ9hedVScKe1K+QYE1g57CZ5JOE=AmFJow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <521C9946.70009@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: davinci-linux-open-source@linux.davincidsp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, linus.walleij@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAKuRcOLK0PjcVKFxUZ9hedVScKe1K+QYE1g57CZ5JOE=AmFJow@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "dianders@chromium.org" <dianders@chromium.org>, "cjb@laptop.org" <cjb@laptop.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi Yuvaraj,
 
-On Tuesday 27 August 2013 05:49 PM, Sergei Shtylyov wrote:
-> Hello.
->
-> On 27-08-2013 11:05, Vishwanathrao Badarkhe, Manish wrote:
->
->> From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
->
->> Convert devm_request_mem_region() and devm_ioremap() to
->> devm_ioremap_resource() which provides more consistent
->> error handling to manage resource.
->
->> Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
->> ---
->> :100644 100644 7323cca... b0fef18... M drivers/pinctrl/pinctrl-single.c
->>   drivers/pinctrl/pinctrl-single.c |   21 +++------------------
->>   1 file changed, 3 insertions(+), 18 deletions(-)
->
->> diff --git a/drivers/pinctrl/pinctrl-single.c 
->> b/drivers/pinctrl/pinctrl-single.c
->> index 7323cca..b0fef18 100644
->> --- a/drivers/pinctrl/pinctrl-single.c
->> +++ b/drivers/pinctrl/pinctrl-single.c
->> @@ -1556,24 +1556,9 @@ static int pcs_probe(struct platform_device 
->> *pdev)
->>                             "pinctrl-single,bit-per-mux");
->>
->>       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> -    if (!res) {
->> -        dev_err(pcs->dev, "could not get resource\n");
->> -        return -ENODEV;
->> -    }
->> -
->> -    pcs->res = devm_request_mem_region(pcs->dev, res->start,
->> -            resource_size(res), DRIVER_NAME);
->> -    if (!pcs->res) {
->
->    Is pcs->res used anywhere else?
+On Tuesday 27 of August 2013 17:32:52 Yuvaraj Kumar wrote:
+> On Tue, Aug 27, 2013 at 4:31 PM, Mark Rutland <mark.rutland@arm.com> 
+wrote:
+> > On Tue, Aug 27, 2013 at 10:22:31AM +0100, Yuvaraj Kumar C D wrote:
+> >> This patch adds the device tree node entries for exynos5420 SOC.
+> >> Exynos5420 has a different version of DWMMC controller,so a new
+> >> compatible string is used to distinguish it from the prior SOC's.
+> >> 
+> >> This patch depends on
+> >> 
+> >>       mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
+> >> 
+> >> changes since V3:
+> >>       1.change fifo-depth size from 0x80 to 0x40
+> >>       2.Move the below properties
+> >>       
+> >>               a.card-detect-delay
+> >>               b.samsung,dw-mshc-ciu-div
+> >>               c.samsung,dw-mshc-sdr-timing
+> >>               d.samsung,dw-mshc-ddr-timing
+> >>       
+> >>       from SOC dts to board dts file as suggested by Doug Anderson
+> >> 
+> >> changes since V2:
+> >>       1.dropped num-slots property from node as its not required
+> >>       
+> >>         if number of card slots available is 1.
+> >>       
+> >>       2.Move the below properties
+> >>       
+> >>               a.fifo-depth
+> >>               b.card-detect-delay
+> >>               c.samsung,dw-mshc-ciu-div
+> >>               d.samsung,dw-mshc-sdr-timing
+> >>               e.samsung,dw-mshc-ddr-timing
+> >>       
+> >>       from board dts to SOC dts,as these are not board specific
+> >>       properties.
+> >>       
+> >>       3.Updated the binding document exynos-dw-mshc.txt.
+> >> 
+> >> changes since V1:
+> >>       1.disable node by status = disabled in SOC file
+> >>       2.enable node by status = okay in board specific file
+> >> 
+> >> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+> >> ---
+> >> 
+> >>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    4 ++
+> >>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   34
+> >>  +++++++++++++++++ arch/arm/boot/dts/exynos5420.dtsi                 
+> >>  |   39 ++++++++++++++++++++ 3 files changed, 77 insertions(+)
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> >> b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt index
+> >> 6d1c098..25368e8 100644
+> >> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> >> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> >> 
+> >> @@ -16,6 +16,8 @@ Required Properties:
+> >>         specific extensions.
+> >>       
+> >>       - "samsung,exynos5250-dw-mshc": for controllers with Samsung
+> >>       Exynos5250
+> >>       
+> >>         specific extensions.
+> >> 
+> >> +     - "samsung,exynos5420-dw-mshc": for controllers with Samsung
+> >> Exynos5420 +       specific extensions.
+> >> 
+> >>  * samsung,dw-mshc-ciu-div: Specifies the divider value for the card
+> >>  interface>>  
+> >>    unit (ciu) clock. This property is applicable only for Exynos5
+> >>    SoC's and
+> >> 
+> >> @@ -31,6 +33,8 @@ Required Properties:
+> >>    data rate mode operation. Refer notes below for the order of the
+> >>    cells and the valid values.
+> >> 
+> >> +* bypass-smu: Bypass Security Management Unit of eMMC channel 0 and
+> >> channel 1. +
+> > 
+> > Could you elaborate on why this is needed?
+> 
+> Exynos5420  Mobile Storage Host controller has a Security Management
+> Unit (SMU) for
+> channel 0 and channel 1 (mainly for eMMC). This binding property
+> requires to add a quirk
+> to bypass SMU as it is not being used yet.
 
-My bad, I have not seen this variable is used in another functions too.
->
->> -        dev_err(pcs->dev, "could not get mem_region\n");
->> -        return -EBUSY;
->> -    }
->> -
->> -    pcs->size = resource_size(pcs->res);
->
->    Is pcs->size used anywhere else?
-My bad, I have not seen this variable is used in another functions too.
->
->> -    pcs->base = devm_ioremap(pcs->dev, pcs->res->start, pcs->size);
->> -    if (!pcs->base) {
->> -        dev_err(pcs->dev, "could not ioremap\n");
->> -        return -ENODEV;
->> -    }
->> +    pcs->base = devm_ioremap_resource(pcs->dev, res);
->> +    if (IS_ERR(pcs->base))
->> +        return PTR_ERR(pcs->base);
->
-I will go through code again and update it accordingly.
->
-Regards
-Manish Badarkhe
+This looks like a configuration property, not hardware description to me 
+then. If presence of SMU depends on particular channel, then either the 
+property should be "snps,has-smu" or something like this, to indicate that 
+particular channel supports it and it's up to the driver how to handle this 
+feature.
+
+> > Is the SMU broken or not present in some hardware revisions?
+> 
+> SMU is only present in channel 0 and channel 1,but not in channel 2.So
+> to distinguish this,
+> bypass-smu property has been added as quirks in the channel.
+
+Also a good question is what you mean with "channel". Is it the whole mshc 
+entity having compatible property or its subnodes aka slots?
+
+If it's the former and channel 2 does not have SMU, making it compatible 
+with "samsung,exynos5250-dw-mshc", then it should be marked as such. In 
+this case the ideal solution would be to determine the SMU quirk only by 
+compatible value.
+
+Best regards,
+Tomasz
