@@ -1,309 +1,69 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [RFC PATCH 2/3] pinctrl: at91: add support for generic pinconf
-Date: Tue, 27 Aug 2013 09:51:39 +0200
-Message-ID: <521C5A8B.2030607@atmel.com>
-References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com> <1377380259-11290-1-git-send-email-b.brezillon@overkiz.com> <20130826175333.GF18627@ns203013.ovh.net> <521BA235.1090104@overkiz.com> <20130826191843.GG18627@ns203013.ovh.net>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2] gpio: Enable pcf857x GPIO expander for Device Tree
+Date: Tue, 27 Aug 2013 09:58:05 +0200
+Message-ID: <1469857.rVNB2R9T3s@avalon>
+References: <1370527523-1030-1-git-send-email-archit@ti.com> <7142087.DRSP8TfuKN@avalon> <521C4E82.9040309@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130826191843.GG18627@ns203013.ovh.net>
+In-Reply-To: <521C4E82.9040309@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: boris brezillon <b.brezillon@overkiz.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Archit Taneja <archit@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26/08/2013 21:18, Jean-Christophe PLAGNIOL-VILLARD :
-> On 20:45 Mon 26 Aug     , boris brezillon wrote:
->> Hello Jean-Christophe,
->>
->> Le 26/08/2013 19:53, Jean-Christophe PLAGNIOL-VILLARD a =E9crit :
->>> On 23:37 Sat 24 Aug     , Boris BREZILLON wrote:
->>>> Add support for generic pin configuration to pinctrl-at91 driver.
->>>>
->>>> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
->>>> ---
->>>>   .../bindings/pinctrl/atmel,at91-pinctrl.txt        |   43 +++-
->>>>   drivers/pinctrl/Kconfig                            |    2 +-
->>>>   drivers/pinctrl/pinctrl-at91.c                     |  265 ++++++=
-++++++++++++--
->>>>   3 files changed, 289 insertions(+), 21 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-=
-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinc=
-trl.txt
->>>> index 7ccae49..7a7c0c4 100644
->>>> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl=
-=2Etxt
->>>> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl=
-=2Etxt
->>>> @@ -18,7 +18,9 @@ mode) this pin can work on and the 'config' conf=
-igures various pad settings
->>>>   such as pull-up, multi drive, etc.
->>>>   Required properties for iomux controller:
->>>> -- compatible: "atmel,at91rm9200-pinctrl"
->>>> +- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pin=
-ctrl".
->>>> +  Add "generic-pinconf" to the compatible string list to use the =
-generic pin
->>>> +  configuration syntax.
->>>>   - atmel,mux-mask: array of mask (periph per bank) to describe if=
- a pin can be
->>>>     configured in this periph mode. All the periph and bank need t=
-o be describe.
->>>> @@ -83,6 +85,11 @@ Required properties for pin configuration node:
->>>>     setting. The format is atmel,pins =3D <PIN_BANK PIN_BANK_NUM P=
-ERIPH CONFIG>.
->>>>     The PERIPH 0 means gpio, PERIPH 1 is periph A, PERIPH 2 is per=
-iph B...
->>>>     PIN_BANK 0 is pioA, PIN_BANK 1 is pioB...
->>>> +  Dependending on the presence of the "generic-pinconf" string in=
- the
->>>> +  compatible property the 4th cell is:
->>>> +   * a phandle referencing a generic pin config node (refer to
->>>> +     pinctrl-bindings.txt)
->>>> +   * an integer defining the pin config (see the following descri=
-ption)
->>>>   Bits used for CONFIG:
->>>>   PULL_UP		(1 << 0): indicate this pin need a pull up.
->>>> @@ -132,6 +139,40 @@ pinctrl@fffff400 {
->>>>   	};
->>>>   };
->>>> +or
->>>> +
->>>> +pinctrl@fffff400 {
->>>> +	#address-cells =3D <1>;
->>>> +	#size-cells =3D <1>;
->>>> +	ranges;
->>>> +	compatible =3D "atmel,at91rm9200-pinctrl", "generic-pinconf", "s=
-imple-bus";
->>> nack your break the backword compatibility
->>>
->>> if we use a old kernel with this new dt nothing will work
->>> as the old kernel will never known the the "generic-pinconf" means =
-anything
->>
->> Your're right, I didn't think of this case (old kernel with new dt).
->>
->>> if we want to use generic-pinconf support you *CAN NOT* use atmel,a=
-t91rm9200-pinctrl
+Hi Archit,
 
-One.
-I did not spot.
-
->>> in the compatible
->>
->> What about using "atmel,at91xx-pinconf" instead of
->> "atmel,at91xx-pinctrl" to notify
->> the generic pinconf compatibility (as done by single pinctrl driver)=
- ?
-> no as the rm9200 IP and sam9x5 IP are only partially compatible
-> you MUST distinguish them
-
-Two? WTF!
-
-Jean-Christophe, YOU MUST NOT SCREAM in emails, okay?!
-
-
->>>> +	reg =3D <0xfffff400 0x600>;
->>>> +
->>>> +	atmel,mux-mask =3D <
->>>> +	      /*    A         B     */
->>>> +	       0xffffffff 0xffc00c3b  /* pioA */
->>>> +	       0xffffffff 0x7fff3ccf  /* pioB */
->>>> +	       0xffffffff 0x007fffff  /* pioC */
->>>> +	      >;
->>>> +
->>>> +	pcfg_none: pcfg_none {
->>>> +		bias-disable;
->>>> +	};
->>>> +
->>>> +	pcfg_pull_up: pcfg_pull_up {
->>>> +		bias-pullup;
->>>> +	};
->>>> +
->>>> +	/* shared pinctrl settings */
->>>> +	dbgu {
->>>> +		pinctrl_dbgu: dbgu-0 {
->>>> +			atmel,pins =3D
->>>> +				<1 14 0x1 &pcfg_none		/* PB14 periph A */
->>>> +				 1 15 0x1 &pcfg_pull_up>;	/* PB15 periph A with pullup */
->>>> +		};
->>>> +	};
->>>> +};
->>>> +
->>>>   dbgu: serial@fffff200 {
->>>>   	compatible =3D "atmel,at91sam9260-usart";
->>>>   	reg =3D <0xfffff200 0x200>;
->>>> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
->>>> index bdb1a87..55a4f2c 100644
->>>> --- a/drivers/pinctrl/Kconfig
->>>> +++ b/drivers/pinctrl/Kconfig
->>>> @@ -54,7 +54,7 @@ config PINCTRL_AT91
->>>>   	depends on OF
->>>>   	depends on ARCH_AT91
->>>>   	select PINMUX
->>>> -	select PINCONF
->>>> +	select GENERIC_PINCONF
->>>>   	help
->>>>   	  Say Y here to enable the at91 pinctrl driver
->>>> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinc=
-trl-at91.c
->>>> index 7cce066..1994dd2 100644
->>>> --- a/drivers/pinctrl/pinctrl-at91.c
->>>> +++ b/drivers/pinctrl/pinctrl-at91.c
->>>> @@ -23,6 +23,7 @@
->>>>   #include <linux/gpio.h>
->>>>   #include <linux/pinctrl/machine.h>
->>>>   #include <linux/pinctrl/pinconf.h>
->>>> +#include <linux/pinctrl/pinconf-generic.h>
->>>>   #include <linux/pinctrl/pinctrl.h>
->>>>   #include <linux/pinctrl/pinmux.h>
->>>>   /* Since we request GPIOs from ourself */
->>>> @@ -32,6 +33,7 @@
->>>>   #include <mach/at91_pio.h>
->>>>   #include "core.h"
->>>> +#include "pinconf.h"
->>>>   #define MAX_NB_GPIO_PER_BANK	32
->>>> @@ -85,6 +87,21 @@ enum at91_mux {
->>>>   	AT91_MUX_PERIPH_D =3D 4,
->>>>   };
->>>> +struct at91_generic_pinconf {
->>>> +	unsigned long	*configs;
->>>> +	unsigned int	nconfigs;
->>>> +};
->>>> +
->>>> +enum at91_pinconf_type {
->>>> +	AT91_PINCONF_NATIVE,
->>>> +	AT91_PINCONF_GENERIC,
->>>> +};
->>>> +
->>>> +union at91_pinconf {
->>>> +	unsigned long			native;
->>>> +	struct at91_generic_pinconf	generic;
->>>> +};
->>>> +
->>>>   /**
->>>>    * struct at91_pmx_pin - describes an At91 pin mux
->>>>    * @bank: the bank of the pin
->>>> @@ -93,10 +110,11 @@ enum at91_mux {
->>>>    * @conf: the configuration of the pin: PULL_UP, MULTIDRIVE etc.=
-=2E.
->>>>    */
->>>>   struct at91_pmx_pin {
->>>> -	uint32_t	bank;
->>>> -	uint32_t	pin;
->>>> -	enum at91_mux	mux;
->>>> -	unsigned long	conf;
->>>> +	uint32_t		bank;
->>>> +	uint32_t		pin;
->>>> +	enum at91_mux		mux;
->>>> +	enum at91_pinconf_type	conftype;
->>>> +	union at91_pinconf	conf;
->>>>   };
->>>>   /**
->>>> @@ -278,8 +296,16 @@ static int at91_dt_node_to_map(struct pinctrl=
-_dev *pctldev,
->>>>   		new_map[i].type =3D PIN_MAP_TYPE_CONFIGS_PIN;
->>>>   		new_map[i].data.configs.group_or_pin =3D
->>>>   				pin_get_name(pctldev, grp->pins[i]);
->>>> -		new_map[i].data.configs.configs =3D &grp->pins_conf[i].conf;
->>>> -		new_map[i].data.configs.num_configs =3D 1;
->>>> +		if (!pctldev->desc->confops->is_generic) {
->>>> +			new_map[i].data.configs.configs =3D
->>>> +				&grp->pins_conf[i].conf.native;
->>>> +			new_map[i].data.configs.num_configs =3D 1;
->>>> +		} else {
->>>> +			new_map[i].data.configs.configs =3D
->>>> +				grp->pins_conf[i].conf.generic.configs;
->>>> +			new_map[i].data.configs.num_configs =3D
->>>> +				grp->pins_conf[i].conf.generic.nconfigs;
->>>> +		}
->>>>   	}
->>>>   	dev_dbg(pctldev->dev, "maps: function %s group %s num %d\n",
->>>> @@ -325,7 +351,7 @@ static void at91_mux_disable_interrupt(void __=
-iomem *pio, unsigned mask)
->>>>   static unsigned at91_mux_get_pullup(void __iomem *pio, unsigned =
-pin)
->>>>   {
->>>> -	return (readl_relaxed(pio + PIO_PUSR) >> pin) & 0x1;
->>>> +	return !((readl_relaxed(pio + PIO_PUSR) >> pin) & 0x1);
->>>>   }
->>>>   static void at91_mux_set_pullup(void __iomem *pio, unsigned mask=
-, bool on)
->>>> @@ -407,6 +433,16 @@ static enum at91_mux at91_mux_get_periph(void=
- __iomem *pio, unsigned mask)
->>>>   	return select + 1;
->>>>   }
->>>> +static bool at91_mux_get_output(void __iomem *pio, unsigned pin)
->>>> +{
->>>> +	return (readl_relaxed(pio + PIO_OSR) >> pin) & 0x1;
->>>> +}
->>>> +
->>>> +static void at91_mux_set_output(void __iomem *pio, unsigned mask,=
- bool is_on)
->>>> +{
->>>> +	__raw_writel(mask, pio + (is_on ? PIO_OER : PIO_ODR));
->>>> +}
->>>> +
->>>>   static bool at91_mux_get_deglitch(void __iomem *pio, unsigned pi=
-n)
->>>>   {
->>>>   	return (__raw_readl(pio + PIO_IFSR) >> pin) & 0x1;
->>>> @@ -445,7 +481,7 @@ static void at91_mux_pio3_set_debounce(void __=
-iomem *pio, unsigned mask,
->>>>   static bool at91_mux_pio3_get_pulldown(void __iomem *pio, unsign=
-ed pin)
->>>>   {
->>>> -	return (__raw_readl(pio + PIO_PPDSR) >> pin) & 0x1;
->>>> +	return !((__raw_readl(pio + PIO_PPDSR) >> pin) & 0x1);
->>>>   }
->>>>   static void at91_mux_pio3_set_pulldown(void __iomem *pio, unsign=
-ed mask, bool is_on)
->>>> @@ -492,12 +528,17 @@ static struct at91_pinctrl_mux_ops at91sam9x=
-5_ops =3D {
->>>>   static void at91_pin_dbg(const struct device *dev, const struct =
-at91_pmx_pin *pin)
->>>>   {
->>>>   	if (pin->mux) {
->>>> -		dev_dbg(dev, "pio%c%d configured as periph%c with conf =3D 0x%l=
-u\n",
->>>> -			pin->bank + 'A', pin->pin, pin->mux - 1 + 'A', pin->conf);
->>>> +		dev_dbg(dev, "pio%c%d configured as periph%c",
->>>> +			pin->bank + 'A', pin->pin, pin->mux - 1 + 'A');
->>>>   	} else {
->>>> -		dev_dbg(dev, "pio%c%d configured as gpio with conf =3D 0x%lu\n"=
-,
->>>> -			pin->bank + 'A', pin->pin, pin->conf);
->>>> +		dev_dbg(dev, "pio%c%d configured as gpio",
->>>> +			pin->bank + 'A', pin->pin);
->>>>   	}
->>>> +
->>>> +	if (pin->conftype =3D=3D AT91_PINCONF_NATIVE)
->>>> +		dev_dbg(dev, " with conf =3D 0x%lu\n", pin->conf.native);
->>>> +	else
->>>> +		dev_dbg(dev, "\n");
->>> do not change debug output
->>
->> I do not change the debug output for the native pinconf binding, but
->> I cannot print the config as
->> a single interger in hex format if the generic pinconf is used.
->> I must translate each config entry to a "property=3Dvalue" string, o=
-r
->> translate the generic config
->> array to a single native config integer.
->>
->> Do you have something easier in mind ?
+On Tuesday 27 August 2013 12:30:18 Archit Taneja wrote:
+> On Tuesday 27 August 2013 12:17 PM, Laurent Pinchart wrote:
+> > On Tuesday 27 August 2013 05:20:45 Linus Walleij wrote:
+> >> On Mon, Aug 26, 2013 at 8:21 AM, Archit Taneja <archit@ti.com> wrote:
+> >>> Add code to parse the GPIO expander Device Tree node and extract
+> >>> platform
+> >>> data out of it, and populate the struct 'pcf857x_platform_data'
+> >>> maintained by the driver. This enables devices to reference the gpio
+> >>> expander from Device Tree.
+> >>> 
+> >>> Add DT binding info in Documentation.
+> >>> 
+> >>> Signed-off-by: Archit Taneja <archit@ti.com>
+> >>> ---
+> >>> - v2 posted after quite a while, sorry for the delay!
+> >>> 
+> >>> Changes in v2:
+> >>> - second gpeio-cell description corrected in Documentation
+> >>> - interrupt controller description removed for now, will be added in a
+> >>> 
+> >>>    follow up patch
+> >>> 
+> >>> - n_latch description updated
+> > 
+> > And it seems that the patch conflicts with
+> > 
+> > https://lkml.org/lkml/2013/8/26/248
+> > 
+> > :-/
 >
-> no but I do not want to brake current automatic test tools
+> :/
 >
-> propose something with this in mind
->
-> Best Regards,
-> J.
->
+> > If we end up merging this one, I'd like to at least rename the DT n-latch
+> > property to pin-initial-states as in my patch and update the
+> > documentation, as I find it more explicit.
+> 
+> I think your patch is cleaner and more descriptive.
 
+Thank you.
 
---=20
-Nicolas Ferre
+> The only thing which I am not clear about in your patch is the extra work
+> done in getting ngpio, that should be available in i2c_device_id pointer
+> argument in probe(id points to the array pcf857x_id already available in the
+> driver with the number of gpios for each chip variant).
+
+You're right. I'll fix that and repost.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
