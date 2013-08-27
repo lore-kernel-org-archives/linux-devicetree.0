@@ -1,31 +1,43 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch] ab8500-charger: we print an unintended error message
-Date: Tue, 27 Aug 2013 04:19:42 +0300
-Message-ID: <20130827011942.GD17061@elgon.mountain>
+From: Nicolin Chen <b42378@freescale.com>
+Subject: Re: [PATCH v11] ASoC: fsl: Add S/PDIF machine driver
+Date: Tue, 27 Aug 2013 10:01:08 +0800
+Message-ID: <20130827020107.GB3758@MrMyself>
+References: <fac39ed91818630e03f81a5f0cf9ddde0e6a3c3a.1377244995.git.b42378@freescale.com>
+ <5217B32C.5070300@wwwdotorg.org>
+ <20130823191353.GK25263@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <kernel-janitors-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Anton Vorontsov <anton@enomsg.org>
-Cc: David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <20130823191353.GK25263@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, Stephen Warren <swarren@wwwdotorg.org>, s.hauer@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, p.zabel@pengutronix.de, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-There is a missing break statement here, so we print an error message
-that the USB type is invalid.  The original code still works fine
-though except for the error message.
+On Fri, Aug 23, 2013 at 08:13:53PM +0100, Mark Brown wrote:
+> On Fri, Aug 23, 2013 at 01:08:28PM -0600, Stephen Warren wrote:
+> > On 08/23/2013 02:04 AM, Nicolin Chen wrote:
+> > > This patch implements a device-tree-only machine driver for Freescale
+> > > i.MX series Soc. It works with spdif_transmitter/spdif_receiver and
+> > > fsl_spdif.c drivers.
+> 
+> > The binding looks reasonable to me now. Thanks.
+> 
+> Is that a Reviewed-by?
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Sir,
+I think this patch hasn't been applied yet, already been acked though.
+Is there any problem in it?
 
-diff --git a/drivers/power/ab8500_charger.c b/drivers/power/ab8500_charger.c
-index f098fda..a4c4a10 100644
---- a/drivers/power/ab8500_charger.c
-+++ b/drivers/power/ab8500_charger.c
-@@ -774,6 +774,7 @@ static int ab8500_charger_max_usb_curr(struct ab8500_charger *di,
- 		di->max_usb_in_curr.usb_type_max = USB_CH_IP_CUR_LVL_0P5;
- 		dev_dbg(di->dev, "USB Type - 0x%02x MaxCurr: %d", link_status,
- 				di->max_usb_in_curr.usb_type_max);
-+		break;
- 	case USB_STAT_NOT_VALID_LINK:
- 		dev_err(di->dev, "USB Type invalid - try charging anyway\n");
- 		di->max_usb_in_curr.usb_type_max = USB_CH_IP_CUR_LVL_0P5;
+Thank you.
+Nicolin
