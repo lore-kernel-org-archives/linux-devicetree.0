@@ -1,56 +1,28 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V4] gpio: New driver for LSI ZEVIO SoCs
-Date: Tue, 27 Aug 2013 14:11:14 -0600
-Message-ID: <521D07E2.80209@wwwdotorg.org>
-References: <1377460180-6192-1-git-send-email-fabian@ritter-vogt.de> <20130827144043.GN19893@e106331-lin.cambridge.arm.com>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 27 Aug 2013 14:17:40 -0600
+Message-ID: <521D0964.2080209@wwwdotorg.org>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130827144043.GN19893@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Fabian Vogt <fabian@ritter-vogt.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Pawel Moll <Pawel.Moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lars Poeschel <larsi@wh2.tu-dresden.de>
+Cc: poeschel@lemonage.de, grant.likely@linaro.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, ian.campbell@citrix.com, galak@codeaurora.org, pawel.moll@arm.com, tomasz.figa@gmail.com, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2013 08:40 AM, Mark Rutland wrote:
-> On Sun, Aug 25, 2013 at 08:49:40PM +0100, Fabian Vogt wrote:
->> This driver supports the GPIO controller found in LSI ZEVIO SoCs.
->> It has been successfully tested on a TI nspire CX calculator.
->> ---
->>  .../devicetree/bindings/gpio/gpio-zevio.txt        |  18 ++
->>  drivers/gpio/Kconfig                               |   6 +
->>  drivers/gpio/Makefile                              |   1 +
->>  drivers/gpio/gpio-zevio.c                          | 214 +++++++++++++++++++++
->>  4 files changed, 239 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-zevio.txt
->>  create mode 100644 drivers/gpio/gpio-zevio.c
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-zevio.txt b/Documentation/devicetree/bindings/gpio/gpio-zevio.txt
->> new file mode 100644
->> index 0000000..892f953
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-zevio.txt
->> @@ -0,0 +1,18 @@
->> +Zevio GPIO controller
->> +
->> +Required properties:
->> +- compatible = "lsi,zevio-gpio"
->> +- reg = <BASEADDR SIZE>
->> +- #gpio-cells = <2>
->> +- gpio-controller;
+On 08/26/2013 08:07 AM, Lars Poeschel wrote:
+> From: Linus Walleij <linus.walleij@linaro.org>
 > 
-> I take it there's nothing else known about at present that we might want
-> to describe in future (e.g. input clocks)?
-> 
-> This is more for the other dt maintainers, but I've seen a lot of
-> variation in how we describe properties, and it would be nice to unify
-> that. Does anyone fancy writing a document pushing for some standard
-> terminology and formatting, or should I?
+> Currently the kernel is ambigously treating GPIOs and interrupts
+> from a GPIO controller: GPIOs and interrupts are treated as
+> orthogonal. This unfortunately makes it unclear how to actually
+> retrieve and request a GPIO line or interrupt from a GPIO
+> controller in the device tree probe path.
 
-I was hoping that the DT schema system would tighten this up, since
-there would be specific syntax in the schema to describe all these options.
-
-I was thinking of writing a DT binding review checklist, but so far
-haven't made time to do so. It'd probably be reasonable to include any
-specific wording requirements for property descriptions in that document.
+I still think that this patch is the wrong approach. Instead, the logic
+should be hooked into gpio_request() and request_irq(). This patch only
+addresses DT, and ignores anything else, hence doesn't seem like the
+right level of abstraction to plug in, since the issue is not related to DT.
