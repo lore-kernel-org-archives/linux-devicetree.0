@@ -1,146 +1,200 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v8 1/3] DMA: Freescale: revise device tree binding
- document
-Date: Tue, 27 Aug 2013 12:25:09 +0100
-Message-ID: <20130827112509.GH19893@e106331-lin.cambridge.arm.com>
-References: <1377600123-5746-1-git-send-email-hongbo.zhang@freescale.com>
- <1377600123-5746-2-git-send-email-hongbo.zhang@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1377600123-5746-2-git-send-email-hongbo.zhang@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "hongbo.zhang@freescale.com" <hongbo.zhang@freescale.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 2/6] iio: at91: introduce the multiple compatible string for different IPs.
+Date: Tue, 27 Aug 2013 19:28:48 +0800
+Message-ID: <1377602932-1899-3-git-send-email-josh.wu@atmel.com>
+References: <1377602932-1899-1-git-send-email-josh.wu@atmel.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1377602932-1899-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 27, 2013 at 11:42:01AM +0100, hongbo.zhang@freescale.com wrote:
-> From: Hongbo Zhang <hongbo.zhang@freescale.com>
-> 
-> This patch updates the discription of each type of DMA controller and its
-> channels, it is preparation for adding another new DMA controller binding, it
-> also fixes some defects of indent for text alignment at the same time.
-> 
-> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
-> ---
->  .../devicetree/bindings/powerpc/fsl/dma.txt        |   62 +++++++++-----------
->  1 file changed, 27 insertions(+), 35 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> index 2a4b4bc..ddf17af 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> @@ -1,33 +1,29 @@
-> -* Freescale 83xx DMA Controller
-> +* Freescale DMA Controllers
->  
-> -Freescale PowerPC 83xx have on chip general purpose DMA controllers.
-> +** Freescale Elo DMA Controller
-> +   This is a little-endian DMA controller, used in Freescale mpc83xx series
-> +   chips such as mpc8315, mpc8349, mpc8379 etc.
->  
->  Required properties:
->  
-> -- compatible        : compatible list, contains 2 entries, first is
-> -		 "fsl,CHIP-dma", where CHIP is the processor
-> -		 (mpc8349, mpc8360, etc.) and the second is
-> -		 "fsl,elo-dma"
-> -- reg               : <registers mapping for DMA general status reg>
-> -- ranges		: Should be defined as specified in 1) to describe the
-> -		  DMA controller channels.
-> +- compatible        : must include "fsl,elo-dma"
+As use the multiple compatible string, we can remove hardware register in dt.
 
-We should list the other values that may be in the list also, unless
-they are really of no consequence, in which case their presence in dt is
-questionable.
+CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/arm/atmel-adc.txt          |    7 +-
+ arch/arm/mach-at91/include/mach/at91_adc.h         |    9 +++
+ drivers/iio/adc/at91_adc.c                         |   79 ++++++++++----------
+ 3 files changed, 52 insertions(+), 43 deletions(-)
 
-> +- reg               : <registers specifier for DMA general status reg>
-> +- ranges            : describes the mapping between the address space of the
-> +                      DMA channels and the address space of the DMA controller
->  - cell-index        : controller index.  0 for controller @ 0x8100
-> -- interrupts        : <interrupt mapping for DMA IRQ>
-> +- interrupts        : <interrupt specifier for DMA IRQ>
->  - interrupt-parent  : optional, if needed for interrupt mapping
->  
-> -
->  - DMA channel nodes:
-> -        - compatible        : compatible list, contains 2 entries, first is
-> -			 "fsl,CHIP-dma-channel", where CHIP is the processor
-> -			 (mpc8349, mpc8350, etc.) and the second is
-> -			 "fsl,elo-dma-channel". However, see note below.
-> -        - reg               : <registers mapping for channel>
-> +        - compatible        : must include "fsl,elo-dma-channel"
-> +                              However, see note below.
-
-Again, I think we should list the other entries that may be in the list.
-Otherwise it's not clear what the binding defines. Similarly for the
-other compatible list definitions below...
-
-> +        - reg               : <registers specifier for channel>
->          - cell-index        : dma channel index starts at 0.
-
-I realise you haven't changed it, but it's unclear what the cell-index
-property is (and somewhat confusingly there seem to be multiple
-defnitions). It might be worth clarifying it while performing the other
-cleanup.
-
->  
->  Optional properties:
-> -        - interrupts        : <interrupt mapping for DMA channel IRQ>
-> -			  (on 83xx this is expected to be identical to
-> -			   the interrupts property of the parent node)
-> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
-> +                              (on 83xx this is expected to be identical to
-> +                              the interrupts property of the parent node)
->          - interrupt-parent  : optional, if needed for interrupt mapping
->  
->  Example:
-> @@ -70,30 +66,26 @@ Example:
->  		};
->  	};
->  
-> -* Freescale 85xx/86xx DMA Controller
-> -
-> -Freescale PowerPC 85xx/86xx have on chip general purpose DMA controllers.
-> +** Freescale EloPlus DMA Controller
-> +   This is DMA controller with extended addresses and chaining, mainly used in
-> +   Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as mpc8540, mpc8641
-> +   p4080, bsc9131 etc.
->  
->  Required properties:
->  
-> -- compatible        : compatible list, contains 2 entries, first is
-> -		 "fsl,CHIP-dma", where CHIP is the processor
-> -		 (mpc8540, mpc8540, etc.) and the second is
-> -		 "fsl,eloplus-dma"
-> -- reg               : <registers mapping for DMA general status reg>
-> +- compatible        : must include "fsl,eloplus-dma"
-> +- reg               : <registers specifier for DMA general status reg>
->  - cell-index        : controller index.  0 for controller @ 0x21000,
->                                           1 for controller @ 0xc000
-> -- ranges		: Should be defined as specified in 1) to describe the
-> -		  DMA controller channels.
-> +- ranges            : describes the mapping between the address space of the
-> +                      DMA channels and the address space of the DMA controller
->  
->  - DMA channel nodes:
-> -        - compatible        : compatible list, contains 2 entries, first is
-> -			 "fsl,CHIP-dma-channel", where CHIP is the processor
-> -			 (mpc8540, mpc8560, etc.) and the second is
-> -			 "fsl,eloplus-dma-channel". However, see note below.
-> +        - compatible        : must include "fsl,eloplus-dma-channel"
-> +                              However, see note below.
->          - cell-index        : dma channel index starts at 0.
-> -        - reg               : <registers mapping for channel>
-> -        - interrupts        : <interrupt mapping for DMA channel IRQ>
-> +        - reg               : <registers specifier for channel>
-> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
->          - interrupt-parent  : optional, if needed for interrupt mapping
->  
->  Example:
-> -- 
-> 1.7.9.5
-
-Thanks,
-Mark.
+diff --git a/Documentation/devicetree/bindings/arm/atmel-adc.txt b/Documentation/devicetree/bindings/arm/atmel-adc.txt
+index 16769d9..723c205 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-adc.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-adc.txt
+@@ -1,18 +1,15 @@
+ * AT91's Analog to Digital Converter (ADC)
+ 
+ Required properties:
+-  - compatible: Should be "atmel,at91sam9260-adc"
++  - compatible: Should be "atmel,<chip>-adc"
++    <chip> can be "at91sam9260", "at91sam9g45" or "at91sam9x5"
+   - reg: Should contain ADC registers location and length
+   - interrupts: Should contain the IRQ line for the ADC
+-  - atmel,adc-channel-base: Offset of the first channel data register
+   - atmel,adc-channels-used: Bitmask of the channels muxed and enable for this
+     device
+-  - atmel,adc-drdy-mask: Mask of the DRDY interruption in the ADC
+   - atmel,adc-num-channels: Number of channels available in the ADC
+   - atmel,adc-startup-time: Startup Time of the ADC in microseconds as
+     defined in the datasheet
+-  - atmel,adc-status-register: Offset of the Interrupt Status Register
+-  - atmel,adc-trigger-register: Offset of the Trigger Register
+   - atmel,adc-vref: Reference voltage in millivolts for the conversions
+   - atmel,adc-res: List of resolution in bits supported by the ADC. List size
+ 		   must be two at least.
+diff --git a/arch/arm/mach-at91/include/mach/at91_adc.h b/arch/arm/mach-at91/include/mach/at91_adc.h
+index 8e7ed5c..bea1a20 100644
+--- a/arch/arm/mach-at91/include/mach/at91_adc.h
++++ b/arch/arm/mach-at91/include/mach/at91_adc.h
+@@ -48,6 +48,9 @@
+ #define		AT91_ADC_ENDRX		(1 << 18)	/* End of RX Buffer */
+ #define		AT91_ADC_RXFUFF		(1 << 19)	/* RX Buffer Full */
+ 
++#define AT91_ADC_SR_9X5		0x30		/* Status Register for 9x5 */
++#define		AT91_ADC_SR_DRDY_9X5	(1 << 24)	/* Data Ready */
++
+ #define AT91_ADC_LCDR		0x20		/* Last Converted Data Register */
+ #define		AT91_ADC_LDATA		(0x3ff)
+ 
+@@ -58,4 +61,10 @@
+ #define AT91_ADC_CHR(n)		(0x30 + ((n) * 4))	/* Channel Data Register N */
+ #define		AT91_ADC_DATA		(0x3ff)
+ 
++#define AT91_ADC_CDR0_9X5	(0x50)			/* Channel Data Register 0 for 9X5 */
++
++#define AT91_ADC_TRGR_9260	AT91_ADC_MR
++#define AT91_ADC_TRGR_9G45	0x08
++#define AT91_ADC_TRGR_9X5	0xC0
++
+ #endif
+diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
+index 9cf8ab5..49dd751 100644
+--- a/drivers/iio/adc/at91_adc.c
++++ b/drivers/iio/adc/at91_adc.c
+@@ -39,6 +39,10 @@
+ #define at91_adc_writel(st, reg, val) \
+ 	(writel_relaxed(val, st->reg_base + reg))
+ 
++struct at91_adc_caps {
++	struct at91_adc_reg_desc registers;
++};
++
+ struct at91_adc_state {
+ 	struct clk		*adc_clk;
+ 	u16			*buffer;
+@@ -62,6 +66,7 @@ struct at91_adc_state {
+ 	u32			res;		/* resolution used for convertions */
+ 	bool			low_res;	/* the resolution corresponds to the lowest one */
+ 	wait_queue_head_t	wq_data_avail;
++	struct at91_adc_caps	*caps;
+ };
+ 
+ static irqreturn_t at91_adc_trigger_handler(int irq, void *p)
+@@ -429,6 +434,8 @@ ret:
+ 	return ret;
+ }
+ 
++static const struct of_device_id at91_adc_dt_ids[];
++
+ static int at91_adc_probe_dt(struct at91_adc_state *st,
+ 			     struct platform_device *pdev)
+ {
+@@ -441,6 +448,9 @@ static int at91_adc_probe_dt(struct at91_adc_state *st,
+ 	if (!node)
+ 		return -EINVAL;
+ 
++	st->caps = (struct at91_adc_caps *)
++		of_match_device(at91_adc_dt_ids, &pdev->dev)->data;
++
+ 	st->use_external = of_property_read_bool(node, "atmel,adc-use-external-triggers");
+ 
+ 	if (of_property_read_u32(node, "atmel,adc-channels-used", &prop)) {
+@@ -481,43 +491,7 @@ static int at91_adc_probe_dt(struct at91_adc_state *st,
+ 	if (ret)
+ 		goto error_ret;
+ 
+-	st->registers = devm_kzalloc(&idev->dev,
+-				     sizeof(struct at91_adc_reg_desc),
+-				     GFP_KERNEL);
+-	if (!st->registers) {
+-		dev_err(&idev->dev, "Could not allocate register memory.\n");
+-		ret = -ENOMEM;
+-		goto error_ret;
+-	}
+-
+-	if (of_property_read_u32(node, "atmel,adc-channel-base", &prop)) {
+-		dev_err(&idev->dev, "Missing adc-channel-base property in the DT.\n");
+-		ret = -EINVAL;
+-		goto error_ret;
+-	}
+-	st->registers->channel_base = prop;
+-
+-	if (of_property_read_u32(node, "atmel,adc-drdy-mask", &prop)) {
+-		dev_err(&idev->dev, "Missing adc-drdy-mask property in the DT.\n");
+-		ret = -EINVAL;
+-		goto error_ret;
+-	}
+-	st->registers->drdy_mask = prop;
+-
+-	if (of_property_read_u32(node, "atmel,adc-status-register", &prop)) {
+-		dev_err(&idev->dev, "Missing adc-status-register property in the DT.\n");
+-		ret = -EINVAL;
+-		goto error_ret;
+-	}
+-	st->registers->status_register = prop;
+-
+-	if (of_property_read_u32(node, "atmel,adc-trigger-register", &prop)) {
+-		dev_err(&idev->dev, "Missing adc-trigger-register property in the DT.\n");
+-		ret = -EINVAL;
+-		goto error_ret;
+-	}
+-	st->registers->trigger_register = prop;
+-
++	st->registers = &st->caps->registers;
+ 	st->trigger_number = of_get_child_count(node);
+ 	st->trigger_list = devm_kzalloc(&idev->dev, st->trigger_number *
+ 					sizeof(struct at91_adc_trigger),
+@@ -776,8 +750,37 @@ static int at91_adc_remove(struct platform_device *pdev)
+ }
+ 
+ #ifdef CONFIG_OF
++static struct at91_adc_caps at91sam9260_caps = {
++	.registers = {
++		.channel_base = AT91_ADC_CHR(0),
++		.drdy_mask = AT91_ADC_DRDY,
++		.status_register = AT91_ADC_SR,
++		.trigger_register = AT91_ADC_TRGR_9260,
++	},
++};
++
++static struct at91_adc_caps at91sam9g45_caps = {
++	.registers = {
++		.channel_base = AT91_ADC_CHR(0),
++		.drdy_mask = AT91_ADC_DRDY,
++		.status_register = AT91_ADC_SR,
++		.trigger_register = AT91_ADC_TRGR_9G45,
++	},
++};
++
++static struct at91_adc_caps at91sam9x5_caps = {
++	.registers = {
++		.channel_base = AT91_ADC_CDR0_9X5,
++		.drdy_mask = AT91_ADC_SR_DRDY_9X5,
++		.status_register = AT91_ADC_SR_9X5,
++		.trigger_register = AT91_ADC_TRGR_9X5,
++	},
++};
++
+ static const struct of_device_id at91_adc_dt_ids[] = {
+-	{ .compatible = "atmel,at91sam9260-adc" },
++	{ .compatible = "atmel,at91sam9260-adc", .data = &at91sam9260_caps },
++	{ .compatible = "atmel,at91sam9g45-adc", .data = &at91sam9g45_caps },
++	{ .compatible = "atmel,at91sam9x5-adc", .data = &at91sam9x5_caps },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, at91_adc_dt_ids);
+-- 
+1.7.10
