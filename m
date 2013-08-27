@@ -1,105 +1,97 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH 2/2] spi: dual and quad support(device tree)
-Date: Tue, 27 Aug 2013 06:31:57 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9FAF78@DBDE04.ent.ti.com>
-References: <1377496080-14356-1-git-send-email-wangyuhang2014@gmail.com>
- <1377496080-14356-2-git-send-email-wangyuhang2014@gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73E9FA932@DBDE04.ent.ti.com>
- <CAHSAbzN9GFX++gkZwxny4qpRPpEkPgjqAPJBNU+h+SNymNdGFA@mail.gmail.com>
+From: boris brezillon <b.brezillon@overkiz.com>
+Subject: Re: [RFC PATCH 2/3] pinctrl: at91: add support for generic pinconf
+Date: Tue, 27 Aug 2013 08:40:47 +0200
+Message-ID: <521C49EF.5020403@overkiz.com>
+References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com> <1377380259-11290-1-git-send-email-b.brezillon@overkiz.com> <521B8822.50304@wwwdotorg.org> <521B8D9B.5020809@overkiz.com> <521C23AF.2060309@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CAHSAbzN9GFX++gkZwxny4qpRPpEkPgjqAPJBNU+h+SNymNdGFA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: yuhang wang <wangyuhang2014@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar,
- Sourav" <sourav.poddar@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <521C23AF.2060309@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> 
-> Hi, Pekon
-> 
-> 2013/8/26 Gupta, Pekon <pekon@ti.com>:
-> >>
-> >> fix one thing in patch:
-> >> commit id:f477b7fb13df2b843997559ff34e87d054ba6538
-> >>
-> >> change property spi-tx-nbits and spi-rx-nbits to optional.
-> >> If User don't set spi-tx-nbits or spi-rx-nbits, spi device mode
-> >> should be regarded as SINGLE, not return an error.
-> >>
-> >> Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
-> >> ---
-> >>  drivers/spi/spi.c |   68 +++++++++++++++++++++++++----------------------
-> ----
-> >> --
-> >>  1 file changed, 32 insertions(+), 36 deletions(-)
-> >>
-> >> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> >> index 50f7fc3..46a55f0 100644
-> >> --- a/drivers/spi/spi.c
-> >> +++ b/drivers/spi/spi.c
-> >> @@ -872,46 +872,42 @@ static void of_register_spi_devices(struct
-> >> spi_master *master)
-> >>               /* Device DUAL/QUAD mode */
-> >>               prop = of_get_property(nc, "spi-tx-nbits", &len);
-> >>               if (!prop || len < sizeof(*prop)) {
-> >> -                     dev_err(&master->dev, "%s has no 'spi-tx-nbits'
-> >> property\n",
-> >> -                             nc->full_name);
-> >> -                     spi_dev_put(spi);
-> >> -                     continue;
-> >> -             }
-> >> -             switch (be32_to_cpup(prop)) {
-> >> -             case SPI_NBITS_SINGLE:
-> >> -                     break;
-> >> -             case SPI_NBITS_DUAL:
-> >> -                     spi->mode |= SPI_TX_DUAL;
-> >> -                     break;
-> >> -             case SPI_NBITS_QUAD:
-> >> -                     spi->mode |= SPI_TX_QUAD;
-> >> -                     break;
-> >> -             default:
-> >> -                     dev_err(&master->dev, "spi-tx-nbits value is not
-> >> supported\n");
-> >> -                     spi_dev_put(spi);
-> >> -                     continue;
-> >> +                     /* set tx mode in SINGLE as default */
-> > [Pekon]: I think you should explicitly set, and not trust spi->mode defaults.
-> >         spi->mode |= SPI_TX_SINGLE;
-> >
-> Now @spi_device->mode [bit8: SPI_TX_DUAL] [bit9: SPI_TX_QUAD] [bit10:
-> SPI_RX_DUAL] [bit11: SPI_RX_QUAD]. Because to every spi controller,
-> SPI SINGLE must be supported, so I did not add that as a mode. My
-> initial thought is if user don't select SPI_TX_DUAL and SPI_TX_QUAD,
-> then it is TX_SINGLE mode[bit8: 0 bit9: 0].
-> Now 2 approaches as follows:
-> 1) #define SPI_TX_SINGLE ~(SPI_TX_DUAL | SPI_TX_QUAD)
->     case SPI_NBITS_SINGLE:
->             spi->mode & SPI_TX_SINGLE;
->             break;
-> 2)Adding a new bit in mode to specify SPI_SINGLE. But this bit also
-> should be reflected to @master->mode_bits. To the probe of each spi
-> controller driver, it is necessary to do "master->mode_bits |=
-> SPI_TX_SINGLE | SPI_RX_SINGLE;", in such case, it's not like a
-> selected mode, it's like a compulsary condition. Since all controller
-> do support, there's no need to make it a mode.
-> 
-> So I prefer the previous correction, what's your idea.
-> 
-[Pekon]: Ok makes sense.. (1) is preferred, as it is compatible to existing layout
+On 27/08/2013 05:57, Stephen Warren wrote:
+> On 08/26/2013 11:17 AM, boris brezillon wrote:
+>> On 26/08/2013 18:53, Stephen Warren wrote:
+>>> On 08/24/2013 03:37 PM, Boris BREZILLON wrote:
+>>>> Add support for generic pin configuration to pinctrl-at91 driver.
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>>>> b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>>>>    Required properties for iomux controller:
+>>>> -- compatible: "atmel,at91rm9200-pinctrl"
+>>>> +- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinctrl".
+>>> You seem to also be adding a second chip name to the list here, which is
+>>> more than the patch subject/description imply you're doing...
+>> This is an update of the documentation:
+>> "atmel,at91sam9x5-pinctrl" compatible is already used in the pinctrl
+>> driver but the documention
+>> was not updated.
+>>
+>> But I agree, this should not be part of this series.
+>>
+>>>> +  Add "generic-pinconf" to the compatible string list to use the
+>>>> generic pin
+>>>> +  configuration syntax.
+>>> "generic-pinconf" is too generic of a compatible value for this binding
+>>> to define.
+>>>
+>>> Instead, I think you want to either:
+>>>
+>>> a)
+>>>
+>>> Use compatible="atmel,at91rm9200-pinctrl" for the old binding,
+>>> use compatible="atmel,at91rm9200-pinctrl-generic" for the new binding
+>>>
+>>> or:
+>>>
+>>> b)
+>>>
+>>> Define Boolean property atmel,generic-pinconf (perhaps a better name
+>>> could be chosen?). If it's not present, parse the node assuming the old
+>>> binding. If it is present, parse the node assuming the new binding.
+>>>
+>> Okay.
+>>
+>> I thought this property string could be generic as it may concern other
+>> drivers too
+>> (in order to keep compatibility with old dt ABI and add support the
+>> generic pinconf binding).
+>>
+>> Anyway, I prefer the first proposition.
+>>
+>> pinctrl single driver is already using these names:
+>>
+>> |compatible = "pinctrl-single" for non generic pinconf binding
+>> ||compatible = "pinconf-single" ||for generic pinconf binding|
+>>
+>> So I think we should use something similar:
+>>
+>> |compatible = "atmel,at91xx-pinctrl" for non generic pinconf binding
+>> ||compatible = "|||atmel,at91xx-|pinconf" ||for generic pinconf binding|
+>>
+>> What do you think ?
+> Hmmm. It is a little odd to switch out the compatible value and invent a
+> new binding for the same HW. Isn't it possible to define both sets of
+> properties in the binding, and have drivers look for either?
+>
 
-with regards, pekon
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Do you mean something like:
+
+atmel,pins = <xxx>;                /* current dt binding */
+atmel,generic-pins = <yyy>;    /* new dt binding */
+
+If that's what you had in mind, it will be a little bit tricky to 
+handle, because AFAIK the pinconf_ops
+callbacks do not give me any element I could use to deduce the type of 
+pinconf (generic or
+native).
+This implies I have to know early during the probe process which kind of 
+binding is in use.
+
+Please tell me if I missed some key points, and this can be easily done.
+
+
