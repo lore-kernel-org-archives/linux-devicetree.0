@@ -1,60 +1,54 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7] s5k5baf: add camera sensor driver
-Date: Tue, 27 Aug 2013 10:14:48 +0100
-Message-ID: <20130827091448.GA19893@e106331-lin.cambridge.arm.com>
-References: <1377096091-7284-1-git-send-email-a.hajda@samsung.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH 0/2] net/cadence/macb: add support for dt phy definition
+Date: Tue, 27 Aug 2013 11:16:42 +0200
+Message-ID: <521C6E7A.8090905@atmel.com>
+References: <1377186980-21902-1-git-send-email-b.brezillon@overkiz.com> <20130826.160450.2176892065062148718.davem@davemloft.net> <521C586A.7080604@overkiz.com> <CAGVrzcYBT5aCmdaiGTm34kVu1UQssxB_EHvvj+t0phT58hcsZQ@mail.gmail.com> <521C6DD7.8030308@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1377096091-7284-1-git-send-email-a.hajda@samsung.com>
-Content-Language: en-US
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <521C6DD7.8030308@overkiz.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: boris brezillon <b.brezillon@overkiz.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 27/08/2013 11:13, boris brezillon :
+> On 27/08/2013 11:07, Florian Fainelli wrote:
+>> Hello Boris,
+>>
+>> 2013/8/27 boris brezillon <b.brezillon@overkiz.com>:
+>>> Hello Dave,
+>>>
+>>>
+>>> On 26/08/2013 22:04, David Miller wrote:
+>>>> From: Boris BREZILLON <b.brezillon@overkiz.com>
+>>>> Date: Thu, 22 Aug 2013 17:56:20 +0200
+>>>>
+>>>>> This patch series adds support for ethernet phy definition using device
+>>>>> tree.
+>>>>>
+>>>>> This may help in moving some at91 boards to dt (some of them define an
+>>>>> interrupt pin).
+>>>>>
+>>>>> Tested on samad31ek.
+>>>> Series applied to net-next, thanks.
+>>> Could you apply, the 3rd version of this series instead ?
+>>>
+>>> It fixes one bug when no phy is discovered and use the appropriate address
+>>> for the phy dt node.
+>>>
+>>> Sorry for the inconvenience.
+>> You will probably have to resubmit an incremental patch, I have never
+>> seen David pick up another version of a patch once it has been pushed
+>> out:
+>>
+>> http://git.kernel.org/cgit/linux/kernel/git/davem/net-next.git/commit/?id=8c038e7e14b1c5f156745e3c4df0a3aa46173dd9
+>> http://git.kernel.org/cgit/linux/kernel/git/davem/net-next.git/commit/?id=148cbb53ace32f584d208764c7f7e6aa8edb970c
+> Okay, I will submit patches (based on net-next branch) to fix those bugs.
 
-[trimming down to relevant context]
+You can add my Acked-by to your fixes...
 
-> +endpoint node
-> +-------------
-> +
-> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
-> +  video-interfaces.txt. This property can be only used to specify number
-> +  of data lanes, i.e. the array's content is unused, only its length is
-> +  meaningful. When this property is not specified default value of 1 lane
-> +  will be used.
-
-Apologies for having not replied to the last posting, but having looked
-at the documentation I was provided last time [1], I don't think the
-values in the data-lanes property should be described as unused. That
-may be the way the Linux driver functions at present, but it's not how
-the generic video-interfaces binding documentation describes the
-property.
-
-If the CSI transmitter hardware doesn't support logical remapping of
-lanes, then the only valid values for data-lanes would be a contiguous
-list of lane IDs starting at 1, ending at 4 at most. Valid values for
-the property would be one of:
-
-data-lanes = <1>;
-data-lanes = <1>, <2>;
-data-lanes = <1>, <2>, <3>;
-data-lanes = <1>, <2>, <3>, <4>;
-
-We can mention the fact the hardware doesn't support remapping of lanes,
-and therefore the list must start with lane 1 and end with (at most)
-lane 4. That way a dts will match the generic binding and actually
-describe the hardware, and it's possible for Linux (or any other OS) to
-factor out the parsing of data-lanes later as desired.
-
-I don't think we should offer freedom to encode garbage in the dt when
-we can just as easily encourage more standard use of bindings that will
-make our lives easier in the long-term.
-
-Thanks,
-Mark.
-
-[1] http://www.mipi.org/specifications/camera-interface#CSI2
+Bye,
+-- 
+Nicolas Ferre
