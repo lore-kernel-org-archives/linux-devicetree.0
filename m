@@ -1,48 +1,78 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH V2 0/4] clk: Samsung: audss: Add support for Exynos5420
-Date: Tue, 27 Aug 2013 11:48:02 +0530
-Message-ID: <CAAgF-BesO-CpNzEdyn=2V1wVzLvcSkV5mimsfqD1ndTfxDNG9A@mail.gmail.com>
-References: <1376639378-20707-1-git-send-email-padma.v@samsung.com>
-	<CAAgF-Bcb+MfBbBkgta8_WyVf5+_LM0_tqCBhvwxqvniniO6rpw@mail.gmail.com>
+From: boris brezillon <b.brezillon@overkiz.com>
+Subject: Re: [RFC PATCH 1/3] pinctrl: add new generic pinconf config for
+ deglitch filter
+Date: Tue, 27 Aug 2013 08:16:49 +0200
+Message-ID: <521C4451.1060908@overkiz.com>
+References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com>
+ <1377380109-11247-1-git-send-email-b.brezillon@overkiz.com>
+ <521B875E.1010605@wwwdotorg.org> <521B89D1.6010902@overkiz.com>
+ <521C2347.4080702@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAgF-Bcb+MfBbBkgta8_WyVf5+_LM0_tqCBhvwxqvniniO6rpw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "broonie@kernel.org" <broonie@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, abrestic@chromium.org, Mike Turquette <mturquette@linaro.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <521C2347.4080702@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, James Hogan <james.hogan@imgtec.com>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>, Jiri Kosina <jkosina@suse.cz>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Masanari Iida <standby24x7@gmail.com>, Rob Landley <rob@landley.net>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
-
-On Mon, Aug 19, 2013 at 2:18 PM, Padma Venkat <padma.kvr@gmail.com> wrote:
-> Hi Mike,
->
-> On Fri, Aug 16, 2013 at 1:19 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
->> This patch set adds support for audio subsystem clks on Exynos5420. Exynos5420
->> audio subsystem has a gate bit for ADMA controller and the some of the parent
->> clks for mout_i2s and sclk_pcm are different from Exynos5250. So this patch
->> adds provision for supporting both the platforms by determining the parent clk
->> names based on compatible string.
+On 27/08/2013 05:55, Stephen Warren wrote:
+> On 08/26/2013 11:01 AM, boris brezillon wrote:
+>> Hello Stephen,
 >>
->> Changes since V1:
->>         - parent clocks are determined by using the compatible string and not
->>           passed via device tree as done in V1 because the probing order of
->>           the clock providers can't be guaranteed.
+>> On 26/08/2013 18:50, Stephen Warren wrote:
+>>> On 08/24/2013 03:35 PM, Boris BREZILLON wrote:
+>>>> Add a new parameter to support deglitch filter configuration.
+>>>> A deglitch filter works like a debounce filter but with a smaller
+>>>> delay (nanoseconds).
+>>> Why not use the existing debounce property, just with a small delay
+>>> specified. It seems like that's exactly what the property is for?
+>> That's one of the question I asked in my cover letter :-)
 >>
->> Andrew Bresticker (3):
->>   clk: exynos-audss: add support for Exynos 5420
->>   clk: exynos-audss: set correct parent clocks
+>> Indeed the at91 deglitch filter delay is not configurable and is statically
+>> assigned to half a master clk cycle (if master clk = 133MHz -> 8 ns).
+>> The debounce property argument is currently expressed in usecs.
+>>
+>> This will result in always selecting the debounce filter (which is also
+>> available on at91 SoCs) over the deglitch filter.
+>>
+>> Could we add a flag in the deglitch argument to specify the delay unit
+>> (nsecs or usecs) ?
+> If the value is hard-coded in HW, why not use non-zero (or 1) to enable
+> and zero to disable?
+
+Indeed at91 pins support both deglitch and debounce filter and I have to 
+choose
+between the two given the argument value (in usec).
+
+Here's what I can do:
+
+if (arg >= 1/2 * slowclock)    /* debounce case */
+     /* choose debounce filter and configure the delay
+         according to the given argument value */
+else                                          /* deglitch case */
+     /* choose deglitch filter */
+
+
+Slow clock is running at 32KHz which gives a 30 usec clock cycle.
+
 >
-> Can you apply the above two patches into your tree?
->
+> (this kind of thing is why I'm not convinced that generic pinconf works
+> so well... What if we need psecs in the future?)
 
-If there is no review comment on the above two can you please
-acknowledge them? The below patch is dependent on these two patches
-and Kukjin is waiting for these patches to be merged.
+Should I keep the at91 native pinconf binding and add the missing flags 
+to this binding
+(OUTPUT configuration flags) ?
 
-[V2] ARM: dts: Add DMA controller node info on Exynos5420.
-https://patchwork.kernel.org/patch/2844436/
-
-Thanks
-Padma
+This was another question I asked in my cover letter: wether or not the 
+generic pinconf
+binding should be used.
