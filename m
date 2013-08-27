@@ -1,58 +1,44 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv3 7/8] mailbox/omap: add code to support the wkupm3 operations
-Date: Tue, 27 Aug 2013 11:03:25 -0500
-Message-ID: <521CCDCD.90207@ti.com>
-References: <1375825238-18299-1-git-send-email-s-anna@ti.com> <87li3n6bcc.fsf@linaro.org>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH 09/33] ARM: ux500: Supply the I2C clocks lookup to the
+ DBX500 DT
+Date: Tue, 27 Aug 2013 17:15:49 +0100
+Message-ID: <1377620149.6308.28.camel@hornet>
+References: <20130820093034.GL31036@pengutronix.de>
+	 <20130822133730.GB23152@e106331-lin.cambridge.arm.com>
+	 <20130822141900.GB17154@lee--X1>
+	 <20130822151723.GE23152@e106331-lin.cambridge.arm.com>
+	 <20130822154116.GC17154@lee--X1>	<20130822211912.GE31036@pengutronix.de>
+	 <20130823075607.GD17154@lee--X1>
+	 <20130823165539.GD7015@e106331-lin.cambridge.arm.com>
+	 <20130827080635.GC6152@lee--X1>
+	 <20130827134621.GJ19893@e106331-lin.cambridge.arm.com>
+	 <20130827140805.GB10210@lee--X1>
+	 <CAL_JsqJU6HA46J2HBRFaOgd_23d4UoLuGtMZYKtsZR1+7brKvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <87li3n6bcc.fsf@linaro.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <benoit.cousson@linaro.org>, Paul Walmsley <paul@pwsan.com>, Ohad Ben-Cohen <ohad@wizery.com>, Jassi Brar <jaswinder.singh@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJU6HA46J2HBRFaOgd_23d4UoLuGtMZYKtsZR1+7brKvg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Kevin,
-
-On 08/26/2013 10:50 PM, Kevin Hilman wrote:
-> Suman Anna <s-anna@ti.com> writes:
+On Tue, 2013-08-27 at 16:51 +0100, Rob Herring wrote:
+> >> * pl111 has no driver or binding in mainline, but appears in dts files.
+> >>   Those dts files clcdclk and apb_pclk, in that order. We could fix
+> >>   those before a driver starts using them.
 > 
->> The WkupM3 mailbox used for triggering PM operations such as suspend
->> and resume on AM33x/AM43x is special in that the M3 processor cannot
->> access the mailbox registers. However, an interrupt is needed to be
->> sent to request the M3 to perform a desired PM operation. This patch
->> adds the support for this special mailbox through separate ops for
->> this mailbox. These ops are designed to have the WkupM3's Rx interrupt
->> programmed within the driver, during transmission of a message. The
->> message is immediately read back and the internal mailbox interrupt
->> acknowledged as well to avoid triggering any spurious interrupts to
->> the M3.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
-> 
-> Dumb Q: why does all this extra logic belong in the mailbox driver and
-> not in the wkup_m3 driver?  To me, this seems like part of the IPC
-> protocol between the MPU and M3 firmware, and not an inherent part of
-> the AM33xx mbox.
+> I think this was waiting for some generic display bindings? Pawel may know.
 
-The IPC protocol state machine for the PM operations is still very much
-handled in the WkupM3 driver. The IPC registers in Control module
-provide the messaging payloads, but unfortunately it is not associated
-with any direct interrupts to make it a separate driver. As far as the
-WkupM3 driver is concerned, it is just using the mailbox for signalling
-- the internals of which would involve accessing the various mailbox
-registers including interrupt configuration and clearing. It is
-preferable to have the various operations on mailbox registers handled
-by the mailbox driver with the API supporting the necessary operations.
+Common Display Framework it was ;-)
 
-The previous version from Vaibhav added a new API to mailbox driver for
-clearing out the Tx fifo, which is non-standard. The mailboxes on AM335
-will also be used for IPC with the Programmable Real-time Unit (PRU)
-subsystem, which will use separate mbox devices. This version handles
-the wkup_m3 mbox device using its device-specific ops without the need
-for any new API, and not having to expose the mailbox registers outside.
+And yes, it was waiting for it, but it is getting bored with waiting so
+I'll cut off the CDF bits and post the rest this or next week.
 
-regards
-Suman
+As to the APB clock, we've been there before...
+http://article.gmane.org/gmane.linux.ports.arm.kernel/188927
 
+Cheers!
+
+Pawel
