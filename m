@@ -1,42 +1,100 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Tue, 27 Aug 2013 08:06:47 +0200
-Message-ID: <521C41F7.8060305@gaisler.com>
-References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de> <201308261256.00870.poeschel@lemonage.de> <521B3C03.8080508@gaisler.com> <201308261604.55827.poeschel@lemonage.de>
+From: yuhang wang <wangyuhang2014@gmail.com>
+Subject: Re: [PATCH 2/2] spi: dual and quad support(device tree)
+Date: Tue, 27 Aug 2013 14:11:27 +0800
+Message-ID: <CAHSAbzN9GFX++gkZwxny4qpRPpEkPgjqAPJBNU+h+SNymNdGFA@mail.gmail.com>
+References: <1377496080-14356-1-git-send-email-wangyuhang2014@gmail.com>
+ <1377496080-14356-2-git-send-email-wangyuhang2014@gmail.com>
+ <20980858CB6D3A4BAE95CA194937D5E73E9FA932@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <201308261604.55827.poeschel@lemonage.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, grant.likely@linaro.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, ian.campbell@citrix.com, galak@codeaurora.org, pawel.moll@arm.com, tomasz.figa@gmail.com, swarren@wwwdotorg.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73E9FA932@DBDE04.ent.ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: "Gupta, Pekon" <pekon@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar,
+ Sourav" <sourav.poddar@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2013-08-26 16:04, Lars Poeschel wrote:
-> On Monday 26 August 2013 at 13:29:07, Andreas Larsson wrote:
->> On 2013-08-26 12:56, Lars Poeschel wrote:
->>>> This call to of_irq_find_parent breaks gpiolib-of for SPARC due to
->>>> the fact that the function is undefined when !defined(CONFIG_OF_IRQ)
->>>> && defined(CONFIG_OF).
->>>>
->>>> Defining the empty of_irq_find_parent in include/linux/of_irq.h when
->>>> !defined(CONFIG_OF_IRQ) instead of the current case when
->>>> !defined(CONFIG_OF) would solve the immediate compilation problem.
->>>
->>> Is this a bug and should be fixed ?
+Hi, Pekon
+
+2013/8/26 Gupta, Pekon <pekon@ti.com>:
 >>
->> Well, at least as soon as anyone tries to use in a context that does not
->> exclude SPARC it creates a bug, so I would say so. There is no reason
->> for SPARC to fall between the chairs. This is the first case I am aware
->> of that triggers this.
+>> fix one thing in patch:
+>> commit id:f477b7fb13df2b843997559ff34e87d054ba6538
+>>
+>> change property spi-tx-nbits and spi-rx-nbits to optional.
+>> If User don't set spi-tx-nbits or spi-rx-nbits, spi device mode
+>> should be regarded as SINGLE, not return an error.
+>>
+>> Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
+>> ---
+>>  drivers/spi/spi.c |   68 +++++++++++++++++++++++++--------------------------
+>> --
+>>  1 file changed, 32 insertions(+), 36 deletions(-)
+>>
+>> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+>> index 50f7fc3..46a55f0 100644
+>> --- a/drivers/spi/spi.c
+>> +++ b/drivers/spi/spi.c
+>> @@ -872,46 +872,42 @@ static void of_register_spi_devices(struct
+>> spi_master *master)
+>>               /* Device DUAL/QUAD mode */
+>>               prop = of_get_property(nc, "spi-tx-nbits", &len);
+>>               if (!prop || len < sizeof(*prop)) {
+>> -                     dev_err(&master->dev, "%s has no 'spi-tx-nbits'
+>> property\n",
+>> -                             nc->full_name);
+>> -                     spi_dev_put(spi);
+>> -                     continue;
+>> -             }
+>> -             switch (be32_to_cpup(prop)) {
+>> -             case SPI_NBITS_SINGLE:
+>> -                     break;
+>> -             case SPI_NBITS_DUAL:
+>> -                     spi->mode |= SPI_TX_DUAL;
+>> -                     break;
+>> -             case SPI_NBITS_QUAD:
+>> -                     spi->mode |= SPI_TX_QUAD;
+>> -                     break;
+>> -             default:
+>> -                     dev_err(&master->dev, "spi-tx-nbits value is not
+>> supported\n");
+>> -                     spi_dev_put(spi);
+>> -                     continue;
+>> +                     /* set tx mode in SINGLE as default */
+> [Pekon]: I think you should explicitly set, and not trust spi->mode defaults.
+>         spi->mode |= SPI_TX_SINGLE;
 >
-> I also think this should be fixed.
-> Are you able to do a patch that fixes this and submit to the relevant
-> people?
+Now @spi_device->mode [bit8: SPI_TX_DUAL] [bit9: SPI_TX_QUAD] [bit10:
+SPI_RX_DUAL] [bit11: SPI_RX_QUAD]. Because to every spi controller,
+SPI SINGLE must be supported, so I did not add that as a mode. My
+initial thought is if user don't select SPI_TX_DUAL and SPI_TX_QUAD,
+then it is TX_SINGLE mode[bit8: 0 bit9: 0].
+Now 2 approaches as follows:
+1) #define SPI_TX_SINGLE ~(SPI_TX_DUAL | SPI_TX_QUAD)
+    case SPI_NBITS_SINGLE:
+            spi->mode & SPI_TX_SINGLE;
+            break;
+2)Adding a new bit in mode to specify SPI_SINGLE. But this bit also
+should be reflected to @master->mode_bits. To the probe of each spi
+controller driver, it is necessary to do "master->mode_bits |=
+SPI_TX_SINGLE | SPI_RX_SINGLE;", in such case, it's not like a
+selected mode, it's like a compulsary condition. Since all controller
+do support, there's no need to make it a mode.
 
-Sure!
+So I prefer the previous correction, what's your idea.
 
-Cheers,
-Andreas
+Best regards
 
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
