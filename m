@@ -1,118 +1,90 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4 2/3] usb: phy: Add Qualcomm SS-USB and HS-USB drivers
- for DWC3 core
-Date: Tue, 27 Aug 2013 14:58:59 -0500
-Message-ID: <20130827195859.GF3005@radagast>
-References: <1376992565-22292-3-git-send-email-iivanov@mm-sol.com>
- <20130820122907.GU26587@radagast>
- <1377005543.26268.22.camel@iivanov-dev.int.mm-sol.com>
- <20130820133712.GC26587@radagast>
- <1377007751.26268.27.camel@iivanov-dev.int.mm-sol.com>
- <20130820143319.GG26587@radagast>
- <1377010458.26268.30.camel@iivanov-dev.int.mm-sol.com>
- <8691FDFE-326E-4198-838A-202D9EC988E1@codeaurora.org>
- <1377012381.26268.42.camel@iivanov-dev.int.mm-sol.com>
- <A2CA0424C0A6F04399FB9E1CD98E030458DECB7C@US01WEMBX2.internal.synopsys.com>
-Reply-To: <balbi@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 27 Aug 2013 14:05:29 -0600
+Message-ID: <521D0689.5020008@wwwdotorg.org>
+References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de> <CACRpkdZgFMH07_W2eUWsgsUMXAJA1paEimAds=-XeViZaYySLA@mail.gmail.com> <5217BD74.5030801@wwwdotorg.org> <201308261245.19513.poeschel@lemonage.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8hYiR1SWmJV79WGg"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <A2CA0424C0A6F04399FB9E1CD98E030458DECB7C@US01WEMBX2.internal.synopsys.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Paul Zimmerman <Paul.Zimmerman@synopsys.com>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, "balbi@ti.com" <balbi@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "idos@codeaurora.org" <idos@codeaurora.org>, "mgautam@codeaurora.org" <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.ke>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <201308261245.19513.poeschel@lemonage.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---8hYiR1SWmJV79WGg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 08/26/2013 04:45 AM, Lars Poeschel wrote:
+> On Friday 23 August 2013 at 21:52:20, Stephen Warren wrote:
+>> On 08/23/2013 12:45 PM, Linus Walleij wrote:
+>>> On Thu, Aug 22, 2013 at 11:10 PM, Stephen Warren 
+> <swarren@wwwdotorg.org> wrote:
+>>>> On 08/21/2013 05:36 PM, Linus Walleij wrote:
+>>>>> On Thu, Aug 22, 2013 at 1:10 AM, Stephen Warren
+>>>>> <swarren@wwwdotorg.org> wrote: [Me]
+>>>>>
+>>>>>>>> check if these in turn reference the interrupt-controller, and
+>>>>>>>> if they do, loop over the interrupts used by that child and
+>>>>>>>> perform gpio_request() and gpio_direction_input() on these,
+>>>>>>>> making them unreachable from the GPIO side.
+>>>>>>
+>>>>>> What about bindings that require a GPIO to be specified, yet don't
+>>>>>> allow an IRQ to be specified, and the driver internally does
+>>>>>> perform gpio_to_irq() on it? I don't think one can detect that
+>>>>>> case.
+>>>>>
+>>>>> This is still allowed. Consumers that prefer to have a GPIO
+>>>>> passed and convert it to IRQ by that call can still do so,
+>>>>> they will know what they're doing and will not cause the
+>>>>> double-command situation that we're trying to solve.
+>>>>
+>>>> Why not? There are certainly drivers in the kernel which request a
+>>>> GPIO as both a GPIO and as an (dual-edge) interrupt, so that they
+>>>> can read the GPIO input whenever the IRQ goes off, in order to
+>>>> determine the pin state. This is safer against high-latency or lost
+>>>> interrupts.
+>>>
+>>> Yes? Are we talking past each other here?
+>>>
+>>> This is a perfectly OK thing to do as long as it is done like
+>>> this:
+>>>
+>>> request_gpio(gpio);
+>>> gpio_direction_input(gpio);
+>>> request_irq(gpio_to_irq(gpio));
+>>
+>> But I'm not aware that there's a rule saying it's illegal to:
+>>
+>> request_irq(gpio_to_irq(gpio));
+>> request_gpio(gpio);
+>> gpio_direction_input(gpio);
+> 
+> But I'd consider this as a bug. What if the scheduler interrupts you right 
+> after you requested (and got assigned) the interrupt and another entity 
+> requests your gpio? Then you'd have a resource conflict, because you are 
+> not the owner of the gpio you requested an interrupt for.
 
-Hi,
+How is that any different from two drivers both attempting to claim a
+GPIO, and there being a race to get their first?
 
-On Thu, Aug 22, 2013 at 09:24:49PM +0000, Paul Zimmerman wrote:
-> > From: Ivan T. Ivanov [mailto:iivanov@mm-sol.com]
-> > Sent: Tuesday, August 20, 2013 8:26 AM
-> >=20
-> > On Tue, 2013-08-20 at 10:01 -0500, Kumar Gala wrote:
-> > > On Aug 20, 2013, at 9:54 AM, Ivan T. Ivanov wrote:
-> > >
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Tue, 2013-08-20 at 09:33 -0500, Felipe Balbi wrote:
-> > > >> On Tue, Aug 20, 2013 at 05:09:11PM +0300, Ivan T. Ivanov wrote:
-> > > >>>
-> > > >>> On Tue, 2013-08-20 at 08:37 -0500, Felipe Balbi wrote:
-> > > >>>>
-> > > >>>> On Tue, Aug 20, 2013 at 04:32:23PM +0300, Ivan T. Ivanov wrote:
-> > > >>>>>
-> > > >>>>> I think they are SNPS DesignWare PHY's, additionally
-> > > >>>>> wrapped with Qualcomm logic. I could substitute "dwc3"
-> > > >>>>> with just "dw", which will be more correct.
-> > > >>>>
-> > > >>>> alright, thank you. Let's add Paul to the loop since he might ha=
-ve very
-> > > >>>> good insight in the synopsys PHYs.
-> > > >>>>
-> > > >>>> mental note: if any other platform shows up with Synopsys PHY, a=
-sk them
-> > > >>>> to use this driver instead :-)
-> > > >>>
-> > > >>> I really doubt that this will bi possible. Control of the PHY's is
-> > > >>> not directly trough ULPI, UTMI or PIPE3 interfaces, but trough
-> > > >>> QSCRATCH registers, which of course is highly Qualcomm specific.
-> > > >>
-> > > >> isn't it a memory mapped IP ? doesn't synopsys provide their own s=
-et of
-> > > >> registers ?
-> > > >
-> > > > From what I see it is not directly mapped. How QSCRATCH write and
-> > > > reads transactions are translated to DW IP is unclear to me.
-> > >
-> > >
-> > > I think the question is how does SW access them?
-> >=20
-> > "USB QSCRATCH Hardware registers" don't ask me what is this :-)
-> > or like Pawel says: "it depends on the SOC" .
->=20
-> To answer the question "doesn't synopsys provide their own set of
-> registers", we provide registers in our USB cores to access the PHYs
-> through I2C, ULPI/UTMI, or PIPE3 interfaces. But if someone wants to use
-> our PHY with some other controller that doesn't provide that, then they
-> may need to implement their own register set, as Qualcomm has apparently
-> done.
+Presumably, all this happens in the device's/driver's probe(), and hence
+if the gpio_request() fails, then probe() fails, and undoes all allocations.
 
-thanks for clarifying. that pretty much hinders writing any sort of
-generic drivers for Synopsys' PHYs though :-s
+Your argument can equally be applied to the first case where the GPIO is
+requested first, then the IRQ later. What if driver A requests the GPIO
+and then attempts to request the IRQ, yet the scheduler causes driver B
+to *just* request the (same) IRQ (because it only cares about using it
+as an IRQ and doesn't even know it's a GPIO). Then, you have the exact
+same problem in reverse.
 
-But I guess that's alright.
+The only possible way to solve this is for either request_irq() or
+request_gpio() to take complete ownership of the GPIO that backs the IRQ
+if there is one, yet allow request_gpio by the same driver on that same
+GPIO to still succeed, so that the order doesn't matter; whatever the
+driver first always claims the GPIO and disallows any other driver from
+claiming "part of the GPIO".
 
---=20
-balbi
+Yet, in your other reply you explicitly said there isn't a check for
+this (the same driver claiming both the IRQ and GPIO).
 
---8hYiR1SWmJV79WGg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSHQUDAAoJEIaOsuA1yqREE5AP/2ZZ5zmei7G9/mOyYAwyr3/z
-79+Q+X/YxO2IKZSGZvH7fEyIbIsVBGq1BxFJTOyhkg6EyHkZixZeUotzMcMtcNB9
-OsSkZTlVNLGa737/U0FAHwG9xLXrL3pHKiZepuZ3V2ch/2MlCY1IQn2BmBjfsrC+
-PNHEjYyn1266O6r2JVJuiHv3sWyUI1cIbDn8d8jJG2pvbAAuEhmkgWMHZkSFvtco
-MrORQpW4beCZAYPtdsukl4jllXIa1Uu+J0+ff5ViHzTZxK4xGpYIQU3smLkU/F52
-hWdqr/gfsWSQa3/sHn6zJEaoQW/HlySAOaD6SzHCoLFUoemDqYkg0w0HPBRS8+lP
-g4ON6lvPywt0xOTzrgbGRp+OORnVwQOuKnfAI16aio/NZPsuIJKP8ECrVYjVno1b
-kkzg7x6i6ziSZ3iYimuN3w6hEG+RoK9qe/eCgmi8SuenpifOtdhjl7QexgAx5gC6
-j4Ux4/bGtg0oawzqfAuh87aC1XRn1EZjEHQWo8VH8iVbIWbLIH5NcAaq5U6EqraF
-4YLMOFGIjMgp8y+MAaIilZqiyBrRz24p+om1riZQOWLlYZZjjJPunhWI5BmA71mT
-3LMdpnJLLYceHQjgBPm2WSyvwFqMSiNzicmPpgY8312/utPUX5KkBv3J1/nIeFge
-39L0sMFx6xf3DhMmYM5F
-=OD97
------END PGP SIGNATURE-----
-
---8hYiR1SWmJV79WGg--
+Perhaps it would help to lay out exactly the problem this is trying to
+solve and why it solves it again.
