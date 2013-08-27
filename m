@@ -1,80 +1,79 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC PATCH 2/3] pinctrl: at91: add support for generic pinconf
-Date: Mon, 26 Aug 2013 21:57:35 -0600
-Message-ID: <521C23AF.2060309@wwwdotorg.org>
-References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com> <1377380259-11290-1-git-send-email-b.brezillon@overkiz.com> <521B8822.50304@wwwdotorg.org> <521B8D9B.5020809@overkiz.com>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH V2 2/2] spi: dual and quad support(device tree)
+Date: Tue, 27 Aug 2013 04:03:12 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9FAED5@DBDE04.ent.ti.com>
+References: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
+ <1377564603-4030-2-git-send-email-wangyuhang2014@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <521B8D9B.5020809@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: boris brezillon <b.brezillon@overkiz.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1377564603-4030-2-git-send-email-wangyuhang2014@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: wangyuhang <wangyuhang2014@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Poddar,
+ Sourav" <sourav.poddar@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/26/2013 11:17 AM, boris brezillon wrote:
-> On 26/08/2013 18:53, Stephen Warren wrote:
->> On 08/24/2013 03:37 PM, Boris BREZILLON wrote:
->>> Add support for generic pin configuration to pinctrl-at91 driver.
->>> diff --git
->>> a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
->>> b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
->>>   Required properties for iomux controller:
->>> -- compatible: "atmel,at91rm9200-pinctrl"
->>> +- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinctrl".
->> You seem to also be adding a second chip name to the list here, which is
->> more than the patch subject/description imply you're doing...
 > 
-> This is an update of the documentation:
-> "atmel,at91sam9x5-pinctrl" compatible is already used in the pinctrl
-> driver but the documention
-> was not updated.
+> Add spi-tmax-nbits and spi-rmax-nbits for spi slave node.
+> Modify the related dt document(spi-bus.txt)
+>  spi-tmax-nbits:Max number of bits slave will use for MOSI(writting)
+>  spi-rmax-nbits:Max number of bits slave will use for MISO(reading)
+> Support for spi-tx/rmax-nbits in SPI framework has been picked[1].
+> [1]: http://comments.gmane.org/gmane.linux.kernel.spi.devel/14420
+> Commit Id:f477b7fb13df2b843997559ff34e87d054ba6538
 > 
-> But I agree, this should not be part of this series.
+> Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/spi/spi-bus.txt |   16
+> ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
->>> +  Add "generic-pinconf" to the compatible string list to use the
->>> generic pin
->>> +  configuration syntax.
->> "generic-pinconf" is too generic of a compatible value for this binding
->> to define.
->>
->> Instead, I think you want to either:
->>
->> a)
->>
->> Use compatible="atmel,at91rm9200-pinctrl" for the old binding,
->> use compatible="atmel,at91rm9200-pinctrl-generic" for the new binding
->>
->> or:
->>
->> b)
->>
->> Define Boolean property atmel,generic-pinconf (perhaps a better name
->> could be chosen?). If it's not present, parse the node assuming the old
->> binding. If it is present, parse the node assuming the new binding.
->>
-> Okay.
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> index 296015e..211336c 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -55,6 +55,22 @@ contain the following properties.
+>      		chip select active high
+>  - spi-3wire       - (optional) Empty property indicating device requires
+>      		    3-wire mode.
+> +- spi-tmax-nbits  - (optional) Max number of bits slave will use for
+> +    		    MOSI(writting)
+> +- spi-rmax-nbits  - (optional) Max number of bits slave will use for
+> +    		    MISO(reading)
+> +
+> +So if for example the slave has 4 wires for writting and 2 wires for reading,
+> +and the spi-tx/rx-nbits property should be set as follows:
+> +
+> +spi-tmax-nbits = <4>;
+> +spi-rmax-nbits = <2>;
+> +
+> +Now the value that spi-tmax-nbits and spi-rmax-nbits can receive is only
+> +1(single), 2(dual) and 4(quad). If you don't set spi-tmax-nbits or spi-rmax-
+> nbits,
+> +spi_device mode will be set in single(1 wire) as default. Another point, if
+> +property:spi-3wire is set, spi-t/rmax-nbits is forbidden to set to <2 or 4>,
+> +otherwise, an errro will return.
 > 
-> I thought this property string could be generic as it may concern other
-> drivers too
-> (in order to keep compatibility with old dt ABI and add support the
-> generic pinconf binding).
-> 
-> Anyway, I prefer the first proposition.
-> 
-> pinctrl single driver is already using these names:
-> 
-> |compatible = "pinctrl-single" for non generic pinconf binding
-> ||compatible = "pinconf-single" ||for generic pinconf binding|
-> 
-> So I think we should use something similar:
-> 
-> |compatible = "atmel,at91xx-pinctrl" for non generic pinconf binding
-> ||compatible = "|||atmel,at91xx-|pinconf" ||for generic pinconf binding|
-> 
-> What do you think ?
+>  If a gpio chipselect is used for the SPI slave the gpio number will be passed
+>  via the cs_gpio
+> --
+> 1.7.9.5
 
-Hmmm. It is a little odd to switch out the compatible value and invent a
-new binding for the same HW. Isn't it possible to define both sets of
-properties in the binding, and have drivers look for either?
+Acked-by: Pekon Gupta <pekon@ti.com>
+
+with regards, pekon
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
