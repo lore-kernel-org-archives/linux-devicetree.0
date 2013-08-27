@@ -1,79 +1,140 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [RFC v1 0/5] ARM: Initial support for Marvell Armada 1500
-Date: Tue, 27 Aug 2013 18:51:29 +0200
-Message-ID: <20130827185129.31bd0c9e@skate>
-References: <1376682098-10580-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<20130827161958.5e71890d@skate>
-	<521CD7B9.7060208@gmail.com>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH RFC v2 3/5] spmi: add generic SPMI controller binding
+ documentation
+Date: Tue, 27 Aug 2013 12:01:20 -0500
+Message-ID: <20130827170120.GR4035@joshc.qualcomm.com>
+References: <cover.1377202730.git.joshc@codeaurora.org>
+ <e42576b69ef3d4e624fbfa2f32f6f79a931b55d6.1377202730.git.joshc@codeaurora.org>
+ <5217DB0C.7000101@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <521CD7B9.7060208@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5217DB0C.7000101@wwwdotorg.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Josh Cartwright <joshc@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Sagar Dharia <sdharia@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Michael Bohan <mbohan@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Sebastian Hesselbarth,
+Hey Stephen-
 
-On Tue, 27 Aug 2013 18:45:45 +0200, Sebastian Hesselbarth wrote:
+Thanks for the comments.
 
-> > After talking a bit with engineers within Marvell that work on this
-> > SoC, I'm inclined to think that using mach-mvebu for this family of SoC
-> > is not a good idea.
+On Fri, Aug 23, 2013 at 03:58:36PM -0600, Stephen Warren wrote:
+> On 08/22/2013 01:59 PM, Josh Cartwright wrote:
+> > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> > ---
+> > I'm introducing this as an RFC, because there are set of assumptions
+> > made in this binding spec, that currently hold true for the supported
+> > controller/addressing scheme for the Snapdragon 800 series, but don't
+> > necessarily hold true for SPMI in general.
+> > 
+> >   1. No use of Group Slave Identifiers (GSIDs)
+> >      (SPMI allows for a slave to belong to zero or more groups specified
+> >      by GSID, however this feature isn't currently implemented)
+> > 
+> >   2. No specification of Master Identifier (MID)
+> >      (A "system integrator" allocates to each master a 2-bit MID, this
+> >      currently isn't being specified, as it isn't needed by software for
+> >      the PMIC Arb; not sure if this is of use to other SPMI controllers)
+> > 
+> >   3. Single SPMI master per controller
+> > 
+> > Effectively, only a subset of possible SPMI configurations are specified
+> > in this document.
+> > 
+> > So, if it's considered necessary to provide a generic SPMI binding
+> > specification, is it acceptable to only define a subset at this time,
+> > expanding only when necessary, or shall I expand the definition to at
+> > least address 1 & 2, even though they are of no use in the current
+> > implementation?
 > 
-> Thomas,
-> 
-> thanks for the info below. Reading a little bit through the GPL'ed
-> source, I also quickly came to the same conclusion. It is more likely
-> we can reuse some stuff from other SoCs than Orion or Armada 370/XP.
+> It's best to define the whole thing from the start if possible. It's
+> easier to ensure the whole binding is consistent, and nothing has been
+> left out.
 
-Yes, many of the IP blocks are for example DesignWare IPs, or ARM IPs
-in the case of the Cortex-A based variants.
+That makes sense.  I think I'll go down this route for v3 of this
+patchset:
 
-> > The codename used for those Armada 1500 SOCs is "Berlin", so a name
-> > like mach-berlin, or mach-mvberlin (if we want to keep 'mv' to identify
-> > the founder) seems like a good name.
-> 
-> I have already moved it under mach-mv88de3xxx as for now, all SoCs
-> Marvell is providing as DE (Digital Entertainment) fit in that. I like
-> mach-codename style more than plain numbers, maybe I rename the folder
-> to mach-berlin before posting.
+For #1 above, extend the 'reg' property of a slave node to include the
+group slave ID's in which the slave is a member.  The first 'reg' entry
+will remain the slave's Unique Slave Identifier (USID) as before.
 
-I also like mach-berlin a bit more than mach-mve88de3xxx, for a very
-silly reason: when during a discussion you have to say mach-mv88de3xxx,
-it's pretty annoying. We already have the horrible mach-mv78xx0, let's
-not add more of this :)
+For #2, add additional required 'spmi-mid' property in the
+controller/master node that describes the 2-bit Master Identifier (MID).
 
-> Speaking of "berlin", they found a 2WW bomb in my home town center today
-> and are evacuating apartments. Mine too, so it looks like I'll have
-> some time to prepare v2 tonight..
+For #3, rename the SPMI API's s/controller/master/.  The current
+controller/master terminology difference is confusing and unnecessary.
 
-Doh!
+> However, it's probably OK to define a subset binding initially and then
+> expand it later, as long as some thought it put into how it can be
+> expanded in a way that is 100% compatible: old DTs will still operate
+> with new kernels and perhaps even new DTs will still operate with old
+> kernels.
+>
+> That said, if the thought is put in to ensure that's possible, it's
+> probably just as easy to define the whole binding from the start.
 
-> > Also, to help us understand the organization of the family of SOCs, I
-> > asked a few informations to Marvell, and here is what I could collect:
-> >
-> > """
-> > BGxname		CPU core	codename	L2 cache controller	internal name
-> > BG2		PJ4B		Armada1500	Tauros3			MV88DE3100
-> > BG2-CT		Cortex-A9	N/A		PL310			N/A
-> > BG3		Cortex-A15	N/A		CA15 integrated		N/A
-> > """
-> >
-> > As was told that the Armada X or MV88DEx names are not used during
-> > development, and what Marvell is really using are the BGxx names.
-> 
-> Ok, I'll add that info to Marvell SoC documentation also.
+That all makes sense.
 
-That'd be nice indeed.
+If we want to ensure for the generic bindings that we are fulling
+characterizing/describing the SPMI bus, then we'll additionally need to
+tackle an additional identified assumption:
 
-Thanks!
+  4. One master per SPMI bus.  (The SPMI spec allows for up to 4
+     masters)
 
-Thomas
+On the Snapdragon 800 series, there exists only one software-controlled
+master, but it is conceivably possible to have a setup with two
+software-controlled masters on the same SPMI bus.
+
+This necessarily means that the description of the slaves and the
+masters will need to be decoupled; I'm imagining a generic binding
+supporting multiple masters would look something like this:
+
+	master0: master@0 {
+		compatible = "...";
+		#spmi-master-cells = <0>;
+		spmi-mid = <0>;
+
+		...
+	};
+
+	master2: master@2 {
+		compatible = "...";
+		#spmi-master-cells = <0>;
+		spmi-mid = <2>;
+
+		...
+	};
+
+	spmi_bus {
+		compatible = "...";
+
+		spmi-masters = <&master0 &master2>;
+
+		foo@0 {
+			compatible = "...";
+			reg = <0 ...>;
+		};
+
+		foo@8 {
+			compatible = "...";
+			reg = <8 ...>;
+		};
+	};
+
+(This will also necessitate a change in the underlying SPMI driver
+model, in the current implementation, a SPMI master 'owns' a particular
+device.  This is not a valid assumption to make.)
+
+Would this property-containing-phandle-vector be considered the
+canonical way of representing nodes with multiple parents in the device
+tree?
+
+Thanks,
+  Josh
+
 -- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
