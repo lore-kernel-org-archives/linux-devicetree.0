@@ -1,8 +1,8 @@
 From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH 14/15] ARM: mvebu: system-controller: Add second reg cell
- devicetree specification
-Date: Tue, 27 Aug 2013 11:34:38 -0300
-Message-ID: <1377614079-10000-15-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH 12/15] watchdog: orion: Rename device-tree binding
+ documentation
+Date: Tue, 27 Aug 2013 11:34:36 -0300
+Message-ID: <1377614079-10000-13-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1377614079-10000-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,35 +22,18 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, wim@iguana.be, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Specify an optional second reg property cell to system-controller's DT
-node. This cell must be used to specify the watchdog RSTOUT register base
-address.
+Name this file to something a bit more judicious.
 
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
 ---
- Documentation/devicetree/bindings/arm/mvebu-system-controller.txt | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/watchdog/{marvel.txt => orion-wdt.txt} | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/watchdog/{marvel.txt => orion-wdt.txt} (100%)
 
-diff --git a/Documentation/devicetree/bindings/arm/mvebu-system-controller.txt b/Documentation/devicetree/bindings/arm/mvebu-system-controller.txt
-index 081c6a7..95a75b3 100644
---- a/Documentation/devicetree/bindings/arm/mvebu-system-controller.txt
-+++ b/Documentation/devicetree/bindings/arm/mvebu-system-controller.txt
-@@ -9,9 +9,14 @@ Required properties:
- 	- "marvell,armada-370-xp-system-controller"
- - reg: Should contain system controller registers location and length.
- 
-+Optional properties:
-+
-+- reg: An optional second cell must be used to specify the watchdog RSTOUT
-+       register base address, available in Armada 370/XP SoC.
-+
- Example:
- 
- 	system-controller@d0018200 {
- 		compatible = "marvell,armada-370-xp-system-controller";
--		reg = <0xd0018200 0x500>;
-+		reg = <0xd0018200 0x500>, <0xd0020704 0x4>;
- 	};
+diff --git a/Documentation/devicetree/bindings/watchdog/marvel.txt b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/watchdog/marvel.txt
+rename to Documentation/devicetree/bindings/watchdog/orion-wdt.txt
 -- 
 1.8.1.5
