@@ -1,80 +1,110 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v11] ASoC: fsl: Add S/PDIF machine driver
-Date: Tue, 27 Aug 2013 15:50:16 +0100
-Message-ID: <20130827145016.GW10783@sirena.org.uk>
-References: <fac39ed91818630e03f81a5f0cf9ddde0e6a3c3a.1377244995.git.b42378@freescale.com>
- <5217B32C.5070300@wwwdotorg.org>
- <20130823191353.GK25263@sirena.org.uk>
- <20130827020107.GB3758@MrMyself>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1489042899997331065=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20130827020107.GB3758@MrMyself>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Nicolin Chen <b42378@freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, Stephen Warren <swarren@wwwdotorg.org>, s.hauer@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, p.zabel@pengutronix.de, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH] pinctrl: at91: add support for OUTPUT config
+Date: Tue, 27 Aug 2013 16:51:22 +0200
+Message-ID: <1377615082-16808-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Jiri Kosina <jkosina@suse.cz>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <b.brezillon@overkiz.com>
 List-Id: devicetree@vger.kernel.org
 
+Add support for pin output control through the pinctrl config:
+ - support enabling/disabling output on a given pin
+ - support output level setting (high or low)
 
---===============1489042899997331065==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RCcFxJ34+mAtH0DM"
-Content-Disposition: inline
+Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+---
+ .../bindings/pinctrl/atmel,at91-pinctrl.txt        |    2 ++
+ drivers/pinctrl/pinctrl-at91.c                     |   22 ++++++++++++++++++++
+ include/dt-bindings/pinctrl/at91.h                 |    2 ++
+ 3 files changed, 26 insertions(+)
 
-
---RCcFxJ34+mAtH0DM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Aug 27, 2013 at 10:01:08AM +0800, Nicolin Chen wrote:
-
-> On Fri, Aug 23, 2013 at 08:13:53PM +0100, Mark Brown wrote:
-
-> I think this patch hasn't been applied yet, already been acked though.
-> Is there any problem in it?
-
-You've allowed less than one working day for a response here - Monday
-was a holiday in the UK.  Something like a week is normally a minimum
-for this sort of thing, especially in a case like this where there has
-been extensive discussion.
-
---RCcFxJ34+mAtH0DM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSHLylAAoJELSic+t+oim9qW4P/jCJvkmyqb+IE8WCJcGSDuzs
-V9TruCMPHsZzAdU7B7Lx6clAYgM4C2bF/MZ2647/OutOvjz8BbgZc5m52ABy9Cs2
-CJHqn9e3TxgFKGMPSRKZdhriN6x/219ziwgjYp4WmMa2CDpMb+wG2Z+sdafCehHd
-p1WqSahsA3WRIVYI+2/kghJW2KCTCkbBtmw7Bu0PiIII25GEgSjhQ3JFn22QRr8N
-QClG+rZjaUyCLZ/G93wYmu6mgjU677OtwEPm99CpbZk2rwcvH6ahA7QG7wJxyGrZ
-LlSbMYswvHpf2K6GcoR+q1rSdvPHWbtOBwGpv4GcTsTHGkfyMdvhvKkbpL2y7u+A
-STJWR+Yu6mmRH7ehMuaq242G2p3QoG8dMa0i1vgAr/6Wqwz7nbSjO+cmPFjzVTvb
-3tc4Gh4wFNUSziIIxgTLIu5dmxuFV/hKqYfo5ijt3sqskoKNytK1qBYEUa0Wudh7
-O3QkM1nnoOuM9arSRCX2sc43qPf6wn514lxpw0a5yMAvJz8ZDR+0xzrHRyfcRZKl
-Urf4HNiduTa56lvQon0bJWcIPpXWskxPKQ48MYmLc2bTQCcMaFEpGIQn9Fh2/lYj
-qqsaIHnZXimf8px4YMGy/eGS36rKkQx2OP+KXVhvIFXmVUVJrpk4xXz9pPqYwd0l
-qBy2puhTYnQRlS3DqgDo
-=sBeY
------END PGP SIGNATURE-----
-
---RCcFxJ34+mAtH0DM--
-
---===============1489042899997331065==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1489042899997331065==--
+diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+index cf7c7bc..5a22e0d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+@@ -90,6 +90,8 @@ MULTIDRIVE	(1 << 1): indicate this pin need to be configured as multidrive.
+ DEGLITCH	(1 << 2): indicate this pin need deglitch.
+ PULL_DOWN	(1 << 3): indicate this pin need a pull down.
+ DIS_SCHMIT	(1 << 4): indicate this pin need to disable schmit trigger.
++OUTPUT		(1 << 5): indicate this pin need to be configured as an output.
++OUTPUT_VAL	(0x1 << 6): output val (1 = high, 0 = low)
+ DEBOUNCE	(1 << 16): indicate this pin need debounce.
+ DEBOUNCE_VAL	(0x3fff << 17): debounce val.
+ 
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 19afb9a..1578a0d 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -61,6 +61,9 @@ static int gpio_banks;
+ #define DEGLITCH	(1 << 2)
+ #define PULL_DOWN	(1 << 3)
+ #define DIS_SCHMIT	(1 << 4)
++#define OUTPUT		(1 << 5)
++#define OUTPUT_VAL_SHIFT	6
++#define OUTPUT_VAL	(0x1 << OUTPUT_VAL_SHIFT)
+ #define DEBOUNCE	(1 << 16)
+ #define DEBOUNCE_VAL_SHIFT	17
+ #define DEBOUNCE_VAL	(0x3fff << DEBOUNCE_VAL_SHIFT)
+@@ -333,6 +336,19 @@ static void at91_mux_set_pullup(void __iomem *pio, unsigned mask, bool on)
+ 	writel_relaxed(mask, pio + (on ? PIO_PUER : PIO_PUDR));
+ }
+ 
++static bool at91_mux_get_output(void __iomem *pio, unsigned pin, bool *val)
++{
++	*val = (readl_relaxed(pio + PIO_ODSR) >> pin) & 0x1;
++	return (readl_relaxed(pio + PIO_OSR) >> pin) & 0x1;
++}
++
++static void at91_mux_set_output(void __iomem *pio, unsigned mask, bool is_on,
++				bool val)
++{
++	writel_relaxed(mask, pio + (val ? PIO_SODR : PIO_CODR));
++	writel_relaxed(mask, pio + (is_on ? PIO_OER : PIO_ODR));
++}
++
+ static unsigned at91_mux_get_multidrive(void __iomem *pio, unsigned pin)
+ {
+ 	return (readl_relaxed(pio + PIO_MDSR) >> pin) & 0x1;
+@@ -712,6 +728,7 @@ static int at91_pinconf_get(struct pinctrl_dev *pctldev,
+ 	void __iomem *pio;
+ 	unsigned pin;
+ 	int div;
++	bool out;
+ 
+ 	dev_dbg(info->dev, "%s:%d, pin_id=%d, config=0x%lx", __func__, __LINE__, pin_id, *config);
+ 	pio = pin_to_controller(info, pin_to_bank(pin_id));
+@@ -732,6 +749,9 @@ static int at91_pinconf_get(struct pinctrl_dev *pctldev,
+ 	if (info->ops->get_schmitt_trig && info->ops->get_schmitt_trig(pio, pin))
+ 		*config |= DIS_SCHMIT;
+ 
++	if (at91_mux_get_output(pio, pin, &out))
++		*config |= OUTPUT | (out << OUTPUT_VAL_SHIFT);
++
+ 	return 0;
+ }
+ 
+@@ -749,6 +769,8 @@ static int at91_pinconf_set(struct pinctrl_dev *pctldev,
+ 	if (config & PULL_UP && config & PULL_DOWN)
+ 		return -EINVAL;
+ 
++	at91_mux_set_output(pio, mask, config & OUTPUT,
++			    (config & OUTPUT_VAL) >> OUTPUT_VAL_SHIFT);
+ 	at91_mux_set_pullup(pio, mask, config & PULL_UP);
+ 	at91_mux_set_multidrive(pio, mask, config & MULTI_DRIVE);
+ 	if (info->ops->set_deglitch)
+diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
+index d7988b4..9fd4d48 100644
+--- a/include/dt-bindings/pinctrl/at91.h
++++ b/include/dt-bindings/pinctrl/at91.h
+@@ -15,6 +15,8 @@
+ #define AT91_PINCTRL_DEGLITCH		(1 << 2)
+ #define AT91_PINCTRL_PULL_DOWN		(1 << 3)
+ #define AT91_PINCTRL_DIS_SCHMIT		(1 << 4)
++#define AT91_PINCTRL_OUTPUT		(1 << 5)
++#define AT91_PINCTRL_OUTPUT_VAL(x)	((x & 0x1) << 6)
+ #define AT91_PINCTRL_DEBOUNCE		(1 << 16)
+ #define AT91_PINCTRL_DEBOUNCE_VA(x)	(x << 17)
+ 
+-- 
+1.7.9.5
