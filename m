@@ -1,14 +1,17 @@
-From: Archit Taneja <archit@ti.com>
-Subject: Re: [PATCH v5] gpio: pcf857x: Add OF support
-Date: Tue, 27 Aug 2013 14:00:24 +0530
-Message-ID: <521C63A0.10902@ti.com>
-References: <1377590559-14279-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <2063335.Uqxok8bYMn@flatron>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH v2 7/9] watchdog: orion: Update device-tree binding
+ documentation
+Date: Tue, 27 Aug 2013 05:36:04 -0300
+Message-ID: <20130827083603.GA2286@localhost>
+References: <1377295942-5955-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1377295942-5955-8-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130826140843.GI13964@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2063335.Uqxok8bYMn@flatron>
+Content-Disposition: inline
+In-Reply-To: <20130826140843.GI13964@titan.lakedaemon.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,44 +21,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, swarren@wwwdotorg.org, wim@iguana.be, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tuesday 27 August 2013 01:44 PM, Tomasz Figa wrote:
-> Hi Laurent,
->
-> On Tuesday 27 of August 2013 10:02:39 Laurent Pinchart wrote:
->> Add DT bindings for the pcf857x-compatible chips and parse the device
->> tree node in the driver.
->>
->> Signed-off-by: Laurent Pinchart
->> <laurent.pinchart+renesas@ideasonboard.com> ---
->>   .../devicetree/bindings/gpio/gpio-pcf857x.txt      | 71
->> ++++++++++++++++++++++ drivers/gpio/gpio-pcf857x.c
->>    | 44 +++++++++++--- 2 files changed, 107 insertions(+), 8
->> deletions(-)
->>   create mode 100644
->> Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
->>
->> Changes since v4:
->>
->> - Don't try to get ngpio from of_device_id data, we already get it from
->>    i2c_device_id
->
-> Hmm, I'm not sure how this is supposed to work.
->
-> How does the I2C core resolve OF compatible name to particular entry in
-> id_table? I believe it simply passes NULL as the second argument of
-> .probe() if the device is instantiated based on OF compatible string and
-> not one in the legacy ID table.
-
-It doesn't pass the second argument as NULL. If you look at 
-i2c_device_probe() in drivers/i2c/i2c-core.c, the second argument to 
-probe is passed as: i2c_match_id(driver->id_table, client)
-
-This will extract the i2c_device_id pointer from the id_table.
-
-Archit
+T24gTW9uLCBBdWcgMjYsIDIwMTMgYXQgMTA6MDg6NDNBTSAtMDQwMCwgSmFzb24gQ29vcGVyIHdy
+b3RlOgo+IE9uIEZyaSwgQXVnIDIzLCAyMDEzIGF0IDA3OjEyOjIwUE0gLTAzMDAsIEV6ZXF1aWVs
+IEdhcmNpYSB3cm90ZToKPiA+IENoYW5nZSB0aGUgJ3JlZycgcHJvcGVydHkgbWVhbmluZywgYnkg
+ZGVmaW5pbmcgdHdvIHJlcXVpcmVkIGNlbGxzLgo+ID4gSXQncyBpbXBvcnRhbnQgdG8gbm90ZSB0
+aGlzIGNvbW1pdCBicmVha3MgRFQtY29tcGF0aWJpbGl0eSBmb3IgdGhpcwo+ID4gZGV2aWNlLgo+
+ID4gCj4gPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiA+IFNpZ25lZC1vZmYtYnk6
+IEV6ZXF1aWVsIEdhcmNpYSA8ZXplcXVpZWwuZ2FyY2lhQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+
+IC0tLQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9vcmlv
+bi13ZHQudHh0IHwgNyArKysrKy0tCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
+KSwgMiBkZWxldGlvbnMoLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9vcmlvbi13ZHQudHh0IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL29yaW9uLXdkdC50eHQKPiA+IGluZGV4IDVkYzhk
+MzAuLmE3NGM5YzggMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvd2F0Y2hkb2cvb3Jpb24td2R0LnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL29yaW9uLXdkdC50eHQKPiA+IEBAIC0zLDcgKzMsOSBA
+QAo+ID4gIFJlcXVpcmVkIFByb3BlcnRpZXM6Cj4gPiAgCj4gPiAgLSBDb21wYXRpYmlsaXR5IDog
+Im1hcnZlbGwsb3Jpb24td2R0Igo+ID4gLS0gcmVnCQk6IEFkZHJlc3Mgb2YgdGhlIHRpbWVyIHJl
+Z2lzdGVycwo+ID4gKy0gcmVnCQk6IFR3byBjZWxscyBhcmUgcmVxdWlyZWQ6Cj4gPiArCQkgIEZp
+cnN0ICBjZWxsIGNvbnRhaW5zIHRoZSBnbG9iYWwgdGltZXIgY29udHJvbCByZWdpc3Rlci4KPiA+
+ICsJCSAgU2Vjb25kIGNlbGwgY29udGFpbnMgdGhlIHdhdGNoZG9nIGNvdW50ZXIgcmVnaXN0ZXIu
+Cj4gPiAgCj4gPiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICAKPiA+IEBAIC0xMyw3ICsxNSw4
+IEBAIEV4YW1wbGU6Cj4gPiAgCj4gPiAgCXdkdEAyMDMwMCB7Cj4gPiAgCQljb21wYXRpYmxlID0g
+Im1hcnZlbGwsb3Jpb24td2R0IjsKPiA+IC0JCXJlZyA9IDwweDIwMzAwIDB4Mjg+Owo+ID4gKwkJ
+cmVnID0gPDB4MjAzMDAgMHg0Cj4gCj4gCj4gPiArCQkgICAgICAgMHgyMDMyNCAweDQ+Owo+IAo+
+IElzIHRoZXJlIGEgcmVhc29uIHdlJ3JlIGdvaW5nIHRoaXMgcm91dGUgb3ZlciBhZGRpbmcgYSBu
+ZXcgY29tcGF0aWJsZQo+IHN0cmluZz8KCldlbGwsIGl0IHNlZW1lZCB0byBtZSB0aGF0IHRoaXMg
+cmVnaXN0ZXIgc3BsaXR0aW5nIHdhcyBtb3JlIGRldmljZS10cmVlaXNoOgppdCBwcmV2ZW50cyB5
+b3UgZnJvbSBmaXhpbmcgeW91ciBkcml2ZXIsIGFkZGluZyBhIG5ldyBjb21wYXRpYmxlLXN0cmlu
+ZywKYW5kIHJlYnVpbGRpbmcgYSBrZXJuZWwgZWFjaCB0aW1lIGEgbmV3IFNvQyBhcHBlYXJzIHdp
+dGggYSBkaWZmZXJlbnQgb2Zmc2V0CmJldHdlZW4gcmVnaXN0ZXJzLgoKSW5zdGVhZCwgYW5kIHRy
+eWluZyB0byBmb2xsb3cgdGhlIERULXByZWFjaGVycywgd2Ugd291bGQganVzdCBjaGFuZ2UgdGhl
+CiJyZWciIHZhbHVlcyBhbmQgLWJhbmchLSBoYXZlIGZvcndhcmQtY29tcGF0aWJpbGl0eSA6LSkK
+ClRoYXQgc2FpZC4uLgoKPiBpb3csIHdoeSBjYW4ndCB3ZSBrZWVwIHRoaXMga25vd2xlZGdlIGlu
+IHRoZSBkcml2ZXIgYW5kIGhhdmUgYQo+ICJtYXJ2ZWxsLGFybWFkYS13ZHQiIG9yIHNpbWlsYXIg
+Y29tcGF0IHN0cmluZyB0aGF0IHRoZSBvcmlvbi13ZHQgZHJpdmVyCj4gYWxzbyBzZXJ2ZXM/Cj4g
+CgouLi4gd2Ugc3RpbGwgbmVlZCBuZXcgY29tcGF0aWJsZSBzdHJpbmdzIGZvciBhcm1hZGEteHAt
+d2R0IGFuZAphcm1hZGEtMzcwLXdkdCwgZm9yIHRoZXkgaGF2ZSBkaWZmZXJlbmNlcyBiZXR3ZWVu
+IGVhY2ggb3RoZXIKYW5kIHdpdGggdGhlIG9yaW9uLXdkdDoKCiogVGhlIGNsb2NrIGlucHV0IGlz
+IG9idGFpbmVkIGluIGEgZGlmZmVyZW50IHdheSBpbiBlYWNoIGNhc2UKCiogVGhlIHdhdGNoZG9n
+IGVuYWJsZSBiaXQgaW5zaWRlIHRoZSB0aW1lciBjb250cm9sIHJlZ2lzdGVyCiAgaXMgYXQgYSBk
+aWZmZXJlbnQgbG9jYXRpb24uCgpTbywgdGhpbmtpbmcgYWJvdXQgdGhpcyBhZ2FpbiwgcGVyaGFw
+cyB3ZSBzaG91bGQgc2ltcGx5IGxldCBhbG9uZSB0aGUKInJlZyIgcHJvcGVydHkgYW5kIGFkZCB0
+aGUgd2F0Y2hkb2cgY291bnRlciBvZmZzZXQgYXMgeWV0IGFub3RoZXIgZmllbGQKaW4gdGhlIGNv
+bXBhdGlibGUtZGF0YT8KCldoYXQgZG8geW91IHRoaW5rPwotLSAKRXplcXVpZWwgR2FyY8OtYSwg
+RnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBFbmdpbmVl
+cmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
