@@ -1,44 +1,26 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH 09/33] ARM: ux500: Supply the I2C clocks lookup to the
- DBX500 DT
-Date: Tue, 27 Aug 2013 17:15:49 +0100
-Message-ID: <1377620149.6308.28.camel@hornet>
-References: <20130820093034.GL31036@pengutronix.de>
-	 <20130822133730.GB23152@e106331-lin.cambridge.arm.com>
-	 <20130822141900.GB17154@lee--X1>
-	 <20130822151723.GE23152@e106331-lin.cambridge.arm.com>
-	 <20130822154116.GC17154@lee--X1>	<20130822211912.GE31036@pengutronix.de>
-	 <20130823075607.GD17154@lee--X1>
-	 <20130823165539.GD7015@e106331-lin.cambridge.arm.com>
-	 <20130827080635.GC6152@lee--X1>
-	 <20130827134621.GJ19893@e106331-lin.cambridge.arm.com>
-	 <20130827140805.GB10210@lee--X1>
-	 <CAL_JsqJU6HA46J2HBRFaOgd_23d4UoLuGtMZYKtsZR1+7brKvg@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 0/2] net/cadence/macb: add support for dt phy definition
+Date: Tue, 27 Aug 2013 12:20:56 -0400 (EDT)
+Message-ID: <20130827.122056.419758783951274884.davem@davemloft.net>
+References: <1377186980-21902-1-git-send-email-b.brezillon@overkiz.com>
+	<20130826.160450.2176892065062148718.davem@davemloft.net>
+	<521C586A.7080604@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJU6HA46J2HBRFaOgd_23d4UoLuGtMZYKtsZR1+7brKvg@mail.gmail.com>
+In-Reply-To: <521C586A.7080604@overkiz.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: b.brezillon@overkiz.com
+Cc: nicolas.ferre@atmel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, linux@arm.linux.org.uk, f.fainelli@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2013-08-27 at 16:51 +0100, Rob Herring wrote:
-> >> * pl111 has no driver or binding in mainline, but appears in dts files.
-> >>   Those dts files clcdclk and apb_pclk, in that order. We could fix
-> >>   those before a driver starts using them.
-> 
-> I think this was waiting for some generic display bindings? Pawel may know.
+From: boris brezillon <b.brezillon@overkiz.com>
+Date: Tue, 27 Aug 2013 09:42:34 +0200
 
-Common Display Framework it was ;-)
+> Could you apply, the 3rd version of this series instead ?
 
-And yes, it was waiting for it, but it is getting bored with waiting so
-I'll cut off the CDF bits and post the rest this or next week.
+There can never be an "instead" or reverting patches I've said I've
+applied already.
 
-As to the APB clock, we've been there before...
-http://article.gmane.org/gmane.linux.ports.arm.kernel/188927
-
-Cheers!
-
-Pawel
+If you want changes, you have to submit follow-on fixes.
