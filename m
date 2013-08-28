@@ -1,107 +1,120 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: dra7-evm: Add extcon nodes for USB ID
- pin detection
-Date: Wed, 28 Aug 2013 18:40:38 +0400
-Message-ID: <521E0BE6.3080607@cogentembedded.com>
-References: <1377698352-27689-1-git-send-email-george.cherian@ti.com> <1377698352-27689-4-git-send-email-george.cherian@ti.com>
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
+Date: Wed, 28 Aug 2013 16:47:36 +0200
+Message-ID: <20130828144736.GA7066@ab42.lan>
+References: <20130618092516.GC18663@ab42.lan>
+ <1371547751-13873-2-git-send-email-christian.ruppert@abilis.com>
+ <CACRpkdZvcF3agP=hK6J6hZn-Sx2Mw=P4dR2Mwzo+NoLxtMkbQg@mail.gmail.com>
+ <20130805115118.GF20936@ab42.lan>
+ <CACRpkdaXqHHF5oDsWSCyhzUOurrxfLhS40=csGJFT8fK4WkA4A@mail.gmail.com>
+ <20130821155751.GB3046@ab42.lan>
+ <5216704F.60007@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1377698352-27689-4-git-send-email-george.cherian-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, popcornmix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5216704F.60007@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, Aug 22, 2013 at 02:10:55PM -0600, Stephen Warren wrote:
+> On 08/21/2013 09:57 AM, Christian Ruppert wrote:
+> > On Wed, Aug 14, 2013 at 06:53:56PM +0200, Linus Walleij wrote:
+> >> On Mon, Aug 5, 2013 at 1:51 PM, Christian Ruppert
+> >> <christian.ruppert@abilis.com> wrote:
+> >>> [Me]
+> >>>> I don't see any of the port concept creeping into the device tree
+> >>>> in this version and that is how I think it should be kept:
+> >>>> the "port" particulars is a thing for the driver and not the
+> >>>> device tree.
+> ...
+> >>> In the driver under discussion, pin groups are defined for every
+> >>> "interface" to make sure that interfaces can be requested in an
+> >>> orthogonal way by different modules and modules don't have to be "aware"
+> >>> of which interfaces are grouped into which port (and which other modules
+> >>> request which other interfaces). A request either succeeds or fails.
+> >>> Resource management (which interfaces can be mapped simultaneously) is
+> >>> done inside the pinctrl driver.
+> >>
+> >> OK
+> > 
+> > This actually looks 100% coherent with Documentation/pinctrl.txt. But
+> > then I don't understand Stephen's request to introduce the concept of
+> > "ports" in the device tree. IMHO ports are a hardware limitation which
+> > should be managed inside the pinctrl driver and if possible not leak
+> > out of it. Also (as stated above), the concept of "ports" does not even
+> > exist in the pinmux framework so why introduce it for DT?
+> > 
+> > I might have thoroughly misunderstood you here, Stephen. Please be
+> > patient with me and explain once more.
+> 
+> I don't think I asked for ports to be represented in DT. Do you have
+> more context?
 
-On 08/28/2013 05:59 PM, George Cherian wrote:
+Well, you never asked about ports but you asked specifically about pin
+groups. The most concise definition of pin groups I have found in your
+mails is from https://lkml.org/lkml/2013/6/21/462:
 
-> Add
-> 	-extcon nodes for USB ID pin detection.
-> 	-i2c nodes.
-> 	-pcf nodes to which USB ID pin is connected.
+> When I pushed for the concept of groups, I intended it to mean precisely
+> one single thing. The points below describe this.
+> 
+> 1) A pin is a single pin/ball/pad on the package.
+> 
+> 2) Some register fields affect just a single pin. For example, there may
+> be a register field that affects pin A8's mux setting only.
+> 
+> 3) Some register fields affect multiple pins at once. For example,
+> perhaps one register field affects both pin A8's an pin A7's mux setting
+> at once.
+> 
+> 4) Depending on HW design, all register fields might be of type
+> described at (2) above, or all of the type described at (3) above, or a
+> mixture of both. Tegra is a mixture.
+> 
+> 5) I expect the concept of a pin group to solely represent the various
+> groups of pins affected by each register field; in (2) above one pin per
+> group, in (3) above many pins per group.
+> 
+> Thus, to my mind, a pin group is purely a HW concept, and dictated
+> purely by HW design.
 
-> Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
-> ---
->   arch/arm/boot/dts/dra7-evm.dts | 52 +++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 51 insertions(+), 1 deletion(-)
+Point 5 clearly defines the "concept of a pin group to solely represent
+the various groups of pins affected by each register field". The TB10x
+definition of a "port" (concept which doesn't seem to exist in the pinctrl
+framework) is the set of pins controlled by the same register field
+(i.e. the same mux). In my understanding this matches point 5 but as I
+said this is probably a misunderstanding and I would be grateful for
+clarification. There are other comments which fuel that
+misunderstanding, e.g. https://lkml.org/lkml/2013/6/19/589:
 
-> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-> index acd3c09..9ee97c0 100644
-> --- a/arch/arm/boot/dts/dra7-evm.dts
-> +++ b/arch/arm/boot/dts/dra7-evm.dts
-> @@ -17,6 +17,17 @@
->   		device_type = "memory";
->   		reg = <0x80000000 0x60000000>; /* 1536 MB */
->   	};
-> +
-> +	extcon1: gpio_usbvid_extcon1 {
-> +		compatible = "ti,gpio-usb-id";
-> +		gpios = <&pcf_21 1 0>;
-> +	};
-> +
-> +	extcon2: gpio_usbvid_extcon2 {
-> +		compatible = "ti,gpio-usb-id";
-> +		gpios = <&pcf_21 2 0>;
-> +	};
-> +
->   };
->
->   &dra7_pmx_core {
-> @@ -33,10 +44,49 @@
->           };
->   };
->
-> +&i2c1 {
-> +	clock-frequency = <400000>;
-> +
-> +	pcf_20: pcf8575@20 {
+> Pin groups are supposed to be something that represents some property of
+> the pinctrl HW itself. So, if you have register "X" bits 3-0 that define
+> the mux function for pins 8, 9, 10, and 11, then there really is a pin
+> group that exists in HW, and that pin group will still exist with that
+> same definition no matter what SoC you put the pinctrl HW into. If this
+> changes, it's not the same pinctrl HW module.
 
-    Acorrding to the ePAPR spec [1], "the name of a node should be somewhat 
-generic, reflecting the function of the device and not its precise 
-programming model. If appropriate, the name should be one of the following 
-choices:
+In TB10x, every function can be activated on exactly one pin group, and
+Documentation/pinctrl.txt says "If only one possible group of pins is
+available for the function, no group name need to be supplied.".
 
-[...]
-- gpio
-[...]"
+Maybe the answer to our concrete question of the tb10x driver is thus
+renaming the pingrp device tree property of the original patch into
+something like function (by which a pin group can be implied)?
 
-> +		compatible = "ti,pcf8575";
-> +		reg = <0x20>;
-> +		n_latch = <0x4000>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		interrupt-parent = <&gpio6>;
-> +		interrupts = <11 2>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	pcf_21: pcf8575@21 {
+For example:
+iomux: iomux@FF10601c {
+        compatible = "abilis,tb10x-iomux";
+        reg = <0xFF10601c 0x4>;
+        pctl_gpio_a: pctl-gpio-a {
+                abilis,function = "gpioa";
+        };
+        pctl_uart0: pctl-uart0 {
+                abilis,function = "uart0";
+        };
+};
 
-    Same comment here.
-
-> +		compatible = "ti,pcf8575";
-> +		reg = <0x21>;
-> +		n_latch = <0x1408>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		interrupt-parent = <&pcf_20>;
-> +		interrupts = <14 2>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +};
-> +
-
-[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What do you think?
+  Christian
