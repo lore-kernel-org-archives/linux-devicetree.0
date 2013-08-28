@@ -1,172 +1,131 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: [PATCH V5] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
-Date: Wed, 28 Aug 2013 17:33:06 +0530
-Message-ID: <1377691386-7085-1-git-send-email-yuvaraj.cd@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree@vger.kernel.org
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, t.figa@samsung.com, dianders@chromium.org, cjb@laptop.org, thomas.abraham@linaro.org, ks.giri@samsung.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH RFC v2 5/6] ARM: add Armada 1500 and Sony NSZ-GS7
+ device tree files
+Date: Wed, 28 Aug 2013 08:14:03 -0400
+Message-ID: <20130828121403.GL19598@titan.lakedaemon.net>
+References: <1376682098-10580-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1377648874-6714-6-git-send-email-sebastian.hesselbarth@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1377648874-6714-6-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree node entries for exynos5420 SOC.
-Exynos5420 has a different version of DWMMC controller,so a new
-compatible string is used to distinguish it from the prior SOC's.
+On Wed, Aug 28, 2013 at 02:14:33AM +0200, Sebastian Hesselbarth wrote:
+> This adds very basic device tree files for the Marvell Armada 1500 SoC
+> (88DE3100) and the Sony NSZ-GS7 GoogleTV board. Currently, SoC only has
+> nodes for cpus, some clocks, l2 cache controller, local timer, apb timers,
+> uart, and interrupt controllers. The Sony NSZ-GS7 is a GoogleTV consumer
+> device comprising the Armada 1500 SoC above.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> ---
+> Changelog:
+> v1->v2:
+> - add binding documentation (Reported by Jason Cooper)
+> - change l2cc from aurora to tauros3 (Reported by Thomas Petazzoni)
+> - add copyright reference
+> - adapt compatibles to mach-berlin instead of mach-mvebu
+> 
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  .../devicetree/bindings/arm/marvell,berlin.txt     |   23 ++
+>  arch/arm/boot/dts/Makefile                         |    2 +
+>  arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts      |   29 +++
+>  arch/arm/boot/dts/mv88de3100.dtsi                  |  222 ++++++++++++++++++++
+>  4 files changed, 276 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/marvell,berlin.txt
+>  create mode 100644 arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts
+>  create mode 100644 arch/arm/boot/dts/mv88de3100.dtsi
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/marvell,berlin.txt b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
+> new file mode 100644
+> index 0000000..a4c3056
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
+> @@ -0,0 +1,23 @@
+> +Marvell Berlin (88DE3xxx) family SoCs Device Tree Bindings
+> +---------------------------------------------------------------
+> +
+> +Boards with a SoC of the Marvell Berlin (88DE3xxx) family, e.g. Armada 1500
+> +shall have the following properties:
+> +
+> +* Required root node properties:
+> +compatible: must contain "marvell,berlin"
+> +
+> +In addition, the above compatible shall be extended with the specific
+> +SoC used, i.e.
+> +    "marvell,88de3100"	for Marvell 88DE3100 (Armada 1500),
+> +    "marvell,88de3010"	for Marvell 88DE3010 (Armada 1000),
+> +    "marvell,88de3005"	for Marvell 88DE3005 (Armada 1500-mini)
+> +
+> +* Example:
+> +
+> +/ {
+> +	model = "Sony NSZ-GS7";
+> +	compatible = "marvell,88de3100", "marvell,berlin";
 
-This patch depends on
-	mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
+I would make this:
 
-changes since v4:
-	1.Droppped the bypass-smu binding property.
-	2.Used compatible string "samsung,exynos5250-dw-mshc"
-	  for controller instance which does not have SMU.
+	compatible = "sony,nsz-gs7", "marvell,88de3100", "marvell,berlin";
 
-changes since V3:
-	1.change fifo-depth size from 0x80 to 0x40
-	2.Move the below properties
-		a.card-detect-delay
-		b.samsung,dw-mshc-ciu-div
-		c.samsung,dw-mshc-sdr-timing
-		d.samsung,dw-mshc-ddr-timing
-	from SOC dts to board dts file as suggested by Doug Anderson
+> +
+> +	...
+> +}
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index d45058e..2989b51 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -43,6 +43,8 @@ dtb-$(CONFIG_ARCH_AT91)	+= sama5d35ek.dtb
+>  
+>  dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
+>  dtb-$(CONFIG_ARCH_BCM) += bcm11351-brt.dtb
+> +dtb-$(CONFIG_ARCH_BERLIN) += \
+> +	mv88de3100-sony-nsz-gs7.dtb
+>  dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
+>  	da850-evm.dtb
+>  dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
+> diff --git a/arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts b/arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts
+> new file mode 100644
+> index 0000000..1081bc1
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts
+> @@ -0,0 +1,29 @@
+> +/*
+> + * Device Tree file for Sony NSZ-GS7
+> + *
+> + * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "mv88de3100.dtsi"
+> +
+> +/ {
+> +	model = "Sony NSZ-GS7";
+> +	compatible = "sony,nsz-gs7", "marvell,88de3100", "marvell,berlin";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200 earlyprintk verbose debug";
 
-changes since V2:
-	1.dropped num-slots property from node as its not required
-	  if number of card slots available is 1.
+I would remove 'verbose debug' before official submission, no point to
+defaulting to log-spammer.
 
-	2.Move the below properties
-		a.fifo-depth
-		b.card-detect-delay
-		c.samsung,dw-mshc-ciu-div
-		d.samsung,dw-mshc-sdr-timing
-		e.samsung,dw-mshc-ddr-timing
-	from board dts to SOC dts,as these are not board specific properties.
+thx,
 
-	3.Updated the binding document exynos-dw-mshc.txt.
-
-changes since V1:
-	1.disable node by status = disabled in SOC file
-	2.enable node by status = okay in board specific file
-
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
----
- .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +
- arch/arm/boot/dts/exynos5420-smdk5420.dts          |   33 +++++++++++++++++
- arch/arm/boot/dts/exynos5420.dtsi                  |   39 ++++++++++++++++++++
- 3 files changed, 74 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-index 6d1c098..84cd56f 100644
---- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-@@ -16,6 +16,8 @@ Required Properties:
- 	  specific extensions.
- 	- "samsung,exynos5250-dw-mshc": for controllers with Samsung Exynos5250
- 	  specific extensions.
-+	- "samsung,exynos5420-dw-mshc": for controllers with Samsung Exynos5420
-+	  specific extensions.
- 
- * samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
-   unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
-diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-index bafba25..3ce5c97 100644
---- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-+++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-@@ -31,6 +31,39 @@
- 		};
- 	};
- 
-+	dwmmc0@12200000 {
-+		status = "okay";
-+		broken-cd;
-+		supports-highspeed;
-+		card-detect-delay = <200>;
-+		samsung,dw-mshc-ciu-div = <3>;
-+		samsung,dw-mshc-sdr-timing = <0 4>;
-+		samsung,dw-mshc-ddr-timing = <0 2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
-+
-+		slot@0 {
-+			reg = <0>;
-+			bus-width = <8>;
-+		};
-+	};
-+
-+	dwmmc2@12220000 {
-+		status = "okay";
-+		supports-highspeed;
-+		card-detect-delay = <200>;
-+		samsung,dw-mshc-ciu-div = <3>;
-+		samsung,dw-mshc-sdr-timing = <2 3>;
-+		samsung,dw-mshc-ddr-timing = <1 2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-+
-+		slot@0 {
-+			reg = <0>;
-+			bus-width = <4>;
-+		};
-+	};
-+
- 	dp-controller@145B0000 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&dp_hpd>;
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index d537cd7..ccfa235 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -22,6 +22,9 @@
- 	compatible = "samsung,exynos5420";
- 
- 	aliases {
-+		mshc0 = &dwmmc_0;
-+		mshc1 = &dwmmc_1;
-+		mshc2 = &dwmmc_2;
- 		pinctrl0 = &pinctrl_0;
- 		pinctrl1 = &pinctrl_1;
- 		pinctrl2 = &pinctrl_2;
-@@ -84,6 +87,42 @@
- 		clock-names = "mfc";
- 	};
- 
-+	dwmmc_0: dwmmc0@12200000 {
-+		compatible = "samsung,exynos5420-dw-mshc";
-+		interrupts = <0 75 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x12200000 0x2000>;
-+		clocks = <&clock 351>, <&clock 132>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x40>;
-+		status = "disabled";
-+	};
-+
-+	dwmmc_1: dwmmc1@12210000 {
-+		compatible = "samsung,exynos5420-dw-mshc";
-+		interrupts = <0 76 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x12210000 0x2000>;
-+		clocks = <&clock 352>, <&clock 133>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x40>;
-+		status = "disabled";
-+	};
-+
-+	dwmmc_2: dwmmc2@12220000 {
-+		compatible = "samsung,exynos5250-dw-mshc";
-+		interrupts = <0 77 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x12220000 0x2000>;
-+		clocks = <&clock 353>, <&clock 134>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x40>;
-+		status = "disabled";
-+	};
-+
- 	mct@101C0000 {
- 		compatible = "samsung,exynos4210-mct";
- 		reg = <0x101C0000 0x800>;
--- 
-1.7.9.5
+Jason.
