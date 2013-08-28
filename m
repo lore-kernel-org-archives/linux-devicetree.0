@@ -1,67 +1,166 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/6] iio: at91: introduce the multiple compatible
- string for different IPs.
-Date: Wed, 28 Aug 2013 10:02:00 +0200
-Message-ID: <20130828080200.GM2695@lukather>
-References: <1377602932-1899-1-git-send-email-josh.wu@atmel.com>
- <1377602932-1899-3-git-send-email-josh.wu@atmel.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH] pinctrl: at91: add support for OUTPUT config
+Date: Wed, 28 Aug 2013 10:08:39 +0200
+Message-ID: <521DB007.5040405@atmel.com>
+References: <1377615082-16808-1-git-send-email-b.brezillon@overkiz.com> <521DA744.1020807@atmel.com> <521DA82C.7020905@overkiz.com> <521DAA28.2070507@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="t5NgoZwlhlUmGr82"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1377602932-1899-3-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <521DAA28.2070507@atmel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: boris brezillon <b.brezillon@overkiz.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Richard Genoud <richard.genoud@gmail.com>, Jiri Kosina <jkosina@suse.cz>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 28/08/2013 09:43, Nicolas Ferre :
+> On 28/08/2013 09:35, boris brezillon :
+>> On 28/08/2013 09:31, Nicolas Ferre wrote:
+>>> On 27/08/2013 16:51, Boris BREZILLON :
+>>>> Add support for pin output control through the pinctrl config:
+>>>>     - support enabling/disabling output on a given pin
+>>>>     - support output level setting (high or low)
+>>>>
+>>>> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+>>>> ---
+>>>>     .../bindings/pinctrl/atmel,at91-pinctrl.txt        |    2 ++
+>>>>     drivers/pinctrl/pinctrl-at91.c                     |   22
+>>>> ++++++++++++++++++++
+>>>>     include/dt-bindings/pinctrl/at91.h                 |    2 ++
+>>>>     3 files changed, 26 insertions(+)
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>>>> b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>>>> index cf7c7bc..5a22e0d 100644
+>>>> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>>>> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>>>> @@ -90,6 +90,8 @@ MULTIDRIVE    (1 << 1): indicate this pin need to
+>>>> be configured as multidrive.
+>>>>     DEGLITCH    (1 << 2): indicate this pin need deglitch.
+>>>>     PULL_DOWN    (1 << 3): indicate this pin need a pull down.
+>>>>     DIS_SCHMIT    (1 << 4): indicate this pin need to disable schmit
+>>>> trigger.
+>>>> +OUTPUT        (1 << 5): indicate this pin need to be configured as
+>>>> an output.
+>>>> +OUTPUT_VAL    (0x1 << 6): output val (1 = high, 0 = low)
+>>>>     DEBOUNCE    (1 << 16): indicate this pin need debounce.
+>>>>     DEBOUNCE_VAL    (0x3fff << 17): debounce val.
+>>>>
+>>>> diff --git a/drivers/pinctrl/pinctrl-at91.c
+>>>> b/drivers/pinctrl/pinctrl-at91.c
+>>>> index 19afb9a..1578a0d 100644
+>>>> --- a/drivers/pinctrl/pinctrl-at91.c
+>>>> +++ b/drivers/pinctrl/pinctrl-at91.c
+>>>> @@ -61,6 +61,9 @@ static int gpio_banks;
+>>>>     #define DEGLITCH    (1 << 2)
+>>>>     #define PULL_DOWN    (1 << 3)
+>>>>     #define DIS_SCHMIT    (1 << 4)
+>>>> +#define OUTPUT        (1 << 5)
+>>>> +#define OUTPUT_VAL_SHIFT    6
+>>>> +#define OUTPUT_VAL    (0x1 << OUTPUT_VAL_SHIFT)
+>>>>     #define DEBOUNCE    (1 << 16)
+>>>>     #define DEBOUNCE_VAL_SHIFT    17
+>>>>     #define DEBOUNCE_VAL    (0x3fff << DEBOUNCE_VAL_SHIFT)
+>>>> @@ -333,6 +336,19 @@ static void at91_mux_set_pullup(void __iomem
+>>>> *pio, unsigned mask, bool on)
+>>>>         writel_relaxed(mask, pio + (on ? PIO_PUER : PIO_PUDR));
+>>>>     }
+>>>>
+>>>> +static bool at91_mux_get_output(void __iomem *pio, unsigned pin,
+>>>> bool *val)
+>>>> +{
+>>>> +    *val = (readl_relaxed(pio + PIO_ODSR) >> pin) & 0x1;
+>>>> +    return (readl_relaxed(pio + PIO_OSR) >> pin) & 0x1;
+>>>> +}
+>>>> +
+>>>> +static void at91_mux_set_output(void __iomem *pio, unsigned mask,
+>>>> bool is_on,
+>>>> +                bool val)
+>>>> +{
+>>>> +    writel_relaxed(mask, pio + (val ? PIO_SODR : PIO_CODR));
+>>>> +    writel_relaxed(mask, pio + (is_on ? PIO_OER : PIO_ODR));
+>>>> +}
+>>>> +
+>>>>     static unsigned at91_mux_get_multidrive(void __iomem *pio, unsigned
+>>>> pin)
+>>>>     {
+>>>>         return (readl_relaxed(pio + PIO_MDSR) >> pin) & 0x1;
+>>>> @@ -712,6 +728,7 @@ static int at91_pinconf_get(struct pinctrl_dev
+>>>> *pctldev,
+>>>>         void __iomem *pio;
+>>>>         unsigned pin;
+>>>>         int div;
+>>>> +    bool out;
+>>>>
+>>>>         dev_dbg(info->dev, "%s:%d, pin_id=%d, config=0x%lx", __func__,
+>>>> __LINE__, pin_id, *config);
+>>>>         pio = pin_to_controller(info, pin_to_bank(pin_id));
+>>>> @@ -732,6 +749,9 @@ static int at91_pinconf_get(struct pinctrl_dev
+>>>> *pctldev,
+>>>>         if (info->ops->get_schmitt_trig &&
+>>>> info->ops->get_schmitt_trig(pio, pin))
+>>>>             *config |= DIS_SCHMIT;
+>>>>
+>>>> +    if (at91_mux_get_output(pio, pin, &out))
+>>>> +        *config |= OUTPUT | (out << OUTPUT_VAL_SHIFT);
+>>>> +
+>>>>         return 0;
+>>>>     }
+>>>>
+>>>> @@ -749,6 +769,8 @@ static int at91_pinconf_set(struct pinctrl_dev
+>>>> *pctldev,
+>>>>         if (config & PULL_UP && config & PULL_DOWN)
+>>>>             return -EINVAL;
+>>>>
+>>>> +    at91_mux_set_output(pio, mask, config & OUTPUT,
+>>>> +                (config & OUTPUT_VAL) >> OUTPUT_VAL_SHIFT);
+>>>>         at91_mux_set_pullup(pio, mask, config & PULL_UP);
+>>>>         at91_mux_set_multidrive(pio, mask, config & MULTI_DRIVE);
+>>>>         if (info->ops->set_deglitch)
+>>>> diff --git a/include/dt-bindings/pinctrl/at91.h
+>>>> b/include/dt-bindings/pinctrl/at91.h
+>>>> index d7988b4..9fd4d48 100644
+>>>> --- a/include/dt-bindings/pinctrl/at91.h
+>>>> +++ b/include/dt-bindings/pinctrl/at91.h
+>>>> @@ -15,6 +15,8 @@
+>>>>     #define AT91_PINCTRL_DEGLITCH        (1 << 2)
+>>>>     #define AT91_PINCTRL_PULL_DOWN        (1 << 3)
+>>>>     #define AT91_PINCTRL_DIS_SCHMIT        (1 << 4)
+>>>> +#define AT91_PINCTRL_OUTPUT        (1 << 5)
+>>>> +#define AT91_PINCTRL_OUTPUT_VAL(x)    ((x & 0x1) << 6)
+>>>
+>>> Can you add this change to the documentation as well:
+>>> Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
 
---t5NgoZwlhlUmGr82
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oops! it is already in this patch: sorry for the noise!
 
-Hi Josh,
 
-On Tue, Aug 27, 2013 at 07:28:48PM +0800, Josh Wu wrote:
-> As use the multiple compatible string, we can remove hardware register in=
- dt.
->=20
-> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>>>     #define AT91_PINCTRL_DEBOUNCE        (1 << 16)
+>>>>     #define AT91_PINCTRL_DEBOUNCE_VA(x)    (x << 17)
+>>>
+>>> Oh, we have a nice typo here! ---^^^^^^
+>>> And moreover it would be good to add the mask as well.
+>>
+>> Do you want me to fix this typo and add mask for DEBOUNCE
+>> in a separate patch ?
+>
+> Yep, if you want.
+>
+>>> Once the documentation added, you can stick my:
 
-It's ok for me. You can add my
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+No condition anymore here then.
 
-Thanks!
-Maxime
+>>>
+>>> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+>>>
+>>> Thanks, bye,
+>>
+>>
+>>
+>
+>
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
 
---t5NgoZwlhlUmGr82
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSHa54AAoJEBx+YmzsjxAgpckP/2+IWk+WOV1b56/C6JAZid4V
-CRgr6qWpiNFYM4ErQCU56/8lgW9JisJFG9xUuR3HBermttOYCTYwEYea4U+a9c48
-F0cykU5fQY5xC4t+K5dIxyarg3WUPUxXFo03mKMIJcZuyJSxHTIBX9vncyFc+uGG
-GEYQIL0AyibygFmiRmBwCh71Mz6sbQsZyLfcHYjz+ljSdRnNB+9MtmK6O/2Tw1YJ
-uXtbCoWjKVSw+tF7OPaD3zobbu9f8Mn9r5FZqu3gjGE5Ri5fWBi6SI9H2lPE7YnG
-TGJa8BgMFD4zIcA7vnl7KVwQ5AX6Pzs3EjtMUJxVW4Oy/vs+7R2kjFWVfcmG/upf
-QRiLKC5tQywMPAhIjBaoaLaAdazcCBIfwi87UZqwbfmxwbNNUqOKXuU7EIVzEkwr
-zOO0DZth4hnGTLBWrz3hbweuJQ3xyX8IF/JHis1TVbg3ZtXPI+rTNQEKWtOAmeBp
-6gL4f0I/HNNaCijQtWJMdwdPh/3LmZQZTzy1EgHStuzX4uizByl59LAMNlTl5Ryz
-ClqZrueXXrGqv+3pw285K+uCUmMLbsjRXghvEcODEXLUVzgFj0xGAugdyh0Lwhle
-Kc5uyf0c2Oh51cBrW4+JSptDNSxm9fnkm1HJZ9B/2FJu7PWrOBgXp9RijkeSM/ww
-WaftnFelm0gK7vCq7OB6
-=yxQx
------END PGP SIGNATURE-----
-
---t5NgoZwlhlUmGr82--
+-- 
+Nicolas Ferre
