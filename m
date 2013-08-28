@@ -1,7 +1,7 @@
 From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
-Date: Wed, 28 Aug 2013 11:34:59 +0200
-Message-ID: <20130828113459.48ecbb34@armhf>
+Subject: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
+Date: Wed, 28 Aug 2013 11:35:21 +0200
+Message-ID: <20130828113521.35c53365@armhf>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
@@ -11,43 +11,36 @@ To: linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesse
 Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the nodes to instantiate the audio devices of the Dove
-boards.
+This patch activates the audio device of the Cubox and sets the i2s
+and S/PDIF pins.
 
 Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
 ---
- arch/arm/boot/dts/dove.dtsi                  | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm/boot/dts/dove-cubox.dts                  | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 499abad..78227e2 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -573,6 +573,24 @@
- 					phy-handle =3D <&ethphy>;
- 				};
- 			};
-+
-+			i2s0: audio-controller@b0000 {
-+				compatible =3D "marvell,mvebu-audio";
-+				reg =3D <0xb0000 0x2210>;
-+				interrupts =3D <19>, <20>;
-+				clocks =3D <&gate_clk 12>;
-+				clock-names =3D "internal";
-+				status =3D "disabled";
-+			};
-+
-+			i2s1: audio-controller@b4000 {
-+				compatible =3D "marvell,mvebu-audio";
-+				reg =3D <0xb4000 0x2210>;
-+				interrupts =3D <21>, <22>;
-+				clocks =3D <&gate_clk 13>;
-+				clock-names =3D "internal";
-+				status =3D "disabled";
-+			};
- 		};
+diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-=
+cubox.dts
+index 4af59b6..003d95b 100644
+--- a/arch/arm/boot/dts/dove-cubox.dts
++++ b/arch/arm/boot/dts/dove-cubox.dts
+@@ -132,3 +132,16 @@
+ 		reg =3D <0>;
  	};
  };
++
++&pinctrl {
++	pmx_audio1_i2s1_spdifo: pmx-audio1-i2s1-spdifo {
++		marvell,pins =3D "mpp_audio1";
++		marvell,function =3D "i2s1/spdifo";
++	};
++};
++
++&i2s1 {
++	status =3D "okay";
++	pinctrl-0 =3D <&pmx_audio1_i2s1_spdifo>;
++	pinctrl-names =3D "default";
++};
 
 
 --=20
