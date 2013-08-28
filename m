@@ -1,102 +1,161 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH V2] PCI: exynos: add support for MSI
-Date: Wed, 28 Aug 2013 17:17:24 +0900
-Message-ID: <001801cea3c7$06bca9d0$1435fd70$%han@samsung.com>
-References: <003d01ce9fc6$9c0f1c20$d42d5460$%han@samsung.com>
- <20130823083539.GB3937@pratyush-vbox>
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
+Subject: Re: [PATCH v8 1/3] DMA: Freescale: revise device tree binding document
+Date: Wed, 28 Aug 2013 16:18:55 +0800
+Message-ID: <521DB26F.8010501@freescale.com>
+References: <1377600123-5746-1-git-send-email-hongbo.zhang@freescale.com> <1377600123-5746-2-git-send-email-hongbo.zhang@freescale.com> <20130827112509.GH19893@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <20130823083539.GB3937@pratyush-vbox>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Pratyush Anand' <pratyush.anand@st.com>
-Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Mohit KUMAR DCG' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130827112509.GH19893@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, August 23, 2013 5:36 PM, Pratyush Anand wrote:
-> On Fri, Aug 23, 2013 at 02:04:20PM +0800, Jingoo Han wrote:
+On 08/27/2013 07:25 PM, Mark Rutland wrote:
+> On Tue, Aug 27, 2013 at 11:42:01AM +0100, hongbo.zhang@freescale.com wrote:
+>> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+>>
+>> This patch updates the discription of each type of DMA controller and its
+>> channels, it is preparation for adding another new DMA controller binding, it
+>> also fixes some defects of indent for text alignment at the same time.
+>>
+>> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+>> ---
+>>   .../devicetree/bindings/powerpc/fsl/dma.txt        |   62 +++++++++-----------
+>>   1 file changed, 27 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+>> index 2a4b4bc..ddf17af 100644
+>> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+>> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+>> @@ -1,33 +1,29 @@
+>> -* Freescale 83xx DMA Controller
+>> +* Freescale DMA Controllers
+>>   
+>> -Freescale PowerPC 83xx have on chip general purpose DMA controllers.
+>> +** Freescale Elo DMA Controller
+>> +   This is a little-endian DMA controller, used in Freescale mpc83xx series
+>> +   chips such as mpc8315, mpc8349, mpc8379 etc.
+>>   
+>>   Required properties:
+>>   
+>> -- compatible        : compatible list, contains 2 entries, first is
+>> -		 "fsl,CHIP-dma", where CHIP is the processor
+>> -		 (mpc8349, mpc8360, etc.) and the second is
+>> -		 "fsl,elo-dma"
+>> -- reg               : <registers mapping for DMA general status reg>
+>> -- ranges		: Should be defined as specified in 1) to describe the
+>> -		  DMA controller channels.
+>> +- compatible        : must include "fsl,elo-dma"
+> We should list the other values that may be in the list also, unless
+> they are really of no consequence, in which case their presence in dt is
+> questionable.
+Hmm.  Stephen questioned here too, it seems this is a default rule.
+Although Scott@freescale had explained our thoughts, I'd like to edit 
+this item like this:
 
-[.....]
+"must include "fsl,eloplus-dma", and a "fsl,CHIP-dma" is optional, where 
+CHIP is the processor name"
 
-> > +#define MAX_MSI_IRQS                   32
-> 
-> DW MSI controller can support upto 256. However, 32 seems a practical
-> choice, as there might not be any system which may use more
-> than 32. But a comment like as follows can be put here:
-> 
-> /*
-> * Maximum number of MSI IRQs can be 256 per controller. But keep
-> * it 32 as of now. Probably we will never need more than 32. If needed,
-> * then increment it in multiple of 32.
-> */
+We don't list all the chip name because we have tens of them and we 
+cannot list all of them, and it is unnecessary to list them because we 
+even don't use "fsl,CHIP-dma" in the new driver, add "fsl,CHIP-dma" here 
+just make it questionable when it presents in example and  old dts files.
 
-OK.
-I will add this comment.
-
-> 
-> > +#define MAX_MSI_CTRLS                  8
-> 
-> Why to waste cpu cycles when MAX_MSI_IRQS is 32 only.
-> #define MAX_MSI_CTRLS   (MAX_MSI_IRQS / 32)
-
-OK.
-I will fix it as you guide.
-
-> 
-> > +
-> > +static unsigned int msi_data;
-> > +static DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
-> 
-> What if one has more than one RC.
-> There are SOCs which support 3 RCs.
-> So something like this:
-> 
-> #define MAX_PCIE_PORT_SUPPORTED 3
-> static DECLARE_BITMAP(msi_irq_in_use[MAX_PCIE_PORT_SUPPORTED],
->                   NUM_MSI_IRQS);
-> static unsigned int *msi_data[MAX_PCIE_PORT_SUPPORTED];
-
-No, there is no need to do it.
-Without this, we can use 3 RCs by adding a node of 3rd RC to dt file.
-
-> 
-> Allocate msi_data using __get_free_pages(GFP_KERNEL, 0)) as Thierry
-> suggested.
-
-OK.
-I will use '__get_free_pages(GFP_KERNEL, 0))' as Thierry guide.
-
-> >  int dw_pcie_link_up(struct pcie_port *pp)
-> >  {
-> >         if (pp->ops->link_up)
-> > @@ -225,6 +432,13 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >                 return -EINVAL;
-> >         }
-> >
-> > +       if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> > +               if (of_property_read_u32(np, "msi-base", &pp->msi_irq_start)) {
-> > +                       dev_err(pp->dev, "Failed to parse the number of lanes\n");
-> > +                       return -EINVAL;
-> > +               }
-> > +       }
-> > +
-> 
-> What if an implementor want to use irq_domain method for msi_irq_start
-> allocation? Is it fine to return error if msi-base is not passed from
-> dt?
-
-Sure, I will consider using irq_domain method.
-
+I remove the examples in bracket "(mpc8349, mpc8360, etc.)" because we 
+can see the real example below.
+I don't say" if "fsl,CHIP-dma" presents, it should be the first one, and 
+the "fsl,eloplus-dma" should be the second" because it is common rule.
+the description language should be clear and concise too I think.
+>> +- reg               : <registers specifier for DMA general status reg>
+>> +- ranges            : describes the mapping between the address space of the
+>> +                      DMA channels and the address space of the DMA controller
+>>   - cell-index        : controller index.  0 for controller @ 0x8100
+>> -- interrupts        : <interrupt mapping for DMA IRQ>
+>> +- interrupts        : <interrupt specifier for DMA IRQ>
+>>   - interrupt-parent  : optional, if needed for interrupt mapping
+>>   
+>> -
+>>   - DMA channel nodes:
+>> -        - compatible        : compatible list, contains 2 entries, first is
+>> -			 "fsl,CHIP-dma-channel", where CHIP is the processor
+>> -			 (mpc8349, mpc8350, etc.) and the second is
+>> -			 "fsl,elo-dma-channel". However, see note below.
+>> -        - reg               : <registers mapping for channel>
+>> +        - compatible        : must include "fsl,elo-dma-channel"
+>> +                              However, see note below.
+> Again, I think we should list the other entries that may be in the list.
+> Otherwise it's not clear what the binding defines. Similarly for the
+> other compatible list definitions below...
 >
-> Also, with the limited knowledge of dt I do not understand one thing, how
-> would dt understand that you have used 32 msi irqs (MAX_MSI_IRQS)?
-
-Sorry, I cannot understand exactly. :-(
-I will look into it.
-
-I really appreciate your comments. :-)
-
-Best regards,
-Jingoo Han
+>> +        - reg               : <registers specifier for channel>
+>>           - cell-index        : dma channel index starts at 0.
+> I realise you haven't changed it, but it's unclear what the cell-index
+> property is (and somewhat confusingly there seem to be multiple
+> defnitions). It might be worth clarifying it while performing the other
+> cleanup.
+not clear with your point "multiple definitions", we really have 
+multiple dma channels for one dma controller.
+cell-index is used as channel index, this is an old method used by old 
+driver, my patch didn't touch this part.
+>>   
+>>   Optional properties:
+>> -        - interrupts        : <interrupt mapping for DMA channel IRQ>
+>> -			  (on 83xx this is expected to be identical to
+>> -			   the interrupts property of the parent node)
+>> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
+>> +                              (on 83xx this is expected to be identical to
+>> +                              the interrupts property of the parent node)
+>>           - interrupt-parent  : optional, if needed for interrupt mapping
+>>   
+>>   Example:
+>> @@ -70,30 +66,26 @@ Example:
+>>   		};
+>>   	};
+>>   
+>> -* Freescale 85xx/86xx DMA Controller
+>> -
+>> -Freescale PowerPC 85xx/86xx have on chip general purpose DMA controllers.
+>> +** Freescale EloPlus DMA Controller
+>> +   This is DMA controller with extended addresses and chaining, mainly used in
+>> +   Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as mpc8540, mpc8641
+>> +   p4080, bsc9131 etc.
+>>   
+>>   Required properties:
+>>   
+>> -- compatible        : compatible list, contains 2 entries, first is
+>> -		 "fsl,CHIP-dma", where CHIP is the processor
+>> -		 (mpc8540, mpc8540, etc.) and the second is
+>> -		 "fsl,eloplus-dma"
+>> -- reg               : <registers mapping for DMA general status reg>
+>> +- compatible        : must include "fsl,eloplus-dma"
+>> +- reg               : <registers specifier for DMA general status reg>
+>>   - cell-index        : controller index.  0 for controller @ 0x21000,
+>>                                            1 for controller @ 0xc000
+>> -- ranges		: Should be defined as specified in 1) to describe the
+>> -		  DMA controller channels.
+>> +- ranges            : describes the mapping between the address space of the
+>> +                      DMA channels and the address space of the DMA controller
+>>   
+>>   - DMA channel nodes:
+>> -        - compatible        : compatible list, contains 2 entries, first is
+>> -			 "fsl,CHIP-dma-channel", where CHIP is the processor
+>> -			 (mpc8540, mpc8560, etc.) and the second is
+>> -			 "fsl,eloplus-dma-channel". However, see note below.
+>> +        - compatible        : must include "fsl,eloplus-dma-channel"
+>> +                              However, see note below.
+>>           - cell-index        : dma channel index starts at 0.
+>> -        - reg               : <registers mapping for channel>
+>> -        - interrupts        : <interrupt mapping for DMA channel IRQ>
+>> +        - reg               : <registers specifier for channel>
+>> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
+>>           - interrupt-parent  : optional, if needed for interrupt mapping
+>>   
+>>   Example:
+>> -- 
+>> 1.7.9.5
+> Thanks,
+> Mark.
+>
