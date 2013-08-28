@@ -1,68 +1,53 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Subject: Re: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
-Date: Wed, 28 Aug 2013 12:26:31 +0200
-Message-ID: <521DD057.4040208@gmail.com>
-References: <20130828113459.48ecbb34@armhf> <521DCD33.2070008@gmail.com> <20130828121943.1c8327ca@skate>
+Date: Wed, 28 Aug 2013 12:19:43 +0200
+Message-ID: <20130828121943.1c8327ca@skate>
+References: <20130828113459.48ecbb34@armhf>
+	<521DCD33.2070008@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130828121943.1c8327ca@skate>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Jean-Francois Moine <moinejf@free.fr>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <521DCD33.2070008@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jean-Francois Moine <moinejf@free.fr>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2013 12:19 PM, Thomas Petazzoni wrote:
-> Sebastian, Jean-Fran=C3=A7ois,
->
-> On Wed, 28 Aug 2013 12:13:07 +0200, Sebastian Hesselbarth wrote:
->> On 08/28/2013 11:34 AM, Jean-Francois Moine wrote:
->>> This patch adds the nodes to instantiate the audio devices of the D=
-ove
->>> boards.
->>>
->>> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
->>> ---
->>>    arch/arm/boot/dts/dove.dtsi                  | 18 ++++++++++++++=
-++++
->>>    1 file changed, 18 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.d=
-tsi
->>> index 499abad..78227e2 100644
->>> --- a/arch/arm/boot/dts/dove.dtsi
->>> +++ b/arch/arm/boot/dts/dove.dtsi
->>> @@ -573,6 +573,24 @@
->>>    					phy-handle =3D <&ethphy>;
->>>    				};
->>>    			};
->>> +
->>> +			i2s0: audio-controller@b0000 {
->>> +				compatible =3D "marvell,mvebu-audio";
->>
->> [added Gregory to Cc]
->>
->> Jean-Francois,
->>
->> as Mark Brown already took the bindings patch for above generic
->> compatible, how are we going to discriminate different
->> implementations/features of Dove, Kirkwood, and Armada 370?
->
-> I agree that mvebu-audio is not a really good compatible string. It
-> should use the first SoC that introduced the IP block, so that if
-> future SOCs have variations, we can introduce separate compatible
-> strings.
->
-> So for now, the compatible string should be kirkwood-audio.
-
-Unfortunately, mvebu-audio has already been taken by Mark. Also, we
-know the differences for the three SoCs now and should have a compatibl=
-e
-for each (and maybe mvebu-audio for fallback).
-
-Also, we'll need to distinguish between the different audio controllers
-on a single SoC, i.e. i2s0 and i2s1. I suggest checking the (phys) reg
-base passed.
-
-Sebastian
+U2ViYXN0aWFuLCBKZWFuLUZyYW7Dp29pcywKCk9uIFdlZCwgMjggQXVnIDIwMTMgMTI6MTM6MDcg
+KzAyMDAsIFNlYmFzdGlhbiBIZXNzZWxiYXJ0aCB3cm90ZToKPiBPbiAwOC8yOC8yMDEzIDExOjM0
+IEFNLCBKZWFuLUZyYW5jb2lzIE1vaW5lIHdyb3RlOgo+ID4gVGhpcyBwYXRjaCBhZGRzIHRoZSBu
+b2RlcyB0byBpbnN0YW50aWF0ZSB0aGUgYXVkaW8gZGV2aWNlcyBvZiB0aGUgRG92ZQo+ID4gYm9h
+cmRzLgo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IEplYW4tRnJhbmNvaXMgTW9pbmUgPG1vaW5lamZA
+ZnJlZS5mcj4KPiA+IC0tLQo+ID4gICBhcmNoL2FybS9ib290L2R0cy9kb3ZlLmR0c2kgICAgICAg
+ICAgICAgICAgICB8IDE4ICsrKysrKysrKysrKysrKysrKwo+ID4gICAxIGZpbGUgY2hhbmdlZCwg
+MTggaW5zZXJ0aW9ucygrKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9k
+b3ZlLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9kb3ZlLmR0c2kKPiA+IGluZGV4IDQ5OWFiYWQu
+Ljc4MjI3ZTIgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9kb3ZlLmR0c2kKPiA+
+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RvdmUuZHRzaQo+ID4gQEAgLTU3Myw2ICs1NzMsMjQg
+QEAKPiA+ICAgCQkJCQlwaHktaGFuZGxlID0gPCZldGhwaHk+Owo+ID4gICAJCQkJfTsKPiA+ICAg
+CQkJfTsKPiA+ICsKPiA+ICsJCQlpMnMwOiBhdWRpby1jb250cm9sbGVyQGIwMDAwIHsKPiA+ICsJ
+CQkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLG12ZWJ1LWF1ZGlvIjsKPiAKPiBbYWRkZWQgR3JlZ29y
+eSB0byBDY10KPiAKPiBKZWFuLUZyYW5jb2lzLAo+IAo+IGFzIE1hcmsgQnJvd24gYWxyZWFkeSB0
+b29rIHRoZSBiaW5kaW5ncyBwYXRjaCBmb3IgYWJvdmUgZ2VuZXJpYwo+IGNvbXBhdGlibGUsIGhv
+dyBhcmUgd2UgZ29pbmcgdG8gZGlzY3JpbWluYXRlIGRpZmZlcmVudAo+IGltcGxlbWVudGF0aW9u
+cy9mZWF0dXJlcyBvZiBEb3ZlLCBLaXJrd29vZCwgYW5kIEFybWFkYSAzNzA/CgpJIGFncmVlIHRo
+YXQgbXZlYnUtYXVkaW8gaXMgbm90IGEgcmVhbGx5IGdvb2QgY29tcGF0aWJsZSBzdHJpbmcuIEl0
+CnNob3VsZCB1c2UgdGhlIGZpcnN0IFNvQyB0aGF0IGludHJvZHVjZWQgdGhlIElQIGJsb2NrLCBz
+byB0aGF0IGlmCmZ1dHVyZSBTT0NzIGhhdmUgdmFyaWF0aW9ucywgd2UgY2FuIGludHJvZHVjZSBz
+ZXBhcmF0ZSBjb21wYXRpYmxlCnN0cmluZ3MuCgpTbyBmb3Igbm93LCB0aGUgY29tcGF0aWJsZSBz
+dHJpbmcgc2hvdWxkIGJlIGtpcmt3b29kLWF1ZGlvLgoKVGhhbmtzLAoKVGhvbWFzCi0tIApUaG9t
+YXMgUGV0YXp6b25pLCBGcmVlIEVsZWN0cm9ucwpLZXJuZWwsIGRyaXZlcnMsIHJlYWwtdGltZSBh
+bmQgZW1iZWRkZWQgTGludXgKZGV2ZWxvcG1lbnQsIGNvbnN1bHRpbmcsIHRyYWluaW5nIGFuZCBz
+dXBwb3J0LgpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
