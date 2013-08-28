@@ -1,250 +1,150 @@
-From: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
-Subject: [PATCH v3 6/6] ARM: s5pv210: Migrate clock handling to Common Clock
- Framework
-Date: Wed, 28 Aug 2013 18:13:04 +0200
-Message-ID: <1377706384-3697-7-git-send-email-m.krawczuk@partner.samsung.com>
-References: <1377706384-3697-1-git-send-email-m.krawczuk@partner.samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1377706384-3697-1-git-send-email-m.krawczuk@partner.samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: kyungmin.park@samsung.com
-Cc: t.stanislaws@samsung.com, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, mturquette@linaro.org, tomasz.figa@gmail.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, s.nawrocki@samsung.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux@arm.linux.org.uk, ben-linux@fluff.org, linux-samsung-soc@vger.kernel.org, Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCHv3 7/8] mailbox/omap: add code to support the wkupm3 operations
+Date: Wed, 28 Aug 2013 11:24:43 -0500
+Message-ID: <521E244B.4060406@ti.com>
+References: <1375825238-18299-1-git-send-email-s-anna@ti.com> <87li3n6bcc.fsf@linaro.org> <521CCDCD.90207@ti.com> <87haeax1v5.fsf@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <87haeax1v5.fsf@linaro.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <benoit.cousson@linaro.org>, Paul Walmsley <paul@pwsan.com>, Ohad Ben-Cohen <ohad@wizery.com>, Jassi Brar <jaswinder.singh@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch migrates the s5pv210 platform to use new clock driver
-using Common Clock Framework.
+Kevin,
 
-Signed-off-by: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
----
- arch/arm/mach-s5pv210/Kconfig         |  9 +++++++++
- arch/arm/mach-s5pv210/Makefile        |  4 ++--
- arch/arm/mach-s5pv210/common.c        | 17 +++++++++++++++++
- arch/arm/mach-s5pv210/common.h        | 13 +++++++++++++
- arch/arm/mach-s5pv210/mach-aquila.c   |  1 +
- arch/arm/mach-s5pv210/mach-goni.c     |  3 ++-
- arch/arm/mach-s5pv210/mach-smdkc110.c |  1 +
- arch/arm/mach-s5pv210/mach-smdkv210.c |  1 +
- arch/arm/mach-s5pv210/mach-torbreck.c |  1 +
- arch/arm/plat-samsung/Kconfig         |  2 +-
- arch/arm/plat-samsung/init.c          |  2 --
- 11 files changed, 48 insertions(+), 6 deletions(-)
+On 08/27/2013 04:25 PM, Kevin Hilman wrote:
+> Suman Anna <s-anna@ti.com> writes:
+> 
+>> Kevin,
+>>
+>> On 08/26/2013 10:50 PM, Kevin Hilman wrote:
+>>> Suman Anna <s-anna@ti.com> writes:
+>>>
+>>>> The WkupM3 mailbox used for triggering PM operations such as suspend
+>>>> and resume on AM33x/AM43x is special in that the M3 processor cannot
+>>>> access the mailbox registers. However, an interrupt is needed to be
+>>>> sent to request the M3 to perform a desired PM operation. This patch
+>>>> adds the support for this special mailbox through separate ops for
+>>>> this mailbox. These ops are designed to have the WkupM3's Rx interrupt
+>>>> programmed within the driver, during transmission of a message. The
+>>>> message is immediately read back and the internal mailbox interrupt
+>>>> acknowledged as well to avoid triggering any spurious interrupts to
+>>>> the M3.
+> 
+> After reading this multiple times, I had to go back to the TRM to try
+> and remember what's going on here because this changelog wasn't helping
+> me understand.  IIUC, the basic idea is that the mailbox is only used to
+> trigger an IRQ to the M3, the messages themselves are dummy.  You
+> explained some more of this in subsequent replies, but all of that
+> detail should be in the changelogs.
+> 
+> Remember that changelogs should be written for those who don't have (or
+> don't remember) all the internal details that you know off the top of
+> your head.  Think of writing a changelog that you'll have to understand
+> in a year when you haven't been staring at the hardware and code.  I've
+> never seen a changelog with too much detail, so please err on the
+> verbose side.
+> 
+>>>>
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>
+>>> Dumb Q: why does all this extra logic belong in the mailbox driver and
+>>> not in the wkup_m3 driver?  To me, this seems like part of the IPC
+>>> protocol between the MPU and M3 firmware, and not an inherent part of
+>>> the AM33xx mbox.
+>>
+>> The IPC protocol state machine for the PM operations is still very
+>> much handled in the WkupM3 driver.  The IPC registers in Control
+>> module provide the messaging payloads, but unfortunately it is not
+>> associated with any direct interrupts to make it a separate driver. As
+>> far as the WkupM3 driver is concerned, it is just using the mailbox
+>> for signalling - the internals of which would involve accessing the
+>> various mailbox registers including interrupt configuration and
+>> clearing. It is preferable to have the various operations on mailbox
+>> registers handled by the mailbox driver with the API supporting the
+>> necessary operations.
+>>
+>> The previous version from Vaibhav added a new API to mailbox driver for
+>> clearing out the Tx fifo, which is non-standard. The mailboxes on AM335
+>> will also be used for IPC with the Programmable Real-time Unit (PRU)
+>> subsystem, which will use separate mbox devices. This version handles
+>> the wkup_m3 mbox device using its device-specific ops without the need
+>> for any new API, and not having to expose the mailbox registers outside.
+> 
+> Perhaps I'm misunderstanding all of this (admittedly, I'm not up on the
+> details of OMAP mailbox internals), but the changelog and code are not
+> helping me understand so I have to ask dumb questions.
+> 
+> The more I look at this, the more confused I get.  The wkupm3 mbox is
+> defined in the DTS to use usr_id=0 yet internally is
+> overridden/hard-coded internally to use usr_id=3 in (at least for
+> managing interrupts.)
+>
+> Since only the interrupt management matters anyways (message payload is
+> dummy), is there any reason not to define the mbox in DTS using usr_id=3
+> so you don't have to do this clumsy override?  IOW, since the M3
+> (usr_id=3) can't ever be a real user of the mbox registers, just have
+> the MPU drive the mbox as usr_id=3?
 
-diff --git a/arch/arm/mach-s5pv210/Kconfig b/arch/arm/mach-s5pv210/Kconfig
-index caaedaf..ad4546e 100644
---- a/arch/arm/mach-s5pv210/Kconfig
-+++ b/arch/arm/mach-s5pv210/Kconfig
-@@ -15,6 +15,7 @@ config CPU_S5PV210
- 	select S5P_PM if PM
- 	select S5P_SLEEP if PM
- 	select SAMSUNG_DMADEV
-+	select S5P_CLOCK if !COMMON_CLK
- 	help
- 	  Enable S5PV210 CPU support
- 
-@@ -69,6 +70,14 @@ config S5PV210_SETUP_USB_PHY
- 	help
- 	  Common setup code for USB PHY controller
- 
-+config COMMON_CLK_S5PV210
-+	bool "Common Clock Framework support"
-+	default y
-+	select COMMON_CLK
-+	help
-+	  Enable this option to use new clock driver
-+	  based on Common Clock Framework.
-+
- menu "S5PC110 Machines"
- 
- config MACH_AQUILA
-diff --git a/arch/arm/mach-s5pv210/Makefile b/arch/arm/mach-s5pv210/Makefile
-index 1c4e419..0c67fe2 100644
---- a/arch/arm/mach-s5pv210/Makefile
-+++ b/arch/arm/mach-s5pv210/Makefile
-@@ -12,8 +12,8 @@ obj-				:=
- 
- # Core
- 
--obj-y				+= common.o clock.o
--
-+obj-y					+= common.o
-+obj-$(CONFIG_S5P_CLOCK)			+= clock.o
- obj-$(CONFIG_PM)		+= pm.o
- 
- obj-y				+= dma.o
-diff --git a/arch/arm/mach-s5pv210/common.c b/arch/arm/mach-s5pv210/common.c
-index 26027a2..a1d86a1 100644
---- a/arch/arm/mach-s5pv210/common.c
-+++ b/arch/arm/mach-s5pv210/common.c
-@@ -34,7 +34,13 @@
- #include <mach/regs-clock.h>
- 
- #include <plat/cpu.h>
-+
-+#ifdef CONFIG_S5P_CLOCK
- #include <plat/clock.h>
-+#else
-+#include <linux/clk-provider.h>
-+#endif
-+
- #include <plat/devs.h>
- #include <plat/sdhci.h>
- #include <plat/adc-core.h>
-@@ -50,6 +56,14 @@
- 
- #include "common.h"
- 
-+/* External clock frequency */
-+static unsigned long xusbxti_f, xxti_f;
-+
-+void __init s5pv210_set_xusbxti_freq(unsigned long freq)
-+{
-+	xusbxti_f = freq;
-+}
-+
- static const char name_s5pv210[] = "S5PV210/S5PC110";
- 
- static struct cpu_table cpu_ids[] __initdata = {
-@@ -229,12 +243,14 @@ void __init s5pv210_map_io(void)
- 
- void __init s5pv210_init_clocks(int xtal)
- {
-+#ifdef CONFIG_S5P_CLOCK
- 	printk(KERN_DEBUG "%s: initializing clocks\n", __func__);
- 
- 	s3c24xx_register_baseclocks(xtal);
- 	s5p_register_clocks(xtal);
- 	s5pv210_register_clocks();
- 	s5pv210_setup_clocks();
-+#endif
- }
- 
- void __init s5pv210_init_irq(void)
-@@ -248,6 +264,7 @@ void __init s5pv210_init_irq(void)
- 	vic[3] = ~0;
- 
- 	s5p_init_irq(vic, ARRAY_SIZE(vic));
-+	s5pv210_clk_init(NULL, xxti_f, xusbxti_f, S3C_VA_SYS);
- }
- 
- struct bus_type s5pv210_subsys = {
-diff --git a/arch/arm/mach-s5pv210/common.h b/arch/arm/mach-s5pv210/common.h
-index fe1beb5..2db2a15 100644
---- a/arch/arm/mach-s5pv210/common.h
-+++ b/arch/arm/mach-s5pv210/common.h
-@@ -14,6 +14,19 @@
- 
- #include <linux/reboot.h>
- 
-+void s5pv210_set_xxti_freq(unsigned long freq);
-+void s5pv210_set_xusbxti_freq(unsigned long freq);
-+
-+#ifdef CONFIG_COMMON_CLK_S5PV210
-+void s5pv210_clk_init(struct device_node *np,
-+			    unsigned long xxti_f, unsigned long xusbxti_f,
-+			    void __iomem *reg_base);
-+#else
-+static inline void s5pv210_clk_init(struct device_node *np,
-+			    unsigned long xxti_f, unsigned long xusbxti_f,
-+			    void __iomem *reg_base) {}
-+#endif
-+
- void s5pv210_init_io(struct map_desc *mach_desc, int size);
- void s5pv210_init_irq(void);
- 
-diff --git a/arch/arm/mach-s5pv210/mach-aquila.c b/arch/arm/mach-s5pv210/mach-aquila.c
-index ad40ab0..e37a311 100644
---- a/arch/arm/mach-s5pv210/mach-aquila.c
-+++ b/arch/arm/mach-s5pv210/mach-aquila.c
-@@ -646,6 +646,7 @@ static void __init aquila_map_io(void)
- {
- 	s5pv210_init_io(NULL, 0);
- 	s3c24xx_init_clocks(24000000);
-+	s5pv210_set_xusbxti_freq(24000000);
- 	s3c24xx_init_uarts(aquila_uartcfgs, ARRAY_SIZE(aquila_uartcfgs));
- 	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
- }
-diff --git a/arch/arm/mach-s5pv210/mach-goni.c b/arch/arm/mach-s5pv210/mach-goni.c
-index 282d714..a1955e9 100644
---- a/arch/arm/mach-s5pv210/mach-goni.c
-+++ b/arch/arm/mach-s5pv210/mach-goni.c
-@@ -966,7 +966,8 @@ static void __init goni_sound_init(void)
- static void __init goni_map_io(void)
- {
- 	s5pv210_init_io(NULL, 0);
--	s3c24xx_init_clocks(clk_xusbxti.rate);
-+	s3c24xx_init_clocks(24000000);
-+	s5pv210_set_xusbxti_freq(24000000);
- 	s3c24xx_init_uarts(goni_uartcfgs, ARRAY_SIZE(goni_uartcfgs));
- 	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
- }
-diff --git a/arch/arm/mach-s5pv210/mach-smdkc110.c b/arch/arm/mach-s5pv210/mach-smdkc110.c
-index 7c0ed07..89563ed 100644
---- a/arch/arm/mach-s5pv210/mach-smdkc110.c
-+++ b/arch/arm/mach-s5pv210/mach-smdkc110.c
-@@ -119,6 +119,7 @@ static void __init smdkc110_map_io(void)
- {
- 	s5pv210_init_io(NULL, 0);
- 	s3c24xx_init_clocks(24000000);
-+	s5pv210_set_xusbxti_freq(24000000);
- 	s3c24xx_init_uarts(smdkv210_uartcfgs, ARRAY_SIZE(smdkv210_uartcfgs));
- 	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
- }
-diff --git a/arch/arm/mach-s5pv210/mach-smdkv210.c b/arch/arm/mach-s5pv210/mach-smdkv210.c
-index 6d72bb99..ff4a470 100644
---- a/arch/arm/mach-s5pv210/mach-smdkv210.c
-+++ b/arch/arm/mach-s5pv210/mach-smdkv210.c
-@@ -285,6 +285,7 @@ static void __init smdkv210_map_io(void)
- {
- 	s5pv210_init_io(NULL, 0);
- 	s3c24xx_init_clocks(clk_xusbxti.rate);
-+	s5pv210_set_xusbxti_freq(24000000);
- 	s3c24xx_init_uarts(smdkv210_uartcfgs, ARRAY_SIZE(smdkv210_uartcfgs));
- 	samsung_set_timer_source(SAMSUNG_PWM2, SAMSUNG_PWM4);
- }
-diff --git a/arch/arm/mach-s5pv210/mach-torbreck.c b/arch/arm/mach-s5pv210/mach-torbreck.c
-index 579afe8..c131cd2 100644
---- a/arch/arm/mach-s5pv210/mach-torbreck.c
-+++ b/arch/arm/mach-s5pv210/mach-torbreck.c
-@@ -105,6 +105,7 @@ static void __init torbreck_map_io(void)
- {
- 	s5pv210_init_io(NULL, 0);
- 	s3c24xx_init_clocks(24000000);
-+	s5pv210_set_xusbxti_freq(24000000);
- 	s3c24xx_init_uarts(torbreck_uartcfgs, ARRAY_SIZE(torbreck_uartcfgs));
- 	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
- }
-diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-index 7dfba93..2a98613 100644
---- a/arch/arm/plat-samsung/Kconfig
-+++ b/arch/arm/plat-samsung/Kconfig
-@@ -91,7 +91,7 @@ config SAMSUNG_CLKSRC
- 	  used by newer systems such as the S3C64XX.
- 
- config S5P_CLOCK
--	def_bool (ARCH_S5P64X0 || ARCH_S5PC100 || ARCH_S5PV210)
-+	def_bool (ARCH_S5P64X0 || ARCH_S5PC100)
- 	help
- 	  Support common clock part for ARCH_S5P and ARCH_EXYNOS SoCs
- 
-diff --git a/arch/arm/plat-samsung/init.c b/arch/arm/plat-samsung/init.c
-index aa9511b..f0f818e 100644
---- a/arch/arm/plat-samsung/init.c
-+++ b/arch/arm/plat-samsung/init.c
-@@ -69,7 +69,6 @@ void __init s3c_init_cpu(unsigned long idcode,
- 	if (cpu->map_io)
- 		cpu->map_io();
- }
--
- /* s3c24xx_init_clocks
-  *
-  * Initialise the clock subsystem and associated information from the
-@@ -92,7 +91,6 @@ void __init s3c24xx_init_clocks(int xtal)
- 	else
- 		(cpu->init_clocks)(xtal);
- }
--
- /* uart management */
- #if IS_ENABLED(CONFIG_SAMSUNG_ATAGS)
- static int nr_uarts __initdata = 0;
--- 
-1.8.1.2
+Yeah, the wkupm3 mbox usage is actually odd (an unfortunate result of
+the way the hardware is designed) and doesn't quite fit into the way a
+regular mailbox is used. I will summarize the following into the
+changelog in the next version to better explain the odd usage and avoid
+any confusion.
+
+A typical mbox device is used for communicating both to and fro with a
+slave processor using two fifos, and has two internal interrupts on the
+MPU that needs to be handled - a rx interrupt for processing in-bound
+messages and a tx-ready interrupt for handling mbox tx readiness. Since
+the WkupM3 cannot access the mailbox registers, the burden of handling
+the M3's Rx interrupt as well as those associated with the MPU lies with
+the wkupm3 mbox device code. As you can see, this usage is non-standard,
+and warrants that the code deal with both usr_ids since they would be
+different (0 for MPU and 3 for M3). The OMAP mailbox core does use the
+internal per-device ops, so it is actually better to plug-in custom ops
+for WkupM3, and deal with both usr_ids within the ops. I had actually
+started out with usr_id=3 but then I changed it to usr_id=0 so that it
+aligns with the DT documentation and the expected behavior that usr_id
+corresponds to the MPU, like for all mboxes on all other SoCs.
+
+> 
+> Even that is a bit hacky IMO, but with proper documentation, is at least
+> better than the current approach IMO.
+
+Even with approach you are suggesting, you still need to have specific
+ops since the MPU interrupt handling code needs to deal with two usr_ids
+for handling MPU Tx and WkupM3 Rx interrupt.
+
+> 
+> That should at least get rid of the need to customize the IRQ management
+> functions of mailbox-omap2.c.   After that, the M3 driver could then
+> just do:
+> 
+>      omap_mbox_enable_irq()
+>      omap_mbox_msg_send()
+>      omap_mbox_disable_irq()
+
+This is infact how it was done in the previous AM335 PM suspend version
+[1] along with another API to read-back the message put in the Tx queue
+[2]. We do not want to add any new users of omap_mbox_enable_irq() or
+omap_mbox_disable_irq() API, since these will not fit into the generic
+mailbox framework. The actual IRQ raised in the M3's NVIC would be
+handled by M3, so the entire functionality of enabling, disabling the
+M3's mailbox Rx interrupt and reading back the message is handled in the
+omap_mbox_msg_send() without having to expose any new additional API.
+
+regards
+Suman
+
+> 
+> and you could get rid of the rest of the custom functions in
+> mailbox-omap2.c also.
+>
+
+[1]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2012-November/129519.html
+[2]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2012-November/129504.html
