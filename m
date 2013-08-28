@@ -1,44 +1,121 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v4 0/2] Document msm_serial bindings and support newer uartdms
-Date: Wed, 28 Aug 2013 13:32:39 -0700
-Message-ID: <1377721961-3508-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH V6 1/5] of: move documentation of of_parse_phandle_with_args
+Date: Wed, 28 Aug 2013 21:42:56 +0100
+Message-ID: <20130828204257.068393E0B6B@localhost>
+References: <1376515632-12594-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1376515632-12594-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset aligns the msm_serial driver more with downstream usage and
-updates the driver's DT bindings.
+On Wed, 14 Aug 2013 15:27:08 -0600, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> From: Stephen Warren <swarren@nvidia.com>
+> 
+> Commit bd69f73 "of: Create function for counting number of phandles in
+> a property" renamed of_parse_phandle_with_args(), and created a wrapper
+> function that implemented the original name. However, the documentation
+> of the original function was not moved, leaving it apparently documenting
+> the newly renamed function.
+> 
+> Move the documentation so that it is adjacent to the function it
+> documents.
+> 
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Changes since v3:
- * Moved bindings to serial instead of tty/serial
+Applied, thanks.
 
-Changes since v2:
- * Fixed up DT review comments
- * Dropped patches that were picked up in tty tree
+g.
 
-Changes since v1:
- * Dropped _clk postfix from {core,iface}_clk
- * Split DT binding into two files
- * Renamed DT binding files to match compatible strings
- * Fixed up DT review comments
- * Added new patch 5/5 (more than 1 char for UARTDM)
+> ---
+>  drivers/of/base.c | 64 +++++++++++++++++++++++++++----------------------------
+>  1 file changed, 32 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 1c3c79c..e485489 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1105,38 +1105,6 @@ struct device_node *of_parse_phandle(const struct device_node *np,
+>  }
+>  EXPORT_SYMBOL(of_parse_phandle);
+>  
+> -/**
+> - * of_parse_phandle_with_args() - Find a node pointed by phandle in a list
+> - * @np:		pointer to a device tree node containing a list
+> - * @list_name:	property name that contains a list
+> - * @cells_name:	property name that specifies phandles' arguments count
+> - * @index:	index of a phandle to parse out
+> - * @out_args:	optional pointer to output arguments structure (will be filled)
+> - *
+> - * This function is useful to parse lists of phandles and their arguments.
+> - * Returns 0 on success and fills out_args, on error returns appropriate
+> - * errno value.
+> - *
+> - * Caller is responsible to call of_node_put() on the returned out_args->node
+> - * pointer.
+> - *
+> - * Example:
+> - *
+> - * phandle1: node1 {
+> - * 	#list-cells = <2>;
+> - * }
+> - *
+> - * phandle2: node2 {
+> - * 	#list-cells = <1>;
+> - * }
+> - *
+> - * node3 {
+> - * 	list = <&phandle1 1 2 &phandle2 3>;
+> - * }
+> - *
+> - * To get a device_node of the `node2' node you may call this:
+> - * of_parse_phandle_with_args(node3, "list", "#list-cells", 1, &args);
+> - */
+>  static int __of_parse_phandle_with_args(const struct device_node *np,
+>  					const char *list_name,
+>  					const char *cells_name, int index,
+> @@ -1239,6 +1207,38 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
+>  	return rc;
+>  }
+>  
+> +/**
+> + * of_parse_phandle_with_args() - Find a node pointed by phandle in a list
+> + * @np:		pointer to a device tree node containing a list
+> + * @list_name:	property name that contains a list
+> + * @cells_name:	property name that specifies phandles' arguments count
+> + * @index:	index of a phandle to parse out
+> + * @out_args:	optional pointer to output arguments structure (will be filled)
+> + *
+> + * This function is useful to parse lists of phandles and their arguments.
+> + * Returns 0 on success and fills out_args, on error returns appropriate
+> + * errno value.
+> + *
+> + * Caller is responsible to call of_node_put() on the returned out_args->node
+> + * pointer.
+> + *
+> + * Example:
+> + *
+> + * phandle1: node1 {
+> + * 	#list-cells = <2>;
+> + * }
+> + *
+> + * phandle2: node2 {
+> + * 	#list-cells = <1>;
+> + * }
+> + *
+> + * node3 {
+> + * 	list = <&phandle1 1 2 &phandle2 3>;
+> + * }
+> + *
+> + * To get a device_node of the `node2' node you may call this:
+> + * of_parse_phandle_with_args(node3, "list", "#list-cells", 1, &args);
+> + */
+>  int of_parse_phandle_with_args(const struct device_node *np, const char *list_name,
+>  				const char *cells_name, int index,
+>  				struct of_phandle_args *out_args)
+> -- 
+> 1.8.1.5
+> 
 
-Stephen Boyd (2):
-  devicetree: serial: Document msm_serial bindings
-  ARM: dts: msm: Update uartdm compatible strings
-
- .../devicetree/bindings/serial/qcom,msm-uart.txt   | 25 ++++++++++
- .../devicetree/bindings/serial/qcom,msm-uartdm.txt | 53 ++++++++++++++++++++++
- .../devicetree/bindings/tty/serial/msm_serial.txt  | 27 -----------
- arch/arm/boot/dts/msm8660-surf.dts                 |  2 +-
- arch/arm/boot/dts/msm8960-cdp.dts                  |  2 +-
- 5 files changed, 80 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/serial/qcom,msm-uart.txt
- create mode 100644 Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
- delete mode 100644 Documentation/devicetree/bindings/tty/serial/msm_serial.txt
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
