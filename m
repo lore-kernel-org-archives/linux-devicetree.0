@@ -1,61 +1,58 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2] of_net.h: Make of_get_phy_mode() return int i.s.o. const int
-Date: Wed, 28 Aug 2013 20:51:03 +0100
-Message-ID: <20130828195103.1C90E3E0AF4@localhost>
-References: <1376823690-29179-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1376823690-29179-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] ARM: new platform for Energy Micro's EFM32 Cortex-M3 SoCs
+Date: Wed, 28 Aug 2013 12:50:54 -0700
+Message-ID: <20130828195054.GJ8607@quad.lixom.net>
+References: <1376552964-16296-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20130815084259.GG30496@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130815084259.GG30496@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 18 Aug 2013 13:01:30 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> include/linux/of_net.h:16: warning: type qualifiers ignored on function return type
-> 
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
+Hi,
 
-Applied, thanks.
+Sorry for the delay in responding to this. See below.
 
-g.
+On Thu, Aug 15, 2013 at 10:42:59AM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello,
+> =
 
-> v2: update the actual function in drivers/of/of_net.c.
-> 
->  drivers/of/of_net.c    |    2 +-
->  include/linux/of_net.h |    4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-> index ea174c8..8f9be2e 100644
-> --- a/drivers/of/of_net.c
-> +++ b/drivers/of/of_net.c
-> @@ -39,7 +39,7 @@ static const char *phy_modes[] = {
->   * The function gets phy interface string from property 'phy-mode',
->   * and return its index in phy_modes table, or errno in error case.
->   */
-> -const int of_get_phy_mode(struct device_node *np)
-> +int of_get_phy_mode(struct device_node *np)
->  {
->  	const char *pm;
->  	int err, i;
-> diff --git a/include/linux/of_net.h b/include/linux/of_net.h
-> index 61bf53b..34597c8 100644
-> --- a/include/linux/of_net.h
-> +++ b/include/linux/of_net.h
-> @@ -9,10 +9,10 @@
->  
->  #ifdef CONFIG_OF_NET
->  #include <linux/of.h>
-> -extern const int of_get_phy_mode(struct device_node *np);
-> +extern int of_get_phy_mode(struct device_node *np);
->  extern const void *of_get_mac_address(struct device_node *np);
->  #else
-> -static inline const int of_get_phy_mode(struct device_node *np)
-> +static inline int of_get_phy_mode(struct device_node *np)
->  {
->  	return -ENODEV;
->  }
-> -- 
-> 1.7.9.5
-> 
+> I forgot to mention that this patch depends on the following patches:
+> =
+
+>  - ARM: ARMv7-M: implement restart routine common to all v7-M machines
+>    sent with Message-Id: 1376494305-24270-1-git-send-email-u.kleine-koeni=
+g@pengutronix.de; and
+
+Seems like you addressed Russell's comments here, so hopefully he's ok with=
+ us
+picking it up directly as a prereq.
+
+>  - clk: new driver for efm32 SoC
+>    sent with Message-Id: 1376510693-12491-1-git-send-email-u.kleine-koeni=
+g@pengutronix.de
+
+This can be applied directly by Mike, since the code doesn't depend on each
+other (just won't be fully functional until both lands).
+
+> So in the unlikely case you are already happy with this patch, it needs
+> some coordination to go in.
+
+I'll have a few comments, should hopefully be quick to respin.
+
+
+-Olof
