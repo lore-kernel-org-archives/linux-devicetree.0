@@ -1,15 +1,62 @@
-From: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
-Subject: Re: [PATCH v5 1/2] staging: iio: Documentation sysfs-bus-iio add power_mode
-Date: Wed, 28 Aug 2013 13:54:56 +0300
-Message-ID: <CAGH3drpiN0bubF2bqhnDqH6U_P6p9CWP8O=vmU=ZABojt1yE_Q@mail.gmail.com>
-References: <1377687110-5632-1-git-send-email-o.v.kravchenko@globallogic.com>
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH 0/9] ARM: at91/dt: add missing devices to rm9200ek board
+Date: Wed, 28 Aug 2013 13:00:40 +0200
+Message-ID: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377687110-5632-1-git-send-email-o.v.kravchenko@globallogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Grygorii Strashko <grygorii.strashko@globallogic.com>
-Cc: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Joachim Eastwood <manabian@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <b.brezillon@overkiz.com>
 List-Id: devicetree@vger.kernel.org
 
-Please ignore this patch, it is wrong
+Hello,
+
+This patch series adds support for the remaining devices (or device options)
+not yet supported in dt.
+
+AFAICT there is no more infos/devices not converted to dt for this board,
+and we should be able to remove board-at91rm9200ek.c (when we decide to
+do it).
+
+This series was not tested (the dt compilation passed), could someone
+owning this board test it ?
+
+In order to test it, you need to apply these series first:
+https://lkml.org/lkml/2013/8/27/58
+pinctrl: at91: add support for OUTPUT config
+
+Best Regards,
+
+Boris
+
+Boris BREZILLON (9):
+  ARM: at91/dt: rm9200: add spi0 chip select pins definitions
+  ARM: at91/dt: add ethernet phy to at91rm9200ek board
+  ARM: at91/dt: add usb1 vbus and pullup pins
+  ARM: at91/dt: add atmel,pullup-gpio to at91rm9200ek usb1 definition
+  ARM: at91/dt: add mmc0 slot0 support to at91rm9200ek board
+  ARM: at91/dt: add spi0 support to at91rm9200ek board
+  ARM: at91/dt: add i2c devices connected to at91rm9200ek board
+  ARM: at91/dt: add new at91rm9200ek_mmc board
+  ARM: at91/dt: add new at91rm9200ek_dataflash board
+
+ arch/arm/boot/dts/at91rm9200.dtsi            |   20 ++++++
+ arch/arm/boot/dts/at91rm9200ek.dts           |   88 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/at91rm9200ek_dataflash.dts |   33 ++++++++++
+ arch/arm/boot/dts/at91rm9200ek_mmc.dts       |   23 +++++++
+ 4 files changed, 164 insertions(+)
+ create mode 100644 arch/arm/boot/dts/at91rm9200ek_dataflash.dts
+ create mode 100644 arch/arm/boot/dts/at91rm9200ek_mmc.dts
+
+-- 
+1.7.9.5
