@@ -1,69 +1,57 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] iio: add Bosch BMA180 acceleration sensor driver
-Date: Wed, 28 Aug 2013 14:17:24 +0100
-Message-ID: <20130828131724.GE10250@e106331-lin.cambridge.arm.com>
-References: <1377687678-5761-1-git-send-email-o.v.kravchenko@globallogic.com>
- <1377687678-5761-2-git-send-email-o.v.kravchenko@globallogic.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH 1/3] pinctrl: add new generic pinconf config for
+ deglitch filter
+Date: Wed, 28 Aug 2013 15:22:40 +0200
+Message-ID: <CACRpkda+92ZAWs1umtXeemLQu+zzi6iak=Nwb27+SO6oD9TOzg@mail.gmail.com>
+References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com>
+	<1377380109-11247-1-git-send-email-b.brezillon@overkiz.com>
+	<521B875E.1010605@wwwdotorg.org>
+	<521B89D1.6010902@overkiz.com>
+	<521C2347.4080702@wwwdotorg.org>
+	<521C4451.1060908@overkiz.com>
+	<521C587E.6050706@atmel.com>
+	<521D1B19.6080204@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1377687678-5761-2-git-send-email-o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org" <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "denis.ciocca-qxv4g6HH51o@public.gmane.org" <denis.ciocca-qxv4g6HH51o@public.gmane.org>, "srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <521D1B19.6080204@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, boris brezillon <b.brezillon@overkiz.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2013 at 12:01:18PM +0100, Oleksandr Kravchenko wrote:
-> This patch adds IIO driver for Bosch BMA180 triaxial
-> acceleration sensor.
-> http://dlnmh9ip6v2uc.cloudfront.net/datasheets/
->                 Sensors/Accelerometers/BST-BMA180-DS000-07_2.pdf
-> 
-> Stephen Warren:
-> The binding looks simple enough to me, so the binding
+On Tue, Aug 27, 2013 at 11:33 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 08/27/2013 01:42 AM, Nicolas Ferre wrote:
 
-You can lose the above two lines, just the Acked-by is good enough. :)
+>> The question is: how much this "generic" pinconf is... well... generic!
+>
+> This is why I don't really like the concept of generic pinconf; it ends
+> up being more: whoever defines something first imposes their SoCs'
+> viewpoint on that feature/property, and then everything else is declared
+> non-generic.
 
-> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/accel/bma180.txt       |   24 +
->  drivers/iio/accel/Kconfig                          |   12 +
->  drivers/iio/accel/Makefile                         |    2 +
->  drivers/iio/accel/bma180.c                         |  676 ++++++++++++++++++++
->  4 files changed, 714 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/bma180.txt
->  create mode 100644 drivers/iio/accel/bma180.c
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/bma180.txt b/Documentation/devicetree/bindings/iio/accel/bma180.txt
-> new file mode 100644
-> index 0000000..c593357
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/bma180.txt
-> @@ -0,0 +1,24 @@
-> +* Bosch BMA180 triaxial acceleration sensor
-> +
-> +http://omapworld.com/BMA180_111_1002839.pdf
-> +
-> +Required properties:
-> +
-> +  - compatible : should be "bosch,bma180"
-> +  - reg : the I2C address of the sensor
-> +
-> +Optional properties:
-> +
-> +  - interrupt-parent : should be the phandle for the interrupt controller
-> +
-> +  - interrupts : interrupt mapping for GPIO IRQ, it should by configured with
-> +               flags IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING
-> +
+I do not see it that way. For pinconf what we're dealing with is a very
+small community of electrical engineers that produce the cell libraries
+for the pads of these ASICs, and connect some of the control lines to
+software-controlled registers and sometimes hard-code their
+characteristics. Or a mix.
 
-One thing I noticed from the datasheet is that this has a clock input
-(sck) and two regulator inputs (vdd and vddio). It might not always be
-the case that these are configured statically, so they may need to be
-described in the dt. It's possible that they could be added later as
-optional properties, though.
+They are all learning from each other and reproducing the design
+patterns of other engineers, much in the same way as software
+engineers do. That is why everyone is implementing some things
+like pull-up/pull-down/drive strength/schmitt-trigger etc.
 
-Thanks,
-Mark.
+We already have 7 drivers using GENERIC_PINCONF without
+any ontological conflicts like this so even if the rest of the world
+end up not using it we have already saved a few thousand lines
+of code by not reimplementing this (including DT bindings and
+parsing code) over and over again for each.
+
+And given that pinctrl-single is one of these, I do hope and think
+that the ACPI people are taking notice and in their case, since
+standardized ACPI tables must describe all systems out there,
+a top-down ten commandments type of pin config is necessary
+for their specs. (My interpretation though.)
+
+Yours,
+Linus Walleij
