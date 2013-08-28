@@ -1,54 +1,107 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC][PATCH v2] documentation/devicetree: Move DT bindigns from
- gpio to watchdog
-Date: Wed, 28 Aug 2013 08:38:56 -0600
-Message-ID: <521E0B80.6040302@wwwdotorg.org>
-References: <521672A1.6010202@wwwdotorg.org> <1377601837-18989-1-git-send-email-johannes.thumshirn@men.de> <521D1D16.9080106@wwwdotorg.org> <20130828062232.GA10368@jtlinux>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: dra7-evm: Add extcon nodes for USB ID
+ pin detection
+Date: Wed, 28 Aug 2013 18:40:38 +0400
+Message-ID: <521E0BE6.3080607@cogentembedded.com>
+References: <1377698352-27689-1-git-send-email-george.cherian@ti.com> <1377698352-27689-4-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130828062232.GA10368@jtlinux>
-Sender: linux-doc-owner@vger.kernel.org
-To: Johannes Thumshirn <johannes.thumshirn@men.de>
-Cc: Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1377698352-27689-4-git-send-email-george.cherian-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, popcornmix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2013 12:22 AM, Johannes Thumshirn wrote:
-> On Tue, Aug 27, 2013 at 03:41:42PM -0600, Stephen Warren wrote:
->> On 08/27/2013 05:10 AM, Johannes Thumshirn wrote:
->>> I accidently put the devicetree bindings for the MEN A21 watchdog driver in
->>> Documentation/devicetree/bindings/gpio instead of
->>> Documentation/devicetree/bindings/watchdog, this patch addresses this error.
->>
->>>  Changes to v1:
->>>  - Use named gpios, as suggested by Stephen Warren
->>
->> The move and the change to the binding should probably be separate
->> patches since they're logically separate things. I didn't intend you to
->> update the rename patch to fix the binding issue I pointed out.
->>
-> 
-> Oops. Looks like I've misunderstood you there. I'll re-send the rename patch
-> then.
-> 
->> Is the driver updated for this binding change? Are there DTs in released
->> kernels that won't work now, or is the driver very new; there may be a
->> need for the driver to support the old binding and the binding doc to
->> document the old gpios property, but mark it deprecated.
-> 
-> The driver is not yet updated, this is why I've sent it as an RFC. Are the
-> bindings acceptable this way? If yes I'll update the driver and re-send the
-> bindings with the driver as a new patch series.
+Hello.
 
-Well, XXX says:
+On 08/28/2013 05:59 PM, George Cherian wrote:
 
-> GPIO properties should be named "[<name>-]gpios"
+> Add
+> 	-extcon nodes for USB ID pin detection.
+> 	-i2c nodes.
+> 	-pcf nodes to which USB ID pin is connected.
 
-whereas in this patch, some of the renamed properties were "-gpio"
-rather than "-gpios". Aside from that, the new binding looks reasonable.
+> Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/dra7-evm.dts | 52 +++++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 51 insertions(+), 1 deletion(-)
 
-However, I see that the existing binding will be released as part of
-v3.11. That implies that we should continue to support the old binding
-for compatibility. As such, I'm not convinced whether it's worth
-changing this binding now.
+> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+> index acd3c09..9ee97c0 100644
+> --- a/arch/arm/boot/dts/dra7-evm.dts
+> +++ b/arch/arm/boot/dts/dra7-evm.dts
+> @@ -17,6 +17,17 @@
+>   		device_type = "memory";
+>   		reg = <0x80000000 0x60000000>; /* 1536 MB */
+>   	};
+> +
+> +	extcon1: gpio_usbvid_extcon1 {
+> +		compatible = "ti,gpio-usb-id";
+> +		gpios = <&pcf_21 1 0>;
+> +	};
+> +
+> +	extcon2: gpio_usbvid_extcon2 {
+> +		compatible = "ti,gpio-usb-id";
+> +		gpios = <&pcf_21 2 0>;
+> +	};
+> +
+>   };
+>
+>   &dra7_pmx_core {
+> @@ -33,10 +44,49 @@
+>           };
+>   };
+>
+> +&i2c1 {
+> +	clock-frequency = <400000>;
+> +
+> +	pcf_20: pcf8575@20 {
+
+    Acorrding to the ePAPR spec [1], "the name of a node should be somewhat 
+generic, reflecting the function of the device and not its precise 
+programming model. If appropriate, the name should be one of the following 
+choices:
+
+[...]
+- gpio
+[...]"
+
+> +		compatible = "ti,pcf8575";
+> +		reg = <0x20>;
+> +		n_latch = <0x4000>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&gpio6>;
+> +		interrupts = <11 2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+> +	pcf_21: pcf8575@21 {
+
+    Same comment here.
+
+> +		compatible = "ti,pcf8575";
+> +		reg = <0x21>;
+> +		n_latch = <0x1408>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-parent = <&pcf_20>;
+> +		interrupts = <14 2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+> +
+> +};
+> +
+
+[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
