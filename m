@@ -1,40 +1,44 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH 1/3] ARM: AM33xx: hwmod: Add RNG module data
-Date: Wed, 28 Aug 2013 18:48:40 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1308281845560.22040@utopia.booyaka.com>
-References: <1375777984-6267-1-git-send-email-lokeshvutla@ti.com> <1375777984-6267-2-git-send-email-lokeshvutla@ti.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1375777984-6267-2-git-send-email-lokeshvutla@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, devicetree@vger.kernel.org, rob@landley.net, rnayak@ti.com, benoit.cousson@linaro.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: merging device tree binding dirs for serial bindings
+Date: Wed, 28 Aug 2013 13:49:13 -0500
+Message-ID: <0F60E12D-C0BF-4185-85FF-0BC879B3C1F0@codeaurora.org>
+References: <F93329E6-1426-4197-871D-211F34455DDE@codeaurora.org> <20130828183534.GC14627@kroah.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20130828183534.GC14627@kroah.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, Fabio Estevam <fabio.estevam@freescale.com>, "shawn.guo@linaro.org Guo" <shawn.guo@linaro.org>, "s.hauer@pengutronix.de Hauer" <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
-On Tue, 6 Aug 2013, Lokesh Vutla wrote:
+On Aug 28, 2013, at 1:35 PM, Greg Kroah-Hartman wrote:
 
-> Add RNG hwmod data for AM33xx SoC.
+> On Wed, Aug 28, 2013 at 01:02:14PM -0500, Kumar Gala wrote:
+>> We appear to have:
+>> 
+>> Documentation/devicetree/bindings/serial/
+>> 
+>> and
+>> 
+>> Documentation/devicetree/bindings/tty/serial/
+>> 
+>> Which one do we want to keep, I'd pick the first, but I don't care too much.
 > 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> I don't care, I never created either one, and don't do any devicetree
+> stuff, so it's up to the devicetree maintainers to pick one.
+> 
+> thanks,
+> 
+> greg k-h
 
-I tried to queue this one, but it caused AM33xx boots to hang.  
-Thought it might be related to the patch ordering -- seems to me that 
-the clock change patch needed to come before this patch -- but if I 
-recall correctly, both BeagleBone and BeagleBone-LT still hung.  
+Since you don't care we'll go with bindings/serial.
 
-Also, this patch created a sparse warning.
+I'll send a patch to merge and clean this up.
 
-Could you take another look at this patch?  Maybe try basing off of this 
-tag:
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-git://git.kernel.org/pub/scm/linux/kernel/git/pjw/omap-pending.git tags/for-v3.12/omap-prcm-hwmod
-
-Fix the sparse problem, and see if the patch boots for you?
-
-thanks
-
-
-- Paul
