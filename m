@@ -1,48 +1,82 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v3 1/2] devicetree: serial: Document msm_serial bindings
-Date: Wed, 28 Aug 2013 13:13:13 -0500
-Message-ID: <3F130457-CA92-4319-A2E9-019F17815810@codeaurora.org>
-References: <1377648764-23453-1-git-send-email-sboyd@codeaurora.org> <1377648764-23453-2-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377648764-23453-2-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] iio: add Bosch BMA180 acceleration sensor driver
+Date: Wed, 28 Aug 2013 20:15:44 +0100
+Message-ID: <521E4C60.6030001@kernel.org>
+References: <1377687678-5761-1-git-send-email-o.v.kravchenko@globallogic.com> <1377687678-5761-2-git-send-email-o.v.kravchenko@globallogic.com> <20130828131724.GE10250@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130828131724.GE10250-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org" <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "denis.ciocca-qxv4g6HH51o@public.gmane.org" <denis.ciocca-qxv4g6HH51o@public.gmane.org>, "srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Aug 27, 2013, at 7:12 PM, Stephen Boyd wrote:
-
-> Let's fix up the msm serial device bindings so that it's clearer
-> what hardware is supported. Instead of using hsuart (for high
-> speed uart) let's use uartdm because that matches the actual name
-> of the hardware. Also, let's add the version information in case
-> we need to differentiate between different versions of the
-> hardware in the future. Finally, lets specify that clocks are
-> required (the clock bindings didn't exist when the original
-> binding was written) and also specify dma bindings just in case
-> we want to use it in software. We split the binding into two
-> files to make it clearer what's required and not required.
+On 08/28/13 14:17, Mark Rutland wrote:
+> On Wed, Aug 28, 2013 at 12:01:18PM +0100, Oleksandr Kravchenko wrote:
+>> This patch adds IIO driver for Bosch BMA180 triaxial
+>> acceleration sensor.
+>> http://dlnmh9ip6v2uc.cloudfront.net/datasheets/
+>>                 Sensors/Accelerometers/BST-BMA180-DS000-07_2.pdf
+>>
+>> Stephen Warren:
+>> The binding looks simple enough to me, so the binding
 > 
-> Cc: David Brown <davidb@codeaurora.org>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
-> .../devicetree/bindings/tty/serial/msm_serial.txt  | 27 -----------
-> .../bindings/tty/serial/qcom,msm-uart.txt          | 25 ++++++++++
-> .../bindings/tty/serial/qcom,msm-uartdm.txt        | 53 ++++++++++++++++++++++
-> 3 files changed, 78 insertions(+), 27 deletions(-)
-> delete mode 100644 Documentation/devicetree/bindings/tty/serial/msm_serial.txt
-> create mode 100644 Documentation/devicetree/bindings/tty/serial/qcom,msm-uart.txt
-> create mode 100644 Documentation/devicetree/bindings/tty/serial/qcom,msm-uartdm.txt
+> You can lose the above two lines, just the Acked-by is good enough. :)
+> 
+>> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
+Bonus text dropped and signoff/ack reordered as the Author goes at the top
+then the chain is as people ack/sign off after that.
 
-Acked-by: Kumar Gala <galak@codeaurora.org>
+Applied to the togreg branch of iio.git.  Not sure on timings for the merge
+window, but chances are high that this is just too late I'm afraid and will
+have to wait for next time around.
 
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Jonathan
+>> ---
+>>  .../devicetree/bindings/iio/accel/bma180.txt       |   24 +
+>>  drivers/iio/accel/Kconfig                          |   12 +
+>>  drivers/iio/accel/Makefile                         |    2 +
+>>  drivers/iio/accel/bma180.c                         |  676 ++++++++++++++++++++
+>>  4 files changed, 714 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/accel/bma180.txt
+>>  create mode 100644 drivers/iio/accel/bma180.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/accel/bma180.txt b/Documentation/devicetree/bindings/iio/accel/bma180.txt
+>> new file mode 100644
+>> index 0000000..c593357
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/accel/bma180.txt
+>> @@ -0,0 +1,24 @@
+>> +* Bosch BMA180 triaxial acceleration sensor
+>> +
+>> +http://omapworld.com/BMA180_111_1002839.pdf
+>> +
+>> +Required properties:
+>> +
+>> +  - compatible : should be "bosch,bma180"
+>> +  - reg : the I2C address of the sensor
+>> +
+>> +Optional properties:
+>> +
+>> +  - interrupt-parent : should be the phandle for the interrupt controller
+>> +
+>> +  - interrupts : interrupt mapping for GPIO IRQ, it should by configured with
+>> +               flags IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING
+>> +
+> 
+> One thing I noticed from the datasheet is that this has a clock input
+> (sck) and two regulator inputs (vdd and vddio). It might not always be
+> the case that these are configured statically, so they may need to be
+> described in the dt. It's possible that they could be added later as
+> optional properties, though.
+> 
+> Thanks,
+> Mark.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
