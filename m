@@ -1,115 +1,54 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v7 05/11] ARM: dts: enable hi4511 with device tree
-Date: Wed, 28 Aug 2013 08:20:18 -0600
-Message-ID: <521E0722.9040206@wwwdotorg.org>
-References: <1376965873-14431-1-git-send-email-haojian.zhuang@linaro.org>
- <1376965873-14431-6-git-send-email-haojian.zhuang@linaro.org>
- <8761uxsiox.fsf@linaro.org> <52165D5E.7040500@wwwdotorg.org>
- <CAD6h2NTYNSFAQ0NWVwKXEr7BHUikmjROk-i+qYGo0otFPZKu0A@mail.gmail.com>
- <521B86D9.5060108@wwwdotorg.org>
- <CAD6h2NSdk0fs-Z=Es9bOkwUEaubDTmAjv3hLDkrS3m1yshrbtQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH v2] documentation/devicetree: Move DT bindigns from
+ gpio to watchdog
+Date: Wed, 28 Aug 2013 08:38:56 -0600
+Message-ID: <521E0B80.6040302@wwwdotorg.org>
+References: <521672A1.6010202@wwwdotorg.org> <1377601837-18989-1-git-send-email-johannes.thumshirn@men.de> <521D1D16.9080106@wwwdotorg.org> <20130828062232.GA10368@jtlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD6h2NSdk0fs-Z=Es9bOkwUEaubDTmAjv3hLDkrS3m1yshrbtQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, John Stultz <john.stultz@linaro.org>, grant.likely@linar.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Mike Turquette <mturquette@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130828062232.GA10368@jtlinux>
+Sender: linux-doc-owner@vger.kernel.org
+To: Johannes Thumshirn <johannes.thumshirn@men.de>
+Cc: Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2013 08:17 PM, Haojian Zhuang wrote:
-> On 27 August 2013 00:48, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 08/23/2013 09:52 PM, Haojian Zhuang wrote:
->>> On 23 August 2013 02:50, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>>> On 08/22/2013 12:07 PM, Kevin Hilman wrote:
->>>>> [+ DT maintainers]
->>>>>
->>>>> Haojian Zhuang <haojian.zhuang@linaro.org> writes:
->>>>>
->>>>>> Enable Hisilicon Hi4511 development platform with device tree support.
->>>>>>
->>>>>> Signed-off-by: Haojian Zhuang <haojian.zhuang@linaro.org>
->>>> ...
+On 08/28/2013 12:22 AM, Johannes Thumshirn wrote:
+> On Tue, Aug 27, 2013 at 03:41:42PM -0600, Stephen Warren wrote:
+>> On 08/27/2013 05:10 AM, Johannes Thumshirn wrote:
+>>> I accidently put the devicetree bindings for the MEN A21 watchdog driver in
+>>> Documentation/devicetree/bindings/gpio instead of
+>>> Documentation/devicetree/bindings/watchdog, this patch addresses this error.
 >>
->>>>>> +    osc32k: osc32k {
->>>>>> +            compatible = "fixed-clock";
->>>>>> +            #clock-cells = <0>;
->>>>>> +            clock-frequency = <32768>;
->>>>>> +            clock-output-names = "osc32khz";
->>>>>> +    };
->>>>>
->>>>> ...seems many of the recent users of clocks have grouped them into a
->>>>> clocks {} grouping on a "simple-bus".
->>>>>
->>>>> DT folks: is there a rule of thumb on how whether these fixed clocks
->>>>> should be grouped on a simple bus?
->>>>
->>>> I would expect all the clock node names to be just "clock", since the
->>>> node names should describe the type of device not their identity (i.e.
->>>> clock name).
->>>>
->>>> In turn, this means that each clock node name needs to use a unit
->>>> address ("@nnn") to make them unique. In turn, this means they must have
->>>> a reg property since the unit address must match the first entry in the
->>>> reg property.
->>>
->>> No, it's really bad on using a unit address. The register always contains
->>> multiple mux or gate or divider. It would cause duplicated unit address.
+>>>  Changes to v1:
+>>>  - Use named gpios, as suggested by Stephen Warren
 >>
->> There shouldn't be multiple nodes with identical reg values; if that's
->> happening, then it seems like the mapping of nodes to HW is incorrect.
+>> The move and the change to the binding should probably be separate
+>> patches since they're logically separate things. I didn't intend you to
+>> update the rename patch to fix the binding issue I pointed out.
 >>
->> Each HW block should have 1 DT node. That way, the reg values won't collide.
 > 
-> At here, I emphasize each clock node is one clock node. They are organized in
-> tree. The same register integrates multiple clock gate/clock mux/clock divider.
-> If each clock node is depend on reg, maybe it's not easy to read and the clock
-> driver will be more complex.
-
-If there's a single HW block (or single register) that provides multiple
-clocks, there should be a single DT node and a single device that
-provides multiple clocks.
-
->>> I tried to use index number also. And it's also bad to append new clock nodes.
->>> So I use the label name instead.
->>>
->>>> Now I assume these clocks don't have any memory-mapped IO registers, so
->>>> they would need an arbitrary reg value rather than a real one. So it
->>>> doesn't make sense to place them directly under the root DT node, since
->>>> their reg values would make no sense within the context of the
->>>> CPU-visible MMIO space that the root node describes.
->>>>
->>>> In this case, it's typical to put all the clock nodes into e.g. a
->>>> /clocks node, since that node can introduce a separate numbering-space
->>>> for clocks. For example, I'd expect something like:
->>>>
->>>>         clocks {
->>>>                 #address-cells = <1>;
->>>>                 #size-cells = <0>;
->>>>
->>>>                 osc32k: clock@0 {
->>>>                         compatible = "fixed-clock";
->>>>                         reg = <0>;
->> ...
->>>>                 osc26m: clock@1 {
->>>>                         compatible = "fixed-clock";
->>>>                         reg = <1>;
->> ...
->>
->>> Those fixed-clock doesn't contain reg property. Since it needs not to access
->>> any clock register. It only provides the clock rate those child clock node.
->>
->> Inside the clocks node, the reg property is just a dummy value.
+> Oops. Looks like I've misunderstood you there. I'll re-send the rename patch
+> then.
 > 
-> Is a dummy value helpful? I don't think so.
+>> Is the driver updated for this binding change? Are there DTs in released
+>> kernels that won't work now, or is the driver very new; there may be a
+>> need for the driver to support the old binding and the binding doc to
+>> document the old gpios property, but mark it deprecated.
+> 
+> The driver is not yet updated, this is why I've sent it as an RFC. Are the
+> bindings acceptable this way? If yes I'll update the driver and re-send the
+> bindings with the driver as a new patch series.
 
-It's not a matter of whether it's helpful; it's just how DT works.
+Well, XXX says:
+
+> GPIO properties should be named "[<name>-]gpios"
+
+whereas in this patch, some of the renamed properties were "-gpio"
+rather than "-gpios". Aside from that, the new binding looks reasonable.
+
+However, I see that the existing binding will be released as part of
+v3.11. That implies that we should continue to support the old binding
+for compatibility. As such, I'm not convinced whether it's worth
+changing this binding now.
