@@ -1,46 +1,89 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
-Date: Wed, 28 Aug 2013 20:49:36 +0200
-Message-ID: <CACRpkda5KT8QWDK+76j0_yfW2LShOb_3mkssFd=nt8tLXx2Q3Q@mail.gmail.com>
-References: <20130618092516.GC18663@ab42.lan>
-	<1371547751-13873-2-git-send-email-christian.ruppert@abilis.com>
-	<CACRpkdZvcF3agP=hK6J6hZn-Sx2Mw=P4dR2Mwzo+NoLxtMkbQg@mail.gmail.com>
-	<20130805115118.GF20936@ab42.lan>
-	<CACRpkdaXqHHF5oDsWSCyhzUOurrxfLhS40=csGJFT8fK4WkA4A@mail.gmail.com>
-	<20130821155751.GB3046@ab42.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130821155751.GB3046@ab42.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: [PATCH 1/2] serial: fsl-imx-uart: Cleanup duplicate device tree binding
+Date: Wed, 28 Aug 2013 14:08:22 -0500
+Message-ID: <1377716903-19699-1-git-send-email-galak@codeaurora.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, gregkh@linuxfoundation.org
+Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, fabio.estevam@freescale.com, s.hauer@pengutronix.de, shawn.guo@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2013 at 5:57 PM, Christian Ruppert
-<christian.ruppert@abilis.com> wrote:
-> On Wed, Aug 14, 2013 at 06:53:56PM +0200, Linus Walleij wrote:
->>
->> OK, that can also be called a "bank" or "register" but whatever.
->
-> As you suggested below I re-read Documentation/pinctrl.txt and it got me
-> even more confused:
-> Am I right in my understanding that the whole concept of a
-> "port/bank/register" or whatever we would like to call it does not exist
-> in the pinctrl framework?
+We had two bindings for the same serial device, it looks like the one in
+tty/serial/fsl-imx-uart.txt is the more up to date one so go with it and
+merge a few things about the use/need for aliases in from
+serial/fsl-imx-uart.txt.
 
-Not that I know :-)
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
+---
+ .../devicetree/bindings/serial/fsl-imx-uart.txt    | 35 ----------------------
+ .../bindings/tty/serial/fsl-imx-uart.txt           |  9 +++++-
+ 2 files changed, 8 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
 
-If what it means is a number of registers from address x thru x+n
-words in memory that is called a register range usually, the
-Device Tree "regs" property.
+diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+deleted file mode 100644
+index c58573b..0000000
+--- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
++++ /dev/null
+@@ -1,35 +0,0 @@
+-* Freescale i.MX UART controller
+-
+-Required properties:
+-- compatible : should be "fsl,imx21-uart"
+-- reg : Address and length of the register set for the device
+-- interrupts : Should contain UART interrupt number
+-
+-Optional properties:
+-- fsl,uart-has-rtscts: indicate that RTS/CTS signals are used
+-
+-Note: Each uart controller should have an alias correctly numbered
+-in "aliases" node.
+-
+-Example:
+-
+-- From imx51.dtsi:
+-aliases {
+-	serial0 = &uart1;
+-	serial1 = &uart2;
+-	serial2 = &uart3;
+-};
+-
+-uart1: serial@73fbc000 {
+-	compatible = "fsl,imx51-uart", "fsl,imx21-uart";
+-	reg = <0x73fbc000 0x4000>;
+-	interrupts = <31>;
+-	status = "disabled";
+-}
+-
+-- From imx51-babbage.dts:
+-uart1: serial@73fbc000 {
+-	fsl,uart-has-rtscts;
+-	status = "okay";
+-};
+-
+diff --git a/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
+index c662eb3..35ae1fb 100644
+--- a/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
++++ b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
+@@ -11,9 +11,16 @@ Optional properties:
+ - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
+                   is DCE mode by default.
+ 
++Note: Each uart controller should have an alias correctly numbered
++in "aliases" node.
++
+ Example:
+ 
+-serial@73fbc000 {
++aliases {
++	serial0 = &uart1;
++};
++
++uart1: serial@73fbc000 {
+ 	compatible = "fsl,imx51-uart", "fsl,imx21-uart";
+ 	reg = <0x73fbc000 0x4000>;
+ 	interrupts = <31>;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
 
-If you're referring to a subset of registers dealing with a batch
-of pins or a single pin that can use whatever terminology you
-want, I consider it a driver-internal detail. Some GPIO drivers
-talk about "ports" when they have e.g. 2 x 32bit registers
-handling a total of 64 pins, then that is port 0 and port 1 or
-something like this, but it's really up to the driver.
-
-Yours,
-Linus Walleij
