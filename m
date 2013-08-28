@@ -1,66 +1,57 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] staging: iio: Documentation sysfs-bus-iio add
- power_mode
-Date: Wed, 28 Aug 2013 20:16:32 +0100
-Message-ID: <521E4C90.5080608@kernel.org>
-References: <1377687678-5761-1-git-send-email-o.v.kravchenko@globallogic.com> <521E1255.2090201@linux.intel.com> <521E12FF.4030709@kernel.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH RFC v2 3/5] spmi: add generic SPMI controller binding
+ documentation
+Date: Wed, 28 Aug 2013 12:32:54 -0600
+Message-ID: <521E4256.4070805@wwwdotorg.org>
+References: <cover.1377202730.git.joshc@codeaurora.org> <e42576b69ef3d4e624fbfa2f32f6f79a931b55d6.1377202730.git.joshc@codeaurora.org> <5217DB0C.7000101@wwwdotorg.org> <20130827170120.GR4035@joshc.qualcomm.com> <521D2047.8030300@wwwdotorg.org> <20130828180025.GA808@joshc.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <521E12FF.4030709-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, denis.ciocca-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20130828180025.GA808@joshc.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Sagar Dharia <sdharia@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Michael Bohan <mbohan@codeaurora.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/13 16:10, Jonathan Cameron wrote:
-> On 28/08/13 16:08, Srinivas Pandruvada wrote:
->> On 08/28/2013 04:01 AM, Oleksandr Kravchenko wrote:
->>> Add description about in_accelX_power_mode and
->>> in_accel_power_mode_available.
+On 08/28/2013 12:00 PM, Josh Cartwright wrote:
+> On Tue, Aug 27, 2013 at 03:55:19PM -0600, Stephen Warren wrote:
+>> On 08/27/2013 11:01 AM, Josh Cartwright wrote:
+>> ...
+>>> If we want to ensure for the generic bindings that we are fulling
+>>> characterizing/describing the SPMI bus, then we'll additionally need to
+>>> tackle an additional identified assumption:
 >>>
->>> Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
-Applied.  Note that neither this nor the next patch applied cleanly. In both
-cases some of the context was missing.  Could you check the resulting
-merge.  Seems fine to me, but I have messed these up before!
-
-Jonathan
->>> ---
->>>   Documentation/ABI/testing/sysfs-bus-iio |   10 ++++++++++
->>>   1 file changed, 10 insertions(+)
+>>>   4. One master per SPMI bus.  (The SPMI spec allows for up to 4
+>>>      masters)
 >>>
->>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio
->>> b/Documentation/ABI/testing/sysfs-bus-iio
->>> index dda81ff..1a333f3 100644
->>> --- a/Documentation/ABI/testing/sysfs-bus-iio
->>> +++ b/Documentation/ABI/testing/sysfs-bus-iio
->>> @@ -792,3 +792,13 @@ Contact:    linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>   Description:
->>>           This attribute is used to read the amount of quadrature error
->>>           present in the device at a given time.
->>> +
->>> +What:        /sys/.../iio:deviceX/in_accelX_power_mode
->> Shall we add power_mode to all sensors not just accelerometer? HID
->> sensor hub spec allows every sensor in it to go low power mode.
->> This is not same as OFF.
-> Feel free to add the relevant lines in the patch that adds the attribute.  We should not add stuff here that is not used.
-> 
->>> +KernelVersion:    3.11
->>> +Contact:    linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> +Description:
->>> +        Specifies the chip power mode.
->>> +        low_noise: reduce noise level from ADC,
->>> +        low_power: enable low current consumption.
->>> +        For a list of available output power modes read
->>> +        in_accel_power_mode_available.
+>>> On the Snapdragon 800 series, there exists only one software-controlled
+>>> master, but it is conceivably possible to have a setup with two
+>>> software-controlled masters on the same SPMI bus.
+>>>
+>>> This necessarily means that the description of the slaves and the
+>>> masters will need to be decoupled; I'm imagining a generic binding
+>>> supporting multiple masters would look something like this:
 >>
->> -- 
->> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Is there a need to represent the other masters in the DT? Sure they're
+>> there in HW, but if there's no specific way for the
+>> CPU-to-which-the-DT-applies to actually interact with those other
+>> masters (except perhaps by experiencing some arbitration delays) then
+>> presumably there's no need to represent the other masters in DT?
 > 
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> My example is contrived, but there is nothing in the SPMI spec
+> preventing two masters from being controllable by the same
+> CPU-to-which-the-DT-applies, sharing the same underlying bus.
+
+That's true.
+
+> I would also expect this configuration to be uncommon, I'm checking with
+> some folks with more SPMI experience to make sure they agree.
+> 
+> Interestingly, i2c as far as I can tell has also made the same
+> assumption.  There doesn't appear to be any way to express a
+> multi-master i2c setup where both masters are controlled by the same OS.
+
+Yes, I think it's a fair assumption that we don't need to represent
+that; I immediately thought about the I2C counter-example after reading
+your first paragraph.
