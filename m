@@ -1,165 +1,132 @@
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
-Subject: Re: [PATCH v8 2/3] DMA: Freescale: Add new 8-channel DMA engine device
- tree nodes
-Date: Wed, 28 Aug 2013 14:54:01 +0800
-Message-ID: <521D9E89.7040700@freescale.com>
-References: <1377600123-5746-1-git-send-email-hongbo.zhang@freescale.com> <1377600123-5746-3-git-send-email-hongbo.zhang@freescale.com> <20130827113534.GI19893@e106331-lin.cambridge.arm.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH] pinctrl: at91: add support for OUTPUT config
+Date: Wed, 28 Aug 2013 09:31:16 +0200
+Message-ID: <521DA744.1020807@atmel.com>
+References: <1377615082-16808-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130827113534.GI19893@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1377615082-16808-1-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon@overkiz.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Linus Walleij <linus.walleij@linaro.org>, Richard Genoud <richard.genoud@gmail.com>, Jiri Kosina <jkosina@suse.cz>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2013 07:35 PM, Mark Rutland wrote:
-> On Tue, Aug 27, 2013 at 11:42:02AM +0100, hongbo.zhang@freescale.com wrote:
->> From: Hongbo Zhang <hongbo.zhang@freescale.com>
->>
->> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch adds
->> the device tree nodes for them.
->>
->> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
->> ---
->>   .../devicetree/bindings/powerpc/fsl/dma.txt        |   66 ++++++++++++++++
->>   arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
->>   arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   81 ++++++++++++++++++++
->>   arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   81 ++++++++++++++++++++
->>   arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
->>   5 files changed, 232 insertions(+), 4 deletions(-)
->>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
->>
->> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->> index ddf17af..10fd031 100644
->> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->> @@ -126,6 +126,72 @@ Example:
->>                  };
->>          };
->>
->> +** Freescale Elo3 DMA Controller
->> +   This is EloPlus controller with 8 channels, used in Freescale Txxx and Bxxx
->> +   series chips, such as t1040, t4240, b4860.
->> +
->> +Required properties:
->> +
->> +- compatible        : must include "fsl,elo3-dma"
->> +- reg               : <registers specifier for DMA general status reg>
->> +- ranges            : describes the mapping between the address space of the
->> +                      DMA channels and the address space of the DMA controller
->> +
->> +- DMA channel nodes:
->> +        - compatible        : must include "fsl,eloplus-dma-channel"
->> +        - reg               : <registers specifier for channel>
->> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
->> +        - interrupt-parent  : optional, if needed for interrupt mapping
->> +
->> +Example:
->> +dma@100300 {
->> +       #address-cells = <1>;
->> +       #size-cells = <1>;
->> +       compatible = "fsl,elo3-dma";
->> +       reg = <0x100300 0x4 0x100600 0x4>;
-> Is that one reg entry where #size-cells=2 and #address-cells=2?
+On 27/08/2013 16:51, Boris BREZILLON :
+> Add support for pin output control through the pinctrl config:
+>   - support enabling/disabling output on a given pin
+>   - support output level setting (high or low)
 >
-> That's what the binding implies (given it only describes a single reg
-> entry).
+> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+> ---
+>   .../bindings/pinctrl/atmel,at91-pinctrl.txt        |    2 ++
+>   drivers/pinctrl/pinctrl-at91.c                     |   22 ++++++++++++++++++++
+>   include/dt-bindings/pinctrl/at91.h                 |    2 ++
+>   3 files changed, 26 insertions(+)
 >
-> if it's two entries, we should make that explicit (both in the binding
-> and example):
+> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> index cf7c7bc..5a22e0d 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+> @@ -90,6 +90,8 @@ MULTIDRIVE	(1 << 1): indicate this pin need to be configured as multidrive.
+>   DEGLITCH	(1 << 2): indicate this pin need deglitch.
+>   PULL_DOWN	(1 << 3): indicate this pin need a pull down.
+>   DIS_SCHMIT	(1 << 4): indicate this pin need to disable schmit trigger.
+> +OUTPUT		(1 << 5): indicate this pin need to be configured as an output.
+> +OUTPUT_VAL	(0x1 << 6): output val (1 = high, 0 = low)
+>   DEBOUNCE	(1 << 16): indicate this pin need debounce.
+>   DEBOUNCE_VAL	(0x3fff << 17): debounce val.
 >
-> 	reg = <0x100300 0x4>,
-> 	      <0x100600 0x4>;
-Yes they are two entries, I will change it this way.
->> +       ranges = <0x0 0x100100 0x500>;
-> If it is one reg entry then the example ranges property isn't big enough
-> to contain the parent-bus-address.
-They are two reg entries, so the range is big enough.
+> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+> index 19afb9a..1578a0d 100644
+> --- a/drivers/pinctrl/pinctrl-at91.c
+> +++ b/drivers/pinctrl/pinctrl-at91.c
+> @@ -61,6 +61,9 @@ static int gpio_banks;
+>   #define DEGLITCH	(1 << 2)
+>   #define PULL_DOWN	(1 << 3)
+>   #define DIS_SCHMIT	(1 << 4)
+> +#define OUTPUT		(1 << 5)
+> +#define OUTPUT_VAL_SHIFT	6
+> +#define OUTPUT_VAL	(0x1 << OUTPUT_VAL_SHIFT)
+>   #define DEBOUNCE	(1 << 16)
+>   #define DEBOUNCE_VAL_SHIFT	17
+>   #define DEBOUNCE_VAL	(0x3fff << DEBOUNCE_VAL_SHIFT)
+> @@ -333,6 +336,19 @@ static void at91_mux_set_pullup(void __iomem *pio, unsigned mask, bool on)
+>   	writel_relaxed(mask, pio + (on ? PIO_PUER : PIO_PUDR));
+>   }
 >
->> +       dma-channel@0 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x0 0x80>;
->> +               interrupts = <28 2 0 0>;
->> +       };
->> +       dma-channel@80 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x80 0x80>;
->> +               interrupts = <29 2 0 0>;
->> +       };
->> +       dma-channel@100 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x100 0x80>;
->> +               interrupts = <30 2 0 0>;
->> +       };
->> +       dma-channel@180 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x180 0x80>;
->> +               interrupts = <31 2 0 0>;
->> +       };
->> +       dma-channel@300 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x300 0x80>;
->> +               interrupts = <76 2 0 0>;
->> +       };
->> +       dma-channel@380 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x380 0x80>;
->> +               interrupts = <77 2 0 0>;
->> +       };
->> +       dma-channel@400 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x400 0x80>;
->> +               interrupts = <78 2 0 0>;
->> +       };
->> +       dma-channel@480 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x480 0x80>;
->> +               interrupts = <79 2 0 0>;
->> +       };
->> +};
->> +
->>   Note on DMA channel compatible properties: The compatible property must say
->>   "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
->>   driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
->> diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
->> index 7399154..ea53ea1 100644
->> --- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
->> +++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
->> @@ -223,13 +223,13 @@
->>                  reg = <0xe2000 0x1000>;
->>          };
->>
->> -/include/ "qoriq-dma-0.dtsi"
->> +/include/ "elo3-dma-0.dtsi"
->>          dma@100300 {
->>                  fsl,iommu-parent = <&pamu0>;
->>                  fsl,liodn-reg = <&guts 0x580>; /* DMA1LIODNR */
->>          };
->>
->> -/include/ "qoriq-dma-1.dtsi"
->> +/include/ "elo3-dma-1.dtsi"
->>          dma@101300 {
->>                  fsl,iommu-parent = <&pamu0>;
->>                  fsl,liodn-reg = <&guts 0x584>; /* DMA2LIODNR */
->> diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->> new file mode 100644
->> index 0000000..69a3277
->> --- /dev/null
->> +++ b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->> @@ -0,0 +1,81 @@
->> +/*
->> + * QorIQ DMA device tree stub [ controller @ offset 0x100000 ]
-> Copy-pasted?
+> +static bool at91_mux_get_output(void __iomem *pio, unsigned pin, bool *val)
+> +{
+> +	*val = (readl_relaxed(pio + PIO_ODSR) >> pin) & 0x1;
+> +	return (readl_relaxed(pio + PIO_OSR) >> pin) & 0x1;
+> +}
+> +
+> +static void at91_mux_set_output(void __iomem *pio, unsigned mask, bool is_on,
+> +				bool val)
+> +{
+> +	writel_relaxed(mask, pio + (val ? PIO_SODR : PIO_CODR));
+> +	writel_relaxed(mask, pio + (is_on ? PIO_OER : PIO_ODR));
+> +}
+> +
+>   static unsigned at91_mux_get_multidrive(void __iomem *pio, unsigned pin)
+>   {
+>   	return (readl_relaxed(pio + PIO_MDSR) >> pin) & 0x1;
+> @@ -712,6 +728,7 @@ static int at91_pinconf_get(struct pinctrl_dev *pctldev,
+>   	void __iomem *pio;
+>   	unsigned pin;
+>   	int div;
+> +	bool out;
 >
-> Presumably should be "Elo3 DMA devicetree stub", or similar?
+>   	dev_dbg(info->dev, "%s:%d, pin_id=%d, config=0x%lx", __func__, __LINE__, pin_id, *config);
+>   	pio = pin_to_controller(info, pin_to_bank(pin_id));
+> @@ -732,6 +749,9 @@ static int at91_pinconf_get(struct pinctrl_dev *pctldev,
+>   	if (info->ops->get_schmitt_trig && info->ops->get_schmitt_trig(pio, pin))
+>   		*config |= DIS_SCHMIT;
 >
-> Similarly for elo3-dma-1.dtsi.
-Yes copy-pasted, but QorIQ isn't wrong, it is name of Freescale series 
-chips.
-To be more specific, I'd like to use "QorIQ Elo3 DMA devicetree stub"
-> Thanks,
-> Mark.
+> +	if (at91_mux_get_output(pio, pin, &out))
+> +		*config |= OUTPUT | (out << OUTPUT_VAL_SHIFT);
+> +
+>   	return 0;
+>   }
 >
+> @@ -749,6 +769,8 @@ static int at91_pinconf_set(struct pinctrl_dev *pctldev,
+>   	if (config & PULL_UP && config & PULL_DOWN)
+>   		return -EINVAL;
+>
+> +	at91_mux_set_output(pio, mask, config & OUTPUT,
+> +			    (config & OUTPUT_VAL) >> OUTPUT_VAL_SHIFT);
+>   	at91_mux_set_pullup(pio, mask, config & PULL_UP);
+>   	at91_mux_set_multidrive(pio, mask, config & MULTI_DRIVE);
+>   	if (info->ops->set_deglitch)
+> diff --git a/include/dt-bindings/pinctrl/at91.h b/include/dt-bindings/pinctrl/at91.h
+> index d7988b4..9fd4d48 100644
+> --- a/include/dt-bindings/pinctrl/at91.h
+> +++ b/include/dt-bindings/pinctrl/at91.h
+> @@ -15,6 +15,8 @@
+>   #define AT91_PINCTRL_DEGLITCH		(1 << 2)
+>   #define AT91_PINCTRL_PULL_DOWN		(1 << 3)
+>   #define AT91_PINCTRL_DIS_SCHMIT		(1 << 4)
+> +#define AT91_PINCTRL_OUTPUT		(1 << 5)
+> +#define AT91_PINCTRL_OUTPUT_VAL(x)	((x & 0x1) << 6)
+
+Can you add this change to the documentation as well:
+Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+
+
+>   #define AT91_PINCTRL_DEBOUNCE		(1 << 16)
+>   #define AT91_PINCTRL_DEBOUNCE_VA(x)	(x << 17)
+
+Oh, we have a nice typo here! ---^^^^^^
+And moreover it would be good to add the mask as well.
+
+>
+>
+
+Once the documentation added, you can stick my:
+
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+
+Thanks, bye,
+-- 
+Nicolas Ferre
