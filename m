@@ -1,45 +1,165 @@
-From: Johannes Thumshirn <johannes.thumshirn@men.de>
-Subject: Re: [RFC][PATCH v2] documentation/devicetree: Move DT bindigns from
- gpio to watchdog
-Date: Wed, 28 Aug 2013 08:22:32 +0200
-Message-ID: <20130828062232.GA10368@jtlinux>
-References: <521672A1.6010202@wwwdotorg.org>
- <1377601837-18989-1-git-send-email-johannes.thumshirn@men.de>
- <521D1D16.9080106@wwwdotorg.org>
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
+Subject: Re: [PATCH v8 2/3] DMA: Freescale: Add new 8-channel DMA engine device
+ tree nodes
+Date: Wed, 28 Aug 2013 14:54:01 +0800
+Message-ID: <521D9E89.7040700@freescale.com>
+References: <1377600123-5746-1-git-send-email-hongbo.zhang@freescale.com> <1377600123-5746-3-git-send-email-hongbo.zhang@freescale.com> <20130827113534.GI19893@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <521D1D16.9080106@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Johannes Thumshirn <johannes.thumshirn@men.de>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130827113534.GI19893@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 27, 2013 at 03:41:42PM -0600, Stephen Warren wrote:
-> On 08/27/2013 05:10 AM, Johannes Thumshirn wrote:
-> > I accidently put the devicetree bindings for the MEN A21 watchdog driver in
-> > Documentation/devicetree/bindings/gpio instead of
-> > Documentation/devicetree/bindings/watchdog, this patch addresses this error.
+On 08/27/2013 07:35 PM, Mark Rutland wrote:
+> On Tue, Aug 27, 2013 at 11:42:02AM +0100, hongbo.zhang@freescale.com wrote:
+>> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+>>
+>> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch adds
+>> the device tree nodes for them.
+>>
+>> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+>> ---
+>>   .../devicetree/bindings/powerpc/fsl/dma.txt        |   66 ++++++++++++++++
+>>   arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
+>>   arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   81 ++++++++++++++++++++
+>>   arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   81 ++++++++++++++++++++
+>>   arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
+>>   5 files changed, 232 insertions(+), 4 deletions(-)
+>>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
+>>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
+>>
+>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+>> index ddf17af..10fd031 100644
+>> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+>> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+>> @@ -126,6 +126,72 @@ Example:
+>>                  };
+>>          };
+>>
+>> +** Freescale Elo3 DMA Controller
+>> +   This is EloPlus controller with 8 channels, used in Freescale Txxx and Bxxx
+>> +   series chips, such as t1040, t4240, b4860.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible        : must include "fsl,elo3-dma"
+>> +- reg               : <registers specifier for DMA general status reg>
+>> +- ranges            : describes the mapping between the address space of the
+>> +                      DMA channels and the address space of the DMA controller
+>> +
+>> +- DMA channel nodes:
+>> +        - compatible        : must include "fsl,eloplus-dma-channel"
+>> +        - reg               : <registers specifier for channel>
+>> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
+>> +        - interrupt-parent  : optional, if needed for interrupt mapping
+>> +
+>> +Example:
+>> +dma@100300 {
+>> +       #address-cells = <1>;
+>> +       #size-cells = <1>;
+>> +       compatible = "fsl,elo3-dma";
+>> +       reg = <0x100300 0x4 0x100600 0x4>;
+> Is that one reg entry where #size-cells=2 and #address-cells=2?
 >
-> >  Changes to v1:
-> >  - Use named gpios, as suggested by Stephen Warren
+> That's what the binding implies (given it only describes a single reg
+> entry).
 >
-> The move and the change to the binding should probably be separate
-> patches since they're logically separate things. I didn't intend you to
-> update the rename patch to fix the binding issue I pointed out.
+> if it's two entries, we should make that explicit (both in the binding
+> and example):
 >
-
-Oops. Looks like I've misunderstood you there. I'll re-send the rename patch
-then.
-
-> Is the driver updated for this binding change? Are there DTs in released
-> kernels that won't work now, or is the driver very new; there may be a
-> need for the driver to support the old binding and the binding doc to
-> document the old gpios property, but mark it deprecated.
-
-The driver is not yet updated, this is why I've sent it as an RFC. Are the
-bindings acceptable this way? If yes I'll update the driver and re-send the
-bindings with the driver as a new patch series.
-
-Johannes
+> 	reg = <0x100300 0x4>,
+> 	      <0x100600 0x4>;
+Yes they are two entries, I will change it this way.
+>> +       ranges = <0x0 0x100100 0x500>;
+> If it is one reg entry then the example ranges property isn't big enough
+> to contain the parent-bus-address.
+They are two reg entries, so the range is big enough.
+>
+>> +       dma-channel@0 {
+>> +               compatible = "fsl,eloplus-dma-channel";
+>> +               reg = <0x0 0x80>;
+>> +               interrupts = <28 2 0 0>;
+>> +       };
+>> +       dma-channel@80 {
+>> +               compatible = "fsl,eloplus-dma-channel";
+>> +               reg = <0x80 0x80>;
+>> +               interrupts = <29 2 0 0>;
+>> +       };
+>> +       dma-channel@100 {
+>> +               compatible = "fsl,eloplus-dma-channel";
+>> +               reg = <0x100 0x80>;
+>> +               interrupts = <30 2 0 0>;
+>> +       };
+>> +       dma-channel@180 {
+>> +               compatible = "fsl,eloplus-dma-channel";
+>> +               reg = <0x180 0x80>;
+>> +               interrupts = <31 2 0 0>;
+>> +       };
+>> +       dma-channel@300 {
+>> +               compatible = "fsl,eloplus-dma-channel";
+>> +               reg = <0x300 0x80>;
+>> +               interrupts = <76 2 0 0>;
+>> +       };
+>> +       dma-channel@380 {
+>> +               compatible = "fsl,eloplus-dma-channel";
+>> +               reg = <0x380 0x80>;
+>> +               interrupts = <77 2 0 0>;
+>> +       };
+>> +       dma-channel@400 {
+>> +               compatible = "fsl,eloplus-dma-channel";
+>> +               reg = <0x400 0x80>;
+>> +               interrupts = <78 2 0 0>;
+>> +       };
+>> +       dma-channel@480 {
+>> +               compatible = "fsl,eloplus-dma-channel";
+>> +               reg = <0x480 0x80>;
+>> +               interrupts = <79 2 0 0>;
+>> +       };
+>> +};
+>> +
+>>   Note on DMA channel compatible properties: The compatible property must say
+>>   "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
+>>   driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
+>> diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+>> index 7399154..ea53ea1 100644
+>> --- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+>> +++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+>> @@ -223,13 +223,13 @@
+>>                  reg = <0xe2000 0x1000>;
+>>          };
+>>
+>> -/include/ "qoriq-dma-0.dtsi"
+>> +/include/ "elo3-dma-0.dtsi"
+>>          dma@100300 {
+>>                  fsl,iommu-parent = <&pamu0>;
+>>                  fsl,liodn-reg = <&guts 0x580>; /* DMA1LIODNR */
+>>          };
+>>
+>> -/include/ "qoriq-dma-1.dtsi"
+>> +/include/ "elo3-dma-1.dtsi"
+>>          dma@101300 {
+>>                  fsl,iommu-parent = <&pamu0>;
+>>                  fsl,liodn-reg = <&guts 0x584>; /* DMA2LIODNR */
+>> diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
+>> new file mode 100644
+>> index 0000000..69a3277
+>> --- /dev/null
+>> +++ b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
+>> @@ -0,0 +1,81 @@
+>> +/*
+>> + * QorIQ DMA device tree stub [ controller @ offset 0x100000 ]
+> Copy-pasted?
+>
+> Presumably should be "Elo3 DMA devicetree stub", or similar?
+>
+> Similarly for elo3-dma-1.dtsi.
+Yes copy-pasted, but QorIQ isn't wrong, it is name of Freescale series 
+chips.
+To be more specific, I'd like to use "QorIQ Elo3 DMA devicetree stub"
+> Thanks,
+> Mark.
+>
