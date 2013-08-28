@@ -1,279 +1,99 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v12] ASoC: fsl: Add S/PDIF machine driver
-Date: Wed, 28 Aug 2013 12:04:46 +0800
-Message-ID: <1377662686-31696-1-git-send-email-b42378@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org, s.hauer@pengutronix.de, swarren@wwwdotorg.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, p.zabel@pengutronix.de, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH 1/3] thermal: samsung: correct the fall interrupt en,
+ status bit fields
+Date: Wed, 28 Aug 2013 11:15:17 +0530
+Message-ID: <1377668719-8602-2-git-send-email-ch.naveen@samsung.com>
+References: <1375336979-14747-1-git-send-email-ch.naveen@samsung.com>
+ <1377668719-8602-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1377668719-8602-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, rui.zhang@intel.com, eduardo.valentin@ti.com
+Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, naveenkrishna.ch@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch implements a device-tree-only machine driver for Freescale
-i.MX series Soc. It works with spdif_transmitter/spdif_receiver and
-fsl_spdif.c drivers.
+The FALL interrupt related en, status bits are available at an offset of
+16 on INTEN, INTSTAT registers and at an offset of
+12 on INTCLEAR register.
 
-Signed-off-by: Nicolin Chen <b42378@freescale.com>
+This patch corrects the same for exyns5250 and exynos5440
+
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
 ---
-Changelog
-v11->v12:
- * Dropped unused spdif_pdev.
- * Register spdif-dit/dir depending on DT bool property.
-v10->v11:
- * Use boolean properties for spdif-out/in switch instead of codec phandles.
- * Accordingly create dummy codec driver in probe() instead of DT nodes.
+ drivers/thermal/samsung/exynos_tmu.c      |    2 +-
+ drivers/thermal/samsung/exynos_tmu.h      |    2 ++
+ drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
+ drivers/thermal/samsung/exynos_tmu_data.h |    3 ++-
+ 4 files changed, 7 insertions(+), 2 deletions(-)
 
- .../devicetree/bindings/sound/imx-audio-spdif.txt  |   34 +++++
- sound/soc/fsl/Kconfig                              |   11 ++
- sound/soc/fsl/Makefile                             |    2 +
- sound/soc/fsl/imx-spdif.c                          |  148 ++++++++++++++++++++
- 4 files changed, 195 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
- create mode 100644 sound/soc/fsl/imx-spdif.c
-
-diff --git a/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt b/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
-new file mode 100644
-index 0000000..7d13479
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
-@@ -0,0 +1,34 @@
-+Freescale i.MX audio complex with S/PDIF transceiver
-+
-+Required properties:
-+
-+  - compatible : "fsl,imx-audio-spdif"
-+
-+  - model : The user-visible name of this sound complex
-+
-+  - spdif-controller : The phandle of the i.MX S/PDIF controller
-+
-+
-+Optional properties:
-+
-+  - spdif-out : This is a boolean property. If present, the transmitting
-+    function of S/PDIF will be enabled, indicating there's a physical
-+    S/PDIF out connector/jack on the board or it's connecting to some
-+    other IP block, such as an HDMI encoder/display-controller.
-+
-+  - spdif-in : This is a boolean property. If present, the receiving
-+    function of S/PDIF will be enabled, indicating there's a physical
-+    S/PDIF in connector/jack on the board.
-+
-+* Note: At least one of these two properties should be set in the DT binding.
-+
-+
-+Example:
-+
-+sound-spdif {
-+	compatible = "fsl,imx-audio-spdif";
-+	model = "imx-spdif";
-+	spdif-controller = <&spdif>;
-+	spdif-out;
-+	spdif-in;
-+};
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index cd088cc..a708380 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -193,6 +193,17 @@ config SND_SOC_IMX_SGTL5000
- 	  Say Y if you want to add support for SoC audio on an i.MX board with
- 	  a sgtl5000 codec.
+diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+index ec01dfe..d201ed8 100644
+--- a/drivers/thermal/samsung/exynos_tmu.c
++++ b/drivers/thermal/samsung/exynos_tmu.c
+@@ -265,7 +265,7 @@ skip_calib_data:
+ 				data->base + reg->threshold_th1);
  
-+config SND_SOC_IMX_SPDIF
-+	tristate "SoC Audio support for i.MX boards with S/PDIF"
-+	select SND_SOC_IMX_PCM_DMA
-+	select SND_SOC_FSL_SPDIF
-+	select SND_SOC_FSL_UTILS
-+	select SND_SOC_SPDIF
-+	help
-+	  SoC Audio support for i.MX boards with S/PDIF
-+	  Say Y if you want to add support for SoC audio on an i.MX board with
-+	  a S/DPDIF.
-+
- config SND_SOC_IMX_MC13783
- 	tristate "SoC Audio support for I.MX boards with mc13783"
- 	depends on MFD_MC13783 && ARM
-diff --git a/sound/soc/fsl/Makefile b/sound/soc/fsl/Makefile
-index 4b5970e..e2aaff7 100644
---- a/sound/soc/fsl/Makefile
-+++ b/sound/soc/fsl/Makefile
-@@ -45,6 +45,7 @@ snd-soc-mx27vis-aic32x4-objs := mx27vis-aic32x4.o
- snd-soc-wm1133-ev1-objs := wm1133-ev1.o
- snd-soc-imx-sgtl5000-objs := imx-sgtl5000.o
- snd-soc-imx-wm8962-objs := imx-wm8962.o
-+snd-soc-imx-spdif-objs :=imx-spdif.o
- snd-soc-imx-mc13783-objs := imx-mc13783.o
+ 		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
+-			(reg->inten_fall_mask << reg->inten_fall_shift),
++			(reg->inten_fall_mask << reg->intclr_fall_shift),
+ 				data->base + reg->tmu_intclear);
  
- obj-$(CONFIG_SND_SOC_EUKREA_TLV320) += snd-soc-eukrea-tlv320.o
-@@ -53,4 +54,5 @@ obj-$(CONFIG_SND_SOC_MX27VIS_AIC32X4) += snd-soc-mx27vis-aic32x4.o
- obj-$(CONFIG_SND_MXC_SOC_WM1133_EV1) += snd-soc-wm1133-ev1.o
- obj-$(CONFIG_SND_SOC_IMX_SGTL5000) += snd-soc-imx-sgtl5000.o
- obj-$(CONFIG_SND_SOC_IMX_WM8962) += snd-soc-imx-wm8962.o
-+obj-$(CONFIG_SND_SOC_IMX_SPDIF) += snd-soc-imx-spdif.o
- obj-$(CONFIG_SND_SOC_IMX_MC13783) += snd-soc-imx-mc13783.o
-diff --git a/sound/soc/fsl/imx-spdif.c b/sound/soc/fsl/imx-spdif.c
-new file mode 100644
-index 0000000..816013b
---- /dev/null
-+++ b/sound/soc/fsl/imx-spdif.c
-@@ -0,0 +1,148 @@
-+/*
-+ * Copyright (C) 2013 Freescale Semiconductor, Inc.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <sound/soc.h>
-+
-+struct imx_spdif_data {
-+	struct snd_soc_dai_link dai[2];
-+	struct snd_soc_card card;
-+	struct platform_device *txdev;
-+	struct platform_device *rxdev;
-+};
-+
-+static int imx_spdif_audio_probe(struct platform_device *pdev)
-+{
-+	struct device_node *spdif_np, *np = pdev->dev.of_node;
-+	struct imx_spdif_data *data;
-+	int ret = 0, num_links = 0;
-+
-+	spdif_np = of_parse_phandle(np, "spdif-controller", 0);
-+	if (!spdif_np) {
-+		dev_err(&pdev->dev, "failed to find spdif-controller\n");
-+		ret = -EINVAL;
-+		goto end;
-+	}
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data) {
-+		dev_err(&pdev->dev, "failed to allocate memory\n");
-+		ret = -ENOMEM;
-+		goto end;
-+	}
-+
-+	if (of_property_read_bool(np, "spdif-out")) {
-+		data->dai[num_links].name = "S/PDIF TX";
-+		data->dai[num_links].stream_name = "S/PDIF PCM Playback";
-+		data->dai[num_links].codec_dai_name = "dit-hifi";
-+		data->dai[num_links].codec_name = "spdif-dit";
-+		data->dai[num_links].cpu_of_node = spdif_np;
-+		data->dai[num_links].platform_of_node = spdif_np;
-+		num_links++;
-+
-+		data->txdev = platform_device_register_simple("spdif-dit", -1, NULL, 0);
-+		if (IS_ERR(data->txdev)) {
-+			ret = PTR_ERR(data->txdev);
-+			dev_err(&pdev->dev, "register dit failed: %d\n", ret);
-+			goto end;
-+		}
-+	}
-+
-+	if (of_property_read_bool(np, "spdif-in")) {
-+		data->dai[num_links].name = "S/PDIF RX";
-+		data->dai[num_links].stream_name = "S/PDIF PCM Capture";
-+		data->dai[num_links].codec_dai_name = "dir-hifi";
-+		data->dai[num_links].codec_name = "spdif-dir";
-+		data->dai[num_links].cpu_of_node = spdif_np;
-+		data->dai[num_links].platform_of_node = spdif_np;
-+		num_links++;
-+
-+		data->rxdev = platform_device_register_simple("spdif-dir", -1, NULL, 0);
-+		if (IS_ERR(data->rxdev)) {
-+			ret = PTR_ERR(data->rxdev);
-+			dev_err(&pdev->dev, "register dir failed: %d\n", ret);
-+			goto error_dit;
-+		}
-+	}
-+
-+	if (!num_links) {
-+		dev_err(&pdev->dev, "no enabled S/PDIF DAI link\n");
-+		goto error_dir;
-+	}
-+
-+	data->card.dev = &pdev->dev;
-+	data->card.num_links = num_links;
-+	data->card.dai_link = data->dai;
-+
-+	ret = snd_soc_of_parse_card_name(&data->card, "model");
-+	if (ret)
-+		goto error_dir;
-+
-+	ret = snd_soc_register_card(&data->card);
-+	if (ret) {
-+		dev_err(&pdev->dev, "snd_soc_register_card failed: %d\n", ret);
-+		goto error_dir;
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	goto end;
-+
-+error_dir:
-+	if (data->rxdev)
-+		platform_device_unregister(data->rxdev);
-+error_dit:
-+	if (data->txdev)
-+		platform_device_unregister(data->txdev);
-+end:
-+	if (spdif_np)
-+		of_node_put(spdif_np);
-+
-+	return ret;
-+}
-+
-+static int imx_spdif_audio_remove(struct platform_device *pdev)
-+{
-+	struct imx_spdif_data *data = platform_get_drvdata(pdev);
-+
-+	if (data->rxdev)
-+		platform_device_unregister(data->rxdev);
-+	if (data->txdev)
-+		platform_device_unregister(data->txdev);
-+
-+	snd_soc_unregister_card(&data->card);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id imx_spdif_dt_ids[] = {
-+	{ .compatible = "fsl,imx-audio-spdif", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, imx_spdif_dt_ids);
-+
-+static struct platform_driver imx_spdif_driver = {
-+	.driver = {
-+		.name = "imx-spdif",
-+		.owner = THIS_MODULE,
-+		.of_match_table = imx_spdif_dt_ids,
-+	},
-+	.probe = imx_spdif_audio_probe,
-+	.remove = imx_spdif_audio_remove,
-+};
-+
-+module_platform_driver(imx_spdif_driver);
-+
-+MODULE_AUTHOR("Freescale Semiconductor, Inc.");
-+MODULE_DESCRIPTION("Freescale i.MX S/PDIF machine driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:imx-spdif");
+ 		/* if last threshold limit is also present */
+diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
+index b364c9e..7c6c34a 100644
+--- a/drivers/thermal/samsung/exynos_tmu.h
++++ b/drivers/thermal/samsung/exynos_tmu.h
+@@ -134,6 +134,7 @@ enum soc_type {
+  * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
+  * @tmu_intstat: Register containing the interrupt status values.
+  * @tmu_intclear: Register for clearing the raised interrupt status.
++ * @intclr_fall_shift: shift bits for interrupt clear fall 0
+  * @emul_con: TMU emulation controller register.
+  * @emul_temp_shift: shift bits of emulation temperature.
+  * @emul_time_shift: shift bits of emulation time.
+@@ -204,6 +205,7 @@ struct exynos_tmu_registers {
+ 	u32	tmu_intstat;
+ 
+ 	u32	tmu_intclear;
++	u32	intclr_fall_shift;
+ 
+ 	u32	emul_con;
+ 	u32	emul_temp_shift;
+diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
+index 9002499..23fea23 100644
+--- a/drivers/thermal/samsung/exynos_tmu_data.c
++++ b/drivers/thermal/samsung/exynos_tmu_data.c
+@@ -122,6 +122,7 @@ static const struct exynos_tmu_registers exynos5250_tmu_registers = {
+ 	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
+ 	.tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
+ 	.tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
++	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+ 	.emul_con = EXYNOS_EMUL_CON,
+ 	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+ 	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
+@@ -210,6 +211,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
+ 	.inten_fall0_shift = EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
+ 	.tmu_intstat = EXYNOS5440_TMU_S0_7_IRQ,
+ 	.tmu_intclear = EXYNOS5440_TMU_S0_7_IRQ,
++	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+ 	.tmu_irqstatus = EXYNOS5440_TMU_IRQ_STATUS,
+ 	.emul_con = EXYNOS5440_TMU_S0_7_DEBUG,
+ 	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
+index dc7feb5..8788a87 100644
+--- a/drivers/thermal/samsung/exynos_tmu_data.h
++++ b/drivers/thermal/samsung/exynos_tmu_data.h
+@@ -69,9 +69,10 @@
+ #define EXYNOS_TMU_RISE_INT_MASK	0x111
+ #define EXYNOS_TMU_RISE_INT_SHIFT	0
+ #define EXYNOS_TMU_FALL_INT_MASK	0x111
+-#define EXYNOS_TMU_FALL_INT_SHIFT	12
++#define EXYNOS_TMU_FALL_INT_SHIFT	16
+ #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
+ #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
++#define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT	12
+ #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
+ #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
+ #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
 -- 
-1.7.1
+1.7.9.5
