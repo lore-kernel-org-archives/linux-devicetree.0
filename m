@@ -1,83 +1,41 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH 3/5] drivers: thermal: make usage of
- CONFIG_THERMAL_HWMON optional
-Date: Wed, 28 Aug 2013 08:13:56 +0800
-Message-ID: <1377648836.2335.252.camel@rzhang-lenovo>
-References: <1377295396-17289-1-git-send-email-eduardo.valentin@ti.com>
-	 <4832825.8PCMQe7StP@vostro.rjw.lan> <521CEF61.6040504@ti.com>
-	 <8131326.8QGX41MW6c@vostro.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <8131326.8QGX41MW6c@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, Peter Feuerer <peter@piie.net>, platform-driver-x86@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Lan Tianyu <tianyu.lan@intel.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v3 0/2] Document msm_serial bindings and support newer uartdms
+Date: Tue, 27 Aug 2013 17:12:42 -0700
+Message-ID: <1377648764-23453-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On =E4=BA=8C, 2013-08-27 at 23:17 +0200, Rafael J. Wysocki wrote:
-> On Tuesday, August 27, 2013 02:26:41 PM Eduardo Valentin wrote:
-> > On 23-08-2013 19:08, Rafael J. Wysocki wrote:
-> > > On Friday, August 23, 2013 06:03:14 PM Eduardo Valentin wrote:
-> > >> When registering a new thermal_device, the thermal framework
-> > >> will always add a hwmon sysfs interface.
-> > >>
-> > >> This patch adds a flag to make this behavior optional. Now
-> > >> when registering a new thermal device, the caller needs
-> > >> to say if the hwmon interface is required.
-> > >>
-> > >> In order to keep same behavior as of today, all current
-> > >> calls will by default create the hwmon interface.
-> > >=20
-> > > Well, instead of modifying all of the callers this way, why don't
-> > > you add new versions taking the additional argument as, for examp=
-le,
-> > >=20
-> > > thermal_zone_device_register_full()
-> > >=20
-> > > and redefine the old ones as static inline wrappers, for example
-> > >=20
-> > > static inline struct thermal_zone_device *thermal_zone_device_reg=
-ister(args)
-> > > {
-> > > 	return thermal_zone_device_register_full(args, true);
-> > > }
-> > >=20
-> > > ?
-> >=20
-> > Yeah, that is another way to go and I thought of doing it like that=
-=2E I
-> > just could not come out with a good API naming:
-> >=20
-> > thermal_zone_device_register_full(all args)
-> >=20
-> > thermal_zone_device_register(args) /* on hwmon =3D=3D true */
-> > thermal_zone_device_register_no_hwmon(args) /* on hwmon =3D=3D fals=
-e */
-> >=20
-> > Would this sound reasonable naming?
->=20
-> Yeah, sounds good to me.
->=20
-Well, actually, Tianyu is working on a patch set to move all the
-thermal_zone_device_register() parameters to struct thermal_zone_params=
-=2E
+This patchset aligns the msm_serial driver more with downstream usage and
+updates the driver's DT bindings.
 
-But with that patch set done, what you need to do next is just to
-introduce a new field in struct thermal_zone_params and make sure 0
-means registering hwmon sysfs I/F.
+Changes since v2:
+ * Fixed up DT review comments
+ * Dropped patches that were picked up in tty tree
 
-thanks,
-rui
+Changes since v1:
+ * Dropped _clk postfix from {core,iface}_clk
+ * Split DT binding into two files
+ * Renamed DT binding files to match compatible strings
+ * Fixed up DT review comments
+ * Added new patch 5/5 (more than 1 char for UARTDM)
 
-> Thanks,
-> Rafael
->=20
+Stephen Boyd (2):
+  devicetree: serial: Document msm_serial bindings
+  ARM: dts: msm: Update uartdm compatible strings
 
+ .../devicetree/bindings/tty/serial/msm_serial.txt  | 27 -----------
+ .../bindings/tty/serial/qcom,msm-uart.txt          | 25 ++++++++++
+ .../bindings/tty/serial/qcom,msm-uartdm.txt        | 53 ++++++++++++++++++++++
+ arch/arm/boot/dts/msm8660-surf.dts                 |  2 +-
+ arch/arm/boot/dts/msm8960-cdp.dts                  |  2 +-
+ 5 files changed, 80 insertions(+), 29 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/tty/serial/msm_serial.txt
+ create mode 100644 Documentation/devicetree/bindings/tty/serial/qcom,msm-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/tty/serial/qcom,msm-uartdm.txt
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
