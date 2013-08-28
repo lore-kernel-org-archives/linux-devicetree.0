@@ -1,48 +1,59 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
-Date: Wed, 28 Aug 2013 12:14:24 +0200
-Message-ID: <521DCD80.9010105@gmail.com>
-References: <20130828113521.35c53365@armhf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130828113521.35c53365@armhf>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v2: 3/3] thermal: samsung: Add TMU support for Exynos5420
+ SoCs
+Date: Wed, 28 Aug 2013 12:38:31 +0200
+Message-ID: <2432994.TkQmThmFSA@amdc1032>
+References: <1375336979-14747-1-git-send-email-ch.naveen@samsung.com>
+ <1377681409-18166-1-git-send-email-ch.naveen@samsung.com>
+ <1377681409-18166-3-git-send-email-ch.naveen@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1377681409-18166-3-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: linux-pm@vger.kernel.org, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, naveenkrishna.ch@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2013 11:35 AM, Jean-Francois Moine wrote:
-> This patch activates the audio device of the Cubox and sets the i2s
-> and S/PDIF pins.
->
-> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+
+Hi,
+
+On Wednesday, August 28, 2013 02:46:49 PM Naveen Krishna Chatradhi wrote:
+> This patch adds the neccessary register changes and arch information
+> to support Exynos5420 SoCs
+> Exynos5420 has 5 TMU channels one for each CPU 0, 1, 2 and 3 and GPU
+> 
+> Note: The platform data structure will be handled properly once the driver
+>  moves to complete device driver solution.
+> 
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+
+OK, this is also an acceptable solution (though it seems to be worse
+in terms of simplicity and long term maintainance). Anyway please ignore
+my comments to v1, just remember to rename this flag (as already pointed
+by out by Amit). TMU_SUPPORT_SHARED_MEMORY documentation in exynos_tmu.h
+also requires an update.
+
 > ---
->   arch/arm/boot/dts/dove-cubox.dts                  | 13 +++++++++++++
->   1 file changed, 13 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-cubox.dts
-> index 4af59b6..003d95b 100644
-> --- a/arch/arm/boot/dts/dove-cubox.dts
-> +++ b/arch/arm/boot/dts/dove-cubox.dts
-> @@ -132,3 +132,16 @@
->   		reg = <0>;
->   	};
->   };
-> +
-> +&pinctrl {
-> +	pmx_audio1_i2s1_spdifo: pmx-audio1-i2s1-spdifo {
-> +		marvell,pins = "mpp_audio1";
-> +		marvell,function = "i2s1/spdifo";
-> +	};
-> +};
-> +
-> +&i2s1 {
-> +	status = "okay";
-> +	pinctrl-0 = <&pmx_audio1_i2s1_spdifo>;
-> +	pinctrl-names = "default";
-> +};
+> Changes since v1:
+> 1. modified the platform data structure in order to pass SHARED flag
+>    for channels that need sharing of address space.
+> 2. https://lkml.org/lkml/2013/8/1/38 is merged into this patch.
+>    As the changes are minimum and can be added here.
 
-Please also add the external clock connected from si5351.
+Documentation/devicetree/bindings/thermal/exynos-thermal.txt update got
+lost and it is quite important now as second address servers multiple
+purposes. Please fix it.
 
-Sebastian
+>  drivers/thermal/samsung/exynos_tmu.c      |   14 +++-
+>  drivers/thermal/samsung/exynos_tmu.h      |    1 +
+>  drivers/thermal/samsung/exynos_tmu_data.c |  130 +++++++++++++++++++++++++++++
+>  drivers/thermal/samsung/exynos_tmu_data.h |    7 ++
+>  4 files changed, 150 insertions(+), 2 deletions(-)
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
