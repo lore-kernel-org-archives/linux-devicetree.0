@@ -1,38 +1,58 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V6 2/5] of: move of_parse_phandle()
-Date: Wed, 28 Aug 2013 21:30:38 +0200
-Message-ID: <CACRpkdYK75uSXLmzkQ9uNQfSBW86bSz3D0nYSr_XSXfixKSDGg@mail.gmail.com>
-References: <1376515632-12594-1-git-send-email-swarren@wwwdotorg.org>
-	<1376515632-12594-2-git-send-email-swarren@wwwdotorg.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: arm: cpus/cpu nodes
+ bindings updates
+Date: Wed, 28 Aug 2013 20:45:58 +0100
+Message-ID: <20130828194558.568303E0A6F@localhost>
+References: <1376559743-31848-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1376559743-31848-2-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1376515632-12594-2-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1376559743-31848-2-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <rob.herring@calxeda.com>, Hanjun Guo <hanjun.guo@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Dave Martin <dave.martin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 14, 2013 at 11:27 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+On Thu, 15 Aug 2013 10:42:22 +0100, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> +=====================================
+> +cpus and cpu node bindings definition
+> +=====================================
+> +
+> +The ARM architecture, in accordance with the ePAPR, requires the cpus and cpu
+> +nodes to be present and contain the properties described below.
+> +
+> +- cpus node
+> +
+> +	Description: Container of cpu nodes
+> +
+> +	The node name must be "cpus".
+> +
+> +	A cpus node must define the following properties:
+> +
+> +	- #address-cells
+> +		Usage: required
+> +		Value type: <u32>
+> +
+> +		Definition depends on ARM architecture version and
+> +		configuration:
+> +
+> +			# On uniprocessor ARM architectures previous to v7
+> +			  value must be 0, since they have no register
+> +			  providing CPU identification.
 
-> From: Stephen Warren <swarren@nvidia.com>
->
-> Move of_parse_phandle() after __of_parse_phandle_with_args(), since a
-> future patch will call __of_parse_phandle_with_args() from
-> of_parse_phandle(). Moving the function avoids adding a prototype. Doing
-> the move separately highlights the code changes separately.
->
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> ---
-> v5: New patch.
+Just clued into this point from the other thread; Don't do this.
+Uniprocessor should follow the same rules as 32bit or 64bit for the
+value of #address-cells, and cpu nodes should have a reg property, even
+if it is merely set to '0'.
 
-Still no feedback from Rob || Grant on this quite important cleanup?
-
-I would like to nominate Stephen Warren as co-maintainer of
-drivers/of/*, he definately knows his way around the code.
-I'm just worried that he may not accept due to a lot of work in the
-bindings already.
-
-Yours,
-Linus Walleij
+g.
