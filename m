@@ -1,57 +1,61 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 1/3] ARM: bcm281xx: Add GPIO driver
-Date: Wed, 28 Aug 2013 21:50:09 +0200
-Message-ID: <CACRpkdb1wjJh1qCq1Zke0MmL0WZsMKqA5NSJF571aMAKY1mOuA@mail.gmail.com>
-References: <1376938761-13657-1-git-send-email-markus.mayer@linaro.org>
- <1376938761-13657-2-git-send-email-markus.mayer@linaro.org>
- <CACRpkdbm2cKpz2SrUgsUpB4x5xjm=Bz=VCu279sEAKFJ1x9SPg@mail.gmail.com>
- <CAPdLdqm+r1P=48Aujz9nuDb_vpFj-wBvmCV=oOKNZ0YENmbL1g@mail.gmail.com>
- <CAPdLdq=atsbY8QDzH-aaHJvLk1CDe5qK3phSGLVZSvm=FoncjA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPdLdq=atsbY8QDzH-aaHJvLk1CDe5qK3phSGLVZSvm=FoncjA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Mayer <markus.mayer@linaro.org>
-Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Christian Daudt <csd@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <mmayer@broadcom.com>, Matt Porter <matt.porter@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2] of_net.h: Make of_get_phy_mode() return int i.s.o. const int
+Date: Wed, 28 Aug 2013 20:51:03 +0100
+Message-ID: <20130828195103.1C90E3E0AF4@localhost>
+References: <1376823690-29179-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1376823690-29179-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2013 at 9:30 PM, Markus Mayer <markus.mayer@linaro.org> wrote:
+On Sun, 18 Aug 2013 13:01:30 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> include/linux/of_net.h:16: warning: type qualifiers ignored on function return type
+> 
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> ---
 
-> I have a follow-up question regarding status reads for each iteration.
-> Is this what you are looking for?
->
->         for (;;) {
->                 sta = readl(reg_base + GPIO_INT_STATUS(bank_id)) &
->                     (~(readl(reg_base + GPIO_INT_MASK(bank_id))));
->                 if (sta == 0)
->                         break;
+Applied, thanks.
 
-Yes, but follow the design pattern of other drivers such as the
-drivers/irqchip/irq-vic.c:
+g.
 
-static int handle_one_vic(struct vic_device *vic, struct pt_regs *regs)
-{
-        u32 stat, irq;
-        int handled = 0;
-
-        while ((stat = readl_relaxed(vic->base + VIC_IRQ_STATUS))) {
-                irq = ffs(stat) - 1;
-                handle_IRQ(irq_find_mapping(vic->domain, irq), regs);
-                handled = 1;
-        }
-}
-
-I.e use that nice while-construction.
-
-Yours,
-Linus Walleij
+> v2: update the actual function in drivers/of/of_net.c.
+> 
+>  drivers/of/of_net.c    |    2 +-
+>  include/linux/of_net.h |    4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
+> index ea174c8..8f9be2e 100644
+> --- a/drivers/of/of_net.c
+> +++ b/drivers/of/of_net.c
+> @@ -39,7 +39,7 @@ static const char *phy_modes[] = {
+>   * The function gets phy interface string from property 'phy-mode',
+>   * and return its index in phy_modes table, or errno in error case.
+>   */
+> -const int of_get_phy_mode(struct device_node *np)
+> +int of_get_phy_mode(struct device_node *np)
+>  {
+>  	const char *pm;
+>  	int err, i;
+> diff --git a/include/linux/of_net.h b/include/linux/of_net.h
+> index 61bf53b..34597c8 100644
+> --- a/include/linux/of_net.h
+> +++ b/include/linux/of_net.h
+> @@ -9,10 +9,10 @@
+>  
+>  #ifdef CONFIG_OF_NET
+>  #include <linux/of.h>
+> -extern const int of_get_phy_mode(struct device_node *np);
+> +extern int of_get_phy_mode(struct device_node *np);
+>  extern const void *of_get_mac_address(struct device_node *np);
+>  #else
+> -static inline const int of_get_phy_mode(struct device_node *np)
+> +static inline int of_get_phy_mode(struct device_node *np)
+>  {
+>  	return -ENODEV;
+>  }
+> -- 
+> 1.7.9.5
+> 
