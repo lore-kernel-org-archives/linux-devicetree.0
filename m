@@ -1,345 +1,115 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH v2 1/3] extcon: extcon-gpio-usbvid: Generic USB VBUS/ID detection via GPIO
-Date: Wed, 28 Aug 2013 19:29:10 +0530
-Message-ID: <1377698352-27689-2-git-send-email-george.cherian@ti.com>
-References: <1377698352-27689-1-git-send-email-george.cherian@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v7 05/11] ARM: dts: enable hi4511 with device tree
+Date: Wed, 28 Aug 2013 08:20:18 -0600
+Message-ID: <521E0722.9040206@wwwdotorg.org>
+References: <1376965873-14431-1-git-send-email-haojian.zhuang@linaro.org>
+ <1376965873-14431-6-git-send-email-haojian.zhuang@linaro.org>
+ <8761uxsiox.fsf@linaro.org> <52165D5E.7040500@wwwdotorg.org>
+ <CAD6h2NTYNSFAQ0NWVwKXEr7BHUikmjROk-i+qYGo0otFPZKu0A@mail.gmail.com>
+ <521B86D9.5060108@wwwdotorg.org>
+ <CAD6h2NSdk0fs-Z=Es9bOkwUEaubDTmAjv3hLDkrS3m1yshrbtQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377698352-27689-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, bcousson@baylibre.com, davidb@codeaurora.org, arnd@arndb.de, swarren@nvidia.com, popcornmix@gmail.com, George Cherian <george.cherian@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAD6h2NSdk0fs-Z=Es9bOkwUEaubDTmAjv3hLDkrS3m1yshrbtQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, John Stultz <john.stultz@linaro.org>, grant.likely@linar.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Mike Turquette <mturquette@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a generic USB VBUS/ID detection EXTCON driver. This driver expects
-the ID/VBUS pin are connected via GPIOs. This driver is tested on
-DRA7x board were the ID pin is routed via GPIOs. The driver supports
-both VBUS and ID pin configuration and ID pin only configuration.
+On 08/27/2013 08:17 PM, Haojian Zhuang wrote:
+> On 27 August 2013 00:48, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 08/23/2013 09:52 PM, Haojian Zhuang wrote:
+>>> On 23 August 2013 02:50, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>>> On 08/22/2013 12:07 PM, Kevin Hilman wrote:
+>>>>> [+ DT maintainers]
+>>>>>
+>>>>> Haojian Zhuang <haojian.zhuang@linaro.org> writes:
+>>>>>
+>>>>>> Enable Hisilicon Hi4511 development platform with device tree support.
+>>>>>>
+>>>>>> Signed-off-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+>>>> ...
+>>
+>>>>>> +    osc32k: osc32k {
+>>>>>> +            compatible = "fixed-clock";
+>>>>>> +            #clock-cells = <0>;
+>>>>>> +            clock-frequency = <32768>;
+>>>>>> +            clock-output-names = "osc32khz";
+>>>>>> +    };
+>>>>>
+>>>>> ...seems many of the recent users of clocks have grouped them into a
+>>>>> clocks {} grouping on a "simple-bus".
+>>>>>
+>>>>> DT folks: is there a rule of thumb on how whether these fixed clocks
+>>>>> should be grouped on a simple bus?
+>>>>
+>>>> I would expect all the clock node names to be just "clock", since the
+>>>> node names should describe the type of device not their identity (i.e.
+>>>> clock name).
+>>>>
+>>>> In turn, this means that each clock node name needs to use a unit
+>>>> address ("@nnn") to make them unique. In turn, this means they must have
+>>>> a reg property since the unit address must match the first entry in the
+>>>> reg property.
+>>>
+>>> No, it's really bad on using a unit address. The register always contains
+>>> multiple mux or gate or divider. It would cause duplicated unit address.
+>>
+>> There shouldn't be multiple nodes with identical reg values; if that's
+>> happening, then it seems like the mapping of nodes to HW is incorrect.
+>>
+>> Each HW block should have 1 DT node. That way, the reg values won't collide.
+> 
+> At here, I emphasize each clock node is one clock node. They are organized in
+> tree. The same register integrates multiple clock gate/clock mux/clock divider.
+> If each clock node is depend on reg, maybe it's not easy to read and the clock
+> driver will be more complex.
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
----
- .../bindings/extcon/extcon-gpio-usbvid.txt         |  20 +++
- drivers/extcon/Kconfig                             |   7 +-
- drivers/extcon/Makefile                            |   2 +-
- drivers/extcon/extcon-gpio-usbvid.c                | 185 +++++++++++++++++----
- 4 files changed, 174 insertions(+), 40 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio-usbvid.txt
+If there's a single HW block (or single register) that provides multiple
+clocks, there should be a single DT node and a single device that
+provides multiple clocks.
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio-usbvid.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio-usbvid.txt
-new file mode 100644
-index 0000000..eea0741
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-gpio-usbvid.txt
-@@ -0,0 +1,20 @@
-+EXTCON FOR USB VIA GPIO
-+
-+Required Properties:
-+ - compatible : Should be "ti,gpio-usb-vid" for USB VBUS-ID detector
-+		using gpios or "ti,gpio-usb-id" for USB ID pin detector
-+ - gpios : phandle and args ID pin gpio and VBUS gpio.
-+	   The first gpio used  for ID pin detection
-+	   and the second used for VBUS detection.
-+	   ID pin gpio is mandatory and VBUS is optional
-+	   depending on implementation.
-+
-+Please refer to ../gpio/gpio.txt for details of the common GPIO bindings
-+
-+Example:
-+
-+	gpio_usbvid_extcon1 {
-+		compatible = "ti,gpio-usb-vid";
-+		gpios = <&gpio1 1 0>,
-+			<&gpio2 2 0>;
-+	};
-diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-index da21c5c..8097398 100644
---- a/drivers/extcon/Kconfig
-+++ b/drivers/extcon/Kconfig
-@@ -64,11 +64,10 @@ config EXTCON_PALMAS
- 	  Say Y here to enable support for USB peripheral and USB host
- 	  detection by palmas usb.
- 
--config EXTCON_GPIO_USB_VID
--	tristate "USB VBUS and ID detection over GPIO EXTCON support"
-+config EXTCON_GPIO_USBVID
-+	tristate "Generic USB VBUS/ID detection using GPIO EXTCON support"
- 	help
--	  Say Y here to enable support for USB peripheral and USB host
--	  detection by pcf8575 using DRA7XX extcon.
-+	  Say Y here to enable support for USB VBUS/ID deetction by GPIO.
- 
- 
- endif # MULTISTATE_SWITCH
-diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
-index cbb0932..0451f698 100644
---- a/drivers/extcon/Makefile
-+++ b/drivers/extcon/Makefile
-@@ -10,4 +10,4 @@ obj-$(CONFIG_EXTCON_MAX77693)	+= extcon-max77693.o
- obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
- obj-$(CONFIG_EXTCON_ARIZONA)	+= extcon-arizona.o
- obj-$(CONFIG_EXTCON_PALMAS)	+= extcon-palmas.o
--obj-$(CONFIG_EXTCON_GPIO_USB_VID)	+= extcon-gpio-usb-vid.o
-+obj-$(CONFIG_EXTCON_GPIO_USBVID)	+= extcon-gpio-usbvid.o
-diff --git a/drivers/extcon/extcon-gpio-usbvid.c b/drivers/extcon/extcon-gpio-usbvid.c
-index 5a85c99..e9bc2a97 100644
---- a/drivers/extcon/extcon-gpio-usbvid.c
-+++ b/drivers/extcon/extcon-gpio-usbvid.c
-@@ -1,5 +1,5 @@
- /*
-- * DRA7XX USB ID pin detection driver
-+ * Generic  USB VBUS-ID pin detection driver
-  *
-  * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-  * This program is free software; you can redistribute it and/or modify
-@@ -38,9 +38,11 @@ struct gpio_usbvid {
- 
- 	/*GPIO pin */
- 	int id_gpio;
-+	int vbus_gpio;
- 
--	int id_prev;
--	int id_current;
-+	int id_irq;
-+	int vbus_irq;
-+	int type;
- };
- 
- static const char *dra7xx_extcon_cable[] = {
-@@ -51,36 +53,141 @@ static const char *dra7xx_extcon_cable[] = {
- 
- static const int mutually_exclusive[] = {0x3, 0x0};
- 
-+/* Two types of support are provided.
-+ * Systems which has
-+ *	1) VBUS and ID pin connected via GPIO
-+ *	2)  only ID pin connected via GPIO
-+ *  For Case 1 both the gpios should be provided via DT
-+ *  Always the first GPIO in dt is considered ID pin GPIO
-+ */
-+
-+enum {
-+	UNKNOWN = 0,
-+	ID_DETECT,
-+	VBUS_ID_DETECT,
-+};
-+
-+#define ID_GND		0
-+#define ID_FLOAT	1
-+#define VBUS_OFF	0
-+#define VBUS_ON		1
-+
-+
- static irqreturn_t id_irq_handler(int irq, void *data)
- {
- 	struct gpio_usbvid *gpio_usbvid = (struct gpio_usbvid *) data;
-+	int id_current;
- 
--	gpio_usbvid->id_current = gpio_get_value_cansleep(gpio_usbvid->id_gpio);
--	printk ("***********id_irq_handler\n");
--	if (gpio_usbvid->id_current == gpio_usbvid->id_prev) {
--		return IRQ_HANDLED;
--	} else if (gpio_usbvid->id_current == 0) {
--		extcon_set_cable_state(&gpio_usbvid->edev, "USB", false);
-+	id_current = gpio_get_value_cansleep(gpio_usbvid->id_gpio);
-+	if (id_current == ID_GND) {
-+		if (gpio_usbvid->type == ID_DETECT)
-+			extcon_set_cable_state(&gpio_usbvid->edev,
-+							"USB", false);
- 		extcon_set_cable_state(&gpio_usbvid->edev, "USB-HOST", true);
- 	} else {
- 		extcon_set_cable_state(&gpio_usbvid->edev, "USB-HOST", false);
--		extcon_set_cable_state(&gpio_usbvid->edev, "USB", true);
-+		if (gpio_usbvid->type == ID_DETECT)
-+			extcon_set_cable_state(&gpio_usbvid->edev,
-+							"USB", true);
- 	}
-+	return IRQ_HANDLED;
-+}
- 
--	gpio_usbvid->id_prev = gpio_usbvid->id_current;
-+static irqreturn_t vbus_irq_handler(int irq, void *data)
-+{
-+	struct gpio_usbvid *gpio_usbvid = (struct gpio_usbvid *) data;
-+	int vbus_current;
-+
-+	vbus_current = gpio_get_value_cansleep(gpio_usbvid->vbus_gpio);
-+	if (vbus_current == VBUS_OFF)
-+		extcon_set_cable_state(&gpio_usbvid->edev, "USB", false);
-+	else
-+		extcon_set_cable_state(&gpio_usbvid->edev, "USB", true);
- 
- 	return IRQ_HANDLED;
- }
- 
-+
-+static void gpio_usbvid_set_initial_state(struct gpio_usbvid *gpio_usbvid)
-+{
-+	int id_current;
-+	int vbus_current;
-+
-+	switch (gpio_usbvid->type) {
-+	case ID_DETECT:
-+		id_current = gpio_get_value_cansleep(gpio_usbvid->id_gpio);
-+		if (!!id_current == ID_FLOAT) {
-+			extcon_set_cable_state(&gpio_usbvid->edev,
-+							"USB-HOST", false);
-+			extcon_set_cable_state(&gpio_usbvid->edev,
-+							"USB", true);
-+		} else {
-+			extcon_set_cable_state(&gpio_usbvid->edev,
-+							"USB", false);
-+			extcon_set_cable_state(&gpio_usbvid->edev,
-+							"USB-HOST", true);
-+		}
-+		break;
-+
-+	case VBUS_ID_DETECT:
-+		id_current = gpio_get_value_cansleep(gpio_usbvid->id_gpio);
-+		if (!!id_current == ID_FLOAT)
-+			extcon_set_cable_state(&gpio_usbvid->edev,
-+							"USB-HOST", false);
-+		else
-+			extcon_set_cable_state(&gpio_usbvid->edev,
-+							"USB-HOST", true);
-+
-+		vbus_current = gpio_get_value_cansleep(gpio_usbvid->vbus_gpio);
-+		if (!!vbus_current == VBUS_ON)
-+			extcon_set_cable_state(&gpio_usbvid->edev,
-+							"USB", true);
-+		else
-+			extcon_set_cable_state(&gpio_usbvid->edev,
-+							"USB", false);
-+		break;
-+
-+	default:
-+		dev_err(gpio_usbvid->dev, "Unknown VBUS-ID type\n");
-+	}
-+}
-+
-+static int gpio_usbvid_request_irq(struct gpio_usbvid *gpio_usbvid)
-+{
-+	int ret;
-+	ret = devm_request_threaded_irq(gpio_usbvid->dev, gpio_usbvid->id_irq,
-+					NULL, id_irq_handler,
-+					IRQF_ONESHOT | IRQF_TRIGGER_FALLING,
-+					dev_name(gpio_usbvid->dev),
-+					(void *) gpio_usbvid);
-+	if (ret) {
-+		dev_err(gpio_usbvid->dev, "failed to request id irq #%d\n",
-+					gpio_usbvid->id_irq);
-+		return ret;
-+	}
-+	if (gpio_usbvid->type == VBUS_ID_DETECT) {
-+		ret = devm_request_threaded_irq(gpio_usbvid->dev,
-+					gpio_usbvid->vbus_irq, NULL,
-+					vbus_irq_handler,
-+					IRQF_ONESHOT | IRQF_TRIGGER_FALLING,
-+					dev_name(gpio_usbvid->dev),
-+					(void *) gpio_usbvid);
-+		if (ret)
-+			dev_err(gpio_usbvid->dev, "failed to request vbus irq #%d\n",
-+						gpio_usbvid->vbus_irq);
-+	}
-+	return ret;
-+}
-+
- static int gpio_usbvid_probe(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
- 	struct gpio_usbvid *gpio_usbvid;
- 	int ret;
--	int irq_num;
- 	int gpio;
- 
--	gpio_usbvid = devm_kzalloc(&pdev->dev, sizeof(*gpio_usbvid), GFP_KERNEL);
-+	gpio_usbvid = devm_kzalloc(&pdev->dev, sizeof(*gpio_usbvid),
-+								GFP_KERNEL);
- 	if (!gpio_usbvid)
- 		return -ENOMEM;
- 
-@@ -93,44 +200,51 @@ static int gpio_usbvid_probe(struct platform_device *pdev)
- 	gpio_usbvid->edev.supported_cable = dra7xx_extcon_cable;
- 	gpio_usbvid->edev.mutually_exclusive = mutually_exclusive;
- 
-+	if (of_device_is_compatible(node, "ti,gpio-usb-id"))
-+		gpio_usbvid->type = ID_DETECT;
-+
- 	gpio = of_get_gpio(node, 0);
- 	if (gpio_is_valid(gpio)) {
- 		gpio_usbvid->id_gpio = gpio;
--		ret = devm_gpio_request(&pdev->dev, gpio_usbvid->id_gpio, "id_gpio");
-+		ret = devm_gpio_request(&pdev->dev, gpio_usbvid->id_gpio,
-+					"id_gpio");
- 		if (ret)
- 			return ret;
--		irq_num = gpio_to_irq(gpio_usbvid->id_gpio);
-+		gpio_usbvid->id_irq = gpio_to_irq(gpio_usbvid->id_gpio);
- 	} else {
- 		dev_err(&pdev->dev, "failed to get id gpio\n");
- 		return -ENODEV;
- 	}
- 
-+	if (of_device_is_compatible(node, "ti,gpio-usb-vid")) {
-+		gpio_usbvid->type = VBUS_ID_DETECT;
-+		gpio = of_get_gpio(node, 1);
-+		if (gpio_is_valid(gpio)) {
-+			gpio_usbvid->vbus_gpio = gpio;
-+			ret = devm_gpio_request(&pdev->dev,
-+						gpio_usbvid->vbus_gpio,
-+						"vbus_gpio");
-+			if (ret)
-+				return ret;
-+			gpio_usbvid->vbus_irq =
-+					gpio_to_irq(gpio_usbvid->vbus_gpio);
-+		} else {
-+			dev_err(&pdev->dev, "failed to get vbus gpio\n");
-+			return -ENODEV;
-+		}
-+	}
-+
- 	ret = extcon_dev_register(&gpio_usbvid->edev, gpio_usbvid->dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to register extcon device\n");
- 		return ret;
- 	}
- 
--	gpio_usbvid->id_prev = gpio_get_value_cansleep(gpio_usbvid->id_gpio);
--	if (gpio_usbvid->id_prev) {
--		extcon_set_cable_state(&gpio_usbvid->edev, "USB-HOST", false);
--		printk("***********extcon set USB DEV \n");
--		extcon_set_cable_state(&gpio_usbvid->edev, "USB", true);
--	} else {
--		extcon_set_cable_state(&gpio_usbvid->edev, "USB", false);
--		extcon_set_cable_state(&gpio_usbvid->edev, "USB-HOST", true);
--		printk("***********extcon set USB HOST \n");
--	}
--
--	ret = devm_request_threaded_irq(gpio_usbvid->dev, irq_num,
--			NULL, id_irq_handler, 
--			IRQF_ONESHOT | IRQF_TRIGGER_FALLING,
--		dev_name(&pdev->dev), (void *) gpio_usbvid);
--	if (ret) {
--		dev_err(gpio_usbvid->dev, "failed to request irq #%d\n",
--					irq_num);
-+	gpio_usbvid_set_initial_state(gpio_usbvid);
-+	ret = gpio_usbvid_request_irq(gpio_usbvid);
-+	if (ret)
- 		goto err0;
--	}
-+
- 	return 0;
- 
- err0:
-@@ -148,7 +262,8 @@ static int gpio_usbvid_remove(struct platform_device *pdev)
- }
- 
- static struct of_device_id of_gpio_usbvid_match_tbl[] = {
--	{ .compatible = "ti,gpio-usbvid", },
-+	{ .compatible = "ti,gpio-usb-vid", },
-+	{ .compatible = "ti,gpio-usb-id", },
- 	{ /* end */ }
- };
- 
--- 
-1.8.1.4
+>>> I tried to use index number also. And it's also bad to append new clock nodes.
+>>> So I use the label name instead.
+>>>
+>>>> Now I assume these clocks don't have any memory-mapped IO registers, so
+>>>> they would need an arbitrary reg value rather than a real one. So it
+>>>> doesn't make sense to place them directly under the root DT node, since
+>>>> their reg values would make no sense within the context of the
+>>>> CPU-visible MMIO space that the root node describes.
+>>>>
+>>>> In this case, it's typical to put all the clock nodes into e.g. a
+>>>> /clocks node, since that node can introduce a separate numbering-space
+>>>> for clocks. For example, I'd expect something like:
+>>>>
+>>>>         clocks {
+>>>>                 #address-cells = <1>;
+>>>>                 #size-cells = <0>;
+>>>>
+>>>>                 osc32k: clock@0 {
+>>>>                         compatible = "fixed-clock";
+>>>>                         reg = <0>;
+>> ...
+>>>>                 osc26m: clock@1 {
+>>>>                         compatible = "fixed-clock";
+>>>>                         reg = <1>;
+>> ...
+>>
+>>> Those fixed-clock doesn't contain reg property. Since it needs not to access
+>>> any clock register. It only provides the clock rate those child clock node.
+>>
+>> Inside the clocks node, the reg property is just a dummy value.
+> 
+> Is a dummy value helpful? I don't think so.
+
+It's not a matter of whether it's helpful; it's just how DT works.
