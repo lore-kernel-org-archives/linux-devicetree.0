@@ -1,259 +1,507 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v4 3/5] clk: dt: binding for basic multiplexer clock
-Date: Wed, 28 Aug 2013 10:50:10 -0500
-Message-ID: <2A930389-012E-45C3-93EB-6B4A41DB2EF5@codeaurora.org>
-References: <1377150793-27864-1-git-send-email-mturquette@linaro.org> <1377150793-27864-4-git-send-email-mturquette@linaro.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377150793-27864-4-git-send-email-mturquette@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Matt Sealey <neko@bakuhatsu.net>, Stephen Boyd <sboyd@codeaurora.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Tero Kristo <t-kristo@ti.com>, =?iso-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, devicetree@vger.kernel.org
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: [PATCH v2] media: st-rc: Add ST remote control driver
+Date: Wed, 28 Aug 2013 16:33:50 +0100
+Message-ID: <1377704030-3763-1-git-send-email-srinivas.kandagatla@st.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@st.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-On Aug 22, 2013, at 12:53 AM, Mike Turquette wrote:
+This patch adds support to ST RC driver, which is basically a IR/UHF
+receiver and transmitter. This IP (IRB) is common across all the ST
+parts for settop box platforms. IRB is embedded in ST COMMS IP block.
+It supports both Rx & Tx functionality.
 
-> Device Tree binding for the basic clock multiplexer, plus the setup
-> function to register the clock.  Based on the existing fixed-clock
-> binding.
-> 
-> Includes minor beautification of clk-provider.h where some whitespace is
-> added and of_fixed_factor_clock_setup is relocated to maintain a
-> consistent style.
-> 
-> Tero Kristo contributed helpful bug fixes to this patch.
-> 
-> Signed-off-by: Mike Turquette <mturquette@linaro.org>
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> ---
-> Changes since v3:
-> * replaced underscores with dashes in DT property names
-> * bail from of clock setup function early if of_iomap fails
-> * removed unecessary explict cast
-> 
-> .../devicetree/bindings/clock/mux-clock.txt        | 79 ++++++++++++++++++++++
-> drivers/clk/clk-mux.c                              | 68 ++++++++++++++++++-
-> include/linux/clk-provider.h                       |  5 +-
-> 3 files changed, 150 insertions(+), 2 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/clock/mux-clock.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/mux-clock.txt b/Documentation/devicetree/bindings/clock/mux-clock.txt
-> new file mode 100644
-> index 0000000..21eb3b3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/mux-clock.txt
-> @@ -0,0 +1,79 @@
-> +Binding for simple mux clock.
-> +
-> +This binding uses the common clock binding[1].  It assumes a
-> +register-mapped multiplexer with multiple input clock signals or
-> +parents, one of which can be selected as output.  This clock does not
-> +gate or adjust the parent rate via a divider or multiplier.
-> +
-> +By default the "clocks" property lists the parents in the same order
-> +as they are programmed into the regster.  E.g:
-> +
-> +	clocks = <&foo_clock>, <&bar_clock>, <&baz_clock>;
-> +
-> +results in programming the register as follows:
-> +
-> +register value		selected parent clock
-> +0			foo_clock
-> +1			bar_clock
-> +2			baz_clock
-> +
-> +Some clock controller IPs do not allow a value of zero to be programmed
-> +into the register, instead indexing begins at 1.  The optional property
-> +"index-starts-at-one" modified the scheme as follows:
-> +
-> +register value		selected clock parent
-> +1			foo_clock
-> +2			bar_clock
-> +3			baz_clock
-> +
-> +Additionally an optional table of bit and parent pairs may be supplied
-> +like so:
-> +
-> +	table = <&foo_clock 0x0>, <&bar_clock, 0x2>, <&baz_clock, 0x4>;
-> +
+In this driver adds only Rx functionality via LIRC codec.
 
-I think this is going way too far for what should be in a device tree.  Why should this not just be encoded in tables in the code?
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+---
+Hi Chehab,
 
-> +where the first value in the pair is the parent clock and the second
-> +value is the bitfield to be programmed into the register.
-> +
-> +The binding must provide the register to control the mux and the mask
-> +for the corresponding control bits.  Optionally the number of bits to
-> +shift that mask if necessary.  If the shift value is missing it is the
-> +same as supplying a zero shift.
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible : shall be "mux-clock".
-> +- #clock-cells : from common clock binding; shall be set to 0.
-> +- clocks : link phandles of parent clocks
-> +- reg : base address for register controlling adjustable mux
-> +- bit-mask : arbitrary bitmask for programming the adjustable mux
-> +
-> +Optional properties:
-> +- clock-output-names : From common clock binding.
-> +- table : array of integer pairs defining parents & bitfield values
-> +- bit-shift : number of bits to shift the bit-mask, defaults to
-> +  (ffs(mask) - 1) if not present
-> +- index-starts-at-one : valid input select programming starts at 1, not
-> +  zero
-> +- hiword-mask : lower half of the register programs the mux, upper half
-> +  of the register indicates bits that were updated in the lower half
-> +
-> +Examples:
-> +	clock: clock@4a008100 {
-> +		compatible = "mux-clock";
-> +		#clock-cells = <0>;
-> +		clocks = <&clock_foo>, <&clock_bar>, <&clock_baz>;
-> +		reg = <0x4a008100 0x4>
-> +		mask = <0x3>;
-> +		index-starts-at-one;
-> +	};
-> +
-> +	clock: clock@4a008100 {
-> +		#clock-cells = <0>;
-> +		compatible = "mux-clock";
-> +		clocks = <&clock_foo>, <&clock_bar>, <&clock_baz>;
-> +		reg = <0x4a008100 0x4>;
-> +		mask = <0x3>;
-> +		shift = <0>;
-> +		table = <&clock_foo 1>, <&clock_bar 2>, <&clock_baz 3>;
-> +	};
-> diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
-> index 0811633..9292253 100644
-> --- a/drivers/clk/clk-mux.c
-> +++ b/drivers/clk/clk-mux.c
-> @@ -1,7 +1,7 @@
-> /*
->  * Copyright (C) 2011 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
->  * Copyright (C) 2011 Richard Zhao, Linaro <richard.zhao@linaro.org>
-> - * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
-> + * Copyright (C) 2011-2013 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
->  *
->  * This program is free software; you can redistribute it and/or modify
->  * it under the terms of the GNU General Public License version 2 as
-> @@ -16,6 +16,8 @@
-> #include <linux/slab.h>
-> #include <linux/io.h>
-> #include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> 
-> /*
->  * DOC: basic adjustable multiplexer clock that cannot gate
-> @@ -177,3 +179,67 @@ struct clk *clk_register_mux(struct device *dev, const char *name,
-> 				      NULL, lock);
-> }
-> EXPORT_SYMBOL_GPL(clk_register_mux);
-> +
-> +#ifdef CONFIG_OF
-> +/**
-> + * of_mux_clk_setup() - Setup function for simple mux rate clock
-> + */
-> +void of_mux_clk_setup(struct device_node *node)
-> +{
-> +	struct clk *clk;
-> +	const char *clk_name = node->name;
-> +	void __iomem *reg;
-> +	int num_parents;
-> +	const char **parent_names;
-> +	int i;
-> +	u8 clk_mux_flags = 0;
-> +	u32 mask = 0;
-> +	u32 shift = 0;
-> +
-> +	of_property_read_string(node, "clock-output-names", &clk_name);
-> +
-> +	num_parents = of_clk_get_parent_count(node);
-> +	if (num_parents < 1) {
-> +		pr_err("%s: mux-clock %s must have parent(s)\n",
-> +				__func__, node->name);
-> +		return;
-> +	}
-> +
-> +	parent_names = kzalloc((sizeof(char*) * num_parents),
-> +			GFP_KERNEL);
-> +
-> +	for (i = 0; i < num_parents; i++)
-> +		parent_names[i] = of_clk_get_parent_name(node, i);
-> +
-> +	reg = of_iomap(node, 0);
-> +	if (!reg) {
-> +		pr_err("%s: no memory mapped for property reg\n", __func__);
-> +		return;
-> +	}
-> +
-> +	if (of_property_read_u32(node, "bit-mask", &mask)) {
-> +		pr_err("%s: missing bit-mask property for %s\n", __func__, node->name);
-> +		return;
-> +	}
-> +
-> +	if (of_property_read_u32(node, "bit-shift", &shift)) {
-> +		shift = __ffs(mask);
-> +		pr_debug("%s: bit-shift property defaults to 0x%x for %s\n",
-> +				__func__, shift, node->name);
-> +	}
-> +
-> +	if (of_property_read_bool(node, "index-starts-at-one"))
-> +		clk_mux_flags |= CLK_MUX_INDEX_ONE;
-> +
-> +	if (of_property_read_bool(node, "hiword-mask"))
-> +		clk_mux_flags |= CLK_MUX_HIWORD_MASK;
-> +
-> +	clk = clk_register_mux_table(NULL, clk_name, parent_names, num_parents,
-> +			0, reg, shift, mask, clk_mux_flags, NULL, NULL);
-> +
-> +	if (!IS_ERR(clk))
-> +		of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> +}
-> +EXPORT_SYMBOL_GPL(of_mux_clk_setup);
-> +CLK_OF_DECLARE(mux_clk, "mux-clock", of_mux_clk_setup);
-> +#endif
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 5497739..e019212 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -350,7 +350,7 @@ struct clk *clk_register_mux_table(struct device *dev, const char *name,
-> 		void __iomem *reg, u8 shift, u32 mask,
-> 		u8 clk_mux_flags, u32 *table, spinlock_t *lock);
-> 
-> -void of_fixed_factor_clk_setup(struct device_node *node);
-> +void of_mux_clk_setup(struct device_node *node);
-> 
-> /**
->  * struct clk_fixed_factor - fixed multiplier and divider clock
-> @@ -371,10 +371,13 @@ struct clk_fixed_factor {
-> };
-> 
-> extern struct clk_ops clk_fixed_factor_ops;
-> +
-> struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
-> 		const char *parent_name, unsigned long flags,
-> 		unsigned int mult, unsigned int div);
-> 
-> +void of_fixed_factor_clk_setup(struct device_node *node);
-> +
-> /***
->  * struct clk_composite - aggregate clock of mux, divider and gate clocks
->  *
-> -- 
-> 1.8.1.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is a very simple rc driver for IRB controller found in STi ARM CA9 SOCs.
+STi ARM SOC support went in 3.11 recently.
+This driver is a raw driver which feeds data to lirc codec for the user lircd
+to decode the keys.
 
+This patch is based on git://linuxtv.org/media_tree.git master branch.
+
+Changes since v1:
+	- Device tree bindings cleaned up as suggested by Mark and Pawel
+	- use ir_raw_event_reset under overflow conditions as suggested by Sean.
+	- call ir_raw_event_handle in interrupt handler as suggested by Sean.
+	- correct allowed_protos flag with RC_BIT_ types as suggested by Sean.
+	- timeout and rx resolution added as suggested by Sean.
+
+Thanks,
+srini
+
+ Documentation/devicetree/bindings/media/st-rc.txt |   24 ++
+ drivers/media/rc/Kconfig                          |   10 +
+ drivers/media/rc/Makefile                         |    1 +
+ drivers/media/rc/st_rc.c                          |  392 +++++++++++++++++++++
+ 4 files changed, 427 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/st-rc.txt
+ create mode 100644 drivers/media/rc/st_rc.c
+
+diff --git a/Documentation/devicetree/bindings/media/st-rc.txt b/Documentation/devicetree/bindings/media/st-rc.txt
+new file mode 100644
+index 0000000..20fe264
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/st-rc.txt
+@@ -0,0 +1,24 @@
++Device-Tree bindings for ST IRB IP
++
++Required properties:
++	- compatible: should be "st,comms-irb".
++	- reg: base physical address of the controller and length of memory
++	mapped  region.
++	- interrupts: interrupt number to the cpu. The interrupt specifier
++	format depends on the interrupt controller parent.
++
++Optional properties:
++	- rx-mode: can be "infrared" or "uhf".
++	- tx-mode: should be "infrared".
++	- pinctrl-names, pinctrl-0: the pincontrol settings to configure
++	muxing properly for IRB pins.
++	- clocks : phandle of clock.
++
++Example node:
++
++	rc: rc@fe518000 {
++		compatible	= "st,comms-irb";
++		reg		= <0xfe518000 0x234>;
++		interrupts	=  <0 203 0>;
++		rx-mode		= "infrared";
++	};
+diff --git a/drivers/media/rc/Kconfig b/drivers/media/rc/Kconfig
+index 11e84bc..bf301ed 100644
+--- a/drivers/media/rc/Kconfig
++++ b/drivers/media/rc/Kconfig
+@@ -322,4 +322,14 @@ config IR_GPIO_CIR
+ 	   To compile this driver as a module, choose M here: the module will
+ 	   be called gpio-ir-recv.
+ 
++config RC_ST
++	tristate "ST remote control receiver"
++	depends on ARCH_STI && LIRC && OF
++	help
++	 Say Y here if you want support for ST remote control driver
++	 which allows both IR and UHF RX.
++	 The driver passes raw pluse and space information to the LIRC decoder.
++
++	 If you're not sure, select N here.
++
+ endif #RC_DEVICES
+diff --git a/drivers/media/rc/Makefile b/drivers/media/rc/Makefile
+index 56bacf0..f4eb32c 100644
+--- a/drivers/media/rc/Makefile
++++ b/drivers/media/rc/Makefile
+@@ -30,3 +30,4 @@ obj-$(CONFIG_RC_LOOPBACK) += rc-loopback.o
+ obj-$(CONFIG_IR_GPIO_CIR) += gpio-ir-recv.o
+ obj-$(CONFIG_IR_IGUANA) += iguanair.o
+ obj-$(CONFIG_IR_TTUSBIR) += ttusbir.o
++obj-$(CONFIG_RC_ST) += st_rc.o
+diff --git a/drivers/media/rc/st_rc.c b/drivers/media/rc/st_rc.c
+new file mode 100644
+index 0000000..5caa6c5
+--- /dev/null
++++ b/drivers/media/rc/st_rc.c
+@@ -0,0 +1,392 @@
++/*
++ * Copyright (C) 2013 STMicroelectronics Limited
++ * Author: Srinivas Kandagatla <srinivas.kandagatla@st.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#include <linux/kernel.h>
++#include <linux/clk.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <media/rc-core.h>
++#include <linux/pinctrl/consumer.h>
++
++struct st_rc_device {
++	struct device			*dev;
++	int				irq;
++	int				irq_wake;
++	struct clk			*sys_clock;
++	void				*base;	/* Register base address */
++	void				*rx_base;/* RX Register base address */
++	struct rc_dev			*rdev;
++	bool				overclocking;
++	int				sample_mult;
++	int				sample_div;
++	bool				rxuhfmode;
++};
++
++/* Registers */
++#define IRB_SAMPLE_RATE_COMM	0x64	/* sample freq divisor*/
++#define IRB_CLOCK_SEL		0x70	/* clock select       */
++#define IRB_CLOCK_SEL_STATUS	0x74	/* clock status       */
++/* IRB IR/UHF receiver registers */
++#define IRB_RX_ON               0x40	/* pulse time capture */
++#define IRB_RX_SYS              0X44	/* sym period capture */
++#define IRB_RX_INT_EN           0x48	/* IRQ enable (R/W)   */
++#define IRB_RX_INT_STATUS       0x4C	/* IRQ status (R/W)   */
++#define IRB_RX_EN               0x50	/* Receive enablei    */
++#define IRB_MAX_SYM_PERIOD      0x54	/* max sym value      */
++#define IRB_RX_INT_CLEAR        0x58	/* overrun status     */
++#define IRB_RX_STATUS           0x6C	/* receive status     */
++#define IRB_RX_NOISE_SUPPR      0x5C	/* noise suppression  */
++#define IRB_RX_POLARITY_INV     0x68	/* polarity inverter  */
++
++/**
++ * IRQ set: Enable full FIFO                 1  -> bit  3;
++ *          Enable overrun IRQ               1  -> bit  2;
++ *          Enable last symbol IRQ           1  -> bit  1:
++ *          Enable RX interrupt              1  -> bit  0;
++ */
++#define IRB_RX_INTS		0x0f
++#define IRB_RX_OVERRUN_INT	0x04
++ /* maximum symbol period (microsecs),timeout to detect end of symbol train */
++#define MAX_SYMB_TIME		0x5000
++#define IRB_SAMPLE_FREQ		10000000
++#define	IRB_FIFO_NOT_EMPTY	0xff00
++#define IRB_OVERFLOW		0x4
++#define IRB_TIMEOUT		0xffff
++#define IR_ST_NAME "st-rc"
++
++static void st_rc_send_lirc_timeout(struct rc_dev *rdev)
++{
++	DEFINE_IR_RAW_EVENT(ev);
++	ev.timeout = true;
++	ir_raw_event_store(rdev, &ev);
++}
++
++/**
++ * RX graphical example to better understand the difference between ST IR block
++ * output and standard definition used by LIRC (and most of the world!)
++ *
++ *           mark                                     mark
++ *      |-IRB_RX_ON-|                            |-IRB_RX_ON-|
++ *      ___  ___  ___                            ___  ___  ___             _
++ *      | |  | |  | |                            | |  | |  | |             |
++ *      | |  | |  | |         space 0            | |  | |  | |   space 1   |
++ * _____| |__| |__| |____________________________| |__| |__| |_____________|
++ *
++ *      |--------------- IRB_RX_SYS -------------|------ IRB_RX_SYS -------|
++ *
++ *      |------------- encoding bit 0 -----------|---- encoding bit 1 -----|
++ *
++ * ST hardware returns mark (IRB_RX_ON) and total symbol time (IRB_RX_SYS), so
++ * convert to standard mark/space we have to calculate space=(IRB_RX_SYS-mark)
++ * The mark time represents the amount of time the carrier (usually 36-40kHz)
++ * is detected.The above examples shows Pulse Width Modulation encoding where
++ * bit 0 is represented by space>mark.
++ */
++
++static irqreturn_t st_rc_rx_interrupt(int irq, void *data)
++{
++	unsigned int symbol, mark = 0;
++	struct st_rc_device *dev = data;
++	int last_symbol = 0;
++	u32 status;
++	DEFINE_IR_RAW_EVENT(ev);
++
++	if (dev->irq_wake)
++		pm_wakeup_event(dev->dev, 0);
++
++	status  = readl(dev->rx_base + IRB_RX_STATUS);
++
++	while (status & (IRB_FIFO_NOT_EMPTY | IRB_OVERFLOW)) {
++		u32 int_status = readl(dev->rx_base + IRB_RX_INT_STATUS);
++		if (unlikely(int_status & IRB_RX_OVERRUN_INT)) {
++			/* discard the entire collection in case of errors!  */
++			ir_raw_event_reset(dev->rdev);
++			dev_info(dev->dev, "IR RX overrun\n");
++			writel(IRB_RX_OVERRUN_INT,
++					dev->rx_base + IRB_RX_INT_CLEAR);
++			continue;
++		}
++
++		symbol = readl(dev->rx_base + IRB_RX_SYS);
++		mark = readl(dev->rx_base + IRB_RX_ON);
++
++		if (symbol == IRB_TIMEOUT)
++			last_symbol = 1;
++
++		 /* Ignore any noise */
++		if ((mark > 2) && (symbol > 1)) {
++			symbol -= mark;
++			if (dev->overclocking) { /* adjustments to timings */
++				symbol *= dev->sample_mult;
++				symbol /= dev->sample_div;
++				mark *= dev->sample_mult;
++				mark /= dev->sample_div;
++			}
++
++			ev.duration = US_TO_NS(mark);
++			ev.pulse = true;
++			ir_raw_event_store(dev->rdev, &ev);
++
++			if (!last_symbol) {
++				ev.duration = US_TO_NS(symbol);
++				ev.pulse = false;
++				ir_raw_event_store(dev->rdev, &ev);
++			} else  {
++				st_rc_send_lirc_timeout(dev->rdev);
++			}
++
++		}
++		last_symbol = 0;
++		status  = readl(dev->rx_base + IRB_RX_STATUS);
++	}
++
++	writel(IRB_RX_INTS, dev->rx_base + IRB_RX_INT_CLEAR);
++
++	/* Empty software fifo */
++	ir_raw_event_handle(dev->rdev);
++	return IRQ_HANDLED;
++}
++
++static void st_rc_hardware_init(struct st_rc_device *dev)
++{
++	int baseclock, freqdiff;
++	unsigned int rx_max_symbol_per = MAX_SYMB_TIME;
++	unsigned int rx_sampling_freq_div;
++
++	clk_prepare_enable(dev->sys_clock);
++	baseclock = clk_get_rate(dev->sys_clock);
++
++	/* IRB input pins are inverted internally from high to low. */
++	writel(1, dev->rx_base + IRB_RX_POLARITY_INV);
++
++	rx_sampling_freq_div = baseclock / IRB_SAMPLE_FREQ;
++	writel(rx_sampling_freq_div, dev->base + IRB_SAMPLE_RATE_COMM);
++
++	freqdiff = baseclock - (rx_sampling_freq_div * IRB_SAMPLE_FREQ);
++	if (freqdiff) { /* over clocking, workout the adjustment factors */
++		dev->overclocking = true;
++		dev->sample_mult = 1000;
++		dev->sample_div = baseclock / (10000 * rx_sampling_freq_div);
++		rx_max_symbol_per = (rx_max_symbol_per * 1000)/dev->sample_div;
++	}
++
++	writel(rx_max_symbol_per, dev->rx_base + IRB_MAX_SYM_PERIOD);
++}
++
++static int st_rc_remove(struct platform_device *pdev)
++{
++	struct st_rc_device *rc_dev = platform_get_drvdata(pdev);
++	clk_disable_unprepare(rc_dev->sys_clock);
++	rc_unregister_device(rc_dev->rdev);
++	return 0;
++}
++
++static int st_rc_open(struct rc_dev *rdev)
++{
++	struct st_rc_device *dev = rdev->priv;
++	unsigned long flags;
++	local_irq_save(flags);
++	/* enable interrupts and receiver */
++	writel(IRB_RX_INTS, dev->rx_base + IRB_RX_INT_EN);
++	writel(0x01, dev->rx_base + IRB_RX_EN);
++	local_irq_restore(flags);
++
++	return 0;
++}
++
++static void st_rc_close(struct rc_dev *rdev)
++{
++	struct st_rc_device *dev = rdev->priv;
++	/* disable interrupts and receiver */
++	writel(0x00, dev->rx_base + IRB_RX_EN);
++	writel(0x00, dev->rx_base + IRB_RX_INT_EN);
++}
++
++static int st_rc_probe(struct platform_device *pdev)
++{
++	int ret = -EINVAL;
++	struct rc_dev *rdev;
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	struct st_rc_device *rc_dev;
++	struct device_node *np = pdev->dev.of_node;
++	const char *rx_mode;
++
++	rc_dev = devm_kzalloc(dev, sizeof(struct st_rc_device), GFP_KERNEL);
++	rdev = rc_allocate_device();
++
++	if (!rc_dev || !rdev)
++		return -ENOMEM;
++
++	if (np && !of_property_read_string(np, "rx-mode", &rx_mode)) {
++
++		if (!strcmp(rx_mode, "uhf")) {
++			rc_dev->rxuhfmode = true;
++		} else if (!strcmp(rx_mode, "infrared")) {
++			rc_dev->rxuhfmode = false;
++		} else {
++			dev_err(dev, "Unsupported rx mode [%s]\n", rx_mode);
++			goto err;
++		}
++
++	} else {
++		goto err;
++	}
++
++	rc_dev->sys_clock = devm_clk_get(dev, NULL);
++	if (IS_ERR(rc_dev->sys_clock)) {
++		dev_err(dev, "System clock not found\n");
++		ret = PTR_ERR(rc_dev->sys_clock);
++		goto err;
++	}
++
++	rc_dev->irq = platform_get_irq(pdev, 0);
++	if (rc_dev->irq < 0) {
++		ret = rc_dev->irq;
++		goto clkerr;
++	}
++
++	ret = -ENODEV;
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		goto clkerr;
++
++	rc_dev->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(rc_dev->base))
++		goto clkerr;
++
++	if (rc_dev->rxuhfmode)
++		rc_dev->rx_base = rc_dev->base + 0x40;
++	else
++		rc_dev->rx_base = rc_dev->base;
++
++	rc_dev->dev = dev;
++	platform_set_drvdata(pdev, rc_dev);
++	st_rc_hardware_init(rc_dev);
++
++	rdev->driver_type = RC_DRIVER_IR_RAW;
++	rdev->allowed_protos = RC_BIT_ALL;
++	/* rx sampling rate is 10Mhz */
++	rdev->rx_resolution = 100;
++	rdev->timeout = US_TO_NS(MAX_SYMB_TIME);
++	rdev->priv = rc_dev;
++	rdev->open = st_rc_open;
++	rdev->close = st_rc_close;
++	rdev->driver_name = IR_ST_NAME;
++	rdev->map_name = RC_MAP_LIRC;
++	rdev->input_name = "ST Remote Control Receiver";
++
++	/* enable wake via this device */
++	device_set_wakeup_capable(dev, true);
++	device_set_wakeup_enable(dev, true);
++
++	ret = rc_register_device(rdev);
++	if (ret < 0)
++		goto clkerr;
++
++	rc_dev->rdev = rdev;
++	if (devm_request_irq(dev, rc_dev->irq, st_rc_rx_interrupt,
++			IRQF_NO_SUSPEND, IR_ST_NAME, rc_dev) < 0) {
++		dev_err(dev, "IRQ %d register failed\n", rc_dev->irq);
++		ret = -EINVAL;
++		goto rcerr;
++	}
++
++	/**
++	 * for LIRC_MODE_MODE2 or LIRC_MODE_PULSE or LIRC_MODE_RAW
++	 * lircd expects a long space first before a signal train to sync.
++	 */
++	st_rc_send_lirc_timeout(rdev);
++
++	dev_info(dev, "setup in %s mode\n", rc_dev->rxuhfmode ? "UHF" : "IR");
++
++	return ret;
++rcerr:
++	rc_unregister_device(rdev);
++	rdev = NULL;
++clkerr:
++	clk_disable_unprepare(rc_dev->sys_clock);
++err:
++	rc_free_device(rdev);
++	dev_err(dev, "Unable to register device (%d)\n", ret);
++	return ret;
++}
++
++#ifdef CONFIG_PM
++static int st_rc_suspend(struct device *dev)
++{
++	struct st_rc_device *rc_dev = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev)) {
++		if (!enable_irq_wake(rc_dev->irq))
++			rc_dev->irq_wake = 1;
++		else
++			return -EINVAL;
++	} else {
++		pinctrl_pm_select_sleep_state(dev);
++		writel(0x00, rc_dev->rx_base + IRB_RX_EN);
++		writel(0x00, rc_dev->rx_base + IRB_RX_INT_EN);
++		clk_disable_unprepare(rc_dev->sys_clock);
++	}
++
++	return 0;
++}
++
++static int st_rc_resume(struct device *dev)
++{
++	struct st_rc_device *rc_dev = dev_get_drvdata(dev);
++	struct rc_dev	*rdev = rc_dev->rdev;
++
++	if (rc_dev->irq_wake) {
++		disable_irq_wake(rc_dev->irq);
++		rc_dev->irq_wake = 0;
++	} else {
++		pinctrl_pm_select_default_state(dev);
++		st_rc_hardware_init(rc_dev);
++		if (rdev->users) {
++			writel(IRB_RX_INTS, rc_dev->rx_base + IRB_RX_INT_EN);
++			writel(0x01, rc_dev->rx_base + IRB_RX_EN);
++		}
++	}
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(st_rc_pm_ops, st_rc_suspend, st_rc_resume);
++#endif
++
++#ifdef CONFIG_OF
++static struct of_device_id st_rc_match[] = {
++	{ .compatible = "st,comms-irb", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, st_rc_match);
++#endif
++
++static struct platform_driver st_rc_driver = {
++	.driver = {
++		.name = IR_ST_NAME,
++		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(st_rc_match),
++#ifdef CONFIG_PM
++		.pm     = &st_rc_pm_ops,
++#endif
++	},
++	.probe = st_rc_probe,
++	.remove = st_rc_remove,
++};
++
++module_platform_driver(st_rc_driver);
++
++MODULE_DESCRIPTION("RC Transceiver driver for STMicroelectronics platforms");
++MODULE_AUTHOR("STMicroelectronics (R&D) Ltd");
++MODULE_LICENSE("GPL");
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+1.7.6.5
+
