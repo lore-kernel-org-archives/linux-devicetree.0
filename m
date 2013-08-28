@@ -1,111 +1,156 @@
-From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: Re: [PATCH v7 05/11] ARM: dts: enable hi4511 with device tree
-Date: Wed, 28 Aug 2013 10:17:14 +0800
-Message-ID: <CAD6h2NSdk0fs-Z=Es9bOkwUEaubDTmAjv3hLDkrS3m1yshrbtQ@mail.gmail.com>
-References: <1376965873-14431-1-git-send-email-haojian.zhuang@linaro.org>
- <1376965873-14431-6-git-send-email-haojian.zhuang@linaro.org>
- <8761uxsiox.fsf@linaro.org> <52165D5E.7040500@wwwdotorg.org>
- <CAD6h2NTYNSFAQ0NWVwKXEr7BHUikmjROk-i+qYGo0otFPZKu0A@mail.gmail.com>
- <521B86D9.5060108@wwwdotorg.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v3 2/2] media: i2c: adv7343: add OF support
+Date: Wed, 28 Aug 2013 08:13:04 +0530
+Message-ID: <CA+V-a8vuYNNiXJ+iGgceaTqHdM_Q9X2dVDyiHHZPJ+-rSbJgLQ@mail.gmail.com>
+References: <1374301266-26726-1-git-send-email-prabhakar.csengg@gmail.com>
+ <1374301266-26726-3-git-send-email-prabhakar.csengg@gmail.com>
+ <5217A3E7.50706@samsung.com> <CA+V-a8tStFRbELAmZL=418VpR9SJgp8uo_4hrtny2UEMEoXakg@mail.gmail.com>
+ <20130827152405.GQ19893@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <521B86D9.5060108@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, John Stultz <john.stultz@linaro.org>, grant.likely@linar.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Mike Turquette <mturquette@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130827152405.GQ19893@e106331-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, LDOC <linux-doc@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27 August 2013 00:48, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 08/23/2013 09:52 PM, Haojian Zhuang wrote:
->> On 23 August 2013 02:50, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>> On 08/22/2013 12:07 PM, Kevin Hilman wrote:
->>>> [+ DT maintainers]
->>>>
->>>> Haojian Zhuang <haojian.zhuang@linaro.org> writes:
->>>>
->>>>> Enable Hisilicon Hi4511 development platform with device tree support.
->>>>>
->>>>> Signed-off-by: Haojian Zhuang <haojian.zhuang@linaro.org>
->>> ...
+Hi Mark,
+
+On Tue, Aug 27, 2013 at 8:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> [fixing up devicetree list address]
 >
->>>>> +    osc32k: osc32k {
->>>>> +            compatible = "fixed-clock";
->>>>> +            #clock-cells = <0>;
->>>>> +            clock-frequency = <32768>;
->>>>> +            clock-output-names = "osc32khz";
->>>>> +    };
->>>>
->>>> ...seems many of the recent users of clocks have grouped them into a
->>>> clocks {} grouping on a "simple-bus".
->>>>
->>>> DT folks: is there a rule of thumb on how whether these fixed clocks
->>>> should be grouped on a simple bus?
->>>
->>> I would expect all the clock node names to be just "clock", since the
->>> node names should describe the type of device not their identity (i.e.
->>> clock name).
->>>
->>> In turn, this means that each clock node name needs to use a unit
->>> address ("@nnn") to make them unique. In turn, this means they must have
->>> a reg property since the unit address must match the first entry in the
->>> reg property.
+Thanks!
+
+> On Mon, Aug 26, 2013 at 03:41:45AM +0100, Prabhakar Lad wrote:
+>> Hi Sylwester,
 >>
->> No, it's really bad on using a unit address. The register always contains
->> multiple mux or gate or divider. It would cause duplicated unit address.
+>> On Fri, Aug 23, 2013 at 11:33 PM, Sylwester Nawrocki
+>> <s.nawrocki@samsung.com> wrote:
+>> > Cc: DT binding maintainers
 >
-> There shouldn't be multiple nodes with identical reg values; if that's
-> happening, then it seems like the mapping of nodes to HW is incorrect.
+> Cheers!
 >
-> Each HW block should have 1 DT node. That way, the reg values won't collide.
+>> >
+>> > On 07/20/2013 08:21 AM, Lad, Prabhakar wrote:
+>> >> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+>> >>
+>> >> add OF support for the adv7343 driver.
+>> >>
+>> >> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>> >> ---
+>> > [...]
+>> >>  .../devicetree/bindings/media/i2c/adv7343.txt      |   48 ++++++++++++++++++++
+>> >>  drivers/media/i2c/adv7343.c                        |   46 ++++++++++++++++++-
+>> >>  2 files changed, 93 insertions(+), 1 deletion(-)
+>> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7343.txt
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+>> >> new file mode 100644
+>> >> index 0000000..5653bc2
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+>> >> @@ -0,0 +1,48 @@
+>> >> +* Analog Devices adv7343 video encoder
+>> >> +
+>> >> +The ADV7343 are high speed, digital-to-analog video encoders in a 64-lead LQFP
+>> >> +package. Six high speed, 3.3 V, 11-bit video DACs provide support for composite
+>> >> +(CVBS), S-Video (Y-C), and component (YPrPb/RGB) analog outputs in standard
+>> >> +definition (SD), enhanced definition (ED), or high definition (HD) video
+>> >> +formats.
+>> >> +
+>> >> +Required Properties :
+>> >> +- compatible: Must be "adi,adv7343"
+>> >> +
+>> >> +Optional Properties :
+>> >> +- adi,power-mode-sleep-mode: on enable the current consumption is reduced to
+>> >> +                           micro ampere level. All DACs and the internal PLL
+>> >> +                           circuit are disabled.
 >
+> This seems to be a boolean property, and I couldn't find any description
+> in the linked datasheet of the constraints under which the unit may be
+> put into sleep mode.
+>
+> Why do we require this property in the dt? Can the driver not always put
+> a adv734x into sleep mode if it wants to, and then wake it up as
+> required?
+>
+The adv7343 decoder, fits on da850/dm6467 etc.. For the da850 it supports
+only SD where as the dm6467 supports HD/SD/ED for which DAC 1-6 of
+Register 0x0 varies for this board so I added them as the platform data
+but I got a review comment in the ML asking to add entire register as
+the pdata instead of DAC 1-6, so because of which it is being converted
+in the same way for DT.
 
-At here, I emphasize each clock node is one clock node. They are organized in
-tree. The same register integrates multiple clock gate/clock mux/clock divider.
-If each clock node is depend on reg, maybe it's not easy to read and the clock
-driver will be more complex.
-
->> I tried to use index number also. And it's also bad to append new clock nodes.
->> So I use the label name instead.
+>> >
+>> > Sorry for getting back so late to this. I realize this is already queued in
+>> > the media tree. But this binding doesn't look good enough to me. I think it
+>> > will need to be corrected during upcoming -rc period.
+>> >
+>> Thanks for the catch :-)
 >>
->>> Now I assume these clocks don't have any memory-mapped IO registers, so
->>> they would need an arbitrary reg value rather than a real one. So it
->>> doesn't make sense to place them directly under the root DT node, since
->>> their reg values would make no sense within the context of the
->>> CPU-visible MMIO space that the root node describes.
->>>
->>> In this case, it's typical to put all the clock nodes into e.g. a
->>> /clocks node, since that node can introduce a separate numbering-space
->>> for clocks. For example, I'd expect something like:
->>>
->>>         clocks {
->>>                 #address-cells = <1>;
->>>                 #size-cells = <0>;
->>>
->>>                 osc32k: clock@0 {
->>>                         compatible = "fixed-clock";
->>>                         reg = <0>;
-> ...
->>>                 osc26m: clock@1 {
->>>                         compatible = "fixed-clock";
->>>                         reg = <1>;
-> ...
+>> > It might be hard to figure out only from the chip's datasheet what
+>> > adi,power-mode-sleep-mode really refers to. AFAICS it is for assigning some
+>> > value to a specific register. If we really need to specify register values
+>> > in the device tree then it would probably make sense to describe to which
+>> > register this apply. Now the name looks like derived from some structure
+>> > member name in the Linux driver of the device.
+>> >
+>> the property is derived from the datasheet itself for example the
+>> 'adi,power-mode-sleep-mode' --> Register 0x0 power mode bit 0
+>> 'adi,power-mode-pll-ctrl' ---> Register 0x0 power mode bit 1
+>> 'adi,dac-enable' ----> Register 0x0 power mode bit 2-7
+>> 'adi,sd-dac-enable' ---> Register 0x82 SD mode register bit 1-2
+>>
+>> [1] http://www.analog.com/static/imported-files/data_sheets/ADV7342_7343.pdf
+>>
+>> >> +- adi,power-mode-pll-ctrl: PLL and oversampling control. This control allows
+>> >> +                        internal PLL 1 circuit to be powered down and the
+>> >> +                        oversampling to be switched off.
 >
->> Those fixed-clock doesn't contain reg property. Since it needs not to access
->> any clock register. It only provides the clock rate those child clock node.
+> This affects whether or not oversampling is possible. That sounds like
+> it should be a run-time configurable rather than a fixed property of the
+> device.
 >
-> Inside the clocks node, the reg property is just a dummy value.
+ditto
 
-Is a dummy value helpful? I don't think so.
+>> >
+>> > Similar comments applies to this property.
+>> >
+>> >> +- ad,adv7343-power-mode-dac: array configuring the power on/off DAC's 1..6,
+>> >> +                           0 = OFF and 1 = ON, Default value when this
+>> >> +                           property is not specified is <0 0 0 0 0 0>.
+>> >
+>> > Name of the property is incorrect here. It has changed to "adi,dac-enable".
+>> >
+>> OK
+>
+> Why do we need this property at all? Might some DACs not be wired up to
+> anything?
+>
+> Surely this could be configured at run-time as and when the user wants
+> to use the DACs.
+>
+>>
+>> >> +- ad,adv7343-sd-config-dac-out: array configure SD DAC Output's 1 and 2, 0 = OFF
+>> >> +                              and 1 = ON, Default value when this property is
+>> >> +                              not specified is <0 0>.
+>> >
+>> > Similarly, "adi,sd-dac-enable.
+>> >
+>> OK
+>
+> Again, couldn't this be done at run-time?
+>
+> Do we need to permanently disable/enable some DACs? If so, why?
+>
+ditto.
 
-Regards
-Haojian
+> I also note from the spec that the unit has two clocks, CLKIN_A and
+> CLKIN_B that aren't in the binding, but should be. Some regulators
+> too (VDD, PVDD, VAA, VDD_IO, VREF?).
+>
+OK
+
+Regards,
+--Prabhakar Lad
