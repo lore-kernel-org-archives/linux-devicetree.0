@@ -1,183 +1,59 @@
-From: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
-Subject: [RFC 3/3] ARM: s5pc100: Migrate clock handling to Common Clock
- Framework
-Date: Wed, 28 Aug 2013 18:29:17 +0200
-Message-ID: <1377707357-4902-4-git-send-email-m.krawczuk@partner.samsung.com>
-References: <1377707357-4902-1-git-send-email-m.krawczuk@partner.samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1377707357-4902-1-git-send-email-m.krawczuk@partner.samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: kgene.kim@samsung.com
-Cc: mturquette@linaro.org, tomasz.figa@gmail.com, yadi.brar@samsung.com, dianders@chromium.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, thomas.abraham@linaro.org, s.nawrocki@samsung.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux@arm.linux.org.uk, ben-linux@fluff.org, linux-samsung-soc@vger.kernel.org, Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+From: George Cherian <george.cherian@ti.com>
+Subject: [PATCH v3 0/3] Add Generic USB VBUS/ID detection via GPIO using extcon
+Date: Wed, 28 Aug 2013 23:03:02 +0530
+Message-ID: <1377711185-31238-1-git-send-email-george.cherian@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, bcousson@baylibre.com, davidb@codeaurora.org, arnd@arndb.de, swarren@nvidia.com, popcornmix@gmail.com, George Cherian <george.cherian@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch migrates the s5pc100 platform to use new clock driver
-using Common Clock Framework.
+Hi,
 
-Signed-off-by: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
----
- arch/arm/mach-s5pc100/Kconfig         |  8 ++++++++
- arch/arm/mach-s5pc100/Makefile        |  4 ++--
- arch/arm/mach-s5pc100/common.c        | 23 ++++++++++++++++++++++-
- arch/arm/mach-s5pc100/common.h        | 13 +++++++++++++
- arch/arm/mach-s5pc100/mach-smdkc100.c |  3 ++-
- arch/arm/plat-samsung/Kconfig         |  2 +-
- 6 files changed, 48 insertions(+), 5 deletions(-)
+These patches add generic support for USB VBUS/ID pin detection using extcon framework.
+The USB ID pin on DRA7xx is connected via the gpio expander pcf8575.
+The interrupt line of the same is connected to the gpio 11 of bank 6.
+The following driver relies on  the  gpio interrupt to notify the actual
+ID pin values by which the dwc3 driver determines the HOST/Peripheral roles.
 
-diff --git a/arch/arm/mach-s5pc100/Kconfig b/arch/arm/mach-s5pc100/Kconfig
-index 15170be..ed50897 100644
---- a/arch/arm/mach-s5pc100/Kconfig
-+++ b/arch/arm/mach-s5pc100/Kconfig
-@@ -11,6 +11,7 @@ config CPU_S5PC100
- 	bool
- 	select S5P_EXT_INT
- 	select SAMSUNG_DMADEV
-+	select S5P_CLOCK if !COMMON_CLK_S5PC100
- 	help
- 	  Enable S5PC100 CPU support
- 
-@@ -50,6 +51,13 @@ config S5PC100_SETUP_SPI
- 	help
- 	  Common setup code for SPI GPIO configurations.
- 
-+config COMMON_CLK_S5PC100
-+	bool "Common Clock Framework support"
-+	default y
-+	select COMMON_CLK
-+	help
-+	  Common setup code for common clock framework.
-+
- config MACH_SMDKC100
- 	bool "SMDKC100"
- 	select CPU_S5PC100
-diff --git a/arch/arm/mach-s5pc100/Makefile b/arch/arm/mach-s5pc100/Makefile
-index 118c711..74b90ec 100644
---- a/arch/arm/mach-s5pc100/Makefile
-+++ b/arch/arm/mach-s5pc100/Makefile
-@@ -11,8 +11,8 @@ obj-				:=
- 
- # Core
- 
--obj-y				+= common.o clock.o
--
-+obj-y				+= common.o
-+obj-$(CONFIG_S5P_CLOCK)	+= clock.o
- obj-y				+= dma.o
- 
- # machine support
-diff --git a/arch/arm/mach-s5pc100/common.c b/arch/arm/mach-s5pc100/common.c
-index c5a8eea..d8db7b2 100644
---- a/arch/arm/mach-s5pc100/common.c
-+++ b/arch/arm/mach-s5pc100/common.c
-@@ -40,7 +40,13 @@
- 
- #include <plat/cpu.h>
- #include <plat/devs.h>
-+
-+#ifdef CONFIG_S5P_CLOCK
- #include <plat/clock.h>
-+#else
-+#include <linux/clk-provider.h>
-+#endif
-+
- #include <plat/sdhci.h>
- #include <plat/adc-core.h>
- #include <plat/ata-core.h>
-@@ -54,6 +60,18 @@
- 
- #include "common.h"
- 
-+static unsigned long xxti_f, xusbxti_f;
-+
-+void __init s5pc100_set_xxti_freq(unsigned long freq)
-+{
-+	xxti_f = freq;
-+}
-+
-+void __init s5pc100_set_xusbxti_freq(unsigned long freq)
-+{
-+	xusbxti_f = freq;
-+}
-+
- static const char name_s5pc100[] = "S5PC100";
- 
- static struct cpu_table cpu_ids[] __initdata = {
-@@ -201,13 +219,14 @@ void __init s5pc100_map_io(void)
- 
- void __init s5pc100_init_clocks(int xtal)
- {
-+#ifdef CONFIG_S5P_CLOCK
- 	printk(KERN_DEBUG "%s: initializing clocks\n", __func__);
- 
- 	s3c24xx_register_baseclocks(xtal);
- 	s5p_register_clocks(xtal);
- 	s5pc100_register_clocks();
- 	s5pc100_setup_clocks();
--	samsung_wdt_reset_init(S3C_VA_WATCHDOG);
-+#endif
- }
- 
- void __init s5pc100_init_irq(void)
-@@ -216,6 +235,8 @@ void __init s5pc100_init_irq(void)
- 
- 	/* VIC0, VIC1, and VIC2 are fully populated. */
- 	s5p_init_irq(vic, ARRAY_SIZE(vic));
-+	s5pc100_clk_init(NULL, xxti_f, xusbxti_f, S3C_VA_SYS);
-+	samsung_wdt_reset_init(S3C_VA_WATCHDOG);
- }
- 
- static struct bus_type s5pc100_subsys = {
-diff --git a/arch/arm/mach-s5pc100/common.h b/arch/arm/mach-s5pc100/common.h
-index 08d782d..d7d80b8 100644
---- a/arch/arm/mach-s5pc100/common.h
-+++ b/arch/arm/mach-s5pc100/common.h
-@@ -14,6 +14,19 @@
- 
- #include <linux/reboot.h>
- 
-+void s5pc100_set_xxti_freq(unsigned long freq);
-+void s5pc100_set_xusbxti_freq(unsigned long freq);
-+
-+#ifdef CONFIG_COMMON_CLK_S5PC100
-+void s5pc100_clk_init(struct device_node *np,
-+			    unsigned long xxti_f, unsigned long xusbxti_f,
-+			    void __iomem *reg_base);
-+#else
-+static inline void s5pc100_clk_init(struct device_node *np,
-+			    unsigned long xxti_f, unsigned long xusbxti_f,
-+			    void __iomem *reg_base) {}
-+#endif
-+
- void s5pc100_init_io(struct map_desc *mach_desc, int size);
- void s5pc100_init_irq(void);
- 
-diff --git a/arch/arm/mach-s5pc100/mach-smdkc100.c b/arch/arm/mach-s5pc100/mach-smdkc100.c
-index 7c57a22..1087dcb 100644
---- a/arch/arm/mach-s5pc100/mach-smdkc100.c
-+++ b/arch/arm/mach-s5pc100/mach-smdkc100.c
-@@ -221,7 +221,8 @@ static struct platform_pwm_backlight_data smdkc100_bl_data = {
- static void __init smdkc100_map_io(void)
- {
- 	s5pc100_init_io(NULL, 0);
--	s3c24xx_init_clocks(12000000);
-+	s5pc100_set_xxti_freq(12000000);
-+	s5pc100_set_xusbxti_freq(24000000);
- 	s3c24xx_init_uarts(smdkc100_uartcfgs, ARRAY_SIZE(smdkc100_uartcfgs));
- 	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
- }
-diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-index 2a98613..645f21c 100644
---- a/arch/arm/plat-samsung/Kconfig
-+++ b/arch/arm/plat-samsung/Kconfig
-@@ -91,7 +91,7 @@ config SAMSUNG_CLKSRC
- 	  used by newer systems such as the S3C64XX.
- 
- config S5P_CLOCK
--	def_bool (ARCH_S5P64X0 || ARCH_S5PC100)
-+	def_bool ARCH_S5P64X0
- 	help
- 	  Support common clock part for ARCH_S5P and ARCH_EXYNOS SoCs
- 
+
+These patches are on top of following merges.
+v3.11-rc3 dra7 baseport tree [1] , with balbi/next ,control-usb multi instance support [2],
+chanwoo/extcon-next, roger's patches for USB host adaptation[3],Laurent Pinchart's patch to
+Enable pcf857x GPIO expander for Device Tree[4] and pcf857x cleanup patch [5].
+
+Patches are available at
+extcon_gpio_usbvid-v1
+in git tree
+git://git.ti.com/~georgecherian/ti-linux-kernel/georgec-connectivity-linux-feature-tree.git
+
+[1] - dra7 base tree
+        https://github.com/lokeshvutla/linux/tree/dra7-3.11-rc3-base
+[2] - multiple control-usb instances
+        https://github.com/rogerq/linux/tree/usb-control-module
+[3] - [PATCH 0/4] ARM: DRA7-evm: USB host adaptation
+        https://lkml.org/lkml/2013/8/1/335
+[4] - [PATCH v5] gpio: pcf857x: Add OF support
+        https://lkml.org/lkml/2013/8/27/70
+[5] - [PATCH] gpio: pcf857x: cleanup irq_demux_work and use threaded irq
+        https://lkml.org/lkml/2013/8/27/207
+
+George Cherian (3):
+  extcon: extcon-gpio-usbvid: Generic USB VBUS/ID detection via GPIO
+  drivers: Makefile: Extcon is a framework so bump it up
+  ARM: dts: dra7-evm: Add extcon nodes for USB ID pin detection
+
+ .../bindings/extcon/extcon-gpio-usbvid.txt         |  20 ++
+ arch/arm/boot/dts/dra7-evm.dts                     |  50 +++-
+ drivers/Makefile                                   |   2 +-
+ drivers/extcon/Kconfig                             |   6 +
+ drivers/extcon/Makefile                            |   1 +
+ drivers/extcon/extcon-gpio-usbvid.c                | 286 +++++++++++++++++++++
+ 6 files changed, 363 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio-usbvid.txt
+ create mode 100644 drivers/extcon/extcon-gpio-usbvid.c
+
 -- 
-1.8.1.2
-
+1.8.1.4
