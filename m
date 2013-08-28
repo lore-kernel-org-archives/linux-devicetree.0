@@ -1,38 +1,38 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch] dma: cppi41: off by one in desc_to_chan()
-Date: Wed, 28 Aug 2013 13:48:44 +0300
-Message-ID: <20130828104844.GG19256@mwanda>
-References: <20130826083220.GM2748@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130826083220.GM2748@intel.com>
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Dan Williams <djbw@fb.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org, linux-usb@vger.kernel.org
+From: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+Subject: [PATCH v5 1/2] staging: iio: Documentation sysfs-bus-iio add power_mode
+Date: Wed, 28 Aug 2013 13:51:48 +0300
+Message-ID: <1377687110-5632-1-git-send-email-o.v.kravchenko@globallogic.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@globallogic.com
+Cc: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
 List-Id: devicetree@vger.kernel.org
 
-The test here should be ">=" instead of ">".  The cdd->chan_busy[] array
-has "ALLOC_DECS_NUM" elements.
+Add description about in_accelX_power_mode and
+in_accel_power_mode_available.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Vinod Koul <vinod.koul@intel.com>
+Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
 ---
-Resending to Greg and the USB people because Vinod says this goes
-through the USB tree.
+ Documentation/ABI/testing/sysfs-bus-iio |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
-index 5dcebca..7f6524c 100644
---- a/drivers/dma/cppi41.c
-+++ b/drivers/dma/cppi41.c
-@@ -241,7 +241,7 @@ static struct cppi41_channel *desc_to_chan(struct cppi41_dd *cdd, u32 desc)
- 	}
- 
- 	desc_num = (desc - cdd->descs_phys) / sizeof(struct cppi41_desc);
--	BUG_ON(desc_num > ALLOC_DECS_NUM);
-+	BUG_ON(desc_num >= ALLOC_DECS_NUM);
- 	c = cdd->chan_busy[desc_num];
- 	cdd->chan_busy[desc_num] = NULL;
- 	return c;
-
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index dda81ff..1a333f3 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -792,3 +792,13 @@ Contact:	linux-iio@vger.kernel.org
+ Description:
+ 		This attribute is used to read the amount of quadrature error
+ 		present in the device at a given time.
++
++What:		/sys/.../iio:deviceX/in_accelX_power_mode
++KernelVersion:	3.11
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Specifies the chip power mode.
++		low_noise: reduce noise level from ADC,
++		low_power: enable low current consumption.
++		For a list of available output power modes read
++		in_accel_power_mode_available.
+-- 
+1.7.9.5
