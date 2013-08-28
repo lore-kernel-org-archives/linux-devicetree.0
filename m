@@ -1,103 +1,56 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH V6 2/5] of: move of_parse_phandle()
-Date: Wed, 28 Aug 2013 21:43:33 +0100
-Message-ID: <20130828204333.9B7F13E0B6B@localhost>
-References: <1376515632-12594-1-git-send-email-swarren@wwwdotorg.org> <1376515632-12594-2-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1376515632-12594-2-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH] ARM: new platform for Energy Micro's EFM32 Cortex-M3 SoCs
+Date: Wed, 28 Aug 2013 22:43:13 +0200
+Message-ID: <20130828204313.GE24802@pengutronix.de>
+References: <1376552964-16296-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20130815084259.GG30496@pengutronix.de>
+ <20130828195054.GJ8607@quad.lixom.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130828195054.GJ8607@quad.lixom.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 Aug 2013 15:27:09 -0600, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> From: Stephen Warren <swarren@nvidia.com>
-> 
-> Move of_parse_phandle() after __of_parse_phandle_with_args(), since a
-> future patch will call __of_parse_phandle_with_args() from
-> of_parse_phandle(). Moving the function avoids adding a prototype. Doing
-> the move separately highlights the code changes separately.
-> 
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
+I already told Olof via irc, but for the protocol:
 
-Applied, thanks.
+On Wed, Aug 28, 2013 at 12:50:54PM -0700, Olof Johansson wrote:
+> On Thu, Aug 15, 2013 at 10:42:59AM +0200, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> > =
 
-g.
+> > I forgot to mention that this patch depends on the following patches:
+> > =
 
-> ---
-> v5: New patch.
-> ---
->  drivers/of/base.c | 48 ++++++++++++++++++++++++------------------------
->  1 file changed, 24 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index e485489..9eaf662 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1081,30 +1081,6 @@ int of_property_count_strings(struct device_node *np, const char *propname)
->  }
->  EXPORT_SYMBOL_GPL(of_property_count_strings);
->  
-> -/**
-> - * of_parse_phandle - Resolve a phandle property to a device_node pointer
-> - * @np: Pointer to device node holding phandle property
-> - * @phandle_name: Name of property holding a phandle value
-> - * @index: For properties holding a table of phandles, this is the index into
-> - *         the table
-> - *
-> - * Returns the device_node pointer with refcount incremented.  Use
-> - * of_node_put() on it when done.
-> - */
-> -struct device_node *of_parse_phandle(const struct device_node *np,
-> -				     const char *phandle_name, int index)
-> -{
-> -	const __be32 *phandle;
-> -	int size;
-> -
-> -	phandle = of_get_property(np, phandle_name, &size);
-> -	if ((!phandle) || (size < sizeof(*phandle) * (index + 1)))
-> -		return NULL;
-> -
-> -	return of_find_node_by_phandle(be32_to_cpup(phandle + index));
-> -}
-> -EXPORT_SYMBOL(of_parse_phandle);
-> -
->  static int __of_parse_phandle_with_args(const struct device_node *np,
->  					const char *list_name,
->  					const char *cells_name, int index,
-> @@ -1208,6 +1184,30 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
->  }
->  
->  /**
-> + * of_parse_phandle - Resolve a phandle property to a device_node pointer
-> + * @np: Pointer to device node holding phandle property
-> + * @phandle_name: Name of property holding a phandle value
-> + * @index: For properties holding a table of phandles, this is the index into
-> + *         the table
-> + *
-> + * Returns the device_node pointer with refcount incremented.  Use
-> + * of_node_put() on it when done.
-> + */
-> +struct device_node *of_parse_phandle(const struct device_node *np,
-> +				     const char *phandle_name, int index)
-> +{
-> +	const __be32 *phandle;
-> +	int size;
-> +
-> +	phandle = of_get_property(np, phandle_name, &size);
-> +	if ((!phandle) || (size < sizeof(*phandle) * (index + 1)))
-> +		return NULL;
-> +
-> +	return of_find_node_by_phandle(be32_to_cpup(phandle + index));
-> +}
-> +EXPORT_SYMBOL(of_parse_phandle);
-> +
-> +/**
->   * of_parse_phandle_with_args() - Find a node pointed by phandle in a list
->   * @np:		pointer to a device tree node containing a list
->   * @list_name:	property name that contains a list
-> -- 
-> 1.8.1.5
-> 
+> >  - ARM: ARMv7-M: implement restart routine common to all v7-M machines
+> >    sent with Message-Id: 1376494305-24270-1-git-send-email-u.kleine-koe=
+nig@pengutronix.de; and
+> =
 
+> Seems like you addressed Russell's comments here, so hopefully he's ok wi=
+th us
+> picking it up directly as a prereq.
+It was Jonathan Austin who commented, but anyhow as I don't think to get
+all three patches ready in time for 3.12-rc1 I posted that one to
+Russell's patch tracker.
+ =
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
