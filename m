@@ -1,46 +1,66 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v5 1/2] staging: iio: Documentation sysfs-bus-iio add
- power_mode
-Date: Wed, 28 Aug 2013 08:08:05 -0700
-Message-ID: <521E1255.2090201@linux.intel.com>
-References: <1377687678-5761-1-git-send-email-o.v.kravchenko@globallogic.com>
+From: Johannes Thumshirn <johannes.thumshirn@men.de>
+Subject: Re: [RFC][PATCH v2] documentation/devicetree: Move DT bindigns from
+ gpio to watchdog
+Date: Wed, 28 Aug 2013 17:01:12 +0200
+Message-ID: <20130828150112.GA17200@jtlinux>
+References: <521672A1.6010202@wwwdotorg.org>
+ <1377601837-18989-1-git-send-email-johannes.thumshirn@men.de>
+ <521D1D16.9080106@wwwdotorg.org>
+ <20130828062232.GA10368@jtlinux>
+ <521E0B80.6040302@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377687678-5761-1-git-send-email-o.v.kravchenko@globallogic.com>
+Content-Disposition: inline
+In-Reply-To: <521E0B80.6040302@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, jic23@cam.ac.uk, denis.ciocca@st.com, lars@metafoo.de
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Johannes Thumshirn <johannes.thumshirn@men.de>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2013 04:01 AM, Oleksandr Kravchenko wrote:
-> Add description about in_accelX_power_mode and
-> in_accel_power_mode_available.
+On Wed, Aug 28, 2013 at 08:38:56AM -0600, Stephen Warren wrote:
+> On 08/28/2013 12:22 AM, Johannes Thumshirn wrote:
+> > On Tue, Aug 27, 2013 at 03:41:42PM -0600, Stephen Warren wrote:
+> >> On 08/27/2013 05:10 AM, Johannes Thumshirn wrote:
+> >>> I accidently put the devicetree bindings for the MEN A21 watchdog driver in
+> >>> Documentation/devicetree/bindings/gpio instead of
+> >>> Documentation/devicetree/bindings/watchdog, this patch addresses this error.
+> >>
+> >>>  Changes to v1:
+> >>>  - Use named gpios, as suggested by Stephen Warren
+> >>
+> >> The move and the change to the binding should probably be separate
+> >> patches since they're logically separate things. I didn't intend you to
+> >> update the rename patch to fix the binding issue I pointed out.
+> >>
+> >
+> > Oops. Looks like I've misunderstood you there. I'll re-send the rename patch
+> > then.
+> >
+> >> Is the driver updated for this binding change? Are there DTs in released
+> >> kernels that won't work now, or is the driver very new; there may be a
+> >> need for the driver to support the old binding and the binding doc to
+> >> document the old gpios property, but mark it deprecated.
+> >
+> > The driver is not yet updated, this is why I've sent it as an RFC. Are the
+> > bindings acceptable this way? If yes I'll update the driver and re-send the
+> > bindings with the driver as a new patch series.
 >
-> Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
-> ---
->   Documentation/ABI/testing/sysfs-bus-iio |   10 ++++++++++
->   1 file changed, 10 insertions(+)
+> Well, XXX says:
 >
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index dda81ff..1a333f3 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -792,3 +792,13 @@ Contact:	linux-iio@vger.kernel.org
->   Description:
->   		This attribute is used to read the amount of quadrature error
->   		present in the device at a given time.
-> +
-> +What:		/sys/.../iio:deviceX/in_accelX_power_mode
-Shall we add power_mode to all sensors not just accelerometer? HID 
-sensor hub spec allows every sensor in it to go low power mode.
-This is not same as OFF.
-> +KernelVersion:	3.11
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Specifies the chip power mode.
-> +		low_noise: reduce noise level from ADC,
-> +		low_power: enable low current consumption.
-> +		For a list of available output power modes read
-> +		in_accel_power_mode_available.
+> > GPIO properties should be named "[<name>-]gpios"
+>
+> whereas in this patch, some of the renamed properties were "-gpio"
+> rather than "-gpios". Aside from that, the new binding looks reasonable.
+>
+> However, I see that the existing binding will be released as part of
+> v3.11. That implies that we should continue to support the old binding
+> for compatibility. As such, I'm not convinced whether it's worth
+> changing this binding now.
+
+Well I'm be perfectly happy with not changing the bindings and therefore not
+changing the driver. If this O.K. for you.
+
+Should I resend my 1st patch, or is it O.K. to pick up the old one?
+
+Johannes
