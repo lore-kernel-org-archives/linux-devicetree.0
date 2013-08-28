@@ -1,56 +1,167 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH] ARM: new platform for Energy Micro's EFM32 Cortex-M3 SoCs
-Date: Wed, 28 Aug 2013 22:43:13 +0200
-Message-ID: <20130828204313.GE24802@pengutronix.de>
-References: <1376552964-16296-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <20130815084259.GG30496@pengutronix.de>
- <20130828195054.GJ8607@quad.lixom.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130828195054.GJ8607@quad.lixom.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH V6 3/5] of: introduce of_parse_phandle_with_fixed_args
+Date: Wed, 28 Aug 2013 21:44:42 +0100
+Message-ID: <20130828204442.253513E0B6B@localhost>
+References: <1376515632-12594-1-git-send-email-swarren@wwwdotorg.org> <1376515632-12594-3-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1376515632-12594-3-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-I already told Olof via irc, but for the protocol:
+On Wed, 14 Aug 2013 15:27:10 -0600, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> From: Stephen Warren <swarren@nvidia.com>
+> 
+> This is identical to of_parse_phandle_with_args(), except that the
+> number of argument cells is fixed, rather than being parsed out of the
+> node referenced by each phandle.
+> 
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> ---
 
-On Wed, Aug 28, 2013 at 12:50:54PM -0700, Olof Johansson wrote:
-> On Thu, Aug 15, 2013 at 10:42:59AM +0200, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> > =
+Applied, thanks
 
-> > I forgot to mention that this patch depends on the following patches:
-> > =
+g.
 
-> >  - ARM: ARMv7-M: implement restart routine common to all v7-M machines
-> >    sent with Message-Id: 1376494305-24270-1-git-send-email-u.kleine-koe=
-nig@pengutronix.de; and
-> =
+> v3: s/cells_count/cell_count, add missing braces per coding style
+> ---
+>  drivers/of/base.c  | 66 +++++++++++++++++++++++++++++++++++++++++++++++-------
+>  include/linux/of.h | 10 +++++++++
+>  2 files changed, 68 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 9eaf662..3a5cd9e 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1083,7 +1083,8 @@ EXPORT_SYMBOL_GPL(of_property_count_strings);
+>  
+>  static int __of_parse_phandle_with_args(const struct device_node *np,
+>  					const char *list_name,
+> -					const char *cells_name, int index,
+> +					const char *cells_name,
+> +					int cell_count, int index,
+>  					struct of_phandle_args *out_args)
+>  {
+>  	const __be32 *list, *list_end;
+> @@ -1119,11 +1120,17 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
+>  					 np->full_name);
+>  				goto err;
+>  			}
+> -			if (of_property_read_u32(node, cells_name, &count)) {
+> -				pr_err("%s: could not get %s for %s\n",
+> -					 np->full_name, cells_name,
+> -					 node->full_name);
+> -				goto err;
+> +
+> +			if (cells_name) {
+> +				if (of_property_read_u32(node, cells_name,
+> +							 &count)) {
+> +					pr_err("%s: could not get %s for %s\n",
+> +						np->full_name, cells_name,
+> +						node->full_name);
+> +					goto err;
+> +				}
+> +			} else {
+> +				count = cell_count;
+>  			}
+>  
+>  			/*
+> @@ -1245,11 +1252,53 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
+>  {
+>  	if (index < 0)
+>  		return -EINVAL;
+> -	return __of_parse_phandle_with_args(np, list_name, cells_name, index, out_args);
+> +	return __of_parse_phandle_with_args(np, list_name, cells_name, 0,
+> +					    index, out_args);
+>  }
+>  EXPORT_SYMBOL(of_parse_phandle_with_args);
+>  
+>  /**
+> + * of_parse_phandle_with_fixed_args() - Find a node pointed by phandle in a list
+> + * @np:		pointer to a device tree node containing a list
+> + * @list_name:	property name that contains a list
+> + * @cell_count: number of argument cells following the phandle
+> + * @index:	index of a phandle to parse out
+> + * @out_args:	optional pointer to output arguments structure (will be filled)
+> + *
+> + * This function is useful to parse lists of phandles and their arguments.
+> + * Returns 0 on success and fills out_args, on error returns appropriate
+> + * errno value.
+> + *
+> + * Caller is responsible to call of_node_put() on the returned out_args->node
+> + * pointer.
+> + *
+> + * Example:
+> + *
+> + * phandle1: node1 {
+> + * }
+> + *
+> + * phandle2: node2 {
+> + * }
+> + *
+> + * node3 {
+> + * 	list = <&phandle1 0 2 &phandle2 2 3>;
+> + * }
+> + *
+> + * To get a device_node of the `node2' node you may call this:
+> + * of_parse_phandle_with_fixed_args(node3, "list", 2, 1, &args);
+> + */
+> +int of_parse_phandle_with_fixed_args(const struct device_node *np,
+> +				const char *list_name, int cell_count,
+> +				int index, struct of_phandle_args *out_args)
+> +{
+> +	if (index < 0)
+> +		return -EINVAL;
+> +	return __of_parse_phandle_with_args(np, list_name, NULL, cell_count,
+> +					   index, out_args);
+> +}
+> +EXPORT_SYMBOL(of_parse_phandle_with_fixed_args);
+> +
+> +/**
+>   * of_count_phandle_with_args() - Find the number of phandles references in a property
+>   * @np:		pointer to a device tree node containing a list
+>   * @list_name:	property name that contains a list
+> @@ -1267,7 +1316,8 @@ EXPORT_SYMBOL(of_parse_phandle_with_args);
+>  int of_count_phandle_with_args(const struct device_node *np, const char *list_name,
+>  				const char *cells_name)
+>  {
+> -	return __of_parse_phandle_with_args(np, list_name, cells_name, -1, NULL);
+> +	return __of_parse_phandle_with_args(np, list_name, cells_name, 0, -1,
+> +					    NULL);
+>  }
+>  EXPORT_SYMBOL(of_count_phandle_with_args);
+>  
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 17ce8a6..252adbc 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -280,6 +280,9 @@ extern struct device_node *of_parse_phandle(const struct device_node *np,
+>  extern int of_parse_phandle_with_args(const struct device_node *np,
+>  	const char *list_name, const char *cells_name, int index,
+>  	struct of_phandle_args *out_args);
+> +extern int of_parse_phandle_with_fixed_args(const struct device_node *np,
+> +	const char *list_name, int cells_count, int index,
+> +	struct of_phandle_args *out_args);
+>  extern int of_count_phandle_with_args(const struct device_node *np,
+>  	const char *list_name, const char *cells_name);
+>  
+> @@ -479,6 +482,13 @@ static inline int of_parse_phandle_with_args(struct device_node *np,
+>  	return -ENOSYS;
+>  }
+>  
+> +static inline int of_parse_phandle_with_fixed_args(const struct device_node *np,
+> +	const char *list_name, int cells_count, int index,
+> +	struct of_phandle_args *out_args)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+>  static inline int of_count_phandle_with_args(struct device_node *np,
+>  					     const char *list_name,
+>  					     const char *cells_name)
+> -- 
+> 1.8.1.5
+> 
 
-> Seems like you addressed Russell's comments here, so hopefully he's ok wi=
-th us
-> picking it up directly as a prereq.
-It was Jonathan Austin who commented, but anyhow as I don't think to get
-all three patches ready in time for 3.12-rc1 I posted that one to
-Russell's patch tracker.
- =
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
