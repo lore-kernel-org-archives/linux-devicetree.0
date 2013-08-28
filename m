@@ -1,161 +1,351 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v3 1/2] devicetree: serial: Document msm_serial bindings
-Date: Tue, 27 Aug 2013 17:12:43 -0700
-Message-ID: <1377648764-23453-2-git-send-email-sboyd@codeaurora.org>
-References: <1377648764-23453-1-git-send-email-sboyd@codeaurora.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH RFC v2 5/6] ARM: add Armada 1500 and Sony NSZ-GS7 device tree files
+Date: Wed, 28 Aug 2013 02:14:33 +0200
+Message-ID: <1377648874-6714-6-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1376682098-10580-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377648764-23453-1-git-send-email-sboyd@codeaurora.org>
+In-Reply-To: <1376682098-10580-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Let's fix up the msm serial device bindings so that it's clearer
-what hardware is supported. Instead of using hsuart (for high
-speed uart) let's use uartdm because that matches the actual name
-of the hardware. Also, let's add the version information in case
-we need to differentiate between different versions of the
-hardware in the future. Finally, lets specify that clocks are
-required (the clock bindings didn't exist when the original
-binding was written) and also specify dma bindings just in case
-we want to use it in software. We split the binding into two
-files to make it clearer what's required and not required.
+This adds very basic device tree files for the Marvell Armada 1500 SoC
+(88DE3100) and the Sony NSZ-GS7 GoogleTV board. Currently, SoC only has
+nodes for cpus, some clocks, l2 cache controller, local timer, apb timers,
+uart, and interrupt controllers. The Sony NSZ-GS7 is a GoogleTV consumer
+device comprising the Armada 1500 SoC above.
 
-Cc: David Brown <davidb@codeaurora.org>
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
- .../devicetree/bindings/tty/serial/msm_serial.txt  | 27 -----------
- .../bindings/tty/serial/qcom,msm-uart.txt          | 25 ++++++++++
- .../bindings/tty/serial/qcom,msm-uartdm.txt        | 53 ++++++++++++++++++++++
- 3 files changed, 78 insertions(+), 27 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/tty/serial/msm_serial.txt
- create mode 100644 Documentation/devicetree/bindings/tty/serial/qcom,msm-uart.txt
- create mode 100644 Documentation/devicetree/bindings/tty/serial/qcom,msm-uartdm.txt
+Changelog:
+v1->v2:
+- add binding documentation (Reported by Jason Cooper)
+- change l2cc from aurora to tauros3 (Reported by Thomas Petazzoni)
+- add copyright reference
+- adapt compatibles to mach-berlin instead of mach-mvebu
 
-diff --git a/Documentation/devicetree/bindings/tty/serial/msm_serial.txt b/Documentation/devicetree/bindings/tty/serial/msm_serial.txt
-deleted file mode 100644
-index aef383e..0000000
---- a/Documentation/devicetree/bindings/tty/serial/msm_serial.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Qualcomm MSM UART
--
--Required properties:
--- compatible :
--	- "qcom,msm-uart", and one of "qcom,msm-hsuart" or
--	  "qcom,msm-lsuart".
--- reg : offset and length of the register set for the device
--	for the hsuart operating in compatible mode, there should be a
--	second pair describing the gsbi registers.
--- interrupts : should contain the uart interrupt.
--
--There are two different UART blocks used in MSM devices,
--"qcom,msm-hsuart" and "qcom,msm-lsuart".  The msm-serial driver is
--able to handle both of these, and matches against the "qcom,msm-uart"
--as the compatibility.
--
--The registers for the "qcom,msm-hsuart" device need to specify both
--register blocks, even for the common driver.
--
--Example:
--
--	uart@19c400000 {
--		compatible = "qcom,msm-hsuart", "qcom,msm-uart";
--		reg = <0x19c40000 0x1000>,
--		      <0x19c00000 0x1000>;
--		interrupts = <195>;
--	};
-diff --git a/Documentation/devicetree/bindings/tty/serial/qcom,msm-uart.txt b/Documentation/devicetree/bindings/tty/serial/qcom,msm-uart.txt
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ .../devicetree/bindings/arm/marvell,berlin.txt     |   23 ++
+ arch/arm/boot/dts/Makefile                         |    2 +
+ arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts      |   29 +++
+ arch/arm/boot/dts/mv88de3100.dtsi                  |  222 ++++++++++++++++++++
+ 4 files changed, 276 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell,berlin.txt
+ create mode 100644 arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts
+ create mode 100644 arch/arm/boot/dts/mv88de3100.dtsi
+
+diff --git a/Documentation/devicetree/bindings/arm/marvell,berlin.txt b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
 new file mode 100644
-index 0000000..ce8c901
+index 0000000..a4c3056
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/tty/serial/qcom,msm-uart.txt
-@@ -0,0 +1,25 @@
-+* MSM Serial UART
++++ b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
+@@ -0,0 +1,23 @@
++Marvell Berlin (88DE3xxx) family SoCs Device Tree Bindings
++---------------------------------------------------------------
 +
-+The MSM serial UART hardware is designed for low-speed use cases where a
-+dma-engine isn't needed. From a software perspective it's mostly compatible
-+with the MSM serial UARTDM except that it only supports reading and writing one
-+character at a time.
++Boards with a SoC of the Marvell Berlin (88DE3xxx) family, e.g. Armada 1500
++shall have the following properties:
 +
-+Required properties:
-+- compatible: Should contain "qcom,msm-uart"
-+- reg: Should contain UART register location and length.
-+- interrupts: Should contain UART interrupt.
-+- clocks: Should contain the core clock.
-+- clock-names: Should be "core".
++* Required root node properties:
++compatible: must contain "marvell,berlin"
 +
-+Example:
++In addition, the above compatible shall be extended with the specific
++SoC used, i.e.
++    "marvell,88de3100"	for Marvell 88DE3100 (Armada 1500),
++    "marvell,88de3010"	for Marvell 88DE3010 (Armada 1000),
++    "marvell,88de3005"	for Marvell 88DE3005 (Armada 1500-mini)
 +
-+A uart device at 0xa9c00000 with interrupt 11.
++* Example:
 +
-+serial@a9c00000 {
-+	compatible = "qcom,msm-uart";
-+	reg = <0xa9c00000 0x1000>;
-+	interrupts = <11>;
-+	clocks = <&uart_cxc>;
-+	clock-names = "core";
-+};
-diff --git a/Documentation/devicetree/bindings/tty/serial/qcom,msm-uartdm.txt b/Documentation/devicetree/bindings/tty/serial/qcom,msm-uartdm.txt
++/ {
++	model = "Sony NSZ-GS7";
++	compatible = "marvell,88de3100", "marvell,berlin";
++
++	...
++}
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d45058e..2989b51 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -43,6 +43,8 @@ dtb-$(CONFIG_ARCH_AT91)	+= sama5d35ek.dtb
+ 
+ dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
+ dtb-$(CONFIG_ARCH_BCM) += bcm11351-brt.dtb
++dtb-$(CONFIG_ARCH_BERLIN) += \
++	mv88de3100-sony-nsz-gs7.dtb
+ dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
+ 	da850-evm.dtb
+ dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
+diff --git a/arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts b/arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts
 new file mode 100644
-index 0000000..ffa5b78
+index 0000000..1081bc1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/tty/serial/qcom,msm-uartdm.txt
-@@ -0,0 +1,53 @@
-+* MSM Serial UARTDM
++++ b/arch/arm/boot/dts/mv88de3100-sony-nsz-gs7.dts
+@@ -0,0 +1,29 @@
++/*
++ * Device Tree file for Sony NSZ-GS7
++ *
++ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
 +
-+The MSM serial UARTDM hardware is designed for high-speed use cases where the
-+transmit and/or receive channels can be offloaded to a dma-engine. From a
-+software perspective it's mostly compatible with the MSM serial UART except
-+that it supports reading and writing multiple characters at a time.
++/dts-v1/;
 +
-+Required properties:
-+- compatible: Should contain at least "qcom,msm-uartdm".
-+              A more specific property should be specified as follows depending
-+	      on the version:
-+		"qcom,msm-uartdm-v1.1"
-+		"qcom,msm-uartdm-v1.2"
-+		"qcom,msm-uartdm-v1.3"
-+		"qcom,msm-uartdm-v1.4"
-+- reg: Should contain UART register locations and lengths. The first
-+       register shall specify the main control registers. An optional second
-+       register location shall specify the GSBI control region.
-+       "qcom,msm-uartdm-v1.3" is the only compatible value that might
-+       need the GSBI control region.
-+- interrupts: Should contain UART interrupt.
-+- clocks: Should contain the core clock and the AHB clock.
-+- clock-names: Should be "core" for the core clock and "iface" for the
-+	       AHB clock.
++#include "mv88de3100.dtsi"
 +
-+Optional properties:
-+- dmas: Should contain dma specifiers for transmit and receive channels
-+- dma-names: Should contain "tx" for transmit and "rx" for receive channels
++/ {
++	model = "Sony NSZ-GS7";
++	compatible = "sony,nsz-gs7", "marvell,88de3100", "marvell,berlin";
 +
-+Examples:
++	chosen {
++		bootargs = "console=ttyS0,115200 earlyprintk verbose debug";
++	};
 +
-+A uartdm v1.4 device with dma capabilities.
-+
-+serial@f991e000 {
-+	compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+	reg = <0xf991e000 0x1000>;
-+	interrupts = <0 108 0x0>;
-+	clocks = <&blsp1_uart2_apps_cxc>, <&blsp1_ahb_cxc>;
-+	clock-names = "core", "iface";
-+	dmas = <&dma0 0>, <&dma0 1>;
-+	dma-names = "tx", "rx";
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x40000000>; /* 1 GB */
++	};
 +};
 +
-+A uartdm v1.3 device without dma capabilities and part of a GSBI complex.
++&uart0 { status = "okay"; };
+diff --git a/arch/arm/boot/dts/mv88de3100.dtsi b/arch/arm/boot/dts/mv88de3100.dtsi
+new file mode 100644
+index 0000000..04328a6
+--- /dev/null
++++ b/arch/arm/boot/dts/mv88de3100.dtsi
+@@ -0,0 +1,222 @@
++/*
++ * Device Tree Include file for Marvell 88DE3100 (Armada 1500) SoC
++ *
++ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
++ *
++ * based on GPL'ed 2.6 kernel sources
++ *  (c) Marvell International Ltd.
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
 +
-+serial@19c40000 {
-+	compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
-+	reg = <0x19c40000 0x1000>,
-+	      <0x19c00000 0x1000>;
-+	interrupts = <0 195 0x0>;
-+	clocks = <&gsbi5_uart_cxc>, <&gsbi5_ahb_cxc>;
-+	clock-names = "core", "iface";
++#include "skeleton.dtsi"
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	model = "Marvell 88DE3100 (Armada 1500) SoC";
++	compatible = "marvell,88de3100", "marvell,berlin";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "marvell,sheeva-v7";
++			device_type = "cpu";
++			next-level-cache = <&l2>;
++			reg = <0>;
++		};
++
++		cpu@1 {
++			compatible = "marvell,sheeva-v7";
++			device_type = "cpu";
++			next-level-cache = <&l2>;
++			reg = <1>;
++		};
++	};
++
++	clocks {
++		/* 25MHz reference crystal */
++		ref25: oscillator {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <25000000>;
++		};
++
++		cfgclk: cfg-clock {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <100000000>;
++		};
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		interrupt-parent = <&gic>;
++
++		ranges = <0 0xf7000000 0x1000000>;
++
++		l2: l2-cache-controller@ac0000 {
++			compatible = "marvell,tauros3-cache";
++			reg = <0xac0000 0x1000>;
++			cache-unified;
++			cache-level = <2>;
++		};
++
++		gic: interrupt-controller@ad1000 {
++			compatible = "arm,cortex-a9-gic";
++			reg = <0xad1000 0x1000
++			       0xad0100 0x0100>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++		};
++
++		local-timer@ad0600 {
++			compatible = "arm,cortex-a9-twd-timer";
++			reg = <0xad0600 0x20>;
++			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		apb@e80000 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			ranges = <0 0xe80000 0x10000>;
++			interrupt-parent = <&aic>;
++
++			timer0: timer@2c00 {
++				compatible = "snps,dw-apb-timer-osc";
++				reg = <0x2c00 0x14>;
++				interrupts = <8>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "okay";
++			};
++
++			timer1: timer@2c14 {
++				compatible = "snps,dw-apb-timer-osc";
++				reg = <0x2c14 0x14>;
++				interrupts = <9>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "okay";
++			};
++
++			timer2: timer@2c28 {
++				compatible = "snps,dw-apb-timer-sp";
++				reg = <0x2c28 0x14>;
++				interrupts = <10>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "okay";
++			};
++
++			timer3: timer@2c3c {
++				compatible = "snps,dw-apb-timer-sp";
++				reg = <0x2c3c 0x14>;
++				interrupts = <11>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "okay";
++			};
++
++			timer4: timer@2c50 {
++				compatible = "snps,dw-apb-timer-sp";
++				reg = <0x2c50 0x14>;
++				interrupts = <12>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "disabled";
++			};
++
++			timer5: timer@2c64 {
++				compatible = "snps,dw-apb-timer-sp";
++				reg = <0x2c64 0x14>;
++				interrupts = <13>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "disabled";
++			};
++
++			timer6: timer@2c78 {
++				compatible = "snps,dw-apb-timer-sp";
++				reg = <0x2c78 0x14>;
++				interrupts = <14>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "disabled";
++			};
++
++			timer7: timer@2c8c {
++				compatible = "snps,dw-apb-timer-sp";
++				reg = <0x2c8c 0x14>;
++				interrupts = <15>;
++				clocks = <&cfgclk>;
++				clock-names = "timer";
++				status = "disabled";
++			};
++
++			aic: interrupt-controller@3000 {
++				compatible = "snps,dw-apb-ictl";
++				reg = <0x3000 0xc00>;
++				interrupt-controller;
++				#interrupt-cells = <1>;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++
++		apb@fc0000 {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			ranges = <0 0xfc0000 0x10000>;
++			interrupt-parent = <&sic>;
++
++			uart0: serial@9000 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0x9000 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <1>;
++				interrupts = <8>;
++				clock-frequency = <25000000>;
++				status = "disabled";
++			};
++
++			uart1: serial@a000 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0xa000 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <1>;
++				interrupts = <9>;
++				clock-frequency = <25000000>;
++				status = "disabled";
++			};
++
++			uart2: serial@b000 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0xb000 0x100>;
++				reg-shift = <2>;
++				reg-io-width = <1>;
++				interrupts = <10>;
++				clock-frequency = <25000000>;
++				status = "disabled";
++			};
++
++			sic: interrupt-controller@e000 {
++				compatible = "snps,dw-apb-ictl";
++				reg = <0xe000 0x400>;
++				interrupt-controller;
++				#interrupt-cells = <1>;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++	};
 +};
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+1.7.2.5
