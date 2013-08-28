@@ -1,42 +1,57 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH 7/9] ARM: at91/dt: add i2c devices connected to at91rm9200ek board
-Date: Wed, 28 Aug 2013 13:08:27 +0200
-Message-ID: <1377688107-10830-1-git-send-email-b.brezillon@overkiz.com>
-References: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
+Date: Wed, 28 Aug 2013 13:15:48 +0200
+Message-ID: <20130828131548.0009d613@skate>
+References: <20130828113459.48ecbb34@armhf>
+	<521DCD33.2070008@gmail.com>
+	<20130828121943.1c8327ca@skate>
+	<521DD057.4040208@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377687640-10529-1-git-send-email-b.brezillon@overkiz.com>
+In-Reply-To: <521DD057.4040208@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Joachim Eastwood <manabian@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <b.brezillon@overkiz.com>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
----
- arch/arm/boot/dts/at91rm9200ek.dts |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Dear Sebastian Hesselbarth,
 
-diff --git a/arch/arm/boot/dts/at91rm9200ek.dts b/arch/arm/boot/dts/at91rm9200ek.dts
-index b3e7425..fd2601a 100644
---- a/arch/arm/boot/dts/at91rm9200ek.dts
-+++ b/arch/arm/boot/dts/at91rm9200ek.dts
-@@ -147,6 +147,18 @@
- 		};
- 	};
- 
-+	i2c@0 {
-+		status = "okay";
-+
-+		ics1523@26 {
-+			reg = <0x26>;
-+		};
-+
-+		dac3550@4d {
-+			reg = <0x4d>;
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
+On Wed, 28 Aug 2013 12:26:31 +0200, Sebastian Hesselbarth wrote:
+
+> >> as Mark Brown already took the bindings patch for above generic
+> >> compatible, how are we going to discriminate different
+> >> implementations/features of Dove, Kirkwood, and Armada 370?
+> >
+> > I agree that mvebu-audio is not a really good compatible string. It
+> > should use the first SoC that introduced the IP block, so that if
+> > future SOCs have variations, we can introduce separate compatible
+> > strings.
+> >
+> > So for now, the compatible string should be kirkwood-audio.
+> 
+> Unfortunately, mvebu-audio has already been taken by Mark. Also, we
+> know the differences for the three SoCs now and should have a compatible
+> for each (and maybe mvebu-audio for fallback).
+
+For 3.12, right? So 3.12 hasn't been released yet, so it's still time
+to fix this.
+
+> Also, we'll need to distinguish between the different audio controllers
+> on a single SoC, i.e. i2s0 and i2s1. I suggest checking the (phys) reg
+> base passed.
+
+For what reason does the driver needs to know whether it's the instance
+0 or instance 1 ? If it's needed for some specific reason, then there
+should probably be something like marvell,i2s-channel-id = <0> and
+marvell,i2s-channel-id = <1>.
+
+Best regards,
+
+Thomas
 -- 
-1.7.9.5
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
