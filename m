@@ -1,91 +1,37 @@
-From: boris brezillon <b.brezillon@overkiz.com>
-Subject: Re: [RFC PATCH 3/3] ARM: at91/dt: move sama5 to generic pinconf
-Date: Wed, 28 Aug 2013 14:52:08 +0200
-Message-ID: <521DF278.3090307@overkiz.com>
-References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com> <1377380400-11331-1-git-send-email-b.brezillon@overkiz.com> <CACRpkdbGWAg19Redc-KB4=dUnNOqCVvFN4H=wAAoki6Y=Zp-wA@mail.gmail.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [Patch v2] pinctrl: Add s5pv210 support to pinctrl-exynos
+Date: Wed, 28 Aug 2013 14:58:41 +0200
+Message-ID: <3439226.L4MiyJHvQr@amdc1227>
+References: <1377608890-8528-1-git-send-email-m.krawczuk@partner.samsung.com>
+ <CACRpkdYiB5OG-YPRozwEurPHECDzZjQUs2s_E8gCdeqDPyr+WA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbGWAg19Redc-KB4=dUnNOqCVvFN4H=wAAoki6Y=Zp-wA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CACRpkdYiB5OG-YPRozwEurPHECDzZjQUs2s_E8gCdeqDPyr+WA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Thomas Abraham <thomas.abraham@linaro.org>, Leelakrishna A <l.krishna@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Linus,
+On Wednesday 28 of August 2013 14:51:44 Linus Walleij wrote:
+> On Tue, Aug 27, 2013 at 3:08 PM, Mateusz Krawczuk
+> 
+> <m.krawczuk@partner.samsung.com> wrote:
+> > This patch implements pinctrl support and adds device tree bindings
+> > for s5pv210.
+> > 
+> > Signed-off-by: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+> 
+> Oh this one does add bindings, sorry for previous comment.
+> 
+> I want an ACK from Kukjin or Sylwester for this since it's
+> something new for S5P.
 
-On 28/08/2013 14:28, Linus Walleij wrote:
-> On Sat, Aug 24, 2013 at 11:40 PM, Boris BREZILLON
-> <b.brezillon@overkiz.com> wrote:
->
->> Add generic pinconf definitions and reference appropriate configs in
->> atmel,pins properties.
->>
->> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
-> (...)
->>                          pinctrl@fffff200 {
->>                                  #address-cells = <1>;
->>                                  #size-cells = <1>;
->> -                               compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
->> +                               compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "generic-pinconf", "simple-bus";
-> What kind of compatible string is that "generic-pinconf"?
->
-> There is no driver that can instantiate against this string but I'm not
-> 100% sure about such things. Is there some other driver doing this?
->
-> Else I think it'd just be removed.
+Well, it does not touch anything outside drivers/pinctrl/, so my and your 
+ACKs should be enough, but since this patch is just one day old, let's give 
+it a bit more time for people to review it, if you don't have to hurry with 
+it yet.
 
-It did not exist before this patch series.
-
-I thought it would be good idea to add a compatible string to tell if 
-the pinctrl subnodes support the generic-pinconf binding,
-without modifying the current compatible strings:
-if compatible string contains the "generic-pinconf" then the pinconf 
-definitions should be considered generic.
-
-However, after discussing it with Stephen, Jean-Christophe and Nicolas, 
-I no longer think this is a good idea
-(backward compatibility issues).
-
-
-
->
->> +                               pcfg_none: pcfg_none {
->> +                                       bias-disable;
->> +                               };
->> +
->> +                               pcfg_pull_up: pcfg_pull_up {
->> +                                       bias-pull-up;
->> +                               };
-> Nice.
->
->> +                               pcfg_deglitch: pcfg_deglitch {
->> +                                       input-deglitch = <1>;
->> +                               };
->> +
->> +                               pcfg_pull_up_deglitch: pcfg_pull_up_deglitch {
->> +                                       bias-pull-up;
->> +                                       input-deglitch = <1>;
->> +                               };
-> input-deglitch seems like a proposed generic binding but I haven't seen
-> these yet?
-> (It might be in my violently exploding INBOX though sorry in that case.)
->
-> This would need adding to
-> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> Plus changes to pinctrl core for handling.
-
-This was added in the first patch of this series:
-https://lkml.org/lkml/2013/8/24/99
-
-> BTW: this is really moving in the right direction!
->
-> Yours,
-> Linus Walleij
-
-Thanks.
-
-Best Regards,
-
-Boris
+Best regards,
+Tomasz
