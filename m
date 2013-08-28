@@ -1,39 +1,74 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [Patch v2] pinctrl: Add s5pv210 support to pinctrl-exynos
-Date: Wed, 28 Aug 2013 15:11:08 +0200
-Message-ID: <521DF6EC.6030206@samsung.com>
-References: <1377608890-8528-1-git-send-email-m.krawczuk@partner.samsung.com>
- <CACRpkdYiB5OG-YPRozwEurPHECDzZjQUs2s_E8gCdeqDPyr+WA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH 1/3] pinctrl: add new generic pinconf config for
+ deglitch filter
+Date: Wed, 28 Aug 2013 15:13:58 +0200
+Message-ID: <CACRpkdaRBSGJYrCgOC-dSPEeEMWZ1N=aqhM9O-ZO+mGnEBQ=1g@mail.gmail.com>
+References: <1377379926-11163-1-git-send-email-b.brezillon@overkiz.com>
+	<1377380109-11247-1-git-send-email-b.brezillon@overkiz.com>
+	<521B875E.1010605@wwwdotorg.org>
+	<521B89D1.6010902@overkiz.com>
+	<521C2347.4080702@wwwdotorg.org>
+	<521C4451.1060908@overkiz.com>
+	<521C587E.6050706@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CACRpkdYiB5OG-YPRozwEurPHECDzZjQUs2s_E8gCdeqDPyr+WA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Tomasz Figa <t.figa@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Leelakrishna A <l.krishna@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <521C587E.6050706@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: boris brezillon <b.brezillon@overkiz.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jiri Kosina <jkosina@suse.cz>, Masanari Iida <standby24x7@gmail.com>, Richard Genoud <richard.genoud@gmail.com>, Heiko Stuebner <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2013 02:51 PM, Linus Walleij wrote:
-> On Tue, Aug 27, 2013 at 3:08 PM, Mateusz Krawczuk
-> <m.krawczuk@partner.samsung.com> wrote:
-> 
->> This patch implements pinctrl support and adds device tree bindings
->> for s5pv210.
->>
->> Signed-off-by: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
-> 
-> Oh this one does add bindings, sorry for previous comment.
-> 
-> I want an ACK from Kukjin or Sylwester for this since it's
-> something new for S5P.
+On Tue, Aug 27, 2013 at 9:42 AM, Nicolas Ferre <nicolas.ferre@atmel.com> wrote:
+> On 27/08/2013 08:16, boris brezillon :
 
-I'm happy to see this, it will allow us to clean up some common
-S5P/Exynos drivers by removing non-dt support from them, once
-S5PV210 is converted to DT.
+> Deglitch and
+> Debounce filters are different features in at91 (even if they pursuit the
+> same goal). So I do prefer to let the user choose which feature is preferred
+> for his application and add a different flag.
 
+Electrically speaking debounce and deglitch are totally different things.
 
-Regards,
--- 
-Sylwester Nawrocki
-Samsung R&D Institute Poland
+Debounce is for, well debouncing. To even out the effect of pressing
+a button which due to mechanical characteristics create a sharp
+series of spikes like that:
+  _   _
+_| |_| |_
+
+I highly suspect that "deglitch" is either:
+
+- A one-spike version of the above (in which case a custom config
+  may be warranted) or
+
+- What we usually call schmitt-trigger, i.e. handling of analog
+  swing-in.
+
+Can you describe exactly what the two features do, in electrical
+terms?
+
+> The question is: how much this "generic" pinconf is... well... generic! And
+> it is not a answer I can give.
+
+The generic configs are defined from electrical use-cases that
+appear in practice and also have the character of appearing in
+similar implementations in I/O cells of several vendors, to the point
+that from a software perspective they are identical.
+
+> On the other hand, if the "generic" is not going to overcome the native
+> pinctrl, I do not feel like switching to this at the cost of changing the
+> whole dtsi/dts entries that we already have.
+
+The question we ask in this case is whether the electrical construction
+is so fantastically unique and ingenious that no other ASIC pad
+implementer sitting in his chamber working on I/O cells would
+possibly ever come up with the same concept.
+
+If that is true, then it warrants its own, custom binding.
+
+If you ask some other randong cell implementer whether this is
+something they would do, and they say "yeah I have that in the
+next version of my cell library" then it is generic, because we will
+see the same thing in other systems as time moves on.
+
+Yours,
+Linus Walleij
