@@ -1,160 +1,63 @@
-From: Lars Poeschel <larsi@wh2.tu-dresden.de>
-Subject: [PATCH V3 1/2] gpio: mcp23s08: rename the device tree property
-Date: Wed, 28 Aug 2013 10:38:50 +0200
-Message-ID: <1377679131-32082-1-git-send-email-larsi@wh2.tu-dresden.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: poeschel@lemonage.de, grant.likely@linaro.org, linus.walleij@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, arnd@arndb.de, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [resend][PATCH v3 5/6] iio: at91: move the num_channels from DT
+ to driver itself
+Date: Wed, 28 Aug 2013 10:39:13 +0200
+Message-ID: <20130828083913.GN2695@lukather>
+References: <1377602932-1899-6-git-send-email-josh.wu@atmel.com>
+ <1377675770-30813-1-git-send-email-josh.wu@atmel.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FX+Db2fp7WJhXKrW"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1377675770-30813-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lars Poeschel <poeschel@lemonage.de>
 
-The device tree property should be more descriptive.
-microchip seems more reasonable than mcp. The old mcp
-prefix is still supported but marked as deprecated.
-Users of mcp have to switch to the microchip prefix.
+--FX+Db2fp7WJhXKrW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
----
- .../devicetree/bindings/gpio/gpio-mcp23s08.txt     |   26 +++++++++----
- drivers/gpio/gpio-mcp23s08.c                       |   41 ++++++++++++++++----
- 2 files changed, 52 insertions(+), 15 deletions(-)
+Hi Josh,
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-index 629d0ef..daa3017 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-@@ -3,10 +3,17 @@ Microchip MCP2308/MCP23S08/MCP23017/MCP23S17 driver for
- 
- Required properties:
- - compatible : Should be
--    - "mcp,mcp23s08" for  8 GPIO SPI version
--    - "mcp,mcp23s17" for 16 GPIO SPI version
--    - "mcp,mcp23008" for  8 GPIO I2C version or
--    - "mcp,mcp23017" for 16 GPIO I2C version of the chip
-+    - "mcp,mcp23s08" (DEPRECATED) for  8 GPIO SPI version
-+    - "mcp,mcp23s17" (DEPRECATED) for 16 GPIO SPI version
-+    - "mcp,mcp23008" (DEPRECATED) for  8 GPIO I2C version or
-+    - "mcp,mcp23017" (DEPRECATED) for 16 GPIO I2C version of the chip
-+
-+    - "microchip,mcp23s08" for  8 GPIO SPI version
-+    - "microchip,mcp23s17" for 16 GPIO SPI version
-+    - "microchip,mcp23008" for  8 GPIO I2C version or
-+    - "microchip,mcp23017" for 16 GPIO I2C version of the chip
-+    NOTE: Do not use the old mcp prefix any more. It is deprecated and will be
-+    removed.
- - #gpio-cells : Should be two.
-   - first cell is the pin number
-   - second cell is used to specify flags. Flags are currently unused.
-@@ -15,10 +22,11 @@ Required properties:
-         SPI uses this to specify the chipselect line which the chip is
-         connected to. The driver and the SPI variant of the chip support
-         multiple chips on the same chipselect. Have a look at
--        mcp,spi-present-mask below.
-+        microchip,spi-present-mask below.
- 
- Required device specific properties (only for SPI chips):
--- mcp,spi-present-mask : This is a present flag, that makes only sense for SPI
-+- mcp,spi-present-mask (DEPRECATED)
-+- microchip,spi-present-mask : This is a present flag, that makes only sense for SPI
-         chips - as the name suggests. Multiple SPI chips can share the same
-         SPI chipselect. Set a bit in bit0-7 in this mask to 1 if there is a
-         chip connected with the corresponding spi address set. For example if
-@@ -26,11 +34,13 @@ Required device specific properties (only for SPI chips):
-         which is 0x08. mcp23s08 chip variant only supports bits 0-3. It is not
-         possible to mix mcp23s08 and mcp23s17 on the same chipselect. Set at
-         least one bit to 1 for SPI chips.
-+    NOTE: Do not use the old mcp prefix any more. It is deprecated and will be
-+    removed.
- - spi-max-frequency = The maximum frequency this chip is able to handle
- 
- Example I2C:
- gpiom1: gpio@20 {
--        compatible = "mcp,mcp23017";
-+        compatible = "microchip,mcp23017";
-         gpio-controller;
-         #gpio-cells = <2>;
-         reg = <0x20>;
-@@ -38,7 +48,7 @@ gpiom1: gpio@20 {
- 
- Example SPI:
- gpiom1: gpio@0 {
--        compatible = "mcp,mcp23s17";
-+        compatible = "microchip,mcp23s17";
-         gpio-controller;
-         #gpio-cells = <2>;
-         spi-present-mask = <0x01>;
-diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
-index 6a4470b..2f94f0f 100644
---- a/drivers/gpio/gpio-mcp23s08.c
-+++ b/drivers/gpio/gpio-mcp23s08.c
-@@ -483,10 +483,21 @@ fail:
- #ifdef CONFIG_SPI_MASTER
- static struct of_device_id mcp23s08_spi_of_match[] = {
- 	{
--		.compatible = "mcp,mcp23s08", .data = (void *) MCP_TYPE_S08,
-+		.compatible = "microchip,mcp23s08",
-+		.data = (void *) MCP_TYPE_S08,
- 	},
- 	{
--		.compatible = "mcp,mcp23s17", .data = (void *) MCP_TYPE_S17,
-+		.compatible = "microchip,mcp23s17",
-+		.data = (void *) MCP_TYPE_S17,
-+	},
-+/* NOTE: The use of the mcp prefix is deprecated and will be removed. */
-+	{
-+		.compatible = "mcp,mcp23s08",
-+		.data = (void *) MCP_TYPE_S08,
-+	},
-+	{
-+		.compatible = "mcp,mcp23s17",
-+		.data = (void *) MCP_TYPE_S17,
- 	},
- 	{ },
- };
-@@ -496,10 +507,21 @@ MODULE_DEVICE_TABLE(of, mcp23s08_spi_of_match);
- #if IS_ENABLED(CONFIG_I2C)
- static struct of_device_id mcp23s08_i2c_of_match[] = {
- 	{
--		.compatible = "mcp,mcp23008", .data = (void *) MCP_TYPE_008,
-+		.compatible = "microchip,mcp23008",
-+		.data = (void *) MCP_TYPE_008,
-+	},
-+	{
-+		.compatible = "microchip,mcp23017",
-+		.data = (void *) MCP_TYPE_017,
- 	},
-+/* NOTE: The use of the mcp prefix is deprecated and will be removed. */
- 	{
--		.compatible = "mcp,mcp23017", .data = (void *) MCP_TYPE_017,
-+		.compatible = "mcp,mcp23008",
-+		.data = (void *) MCP_TYPE_008,
-+	},
-+	{
-+		.compatible = "mcp,mcp23017",
-+		.data = (void *) MCP_TYPE_017,
- 	},
- 	{ },
- };
-@@ -621,10 +643,15 @@ static int mcp23s08_probe(struct spi_device *spi)
- 	if (match) {
- 		type = (int)match->data;
- 		status = of_property_read_u32(spi->dev.of_node,
--				"mcp,spi-present-mask", &spi_present_mask);
-+			    "microchip,spi-present-mask", &spi_present_mask);
- 		if (status) {
--			dev_err(&spi->dev, "DT has no spi-present-mask\n");
--			return -ENODEV;
-+			status = of_property_read_u32(spi->dev.of_node,
-+				    "mcp,spi-present-mask", &spi_present_mask);
-+			if (status) {
-+				dev_err(&spi->dev,
-+					"DT has no spi-present-mask\n");
-+				return -ENODEV;
-+			}
- 		}
- 		if ((spi_present_mask <= 0) || (spi_present_mask >= 256)) {
- 			dev_err(&spi->dev, "invalid spi-present-mask\n");
--- 
-1.7.10.4
+On Wed, Aug 28, 2013 at 03:42:50PM +0800, Josh Wu wrote:
+> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--FX+Db2fp7WJhXKrW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSHbcxAAoJEBx+YmzsjxAgDwwQAL7Z5FGSblWKZs+2coIMZoy+
+5IPPZ/wEo/MCJskKUbgiwJ+Ko0AlHgXGwVIWwTyVopUcQrXyfWpV8Fau24ySEeKW
+Nd5bOItj2SxnmtKTt7p2SqMbie9OkzvR36NFkpkvY3eNxFRnedhouTor4r7hGKo+
+Wfi1kXEAtOQ354yVau0yL9/HuuKYtEAwcOB5YAjigXcZTH34H/0GwWlf2sXG5MSJ
+RS2aTPiUjHEkoipKCkxTWEFpBoDDiyb2iu85YS14m8te21QQ+HbzrFGotQheLtal
+wLTi/eU7AGYdx0czeF6wxZCJOnsn10bB6jHphP69sC5MzKukDTVlrLf0a1XOGIbt
+UlqrPxhJVmDihBuffld2fyoZiqCsl667wgpBHllvV/PkWnJEvCV6eIjtnDxE6w5r
+vHIq5gcKAkyaFdUr4ptfPvhx4JF0UgIC3IDqFizZBjAB8GdXMMGwBcBdbX2fuI7w
+hIVUitQFQdbidP3qqUhdzbgQq2rdV5esInxLoxqjJgOMaOWwRo5Nh4+NJete0hUW
+H2nIQBma5EpaOcTq0vNcD1XM79OG9fekDyiCN0C+oBw8HcpTFLecNUC6F8JUXAG5
+IS/umYbfUhIetnnqE10P+dpIx2wjfUhJPl3JnblXIu0V8eYwOfKVawsyXlTu3tPm
+bylnV5lXt09OfI9YJg6C
+=pMOD
+-----END PGP SIGNATURE-----
+
+--FX+Db2fp7WJhXKrW--
