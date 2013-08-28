@@ -1,148 +1,184 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
-Date: Wed, 28 Aug 2013 13:42:55 +0100
-Message-ID: <20130828124255.GL6617@n2100.arm.linux.org.uk>
-References: <20130828113459.48ecbb34@armhf> <521DCD33.2070008@gmail.com> <20130828121943.1c8327ca@skate> <521DD057.4040208@gmail.com> <20130828131548.0009d613@skate> <521DE2B3.9050508@gmail.com> <20130828135827.2307c89e@skate> <20130828121320.GK6617@n2100.arm.linux.org.uk> <20130828142909.3521064b@skate>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v8 1/3] DMA: Freescale: revise device tree binding
+ document
+Date: Wed, 28 Aug 2013 13:48:57 +0100
+Message-ID: <20130828124857.GB10250@e106331-lin.cambridge.arm.com>
+References: <1377600123-5746-1-git-send-email-hongbo.zhang@freescale.com>
+ <1377600123-5746-2-git-send-email-hongbo.zhang@freescale.com>
+ <20130827112509.GH19893@e106331-lin.cambridge.arm.com>
+ <521DB26F.8010501@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130828142909.3521064b@skate>
+In-Reply-To: <521DB26F.8010501@freescale.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+To: Hongbo Zhang <hongbo.zhang@freescale.com>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2013 at 02:29:09PM +0200, Thomas Petazzoni wrote:
-> Dear Russell King - ARM Linux,
->=20
-> On Wed, 28 Aug 2013 13:13:20 +0100, Russell King - ARM Linux wrote:
->=20
-> > > > I guess, yes.
-> > >=20
-> > > Jean-Fran=E7ois, could you cook and submit a patch to change the
-> > > compatible string?
-> >=20
-> > I don't think this is a good idea.  The configuration of this IP is
-> > not based on the SoC as a single SoC can have a mixture of differen=
-t
-> > configurations.
->=20
-> Using the name of the oldest SoC in the family that had the IP block =
-is
-> the norm, because it's really what "compatible" means: the IP block i=
-n
-> Dove is *compatible* with the one that was originally introduced in
-> Kirkwood.
->=20
-> See what Rob Herring (one of the DT maintainer) says in
-> http://lists.infradead.org/pipermail/linux-mtd/2012-March/040417.html=
-:
->=20
-> """
-> There is no reason all machines can't use "st,spear600-smi" in their
-> dts. It doesn't have to be a spear600, just compatible with it. Reall=
-y
-> you want the string to be the oldest SOC the block is in and then new=
-er
-> SOCs can claim compatibility with the old version.
-> """
->=20
-> The thread was precisely about replacing a SoC-specific compatible
-> string "st,spear600-smi" by a more generic "st,spear-smi" and Rob
-> Herring (above) was opposing to that.
+On Wed, Aug 28, 2013 at 09:18:55AM +0100, Hongbo Zhang wrote:
+> On 08/27/2013 07:25 PM, Mark Rutland wrote:
+> > On Tue, Aug 27, 2013 at 11:42:01AM +0100, hongbo.zhang@freescale.com wrote:
+> >> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+> >>
+> >> This patch updates the discription of each type of DMA controller and its
+> >> channels, it is preparation for adding another new DMA controller binding, it
+> >> also fixes some defects of indent for text alignment at the same time.
+> >>
+> >> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+> >> ---
+> >>   .../devicetree/bindings/powerpc/fsl/dma.txt        |   62 +++++++++-----------
+> >>   1 file changed, 27 insertions(+), 35 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+> >> index 2a4b4bc..ddf17af 100644
+> >> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+> >> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+> >> @@ -1,33 +1,29 @@
+> >> -* Freescale 83xx DMA Controller
+> >> +* Freescale DMA Controllers
+> >>   
+> >> -Freescale PowerPC 83xx have on chip general purpose DMA controllers.
+> >> +** Freescale Elo DMA Controller
+> >> +   This is a little-endian DMA controller, used in Freescale mpc83xx series
+> >> +   chips such as mpc8315, mpc8349, mpc8379 etc.
+> >>   
+> >>   Required properties:
+> >>   
+> >> -- compatible        : compatible list, contains 2 entries, first is
+> >> -		 "fsl,CHIP-dma", where CHIP is the processor
+> >> -		 (mpc8349, mpc8360, etc.) and the second is
+> >> -		 "fsl,elo-dma"
+> >> -- reg               : <registers mapping for DMA general status reg>
+> >> -- ranges		: Should be defined as specified in 1) to describe the
+> >> -		  DMA controller channels.
+> >> +- compatible        : must include "fsl,elo-dma"
+> > We should list the other values that may be in the list also, unless
+> > they are really of no consequence, in which case their presence in dt is
+> > questionable.
+> Hmm.  Stephen questioned here too, it seems this is a default rule.
+> Although Scott@freescale had explained our thoughts, I'd like to edit 
+> this item like this:
+> 
+> "must include "fsl,eloplus-dma", and a "fsl,CHIP-dma" is optional, where 
+> CHIP is the processor name"
+> 
+> We don't list all the chip name because we have tens of them and we 
+> cannot list all of them, and it is unnecessary to list them because we 
+> even don't use "fsl,CHIP-dma" in the new driver, add "fsl,CHIP-dma" here 
+> just make it questionable when it presents in example and  old dts files.
+> 
+> I remove the examples in bracket "(mpc8349, mpc8360, etc.)" because we 
+> can see the real example below.
+> I don't say" if "fsl,CHIP-dma" presents, it should be the first one, and 
+> the "fsl,eloplus-dma" should be the second" because it is common rule.
+> the description language should be clear and concise too I think.
 
-We're not talking about replacing a pre-existing string, we're talking
-about adding one, which is a different situation.
+Actually, you've convinced me for the form as you originally converted
+it (must include "fsl,elo-dma"), given that the other strings aren't
+used to give information anywhere and "fsl,CHIP-dma" doesn't fully
+define a valid string.
 
-> > I think marvell,mvebu-audio is a reasonable compatible string for t=
-his,
-> > and that the different configurations should be described by proper=
-ties
-> > indicating which inputs and outputs have been implemented.
-> >=20
-> > For instance, on the Dove, there are two of these blocks.  One has =
-I2S
-> > in and out only, but the other block has I2S in and out, and SPDIF =
-out.
-> > On some other Marvell devices, this block has I2S in and out and SP=
-DIF
-> > in and out.
-> >=20
-> > Otherwise, they're functionally the same.
->=20
-> Right, that's why they can both use "kirkwood-audio" as the compatibl=
-e
-> string.
->=20
-> > > Though, if the difference between the two units is the availabili=
-ty of
-> > > SPDIF support, then we shouldn't encode the channel number, but i=
-nstead
-> > > the availability of SPDIF, i.e:
-> > >=20
-> > > 	audio0 {
-> > > 		reg =3D <... ...>;
-> > > 		compatible =3D "marvell,kirkwood-audio";
-> > > 		marvell,has-spdif;
-> > > 	};
-> > >=20
-> > > 	audio1 {
-> > > 		reg =3D <... ...>;
-> > > 		compatible =3D "marvell,kirkwood-audio";
-> > > 	};
-> >=20
-> > ... which means there's no problem with using marvell,mvebu-audio a=
-s the
-> > compatible string if you're going to use properties to describe wha=
-t
-> > facilities are available.
->=20
-> I disagree, because how do you know if a future "mvebu" SOC such as
-> Armada 370, or one that doesn't exist yet, will not have a different
-> audio IP block?
+> >> +- reg               : <registers specifier for DMA general status reg>
+> >> +- ranges            : describes the mapping between the address space of the
+> >> +                      DMA channels and the address space of the DMA controller
+> >>   - cell-index        : controller index.  0 for controller @ 0x8100
+> >> -- interrupts        : <interrupt mapping for DMA IRQ>
+> >> +- interrupts        : <interrupt specifier for DMA IRQ>
+> >>   - interrupt-parent  : optional, if needed for interrupt mapping
+> >>   
+> >> -
+> >>   - DMA channel nodes:
+> >> -        - compatible        : compatible list, contains 2 entries, first is
+> >> -			 "fsl,CHIP-dma-channel", where CHIP is the processor
+> >> -			 (mpc8349, mpc8350, etc.) and the second is
+> >> -			 "fsl,elo-dma-channel". However, see note below.
+> >> -        - reg               : <registers mapping for channel>
+> >> +        - compatible        : must include "fsl,elo-dma-channel"
+> >> +                              However, see note below.
+> > Again, I think we should list the other entries that may be in the list.
+> > Otherwise it's not clear what the binding defines. Similarly for the
+> > other compatible list definitions below...
+> >
+> >> +        - reg               : <registers specifier for channel>
+> >>           - cell-index        : dma channel index starts at 0.
+> > I realise you haven't changed it, but it's unclear what the cell-index
+> > property is (and somewhat confusingly there seem to be multiple
+> > defnitions). It might be worth clarifying it while performing the other
+> > cleanup.
+> not clear with your point "multiple definitions", we really have 
+> multiple dma channels for one dma controller.
+> cell-index is used as channel index, this is an old method used by old 
+> driver, my patch didn't touch this part.
 
-The Dove already contains _three_ audio blocks, two of which are this
-one, and another which is block for driving an AC'97 codec (which doesn=
-'t
-have a driver.)  That's no problem because you won't call that one an
-"audio" block but an AC'97 block.  So...
+Sorry, I'd misunderstood the cell-index property. More noise from me.
 
-> It will still be audio, it will still be mvebu, but it
-> will not be able to use a "marvell,mvebu-audio" driver. Or maybe it c=
-an
-> use the same driver, but with a few variations, so a different
-> compatible string will be needed to identify the original IP
-> ("marvell,kirkwood-audio", used on Kirkwood/Dove) and slightly newer
-> versions of the IP ("marvell,some-funky-soc-audio").
+Given that, this looks fine to me.
 
-I don't think this really applies.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-> > In any case "marvell,has-spdif" is too generic - as I've indicated =
-above,
-> > there's versions with spdif out, and other versions with spdif in a=
-nd
-> > out.
->=20
-> Right, the above was just an example to illustrate that we can have
-> additional properties to encode the differences between each instance
-> of the audio devices.
-
-I think this is a mistake too: these properties will just tell us what
-may be possible, and the driver will take no real action on them.  I
-suppose that a property specifying whether there is a SPDIF output coul=
-d
-be used to control whether the IEC958 channel status controls are
-registered.  However...
-
-What's more important is which outputs are actually wired up, and
-therefore which bits of this hardware are enabled.  Even then, we
-wouldn't want to expose (eg) the IEC958 channel status controls if
-the SPDIF output isn't wired.  So all in all, I don't see any point
-to a set of properties saying "we have SPDIF" etc.  That information
-should come solely from whether the SPDIF output has been "wired up".
-
-Let me put that another way: we _can_ provide those properties to
-indicate what facilities the hardware has, we just wouldn't use them
-at all - and to provide them seems like over-design to me.
+> >>   
+> >>   Optional properties:
+> >> -        - interrupts        : <interrupt mapping for DMA channel IRQ>
+> >> -			  (on 83xx this is expected to be identical to
+> >> -			   the interrupts property of the parent node)
+> >> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
+> >> +                              (on 83xx this is expected to be identical to
+> >> +                              the interrupts property of the parent node)
+> >>           - interrupt-parent  : optional, if needed for interrupt mapping
+> >>   
+> >>   Example:
+> >> @@ -70,30 +66,26 @@ Example:
+> >>   		};
+> >>   	};
+> >>   
+> >> -* Freescale 85xx/86xx DMA Controller
+> >> -
+> >> -Freescale PowerPC 85xx/86xx have on chip general purpose DMA controllers.
+> >> +** Freescale EloPlus DMA Controller
+> >> +   This is DMA controller with extended addresses and chaining, mainly used in
+> >> +   Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as mpc8540, mpc8641
+> >> +   p4080, bsc9131 etc.
+> >>   
+> >>   Required properties:
+> >>   
+> >> -- compatible        : compatible list, contains 2 entries, first is
+> >> -		 "fsl,CHIP-dma", where CHIP is the processor
+> >> -		 (mpc8540, mpc8540, etc.) and the second is
+> >> -		 "fsl,eloplus-dma"
+> >> -- reg               : <registers mapping for DMA general status reg>
+> >> +- compatible        : must include "fsl,eloplus-dma"
+> >> +- reg               : <registers specifier for DMA general status reg>
+> >>   - cell-index        : controller index.  0 for controller @ 0x21000,
+> >>                                            1 for controller @ 0xc000
+> >> -- ranges		: Should be defined as specified in 1) to describe the
+> >> -		  DMA controller channels.
+> >> +- ranges            : describes the mapping between the address space of the
+> >> +                      DMA channels and the address space of the DMA controller
+> >>   
+> >>   - DMA channel nodes:
+> >> -        - compatible        : compatible list, contains 2 entries, first is
+> >> -			 "fsl,CHIP-dma-channel", where CHIP is the processor
+> >> -			 (mpc8540, mpc8560, etc.) and the second is
+> >> -			 "fsl,eloplus-dma-channel". However, see note below.
+> >> +        - compatible        : must include "fsl,eloplus-dma-channel"
+> >> +                              However, see note below.
+> >>           - cell-index        : dma channel index starts at 0.
+> >> -        - reg               : <registers mapping for channel>
+> >> -        - interrupts        : <interrupt mapping for DMA channel IRQ>
+> >> +        - reg               : <registers specifier for channel>
+> >> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
+> >>           - interrupt-parent  : optional, if needed for interrupt mapping
+> >>   
+> >>   Example:
+> >> -- 
+> >> 1.7.9.5
+> > Thanks,
+> > Mark.
+> >
+> 
+> 
+> 
+> 
