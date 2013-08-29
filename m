@@ -1,81 +1,126 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db9lp0249.outbound.messaging.microsoft.com ([213.199.154.249]:9180
-	"EHLO db9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752045Ab3HUDCZ (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Tue, 20 Aug 2013 23:02:25 -0400
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v10 0/2] Add freescale S/PDIF CPU DAI and machine drivers
-Date: Wed, 21 Aug 2013 11:13:15 +0800
-Message-ID: <cover.1377054540.git.b42378@freescale.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Received: from mail-pa0-f50.google.com ([209.85.220.50]:51143 "EHLO
+	mail-pa0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756045Ab3H2LvI (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 29 Aug 2013 07:51:08 -0400
+Received: by mail-pa0-f50.google.com with SMTP id fb10so820945pad.37
+        for <devicetree@vger.kernel.org>; Thu, 29 Aug 2013 04:51:07 -0700 (PDT)
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH v2 2/2] usb: phy: samsung: Update usbphy documentation
+Date: Thu, 29 Aug 2013 17:03:26 +0530
+Message-Id: <1377776006-22972-2-git-send-email-sachin.kamat@linaro.org>
+In-Reply-To: <1377776006-22972-1-git-send-email-sachin.kamat@linaro.org>
+References: <1377776006-22972-1-git-send-email-sachin.kamat@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, s.hauer@pengutronix.de
-Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, tomasz.figa@gmail.com, swarren@wwwdotorg.org, mark.rutland@arm.com, R65777@freescale.com
+To: devicetree@vger.kernel.org
+Cc: rob.herring@calxeda.com, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, sachin.kamat@linaro.org, kgene.kim@samsung.com, patches@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-Changelog:
-v9->v10:
- * Removed "dummy" words from binding doc in PATCH-2.
-v8->v9:
- * Use bool instead of atomic_t.
- * Use clk_prepare_enable() instead.
- * Dropped dumpregs().
- * Dropped unnecessary clk_round_rate().
- * Dropped unused clock source enum.
- * Revised dev_err() message.
-v7->v8:
- * Revised DT binding doc.
- * Revised dev_err() error msg.
- * Check return value of clk_set_rate().
-v6->v7:
- * Removed extra comma in array.
- * Revised some comments.
- * Added some dev_err().
- * Check the return value of soft reset.
- * Use bitrev8() instead of extra reverse_bits().
- * Use cache_bypass as default for regmap.
-v5->v6:
- * Sorted out rxtx clk source in DT binding.
- * Use devm_xxxx() functions.
- * Use platform_get_resource() instead.
-v4->v5:
- * Dropped rx/tx-clksrc-names DT bindings.
- * Use standard clock binding instead to pass the clock source list.
- * Update the compatible list by using "imx35", the first SoC that has spdif.
-v3->v4:
- * Use regmap for CPU DAI driver.
- * Use individual clock source for 32KHz, 44KHz, 48KHz playback.
- * Determine clock source configuration from 'clocks' entry.
- * Added imx53 to compatible list, merged imx6q and imx6dl in the list.
- * Improve the algorism of reverse_bits().
- * Dropped the unneeded clk_put().
-v2->v3:
- * Removed a wrong tag from the commit of patch-1.
-v1->v2:
- * Dropped one applied patch for spdif dummy codec drivers.
- * Use generic DMA DT binding.
- * Let spdif controller driver calculate the clock div.
- * Added one optional clock source for spdif tx.
- * Reivsed documentation accordingly.
+Updated the documentation as per the latest driver implementation.
+While at it also fixed some trivial typos.
 
-Nicolin Chen (2):
-  ASoC: fsl: Add S/PDIF CPU DAI driver
-  ASoC: fsl: Add S/PDIF machine driver
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Acked-by: Felipe Balbi <balbi@ti.com>
+---
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |   53 ++++++++------------
+ 1 file changed, 22 insertions(+), 31 deletions(-)
 
- .../devicetree/bindings/sound/fsl,spdif.txt        |   54 +
- .../devicetree/bindings/sound/imx-audio-spdif.txt  |   29 +
- sound/soc/fsl/Kconfig                              |   14 +
- sound/soc/fsl/Makefile                             |    4 +
- sound/soc/fsl/fsl_spdif.c                          | 1236 ++++++++++++++++++++
- sound/soc/fsl/fsl_spdif.h                          |  191 +++
- sound/soc/fsl/imx-spdif.c                          |  134 +++
- 7 files changed, 1662 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.txt
- create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
- create mode 100644 sound/soc/fsl/fsl_spdif.c
- create mode 100644 sound/soc/fsl/fsl_spdif.h
- create mode 100644 sound/soc/fsl/imx-spdif.c
-
+diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+index 33fd354..a088a30 100644
+--- a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
++++ b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+@@ -1,40 +1,35 @@
+ SAMSUNG USB-PHY controllers
+ 
+-** Samsung's usb 2.0 phy transceiver
++** Samsung USB 2.0 phy transceiver
+ 
+-The Samsung's usb 2.0 phy transceiver is used for controlling
+-usb 2.0 phy for s3c-hsotg as well as ehci-s5p and ohci-exynos
+-usb controllers across Samsung SOCs.
++The Samsung USB 2.0 phy transceiver is used for controlling
++USB 2.0 phy for s3c-hsotg as well as ehci-s5p and ohci-exynos
++USB controllers across Samsung SOCs.
+ TODO: Adding the PHY binding with controller(s) according to the under
+ development generic PHY driver.
+ 
+ Required properties:
+ 
+-Exynos4210:
+-- compatible : should be "samsung,exynos4210-usb2phy"
+-- reg : base physical address of the phy registers and length of memory mapped
++- compatible: value should be one among the following:
++	(a) "samsung,s3c64xx-usb2phy" for S3C64xx SoCs
++	(b) "samsung,exynos4210-usb2phy" for Exynos4210 SoC
++	(c) "samsung,exynos4x12-usb2phy" for Exynos4x12 SoCs
++	(d) "samsung,exynos5250-usb2phy" for Exynos5250 SoC
++- reg: base physical address of the phy registers and length of memory mapped
+ 	region.
+ - clocks: Clock IDs array as required by the controller.
+-- clock-names: names of clock correseponding IDs clock property as requested
+-	       by the controller driver.
+-
+-Exynos5250:
+-- compatible : should be "samsung,exynos5250-usb2phy"
+-- reg : base physical address of the phy registers and length of memory mapped
+-	region.
++- clock-names: shall be "usbhost" for Exynos5250 and "otg" for others.
+ 
+ Optional properties:
+-- #address-cells: should be '1' when usbphy node has a child node with 'reg'
+-		  property.
+-- #size-cells: should be '1' when usbphy node has a child node with 'reg'
+-	       property.
++- #address-cells: should be '1'.
++- #size-cells: should be '1'.
+ - ranges: allows valid translation between child's address space and parent's
+ 	  address space.
+ 
+ - The child node 'usbphy-sys' to the node 'usbphy' is for the system controller
+   interface for usb-phy. It should provide the following information required by
+   usb-phy controller to control phy.
+-  - reg : base physical address of PHY_CONTROL registers.
++  - reg: base physical address of PHY_CONTROL registers.
+ 	  The size of this register is the total sum of size of all PHY_CONTROL
+ 	  registers that the SoC has. For example, the size will be
+ 	  '0x4' in case we have only one PHY_CONTROL register (e.g.
+@@ -62,28 +57,24 @@ Example:
+ 		};
+ 	};
+ 
++** Samsung USB 3.0 phy transceiver
+ 
+-** Samsung's usb 3.0 phy transceiver
+-
+-Starting exynso5250, Samsung's SoC have usb 3.0 phy transceiver
+-which is used for controlling usb 3.0 phy for dwc3-exynos usb 3.0
++Starting Exynos5250, Samsung SoCs have USB 3.0 phy transceiver
++which is used for controlling USB 3.0 phy for dwc3-exynos USB 3.0
+ controllers across Samsung SOCs.
+ 
+ Required properties:
+ 
+ Exynos5250:
+-- compatible : should be "samsung,exynos5250-usb3phy"
+-- reg : base physical address of the phy registers and length of memory mapped
++- compatible: should be "samsung,exynos5250-usb3phy"
++- reg: base physical address of the phy registers and length of memory mapped
+ 	region.
+ - clocks: Clock IDs array as required by the controller.
+-- clock-names: names of clocks correseponding to IDs in the clock property
+-	       as requested by the controller driver.
++- clock-names: shall be "usbdrd30".
+ 
+ Optional properties:
+-- #address-cells: should be '1' when usbphy node has a child node with 'reg'
+-		  property.
+-- #size-cells: should be '1' when usbphy node has a child node with 'reg'
+-	       property.
++- #address-cells: should be '1'.
++- #size-cells: should be '1'.
+ - ranges: allows valid translation between child's address space and parent's
+ 	  address space.
+ 
+-- 
+1.7.9.5
 
