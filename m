@@ -1,56 +1,32 @@
-From: Russ Dill <Russ.Dill@ti.com>
-Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
-Date: Thu, 29 Aug 2013 11:28:17 -0700
-Message-ID: <CA+Bv8XaquSBKUpDbVZwcGEbmDB2Lw1ZaZu3gSU4FnG9qBKTViA@mail.gmail.com>
-References: <1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
-	<CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
-	<87txiasqhk.fsf@linaro.org>
-	<CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
-	<20130829110534.GV10783@sirena.org.uk>
-	<CAGa+x85u0OpB9o71xUTs15wt8Te-o5f0C9o22GHzZwOjn5F6=w@mail.gmail.com>
-	<20130829154929.GJ10783@sirena.org.uk>
-	<CA+Bv8XYbpqQAYwJ3=vkP0gXDMTp7_VNVzB0NXLG6GHDi=Z1img@mail.gmail.com>
-	<20130829173022.GN10783@sirena.org.uk>
-	<CA+Bv8Xb38bwby78Q--nEGffBknj5ZD98x0OuRX5N1EFNjbh7zA@mail.gmail.com>
-	<20130829180353.GP10783@sirena.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V5] gpio: New driver for LSI ZEVIO SoCs
+Date: Thu, 29 Aug 2013 20:30:18 +0200
+Message-ID: <CACRpkdbnvnCiJ1apWA4gq03QH-vhmKae_3yYjYxEqGzYsWjaqg@mail.gmail.com>
+References: <1377541133-7427-1-git-send-email-fabian@ritter-vogt.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130829180353.GP10783@sirena.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Kevin Hilman <khilman@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1377541133-7427-1-git-send-email-fabian@ritter-vogt.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Fabian Vogt <fabian@ritter-vogt.de>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2013 at 11:03 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Aug 29, 2013 at 10:47:04AM -0700, Russ Dill wrote:
->> On Thu, Aug 29, 2013 at 10:30 AM, Mark Brown <broonie@kernel.org> wrote:
->
->> > So this is done from cpuidle rather than system suspend.
->
->> It is done for system suspend. It isn't possible to do this in a
->> cpuidle use case as the memory controller would need to come out of
->> idle automatically to service DMA requests.
->
-> OK, so it's all part of the core power down sequence for the SoC?  I'm
-> not sure that makes a big difference but it at least means that there
-> are fewer runtime interactions to worry about.
+On Mon, Aug 26, 2013 at 8:18 PM, Fabian Vogt <fabian@ritter-vogt.de> wrote:
 
- Well, core suspend sequence for the SoC.
+> This driver supports the GPIO controller found in LSI ZEVIO SoCs.
+> It has been successfully tested on a TI nspire CX calculator.
+> ---
+>  .../devicetree/bindings/gpio/gpio-zevio.txt        |  15 ++
+>  drivers/gpio/Kconfig                               |   6 +
+>  drivers/gpio/Makefile                              |   1 +
+>  drivers/gpio/gpio-zevio.c                          | 210 +++++++++++++++++++++
+>  4 files changed, 232 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-zevio.txt
+>  create mode 100644 drivers/gpio/gpio-zevio.c
 
->> > I mean describe the intended sequence of events in the system rather
->> > than the raw register commands to accomplish them.
->
->> I'm still not sure what you mean.
->
-> Say "set voltage X" or even "regulator X supplies Y" not "send this
-> bytestream to the device".
+Repeating what Stephen said, can you please provide a changelog?
+I need an overview of what changed over time.
 
-That's already known at the SoC level, "set the vdd core regulator to
-0.95V". What isn't known is how to do that for each board.
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+Yours,
+Linus Walleij
