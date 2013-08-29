@@ -1,177 +1,37 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: [PATCH V6] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
-Date: Thu, 29 Aug 2013 17:11:08 +0530
-Message-ID: <1377776468-24808-1-git-send-email-yuvaraj.cd@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree@vger.kernel.org
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, t.figa@samsung.com, dianders@chromium.org, cjb@laptop.org, thomas.abraham@linaro.org, ks.giri@samsung.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [PATCH] of: Fix missing memory initialization on FDT unflattening
+Date: Thu, 29 Aug 2013 12:41:34 +0100
+Message-ID: <1377776494-27040-1-git-send-email-grant.likely@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, stable@vger.kernel.org, Wladislav Wiebe <wladislav.kw@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree node entries for exynos5420 SOC.
-Exynos5420 has a different version of DWMMC controller,so a new
-compatible string is used to distinguish it from the prior SOC's.
+Any calls to dt_alloc() need to be zeroed. This is a temporary fix, but
+the allocation function itself needs to zero memory before returning
+it. This is a follow up to patch 9e4012752, "of: fdt: fix memory
+initialization for expanded DT" which fixed one call site but missed
+another.
 
-This patch depends on
-	mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
-
-changes since v5:
-	1.removed instance index from node name.
-	2.changed the node name to mshc.
-	3.changed the reg property value for mshc_2.
-
-changes since v4:
-	1.Droppped the bypass-smu binding property.
-	2.Used compatible string "samsung,exynos5250-dw-mshc"
-	  for controller instance which does not have SMU.
-
-changes since V3:
-	1.change fifo-depth size from 0x80 to 0x40
-	2.Move the below properties
-		a.card-detect-delay
-		b.samsung,dw-mshc-ciu-div
-		c.samsung,dw-mshc-sdr-timing
-		d.samsung,dw-mshc-ddr-timing
-	from SOC dts to board dts file as suggested by Doug Anderson
-
-changes since V2:
-	1.dropped num-slots property from node as its not required
-	  if number of card slots available is 1.
-
-	2.Move the below properties
-		a.fifo-depth
-		b.card-detect-delay
-		c.samsung,dw-mshc-ciu-div
-		d.samsung,dw-mshc-sdr-timing
-		e.samsung,dw-mshc-ddr-timing
-	from board dts to SOC dts,as these are not board specific properties.
-
-	3.Updated the binding document exynos-dw-mshc.txt.
-
-changes since V1:
-	1.disable node by status = disabled in SOC file
-	2.enable node by status = okay in board specific file
-
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Cc: stable@vger.kernel.org
+Cc: Wladislav Wiebe <wladislav.kw@gmail.com>
 ---
- .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +
- arch/arm/boot/dts/exynos5420-smdk5420.dts          |   33 +++++++++++++++++
- arch/arm/boot/dts/exynos5420.dtsi                  |   39 ++++++++++++++++++++
- 3 files changed, 74 insertions(+)
+ drivers/of/base.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-index 6d1c098..84cd56f 100644
---- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-@@ -16,6 +16,8 @@ Required Properties:
- 	  specific extensions.
- 	- "samsung,exynos5250-dw-mshc": for controllers with Samsung Exynos5250
- 	  specific extensions.
-+	- "samsung,exynos5420-dw-mshc": for controllers with Samsung Exynos5420
-+	  specific extensions.
- 
- * samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
-   unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
-diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-index bafba25..fe22f97 100644
---- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-+++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-@@ -31,6 +31,39 @@
- 		};
- 	};
- 
-+	mshc@12200000 {
-+		status = "okay";
-+		broken-cd;
-+		supports-highspeed;
-+		card-detect-delay = <200>;
-+		samsung,dw-mshc-ciu-div = <3>;
-+		samsung,dw-mshc-sdr-timing = <0 4>;
-+		samsung,dw-mshc-ddr-timing = <0 2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
-+
-+		slot@0 {
-+			reg = <0>;
-+			bus-width = <8>;
-+		};
-+	};
-+
-+	mshc@12220000 {
-+		status = "okay";
-+		supports-highspeed;
-+		card-detect-delay = <200>;
-+		samsung,dw-mshc-ciu-div = <3>;
-+		samsung,dw-mshc-sdr-timing = <2 3>;
-+		samsung,dw-mshc-ddr-timing = <1 2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-+
-+		slot@0 {
-+			reg = <0>;
-+			bus-width = <4>;
-+		};
-+	};
-+
- 	dp-controller@145B0000 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&dp_hpd>;
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index d537cd7..65375f0 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -22,6 +22,9 @@
- 	compatible = "samsung,exynos5420";
- 
- 	aliases {
-+		mshc0 = &mshc_0;
-+		mshc1 = &mshc_1;
-+		mshc2 = &mshc_2;
- 		pinctrl0 = &pinctrl_0;
- 		pinctrl1 = &pinctrl_1;
- 		pinctrl2 = &pinctrl_2;
-@@ -84,6 +87,42 @@
- 		clock-names = "mfc";
- 	};
- 
-+	mshc_0: mshc@12200000 {
-+		compatible = "samsung,exynos5420-dw-mshc";
-+		interrupts = <0 75 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x12200000 0x2000>;
-+		clocks = <&clock 351>, <&clock 132>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x40>;
-+		status = "disabled";
-+	};
-+
-+	mshc_1: mshc@12210000 {
-+		compatible = "samsung,exynos5420-dw-mshc";
-+		interrupts = <0 76 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x12210000 0x2000>;
-+		clocks = <&clock 352>, <&clock 133>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x40>;
-+		status = "disabled";
-+	};
-+
-+	mshc_2: mshc@12220000 {
-+		compatible = "samsung,exynos5250-dw-mshc";
-+		interrupts = <0 77 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x12220000 0x1000>;
-+		clocks = <&clock 353>, <&clock 134>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x40>;
-+		status = "disabled";
-+	};
-+
- 	mct@101C0000 {
- 		compatible = "samsung,exynos4210-mct";
- 		reg = <0x101C0000 0x800>;
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 5c54279..bf8432f 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1629,6 +1629,7 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+ 		ap = dt_alloc(sizeof(*ap) + len + 1, 4);
+ 		if (!ap)
+ 			continue;
++		memset(ap, 0, sizeof(*ap) + len + 1);
+ 		ap->alias = start;
+ 		of_alias_add(ap, np, id, start, len);
+ 	}
 -- 
-1.7.9.5
+1.8.1.2
