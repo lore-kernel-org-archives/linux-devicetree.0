@@ -1,109 +1,69 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
-Date: Thu, 29 Aug 2013 13:01:23 +0200
-Message-ID: <521F2A03.8000905@gmail.com>
-References: <20130828113459.48ecbb34@armhf> <521DCD33.2070008@gmail.com> <20130828121943.1c8327ca@skate> <521DD057.4040208@gmail.com> <20130828131548.0009d613@skate> <521DE2B3.9050508@gmail.com> <20130828135827.2307c89e@skate> <521DEA20.8020103@gmail.com> <20130829120704.410ad309@armhf> <20130829101303.GR6617@n2100.arm.linux.org.uk>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130829101303.GR6617@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Jean-Francois Moine <moinejf@free.fr>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
+Date: Thu, 29 Aug 2013 12:05:34 +0100
+Message-ID: <20130829110534.GV10783@sirena.org.uk>
+References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
+ <1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
+ <CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
+ <87txiasqhk.fsf@linaro.org>
+ <CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+61ZvX8xaeyevaKt"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russ Dill <Russ.Dill@ti.com>
+Cc: Kevin Hilman <khilman@linaro.org>, Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>, devicetree@vger.kernel.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/29/13 12:13, Russell King - ARM Linux wrote:
-> On Thu, Aug 29, 2013 at 12:07:04PM +0200, Jean-Francois Moine wrote:
->> On Wed, 28 Aug 2013 14:16:32 +0200
->> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
->>
->> 	[snip]
->>>> Though, if the difference between the two units is the availability of
->>>> SPDIF support, then we shouldn't encode the channel number, but instead
->>>> the availability of SPDIF, i.e:
->>>>
->>>> 	audio0 {
->>>> 		reg = <... ...>;
->>>> 		compatible = "marvell,kirkwood-audio";
->>>> 		marvell,has-spdif;
->>>
->>> Agree, if you make it "marvell,has-spdif-in" and "marvell,has-spdif-out"
->>> Dove has either i2s-only or i2s+spdifo, kirkwood has i2s+spdifo+spdifi
->>> for the one audio controller available. Can't tell for Armada 370.
->>>
->>> BTW, you might have followed some of the DT discussions with Mark
->>> before; as he insists on having a separate sound card node, he might
->>> argue that above property should be part of that node instead.
->>
->> Yes. For the Cubox, the card will be described by something like:
->>
->> 	sound {
->> 		compatible = "simple-audio";
->> 		audio-controller = <&audio1>;
->> 		audio-codec = <&spdif>;
->> 		codec-dai-name = "dit-hifi";
->> 	};
->>
->> with:
->>
->> 	spdif: spdif {
->>   		compatible = "linux,spdif-dit";
->> 	};
->>
->> Then, the audio driver will know about s/pdif on the first open.
->
-> I can tell that neither of you have taken notice of what I said about
-> the "has" stuff - it's completely useless to the driver, it conveys no
-> useful information.
 
-You are right, of course, that has-spdif-foo properties are useless,
-for the driver and the DT. For a working audio setup, we need to link
-the codecs anyway and we can put that information in there.
+--+61ZvX8xaeyevaKt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Moreover, the above isn't going to be the answer to this.  With DPCM
-> you need:
->
-> 1. two DAI links to be setup:
-> 1a. one to connect the CPU DAI to the dummy codec
-> 1b. one to connect the dummy platform/CPU DAI to the SPDIF codec
+On Tue, Aug 27, 2013 at 06:05:34PM -0700, Russ Dill wrote:
+> On Tue, Aug 27, 2013 at 3:44 PM, Kevin Hilman <khilman@linaro.org> wrote:
 
-Taking the sound node above:
+> > The framework already has a concept of suspend voltage, suspend mode
+> > etc.  Maybe it needs some generalizing so low-level platform code could
+> > query the framework for the sequence so it can be done late in platform
+> > idle/suspend paths.  Especially for regmap drivers, this seems feasible.
 
-sound {
-	compatible = "whatever-audio";
-	...
-	audio-codec = <&rt1234 1>, <&spdif 0>;
-	audio-codec-names = "i2s", "spdifo";
-	...
-};
+> Yes, my main hesitation for going down this path is possible lack of
+> support for such an interface upstream.
 
-Each audio-codec phandle with arg links to one specific "port" at some
-"codec". The audio-codec-names property allows the ASoC driver to
-determine the local "ports" where the above codecs are connected.
-The dummy codecs are ASoC specific and must be added by the driver.
+Someone is going to have to walk me through the context for me to fully
+understand what this is all about - what's the problem?
 
-Basically, it is the same approach as we have for clocks, maybe the 
-property names are not best suited, but it should give an impression of
-how it _could_ be done.
+Generally for suspend if the sequencing is being done by the processor
+it's been handled by the drivers for the components in question.  For
+sequencing beyond that you're into hardware features which aren't all
+that regular sadly and often aren't controllable either.  It sounds like
+this is the latter case but the thing that manages some of the late
+power down stages does so using a firmware we can rewrite?
 
-Unfortunately, the fsl spdif discussion I referenced earlier ended up
-with
-a) a special machine driver and its own DT binding
-b) using that "has" properties approach
+--+61ZvX8xaeyevaKt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> 2. DAPM routes to connect the CPU DAI audio stream(s) to the Codec stream(s)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-I am not yet sure how that could be solved easily with DT, nor if it
-should go in there at all. But I have not dug into ASoC and DAPM enough.
+iQIcBAEBAgAGBQJSHyr7AAoJELSic+t+oim9UTMP/2i04TBDlsb8WPvSPlfu7FDJ
+K/QiIyEf5QPkhvFw2wqFfEPQPHOfs7hmq0HJ3Y2Z1HAkZhI5IzNJfCp8/1D+QgnC
+ghBqYYUUs3Y7kq2aFpHX3ruk4Mz3duK8d0Q2HSv/4vRhVzGSKAFWZhjuIZDgX78p
+dQjzHDxPGpXmZcpAJ1SwQ35yDeip1nx68SNkKXVj5YzteRsMzrp7ykgSBnddeugT
+qbt1ohD9QY9JVV0oONG4HnMhLi8bnmkCGXAeG+OzmjP8eLfREy42elNwbAMBogwj
+QfqPacA3xNQKIQMuGVZu4RBLyWkAbAb/ZFsAvwUBCKeSDn9cQMISJp93o7KrDklB
+zHgKoBfKYDVjAQmIb/HHNkfLk5Wj1wnQbwhCvrAawsti5pGKJGoGKlPho+lndaew
+XohW6jtq8X10W/GeeoMQCslUZDcf9BDlX0F7CsxOyReowSdxnB1goNOZJkxaPFTb
+9z1wzeK8U0844mrbhfS5szq+SxXtJJj5qyu3Dj0YN82gTwXCxJkiBofE8ABDmbXd
+7EAfKbge3mp8GP5JyrqfPt1g+hBcOMgHEsZm8BDAX7iLCxqDxGUfbqNYBXBO2AjS
+hADjHNRt1niyp7ggk+kVkEBOPgnBJdzTM6dRfOS5OQEE45f0gCuf6C3rF596uQb7
+/7KXvKoA0idEszuM8sRW
+=c6vT
+-----END PGP SIGNATURE-----
 
-Can you point out, given the above linking, what you think is missing
-to allow the driver to find all it needs wrt to DAIs and DAPM?
-
-> If you have both I2S and SPDIF, then you need another DAI link and a
-> few more DAPM routes.  Even if you have just one codec connected, you
-> will need this structure so that the CPU DAI knows which audio outputs
-> are to be enabled.  If no DAPM routes exist, the CPU DAI will not enable
-> any outputs.
->
-> Or at least that's the theory when ASoC DPCM eventually works.
->
+--+61ZvX8xaeyevaKt--
