@@ -1,345 +1,86 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: [PATCH 2/3 v2] clk: keystone: Add gate control clock driver
-Date: Thu, 29 Aug 2013 15:14:21 -0400
-Message-ID: <1377803662-3509-3-git-send-email-santosh.shilimkar@ti.com>
-References: <1377803662-3509-1-git-send-email-santosh.shilimkar@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 1/3] extcon: extcon-gpio-usbvid: Generic USB VBUS/ID
+ detection via GPIO
+Date: Thu, 29 Aug 2013 13:19:11 -0600
+Message-ID: <521F9EAF.4060701@wwwdotorg.org>
+References: <1377711185-31238-1-git-send-email-george.cherian@ti.com> <1377711185-31238-2-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1377803662-3509-1-git-send-email-santosh.shilimkar@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mike Turquette <mturquette@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1377711185-31238-2-git-send-email-george.cherian@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>
+Cc: balbi@ti.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, bcousson@baylibre.com, davidb@codeaurora.org, arnd@arndb.de, swarren@nvidia.com, popcornmix@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add the driver for the clock gate control which uses PSC (Power Sleep
-Controller) IP on Keystone 2 based SOCs. It is responsible for enabling and
-disabling of the clocks for different IPs present in the SoC.
+On 08/28/2013 11:33 AM, George Cherian wrote:
+> Add a generic USB VBUS/ID detection EXTCON driver. This driver expects
+> the ID/VBUS pin are connected via GPIOs. This driver is tested on
+> DRA7x board were the ID pin is routed via GPIOs. The driver supports
+> both VBUS and ID pin configuration and ID pin only configuration.
 
-Cc: Mike Turquette <mturquette@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio-usbvid.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio-usbvid.txt
 
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
----
- .../devicetree/bindings/clock/keystone-gate.txt    |   29 +++
- drivers/clk/keystone/gate.c                        |  264 ++++++++++++++++++++
- 2 files changed, 293 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/keystone-gate.txt
- create mode 100644 drivers/clk/keystone/gate.c
+> +EXTCON FOR USB VIA GPIO
 
-diff --git a/Documentation/devicetree/bindings/clock/keystone-gate.txt b/Documentation/devicetree/bindings/clock/keystone-gate.txt
-new file mode 100644
-index 0000000..c5aa187
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/keystone-gate.txt
-@@ -0,0 +1,29 @@
-+Status: Unstable - ABI compatibility may be broken in the future
-+
-+Binding for Keystone gate control driver which uses PSC controller IP.
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : shall be "ti,keystone,psc-clock".
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : parent clock phandle
-+- reg :	psc control and domain address address space
-+- reg-names : psc control and domain registers
-+- domain-id : psc domain id needed to check the transition state register
-+
-+Optional properties:
-+- clock-output-names : From common clock binding to override the
-+			default output clock name
-+Example:
-+	clkusb: clkusb {
-+		#clock-cells = <0>;
-+		compatible = "ti,keystone,psc-clock";
-+		clocks = <&chipclk16>;
-+		clock-output-names = "usb";
-+		reg = <0x02350008 0xb00>, <0x02350000 0x400>;
-+		reg-names = "control", "domain";
-+		domain-id = <0>;
-+	};
-diff --git a/drivers/clk/keystone/gate.c b/drivers/clk/keystone/gate.c
-new file mode 100644
-index 0000000..1f333bc
---- /dev/null
-+++ b/drivers/clk/keystone/gate.c
-@@ -0,0 +1,264 @@
-+/*
-+ * Clock driver for Keystone 2 based devices
-+ *
-+ * Copyright (C) 2013 Texas Instruments.
-+ *	Murali Karicheri <m-karicheri2@ti.com>
-+ *	Santosh Shilimkar <santosh.shilimkar@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include <linux/of_address.h>
-+#include <linux/of.h>
-+#include <linux/module.h>
-+
-+/* PSC register offsets */
-+#define PTCMD			0x120
-+#define PTSTAT			0x128
-+#define PDSTAT			0x200
-+#define PDCTL			0x300
-+#define MDSTAT			0x800
-+#define MDCTL			0xa00
-+
-+/* PSC module states */
-+#define PSC_STATE_SWRSTDISABLE	0
-+#define PSC_STATE_SYNCRST	1
-+#define PSC_STATE_DISABLE	2
-+#define PSC_STATE_ENABLE	3
-+
-+#define MDSTAT_STATE_MASK	0x3f
-+#define MDSTAT_MCKOUT		BIT(12)
-+#define PDSTAT_STATE_MASK	0x1f
-+#define MDCTL_FORCE		BIT(31)
-+#define MDCTL_LRESET		BIT(8)
-+#define PDCTL_NEXT		BIT(0)
-+
-+/* Maximum timeout to bail out state transition for module */
-+#define STATE_TRANS_MAX_COUNT	0xffff
-+
-+static void __iomem *domain_transition_base;
-+
-+/**
-+ * struct clk_psc_data - PSC data
-+ * @control_base: Base address for a PSC control
-+ * @domain_base: Base address for a PSC domain
-+ * @domain_id: PSC domain id number
-+ */
-+struct clk_psc_data {
-+	void __iomem *control_base;
-+	void __iomem *domain_base;
-+	u32 domain_id;
-+};
-+
-+/**
-+ * struct clk_psc - PSC clock structure
-+ * @hw: clk_hw for the psc
-+ * @psc_data: PSC driver specific data
-+ * @lock: Spinlock used by the driver
-+ */
-+struct clk_psc {
-+	struct clk_hw hw;
-+	struct clk_psc_data *psc_data;
-+	spinlock_t *lock;
-+};
-+
-+static DEFINE_SPINLOCK(psc_lock);
-+
-+#define to_clk_psc(_hw) container_of(_hw, struct clk_psc, hw)
-+
-+static void psc_config(void __iomem *control_base, void __iomem *domain_base,
-+						u32 next_state, u32 domain_id)
-+{
-+	u32 ptcmd, pdstat, pdctl, mdstat, mdctl, ptstat;
-+	u32 count = STATE_TRANS_MAX_COUNT;
-+
-+	mdctl = readl(control_base + MDCTL);
-+	mdctl &= ~MDSTAT_STATE_MASK;
-+	mdctl |= next_state;
-+	/* For disable, we always put the module in local reset */
-+	if (next_state == PSC_STATE_DISABLE)
-+		mdctl &= ~MDCTL_LRESET;
-+	writel(mdctl, control_base + MDCTL);
-+
-+	pdstat = readl(domain_base + PDSTAT);
-+	if (!(pdstat & PDSTAT_STATE_MASK)) {
-+		pdctl = readl(domain_base + PDCTL);
-+		pdctl |= PDCTL_NEXT;
-+		writel(pdctl, domain_base + PDCTL);
-+	}
-+
-+	ptcmd = 1 << domain_id;
-+	writel(ptcmd, domain_transition_base + PTCMD);
-+	do {
-+		ptstat = readl(domain_transition_base + PTSTAT);
-+	} while (((ptstat >> domain_id) & 1) && count--);
-+
-+	count = STATE_TRANS_MAX_COUNT;
-+	do {
-+		mdstat = readl(control_base + MDSTAT);
-+	} while (!((mdstat & MDSTAT_STATE_MASK) == next_state) && count--);
-+}
-+
-+static int keystone_clk_is_enabled(struct clk_hw *hw)
-+{
-+	struct clk_psc *psc = to_clk_psc(hw);
-+	struct clk_psc_data *data = psc->psc_data;
-+	u32 mdstat = readl(data->control_base + MDSTAT);
-+
-+	return (mdstat & MDSTAT_MCKOUT) ? 1 : 0;
-+}
-+
-+static int keystone_clk_enable(struct clk_hw *hw)
-+{
-+	struct clk_psc *psc = to_clk_psc(hw);
-+	struct clk_psc_data *data = psc->psc_data;
-+	unsigned long flags = 0;
-+
-+	if (psc->lock)
-+		spin_lock_irqsave(psc->lock, flags);
-+
-+	psc_config(data->control_base, data->domain_base,
-+				PSC_STATE_ENABLE, data->domain_id);
-+
-+	if (psc->lock)
-+		spin_unlock_irqrestore(psc->lock, flags);
-+
-+	return 0;
-+}
-+
-+static void keystone_clk_disable(struct clk_hw *hw)
-+{
-+	struct clk_psc *psc = to_clk_psc(hw);
-+	struct clk_psc_data *data = psc->psc_data;
-+	unsigned long flags = 0;
-+
-+	if (psc->lock)
-+		spin_lock_irqsave(psc->lock, flags);
-+
-+	psc_config(data->control_base, data->domain_base,
-+				PSC_STATE_DISABLE, data->domain_id);
-+
-+	if (psc->lock)
-+		spin_unlock_irqrestore(psc->lock, flags);
-+}
-+
-+static const struct clk_ops clk_psc_ops = {
-+	.enable = keystone_clk_enable,
-+	.disable = keystone_clk_disable,
-+	.is_enabled = keystone_clk_is_enabled,
-+};
-+
-+/**
-+ * clk_register_psc - register psc clock
-+ * @dev: device that is registering this clock
-+ * @name: name of this clock
-+ * @parent_name: name of clock's parent
-+ * @psc_data: platform data to configure this clock
-+ * @lock: spinlock used by this clock
-+ */
-+static struct clk *clk_register_psc(struct device *dev,
-+			const char *name,
-+			const char *parent_name,
-+			struct clk_psc_data *psc_data,
-+			spinlock_t *lock)
-+{
-+	struct clk_init_data init;
-+	struct clk_psc *psc;
-+	struct clk *clk;
-+
-+	psc = kzalloc(sizeof(*psc), GFP_KERNEL);
-+	if (!psc)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &clk_psc_ops;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
-+
-+	psc->psc_data = psc_data;
-+	psc->lock = lock;
-+	psc->hw.init = &init;
-+
-+	clk = clk_register(NULL, &psc->hw);
-+	if (IS_ERR(clk))
-+		kfree(psc);
-+
-+	return clk;
-+}
-+
-+/**
-+ * of_psc_clk_init - initialize psc clock through DT
-+ * @node: device tree node for this clock
-+ * @lock: spinlock used by this clock
-+ */
-+static void __init of_psc_clk_init(struct device_node *node, spinlock_t *lock)
-+{
-+	const char *clk_name = node->name;
-+	const char *parent_name;
-+	struct clk_psc_data *data;
-+	struct clk *clk;
-+	int i;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data) {
-+		pr_err("%s: Out of memory\n", __func__);
-+		return;
-+	}
-+
-+	i = of_property_match_string(node, "reg-names", "control");
-+	data->control_base = of_iomap(node, i);
-+	if (!data->control_base) {
-+		pr_err("%s: control ioremap failed\n", __func__);
-+		goto out;
-+	}
-+
-+	i = of_property_match_string(node, "reg-names", "domain");
-+	data->domain_base = of_iomap(node, i);
-+	if (!data->domain_base) {
-+		pr_err("%s: domain ioremap failed\n", __func__);
-+		iounmap(data->control_base);
-+		goto out;
-+	}
-+
-+	of_property_read_u32(node, "domain-id", &data->domain_id);
-+
-+	/* Domain transition registers at fixed address space of domain_id 0 */
-+	if (!domain_transition_base && !data->domain_id)
-+		domain_transition_base = data->domain_base;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+	parent_name = of_clk_get_parent_name(node, 0);
-+	if (!parent_name) {
-+		pr_err("%s: Parent clock not found\n", __func__);
-+		goto out;
-+	}
-+
-+	clk = clk_register_psc(NULL, clk_name, parent_name, data, lock);
-+	if (clk) {
-+		of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+		return;
-+	}
-+
-+	pr_err("%s: error registering clk %s\n", __func__, node->name);
-+out:
-+	kfree(data);
-+	return;
-+}
-+
-+/**
-+ * of_keystone_psc_clk_init - initialize psc clock through DT
-+ * @node: device tree node for this clock
-+ */
-+static void __init of_keystone_psc_clk_init(struct device_node *node)
-+{
-+	of_psc_clk_init(node, &psc_lock);
-+}
-+CLK_OF_DECLARE(keystone_gate_clk, "ti,keystone,psc-clock",
-+					of_keystone_psc_clk_init);
--- 
-1.7.9.5
+Please write a brief explanation of the HW that this binding represents.
+
+"Extcon" is a Linux-specific term. Binding documentation should be
+written in an OS-agnostic manner. Bindings should not reference
+OS-specific terminology, and should be a pure description of the HW.
+
+> +Required Properties:
+> + - compatible : Should be "ti,gpio-usb-vid" for USB VBUS-ID detector
+> +		using gpios or "ti,gpio-usb-id" for USB ID pin detector
+
+Those souond like two rather different things. Should they be separate
+bindings, or at the least, separate sections in the document?
+
+If this binding is meant to represent some generic hardware, the vendor
+prefix probably isn't required. So, remove "ti," from the compatible values.
+
+> + - gpios : phandle and args ID pin gpio and VBUS gpio.
+
+s/and args/and specifier/.
+
+> +	   The first gpio used  for ID pin detection
+> +	   and the second used for VBUS detection.
+> +	   ID pin gpio is mandatory and VBUS is optional
+> +	   depending on implementation.
+
+It'd be better to use named GPIO properties here, rather than having
+multiple different kinds of GPIO in the same property. How about
+"id-gpios" and "vbus-gpios" as the property names?
+
+The semantics of each property should be specified. Are these input
+GPIOs that reflect the ID and VBUS state? Do they directly represent the
+signal state on the connector, or are they processed somehow? Does the
+VBUS GPIO control the board's VBUS output, or is it an input? If it
+controls VBUS output, it probably should be represented as a regulator
+rather than a GPIO.
+
+I think the following might work:
+
+Required properties:
+
+id-gpios: GPIO specifier for the connector's ID pin input. This directly
+represents the value present on the ID pin at the connector.
+
+Optional properties:
+
+vbus-gpios: GPIO specifier for the connector's VBUS signal. This
+directly represents whether VBUS being driven by the USB cable itself.
+
+(although perhaps that isn't an optional property, but rather a required
+property of the second compatible value?)
+
+> +Please refer to ../gpio/gpio.txt for details of the common GPIO bindings
+> +
+> +Example:
+> +
+> +	gpio_usbvid_extcon1 {
+> +		compatible = "ti,gpio-usb-vid";
+> +		gpios = <&gpio1 1 0>,
+> +			<&gpio2 2 0>;
+> +	};
