@@ -1,61 +1,74 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
-Date: Thu, 29 Aug 2013 20:02:27 +0200
-Message-ID: <521F8CB3.5060407@gmail.com>
-References: <20130828113459.48ecbb34@armhf> <521DCD33.2070008@gmail.com> <20130828121943.1c8327ca@skate> <521DD057.4040208@gmail.com> <20130829161217.GK10783@sirena.org.uk> <20130829163358.GS6617@n2100.arm.linux.org.uk> <20130829171210.GM10783@sirena.org.uk>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130829171210.GM10783@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Jean-Francois Moine <moinejf@free.fr>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>, liam.r.girdwood@intel.com
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
+Date: Thu, 29 Aug 2013 19:03:53 +0100
+Message-ID: <20130829180353.GP10783@sirena.org.uk>
+References: <1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
+ <CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
+ <87txiasqhk.fsf@linaro.org>
+ <CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
+ <20130829110534.GV10783@sirena.org.uk>
+ <CAGa+x85u0OpB9o71xUTs15wt8Te-o5f0C9o22GHzZwOjn5F6=w@mail.gmail.com>
+ <20130829154929.GJ10783@sirena.org.uk>
+ <CA+Bv8XYbpqQAYwJ3=vkP0gXDMTp7_VNVzB0NXLG6GHDi=Z1img@mail.gmail.com>
+ <20130829173022.GN10783@sirena.org.uk>
+ <CA+Bv8Xb38bwby78Q--nEGffBknj5ZD98x0OuRX5N1EFNjbh7zA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Jtzgsd50XOpelISN"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+Bv8Xb38bwby78Q--nEGffBknj5ZD98x0OuRX5N1EFNjbh7zA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russ Dill <Russ.Dill@ti.com>
+Cc: devicetree@vger.kernel.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/29/13 19:12, Mark Brown wrote:
-> On Thu, Aug 29, 2013 at 05:33:58PM +0100, Russell King - ARM Linux wrote:
->> On Thu, Aug 29, 2013 at 05:12:17PM +0100, Mark Brown wrote:
->>> On Wed, Aug 28, 2013 at 12:26:31PM +0200, Sebastian Hesselbarth wrote:
->
->>>> Also, we'll need to distinguish between the different audio controllers
->>>> on a single SoC, i.e. i2s0 and i2s1. I suggest checking the (phys) reg
->>>> base passed.
->
->>> Why is this required - ideally this would have been mentioned in some of
->>> the previous reviews...
->
->> I've mentioned the differences between the blocks to you repeatedly in
->> our massive thread, including that some contain the block with different
->
-> You have described some additional features which will require
-> additional driver support.  I would expect that the device tree bindings
-> for these features would be added as the features are added and the DTS
-> files updated, for example by listing additional compatible strings if
-> that was the binding update, as is the normal practice.  Obviously any
-> hardware which is not compatible with the current binding should not be
-> being registered using the current binding.
->
-> It is not clear from the above comment by Sebastian if he is referring
-> to the same set of hardware differences or something new - doing things
-> based on device address is highly unusual, it sounds like something to
-> do with the integration into the SoC rather than to do with the IP.
->
 
-Mark,
+--Jtzgsd50XOpelISN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-it is referring the same differences Russell already mentioned. But I
-already came to the conclusion, that we don't need the information in
-the binding. For example, if you use that controller on Dove and you
-hook it up for SPDIF-in (which it hasn't), than I consider this a
-DT bug. No need to double-check that in the driver. From that p-o-v,
-please just let the current binding as is.
+On Thu, Aug 29, 2013 at 10:47:04AM -0700, Russ Dill wrote:
+> On Thu, Aug 29, 2013 at 10:30 AM, Mark Brown <broonie@kernel.org> wrote:
 
-Thomas Petazzoni mentioned earlier, that the _usual_ procedure to
-name the compatibles is to pick the SoC that the IP appeared in first.
-But I am also fine with "marvell,mvebu-audio" and adding compatibles
-for dove or kirkwood _if_ we will ever need them.
+> > So this is done from cpuidle rather than system suspend.
 
-Please, just stop fighting over this again - it is not getting anything
-any further.
+> It is done for system suspend. It isn't possible to do this in a
+> cpuidle use case as the memory controller would need to come out of
+> idle automatically to service DMA requests.
 
-Sebastian
+OK, so it's all part of the core power down sequence for the SoC?  I'm
+not sure that makes a big difference but it at least means that there
+are fewer runtime interactions to worry about.
+
+> > I mean describe the intended sequence of events in the system rather
+> > than the raw register commands to accomplish them.
+
+> I'm still not sure what you mean.
+
+Say "set voltage X" or even "regulator X supplies Y" not "send this
+bytestream to the device".
+
+--Jtzgsd50XOpelISN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSH40GAAoJELSic+t+oim9nJMP+gLIcSKDdAyHLH/JL8JKzZo+
+eSixyfavlXJSfK7qz1v3Y33P2cgKXdYMCFXCTRnzV6bsArgYbrMzWmg1sgyiMSUR
+iQVFNi/vzjJT/RB6X08EB5cvxHcqSEQ/W0ZARR8XS4Bb7OMEXqw8wWBwWqZpWCh/
+7mtmi/WyUMkm90DdvXgBLbZ24C4QKUH3k5tJQsJ5LM+Xdw32qbILVHuNQyY+lqH3
+6tWL8WKUZ6m7mQvlnNmI+zsHw2RmNaUcjLfUGmjq8M6lhW/ZO5gd9GEX2OwWxZgC
+maU7lz6BwkqSpR/jq/V38O+lcoQ/Y6noqMY9jF3nZIsigRXWnyVrPGUM25NG3z0o
+0qkdzAdnsYC9TPS85dywnXN1BJDnCC+ju1rl3WRpSgY3rGoJEdfaX4WIT2NqbFSf
+ChQwA6a9NMFUVhmF9RCzpmPWQSM5ZhAAUZQ+t/m5m+Ayc11HMDhHtmDjM0t4gwMc
+VLH6b/GoJfDEKD3ygmsL0+rdU4rRmePJH4W9+1OSh6F3tAXKRvezIG8mknkau/nD
+nfenzB9huW9X9DqLfHKWyYYrwJTymNKK4ceCjZbSJL6PIYJ0KclIbnVuZTuShJ1c
+fLwr/daIV1X3lGWb4cZqJmozWyjaD1yc0xoRpFaZgM2sUAu7jGnXFZsf2BnmkpnI
+2ARAiACMpoh3pxUglQf+
+=ikwd
+-----END PGP SIGNATURE-----
+
+--Jtzgsd50XOpelISN--
