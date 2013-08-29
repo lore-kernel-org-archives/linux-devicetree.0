@@ -1,55 +1,76 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: Re: [PATCH 1/3] ARM: AM33xx: hwmod: Add RNG module data
-Date: Thu, 29 Aug 2013 14:52:18 +0530
-Message-ID: <521F12CA.8010608@ti.com>
-References: <1375777984-6267-1-git-send-email-lokeshvutla@ti.com> <1375777984-6267-2-git-send-email-lokeshvutla@ti.com> <alpine.DEB.2.02.1308281845560.22040@utopia.booyaka.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1308281845560.22040@utopia.booyaka.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, devicetree@vger.kernel.org, rob@landley.net, rnayak@ti.com, benoit.cousson@linaro.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [RESEND PATCH v2 0/7] Add device tree support for Exynos4412 Trats2
+ cameras
+Date: Thu, 29 Aug 2013 11:24:31 +0200
+Message-ID: <1377768278-15391-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: mturquette@linaro.org, g.liakhovetski@gmx.de, laurent.pinchart@ideasonboard.com, arun.kk@samsung.com, hverkuil@xs4all.nl, sakari.ailus@iki.fi, a.hajda@samsung.com, kyungmin.park@samsung.com, t.figa@samsung.com, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, swarren@wwwdotorg.org, pawel.moll@arm.com, rob.herring@calxeda.com, galak@codeaurora.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
-On Thursday 29 August 2013 12:18 AM, Paul Walmsley wrote:
-> Hi
-> 
-> On Tue, 6 Aug 2013, Lokesh Vutla wrote:
-> 
->> Add RNG hwmod data for AM33xx SoC.
->>
->> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> 
-> I tried to queue this one, but it caused AM33xx boots to hang.  
-> Thought it might be related to the patch ordering -- seems to me that 
-> the clock change patch needed to come before this patch -- but if I 
-> recall correctly, both BeagleBone and BeagleBone-LT still hung. 
-This is because register address space is not passed in hwmod_data as it
-is passed from dt. So we need to include 3/3 patch in this series to boot.
+[Sigh, I've forgotten to Cc some mailing lists when submitting this
+ previously, resending with device tree and samsung-soc ML added]
 
-Ill fix this sparse warning and post a v2.
+This series is intended to add device tree support for both cameras
+on the Exynos4412 SoC Trats 2 board. It converts related drivers to use
+the v4l2-async API and expose the sensor's master clock supplied by the
+camera host interface through the common clock API.
 
-PS: Probe for this driver will be failed even after this. Support for this version
-of rng ip is already posted and pushed into cryptodev-2.6 tree.
+This changeset is an updated version of my patch series [1] separating
+the sensor subdev driver from the exynos4-fimc-is module and adding
+asynchronous sensor registration support. There is also included next
+iteration of the patch adding DT bits to the rear facing S5C73M3 camera
+module driver [2].
 
-Thanks and regards,
-Lokesh
-> 
-> Also, this patch created a sparse warning.
-> 
-> Could you take another look at this patch?  Maybe try basing off of this 
-> tag:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pjw/omap-pending.git tags/for-v3.12/omap-prcm-hwmod
-> 
-> Fix the sparse problem, and see if the patch boots for you?
-> 
-> thanks
-> 
-> 
-> - Paul
-> 
+The S5K6A3 is a raw image sensor of the front facing camera connected
+to the SoC local ISP (FIMC-IS).
 
+This series has run-time dependency on the patches adding clk_unregister()
+implementation [3].
+
+Any feedback, especially on the "s5k6a3: Add DT binding documentation"
+patch, where I've described some issue with the common video-interfaces
+binding is welcome.
+
+[1] http://www.spinics.net/lists/linux-media/msg66073.html
+[2] https://linuxtv.org/patch/19386/
+[3] https://lkml.org/lkml/2013/8/24/63
+
+Thanks,
+Sylwester
+
+Andrzej Hajda (1):
+  V4L: s5c73m3: Add device tree support
+
+Sylwester Nawrocki (6):
+  V4L: s5k6a3: Add DT binding documentation
+  V4L: Add driver for s5k6a3 image sensor
+  V4L: s5k6a3: Add support for asynchronous subdev registration
+  exynos4-is: Add clock provider for the external clocks
+  exynos4-is: Use external s5k6a3 sensor driver
+  exynos4-is: Add support for asynchronous sensor subddevs registration
+
+ .../devicetree/bindings/media/samsung-fimc.txt     |   21 +-
+ .../devicetree/bindings/media/samsung-s5c73m3.txt  |   95 ++++++
+ .../devicetree/bindings/media/samsung-s5k6a3.txt   |   31 ++
+ drivers/media/i2c/Kconfig                          |    8 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/s5c73m3/s5c73m3-core.c           |  206 +++++++++---
+ drivers/media/i2c/s5c73m3/s5c73m3-spi.c            |    6 +
+ drivers/media/i2c/s5c73m3/s5c73m3.h                |    4 +
+ drivers/media/i2c/s5k6a3.c                         |  340 ++++++++++++++++++++
+ drivers/media/platform/exynos4-is/fimc-is-regs.c   |    2 +-
+ drivers/media/platform/exynos4-is/fimc-is-sensor.c |  285 +---------------
+ drivers/media/platform/exynos4-is/fimc-is-sensor.h |   49 +--
+ drivers/media/platform/exynos4-is/fimc-is.c        |   97 +++---
+ drivers/media/platform/exynos4-is/fimc-is.h        |    4 +-
+ drivers/media/platform/exynos4-is/media-dev.c      |  335 +++++++++++++------
+ drivers/media/platform/exynos4-is/media-dev.h      |   31 +-
+ 16 files changed, 984 insertions(+), 531 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/samsung-s5c73m3.txt
+ create mode 100644 Documentation/devicetree/bindings/media/samsung-s5k6a3.txt
+ create mode 100644 drivers/media/i2c/s5k6a3.c
+
+--
+1.7.9.5
