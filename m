@@ -1,124 +1,153 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH v2] media: st-rc: Add ST remote control driver
-Date: Thu, 29 Aug 2013 12:29:00 +0100
-Message-ID: <521F307C.9040807@st.com>
-References: <1377704030-3763-1-git-send-email-srinivas.kandagatla@st.com> <20130829091155.GA6162@pequod.mess.org>
-Reply-To: srinivas.kandagatla@st.com
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [RFC V3 4/4] mmc: dw_mmc: exynos: configure SMU in exynos5420.
+Date: Thu, 29 Aug 2013 13:46:27 +0200
+Message-ID: <49209892.KLA1Q6dtil@amdc1227>
+References: <1377691731-7226-1-git-send-email-yuvaraj.cd@samsung.com>
+ <CAKuRcO+R4G9LXdXGJOXFNGB+XZeJwvnVq1U5wtCKRPmNN8DWPA@mail.gmail.com>
+ <001001cea4a3$9eb13080$dc139180$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130829091155.GA6162@pequod.mess.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sean Young <sean@mess.org>
-Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <001001cea4a3$9eb13080$dc139180$%jun@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>
+Cc: 'Yuvaraj Kumar' <yuvaraj.cd@gmail.com>, 'Alim Akhtar' <alim.akhtar@gmail.com>, 'linux-mmc' <linux-mmc@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, 'Chris Ball' <cjb@laptop.org>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Girish K S' <ks.giri@samsung.com>, 'Alim Akhtar' <alim.akhtar@samsung.com>, 'Yuvaraj Kumar C D' <yuvaraj.cd@samsung.com>, swarren@wwwdotorg.org, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/08/13 10:11, Sean Young wrote:
-> On Wed, Aug 28, 2013 at 04:33:50PM +0100, Srinivas KANDAGATLA wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
->>
->> This patch adds support to ST RC driver, which is basically a IR/UHF
->> receiver and transmitter. This IP (IRB) is common across all the ST
->> parts for settop box platforms. IRB is embedded in ST COMMS IP block.
->> It supports both Rx & Tx functionality.
->>
->> In this driver adds only Rx functionality via LIRC codec.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
->> ---
->> Hi Chehab,
->>
->> This is a very simple rc driver for IRB controller found in STi ARM CA9 SOCs.
->> STi ARM SOC support went in 3.11 recently.
->> This driver is a raw driver which feeds data to lirc codec for the user lircd
->> to decode the keys.
->>
->> This patch is based on git://linuxtv.org/media_tree.git master branch.
->>
->> Changes since v1:
->> 	- Device tree bindings cleaned up as suggested by Mark and Pawel
->> 	- use ir_raw_event_reset under overflow conditions as suggested by Sean.
->> 	- call ir_raw_event_handle in interrupt handler as suggested by Sean.
->> 	- correct allowed_protos flag with RC_BIT_ types as suggested by Sean.
->> 	- timeout and rx resolution added as suggested by Sean.
-> 
-> Acked-by: Sean Young <sean@mess.org>
+Hi Seungwon,
 
-Thankyou Sean for the Ack.
-> 
-> Note minor nitpicks below.
->>
->> Thanks,
->> srini
->>
->>  Documentation/devicetree/bindings/media/st-rc.txt |   24 ++
->>  drivers/media/rc/Kconfig                          |   10 +
->>  drivers/media/rc/Makefile                         |    1 +
->>  drivers/media/rc/st_rc.c                          |  392 +++++++++++++++++++++
->>  4 files changed, 427 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/media/st-rc.txt
->>  create mode 100644 drivers/media/rc/st_rc.c
->>
+On Thursday 29 of August 2013 19:36:28 Seungwon Jeon wrote:
+> Yuvaraj Kumar wrote:
+> > On Thu, Aug 29, 2013 at 3:14 PM, Seungwon Jeon <tgih.jun@samsung.com> 
+wrote:
+> > > On Thu, August 29, 2013, Alim Akhtar wrote:
+> > >> Hi Seungwon,
+> > >> 
+> > >> On Thu, Aug 29, 2013 at 1:53 PM, Seungwon Jeon 
+<tgih.jun@samsung.com> wrote:
+> > >> > On Wed, August 28, 2013, Yuvaraj Kumar C D wrote:
+> > >> >> Exynos5420 Mobile Storage Host controller has Security Management
+> > >> >> Unit
+> > >> >> (SMU) for channel 0 and channel 1 (mainly for eMMC).This patch
+> > >> >> configures SMU for exynos5420.
+> > >> >> 
+> > >> >> This patch is on top of the below patch by Doug Anderson.
+> > >> >> mmc: dw_mmc: Add exynos resume_noirq callback to clear WAKEUP_INT
+> > >> >> 
+> > >> >> changes since V2:
+> > >> >>       1.Droppped the bypass-smu quirk.
+> > >> >>       2.Changed the subject line for this patch
+> > >> >>       
+> > >> >>         add a quirk for SMU -> configure SMU in exynos5420
+> > >> >> 
+> > >> >> changes since V1:
+> > >> >>       1.avoid code duplication by calling dw_mci_exynos_priv_init
+> > >> >>       in
+> > >> >>       
+> > >> >>         resume path.
+> > >> >> 
+> > >> >> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+> > >> >> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> > >> >> ---
+> > >> >> 
+> > >> >>  drivers/mmc/host/dw_mmc-exynos.c |   29
+> > >> >>  +++++++++++++++++++++++++++++
+> > >> >>  1 file changed, 29 insertions(+)
+> > >> >> 
+> > >> >> diff --git a/drivers/mmc/host/dw_mmc-exynos.c
+> > >> >> b/drivers/mmc/host/dw_mmc-exynos.c index 19c845b..db28f10 100644
+> > >> >> --- a/drivers/mmc/host/dw_mmc-exynos.c
+> > >> >> +++ b/drivers/mmc/host/dw_mmc-exynos.c
+> > >> >> @@ -35,6 +35,25 @@
+> > >> >> 
+> > >> >>  #define EXYNOS4210_FIXED_CIU_CLK_DIV 2
+> > >> >>  #define EXYNOS4412_FIXED_CIU_CLK_DIV 4
+> > >> >> 
+> > >> >> +/* Block number in eMMC */
+> > >> >> +#define DWMCI_BLOCK_NUM                      0xFFFFFFFF
+> > >> >> +
+> > >> >> +#define SDMMC_EMMCP_BASE             0x1000
+> > >> >> +#define SDMMC_MPSECURITY             (SDMMC_EMMCP_BASE + 0x0010)
+> > >> >> +#define SDMMC_MPSBEGIN0                      (SDMMC_EMMCP_BASE +
+> > >> >> 0x0200) +#define SDMMC_MPSEND0                       
+> > >> >> (SDMMC_EMMCP_BASE + 0x0204) +#define SDMMC_MPSCTRL0             
+> > >> >>          (SDMMC_EMMCP_BASE + 0x020C) +
+> > >> >> +/* SMU control bits */
+> > >> >> +#define DWMCI_MPSCTRL_SECURE_READ_BIT                BIT(7)
+> > >> >> +#define DWMCI_MPSCTRL_SECURE_WRITE_BIT               BIT(6)
+> > >> >> +#define DWMCI_MPSCTRL_NON_SECURE_READ_BIT    BIT(5)
+> > >> >> +#define DWMCI_MPSCTRL_NON_SECURE_WRITE_BIT   BIT(4)
+> > >> >> +#define DWMCI_MPSCTRL_USE_FUSE_KEY           BIT(3)
+> > >> >> +#define DWMCI_MPSCTRL_ECB_MODE                       BIT(2)
+> > >> >> +#define DWMCI_MPSCTRL_ENCRYPTION             BIT(1)
+> > >> >> +#define DWMCI_MPSCTRL_VALID                  BIT(0)
+> > >> >> +
+> > >> >> 
+> > >> >>  /* Variations in Exynos specific dw-mshc controller */
+> > >> >>  enum dw_mci_exynos_type {
+> > >> >>  
+> > >> >>       DW_MCI_TYPE_EXYNOS4210,
+> > >> >> 
+> > >> >> @@ -74,6 +93,15 @@ static int dw_mci_exynos_priv_init(struct
+> > >> >> dw_mci *host)> >> >> 
+> > >> >>  {
+> > >> >>  
+> > >> >>       struct dw_mci_exynos_priv_data *priv = host->priv;
+> > >> >> 
+> > >> >> +     if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS5420) {
+> > >> >> +             mci_writel(host, MPSBEGIN0, 0);
+> > >> >> +             mci_writel(host, MPSEND0, DWMCI_BLOCK_NUM);
+> > >> >> +             mci_writel(host, MPSCTRL0,
+> > >> >> DWMCI_MPSCTRL_SECURE_WRITE_BIT | +                    
+> > >> >> DWMCI_MPSCTRL_NON_SECURE_READ_BIT |
+> > >> >> +                     DWMCI_MPSCTRL_VALID |
+> > >> >> +                     DWMCI_MPSCTRL_NON_SECURE_WRITE_BIT);
+> > >> > 
+> > >> > Yuvaraj,
+> > >> > 
+> > >> > Just one thing to check.
+> > >> > ch#0 and #1 of three hosts are only valid for SMU control.
+> > >> > Did you consider #2 host?
+> > >> > It seems not.
+> > >> 
+> > >> Only host#0 and host#1 has SMU (On exynos5420).
+> > >> Host #2 does not contain SMU.
+> > > 
+> > > Let me clear it.
+> > > I mean that current change allows for ch2 to access registers related
+> > > to SMU, even though ch2 doesn't actually has SMU. It's not valid IO
+> > > area.> 
+> > No,host#0 and host#1 are compatible with "samsung,exynos5420-dw-mshc"
+> > but host#2 is compatible with the "samsung,exynos5250-dw-mshc".
+> > Below is the DT patch posted in another thread.
+> > [1] [PATCH V4] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
+> > http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg21985.
+> > html I will resubmit the DT patch[1] with reg = <0x12220000 0x1000> for
+> > host#2.
+> Hmm. If we notice exynos5420's other newly added registers apart from
+> SMU, it is difficult to say exynos5420 is compatible with exynos5250
+> fully for #2. But because there is no use case for new registers, it
+> could be acceptable. Ok, we should be careful to configure DT file
+> though.
 
->> diff --git a/drivers/media/rc/Kconfig b/drivers/media/rc/Kconfig
->> index 11e84bc..bf301ed 100644
->> --- a/drivers/media/rc/Kconfig
->> +++ b/drivers/media/rc/Kconfig
->> @@ -322,4 +322,14 @@ config IR_GPIO_CIR
->>  	   To compile this driver as a module, choose M here: the module will
->>  	   be called gpio-ir-recv.
->>  
->> +config RC_ST
->> +	tristate "ST remote control receiver"
->> +	depends on ARCH_STI && LIRC && OF
-> 
-> Minor nitpick, this should not depend on LIRC, it depends on RC_CORE.
-Yes, I will make it depend on RC_CORE, remove OF as suggested by Mauro
-CC and select LIRC to something like.
+Could you elaborate a bit more on the differences in DW MMC IP between 
+Exynos5250 and Exynos5420? If the differences are significant, then it 
+might be necessary to use different compatible value, as it should not 
+depend on any use case (or lack of).
 
-depends on ARCH_STI && RC_CORE
-select LIRC
+If the DW MMC version used in Exynos 5420 provides the whole set of 
+functionality of the version used in Exynos 5250 and some extra extensions, 
+then it can be called "compatible with Exynos 5250", but if you ever need 
+to support those extra extensions, you will have to add a separate 
+compatible string for it.
 
->> +static int st_rc_probe(struct platform_device *pdev)
->> +{
->> +	int ret = -EINVAL;
->> +	struct rc_dev *rdev;
->> +	struct device *dev = &pdev->dev;
->> +	struct resource *res;
->> +	struct st_rc_device *rc_dev;
->> +	struct device_node *np = pdev->dev.of_node;
->> +	const char *rx_mode;
->> +
->> +	rc_dev = devm_kzalloc(dev, sizeof(struct st_rc_device), GFP_KERNEL);
->> +	rdev = rc_allocate_device();
->> +
->> +	if (!rc_dev || !rdev)
->> +		return -ENOMEM;
-> 
-> If one fails and the other succeeds you have a leak.
+With regard to SMU that is present only on selected instances, you can as 
+well create two compatible values for the DW MMC IP on Exynos 5420, e.g. 
+"samsung,exynos5420-dw-mshc" and "samsung,exynos5420-dw-mshc-smu".
 
-Yes... I will fix it in v3.
-> 
->> +
->> +	if (np && !of_property_read_string(np, "rx-mode", &rx_mode)) {
->> +
+[Adding devicetree ML and DT maintainers on CC, as this is something they 
+should be able to comment on.]
 
-[...]
-
->> +static SIMPLE_DEV_PM_OPS(st_rc_pm_ops, st_rc_suspend, st_rc_resume);
->> +#endif
->> +
->> +#ifdef CONFIG_OF
-> 
-> Since this depends on OF it will always be defined.
-Removed OF dependency in Kconfig.
->> +module_platform_driver(st_rc_driver);
->> +
->> +MODULE_DESCRIPTION("RC Transceiver driver for STMicroelectronics platforms");
->> +MODULE_AUTHOR("STMicroelectronics (R&D) Ltd");
->> +MODULE_LICENSE("GPL");
->> -- 
->> 1.7.6.5
-> 
-
+Best regards,
+Tomasz
