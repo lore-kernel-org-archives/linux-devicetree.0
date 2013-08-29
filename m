@@ -1,104 +1,144 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: [PATCH] ARM: dts: update binding document exynos-dw-mshc.txt
-Date: Thu, 29 Aug 2013 17:23:57 +0530
-Message-ID: <1377777238-25087-1-git-send-email-yuvaraj.cd@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree@vger.kernel.org
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, t.figa@samsung.com, dianders@chromium.org, cjb@laptop.org, thomas.abraham@linaro.org, ks.giri@samsung.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCHv5 3/3] mmc: dw_mmc: Use phandle to get SDR timing values
+ from sys-mgr
+Date: Thu, 29 Aug 2013 20:56:33 +0900
+Message-ID: <001501cea4ae$cf1381f0$6d3a85d0$%jun@samsung.com>
+References: <1377272686-13253-1-git-send-email-dinguyen@altera.com>
+ <1377272686-13253-3-git-send-email-dinguyen@altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ks_c_5601-1987
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1377272686-13253-3-git-send-email-dinguyen@altera.com>
+Content-language: ko
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinguyen@altera.com, dinh.linux@gmail.com
+Cc: 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Rob Herring' <rob.herring@calxeda.com>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Stephen Warren' <swarren@wwwdotorg.org>, 'Ian Campbell' <ian.campbell@citrix.com>, 'Chris Ball' <cjb@laptop.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the exynos-dw-mshc.txt.Currently we are using
-"pinctrl" binding property to describe the CMD and DATA line's
-of Mobile Storage Host Controller(mshc) node.
+On Saturday, August 24, 2013, Dinh Nguyen wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
+> 
+> Update the driver to get the system manager node from a phandle. Also, the
+> driver can get the correct clock value from the common clock API, thus the
+> "altr,dw-mshc-ciu-div" binding is not needed at all.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+> Cc: Jaehoon Chung <jh80.chung@samsung.com>
+> Cc: Seungwon Jeon <tgih.jun@samsung.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ian.campbell@citrix.com>
+> Cc: Chris Ball <cjb@laptop.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-mmc@vger.kernel.org
+> CC: linux-arm-kernel@lists.infradead.org
+> 
+> v2:
+> - Use "altr,ciu-clk-offset" to get the correct CIU clock values to be
+>   set in the system manager.
+> ---
+>  drivers/mmc/host/dw_mmc-socfpga.c |   33 +++++++++++++++------------------
+>  1 file changed, 15 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/dw_mmc-socfpga.c b/drivers/mmc/host/dw_mmc-socfpga.c
+> index 14b5961..cfd67e1 100644
+> --- a/drivers/mmc/host/dw_mmc-socfpga.c
+> +++ b/drivers/mmc/host/dw_mmc-socfpga.c
+> @@ -24,21 +24,20 @@
+>  #include "dw_mmc.h"
+>  #include "dw_mmc-pltfm.h"
+> 
+> -#define SYSMGR_SDMMCGRP_CTRL_OFFSET		0x108
+> -#define DRV_CLK_PHASE_SHIFT_SEL_MASK	0x7
+> -#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel)          \
+> -	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
+> +#define DRV_CLK_PHASE_SHIFT_SEL_MASK   0x7
+> 
+>  /* SOCFPGA implementation specific driver private data */
+>  struct dw_mci_socfpga_priv_data {
+> -	u8	ciu_div; /* card interface unit divisor */
+>  	u32	hs_timing; /* bitmask for CIU clock phase shift */
+>  	struct regmap   *sysreg; /* regmap for system manager register */
+> +	/* Offset for the ciu clock setting register inside the system manager.*/
+> +	u32     ciu_clk_offset;
+>  };
+> 
+>  static int dw_mci_socfpga_priv_init(struct dw_mci *host)
+>  {
+>  	struct dw_mci_socfpga_priv_data *priv;
+> +	struct device_node *np = host->dev->of_node;
+> 
+>  	priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv) {
+> @@ -46,9 +45,9 @@ static int dw_mci_socfpga_priv_init(struct dw_mci *host)
+>  		return -ENOMEM;
+>  	}
+> 
+> -	priv->sysreg = syscon_regmap_lookup_by_compatible("altr,sys-mgr");
+> +	priv->sysreg = syscon_regmap_lookup_by_phandle(np, "altr,sysmgr");
+>  	if (IS_ERR(priv->sysreg)) {
+> -		dev_err(host->dev, "regmap for altr,sys-mgr lookup failed.\n");
+> +		dev_err(host->dev, "No sysmgr phandle specified!\n");
+>  		return PTR_ERR(priv->sysreg);
+>  	}
+>  	host->priv = priv;
+> @@ -61,11 +60,8 @@ static int dw_mci_socfpga_setup_clock(struct dw_mci *host)
+>  	struct dw_mci_socfpga_priv_data *priv = host->priv;
+> 
+>  	clk_disable_unprepare(host->ciu_clk);
+> -	regmap_write(priv->sysreg, SYSMGR_SDMMCGRP_CTRL_OFFSET,
+> -		priv->hs_timing);
+> +	regmap_write(priv->sysreg, priv->ciu_clk_offset, priv->hs_timing);
+>  	clk_prepare_enable(host->ciu_clk);
+> -
+> -	host->bus_hz /= (priv->ciu_div + 1);
+>  	return 0;
+>  }
+> 
+> @@ -82,20 +78,21 @@ static int dw_mci_socfpga_parse_dt(struct dw_mci *host)
+>  	struct dw_mci_socfpga_priv_data *priv = host->priv;
+>  	struct device_node *np = host->dev->of_node;
+>  	u32 timing[2];
+> -	u32 div = 0;
+> +	u32 offset[3];
+>  	int ret;
+> 
+> -	ret = of_property_read_u32(np, "altr,dw-mshc-ciu-div", &div);
+> -	if (ret)
+> -		dev_info(host->dev, "No dw-mshc-ciu-div specified, assuming 1");
+> -	priv->ciu_div = div;
+> -
+>  	ret = of_property_read_u32_array(np,
+>  			"altr,dw-mshc-sdr-timing", timing, 2);
+>  	if (ret)
+>  		return ret;
+> 
+> -	priv->hs_timing = SYSMGR_SDMMC_CTRL_SET(timing[0], timing[1]);
+> +	ret = of_property_read_u32_array(np, "altr,ciu-clk-offset", offset, 3);
+> +	if (ret)
+> +		return ret;
+> +
+> +	priv->ciu_clk_offset = offset[0];
+> +	priv->hs_timing =
+> +		((((timing[0]) & 0x7) << offset[2]) | (((timing[1]) & 0x7) << offset[1]));
+offset should be gotten from DT?
+These are variable?
 
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
----
- .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   34 ++++++++++----------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+Thanks,
+Seungwon Jeon
 
-diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-index 84cd56f..646a902 100644
---- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-@@ -7,9 +7,9 @@ differences between the core Synopsis dw mshc controller properties described
- by synopsis-dw-mshc.txt and the properties used by the Samsung Exynos specific
- extensions to the Synopsis Designware Mobile Storage Host Controller.
- 
--Required Properties:
-+Required SoC Specific Properties:
- 
--* compatible: should be
-+* compatible: should be one of the following
- 	- "samsung,exynos4210-dw-mshc": for controllers with Samsung Exynos4210
- 	  specific extensions.
- 	- "samsung,exynos4412-dw-mshc": for controllers with Samsung Exynos4412
-@@ -19,6 +19,8 @@ Required Properties:
- 	- "samsung,exynos5420-dw-mshc": for controllers with Samsung Exynos5420
- 	  specific extensions.
- 
-+Required Board Specific Properties:
-+
- * samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
-   unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
-   ignored for Exynos4 SoC's. The valid range of divider value is 0 to 7.
-@@ -46,44 +48,42 @@ Required Properties:
-       - if CIU clock divider value is 0 (that is divide by 1), both tx and rx
-         phase shift clocks should be 0.
- 
--Required properties for a slot:
--
--* gpios: specifies a list of gpios used for command, clock and data bus. The
--  first gpio is the command line and the second gpio is the clock line. The
--  rest of the gpios (depending on the bus-width property) are the data lines in
--  no particular order. The format of the gpio specifier depends on the gpio
--  controller.
-+* pinctrl-0: Should specify pin control groups used for this controller.
-+* pinctrl-names: Should contain only one value - "default".
- 
-+Required properties for a slot:
-+	Refer synopsis-dw-mshc.txt
- Example:
- 
-   The MSHC controller node can be split into two portions, SoC specific and
-   board specific portions as listed below.
- 
--	dwmmc0@12200000 {
-+	mshc@12200000 {
- 		compatible = "samsung,exynos5250-dw-mshc";
- 		reg = <0x12200000 0x1000>;
- 		interrupts = <0 75 0>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		clocks = <&clock 351>, <&clock 132>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x80>;
-+		status = "disabled";
- 	};
- 
--	dwmmc0@12200000 {
-+	mshc@12200000 {
-+		status = "okay";
- 		num-slots = <1>;
- 		supports-highspeed;
- 		broken-cd;
--		fifo-depth = <0x80>;
- 		card-detect-delay = <200>;
- 		samsung,dw-mshc-ciu-div = <3>;
- 		samsung,dw-mshc-sdr-timing = <2 3>;
- 		samsung,dw-mshc-ddr-timing = <1 2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
- 
- 		slot@0 {
- 			reg = <0>;
- 			bus-width = <8>;
--			gpios = <&gpc0 0 2 0 3>, <&gpc0 1 2 0 3>,
--				<&gpc1 0 2 3 3>, <&gpc1 1 2 3 3>,
--				<&gpc1 2 2 3 3>, <&gpc1 3 2 3 3>,
--				<&gpc0 3 2 3 3>, <&gpc0 4 2 3 3>,
--				<&gpc0 5 2 3 3>, <&gpc0 6 2 3 3>;
- 		};
- 	};
--- 
-1.7.9.5
+>  	return 0;
+>  }
+> 
+> --
+> 1.7.9.5
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
