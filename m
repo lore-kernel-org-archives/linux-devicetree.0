@@ -1,42 +1,67 @@
 From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v6 7/7] ARM: dts: add hdmi ddc device for exynos5420 smdk board
-Date: Thu, 29 Aug 2013 10:45:00 +0530
-Message-ID: <1377753300-9118-8-git-send-email-rahul.sharma@samsung.com>
-References: <1377753300-9118-1-git-send-email-rahul.sharma@samsung.com>
+Subject: [PATCH v6 0/7] ARM: dts: add support for exynos hdmi subsystem
+Date: Thu, 29 Aug 2013 11:10:20 +0530
+Message-ID: <1377754827-31786-1-git-send-email-rahul.sharma@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1377753300-9118-1-git-send-email-rahul.sharma@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add hdmi ddc device tree node, which is a I2C device, to
-exynos5420 smdk board file.
+It adds Device tree nodes and clocks information for HDMI subsystem
+for exynos5420 and exynos5250 SoCs. It adds pinctrl node for hdmi
+hpd gpio and update binding documents.
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- arch/arm/boot/dts/exynos5420-smdk5420.dts |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+This set is based on kukjin's for-next branch at
+http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
 
-diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-index 6a31341..79524c7 100644
---- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-+++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-@@ -76,4 +76,15 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&hdmi_hpd_irq>;
- 	};
-+
-+	i2c_2: i2c@12C80000 {
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-max-bus-freq = <66000>;
-+		status = "okay";
-+
-+		hdmiddc@50 {
-+			compatible = "samsung,exynos4210-hdmiddc";
-+			reg = <0x50>;
-+		};
-+	};
- };
+v6:
+1) Update clock numbers as per change in mux and divider clocks.
+2) Isolate board changes from SoC patch and add a different patch for ddc.
+
+v5:
+1) Merged Clock addition patch to DT nmde addition patch.
+2) Add dout_pixel clock for hdmi in place of sclk_pixel.
+3) Enable mixer node in soc dtsi file.
+
+v4:
+1) Remove the movement of common properties to Exynos5.dtsi for
+I2C and hdmi subsystem.
+2) Change the title of the patches.
+
+v3:
+1) Rebase to kgene for-next based on 3.11-rc1.
+2) Changes clock numbers as per updated clocks file for
+exyno5250 and exynos5420.
+3) Dropped Sachin patch as already got merged.
+
+v2:
+1) Added patch for moving common i2c properties to exynos5.dtsi
+2) Added patch for moving common hdmi, mixer properties to exynos5.dtsi
+3) moved hpd pinctrl node to board file.
+4) Added Sachin's patch to update binding document for hdmi with hpd
+information.
+
+Andrew Bresticker (1):
+  ARM: dts: add i2c device nodes for Exynos5420
+
+Rahul Sharma (5):
+  of/documentation: update with clock information for exynos hdmi
+    subsystem
+  ARM: dts: add clocks to hdmi dt node for exynos5250
+  ARM: dts: add dt nodes for hdmi subsystem for exynos5420
+  ARM: dts: add hdmi hpd gpio pinctrl node for exynos5420 smdk board
+  ARM: dts: add hdmi ddc device for exynos5420 smdk board
+
+Sean Paul (1):
+  ARM: dts: add mixer clocks to mixer node for Exynos5250
+
+ .../devicetree/bindings/video/exynos_hdmi.txt      |   15 +++-
+ .../devicetree/bindings/video/exynos_mixer.txt     |    4 ++
+ arch/arm/boot/dts/exynos5250.dtsi                  |    8 ++-
+ arch/arm/boot/dts/exynos5420-smdk5420.dts          |   26 +++++++
+ arch/arm/boot/dts/exynos5420.dtsi                  |   75 ++++++++++++++++++++
+ 5 files changed, 124 insertions(+), 4 deletions(-)
+
 -- 
 1.7.10.4
