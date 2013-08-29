@@ -1,69 +1,89 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V6] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
-Date: Thu, 29 Aug 2013 10:29:45 -0700
-Message-ID: <CAD=FV=URu9jJu5nVE871wPKshV1izN2TS5op4Wo11543367DdA@mail.gmail.com>
-References: <1377776468-24808-1-git-send-email-yuvaraj.cd@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
+Date: Thu, 29 Aug 2013 18:30:22 +0100
+Message-ID: <20130829173022.GN10783@sirena.org.uk>
+References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
+ <1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
+ <CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
+ <87txiasqhk.fsf@linaro.org>
+ <CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
+ <20130829110534.GV10783@sirena.org.uk>
+ <CAGa+x85u0OpB9o71xUTs15wt8Te-o5f0C9o22GHzZwOjn5F6=w@mail.gmail.com>
+ <20130829154929.GJ10783@sirena.org.uk>
+ <CA+Bv8XYbpqQAYwJ3=vkP0gXDMTp7_VNVzB0NXLG6GHDi=Z1img@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1377776468-24808-1-git-send-email-yuvaraj.cd@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, pawel.moll@arm.com, mark.rutland@arm.com, Stephen Warren <swarren@wwwdotorg.org>, ian.campbell@citrix.com, Tomasz Figa <t.figa@samsung.com>, Chris Ball <cjb@laptop.org>, Thomas Abraham <thomas.abraham@linaro.org>, ks.giri@samsung.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WeAyUrhnD1IdQdNw"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+Bv8XYbpqQAYwJ3=vkP0gXDMTp7_VNVzB0NXLG6GHDi=Z1img@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russ Dill <Russ.Dill@ti.com>
+Cc: Kevin Hilman <khilman@linaro.org>, devicetree@vger.kernel.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Yuvaraj,
 
-On Thu, Aug 29, 2013 at 4:41 AM, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com> wrote:
-> This patch adds the device tree node entries for exynos5420 SOC.
-> Exynos5420 has a different version of DWMMC controller,so a new
-> compatible string is used to distinguish it from the prior SOC's.
->
-> This patch depends on
->         mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
->
-> changes since v5:
->         1.removed instance index from node name.
->         2.changed the node name to mshc.
->         3.changed the reg property value for mshc_2.
->
-> changes since v4:
->         1.Droppped the bypass-smu binding property.
->         2.Used compatible string "samsung,exynos5250-dw-mshc"
->           for controller instance which does not have SMU.
->
-> changes since V3:
->         1.change fifo-depth size from 0x80 to 0x40
->         2.Move the below properties
->                 a.card-detect-delay
->                 b.samsung,dw-mshc-ciu-div
->                 c.samsung,dw-mshc-sdr-timing
->                 d.samsung,dw-mshc-ddr-timing
->         from SOC dts to board dts file as suggested by Doug Anderson
->
-> changes since V2:
->         1.dropped num-slots property from node as its not required
->           if number of card slots available is 1.
->
->         2.Move the below properties
->                 a.fifo-depth
->                 b.card-detect-delay
->                 c.samsung,dw-mshc-ciu-div
->                 d.samsung,dw-mshc-sdr-timing
->                 e.samsung,dw-mshc-ddr-timing
->         from board dts to SOC dts,as these are not board specific properties.
->
->         3.Updated the binding document exynos-dw-mshc.txt.
->
-> changes since V1:
->         1.disable node by status = disabled in SOC file
->         2.enable node by status = okay in board specific file
->
-> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
-> ---
->  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +
->  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   33 +++++++++++++++++
->  arch/arm/boot/dts/exynos5420.dtsi                  |   39 ++++++++++++++++++++
->  3 files changed, 74 insertions(+)
+--WeAyUrhnD1IdQdNw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Doug Anderson <dianders@chromium.org>
+On Thu, Aug 29, 2013 at 09:31:55AM -0700, Russ Dill wrote:
+> On Thu, Aug 29, 2013 at 8:49 AM, Mark Brown <broonie@kernel.org> wrote:
+
+> > Why does it have to happen this late and are the sequences definitely
+> > fixed ones not ones that could depend on the system state at the time
+> > we suspend?  It'd help to know what exactly is being controlled here...
+
+> On all am335x platforms, the lower operating point for core voltage
+> cannot be reached without first disabling the DDR controller, and
+> programming it into a lower power mode. For DDR3 platforms, no such
+> lower power mode is available and the lower operating point for core
+> voltage can only be reached with the memory controller disabled.
+
+So this is done from cpuidle rather than system suspend.
+
+> It certainly is possible that some bizarre I2C regulator may mix in
+> regulator voltage and some other state into one I2C register. In the
+> case of such a platform, setting the lower operating point would not
+> be supported.
+
+This isn't particularly bizzare, there is no technical reason why a
+register in the PMIC has to be given over completely to setting the
+voltage and indeed there are PMICs in mainline right now which don't do
+that - if you've got 16 bit registers it's probably not going to take
+the entire 16 bits to encode the voltage range.
+
+> > Surely specifying things in terms of the actual sequence would be better
+> > than trying to specify the I2C commands if you want this to be done from
+> > Linux?  If the firmware has to cope directly then this would require the
+> > firmware to understand what it's doing of course.
+
+> I'm not sure what you mean by "actual sequence". Maybe if I show you a
+> couple examples, it will be more clear:
+
+I mean describe the intended sequence of events in the system rather
+than the raw register commands to accomplish them.
+
+--WeAyUrhnD1IdQdNw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSH4UrAAoJELSic+t+oim9CVQP/23RWaw8Fd69+98PaP5o/+vy
+aF6ekXL7J68qrXr5Oq/jCK6o9XfBedONkLPgzX38V+JdrPqHDiACuJRPk5iMMuqS
+YDv+FVF0YmBA1Y/vFsYpPJxq9Ls+E4psBiRlSEq8ehkiFpLjArio+UeYkDWHtUe/
+6/koBE9xzB5zVlVFnUfYBelHQQapKeE8meeRn6aP2ZOIawWYh9HxRYd+xa8SjcXo
+9yeBiHn5z2W+C0efQOEBjqeRUbemeANhJoWaHdq+jxgDeBNO+S+mLd5wIjShtLS7
+2F5nn2HXBqXJnJX4yHRKIWp51Wxi1qISnMgn9mWhNo0xE8+3H365wsXbu6u9ec4J
+As+Q2xBwYZBv+GDbpaHiwktVBCQcYM59qos7Pm+v22aZnCJZu+ikBTMuYw5vbqay
+R4k9A5pORUuaEF75Y1TmtTSDxHzFr4uv5buFM78/NoVXTZvyg/4drTTKxFJMub6l
+qdwQuV0R5LvkLGjMOujjPccqjUw2vhIC8+9xawXI6ZUYbWr2TKqAMAoTPZOd+e8J
+xd7Dvtac65Uk+kd76eqduQ3fyi9y9BCQJ51VnJNH54EnkKHBXclNHcUpOVnDbCx7
+gLQ86nizDZ18mzdt7P9D6ZVySlgxhYlCxGkaJF47aD7StRI707j8+OptbYvR+qXC
+vZMiJIXU8plcMBXUmnm+
+=HTuv
+-----END PGP SIGNATURE-----
+
+--WeAyUrhnD1IdQdNw--
