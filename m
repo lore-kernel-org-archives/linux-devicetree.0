@@ -1,195 +1,72 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 1/3] extcon: extcon-gpio-usbvid: Generic USB VBUS/ID
- detection via GPIO
-Date: Thu, 29 Aug 2013 21:12:18 +0900
-Message-ID: <521F3AA2.9010707@samsung.com>
-References: <1377711185-31238-1-git-send-email-george.cherian@ti.com>
- <1377711185-31238-2-git-send-email-george.cherian@ti.com>
- <521EA563.4060305@samsung.com> <521EB018.3000301@ti.com>
- <521EE8FC.80802@samsung.com> <521EF88F.4070402@ti.com>
- <521F245E.8050506@samsung.com> <521F3515.7040001@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v12] ASoC: fsl: Add S/PDIF machine driver
+Date: Thu, 29 Aug 2013 13:15:41 +0100
+Message-ID: <20130829121541.GY10783@sirena.org.uk>
+References: <1377662686-31696-1-git-send-email-b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <521F3515.7040001@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: balbi@ti.com, myungjoo.ham@samsung.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, bcousson@baylibre.com, davidb@codeaurora.org, arnd@arndb.de, swarren@nvidia.com, popcornmix@gmail.com
+Content-Type: multipart/mixed; boundary="===============1142376355657699056=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1377662686-31696-1-git-send-email-b42378@freescale.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Nicolin Chen <b42378@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, swarren@wwwdotorg.org, s.hauer@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, p.zabel@pengutronix.de, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/29/2013 08:48 PM, George Cherian wrote:
-> On 8/29/2013 4:07 PM, Chanwoo Choi wrote:
->> On 08/29/2013 04:30 PM, George Cherian wrote:
->>> Hi Chanwoo,
->>>
->>> On 8/29/2013 11:53 AM, Chanwoo Choi wrote:
->>> [snip]
->>>> You should keep following naming stlye. extcon-gpio-usbvid.c is wrong naming style.
->>>> - extcon-[device name].c
->>>> - extcon-gpio-usbvid.c -> extcon-dra7xx.c or etc.
->>>>> Actually dra7xx is the SoC name and the USB VBUS/ID detection is not specific to SoC.
->>>>> It uses gpios to detect the VBUS/ID change. So i thought it would be better to have generic
->>>>> gpio based VBUS/ID detection rather than making dra7xx specific. Stephen Warren had this opinion
->>>>> with patch v1.
->>>> Would you guarantee that this driver support all of extcon devices using gpio pin?
->>> This driver would guarantee extcon devices using gpio pins for USB VBUS and ID detection.
->>> Following is the basic assumption made, correct me if I am wrong.
->>> ID pin ground means -> USB-HOST is true (this happens when a device is connected to USB port and we act as HOST )
->>> ID pin Float means -> USB-HOST is false (this happens when nothing is connected or when we act as a peripheral under a HOST)
->>> VBUS ON means -> USB is true (this happens when we are connected under a HOST as a peripheral)
->>> VBUS OFF means -> USB is false ( this happens when we are either disconnected from a HOST or when we are in HOST mode).
->>>
->>> So normally USB is in peripheral mode is enabled when ID pin is float and VBUS is ON.
->>> and USB is in HOST mode when ID pin is ground and VBUS is OFF.
->>>
->>> In all above cases VBUS is referred to the external VBUS supply from an external HOST.
->>>
->>>> I can't agree. This driver has specific dependency on dra7x SoC.
->>>>
->>>> First,
->>>> vbus_irq_handler() determine USB cable state according to "gpio_usbvid->vbus_gpio" state.
->>>> If "gpio_usbvid->vbus_gpio" value is VBUS_OFF(0), this patch set USB cable state as 'false'
->>>> But, it include potential problems. Other extcon device using gpio would set USB cable state
->>>> as 'true' when gpio state is 1. This way has dependency on specific SoC.
->>> no this is not SoC specific. VBUS is referred to the external VBUS supply from an external HOST.
->>> so if VBUS is zero means its definitely not in connected state.
->> I tested various development board based on Samsung Exynos series SoC.
->> Although some gpio of Exynos series SoC set high state(non zero, 1) as default value,
->> this gpio state could mean off state, disconnected or un-powered state according to gpio.
->> Of course, above explanation about specific gpio don't include all gpios.
->> This is meaning that there is possibility.
-> okay then how about adding a flag for inverted logic too.  something like this
-> 
-> if(of_property_read_bool(np,"inverted_gpio))
->     gpio_usbvid->gpio_inv = 1;
-> And always check on this before deciding?
-> 
->>>> Second,
->>>> gpio_usbvid_set_initial_state() dertermine both "USB-HOST" and "USB" cable state at same time
->>>> in 'case ID_DETCT' according to 'gpio_usbvid->id_gpio'. But, I think that other extcon devices
->>>> would not control both "USB-HOST" and "USB" cable state at same time.
->>>>
->>>> Other extcon devices would support either "USB-HOST" or "USB" cable.
->>> The driver has 2 configurations.
->>> 1) supports implementations with both VBUS and ID pin are routed via gpio's for swicthing roles(compatible  gpio-usb-vid).
->> As you explained about case 1, it is only used on dra7x SoC.
-> No gpio-usb-id is used in dra7xx. dra7xx has got only ID pin routed via gpio.
 
->> Other SoC could not wish to control both "USB-HOST" and "USB" cable at same time.
-I need your answer about above my opinion for other SoC.
+--===============1142376355657699056==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dlFvqfizQ5ooaSx9"
+Content-Disposition: inline
 
->>
->>
->>> 2) supports implementations with only ID pin routed via gpio for swicthing roles(compatible gpio-usb-id).
->>> So if you take type as VBUS_ID_DETECT then it is as what you meant.
-> I think i didnt explain it properly last time.
-> In perfect world you will have both VBUS and ID pin routed via gpios
-> for eg: VBUS via gpio2 and ID via gpio3. if this is the case then we have to use compatible gpio-usb-vid where in 2 gpios will be used
-> 2 irq handlers will be installed and it will control both USB-HOST and USB cables. In this case its possible to have 3 states
-> USB-HOST (true), USB(true) and both false.
-> 
-> Now in case of dra7xx the board designers chose not to route the VBUS to gpio and only ID pin is routed.
-> But still we need to  differentiate USB-HOST and USB cables In such cases we use compatible gpio-usb-id where in 1 gpio will be used
-> 1 irq handler is installed  and it will control both USB-HOST  and USB cables. In this case its possible to have only 2 states
-> USB-HOST (true) or USB(true).
-> 
-> Now there could be a 3rd scenario were in only VBUS is routed via gpio, that we would not support since we cant assume the value of ID pin
-> and configure the UTMI is not proper. So I have mentioned even in documentation that ID pin is mandatory. We can always assume role depending on ID pin.
->> "2) case" don't support the detection of "USB-HOST" cable.
->> Only detect "USB" cable according to "vbus_gpio" value.
->>
->> If user wish to detect only "USB-HOST" cable, should user enter "ID_DETECT" as "ti,gpio-usb-id" on DT file?
->> But, id_irq_handler() control both "USB-HOST" and "USB" cable at same time. It may not prefer this method.
->>
->>>> Third,
->>>> gpio_usbvid_probe() get both gpio_usbvid->id_irq and gpio_usbvid->vbus_irq by using DT helper function.
->>>> and gpio_usbvid_request_irq() register each interrupt handler(id_irq and vbus_irq) according to DT data.
->>>> In result,
->>>>      id_irq_handler() would control both "USB-HOST" and "USB" cable state.
->>> only if type is ID_DETECT id_irq_handler control both USB-HOST and USB cable states
->>> if type is VBUS_ID_DETECT then id_irq_handler only controls USB-HOST.
->> I have some confusion. I need additional your explanation.
->> Could this driver register only one interrupt handler either id_irq_handler() or vbus_irq_handler()?
-> If compatible == ID_DETECT, only one handler --> id_irq_handler() and it will handle both USB and USB-HOST
->> or
->> Could this driver register two interrupt handler both id_irq_handler() or vbus_irq_handler()?
-> If compatible == VBUS_ID_DETECT, 2 handlers --> id_irq_handler() will handle USB-HOST and vbus_irq_handler will handle USB.
 
-As you mentioned, we cannot only control either USB or USB-HOST cable on this extcon driver.
-This extcon driver is only suitable dra7x SoC.
+--dlFvqfizQ5ooaSx9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>>>      vbus_irq_handler() would control only "USB" cable state.
->>>>
->>>> Two interrupt handler(id_irq_handler()/vbus_irq_handler()) would control "USB" cable state
->>>> according to each gpio state at same time. Also, It include critical problem.
->>> No it depends on the configuration as explained above.
->>>
->>> [snip]
->>>
->>>> +
->>>> +#define ID_GND        0
->>>> +#define ID_FLOAT    1
->>>> +#define VBUS_OFF    0
->>>> +#define VBUS_ON        1
->>>>>> I think you could only use two constant instead of four constant definition.
->>>>> you mean only ID_GND and VBUS_OFF?
->>>> you could only define two contant (0 and 1) to detect gpio state.
->>> okay
->>>>>>> +
->>>>>>> +
->>>>>> This blank line isn't necessary.
->>>>>>
->>>>>>> +static irqreturn_t id_irq_handler(int irq, void *data)
->>>>>>> +{
->>>>>>> +    struct gpio_usbvid *gpio_usbvid = (struct gpio_usbvid *) data;
->>>>>> You should delete blank between ')' and 'data' as follwong:
->>>>>>       - (struct gpio_usbvid *)data;
->>>>> okay
->>>>>>> +    int id_current;
->>>>>>> +
->>>>>>> +    id_current = gpio_get_value_cansleep(gpio_usbvid->id_gpio);
->>>>>>> +    if (id_current == ID_GND) {
->>>>>>> +        if (gpio_usbvid->type == ID_DETECT)
->>>>>>> +            extcon_set_cable_state(&gpio_usbvid->edev,
->>>>>>> +                            "USB", false);
->>>>>>> +        extcon_set_cable_state(&gpio_usbvid->edev, "USB-HOST", true);
->>>>>> As else statement, you should set "USB-HOST" cable state to improve readability.
->>>>>>
->>>>>>           extcon_set_cable_state(&gpio_usbvid->edev, "USB-HOST", true);
->>>>>>           if (gpio_usbvid->type == ID_DETECT)
->>>>>>               extcon_set_cable_state(&gpio_usbvid->edev,
->>>>>>                               "USB", false);
->>>>> Actually, USB-HOST state should be set in the id_irq handler. But in cases were only ID pin is routed to gpio
->>>>> and VBUS is not used we set the USB state too. The gpio_usbvid->type differentiates whether its an ID only or
->>>>> VBUS and ID.
->>>> I don't understand. Wht does not you change the order of function call as following?
->>>>
->>>>      Before:
->>>>              if (gpio_usbvid->type == ID_DETECT)
->>>>              extcon_set_cable_state(&gpio_usbvid->edev,
->>>>                                      "USB", false);
->>>>          extcon_set_cable_state(&gpio_usbvid->edev, "USB-HOST", true);
->>> Basically these notifiers would go and change the UTMI modes which is s/w controlled.
->>> so we want to gracefully exit Device mode first and then enter HOST mode.
->>> this is only with type=ID_DETECT.
->> Because id_irq_handler() control both "USB-HOST" and "USB" cable at same time,
->> you need this setting order between "USB-HOST" and "USB" cable.
-> yes
+On Wed, Aug 28, 2013 at 12:04:46PM +0800, Nicolin Chen wrote:
+> This patch implements a device-tree-only machine driver for Freescale
+> i.MX series Soc. It works with spdif_transmitter/spdif_receiver and
+> fsl_spdif.c drivers.
 
-I think that the setting order between cables isn't general. It is specific method for dra7x SoC.
+Applied, thanks.
 
->> Did you think that SoC should always connect either "USB-HOST" cable or "USB" cable?
-> No,  even if a physical cable is not connected it should  default to either USB-HOST or USB
-It isn't general.
+--dlFvqfizQ5ooaSx9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-If physical cable isn't connected to extcon device, the state both USB-HOST and USB cable
-should certainly be zero. Because The extcon consumer driver could set proper operation
-according to cable state.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-> 
->> I don't know this case except for dra7x SoC. So, I think it has dependency on specific SoC.
+iQIcBAEBAgAGBQJSHztqAAoJELSic+t+oim9qEQP/jFayl5Tl6OcYz0p/4MyMs2G
+zbTHT2TMdlP6AlyVI/JYgNpcQbVLwdUppL51xtW3WF3G907ymD11FxV5lunj7JsW
+QHJ1OQISn8yiyECma/fvhtSbzitsdz0XR64L1b1GTJvcXmaMBLqx+m7xlYlG1guY
+cEcg82RoF6OkGUtC6hEIXvzjWidGTF3NQk8l/0NpHp14mfK89WJdBGNihmcflM9U
+BvqvV94Mz04EW9+6BpKdBoyyZ2XaqmtA/07+tK1CIDJF279bBtUm/TDNwdj5F+l3
+e24nprKj4kP5gdNrBTfpU29ub6l7lPK/l7grH8o2tmv3icn3VI4JbMH4LnhxqvC5
++7xTVCKKHFNGl6BBEZk/9NEcUhqTuyurOApsez3xxaYxsZrY03wiv/JFQSUjYlrD
+QZtruaF9XrBuNX7GjikDt4CYRBN3V2uWBYRFXAO3/evKzpyDk3RSlX7iy80ZEZUu
+SSSOFjjtFWdXyQ72qho8W1LcO0K6hlHghljzlnpOgxbNhIwnt+3UCweZ98mj2Wn3
+QOi84neVP6GA3CPY8Mf7dZKL6ROg0QlrNWXHsypdnMDSLBq8mWYWl+DG6X0Nd0W0
+UmFzjrOs0rSFQoGr2NkoIGgIZkw3ywHy7tAT1qftESzwz69KP4t/AVlLDBo6ayZM
+ZQjXAskUVp1N/awbZzvx
+=vaI1
+-----END PGP SIGNATURE-----
 
-I need your answer about above my opinion.
+--dlFvqfizQ5ooaSx9--
 
->> and can't agree as generic extcon gpio driver.
+--===============1142376355657699056==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1142376355657699056==--
