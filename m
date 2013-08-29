@@ -1,90 +1,65 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC PATCH v2 3/4] powerpc: refactor of_get_cpu_node to support
- other architectures
-Date: Thu, 29 Aug 2013 10:50:23 +0100
-Message-ID: <20130829095023.GB2878@e102568-lin.cambridge.arm.com>
-References: <1376586580-5409-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <1376674791-28244-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <1376674791-28244-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <2032060.4bgTKOdEX2@flatron>
- <1376777376.25016.11.camel@pasglop>
- <20130819101922.GI3719@e106331-lin.cambridge.arm.com>
- <5212177C.8000709@gmail.com>
- <521223FA.5050903@arm.com>
- <20130822135930.GC23152@e106331-lin.cambridge.arm.com>
- <20130828194638.AB78E3E0A6F@localhost>
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: [PATCH v4 0/5] ARM: tegra: support for Trusted Foundations
+Date: Thu, 29 Aug 2013 18:57:43 +0900
+Message-ID: <1377770268-14014-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20130828194638.AB78E3E0A6F@localhost>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Rob Herring <robherring2@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jonas Bonn <jonas@southpole.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tomasz Figa <tomasz.figa@gmail.com>, Dave Martin <Dave.Martin@arm.com>
+Cc: gnurou@gmail.com, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2013 at 08:46:38PM +0100, Grant Likely wrote:
-> On Thu, 22 Aug 2013 14:59:30 +0100, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Mon, Aug 19, 2013 at 02:56:10PM +0100, Sudeep KarkadaNagesha wrote:
-> > > On 19/08/13 14:02, Rob Herring wrote:
-> > > > On 08/19/2013 05:19 AM, Mark Rutland wrote:
-> > > >> On Sat, Aug 17, 2013 at 11:09:36PM +0100, Benjamin Herrenschmidt wrote:
-> > > >>> On Sat, 2013-08-17 at 12:50 +0200, Tomasz Figa wrote:
-> > > >>>> I wonder how would this handle uniprocessor ARM (pre-v7) cores, for
-> > > >>>> which 
-> > > >>>> the updated bindings[1] define #address-cells = <0> and so no reg 
-> > > >>>> property.
-> > > >>>>
-> > > >>>> [1] - http://thread.gmane.org/gmane.linux.ports.arm.kernel/260795
-> > > >>>
-> > > >>> Why did you do that in the binding ? That sounds like looking to create
-> > > >>> problems ... 
-> > > >>>
-> > > >>> Traditionally, UP setups just used "0" as the "reg" property on other
-> > > >>> architectures, why do differently ?
-> > > >>
-> > > >> The decision was taken because we defined our reg property to refer to
-> > > >> the MPIDR register's Aff{2,1,0} bitfields, and on UP cores before v7
-> > > >> there's no MPIDR register at all. Given there can only be a single CPU
-> > > >> in that case, describing a register that wasn't present didn't seem
-> > > >> necessary or helpful.
-> > > > 
-> > > > What exactly reg represents is up to the binding definition, but it
-> > > > still should be present IMO. I don't see any issue with it being
-> > > > different for pre-v7.
-> > > > 
-> > > Yes it's better to have 'reg' with value 0 than not having it.
-> > > Otherwise this generic of_get_cpu_node implementation would need some
-> > > _hack_ to handle that case.
-> > 
-> > I'm not sure that having some code to handle a difference in standard
-> > between two architectures is a hack. If anything, I'd argue encoding a
-> > reg of 0 that corresponds to a nonexistent MPIDR value (given that's
-> > what the reg property is defined to map to on ARM) is more of a hack ;)
-> > 
-> > I'm not averse to having a reg value of 0 for this case, but given that
-> > there are existing devicetrees without it, requiring a reg property will
-> > break compatibility with them.
-> 
-> Then special cases those device trees, but you changing existing
-> convention really needs to be avoided. The referenced documentation
-> change is brand new, so we're not stuck with it.
+New version revised according to comments received for v3. Hopefully
+it will be good enough to be merged.
 
-I have no problem with changing the bindings and forcing:
+Changes since v3:
+- Added of_register_trusted_foundations() function to avoid duplicate
+  device tree parsing code in arch files
+- Added ability to initialize Trusted Foundations through platform data
+- Changed TF version number to integers
+- Refactored Kconfig menu for more clarity
 
-#address-cells = <1>;
-reg = <0>;
+A few requests could not reasonably be implemented:
 
-for UP predating v7, my big worry is related to in-kernel dts that we
-already patched to follow the #address-cells = <0> rule (and we had to
-do it since we got asked that question multiple times on the public
-lists).
+TF version probing at runtime (requested by Dave) seems impossible
+unfortunately. TF just does not provide an interface that allows such
+queries. In the downstream Tegra kernel the TF version is
+even hardcoded into the kernel.
 
-What do you mean by "special case those device trees" ? I have not
-planned to patch them again, unless we really consider that a necessary
-evil.
+Use of a firmware_op instance for non-firmware behavior (requested by
+Stephen) would make it necessary to have a dedicated non-firmware
+registration function that takes implementations from various different
+files and would require these implementations to be exported. Checking
+the return code of call_firmware_op() at call sites seems to be easier
+to handle and is how current users of firmware_ops do.
 
-Thanks,
-Lorenzo
+Alexandre Courbot (5):
+  ARM: add basic Trusted Foundations support
+  ARM: tegra: add support for Trusted Foundations
+  ARM: tegra: split setting of CPU reset handler
+  ARM: tegra: set CPU reset handler with firmware op
+  ARM: tegra: support Trusted Foundations by default
 
+ .../arm/firmware/tl,trusted-foundations.txt        | 17 +++++
+ Documentation/devicetree/bindings/arm/tegra.txt    |  5 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm/Kconfig                                   |  2 +
+ arch/arm/Makefile                                  |  1 +
+ arch/arm/configs/tegra_defconfig                   |  1 +
+ arch/arm/firmware/Kconfig                          | 26 +++++++
+ arch/arm/firmware/Makefile                         |  1 +
+ arch/arm/firmware/trusted_foundations.c            | 83 ++++++++++++++++++++++
+ arch/arm/include/asm/trusted_foundations.h         | 48 +++++++++++++
+ arch/arm/mach-tegra/Kconfig                        |  1 +
+ arch/arm/mach-tegra/common.c                       |  2 +
+ arch/arm/mach-tegra/reset.c                        | 40 ++++++++---
+ 13 files changed, 217 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
+ create mode 100644 arch/arm/firmware/Kconfig
+ create mode 100644 arch/arm/firmware/Makefile
+ create mode 100644 arch/arm/firmware/trusted_foundations.c
+ create mode 100644 arch/arm/include/asm/trusted_foundations.h
+
+-- 
+1.8.4
