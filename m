@@ -1,77 +1,164 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
-Date: Thu, 29 Aug 2013 16:49:29 +0100
-Message-ID: <20130829154929.GJ10783@sirena.org.uk>
-References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
- <1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
- <CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
- <87txiasqhk.fsf@linaro.org>
- <CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
- <20130829110534.GV10783@sirena.org.uk>
- <CAGa+x85u0OpB9o71xUTs15wt8Te-o5f0C9o22GHzZwOjn5F6=w@mail.gmail.com>
+From: Dinh Nguyen <dinguyen@altera.com>
+Subject: Re: [PATCHv3 1/4] arm: dts: Add clock entries for timers in SOCFPGA
+Date: Thu, 29 Aug 2013 10:55:18 -0500
+Message-ID: <1377791718.26261.16.camel@linux-builds1>
+References: <1377118427-20644-1-git-send-email-dinguyen@altera.com>
+ <20130828153127.GA17806@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+lkmz3FEiWbOcRWA"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGa+x85u0OpB9o71xUTs15wt8Te-o5f0C9o22GHzZwOjn5F6=w@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>
-Cc: Russ Dill <Russ.Dill@ti.com>, Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>, devicetree@vger.kernel.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130828153127.GA17806@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dinh.linux@gmail.com, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Pavel Machek <pavel@denx.de>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, John Stultz <john.stultz@linaro.org>, Olof Johansson <olof@lixom.net>, Jamie Iles <jamie@jamieiles.com>, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
+Hi Steffen,
 
---+lkmz3FEiWbOcRWA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, 2013-08-28 at 17:31 +0200, Steffen Trumtrar wrote:
+> Hi!
+> 
+> On Wed, Aug 21, 2013 at 03:53:44PM -0500, dinguyen@altera.com wrote:
+> > From: Dinh Nguyen <dinguyen@altera.com>
+> > 
+> > Set the correct clock entries for the the timers, and also clean up
+> > the timer entries for SOCFPGA by removing timer<n> in the timer entry.
+> > 
+> > Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+> > CC: Rob Herring <rob.herring@calxeda.com>
+> > Cc: Pawel Moll <pawel.moll@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Stephen Warren <swarren@wwwdotorg.org>
+> > Cc: Ian Campbell <ian.campbell@citrix.com>
+> > CC: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Olof Johansson <olof@lixom.net>
+> > CC: Jamie Iles <jamie@jamieiles.com>
+> > Cc: John Stultz <john.stultz@linaro.org>
+> > Cc: Heiko Stuebner <heiko@sntech.de>
+> > Cc: Pavel Machek <pavel@denx.de>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > ---
+> >  arch/arm/boot/dts/socfpga.dtsi         |   16 ++++++++--------
+> >  arch/arm/boot/dts/socfpga_cyclone5.dts |    8 ++++----
+> >  arch/arm/boot/dts/socfpga_vt.dts       |    8 ++++----
+> >  3 files changed, 16 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> > index 9706767..9957bae 100644
+> > --- a/arch/arm/boot/dts/socfpga.dtsi
+> > +++ b/arch/arm/boot/dts/socfpga.dtsi
+> > @@ -26,10 +26,6 @@
+> >  		ethernet1 = &gmac1;
+> >  		serial0 = &uart0;
+> >  		serial1 = &uart1;
+> > -		timer0 = &timer0;
+> > -		timer1 = &timer1;
+> > -		timer2 = &timer2;
+> > -		timer3 = &timer3;
+> >  	};
+> >
+> 
+> Yes. Do that.
+> 
+> >  	cpus {
+> > @@ -486,28 +482,32 @@
+> >  			interrupts = <1 13 0xf04>;
+> >  		};
+> >  
+> > -		timer0: timer0@ffc08000 {
+> > +		timer@ffc08000 {
+> 
+> No. Why? Than I can not write something like
+> 
+> &timer0 {
+> 	clock-frequency = <100000000>;
+> };
+> 
+> and would have to reference the whole tree ala
+> 
+> / {
+> 	soc {
+> 		timer@ffc08000 {
+> 			clock-frequency = <100000000>;
+> 		};
+> 	};
+> };
+> 
+> in a boardspecific or SoC specific file (see below).
 
-On Thu, Aug 29, 2013 at 08:29:37AM -0700, Kevin Hilman wrote:
-> On Thu, Aug 29, 2013 at 4:05 AM, Mark Brown <broonie@kernel.org> wrote:
+Agreed. Will adjust accordingly.
 
-> > Someone is going to have to walk me through the context for me to fully
-> > understand what this is all about - what's the problem?
+> 
+> > diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dts b/arch/arm/boot/dts/socfpga_cyclone5.dts
+> > index 698dde9..c1af01c 100644
+> > --- a/arch/arm/boot/dts/socfpga_cyclone5.dts
+> > +++ b/arch/arm/boot/dts/socfpga_cyclone5.dts
+> >  
+> > diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
+> > index 6f23121..72ff14c 100644
+> > --- a/arch/arm/boot/dts/socfpga_vt.dts
+> > +++ b/arch/arm/boot/dts/socfpga_vt.dts
+> 
+> Leads me to a question about terminology: Is the cyclone5 an actual board?
+> AFAIK it is. And the Cyclone 5 FPGA is also called socfpga? Is that correct?
+> But then, seeing that, in an other patch, you add two different sysmgr addresses to
+> the socfpga_vt and socfpga_cyclone5, there are different socfpgas?
 
-> The basic problem is how to have low-level platform code (or possibly
-> firmware) send commands to a regulator to scale voltage.  This has to
-> happen *very* late in the suspend process, so having the drivers do it
-> themselves is not feasible.
+Yes, sofpga_cyclone5.dts is the devkit that is manufactured by Altera.
+socfpga_vt.dts is a virtual platform for SOCFPGA. You can get the
+virtual platform from Synopsis. It mimics everything except the FPGA. 
 
-Why does it have to happen this late and are the sequences definitely
-fixed ones not ones that could depend on the system state at the time
-we suspend?  It'd help to know what exactly is being controlled here...
+socfpga is the base SOC with a Cyclone 5 FPGA on it. I'll be upstreaming
+socfpga_arria5 soon, which has the SOCFPGA + Arria 5 FPGA.
 
-> The proposal in this series is to define the i2c commands sequence to
-> be sent to the regulator in the i2c node of the DT.  The
-> platform-specific code then reads the sequence from the DT and sends
-> the commands (or in in the case of the current series, passes the
-> sequence to some firmware on a microcontroller which does the
-> sequence.)
+> 
+> I want to write a devicetree for the SoCkit. It has a Cyclone 5 on it.
+> So naturally I would now go and include the socfpga_cyclone5.dtsi, with all the
+> cyclone5 stuff and just add my board specific stuff in a socfpga_sockit.dts.
+> But there is no socfpga_cyclone5.dtsi, just the socfpga_cyclone5.dts, which itself
+> seems to be a board...
 
-Surely specifying things in terms of the actual sequence would be better
-than trying to specify the I2C commands if you want this to be done from
-Linux?  If the firmware has to cope directly then this would require the
-firmware to understand what it's doing of course.
+socfpga.dtsi is the base DTSI for the platform. In hindsight, I should
+have named it a bit different, but for now socfpga_cyclone5 is for the
+board.
 
---+lkmz3FEiWbOcRWA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> 
+> So, how should we reorder the current dts (as I tested with current mainline, the
+> support is completely broken out of the box, but works fine with your patches that
+> are floating around, there should be no users as of now)?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
+Not sure what you mean by broken. I was able to boot 3.11-rc7 just now
+using an initramfs. As you can already tell, I'm doing my best to get
+more support for the platform upstream, but it will take time.
 
-iQIcBAEBAgAGBQJSH22FAAoJELSic+t+oim9/+wQAJ5bhMAsYg7F4fi1x9S9ryGC
-7AnizA9Dvl5I7qwTbA2ti9gexhebW7zpxo/SwkzDRsJdLusSILBvCYdQlxmbc2kQ
-d3w1qMocaQ6TYO55biA7Qcdl45k4kiXzbeZOH8m/mPZOT7sxfNwCiGxTcvNsN1Zt
-n9aLaoV9LaxOMELCzPWB35D0OzxMs588s9snXQIMF9Y1L/dDO045wHhL/AISRsyr
-isTfI/ndL/JvAbOFpbamgshVsrX8IbIxbWAVus2/F6RVxZEb1qp2F1W2XVqdYIJg
-DQNLPLQDQrlwLIkqgo0kDdyGJ6Sh6qyz/UOmDhf4eh0Mg777jmlk+DDya16YBxYJ
-qjoZrOJ7S+mg4uFjSBafScjRF/p4mAqekNHyhQK+/+rxtFNf9E84wdjcZLvdXuyy
-yFeBtFcH4+OCmUByyIdqhjLxzC1IrzP+dqMWzHZI+EnGdravoUq6Ep9EzNu31kQd
-Tpz0unT+cQ6fdvb3q3ZrH50eB8oBmRW8IlnpDYW+oRD1leyhRNZbh8t4Zqt8/9NS
-pXfGDQEsClm8etI69Ymjls2pvtM9i69t8AqI7bFtKFd+5JqGajQu2J4CwQ1U2Q8b
-8ssSy94WAUZaqiSQ03ZBlSrh4rG5VhDA6engDhmDi6E5WMdISVWtXXbZUo1Ax3Yp
-yEfg77EeBzvmPHri8Tcd
-=ZMG7
------END PGP SIGNATURE-----
+In the meantim, you get our latest downstream kernel at:
 
---+lkmz3FEiWbOcRWA--
+git://git.rocketboards.org/linux-socfpga.git
+
+Dinh
+
+> 
+> Something like:
+> 
+> socfpga.dtsi
+>  -> socfpga_cyclone5.dtsi
+>  --> socfpga_cyclone5_devboard.dts (?)
+>  --> socfpga_sockit.dts
+>  -> socfpga_???.dtsi
+>  --> socfpga_vt.dts
+> 
+> ?
+> 
+> Thanks and regards,
+> Steffen
+> 
