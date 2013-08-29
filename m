@@ -1,72 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v12] ASoC: fsl: Add S/PDIF machine driver
-Date: Thu, 29 Aug 2013 13:15:41 +0100
-Message-ID: <20130829121541.GY10783@sirena.org.uk>
-References: <1377662686-31696-1-git-send-email-b42378@freescale.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4] gpio: pcf857x: Add OF support
+Date: Thu, 29 Aug 2013 14:16:59 +0200
+Message-ID: <CACRpkdZuODowd6V9WcCes6znT15C105y_kfYynhien4ZCCaoOA@mail.gmail.com>
+References: <1377524753-4027-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1142376355657699056=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1377662686-31696-1-git-send-email-b42378@freescale.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Nicolin Chen <b42378@freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lars@metafoo.de, swarren@wwwdotorg.org, s.hauer@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, p.zabel@pengutronix.de, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1377524753-4027-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Aug 26, 2013 at 3:45 PM, Laurent Pinchart
+<laurent.pinchart+renesas@ideasonboard.com> wrote:
 
---===============1142376355657699056==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dlFvqfizQ5ooaSx9"
-Content-Disposition: inline
+> Add DT bindings for the pcf857x-compatible chips and parse the device
+> tree node in the driver.
+>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
+First: can I get an ACK from some DT-bindings maintainer?
 
---dlFvqfizQ5ooaSx9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think you may need to CC them all individually to get some
+response.
 
-On Wed, Aug 28, 2013 at 12:04:46PM +0800, Nicolin Chen wrote:
-> This patch implements a device-tree-only machine driver for Freescale
-> i.MX series Soc. It works with spdif_transmitter/spdif_receiver and
-> fsl_spdif.c drivers.
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+> @@ -0,0 +1,71 @@
+> +* PCF857x-compatible I/O expanders
+> +
+> +The PCF857x-compatible chips have "quasi-bidirectional" I/O pins that can be
+> +driven high by a pull-up current source or driven low to ground. This combines
+> +the direction and output level into a single bit per pin, which can't be read
+> +back. We can't actually know at initialization time whether a pin is configured
+> +(a) as output and driving the signal low/high, or (b) as input and reporting a
+> +low/high value, without knowing the last value written since the chip came out
+> +of reset (if any). The only reliable solution for setting up pin direction is
+> +thus to do it explicitly.
 
-Applied, thanks.
+Nitpick: I prefer that wrt gpio we talk about "lines" rather than "pins"
+to separate it from the pin control concept. Just
+s/pin/line/g
 
---dlFvqfizQ5ooaSx9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+(...)
+> +Optional Properties:
+> +
+> +  - pins-initial-state: Bitmask that specifies the initial state of each pin.
+> +  When a bit is set to zero, the corresponding pin will be initialized to the
+> +  input (pulled-up) state. When the  bit is set to one, the pin will be
+> +  initialized the the low-level output state. If the property is not specified
+> +  all pins will be initialized to the input state.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
+Name this lines-initial-states (pluralis).
 
-iQIcBAEBAgAGBQJSHztqAAoJELSic+t+oim9qEQP/jFayl5Tl6OcYz0p/4MyMs2G
-zbTHT2TMdlP6AlyVI/JYgNpcQbVLwdUppL51xtW3WF3G907ymD11FxV5lunj7JsW
-QHJ1OQISn8yiyECma/fvhtSbzitsdz0XR64L1b1GTJvcXmaMBLqx+m7xlYlG1guY
-cEcg82RoF6OkGUtC6hEIXvzjWidGTF3NQk8l/0NpHp14mfK89WJdBGNihmcflM9U
-BvqvV94Mz04EW9+6BpKdBoyyZ2XaqmtA/07+tK1CIDJF279bBtUm/TDNwdj5F+l3
-e24nprKj4kP5gdNrBTfpU29ub6l7lPK/l7grH8o2tmv3icn3VI4JbMH4LnhxqvC5
-+7xTVCKKHFNGl6BBEZk/9NEcUhqTuyurOApsez3xxaYxsZrY03wiv/JFQSUjYlrD
-QZtruaF9XrBuNX7GjikDt4CYRBN3V2uWBYRFXAO3/evKzpyDk3RSlX7iy80ZEZUu
-SSSOFjjtFWdXyQ72qho8W1LcO0K6hlHghljzlnpOgxbNhIwnt+3UCweZ98mj2Wn3
-QOi84neVP6GA3CPY8Mf7dZKL6ROg0QlrNWXHsypdnMDSLBq8mWYWl+DG6X0Nd0W0
-UmFzjrOs0rSFQoGr2NkoIGgIZkw3ywHy7tAT1qftESzwz69KP4t/AVlLDBo6ayZM
-ZQjXAskUVp1N/awbZzvx
-=vaI1
------END PGP SIGNATURE-----
+Don't we want to do this generic if we shall do it?
 
---dlFvqfizQ5ooaSx9--
+Like for *any* GPIO chips we provide lines-initial state in the device
+tree and some code in the gpiochip with a callback in struct gpio_chip
+that can be called by the gpiolib core to set this up? Then we don't
+have to reimplement this for every GPIO controller that needs it.
 
---===============1142376355657699056==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Sorry for not noticing this earlier...
 
-
---===============1142376355657699056==--
+Yours,
+Linus Walleij
