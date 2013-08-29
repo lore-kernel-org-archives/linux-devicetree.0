@@ -1,65 +1,107 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
-Date: Thu, 29 Aug 2013 17:12:17 +0100
-Message-ID: <20130829161217.GK10783@sirena.org.uk>
-References: <20130828113459.48ecbb34@armhf>
- <521DCD33.2070008@gmail.com>
- <20130828121943.1c8327ca@skate>
- <521DD057.4040208@gmail.com>
+From: Russ Dill <Russ.Dill@ti.com>
+Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
+Date: Thu, 29 Aug 2013 09:31:55 -0700
+Message-ID: <CA+Bv8XYbpqQAYwJ3=vkP0gXDMTp7_VNVzB0NXLG6GHDi=Z1img@mail.gmail.com>
+References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
+	<1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
+	<CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
+	<87txiasqhk.fsf@linaro.org>
+	<CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
+	<20130829110534.GV10783@sirena.org.uk>
+	<CAGa+x85u0OpB9o71xUTs15wt8Te-o5f0C9o22GHzZwOjn5F6=w@mail.gmail.com>
+	<20130829154929.GJ10783@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GmIAiBEz2jSsbeLA"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <521DD057.4040208@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Jean-Francois Moine <moinejf@free.fr>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130829154929.GJ10783@sirena.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kevin Hilman <khilman@linaro.org>, devicetree@vger.kernel.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Aug 29, 2013 at 8:49 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Aug 29, 2013 at 08:29:37AM -0700, Kevin Hilman wrote:
+>> On Thu, Aug 29, 2013 at 4:05 AM, Mark Brown <broonie@kernel.org> wrote:
+>
+>> > Someone is going to have to walk me through the context for me to fully
+>> > understand what this is all about - what's the problem?
+>
+>> The basic problem is how to have low-level platform code (or possibly
+>> firmware) send commands to a regulator to scale voltage.  This has to
+>> happen *very* late in the suspend process, so having the drivers do it
+>> themselves is not feasible.
+>
+> Why does it have to happen this late and are the sequences definitely
+> fixed ones not ones that could depend on the system state at the time
+> we suspend?  It'd help to know what exactly is being controlled here...
 
---GmIAiBEz2jSsbeLA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On all am335x platforms, the lower operating point for core voltage
+cannot be reached without first disabling the DDR controller, and
+programming it into a lower power mode. For DDR3 platforms, no such
+lower power mode is available and the lower operating point for core
+voltage can only be reached with the memory controller disabled.
 
-On Wed, Aug 28, 2013 at 12:26:31PM +0200, Sebastian Hesselbarth wrote:
+It certainly is possible that some bizarre I2C regulator may mix in
+regulator voltage and some other state into one I2C register. In the
+case of such a platform, setting the lower operating point would not
+be supported.
 
-> Unfortunately, mvebu-audio has already been taken by Mark. Also, we
-> know the differences for the three SoCs now and should have a compatible
-> for each (and maybe mvebu-audio for fallback).
+>> The proposal in this series is to define the i2c commands sequence to
+>> be sent to the regulator in the i2c node of the DT.  The
+>> platform-specific code then reads the sequence from the DT and sends
+>> the commands (or in in the case of the current series, passes the
+>> sequence to some firmware on a microcontroller which does the
+>> sequence.)
+>
+> Surely specifying things in terms of the actual sequence would be better
+> than trying to specify the I2C commands if you want this to be done from
+> Linux?  If the firmware has to cope directly then this would require the
+> firmware to understand what it's doing of course.
 
-We're not at the merge window yet so we can always change it.  We can
-also add additional compatible strings to the drivers at any point - the
-device can list as many as it likes, this is useful if you've got new
-controllers which are supersets of old ones for example.
+I'm not sure what you mean by "actual sequence". Maybe if I show you a
+couple examples, it will be more clear:
 
-> Also, we'll need to distinguish between the different audio controllers
-> on a single SoC, i.e. i2s0 and i2s1. I suggest checking the (phys) reg
-> base passed.
+This is for the AM335X-EVM which has a TPS65910. The first byte is the
+number of bytes to write, the second byte is the I2C device to write
+those bytes to, the third byte happens to be a register address on the
+TPS65910, and the 4th byte happens to be the value for 0.95V and 1.1V
+respectively.
 
-Why is this required - ideally this would have been mentioned in some of
-the previous reviews...
+/* Set OPP50 (0.95V) for VDD core on TPS65910 */
+sleep_sequence = /bits/ 8 <
+        0x02 0x2d 0x25 0x1f /* Set VDD2 to 0.95V */
+>;
 
---GmIAiBEz2jSsbeLA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+/* Set OPP100 (1.10V) for VDD core on TPS65910 */
+wake_sequence = /bits/ 8 <
+        0x02 0x2d 0x25 0x2b /* Set VDD2 to 1.1V */
+>;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
+These next sequences are for the Beaglebone which has a different
+PMIC. The format is the same, but the PMIC requires an unlock sequence
+to be performed for certain registers and it also requires an
+additional step to apply DCDC changes:
 
-iQIcBAEBAgAGBQJSH3LdAAoJELSic+t+oim9OPEQAJlMM5h1dhk4zB9HhyANZSqw
-1OTJC4MbJeioLX7k+mLo9HPFOO8sMP1ya8WGtVyHeMjVjv4IYl8sanadWpa86psr
-c3jKZ2M9onsp7il75Z/0fNklK+/iZP9XbsmPwatVinEDYCxJ0/9dbFtZuJjq2Tuu
-ejnNOq/b5XYqIkfzyvPQQjMW0Avj3TycrpmAi68YnsEXbWhg4uhawYaSqUK5RFU+
-Rz9H41Is3daIOha66VoLIvOf4e2mK7Zn189snygWa6jWYmHglhAIWBKQZeOXXoeW
-L2OzeF6lFuVYEoQvuzVVOS4bApz669U8aMJ+r1sEFxzZBsUOSQANaBK1srv609Jq
-jnonxkgj7MucJ2RM860L1QmytOqemSsqIlR/ksr19GuOveIPcL5rWcsK9S540kYh
-fXDIVfkjOUbVeAtUPHqzmuoJoyn3OjB7G/CHtVfndoMmSMLTb3vbaL3IeC6MzNp9
-Xa/M2XGENgTAALOs5pa8877zwHqXbP0DQyP5yDwVgW6A5tGDHkvxUBkxJXvJoE2W
-KkYZWW+vBUsCVgKIp2h2EdUBAXERrNACau9gkHzx1bGcI1+KcADr3r9HemdIPi6z
-kekD5sS8yDQ5NHq++jb1r/tXx8X6I11g0mfUnudww/wDj2QLQsImkz+yV8ZcWmup
-PsY5NBzWsK7ccvE46X0C
-=YMzN
------END PGP SIGNATURE-----
+/* Set OPP50 (0.95V) for VDD core on TPS65217 */
+sleep_sequence = /bits/ 8 <
+        0x02 0x24 0x0b 0x6d /* Password unlock 1 */
+        0x02 0x24 0x10 0x02 /* Set DCDC3 to 0.95V */
+        0x02 0x24 0x0b 0x6d /* Password unlock 2 */
+        0x02 0x24 0x10 0x02 /* Set DCDC3 to 0.95V */
+        0x02 0x24 0x0b 0x6c /* Password unlock 1 */
+        0x02 0x24 0x11 0x86 /* Apply DCDC changes */
+        0x02 0x24 0x0b 0x6c /* Password unlock 2 */
+        0x02 0x24 0x11 0x86 /* Apply DCDC changes */
+>;
 
---GmIAiBEz2jSsbeLA--
+/* Set OPP100 (1.10V) for VDD core on TPS65217 */
+wake_sequence = /bits/ 8 <
+        0x02 0x24 0x0b 0x6d /* Password unlock 1 */
+        0x02 0x24 0x10 0x08 /* Set DCDC3 to 1.1V */
+        0x02 0x24 0x0b 0x6d /* Password unlock 2 */
+        0x02 0x24 0x10 0x08 /* Set DCDC3 to 1.1V */
+        0x02 0x24 0x0b 0x6c /* Password unlock 1 */
+        0x02 0x24 0x11 0x86 /* Apply DCDC changes */
+        0x02 0x24 0x0b 0x6c /* Password unlock 2 */
+        0x02 0x24 0x11 0x86 /* Apply DCDC changes */
+>;
