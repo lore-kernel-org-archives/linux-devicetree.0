@@ -1,59 +1,33 @@
-From: Gabor Juhos <juhosg@openwrt.org>
-Subject: Re: [PATCH] tty: ar933x_uart: add device tree support and binding
- documentation
-Date: Thu, 29 Aug 2013 11:44:06 +0200
-Message-ID: <521F17E6.1080704@openwrt.org>
-References: <1377758641-4078-1-git-send-email-juhosg@openwrt.org>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
+Date: Thu, 29 Aug 2013 11:46:36 +0200
+Message-ID: <20130829114636.18a09c72@armhf>
+References: <20130828113459.48ecbb34@armhf>
+	<521DCD33.2070008@gmail.com>
+	<20130828121943.1c8327ca@skate>
+	<521DD057.4040208@gmail.com>
+	<20130828131548.0009d613@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-2
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1377758641-4078-1-git-send-email-juhosg@openwrt.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Gabor Juhos <juhosg@openwrt.org>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130828131548.0009d613@skate>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-2013.08.29. 8:44 keltez=E9ssel, Gabor Juhos =EDrta:
-> Modify the probe routine to get the port line number
-> from device tree if the 'of_node' is populated in the
-> platform device. The driver can be built as module,
-> thus add an OF specific module device table as well
-> to support module auto loading.
+On Wed, 28 Aug 2013 13:15:48 +0200
+Thomas Petazzoni <thomas.petazzoni@free-electrons.com> wrote:
 
-Erm, the last statement is not true. I forgot to send the patch which m=
-akes it
-possible to build the driver as a module. I did that a few minutes ago.
+> For what reason does the driver needs to know whether it's the instan=
+ce
+> 0 or instance 1 ? If it's needed for some specific reason, then there
+> should probably be something like marvell,i2s-channel-id =3D <0> and
+> marvell,i2s-channel-id =3D <1>.
 
->=20
-> This makes it possible to use the driver for AR9330
-> UART devices specified in device tree.
->=20
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
-> ---
-> The patch is agains the 'tty-next' branch of the
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tree
-> ---
->  .../bindings/tty/serial/qca,ar9330-uart.txt        |   34 ++++++++++=
-++++++++++
->  drivers/tty/serial/ar933x_uart.c                   |   28 ++++++++++=
-++++--
->  2 files changed, 59 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/tty/serial/qca,=
-ar9330-uart.txt
+It seems simpler to use aliases.
 
-Additionally, according to the recent thread [1] on the linux-serial li=
-st the
-binding doc should go into bindings/serial.
-
-Please drop this patch. I will send an updated version.
-
--Gabor
-
-1. http://marc.info/?l=3Dlinux-serial&m=3D137771717313040&w=3D2
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
