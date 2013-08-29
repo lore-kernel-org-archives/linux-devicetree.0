@@ -1,164 +1,139 @@
-From: Dinh Nguyen <dinguyen@altera.com>
-Subject: Re: [PATCHv3 1/4] arm: dts: Add clock entries for timers in SOCFPGA
-Date: Thu, 29 Aug 2013 10:55:18 -0500
-Message-ID: <1377791718.26261.16.camel@linux-builds1>
-References: <1377118427-20644-1-git-send-email-dinguyen@altera.com>
- <20130828153127.GA17806@pengutronix.de>
+From: Russ Dill <Russ.Dill@ti.com>
+Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
+Date: Thu, 29 Aug 2013 09:10:51 -0700
+Message-ID: <CA+Bv8XbxV=BFjcSsUMX2pz9LeCkSwrjzZmj_=YbHGzyfbLXmaQ@mail.gmail.com>
+References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
+	<1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
+	<CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
+	<87txiasqhk.fsf@linaro.org>
+	<CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
+	<87ppsw7cgq.fsf@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130828153127.GA17806@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dinh.linux@gmail.com, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Pavel Machek <pavel@denx.de>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, John Stultz <john.stultz@linaro.org>, Olof Johansson <olof@lixom.net>, Jamie Iles <jamie@jamieiles.com>, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <87ppsw7cgq.fsf@linaro.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>
+Cc: devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
+On Thu, Aug 29, 2013 at 8:17 AM, Kevin Hilman <khilman@linaro.org> wrot=
+e:
+> Russ Dill <Russ.Dill@ti.com> writes:
+>
+>> On Tue, Aug 27, 2013 at 3:44 PM, Kevin Hilman <khilman@linaro.org> w=
+rote:
+>>> [+Mark Brown for regulator suspend sequence ideas]
+>>>
+>>> Russ Dill <Russ.Dill@ti.com> writes:
+>>>
+>>>> On Wed, Aug 14, 2013 at 6:38 AM, Jan L=C3=BCbbe <jlu@pengutronix.d=
+e> wrote:
+>>>>> On Tue, 2013-08-13 at 15:20 -0700, Russ Dill wrote:
+>> [snip]
+>>>>> Shouldn't the TPS driver know how to generate this sequence? It s=
+eems
+>>>>> fragile to do voltage adjustments behind the back of the regulato=
+r
+>>>>> framework and the TPS driver. The wake-sequence values should mat=
+ch the
+>>>>> (in-memory) regulator configuration on resume (which may have bee=
+n
+>>>>> changed by DVFS).
+>>>>
+>>>> The sequence is both PMIC specific and board specific. Additionall=
+y,
+>>>> the PMICs used aren't am335x specific. It would be nice to have th=
+e
+>>>> regulator framework and the driver write all this out, but the
+>>>> sequence is written out by the Cortex-M3 processor running some PM
+>>>> firmware. Even if the code was changed to run on the A8, it'd have=
+ to
+>>>> run from a small piece of SRAM.
+>>>
+>>> So, why/how was the decision made to use the M3 instead of the MPU
+>>> running from SRAM?
+>>>
+>>> As a firmware minimalist, I obviously prefer to do this from the MP=
+U
+>>> side.  But also, because the M3 is reset every suspend sequence, th=
+is
+>>> becomes rather heavy to do from the M3.
+>>
+>> After the feedback Vaibhav Bedia received on v2 of his suspend/resum=
+e
+>> patchset for am335x, he decided to move many of the operations from
+>> sleep33xx.S into the M3 firmware.
+>>
+>> See the commit message here:
+>> http://arago-project.org/git/projects/?p=3Dam33x-cm3.git;a=3Dcommit;=
+h=3Da972ce2f6
+>
+> Was this feedback on the public lists?  That patch has never been pos=
+ted
+> to linux-omap AFAICT.
+>
+>> I need to wait until after the PLLs are put into bypass, which is no=
+w
+>> done in the M3 firmware. It also ends up being a lot easier to write
+>> the I2C writer code there in C rather than in assembly in sleep33xx.=
+S.
+>
+> hmm, (carefully) written functions in C can still be copied to SRAM. =
+ I
+> dont' see that as an obstacle.
+>
+>>> Currently voltage scaling is only being proposed for suspend in thi=
+s
+>>> series, but in theory it's possible from idle as well.  Doing this =
+from
+>>> the MPU/SRAM seems much better suited for idle.
+>>
+>> The M3 firmware will also handle any cpuidle modes deeper than just
+>> putting SDRAM into self refresh. This is actually the only way of
+>> doing things like turning the MPU domain off on am335x.
+>
+> Yes, it will have to handle the MPU/interconnect off parts but other
+> than that, that's the only thing it *has* to do (well, and handle wak=
+eup
+> from the deep state.)  The rest of the stuff being piled into the M3 =
+is
+> a result of software/firmware design decisions AFAICT.  As I predicte=
+d
+> when I first saw this SoC design, the firmware is getting bigger and
+> bigger.  Initially it was argued that it would be tiny, and only hand=
+le
+> the things it had to do.  Now it's growing due to "convenience".  IMO=
+,
+> this is a bad trend, and one that will make this code more and more
+> difficult to maintain upstream (assuming that's a goal.)
 
-On Wed, 2013-08-28 at 17:31 +0200, Steffen Trumtrar wrote:
-> Hi!
-> 
-> On Wed, Aug 21, 2013 at 03:53:44PM -0500, dinguyen@altera.com wrote:
-> > From: Dinh Nguyen <dinguyen@altera.com>
-> > 
-> > Set the correct clock entries for the the timers, and also clean up
-> > the timer entries for SOCFPGA by removing timer<n> in the timer entry.
-> > 
-> > Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-> > CC: Rob Herring <rob.herring@calxeda.com>
-> > Cc: Pawel Moll <pawel.moll@arm.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Stephen Warren <swarren@wwwdotorg.org>
-> > Cc: Ian Campbell <ian.campbell@citrix.com>
-> > CC: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Olof Johansson <olof@lixom.net>
-> > CC: Jamie Iles <jamie@jamieiles.com>
-> > Cc: John Stultz <john.stultz@linaro.org>
-> > Cc: Heiko Stuebner <heiko@sntech.de>
-> > Cc: Pavel Machek <pavel@denx.de>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > ---
-> >  arch/arm/boot/dts/socfpga.dtsi         |   16 ++++++++--------
-> >  arch/arm/boot/dts/socfpga_cyclone5.dts |    8 ++++----
-> >  arch/arm/boot/dts/socfpga_vt.dts       |    8 ++++----
-> >  3 files changed, 16 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> > index 9706767..9957bae 100644
-> > --- a/arch/arm/boot/dts/socfpga.dtsi
-> > +++ b/arch/arm/boot/dts/socfpga.dtsi
-> > @@ -26,10 +26,6 @@
-> >  		ethernet1 = &gmac1;
-> >  		serial0 = &uart0;
-> >  		serial1 = &uart1;
-> > -		timer0 = &timer0;
-> > -		timer1 = &timer1;
-> > -		timer2 = &timer2;
-> > -		timer3 = &timer3;
-> >  	};
-> >
-> 
-> Yes. Do that.
-> 
-> >  	cpus {
-> > @@ -486,28 +482,32 @@
-> >  			interrupts = <1 13 0xf04>;
-> >  		};
-> >  
-> > -		timer0: timer0@ffc08000 {
-> > +		timer@ffc08000 {
-> 
-> No. Why? Than I can not write something like
-> 
-> &timer0 {
-> 	clock-frequency = <100000000>;
-> };
-> 
-> and would have to reference the whole tree ala
-> 
-> / {
-> 	soc {
-> 		timer@ffc08000 {
-> 			clock-frequency = <100000000>;
-> 		};
-> 	};
-> };
-> 
-> in a boardspecific or SoC specific file (see below).
+Do you mean upstream as in the firmware upstream, or upstream as in
+the kernel upstream? Upstream kernel is really easy to maintain
+because sleep33xx.S just puts the SDRAM into self-refresh.
 
-Agreed. Will adjust accordingly.
+The code to perform these transitions is going to exist, either in
+kernel or in firmware. If you are looking for this to be maintainable
+C code that is copied into SRAM, it will need to be built much like a
+firmware, with it's elf sections being copied into SRAM properly. I'm
+not sure how much it complicates things, but the code needs to be able
+to run with the MMU on and MMU off. The C code would be a minimalized
+duplication of much of what is already in mach-omap2. Because you are
+proposing to split this up between A8 and M3, much of that code would
+then be duplicated again within the M3 firmware.
 
-> 
-> > diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dts b/arch/arm/boot/dts/socfpga_cyclone5.dts
-> > index 698dde9..c1af01c 100644
-> > --- a/arch/arm/boot/dts/socfpga_cyclone5.dts
-> > +++ b/arch/arm/boot/dts/socfpga_cyclone5.dts
-> >  
-> > diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
-> > index 6f23121..72ff14c 100644
-> > --- a/arch/arm/boot/dts/socfpga_vt.dts
-> > +++ b/arch/arm/boot/dts/socfpga_vt.dts
-> 
-> Leads me to a question about terminology: Is the cyclone5 an actual board?
-> AFAIK it is. And the Cyclone 5 FPGA is also called socfpga? Is that correct?
-> But then, seeing that, in an other patch, you add two different sysmgr addresses to
-> the socfpga_vt and socfpga_cyclone5, there are different socfpgas?
+And don't forget that am335x is just the first platform with such a PM =
+scheme.
 
-Yes, sofpga_cyclone5.dts is the devkit that is manufactured by Altera.
-socfpga_vt.dts is a virtual platform for SOCFPGA. You can get the
-virtual platform from Synopsis. It mimics everything except the FPGA. 
-
-socfpga is the base SOC with a Cyclone 5 FPGA on it. I'll be upstreaming
-socfpga_arria5 soon, which has the SOCFPGA + Arria 5 FPGA.
-
-> 
-> I want to write a devicetree for the SoCkit. It has a Cyclone 5 on it.
-> So naturally I would now go and include the socfpga_cyclone5.dtsi, with all the
-> cyclone5 stuff and just add my board specific stuff in a socfpga_sockit.dts.
-> But there is no socfpga_cyclone5.dtsi, just the socfpga_cyclone5.dts, which itself
-> seems to be a board...
-
-socfpga.dtsi is the base DTSI for the platform. In hindsight, I should
-have named it a bit different, but for now socfpga_cyclone5 is for the
-board.
-
-> 
-> So, how should we reorder the current dts (as I tested with current mainline, the
-> support is completely broken out of the box, but works fine with your patches that
-> are floating around, there should be no users as of now)?
-
-Not sure what you mean by broken. I was able to boot 3.11-rc7 just now
-using an initramfs. As you can already tell, I'm doing my best to get
-more support for the platform upstream, but it will take time.
-
-In the meantim, you get our latest downstream kernel at:
-
-git://git.rocketboards.org/linux-socfpga.git
-
-Dinh
-
-> 
-> Something like:
-> 
-> socfpga.dtsi
->  -> socfpga_cyclone5.dtsi
->  --> socfpga_cyclone5_devboard.dts (?)
->  --> socfpga_sockit.dts
->  -> socfpga_???.dtsi
->  --> socfpga_vt.dts
-> 
-> ?
-> 
-> Thanks and regards,
-> Steffen
-> 
+Because the M3 firmware already has to manage power domains, hwmods,
+plls, and clockdomains, adding or removing which ones it handles
+doesn't really change the size or complexity of the firmware. In fact,
+because so much of the code is common code, moving this into kernel
+would just mean making two copies of the firmware with different steps
+to be run, one for the A8 SRAM, one for the M3.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
