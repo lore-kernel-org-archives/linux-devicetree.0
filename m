@@ -1,146 +1,104 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv6 02/45] CLK: TI: add DT alias clock registration mechanism
-Date: Thu, 29 Aug 2013 16:15:54 +0300
-Message-ID: <1377782197-10611-3-git-send-email-t-kristo@ti.com>
-References: <1377782197-10611-1-git-send-email-t-kristo@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v3 4/6] media: s5p-tv: Fix mixer driver to work with CCF
+Date: Thu, 29 Aug 2013 15:17:23 +0200
+Message-ID: <6962075.17ypj6ChmC@amdc1227>
+References: <1377706384-3697-1-git-send-email-m.krawczuk@partner.samsung.com>
+ <1377706384-3697-5-git-send-email-m.krawczuk@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1377782197-10611-1-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, rnayak@ti.com, nm@ti.com, mturquette@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1377706384-3697-5-git-send-email-m.krawczuk@partner.samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+Cc: kyungmin.park@samsung.com, t.stanislaws@samsung.com, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, mturquette@linaro.org, tomasz.figa@gmail.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, s.nawrocki@samsung.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux@arm.linux.org.uk, ben-linux@fluff.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some devices require their clocks to be available with a specific
-dev-id con-id mapping. With DT, the clocks can be found by default
-only with their name, or alternatively through the device node of
-the consumer. With drivers, that don't support DT fully yet, add
-mechanism to register specific clock names.
+On Wednesday 28 of August 2013 18:13:02 Mateusz Krawczuk wrote:
+> Replace clk_enable by clock_enable_prepare and clk_disable with
+> clk_disable_unprepare. Clock prepare is required by Clock Common
+> Framework, and old clock driver didn`t support it. Without it Common
+> Clock Framework prints a warning.
+> 
+> Signed-off-by: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+> ---
+>  drivers/media/platform/s5p-tv/mixer_drv.c | 35
+> ++++++++++++++++++++++++------- 1 file changed, 28 insertions(+), 7
+> deletions(-)
+> 
+> diff --git a/drivers/media/platform/s5p-tv/mixer_drv.c
+> b/drivers/media/platform/s5p-tv/mixer_drv.c index 8ce7c3e..3b2b305
+> 100644
+> --- a/drivers/media/platform/s5p-tv/mixer_drv.c
+> +++ b/drivers/media/platform/s5p-tv/mixer_drv.c
+> @@ -347,19 +347,40 @@ static int mxr_runtime_resume(struct device *dev)
+>  {
+>  	struct mxr_device *mdev = to_mdev(dev);
+>  	struct mxr_resources *res = &mdev->res;
+> +	int ret;
+> 
+>  	dev_dbg(mdev->dev, "resume - start\n");
+>  	mutex_lock(&mdev->mutex);
+>  	/* turn clocks on */
+> -	clk_enable(res->mixer);
+> -	clk_enable(res->vp);
+> -	clk_enable(res->sclk_mixer);
+> +	ret = clk_prepare_enable(res->mixer);
+> +	if (ret < 0) {
+> +		dev_err(mdev->dev, "clk_prepare_enable(mixer) failed\n");
+> +		goto fail;
+> +	}
+> +	ret = clk_prepare_enable(res->vp);
+> +	if (ret < 0) {
+> +		dev_err(mdev->dev, "clk_prepare_enable(vp) failed\n");
+> +		goto fail_mixer;
+> +	}
+> +	ret = clk_prepare_enable(res->sclk_mixer);
+> +	if (ret < 0) {
+> +		dev_err(mdev->dev, "clk_prepare_enable(sclk_mixer) failed\n");
+> +		goto fail_vp;
+> +	}
+>  	/* apply default configuration */
+>  	mxr_reg_reset(mdev);
+> -	dev_dbg(mdev->dev, "resume - finished\n");
+> 
+>  	mutex_unlock(&mdev->mutex);
+> +	dev_dbg(mdev->dev, "resume - finished\n");
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/clk/ti/Makefile |    2 +-
- drivers/clk/ti/clk.c    |   52 +++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/clk/ti.h  |   23 +++++++++++++++++++++
- 3 files changed, 76 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/ti/clk.c
+Why is this line moved in this patch?
 
-diff --git a/drivers/clk/ti/Makefile b/drivers/clk/ti/Makefile
-index 93177987..05af5d8 100644
---- a/drivers/clk/ti/Makefile
-+++ b/drivers/clk/ti/Makefile
-@@ -1,3 +1,3 @@
- ifneq ($(CONFIG_OF),)
--obj-y					+= dpll.o
-+obj-y					+= clk.o dpll.o
- endif
-diff --git a/drivers/clk/ti/clk.c b/drivers/clk/ti/clk.c
-new file mode 100644
-index 0000000..f09798e
---- /dev/null
-+++ b/drivers/clk/ti/clk.c
-@@ -0,0 +1,52 @@
-+/*
-+ * TI clock support
-+ *
-+ * Copyright (C) 2013 Texas Instruments, Inc.
-+ *
-+ * Tero Kristo <t-kristo@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk/ti.h>
-+#include <linux/of.h>
-+
-+/**
-+ * omap_dt_clocks_register - register DT duplicate clocks during boot
-+ * @oclks: list of clocks to register
-+ *
-+ * Register duplicate or non-standard DT clock entries during boot. By
-+ * default, DT clocks are found based on their node name. If any
-+ * additional con-id / dev-id -> clock mapping is required, use this
-+ * function to list these.
-+ */
-+void __init omap_dt_clocks_register(struct omap_dt_clk oclks[])
-+{
-+	struct omap_dt_clk *c;
-+	struct device_node *node;
-+	struct clk *clk;
-+	struct of_phandle_args clkspec;
-+
-+	for (c = oclks; c->node_name != NULL; c++) {
-+		node = of_find_node_by_name(NULL, c->node_name);
-+		clkspec.np = node;
-+		clk = of_clk_get_from_provider(&clkspec);
-+
-+		if (!IS_ERR(clk)) {
-+			c->lk.clk = clk;
-+			clkdev_add(&c->lk);
-+		} else {
-+			pr_warn("%s: failed to lookup clock node %s\n",
-+				__func__, c->node_name);
-+		}
-+	}
-+}
-diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
-index 385384a..1c4f492 100644
---- a/include/linux/clk/ti.h
-+++ b/include/linux/clk/ti.h
-@@ -15,6 +15,8 @@
- #ifndef __LINUX_CLK_TI_H__
- #define __LINUX_CLK_TI_H__
- 
-+#include <linux/clkdev.h>
-+
- /**
-  * struct dpll_data - DPLL registers and integration data
-  * @mult_div1_reg: register containing the DPLL M and N bitfields
-@@ -138,6 +140,25 @@ struct clk_hw_omap {
- /* DPLL Type and DCO Selection Flags */
- #define DPLL_J_TYPE		0x1
- 
-+/**
-+ * struct omap_dt_clk - OMAP DT clock alias declarations
-+ * @lk: clock lookup definition
-+ * @node_name: clock DT node to map to
-+ */
-+struct omap_dt_clk {
-+	struct clk_lookup		lk;
-+	char				*node_name;
-+};
-+
-+#define DT_CLK(dev, con, name)		\
-+	{				\
-+		.lk = {			\
-+			.dev_id = dev,	\
-+			.con_id = con,	\
-+		},			\
-+		.node_name = name,	\
-+	}
-+
- void omap2_init_clk_hw_omap_clocks(struct clk *clk);
- int omap3_noncore_dpll_enable(struct clk_hw *hw);
- void omap3_noncore_dpll_disable(struct clk_hw *hw);
-@@ -158,6 +179,8 @@ unsigned long omap3_clkoutx2_recalc(struct clk_hw *hw,
- int omap3_dpll4_set_rate(struct clk_hw *clk, unsigned long rate,
- 			 unsigned long parent_rate);
- 
-+void omap_dt_clocks_register(struct omap_dt_clk *oclks);
-+
- extern const struct clk_hw_omap_ops clkhwops_omap3_dpll;
- extern const struct clk_hw_omap_ops clkhwops_omap4_dpllmx;
- 
--- 
-1.7.9.5
+>  	return 0;
+
+nit: A blank line would look good here.
+
+> +fail_vp:
+> +	clk_disable_unprepare(res->vp);
+> +fail_mixer:
+> +	clk_disable_unprepare(res->mixer);
+> +fail:
+> +	mutex_unlock(&mdev->mutex);
+> +	dev_info(mdev->dev, "resume failed\n");
+
+dev_err?
+
+Best regards,
+Tomasz
+
+> +	return ret;
+>  }
+> 
+>  static int mxr_runtime_suspend(struct device *dev)
+> @@ -369,9 +390,9 @@ static int mxr_runtime_suspend(struct device *dev)
+>  	dev_dbg(mdev->dev, "suspend - start\n");
+>  	mutex_lock(&mdev->mutex);
+>  	/* turn clocks off */
+> -	clk_disable(res->sclk_mixer);
+> -	clk_disable(res->vp);
+> -	clk_disable(res->mixer);
+> +	clk_disable_unprepare(res->sclk_mixer);
+> +	clk_disable_unprepare(res->vp);
+> +	clk_disable_unprepare(res->mixer);
+>  	mutex_unlock(&mdev->mutex);
+>  	dev_dbg(mdev->dev, "suspend - finished\n");
+>  	return 0;
 
