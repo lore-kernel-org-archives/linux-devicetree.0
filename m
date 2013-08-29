@@ -1,44 +1,75 @@
 From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Thu, 29 Aug 2013 20:51:39 +0200
-Message-ID: <CACRpkdYiV4e76j1N=m7YiK8ZvUAO69-=JkX6-su5T_DetwRK1Q@mail.gmail.com>
+Date: Thu, 29 Aug 2013 21:00:32 +0200
+Message-ID: <CACRpkdYz7Kn-y8LHpNBV3YyYFhyaU6N592BJE1newUZJpUMNfA@mail.gmail.com>
 References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de>
 	<1507189.CRWvzVJqTV@flatron>
 	<521548E3.6010703@wwwdotorg.org>
-	<CACRpkdbVYfBS5L+0ejfbTBwPbD9HFB1kV8qnS7DdSydRccxDmg@mail.gmail.com>
-	<52167A35.2010109@wwwdotorg.org>
-	<CACRpkdYAjKhKC+Aaa4iQBXsJ46mgOta_SVztVyB=HZCGJD-b2g@mail.gmail.com>
-	<5217BCE1.4080101@wwwdotorg.org>
+	<CACRpkdYUeyVZcN1-jOzg0zo4eSJK1S+M5fJ0FcMsgwaPKW4Obw@mail.gmail.com>
+	<52167E5D.6060802@wwwdotorg.org>
+	<CACRpkdZgFMH07_W2eUWsgsUMXAJA1paEimAds=-XeViZaYySLA@mail.gmail.com>
+	<5217BD74.5030801@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5217BCE1.4080101@wwwdotorg.org>
-Sender: linux-gpio-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5217BD74.5030801@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
 Cc: Tomasz Figa <tomasz.figa@gmail.com>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2013 at 9:49 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 08/23/2013 12:38 PM, Linus Walleij wrote:
+On Fri, Aug 23, 2013 at 9:52 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 08/23/2013 12:45 PM, Linus Walleij wrote:
 
->> It can't be stopped but I consider it a bug if they do, as the proper
->> way to handle such GPIO lines is the sequence:
+>> This is a perfectly OK thing to do as long as it is done like
+>> this:
 >>
 >> request_gpio(gpio);
+>> gpio_direction_input(gpio);
 >> request_irq(gpio_to_irq(gpio));
 >
-> Back in the old days of ARM board files, there were many boards that
-> didn't do this. I guess that doesn't make it any less of a bug, but it
-> certainly implies to me that solving this in a way that caters to that
-> bug being present will be a lot more useful.
+> But I'm not aware that there's a rule saying it's illegal to:
+>
+> request_irq(gpio_to_irq(gpio));
+> request_gpio(gpio);
+> gpio_direction_input(gpio);
 
-I was more thinking along the lines of trying to avoid the
-unpleasant lack of control when doing this with platform
-data and hard-coded GPIO numbers by restricting the way
-it can be done in the device tree.
+No but I think there should be one ... maybe I'm an oddball
+but it seems natural to request a GPIO before tying
+IRQs to fire off it.
 
-Hoping that there were no offenders in there already ...
-I guess it has to hit linux-next before we know that.
+Besides, the bug that this is trying to solve is due to the
+fact that the OMAP driver require exactly the former order
+for the IRQs to work. I think if the sequence matters it is
+likely to be the first form, but it's a rough guess.
+
+>> Pass only the GPIO in the device tree and this works just fine.
+>
+> And I wouldn't be surprised if there were DTs that had separate GPIO and
+> interrupt entries for the same pin.
+
+That is the situation we want to catch.
+
+Don't you agree that it has some bit of ambiguity around it, like
+the tree makes an assumtion that whether you ask for the GPIO
+line or IRQ first does not matter, and leave it up to the driver to
+"do something" if the order suddenly turns out the other way around,
+but is important to the hardware?
+
+I think we can't get away from the ambition to define this
+semantic for all DT systems.
+
+> In fact, it's arguably technically
+> more correct to do that than just list the GPIO, and then hope the OS
+> will be able to convert it to the correct IRQ. Then, drivers wouldn't
+> have any reason to believe they needed a specific IRQ-vs-GPIO request
+> ordering.
+
+If that is more technically correct (hm I wonder what measure is
+used for "correctness" here) I think we are back at the GPIO input
+hogs to achive what OMAP needs. Using such hogs they can
+let the gpiochip node hog a few pins and set them as input rather
+than each and every driver having to do so.
 
 Yours,
 Linus Walleij
