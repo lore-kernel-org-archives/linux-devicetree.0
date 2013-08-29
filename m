@@ -1,75 +1,39 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Thu, 29 Aug 2013 21:00:32 +0200
-Message-ID: <CACRpkdYz7Kn-y8LHpNBV3YyYFhyaU6N592BJE1newUZJpUMNfA@mail.gmail.com>
-References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de>
-	<1507189.CRWvzVJqTV@flatron>
-	<521548E3.6010703@wwwdotorg.org>
-	<CACRpkdYUeyVZcN1-jOzg0zo4eSJK1S+M5fJ0FcMsgwaPKW4Obw@mail.gmail.com>
-	<52167E5D.6060802@wwwdotorg.org>
-	<CACRpkdZgFMH07_W2eUWsgsUMXAJA1paEimAds=-XeViZaYySLA@mail.gmail.com>
-	<5217BD74.5030801@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 1/3] extcon: extcon-gpio-usbvid: Generic USB VBUS/ID
+ detection via GPIO
+Date: Thu, 29 Aug 2013 13:11:05 -0600
+Message-ID: <521F9CC9.4010004@wwwdotorg.org>
+References: <1377711185-31238-1-git-send-email-george.cherian@ti.com> <1377711185-31238-2-git-send-email-george.cherian@ti.com> <521EA563.4060305@samsung.com> <521EB018.3000301@ti.com> <521EE8FC.80802@samsung.com> <521EF88F.4070402@ti.com> <521F245E.8050506@samsung.com> <521F3515.7040001@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5217BD74.5030801@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <521F3515.7040001@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, balbi@ti.com, myungjoo.ham@samsung.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, bcousson@baylibre.com, davidb@codeaurora.org, arnd@arndb.de, swarren@nvidia.com, popcornmix@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2013 at 9:52 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 08/23/2013 12:45 PM, Linus Walleij wrote:
-
->> This is a perfectly OK thing to do as long as it is done like
->> this:
->>
->> request_gpio(gpio);
->> gpio_direction_input(gpio);
->> request_irq(gpio_to_irq(gpio));
+On 08/29/2013 05:48 AM, George Cherian wrote:
+> On 8/29/2013 4:07 PM, Chanwoo Choi wrote:
+...
+>> I tested various development board based on Samsung Exynos series SoC.
+>> Although some gpio of Exynos series SoC set high state(non zero, 1) as
+>> default value,
+>> this gpio state could mean off state, disconnected or un-powered state
+>> according to gpio.
+>> Of course, above explanation about specific gpio don't include all gpios.
+>> This is meaning that there is possibility.
 >
-> But I'm not aware that there's a rule saying it's illegal to:
+> okay then how about adding a flag for inverted logic too.  something
+> like this
+> 
+> if(of_property_read_bool(np,"inverted_gpio))
+>     gpio_usbvid->gpio_inv = 1;
 >
-> request_irq(gpio_to_irq(gpio));
-> request_gpio(gpio);
-> gpio_direction_input(gpio);
+> And always check on this before deciding?
 
-No but I think there should be one ... maybe I'm an oddball
-but it seems natural to request a GPIO before tying
-IRQs to fire off it.
-
-Besides, the bug that this is trying to solve is due to the
-fact that the OMAP driver require exactly the former order
-for the IRQs to work. I think if the sequence matters it is
-likely to be the first form, but it's a rough guess.
-
->> Pass only the GPIO in the device tree and this works just fine.
->
-> And I wouldn't be surprised if there were DTs that had separate GPIO and
-> interrupt entries for the same pin.
-
-That is the situation we want to catch.
-
-Don't you agree that it has some bit of ambiguity around it, like
-the tree makes an assumtion that whether you ask for the GPIO
-line or IRQ first does not matter, and leave it up to the driver to
-"do something" if the order suddenly turns out the other way around,
-but is important to the hardware?
-
-I think we can't get away from the ambition to define this
-semantic for all DT systems.
-
-> In fact, it's arguably technically
-> more correct to do that than just list the GPIO, and then hope the OS
-> will be able to convert it to the correct IRQ. Then, drivers wouldn't
-> have any reason to believe they needed a specific IRQ-vs-GPIO request
-> ordering.
-
-If that is more technically correct (hm I wonder what measure is
-used for "correctness" here) I think we are back at the GPIO input
-hogs to achive what OMAP needs. Using such hogs they can
-let the gpiochip node hog a few pins and set them as input rather
-than each and every driver having to do so.
-
-Yours,
-Linus Walleij
+Don't do this. GPIO specifiers in DT typically include a "flags" cell
+that describes certain GPIO properties. One of those properties is
+signal inversion. You can use of_get_named_gpio_flags() to retrieve
+those flags.
