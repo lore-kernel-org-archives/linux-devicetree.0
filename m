@@ -1,81 +1,86 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: Re: [PATCH v3 3/3] ARM: dts: dra7-evm: Add extcon nodes for USB ID
- pin detection
-Date: Thu, 29 Aug 2013 08:23:28 +0530
-Message-ID: <521EB7A8.3000603@ti.com>
-References: <1377711185-31238-1-git-send-email-george.cherian@ti.com> <1377711185-31238-4-git-send-email-george.cherian@ti.com> <521E394C.3040402@cogentembedded.com>
+From: Lu Jingchang-B35083 <B35083@freescale.com>
+Subject: RE: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
+Date: Thu, 29 Aug 2013 03:32:04 +0000
+Message-ID: <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
+References: <1376633274-17850-1-git-send-email-b35083@freescale.com>
+ <20130828081742.GC11414@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <521E394C.3040402@cogentembedded.com>
+In-Reply-To: <20130828081742.GC11414@intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: balbi@ti.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, bcousson@baylibre.com, davidb@codeaurora.org, arnd@arndb.de, swarren@nvidia.com, popcornmix@gmail.com
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/28/2013 11:24 PM, Sergei Shtylyov wrote:
-> On 08/28/2013 09:33 PM, George Cherian wrote:
->
->> Add
->>     -extcon nodes for USB ID pin detection.
->>     -i2c nodes.
->>     -pcf nodes to which USB ID pin is connected.
->
->> Signed-off-by: George Cherian <george.cherian@ti.com>
->> ---
->>   arch/arm/boot/dts/dra7-evm.dts | 50 
->> +++++++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 49 insertions(+), 1 deletion(-)
->
->> diff --git a/arch/arm/boot/dts/dra7-evm.dts 
->> b/arch/arm/boot/dts/dra7-evm.dts
->> index acd3c09..8b0738a 100644
->> --- a/arch/arm/boot/dts/dra7-evm.dts
->> +++ b/arch/arm/boot/dts/dra7-evm.dts
-> [...]
->> @@ -33,10 +44,47 @@
->>           };
->>   };
->>
->> +&i2c1 {
->> +    clock-frequency = <400000>;
->> +
->> +    gpio20: pcf8575@20 {
->
->     ePAPR was talking about the node naming, not about labelling. Back 
-> to the drawing board. ;-)
->
-ha..... :-/
->> +        compatible = "ti,pcf8575";
->> +        reg = <0x20>;
->> +        n_latch = <0x4000>;
->> +        gpio-controller;
->> +        #gpio-cells = <2>;
->> +        interrupt-parent = <&gpio6>;
->> +        interrupts = <11 2>;
->> +        interrupt-controller;
->> +        #interrupt-cells = <2>;
->> +    };
->> +
->> +    gpio21: pcf8575@21 {
->> +        compatible = "ti,pcf8575";
->> +        reg = <0x21>;
->> +        n_latch = <0x1408>;
->> +        gpio-controller;
->> +        #gpio-cells = <2>;
->> +        interrupt-parent = <&pcf_20>;
->> +        interrupts = <14 2>;
->> +        interrupt-controller;
->> +        #interrupt-cells = <2>;
->> +    };
->> +
->> +};
->> +
->
-> WBR, Sergei
->
-
-
--- 
--George
+PiA+ICsJCX0gZWxzZSB7DQo+IHNpbmNlIHlvdSBzdXBwb3J0IGN5Y2xpYywgaXMgdGhlcmUgYSBy
+ZWFzb253IHdoeSB5b3UgZG9udCBzdXBwb3J0DQo+IHBhdXNlL3Jlc3VtZT8NCj4gaXMgaXQgaHcg
+aXNzdWUgb3IgcGxhbm5lZCBpbiBmdXR1cmU/DQpbTHUgSmluZ2NoYW5nXSANClRoZSBIVyBzdXBw
+b3J0cyBzdGFydC9zdG9wIHJlcXVlc3QgZnJvbSB0aGUgcGVyaXBoZXJhbCBkbWEgcmVxdWVzdCwg
+SSBoYWQgcGxhbm5lZCB0byBhZGQgdGhpcyBpbiBmdXR1cmUgYXMgcmVxdWVzdGVkLg0KSSB3aWxs
+IGFkZCB0aGlzIGluIHRoZSBuZXh0IHZlcnNpb24gcGF0Y2guDQpUaGFua3MuDQoNCj4gDQo+ID4g
+KwkJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJCX0NCj4gPiArCQlyZXR1cm4gMDsNCj4gPiArDQo+
+ID4gKwlkZWZhdWx0Og0KPiA+ICsJCXJldHVybiAtRU5YSU87DQo+ID4gKwl9DQo+ID4gK30NCj4g
+PiArDQo+ID4gK3N0YXRpYyBlbnVtIGRtYV9zdGF0dXMgZnNsX2VkbWFfdHhfc3RhdHVzKHN0cnVj
+dCBkbWFfY2hhbiAqY2hhbiwNCj4gPiArCQlkbWFfY29va2llX3QgY29va2llLCBzdHJ1Y3QgZG1h
+X3R4X3N0YXRlICp0eHN0YXRlKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgZnNsX2VkbWFfY2hhbiAq
+ZnNsX2NoYW4gPSB0b19mc2xfZWRtYV9jaGFuKGNoYW4pOw0KPiA+ICsNCj4gPiArCWlmIChmc2xf
+Y2hhbi0+c3RhdHVzID09IERNQV9FUlJPUikNCj4gPiArCQlyZXR1cm4gRE1BX0VSUk9SOw0KPiA+
+ICsNCj4gPiArCXJldHVybiBkbWFfY29va2llX3N0YXR1cyhjaGFuLCBjb29raWUsIHR4c3RhdGUp
+Ow0KPiB0aGlzIHdpbGwgdGVsbCBpZiB0aGUgRE1BIGlzIGNvbXBsZXRlZCBvciBub3Qgb25seS4N
+Cj4gWW91IGFsc28gbmVlZCB0byBjYWxjdWxhdGUgcmVzaWR1ZSBmb3IgdGhlIHBlbmRpbmcgZG1h
+DQo+IA0KPiBTaW5jZSB5b3Ugc3VwcG9ydCBjeWNsaWMgdGhpcyBzaG91bGQgYmUgZG9uZSBwcm9w
+ZXJseS4uLg0KPiANCj4gYWxzbyB5b3UgY25hIHRha2UgbW9yZSBoZWxwIGZyb20gdmNoYW4gc3Vw
+cG9ydCB0byBtYWtlIHlvdXIgbGlmZQ0KPiBzaW1wbGVyLi4uDQpbTHUgSmluZ2NoYW5nXSANCk9r
+LCBpZiBpdCBpcyBuZWVkZWQsIEkgd2lsbCBhZGQgcmVzaWR1ZSBjYWxjdWxhdGlvbiBpbiB0aGUg
+bmV4dCB2ZXJzaW9uLiANClRoYW5rcy4NCj4gDQpbLi4uXQ0KPiA+ICtzdGF0aWMgc3RydWN0IGRt
+YV9hc3luY190eF9kZXNjcmlwdG9yICpmc2xfZWRtYV9wcmVwX2RtYV9jeWNsaWMoDQo+ID4gKwkJ
+c3RydWN0IGRtYV9jaGFuICpjaGFuLCBkbWFfYWRkcl90IGRtYV9hZGRyLCBzaXplX3QgYnVmX2xl
+biwNCj4gPiArCQlzaXplX3QgcGVyaW9kX2xlbiwgZW51bSBkbWFfdHJhbnNmZXJfZGlyZWN0aW9u
+IGRpcmVjdGlvbiwNCj4gPiArCQl1bnNpZ25lZCBsb25nIGZsYWdzLCB2b2lkICpjb250ZXh0KQ0K
+PiA+ICt7DQo+ID4gKwlzdHJ1Y3QgZnNsX2VkbWFfY2hhbiAqZnNsX2NoYW4gPSB0b19mc2xfZWRt
+YV9jaGFuKGNoYW4pOw0KPiA+ICsJc3RydWN0IGZzbF9lZG1hX2Rlc2MgKmZzbF9kZXNjOw0KPiA+
+ICsJZG1hX2FkZHJfdCBkbWFfYnVmX25leHQ7DQo+ID4gKwlpbnQgc2dfbGVuLCBpOw0KPiA+ICsJ
+dTMyIHNyY19hZGRyLCBkc3RfYWRkciwgbGFzdF9zZywgbmJ5dGVzOw0KPiA+ICsJdTE2IHNvZmYs
+IGRvZmYsIGl0ZXI7DQo+ID4gKw0KPiA+ICsJaWYgKCFmc2xfY2hhbi0+ZnNjLmRpciA9PSBETUFf
+TUVNX1RPX0RFViAmJg0KPiA+ICsJCQkhZnNsX2NoYW4tPmZzYy5kaXIgPT0gRE1BX0RFVl9UT19N
+RU0pDQo+ID4gKwkJcmV0dXJuIE5VTEw7DQo+IHlvdSBhcmUgaWdub3JpbmcgdGhlIGRpcmVjdGlv
+biBhcmcuIEFsc28gdXNlIGlzX3NsYXZlX2RpcmVjdGlvbigpIGhlbHBlcg0KDQpbLi4uXQ0KDQo+
+ID4gKwlpZiAoIWZzbF9jaGFuLT5mc2MuZGlyID09IERNQV9NRU1fVE9fREVWICYmDQo+ID4gKwkJ
+CSFmc2xfY2hhbi0+ZnNjLmRpciA9PSBETUFfREVWX1RPX01FTSkNCj4gPiArCQlyZXR1cm4gTlVM
+TDsNCj4gZGl0dG8NCltMdSBKaW5nY2hhbmddIA0KVGhhbmtzLiBJIHdpbGwgY2FsbCB0aGUgaGVs
+cGVyIGZ1bmN0aW9uIGluc3RlYWQuDQoNCg0KWy4uLl0NCg0KPiA+ICtzdGF0aWMgYm9vbCBmc2xf
+ZWRtYV9maWx0ZXJfZm4oc3RydWN0IGRtYV9jaGFuICpjaGFuLCB2b2lkICpmbl9wYXJhbSkNCj4g
+PiArew0KPiA+ICsJc3RydWN0IGZzbF9lZG1hX2ZpbHRlcl9wYXJhbSAqZnBhcmFtID0gZm5fcGFy
+YW07DQo+ID4gKwlzdHJ1Y3QgZnNsX2VkbWFfY2hhbiAqZnNsX2NoYW4gPSB0b19mc2xfZWRtYV9j
+aGFuKGNoYW4pOw0KPiA+ICsNCj4gPiArCWlmIChmc2xfY2hhbi0+ZWRtYW11eC0+bXV4X2lkICE9
+IGZwYXJhbS0+bXV4X2lkKQ0KPiA+ICsJCXJldHVybiBmYWxzZTsNCj4gPiArDQo+ID4gKwlmc2xf
+Y2hhbi0+c2xvdF9pZCA9IGZwYXJhbS0+c2xvdF9pZDsNCj4gPiArCWNoYW4tPnByaXZhdGUgPSBm
+bl9wYXJhbTsNCj4gd2h5IGRvIHlvdSBuZWVkIHRvIHVzZSBjaGFuLT5wcml2YXRlPw0KW0x1IEpp
+bmdjaGFuZ10gDQpUaGUgcHJpdmF0ZSB1c2VkIGhlcmUgaXMgdG8gc3RvcmUgdGhlIHNsb3RfaWQg
+aW5mb3JtYXRpb24sIHdoaWNoIG11c3QgYmUgdXNlZCBieSB0aGUgRE1BTVVYIGluIGFsbG9jX2No
+YW5fcmVzb3VyY2VzIGZ1bmN0aW9uLiBUaGFua3MuDQoNCj4gPiArCXJldHVybiB0cnVlOw0KPiA+
+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3RydWN0IGRtYV9jaGFuICpmc2xfZWRtYV94bGF0ZShz
+dHJ1Y3Qgb2ZfcGhhbmRsZV9hcmdzDQo+ICpkbWFfc3BlYywNCj4gPiArCQlzdHJ1Y3Qgb2ZfZG1h
+ICpvZmRtYSkNCj4gPiArew0KPiA+ICsJZG1hX2NhcF9tYXNrX3QgbWFzazsNCj4gPiArCXN0cnVj
+dCBmc2xfZWRtYV9maWx0ZXJfcGFyYW0gZnBhcmFtOw0KPiA+ICsNCj4gPiArCWlmIChkbWFfc3Bl
+Yy0+YXJnc19jb3VudCAhPSAyKQ0KPiA+ICsJCXJldHVybiBOVUxMOw0KPiA+ICsNCj4gPiArCWZw
+YXJhbS5tdXhfaWQgPSBkbWFfc3BlYy0+YXJnc1swXTsNCj4gPiArCWZwYXJhbS5zbG90X2lkID0g
+ZG1hX3NwZWMtPmFyZ3NbMV07DQo+ID4gKw0KPiA+ICsJZG1hX2NhcF96ZXJvKG1hc2spOw0KPiA+
+ICsJZG1hX2NhcF9zZXQoRE1BX1NMQVZFLCBtYXNrKTsNCj4gPiArCWRtYV9jYXBfc2V0KERNQV9D
+WUNMSUMsIG1hc2spOw0KPiA+ICsJcmV0dXJuIGRtYV9yZXF1ZXN0X2NoYW5uZWwobWFzaywgZnNs
+X2VkbWFfZmlsdGVyX2ZuLCAodm9pZA0KPiAqKSZmcGFyYW0pOw0KPiA+ICt9DQo+ID4gKw0KPiA+
+ICtzdGF0aWMgaW50IGZzbF9lZG1hX2FsbG9jX2NoYW5fcmVzb3VyY2VzKHN0cnVjdCBkbWFfY2hh
+biAqY2hhbikNCj4gPiArew0KPiA+ICsJc3RydWN0IGZzbF9lZG1hX2NoYW4gKmZzbF9jaGFuID0g
+dG9fZnNsX2VkbWFfY2hhbihjaGFuKTsNCj4gPiArCXN0cnVjdCBmc2xfZWRtYV9maWx0ZXJfcGFy
+YW0gKmRhdGEgPSBjaGFuLT5wcml2YXRlOw0KPiA+ICsJdW5zaWduZWQgY2hhciB2YWw7DQo+ID4g
+Kw0KPiA+ICsJdmFsID0gRURNQU1VWF9DSENGR19FTkJMIHwgRURNQU1VWF9DSENGR19TT1VSQ0Uo
+ZGF0YS0+c2xvdF9pZCk7DQo+IG9rYXksIHNvIHdoYXQgZG9lcyB0aGUgc2xvdF9pZCBtZWFuPw0K
+Pg0KW0x1IEppbmdjaGFuZ10gDQpzbG90X2lkIGlzIHRoZSByZXF1ZXN0IHNvdXJjZSBpZCwgYSBw
+ZXJpcGhlcmFsIGRldmljZSBJRC4gRWFjaCBwZXJpcGhlcmFsIHVzaW5nIERNQSBoYXMgYSBJRCB0
+aGF0IGNhbiBiZSBpZGVudGlmaWVkIGJ5IHRoZSBETUEgZW5naW5lLiB0aGUgcGVyaXBoZXJhbCBJ
+RCBtdXN0IGJlIHdyaXR0ZW4gdG8gdGhlIERNQU1VWCBjb25maWd1cmF0aW9uIHJlZ2lzdGVyIHRv
+IHJvdXRlIHRoZSBwZXJpcGhlcmFsIHRvIERNQSBlbmdpbmUgY2hhbm5lbC4gVGhhbmtzLg0KDQoN
+CkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0K
