@@ -1,178 +1,81 @@
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
-Subject: Re: [PATCH v8 2/3] DMA: Freescale: Add new 8-channel DMA engine device
- tree nodes
-Date: Thu, 29 Aug 2013 10:46:59 +0800
-Message-ID: <521EB623.5040301@freescale.com>
-References: <1377600123-5746-1-git-send-email-hongbo.zhang@freescale.com> <1377600123-5746-3-git-send-email-hongbo.zhang@freescale.com> <20130827113534.GI19893@e106331-lin.cambridge.arm.com> <521D9E89.7040700@freescale.com> <20130828125153.GC10250@e106331-lin.cambridge.arm.com>
+From: George Cherian <george.cherian@ti.com>
+Subject: Re: [PATCH v3 3/3] ARM: dts: dra7-evm: Add extcon nodes for USB ID
+ pin detection
+Date: Thu, 29 Aug 2013 08:23:28 +0530
+Message-ID: <521EB7A8.3000603@ti.com>
+References: <1377711185-31238-1-git-send-email-george.cherian@ti.com> <1377711185-31238-4-git-send-email-george.cherian@ti.com> <521E394C.3040402@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130828125153.GC10250@e106331-lin.cambridge.arm.com>
+In-Reply-To: <521E394C.3040402@cogentembedded.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: balbi@ti.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, bcousson@baylibre.com, davidb@codeaurora.org, arnd@arndb.de, swarren@nvidia.com, popcornmix@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2013 08:51 PM, Mark Rutland wrote:
-> On Wed, Aug 28, 2013 at 07:54:01AM +0100, Hongbo Zhang wrote:
->> On 08/27/2013 07:35 PM, Mark Rutland wrote:
->>> On Tue, Aug 27, 2013 at 11:42:02AM +0100, hongbo.zhang@freescale.com wrote:
->>>> From: Hongbo Zhang <hongbo.zhang@freescale.com>
->>>>
->>>> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch adds
->>>> the device tree nodes for them.
->>>>
->>>> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
->>>> ---
->>>>    .../devicetree/bindings/powerpc/fsl/dma.txt        |   66 ++++++++++++++++
->>>>    arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
->>>>    arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   81 ++++++++++++++++++++
->>>>    arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   81 ++++++++++++++++++++
->>>>    arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
->>>>    5 files changed, 232 insertions(+), 4 deletions(-)
->>>>    create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->>>>    create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->>>> index ddf17af..10fd031 100644
->>>> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->>>> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->>>> @@ -126,6 +126,72 @@ Example:
->>>>                   };
->>>>           };
->>>>
->>>> +** Freescale Elo3 DMA Controller
->>>> +   This is EloPlus controller with 8 channels, used in Freescale Txxx and Bxxx
->>>> +   series chips, such as t1040, t4240, b4860.
->>>> +
->>>> +Required properties:
->>>> +
->>>> +- compatible        : must include "fsl,elo3-dma"
->>>> +- reg               : <registers specifier for DMA general status reg>
->>>> +- ranges            : describes the mapping between the address space of the
->>>> +                      DMA channels and the address space of the DMA controller
->>>> +
->>>> +- DMA channel nodes:
->>>> +        - compatible        : must include "fsl,eloplus-dma-channel"
->>>> +        - reg               : <registers specifier for channel>
->>>> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
->>>> +        - interrupt-parent  : optional, if needed for interrupt mapping
->>>> +
->>>> +Example:
->>>> +dma@100300 {
->>>> +       #address-cells = <1>;
->>>> +       #size-cells = <1>;
->>>> +       compatible = "fsl,elo3-dma";
->>>> +       reg = <0x100300 0x4 0x100600 0x4>;
->>> Is that one reg entry where #size-cells=2 and #address-cells=2?
->>>
->>> That's what the binding implies (given it only describes a single reg
->>> entry).
->>>
->>> if it's two entries, we should make that explicit (both in the binding
->>> and example):
->>>
->>> 	reg = <0x100300 0x4>,
->>> 	      <0x100600 0x4>;
->> Yes they are two entries, I will change it this way.
-> Ok. Could you make sure you document what the two reg entries correspond
-> to? That's not clear from "<registers specifier for channel>".
-Yes I am sure, we have reg for DMA controller and also reg for each DMA 
-channel.
-these two reg entries are "registers specifier for DMA general status 
-reg", not "registers specifier for channel"
-because this is an 8-channel DMA controller, we have two general status 
-registers (vs. one status register for 4-chanel DMA controller previously )
->>>> +       ranges = <0x0 0x100100 0x500>;
->>> If it is one reg entry then the example ranges property isn't big enough
->>> to contain the parent-bus-address.
->> They are two reg entries, so the range is big enough.
-> Ok.
+On 8/28/2013 11:24 PM, Sergei Shtylyov wrote:
+> On 08/28/2013 09:33 PM, George Cherian wrote:
 >
->>>> +       dma-channel@0 {
->>>> +               compatible = "fsl,eloplus-dma-channel";
->>>> +               reg = <0x0 0x80>;
->>>> +               interrupts = <28 2 0 0>;
->>>> +       };
->>>> +       dma-channel@80 {
->>>> +               compatible = "fsl,eloplus-dma-channel";
->>>> +               reg = <0x80 0x80>;
->>>> +               interrupts = <29 2 0 0>;
->>>> +       };
->>>> +       dma-channel@100 {
->>>> +               compatible = "fsl,eloplus-dma-channel";
->>>> +               reg = <0x100 0x80>;
->>>> +               interrupts = <30 2 0 0>;
->>>> +       };
->>>> +       dma-channel@180 {
->>>> +               compatible = "fsl,eloplus-dma-channel";
->>>> +               reg = <0x180 0x80>;
->>>> +               interrupts = <31 2 0 0>;
->>>> +       };
->>>> +       dma-channel@300 {
->>>> +               compatible = "fsl,eloplus-dma-channel";
->>>> +               reg = <0x300 0x80>;
->>>> +               interrupts = <76 2 0 0>;
->>>> +       };
->>>> +       dma-channel@380 {
->>>> +               compatible = "fsl,eloplus-dma-channel";
->>>> +               reg = <0x380 0x80>;
->>>> +               interrupts = <77 2 0 0>;
->>>> +       };
->>>> +       dma-channel@400 {
->>>> +               compatible = "fsl,eloplus-dma-channel";
->>>> +               reg = <0x400 0x80>;
->>>> +               interrupts = <78 2 0 0>;
->>>> +       };
->>>> +       dma-channel@480 {
->>>> +               compatible = "fsl,eloplus-dma-channel";
->>>> +               reg = <0x480 0x80>;
->>>> +               interrupts = <79 2 0 0>;
->>>> +       };
->>>> +};
->>>> +
->>>>    Note on DMA channel compatible properties: The compatible property must say
->>>>    "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
->>>>    driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
->>>> diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
->>>> index 7399154..ea53ea1 100644
->>>> --- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
->>>> +++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
->>>> @@ -223,13 +223,13 @@
->>>>                   reg = <0xe2000 0x1000>;
->>>>           };
->>>>
->>>> -/include/ "qoriq-dma-0.dtsi"
->>>> +/include/ "elo3-dma-0.dtsi"
->>>>           dma@100300 {
->>>>                   fsl,iommu-parent = <&pamu0>;
->>>>                   fsl,liodn-reg = <&guts 0x580>; /* DMA1LIODNR */
->>>>           };
->>>>
->>>> -/include/ "qoriq-dma-1.dtsi"
->>>> +/include/ "elo3-dma-1.dtsi"
->>>>           dma@101300 {
->>>>                   fsl,iommu-parent = <&pamu0>;
->>>>                   fsl,liodn-reg = <&guts 0x584>; /* DMA2LIODNR */
->>>> diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->>>> new file mode 100644
->>>> index 0000000..69a3277
->>>> --- /dev/null
->>>> +++ b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->>>> @@ -0,0 +1,81 @@
->>>> +/*
->>>> + * QorIQ DMA device tree stub [ controller @ offset 0x100000 ]
->>> Copy-pasted?
->>>
->>> Presumably should be "Elo3 DMA devicetree stub", or similar?
->>>
->>> Similarly for elo3-dma-1.dtsi.
->> Yes copy-pasted, but QorIQ isn't wrong, it is name of Freescale series
->> chips.
->> To be more specific, I'd like to use "QorIQ Elo3 DMA devicetree stub"
-> That sounds good to me.
+>> Add
+>>     -extcon nodes for USB ID pin detection.
+>>     -i2c nodes.
+>>     -pcf nodes to which USB ID pin is connected.
 >
-> Cheers,
-> Mark.
+>> Signed-off-by: George Cherian <george.cherian@ti.com>
+>> ---
+>>   arch/arm/boot/dts/dra7-evm.dts | 50 
+>> +++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 49 insertions(+), 1 deletion(-)
 >
+>> diff --git a/arch/arm/boot/dts/dra7-evm.dts 
+>> b/arch/arm/boot/dts/dra7-evm.dts
+>> index acd3c09..8b0738a 100644
+>> --- a/arch/arm/boot/dts/dra7-evm.dts
+>> +++ b/arch/arm/boot/dts/dra7-evm.dts
+> [...]
+>> @@ -33,10 +44,47 @@
+>>           };
+>>   };
+>>
+>> +&i2c1 {
+>> +    clock-frequency = <400000>;
+>> +
+>> +    gpio20: pcf8575@20 {
+>
+>     ePAPR was talking about the node naming, not about labelling. Back 
+> to the drawing board. ;-)
+>
+ha..... :-/
+>> +        compatible = "ti,pcf8575";
+>> +        reg = <0x20>;
+>> +        n_latch = <0x4000>;
+>> +        gpio-controller;
+>> +        #gpio-cells = <2>;
+>> +        interrupt-parent = <&gpio6>;
+>> +        interrupts = <11 2>;
+>> +        interrupt-controller;
+>> +        #interrupt-cells = <2>;
+>> +    };
+>> +
+>> +    gpio21: pcf8575@21 {
+>> +        compatible = "ti,pcf8575";
+>> +        reg = <0x21>;
+>> +        n_latch = <0x1408>;
+>> +        gpio-controller;
+>> +        #gpio-cells = <2>;
+>> +        interrupt-parent = <&pcf_20>;
+>> +        interrupts = <14 2>;
+>> +        interrupt-controller;
+>> +        #interrupt-cells = <2>;
+>> +    };
+>> +
+>> +};
+>> +
+>
+> WBR, Sergei
+>
+
+
+-- 
+-George
