@@ -1,175 +1,113 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] i2c: qup: Add device tree bindings information
-Date: Thu, 29 Aug 2013 20:26:26 +0300
-Message-ID: <1377797186.30358.14.camel@localhost>
-References: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
-	 <3A0F4153-1C55-4008-8EB1-D6FA60D87CEA@codeaurora.org>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v4 2/3] usb: phy: Add Qualcomm SS-USB and HS-USB
+ drivers for DWC3 core
+Date: Thu, 29 Aug 2013 20:28:40 +0300
+Message-ID: <1377797320.30358.16.camel@localhost>
+References: <1377005543.26268.22.camel@iivanov-dev.int.mm-sol.com>
+	 <20130820133712.GC26587@radagast>
+	 <1377007751.26268.27.camel@iivanov-dev.int.mm-sol.com>
+	 <20130820143319.GG26587@radagast>
+	 <1377010458.26268.30.camel@iivanov-dev.int.mm-sol.com>
+	 <8691FDFE-326E-4198-838A-202D9EC988E1@codeaurora.org>
+	 <1377011163.31445.30.camel@hornet> <1377018092.31445.42.camel@hornet>
+	 <1377090364.15070.13.camel@iivanov-dev.int.mm-sol.com>
+	 <68B25A45-443C-4CC0-9933-80A3D290B557@codeaurora.org>
+	 <20130822204130.GP28420@radagast>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3A0F4153-1C55-4008-8EB1-D6FA60D87CEA-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TZUIDd8j+nm9g@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130822204130.GP28420@radagast>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Rutland <Mark.Rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "idos@codeaurora.org" <idos@codeaurora.org>, "mgautam@codeaurora.org" <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Paul
 List-Id: devicetree@vger.kernel.org
 
-Hi Kumar,
-
-On Thu, 2013-08-29 at 10:28 -0500, Kumar Gala wrote:
-> On Aug 29, 2013, at 8:27 AM, Ivan T. Ivanov wrote:
-> 
-> > From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+On Thu, 2013-08-22 at 15:41 -0500, Felipe Balbi wrote:
+> On Wed, Aug 21, 2013 at 10:13:28AM -0500, Kumar Gala wrote:
 > > 
-> > The Qualcomm Universal Peripherial (QUP) wraps I2C mini-core and
-> > provide input and output FIFO's for it. I2C controller can operate
-> > as master with supported bus speeds of 100Kbps and 400Kbps.
+> > On Aug 21, 2013, at 8:06 AM, Ivan T. Ivanov wrote:
 > > 
-> > Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > Documentation/devicetree/bindings/i2c/i2c-qup.txt |   99 +++++++++++++++++++++
-> > 1 file changed, 99 insertions(+)
-> > create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qup.txt
+> > > On Tue, 2013-08-20 at 18:01 +0100, Pawel Moll wrote: 
+> > >> On Tue, 2013-08-20 at 16:06 +0100, Pawel Moll wrote:
+> > >>> On Tue, 2013-08-20 at 16:01 +0100, Kumar Gala wrote:
+> > >>>> On Aug 20, 2013, at 9:54 AM, Ivan T. Ivanov wrote:
+> > >>>> 
+> > >>>>> 
+> > >>>>> Hi, 
+> > >>>>> 
+> > >>>>> On Tue, 2013-08-20 at 09:33 -0500, Felipe Balbi wrote: 
+> > >>>>>> On Tue, Aug 20, 2013 at 05:09:11PM +0300, Ivan T. Ivanov wrote:
+> > >>>>>>> Hi,
+> > >>>>>>> 
+> > >>>>>>> On Tue, 2013-08-20 at 08:37 -0500, Felipe Balbi wrote: 
+> > >>>>>>>> Hi,
+> > >>>>>>>> 
+> > >>>>>>>> On Tue, Aug 20, 2013 at 04:32:23PM +0300, Ivan T. Ivanov wrote:
+> > >>>>>>>>>> On Tue, Aug 20, 2013 at 12:56:04PM +0300, Ivan T. Ivanov wrote:
+> > >>>>>>>>>>> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > >>>>>>>>>>> 
+> > >>>>>>>>>>> These drivers handles control and configuration of the HS
+> > >>>>>>>>>>> and SS USB PHY transceivers. They are part of the driver
+> > >>>>>>>>>>> which manage Synopsys DesignWare USB3 controller stack
+> > >>>>>>>>>>> inside Qualcomm SoC's.
+> > >>>>>>>>>>> 
+> > >>>>>>>>>>> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> > >>>>>>>>>>> ---
+> > >>>>>>>>>>> drivers/usb/phy/Kconfig           |   11 ++
+> > >>>>>>>>>>> drivers/usb/phy/Makefile          |    2 +
+> > >>>>>>>>>>> drivers/usb/phy/phy-msm-dwc3-hs.c |  327 ++++++++++++++++++++++++++++++++
+> > >>>>>>>>>>> drivers/usb/phy/phy-msm-dwc3-ss.c |  374 +++++++++++++++++++++++++++++++++++++
+> > >>>>>>>>>> 
+> > >>>>>>>>>> please rename these PHY drivers, they have nothing to do with DWC3. PHYs
+> > >>>>>>>>>> don't care about the USB controller.
+> > >>>>>>>>> 
+> > >>>>>>>>> I think they are SNPS DesignWare PHY's, additionally
+> > >>>>>>>>> wrapped with Qualcomm logic. I could substitute "dwc3"
+> > >>>>>>>>> with just "dw", which will be more correct.
+> > >>>>>>>> 
+> > >>>>>>>> alright, thank you. Let's add Paul to the loop since he might have very
+> > >>>>>>>> good insight in the synopsys PHYs.
+> > >>>>>>>> 
+> > >>>>>>>> mental note: if any other platform shows up with Synopsys PHY, ask them
+> > >>>>>>>> to use this driver instead :-)
+> > >>>>>>> 
+> > >>>>>>> I really doubt that this will bi possible. Control of the PHY's is
+> > >>>>>>> not directly trough ULPI, UTMI or PIPE3 interfaces, but trough
+> > >>>>>>> QSCRATCH registers, which of course is highly Qualcomm specific.
+> > >>>>>> 
+> > >>>>>> isn't it a memory mapped IP ? doesn't synopsys provide their own set of
+> > >>>>>> registers ?
+> > >>>>> 
+> > >>>>> From what I see it is not directly mapped. How QSCRATCH write and
+> > >>>>> reads transactions are translated to DW IP is unclear to me.
+> > >>>> 
+> > >>>> 
+> > >>>> I think the question is how does SW access them?
+> > >>> 
+> > >>> I afraid the answer may be: "it depends on the SOC". In my past I had to
+> > >>> initialize a (SATA) PHY by implementing a software JTAG state machine,
+> > >>> as the PHY's registers were not memory mapped *at all*. And the IP
+> > >>> itself came from Synopsys, Cadence or yet another EDA company...
+> > >> 
+> > >> Having said all that... If the PHY's spec at least defined layout of the
+> > >> registers in question and driver was using regmap API to talk to the
+> > >> device (initially regmap-mmio), it has some chances to become universal.
+> > >> The SOCs designed like "my" one would have to provide a custom regmap
+> > >> implementation.
+> > > 
+> > > Sound reasonable. Unfortunately I don't have PHY's IP spec. 
 > > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-qup.txt b/Documentation/devicetree/bindings/i2c/i2c-qup.txt
-> > new file mode 100644
-> > index 0000000..c682726
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-qup.txt
-> > @@ -0,0 +1,99 @@
-> > +Qualcomm Universal Periferial (QUP) I2C controller
+> > Looking into this it appears that the register wrapper around the IP
+> > is most likely highly specific to qualcomm as I'm not seeing a
+> > register interface around the DWC HS PHY.
 > 
-> [nit: remove extra spaces before ':']
-
-ok.
-
+> Then it's set, we'll go with this driver :-)
 > 
-> > +
-> > +Required properties:
-> > + - compatible : should be "qcom,i2c-qup"
-> > + - reg : Offset and length of the register region for the device
-> > + - interrupts : core interrupt
-> > +
-> > + - pinctrl-names: Should contain only one value - "default".
-> > + - pinctrl-0: Should specify pin control group used for this controller.
-> > +
-> > + - clocks : phandles to clock instances of the device tree nodes
-> > + - clock-names :
-> > +		"core" : Allow access to FIFO buffers and registers
-> > +		"iface" : Clock used by QUP interface
-> > +
-> > + - #address-cells : should be <1> Address cells for I2C device address
-> > + - #size-cells : should be <0> I2C addresses have no size component.
-> > +
-> > +Optional properties :
-> > + - Child nodes conforming to i2c bus binding
-> > + - clock-frequency : Desired I2C bus clock frequency in Hz. If
-> > +		not set thedefault frequency is 100kHz
-> > + - qcom,src-freq : Frequency of the source clocking this bus in Hz.
-> > +		Divider value is set based on soruce-frequency and
-> > +		desired I2C bus frequency. If this value is not
-> > +		provided, the source clock is assumed to be running
-> > +		at 19.2 MHz.
-> 
-> I'd spell out frequency instead of 'freq' to be consistent with 'clock-frequency'
 
-ok.
+Does this mean that driver could be merged? 
 
-> 
-> Is the frequency of the 'iface' clock?  Can we not use clk_get_rate?
-
-It is for 'core' clock. I think that for higher I2C bus frequencies,
-'core' clock have to be higher, but I am not sure what is relation.
-
-> 
-> > +
-> > +Aliases: An alias may optionally be used to bind the I2C controller
-> > +to bus number. Aliases are of the form i2c<n> where <n> is an integer
-> > +representing the bus number to use.
-> > +
-> > +Example:
-> > +
-> > + aliases {
-> > +		i2c0 = &i2c_A;
-> > +		i2c1 = &i2c_B;
-> > +		i2c2 = &i2c_C;
-> > + };
-> 
-> What is the purpose here?
-
-Define on which I2C bus this controller operate. I2C client 
-drivers usually do i2c_get_adapter(bus_number) before its
-registration. This is for drivers before invention of
-of_i2c_register_devices(), I believe.
-
-
-Thanks,
+Regards,
 Ivan
 
-> 
-> > +
-> > + i2c_A: i2c@f9967000 {
-> > +		compatible = "qcom,i2c-qup";
-> > +		reg = <0Xf9967000 0x1000>;
-> > +		interrupts = <0 105 0>;
-> > +
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&i2c0_data>;
-> > +
-> > +		clocks = <&core>, <&iface>;
-> > +		clock-names = "core", "iface";
-> > +
-> > +		clock-frequency = <100000>;
-> > +		qcom,src-freq = <50000000>;
-> > +		status = "disabled";
-> > +
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		dummy@60 {
-> > +			compatible = "dummy";
-> > +			reg = <0x60>;
-> > +		};
-> > +	};
-> > +
-> > + i2c_B: i2c@f9923000 {
-> > +		compatible = "qcom,i2c-qup";
-> > +		reg = <0xf9923000 0x1000>;
-> > +		interrupts = <0 95 0>;
-> > +
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&i2c1_data>;
-> > +
-> > +		clocks = <&core>, <&iface>;
-> > +		clock-names = "core", "iface";
-> > +
-> > +		clock-frequency = <100000>;
-> > +		qcom,src-freq = <19200000>;
-> > +
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +	};
-> > +
-> > + i2c_C: i2c@f9924000 {
-> > +		compatible = "qcom,i2c-qup";
-> > +		reg = <0xf9924000 0x1000>;
-> > +		interrupts = <0 96 0>;
-> > +
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&i2c5_data>;
-> > +
-> > +		clocks = <&core>, <&iface>;
-> > +		clock-names = "core", "iface";
-> > +
-> > +		clock-frequency = <100000>;
-> > +		qcom,src-freq = <50000000>;
-> > +
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +	};
-> > -- 
-> > 1.7.9.5
-> 
-> 
-> - k
-> 
+
