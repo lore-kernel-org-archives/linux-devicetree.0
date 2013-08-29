@@ -1,70 +1,57 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 2/3] ARM: bcm281xx: Enable GPIO driver
-Date: Thu, 29 Aug 2013 20:40:41 +0200
-Message-ID: <CACRpkdbWnzcgjRZnUj5x6a42SZc2+fr5etT3_Z9zqjTz+qQB5A@mail.gmail.com>
-References: <1377728173-30711-1-git-send-email-markus.mayer@linaro.org>
- <1377728173-30711-3-git-send-email-markus.mayer@linaro.org>
+From: Ben Hutchings <bhutchings@solarflare.com>
+Subject: Re: [patch v2] net/fec: cleanup types in fec_get_mac()
+Date: Thu, 29 Aug 2013 19:48:58 +0100
+Message-ID: <1377802138.5372.12.camel@bwh-desktop.uk.level5networks.com>
+References: <20130829082514.GB14334@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1377728173-30711-3-git-send-email-markus.mayer@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Mayer <markus.mayer@linaro.org>
-Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Christian Daudt <csd@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+In-Reply-To: <20130829082514.GB14334@elgon.mountain>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Fabio Estevam <fabio.estevam@freescale.com>, Frank Li <Frank.Li@freescale.com>, Jim Baxter <jim_baxter@mentor.com>, Fugang Duan <B38611@freescale.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2013 at 12:16 AM, Markus Mayer <markus.mayer@linaro.org> wrote:
+On Thu, 2013-08-29 at 11:25 +0300, Dan Carpenter wrote:
+> My static checker complains that on some arches unsigned longs can be 8
+> characters which is larger than the buffer is only 6 chars.
+> Additionally, Ben Hutchings points out that the buffer actually holds
+> big endian data and the buffer we are reading from is CPU endian.
 
-> This patch adds the Kconfig and Makefile glue to compile the GPIO
-> driver for bcm281xx when CONFIG_GPIO_BCM=y.
->
-> Signed-off-by: Markus Mayer <markus.mayer@linaro.org>
-> Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
-> Reviewed-by: Matt Porter <matt.porter@linaro.org>
-(...)
+It's not really as clear-cut as that. :-)  But I think it's slightly
+more logical this way.
 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index b2450ba..b68e9b5 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -714,6 +714,11 @@ config GPIO_MSIC
->           Enable support for GPIO on intel MSIC controllers found in
->           intel MID devices
->
-> +config GPIO_BCM_KONA
-> +       bool "Broadcom Kona GPIO"
-> +       help
-> +         Turn on GPIO support for Broadcom "Kona" chips.
-> +
->  comment "USB GPIO expanders:"
->
->  config GPIO_VIPERBOARD
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index ef3e983..fcd0751 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -16,6 +16,7 @@ obj-$(CONFIG_GPIO_ADP5520)    += gpio-adp5520.o
->  obj-$(CONFIG_GPIO_ADP5588)     += gpio-adp5588.o
->  obj-$(CONFIG_GPIO_AMD8111)     += gpio-amd8111.o
->  obj-$(CONFIG_GPIO_ARIZONA)     += gpio-arizona.o
-> +obj-$(CONFIG_GPIO_BCM_KONA)    += gpio-bcm-kona.o
->  obj-$(CONFIG_GPIO_BT8XX)       += gpio-bt8xx.o
->  obj-$(CONFIG_GPIO_CLPS711X)    += gpio-clps711x.o
->  obj-$(CONFIG_GPIO_CS5535)      += gpio-cs5535.o
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Move these two hunks of the patch over to patch 1.
+Reviewed-by: Ben Hutchings <bhutchings@solarflare.com>
 
-I prefer to have the driver added along with the Kconfig and
-Makefile changes.
+> ---
+> v2: fix endian annotations and reverse the beXX_to_cpu() calls so that
+>     they say cpu_to_beXX().
+> 
+> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+> index fdf9307..0b12866 100644
+> --- a/drivers/net/ethernet/freescale/fec_main.c
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> @@ -1100,10 +1100,10 @@ static void fec_get_mac(struct net_device *ndev)
+>  	 * 4) FEC mac registers set by bootloader
+>  	 */
+>  	if (!is_valid_ether_addr(iap)) {
+> -		*((unsigned long *) &tmpaddr[0]) =
+> -			be32_to_cpu(readl(fep->hwp + FEC_ADDR_LOW));
+> -		*((unsigned short *) &tmpaddr[4]) =
+> -			be16_to_cpu(readl(fep->hwp + FEC_ADDR_HIGH) >> 16);
+> +		*((__be32 *) &tmpaddr[0]) =
+> +			cpu_to_be32(readl(fep->hwp + FEC_ADDR_LOW));
+> +		*((__be16 *) &tmpaddr[4]) =
+> +			cpu_to_be16(readl(fep->hwp + FEC_ADDR_HIGH) >> 16);
+>  		iap = &tmpaddr[0];
+>  	}
+>  
 
-Yours,
-Linus Walleij
+-- 
+Ben Hutchings, Staff Engineer, Solarflare
+Not speaking for my employer; that's the marketing department's job.
+They asked us to note that Solarflare product names are trademarked.
+
