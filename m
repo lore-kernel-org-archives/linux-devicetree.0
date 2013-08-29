@@ -1,158 +1,76 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCHv3 7/8] mailbox/omap: add code to support the wkupm3 operations
-Date: Thu, 29 Aug 2013 09:57:24 -0700
-Message-ID: <87sixs305n.fsf@linaro.org>
-References: <1375825238-18299-1-git-send-email-s-anna@ti.com>
-	<87li3n6bcc.fsf@linaro.org> <521CCDCD.90207@ti.com>
-	<87haeax1v5.fsf@linaro.org> <521E244B.4060406@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
+Date: Thu, 29 Aug 2013 18:12:10 +0100
+Message-ID: <20130829171210.GM10783@sirena.org.uk>
+References: <20130828113459.48ecbb34@armhf>
+ <521DCD33.2070008@gmail.com>
+ <20130828121943.1c8327ca@skate>
+ <521DD057.4040208@gmail.com>
+ <20130829161217.GK10783@sirena.org.uk>
+ <20130829163358.GS6617@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <521E244B.4060406@ti.com> (Suman Anna's message of "Wed, 28 Aug
-	2013 11:24:43 -0500")
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <benoit.cousson@linaro.org>, Paul Walmsley <paul@pwsan.com>, Ohad Ben-Cohen <ohad@wizery.com>, Jassi Brar <jaswinder.singh@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ct8ez/PVgO98mXV4"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130829163358.GS6617@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Jean-Francois Moine <moinejf@free.fr>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>, liam.r.girdwood@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Suman Anna <s-anna@ti.com> writes:
 
-[...]
+--ct8ez/PVgO98mXV4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Yeah, the wkupm3 mbox usage is actually odd (an unfortunate result of
-> the way the hardware is designed) 
+On Thu, Aug 29, 2013 at 05:33:58PM +0100, Russell King - ARM Linux wrote:
+> On Thu, Aug 29, 2013 at 05:12:17PM +0100, Mark Brown wrote:
+> > On Wed, Aug 28, 2013 at 12:26:31PM +0200, Sebastian Hesselbarth wrote:
 
-heh, "design" is a generous term for this hardware. ;)
+> > > Also, we'll need to distinguish between the different audio controllers
+> > > on a single SoC, i.e. i2s0 and i2s1. I suggest checking the (phys) reg
+> > > base passed.
 
-> and doesn't quite fit into the way a regular mailbox is used. I will
-> summarize the following into the changelog in the next version to
-> better explain the odd usage and avoid any confusion.
->
-> A typical mbox device is used for communicating both to and fro with a
-> slave processor using two fifos, and has two internal interrupts on the
-> MPU that needs to be handled - a rx interrupt for processing in-bound
-> messages
+> > Why is this required - ideally this would have been mentioned in some of
+> > the previous reviews...
 
-but there are no inbound message, so we don't care about that
-interrupt.
+> I've mentioned the differences between the blocks to you repeatedly in
+> our massive thread, including that some contain the block with different
 
-> and a tx-ready interrupt for handling mbox tx readiness. 
+You have described some additional features which will require
+additional driver support.  I would expect that the device tree bindings
+for these features would be added as the features are added and the DTS
+files updated, for example by listing additional compatible strings if
+that was the binding update, as is the normal practice.  Obviously any
+hardware which is not compatible with the current binding should not be
+being registered using the current binding.
 
-Yes, this is where it gets tricky.  However, in the case of AM33xx, the
-MPU doesn't care about RX interrupts and the M3 doesn't care about TX
-interrupts.  hmm
+It is not clear from the above comment by Sebastian if he is referring
+to the same set of hardware differences or something new - doing things
+based on device address is highly unusual, it sounds like something to
+do with the integration into the SoC rather than to do with the IP.
 
-> Since the WkupM3 cannot access the mailbox registers, the burden of
-> handling the M3's Rx interrupt as well as those associated with the
-> MPU lies with the wkupm3 mbox device code. As you can see, this usage
-> is non-standard, and warrants that the code deal with both usr_ids
-> since they would be different (0 for MPU and 3 for M3). 
+--ct8ez/PVgO98mXV4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Another possibility would be to allow configurability over which usr_id
-is used for RX and which usr_id is used for TX.  IOW, have the DT
-binding have a usr_id_tx and and optional usr_id_rx.  If usr_id_rx isn't
-present (for most normal users), it uses usr_id_tx.  For AM33xx, we'd
-use usr_id_tx=0, usr_id_rx=3.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-That would allow you to get rid of the overrides for the IRQ functions,
-no?  But as I think about it, this id a bit yucky too.
+iQIcBAEBAgAGBQJSH4DnAAoJELSic+t+oim9WaUP/iIRyI7VvEaZ0NKasXFMhef1
+UcN/ufAgcobuewmWn12bBrgRtmmw3A4Gb2CH72ffY+CrxkHIPkbAeoHzAAkCZbXD
+Em8+mWUd3UmHcJ9MOngOe4XYS2oEEaCcQ4Due8IZF54ShI3LwuGYp6bgaV+zb+GJ
+2AJTJXX6e4sEX36olhPyfrQ/QnFD5P7/pGX3LaQ8rdEPSeqJt1pUqJ1C2Gus4cPZ
+QzS32riOGd63jHCGzX3UXhf3ooEeLCFPcu42HMxe0QvgGtkljM0u7EfEQbEFZDKw
+USpJGQ2G1xOzaBzP53Bqp/yGEaJYFctghsRqR2fIg8jCCWXWjUkgYKRN3HXmv5PL
+vvU5MOG5TZPfDScWmaGPEQxRem9JjeOAEzucIegCHVIOiPJEoYmPRPk600Tmt3dy
+iPvGYLKBHRNE8AN8IuoC7xVB5REP6p5raKV25mZymyo0Db5FIbMcV1DmyOa6trSL
+l+IWod8WYr0chfagKHmrzhlMp6bgAj0GhF0ifrqeynvnjEUNSv9nL6oI6L00OtlE
+3+K0QgWV/wimzJWMNZ0k4JAarA3bBNJa3gwccLYBY7dX7C0p5Z6nIhvuUKuVvpr1
+SDF+vSGqjn3I4XjeFRNF3WaN2YHLZRc2q4v3YqwsLShZcKRBiUXrrJfuxzu62JFC
+HW2Pp9lm83r4CMf+XKEJ
+=WXFo
+-----END PGP SIGNATURE-----
 
-Yet another possiblity would be to use the DT to define 2 mailboxes.
-One "normal" one for control of the MPU's view (usr_id=0) and one dummy
-one (usr_id=3) for control of the M3's view of the world.  Since Linux
-needs to control both, just define them both in the DT for linux
-control, and drive them from the M3 driver:
-
-  mbox_mpu = omap_mbox_get(<normal one>)
-  mbox_m3 = omap_mbox_get(<M3 one>)
-
-  omap_mbox_enable_irq(mbox_m3, IRQ_RX)
-  omap_mbox_msg_send(mbox_mpu, msg)
-  omap_mbox_disable_irq(mbox_m3, IRQ_RX)
-  omap_mbox_fifo_readback(mbox_mpu) /* API from earlier patch */  
-  omap_mbox_ack_irq(mbox_m3) /* this would need to be added/exported */
-
-AFAICS, other than the new APIs to export, this wouldn't require any
-additional M3 quirks in the mailbox driver. 
-
-To me, what's important here is that the quirkiness of the M3 setup
-remains contained in the M3 driver (where it should be), not hidden in
-the mailbox driver, when it has nothing to do with the mailbox hardware.
-
-> The OMAP mailbox core does use the internal per-device ops, so it is
-> actually better to plug-in custom ops for WkupM3, and deal with both
-> usr_ids within the ops. 
-
-This is where I disagree.  The M3 brokenness should be contained in the
-M3 driver, not the mailbox driver.
-
-> I had actually started out with usr_id=3 but
-> then I changed it to usr_id=0 so that it aligns with the DT
-> documentation 
-
-Which DT documentation?  I don't see how the DT documentation forces you
-into any usr_id choice.
-
-> and the expected behavior that usr_id corresponds to the MPU, like for
-> all mboxes on all other SoCs.
-
-For AM33xx, I think you can throw out any ideas of "expected
-behavior". ;) Using usr_id=3 as described above along with some
-documentation in the .dts would go a long ways.
-
->> 
->> Even that is a bit hacky IMO, but with proper documentation, is at least
->> better than the current approach IMO.
->
-> Even with approach you are suggesting, you still need to have specific
-> ops since the MPU interrupt handling code needs to deal with two usr_ids
-> for handling MPU Tx and WkupM3 Rx interrupt.
-
-Not if you actually define 2 mailboxes in the DT and use them both from
-the driver as I describe above.
-
->> 
->> That should at least get rid of the need to customize the IRQ management
->> functions of mailbox-omap2.c.   After that, the M3 driver could then
->> just do:
->> 
->>      omap_mbox_enable_irq()
->>      omap_mbox_msg_send()
->>      omap_mbox_disable_irq()
->
-> This is infact how it was done in the previous AM335 PM suspend version
-> [1] along with another API to read-back the message put in the Tx queue
-> [2]. 
-
-Except that the previous version was doing the readback/flush in the
-txev_handler of the M3 driver instead of in the message send like the
-current version (and my proposed one above.)
-
-> We do not want to add any new users of omap_mbox_enable_irq() or
-> omap_mbox_disable_irq() API, since these will not fit into the generic
-> mailbox framework. 
-
-What generic mailbox framework?  The only mailbox API I see currently is
-omap_mbox_*.  Assuming there's a generic one coming, how will a generic
-mailbox framework work without the enable/disable IRQ?  What other
-method would there be for determining the receiver of the message?
-Whatever that new generic API is for that is, it would have to use the
-omap_mbox_[enable|disable]_irq() APIs internally, so they are those not
-going away, so I don't see why you can't add more users.  IOW, any users of
-omap_mbox_[enable|disable]_irq() would be converted to the new API for
-configuring the message receiver.
-
-> The actual IRQ raised in the M3's NVIC would be
-> handled by M3, so the entire functionality of enabling, disabling the
-> M3's mailbox Rx interrupt and reading back the message is handled in the
-> omap_mbox_msg_send() without having to expose any new additional API.
-
-So the fundamental difference we have here is that you believe exposing
-a new API is wrong and I believe hiding non-mailbox related quirks of
-the M3 inside the mailbox driver is wrong.
-
-I've tried to argue above why I think adding the API is not a big deal.
-At least, it's not as big a deal (to me) as hiding M3 quirks inside the
-mailbox driver.
-
-Kevin
+--ct8ez/PVgO98mXV4--
