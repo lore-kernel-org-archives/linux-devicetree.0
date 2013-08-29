@@ -1,138 +1,90 @@
-From: Gabor Juhos <juhosg@openwrt.org>
-Subject: [PATCH v2] tty: ar933x_uart: add device tree support and binding documentation
-Date: Thu, 29 Aug 2013 11:48:15 +0200
-Message-ID: <1377769695-27397-1-git-send-email-juhosg@openwrt.org>
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-serial@vger.kernel.org, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH v2 3/4] powerpc: refactor of_get_cpu_node to support
+ other architectures
+Date: Thu, 29 Aug 2013 10:50:23 +0100
+Message-ID: <20130829095023.GB2878@e102568-lin.cambridge.arm.com>
+References: <1376586580-5409-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <1376674791-28244-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <1376674791-28244-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <2032060.4bgTKOdEX2@flatron>
+ <1376777376.25016.11.camel@pasglop>
+ <20130819101922.GI3719@e106331-lin.cambridge.arm.com>
+ <5212177C.8000709@gmail.com>
+ <521223FA.5050903@arm.com>
+ <20130822135930.GC23152@e106331-lin.cambridge.arm.com>
+ <20130828194638.AB78E3E0A6F@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20130828194638.AB78E3E0A6F@localhost>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Rob Herring <robherring2@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jonas Bonn <jonas@southpole.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Modify the probe routine to get the port line number
-from device tree if the 'of_node' is populated in the
-platform device. The driver can be built as module,
-thus add an OF specific module device table as well
-to support module auto loading.
+On Wed, Aug 28, 2013 at 08:46:38PM +0100, Grant Likely wrote:
+> On Thu, 22 Aug 2013 14:59:30 +0100, Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Mon, Aug 19, 2013 at 02:56:10PM +0100, Sudeep KarkadaNagesha wrote:
+> > > On 19/08/13 14:02, Rob Herring wrote:
+> > > > On 08/19/2013 05:19 AM, Mark Rutland wrote:
+> > > >> On Sat, Aug 17, 2013 at 11:09:36PM +0100, Benjamin Herrenschmidt wrote:
+> > > >>> On Sat, 2013-08-17 at 12:50 +0200, Tomasz Figa wrote:
+> > > >>>> I wonder how would this handle uniprocessor ARM (pre-v7) cores, for
+> > > >>>> which 
+> > > >>>> the updated bindings[1] define #address-cells = <0> and so no reg 
+> > > >>>> property.
+> > > >>>>
+> > > >>>> [1] - http://thread.gmane.org/gmane.linux.ports.arm.kernel/260795
+> > > >>>
+> > > >>> Why did you do that in the binding ? That sounds like looking to create
+> > > >>> problems ... 
+> > > >>>
+> > > >>> Traditionally, UP setups just used "0" as the "reg" property on other
+> > > >>> architectures, why do differently ?
+> > > >>
+> > > >> The decision was taken because we defined our reg property to refer to
+> > > >> the MPIDR register's Aff{2,1,0} bitfields, and on UP cores before v7
+> > > >> there's no MPIDR register at all. Given there can only be a single CPU
+> > > >> in that case, describing a register that wasn't present didn't seem
+> > > >> necessary or helpful.
+> > > > 
+> > > > What exactly reg represents is up to the binding definition, but it
+> > > > still should be present IMO. I don't see any issue with it being
+> > > > different for pre-v7.
+> > > > 
+> > > Yes it's better to have 'reg' with value 0 than not having it.
+> > > Otherwise this generic of_get_cpu_node implementation would need some
+> > > _hack_ to handle that case.
+> > 
+> > I'm not sure that having some code to handle a difference in standard
+> > between two architectures is a hack. If anything, I'd argue encoding a
+> > reg of 0 that corresponds to a nonexistent MPIDR value (given that's
+> > what the reg property is defined to map to on ARM) is more of a hack ;)
+> > 
+> > I'm not averse to having a reg value of 0 for this case, but given that
+> > there are existing devicetrees without it, requiring a reg property will
+> > break compatibility with them.
+> 
+> Then special cases those device trees, but you changing existing
+> convention really needs to be avoided. The referenced documentation
+> change is brand new, so we're not stuck with it.
 
-This makes it possible to use the driver for AR9330
-UART devices specified in device tree.
+I have no problem with changing the bindings and forcing:
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
----
-Changes since v1:
-  - move the doc from bindings/tty/serial to bindings/serial
+#address-cells = <1>;
+reg = <0>;
 
-The patch is agains the 'tty-next' branch of the
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tree
----
- .../devicetree/bindings/serial/qca,ar9330-uart.txt |   34 ++++++++++++++++++++
- drivers/tty/serial/ar933x_uart.c                   |   28 ++++++++++++++--
- 2 files changed, 59 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
+for UP predating v7, my big worry is related to in-kernel dts that we
+already patched to follow the #address-cells = <0> rule (and we had to
+do it since we got asked that question multiple times on the public
+lists).
 
-diff --git a/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt b/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
-new file mode 100644
-index 0000000..c5e032c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
-@@ -0,0 +1,34 @@
-+* Qualcomm Atheros AR9330 High-Speed UART
-+
-+Required properties:
-+
-+- compatible: Must be "qca,ar9330-uart"
-+
-+- reg: Specifies the physical base address of the controller and
-+  the length of the memory mapped region.
-+
-+- interrupt-parent: The phandle for the interrupt controller that
-+  services interrupts for this device.
-+
-+- interrupts: Specifies the interrupt source of the parent interrupt
-+  controller. The format of the interrupt specifier depends on the
-+  parent interrupt controller.
-+
-+Additional requirements:
-+
-+  Each UART port must have an alias correctly numbered in "aliases"
-+  node.
-+
-+Example:
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	uart0: uart@18020000 {
-+		compatible = "qca,ar9330-uart";
-+		reg = <0x18020000 0x14>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <3>;
-+	};
-diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-index 0437a9e..acd03af 100644
---- a/drivers/tty/serial/ar933x_uart.c
-+++ b/drivers/tty/serial/ar933x_uart.c
-@@ -17,6 +17,8 @@
- #include <linux/sysrq.h>
- #include <linux/delay.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
- #include <linux/tty.h>
- #include <linux/tty_flip.h>
- #include <linux/serial_core.h>
-@@ -623,13 +625,24 @@ static int ar933x_uart_probe(struct platform_device *pdev)
- 	struct uart_port *port;
- 	struct resource *mem_res;
- 	struct resource *irq_res;
-+	struct device_node *np;
- 	unsigned int baud;
- 	int id;
- 	int ret;
- 
--	id = pdev->id;
--	if (id == -1)
--		id = 0;
-+	np = pdev->dev.of_node;
-+	if (config_enabled(CONFIG_OF) && np) {
-+		id = of_alias_get_id(np, "serial");
-+		if (id < 0) {
-+			dev_err(&pdev->dev, "unable to get alias id, err=%d\n",
-+				id);
-+			return id;
-+		}
-+	} else {
-+		id = pdev->id;
-+		if (id == -1)
-+			id = 0;
-+	}
- 
- 	if (id > CONFIG_SERIAL_AR933X_NR_UARTS)
- 		return -EINVAL;
-@@ -713,12 +726,21 @@ static int ar933x_uart_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id ar933x_uart_of_ids[] = {
-+	{ .compatible = "qca,ar9330-uart" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ar933x_uart_of_ids);
-+#endif
-+
- static struct platform_driver ar933x_uart_platform_driver = {
- 	.probe		= ar933x_uart_probe,
- 	.remove		= ar933x_uart_remove,
- 	.driver		= {
- 		.name		= DRIVER_NAME,
- 		.owner		= THIS_MODULE,
-+		.of_match_table = of_match_ptr(ar933x_uart_of_ids),
- 	},
- };
- 
--- 
-1.7.10
+What do you mean by "special case those device trees" ? I have not
+planned to patch them again, unless we really consider that a necessary
+evil.
+
+Thanks,
+Lorenzo
+
