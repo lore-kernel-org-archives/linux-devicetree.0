@@ -1,25 +1,49 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/2] serial: fsl-imx-uart: Cleanup duplicate device tree
- binding
-Date: Thu, 29 Aug 2013 20:55:19 +0800
-Message-ID: <20130829125517.GJ18729@S2101-09.ap.freescale.net>
-References: <1377716903-19699-1-git-send-email-galak@codeaurora.org>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v6 1/7] of/documentation: update with clock information for
+ exynos hdmi subsystem
+Date: Thu, 29 Aug 2013 14:59:51 +0200
+Message-ID: <2408083.FgRSDHIkdl@amdc1227>
+References: <1377754827-31786-1-git-send-email-rahul.sharma@samsung.com>
+ <1377754827-31786-2-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1377716903-19699-1-git-send-email-galak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, fabio.estevam@freescale.com, s.hauer@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1377754827-31786-2-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2013 at 02:08:22PM -0500, Kumar Gala wrote:
-> We had two bindings for the same serial device, it looks like the one in
-> tty/serial/fsl-imx-uart.txt is the more up to date one so go with it and
-> merge a few things about the use/need for aliases in from
-> serial/fsl-imx-uart.txt.
+On Thursday 29 of August 2013 11:10:21 Rahul Sharma wrote:
+> Adding information about clocks to the binding documentation
+> for exynos mixer and hdmi.
 > 
-> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/video/exynos_hdmi.txt |   15
+> ++++++++++++++- .../devicetree/bindings/video/exynos_mixer.txt         
+> |    4 ++++ 2 files changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> b/Documentation/devicetree/bindings/video/exynos_hdmi.txt index
+> 323983b..1878418 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> @@ -12,7 +12,20 @@ Required properties:
+>  	a) phandle of the gpio controller node.
+>  	b) pin number within the gpio controller.
+>  	c) optional flags and pull up/down.
+> -
+> +- clocks: list of clock IDs from SoC clock driver.
+> +	a) hdmi: It is required for gate operation on aclk_200_disp1 clock
+> +		which clocks the display1 block.
 
-Acked-by: Shawn Guo <shawn.guo@linaro.org>
+The "aclk_200_disp1" name is valid only on Exynos 5, but this binding is 
+generic for all Exynos SoCs and probably also previous S5P SoCs. I believe 
+that "Gate of HDMI IP bus clock." would be appropriate here.
+
+Otherwise, this patch looks good to me.
+
+Best regards,
+Tomasz
