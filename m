@@ -1,141 +1,80 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCHv3 1/4] arm: dts: Add clock entries for timers in SOCFPGA
-Date: Thu, 29 Aug 2013 21:20:42 +0200
-Message-ID: <20130829192042.GC10398@pengutronix.de>
-References: <1377118427-20644-1-git-send-email-dinguyen@altera.com>
- <20130828153127.GA17806@pengutronix.de>
- <1377791718.26261.16.camel@linux-builds1>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Thu, 29 Aug 2013 21:26:34 +0200
+Message-ID: <CACRpkdaWPQTPw8u+97iV8MRB1fdeS40kd242pJd3UE9Ler4kRQ@mail.gmail.com>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
+	<521D0964.2080209@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1377791718.26261.16.camel@linux-builds1>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dinh Nguyen <dinguyen@altera.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dinh.linux@gmail.com, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Pavel Machek <pavel@denx.de>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, John Stultz <john.stultz@linaro.org>, Olof Johansson <olof@lixom.net>, Jamie Iles <jamie@jamieiles.com>, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <521D0964.2080209@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
+On Tue, Aug 27, 2013 at 10:17 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 08/26/2013 08:07 AM, Lars Poeschel wrote:
+>>
+>> Currently the kernel is ambigously treating GPIOs and interrupts
+>> from a GPIO controller: GPIOs and interrupts are treated as
+>> orthogonal. This unfortunately makes it unclear how to actually
+>> retrieve and request a GPIO line or interrupt from a GPIO
+>> controller in the device tree probe path.
+>
+> I still think that this patch is the wrong approach. Instead, the logic
+> should be hooked into gpio_request() and request_irq(). This patch only
+> addresses DT, and ignores anything else, hence doesn't seem like the
+> right level of abstraction to plug in, since the issue is not related to DT.
 
-On Thu, Aug 29, 2013 at 10:55:18AM -0500, Dinh Nguyen wrote:
-> Hi Steffen,
-> > > @@ -486,28 +482,32 @@
-> > >  			interrupts = <1 13 0xf04>;
-> > >  		};
-> > >  
-> > > -		timer0: timer0@ffc08000 {
-> > > +		timer@ffc08000 {
-> > 
-> > No. Why? Than I can not write something like
-> > 
-> > &timer0 {
-> > 	clock-frequency = <100000000>;
-> > };
-> > 
-> > and would have to reference the whole tree ala
-> > 
-> > / {
-> > 	soc {
-> > 		timer@ffc08000 {
-> > 			clock-frequency = <100000000>;
-> > 		};
-> > 	};
-> > };
-> > 
-> > in a boardspecific or SoC specific file (see below).
-> 
-> Agreed. Will adjust accordingly.
-> 
+We tried to do it that way, and it exploded. See commit
+b4419e1a15905191661ffe75ba2f9e649f5d565e
+"gpio/omap: auto request GPIO as input if used as IRQ via DT"
 
-Good.
+Here request_irq() augmented through its irqdomain to
+issue gpio_request_one().
 
-> > 
-> > > diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dts b/arch/arm/boot/dts/socfpga_cyclone5.dts
-> > > index 698dde9..c1af01c 100644
-> > > --- a/arch/arm/boot/dts/socfpga_cyclone5.dts
-> > > +++ b/arch/arm/boot/dts/socfpga_cyclone5.dts
-> > >  
-> > > diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
-> > > index 6f23121..72ff14c 100644
-> > > --- a/arch/arm/boot/dts/socfpga_vt.dts
-> > > +++ b/arch/arm/boot/dts/socfpga_vt.dts
-> > 
-> > Leads me to a question about terminology: Is the cyclone5 an actual board?
-> > AFAIK it is. And the Cyclone 5 FPGA is also called socfpga? Is that correct?
-> > But then, seeing that, in an other patch, you add two different sysmgr addresses to
-> > the socfpga_vt and socfpga_cyclone5, there are different socfpgas?
-> 
-> Yes, sofpga_cyclone5.dts is the devkit that is manufactured by Altera.
-> socfpga_vt.dts is a virtual platform for SOCFPGA. You can get the
-> virtual platform from Synopsis. It mimics everything except the FPGA. 
-> 
+Why was this patch reverted? It seems this is what has not
+managed to reach the audience here.
 
-Uh, nice. I will check out the vt.
+It turns out some drivers were already doing this:
 
-> socfpga is the base SOC with a Cyclone 5 FPGA on it. I'll be upstreaming
-> socfpga_arria5 soon, which has the SOCFPGA + Arria 5 FPGA.
-> 
+request_gpio(gpio);
+gpio_direction_input(gpio);
+request_irq(gpio_to_irq(gpio));
 
-Hm, okay. That might lead to confusion then...
+Looks perfectly valid right?
 
-> > 
-> > I want to write a devicetree for the SoCkit. It has a Cyclone 5 on it.
-> > So naturally I would now go and include the socfpga_cyclone5.dtsi, with all the
-> > cyclone5 stuff and just add my board specific stuff in a socfpga_sockit.dts.
-> > But there is no socfpga_cyclone5.dtsi, just the socfpga_cyclone5.dts, which itself
-> > seems to be a board...
-> 
-> socfpga.dtsi is the base DTSI for the platform. In hindsight, I should
-> have named it a bit different, but for now socfpga_cyclone5 is for the
-> board.
-> 
+Not so: after the above change, we tried to request the
+GPIO a *second time* in the GPIO driver's irq map function,
+and of course it failed, as it was already taken.
 
-and we should make the socfpga_cyclone5 a dtsi. I can do that.
-It's early in development and I see no reason not to fix it now.
-We have seen quite a lot of rearrangment with the imx6 for example. No need to
-duplicate it, if we know it beforehand.
+So saying that it should be done in the request_irq()
+function is imposing this other semantic on the kernel
+instead: you must *NOT* request the GPIO with
+request_gpio() if you're going to use it as an IRQ.
 
+(Also, it force us to implement the same code in each
+and every driver, but that is a lesser problem.)
 
-> > 
-> > So, how should we reorder the current dts (as I tested with current mainline, the
-> > support is completely broken out of the box, but works fine with your patches that
-> > are floating around, there should be no users as of now)?
-> 
-> Not sure what you mean by broken. I was able to boot 3.11-rc7 just now
-> using an initramfs. As you can already tell, I'm doing my best to get
-> more support for the platform upstream, but it will take time.
-> 
+I don't quite understand what is so hard around this.
+We cannot get away from restricting the semantics in
+some way, if gpio-controllers shall also be interrupt-controllers,
+the current patch is the least intrusive I've seen so far.
 
-Yeah, broken might have been a bit harsh :-D
-But my first experience with the mainline kernel was a scrambled serial console
-and hanging system as soon as you use the ethernet/ip=dhcp.
-And the SD wasn't working for me, too. But those SD cards are really more problematic
-than one might think, so...
+And I don't even think this is a Linux problem, handing
+out the same resource with two hands is ambigous and is
+going to cause problems with any operating system.
+It is better to restrict this and say in the binding doc that
+the gpio line cannot be <&gpio n> assigned when there
+is an interrupt on the same line.
 
-But as I said: with your patch series, both is working. Looking forward to your
-next versions of those patches.
-Now I have a hanging system, when I add the at24 on i2c-0, what ever might be
-the reason for that :-D
+We can start out by printing warnings when we fail to
+request the corresponding GPIO for an interrupt line
+though, it will be annoying enough and a kind of
+compromise.
 
-BTW: you don't happen to have any insight in what crazy things you do with the CRC32
-in your prebootloader, do you? Been trying some time to calculate the crc, but never
-got to the one the mkpimage generates. It doesn't seem to be what crc32 or chksum
-calculate or the datasheet is missing some essential info for me to understand it.
+Or it has to be the GPIO input hogs.
 
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Yours,
+Linus Walleij
