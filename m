@@ -1,139 +1,65 @@
-From: Russ Dill <Russ.Dill@ti.com>
-Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
-Date: Thu, 29 Aug 2013 09:10:51 -0700
-Message-ID: <CA+Bv8XbxV=BFjcSsUMX2pz9LeCkSwrjzZmj_=YbHGzyfbLXmaQ@mail.gmail.com>
-References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
-	<1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
-	<CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
-	<87txiasqhk.fsf@linaro.org>
-	<CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
-	<87ppsw7cgq.fsf@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
+Date: Thu, 29 Aug 2013 17:12:17 +0100
+Message-ID: <20130829161217.GK10783@sirena.org.uk>
+References: <20130828113459.48ecbb34@armhf>
+ <521DCD33.2070008@gmail.com>
+ <20130828121943.1c8327ca@skate>
+ <521DD057.4040208@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <87ppsw7cgq.fsf@linaro.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>
-Cc: devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="GmIAiBEz2jSsbeLA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <521DD057.4040208@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Jean-Francois Moine <moinejf@free.fr>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2013 at 8:17 AM, Kevin Hilman <khilman@linaro.org> wrot=
-e:
-> Russ Dill <Russ.Dill@ti.com> writes:
->
->> On Tue, Aug 27, 2013 at 3:44 PM, Kevin Hilman <khilman@linaro.org> w=
-rote:
->>> [+Mark Brown for regulator suspend sequence ideas]
->>>
->>> Russ Dill <Russ.Dill@ti.com> writes:
->>>
->>>> On Wed, Aug 14, 2013 at 6:38 AM, Jan L=C3=BCbbe <jlu@pengutronix.d=
-e> wrote:
->>>>> On Tue, 2013-08-13 at 15:20 -0700, Russ Dill wrote:
->> [snip]
->>>>> Shouldn't the TPS driver know how to generate this sequence? It s=
-eems
->>>>> fragile to do voltage adjustments behind the back of the regulato=
-r
->>>>> framework and the TPS driver. The wake-sequence values should mat=
-ch the
->>>>> (in-memory) regulator configuration on resume (which may have bee=
-n
->>>>> changed by DVFS).
->>>>
->>>> The sequence is both PMIC specific and board specific. Additionall=
-y,
->>>> the PMICs used aren't am335x specific. It would be nice to have th=
-e
->>>> regulator framework and the driver write all this out, but the
->>>> sequence is written out by the Cortex-M3 processor running some PM
->>>> firmware. Even if the code was changed to run on the A8, it'd have=
- to
->>>> run from a small piece of SRAM.
->>>
->>> So, why/how was the decision made to use the M3 instead of the MPU
->>> running from SRAM?
->>>
->>> As a firmware minimalist, I obviously prefer to do this from the MP=
-U
->>> side.  But also, because the M3 is reset every suspend sequence, th=
-is
->>> becomes rather heavy to do from the M3.
->>
->> After the feedback Vaibhav Bedia received on v2 of his suspend/resum=
-e
->> patchset for am335x, he decided to move many of the operations from
->> sleep33xx.S into the M3 firmware.
->>
->> See the commit message here:
->> http://arago-project.org/git/projects/?p=3Dam33x-cm3.git;a=3Dcommit;=
-h=3Da972ce2f6
->
-> Was this feedback on the public lists?  That patch has never been pos=
-ted
-> to linux-omap AFAICT.
->
->> I need to wait until after the PLLs are put into bypass, which is no=
-w
->> done in the M3 firmware. It also ends up being a lot easier to write
->> the I2C writer code there in C rather than in assembly in sleep33xx.=
-S.
->
-> hmm, (carefully) written functions in C can still be copied to SRAM. =
- I
-> dont' see that as an obstacle.
->
->>> Currently voltage scaling is only being proposed for suspend in thi=
-s
->>> series, but in theory it's possible from idle as well.  Doing this =
-from
->>> the MPU/SRAM seems much better suited for idle.
->>
->> The M3 firmware will also handle any cpuidle modes deeper than just
->> putting SDRAM into self refresh. This is actually the only way of
->> doing things like turning the MPU domain off on am335x.
->
-> Yes, it will have to handle the MPU/interconnect off parts but other
-> than that, that's the only thing it *has* to do (well, and handle wak=
-eup
-> from the deep state.)  The rest of the stuff being piled into the M3 =
-is
-> a result of software/firmware design decisions AFAICT.  As I predicte=
-d
-> when I first saw this SoC design, the firmware is getting bigger and
-> bigger.  Initially it was argued that it would be tiny, and only hand=
-le
-> the things it had to do.  Now it's growing due to "convenience".  IMO=
-,
-> this is a bad trend, and one that will make this code more and more
-> difficult to maintain upstream (assuming that's a goal.)
 
-Do you mean upstream as in the firmware upstream, or upstream as in
-the kernel upstream? Upstream kernel is really easy to maintain
-because sleep33xx.S just puts the SDRAM into self-refresh.
+--GmIAiBEz2jSsbeLA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The code to perform these transitions is going to exist, either in
-kernel or in firmware. If you are looking for this to be maintainable
-C code that is copied into SRAM, it will need to be built much like a
-firmware, with it's elf sections being copied into SRAM properly. I'm
-not sure how much it complicates things, but the code needs to be able
-to run with the MMU on and MMU off. The C code would be a minimalized
-duplication of much of what is already in mach-omap2. Because you are
-proposing to split this up between A8 and M3, much of that code would
-then be duplicated again within the M3 firmware.
+On Wed, Aug 28, 2013 at 12:26:31PM +0200, Sebastian Hesselbarth wrote:
 
-And don't forget that am335x is just the first platform with such a PM =
-scheme.
+> Unfortunately, mvebu-audio has already been taken by Mark. Also, we
+> know the differences for the three SoCs now and should have a compatible
+> for each (and maybe mvebu-audio for fallback).
 
-Because the M3 firmware already has to manage power domains, hwmods,
-plls, and clockdomains, adding or removing which ones it handles
-doesn't really change the size or complexity of the firmware. In fact,
-because so much of the code is common code, moving this into kernel
-would just mean making two copies of the firmware with different steps
-to be run, one for the A8 SRAM, one for the M3.
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We're not at the merge window yet so we can always change it.  We can
+also add additional compatible strings to the drivers at any point - the
+device can list as many as it likes, this is useful if you've got new
+controllers which are supersets of old ones for example.
+
+> Also, we'll need to distinguish between the different audio controllers
+> on a single SoC, i.e. i2s0 and i2s1. I suggest checking the (phys) reg
+> base passed.
+
+Why is this required - ideally this would have been mentioned in some of
+the previous reviews...
+
+--GmIAiBEz2jSsbeLA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSH3LdAAoJELSic+t+oim9OPEQAJlMM5h1dhk4zB9HhyANZSqw
+1OTJC4MbJeioLX7k+mLo9HPFOO8sMP1ya8WGtVyHeMjVjv4IYl8sanadWpa86psr
+c3jKZ2M9onsp7il75Z/0fNklK+/iZP9XbsmPwatVinEDYCxJ0/9dbFtZuJjq2Tuu
+ejnNOq/b5XYqIkfzyvPQQjMW0Avj3TycrpmAi68YnsEXbWhg4uhawYaSqUK5RFU+
+Rz9H41Is3daIOha66VoLIvOf4e2mK7Zn189snygWa6jWYmHglhAIWBKQZeOXXoeW
+L2OzeF6lFuVYEoQvuzVVOS4bApz669U8aMJ+r1sEFxzZBsUOSQANaBK1srv609Jq
+jnonxkgj7MucJ2RM860L1QmytOqemSsqIlR/ksr19GuOveIPcL5rWcsK9S540kYh
+fXDIVfkjOUbVeAtUPHqzmuoJoyn3OjB7G/CHtVfndoMmSMLTb3vbaL3IeC6MzNp9
+Xa/M2XGENgTAALOs5pa8877zwHqXbP0DQyP5yDwVgW6A5tGDHkvxUBkxJXvJoE2W
+KkYZWW+vBUsCVgKIp2h2EdUBAXERrNACau9gkHzx1bGcI1+KcADr3r9HemdIPi6z
+kekD5sS8yDQ5NHq++jb1r/tXx8X6I11g0mfUnudww/wDj2QLQsImkz+yV8ZcWmup
+PsY5NBzWsK7ccvE46X0C
+=YMzN
+-----END PGP SIGNATURE-----
+
+--GmIAiBEz2jSsbeLA--
