@@ -1,69 +1,49 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
-Date: Thu, 29 Aug 2013 12:05:34 +0100
-Message-ID: <20130829110534.GV10783@sirena.org.uk>
-References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
- <1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
- <CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
- <87txiasqhk.fsf@linaro.org>
- <CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH 1/3] ARM: AM33xx: hwmod: Add RNG module data
+Date: Thu, 29 Aug 2013 11:30:25 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1308291127250.19789@utopia.booyaka.com>
+References: <1375777984-6267-1-git-send-email-lokeshvutla@ti.com> <1375777984-6267-2-git-send-email-lokeshvutla@ti.com> <alpine.DEB.2.02.1308281845560.22040@utopia.booyaka.com> <521F12CA.8010608@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+61ZvX8xaeyevaKt"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
+In-Reply-To: <521F12CA.8010608@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Russ Dill <Russ.Dill@ti.com>
-Cc: Kevin Hilman <khilman@linaro.org>, Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>, devicetree@vger.kernel.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, devicetree@vger.kernel.org, rob@landley.net, rnayak@ti.com, benoit.cousson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+Hi
 
---+61ZvX8xaeyevaKt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, 29 Aug 2013, Lokesh Vutla wrote:
 
-On Tue, Aug 27, 2013 at 06:05:34PM -0700, Russ Dill wrote:
-> On Tue, Aug 27, 2013 at 3:44 PM, Kevin Hilman <khilman@linaro.org> wrote:
+> On Thursday 29 August 2013 12:18 AM, Paul Walmsley wrote:
+> > Hi
+> > 
+> > On Tue, 6 Aug 2013, Lokesh Vutla wrote:
+> > 
+> >> Add RNG hwmod data for AM33xx SoC.
+> >>
+> >> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> > 
+> > I tried to queue this one, but it caused AM33xx boots to hang.  
+> > Thought it might be related to the patch ordering -- seems to me that 
+> > the clock change patch needed to come before this patch -- but if I 
+> > recall correctly, both BeagleBone and BeagleBone-LT still hung. 
+> This is because register address space is not passed in hwmod_data as it
+> is passed from dt. So we need to include 3/3 patch in this series to boot.
 
-> > The framework already has a concept of suspend voltage, suspend mode
-> > etc.  Maybe it needs some generalizing so low-level platform code could
-> > query the framework for the sequence so it can be done late in platform
-> > idle/suspend paths.  Especially for regmap drivers, this seems feasible.
+So this patch has a dependency on a DT data patch?  If so then please 
+upstream that through Benoit, and put in the patch description on this 
+patch that there's a dependency on that patch.  If you post those together 
+in a series, please make sure that the DT patch comes first so it doesn't 
+break 'git bisect'. 
 
-> Yes, my main hesitation for going down this path is possible lack of
-> support for such an interface upstream.
+I've already queued the clock change patch for upstream.
 
-Someone is going to have to walk me through the context for me to fully
-understand what this is all about - what's the problem?
+> PS: Probe for this driver will be failed even after this. Support for 
+> this version of rng ip is already posted and pushed into cryptodev-2.6 
+> tree.
 
-Generally for suspend if the sequencing is being done by the processor
-it's been handled by the drivers for the components in question.  For
-sequencing beyond that you're into hardware features which aren't all
-that regular sadly and often aren't controllable either.  It sounds like
-this is the latter case but the thing that manages some of the late
-power down stages does so using a firmware we can rewrite?
+I don't quite understand, could you please rephrase?
 
---+61ZvX8xaeyevaKt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSHyr7AAoJELSic+t+oim9UTMP/2i04TBDlsb8WPvSPlfu7FDJ
-K/QiIyEf5QPkhvFw2wqFfEPQPHOfs7hmq0HJ3Y2Z1HAkZhI5IzNJfCp8/1D+QgnC
-ghBqYYUUs3Y7kq2aFpHX3ruk4Mz3duK8d0Q2HSv/4vRhVzGSKAFWZhjuIZDgX78p
-dQjzHDxPGpXmZcpAJ1SwQ35yDeip1nx68SNkKXVj5YzteRsMzrp7ykgSBnddeugT
-qbt1ohD9QY9JVV0oONG4HnMhLi8bnmkCGXAeG+OzmjP8eLfREy42elNwbAMBogwj
-QfqPacA3xNQKIQMuGVZu4RBLyWkAbAb/ZFsAvwUBCKeSDn9cQMISJp93o7KrDklB
-zHgKoBfKYDVjAQmIb/HHNkfLk5Wj1wnQbwhCvrAawsti5pGKJGoGKlPho+lndaew
-XohW6jtq8X10W/GeeoMQCslUZDcf9BDlX0F7CsxOyReowSdxnB1goNOZJkxaPFTb
-9z1wzeK8U0844mrbhfS5szq+SxXtJJj5qyu3Dj0YN82gTwXCxJkiBofE8ABDmbXd
-7EAfKbge3mp8GP5JyrqfPt1g+hBcOMgHEsZm8BDAX7iLCxqDxGUfbqNYBXBO2AjS
-hADjHNRt1niyp7ggk+kVkEBOPgnBJdzTM6dRfOS5OQEE45f0gCuf6C3rF596uQb7
-/7KXvKoA0idEszuM8sRW
-=c6vT
------END PGP SIGNATURE-----
-
---+61ZvX8xaeyevaKt--
+- Paul
