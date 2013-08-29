@@ -1,47 +1,48 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5] gpio: pcf857x: Add OF support
-Date: Fri, 30 Aug 2013 01:52:08 +0200
-Message-ID: <1992930.Xjyakli5Kt@avalon>
-References: <1377590559-14279-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CACRpkda=pZ6xQ2XJke=MBLiH_DAS8CXW+JOZ856ohGZi+fOCzA@mail.gmail.com> <35333449.0R3QP6op66@avalon>
+From: "Markus Mayer" <markus.mayer@linaro.org>
+Subject: [PATCH v6 0/2] gpio: bcm281xx: GPIO driver
+Date: Thu, 29 Aug 2013 16:51:05 -0700
+Message-ID: <1377820267-20050-1-git-send-email-markus.mayer@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <35333449.0R3QP6op66@avalon>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Tomasz Figa <t.figa@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Archit Taneja <archit@ti.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Christian Daudt <csd@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 30 August 2013 01:44:50 Laurent Pinchart wrote:
-> On Thursday 29 August 2013 20:24:32 Linus Walleij wrote:
-> > On Wed, Aug 28, 2013 at 1:58 PM, Laurent Pinchart wrote:
-> > > On Tuesday 27 August 2013 19:18:55 Wolfram Sang wrote:
-> > >> > The driver should support the same chip models reardless of whether
-> > >> > it's used with or without DT. If an entry in the OF table has no
-> > >> > corresponding entry in the I2C table I would consider that as a
-> > >> > driver
-> > >> > bug.
-> > >> 
-> > >> Linus Walleij posted a patch to support DT only probing, but too many
-> > >> side-effects showed up. Some were fixable (probe regressions) and some
-> > >> need more work, if feasible at all. Most prominent is that runtime
-> > >> instantiation of i2c slaves currently needs an entry in the i2c table.
-> > > 
-> > > Linus, I'd like to get this in v3.12 if it's not too late. Could you
-> > > please provide your input ?
-> > 
-> > Provided some input on the v4 version,
-> 
-> Do you mean v4 of this patch ? I can't find your reply.
+This patch series adds the GPIO driver, and its device tree bindings,
+for the Broadcom bcm281xx family of mobile SoCs.
 
-Scratch that, I've found it. Sorry for the noise.
+Changes since v5:
 
-> > due to being a bit overloaded my patch queue is overloaded...
-> 
-> No worries. We can delay this one until v3.13.
+- Folded former patch 2/3 into patch 1 (so now there's only 2 patches)
+- Changed the subject lines of the series from "ARM: ..." to "gpio: ..."
+- Added a more detailed description to the commit message in patch 1
+- Slightly edited the commit message in patch 2 to match
+- No changes to the code
+
+Markus Mayer (2):
+  gpio: bcm281xx: Add GPIO driver
+  gpio: bcm281xx: Add device node for the GPIO controller
+
+ .../devicetree/bindings/gpio/gpio-bcm-kona.txt     |   52 ++
+ arch/arm/boot/dts/bcm11351.dtsi                    |   16 +
+ arch/arm/mach-bcm/Kconfig                          |    2 +-
+ drivers/gpio/Kconfig                               |    5 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-bcm-kona.c                       |  631 ++++++++++++++++++++
+ 6 files changed, 706 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt
+ create mode 100644 drivers/gpio/gpio-bcm-kona.c
+
 -- 
-Regards,
-
-Laurent Pinchart
-
+1.7.9.5
