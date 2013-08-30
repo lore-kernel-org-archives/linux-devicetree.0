@@ -1,120 +1,68 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
-Date: Fri, 30 Aug 2013 16:08:41 +0100
-Message-ID: <20130830150841.GY6617@n2100.arm.linux.org.uk>
-References: <521DCD33.2070008@gmail.com> <20130828121943.1c8327ca@skate> <521DD057.4040208@gmail.com> <20130828131548.0009d613@skate> <521DE2B3.9050508@gmail.com> <20130828135827.2307c89e@skate> <521DEA20.8020103@gmail.com> <20130829120704.410ad309@armhf> <20130829101303.GR6617@n2100.arm.linux.org.uk> <521F2A03.8000905@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <521F2A03.8000905@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jean-Francois Moine <moinejf@free.fr>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC 0/3] drm: Add panel support
+Date: Fri, 30 Aug 2013 17:25:18 +0200
+Message-ID: <1377876321-26835-1-git-send-email-treding@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2013 at 01:01:23PM +0200, Sebastian Hesselbarth wrote:
-> Taking the sound node above:
->
-> sound {
-> 	compatible = "whatever-audio";
-> 	...
-> 	audio-codec = <&rt1234 1>, <&spdif 0>;
-> 	audio-codec-names = "i2s", "spdifo";
-> 	...
-> };
->
-> Each audio-codec phandle with arg links to one specific "port" at some
-> "codec". The audio-codec-names property allows the ASoC driver to
-> determine the local "ports" where the above codecs are connected.
-> The dummy codecs are ASoC specific and must be added by the driver.
+Hi,
 
-I think it's slightly more complicated than that.  Here's what needs to
-be setup with DPCM - when it eventually works:
+This patch series adds support for panels to DRM. The current implementation
+is very basic and only provides hooks for a panel to handle DPMS changes and
+return a list of supported modes. That should be enough to support a rather
+large number of panels. It should also be easy to extend the framework for
+more sophisticated panels such as DSI.
 
-1. Two DAI links need to be setup:
-1a:             .name = "S/PDIF1",
-                .stream_name = "Audio Playback",
-                .platform_name = "mvebu-audio.1",
-                .cpu_dai_name = "mvebu-audio.1",
-                .codec_name = "snd-soc-dummy",
-                .codec_dai_name = "snd-soc-dummy-dai",
-                .dynamic = 1,
+I'm aware of the existing efforts to create such a framework, called CDF. My
+impression was that a lot of people thought it overengineered and that it
+doesn't fit well into the existing DRM infrastructure. This alternative
+proposal is an attempt to start with something simpler (yet extensible) that
+fits into DRM more nicely.
 
-1b:             .name = "Codec",
-                .stream_name = "IEC958 Playback",
-                .cpu_dai_name = "snd-soc-dummy-dai",
-                .platform_name = "snd-soc-dummy",
-                .no_pcm = 1,
-                .codec_dai_name = "dit-hifi",
-                .codec_name = "spdif-dit",
+Patch 1 adds the "framework" if one can call it that. At the moment it isn't
+anything more than a global registry that panel drivers can register panels
+with and display drivers can retrieve them. All of this is very device tree
+centric right now, but it shouldn't be difficult to add support for platform
+data.
 
-   This separates the CPU DAI from the codec DAI - the important thing
-   seems to be that the first entry (which connects the CPU DAI to the
-   dummy codec) breaks the automatic DAPM routes between the CPU streams
-   and the codec streams.
+Patch 2 implements a simple driver for dumb panels that can have a regulator
+for the supply voltage of the panel and a separate GPIO to enable the panel.
+Three simple panels are currently supported by that driver.
 
-2. DAPM routes need to be created between the CPU DAI and Codec DAIs to
-   wire the back together:
+Finally patch 3 hooks up the panel framework with the Tegra DRM driver. Note
+that the framework isn't tied to the core at the moment. That can easily be
+changed if we want to, but I didn't see a need so far. Instead the driver
+calls the .dpms() and .get_modes() hooks in it's encoder/connector
+implementation.
 
-	static const struct snd_soc_dapm_route routes[] = {
-	        { "spdif-Playback", NULL, "spdifdo" },
-	};
+Thierry
 
-"spdif-Playback" is the stream name in the spdif-dit codec (I had to change
-the name from merely "Playback" as otherwise the route gets bound to the
-dummy codec instead.)  "spdifdo" is the audio interface widget name in the
-CPU DAI, which is connected to the CPU DAI playback stream.
+Thierry Reding (3):
+  drm: Add panel support
+  drm/panel: Add simple panel support
+  drm/tegra: Implement panel support
 
-So, if we wanted two codecs, one spdif and one i2s, we would need something
-like this:
+ .../devicetree/bindings/panel/panel-simple.txt     |  25 ++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   2 +
+ drivers/gpu/drm/drm_panel.c                        |  96 ++++++
+ drivers/gpu/drm/panel/Kconfig                      |  17 ++
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-simple.c               | 335 +++++++++++++++++++++
+ drivers/gpu/host1x/drm/Kconfig                     |   1 +
+ drivers/gpu/host1x/drm/drm.h                       |   1 +
+ drivers/gpu/host1x/drm/output.c                    |  28 +-
+ include/drm/drm_panel.h                            |  65 ++++
+ 11 files changed, 571 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/panel/panel-simple.txt
+ create mode 100644 drivers/gpu/drm/drm_panel.c
+ create mode 100644 drivers/gpu/drm/panel/Kconfig
+ create mode 100644 drivers/gpu/drm/panel/Makefile
+ create mode 100644 drivers/gpu/drm/panel/panel-simple.c
+ create mode 100644 include/drm/drm_panel.h
 
-DAI links:
-                .name = "CPU",
-                .stream_name = "Audio Playback",
-                .platform_name = "mvebu-audio.1",
-                .cpu_dai_name = "mvebu-audio.1",
-                .codec_name = "snd-soc-dummy",
-                .codec_dai_name = "snd-soc-dummy-dai",
-                .dynamic = 1,
-
-                .name = "I2S",
-                .stream_name = "PCM Playback",
-                .cpu_dai_name = "snd-soc-dummy-dai",
-                .platform_name = "snd-soc-dummy",
-                .no_pcm = 1,
-                .codec_dai_name = "i2s-codec-dai-name",
-                .codec_name = "i2s-codec-name",
-                .ops = &..._ops,
-
-                .name = "SPDIF",
-                .stream_name = "IEC958 Playback",
-                .cpu_dai_name = "snd-soc-dummy-dai",
-                .platform_name = "snd-soc-dummy",
-                .no_pcm = 1,
-                .codec_dai_name = "dit-hifi",
-                .codec_name = "spdif-dit",
-
-with routes like this:
-
-static const struct snd_soc_dapm_route routes[] = {
-	{ "i2sdi", NULL, "i2s-codec-Capture" },
-	{ "i2s-codec-Playback", NULL, "i2sdo" },
-        { "spdif-Playback", NULL, "spdifdo" },
-};
-
-If we were to add support for SPDIF recording mode, then we'd need to add
-an additional route for that.
-
-The pitfalls here are:
-1. if we are going to refer to codec streams in DAPM routes, we need all
-   codec implementations to have unique names, or some way for DAPM routes
-   to refer to specific codec streams.
-
-2. being able to effectively represent this in DT.
-
-I think we need a flag in DT to indicate a DPCM configuration, which would
-trigger the creation of the first DAI link.  The second and (optionally)
-third can be generated from knowing the codec DAI name and the codec
-name.  I think we also need a way to specify arbitary DAPM routes in DT
-as well.
+-- 
+1.8.4
