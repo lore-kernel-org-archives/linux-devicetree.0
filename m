@@ -1,7 +1,7 @@
 From: Guenter Roeck <linux@roeck-us.net>
-Subject: [RFC PATCH 5/6] extcon-gpio: Describe devicetree bindings
-Date: Thu, 29 Aug 2013 21:29:37 -0700
-Message-ID: <1377836978-24082-6-git-send-email-linux@roeck-us.net>
+Subject: [PATCH 2/6] extcon-gpio: If the gpio driver/chip supports debounce, use it
+Date: Thu, 29 Aug 2013 21:29:34 -0700
+Message-ID: <1377836978-24082-3-git-send-email-linux@roeck-us.net>
 References: <1377836978-24082-1-git-send-email-linux@roeck-us.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1377836978-24082-1-git-send-email-linux@roeck-us.net>
@@ -12,38 +12,24 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- .../devicetree/bindings/extcon/extcon-gpio         |   23 ++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio
+ drivers/extcon/extcon-gpio.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio b/Documentation/devicetree/bindings/extcon/extcon-gpio
-new file mode 100644
-index 0000000..091ddc6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-gpio
-@@ -0,0 +1,23 @@
-+Device-Tree bindings for extcon/extcon-gpio driver
+diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+index 77d35a7..973600e 100644
+--- a/drivers/extcon/extcon-gpio.c
++++ b/drivers/extcon/extcon-gpio.c
+@@ -111,6 +111,11 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto err;
+ 
++	/* Use gpio debounce if available. If so, don't debounce in software. */
++	if (pdata->debounce &&
++	    !gpio_set_debounce(extcon_data->gpio, pdata->debounce * 1000))
++		extcon_data->debounce_jiffies = 0;
 +
-+Required properties:
-+	- compatible = "gpio-connector";
-+	- presence-detect-gpios - presence detect gpio pin
-+
-+Optional properties:
-+	- debounce-interval - debounce interval in milli-seconds
-+	- state-on - on (connected) state
-+	- state-off - off (disconnected) state
-+	  Depending on the type of connector or cable, states may
-+	  for example be reported as "connected"/"disconnected"
-+	  or "inserted"/"removed".
-+
-+Example node:
-+
-+	some-connector {
-+		compatible = "gpio-connector";
-+		presence-detect-gpios = <&gpio1 7 1>;
-+		debounce-interval = <1>;
-+		state-on = "connected";
-+		state-on = "disconnected";
-+	};
+ 	INIT_DELAYED_WORK(&extcon_data->work, gpio_extcon_work);
+ 
+ 	extcon_data->irq = gpio_to_irq(extcon_data->gpio);
 -- 
 1.7.9.7
