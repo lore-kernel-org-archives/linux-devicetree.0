@@ -1,82 +1,57 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCHv2 4/4] Documentation: Add device tree bindings for
- Freescale FTM PWM.
-Date: Fri, 30 Aug 2013 19:30:08 +0200
-Message-ID: <20130830173008.GC30069@pengutronix.de>
-References: <1377856132-11290-1-git-send-email-Li.Xiubo@freescale.com>
- <1377856132-11290-5-git-send-email-Li.Xiubo@freescale.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] ARM: dts: vexpress: Add CCI node to TC2 device-tree
+Date: Fri, 30 Aug 2013 18:36:37 +0100
+Message-ID: <20130830173636.GB10045@e102568-lin.cambridge.arm.com>
+References: <1377872760.3655.48.camel@linaro1.home>
+ <20130830161327.GA10045@e102568-lin.cambridge.arm.com>
+ <CAOesGMhwqqOuSwVEukpfqM00BV2i=fQRhLUaf-wf-iVGR_mNbg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOesGMhwqqOuSwVEukpfqM00BV2i=fQRhLUaf-wf-iVGR_mNbg@mail.gmail.com>
 Content-Disposition: inline
-In-Reply-To: <1377856132-11290-5-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: r65073@freescale.com, thierry.reding@gmail.com, grant.likely@linaro.org, linux@arm.linux.org.uk, rob@landley.net, ian.campbell@citrix.com, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: "Jon Medhurst (Tixy)" <tixy@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2013 at 05:48:52PM +0800, Xiubo Li wrote:
-> This patch adds the document for Freescale FTM PWM driver under
-> Documentation/devicetree/bindings/pwm/.
+On Fri, Aug 30, 2013 at 05:30:17PM +0100, Olof Johansson wrote:
+> On Fri, Aug 30, 2013 at 9:13 AM, Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
 > 
-> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-fsl-ftm.txt        | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+> > Now that MCPM and CPU idle are heading to mainline, it should get queued asap,
+> > thanks for that, probably as a fix at -rc1, since it is quite late now.
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-> new file mode 100644
-> index 0000000..b2b5214
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-> @@ -0,0 +1,40 @@
-> +Freescale FTM PWM controller
-> +
-> +Required properties:
-> +- compatible: Should be "fsl,vf610-ftm-pwm"
-> +- reg: Physical base address and length of the controller's registers
-> +- #pwm-cells: Should be 3. See pwm.txt in this directory for a description of
-> +  the cells format.
-> +- clock-names : Includes the following module clock source entries:
-> +    "ftm0" (system clock),
-> +    "ftm0_fix_sel" (fixed frequency clock),
-> +    "ftm0_ext_sel" (external clock)
-> +- clocks : Must contain an entry list for entries in clock-names.
-> +- fsl,pwm-counter-clk: The FTM PWM counter clock source, should be one of the
-> +  entries in clock-names.
-> +- fsl,pwm-avaliable-chs: The FTM channels ID list of current board which are
-> +  available as PWM function.
-> +- For each channel's pinctrl, the "chN-active" and "chN-idle" states should be
-> +  implemented at same time.
-> +
-> +Example:
-> +
-> +pwm0: pwm@40038000 {
-> +		compatible = "fsl,vf610-ftm-pwm";
-> +		reg = <0x40038000 0x1000>;
-> +		#pwm-cells = <3>;
-> +		clock-names = "ftm0", "ftm0_fix_sel", "ftm0_ext_sel";
-> +		clocks = <&clks VF610_CLK_FTM0>,
-> +			<&clks VF610_CLK_FTM0_FIX_SEL>,
-> +			<&clks VF610_CLK_FTM0_EXT_SEL>;
-> +		pinctrl-names = "ch0-active", "ch0-idle", "ch1-active", "ch1-idle",
-> +		....;
-> +		pinctrl-0 = <&pinctrl_pwm0_ch0_active>;
-> +		pinctrl-1 = <&pinctrl_pwm0_ch0_idle>;
-> +		pinctrl-2 = <&pinctrl_pwm0_ch1_active>;
-> +		pinctrl-3 = <&pinctrl_pwm0_ch1_idle>;
-> +		...
-> +		fsl,pwm-counter-clk = "ftm0_ext_sel";
-> +		fsl,pwm-avaliable-chs = <0 3 5 6>;
+> This is not a regression, it's a missing piece of a feature. It's not
+> post-rc1 material.
 
-I don't think this proerty is useful. Just enable all channels. I think
-this was mentioned before.
+It is an incomplete dts, which has been true since the dts file for TC2 has
+been merged in the kernel or better since the CCI bindings got merged in
+the kernel.
 
-Sascha
+> It's also an indication that nobody actually tested the feature branch
+> before the pull request was sent. Hrmpf.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+It has been tested and we were aware that the dts in the kernel was missing
+the CCI node, we were not really sure about what to do given the ongoing
+discussions on dts in the kernel and so on and considered that we might
+get the patch in as a fix eventually; we made a mistake, sorry.
+
+> Shouldn't you be updating some vexpress_defconfig and probably
+> multi_v7_defconfig to at least get some build coverage for this as
+> well, by the way?
+> 
+> I really should hold this off for 3.13, but I'll apply it to the late/
+> branch anyway.
+
+Thanks,
+Lorenzo
