@@ -1,129 +1,120 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: Re: [Patch v3 2/3] ARM: dts: Document the CCI PMU DT bindings
-Date: Fri, 30 Aug 2013 15:36:06 +0100
-Message-ID: <5220ADD6.1020006@arm.com>
-References: <1377183748-5717-1-git-send-email-punit.agrawal@arm.com>
- <1377183748-5717-3-git-send-email-punit.agrawal@arm.com>
- <1377871180.3655.41.camel@linaro1.home>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 1/2] ARM: Dove: Add the audio devices in DT
+Date: Fri, 30 Aug 2013 16:08:41 +0100
+Message-ID: <20130830150841.GY6617@n2100.arm.linux.org.uk>
+References: <521DCD33.2070008@gmail.com> <20130828121943.1c8327ca@skate> <521DD057.4040208@gmail.com> <20130828131548.0009d613@skate> <521DE2B3.9050508@gmail.com> <20130828135827.2307c89e@skate> <521DEA20.8020103@gmail.com> <20130829120704.410ad309@armhf> <20130829101303.GR6617@n2100.arm.linux.org.uk> <521F2A03.8000905@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1377871180.3655.41.camel@linaro1.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <521F2A03.8000905@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+On Thu, Aug 29, 2013 at 01:01:23PM +0200, Sebastian Hesselbarth wrote:
+> Taking the sound node above:
+>
+> sound {
+> 	compatible = "whatever-audio";
+> 	...
+> 	audio-codec = <&rt1234 1>, <&spdif 0>;
+> 	audio-codec-names = "i2s", "spdifo";
+> 	...
+> };
+>
+> Each audio-codec phandle with arg links to one specific "port" at some
+> "codec". The audio-codec-names property allows the ASoC driver to
+> determine the local "ports" where the above codecs are connected.
+> The dummy codecs are ASoC specific and must be added by the driver.
 
-On 30/08/13 14:59, Jon Medhurst (Tixy) wrote:
-> On Thu, 2013-08-22 at 16:02 +0100, Punit Agrawal wrote:
->> The CCI PMU can profile bus transactions at the master and slave
->> interfaces of the CCI. The PMU can be used to observe an aggregated
->> view of the bus traffic between the various components connected to the
->> CCI.
->>
->> Introduce a binding for the CCI PMU. The PMU node will be a sub-node of
->> the CCI node.
->>
->> Cc: devicetree@vger.kernel.org
->> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
->> Cc: Stephen Warren <swarren@wwwdotorg.org>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Cc: Rob Herring <rob.herring@calxeda.com>
->> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
->> ---
->>   Documentation/devicetree/bindings/arm/cci.txt |   46 +++++++++++++++++++++++++
->>   1 file changed, 46 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/cci.txt b/Documentation/devicetree/bindings/arm/cci.txt
->> index 024c03d..551119e 100644
->> --- a/Documentation/devicetree/bindings/arm/cci.txt
->> +++ b/Documentation/devicetree/bindings/arm/cci.txt
->> @@ -85,6 +85,42 @@ specific to ARM.
->>   				    corresponding interface programming
->>   				    registers.
->>
->> +	- CCI PMU node
->> +
->> +		Parent node must be CCI interconnect node.
->> +
->> +		A CCI pmu node must contain the following properties:
->> +
->> +		- compatible
->> +			Usage: required
->> +			Value type: <string>
->> +			Definition: must be "arm,cci-400-pmu"
->> +
->> +		- reg:
->> +			Usage: required
->> +			Value type: Integer cells. A register entry, expressed
->> +				    as a pair of cells, containing base and
->> +				    size.
->> +			Definition: the base address and size of the
->> +				    corresponding interface programming
->> +				    registers.
->> +
->> +		- interrupts:
->> +			Usage: required
->> +			Value type: Integer cells. Array of interrupt specifier
->> +				    entries, as defined in
->> +				    ../interrupt-controller/interrupts.txt.
->> +			Definition: list of counter overflow interrupts, one per
->> +				    counter. The interrupts must be specified
->> +				    starting with the cycle counter overflow
->> +				    interrupt, followed by counter0 overflow
->> +				    interrupt, counter1 overflow interrupt,...
->> +				    ,counterN overflow interrupt.
->> +
->> +				    The CCI PMU has an interrupt signal for each
->> +				    counter. The number of interrupts must be
->> +				    equal to the number of counters.
->> +
->>   * CCI interconnect bus masters
->>
->>   	Description: masters in the device tree connected to a CCI port
->> @@ -169,6 +205,16 @@ Example:
->>   			interface-type = "ace";
->>   			reg = <0x5000 0x1000>;
->>   		};
->> +
->> +		pmu@9000 {
->> +			 compatible = "arm,cci-400-pmu";
->> +			 reg = <0x9000 0x5000>;
->> +			 interrupts = <0 101 4>,
->> +				      <0 102 4>,
->> +				      <0 103 4>,
->> +				      <0 104 4>,
->> +				      <0 105 4>;
->> +		};
->>   	};
->>
->>   This CCI node corresponds to a CCI component whose control registers sits
->
->
-> It's not shown in the diff above, but the documentation gives the
-> following for the cci node:
->
-> 		ranges = <0x0 0x0 0x2c090000 0x6000>;
->
-> which doesn't include the PMU nodes, so should that 0x6000 also be
-> changed to 0x10000 (the full range of addresses in the TRM).
->
+I think it's slightly more complicated than that.  Here's what needs to
+be setup with DPCM - when it eventually works:
 
-You're right. Now that I am adding support for the PMU, this range 
-should be extended to include the rest of the CCI addresses. I'll update 
-it in the next version.
+1. Two DAI links need to be setup:
+1a:             .name = "S/PDIF1",
+                .stream_name = "Audio Playback",
+                .platform_name = "mvebu-audio.1",
+                .cpu_dai_name = "mvebu-audio.1",
+                .codec_name = "snd-soc-dummy",
+                .codec_dai_name = "snd-soc-dummy-dai",
+                .dynamic = 1,
 
-Cheers,
-Punit
+1b:             .name = "Codec",
+                .stream_name = "IEC958 Playback",
+                .cpu_dai_name = "snd-soc-dummy-dai",
+                .platform_name = "snd-soc-dummy",
+                .no_pcm = 1,
+                .codec_dai_name = "dit-hifi",
+                .codec_name = "spdif-dit",
+
+   This separates the CPU DAI from the codec DAI - the important thing
+   seems to be that the first entry (which connects the CPU DAI to the
+   dummy codec) breaks the automatic DAPM routes between the CPU streams
+   and the codec streams.
+
+2. DAPM routes need to be created between the CPU DAI and Codec DAIs to
+   wire the back together:
+
+	static const struct snd_soc_dapm_route routes[] = {
+	        { "spdif-Playback", NULL, "spdifdo" },
+	};
+
+"spdif-Playback" is the stream name in the spdif-dit codec (I had to change
+the name from merely "Playback" as otherwise the route gets bound to the
+dummy codec instead.)  "spdifdo" is the audio interface widget name in the
+CPU DAI, which is connected to the CPU DAI playback stream.
+
+So, if we wanted two codecs, one spdif and one i2s, we would need something
+like this:
+
+DAI links:
+                .name = "CPU",
+                .stream_name = "Audio Playback",
+                .platform_name = "mvebu-audio.1",
+                .cpu_dai_name = "mvebu-audio.1",
+                .codec_name = "snd-soc-dummy",
+                .codec_dai_name = "snd-soc-dummy-dai",
+                .dynamic = 1,
+
+                .name = "I2S",
+                .stream_name = "PCM Playback",
+                .cpu_dai_name = "snd-soc-dummy-dai",
+                .platform_name = "snd-soc-dummy",
+                .no_pcm = 1,
+                .codec_dai_name = "i2s-codec-dai-name",
+                .codec_name = "i2s-codec-name",
+                .ops = &..._ops,
+
+                .name = "SPDIF",
+                .stream_name = "IEC958 Playback",
+                .cpu_dai_name = "snd-soc-dummy-dai",
+                .platform_name = "snd-soc-dummy",
+                .no_pcm = 1,
+                .codec_dai_name = "dit-hifi",
+                .codec_name = "spdif-dit",
+
+with routes like this:
+
+static const struct snd_soc_dapm_route routes[] = {
+	{ "i2sdi", NULL, "i2s-codec-Capture" },
+	{ "i2s-codec-Playback", NULL, "i2sdo" },
+        { "spdif-Playback", NULL, "spdifdo" },
+};
+
+If we were to add support for SPDIF recording mode, then we'd need to add
+an additional route for that.
+
+The pitfalls here are:
+1. if we are going to refer to codec streams in DAPM routes, we need all
+   codec implementations to have unique names, or some way for DAPM routes
+   to refer to specific codec streams.
+
+2. being able to effectively represent this in DT.
+
+I think we need a flag in DT to indicate a DPCM configuration, which would
+trigger the creation of the first DAI link.  The second and (optionally)
+third can be generated from knowing the codec DAI name and the codec
+name.  I think we also need a way to specify arbitary DAPM routes in DT
+as well.
