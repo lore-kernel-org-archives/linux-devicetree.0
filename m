@@ -1,87 +1,96 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [RFC 2/3] drm/panel: Add simple panel support
-Date: Fri, 30 Aug 2013 14:24:16 -0500
-Message-ID: <60046BAF-42E8-40FB-A45D-045B7C92513E@codeaurora.org>
-References: <1377876321-26835-1-git-send-email-treding@nvidia.com> <1377876321-26835-3-git-send-email-treding@nvidia.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1377876321-26835-3-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Fri, 30 Aug 2013 13:53:45 -0600
+Message-ID: <5220F849.8030909@wwwdotorg.org>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <521D0964.2080209@wwwdotorg.org> <CACRpkdaWPQTPw8u+97iV8MRB1fdeS40kd242pJd3UE9Ler4kRQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaWPQTPw8u+97iV8MRB1fdeS40kd242pJd3UE9Ler4kRQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On Aug 30, 2013, at 10:25 AM, Thierry Reding wrote:
-
-> Add a driver for simple panels. Such panels can have a regulator that
-> provides the supply voltage and a separate GPIO to enable the panel.
-> Optionally the panels can have a backlight associated with them so it
-> can be enabled or disabled according to the panel's power management
-> mode.
+On 08/29/2013 01:26 PM, Linus Walleij wrote:
+> On Tue, Aug 27, 2013 at 10:17 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 08/26/2013 08:07 AM, Lars Poeschel wrote:
+>>>
+>>> Currently the kernel is ambigously treating GPIOs and interrupts
+>>> from a GPIO controller: GPIOs and interrupts are treated as
+>>> orthogonal. This unfortunately makes it unclear how to actually
+>>> retrieve and request a GPIO line or interrupt from a GPIO
+>>> controller in the device tree probe path.
+>>
+>> I still think that this patch is the wrong approach. Instead, the logic
+>> should be hooked into gpio_request() and request_irq(). This patch only
+>> addresses DT, and ignores anything else, hence doesn't seem like the
+>> right level of abstraction to plug in, since the issue is not related to DT.
 > 
-> Support is added for three panels: An AU Optronics 10.1" WSVGA, a
-> Chunghwa Picture Tubes 10.1" WXGA and a Panasonic 10.1 WUXGA TFT LCD
-> panel.
+> We tried to do it that way, and it exploded. See commit
+> b4419e1a15905191661ffe75ba2f9e649f5d565e
+> "gpio/omap: auto request GPIO as input if used as IRQ via DT"
 > 
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> .../devicetree/bindings/panel/panel-simple.txt     |  25 ++
-> drivers/gpu/drm/Makefile                           |   1 +
-> drivers/gpu/drm/panel/Kconfig                      |  13 +
-> drivers/gpu/drm/panel/Makefile                     |   1 +
-> drivers/gpu/drm/panel/panel-simple.c               | 335 +++++++++++++++++++++
-> 5 files changed, 375 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/panel/panel-simple.txt
-> create mode 100644 drivers/gpu/drm/panel/Makefile
-> create mode 100644 drivers/gpu/drm/panel/panel-simple.c
+> Here request_irq() augmented through its irqdomain to
+> issue gpio_request_one().
 > 
-> diff --git a/Documentation/devicetree/bindings/panel/panel-simple.txt b/Documentation/devicetree/bindings/panel/panel-simple.txt
-> new file mode 100644
-> index 0000000..dfd4b76
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/panel-simple.txt
-> @@ -0,0 +1,25 @@
-> +Simple display panel
-> +
-> +Required properties:
-> +- compatible: should be one of:
-> +  - "auo,b101aw03": AU Optronics Corporation 10.1" WSVGA TFT LCD panel
-> +  - "cptt,claa101wb03": Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
-> +  - "pc,vvx10f004b00": Panasonic Corporation 10.1" WUXGA TFT LCD panel
-> +
+> Why was this patch reverted? It seems this is what has not
+> managed to reach the audience here.
+> 
+> It turns out some drivers were already doing this:
+> 
+> request_gpio(gpio);
+> gpio_direction_input(gpio);
+> request_irq(gpio_to_irq(gpio));
+> 
+> Looks perfectly valid right?
+> 
+> Not so: after the above change, we tried to request the
+> GPIO a *second time* in the GPIO driver's irq map function,
+> and of course it failed, as it was already taken.
+> 
+> So saying that it should be done in the request_irq()
+> function is imposing this other semantic on the kernel
+> instead: you must *NOT* request the GPIO with
+> request_gpio() if you're going to use it as an IRQ.
 
-It would seem there should be a more generic compatible to cover the basic "panel-simple" case.
+Surely both request_gpio() and request_irq() must both request the GPIO
+(amongst other things), with the caveat that if the same driver does
+both, this specific "sharing" is allowed.
 
-> +Optional properties:
-> +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-> +- power-supply: regulator to provide the supply voltage
-> +- enable-gpios: GPIO pin to enable or disable the panel
-> +- backlight: phandle of the backlight device attached to the panel
-> +
+If that won't work, then the very core concept behind what this patch is
+attempting to do won't work.
 
-If these are all optional, what does it mean to be a "panel-simple"?
+> (Also, it force us to implement the same code in each
+> and every driver, but that is a lesser problem.)
 
-> +Example:
-> +
-> +	panel: panel {
-> +		compatible = "cptt,claa101wb01";
-> +		ddc-i2c-bus = <&panelddc>;
-> +
-> +		power-supply = <&vdd_pnl_reg>;
-> +		enable-gpios = <&gpio 90 0>;
-> +
-> +		backlight = <&backlight>;
-> +	};
+Drivers don't have to do the request; the IRQ/GPIO core can do this,
+with drivers simply providing an irq_to_gpio() (which only returns valid
+data iff there's a 1:1 mapping between IRQs and GPIOs in that particular
+HW).
 
-We'd normally do this as unique binding specs for the specific devices and a generic one to cover the concepts of a simple panel.  Who know if in the future a 'auo,b101aw03' might want some other unique properties.
+> I don't quite understand what is so hard around this.
+> We cannot get away from restricting the semantics in
+> some way, if gpio-controllers shall also be interrupt-controllers,
+> the current patch is the least intrusive I've seen so far.
 
-[snip]
+Yet the current patch only addresses a limited set of cases, since it
+doesn't hook the APIs but rather parses the DT. It doesn't cover the
+non-DT case. It should if the feature is useful.
 
-- k
+> And I don't even think this is a Linux problem, handing
+> out the same resource with two hands is ambigous and is
+> going to cause problems with any operating system.
+> It is better to restrict this and say in the binding doc that
+> the gpio line cannot be <&gpio n> assigned when there
+> is an interrupt on the same line.
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+That won't work; there is already HW that allows this and drivers that
+assume this.
+
+I still haven't seen an answer to why we really care about this; how
+many times has code actually allocated the same GPIO/IRQ when it
+shouldn't, in a way that it wasn't detectable by some other mechanism,
+i.e. the feature just not working? Why are we even trying to solve this
+issue? I'm not totally convinced it even makes sense to try and solve it.
