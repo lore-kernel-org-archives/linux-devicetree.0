@@ -1,102 +1,116 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH V2 2/2] spi: dual and quad support(device tree)
-Date: Fri, 30 Aug 2013 23:30:46 +0200
-Message-ID: <1589764.vkg6UQTo21@flatron>
-References: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
- <1377564603-4030-2-git-send-email-wangyuhang2014@gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v4 3/5] clk: dt: binding for basic multiplexer clock
+Date: Fri, 30 Aug 2013 15:37:46 -0600
+Message-ID: <522110AA.7040700@wwwdotorg.org>
+References: <1377150793-27864-1-git-send-email-mturquette@linaro.org> <1377150793-27864-4-git-send-email-mturquette@linaro.org> <2A930389-012E-45C3-93EB-6B4A41DB2EF5@codeaurora.org> <20130829011425.8231.78802@quantum> <39BAF1F8-41AD-4667-BF76-22BDF709415A@codeaurora.org> <20130830203334.10934.10011@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1377564603-4030-2-git-send-email-wangyuhang2014@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: wangyuhang <wangyuhang2014@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-spi@vger.kernel.org, broonie@kernel.org, linux-mtd@lists.infradead.org, pekon@ti.com, galak@codeaurora.org, sourav.poddar@ti.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130830203334.10934.10011@quantum>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-[Ccing DT binding maintainers]
-
-On Tuesday 27 of August 2013 08:50:03 wangyuhang wrote:
-> Add spi-tmax-nbits and spi-rmax-nbits for spi slave node.
-> Modify the related dt document(spi-bus.txt)
->  spi-tmax-nbits:Max number of bits slave will use for MOSI(writting)
->  spi-rmax-nbits:Max number of bits slave will use for MISO(reading)
-> Support for spi-tx/rmax-nbits in SPI framework has been picked[1].
-> [1]: http://comments.gmane.org/gmane.linux.kernel.spi.devel/14420
-> Commit Id:f477b7fb13df2b843997559ff34e87d054ba6538
+On 08/30/2013 02:33 PM, Mike Turquette wrote:
+> Quoting Kumar Gala (2013-08-30 13:02:42)
+>> On Aug 28, 2013, at 8:14 PM, Mike Turquette wrote:
+>>
+>>> Quoting Kumar Gala (2013-08-28 08:50:10)
+>>>> On Aug 22, 2013, at 12:53 AM, Mike Turquette wrote:
+>>>>
+>>>>> Device Tree binding for the basic clock multiplexer, plus the setup
+>>>>> function to register the clock.  Based on the existing fixed-clock
+>>>>> binding.
+>>>>>
+>>>>> Includes minor beautification of clk-provider.h where some whitespace is
+>>>>> added and of_fixed_factor_clock_setup is relocated to maintain a
+>>>>> consistent style.
+>>>>>
+>>>>> Tero Kristo contributed helpful bug fixes to this patch.
+>>>>>
+>>>>> Signed-off-by: Mike Turquette <mturquette@linaro.org>
+>>>>> Tested-by: Heiko Stuebner <heiko@sntech.de>
+>>>>> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+>>>>> ---
+>>>>> Changes since v3:
+>>>>> * replaced underscores with dashes in DT property names
+>>>>> * bail from of clock setup function early if of_iomap fails
+>>>>> * removed unecessary explict cast
+>>>>>
+>>>>> .../devicetree/bindings/clock/mux-clock.txt        | 79 ++++++++++++++++++++++
+>>>>> drivers/clk/clk-mux.c                              | 68 ++++++++++++++++++-
+>>>>> include/linux/clk-provider.h                       |  5 +-
+>>>>> 3 files changed, 150 insertions(+), 2 deletions(-)
+>>>>> create mode 100644 Documentation/devicetree/bindings/clock/mux-clock.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/clock/mux-clock.txt b/Documentation/devicetree/bindings/clock/mux-clock.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..21eb3b3
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/clock/mux-clock.txt
+>>>>> @@ -0,0 +1,79 @@
+>>>>> +Binding for simple mux clock.
+>>>>> +
+>>>>> +This binding uses the common clock binding[1].  It assumes a
+>>>>> +register-mapped multiplexer with multiple input clock signals or
+>>>>> +parents, one of which can be selected as output.  This clock does not
+>>>>> +gate or adjust the parent rate via a divider or multiplier.
+>>>>> +
+>>>>> +By default the "clocks" property lists the parents in the same order
+>>>>> +as they are programmed into the regster.  E.g:
+>>>>> +
+>>>>> +     clocks = <&foo_clock>, <&bar_clock>, <&baz_clock>;
+>>>>> +
+>>>>> +results in programming the register as follows:
+>>>>> +
+>>>>> +register value               selected parent clock
+>>>>> +0                    foo_clock
+>>>>> +1                    bar_clock
+>>>>> +2                    baz_clock
+>>>>> +
+>>>>> +Some clock controller IPs do not allow a value of zero to be programmed
+>>>>> +into the register, instead indexing begins at 1.  The optional property
+>>>>> +"index-starts-at-one" modified the scheme as follows:
+>>>>> +
+>>>>> +register value               selected clock parent
+>>>>> +1                    foo_clock
+>>>>> +2                    bar_clock
+>>>>> +3                    baz_clock
+>>>>> +
+>>>>> +Additionally an optional table of bit and parent pairs may be supplied
+>>>>> +like so:
+>>>>> +
+>>>>> +     table = <&foo_clock 0x0>, <&bar_clock, 0x2>, <&baz_clock, 0x4>;
+>>>>> +
+>>>>
+>>>> I think this is going way too far for what should be in a device tree.  Why should this not just be encoded in tables in the code?
+>>>
+>>> To reduce kernel data bloat.
+>>
+>> Why is this really an issue, for systems that are concerned about kernel size, they are going to be built targeting the HW platform of choice, for one's like a server, the bloat isn't going to be significant, and if so we can look at mechanisms like __init section that would free up after boot.
 > 
-> Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
-> ---
->  Documentation/devicetree/bindings/spi/spi-bus.txt |   16
-> ++++++++++++++++ 1 file changed, 16 insertions(+)
+> s/bloat/churn/
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> b/Documentation/devicetree/bindings/spi/spi-bus.txt index
-> 296015e..211336c 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -55,6 +55,22 @@ contain the following properties.
->      		chip select active high
->  - spi-3wire       - (optional) Empty property indicating device
-> requires 3-wire mode.
-> +- spi-tmax-nbits  - (optional) Max number of bits slave will use for
-> +    		    MOSI(writting)
-> +- spi-rmax-nbits  - (optional) Max number of bits slave will use for
-> +    		    MISO(reading)
+> The clock _data_ seems to always have some churn to it. Moving it out to
+> DT reduces that churn from Linux. My concern above is not about kernel
+> data size.
 
-May I ask for more human-readable names, please?
+That sounds like the opposite of what we should be doing.
 
-If we look around, there are already devices using bus-width property, so 
-for consistency we could use tx-bus-width and rx-bus-width here or even a 
-single bus-width property taking two cells, first tx and second rx?
+It's fine for kernel code/data to change; that's a natural part of
+development. Obviously, we should minimize churn, through thorough
+review, domain knowledge, etc.
 
-Let's hear others' opinion on this as well.
+Saying that we must shove the data out into DT because it changes
+pre-supposes that we should be changing the DT!
 
-Also the properties should be telling information about hardware, so 
-probably in this case the meaning would be the number of wires that are 
-physically wired on the board.
+We should strive to write the DT for a particular piece of HW once, and
+have it be a complete and accurate description of the HW. That's hard
+enough to do with small amounts of simple data. Deliberately pushing
+data that's known to be hard to get right and churn a lot into DT seems
+to be destined to make most DTs contain incorrect data.
 
-> +
-
-One or two sentences about what this dual/quad thing is about would be 
-nice here, e.g.
-
-	Some SPI controllers and devices support Dual and/or Quad SPI
-	mode, which is [...]. It allows [...], etc.
-
-> +So if for example the slave has 4 wires for writting and 2 wires for
-> reading, +and the spi-tx/rx-nbits property should be set as follows:
-> +
-> +spi-tmax-nbits = <4>;
-> +spi-rmax-nbits = <2>;
-> +
-> +Now the value that spi-tmax-nbits and spi-rmax-nbits can receive is
-> only +1(single), 2(dual) and 4(quad). If you don't set spi-tmax-nbits
-> or spi-rmax-nbits, +spi_device mode will be set in single(1 wire) as
-> default. Another point, if +property:spi-3wire is set, spi-t/rmax-nbits
-> is forbidden to set to <2 or 4>, +otherwise, an errro will return.
-
-typo: errro
-
-Also an error or "returning an error" is an OS specific term. This 
-statement should rather be something along
-
-	Dual/Quad mode is not allowed when 3-wire mode is used.
-
-Best regards,
-Tomasz
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+DT-as-an-ABI works both ways; the binding definition needs to stay
+constant /and/ the data in any particular DT needs to be accurate too.
