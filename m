@@ -1,38 +1,126 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 1/2] extcon: extcon-dra7xx: Add extcon driver for USB ID
- detection
-Date: Fri, 30 Aug 2013 09:20:25 +0900
-Message-ID: <521FE549.3080605@samsung.com>
-References: <1376648029-30659-1-git-send-email-george.cherian@ti.com>
- <1376648029-30659-2-git-send-email-george.cherian@ti.com>
- <52127284.6030506@wwwdotorg.org> <521312CC.8060003@ti.com>
- <52139F0F.6090507@wwwdotorg.org> <52199663.8070201@roeck-us.net>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Fri, 30 Aug 2013 02:24:23 +0200
+Message-ID: <521FE637.3010805@collabora.co.uk>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <521D0964.2080209@wwwdotorg.org> <CACRpkdaWPQTPw8u+97iV8MRB1fdeS40kd242pJd3UE9Ler4kRQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <52199663.8070201@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, George Cherian <george.cherian@ti.com>, balbi@ti.com, myungjoo.ham@samsung.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.co
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaWPQTPw8u+97iV8MRB1fdeS40kd242pJd3UE9Ler4kRQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
-
-> I am currently working on adding device tree support to the extcon-gpio driver.
+On 08/29/2013 09:26 PM, Linus Walleij wrote:
+> On Tue, Aug 27, 2013 at 10:17 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 08/26/2013 08:07 AM, Lars Poeschel wrote:
+>>>
+>>> Currently the kernel is ambigously treating GPIOs and interrupts
+>>> from a GPIO controller: GPIOs and interrupts are treated as
+>>> orthogonal. This unfortunately makes it unclear how to actually
+>>> retrieve and request a GPIO line or interrupt from a GPIO
+>>> controller in the device tree probe path.
+>>
+>> I still think that this patch is the wrong approach. Instead, the logic
+>> should be hooked into gpio_request() and request_irq(). This patch only
+>> addresses DT, and ignores anything else, hence doesn't seem like the
+>> right level of abstraction to plug in, since the issue is not related to DT.
 > 
-> Wonder if it would make sense to just use that driver. As far as I can see
-> the only missing part is support for multiple cables and cable naming through
-> device tree properties.
+> We tried to do it that way, and it exploded. See commit
+> b4419e1a15905191661ffe75ba2f9e649f5d565e
+> "gpio/omap: auto request GPIO as input if used as IRQ via DT"
 > 
-> Any thoughts ? The patches are not yet clean enough to submit upstream,
-> but I could send them as RFC if there is interest.
+> Here request_irq() augmented through its irqdomain to
+> issue gpio_request_one().
+> 
+> Why was this patch reverted? It seems this is what has not
+> managed to reach the audience here.
+>
+
+The mentioned patch also broke some ancient platforms that have not been (and
+probably never will) migrated to DT like OMAP1.
+
+So, after trying to add this logic by using a custom irq domain .map function
+handler for the OMAP GPIO driver I agree with Linus that is better to provide a
+solution at the Device Tree level to not affect platforms that are still using
+legacy boot.
+
+Legacy boot don't need a fix since it does not have this issue. Platform code
+just request the GPIO and do the setup (gpio_direction_input) before the drivers
+call to request_irq().
+
+> It turns out some drivers were already doing this:
+> 
+> request_gpio(gpio);
+> gpio_direction_input(gpio);
+> request_irq(gpio_to_irq(gpio));
+>
+> Looks perfectly valid right?
+>
+> Not so: after the above change, we tried to request the
+> GPIO a *second time* in the GPIO driver's irq map function,
+> and of course it failed, as it was already taken.
+>
+> So saying that it should be done in the request_irq()
+> function is imposing this other semantic on the kernel
+> instead: you must *NOT* request the GPIO with
+> request_gpio() if you're going to use it as an IRQ.
+> 
+> (Also, it force us to implement the same code in each
+> and every driver, but that is a lesser problem.)
+> 
+> I don't quite understand what is so hard around this.
+> We cannot get away from restricting the semantics in
+> some way, if gpio-controllers shall also be interrupt-controllers,
+> the current patch is the least intrusive I've seen so far.
 > 
 
-I'm considering ways to use and update extcon-gpio driver.
-I have interest concerning your approach.
-After completing your work, send them as RFC as you mentioned.
+We have been trying to solve this issue for a few months by now and Linus'
+approach seems to be the most sensible solution to me.
 
-Thanks,
-Chanwoo Choi
+Drivers that request an IRQ and assume that platform code will request and setup
+the GPIO have been broken since the boards using these drivers were migrated to
+DT (e.g: smsc911x on OMAP2+ boards). I know is really hard to agree on the
+better approach to solve this but it would be great if we can find a solution
+and fix these broken platforms.
 
+> And I don't even think this is a Linux problem, handing
+> out the same resource with two hands is ambigous and is
+> going to cause problems with any operating system.
+> It is better to restrict this and say in the binding doc that
+> the gpio line cannot be <&gpio n> assigned when there
+> is an interrupt on the same line.
+>
+
+Indeed, if a driver wants to manually request a GPIO to be used as an IRQ, then
+the DT binding for that driver should not use a gpio as "interrupt-parent" and
+should leave the driver to handle this manually.
+
+On the other hand, if a driver just calls request_irq() and it does not know if
+the IRQ is a real interrupt line from an interrupt controller or a GPIO line
+acting as an IRQ, then the DT binding should just have a required
+"interrupt-parent" property to define the phandle for the interrupt controller
+used which could or could not be a GPIO controller.
+
+> We can start out by printing warnings when we fail to
+> request the corresponding GPIO for an interrupt line
+> though, it will be annoying enough and a kind of
+> compromise.
+>
+
+If the GPIO pin is first requested because it is described to be an IRQ in a DT
+and then a driver tries to request the same GPIO pin, then there is a bug in
+either the DT or the driver IMHO. The same assumption is made with platform code
+right now when using legacy boot, I don't understand why is different for the DT
+case.
+
+> Or it has to be the GPIO input hogs.
+> 
+> Yours,
+> Linus Walleij
+> 
+
+Thanks a lot and best regards,
+Javier
