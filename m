@@ -1,91 +1,39 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [PATCH V3] ARM: dts: Add DMA controller node info on Exynos5420.
-Date: Fri, 30 Aug 2013 10:13:09 +0530
-Message-ID: <1377837789-13412-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, padma.v@samsung.com, padma.kvr@gmail.com
-Cc: broonie@kernel.org, kgene.kim@samsung.com
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] extcon: extcon-dra7xx: Add extcon driver for USB
+ ID detection
+Date: Thu, 29 Aug 2013 21:33:43 -0700
+Message-ID: <522020A7.9060405@roeck-us.net>
+References: <1376648029-30659-1-git-send-email-george.cherian@ti.com> <1376648029-30659-2-git-send-email-george.cherian@ti.com> <52127284.6030506@wwwdotorg.org> <521312CC.8060003@ti.com> <52139F0F.6090507@wwwdotorg.org> <52199663.8070201@roeck-us.net> <521FE549.3080605@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <521FE549.3080605@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, George Cherian <george.cherian@ti.com>, balbi@ti.com, myungjoo.ham@samsung.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.co
 List-Id: devicetree@vger.kernel.org
 
-This patch adds dma controller node info on Exynos5420.
-Exynos5420 has adma for audio IPs. As adma clk is dependent
-on audss clk provider that will be added later.
+On 08/29/2013 05:20 PM, Chanwoo Choi wrote:
+> Hi Guenter,
+>
+>> I am currently working on adding device tree support to the extcon-gpio driver.
+>>
+>> Wonder if it would make sense to just use that driver. As far as I can see
+>> the only missing part is support for multiple cables and cable naming through
+>> device tree properties.
+>>
+>> Any thoughts ? The patches are not yet clean enough to submit upstream,
+>> but I could send them as RFC if there is interest.
+>>
+>
+> I'm considering ways to use and update extcon-gpio driver.
+> I have interest concerning your approach.
+> After completing your work, send them as RFC as you mentioned.
+>
 
-Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
----
-Change since V2:
-	- Removed adma node as adma clock is dependent audss clock provider.
+It does what we need it to do, so I sent it out a minute ago.
+I added possible bindings for multi-cable support as additional RFC.
 
-Changes since V1:
-        - In V1, dma node common stuff was added in common exynos5.dtsi file.
-          This was removed as per Kukjin comment and added in exynos5420.dtsi.
+Guenter
 
- arch/arm/boot/dts/exynos5420.dtsi |   52 +++++++++++++++++++++++++++++++++++++
- 1 files changed, 52 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index d537cd7..15465f8 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -186,6 +186,58 @@
- 		status = "okay";
- 	};
- 
-+	amba {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "arm,amba-bus";
-+		interrupt-parent = <&gic>;
-+		ranges;
-+
-+		pdma0: pdma@121A0000 {
-+			compatible = "arm,pl330", "arm,primecell";
-+			reg = <0x121A0000 0x1000>;
-+			interrupts = <0 34 0>;
-+			clocks = <&clock 362>;
-+			clock-names = "apb_pclk";
-+			#dma-cells = <1>;
-+			#dma-channels = <8>;
-+			#dma-requests = <32>;
-+		};
-+
-+		pdma1: pdma@121B0000 {
-+			compatible = "arm,pl330", "arm,primecell";
-+			reg = <0x121B0000 0x1000>;
-+			interrupts = <0 35 0>;
-+			clocks = <&clock 363>;
-+			clock-names = "apb_pclk";
-+			#dma-cells = <1>;
-+			#dma-channels = <8>;
-+			#dma-requests = <32>;
-+		};
-+
-+		mdma0: mdma@10800000 {
-+			compatible = "arm,pl330", "arm,primecell";
-+			reg = <0x10800000 0x1000>;
-+			interrupts = <0 33 0>;
-+			clocks = <&clock 473>;
-+			clock-names = "apb_pclk";
-+			#dma-cells = <1>;
-+			#dma-channels = <8>;
-+			#dma-requests = <1>;
-+		};
-+
-+		mdma1: mdma@11C10000 {
-+			compatible = "arm,pl330", "arm,primecell";
-+			reg = <0x11C10000 0x1000>;
-+			interrupts = <0 124 0>;
-+			clocks = <&clock 442>;
-+			clock-names = "apb_pclk";
-+			#dma-cells = <1>;
-+			#dma-channels = <8>;
-+			#dma-requests = <1>;
-+		};
-+	};
-+
- 	serial@12C00000 {
- 		clocks = <&clock 257>, <&clock 128>;
- 		clock-names = "uart", "clk_uart_baud0";
--- 
-1.7.4.4
