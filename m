@@ -1,7 +1,7 @@
 From: Huang Shijie <b32955@freescale.com>
-Subject: [PATCH v3 4/8] mtd: m25p80: add the DDR quad-read support
-Date: Fri, 30 Aug 2013 10:07:25 +0800
-Message-ID: <1377828449-18912-5-git-send-email-b32955@freescale.com>
+Subject: [PATCH v3 6/8] Documentation: add the binding file for Quadspi driver
+Date: Fri, 30 Aug 2013 10:07:27 +0800
+Message-ID: <1377828449-18912-7-git-send-email-b32955@freescale.com>
 References: <1377828449-18912-1-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,92 +12,52 @@ To: broonie@kernel.org
 Cc: dwmw2@infradead.org, dedekind1@gmail.com, computersforpeace@gmail.com, shawn.guo@linaro.org, kernel@pengutronix.de, b18965@freescale.com, b44548@freescale.com, lznuaa@gmail.com, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Huang Shijie <b32955@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DDR quad read support by:
-
-(1) Add the relative commands:
-      OPCODE_DDRQIOR, OPCODE_4DDRQIOR
-
-(2) add the "m25p,ddr-quad-read" property for the m25p80 driver
-    If the dts has the "m25p,ddr-quad-read" property, the kernel will
-    set the Quad bit of the configuration register, and when the
-    setting suceedes, we will set the read opcode with the right
-    spi nor command.
+This patch adds the binding file for Freescale Quadspi driver.
 
 Signed-off-by: Huang Shijie <b32955@freescale.com>
 ---
- Documentation/devicetree/bindings/mtd/m25p80.txt |    5 +++++
- drivers/mtd/devices/m25p80.c                     |   21 ++++++++++++++++-----
- include/linux/mtd/spi-nor.h                      |    2 ++
- 3 files changed, 23 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/spi/fsl-quadspi.txt        |   32 ++++++++++++++++++++
+ 1 files changed, 32 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/fsl-quadspi.txt
 
-diff --git a/Documentation/devicetree/bindings/mtd/m25p80.txt b/Documentation/devicetree/bindings/mtd/m25p80.txt
-index b33313f..a01c6b7 100644
---- a/Documentation/devicetree/bindings/mtd/m25p80.txt
-+++ b/Documentation/devicetree/bindings/mtd/m25p80.txt
-@@ -22,6 +22,11 @@ Optional properties:
-                    all chips and support for it can not be detected at runtime.
-                    Refer to your chips' datasheet to check if this is supported
-                    by your chip.
-+- m25p,ddr-quad-read : Use the "ddr quad read" opcode to read data from the chip
-+                   instead of the usual "read" opcode. This opcode is not
-+                   supported by all chips and support for it can not be detected
-+                   at runtime. Refer to your chips' datasheet to check if this
-+                   is supported by your chip.
- Example:
- 
- 	flash: m25p80@0 {
-diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-index 0645c9f..32ccdc7 100644
---- a/drivers/mtd/devices/m25p80.c
-+++ b/drivers/mtd/devices/m25p80.c
-@@ -913,7 +913,8 @@ static void m25p80_check_quad_read(struct m25p *flash, struct device_node *np)
- 	int ret;
- 	int sr_cr;
- 
--	if (of_property_read_bool(np, "m25p,quad-read")) {
-+	if (of_property_read_bool(np, "m25p,quad-read")
-+		|| of_property_read_bool(np, "m25p,ddr-quad-read")) {
- 		/* The configuration register is set by the second byte. */
- 		sr_cr = CR_QUAD << 8;
- 
-@@ -927,10 +928,20 @@ static void m25p80_check_quad_read(struct m25p *flash, struct device_node *np)
- 		if (!(ret > 0 && (ret & CR_QUAD)))
- 			return;
- 
--		if (flash->mtd.size <= SZ_16M)
--			flash->read_opcode = OPCODE_QIOR;
--		else
--			flash->read_opcode = OPCODE_4QIOR;
-+		if (of_property_read_bool(np, "m25p,quad-read")) {
-+			if (flash->mtd.size <= SZ_16M)
-+				flash->read_opcode = OPCODE_QIOR;
-+			else
-+				flash->read_opcode = OPCODE_4QIOR;
-+			return;
-+		}
+diff --git a/Documentation/devicetree/bindings/spi/fsl-quadspi.txt b/Documentation/devicetree/bindings/spi/fsl-quadspi.txt
+new file mode 100644
+index 0000000..d86ee84
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/fsl-quadspi.txt
+@@ -0,0 +1,32 @@
++* Freescale Quad Serial Peripheral Interface(QuadSPI)
 +
-+		if (of_property_read_bool(np, "m25p,ddr-quad-read")) {
-+			if (flash->mtd.size <= SZ_16M)
-+				flash->read_opcode = OPCODE_DDRQIOR;
-+			else
-+				flash->read_opcode = OPCODE_4DDRQIOR;
-+		}
- 	}
- }
- 
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index e6c3309..a985336 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -42,6 +42,8 @@
- #define	OPCODE_BRWR		0x17	/* Bank register write */
- #define	OPCODE_QIOR		0xeb	/* Quad read */
- #define	OPCODE_4QIOR		0xec	/* Quad read (4-byte)*/
-+#define	OPCODE_DDRQIOR		0xed	/* DDR Quad read */
-+#define	OPCODE_4DDRQIOR		0xee	/* DDR Quad read (4-byte)*/
- #define	OPCODE_RDCR		0x35	/* Read configuration register */
- 
- /* Status Register bits. */
++Required properties:
++- compatible : Should be "fsl,vf610-qspi"
++- reg : Offset and length of the register set for the device
++- interrupts : Should contain the interrupt for the device
++- clocks : The clocks needed by the QuadSPI controller
++- clock-names : the name of the clocks
++- num-cs : Contains the number of the chip selects
++
++Optional properties:
++- fsl,nor-size : If You set this property, it means that you connect the NOR
++                 flash to QuadSPI. This property is mainly used by the QuadSPI
++                 to map an AHB bus accessible address.
++
++Example:
++
++qspi0: quadspi@40044000 {
++	compatible = "fsl,vf610-qspi";
++	reg = <0x40044000 0x1000>;
++	interrupts = <0 24 0x04>;
++	clocks = <&clks VF610_CLK_QSPI0_EN>,
++		<&clks VF610_CLK_QSPI0>;
++	clock-names = "qspi_en", "qspi";
++	fsl,nor-size = <0x1000000>;
++	num-cs = <1>;
++	status = "disabled";
++
++	flash0: s25fl128s@0 {
++		....
++	};
++};
 -- 
 1.7.1
 
