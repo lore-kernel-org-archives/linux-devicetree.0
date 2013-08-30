@@ -1,15 +1,11 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH] ARM: dts: vexpress: Add CCI node to TC2 device-tree
-Date: Fri, 30 Aug 2013 17:36:20 +0100
-Message-ID: <1377880580.10738.14.camel@hornet>
-References: <1377872760.3655.48.camel@linaro1.home>
- <20130830161327.GA10045@e102568-lin.cambridge.arm.com>
- <CAOesGMhwqqOuSwVEukpfqM00BV2i=fQRhLUaf-wf-iVGR_mNbg@mail.gmail.com>
+From: "Markus Mayer" <markus.mayer@linaro.org>
+Subject: [PATCH v7 0/3] gpio: bcm281xx: GPIO driver
+Date: Fri, 30 Aug 2013 10:15:11 -0700
+Message-ID: <1377882914-30152-1-git-send-email-markus.mayer@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOesGMhwqqOuSwVEukpfqM00BV2i=fQRhLUaf-wf-iVGR_mNbg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,16 +15,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: "Jon Medhurst (Tixy)" <tixy@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Christian Daudt <csd@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-08-30 at 17:30 +0100, Olof Johansson wrote:
-> Shouldn't you be updating some vexpress_defconfig and probably
-> multi_v7_defconfig to at least get some build coverage for this as
-> well, by the way?
+This patch series adds the GPIO driver, and its device tree bindings,
+for the Broadcom bcm281xx family of mobile SoCs.
 
-Yeah, I've been told not to kill vexpress_defconfig after all, so I'll
-refresh it in the next cycle.
+Changes since v6:
+- Broke out arch/arm/mach-bcm/Kconfig into its own patch
+- Changed commit title messages accordingly
 
-Pawel 
+Markus Mayer (3):
+  gpio: bcm281xx: Add GPIO driver
+  ARM: bcm281xx: Enable GPIO driver
+  ARM: bcm281xx: Add device node for the GPIO controller
+
+ .../devicetree/bindings/gpio/gpio-bcm-kona.txt     |   52 ++
+ arch/arm/boot/dts/bcm11351.dtsi                    |   16 +
+ arch/arm/mach-bcm/Kconfig                          |    2 +-
+ drivers/gpio/Kconfig                               |    5 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-bcm-kona.c                       |  631 ++++++++++++++++++++
+ 6 files changed, 706 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt
+ create mode 100644 drivers/gpio/gpio-bcm-kona.c
+
+-- 
+1.7.9.5
