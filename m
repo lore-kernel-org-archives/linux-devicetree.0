@@ -1,116 +1,99 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v4 3/5] clk: dt: binding for basic multiplexer clock
-Date: Fri, 30 Aug 2013 15:37:46 -0600
-Message-ID: <522110AA.7040700@wwwdotorg.org>
-References: <1377150793-27864-1-git-send-email-mturquette@linaro.org> <1377150793-27864-4-git-send-email-mturquette@linaro.org> <2A930389-012E-45C3-93EB-6B4A41DB2EF5@codeaurora.org> <20130829011425.8231.78802@quantum> <39BAF1F8-41AD-4667-BF76-22BDF709415A@codeaurora.org> <20130830203334.10934.10011@quantum>
+From: Gabor Juhos <juhosg@openwrt.org>
+Subject: Re: [PATCH v2] tty: ar933x_uart: add device tree support and binding
+ documentation
+Date: Fri, 30 Aug 2013 23:49:41 +0200
+Message-ID: <52211375.8040609@openwrt.org>
+References: <1377769695-27397-1-git-send-email-juhosg@openwrt.org> <20130830211327.GA30138@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130830203334.10934.10011@quantum>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20130830211327.GA30138@kroah.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/2013 02:33 PM, Mike Turquette wrote:
-> Quoting Kumar Gala (2013-08-30 13:02:42)
->> On Aug 28, 2013, at 8:14 PM, Mike Turquette wrote:
+2013.08.30. 23:13 keltez=E9ssel, Greg Kroah-Hartman =EDrta:
+> On Thu, Aug 29, 2013 at 11:48:15AM +0200, Gabor Juhos wrote:
+>> Modify the probe routine to get the port line number
+>> from device tree if the 'of_node' is populated in the
+>> platform device. The driver can be built as module,
+>> thus add an OF specific module device table as well
+>> to support module auto loading.
 >>
->>> Quoting Kumar Gala (2013-08-28 08:50:10)
->>>> On Aug 22, 2013, at 12:53 AM, Mike Turquette wrote:
->>>>
->>>>> Device Tree binding for the basic clock multiplexer, plus the setup
->>>>> function to register the clock.  Based on the existing fixed-clock
->>>>> binding.
->>>>>
->>>>> Includes minor beautification of clk-provider.h where some whitespace is
->>>>> added and of_fixed_factor_clock_setup is relocated to maintain a
->>>>> consistent style.
->>>>>
->>>>> Tero Kristo contributed helpful bug fixes to this patch.
->>>>>
->>>>> Signed-off-by: Mike Turquette <mturquette@linaro.org>
->>>>> Tested-by: Heiko Stuebner <heiko@sntech.de>
->>>>> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
->>>>> ---
->>>>> Changes since v3:
->>>>> * replaced underscores with dashes in DT property names
->>>>> * bail from of clock setup function early if of_iomap fails
->>>>> * removed unecessary explict cast
->>>>>
->>>>> .../devicetree/bindings/clock/mux-clock.txt        | 79 ++++++++++++++++++++++
->>>>> drivers/clk/clk-mux.c                              | 68 ++++++++++++++++++-
->>>>> include/linux/clk-provider.h                       |  5 +-
->>>>> 3 files changed, 150 insertions(+), 2 deletions(-)
->>>>> create mode 100644 Documentation/devicetree/bindings/clock/mux-clock.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/clock/mux-clock.txt b/Documentation/devicetree/bindings/clock/mux-clock.txt
->>>>> new file mode 100644
->>>>> index 0000000..21eb3b3
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/clock/mux-clock.txt
->>>>> @@ -0,0 +1,79 @@
->>>>> +Binding for simple mux clock.
->>>>> +
->>>>> +This binding uses the common clock binding[1].  It assumes a
->>>>> +register-mapped multiplexer with multiple input clock signals or
->>>>> +parents, one of which can be selected as output.  This clock does not
->>>>> +gate or adjust the parent rate via a divider or multiplier.
->>>>> +
->>>>> +By default the "clocks" property lists the parents in the same order
->>>>> +as they are programmed into the regster.  E.g:
->>>>> +
->>>>> +     clocks = <&foo_clock>, <&bar_clock>, <&baz_clock>;
->>>>> +
->>>>> +results in programming the register as follows:
->>>>> +
->>>>> +register value               selected parent clock
->>>>> +0                    foo_clock
->>>>> +1                    bar_clock
->>>>> +2                    baz_clock
->>>>> +
->>>>> +Some clock controller IPs do not allow a value of zero to be programmed
->>>>> +into the register, instead indexing begins at 1.  The optional property
->>>>> +"index-starts-at-one" modified the scheme as follows:
->>>>> +
->>>>> +register value               selected clock parent
->>>>> +1                    foo_clock
->>>>> +2                    bar_clock
->>>>> +3                    baz_clock
->>>>> +
->>>>> +Additionally an optional table of bit and parent pairs may be supplied
->>>>> +like so:
->>>>> +
->>>>> +     table = <&foo_clock 0x0>, <&bar_clock, 0x2>, <&baz_clock, 0x4>;
->>>>> +
->>>>
->>>> I think this is going way too far for what should be in a device tree.  Why should this not just be encoded in tables in the code?
->>>
->>> To reduce kernel data bloat.
+>> This makes it possible to use the driver for AR9330
+>> UART devices specified in device tree.
 >>
->> Why is this really an issue, for systems that are concerned about kernel size, they are going to be built targeting the HW platform of choice, for one's like a server, the bloat isn't going to be significant, and if so we can look at mechanisms like __init section that would free up after boot.
-> 
-> s/bloat/churn/
-> 
-> The clock _data_ seems to always have some churn to it. Moving it out to
-> DT reduces that churn from Linux. My concern above is not about kernel
-> data size.
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+>> ---
+>> Changes since v1:
+>>   - move the doc from bindings/tty/serial to bindings/serial
+>>
+>> The patch is agains the 'tty-next' branch of the
+>> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tree
+>=20
+> No it isn't, it fails to apply here :(
 
-That sounds like the opposite of what we should be doing.
+Well, it was created on top of ...
 
-It's fine for kernel code/data to change; that's a natural part of
-development. Obviously, we should minimize churn, through thorough
-review, domain knowledge, etc.
+  commit 9dfe59f15195b8c5bd4c2950266877c51fc329f0
+  Author: Stephen Boyd <sboyd@codeaurora.org>
+  Date:   Wed Aug 28 13:32:41 2013 -0700
 
-Saying that we must shove the data out into DT because it changes
-pre-supposes that we should be changing the DT!
+      ARM: dts: msm: Update uartdm compatible strings
 
-We should strive to write the DT for a particular piece of HW once, and
-have it be a complete and accurate description of the HW. That's hard
-enough to do with small amounts of simple data. Deliberately pushing
-data that's known to be hard to get right and churn a lot into DT seems
-to be destined to make most DTs contain incorrect data.
+      Let's follow the ratified DT binding and use uartdm instead of
+      hsuart. This does break backwards compatibility but this
+      shouldn't be a problem because the uart driver isn't probing on
+      these devices without adding clock support (which isn't merged so
+      far).
 
-DT-as-an-ABI works both ways; the binding definition needs to stay
-constant /and/ the data in any particular DT needs to be accurate too.
+      Cc: David Brown <davidb@codeaurora.org>
+      Acked-by: Kumar Gala <galak@codeaurora.org>
+      Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+      Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+=2E.. and i can still apply the patch on top of that commit.
+
+However the current tty-next tree contains the previous version of the =
+patch:
+
+  commit dd910d98a2e240443db0090b0ae8a719a4a460f8
+  Author: Gabor Juhos <juhosg@openwrt.org>
+  Date:   Thu Aug 29 08:44:01 2013 +0200
+
+      tty: ar933x_uart: add device tree support and binding documentati=
+on
+
+    Modify the probe routine to get the port line number
+    from device tree if the 'of_node' is populated in the
+    platform device. The driver can be built as module,
+    thus add an OF specific module device table as well
+    to support module auto loading.
+
+    This makes it possible to use the driver for AR9330
+    UART devices specified in device tree.
+
+    Cc: devicetree@vger.kernel.org
+    Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+And that is the reason why you can't apply v2. Probably you have missed=
+ my
+preceding [1] mail.
+
+What should I do now? Should I send a follow-up patch which moves the
+documentation from 'bindings/tty/serial' to bindings/serial?
+
+Thanks,
+Gabor
+
+http://marc.info/?l=3Dlinux-serial&m=3D137776943126968&w=3D2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
