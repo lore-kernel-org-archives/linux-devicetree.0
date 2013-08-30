@@ -1,16 +1,17 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma
- reserved memory
-Date: Fri, 30 Aug 2013 15:26:24 -0500
-Message-ID: <DAF223EB-C84C-4E82-A24A-ACD0A3A0559F@codeaurora.org>
-References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com>
- <1377527959-5080-4-git-send-email-m.szyprowski@samsung.com>
- <20130829224637.D09183E1222@localhost> <52209278.8040106@samsung.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v4 3/5] clk: dt: binding for basic multiplexer clock
+Date: Fri, 30 Aug 2013 13:33:34 -0700
+Message-ID: <20130830203334.10934.10011@quantum>
+References: <1377150793-27864-1-git-send-email-mturquette@linaro.org>
+ <1377150793-27864-4-git-send-email-mturquette@linaro.org>
+ <2A930389-012E-45C3-93EB-6B4A41DB2EF5@codeaurora.org>
+ <20130829011425.8231.78802@quantum>
+ <39BAF1F8-41AD-4667-BF76-22BDF709415A@codeaurora.org>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52209278.8040106@samsung.com>
+In-Reply-To: <39BAF1F8-41AD-4667-BF76-22BDF709415A@codeaurora.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,582 +21,314 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linaro-mm-sig@lists.linaro.org, Laura Abbott <lauraa@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <tomasz.figa@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@secretlab.ca>, Marc <marc.ceeeee@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, Nishanth Peethambaran <nishanth.p@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
+To: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Kumar Gala (2013-08-30 13:02:42)
+> On Aug 28, 2013, at 8:14 PM, Mike Turquette wrote:
+> 
+> > Quoting Kumar Gala (2013-08-28 08:50:10)
+> >> On Aug 22, 2013, at 12:53 AM, Mike Turquette wrote:
+> >> 
+> >>> Device Tree binding for the basic clock multiplexer, plus the setup
+> >>> function to register the clock.  Based on the existing fixed-clock
+> >>> binding.
+> >>> 
+> >>> Includes minor beautification of clk-provider.h where some whitespace is
+> >>> added and of_fixed_factor_clock_setup is relocated to maintain a
+> >>> consistent style.
+> >>> 
+> >>> Tero Kristo contributed helpful bug fixes to this patch.
+> >>> 
+> >>> Signed-off-by: Mike Turquette <mturquette@linaro.org>
+> >>> Tested-by: Heiko Stuebner <heiko@sntech.de>
+> >>> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> >>> ---
+> >>> Changes since v3:
+> >>> * replaced underscores with dashes in DT property names
+> >>> * bail from of clock setup function early if of_iomap fails
+> >>> * removed unecessary explict cast
+> >>> 
+> >>> .../devicetree/bindings/clock/mux-clock.txt        | 79 ++++++++++++++++++++++
+> >>> drivers/clk/clk-mux.c                              | 68 ++++++++++++++++++-
+> >>> include/linux/clk-provider.h                       |  5 +-
+> >>> 3 files changed, 150 insertions(+), 2 deletions(-)
+> >>> create mode 100644 Documentation/devicetree/bindings/clock/mux-clock.txt
+> >>> 
+> >>> diff --git a/Documentation/devicetree/bindings/clock/mux-clock.txt b/Documentation/devicetree/bindings/clock/mux-clock.txt
+> >>> new file mode 100644
+> >>> index 0000000..21eb3b3
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/clock/mux-clock.txt
+> >>> @@ -0,0 +1,79 @@
+> >>> +Binding for simple mux clock.
+> >>> +
+> >>> +This binding uses the common clock binding[1].  It assumes a
+> >>> +register-mapped multiplexer with multiple input clock signals or
+> >>> +parents, one of which can be selected as output.  This clock does not
+> >>> +gate or adjust the parent rate via a divider or multiplier.
+> >>> +
+> >>> +By default the "clocks" property lists the parents in the same order
+> >>> +as they are programmed into the regster.  E.g:
+> >>> +
+> >>> +     clocks = <&foo_clock>, <&bar_clock>, <&baz_clock>;
+> >>> +
+> >>> +results in programming the register as follows:
+> >>> +
+> >>> +register value               selected parent clock
+> >>> +0                    foo_clock
+> >>> +1                    bar_clock
+> >>> +2                    baz_clock
+> >>> +
+> >>> +Some clock controller IPs do not allow a value of zero to be programmed
+> >>> +into the register, instead indexing begins at 1.  The optional property
+> >>> +"index-starts-at-one" modified the scheme as follows:
+> >>> +
+> >>> +register value               selected clock parent
+> >>> +1                    foo_clock
+> >>> +2                    bar_clock
+> >>> +3                    baz_clock
+> >>> +
+> >>> +Additionally an optional table of bit and parent pairs may be supplied
+> >>> +like so:
+> >>> +
+> >>> +     table = <&foo_clock 0x0>, <&bar_clock, 0x2>, <&baz_clock, 0x4>;
+> >>> +
+> >> 
+> >> I think this is going way too far for what should be in a device tree.  Why should this not just be encoded in tables in the code?
+> > 
+> > To reduce kernel data bloat.
+> 
+> Why is this really an issue, for systems that are concerned about kernel size, they are going to be built targeting the HW platform of choice, for one's like a server, the bloat isn't going to be significant, and if so we can look at mechanisms like __init section that would free up after boot.
 
-On Aug 30, 2013, at 7:39 AM, Marek Szyprowski wrote:
+s/bloat/churn/
 
-> Hello,
-> 
-> On 8/30/2013 12:46 AM, Grant Likely wrote:
->> On Mon, 26 Aug 2013 16:39:18 +0200, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
->> > This patch adds device tree support for contiguous and reserved memory
->> > regions defined in device tree.
->> >
->> > Large memory blocks can be reliably reserved only during early boot.
->> > This must happen before the whole memory management subsystem is
->> > initialized, because we need to ensure that the given contiguous blocks
->> > are not yet allocated by kernel. Also it must happen before kernel
->> > mappings for the whole low memory are created, to ensure that there will
->> > be no mappings (for reserved blocks) or mapping with special properties
->> > can be created (for CMA blocks). This all happens before device tree
->> > structures are unflattened, so we need to get reserved memory layout
->> > directly from fdt.
->> >
->> > Later, those reserved memory regions are assigned to devices on each
->> > device structure initialization.
->> >
->> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> > Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> > Acked-by: Michal Nazarewicz <mina86@mina86.com>
->> > Acked-by: Tomasz Figa <t.figa@samsung.com>
->> > Acked-by: Stephen Warren <swarren@nvidia.com>
->> > Reviewed-by: Rob Herring <rob.herring@calxeda.com>
->> 
->> Hi Marek,
->> 
->> This patch is in good shape, but I have some comments below and a few
->> concerns about the binding....
->> 
->> g.
->> 
->> > ---
->> >  Documentation/devicetree/bindings/memory.txt |  168 +++++++++++++++++++++++++
->> >  drivers/of/Kconfig                           |    6 +
->> >  drivers/of/Makefile                          |    1 +
->> >  drivers/of/of_reserved_mem.c                 |  175 ++++++++++++++++++++++++++
->> >  drivers/of/platform.c                        |    4 +
->> >  include/linux/of_reserved_mem.h              |   14 +++
->> >  6 files changed, 368 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/memory.txt
->> >  create mode 100644 drivers/of/of_reserved_mem.c
->> >  create mode 100644 include/linux/of_reserved_mem.h
->> >
->> > diff --git a/Documentation/devicetree/bindings/memory.txt b/Documentation/devicetree/bindings/memory.txt
->> > new file mode 100644
->> > index 0000000..eb24693
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/memory.txt
->> > @@ -0,0 +1,168 @@
->> > +*** Memory binding ***
->> > +
->> > +The /memory node provides basic information about the address and size
->> > +of the physical memory. This node is usually filled or updated by the
->> > +bootloader, depending on the actual memory configuration of the given
->> > +hardware.
->> > +
->> > +The memory layout is described by the following node:
->> > +
->> > +/ {
->> > +	#address-cells = <(n)>;
->> > +	#size-cells = <(m)>;
->> > +	memory {
->> > +		device_type = "memory";
->> > +		reg =  <(baseaddr1) (size1)
->> > +			(baseaddr2) (size2)
->> > +			...
->> > +			(baseaddrN) (sizeN)>;
->> > +	};
->> > +	...
->> > +};
->> > +
->> > +A memory node follows the typical device tree rules for "reg" property:
->> > +n:		number of cells used to store base address value
->> > +m:		number of cells used to store size value
->> > +baseaddrX:	defines a base address of the defined memory bank
->> > +sizeX:		the size of the defined memory bank
->> > +
->> > +
->> > +More than one memory bank can be defined.
->> > +
->> > +
->> > +*** Reserved memory regions ***
->> > +
->> > +In /memory/reserved-memory node one can create child nodes describing
->> > +particular reserved (excluded from normal use) memory regions. Such
->> > +memory regions are usually designed for the special usage by various
->> > +device drivers. A good example are contiguous memory allocations or
->> > +memory sharing with other operating system on the same hardware board.
->> > +Those special memory regions might depend on the board configuration and
->> > +devices used on the target system.
->> > +
->> > +Parameters for each memory region can be encoded into the device tree
->> > +with the following convention:
->> > +
->> > +[(label):] (name) {
->> > +	compatible = "linux,contiguous-memory-region", "reserved-memory-region";
->> > +	reg = <(address) (size)>;
->> > +	(linux,default-contiguous-region);
->> > +};
->> > +
->> > +compatible:	one or more of:
->> 
->> It's unclear what the meaning of having both values means for the
->> kernel. Does it mean the regions is sharable with the kernel or not? I
->> would think they are mutually exclusive.
-> 
-> I consider CMA ("linux,contiguous-memory-region") as a special case of the
-> reserved memory driver. The main advantage is the ability of sharing the memory
-> with the system instead of just allocating it from the carved out memory
-> region. From the device and hardware perspective there is no difference
-> if the buffer comes from CMA or reserved memory. However if you insist, I
-> can change it to something different, like "shareable-memory-region".
-> 
-> Specifying both compatible values would let kernel to bind the more specific
-> driver (cma, if available) over the generic one (simple reserved memory
-> carve-out allocator based on dma_coherent).
-> 
->> > +	- "linux,contiguous-memory-region" - enables binding of this
->> > +	  region to Contiguous Memory Allocator (special region for
->> > +	  contiguous memory allocations, shared with movable system
->> > +	  memory, Linux kernel-specific).
->> 
->> As mentioned in the older thread, you can drop the 'linux,' prefix here.
->> Perhaps something like "shareable-memory-region" or merely
->> "memory-region". It is reasonable for any kernel (not just Linux) to use
->> marked regions for movable pages until it gets requested by a driver, in
->> which case a rather generic "memory-region" makes a lot of sense as a
->> name.
->> 
->> > +	- "reserved-memory-region" - compatibility is defined, given
->> > +	  region is assigned for exclusive usage for by the respective
->> > +	  devices.
->> 
->> BTW, just so you're aware there is already a binding for marking regions
->> as reserved. It was recently added to arch/powerpc/kernel/prom.c.
->> Unfortunately it doesn't look like it got documented. Search for
->> "reserved-ranges". However, I don't think it blocks your work here. That
->> binding doesn't provide any way for matching devices to reserved ranges.
->> It is only for telling the kernel "hands of that memory".
-> 
-> ok, good to know.
+The clock _data_ seems to always have some churn to it. Moving it out to
+DT reduces that churn from Linux. My concern above is not about kernel
+data size.
 
-So I think the most generic compatible should effectively be the same as 'reserved-ranges', ie this region shouldn't be touched by the kernel.
+> 
+> > The mux-clock binding covers a quite a few platforms that have similar
+> > mux-clock programming requirements. If the DT binding is verbose enough
+> > then the basic mux clock driver is sufficient to initialize all of the
+> > mux clocks from DT: no new platform-specific clock driver with a bunch
+> > of data is necessary.
+> 
+> The same could be said of just embedded this info in a C struct that is well known, I don't need the data in the dt for bits and shifts.
+> 
+> > On the other hand if we rely on tables in C to define how mux-clock
+> > parents are selected then every platform will have to write their own
+> > clock driver just to define their clock data.
+> 
+> Why?  If you can have a common mechanism in the device tree there isn't any reason you can't have a common struct that looks similar in C.
+> 
+> > Having drivers written for the sole purpose of listing out a bunch of
+> > data sounds like something that DT was meant to solve, even if this
+> > isn't at the board level and is at the SoC level.
+> 
+> I just don't see the need for the data to be in the DT.  You can get the same goal w/a standard struct defined in C.
 
-Than we can build on top of that with more specific compatibles.
+Absolutely you could put this stuff in C. Originally all of the clock
+registration mechanisms in the common clock implementation assumed
+static data in the kernel. That's how it used to be.
 
-I have examples from FSL networking SoCs where we would carve out memory for backing storage managed completely by the HW and Linux wouldn't need to touch it, however we might have a "fsl,qman-backing-store" compat encase we might want some debug code in linux to look at the region of memory.
+However DT came along to ARM and the clock framework and these "clock
+mapping" bindings started popping up, which are fragile. Adding a clock
+requires changes both to the DT binding AND to the kernel. That sucks.
 
-I've got examples at qualcomm where we have shared data structures in specific memory regions between different processors that aren't cache coherent, so want the memory not to be marked as cacheable by Linux when it accesses it.  Again we'd have a "qcom,smem" prop on top of the "reserved-memory-region".
+Once again I'll point out that this binding (mux-clock) makes it so that
+devices with simpler clock trees do not need to merge any code into the
+kernel. What value does device tree bring to me if for every platform
+with 8 clocks I have to write a new Linux clock driver with that static
+data in it? That also sucks. In that case DT brings almost zero value,
+with the exception of linking clock phandles to clock consumers, which
+clkdev had been doing for us already.
 
-So I'd like what we come up with to handle these use cases in addition to CMA.
+Regards,
+Mike
 
-Maybe, "reserved-memory-region" should be "carved-out-memory-region".  To say this region isn't for general OS usage, than compat's on top of that might imply more meaning.
-
->> > +
->> > +reg:	standard property defining the base address and size of
->> > +	the memory region
->> > +
->> > +linux,default-contiguous-region: property indicating that the region
->> > +	is the default region for all contiguous memory
->> > +	allocations, Linux specific (optional)
->> > +
->> > +It is optional to specify the base address, so if one wants to use
->> > +autoconfiguration of the base address, '0' can be specified as a base
->> > +address in the 'reg' property.
->> 
->> I don't understand this. What does autoconfiguration of the base address
->> actually do? If this is intended to dynamically allocate a region of RAM
->> for contiguous allocations, then don't use 'reg'. Use a different
->> property that only specifies the size.
 > 
-> Ok, I will try to make a patch which removes special 'zero' base address
-> handling and adds separate 'size' property for automatically configured
-> regions.
+> > 
+> > Regards,
+> > Mike
+> > 
+> >> 
+> >>> +where the first value in the pair is the parent clock and the second
+> >>> +value is the bitfield to be programmed into the register.
+> >>> +
+> >>> +The binding must provide the register to control the mux and the mask
+> >>> +for the corresponding control bits.  Optionally the number of bits to
+> >>> +shift that mask if necessary.  If the shift value is missing it is the
+> >>> +same as supplying a zero shift.
+> >>> +
+> >>> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >>> +
+> >>> +Required properties:
+> >>> +- compatible : shall be "mux-clock".
+> >>> +- #clock-cells : from common clock binding; shall be set to 0.
+> >>> +- clocks : link phandles of parent clocks
+> >>> +- reg : base address for register controlling adjustable mux
+> >>> +- bit-mask : arbitrary bitmask for programming the adjustable mux
+> >>> +
+> >>> +Optional properties:
+> >>> +- clock-output-names : From common clock binding.
+> >>> +- table : array of integer pairs defining parents & bitfield values
+> >>> +- bit-shift : number of bits to shift the bit-mask, defaults to
+> >>> +  (ffs(mask) - 1) if not present
+> >>> +- index-starts-at-one : valid input select programming starts at 1, not
+> >>> +  zero
+> >>> +- hiword-mask : lower half of the register programs the mux, upper half
+> >>> +  of the register indicates bits that were updated in the lower half
+> >>> +
+> >>> +Examples:
+> >>> +     clock: clock@4a008100 {
+> >>> +             compatible = "mux-clock";
+> >>> +             #clock-cells = <0>;
+> >>> +             clocks = <&clock_foo>, <&clock_bar>, <&clock_baz>;
+> >>> +             reg = <0x4a008100 0x4>
+> >>> +             mask = <0x3>;
+> >>> +             index-starts-at-one;
+> >>> +     };
+> >>> +
+> >>> +     clock: clock@4a008100 {
+> >>> +             #clock-cells = <0>;
+> >>> +             compatible = "mux-clock";
+> >>> +             clocks = <&clock_foo>, <&clock_bar>, <&clock_baz>;
+> >>> +             reg = <0x4a008100 0x4>;
+> >>> +             mask = <0x3>;
+> >>> +             shift = <0>;
+> >>> +             table = <&clock_foo 1>, <&clock_bar 2>, <&clock_baz 3>;
+> >>> +     };
+> >>> diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
+> >>> index 0811633..9292253 100644
+> >>> --- a/drivers/clk/clk-mux.c
+> >>> +++ b/drivers/clk/clk-mux.c
+> >>> @@ -1,7 +1,7 @@
+> >>> /*
+> >>> * Copyright (C) 2011 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
+> >>> * Copyright (C) 2011 Richard Zhao, Linaro <richard.zhao@linaro.org>
+> >>> - * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
+> >>> + * Copyright (C) 2011-2013 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
+> >>> *
+> >>> * This program is free software; you can redistribute it and/or modify
+> >>> * it under the terms of the GNU General Public License version 2 as
+> >>> @@ -16,6 +16,8 @@
+> >>> #include <linux/slab.h>
+> >>> #include <linux/io.h>
+> >>> #include <linux/err.h>
+> >>> +#include <linux/of.h>
+> >>> +#include <linux/of_address.h>
+> >>> 
+> >>> /*
+> >>> * DOC: basic adjustable multiplexer clock that cannot gate
+> >>> @@ -177,3 +179,67 @@ struct clk *clk_register_mux(struct device *dev, const char *name,
+> >>>                                    NULL, lock);
+> >>> }
+> >>> EXPORT_SYMBOL_GPL(clk_register_mux);
+> >>> +
+> >>> +#ifdef CONFIG_OF
+> >>> +/**
+> >>> + * of_mux_clk_setup() - Setup function for simple mux rate clock
+> >>> + */
+> >>> +void of_mux_clk_setup(struct device_node *node)
+> >>> +{
+> >>> +     struct clk *clk;
+> >>> +     const char *clk_name = node->name;
+> >>> +     void __iomem *reg;
+> >>> +     int num_parents;
+> >>> +     const char **parent_names;
+> >>> +     int i;
+> >>> +     u8 clk_mux_flags = 0;
+> >>> +     u32 mask = 0;
+> >>> +     u32 shift = 0;
+> >>> +
+> >>> +     of_property_read_string(node, "clock-output-names", &clk_name);
+> >>> +
+> >>> +     num_parents = of_clk_get_parent_count(node);
+> >>> +     if (num_parents < 1) {
+> >>> +             pr_err("%s: mux-clock %s must have parent(s)\n",
+> >>> +                             __func__, node->name);
+> >>> +             return;
+> >>> +     }
+> >>> +
+> >>> +     parent_names = kzalloc((sizeof(char*) * num_parents),
+> >>> +                     GFP_KERNEL);
+> >>> +
+> >>> +     for (i = 0; i < num_parents; i++)
+> >>> +             parent_names[i] = of_clk_get_parent_name(node, i);
+> >>> +
+> >>> +     reg = of_iomap(node, 0);
+> >>> +     if (!reg) {
+> >>> +             pr_err("%s: no memory mapped for property reg\n", __func__);
+> >>> +             return;
+> >>> +     }
+> >>> +
+> >>> +     if (of_property_read_u32(node, "bit-mask", &mask)) {
+> >>> +             pr_err("%s: missing bit-mask property for %s\n", __func__, node->name);
+> >>> +             return;
+> >>> +     }
+> >>> +
+> >>> +     if (of_property_read_u32(node, "bit-shift", &shift)) {
+> >>> +             shift = __ffs(mask);
+> >>> +             pr_debug("%s: bit-shift property defaults to 0x%x for %s\n",
+> >>> +                             __func__, shift, node->name);
+> >>> +     }
+> >>> +
+> >>> +     if (of_property_read_bool(node, "index-starts-at-one"))
+> >>> +             clk_mux_flags |= CLK_MUX_INDEX_ONE;
+> >>> +
+> >>> +     if (of_property_read_bool(node, "hiword-mask"))
+> >>> +             clk_mux_flags |= CLK_MUX_HIWORD_MASK;
+> >>> +
+> >>> +     clk = clk_register_mux_table(NULL, clk_name, parent_names, num_parents,
+> >>> +                     0, reg, shift, mask, clk_mux_flags, NULL, NULL);
+> >>> +
+> >>> +     if (!IS_ERR(clk))
+> >>> +             of_clk_add_provider(node, of_clk_src_simple_get, clk);
+> >>> +}
+> >>> +EXPORT_SYMBOL_GPL(of_mux_clk_setup);
+> >>> +CLK_OF_DECLARE(mux_clk, "mux-clock", of_mux_clk_setup);
+> >>> +#endif
+> >>> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> >>> index 5497739..e019212 100644
+> >>> --- a/include/linux/clk-provider.h
+> >>> +++ b/include/linux/clk-provider.h
+> >>> @@ -350,7 +350,7 @@ struct clk *clk_register_mux_table(struct device *dev, const char *name,
+> >>>              void __iomem *reg, u8 shift, u32 mask,
+> >>>              u8 clk_mux_flags, u32 *table, spinlock_t *lock);
+> >>> 
+> >>> -void of_fixed_factor_clk_setup(struct device_node *node);
+> >>> +void of_mux_clk_setup(struct device_node *node);
+> >>> 
+> >>> /**
+> >>> * struct clk_fixed_factor - fixed multiplier and divider clock
+> >>> @@ -371,10 +371,13 @@ struct clk_fixed_factor {
+> >>> };
+> >>> 
+> >>> extern struct clk_ops clk_fixed_factor_ops;
+> >>> +
+> >>> struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
+> >>>              const char *parent_name, unsigned long flags,
+> >>>              unsigned int mult, unsigned int div);
+> >>> 
+> >>> +void of_fixed_factor_clk_setup(struct device_node *node);
+> >>> +
+> >>> /***
+> >>> * struct clk_composite - aggregate clock of mux, divider and gate clocks
+> >>> *
+> >>> -- 
+> >>> 1.8.1.2
+> >>> 
+> >>> --
+> >>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> >>> the body of a message to majordomo@vger.kernel.org
+> >>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >> 
+> >> -- 
+> >> Employee of Qualcomm Innovation Center, Inc.
+> >> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 > 
->> > +The /memory/reserved-memory node must contain the same #address-cells
->> > +and #size-cells value as the root node.
->> 
->> That seems to be an arbitrary restriction. Why does the reserved-memory
->> node need to have exactly the same #address/size values? The 'reg'
->> property binding quite easily handles different values at different
->> levels of the tree. More below....
-> 
-> Does it really makes sense to have such configuration with different
-> #address-cells/#size-cells than the root memory node?
-> 
->> > +/ {
->> > +	#address-cells = <1>;
->> > +	#size-cells = <1>;
->> > +
->> > +	/* ... */
->> > +
->> > +	memory {
->> > +		reg =  <0x40000000 0x10000000
->> > +			0x50000000 0x10000000
->> > +			0x60000000 0x10000000
->> > +			0x70000000 0x10000000>;
->> > +
->> > +		reserved-memory {
->> > +			#address-cells = <1>;
->> > +			#size-cells = <1>;
->> > +
->> > +			/*
->> > +			 * global autoconfigured region for contiguous allocations
->> > +			 * (used only with Contiguous Memory Allocator)
->> > +			 */
->> > +			contig_region@0 {
->> 
->> I would expect this to be "region@0", not "contig_region". Also, the '_'
->> character is strongly discouraged in node names.
->> 
->> > +				compatible = "linux,contiguous-memory-region";
->> > +				reg = <0x0 0x4000000>;
->> 
->> As written, this example tree is abusing the 'reg' binding. Whenever a
->> node has a mappable 'reg' propertie, then all of the parent nodes above
->> it need to have 'ranges' properties. In this case it is pretty easy to
->> fix by simply adding "ranges;" to the reserved-memory and memory nodes.
->> An empty ranges property simply means that all addresses are 1:1 mapped
->> if #address/size are the same between each parent/child.
->> 
->> The documentation above should specify that both memory and
->> reserved-memory need to have 'ranges', but can suggest that the best
->> use-case is for ranges to be empty.
->> 
->> I mentioned above that #address/#size can actually be different. If
->> someone wants to do that, then they need to have a fully specified
->> ranges property that declares the mapping from one address space to
->> another.
->> 
->> I'm okay with the implementation as it currently stands, but only if you
->> make it test for the presence of an empty ranges property. If ranges is
->> missing, or if it has data in it then it should throw an error that it
->> cannot be parsed.
-> 
-> Ok, now I see the problem. Too bad that the ranges and #address/#size
-> cells need to be parsed from FDT, what makes the code much more complicated,
-> especially because there is almost no infrastructure for parsing it. I can
-> resurrect the simple code for parsing FDT from V5 of the patches (see
-> http://thread.gmane.org/gmane.linux.ports.arm.kernel/259278/focus=259281 ),
-> but Rob already pointed that such code is quite hard to understand.
-> 
->> > +				linux,default-contiguous-region;
->> > +			};
->> > +
->> > +			/*
->> > +			 * special region for framebuffer
->> > +			 */
->> > +			display_region: region@78000000 {
->> > +				compatible = "linux,contiguous-memory-region", "reserved-memory-region";
->> > +				reg = <0x78000000 0x800000>;
->> > +			};
->> > +
->> > +			/*
->> > +			 * special region for multimedia processing devices
->> > +			 */
->> > +			multimedia_region: region@77000000 {
->> > +				compatible = "linux,contiguous-memory-region";
->> > +				reg = <0x77000000 0x4000000>;
->> > +			};
->> > +		};
->> > +	};
->> > +
->> > +	/* ... */
->> > +
->> > +	fb0: fb@12300000 {
->> > +		status = "okay";
->> > +		memory-region = <&display_region>;
->> > +	};
->> > +
->> > +	scaler: scaler@12500000 {
->> > +		status = "okay";
->> > +		memory-region = <&multimedia_region>;
->> > +	};
->> > +
->> > +	codec: codec@12600000 {
->> > +		status = "okay";
->> > +		memory-region = <&multimedia_region>;
->> > +	};
->> > +};
->> > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
->> > index 80e5c13..f7107fa 100644
->> > --- a/drivers/of/Kconfig
->> > +++ b/drivers/of/Kconfig
->> > @@ -80,4 +80,10 @@ config OF_MTD
->> >  	depends on MTD
->> >  	def_bool y
->> >
->> > +config OF_RESERVED_MEM
->> > +	depends on DMA_CMA || (HAVE_GENERIC_DMA_COHERENT && HAVE_MEMBLOCK)
->> > +	def_bool y
->> > +	help
->> > +	  Initialization code for DMA reserved memory
->> > +
->> >  endmenu # OF
->> > diff --git a/drivers/of/Makefile b/drivers/of/Makefile
->> > index 1f9c0c4..e7e3322 100644
->> > --- a/drivers/of/Makefile
->> > +++ b/drivers/of/Makefile
->> > @@ -10,3 +10,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
->> >  obj-$(CONFIG_OF_PCI)	+= of_pci.o
->> >  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
->> >  obj-$(CONFIG_OF_MTD)	+= of_mtd.o
->> > +obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
->> > diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
->> > new file mode 100644
->> > index 0000000..a754b84
->> > --- /dev/null
->> > +++ b/drivers/of/of_reserved_mem.c
->> > @@ -0,0 +1,175 @@
->> > +/*
->> > + * Device tree based initialization code for reserved memory.
->> > + *
->> > + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
->> > + *		http://www.samsung.com
->> > + * Author: Marek Szyprowski <m.szyprowski@samsung.com>
->> > + *
->> > + * This program is free software; you can redistribute it and/or
->> > + * modify it under the terms of the GNU General Public License as
->> > + * published by the Free Software Foundation; either version 2 of the
->> > + * License or (at your optional) any later version of the license.
->> > + */
->> > +
->> > +#include <asm/dma-contiguous.h>
->> > +
->> > +#include <linux/memblock.h>
->> > +#include <linux/err.h>
->> > +#include <linux/of.h>
->> > +#include <linux/of_fdt.h>
->> > +#include <linux/of_platform.h>
->> > +#include <linux/mm.h>
->> > +#include <linux/sizes.h>
->> > +#include <linux/mm_types.h>
->> > +#include <linux/dma-contiguous.h>
->> > +#include <linux/dma-mapping.h>
->> > +#include <linux/of_reserved_mem.h>
->> > +
->> > +#define MAX_RESERVED_REGIONS	16
->> 
->> Nit: This seems a little arbitrary. I would expect the reserved_mem
->> array to be dynamically allocated. I'm not going to force you to change
->> this, but it should be revisited with a follow-on patch.
->> 
->> > +struct reserved_mem {
->> > +	phys_addr_t		base;
->> > +	unsigned long		size;
->> > +	struct cma		*cma;
->> > +	char			name[32];
->> 
->> Why is name a fixed size string? And why is it a magic size of 32?
->> 
->> > +};
->> > +static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
->> > +static int reserved_mem_count;
->> > +
->> > +static int __init fdt_scan_reserved_mem(unsigned long node, const char *uname,
->> > +					int depth, void *data)
->> > +{
->> > +	struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
->> > +	phys_addr_t base, size;
->> > +	int is_cma, is_reserved;
->> > +	unsigned long len;
->> > +	const char *status;
->> > +	__be32 *prop;
->> > +
->> > +	is_cma = IS_ENABLED(CONFIG_DMA_CMA) &&
->> > +	       of_flat_dt_is_compatible(node, "linux,contiguous-memory-region");
->> 
->> Nit: Indentation by tabs.
->> 
->> > +	is_reserved = of_flat_dt_is_compatible(node, "reserved-memory-region");
->> > +
->> > +	if (!is_reserved && !is_cma) {
->> > +		/* ignore node and scan next one */
->> > +		return 0;
->> > +	}
->> > +
->> > +	status = of_get_flat_dt_prop(node, "status", &len);
->> > +	if (status && strcmp(status, "okay") != 0) {
->> > +		/* ignore disabled node nad scan next one */
->> > +		return 0;
->> > +	}
->> > +
->> > +	prop = of_get_flat_dt_prop(node, "reg", &len);
->> > +	if (!prop || (len < (dt_root_size_cells + dt_root_addr_cells) *
->> > +			     sizeof(__be32))) {
->> > +		pr_err("Reserved mem: node %s, incorrect \"reg\" property\n",
->> > +		       uname);
->> > +		/* ignore node and scan next one */
->> > +		return 0;
->> > +	}
->> > +	base = dt_mem_next_cell(dt_root_addr_cells, &prop);
->> > +	size = dt_mem_next_cell(dt_root_size_cells, &prop);
->> > +
->> > +	if (!size) {
->> > +		/* ignore node and scan next one */
->> > +		return 0;
->> > +	}
->> > +
->> > +	pr_info("Reserved mem: found %s, memory base %lx, size %ld MiB\n",
->> > +		uname, (unsigned long)base, (unsigned long)size / SZ_1M);
->> > +
->> > +	if (reserved_mem_count == ARRAY_SIZE(reserved_mem))
->> > +		return -ENOSPC;
->> > +
->> > +	rmem->base = base;
->> > +	rmem->size = size;
->> > +	strlcpy(rmem->name, uname, sizeof(rmem->name));
->> 
->> If I'm reading the code correctly, uname is directly from the flattened
->> device tree and is safe to keep a pointer to. Can you make rmem->name a
->> char* and merely do a rmem->name = uname;?
-> 
-> Ok, I didn't know it is safe to keep a pointer to FDT.
-> 
->> > +
->> > +	if (is_cma) {
->> > +		struct cma *cma;
->> > +		if (dma_contiguous_reserve_area(size, base, 0, &cma) == 0) {
->> > +			rmem->cma = cma;
->> > +			reserved_mem_count++;
->> > +			if (of_get_flat_dt_prop(node,
->> > +						"linux,default-contiguous-region",
->> > +						NULL))
->> > +				dma_contiguous_set_default(cma);
->> > +		}
->> > +	} else if (is_reserved) {
->> > +		if (memblock_remove(base, size) == 0)
->> > +			reserved_mem_count++;
->> > +		else
->> > +			pr_err("Failed to reserve memory for %s\n", uname);
->> > +	}
->> > +
->> > +	return 0;
->> > +}
->> > +
->> > +static struct reserved_mem *get_dma_memory_region(struct device *dev)
->> > +{
->> > +	struct device_node *node;
->> > +	const char *name;
->> > +	int i;
->> > +
->> > +	node = of_parse_phandle(dev->of_node, "memory-region", 0);
->> > +	if (!node)
->> > +		return NULL;
->> > +
->> > +	name = kbasename(node->full_name);
->> > +	for (i = 0; i < reserved_mem_count; i++)
->> > +		if (strcmp(name, reserved_mem[i].name) == 0)
->> > +			return &reserved_mem[i];
->> > +	return NULL;
->> > +}
->> > +
->> > +/**
->> > + * of_reserved_mem_device_init() - assign reserved memory region to given device
->> > + *
->> > + * This function assign memory region pointed by "memory-region" device tree
->> > + * property to the given device.
->> > + */
->> > +void of_reserved_mem_device_init(struct device *dev)
->> > +{
->> > +	struct reserved_mem *region = get_dma_memory_region(dev);
->> > +	if (!region)
->> > +		return;
->> > +
->> > +	if (region->cma) {
->> > +		dev_set_cma_area(dev, region->cma);
->> > +		pr_info("Assigned CMA %s to %s device\n", region->name,
->> > +			dev_name(dev));
->> > +	} else {
->> > +		if (dma_declare_coherent_memory(dev, region->base, region->base,
->> > +		    region->size, DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE) != 0)
->> > +			pr_info("Declared reserved memory %s to %s device\n",
->> > +				region->name, dev_name(dev));
->> > +	}
->> > +}
->> > +
->> > +/**
->> > + * of_reserved_mem_device_release() - release reserved memory device structures
->> > + *
->> > + * This function releases structures allocated for memory region handling for
->> > + * the given device.
->> > + */
->> > +void of_reserved_mem_device_release(struct device *dev)
->> > +{
->> > +	struct reserved_mem *region = get_dma_memory_region(dev);
->> > +	if (!region && !region->cma)
->> > +		dma_release_declared_memory(dev);
->> > +}
->> > +
->> > +/**
->> > + * early_init_dt_scan_reserved_mem() - create reserved memory regions
->> > + *
->> > + * This function grabs memory from early allocator for device exclusive use
->> > + * defined in device tree structures. It should be called by arch specific code
->> > + * once the early allocator (memblock) has been activated and all other
->> > + * subsystems have already allocated/reserved memory.
->> > + */
->> > +void __init early_init_dt_scan_reserved_mem(void)
->> > +{
->> > +	of_scan_flat_dt_by_path("/memory/reserved-memory",
->> > +				fdt_scan_reserved_mem, NULL);
->> > +}
->> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->> > index e0a6514..eeca8a5 100644
->> > --- a/drivers/of/platform.c
->> > +++ b/drivers/of/platform.c
->> > @@ -21,6 +21,7 @@
->> >  #include <linux/of_device.h>
->> >  #include <linux/of_irq.h>
->> >  #include <linux/of_platform.h>
->> > +#include <linux/of_reserved_mem.h>
->> >  #include <linux/platform_device.h>
->> >
->> >  const struct of_device_id of_default_bus_match_table[] = {
->> > @@ -218,6 +219,8 @@ struct platform_device *of_platform_device_create_pdata(
->> >  	dev->dev.bus = &platform_bus_type;
->> >  	dev->dev.platform_data = platform_data;
->> >
->> > +	of_reserved_mem_device_init(&dev->dev);
->> > +
->> >  	/* We do not fill the DMA ops for platform devices by default.
->> >  	 * This is currently the responsibility of the platform code
->> >  	 * to do such, possibly using a device notifier
->> > @@ -225,6 +228,7 @@ struct platform_device *of_platform_device_create_pdata(
->> >
->> >  	if (of_device_add(dev) != 0) {
->> >  		platform_device_put(dev);
->> > +		of_reserved_mem_device_release(&dev->dev);
->> >  		return NULL;
->> >  	}
->> >
->> > diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
->> > new file mode 100644
->> > index 0000000..c841282
->> > --- /dev/null
->> > +++ b/include/linux/of_reserved_mem.h
->> > @@ -0,0 +1,14 @@
->> > +#ifndef __OF_RESERVED_MEM_H
->> > +#define __OF_RESERVED_MEM_H
->> > +
->> > +#ifdef CONFIG_OF_RESERVED_MEM
->> > +void of_reserved_mem_device_init(struct device *dev);
->> > +void of_reserved_mem_device_release(struct device *dev);
->> > +void early_init_dt_scan_reserved_mem(void);
->> > +#else
->> > +static inline void of_reserved_mem_device_init(struct device *dev) { }
->> > +static inline void of_reserved_mem_device_release(struct device *dev) { }
->> > +static inline void early_init_dt_scan_reserved_mem(void) { }
->> > +#endif
->> > +
->> > +#endif /* __OF_RESERVED_MEM_H */
->> > --
->> > 1.7.9.5
-> 
-> Best regards
 > -- 
-> Marek Szyprowski
-> Samsung R&D Institute Poland
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> Employee of Qualcomm Innovation Center, Inc.
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
