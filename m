@@ -1,44 +1,94 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [patch v2] net/fec: cleanup types in fec_get_mac()
-Date: Fri, 30 Aug 2013 12:00:49 +0300
-Message-ID: <20130830090049.GJ19256@mwanda>
-References: <20130829082514.GB14334@elgon.mountain>
- <1377802138.5372.12.camel@bwh-desktop.uk.level5networks.com>
- <9848F2DB572E5649BA045B288BE08FBE01662A4B@039-SN2MPN1-021.039d.mgd.msft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9848F2DB572E5649BA045B288BE08FBE01662A4B@039-SN2MPN1-021.039d.mgd.msft.net>
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Duan Fugang-B38611 <B38611@freescale.com>
-Cc: Ben Hutchings <bhutchings@solarflare.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Estevam Fabio-R49496 <r49496@freescale.com>, Li Frank-B20596 <B20596@freescale.com>, Jim Baxter <jim_baxter@mentor.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: [PATCH] ARM: dts: Add SPI nodes to the exynos5420 device tree file
+Date: Fri, 30 Aug 2013 15:27:17 +0530
+Message-ID: <1377856637-7595-1-git-send-email-l.krishna@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, kgene.kim@samsung.com, dianders@chromium.org, abrestic@chromium.org, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2013 at 02:02:00AM +0000, Duan Fugang-B38611 wrote:
-> From: Ben Hutchings [mailto:bhutchings@solarflare.com]
-> Data: Friday, August 30, 2013 2:49 AM
-> 
-> > To: Dan Carpenter
-> > Cc: Grant Likely; Rob Herring; David S. Miller; Estevam Fabio-R49496; Li
-> > Frank-B20596; Jim Baxter; Duan Fugang-B38611; netdev@vger.kernel.org;
-> > devicetree@vger.kernel.org; kernel-janitors@vger.kernel.org
-> > Subject: Re: [patch v2] net/fec: cleanup types in fec_get_mac()
-> > 
-> > On Thu, 2013-08-29 at 11:25 +0300, Dan Carpenter wrote:
-> > > My static checker complains that on some arches unsigned longs can be
-> > > 8 characters which is larger than the buffer is only 6 chars.
-> > > Additionally, Ben Hutchings points out that the buffer actually holds
-> > > big endian data and the buffer we are reading from is CPU endian.
-> > 
-> > It's not really as clear-cut as that. :-)  But I think it's slightly more
-> > logical this way.
-> > 
-> Yes, it is not clear, pls remove somebody's name from the commit log.
+Add SPI device tree nodes to Exynos5420 SoC
 
-Huh?  No, I'm going to leave Ben's name as is.  It's weird that you
-would ask for that.
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
+---
+Note: This patch is rebased on Kgene's for-next branch and is dependent on
+[V3] ARM: dts: Add DMA controller node info on Exynos5420.
+https://patchwork.kernel.org/patch/2851790/
 
-regards,
-dan carpenter
+ arch/arm/boot/dts/exynos5420.dtsi |   51 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 15465f8..8d9e980 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -27,6 +27,9 @@
+ 		pinctrl2 = &pinctrl_2;
+ 		pinctrl3 = &pinctrl_3;
+ 		pinctrl4 = &pinctrl_4;
++		spi0 = &spi_0;
++		spi1 = &spi_1;
++		spi2 = &spi_2;
+ 	};
+ 
+ 	cpus {
+@@ -238,6 +241,54 @@
+ 		};
+ 	};
+ 
++	spi_0: spi@12d20000 {
++		compatible = "samsung,exynos4210-spi";
++		reg = <0x12d20000 0x100>;
++		interrupts = <0 66 0>;
++		dmas = <&pdma0 5
++			&pdma0 4>;
++		dma-names = "tx", "rx";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&spi0_bus>;
++		clocks = <&clock 271>, <&clock 135>;
++		clock-names = "spi", "spi_busclk0";
++		status = "disabled";
++	};
++
++	spi_1: spi@12d30000 {
++		compatible = "samsung,exynos4210-spi";
++		reg = <0x12d30000 0x100>;
++		interrupts = <0 67 0>;
++		dmas = <&pdma1 5
++			&pdma1 4>;
++		dma-names = "tx", "rx";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&spi1_bus>;
++		clocks = <&clock 272>, <&clock 136>;
++		clock-names = "spi", "spi_busclk0";
++		status = "disabled";
++	};
++
++	spi_2: spi@12d40000 {
++		compatible = "samsung,exynos4210-spi";
++		reg = <0x12d40000 0x100>;
++		interrupts = <0 68 0>;
++		dmas = <&pdma0 7
++			&pdma0 6>;
++		dma-names = "tx", "rx";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&spi2_bus>;
++		clocks = <&clock 273>, <&clock 137>;
++		clock-names = "spi", "spi_busclk0";
++		status = "disabled";
++	};
++
+ 	serial@12C00000 {
+ 		clocks = <&clock 257>, <&clock 128>;
+ 		clock-names = "uart", "clk_uart_baud0";
+-- 
+1.7.10.4
