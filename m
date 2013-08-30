@@ -1,104 +1,212 @@
-From: <hongbo.zhang@freescale.com>
-Subject: [PATCH v9 3/3] DMA: Freescale: update driver to support 8-channel DMA engine
-Date: Fri, 30 Aug 2013 19:26:20 +0800
-Message-ID: <1377861980-7027-4-git-send-email-hongbo.zhang@freescale.com>
-References: <1377861980-7027-1-git-send-email-hongbo.zhang@freescale.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v2 1/7] pinctrl: imx1 core driver
+Date: Fri, 30 Aug 2013 14:17:32 +0200
+Message-ID: <20130830121732.GN20071@s25.your-server.de>
+References: <1376921234-26682-1-git-send-email-mpa@pengutronix.de>
+ <1376921234-26682-2-git-send-email-mpa@pengutronix.de>
+ <20130820125614.GE29114@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377861980-7027-1-git-send-email-hongbo.zhang@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, vinod.koul@intel.com, djbw@fb.com
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Hongbo Zhang <hongbo.zhang@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130820125614.GE29114@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
+Hi,
 
-This patch adds support to 8-channel DMA engine, thus the driver works for both
-the new 8-channel and the legacy 4-channel DMA engines.
+sorry for the late response, I moved last week.
 
-Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
----
- drivers/dma/Kconfig  |    9 +++++----
- drivers/dma/fsldma.c |    9 ++++++---
- drivers/dma/fsldma.h |    2 +-
- 3 files changed, 12 insertions(+), 8 deletions(-)
+On Tue, Aug 20, 2013 at 08:56:17PM +0800, Shawn Guo wrote:
+> Looks good to me.  A couple of small comments below.
+> 
+> On Mon, Aug 19, 2013 at 04:07:08PM +0200, Markus Pargmann wrote:
+> > +/*
+> > + * Write to a register with 2 bits per pin. The function will automatically
+> > + * use the next register if the pin is managed in the second register.
+> > + */
+> > +static void imx1_write_2bit(struct imx1_pinctrl *ipctl, unsigned int pin_id,
+> > +		u32 value, u32 reg_offset)
+> > +{
+> > +	void __iomem *reg = imx1_mem(ipctl, pin_id) + reg_offset;
+> > +	int offset = (pin_id % 16) * 2; /* offset, regardless of register used */
+> > +	int mask = ~(0x3 << offset); /* Mask for 2 bits at offset */
+> > +	u32 old_val;
+> > +	u32 new_val;
+> > +
+> > +	dev_dbg(ipctl->dev, "write: register 0x%p offset %d value 0x%x\n",
+> > +			reg, offset, value);
+> > +
+> > +	/* Use the next register if the pin's port pin number is >=16 */
+> > +	if (pin_id % 32 >= 16)
+> > +		reg += 0x04;
+> > +
+> > +	/* Get current state of pins */
+> > +	old_val = readl(reg);
+> > +	old_val &= mask;
+> > +
+> > +	new_val = value & 0x3; /* Make sure value is really 2 bit */
+> > +	new_val <<= offset;
+> > +	new_val |= old_val;/* Set new state for pin_id */
+> > +
+> > +	writel(new_val, reg);
+> > +}
+> > +
+> > +static void imx1_write_bit(struct imx1_pinctrl *ipctl, unsigned int pin_id,
+> > +		u32 value, u32 reg_offset)
+> > +{
+> > +	void __iomem *reg = imx1_mem(ipctl, pin_id) + reg_offset;
+> > +	int offset = pin_id % 32;
+> > +	int mask = ~BIT_MASK(offset);
+> > +	u32 old_val;
+> > +	u32 new_val;
+> > +
+> > +	/* Get current state of pins */
+> > +	old_val = readl(reg);
+> > +	old_val &= mask;
+> > +
+> > +	new_val = value & 0x1; /* Make sure value is really 2 bit */
+> 
+> Copy&past error in comment.
+> 
+> > +	new_val <<= offset;
+> > +	new_val |= old_val;/* Set new state for pin_id */
+> > +
+> > +	writel(new_val, reg);
+> > +}
+> 
+> <snip>
+> 
+> > +static int imx1_pinctrl_parse_groups(struct device_node *np,
+> > +				    struct imx1_pin_group *grp,
+> > +				    struct imx1_pinctrl_soc_info *info,
+> > +				    u32 index)
+> > +{
+> > +	int size;
+> > +	const __be32 *list;
+> > +	int i;
+> > +
+> > +	dev_dbg(info->dev, "group(%d): %s\n", index, np->name);
+> > +
+> > +	/* Initialise group */
+> > +	grp->name = np->name;
+> > +
+> > +	/*
+> > +	 * the binding format is fsl,pins = <PIN_FUNC_ID CONFIG ...>,
+> 
+> It does not match the bindings.
+> 
+> > +	 * do sanity check and calculate pins number
+> > +	 */
+> > +	list = of_get_property(np, "fsl,pins", &size);
+> > +	/* we do not check return since it's safe node passed down */
+> > +	if (!size || size % 12) {
+> > +		dev_notice(info->dev, "Not a valid fsl,pins property (%s)\n",
+> > +				np->name);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	grp->npins = size / 12;
+> > +	grp->pins = devm_kzalloc(info->dev,
+> > +			grp->npins * sizeof(struct imx1_pin), GFP_KERNEL);
+> > +	grp->pin_ids = devm_kzalloc(info->dev,
+> > +			grp->npins * sizeof(unsigned int), GFP_KERNEL);
+> > +
+> > +	if (!grp->pins || !grp->pin_ids)
+> > +		return -ENOMEM;
+> > +
+> > +	for (i = 0; i < grp->npins; i++) {
+> > +		grp->pins[i].pin_id = be32_to_cpu(*list++);
+> > +		grp->pins[i].mux_id = be32_to_cpu(*list++);
+> > +		grp->pins[i].config = be32_to_cpu(*list++);
+> > +
+> > +		grp->pin_ids[i] = grp->pins[i].pin_id;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> 
+> <snip>
+> 
+> > +static int imx1_pinctrl_parse_dt(struct platform_device *pdev,
+> > +		struct imx1_pinctrl *pctl, struct imx1_pinctrl_soc_info *info)
+> > +{
+> > +	struct device_node *np = pdev->dev.of_node;
+> > +	struct device_node *child;
+> > +	int ret;
+> > +	u32 nfuncs = 0;
+> > +	u32 ngroups = 0;
+> > +	u32 ifunc = 0;
+> > +	u32 base_addr;
+> > +
+> > +	if (!np)
+> > +		return -ENODEV;
+> > +
+> > +	ret = of_property_read_u32(np, "reg", &base_addr);
+> 
+> It seems base_addr is used nowhere?
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 6825957..3979c65 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -89,14 +89,15 @@ config AT_HDMAC
- 	  Support the Atmel AHB DMA controller.
- 
- config FSL_DMA
--	tristate "Freescale Elo and Elo Plus DMA support"
-+	tristate "Freescale Elo series DMA support"
- 	depends on FSL_SOC
- 	select DMA_ENGINE
- 	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
- 	---help---
--	  Enable support for the Freescale Elo and Elo Plus DMA controllers.
--	  The Elo is the DMA controller on some 82xx and 83xx parts, and the
--	  Elo Plus is the DMA controller on 85xx and 86xx parts.
-+	  Enable support for the Freescale Elo series DMA controllers.
-+	  The Elo is the DMA controller on some mpc82xx and mpc83xx parts, the
-+	  EloPlus is on mpc85xx and mpc86xx and Pxxx parts, and the Elo3 is on
-+	  some Txxx and Bxxx parts.
- 
- config MPC512X_DMA
- 	tristate "Freescale MPC512x built-in DMA engine support"
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index 49e8fbd..16a9a48 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -1261,7 +1261,9 @@ static int fsl_dma_chan_probe(struct fsldma_device *fdev,
- 	WARN_ON(fdev->feature != chan->feature);
- 
- 	chan->dev = fdev->dev;
--	chan->id = ((res.start - 0x100) & 0xfff) >> 7;
-+	chan->id = (res.start & 0xfff) < 0x300 ?
-+		   ((res.start - 0x100) & 0xfff) >> 7 :
-+		   ((res.start - 0x200) & 0xfff) >> 7;
- 	if (chan->id >= FSL_DMA_MAX_CHANS_PER_DEVICE) {
- 		dev_err(fdev->dev, "too many channels for device\n");
- 		err = -EINVAL;
-@@ -1434,6 +1436,7 @@ static int fsldma_of_remove(struct platform_device *op)
- }
- 
- static const struct of_device_id fsldma_of_ids[] = {
-+	{ .compatible = "fsl,elo3-dma", },
- 	{ .compatible = "fsl,eloplus-dma", },
- 	{ .compatible = "fsl,elo-dma", },
- 	{}
-@@ -1455,7 +1458,7 @@ static struct platform_driver fsldma_of_driver = {
- 
- static __init int fsldma_init(void)
- {
--	pr_info("Freescale Elo / Elo Plus DMA driver\n");
-+	pr_info("Freescale Elo series DMA driver\n");
- 	return platform_driver_register(&fsldma_of_driver);
- }
- 
-@@ -1467,5 +1470,5 @@ static void __exit fsldma_exit(void)
- subsys_initcall(fsldma_init);
- module_exit(fsldma_exit);
- 
--MODULE_DESCRIPTION("Freescale Elo / Elo Plus DMA driver");
-+MODULE_DESCRIPTION("Freescale Elo series DMA driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index f5c3879..1ffc244 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -112,7 +112,7 @@ struct fsldma_chan_regs {
- };
- 
- struct fsldma_chan;
--#define FSL_DMA_MAX_CHANS_PER_DEVICE 4
-+#define FSL_DMA_MAX_CHANS_PER_DEVICE 8
- 
- struct fsldma_device {
- 	void __iomem *regs;	/* DGSR register base */
+It's not used anymore. Some old code I forgot to remove from the gpio
+subdevices.
+
+I also fixed the comments you mentioned.
+
+Thanks,
+
+Markus
+
+> 
+> Shawn
+> 
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	for_each_child_of_node(np, child) {
+> > +		++nfuncs;
+> > +		ngroups += of_get_child_count(child);
+> > +	}
+> > +
+> > +	if (!nfuncs) {
+> > +		dev_err(&pdev->dev, "No pin functions defined\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	info->nfunctions = nfuncs;
+> > +	info->functions = devm_kzalloc(&pdev->dev,
+> > +			nfuncs * sizeof(struct imx1_pmx_func), GFP_KERNEL);
+> > +
+> > +	info->ngroups = ngroups;
+> > +	info->groups = devm_kzalloc(&pdev->dev,
+> > +			ngroups * sizeof(struct imx1_pin_group), GFP_KERNEL);
+> > +
+> > +
+> > +	if (!info->functions || !info->groups)
+> > +		return -ENOMEM;
+> > +
+> > +	for_each_child_of_node(np, child) {
+> > +		ret = imx1_pinctrl_parse_functions(child, info, ifunc++);
+> > +		if (ret == -ENOMEM)
+> > +			return -ENOMEM;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> 
+> 
+
 -- 
-1.7.9.5
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
