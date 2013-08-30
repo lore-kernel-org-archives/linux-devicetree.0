@@ -1,34 +1,44 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v4 0/5] ARM: tegra: support for Trusted Foundations
-Date: Fri, 30 Aug 2013 10:23:03 +0200
-Message-ID: <13779002.NFLbqBjPSE@flatron>
-References: <1377770268-14014-1-git-send-email-acourbot@nvidia.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [patch v2] net/fec: cleanup types in fec_get_mac()
+Date: Fri, 30 Aug 2013 12:00:49 +0300
+Message-ID: <20130830090049.GJ19256@mwanda>
+References: <20130829082514.GB14334@elgon.mountain>
+ <1377802138.5372.12.camel@bwh-desktop.uk.level5networks.com>
+ <9848F2DB572E5649BA045B288BE08FBE01662A4B@039-SN2MPN1-021.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377770268-14014-1-git-send-email-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dave Martin <Dave.Martin@arm.com>, gnurou@gmail.com, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9848F2DB572E5649BA045B288BE08FBE01662A4B@039-SN2MPN1-021.039d.mgd.msft.net>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Duan Fugang-B38611 <B38611@freescale.com>
+Cc: Ben Hutchings <bhutchings@solarflare.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Estevam Fabio-R49496 <r49496@freescale.com>, Li Frank-B20596 <B20596@freescale.com>, Jim Baxter <jim_baxter@mentor.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
-
-On Thursday 29 of August 2013 18:57:43 Alexandre Courbot wrote:
-> New version revised according to comments received for v3. Hopefully
-> it will be good enough to be merged.
+On Fri, Aug 30, 2013 at 02:02:00AM +0000, Duan Fugang-B38611 wrote:
+> From: Ben Hutchings [mailto:bhutchings@solarflare.com]
+> Data: Friday, August 30, 2013 2:49 AM
 > 
-> Changes since v3:
-> - Added of_register_trusted_foundations() function to avoid duplicate
->   device tree parsing code in arch files
-> - Added ability to initialize Trusted Foundations through platform data
-> - Changed TF version number to integers
-> - Refactored Kconfig menu for more clarity
+> > To: Dan Carpenter
+> > Cc: Grant Likely; Rob Herring; David S. Miller; Estevam Fabio-R49496; Li
+> > Frank-B20596; Jim Baxter; Duan Fugang-B38611; netdev@vger.kernel.org;
+> > devicetree@vger.kernel.org; kernel-janitors@vger.kernel.org
+> > Subject: Re: [patch v2] net/fec: cleanup types in fec_get_mac()
+> > 
+> > On Thu, 2013-08-29 at 11:25 +0300, Dan Carpenter wrote:
+> > > My static checker complains that on some arches unsigned longs can be
+> > > 8 characters which is larger than the buffer is only 6 chars.
+> > > Additionally, Ben Hutchings points out that the buffer actually holds
+> > > big endian data and the buffer we are reading from is CPU endian.
+> > 
+> > It's not really as clear-cut as that. :-)  But I think it's slightly more
+> > logical this way.
+> > 
+> Yes, it is not clear, pls remove somebody's name from the commit log.
 
-Except some minor comments to patch 1/5, the series looks good to me.
+Huh?  No, I'm going to leave Ben's name as is.  It's weird that you
+would ask for that.
 
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+regards,
+dan carpenter
 
-Best regards,
-Tomasz
