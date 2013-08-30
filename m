@@ -1,72 +1,80 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v7 2/4] drivers: of: add function to scan fdt nodes given
- by path
-Date: Fri, 30 Aug 2013 11:46:13 +0100
-Message-ID: <CACxGe6tdk8JbtfrB4s8BoRiAVN5KKUo=5C3AXH7qHBNkzT-VSQ@mail.gmail.com>
-References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com>
- <1377527959-5080-3-git-send-email-m.szyprowski@samsung.com>
- <20130829214007.CDB813E1222@localhost> <5220770F.9080806@samsung.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH v2] of/platform: add error reporting to of_amba_device_create()
+Date: Fri, 30 Aug 2013 13:17:29 +0200
+Message-ID: <2891140.lVrJfIiCi5@amdc1032>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5220770F.9080806@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laura Abbott <lauraa@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Marc <marc.ceeeee@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Nishanth Peethambaran <nishanth.p@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ian Campbell <ian.campbell@citrix.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2013 at 11:42 AM, Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
-> Hello,
->
->
-> On 8/29/2013 11:40 PM, Grant Likely wrote:
->>
->> On Mon, 26 Aug 2013 16:39:17 +0200, Marek Szyprowski
->> <m.szyprowski@samsung.com> wrote:
->> > Add a function to scan the flattened device-tree starting from the
->> > node given by the path. It is used to extract information (like reserved
->> > memory), which is required on early boot before we can unflatten the
->> > tree.
->> >
->> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> > Acked-by: Michal Nazarewicz <mina86@mina86.com>
->> > Acked-by: Tomasz Figa <t.figa@samsung.com>
->> > Reviewed-by: Rob Herring <rob.herring@calxeda.com>
->>
->> Some nits below, but otherwise:
->>
->> Acked-by: Grant Likely <grant.likely@secretlab.ca>
->
->
-> Thanks!
->
->
->> I'm happy to take this through the DT tree, or have you take it via the
->> CMA tree.
->
->
-> I have already put the whole patchset in linux-next via my dma-mapping/cma
-> tree,
-> so I would like to keep it there to avoid further confusion.
->
-> I only wonder how to handle the patches to get them merged to v3.12-rc1.
-> After your review there will be some changes to the binding, its
-> documentation
-> and the code itself. Would you mind if I send pull request with the current
-> version and then provide incremental patches to fix the issues you have
-> reported? Or should we delay this patchset till v3.13-rc1?
+Add error reporting to of_amba_device_create() so the user knows
+when (and why) some device tree nodes fail to initialize.
 
-Merge the series as-is and send follow-on patches. If you can get the
-fixups done quickly, then we can get them merged for v3.12 also.
+[ The issue was spotted on Universal C210 board (using revision 0 of
+  ARM Exynos4210 SoC) on which initialization was silently failing
+  for PL330 MDMA1 device tree node (it was using the wrong addres
+  resulting in amba_device_add() returning -ENODEV). ]
 
-g.
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+v2:
+* don't change the return value
+* don't change the user of of_amba_device_create()
+
+ drivers/of/platform.c |   19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+Index: b/drivers/of/platform.c
+===================================================================
+--- a/drivers/of/platform.c	2013-08-29 17:04:38.227921054 +0200
++++ b/drivers/of/platform.c	2013-08-30 13:13:31.202813954 +0200
+@@ -268,8 +268,11 @@ static struct amba_device *of_amba_devic
+ 		return NULL;
+ 
+ 	dev = amba_device_alloc(NULL, 0, 0);
+-	if (!dev)
++	if (!dev) {
++		pr_err("%s(): amba_device_alloc() failed for %s\n",
++		       __func__, node->full_name);
+ 		return NULL;
++	}
+ 
+ 	/* setup generic device info */
+ 	dev->dev.coherent_dma_mask = ~0;
+@@ -294,12 +297,18 @@ static struct amba_device *of_amba_devic
+ 		dev->irq[i] = irq_of_parse_and_map(node, i);
+ 
+ 	ret = of_address_to_resource(node, 0, &dev->res);
+-	if (ret)
++	if (ret) {
++		pr_err("%s(): of_address_to_resource() failed (%d) for %s\n",
++		       __func__, ret, node->full_name);
+ 		goto err_free;
++	}
+ 
+ 	ret = amba_device_add(dev, &iomem_resource);
+-	if (ret)
++	if (ret) {
++		pr_err("%s(): amba_device_add() failed (%d) for %s\n",
++		       __func__, ret, node->full_name);
+ 		goto err_free;
++	}
+ 
+ 	return dev;
+ 
+@@ -378,6 +387,10 @@ static int of_platform_bus_create(struct
+ 	}
+ 
+ 	if (of_device_is_compatible(bus, "arm,primecell")) {
++		/*
++		 * Don't return an error here to keep compatibility with older
++		 * device tree files.
++		 */
+ 		of_amba_device_create(bus, bus_id, platform_data, parent);
+ 		return 0;
+ 	}
