@@ -1,64 +1,120 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v2 00/16] Exynos clock clean-up for 3.12
-Date: Fri, 30 Aug 2013 15:51:20 +0200
-Message-ID: <1920907.Hu7ncHu6EC@amdc1227>
-References: <1377536951-9307-1-git-send-email-t.figa@samsung.com>
+From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Subject: Re: [Patch v3 2/3] ARM: dts: Document the CCI PMU DT bindings
+Date: Fri, 30 Aug 2013 14:59:40 +0100
+Message-ID: <1377871180.3655.41.camel@linaro1.home>
+References: <1377183748-5717-1-git-send-email-punit.agrawal@arm.com>
+ <1377183748-5717-3-git-send-email-punit.agrawal@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1377536951-9307-1-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Thomas Abraham <thomas.abraham@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Tushar Behera <tushar.behera@linaro.org>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Doug Anderson <dianders@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1377183748-5717-3-git-send-email-punit.agrawal@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Punit Agrawal <punit.agrawal@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
-
-On Monday 26 of August 2013 19:08:55 Tomasz Figa wrote:
-> This series fixes various functional and non-functional (e.g. stylistic)
-> issues in Common Clock Framework drivers for Samsung Exynos SoCs. See
-> particular patches for more detailed descriptions.
+On Thu, 2013-08-22 at 16:02 +0100, Punit Agrawal wrote:
+> The CCI PMU can profile bus transactions at the master and slave
+> interfaces of the CCI. The PMU can be used to observe an aggregated
+> view of the bus traffic between the various components connected to the
+> CCI.
 > 
-> Changes since v1:
-> [http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg21665.h
-> tml] - Addressed comments from Yadwinder Singh Brar:
->    - added missing __initdata keywords,
->    - various typoes fixed,
->    - other minor stylistic improvements.
+> Introduce a binding for the CCI PMU. The PMU node will be a sub-node of
+> the CCI node.
 > 
-> Tomasz Figa (16):
->   pwm: samsung: Update DT bindings documentation to cover clocks
->   ARM: dts: exynos4: Specify PWM clocks in PWM node
->   clocksource: samsung_pwm_timer: Get clock from device tree
->   clk: samsung: exynos4: Use separate aliases for cpufreq related clocks
->   clk: samsung: Modify _get_rate() helper to use __clk_lookup()
->   clk: samsung: exynos4: Remove unused static clkdev aliases
->   clk: samsung: exynos4: Remove checks for DT node
->   clk: samsung: exynos4: Rename exynos4_plls to exynos4x12_plls
->   clk: samsung: pll: Use new registration method for PLL45xx
->   clk: samsung: pll: Add support for rate configuration of PLL45xx
->   clk: samsung: pll: Use new registration method for PLL46xx
->   clk: samsung: pll: Add support for rate configuration of PLL46xx
->   clk: samsung: exynos4: Reorder registration of mout_vpllsrc
->   clk: samsung: exynos4: Register PLL rate tables for Exynos4210
->   clk: samsung: exynos4: Register PLL rate tables for Exynos4x12
->   clk: samsung: exynos5250: Simplify registration of PLL rate tables
+> Cc: devicetree@vger.kernel.org
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
+> ---
+>  Documentation/devicetree/bindings/arm/cci.txt |   46 +++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
 > 
->  .../devicetree/bindings/pwm/pwm-samsung.txt        |  12 +
->  arch/arm/boot/dts/exynos4.dtsi                     |   2 +
->  drivers/clk/samsung/clk-exynos4.c                  | 539
-> ++++++++++++--------- drivers/clk/samsung/clk-exynos5250.c              
-> |  12 +-
->  drivers/clk/samsung/clk-exynos5440.c               |   2 +-
->  drivers/clk/samsung/clk-pll.c                      | 285 ++++++++---
->  drivers/clk/samsung/clk-pll.h                      |  59 ++-
->  drivers/clk/samsung/clk.c                          |  10 +-
->  drivers/clocksource/samsung_pwm_timer.c            |  12 +-
->  9 files changed, 602 insertions(+), 331 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/arm/cci.txt b/Documentation/devicetree/bindings/arm/cci.txt
+> index 024c03d..551119e 100644
+> --- a/Documentation/devicetree/bindings/arm/cci.txt
+> +++ b/Documentation/devicetree/bindings/arm/cci.txt
+> @@ -85,6 +85,42 @@ specific to ARM.
+>  				    corresponding interface programming
+>  				    registers.
+>  
+> +	- CCI PMU node
+> +
+> +		Parent node must be CCI interconnect node.
+> +
+> +		A CCI pmu node must contain the following properties:
+> +
+> +		- compatible
+> +			Usage: required
+> +			Value type: <string>
+> +			Definition: must be "arm,cci-400-pmu"
+> +
+> +		- reg:
+> +			Usage: required
+> +			Value type: Integer cells. A register entry, expressed
+> +				    as a pair of cells, containing base and
+> +				    size.
+> +			Definition: the base address and size of the
+> +				    corresponding interface programming
+> +				    registers.
+> +
+> +		- interrupts:
+> +			Usage: required
+> +			Value type: Integer cells. Array of interrupt specifier
+> +				    entries, as defined in
+> +				    ../interrupt-controller/interrupts.txt.
+> +			Definition: list of counter overflow interrupts, one per
+> +				    counter. The interrupts must be specified
+> +				    starting with the cycle counter overflow
+> +				    interrupt, followed by counter0 overflow
+> +				    interrupt, counter1 overflow interrupt,...
+> +				    ,counterN overflow interrupt.
+> +
+> +				    The CCI PMU has an interrupt signal for each
+> +				    counter. The number of interrupts must be
+> +				    equal to the number of counters.
+> +
+>  * CCI interconnect bus masters
+>  
+>  	Description: masters in the device tree connected to a CCI port
+> @@ -169,6 +205,16 @@ Example:
+>  			interface-type = "ace";
+>  			reg = <0x5000 0x1000>;
+>  		};
+> +
+> +		pmu@9000 {
+> +			 compatible = "arm,cci-400-pmu";
+> +			 reg = <0x9000 0x5000>;
+> +			 interrupts = <0 101 4>,
+> +				      <0 102 4>,
+> +				      <0 103 4>,
+> +				      <0 104 4>,
+> +				      <0 105 4>;
+> +		};
+>  	};
+>  
+>  This CCI node corresponds to a CCI component whose control registers sits
 
-Any chance to still have this merged for 3.12? AFAIK this should apply 
-cleanly on your clk-next without any dependencies from other trees.
 
-Best regards,
-Tomasz
+It's not shown in the diff above, but the documentation gives the
+following for the cci node:
+
+		ranges = <0x0 0x0 0x2c090000 0x6000>;
+
+which doesn't include the PMU nodes, so should that 0x6000 also be
+changed to 0x10000 (the full range of addresses in the TRM).
+
+-- 
+Tixy
