@@ -1,106 +1,203 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of/platform: add error reporting to of_amba_device_create()
-Date: Fri, 30 Aug 2013 11:39:19 +0100
-Message-ID: <CACxGe6u_O4JxZo6rmzwHX1LibD5vbtjdj8QBzwF5Bjizo0bUiQ@mail.gmail.com>
-References: <1464891.8oCRh2189n@amdc1032>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v7 2/4] drivers: of: add function to scan fdt nodes given
+ by path
+Date: Fri, 30 Aug 2013 12:42:23 +0200
+Message-ID: <5220770F.9080806@samsung.com>
+References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com>
+ <1377527959-5080-3-git-send-email-m.szyprowski@samsung.com>
+ <20130829214007.CDB813E1222@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1464891.8oCRh2189n@amdc1032>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20130829214007.CDB813E1222@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Laura Abbott <lauraa@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Marc <marc.ceeeee@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Nishanth Peethambaran <nishanth.p@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2013 at 11:11 AM, Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
-> Add error reporting to of_amba_device_create() so the user knows
-> when (and why) some device tree nodes fail to initialize.
->
-> Also while at it fix the function to return an error value on error.
->
-> [ The issue was spotted on Universal C210 board (using revision 0 of
->   ARM Exynos4210 SoC) on which initialization was silently failing
->   for PL330 MDMA1 device tree node (it was using the wrong addres
->   resulting in amba_device_add() returning -ENODEV). ]
->
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  drivers/of/platform.c | 25 +++++++++++++++++++------
->  1 file changed, 19 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index b0d1ff8..cab4d0a 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -264,8 +264,11 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->                 return NULL;
->
->         dev = amba_device_alloc(NULL, 0, 0);
-> -       if (!dev)
-> -               return NULL;
-> +       if (!dev) {
-> +               pr_err("%s(): amba_device_alloc() failed for %s\n",
-> +                      __func__, node->full_name);
-> +               return ERR_PTR(-ENOMEM);
+Hello,
 
-Don't change the return value here. This function does not use the
-ERR_PTR() pattern. The message to the kernel log is sufficient.
+On 8/29/2013 11:40 PM, Grant Likely wrote:
+> On Mon, 26 Aug 2013 16:39:17 +0200, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> > Add a function to scan the flattened device-tree starting from the
+> > node given by the path. It is used to extract information (like reserved
+> > memory), which is required on early boot before we can unflatten the tree.
+> >
+> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Acked-by: Michal Nazarewicz <mina86@mina86.com>
+> > Acked-by: Tomasz Figa <t.figa@samsung.com>
+> > Reviewed-by: Rob Herring <rob.herring@calxeda.com>
+>
+> Some nits below, but otherwise:
+>
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-> +       }
->
->         /* setup generic device info */
->         dev->dev.coherent_dma_mask = ~0;
-> @@ -290,18 +293,24 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->                 dev->irq[i] = irq_of_parse_and_map(node, i);
->
->         ret = of_address_to_resource(node, 0, &dev->res);
-> -       if (ret)
-> +       if (ret) {
-> +               pr_err("%s(): of_address_to_resource() failed (%d) for %s\n",
-> +                      __func__, ret, node->full_name);
->                 goto err_free;
-> +       }
->
->         ret = amba_device_add(dev, &iomem_resource);
-> -       if (ret)
-> +       if (ret) {
-> +               pr_err("%s(): amba_device_add() failed (%d) for %s\n",
-> +                      __func__, ret, node->full_name);
->                 goto err_free;
-> +       }
->
->         return dev;
->
->  err_free:
->         amba_device_put(dev);
-> -       return NULL;
-> +       return ERR_PTR(ret);
+Thanks!
 
-Ditto here. Don't change the pattern. Otherwise this patch looks okay.
-If you respin it then I can pick it up for v3.12
+> I'm happy to take this through the DT tree, or have you take it via the
+> CMA tree.
 
->  }
->  #else /* CONFIG_ARM_AMBA */
->  static struct amba_device *of_amba_device_create(struct device_node *node,
-> @@ -374,7 +383,11 @@ static int of_platform_bus_create(struct device_node *bus,
->         }
->
->         if (of_device_is_compatible(bus, "arm,primecell")) {
-> -               of_amba_device_create(bus, bus_id, platform_data, parent);
-> +               /*
-> +                * Don't return an error here to keep compatibility with older
-> +                * device tree files.
-> +                */
-> +               (void)of_amba_device_create(bus, bus_id, platform_data, parent);
+I have already put the whole patchset in linux-next via my 
+dma-mapping/cma tree,
+so I would like to keep it there to avoid further confusion.
 
-Adding he comment is fine, but why is this line being changed?
+I only wonder how to handle the patches to get them merged to v3.12-rc1.
+After your review there will be some changes to the binding, its 
+documentation
+and the code itself. Would you mind if I send pull request with the current
+version and then provide incremental patches to fix the issues you have
+reported? Or should we delay this patchset till v3.13-rc1?
 
->                 return 0;
->         }
+> > ---
+> >  drivers/of/fdt.c       |   76 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/of_fdt.h |    3 ++
+> >  2 files changed, 79 insertions(+)
+> >
+> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > index b10ba00..4fb06f3 100644
+> > --- a/drivers/of/fdt.c
+> > +++ b/drivers/of/fdt.c
+> > @@ -545,6 +545,82 @@ int __init of_flat_dt_match(unsigned long node, const char *const *compat)
+> >  	return of_fdt_match(initial_boot_params, node, compat);
+> >  }
+> >
+> > +struct fdt_scan_status {
+> > +	const char *name;
+> > +	int namelen;
+> > +	int depth;
+> > +	int found;
+> > +	int (*iterator)(unsigned long node, const char *uname, int depth, void *data);
+> > +	void *data;
+> > +};
+> > +
+> > +/**
+> > + * fdt_scan_node_by_path - iterator for of_scan_flat_dt_by_path function
+> > + */
+> > +static int __init fdt_scan_node_by_path(unsigned long node, const char *uname,
+> > +					int depth, void *data)
 >
-> --
-> 1.8.2.3
+> Nit: since this is an iterator, I'd like to see "iter" in the function
+> name.
+>
+> > +{
+> > +	struct fdt_scan_status *st = data;
+> > +
+> > +	/*
+> > +	 * if scan at the requested fdt node has been completed,
+> > +	 * return -ENXIO to abort further scanning
+> > +	 */
+> > +	if (depth <= st->depth)
+> > +		return -ENXIO;
+> > +
+> > +	/* requested fdt node has been found, so call iterator function */
+> > +	if (st->found)
+> > +		return st->iterator(node, uname, depth, st->data);
+> > +
+> > +	/* check if scanning automata is entering next level of fdt nodes */
+> > +	if (depth == st->depth + 1 &&
+> > +	    strncmp(st->name, uname, st->namelen) == 0 &&
+> > +	    uname[st->namelen] == 0) {
+> > +		st->depth += 1;
+> > +		if (st->name[st->namelen] == 0) {
+> > +			st->found = 1;
+> > +		} else {
+> > +			const char *next = st->name + st->namelen + 1;
+> > +			st->name = next;
+> > +			st->namelen = strcspn(next, "/");
+> > +		}
+> > +		return 0;
+>
+> The above return statement is redundant.
+>
+> > +	}
+> > +
+> > +	/* scan next fdt node */
+> > +	return 0;
+> > +}
+> > +
+> > +/**
+> > + * of_scan_flat_dt_by_path - scan flattened tree blob and call callback on each
+> > + *			     child of the given path.
+> > + * @path: path to start searching for children
+> > + * @it: callback function
+> > + * @data: context data pointer
+> > + *
+> > + * This function is used to scan the flattened device-tree starting from the
+> > + * node given by path. It is used to extract information (like reserved
+> > + * memory), which is required on ealy boot before we can unflatten the tree.
+> > + */
+> > +int __init of_scan_flat_dt_by_path(const char *path,
+> > +	int (*it)(unsigned long node, const char *name, int depth, void *data),
+> > +	void *data)
+>
+> Nit: Please match the indentation convention used by of_scan_flat_dt().
+> This current version is really hard to read.
+>
+> > +{
+> > +	struct fdt_scan_status st = {path, 0, -1, 0, it, data};
+>
+> This is a little fragile. If the structure gets modified, this line
+> will break. I know it results in more text, but please use explicit data
+> member assignments in initializers.
+>
+> > +	int ret = 0;
+> > +
+> > +	if (initial_boot_params)
+>
+> Nit:
+> 	if (!initial_boot_params)
+> 		return 0;
+>
+> > +                ret = of_scan_flat_dt(fdt_scan_node_by_path, &st);
+>
+> Nit: inconsitent indentation (tabs vs. spaces)
+>
+> > +
+> > +	if (!st.found)
+> > +		return -ENOENT;
+> > +	else if (ret == -ENXIO)	/* scan has been completed */
+> > +		return 0;
+> > +	else
+> > +		return ret;
+>
+> Both uses of 'else' above are redundant. The only way the execution will
+> pass that point is if it was the else case!
+>
+> > +}
+> > +
+> >  #ifdef CONFIG_BLK_DEV_INITRD
+> >  /**
+> >   * early_init_dt_check_for_initrd - Decode initrd location from flat tree
+> > diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> > index ed136ad..19f26f8 100644
+> > --- a/include/linux/of_fdt.h
+> > +++ b/include/linux/of_fdt.h
+> > @@ -90,6 +90,9 @@ extern void *of_get_flat_dt_prop(unsigned long node, const char *name,
+> >  extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
+> >  extern int of_flat_dt_match(unsigned long node, const char *const *matches);
+> >  extern unsigned long of_get_flat_dt_root(void);
+> > +extern int of_scan_flat_dt_by_path(const char *path,
+> > +	int (*it)(unsigned long node, const char *name, int depth, void *data),
+> > +	void *data);
+> >
+> >  extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+> >  				     int depth, void *data);
+> > --
+> > 1.7.9.5
+> >
 >
 >
+
+Best regards
+-- 
+Marek Szyprowski
+Samsung R&D Institute Poland
