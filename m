@@ -1,57 +1,177 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] ARM: dts: vexpress: Add CCI node to TC2 device-tree
-Date: Fri, 30 Aug 2013 18:36:37 +0100
-Message-ID: <20130830173636.GB10045@e102568-lin.cambridge.arm.com>
-References: <1377872760.3655.48.camel@linaro1.home>
- <20130830161327.GA10045@e102568-lin.cambridge.arm.com>
- <CAOesGMhwqqOuSwVEukpfqM00BV2i=fQRhLUaf-wf-iVGR_mNbg@mail.gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCHv2 1/4] pwm: Add Freescale FTM PWM driver support
+Date: Fri, 30 Aug 2013 19:49:09 +0200
+Message-ID: <20130830174909.GF30088@pengutronix.de>
+References: <1377856132-11290-1-git-send-email-Li.Xiubo@freescale.com>
+ <1377856132-11290-2-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOesGMhwqqOuSwVEukpfqM00BV2i=fQRhLUaf-wf-iVGR_mNbg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: "Jon Medhurst (Tixy)" <tixy@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1377856132-11290-2-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: r65073@freescale.com, thierry.reding@gmail.com, grant.likely@linaro.org, linux@arm.linux.org.uk, rob@landley.net, ian.campbell@citrix.com, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Jingchang Lu <b35083@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2013 at 05:30:17PM +0100, Olof Johansson wrote:
-> On Fri, Aug 30, 2013 at 9:13 AM, Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com> wrote:
-> 
-> > Now that MCPM and CPU idle are heading to mainline, it should get queued asap,
-> > thanks for that, probably as a fix at -rc1, since it is quite late now.
-> 
-> This is not a regression, it's a missing piece of a feature. It's not
-> post-rc1 material.
+On Fri, Aug 30, 2013 at 05:48:49PM +0800, Xiubo Li wrote:
+> +
+> +#define FTM_CSC_BASE        0x0C
+> +#define FTM_CSC(_channel) \
+> +	(FTM_CSC_BASE + ((_channel) * 8))
 
-It is an incomplete dts, which has been true since the dts file for TC2 has
-been merged in the kernel or better since the CCI bindings got merged in
-the kernel.
+Put into a single line.
 
-> It's also an indication that nobody actually tested the feature branch
-> before the pull request was sent. Hrmpf.
+> +#define FTMCnSC_MSB         BIT(5)
+> +#define FTMCnSC_MSA         BIT(4)
+> +#define FTMCnSC_ELSB        BIT(3)
+> +#define FTMCnSC_ELSA        BIT(2)
+> +
+> +#define FTM_CV_BASE         0x10
+> +#define FTM_CV(_channel) \
+> +	(FTM_CV_BASE + ((_channel) * 8))
 
-It has been tested and we were aware that the dts in the kernel was missing
-the CCI node, we were not really sure about what to do given the ongoing
-discussions on dts in the kernel and so on and considered that we might
-get the patch in as a fix eventually; we made a mistake, sorry.
+ditto.
 
-> Shouldn't you be updating some vexpress_defconfig and probably
-> multi_v7_defconfig to at least get some build coverage for this as
-> well, by the way?
-> 
-> I really should hold this off for 3.13, but I'll apply it to the late/
-> branch anyway.
+> +static int fsl_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	int ret;
+> +	struct fsl_pwm_chip *fpc;
+> +	struct fsl_pwm_data *pwm_data;
+> +
+> +	fpc = to_fsl_chip(chip);
+> +
+> +	pwm_data = pwm_get_chip_data(pwm);
+> +	if (!pwm_data)
+> +		return -EINVAL;
+> +
+> +	if (pwm_data->available != FSL_AVAILABLE)
+> +		return -EINVAL;
+> +
+> +	ret = clk_enable(fpc->sys_clk);
+> +	if (ret)
+> +		return ret;
 
-Thanks,
-Lorenzo
+This is non atomic context. You can also prepare the clocks here instead
+of doing it in probe().
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void fsl_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct fsl_pwm_chip *fpc;
+> +	struct fsl_pwm_data *pwm_data;
+> +
+> +	fpc = to_fsl_chip(chip);
+> +
+> +	pwm_data = pwm_get_chip_data(pwm);
+> +	if (!pwm_data)
+> +		return;
+
+THis check seems unnecessary.
+
+> +
+> +	if (pwm_data->available != FSL_AVAILABLE)
+> +		return;
+> +
+> +	clk_disable(fpc->sys_clk);
+> +}
+> +
+
+[...]
+
+> +
+> +
+> +	pwm_data->period_cycles = period_cycles;
+> +	pwm_data->duty_cycles = duty_cycles;
+
+These fields are set but never read. Please drop them.
+
+If you drop the 'available' field also the you can drop chip_data
+completely.
+
+> +
+> +	writel(FTMCnSC_MSB | FTMCnSC_ELSB, fpc->base + FTM_CSC(pwm->hwpwm));
+> +
+> +	writel(0xF0, fpc->base + FTM_OUTMASK);
+> +	writel(0x0F, fpc->base + FTM_OUTINIT);
+> +	writel(FTM_CNTIN_VAL, fpc->base + FTM_CNTIN);
+> +
+> +	writel(period_cycles + cntin - 1, fpc->base + FTM_MOD);
+> +	writel(duty_cycles + cntin, fpc->base + FTM_CV(pwm->hwpwm));
+> +
+> +	return 0;
+> +}
+> +
+> +static int fsl_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
+> +				enum pwm_polarity polarity)
+> +{
+> +	unsigned long reg;
+> +	struct fsl_pwm_data *pwm_data;
+> +	struct fsl_pwm_chip *fpc;
+> +
+> +	fpc = to_fsl_chip(chip);
+> +
+> +	pwm_data = pwm_get_chip_data(pwm);
+> +	if (!pwm_data)
+> +		return -EINVAL;
+> +
+> +	if (pwm_data->available != FSL_AVAILABLE)
+> +		return -EINVAL;
+> +
+> +	reg = readl(fpc->base + FTM_POL);
+> +	reg &= ~BIT(pwm->hwpwm);
+
+Either drop this line...
+
+> +	if (polarity == PWM_POLARITY_INVERSED)
+> +		reg |= BIT(pwm->hwpwm);
+> +	else
+> +		reg &= ~BIT(pwm->hwpwm);
+
+...or this one
+
+> +static int fsl_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	int ret;
+> +	struct fsl_pwm_chip *fpc;
+> +	struct pinctrl_state *pins_state;
+> +	struct fsl_pwm_data *pwm_data;
+> +	const char *statename;
+> +
+> +	fpc = to_fsl_chip(chip);
+> +
+> +	pwm_data = pwm_get_chip_data(pwm);
+> +	if (!pwm_data)
+> +		return -EINVAL;
+> +
+> +	if (pwm_data->available != FSL_AVAILABLE)
+> +		return -EINVAL;
+> +
+> +	statename = kasprintf(GFP_KERNEL, "ch%d-active", pwm->hwpwm);
+
+You loose memory here and in fsl_pwm_disable aswell.
+
+> +	pins_state = pinctrl_lookup_state(fpc->pinctrl,
+> +			statename);
+> +	/* enable pins to be muxed in and configured */
+> +	if (!IS_ERR(pins_state)) {
+> +		ret = pinctrl_select_state(fpc->pinctrl, pins_state);
+> +		if (ret)
+> +			dev_warn(chip->dev, "could not set default pins\n");
+> +	} else
+> +		dev_warn(chip->dev, "could not get default pinstate\n");
+
+Either it's ok to do without pinctrl or it's not ok, so either return
+an error or drop the warnings. Polluting the kernel log with such
+messages from a frequently called function is not a good idea.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
