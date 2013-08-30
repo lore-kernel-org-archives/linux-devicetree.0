@@ -1,226 +1,114 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 1/3] extcon: extcon-gpio-usbvid: Generic USB VBUS/ID
- detection via GPIO
-Date: Fri, 30 Aug 2013 15:53:12 +0900
-Message-ID: <52204158.8070406@samsung.com>
-References: <1377711185-31238-1-git-send-email-george.cherian@ti.com>
- <1377711185-31238-2-git-send-email-george.cherian@ti.com>
- <521EA563.4060305@samsung.com> <521EB018.3000301@ti.com>
- <521EE8FC.80802@samsung.com> <521EF88F.4070402@ti.com>
- <521F245E.8050506@samsung.com> <521F3515.7040001@ti.com>
- <521F3AA2.9010707@samsung.com> <521F505E.8090607@ti.com>
- <521FE31D.8050902@samsung.com> <52203872.2050304@ti.com>
+From: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
+Subject: Re: [PATCH V5] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
+Date: Fri, 30 Aug 2013 12:29:10 +0530
+Message-ID: <CAKuRcO+qhfry4KT2gJmB5DGgPF7=0WrEJH=7quVOj3tobnPv=A@mail.gmail.com>
+References: <1377691386-7085-1-git-send-email-yuvaraj.cd@samsung.com>
+	<1499444.qkqi2LXfcl@amdc1227>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <52203872.2050304@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: balbi@ti.com, myungjoo.ham@samsung.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, ian.campbell@citrix.com, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, bcousson@baylibre.com, davidb@codeaurora.org, arnd@arndb.de, swarren@nvidia.com, popcornmix@gmail.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1499444.qkqi2LXfcl@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Doug Anderson <dianders@chromium.org>, Chris Ball <cjb@laptop.org>, Thomas Abraham <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi George,
-
-On 08/30/2013 03:15 PM, George Cherian wrote:
-> Hi Chanwoo,
-> 
-> On 8/30/2013 5:41 AM, Chanwoo Choi wrote:
->> Hi George,
+On Wed, Aug 28, 2013 at 5:52 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+> Hi Yuvaraj,
+>
+> On Wednesday 28 of August 2013 17:33:06 Yuvaraj Kumar C D wrote:
+>> This patch adds the device tree node entries for exynos5420 SOC.
+>> Exynos5420 has a different version of DWMMC controller,so a new
+>> compatible string is used to distinguish it from the prior SOC's.
 >>
->> On 08/29/2013 10:45 PM, George Cherian wrote:
->>> Hi Chanwoo,
->>>
->>>
->>> On 8/29/2013 5:42 PM, Chanwoo Choi wrote:
->>> [big snip ]
->>>>>> I tested various development board based on Samsung Exynos series SoC.
->>>>>> Although some gpio of Exynos series SoC set high state(non zero, 1) as default value,
->>>>>> this gpio state could mean off state, disconnected or un-powered state according to gpio.
->>>>>> Of course, above explanation about specific gpio don't include all gpios.
->>>>>> This is meaning that there is possibility.
->>>>> okay then how about adding a flag for inverted logic too.  something like this
->>>>>
->>>>> if(of_property_read_bool(np,"inverted_gpio))
->>>>>       gpio_usbvid->gpio_inv = 1;
->>>>> And always check on this before deciding?
->>> Is this fine ?
->> OK.
->> But, as Stephen commented on other mail, you should use proper DT helper function.
-> okay
->>>>>>>> Second,
->>>>>>>> gpio_usbvid_set_initial_state() dertermine both "USB-HOST" and "USB" cable state at same time
->>>>>>>> in 'case ID_DETCT' according to 'gpio_usbvid->id_gpio'. But, I think that other extcon devices
->>>>>>>> would not control both "USB-HOST" and "USB" cable state at same time.
->>>>>>>>
->>>>>>>> Other extcon devices would support either "USB-HOST" or "USB" cable.
->>>>>>> The driver has 2 configurations.
->>>>>>> 1) supports implementations with both VBUS and ID pin are routed via gpio's for swicthing roles(compatible  gpio-usb-vid).
->>>>>> As you explained about case 1, it is only used on dra7x SoC.
->>>>> No gpio-usb-id is used in dra7xx. dra7xx has got only ID pin routed via gpio.
->>>>>> Other SoC could not wish to control both "USB-HOST" and "USB" cable at same time.
->>> I could'nt actually parse this. You meant since the id_irq_handler handles both USB and USB-HOST cable
->>> its not proper?
->> It's not proper in general case. The generic driver must guarantee all of extcon device using gpio.
->> As far as I know, the generic driver cannot direclty control gpio pin and get value from gpio pin.
->> Almost device driver including in kernel/drivers control gpio pin on specific device driver
->> instead of generic driver.
-> But without reading the gpio value how can we set the cable states? for this driver the assumption is the dedicated gpio
-> is always DIR_IN and in the driver we just read the value.
->>>> I need your answer about above my opinion for other SoC.
->>> So how about this, I have removed the dra7x specific stuffs (gpio-usb-id)
->>>
->>> static void gpio_usbvid_set_initial_state(struct gpio_usbvid *gpio_usbvid)
->>> {
->>>          int id_current, vbus_current;
->>>
->>>      id_current = gpio_get_value_cansleep(gpio_usbvid->id_gpio);
->>>      if (!!id_current == ID_FLOAT)
->>>          extcon_set_cable_state(&gpio_usbvid->edev, "USB-HOST", false);
->>>      else
->>>          extcon_set_cable_state(&gpio_usbvid->edev, "USB-HOST", true);
->>>
->>>      vbus_current = gpio_get_value_cansleep(gpio_usbvid->vbus_gpio);
->>>       if (!!vbus_current == VBUS_ON)
->>>          extcon_set_cable_state(&gpio_usbvid->edev, "USB", true);
->>>      else
->>>          extcon_set_cable_state(&gpio_usbvid->edev, "USB", false);
->>> }
->>>
->>> and the irq handlers like this
->>>
->>> static irqreturn_t id_irq_handler(int irq, void *data)
->>> {
->>>          struct gpio_usbvid *gpio_usbvid = (struct gpio_usbvid *)data;
->>>          int id_current;
->>>
->>>          id_current = gpio_get_value_cansleep(gpio_usbvid->id_gpio);
->>>          if (id_current == ID_GND)
->>>                  extcon_set_cable_state(&gpio_usbvid->edev, "USB-HOST", true);
->>>          else
->>>                  extcon_set_cable_state(&gpio_usbvid->edev, "USB-HOST", false);
->>>          return IRQ_HANDLED;
->>> }
->>>
->>> static irqreturn_t vbus_irq_handler(int irq, void *data)
->>> {
->>>          struct gpio_usbvid *gpio_usbvid = (struct gpio_usbvid *)data;
->>>          int vbus_current;
->>>
->>>          vbus_current = gpio_get_value_cansleep(gpio_usbvid->vbus_gpio);
->>>          if (vbus_current == VBUS_OFF)
->>>                  extcon_set_cable_state(&gpio_usbvid->edev, "USB", false);
->>>          else
->>>                  extcon_set_cable_state(&gpio_usbvid->edev, "USB", true);
->>>
->>>          return IRQ_HANDLED;
->>> }
->> I know your intention dividing interrupt handler for each cable.
->> But I don't think this driver must guarantee all of extcon device using gpio.
+>> This patch depends on
+>>       mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
 >>
->> For example,
->> below three SoC wish to detect USB/USB-HOST cable with each different methods.
+>> changes since v4:
+>>       1.Droppped the bypass-smu binding property.
+>>       2.Used compatible string "samsung,exynos5250-dw-mshc"
+>>         for controller instance which does not have SMU.
 >>
->> "SoC A" wish to detect USB/USB-HOST cable through only one gpio pin.
-> 
-> You mean to say that both USB ID pin and VBUS are connected to same gpio?
-> If so that is a really bad h/w design and it will not fly.
-> Or, you meant that only USB ID pin is connected to single gpio and it controls the state of the USB/USB-HOST cables?
-> If so thats what exactly the v3 driver did with compatible gpio-usb-id.
-
-My original question intention,
-I'd like you to answer that this driver can support all case of "SoC A"/"SoC B"/"SoC C" without othe implementation?
-
-> 
->> "SoC B" wish to detect USB/USB-HOST cable through ADC value instead of gpio pin.
-> 
-> Via ADC this driver should never be used , it should be extcon-adc-usbvid driver and not extcon-gpio-usbvid driver.
-
-No, we cannot implement many generic extcon device driver whenever this is the case.
-
->> "SoC C" wish to detect USB/USB-HOST cable through two gpio pin because USB connected on gpio an USB-HOST connected on another.
-> 
-> Whatever modifications above should meet this need  in combination with named gpios (id_gpio and vbus_gpio in dt)as stephen pointed.
-> But still i feel the above modification would even support Soc A provided the code registered for the notifier could handle it properly.
-
-I'd like you to answer that this driver can support all case of "SoC A"/"SoC B"/"SoC C"?
-If we should implement extcon device driver according each case,
-Could you tell me that this driver is generic? I think NO.
-
+>> changes since V3:
+>>       1.change fifo-depth size from 0x80 to 0x40
+>>       2.Move the below properties
+>>               a.card-detect-delay
+>>               b.samsung,dw-mshc-ciu-div
+>>               c.samsung,dw-mshc-sdr-timing
+>>               d.samsung,dw-mshc-ddr-timing
+>>       from SOC dts to board dts file as suggested by Doug Anderson
 >>
->> In addition,
->> if "SoC A/C" wish to write some data to own specific registers for proper opeating,
->> Could we write some data to register on generic driver?
-> 
-> Yes definitely, those register configuration should not be part of this driver and it should be done in the notifier handler.
-
-No. there are many extcon consumer driver. We cannot order the sequence of notification reception among all of extcon consumer driver.
-Only, extcon consumer driver get the changed state of cable and can never set cable H/W setting in extcon consumer driver.
-Certainly, we have to set cabe H/W setting in extcon producer driver.
-
+>> changes since V2:
+>>       1.dropped num-slots property from node as its not required
+>>         if number of card slots available is 1.
 >>
->> Finally,
->> "SoC D" wish to detect USB/USB-HOST/JIG cable through two gpio pin
-> Correct me If I am wrong, USB JIG is not a standard cable. so for supporting that anyways you need to have
-> a different driver.
-
-No, we cannot guarantee that some cable would be connected to SoC.
-If this dirver is generic, it have to certainly support above all case in this driver.
-
->> - one gpio may detect either USB or USB-HOST and another may detect JIG cable
-> I assume u meant the USB ID pin is connected to one gpio and based on it value USB/USB-HOST  is detected.
->> or one gpio may detect either USb or JIG and another may detect USB-HOST cable.
->  As I mentioned earlier these are gpios configured as input and if you try to drive with 2 sources (USB and JIG or USB and USB-HOST etc)
-> then its a potentially bad design . If at all we need to identify all 3 then there should be 3 dedicated gpios.
-> 
->> That way, there are many cases we cannot guarantee all of extcon devices.
+>>       2.Move the below properties
+>>               a.fifo-depth
+>>               b.card-detect-delay
+>>               c.samsung,dw-mshc-ciu-div
+>>               d.samsung,dw-mshc-sdr-timing
+>>               e.samsung,dw-mshc-ddr-timing
+>>       from board dts to SOC dts,as these are not board specific properties.
 >>
->> I think this driver could support dra7x series SoC but as I mentioned,
->> this driver may not guarantee all of cases.
-> I am sorry, I feel it supports all standard cases except for something like a JIG cable which is not standard.
-
-I've never seen spec documentation that USB/USB-HOST cable have to be only connected to SoC.
-As I mentioned above, there are many cases we cannot think about various extcon devices.
-
+>>       3.Updated the binding document exynos-dw-mshc.txt.
 >>
->>> [snip]
->>>>>> I have some confusion. I need additional your explanation.
->>>>>> Could this driver register only one interrupt handler either id_irq_handler() or vbus_irq_handler()?
->>>>> If compatible == ID_DETECT, only one handler --> id_irq_handler() and it will handle both USB and USB-HOST
->>>>>> or
->>>>>> Could this driver register two interrupt handler both id_irq_handler() or vbus_irq_handler()?
->>>>> If compatible == VBUS_ID_DETECT, 2 handlers --> id_irq_handler() will handle USB-HOST and vbus_irq_handler will handle USB.
->>>> As you mentioned, we cannot only control either USB or USB-HOST cable on this extcon driver.
->>>> This extcon driver is only suitable dra7x SoC.
->>> Do you still feel its dra7x specific if i modify it as above?
->> I commented above about your modification.
+>> changes since V1:
+>>       1.disable node by status = disabled in SOC file
+>>       2.enable node by status = okay in board specific file
 >>
->>>> Because id_irq_handler() control both "USB-HOST" and "USB" cable at same time,
->>>> you need this setting order between "USB-HOST" and "USB" cable.
->>>>> yes
->>>> I think that the setting order between cables isn't general. It is specific method for dra7x SoC.
->>> So if i remove that part then?
->> The setting order should be removed in generic driver.
-> Yes I agree and should be done by the subscriber to the notifier.
-
-OK.
-
+>> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+>> ---
+>>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +
+>>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   33
+>> +++++++++++++++++ arch/arm/boot/dts/exynos5420.dtsi                  |
+>> 39 ++++++++++++++++++++ 3 files changed, 74 insertions(+)
+>
+> This patch looks good to me now, except some minor comments below.
+>
+>> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt index
+>> 6d1c098..84cd56f 100644
+>> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> @@ -16,6 +16,8 @@ Required Properties:
+>>         specific extensions.
+>>       - "samsung,exynos5250-dw-mshc": for controllers with Samsung Exynos5250
+>> specific extensions.
+>> +     - "samsung,exynos5420-dw-mshc": for controllers with Samsung Exynos5420
+>> +       specific extensions.
 >>
->>>>>> Did you think that SoC should always connect either "USB-HOST" cable or "USB" cable?
->>>>> No,  even if a physical cable is not connected it should  default to either USB-HOST or USB
->>>> It isn't general.
->>>>
->>>> If physical cable isn't connected to extcon device, the state both USB-HOST and USB cable
->>>> should certainly be zero. Because The extcon consumer driver could set proper operation
->>>> according to cable state.
->>> okay
->>>>>> I don't know this case except for dra7x SoC. So, I think it has dependency on specific SoC.
->>>> I need your answer about above my opinion.
->>> Hope i could answer you :-)
->>>>>> and can't agree as generic extcon gpio driver.
->> Thanks,
->> Chanwoo Choi
+>>  * samsung,dw-mshc-ciu-div: Specifies the divider value for the card
+>> interface unit (ciu) clock. This property is applicable only for Exynos5
+>> SoC's and diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> b/arch/arm/boot/dts/exynos5420-smdk5420.dts index bafba25..3ce5c97
+>> 100644
+>> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> @@ -31,6 +31,39 @@
+>>               };
+>>       };
+>>
+>> +     dwmmc0@12200000 {
+>
+> Node name should not contain instance index. Instead, according to ePAPR
+> recommendation, I would opt for a generic name such as mmc, mshc or sdio-
+> host. mshc is already used on Exynos 4 so it might be a good idea to use it
+> for consistency.
+If we change node name's to mshc, debug statements are look like below:
+dwmmc_exynos 12200000.mshc: num-slots property not found, assuming 1
+slot is available
+dwmmc_exynos 12200000.mshc: no vmmc regulator found: -19
+dwmmc_exynos 12200000.mshc: Using internal DMA controller.
+dwmmc_exynos 12200000.mshc: Version ID is 250a
+dwmmc_exynos 12200000.mshc: DW MMC controller at irq 107, 64 bit host
+data width, 64 deep fifo
 
+"dwmmc_exynos" is platform driver name and "12200000.mshc" from dt
+node.Is'nt it look like bit confusing?
 
-Thanks,
-Chanwoo Choi
+>
+> [Adding DT maintainers on CC]
+>
+> Best regards,
+> Tomasz
+>
