@@ -1,51 +1,40 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Fri, 30 Aug 2013 14:08:41 -0600
-Message-ID: <5220FBC9.1070602@wwwdotorg.org>
-References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de> <1507189.CRWvzVJqTV@flatron> <521548E3.6010703@wwwdotorg.org> <CACRpkdYUeyVZcN1-jOzg0zo4eSJK1S+M5fJ0FcMsgwaPKW4Obw@mail.gmail.com> <52167E5D.6060802@wwwdotorg.org> <CACRpkdZgFMH07_W2eUWsgsUMXAJA1paEimAds=-XeViZaYySLA@mail.gmail.com> <5217BD74.5030801@wwwdotorg.org> <CACRpkdYz7Kn-y8LHpNBV3YyYFhyaU6N592BJE1newUZJpUMNfA@mail.gmail.com>
+Subject: Re: [PATCH V6 2/5] of: move of_parse_phandle()
+Date: Fri, 30 Aug 2013 14:09:55 -0600
+Message-ID: <5220FC13.4070708@wwwdotorg.org>
+References: <1376515632-12594-1-git-send-email-swarren@wwwdotorg.org> <1376515632-12594-2-git-send-email-swarren@wwwdotorg.org> <CACRpkdYK75uSXLmzkQ9uNQfSBW86bSz3D0nYSr_XSXfixKSDGg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYz7Kn-y8LHpNBV3YyYFhyaU6N592BJE1newUZJpUMNfA@mail.gmail.com>
+In-Reply-To: <CACRpkdYK75uSXLmzkQ9uNQfSBW86bSz3D0nYSr_XSXfixKSDGg@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/29/2013 01:00 PM, Linus Walleij wrote:
-> On Fri, Aug 23, 2013 at 9:52 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 08/23/2013 12:45 PM, Linus Walleij wrote:
+On 08/28/2013 01:30 PM, Linus Walleij wrote:
+> On Wed, Aug 14, 2013 at 11:27 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
 > 
->>> This is a perfectly OK thing to do as long as it is done like
->>> this:
->>>
->>> request_gpio(gpio);
->>> gpio_direction_input(gpio);
->>> request_irq(gpio_to_irq(gpio));
+>> From: Stephen Warren <swarren@nvidia.com>
 >>
->> But I'm not aware that there's a rule saying it's illegal to:
+>> Move of_parse_phandle() after __of_parse_phandle_with_args(), since a
+>> future patch will call __of_parse_phandle_with_args() from
+>> of_parse_phandle(). Moving the function avoids adding a prototype. Doing
+>> the move separately highlights the code changes separately.
 >>
->> request_irq(gpio_to_irq(gpio));
->> request_gpio(gpio);
->> gpio_direction_input(gpio);
+>> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+>> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>> ---
+>> v5: New patch.
 > 
-> No but I think there should be one ... maybe I'm an oddball
-> but it seems natural to request a GPIO before tying
-> IRQs to fire off it.
+> Still no feedback from Rob || Grant on this quite important cleanup?
+> 
+> I would like to nominate Stephen Warren as co-maintainer of
+> drivers/of/*, he definately knows his way around the code.
+> I'm just worried that he may not accept due to a lot of work in the
+> bindings already.
 
-What if there is no GPIO?
-
-There are plenty of chips with dedicated IRQ input pins that can't be
-read as GPIOs, or treated as GPIOs in any way.
-
-If a driver only needs IRQ input functionality, it should just request
-an IRQ and be done with it. There should be no need at all for the
-driver to know that the IRQ might be routed into a GPIO controller, and
-hence that the driver may (or may not) need to additionally request the
-GPIO before requesting the IRQ.
-
-In other words, request_irq() must do everything necessary for the input
-signal to operate as an IRQ input, irrespective of whether it might be
-possible to use that input signal as a GPIO.
-
+I would prefer not to be flooded with any more email. That said,
+/swapping/ my DT binding reviewer position with a drivers/of reviewer
+position would reduce the email load.
