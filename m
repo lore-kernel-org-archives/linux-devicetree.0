@@ -1,64 +1,93 @@
-From: "Markus Mayer" <markus.mayer@linaro.org>
-Subject: [PATCH v6 2/2] gpio: bcm281xx: Add device node for the GPIO controller
-Date: Thu, 29 Aug 2013 16:51:07 -0700
-Message-ID: <1377820267-20050-3-git-send-email-markus.mayer@linaro.org>
-References: <1377820267-20050-1-git-send-email-markus.mayer@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4] gpio: pcf857x: Add OF support
+Date: Fri, 30 Aug 2013 02:05:41 +0200
+Message-ID: <32047086.JjfkHtWF69@avalon>
+References: <1377524753-4027-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CACRpkdZuODowd6V9WcCes6znT15C105y_kfYynhien4ZCCaoOA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1377820267-20050-1-git-send-email-markus.mayer@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Christian Daudt <csd@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZuODowd6V9WcCes6znT15C105y_kfYynhien4ZCCaoOA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the GPIO controller device node for the Broadcom bcm281xx family of
-mobile SoCs.
+Hi Linus,
 
-Signed-off-by: Markus Mayer <markus.mayer@linaro.org>
-Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
-Reviewed-by: Matt Porter <matt.porter@linaro.org>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/arm/boot/dts/bcm11351.dtsi |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+On Thursday 29 August 2013 14:16:59 Linus Walleij wrote:
+> On Mon, Aug 26, 2013 at 3:45 PM, Laurent Pinchart wrote:
+> > Add DT bindings for the pcf857x-compatible chips and parse the device
+> > tree node in the driver.
+> > 
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> 
+> First: can I get an ACK from some DT-bindings maintainer?
+> 
+> I think you may need to CC them all individually to get some response.
 
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index c0cdf66..a3945e3 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -63,6 +63,22 @@
- 		clock-frequency = <32768>;
- 	};
- 
-+	gpio: gpio@35003000 {
-+		compatible = "brcm,bcm11351-gpio", "brcm,kona-gpio";
-+		reg = <0x35003000 0x800>;
-+		interrupts =
-+		       <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH
-+			GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH
-+			GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH
-+			GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
-+			GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH
-+			GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-+		#gpio-cells = <2>;
-+		#interrupt-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+	};
-+
- 	sdio0: sdio@0x3f180000 {
- 		compatible = "bcm,kona-sdhci";
- 		reg = <0x3f180000 0x10000>;
+I'll make sure to get an ACK for v6 (or a more recent version). Reviewers are 
+probably busy with the merge window about to open, delaying this patch to 
+v3.13 should help.
+
+I'll post v6 after receiving your answer to the comment below, as well as to 
+the issue raised by Tomasz on v5.
+
+> > +++ b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+> > @@ -0,0 +1,71 @@
+> > +* PCF857x-compatible I/O expanders
+> > +
+> > +The PCF857x-compatible chips have "quasi-bidirectional" I/O pins that can
+> > be +driven high by a pull-up current source or driven low to ground. This
+> > combines +the direction and output level into a single bit per pin, which
+> > can't be read +back. We can't actually know at initialization time
+> > whether a pin is configured +(a) as output and driving the signal
+> > low/high, or (b) as input and reporting a +low/high value, without
+> > knowing the last value written since the chip came out +of reset (if
+> > any). The only reliable solution for setting up pin direction is +thus to
+> > do it explicitly.
+> 
+> Nitpick: I prefer that wrt gpio we talk about "lines" rather than "pins"
+> to separate it from the pin control concept. Just
+> s/pin/line/g
+
+OK.
+
+> (...)
+> 
+> > +Optional Properties:
+> > +
+> > +  - pins-initial-state: Bitmask that specifies the initial state of each
+> > pin. +  When a bit is set to zero, the corresponding pin will be
+> > initialized to the +  input (pulled-up) state. When the  bit is set to
+> > one, the pin will be +  initialized the the low-level output state. If
+> > the property is not specified +  all pins will be initialized to the
+> > input state.
+> 
+> Name this lines-initial-states (pluralis).
+
+OK.
+
+> Don't we want to do this generic if we shall do it?
+> 
+> Like for *any* GPIO chips we provide lines-initial state in the device
+> tree and some code in the gpiochip with a callback in struct gpio_chip
+> that can be called by the gpiolib core to set this up? Then we don't
+> have to reimplement this for every GPIO controller that needs it.
+
+Most GPIO chips will provide a way to read back the current state. The initial 
+state only needs to be provided for write-only chips. This is (luckily) rather 
+an exception, so I don't think we should implement it in the core, at least 
+not yet. We can always refactor the code later if needed, the proposed DT 
+binding is generic enough.
+
+> Sorry for not noticing this earlier...
+
+No worries.
+
 -- 
-1.7.9.5
+Regards,
+
+Laurent Pinchart
+
