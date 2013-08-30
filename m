@@ -1,57 +1,44 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 1/2] gpio: bcm281xx: Add GPIO driver
-Date: Fri, 30 Aug 2013 10:03:17 +0200
-Message-ID: <CACRpkdY-feNrJvL6_pbPtQ0Z1Q8ukaszqPMY4EPKhbuNgw0A1w@mail.gmail.com>
-References: <1377820267-20050-1-git-send-email-markus.mayer@linaro.org>
- <1377820267-20050-2-git-send-email-markus.mayer@linaro.org>
+Subject: Re: [PATCH v4] gpio: pcf857x: Add OF support
+Date: Fri, 30 Aug 2013 10:07:23 +0200
+Message-ID: <CACRpkdbohob2cST6Wmn3yJ8cxy162iwR8oZaBk+QJRJTvSN-QA@mail.gmail.com>
+References: <1377524753-4027-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<CACRpkdZuODowd6V9WcCes6znT15C105y_kfYynhien4ZCCaoOA@mail.gmail.com>
+	<32047086.JjfkHtWF69@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1377820267-20050-2-git-send-email-markus.mayer@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Mayer <markus.mayer@linaro.org>
-Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Christian Daudt <csd@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <mmayer@broadcom.com>, Matt Porter <matt.porter@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <32047086.JjfkHtWF69@avalon>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2013 at 1:51 AM, Markus Mayer <markus.mayer@linaro.org> wrote:
+On Fri, Aug 30, 2013 at 2:05 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Thursday 29 August 2013 14:16:59 Linus Walleij wrote:
+>> On Mon, Aug 26, 2013 at 3:45 PM, Laurent Pinchart wrote:
 
-> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-> index f112895..5819126 100644
-> --- a/arch/arm/mach-bcm/Kconfig
-> +++ b/arch/arm/mach-bcm/Kconfig
-> @@ -9,7 +9,7 @@ config ARCH_BCM
->         select CLKSRC_OF
->         select GENERIC_CLOCKEVENTS
->         select GENERIC_TIME
-> -       select GPIO_BCM
-> +       select GPIO_BCM_KONA
->         select SPARSE_IRQ
->         select TICK_ONESHOT
->         help
+>> Don't we want to do this generic if we shall do it?
+>>
+>> Like for *any* GPIO chips we provide lines-initial state in the device
+>> tree and some code in the gpiochip with a callback in struct gpio_chip
+>> that can be called by the gpiolib core to set this up? Then we don't
+>> have to reimplement this for every GPIO controller that needs it.
+>
+> Most GPIO chips will provide a way to read back the current state. The initial
+> state only needs to be provided for write-only chips. This is (luckily) rather
+> an exception, so I don't think we should implement it in the core, at least
+> not yet. We can always refactor the code later if needed, the proposed DT
+> binding is generic enough.
 
-No. I didn't ask you to move this hunk over to this patch.
+But I think this can be useful on any GPIO chip.
 
-Just the two hunks hitting:
+For someone deploying some system and hacking around in the
+device tree to set the GPIOs up properly at boot it can be a
+real useful tool.
 
-- Kconfig
-- Makefile
-
-Further I only wanted *this* patch [1/3] to be renamed with
-the gpio: prefix, not the other two.
-
-The idea is:
-
-Patch mainly touches drivers/gpio/* -> gpio: prefix
-Patch mainly touches arch/arm/* -> ARM: prefix
+Or is that giving them too much rope? :-D
 
 Yours,
 Linus Walleij
