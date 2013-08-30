@@ -1,214 +1,57 @@
-From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: Re: [PATCH v4 5/5] clk: dt: binding for basic gate clock
-Date: Fri, 30 Aug 2013 09:45:16 +0800
-Message-ID: <CAD6h2NRBq8hD8J5+P4NBZJZsPo4QAebgGaxmAn5TL0c2Cc5ULQ@mail.gmail.com>
-References: <1377150793-27864-1-git-send-email-mturquette@linaro.org>
-	<1377150793-27864-6-git-send-email-mturquette@linaro.org>
+From: Duan Fugang-B38611 <B38611@freescale.com>
+Subject: RE: [patch v2] net/fec: cleanup types in fec_get_mac()
+Date: Fri, 30 Aug 2013 02:02:00 +0000
+Message-ID: <9848F2DB572E5649BA045B288BE08FBE01662A4B@039-SN2MPN1-021.039d.mgd.msft.net>
+References: <20130829082514.GB14334@elgon.mountain>
+ <1377802138.5372.12.camel@bwh-desktop.uk.level5networks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1377150793-27864-6-git-send-email-mturquette@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Sealey <neko@bakuhatsu.net>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1377802138.5372.12.camel@bwh-desktop.uk.level5networks.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Ben Hutchings <bhutchings@solarflare.com>, Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Estevam Fabio-R49496 <r49496@freescale.com>, Li Frank-B20596 <B20596@freescale.com>, Jim Baxter <jim_baxter@mentor.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 August 2013 13:53, Mike Turquette <mturquette@linaro.org> wrote:
-> Device Tree binding for the basic clock gate, plus the setup function to
-> register the clock.  Based on the existing fixed-clock binding.
->
-> A different approach to this was proposed in 2012[1] and a similar
-> binding was proposed more recently[2] if anyone wants some extra
-> reading.
->
-> [1] http://article.gmane.org/gmane.linux.documentation/5679
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/137878.html
->
-> Tero Kristo contributed helpful bug fixes to this patch.
->
-> Signed-off-by: Mike Turquette <mturquette@linaro.org>
-> Tested-by: Heiko Stuebner <heiko@sntech.de>
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> ---
-> Changes since v3:
-> * replaced underscores with dashes in DT property names
-> * bail from of clock setup function early if of_iomap fails
-> * removed unecessary explict cast
->
->  .../devicetree/bindings/clock/gate-clock.txt       | 36 +++++++++++++++++
->  drivers/clk/clk-gate.c                             | 47 ++++++++++++++++++++++
->  include/linux/clk-provider.h                       |  2 +
->  3 files changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/gate-clock.txt
->
-> diff --git a/Documentation/devicetree/bindings/clock/gate-clock.txt b/Documentation/devicetree/bindings/clock/gate-clock.txt
-> new file mode 100644
-> index 0000000..1c0d4d5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/gate-clock.txt
-> @@ -0,0 +1,36 @@
-> +Binding for simple gate clock.
-> +
-> +This binding uses the common clock binding[1].  It assumes a
-> +register-mapped clock gate controlled by a single bit that has only one
-> +input clock or parent.  By default setting the specified bit gates the
-> +clock signal and clearing the bit ungates it.
-> +
-> +The binding must provide the register to control the gate and the bit
-> +shift for the corresponding gate control bit. Some clocks set the bit to
-> +gate the clock signal, and clear it to ungate the clock signal. The
-> +optional "set-bit-to-disable" specifies this behavior.
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible : shall be "gate-clock".
-> +- #clock-cells : from common clock binding; shall be set to 0.
-> +- clocks : link to phandle of parent clock
-> +- reg : base address for register controlling adjustable gate
-> +- bit-shift : bit shift for programming the clock gate
-> +
-> +Optional properties:
-> +- clock-output-names : from common clock binding.
-> +- set-bit-to-disable : inverts default gate programming. Setting the bit
-> +  gates the clock and clearing the bit ungates the clock.
-> +- hiword-mask : lower half of the register controls the gate, upper half
-> +  of the register indicates bits that were updated in the lower half
-> +
-> +Examples:
-> +       clock_foo: clock_foo@4a008100 {
-> +               compatible = "gate-clock";
-> +               #clock-cells = <0>;
-> +               clocks = <&clock_bar>;
-> +               reg = <0x4a008100 0x4>
-> +               bit-shift = <3>
-
-There's some argument on my clock binding patch set of Hi3620.
-
-I defined each clock as one clock node and some of them are sharing one
-register. Stephen attacked on this since it means multiple clock node sharing
-one register.
-
-Now the same thing also exists in Mike's patch. Mike's patch could also
-support this behavior. And it's very common that one register is sharing among
-multiple clocks in every SoC. Which one should I follow?
-
-
-> +       };
-> diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
-> index 2b28a00..63641c2 100644
-> --- a/drivers/clk/clk-gate.c
-> +++ b/drivers/clk/clk-gate.c
-> @@ -15,6 +15,8 @@
->  #include <linux/io.h>
->  #include <linux/err.h>
->  #include <linux/string.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
->
->  /**
->   * DOC: basic gatable clock which can gate and ungate it's ouput
-> @@ -162,3 +164,48 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
->         return clk;
->  }
->  EXPORT_SYMBOL_GPL(clk_register_gate);
-> +
-> +#ifdef CONFIG_OF
-> +/**
-> + * of_gate_clk_setup() - Setup function for simple gate rate clock
-> + */
-> +void of_gate_clk_setup(struct device_node *node)
-> +{
-> +       struct clk *clk;
-> +       const char *clk_name = node->name;
-> +       void __iomem *reg;
-> +       const char *parent_name;
-> +       u8 clk_gate_flags = 0;
-> +       u32 bit_idx = 0;
-> +
-> +       of_property_read_string(node, "clock-output-names", &clk_name);
-> +
-> +       parent_name = of_clk_get_parent_name(node, 0);
-> +
-> +       reg = of_iomap(node, 0);
-
-I suggest not using of_iomap for each clock node.
-
-If each clock is one node, it means hundreds of clock node existing in
-device tree. Hundreds of mapping page only cost unnecessary mapping.
-
-Maybe we can resolve it by this way.
-
-DTS file:
-        clock register bank {
-                reg = <{start} {size}>;
-                #address-cells = <1>;
-                #size-cells = <0>;             /* each clock only
-exists in one register */
-
-                clock node {
-                        compatible = "xxx";
-                        #clock-cells = <0>;
-                        clock-output-names = yyy";
-                        reg = <{offset}>;
-                        ... other properties ...
-                };
-         };
-
-clock driver:
-         void __iomem *base, *reg;
-         const __be32 *prop;
-         /* base comes from the iomapping of the parent node */
-         prop = of_get_address(np, 0, NULL, NULL);
-         if (!prop)
-               goto err;
-         reg = base + be32_to_cpu(*prop);
-
-Then we can get the register virtual address at here.
-
-It could avoid always calling ioremap(). Maybe it's not the best
-solution, it's just
-for your reference.
-
-> +       if (!reg) {
-> +               pr_err("%s: no memory mapped for property reg\n", __func__);
-> +               return;
-> +       }
-> +
-> +       if (of_property_read_u32(node, "bit-shift", &bit_idx)) {
-> +               pr_err("%s: missing bit-shift property for %s\n",
-> +                               __func__, node->name);
-> +               return;
-> +       }
-> +
-> +       if (of_property_read_bool(node, "set-bit-to-disable"))
-> +               clk_gate_flags |= CLK_GATE_SET_TO_DISABLE;
-> +
-> +       if (of_property_read_bool(node, "hiword-mask"))
-> +               clk_gate_flags |= CLK_GATE_HIWORD_MASK;
-> +
-> +       clk = clk_register_gate(NULL, clk_name, parent_name, 0, reg, bit_idx,
-> +                       clk_gate_flags, NULL);
-> +
-> +       if (!IS_ERR(clk))
-> +               of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> +}
-> +EXPORT_SYMBOL_GPL(of_gate_clk_setup);
-> +CLK_OF_DECLARE(gate_clk, "gate-clock", of_gate_clk_setup);
-> +#endif
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 218d923..b471e37 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -240,6 +240,8 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
->                 void __iomem *reg, u8 bit_idx,
->                 u8 clk_gate_flags, spinlock_t *lock);
->
-> +void of_gate_clk_setup(struct device_node *node);
-> +
->  struct clk_div_table {
->         unsigned int    val;
->         unsigned int    div;
-> --
-> 1.8.1.2
->
+RnJvbTogQmVuIEh1dGNoaW5ncyBbbWFpbHRvOmJodXRjaGluZ3NAc29sYXJmbGFyZS5jb21dDQpE
+YXRhOiBGcmlkYXksIEF1Z3VzdCAzMCwgMjAxMyAyOjQ5IEFNDQoNCj4gVG86IERhbiBDYXJwZW50
+ZXINCj4gQ2M6IEdyYW50IExpa2VseTsgUm9iIEhlcnJpbmc7IERhdmlkIFMuIE1pbGxlcjsgRXN0
+ZXZhbSBGYWJpby1SNDk0OTY7IExpDQo+IEZyYW5rLUIyMDU5NjsgSmltIEJheHRlcjsgRHVhbiBG
+dWdhbmctQjM4NjExOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZzsga2VybmVsLWphbml0b3JzQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBS
+ZTogW3BhdGNoIHYyXSBuZXQvZmVjOiBjbGVhbnVwIHR5cGVzIGluIGZlY19nZXRfbWFjKCkNCj4g
+DQo+IE9uIFRodSwgMjAxMy0wOC0yOSBhdCAxMToyNSArMDMwMCwgRGFuIENhcnBlbnRlciB3cm90
+ZToNCj4gPiBNeSBzdGF0aWMgY2hlY2tlciBjb21wbGFpbnMgdGhhdCBvbiBzb21lIGFyY2hlcyB1
+bnNpZ25lZCBsb25ncyBjYW4gYmUNCj4gPiA4IGNoYXJhY3RlcnMgd2hpY2ggaXMgbGFyZ2VyIHRo
+YW4gdGhlIGJ1ZmZlciBpcyBvbmx5IDYgY2hhcnMuDQo+ID4gQWRkaXRpb25hbGx5LCBCZW4gSHV0
+Y2hpbmdzIHBvaW50cyBvdXQgdGhhdCB0aGUgYnVmZmVyIGFjdHVhbGx5IGhvbGRzDQo+ID4gYmln
+IGVuZGlhbiBkYXRhIGFuZCB0aGUgYnVmZmVyIHdlIGFyZSByZWFkaW5nIGZyb20gaXMgQ1BVIGVu
+ZGlhbi4NCj4gDQo+IEl0J3Mgbm90IHJlYWxseSBhcyBjbGVhci1jdXQgYXMgdGhhdC4gOi0pICBC
+dXQgSSB0aGluayBpdCdzIHNsaWdodGx5IG1vcmUNCj4gbG9naWNhbCB0aGlzIHdheS4NCj4gDQpZ
+ZXMsIGl0IGlzIG5vdCBjbGVhciwgcGxzIHJlbW92ZSBzb21lYm9keSdzIG5hbWUgZnJvbSB0aGUg
+Y29tbWl0IGxvZy4NCg0KPiA+IFNpZ25lZC1vZmYtYnk6IERhbiBDYXJwZW50ZXIgPGRhbi5jYXJw
+ZW50ZXJAb3JhY2xlLmNvbT4NCj4gDQo+IFJldmlld2VkLWJ5OiBCZW4gSHV0Y2hpbmdzIDxiaHV0
+Y2hpbmdzQHNvbGFyZmxhcmUuY29tPg0KPiANCj4gPiAtLS0NCj4gPiB2MjogZml4IGVuZGlhbiBh
+bm5vdGF0aW9ucyBhbmQgcmV2ZXJzZSB0aGUgYmVYWF90b19jcHUoKSBjYWxscyBzbyB0aGF0DQo+
+ID4gICAgIHRoZXkgc2F5IGNwdV90b19iZVhYKCkuDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2ZlY19tYWluLmMNCj4gPiBiL2RyaXZlcnMvbmV0
+L2V0aGVybmV0L2ZyZWVzY2FsZS9mZWNfbWFpbi5jDQo+ID4gaW5kZXggZmRmOTMwNy4uMGIxMjg2
+NiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZmVjX21h
+aW4uYw0KPiA+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9mZWNfbWFpbi5j
+DQo+ID4gQEAgLTExMDAsMTAgKzExMDAsMTAgQEAgc3RhdGljIHZvaWQgZmVjX2dldF9tYWMoc3Ry
+dWN0IG5ldF9kZXZpY2UgKm5kZXYpDQo+ID4gIAkgKiA0KSBGRUMgbWFjIHJlZ2lzdGVycyBzZXQg
+YnkgYm9vdGxvYWRlcg0KPiA+ICAJICovDQo+ID4gIAlpZiAoIWlzX3ZhbGlkX2V0aGVyX2FkZHIo
+aWFwKSkgew0KPiA+IC0JCSooKHVuc2lnbmVkIGxvbmcgKikgJnRtcGFkZHJbMF0pID0NCj4gPiAt
+CQkJYmUzMl90b19jcHUocmVhZGwoZmVwLT5od3AgKyBGRUNfQUREUl9MT1cpKTsNCj4gPiAtCQkq
+KCh1bnNpZ25lZCBzaG9ydCAqKSAmdG1wYWRkcls0XSkgPQ0KPiA+IC0JCQliZTE2X3RvX2NwdShy
+ZWFkbChmZXAtPmh3cCArIEZFQ19BRERSX0hJR0gpID4+IDE2KTsNCj4gPiArCQkqKChfX2JlMzIg
+KikgJnRtcGFkZHJbMF0pID0NCj4gPiArCQkJY3B1X3RvX2JlMzIocmVhZGwoZmVwLT5od3AgKyBG
+RUNfQUREUl9MT1cpKTsNCj4gPiArCQkqKChfX2JlMTYgKikgJnRtcGFkZHJbNF0pID0NCj4gPiAr
+CQkJY3B1X3RvX2JlMTYocmVhZGwoZmVwLT5od3AgKyBGRUNfQUREUl9ISUdIKSA+PiAxNik7DQo+
+ID4gIAkJaWFwID0gJnRtcGFkZHJbMF07DQo+ID4gIAl9DQo+ID4NCj4gDQo+IC0tDQo+IEJlbiBI
+dXRjaGluZ3MsIFN0YWZmIEVuZ2luZWVyLCBTb2xhcmZsYXJlIE5vdCBzcGVha2luZyBmb3IgbXkg
+ZW1wbG95ZXI7DQo+IHRoYXQncyB0aGUgbWFya2V0aW5nIGRlcGFydG1lbnQncyBqb2IuDQo+IFRo
+ZXkgYXNrZWQgdXMgdG8gbm90ZSB0aGF0IFNvbGFyZmxhcmUgcHJvZHVjdCBuYW1lcyBhcmUgdHJh
+ZGVtYXJrZWQuDQo+IA0KDQoNCg0K
