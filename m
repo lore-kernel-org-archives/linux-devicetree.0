@@ -1,7 +1,7 @@
 From: Guenter Roeck <linux@roeck-us.net>
-Subject: [RFC PATCH 6/6] extcon-gpio: Describe possible properties to support multi-type cables
-Date: Thu, 29 Aug 2013 21:29:38 -0700
-Message-ID: <1377836978-24082-7-git-send-email-linux@roeck-us.net>
+Subject: [RFC PATCH 5/6] extcon-gpio: Describe devicetree bindings
+Date: Thu, 29 Aug 2013 21:29:37 -0700
+Message-ID: <1377836978-24082-6-git-send-email-linux@roeck-us.net>
 References: <1377836978-24082-1-git-send-email-linux@roeck-us.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1377836978-24082-1-git-send-email-linux@roeck-us.net>
@@ -10,46 +10,40 @@ To: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-This is purely a possible description and an RFC; there is no code (yet).
-
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- .../devicetree/bindings/extcon/extcon-gpio         |   26 ++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ .../devicetree/bindings/extcon/extcon-gpio         |   23 ++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio
 
 diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio b/Documentation/devicetree/bindings/extcon/extcon-gpio
-index 091ddc6..5836ac2 100644
---- a/Documentation/devicetree/bindings/extcon/extcon-gpio
+new file mode 100644
+index 0000000..091ddc6
+--- /dev/null
 +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio
-@@ -21,3 +21,29 @@ Example node:
- 		state-on = "connected";
- 		state-on = "disconnected";
- 	};
+@@ -0,0 +1,23 @@
++Device-Tree bindings for extcon/extcon-gpio driver
 +
-+---
-+TBD: Add support for multiple connectors
++Required properties:
++	- compatible = "gpio-connector";
++	- presence-detect-gpios - presence detect gpio pin
 +
-+An example node with multiple connectors might look as follows.
++Optional properties:
++	- debounce-interval - debounce interval in milli-seconds
++	- state-on - on (connected) state
++	- state-off - off (disconnected) state
++	  Depending on the type of connector or cable, states may
++	  for example be reported as "connected"/"disconnected"
++	  or "inserted"/"removed".
++
++Example node:
 +
 +	some-connector {
-+		#size-cells = <1>;
 +		compatible = "gpio-connector";
 +		presence-detect-gpios = <&gpio1 7 1>;
-+		id-gpios = <&gpio1 8 0>;
 +		debounce-interval = <1>;
 +		state-on = "connected";
 +		state-on = "disconnected";
-+
-+		USB {
-+			reg = <0>;
-+		};
-+		USB-Host {
-+			reg = <1>;
-+		};
 +	};
-+
-+This describes a cable with a (low-active) presence detect pin and an ID pin.
-+If the value returned by the ID pin is 0, the connected cable type is "USB".
-+If the value is 1, the connected cable type is "USB-Host".
 -- 
 1.7.9.7
