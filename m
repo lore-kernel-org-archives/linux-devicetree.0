@@ -1,115 +1,84 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: [PATCH] mmc: dw_mmc: update binding document exynos-dw-mshc.txt
-Date: Fri, 30 Aug 2013 16:50:11 +0530
-Message-ID: <1377861611-3891-1-git-send-email-yuvaraj.cd@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cjb@laptop.org, jh80.chung@samsung.com, tgih.jun@samsung.com
-Cc: ks.giri@samsung.com, t.figa@samsung.com, alim.akhtar@samsung.com, dianders@chromium.org, devicetree@vger.kernel.org, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+From: <hongbo.zhang@freescale.com>
+Subject: [PATCH v9 0/3] DMA: Freescale: Add support for 8-channel DMA engine
+Date: Fri, 30 Aug 2013 19:26:17 +0800
+Message-ID: <1377861980-7027-1-git-send-email-hongbo.zhang@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, vinod.koul@intel.com, djbw@fb.com
+Cc: Hongbo Zhang <hongbo.zhang@freescale.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the exynos-dw-mshc.txt.Currently we are using
-"pinctrl" binding property to describe the CMD and DATA line's
-of Mobile Storage Host Controller(mshc) node.
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
 
-Compatibility string is added in the driver with the patch.
-[1] mmc: dw_mmc: exynos: configure SMU in exynos5420.
+Hi DMA and DT maintainers, please have a look at these V9 patches.
 
-DT nodes has been added in separate patch.
-[2] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
+Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch set
+adds support this DMA engine.
 
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
----
- .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   39 +++++++++++---------
- 1 file changed, 21 insertions(+), 18 deletions(-)
+V8->V9 changes:
+- add "Acked-by: Mark Rutland <mark.rutland@arm.com>" into patch [1/3]
+- update reg entry <0x100300 0x4 0x100600 0x4> to two seperate ones
+  <0x100300 0x4>, <0x100600 0x4> in patch [2/3]
+- and also use "QorIQ Elo3 DMA" to mention previous "QorIQ DMA" in [2/3]
 
-diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-index 84cd56f..0e1d4d9 100644
---- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-@@ -7,9 +7,9 @@ differences between the core Synopsis dw mshc controller properties described
- by synopsis-dw-mshc.txt and the properties used by the Samsung Exynos specific
- extensions to the Synopsis Designware Mobile Storage Host Controller.
- 
--Required Properties:
-+Required SoC Specific Properties:
- 
--* compatible: should be
-+* compatible: should be one of the following
- 	- "samsung,exynos4210-dw-mshc": for controllers with Samsung Exynos4210
- 	  specific extensions.
- 	- "samsung,exynos4412-dw-mshc": for controllers with Samsung Exynos4412
-@@ -17,7 +17,12 @@ Required Properties:
- 	- "samsung,exynos5250-dw-mshc": for controllers with Samsung Exynos5250
- 	  specific extensions.
- 	- "samsung,exynos5420-dw-mshc": for controllers with Samsung Exynos5420
--	  specific extensions.
-+	  specific extensions which does not have SMU(Security Management Unit).
-+	- "samsung,exynos5420-dw-mshc-smu": for controllers with Samsung
-+	  Exynos5420 specific extensions which has SMU(Security Management
-+	  Unit).
-+
-+Required Board Specific Properties:
- 
- * samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
-   unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
-@@ -46,44 +51,42 @@ Required Properties:
-       - if CIU clock divider value is 0 (that is divide by 1), both tx and rx
-         phase shift clocks should be 0.
- 
--Required properties for a slot:
--
--* gpios: specifies a list of gpios used for command, clock and data bus. The
--  first gpio is the command line and the second gpio is the clock line. The
--  rest of the gpios (depending on the bus-width property) are the data lines in
--  no particular order. The format of the gpio specifier depends on the gpio
--  controller.
-+* pinctrl-0: Should specify pin control groups used for this controller.
-+* pinctrl-names: Should contain only one value - "default".
- 
-+Required properties for a slot:
-+	Refer synopsis-dw-mshc.txt
- Example:
- 
-   The MSHC controller node can be split into two portions, SoC specific and
-   board specific portions as listed below.
- 
--	dwmmc0@12200000 {
-+	mshc@12200000 {
- 		compatible = "samsung,exynos5250-dw-mshc";
- 		reg = <0x12200000 0x1000>;
- 		interrupts = <0 75 0>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		clocks = <&clock 351>, <&clock 132>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x80>;
-+		status = "disabled";
- 	};
- 
--	dwmmc0@12200000 {
-+	mshc@12200000 {
-+		status = "okay";
- 		num-slots = <1>;
- 		supports-highspeed;
- 		broken-cd;
--		fifo-depth = <0x80>;
- 		card-detect-delay = <200>;
- 		samsung,dw-mshc-ciu-div = <3>;
- 		samsung,dw-mshc-sdr-timing = <2 3>;
- 		samsung,dw-mshc-ddr-timing = <1 2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
- 
- 		slot@0 {
- 			reg = <0>;
- 			bus-width = <8>;
--			gpios = <&gpc0 0 2 0 3>, <&gpc0 1 2 0 3>,
--				<&gpc1 0 2 3 3>, <&gpc1 1 2 3 3>,
--				<&gpc1 2 2 3 3>, <&gpc1 3 2 3 3>,
--				<&gpc0 3 2 3 3>, <&gpc0 4 2 3 3>,
--				<&gpc0 5 2 3 3>, <&gpc0 6 2 3 3>;
- 		};
- 	};
+V7->V8 changes:
+- change the word "mapping" to "specifier" for reg and interrupts description
+
+V6->V7 changes:
+- only remove unnecessary "CHIP-dma" explanations in [1/3]
+
+V5->V6 changes:
+- minor updates of descriptions in binding document and Kconfig
+- remove [4/4], that should be another patch in future
+
+V4->V5 changes:
+- update description in the dt binding document, to make it more resonable
+- add new patch [4/4] to eliminate a compiling warning which already exists
+  for a long time
+
+V3->V4 changes:
+- introduce new patch [1/3] to revise the legacy dma binding document
+- and then add new paragraph to describe new dt node binding in [2/3]
+- rebase to latest kernel v3.11-rc1
+
+V2->V3 changes:
+- edit Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+- edit text string in Kconfig and the driver files, using "elo series" to
+  mention all the current "elo*"
+
+V1->V2 changes:
+- removed the codes handling the register dgsr1, since it isn't used currently
+- renamed the DMA DT compatible to "fsl,elo3-dma"
+- renamed the new dts files to "elo3-dma-<n>.dtsi"
+
+Hongbo Zhang (3):
+  DMA: Freescale: revise device tree binding document
+  DMA: Freescale: Add new 8-channel DMA engine device tree nodes
+  DMA: Freescale: update driver to support 8-channel DMA engine
+
+ .../devicetree/bindings/powerpc/fsl/dma.txt        |  129 ++++++++++++++------
+ arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
+ arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   82 +++++++++++++
+ arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   82 +++++++++++++
+ arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
+ drivers/dma/Kconfig                                |    9 +-
+ drivers/dma/fsldma.c                               |    9 +-
+ drivers/dma/fsldma.h                               |    2 +-
+ 8 files changed, 274 insertions(+), 47 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
+
 -- 
 1.7.9.5
