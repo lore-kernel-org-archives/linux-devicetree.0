@@ -1,14 +1,14 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [Patch v3 2/3] ARM: dts: Document the CCI PMU DT bindings
-Date: Fri, 30 Aug 2013 11:17:08 -0500
-Message-ID: <938AAABA-BE7E-48ED-82D6-61A35B6D9774@codeaurora.org>
-References: <1377183748-5717-1-git-send-email-punit.agrawal@arm.com>
- <1377183748-5717-3-git-send-email-punit.agrawal@arm.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] ARM: dts: vexpress: Add CCI node to TC2 device-tree
+Date: Fri, 30 Aug 2013 09:30:17 -0700
+Message-ID: <CAOesGMhwqqOuSwVEukpfqM00BV2i=fQRhLUaf-wf-iVGR_mNbg@mail.gmail.com>
+References: <1377872760.3655.48.camel@linaro1.home>
+ <20130830161327.GA10045@e102568-lin.cambridge.arm.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1377183748-5717-3-git-send-email-punit.agrawal@arm.com>
+In-Reply-To: <20130830161327.GA10045@e102568-lin.cambridge.arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,36 +18,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Punit Agrawal <punit.agrawal@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "Jon Medhurst (Tixy)" <tixy@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 30, 2013 at 9:13 AM, Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
 
-On Aug 22, 2013, at 10:02 AM, Punit Agrawal wrote:
+> Now that MCPM and CPU idle are heading to mainline, it should get queued asap,
+> thanks for that, probably as a fix at -rc1, since it is quite late now.
 
-> The CCI PMU can profile bus transactions at the master and slave
-> interfaces of the CCI. The PMU can be used to observe an aggregated
-> view of the bus traffic between the various components connected to the
-> CCI.
-> 
-> Introduce a binding for the CCI PMU. The PMU node will be a sub-node of
-> the CCI node.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-> ---
-> Documentation/devicetree/bindings/arm/cci.txt |   46 +++++++++++++++++++++++++
-> 1 file changed, 46 insertions(+)
+This is not a regression, it's a missing piece of a feature. It's not
+post-rc1 material.
 
-Acked-by: Kumar Gala <galak@codeaurora.org>
+It's also an indication that nobody actually tested the feature branch
+before the pull request was sent. Hrmpf.
 
-- k
+Shouldn't you be updating some vexpress_defconfig and probably
+multi_v7_defconfig to at least get some build coverage for this as
+well, by the way?
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+I really should hold this off for 3.13, but I'll apply it to the late/
+branch anyway.
+
+
+-Olof
