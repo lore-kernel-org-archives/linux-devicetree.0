@@ -1,445 +1,126 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC 2/3] drm/panel: Add simple panel support
-Date: Fri, 30 Aug 2013 17:25:20 +0200
-Message-ID: <1377876321-26835-3-git-send-email-treding@nvidia.com>
-References: <1377876321-26835-1-git-send-email-treding@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1377876321-26835-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH] ARM: dts: vexpress: Add CCI node to TC2 device-tree
+Date: Fri, 30 Aug 2013 16:48:33 +0100
+Message-ID: <1377877713.10738.12.camel@hornet>
+References: <1377872760.3655.48.camel@linaro1.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1377872760.3655.48.camel@linaro1.home>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Jon Medhurst (Tixy)" <tixy@linaro.org>, arm@kernel.org
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for simple panels. Such panels can have a regulator that
-provides the supply voltage and a separate GPIO to enable the panel.
-Optionally the panels can have a backlight associated with them so it
-can be enabled or disabled according to the panel's power management
-mode.
+On Fri, 2013-08-30 at 15:26 +0100, Jon Medhurst (Tixy) wrote:
+> The Versatile Express V2P-CA15_A7 (aka TC2) has a CCI-400 which is
+> needed to get Multi-Cluster Power Management (MCPM) working.
+> 
+> Signed-off-by: Jon Medhurst <tixy@linaro.org>
+> ---
+> 
+> I was unsure if the devicetree list should be cc'd when making use of
+> already agreed and documented bindings, so I erred on the side of
+> caution and added it. Please say if this is unnecessary noise, or is
+> expected for all device-tree changes, thanks.
 
-Support is added for three panels: An AU Optronics 10.1" WSVGA, a
-Chunghwa Picture Tubes 10.1" WXGA and a Panasonic 10.1 WUXGA TFT LCD
-panel.
+MAINTAINERS say:
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/panel/panel-simple.txt     |  25 ++
- drivers/gpu/drm/Makefile                           |   1 +
- drivers/gpu/drm/panel/Kconfig                      |  13 +
- drivers/gpu/drm/panel/Makefile                     |   1 +
- drivers/gpu/drm/panel/panel-simple.c               | 335 +++++++++++++++++++++
- 5 files changed, 375 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/panel/panel-simple.txt
- create mode 100644 drivers/gpu/drm/panel/Makefile
- create mode 100644 drivers/gpu/drm/panel/panel-simple.c
+F:      arch/*/boot/dts/
 
-diff --git a/Documentation/devicetree/bindings/panel/panel-simple.txt b/Documentation/devicetree/bindings/panel/panel-simple.txt
-new file mode 100644
-index 0000000..dfd4b76
---- /dev/null
-+++ b/Documentation/devicetree/bindings/panel/panel-simple.txt
-@@ -0,0 +1,25 @@
-+Simple display panel
-+
-+Required properties:
-+- compatible: should be one of:
-+  - "auo,b101aw03": AU Optronics Corporation 10.1" WSVGA TFT LCD panel
-+  - "cptt,claa101wb03": Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
-+  - "pc,vvx10f004b00": Panasonic Corporation 10.1" WUXGA TFT LCD panel
-+
-+Optional properties:
-+- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-+- power-supply: regulator to provide the supply voltage
-+- enable-gpios: GPIO pin to enable or disable the panel
-+- backlight: phandle of the backlight device attached to the panel
-+
-+Example:
-+
-+	panel: panel {
-+		compatible = "cptt,claa101wb01";
-+		ddc-i2c-bus = <&panelddc>;
-+
-+		power-supply = <&vdd_pnl_reg>;
-+		enable-gpios = <&gpio 90 0>;
-+
-+		backlight = <&backlight>;
-+	};
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 9b009c7..764a5ec 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -57,3 +57,4 @@ obj-$(CONFIG_DRM_TILCDC)	+= tilcdc/
- obj-$(CONFIG_DRM_QXL) += qxl/
- obj-$(CONFIG_DRM_MSM) += msm/
- obj-y			+= i2c/
-+obj-y			+= panel/
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index 2ddd5bd..843087b 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -2,3 +2,16 @@ menuconfig DRM_PANEL
- 	bool "DRM panel support"
- 	help
- 	  Panel registration and lookup framework.
-+
-+if DRM_PANEL
-+
-+config DRM_PANEL_SIMPLE
-+	bool "support for simple panels"
-+	depends on OF
-+	help
-+	  DRM panel driver for dumb panels that need at most a regulator and
-+	  a GPIO to be powered up. Optionally a backlight can be attached so
-+	  that it can be automatically turned off when the panel goes into a
-+	  low power state.
-+
-+endif
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-new file mode 100644
-index 0000000..af9dfa2
---- /dev/null
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_DRM_PANEL_SIMPLE) += panel-simple.o
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-new file mode 100644
-index 0000000..e38cd6f
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -0,0 +1,335 @@
-+/*
-+ * Copyright (C) 2013, NVIDIA Corporation.  All rights reserved.
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining a
-+ * copy of this software and associated documentation files (the "Software"),
-+ * to deal in the Software without restriction, including without limitation
-+ * the rights to use, copy, modify, merge, publish, distribute, sub license,
-+ * and/or sell copies of the Software, and to permit persons to whom the
-+ * Software is furnished to do so, subject to the following conditions:
-+ *
-+ * The above copyright notice and this permission notice (including the
-+ * next paragraph) shall be included in all copies or substantial portions
-+ * of the Software.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
-+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-+ * DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include <linux/backlight.h>
-+#include <linux/gpio.h>
-+#include <linux/module.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_panel.h>
-+
-+struct panel_desc {
-+	const struct drm_display_mode *modes;
-+	unsigned int num_modes;
-+
-+	struct {
-+		unsigned int width;
-+		unsigned int height;
-+	} size;
-+};
-+
-+struct panel_simple {
-+	struct drm_panel base;
-+
-+	const struct panel_desc *desc;
-+
-+	struct backlight_device *backlight;
-+	struct regulator *supply;
-+
-+	unsigned long enable_gpio_flags;
-+	int enable_gpio;
-+};
-+
-+static inline struct panel_simple *to_panel_simple(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct panel_simple, base);
-+}
-+
-+static void panel_simple_dpms(struct drm_panel *panel, int mode)
-+{
-+	struct panel_simple *p = to_panel_simple(panel);
-+	int err;
-+
-+	if (mode == DRM_MODE_DPMS_ON) {
-+		if (p->supply) {
-+			err = regulator_enable(p->supply);
-+			if (err < 0)
-+				dev_err(panel->dev,
-+					"failed to enable supply: %d\n",
-+					err);
-+		}
-+
-+		if (gpio_is_valid(p->enable_gpio)) {
-+			if (p->enable_gpio_flags & GPIO_ACTIVE_LOW)
-+				gpio_set_value(p->enable_gpio, 0);
-+			else
-+				gpio_set_value(p->enable_gpio, 1);
-+		}
-+	}
-+
-+	if (p->backlight) {
-+		if (mode != DRM_MODE_DPMS_ON)
-+			p->backlight->props.power = FB_BLANK_POWERDOWN;
-+		else
-+			p->backlight->props.power = FB_BLANK_UNBLANK;
-+
-+		backlight_update_status(p->backlight);
-+	}
-+
-+	if (mode == DRM_MODE_DPMS_OFF) {
-+		if (gpio_is_valid(p->enable_gpio)) {
-+			if (p->enable_gpio_flags & GPIO_ACTIVE_LOW)
-+				gpio_set_value(p->enable_gpio, 1);
-+			else
-+				gpio_set_value(p->enable_gpio, 0);
-+		}
-+
-+		if (p->supply)
-+			regulator_disable(p->supply);
-+	}
-+}
-+
-+static int panel_simple_get_modes(struct drm_panel *panel)
-+{
-+	struct panel_simple *p = to_panel_simple(panel);
-+	struct drm_display_mode *mode;
-+	unsigned int i;
-+
-+	for (i = 0; i < p->desc->num_modes; i++) {
-+		mode = drm_mode_duplicate(panel->drm, &p->desc->modes[i]);
-+		if (!mode)
-+			return -ENOMEM;
-+
-+		drm_mode_set_name(mode);
-+
-+		drm_mode_probed_add(panel->connector, mode);
-+	}
-+
-+	return p->desc->num_modes;
-+}
-+
-+static const struct drm_panel_funcs panel_simple_funcs = {
-+	.dpms = panel_simple_dpms,
-+	.get_modes = panel_simple_get_modes,
-+};
-+
-+static const struct drm_display_mode auo_b101aw03_mode = {
-+	.clock = 51450,
-+	.hdisplay = 1024,
-+	.hsync_start = 1024 + 156,
-+	.hsync_end = 1024 + 156 + 8,
-+	.htotal = 1024 + 156 + 8 + 156,
-+	.vdisplay = 600,
-+	.vsync_start = 600 + 16,
-+	.vsync_end = 600 + 16 + 6,
-+	.vtotal = 600 + 16 + 6 + 16,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc auo_b101aw03 = {
-+	.modes = &auo_b101aw03_mode,
-+	.num_modes = 1,
-+	.size = {
-+		.width = 223,
-+		.height = 125,
-+	},
-+};
-+
-+static const struct drm_display_mode chunghwa_claa101wb01_mode = {
-+	.clock = 69300,
-+	.hdisplay = 1366,
-+	.hsync_start = 1366 + 48,
-+	.hsync_end = 1366 + 48 + 32,
-+	.htotal = 1366 + 48 + 32 + 20,
-+	.vdisplay = 768,
-+	.vsync_start = 768 + 16,
-+	.vsync_end = 768 + 16 + 8,
-+	.vtotal = 768 + 16 + 8 + 16,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc chunghwa_claa101wb01 = {
-+	.modes = &chunghwa_claa101wb01_mode,
-+	.num_modes = 1,
-+	.size = {
-+		.width = 223,
-+		.height = 125,
-+	},
-+};
-+
-+static const struct drm_display_mode panasonic_vvx10f004b00_mode = {
-+	.clock = 154700,
-+	.hdisplay = 1920,
-+	.hsync_start = 1920 + 154,
-+	.hsync_end = 1920 + 154 + 16,
-+	.htotal = 1920 + 154 + 16 + 32,
-+	.vdisplay = 1200,
-+	.vsync_start = 1200 + 17,
-+	.vsync_end = 1200 + 17 + 2,
-+	.vtotal = 1200 + 17 + 2 + 16,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc panasonic_vvx10f004b00 = {
-+	.modes = &panasonic_vvx10f004b00_mode,
-+	.num_modes = 1,
-+	.size = {
-+		.width = 217,
-+		.height = 136,
-+	},
-+};
-+
-+static const struct of_device_id panel_simple_of_match[] = {
-+	{
-+		.compatible = "auo,b101aw03",
-+		.data = &auo_b101aw03,
-+	}, {
-+		.compatible = "cptt,claa101wb01",
-+		.data = &chunghwa_claa101wb01
-+	}, {
-+		.compatible = "pc,vvx10f004b00",
-+		.data = &panasonic_vvx10f004b00
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(of, panel_simple_of_match);
-+
-+static int panel_simple_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *id;
-+	struct device_node *backlight;
-+	struct panel_simple *panel;
-+	enum of_gpio_flags flags;
-+	int err;
-+
-+	panel = devm_kzalloc(&pdev->dev, sizeof(*panel), GFP_KERNEL);
-+	if (!panel)
-+		return -ENOMEM;
-+
-+	id = of_match_node(panel_simple_of_match, pdev->dev.of_node);
-+	if (!id)
-+		return -ENODEV;
-+
-+	panel->desc = id->data;
-+
-+	panel->supply = devm_regulator_get_optional(&pdev->dev, "power");
-+	if (IS_ERR(panel->supply)) {
-+		if (PTR_ERR(panel->supply) != -ENODEV) {
-+			dev_err(&pdev->dev, "failed to get regulator: %ld\n",
-+				PTR_ERR(panel->supply));
-+			return PTR_ERR(panel->supply);
-+		}
-+
-+		panel->supply = NULL;
-+	}
-+
-+	panel->enable_gpio = of_get_named_gpio_flags(pdev->dev.of_node,
-+						     "enable-gpios", 0,
-+						     &flags);
-+	if (gpio_is_valid(panel->enable_gpio)) {
-+		unsigned int value;
-+
-+		if (flags & OF_GPIO_ACTIVE_LOW)
-+			panel->enable_gpio_flags |= GPIO_ACTIVE_LOW;
-+
-+		err = gpio_request(panel->enable_gpio, "enable");
-+		if (err < 0) {
-+			dev_err(&pdev->dev, "failed to request GPIO#%u: %d\n",
-+				panel->enable_gpio, err);
-+			return err;
-+		}
-+
-+		value = (panel->enable_gpio_flags & GPIO_ACTIVE_LOW) != 0;
-+
-+		err = gpio_direction_output(panel->enable_gpio, value);
-+		if (err < 0) {
-+			dev_err(&pdev->dev, "failed to setup GPIO%u: %d\n",
-+				panel->enable_gpio, err);
-+			goto free_gpio;
-+		}
-+	}
-+
-+	backlight = of_parse_phandle(pdev->dev.of_node, "backlight", 0);
-+	if (backlight) {
-+		panel->backlight = of_find_backlight_by_node(backlight);
-+		if (!panel->backlight) {
-+			err = -EPROBE_DEFER;
-+			goto free_gpio;
-+		}
-+
-+		of_node_put(backlight);
-+	}
-+
-+	drm_panel_init(&panel->base);
-+	panel->base.dev = &pdev->dev;
-+	panel->base.funcs = &panel_simple_funcs;
-+
-+	err = drm_panel_add(&panel->base);
-+	if (err < 0)
-+		goto free_gpio;
-+
-+	platform_set_drvdata(pdev, panel);
-+
-+	return 0;
-+
-+free_gpio:
-+	if (gpio_is_valid(panel->enable_gpio))
-+		gpio_free(panel->enable_gpio);
-+
-+	return err;
-+}
-+
-+static int panel_simple_remove(struct platform_device *pdev)
-+{
-+	struct panel_simple *panel = platform_get_drvdata(pdev);
-+
-+	if (gpio_is_valid(panel->enable_gpio)) {
-+		if (panel->enable_gpio_flags & GPIO_ACTIVE_LOW)
-+			gpio_set_value(panel->enable_gpio, 1);
-+		else
-+			gpio_set_value(panel->enable_gpio, 0);
-+
-+		gpio_free(panel->enable_gpio);
-+	}
-+
-+	if (panel->supply)
-+		regulator_disable(panel->supply);
-+
-+	if (panel->backlight)
-+		put_device(&panel->backlight->dev);
-+
-+	drm_panel_detach(&panel->base);
-+	drm_panel_remove(&panel->base);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver panel_simple_driver = {
-+	.driver = {
-+		.name = "panel-simple",
-+		.owner = THIS_MODULE,
-+		.of_match_table = panel_simple_of_match,
-+	},
-+	.probe = panel_simple_probe,
-+	.remove = panel_simple_remove,
-+};
-+module_platform_driver(panel_simple_driver);
-+
-+MODULE_DESCRIPTION("DRM Driver for Simple Panels");
-+MODULE_AUTHOR("Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.4
+so you did right. The reality is that there is more focus on
+Documentation/devicetree/bindings/* than on *.dts? and if the changes
+are complainant they will be most likely sort-of-ignored...
+
+>  arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts |   25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+> index d2803be..12bd4ea 100644
+> --- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+> +++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+> @@ -37,30 +37,35 @@
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a15";
+>  			reg = <0>;
+> +			cci-control-port = <&cci_control1>;
+>  		};
+>  
+>  		cpu1: cpu@1 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a15";
+>  			reg = <1>;
+> +			cci-control-port = <&cci_control1>;
+>  		};
+>  
+>  		cpu2: cpu@2 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a7";
+>  			reg = <0x100>;
+> +			cci-control-port = <&cci_control2>;
+>  		};
+>  
+>  		cpu3: cpu@3 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a7";
+>  			reg = <0x101>;
+> +			cci-control-port = <&cci_control2>;
+>  		};
+>  
+>  		cpu4: cpu@4 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a7";
+>  			reg = <0x102>;
+> +			cci-control-port = <&cci_control2>;
+>  		};
+>  	};
+>  
+> @@ -104,6 +109,26 @@
+>  		interrupts = <1 9 0xf04>;
+>  	};
+>  
+> +	cci@2c090000 {
+> +		compatible = "arm,cci-400";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0 0x2c090000 0 0x1000>;
+> +		ranges = <0x0 0x0 0x2c090000 0x10000>;
+> +
+> +		cci_control1: slave-if@4000 {
+> +			compatible = "arm,cci-400-ctrl-if";
+> +			interface-type = "ace";
+> +			reg = <0x4000 0x1000>;
+> +		};
+> +
+> +		cci_control2: slave-if@5000 {
+> +			compatible = "arm,cci-400-ctrl-if";
+> +			interface-type = "ace";
+> +			reg = <0x5000 0x1000>;
+> +		};
+> +	};
+> +
+>  	memory-controller@7ffd0000 {
+>  		compatible = "arm,pl354", "arm,primecell";
+>  		reg = <0 0x7ffd0000 0 0x1000>;
+
+With my VE-hat on, I can only say that if Lorenzo says it's fine, it's
+fine :-) So:
+
+Acked-by: Pawel Moll <pawel.moll@arm.com>
+
+Now, it seems that we will really need it in 3.12. The problem is it's
+quite late for this... Would arm-soc maintainers consider taking it in
+on last-minute basis or should we wait to rc1 and post it then as a fix?
+
+Thanks!
+
+Pawel
