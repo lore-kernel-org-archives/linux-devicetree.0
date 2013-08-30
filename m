@@ -1,94 +1,83 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: [PATCH] ARM: dts: Add SPI nodes to the exynos5420 device tree file
-Date: Fri, 30 Aug 2013 15:27:17 +0530
-Message-ID: <1377856637-7595-1-git-send-email-l.krishna@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, kgene.kim@samsung.com, dianders@chromium.org, abrestic@chromium.org, t.figa@samsung.com
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [RFC 00/22] OMAPDSS: DT support
+Date: Fri, 30 Aug 2013 12:47:52 +0300
+Message-ID: <52206A48.8040401@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com> <20130813075449.GS7656@atomide.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="P6AOCXNVlxgIXSoL3PwQiUHh6Fg1XA0oU"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130813075449.GS7656@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add SPI device tree nodes to Exynos5420 SoC
+--P6AOCXNVlxgIXSoL3PwQiUHh6Fg1XA0oU
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
----
-Note: This patch is rebased on Kgene's for-next branch and is dependent on
-[V3] ARM: dts: Add DMA controller node info on Exynos5420.
-https://patchwork.kernel.org/patch/2851790/
+On 13/08/13 10:54, Tony Lindgren wrote:
+> * Tomi Valkeinen <tomi.valkeinen@ti.com> [130809 01:46]:
+>>
+>> So as is evident, I have things in my mind that should be improved. Ma=
+ybe
+>> the most important question for short term future is:
+>>
+>> Can we add DSS DT bindings for OMAP4 as unstable bindings? It would gi=
+ve us
+>> some proper testing of the related code, and would also allow us to re=
+move
+>> the related hacks (which don't even work quite right). However, I have=
+ no
+>> idea yet when the unstable DSS bindings would turn stable.
+>>
+>> If we shouldn't add the bindings as unstable, when should the bindings=
+ be
+>> added? Wait until CDF is in the mainline, and use that?
+>=20
+> I don't think we should add any temporary bindings as it's going to be
+> a pain to support those in the long run. I suggest you initially just
+> stick to established bindings for the basic hardware IO address and
+> interrupts etc, then those should still be valid with the generic panel=
 
- arch/arm/boot/dts/exynos5420.dtsi |   51 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+> bindings later on.
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 15465f8..8d9e980 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -27,6 +27,9 @@
- 		pinctrl2 = &pinctrl_2;
- 		pinctrl3 = &pinctrl_3;
- 		pinctrl4 = &pinctrl_4;
-+		spi0 = &spi_0;
-+		spi1 = &spi_1;
-+		spi2 = &spi_2;
- 	};
- 
- 	cpus {
-@@ -238,6 +241,54 @@
- 		};
- 	};
- 
-+	spi_0: spi@12d20000 {
-+		compatible = "samsung,exynos4210-spi";
-+		reg = <0x12d20000 0x100>;
-+		interrupts = <0 66 0>;
-+		dmas = <&pdma0 5
-+			&pdma0 4>;
-+		dma-names = "tx", "rx";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spi0_bus>;
-+		clocks = <&clock 271>, <&clock 135>;
-+		clock-names = "spi", "spi_busclk0";
-+		status = "disabled";
-+	};
-+
-+	spi_1: spi@12d30000 {
-+		compatible = "samsung,exynos4210-spi";
-+		reg = <0x12d30000 0x100>;
-+		interrupts = <0 67 0>;
-+		dmas = <&pdma1 5
-+			&pdma1 4>;
-+		dma-names = "tx", "rx";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spi1_bus>;
-+		clocks = <&clock 272>, <&clock 136>;
-+		clock-names = "spi", "spi_busclk0";
-+		status = "disabled";
-+	};
-+
-+	spi_2: spi@12d40000 {
-+		compatible = "samsung,exynos4210-spi";
-+		reg = <0x12d40000 0x100>;
-+		interrupts = <0 68 0>;
-+		dmas = <&pdma0 7
-+			&pdma0 6>;
-+		dma-names = "tx", "rx";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spi2_bus>;
-+		clocks = <&clock 273>, <&clock 137>;
-+		clock-names = "spi", "spi_busclk0";
-+		status = "disabled";
-+	};
-+
- 	serial@12C00000 {
- 		clocks = <&clock 257>, <&clock 128>;
- 		clock-names = "uart", "clk_uart_baud0";
--- 
-1.7.10.4
+I don't understand what does it matter if the bindings are temporary, or
+basic established bindings. In both cases the DT data needs to be
+changed when the CDF is taken into use.
+
+Well, one difference is that the temporary bindings would give us
+working display, but having only basic bindings would not. So I don't
+see any reason to add only the basic bindings. Or how would it work?
+
+ Tomi
+
+
+
+--P6AOCXNVlxgIXSoL3PwQiUHh6Fg1XA0oU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJSIGpIAAoJEPo9qoy8lh716HoP/jOaxTPZzct/XmOpFiHK+Jub
+0Z3c82vlpTB3Cu/wBTGml15Cpry7i0qiU2wnbJMC16Fj4+ft3Ojiu7n8eA/fPuz5
+43T9BqN4oka0+981hbrcSO7vQndgK6tPsfxqZ6cBwWeHNdCvjnJip5EAFtZlwL5Z
++cjJ9C6NXoHRaN+bNiOzN7t9nNmw/oIraKuGZNCH2xdbbO7jgVtCGHmgeJfc7Pbp
+aH109D/98xO3Fs9DVWtVFHQm6dSeCVdxTf63kUyWJuMLhfjuaS5B2CnxbD1ClIcL
+QVMwTJrb9J5mZwfAI4UnrLGZ1Mx81HBImzwErg+wLtLgH/HsnVZmaU5JHc3cTwIL
+vV6dIqPFLAg/Inqy4LZ2vSgcnZijWSLRcuWPMNGIOkvwtgiNiqZYBhWUC0MszwJF
+d5DUexYebq2BjKmUW5TA8wc1CZypaqQK89ml7k8jXfI632dqygzQuqkwXjQ+wMqm
+fkKWUd2rbomLgDA/cow1YOdbZc93mknzajvOHRNZ30r8NiaTt6A6on+wB7Td1vj3
+k3WIWDRW6nPnzOyCQ3NZrttvRCIQmuvgPNI9rvN1u5aWVg5PL3rlpVqolfvbfpyH
+VdnkoLiV0cinQW1ykhbKpKoJaoYvSLebhHR9wxc1jmX7RqY1SSOQGZ5dp9Wx6Vhx
+C7ZIYQGTzqhMMRO12o38
+=V+UN
+-----END PGP SIGNATURE-----
+
+--P6AOCXNVlxgIXSoL3PwQiUHh6Fg1XA0oU--
