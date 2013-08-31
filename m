@@ -1,65 +1,46 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 2/3] ASoC: generic simple sound card DT
-	bindings
-Date: Sat, 31 Aug 2013 17:10:30 +0200
-Message-ID: <52220766.1040504@metafoo.de>
-References: <1377945878-13322-1-git-send-email-mpa@pengutronix.de>
- <1377945878-13322-3-git-send-email-mpa@pengutronix.de>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH v4 01/14] mtd: nand: pxa3xx: Remove unneeded ifdef
+ CONFIG_OF
+Date: Sat, 31 Aug 2013 13:53:01 -0300
+Message-ID: <20130831165300.GB2404@localhost>
+References: <1376327699-7973-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1376327699-7973-2-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1377893182.22372.83.camel@shinybook.infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1377945878-13322-3-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1377893182.22372.83.camel@shinybook.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Artem Bityutskiy <dedekind1@gmail.com>, Daniel Mack <zonque@gmail.com>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, Gregory Clement <gregory.clement@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>, Willy Tarreau <w@1wt.eu>
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2013 12:44 PM, Markus Pargmann wrote:
-> Simple sound card initialized using DT. When used with AC97, ac97-codec
-> is used to automatically discover the used codec.
-> 
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> ---
->  .../bindings/sound/generic,simple-dt-card.txt      |  28 +++
->  sound/soc/generic/Kconfig                          |   1 +
->  sound/soc/generic/simple-card.c                    | 195 +++++++++++++++++++--
->  3 files changed, 206 insertions(+), 18 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/generic,simple-dt-card.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/generic,simple-dt-card.txt b/Documentation/devicetree/bindings/sound/generic,simple-dt-card.txt
-> new file mode 100644
-> index 0000000..6b41dbe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/generic,simple-dt-card.txt
-> @@ -0,0 +1,28 @@
-> +ASoC Simple Sound Card
-> +
-> +A simple generic driver that connects a CPU DAI with a CODEC.
-> +
-> +Required properties:
-> + - compatible: "asoc-simple-card" used for standard ssi, codec
-> +   combinations, or "asoc-simple-ac97-card" to use ac97 to discover the
-> +   codec.
-> + - cpu-dai: CPU DAI connected to the codec.
-> +
-> +Required properties for "asoc-simple-card":
-> + - audio-codec: Codec phandle.
-> + - codec-dai-name: DAI name within the codec.
-
-In my opinion this binding exposes way to much of the ASoC internal data
-structures. E.g. CODECs are referenced by phandle, but the DAI of the CODEC
-is reference by a string. This string is completely ASoC internal. The
-binding also assumes that a CPU controller may have one DAI at most. In my
-opinion this binding ought to use the upcoming of_xlate stuff for ASoC
-components.
-
-- Lars
+T24gRnJpLCBBdWcgMzAsIDIwMTMgYXQgMDk6MDY6MjJQTSArMDEwMCwgRGF2aWQgV29vZGhvdXNl
+IHdyb3RlOgo+IE9uIE1vbiwgMjAxMy0wOC0xMiBhdCAxNDoxNCAtMDMwMCwgRXplcXVpZWwgR2Fy
+Y2lhIHdyb3RlOgo+ID4gVGhlcmUncyBubyBuZWVkIHRvIGVuY2xvc2UgdGhpcyBjb2RlIHdpdGhp
+biBpZGVmIENPTkZJR19PRiwKPiA+IGJlY2F1c2UgdGhlIE9GIGZyYW1ld29yayBwcm92aWRlcyBu
+by1vcCBzdHVicyBpZiBDT05GSUdfT0Y9bi4KPiAKPiBIbSwgd29uJ3QgdGhpcyBlbmQgdXAgd2l0
+aCB0aGUgc2FtZSAncHhhM3h4X25hbmRfZHRfaWRzIGlzIGRlZmluZWQgYnV0Cj4gbm90IHVzZWQn
+IHdhcm5pbmcgdGhhdCBqdXN0IGNhdXNlZCB1cyB0byAqYWRkKiBhbiAjaWZkZWYgQ09ORklHX09G
+IHRvCj4gYXRtZWxfbmFuZD8gCj4gCgpObywgaXQgd29uJ3QuCgpDdXJyZW50bHkgYXRtZWxfbmFu
+ZCB1c2VzIGl0cyBvZl9kZXZpY2VfaWQgZm9yIGp1c3QgdGhlIG9mX21hdGNoX3RhYmxlLAp3aGls
+ZSBweGEzeHgtbmFuZCB1c2VzIHRoZSBweGEzeHhfbmFuZF9kdF9pZHMgZm9yIG1vcmUgdGhhbiBq
+dXN0IHRoYXQsCmFzIGEgcGFyYW1hdGVyIGZvciBvZl9tYXRjaF9kZXZpY2UoKS4KClRoZSBsYXR0
+ZXIgcHJldmVudHMgdGhlIHdhcm5pbmcgYnkgaGF2aW5nIGFuIGFjdHVhbCBkdW1teS1pbmxpbmVk
+CmltcGxlbWVudGF0aW9uIGZvciB0aGUgIU9GIGNhc2UuCgpJJ2xsIGFuc3dlciBhYm91dCB0aGUg
+YXRtZWxfbmFuZCBpbiB0aGUgcmVzcGVjdGl2ZSBwYXRjaC4KLS0gCkV6ZXF1aWVsIEdhcmPDrWEs
+IEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5l
+ZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxp
+bmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LW10ZC8K
