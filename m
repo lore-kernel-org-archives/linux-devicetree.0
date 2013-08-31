@@ -1,34 +1,80 @@
-From: Yijing Wang <wangyijing@huawei.com>
-Subject: [PATCH] irq/of: Fix comment typo for irq_of_parse_and_map
-Date: Sat, 31 Aug 2013 09:44:10 +0800
-Message-ID: <1377913450-30108-1-git-send-email-wangyijing@huawei.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v2 4/7] ARM: dts: imx27 pinctrl
+Date: Sat, 31 Aug 2013 08:29:37 +0200
+Message-ID: <20130831062937.GU20071@s25.your-server.de>
+References: <1376921234-26682-1-git-send-email-mpa@pengutronix.de>
+ <1376921234-26682-5-git-send-email-mpa@pengutronix.de>
+ <20130820071411.GI31036@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yijing Wang <wangyijing@huawei.com>, Hanjun Guo <guohanjun@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130820071411.GI31036@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Fix trivial comment typo for irq_of_parse_and_map().
+Hi Sascha,
 
-Signed-off-by: Yijing Wang <wangyijing@huawei.com>
----
- drivers/of/irq.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+On Tue, Aug 20, 2013 at 09:14:11AM +0200, Sascha Hauer wrote:
+> On Mon, Aug 19, 2013 at 04:07:11PM +0200, Markus Pargmann wrote:
+> > Pinctrl driver node and pin group definitions for other driver nodes.
+> > 
+> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> > ---
+> > +					pinctrl_uart_1: uart-1 {
+> > +						fsl,pins = <
+> > +							MX27_PAD_UART1_TXD__UART1_TXD 0x0
+> > +							MX27_PAD_UART1_RXD__UART1_RXD 0x0
+> > +							MX27_PAD_UART1_CTS__UART1_CTS 0x0
+> > +							MX27_PAD_UART1_RTS__UART1_RTS 0x0
+> > +						>;
+> > +					};
+> 
+> The above either misses a group number or an uart number. We need
+> pinctrl_uart<uartno>_<groupno>
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 1264923..1752988 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -28,7 +28,7 @@
- 
- /**
-  * irq_of_parse_and_map - Parse and map an interrupt into linux virq space
-- * @device: Device node of the device whose interrupt is to be mapped
-+ * @dev: Device node of the device whose interrupt is to be mapped
-  * @index: Index of the interrupt to map
-  *
-  * This function is a wrapper that chains of_irq_map_one() and
+Fixed.
+
+> 
+> Also this doesn't scale very good. For boards without RTS/CTS we would have
+> to add a completely different group. For the FEC I've seen different
+> groups with a dozen pins each which differ in only a single pin.
+> 
+> I therefore suggest (and Shawn acked the general idea already) to
+> do this:
+> 
+> 	pinctrl_uart1_1: uart1-1 {
+> 		fsl,pins = <
+> 			MX27_PAD_UART1_TXD__UART1_TXD 0x0
+> 			MX27_PAD_UART1_RXD__UART1_RXD 0x0
+> 		>;
+> 	};
+> 
+> 	pinctrl_uart1_rtscts_1: uart1-rtscts-1 {
+> 		fsl,pins = <
+> 			MX27_PAD_UART1_CTS__UART1_CTS 0x0
+> 			MX27_PAD_UART1_RTS__UART1_RTS 0x0
+> 		>;
+> 	};
+
+I changed the uart groups accordingly.
+
+Thanks,
+
+Markus
+
 -- 
-1.7.1
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
