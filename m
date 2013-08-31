@@ -1,43 +1,45 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: [PATCH 0/3] ASoC: generic simple sound card DT bindings
-Date: Sat, 31 Aug 2013 12:44:35 +0200
-Message-ID: <1377945878-13322-1-git-send-email-mpa@pengutronix.de>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
+Date: Sat, 31 Aug 2013 12:51:28 +0200
+Message-ID: <20130831125128.0e3a23c7@armhf>
+References: <20130828113521.35c53365@armhf>
+	<521DCD80.9010105@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <521DCD80.9010105@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 28 Aug 2013 12:14:24 +0200
+Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
 
-The patches were already in the fsl-ssi ac97 series. I moved the seperated
-simple sound card DT driver into the existing simple card driver.
+> > +&i2s1 {
+> > +	status =3D "okay";
+> > +	pinctrl-0 =3D <&pmx_audio1_i2s1_spdifo>;
+> > +	pinctrl-names =3D "default";
+> > +}; =20
+>=20
+> Please also add the external clock connected from si5351.
 
-Regards,
+Hi Sebastian and Russell,
 
-Markus
+I tried it on my Cubox (<&si5351 2>), and I have problems with HDMI
+output and some audio streams like webradios with sample rates 32 or
+22.05 kHz.
 
+According to the Dove specification, the audio controller works with
+the samples rates 44.1, 48 and 96 kHz, so, I don't see the usage of the
+external clock, except when using the two audio controllers with
+different sample rates.
 
-Markus Pargmann (3):
-      ASoC: generic: simple card, use private data
-      ASoC: generic simple sound card DT bindings
-      ASoC: fsl: Kconfig, visible config items for simple card
+But, BTW, as the kirkwood-i2 driver is written, this last case does not
+work: for 44.1, 48 and 96 kHz, the external clock is never used and
+there is only one DCO.
 
- .../bindings/sound/generic,simple-dt-card.txt      |  28 +++
- include/sound/simple_card.h                        |   4 -
- sound/soc/fsl/Kconfig                              |  23 ++-
- sound/soc/generic/Kconfig                          |   1 +
- sound/soc/generic/simple-card.c                    | 225 ++++++++++++++++++---
- 5 files changed, 246 insertions(+), 35 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/generic,simple-dt-card.txt
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
