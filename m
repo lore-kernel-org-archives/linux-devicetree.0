@@ -1,81 +1,65 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
-Date: Sat, 31 Aug 2013 13:17:06 +0100
-Message-ID: <20130831121705.GE6617@n2100.arm.linux.org.uk>
-References: <20130828113521.35c53365@armhf> <521DCD80.9010105@gmail.com>
- <20130831125128.0e3a23c7@armhf>
- <20130831112430.GD6617@n2100.arm.linux.org.uk>
- <20130831135519.6ab0e163@armhf>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 2/3] ASoC: generic simple sound card DT
+	bindings
+Date: Sat, 31 Aug 2013 17:10:30 +0200
+Message-ID: <52220766.1040504@metafoo.de>
+References: <1377945878-13322-1-git-send-email-mpa@pengutronix.de>
+ <1377945878-13322-3-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130831135519.6ab0e163@armhf>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Ian Campbell <ian.campbell@citrix.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1377945878-13322-3-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 31, 2013 at 01:55:19PM +0200, Jean-Francois Moine wrote:
-> The last case was "when using the two audio controllers with different
-> sample rates" (I should have added "in the set [44.1, 48, 96 kHz]").
-> Then, with or without the availability of external clocks, both
-> controllers will set the unique DCO to two different rates.
+On 08/31/2013 12:44 PM, Markus Pargmann wrote:
+> Simple sound card initialized using DT. When used with AC97, ac97-codec
+> is used to automatically discover the used codec.
+> 
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> ---
+>  .../bindings/sound/generic,simple-dt-card.txt      |  28 +++
+>  sound/soc/generic/Kconfig                          |   1 +
+>  sound/soc/generic/simple-card.c                    | 195 +++++++++++++++++++--
+>  3 files changed, 206 insertions(+), 18 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/generic,simple-dt-card.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/generic,simple-dt-card.txt b/Documentation/devicetree/bindings/sound/generic,simple-dt-card.txt
+> new file mode 100644
+> index 0000000..6b41dbe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/generic,simple-dt-card.txt
+> @@ -0,0 +1,28 @@
+> +ASoC Simple Sound Card
+> +
+> +A simple generic driver that connects a CPU DAI with a CODEC.
+> +
+> +Required properties:
+> + - compatible: "asoc-simple-card" used for standard ssi, codec
+> +   combinations, or "asoc-simple-ac97-card" to use ac97 to discover the
+> +   codec.
+> + - cpu-dai: CPU DAI connected to the codec.
+> +
+> +Required properties for "asoc-simple-card":
+> + - audio-codec: Codec phandle.
+> + - codec-dai-name: DAI name within the codec.
 
-Ah, yes.  The documentation is rather confusing too.  In one part, it
-does indeed say that there is only one DCO which is shared between the
-two blocks.
+In my opinion this binding exposes way to much of the ASoC internal data
+structures. E.g. CODECs are referenced by phandle, but the DAI of the CODEC
+is reference by a string. This string is completely ASoC internal. The
+binding also assumes that a CPU controller may have one DAI at most. In my
+opinion this binding ought to use the upcoming of_xlate stuff for ASoC
+components.
 
-However, each block has its own DCO register which allows it to be set
-to a different frequency - maybe it accesses the same physical register.
-
-In which case, it probably would be better that we use the external clock
-for everything when it is available - Rabeeh's kernel already does that,
-as does the kernel which I run on my Cubox.  I'll pull that patch over to
-the series for mainline later today:
-
-a402fa7 ASoC: kirkwood: prefer external clock over internal clock
-
-(This is copy'n'pasted with gpm, so is white-space damaged).
-diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
-index 1c8177b..92cd467 100644
---- a/sound/soc/kirkwood/kirkwood-i2s.c
-+++ b/sound/soc/kirkwood/kirkwood-i2s.c
-@@ -222,20 +222,20 @@ static void kirkwood_set_rate(struct snd_soc_dai *dai,
- {
-        uint32_t clks_ctrl;
-
--       if (rate == 44100 || rate == 48000 || rate == 96000) {
--               /* use internal dco for supported rates */
--               dev_dbg(dai->dev, "%s: dco set rate = %lu\n",
--                       __func__, rate);
--               kirkwood_set_dco(priv->io, rate);
--
--               clks_ctrl = KIRKWOOD_MCLK_SOURCE_DCO;
--       } else if (!IS_ERR(priv->extclk)) {
-+       if (!IS_ERR(priv->extclk)) {
-                /* use optional external clk for other rates */
-                dev_dbg(dai->dev, "%s: extclk set rate = %lu -> %lu\n",
-                        __func__, rate, 256 * rate);
-                clk_set_rate(priv->extclk, 256 * rate);
-
-                clks_ctrl = KIRKWOOD_MCLK_SOURCE_EXTCLK;
-+       } else if (rate == 44100 || rate == 48000 || rate == 96000) {
-+               /* use internal dco for supported rates */
-+               dev_dbg(dai->dev, "%s: dco set rate = %lu\n",
-+                       __func__, rate);
-+               kirkwood_set_dco(priv->io, rate);
-+
-+               clks_ctrl = KIRKWOOD_MCLK_SOURCE_DCO;
-        }
-        writel(clks_ctrl, priv->io + KIRKWOOD_CLOCKS_CTRL);
- }
+- Lars
