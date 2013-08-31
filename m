@@ -1,49 +1,93 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V6 2/5] of: move of_parse_phandle()
-Date: Fri, 30 Aug 2013 19:32:09 -0500
-Message-ID: <CAL_JsqL0XO1o25a4kLmDcgiZw4Jp-1kotAw3cDUT0NT-O2tv_A@mail.gmail.com>
-References: <1376515632-12594-1-git-send-email-swarren@wwwdotorg.org>
-	<1376515632-12594-2-git-send-email-swarren@wwwdotorg.org>
-	<CACRpkdYK75uSXLmzkQ9uNQfSBW86bSz3D0nYSr_XSXfixKSDGg@mail.gmail.com>
-	<5220FC13.4070708@wwwdotorg.org>
+From: Joel Fernandes <joelf@ti.com>
+Subject: Re: [PATCH v2] ARM: dts: add AM33XX EDMA support
+Date: Fri, 30 Aug 2013 20:19:39 -0500
+Message-ID: <522144AB.9010802@ti.com>
+References: <1377505784-9820-1-git-send-email-bigeasy@linutronix.de>
+ <521B1380.3030908@baylibre.com>
+Reply-To: joelf@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5220FC13.4070708@wwwdotorg.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <521B1380.3030908@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benoit Cousson <bcousson@baylibre.com>
+Cc: devicetree@vger.kernel.org, tony@atomide.com, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-kernel@vger.kernel.org, santosh.shilimkar@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2013 at 3:09 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 08/28/2013 01:30 PM, Linus Walleij wrote:
->> On Wed, Aug 14, 2013 at 11:27 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>
->>> From: Stephen Warren <swarren@nvidia.com>
->>>
->>> Move of_parse_phandle() after __of_parse_phandle_with_args(), since a
->>> future patch will call __of_parse_phandle_with_args() from
->>> of_parse_phandle(). Moving the function avoids adding a prototype. Doing
->>> the move separately highlights the code changes separately.
->>>
->>> Signed-off-by: Stephen Warren <swarren@nvidia.com>
->>> Acked-by: Mark Rutland <mark.rutland@arm.com>
->>> ---
->>> v5: New patch.
->>
->> Still no feedback from Rob || Grant on this quite important cleanup?
->>
->> I would like to nominate Stephen Warren as co-maintainer of
->> drivers/of/*, he definately knows his way around the code.
->> I'm just worried that he may not accept due to a lot of work in the
->> bindings already.
->
-> I would prefer not to be flooded with any more email. That said,
-> /swapping/ my DT binding reviewer position with a drivers/of reviewer
-> position would reduce the email load.
+Hi Benoit,
 
-I would be happy with your help either way. But don't get your hopes
-up, drivers/of is not much of a relief from the flood of DT bindings.
-:)
+On 08/26/2013 03:36 AM, Benoit Cousson wrote:
+> - minus all the TI emails which are not working anymore :-(
+> 
+> I've just sent my previous email too soon...
+> 
+> Now the patch is different :-) I'll take that one.
 
-Rob
+Unfortunately this patch is still missing from your latest pull request:
+
+Subject "[GIT PULL] ARM: OMAP: Device Tree for 3.12 take #2"
+  git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git
+tags/for_3.12/dts_signed  (commit 4843be165c10f9886c87eeb20acf19a3ddec6653)
+
+Below is a scissor patch that cleanly applies on above branch.
+
+Thanks,
+
+-Joel
+
+--->8----
+From: Matt Porter <mporter@ti.com>
+Subject: [PATCH] ARM: dts: add AM33XX EDMA support
+
+Adds AM33XX EDMA support to the am33xx.dtsi as documented in
+Documentation/devicetree/bindings/dma/ti-edma.txt
+
+v2 changes:
+Drop DT entries that are non-hardware-description Joel Fernandes <joelf@ti.com>
+Discussion in [1].
+
+v3 changes: Changed node name from "edma: edma@" to "edma: dma-controller@"
+by Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+[1] https://patchwork.kernel.org/patch/2226761/
+
+Signed-off-by: Matt Porter <mporter@ti.com>
+Signed-off-by: Joel A Fernandes <joelagnel@ti.com>
+---
+ arch/arm/boot/dts/am33xx.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 5996d63..f5869ed 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -101,6 +101,18 @@
+ 			reg = <0x48200000 0x1000>;
+ 		};
+
++		edma: dma-controller@49000000 {
++			compatible = "ti,edma3";
++			ti,hwmods = "tpcc", "tptc0", "tptc1", "tptc2";
++			reg =	<0x49000000 0x10000>,
++				<0x44e10f90 0x10>;
++			interrupts = <12 13 14>;
++			#dma-cells = <1>;
++			dma-channels = <64>;
++			ti,edma-regions = <4>;
++			ti,edma-slots = <256>;
++		};
++
+ 		gpio0: gpio@44e07000 {
+ 			compatible = "ti,omap4-gpio";
+ 			ti,hwmods = "gpio1";
+-- 
+1.8.1.2
