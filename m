@@ -1,15 +1,15 @@
 From: yuhang wang <wangyuhang2014@gmail.com>
 Subject: Re: [PATCH V2 2/2] spi: dual and quad support(device tree)
-Date: Sun, 1 Sep 2013 16:05:58 +0800
-Message-ID: <CAHSAbzPincMaT0L3jdr-119Ojzw88DVDrizm-ti4zpvZqnd4EQ@mail.gmail.com>
+Date: Sun, 1 Sep 2013 16:14:24 +0800
+Message-ID: <CAHSAbzOm_-mOCjuaz7+ZH+giXJAgw+Tx8iE61RPctaH+9bEh_g@mail.gmail.com>
 References: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
  <1377564603-4030-2-git-send-email-wangyuhang2014@gmail.com>
- <52210E14.8020006@wwwdotorg.org>
+ <1589764.vkg6UQTo21@flatron>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <52210E14.8020006@wwwdotorg.org>
+In-Reply-To: <1589764.vkg6UQTo21@flatron>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
@@ -19,15 +19,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
 Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Gupta,
- Pekon" <pekon@ti.com>, Sourav Poddar <sourav.poddar@ti.com>
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: mark.rutland@arm.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ian.campbell@citrix.com, pawel.moll@arm.com, Stephen Warren <swarren@wwwdotorg.org>, rob.herring@calxeda.com, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Gupta,
+ Pekon" <pekon@ti.com>, galak@codeaurora.org, Sourav Poddar <sourav.poddar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stephen
+Hi, Tomasz
 
-2013/8/31 Stephen Warren <swarren@wwwdotorg.org>:
-> On 08/26/2013 06:50 PM, wangyuhang wrote:
+2013/8/31 Tomasz Figa <tomasz.figa@gmail.com>:
+> Hi,
+>
+> [Ccing DT binding maintainers]
+>
+> On Tuesday 27 of August 2013 08:50:03 wangyuhang wrote:
 >> Add spi-tmax-nbits and spi-rmax-nbits for spi slave node.
 >> Modify the related dt document(spi-bus.txt)
 >>  spi-tmax-nbits:Max number of bits slave will use for MOSI(writting)
@@ -35,63 +39,70 @@ Hi, Stephen
 >> Support for spi-tx/rmax-nbits in SPI framework has been picked[1].
 >> [1]: http://comments.gmane.org/gmane.linux.kernel.spi.devel/14420
 >> Commit Id:f477b7fb13df2b843997559ff34e87d054ba6538
->
->> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
->
+>>
+>> Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
+>> ---
+>>  Documentation/devicetree/bindings/spi/spi-bus.txt |   16
+>> ++++++++++++++++ 1 file changed, 16 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt
+>> b/Documentation/devicetree/bindings/spi/spi-bus.txt index
+>> 296015e..211336c 100644
+>> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+>> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+>> @@ -55,6 +55,22 @@ contain the following properties.
+>>               chip select active high
+>>  - spi-3wire       - (optional) Empty property indicating device
+>> requires 3-wire mode.
 >> +- spi-tmax-nbits  - (optional) Max number of bits slave will use for
 >> +                 MOSI(writting)
 >> +- spi-rmax-nbits  - (optional) Max number of bits slave will use for
 >> +                 MISO(reading)
 >
-> I would suggest the property names
+> May I ask for more human-readable names, please?
 >
-> spi-tx-num-wires, spi-rx-num-wires
+> If we look around, there are already devices using bus-width property, so
+> for consistency we could use tx-bus-width and rx-bus-width here or even a
+> single bus-width property taking two cells, first tx and second rx?
 >
-> or:
->
-> spi-tx-bus-width, spi-rx-bus-width (this option from Tomasz Figa on IRC)
->
-> Those name alone self-document their purpose much more clearly to me.
->
-> I would also change the descriptions a bit, resulting in the following
-> overall:
->
-> ==========
-> - spi-tx-num-wires  - (optional) The number of data wires that
->                       transfer data from the SPI controller to the
->                       SPI device. Defaults to 1 if not present.
-> - spi-rx-num-wires  - (optional) The number of data wires that
->                       transfer data from the SPI device to the
->                       SPI controller. Defaults to 1 if not present.
-> ==========
->
+Yes, you are right. bus_width is really more widely used. So I will correct it.
 
-OK, that seems better.
+> Let's hear others' opinion on this as well.
+>
+> Also the properties should be telling information about hardware, so
+> probably in this case the meaning would be the number of wires that are
+> physically wired on the board.
+>
+>> +
+>
+> One or two sentences about what this dual/quad thing is about would be
+> nice here, e.g.
+>
+>         Some SPI controllers and devices support Dual and/or Quad SPI
+>         mode, which is [...]. It allows [...], etc.
+>
+OK, Thanks.
 
->> +So if for example the slave has 4 wires for writting and 2 wires for reading,
->> +and the spi-tx/rx-nbits property should be set as follows:
+>> +So if for example the slave has 4 wires for writting and 2 wires for
+>> reading, +and the spi-tx/rx-nbits property should be set as follows:
 >> +
 >> +spi-tmax-nbits = <4>;
 >> +spi-rmax-nbits = <2>;
 >> +
->> +Now the value that spi-tmax-nbits and spi-rmax-nbits can receive is only
->> +1(single), 2(dual) and 4(quad). If you don't set spi-tmax-nbits or spi-rmax-nbits,
->> +spi_device mode will be set in single(1 wire) as default. Another point, if
->> +property:spi-3wire is set, spi-t/rmax-nbits is forbidden to set to <2 or 4>,
->> +otherwise, an errro will return.
+>> +Now the value that spi-tmax-nbits and spi-rmax-nbits can receive is
+>> only +1(single), 2(dual) and 4(quad). If you don't set spi-tmax-nbits
+>> or spi-rmax-nbits, +spi_device mode will be set in single(1 wire) as
+>> default. Another point, if +property:spi-3wire is set, spi-t/rmax-nbits
+>> is forbidden to set to <2 or 4>, +otherwise, an errro will return.
 >
-> I think most of that explanation can be removed if you use the text I
-> wrote above.
+> typo: errro
 >
-> I'm not sure you should ban spi-3wire if those properties are specified;
-> can't all those properties be present together, if the num-wires are set
-> to 1? Actually, isn't spi-3write the default; what does that property mean?
-
-Property spi-3write means some controllers only have cs, clk and
-sda(SI/SO shared) 3 wires. So if spi-3wire is set, then dual and quad
-set should be forbidden. I didn't mean that spi-3wire can't be present
-together with spi-tx/rx-num-wires, if set to <1> it's OK. Just can't
-be <2 | 4>(dual and quad).
+> Also an error or "returning an error" is an OS specific term. This
+> statement should rather be something along
+>
+>         Dual/Quad mode is not allowed when 3-wire mode is used.
+>
+Got it, Thanks a lot.
 
 ______________________________________________________
 Linux MTD discussion mailing list
