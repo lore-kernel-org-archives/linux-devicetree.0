@@ -1,75 +1,98 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: [PATCH v3 6/7] ARM: dts: imx27 phycore pinctrl
-Date: Sun,  1 Sep 2013 09:28:07 +0200
-Message-ID: <1378020488-21129-7-git-send-email-mpa@pengutronix.de>
-References: <1378020488-21129-1-git-send-email-mpa@pengutronix.de>
+From: yuhang wang <wangyuhang2014@gmail.com>
+Subject: Re: [PATCH V2 2/2] spi: dual and quad support(device tree)
+Date: Sun, 1 Sep 2013 16:05:58 +0800
+Message-ID: <CAHSAbzPincMaT0L3jdr-119Ojzw88DVDrizm-ti4zpvZqnd4EQ@mail.gmail.com>
+References: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
+ <1377564603-4030-2-git-send-email-wangyuhang2014@gmail.com>
+ <52210E14.8020006@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1378020488-21129-1-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Markus Pargmann <mpa@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <52210E14.8020006@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Gupta,
+ Pekon" <pekon@ti.com>, Sourav Poddar <sourav.poddar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable pinctrl for phycore devices.
+Hi, Stephen
 
-Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
----
- arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts | 2 ++
- arch/arm/boot/dts/imx27-phytec-phycore-som.dts | 6 ++++++
- 2 files changed, 8 insertions(+)
+2013/8/31 Stephen Warren <swarren@wwwdotorg.org>:
+> On 08/26/2013 06:50 PM, wangyuhang wrote:
+>> Add spi-tmax-nbits and spi-rmax-nbits for spi slave node.
+>> Modify the related dt document(spi-bus.txt)
+>>  spi-tmax-nbits:Max number of bits slave will use for MOSI(writting)
+>>  spi-rmax-nbits:Max number of bits slave will use for MISO(reading)
+>> Support for spi-tx/rmax-nbits in SPI framework has been picked[1].
+>> [1]: http://comments.gmane.org/gmane.linux.kernel.spi.devel/14420
+>> Commit Id:f477b7fb13df2b843997559ff34e87d054ba6538
+>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+>
+>> +- spi-tmax-nbits  - (optional) Max number of bits slave will use for
+>> +                 MOSI(writting)
+>> +- spi-rmax-nbits  - (optional) Max number of bits slave will use for
+>> +                 MISO(reading)
+>
+> I would suggest the property names
+>
+> spi-tx-num-wires, spi-rx-num-wires
+>
+> or:
+>
+> spi-tx-bus-width, spi-rx-bus-width (this option from Tomasz Figa on IRC)
+>
+> Those name alone self-document their purpose much more clearly to me.
+>
+> I would also change the descriptions a bit, resulting in the following
+> overall:
+>
+> ==========
+> - spi-tx-num-wires  - (optional) The number of data wires that
+>                       transfer data from the SPI controller to the
+>                       SPI device. Defaults to 1 if not present.
+> - spi-rx-num-wires  - (optional) The number of data wires that
+>                       transfer data from the SPI device to the
+>                       SPI controller. Defaults to 1 if not present.
+> ==========
+>
 
-diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts b/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
-index 0fc6551..9bedd2f 100644
---- a/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
-+++ b/arch/arm/boot/dts/imx27-phytec-phycore-rdk.dts
-@@ -33,6 +33,8 @@
- 
- &uart2 {
- 	fsl,uart-has-rtscts;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2_1 &pinctrl_uart2_rtscts_1>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx27-phytec-phycore-som.dts b/arch/arm/boot/dts/imx27-phytec-phycore-som.dts
-index aa70ad7..23a9c24 100644
---- a/arch/arm/boot/dts/imx27-phytec-phycore-som.dts
-+++ b/arch/arm/boot/dts/imx27-phytec-phycore-som.dts
-@@ -120,11 +120,15 @@
- 
- &fec {
- 	phy-reset-gpios = <&gpio3 30 0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1_1>;
- 	status = "okay";
- };
- 
- &i2c2 {
- 	clock-frequency = <400000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2_1>;
- 	status = "okay";
- 
- 	at24@52 {
-@@ -151,6 +155,8 @@
- };
- 
- &uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1_1 &pinctrl_uart1_rtscts_1>;
- 	status = "okay";
- };
- 
--- 
-1.8.4.rc3
+OK, that seems better.
+
+>> +So if for example the slave has 4 wires for writting and 2 wires for reading,
+>> +and the spi-tx/rx-nbits property should be set as follows:
+>> +
+>> +spi-tmax-nbits = <4>;
+>> +spi-rmax-nbits = <2>;
+>> +
+>> +Now the value that spi-tmax-nbits and spi-rmax-nbits can receive is only
+>> +1(single), 2(dual) and 4(quad). If you don't set spi-tmax-nbits or spi-rmax-nbits,
+>> +spi_device mode will be set in single(1 wire) as default. Another point, if
+>> +property:spi-3wire is set, spi-t/rmax-nbits is forbidden to set to <2 or 4>,
+>> +otherwise, an errro will return.
+>
+> I think most of that explanation can be removed if you use the text I
+> wrote above.
+>
+> I'm not sure you should ban spi-3wire if those properties are specified;
+> can't all those properties be present together, if the num-wires are set
+> to 1? Actually, isn't spi-3write the default; what does that property mean?
+
+Property spi-3write means some controllers only have cs, clk and
+sda(SI/SO shared) 3 wires. So if spi-3wire is set, then dual and quad
+set should be forbidden. I didn't mean that spi-3wire can't be present
+together with spi-tx/rx-num-wires, if set to <1> it's OK. Just can't
+be <2 | 4>(dual and quad).
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
