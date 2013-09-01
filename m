@@ -1,109 +1,60 @@
-From: yuhang wang <wangyuhang2014@gmail.com>
-Subject: Re: [PATCH V2 2/2] spi: dual and quad support(device tree)
-Date: Sun, 1 Sep 2013 16:14:24 +0800
-Message-ID: <CAHSAbzOm_-mOCjuaz7+ZH+giXJAgw+Tx8iE61RPctaH+9bEh_g@mail.gmail.com>
-References: <1377564603-4030-1-git-send-email-wangyuhang2014@gmail.com>
- <1377564603-4030-2-git-send-email-wangyuhang2014@gmail.com>
- <1589764.vkg6UQTo21@flatron>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
+Date: Sun, 01 Sep 2013 11:26:54 +0200
+Message-ID: <140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com>
+References: <20130828113521.35c53365@armhf>
+ <521DCD80.9010105@gmail.com>
+ <20130831125128.0e3a23c7@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1589764.vkg6UQTo21@flatron>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: mark.rutland@arm.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ian.campbell@citrix.com, pawel.moll@arm.com, Stephen Warren <swarren@wwwdotorg.org>, rob.herring@calxeda.com, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Gupta,
- Pekon" <pekon@ti.com>, galak@codeaurora.org, Sourav Poddar <sourav.poddar@ti.com>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130831125128.0e3a23c7@armhf>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Tomasz
+Jean-Francois,
+Sorry for the messy reply, posting from mobile.
 
-2013/8/31 Tomasz Figa <tomasz.figa@gmail.com>:
-> Hi,
->
-> [Ccing DT binding maintainers]
->
-> On Tuesday 27 of August 2013 08:50:03 wangyuhang wrote:
->> Add spi-tmax-nbits and spi-rmax-nbits for spi slave node.
->> Modify the related dt document(spi-bus.txt)
->>  spi-tmax-nbits:Max number of bits slave will use for MOSI(writting)
->>  spi-rmax-nbits:Max number of bits slave will use for MISO(reading)
->> Support for spi-tx/rmax-nbits in SPI framework has been picked[1].
->> [1]: http://comments.gmane.org/gmane.linux.kernel.spi.devel/14420
->> Commit Id:f477b7fb13df2b843997559ff34e87d054ba6538
->>
->> Signed-off-by: wangyuhang <wangyuhang2014@gmail.com>
->> ---
->>  Documentation/devicetree/bindings/spi/spi-bus.txt |   16
->> ++++++++++++++++ 1 file changed, 16 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt
->> b/Documentation/devicetree/bindings/spi/spi-bus.txt index
->> 296015e..211336c 100644
->> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
->> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
->> @@ -55,6 +55,22 @@ contain the following properties.
->>               chip select active high
->>  - spi-3wire       - (optional) Empty property indicating device
->> requires 3-wire mode.
->> +- spi-tmax-nbits  - (optional) Max number of bits slave will use for
->> +                 MOSI(writting)
->> +- spi-rmax-nbits  - (optional) Max number of bits slave will use for
->> +                 MISO(reading)
->
-> May I ask for more human-readable names, please?
->
-> If we look around, there are already devices using bus-width property, so
-> for consistency we could use tx-bus-width and rx-bus-width here or even a
-> single bus-width property taking two cells, first tx and second rx?
->
-Yes, you are right. bus_width is really more widely used. So I will correct it.
+Can you please try <&si5351 1>, iirc audio ist connected to it. I will =
+also=20
+look it up later.
 
-> Let's hear others' opinion on this as well.
->
-> Also the properties should be telling information about hardware, so
-> probably in this case the meaning would be the number of wires that are
-> physically wired on the board.
->
->> +
->
-> One or two sentences about what this dual/quad thing is about would be
-> nice here, e.g.
->
->         Some SPI controllers and devices support Dual and/or Quad SPI
->         mode, which is [...]. It allows [...], etc.
->
-OK, Thanks.
+Sebastian
 
->> +So if for example the slave has 4 wires for writting and 2 wires for
->> reading, +and the spi-tx/rx-nbits property should be set as follows:
->> +
->> +spi-tmax-nbits = <4>;
->> +spi-rmax-nbits = <2>;
->> +
->> +Now the value that spi-tmax-nbits and spi-rmax-nbits can receive is
->> only +1(single), 2(dual) and 4(quad). If you don't set spi-tmax-nbits
->> or spi-rmax-nbits, +spi_device mode will be set in single(1 wire) as
->> default. Another point, if +property:spi-3wire is set, spi-t/rmax-nbits
->> is forbidden to set to <2 or 4>, +otherwise, an errro will return.
->
-> typo: errro
->
-> Also an error or "returning an error" is an OS specific term. This
-> statement should rather be something along
->
->         Dual/Quad mode is not allowed when 3-wire mode is used.
->
-Got it, Thanks a lot.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+On August 31, 2013 12:51:28 PM Jean-Francois Moine <moinejf@free.fr> wr=
+ote:
+> On Wed, 28 Aug 2013 12:14:24 +0200
+> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+>
+> > > +&i2s1 {
+> > > +	status =3D "okay";
+> > > +	pinctrl-0 =3D <&pmx_audio1_i2s1_spdifo>;
+> > > +	pinctrl-names =3D "default";
+> > > +};
+> > Please also add the external clock connected from si5351.
+>
+> Hi Sebastian and Russell,
+>
+> I tried it on my Cubox (<&si5351 2>), and I have problems with HDMI
+> output and some audio streams like webradios with sample rates 32 or
+> 22.05 kHz.
+>
+> According to the Dove specification, the audio controller works with
+> the samples rates 44.1, 48 and 96 kHz, so, I don't see the usage of t=
+he
+> external clock, except when using the two audio controllers with
+> different sample rates.
+>
+> But, BTW, as the kirkwood-i2 driver is written, this last case does n=
+ot
+> work: for 44.1, 48 and 96 kHz, the external clock is never used and
+> there is only one DCO.
+>
+> --
+> Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+> Jef		|		http://moinejf.free.fr/
