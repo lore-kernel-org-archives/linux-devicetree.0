@@ -1,185 +1,39 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from perceval.ideasonboard.com ([95.142.166.194]:43861 "EHLO
-	perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751466Ab3HHKni (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 8 Aug 2013 06:43:38 -0400
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] pwm: renesas-tpu: Add DT support
-Date: Thu, 08 Aug 2013 12:44:42 +0200
-Message-ID: <1943187.cb9fxEDeXJ@avalon>
-In-Reply-To: <1374791261-9850-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1374791261-9850-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Received: from mail-bk0-f43.google.com ([209.85.214.43]:44157 "EHLO
+	mail-bk0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754146Ab3IABBD (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 31 Aug 2013 21:01:03 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Date: Sun, 1 Sep 2013 09:01:00 +0800
+Message-ID: <CAPgLHd90UyPGVLUdMV2domFKKDG5inKsXKxcOpvCDbVt-A_t-w@mail.gmail.com>
+Subject: [PATCH -next] spi/qspi: fix missing unlock on error in ti_qspi_start_transfer_one()
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+To: broonie@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Thierry,
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-I'd like to get this patch in v3.12, could you please take it in your tree ?
+Add the missing unlock before return from function ti_qspi_start_transfer_one()
+in the error handling case.
 
-On Friday 26 July 2013 00:27:41 Laurent Pinchart wrote:
-> Specify DT bindings for the TPU PWM controller and add OF support to the
-> driver.
-> 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->  .../devicetree/bindings/pwm/renesas,tpu-pwm.txt    | 28 +++++++++++++++
->  drivers/pwm/pwm-renesas-tpu.c                      | 41 +++++++++++++++----
->  2 files changed, 62 insertions(+), 7 deletions(-)
->  create mode 100644
-> Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-> 
-> This patch depends on the "[PATCH v2 0/4] Add PWM polarity flag macro for
-> DT" series that is scheduled for merge in the PWM tree, and should thus go
-> in via the same tree.
-> 
-> The code has been tested on an Armadillo800EVA with additional platform
-> patches that I'm going to submit next.
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-> b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt new file mode
-> 100644
-> index 0000000..b067e84
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
-> @@ -0,0 +1,28 @@
-> +* Renesas R-Car Timer Pulse Unit PWM Controller
-> +
-> +Required Properties:
-> +
-> +  - compatible: should be one of the following.
-> +    - "renesas,tpu-r8a73a4": for R8A77A4 (R-Mobile APE6) compatible PWM
-> controller. +    - "renesas,tpu-r8a7740": for R8A7740 (R-Mobile A1)
-> compatible PWM controller. +    - "renesas,tpu-r8a7790": for R8A7790 (R-Car
-> H2) compatible PWM controller. +    - "renesas,tpu-sh7372": for SH7372
-> (SH-Mobile AP4) compatible PWM controller. +    - "renesas,tpu": for
-> generic R-Car TPU PWM controller.
-> +
-> +  - reg: Base address and length of each memory resource used by the PWM
-> +    controller hardware module.
-> +
-> +  - #pwm-cells: should be 3. See pwm.txt in this directory for a
-> description of +    the cells format. The only third cell flag supported by
-> this binding is +    PWM_POLARITY_INVERTED.
-> +
-> +Please refer to pwm.txt in this directory for details of the common PWM
-> bindings +used by client devices.
-> +
-> +Example: R8A7740 (R-Car A1) TPU controller node
-> +
-> +	tpu: pwm@e6600000 {
-> +		compatible = "renesas,tpu-r8a7740", "renesas,tpu";
-> +		reg = <0xe6600000 0x100>;
-> +		#pwm-cells = <3>;
-> +	};
-> diff --git a/drivers/pwm/pwm-renesas-tpu.c b/drivers/pwm/pwm-renesas-tpu.c
-> index 2600892..3eeffff 100644
-> --- a/drivers/pwm/pwm-renesas-tpu.c
-> +++ b/drivers/pwm/pwm-renesas-tpu.c
-> @@ -20,6 +20,7 @@
->  #include <linux/ioport.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of.h>
->  #include <linux/platform_data/pwm-renesas-tpu.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
-> @@ -86,7 +87,7 @@ struct tpu_pwm_device {
-> 
->  struct tpu_device {
->  	struct platform_device *pdev;
-> -	struct tpu_pwm_platform_data *pdata;
-> +	enum pwm_polarity polarities[TPU_CHANNEL_MAX];
->  	struct pwm_chip chip;
->  	spinlock_t lock;
-> 
-> @@ -228,8 +229,7 @@ static int tpu_pwm_request(struct pwm_chip *chip, struct
-> pwm_device *_pwm)
-> 
->  	pwm->tpu = tpu;
->  	pwm->channel = _pwm->hwpwm;
-> -	pwm->polarity = tpu->pdata ? tpu->pdata->channels[pwm->channel].polarity
-> -		      : PWM_POLARITY_NORMAL;
-> +	pwm->polarity = tpu->polarities[pwm->channel];
->  	pwm->prescaler = 0;
->  	pwm->period = 0;
->  	pwm->duty = 0;
-> @@ -388,6 +388,16 @@ static const struct pwm_ops tpu_pwm_ops = {
->   * Probe and remove
->   */
-> 
-> +static void tpu_parse_pdata(struct tpu_device *tpu)
-> +{
-> +	struct tpu_pwm_platform_data *pdata = tpu->pdev->dev.platform_data;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(tpu->polarities); ++i)
-> +		tpu->polarities[i] = pdata ? pdata->channels[i].polarity
-> +				   : PWM_POLARITY_NORMAL;
-> +}
-> +
->  static int tpu_probe(struct platform_device *pdev)
->  {
->  	struct tpu_device *tpu;
-> @@ -400,7 +410,11 @@ static int tpu_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  	}
-> 
-> -	tpu->pdata = pdev->dev.platform_data;
-> +	spin_lock_init(&tpu->lock);
-> +	tpu->pdev = pdev;
-> +
-> +	/* Initialize device configuration from platform data. */
-> +	tpu_parse_pdata(tpu);
-> 
->  	/* Map memory, get clock and pin control. */
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> @@ -422,11 +436,10 @@ static int tpu_probe(struct platform_device *pdev)
->  	/* Initialize and register the device. */
->  	platform_set_drvdata(pdev, tpu);
-> 
-> -	spin_lock_init(&tpu->lock);
-> -	tpu->pdev = pdev;
-> -
->  	tpu->chip.dev = &pdev->dev;
->  	tpu->chip.ops = &tpu_pwm_ops;
-> +	tpu->chip.of_xlate = of_pwm_xlate_with_flags;
-> +	tpu->chip.of_pwm_n_cells = 3;
->  	tpu->chip.base = -1;
->  	tpu->chip.npwm = TPU_CHANNEL_MAX;
-> 
-> @@ -457,12 +470,26 @@ static int tpu_remove(struct platform_device *pdev)
->  	return 0;
->  }
-> 
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id tpu_of_table[] = {
-> +	{ .compatible = "renesas,tpu-r8a73a4", },
-> +	{ .compatible = "renesas,tpu-r8a7740", },
-> +	{ .compatible = "renesas,tpu-r8a7790", },
-> +	{ .compatible = "renesas,tpu-sh7372", },
-> +	{ .compatible = "renesas,tpu", },
-> +	{ },
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, tpu_of_table);
-> +#endif
-> +
->  static struct platform_driver tpu_driver = {
->  	.probe		= tpu_probe,
->  	.remove		= tpu_remove,
->  	.driver		= {
->  		.name	= "renesas-tpu-pwm",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(tpu_of_table),
->  	}
->  };
--- 
-Regards,
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/spi/spi-ti-qspi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Laurent Pinchart
+diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
+index 136d71e..e12d962 100644
+--- a/drivers/spi/spi-ti-qspi.c
++++ b/drivers/spi/spi-ti-qspi.c
+@@ -376,6 +376,7 @@ static int ti_qspi_start_transfer_one(struct spi_master *master,
+ 		ret = qspi_transfer_msg(qspi, t);
+ 		if (ret) {
+ 			dev_dbg(qspi->dev, "transfer message failed\n");
++			mutex_unlock(&qspi->list_lock);
+ 			return -EINVAL;
+ 		}
+ 
 
