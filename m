@@ -1,236 +1,115 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [RFC PATCH 02/14] drivers: thermal: introduce device tree parser
-Date: Mon, 2 Sep 2013 12:28:34 -0400
-Message-ID: <5224BCB2.9090305@ti.com>
-References: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com> <1377299755-5134-3-git-send-email-eduardo.valentin@ti.com> <20130827102205.GC19893@e106331-lin.cambridge.arm.com> <521CAD48.2030306@ti.com> <20130827162309.GR19893@e106331-lin.cambridge.arm.com> <521CED34.2090008@ti.com> <521FD70F.7080104@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v7] s5k5baf: add camera sensor driver
+Date: Mon, 2 Sep 2013 17:55:43 +0100
+Message-ID: <20130902165543.GC18206@e106331-lin.cambridge.arm.com>
+References: <1377096091-7284-1-git-send-email-a.hajda@samsung.com>
+ <20130827091448.GA19893@e106331-lin.cambridge.arm.com>
+ <5224BB26.9090902@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="KRWvKoulJrSb08iFN5SRUQsiVhVPM4oON"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <521FD70F.7080104@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "wni@nvidia.com" <wni@nvidia.com>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5224BB26.9090902@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
---KRWvKoulJrSb08iFN5SRUQsiVhVPM4oON
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 02, 2013 at 05:21:58PM +0100, Sylwester Nawrocki wrote:
+> Hi Mark,
 
-On 29-08-2013 19:19, Eduardo Valentin wrote:
-> Mark, Pawel and Stephen,
->=20
->=20
-> On 27-08-2013 14:17, Eduardo Valentin wrote:
->> On 27-08-2013 12:23, Mark Rutland wrote:
->>> On Tue, Aug 27, 2013 at 02:44:40PM +0100, Eduardo Valentin wrote:
->>>> Hello Mark,
->=20
-> <cut>
->=20
-> I believe now we need to align on thermal bindings, before I propose
-> next version of this series. So, following the discussions on this
-> thread, I believe a typical CPU thermal zone would look like the follow=
-ing:
-> + #include <dt-bindings/thermal/thermal.h>
-> +
-> + cpu_thermal: cpu_thermal {
-> +         passive-delay =3D <250>; /* milliseconds */
-> +         polling-delay =3D <1000>; /* milliseconds */
-> +                 /*
-> +                  * sensor       ID
-> +                  */
-> +         sensors =3D <&bandgap0     0>;
-> +                         /*
-> +                          * cooling
-> +                          * device       Usage   Trip            lower=
+Hi Sylwester,
 
-> bound             upper bound
-> +                          */
-> +         cooling-devices =3D <&cpu0        100     &cpu-alert
-> THERMAL_NO_LIMITS        THERMAL_NO_LIMITS>;
-> +         trips {
-> +                 cpu-alert: cpu-alert {
-> +                         temperature =3D <100000>; /* milliCelsius */
-> +                         hysteresis =3D <2000>; /* milliCelsius */
-> +                         type =3D <THERMAL_TRIP_PASSIVE>;
-> +                 };
-> +                 cpu-crit: cpu-crit {
-> +                         temperature =3D <125000>; /* milliCelsius */
-> +                         hysteresis =3D <2000>; /* milliCelsius */
-> +                         type =3D <THERMAL_TRIP_CRITICAL>;
-> +                 };
-> +         };
-> + };
->=20
-> *Note: THERMAL_NO_LIMIT means, it will be using the cooling device
-> minimum and maximum limits.
->=20
-> Couple of comments.
-> 1. I am keeping the pooling intervals. A possible alternative way to
-> describe that would be specifying the maximum dT/dt. Essentially becaus=
-e
-> I am still convinced that this is part of hw specs.
->=20
-> 2. The above follows your suggestion to use consumer pointing to
-> producers. Although, I still need to figure out how this could be
-> implemented for Linux. But I think that is another story, at least for
-> now. We need to first align on the DT binding itself.
->=20
-> 3. The link from cooling device specification to trip points, from my
-> perspective, should be enough, and thus we shall not need the thermal
-> cells and size for trip points, as you proposed. Let me know what you t=
-hink.
->=20
-> Below is another example, on a more complex scenario, board specific
-> case (hypothetical, just for exemplification):
->=20
-> + #include <dt-bindings/thermal/thermal.h>
-> +
-> + board_thermal: board_thermal {
-> +         passive-delay =3D <1000>; /* milliseconds */
-> +         polling-delay =3D <2500>; /* milliseconds */
-> +                 /*
-> +                  * sensor       ID
-> +                  */
-> +         sensors =3D <&adc-dummy     0>,
-> +		    <&adc-dummy     1>,
-> +		    <&adc-dymmy     2>;
-> +                         /*
-> +                          * cooling
-> +                          * device       Usage   Trip		lower	upper
-> +                          */
-> +         cooling-devices =3D <&cpu0       75     &cpu-trip	0      2>,
-> +			    <&gpu0       40     &gpu-trip	0      2>;
-> +			    <&lcd0       25     &lcd-trip	5      10>;
-> +         trips {
-> +                 cpu-trip: cpu-trip {
-> +                         temperature =3D <60000>; /* milliCelsius */
-> +                         hysteresis =3D <2000>; /* milliCelsius */
-> +                         type =3D <THERMAL_TRIP_PASSIVE>;
-> +                 };
-> +                 gpu-trip: gpu-trip {
-> +                         temperature =3D <55000>; /* milliCelsius */
-> +                         hysteresis =3D <2000>; /* milliCelsius */
-> +                         type =3D <THERMAL_TRIP_PASSIVE>;
-> +                 }
-> +                 lcd-trip: lcp-trip {
-> +                         temperature =3D <53000>; /* milliCelsius */
-> +                         hysteresis =3D <2000>; /* milliCelsius */
-> +                         type =3D <THERMAL_TRIP_PASSIVE>;
-> +                 };
-> +                 crit-trip: crit-trip {
-> +                         temperature =3D <68000>; /* milliCelsius */
-> +                         hysteresis =3D <2000>; /* milliCelsius */
-> +                         type =3D <THERMAL_TRIP_CRITICAL>;
-> +                 };
-> +         };
-> + };
->=20
-> Now writing the above example, one might want to have a way to say the
-> sensor correlation equation.
->=20
-> Another example:
-> + #include <dt-bindings/thermal/thermal.h>
-> +
-> + dsp_thermal: dsp_thermal {
-> +         passive-delay =3D <250>; /* milliseconds */
-> +         polling-delay =3D <1000>; /* milliseconds */
-> +                 /*
-> +                  * sensor       ID
-> +                  */
-> +         sensors =3D <&bandgap0     1>;
-> +                         /*
-> +                          * cooling
-> +                          * device       Usage   Trip            lower=
+> 
+> On 08/27/2013 11:14 AM, Mark Rutland wrote:
+> >> +endpoint node
+> >> +-------------
+> >> +
+> >> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
+> >> +  video-interfaces.txt. This property can be only used to specify number
+> >> +  of data lanes, i.e. the array's content is unused, only its length is
+> >> +  meaningful. When this property is not specified default value of 1 lane
+> >> +  will be used.
+> > 
+> > Apologies for having not replied to the last posting, but having looked
+> > at the documentation I was provided last time [1], I don't think the
+> > values in the data-lanes property should be described as unused. That
+> > may be the way the Linux driver functions at present, but it's not how
+> > the generic video-interfaces binding documentation describes the
+> > property.
+> > 
+> > If the CSI transmitter hardware doesn't support logical remapping of
+> > lanes, then the only valid values for data-lanes would be a contiguous
+> > list of lane IDs starting at 1, ending at 4 at most. Valid values for
+> > the property would be one of:
+> > 
+> > data-lanes = <1>;
+> > data-lanes = <1>, <2>;
+> > data-lanes = <1>, <2>, <3>;
+> > data-lanes = <1>, <2>, <3>, <4>;
+> > 
+> > We can mention the fact the hardware doesn't support remapping of lanes,
+> > and therefore the list must start with lane 1 and end with (at most)
+> > lane 4. That way a dts will match the generic binding and actually
+> > describe the hardware, and it's possible for Linux (or any other OS) to
+> > factor out the parsing of data-lanes later as desired.
+> > 
+> > I don't think we should offer freedom to encode garbage in the dt when
+> > we can just as easily encourage more standard use of bindings that will
+> > make our lives easier in the long-term.
+> 
+> I entirely agree, that's a very accurate analysis.
+> 
+> Presumably the data-lanes property's descriptions could be improved so
+> it is said explicitly that array elements 0...N - 1, where N = 4, 
+> correspond to logical data lanes 1...N.
 
-> bound             upper bound
-> +                          */
-> +         cooling-devices =3D <&dsp0        100     &dsp-alert
-> THERMAL_NO_LIMIT        THERMAL_NO_LIMIT>;
-> +         trips {
-> +                 dsp-alert: dsp-alert {
-> +                         temperature =3D <100000>; /* milliCelsius */
-> +                         hysteresis =3D <2000>; /* milliCelsius */
-> +                         type =3D <THERMAL_TRIP_PASSIVE>;
-> +                 };
-> +                 dsp-crit: cdsp-crit {
-> +                         temperature =3D <125000>; /* milliCelsius */
-> +                         hysteresis =3D <2000>; /* milliCelsius */
-> +                         type =3D <THERMAL_TRIP_CRITICAL>;
-> +                 };
-> +         };
-> + };
-> +
-> + gpu_thermal: gpu_thermal {
-> +         passive-delay =3D <500>; /* milliseconds */
-> +         polling-delay =3D <1000>; /* milliseconds */
-> +                 /*
-> +                  * sensor       ID
-> +                  */
-> +         sensors =3D <&bandgap0     2>;
-> +                         /*
-> +                          * cooling
-> +                          * device       Usage   Trip            lower=
+That makes sense to me.
 
-> bound             upper bound
-> +                          */
-> +         cooling-devices =3D <&gpu0        100     &gpu-alert
-> THERMAL_NO_LIMIT        THERMAL_NO_LIMIT>;
-> +         trips {
-> +                 gpu-alert: gpu-alert {
-> +                         temperature =3D <100000>; /* milliCelsius */
-> +                         hysteresis =3D <2000>; /* milliCelsius */
-> +                         type =3D <THERMAL_TRIP_PASSIVE>;
-> +                 };
-> +                 gpu-crit: gpu-crit {
-> +                         temperature =3D <125000>; /* milliCelsius */
-> +                         hysteresis =3D <2000>; /* milliCelsius */
-> +                         type =3D <THERMAL_TRIP_CRITICAL>;
-> +                 };
-> +         };
-> + };
->=20
->=20
-> Wei, I think the above would cover for the IPs with multiple internal
-> sensors cases you were looking for, right?
->=20
-> Durga, please also check if I am missing something to cover for your
-> plans to, in case you will be using DT to describe your HW.
->=20
-> Anyways, Mark and Pawel, let me know if I missed something from our
-> discussion. I believe the above bindings would look more like regular
-> standard DT bindings. And also they should be now slim enough, without
-> Linux implementation details and also without policies.
+> 
+> Then considering the values in the data-lanes property, I didn't make
+> the description terribly specific about the fact that pool of indexes
+> 0...4 is used for the clock lane and 4 data lanes. The values could well
+> be H/W specific, but it seems more sensible to enforce common range.
+> It may not match exactly with documentation of various hardware. E.g.
+> OMAP, see page 1661, register CSI2_COMPLEXIO_CFG [1], uses indexes 
+> 1..5 to indicate position of a data lane and 0 is used to mark a lane 
+> as unused.
 
-Any objections on the above binding proposal?
+Ah, I see. I guess this boils down to what the "physical indexes"
+referred to by the video-interfaces binding actually are. If an
+interface may only ever have 5 lanes, then using a logical index sounds
+fine. But if we ever have the case where a CSI transmitter has more than
+5 lanes (so it could communicate with multiple receviers), then the
+value has to become hardware-specific. At that point, we'd possibly need
+to define remapping of the clocks too. I'm not that familiar with CSI so
+I'm not sure if such a device is possible.
 
->=20
->>
->>
->=20
->=20
+> 
+> I think we should have similarly defined value 0 to indicate an unused 
+> lane. None of drivers in mainline uses this line remapping feature, so 
+> changing meaning of the array values wouldn't presumably have any bad 
+> side effects. I'm not sure if it's OK to make a change like this now. 
+> IIUC the MIPI CSI-2 standard requires consecutive data lane indexes, 
+> so valid set of data lanes could be only: <1>, <1, 2>, <1, 2, 3>, 
+> <1, 2, 3, 4>. So there seems to be no issue for MIPI CSI-2. But for 
+> future protocols the current convention might not have been flexible 
+> enough.
 
+Given that the video-interfaces binding refers to the clock being on
+lane 0, I'm not sure it makes sense to reserve this as an unused id --
+we'd be saying the lane is the clock to say it's unused, but maybe that
+doesn't matter.
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
+Thanks,
+Mark.
 
-Eduardo Valentin
-
-
---KRWvKoulJrSb08iFN5SRUQsiVhVPM4oON
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlIkvLgACgkQCXcVR3XQvP2K2wEA74jalbsT1C8NPiyRQLZxxAby
-H5DyhozwZCrWqsQQ9h4BAOu2/Opag6a7Try10r1ILmiyzsnpp6WrQi/ZQmDaihby
-=Ou0V
------END PGP SIGNATURE-----
-
---KRWvKoulJrSb08iFN5SRUQsiVhVPM4oON--
+> 
+> > [1] http://www.mipi.org/specifications/camera-interface#CSI2
+> 
+> [2] http://www.ti.com/general/docs/lit/getliterature.tsp?literatureNumber=swpu231ao&fileType=pdf
+ 
+> --
+> Regards,
+> Sylwester
+> 
