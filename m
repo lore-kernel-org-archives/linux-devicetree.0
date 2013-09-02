@@ -1,72 +1,72 @@
-From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] ARM: add basic Trusted Foundations support
-Date: Mon, 2 Sep 2013 16:28:36 +0900
-Message-ID: <CAAVeFuJ=z-29gp9=caQaxRGCiOQSnPLfafia3eCgWAUuny3GBg@mail.gmail.com>
-References: <1377770268-14014-1-git-send-email-acourbot@nvidia.com>
- <1377770268-14014-2-git-send-email-acourbot@nvidia.com> <2081838.eZHRxlDf7s@flatron>
+From: Lu Jingchang-B35083 <B35083@freescale.com>
+Subject: RE: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
+Date: Mon, 2 Sep 2013 07:32:53 +0000
+Message-ID: <B56CDBE15CE27145A4B77D2D24263E8520F101@039-SN1MPN1-004.039d.mgd.msft.net>
+References: <1376633274-17850-1-git-send-email-b35083@freescale.com>
+ <20130828081742.GC11414@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
+ <20130902045050.GE7376@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520D0D4@039-SN1MPN1-004.039d.mgd.msft.net>
+ <20130902063721.GK7376@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2081838.eZHRxlDf7s@flatron>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130902063721.GK7376@intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz!
-
-On Fri, Aug 30, 2013 at 5:20 PM, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> +Required properties:
->> +- compatible : "tl,trusted-foundations"
->> +- version-major : major version number of Trusted Foundations firmware
->> +- version-minor: minor version number of Trusted Foundations firmware
->
-> Hmm, maybe you could simply define a single version property that could
-> have multiple cells? Like:
->
->         firmware {
->                 compatible = "tl,trusted-foundations";
->                 version = <2 8>;
->         };
-
-I'm fine this way too, but do we have other bindings that use the same
-scheme? What is the general convention for version number bindings?
-
->> +       This option allows the kernel to invoke the secure monitor
-> whenever
->> +       required on devices using Trusted Foundations.
->> +
->> +       Devices using Trusted Foundations should pass a device tree
->> containing +    a node compatible with "tl,trusted-foundations" to
->> signal the presence +   of the secure monitor.
->
-> What about pointing to the documentation file instead?
-
-Yes, that would make more sense.
-
->> +void of_register_trusted_foundations(void)
->> +{
->> +     struct device_node *node;
->> +
->> +     node = of_find_compatible_node(NULL, NULL, "tl,trusted-
-> foundations");
->
-> nit:
->         if (!node)
->                 return;
-
-Fixed, thanks.
-
->> +static inline void register_trusted_foundations(
->> +                                struct
-> trusted_foundations_platform_data *pd)
->> +{
->> +     pr_crit("No support for Trusted Foundations, stopping...\n");
->> +     BUG();
->
-> Hmm, why not simply panic()?
-
-Fixed that too.
-
-Thanks for the review!
-Alex.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWaW5vZCBLb3VsIFttYWlsdG86
+dmlub2Qua291bEBpbnRlbC5jb21dDQo+IFNlbnQ6IE1vbmRheSwgU2VwdGVtYmVyIDAyLCAyMDEz
+IDI6MzcgUE0NCj4gVG86IEx1IEppbmdjaGFuZy1CMzUwODMNCj4gQ2M6IHNoYXduLmd1b0BsaW5h
+cm8ub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIIHY0IDMvM10gZG1hOiBBZGQgRnJlZXNjYWxlIGVETUEgZW5naW5lIGRy
+aXZlciBzdXBwb3J0DQo+IA0KPiBPbiBNb24sIFNlcCAwMiwgMjAxMyBhdCAwNzoxMDo1M0FNICsw
+MDAwLCBMdSBKaW5nY2hhbmctQjM1MDgzIHdyb3RlOg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj4gPiA+IEZyb206IFZpbm9kIEtvdWwgW21haWx0bzp2aW5vZC5rb3VsQGludGVs
+LmNvbV0NCj4gPiA+IFNlbnQ6IE1vbmRheSwgU2VwdGVtYmVyIDAyLCAyMDEzIDEyOjUxIFBNDQo+
+ID4gPiBUbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPiA+ID4gQ2M6IHNoYXduLmd1b0BsaW5hcm8u
+b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+ID4gPiBrZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMy8zXSBkbWE6IEFkZCBGcmVlc2NhbGUgZURNQSBlbmdp
+bmUgZHJpdmVyDQo+IHN1cHBvcnQNCj4gPiA+DQo+ID4gPiBPbiBUaHUsIEF1ZyAyOSwgMjAxMyBh
+dCAwMzozMjowNEFNICswMDAwLCBMdSBKaW5nY2hhbmctQjM1MDgzIHdyb3RlOg0KPiA+ID4NCj4g
+PiA+IFBsZWFzZSB1c2UgYSByaWdodCBNVUEgYW5kIHdyYXAgeW91ciBsaW5lcyBhdCA4MGNoYXJz
+Li4uDQo+IA0KPiA+ID4gPiBbTHUgSmluZ2NoYW5nXQ0KPiA+ID4gTm8gbmVlZCB0byBwdXQgeW91
+ciBuYW1lIDopDQo+ID4gW0x1IEppbmdjaGFuZy1iMzUwODNdDQo+ID4gQWhhLCB0aGUgTWljcm9z
+b2Z0IE91dGxvb2sgYWRkcyB0aGlzIGF1dG9tYXRpY2FsbHkgd2l0aCBkZWZhdWx0IG9wdGlvbi4N
+Cj4gWW91IGNhbiBjaGFuZ2UgdGhhdCEhDQpUaGFua3MuDQo+ID4gPg0KPiA+ID4gPiA+ID4gK3N0
+YXRpYyBib29sIGZzbF9lZG1hX2ZpbHRlcl9mbihzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4sIHZvaWQN
+Cj4gPiA+ICpmbl9wYXJhbSkNCj4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gPiArCXN0cnVjdCBm
+c2xfZWRtYV9maWx0ZXJfcGFyYW0gKmZwYXJhbSA9IGZuX3BhcmFtOw0KPiA+ID4gPiA+ID4gKwlz
+dHJ1Y3QgZnNsX2VkbWFfY2hhbiAqZnNsX2NoYW4gPSB0b19mc2xfZWRtYV9jaGFuKGNoYW4pOw0K
+PiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKwlpZiAoZnNsX2NoYW4tPmVkbWFtdXgtPm11eF9p
+ZCAhPSBmcGFyYW0tPm11eF9pZCkNCj4gPiA+ID4gPiA+ICsJCXJldHVybiBmYWxzZTsNCj4gPiA+
+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJZnNsX2NoYW4tPnNsb3RfaWQgPSBmcGFyYW0tPnNsb3Rf
+aWQ7DQo+ID4gPiA+ID4gPiArCWNoYW4tPnByaXZhdGUgPSBmbl9wYXJhbTsNCj4gPiA+ID4gPiB3
+aHkgZG8geW91IG5lZWQgdG8gdXNlIGNoYW4tPnByaXZhdGU/DQo+ID4gPiA+IFtMdSBKaW5nY2hh
+bmddDQo+ID4gPiA+IFRoZSBwcml2YXRlIHVzZWQgaGVyZSBpcyB0byBzdG9yZSB0aGUgc2xvdF9p
+ZCBpbmZvcm1hdGlvbiwgd2hpY2gNCj4gbXVzdA0KPiA+ID4gYmUgdXNlZA0KPiA+ID4gPiBieSB0
+aGUgRE1BTVVYIGluIGFsbG9jX2NoYW5fcmVzb3VyY2VzIGZ1bmN0aW9uLiBUaGFua3MuDQo+ID4g
+PiBXaHkgZG9udCB5b3UgcGFzcyB0aGlzIGluIHN0cnVjdCBkbWFfc2xhdmVfY29uZmlnIG1lbWVi
+ZXIgc2xhdmVfaWQNCj4gZm9yDQo+ID4gPiB0aGlzLg0KPiA+IFtMdSBKaW5nY2hhbmctYjM1MDgz
+XQ0KPiA+IEkgd2lsbCBkcm9wIHRoaXMgcHJpdmF0ZSBhbmQgc2V0dXAgdGhlIHNsYXZlX2lkIGRp
+cmVjdGx5IGluIHRoZSBmaWx0ZXINCj4gZnVuY3Rpb24uDQo+IHdoeSBpbiBmaWx0ZXI/IGJlZm9y
+ZSBjYWxsaW5nIHByZXBhcmUgZnVuY3Rpb24geW91IGNhbiBzZXQgdGhlIHNsYXZlDQo+IGNvbmZp
+Zw0KSG93IGFib3V0IGNoYW5nZSB0aGUgZmlsdGVyX2ZuIHRvIGZvbGxvdzoNCnN0YXRpYyBib29s
+IGZzbF9lZG1hX2ZpbHRlcl9mbihzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4sIHZvaWQgKmZuX3BhcmFt
+KQ0Kew0KICAgICAgICBzdHJ1Y3QgZnNsX2VkbWFfZmlsdGVyX3BhcmFtICpmcGFyYW0gPSBmbl9w
+YXJhbTsNCiAgICAgICAgc3RydWN0IGZzbF9lZG1hX2NoYW4gKmZzbF9jaGFuID0gdG9fZnNsX2Vk
+bWFfY2hhbihjaGFuKTsNCiAgICAgICAgdW5zaWduZWQgY2hhciB2YWw7DQoNCiAgICAgICAgaWYg
+KGZzbF9jaGFuLT5lZG1hbXV4LT5tdXhfaWQgIT0gZnBhcmFtLT5tdXhfaWQpDQogICAgICAgICAg
+ICAgICAgcmV0dXJuIGZhbHNlOw0KDQogICAgICAgIHZhbCA9IEVETUFNVVhfQ0hDRkdfRU5CTCB8
+IEVETUFNVVhfQ0hDRkdfU09VUkNFKGZwYXJhbS0+c2xvdF9pZCk7DQogICAgICAgIGZzbF9lZG1h
+bXV4X2NvbmZpZ19jaGFuKGZzbF9jaGFuLCB2YWwpOw0KICAgICAgICByZXR1cm4gdHJ1ZTsNCn0N
+CkluIGZhY3QgdGhlIHNsb3RfaWQgaXNuJ3QgbmVlZCBlbHNld2hlcmUsIGFuZCBpZiB0aGUgZmls
+dGVyIHJldHVybiB0cnVlLCANClRoaXMgY2hhbm5lbCBzaG91bGQgYmUgdG8gdGhpcyByZXF1ZXN0
+LiBTbyBubyBuZWVkIHRvIHNhdmUgdGhlIHNsYXZlIGlkLCBSaWdodD8NCg0KDQoNCkJlc3QgUmVn
+YXJlZHMsDQpKaW5nY2hhbmcNCg==
