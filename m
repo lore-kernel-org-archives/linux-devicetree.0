@@ -1,181 +1,87 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 2/2] media: i2c: adv7343: add OF support
-Date: Mon, 2 Sep 2013 17:17:15 +0100
-Message-ID: <20130902161715.GB18206@e106331-lin.cambridge.arm.com>
-References: <1374301266-26726-1-git-send-email-prabhakar.csengg@gmail.com>
- <1374301266-26726-3-git-send-email-prabhakar.csengg@gmail.com>
- <5217A3E7.50706@samsung.com>
- <CA+V-a8tStFRbELAmZL=418VpR9SJgp8uo_4hrtny2UEMEoXakg@mail.gmail.com>
- <20130827152405.GQ19893@e106331-lin.cambridge.arm.com>
- <CA+V-a8vuYNNiXJ+iGgceaTqHdM_Q9X2dVDyiHHZPJ+-rSbJgLQ@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v7] s5k5baf: add camera sensor driver
+Date: Mon, 02 Sep 2013 18:21:58 +0200
+Message-ID: <5224BB26.9090902@samsung.com>
+References: <1377096091-7284-1-git-send-email-a.hajda@samsung.com>
+ <20130827091448.GA19893@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8vuYNNiXJ+iGgceaTqHdM_Q9X2dVDyiHHZPJ+-rSbJgLQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LDOC <linux-doc@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20130827091448.GA19893@e106331-lin.cambridge.arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2013 at 03:43:04AM +0100, Prabhakar Lad wrote:
-> Hi Mark,
+Hi Mark,
+
+On 08/27/2013 11:14 AM, Mark Rutland wrote:
+>> +endpoint node
+>> +-------------
+>> +
+>> +- data-lanes : (optional) specifies MIPI CSI-2 data lanes as covered in
+>> +  video-interfaces.txt. This property can be only used to specify number
+>> +  of data lanes, i.e. the array's content is unused, only its length is
+>> +  meaningful. When this property is not specified default value of 1 lane
+>> +  will be used.
 > 
-> On Tue, Aug 27, 2013 at 8:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> > [fixing up devicetree list address]
-> >
-> Thanks!
+> Apologies for having not replied to the last posting, but having looked
+> at the documentation I was provided last time [1], I don't think the
+> values in the data-lanes property should be described as unused. That
+> may be the way the Linux driver functions at present, but it's not how
+> the generic video-interfaces binding documentation describes the
+> property.
 > 
-> > On Mon, Aug 26, 2013 at 03:41:45AM +0100, Prabhakar Lad wrote:
-> >> Hi Sylwester,
-> >>
-> >> On Fri, Aug 23, 2013 at 11:33 PM, Sylwester Nawrocki
-> >> <s.nawrocki@samsung.com> wrote:
-> >> > Cc: DT binding maintainers
-> >
-> > Cheers!
-> >
-> >> >
-> >> > On 07/20/2013 08:21 AM, Lad, Prabhakar wrote:
-> >> >> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-> >> >>
-> >> >> add OF support for the adv7343 driver.
-> >> >>
-> >> >> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> >> >> ---
-> >> > [...]
-> >> >>  .../devicetree/bindings/media/i2c/adv7343.txt      |   48 ++++++++++++++++++++
-> >> >>  drivers/media/i2c/adv7343.c                        |   46 ++++++++++++++++++-
-> >> >>  2 files changed, 93 insertions(+), 1 deletion(-)
-> >> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7343.txt
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
-> >> >> new file mode 100644
-> >> >> index 0000000..5653bc2
-> >> >> --- /dev/null
-> >> >> +++ b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
-> >> >> @@ -0,0 +1,48 @@
-> >> >> +* Analog Devices adv7343 video encoder
-> >> >> +
-> >> >> +The ADV7343 are high speed, digital-to-analog video encoders in a 64-lead LQFP
-> >> >> +package. Six high speed, 3.3 V, 11-bit video DACs provide support for composite
-> >> >> +(CVBS), S-Video (Y-C), and component (YPrPb/RGB) analog outputs in standard
-> >> >> +definition (SD), enhanced definition (ED), or high definition (HD) video
-> >> >> +formats.
-> >> >> +
-> >> >> +Required Properties :
-> >> >> +- compatible: Must be "adi,adv7343"
-> >> >> +
-> >> >> +Optional Properties :
-> >> >> +- adi,power-mode-sleep-mode: on enable the current consumption is reduced to
-> >> >> +                           micro ampere level. All DACs and the internal PLL
-> >> >> +                           circuit are disabled.
-> >
-> > This seems to be a boolean property, and I couldn't find any description
-> > in the linked datasheet of the constraints under which the unit may be
-> > put into sleep mode.
-> >
-> > Why do we require this property in the dt? Can the driver not always put
-> > a adv734x into sleep mode if it wants to, and then wake it up as
-> > required?
-> >
-> The adv7343 decoder, fits on da850/dm6467 etc.. For the da850 it supports
-> only SD where as the dm6467 supports HD/SD/ED for which DAC 1-6 of
-> Register 0x0 varies for this board so I added them as the platform data
-> but I got a review comment in the ML asking to add entire register as
-> the pdata instead of DAC 1-6, so because of which it is being converted
-> in the same way for DT.
-
-Not everything that appears in platform data should appear in the dt.
-This seems more like a run-time decision that a description of the
-hardware. 
-
-I don't see why we need the "adi,power-mode-sleep-mode" property.
-
+> If the CSI transmitter hardware doesn't support logical remapping of
+> lanes, then the only valid values for data-lanes would be a contiguous
+> list of lane IDs starting at 1, ending at 4 at most. Valid values for
+> the property would be one of:
 > 
-> >> >
-> >> > Sorry for getting back so late to this. I realize this is already queued in
-> >> > the media tree. But this binding doesn't look good enough to me. I think it
-> >> > will need to be corrected during upcoming -rc period.
-> >> >
-> >> Thanks for the catch :-)
-> >>
-> >> > It might be hard to figure out only from the chip's datasheet what
-> >> > adi,power-mode-sleep-mode really refers to. AFAICS it is for assigning some
-> >> > value to a specific register. If we really need to specify register values
-> >> > in the device tree then it would probably make sense to describe to which
-> >> > register this apply. Now the name looks like derived from some structure
-> >> > member name in the Linux driver of the device.
-> >> >
-> >> the property is derived from the datasheet itself for example the
-> >> 'adi,power-mode-sleep-mode' --> Register 0x0 power mode bit 0
-> >> 'adi,power-mode-pll-ctrl' ---> Register 0x0 power mode bit 1
-> >> 'adi,dac-enable' ----> Register 0x0 power mode bit 2-7
-> >> 'adi,sd-dac-enable' ---> Register 0x82 SD mode register bit 1-2
-> >>
-> >> [1] http://www.analog.com/static/imported-files/data_sheets/ADV7342_7343.pdf
-> >>
-> >> >> +- adi,power-mode-pll-ctrl: PLL and oversampling control. This control allows
-> >> >> +                        internal PLL 1 circuit to be powered down and the
-> >> >> +                        oversampling to be switched off.
-> >
-> > This affects whether or not oversampling is possible. That sounds like
-> > it should be a run-time configurable rather than a fixed property of the
-> > device.
-> >
-> ditto
-
-Not all platform data is suitable for dt. This seems like a decision as
-to how to use the hardware, rather than a description of the hardware.
-Hardware description should go in the dt, decisions should go in the
-driver.
-
+> data-lanes = <1>;
+> data-lanes = <1>, <2>;
+> data-lanes = <1>, <2>, <3>;
+> data-lanes = <1>, <2>, <3>, <4>;
 > 
-> >> >
-> >> > Similar comments applies to this property.
-> >> >
-> >> >> +- ad,adv7343-power-mode-dac: array configuring the power on/off DAC's 1..6,
-> >> >> +                           0 = OFF and 1 = ON, Default value when this
-> >> >> +                           property is not specified is <0 0 0 0 0 0>.
-> >> >
-> >> > Name of the property is incorrect here. It has changed to "adi,dac-enable".
-> >> >
-> >> OK
-> >
-> > Why do we need this property at all? Might some DACs not be wired up to
-> > anything?
-> >
-> > Surely this could be configured at run-time as and when the user wants
-> > to use the DACs.
-> >
-> >>
-> >> >> +- ad,adv7343-sd-config-dac-out: array configure SD DAC Output's 1 and 2, 0 = OFF
-> >> >> +                              and 1 = ON, Default value when this property is
-> >> >> +                              not specified is <0 0>.
-> >> >
-> >> > Similarly, "adi,sd-dac-enable.
-> >> >
-> >> OK
-> >
-> > Again, couldn't this be done at run-time?
-> >
-> > Do we need to permanently disable/enable some DACs? If so, why?
-> >
-> ditto.
-
-And ditto to my points above.
-
-Cheers,
-Mark.
-
+> We can mention the fact the hardware doesn't support remapping of lanes,
+> and therefore the list must start with lane 1 and end with (at most)
+> lane 4. That way a dts will match the generic binding and actually
+> describe the hardware, and it's possible for Linux (or any other OS) to
+> factor out the parsing of data-lanes later as desired.
 > 
-> > I also note from the spec that the unit has two clocks, CLKIN_A and
-> > CLKIN_B that aren't in the binding, but should be. Some regulators
-> > too (VDD, PVDD, VAA, VDD_IO, VREF?).
-> >
-> OK
-> 
-> Regards,
-> --Prabhakar Lad
-> 
+> I don't think we should offer freedom to encode garbage in the dt when
+> we can just as easily encourage more standard use of bindings that will
+> make our lives easier in the long-term.
+
+I entirely agree, that's a very accurate analysis.
+
+Presumably the data-lanes property's descriptions could be improved so
+it is said explicitly that array elements 0...N - 1, where N = 4, 
+correspond to logical data lanes 1...N.
+
+Then considering the values in the data-lanes property, I didn't make
+the description terribly specific about the fact that pool of indexes
+0...4 is used for the clock lane and 4 data lanes. The values could well
+be H/W specific, but it seems more sensible to enforce common range.
+It may not match exactly with documentation of various hardware. E.g.
+OMAP, see page 1661, register CSI2_COMPLEXIO_CFG [1], uses indexes 
+1..5 to indicate position of a data lane and 0 is used to mark a lane 
+as unused.
+
+I think we should have similarly defined value 0 to indicate an unused 
+lane. None of drivers in mainline uses this line remapping feature, so 
+changing meaning of the array values wouldn't presumably have any bad 
+side effects. I'm not sure if it's OK to make a change like this now. 
+IIUC the MIPI CSI-2 standard requires consecutive data lane indexes, 
+so valid set of data lanes could be only: <1>, <1, 2>, <1, 2, 3>, 
+<1, 2, 3, 4>. So there seems to be no issue for MIPI CSI-2. But for 
+future protocols the current convention might not have been flexible 
+enough.
+
+> [1] http://www.mipi.org/specifications/camera-interface#CSI2
+
+[2] http://www.ti.com/general/docs/lit/getliterature.tsp?literatureNumber=swpu231ao&fileType=pdf
+
+--
+Regards,
+Sylwester
