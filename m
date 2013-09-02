@@ -1,51 +1,40 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 6/7] arm/dts: added dt properties to adapt to the new phy framwork
-Date: Mon, 2 Sep 2013 21:13:10 +0530
-Message-ID: <1378136591-7463-7-git-send-email-kishon@ti.com>
-References: <1378136591-7463-1-git-send-email-kishon@ti.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] of_irq.h: fix build warnings when CONFIG_OF is not enabled
+Date: Mon, 02 Sep 2013 08:54:01 -0700
+Message-ID: <5224B499.4010600@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378136591-7463-1-git-send-email-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rogerq@ti.com, kishon@ti.com, balbi@ti.com
-Cc: bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, linux@arm.linux.org.uk, grant.likely@linaro.org, s.nawrocki@samsung.com, galak@codeaurora.org, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, george.cherian@ti.com, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/omap5.dtsi |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+From: Randy Dunlap <rdunlap@infradead.org>
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 94abef5..9fe71ff 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -651,7 +651,8 @@
- 				compatible = "snps,dwc3";
- 				reg = <0x4a030000 0x10000>;
- 				interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
--				usb-phy = <&usb2_phy>, <&usb3_phy>;
-+				phys = <&usb2_phy>, <&usb3_phy>;
-+				phy-names = "usb2-phy", "usb3-phy";
- 				tx-fifo-resize;
- 			};
- 		};
-@@ -667,6 +668,7 @@
- 				compatible = "ti,omap-usb2";
- 				reg = <0x4a084000 0x7c>;
- 				ctrl-module = <&omap_control_usb2phy>;
-+				#phy-cells = <0>;
- 			};
+Fix build warnings when CONFIG_OF is not enabled:
+
+include/linux/of_irq.h:82:7: warning: 'struct device_node' declared inside parameter list [enabled by default]
+include/linux/of_irq.h:82:7: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
+include/linux/of_irq.h:87:47: warning: 'struct device_node' declared inside parameter list [enabled by default]
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc:	Grant Likely <grant.likely@linaro.org>
+Cc:	Rob Herring <rob.herring@calxeda.com>
+Cc:	devicetree@vger.kernel.org
+---
+ include/linux/of_irq.h |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- linux-next-20130830.orig/include/linux/of_irq.h
++++ linux-next-20130830/include/linux/of_irq.h
+@@ -78,6 +78,8 @@ extern void of_irq_init(const struct of_
+ #endif /* CONFIG_OF_IRQ */
  
- 			usb3_phy: usb3phy@4a084400 {
-@@ -676,6 +678,7 @@
- 				      <0x4a084c00 0x40>;
- 				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
- 				ctrl-module = <&omap_control_usb3phy>;
-+				#phy-cells = <0>;
- 			};
- 		};
- 
--- 
-1.7.10.4
+ #else /* !CONFIG_OF */
++struct device_node;
++
+ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+ 						int index)
+ {
