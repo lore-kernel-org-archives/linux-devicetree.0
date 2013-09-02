@@ -1,65 +1,65 @@
-From: Lu Jingchang-B35083 <B35083@freescale.com>
-Subject: RE: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
-Date: Mon, 2 Sep 2013 07:10:53 +0000
-Message-ID: <B56CDBE15CE27145A4B77D2D24263E8520D0D4@039-SN1MPN1-004.039d.mgd.msft.net>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
+Date: Mon, 2 Sep 2013 12:07:21 +0530
+Message-ID: <20130902063721.GK7376@intel.com>
 References: <1376633274-17850-1-git-send-email-b35083@freescale.com>
  <20130828081742.GC11414@intel.com>
  <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
  <20130902045050.GE7376@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520D0D4@039-SN1MPN1-004.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130902045050.GE7376@intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <B56CDBE15CE27145A4B77D2D24263E8520D0D4@039-SN1MPN1-004.039d.mgd.msft.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
+To: Lu Jingchang-B35083 <B35083@freescale.com>
 Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWaW5vZCBLb3VsIFttYWlsdG86
-dmlub2Qua291bEBpbnRlbC5jb21dDQo+IFNlbnQ6IE1vbmRheSwgU2VwdGVtYmVyIDAyLCAyMDEz
-IDEyOjUxIFBNDQo+IFRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+IENjOiBzaGF3bi5ndW9AbGlu
-YXJvLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCB2NCAzLzNdIGRtYTogQWRkIEZyZWVzY2FsZSBlRE1BIGVuZ2luZSBk
-cml2ZXIgc3VwcG9ydA0KPiANCj4gT24gVGh1LCBBdWcgMjksIDIwMTMgYXQgMDM6MzI6MDRBTSAr
-MDAwMCwgTHUgSmluZ2NoYW5nLUIzNTA4MyB3cm90ZToNCj4gDQo+IFBsZWFzZSB1c2UgYSByaWdo
-dCBNVUEgYW5kIHdyYXAgeW91ciBsaW5lcyBhdCA4MGNoYXJzLi4uDQo+IA0KPiA+DQo+ID4gPg0K
-PiA+ID4gPiArCQkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gPiA+ICsJCX0NCj4gPiA+ID4gKwkJcmV0
-dXJuIDA7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlkZWZhdWx0Og0KPiA+ID4gPiArCQlyZXR1cm4g
-LUVOWElPOw0KPiA+ID4gPiArCX0NCj4gPiA+ID4gK30NCj4gPiA+ID4gKw0KPiA+ID4gPiArc3Rh
-dGljIGVudW0gZG1hX3N0YXR1cyBmc2xfZWRtYV90eF9zdGF0dXMoc3RydWN0IGRtYV9jaGFuICpj
-aGFuLA0KPiA+ID4gPiArCQlkbWFfY29va2llX3QgY29va2llLCBzdHJ1Y3QgZG1hX3R4X3N0YXRl
-ICp0eHN0YXRlKQ0KPiA+ID4gPiArew0KPiA+ID4gPiArCXN0cnVjdCBmc2xfZWRtYV9jaGFuICpm
-c2xfY2hhbiA9IHRvX2ZzbF9lZG1hX2NoYW4oY2hhbik7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlp
-ZiAoZnNsX2NoYW4tPnN0YXR1cyA9PSBETUFfRVJST1IpDQo+ID4gPiA+ICsJCXJldHVybiBETUFf
-RVJST1I7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlyZXR1cm4gZG1hX2Nvb2tpZV9zdGF0dXMoY2hh
-biwgY29va2llLCB0eHN0YXRlKTsNCj4gPiA+IHRoaXMgd2lsbCB0ZWxsIGlmIHRoZSBETUEgaXMg
-Y29tcGxldGVkIG9yIG5vdCBvbmx5Lg0KPiA+ID4gWW91IGFsc28gbmVlZCB0byBjYWxjdWxhdGUg
-cmVzaWR1ZSBmb3IgdGhlIHBlbmRpbmcgZG1hDQo+ID4gPg0KPiA+ID4gU2luY2UgeW91IHN1cHBv
-cnQgY3ljbGljIHRoaXMgc2hvdWxkIGJlIGRvbmUgcHJvcGVybHkuLi4NCj4gPiA+DQo+ID4gPiBh
-bHNvIHlvdSBjbmEgdGFrZSBtb3JlIGhlbHAgZnJvbSB2Y2hhbiBzdXBwb3J0IHRvIG1ha2UgeW91
-ciBsaWZlDQo+ID4gPiBzaW1wbGVyLi4uDQo+ID4gW0x1IEppbmdjaGFuZ10NCj4gTm8gbmVlZCB0
-byBwdXQgeW91ciBuYW1lIDopDQpbTHUgSmluZ2NoYW5nLWIzNTA4M10gDQpBaGEsIHRoZSBNaWNy
-b3NvZnQgT3V0bG9vayBhZGRzIHRoaXMgYXV0b21hdGljYWxseSB3aXRoIGRlZmF1bHQgb3B0aW9u
-Lg0KPiANCj4gPiBPaywgaWYgaXQgaXMgbmVlZGVkLCBJIHdpbGwgYWRkIHJlc2lkdWUgY2FsY3Vs
-YXRpb24gaW4gdGhlIG5leHQgdmVyc2lvbi4NCj4gWWVzIHRoaXMgaXMgbmVlZGVkDQo+IA0KPiA+
-ID4gPiArc3RhdGljIGJvb2wgZnNsX2VkbWFfZmlsdGVyX2ZuKHN0cnVjdCBkbWFfY2hhbiAqY2hh
-biwgdm9pZA0KPiAqZm5fcGFyYW0pDQo+ID4gPiA+ICt7DQo+ID4gPiA+ICsJc3RydWN0IGZzbF9l
-ZG1hX2ZpbHRlcl9wYXJhbSAqZnBhcmFtID0gZm5fcGFyYW07DQo+ID4gPiA+ICsJc3RydWN0IGZz
-bF9lZG1hX2NoYW4gKmZzbF9jaGFuID0gdG9fZnNsX2VkbWFfY2hhbihjaGFuKTsNCj4gPiA+ID4g
-Kw0KPiA+ID4gPiArCWlmIChmc2xfY2hhbi0+ZWRtYW11eC0+bXV4X2lkICE9IGZwYXJhbS0+bXV4
-X2lkKQ0KPiA+ID4gPiArCQlyZXR1cm4gZmFsc2U7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlmc2xf
-Y2hhbi0+c2xvdF9pZCA9IGZwYXJhbS0+c2xvdF9pZDsNCj4gPiA+ID4gKwljaGFuLT5wcml2YXRl
-ID0gZm5fcGFyYW07DQo+ID4gPiB3aHkgZG8geW91IG5lZWQgdG8gdXNlIGNoYW4tPnByaXZhdGU/
-DQo+ID4gW0x1IEppbmdjaGFuZ10NCj4gPiBUaGUgcHJpdmF0ZSB1c2VkIGhlcmUgaXMgdG8gc3Rv
-cmUgdGhlIHNsb3RfaWQgaW5mb3JtYXRpb24sIHdoaWNoIG11c3QNCj4gYmUgdXNlZA0KPiA+IGJ5
-IHRoZSBETUFNVVggaW4gYWxsb2NfY2hhbl9yZXNvdXJjZXMgZnVuY3Rpb24uIFRoYW5rcy4NCj4g
-V2h5IGRvbnQgeW91IHBhc3MgdGhpcyBpbiBzdHJ1Y3QgZG1hX3NsYXZlX2NvbmZpZyBtZW1lYmVy
-IHNsYXZlX2lkIGZvcg0KPiB0aGlzLg0KW0x1IEppbmdjaGFuZy1iMzUwODNdIA0KSSB3aWxsIGRy
-b3AgdGhpcyBwcml2YXRlIGFuZCBzZXR1cCB0aGUgc2xhdmVfaWQgZGlyZWN0bHkgaW4gdGhlIGZp
-bHRlciBmdW5jdGlvbi4NClRoZSBzbGF2ZSBpZCBpcyBvbmx5IHVzZWQgaW4gZmlyc3QgcmVxdWVz
-dCBwaGFzZSwgaWYgZmlsdGVyIGlzIHRydWUsIHRoZSBjaGFubmVsDQpTaG91bGQgYmUgdG8gdGhp
-cyBzbGF2ZS4NClRoYW5rcy4NCg0KDQoNCg0KDQoNCg0KQmVzdCBSZWdhcmRzLA0KSmluZ2NoYW5n
-DQoNCg0K
+On Mon, Sep 02, 2013 at 07:10:53AM +0000, Lu Jingchang-B35083 wrote:
+> > -----Original Message-----
+> > From: Vinod Koul [mailto:vinod.koul@intel.com]
+> > Sent: Monday, September 02, 2013 12:51 PM
+> > To: Lu Jingchang-B35083
+> > Cc: shawn.guo@linaro.org; linux-kernel@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; devicetree@vger.kernel.org
+> > Subject: Re: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
+> > 
+> > On Thu, Aug 29, 2013 at 03:32:04AM +0000, Lu Jingchang-B35083 wrote:
+> > 
+> > Please use a right MUA and wrap your lines at 80chars...
+
+> > > [Lu Jingchang]
+> > No need to put your name :)
+> [Lu Jingchang-b35083] 
+> Aha, the Microsoft Outlook adds this automatically with default option.
+You can change that!!
+
+> > 
+> > > Ok, if it is needed, I will add residue calculation in the next version.
+> > Yes this is needed
+> > 
+> > > > > +static bool fsl_edma_filter_fn(struct dma_chan *chan, void
+> > *fn_param)
+> > > > > +{
+> > > > > +	struct fsl_edma_filter_param *fparam = fn_param;
+> > > > > +	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
+> > > > > +
+> > > > > +	if (fsl_chan->edmamux->mux_id != fparam->mux_id)
+> > > > > +		return false;
+> > > > > +
+> > > > > +	fsl_chan->slot_id = fparam->slot_id;
+> > > > > +	chan->private = fn_param;
+> > > > why do you need to use chan->private?
+> > > [Lu Jingchang]
+> > > The private used here is to store the slot_id information, which must
+> > be used
+> > > by the DMAMUX in alloc_chan_resources function. Thanks.
+> > Why dont you pass this in struct dma_slave_config memeber slave_id for
+> > this.
+> [Lu Jingchang-b35083] 
+> I will drop this private and setup the slave_id directly in the filter function.
+why in filter? before calling prepare function you can set the slave config
+
+~Vinod
