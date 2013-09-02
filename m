@@ -1,74 +1,114 @@
-From: Huang Shijie <b32955@freescale.com>
-Subject: Re: [PATCH 1/2] ARM: i.MX6: dts: change iomuxc pinctrl config to
- match Rev. 1 IMX6DQRM
-Date: Mon, 2 Sep 2013 13:01:39 +0800
-Message-ID: <52241BB3.5030909@freescale.com>
-References: <521C40D9.3070802@freescale.com>
- <1377659855-9573-1-git-send-email-alison_chaiken@mentor.com>
- <1377659855-9573-2-git-send-email-alison_chaiken@mentor.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
+Date: Mon, 2 Sep 2013 10:20:50 +0530
+Message-ID: <20130902045050.GE7376@intel.com>
+References: <1376633274-17850-1-git-send-email-b35083@freescale.com>
+ <20130828081742.GC11414@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1377659855-9573-2-git-send-email-alison_chaiken@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: alison_chaiken@mentor.com
-Cc: devicetree@vger.kernel.org, alison@she-devel.com, linus.walleij@linaro.org, rob.herring@calxeda.com, olof@lixom.net, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lu Jingchang-B35083 <B35083@freescale.com>
+Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-09ogMjAxM8TqMDjUwjI4yNUgMTE6MTcsIGFsaXNvbl9jaGFpa2VuQG1lbnRvci5jb20g0LS1wDoK
-PiBAQCAtNzU5LDIzICs3NTksMjMgQEAKPiAgCQkJCWdwbWktbmFuZCB7Cj4gIAkJCQkJcGluY3Ry
-bF9ncG1pX25hbmRfMTogZ3BtaS1uYW5kLTEgewo+ICAJCQkJCQlmc2wscGlucyA9IDwKPiAtCQkJ
-CQkJCU1YNlFETF9QQURfTkFOREZfQ0xFX19OQU5EX0NMRSAgICAgMHhiMGIxCj4gLQkJCQkJCQlN
-WDZRRExfUEFEX05BTkRGX0FMRV9fTkFORF9BTEUgICAgIDB4YjBiMQo+IC0JCQkJCQkJTVg2UURM
-X1BBRF9OQU5ERl9XUF9CX19OQU5EX1dQX0IgICAweGIwYjEKPiAtCQkJCQkJCU1YNlFETF9QQURf
-TkFOREZfUkIwX19OQU5EX1JFQURZX0IgMHhiMDAwCj4gLQkJCQkJCQlNWDZRRExfUEFEX05BTkRG
-X0NTMF9fTkFORF9DRTBfQiAgIDB4YjBiMQo+IC0JCQkJCQkJTVg2UURMX1BBRF9OQU5ERl9DUzFf
-X05BTkRfQ0UxX0IgICAweGIwYjEKPiAtCQkJCQkJCU1YNlFETF9QQURfU0Q0X0NNRF9fTkFORF9S
-RV9CICAgICAgMHhiMGIxCj4gLQkJCQkJCQlNWDZRRExfUEFEX1NENF9DTEtfX05BTkRfV0VfQiAg
-ICAgIDB4YjBiMQo+IC0JCQkJCQkJTVg2UURMX1BBRF9OQU5ERl9EMF9fTkFORF9EQVRBMDAgICAw
-eGIwYjEKPiAtCQkJCQkJCU1YNlFETF9QQURfTkFOREZfRDFfX05BTkRfREFUQTAxICAgMHhiMGIx
-Cj4gLQkJCQkJCQlNWDZRRExfUEFEX05BTkRGX0QyX19OQU5EX0RBVEEwMiAgIDB4YjBiMQo+IC0J
-CQkJCQkJTVg2UURMX1BBRF9OQU5ERl9EM19fTkFORF9EQVRBMDMgICAweGIwYjEKPiAtCQkJCQkJ
-CU1YNlFETF9QQURfTkFOREZfRDRfX05BTkRfREFUQTA0ICAgMHhiMGIxCj4gLQkJCQkJCQlNWDZR
-RExfUEFEX05BTkRGX0Q1X19OQU5EX0RBVEEwNSAgIDB4YjBiMQo+IC0JCQkJCQkJTVg2UURMX1BB
-RF9OQU5ERl9ENl9fTkFORF9EQVRBMDYgICAweGIwYjEKPiAtCQkJCQkJCU1YNlFETF9QQURfTkFO
-REZfRDdfX05BTkRfREFUQTA3ICAgMHhiMGIxCj4gLQkJCQkJCQlNWDZRRExfUEFEX1NENF9EQVQw
-X19OQU5EX0RRUyAgICAgIDB4MDBiMQo+ICsJCQkJCQkJTVg2UURMX1BBRF9OQU5ERl9DTEVfX05B
-TkRfQ0xFICAgICAweDFiMGIwCj4gKwkJCQkJCQlNWDZRRExfUEFEX05BTkRGX0FMRV9fTkFORF9B
-TEUgICAgIDB4MWIwYjAKPiArCQkJCQkJCU1YNlFETF9QQURfTkFOREZfV1BfQl9fTkFORF9XUF9C
-ICAgMHgxYjBiMAo+ICsJCQkJCQkJTVg2UURMX1BBRF9OQU5ERl9SQjBfX05BTkRfUkVBRFlfQiAw
-eDFiMGIwCj4gKwkJCQkJCQlNWDZRRExfUEFEX05BTkRGX0NTMF9fTkFORF9DRTBfQiAgIDB4MWIw
-YjAKPiArCQkJCQkJCU1YNlFETF9QQURfTkFOREZfQ1MxX19OQU5EX0NFMV9CICAgMHgxYjBiMAo+
-ICsJCQkJCQkJTVg2UURMX1BBRF9TRDRfQ01EX19OQU5EX1JFX0IgICAgICAweDFiMGIwCj4gKwkJ
-CQkJCQlNWDZRRExfUEFEX1NENF9DTEtfX05BTkRfV0VfQiAgICAgIDB4MWIwYjAKPiArCQkJCQkJ
-CU1YNlFETF9QQURfTkFOREZfRDBfX05BTkRfREFUQTAwICAgMHgxYjBiMAo+ICsJCQkJCQkJTVg2
-UURMX1BBRF9OQU5ERl9EMV9fTkFORF9EQVRBMDEgICAweDFiMGIwCj4gKwkJCQkJCQlNWDZRRExf
-UEFEX05BTkRGX0QyX19OQU5EX0RBVEEwMiAgIDB4MWIwYjAKPiArCQkJCQkJCU1YNlFETF9QQURf
-TkFOREZfRDNfX05BTkRfREFUQTAzICAgMHgxYjBiMAo+ICsJCQkJCQkJTVg2UURMX1BBRF9OQU5E
-Rl9ENF9fTkFORF9EQVRBMDQgICAweDFiMGIwCj4gKwkJCQkJCQlNWDZRRExfUEFEX05BTkRGX0Q1
-X19OQU5EX0RBVEEwNSAgIDB4MWIwYjAKPiArCQkJCQkJCU1YNlFETF9QQURfTkFOREZfRDZfX05B
-TkRfREFUQTA2ICAgMHgxYjBiMAo+ICsJCQkJCQkJTVg2UURMX1BBRF9OQU5ERl9EN19fTkFORF9E
-QVRBMDcgICAweDFiMGIwCj4gKwkJCQkJCQlNWDZRRExfUEFEX1NENF9EQVQwX19OQU5EX0RRUyAg
-ICAgIDB4MWIwYjAKPiAgCQkJCQkJPjsKPiAgCQkJCQl9Owo+ICAJCQkJfTsKSSB0ZXN0ZWQgdGhp
-cyBwYXRjaCB3aXRoIHRoZSBpbXg2cS1hcmQgYm9hcmQgYW5kIGlteDZkbC1hcmQgYm9hcmQuCgpG
-b3IgdGhlIGdwbWkgbmFuZCB0ZXN0IHJlc3VsdDoKWzFdIGlteDZxLWFyZDogV2UgY2FuIHBhc3Mg
-dGhlIGJvbmllKysgc3RyZXNzIHRlc3Qgd2l0aCB0aGUgaW14NnEtYXJkIGJvYXJkLgoKWzJdIGlt
-eDZkbC1hcmQ6IEJ1dCB3ZSBmYWlscyB0byByZWFkIHRoZSBuYW5kIElEIHdpdGggdGhlIGlteDZk
-bC1hcmQgYm9hcmQuCkluIG90aGVyIHdvcmQsIHRoaXMgZ3BtaSBjYW4gX25vdF8gd29ya3Mgd2l0
-aCB0aGlzIHBhdGNoLgoKQnV0IHdpdGhvdXQgdGhpcyBwYXRjaCwgdGhlIGlteDZkbC1hcmQgd29y
-a3MgZmluZS4KCkluIHNlY3Rpb24gNC4xLCB0aGUgc3BlYyB0ZWxscyB1cyB0aGF0IHRoZSAweDFi
-MGIwIGlzIGp1c3QgdGhlICJkZWZhdWx0CnNldHRpbmdzIGZvciB0aGUgZWFjaCBwYWQiLApub3Qg
-dGhlIHJpZ2h0IHNldHRpbmdzIGZvciB0aGUgZWFjaCBwYWQuCgoKCnRoYW5rcwpIdWFuZyBTaGlq
-aWUKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+On Thu, Aug 29, 2013 at 03:32:04AM +0000, Lu Jingchang-B35083 wrote:
+
+Please use a right MUA and wrap your lines at 80chars...
+
+> 
+> > 
+> > > +			return -EINVAL;
+> > > +		}
+> > > +		return 0;
+> > > +
+> > > +	default:
+> > > +		return -ENXIO;
+> > > +	}
+> > > +}
+> > > +
+> > > +static enum dma_status fsl_edma_tx_status(struct dma_chan *chan,
+> > > +		dma_cookie_t cookie, struct dma_tx_state *txstate)
+> > > +{
+> > > +	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
+> > > +
+> > > +	if (fsl_chan->status == DMA_ERROR)
+> > > +		return DMA_ERROR;
+> > > +
+> > > +	return dma_cookie_status(chan, cookie, txstate);
+> > this will tell if the DMA is completed or not only.
+> > You also need to calculate residue for the pending dma
+> > 
+> > Since you support cyclic this should be done properly...
+> > 
+> > also you cna take more help from vchan support to make your life
+> > simpler...
+> [Lu Jingchang]
+No need to put your name :)
+ 
+> Ok, if it is needed, I will add residue calculation in the next version. 
+Yes this is needed
+
+> > > +static bool fsl_edma_filter_fn(struct dma_chan *chan, void *fn_param)
+> > > +{
+> > > +	struct fsl_edma_filter_param *fparam = fn_param;
+> > > +	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
+> > > +
+> > > +	if (fsl_chan->edmamux->mux_id != fparam->mux_id)
+> > > +		return false;
+> > > +
+> > > +	fsl_chan->slot_id = fparam->slot_id;
+> > > +	chan->private = fn_param;
+> > why do you need to use chan->private?
+> [Lu Jingchang] 
+> The private used here is to store the slot_id information, which must be used
+> by the DMAMUX in alloc_chan_resources function. Thanks.
+Why dont you pass this in struct dma_slave_config memeber slave_id for this.
+
+> 
+> > > +	return true;
+> > > +}
+> > > +
+> > > +static struct dma_chan *fsl_edma_xlate(struct of_phandle_args
+> > *dma_spec,
+> > > +		struct of_dma *ofdma)
+> > > +{
+> > > +	dma_cap_mask_t mask;
+> > > +	struct fsl_edma_filter_param fparam;
+> > > +
+> > > +	if (dma_spec->args_count != 2)
+> > > +		return NULL;
+> > > +
+> > > +	fparam.mux_id = dma_spec->args[0];
+> > > +	fparam.slot_id = dma_spec->args[1];
+> > > +
+> > > +	dma_cap_zero(mask);
+> > > +	dma_cap_set(DMA_SLAVE, mask);
+> > > +	dma_cap_set(DMA_CYCLIC, mask);
+> > > +	return dma_request_channel(mask, fsl_edma_filter_fn, (void
+> > *)&fparam);
+> > > +}
+> > > +
+> > > +static int fsl_edma_alloc_chan_resources(struct dma_chan *chan)
+> > > +{
+> > > +	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
+> > > +	struct fsl_edma_filter_param *data = chan->private;
+> > > +	unsigned char val;
+> > > +
+> > > +	val = EDMAMUX_CHCFG_ENBL | EDMAMUX_CHCFG_SOURCE(data->slot_id);
+> > okay, so what does the slot_id mean?
+> >
+> [Lu Jingchang] 
+> slot_id is the request source id, a peripheral device ID. Each peripheral
+> using DMA has a ID that can be identified by the DMA engine. the peripheral ID
+> must be written to the DMAMUX configuration register to route the peripheral
+> to DMA engine channel. Thanks.
+And thanks makes me belive you dont need this way, slave_id is the thing for
+you...
+
+~Vinod
+
+-- 
