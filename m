@@ -1,40 +1,37 @@
-From: Afzal Mohammed <afzal@ti.com>
-Subject: [PATCH RFC 5/6] ARM: dts: AM335x: prcm node (for reset)
-Date: Mon, 2 Sep 2013 19:52:04 +0530
-Message-ID: <00675d65eef61eb4222e6a461ef479ebbd1d4787.1378129416.git.afzal@ti.com>
-References: <cover.1378129416.git.afzal@ti.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v3 0/7] ARM: imx27 pinctrl
+Date: Mon, 2 Sep 2013 23:07:53 +0800
+Message-ID: <20130902150751.GB17900@S2101-09.ap.freescale.net>
+References: <1378020488-21129-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1378129416.git.afzal@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Benoit Cousson <bcousson@baylibre.com>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1378020488-21129-1-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add AM335x prcm node with reset binding.
+On Sun, Sep 01, 2013 at 09:28:01AM +0200, Markus Pargmann wrote:
+> Markus Pargmann (7):
+>       pinctrl: imx1 core driver
+>       pinctrl: imx27: imx27 pincontrol driver
 
-Signed-off-by: Afzal Mohammed <afzal@ti.com>
----
- arch/arm/boot/dts/am33xx.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Acked-by: Shawn Guo <shawn.guo@linaro.org>
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 4701e3c..c2ccf94 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -530,6 +530,12 @@
- 			#size-cells = <1>;
- 			status = "disabled";
- 		};
-+
-+		prcm: prcm@44e00000 {
-+			compatible = "ti,am3352-prcm";
-+			reg = <0x44e00000 0x1300>;
-+			#reset-cells = <1>;
-+		};
- 	};
- 
- 	clocks {
--- 
-1.8.3.4
+Linus,
+
+Please apply these two through your tree if they look good to you.  And
+I will take care of the "ARM" part.  Thanks.
+
+Shawn
