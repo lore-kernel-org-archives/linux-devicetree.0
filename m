@@ -1,114 +1,57 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
-Date: Mon, 2 Sep 2013 10:20:50 +0530
-Message-ID: <20130902045050.GE7376@intel.com>
-References: <1376633274-17850-1-git-send-email-b35083@freescale.com>
- <20130828081742.GC11414@intel.com>
- <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC 00/22] OMAPDSS: DT support
+Date: Sun, 1 Sep 2013 23:15:42 -0700
+Message-ID: <20130902061541.GU7656@atomide.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+ <20130813075449.GS7656@atomide.com>
+ <52206A48.8040401@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lu Jingchang-B35083 <B35083@freescale.com>
-Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <52206A48.8040401@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2013 at 03:32:04AM +0000, Lu Jingchang-B35083 wrote:
-
-Please use a right MUA and wrap your lines at 80chars...
-
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [130830 02:55]:
+> On 13/08/13 10:54, Tony Lindgren wrote:
+> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [130809 01:46]:
+> >>
+> >> So as is evident, I have things in my mind that should be improved. Maybe
+> >> the most important question for short term future is:
+> >>
+> >> Can we add DSS DT bindings for OMAP4 as unstable bindings? It would give us
+> >> some proper testing of the related code, and would also allow us to remove
+> >> the related hacks (which don't even work quite right). However, I have no
+> >> idea yet when the unstable DSS bindings would turn stable.
+> >>
+> >> If we shouldn't add the bindings as unstable, when should the bindings be
+> >> added? Wait until CDF is in the mainline, and use that?
+> > 
+> > I don't think we should add any temporary bindings as it's going to be
+> > a pain to support those in the long run. I suggest you initially just
+> > stick to established bindings for the basic hardware IO address and
+> > interrupts etc, then those should still be valid with the generic panel
+> > bindings later on.
 > 
-> > 
-> > > +			return -EINVAL;
-> > > +		}
-> > > +		return 0;
-> > > +
-> > > +	default:
-> > > +		return -ENXIO;
-> > > +	}
-> > > +}
-> > > +
-> > > +static enum dma_status fsl_edma_tx_status(struct dma_chan *chan,
-> > > +		dma_cookie_t cookie, struct dma_tx_state *txstate)
-> > > +{
-> > > +	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
-> > > +
-> > > +	if (fsl_chan->status == DMA_ERROR)
-> > > +		return DMA_ERROR;
-> > > +
-> > > +	return dma_cookie_status(chan, cookie, txstate);
-> > this will tell if the DMA is completed or not only.
-> > You also need to calculate residue for the pending dma
-> > 
-> > Since you support cyclic this should be done properly...
-> > 
-> > also you cna take more help from vchan support to make your life
-> > simpler...
-> [Lu Jingchang]
-No need to put your name :)
+> I don't understand what does it matter if the bindings are temporary, or
+> basic established bindings. In both cases the DT data needs to be
+> changed when the CDF is taken into use.
+
+Yes but the old bindings still need to be supported because people
+are doing devices using those. So any kind of temporary binding will be
+a pain to support.
  
-> Ok, if it is needed, I will add residue calculation in the next version. 
-Yes this is needed
+> Well, one difference is that the temporary bindings would give us
+> working display, but having only basic bindings would not. So I don't
+> see any reason to add only the basic bindings. Or how would it work?
 
-> > > +static bool fsl_edma_filter_fn(struct dma_chan *chan, void *fn_param)
-> > > +{
-> > > +	struct fsl_edma_filter_param *fparam = fn_param;
-> > > +	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
-> > > +
-> > > +	if (fsl_chan->edmamux->mux_id != fparam->mux_id)
-> > > +		return false;
-> > > +
-> > > +	fsl_chan->slot_id = fparam->slot_id;
-> > > +	chan->private = fn_param;
-> > why do you need to use chan->private?
-> [Lu Jingchang] 
-> The private used here is to store the slot_id information, which must be used
-> by the DMAMUX in alloc_chan_resources function. Thanks.
-Why dont you pass this in struct dma_slave_config memeber slave_id for this.
+You might be able to use just a minimal binding for now using the
+basic reg, interrupt and entries for the various components. Those will
+be still valid when the CDF bindings are available.
 
-> 
-> > > +	return true;
-> > > +}
-> > > +
-> > > +static struct dma_chan *fsl_edma_xlate(struct of_phandle_args
-> > *dma_spec,
-> > > +		struct of_dma *ofdma)
-> > > +{
-> > > +	dma_cap_mask_t mask;
-> > > +	struct fsl_edma_filter_param fparam;
-> > > +
-> > > +	if (dma_spec->args_count != 2)
-> > > +		return NULL;
-> > > +
-> > > +	fparam.mux_id = dma_spec->args[0];
-> > > +	fparam.slot_id = dma_spec->args[1];
-> > > +
-> > > +	dma_cap_zero(mask);
-> > > +	dma_cap_set(DMA_SLAVE, mask);
-> > > +	dma_cap_set(DMA_CYCLIC, mask);
-> > > +	return dma_request_channel(mask, fsl_edma_filter_fn, (void
-> > *)&fparam);
-> > > +}
-> > > +
-> > > +static int fsl_edma_alloc_chan_resources(struct dma_chan *chan)
-> > > +{
-> > > +	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
-> > > +	struct fsl_edma_filter_param *data = chan->private;
-> > > +	unsigned char val;
-> > > +
-> > > +	val = EDMAMUX_CHCFG_ENBL | EDMAMUX_CHCFG_SOURCE(data->slot_id);
-> > okay, so what does the slot_id mean?
-> >
-> [Lu Jingchang] 
-> slot_id is the request source id, a peripheral device ID. Each peripheral
-> using DMA has a ID that can be identified by the DMA engine. the peripheral ID
-> must be written to the DMAMUX configuration register to route the peripheral
-> to DMA engine channel. Thanks.
-And thanks makes me belive you dont need this way, slave_id is the thing for
-you...
+Regards,
 
-~Vinod
-
--- 
+Tony
