@@ -1,149 +1,58 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH V5] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
-Date: Mon, 02 Sep 2013 14:21:01 +0200
-Message-ID: <11882414.uDVzNviTV8@amdc1227>
-References: <1377691386-7085-1-git-send-email-yuvaraj.cd@samsung.com>
- <CAKuRcO+qhfry4KT2gJmB5DGgPF7=0WrEJH=7quVOj3tobnPv=A@mail.gmail.com>
- <CAKuRcO+EF12mbx-EyptWKmuAiabw4Cx7TqUMTmUAgVFWkwMr=w@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/4] ARM: shmobile: r8a7778: add Ether DT support
+Date: Mon, 02 Sep 2013 15:14:37 +0200
+Message-ID: <1643070.uIkONXsrBj@avalon>
+References: <201309010311.05466.sergei.shtylyov@cogentembedded.com> <201309010315.49763.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAKuRcO+EF12mbx-EyptWKmuAiabw4Cx7TqUMTmUAgVFWkwMr=w@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Doug Anderson <dianders@chromium.org>, Chris Ball <cjb@laptop.org>, Thomas Abraham <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201309010315.49763.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: horms@verge.net.au, linux-sh@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 02 of September 2013 16:45:41 Yuvaraj Kumar wrote:
-> On Fri, Aug 30, 2013 at 12:29 PM, Yuvaraj Kumar <yuvaraj.cd@gmail.com> 
-wrote:
-> > On Wed, Aug 28, 2013 at 5:52 PM, Tomasz Figa <t.figa@samsung.com> 
-wrote:
-> >> Hi Yuvaraj,
-> >> 
-> >> On Wednesday 28 of August 2013 17:33:06 Yuvaraj Kumar C D wrote:
-> >>> This patch adds the device tree node entries for exynos5420 SOC.
-> >>> Exynos5420 has a different version of DWMMC controller,so a new
-> >>> compatible string is used to distinguish it from the prior SOC's.
-> >>> 
-> >>> This patch depends on
-> >>> 
-> >>>       mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
-> >>> 
-> >>> changes since v4:
-> >>>       1.Droppped the bypass-smu binding property.
-> >>>       2.Used compatible string "samsung,exynos5250-dw-mshc"
-> >>>       
-> >>>         for controller instance which does not have SMU.
-> >>> 
-> >>> changes since V3:
-> >>>       1.change fifo-depth size from 0x80 to 0x40
-> >>>       2.Move the below properties
-> >>>       
-> >>>               a.card-detect-delay
-> >>>               b.samsung,dw-mshc-ciu-div
-> >>>               c.samsung,dw-mshc-sdr-timing
-> >>>               d.samsung,dw-mshc-ddr-timing
-> >>>       
-> >>>       from SOC dts to board dts file as suggested by Doug Anderson
-> >>> 
-> >>> changes since V2:
-> >>>       1.dropped num-slots property from node as its not required
-> >>>       
-> >>>         if number of card slots available is 1.
-> >>>       
-> >>>       2.Move the below properties
-> >>>       
-> >>>               a.fifo-depth
-> >>>               b.card-detect-delay
-> >>>               c.samsung,dw-mshc-ciu-div
-> >>>               d.samsung,dw-mshc-sdr-timing
-> >>>               e.samsung,dw-mshc-ddr-timing
-> >>>       
-> >>>       from board dts to SOC dts,as these are not board specific
-> >>>       properties.
-> >>>       
-> >>>       3.Updated the binding document exynos-dw-mshc.txt.
-> >>> 
-> >>> changes since V1:
-> >>>       1.disable node by status = disabled in SOC file
-> >>>       2.enable node by status = okay in board specific file
-> >>> 
-> >>> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
-> >>> ---
-> >>> 
-> >>>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +
-> >>>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   33
-> >>> 
-> >>> +++++++++++++++++ arch/arm/boot/dts/exynos5420.dtsi                 
-> >>> |
-> >>> 39 ++++++++++++++++++++ 3 files changed, 74 insertions(+)
-> >> 
-> >> This patch looks good to me now, except some minor comments below.
-> >> 
-> >>> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> >>> b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt index
-> >>> 6d1c098..84cd56f 100644
-> >>> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> >>> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> >>> 
-> >>> @@ -16,6 +16,8 @@ Required Properties:
-> >>>         specific extensions.
-> >>>       
-> >>>       - "samsung,exynos5250-dw-mshc": for controllers with Samsung
-> >>>       Exynos5250
-> >>> 
-> >>> specific extensions.
-> >>> +     - "samsung,exynos5420-dw-mshc": for controllers with Samsung
-> >>> Exynos5420 +       specific extensions.
-> >>> 
-> >>>  * samsung,dw-mshc-ciu-div: Specifies the divider value for the card
-> >>> 
-> >>> interface unit (ciu) clock. This property is applicable only for
-> >>> Exynos5
-> >>> SoC's and diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> >>> b/arch/arm/boot/dts/exynos5420-smdk5420.dts index bafba25..3ce5c97
-> >>> 100644
-> >>> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> >>> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> >>> @@ -31,6 +31,39 @@
-> >>> 
-> >>>               };
-> >>>       
-> >>>       };
-> >>> 
-> >>> +     dwmmc0@12200000 {
-> >> 
-> >> Node name should not contain instance index. Instead, according to
-> >> ePAPR
-> >> recommendation, I would opt for a generic name such as mmc, mshc or
-> >> sdio- host. mshc is already used on Exynos 4 so it might be a good
-> >> idea to use it for consistency.
-> > 
-> > If we change node name's to mshc, debug statements are look like below:
-> > dwmmc_exynos 12200000.mshc: num-slots property not found, assuming 1
-> > slot is available
-> > dwmmc_exynos 12200000.mshc: no vmmc regulator found: -19
-> > dwmmc_exynos 12200000.mshc: Using internal DMA controller.
-> > dwmmc_exynos 12200000.mshc: Version ID is 250a
-> > dwmmc_exynos 12200000.mshc: DW MMC controller at irq 107, 64 bit host
-> > data width, 64 deep fifo
-> > 
-> > "dwmmc_exynos" is platform driver name and "12200000.mshc" from dt
-> > node.Is'nt it look like bit confusing?
+Hi Sergei,
 
-Well, device tree should be written in an OS-agnostic way, so it's not a 
-valid reason to use node names not complying to the recommendations.
+Thank you for the patch.
 
-Also, I don't see anything wrong in this name. There is a lot of devices 
-named this way, like 13920000.spi, 139d0000.pwm or 13800000.serial.
+On Sunday 01 September 2013 03:15:48 Sergei Shtylyov wrote:
+> Define the generic R8A777x part of the Ether device node.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+>  arch/arm/boot/dts/r8a7778.dtsi |   11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> Index: renesas/arch/arm/boot/dts/r8a7778.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7778.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7778.dtsi
+> @@ -98,4 +98,15 @@
+>  		reg = <0xfffc000 0x118>;
+>  		#gpio-range-cells = <3>;
+>  	};
+> +
+> +	ether: ethernet@fde00000 {
+> +		device_type = "network";
 
-Looking at other dts(i) files around the kernel, mmc is the most commonly 
-used node name for MMC controllers (after sdhci, but it's used for the 
-whole class of controllers compatible with standard SDHCI).
+Documentation/devicetree/bindings/net/sh_eth.txt from "[PATCH 2/2] sh_eth: add 
+device tree support" doesn't document this property, should you update it ?
 
-So, for me, just go with "mmc" and it should be fine.
+> +		compatible = "renesas,ether-r8a7779";
+> +		reg = <0xfde00000 0x400>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 105 0x4>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "disabled";
+> +	};
+>  };
 
-Best regards,
-Tomasz
+-- 
+Regards,
+
+Laurent Pinchart
+
