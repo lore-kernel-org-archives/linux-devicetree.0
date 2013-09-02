@@ -1,370 +1,181 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v9 2/3] DMA: Freescale: Add new 8-channel DMA engine
- device tree nodes
-Date: Mon, 2 Sep 2013 16:58:12 +0100
-Message-ID: <20130902155636.GA18206@e106331-lin.cambridge.arm.com>
-References: <1377861980-7027-1-git-send-email-hongbo.zhang@freescale.com>
- <1377861980-7027-3-git-send-email-hongbo.zhang@freescale.com>
+Subject: Re: [PATCH v3 2/2] media: i2c: adv7343: add OF support
+Date: Mon, 2 Sep 2013 17:17:15 +0100
+Message-ID: <20130902161715.GB18206@e106331-lin.cambridge.arm.com>
+References: <1374301266-26726-1-git-send-email-prabhakar.csengg@gmail.com>
+ <1374301266-26726-3-git-send-email-prabhakar.csengg@gmail.com>
+ <5217A3E7.50706@samsung.com>
+ <CA+V-a8tStFRbELAmZL=418VpR9SJgp8uo_4hrtny2UEMEoXakg@mail.gmail.com>
+ <20130827152405.GQ19893@e106331-lin.cambridge.arm.com>
+ <CA+V-a8vuYNNiXJ+iGgceaTqHdM_Q9X2dVDyiHHZPJ+-rSbJgLQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1377861980-7027-3-git-send-email-hongbo.zhang@freescale.com>
+In-Reply-To: <CA+V-a8vuYNNiXJ+iGgceaTqHdM_Q9X2dVDyiHHZPJ+-rSbJgLQ@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "hongbo.zhang@freescale.com" <hongbo.zhang@freescale.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LDOC <linux-doc@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Aug 28, 2013 at 03:43:04AM +0100, Prabhakar Lad wrote:
+> Hi Mark,
+> 
+> On Tue, Aug 27, 2013 at 8:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > [fixing up devicetree list address]
+> >
+> Thanks!
+> 
+> > On Mon, Aug 26, 2013 at 03:41:45AM +0100, Prabhakar Lad wrote:
+> >> Hi Sylwester,
+> >>
+> >> On Fri, Aug 23, 2013 at 11:33 PM, Sylwester Nawrocki
+> >> <s.nawrocki@samsung.com> wrote:
+> >> > Cc: DT binding maintainers
+> >
+> > Cheers!
+> >
+> >> >
+> >> > On 07/20/2013 08:21 AM, Lad, Prabhakar wrote:
+> >> >> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+> >> >>
+> >> >> add OF support for the adv7343 driver.
+> >> >>
+> >> >> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> >> >> ---
+> >> > [...]
+> >> >>  .../devicetree/bindings/media/i2c/adv7343.txt      |   48 ++++++++++++++++++++
+> >> >>  drivers/media/i2c/adv7343.c                        |   46 ++++++++++++++++++-
+> >> >>  2 files changed, 93 insertions(+), 1 deletion(-)
+> >> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7343.txt
+> >> >>
+> >> >> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+> >> >> new file mode 100644
+> >> >> index 0000000..5653bc2
+> >> >> --- /dev/null
+> >> >> +++ b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+> >> >> @@ -0,0 +1,48 @@
+> >> >> +* Analog Devices adv7343 video encoder
+> >> >> +
+> >> >> +The ADV7343 are high speed, digital-to-analog video encoders in a 64-lead LQFP
+> >> >> +package. Six high speed, 3.3 V, 11-bit video DACs provide support for composite
+> >> >> +(CVBS), S-Video (Y-C), and component (YPrPb/RGB) analog outputs in standard
+> >> >> +definition (SD), enhanced definition (ED), or high definition (HD) video
+> >> >> +formats.
+> >> >> +
+> >> >> +Required Properties :
+> >> >> +- compatible: Must be "adi,adv7343"
+> >> >> +
+> >> >> +Optional Properties :
+> >> >> +- adi,power-mode-sleep-mode: on enable the current consumption is reduced to
+> >> >> +                           micro ampere level. All DACs and the internal PLL
+> >> >> +                           circuit are disabled.
+> >
+> > This seems to be a boolean property, and I couldn't find any description
+> > in the linked datasheet of the constraints under which the unit may be
+> > put into sleep mode.
+> >
+> > Why do we require this property in the dt? Can the driver not always put
+> > a adv734x into sleep mode if it wants to, and then wake it up as
+> > required?
+> >
+> The adv7343 decoder, fits on da850/dm6467 etc.. For the da850 it supports
+> only SD where as the dm6467 supports HD/SD/ED for which DAC 1-6 of
+> Register 0x0 varies for this board so I added them as the platform data
+> but I got a review comment in the ML asking to add entire register as
+> the pdata instead of DAC 1-6, so because of which it is being converted
+> in the same way for DT.
 
-On Fri, Aug 30, 2013 at 12:26:19PM +0100, hongbo.zhang@freescale.com wrote:
-> From: Hongbo Zhang <hongbo.zhang@freescale.com>
->
-> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch adds
-> the device tree nodes for them.
->
-> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
-> ---
->  .../devicetree/bindings/powerpc/fsl/dma.txt        |   67 ++++++++++++++++
->  arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
->  arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   82 ++++++++++++++++++++
->  arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   82 ++++++++++++++++++++
->  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
->  5 files changed, 235 insertions(+), 4 deletions(-)
->  create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->  create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
->
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> index ddf17af..332ac77 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> @@ -126,6 +126,73 @@ Example:
->                 };
->         };
->
-> +** Freescale Elo3 DMA Controller
-> +   This is EloPlus controller with 8 channels, used in Freescale Txxx and Bxxx
+Not everything that appears in platform data should appear in the dt.
+This seems more like a run-time decision that a description of the
+hardware. 
 
-I was under the impression EloPlus was the previous revision. Should
-that say Elo3, or is Elo3 considered to be an EloPlus implementation?
+I don't see why we need the "adi,power-mode-sleep-mode" property.
 
-> +   series chips, such as t1040, t4240, b4860.
-> +
-> +Required properties:
-> +
-> +- compatible        : must include "fsl,elo3-dma"
-> +- reg               : <registers specifier for DMA general status reg>
+> 
+> >> >
+> >> > Sorry for getting back so late to this. I realize this is already queued in
+> >> > the media tree. But this binding doesn't look good enough to me. I think it
+> >> > will need to be corrected during upcoming -rc period.
+> >> >
+> >> Thanks for the catch :-)
+> >>
+> >> > It might be hard to figure out only from the chip's datasheet what
+> >> > adi,power-mode-sleep-mode really refers to. AFAICS it is for assigning some
+> >> > value to a specific register. If we really need to specify register values
+> >> > in the device tree then it would probably make sense to describe to which
+> >> > register this apply. Now the name looks like derived from some structure
+> >> > member name in the Linux driver of the device.
+> >> >
+> >> the property is derived from the datasheet itself for example the
+> >> 'adi,power-mode-sleep-mode' --> Register 0x0 power mode bit 0
+> >> 'adi,power-mode-pll-ctrl' ---> Register 0x0 power mode bit 1
+> >> 'adi,dac-enable' ----> Register 0x0 power mode bit 2-7
+> >> 'adi,sd-dac-enable' ---> Register 0x82 SD mode register bit 1-2
+> >>
+> >> [1] http://www.analog.com/static/imported-files/data_sheets/ADV7342_7343.pdf
+> >>
+> >> >> +- adi,power-mode-pll-ctrl: PLL and oversampling control. This control allows
+> >> >> +                        internal PLL 1 circuit to be powered down and the
+> >> >> +                        oversampling to be switched off.
+> >
+> > This affects whether or not oversampling is possible. That sounds like
+> > it should be a run-time configurable rather than a fixed property of the
+> > device.
+> >
+> ditto
 
-The example has two reg entries. What both are should be specified. From
-what you described last time, it sounds like each is a status register
-for four channels.
+Not all platform data is suitable for dt. This seems like a decision as
+to how to use the hardware, rather than a description of the hardware.
+Hardware description should go in the dt, decisions should go in the
+driver.
 
-Presumably the first covers the channels at 0x0,0x80,0x100,0x180, and
-the second covers the channels at 0x300,0x380,0x400,0x480? If the
-registers have specific names in a datasheet, it would be worth
-mentioning them.
+> 
+> >> >
+> >> > Similar comments applies to this property.
+> >> >
+> >> >> +- ad,adv7343-power-mode-dac: array configuring the power on/off DAC's 1..6,
+> >> >> +                           0 = OFF and 1 = ON, Default value when this
+> >> >> +                           property is not specified is <0 0 0 0 0 0>.
+> >> >
+> >> > Name of the property is incorrect here. It has changed to "adi,dac-enable".
+> >> >
+> >> OK
+> >
+> > Why do we need this property at all? Might some DACs not be wired up to
+> > anything?
+> >
+> > Surely this could be configured at run-time as and when the user wants
+> > to use the DACs.
+> >
+> >>
+> >> >> +- ad,adv7343-sd-config-dac-out: array configure SD DAC Output's 1 and 2, 0 = OFF
+> >> >> +                              and 1 = ON, Default value when this property is
+> >> >> +                              not specified is <0 0>.
+> >> >
+> >> > Similarly, "adi,sd-dac-enable.
+> >> >
+> >> OK
+> >
+> > Again, couldn't this be done at run-time?
+> >
+> > Do we need to permanently disable/enable some DACs? If so, why?
+> >
+> ditto.
 
-If the specification of the DMA controller allows for more channels, it
-may be worth describing that case now.
-
-> +- ranges            : describes the mapping between the address space of the
-> +                      DMA channels and the address space of the DMA controller
-
-This looks odd as a required property, and I'm slightly confused. Is
-this used to map the reg values of the DMA channels, or is it used when
-mapping the DMA address space (for which dma-ranges exists in ePAPR and
-other bindings).
-
-> +
-> +- DMA channel nodes:
-> +        - compatible        : must include "fsl,eloplus-dma-channel"
-> +        - reg               : <registers specifier for channel>
-
-What does this represent? What are valid values?
-
-In the example below it looks like these are offsets of control
-registers within the dma controller.
-
-If the reg property may have any value, how do they get mapped to bits
-in the status register(s)?
-
-May some channels be unusable for some reason, or will all eight
-channels be wired on any given Elo3 DMA?
+And ditto to my points above.
 
 Cheers,
 Mark.
 
-> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
-> +        - interrupt-parent  : optional, if needed for interrupt mapping
-> +
-> +Example:
-> +dma@100300 {
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +       compatible = "fsl,elo3-dma";
-> +       reg = <0x100300 0x4>,
-> +             <0x100600 0x4>;
-> +       ranges = <0x0 0x100100 0x500>;
-> +       dma-channel@0 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x0 0x80>;
-> +               interrupts = <28 2 0 0>;
-> +       };
-> +       dma-channel@80 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x80 0x80>;
-> +               interrupts = <29 2 0 0>;
-> +       };
-> +       dma-channel@100 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x100 0x80>;
-> +               interrupts = <30 2 0 0>;
-> +       };
-> +       dma-channel@180 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x180 0x80>;
-> +               interrupts = <31 2 0 0>;
-> +       };
-> +       dma-channel@300 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x300 0x80>;
-> +               interrupts = <76 2 0 0>;
-> +       };
-> +       dma-channel@380 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x380 0x80>;
-> +               interrupts = <77 2 0 0>;
-> +       };
-> +       dma-channel@400 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x400 0x80>;
-> +               interrupts = <78 2 0 0>;
-> +       };
-> +       dma-channel@480 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x480 0x80>;
-> +               interrupts = <79 2 0 0>;
-> +       };
-> +};
-> +
->  Note on DMA channel compatible properties: The compatible property must say
->  "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
->  driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
-> diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-> index 7399154..ea53ea1 100644
-> --- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-> +++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-> @@ -223,13 +223,13 @@
->                 reg = <0xe2000 0x1000>;
->         };
->
-> -/include/ "qoriq-dma-0.dtsi"
-> +/include/ "elo3-dma-0.dtsi"
->         dma@100300 {
->                 fsl,iommu-parent = <&pamu0>;
->                 fsl,liodn-reg = <&guts 0x580>; /* DMA1LIODNR */
->         };
->
-> -/include/ "qoriq-dma-1.dtsi"
-> +/include/ "elo3-dma-1.dtsi"
->         dma@101300 {
->                 fsl,iommu-parent = <&pamu0>;
->                 fsl,liodn-reg = <&guts 0x584>; /* DMA2LIODNR */
-> diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
-> new file mode 100644
-> index 0000000..3c210e0
-> --- /dev/null
-> +++ b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
-> @@ -0,0 +1,82 @@
-> +/*
-> + * QorIQ Elo3 DMA device tree stub [ controller @ offset 0x100000 ]
-> + *
-> + * Copyright 2013 Freescale Semiconductor Inc.
-> + *
-> + * Redistribution and use in source and binary forms, with or without
-> + * modification, are permitted provided that the following conditions are met:
-> + *     * Redistributions of source code must retain the above copyright
-> + *       notice, this list of conditions and the following disclaimer.
-> + *     * Redistributions in binary form must reproduce the above copyright
-> + *       notice, this list of conditions and the following disclaimer in the
-> + *       documentation and/or other materials provided with the distribution.
-> + *     * Neither the name of Freescale Semiconductor nor the
-> + *       names of its contributors may be used to endorse or promote products
-> + *       derived from this software without specific prior written permission.
-> + *
-> + *
-> + * ALTERNATIVELY, this software may be distributed under the terms of the
-> + * GNU General Public License ("GPL") as published by the Free Software
-> + * Foundation, either version 2 of that License or (at your option) any
-> + * later version.
-> + *
-> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-> +
-> +dma0: dma@100300 {
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +       compatible = "fsl,elo3-dma";
-> +       reg = <0x100300 0x4>,
-> +             <0x100600 0x4>;
-> +       ranges = <0x0 0x100100 0x500>;
-> +       dma-channel@0 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x0 0x80>;
-> +               interrupts = <28 2 0 0>;
-> +       };
-> +       dma-channel@80 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x80 0x80>;
-> +               interrupts = <29 2 0 0>;
-> +       };
-> +       dma-channel@100 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x100 0x80>;
-> +               interrupts = <30 2 0 0>;
-> +       };
-> +       dma-channel@180 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x180 0x80>;
-> +               interrupts = <31 2 0 0>;
-> +       };
-> +       dma-channel@300 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x300 0x80>;
-> +               interrupts = <76 2 0 0>;
-> +       };
-> +       dma-channel@380 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x380 0x80>;
-> +               interrupts = <77 2 0 0>;
-> +       };
-> +       dma-channel@400 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x400 0x80>;
-> +               interrupts = <78 2 0 0>;
-> +       };
-> +       dma-channel@480 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x480 0x80>;
-> +               interrupts = <79 2 0 0>;
-> +       };
-> +};
-> diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
-> new file mode 100644
-> index 0000000..cccf3bb
-> --- /dev/null
-> +++ b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
-> @@ -0,0 +1,82 @@
-> +/*
-> + * QorIQ Elo3 DMA device tree stub [ controller @ offset 0x101000 ]
-> + *
-> + * Copyright 2013 Freescale Semiconductor Inc.
-> + *
-> + * Redistribution and use in source and binary forms, with or without
-> + * modification, are permitted provided that the following conditions are met:
-> + *     * Redistributions of source code must retain the above copyright
-> + *       notice, this list of conditions and the following disclaimer.
-> + *     * Redistributions in binary form must reproduce the above copyright
-> + *       notice, this list of conditions and the following disclaimer in the
-> + *       documentation and/or other materials provided with the distribution.
-> + *     * Neither the name of Freescale Semiconductor nor the
-> + *       names of its contributors may be used to endorse or promote products
-> + *       derived from this software without specific prior written permission.
-> + *
-> + *
-> + * ALTERNATIVELY, this software may be distributed under the terms of the
-> + * GNU General Public License ("GPL") as published by the Free Software
-> + * Foundation, either version 2 of that License or (at your option) any
-> + * later version.
-> + *
-> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-> +
-> +dma1: dma@101300 {
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +       compatible = "fsl,elo3-dma";
-> +       reg = <0x101300 0x4>,
-> +             <0x101600 0x4>;
-> +       ranges = <0x0 0x101100 0x500>;
-> +       dma-channel@0 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x0 0x80>;
-> +               interrupts = <32 2 0 0>;
-> +       };
-> +       dma-channel@80 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x80 0x80>;
-> +               interrupts = <33 2 0 0>;
-> +       };
-> +       dma-channel@100 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x100 0x80>;
-> +               interrupts = <34 2 0 0>;
-> +       };
-> +       dma-channel@180 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x180 0x80>;
-> +               interrupts = <35 2 0 0>;
-> +       };
-> +       dma-channel@300 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x300 0x80>;
-> +               interrupts = <80 2 0 0>;
-> +       };
-> +       dma-channel@380 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x380 0x80>;
-> +               interrupts = <81 2 0 0>;
-> +       };
-> +       dma-channel@400 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x400 0x80>;
-> +               interrupts = <82 2 0 0>;
-> +       };
-> +       dma-channel@480 {
-> +               compatible = "fsl,eloplus-dma-channel";
-> +               reg = <0x480 0x80>;
-> +               interrupts = <83 2 0 0>;
-> +       };
-> +};
-> diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-> index bd611a9..ec95c60 100644
-> --- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-> +++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-> @@ -387,8 +387,8 @@
->                 reg        = <0xea000 0x4000>;
->         };
->
-> -/include/ "qoriq-dma-0.dtsi"
-> -/include/ "qoriq-dma-1.dtsi"
-> +/include/ "elo3-dma-0.dtsi"
-> +/include/ "elo3-dma-1.dtsi"
->
->  /include/ "qoriq-espi-0.dtsi"
->         spi@110000 {
-> --
-> 1.7.9.5
->
->
->
->
+> 
+> > I also note from the spec that the unit has two clocks, CLKIN_A and
+> > CLKIN_B that aren't in the binding, but should be. Some regulators
+> > too (VDD, PVDD, VAA, VDD_IO, VREF?).
+> >
+> OK
+> 
+> Regards,
+> --Prabhakar Lad
+> 
