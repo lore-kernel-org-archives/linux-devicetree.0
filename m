@@ -1,56 +1,58 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v3 0/7] ARM: imx27 pinctrl
-Date: Mon, 2 Sep 2013 11:25:50 +0200
-Message-ID: <20130902092550.GY30088@pengutronix.de>
-References: <1378020488-21129-1-git-send-email-mpa@pengutronix.de>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Mon, 02 Sep 2013 11:25:25 +0200
+Message-ID: <1521079.WSLhhfqBXl@lem-wkst-02>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <521FE637.3010805@collabora.co.uk> <5220F8AE.2080300@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1378020488-21129-1-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5220F8AE.2080300@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 01, 2013 at 09:28:01AM +0200, Markus Pargmann wrote:
-> Hi,
+Am Freitag, 30. August 2013, 13:55:26 schrieb Stephen Warren:
+> On 08/29/2013 06:24 PM, Javier Martinez Canillas wrote:
+> ...
 > 
-> this series implements a imx27 pinctrl driver. imx1/21/27 have a register
-> format that is not compatible with the rest of imx series processors. The
-> series adds a imx1 core driver for the different register layout.
+> > We have been trying to solve this issue for a few months by now and Linus'
+> > approach seems to be the most sensible solution to me.
+> > 
+> > Drivers that request an IRQ and assume that platform code will request and
+> > setup the GPIO have been broken since the boards using these drivers were
+> > migrated to DT (e.g: smsc911x on OMAP2+ boards).
 > 
-> Regards,
-> 
-> Markus
-> 
-> Changes since v2:
->  - Some fixes in dts files and documentation
-> 
-> Changes since v1:
->  - Removed changes of gpio-mxc driver
->  - imx and imx1-core drivers are completely seperated now
->  - Splitted DT pinctrl entries into imx27.dtsi and board files
->  - Other style changes
+> That's only true if the driver for the GPIO controller is buggy.
+> Whatever request_irq() maps down to in the GPIO/IRQ controller driver
+> simply needs to set up the pin as an interrupt input, then it doesn't
+> matter which order the driver does things.
 
->From my side this looks ok now.
+Is it really that easy?
+request_irq() should request the gpio and set it to input that it needs to 
+fulfill the irq request. That would then be the way to go for new drivers and 
+in the DT case.
+Some leagcy drivers currently do this:
 
-Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
+request_gpio(gpio);
+gpio_direction_input(gpio);
+request_irq(gpio_to_irq(gpio));
 
-Sascha
+In that case request_irq should not fail because the driver is already the 
+correct owner of this gpio. But if some other entity owns this gpio it should 
+fail.
 
+Also if I understand you correct the other way round should also possible:
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+request_irq(gpio_to_irq(gpio));
+request_gpio(gpio);
+gpio_direction_input(gpio);
+
+request_irq() also requests the gpio then but the following request_gpio() 
+should also not fail.
+
+To have it work that way we have to track the owners of all requested gpios 
+somewhere. Or am I wrong here?
+Where and how to record these owners? Can gpio system achieve this? gpios are 
+requested without an owning device.
