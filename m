@@ -1,148 +1,74 @@
-From: Xiubo Li-B47053 <B47053@freescale.com>
-Subject: RE: [PATCHv2 1/4] pwm: Add Freescale FTM PWM driver support
-Date: Mon, 2 Sep 2013 03:33:37 +0000
-Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F827F785F@039-SN2MPN1-011.039d.mgd.msft.net>
-References: <1377856132-11290-1-git-send-email-Li.Xiubo@freescale.com>
- <1377856132-11290-2-git-send-email-Li.Xiubo@freescale.com>
- <20130830174909.GF30088@pengutronix.de>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCH 1/2] ARM: i.MX6: dts: change iomuxc pinctrl config to
+ match Rev. 1 IMX6DQRM
+Date: Mon, 2 Sep 2013 13:01:39 +0800
+Message-ID: <52241BB3.5030909@freescale.com>
+References: <521C40D9.3070802@freescale.com>
+ <1377659855-9573-1-git-send-email-alison_chaiken@mentor.com>
+ <1377659855-9573-2-git-send-email-alison_chaiken@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130830174909.GF30088@pengutronix.de>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Guo Shawn-R65073 <r65073@freescale.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Lu Jingchang-B35083 <B35083@freescale.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1377659855-9573-2-git-send-email-alison_chaiken@mentor.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: alison_chaiken@mentor.com
+Cc: devicetree@vger.kernel.org, alison@she-devel.com, linus.walleij@linaro.org, rob.herring@calxeda.com, olof@lixom.net, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-> > +static void fsl_pwm_free(struct pwm_chip *chip, struct pwm_device
-> > +*pwm) {
-> > +	struct fsl_pwm_chip *fpc;
-> > +	struct fsl_pwm_data *pwm_data;
-> > +
-> > +	fpc = to_fsl_chip(chip);
-> > +
-> > +	pwm_data = pwm_get_chip_data(pwm);
-> > +	if (!pwm_data)
-> > +		return;
-> 
-> THis check seems unnecessary.
-> 
-
-But if do not check it here, I must check it in the following code.
-
-> > +
-> > +	if (pwm_data->available != FSL_AVAILABLE)
-> > +		return;
-> > +
-
-So the ' struct fsl_pwm_data' may be removed in the future.
-
-> 
-> > +
-> > +
-> > +	pwm_data->period_cycles = period_cycles;
-> > +	pwm_data->duty_cycles = duty_cycles;
-> 
-> These fields are set but never read. Please drop them.
-> 
-> If you drop the 'available' field also the you can drop chip_data
-> completely.
-> 
-
-I think I may move the 'available' field to the PWM driver data struct.
-
-> > +
-> > +	writel(FTMCnSC_MSB | FTMCnSC_ELSB, fpc->base + FTM_CSC(pwm->hwpwm));
-> > +
-> > +	writel(0xF0, fpc->base + FTM_OUTMASK);
-> > +	writel(0x0F, fpc->base + FTM_OUTINIT);
-> > +	writel(FTM_CNTIN_VAL, fpc->base + FTM_CNTIN);
-> > +
-> > +	writel(period_cycles + cntin - 1, fpc->base + FTM_MOD);
-> > +	writel(duty_cycles + cntin, fpc->base + FTM_CV(pwm->hwpwm));
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int fsl_pwm_set_polarity(struct pwm_chip *chip, struct
-> pwm_device *pwm,
-> > +				enum pwm_polarity polarity)
-> > +{
-> > +	unsigned long reg;
-> > +	struct fsl_pwm_data *pwm_data;
-> > +	struct fsl_pwm_chip *fpc;
-> > +
-> > +	fpc = to_fsl_chip(chip);
-> > +
-> > +	pwm_data = pwm_get_chip_data(pwm);
-> > +	if (!pwm_data)
-> > +		return -EINVAL;
-> > +
-> > +	if (pwm_data->available != FSL_AVAILABLE)
-> > +		return -EINVAL;
-> > +
-> > +	reg = readl(fpc->base + FTM_POL);
-> > +	reg &= ~BIT(pwm->hwpwm);
-> 
-> Either drop this line...
-> 
-
-This is just for unmasking this bit field.
-Here it's not needed, so I will revise it.
-
-> > +	if (polarity == PWM_POLARITY_INVERSED)
-> > +		reg |= BIT(pwm->hwpwm);
-> > +	else
-> > +		reg &= ~BIT(pwm->hwpwm);
-> 
-> ...or this one
-> 
-
-> > +static int fsl_pwm_enable(struct pwm_chip *chip, struct pwm_device
-> > +*pwm) {
-> > +	int ret;
-> > +	struct fsl_pwm_chip *fpc;
-> > +	struct pinctrl_state *pins_state;
-> > +	struct fsl_pwm_data *pwm_data;
-> > +	const char *statename;
-> > +
-> > +	fpc = to_fsl_chip(chip);
-> > +
-> > +	pwm_data = pwm_get_chip_data(pwm);
-> > +	if (!pwm_data)
-> > +		return -EINVAL;
-> > +
-> > +	if (pwm_data->available != FSL_AVAILABLE)
-> > +		return -EINVAL;
-> > +
-> > +	statename = kasprintf(GFP_KERNEL, "ch%d-active", pwm->hwpwm);
-> 
-> You loose memory here and in fsl_pwm_disable aswell.
-> 
-
-Yes, I will revise it.
-
-> > +	pins_state = pinctrl_lookup_state(fpc->pinctrl,
-> > +			statename);
-> > +	/* enable pins to be muxed in and configured */
-> > +	if (!IS_ERR(pins_state)) {
-> > +		ret = pinctrl_select_state(fpc->pinctrl, pins_state);
-> > +		if (ret)
-> > +			dev_warn(chip->dev, "could not set default pins\n");
-> > +	} else
-> > +		dev_warn(chip->dev, "could not get default pinstate\n");
-> 
-> Either it's ok to do without pinctrl or it's not ok, so either return an
-> error or drop the warnings. Polluting the kernel log with such messages
-> from a frequently called function is not a good idea.
-> 
-
-Well, I will just print out some error logs and return the error.
-
---
-Best Regards.
-Xiubo
-
+09ogMjAxM8TqMDjUwjI4yNUgMTE6MTcsIGFsaXNvbl9jaGFpa2VuQG1lbnRvci5jb20g0LS1wDoK
+PiBAQCAtNzU5LDIzICs3NTksMjMgQEAKPiAgCQkJCWdwbWktbmFuZCB7Cj4gIAkJCQkJcGluY3Ry
+bF9ncG1pX25hbmRfMTogZ3BtaS1uYW5kLTEgewo+ICAJCQkJCQlmc2wscGlucyA9IDwKPiAtCQkJ
+CQkJCU1YNlFETF9QQURfTkFOREZfQ0xFX19OQU5EX0NMRSAgICAgMHhiMGIxCj4gLQkJCQkJCQlN
+WDZRRExfUEFEX05BTkRGX0FMRV9fTkFORF9BTEUgICAgIDB4YjBiMQo+IC0JCQkJCQkJTVg2UURM
+X1BBRF9OQU5ERl9XUF9CX19OQU5EX1dQX0IgICAweGIwYjEKPiAtCQkJCQkJCU1YNlFETF9QQURf
+TkFOREZfUkIwX19OQU5EX1JFQURZX0IgMHhiMDAwCj4gLQkJCQkJCQlNWDZRRExfUEFEX05BTkRG
+X0NTMF9fTkFORF9DRTBfQiAgIDB4YjBiMQo+IC0JCQkJCQkJTVg2UURMX1BBRF9OQU5ERl9DUzFf
+X05BTkRfQ0UxX0IgICAweGIwYjEKPiAtCQkJCQkJCU1YNlFETF9QQURfU0Q0X0NNRF9fTkFORF9S
+RV9CICAgICAgMHhiMGIxCj4gLQkJCQkJCQlNWDZRRExfUEFEX1NENF9DTEtfX05BTkRfV0VfQiAg
+ICAgIDB4YjBiMQo+IC0JCQkJCQkJTVg2UURMX1BBRF9OQU5ERl9EMF9fTkFORF9EQVRBMDAgICAw
+eGIwYjEKPiAtCQkJCQkJCU1YNlFETF9QQURfTkFOREZfRDFfX05BTkRfREFUQTAxICAgMHhiMGIx
+Cj4gLQkJCQkJCQlNWDZRRExfUEFEX05BTkRGX0QyX19OQU5EX0RBVEEwMiAgIDB4YjBiMQo+IC0J
+CQkJCQkJTVg2UURMX1BBRF9OQU5ERl9EM19fTkFORF9EQVRBMDMgICAweGIwYjEKPiAtCQkJCQkJ
+CU1YNlFETF9QQURfTkFOREZfRDRfX05BTkRfREFUQTA0ICAgMHhiMGIxCj4gLQkJCQkJCQlNWDZR
+RExfUEFEX05BTkRGX0Q1X19OQU5EX0RBVEEwNSAgIDB4YjBiMQo+IC0JCQkJCQkJTVg2UURMX1BB
+RF9OQU5ERl9ENl9fTkFORF9EQVRBMDYgICAweGIwYjEKPiAtCQkJCQkJCU1YNlFETF9QQURfTkFO
+REZfRDdfX05BTkRfREFUQTA3ICAgMHhiMGIxCj4gLQkJCQkJCQlNWDZRRExfUEFEX1NENF9EQVQw
+X19OQU5EX0RRUyAgICAgIDB4MDBiMQo+ICsJCQkJCQkJTVg2UURMX1BBRF9OQU5ERl9DTEVfX05B
+TkRfQ0xFICAgICAweDFiMGIwCj4gKwkJCQkJCQlNWDZRRExfUEFEX05BTkRGX0FMRV9fTkFORF9B
+TEUgICAgIDB4MWIwYjAKPiArCQkJCQkJCU1YNlFETF9QQURfTkFOREZfV1BfQl9fTkFORF9XUF9C
+ICAgMHgxYjBiMAo+ICsJCQkJCQkJTVg2UURMX1BBRF9OQU5ERl9SQjBfX05BTkRfUkVBRFlfQiAw
+eDFiMGIwCj4gKwkJCQkJCQlNWDZRRExfUEFEX05BTkRGX0NTMF9fTkFORF9DRTBfQiAgIDB4MWIw
+YjAKPiArCQkJCQkJCU1YNlFETF9QQURfTkFOREZfQ1MxX19OQU5EX0NFMV9CICAgMHgxYjBiMAo+
+ICsJCQkJCQkJTVg2UURMX1BBRF9TRDRfQ01EX19OQU5EX1JFX0IgICAgICAweDFiMGIwCj4gKwkJ
+CQkJCQlNWDZRRExfUEFEX1NENF9DTEtfX05BTkRfV0VfQiAgICAgIDB4MWIwYjAKPiArCQkJCQkJ
+CU1YNlFETF9QQURfTkFOREZfRDBfX05BTkRfREFUQTAwICAgMHgxYjBiMAo+ICsJCQkJCQkJTVg2
+UURMX1BBRF9OQU5ERl9EMV9fTkFORF9EQVRBMDEgICAweDFiMGIwCj4gKwkJCQkJCQlNWDZRRExf
+UEFEX05BTkRGX0QyX19OQU5EX0RBVEEwMiAgIDB4MWIwYjAKPiArCQkJCQkJCU1YNlFETF9QQURf
+TkFOREZfRDNfX05BTkRfREFUQTAzICAgMHgxYjBiMAo+ICsJCQkJCQkJTVg2UURMX1BBRF9OQU5E
+Rl9ENF9fTkFORF9EQVRBMDQgICAweDFiMGIwCj4gKwkJCQkJCQlNWDZRRExfUEFEX05BTkRGX0Q1
+X19OQU5EX0RBVEEwNSAgIDB4MWIwYjAKPiArCQkJCQkJCU1YNlFETF9QQURfTkFOREZfRDZfX05B
+TkRfREFUQTA2ICAgMHgxYjBiMAo+ICsJCQkJCQkJTVg2UURMX1BBRF9OQU5ERl9EN19fTkFORF9E
+QVRBMDcgICAweDFiMGIwCj4gKwkJCQkJCQlNWDZRRExfUEFEX1NENF9EQVQwX19OQU5EX0RRUyAg
+ICAgIDB4MWIwYjAKPiAgCQkJCQkJPjsKPiAgCQkJCQl9Owo+ICAJCQkJfTsKSSB0ZXN0ZWQgdGhp
+cyBwYXRjaCB3aXRoIHRoZSBpbXg2cS1hcmQgYm9hcmQgYW5kIGlteDZkbC1hcmQgYm9hcmQuCgpG
+b3IgdGhlIGdwbWkgbmFuZCB0ZXN0IHJlc3VsdDoKWzFdIGlteDZxLWFyZDogV2UgY2FuIHBhc3Mg
+dGhlIGJvbmllKysgc3RyZXNzIHRlc3Qgd2l0aCB0aGUgaW14NnEtYXJkIGJvYXJkLgoKWzJdIGlt
+eDZkbC1hcmQ6IEJ1dCB3ZSBmYWlscyB0byByZWFkIHRoZSBuYW5kIElEIHdpdGggdGhlIGlteDZk
+bC1hcmQgYm9hcmQuCkluIG90aGVyIHdvcmQsIHRoaXMgZ3BtaSBjYW4gX25vdF8gd29ya3Mgd2l0
+aCB0aGlzIHBhdGNoLgoKQnV0IHdpdGhvdXQgdGhpcyBwYXRjaCwgdGhlIGlteDZkbC1hcmQgd29y
+a3MgZmluZS4KCkluIHNlY3Rpb24gNC4xLCB0aGUgc3BlYyB0ZWxscyB1cyB0aGF0IHRoZSAweDFi
+MGIwIGlzIGp1c3QgdGhlICJkZWZhdWx0CnNldHRpbmdzIGZvciB0aGUgZWFjaCBwYWQiLApub3Qg
+dGhlIHJpZ2h0IHNldHRpbmdzIGZvciB0aGUgZWFjaCBwYWQuCgoKCnRoYW5rcwpIdWFuZyBTaGlq
+aWUKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
+eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
+cm0ta2VybmVsCg==
