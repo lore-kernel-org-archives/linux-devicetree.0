@@ -1,157 +1,135 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] sh_eth: add device tree support
-Date: Mon, 2 Sep 2013 09:52:25 +0100
-Message-ID: <20130902085225.GF27891@e106331-lin.cambridge.arm.com>
-References: <201308310429.34856.sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] serial: fsl-imx-uart: Cleanup duplicate device
+ tree binding
+Date: Mon, 2 Sep 2013 12:40:16 +0100
+Message-ID: <20130902114016.GA13303@e106331-lin.cambridge.arm.com>
+References: <1377716903-19699-1-git-send-email-galak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201308310429.34856.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "nobuhiro.iwamatsu.yj@renesas.com" <nobuhiro.iwamatsu.yj@renesas.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+In-Reply-To: <1377716903-19699-1-git-send-email-galak@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "fabio.estevam@freescale.com" <fabio.estevam@freescale.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 31, 2013 at 01:29:33AM +0100, Sergei Shtylyov wrote:
-> Add support of the device tree probing for the Renesas SH-Mobile SoCs.
-> 
-> This work is loosely based on an original patch by Nobuhiro Iwamatsu
-> <nobuhiro.iwamatsu.yj@renesas.com>.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
+On Wed, Aug 28, 2013 at 08:08:22PM +0100, Kumar Gala wrote:
+> We had two bindings for the same serial device, it looks like the one=
+ in
+> tty/serial/fsl-imx-uart.txt is the more up to date one so go with it =
+and
+> merge a few things about the use/need for aliases in from
+> serial/fsl-imx-uart.txt.
+
+Oh my, that's a mess.
+
+>=20
+> Signed-off-by: Kumar Gala <galak@codeaurora.org>
 > ---
-> This patch is against Dave's 'net-next.git' repo.
-> 
->  Documentation/devicetree/bindings/net/sh_eth.txt |   40 +++++++++++++
->  drivers/net/ethernet/renesas/sh_eth.c            |   66 ++++++++++++++++++++++-
->  2 files changed, 105 insertions(+), 1 deletion(-)
-> 
-> Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
-> ===================================================================
-> --- /dev/null
-> +++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
-> @@ -0,0 +1,40 @@
-> +* Renesas Electronics SH EtherMAC
-> +
-> +This file provides information on what the device node for the SH EtherMAC
-> +interface contains.
-> +
-> +Required properties:
-> +- compatible: "renesas,gether-r8a7740" if the device is a part of R8A7740 SoC.
-> +	      "renesas,ether-r8a7779" if the device is a part of R8A7778/9 SoCs.
-> +	      "renesas,ether-r8a7790" if the device is a part of R8A7790/1 SoCs.
+>  .../devicetree/bindings/serial/fsl-imx-uart.txt    | 35 ------------=
+----------
+>  .../bindings/tty/serial/fsl-imx-uart.txt           |  9 +++++-
+>  2 files changed, 8 insertions(+), 36 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/fsl-imx-=
+uart.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.tx=
+t b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+> deleted file mode 100644
+> index c58573b..0000000
+> --- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+> +++ /dev/null
+> @@ -1,35 +0,0 @@
+> -* Freescale i.MX UART controller
+> -
+> -Required properties:
+> -- compatible : should be "fsl,imx21-uart"
+> -- reg : Address and length of the register set for the device
+> -- interrupts : Should contain UART interrupt number
+> -
+> -Optional properties:
+> -- fsl,uart-has-rtscts: indicate that RTS/CTS signals are used
+> -
+> -Note: Each uart controller should have an alias correctly numbered
+> -in "aliases" node.
+> -
+> -Example:
+> -
+> -- From imx51.dtsi:
+> -aliases {
+> -	serial0 =3D &uart1;
+> -	serial1 =3D &uart2;
+> -	serial2 =3D &uart3;
+> -};
+> -
+> -uart1: serial@73fbc000 {
+> -	compatible =3D "fsl,imx51-uart", "fsl,imx21-uart";
+> -	reg =3D <0x73fbc000 0x4000>;
+> -	interrupts =3D <31>;
+> -	status =3D "disabled";
+> -}
+> -
+> -- From imx51-babbage.dts:
+> -uart1: serial@73fbc000 {
+> -	fsl,uart-has-rtscts;
+> -	status =3D "okay";
+> -};
+> -
+> diff --git a/Documentation/devicetree/bindings/tty/serial/fsl-imx-uar=
+t.txt b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
+> index c662eb3..35ae1fb 100644
+> --- a/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
+> +++ b/Documentation/devicetree/bindings/tty/serial/fsl-imx-uart.txt
+> @@ -11,9 +11,16 @@ Optional properties:
 
-What are the functional differences between the blocks in these devices
-that mean they have different compatible strings?
+I note this binding doesn't actually define the set of compatible
+strings, as it has:
 
-> +- reg: offset and length of the register set for the device; if the device has
-> +       TSU registers, you need to specify two register sets here.
+	Compatible : Should be "fsl,<soc>-uart"
 
-This doesn't explicitly state ordering, and doesn't describe what the
-first register set is (control registers?). If possible, it would be
-nice to refer to the set of registers by the name given in
-documentation; is there any available?
+=2E.. the other binding had:
 
-I think we should have something like the below to ensure it's explicit.
-In general we need more consistency in the the way bindings describe reg
-properties.
+	compatible : should be "fsl,imx21-uart"
 
-	- reg: offset and length of:
-	     [1] the control registers of the device (required)
-	     [2] the TSU registers for the device (optional)
+=2E. and the driver accepts "fsl,imx21-uart" and "fsl,imx1-uart".
 
-> +- interrupt-parent: the phandle for the interrupt controller that services
-> +		    interrupts for this device.
+Would it be possible to clarify this at the same time, something like:
 
-Why is that required?
+	Compatible : Should contain one of:
+		     * "fsl,imx21-uart" for UARTs compatible with that in
+		       i.MX21 SoCs.
+		     * "fsl,imx1-uart" for UARTs compatible with that in
+		       i.MX1x SoCs=C2=B7.
 
-> +- interrupts: interrupt mapping for the interrupt source.
+Otherwise, this seems sensible. With something like the above:
 
-Interrupts are defined in terms of interrupt-specifiers. How about:
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-	- interrupts: an interrupt-specifier for the sole interrupt
-	              generated by the device.
-
-> +- phy-mode: string, operation mode of the PHY interface (a string that
-> +	    of_get_phy_mode() can understand).
-
-That looks suspicious. Bindings should *not* refer to Linux internals.
-Instead, we should document the phy-handle and phy-mode properties and
-how they are meant to be used in a generic binding document (I couldn't
-see a generic document doing this so far...).
-
-> +- phy-handle: phandle of the PHY device.
-> +
-> +Optional properties:
-> +- local-mac-address: 6 bytes, MAC address.
-> +- renesas,no-ether-link: specify when a board does not provide a proper LINK
-> +			 signal.
-> +- renesas,ether-link-active-low: specify when the LINK signal is active-low.
-
-What types are these? I know local-mac-address is a byte-string by
-ePAPR, presumably the last two are empty (boolean)?
-
-> +
-> +Example (Armadillo800EVA board):
-> +
-> +	ethernet@e9a00000 {
-> +		compatible = "renesas,gether-r8a7740";
-> +		reg = <0xe9a00000 0x800>, <0xe9a01800 0x800>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 142 0x4>;
-> +		phy-mode = "mii";
-> +		phy-handle = <&phy0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		phy0: ethernet-phy@0 {
-> +			reg = <0>;
-> +		};
-
-The binding didn't state anything about sub-nodes. Is it a general
-property of phy bindings that they may be embedded within a consumer's
-node?
-
-> +	};
-> Index: net-next/drivers/net/ethernet/renesas/sh_eth.c
-> ===================================================================
-> --- net-next.orig/drivers/net/ethernet/renesas/sh_eth.c
-> +++ net-next/drivers/net/ethernet/renesas/sh_eth.c
-> @@ -32,6 +32,9 @@
->  #include <linux/platform_device.h>
->  #include <linux/mdio-bitbang.h>
->  #include <linux/netdevice.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_net.h>
->  #include <linux/phy.h>
->  #include <linux/cache.h>
->  #include <linux/io.h>
-> @@ -2600,6 +2603,52 @@ static const struct net_device_ops sh_et
->  	.ndo_change_mtu		= eth_change_mtu,
->  };
->  
-> +#ifdef CONFIG_OF
-> +static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	struct sh_eth_plat_data *pdata;
-> +	struct device_node *phy;
-> +	const char *mac_addr;
-> +
-> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return NULL;
-> +
-> +	pdata->phy_interface = of_get_phy_mode(np);
-> +
-> +	phy = of_parse_phandle(np, "phy-handle", 0);
-> +	if (!phy || of_property_read_u32(phy, "reg", &pdata->phy)) {
-
-NAK. You didn't describe the format of the phy node, yet you are reading
-values from it from a logically separate driver.
-
-Thanks,
+Cheers,
 Mark.
+
+>  - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
+>                    is DCE mode by default.
+> =20
+> +Note: Each uart controller should have an alias correctly numbered
+> +in "aliases" node.
+> +
+>  Example:
+> =20
+> -serial@73fbc000 {
+> +aliases {
+> +	serial0 =3D &uart1;
+> +};
+> +
+> +uart1: serial@73fbc000 {
+>  	compatible =3D "fsl,imx51-uart", "fsl,imx21-uart";
+>  	reg =3D <0x73fbc000 0x4000>;
+>  	interrupts =3D <31>;
+> --=20
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora F=
+orum,
+> hosted by The Linux Foundation
+>=20
+>=20
