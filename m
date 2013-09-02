@@ -1,50 +1,57 @@
-From: Afzal Mohammed <afzal@ti.com>
-Subject: [PATCH RFC 2/6] doc: dt: binding: omap: am43x/am335x prcm reset
-Date: Mon, 2 Sep 2013 19:46:56 +0530
-Message-ID: <4aa6c41809a53c6e91dacae9fc52e40c3ccf61c4.1378129416.git.afzal@ti.com>
-References: <cover.1378129416.git.afzal@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/4] ARM: shmobile: r8a7778: add Ether DT support
+Date: Mon, 02 Sep 2013 16:18:41 +0200
+Message-ID: <1738124.5rApJWhXUN@avalon>
+References: <201309010311.05466.sergei.shtylyov@cogentembedded.com> <1643070.uIkONXsrBj@avalon> <52249B16.8010409@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <cover.1378129416.git.afzal@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Benoit Cousson <bcousson@baylibre.com>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Pavel Machek <pavel@ucw.cz>, Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <52249B16.8010409@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: horms@verge.net.au, linux-sh@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-prcm reset binding for AM43x/AM335x SoC's.
+On Monday 02 September 2013 18:05:10 Sergei Shtylyov wrote:
+> On 09/02/2013 05:14 PM, Laurent Pinchart wrote:
+> >> Define the generic R8A777x part of the Ether device node.
+> >> 
+> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >> 
+> >> ---
+> >> 
+> >>   arch/arm/boot/dts/r8a7778.dtsi |   11 +++++++++++
+> >>   1 file changed, 11 insertions(+)
+> >> 
+> >> Index: renesas/arch/arm/boot/dts/r8a7778.dtsi
+> >> ===================================================================
+> >> --- renesas.orig/arch/arm/boot/dts/r8a7778.dtsi
+> >> +++ renesas/arch/arm/boot/dts/r8a7778.dtsi
+> >> @@ -98,4 +98,15 @@
+> >> 
+> >>   		reg = <0xfffc000 0x118>;
+> >>   		#gpio-range-cells = <3>;
+> >>   	
+> >>   	};
+> >> 
+> >> +
+> >> +	ether: ethernet@fde00000 {
+> >> +		device_type = "network";
+> > 
+> > Documentation/devicetree/bindings/net/sh_eth.txt from "[PATCH 2/2] sh_eth:
+> > add device tree support" doesn't document this property, should you
+> > update it ?
+>     It's a standard property but completely optional for non-OF systems.
+> I've not seen anybody document it but I should grep for it...
 
-This was started with an attempt to add reset binding without a clear
-idea on the device node where binding should appear. So a new node
-with compatible "am4372-reset" to represent reset managment in prcm
-was added. But finally ended up with a node to represent prcm (with
-compatible "am4372-prcm") which was felt to be the natural one.
+Documentation/devicetree/booting-without-of.txt mentions it, as well as a 
+couple of other DT bindings document, but there's no clear documentation of 
+what device_type should be for network device, and whether the property is 
+mandatory or optional. Clarifying the documentation would be great.
 
-Signed-off-by: Afzal Mohammed <afzal@ti.com>
----
- Documentation/devicetree/bindings/arm/omap/prcm.txt | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/omap/prcm.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/omap/prcm.txt b/Documentation/devicetree/bindings/arm/omap/prcm.txt
-new file mode 100644
-index 0000000..ad25abc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/omap/prcm.txt
-@@ -0,0 +1,13 @@
-+TI Power Reset Clock Manager (PRCM)
-+
-+Properties:
-+- compatible:	"ti,am4372-prcm" for prcm in am43x SoC's
-+		"ti,am3352-prcm" for prcm in am335x SoC's
-+- #reset-cells: 1 (refer generic reset bindings for details)
-+
-+example:
-+	prcm: prcm@44df0000 {
-+		compatible = "ti,am4372-prcm";
-+		reg = <0x44df0000 0xa000>;
-+		#reset-cells = <1>;
-+	};
 -- 
-1.8.3.4
+Regards,
+
+Laurent Pinchart
 
