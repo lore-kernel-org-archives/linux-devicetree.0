@@ -1,39 +1,24 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 2/2] ARM: dts: OMAP4: Add hwspinlock node
-Date: Tue, 3 Sep 2013 12:52:52 -0500
-Message-ID: <1378230772-54967-1-git-send-email-s-anna@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra114: add missing clocks to binding
+Date: Tue, 03 Sep 2013 11:56:42 -0600
+Message-ID: <522622DA.7020907@wwwdotorg.org>
+References: <1378213637-9948-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Suman Anna <s-anna@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1378213637-9948-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the hwspinlock device tree node for OMAP4 family
-of SoCs.
+On 09/03/2013 07:07 AM, Peter De Schrijver wrote:
+> commit 992bb598f690542a2f539fd12a42b960b7692025 forgot to move dfll_soc and
+> dfll_ref to include/dt-bindings/clock/tegra114-car.h. Add them again in this
+> patch as TEGRA114_CLK_DFLL_SOC and TEGRA114_CLK_DFLL_REF.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- arch/arm/boot/dts/omap4.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index 22d9f2b..a8cc274 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -248,6 +248,12 @@
- 			clock-frequency = <48000000>;
- 		};
- 
-+		hwspinlock: spinlock@4a0f6000 {
-+			compatible = "ti,omap4-hwspinlock";
-+			reg = <0x4a0f6000 0x1000>;
-+			ti,hwmods = "spinlock";
-+		};
-+
- 		i2c1: i2c@48070000 {
- 			compatible = "ti,omap4-i2c";
- 			reg = <0x48070000 0x100>;
--- 
-1.8.3.3
+I assume this will go through Mike's clock tree along with the driver
+changes that rely on it.
