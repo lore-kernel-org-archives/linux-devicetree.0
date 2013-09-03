@@ -1,61 +1,78 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC 2/3] drm/panel: Add simple panel support
-Date: Tue, 03 Sep 2013 12:49:30 -0600
-Message-ID: <52262F3A.2020507@wwwdotorg.org>
-References: <1377876321-26835-1-git-send-email-treding@nvidia.com> <1377876321-26835-3-git-send-email-treding@nvidia.com> <60046BAF-42E8-40FB-A45D-045B7C92513E@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <60046BAF-42E8-40FB-A45D-045B7C92513E-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 1/2] hwspinlock/omap: add support for dt nodes
+Date: Tue, 3 Sep 2013 13:50:53 -0500
+Message-ID: <43798031-2D57-44F0-A19C-FD80DB9E9794@codeaurora.org>
+References: <1378230767-54931-1-git-send-email-s-anna@ti.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1378230767-54931-1-git-send-email-s-anna@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/2013 01:24 PM, Kumar Gala wrote:
+
+On Sep 3, 2013, at 12:52 PM, Suman Anna wrote:
+
+> HwSpinlock IP is present only on OMAP4 and other newer SoCs,
+> which are all device-tree boot only. This patch adds the
+> base support for parsing the DT nodes, and removes the code
+> dealing with the traditional platform device instantiation.
 > 
-> On Aug 30, 2013, at 10:25 AM, Thierry Reding wrote:
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+> .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 28 ++++++++++
+> arch/arm/mach-omap2/Makefile                       |  3 --
+> arch/arm/mach-omap2/hwspinlock.c                   | 60 ----------------------
+> drivers/hwspinlock/omap_hwspinlock.c               | 21 ++++++--
+> 4 files changed, 45 insertions(+), 67 deletions(-)
+> create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
+> delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
 > 
->> Add a driver for simple panels. Such panels can have a regulator that
->> provides the supply voltage and a separate GPIO to enable the panel.
->> Optionally the panels can have a backlight associated with them so it
->> can be enabled or disabled according to the panel's power management
->> mode.
->>
->> Support is added for three panels: An AU Optronics 10.1" WSVGA, a
->> Chunghwa Picture Tubes 10.1" WXGA and a Panasonic 10.1 WUXGA TFT LCD
->> panel.
+> diff --git a/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
+> new file mode 100644
+> index 0000000..adfb8ad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
+> @@ -0,0 +1,28 @@
+> +OMAP4+ HwSpinlock Driver
+> +
+> +Required properties:
+> +- compatible:		Currently supports only "ti,omap4-hwspinlock" for
+> +				OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
+> +- reg:			Contains the hwspinlock register address range (base
+> +			address and length)
+> +- ti,hwmods:		Name of the hwmod associated with the hwspinlock device
+> +
+> +Optional properties:
+> +- base_id:		Base Id for the locks for a particular hwspinlock
+> +			device. If not mentioned, a default value of 0 is used.
+> +			This property is mandatory ONLY if a SoC has several
+> +			hwspinlock devices. There are currently no such OMAP
+> +			SoCs.
 
->> diff --git a/Documentation/devicetree/bindings/panel/panel-simple.txt b/Documentation/devicetree/bindings/panel/panel-simple.txt
+Should this be ti,base_id ? [ I know its kinda generic in its intent for any SoC w/multiple blocks ]
 
->> +Required properties:
->> +- compatible: should be one of:
->> +  - "auo,b101aw03": AU Optronics Corporation 10.1" WSVGA TFT LCD panel
->> +  - "cptt,claa101wb03": Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
->> +  - "pc,vvx10f004b00": Panasonic Corporation 10.1" WUXGA TFT LCD panel
->> +
-> 
-> It would seem there should be a more generic compatible to cover the basic "panel-simple" case.
+> +
+> +			See documentation on struct hwspinlock_pdata in
+> +			linux/hwspinlock.h for more details.
+> +
+> +
+> +Example:
+> +
+> +/* OMAP4 */
+> +hwspinlock: spinlock@4a0f6000 {
+> +	compatible = "ti,omap4-hwspinlock";
+> +	reg = <0x4a0f6000 0x1000>;
+> +	ti,hwmods = "spinlock";
+> +};
 
-I would suggest only documenting "simple-panel" here, and not
-documenting the specific panels at all; the panel-specific compatible
-values would show up simply due to the rule that all compatible values
-in *.dts should contain the exact HW model (e.g. "auo,b101aw03"), plus
-any HW they're compatible with (i.e. "simple-panel").
+[ snip ]
 
-I'd suggest "simple-panel" rather than "panel-simple" since IIRC other
-simple bindings are "simple-xxx" rather than "xxx-simple".
+- k
 
->> +Optional properties:
->> +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
->> +- power-supply: regulator to provide the supply voltage
->> +- enable-gpios: GPIO pin to enable or disable the panel
->> +- backlight: phandle of the backlight device attached to the panel
->> +
-> 
-> If these are all optional, what does it mean to be a "panel-simple"?
-
-I think at least ddc-i2c-bus and backlight should be required
-properties. I suppose it might be possible for the panel to be
-always-on, and hence enable-gpios/power-supply could be optional?
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
