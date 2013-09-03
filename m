@@ -1,64 +1,107 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] of_irq.h: fix build warnings when CONFIG_OF is not enabled
-Date: Tue, 03 Sep 2013 16:18:27 -0700
-Message-ID: <52266E43.70102@infradead.org>
-References: <5224B499.4010600@infradead.org> <CAL_Jsq+82vm_vt5EpcG1zvWmL_H4KY=91tB1WH5yUhHsiM11DA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] ASoC: generic simple sound card DT
+ bindings
+Date: Wed, 4 Sep 2013 00:19:22 +0100
+Message-ID: <20130903231922.GL3084@sirena.org.uk>
+References: <1377945878-13322-1-git-send-email-mpa@pengutronix.de>
+ <1377945878-13322-3-git-send-email-mpa@pengutronix.de>
+ <52220766.1040504@metafoo.de> <52263795.8010600@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+82vm_vt5EpcG1zvWmL_H4KY=91tB1WH5yUhHsiM11DA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============5505935594943612177=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <52263795.8010600@wwwdotorg.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/13 15:31, Rob Herring wrote:
-> On Mon, Sep 2, 2013 at 10:54 AM, Randy Dunlap <rdunlap@infradead.org> wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Fix build warnings when CONFIG_OF is not enabled:
-> 
-> It would be nice to know what arch/config you see this on.
 
-i386 and x86_64.
-
-> 
->> include/linux/of_irq.h:82:7: warning: 'struct device_node' declared inside parameter list [enabled by default]
->> include/linux/of_irq.h:82:7: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
->> include/linux/of_irq.h:87:47: warning: 'struct device_node' declared inside parameter list [enabled by default]
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc:     Grant Likely <grant.likely@linaro.org>
->> Cc:     Rob Herring <rob.herring@calxeda.com>
->> Cc:     devicetree@vger.kernel.org
->> ---
->>  include/linux/of_irq.h |    2 ++
->>  1 file changed, 2 insertions(+)
->>
->> --- linux-next-20130830.orig/include/linux/of_irq.h
->> +++ linux-next-20130830/include/linux/of_irq.h
->> @@ -78,6 +78,8 @@ extern void of_irq_init(const struct of_
->>  #endif /* CONFIG_OF_IRQ */
->>
->>  #else /* !CONFIG_OF */
->> +struct device_node;
-> 
-> Can you move this outside of the ifdefs to minimize the amount of ifdef'ed code.
-
-I'm build testing that change now, but it seems odd to have it there in 2 ways
-when CONFIG_OF is enabled:
+--===============5505935594943612177==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QeIEYJGnsH0eC7HY"
+Content-Disposition: inline
 
 
-struct device_node;
+--QeIEYJGnsH0eC7HY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-#if defined(CONFIG_OF)
+On Tue, Sep 03, 2013 at 01:25:09PM -0600, Stephen Warren wrote:
 
-#include <linux/of.h>
+> Mark has made the argument that (at least for CODEC analog pins) we can
+> simply put those strings into the binding document, and make them as
+> much a part of the binding as anything else. After all, (at least for
+> CODEC analog pins) the values are simply the names of the pins on the
+> package, as listed by the HW documentation itself.
+
+> We could presumably do the same thing for DAIs; in DT, use a
+> string-based DAI name derived directly from the HW documentation, rather
+> than the current intra-ASoC DAI name strings.
+
+> That said, I will admit that I personally don't really like the idea of
+> using strings in bindings. That opinion certainly isn't universal though.
+
+I think either works - with DAIs there is a tendency (though not
+universal) for devices to just have numbered interfaces which makes the
+numbers more natural.  I'm more concerned with the binding being legible
+than with what ends up physically written in there, the original reason
+for strings (apart from the fact that they're in the drivers already)
+was that there was a lot of resistance in the DT community to symbolic
+constants.  That would have lead to bindings which looked like line
+noise.
+
+> > The
+> > binding also assumes that a CPU controller may have one DAI at most. In my
+> > opinion this binding ought to use the upcoming of_xlate stuff for ASoC
+> > components.
+
+> That restriction seems reasonable for a *simple* DT sound binding. For
+> more complex cards, one could presumably create more complex bindings,
+> be they generic bindings that cover arbitrary more complex cases, or
+> bindings for specific configurations that happen to include multiple DAIs.
+
+The complexity there comes from the device that's being used rather than
+the design of the sound card though - the fact that a SoC has an audio
+block with many DAIs shouldn't prevent it using the simple bindings if
+someone just hung a simple CODEC off one of the DAIs.
+
+--QeIEYJGnsH0eC7HY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSJm53AAoJELSic+t+oim9LKYP/2S8sZE3s5Pq+OFh4ZZNMvgp
+61CehgYh4Ed4Q7vSHrC3ZC3WmOZiJnmady74y6X4roFd1CXhy91S9Q3t6bIi2Pq1
+jFGOwiov+mqNsEr0C4DnVI6SXL9cuQ6yzHKAzQRSeM871YDfJoDZ+dS2MYv5uPYK
+w8xPeEHFQIwkNKrGpiCfcrNLQoCk2zEKoKU2OGLTw+vTIrTnwqNbzQbi+9yh7slC
+M8zhjH6la/AnbGKufJRR/ZomugRLaoWbQBcMDSCITuBhB8uB7tz89Xq2UBf0U8l1
+jYS02r7StcRqqrtEBJ6p9hrE47LavrI9S2wA7fF04Z5BnWhpd9RWngOnJKdN9BB/
+Jww0lVi2KtBX7g0WZMEOPgAD3nbN8p0+QHyCsLQamh/LgDUn9eXTrBUt+aBvH7zy
+X9WcASbhEmKxVvJDQBDdgZ66AIlh0yZjoP3t9BwoeQLIQpUPNo10Ktdg2vHtEKSh
+vhJdqDuRhtePHxbHs79As2w4op9EBHoUWLu6cLDAuAf4K7TM0i3wguBc3VcGyeT/
+ior715vX5+2izh6qxET75Z+/ny5XgAPGB2hnCp/N4ViePS2PNjxyHSKbAIuMqiDJ
+4jknOYg+LQsISYcw/0J9fvuYKpELAcNHDIN9forb2d7o0sYpnHS3L4frnfzb7aIr
+ONTA19XWUkKyb4gMJm1D
+=VMLW
+-----END PGP SIGNATURE-----
+
+--QeIEYJGnsH0eC7HY--
+
+--===============5505935594943612177==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 
-
-will resend the patch shortly.
-
--- 
-~Randy
+--===============5505935594943612177==--
