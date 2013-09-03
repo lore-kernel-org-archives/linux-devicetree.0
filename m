@@ -1,74 +1,54 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/4] ARM: shmobile: r8a7778: add Ether DT support
-Date: Tue, 03 Sep 2013 22:27:39 +0400
-Message-ID: <52262A1B.4050406@cogentembedded.com>
-References: <201309010311.05466.sergei.shtylyov@cogentembedded.com>
- <201309010315.49763.sergei.shtylyov@cogentembedded.com>
- <CANqRtoQFYFva9msdoEWdU2Z7_=jOtZwvXgL7OqUKhVMO3NOPzg@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] ARM: add basic Trusted Foundations support
+Date: Tue, 03 Sep 2013 12:36:06 -0600
+Message-ID: <52262C16.3020406@wwwdotorg.org>
+References: <1377770268-14014-1-git-send-email-acourbot@nvidia.com> <1377770268-14014-2-git-send-email-acourbot@nvidia.com> <2081838.eZHRxlDf7s@flatron> <CAAVeFuJ=z-29gp9=caQaxRGCiOQSnPLfafia3eCgWAUuny3GBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CANqRtoQFYFva9msdoEWdU2Z7_=jOtZwvXgL7OqUKhVMO3NOPzg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, ian.campbell@citrix.com, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "Simon Horman [Horms]" <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAVeFuJ=z-29gp9=caQaxRGCiOQSnPLfafia3eCgWAUuny3GBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 09/03/2013 07:17 PM, Magnus Damm wrote:
-
->> Define the generic R8A777x part of the Ether device node.
-
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
->> ---
->>   arch/arm/boot/dts/r8a7778.dtsi |   11 +++++++++++
->>   1 file changed, 11 insertions(+)
+On 09/02/2013 01:28 AM, Alexandre Courbot wrote:
+> Hi Tomasz!
+> 
+> On Fri, Aug 30, 2013 at 5:20 PM, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> +Required properties:
+>>> +- compatible : "tl,trusted-foundations"
+>>> +- version-major : major version number of Trusted Foundations firmware
+>>> +- version-minor: minor version number of Trusted Foundations firmware
 >>
->> Index: renesas/arch/arm/boot/dts/r8a7778.dtsi
->> ===================================================================
->> --- renesas.orig/arch/arm/boot/dts/r8a7778.dtsi
->> +++ renesas/arch/arm/boot/dts/r8a7778.dtsi
->> @@ -98,4 +98,15 @@
->>                  reg = <0xfffc000 0x118>;
->>                  #gpio-range-cells = <3>;
->>          };
->> +
->> +       ether: ethernet@fde00000 {
->> +               device_type = "network";
->> +               compatible = "renesas,ether-r8a7779";
+>> Hmm, maybe you could simply define a single version property that could
+>> have multiple cells? Like:
+>>
+>>         firmware {
+>>                 compatible = "tl,trusted-foundations";
+>>                 version = <2 8>;
+>>         };
+> 
+> I'm fine this way too, but do we have other bindings that use the same
+> scheme? What is the general convention for version number bindings?
 
-> Hi Sergei,
+I don't know if there are enough cases of this for there to be a
+convention. A 2-cell property seems fine to me.
 
-> Thanks for your patch. What's the reason behind the r8a7778 SoC using
-> a compatible string for r8a7779 like "renesas,ether-r8a7779"?
+>>> +       This option allows the kernel to invoke the secure monitor whenever
+>>> +       required on devices using Trusted Foundations.
+>>> +
+>>> +       Devices using Trusted Foundations should pass a device tree
+>>> containing +    a node compatible with "tl,trusted-foundations" to
+>>> signal the presence +   of the secure monitor.
+>>
+>> What about pointing to the documentation file instead?
+> 
+> Yes, that would make more sense.
 
-    R8A7779 support has appeared first in Linux and as R8A7778 Ether is 
-identical to R8A7779 and no wildcards are allowed in the device tree, I 
-decided to use this "compatible" prop.
-
-> It seems that you assume that the r8a7778 ethernet controller is 100%
-> compatible with r8a7779. Is that really true? For earlier versions the
-> sh_eth hardware documentation was anything but accurate, so it seems
-> to me that it must be more safe that r8a7778 would be using
-> "renesas,ether-r8a7778". What do you think?
-
-    I think R8A7778 and R8A7779 EtherMACs are identical. I've cross checked 
-the documentation at the start of the development and the registers appeared 
-to be the same.
-
-> Thanks,
-
-> / magnus
-
-WBR, Sergei
+Possibly. What about when the binding document is no longer part of the
+kernel though? Perhaps we could reference the documentation in some way
+other than by the pathname within the kernel source tree though, e.g.
+'see the device tree binding documentation for
+compatible="tl,trusted-foundations"'?
