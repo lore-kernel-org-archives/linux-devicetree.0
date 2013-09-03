@@ -1,38 +1,252 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ARM: tegra114: add missing clocks to binding
-Date: Tue, 3 Sep 2013 16:07:13 +0300
-Message-ID: <1378213637-9948-1-git-send-email-pdeschrijver@nvidia.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC PATCH 02/14] drivers: thermal: introduce device tree
+ parser
+Date: Tue, 3 Sep 2013 14:15:54 +0100
+Message-ID: <20130903131554.GE18206@e106331-lin.cambridge.arm.com>
+References: <1377299755-5134-1-git-send-email-eduardo.valentin@ti.com>
+ <1377299755-5134-3-git-send-email-eduardo.valentin@ti.com>
+ <20130827102205.GC19893@e106331-lin.cambridge.arm.com>
+ <521CAD48.2030306@ti.com>
+ <20130827162309.GR19893@e106331-lin.cambridge.arm.com>
+ <521CED34.2090008@ti.com>
+ <521FD70F.7080104@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <521FD70F.7080104@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "wni@nvidia.com" <wni@nvidia.com>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-commit 992bb598f690542a2f539fd12a42b960b7692025 forgot to move dfll_soc and
-dfll_ref to include/dt-bindings/clock/tegra114-car.h. Add them again in this
-patch as TEGRA114_CLK_DFLL_SOC and TEGRA114_CLK_DFLL_REF.
+On Fri, Aug 30, 2013 at 12:19:43AM +0100, Eduardo Valentin wrote:
+> Mark, Pawel and Stephen,
+> 
+> 
+> On 27-08-2013 14:17, Eduardo Valentin wrote:
+> > On 27-08-2013 12:23, Mark Rutland wrote:
+> >> On Tue, Aug 27, 2013 at 02:44:40PM +0100, Eduardo Valentin wrote:
+> >>> Hello Mark,
 
-Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- include/dt-bindings/clock/tegra114-car.h |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+Hi, sorry for the delay.
 
-diff --git a/include/dt-bindings/clock/tegra114-car.h b/include/dt-bindings/clock/tegra114-car.h
-index 614aec4..5d4b90a 100644
---- a/include/dt-bindings/clock/tegra114-car.h
-+++ b/include/dt-bindings/clock/tegra114-car.h
-@@ -289,8 +289,8 @@
- #define TEGRA114_CLK_PCLK 261
- #define TEGRA114_CLK_CCLK_G 262
- #define TEGRA114_CLK_CCLK_LP 263
--/* 264 */
--/* 265 */
-+#define TEGRA114_CLK_DFLL_REF 264
-+#define TEGRA114_CLK_DFLL_SOC 265
- /* 266 */
- /* 267 */
- /* 268 */
--- 
-1.7.7.rc0.72.g4b5ea.dirty
+> 
+> <cut>
+> 
+> I believe now we need to align on thermal bindings, before I propose
+> next version of this series. So, following the discussions on this
+> thread, I believe a typical CPU thermal zone would look like the following:
+> + #include <dt-bindings/thermal/thermal.h>
+> +
+> + cpu_thermal: cpu_thermal {
+> +         passive-delay = <250>; /* milliseconds */
+> +         polling-delay = <1000>; /* milliseconds */
+
+I'm still not keen on placing these intervals in the dt. Why can the
+kernel not choose sensible values?
+
+> +                 /*
+> +                  * sensor       ID
+> +                  */
+> +         sensors = <&bandgap0     0>;
+> +                         /*
+> +                          * cooling
+> +                          * device       Usage   Trip            lower
+> bound             upper bound
+> +                          */
+> +         cooling-devices = <&cpu0        100     &cpu-alert
+> THERMAL_NO_LIMITS        THERMAL_NO_LIMITS>;
+
+I'm not sure it makes sense to group this data within a property. We
+might need to extend this in future and it might not be possible to
+extend this unambiguously. It may make more sense as a sub-node or
+collection of properties.
+
+> +         trips {
+> +                 cpu-alert: cpu-alert {
+> +                         temperature = <100000>; /* milliCelsius */
+> +                         hysteresis = <2000>; /* milliCelsius */
+> +                         type = <THERMAL_TRIP_PASSIVE>;
+> +                 };
+> +                 cpu-crit: cpu-crit {
+> +                         temperature = <125000>; /* milliCelsius */
+> +                         hysteresis = <2000>; /* milliCelsius */
+> +                         type = <THERMAL_TRIP_CRITICAL>;
+> +                 };
+> +         };
+> + };
+
+How do the upper and lower bounds in the cooling-devices property
+interact with temperatures described in the trips node?
+
+> 
+> *Note: THERMAL_NO_LIMIT means, it will be using the cooling device
+> minimum and maximum limits.
+
+I'm confused what are the cooling device min and max limits? Where are
+they defined if not in the lower bound and upper bound entries of the
+cooling-devices property?
+
+> 
+> Couple of comments.
+> 1. I am keeping the pooling intervals. A possible alternative way to
+> describe that would be specifying the maximum dT/dt. Essentially because
+> I am still convinced that this is part of hw specs.
+
+I still don't see why it's not possible to do this dynamically. I am not
+entirely convinced this is part of the hw spec.
+
+> 
+> 2. The above follows your suggestion to use consumer pointing to
+> producers. Although, I still need to figure out how this could be
+> implemented for Linux. But I think that is another story, at least for
+> now. We need to first align on the DT binding itself.
+
+I assume you mean the sensors property? That looks fine to me, though we
+may need to specify the way sensors relate to temperatures in trip
+points and cooling device properties -- do those temperatures correspond
+to an average of sensors readings, min/max, etc?
+
+> 
+> 3. The link from cooling device specification to trip points, from my
+> perspective, should be enough, and thus we shall not need the thermal
+> cells and size for trip points, as you proposed. Let me know what you think.
+
+I'm not keen on the mixed bag of values in the cooling-device property,
+as it's difficult to extend in future if necessary. I think we may need
+cells for cooling devices -- what if a single fan controller controls
+fans in different thermal zones?
+
+I'm also not keen on devices being described as their own cooling
+device, as I think this is more difficult to support than not listing a
+cooling device -- it'll have to be special-cased anyway.
+
+> Below is another example, on a more complex scenario, board specific
+> case (hypothetical, just for exemplification):
+> 
+> + #include <dt-bindings/thermal/thermal.h>
+> +
+> + board_thermal: board_thermal {
+> +         passive-delay = <1000>; /* milliseconds */
+> +         polling-delay = <2500>; /* milliseconds */
+> +                 /*
+> +                  * sensor       ID
+> +                  */
+> +         sensors = <&adc-dummy     0>,
+> +		    <&adc-dummy     1>,
+> +		    <&adc-dymmy     2>;
+
+Here we have a set of sensors, but no relationship between these sensors
+and the trips or cooling-devices are described. How does that work?
+
+> +                         /*
+> +                          * cooling
+> +                          * device       Usage   Trip		lower	upper
+> +                          */
+> +         cooling-devices = <&cpu0       75     &cpu-trip	0      2>,
+> +			    <&gpu0       40     &gpu-trip	0      2>;
+> +			    <&lcd0       25     &lcd-trip	5      10>;
+> +         trips {
+> +                 cpu-trip: cpu-trip {
+> +                         temperature = <60000>; /* milliCelsius */
+> +                         hysteresis = <2000>; /* milliCelsius */
+> +                         type = <THERMAL_TRIP_PASSIVE>;
+> +                 };
+> +                 gpu-trip: gpu-trip {
+> +                         temperature = <55000>; /* milliCelsius */
+> +                         hysteresis = <2000>; /* milliCelsius */
+> +                         type = <THERMAL_TRIP_PASSIVE>;
+> +                 }
+> +                 lcd-trip: lcp-trip {
+> +                         temperature = <53000>; /* milliCelsius */
+> +                         hysteresis = <2000>; /* milliCelsius */
+> +                         type = <THERMAL_TRIP_PASSIVE>;
+> +                 };
+> +                 crit-trip: crit-trip {
+> +                         temperature = <68000>; /* milliCelsius */
+> +                         hysteresis = <2000>; /* milliCelsius */
+> +                         type = <THERMAL_TRIP_CRITICAL>;
+> +                 };
+> +         };
+> + };
+> 
+> Now writing the above example, one might want to have a way to say the
+> sensor correlation equation.
+> 
+> Another example:
+> + #include <dt-bindings/thermal/thermal.h>
+> +
+> + dsp_thermal: dsp_thermal {
+> +         passive-delay = <250>; /* milliseconds */
+> +         polling-delay = <1000>; /* milliseconds */
+> +                 /*
+> +                  * sensor       ID
+> +                  */
+> +         sensors = <&bandgap0     1>;
+> +                         /*
+> +                          * cooling
+> +                          * device       Usage   Trip            lower
+> bound             upper bound
+> +                          */
+> +         cooling-devices = <&dsp0        100     &dsp-alert
+> THERMAL_NO_LIMIT        THERMAL_NO_LIMIT>;
+> +         trips {
+> +                 dsp-alert: dsp-alert {
+> +                         temperature = <100000>; /* milliCelsius */
+> +                         hysteresis = <2000>; /* milliCelsius */
+> +                         type = <THERMAL_TRIP_PASSIVE>;
+> +                 };
+> +                 dsp-crit: cdsp-crit {
+> +                         temperature = <125000>; /* milliCelsius */
+> +                         hysteresis = <2000>; /* milliCelsius */
+> +                         type = <THERMAL_TRIP_CRITICAL>;
+> +                 };
+> +         };
+> + };
+> +
+> + gpu_thermal: gpu_thermal {
+> +         passive-delay = <500>; /* milliseconds */
+> +         polling-delay = <1000>; /* milliseconds */
+> +                 /*
+> +                  * sensor       ID
+> +                  */
+> +         sensors = <&bandgap0     2>;
+> +                         /*
+> +                          * cooling
+> +                          * device       Usage   Trip            lower
+> bound             upper bound
+> +                          */
+> +         cooling-devices = <&gpu0        100     &gpu-alert
+> THERMAL_NO_LIMIT        THERMAL_NO_LIMIT>;
+> +         trips {
+> +                 gpu-alert: gpu-alert {
+> +                         temperature = <100000>; /* milliCelsius */
+> +                         hysteresis = <2000>; /* milliCelsius */
+> +                         type = <THERMAL_TRIP_PASSIVE>;
+> +                 };
+> +                 gpu-crit: gpu-crit {
+> +                         temperature = <125000>; /* milliCelsius */
+> +                         hysteresis = <2000>; /* milliCelsius */
+> +                         type = <THERMAL_TRIP_CRITICAL>;
+> +                 };
+> +         };
+> + };
+> 
+> 
+> Wei, I think the above would cover for the IPs with multiple internal
+> sensors cases you were looking for, right?
+> 
+> Durga, please also check if I am missing something to cover for your
+> plans to, in case you will be using DT to describe your HW.
+> 
+> Anyways, Mark and Pawel, let me know if I missed something from our
+> discussion. I believe the above bindings would look more like regular
+> standard DT bindings. And also they should be now slim enough, without
+> Linux implementation details and also without policies.
+
+I think that the above can describe that, but I'd like to see a binding
+document so we can consider it in more detail.
+
+Thanks,
+Mark.
