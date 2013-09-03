@@ -1,78 +1,48 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 1/2] hwspinlock/omap: add support for dt nodes
-Date: Tue, 3 Sep 2013 13:50:53 -0500
-Message-ID: <43798031-2D57-44F0-A19C-FD80DB9E9794@codeaurora.org>
-References: <1378230767-54931-1-git-send-email-s-anna@ti.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378230767-54931-1-git-send-email-s-anna@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC 2/3] drm/panel: Add simple panel support
+Date: Tue, 03 Sep 2013 12:52:36 -0600
+Message-ID: <52262FF4.6050605@wwwdotorg.org>
+References: <1377876321-26835-1-git-send-email-treding@nvidia.com> <1377876321-26835-3-git-send-email-treding@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1377876321-26835-3-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 08/30/2013 09:25 AM, Thierry Reding wrote:
+> Add a driver for simple panels. Such panels can have a regulator that
+> provides the supply voltage and a separate GPIO to enable the panel.
+> Optionally the panels can have a backlight associated with them so it
+> can be enabled or disabled according to the panel's power management
+> mode.
 
-On Sep 3, 2013, at 12:52 PM, Suman Anna wrote:
+> diff --git a/Documentation/devicetree/bindings/panel/panel-simple.txt b/Documentation/devicetree/bindings/panel/panel-simple.txt
 
-> HwSpinlock IP is present only on OMAP4 and other newer SoCs,
-> which are all device-tree boot only. This patch adds the
-> base support for parsing the DT nodes, and removes the code
-> dealing with the traditional platform device instantiation.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
-> .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 28 ++++++++++
-> arch/arm/mach-omap2/Makefile                       |  3 --
-> arch/arm/mach-omap2/hwspinlock.c                   | 60 ----------------------
-> drivers/hwspinlock/omap_hwspinlock.c               | 21 ++++++--
-> 4 files changed, 45 insertions(+), 67 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
-> delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
-> 
-> diff --git a/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
-> new file mode 100644
-> index 0000000..adfb8ad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
-> @@ -0,0 +1,28 @@
-> +OMAP4+ HwSpinlock Driver
+> +Simple display panel
 > +
 > +Required properties:
-> +- compatible:		Currently supports only "ti,omap4-hwspinlock" for
-> +				OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
-> +- reg:			Contains the hwspinlock register address range (base
-> +			address and length)
-> +- ti,hwmods:		Name of the hwmod associated with the hwspinlock device
+> +- compatible: should be one of:
+> +  - "auo,b101aw03": AU Optronics Corporation 10.1" WSVGA TFT LCD panel
+> +  - "cptt,claa101wb03": Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
+> +  - "pc,vvx10f004b00": Panasonic Corporation 10.1" WUXGA TFT LCD panel
 > +
 > +Optional properties:
-> +- base_id:		Base Id for the locks for a particular hwspinlock
-> +			device. If not mentioned, a default value of 0 is used.
-> +			This property is mandatory ONLY if a SoC has several
-> +			hwspinlock devices. There are currently no such OMAP
-> +			SoCs.
+> +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+> +- power-supply: regulator to provide the supply voltage
+> +- enable-gpios: GPIO pin to enable or disable the panel
+> +- backlight: phandle of the backlight device attached to the panel
 
-Should this be ti,base_id ? [ I know its kinda generic in its intent for any SoC w/multiple blocks ]
+Do we need to represent the timing requirements e.g. between panel
+enable and backlight enable, or do you expect the driver to hard-code
+this based on the compatible value?
 
-> +
-> +			See documentation on struct hwspinlock_pdata in
-> +			linux/hwspinlock.h for more details.
-> +
-> +
-> +Example:
-> +
-> +/* OMAP4 */
-> +hwspinlock: spinlock@4a0f6000 {
-> +	compatible = "ti,omap4-hwspinlock";
-> +	reg = <0x4a0f6000 0x1000>;
-> +	ti,hwmods = "spinlock";
-> +};
-
-[ snip ]
-
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Looking at the driver code, it seems that it has direct knowledge of the
+video mode that each panel supports, so DDC is actually optional unlike
+what I asserted/assumed in my previous response. As such, I guess we
+should have a separate DT binding document for each of the three panels
+(compatible values) listed above that pretty much just says "go look at
+simple-panel.txt".
