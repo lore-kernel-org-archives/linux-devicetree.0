@@ -1,48 +1,38 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC 2/3] drm/panel: Add simple panel support
-Date: Tue, 03 Sep 2013 12:52:36 -0600
-Message-ID: <52262FF4.6050605@wwwdotorg.org>
-References: <1377876321-26835-1-git-send-email-treding@nvidia.com> <1377876321-26835-3-git-send-email-treding@nvidia.com>
+From: Russ Dill <Russ.Dill@ti.com>
+Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
+Date: Tue, 3 Sep 2013 11:55:48 -0700
+Message-ID: <CA+Bv8XakgQZoeB8OTWsq1uUTcPfuxcD1qP9wnhu4HK22FMxFNQ@mail.gmail.com>
+References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
+	<1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
+	<CA+Bv8XYe0UzBkjqtO7bNkgNVTQtxiM7Hv93BOu8Lw1=pESOwLA@mail.gmail.com>
+	<87txiasqhk.fsf@linaro.org>
+	<CA+Bv8XZagHZ9mUuZB49hrH=901fXzoAcV8C0Fm3EfLa2eiBu0w@mail.gmail.com>
+	<87ppsw7cgq.fsf@linaro.org>
+	<CA+Bv8XbxV=BFjcSsUMX2pz9LeCkSwrjzZmj_=YbHGzyfbLXmaQ@mail.gmail.com>
+	<874na8xqfl.fsf@linaro.org>
+	<CANacCWzK1w9+XKEoUfS4ZB7QGxi_0JkVWBLs_wsaUjrzW2QB+A@mail.gmail.com>
+	<87hae8tc6e.fsf@linaro.org>
+	<CA+Bv8XaQgOiSiScQW=CVxzXBuG0soafQotApjoVEZ0P9U3netg@mail.gmail.com>
+	<87eh9bqi1x.fsf@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1377876321-26835-3-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <87eh9bqi1x.fsf@linaro.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>
+Cc: devicetree@vger.kernel.org, =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Mark Brown <broonie@kernel.org>, Vaibhav Bedia <vaibhav.bedia@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/2013 09:25 AM, Thierry Reding wrote:
-> Add a driver for simple panels. Such panels can have a regulator that
-> provides the supply voltage and a separate GPIO to enable the panel.
-> Optionally the panels can have a backlight associated with them so it
-> can be enabled or disabled according to the panel's power management
-> mode.
+On Fri, Aug 30, 2013 at 9:06 AM, Kevin Hilman <khilman@linaro.org> wrote:
+> Well, I was thinking of something much dumber.
+>
+> I was thinking about just _carefully_ writing a single, self-contained C
+> function, with all of its data on the stack (and consts as #defines).
+> Think of it is a step up in readability from straight assembly (which
+> was the stated reason for moving the code to the M3 in the first place.)
+>
+> Kevin
 
-> diff --git a/Documentation/devicetree/bindings/panel/panel-simple.txt b/Documentation/devicetree/bindings/panel/panel-simple.txt
-
-> +Simple display panel
-> +
-> +Required properties:
-> +- compatible: should be one of:
-> +  - "auo,b101aw03": AU Optronics Corporation 10.1" WSVGA TFT LCD panel
-> +  - "cptt,claa101wb03": Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD panel
-> +  - "pc,vvx10f004b00": Panasonic Corporation 10.1" WUXGA TFT LCD panel
-> +
-> +Optional properties:
-> +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-> +- power-supply: regulator to provide the supply voltage
-> +- enable-gpios: GPIO pin to enable or disable the panel
-> +- backlight: phandle of the backlight device attached to the panel
-
-Do we need to represent the timing requirements e.g. between panel
-enable and backlight enable, or do you expect the driver to hard-code
-this based on the compatible value?
-
-Looking at the driver code, it seems that it has direct knowledge of the
-video mode that each panel supports, so DDC is actually optional unlike
-what I asserted/assumed in my previous response. As such, I guess we
-should have a separate DT binding document for each of the three panels
-(compatible values) listed above that pretty much just says "go look at
-simple-panel.txt".
+That can only give you your suspend function. You need a resume
+function to undo everything before calling cpu_resume, and the resume
+function needs access to the data that was in the suspend function.
