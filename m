@@ -1,15 +1,49 @@
-From: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: EMMA I2C driver
-Date: Tue,  3 Sep 2013 12:30:31 +0100
-Message-ID: <1378207832-3412-1-git-send-email-ian.molton@codethink.co.uk>
-References: <CANqRtoRK+Ur=87-me7CpP+s9SO5g0ZVZSEOrqwDf4HFfjZZmZA@mail.gmail.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANqRtoRK+Ur=87-me7CpP+s9SO5g0ZVZSEOrqwDf4HFfjZZmZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/4] ARM: shmobile: r8a7778: add Ether DT support
+Date: Tue, 03 Sep 2013 14:11:17 +0200
+Message-ID: <2922765.My7X58lhxd@avalon>
+References: <201309010311.05466.sergei.shtylyov@cogentembedded.com> <1738124.5rApJWhXUN@avalon> <1378135954.3321.5.camel@hornet>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1378135954.3321.5.camel@hornet>
+Sender: linux-sh-owner@vger.kernel.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "horms@verge.net.au" <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Rutland <Mark.Rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-EMMA I2C bus driver, addressing the comments regarding the #defined constant.
+Hi Pawe=C5=82,
 
--Ian
+On Monday 02 September 2013 16:32:34 Pawel Moll wrote:
+> On Mon, 2013-09-02 at 15:18 +0100, Laurent Pinchart wrote:
+> > Documentation/devicetree/booting-without-of.txt mentions it, as wel=
+l as a
+> > couple of other DT bindings document, but there's no clear document=
+ation
+> > of what device_type should be for network device, and whether the p=
+roperty
+> > is mandatory or optional. Clarifying the documentation would be gre=
+at.
+>=20
+> It's documented in the ePAPR spec:
+>=20
+> "The device_type property was used in IEEE 1275 to describe the devic=
+e=E2=80=99s
+> FCode programming model. Because ePAPR does not have FCode, new use o=
+f
+> the property is deprecated, and it should be included only on cpu and
+> memory nodes for compatibility with IEEE 1275=E2=80=93derived device =
+trees."
+
+Thank you for the clarification.
+
+> The bottom line is - don't use it, unless you've good good reasons?
+
+I'll let Sergei share his opinion on whether we've got good reasons :-)
+
+--=20
+Regards,
+
+Laurent Pinchart
+
