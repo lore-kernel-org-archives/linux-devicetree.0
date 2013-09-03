@@ -1,158 +1,100 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v2] tty: ar933x_uart: add device tree support and binding documentation
-Date: Tue, 3 Sep 2013 17:16:10 -0500
-Message-ID: <80D7C583-FF16-4789-B8D1-2D0881DAD8F0@codeaurora.org>
-References: <1377769695-27397-1-git-send-email-juhosg@openwrt.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1377769695-27397-1-git-send-email-juhosg@openwrt.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Gabor Juhos <juhosg@openwrt.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH] pwm: pxa: add device tree support to pwm driver
+Date: Wed, 4 Sep 2013 00:20:54 +0200
+Message-ID: <201309040020.55029.marex@denx.de>
+References: <1378236233-15637-1-git-send-email-mikedunn@newsguy.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1378236233-15637-1-git-send-email-mikedunn@newsguy.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-pwm@vger.kernel.org, Mike Dunn <mikedunn@newsguy.com>, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
+Dear Mike Dunn,
 
-On Aug 29, 2013, at 4:48 AM, Gabor Juhos wrote:
-
-> Modify the probe routine to get the port line number
-> from device tree if the 'of_node' is populated in the
-> platform device. The driver can be built as module,
-> thus add an OF specific module device table as well
-> to support module auto loading.
+> This patch adds device tree support to the pxa's pwm driver.  Only an OF
+> match table is added; nothing needs to be extracted from the device tree
+> node.  The existing platform_device id table is reused for the match table
+> data.
 > 
-> This makes it possible to use the driver for AR9330
-> UART devices specified in device tree.
+> Tested on a Palm Treo 680 (both platform data and DT cases).
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
 > ---
-> Changes since v1:
->  - move the doc from bindings/tty/serial to bindings/serial
 > 
-> The patch is agains the 'tty-next' branch of the
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tree
-> ---
-> .../devicetree/bindings/serial/qca,ar9330-uart.txt |   34 ++++++++++++++++++++
-> drivers/tty/serial/ar933x_uart.c                   |   28 ++++++++++++++--
-> 2 files changed, 59 insertions(+), 3 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
+> I don't have data sheets handy for the newer Marvell pxa's (and I'm
+> confused about the presence of a pwm unit on pxa25x), so only pxa27x.dtsi
+> was updated. Thanks for looking!
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt b/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
-> new file mode 100644
-> index 0000000..c5e032c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
-> @@ -0,0 +1,34 @@
-> +* Qualcomm Atheros AR9330 High-Speed UART
-> +
-> +Required properties:
-> +
-> +- compatible: Must be "qca,ar9330-uart"
-
-If the driver is called ar933x, is there a reason not to do so with the compatible and binding spec?
-
-> +
-> +- reg: Specifies the physical base address of the controller and
-> +  the length of the memory mapped region.
-> +
-> +- interrupt-parent: The phandle for the interrupt controller that
-> +  services interrupts for this device.
-> +
-> +- interrupts: Specifies the interrupt source of the parent interrupt
-> +  controller. The format of the interrupt specifier depends on the
-> +  parent interrupt controller.
-> +
-> +Additional requirements:
-> +
-> +  Each UART port must have an alias correctly numbered in "aliases"
-> +  node.
-> +
-> +Example:
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	uart0: uart@18020000 {
-> +		compatible = "qca,ar9330-uart";
-> +		reg = <0x18020000 0x14>;
-> +
-> +		interrupt-parent = <&intc>;
-> +		interrupts = <3>;
-> +	};
-> diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-> index 0437a9e..acd03af 100644
-> --- a/drivers/tty/serial/ar933x_uart.c
-> +++ b/drivers/tty/serial/ar933x_uart.c
-> @@ -17,6 +17,8 @@
-> #include <linux/sysrq.h>
-> #include <linux/delay.h>
-> #include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> #include <linux/tty.h>
-> #include <linux/tty_flip.h>
-> #include <linux/serial_core.h>
-> @@ -623,13 +625,24 @@ static int ar933x_uart_probe(struct platform_device *pdev)
-> 	struct uart_port *port;
-> 	struct resource *mem_res;
-> 	struct resource *irq_res;
-> +	struct device_node *np;
-> 	unsigned int baud;
-> 	int id;
-> 	int ret;
+>  arch/arm/boot/dts/pxa27x.dtsi | 12 ++++++++++++
+>  drivers/pwm/pwm-pxa.c         | 31 +++++++++++++++++++++++++++++++
+>  2 files changed, 43 insertions(+)
 > 
-> -	id = pdev->id;
-> -	if (id == -1)
-> -		id = 0;
-> +	np = pdev->dev.of_node;
-> +	if (config_enabled(CONFIG_OF) && np) {
-> +		id = of_alias_get_id(np, "serial");
-> +		if (id < 0) {
-> +			dev_err(&pdev->dev, "unable to get alias id, err=%d\n",
-> +				id);
-> +			return id;
-> +		}
-> +	} else {
-> +		id = pdev->id;
-> +		if (id == -1)
-> +			id = 0;
-> +	}
+> diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+> index d7c5d72..4031dce 100644
+> --- a/arch/arm/boot/dts/pxa27x.dtsi
+> +++ b/arch/arm/boot/dts/pxa27x.dtsi
+> @@ -10,5 +10,17 @@
+>  			marvell,intc-priority;
+>  			marvell,intc-nr-irqs = <34>;
+>  		};
+> +
+> +		pwm0: pwm@40b00000 {
+> +			compatible = "marvell,pxa27x-pwm";
+> +			reg = <0x40b00000 0x100000>;
+> +			#pwm-cells = <2>;
+> +		};
+> +
+> +		pwm1: pwm@40c00000 {
+> +			compatible = "marvell,pxa27x-pwm";
+> +			reg = <0x40c00000 0x100000>;
+> +			#pwm-cells = <2>;
+> +		};
+>  	};
+>  };
+> diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
+> index a4d2164..be5f914 100644
+> --- a/drivers/pwm/pwm-pxa.c
+> +++ b/drivers/pwm/pwm-pxa.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/io.h>
+>  #include <linux/pwm.h>
+> +#include <linux/of_device.h>
 > 
-> 	if (id > CONFIG_SERIAL_AR933X_NR_UARTS)
-> 		return -EINVAL;
-> @@ -713,12 +726,21 @@ static int ar933x_uart_remove(struct platform_device *pdev)
-> 	return 0;
-> }
+>  #include <asm/div64.h>
+> 
+> @@ -124,6 +125,30 @@ static struct pwm_ops pxa_pwm_ops = {
+>  	.owner = THIS_MODULE,
+>  };
 > 
 > +#ifdef CONFIG_OF
-> +static const struct of_device_id ar933x_uart_of_ids[] = {
-> +	{ .compatible = "qca,ar9330-uart" },
-> +	{},
+> +/* use the platform_device id table for OF match table data */
+> +static struct of_device_id pwm_of_match[] = {
+> +	{ .compatible = "marvell,pxa25x-pwm", .data = &pwm_id_table[0] },
+> +	{ .compatible = "marvell,pxa27x-pwm", .data = &pwm_id_table[1] },
+> +	{ .compatible = "marvell,pxa168-pwm", .data = &pwm_id_table[2] },
+> +	{ .compatible = "marvell,pxa910-pwm", .data = &pwm_id_table[3] },
+> +	{ }
 > +};
-> +MODULE_DEVICE_TABLE(of, ar933x_uart_of_ids);
-> +#endif
-> +
-> static struct platform_driver ar933x_uart_platform_driver = {
-> 	.probe		= ar933x_uart_probe,
-> 	.remove		= ar933x_uart_remove,
-> 	.driver		= {
-> 		.name		= DRIVER_NAME,
-> 		.owner		= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(ar933x_uart_of_ids),
-> 	},
-> };
-> 
-> -- 
-> 1.7.10
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +MODULE_DEVICE_TABLE(of, pwm_of_match);
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Are PXA2xx and PXA3xx PWM impleemntations not all the same ? If so, why not just 
+stick with pxa25x-pwm only for all of the CPUs (aka. the lowest CPU model). Then 
+the table would have but a single entry.
 
+[...]
+
+Best regards,
+Marek Vasut
