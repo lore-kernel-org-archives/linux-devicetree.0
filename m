@@ -1,42 +1,79 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
 Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Tue, 03 Sep 2013 11:22:23 -0600
-Message-ID: <52261ACF.30504@wwwdotorg.org>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <521D0964.2080209@wwwdotorg.org> <CACRpkdaWPQTPw8u+97iV8MRB1fdeS40kd242pJd3UE9Ler4kRQ@mail.gmail.com> <5220F849.8030909@wwwdotorg.org> <CAK7N6vrEXVyLHpY-v+SJ668hC0wvHrWOgtviAQ+w5yis7p_E4Q@mail.gmail.com>
+Date: Tue, 03 Sep 2013 11:27:12 -0600
+Message-ID: <52261BF0.4090106@wwwdotorg.org>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <521FE637.3010805@collabora.co.uk> <5220F8AE.2080300@wwwdotorg.org> <1521079.WSLhhfqBXl@lem-wkst-02>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAK7N6vrEXVyLHpY-v+SJ668hC0wvHrWOgtviAQ+w5yis7p_E4Q@mail.gmail.com>
+In-Reply-To: <1521079.WSLhhfqBXl@lem-wkst-02>
 Sender: linux-gpio-owner@vger.kernel.org
-To: anish singh <anish198519851985@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2013 09:32 AM, anish singh wrote:
-> On Sat, Aug 31, 2013 at 1:23 AM, Stephen Warren <swarren@wwwdotorg.org
-> <mailto:swarren@wwwdotorg.org>> wrote:
-
->     I still haven't seen an answer to why we really care about this; how
->     many times has code actually allocated the same GPIO/IRQ when it
->     shouldn't, in a way that it wasn't detectable by some other mechanism,
->     i.e. the feature just not working? Why are we even trying to solve this
->     issue? I'm not totally convinced it even makes sense to try and
->     solve it.
+On 09/02/2013 03:25 AM, Lars Poeschel wrote:
+> Am Freitag, 30. August 2013, 13:55:26 schrieb Stephen Warren:
+>> On 08/29/2013 06:24 PM, Javier Martinez Canillas wrote:
+>> ...
+>>
+>>> We have been trying to solve this issue for a few months by now and Linus'
+>>> approach seems to be the most sensible solution to me.
+>>>
+>>> Drivers that request an IRQ and assume that platform code will request and
+>>> setup the GPIO have been broken since the boards using these drivers were
+>>> migrated to DT (e.g: smsc911x on OMAP2+ boards).
+>>
+>> That's only true if the driver for the GPIO controller is buggy.
+>> Whatever request_irq() maps down to in the GPIO/IRQ controller driver
+>> simply needs to set up the pin as an interrupt input, then it doesn't
+>> matter which order the driver does things.
 > 
->  
-> Probably this issue(same gpio/irq being used by multiple drivers) is
-> very rare
-> but debugging it is bit difficult.
+> Is it really that easy?
 
-Really? It's easy to just look in /proc/interrupts and
-/sys/kernel/debug/gpio.
+Yes.
 
-> This generally happens when we are working
-> on latest revised boards where latest gpio number of some driver
-> conflicts with the some other driver.
+> request_irq() should request the gpio and set it to input that it needs to 
+> fulfill the irq request. That would then be the way to go for new drivers and 
+> in the DT case.
 
-At least in the DT case, which is all that this patch solves, the DT is
-describing the HW GPIO/IRQ numbers, so the Linux GPIO numbers are
-irrelevant; everything is expressed as raw HW numbers, which are quite
-easy to check.
+Either explicitly request the GPIO, or simply directly program the HW in
+whatever way is required for the pin to operate as an IRQ.
+
+> Some leagcy drivers currently do this:
+> 
+> request_gpio(gpio);
+> gpio_direction_input(gpio);
+> request_irq(gpio_to_irq(gpio));
+> 
+> In that case request_irq should not fail because the driver is already the 
+> correct owner of this gpio. But if some other entity owns this gpio it should 
+> fail.
+
+Yes.
+
+> Also if I understand you correct the other way round should also possible:
+> 
+> request_irq(gpio_to_irq(gpio));
+> request_gpio(gpio);
+> gpio_direction_input(gpio);
+> 
+> request_irq() also requests the gpio then but the following request_gpio() 
+> should also not fail.
+
+I don't believe that code sequence is currently banned. If we want to
+ban it, we should document that. Until this is documented as being
+banned, I think we must fully support that code sequence.
+
+> To have it work that way we have to track the owners of all requested gpios 
+> somewhere. Or am I wrong here?
+> Where and how to record these owners? Can gpio system achieve this? gpios are 
+> requested without an owning device.
+
+Yes. But, I believe we need to fully track every GPIO/IRQ owner already
+right now; if a driver (not the GPIO/IRQ chip driver, but a driver that
+uses the GPIOs/IRQs) calls gpio_request()/request_irq(), and this patch
+has already requested them, then we already need to fully track GPIO/IRQ
+ownership to make sure that the driver's own requests aren't failed
+because the DT/GPIO core has already requested them on its behalf.
