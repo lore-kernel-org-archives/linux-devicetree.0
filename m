@@ -1,91 +1,54 @@
-From: Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
-Date: Tue, 03 Sep 2013 17:53:44 +0200
-Message-ID: <52260608.2030202@linaro.org>
+From: "Chaiken, Alison" <Alison_Chaiken@mentor.com>
+Subject: RE: [PATCH 1/2] ARM: i.MX6: dts: change iomuxc pinctrl config to
+ match Rev. 1 IMX6DQRM
+Date: Tue, 3 Sep 2013 16:01:27 +0000
+Message-ID: <60BA5429A0E1584BA3633194F6F993B502F2D8D2@NA-MBX-02.mgc.mentorg.com>
+References: <521C40D9.3070802@freescale.com>
+ <1377659855-9573-1-git-send-email-alison_chaiken@mentor.com>
+ <1377659855-9573-2-git-send-email-alison_chaiken@mentor.com>,
+ <52241BB3.5030909@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/boot-architecture>
-List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Sender: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <52241BB3.5030909@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Huang Shijie <b32955@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alison@she-devel.com" <alison@she-devel.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "olof@lixom.net" <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+I wrote:
+>> @@ -759,23 +759,23 @@
+>>                               gpmi-nand {
+>>                                       pinctrl_gpmi_nand_1: gpmi-nand-1 {
+>>                                               fsl,pins = <
+>> -                                                     MX6QDL_PAD_NANDF_CLE__NAND_CLE     0xb0b1
+>> -                                                     MX6QDL_PAD_NANDF_ALE__NAND_ALE     0xb0b1
+[ . . . ]
+>>                                       };
+>>                               };
 
-a normal Linux kernel currently supports reading the start and end 
-address of a single binary blob via the FDT's /chosen node.
-This will be interpreted as the location of an initial RAM disk.
+Huang Shijie [b32955@freescale.com] responds:
+>I tested this patch with the imx6q-ard board and imx6dl-ard board.
+>For the gpmi nand test result:
+>[1] imx6q-ard: We can pass the bonie++ stress test with the imx6q-ard board.
+>[2] imx6dl-ard: But we fails to read the nand ID with the imx6dl-ard board.
+>In other word, this gpmi can _not_ works with this patch.
 
-The Xen hypervisor itself is a kernel, but needs up to _two_ binaries 
-for proper operation: a Dom0 Linux kernel and it's associated initrd.
-On x86 this is solved via the multiboot protocol used by the Grub 
-bootloader, which supports to pass an arbitrary number of binary modules 
-to any kernel.
+Huang, I appreciate your speedy testing and sharing of results.   While I carefully and lengthily RTFM to create this patch, we can agree that making the hardware work well is the final goal!   We have tested the patch I sent on our hardware with our tests, but certainly any patch that renders some features of some boards inoperable is unacceptable.
 
-Since in the ARM world we have the versatile device tree, we don't need 
-to implement the mulitboot protocol.
+The patch we are discussing is about 670 lines, and the NAND part is about 60.   What is your advice regarding the remaining ~600 lines?  
 
-So I'd like to propose a new binding which denotes binary modules a 
-kernel can use at it's own discretion.
-The need is triggered by the Xen hypervisor (which already uses a very 
-similar scheme), but the approach is deliberately chosen to be as 
-generic as possible to allow future uses (like passing firmware blobs 
-for devices or the like).
-Credits for this go to Ian Campbell, who started something very similar 
-[1] for the Xen hypervisor. The intention of this proposal is to make 
-this generic and publicly documented.
-
-Looking forward to any comments!
-
-Thanks,
-Andre.
-
-[1] 
-http://xenbits.xen.org/gitweb/?p=xen.git;a=blob;f=docs/misc/arm/device-tree/booting.txt;h=94cd3f18a4e1317a35e1255bf5c6e1e091001d1a;hb=HEAD
-----------------------------
-* Multiple boot modules device tree bindings
-
-Boot loaders wanting to pass multiple additional binaries to a kernel 
-shall add a node "module" for each binary blob under the /chosen node 
-with the following properties:
-
-- compatible:
-     compatible = "boot,module";
-   A bootloader may add names to more specifically describe the module,
-   e.g. Xen may use "xen,dom0-kernel" or "xen,dom0-ramdisk".
-   If possible a kernel should be able to use modules even without a
-   descriptive naming, by enumerating them in order and using hard-coded
-   meanings for each module (e.g. first is kernel, second is initrd).
-
-- reg: specifies the base physical address and size of a region in
-   memory where the bootloader loaded the respective binary data to.
-
-- bootargs:
-   An optional property describing arguments to use for this module.
-   Could be a command line or configuration data.
-
-Example:
-/chosen {
-     #size-cells = <0x1>;
-     #address-cells = <0x1>;
-     module@0 {
-         compatible = "xen,linux-zimage", "xen,multiboot-module", 
-"boot,module";
-         reg = <0x80000000 0x003dcff8>;
-         bootargs = "console=hvc0 earlyprintk ro root=/dev/sda1 nosmp";
-     };
-     module@1 {
-         compatible = "xen,linux-initrd", "xen,multiboot-module", 
-"boot,module";
-         reg = <0x08000000 0x00123456>;
-     };
-...
+Best wishes,
+Alison Chaiken
+Mentor Embedded Software Division
+Fremont, CA, USA
