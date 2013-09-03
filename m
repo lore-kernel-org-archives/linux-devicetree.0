@@ -1,192 +1,63 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3] dt: update PSCI binding documentation for v0.2
-Date: Tue, 3 Sep 2013 10:52:35 +0100
-Message-ID: <20130903095235.GD18206@e106331-lin.cambridge.arm.com>
-References: <1377564633-31638-1-git-send-email-robherring2@gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH] of_mtd: Add no-op stubs to support CONFIG_OF=n
+Date: Tue, 3 Sep 2013 07:53:14 -0300
+Message-ID: <20130903105313.GA2355@localhost>
+References: <1378175873-2763-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130903053642.GA364@norris.computersforpeace.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1377564633-31638-1-git-send-email-robherring2@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <Ian.Campbell@citrix.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Christoffer Dall <christoffer.dall@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
+In-Reply-To: <20130903053642.GA364@norris.computersforpeace.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: devicetree@vger.kernel.org, Josh Wu <josh.wu@atmel.com>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <dedekind1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 27, 2013 at 01:50:33AM +0100, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-
-Hi Rob,
-
-Sorry for the delay on reviewing this.
-
-> 
-> The PSCI spec from ARM has been updated to 0.2 version. Update the
-> binding document to reflect the spec changes. For the binding, the
-> major changes are the addition of psci_version, affinity_info,
-> migrate_info_type, migrate_info_up_cpu, system_reset and system_off
-> functions. The recommended function ID numbering has also changed.
-> 
-> This update also defines 32 and 64 bit calling conventions. The calling
-> convention is defined on a per function ID basis.
-> 
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> Cc: Dave Martin <Dave.Martin@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <Ian.Campbell@citrix.com>
-> Cc: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-> Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-> Cc: Christoffer Dall <christoffer.dall@linaro.org>,
-> Cc: Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
-> Cc: Matt Sealey <neko@bakuhatsu.net>
-> Cc: devicetree@vger.kernel.org
-> ---
-> v3: This version implements Mark's suggested binding with -32 and -64 suffixes.
-> 
->  Documentation/devicetree/bindings/arm/psci.txt | 62 +++++++++++++++++++-------
->  1 file changed, 46 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
-> index 433afe9..209bb04 100644
-> --- a/Documentation/devicetree/bindings/arm/psci.txt
-> +++ b/Documentation/devicetree/bindings/arm/psci.txt
-> @@ -1,16 +1,17 @@
->  * Power State Coordination Interface (PSCI)
->  
->  Firmware implementing the PSCI functions described in ARM document number
-> -ARM DEN 0022A ("Power State Coordination Interface System Software on ARM
-> +ARM DEN 0022B ("Power State Coordination Interface System Software on ARM
->  processors") can be used by Linux to initiate various CPU-centric power
->  operations.
->  
-> -Issue A of the specification describes functions for CPU suspend, hotplug
-> -and migration of secure software.
-> +Issue B of the specification describes functions for CPU suspend, hotplug,
-> +migration of secure software, and system level reset and powerdown.
->  
->  Functions are invoked by trapping to the privilege level of the PSCI
->  firmware (specified as part of the binding below) and passing arguments
-> -in a manner similar to that specified by AAPCS:
-> +as defined in ARM document "SMC Calling Convention" (ARM DEN 0028) in a manner
-> +similar to that specified by AAPCS:
->  
->  	 r0		=> 32-bit Function ID / return value
->  	{r1 - r3}	=> Parameters
-> @@ -21,10 +22,10 @@ to #0.
->  
->  Main node required properties:
->  
-> - - compatible    : Must be "arm,psci"
-> + - compatible    : Must contain "arm,psci-0.2" or "arm,psci"
->  
-> - - method        : The method of calling the PSCI firmware. Permitted
-> -                   values are:
-> + - method        : The method defines the calling convention for the PSCI
-> +                   firmware. Permitted values are:
->  
->                     "smc" : SMC #0, with the register assignments specified
->  		           in this binding.
-> @@ -32,24 +33,53 @@ Main node required properties:
->                     "hvc" : HVC #0, with the register assignments specified
->  		           in this binding.
->  
-> + - psci_version  : Function ID for PSCI_VERSION operation. Required for
-> +                   "arm,psci-0.2" compatible version or later.
-> +
-
-While this seems sensible, I'm not sure that this needs to be mandatory.
-
->  Main node optional properties:
->  
-> - - cpu_suspend   : Function ID for CPU_SUSPEND operation
-> + - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
-> +
-> + - cpu_off                : Function ID for CPU_OFF operation
-> +
-> + - cpu_on[-<32|64]        : Function ID for CPU_ON operation
-> +
-> + - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
->  
-> - - cpu_off       : Function ID for CPU_OFF operation
-> + - migrate[-<32|64]       : Function ID for MIGRATE operation
->  
-> - - cpu_on        : Function ID for CPU_ON operation
-> + - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
->  
-> - - migrate       : Function ID for MIGRATE operation
-> + - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
->  
-> + - system_reset           : Function ID for SYSTEM_RESET operation
-> +
-> + - system_off             : Function ID for SYSTEM_OFF operation
-> +
-> +Some function IDs support 32-bit and 64-bit calling conventions. If no size is
-> +specified, then the 32-bit calling convention is used. Therefore, all function
-> +IDs for 64-bit calling convention are required to have "-64" suffix. Use of the
-> +"-32" suffix is recommended, but not required for backwards compatibility.
-
-I don't think we can say that non suffixed IDs mean use the 32-bit
-calling convention -- the arm64 PSCI code uses 64-bit parameters at the
-moment for non-suffixed IDs.
-
-I think if we say that callers should use their native register width
-calling convention for non-suffixed IDs, it's compatible with all PSCI
-implementations using DT in the wild currently. Implementations on v7
-don't have AArch64 state, so can't ever use the 64-bit convention, and
-existing 64-bit implementations like KVM has are implemented at EL2, so
-the guest is stuck at a particular register width.
-
-Given that, how about the below?
-
-Some functions have have separate IDs for 32-bit and 64-bit calling
-conventions. These separate function IDs are described with function
-names with  "-64" and "-32" suffixes (e.g. cpu_on-64). Where a function
-name does not have a suffix, the ID may be used with either calling
-convention depending on the CPU state -- AArch32 callers should use the
-32-bit calling convention, and AArch64 callers should use the 64-bit
-calling convention.
-
-Thanks,
-Mark.
-
->  
->  Example:
->  
->  	psci {
-> -		compatible	= "arm,psci";
-> +		compatible	= "arm,psci-0.2";
->  		method		= "smc";
-> -		cpu_suspend	= <0x95c10000>;
-> -		cpu_off		= <0x95c10001>;
-> -		cpu_on		= <0x95c10002>;
-> -		migrate		= <0x95c10003>;
-> +		psci_version	= <0x84000000>;
-> +		cpu_suspend-32	= <0x84000001>;
-> +		cpu_suspend-64	= <0xc4000001>;
-> +		cpu_off		= <0x84000002>;
-> +		cpu_on-32	= <0x84000003>;
-> +		cpu_on-64	= <0xc4000003>;
-> +		affinity_info-32 = <0x84000004>; 
-> +		affinity_info-64 = <0xc4000004>; 
-> +		migrate-32	= <0x84000005>;
-> +		migrate-64	= <0xc4000005>;
-> +		migrate_info_type = <0x84000006>;
-> +		migrate_info_up_cpu-32 = <0x84000007>;
-> +		migrate_info_up_cpu-64 = <0xc4000007>;
-> +		system_off	= <0x84000008>; 
-> +		system_reset	= <0x84000009>; 
->  	};
-> +
-> -- 
-> 1.8.1.2
-> 
-> 
+T24gTW9uLCBTZXAgMDIsIDIwMTMgYXQgMTA6MzY6NThQTSAtMDcwMCwgQnJpYW4gTm9ycmlzIHdy
+b3RlOgo+IE9uIE1vbiwgU2VwIDAyLCAyMDEzIGF0IDExOjM3OjUzUE0gLTAzMDAsIEV6ZXF1aWVs
+IEdhcmNpYSB3cm90ZToKPiA+IEp1c3QgbGlrZSB0aGUgcmVzdCBvZiB0aGUgc3Vic3lzdGVtcywg
+bGV0J3MgYWRkIHRoZSByZXF1aXJlZCBuby1vcAo+ID4gZnVuY3Rpb25zIHRvIGltcGxlbWVudCBz
+dHVicyB3aGVuIENPTkZJR19PRj1uLgo+ID4gCj4gPiBUaGlzIHByZXZlbnRzIE1URCBkcml2ZXJz
+IGZyb20gaGF2aW5nIHVnbHkgaWZkZWZzIGluIHRoZWlyIGNvZGUsCj4gPiBhbmQgaW5zdGVhZCBo
+aWRlIHRoZSBpZmRlZiBtb25zdGVyIGluIHRoZSBoZWFkZXIgY2xvc2V0IChmYXIgYXdheQo+ID4g
+ZnJvbSBwZW9wbGUncyBzaWdodCkuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEV6ZXF1aWVsIEdh
+cmNpYSA8ZXplcXVpZWwuZ2FyY2lhQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+IC0tLQo+ID4gIGlu
+Y2x1ZGUvbGludXgvb2ZfbXRkLmggfCAxNSArKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgMTUgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51
+eC9vZl9tdGQuaCBiL2luY2x1ZGUvbGludXgvb2ZfbXRkLmgKPiA+IGluZGV4IGVkN2YyNjcuLjY2
+ZjE3M2UgMTAwNjQ0Cj4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L29mX210ZC5oCj4gPiArKysgYi9p
+bmNsdWRlL2xpbnV4L29mX210ZC5oCj4gPiBAQCAtMTQsNiArMTQsMjEgQEAKPiA+ICBpbnQgb2Zf
+Z2V0X25hbmRfZWNjX21vZGUoc3RydWN0IGRldmljZV9ub2RlICpucCk7Cj4gPiAgaW50IG9mX2dl
+dF9uYW5kX2J1c193aWR0aChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKTsKPiA+ICBib29sIG9mX2dl
+dF9uYW5kX29uX2ZsYXNoX2JidChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKTsKPiA+ICsjZWxzZQo+
+IAo+IEkgd291bGQgaW5jbHVkZSBhbiBleHRyYSBsaW5lIG9uIGVpdGhlciBzaWRlIG9mICNlbHNl
+Lgo+IAo+ID4gK3N0YXRpYyBpbmxpbmUgaW50IG9mX2dldF9uYW5kX2VjY19tb2RlKHN0cnVjdCBk
+ZXZpY2Vfbm9kZSAqbnApCj4gPiArewo+ID4gKwlyZXR1cm4gLUVOT1NZUzsKPiA+ICt9Cj4gPiAr
+Cj4gPiArc3RhdGljIGlubGluZSBpbnQgb2ZfZ2V0X25hbmRfYnVzX3dpZHRoKHN0cnVjdCBkZXZp
+Y2Vfbm9kZSAqbnApCj4gPiArewo+ID4gKwlyZXR1cm4gLUVOT1NZUzsKPiA+ICt9Cj4gPiArCj4g
+PiArc3RhdGljIGlubGluZSBib29sIG9mX2dldF9uYW5kX29uX2ZsYXNoX2JidChzdHJ1Y3QgZGV2
+aWNlX25vZGUgKm5wKQo+ID4gK3sKPiA+ICsJcmV0dXJuIGZhbHNlOwo+ID4gK30KPiA+ICAjZW5k
+aWYKPiAKPiBBbHRob3VnaCB3ZSBhcmUgImhpZGluZyIgdGhlICNpZmRlZidzIGhlcmUgaW4gdGhl
+IGhlYWRlciwgd2UgY2FuIHN0aWxsCj4gaGVscCB0byBtYWtlIHRoZW0gZXh0cmEgY2xlYXI7IEkg
+dGhpbmsgdGhlIHR5cGljYWwgc3R5bGUgaXMgdG8gaW5jbHVkZQo+IC8qIENPTkZJR19PRl9NVEQg
+Ki8gbWFya2VycyB0byBzaG93IHdoaWNoICNpZmRlZi8jZWxzZS8jZW5kaWYgYmxvY2sgaXQKPiBi
+ZWxvbmdzIHRvLgo+IAoKUmlnaHQsIGZvcmdvdCBhYm91dCB0aG9zZSBtYXJrZXJzIQoKPiA+ICAK
+PiA+ICAjZW5kaWYgLyogX19MSU5VWF9PRl9NVERfSCAqLwo+IAo+IFdpdGggdGhpcyB0cml2aWFs
+IGNoYW5nZXMsIEkgYW1lbmRlZCB5b3VyIHBhdGNoIGFuZCBwdXNoZWQgdG8KPiBsMi1tdGQuZ2l0
+LiBUaGFua3MhIEkgbG9vayBmb3J3YXJkIHRvIHRoZSBmb2xsb3dpbmcgcGF0Y2hlcyB0byByZW1v
+dmUKPiBzb21lIG9mIHRoZSBkcml2ZXIgI2lmZGVmJ3MuCj4gCgpHcmVhdCwgdGhhbmtzIGZvciBm
+aXhpbmcgaXQhCi0tIApFemVxdWllbCBHYXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBM
+aW51eCwgS2VybmVsIGFuZCBBbmRyb2lkIEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9u
+cy5jb20KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
