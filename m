@@ -1,107 +1,156 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3] ASoC: generic simple sound card DT
- bindings
-Date: Wed, 4 Sep 2013 00:19:22 +0100
-Message-ID: <20130903231922.GL3084@sirena.org.uk>
-References: <1377945878-13322-1-git-send-email-mpa@pengutronix.de>
- <1377945878-13322-3-git-send-email-mpa@pengutronix.de>
- <52220766.1040504@metafoo.de> <52263795.8010600@wwwdotorg.org>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v4 3/5] clk: dt: binding for basic multiplexer clock
+Date: Tue, 03 Sep 2013 16:22:19 -0700
+Message-ID: <20130903232219.10934.67434@quantum>
+References: <1377150793-27864-1-git-send-email-mturquette@linaro.org>
+ <1377150793-27864-4-git-send-email-mturquette@linaro.org>
+ <2A930389-012E-45C3-93EB-6B4A41DB2EF5@codeaurora.org>
+ <20130829011425.8231.78802@quantum>
+ <39BAF1F8-41AD-4667-BF76-22BDF709415A@codeaurora.org>
+ <20130830203334.10934.10011@quantum> <522110AA.7040700@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5505935594943612177=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <52263795.8010600@wwwdotorg.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <522110AA.7040700@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Stephen Warren (2013-08-30 14:37:46)
+> On 08/30/2013 02:33 PM, Mike Turquette wrote:
+> > Quoting Kumar Gala (2013-08-30 13:02:42)
+> >> On Aug 28, 2013, at 8:14 PM, Mike Turquette wrote:
+> >>
+> >>> Quoting Kumar Gala (2013-08-28 08:50:10)
+> >>>> On Aug 22, 2013, at 12:53 AM, Mike Turquette wrote:
+> >>>>
+> >>>>> Device Tree binding for the basic clock multiplexer, plus the setup
+> >>>>> function to register the clock.  Based on the existing fixed-clock
+> >>>>> binding.
+> >>>>>
+> >>>>> Includes minor beautification of clk-provider.h where some whitespace is
+> >>>>> added and of_fixed_factor_clock_setup is relocated to maintain a
+> >>>>> consistent style.
+> >>>>>
+> >>>>> Tero Kristo contributed helpful bug fixes to this patch.
+> >>>>>
+> >>>>> Signed-off-by: Mike Turquette <mturquette@linaro.org>
+> >>>>> Tested-by: Heiko Stuebner <heiko@sntech.de>
+> >>>>> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> >>>>> ---
+> >>>>> Changes since v3:
+> >>>>> * replaced underscores with dashes in DT property names
+> >>>>> * bail from of clock setup function early if of_iomap fails
+> >>>>> * removed unecessary explict cast
+> >>>>>
+> >>>>> .../devicetree/bindings/clock/mux-clock.txt        | 79 ++++++++++++++++++++++
+> >>>>> drivers/clk/clk-mux.c                              | 68 ++++++++++++++++++-
+> >>>>> include/linux/clk-provider.h                       |  5 +-
+> >>>>> 3 files changed, 150 insertions(+), 2 deletions(-)
+> >>>>> create mode 100644 Documentation/devicetree/bindings/clock/mux-clock.txt
+> >>>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/clock/mux-clock.txt b/Documentation/devicetree/bindings/clock/mux-clock.txt
+> >>>>> new file mode 100644
+> >>>>> index 0000000..21eb3b3
+> >>>>> --- /dev/null
+> >>>>> +++ b/Documentation/devicetree/bindings/clock/mux-clock.txt
+> >>>>> @@ -0,0 +1,79 @@
+> >>>>> +Binding for simple mux clock.
+> >>>>> +
+> >>>>> +This binding uses the common clock binding[1].  It assumes a
+> >>>>> +register-mapped multiplexer with multiple input clock signals or
+> >>>>> +parents, one of which can be selected as output.  This clock does not
+> >>>>> +gate or adjust the parent rate via a divider or multiplier.
+> >>>>> +
+> >>>>> +By default the "clocks" property lists the parents in the same order
+> >>>>> +as they are programmed into the regster.  E.g:
+> >>>>> +
+> >>>>> +     clocks = <&foo_clock>, <&bar_clock>, <&baz_clock>;
+> >>>>> +
+> >>>>> +results in programming the register as follows:
+> >>>>> +
+> >>>>> +register value               selected parent clock
+> >>>>> +0                    foo_clock
+> >>>>> +1                    bar_clock
+> >>>>> +2                    baz_clock
+> >>>>> +
+> >>>>> +Some clock controller IPs do not allow a value of zero to be programmed
+> >>>>> +into the register, instead indexing begins at 1.  The optional property
+> >>>>> +"index-starts-at-one" modified the scheme as follows:
+> >>>>> +
+> >>>>> +register value               selected clock parent
+> >>>>> +1                    foo_clock
+> >>>>> +2                    bar_clock
+> >>>>> +3                    baz_clock
+> >>>>> +
+> >>>>> +Additionally an optional table of bit and parent pairs may be supplied
+> >>>>> +like so:
+> >>>>> +
+> >>>>> +     table = <&foo_clock 0x0>, <&bar_clock, 0x2>, <&baz_clock, 0x4>;
+> >>>>> +
+> >>>>
+> >>>> I think this is going way too far for what should be in a device tree.  Why should this not just be encoded in tables in the code?
+> >>>
+> >>> To reduce kernel data bloat.
+> >>
+> >> Why is this really an issue, for systems that are concerned about kernel size, they are going to be built targeting the HW platform of choice, for one's like a server, the bloat isn't going to be significant, and if so we can look at mechanisms like __init section that would free up after boot.
+> > 
+> > s/bloat/churn/
+> > 
+> > The clock _data_ seems to always have some churn to it. Moving it out to
+> > DT reduces that churn from Linux. My concern above is not about kernel
+> > data size.
+> 
+> That sounds like the opposite of what we should be doing.
+> 
+> It's fine for kernel code/data to change; that's a natural part of
+> development. Obviously, we should minimize churn, through thorough
+> review, domain knowledge, etc.
 
---===============5505935594943612177==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QeIEYJGnsH0eC7HY"
-Content-Disposition: inline
+And with the "clock mapping" style bindings we'll end up changing both
+the DT binding definition and the kernel. Not great.
 
+And I'll respond to your points below but the whole "relocate the
+problem to DT" argument is simply not my main point. What I want to do
+is increase the usefulness of DT by allowing register-level details into
+the binding which can 
 
---QeIEYJGnsH0eC7HY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> 
+> Saying that we must shove the data out into DT because it changes
+> pre-supposes that we should be changing the DT!
+> 
+> We should strive to write the DT for a particular piece of HW once, and
+> have it be a complete and accurate description of the HW.
 
-On Tue, Sep 03, 2013 at 01:25:09PM -0600, Stephen Warren wrote:
+We're always trying to do this no matter where the data resides. Having
+accurate data is not a new proposal.
 
-> Mark has made the argument that (at least for CODEC analog pins) we can
-> simply put those strings into the binding document, and make them as
-> much a part of the binding as anything else. After all, (at least for
-> CODEC analog pins) the values are simply the names of the pins on the
-> package, as listed by the HW documentation itself.
+> That's hard
+> enough to do with small amounts of simple data. Deliberately pushing
+> data that's known to be hard to get right and churn a lot into DT seems
+> to be destined to make most DTs contain incorrect data.
 
-> We could presumably do the same thing for DAIs; in DT, use a
-> string-based DAI name derived directly from the HW documentation, rather
-> than the current intra-ASoC DAI name strings.
+The data churn doesn't change, whether it's static data in C or nodes in
+dts. And for the sane non-mapping-a-clock-to-a-number bindings there is
+no cause to change the binding at all when introducing new clock data or
+making corrections to the nodes in the dts.
 
-> That said, I will admit that I personally don't really like the idea of
-> using strings in bindings. That opinion certainly isn't universal though.
+> 
+> DT-as-an-ABI works both ways; the binding definition needs to stay
+> constant /and/ the data in any particular DT needs to be accurate too.
 
-I think either works - with DAIs there is a tendency (though not
-universal) for devices to just have numbered interfaces which makes the
-numbers more natural.  I'm more concerned with the binding being legible
-than with what ends up physically written in there, the original reason
-for strings (apart from the fact that they're in the drivers already)
-was that there was a lot of resistance in the DT community to symbolic
-constants.  That would have lead to bindings which looked like line
-noise.
+I'm not proposing changing the binding and accuracy in the dts is
+implied. No one has a goal to put inaccurate data into DT.
 
-> > The
-> > binding also assumes that a CPU controller may have one DAI at most. In my
-> > opinion this binding ought to use the upcoming of_xlate stuff for ASoC
-> > components.
-
-> That restriction seems reasonable for a *simple* DT sound binding. For
-> more complex cards, one could presumably create more complex bindings,
-> be they generic bindings that cover arbitrary more complex cases, or
-> bindings for specific configurations that happen to include multiple DAIs.
-
-The complexity there comes from the device that's being used rather than
-the design of the sound card though - the fact that a SoC has an audio
-block with many DAIs shouldn't prevent it using the simple bindings if
-someone just hung a simple CODEC off one of the DAIs.
-
---QeIEYJGnsH0eC7HY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSJm53AAoJELSic+t+oim9LKYP/2S8sZE3s5Pq+OFh4ZZNMvgp
-61CehgYh4Ed4Q7vSHrC3ZC3WmOZiJnmady74y6X4roFd1CXhy91S9Q3t6bIi2Pq1
-jFGOwiov+mqNsEr0C4DnVI6SXL9cuQ6yzHKAzQRSeM871YDfJoDZ+dS2MYv5uPYK
-w8xPeEHFQIwkNKrGpiCfcrNLQoCk2zEKoKU2OGLTw+vTIrTnwqNbzQbi+9yh7slC
-M8zhjH6la/AnbGKufJRR/ZomugRLaoWbQBcMDSCITuBhB8uB7tz89Xq2UBf0U8l1
-jYS02r7StcRqqrtEBJ6p9hrE47LavrI9S2wA7fF04Z5BnWhpd9RWngOnJKdN9BB/
-Jww0lVi2KtBX7g0WZMEOPgAD3nbN8p0+QHyCsLQamh/LgDUn9eXTrBUt+aBvH7zy
-X9WcASbhEmKxVvJDQBDdgZ66AIlh0yZjoP3t9BwoeQLIQpUPNo10Ktdg2vHtEKSh
-vhJdqDuRhtePHxbHs79As2w4op9EBHoUWLu6cLDAuAf4K7TM0i3wguBc3VcGyeT/
-ior715vX5+2izh6qxET75Z+/ny5XgAPGB2hnCp/N4ViePS2PNjxyHSKbAIuMqiDJ
-4jknOYg+LQsISYcw/0J9fvuYKpELAcNHDIN9forb2d7o0sYpnHS3L4frnfzb7aIr
-ONTA19XWUkKyb4gMJm1D
-=VMLW
------END PGP SIGNATURE-----
-
---QeIEYJGnsH0eC7HY--
-
---===============5505935594943612177==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5505935594943612177==--
+Regards,
+Mike
