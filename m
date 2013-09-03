@@ -1,100 +1,44 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH] pwm: pxa: add device tree support to pwm driver
-Date: Wed, 4 Sep 2013 00:20:54 +0200
-Message-ID: <201309040020.55029.marex@denx.de>
-References: <1378236233-15637-1-git-send-email-mikedunn@newsguy.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of_irq.h: fix build warnings when CONFIG_OF is not enabled
+Date: Tue, 3 Sep 2013 17:31:20 -0500
+Message-ID: <CAL_Jsq+82vm_vt5EpcG1zvWmL_H4KY=91tB1WH5yUhHsiM11DA@mail.gmail.com>
+References: <5224B499.4010600@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1378236233-15637-1-git-send-email-mikedunn@newsguy.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-pwm@vger.kernel.org, Mike Dunn <mikedunn@newsguy.com>, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5224B499.4010600@infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Mike Dunn,
+On Mon, Sep 2, 2013 at 10:54 AM, Randy Dunlap <rdunlap@infradead.org> wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+>
+> Fix build warnings when CONFIG_OF is not enabled:
 
-> This patch adds device tree support to the pxa's pwm driver.  Only an OF
-> match table is added; nothing needs to be extracted from the device tree
-> node.  The existing platform_device id table is reused for the match table
-> data.
-> 
-> Tested on a Palm Treo 680 (both platform data and DT cases).
-> 
-> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
+It would be nice to know what arch/config you see this on.
+
+> include/linux/of_irq.h:82:7: warning: 'struct device_node' declared inside parameter list [enabled by default]
+> include/linux/of_irq.h:82:7: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
+> include/linux/of_irq.h:87:47: warning: 'struct device_node' declared inside parameter list [enabled by default]
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc:     Grant Likely <grant.likely@linaro.org>
+> Cc:     Rob Herring <rob.herring@calxeda.com>
+> Cc:     devicetree@vger.kernel.org
 > ---
-> 
-> I don't have data sheets handy for the newer Marvell pxa's (and I'm
-> confused about the presence of a pwm unit on pxa25x), so only pxa27x.dtsi
-> was updated. Thanks for looking!
-> 
->  arch/arm/boot/dts/pxa27x.dtsi | 12 ++++++++++++
->  drivers/pwm/pwm-pxa.c         | 31 +++++++++++++++++++++++++++++++
->  2 files changed, 43 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-> index d7c5d72..4031dce 100644
-> --- a/arch/arm/boot/dts/pxa27x.dtsi
-> +++ b/arch/arm/boot/dts/pxa27x.dtsi
-> @@ -10,5 +10,17 @@
->  			marvell,intc-priority;
->  			marvell,intc-nr-irqs = <34>;
->  		};
-> +
-> +		pwm0: pwm@40b00000 {
-> +			compatible = "marvell,pxa27x-pwm";
-> +			reg = <0x40b00000 0x100000>;
-> +			#pwm-cells = <2>;
-> +		};
-> +
-> +		pwm1: pwm@40c00000 {
-> +			compatible = "marvell,pxa27x-pwm";
-> +			reg = <0x40c00000 0x100000>;
-> +			#pwm-cells = <2>;
-> +		};
->  	};
->  };
-> diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
-> index a4d2164..be5f914 100644
-> --- a/drivers/pwm/pwm-pxa.c
-> +++ b/drivers/pwm/pwm-pxa.c
-> @@ -19,6 +19,7 @@
->  #include <linux/clk.h>
->  #include <linux/io.h>
->  #include <linux/pwm.h>
-> +#include <linux/of_device.h>
-> 
->  #include <asm/div64.h>
-> 
-> @@ -124,6 +125,30 @@ static struct pwm_ops pxa_pwm_ops = {
->  	.owner = THIS_MODULE,
->  };
-> 
-> +#ifdef CONFIG_OF
-> +/* use the platform_device id table for OF match table data */
-> +static struct of_device_id pwm_of_match[] = {
-> +	{ .compatible = "marvell,pxa25x-pwm", .data = &pwm_id_table[0] },
-> +	{ .compatible = "marvell,pxa27x-pwm", .data = &pwm_id_table[1] },
-> +	{ .compatible = "marvell,pxa168-pwm", .data = &pwm_id_table[2] },
-> +	{ .compatible = "marvell,pxa910-pwm", .data = &pwm_id_table[3] },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, pwm_of_match);
+>  include/linux/of_irq.h |    2 ++
+>  1 file changed, 2 insertions(+)
+>
+> --- linux-next-20130830.orig/include/linux/of_irq.h
+> +++ linux-next-20130830/include/linux/of_irq.h
+> @@ -78,6 +78,8 @@ extern void of_irq_init(const struct of_
+>  #endif /* CONFIG_OF_IRQ */
+>
+>  #else /* !CONFIG_OF */
+> +struct device_node;
 
-Are PXA2xx and PXA3xx PWM impleemntations not all the same ? If so, why not just 
-stick with pxa25x-pwm only for all of the CPUs (aka. the lowest CPU model). Then 
-the table would have but a single entry.
+Can you move this outside of the ifdefs to minimize the amount of ifdef'ed code.
 
-[...]
-
-Best regards,
-Marek Vasut
+Rob
