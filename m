@@ -1,116 +1,96 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
-Date: Tue, 3 Sep 2013 17:00:27 -0500
-Message-ID: <CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
-References: <52260608.2030202@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <52260608.2030202-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/boot-architecture>
-List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Sender: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 2/2] sh_eth: add device tree support
+Date: Tue, 3 Sep 2013 17:08:28 -0500
+Message-ID: <E4C90BAA-A89F-4C7C-B186-12C2DF7E6F31@codeaurora.org>
+References: <201308310429.34856.sergei.shtylyov@cogentembedded.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201308310429.34856.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: netdev@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, linux-sh@vger.kernel.org, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 3, 2013 at 10:53 AM, Andre Przywara
-<andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Hi,
->
-> a normal Linux kernel currently supports reading the start and end address
-> of a single binary blob via the FDT's /chosen node.
-> This will be interpreted as the location of an initial RAM disk.
->
-> The Xen hypervisor itself is a kernel, but needs up to _two_ binaries for
-> proper operation: a Dom0 Linux kernel and it's associated initrd.
-> On x86 this is solved via the multiboot protocol used by the Grub
-> bootloader, which supports to pass an arbitrary number of binary modules to
-> any kernel.
->
-> Since in the ARM world we have the versatile device tree, we don't need to
-> implement the mulitboot protocol.
 
-But surely there would be some advantage of reuse by using the
-multi-boot protocol since Xen, grub, and OS tools already support it
-for x86.
+On Aug 30, 2013, at 7:29 PM, Sergei Shtylyov wrote:
 
-> So I'd like to propose a new binding which denotes binary modules a kernel
-> can use at it's own discretion.
-> The need is triggered by the Xen hypervisor (which already uses a very
-> similar scheme), but the approach is deliberately chosen to be as generic as
-> possible to allow future uses (like passing firmware blobs for devices or
-> the like).
-> Credits for this go to Ian Campbell, who started something very similar [1]
-> for the Xen hypervisor. The intention of this proposal is to make this
-> generic and publicly documented.
+> Add support of the device tree probing for the Renesas SH-Mobile SoCs.
+> 
+> This work is loosely based on an original patch by Nobuhiro Iwamatsu
+> <nobuhiro.iwamatsu.yj@renesas.com>.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+> This patch is against Dave's 'net-next.git' repo.
+> 
+> Documentation/devicetree/bindings/net/sh_eth.txt |   40 +++++++++++++
+> drivers/net/ethernet/renesas/sh_eth.c            |   66 ++++++++++++++++++++++-
+> 2 files changed, 105 insertions(+), 1 deletion(-)
+> 
+> Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+> ===================================================================
+> --- /dev/null
+> +++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+> @@ -0,0 +1,40 @@
+> +* Renesas Electronics SH EtherMAC
+> +
+> +This file provides information on what the device node for the SH EtherMAC
+> +interface contains.
+> +
+> +Required properties:
+> +- compatible: "renesas,gether-r8a7740" if the device is a part of R8A7740 SoC.
+> +	      "renesas,ether-r8a7779" if the device is a part of R8A7778/9 SoCs.
+> +	      "renesas,ether-r8a7790" if the device is a part of R8A7790/1 SoCs.
 
-Can you describe how you see the boot flow working starting with OS
-installer writes kernel, initrd, xen and ??? to disk. How does the
-bootloader know what to load? The OS may not have access to the dtb,
-so this has to be described to the bootloader as well.
+Curious, 7779 (vs 7778) but 7790 (vs 7791).
 
->
-> Looking forward to any comments!
->
-> Thanks,
-> Andre.
->
-> [1]
-> http://xenbits.xen.org/gitweb/?p=xen.git;a=blob;f=docs/misc/arm/device-tree/booting.txt;h=94cd3f18a4e1317a35e1255bf5c6e1e091001d1a;hb=HEAD
-> ----------------------------
-> * Multiple boot modules device tree bindings
->
-> Boot loaders wanting to pass multiple additional binaries to a kernel shall
-> add a node "module" for each binary blob under the /chosen node with the
-> following properties:
->
-> - compatible:
->     compatible = "boot,module";
->   A bootloader may add names to more specifically describe the module,
->   e.g. Xen may use "xen,dom0-kernel" or "xen,dom0-ramdisk".
->   If possible a kernel should be able to use modules even without a
->   descriptive naming, by enumerating them in order and using hard-coded
->   meanings for each module (e.g. first is kernel, second is initrd).
->
-> - reg: specifies the base physical address and size of a region in
->   memory where the bootloader loaded the respective binary data to.
->
-> - bootargs:
->   An optional property describing arguments to use for this module.
->   Could be a command line or configuration data.
+> +- reg: offset and length of the register set for the device; if the device has
+> +       TSU registers, you need to specify two register sets here.
+> +- interrupt-parent: the phandle for the interrupt controller that services
+> +		    interrupts for this device.
+> +- interrupts: interrupt mapping for the interrupt source.
+> +- phy-mode: string, operation mode of the PHY interface (a string that
+> +	    of_get_phy_mode() can understand).
+> +- phy-handle: phandle of the PHY device.
+> +
 
-> Example:
-> /chosen {
->     #size-cells = <0x1>;
->     #address-cells = <0x1>;
->     module@0 {
->         compatible = "xen,linux-zimage", "xen,multiboot-module",
-> "boot,module";
->         reg = <0x80000000 0x003dcff8>;
->         bootargs = "console=hvc0 earlyprintk ro root=/dev/sda1 nosmp";
->     };
->     module@1 {
->         compatible = "xen,linux-initrd", "xen,multiboot-module",
-> "boot,module";
->         reg = <0x08000000 0x00123456>;
->     };
+Should add something about requiring a phy subnode
 
-This has to be created and parsed typically in FDT format by early
-boot code, and I worry about the complexity this has. Being future
-proof and extensible is good, but we could meet today's needs with
-something simple like this:
+> +Optional properties:
+> +- local-mac-address: 6 bytes, MAC address.
 
-bootargs = "xen args --- linux args";
-xen,linux-image = <start size>;
+What's the assumption if local-mac-address is not specified?
 
-So, is having a more generic solution really needed?
+> +- renesas,no-ether-link: specify when a board does not provide a proper LINK
+> +			 signal.
 
-Rob
+How is this different from the fixed link concept we have?
+
+> +- renesas,ether-link-active-low: specify when the LINK signal is active-low.
+> +
+> +Example (Armadillo800EVA board):
+> +
+> +	ethernet@e9a00000 {
+> +		compatible = "renesas,gether-r8a7740";
+> +		reg = <0xe9a00000 0x800>, <0xe9a01800 0x800>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 142 0x4>;
+> +		phy-mode = "mii";
+> +		phy-handle = <&phy0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		phy0: ethernet-phy@0 {
+> +			reg = <0>;
+> +		};
+> +	};
+
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
