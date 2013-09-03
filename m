@@ -1,32 +1,58 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v6 4/4] ARM: dts: mvebu: Update with the new compatible
- string for mv64xxx-i2c
-Date: Tue, 3 Sep 2013 08:36:40 -0400
-Message-ID: <20130903123640.GG19598@titan.lakedaemon.net>
-References: <1377181169-17483-1-git-send-email-gregory.clement@free-electrons.com>
- <1377181169-17483-2-git-send-email-gregory.clement@free-electrons.com>
- <52247A2D.9090400@free-electrons.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 3 Sep 2013 14:43:57 +0200
+Message-ID: <CACRpkdZRkNzt6eGr81tEGJpV5_+vccOPun3HXjQoGNtFWGfvYg@mail.gmail.com>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
+	<521D0964.2080209@wwwdotorg.org>
+	<CACRpkdaWPQTPw8u+97iV8MRB1fdeS40kd242pJd3UE9Ler4kRQ@mail.gmail.com>
+	<521FE637.3010805@collabora.co.uk>
+	<5220F8AE.2080300@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52247A2D.9090400-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5220F8AE.2080300@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <acourbot@nvidia.com>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2013 at 01:44:45PM +0200, Gregory CLEMENT wrote:
-> Hi Jason,
-> 
-> Unless I missed it I didn't see this patch in your last pull request.
-> Wolfram took the 3 others patches and Mark Rutland agreed with the binding
-> introduced in the patch 3. So I think we are fine to take this patch
-> in mvebu.
+On Fri, Aug 30, 2013 at 9:55 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 08/29/2013 06:24 PM, Javier Martinez Canillas wrote:
+> ...
+>> We have been trying to solve this issue for a few months by now and Linus'
+>> approach seems to be the most sensible solution to me.
+>>
+>> Drivers that request an IRQ and assume that platform code will request and setup
+>> the GPIO have been broken since the boards using these drivers were migrated to
+>> DT (e.g: smsc911x on OMAP2+ boards).
+>
+> That's only true if the driver for the GPIO controller is buggy.
+> Whatever request_irq() maps down to in the GPIO/IRQ controller driver
+> simply needs to set up the pin as an interrupt input, then it doesn't
+> matter which order the driver does things.
 
-Ok, I had dropped it before until the dust settled.  I've re-applied it
-and will be sending the last pull shortly.
+As mentioned it can't do that, because doing that creates a
+restriction on which order the driver does things...
 
-thx,
+But you mentioned that you wanted an API that would account
+for the case where the *same driver* requested the same resource
+(a GPIO line) to be used for both IRQ and GPIO, through two
+different calls.
 
-Jason.
+I would be happy to see how we could do that, preferably in a
+generic way.
+
+Since the gpio_request() does not contain the signature of the
+calling driver I don't see how we could do this without refactoring
+the whole world.
+
+In that case it would probably be easiest to
+*first* proceed to complete Alexandre's suggested refactorings for
+GPIO descriptors, which tie down GPIOs to be requested like
+clocks and regulators and thus tied to a device, so we can from
+there proceed to implement such a conditional request,
+as we will then have the required information in the GPIO
+subsystem.
+
+Yours,
+Linus Walleij
