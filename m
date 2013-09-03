@@ -1,81 +1,64 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] spi: quad: fix the name of DT property
-Date: Wed, 4 Sep 2013 00:01:58 +0100
-Message-ID: <20130903230158.GK3084@sirena.org.uk>
-References: <1376216117-5864-1-git-send-email-wangyuhang2014@gmail.com>
- <1378028181-5409-1-git-send-email-wangyuhang2014@gmail.com>
- <522613F7.908@wwwdotorg.org>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] of_irq.h: fix build warnings when CONFIG_OF is not enabled
+Date: Tue, 03 Sep 2013 16:18:27 -0700
+Message-ID: <52266E43.70102@infradead.org>
+References: <5224B499.4010600@infradead.org> <CAL_Jsq+82vm_vt5EpcG1zvWmL_H4KY=91tB1WH5yUhHsiM11DA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8279598277355804240=="
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <522613F7.908@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, tomasz.figa@gmail.com, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, pekon@ti.com, wangyuhang <wangyuhang2014@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+82vm_vt5EpcG1zvWmL_H4KY=91tB1WH5yUhHsiM11DA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 09/03/13 15:31, Rob Herring wrote:
+> On Mon, Sep 2, 2013 at 10:54 AM, Randy Dunlap <rdunlap@infradead.org> wrote:
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>>
+>> Fix build warnings when CONFIG_OF is not enabled:
+> 
+> It would be nice to know what arch/config you see this on.
 
---===============8279598277355804240==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PNftq4k6NuHCGvy8"
-Content-Disposition: inline
+i386 and x86_64.
 
+> 
+>> include/linux/of_irq.h:82:7: warning: 'struct device_node' declared inside parameter list [enabled by default]
+>> include/linux/of_irq.h:82:7: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
+>> include/linux/of_irq.h:87:47: warning: 'struct device_node' declared inside parameter list [enabled by default]
+>>
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc:     Grant Likely <grant.likely@linaro.org>
+>> Cc:     Rob Herring <rob.herring@calxeda.com>
+>> Cc:     devicetree@vger.kernel.org
+>> ---
+>>  include/linux/of_irq.h |    2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> --- linux-next-20130830.orig/include/linux/of_irq.h
+>> +++ linux-next-20130830/include/linux/of_irq.h
+>> @@ -78,6 +78,8 @@ extern void of_irq_init(const struct of_
+>>  #endif /* CONFIG_OF_IRQ */
+>>
+>>  #else /* !CONFIG_OF */
+>> +struct device_node;
+> 
+> Can you move this outside of the ifdefs to minimize the amount of ifdef'ed code.
 
---PNftq4k6NuHCGvy8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Sep 03, 2013 at 10:53:11AM -0600, Stephen Warren wrote:
-
-> I would have preferred my original wording rather than the unqualified
-> "MOSI"/"MISO", since the meaning of those terms depends on whether
-> you're looking at the host controller or the device, but I guess we can
-
-No, MOSI and MISO have fixed meanings at all ends - they expand to
-Master Out Slave In and Master In Slave Out so it's always clear which
-side should be transmitting.
-
---PNftq4k6NuHCGvy8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSJmpjAAoJELSic+t+oim921kP/1WDKnJY4Q1Lh6tq5h14Gm3I
-cqvNxB+U7E2HXAYPFW0pmbY/hSqEeeN5c3i9O6S7/22aKjL6XPcVgQiYh6syFz3v
-1cehSDBk6dTi4BMcjfe7rEj+I2HFufYPIustzBykWXZew4WpTrzEfcnrZoBx/cVr
-8BYWq9QsydRyIwdK2yQ+K/fjzl33CZfhivTRfCCPWosKIZc/H1wRNYTCf5o5BmAv
-+/QgLNnCQWVwxvtTIzP8SiD5uLO76LxHqL95IYi/shl8UDQ00uZ0Y4rWVqrxx4rJ
-Ew8qHgPFx3/F2u+JfBew4FPzIpcDMzmhifVGvMaodmGrzpEBgzzvkDrJdvbf42Oe
-utPjIA+HpBlvHsFhxiMvSwuZSgHIZiC3M1VW4g3Gh7vc+4rCi9yBGRqoGbEwhQFC
-aaV94iJU0bkvLzFPncM3RVs2VsJQkgQucZdYzmzILnE2hAtoFZ+DeXJb+bN1d4oK
-JrumM25osh4k5XZJzd7e6oAVqMOCgmAdBs2d26nGr+02fUgNnWEHGFD4EZM89p2U
-HFy8HU61Ek4Ffd0eurvoWY2+ufJyTQEvFz4xrmLdceBcS6ou/yb2QvCqcPwAA/FS
-kkB9NUg5A1U1sUTxWPLUrveLYJABVzY/dtmHxrgze3iJY6s6dIV072Df/vo4BG/u
-LuFkm6MBYXvmBNga+dk9
-=06Un
------END PGP SIGNATURE-----
-
---PNftq4k6NuHCGvy8--
+I'm build testing that change now, but it seems odd to have it there in 2 ways
+when CONFIG_OF is enabled:
 
 
---===============8279598277355804240==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+struct device_node;
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+#if defined(CONFIG_OF)
 
---===============8279598277355804240==--
+#include <linux/of.h>
+
+
+
+will resend the patch shortly.
+
+-- 
+~Randy
