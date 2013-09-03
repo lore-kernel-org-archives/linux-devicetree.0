@@ -1,81 +1,83 @@
-From: Xiubo Li-B47053 <B47053@freescale.com>
-Subject: RE: [PATCH 4/4] Documentation: Add device tree bindings for
- Freescale FTM PWM
-Date: Tue, 3 Sep 2013 05:25:05 +0000
-Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F827F7CCF@039-SN2MPN1-011.039d.mgd.msft.net>
-References: <1377054462-6283-1-git-send-email-Li.Xiubo@freescale.com>
- <1377054462-6283-5-git-send-email-Li.Xiubo@freescale.com>
- <5EFBF478-CFCC-4E66-A279-25F4A338B05B@kernel.crashing.org>
- <5220FC8C.90908@wwwdotorg.org>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH] of_mtd: Add no-op stubs to support CONFIG_OF=n
+Date: Mon, 2 Sep 2013 22:36:58 -0700
+Message-ID: <20130903053642.GA364@norris.computersforpeace.net>
+References: <1378175873-2763-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5220FC8C.90908@wwwdotorg.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Kumar Gala <galak@kernel.crashing.org>
-Cc: Guo Shawn-R65073 <r65073@freescale.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1378175873-2763-1-git-send-email-ezequiel.garcia@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Josh Wu <josh.wu@atmel.com>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <dedekind1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH 4/4] Documentation: Add device tree bindings for
-> Freescale FTM PWM
+On Mon, Sep 02, 2013 at 11:37:53PM -0300, Ezequiel Garcia wrote:
+> Just like the rest of the subsystems, let's add the required no-op
+> functions to implement stubs when CONFIG_OF=n.
 > 
-> On 08/30/2013 01:19 PM, Kumar Gala wrote:
-> > Should have at least something w/regards to a commit message.
-> >
-> > On Aug 20, 2013, at 10:07 PM, Xiubo Li wrote:
-> >
-> >> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
-> >> ---
-> >> .../devicetree/bindings/pwm/fsl-ftm-pwm.txt        | 52
-> ++++++++++++++++++++++
-> >> 1 file changed, 52 insertions(+)
-> >> create mode 100644
-> >> Documentation/devicetree/bindings/pwm/fsl-ftm-pwm.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pwm/fsl-ftm-pwm.txt
-> >> b/Documentation/devicetree/bindings/pwm/fsl-ftm-pwm.txt
-> >> new file mode 100644
-> >> index 0000000..698965b
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/pwm/fsl-ftm-pwm.txt
-> >> @@ -0,0 +1,52 @@
-> >> +Freescale FTM PWM controller
-> >> +
-> >> +Required properties:
-> >> +- compatible: should be "fsl,vf610-ftm-pwm"
-> >> +- reg: physical base address and length of the controller's
-> >> +registers
-> >> +- #pwm-cells: Should be 3. Number of cells being used to specify PWM
-> property.
-> >> +  First cell specifies the per-chip channel index of the PWM to use,
-> >> +the
-> >> +  second cell is the period in nanoseconds and bit 0 in the third
-> >> +cell is
-> >> +  used to encode the polarity of PWM output. Set bit 0 of the third
-> >> +in PWM
-> >> +  specifier to 1 for inverse polarity & set to 0 for normal polarity.
-> >> +- fsl,pwm-clk-ps: the ftm0 pwm clock's prescaler, divide-by 2^n(n = 0
-> ~ 7).
-> >> +- fsl,pwm-cpwm: Center-Aligned PWM (CPWM) mode.
-> >
-> > Should describe this in more detail, what does the value actually mean
-> for what modes there are?
+> This prevents MTD drivers from having ugly ifdefs in their code,
+> and instead hide the ifdef monster in the header closet (far away
+> from people's sight).
 > 
-> Assuming "CPWM" is clearly explained in the HW documentation for this
-> chip (I have no idea if that's actually the case), then is it still
-> necessary to explain what this means in *detail*? Perhaps simply "see
-> section XXX in the TRM" or "see register XXX, bit YYY in the HW
-> documentation" would be enough?
->
-If to clearly explain the 'CPWM' mode, there maybe need much more words, I think just simply explain it, and then for more detail information "see section XXX in the TRM" or "see register XXX, bit YYY in HW documentation".
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+> ---
+>  include/linux/of_mtd.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
+> index ed7f267..66f173e 100644
+> --- a/include/linux/of_mtd.h
+> +++ b/include/linux/of_mtd.h
+> @@ -14,6 +14,21 @@
+>  int of_get_nand_ecc_mode(struct device_node *np);
+>  int of_get_nand_bus_width(struct device_node *np);
+>  bool of_get_nand_on_flash_bbt(struct device_node *np);
+> +#else
 
+I would include an extra line on either side of #else.
 
-Thanks.
+> +static inline int of_get_nand_ecc_mode(struct device_node *np)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+> +static inline int of_get_nand_bus_width(struct device_node *np)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+> +static inline bool of_get_nand_on_flash_bbt(struct device_node *np)
+> +{
+> +	return false;
+> +}
+>  #endif
 
---
-Best Regards,
-Xiubo
+Although we are "hiding" the #ifdef's here in the header, we can still
+help to make them extra clear; I think the typical style is to include
+/* CONFIG_OF_MTD */ markers to show which #ifdef/#else/#endif block it
+belongs to.
 
+>  
+>  #endif /* __LINUX_OF_MTD_H */
 
+With this trivial changes, I amended your patch and pushed to
+l2-mtd.git. Thanks! I look forward to the following patches to remove
+some of the driver #ifdef's.
+
+Thanks,
+Brian
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
