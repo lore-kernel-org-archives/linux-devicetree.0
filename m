@@ -1,176 +1,163 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>
-Subject: [PATCH V4 4/4] ARM: dts: rename mmc dts node for exynos5 series
-Date: Tue,  3 Sep 2013 11:34:24 +0530
-Message-ID: <1378188264-22382-5-git-send-email-yuvaraj.cd@samsung.com>
-References: <1378188264-22382-1-git-send-email-yuvaraj.cd@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1378188264-22382-1-git-send-email-yuvaraj.cd@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree@vger.kernel.org
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, t.figa@samsung.com, dianders@chromium.org, cjb@laptop.org, thomas.abraham@linaro.org, ks.giri@samsung.com, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH] ARM: DTS: DRA7: Add TPS659038 PMIC nodes
+Date: Tue, 3 Sep 2013 12:03:58 +0530
+Message-ID: <522582D6.4020800@ti.com>
+References: <1377495411-21984-1-git-send-email-j-keerthy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1377495411-21984-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bcousson@baylibre.com
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, pawel.moll@arm.com, devicetree@vger.kernel.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, nm@ti.com, balajitk@ti.com
 List-Id: devicetree@vger.kernel.org
 
-This patch rename's the device tree mmc node's from "dwmmc" to "mmc".
-According to ePAPR chapter 2.2.2 generic node name recommendation,
-it has been opted change from dwmmc to mmc.Also this patch remove the
-instance index from the node name.
+Benoit,
 
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
----
- arch/arm/boot/dts/cros5250-common.dtsi    |    8 ++++----
- arch/arm/boot/dts/exynos5250-arndale.dts  |    4 ++--
- arch/arm/boot/dts/exynos5250-smdk5250.dts |    4 ++--
- arch/arm/boot/dts/exynos5250-snow.dts     |    2 +-
- arch/arm/boot/dts/exynos5250.dtsi         |   16 ++++++++--------
- 5 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
-index dc259e8b..6470536 100644
---- a/arch/arm/boot/dts/cros5250-common.dtsi
-+++ b/arch/arm/boot/dts/cros5250-common.dtsi
-@@ -229,7 +229,7 @@
- 		};
- 	};
- 
--	dwmmc0@12200000 {
-+	mmc@12200000 {
- 		num-slots = <1>;
- 		supports-highspeed;
- 		broken-cd;
-@@ -247,11 +247,11 @@
- 		};
- 	};
- 
--	dwmmc1@12210000 {
-+	mmc@12210000 {
- 		status = "disabled";
- 	};
- 
--	dwmmc2@12220000 {
-+	mmc@12220000 {
- 		num-slots = <1>;
- 		supports-highspeed;
- 		fifo-depth = <0x80>;
-@@ -269,7 +269,7 @@
- 		};
- 	};
- 
--	dwmmc3@12230000 {
-+	mmc@12230000 {
- 		num-slots = <1>;
- 		supports-highspeed;
- 		broken-cd;
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index 176ef16..418f869 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -366,7 +366,7 @@
- 		status = "disabled";
- 	};
- 
--	dwmmc_0: dwmmc0@12200000 {
-+	mmc_0: mmc@12200000 {
- 		status = "okay";
- 		num-slots = <1>;
- 		supports-highspeed;
-@@ -385,7 +385,7 @@
- 		};
- 	};
- 
--	dwmmc_2: dwmmc2@12220000 {
-+	mmc_2: mmc@12220000 {
- 		status = "okay";
- 		num-slots = <1>;
- 		supports-highspeed;
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 5a4831d..99784ec 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -140,7 +140,7 @@
- 		};
- 	};
- 
--	dwmmc0@12200000 {
-+	mmc@12200000 {
- 		status = "okay";
- 		num-slots = <1>;
- 		supports-highspeed;
-@@ -158,7 +158,7 @@
- 		};
- 	};
- 
--	dwmmc2@12220000 {
-+	mmc@12220000 {
- 		status = "okay";
- 		num-slots = <1>;
- 		supports-highspeed;
-diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-index fd711e2..a9395c4 100644
---- a/arch/arm/boot/dts/exynos5250-snow.dts
-+++ b/arch/arm/boot/dts/exynos5250-snow.dts
-@@ -175,7 +175,7 @@
- 	 * On Snow we've got SIP WiFi and so can keep drive strengths low to
- 	 * reduce EMI.
- 	 */
--	dwmmc3@12230000 {
-+	mmc@12230000 {
- 		slot@0 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&sd3_clk &sd3_cmd &sd3_bus4>;
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index fb28d21..9922d1e 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -33,10 +33,10 @@
- 		gsc1 = &gsc_1;
- 		gsc2 = &gsc_2;
- 		gsc3 = &gsc_3;
--		mshc0 = &dwmmc_0;
--		mshc1 = &dwmmc_1;
--		mshc2 = &dwmmc_2;
--		mshc3 = &dwmmc_3;
-+		mshc0 = &mmc_0;
-+		mshc1 = &mmc_1;
-+		mshc2 = &mmc_2;
-+		mshc3 = &mmc_3;
- 		i2c0 = &i2c_0;
- 		i2c1 = &i2c_1;
- 		i2c2 = &i2c_2;
-@@ -387,7 +387,7 @@
- 		pinctrl-0 = <&spi2_bus>;
- 	};
- 
--	dwmmc_0: dwmmc0@12200000 {
-+	mmc_0: mmc@12200000 {
- 		compatible = "samsung,exynos5250-dw-mshc";
- 		interrupts = <0 75 0>;
- 		#address-cells = <1>;
-@@ -399,7 +399,7 @@
- 		status = "disabled";
- 	};
- 
--	dwmmc_1: dwmmc1@12210000 {
-+	mmc_1: mmc@12210000 {
- 		compatible = "samsung,exynos5250-dw-mshc";
- 		interrupts = <0 76 0>;
- 		#address-cells = <1>;
-@@ -411,7 +411,7 @@
- 		status = "disabled";
- 	};
- 
--	dwmmc_2: dwmmc2@12220000 {
-+	mmc_2: mmc@12220000 {
- 		compatible = "samsung,exynos5250-dw-mshc";
- 		interrupts = <0 77 0>;
- 		#address-cells = <1>;
-@@ -423,7 +423,7 @@
- 		status = "disabled";
- 	};
- 
--	dwmmc_3: dwmmc3@12230000 {
-+	mmc_3: mmc@12230000 {
- 		compatible = "samsung,exynos5250-dw-mshc";
- 		reg = <0x12230000 0x1000>;
- 		interrupts = <0 78 0>;
--- 
-1.7.9.5
+On Monday 26 August 2013 11:06 AM, Keerthy wrote:
+> The Patch adds nodes for TPS659038 PMIC for DRA7 boards.
+>
+> It is based on top of:
+> http://comments.gmane.org/gmane.linux.ports.arm.omap/102459.
+>
+> Documentation:	Documentation/devicetree/bindings/mfd/palmas.txt
+> 		Documentation/devicetree/bindings/regulator/palmas-pmic.txt		
+>
+> Boot Tested on DRA7 d1 Board.
+
+Any comments on this patch?
+
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>   arch/arm/boot/dts/dra7-evm.dts |  118 ++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 118 insertions(+)
+>
+> Index: linux/arch/arm/boot/dts/dra7-evm.dts
+> ===================================================================
+> --- linux.orig/arch/arm/boot/dts/dra7-evm.dts	2013-08-26 09:57:52.496173554 +0530
+> +++ linux/arch/arm/boot/dts/dra7-evm.dts	2013-08-26 10:38:44.995414695 +0530
+> @@ -93,6 +93,119 @@
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&i2c1_pins>;
+>   	clock-frequency = <400000>;
+> +
+> +	tps659038: tps659038@58 {
+> +		compatible = "ti,tps659038";
+> +		reg = <0x58>;
+> +
+> +		tps659038_pmic {
+> +			compatible = "ti,tps659038-pmic";
+> +
+> +			regulators {
+> +				smps123_reg: smps123 {
+> +					/* VDD_MPU */
+> +						regulator-name = "smps123";
+> +						regulator-min-microvolt = < 850000>;
+> +						regulator-max-microvolt = <1250000>;
+> +						regulator-always-on;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				smps45_reg: smps45 {
+> +						/* VDD_DSPEVE */
+> +						regulator-name = "smps45";
+> +						regulator-min-microvolt = < 850000>;
+> +						regulator-max-microvolt = <1150000>;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				smps6_reg: smps6 {
+> +						/* VDD_GPU - over VDD_SMPS6 */
+> +						regulator-name = "smps6";
+> +						regulator-min-microvolt = <850000>;
+> +						regulator-max-microvolt = <12500000>;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				smps7_reg: smps7 {
+> +						/* CORE_VDD */
+> +						regulator-name = "smps7";
+> +						regulator-min-microvolt = <850000>;
+> +						regulator-max-microvolt = <1030000>;
+> +						regulator-always-on;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				smps8_reg: smps8 {
+> +						/* VDD_IVAHD */
+> +						regulator-name = "smps8";
+> +						regulator-min-microvolt = < 850000>;
+> +						regulator-max-microvolt = <1250000>;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				smps9_reg: smps9 {
+> +						/* VDDS1V8 */
+> +						regulator-name = "smps9";
+> +						regulator-min-microvolt = <1800000>;
+> +						regulator-max-microvolt = <1800000>;
+> +						regulator-always-on;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				ldo1_reg: ldo1 {
+> +						/* LDO1_OUT --> SDIO  */
+> +						regulator-name = "ldo1";
+> +						regulator-min-microvolt = <1800000>;
+> +						regulator-max-microvolt = <3300000>;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				ldo2_reg: ldo2 {
+> +						/* VDD_RTCIO */
+> +						/* LDO2 -> VDDSHV5, LDO2 also goes to CAN_PHY_3V3 */
+> +						regulator-name = "ldo2";
+> +						regulator-min-microvolt = <3300000>;
+> +						regulator-max-microvolt = <3300000>;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				ldo3_reg: ldo3 {
+> +						/* VDDA_1V8_PHY */
+> +						regulator-name = "ldo3";
+> +						regulator-min-microvolt = <1800000>;
+> +						regulator-max-microvolt = <1800000>;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				ldo9_reg: ldo9 {
+> +						/* VDD_RTC */
+> +						regulator-name = "ldo9";
+> +						regulator-min-microvolt = <1050000>;
+> +						regulator-max-microvolt = <1050000>;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				ldoln_reg: ldoln {
+> +						/* VDDA_1V8_PLL */
+> +						regulator-name = "ldoln";
+> +						regulator-min-microvolt = <1800000>;
+> +						regulator-max-microvolt = <1800000>;
+> +						regulator-always-on;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				ldousb_reg: ldousb {
+> +						/* VDDA_3V_USB: VDDA_USBHS33 */
+> +						regulator-name = "ldousb";
+> +						regulator-min-microvolt = <3300000>;
+> +						regulator-max-microvolt = <3300000>;
+> +						regulator-boot-on;
+> +					};
+> +
+> +				};
+> +			};
+> +		};
+>   };
+>   
+>   &i2c2 {
+
+Regards,
+Keerthy
