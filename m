@@ -1,67 +1,32 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Tue, 3 Sep 2013 14:28:14 +0200
-Message-ID: <CACRpkdZ8xYr2igJ+0OHo9tuM4U4QH-1S8Nu6uF=eNTARfYk+Tw@mail.gmail.com>
-References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de>
-	<1507189.CRWvzVJqTV@flatron>
-	<521548E3.6010703@wwwdotorg.org>
-	<CACRpkdYUeyVZcN1-jOzg0zo4eSJK1S+M5fJ0FcMsgwaPKW4Obw@mail.gmail.com>
-	<52167E5D.6060802@wwwdotorg.org>
-	<CACRpkdZgFMH07_W2eUWsgsUMXAJA1paEimAds=-XeViZaYySLA@mail.gmail.com>
-	<5217BD74.5030801@wwwdotorg.org>
-	<CACRpkdYz7Kn-y8LHpNBV3YyYFhyaU6N592BJE1newUZJpUMNfA@mail.gmail.com>
-	<5220FBC9.1070602@wwwdotorg.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 3 Sep 2013 14:35:39 +0200
+Message-ID: <CACRpkdYeMGkju345g9d_ifZEOiVXftzSqU=1CfGO=qnt6Vj-Bg@mail.gmail.com>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
+	<521D0964.2080209@wwwdotorg.org>
+	<CACRpkdaWPQTPw8u+97iV8MRB1fdeS40kd242pJd3UE9Ler4kRQ@mail.gmail.com>
+	<5220F849.8030909@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5220FBC9.1070602@wwwdotorg.org>
+In-Reply-To: <5220F849.8030909@wwwdotorg.org>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2013 at 10:08 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 08/29/2013 01:00 PM, Linus Walleij wrote:
+On Fri, Aug 30, 2013 at 9:53 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
 
->> No but I think there should be one ... maybe I'm an oddball
->> but it seems natural to request a GPIO before tying
->> IRQs to fire off it.
->
-> What if there is no GPIO?
->
-> There are plenty of chips with dedicated IRQ input pins that can't be
-> read as GPIOs, or treated as GPIOs in any way.
+> I still haven't seen an answer to why we really care about this; how
+> many times has code actually allocated the same GPIO/IRQ when it
+> shouldn't, in a way that it wasn't detectable by some other mechanism,
+> i.e. the feature just not working? Why are we even trying to solve this
+> issue? I'm not totally convinced it even makes sense to try and solve it.
 
-I'm not following this. In that case it is not tagged as
-gpio-controller right? The patch is to gpiolib.c.
-
-Do you mean chips where some part of it is GPIO and
-another part is IRQ-only?
-
-Should we not in that case create an MFD device that spawns
-one GPIO device and then another irqchip device, or possibly
-have the IRQ handling directly in the MFD device, as
-ab8500-core.c does?
-
-> If a driver only needs IRQ input functionality, it should just request
-> an IRQ and be done with it. There should be no need at all for the
-> driver to know that the IRQ might be routed into a GPIO controller, and
-> hence that the driver may (or may not) need to additionally request the
-> GPIO before requesting the IRQ.
-
-This is what the patch is trying to achieve, for the DT use case.
-
-> In other words, request_irq() must do everything necessary for the input
-> signal to operate as an IRQ input, irrespective of whether it might be
-> possible to use that input signal as a GPIO.
-
-That is not the case for a bunch of OMAP drivers today, and their
-attempt to fix that inside the irqchip callback backfired since it
-was mutually exclusive with requesting the gpio first.
-
-We have to encode some semantic into this, it's just a matter of
-which one shall win, the APIs as they stand are ambiguous wrt
-call sequence.
+We care about this because a number of OMAP boards are not
+working properly when booted from device tree, and they have a hard
+time figuring out a solution to the problem. Last try exploded. Now
+they are looking to create a patch that will fix the actual problem.
 
 Yours,
 Linus Walleij
