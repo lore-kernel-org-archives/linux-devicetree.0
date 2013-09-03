@@ -1,83 +1,59 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH] of_mtd: Add no-op stubs to support CONFIG_OF=n
-Date: Mon, 2 Sep 2013 22:36:58 -0700
-Message-ID: <20130903053642.GA364@norris.computersforpeace.net>
-References: <1378175873-2763-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Lu Jingchang-B35083 <B35083@freescale.com>
+Subject: RE: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
+Date: Tue, 3 Sep 2013 05:43:21 +0000
+Message-ID: <B56CDBE15CE27145A4B77D2D24263E852102A1@039-SN1MPN1-004.039d.mgd.msft.net>
+References: <1376633274-17850-1-git-send-email-b35083@freescale.com>
+ <20130828081742.GC11414@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
+ <20130902045050.GE7376@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520D0D4@039-SN1MPN1-004.039d.mgd.msft.net>
+ <20130902063721.GK7376@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520F101@039-SN1MPN1-004.039d.mgd.msft.net>
+ <20130902111200.GP7376@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1378175873-2763-1-git-send-email-ezequiel.garcia@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: devicetree@vger.kernel.org, Josh Wu <josh.wu@atmel.com>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <dedekind1@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130902111200.GP7376@intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2013 at 11:37:53PM -0300, Ezequiel Garcia wrote:
-> Just like the rest of the subsystems, let's add the required no-op
-> functions to implement stubs when CONFIG_OF=n.
-> 
-> This prevents MTD drivers from having ugly ifdefs in their code,
-> and instead hide the ifdef monster in the header closet (far away
-> from people's sight).
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-> ---
->  include/linux/of_mtd.h | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
-> index ed7f267..66f173e 100644
-> --- a/include/linux/of_mtd.h
-> +++ b/include/linux/of_mtd.h
-> @@ -14,6 +14,21 @@
->  int of_get_nand_ecc_mode(struct device_node *np);
->  int of_get_nand_bus_width(struct device_node *np);
->  bool of_get_nand_on_flash_bbt(struct device_node *np);
-> +#else
-
-I would include an extra line on either side of #else.
-
-> +static inline int of_get_nand_ecc_mode(struct device_node *np)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
-> +static inline int of_get_nand_bus_width(struct device_node *np)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
-> +static inline bool of_get_nand_on_flash_bbt(struct device_node *np)
-> +{
-> +	return false;
-> +}
->  #endif
-
-Although we are "hiding" the #ifdef's here in the header, we can still
-help to make them extra clear; I think the typical style is to include
-/* CONFIG_OF_MTD */ markers to show which #ifdef/#else/#endif block it
-belongs to.
-
->  
->  #endif /* __LINUX_OF_MTD_H */
-
-With this trivial changes, I amended your patch and pushed to
-l2-mtd.git. Thanks! I look forward to the following patches to remove
-some of the driver #ifdef's.
-
-Thanks,
-Brian
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+PiA+IEhvdyBhYm91dCBjaGFuZ2UgdGhlIGZpbHRlcl9mbiB0byBmb2xsb3c6DQo+ID4gc3RhdGlj
+IGJvb2wgZnNsX2VkbWFfZmlsdGVyX2ZuKHN0cnVjdCBkbWFfY2hhbiAqY2hhbiwgdm9pZCAqZm5f
+cGFyYW0pDQo+ID4gew0KPiA+ICAgICAgICAgc3RydWN0IGZzbF9lZG1hX2ZpbHRlcl9wYXJhbSAq
+ZnBhcmFtID0gZm5fcGFyYW07DQo+ID4gICAgICAgICBzdHJ1Y3QgZnNsX2VkbWFfY2hhbiAqZnNs
+X2NoYW4gPSB0b19mc2xfZWRtYV9jaGFuKGNoYW4pOw0KPiA+ICAgICAgICAgdW5zaWduZWQgY2hh
+ciB2YWw7DQo+ID4NCj4gPiAgICAgICAgIGlmIChmc2xfY2hhbi0+ZWRtYW11eC0+bXV4X2lkICE9
+IGZwYXJhbS0+bXV4X2lkKQ0KPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gZmFsc2U7DQo+ID4N
+Cj4gPiAgICAgICAgIHZhbCA9IEVETUFNVVhfQ0hDRkdfRU5CTCB8IEVETUFNVVhfQ0hDRkdfU09V
+UkNFKGZwYXJhbS0NCj4gPnNsb3RfaWQpOw0KPiA+ICAgICAgICAgZnNsX2VkbWFtdXhfY29uZmln
+X2NoYW4oZnNsX2NoYW4sIHZhbCk7DQo+ID4gICAgICAgICByZXR1cm4gdHJ1ZTsNCj4gPiB9DQo+
+ID4gSW4gZmFjdCB0aGUgc2xvdF9pZCBpc24ndCBuZWVkIGVsc2V3aGVyZSwgYW5kIGlmIHRoZSBm
+aWx0ZXIgcmV0dXJuIHRydWUsDQo+ID4gVGhpcyBjaGFubmVsIHNob3VsZCBiZSB0byB0aGlzIHJl
+cXVlc3QuIFNvIG5vIG5lZWQgdG8gc2F2ZSB0aGUgc2xhdmUgaWQsDQo+IFJpZ2h0Pw0KPiBzb21l
+dGhpbmcgbGlrZQ0KPiANCj4gc3RhdGljIGJvb2wgZnNsX2VkbWFfZmlsdGVyX2ZuKHN0cnVjdCBk
+bWFfY2hhbiAqY2hhbiwgdm9pZCAqZm5fcGFyYW0pDQo+IHsNCj4gCXN0cnVjdCBmc2xfZWRtYV9m
+aWx0ZXJfcGFyYW0gKmZwYXJhbSA9IGZuX3BhcmFtOw0KPiAJc3RydWN0IGZzbF9lZG1hX2NoYW4g
+KmZzbF9jaGFuID0gdG9fZnNsX2VkbWFfY2hhbihjaGFuKTsNCj4gDQo+IAlpZiAoZnNsX2NoYW4t
+PmVkbWFtdXgtPm11eF9pZCAhPSBmcGFyYW0tPm11eF9pZCkNCj4gCQlyZXR1cm4gZmFsc2U7DQo+
+IAlyZXR1cm4gdHJ1ZTsNCj4gfQ0KPiANCj4gaW4gdGhlZHJpdmVyIHdoaWNoIGNhbGxzIHRoaXM6
+DQo+IA0KPiBiZWZvcmUgcHJlcDoNCj4gDQo+IAljb25maWctPnNsYXZlX2lkID0gdmFsOw0KPiAN
+Cj4gCWRtYV9zZXRfc2xhdmVfY29uZmlnKGNoYW4sIHNsYXZlKTsNCj4gDQogIERvIHlvdSBtZWFu
+IHRoZSBETUFfU0xBVkVfQ09ORklHIGRldmljZV9jb250cm9sPyBZZWFoLCB0aGUgc2xhdmUgZHJp
+dmVyIGNvdWxkIHBhc3MNCnRoZSBzbGF2ZV9pZC4gQnV0IHRoZSBETUFfU0xBVkVfQ09ORklHIG1h
+eSBiZSBjYWxsZWQgbW9yZSB0aGFuIG9uY2UsIGFuZCB0aGUgZURNQQ0KZHJpdmVyIGp1c3QgbmVl
+ZHMgdG8gc2V0IHRoZSBzbGF2ZSBpZCBvbmNlIGZvciBhbnkgZ2l2ZW4gY2hhbm5lbCwgYWZ0ZXIg
+dGhhdCB0aGUgDQp0cmFuc2ZlciBpcyB0cmFuc3BhcmVudCB0byB0aGUgZGV2aWNlLiANCiAgT24g
+dGhlIG90aGVyIGhhbmQsIHRoZSBETUFNVVgncyBzZXR0aW5nIHByb2NlZHVyZSByZXF1aXJlcyBm
+aXJzdCBkaXNhYmxlIHRoZSBkbWFtdXgNCmJlZm9yZSBzZXR0aW5nLCB0aGVuIGlmIGl0IGlzIHNl
+dCBpbiBETUFfU0xBVkVfQ09ORklHLCB0aGUgcmVwZWF0ZWQgc2V0dGluZyBtYXkgYmUNCmNvbXBs
+ZXggYW5kIHVubmVjZXNzYXJ5LiBUaGUgY2hhbm5lbCBpcyBvY2N1cGllZCBleGNsdXNpdmVseSBi
+eSB0aGUgcGVyaXBoZXJhbC4NCiAgU28sIGFjY29yZGluZyB0aGUgSFcgZmVhdHVyZSwgSSB0aGlu
+ayB0aGUgZURNQSBuZWVkcyBvbmx5IHNldCB0aGUgc2xhdmUgaWQgb25jZSwNCmFuZCBzaW5jZSB0
+aGUgb2ZfZG1hIGhlbHBlciBoYXMgcGFzcyB0aGUgc2xhdmUgaWQgaW4gb24geGxhdGUsIHdlIGNh
+biBnZXQgYW5kIHNldA0KdGhlIHNsYXZlIGlkIGhlcmUuIEhvdyBkbyB5b3UgdGhpbmsgYWJvdXQg
+dGhpcz8NCiAgVGhhbmtzIQ0KDQoNCg0KDQoNCg0KDQoNCg0KQmVzdCBSZWdhcmRzLA0KSmluZ2No
+YW5nDQoNCg0KDQo=
