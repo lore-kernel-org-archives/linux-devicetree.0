@@ -1,82 +1,45 @@
-From: Xiubo Li-B47053 <B47053@freescale.com>
-Subject: RE: [PATCHv2 1/4] pwm: Add Freescale FTM PWM driver support
-Date: Tue, 3 Sep 2013 04:17:09 +0000
-Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F827F7C59@039-SN2MPN1-011.039d.mgd.msft.net>
-References: <1377856132-11290-1-git-send-email-Li.Xiubo@freescale.com>
- <1377856132-11290-2-git-send-email-Li.Xiubo@freescale.com>
- <20130830174909.GF30088@pengutronix.de>
- <1DD289F6464F0949A2FCA5AA6DC23F827F785F@039-SN2MPN1-011.039d.mgd.msft.net>
- <20130902085630.GS30088@pengutronix.de>
+From: Fugang Duan <B38611@freescale.com>
+Subject: [PATCH v2 0/4] *** ARM: imx6sl: add FEC support for imx6sl evk
+ platform ***
+Date: Tue, 3 Sep 2013 12:26:21 +0800
+Message-ID: <1378182385-9205-1-git-send-email-B38611@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130902085630.GS30088@pengutronix.de>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Guo Shawn-R65073 <r65073@freescale.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Lu Jingchang-B35083 <B35083@freescale.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCHv2 1/4] pwm: Add Freescale FTM PWM driver support
-> 
-> On Mon, Sep 02, 2013 at 03:33:37AM +0000, Xiubo Li-B47053 wrote:
-> >
-> > > > +static void fsl_pwm_free(struct pwm_chip *chip, struct pwm_device
-> > > > +*pwm) {
-> > > > +	struct fsl_pwm_chip *fpc;
-> > > > +	struct fsl_pwm_data *pwm_data;
-> > > > +
-> > > > +	fpc = to_fsl_chip(chip);
-> > > > +
-> > > > +	pwm_data = pwm_get_chip_data(pwm);
-> > > > +	if (!pwm_data)
-> > > > +		return;
-> > >
-> > > THis check seems unnecessary.
-> > >
-> >
-> > But if do not check it here, I must check it in the following code.
-> >
-> > > > +
-> > > > +	if (pwm_data->available != FSL_AVAILABLE)
-> > > > +		return;
-> > > > +
-> >
-> > So the ' struct fsl_pwm_data' may be removed in the future.
-> >
-> > >
-> > > > +
-> > > > +
-> > > > +	pwm_data->period_cycles = period_cycles;
-> > > > +	pwm_data->duty_cycles = duty_cycles;
-> > >
-> > > These fields are set but never read. Please drop them.
-> > >
-> > > If you drop the 'available' field also the you can drop chip_data
-> > > completely.
-> > >
-> >
-> > I think I may move the 'available' field to the PWM driver data struct.
-> 
-> You simply don't need the available field. You don't need to track
-> whether they are available. If a user enables a pwm which is not routed
-> out of the SoC (disabled in the iomux) simply nothing will happen except
-> for a slightly increased power consumption.
-> 
-If the there is not need to explicitly specify the channels are available or not, so there is no doubt that the 'available' field will be dropt.
-Why I added this here is because that the 4th and 5th channels' pinctrls are used as UART TX and RX as I have mentioned before, so here if you configure these two pinctrls, the UART TX and RX will be polluted, there maybe some other cases like this.
-So, if there is no need to worry about this in PWM driver, the customer should be aware of it and be responsible for the potential risk.
-I will think it over and optimize it then.
+Changelog:
 
+V2:
+ * Split iomuxc-gpr and fec phy gpio reset dts patch
+ * Sort included header file
 
+v1:
+ * Add iomuxc-gpr device node
+ * Add imx6sl evk fec phy gpio reset
+ * Add imx6sl iomuxc-gpr fec gpr field define
+ * Add fec init function to select clock source.
 
-Thanks very much.
---
-Best Regards.
-Xiubo
+Fugang Duan (4):
+  ARM: dts: add iomuxc-gpr device node for imx6sl
+  ARM: dts: add fec phy reset for imx6sl evk board
+  ARM: imx6sl: add imx6sl iomux-gpr field define
+  ARM: imx6sl: config iomux-gpr1 to select clock for fec
 
-
-
-
-
+ arch/arm/boot/dts/imx6sl-evk.dts            |    3 +++
+ arch/arm/boot/dts/imx6sl.dtsi               |    5 +++++
+ arch/arm/mach-imx/mach-imx6sl.c             |   21 +++++++++++++++++++++
+ include/linux/mfd/syscon/imx6q-iomuxc-gpr.h |    5 +++++
+ 4 files changed, 34 insertions(+), 0 deletions(-)
