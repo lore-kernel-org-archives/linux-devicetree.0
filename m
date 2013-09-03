@@ -1,45 +1,67 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
-Date: Tue, 3 Sep 2013 17:01:51 +0530
-Message-ID: <20130903113151.GE15824@intel.com>
-References: <1376633274-17850-1-git-send-email-b35083@freescale.com>
- <20130828081742.GC11414@intel.com>
- <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
- <20130902045050.GE7376@intel.com>
- <B56CDBE15CE27145A4B77D2D24263E8520D0D4@039-SN1MPN1-004.039d.mgd.msft.net>
- <20130902063721.GK7376@intel.com>
- <B56CDBE15CE27145A4B77D2D24263E8520F101@039-SN1MPN1-004.039d.mgd.msft.net>
- <20130902111200.GP7376@intel.com>
- <B56CDBE15CE27145A4B77D2D24263E852102A1@039-SN1MPN1-004.039d.mgd.msft.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 3 Sep 2013 14:28:14 +0200
+Message-ID: <CACRpkdZ8xYr2igJ+0OHo9tuM4U4QH-1S8Nu6uF=eNTARfYk+Tw@mail.gmail.com>
+References: <1377092334-770-1-git-send-email-larsi@wh2.tu-dresden.de>
+	<1507189.CRWvzVJqTV@flatron>
+	<521548E3.6010703@wwwdotorg.org>
+	<CACRpkdYUeyVZcN1-jOzg0zo4eSJK1S+M5fJ0FcMsgwaPKW4Obw@mail.gmail.com>
+	<52167E5D.6060802@wwwdotorg.org>
+	<CACRpkdZgFMH07_W2eUWsgsUMXAJA1paEimAds=-XeViZaYySLA@mail.gmail.com>
+	<5217BD74.5030801@wwwdotorg.org>
+	<CACRpkdYz7Kn-y8LHpNBV3YyYFhyaU6N592BJE1newUZJpUMNfA@mail.gmail.com>
+	<5220FBC9.1070602@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <B56CDBE15CE27145A4B77D2D24263E852102A1@039-SN1MPN1-004.039d.mgd.msft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lu Jingchang-B35083 <B35083@freescale.com>
-Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5220FBC9.1070602@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 03, 2013 at 05:43:21AM +0000, Lu Jingchang-B35083 wrote:
->   Do you mean the DMA_SLAVE_CONFIG device_control? Yeah, the slave driver could pass
-> the slave_id. But the DMA_SLAVE_CONFIG may be called more than once, and the eDMA
-> driver just needs to set the slave id once for any given channel, after that the 
-> transfer is transparent to the device. 
-It depends, for a channel requested, if you are only tranferring to a particular
-slave device then it can be confugured once.
-so
-1. allocate channel
-2. dmaengine_slave_config()
+On Fri, Aug 30, 2013 at 10:08 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 08/29/2013 01:00 PM, Linus Walleij wrote:
 
-then you cnan do preare etc multiple times based on need.
+>> No but I think there should be one ... maybe I'm an oddball
+>> but it seems natural to request a GPIO before tying
+>> IRQs to fire off it.
+>
+> What if there is no GPIO?
+>
+> There are plenty of chips with dedicated IRQ input pins that can't be
+> read as GPIOs, or treated as GPIOs in any way.
 
-~Vinod
->   On the other hand, the DMAMUX's setting procedure requires first disable the dmamux
-> before setting, then if it is set in DMA_SLAVE_CONFIG, the repeated setting may be
-> complex and unnecessary. The channel is occupied exclusively by the peripheral.
->   So, according the HW feature, I think the eDMA needs only set the slave id once,
-> and since the of_dma helper has pass the slave id in on xlate, we can get and set
-> the slave id here. How do you think about this?
+I'm not following this. In that case it is not tagged as
+gpio-controller right? The patch is to gpiolib.c.
 
--- 
+Do you mean chips where some part of it is GPIO and
+another part is IRQ-only?
+
+Should we not in that case create an MFD device that spawns
+one GPIO device and then another irqchip device, or possibly
+have the IRQ handling directly in the MFD device, as
+ab8500-core.c does?
+
+> If a driver only needs IRQ input functionality, it should just request
+> an IRQ and be done with it. There should be no need at all for the
+> driver to know that the IRQ might be routed into a GPIO controller, and
+> hence that the driver may (or may not) need to additionally request the
+> GPIO before requesting the IRQ.
+
+This is what the patch is trying to achieve, for the DT use case.
+
+> In other words, request_irq() must do everything necessary for the input
+> signal to operate as an IRQ input, irrespective of whether it might be
+> possible to use that input signal as a GPIO.
+
+That is not the case for a bunch of OMAP drivers today, and their
+attempt to fix that inside the irqchip callback backfired since it
+was mutually exclusive with requesting the gpio first.
+
+We have to encode some semantic into this, it's just a matter of
+which one shall win, the APIs as they stand are ambiguous wrt
+call sequence.
+
+Yours,
+Linus Walleij
