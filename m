@@ -1,52 +1,65 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 1/4] ARM: shmobile: r8a7778: add Ether DT support
-Date: Wed, 4 Sep 2013 00:17:44 +0900
-Message-ID: <CANqRtoQFYFva9msdoEWdU2Z7_=jOtZwvXgL7OqUKhVMO3NOPzg@mail.gmail.com>
-References: <201309010311.05466.sergei.shtylyov@cogentembedded.com>
-	<201309010315.49763.sergei.shtylyov@cogentembedded.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v11 0/8] PHY framework
+Date: Tue, 3 Sep 2013 20:55:23 +0530
+Message-ID: <5225FF63.6080608@ti.com>
+References: <1377063973-22044-1-git-send-email-kishon@ti.com>
+ <521B0E79.6060506@ti.com> <20130827192059.GZ3005@radagast>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201309010315.49763.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, ian.campbell@citrix.com, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130827192059.GZ3005@radagast>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org
+Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, stern@rowland.harvard.edu, grant.likely@linaro.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, george.cherian@ti.com, arnd@arndb.de, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, broonie@kernel.org, akpm@linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 1, 2013 at 8:15 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Define the generic R8A777x part of the Ether device node.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
->  arch/arm/boot/dts/r8a7778.dtsi |   11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> Index: renesas/arch/arm/boot/dts/r8a7778.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7778.dtsi
-> +++ renesas/arch/arm/boot/dts/r8a7778.dtsi
-> @@ -98,4 +98,15 @@
->                 reg = <0xfffc000 0x118>;
->                 #gpio-range-cells = <3>;
->         };
-> +
-> +       ether: ethernet@fde00000 {
-> +               device_type = "network";
-> +               compatible = "renesas,ether-r8a7779";
+Hi Greg,
 
-Hi Sergei,
+On Wednesday 28 August 2013 12:50 AM, Felipe Balbi wrote:
+> Hi,
+> 
+> On Mon, Aug 26, 2013 at 01:44:49PM +0530, Kishon Vijay Abraham I wrote:
+>> On Wednesday 21 August 2013 11:16 AM, Kishon Vijay Abraham I wrote:
+>>> Added a generic PHY framework that provides a set of APIs for the PHY drivers
+>>> to create/destroy a PHY and APIs for the PHY users to obtain a reference to
+>>> the PHY with or without using phandle.
+>>>
+>>> This framework will be of use only to devices that uses external PHY (PHY
+>>> functionality is not embedded within the controller).
+>>>
+>>> The intention of creating this framework is to bring the phy drivers spread
+>>> all over the Linux kernel to drivers/phy to increase code re-use and to
+>>> increase code maintainability.
+>>>
+>>> Comments to make PHY as bus wasn't done because PHY devices can be part of
+>>> other bus and making a same device attached to multiple bus leads to bad
+>>> design.
+>>>
+>>> If the PHY driver has to send notification on connect/disconnect, the PHY
+>>> driver should make use of the extcon framework. Using this susbsystem
+>>> to use extcon framwork will have to be analysed.
+>>>
+>>> You can find this patch series @
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git testing
+>>
+>> Looks like there are not further comments on this series. Can you take this in
+>> your misc tree?
+> 
+> Do you want me to queue these for you ? There are quite a few users for
+> this framework already and I know of at least 2 others which will show
+> up for v3.13.
 
-Thanks for your patch. What's the reason behind the r8a7778 SoC using
-a compatible string for r8a7779 like "renesas,ether-r8a7779"?
+Can you queue this patch series? There are quite a few users already for this
+framework.
 
-It seems that you assume that the r8a7778 ethernet controller is 100%
-compatible with r8a7779. Is that really true? For earlier versions the
-sh_eth hardware documentation was anything but accurate, so it seems
-to me that it must be more safe that r8a7778 would be using
-"renesas,ether-r8a7778". What do you think?
-
-Thanks,
-
-/ magnus
+Thanks
+Kishon
