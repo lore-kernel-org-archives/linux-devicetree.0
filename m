@@ -1,37 +1,52 @@
-From: Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: [PATCH] MIPS: add <dt-bindings/> symlink
-Date: Tue, 3 Sep 2013 17:11:58 +0200
-Message-ID: <20130903151158.GB14258@linux-mips.org>
-References: <1377095762-18926-1-git-send-email-james.hogan@imgtec.com>
- <521505E2.3050308@wwwdotorg.org>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH 1/4] ARM: shmobile: r8a7778: add Ether DT support
+Date: Wed, 4 Sep 2013 00:17:44 +0900
+Message-ID: <CANqRtoQFYFva9msdoEWdU2Z7_=jOtZwvXgL7OqUKhVMO3NOPzg@mail.gmail.com>
+References: <201309010311.05466.sergei.shtylyov@cogentembedded.com>
+	<201309010315.49763.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <521505E2.3050308@wwwdotorg.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: James Hogan <james.hogan@imgtec.com>, Stephen Warren <swarren@nvidia.com>, Michal Marek <mmarek@suse.cz>, Shawn Guo <shawn.guo@linaro.org>, Ian Campbell <ian.campbell@citrix.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201309010315.49763.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, ian.campbell@citrix.com, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2013 at 12:24:34PM -0600, Stephen Warren wrote:
+On Sun, Sep 1, 2013 at 8:15 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Define the generic R8A777x part of the Ether device node.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> ---
+>  arch/arm/boot/dts/r8a7778.dtsi |   11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> Index: renesas/arch/arm/boot/dts/r8a7778.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7778.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7778.dtsi
+> @@ -98,4 +98,15 @@
+>                 reg = <0xfffc000 0x118>;
+>                 #gpio-range-cells = <3>;
+>         };
+> +
+> +       ether: ethernet@fde00000 {
+> +               device_type = "network";
+> +               compatible = "renesas,ether-r8a7779";
 
-> On 08/21/2013 08:36 AM, James Hogan wrote:
-> > Add symlink to include/dt-bindings from arch/mips/boot/dts/include/ to
-> > match the ones in ARM and Meta architectures so that preprocessed device
-> > tree files can include various useful constant definitions.
-> > 
-> > See commit c58299a (kbuild: create an "include chroot" for DT bindings)
-> > merged in v3.10-rc1 for details.
-> > 
-> > MIPS structures it's dts files a little differently to other
-> > architectures, having a separate dts directory for each SoC/platform,
-> > but most of the definitions in the dt-bindings/ directory are common so
-> > for now lets just have a single "include chroot" for all MIPS platforms.
-> 
-> Acked-by: Stephen Warren <swarren@nvidia.com>
+Hi Sergei,
 
-Applied - but I'd be happier if there was a way of achiving the same thing
-without symlinks.
+Thanks for your patch. What's the reason behind the r8a7778 SoC using
+a compatible string for r8a7779 like "renesas,ether-r8a7779"?
 
-  Ralf
+It seems that you assume that the r8a7778 ethernet controller is 100%
+compatible with r8a7779. Is that really true? For earlier versions the
+sh_eth hardware documentation was anything but accurate, so it seems
+to me that it must be more safe that r8a7778 would be using
+"renesas,ether-r8a7778". What do you think?
+
+Thanks,
+
+/ magnus
