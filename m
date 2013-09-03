@@ -1,385 +1,192 @@
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
-Subject: Re: [PATCH v9 2/3] DMA: Freescale: Add new 8-channel DMA engine device
- tree nodes
-Date: Tue, 3 Sep 2013 17:01:50 +0800
-Message-ID: <5225A57E.4030003@freescale.com>
-References: <1377861980-7027-1-git-send-email-hongbo.zhang@freescale.com> <1377861980-7027-3-git-send-email-hongbo.zhang@freescale.com> <20130902155636.GA18206@e106331-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3] dt: update PSCI binding documentation for v0.2
+Date: Tue, 3 Sep 2013 10:52:35 +0100
+Message-ID: <20130903095235.GD18206@e106331-lin.cambridge.arm.com>
+References: <1377564633-31638-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130902155636.GA18206@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1377564633-31638-1-git-send-email-robherring2@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <Ian.Campbell@citrix.com>, Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Christoffer Dall <christoffer.dall@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2013 11:58 PM, Mark Rutland wrote:
-> Hi,
->
-> On Fri, Aug 30, 2013 at 12:26:19PM +0100, hongbo.zhang@freescale.com wrote:
->> From: Hongbo Zhang <hongbo.zhang@freescale.com>
->>
->> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch adds
->> the device tree nodes for them.
->>
->> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
->> ---
->>   .../devicetree/bindings/powerpc/fsl/dma.txt        |   67 ++++++++++++++++
->>   arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
->>   arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   82 ++++++++++++++++++++
->>   arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   82 ++++++++++++++++++++
->>   arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
->>   5 files changed, 235 insertions(+), 4 deletions(-)
->>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
->>
->> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->> index ddf17af..332ac77 100644
->> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->> @@ -126,6 +126,73 @@ Example:
->>                  };
->>          };
->>
->> +** Freescale Elo3 DMA Controller
->> +   This is EloPlus controller with 8 channels, used in Freescale Txxx and Bxxx
-> I was under the impression EloPlus was the previous revision. Should
-> that say Elo3, or is Elo3 considered to be an EloPlus implementation?
-In this patch 1/3 I revise the doc to make it clear we have Elo and 
-EloPlus, and I'm adding another new Elo3. Yes the only difference 
-between Elo3 and EloPlus is channel numbers(8 channels vs 4 channels), 
-so we can call "Elo3 is an 8-channel EloPlus"
->> +   series chips, such as t1040, t4240, b4860.
->> +
->> +Required properties:
->> +
->> +- compatible        : must include "fsl,elo3-dma"
->> +- reg               : <registers specifier for DMA general status reg>
-> The example has two reg entries. What both are should be specified. From
-> what you described last time, it sounds like each is a status register
-> for four channels.
->
-> Presumably the first covers the channels at 0x0,0x80,0x100,0x180, and
-> the second covers the channels at 0x300,0x380,0x400,0x480? If the
-> registers have specific names in a datasheet, it would be worth
-> mentioning them.
-Yes, each is a status register for four channels, you got it -- this 
-means my statement works.
-Is it necessary to specify all the register names?
-I can describe my two registers, but in other cases the reg entryies can 
-cover tens even hundreds of registers, just a summary is OK I think.
-> If the specification of the DMA controller allows for more channels, it
-> may be worth describing that case now.
-This DMA controller doesn't allows for more channels. (Even if it does, 
-it should be another new controller)
->> +- ranges            : describes the mapping between the address space of the
->> +                      DMA channels and the address space of the DMA controller
-> This looks odd as a required property, and I'm slightly confused. Is
-> this used to map the reg values of the DMA channels, or is it used when
-> mapping the DMA address space (for which dma-ranges exists in ePAPR and
-> other bindings).
-It is used to map the reg values of DMA channels.
->> +
->> +- DMA channel nodes:
->> +        - compatible        : must include "fsl,eloplus-dma-channel"
->> +        - reg               : <registers specifier for channel>
-> What does this represent? What are valid values?
->
-> In the example below it looks like these are offsets of control
-> registers within the dma controller.
-Yes, they are offsets of control registers within dma controller, but 
-the contents in these registers are for dma channels.
-Physically we have dma controller registers and dma channel registers, 
-they are in one continuous physical address space, we divide all these 
-registers into two controller/channel parts, according to contents in 
-these registers, common status registers for all channels are called dma 
-controller registers, otherwise channel specific registers are called 
-dma channel registers.
-> If the reg property may have any value, how do they get mapped to bits
-> in the status register(s)?
-In fact, each channel has its own status register(and also other 
-registers), the dma controller status register is just aggregation of 
-all channel status register. (that seems duplicated somehow, maybe this 
-is due to hardware compatibility with legacy one, and the device tree 
-just describes the physical hardware without lie)
-> May some channels be unusable for some reason, or will all eight
-> channels be wired on any given Elo3 DMA?
-Sorry, not get your point clearly, maybe you are clear now because of my 
-previous explanations.
-> Cheers,
-> Mark.
->
->> +        - interrupts        : <interrupt specifier for DMA channel IRQ>
->> +        - interrupt-parent  : optional, if needed for interrupt mapping
->> +
->> +Example:
->> +dma@100300 {
->> +       #address-cells = <1>;
->> +       #size-cells = <1>;
->> +       compatible = "fsl,elo3-dma";
->> +       reg = <0x100300 0x4>,
->> +             <0x100600 0x4>;
->> +       ranges = <0x0 0x100100 0x500>;
->> +       dma-channel@0 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x0 0x80>;
->> +               interrupts = <28 2 0 0>;
->> +       };
->> +       dma-channel@80 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x80 0x80>;
->> +               interrupts = <29 2 0 0>;
->> +       };
->> +       dma-channel@100 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x100 0x80>;
->> +               interrupts = <30 2 0 0>;
->> +       };
->> +       dma-channel@180 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x180 0x80>;
->> +               interrupts = <31 2 0 0>;
->> +       };
->> +       dma-channel@300 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x300 0x80>;
->> +               interrupts = <76 2 0 0>;
->> +       };
->> +       dma-channel@380 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x380 0x80>;
->> +               interrupts = <77 2 0 0>;
->> +       };
->> +       dma-channel@400 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x400 0x80>;
->> +               interrupts = <78 2 0 0>;
->> +       };
->> +       dma-channel@480 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x480 0x80>;
->> +               interrupts = <79 2 0 0>;
->> +       };
->> +};
->> +
->>   Note on DMA channel compatible properties: The compatible property must say
->>   "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
->>   driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
->> diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
->> index 7399154..ea53ea1 100644
->> --- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
->> +++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
->> @@ -223,13 +223,13 @@
->>                  reg = <0xe2000 0x1000>;
->>          };
->>
->> -/include/ "qoriq-dma-0.dtsi"
->> +/include/ "elo3-dma-0.dtsi"
->>          dma@100300 {
->>                  fsl,iommu-parent = <&pamu0>;
->>                  fsl,liodn-reg = <&guts 0x580>; /* DMA1LIODNR */
->>          };
->>
->> -/include/ "qoriq-dma-1.dtsi"
->> +/include/ "elo3-dma-1.dtsi"
->>          dma@101300 {
->>                  fsl,iommu-parent = <&pamu0>;
->>                  fsl,liodn-reg = <&guts 0x584>; /* DMA2LIODNR */
->> diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->> new file mode 100644
->> index 0000000..3c210e0
->> --- /dev/null
->> +++ b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->> @@ -0,0 +1,82 @@
->> +/*
->> + * QorIQ Elo3 DMA device tree stub [ controller @ offset 0x100000 ]
->> + *
->> + * Copyright 2013 Freescale Semiconductor Inc.
->> + *
->> + * Redistribution and use in source and binary forms, with or without
->> + * modification, are permitted provided that the following conditions are met:
->> + *     * Redistributions of source code must retain the above copyright
->> + *       notice, this list of conditions and the following disclaimer.
->> + *     * Redistributions in binary form must reproduce the above copyright
->> + *       notice, this list of conditions and the following disclaimer in the
->> + *       documentation and/or other materials provided with the distribution.
->> + *     * Neither the name of Freescale Semiconductor nor the
->> + *       names of its contributors may be used to endorse or promote products
->> + *       derived from this software without specific prior written permission.
->> + *
->> + *
->> + * ALTERNATIVELY, this software may be distributed under the terms of the
->> + * GNU General Public License ("GPL") as published by the Free Software
->> + * Foundation, either version 2 of that License or (at your option) any
->> + * later version.
->> + *
->> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
->> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
->> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
->> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
->> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
->> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
->> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
->> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
->> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
->> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->> + */
->> +
->> +dma0: dma@100300 {
->> +       #address-cells = <1>;
->> +       #size-cells = <1>;
->> +       compatible = "fsl,elo3-dma";
->> +       reg = <0x100300 0x4>,
->> +             <0x100600 0x4>;
->> +       ranges = <0x0 0x100100 0x500>;
->> +       dma-channel@0 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x0 0x80>;
->> +               interrupts = <28 2 0 0>;
->> +       };
->> +       dma-channel@80 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x80 0x80>;
->> +               interrupts = <29 2 0 0>;
->> +       };
->> +       dma-channel@100 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x100 0x80>;
->> +               interrupts = <30 2 0 0>;
->> +       };
->> +       dma-channel@180 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x180 0x80>;
->> +               interrupts = <31 2 0 0>;
->> +       };
->> +       dma-channel@300 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x300 0x80>;
->> +               interrupts = <76 2 0 0>;
->> +       };
->> +       dma-channel@380 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x380 0x80>;
->> +               interrupts = <77 2 0 0>;
->> +       };
->> +       dma-channel@400 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x400 0x80>;
->> +               interrupts = <78 2 0 0>;
->> +       };
->> +       dma-channel@480 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x480 0x80>;
->> +               interrupts = <79 2 0 0>;
->> +       };
->> +};
->> diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
->> new file mode 100644
->> index 0000000..cccf3bb
->> --- /dev/null
->> +++ b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
->> @@ -0,0 +1,82 @@
->> +/*
->> + * QorIQ Elo3 DMA device tree stub [ controller @ offset 0x101000 ]
->> + *
->> + * Copyright 2013 Freescale Semiconductor Inc.
->> + *
->> + * Redistribution and use in source and binary forms, with or without
->> + * modification, are permitted provided that the following conditions are met:
->> + *     * Redistributions of source code must retain the above copyright
->> + *       notice, this list of conditions and the following disclaimer.
->> + *     * Redistributions in binary form must reproduce the above copyright
->> + *       notice, this list of conditions and the following disclaimer in the
->> + *       documentation and/or other materials provided with the distribution.
->> + *     * Neither the name of Freescale Semiconductor nor the
->> + *       names of its contributors may be used to endorse or promote products
->> + *       derived from this software without specific prior written permission.
->> + *
->> + *
->> + * ALTERNATIVELY, this software may be distributed under the terms of the
->> + * GNU General Public License ("GPL") as published by the Free Software
->> + * Foundation, either version 2 of that License or (at your option) any
->> + * later version.
->> + *
->> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
->> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
->> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
->> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
->> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
->> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
->> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
->> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
->> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
->> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->> + */
->> +
->> +dma1: dma@101300 {
->> +       #address-cells = <1>;
->> +       #size-cells = <1>;
->> +       compatible = "fsl,elo3-dma";
->> +       reg = <0x101300 0x4>,
->> +             <0x101600 0x4>;
->> +       ranges = <0x0 0x101100 0x500>;
->> +       dma-channel@0 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x0 0x80>;
->> +               interrupts = <32 2 0 0>;
->> +       };
->> +       dma-channel@80 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x80 0x80>;
->> +               interrupts = <33 2 0 0>;
->> +       };
->> +       dma-channel@100 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x100 0x80>;
->> +               interrupts = <34 2 0 0>;
->> +       };
->> +       dma-channel@180 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x180 0x80>;
->> +               interrupts = <35 2 0 0>;
->> +       };
->> +       dma-channel@300 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x300 0x80>;
->> +               interrupts = <80 2 0 0>;
->> +       };
->> +       dma-channel@380 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x380 0x80>;
->> +               interrupts = <81 2 0 0>;
->> +       };
->> +       dma-channel@400 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x400 0x80>;
->> +               interrupts = <82 2 0 0>;
->> +       };
->> +       dma-channel@480 {
->> +               compatible = "fsl,eloplus-dma-channel";
->> +               reg = <0x480 0x80>;
->> +               interrupts = <83 2 0 0>;
->> +       };
->> +};
->> diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
->> index bd611a9..ec95c60 100644
->> --- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
->> +++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
->> @@ -387,8 +387,8 @@
->>                  reg        = <0xea000 0x4000>;
->>          };
->>
->> -/include/ "qoriq-dma-0.dtsi"
->> -/include/ "qoriq-dma-1.dtsi"
->> +/include/ "elo3-dma-0.dtsi"
->> +/include/ "elo3-dma-1.dtsi"
->>
->>   /include/ "qoriq-espi-0.dtsi"
->>          spi@110000 {
->> --
->> 1.7.9.5
->>
->>
->>
->>
+On Tue, Aug 27, 2013 at 01:50:33AM +0100, Rob Herring wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
+
+Hi Rob,
+
+Sorry for the delay on reviewing this.
+
+> 
+> The PSCI spec from ARM has been updated to 0.2 version. Update the
+> binding document to reflect the spec changes. For the binding, the
+> major changes are the addition of psci_version, affinity_info,
+> migrate_info_type, migrate_info_up_cpu, system_reset and system_off
+> functions. The recommended function ID numbering has also changed.
+> 
+> This update also defines 32 and 64 bit calling conventions. The calling
+> convention is defined on a per function ID basis.
+> 
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+> Cc: Dave Martin <Dave.Martin@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <Ian.Campbell@citrix.com>
+> Cc: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+> Cc: Marc Zyngier <Marc.Zyngier@arm.com>
+> Cc: Christoffer Dall <christoffer.dall@linaro.org>,
+> Cc: Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>
+> Cc: Matt Sealey <neko@bakuhatsu.net>
+> Cc: devicetree@vger.kernel.org
+> ---
+> v3: This version implements Mark's suggested binding with -32 and -64 suffixes.
+> 
+>  Documentation/devicetree/bindings/arm/psci.txt | 62 +++++++++++++++++++-------
+>  1 file changed, 46 insertions(+), 16 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
+> index 433afe9..209bb04 100644
+> --- a/Documentation/devicetree/bindings/arm/psci.txt
+> +++ b/Documentation/devicetree/bindings/arm/psci.txt
+> @@ -1,16 +1,17 @@
+>  * Power State Coordination Interface (PSCI)
+>  
+>  Firmware implementing the PSCI functions described in ARM document number
+> -ARM DEN 0022A ("Power State Coordination Interface System Software on ARM
+> +ARM DEN 0022B ("Power State Coordination Interface System Software on ARM
+>  processors") can be used by Linux to initiate various CPU-centric power
+>  operations.
+>  
+> -Issue A of the specification describes functions for CPU suspend, hotplug
+> -and migration of secure software.
+> +Issue B of the specification describes functions for CPU suspend, hotplug,
+> +migration of secure software, and system level reset and powerdown.
+>  
+>  Functions are invoked by trapping to the privilege level of the PSCI
+>  firmware (specified as part of the binding below) and passing arguments
+> -in a manner similar to that specified by AAPCS:
+> +as defined in ARM document "SMC Calling Convention" (ARM DEN 0028) in a manner
+> +similar to that specified by AAPCS:
+>  
+>  	 r0		=> 32-bit Function ID / return value
+>  	{r1 - r3}	=> Parameters
+> @@ -21,10 +22,10 @@ to #0.
+>  
+>  Main node required properties:
+>  
+> - - compatible    : Must be "arm,psci"
+> + - compatible    : Must contain "arm,psci-0.2" or "arm,psci"
+>  
+> - - method        : The method of calling the PSCI firmware. Permitted
+> -                   values are:
+> + - method        : The method defines the calling convention for the PSCI
+> +                   firmware. Permitted values are:
+>  
+>                     "smc" : SMC #0, with the register assignments specified
+>  		           in this binding.
+> @@ -32,24 +33,53 @@ Main node required properties:
+>                     "hvc" : HVC #0, with the register assignments specified
+>  		           in this binding.
+>  
+> + - psci_version  : Function ID for PSCI_VERSION operation. Required for
+> +                   "arm,psci-0.2" compatible version or later.
+> +
+
+While this seems sensible, I'm not sure that this needs to be mandatory.
+
+>  Main node optional properties:
+>  
+> - - cpu_suspend   : Function ID for CPU_SUSPEND operation
+> + - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
+> +
+> + - cpu_off                : Function ID for CPU_OFF operation
+> +
+> + - cpu_on[-<32|64]        : Function ID for CPU_ON operation
+> +
+> + - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
+>  
+> - - cpu_off       : Function ID for CPU_OFF operation
+> + - migrate[-<32|64]       : Function ID for MIGRATE operation
+>  
+> - - cpu_on        : Function ID for CPU_ON operation
+> + - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
+>  
+> - - migrate       : Function ID for MIGRATE operation
+> + - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
+>  
+> + - system_reset           : Function ID for SYSTEM_RESET operation
+> +
+> + - system_off             : Function ID for SYSTEM_OFF operation
+> +
+> +Some function IDs support 32-bit and 64-bit calling conventions. If no size is
+> +specified, then the 32-bit calling convention is used. Therefore, all function
+> +IDs for 64-bit calling convention are required to have "-64" suffix. Use of the
+> +"-32" suffix is recommended, but not required for backwards compatibility.
+
+I don't think we can say that non suffixed IDs mean use the 32-bit
+calling convention -- the arm64 PSCI code uses 64-bit parameters at the
+moment for non-suffixed IDs.
+
+I think if we say that callers should use their native register width
+calling convention for non-suffixed IDs, it's compatible with all PSCI
+implementations using DT in the wild currently. Implementations on v7
+don't have AArch64 state, so can't ever use the 64-bit convention, and
+existing 64-bit implementations like KVM has are implemented at EL2, so
+the guest is stuck at a particular register width.
+
+Given that, how about the below?
+
+Some functions have have separate IDs for 32-bit and 64-bit calling
+conventions. These separate function IDs are described with function
+names with  "-64" and "-32" suffixes (e.g. cpu_on-64). Where a function
+name does not have a suffix, the ID may be used with either calling
+convention depending on the CPU state -- AArch32 callers should use the
+32-bit calling convention, and AArch64 callers should use the 64-bit
+calling convention.
+
+Thanks,
+Mark.
+
+>  
+>  Example:
+>  
+>  	psci {
+> -		compatible	= "arm,psci";
+> +		compatible	= "arm,psci-0.2";
+>  		method		= "smc";
+> -		cpu_suspend	= <0x95c10000>;
+> -		cpu_off		= <0x95c10001>;
+> -		cpu_on		= <0x95c10002>;
+> -		migrate		= <0x95c10003>;
+> +		psci_version	= <0x84000000>;
+> +		cpu_suspend-32	= <0x84000001>;
+> +		cpu_suspend-64	= <0xc4000001>;
+> +		cpu_off		= <0x84000002>;
+> +		cpu_on-32	= <0x84000003>;
+> +		cpu_on-64	= <0xc4000003>;
+> +		affinity_info-32 = <0x84000004>; 
+> +		affinity_info-64 = <0xc4000004>; 
+> +		migrate-32	= <0x84000005>;
+> +		migrate-64	= <0xc4000005>;
+> +		migrate_info_type = <0x84000006>;
+> +		migrate_info_up_cpu-32 = <0x84000007>;
+> +		migrate_info_up_cpu-64 = <0xc4000007>;
+> +		system_off	= <0x84000008>; 
+> +		system_reset	= <0x84000009>; 
+>  	};
+> +
+> -- 
+> 1.8.1.2
+> 
+> 
