@@ -1,41 +1,67 @@
-From: Huang Shijie <shijie8@gmail.com>
-Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
-Date: Wed, 4 Sep 2013 22:04:37 -0400
-Message-ID: <20130905020435.GA3970@gmail.com>
-References: <1377828449-18912-1-git-send-email-b32955@freescale.com>
- <522697E9.1050208@freescale.com>
- <20130904095523.GT3084@sirena.org.uk>
- <52270B8E.5080402@freescale.com>
- <20130904113322.GA5859@sirena.org.uk>
- <20130905014350.GA2261@gmail.com>
- <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com>
+From: Mike Dunn <mikedunn@newsguy.com>
+Subject: Re: [PATCH] pwm: pxa: add device tree support to pwm driver
+Date: Wed, 04 Sep 2013 07:23:26 -0700
+Message-ID: <5227425E.7030806@newsguy.com>
+References: <1378236233-15637-1-git-send-email-mikedunn@newsguy.com>
+ <201309040020.55029.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: thomas.langer@lantiq.com
-Cc: broonie@kernel.org, b32955@freescale.com, devicetree@vger.kernel.org, computersforpeace@gmail.com, b44548@freescale.com, dedekind1@gmail.com, linux-doc@vger.kernel.org, b18965@freescale.com, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, lznuaa@gmail.com, shawn.guo@linaro.org, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201309040020.55029.marex@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marex@denx.de>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 04, 2013 at 01:45:40PM +0000, thomas.langer@lantiq.com wrote:
-> Hello Huang,
+On 09/03/2013 03:20 PM, Marek Vasut wrote:
+
+[...]
+
+>>
+>> +#ifdef CONFIG_OF
+>> +/* use the platform_device id table for OF match table data */
+>> +static struct of_device_id pwm_of_match[] = {
+>> +	{ .compatible = "marvell,pxa25x-pwm", .data = &pwm_id_table[0] },
+>> +	{ .compatible = "marvell,pxa27x-pwm", .data = &pwm_id_table[1] },
+>> +	{ .compatible = "marvell,pxa168-pwm", .data = &pwm_id_table[2] },
+>> +	{ .compatible = "marvell,pxa910-pwm", .data = &pwm_id_table[3] },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, pwm_of_match);
 > 
-> >> In what way does the controller driver depend on those changes?
-> > This driver needs the spi nor command to fill the LUT register, such as
-> > OPCODE_WREN(0x06), so the patch 1 moves the spi nor command to a seprate
-> > header spi-nor.h, and this driver includes this new header.
-> > 
-> Then some questions come up: 
-> - Why does the spi controller need to know this?
-The hardware works in this way.
-> - What is this LUT register at all?
-Please see the patch 1.
-> - What happens if something different that a flash is connected and 
->    the data starts with one of these opcodes?
-Submit a new patch to fix it.
+> Are PXA2xx and PXA3xx PWM impleemntations not all the same ? If so, why not just 
+> stick with pxa25x-pwm only for all of the CPUs (aka. the lowest CPU model). Then 
+> the table would have but a single entry.
 
 
-thanks
-Huang Shijie
+I'm just echoing the existing platform_device_id table...
+
+static const struct platform_device_id pwm_id_table[] = {
+	/*   PWM    has_secondary_pwm? */
+	{ "pxa25x-pwm", 0 },
+	{ "pxa27x-pwm", HAS_SECONDARY_PWM },
+	{ "pxa168-pwm", 0 },
+	{ "pxa910-pwm", 0 },
+	{ },
+};
+MODULE_DEVICE_TABLE(platform, pwm_id_table);
+
+... so that my changes to the driver are minimal.  Yes, apparently the only
+difference is the existance of a "secondary" pwm for pxa27x.
+
+BTW, the pxa27x actually has four pwms, which is why the addition I made to
+pxa27x.dtsi has two nodes (the driver handles two pwms for each device instance
+in the pxa27x case).
+
+Thanks Marek.
+
+Mike
