@@ -1,50 +1,33 @@
-From: Lu Jingchang-B35083 <B35083@freescale.com>
-Subject: RE: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
-Date: Wed, 4 Sep 2013 02:02:42 +0000
-Message-ID: <B56CDBE15CE27145A4B77D2D24263E852123D5@039-SN1MPN1-004.039d.mgd.msft.net>
-References: <1376633274-17850-1-git-send-email-b35083@freescale.com>
- <20130828081742.GC11414@intel.com>
- <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
- <20130902045050.GE7376@intel.com>
- <B56CDBE15CE27145A4B77D2D24263E8520D0D4@039-SN1MPN1-004.039d.mgd.msft.net>
- <20130902063721.GK7376@intel.com>
- <B56CDBE15CE27145A4B77D2D24263E8520F101@039-SN1MPN1-004.039d.mgd.msft.net>
- <20130902111200.GP7376@intel.com>
- <B56CDBE15CE27145A4B77D2D24263E852102A1@039-SN1MPN1-004.039d.mgd.msft.net>
- <20130903113151.GE15824@intel.com>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Wed, 4 Sep 2013 10:16:09 +0800
+Message-ID: <522697E9.1050208@freescale.com>
+References: <1377828449-18912-1-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="gb2312"
 Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130903113151.GE15824@intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1377828449-18912-1-git-send-email-b32955@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Huang Shijie <b32955@freescale.com>
+Cc: devicetree@vger.kernel.org, shawn.guo@linaro.org, b44548@freescale.com, dedekind1@gmail.com, linux-doc@vger.kernel.org, b18965@freescale.com, linux-spi@vger.kernel.org, broonie@kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, lznuaa@gmail.com, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWaW5vZCBLb3VsIFttYWlsdG86
-dmlub2Qua291bEBpbnRlbC5jb21dDQo+IFNlbnQ6IFR1ZXNkYXksIFNlcHRlbWJlciAwMywgMjAx
-MyA3OjMyIFBNDQo+IFRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+IENjOiBzaGF3bi5ndW9AbGlu
-YXJvLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCB2NCAzLzNdIGRtYTogQWRkIEZyZWVzY2FsZSBlRE1BIGVuZ2luZSBk
-cml2ZXIgc3VwcG9ydA0KPiANCj4gT24gVHVlLCBTZXAgMDMsIDIwMTMgYXQgMDU6NDM6MjFBTSAr
-MDAwMCwgTHUgSmluZ2NoYW5nLUIzNTA4MyB3cm90ZToNCj4gPiAgIERvIHlvdSBtZWFuIHRoZSBE
-TUFfU0xBVkVfQ09ORklHIGRldmljZV9jb250cm9sPyBZZWFoLCB0aGUgc2xhdmUNCj4gZHJpdmVy
-IGNvdWxkIHBhc3MNCj4gPiB0aGUgc2xhdmVfaWQuIEJ1dCB0aGUgRE1BX1NMQVZFX0NPTkZJRyBt
-YXkgYmUgY2FsbGVkIG1vcmUgdGhhbiBvbmNlLA0KPiBhbmQgdGhlIGVETUENCj4gPiBkcml2ZXIg
-anVzdCBuZWVkcyB0byBzZXQgdGhlIHNsYXZlIGlkIG9uY2UgZm9yIGFueSBnaXZlbiBjaGFubmVs
-LCBhZnRlcg0KPiB0aGF0IHRoZQ0KPiA+IHRyYW5zZmVyIGlzIHRyYW5zcGFyZW50IHRvIHRoZSBk
-ZXZpY2UuDQo+IEl0IGRlcGVuZHMsIGZvciBhIGNoYW5uZWwgcmVxdWVzdGVkLCBpZiB5b3UgYXJl
-IG9ubHkgdHJhbmZlcnJpbmcgdG8gYQ0KPiBwYXJ0aWN1bGFyDQo+IHNsYXZlIGRldmljZSB0aGVu
-IGl0IGNhbiBiZSBjb25mdWd1cmVkIG9uY2UuDQo+IHNvDQo+IDEuIGFsbG9jYXRlIGNoYW5uZWwN
-Cj4gMi4gZG1hZW5naW5lX3NsYXZlX2NvbmZpZygpDQo+IA0KPiB0aGVuIHlvdSBjbmFuIGRvIHBy
-ZWFyZSBldGMgbXVsdGlwbGUgdGltZXMgYmFzZWQgb24gbmVlZC4NClllYWgsIEkgdGhpbmsgd2Ug
-c2hvdWxkIGp1c3QgY29uZmlndXJlIHRoZSBzbGF2ZSBpZCBvbmNlIGFuZCB0aGlzIHdvdWxkIG1h
-a2UgdGhlDQpjb25maWd1cmF0aW9uIHNpbXBseS4gQnV0IGJ5IGRlYnVnZ2luZywgSSBmaW5kIHRo
-ZSBkbWFlbmdpbmVfc2xhdmVfY29uZmlnKCkgbWF5IGJlDQpjYWxsZWQgbW9yZSBvbmUgdGltZXMg
-YWZ0ZXIgcmVxdWVzdGVkIGJ5IG9uIHVzZXIuIFNvIEkgcHV0IHRoZSBzbGF2ZSBpZCBjb25maWd1
-cmF0aW9uDQppbiB0aGUgY2hhbm5lbCByZXF1ZXN0IHBoYXNlLiBBbmQgdGhlIGVmZmVjdCBpcyB0
-aGUgc2FtZSBmb3IgZXhjbHVzaXZlIGNoYW5uZWwuDQpUaGFua3MhDQoNCg0KQmVzdCBSZWdhcmRz
-LA0KSmluZ2NoYW5nDQoNCg0KDQoNCg==
+09ogMjAxM8TqMDjUwjMwyNUgMTA6MDcsIEh1YW5nIFNoaWppZSDQtLXAOgo+ICgwKSBXaGF0IGlz
+IHRoZSBRdWFkc3BpIGNvbnRyb2xsZXI/Cj4KPiAgICAgVGhlIFF1YWRzcGkoUXVhZCBTZXJpYWwg
+UGVyaXBoZXJhbCBJbnRlcmZhY2UpIGFjdHMgYXMgYW4gaW50ZXJmYWNlIHRvCj4gICAgIG9uZSBz
+aW5nbGUgb3IgdHdvIGV4dGVybmFsIHNlcmlhbCBmbGFzaCBkZXZpY2VzLCBlYWNoIHdpdGggdXAg
+dG8gNAo+ICAgICBiaWRpcmVjdGlvbmFsIGRhdGEgbGluZXMuCj4KSGkgTWFyazoKClNpbmNlIHRo
+aXMgcXVhZHNwaSBkcml2ZXIgZGVwZW5kcyBvbiB0aGUgbXRkIGNvZGUsIGNvdWxkIHRoaXMgZHJp
+dmVyCmdvZXMgdG8gdGhlIGtlcm5lbCBieQp0aGUgbDItbXRkIHRyZWU/CgoKdGhhbmtzCkh1YW5n
+IFNoaWppZQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
