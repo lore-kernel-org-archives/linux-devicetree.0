@@ -1,93 +1,87 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 2/3] drm/panel: Add simple panel support
-Date: Wed, 4 Sep 2013 16:38:30 +0200
-Message-ID: <20130904143829.GA11833@ulmo>
-References: <1377876321-26835-1-git-send-email-treding@nvidia.com>
- <1377876321-26835-3-git-send-email-treding@nvidia.com>
- <52262FF4.6050605@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52262FF4.6050605-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 1/2] hwspinlock/omap: add support for dt nodes
+Date: Wed, 4 Sep 2013 09:46:19 -0500
+Message-ID: <71570936-39F5-4AE1-AD05-163EA3179271@codeaurora.org>
+References: <1378230767-54931-1-git-send-email-s-anna@ti.com> <43798031-2D57-44F0-A19C-FD80DB9E9794@codeaurora.org> <52263413.1050108@ti.com> <8E84282E-BAD1-4A2B-849A-167C32F629DA@codeaurora.org> <52266409.90908@ti.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52266409.90908@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---/04w6evG8XlLl3ft
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sep 3, 2013, at 5:34 PM, Suman Anna wrote:
 
-On Tue, Sep 03, 2013 at 12:52:36PM -0600, Stephen Warren wrote:
-> On 08/30/2013 09:25 AM, Thierry Reding wrote:
-> > Add a driver for simple panels. Such panels can have a regulator that
-> > provides the supply voltage and a separate GPIO to enable the panel.
-> > Optionally the panels can have a backlight associated with them so it
-> > can be enabled or disabled according to the panel's power management
-> > mode.
->=20
-> > diff --git a/Documentation/devicetree/bindings/panel/panel-simple.txt b=
-/Documentation/devicetree/bindings/panel/panel-simple.txt
->=20
-> > +Simple display panel
-> > +
-> > +Required properties:
-> > +- compatible: should be one of:
-> > +  - "auo,b101aw03": AU Optronics Corporation 10.1" WSVGA TFT LCD panel
-> > +  - "cptt,claa101wb03": Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD=
- panel
-> > +  - "pc,vvx10f004b00": Panasonic Corporation 10.1" WUXGA TFT LCD panel
-> > +
-> > +Optional properties:
-> > +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-> > +- power-supply: regulator to provide the supply voltage
-> > +- enable-gpios: GPIO pin to enable or disable the panel
-> > +- backlight: phandle of the backlight device attached to the panel
->=20
-> Do we need to represent the timing requirements e.g. between panel
-> enable and backlight enable, or do you expect the driver to hard-code
-> this based on the compatible value?
+> Kumar,
+> 
+>>> 
+>>> On 09/03/2013 01:50 PM, Kumar Gala wrote:
+>>>> 
+>>>> On Sep 3, 2013, at 12:52 PM, Suman Anna wrote:
+>>>> 
+>>>>> HwSpinlock IP is present only on OMAP4 and other newer SoCs,
+>>>>> which are all device-tree boot only. This patch adds the
+>>>>> base support for parsing the DT nodes, and removes the code
+>>>>> dealing with the traditional platform device instantiation.
+>>>>> 
+>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>>> ---
+>>>>> .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 28 ++++++++++
+>>>>> arch/arm/mach-omap2/Makefile                       |  3 --
+>>>>> arch/arm/mach-omap2/hwspinlock.c                   | 60 ----------------------
+>>>>> drivers/hwspinlock/omap_hwspinlock.c               | 21 ++++++--
+>>>>> 4 files changed, 45 insertions(+), 67 deletions(-)
+>>>>> create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
+>>>>> delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
+>>>>> 
+>>>>> diff --git a/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..adfb8ad
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
+>>>>> @@ -0,0 +1,28 @@
+>>>>> +OMAP4+ HwSpinlock Driver
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible:		Currently supports only "ti,omap4-hwspinlock" for
+>>>>> +				OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
+>>>>> +- reg:			Contains the hwspinlock register address range (base
+>>>>> +			address and length)
+>>>>> +- ti,hwmods:		Name of the hwmod associated with the hwspinlock device
+>>>>> +
+>>>>> +Optional properties:
+>>>>> +- base_id:		Base Id for the locks for a particular hwspinlock
+>>>>> +			device. If not mentioned, a default value of 0 is used.
+>>>>> +			This property is mandatory ONLY if a SoC has several
+>>>>> +			hwspinlock devices. There are currently no such OMAP
+>>>>> +			SoCs.
+>>>> 
+>>>> Should this be ti,base_id ? [ I know its kinda generic in its intent for any SoC w/multiple blocks ]
+>>> 
+>>> I didn't add the "ti," prefix exactly for the same reason - it is
+>>> generic w.r.t the hwspinlock core irrespective of the SoC family, and
+>>> there is nothing ti or OMAP specific about it. I have added it to keep
+>>> the DT node definition in sync with the driver code. If it is too
+>>> generic a name, it can always be renamed as hwlock_base_id. This will be
+>>> SoC agnostic property for the hwspinlock driver. What do you think?
+>> 
+>> I'm wondering if we should use cell-index for this purpose.
+> 
+> I didn't get you completely. Do you intend to compute the base_id using
+> cell-index and number of locks (which may be a separate field altogether
+> if this information cannot be read from the h/w)? My understanding is
+> that cell-index is primarily used for identifying the h/w instance number.
 
-Yes, I'd expect the driver to hard-code that, similar to how the video
-mode is hardcoded. ddc-i2c-bus support hasn't even been implemented yet.
-I was planning to do that because one of the panels (the Chunghwa I
-think) actually is connected via DDC. What I was going to do was prefer
-a hardcoded mode over EDID to allow a driver to override a faulty EDID.
+I was suggesting using cell-index instead of base_id.  What we should probably due is have a devicetree/bindings/hwlock/hwlock.txt that would describe generic properties like this and just reference that in the omap binding spec.
 
-> Looking at the driver code, it seems that it has direct knowledge of the
-> video mode that each panel supports, so DDC is actually optional unlike
-> what I asserted/assumed in my previous response. As such, I guess we
-> should have a separate DT binding document for each of the three panels
-> (compatible values) listed above that pretty much just says "go look at
-> simple-panel.txt".
+I'm thinking if we dont use cell-index, that it should probably be hwlock-base-id
 
-Okay, I suppose that makes sense.
+- k
 
-Thierry
-
---/04w6evG8XlLl3ft
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSJ0XlAAoJEN0jrNd/PrOh7iMP/AxEnK6mo55lUYijqFYMyiau
-frO1LmkHTqmEC11dECmjVWto8D0BPnHr0yZ+Cy8bygDpE06aqforAm2GXDW2o6bb
-/YbC5FTDf/SvwEZT7oGwI2H5NlR1BKscTTJM4t0uCgvjdNHOnHuhRdN873fwJkAU
-Y0yjJVrD+qpFP+cCUm/ZRv/0EO5SLxQJPLEJnFBcHzOnYF8pFcApc5RO8FNB2Fto
-a3UEyUJ7HP81JAAfcMVsWA8OcCQ/DpKbCwXjWu12wMvWRClBjTOwVG+Llx/lL+4F
-qn1uO5ADlJ/3WQSAv2Sz5fEgz6R6+9coKnI+innUDoP8yO16VQLvZMVOnIH3cpYN
-M3dpav4jNvLjEqUB5pPaSdHTJ95yp9TGr0ncPdpUbNaLbOLhLcDvJyqX6Exy2D7g
-lQ4/YPPqcJy5yk4TZgXOiDUAGrmcKlitCa3SPzNvslwVsOiLrrCBTb61wF16uJw7
-Pk+2pWRljPN8COCyOQ//kwUI7tIEcUEIMk1ocWfiNHAAh7cyJ7ItWnuZKO3+SJ+S
-QdKokTfuXafhKqkjc22rQ3JAb/vHrXHc7k5nQ2lr9ZXrxjSgnjG8rsJuf4gedK3B
-IRqakWF4BiXTx/RuWHRdh2koIlrU7Hb11y9460w9/YXRVtkdI1akpxSy37iG1Ksd
-rJ52tTWH2Y1g0lkFEVKJ
-=nC/j
------END PGP SIGNATURE-----
-
---/04w6evG8XlLl3ft--
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
