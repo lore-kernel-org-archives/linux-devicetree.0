@@ -1,58 +1,37 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 1/2] hwspinlock/omap: add support for dt nodes
-Date: Wed, 04 Sep 2013 11:09:57 +0300
-Message-ID: <5226EAD5.8070400@mm-sol.com>
-References: <1378230767-54931-1-git-send-email-s-anna@ti.com>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Wed, 04 Sep 2013 10:35:44 +0200
+Message-ID: <5584741.67AvVurcHF@lem-wkst-02>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <CACRpkdYeMGkju345g9d_ifZEOiVXftzSqU=1CfGO=qnt6Vj-Bg@mail.gmail.com> <52261C8B.2030906@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378230767-54931-1-git-send-email-s-anna@ti.com>
+In-Reply-To: <52261C8B.2030906@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
-
-Thanks for the patch.
-
-On 09/03/2013 08:52 PM, Suman Anna wrote:
-> HwSpinlock IP is present only on OMAP4 and other newer SoCs,
-> which are all device-tree boot only. This patch adds the
-> base support for parsing the DT nodes, and removes the code
-> dealing with the traditional platform device instantiation.
+On Wednesday 04 September 2013 11:29:47, Stephen Warren wrote:
+> On 09/03/2013 06:35 AM, Linus Walleij wrote:
+> > On Fri, Aug 30, 2013 at 9:53 PM, Stephen Warren <swarren@wwwdotorg.org> 
+wrote:
+> >> I still haven't seen an answer to why we really care about this; how
+> >> many times has code actually allocated the same GPIO/IRQ when it
+> >> shouldn't, in a way that it wasn't detectable by some other mechanism,
+> >> i.e. the feature just not working? Why are we even trying to solve this
+> >> issue? I'm not totally convinced it even makes sense to try and solve it.
+> > 
+> > We care about this because a number of OMAP boards are not
+> > working properly when booted from device tree, and they have a hard
+> > time figuring out a solution to the problem. Last try exploded. Now
+> > they are looking to create a patch that will fix the actual problem.
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
->  .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 28 ++++++++++
->  arch/arm/mach-omap2/Makefile                       |  3 --
->  arch/arm/mach-omap2/hwspinlock.c                   | 60 ----------------------
->  drivers/hwspinlock/omap_hwspinlock.c               | 21 ++++++--
->  4 files changed, 45 insertions(+), 67 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->  delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
-> 
-> diff --git a/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
-> new file mode 100644
-> index 0000000..adfb8ad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
-> @@ -0,0 +1,28 @@
-> +OMAP4+ HwSpinlock Driver
-> +
-> +Required properties:
-> +- compatible:		Currently supports only "ti,omap4-hwspinlock" for
-> +				OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
-> +- reg:			Contains the hwspinlock register address range (base
-> +			address and length)
-> +- ti,hwmods:		Name of the hwmod associated with the hwspinlock device
-> +
-> +Optional properties:
-> +- base_id:		Base Id for the locks for a particular hwspinlock
+> Is something missing from /proc/interrupts or /sys/kernel/debug/gpios?
+> If so, let's just add it.
 
-Could you rename base_id to base-id. The property name convention is to
-use dashes in DT world.
-
-regards,
-Stan
+That would require procfs to be mounted to /proc and even CONFIG_PROC_FS to be 
+compiled in. Drivers have to work without that requirement.
+That would require CONFIG_DEBUG_FS to be set, right? Drivers have to work 
+without that.
