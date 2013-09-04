@@ -1,114 +1,35 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 1/2] hwspinlock/omap: add support for dt nodes
-Date: Wed, 4 Sep 2013 12:51:11 -0500
-Message-ID: <F363B498-5648-4C19-BC16-096EE12C29CE@codeaurora.org>
-References: <1378230767-54931-1-git-send-email-s-anna@ti.com> <43798031-2D57-44F0-A19C-FD80DB9E9794@codeaurora.org> <52263413.1050108@ti.com> <8E84282E-BAD1-4A2B-849A-167C32F629DA@codeaurora.org> <52266409.90908@ti.com> <71570936-39F5-4AE1-AD05-163EA3179271@codeaurora.org> <52275F7D.4030305@ti.com> <9BE41927-7C6C-4E62-860B-0288627E9421@codeaurora.org> <522767E5.9080302@ti.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <522767E5.9080302@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v4 5/5] clk: dt: binding for basic gate clock
+Date: Wed, 4 Sep 2013 10:59:09 -0700
+Message-ID: <20130904175909.GB31541@atomide.com>
+References: <1377150793-27864-1-git-send-email-mturquette@linaro.org>
+ <1377150793-27864-6-git-send-email-mturquette@linaro.org>
+ <CAD6h2NRBq8hD8J5+P4NBZJZsPo4QAebgGaxmAn5TL0c2Cc5ULQ@mail.gmail.com>
+ <5220FB48.7080607@wwwdotorg.org>
+ <CAD6h2NSr0cM_SWqniC30pYm0mCeziBOzVg-46-814qPMxUwDCQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD6h2NSr0cM_SWqniC30pYm0mCeziBOzVg-46-814qPMxUwDCQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@linaro.org>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Sealey <neko@bakuhatsu.net>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On Sep 4, 2013, at 12:03 PM, Suman Anna wrote:
-
->>>>>>>> 
->>>>>>>>> HwSpinlock IP is present only on OMAP4 and other newer SoCs,
->>>>>>>>> which are all device-tree boot only. This patch adds the
->>>>>>>>> base support for parsing the DT nodes, and removes the code
->>>>>>>>> dealing with the traditional platform device instantiation.
->>>>>>>>> 
->>>>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>>>>>>> ---
->>>>>>>>> .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 28 ++++++++++
->>>>>>>>> arch/arm/mach-omap2/Makefile                       |  3 --
->>>>>>>>> arch/arm/mach-omap2/hwspinlock.c                   | 60 ----------------------
->>>>>>>>> drivers/hwspinlock/omap_hwspinlock.c               | 21 ++++++--
->>>>>>>>> 4 files changed, 45 insertions(+), 67 deletions(-)
->>>>>>>>> create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>>>>>>>> delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
->>>>>>>>> 
->>>>>>>>> diff --git a/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>>>>>>>> new file mode 100644
->>>>>>>>> index 0000000..adfb8ad
->>>>>>>>> --- /dev/null
->>>>>>>>> +++ b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>>>>>>>> @@ -0,0 +1,28 @@
->>>>>>>>> +OMAP4+ HwSpinlock Driver
->>>>>>>>> +
->>>>>>>>> +Required properties:
->>>>>>>>> +- compatible:		Currently supports only "ti,omap4-hwspinlock" for
->>>>>>>>> +				OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
->>>>>>>>> +- reg:			Contains the hwspinlock register address range (base
->>>>>>>>> +			address and length)
->>>>>>>>> +- ti,hwmods:		Name of the hwmod associated with the hwspinlock device
->>>>>>>>> +
->>>>>>>>> +Optional properties:
->>>>>>>>> +- base_id:		Base Id for the locks for a particular hwspinlock
->>>>>>>>> +			device. If not mentioned, a default value of 0 is used.
->>>>>>>>> +			This property is mandatory ONLY if a SoC has several
->>>>>>>>> +			hwspinlock devices. There are currently no such OMAP
->>>>>>>>> +			SoCs.
->>>>>>>> 
->>>>>>>> Should this be ti,base_id ? [ I know its kinda generic in its intent for any SoC w/multiple blocks ]
->>>>>>> 
->>>>>>> I didn't add the "ti," prefix exactly for the same reason - it is
->>>>>>> generic w.r.t the hwspinlock core irrespective of the SoC family, and
->>>>>>> there is nothing ti or OMAP specific about it. I have added it to keep
->>>>>>> the DT node definition in sync with the driver code. If it is too
->>>>>>> generic a name, it can always be renamed as hwlock_base_id. This will be
->>>>>>> SoC agnostic property for the hwspinlock driver. What do you think?
->>>>>> 
->>>>>> I'm wondering if we should use cell-index for this purpose.
->>>>> 
->>>>> I didn't get you completely. Do you intend to compute the base_id using
->>>>> cell-index and number of locks (which may be a separate field altogether
->>>>> if this information cannot be read from the h/w)? My understanding is
->>>>> that cell-index is primarily used for identifying the h/w instance number.
->>>> 
->>>> I was suggesting using cell-index instead of base_id.  What we should probably due is have a devicetree/bindings/hwlock/hwlock.txt that would describe generic properties like this and just reference that in the omap binding spec.
->>> 
->>> Common hwlock.txt sounds good. Will make the change.
->>> 
->>>> 
->>>> I'm thinking if we dont use cell-index, that it should probably be hwlock-base-id
->>>> 
->>> 
->>> I prefer to use hwlock-base-id. I think we should also be defining a
->>> common property name for number of locks, say hwlock-num-locks.
->> 
->> I'm good with that, cell-index is always funny so might as well be explicit.
->> 
->> I'm also good with hwlock-num-locks, I'll update the msm spinlock driver to use this.
->> 
->> Can you also maybe add some helper functions into the hwspinlock core to return these values so we both don't duplicate code in drivers and maintain consistency.
+* Haojian Zhuang <haojian.zhuang@linaro.org> [130903 20:11]:
 > 
-> I am trying to understand what you would need these for. Your driver
-> would already know the base_id and num_locks, since these are used in
-> the registration function.
+> We can see that it'll try to find static mapping. What's the static mapping?
+> If we define iotable in machine driver, we have the static mapping, just like
+> debug_ll. If we parse everything from DTS file, it'll always get a new virtual
+> address from vm area. So it always create a new page mapping even for one
+> register.
 
+I may not follow you here.. But it seems that you've missing something with
+the static mapping: It's found based on the physical address. So if you
+create static mappings for your SoC with iotable_init(), those mappings
+will be available everywhere including drivers when you do ioremap().
 
-It would be something simple like:
+Regards,
 
-static inline int of_get_hwlock_base_id (struct device_node *dn) {
-#ifdef CONFIG_OF
-	u32 val;
-
-	if (of_property_read_u32(dn, "hwlock-base-id", &val)
-		return val;
-#endif
-	return 0;
-}
-
-make sense?
-
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+Tony
