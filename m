@@ -1,62 +1,93 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] pwm: pxa: add device tree support to pwm driver
-Date: Wed, 04 Sep 2013 18:38:12 +0400
-Message-ID: <522745D4.3030601@cogentembedded.com>
-References: <1378236233-15637-1-git-send-email-mikedunn@newsguy.com>
- <201309040020.55029.marex@denx.de> <5227425E.7030806@newsguy.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 2/3] drm/panel: Add simple panel support
+Date: Wed, 4 Sep 2013 16:38:30 +0200
+Message-ID: <20130904143829.GA11833@ulmo>
+References: <1377876321-26835-1-git-send-email-treding@nvidia.com>
+ <1377876321-26835-3-git-send-email-treding@nvidia.com>
+ <52262FF4.6050605@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5227425E.7030806@newsguy.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Dunn <mikedunn@newsguy.com>
-Cc: Marek Vasut <marex@denx.de>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52262FF4.6050605-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 04-09-2013 18:23, Mike Dunn wrote:
+--/04w6evG8XlLl3ft
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>> +#ifdef CONFIG_OF
->>> +/* use the platform_device id table for OF match table data */
->>> +static struct of_device_id pwm_of_match[] = {
->>> +	{ .compatible = "marvell,pxa25x-pwm", .data = &pwm_id_table[0] },
->>> +	{ .compatible = "marvell,pxa27x-pwm", .data = &pwm_id_table[1] },
->>> +	{ .compatible = "marvell,pxa168-pwm", .data = &pwm_id_table[2] },
->>> +	{ .compatible = "marvell,pxa910-pwm", .data = &pwm_id_table[3] },
->>> +	{ }
->>> +};
->>> +MODULE_DEVICE_TABLE(of, pwm_of_match);
+On Tue, Sep 03, 2013 at 12:52:36PM -0600, Stephen Warren wrote:
+> On 08/30/2013 09:25 AM, Thierry Reding wrote:
+> > Add a driver for simple panels. Such panels can have a regulator that
+> > provides the supply voltage and a separate GPIO to enable the panel.
+> > Optionally the panels can have a backlight associated with them so it
+> > can be enabled or disabled according to the panel's power management
+> > mode.
+>=20
+> > diff --git a/Documentation/devicetree/bindings/panel/panel-simple.txt b=
+/Documentation/devicetree/bindings/panel/panel-simple.txt
+>=20
+> > +Simple display panel
+> > +
+> > +Required properties:
+> > +- compatible: should be one of:
+> > +  - "auo,b101aw03": AU Optronics Corporation 10.1" WSVGA TFT LCD panel
+> > +  - "cptt,claa101wb03": Chunghwa Picture Tubes Ltd. 10.1" WXGA TFT LCD=
+ panel
+> > +  - "pc,vvx10f004b00": Panasonic Corporation 10.1" WUXGA TFT LCD panel
+> > +
+> > +Optional properties:
+> > +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+> > +- power-supply: regulator to provide the supply voltage
+> > +- enable-gpios: GPIO pin to enable or disable the panel
+> > +- backlight: phandle of the backlight device attached to the panel
+>=20
+> Do we need to represent the timing requirements e.g. between panel
+> enable and backlight enable, or do you expect the driver to hard-code
+> this based on the compatible value?
 
->> Are PXA2xx and PXA3xx PWM impleemntations not all the same ? If so, why not just
->> stick with pxa25x-pwm only for all of the CPUs (aka. the lowest CPU model). Then
->> the table would have but a single entry.
+Yes, I'd expect the driver to hard-code that, similar to how the video
+mode is hardcoded. ddc-i2c-bus support hasn't even been implemented yet.
+I was planning to do that because one of the panels (the Chunghwa I
+think) actually is connected via DDC. What I was going to do was prefer
+a hardcoded mode over EDID to allow a driver to override a faulty EDID.
 
-> I'm just echoing the existing platform_device_id table...
+> Looking at the driver code, it seems that it has direct knowledge of the
+> video mode that each panel supports, so DDC is actually optional unlike
+> what I asserted/assumed in my previous response. As such, I guess we
+> should have a separate DT binding document for each of the three panels
+> (compatible values) listed above that pretty much just says "go look at
+> simple-panel.txt".
 
-> static const struct platform_device_id pwm_id_table[] = {
-> 	/*   PWM    has_secondary_pwm? */
-> 	{ "pxa25x-pwm", 0 },
-> 	{ "pxa27x-pwm", HAS_SECONDARY_PWM },
-> 	{ "pxa168-pwm", 0 },
-> 	{ "pxa910-pwm", 0 },
-> 	{ },
-> };
-> MODULE_DEVICE_TABLE(platform, pwm_id_table);
+Okay, I suppose that makes sense.
 
-    Unlike 'struct platform_device_id', the "compatible" property can't have 
-wildcards such as "pxa25x-pwm". You should choose one model (which e.g. was 
-produced first in the PXA25x series) and use that.
+Thierry
 
-> Mike
+--/04w6evG8XlLl3ft
+Content-Type: application/pgp-signature
 
-WBR, Sergei
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSJ0XlAAoJEN0jrNd/PrOh7iMP/AxEnK6mo55lUYijqFYMyiau
+frO1LmkHTqmEC11dECmjVWto8D0BPnHr0yZ+Cy8bygDpE06aqforAm2GXDW2o6bb
+/YbC5FTDf/SvwEZT7oGwI2H5NlR1BKscTTJM4t0uCgvjdNHOnHuhRdN873fwJkAU
+Y0yjJVrD+qpFP+cCUm/ZRv/0EO5SLxQJPLEJnFBcHzOnYF8pFcApc5RO8FNB2Fto
+a3UEyUJ7HP81JAAfcMVsWA8OcCQ/DpKbCwXjWu12wMvWRClBjTOwVG+Llx/lL+4F
+qn1uO5ADlJ/3WQSAv2Sz5fEgz6R6+9coKnI+innUDoP8yO16VQLvZMVOnIH3cpYN
+M3dpav4jNvLjEqUB5pPaSdHTJ95yp9TGr0ncPdpUbNaLbOLhLcDvJyqX6Exy2D7g
+lQ4/YPPqcJy5yk4TZgXOiDUAGrmcKlitCa3SPzNvslwVsOiLrrCBTb61wF16uJw7
+Pk+2pWRljPN8COCyOQ//kwUI7tIEcUEIMk1ocWfiNHAAh7cyJ7ItWnuZKO3+SJ+S
+QdKokTfuXafhKqkjc22rQ3JAb/vHrXHc7k5nQ2lr9ZXrxjSgnjG8rsJuf4gedK3B
+IRqakWF4BiXTx/RuWHRdh2koIlrU7Hb11y9460w9/YXRVtkdI1akpxSy37iG1Ksd
+rJ52tTWH2Y1g0lkFEVKJ
+=nC/j
+-----END PGP SIGNATURE-----
+
+--/04w6evG8XlLl3ft--
