@@ -1,167 +1,102 @@
-From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: Re: [PATCH v4 5/5] clk: dt: binding for basic gate clock
-Date: Wed, 4 Sep 2013 11:03:42 +0800
-Message-ID: <CAD6h2NSr0cM_SWqniC30pYm0mCeziBOzVg-46-814qPMxUwDCQ@mail.gmail.com>
-References: <1377150793-27864-1-git-send-email-mturquette@linaro.org>
-	<1377150793-27864-6-git-send-email-mturquette@linaro.org>
-	<CAD6h2NRBq8hD8J5+P4NBZJZsPo4QAebgGaxmAn5TL0c2Cc5ULQ@mail.gmail.com>
-	<5220FB48.7080607@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5220FB48.7080607@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Sealey <neko@bakuhatsu.net>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, devicetree@vger.kernel.org
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH 1/3] thermal: samsung: correct the fall interrupt en,
+ status bit fields
+Date: Wed, 04 Sep 2013 09:53:47 +0530
+Message-ID: <1378268629-2886-1-git-send-email-ch.naveen@samsung.com>
+References: <1377668719-8602-2-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1377668719-8602-2-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, rui.zhang@intel.com, eduardo.valentin@ti.com
+Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, naveenkrishna.ch@gmail.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 31 August 2013 04:06, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 08/29/2013 07:45 PM, Haojian Zhuang wrote:
->> On 22 August 2013 13:53, Mike Turquette <mturquette@linaro.org> wrote:
->>> Device Tree binding for the basic clock gate, plus the setup function to
->>> register the clock.  Based on the existing fixed-clock binding.
->>>
->>> A different approach to this was proposed in 2012[1] and a similar
->>> binding was proposed more recently[2] if anyone wants some extra
->>> reading.
->
->>> diff --git a/Documentation/devicetree/bindings/clock/gate-clock.txt b/Documentation/devicetree/bindings/clock/gate-clock.txt
->
->>> +Binding for simple gate clock.
-> ...
->>> +       clock_foo: clock_foo@4a008100 {
->>> +               compatible = "gate-clock";
->>> +               #clock-cells = <0>;
->>> +               clocks = <&clock_bar>;
->>> +               reg = <0x4a008100 0x4>
->>> +               bit-shift = <3>
->>
->> There's some argument on my clock binding patch set of Hi3620.
->>
->> I defined each clock as one clock node and some of them are sharing one
->> register. Stephen attacked on this since it means multiple clock node sharing
->> one register.
->
-> s/attacked/disagreed with/ I think:-)
->
->> Now the same thing also exists in Mike's patch. Mike's patch could also
->> support this behavior. And it's very common that one register is sharing among
->> multiple clocks in every SoC. Which one should I follow?
->
-> I believe it's a matter of how the HW is structured.
->
-> If the HW truly has segregated register regions for each individual
-> clock, and is documented in a way that implies each individual clock is
-> a separate HW module, then it makes sense to describe each clock as a
-> separate DT node.
->
-> However, if the HW simply has a "clock module" that provides many
-> clocks, with inter-mingled registers all over the place, and is
-> documented as a single module that generates lots of clocks, then it
-> makes sense to describe that one module as a single DT node.
->
-> In other words, the DT representation should match the HW design and
-> documentation.
->
-> This is exactly why we have the #clock-cells property in DT; so that a
-> clock provider can provide multiple clocks if that's the way the HW is
-> designed.
->
->>> diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
->
->>> +void of_gate_clk_setup(struct device_node *node)
->>> +{
->>> +       struct clk *clk;
->>> +       const char *clk_name = node->name;
->>> +       void __iomem *reg;
->>> +       const char *parent_name;
->>> +       u8 clk_gate_flags = 0;
->>> +       u32 bit_idx = 0;
->>> +
->>> +       of_property_read_string(node, "clock-output-names", &clk_name);
->>> +
->>> +       parent_name = of_clk_get_parent_name(node, 0);
->>> +
->>> +       reg = of_iomap(node, 0);
->>
->> I suggest not using of_iomap for each clock node.
->>
->> If each clock is one node, it means hundreds of clock node existing in
->> device tree. Hundreds of mapping page only cost unnecessary mapping.
->
-> The page table entries will get re-used. I'm not familiar with the mm
-> code, but multiple of_iomap() for the exact same range probably just map
-> down to incrementing a refcount on some kernel data structure, so
-> actually has zero overhead?
+The FALL interrupt related en, status bits are available at an offset of
+16 on INTEN, INTSTAT registers and at an offset of
+12 on INTCLEAR register.
 
-I think it's not right. Let check the implemenation in ioremap().
+This patch corrects the same for exyns5250 and exynos5440
 
-__arm_ioremap_pfn_caller():
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+---
 
-    /* try to reuse one of the static mapping whenever possible. */
-    svm = find_static_vm_paddr();
-    if (svm) {
-         addr = svm->vm.addr;
-         addr += paddr - svm->vm.phys_addr;
-         return (void __iomem *)(offset + addr);
-    }
-    ...
+Changes since v1:
+  None
 
-    area = get_vm_area_caller(size, VM_IOREMAP, caller);
-    addr = area->addr;
-    ioremap_page_range(addr, addr+size, paddr, ..);
+ drivers/thermal/samsung/exynos_tmu.c      |    2 +-
+ drivers/thermal/samsung/exynos_tmu.h      |    2 ++
+ drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
+ drivers/thermal/samsung/exynos_tmu_data.h |    3 ++-
+ 4 files changed, 7 insertions(+), 2 deletions(-)
 
-We can see that it'll try to find static mapping. What's the static mapping?
-If we define iotable in machine driver, we have the static mapping, just like
-debug_ll. If we parse everything from DTS file, it'll always get a new virtual
-address from vm area. So it always create a new page mapping even for one
-register.
-
->
->
->> Maybe we can resolve it by this way.
->>
->> DTS file:
->>         clock register bank {
->
-> You need a compatible value here, in order to instantiate the top-level
-> driver for the "clock generator" HW block.
->
->>                 reg = <{start} {size}>;
->>                 #address-cells = <1>;
->>                 #size-cells = <0>;             /* each clock only
->> exists in one register */
->
-> You would need a ranges property here, to map the child reg properties
-> into the parent node's address space.
->
->>                 clock node {
->>                         compatible = "xxx";
->>                         #clock-cells = <0>;
->>                         clock-output-names = yyy";
->>                         reg = <{offset}>;
->>                         ... other properties ...
->>                 };
->>          };
->
-> That could be a reasonable solution; the existence of a single "clock
-> generator" HW block is clearly called out by the existing of the
-> top-level DT node, yet the internals of that node are free to be
-> whatever you want, since this is purely defined by the binding
-> definition for that top-level "clock generator" node.
->
-> That all said, I see almost zero value in having all these child nodes,
-> since the top-level compatible value implies every single detail about
-> the HW, so the list of clocks and their parameters could just as easily
-> be a table in the driver for the HW, in order to avoid having to parse
-> that data every boot just to end up with the same table...
->
-> The only exception would be if the SoC designer truly had composed the
-> top-level "clock generator" HW block out of many completely independent
-> re-usable clock IP blocks, and many SoCs existed that used those
-> individual clock blocks completely unchanged, without any SoC-specific
-> differences such as additional SoC-specific clock block types, so that
-> one could get greater re-use by parametrizing everything in DT. In my
-> (perhaps limited) experience of SoCS, this seems like an /extremely/
-> unlikely situation.
->
+diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+index ec01dfe..d201ed8 100644
+--- a/drivers/thermal/samsung/exynos_tmu.c
++++ b/drivers/thermal/samsung/exynos_tmu.c
+@@ -265,7 +265,7 @@ skip_calib_data:
+ 				data->base + reg->threshold_th1);
+ 
+ 		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
+-			(reg->inten_fall_mask << reg->inten_fall_shift),
++			(reg->inten_fall_mask << reg->intclr_fall_shift),
+ 				data->base + reg->tmu_intclear);
+ 
+ 		/* if last threshold limit is also present */
+diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
+index b364c9e..7c6c34a 100644
+--- a/drivers/thermal/samsung/exynos_tmu.h
++++ b/drivers/thermal/samsung/exynos_tmu.h
+@@ -134,6 +134,7 @@ enum soc_type {
+  * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
+  * @tmu_intstat: Register containing the interrupt status values.
+  * @tmu_intclear: Register for clearing the raised interrupt status.
++ * @intclr_fall_shift: shift bits for interrupt clear fall 0
+  * @emul_con: TMU emulation controller register.
+  * @emul_temp_shift: shift bits of emulation temperature.
+  * @emul_time_shift: shift bits of emulation time.
+@@ -204,6 +205,7 @@ struct exynos_tmu_registers {
+ 	u32	tmu_intstat;
+ 
+ 	u32	tmu_intclear;
++	u32	intclr_fall_shift;
+ 
+ 	u32	emul_con;
+ 	u32	emul_temp_shift;
+diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
+index 9002499..23fea23 100644
+--- a/drivers/thermal/samsung/exynos_tmu_data.c
++++ b/drivers/thermal/samsung/exynos_tmu_data.c
+@@ -122,6 +122,7 @@ static const struct exynos_tmu_registers exynos5250_tmu_registers = {
+ 	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
+ 	.tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
+ 	.tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
++	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+ 	.emul_con = EXYNOS_EMUL_CON,
+ 	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+ 	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
+@@ -210,6 +211,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
+ 	.inten_fall0_shift = EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
+ 	.tmu_intstat = EXYNOS5440_TMU_S0_7_IRQ,
+ 	.tmu_intclear = EXYNOS5440_TMU_S0_7_IRQ,
++	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
+ 	.tmu_irqstatus = EXYNOS5440_TMU_IRQ_STATUS,
+ 	.emul_con = EXYNOS5440_TMU_S0_7_DEBUG,
+ 	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
+diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
+index dc7feb5..8788a87 100644
+--- a/drivers/thermal/samsung/exynos_tmu_data.h
++++ b/drivers/thermal/samsung/exynos_tmu_data.h
+@@ -69,9 +69,10 @@
+ #define EXYNOS_TMU_RISE_INT_MASK	0x111
+ #define EXYNOS_TMU_RISE_INT_SHIFT	0
+ #define EXYNOS_TMU_FALL_INT_MASK	0x111
+-#define EXYNOS_TMU_FALL_INT_SHIFT	12
++#define EXYNOS_TMU_FALL_INT_SHIFT	16
+ #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
+ #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
++#define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT	12
+ #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
+ #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
+ #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
+-- 
+1.7.9.5
