@@ -1,153 +1,101 @@
-From: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
-Subject: Re: [PATCH V5] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
-Date: Wed, 4 Sep 2013 11:23:13 +0530
-Message-ID: <CAKuRcOJvvKC=Lhj9LHQL7J-h9w6wrgN81MyD8rDa2oRiw2DnyQ@mail.gmail.com>
-References: <1377691386-7085-1-git-send-email-yuvaraj.cd@samsung.com>
-	<CAKuRcO+qhfry4KT2gJmB5DGgPF7=0WrEJH=7quVOj3tobnPv=A@mail.gmail.com>
-	<CAKuRcO+EF12mbx-EyptWKmuAiabw4Cx7TqUMTmUAgVFWkwMr=w@mail.gmail.com>
-	<11882414.uDVzNviTV8@amdc1227>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v3 2/2] media: i2c: adv7343: add OF support
+Date: Wed, 4 Sep 2013 12:43:38 +0530
+Message-ID: <CA+V-a8vwX__S=A=fYCQpvJQLTUMx0C82p=5XdsCtpMKLF5p-TA@mail.gmail.com>
+References: <1374301266-26726-1-git-send-email-prabhakar.csengg@gmail.com>
+ <1374301266-26726-3-git-send-email-prabhakar.csengg@gmail.com>
+ <5217A3E7.50706@samsung.com> <CA+V-a8tStFRbELAmZL=418VpR9SJgp8uo_4hrtny2UEMEoXakg@mail.gmail.com>
+ <20130827152405.GQ19893@e106331-lin.cambridge.arm.com> <CA+V-a8vuYNNiXJ+iGgceaTqHdM_Q9X2dVDyiHHZPJ+-rSbJgLQ@mail.gmail.com>
+ <20130902161715.GB18206@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <11882414.uDVzNviTV8@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Doug Anderson <dianders@chromium.org>, Chris Ball <cjb@laptop.org>, Thomas Abraham <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130902161715.GB18206@e106331-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LDOC <linux-doc@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 2, 2013 at 5:51 PM, Tomasz Figa <t.figa@samsung.com> wrote:
-> On Monday 02 of September 2013 16:45:41 Yuvaraj Kumar wrote:
->> On Fri, Aug 30, 2013 at 12:29 PM, Yuvaraj Kumar <yuvaraj.cd@gmail.com>
-> wrote:
->> > On Wed, Aug 28, 2013 at 5:52 PM, Tomasz Figa <t.figa@samsung.com>
-> wrote:
->> >> Hi Yuvaraj,
->> >>
->> >> On Wednesday 28 of August 2013 17:33:06 Yuvaraj Kumar C D wrote:
->> >>> This patch adds the device tree node entries for exynos5420 SOC.
->> >>> Exynos5420 has a different version of DWMMC controller,so a new
->> >>> compatible string is used to distinguish it from the prior SOC's.
->> >>>
->> >>> This patch depends on
->> >>>
->> >>>       mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
->> >>>
->> >>> changes since v4:
->> >>>       1.Droppped the bypass-smu binding property.
->> >>>       2.Used compatible string "samsung,exynos5250-dw-mshc"
->> >>>
->> >>>         for controller instance which does not have SMU.
->> >>>
->> >>> changes since V3:
->> >>>       1.change fifo-depth size from 0x80 to 0x40
->> >>>       2.Move the below properties
->> >>>
->> >>>               a.card-detect-delay
->> >>>               b.samsung,dw-mshc-ciu-div
->> >>>               c.samsung,dw-mshc-sdr-timing
->> >>>               d.samsung,dw-mshc-ddr-timing
->> >>>
->> >>>       from SOC dts to board dts file as suggested by Doug Anderson
->> >>>
->> >>> changes since V2:
->> >>>       1.dropped num-slots property from node as its not required
->> >>>
->> >>>         if number of card slots available is 1.
->> >>>
->> >>>       2.Move the below properties
->> >>>
->> >>>               a.fifo-depth
->> >>>               b.card-detect-delay
->> >>>               c.samsung,dw-mshc-ciu-div
->> >>>               d.samsung,dw-mshc-sdr-timing
->> >>>               e.samsung,dw-mshc-ddr-timing
->> >>>
->> >>>       from board dts to SOC dts,as these are not board specific
->> >>>       properties.
->> >>>
->> >>>       3.Updated the binding document exynos-dw-mshc.txt.
->> >>>
->> >>> changes since V1:
->> >>>       1.disable node by status = disabled in SOC file
->> >>>       2.enable node by status = okay in board specific file
->> >>>
->> >>> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
->> >>> ---
->> >>>
->> >>>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +
->> >>>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   33
->> >>>
->> >>> +++++++++++++++++ arch/arm/boot/dts/exynos5420.dtsi
->> >>> |
->> >>> 39 ++++++++++++++++++++ 3 files changed, 74 insertions(+)
->> >>
->> >> This patch looks good to me now, except some minor comments below.
->> >>
->> >>> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
->> >>> b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt index
->> >>> 6d1c098..84cd56f 100644
->> >>> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
->> >>> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
->> >>>
->> >>> @@ -16,6 +16,8 @@ Required Properties:
->> >>>         specific extensions.
->> >>>
->> >>>       - "samsung,exynos5250-dw-mshc": for controllers with Samsung
->> >>>       Exynos5250
->> >>>
->> >>> specific extensions.
->> >>> +     - "samsung,exynos5420-dw-mshc": for controllers with Samsung
->> >>> Exynos5420 +       specific extensions.
->> >>>
->> >>>  * samsung,dw-mshc-ciu-div: Specifies the divider value for the card
->> >>>
->> >>> interface unit (ciu) clock. This property is applicable only for
->> >>> Exynos5
->> >>> SoC's and diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >>> b/arch/arm/boot/dts/exynos5420-smdk5420.dts index bafba25..3ce5c97
->> >>> 100644
->> >>> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >>> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >>> @@ -31,6 +31,39 @@
->> >>>
->> >>>               };
->> >>>
->> >>>       };
->> >>>
->> >>> +     dwmmc0@12200000 {
->> >>
->> >> Node name should not contain instance index. Instead, according to
->> >> ePAPR
->> >> recommendation, I would opt for a generic name such as mmc, mshc or
->> >> sdio- host. mshc is already used on Exynos 4 so it might be a good
->> >> idea to use it for consistency.
+Hi Mark,
+
+On Mon, Sep 2, 2013 at 9:47 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Wed, Aug 28, 2013 at 03:43:04AM +0100, Prabhakar Lad wrote:
+>> Hi Mark,
+>>
+>> On Tue, Aug 27, 2013 at 8:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> > [fixing up devicetree list address]
 >> >
->> > If we change node name's to mshc, debug statements are look like below:
->> > dwmmc_exynos 12200000.mshc: num-slots property not found, assuming 1
->> > slot is available
->> > dwmmc_exynos 12200000.mshc: no vmmc regulator found: -19
->> > dwmmc_exynos 12200000.mshc: Using internal DMA controller.
->> > dwmmc_exynos 12200000.mshc: Version ID is 250a
->> > dwmmc_exynos 12200000.mshc: DW MMC controller at irq 107, 64 bit host
->> > data width, 64 deep fifo
+>> Thanks!
+>>
+>> > On Mon, Aug 26, 2013 at 03:41:45AM +0100, Prabhakar Lad wrote:
+>> >> Hi Sylwester,
+>> >>
+>> >> On Fri, Aug 23, 2013 at 11:33 PM, Sylwester Nawrocki
+>> >> <s.nawrocki@samsung.com> wrote:
+>> >> > Cc: DT binding maintainers
 >> >
->> > "dwmmc_exynos" is platform driver name and "12200000.mshc" from dt
->> > node.Is'nt it look like bit confusing?
+>> > Cheers!
+>> >
+>> >> >
+>> >> > On 07/20/2013 08:21 AM, Lad, Prabhakar wrote:
+>> >> >> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+>> >> >>
+>> >> >> add OF support for the adv7343 driver.
+>> >> >>
+>> >> >> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>> >> >> ---
+>> >> > [...]
+>> >> >>  .../devicetree/bindings/media/i2c/adv7343.txt      |   48 ++++++++++++++++++++
+>> >> >>  drivers/media/i2c/adv7343.c                        |   46 ++++++++++++++++++-
+>> >> >>  2 files changed, 93 insertions(+), 1 deletion(-)
+>> >> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7343.txt
+>> >> >>
+>> >> >> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+>> >> >> new file mode 100644
+>> >> >> index 0000000..5653bc2
+>> >> >> --- /dev/null
+>> >> >> +++ b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+>> >> >> @@ -0,0 +1,48 @@
+>> >> >> +* Analog Devices adv7343 video encoder
+>> >> >> +
+>> >> >> +The ADV7343 are high speed, digital-to-analog video encoders in a 64-lead LQFP
+>> >> >> +package. Six high speed, 3.3 V, 11-bit video DACs provide support for composite
+>> >> >> +(CVBS), S-Video (Y-C), and component (YPrPb/RGB) analog outputs in standard
+>> >> >> +definition (SD), enhanced definition (ED), or high definition (HD) video
+>> >> >> +formats.
+>> >> >> +
+>> >> >> +Required Properties :
+>> >> >> +- compatible: Must be "adi,adv7343"
+>> >> >> +
+>> >> >> +Optional Properties :
+>> >> >> +- adi,power-mode-sleep-mode: on enable the current consumption is reduced to
+>> >> >> +                           micro ampere level. All DACs and the internal PLL
+>> >> >> +                           circuit are disabled.
+>> >
+>> > This seems to be a boolean property, and I couldn't find any description
+>> > in the linked datasheet of the constraints under which the unit may be
+>> > put into sleep mode.
+>> >
+>> > Why do we require this property in the dt? Can the driver not always put
+>> > a adv734x into sleep mode if it wants to, and then wake it up as
+>> > required?
+>> >
+>> The adv7343 decoder, fits on da850/dm6467 etc.. For the da850 it supports
+>> only SD where as the dm6467 supports HD/SD/ED for which DAC 1-6 of
+>> Register 0x0 varies for this board so I added them as the platform data
+>> but I got a review comment in the ML asking to add entire register as
+>> the pdata instead of DAC 1-6, so because of which it is being converted
+>> in the same way for DT.
 >
-> Well, device tree should be written in an OS-agnostic way, so it's not a
-> valid reason to use node names not complying to the recommendations.
+> Not everything that appears in platform data should appear in the dt.
+> This seems more like a run-time decision that a description of the
+> hardware.
 >
-> Also, I don't see anything wrong in this name. There is a lot of devices
-> named this way, like 13920000.spi, 139d0000.pwm or 13800000.serial.
+> I don't see why we need the "adi,power-mode-sleep-mode" property.
 >
-> Looking at other dts(i) files around the kernel, mmc is the most commonly
-> used node name for MMC controllers (after sdhci, but it's used for the
-> whole class of controllers compatible with standard SDHCI).
->
-> So, for me, just go with "mmc" and it should be fine.
-I have renamed the node from "mshc" to "mmc" in next version and posted
-[PATCH V7] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
->
-> Best regards,
-> Tomasz
->
+Ok I will drop "adi,power-mode-sleep-mode" and "adi,power-mode-pll-ctrl"
+property from the DT bindings and just have "adi,dac-enable",
+"adi,sd-dac-enable" properties as this cannot be handled runtime.
+
+Regards,
+--Prabhakar Lad
