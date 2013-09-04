@@ -1,35 +1,72 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v4 5/5] clk: dt: binding for basic gate clock
-Date: Wed, 4 Sep 2013 10:59:09 -0700
-Message-ID: <20130904175909.GB31541@atomide.com>
-References: <1377150793-27864-1-git-send-email-mturquette@linaro.org>
- <1377150793-27864-6-git-send-email-mturquette@linaro.org>
- <CAD6h2NRBq8hD8J5+P4NBZJZsPo4QAebgGaxmAn5TL0c2Cc5ULQ@mail.gmail.com>
- <5220FB48.7080607@wwwdotorg.org>
- <CAD6h2NSr0cM_SWqniC30pYm0mCeziBOzVg-46-814qPMxUwDCQ@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/3] ASoC: generic simple sound card DT
+	bindings
+Date: Wed, 04 Sep 2013 12:21:36 -0600
+Message-ID: <52277A30.8010102@wwwdotorg.org>
+References: <1377945878-13322-1-git-send-email-mpa@pengutronix.de>
+ <1377945878-13322-3-git-send-email-mpa@pengutronix.de>
+ <52220766.1040504@metafoo.de> <52263795.8010600@wwwdotorg.org>
+ <20130903231922.GL3084@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD6h2NSr0cM_SWqniC30pYm0mCeziBOzVg-46-814qPMxUwDCQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Mike Turquette <mturquette@linaro.org>, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Matt Sealey <neko@bakuhatsu.net>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20130903231922.GL3084@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Haojian Zhuang <haojian.zhuang@linaro.org> [130903 20:11]:
+On 09/03/2013 05:19 PM, Mark Brown wrote:
+> On Tue, Sep 03, 2013 at 01:25:09PM -0600, Stephen Warren wrote:
 > 
-> We can see that it'll try to find static mapping. What's the static mapping?
-> If we define iotable in machine driver, we have the static mapping, just like
-> debug_ll. If we parse everything from DTS file, it'll always get a new virtual
-> address from vm area. So it always create a new page mapping even for one
-> register.
+>> Mark has made the argument that (at least for CODEC analog pins)
+>> we can simply put those strings into the binding document, and
+>> make them as much a part of the binding as anything else. After
+>> all, (at least for CODEC analog pins) the values are simply the
+>> names of the pins on the package, as listed by the HW
+>> documentation itself.
+> 
+>> We could presumably do the same thing for DAIs; in DT, use a 
+>> string-based DAI name derived directly from the HW documentation,
+>> rather than the current intra-ASoC DAI name strings.
+> 
+>> That said, I will admit that I personally don't really like the
+>> idea of using strings in bindings. That opinion certainly isn't
+>> universal though.
+> 
+> I think either works - with DAIs there is a tendency (though not 
+> universal) for devices to just have numbered interfaces which makes
+> the numbers more natural.  I'm more concerned with the binding
+> being legible than with what ends up physically written in there,
+> the original reason for strings (apart from the fact that they're
+> in the drivers already) was that there was a lot of resistance in
+> the DT community to symbolic constants.  That would have lead to
+> bindings which looked like line noise.
 
-I may not follow you here.. But it seems that you've missing something with
-the static mapping: It's found based on the physical address. So if you
-create static mappings for your SoC with iotable_init(), those mappings
-will be available everywhere including drivers when you do ioremap().
+True.
 
-Regards,
+>>> The binding also assumes that a CPU controller may have one DAI
+>>> at most. In my opinion this binding ought to use the upcoming
+>>> of_xlate stuff for ASoC components.
+> 
+>> That restriction seems reasonable for a *simple* DT sound
+>> binding. For more complex cards, one could presumably create more
+>> complex bindings, be they generic bindings that cover arbitrary
+>> more complex cases, or bindings for specific configurations that
+>> happen to include multiple DAIs.
+> 
+> The complexity there comes from the device that's being used rather
+> than the design of the sound card though - the fact that a SoC has
+> an audio block with many DAIs shouldn't prevent it using the simple
+> bindings if someone just hung a simple CODEC off one of the DAIs.
 
-Tony
+Yes, exactly.
