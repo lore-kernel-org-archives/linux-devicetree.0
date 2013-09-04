@@ -1,114 +1,45 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/2] sh_eth: add device tree support
-Date: Wed, 04 Sep 2013 23:42:02 +0400
-Message-ID: <52278D0A.6010901@cogentembedded.com>
-References: <201308310429.34856.sergei.shtylyov@cogentembedded.com> <E4C90BAA-A89F-4C7C-B186-12C2DF7E6F31@codeaurora.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC 4/5] gpiolib: add gpiod_get() and gpiod_put() functions
+Date: Wed, 04 Sep 2013 13:56:50 -0600
+Message-ID: <52279082.5010105@wwwdotorg.org>
+References: <1378294169-22661-1-git-send-email-acourbot@nvidia.com> <1378294169-22661-5-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <E4C90BAA-A89F-4C7C-B186-12C2DF7E6F31@codeaurora.org>
+In-Reply-To: <1378294169-22661-5-git-send-email-acourbot@nvidia.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: netdev@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, linux-sh@vger.kernel.org, rob@landley.net, linux-doc@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, gnurou@gmail.com, linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 09/04/2013 05:29 AM, Alexandre Courbot wrote:
+> Add gpiod_get() and gpiod_put() functions that provide safer handling of
+> GPIOs.
+> 
+> These functions put the GPIO framework in line with the conventions of
+> other frameworks in the kernel, and help ensure every GPIO is declared
+> properly and valid while it is used.
 
-On 09/04/2013 02:08 AM, Kumar Gala wrote:
+> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
 
->> Add support of the device tree probing for the Renesas SH-Mobile SoCs.
+> +struct gpio_desc *__must_check gpiod_get(struct device *dev,
+> +					 const char *con_id);
+> +void gpiod_put(struct gpio_desc *desc);
 
->> This work is loosely based on an original patch by Nobuhiro Iwamatsu
->> <nobuhiro.iwamatsu.yj@renesas.com>.
+It might be nice to add an "int index" parameter to this function. For
+example, a bit-banged parallel bus protocol driver might have 1
+chip-select GPIO, 1 clock GPIO, and 8 data GPIOs. gpiod_get(dev, "bus",
+0)..gpiod_get(dev, "bus", 7) might be nicer than gpiod_get(dev,
+"bus0")..gpiod_get(dev, "bus7")? Possibly for client-simplicity,
+implement both gpiod_get(dev, con_id) (as an inline wrapper for ...) and
+gpiod_get_index(dev, con_id, index)?
 
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+In DT terms, this would map to:
 
->> ---
->> This patch is against Dave's 'net-next.git' repo.
+cs-gpios = <&gpio 3 0>;
+clock-gpios = <&gpio 5 0>;
+bus-gpios = <&gpio 10 0 ... &gpio 17 0>;
 
->> Documentation/devicetree/bindings/net/sh_eth.txt |   40 +++++++++++++
->> drivers/net/ethernet/renesas/sh_eth.c            |   66 ++++++++++++++++++++++-
->> 2 files changed, 105 insertions(+), 1 deletion(-)
-
->> Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
->> ===================================================================
->> --- /dev/null
->> +++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
->> @@ -0,0 +1,40 @@
->> +* Renesas Electronics SH EtherMAC
->> +
->> +This file provides information on what the device node for the SH EtherMAC
->> +interface contains.
->> +
->> +Required properties:
->> +- compatible: "renesas,gether-r8a7740" if the device is a part of R8A7740 SoC.
->> +	      "renesas,ether-r8a7779" if the device is a part of R8A7778/9 SoCs.
->> +	      "renesas,ether-r8a7790" if the device is a part of R8A7790/1 SoCs.
-
-> Curious, 7779 (vs 7778) but 7790 (vs 7791).
-
-    Support for R8A7779 appeared in Linux before support for R8A7778 (probably 
-the chips appeared on the market in the same order). The same can be said 
-about R8A7790 -- it appeared first; R8A7791 isn't yet supported by Linux (it 
-should be in 3.13). R8A7779/90 are high end chips, R8A7778/91 are middle class 
-chips. Anyway, by request of Magnus Damm, I'll have to use the individual 
-"compatible" properties.
-
->> +- reg: offset and length of the register set for the device; if the device has
->> +       TSU registers, you need to specify two register sets here.
->> +- interrupt-parent: the phandle for the interrupt controller that services
->> +		    interrupts for this device.
->> +- interrupts: interrupt mapping for the interrupt source.
->> +- phy-mode: string, operation mode of the PHY interface (a string that
->> +	    of_get_phy_mode() can understand).
->> +- phy-handle: phandle of the PHY device.
->> +
-
-> Should add something about requiring a phy subnode
-
-    OK.
-
->> +Optional properties:
->> +- local-mac-address: 6 bytes, MAC address.
-
-> What's the assumption if local-mac-address is not specified?
-
-    The driver will try to read the chip's MAC address registers hoping to 
-find an address left there programmed by U-Boot. If no valid address is found 
-(usual case on R8A7778/9 development boards which have an extra network chip), 
-the random one will be used.
-
->> +- renesas,no-ether-link: specify when a board does not provide a proper LINK
->> +			 signal.
-
-> How is this different from the fixed link concept we have?
-
-    Here the chip-specific LINK signal is meant which is supposed to go from a 
-PHY to the SoC. Sometimes it's wired from the PHY's link/active LED output or 
-just absent on the board, so we aren't able to use it for the link detection.
-In this case, phylib's notification is used.
-
->> +- renesas,ether-link-active-low: specify when the LINK signal is active-low.
->> +
->> +Example (Armadillo800EVA board):
->> +
->> +	ethernet@e9a00000 {
->> +		compatible = "renesas,gether-r8a7740";
->> +		reg = <0xe9a00000 0x800>, <0xe9a01800 0x800>;
->> +		interrupt-parent = <&gic>;
->> +		interrupts = <0 142 0x4>;
->> +		phy-mode = "mii";
->> +		phy-handle = <&phy0>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		phy0: ethernet-phy@0 {
->> +			reg = <0>;
->> +		};
->> +	};
-
-> - k
-
-WBR, Sergei
-
+... and with the mapping table registration mechanism, we could
+presumably add "int index" to struct gpiod_lookup.
