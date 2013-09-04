@@ -1,85 +1,53 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/4] ARM: shmobile: r8a7778: add Ether DT support
-Date: Wed, 04 Sep 2013 11:39:59 +0200
-Message-ID: <76573995.iPm3QS0b9I@avalon>
-References: <201309010311.05466.sergei.shtylyov@cogentembedded.com> <52262A1B.4050406@cogentembedded.com> <CANqRtoSfsEwqJhh9DgX6jxK5DjH5FeroMAcsvss5o2vAzFk-pg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Wed, 4 Sep 2013 10:55:23 +0100
+Message-ID: <20130904095523.GT3084@sirena.org.uk>
+References: <1377828449-18912-1-git-send-email-b32955@freescale.com>
+ <522697E9.1050208@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoSfsEwqJhh9DgX6jxK5DjH5FeroMAcsvss5o2vAzFk-pg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, ian.campbell@citrix.com, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MljkYTiQARTYtn+v"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <522697E9.1050208@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Huang Shijie <b32955@freescale.com>
+Cc: dwmw2@infradead.org, dedekind1@gmail.com, computersforpeace@gmail.com, shawn.guo@linaro.org, kernel@pengutronix.de, b18965@freescale.com, b44548@freescale.com, lznuaa@gmail.com, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 September 2013 14:35:14 Magnus Damm wrote:
-> On Wed, Sep 4, 2013 at 3:27 AM, Sergei Shtylyov wrote:
-> > On 09/03/2013 07:17 PM, Magnus Damm wrote:
-> >>> Define the generic R8A777x part of the Ether device node.
-> >>> 
-> >>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >>> 
-> >>> ---
-> >>> 
-> >>>   arch/arm/boot/dts/r8a7778.dtsi |   11 +++++++++++
-> >>>   1 file changed, 11 insertions(+)
-> >>> 
-> >>> Index: renesas/arch/arm/boot/dts/r8a7778.dtsi
-> >>> ===================================================================
-> >>> --- renesas.orig/arch/arm/boot/dts/r8a7778.dtsi
-> >>> +++ renesas/arch/arm/boot/dts/r8a7778.dtsi
-> >>> @@ -98,4 +98,15 @@
-> >>>                  reg = <0xfffc000 0x118>;
-> >>>                  #gpio-range-cells = <3>;
-> >>>          };
-> >>> +
-> >>> +       ether: ethernet@fde00000 {
-> >>> +               device_type = "network";
-> >>> +               compatible = "renesas,ether-r8a7779";
-> >> 
-> >> Hi Sergei,
-> >> 
-> >> Thanks for your patch. What's the reason behind the r8a7778 SoC using
-> >> a compatible string for r8a7779 like "renesas,ether-r8a7779"?
-> >
-> > R8A7779 support has appeared first in Linux and as R8A7778 Ether is
-> > identical to R8A7779 and no wildcards are allowed in the device tree, I
-> > decided to use this "compatible" prop.
-> 
-> Thanks for your reply, I see.
-> 
-> >> It seems that you assume that the r8a7778 ethernet controller is 100%
-> >> compatible with r8a7779. Is that really true? For earlier versions the
-> >> sh_eth hardware documentation was anything but accurate, so it seems
-> >> to me that it must be more safe that r8a7778 would be using
-> >> "renesas,ether-r8a7778". What do you think?
-> >
-> > I think R8A7778 and R8A7779 EtherMACs are identical. I've cross checked
-> > the documentation at the start of the development and the registers
-> > appeared to be the same.
-> 
-> But even if the current version of the documentation happens to be
-> similar in it still doesn't guarantee that the IP is the same. And
-> using the "correct" SoC compatible value doesn't really hurt in any
-> way, does it?
-> 
-> My feeling is that using the identical SoC as compatible value must be
-> the best option - unless we know for sure they are identical that is.
-> 
-> So unless we're 100% certain about IP compatibility I'm trying to
-> enforce that we either use a strict matching for exactly the same SoC
-> version or IP block. Using a different maybe-compatible SoC string
-> seems to be begging for future trouble IMO.
-> 
-> Laurent, any opinion?
 
-I agree. If we had access to IP version information we could use that to 
-construct the compatible name. As we don't, the SoC name is the best option, 
-and to ensure future compatibility we should use the exact SoC version.
+--MljkYTiQARTYtn+v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Regards,
+On Wed, Sep 04, 2013 at 10:16:09AM +0800, Huang Shijie wrote:
 
-Laurent Pinchart
+> Since this quadspi driver depends on the mtd code, could this driver
+> goes to the kernel by
+> the l2-mtd tree?
 
+Why would a SPI driver depend on MTD?
+
+--MljkYTiQARTYtn+v
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSJwOIAAoJELSic+t+oim9OKIQAJwp7urCGFK3LcfwVDngUptc
+0cIyY+lYKMT3OjZeuT2c1I/J1TKfbDJWdwQXgyFPAqidXl+v1XBVGpXEWJpPJJvj
+R8j24xQO34/2ddY2PpYTJmC1Jur04MTy65vQSxBFTSG9oPk0oOW5nGSY1Yi1PWvb
+5Kq0vkePoNakP4Q54/aexkiX/CiE7b0UujZjYRwrTZRaSu71bRtBEmuhpUaFBYll
+H8swnP3twySFL/0CfGdmiQxT311AHND5kge65Mhhyiow8EyqF6pjxKfFLcvq5E7C
+9XpC/iQdWIyv7ORo//QN0OqsCA2saZ6LMqa9mu+swQXuVEZh18/CbSf2mQWGgRST
+UgKNuctdBWhDwRYEmAORPWro5PCaKjbF+WTqzEsTK5rRCRQYRtdpieli3epszsFU
+wisnd5EeC61AceiGn7y9U+BvKhIGnqsezGP3gIa1UaLBnDCh+T0P7IEeH0SNM4J+
+df25WEisHCw3Ay8LyDdnTPmZn48R+EcaTNfY236azNSrJiItv7CvywRksYYgvpi5
+PKolJTqvBwb0eda1O43182fpYhn9m6DbHRvVCGyYtyEMr1oswpLsQ2IzNVoxer84
+J8h9GDF9Tl7tJ2DhoLM6nFO4gYN7CgIGDyJcAxcUlf9SqgsvCxiYJVm9ZNnKMSV4
+e533eyGkY8bXpQWSbygH
+=Yn9k
+-----END PGP SIGNATURE-----
+
+--MljkYTiQARTYtn+v--
