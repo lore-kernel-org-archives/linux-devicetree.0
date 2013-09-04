@@ -1,45 +1,64 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] EMMA: Add em i2c driver
-Date: Wed, 4 Sep 2013 14:06:13 +0200
-Message-ID: <20130904140613.2b47e4a7@skate>
-References: <CANqRtoRK+Ur=87-me7CpP+s9SO5g0ZVZSEOrqwDf4HFfjZZmZA@mail.gmail.com>
-	<1378207832-3412-1-git-send-email-ian.molton@codethink.co.uk>
-	<1378207832-3412-2-git-send-email-ian.molton@codethink.co.uk>
-	<5225DC8E.7070001@codethink.co.uk>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [Patch v3 2/3] ARM: dts: Document the CCI PMU DT bindings
+Date: Wed, 04 Sep 2013 13:26:17 +0100
+Message-ID: <522726E9.8050406@arm.com>
+References: <1377183748-5717-1-git-send-email-punit.agrawal@arm.com>
+ <1377183748-5717-3-git-send-email-punit.agrawal@arm.com>
+ <938AAABA-BE7E-48ED-82D6-61A35B6D9774@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5225DC8E.7070001-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <938AAABA-BE7E-48ED-82D6-61A35B6D9774@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kumar Gala <galak@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Ben Dooks,
+(adding Will, as these patches will be going via his tree.)
 
-On Tue, 03 Sep 2013 13:56:46 +0100, Ben Dooks wrote:
+Hi Will,
 
-> > +static int em_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
-> > +	int num)
-> > +{
-> > +	struct em_i2c_device *i2c_dev =
-> > +		(struct em_i2c_device *)(i2c_get_adapdata(adap));
-> 
-> if this is used enough it may have been easier to add an to_em_i2c()
-> macro.
+On 30/08/13 17:17, Kumar Gala wrote:
+>
+> On Aug 22, 2013, at 10:02 AM, Punit Agrawal wrote:
+>
+>> The CCI PMU can profile bus transactions at the master and slave
+>> interfaces of the CCI. The PMU can be used to observe an aggregated
+>> view of the bus traffic between the various components connected to the
+>> CCI.
+>>
+>> Introduce a binding for the CCI PMU. The PMU node will be a sub-node of
+>> the CCI node.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+>> Cc: Stephen Warren <swarren@wwwdotorg.org>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
+>> ---
+>> Documentation/devicetree/bindings/arm/cci.txt |   46 +++++++++++++++++++++++++
+>> 1 file changed, 46 insertions(+)
+>
+> Acked-by: Kumar Gala <galak@codeaurora.org>
+>
 
-Or simply realize that i2c_get_adapdata() returns a 'void *' and that
-therefore the cast is unnecessary, which makes a to_em_i2c() macro
-useless, no?
+Can you pick Kumar's ack for the second patch before you send a pull 
+request for the CCI PMU patches? Let me know if you prefer for me to 
+post patches with the Acks applied.
 
-I.e, you should be able to write:
+Cheers,
+Punit
 
-	struct em_i2c_device *i2c_dev = i2c_get_adapdata(adap);
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+> - k
+>
