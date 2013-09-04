@@ -1,37 +1,85 @@
-From: Lars Poeschel <poeschel@lemonage.de>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Wed, 04 Sep 2013 11:21:47 +0200
-Message-ID: <5034887.FlGzi4P5YS@lem-wkst-02>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <4094364.ACYUvMRRNa@lem-wkst-02> <52261C5C.9000102@wwwdotorg.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/4] ARM: shmobile: r8a7778: add Ether DT support
+Date: Wed, 04 Sep 2013 11:39:59 +0200
+Message-ID: <76573995.iPm3QS0b9I@avalon>
+References: <201309010311.05466.sergei.shtylyov@cogentembedded.com> <52262A1B.4050406@cogentembedded.com> <CANqRtoSfsEwqJhh9DgX6jxK5DjH5FeroMAcsvss5o2vAzFk-pg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <52261C5C.9000102@wwwdotorg.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoSfsEwqJhh9DgX6jxK5DjH5FeroMAcsvss5o2vAzFk-pg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, ian.campbell@citrix.com, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 September 2013 11:29:00, Stephen Warren wrote:
-> On 09/02/2013 03:38 AM, Lars Poeschel wrote:
-> > Am Freitag, 30. August 2013, 13:53:45 schrieb Stephen Warren:
-> ...
+On Wednesday 04 September 2013 14:35:14 Magnus Damm wrote:
+> On Wed, Sep 4, 2013 at 3:27 AM, Sergei Shtylyov wrote:
+> > On 09/03/2013 07:17 PM, Magnus Damm wrote:
+> >>> Define the generic R8A777x part of the Ether device node.
+> >>> 
+> >>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >>> 
+> >>> ---
+> >>> 
+> >>>   arch/arm/boot/dts/r8a7778.dtsi |   11 +++++++++++
+> >>>   1 file changed, 11 insertions(+)
+> >>> 
+> >>> Index: renesas/arch/arm/boot/dts/r8a7778.dtsi
+> >>> ===================================================================
+> >>> --- renesas.orig/arch/arm/boot/dts/r8a7778.dtsi
+> >>> +++ renesas/arch/arm/boot/dts/r8a7778.dtsi
+> >>> @@ -98,4 +98,15 @@
+> >>>                  reg = <0xfffc000 0x118>;
+> >>>                  #gpio-range-cells = <3>;
+> >>>          };
+> >>> +
+> >>> +       ether: ethernet@fde00000 {
+> >>> +               device_type = "network";
+> >>> +               compatible = "renesas,ether-r8a7779";
+> >> 
+> >> Hi Sergei,
+> >> 
+> >> Thanks for your patch. What's the reason behind the r8a7778 SoC using
+> >> a compatible string for r8a7779 like "renesas,ether-r8a7779"?
+> >
+> > R8A7779 support has appeared first in Linux and as R8A7778 Ether is
+> > identical to R8A7779 and no wildcards are allowed in the device tree, I
+> > decided to use this "compatible" prop.
 > 
-> >> Yet the current patch only addresses a limited set of cases, since it
-> >> doesn't hook the APIs but rather parses the DT. It doesn't cover the
-> >> non-DT case. It should if the feature is useful.
-> > 
-> > As pointed out before, only DT has this problem, that,
+> Thanks for your reply, I see.
 > 
-> That's completely false. Both DT and non-DT can represent the exact same
-> HW, and use the exact same drivers. It's equally possible to write a bug
-> in a board file or a DT file (i.e. a typo or incorrect reading of the
-> schematic) that causes the wrong GPIO or IRQ ID to be used, and hence
-> for there to be conflicts. Any solution to this issue needs to address
-> both cases.
+> >> It seems that you assume that the r8a7778 ethernet controller is 100%
+> >> compatible with r8a7779. Is that really true? For earlier versions the
+> >> sh_eth hardware documentation was anything but accurate, so it seems
+> >> to me that it must be more safe that r8a7778 would be using
+> >> "renesas,ether-r8a7778". What do you think?
+> >
+> > I think R8A7778 and R8A7779 EtherMACs are identical. I've cross checked
+> > the documentation at the start of the development and the registers
+> > appeared to be the same.
+> 
+> But even if the current version of the documentation happens to be
+> similar in it still doesn't guarantee that the IP is the same. And
+> using the "correct" SoC compatible value doesn't really hurt in any
+> way, does it?
+> 
+> My feeling is that using the identical SoC as compatible value must be
+> the best option - unless we know for sure they are identical that is.
+> 
+> So unless we're 100% certain about IP compatibility I'm trying to
+> enforce that we either use a strict matching for exactly the same SoC
+> version or IP block. Using a different maybe-compatible SoC string
+> seems to be begging for future trouble IMO.
+> 
+> Laurent, any opinion?
 
-This is again not the point. This is not what this patch is trying to solve. 
-The patch is trying to solve problem A. But you are talking about problem B.
-Sure I can write a bug in board files and I can write a bug in DT files. The 
-patch is not trying to prevent that. This is a completly different thing.
+I agree. If we had access to IP version information we could use that to 
+construct the compatible name. As we don't, the SoC name is the best option, 
+and to ensure future compatibility we should use the exact SoC version.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
