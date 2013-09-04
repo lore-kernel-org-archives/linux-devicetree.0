@@ -1,282 +1,221 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from fw-tnat.cambridge.arm.com ([217.140.96.21]:54037 "EHLO
-	cam-smtp0.cambridge.arm.com" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S935543Ab3IELTf (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 5 Sep 2013 07:19:35 -0400
-Date: Thu, 5 Sep 2013 12:19:18 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH] dt: add a binding review checklist
-Message-ID: <20130905111918.GQ18206@e106331-lin.cambridge.arm.com>
-References: <1378334532-21025-1-git-send-email-swarren@wwwdotorg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1378334532-21025-1-git-send-email-swarren@wwwdotorg.org>
-Content-Language: en-US
+Received: from avon.wwwdotorg.org ([70.85.31.133]:45521 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753770Ab3IDWmT (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 4 Sep 2013 18:42:19 -0400
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [RFC PATCH] dt: add a binding review checklist
+Date: Wed,  4 Sep 2013 16:42:12 -0600
+Message-Id: <1378334532-21025-1-git-send-email-swarren@wwwdotorg.org>
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Stephen,
+From: Stephen Warren <swarren@nvidia.com>
 
-On Wed, Sep 04, 2013 at 11:42:12PM +0100, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
-> 
-> I originally intended this to be a brief list of items to check when
-> reviewing a new DT binding. However, I appear to have become slightly
-> distracted and added in a bunch of background/justification verbiage
-> too!
+I originally intended this to be a brief list of items to check when
+reviewing a new DT binding. However, I appear to have become slightly
+distracted and added in a bunch of background/justification verbiage
+too!
 
-Cheers for this!
+Do people think this is going the right direction? Should I continue in
+the current style and add more sections to the document, or strip it back
+to be a much more plain list, perhaps something like:
+https://fedoraproject.org/wiki/Packaging:ReviewGuidelines
+(which is where I got the idea for this)
 
-I'd also had a go (and fell into the same verbiage trap). I could post
-that in another reply for reference, some of it might be useful and
-could probably be lifted directly.
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+ .../bindings/binding-review-checklist.txt          | 179 +++++++++++++++++++++
+ 1 file changed, 179 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/binding-review-checklist.txt
 
-> 
-> Do people think this is going the right direction? Should I continue in
-> the current style and add more sections to the document, or strip it back
-> to be a much more plain list, perhaps something like:
-> https://fedoraproject.org/wiki/Packaging:ReviewGuidelines
-> (which is where I got the idea for this)
+diff --git a/Documentation/devicetree/bindings/binding-review-checklist.txt b/Documentation/devicetree/bindings/binding-review-checklist.txt
+new file mode 100644
+index 0000000..8c4b5bf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/binding-review-checklist.txt
+@@ -0,0 +1,179 @@
++Reviewers' checklist for Device Tree bindings
++=============================================
++
++Introduction
++------------
++
++This document provides a set of guidelines for review of new Device Tree
++bindings. It is not (yet?) exhaustive. Good engineering judgement should be
++applied in addition to the requirements specified below.
++
++Much of this document is written from the perspective of defining bindings for
++individual chips, or hardware/IP blocks. However, many of the assertions here
++are valid when defining generic/super-class bindings for "subsystems" or
++device classes, such as "all I2C controllers", "all I2C clients", etc.
++
++What Device Tree Represents
++---------------------------
++
++Hardware Description
++~~~~~~~~~~~~~~~~~~~~
++
++Device Tree is a description of hardware, or firmware interfaces. It may
++describe device presence, type, location, associated configuration parameters
++that are purely derived from the hardware definition, and connectivity
++between components.
++
++The rest of this document uses the term "hardware" to refer to either a
++physical hardware device, or a firmware interface.
++
++For example, a DT might specify that a particular vendor's SHDCI controller is
++available, memory-mapped at address 0xc8000000, generates an interrupt that
++is routed to a specified active-low level-sensitive input on a specified IRQ
++controller, is fed by a specific clock generated by a specific clock source,
++and may detect card presence using a specific active-low GPIO hosted by a
++specific GPIO controller.
++
++No Representation of Policy
++~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++Device tree is not a description of how to use the hardware, nor policy to
++be applied when using the hardware.
++
++For example, consider a system with two analog line-out audio jacks, where
++only one may be used at a time, with software control over which jack is
++active. The DT should describe the presence of both jacks, but should not
++specify the conditions under which to select when to use one jack or the
++other. That decision should be left up to the software running on the device.
++In this situation, however, it is reasonable for DT to identify which jack
++is which, so that software can usefully select between the two jacks.
++
++Equally, consider a system that is sold as two different products, one
++of which costs more because it allows the use of an SD card slot at a
++faster clock rate than the other, even though the hardware is actually
++identical. DT should not be used to impose the limit on the SD card
++clock rate purely for policy or differentiation reasons. However, if
++the PCB is physically different between the two products, and has been
++deliberately designed and qualified to support different maximum clock
++rates (e.g. differing trace width or impedance), it would be acceptable to
++represent this maximum supported clock rate in device tree.
++
++Operating System Agnostic
++~~~~~~~~~~~~~~~~~~~~~~~~~
++
++Since Device tree is a pure description of hardware, the same bindings apply
++irrespective of the software running on the device. This implies that the same
++DT content should be passed to any software running on the device.
++
++Binding definitions should be self-contained, and not reference any particular
++operating system's documentation or code. Referencing OS-independent standards,
++such as USB or EHCI, is appropriate.
++
++Some exceptions are necessary, although these are generally limited to more
++system-level DT nodes such as /chosen. This is an area where engineering
++judgement may apply.
++
++Some bindings need to name or identify certain hardware properties. An example
++may be labels on keys in a matrix keyboard. Some numbering scheme is needed
++here, and in the absence of any OS-independent standard, it is reasonably to
++choose the numbering scheme of some particular operating system rather than
++inventing a new scheme. However, the full details of that scheme should be
++duplicated into the DT binding document (or associated header file) so that
++the binding definition remains stand-alone, and may be easily used by other
++operating systems.
++
++Vendor Prefix
++-------------
++
++A vendor prefix is simply a unique name for a (typically hardware-) vendor.
++This prefix is part of the entries in the compatible property, and names of
++binding-specific properties. The prefix serves to divide the name-space and
++avoid collisions between bindings from different vendors.
++
++All vendor prefix values must be documented in vendor-prefixes.txt.
++
++Valid values for a vendor prefix are:
++
++* A short, yet not obscure or obfuscated, representation of the vendor's name,
++  in lower-case. Stock tickers may be used in lower-case.
++* The vendor's stock ticker, in upper-case.
++
++Binding Structure
++-----------------
++
++A binding definition is currently a plain text file that contains:
++
++* A brief description of the hardware it describes, e.g. it's an I2C
++  controller, or an SPI controller, etc. Any unique or unusual features should
++  be explained in more depth.
++* Enough information to identify the hardware, and hence find the relevant
++  documentation for it to read alongside the binding definition (assuming such
++  documentation exists, and one has access to obtain it).
++* References any other generic/super-class bindings that this binding
++  "inherits" from, including their binding document filename.
++* For all properties the binding supports, defines:
++** The property name.
++** Whether the property is defined by, or is an instance of, some generic
++   binding, such as GPIO, IRQ, etc. If so, reference the binding document
++   filename that defines that binding.
++** Whether it is required or optional.
++** For optional properties, the implied value when the property is missing.
++** The type of the value.
++** The set or range of legal values for the property.
++** For properties that are lists, the order (if any) the entries must appear.
++* Typically contains a simple example to demonstrate the binding.
++
++Compatible Property
++-------------------
++
++A compatible value identifies a hardware module. It needs to identify the
++vendor (e.g. NVIDIA), type or name of device (e.g. I2C), and version of the
++device (e.g. an IP block version number or chip name). The following formats
++of compatible value are acceptable:
++
++* ${vendor},${device}-${version} (e.g. ti,omap4-i2c)
++* ${vendor},${version}-${device} (e.g. nvidia,tegra20-i2c)
++* ${vendor},${device}-${version} (e.g. synopsis,dwc3)
++
++Bindings for related hardware modules (e.g. all IP blocks in an SoC) should
++consistently use the same formatting option for their compatible values.
++
++A binding should enumerate all compatible values that it supports,
++both compatible values that imply a different software-visible programming interface, and
++compatible values that simply define device-specific instantiations of a
++common IP block. This provides a central database of all valid compatible
++values. This ensures that if a particular instance of an IP block is found
++to require a quirk to be activated, the binding document will authoritatively
++define the compatible value that software can use to identify it.
++
++Examples compatible values might be:
++
++* vendor,chip-i2c. First value defined.
++* vendor,chip2-i2c. 100% backwards-compatible with vendor,chip-i2c, yet
++  adds some optional new features.
++* vendor,chip3-i2c. Identical to vendor,chip2-i2c. This value exists only to
++  document the fact the IP block was instantiated into a different top-level
++  chip, to allow enabling any quirks required by that instantiation.
++
++Specifiers
++----------
++
++Many properties define a resource that is provided by one DT node and used by
++another. Any naming, formatting, and order of entry conventions for these
++properties should be defined by a "super-class" or "subsystem" binding.
++
++For example, some properties (such as reg, interrupts) are accessed by list
++index. Any reg-names or interrupt-names property is purely informational. The
++core definition of the regs or interrupts properties defines that these
++properties are accessed by index. Any binding that uses these properties must
++define how many entries these properties should contain (e.g. if multiple
++interrupts are generated by the hardware module or not), and which order
++the entries must appear.
++
++Other properties (such as clocks) have a mandatory associated names property
++(e.g. clock-names). In this case, the clock subsystem binding defines that
++clock names are first located in the clock-names property, then the index of
++the name is also used to index into the clocks property to find the actual
++clock definition. In this case, any binding that uses these properties must
++define the set of required and optional entries for the clock-names property.
++No specification of order of entries is possible.
+-- 
+1.8.1.5
 
-I think this is going in the right direction, but I think it would make
-sense to also have a basic checklist that people can go over
-mechanically that detects big issues (e.g. unallocated vendor prefixes,
-undocumented or ambiguous properties, undescribed HW inputs/outputs).
-
-> 
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> ---
->  .../bindings/binding-review-checklist.txt          | 179 +++++++++++++++++++++
->  1 file changed, 179 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/binding-review-checklist.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/binding-review-checklist.txt b/Documentation/devicetree/bindings/binding-review-checklist.txt
-> new file mode 100644
-> index 0000000..8c4b5bf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/binding-review-checklist.txt
-> @@ -0,0 +1,179 @@
-> +Reviewers' checklist for Device Tree bindings
-> +=============================================
-> +
-> +Introduction
-> +------------
-> +
-> +This document provides a set of guidelines for review of new Device Tree
-> +bindings. It is not (yet?) exhaustive. Good engineering judgement should be
-> +applied in addition to the requirements specified below.
-> +
-> +Much of this document is written from the perspective of defining bindings for
-> +individual chips, or hardware/IP blocks. However, many of the assertions here
-> +are valid when defining generic/super-class bindings for "subsystems" or
-> +device classes, such as "all I2C controllers", "all I2C clients", etc.
-> +
-> +What Device Tree Represents
-> +---------------------------
-> +
-> +Hardware Description
-> +~~~~~~~~~~~~~~~~~~~~
-> +
-> +Device Tree is a description of hardware, or firmware interfaces. It may
-> +describe device presence, type, location, associated configuration parameters
-> +that are purely derived from the hardware definition, and connectivity
-> +between components.
-> +
-> +The rest of this document uses the term "hardware" to refer to either a
-> +physical hardware device, or a firmware interface.
-> +
-> +For example, a DT might specify that a particular vendor's SHDCI controller is
-> +available, memory-mapped at address 0xc8000000, generates an interrupt that
-> +is routed to a specified active-low level-sensitive input on a specified IRQ
-> +controller, is fed by a specific clock generated by a specific clock source,
-> +and may detect card presence using a specific active-low GPIO hosted by a
-> +specific GPIO controller.
-> +
-> +No Representation of Policy
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Device tree is not a description of how to use the hardware, nor policy to
-> +be applied when using the hardware.
-> +
-> +For example, consider a system with two analog line-out audio jacks, where
-> +only one may be used at a time, with software control over which jack is
-> +active. The DT should describe the presence of both jacks, but should not
-> +specify the conditions under which to select when to use one jack or the
-> +other. That decision should be left up to the software running on the device.
-> +In this situation, however, it is reasonable for DT to identify which jack
-> +is which, so that software can usefully select between the two jacks.
-> +
-> +Equally, consider a system that is sold as two different products, one
-> +of which costs more because it allows the use of an SD card slot at a
-> +faster clock rate than the other, even though the hardware is actually
-> +identical. DT should not be used to impose the limit on the SD card
-> +clock rate purely for policy or differentiation reasons. However, if
-> +the PCB is physically different between the two products, and has been
-> +deliberately designed and qualified to support different maximum clock
-> +rates (e.g. differing trace width or impedance), it would be acceptable to
-> +represent this maximum supported clock rate in device tree.
-> +
-> +Operating System Agnostic
-> +~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Since Device tree is a pure description of hardware, the same bindings apply
-> +irrespective of the software running on the device. This implies that the same
-> +DT content should be passed to any software running on the device.
-> +
-> +Binding definitions should be self-contained, and not reference any particular
-> +operating system's documentation or code. Referencing OS-independent standards,
-> +such as USB or EHCI, is appropriate.
-> +
-> +Some exceptions are necessary, although these are generally limited to more
-> +system-level DT nodes such as /chosen. This is an area where engineering
-> +judgement may apply.
-> +
-> +Some bindings need to name or identify certain hardware properties. An example
-> +may be labels on keys in a matrix keyboard. Some numbering scheme is needed
-> +here, and in the absence of any OS-independent standard, it is reasonably to
-> +choose the numbering scheme of some particular operating system rather than
-> +inventing a new scheme. However, the full details of that scheme should be
-> +duplicated into the DT binding document (or associated header file) so that
-> +the binding definition remains stand-alone, and may be easily used by other
-> +operating systems.
-> +
-> +Vendor Prefix
-> +-------------
-> +
-> +A vendor prefix is simply a unique name for a (typically hardware-) vendor.
-
-s/hardware-/hardware/
-
-> +This prefix is part of the entries in the compatible property, and names of
-> +binding-specific properties. The prefix serves to divide the name-space and
-> +avoid collisions between bindings from different vendors.
-> +
-> +All vendor prefix values must be documented in vendor-prefixes.txt.
-> +
-> +Valid values for a vendor prefix are:
-> +
-> +* A short, yet not obscure or obfuscated, representation of the vendor's name,
-> +  in lower-case. Stock tickers may be used in lower-case.
-> +* The vendor's stock ticker, in upper-case.
-
-We've got plenty of stock ticker names in lower case. The only prefix I
-can see documented with any upper case part is "GEFanuc" (though "SUNW"
-is an obvious undocumented example...).
-
-> +
-> +Binding Structure
-> +-----------------
-> +
-> +A binding definition is currently a plain text file that contains:
-> +
-> +* A brief description of the hardware it describes, e.g. it's an I2C
-> +  controller, or an SPI controller, etc. Any unique or unusual features should
-> +  be explained in more depth.
-> +* Enough information to identify the hardware, and hence find the relevant
-> +  documentation for it to read alongside the binding definition (assuming such
-> +  documentation exists, and one has access to obtain it).
-> +* References any other generic/super-class bindings that this binding
-> +  "inherits" from, including their binding document filename.
-
-s/References/References to/
-
-> +* For all properties the binding supports, defines:
-> +** The property name.
-> +** Whether the property is defined by, or is an instance of, some generic
-> +   binding, such as GPIO, IRQ, etc. If so, reference the binding document
-> +   filename that defines that binding.
-> +** Whether it is required or optional.
-> +** For optional properties, the implied value when the property is missing.
-> +** The type of the value.
-> +** The set or range of legal values for the property.
-> +** For properties that are lists, the order (if any) the entries must appear.
-
-I'd note that this may be defined by reference to other properties. There
-might be a ${X}-names style property defining each entry in the list, or
-there might be other properties defining the list (e.g.
-"#global-interrupts" in the "arm,smmu" binding).
-
-> +* Typically contains a simple example to demonstrate the binding.
-> +
-> +Compatible Property
-> +-------------------
-> +
-> +A compatible value identifies a hardware module. It needs to identify the
-> +vendor (e.g. NVIDIA), type or name of device (e.g. I2C), and version of the
-> +device (e.g. an IP block version number or chip name). The following formats
-> +of compatible value are acceptable:
-> +
-> +* ${vendor},${device}-${version} (e.g. ti,omap4-i2c)
-> +* ${vendor},${version}-${device} (e.g. nvidia,tegra20-i2c)
-> +* ${vendor},${device}-${version} (e.g. synopsis,dwc3)
-
-It would be nice to make it clear that the compatible string for a
-device should (wherever possible) be the name of the specific IP block,
-which isn't completely clear above (e.g. "arm,pl011" is preferred to
-"arm,vexpress-v2m-serial"). It would be nice if we could avoid examples
-with SoC names for this reason.
-
-Obviously there will be SoC-specific devices that will have SoC names in
-their bindings. But those bindings should be considered carefully.
-
-> +
-> +Bindings for related hardware modules (e.g. all IP blocks in an SoC) should
-> +consistently use the same formatting option for their compatible values.
-> +
-> +A binding should enumerate all compatible values that it supports,
-> +both compatible values that imply a different software-visible programming interface, and
-> +compatible values that simply define device-specific instantiations of a
-> +common IP block. This provides a central database of all valid compatible
-> +values. This ensures that if a particular instance of an IP block is found
-> +to require a quirk to be activated, the binding document will authoritatively
-> +define the compatible value that software can use to identify it.
-> +
-> +Examples compatible values might be:
-> +
-> +* vendor,chip-i2c. First value defined.
-> +* vendor,chip2-i2c. 100% backwards-compatible with vendor,chip-i2c, yet
-> +  adds some optional new features.
-> +* vendor,chip3-i2c. Identical to vendor,chip2-i2c. This value exists only to
-> +  document the fact the IP block was instantiated into a different top-level
-> +  chip, to allow enabling any quirks required by that instantiation.
-> +
-> +Specifiers
-> +----------
-> +
-> +Many properties define a resource that is provided by one DT node and used by
-> +another. Any naming, formatting, and order of entry conventions for these
-> +properties should be defined by a "super-class" or "subsystem" binding.
-> +
-> +For example, some properties (such as reg, interrupts) are accessed by list
-> +index. Any reg-names or interrupt-names property is purely informational. The
-> +core definition of the regs or interrupts properties defines that these
-> +properties are accessed by index. Any binding that uses these properties must
-> +define how many entries these properties should contain (e.g. if multiple
-> +interrupts are generated by the hardware module or not), and which order
-> +the entries must appear.
-
-I don't agree that any reg-names or interrupt-names property is purely
-informational. I think this is certainly binding-specific, but we have
-drivers grabbing values by name, and in some cases there is no defined
-ordering and names are required for disambiguation and/or handling
-missing entries.
-
-> +
-> +Other properties (such as clocks) have a mandatory associated names property
-> +(e.g. clock-names). In this case, the clock subsystem binding defines that
-> +clock names are first located in the clock-names property, then the index of
-> +the name is also used to index into the clocks property to find the actual
-> +clock definition. In this case, any binding that uses these properties must
-> +define the set of required and optional entries for the clock-names property.
-> +No specification of order of entries is possible.
-
-The primecell bindings are in violation of the above (but the code is
-not), and there may be other cases I'm not aware of. Ideally the above
-would be true, but I'm not sure we can document it as such (though we
-can enforce such rules for new bindings).
-
-Thanks,
-Mark.
