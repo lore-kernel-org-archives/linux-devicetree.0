@@ -1,37 +1,100 @@
-From: Lars Poeschel <poeschel@lemonage.de>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Wed, 04 Sep 2013 10:35:44 +0200
-Message-ID: <5584741.67AvVurcHF@lem-wkst-02>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <CACRpkdYeMGkju345g9d_ifZEOiVXftzSqU=1CfGO=qnt6Vj-Bg@mail.gmail.com> <52261C8B.2030906@wwwdotorg.org>
+From: Ian Campbell <Ian.Campbell@citrix.com>
+Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
+Date: Wed, 4 Sep 2013 09:44:16 +0100
+Message-ID: <1378284256.17510.60.camel@kazak.uk.xensource.com>
+References: <52260608.2030202@linaro.org>
+ <CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52261C8B.2030906@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, boot-architecture@lists.linaro.org, Julien Grall <julien.grall@linaro.org>, Andre Przywara <andre.przywara@linaro.org>, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 September 2013 11:29:47, Stephen Warren wrote:
-> On 09/03/2013 06:35 AM, Linus Walleij wrote:
-> > On Fri, Aug 30, 2013 at 9:53 PM, Stephen Warren <swarren@wwwdotorg.org> 
-wrote:
-> >> I still haven't seen an answer to why we really care about this; how
-> >> many times has code actually allocated the same GPIO/IRQ when it
-> >> shouldn't, in a way that it wasn't detectable by some other mechanism,
-> >> i.e. the feature just not working? Why are we even trying to solve this
-> >> issue? I'm not totally convinced it even makes sense to try and solve it.
-> > 
-> > We care about this because a number of OMAP boards are not
-> > working properly when booted from device tree, and they have a hard
-> > time figuring out a solution to the problem. Last try exploded. Now
-> > they are looking to create a patch that will fix the actual problem.
+On Tue, 2013-09-03 at 17:00 -0500, Rob Herring wrote:
+> On Tue, Sep 3, 2013 at 10:53 AM, Andre Przywara
+> <andre.przywara@linaro.org> wrote:
+> > Hi,
+> >
+> > a normal Linux kernel currently supports reading the start and end address
+> > of a single binary blob via the FDT's /chosen node.
+> > This will be interpreted as the location of an initial RAM disk.
+> >
+> > The Xen hypervisor itself is a kernel, but needs up to _two_ binaries for
+> > proper operation: a Dom0 Linux kernel and it's associated initrd.
+> > On x86 this is solved via the multiboot protocol used by the Grub
+> > bootloader, which supports to pass an arbitrary number of binary modules to
+> > any kernel.
+> >
+> > Since in the ARM world we have the versatile device tree, we don't need to
+> > implement the mulitboot protocol.
 > 
-> Is something missing from /proc/interrupts or /sys/kernel/debug/gpios?
-> If so, let's just add it.
+> But surely there would be some advantage of reuse by using the
+> multi-boot protocol since Xen, grub, and OS tools already support it
+> for x86.
 
-That would require procfs to be mounted to /proc and even CONFIG_PROC_FS to be 
-compiled in. Drivers have to work without that requirement.
-That would require CONFIG_DEBUG_FS to be set, right? Drivers have to work 
-without that.
+Multiboot is pretty x86 specific (although MB2 has a MIPS port) and
+covers more stuff than we strictly require (e.g. on x86 it has
+requirements around which processor mode you enter in, has paging
+enabled etc).
+
+> > So I'd like to propose a new binding which denotes binary modules a kernel
+> > can use at it's own discretion.
+> > The need is triggered by the Xen hypervisor (which already uses a very
+> > similar scheme), but the approach is deliberately chosen to be as generic as
+> > possible to allow future uses (like passing firmware blobs for devices or
+> > the like).
+> > Credits for this go to Ian Campbell, who started something very similar [1]
+> > for the Xen hypervisor. The intention of this proposal is to make this
+> > generic and publicly documented.
+> 
+> Can you describe how you see the boot flow working starting with OS
+> installer writes kernel, initrd, xen and ??? to disk.
+
+Kernel and initrd are written to /boot in the usual way (probably from
+kernel.deb or whatever). Xen would also normally come from a distro
+package (also in /boot).
+
+> How does the bootloader know what to load?
+
+It's in the bootloader config, e.g. boot.scr or grub.cfg, which are
+either hand written or produced by the distros tooling.
+
+grub on ARM could consume the same stanzas as are used by grub on x86 to
+boot Xen (which are produced by update-grub):
+        echo    'Loading Xen 4.1-amd64 ...'
+        multiboot       /xen-4.1-amd64.gz placeholder  
+        echo    'Loading Linux 3.10-2-amd64 ...'
+        module  /vmlinuz-3.10-2-amd64 placeholder root=/dev/mapper/disks-root ro resume=/dev/mapper/disks-swap quiet
+        echo    'Loading initial ramdisk ...'
+        module  /initrd.img-3.10-2-amd64
+
+Since there is no multiboot on ARM (and never will be) this is safe.
+
+If multiboot ever does come to ARM it will necessarily be multiboot2
+which uses a different keyword.
+
+For u-boot Andre has proposed some syntactic sugar over the "fdt"
+command to make boot.scr more trivial to use. We would of course need to
+implement support for using it in the relevant distro tools (but they
+tend to be very distro/machine specific already, e.g. Debian's
+flash-kernel)
+
+>  The OS may not have access to the dtb,
+> so this has to be described to the bootloader as well.
+
+Right. The proposal is not for the OS to frob the DTB to support this
+protocol but to configure the bootloader to do it.
+
+Ian.
