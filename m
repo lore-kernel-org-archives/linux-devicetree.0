@@ -1,43 +1,50 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2] of_irq.h: fix build warnings when CONFIG_OF is not enabled
-Date: Tue, 03 Sep 2013 16:25:27 -0700
-Message-ID: <52266FE7.9030506@infradead.org>
-References: <5224B499.4010600@infradead.org> <CAL_Jsq+82vm_vt5EpcG1zvWmL_H4KY=91tB1WH5yUhHsiM11DA@mail.gmail.com>
+From: Lu Jingchang-B35083 <B35083@freescale.com>
+Subject: RE: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
+Date: Wed, 4 Sep 2013 02:02:42 +0000
+Message-ID: <B56CDBE15CE27145A4B77D2D24263E852123D5@039-SN1MPN1-004.039d.mgd.msft.net>
+References: <1376633274-17850-1-git-send-email-b35083@freescale.com>
+ <20130828081742.GC11414@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
+ <20130902045050.GE7376@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520D0D4@039-SN1MPN1-004.039d.mgd.msft.net>
+ <20130902063721.GK7376@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520F101@039-SN1MPN1-004.039d.mgd.msft.net>
+ <20130902111200.GP7376@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E852102A1@039-SN1MPN1-004.039d.mgd.msft.net>
+ <20130903113151.GE15824@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+82vm_vt5EpcG1zvWmL_H4KY=91tB1WH5yUhHsiM11DA@mail.gmail.com>
+In-Reply-To: <20130903113151.GE15824@intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
-
-Fix build warnings when CONFIG_OF is not enabled:
-(seen on i386 and x86_64)
-
-include/linux/of_irq.h:82:7: warning: 'struct device_node' declared inside parameter list [enabled by default]
-include/linux/of_irq.h:82:7: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
-include/linux/of_irq.h:87:47: warning: 'struct device_node' declared inside parameter list [enabled by default]
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc:	Grant Likely <grant.likely@linaro.org>
-Cc:	Rob Herring <rob.herring@calxeda.com>
-Cc:	devicetree@vger.kernel.org
----
- include/linux/of_irq.h |    2 ++
- 1 file changed, 2 insertions(+)
-
---- linux-next-20130830.orig/include/linux/of_irq.h
-+++ linux-next-20130830/include/linux/of_irq.h
-@@ -1,6 +1,8 @@
- #ifndef __OF_IRQ_H
- #define __OF_IRQ_H
- 
-+struct device_node;
-+
- #if defined(CONFIG_OF)
- struct of_irq;
- #include <linux/types.h>
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWaW5vZCBLb3VsIFttYWlsdG86
+dmlub2Qua291bEBpbnRlbC5jb21dDQo+IFNlbnQ6IFR1ZXNkYXksIFNlcHRlbWJlciAwMywgMjAx
+MyA3OjMyIFBNDQo+IFRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+IENjOiBzaGF3bi5ndW9AbGlu
+YXJvLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3Vi
+amVjdDogUmU6IFtQQVRDSCB2NCAzLzNdIGRtYTogQWRkIEZyZWVzY2FsZSBlRE1BIGVuZ2luZSBk
+cml2ZXIgc3VwcG9ydA0KPiANCj4gT24gVHVlLCBTZXAgMDMsIDIwMTMgYXQgMDU6NDM6MjFBTSAr
+MDAwMCwgTHUgSmluZ2NoYW5nLUIzNTA4MyB3cm90ZToNCj4gPiAgIERvIHlvdSBtZWFuIHRoZSBE
+TUFfU0xBVkVfQ09ORklHIGRldmljZV9jb250cm9sPyBZZWFoLCB0aGUgc2xhdmUNCj4gZHJpdmVy
+IGNvdWxkIHBhc3MNCj4gPiB0aGUgc2xhdmVfaWQuIEJ1dCB0aGUgRE1BX1NMQVZFX0NPTkZJRyBt
+YXkgYmUgY2FsbGVkIG1vcmUgdGhhbiBvbmNlLA0KPiBhbmQgdGhlIGVETUENCj4gPiBkcml2ZXIg
+anVzdCBuZWVkcyB0byBzZXQgdGhlIHNsYXZlIGlkIG9uY2UgZm9yIGFueSBnaXZlbiBjaGFubmVs
+LCBhZnRlcg0KPiB0aGF0IHRoZQ0KPiA+IHRyYW5zZmVyIGlzIHRyYW5zcGFyZW50IHRvIHRoZSBk
+ZXZpY2UuDQo+IEl0IGRlcGVuZHMsIGZvciBhIGNoYW5uZWwgcmVxdWVzdGVkLCBpZiB5b3UgYXJl
+IG9ubHkgdHJhbmZlcnJpbmcgdG8gYQ0KPiBwYXJ0aWN1bGFyDQo+IHNsYXZlIGRldmljZSB0aGVu
+IGl0IGNhbiBiZSBjb25mdWd1cmVkIG9uY2UuDQo+IHNvDQo+IDEuIGFsbG9jYXRlIGNoYW5uZWwN
+Cj4gMi4gZG1hZW5naW5lX3NsYXZlX2NvbmZpZygpDQo+IA0KPiB0aGVuIHlvdSBjbmFuIGRvIHBy
+ZWFyZSBldGMgbXVsdGlwbGUgdGltZXMgYmFzZWQgb24gbmVlZC4NClllYWgsIEkgdGhpbmsgd2Ug
+c2hvdWxkIGp1c3QgY29uZmlndXJlIHRoZSBzbGF2ZSBpZCBvbmNlIGFuZCB0aGlzIHdvdWxkIG1h
+a2UgdGhlDQpjb25maWd1cmF0aW9uIHNpbXBseS4gQnV0IGJ5IGRlYnVnZ2luZywgSSBmaW5kIHRo
+ZSBkbWFlbmdpbmVfc2xhdmVfY29uZmlnKCkgbWF5IGJlDQpjYWxsZWQgbW9yZSBvbmUgdGltZXMg
+YWZ0ZXIgcmVxdWVzdGVkIGJ5IG9uIHVzZXIuIFNvIEkgcHV0IHRoZSBzbGF2ZSBpZCBjb25maWd1
+cmF0aW9uDQppbiB0aGUgY2hhbm5lbCByZXF1ZXN0IHBoYXNlLiBBbmQgdGhlIGVmZmVjdCBpcyB0
+aGUgc2FtZSBmb3IgZXhjbHVzaXZlIGNoYW5uZWwuDQpUaGFua3MhDQoNCg0KQmVzdCBSZWdhcmRz
+LA0KSmluZ2NoYW5nDQoNCg0KDQoNCg==
