@@ -1,127 +1,94 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 2/2] media: i2c: adv7343: add OF support
-Date: Wed, 4 Sep 2013 15:48:09 +0100
-Message-ID: <20130904144809.GN18206@e106331-lin.cambridge.arm.com>
-References: <1374301266-26726-1-git-send-email-prabhakar.csengg@gmail.com>
- <1374301266-26726-3-git-send-email-prabhakar.csengg@gmail.com>
- <5217A3E7.50706@samsung.com>
- <CA+V-a8tStFRbELAmZL=418VpR9SJgp8uo_4hrtny2UEMEoXakg@mail.gmail.com>
- <20130827152405.GQ19893@e106331-lin.cambridge.arm.com>
- <CA+V-a8vuYNNiXJ+iGgceaTqHdM_Q9X2dVDyiHHZPJ+-rSbJgLQ@mail.gmail.com>
- <20130902161715.GB18206@e106331-lin.cambridge.arm.com>
- <CA+V-a8vwX__S=A=fYCQpvJQLTUMx0C82p=5XdsCtpMKLF5p-TA@mail.gmail.com>
+From: Mike Dunn <mikedunn@newsguy.com>
+Subject: Re: [PATCH] pwm: pxa: add device tree support to pwm driver
+Date: Wed, 04 Sep 2013 08:41:23 -0700
+Message-ID: <522754A3.8010602@newsguy.com>
+References: <1378236233-15637-1-git-send-email-mikedunn@newsguy.com>
+ <201309040020.55029.marex@denx.de> <5227425E.7030806@newsguy.com>
+ <201309041635.26695.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8vwX__S=A=fYCQpvJQLTUMx0C82p=5XdsCtpMKLF5p-TA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LDOC <linux-doc@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201309041635.26695.marex@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marex@denx.de>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 04, 2013 at 08:13:38AM +0100, Prabhakar Lad wrote:
-> Hi Mark,
-
-Hi Prabhakar,
-
+On 09/04/2013 07:35 AM, Marek Vasut wrote:
+> Dear Mike Dunn,
 > 
-> On Mon, Sep 2, 2013 at 9:47 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Wed, Aug 28, 2013 at 03:43:04AM +0100, Prabhakar Lad wrote:
-> >> Hi Mark,
-> >>
-> >> On Tue, Aug 27, 2013 at 8:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> >> > [fixing up devicetree list address]
-> >> >
-> >> Thanks!
-> >>
-> >> > On Mon, Aug 26, 2013 at 03:41:45AM +0100, Prabhakar Lad wrote:
-> >> >> Hi Sylwester,
-> >> >>
-> >> >> On Fri, Aug 23, 2013 at 11:33 PM, Sylwester Nawrocki
-> >> >> <s.nawrocki@samsung.com> wrote:
-> >> >> > Cc: DT binding maintainers
-> >> >
-> >> > Cheers!
-> >> >
-> >> >> >
-> >> >> > On 07/20/2013 08:21 AM, Lad, Prabhakar wrote:
-> >> >> >> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-> >> >> >>
-> >> >> >> add OF support for the adv7343 driver.
-> >> >> >>
-> >> >> >> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> >> >> >> ---
-> >> >> > [...]
-> >> >> >>  .../devicetree/bindings/media/i2c/adv7343.txt      |   48 ++++++++++++++++++++
-> >> >> >>  drivers/media/i2c/adv7343.c                        |   46 ++++++++++++++++++-
-> >> >> >>  2 files changed, 93 insertions(+), 1 deletion(-)
-> >> >> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7343.txt
-> >> >> >>
-> >> >> >> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
-> >> >> >> new file mode 100644
-> >> >> >> index 0000000..5653bc2
-> >> >> >> --- /dev/null
-> >> >> >> +++ b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
-> >> >> >> @@ -0,0 +1,48 @@
-> >> >> >> +* Analog Devices adv7343 video encoder
-> >> >> >> +
-> >> >> >> +The ADV7343 are high speed, digital-to-analog video encoders in a 64-lead LQFP
-> >> >> >> +package. Six high speed, 3.3 V, 11-bit video DACs provide support for composite
-> >> >> >> +(CVBS), S-Video (Y-C), and component (YPrPb/RGB) analog outputs in standard
-> >> >> >> +definition (SD), enhanced definition (ED), or high definition (HD) video
-> >> >> >> +formats.
-> >> >> >> +
-> >> >> >> +Required Properties :
-> >> >> >> +- compatible: Must be "adi,adv7343"
-> >> >> >> +
-> >> >> >> +Optional Properties :
-> >> >> >> +- adi,power-mode-sleep-mode: on enable the current consumption is reduced to
-> >> >> >> +                           micro ampere level. All DACs and the internal PLL
-> >> >> >> +                           circuit are disabled.
-> >> >
-> >> > This seems to be a boolean property, and I couldn't find any description
-> >> > in the linked datasheet of the constraints under which the unit may be
-> >> > put into sleep mode.
-> >> >
-> >> > Why do we require this property in the dt? Can the driver not always put
-> >> > a adv734x into sleep mode if it wants to, and then wake it up as
-> >> > required?
-> >> >
-> >> The adv7343 decoder, fits on da850/dm6467 etc.. For the da850 it supports
-> >> only SD where as the dm6467 supports HD/SD/ED for which DAC 1-6 of
-> >> Register 0x0 varies for this board so I added them as the platform data
-> >> but I got a review comment in the ML asking to add entire register as
-> >> the pdata instead of DAC 1-6, so because of which it is being converted
-> >> in the same way for DT.
-> >
-> > Not everything that appears in platform data should appear in the dt.
-> > This seems more like a run-time decision that a description of the
-> > hardware.
-> >
-> > I don't see why we need the "adi,power-mode-sleep-mode" property.
-> >
-> Ok I will drop "adi,power-mode-sleep-mode" and "adi,power-mode-pll-ctrl"
-> property from the DT bindings and just have "adi,dac-enable",
-> "adi,sd-dac-enable" properties as this cannot be handled runtime.
+>> On 09/03/2013 03:20 PM, Marek Vasut wrote:
+>>
+>> [...]
+>>
+>>>> +#ifdef CONFIG_OF
+>>>> +/* use the platform_device id table for OF match table data */
+>>>> +static struct of_device_id pwm_of_match[] = {
+>>>> +	{ .compatible = "marvell,pxa25x-pwm", .data = &pwm_id_table[0] },
+>>>> +	{ .compatible = "marvell,pxa27x-pwm", .data = &pwm_id_table[1] },
+>>>> +	{ .compatible = "marvell,pxa168-pwm", .data = &pwm_id_table[2] },
+>>>> +	{ .compatible = "marvell,pxa910-pwm", .data = &pwm_id_table[3] },
+>>>> +	{ }
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(of, pwm_of_match);
+>>>
+>>> Are PXA2xx and PXA3xx PWM impleemntations not all the same ? If so, why
+>>> not just stick with pxa25x-pwm only for all of the CPUs (aka. the lowest
+>>> CPU model). Then the table would have but a single entry.
+>>
+>> I'm just echoing the existing platform_device_id table...
+>>
+>> static const struct platform_device_id pwm_id_table[] = {
+>> 	/*   PWM    has_secondary_pwm? */
+>> 	{ "pxa25x-pwm", 0 },
+>> 	{ "pxa27x-pwm", HAS_SECONDARY_PWM },
+>> 	{ "pxa168-pwm", 0 },
+>> 	{ "pxa910-pwm", 0 },
+>> 	{ },
+>> };
+>> MODULE_DEVICE_TABLE(platform, pwm_id_table);
+>>
+>> ... so that my changes to the driver are minimal.  Yes, apparently the only
+>> difference is the existance of a "secondary" pwm for pxa27x.
+>>
+>> BTW, the pxa27x actually has four pwms, which is why the addition I made to
+>> pxa27x.dtsi has two nodes (the driver handles two pwms for each device
+>> instance in the pxa27x case).
+>>
+> 
+> What's that "secondary PWM" there? I no longer remember, sorry. 
 
-I'm still somewhat confused by these properties. The "adi,sd-dac-enable"
-property only describes two, the "sd" DACs, and "adi,dac-enable"
-describes 6. From the block diagram in the device manual, there are only
-6 DACs (1...6). None of the DACs seem to be limited in what they support
-(unless that's described elsewhere), so I don't understand what the "sd"
-DACs are. Could you elaborate?
 
-Which DACs are being described by each property? They seem to overlap.
+If pdev->id_entry->driver_data == HAS_SECONDARY_PWM, then pwm_chip->npwm=2 when
+pwmchip_add() is called.  Otherwise pwm_chip->npwm=1.  The driver knows that the
+second pwm's registers are at a fixed offset from the first.  For compatibility,
+the pxa27x maps the registers for the third pwm at a distant offset, and makes
+the offset between 3 and 4 the same as between 1 and 2.  Yes, the driver mkes
+this unnecessarily complicated.  There should just be one device instance per
+pwm, and dispense with the whole driver_data thing.  I guess there's some
+history there.
 
-Why do we need to program them as on or off? Surely that depends on
-whether or not they're connected to anything and whether or not we want
-something to appear on that output? Can the "REFERENCE AND CABLE DETECT"
-unit tell us that?
 
-Until the binding is clarified and stabilised, I don't think the binding
-or driver should be merged.
+> The question 
+> remains still, we can have two entries there (pxa25x and pxa27x) ORR have one 
+> entry (pxa25x) + mrvl,has-secondary-pwm entry.
+
+
+It looks like defining "compatible" properties that mirror the old
+platform_device_id names won't fly... wildcards are verboten (see Sergei's
+comment).  So your inclination to use one value for the "compatible" property is
+correct.  I think the way to go is to forget the whole HAS_SECONDARY_PWM in the
+DT case, have one device instance per pwm, and use "compatible=marvell,pwm".
+Other suggestions welcome.
 
 Thanks,
-Mark.
+Mike
