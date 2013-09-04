@@ -1,73 +1,64 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v11 0/8] PHY framework
-Date: Wed, 4 Sep 2013 14:27:06 +0530
-Message-ID: <5226F5E2.5010409@ti.com>
-References: <1377063973-22044-1-git-send-email-kishon@ti.com>
- <521B0E79.6060506@ti.com> <20130827192059.GZ3005@radagast>
- <5225FF63.6080608@ti.com> <20130903155030.GA21525@kroah.com>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Wed, 04 Sep 2013 11:05:58 +0200
+Message-ID: <3144247.j2q6H0KWZx@lem-wkst-02>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <1521079.WSLhhfqBXl@lem-wkst-02> <52261BF0.4090106@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130903155030.GA21525@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, stern@rowland.harvard.edu, grant.likely@linaro.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, george.cherian@ti.com, arnd@arndb.de, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, broonie@kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <52261BF0.4090106@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 03 September 2013 09:20 PM, Greg KH wrote:
-> On Tue, Sep 03, 2013 at 08:55:23PM +0530, Kishon Vijay Abraham I wrote:
->> Hi Greg,
->>
->> On Wednesday 28 August 2013 12:50 AM, Felipe Balbi wrote:
->>> Hi,
->>>
->>> On Mon, Aug 26, 2013 at 01:44:49PM +0530, Kishon Vijay Abraham I wrote:
->>>> On Wednesday 21 August 2013 11:16 AM, Kishon Vijay Abraham I wrote:
->>>>> Added a generic PHY framework that provides a set of APIs for the PHY drivers
->>>>> to create/destroy a PHY and APIs for the PHY users to obtain a reference to
->>>>> the PHY with or without using phandle.
->>>>>
->>>>> This framework will be of use only to devices that uses external PHY (PHY
->>>>> functionality is not embedded within the controller).
->>>>>
->>>>> The intention of creating this framework is to bring the phy drivers spread
->>>>> all over the Linux kernel to drivers/phy to increase code re-use and to
->>>>> increase code maintainability.
->>>>>
->>>>> Comments to make PHY as bus wasn't done because PHY devices can be part of
->>>>> other bus and making a same device attached to multiple bus leads to bad
->>>>> design.
->>>>>
->>>>> If the PHY driver has to send notification on connect/disconnect, the PHY
->>>>> driver should make use of the extcon framework. Using this susbsystem
->>>>> to use extcon framwork will have to be analysed.
->>>>>
->>>>> You can find this patch series @
->>>>> git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git testing
->>>>
->>>> Looks like there are not further comments on this series. Can you take this in
->>>> your misc tree?
->>>
->>> Do you want me to queue these for you ? There are quite a few users for
->>> this framework already and I know of at least 2 others which will show
->>> up for v3.13.
->>
->> Can you queue this patch series? There are quite a few users already for this
->> framework.
+On Wednesday 04 September 2013 11:27:12, Stephen Warren wrote:
+> On 09/02/2013 03:25 AM, Lars Poeschel wrote:
+> > Some leagcy drivers currently do this:
+> > 
+> > request_gpio(gpio);
+> > gpio_direction_input(gpio);
+> > request_irq(gpio_to_irq(gpio));
+> > 
+> > In that case request_irq should not fail because the driver is already the
+> > correct owner of this gpio. But if some other entity owns this gpio it
+> > should fail.
 > 
-> It will have to wait for 3.13 as the merge window for new features has
-> been closed for a week or so.  Sorry, I'll queue this up after 3.12-rc1
-> is out.
+> Yes.
+> 
+> > Also if I understand you correct the other way round should also possible:
+> > 
+> > request_irq(gpio_to_irq(gpio));
+> > request_gpio(gpio);
+> > gpio_direction_input(gpio);
+> > 
+> > request_irq() also requests the gpio then but the following request_gpio()
+> > should also not fail.
+> 
+> I don't believe that code sequence is currently banned. If we want to
+> ban it, we should document that. Until this is documented as being
+> banned, I think we must fully support that code sequence.
+> 
+> > To have it work that way we have to track the owners of all requested
+> > gpios
+> > somewhere. Or am I wrong here?
+> > Where and how to record these owners? Can gpio system achieve this? gpios
+> > are requested without an owning device.
+> 
+> Yes. But, I believe we need to fully track every GPIO/IRQ owner already
+> right now; if a driver (not the GPIO/IRQ chip driver, but a driver that
+> uses the GPIOs/IRQs) calls gpio_request()/request_irq(), and this patch
+> has already requested them, then we already need to fully track GPIO/IRQ
+> ownership to make sure that the driver's own requests aren't failed
+> because the DT/GPIO core has already requested them on its behalf.
 
-Alright, thanks.
+The driver that tries to use the GPIO requested by this patch before HAS to 
+fail. This is exactly the intention of this patch. We don't want the GPIO to 
+be requested any more, if it is used as an interrupt pin.
+To be able to implement the way you proposed some mails before, I have to be 
+able to do some checks that to my opinion (and if I understand Linus 
+correctly) aren't possible at the moment. So I asked, where and how to record 
+these owners of the GPIOs? And can the GPIO system achieve this and how? Can 
+you please shed some light on this! Thanks!
 
--Kishon
