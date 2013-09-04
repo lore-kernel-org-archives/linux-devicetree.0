@@ -1,57 +1,37 @@
-From: Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
-Date: Wed, 04 Sep 2013 11:14:08 +0200
-Message-ID: <5226F9E0.9070307@linaro.org>
-References: <52260608.2030202@linaro.org>
- <CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
- <5226F2B3.10606@linaro.org>
- <1378284955.17510.64.camel@kazak.uk.xensource.com>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Wed, 04 Sep 2013 11:21:47 +0200
+Message-ID: <5034887.FlGzi4P5YS@lem-wkst-02>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <4094364.ACYUvMRRNa@lem-wkst-02> <52261C5C.9000102@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <1378284955.17510.64.camel-ommiHX4a84BXesXXhkcM7miJhflN2719@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/boot-architecture>
-List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Sender: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <52261C5C.9000102@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/04/2013 10:55 AM, Ian Campbell wrote:
-> On Wed, 2013-09-04 at 10:43 +0200, Andre Przywara wrote:
->
->> I am about to write up a more elaborate technical rationale describing
->> the problems with multiboot on ARM:
->>
->> https://wiki.linaro.org/AndrePrzywara/Multiboot
->
-> Doesn't seem to exist? A search for "mulitboot" doesn't seem to throw up
-> the one you meant either.
+On Wednesday 04 September 2013 11:29:00, Stephen Warren wrote:
+> On 09/02/2013 03:38 AM, Lars Poeschel wrote:
+> > Am Freitag, 30. August 2013, 13:53:45 schrieb Stephen Warren:
+> ...
+> 
+> >> Yet the current patch only addresses a limited set of cases, since it
+> >> doesn't hook the APIs but rather parses the DT. It doesn't cover the
+> >> non-DT case. It should if the feature is useful.
+> > 
+> > As pointed out before, only DT has this problem, that,
+> 
+> That's completely false. Both DT and non-DT can represent the exact same
+> HW, and use the exact same drivers. It's equally possible to write a bug
+> in a board file or a DT file (i.e. a typo or incorrect reading of the
+> schematic) that causes the wrong GPIO or IRQ ID to be used, and hence
+> for there to be conflicts. Any solution to this issue needs to address
+> both cases.
 
-Try again now. As mentioned "I am about to write ..." ;-)
-
-Thanks,
-Andre.
-
->>> So, is having a more generic solution really needed?
->>
->> Not necessarily needed, but useful, I think. As described above I don't
->> see any technical obstacles of doing it in a more generic way, so we
->> could as well go ahead with this. On x86 from time to time the need for
->> additional binaries pops up (early microcode loading, for instance), so
->> why not be be prepared.
->
-> I agree. There have also been occasions where people doing
-> disaggregation have wanted to start multiple initial domains, requiring
-> additional modules at load time. I don't think being generic and
-> extensible is costing too much here.
->
-> Ian.
->
+This is again not the point. This is not what this patch is trying to solve. 
+The patch is trying to solve problem A. But you are talking about problem B.
+Sure I can write a bug in board files and I can write a bug in DT files. The 
+patch is not trying to prevent that. This is a completly different thing.
