@@ -1,101 +1,66 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v3 2/2] media: i2c: adv7343: add OF support
-Date: Wed, 4 Sep 2013 12:43:38 +0530
-Message-ID: <CA+V-a8vwX__S=A=fYCQpvJQLTUMx0C82p=5XdsCtpMKLF5p-TA@mail.gmail.com>
-References: <1374301266-26726-1-git-send-email-prabhakar.csengg@gmail.com>
- <1374301266-26726-3-git-send-email-prabhakar.csengg@gmail.com>
- <5217A3E7.50706@samsung.com> <CA+V-a8tStFRbELAmZL=418VpR9SJgp8uo_4hrtny2UEMEoXakg@mail.gmail.com>
- <20130827152405.GQ19893@e106331-lin.cambridge.arm.com> <CA+V-a8vuYNNiXJ+iGgceaTqHdM_Q9X2dVDyiHHZPJ+-rSbJgLQ@mail.gmail.com>
- <20130902161715.GB18206@e106331-lin.cambridge.arm.com>
+From: Stefan Roese <stefan.roese@gmail.com>
+Subject: Re: [RFC 00/22] OMAPDSS: DT support
+Date: Wed, 04 Sep 2013 09:29:02 +0200
+Message-ID: <5226E13E.1030807@gmail.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com> <2305295.bk1TpuGLMv@avalon> <5224458F.9070401@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130902161715.GB18206@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LDOC <linux-doc@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5224458F.9070401@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Mon, Sep 2, 2013 at 9:47 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Wed, Aug 28, 2013 at 03:43:04AM +0100, Prabhakar Lad wrote:
->> Hi Mark,
+On 28.08.2013 13:40, Tero Kristo wrote:
+> On 08/28/2013 01:14 PM, Tomi Valkeinen wrote:
+>> On 28/08/13 12:48, Tero Kristo wrote:
+>>> On 08/28/2013 12:22 PM, Tomi Valkeinen wrote:
+>>>> Hi,
+>>>>
+>>>> I'm seeing odd clock behavior with Beagle, booting with DT. I'm using
+>>>> v3.11-rc7 + DSS DT patches.
+>>>
+>>> I guess you are not using the clock DT patches? Just making sure I
+>>> didn't break anything.
 >>
->> On Tue, Aug 27, 2013 at 8:54 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> > [fixing up devicetree list address]
->> >
->> Thanks!
+>> No, plain rc7 with my DSS DT patches.
 >>
->> > On Mon, Aug 26, 2013 at 03:41:45AM +0100, Prabhakar Lad wrote:
->> >> Hi Sylwester,
->> >>
->> >> On Fri, Aug 23, 2013 at 11:33 PM, Sylwester Nawrocki
->> >> <s.nawrocki@samsung.com> wrote:
->> >> > Cc: DT binding maintainers
->> >
->> > Cheers!
->> >
->> >> >
->> >> > On 07/20/2013 08:21 AM, Lad, Prabhakar wrote:
->> >> >> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
->> >> >>
->> >> >> add OF support for the adv7343 driver.
->> >> >>
->> >> >> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->> >> >> ---
->> >> > [...]
->> >> >>  .../devicetree/bindings/media/i2c/adv7343.txt      |   48 ++++++++++++++++++++
->> >> >>  drivers/media/i2c/adv7343.c                        |   46 ++++++++++++++++++-
->> >> >>  2 files changed, 93 insertions(+), 1 deletion(-)
->> >> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7343.txt
->> >> >>
->> >> >> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
->> >> >> new file mode 100644
->> >> >> index 0000000..5653bc2
->> >> >> --- /dev/null
->> >> >> +++ b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
->> >> >> @@ -0,0 +1,48 @@
->> >> >> +* Analog Devices adv7343 video encoder
->> >> >> +
->> >> >> +The ADV7343 are high speed, digital-to-analog video encoders in a 64-lead LQFP
->> >> >> +package. Six high speed, 3.3 V, 11-bit video DACs provide support for composite
->> >> >> +(CVBS), S-Video (Y-C), and component (YPrPb/RGB) analog outputs in standard
->> >> >> +definition (SD), enhanced definition (ED), or high definition (HD) video
->> >> >> +formats.
->> >> >> +
->> >> >> +Required Properties :
->> >> >> +- compatible: Must be "adi,adv7343"
->> >> >> +
->> >> >> +Optional Properties :
->> >> >> +- adi,power-mode-sleep-mode: on enable the current consumption is reduced to
->> >> >> +                           micro ampere level. All DACs and the internal PLL
->> >> >> +                           circuit are disabled.
->> >
->> > This seems to be a boolean property, and I couldn't find any description
->> > in the linked datasheet of the constraints under which the unit may be
->> > put into sleep mode.
->> >
->> > Why do we require this property in the dt? Can the driver not always put
->> > a adv734x into sleep mode if it wants to, and then wake it up as
->> > required?
->> >
->> The adv7343 decoder, fits on da850/dm6467 etc.. For the da850 it supports
->> only SD where as the dm6467 supports HD/SD/ED for which DAC 1-6 of
->> Register 0x0 varies for this board so I added them as the platform data
->> but I got a review comment in the ML asking to add entire register as
->> the pdata instead of DAC 1-6, so because of which it is being converted
->> in the same way for DT.
+>>>> So, for some reason, the first clk_set_rate goes wrong. Any ideas?
+>>>
+>>> Hmm, strange. I am not seeing similar behavior, but I am calling
+>>> clk_set_rate in different location.... also I am using clock DT patches
+>>> (don't try the current version though, as I am reworking them.)
+>>>
+>>> [    0.000000] dpll4_ck: 432000000
+>>> [    0.000000] dpll4_m4_ck: 72000000
+>>> [    0.000000] dpll4_m4x2_ck: 144000000
+>>> [    0.000000] dss1_alwon_fck_3430es2: 144000000
+>>> [    0.000000] dpll4_ck: 432000000
+>>> [    0.000000] dpll4_m4_ck: 86400000
+>>> [    0.000000] dpll4_m4x2_ck: 172800000
+>>> [    0.000000] dss1_alwon_fck_3430es2: 172800000
+>>>
+>>> Do you see the error only when setting to some specific rate (86400000)
+>>> or it doesn't matter?
+>>
+>> I also tried setting to 72000000, with the same result.
+>>
+>> Do you know if I can somehow easily get debug prints from the clock
+>> framework, that could lighten up the issue?
 >
-> Not everything that appears in platform data should appear in the dt.
-> This seems more like a run-time decision that a description of the
-> hardware.
->
-> I don't see why we need the "adi,power-mode-sleep-mode" property.
->
-Ok I will drop "adi,power-mode-sleep-mode" and "adi,power-mode-pll-ctrl"
-property from the DT bindings and just have "adi,dac-enable",
-"adi,sd-dac-enable" properties as this cannot be handled runtime.
+> There isn't any good config option for that, I would suggest add prints
+> to the clk_set_rate and then for the clocks you are interested in, print
+> results for the recalc_rate / set_rate ops also.
 
-Regards,
---Prabhakar Lad
+Tomi, did you make any progress on this issue? If not I'll try to dig
+into it later this week.
+
+BTW: Whats the current plan for your OMAPDSS DT patchset? Is it queued
+for v3.12 (this merge windows)? And do you have a git tree to pull the
+latest version from?
+
+Thanks,
+Stefan
+
