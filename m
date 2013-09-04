@@ -1,113 +1,48 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 1/2] hwspinlock/omap: add support for dt nodes
-Date: Wed, 4 Sep 2013 15:04:35 -0500
-Message-ID: <52279253.6080603@ti.com>
-References: <1378230767-54931-1-git-send-email-s-anna@ti.com> <43798031-2D57-44F0-A19C-FD80DB9E9794@codeaurora.org> <52263413.1050108@ti.com> <8E84282E-BAD1-4A2B-849A-167C32F629DA@codeaurora.org> <52266409.90908@ti.com> <71570936-39F5-4AE1-AD05-163EA3179271@codeaurora.org> <52275F7D.4030305@ti.com> <9BE41927-7C6C-4E62-860B-0288627E9421@codeaurora.org> <522767E5.9080302@ti.com> <F363B498-5648-4C19-BC16-096EE12C29CE@codeaurora.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Wed, 04 Sep 2013 14:13:13 -0600
+Message-ID: <52279459.1010100@wwwdotorg.org>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <CACRpkdYeMGkju345g9d_ifZEOiVXftzSqU=1CfGO=qnt6Vj-Bg@mail.gmail.com> <52261C8B.2030906@wwwdotorg.org> <5584741.67AvVurcHF@lem-wkst-02>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <F363B498-5648-4C19-BC16-096EE12C29CE@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5584741.67AvVurcHF@lem-wkst-02>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/04/2013 12:51 PM, Kumar Gala wrote:
-> 
-> On Sep 4, 2013, at 12:03 PM, Suman Anna wrote:
-> 
->>>>>>>>>
->>>>>>>>>> HwSpinlock IP is present only on OMAP4 and other newer SoCs,
->>>>>>>>>> which are all device-tree boot only. This patch adds the
->>>>>>>>>> base support for parsing the DT nodes, and removes the code
->>>>>>>>>> dealing with the traditional platform device instantiation.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>>>>>>>> ---
->>>>>>>>>> .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 28 ++++++++++
->>>>>>>>>> arch/arm/mach-omap2/Makefile                       |  3 --
->>>>>>>>>> arch/arm/mach-omap2/hwspinlock.c                   | 60 ----------------------
->>>>>>>>>> drivers/hwspinlock/omap_hwspinlock.c               | 21 ++++++--
->>>>>>>>>> 4 files changed, 45 insertions(+), 67 deletions(-)
->>>>>>>>>> create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>>>>>>>>> delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
->>>>>>>>>>
->>>>>>>>>> diff --git a/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>>>>>>>>> new file mode 100644
->>>>>>>>>> index 0000000..adfb8ad
->>>>>>>>>> --- /dev/null
->>>>>>>>>> +++ b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>>>>>>>>> @@ -0,0 +1,28 @@
->>>>>>>>>> +OMAP4+ HwSpinlock Driver
->>>>>>>>>> +
->>>>>>>>>> +Required properties:
->>>>>>>>>> +- compatible:		Currently supports only "ti,omap4-hwspinlock" for
->>>>>>>>>> +				OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
->>>>>>>>>> +- reg:			Contains the hwspinlock register address range (base
->>>>>>>>>> +			address and length)
->>>>>>>>>> +- ti,hwmods:		Name of the hwmod associated with the hwspinlock device
->>>>>>>>>> +
->>>>>>>>>> +Optional properties:
->>>>>>>>>> +- base_id:		Base Id for the locks for a particular hwspinlock
->>>>>>>>>> +			device. If not mentioned, a default value of 0 is used.
->>>>>>>>>> +			This property is mandatory ONLY if a SoC has several
->>>>>>>>>> +			hwspinlock devices. There are currently no such OMAP
->>>>>>>>>> +			SoCs.
->>>>>>>>>
->>>>>>>>> Should this be ti,base_id ? [ I know its kinda generic in its intent for any SoC w/multiple blocks ]
->>>>>>>>
->>>>>>>> I didn't add the "ti," prefix exactly for the same reason - it is
->>>>>>>> generic w.r.t the hwspinlock core irrespective of the SoC family, and
->>>>>>>> there is nothing ti or OMAP specific about it. I have added it to keep
->>>>>>>> the DT node definition in sync with the driver code. If it is too
->>>>>>>> generic a name, it can always be renamed as hwlock_base_id. This will be
->>>>>>>> SoC agnostic property for the hwspinlock driver. What do you think?
->>>>>>>
->>>>>>> I'm wondering if we should use cell-index for this purpose.
->>>>>>
->>>>>> I didn't get you completely. Do you intend to compute the base_id using
->>>>>> cell-index and number of locks (which may be a separate field altogether
->>>>>> if this information cannot be read from the h/w)? My understanding is
->>>>>> that cell-index is primarily used for identifying the h/w instance number.
->>>>>
->>>>> I was suggesting using cell-index instead of base_id.  What we should probably due is have a devicetree/bindings/hwlock/hwlock.txt that would describe generic properties like this and just reference that in the omap binding spec.
->>>>
->>>> Common hwlock.txt sounds good. Will make the change.
->>>>
->>>>>
->>>>> I'm thinking if we dont use cell-index, that it should probably be hwlock-base-id
->>>>>
->>>>
->>>> I prefer to use hwlock-base-id. I think we should also be defining a
->>>> common property name for number of locks, say hwlock-num-locks.
+On 09/04/2013 02:35 AM, Lars Poeschel wrote:
+> On Wednesday 04 September 2013 11:29:47, Stephen Warren wrote:
+>> On 09/03/2013 06:35 AM, Linus Walleij wrote:
+>>> On Fri, Aug 30, 2013 at 9:53 PM, Stephen Warren <swarren@wwwdotorg.org> 
+> wrote:
+>>>> I still haven't seen an answer to why we really care about this; how
+>>>> many times has code actually allocated the same GPIO/IRQ when it
+>>>> shouldn't, in a way that it wasn't detectable by some other mechanism,
+>>>> i.e. the feature just not working? Why are we even trying to solve this
+>>>> issue? I'm not totally convinced it even makes sense to try and solve it.
 >>>
->>> I'm good with that, cell-index is always funny so might as well be explicit.
->>>
->>> I'm also good with hwlock-num-locks, I'll update the msm spinlock driver to use this.
->>>
->>> Can you also maybe add some helper functions into the hwspinlock core to return these values so we both don't duplicate code in drivers and maintain consistency.
+>>> We care about this because a number of OMAP boards are not
+>>> working properly when booted from device tree, and they have a hard
+>>> time figuring out a solution to the problem. Last try exploded. Now
+>>> they are looking to create a patch that will fix the actual problem.
 >>
->> I am trying to understand what you would need these for. Your driver
->> would already know the base_id and num_locks, since these are used in
->> the registration function.
+>> Is something missing from /proc/interrupts or /sys/kernel/debug/gpios?
+>> If so, let's just add it.
 > 
-> 
-> It would be something simple like:
-> 
-> static inline int of_get_hwlock_base_id (struct device_node *dn) {
-> #ifdef CONFIG_OF
-> 	u32 val;
-> 
-> 	if (of_property_read_u32(dn, "hwlock-base-id", &val)
-> 		return val;
-> #endif
-> 	return 0;
-> }
-> 
+> That would require procfs to be mounted to /proc and even CONFIG_PROC_FS to be 
+> compiled in. Drivers have to work without that requirement.
+> That would require CONFIG_DEBUG_FS to be set, right? Drivers have to work 
+> without that.
 
-Sorry I misinterpreted, thought you were asking for accessor functions
-after, and not of_ helpers. Yes, will add these as well.
+Drivers will/could work fine without those options enabled and
+filesystems mounted. Nothing in this patch series affects that, nor
+would not applying the patch series.
 
-regards
-Suman
+However, you only need this patch series if there's some kind of
+problematic resource conflict and you want to debug it. If your system
+has a problem and you want to debug it, it seems entirely reasonable to
+make use of (require making use of) the debugging tools that are already
+part of the kernel.
