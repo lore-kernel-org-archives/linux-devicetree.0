@@ -1,64 +1,57 @@
-From: Lars Poeschel <poeschel@lemonage.de>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Wed, 04 Sep 2013 11:05:58 +0200
-Message-ID: <3144247.j2q6H0KWZx@lem-wkst-02>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <1521079.WSLhhfqBXl@lem-wkst-02> <52261BF0.4090106@wwwdotorg.org>
+From: Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
+Date: Wed, 04 Sep 2013 11:14:08 +0200
+Message-ID: <5226F9E0.9070307@linaro.org>
+References: <52260608.2030202@linaro.org>
+ <CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
+ <5226F2B3.10606@linaro.org>
+ <1378284955.17510.64.camel@kazak.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <52261BF0.4090106@wwwdotorg.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <1378284955.17510.64.camel-ommiHX4a84BXesXXhkcM7miJhflN2719@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/boot-architecture>
+List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Sender: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 04 September 2013 11:27:12, Stephen Warren wrote:
-> On 09/02/2013 03:25 AM, Lars Poeschel wrote:
-> > Some leagcy drivers currently do this:
-> > 
-> > request_gpio(gpio);
-> > gpio_direction_input(gpio);
-> > request_irq(gpio_to_irq(gpio));
-> > 
-> > In that case request_irq should not fail because the driver is already the
-> > correct owner of this gpio. But if some other entity owns this gpio it
-> > should fail.
-> 
-> Yes.
-> 
-> > Also if I understand you correct the other way round should also possible:
-> > 
-> > request_irq(gpio_to_irq(gpio));
-> > request_gpio(gpio);
-> > gpio_direction_input(gpio);
-> > 
-> > request_irq() also requests the gpio then but the following request_gpio()
-> > should also not fail.
-> 
-> I don't believe that code sequence is currently banned. If we want to
-> ban it, we should document that. Until this is documented as being
-> banned, I think we must fully support that code sequence.
-> 
-> > To have it work that way we have to track the owners of all requested
-> > gpios
-> > somewhere. Or am I wrong here?
-> > Where and how to record these owners? Can gpio system achieve this? gpios
-> > are requested without an owning device.
-> 
-> Yes. But, I believe we need to fully track every GPIO/IRQ owner already
-> right now; if a driver (not the GPIO/IRQ chip driver, but a driver that
-> uses the GPIOs/IRQs) calls gpio_request()/request_irq(), and this patch
-> has already requested them, then we already need to fully track GPIO/IRQ
-> ownership to make sure that the driver's own requests aren't failed
-> because the DT/GPIO core has already requested them on its behalf.
+On 09/04/2013 10:55 AM, Ian Campbell wrote:
+> On Wed, 2013-09-04 at 10:43 +0200, Andre Przywara wrote:
+>
+>> I am about to write up a more elaborate technical rationale describing
+>> the problems with multiboot on ARM:
+>>
+>> https://wiki.linaro.org/AndrePrzywara/Multiboot
+>
+> Doesn't seem to exist? A search for "mulitboot" doesn't seem to throw up
+> the one you meant either.
 
-The driver that tries to use the GPIO requested by this patch before HAS to 
-fail. This is exactly the intention of this patch. We don't want the GPIO to 
-be requested any more, if it is used as an interrupt pin.
-To be able to implement the way you proposed some mails before, I have to be 
-able to do some checks that to my opinion (and if I understand Linus 
-correctly) aren't possible at the moment. So I asked, where and how to record 
-these owners of the GPIOs? And can the GPIO system achieve this and how? Can 
-you please shed some light on this! Thanks!
+Try again now. As mentioned "I am about to write ..." ;-)
 
+Thanks,
+Andre.
+
+>>> So, is having a more generic solution really needed?
+>>
+>> Not necessarily needed, but useful, I think. As described above I don't
+>> see any technical obstacles of doing it in a more generic way, so we
+>> could as well go ahead with this. On x86 from time to time the need for
+>> additional binaries pops up (early microcode loading, for instance), so
+>> why not be be prepared.
+>
+> I agree. There have also been occasions where people doing
+> disaggregation have wanted to start multiple initial domains, requiring
+> additional modules at load time. I don't think being generic and
+> extensible is costing too much here.
+>
+> Ian.
+>
