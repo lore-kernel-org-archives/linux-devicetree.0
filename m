@@ -1,66 +1,85 @@
-From: Mike Dunn <mikedunn@newsguy.com>
-Subject: Re: [PATCH] pwm: pxa: add device tree support to pwm driver
-Date: Wed, 04 Sep 2013 08:44:19 -0700
-Message-ID: <52275553.9060104@newsguy.com>
-References: <1378236233-15637-1-git-send-email-mikedunn@newsguy.com>
- <201309040020.55029.marex@denx.de> <5227425E.7030806@newsguy.com>
- <522745D4.3030601@cogentembedded.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 1/2] hwspinlock/omap: add support for dt nodes
+Date: Wed, 4 Sep 2013 11:27:41 -0500
+Message-ID: <52275F7D.4030305@ti.com>
+References: <1378230767-54931-1-git-send-email-s-anna@ti.com> <43798031-2D57-44F0-A19C-FD80DB9E9794@codeaurora.org> <52263413.1050108@ti.com> <8E84282E-BAD1-4A2B-849A-167C32F629DA@codeaurora.org> <52266409.90908@ti.com> <71570936-39F5-4AE1-AD05-163EA3179271@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <522745D4.3030601@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Marek Vasut <marex@denx.de>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <71570936-39F5-4AE1-AD05-163EA3179271@codeaurora.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/04/2013 07:38 AM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 04-09-2013 18:23, Mike Dunn wrote:
-> 
->>>> +#ifdef CONFIG_OF
->>>> +/* use the platform_device id table for OF match table data */
->>>> +static struct of_device_id pwm_of_match[] = {
->>>> +    { .compatible = "marvell,pxa25x-pwm", .data = &pwm_id_table[0] },
->>>> +    { .compatible = "marvell,pxa27x-pwm", .data = &pwm_id_table[1] },
->>>> +    { .compatible = "marvell,pxa168-pwm", .data = &pwm_id_table[2] },
->>>> +    { .compatible = "marvell,pxa910-pwm", .data = &pwm_id_table[3] },
->>>> +    { }
->>>> +};
->>>> +MODULE_DEVICE_TABLE(of, pwm_of_match);
-> 
->>> Are PXA2xx and PXA3xx PWM impleemntations not all the same ? If so, why not just
->>> stick with pxa25x-pwm only for all of the CPUs (aka. the lowest CPU model). Then
->>> the table would have but a single entry.
-> 
->> I'm just echoing the existing platform_device_id table...
-> 
->> static const struct platform_device_id pwm_id_table[] = {
->>     /*   PWM    has_secondary_pwm? */
->>     { "pxa25x-pwm", 0 },
->>     { "pxa27x-pwm", HAS_SECONDARY_PWM },
->>     { "pxa168-pwm", 0 },
->>     { "pxa910-pwm", 0 },
->>     { },
->> };
->> MODULE_DEVICE_TABLE(platform, pwm_id_table);
-> 
->    Unlike 'struct platform_device_id', the "compatible" property can't have
-> wildcards such as "pxa25x-pwm". You should choose one model (which e.g. was
-> produced first in the PXA25x series) and use that.
+Kumar,
 
+>>>>>
+>>>>>> HwSpinlock IP is present only on OMAP4 and other newer SoCs,
+>>>>>> which are all device-tree boot only. This patch adds the
+>>>>>> base support for parsing the DT nodes, and removes the code
+>>>>>> dealing with the traditional platform device instantiation.
+>>>>>>
+>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>>>> ---
+>>>>>> .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 28 ++++++++++
+>>>>>> arch/arm/mach-omap2/Makefile                       |  3 --
+>>>>>> arch/arm/mach-omap2/hwspinlock.c                   | 60 ----------------------
+>>>>>> drivers/hwspinlock/omap_hwspinlock.c               | 21 ++++++--
+>>>>>> 4 files changed, 45 insertions(+), 67 deletions(-)
+>>>>>> create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
+>>>>>> delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..adfb8ad
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
+>>>>>> @@ -0,0 +1,28 @@
+>>>>>> +OMAP4+ HwSpinlock Driver
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible:		Currently supports only "ti,omap4-hwspinlock" for
+>>>>>> +				OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
+>>>>>> +- reg:			Contains the hwspinlock register address range (base
+>>>>>> +			address and length)
+>>>>>> +- ti,hwmods:		Name of the hwmod associated with the hwspinlock device
+>>>>>> +
+>>>>>> +Optional properties:
+>>>>>> +- base_id:		Base Id for the locks for a particular hwspinlock
+>>>>>> +			device. If not mentioned, a default value of 0 is used.
+>>>>>> +			This property is mandatory ONLY if a SoC has several
+>>>>>> +			hwspinlock devices. There are currently no such OMAP
+>>>>>> +			SoCs.
+>>>>>
+>>>>> Should this be ti,base_id ? [ I know its kinda generic in its intent for any SoC w/multiple blocks ]
+>>>>
+>>>> I didn't add the "ti," prefix exactly for the same reason - it is
+>>>> generic w.r.t the hwspinlock core irrespective of the SoC family, and
+>>>> there is nothing ti or OMAP specific about it. I have added it to keep
+>>>> the DT node definition in sync with the driver code. If it is too
+>>>> generic a name, it can always be renamed as hwlock_base_id. This will be
+>>>> SoC agnostic property for the hwspinlock driver. What do you think?
+>>>
+>>> I'm wondering if we should use cell-index for this purpose.
+>>
+>> I didn't get you completely. Do you intend to compute the base_id using
+>> cell-index and number of locks (which may be a separate field altogether
+>> if this information cannot be read from the h/w)? My understanding is
+>> that cell-index is primarily used for identifying the h/w instance number.
+> 
+> I was suggesting using cell-index instead of base_id.  What we should probably due is have a devicetree/bindings/hwlock/hwlock.txt that would describe generic properties like this and just reference that in the omap binding spec.
 
-Thanks Sergei, I forgot about that.  I also forgot to add a file to
-Documentation/devicetree/bindings/pwm/  Looks like I have more work.
+Common hwlock.txt sounds good. Will make the change.
 
-Mike
+> 
+> I'm thinking if we dont use cell-index, that it should probably be hwlock-base-id
+> 
+
+I prefer to use hwlock-base-id. I think we should also be defining a
+common property name for number of locks, say hwlock-num-locks.
+
+regards
+Suman
+
