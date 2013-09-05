@@ -1,118 +1,81 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
-Date: Thu, 5 Sep 2013 09:11:59 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA0C907@DBDE04.ent.ti.com>
-References: <1377828449-18912-1-git-send-email-b32955@freescale.com>
- <522697E9.1050208@freescale.com> <20130904095523.GT3084@sirena.org.uk>
- <52270B8E.5080402@freescale.com> <20130904113322.GA5859@sirena.org.uk>
- <20130905014350.GA2261@gmail.com>
- <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com>
- <20130905020435.GA3970@gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>
- <522817D7.1010206@freescale.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA0C885@DBDE04.ent.ti.com>
- <5228369A.9000904@freescale.com>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Thu, 5 Sep 2013 17:30:26 +0800
+Message-ID: <52284F32.2020302@freescale.com>
+References: <1377828449-18912-1-git-send-email-b32955@freescale.com> <522697E9.1050208@freescale.com> <20130904095523.GT3084@sirena.org.uk> <52270B8E.5080402@freescale.com> <20130904113322.GA5859@sirena.org.uk> <20130905014350.GA2261@gmail.com> <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com> <20130905020435.GA3970@gmail.com> <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com> <522817D7.1010206@freescale.com> <20980858CB6D3A4BAE95CA194937D5E73EA0C885@DBDE04.ent.ti.com> <5228369A.9000904@freescale.com> <20980858CB6D3A4BAE95CA194937D5E73EA0C907@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5228369A.9000904@freescale.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Huang Shijie <b32955@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, Huang Shijie <shijie8@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA0C907@DBDE04.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Gupta, Pekon" <pekon@ti.com>
+Cc: Huang Shijie <shijie8@gmail.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-PiDkuo4gMjAxM+W5tDA55pyIMDXml6UgMTQ6MzIsIEd1cHRhLCBQZWtvbiDlhpnpgZM6DQo+ID4+
-IOS6jiAyMDEz5bm0MDnmnIgwNeaXpSAxMjoyNSwgR3VwdGEsIFBla29uIOWGmemBkzoNCj4gPj4+
-IEkgd291bGQgcmF0aGVyIHN1Z2dlc3QgdG8gZ2V0IHRoZXNlIHZhbHVlcyBmcm9tIERUIGJpbmRp
-bmdzIHNwZWNpZmljIHRvDQo+ID4+IGNvdWxkIHlvdSBzaG93IG1lIHdoYXQgdmFsdWVzIHNob3Vs
-ZCBpIHNldCBpbiB0aGUgRFQgYmluZGluZ3M/DQo+ID4+IFRoZSBzcGkgbm9yIGNvbW1hbmQ/IG9y
-IHRoZSBkdW1teT8gb3Igc29tZXRoaW5nIGVsc2U/DQo+ID4+DQo+ID4gVGFraW5nIGV4YW1wbGUg
-b2YgUkVBRCBjb21tYW5kIGZvciBTMjVGTDEyOFMgTk9SIGZsYXNoIGRldmljZXMuLg0KPiA+IFMy
-NUZMMTI4UyBzdXBwb3J0cyBmb2xsb3dpbmcgZmxhdm9ycyBvZiBSRUFEIG1vZGVzLg0KPiA+IAk0
-RkFTVF9SRUFEIFJlYWQgRmFzdCAoNC1ieXRlIEFkZHJlc3MpIDBDDQo+ID4gCTRSRUFEIFJlYWQg
-KDQtYnl0ZSBBZGRyZXNzKSAxMw0KPiA+IAk0RE9SIFJlYWQgRHVhbCBPdXQgKDQtYnl0ZSBBZGRy
-ZXNzKSAzQw0KPiA+IAk0UU9SIFJlYWQgUXVhZCBPdXQgKDQtYnl0ZSBBZGRyZXNzKSA2Qw0KPiA+
-IAk0RElPUiBEdWFsIEkvTyBSZWFkICg0LWJ5dGUgQWRkcmVzcykgQkMNCj4gPiAJNFFJT1IgUXVh
-ZCBJL08gUmVhZCAoNC1ieXRlIEFkZHJlc3MpIEVDDQo+ID4gCTRERFJGUiBSZWFkIEREUiBGYXN0
-ICg0LWJ5dGUgQWRkcmVzcykgMEUNCj4gPiAJNEREUkRJT1IgRERSIER1YWwgSS9PIFJlYWQgKDQt
-Ynl0ZSBBZGRyZXNzKSBCRQ0KPiA+IAk0RERSUUlPUiBERFIgUXVhZCBJL08gUmVhZCAoNC1ieXRl
-IEFkZHJlc3MpIEVFDQo+ID4NCj4gPiBCdXQgZHVlIHRvIGJvYXJkIGNvbnN0cmFpbnMgYW5kIHlv
-dXIgdXNlLWNhc2UsIHlvdSB3b3VsZCBwcmVmZXIgb25seSBmZXcNCj4gPiByZWFkIG1vZGVzLiBU
-aG9zZSBvcGNvZGVzIHlvdSBjYW4gc3BlY2lmeSB2aWEgZm9sbG93aW5nIERUIHByb3BlcnR5Lg0K
-PiA+ICJxc3BpLCBmbGFzaC1yZWFkLWNvbW1hbmQiDQo+ID4NCj4gPiBTYW1lIHdheSB5b3UgY2Fu
-IGhhdmUgRFQgcHJvcGVydHkgZm9yDQo+ID4gInFzcGksIGZsYXNoLXdyaXRlLWNvbW1hbmQiDQo+
-ID4gInFzcGksIGZsYXNoLWVyYXNlLWNvbW1hbmQiDQo+ID4gInFzcGksIGZsYXNoLWFkZHJlc3Mt
-bW9kZSIgPTw0LWJ5dGUvMy1ieXRlPg0KPiA+ICJxc3BpLCBmbGFzaC1kdW1teS1jeWNsZXMiID08
-aW50ZWdlcj4NCj4gdGhhbmtzIGZvciB5b3VyIHN1Z2dlc3Rpb24uDQo+IA0KPiBJIGV2ZXIgdGhv
-dWdodCBvZiB0aGlzIHNvbHV0aW9uLg0KPiANCj4gQnV0IGkgZG8gbm90IHRoaW5rIHRoaXMgaXMg
-bm90IGEgZ29vZCBzb2x1dGlvbi4gOigNCj4gDQpTb3JyeS4uIEkgZGluJ3QgbWVhbiB0byBiZSBv
-ZmZlbnNpdmUsIEkgc2hvdWxkIHJlLXdvcmQgbXkgZmVlZGJhY2sgYXMNCnlvdXIgcHJldmlvdXMg
-c29sdXRpb24gaXMgbm90IHNjYWxhYmxlLiBNeSBzdWdnZXN0aW9uIGlzIGp1c3QgYSANCmZvb2Qt
-Zm9yLXRob3VnaHQsIGFwcHJvdmFscyBmcm9tIG90aGVyIHVzZXJzIGlzIHJlcXVpcmVkIGhlcmUu
-DQoNCj4gRmlyc3RseSwgdGhlIE5PUiBmbGFzaCBTMjVGTDEyOFMgbWF5IGJlIHVzZWQgYnkgb3Ro
-ZXIgYm9hcmRzIG9yIG90aGVyDQo+IHBsYXRmb3JtLg0KPiBTbyBpZiBvdGhlciBwZXJzb24gdXNl
-cyB0aGUgUzI1RkwxMjhTLCBoZSBoYXMgdG8gYWRkIHRoZSBTUEkgTk9SDQo+IGNvbW1hbmQoc3Vj
-aCBhcyAweGJlLCAweGVjKSwNCj4gdGhpcyBpcyByZWFsbHkgbm90IG5lZWRlZC4gV2h5IG5vdCBh
-ZGQgdGhlc2UgU1BJIE5PUiBjb21tYW5kIG5vdz8NCj4gDQo+IA0KPiBTZWNvbmRseSwgdGhpcyBj
-b250cm9sbGVyIG5vdCBvbmx5IG5lZWRzIHRoZSB3cml0ZS9lcmFzZS9yZWFkLCBidXQgYWxzbw0K
-PiBuZWVkIG90aGVyIFNQSSBOT1IgY29tbWFuZHMNCj4gc3VjaCBhcyBXcml0ZS1FbmFibGUvUmVh
-ZC1zdGF0dXMvQ29uZmlndXJhdGUgdGhlIFJlZ2lzdGVyLiBpZiB3ZSBhZGQNCj4gdGhlc2UgU1BJ
-IE5PUiBjb21tYW5kcyB0bw0KPiB0aGUgRFQgYmluZGluZywgaXQgd2lsbCBiZSBtb3JlIHVnbHkg
-dG8gdmVyeW9uZS4gVGhhdCdzIHdoeSB0aGUgUGF0Y2ggMQ0KPiBpcyBuZWVkZWQuDQo+IA0KPiAN
-Cj4gVGhlIG9ubHkgdmFsdWUgc2hvdWxkIGJlIHNldCBpbiB0aGUgRFQgaXMgdGhlIF9kdW1teV8g
-dmFsdWUuIEJ1dCBBZGQgdGhlDQo+IGR1bW15IHN1cHBvcnQgc2hvdWxkIGJlIGFuIG90aGVyDQo+
-IHBhdGNoc2V0J3Mgam9iLiBJIHRoaW5rIGl0IGlzIGEgbGl0dGxlIGNvbXBsaWNhdGVkIHRvIGFk
-ZCB0aGUgZHVtbXkgc3VwcG9ydC4NCj4gDQo+IFRoZSBmYXN0LXJlYWQgdXNlcyA4Yml0IGR1bW15
-LCB0aGUgcXVhZC1yZWFkIG1heSBuZWVkcyA2Yml0IGR1bW15LCBhbmQNCj4gc28gb24uLg0KPiAN
-Cj4gSG93IGNhbiB3ZSB0cmFuc2ZlciB0aGUgZHVtbXkgdmFsdWUgdG8gdGhlIGRldmljZT8gQWRk
-IGEgdmFsdWUgdG8gdGhlDQo+IHNwaV90cmFuc2Zlcnt9Pw0KPiBJIHBsYW5lZCB0byBzdWJtaXQg
-YW5vdGhlciBwYXRjaHNldCB0byBmaXggdGhlIGR1bW15IGlzc3VlLCBzaW5jZSBpdA0KPiBtYXli
-ZSBuZWVkcyBtb3JlIGRpc2N1c3Npb24sDQo+IGkgZGlkIG5vdCBpbmNsdWRlIHRoZSBkdW1teSBw
-YXRjaGVzIGluIHRoaXMgcGF0Y2ggc2V0Lg0KPiANCk5vLCBTUEkgZ2VuZXJpYyBmcmFtZXdvcmsg
-KHN0cnVjdCBzcGlfdHJhbnNmZXIsIHNwaV9tZXNzYWdlLC4uLikNCnNob3VsZCBiZSBrZXB0IGlu
-ZGVwZW5kZW50IG9mIGFueSBNVEQgZmxhc2ggc3BlY2lmaWMgZGF0YSBoYW5kbGVycy4NCjx3YW5n
-eXVoYW5nMjAxNEBnbWFpbC5jb20+IGFkZGVkIHR3byBuZXcgZmllbGRzICh0eF9uYml0cywgcnhf
-bmJpdHMpDQp0byBzcGlfZGV2aWNlIGJlY2F1c2UgdGhvc2UgcHJvcGVydGllcyBhcmUgcGFydCBv
-ZiBTUEkgcHJvdG9jb2wuDQpCdXQsICdkdW1teV9jeWNsZXMnIGlzIG5vIHJlbGF0ZWQgdG8gU1BJ
-IHByb3RvY29sLiBTbyBpdCBzaG91bGQgYmUga2VwdCBvdXQNCm9mIFNQSSBnZW5lcmljIGZyYW1l
-d29yay4NClRoaXMgaXMgd2hlcmUgaWYgeW91IGNvdWxkIHVzZSBEVCBiYXNlZCBhcHByb2FjaCwg
-dGhpbmdzIHdvdWxkIGhhdmUgYmVlbg0Kc2ltcGxlciwgYmVjYXVzZSB5b3UgZ2l2ZSBlbmQtdXNl
-ciB0aGUgZnJlZWRvbSB0byBlbnRlciBkZXZpY2UtaW5mbyBmcm9tDQpkZXZpY2UgZGF0YXNoZWV0
-Lg0KPiANCj4gDQo+IA0KPiANCj4gDQo+IA0KPiANCj4gPiBFeGFtcGxlOiBIb3cgdG8gc2VsZWN0
-IG9wY29kZXMgaW4gRFQgPw0KPiA+IChzdGVwLTEpIGVsaW1pbmF0ZSBvcGNvZGUgd2hpY2ggY2Fu
-bm90IGJlIHVzZWQgZHVlIHRvIGJvYXJkIGNvbnN0cmFpbnMuDQo+ID4gICB5b3VyIGJvYXJkIGNv
-bm5lY3RzIG9ubHkgMiBkYXRhIEkvTyBiZXR3ZWVuIGRldmljZSBhbmQgY29udHJvbGxlciwgIFNv
-IHlvdQ0KPiA+ICAgY2Fubm90IHVzZSBhbnkgb2YgdGhlIFFVQUQgIFJlYWQgb3Bjb2Rlcy4gVGh1
-cyB5b3VyIGNob2ljZSBpcyBsaW1pdGVkIHRvDQo+ID4gICBEVUFMIG9yIFNJTkdMRSBtb2RlcyBv
-bmx5Lg0KPiB3ZSBoYXZlIDQgZGF0YSBJL08gbGluZXMgYmV0d2VlbiB0aGUgZGV2aWNlIGFuZCBj
-b250cm9sbGVyLCBpIG9ubHkgbmVlZA0KPiB0aGUgUXVhZCBtb2RlLiA6KQ0KPiANCk1heSBiZSBi
-ZWNhdXNlIHlvdSBhcmUgY3VycmVudGx5IHdvcmtpbmcgb24gYSBkZXZlbG9wbWVudCBFVk0gb3IN
-CmRlbW8gYm9hcmQsIHNvIHlvdSBjYW4gbGl2ZSB3aXRoIFFVQUQgbW9kZS4NCkJ1dCB3aGVuIGN1
-c3RvbWVyIHdpbGwgaGF2ZSBjdXN0b20gYm9hcmRzIHdpdGggZGlmZmVyZW50IFFTUEkgZGV2aWNl
-cyANCnRoZW4geW91IHdvdWxkIGVuZC11cCAgc3VwcG9ydGluZyBhbGwgc29ydHMgb2YgY29uZmln
-dXJhdGlvbnMgOi0pDQpBbmQgaW4gcHJvZHVjdGlvbiBzY2VuYXJpb3MsIGl04oCZcyB0aGUgcHJp
-Y2UgZWNvbm9taWNzIHdoaWNoIG1vc3RseSBkb21pbmF0ZXMNCndoaWNoIHBhcnQgdG8gY2hvb3Nl
-IGFuZCBob3cgdG8gY29ubmVjdCBpdCBvbiBib2FyZC4NCkxpa2UgYXMgSSByZW1lbWJlciBzb21l
-IGZyZWVzY2FsZSBib2FyZHMgaGF2ZSBXSU5CT05EIFFTUEkgZmxhc2gNCndoaWNoIHVzZXMgZGlm
-ZmVyZW50IG9wY29kZXMgYW5kIHNlbWFudGljcywgc28geW91IG1pZ2h0IG5lZWQgdG8gc3VwcG9y
-dA0KdGhhdCB0b28gaW4gZnV0dXJlLg0KDQpTbyBteSBzdWdnZXN0aW9uIGlzIHRoaW5rIGFnYWlu
-LiBBcyB5b3UgYXJlIGludml0aW5nIGxvdCBvZiByZS13b3JrIGZvciB5b3Vyc2VsZg0KYW5kIGZv
-ciBvdGhlcnMgdG9vIDotKQ0KDQpBbnl3YXksIGlmIHlvdSByZWFsbHkgd2FudCB0byBjb250aW51
-ZSB3aXRoIHRoaXMgaXMsIHRoZW4gcGxlYXNlIHJlLW5hbWUNCmluY2x1ZGUvbGludXgvbXRkL3Nw
-aS1ub3IuaCB0bw0KaW5jbHVkZS9saW51eC9tdGQvc3BpLWZzbC1xdWFkc3BpLmgNCmJlY2F1c2Ug
-c29tZXRoaW5nIHNwZWNpZmljIGZvciB5b3VyIGRyaXZlciBzaG91bGQgbm90IGNvbmZsaWN0IHdp
-dGgNCmdlbmVyaWMgc3BpLW5vciBmcmFtZXdvcmsgYWRkZWQgbGF0ZXIuDQoNCndpdGggcmVnYXJk
-cywgcGVrb24NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWFybS1rZXJuZWwK
+=E4=BA=8E 2013=E5=B9=B409=E6=9C=8805=E6=97=A5 17:11, Gupta, Pekon =E5=86=
+=99=E9=81=93:
+> No, SPI generic framework (struct spi_transfer, spi_message,...)
+> should be kept independent of any MTD flash specific data handlers.
+> <wangyuhang2014@gmail.com>  added two new fields (tx_nbits, rx_nbits)
+> to spi_device because those properties are part of SPI protocol.
+> But, 'dummy_cycles' is no related to SPI protocol. So it should be ke=
+pt out
+> of SPI generic framework.
+> This is where if you could use DT based approach, things would have b=
+een
+> simpler, because you give end-user the freedom to enter device-info f=
+rom
+> device datasheet.
+ok. i think i do not need to change the spi code now.
+>> > =20
+>> > =20
+>> > =20
+>> > =20
+>> > =20
+>> > =20
+>> > =20
+>>> >  >  Example: How to select opcodes in DT ?
+>>> >  >  (step-1) eliminate opcode which cannot be used due to board c=
+onstrains.
+>>> >  >     your board connects only 2 data I/O between device and con=
+troller,  So you
+>>> >  >     cannot use any of the QUAD  Read opcodes. Thus your choice=
+ is limited to
+>>> >  >     DUAL or SINGLE modes only.
+>> >  we have 4 data I/O lines between the device and controller, i onl=
+y need
+>> >  the Quad mode.:)
+>> > =20
+> May be because you are currently working on a development EVM or
+> demo board, so you can live with QUAD mode.
+> But when customer will have custom boards with different QSPI devices
+> then you would end-up  supporting all sorts of configurations:-)
+> And in production scenarios, it=E2=80=99s the price economics which m=
+ostly dominates
+> which part to choose and how to connect it on board.
+> Like as I remember some freescale boards have WINBOND QSPI flash
+> which uses different opcodes and semantics, so you might need to supp=
+ort
+> that too in future.
+>
+> So my suggestion is think again. As you are inviting lot of re-work f=
+or yourself
+> and for others too:-)
+>
+> Anyway, if you really want to continue with this is, then please re-n=
+ame
+> include/linux/mtd/spi-nor.h to
+> include/linux/mtd/spi-fsl-quadspi.h
+> because something specific for your driver should not conflict with
+> generic spi-nor framework added later.
+i think there is no specific thing for this driver. The S25FL128S is a=20
+common flash,
+other person may uses it too. Could you show me what is specific?
+
+so, i prefer to spi-nor.h.
+
+thanks
+Huang Shijie
+
