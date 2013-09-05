@@ -1,39 +1,95 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: Re: [PATCH RFC v3] mmc: sdhci-msm: Add support for MSM chipsets
-Date: Thu, 05 Sep 2013 18:57:46 +0300
-Message-ID: <5228A9FA.90003@mm-sol.com>
-References: <1377017077-9834-1-git-send-email-gdjakov@mm-sol.com> <521C699A.2010609@samsung.com>
+From: Afzal Mohammed <afzal@ti.com>
+Subject: Re: [PATCH RFC 0/6] ARM: OMAP2+: AM43x/AM335x prcm reset driver
+Date: Thu, 5 Sep 2013 21:26:13 +0530
+Message-ID: <5228A99D.4020702@ti.com>
+References: <cover.1378129416.git.afzal@ti.com> <1378375634.3948.10.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <521C699A.2010609@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, grant.likely@linaro.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, Subhash Jadavani <subhashj@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1378375634.3948.10.camel@pizza.hi.pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Benoit Cousson <bcousson@baylibre.com>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Pavel Machek <pavel@ucw.cz>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaehoon,
+Hi Philipp,
 
-On 08/27/2013 11:55 AM, Jaehoon Chung wrote:
-> Hi Georgi,
->
-> I found the sdhci_msm_vreg_reset(). Why do you run enable->disable?
->
-> +/*
-> + * Reset vreg by ensuring it is off during probe. A call
-> + * to enable vreg is needed to balance disable vreg
-> + */
-> +static int sdhci_msm_vreg_reset(struct sdhci_msm_pltfm_data *pdata)
->
-> I think that controller didn't have responsibility to ensure whether power is enabled or not at probing time.
-> If just needed to balance vreg, then i think this function can be removed.
-> How about?
->
-> Also before using regulator_is_enabled(), i had found the hole for balancing the vreg.
+On Thursday 05 September 2013 03:37 PM, Philipp Zabel wrote:
+> Am Montag, den 02.09.2013, 19:41 +0530 schrieb Afzal Mohammed:
 
-Thank you! I'll remove this function.
+>> Two new reset API's are provided to check whether reset is ready and
+>> to clear reset. This would be required in case IP needs to mix reset
+>> handling procedure with power/clock managment procedure to achieve
+>> proper reset and these procedures are sometimes IP specific that would
+>> make it difficult to handle reset fully in pm_runtime platform support.
 
-BR,
-Georgi
+>> client IP handling s/w (DT based) should do as follows:
 
+>> 2. In driver, that require reset to be deasserted,
+>>  (this is the sequence required for gfx on AM43x/AM335x, this would
+>>   depend on requirements of the IP)
+>>
+>> 	mydriver_probe(struct platform device *pdev)
+>> 	{
+>> 		:
+>> 		:
+>> 		reset_control_get(&pdev->dev, NULL);
+>> 		reset_control_clear_reset();
+>> 		reset_control_deassert();
+>> 		pm_runtime_get_sync();
+>> 		if (reset_control_is_reset() != true)
+>> 			goto err;
+>> 		reset_control_put();
+>> 		:
+>> 		:
+>> 	}
+
+> if possible, I'd like to move this logic into the reset controller
+> driver. Can this be reordered to enable power before deasserting the
+> reset line (assuming it is initially asserted)? In this case, I'd
+> suggest to just call device_reset:
+> 
+> 	pm_runtime_get_sync(&pdev->dev);
+> 	ret = device_reset(&pdev->dev);
+> 	if (ret)
+> 		goto err;
+> 
+> The ops.reset callback in the prcm driver then can handle clearing
+> the reset status bit, deasserting the reset control bit, and waiting for
+> the reset status bit to be set (or timing out with an error).
+
+I too would have loved to have it in such a clean way and was initially
+proceeding in that direction, but there is an issue specific to OMAP
+family SoC's, which was required to be taken care of (even though
+present use case for AM335x/AM43x would work [as it does not have
+hardware supervised clockdomain mode] with a small change in platform
+level power management support code - a generic one shared with other
+OMAP family SoC's)
+
+For a module to be reset, clock domain to which the module clock belongs
+should be set to software supervised mode. During "pm_runtime_get_sync",
+in OMAP platform level handling code, it first put clockdomain into
+software supervised mode, enables clock to module, and once module is
+ready, module will be put to hardware supervised mode. In hardware
+supervised mode, reset may not happen.
+
+So if device_reset() is done after pm_runtime_get_sync(), reset may not
+happen as by the time device_reset() is called, clockdomain would be in
+hardware supervised mode. But in other case, as reset is already
+deasserted when pm_runtime_get_sync() is called, module would be reset
+as it first puts to software supervised mode.
+
+And device reset would happen only upon enabling clock to module (if
+reset was deasserted) by pm_runtime_get_sync(), so reset status has to
+be checked after pm call, preventing us having device_reset() before
+pm_runtime_get_sync(), or else in that case we have to sacrifice on
+reset status checking (which may not be reliable)
+
+Another alternative would have been to integrate this reset handling in
+low level power management code thus hiding all reset handling from
+driver, but as far as I know the reset sequence to be done is sometimes
+IP specific, preventing it.
+
+Regards
+Afzal
