@@ -1,95 +1,50 @@
-From: Afzal Mohammed <afzal@ti.com>
-Subject: Re: [PATCH RFC 0/6] ARM: OMAP2+: AM43x/AM335x prcm reset driver
-Date: Thu, 5 Sep 2013 21:26:13 +0530
-Message-ID: <5228A99D.4020702@ti.com>
-References: <cover.1378129416.git.afzal@ti.com> <1378375634.3948.10.camel@pizza.hi.pengutronix.de>
+From: Mike Dunn <mikedunn@newsguy.com>
+Subject: Re: [PATCH] pwm: pxa: add device tree support to pwm driver
+Date: Thu, 05 Sep 2013 09:07:50 -0700
+Message-ID: <5228AC56.6020200@newsguy.com>
+References: <1378236233-15637-1-git-send-email-mikedunn@newsguy.com>
+ <201309050011.01808.marex@denx.de> <5228A238.2090202@newsguy.com>
+ <201309051734.40570.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378375634.3948.10.camel@pizza.hi.pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Benoit Cousson <bcousson@baylibre.com>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Pavel Machek <pavel@ucw.cz>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201309051734.40570.marex@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marex@denx.de>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+On 09/05/2013 08:34 AM, Marek Vasut wrote:
+>>>
 
-On Thursday 05 September 2013 03:37 PM, Philipp Zabel wrote:
-> Am Montag, den 02.09.2013, 19:41 +0530 schrieb Afzal Mohammed:
+[...]
 
->> Two new reset API's are provided to check whether reset is ready and
->> to clear reset. This would be required in case IP needs to mix reset
->> handling procedure with power/clock managment procedure to achieve
->> proper reset and these procedures are sometimes IP specific that would
->> make it difficult to handle reset fully in pm_runtime platform support.
 
->> client IP handling s/w (DT based) should do as follows:
-
->> 2. In driver, that require reset to be deasserted,
->>  (this is the sequence required for gfx on AM43x/AM335x, this would
->>   depend on requirements of the IP)
+>>> compatbile=marvell,pxa25x-pwm , no ? The lowest CPU with the block.
 >>
->> 	mydriver_probe(struct platform device *pdev)
->> 	{
->> 		:
->> 		:
->> 		reset_control_get(&pdev->dev, NULL);
->> 		reset_control_clear_reset();
->> 		reset_control_deassert();
->> 		pm_runtime_get_sync();
->> 		if (reset_control_is_reset() != true)
->> 			goto err;
->> 		reset_control_put();
->> 		:
->> 		:
->> 	}
-
-> if possible, I'd like to move this logic into the reset controller
-> driver. Can this be reordered to enable power before deasserting the
-> reset line (assuming it is initially asserted)? In this case, I'd
-> suggest to just call device_reset:
+>> Unless I am missing something, the compatible string does not need to
+>> replicate any of the existing platform_device_id names, so wouldn't
+>> "marvell,pxa" be better?  Except for register mapping and the number of
+>> units present on a particular pxa variant, the peripheral is software
+>> compatible across all pxa processors.  Plus there is the problem of the
+>> 'x' wildcard in "pxa25x-pwm".
 > 
-> 	pm_runtime_get_sync(&pdev->dev);
-> 	ret = device_reset(&pdev->dev);
-> 	if (ret)
-> 		goto err;
+> So use pxa250 ?
 > 
-> The ops.reset callback in the prcm driver then can handle clearing
-> the reset status bit, deasserting the reset control bit, and waiting for
-> the reset status bit to be set (or timing out with an error).
+> My concern is once marvell comes up with PXA1048576 which will have a different 
+> PWM unit, then what will be the name for this new one?
 
-I too would have loved to have it in such a clean way and was initially
-proceeding in that direction, but there is an issue specific to OMAP
-family SoC's, which was required to be taken care of (even though
-present use case for AM335x/AM43x would work [as it does not have
-hardware supervised clockdomain mode] with a small change in platform
-level power management support code - a generic one shared with other
-OMAP family SoC's)
 
-For a module to be reset, clock domain to which the module clock belongs
-should be set to software supervised mode. During "pm_runtime_get_sync",
-in OMAP platform level handling code, it first put clockdomain into
-software supervised mode, enables clock to module, and once module is
-ready, module will be put to hardware supervised mode. In hardware
-supervised mode, reset may not happen.
+I see.  OK then, pxa250 it is.
 
-So if device_reset() is done after pm_runtime_get_sync(), reset may not
-happen as by the time device_reset() is called, clockdomain would be in
-hardware supervised mode. But in other case, as reset is already
-deasserted when pm_runtime_get_sync() is called, module would be reset
-as it first puts to software supervised mode.
-
-And device reset would happen only upon enabling clock to module (if
-reset was deasserted) by pm_runtime_get_sync(), so reset status has to
-be checked after pm call, preventing us having device_reset() before
-pm_runtime_get_sync(), or else in that case we have to sacrifice on
-reset status checking (which may not be reliable)
-
-Another alternative would have been to integrate this reset handling in
-low level power management code thus hiding all reset handling from
-driver, but as far as I know the reset sequence to be done is sometimes
-IP specific, preventing it.
-
-Regards
-Afzal
+Thanks Marek,
+Mike
