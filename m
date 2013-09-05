@@ -1,141 +1,71 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH RFC 0/6] ARM: OMAP2+: AM43x/AM335x prcm reset driver
-Date: Thu, 05 Sep 2013 12:07:14 +0200
-Message-ID: <1378375634.3948.10.camel@pizza.hi.pengutronix.de>
-References: <cover.1378129416.git.afzal@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dt: i2c: Add LPS001WP to the Trivial
+ Devices list
+Date: Thu, 5 Sep 2013 12:30:01 +0100
+Message-ID: <20130905113001.GR18206@e106331-lin.cambridge.arm.com>
+References: <1378302655-13258-1-git-send-email-lee.jones@linaro.org>
+ <20130904142422.GM18206@e106331-lin.cambridge.arm.com>
+ <20130904151159.GA8980@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <cover.1378129416.git.afzal@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Afzal Mohammed <afzal@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Benoit Cousson <bcousson@baylibre.com>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130904151159.GA8980@lee--X1>
+Content-Language: en-US
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "sa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <sa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org" <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Afzal,
+On Wed, Sep 04, 2013 at 04:11:59PM +0100, Lee Jones wrote:
+> > Cheers for producing a binding.
+> > 
+> > On Wed, Sep 04, 2013 at 02:50:55PM +0100, Lee Jones wrote:
+> > > LPS001WP is a Pressure and Temperature sensor.
+> > > 
+> > > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > > index ad6a738..6038807e6 100644
+> > > --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > > +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > > @@ -57,6 +57,7 @@ st-micro,24c256		i2c serial eeprom  (24cxx)
+> > >  stm,m41t00		Serial Access TIMEKEEPER
+> > >  stm,m41t62		Serial real-time clock (RTC) with alarm
+> > >  stm,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
+> > > +stm,lps001wp		Pressure and Temperature sensor
+> > 
+> > As I hinted at in the other thread [1], I don't think this can be
+> > documented as a trivial binding -- the driver expects a couple of
+> > regulators which should be described in the binding (or the driver
+> > shouldn't be using them...).
+> 
+> Surely all devices need to be powered and would subsequently require a
+> regulator of one description or other? We don't really *need* to
+> manually enable it on my platform but that's because it's 'always
+> on', but we do anyway for completeness.
 
-Am Montag, den 02.09.2013, 19:41 +0530 schrieb Afzal Mohammed:
-> Hi,
-> 
-> This is an attempt to achieve reset on AM43x/AM335x based SoC's with
-> reset driver making use of the reset framework.
-> 
-> prcm node is added in device tree, which would hold reset bindings.
-> Initially node was made as a one that represents reset functionality
-> of SoC. but ended up with node for prcm (which is felt to be natural
-> choice) instead. I am a bit doubtful whether placement of prcm node in
-> root node as in this series is the right thing.
-> 
-> Reset driver gets probed for specific prcm node, the same defines
-> register details to be used for a particular SoC (using ".data" field
-> associated with ".compatible" in driver match table).
-> 
-> Another option to handle different SoC's would be to add register
-> details to DT and let the driver extract it from DT. I vaguely
-> remember seeing a thread mentioning that putting register details in
-> DT is not preferred. But open to putting register level details
-> instead in DT if that is being generally preferred. This would have
-> advantage that adding reset support for a new SoC would be easier, but
-> would have to put more thought before doing so as DT bindings should
-> not change.
-> 
-> With the approach taken here, for supporting a new SoC with new prcm
-> register details, driver would have to be updated much like the way a
-> pci based ethernet driver would have to be updated to handle a new IP
-> version that is not register level compatible with the existing ones.
-> 
-> In this series out of the three IP's (gfx, m3, pruss) that would need
-> reset support, here as a proof of concept only gfx is taken care.
-> Other's can be easily supported by adding new register data array
-> entries.
-> 
-> Two new reset API's are provided to check whether reset is ready and
-> to clear reset. This would be required in case IP needs to mix reset
-> handling procedure with power/clock managment procedure to achieve
-> proper reset and these procedures are sometimes IP specific that would
-> make it difficult to handle reset fully in pm_runtime platform support.
-> 
-> *------*
-> client IP handling s/w (DT based) should do as follows:
-> 
-> 1. Specify reset handle in the relevant DT node, for eg.
-> 
-> 	myip@deadbeef {
-> 		:
-> 		:
-> 		/* here prcm is the handle to reset binding node */
-> 		resets = <&prcm 0>;
-> 	};
-> 
-> 2. In driver, that require reset to be deasserted,
->  (this is the sequence required for gfx on AM43x/AM335x, this would
->   depend on requirements of the IP)
-> 
-> 	mydriver_probe(struct platform device *pdev)
-> 	{
-> 		:
-> 		:
-> 		reset_control_get(&pdev->dev, NULL);
-> 		reset_control_clear_reset();
-> 		reset_control_deassert();
-> 		pm_runtime_get_sync();
-> 		if (reset_control_is_reset() != true)
-> 			goto err;
-> 		reset_control_put();
-> 		:
-> 		:
-> 	}
-> 
-> *------*
+They may or may not, that's a grey area. Regardless of whether you
+actually need it, the driver is currently looking for two undocumented
+entries in the DT. If you want to be able to use them, they must be
+documented so that people know they exist, what format they are expected
+to be, and what they actually represent.
 
-if possible, I'd like to move this logic into the reset controller
-driver. Can this be reordered to enable power before deasserting the
-reset line (assuming it is initially asserted)? In this case, I'd
-suggest to just call device_reset:
+We should not allow for undocumented ABIs.
 
-	pm_runtime_get_sync(&pdev->dev);
-	ret = device_reset(&pdev->dev);
-	if (ret)
-		goto err;
+> 
+> Would a (regulator: vdd) note in this patch be suitable? It seems a
+> shame to have to produce a boilerplate binding entry for the sake of a
+> regulator.
 
-The ops.reset callback in the prcm driver then can handle clearing
-the reset status bit, deasserting the reset control bit, and waiting for
-the reset status bit to be set (or timing out with an error).
+I thought this could have two regulators (vdd and vms)? 
 
-> May be removing reset handling in hwmod can be considered by making
-> use of reset driver.
-> 
-> Or as another extreme, perhaps, other logic's in the prcm can be
-> handled by a new prcm driver and then this reset driver can be a child
-> of it.
-> 
-> Regards
-> Afzal
-> 
-> 
-> Afzal Mohammed (6):
->   reset: is_reset and clear_reset api's
->   doc: dt: binding: omap: am43x/am335x prcm reset
->   reset: am43x/am335x support
->   ARM: OMAP2+: AM43x/AM335x: have reset controller
->   ARM: dts: AM335x: prcm node (for reset)
->   ARM: dts: AM4372: prcm node (for reset)
-> 
->  .../devicetree/bindings/arm/omap/prcm.txt          |  13 ++
->  arch/arm/boot/dts/am33xx.dtsi                      |   6 +
->  arch/arm/boot/dts/am4372.dtsi                      |   6 +
->  arch/arm/mach-omap2/Kconfig                        |   2 +
->  drivers/reset/Kconfig                              |  14 ++
->  drivers/reset/Makefile                             |   1 +
->  drivers/reset/amx3_reset.c                         | 157 +++++++++++++++++++++
->  drivers/reset/core.c                               |  32 +++++
->  include/linux/reset-controller.h                   |   2 +
->  include/linux/reset.h                              |   2 +
->  10 files changed, 235 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/omap/prcm.txt
->  create mode 100644 drivers/reset/amx3_reset.c
+I also note that the device can also be attached to SPI. Do we have any
+other devices which may be attached to either? Do we handle that, and if
+so, how (do we have the same compatible string for both interfaces?)?
 
-regards
-Philipp
-
+Thanks,
+Mark.
