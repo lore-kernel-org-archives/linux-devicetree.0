@@ -1,90 +1,47 @@
-From: Gabor Juhos <juhosg@openwrt.org>
-Subject: Re: [PATCH v2] tty: ar933x_uart: add device tree support and binding
- documentation
-Date: Sat, 24 Aug 2013 13:53:45 +0200
-Message-ID: <52189EC9.5040906@openwrt.org>
-References: <1377769695-27397-1-git-send-email-juhosg@openwrt.org> <80D7C583-FF16-4789-B8D1-2D0881DAD8F0@codeaurora.org>
+From: Lu Jingchang-B35083 <B35083@freescale.com>
+Subject: RE: [PATCH v4 3/3] dma: Add Freescale eDMA engine driver support
+Date: Thu, 5 Sep 2013 08:18:24 +0000
+Message-ID: <B56CDBE15CE27145A4B77D2D24263E852157C4@039-SN1MPN1-003.039d.mgd.msft.net>
+References: <1376633274-17850-1-git-send-email-b35083@freescale.com>
+ <20130828081742.GC11414@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520A8C7@039-SN1MPN1-003.039d.mgd.msft.net>
+ <20130902045050.GE7376@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520D0D4@039-SN1MPN1-004.039d.mgd.msft.net>
+ <20130902063721.GK7376@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E8520F101@039-SN1MPN1-004.039d.mgd.msft.net>
+ <20130902111200.GP7376@intel.com>
+ <B56CDBE15CE27145A4B77D2D24263E852102A1@039-SN1MPN1-004.039d.mgd.msft.net>
+ <20130903113151.GE15824@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <80D7C583-FF16-4789-B8D1-2D0881DAD8F0@codeaurora.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130903113151.GE15824@intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2013.09.04. 0:16 keltez=E9ssel, Kumar Gala =EDrta:
->=20
-> On Aug 29, 2013, at 4:48 AM, Gabor Juhos wrote:
->=20
->> Modify the probe routine to get the port line number
->> from device tree if the 'of_node' is populated in the
->> platform device. The driver can be built as module,
->> thus add an OF specific module device table as well
->> to support module auto loading.
->>
->> This makes it possible to use the driver for AR9330
->> UART devices specified in device tree.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
->> ---
->> Changes since v1:
->>  - move the doc from bindings/tty/serial to bindings/serial
->>
->> The patch is agains the 'tty-next' branch of the
->> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tree
->> ---
->> .../devicetree/bindings/serial/qca,ar9330-uart.txt |   34 ++++++++++=
-++++++++++
->> drivers/tty/serial/ar933x_uart.c                   |   28 ++++++++++=
-++++--
->> 2 files changed, 59 insertions(+), 3 deletions(-)
->> create mode 100644 Documentation/devicetree/bindings/serial/qca,ar93=
-30-uart.txt
->>
->> diff --git a/Documentation/devicetree/bindings/serial/qca,ar9330-uar=
-t.txt b/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
->> new file mode 100644
->> index 0000000..c5e032c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
->> @@ -0,0 +1,34 @@
->> +* Qualcomm Atheros AR9330 High-Speed UART
->> +
->> +Required properties:
->> +
->> +- compatible: Must be "qca,ar9330-uart"
->=20
-> If the driver is called ar933x, is there a reason not to do so with t=
-he compatible and binding spec?
-
-Yes, there is a reason, the compatible string should not contain wildca=
-rds. At
-least the devicetree.org wiki [1] says the following:
-
-  Warning: Don't use wildcard compatible values, like "fsl,mpc83xx-uart=
-" or
-  similar. Silicon vendors will invariably make a change that breaks yo=
-ur wildcard
-  assumptions the moment it is too late to change it. Instead, choose a=
- specific
-  silicon implementations and make all subsequent silicon compatible wi=
-th it.
-
-Additionally, Grant Likely wrote the same thing here basically:
-
-http://lists.infradead.org/pipermail/linux-arm-kernel/2012-January/0822=
-65.html
-
--Gabor
-
-1. http://devicetree.org/Device_Tree_Usage#Understanding_the_compatible=
-_Property
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWaW5vZCBLb3VsIFttYWlsdG86
+dmlub2Qua291bEBpbnRlbC5jb21dDQo+IFNlbnQ6IFR1ZXNkYXksIFNlcHRlbWJlciAwMywgMjAx
+MyA3OjMyIFBNDQo+IFRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+IENjOiBzaGF3bi5ndW9AbGlu
+YXJvLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3Vi
+amVjdDogUmU6IFtQQVRDSCB2NCAzLzNdIGRtYTogQWRkIEZyZWVzY2FsZSBlRE1BIGVuZ2luZSBk
+cml2ZXIgc3VwcG9ydA0KPiANCj4gT24gVHVlLCBTZXAgMDMsIDIwMTMgYXQgMDU6NDM6MjFBTSAr
+MDAwMCwgTHUgSmluZ2NoYW5nLUIzNTA4MyB3cm90ZToNCj4gPiAgIERvIHlvdSBtZWFuIHRoZSBE
+TUFfU0xBVkVfQ09ORklHIGRldmljZV9jb250cm9sPyBZZWFoLCB0aGUgc2xhdmUNCj4gZHJpdmVy
+IGNvdWxkIHBhc3MNCj4gPiB0aGUgc2xhdmVfaWQuIEJ1dCB0aGUgRE1BX1NMQVZFX0NPTkZJRyBt
+YXkgYmUgY2FsbGVkIG1vcmUgdGhhbiBvbmNlLA0KPiBhbmQgdGhlIGVETUENCj4gPiBkcml2ZXIg
+anVzdCBuZWVkcyB0byBzZXQgdGhlIHNsYXZlIGlkIG9uY2UgZm9yIGFueSBnaXZlbiBjaGFubmVs
+LCBhZnRlcg0KPiB0aGF0IHRoZQ0KPiA+IHRyYW5zZmVyIGlzIHRyYW5zcGFyZW50IHRvIHRoZSBk
+ZXZpY2UuDQo+IEl0IGRlcGVuZHMsIGZvciBhIGNoYW5uZWwgcmVxdWVzdGVkLCBpZiB5b3UgYXJl
+IG9ubHkgdHJhbmZlcnJpbmcgdG8gYQ0KPiBwYXJ0aWN1bGFyDQo+IHNsYXZlIGRldmljZSB0aGVu
+IGl0IGNhbiBiZSBjb25mdWd1cmVkIG9uY2UuDQo+IHNvDQo+IDEuIGFsbG9jYXRlIGNoYW5uZWwN
+Cj4gMi4gZG1hZW5naW5lX3NsYXZlX2NvbmZpZygpDQo+IA0KPiB0aGVuIHlvdSBjbmFuIGRvIHBy
+ZWFyZSBldGMgbXVsdGlwbGUgdGltZXMgYmFzZWQgb24gbmVlZC4NCiBCdXQgaWYgdGhlIHByZWZl
+cnJlZCBzbGF2ZSBpZCBjb25maWd1cmF0aW9uIHNob3VsZCBiZSBpbiBkbWFlbmdpbmVfc2xhdmVf
+Y29uZmlnLA0KSSB3aWxsIHNlbmQgb3V0IHRoaXMgY2hhbmdlIGluIHRoZSBuZXh0IHZlcnNpb24g
+cGF0Y2guDQpUaGFua3MhDQoNCg0KDQoNCg0KQmVzdCBSZWdhcmRzLA0KSmluZ2NoYW5nDQoNCg0K
+IA0K
