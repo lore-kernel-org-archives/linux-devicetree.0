@@ -1,99 +1,87 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] of: clean-up ifdefs in of_irq.h
-Date: Thu, 05 Sep 2013 12:29:34 -0700
-Message-ID: <5228DB9E.9020004@infradead.org>
-References: <1378404374-13650-1-git-send-email-robherring2@gmail.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v7 02/13] [media] exynos5-fimc-is: Add Exynos5 FIMC-IS
+ device tree bindings documentation
+Date: Thu, 05 Sep 2013 21:40:24 +0200
+Message-ID: <5228DE28.4030503@gmail.com>
+References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com> <1377066881-5423-3-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378404374-13650-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1377066881-5423-3-git-send-email-arun.kk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Arun Kumar K <arun.kk@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/13 11:06, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> Much of of_irq.h is needlessly ifdef'ed. Clean this up and minimize the
-> amount ifdef'ed code. This fixes some  build warnings when CONFIG_OF
-> is not enabled (seen on i386 and x86_64):
-> 
-> include/linux/of_irq.h:82:7: warning: 'struct device_node' declared inside parameter list [enabled by default]
-> include/linux/of_irq.h:82:7: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
-> include/linux/of_irq.h:87:47: warning: 'struct device_node' declared inside parameter list [enabled by default]
-> 
-> Compile tested on i386, sparc and arm.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+On 08/21/2013 08:34 AM, Arun Kumar K wrote:
+> The patch adds the DT binding documentation for Samsung
+> Exynos5 SoC series imaging subsystem (FIMC-IS).
+>
+> Signed-off-by: Arun Kumar K<arun.kk@samsung.com>
+> Reviewed-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
+
+Can I have a DT binding maintainer Ack for this binding ?
+I'd like to queue this patch for 3.13 once the merge window has closed.
+
 > ---
-> Randy,
-> 
-> After looking at this some more, I think it makes sense to just
-> fix these needless ifdefs now and be done with it.
+>   .../devicetree/bindings/media/exynos5-fimc-is.txt  |   46 ++++++++++++++++++++
+>   1 file changed, 46 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+> new file mode 100644
+> index 0000000..5611401
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+> @@ -0,0 +1,46 @@
+> +Samsung EXYNOS5 SoC series Imaging Subsystem (FIMC-IS)
+> +------------------------------------------------------
+> +
+> +The camera subsystem on Samsung Exynos5 SoC has some changes relative
+> +to previous SoC versions. Exynos5 has almost similar MIPI-CSIS and
+> +FIMC-LITE IPs but has a much improved version of FIMC-IS which can
+> +handle sensor controls and camera post-processing operations. The
+> +Exynos5 FIMC-IS has a dedicated ARM Cortex A5 processor, many
+> +post-processing blocks (ISP, DRC, FD, ODC, DIS, 3DNR) and two
+> +dedicated scalers (SCC and SCP).
+> +
+> +fimc-is node
+> +------------
+> +
+> +Required properties:
+> +
+> +- compatible        : must be "samsung,exynos5250-fimc-is"
+> +- reg               : physical base address and size of the memory mapped
+> +                      registers
+> +- interrupt-parent  : parent interrupt controller
+> +- interrupts        : fimc-is interrupt to the parent interrupt controller
+> +- clocks            : list of clock specifiers, corresponding to entries in
+> +                      clock-names property
+> +- clock-names       : must contain "isp", "mcu_isp", "isp_div0", "isp_div1",
+> +                      "isp_divmpwm", "mcu_isp_div0", "mcu_isp_div1" entries,
+> +                      matching entries in the clocks property
+> +- samsung,pmu       : phandle to the Power Management Unit (PMU) node
+> +
+> +i2c-isp (ISP I2C bus controller) nodes
+> +------------------------------------------
+> +
+> +Required properties:
+> +
+> +- compatible	: should be "samsung,exynos4212-i2c-isp" for Exynos4212,
+> +		  Exynos4412 and Exynos5250 SoCs
+> +- reg		: physical base address and length of the registers set
+> +- clocks	: must contain gate clock specifier for this controller
+> +- clock-names	: must contain "i2c_isp" entry
+> +
+> +For the i2c-isp node, it is required to specify a pinctrl state named "default",
+> +according to the pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt.
+> +
+> +Device tree nodes of the image sensors controlled directly by the FIMC-IS
+> +firmware must be child nodes of their corresponding ISP I2C bus controller node.
+> +The data link of these image sensors must be specified using the common video
+> +interfaces bindings, defined in video-interfaces.txt.
 
-OK, thanks for the patch.
-
-
-> 
-> Rob
-> 
->  include/linux/of_irq.h | 20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 535cecf..fcd63ba 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -1,8 +1,6 @@
->  #ifndef __OF_IRQ_H
->  #define __OF_IRQ_H
->  
-> -#if defined(CONFIG_OF)
-> -struct of_irq;
->  #include <linux/types.h>
->  #include <linux/errno.h>
->  #include <linux/irq.h>
-> @@ -10,14 +8,6 @@ struct of_irq;
->  #include <linux/ioport.h>
->  #include <linux/of.h>
->  
-> -/*
-> - * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
-> - * implements it differently.  However, the prototype is the same for all,
-> - * so declare it here regardless of the CONFIG_OF_IRQ setting.
-> - */
-> -extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
-> -
-> -#if defined(CONFIG_OF_IRQ)
->  /**
->   * of_irq - container for device_node/irq_specifier pair for an irq controller
->   * @controller: pointer to interrupt controller device tree node
-> @@ -71,11 +61,17 @@ extern int of_irq_to_resource(struct device_node *dev, int index,
->  extern int of_irq_count(struct device_node *dev);
->  extern int of_irq_to_resource_table(struct device_node *dev,
->  		struct resource *res, int nr_irqs);
-> -extern struct device_node *of_irq_find_parent(struct device_node *child);
->  
->  extern void of_irq_init(const struct of_device_id *matches);
->  
-> -#endif /* CONFIG_OF_IRQ */
-> +#if defined(CONFIG_OF)
-> +/*
-> + * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
-> + * implements it differently.  However, the prototype is the same for all,
-> + * so declare it here regardless of the CONFIG_OF_IRQ setting.
-> + */
-> +extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
-> +extern struct device_node *of_irq_find_parent(struct device_node *child);
->  
->  #else /* !CONFIG_OF */
->  static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
-> 
-
-
--- 
-~Randy
+--
+Thanks,
+Sylwester
