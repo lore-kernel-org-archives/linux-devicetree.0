@@ -1,37 +1,39 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH] ARM: shmobile: update SDHI DT compatibility string to the <unit>-<soc> format
-Date: Thu, 05 Sep 2013 13:29:33 +0100
-Message-ID: <86ob87tpsi.fsf@void.printf.net>
-References: <Pine.LNX.4.64.1308291650120.3786@axis700.grange>
-	<1621893.Re68yLczyK@avalon> <20130905060102.GH14960@verge.net.au>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [Patch v3 2/3] ARM: dts: Document the CCI PMU DT bindings
+Date: Thu, 5 Sep 2013 13:51:58 +0100
+Message-ID: <20130905125158.GF9696@mudshark.cambridge.arm.com>
+References: <1377183748-5717-1-git-send-email-punit.agrawal@arm.com>
+ <1377183748-5717-3-git-send-email-punit.agrawal@arm.com>
+ <938AAABA-BE7E-48ED-82D6-61A35B6D9774@codeaurora.org>
+ <522726E9.8050406@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130905060102.GH14960@verge.net.au> (Simon Horman's message of
-	"Thu, 5 Sep 2013 15:01:03 +0900")
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-sh@vger.kernel.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <522726E9.8050406@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Punit Agrawal <Punit.Agrawal@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Sep 04, 2013 at 01:26:17PM +0100, Punit Agrawal wrote:
+> On 30/08/13 17:17, Kumar Gala wrote:
+> > Acked-by: Kumar Gala <galak@codeaurora.org>
+> >
+> 
+> Can you pick Kumar's ack for the second patch before you send a pull 
+> request for the CCI PMU patches? Let me know if you prefer for me to 
+> post patches with the Acks applied.
 
-On Thu, Sep 05 2013, Simon Horman wrote:
->> > Ok, the "no real products" is an assumption, that Laurent and Simon kind
->> > of agreed upon, so, I'm using it here to avoid having to carry old
->> > compatibility strings with us around. If anyone has other information -
->> > please shout. Otherwise, I think, it would be the easiest for Chris to ack
->> > this and for Simon to pull this via the ARM tree for late 3.12 (possibly,
->> > post -rc1) inclusion.
->
-> Thanks, I believe that is a good plan.
->
-> Chris, could we get an Ack?
+That's fine, I've added the ack.
 
-Acked-by: Chris Ball <cjb@laptop.org>
-
-Thanks,
-
-- Chris.
--- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+Will
