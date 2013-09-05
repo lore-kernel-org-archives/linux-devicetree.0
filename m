@@ -1,83 +1,59 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH] pwm: pxa: add device tree support to pwm driver
-Date: Thu, 5 Sep 2013 17:34:40 +0200
-Message-ID: <201309051734.40570.marex@denx.de>
-References: <1378236233-15637-1-git-send-email-mikedunn@newsguy.com>
- <201309050011.01808.marex@denx.de> <5228A238.2090202@newsguy.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V4] regulator: palmas: add support for external control
+ of rails
+Date: Thu, 5 Sep 2013 16:34:32 +0100
+Message-ID: <20130905153432.GD3084@sirena.org.uk>
+References: <1377082096-22296-1-git-send-email-ldewangan@nvidia.com>
+ <20130823095841.GG25263@sirena.org.uk>
+ <522897FD.2030509@nvidia.com>
+ <20130905143431.GI8980@lee--X1>
+ <52289BD4.9060607@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5228A238.2090202@newsguy.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Dunn <mikedunn@newsguy.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Tk7bxryrhVQGv1nz"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52289BD4.9060607@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Lee Jones <lee.jones@linaro.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>, "j-keerthy@ti.com" <j-keerthy@ti.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Mike Dunn,
 
-> On 09/04/2013 03:11 PM, Marek Vasut wrote:
-> 
-> 
-> [...]
-> 
-> >>> What's that "secondary PWM" there? I no longer remember, sorry.
-> >> 
-> >> If pdev->id_entry->driver_data == HAS_SECONDARY_PWM, then
-> >> pwm_chip->npwm=2 when pwmchip_add() is called.  Otherwise
-> >> pwm_chip->npwm=1.  The driver knows that the second pwm's registers are
-> >> at a fixed offset from the first.  For compatibility, the pxa27x maps
-> >> the registers for the third pwm at a distant offset, and makes the
-> >> offset between 3 and 4 the same as between 1 and 2.  Yes, the driver
-> >> mkes this unnecessarily complicated. There should just be one device
-> >> instance per pwm, and dispense with the whole driver_data thing.  I
-> >> guess there's some history there.
-> > 
-> > OK, I checked the datasheet. The register block for PWM<n + 2> is at
-> > offset of 0x10 from PWM<n> , for n in {0, 1} .
-> > 
-> > Why can we not just register four PWM blocks, each with 0x10 register
-> > window size then? I know there's history (maybe), but then, with DT,
-> > this might go away.
-> 
-> Indeed.  That is what I am also thinking.
-> 
-> >>> The question
-> >>> remains still, we can have two entries there (pxa25x and pxa27x) ORR
-> >>> have one entry (pxa25x) + mrvl,has-secondary-pwm entry.
-> >> 
-> >> It looks like defining "compatible" properties that mirror the old
-> >> platform_device_id names won't fly...
-> > 
-> > Yes of course, this won't work. I didn't know the layout exactly.
-> > 
-> >> wildcards are verboten (see Sergei's
-> >> comment).  So your inclination to use one value for the "compatible"
-> >> property is correct.  I think the way to go is to forget the whole
-> >> HAS_SECONDARY_PWM in the DT case, have one device instance per pwm, and
-> >> use "compatible=marvell,pwm". Other suggestions welcome.
-> > 
-> > compatbile=marvell,pxa25x-pwm , no ? The lowest CPU with the block.
-> 
-> Unless I am missing something, the compatible string does not need to
-> replicate any of the existing platform_device_id names, so wouldn't
-> "marvell,pxa" be better?  Except for register mapping and the number of
-> units present on a particular pxa variant, the peripheral is software
-> compatible across all pxa processors.  Plus there is the problem of the
-> 'x' wildcard in "pxa25x-pwm".
+--Tk7bxryrhVQGv1nz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So use pxa250 ?
+On Thu, Sep 05, 2013 at 08:27:24PM +0530, Laxman Dewangan wrote:
+> On Thursday 05 September 2013 08:04 PM, Lee Jones wrote:
 
-My concern is once marvell comes up with PXA1048576 which will have a different 
-PWM unit, then what will be the name for this new one?
+> >It won't go in until v3.12 now, but I have applied the patch.
 
-Best regards,
-Marek Vasut
+> Thanks Lee for taking care.
+
+If it's going to wait for v3.12 there's no point applying it to MFD as
+the dependency will be in mainline after the merge window.
+
+--Tk7bxryrhVQGv1nz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSKKSEAAoJELSic+t+oim9RIwQAI3/xUvZccENj93+7I7XUtHc
+ykabf7B3qzIhQ2egdI9UibwgPAI+8gESgTZVBzOsV+n7ArCbu4zjIXZl3JSXkVLD
+rZ0Sxst5MYLXWuC6zxkAfnXpee2ObRMBgEcOnP9HZz2Y714WMinokRlF4osP6Hmt
+dGHpmwCIXpA31fgsoqYeQmEigwwHTElOk77wPmGbfMWZ3NGKV/eJ9aLh1pT0G1at
+hB7xVXmw29EI/tWzdOPM34Unr31rel3+Hj2DmwObO+TCQ64DvPwmV42KVOIzy5az
+GQ6RL6jPBCdI1VRIAkNOnUhPtKh6qG1bzT//gE7oS3eHFkK7gtJuf7qdS36kQFUp
+5RqcYnnVz3ZnqQxAppjNaiutIqVoEBCrkrPDRRYmF6PqdaxuUPOuq6Oim50gkk4o
+Ib9i2M/GyzKSqyFSzu50rpXEO5dVJWMM6D1CoOmaq6EjAjKr6WUHeiZqtU8zJWMg
+CBY7peWZ1jZPmbUWRduzVZMgg31ADhRKqekQjVIryOYtzVeVarStmE3RcUK+sU6+
+v75VSosJbI8APLpG6bhzJzmV1BenyZSU9z5ZHYK3qON8SUvagPpcjtq7BL8bmwm3
+CgeSojNyijIBY6XubKYaGH6UGRV/OS1U0s96+JIZXBJ+BSOsPSx72CROoCdlqdp6
+aoHigbWCcBaU0r3adc+h
+=b56E
+-----END PGP SIGNATURE-----
+
+--Tk7bxryrhVQGv1nz--
