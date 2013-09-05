@@ -1,22 +1,13 @@
 From: Jingchang Lu <b35083@freescale.com>
-Subject: [PATCH 3/3] dma: Add Freescale eDMA engine driver support
-Date: Thu, 5 Sep 2013 17:53:19 +0800
-Message-ID: <1378374799-16357-1-git-send-email-b35083@freescale.com>
+Subject: [PATCH v5 3/3] dma: Add Freescale eDMA engine driver support
+Date: Thu, 5 Sep 2013 17:55:02 +0800
+Message-ID: <1378374902-16512-1-git-send-email-b35083@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: vinod.koul@intel.com
-Cc: devicetree@vger.kernel.org, Alison Wang <b18965@freescale.com>, linux-kernel@vger.kernel.org, djbw@fb.com, Jingchang Lu <b35083@freescale.com>, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+Cc: djbw@fb.com, shawn.guo@linaro.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jingchang Lu <b35083@freescale.com>, Alison Wang <b18965@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
 Add Freescale enhanced direct memory(eDMA) controller support.
