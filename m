@@ -1,55 +1,57 @@
-From: Otavio Salvador <otavio@ossystems.com.br>
-Subject: Re: [PATCH v2 3/4] ARM: imx6sl: add imx6sl iomux-gpr field define
-Date: Wed, 4 Sep 2013 23:04:57 -0300
-Message-ID: <CAP9ODKoU2f1vOerkYvvT1DNdz3Waj1u0hUBALGQ0TaLsbMDGbw@mail.gmail.com>
-References: <1378182385-9205-1-git-send-email-B38611@freescale.com>
- <1378182385-9205-4-git-send-email-B38611@freescale.com>
- <CAP9ODKqD05+S6HBnbBw-5Hs7NYVHRDJf014stSQ_AVeaYzVV+Q@mail.gmail.com>
- <9848F2DB572E5649BA045B288BE08FBE01689ED6@039-SN2MPN1-021.039d.mgd.msft.net>
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: [PATCH v5 0/5] ARM: support for Trusted Foundations secure monitor
+Date: Thu, 5 Sep 2013 12:27:55 +0900
+Message-ID: <1378351680-14696-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9848F2DB572E5649BA045B288BE08FBE01689ED6@039-SN2MPN1-021.039d.mgd.msft.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Duan Fugang-B38611 <B38611@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Dave Martin <Dave.Martin@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>
+Cc: gnurou@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 4, 2013 at 11:01 PM, Duan Fugang-B38611
-<B38611@freescale.com> wrote:
-> From: otavio.salvador@gmail.com [mailto:otavio.salvador@gmail.com] On Behalf Of Otavio Salvador
-> Data: Thursday, September 05, 2013 9:45 AM
->
->> To: Duan Fugang-B38611
->> Cc: Shawn Guo; devicetree@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org
->> Subject: Re: [PATCH v2 3/4] ARM: imx6sl: add imx6sl iomux-gpr field define
->>
->> On Tue, Sep 3, 2013 at 1:26 AM, Fugang Duan <B38611@freescale.com> wrote:
->> > Add imx6sl iomux-gpr register field define in "imx6q-iomuxc-gpr.h"
->> > header file, which is not fully define all iomux-gpr registers and
->> > fields, only add fec related macro define.
->> >
->> > Signed-off-by: Fugang Duan  <B38611@freescale.com>
->>
->> The 'q' in the header filename is misleading; wouldn't be better to have
->> it named imx6-iomuxc-gpr.h than?
->>
-> Yes, since there have many same macro define and register define, we put the iomux-gpr header file
-> To one. I will submit one patch to rename the header file to imx6-iomuxc-gpr.h.
+After several rounds of reviews, this patchset should be close to maturity. This
+fifth version gathers the Reviewed-by tags, addresses the (hopefully) last
+issues, and seeks the Acked-bys of ARM maintainers to be merged, probably
+through the Tegra tree.
 
-Great; thanks! :-)
+Changes since v4:
+- Added ifdefs to isolate open firmware-dependant code
+- Changed BUGS() into more appropriate calls to panic()
+- Fix hard-fail when TF support is not compiled in
+- Make Tegra documentation reference the TF binding
+- Tested extensively
+
+As there is no consensus on the matter, I have left the TF version in device
+tree as two separate nodes. Comments for or against this and references to prior
+practices regarding version handling in the device tree are welcome.
+
+Alexandre Courbot (5):
+  ARM: add basic Trusted Foundations support
+  ARM: tegra: add support for Trusted Foundations
+  ARM: tegra: split setting of CPU reset handler
+  ARM: tegra: set CPU reset handler with firmware op
+  ARM: tegra: support Trusted Foundations by default
+
+ .../arm/firmware/tl,trusted-foundations.txt        | 17 +++++
+ Documentation/devicetree/bindings/arm/tegra.txt    |  5 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm/Kconfig                                   |  2 +
+ arch/arm/Makefile                                  |  1 +
+ arch/arm/configs/tegra_defconfig                   |  1 +
+ arch/arm/firmware/Kconfig                          | 25 +++++++
+ arch/arm/firmware/Makefile                         |  1 +
+ arch/arm/firmware/trusted_foundations.c            | 82 ++++++++++++++++++++++
+ arch/arm/include/asm/trusted_foundations.h         | 53 ++++++++++++++
+ arch/arm/mach-tegra/Kconfig                        |  1 +
+ arch/arm/mach-tegra/common.c                       |  2 +
+ arch/arm/mach-tegra/reset.c                        | 40 ++++++++---
+ 13 files changed, 220 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
+ create mode 100644 arch/arm/firmware/Kconfig
+ create mode 100644 arch/arm/firmware/Makefile
+ create mode 100644 arch/arm/firmware/trusted_foundations.c
+ create mode 100644 arch/arm/include/asm/trusted_foundations.h
 
 -- 
-Otavio Salvador                             O.S. Systems
-http://www.ossystems.com.br        http://code.ossystems.com.br
-Mobile: +55 (53) 9981-7854            Mobile: +1 (347) 903-9750
+1.8.4
