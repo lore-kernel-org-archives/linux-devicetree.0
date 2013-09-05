@@ -1,115 +1,48 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH] ASoC: kirkwood: change the compatible string
-	of the kirkwood-i2s driver
-Date: Thu,  5 Sep 2013 14:56:31 +0200
-Message-ID: <1378385791-29551-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
+Date: Thu, 5 Sep 2013 08:23:22 -0500
+Message-ID: <CAL_JsqKfcudKiTOr-MrHsq6NidG-5t5S0t08ELTSpOuc2LF4RQ@mail.gmail.com>
+References: <52260608.2030202@linaro.org>
+ <CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
+ <5226F2B3.10606@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>
-Cc: Lior Amsalem <alior@marvell.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <5226F2B3.10606-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/boot-architecture>
+List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Sender: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The compatible string of the kirkwood-i2s driver was chosen as
-"marvell,mvebu-audio". Using such a compatible string is not a good
-idea, since "mvebu" is the name of a large family of SOCs, in which
-new, unknown SOCs will be coming in the future. It is therefore
-impossible to know what will be evolutions of this hardware block in
-the next generations of the SOCs. For this reason, the recommandation
-for compatible strings of on-SOCs devices has always been to use the
-name of the oldest SOC that has the hardware block. New SOCs that have
-an exactly compatible hardware block can reference it using the same
-compatible string. See [1], [2] and [3] for various cases were this
-suggestion was made, including from Rob Herring, a Device Tree binding
-maintainer.
+On Wed, Sep 4, 2013 at 3:43 AM, Andre Przywara
+<andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 09/04/2013 12:00 AM, Rob Herring wrote:
+>>
+>> On Tue, Sep 3, 2013 at 10:53 AM, Andre Przywara
 
-As an example, there are already small differences between current
-generations:
+>> But surely there would be some advantage of reuse by using the
+>> multi-boot protocol since Xen, grub, and OS tools already support it
+>> for x86.
+>
+>
+> Yes, but that is x86 only and multiboot is it's nature quite architecture
+> specific. The current(?) multiboot v2 spec has no official ARM support (only
+> x86 and MIPS), so this would need to be "invented" first. While this is
+> technically easy, ARM software currently has no support for multiboot at
+> all: not in u-boot and not in Xen.
+> Multiboot support in Xen lives entirely in the x86 directory, and big parts
+> of it are even in assembly.
 
- * On Kirkwood, only one interrupt is used for audio.
- * On Dove, two interrupts are used, one for audio data and one for
-   error reporting.
+If so, I cannot find the assembly and most of it seems to be moved out
+of x86 code now.
 
-In the near future, I'll be adding audio support to Armada 370, which
-allows has the same hardware block (but maybe with minor variants).
-
-Therefore, this patch changes the driver to accept
-"marvell,kirkwood-audio" and "marvell,dove-audio" as compatible
-strings instead of the too-generic "marvell,mvebu-audio". The reason
-for the two different compatible strings is the difference in the
-number of interrupts used by the two SOCs for audio.
-
-This Device Tree binding has never been part of a Linux kernel stable
-release so far, so it can be changed now without breaking backward
-compatibility.
-
-[1] http://lists.infradead.org/pipermail/linux-mtd/2012-March/040417.html
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/161065.html
-[3] http://lists.infradead.org/pipermail/linux-arm-kernel/2012-March/087702.html
-
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- Documentation/devicetree/bindings/sound/mvebu-audio.txt | 12 ++++++++----
- sound/soc/kirkwood/kirkwood-i2s.c                       |  3 ++-
- 2 files changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/mvebu-audio.txt b/Documentation/devicetree/bindings/sound/mvebu-audio.txt
-index 7e5fd37..f0062c5 100644
---- a/Documentation/devicetree/bindings/sound/mvebu-audio.txt
-+++ b/Documentation/devicetree/bindings/sound/mvebu-audio.txt
-@@ -2,13 +2,17 @@
- 
- Required properties:
- 
--- compatible: "marvell,mvebu-audio"
-+- compatible:
-+  "marvell,kirkwood-audio" for Kirkwood platforms
-+  "marvell,dove-audio" for Dove platforms
- 
- - reg: physical base address of the controller and length of memory mapped
-   region.
- 
--- interrupts: list of two irq numbers.
--  The first irq is used for data flow and the second one is used for errors.
-+- interrupts:
-+  with "marvell,kirkwood-audio", the audio interrupt
-+  with "marvell,dove-audio", a list of two interrupts, the first for
-+  the data flow, and the second for errors.
- 
- - clocks: one or two phandles.
-   The first one is mandatory and defines the internal clock.
-@@ -21,7 +25,7 @@ Required properties:
- Example:
- 
- i2s1: audio-controller@b4000 {
--	compatible = "marvell,mvebu-audio";
-+	compatible = "marvell,dove-audio";
- 	reg = <0xb4000 0x2210>;
- 	interrupts = <21>, <22>;
- 	clocks = <&gate_clk 13>;
-diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
-index 7fce340..0f3d73d 100644
---- a/sound/soc/kirkwood/kirkwood-i2s.c
-+++ b/sound/soc/kirkwood/kirkwood-i2s.c
-@@ -559,7 +559,8 @@ static int kirkwood_i2s_dev_remove(struct platform_device *pdev)
- 
- #ifdef CONFIG_OF
- static struct of_device_id mvebu_audio_of_match[] = {
--	{ .compatible = "marvell,mvebu-audio" },
-+	{ .compatible = "marvell,kirkwood-audio" },
-+	{ .compatible = "marvell,dove-audio" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, mvebu_audio_of_match);
--- 
-1.8.1.2
+Rob
