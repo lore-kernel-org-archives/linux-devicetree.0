@@ -1,86 +1,84 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH] of: clean-up ifdefs in of_irq.h
-Date: Thu,  5 Sep 2013 13:06:14 -0500
-Message-ID: <1378404374-13650-1-git-send-email-robherring2@gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v4 3/5] clk: dt: binding for basic multiplexer clock
+Date: Thu, 5 Sep 2013 11:29:14 -0700
+Message-ID: <CAPtuhThWHP61FzDBCH5SSFx6kV7==VdF3-M=Lke+cgnrOQL7JQ@mail.gmail.com>
+References: <1377150793-27864-1-git-send-email-mturquette@linaro.org>
+ <1377150793-27864-4-git-send-email-mturquette@linaro.org> <2A930389-012E-45C3-93EB-6B4A41DB2EF5@codeaurora.org>
+ <20130829011425.8231.78802@quantum> <39BAF1F8-41AD-4667-BF76-22BDF709415A@codeaurora.org>
+ <20130830203334.10934.10011@quantum> <522110AA.7040700@wwwdotorg.org>
+ <20130903232219.10934.67434@quantum> <52277DBF.7080104@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52277DBF.7080104@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+On Wed, Sep 4, 2013 at 11:36 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 09/03/2013 05:22 PM, Mike Turquette wrote:
+>> Quoting Stephen Warren (2013-08-30 14:37:46)
+>>> On 08/30/2013 02:33 PM, Mike Turquette wrote:
+> ...
+>>>> The clock _data_ seems to always have some churn to it. Moving it out to
+>>>> DT reduces that churn from Linux. My concern above is not about kernel
+>>>> data size.
+>>>
+>>> That sounds like the opposite of what we should be doing.
+>>>
+>>> It's fine for kernel code/data to change; that's a natural part of
+>>> development. Obviously, we should minimize churn, through thorough
+>>> review, domain knowledge, etc.
+>>
+>> And with the "clock mapping" style bindings we'll end up changing both
+>> the DT binding definition and the kernel. Not great.
+>
+> What's a "clock mapping" style binding? I guess that means the style
+> where you have a single DT node that provides multiple clocks, rather
+> than one DT node per clock?
+>
+> If the kernel driver changes its internal data, I don't see why that
+> would have any impact at all on the DT binding definition. We should be
+> able to use one DT binding definition with arbitrary drivers.
 
-Much of of_irq.h is needlessly ifdef'ed. Clean this up and minimize the
-amount ifdef'ed code. This fixes some  build warnings when CONFIG_OF
-is not enabled (seen on i386 and x86_64):
+Yes, I'm referring to a single node providing multiple clocks. As an
+example see the Exynos 5420 binding:
+Documentation/devicetree/bindings/clock/exynos5420-clock.txt
 
-include/linux/of_irq.h:82:7: warning: 'struct device_node' declared inside parameter list [enabled by default]
-include/linux/of_irq.h:82:7: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
-include/linux/of_irq.h:87:47: warning: 'struct device_node' declared inside parameter list [enabled by default]
+The clock id's are stored as part of the binding definition resulting
+in a mapping scheme that can be fragile. There have already been
+patches to fix the id's assigned in the binding, which isn't supposed
+to happen because it's a stable interface. If clock phandles are
+created by individual nodes in DT then the binding definition need
+never be updated due to merge conflicts or renaming which plagues the
+mapping scenario.
 
-Compile tested on i386, sparc and arm.
+>
+>> And I'll respond to your points below but the whole "relocate the
+>> problem to DT" argument is simply not my main point. What I want to do
+>> is increase the usefulness of DT by allowing register-level details into
+>> the binding which can
+>
+> Can you expand upon why a DT that encodes register-level details is more
+> useful? I can't see why there would be any difference in usefulness.
+>
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
----
-Randy,
+Sure. The usefulness comes out of the fact that we do not need to
+maintain data synchronization across dts and clock provider drivers.
+The data lives in one place and only one place. We absolutely need a
+phandle to a clock in DT link clock consumer devices to their input
+clocks, so there is no question that should be in DT. Since we're
+already doing that, why not do away with trying to keep dts and C
+files in sync and just put all of the data in dts? It's a pure
+separation of logic and data. The Linux clock provider driver is
+purely logic and no data, which I imagine would appease the mind of
+many a computer scientist.
 
-After looking at this some more, I think it makes sense to just
-fix these needless ifdefs now and be done with it.
+Can you return the favor and tell me why putting register level
+details into DT is inherently a bad idea? I'll drop my case if I can
+be convinced that putting that level is detail into DT is The Wrong
+Way, but I'll need more to go on than tradition and status quo.
 
-Rob
-
- include/linux/of_irq.h | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 535cecf..fcd63ba 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -1,8 +1,6 @@
- #ifndef __OF_IRQ_H
- #define __OF_IRQ_H
- 
--#if defined(CONFIG_OF)
--struct of_irq;
- #include <linux/types.h>
- #include <linux/errno.h>
- #include <linux/irq.h>
-@@ -10,14 +8,6 @@ struct of_irq;
- #include <linux/ioport.h>
- #include <linux/of.h>
- 
--/*
-- * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
-- * implements it differently.  However, the prototype is the same for all,
-- * so declare it here regardless of the CONFIG_OF_IRQ setting.
-- */
--extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
--
--#if defined(CONFIG_OF_IRQ)
- /**
-  * of_irq - container for device_node/irq_specifier pair for an irq controller
-  * @controller: pointer to interrupt controller device tree node
-@@ -71,11 +61,17 @@ extern int of_irq_to_resource(struct device_node *dev, int index,
- extern int of_irq_count(struct device_node *dev);
- extern int of_irq_to_resource_table(struct device_node *dev,
- 		struct resource *res, int nr_irqs);
--extern struct device_node *of_irq_find_parent(struct device_node *child);
- 
- extern void of_irq_init(const struct of_device_id *matches);
- 
--#endif /* CONFIG_OF_IRQ */
-+#if defined(CONFIG_OF)
-+/*
-+ * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
-+ * implements it differently.  However, the prototype is the same for all,
-+ * so declare it here regardless of the CONFIG_OF_IRQ setting.
-+ */
-+extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
-+extern struct device_node *of_irq_find_parent(struct device_node *child);
- 
- #else /* !CONFIG_OF */
- static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
--- 
-1.8.1.2
+Thanks,
+Mike
