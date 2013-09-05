@@ -1,308 +1,236 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv3 7/8] mailbox/omap: add code to support the wkupm3 operations
-Date: Thu, 5 Sep 2013 15:12:23 -0500
-Message-ID: <5228E5A7.8010508@ti.com>
-References: <1375825238-18299-1-git-send-email-s-anna@ti.com> <87li3n6bcc.fsf@linaro.org> <521CCDCD.90207@ti.com> <87haeax1v5.fsf@linaro.org> <521E244B.4060406@ti.com> <87sixs305n.fsf@linaro.org> <52279580.2060206@ti.com> <87ob88mdm6.fsf@linaro.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v4 3/5] clk: dt: binding for basic multiplexer clock
+Date: Thu, 05 Sep 2013 14:30:58 -0600
+Message-ID: <5228EA02.3000200@wwwdotorg.org>
+References: <1377150793-27864-1-git-send-email-mturquette@linaro.org> <1377150793-27864-4-git-send-email-mturquette@linaro.org> <2A930389-012E-45C3-93EB-6B4A41DB2EF5@codeaurora.org> <20130829011425.8231.78802@quantum> <39BAF1F8-41AD-4667-BF76-22BDF709415A@codeaurora.org> <20130830203334.10934.10011@quantum> <522110AA.7040700@wwwdotorg.org> <20130903232219.10934.67434@quantum> <52277DBF.7080104@wwwdotorg.org> <CAPtuhThWHP61FzDBCH5SSFx6kV7==VdF3-M=Lke+cgnrOQL7JQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <87ob88mdm6.fsf@linaro.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <benoit.cousson@linaro.org>, Paul Walmsley <paul@pwsan.com>, Ohad Ben-Cohen <ohad@wizery.com>, Jassi Brar <jaswinder.singh@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Russ Dill <russ.dill@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPtuhThWHP61FzDBCH5SSFx6kV7==VdF3-M=Lke+cgnrOQL7JQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ian campbell <ian.campbell@citrix.com>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Kevin,
-
->>
->> Sorry, I couldn't get back earlier due to long weekend.
->>
->> On 08/29/2013 11:57 AM, Kevin Hilman wrote:
->>> Suman Anna <s-anna@ti.com> writes:
->>>
->>> [...]
->>>
->>>> Yeah, the wkupm3 mbox usage is actually odd (an unfortunate result of
->>>> the way the hardware is designed) 
->>>
->>> heh, "design" is a generous term for this hardware. ;)
->>>
->>>> and doesn't quite fit into the way a regular mailbox is used. I will
->>>> summarize the following into the changelog in the next version to
->>>> better explain the odd usage and avoid any confusion.
+On 09/05/2013 12:29 PM, Mike Turquette wrote:
+> On Wed, Sep 4, 2013 at 11:36 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 09/03/2013 05:22 PM, Mike Turquette wrote:
+>>> Quoting Stephen Warren (2013-08-30 14:37:46)
+>>>> On 08/30/2013 02:33 PM, Mike Turquette wrote:
+>> ...
+>>>>> The clock _data_ seems to always have some churn to it. Moving it out to
+>>>>> DT reduces that churn from Linux. My concern above is not about kernel
+>>>>> data size.
 >>>>
->>>> A typical mbox device is used for communicating both to and fro with a
->>>> slave processor using two fifos, and has two internal interrupts on the
->>>> MPU that needs to be handled - a rx interrupt for processing in-bound
->>>> messages
->>>
->>> but there are no inbound message, so we don't care about that
->>> interrupt.
->>>
->>>> and a tx-ready interrupt for handling mbox tx readiness. 
->>>
->>> Yes, this is where it gets tricky.  However, in the case of AM33xx, the
->>> MPU doesn't care about RX interrupts and the M3 doesn't care about TX
->>> interrupts.  hmm
->>
->> Correct, MPU still needs to care about the Tx interrupt though.
->>
->>>
->>>> Since the WkupM3 cannot access the mailbox registers, the burden of
->>>> handling the M3's Rx interrupt as well as those associated with the
->>>> MPU lies with the wkupm3 mbox device code. As you can see, this usage
->>>> is non-standard, and warrants that the code deal with both usr_ids
->>>> since they would be different (0 for MPU and 3 for M3). 
->>>
->>> Another possibility would be to allow configurability over which usr_id
->>> is used for RX and which usr_id is used for TX.  IOW, have the DT
->>> binding have a usr_id_tx and and optional usr_id_rx.  If usr_id_rx isn't
->>> present (for most normal users), it uses usr_id_tx.  For AM33xx, we'd
->>> use usr_id_tx=0, usr_id_rx=3.
->>>
->>> That would allow you to get rid of the overrides for the IRQ functions,
->>> no?  But as I think about it, this id a bit yucky too.
->>>
->>> Yet another possiblity would be to use the DT to define 2 mailboxes.
->>> One "normal" one for control of the MPU's view (usr_id=0) and one dummy
->>> one (usr_id=3) for control of the M3's view of the world.  Since Linux
->>> needs to control both, just define them both in the DT for linux
->>> control, and drive them from the M3 driver:
->>
->> I like the idea of having the ability to define a omap mailbox as
->> rx-only or tx-only or both, rather than defining two usr_ids. So far,
->> for all the IPC communication between processors, we always needed a
->> pair since we only had a single instance and the fifos are
->> unidirectional. For DRA7xx, where we have multiple instances, this
->> should allow flexibility to pick different fifos from different
->> instances. I will redo the patches to support this feature in general.
-> 
-> Sounds good.
-> 
-> Does that mean you plan to define a TX only mailbox for the MPU view
-> (usr_id=0) and an RX only mailbox for the M3 view (usr_id=3)?
-
-I will see how this pans out for the M3 view, because mainly from the
-API point of view, we will have one to send, and the receive is usually
-a callback.
-
-> 
->>>
->>>   mbox_mpu = omap_mbox_get(<normal one>)
->>>   mbox_m3 = omap_mbox_get(<M3 one>)
->>>
->>>   omap_mbox_enable_irq(mbox_m3, IRQ_RX)
->>>   omap_mbox_msg_send(mbox_mpu, msg)
->>>   omap_mbox_disable_irq(mbox_m3, IRQ_RX)
->>>   omap_mbox_fifo_readback(mbox_mpu) /* API from earlier patch */  
->>>   omap_mbox_ack_irq(mbox_m3) /* this would need to be added/exported */
->>
->> If you look at this sequence, there's an inherent understanding of the
->> mailbox behavior. The enable and disable are used to suppress additional
->> interrupts, since the mailbox IP would always trigger an interrupt as
->> long as there is a message within the FIFO. The fifo_readback is
->> clearing the message, but it need not be done in the response message as
->> was done in the previous PM series. The WkupM3 driver has to primarily
->> just trigger an interrupt.
-> 
-> OK, I didn't fully understand the need for the readback everytime
-> either, but was just following what was proposed in this series.
-
-Yeah, the reads are needed to take out the message, since the h/w has a
-fifo, and as long as messages are present (number doesn't matter) and
-mbox irq enabled, the interrupt keeps getting triggered. Reading the
-message, and acking the interrupt within the mailbox IP are the typical
-actions performed on an mbox interrupt. This patch essentially was doing
-all the above steps with the send message API, so at the end of it, an
-interrupt is raised within the M3's NVIC, and the firmware deals with
-performing the necessary steps based on the message in IPC Control
-registers.
-
-> 
->>>
->>> AFAICS, other than the new APIs to export, this wouldn't require any
->>> additional M3 quirks in the mailbox driver. 
->>
->> The omap_mbox_fifo_readback is not a generic mailbox API and actually
->> makes the mailbox driver complex since the driver does support tx
->> buffering as well. 
-> 
-> I think this could be solved by just having some quirks flags or similar
-> for each mbox device.  e.g. a quirk that says "read back message
-> immediately after sending" or something like that.  Or maybe an "IRQ
-> only" mode that implies the readback to keep the fifo empty but still
-> triggers the IRQ.
-> 
->> This is the case irrespective of the framework. The
->> omap_mbox_ack_irq is also not generic, since the irq management usually
->> lies with the mailbox driver, and the clients need not be bothered.
-> 
-> Similarily, you could have another "quirk" flag such that the
-> disable_irq also does an ack.  Or maybe it should already do this?
-
-Yeah, I will look into if a quirk flag can be plumbed into regular
-function ops. My initial development was deciding the quirk based on an
-string compare, and it was much simpler to do this decision at the time
-of plugging in the ops, so that other SoCs are not at all affected by
-having to check for the quirk.
-
-> 
->>>
->>> To me, what's important here is that the quirkiness of the M3 setup
->>> remains contained in the M3 driver (where it should be), not hidden in
->>> the mailbox driver, when it has nothing to do with the mailbox hardware.
->>>
->>>> The OMAP mailbox core does use the internal per-device ops, so it is
->>>> actually better to plug-in custom ops for WkupM3, and deal with both
->>>> usr_ids within the ops. 
->>>
->>> This is where I disagree.  The M3 brokenness should be contained in the
->>> M3 driver, not the mailbox driver.
->>>
->>>> I had actually started out with usr_id=3 but
->>>> then I changed it to usr_id=0 so that it aligns with the DT
->>>> documentation 
->>>
->>> Which DT documentation?
->>
->> Documentation in Patch 2 [3] of this series, where I add the DT binding
->> documentation and the guidelines on what each field means.
->>
->>>  I don't see how the DT documentation forces you into any usr_id choice.
->>>
->>>> and the expected behavior that usr_id corresponds to the MPU, like for
->>>> all mboxes on all other SoCs.
->>>
->>> For AM33xx, I think you can throw out any ideas of "expected
->>> behavior". ;) 
->>
->> Yep, seems like a common theme indeed ;).
->>
->>> Using usr_id=3 as described above along with some
->>> documentation in the .dts would go a long ways.
->>>
->>>>>
->>>>> Even that is a bit hacky IMO, but with proper documentation, is at least
->>>>> better than the current approach IMO.
+>>>> That sounds like the opposite of what we should be doing.
 >>>>
->>>> Even with approach you are suggesting, you still need to have specific
->>>> ops since the MPU interrupt handling code needs to deal with two usr_ids
->>>> for handling MPU Tx and WkupM3 Rx interrupt.
+>>>> It's fine for kernel code/data to change; that's a natural part of
+>>>> development. Obviously, we should minimize churn, through thorough
+>>>> review, domain knowledge, etc.
 >>>
->>> Not if you actually define 2 mailboxes in the DT and use them both from
->>> the driver as I describe above.
->>>
->>>>>
->>>>> That should at least get rid of the need to customize the IRQ management
->>>>> functions of mailbox-omap2.c.   After that, the M3 driver could then
->>>>> just do:
->>>>>
->>>>>      omap_mbox_enable_irq()
->>>>>      omap_mbox_msg_send()
->>>>>      omap_mbox_disable_irq()
->>>>
->>>> This is infact how it was done in the previous AM335 PM suspend version
->>>> [1] along with another API to read-back the message put in the Tx queue
->>>> [2]. 
->>>
->>> Except that the previous version was doing the readback/flush in the
->>> txev_handler of the M3 driver instead of in the message send like the
->>> current version (and my proposed one above.)
->>>
->>>> We do not want to add any new users of omap_mbox_enable_irq() or
->>>> omap_mbox_disable_irq() API, since these will not fit into the generic
->>>> mailbox framework. 
->>>
->>> What generic mailbox framework?  The only mailbox API I see currently is
->>> omap_mbox_*.  
+>>> And with the "clock mapping" style bindings we'll end up changing both
+>>> the DT binding definition and the kernel. Not great.
 >>
->> Yeah, there's a generic one still under development [4]. You can look
->> through the mailbox_client.h for the generic API that would be used by a
->> client. I started out the support for AM335 mailbox on top of it
->> originally, the preliminary dev work including the OMAP adaptation is
->> hosted at [5] (using usr_id 3) & [6] (using usr_id 0), but decided to
->> post this to break the dependency and unblock the PM series. I will
->> adapt all existing OMAP mbox clients at once the framework shows up.
+>> What's a "clock mapping" style binding? I guess that means the style
+>> where you have a single DT node that provides multiple clocks, rather
+>> than one DT node per clock?
 >>
->>> Assuming there's a generic one coming, how will a generic
->>> mailbox framework work without the enable/disable IRQ?  
->>
->> The IRQ handling would be internal to the driver, the clients would
->> not be required to manage them. The framework provides API for the
->> clients to send messages, and receive callbacks for rx messages.
->>
->>> What other method would there be for determining the receiver of the message?
->>
->> A client would operate on a mbox device, so the knowledge of receiver is
->> automatic.
->>
->>> Whatever that new generic API is for that is, it would have to use the
->>> omap_mbox_[enable|disable]_irq() APIs internally, so they are those not
->>> going away, so I don't see why you can't add more users.
->>
->> At present, DSP/Bridge is the only user of this API. The remoteproc
->> infrastructure doesn't use the omap_mbox_[enable|disable]_irq(), and we
->> want all clients to use the generic API in the long term.
+>> If the kernel driver changes its internal data, I don't see why that
+>> would have any impact at all on the DT binding definition. We should be
+>> able to use one DT binding definition with arbitrary drivers.
 > 
-> OK, then I think the only solution is to add some quirks/modes to the
-> generic code so it can handle the case where client has to manage both
-> the sender and the receiver.
+> Yes, I'm referring to a single node providing multiple clocks. As an
+> example see the Exynos 5420 binding:
+> Documentation/devicetree/bindings/clock/exynos5420-clock.txt
 > 
->>> IOW, any users of
->>> omap_mbox_[enable|disable]_irq() would be converted to the new API for
->>> configuring the message receiver.
->>
->> For now, these would be exposed until I rework the DSP/Bridge to remove
->> these.
->>
->>>
->>>> The actual IRQ raised in the M3's NVIC would be
->>>> handled by M3, so the entire functionality of enabling, disabling the
->>>> M3's mailbox Rx interrupt and reading back the message is handled in the
->>>> omap_mbox_msg_send() without having to expose any new additional API.
->>>
->>> So the fundamental difference we have here is that you believe exposing
->>> a new API is wrong and I believe hiding non-mailbox related quirks of
->>> the M3 inside the mailbox driver is wrong.
->>
->> Yeah, the mailbox IP is external to both the MPU and the WkupM3 IPs,
->> with a dedicated mailbox driver dealing with the IP. It is definitely
->> debatable as to who should be responsible for the AM335 PM usecase. The
->> WkupM3 driver is currently using mailbox to raise the interrupt, and if
->> it were using a different interrupt trigger source, then it would have
->> to use that respective driver's API. The WkupM3 usage of mailbox is odd,
->> no matter how we look at it.
-> 
-> Precisely.
-> 
-> IIUC, AM43xx has the ability to trigger an interrupt by a write to the
-> control module, which eliminates the need for using the mailbox hardware
-> all together.  Is that correct?
+> The clock id's are stored as part of the binding definition resulting
+> in a mapping scheme that can be fragile.
 
-I am not sure, can't make out clearly from the early TRM drafts. But it
-would be great, if there is one. If the way the M3 interrupts the MPU is
-also a generic interrupt, then the IPC registers along with these two
-interrupts could be made into its own mailbox driver (would expect it to
-look something similar to the current pl320-ipc driver).
+The mapping shouldn't be fragile if e.g.
+include/dt-bindings/clock/exynos5420.h were used to define the values.
+That way, both the Exynos clock driver and Exynos DT files could both
+include the header, and would always be in sync.
 
-> 
->> My primary reasoning is that we want all clients to migrate to the
->> generic API, so we do not want to be adding/exposing (at this point)
->> driver-specific API for dealing with quirks. My approach was to deal
->> with the wkupm3 interaction/quirks as a device-specific ops within the
->> driver for this reason.
-> 
-> I agree that's the right motiviation.  However if a "generic" driver
-> doesn't handle existing uses on existing hardware, then it's probably
-> not generic enough.
-> 
-> Could you explore adding some more general quirks/modes to the generic
-> driver such that it could handle the AM335x brokenness^Wpeculiarity.
+> There have already been
+> patches to fix the id's assigned in the binding, which isn't supposed
+> to happen because it's a stable interface.
 
-The quirks would have to be handled within the OMAP mailbox driver, I
-doubt the generic core needs to know about these, but definitely I will
-explore this as I rework my patches.
+That's definitely a real problem. The values should be stable.
+Preferably, the values should be derived from some aspect of the HW, and
+hence be stable.
 
-regards
-Suman
+For example, many clock IDs on Tegra are derived from the clock's bit
+index within the peripheral clock enable registers. Although I must
+admit we have a bit of a mess in the Tegra clocks w.r.t. mis-using clock
+IDs for reset IDs and hence there are some peripheral clock IDS that
+don't map 1:1 with the register, and there are other clocks which aren't
+peripheral clocksthat we've assigned arbitrary IDs to rather than some
+HW-derived ID.
+
+Alternatively, perhaps a register address unique to the clock could be used.
+
+If new values are added, the additions should all happen in a single
+tree, and hence can be co-ordinated, thus avoiding any merge-conflicts.
+
+Even ignoring HW-derived clock IDs, people writing DT bindings simply
+need to get used to bindings being an ABI, and put extra effort into
+making sure the list of clocks is accurate and complete.
+
+Finally, while it's true that a DT binding definition is an ABI, and
+perhaps DT content isn't (so if there's a DT content bug it can simply
+be fixed), if DT is wrong because of insufficient thought about its
+content, it's still wrong, and the system doesn't work correctly.
+Whether we edit a kernel clock driver or a DT file to solve a problem,
+there was still a problem. Placing the data into DT doesn't make it any
+less likely there will be a problem if sufficient care isn't taken when
+thinking about the clock structure.
+
+> If clock phandles are
+> created by individual nodes in DT then the binding definition need
+> never be updated due to merge conflicts or renaming which plagues the
+> mapping scenario.
+
+That's true.
+
+But if we take that approach, shouldn't we just ban #clock-cells?
+
+The only case #clock-cells would still be legitimate would be an array
+of identical clocks represented by a single node, and even then the
+argument could be extended so say: just write out a node for each clock
+in the array, just like if the clocks weren't in an array or were
+different types.
+
+>>> And I'll respond to your points below but the whole "relocate the
+>>> problem to DT" argument is simply not my main point. What I want to do
+>>> is increase the usefulness of DT by allowing register-level details into
+>>> the binding which can
+>>
+>> Can you expand upon why a DT that encodes register-level details is more
+>> useful? I can't see why there would be any difference in usefulness.
+> 
+> Sure. The usefulness comes out of the fact that we do not need to
+> maintain data synchronization across dts and clock provider drivers.
+
+Only the clock IDs. That's a very small amount of information. And
+synchronizing the two simply means including a header file that defines
+the IDs in both places. This is *exactly* why I created the
+include/dt-bindings/ directory, to house such header files.
+
+> The data lives in one place and only one place. We absolutely need a
+> phandle to a clock in DT link clock consumer devices to their input
+> clocks, so there is no question that should be in DT. Since we're
+> already doing that, why not do away with trying to keep dts and C
+> files in sync and just put all of the data in dts? It's a pure
+> separation of logic and data. The Linux clock provider driver is
+> purely logic and no data, which I imagine would appease the mind of
+> many a computer scientist.
+
+Separation of code and data is good. However, one can achieve that
+simply by putting data into C structs/arrays, without having to parse it
+out of DT.
+
+> Can you return the favor and tell me why putting register level
+> details into DT is inherently a bad idea? I'll drop my case if I can
+> be convinced that putting that level is detail into DT is The Wrong
+> Way, but I'll need more to go on than tradition and status quo.
+
+Here are a few reasons, in no particular order:
+
+1)
+
+At least for large SoCs (rather than e.g. a simple clock generator
+chip/crystal with 1 or 2 outputs), clock drivers need a *lot* of data.
+We can either:
+
+a) Put that data into the clock driver, so it's "just there" for the
+clock driver to use.
+
+b) Represent that data in DT, and write code in the clock driver to
+parse DT when the driver probe()s.
+
+Option (a) is very simple.
+
+Option (b) entails writing (and executing) a whole bunch of DT parsing
+code. It's a lot of effort to define the DT binding for the data,
+convert the data into DT format, and write the parsing code. It wastes
+execution time at boot. In the end, the result of the parsing is exactly
+the same data structures that could have been embedded into DT in the
+first place. This seems like a futile effort.
+
+2)
+
+If the clock driver knows it's running on e.g. Tegra20 vs. Tegra30, that
+information alone is enough to fully describe all details of the clock
+tree present within the SoC. That information is cast in stone in the
+SoC HW design.
+
+Philosophically, I believe DT should be used to describe what varies
+between different uses of a HW block, not the internals of a HW block
+itself. This means describing the environment around an IP block (e.g.
+which interrupts sinks an I2C controller is connected to, which GPIOs a
+board used for an SD card CD line), rather than the internals of a
+block, which are completely fixed.
+
+For clocks, this means that the routing of a clock module's
+inputs/outputs are useful to describe in DT, since they may be connected
+differently depending on which SoC a clock module is placed into, or
+which board an SoC is placed into. However, the HW within the block is
+fixed, so doesn't need to be represented by a data structure whose
+intent is to represent environmental differences.
+
+To be honest, I would rather not even put e.g. on-SoC I2C, SPI, SDHCI
+controllers into DT, since they are 100% defined by the top-level SoC
+node. However, in practice we must put those nodes into DT for a few
+reasons:
+
+a) They act as a container for the I2C/SPI devices that are connected to
+them, so at least something has to exist in DT.
+
+b) There's some board-specific parameterization of those controllers
+such as max bus clock rate for I2C/SPI, bus width for SDHCI, which GPIOs
+are used for CD/WP for SDHCI, or even whether the controller is
+enabled/disabled.
+
+c) Some of the resources those controllers use (IRQs, GPIOs) may also be
+used by board-specific entities (e.g. off-SoC IRQ source or GPIO sink).
+The on-SoC devices appear in DT in order to allow representation of the
+IRQs/GPIOs they use in a consistent manner with off-SoCs devices, for
+simplicity.
+
+As such, we end up treating them much like any other off-SoC device in
+terms of representing them as a DT node.
+
+3)
+
+Why are clocks a special case?
+
+A "simple-gpio" controller binding and driver was proposed, and we had a
+very similar conversation to this one then. I believe simple-gpio was
+rejected for the reasons I presented above.
+
+pintctrl-simple was initially rejected because it would have ended up
+being essentially a very complex list of (register, value) writes that
+the kernel performed at bootup. I'm not sure how pinctrl-simple finally
+got accepted into the kernel; I think people were just busy and didn't
+notice it and hence didn't object:-(
+
+If we take the "DT should represent the register details" argument to
+extreme, why not have some hyperbole? :-)
+
+a) Do it for everything. For example, Tegra20 and Tegra30 I2S are
+semantically the same, but with register offsets moved around rather
+randomly. Perhaps we should have a mapping table of register field name
+to offset, bit position, and size in DT, and some automated abstraction
+layer in the kernel to parse this and re-direct all the register IO so
+we can use a single driver.
+
+To me this sounds a bit ridiculous, whereas putting all the clock
+register details in DT perhaps doesn't (at least depending on exactly
+what that ends up meaning). However, they're really exactly the same thing.
+
+b) Why have drivers at all? Shouldn't the kernel just manage the core
+ARM CPU, memory, MMU, and other standardized low-level tasks, yet all
+drivers should be written in Forth with the byte-code stored in DT and
+evaluated by the kernel instead? This even separates the driver code out
+of the kernel, and really reduces churn:-)
