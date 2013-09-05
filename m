@@ -1,85 +1,70 @@
-From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: [PATCH v5 3/5] ARM: tegra: split setting of CPU reset handler
-Date: Thu, 5 Sep 2013 12:27:58 +0900
-Message-ID: <1378351680-14696-4-git-send-email-acourbot@nvidia.com>
-References: <1378351680-14696-1-git-send-email-acourbot@nvidia.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [RFC 4/5] gpiolib: add gpiod_get() and gpiod_put() functions
+Date: Thu, 5 Sep 2013 12:44:34 +0900
+Message-ID: <CAAVeFuJCCnx+kY46BTkqTbno-j9YwV=GN3dS1aLzxc+ZYWxEdA@mail.gmail.com>
+References: <1378294169-22661-1-git-send-email-acourbot@nvidia.com>
+ <1378294169-22661-5-git-send-email-acourbot@nvidia.com> <52279082.5010105@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378351680-14696-1-git-send-email-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Dave Martin <Dave.Martin@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>
-Cc: gnurou@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <52279082.5010105@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Alexandre Courbot <acourbot@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-doc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Not all Tegra devices can set the CPU reset handler in the same way.
-In particular, devices using a TrustZone secure monitor cannot set the
-reset handler directly and need to do it through a firmware operation.
+On Thu, Sep 5, 2013 at 4:56 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 09/04/2013 05:29 AM, Alexandre Courbot wrote:
+>> Add gpiod_get() and gpiod_put() functions that provide safer handling of
+>> GPIOs.
+>>
+>> These functions put the GPIO framework in line with the conventions of
+>> other frameworks in the kernel, and help ensure every GPIO is declared
+>> properly and valid while it is used.
+>
+>> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+>
+>> +struct gpio_desc *__must_check gpiod_get(struct device *dev,
+>> +                                      const char *con_id);
+>> +void gpiod_put(struct gpio_desc *desc);
+>
+> It might be nice to add an "int index" parameter to this function. For
+> example, a bit-banged parallel bus protocol driver might have 1
+> chip-select GPIO, 1 clock GPIO, and 8 data GPIOs. gpiod_get(dev, "bus",
+> 0)..gpiod_get(dev, "bus", 7) might be nicer than gpiod_get(dev,
+> "bus0")..gpiod_get(dev, "bus7")? Possibly for client-simplicity,
+> implement both gpiod_get(dev, con_id) (as an inline wrapper for ...) and
+> gpiod_get_index(dev, con_id, index)?
+>
+> In DT terms, this would map to:
+>
+> cs-gpios = <&gpio 3 0>;
+> clock-gpios = <&gpio 5 0>;
+> bus-gpios = <&gpio 10 0 ... &gpio 17 0>;
+>
+> ... and with the mapping table registration mechanism, we could
+> presumably add "int index" to struct gpiod_lookup.
 
-This patch separates the act of setting the reset handler from its
-preparation, so the former can be implemented in a different way.
+Having the index argument of of_get_named_gpiod_flags() propagated
+into gpiod_get() is something I also thought about (see the cover
+letter), but I really can't make up my mind about it.
 
-Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
----
- arch/arm/mach-tegra/reset.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+On the one hand, having several GPIO per DT property is already
+allowed, and presumably used in bindings already. It might also make
+sense to have several lines under the same name, e.g. for bitbanging.
 
-diff --git a/arch/arm/mach-tegra/reset.c b/arch/arm/mach-tegra/reset.c
-index 1ac434e..6964117 100644
---- a/arch/arm/mach-tegra/reset.c
-+++ b/arch/arm/mach-tegra/reset.c
-@@ -33,26 +33,18 @@
- 
- static bool is_enabled;
- 
--static void __init tegra_cpu_reset_handler_enable(void)
-+static void __init tegra_cpu_reset_handler_set(const u32 reset_address)
- {
--	void __iomem *iram_base = IO_ADDRESS(TEGRA_IRAM_RESET_BASE);
- 	void __iomem *evp_cpu_reset =
- 		IO_ADDRESS(TEGRA_EXCEPTION_VECTORS_BASE + 0x100);
- 	void __iomem *sb_ctrl = IO_ADDRESS(TEGRA_SB_BASE);
- 	u32 reg;
- 
--	BUG_ON(is_enabled);
--	BUG_ON(tegra_cpu_reset_handler_size > TEGRA_IRAM_RESET_HANDLER_SIZE);
--
--	memcpy(iram_base, (void *)__tegra_cpu_reset_handler_start,
--			tegra_cpu_reset_handler_size);
--
- 	/*
- 	 * NOTE: This must be the one and only write to the EVP CPU reset
- 	 *       vector in the entire system.
- 	 */
--	writel(TEGRA_IRAM_RESET_BASE + tegra_cpu_reset_handler_offset,
--			evp_cpu_reset);
-+	writel(reset_address, evp_cpu_reset);
- 	wmb();
- 	reg = readl(evp_cpu_reset);
- 
-@@ -66,6 +58,21 @@ static void __init tegra_cpu_reset_handler_enable(void)
- 		writel(reg, sb_ctrl);
- 		wmb();
- 	}
-+}
-+
-+static void __init tegra_cpu_reset_handler_enable(void)
-+{
-+	void __iomem *iram_base = IO_ADDRESS(TEGRA_IRAM_RESET_BASE);
-+	const u32 reset_address = TEGRA_IRAM_RESET_BASE +
-+						tegra_cpu_reset_handler_offset;
-+
-+	BUG_ON(is_enabled);
-+	BUG_ON(tegra_cpu_reset_handler_size > TEGRA_IRAM_RESET_HANDLER_SIZE);
-+
-+	memcpy(iram_base, (void *)__tegra_cpu_reset_handler_start,
-+			tegra_cpu_reset_handler_size);
-+
-+	tegra_cpu_reset_handler_set(reset_address);
- 
- 	is_enabled = true;
- }
--- 
-1.8.4
+On the other hand, I'm afraid people will abuse this, and group all
+the GPIOs for a device under a single property instead of using proper
+names.
+
+I guess that if we want gpiod to cover all that gpio allows already
+(as the ultimate goal is to superseed the latter) we have no choice
+but support this though. A (possibly cleaner) alternative would be to
+have a get_gpios(device, name, gpio_desc **descs, int nb_desc)
+function that returns all the GPIOs defined under a single property,
+and fails if the number of descriptors does not match nb_desc. If that
+works it would be more tailored towards grouping GPIOs that serve the
+same logical purpose, and discourage the behavior I worried about
+above.
+
+Alex.
