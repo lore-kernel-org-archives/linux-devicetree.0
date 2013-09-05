@@ -1,58 +1,44 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [RFC 2/5] gpiolib: export descriptor-based GPIO interface
-Date: Thu, 5 Sep 2013 12:45:04 +0900
-Message-ID: <CAAVeFuKJcD4zjiqxvzEr+HeGjs1Tz0oG6rwrNZPGKo-c438=ZQ@mail.gmail.com>
-References: <1378294169-22661-1-git-send-email-acourbot@nvidia.com>
- <1378294169-22661-3-git-send-email-acourbot@nvidia.com> <522790D6.6080803@wwwdotorg.org>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Thu, 5 Sep 2013 04:25:39 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>
+References: <1377828449-18912-1-git-send-email-b32955@freescale.com>
+ <522697E9.1050208@freescale.com> <20130904095523.GT3084@sirena.org.uk>
+ <52270B8E.5080402@freescale.com> <20130904113322.GA5859@sirena.org.uk>
+ <20130905014350.GA2261@gmail.com>
+ <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com>
+ <20130905020435.GA3970@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <522790D6.6080803@wwwdotorg.org>
-Sender: linux-arch-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Alexandre Courbot <acourbot@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-doc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130905020435.GA3970@gmail.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Huang Shijie <shijie8@gmail.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "b32955@freescale.com" <b32955@freescale.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 5, 2013 at 4:58 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 09/04/2013 05:29 AM, Alexandre Courbot wrote:
->> This patch exports the gpiod_* family of API functions, a safer
->> alternative to the legacy gpio interface. Differences between the gpiod
->> and gpio APIs are:
->>
->> - gpio works with integers, whereas gpiod operates on opaque handlers
->>   which cannot be forged or used before proper acquisition
->> - gpiod get/set functions are aware of the active low state of a GPIO
->> - gpio consumers should now include <linux/gpio/consumer.h> to access
->>   the new interface, whereas chips drivers will use
->>   <linux/gpio/driver.h>
->>
->> The legacy gpio API is now built as inline functions on top of gpiod.
->>
->
->> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
->
->> +struct gpio_chip {
->
->> +     int                     (*get_direction)(struct gpio_chip *chip,
->> +                                             unsigned offset);
->> +     int                     (*direction_input)(struct gpio_chip *chip,
->> +                                             unsigned offset);
->> +     int                     (*get)(struct gpio_chip *chip,
->> +                                             unsigned offset);
->> +     int                     (*direction_output)(struct gpio_chip *chip,
->> +                                             unsigned offset, int value);
->> +     int                     (*set_debounce)(struct gpio_chip *chip,
->> +                                             unsigned offset,
->> +                                             unsigned debounce);
->> +
->> +     void                    (*set)(struct gpio_chip *chip,
->> +                                             unsigned offset, int value);
->> +
->
-> Minor nit: It might be nice to sort/group these entries more cohesively,
-> i.e. get_direction, direction_input, direction_output, get, set,
-> set_debounce?
-
-Sure, since we are moving this around anyway... :)
-
-Alex.
+SGkgU2hpamllLA0KDQo+IA0KPiA+IEhlbGxvIEh1YW5nLA0KPiA+DQo+ID4gPj4gSW4gd2hhdCB3
+YXkgZG9lcyB0aGUgY29udHJvbGxlciBkcml2ZXIgZGVwZW5kIG9uIHRob3NlIGNoYW5nZXM/DQo+
+ID4gPiBUaGlzIGRyaXZlciBuZWVkcyB0aGUgc3BpIG5vciBjb21tYW5kIHRvIGZpbGwgdGhlIExV
+VCByZWdpc3Rlciwgc3VjaCBhcw0KPiA+ID4gT1BDT0RFX1dSRU4oMHgwNiksIHNvIHRoZSBwYXRj
+aCAxIG1vdmVzIHRoZSBzcGkgbm9yIGNvbW1hbmQgdG8gYQ0KPiBzZXByYXRlDQo+ID4gPiBoZWFk
+ZXIgc3BpLW5vci5oLCBhbmQgdGhpcyBkcml2ZXIgaW5jbHVkZXMgdGhpcyBuZXcgaGVhZGVyLg0K
+PiA+ID4NCj4gPiBUaGVuIHNvbWUgcXVlc3Rpb25zIGNvbWUgdXA6DQo+ID4gLSBXaHkgZG9lcyB0
+aGUgc3BpIGNvbnRyb2xsZXIgbmVlZCB0byBrbm93IHRoaXM/DQo+IFRoZSBoYXJkd2FyZSB3b3Jr
+cyBpbiB0aGlzIHdheS4NCj4gPiAtIFdoYXQgaXMgdGhpcyBMVVQgcmVnaXN0ZXIgYXQgYWxsPw0K
+PiBQbGVhc2Ugc2VlIHRoZSBwYXRjaCAxLg0KPiA+IC0gV2hhdCBoYXBwZW5zIGlmIHNvbWV0aGlu
+ZyBkaWZmZXJlbnQgdGhhdCBhIGZsYXNoIGlzIGNvbm5lY3RlZCBhbmQNCj4gPiAgICB0aGUgZGF0
+YSBzdGFydHMgd2l0aCBvbmUgb2YgdGhlc2Ugb3Bjb2Rlcz8NCj4gU3VibWl0IGEgbmV3IHBhdGNo
+IHRvIGZpeCBpdC4NCj4gDQpUaGlzIGlzIG5vdCB0aGUgY29ycmVjdCBhcHByb2FjaCwgYmVjYXVz
+ZSBmb3IgZXZlcnkgTk9SIGZsYXNoIGRldmljZQ0KdXNlciBuZWVkcyB0byBzdWJtaXQgYSBwYXRj
+aCB0byBwb3B1bGF0ZSB0aGVzZSBMVVQgd2l0aCBDTUQsIE9QRVJBTkQNCmFuZCBEVU1NWSB2YWx1
+ZXMgc3BlY2lmaWMgdG8gdGhhdCBOT1IgZGV2aWNlIGludG8gdGhlc2UgaGVhZGVyIGZpbGVzLg0K
+QXMgdGhlIHN1cHBvcnRlZCBOT1IgZGV2aWNlIGxpc3QgZ3Jvd3MsIHRoZSBoZWFkZXIgZmlsZSB3
+b3VsZCBiZWNvbWUNCnVubWFuYWdlYWJsZSBhbmQgY2x1dHRlcmVkLg0KDQpJIHdvdWxkIHJhdGhl
+ciBzdWdnZXN0IHRvIGdldCB0aGVzZSB2YWx1ZXMgZnJvbSBEVCBiaW5kaW5ncyBzcGVjaWZpYyB0
+byANCnlvdXIgZnNsLXFzcGktY29udHJvbGxlci4gVGhpcyB3YXkgeW91IHdvdWxkIHByb3ZpZGUg
+c2NhbGFiaWxpdHkgd2l0aG91dA0KYWZmZWN0aW5nIG90aGVyIGZyYW1ld29yay4gVGhpcyBzaG91
+bGQgYWxzbyBoZWxwIHlvdSB0byBrZWVwIHlvdXIgDQpNVEQgZHJpdmVyIGluZGVwZW5kZW50IG9m
+IFFTUEktY29udHJvbGxlciBkcml2ZXIuDQoNCldpdGggcmVnYXJkcywgcGVrb24NCg==
