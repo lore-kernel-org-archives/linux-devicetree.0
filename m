@@ -1,60 +1,46 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v2 1/4] ARM: dts: add iomuxc-gpr device node for imx6sl
-Date: Wed, 4 Sep 2013 21:23:36 +0800
-Message-ID: <20130904132334.GB16797@S2101-09.ap.freescale.net>
-References: <1378182385-9205-1-git-send-email-B38611@freescale.com>
- <1378182385-9205-2-git-send-email-B38611@freescale.com>
+From: Huang Shijie <shijie8@gmail.com>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Wed, 4 Sep 2013 21:43:53 -0400
+Message-ID: <20130905014350.GA2261@gmail.com>
+References: <1377828449-18912-1-git-send-email-b32955@freescale.com>
+ <522697E9.1050208@freescale.com>
+ <20130904095523.GT3084@sirena.org.uk>
+ <52270B8E.5080402@freescale.com>
+ <20130904113322.GA5859@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1378182385-9205-2-git-send-email-B38611@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fugang Duan <B38611@freescale.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20130904113322.GA5859@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Huang Shijie <b32955@freescale.com>, devicetree@vger.kernel.org, computersforpeace@gmail.com, b44548@freescale.com, dedekind1@gmail.com, linux-doc@vger.kernel.org, b18965@freescale.com, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, kernel@pengutronix.de, lznuaa@gmail.com, shawn.guo@linaro.org, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 03, 2013 at 12:26:22PM +0800, Fugang Duan wrote:
-> Add iomuxc gpr device node for imx6sl.
-> 
-> Signed-off-by: Fugang Duan  <B38611@freescale.com>
-                            ^^
-We generally have only one space between name and email address.  You
-may want to fix it in your git setup to follow the common pattern for
-future patches.
+On Wed, Sep 04, 2013 at 12:33:22PM +0100, Mark Brown wrote:
+> On Wed, Sep 04, 2013 at 06:29:34PM +0800, Huang Shijie wrote:
+> > =E4=BA=8E 2013=E5=B9=B409=E6=9C=8804=E6=97=A5 17:55, Mark Brown =E5=
+=86=99=E9=81=93:
+> > > On Wed, Sep 04, 2013 at 10:16:09AM +0800, Huang Shijie wrote:
+>=20
+> > >> Since this quadspi driver depends on the mtd code, could this dr=
+iver
+> > >> goes to the kernel by
+> > >> the l2-mtd tree?
+>=20
+> > > Why would a SPI driver depend on MTD?
+>=20
+> > The patch 1-4 are for m25p80.c, and this quadspi controller drivers
+> > depends on the
+> > patch 1-4.
+>=20
+> In what way does the controller driver depend on those changes?
+This driver needs the spi nor command to fill the LUT register, such as
+OPCODE_WREN(0x06), so the patch 1 moves the spi nor command to a seprat=
+e
+header spi-nor.h, and this driver includes this new header.
 
-Shawn
+thanks
+Huang Shijie
 
-> ---
->  arch/arm/boot/dts/imx6sl.dtsi |    5 +++++
->  1 files changed, 5 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-> index c5e5da0..abd1eb9 100644
-> --- a/arch/arm/boot/dts/imx6sl.dtsi
-> +++ b/arch/arm/boot/dts/imx6sl.dtsi
-> @@ -504,6 +504,11 @@
->  				interrupts = <0 89 0x04>;
->  			};
->  
-> +			gpr: iomuxc-gpr@020e0000 {
-> +				compatible = "fsl,imx6sl-iomuxc-gpr", "syscon";
-> +				reg = <0x020e0000 0x38>;
-> +			};
-> +
->  			iomuxc: iomuxc@020e0000 {
->  				compatible = "fsl,imx6sl-iomuxc";
->  				reg = <0x020e0000 0x4000>;
-> -- 
-> 1.7.1
-> 
-> 
