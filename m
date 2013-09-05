@@ -1,50 +1,79 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V4] regulator: palmas: add support for external control
- of rails
-Date: Thu, 5 Sep 2013 15:46:11 +0100
-Message-ID: <20130905144611.GA32654@lee--X1>
-References: <1377082096-22296-1-git-send-email-ldewangan@nvidia.com>
- <20130823095841.GG25263@sirena.org.uk>
- <522897FD.2030509@nvidia.com>
- <20130905143431.GI8980@lee--X1>
+From: Mike Dunn <mikedunn@newsguy.com>
+Subject: Re: [PATCH] pwm: pxa: add device tree support to pwm driver
+Date: Thu, 05 Sep 2013 08:24:40 -0700
+Message-ID: <5228A238.2090202@newsguy.com>
+References: <1378236233-15637-1-git-send-email-mikedunn@newsguy.com>
+ <201309041635.26695.marex@denx.de> <522754A3.8010602@newsguy.com>
+ <201309050011.01808.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130905143431.GI8980@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>, "j-keerthy@ti.com" <j-keerthy@ti.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201309050011.01808.marex@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marex@denx.de>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 05 Sep 2013, Lee Jones wrote:
+On 09/04/2013 03:11 PM, Marek Vasut wrote:
+>>>
 
-> On Thu, 05 Sep 2013, Laxman Dewangan wrote:
-> > On Friday 23 August 2013 03:28 PM, Mark Brown wrote:
-> > >* PGP Signed by an unknown key
-> > >
-> > >On Wed, Aug 21, 2013 at 04:18:16PM +0530, Laxman Dewangan wrote:
-> > >>Palmas rails like LDOs, SMPSs, REGENs, SYSENs can be enable and d=
-isable
-> > >>by register programming through I2C communication as well as it c=
-an be
-> > >>enable/disable with the external control input ENABLE1, ENABLE2 a=
-nd NSLEEP.
-> > >Acked-by: Mark Brown <broonie@linaro.org>
-> > >
-> >=20
-> > Can you please take this in your tree as dependent patch is already
-> > in your tree?
->=20
-> It won't go in until v3.12 now, but I have applied the patch.
+[...]
 
-Slight change of plan, as the patch won't apply.
+>>> What's that "secondary PWM" there? I no longer remember, sorry.
+>>
+>> If pdev->id_entry->driver_data == HAS_SECONDARY_PWM, then pwm_chip->npwm=2
+>> when pwmchip_add() is called.  Otherwise pwm_chip->npwm=1.  The driver
+>> knows that the second pwm's registers are at a fixed offset from the
+>> first.  For compatibility, the pxa27x maps the registers for the third pwm
+>> at a distant offset, and makes the offset between 3 and 4 the same as
+>> between 1 and 2.  Yes, the driver mkes this unnecessarily complicated. 
+>> There should just be one device instance per pwm, and dispense with the
+>> whole driver_data thing.  I guess there's some history there.
+> 
+> OK, I checked the datasheet. The register block for PWM<n + 2> is at offset of 
+> 0x10 from PWM<n> , for n in {0, 1} .
+> 
+> Why can we not just register four PWM blocks, each with 0x10 register window 
+> size then? I know there's history (maybe), but then, with DT, this might go 
+> away.
 
-Can you rebase on v3.11 please?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Indeed.  That is what I am also thinking.
+
+
+> 
+>>> The question
+>>> remains still, we can have two entries there (pxa25x and pxa27x) ORR have
+>>> one entry (pxa25x) + mrvl,has-secondary-pwm entry.
+>>
+>> It looks like defining "compatible" properties that mirror the old
+>> platform_device_id names won't fly...
+> 
+> Yes of course, this won't work. I didn't know the layout exactly.
+> 
+>> wildcards are verboten (see Sergei's
+>> comment).  So your inclination to use one value for the "compatible"
+>> property is correct.  I think the way to go is to forget the whole
+>> HAS_SECONDARY_PWM in the DT case, have one device instance per pwm, and
+>> use "compatible=marvell,pwm". Other suggestions welcome.
+> 
+> compatbile=marvell,pxa25x-pwm , no ? The lowest CPU with the block.
+
+
+Unless I am missing something, the compatible string does not need to replicate
+any of the existing platform_device_id names, so wouldn't "marvell,pxa" be
+better?  Except for register mapping and the number of units present on a
+particular pxa variant, the peripheral is software compatible across all pxa
+processors.  Plus there is the problem of the 'x' wildcard in "pxa25x-pwm".
+
+Thanks,
+Mike
