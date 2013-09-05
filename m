@@ -1,297 +1,99 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] ARM: add basic Trusted Foundations support
-Date: Thu, 05 Sep 2013 13:35:07 -0500
-Message-ID: <5228CEDB.1090306@gmail.com>
-References: <1378351680-14696-1-git-send-email-acourbot@nvidia.com> <1378351680-14696-2-git-send-email-acourbot@nvidia.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] of: clean-up ifdefs in of_irq.h
+Date: Thu, 05 Sep 2013 12:29:34 -0700
+Message-ID: <5228DB9E.9020004@infradead.org>
+References: <1378404374-13650-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1378351680-14696-2-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1378404374-13650-1-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/04/2013 10:27 PM, Alexandre Courbot wrote:
-> Trusted Foundations is a TrustZone-based secure monitor for ARM that
-> can be invoked  using a consistent SMC-based API on all supported
-> platforms. This patch adds initial basic support for Trusted
-> Foundations using the ARM firmware API. Current features are limited
-> to the ability to boot secondary processors.
+On 09/05/13 11:06, Rob Herring wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
 > 
-> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Much of of_irq.h is needlessly ifdef'ed. Clean this up and minimize the
+> amount ifdef'ed code. This fixes some  build warnings when CONFIG_OF
+> is not enabled (seen on i386 and x86_64):
+> 
+> include/linux/of_irq.h:82:7: warning: 'struct device_node' declared inside parameter list [enabled by default]
+> include/linux/of_irq.h:82:7: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
+> include/linux/of_irq.h:87:47: warning: 'struct device_node' declared inside parameter list [enabled by default]
+> 
+> Compile tested on i386, sparc and arm.
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 > ---
->  .../arm/firmware/tl,trusted-foundations.txt        | 17 +++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  arch/arm/Kconfig                                   |  2 +
->  arch/arm/Makefile                                  |  1 +
->  arch/arm/firmware/Kconfig                          | 25 +++++++
->  arch/arm/firmware/Makefile                         |  1 +
->  arch/arm/firmware/trusted_foundations.c            | 82 ++++++++++++++++++++++
->  arch/arm/include/asm/trusted_foundations.h         | 53 ++++++++++++++
->  8 files changed, 182 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
->  create mode 100644 arch/arm/firmware/Kconfig
->  create mode 100644 arch/arm/firmware/Makefile
->  create mode 100644 arch/arm/firmware/trusted_foundations.c
->  create mode 100644 arch/arm/include/asm/trusted_foundations.h
+> Randy,
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
-> new file mode 100644
-> index 0000000..3954bbd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
-> @@ -0,0 +1,17 @@
-> +Trusted Foundations
-> +
-> +Boards that use the Trusted Foundations secure monitor can signal its
-> +presence by declaring a node compatible with "tl,trusted-foundations"
-> +under the root node.
-> +
-> +Required properties:
-> +- compatible : "tl,trusted-foundations"
-> +- version-major : major version number of Trusted Foundations firmware
-> +- version-minor: minor version number of Trusted Foundations firmware
-> +
-> +Example:
-> +	firmware {
-> +		compatible = "tl,trusted-foundations";
-> +		version-major = <2>;
-> +		version-minor = <8>;
-> +	};
+> After looking at this some more, I think it makes sense to just
+> fix these needless ifdefs now and be done with it.
 
-I'm wondering how we fit this in with PSCI bindings? Both are pieces of
-firmware functionality and may co-exist. There's nothing incompatible
-here, but there should be some commonality. Will future versions of
-Trusted Foundations follow the SMC calling conventions doc? What about
-armv8 support.
-
-Rob
+OK, thanks for the patch.
 
 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 366ce9b..20d61f3 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -63,6 +63,7 @@ ste	ST-Ericsson
->  stericsson	ST-Ericsson
->  toumaz	Toumaz
->  ti	Texas Instruments
-> +tl	Trusted Logic
->  toshiba	Toshiba Corporation
->  v3	V3 Semiconductor
->  via	VIA Technologies, Inc.
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 43594d5..7fbe800 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1074,6 +1074,8 @@ config ARM_TIMER_SP804
->  	select CLKSRC_MMIO
->  	select CLKSRC_OF if OF
->  
-> +source "arch/arm/firmware/Kconfig"
-> +
->  source arch/arm/mm/Kconfig
->  
->  config ARM_NR_BANKS
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index 6fd2cea..a48de17 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -267,6 +267,7 @@ core-$(CONFIG_KVM_ARM_HOST) 	+= arch/arm/kvm/
->  core-y				+= arch/arm/kernel/ arch/arm/mm/ arch/arm/common/
->  core-y				+= arch/arm/net/
->  core-y				+= arch/arm/crypto/
-> +core-y				+= arch/arm/firmware/
->  core-y				+= $(machdirs) $(platdirs)
->  
->  drivers-$(CONFIG_OPROFILE)      += arch/arm/oprofile/
-> diff --git a/arch/arm/firmware/Kconfig b/arch/arm/firmware/Kconfig
-> new file mode 100644
-> index 0000000..ccf44c8
-> --- /dev/null
-> +++ b/arch/arm/firmware/Kconfig
-> @@ -0,0 +1,25 @@
-> +config ARCH_SUPPORTS_FIRMWARE
-> +	bool
-> +
-> +config ARCH_SUPPORTS_TRUSTED_FOUNDATIONS
-> +	bool
-> +	select ARCH_SUPPORTS_FIRMWARE
-> +
-> +menu "Firmware options"
-> +	depends on ARCH_SUPPORTS_FIRMWARE
-> +
-> +config TRUSTED_FOUNDATIONS
-> +	bool "Trusted Foundations secure monitor support"
-> +	depends on ARCH_SUPPORTS_TRUSTED_FOUNDATIONS
-> +	help
-> +	  Some devices are booted with the Trusted Foundations secure monitor
-> +	  active, requiring some core operations to be performed by the secure
-> +	  monitor instead of the kernel.
-> +
-> +	  This option allows the kernel to invoke the secure monitor whenever
-> +	  required on devices using Trusted Foundations. See
-> +	  arch/arm/include/asm/trusted_foundations.h or the
-> +	  tl,trusted-foundations device tree binding documentation for details
-> +	  on how to use it.
-> +
-> +endmenu
-> diff --git a/arch/arm/firmware/Makefile b/arch/arm/firmware/Makefile
-> new file mode 100644
-> index 0000000..a71f165
-> --- /dev/null
-> +++ b/arch/arm/firmware/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_TRUSTED_FOUNDATIONS)	+= trusted_foundations.o
-> diff --git a/arch/arm/firmware/trusted_foundations.c b/arch/arm/firmware/trusted_foundations.c
-> new file mode 100644
-> index 0000000..210ef83
-> --- /dev/null
-> +++ b/arch/arm/firmware/trusted_foundations.c
-> @@ -0,0 +1,82 @@
-> +/*
-> + * Trusted Foundations support for ARM CPUs
-> + *
-> + * Copyright (c) 2013, NVIDIA Corporation.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/of.h>
-> +#include <asm/firmware.h>
-> +#include <asm/trusted_foundations.h>
-> +
-> +#define TF_SET_CPU_BOOT_ADDR_SMC 0xfffff200
-> +
-> +static void __naked tf_generic_smc(u32 type, u32 subtype, u32 arg)
-> +{
-> +	asm volatile(
-> +		".arch_extension	sec\n\t"
-> +		"stmfd	sp!, {r4 - r11, lr}\n\t"
-> +		__asmeq("%0", "r0")
-> +		__asmeq("%1", "r1")
-> +		__asmeq("%2", "r2")
-> +		"mov	r3, #0\n\t"
-> +		"mov	r4, #0\n\t"
-> +		"smc	#0\n\t"
-> +		"ldmfd	sp!, {r4 - r11, pc}"
-> +		:
-> +		: "r" (type), "r" (subtype), "r" (arg)
-> +		: "memory");
-> +}
-> +
-> +static int tf_set_cpu_boot_addr(int cpu, unsigned long boot_addr)
-> +{
-> +	tf_generic_smc(TF_SET_CPU_BOOT_ADDR_SMC, boot_addr, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct firmware_ops trusted_foundations_ops = {
-> +	.set_cpu_boot_addr = tf_set_cpu_boot_addr,
-> +};
-> +
-> +void register_trusted_foundations(struct trusted_foundations_platform_data *pd)
-> +{
-> +	/* we are not using version information for now since currently
-> +	 * supported SMCs are compatible with all TF releases */
-> +	register_firmware_ops(&trusted_foundations_ops);
-> +}
-> +
-> +#if IS_ENABLED(CONFIG_OF)
-> +
-> +void of_register_trusted_foundations(void)
-> +{
-> +	struct device_node *node;
-> +	struct trusted_foundations_platform_data pdata;
-> +	int err;
-> +
-> +	node = of_find_compatible_node(NULL, NULL, "tl,trusted-foundations");
-> +
-> +	if (!node)
-> +		return;
-> +
-> +	err = of_property_read_u32(node, "version-major", &pdata.version_major);
-> +	if (err != 0)
-> +		panic("Trusted Foundation: missing version-major property\n");
-> +	err = of_property_read_u32(node, "version-minor", &pdata.version_minor);
-> +	if (err != 0)
-> +		panic("Trusted Foundation: missing version-minor property\n");
-> +	register_trusted_foundations(&pdata);
-> +}
-> +
-> +#endif /* CONFIG_OF */
-> diff --git a/arch/arm/include/asm/trusted_foundations.h b/arch/arm/include/asm/trusted_foundations.h
-> new file mode 100644
-> index 0000000..558f616
-> --- /dev/null
-> +++ b/arch/arm/include/asm/trusted_foundations.h
-> @@ -0,0 +1,53 @@
-> +/*
-> + * Copyright (c) 2013, NVIDIA Corporation.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + */
-> +
-> +#ifndef __ASM_ARM_TRUSTED_FOUNDATIONS_H
-> +#define __ASM_ARM_TRUSTED_FOUNDATIONS_H
-> +
-> +#include <linux/kconfig.h>
-> +
-> +struct trusted_foundations_platform_data {
-> +	unsigned int version_major;
-> +	unsigned int version_minor;
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_TRUSTED_FOUNDATIONS)
-> +void register_trusted_foundations(struct trusted_foundations_platform_data *pd);
-> +#if IS_ENABLED(CONFIG_OF)
-> +void of_register_trusted_foundations(void);
-> +#endif
-> +
-> +#else /* CONFIG_TRUSTED_FOUNDATIONS */
-> +
-> +#include <linux/printk.h>
-> +#include <linux/of.h>
-> +#include <asm/bug.h>
-> +
-> +static inline void register_trusted_foundations(
-> +				   struct trusted_foundations_platform_data *pd)
-> +{
-> +	panic("No support for Trusted Foundations, stopping...\n");
-> +}
-> +
-> +#if IS_ENABLED(CONFIG_OF)
-> +static inline void of_register_trusted_foundations(void)
-> +{
-> +	if (of_find_compatible_node(NULL, NULL, "tl,trusted-foundations"))
-> +		register_trusted_foundations(NULL);
-> +}
-> +#endif
-> +
-> +#endif /* CONFIG_TRUSTED_FOUNDATIONS */
-> +
-> +#endif
 > 
+> Rob
+> 
+>  include/linux/of_irq.h | 20 ++++++++------------
+>  1 file changed, 8 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+> index 535cecf..fcd63ba 100644
+> --- a/include/linux/of_irq.h
+> +++ b/include/linux/of_irq.h
+> @@ -1,8 +1,6 @@
+>  #ifndef __OF_IRQ_H
+>  #define __OF_IRQ_H
+>  
+> -#if defined(CONFIG_OF)
+> -struct of_irq;
+>  #include <linux/types.h>
+>  #include <linux/errno.h>
+>  #include <linux/irq.h>
+> @@ -10,14 +8,6 @@ struct of_irq;
+>  #include <linux/ioport.h>
+>  #include <linux/of.h>
+>  
+> -/*
+> - * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
+> - * implements it differently.  However, the prototype is the same for all,
+> - * so declare it here regardless of the CONFIG_OF_IRQ setting.
+> - */
+> -extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
+> -
+> -#if defined(CONFIG_OF_IRQ)
+>  /**
+>   * of_irq - container for device_node/irq_specifier pair for an irq controller
+>   * @controller: pointer to interrupt controller device tree node
+> @@ -71,11 +61,17 @@ extern int of_irq_to_resource(struct device_node *dev, int index,
+>  extern int of_irq_count(struct device_node *dev);
+>  extern int of_irq_to_resource_table(struct device_node *dev,
+>  		struct resource *res, int nr_irqs);
+> -extern struct device_node *of_irq_find_parent(struct device_node *child);
+>  
+>  extern void of_irq_init(const struct of_device_id *matches);
+>  
+> -#endif /* CONFIG_OF_IRQ */
+> +#if defined(CONFIG_OF)
+> +/*
+> + * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
+> + * implements it differently.  However, the prototype is the same for all,
+> + * so declare it here regardless of the CONFIG_OF_IRQ setting.
+> + */
+> +extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
+> +extern struct device_node *of_irq_find_parent(struct device_node *child);
+>  
+>  #else /* !CONFIG_OF */
+>  static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+> 
+
+
+-- 
+~Randy
