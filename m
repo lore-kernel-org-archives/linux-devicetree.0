@@ -1,155 +1,142 @@
-Return-Path: <robherring2@gmail.com>
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 00/21] of: prom.h clean-up and removal
-Date: Thu, 26 Sep 2013 13:50:35 -0500
-Message-Id: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Anatolij Gustschin <agust@denx.de>, Aurelien Jacquiot <a-jacquiot@ti.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Chris Zankel <chris@zankel.net>, "David S. Miller" <davem@davemloft.net>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, James Hogan <james.hogan@imgtec.com>, Jonas Bonn <jonas@southpole.se>, Kumar Gala <galak@kernel.crashing.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Mark Salter <msalter@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, Michal Simek <monstr@monstr.eu>, Olof Johansson <olof@lixom.net>, Paul Mackerras <paulus@samba.org>, Ralf Baechle <ralf@linux-mips.org>, Richard Kuo <rkuo@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Vineet Gupta <vgupta@synopsys.com>, Will Deacon <will.deacon@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, x86@kernel.org
+Return-Path: <devicetree-owner@vger.kernel.org>
+Received: from fw-tnat.cambridge.arm.com ([217.140.96.21]:52861 "EHLO
+	cam-smtp0.cambridge.arm.com" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1751350Ab3IFOah (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 6 Sep 2013 10:30:37 -0400
+Date: Fri, 6 Sep 2013 15:30:26 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/2] usb: samsung: Update Exynos EHCI/OHCI bindings
+ documentation
+Message-ID: <20130906143026.GV18206@e106331-lin.cambridge.arm.com>
+References: <1377776006-22972-1-git-send-email-sachin.kamat@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1377776006-22972-1-git-send-email-sachin.kamat@linaro.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "patches@linaro.org" <patches@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Rob Herring <rob.herring@calxeda.com>
+Hi,
 
-This is the second series of clean-up for architecture DT code. The first
-series is here [1].
+On Thu, Aug 29, 2013 at 12:33:25PM +0100, Sachin Kamat wrote:
+> Updated the document as per the latest implementation.
+> While at it also fixed some trivial typos.
+> 
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+> Changes since v1:
+> * Updated review comments from Stephen Warren regarding the wording
+> and some styling.
+> ---
+>  .../devicetree/bindings/usb/exynos-usb.txt         |   29 ++++++++++----------
+>  1 file changed, 15 insertions(+), 14 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> index d967ba1..56468f7 100644
+> --- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> @@ -5,13 +5,14 @@ The device node has following properties.
+>  
+>  EHCI
+>  Required properties:
+> - - compatible: should be "samsung,exynos4210-ehci" for USB 2.0
+> -   EHCI controller in host mode.
+> + - compatible: should be one of the following for USB 2.0 EHCI controller:
+> +	(a) "samsung,exynos5440-ehci" for Exynos5440 SoC
+> +	(b) "samsung,exynos4210-ehci" for all other Exynos4 and 5 SoCs
+>   - reg: physical base address of the controller and length of memory mapped
+>     region.
+> - - interrupts: interrupt number to the cpu.
+> - - clocks: from common clock binding: handle to usb clock.
+> - - clock-names: from common clock binding: Shall be "usbhost".
+> + - interrupts: interrupt number to the CPU.
 
-As the number of DT enabled architectures has grown, there has been a lot
-of copy/paste duplication of prom.h. The include ordering for prom.h is
-complex and has resulted in many implicit includes. This series cleans up
-prom.h and removes the dependency of prom.h includes in the core DT code
-on all architectures except sparc. This removes prom.h on several
-architectures and makes it an architecture specific include on the rest.
+If this is going to be reorganised, can we fix the terminology?
+Interrupts are defined by interrupt-specifiers:
 
-Compiled on arm, arm64, microblaze, mips, openrisc, powerpc, sparc,
-xtensa. Mostly defconfigs and some allyesconfigs. The 0-day builder has
-also caught some issues.
+ - interrupts: a single interrupt-specifier for the sole interrupt
+               generated by the device.
 
-A branch with both series is available here:
-git://sources.calxeda.com/kernel/linux.git dt-cleanup
+> + - clocks: from common clock binding: handle to USB clock.
+> + - clock-names: shall be "usbhost".
 
-Rob
+Similarly:
 
-[1] http://www.spinics.net/lists/devicetree/msg04865.html
+ - clocks: phandle amd clock-specifier pair for the clocks listed in
+   clock-names.
+ - clock-names: shall contain "usbhost" for the USB clock.
 
-Rob Herring (21):
-  drivers: remove unnecessary prom.h includes
-  of: remove unnecessary prom.h includes
-  ARM: keystone: remove unnecessary prom.h include
-  arm64: remove unnecessary prom.h include
-  openrisc: remove unnecessary prom.h include
-  arc: remove unnecessary prom.h includes
-  hexagon: remove unnecessary prom.h includes
-  metag: move setup_machine_fdt declaration from prom.h
-  microblaze: clean-up prom.h implicit includes
-  drivers: clean-up prom.h implicit includes
-  mips: add explicit includes of prom.h
-  x86: add necessary includes for prom.h
-  of: implement pci_address_to_pio as weak function
-  of: implement of_node_to_nid as a weak function
-  of: remove HAVE_ARCH_DEVTREE_FIXUPS
-  of: move of_address_to_resource and of_iomap declarations from sparc
-  of: move of_translate_dma_address to of_address.h
-  powerpc: clean-up include ordering in prom.h
-  powerpc: add explicit OF includes
-  of: only include prom.h on sparc
-  of: remove empty arch prom.h headers
+>  
+>  Optional properties:
+>   - samsung,vbus-gpio:  if present, specifies the GPIO that
+> @@ -23,7 +24,7 @@ Example:
+>  		compatible = "samsung,exynos4210-ehci";
+>  		reg = <0x12110000 0x100>;
+>  		interrupts = <0 71 0>;
+> -		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
+> +		samsung,vbus-gpio = <&gpx2 6 0>;
 
- arch/arc/include/asm/prom.h                      | 14 ---------
- arch/arc/kernel/devtree.c                        |  1 -
- arch/arc/kernel/setup.c                          |  1 -
- arch/arm/include/asm/prom.h                      |  2 --
- arch/arm/mach-keystone/platsmp.c                 |  1 -
- arch/arm64/include/asm/prom.h                    |  1 -
- arch/arm64/mm/init.c                             |  1 -
- arch/c6x/include/asm/prom.h                      |  1 -
- arch/hexagon/kernel/setup.c                      |  3 --
- arch/metag/include/asm/prom.h                    | 23 --------------
- arch/metag/include/asm/setup.h                   |  1 +
- arch/metag/kernel/setup.c                        |  1 -
- arch/microblaze/include/asm/prom.h               | 39 +-----------------------
- arch/microblaze/kernel/prom.c                    |  1 +
- arch/microblaze/kernel/setup.c                   |  1 +
- arch/microblaze/kernel/timer.c                   |  1 +
- arch/microblaze/pci/pci-common.c                 |  1 +
- arch/mips/include/asm/prom.h                     | 11 -------
- arch/mips/lantiq/prom.c                          |  1 +
- arch/mips/mti-sead3/sead3-setup.c                |  2 ++
- arch/mips/ralink/of.c                            |  1 +
- arch/openrisc/include/asm/prom.h                 | 22 -------------
- arch/openrisc/kernel/prom.c                      |  1 -
- arch/powerpc/include/asm/prom.h                  | 33 ++++----------------
- arch/powerpc/kernel/epapr_paravirt.c             |  1 +
- arch/powerpc/platforms/512x/clock.c              |  1 +
- arch/powerpc/platforms/512x/pdm360ng.c           |  2 ++
- arch/powerpc/platforms/82xx/mpc8272_ads.c        |  2 ++
- arch/powerpc/platforms/82xx/pq2fads.c            |  2 ++
- arch/powerpc/platforms/83xx/suspend.c            |  2 ++
- arch/powerpc/platforms/86xx/pic.c                |  1 +
- arch/powerpc/platforms/embedded6xx/flipper-pic.c |  1 +
- arch/powerpc/platforms/embedded6xx/hlwd-pic.c    |  2 ++
- arch/powerpc/platforms/pasemi/gpio_mdio.c        |  1 +
- arch/powerpc/platforms/powermac/pfunc_base.c     |  1 +
- arch/powerpc/platforms/powernv/opal-lpc.c        |  1 +
- arch/powerpc/platforms/powernv/opal.c            |  1 +
- arch/powerpc/platforms/powernv/setup.c           |  1 +
- arch/powerpc/platforms/pseries/hotplug-memory.c  |  2 ++
- arch/powerpc/sysdev/cpm_common.c                 |  1 +
- arch/powerpc/sysdev/fsl_gtm.c                    |  2 ++
- arch/powerpc/sysdev/fsl_pmc.c                    |  1 +
- arch/powerpc/sysdev/mpic.c                       |  8 ++---
- arch/powerpc/sysdev/mpic_timer.c                 |  2 ++
- arch/sparc/include/asm/prom.h                    | 12 --------
- arch/x86/include/asm/prom.h                      |  5 ---
- arch/x86/kernel/devicetree.c                     | 11 +------
- arch/xtensa/include/asm/prom.h                   |  6 ----
- drivers/ata/sata_fsl.c                           |  2 ++
- drivers/char/bsr.c                               |  1 +
- drivers/char/hw_random/pasemi-rng.c              |  1 +
- drivers/cpufreq/pasemi-cpufreq.c                 |  1 +
- drivers/crypto/caam/ctrl.c                       |  3 ++
- drivers/crypto/caam/jr.c                         |  2 ++
- drivers/dma/fsldma.c                             |  2 ++
- drivers/edac/cell_edac.c                         |  1 +
- drivers/i2c/busses/i2c-mpc.c                     |  2 ++
- drivers/i2c/busses/i2c-powermac.c                |  1 +
- drivers/input/serio/xilinx_ps2.c                 |  1 +
- drivers/macintosh/macio_asic.c                   |  2 ++
- drivers/macintosh/rack-meter.c                   |  2 ++
- drivers/macintosh/smu.c                          |  1 +
- drivers/macintosh/via-pmu.c                      |  2 ++
- drivers/mtd/nand/fsl_elbc_nand.c                 |  1 +
- drivers/mtd/nand/pasemi_nand.c                   |  2 ++
- drivers/net/can/grcan.c                          |  3 --
- drivers/net/can/sja1000/sja1000_of_platform.c    |  1 -
- drivers/net/ethernet/ibm/emac/core.c             |  2 ++
- drivers/net/ethernet/ibm/emac/mal.c              |  1 +
- drivers/net/ethernet/ibm/emac/rgmii.c            |  1 +
- drivers/net/ethernet/ibm/emac/tah.c              |  1 +
- drivers/net/ethernet/ibm/emac/zmii.c             |  1 +
- drivers/net/ethernet/xilinx/ll_temac_main.c      |  1 +
- drivers/of/address.c                             |  8 +++++
- drivers/of/base.c                                |  7 +++++
- drivers/of/of_pci.c                              |  1 -
- drivers/of/of_pci_irq.c                          |  1 -
- drivers/of/pdt.c                                 |  1 -
- drivers/pcmcia/electra_cf.c                      |  2 ++
- drivers/tty/ehv_bytechan.c                       |  1 +
- drivers/tty/serial/pmac_zilog.c                  |  2 ++
- drivers/usb/host/ehci-ppc-of.c                   |  2 ++
- drivers/usb/host/ohci-ppc-of.c                   |  2 ++
- fs/proc/proc_devtree.c                           |  3 --
- include/linux/of.h                               | 13 ++++----
- include/linux/of_address.h                       | 39 +++++++++++++-----------
- sound/aoa/core/gpio-feature.c                    |  3 +-
- sound/aoa/soundbus/i2sbus/core.c                 |  2 ++
- sound/ppc/pmac.c                                 |  2 ++
- sound/ppc/tumbler.c                              |  1 +
- 90 files changed, 141 insertions(+), 220 deletions(-)
- delete mode 100644 arch/arc/include/asm/prom.h
- delete mode 100644 arch/arm64/include/asm/prom.h
- delete mode 100644 arch/c6x/include/asm/prom.h
- delete mode 100644 arch/metag/include/asm/prom.h
- delete mode 100644 arch/openrisc/include/asm/prom.h
- delete mode 100644 arch/xtensa/include/asm/prom.h
+Why does the gpio in the example need to be changed in this way?
 
--- 
-1.8.1.2
+>  
+>  		clocks = <&clock 285>;
+>  		clock-names = "usbhost";
+> @@ -31,13 +32,14 @@ Example:
+>  
+>  OHCI
+>  Required properties:
+> - - compatible: should be "samsung,exynos4210-ohci" for USB 2.0
+> -   OHCI companion controller in host mode.
+> + - compatible: should be one of the following for USB 2.0 OHCI controller:
+> +	(a) "samsung,exynos5440-ohci" for Exynos5440 SoC
+> +	(b) "samsung,exynos4210-ohci" for all other Exynos4 and 5 SoCs
+>   - reg: physical base address of the controller and length of memory mapped
+>     region.
+> - - interrupts: interrupt number to the cpu.
+> - - clocks: from common clock binding: handle to usb clock.
+> - - clock-names: from common clock binding: Shall be "usbhost".
+> + - interrupts: interrupt number to the CPU.
+> + - clocks: from common clock binding: handle to USB clock.
+> + - clock-names: shall be "usbhost".
+
+Similarly it would be nice to fix up the terminology here.
+
+>  
+>  Example:
+>  	usb@12120000 {
+> @@ -53,12 +55,11 @@ DWC3
+>  Required properties:
+>   - compatible: should be "samsung,exynos5250-dwusb3" for USB 3.0 DWC3
+>  	       controller.
+> - - #address-cells, #size-cells : should be '1' if the device has sub-nodes
+> -				 with 'reg' property.
+> + - #address-cells, #size-cells: should be '1'.
+>   - ranges: allows valid 1:1 translation between child's address space and
+>  	   parent's address space
+
+Huh? What if I'm on an LPAE system. I can't necessarily have both an
+empty ranges property (for 1:1 translation) and #address-cells = <1>,
+#size-cells = <1>. That's just broken.
+
+Is the driver relying on this, or does it just require some valid
+ranges, #address-cells, and #size-cells that the Linux infrastructure
+can already handle?
+
+As far as I an see, this should be something like:
+
+- #address-cells: as required to describe any child nodes.
+
+- #size-cells: as required to describe any child nodes.
+
+- ranges: as required to map any child nodes to the parent address space.
+
+>   - clocks: Clock IDs array as required by the controller.
+> - - clock-names: names of clocks correseponding to IDs in the clock property
+> + - clock-names: shall be "usbdrd30".
+
+It would be nice to fix up the terminology here too.
+
+Thanks,
+Mark.
