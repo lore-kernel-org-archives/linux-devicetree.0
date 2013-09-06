@@ -1,66 +1,121 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
-Date: Sun, 8 Sep 2013 14:47:25 +0100
-Message-ID: <20130908134725.GQ29403@sirena.org.uk>
-References: <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com>
- <20130905020435.GA3970@gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>
- <522817D7.1010206@freescale.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA0C885@DBDE04.ent.ti.com>
- <5228369A.9000904@freescale.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA0C907@DBDE04.ent.ti.com>
- <52284F32.2020302@freescale.com>
- <20130905135032.GB3084@sirena.org.uk>
- <20130906023605.GA2292@gmail.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH v4 12/19] cpufreq: cpufreq-cpu0: remove device tree
+ parsing for cpu nodes
+Date: Fri, 6 Sep 2013 15:44:12 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1309061539310.11068@axis700.grange>
+References: <1374492747-13879-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <1376991021-12160-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <1376991021-12160-13-git-send-email-Sudeep.KarkadaNagesha@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WKQ7zUpzoH2KEHMN"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130906023605.GA2292@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Huang Shijie <shijie8@gmail.com>
-Cc: Huang Shijie <b32955@freescale.com>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1376991021-12160-13-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Viresh Kumar <viresh.kumar@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jonas Bonn <jonas@southpole.se>, Michal Simek <monstr@monstr.eu>, "Rafael J. Wysocki" <rjw@sisk.pl>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi
 
---WKQ7zUpzoH2KEHMN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 20 Aug 2013, Sudeep KarkadaNagesha wrote:
 
-On Thu, Sep 05, 2013 at 10:36:44PM -0400, Huang Shijie wrote:
-> On Thu, Sep 05, 2013 at 02:50:32PM +0100, Mark Brown wrote:
+> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> 
+> Now that the cpu device registration initialises the of_node(if available)
+> appropriately for all the cpus, parsing here is redundant.
+> 
+> This patch removes all DT parsing and uses cpu->of_node instead.
+> 
+> Acked-by: Shawn Guo <shawn.guo@linaro.org>
+> Acked-by: Rob Herring <rob.herring@calxeda.com>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> ---
+>  drivers/cpufreq/cpufreq-cpu0.c | 23 ++++-------------------
+>  1 file changed, 4 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.=
+> c
+> index ad1fde2..5b05c26 100644
+> --- a/drivers/cpufreq/cpufreq-cpu0.c
+> +++ b/drivers/cpufreq/cpufreq-cpu0.c
+> @@ -174,29 +174,17 @@ static struct cpufreq_driver cpu0_cpufreq_driver =3D =
+> {
+> =20
+>  static int cpu0_cpufreq_probe(struct platform_device *pdev)
+>  {
+> -=09struct device_node *np, *parent;
+> +=09struct device_node *np;
+>  =09int ret;
+> =20
+> -=09parent =3D of_find_node_by_path("/cpus");
+> -=09if (!parent) {
+> -=09=09pr_err("failed to find OF /cpus\n");
+> -=09=09return -ENOENT;
+> -=09}
+> -
+> -=09for_each_child_of_node(parent, np) {
+> -=09=09if (of_get_property(np, "operating-points", NULL))
+> -=09=09=09break;
+> -=09}
+> +=09cpu_dev =3D &pdev->dev;
+> =20
+> +=09np =3D of_node_get(cpu_dev->of_node);
 
-> > Looking at the current header there just seem to be defines in there, no
-> > abstraction for the chips.  Perhaps that is what is missing?
+Has this actually been tested? This seems to break cpufreq-cpu0. The 
+reason is, that this probe function is called not for the DT CPU node, but 
+for a special virtual cpufreq-cpu0 platform device, typically created by 
+platforms, using
 
-> we do not need any abstraction for this chip, we only need the SPI NOR=20
-> commands, such as Quad read / DDR quad read.
+	platform_device_register_simple("cpufreq-cpu0", -1, NULL, 0);
 
-So the abstraction could say what the commands are, or what's supported
-if they're standard?
+which then of course doesn't have on .of_node associated with it.
 
---WKQ7zUpzoH2KEHMN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks
+Guennadi
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
+>  =09if (!np) {
+>  =09=09pr_err("failed to find cpu0 node\n");
+> -=09=09ret =3D -ENOENT;
+> -=09=09goto out_put_parent;
+> +=09=09return -ENOENT;
+>  =09}
+> =20
+> -=09cpu_dev =3D &pdev->dev;
+> -=09cpu_dev->of_node =3D np;
+> -
+>  =09cpu_reg =3D devm_regulator_get(cpu_dev, "cpu0");
+>  =09if (IS_ERR(cpu_reg)) {
+>  =09=09/*
+> @@ -269,15 +257,12 @@ static int cpu0_cpufreq_probe(struct platform_device =
+> *pdev)
+>  =09}
+> =20
+>  =09of_node_put(np);
+> -=09of_node_put(parent);
+>  =09return 0;
+> =20
+>  out_free_table:
+>  =09opp_free_cpufreq_table(cpu_dev, &freq_table);
+>  out_put_node:
+>  =09of_node_put(np);
+> -out_put_parent:
+> -=09of_node_put(parent);
+>  =09return ret;
+>  }
+> =20
+> --=20
+> 1.8.1.2
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+> 
 
-iQIcBAEBAgAGBQJSLH/qAAoJELSic+t+oim9H3sP/1fg/sf49nzGXCDOTVf9HT3x
-jyiywkjR+AM7BAbQCuESas5QnRJ6K/+F+zqItQjnePOYWhDPF5PnvVM0ZV3jioGz
-68IqqCyks0WYrM3q/lm/1c7Zac6QXE5j2Ctm31BdYlJM/89nvrXz7CkSU+vNNfIg
-HokK8j/q6vM8LIxxFDdU4t5rwf4/qQN80zm4c/c/XWfVtawkuUgszTTNPXP34Ar1
-o6Acy/DHqd8jS/N6rtGr0VydDrrfe9PrvgiRNq3hZx5PcfKt/aISXWseE/XVXhuR
-I6DiMFsibc64jXnzjWqkEaSMBxHInMDl1g4Hl6NbNBf945Nype0ygWH+f2US70lq
-rM5+EDHC9+5iFMQW9OYIuOdYjPBK43PjNqaQSHxd2T/duWNzInJgUu5slVRNO4FW
-y4AdCWyZrczt2k5AIiA7Zrp4bNXR+st86LU09SIO/zH+UNRZEmT8weY3fl4xslfZ
-qTZxDOx39dLGeRQfK8sH35BgvZQGJPZL5yk1RllnnKxMxwfDfJ5cKFxR3gRgmIBn
-CFOPE6NGKyON0ZkZUfPu2YjlEnGjV0Z9EcNVsTTGk19z1atoAlZnfBWJr2+3ypgo
-K7p6VM/MufzyH0ZvTTjfEH9iTXFvF3GWtflzh0qObcim73itQbomMhoiwe1LqqrS
-aTPkSTSymth2y0mfeZCC
-=d2N3
------END PGP SIGNATURE-----
-
---WKQ7zUpzoH2KEHMN--
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
