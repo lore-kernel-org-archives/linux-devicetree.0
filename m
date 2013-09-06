@@ -1,39 +1,79 @@
-From: Xiubo Li <Li.Xiubo@freescale.com>
-Subject: [PATCHv3 3/4] ARM: dts: Enables FTM PWM device for Vybrid VF610 TOWER board.
-Date: Fri, 6 Sep 2013 16:08:26 +0800
-Message-ID: <1378454907-22728-4-git-send-email-Li.Xiubo@freescale.com>
-References: <1378454907-22728-1-git-send-email-Li.Xiubo@freescale.com>
+From: George Cherian <george.cherian@ti.com>
+Subject: [PATCH] arm: dts: am33xx: Add mmc nodes for am33xx platform
+Date: Fri, 6 Sep 2013 13:51:52 +0530
+Message-ID: <1378455712-17379-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378454907-22728-1-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: r65073@freescale.com, thierry.reding@gmail.com
-Cc: grant.likely@linaro.org, linux@arm.linux.org.uk, rob@landley.net, ian.campbell@citrix.com, swarren@wwwdotorg.org, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, George Cherian <george.cherian@ti.com>, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, tony@atomide.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Selecting system clock as the counter source clock by default.
+Add mmc nodes for am33xx platforms
 
-Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+Signed-off-by: George Cherian <george.cherian@ti.com>
 ---
- arch/arm/boot/dts/vf610-twr.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+Verified after applying [1] and [2]
+[1] - [PATCH v4 0/6] dma: edma: Support scatter-lists of any length - https://lkml.org/lkml/2013/8/29/466
+[2] - [PATCH v2] ARM: dts: add AM33XX EDMA support - https://lkml.org/lkml/2013/8/26/57
+ arch/arm/boot/dts/am33xx.dtsi | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
-index 1a58678..c742275 100644
---- a/arch/arm/boot/dts/vf610-twr.dts
-+++ b/arch/arm/boot/dts/vf610-twr.dts
-@@ -57,6 +57,11 @@
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index b0badff..1df512d 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -236,6 +236,41 @@
+ 			status = "disabled";
+ 		};
  
-+&pwm0 {
-+	fsl,pwm-counter-clk = "ftm0";
-+	status = "okay";
-+};
++		mmc1: mmc@48061000 {
++			compatible = "ti,omap4-hsmmc";
++			reg = <0x48060000 0x1000>;
++			interrupts = <64>;
++			ti,hwmods = "mmc1";
++			ti,dual-volt;
++			ti,needs-special-reset;
++			ti,needs-special-hs-handling;
++			dmas = <&edma 24
++				&edma 25>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
 +
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1_1>;
++		mmc2: mmc@481d8000 {
++			compatible = "ti,omap4-hsmmc";
++			reg = <0x481d8000 0x1000>;
++			interrupts = <28>;
++			ti,hwmods = "mmc2";
++			ti,needs-special-reset;
++			dmas = <&edma 2
++				&edma 3>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++
++		mmc3: mmc@47810000 {
++			compatible = "ti,omap4-hsmmc";
++			reg = <0x47810000 0x1000>;
++			interrupts = <29>;
++			ti,hwmods = "mmc3";
++			ti,needs-special-reset;
++			status = "disabled";
++		};
++
+ 		wdt2: wdt@44e35000 {
+ 			compatible = "ti,omap3-wdt";
+ 			ti,hwmods = "wd_timer2";
 -- 
-1.8.0
+1.8.1.4
