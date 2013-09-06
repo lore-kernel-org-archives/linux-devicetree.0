@@ -1,52 +1,66 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCHv2 1/2] ARM: msm: Add support for MSM8974 Dragonboard
-Date: Fri, 6 Sep 2013 12:01:41 -0500
-Message-ID: <8E887DF7-5941-480E-8D05-80EFCC960B91@codeaurora.org>
-References: <1378425890-4225-1-git-send-email-rvaswani@codeaurora.org> <20A8A05D-2F56-4127-A494-470833B2DC42@codeaurora.org> <522A0977.5060703@codeaurora.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <522A0977.5060703@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rohit Vaswani <rvaswani@codeaurora.org>
-Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Matt Porter <matt.porter@linaro.org>
+Subject: Re: [PATCH v7 1/3] gpio: bcm281xx: Add GPIO driver
+Date: Fri, 6 Sep 2013 13:14:01 -0400
+Message-ID: <20130906171400.GC10973@ohporter.com>
+References: <1377882914-30152-1-git-send-email-markus.mayer@linaro.org>
+ <1377882914-30152-2-git-send-email-markus.mayer@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1377882914-30152-2-git-send-email-markus.mayer@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Mayer <markus.mayer@linaro.org>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Christian Daudt <csd@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <mmayer@broadcom.com>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Sep 6, 2013, at 11:57 AM, Rohit Vaswani wrote:
-
-> On 9/6/2013 7:22 AM, Kumar Gala wrote:
->> On Sep 5, 2013, at 7:04 PM, Rohit Vaswani wrote:
->> 
->>> This patch adds basic board support for MSM8974 Dragonboard
->>> which belongs to the Snapdragon 800 family.
->>> For now, just support a basic machine with device tree.
->>> 
->>> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
->>> ---
->>> arch/arm/boot/dts/Makefile        |  3 ++-
->>> arch/arm/boot/dts/msm8974-db.dts  |  7 +++++++
->>> arch/arm/boot/dts/msm8974.dtsi    | 30 ++++++++++++++++++++++++++++++
->>> arch/arm/mach-msm/Kconfig         | 20 ++++++++++++++++++--
->>> arch/arm/mach-msm/Makefile        |  1 +
->>> arch/arm/mach-msm/board-dt-8974.c | 23 +++++++++++++++++++++++
->>> 6 files changed, 81 insertions(+), 3 deletions(-)
->>> create mode 100644 arch/arm/boot/dts/msm8974-db.dts
->>> create mode 100644 arch/arm/boot/dts/msm8974.dtsi
->>> create mode 100644 arch/arm/mach-msm/board-dt-8974.c
->> As I mentioned before, its the APQ8074 Dragonboard, not MSM8974
-> 
-> We are not going with the internal (mangled) naming schemes for this as the configs etc. are all aligned to MSM8974 and we will only have this 1 platform as our upstream platform.
-
-I'm not sure I understand your point.
-
-We call it the DB8074 and not DB8974:
-
-http://mydragonboard.org/db8074/
-
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+T24gRnJpLCBBdWcgMzAsIDIwMTMgYXQgMTA6MTU6MTJBTSAtMDcwMCwgTWFya3VzIE1heWVyIHdy
+b3RlOgoKPHNuaXA+Cgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vTWFrZWZpbGUgYi9kcml2
+ZXJzL2dwaW8vTWFrZWZpbGUKPiBpbmRleCBlZjNlOTgzLi5mY2QwNzUxIDEwMDY0NAo+IC0tLSBh
+L2RyaXZlcnMvZ3Bpby9NYWtlZmlsZQo+ICsrKyBiL2RyaXZlcnMvZ3Bpby9NYWtlZmlsZQo+IEBA
+IC0xNiw2ICsxNiw3IEBAIG9iai0kKENPTkZJR19HUElPX0FEUDU1MjApCSs9IGdwaW8tYWRwNTUy
+MC5vCj4gIG9iai0kKENPTkZJR19HUElPX0FEUDU1ODgpCSs9IGdwaW8tYWRwNTU4OC5vCj4gIG9i
+ai0kKENPTkZJR19HUElPX0FNRDgxMTEpCSs9IGdwaW8tYW1kODExMS5vCj4gIG9iai0kKENPTkZJ
+R19HUElPX0FSSVpPTkEpCSs9IGdwaW8tYXJpem9uYS5vCj4gK29iai0kKENPTkZJR19HUElPX0JD
+TV9LT05BKQkrPSBncGlvLWJjbS1rb25hLm8KPiAgb2JqLSQoQ09ORklHX0dQSU9fQlQ4WFgpCSs9
+IGdwaW8tYnQ4eHgubwo+ICBvYmotJChDT05GSUdfR1BJT19DTFBTNzExWCkJKz0gZ3Bpby1jbHBz
+NzExeC5vCj4gIG9iai0kKENPTkZJR19HUElPX0NTNTUzNSkJKz0gZ3Bpby1jczU1MzUubwo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vZ3Bpby1iY20ta29uYS5jIGIvZHJpdmVycy9ncGlvL2dw
+aW8tYmNtLWtvbmEuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uZjBm
+N2E5Ngo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby1iY20ta29uYS5j
+Cj4gQEAgLTAsMCArMSw2MzEgQEAKPiArLyoKPiArICogQ29weXJpZ2h0IChDKSAyMDEyLTIwMTMg
+QnJvYWRjb20gQ29ycG9yYXRpb24KPiArICoKPiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29m
+dHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcgo+ICsgKiBtb2RpZnkgaXQgdW5k
+ZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcwo+ICsgKiBw
+dWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbiB2ZXJzaW9uIDIuCj4gKyAq
+Cj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCAiYXMgaXMiIFdJVEhPVVQgQU5ZIFdB
+UlJBTlRZIG9mIGFueQo+ICsgKiBraW5kLCB3aGV0aGVyIGV4cHJlc3Mgb3IgaW1wbGllZDsgd2l0
+aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5Cj4gKyAqIG9mIE1FUkNIQU5UQUJJTElUWSBv
+ciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKPiArICogR05VIEdl
+bmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPiArICovCj4gKwo+ICsjaW5j
+bHVkZSA8bGludXgvYml0b3BzLmg+CgpOZWVkICNpbmNsdWRlIDxsaW51eC9lcnIuaD4KCj4gKyNp
+bmNsdWRlIDxsaW51eC9pby5oPgo+ICsjaW5jbHVkZSA8bGludXgvZ3Bpby5oPgo+ICsjaW5jbHVk
+ZSA8bGludXgvb2ZfZGV2aWNlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZl9pcnEuaD4KPiArI2lu
+Y2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ICsjaW5jbHVkZSA8bGludXgvaXJxZG9tYWluLmg+Cj4g
+KyNpbmNsdWRlIDxsaW51eC9pcnFjaGlwL2NoYWluZWRfaXJxLmg+Cgo8c25pcD4KCj4gKwlrb25h
+X2dwaW8tPmlycV9kb21haW4gPSBpcnFfZG9tYWluX2FkZF9saW5lYXIoZGV2LT5vZl9ub2RlLAo+
+ICsJCQkJCQkgICAgICBjaGlwLT5uZ3BpbywKPiArCQkJCQkJICAgICAgJmJjbV9rb25hX2lycV9v
+cHMsCj4gKwkJCQkJCSAgICAgIGtvbmFfZ3Bpbyk7Cj4gKwlpZiAoIWtvbmFfZ3Bpby0+aXJxX2Rv
+bWFpbikgewo+ICsJCWRldl9lcnIoZGV2LCAiQ291bGRuJ3QgYWxsb2NhdGUgSVJRIGRvbWFpblxu
+Iik7Cj4gKwkJcmV0dXJuIC1FTlhJTzsKPiArCX0KPiArCj4gKwlyZXMgPSBwbGF0Zm9ybV9nZXRf
+cmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOwo+ICsJa29uYV9ncGlvLT5yZWdfYmFz
+ZSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIHJlcyk7Cj4gKwlpZiAoSVNfRVJSKGtvbmFf
+Z3Bpby0+cmVnX2Jhc2UpKSB7CgpncGlvLWJjbS1rb25hLmM6NTY4OjI6IGVycm9yOiBpbXBsaWNp
+dCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhJU19FUlLigJkKCi1NYXR0CgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
