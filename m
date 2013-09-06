@@ -1,52 +1,39 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V4] regulator: palmas: add support for external control
- of rails
-Date: Fri, 6 Sep 2013 21:47:12 +0100
-Message-ID: <20130906204712.GK29403@sirena.org.uk>
-References: <1377082096-22296-1-git-send-email-ldewangan@nvidia.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] ARM: msm: Remove irqs-*.h files for DT based targets
+Date: Fri, 06 Sep 2013 13:50:05 -0700
+Message-ID: <522A3FFD.9020105@codeaurora.org>
+References: <20130906195300.GJ808@joshc.qualcomm.com> <1378499517-24014-1-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Tu8ztk+XgTAiG9Id"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1377082096-22296-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: sameo@linux.intel.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1378499517-24014-1-git-send-email-sboyd@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Rohit Vaswani <rvaswani@codeaurora.org>, David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/06/13 13:31, Stephen Boyd wrote:
+> diff --git a/arch/arm/mach-msm/Kconfig b/arch/arm/mach-msm/Kconfig
+> index 905efc8..30b3342 100644
+> --- a/arch/arm/mach-msm/Kconfig
+> +++ b/arch/arm/mach-msm/Kconfig
+> @@ -50,6 +50,7 @@ config ARCH_MSM8X60
+>  	select HAVE_SMP
+>  	select MSM_SCM if SMP
+>  	select USE_OF
+> +	select SPARSE_IRQ
+>  
+>  config ARCH_MSM8960
+>  	bool "MSM8960"
+> @@ -59,6 +60,7 @@ config ARCH_MSM8960
+>  	select GPIO_MSM_V2
+>  	select MSM_SCM if SMP
+>  	select USE_OF
+> +	select SPARSE_IRQ
 
---Tu8ztk+XgTAiG9Id
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Gah, I guess this needs to be sorted alphabetically.
 
-On Wed, Aug 21, 2013 at 04:18:16PM +0530, Laxman Dewangan wrote:
-> Palmas rails like LDOs, SMPSs, REGENs, SYSENs can be enable and disable
-> by register programming through I2C communication as well as it can be
-> enable/disable with the external control input ENABLE1, ENABLE2 and NSLEEP.
-
-Applied, thanks.
-
---Tu8ztk+XgTAiG9Id
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSKj9NAAoJELSic+t+oim9LI4P/3Qb7pv8EVyN2uT9RUSXN4Lp
-1XJLaBZnsZ6/WrivXD7nBZGUIvLvvdHJ04XMWQip7XEjuWE9F6oKk0HphdlGt+EE
-+97ZI5rcAHlllTQ9aEipMfpzY+ZWsITZZabPjAi1pTPTVuzhBBdCjiaSabpuVV12
-tTfgZRsbnRqpEcXkx2PS5x/TowEovsfRswmOJ1p1Ob3+upTJfuy0g4JIBMHBFPLO
-1u8poY9rxO3UTg8YpxvtLiVR5y1lWCaQcqR+uzzvzXc2MkJM27aYr1bSj2bw9pZa
-w5lvXYQSm+05bny++cbX98jfjjuCMOpJfSpZvEWChyaINeZWSVjo0h9pb9UeUNCX
-OHgl8rRh2vxHJFGp/T2jCmnEjQEFFEz07B4lH/f9YJ2hHfDn2rSuA6JRrK4i+JZY
-0+HUhZuw1JwDm0A84/S+PrZFSKILtg+g+YmGqendoFnQHCZG8w6rwssuHwwvsywY
-bDZELb/U2C8o7YFzpuvbWJreYCDbMmUr3GYYSICiwQe1yyGVXgX1RU3M9hQQ2fi/
-Z+0iU4LV6Y/IXHJv3mBXeUi/SZ2InxCVNi/MQ2bHCpTXsKfEOl3HW3/ZLdrudw58
-/X5H84/jjumVqitkCF/Rm8Vyayn3SXhq8MxNKrlBvQWLAVsXsa5IBNIFZDAdP0kC
-0xli7Fl1xL5zBfcvOZ6x
-=BwM7
------END PGP SIGNATURE-----
-
---Tu8ztk+XgTAiG9Id--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
