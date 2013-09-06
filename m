@@ -1,242 +1,194 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCHv3 1/2] ARM: msm: Add support for APQ8074 Dragonboard
-Date: Fri, 6 Sep 2013 14:50:51 -0700
-Message-ID: <20130906215051.GA29253@quad.lixom.net>
-References: <1378495943-2572-1-git-send-email-rvaswani@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 2/2] sh_eth: add device tree support
+Date: Sat, 7 Sep 2013 03:43:24 +0400
+Message-ID: <201309070343.25640.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1378495943-2572-1-git-send-email-rvaswani@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit Vaswani <rvaswani@codeaurora.org>
-Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
+Cc: nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add support of the device tree probing for the Renesas SH-Mobile SoCs
+documenting the device tree binding as necessary.
 
-Some comments below.
+This work is loosely based on an original patch by Nobuhiro Iwamatsu
+<nobuhiro.iwamatsu.yj@renesas.com>.
 
-On Fri, Sep 06, 2013 at 12:32:22PM -0700, Rohit Vaswani wrote:
-> This patch adds basic board support for APQ8074 Dragonboard
-> which belongs to the Snapdragon 800 family.
-> For now, just support a basic machine with device tree.
-> 
-> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
-> ---
->  arch/arm/boot/dts/Makefile                |  3 ++-
->  arch/arm/boot/dts/apq8074-dragonboard.dts |  6 ++++++
->  arch/arm/boot/dts/msm8974.dtsi            | 35 +++++++++++++++++++++++++++++++
->  arch/arm/mach-msm/Kconfig                 | 20 ++++++++++++++++--
->  arch/arm/mach-msm/Makefile                |  1 +
->  arch/arm/mach-msm/board-dt-8974.c         | 24 +++++++++++++++++++++
->  6 files changed, 86 insertions(+), 3 deletions(-)
->  create mode 100644 arch/arm/boot/dts/apq8074-dragonboard.dts
->  create mode 100644 arch/arm/boot/dts/msm8974.dtsi
->  create mode 100644 arch/arm/mach-msm/board-dt-8974.c
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 641b3c9a..bea54a7 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -97,7 +97,8 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) += kirkwood-cloudbox.dtb \
->  	kirkwood-openblocks_a6.dtb
->  dtb-$(CONFIG_ARCH_MARCO) += marco-evb.dtb
->  dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
-> -	msm8960-cdp.dtb
-> +	msm8960-cdp.dtb \
-> +	apq8074-dragonboard.dtb
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Please add boards alphabetically.
+---
+This patch is against Dave's 'net-next.git' repo.
+Not posting it to netdev@vger.kernel.org this time, or Dave will scold me. :-)
 
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
->  	armada-370-mirabox.dtb \
->  	armada-370-rd.dtb \
-> diff --git a/arch/arm/boot/dts/apq8074-dragonboard.dts b/arch/arm/boot/dts/apq8074-dragonboard.dts
-> new file mode 100644
-> index 0000000..5b7b6a0
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/apq8074-dragonboard.dts
+Changes in version 2:
+- added sh_eth_match_table[] entry for "renesas,ether-r8a7778", documented it;
+- clarified descriptions of the "reg" and "interrupt" properties;
+- moved "interrupt-parent" from required properties to optional;
+- mentioned the necessary PHY subnode to the "phy-handle" property description,
+  documented the requered "#address-cells" and "#size-cells" properties;
+- clarified the types/descriptions of the Renesas specific properties;
+- refreshed the patch.
 
-arch/arm/boot/dts/ is getting really crowded. It's been working best if the SoC
-family or vendor is used as a prefix to keep things a bit more organized. In
-that spirit, prefixing these with msm-<foo> makes sense. Can you please do so?
+ Documentation/devicetree/bindings/net/sh_eth.txt |   44 +++++++++++++++
+ drivers/net/ethernet/renesas/sh_eth.c            |   67 ++++++++++++++++++++++-
+ 2 files changed, 110 insertions(+), 1 deletion(-)
 
-> @@ -0,0 +1,6 @@
-> +/include/ "msm8974.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm APQ8074 Dragonboard";
-> +	compatible = "qcom,apq8074-dragonboard", "qcom,apq8074";
-> +};
-
-Ok, I'm all for merging a early minimal dts file, but things like memory and
-a default bootargs tend to make sense.
-
-> diff --git a/arch/arm/boot/dts/msm8974.dtsi b/arch/arm/boot/dts/msm8974.dtsi
-> new file mode 100644
-> index 0000000..f04b643
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/msm8974.dtsi
-> @@ -0,0 +1,35 @@
-> +/dts-v1/;
-> +
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm MSM8974";
-> +	compatible = "qcom,msm8974";
-
-the board uses "qcom,apq8074" and this overrides this. Which way is it?
-
-> +	interrupt-parent = <&intc>;
-> +
-> +	soc: soc { };
-
-For files that include this it's ok to use the &phandle syntax, but in this
-base dtsi, please use proper structure. In other words, move the contents of
-the soc node up above instead.
-
-> +};
-> +
-> +&soc {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges;
-> +	compatible = "simple-bus";
-> +
-> +	intc: interrupt-controller@f9000000 {
-> +		compatible = "qcom,msm-qgic2";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		reg = <0xf9000000 0x1000>,
-> +		      <0xf9002000 0x1000>;
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv7-timer";
-> +		interrupts = <1 2 0xf08>,
-> +			     <1 3 0xf08>,
-> +			     <1 4 0xf08>,
-> +			     <1 1 0xf08>;
-> +		clock-frequency = <19200000>;
-> +	};
-> +};
-
-It'd make a lot of sense to include at least cpu nodes here as well, and
-ideally basics for the drivers you have already merged, such as uarts.
-
-> diff --git a/arch/arm/mach-msm/Kconfig b/arch/arm/mach-msm/Kconfig
-> index 905efc8..499e8fe 100644
-> --- a/arch/arm/mach-msm/Kconfig
-> +++ b/arch/arm/mach-msm/Kconfig
-> @@ -1,12 +1,12 @@
->  if ARCH_MSM
->  
->  comment "Qualcomm MSM SoC Type"
-> -	depends on (ARCH_MSM8X60 || ARCH_MSM8960)
-> +	depends on ARCH_MSM_DT
->  
->  choice
->  	prompt "Qualcomm MSM SoC Type"
->  	default ARCH_MSM7X00A
-> -	depends on !(ARCH_MSM8X60 || ARCH_MSM8960)
-> +	depends on !ARCH_MSM_DT
-
-This has nothing to do with adding support for dragonboard. Please break
-out the cleanup separately.
-
-I'm not sure what the purpose of ARCH_MSM_DT is either, it just looks to
-complicate matter here?
-
-> +config ARCH_MSM8974
-> +	bool "MSM8974"
-> +	select ARM_GIC
-> +	select CPU_V7
-> +	select HAVE_ARM_ARCH_TIMER
-> +	select HAVE_SMP
-> +	select MSM_SCM if SMP
-> +	select USE_OF
-> +
-> +config ARCH_MSM_DT
-> +	def_bool y
-> +	depends on (ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_MSM8974)
-> +
->  config MSM_HAS_DEBUG_UART_HS
->  	bool
->  
-> @@ -68,6 +81,7 @@ config MSM_SOC_REV_A
->  
->  config  ARCH_MSM_ARM11
->  	bool
-> +
->  config  ARCH_MSM_SCORPION
->  	bool
->  
-> @@ -75,6 +89,7 @@ config  MSM_VIC
->  	bool
->  
->  menu "Qualcomm MSM Board Type"
-> +	depends on !ARCH_MSM_DT
->  
->  config MACH_HALIBUT
->  	depends on ARCH_MSM
-> @@ -122,6 +137,7 @@ config MSM_SMD
->  
->  config MSM_GPIOMUX
->  	bool
-> +	depends on !ARCH_MSM_DT
->  	help
->  	  Support for MSM V1 TLMM GPIOMUX architecture.
-
-
-All of the above should be in a separate patch and motivated.
-
->  
-> diff --git a/arch/arm/mach-msm/Makefile b/arch/arm/mach-msm/Makefile
-> index d257ff4..80e3b15 100644
-> --- a/arch/arm/mach-msm/Makefile
-> +++ b/arch/arm/mach-msm/Makefile
-> @@ -29,5 +29,6 @@ obj-$(CONFIG_ARCH_MSM7X30) += board-msm7x30.o devices-msm7x30.o
->  obj-$(CONFIG_ARCH_QSD8X50) += board-qsd8x50.o devices-qsd8x50.o
->  obj-$(CONFIG_ARCH_MSM8X60) += board-dt-8660.o
->  obj-$(CONFIG_ARCH_MSM8960) += board-dt-8960.o
-> +obj-$(CONFIG_ARCH_MSM8974) += board-dt-8974.o
->  obj-$(CONFIG_MSM_GPIOMUX) += gpiomux.o
->  obj-$(CONFIG_ARCH_QSD8X50) += gpiomux-8x50.o
-> diff --git a/arch/arm/mach-msm/board-dt-8974.c b/arch/arm/mach-msm/board-dt-8974.c
-> new file mode 100644
-> index 0000000..01ed8d0
-> --- /dev/null
-> +++ b/arch/arm/mach-msm/board-dt-8974.c
-> @@ -0,0 +1,24 @@
-> +/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/of_platform.h>
-> +#include <asm/mach/arch.h>
-> +
-> +static const char * const msm8974_dt_match[] __initconst = {
-> +	"qcom,msm8974",
-> +	"qcom,apq8074",
-> +	NULL
-> +};
-> +
-> +DT_MACHINE_START(MSM8974_DT, "Qualcomm MSM (Flattened Device Tree)")
-> +	.dt_compat = msm8974_dt_match,
-> +MACHINE_END
-
-This file should be shared across SoCs. You should avoid adding a new dt board
-file for every SoC like this.
-
-
--Olof
+Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+===================================================================
+--- /dev/null
++++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+@@ -0,0 +1,44 @@
++* Renesas Electronics SH EtherMAC
++
++This file provides information on what the device node for the SH EtherMAC
++interface contains.
++
++Required properties:
++- compatible: "renesas,gether-r8a7740" if the device is a part of R8A7740 SoC.
++	      "renesas,ether-r8a7778"  if the device is a part of R8A7778 SoC.
++	      "renesas,ether-r8a7779"  if the device is a part of R8A7779 SoC.
++	      "renesas,ether-r8a7790"  if the device is a part of R8A7790 SoC.
++- reg: offset and length of (1) the E-DMAC/feLic register block (required),
++       (2) the TSU register block (optional).
++- interrupts: interrupt specifier for the sole interrupt.
++- phy-mode: string, operation mode of the PHY interface (a string that
++	    of_get_phy_mode() can understand).
++- phy-handle: phandle of the PHY device (there should be a PHY device subnode).
++- #address-cells: number of address cells for the MDIO bus, must be equal to 1.
++- #size-cells: number of size cells on the MDIO bus, must be equal to 0.
++
++Optional properties:
++- interrupt-parent: the phandle for the interrupt controller that services
++		    interrupts for this device.
++- local-mac-address: 6 bytes, MAC address.
++- renesas,no-ether-link: boolean, specify when a board does not provide a proper
++			 Ether LINK signal.
++- renesas,ether-link-active-low: boolean, specify when the Ether LINK signal is
++  				 active-low instead of normal active-high.
++
++Example (Armadillo800EVA board):
++
++	ethernet@e9a00000 {
++		compatible = "renesas,gether-r8a7740";
++		reg = <0xe9a00000 0x800>, <0xe9a01800 0x800>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 142 0x4>;
++		phy-mode = "mii";
++		phy-handle = <&phy0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		phy0: ethernet-phy@0 {
++			reg = <0>;
++		};
++	};
+Index: net-next/drivers/net/ethernet/renesas/sh_eth.c
+===================================================================
+--- net-next.orig/drivers/net/ethernet/renesas/sh_eth.c
++++ net-next/drivers/net/ethernet/renesas/sh_eth.c
+@@ -32,6 +32,9 @@
+ #include <linux/platform_device.h>
+ #include <linux/mdio-bitbang.h>
+ #include <linux/netdevice.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_net.h>
+ #include <linux/phy.h>
+ #include <linux/cache.h>
+ #include <linux/io.h>
+@@ -2606,6 +2609,53 @@ static const struct net_device_ops sh_et
+ 	.ndo_change_mtu		= eth_change_mtu,
+ };
+ 
++#ifdef CONFIG_OF
++static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct sh_eth_plat_data *pdata;
++	struct device_node *phy;
++	const char *mac_addr;
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++
++	pdata->phy_interface = of_get_phy_mode(np);
++
++	phy = of_parse_phandle(np, "phy-handle", 0);
++	if (!phy || of_property_read_u32(phy, "reg", &pdata->phy)) {
++		devm_kfree(dev, pdata);
++		return NULL;
++	}
++
++	mac_addr = of_get_mac_address(np);
++	if (mac_addr)
++		memcpy(pdata->mac_addr, mac_addr, ETH_ALEN);
++
++	pdata->no_ether_link =
++		of_property_read_bool(np, "renesas,no-ether-link");
++	pdata->ether_link_active_low =
++		of_property_read_bool(np, "renesas,ether-link-active-low");
++
++	return pdata;
++}
++
++static const struct of_device_id sh_eth_match_table[] = {
++	{ .compatible = "renesas,gether-r8a7740", .data = &r8a7740_data },
++	{ .compatible = "renesas,ether-r8a7778", .data = &r8a777x_data },
++	{ .compatible = "renesas,ether-r8a7779", .data = &r8a777x_data },
++	{ .compatible = "renesas,ether-r8a7790", .data = &r8a7790_data },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, sh_eth_match_table);
++#else
++static inline struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
++{
++	return NULL;
++}
++#endif
++
+ static int sh_eth_drv_probe(struct platform_device *pdev)
+ {
+ 	int ret, devno = 0;
+@@ -2659,6 +2709,8 @@ static int sh_eth_drv_probe(struct platf
+ 	pm_runtime_enable(&pdev->dev);
+ 	pm_runtime_resume(&pdev->dev);
+ 
++	if (pdev->dev.of_node)
++		pd = sh_eth_parse_dt(&pdev->dev);
+ 	if (!pd) {
+ 		dev_err(&pdev->dev, "no platform data\n");
+ 		ret = -EINVAL;
+@@ -2674,7 +2726,19 @@ static int sh_eth_drv_probe(struct platf
+ 	mdp->ether_link_active_low = pd->ether_link_active_low;
+ 
+ 	/* set cpu data */
+-	mdp->cd = (struct sh_eth_cpu_data *)id->driver_data;
++	if (id) {
++		mdp->cd = (struct sh_eth_cpu_data *)id->driver_data;
++	} else	{
++		const struct of_device_id *match;
++
++		match = of_match_device(of_match_ptr(sh_eth_match_table),
++					&pdev->dev);
++		if (!match) {
++			ret = -EINVAL;
++			goto out_release;
++		}
++		mdp->cd = (struct sh_eth_cpu_data *)match->data;
++	}
+ 	mdp->reg_offset = sh_eth_get_register_offset(mdp->cd->register_type);
+ 	sh_eth_set_default_cpu_data(mdp->cd);
+ 
+@@ -2815,6 +2879,7 @@ static struct platform_driver sh_eth_dri
+ 	.driver = {
+ 		   .name = CARDNAME,
+ 		   .pm = SH_ETH_PM_OPS,
++		   .of_match_table = of_match_ptr(sh_eth_match_table),
+ 	},
+ };
+ 
