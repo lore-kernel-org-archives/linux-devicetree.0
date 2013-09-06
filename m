@@ -1,159 +1,196 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCHv2 RESEND] am33xx: cpsw: default to ethernet hwaddr from
- efuse if not defined in dt
-Date: Thu, 5 Sep 2013 15:07:59 -0700
-Message-ID: <20130905220759.GA17778@quad.lixom.net>
-References: <1378415306-28821-1-git-send-email-jacmet@sunsite.dk>
- <1378417322-2277-1-git-send-email-jacmet@sunsite.dk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1378417322-2277-1-git-send-email-jacmet@sunsite.dk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Korsgaard <jacmet@sunsite.dk>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, khilman@linaro.org, tony@atomide.com, mugunthanvnm@ti.com, mpfj-list@newflow.co.uk, koen@dominion.thruhere.net, matt.porter@linaro.org
+From: Rohit Vaswani <rvaswani@codeaurora.org>
+Subject: [PATCHv2 1/2] ARM: msm: Add support for MSM8974 Dragonboard
+Date: Thu,  5 Sep 2013 17:04:49 -0700
+Message-ID: <1378425890-4225-1-git-send-email-rvaswani@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Brown <davidb@codeaurora.org>
+Cc: Rohit Vaswani <rvaswani@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds basic board support for MSM8974 Dragonboard
+which belongs to the Snapdragon 800 family.
+For now, just support a basic machine with device tree.
 
-On Thu, Sep 05, 2013 at 11:42:02PM +0200, Peter Korsgaard wrote:
-> When booting with CONFIG_ARM_APPENDED_DTB (either because of using an old
-> U-Boot, not wanting the hassle of 2 files or when using Falcon fast boot
-> mode in U-Boot), nothing updates the ethernet hwaddr specified for the
-> CPSW slaves, causing the driver to use a random hwaddr, which is some times
-> troublesome.
-> 
-> The am33xx has unique ethernet hwaddrs programmed in the efuse, so it makes
-> more sense to default to these rather than random ones. Add a fixup step
-> which adds mac-address dt properties using the efuse addresses if the DTB
-> didn't contain valid ones.
-> 
-> Signed-off-by: Peter Korsgaard <jacmet@sunsite.dk>
-> Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
-> Tested-by: Mark Jackson <mpfj-list@newflow.co.uk>
-> Tested-by: Koen Kooi <koen@dominion.thruhere.net>
-> Tested-by: Matt Porter <matt.porter@linaro.org>
-> ---
-> diff --git a/arch/arm/mach-omap2/am33xx-cpsw.c b/arch/arm/mach-omap2/am33xx-cpsw.c
-> new file mode 100644
-> index 0000000..eec29a4
-> --- /dev/null
-> +++ b/arch/arm/mach-omap2/am33xx-cpsw.c
-> @@ -0,0 +1,94 @@
-> +/*
-> + * am335x specific cpsw dt fixups
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/etherdevice.h>
-> +#include <linux/of.h>
-> +#include <linux/of_net.h>
-> +
-> +#include "soc.h"
-> +#include "control.h"
-> +
-> +/**
-> + * am33xx_dt_cpsw_set_mac_from_efuse - Add mac-address property using
-> + * ethernet hwaddr from efuse
-> + * @np:		Pointer to the cpsw slave to set mac address of
-> + * @idx:	Mac address index to use from efuse
-> + */
-> +static void am33xx_dt_cpsw_set_mac_from_efuse(struct device_node *np, int idx)
-> +{
-> +	struct property *prop;
-> +	u32 lo, hi;
-> +	u8 *mac;
-> +
-> +	switch (idx) {
-> +	case 0:
-> +		lo = omap_ctrl_readl(AM33XX_CONTROL_MAC_ID0_LOW);
-> +		hi = omap_ctrl_readl(AM33XX_CONTROL_MAC_ID0_HIGH);
-> +		break;
-> +
-> +	case 1:
-> +		lo = omap_ctrl_readl(AM33XX_CONTROL_MAC_ID1_LOW);
-> +		hi = omap_ctrl_readl(AM33XX_CONTROL_MAC_ID1_HIGH);
-> +		break;
-> +
-> +	default:
-> +		pr_err("cpsw.%d: too many slaves found\n", idx);
-> +		return;
-> +	}
-> +
-> +	prop = kzalloc(sizeof(*prop) + ETH_ALEN, GFP_KERNEL);
-> +	if (!prop)
-> +		return;
-> +
-> +	prop->value = prop + 1;
-> +	prop->length = ETH_ALEN;
-> +	prop->name = kstrdup("mac-address", GFP_KERNEL);
+Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
+---
+ arch/arm/boot/dts/Makefile        |  3 ++-
+ arch/arm/boot/dts/msm8974-db.dts  |  7 +++++++
+ arch/arm/boot/dts/msm8974.dtsi    | 30 ++++++++++++++++++++++++++++++
+ arch/arm/mach-msm/Kconfig         | 20 ++++++++++++++++++--
+ arch/arm/mach-msm/Makefile        |  1 +
+ arch/arm/mach-msm/board-dt-8974.c | 23 +++++++++++++++++++++++
+ 6 files changed, 81 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/boot/dts/msm8974-db.dts
+ create mode 100644 arch/arm/boot/dts/msm8974.dtsi
+ create mode 100644 arch/arm/mach-msm/board-dt-8974.c
 
-Hmm. Do we want this to be mac-address or local-mac-address? If it's
-mac-address, then this will override anything set by u-boot (by means
-of priority in of_net). I don't think that's desireable. So it should
-probably set local-mac-address instead.
-
-> +	if (!prop->name) {
-> +		kfree(prop);
-> +		return;
-> +	}
-> +
-> +	mac = prop->value;
-> +
-> +	mac[0] = hi;
-> +	mac[1] = hi >> 8;
-> +	mac[2] = hi >> 16;
-> +	mac[3] = hi >> 24;
-> +	mac[4] = lo;
-> +	mac[5] = lo >> 8;
-> +
-> +	of_update_property(np, prop);
-
-mach-mxs does this too, I wonder if it's worth creating a small helper for it.
-
-Doesn't have to be done as part of this patch but it's still worth doing.
-
-> +
-> +	pr_info("cpsw.%d: No hwaddr in dt. Using %pM from efuse\n", idx, mac);
-> +}
-> +
-> +static int __init am33xx_dt_cpsw_mac_fixup(void)
-> +{
-> +	struct device_node *np, *slave;
-> +	int idx = 0;
-> +
-> +	if (!soc_is_am33xx())
-> +		return -ENODEV;
-> +
-> +	for_each_compatible_node(np, NULL, "ti,cpsw")
-> +		for_each_node_by_name(slave, "slave") {
-
-The binding doesn't enforce "slave" node names for the subnodes, so you
-should probably just iterate over children. Right now they are named
-slave@0 and slave@1, but lack reg properties (and a notion of what said
-reg property would symbolize).
-
-> +			if (!of_get_mac_address(slave))
-> +				am33xx_dt_cpsw_set_mac_from_efuse(slave, idx);
-> +			idx++;
-
-You're assuming that you get the children in order here, which is not
-guaranteed.
-
-Maybe best is to adjust the binding, to make "reg" mean something (i.e. the MAC
-index for this hardware) and use the <reg> property of the childnode to tell
-which efuse to read.
-
-
--Olof
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 69193be..95ace01 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -103,7 +103,8 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) += kirkwood-cloudbox.dtb \
+ 	kirkwood-openblocks_a6.dtb
+ dtb-$(CONFIG_ARCH_MARCO) += marco-evb.dtb
+ dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
+-	msm8960-cdp.dtb
++	msm8960-cdp.dtb \
++	msm8974-db.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
+ 	armada-370-mirabox.dtb \
+ 	armada-370-netgear-rn102.dtb \
+diff --git a/arch/arm/boot/dts/msm8974-db.dts b/arch/arm/boot/dts/msm8974-db.dts
+new file mode 100644
+index 0000000..74106a8
+--- /dev/null
++++ b/arch/arm/boot/dts/msm8974-db.dts
+@@ -0,0 +1,7 @@
++/include/ "msm8974.dtsi"
++
++/ {
++	model = "Qualcomm MSM8974 Dragonboard";
++	compatible = "qcom,msm8974-db", "qcom,msm8974";
++};
++
+diff --git a/arch/arm/boot/dts/msm8974.dtsi b/arch/arm/boot/dts/msm8974.dtsi
+new file mode 100644
+index 0000000..aa3bb2f
+--- /dev/null
++++ b/arch/arm/boot/dts/msm8974.dtsi
+@@ -0,0 +1,30 @@
++/dts-v1/;
++
++/include/ "skeleton.dtsi"
++
++/ {
++	model = "Qualcomm MSM8974";
++	compatible = "qcom,msm8974";
++	interrupt-parent = <&intc>;
++
++	soc: soc { };
++};
++
++&soc {
++	intc: interrupt-controller@f9000000 {
++		compatible = "qcom,msm-qgic2";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		reg = < 0xf9000000 0x1000 >,
++		      < 0xf9002000 0x1000 >;
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts = <1 2 0xf08>,
++			     <1 3 0xf08>,
++			     <1 4 0xf08>,
++			     <1 1 0xf08>;
++		clock-frequency = <19200000>;
++	};
++};
+diff --git a/arch/arm/mach-msm/Kconfig b/arch/arm/mach-msm/Kconfig
+index 905efc8..499e8fe 100644
+--- a/arch/arm/mach-msm/Kconfig
++++ b/arch/arm/mach-msm/Kconfig
+@@ -1,12 +1,12 @@
+ if ARCH_MSM
+ 
+ comment "Qualcomm MSM SoC Type"
+-	depends on (ARCH_MSM8X60 || ARCH_MSM8960)
++	depends on ARCH_MSM_DT
+ 
+ choice
+ 	prompt "Qualcomm MSM SoC Type"
+ 	default ARCH_MSM7X00A
+-	depends on !(ARCH_MSM8X60 || ARCH_MSM8960)
++	depends on !ARCH_MSM_DT
+ 
+ config ARCH_MSM7X00A
+ 	bool "MSM7x00A / MSM7x01A"
+@@ -60,6 +60,19 @@ config ARCH_MSM8960
+ 	select MSM_SCM if SMP
+ 	select USE_OF
+ 
++config ARCH_MSM8974
++	bool "MSM8974"
++	select ARM_GIC
++	select CPU_V7
++	select HAVE_ARM_ARCH_TIMER
++	select HAVE_SMP
++	select MSM_SCM if SMP
++	select USE_OF
++
++config ARCH_MSM_DT
++	def_bool y
++	depends on (ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_MSM8974)
++
+ config MSM_HAS_DEBUG_UART_HS
+ 	bool
+ 
+@@ -68,6 +81,7 @@ config MSM_SOC_REV_A
+ 
+ config  ARCH_MSM_ARM11
+ 	bool
++
+ config  ARCH_MSM_SCORPION
+ 	bool
+ 
+@@ -75,6 +89,7 @@ config  MSM_VIC
+ 	bool
+ 
+ menu "Qualcomm MSM Board Type"
++	depends on !ARCH_MSM_DT
+ 
+ config MACH_HALIBUT
+ 	depends on ARCH_MSM
+@@ -122,6 +137,7 @@ config MSM_SMD
+ 
+ config MSM_GPIOMUX
+ 	bool
++	depends on !ARCH_MSM_DT
+ 	help
+ 	  Support for MSM V1 TLMM GPIOMUX architecture.
+ 
+diff --git a/arch/arm/mach-msm/Makefile b/arch/arm/mach-msm/Makefile
+index d872634..28e5c21 100644
+--- a/arch/arm/mach-msm/Makefile
++++ b/arch/arm/mach-msm/Makefile
+@@ -28,5 +28,6 @@ obj-$(CONFIG_ARCH_MSM7X30) += board-msm7x30.o devices-msm7x30.o
+ obj-$(CONFIG_ARCH_QSD8X50) += board-qsd8x50.o devices-qsd8x50.o
+ obj-$(CONFIG_ARCH_MSM8X60) += board-dt-8660.o
+ obj-$(CONFIG_ARCH_MSM8960) += board-dt-8960.o
++obj-$(CONFIG_ARCH_MSM8974) += board-dt-8974.o
+ obj-$(CONFIG_MSM_GPIOMUX) += gpiomux.o
+ obj-$(CONFIG_ARCH_QSD8X50) += gpiomux-8x50.o
+diff --git a/arch/arm/mach-msm/board-dt-8974.c b/arch/arm/mach-msm/board-dt-8974.c
+new file mode 100644
+index 0000000..697623e
+--- /dev/null
++++ b/arch/arm/mach-msm/board-dt-8974.c
+@@ -0,0 +1,23 @@
++/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/of_platform.h>
++#include <asm/mach/arch.h>
++
++static const char * const msm8974_dt_match[] __initconst = {
++	"qcom,msm8974-db",
++	NULL
++};
++
++DT_MACHINE_START(MSM8974_DT, "Qualcomm MSM (Flattened Device Tree)")
++	.dt_compat = msm8974_dt_match,
++MACHINE_END
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
