@@ -1,51 +1,49 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 1/5] ARM: add basic Trusted Foundations support
-Date: Fri, 6 Sep 2013 18:48:15 +0200
-Message-ID: <CACRpkdaphSqM1oOphC-t1UPmkxaEemC3R3aDfEXb79GWNNyNMA@mail.gmail.com>
-References: <1378351680-14696-1-git-send-email-acourbot@nvidia.com>
-	<1378351680-14696-2-git-send-email-acourbot@nvidia.com>
+From: Rohit Vaswani <rvaswani@codeaurora.org>
+Subject: Re: [PATCHv2 1/2] ARM: msm: Add support for MSM8974 Dragonboard
+Date: Fri, 06 Sep 2013 09:57:27 -0700
+Message-ID: <522A0977.5060703@codeaurora.org>
+References: <1378425890-4225-1-git-send-email-rvaswani@codeaurora.org> <20A8A05D-2F56-4127-A494-470833B2DC42@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378351680-14696-2-git-send-email-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Dave Martin <Dave.Martin@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20A8A05D-2F56-4127-A494-470833B2DC42@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 5, 2013 at 5:27 AM, Alexandre Courbot <acourbot@nvidia.com> wrote:
-
-> Trusted Foundations is a TrustZone-based secure monitor for ARM that
-> can be invoked  using a consistent SMC-based API on all supported
-> platforms. This patch adds initial basic support for Trusted
-> Foundations using the ARM firmware API. Current features are limited
-> to the ability to boot secondary processors.
+On 9/6/2013 7:22 AM, Kumar Gala wrote:
+> On Sep 5, 2013, at 7:04 PM, Rohit Vaswani wrote:
 >
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+>> This patch adds basic board support for MSM8974 Dragonboard
+>> which belongs to the Snapdragon 800 family.
+>> For now, just support a basic machine with device tree.
+>>
+>> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
+>> ---
+>> arch/arm/boot/dts/Makefile        |  3 ++-
+>> arch/arm/boot/dts/msm8974-db.dts  |  7 +++++++
+>> arch/arm/boot/dts/msm8974.dtsi    | 30 ++++++++++++++++++++++++++++++
+>> arch/arm/mach-msm/Kconfig         | 20 ++++++++++++++++++--
+>> arch/arm/mach-msm/Makefile        |  1 +
+>> arch/arm/mach-msm/board-dt-8974.c | 23 +++++++++++++++++++++++
+>> 6 files changed, 81 insertions(+), 3 deletions(-)
+>> create mode 100644 arch/arm/boot/dts/msm8974-db.dts
+>> create mode 100644 arch/arm/boot/dts/msm8974.dtsi
+>> create mode 100644 arch/arm/mach-msm/board-dt-8974.c
+> As I mentioned before, its the APQ8074 Dragonboard, not MSM8974
 
-I take it that this means that it is a set of standard routines
-living in the secure world that can be called by way of this
-API, correct? The commit message is written a bit like
-everybody knows what this is about but I don't :-)
+We are not going with the internal (mangled) naming schemes for this as 
+the configs etc. are all aligned to MSM8974 and we will only have this 1 
+platform as our upstream platform.
+>
+> - k
+>
 
-Some more background here would be nice, like where did this
-thing come from, and are there other platforms in existance that
-use trusted foundations or is it a Tegra-only thing? Does a
-specification of this thing listing available services exist for
-example?
-
-How does it relate to the (arch-neutral) trusted execution
-environment and such things that other vendors are pushing for?
-Can the trusted foundations be used "underneath" such
-frameworks for trusted applications, or is it a parallell thing
-altogether?
-
-Simple things like that...
-
-I tried googling it, is this a relevant URL?
-http://www.arm.com/community/partners/display_product/rw/ProductId/5393/
 
 Thanks,
-Linus Walleij
+Rohit Vaswani
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation
