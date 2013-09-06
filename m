@@ -1,304 +1,448 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v4 3/5] clk: dt: binding for basic multiplexer clock
-Date: Fri, 6 Sep 2013 09:53:22 +0300
-Message-ID: <52297BE2.8010603@ti.com>
-References: <1377150793-27864-1-git-send-email-mturquette@linaro.org>
- <1377150793-27864-4-git-send-email-mturquette@linaro.org>
- <2A930389-012E-45C3-93EB-6B4A41DB2EF5@codeaurora.org>
- <20130829011425.8231.78802@quantum>
- <39BAF1F8-41AD-4667-BF76-22BDF709415A@codeaurora.org>
- <20130830203334.10934.10011@quantum> <522110AA.7040700@wwwdotorg.org>
- <20130903232219.10934.67434@quantum> <52277DBF.7080104@wwwdotorg.org>
- <CAPtuhThWHP61FzDBCH5SSFx6kV7==VdF3-M=Lke+cgnrOQL7JQ@mail.gmail.com>
- <5228EA02.3000200@wwwdotorg.org>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: [PATCH V3] PCI: exynos: add support for MSI
+Date: Fri, 06 Sep 2013 15:54:59 +0900
+Message-ID: <001a01ceaace$013ec980$03bc5c80$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5228EA02.3000200@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ian campbell <ian.campbell@citrix.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Pratyush Anand <pratyush.anand@st.com>, Mohit KUMAR <Mohit.KUMAR@st.com>, Siva Reddy Kallam <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, Arnd Bergmann <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds support for Message Signaled Interrupt in the
+Exynos PCIe diver using Synopsys designware PCIe core IP.
 
-Chirping in my thoughts below.
+Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
+Signed-off-by: Srikanth T Shivanand <ts.srikanth@samsung.com>
+Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+Cc: Pratyush Anand <pratyush.anand@st.com>
+Cc: Mohit KUMAR <Mohit.KUMAR@st.com>
+---
+Changes since v2:
+- fixed MAX_MSI_CTRLS because MAX_MSI_IRQS is 32 only
+- used __get_free_pages() to allocate msi_data
+- used one msi_data and msi_irq_in_use per one RC
+- used irq_domain to represent the MSI controller
+- removed msi-base irq number from device tree because this is not
+  a hardware property.
 
-On 09/05/2013 11:30 PM, Stephen Warren wrote:
-> On 09/05/2013 12:29 PM, Mike Turquette wrote:
->> On Wed, Sep 4, 2013 at 11:36 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>> On 09/03/2013 05:22 PM, Mike Turquette wrote:
->>>> Quoting Stephen Warren (2013-08-30 14:37:46)
->>>>> On 08/30/2013 02:33 PM, Mike Turquette wrote:
->>> ...
->>>>>> The clock _data_ seems to always have some churn to it. Moving it out to
->>>>>> DT reduces that churn from Linux. My concern above is not about kernel
->>>>>> data size.
->>>>>
->>>>> That sounds like the opposite of what we should be doing.
->>>>>
->>>>> It's fine for kernel code/data to change; that's a natural part of
->>>>> development. Obviously, we should minimize churn, through thorough
->>>>> review, domain knowledge, etc.
->>>>
->>>> And with the "clock mapping" style bindings we'll end up changing both
->>>> the DT binding definition and the kernel. Not great.
->>>
->>> What's a "clock mapping" style binding? I guess that means the style
->>> where you have a single DT node that provides multiple clocks, rather
->>> than one DT node per clock?
->>>
->>> If the kernel driver changes its internal data, I don't see why that
->>> would have any impact at all on the DT binding definition. We should be
->>> able to use one DT binding definition with arbitrary drivers.
->>
->> Yes, I'm referring to a single node providing multiple clocks. As an
->> example see the Exynos 5420 binding:
->> Documentation/devicetree/bindings/clock/exynos5420-clock.txt
->>
->> The clock id's are stored as part of the binding definition resulting
->> in a mapping scheme that can be fragile.
->
-> The mapping shouldn't be fragile if e.g.
-> include/dt-bindings/clock/exynos5420.h were used to define the values.
-> That way, both the Exynos clock driver and Exynos DT files could both
-> include the header, and would always be in sync.
->
->> There have already been
->> patches to fix the id's assigned in the binding, which isn't supposed
->> to happen because it's a stable interface.
->
-> That's definitely a real problem. The values should be stable.
-> Preferably, the values should be derived from some aspect of the HW, and
-> hence be stable.
->
-> For example, many clock IDs on Tegra are derived from the clock's bit
-> index within the peripheral clock enable registers. Although I must
-> admit we have a bit of a mess in the Tegra clocks w.r.t. mis-using clock
-> IDs for reset IDs and hence there are some peripheral clock IDS that
-> don't map 1:1 with the register, and there are other clocks which aren't
-> peripheral clocksthat we've assigned arbitrary IDs to rather than some
-> HW-derived ID.
->
-> Alternatively, perhaps a register address unique to the clock could be used.
->
-> If new values are added, the additions should all happen in a single
-> tree, and hence can be co-ordinated, thus avoiding any merge-conflicts.
->
-> Even ignoring HW-derived clock IDs, people writing DT bindings simply
-> need to get used to bindings being an ABI, and put extra effort into
-> making sure the list of clocks is accurate and complete.
->
-> Finally, while it's true that a DT binding definition is an ABI, and
-> perhaps DT content isn't (so if there's a DT content bug it can simply
-> be fixed), if DT is wrong because of insufficient thought about its
-> content, it's still wrong, and the system doesn't work correctly.
-> Whether we edit a kernel clock driver or a DT file to solve a problem,
-> there was still a problem. Placing the data into DT doesn't make it any
-> less likely there will be a problem if sufficient care isn't taken when
-> thinking about the clock structure.
->
->> If clock phandles are
->> created by individual nodes in DT then the binding definition need
->> never be updated due to merge conflicts or renaming which plagues the
->> mapping scenario.
->
-> That's true.
->
-> But if we take that approach, shouldn't we just ban #clock-cells?
->
-> The only case #clock-cells would still be legitimate would be an array
-> of identical clocks represented by a single node, and even then the
-> argument could be extended so say: just write out a node for each clock
-> in the array, just like if the clocks weren't in an array or were
-> different types.
->
->>>> And I'll respond to your points below but the whole "relocate the
->>>> problem to DT" argument is simply not my main point. What I want to do
->>>> is increase the usefulness of DT by allowing register-level details into
->>>> the binding which can
->>>
->>> Can you expand upon why a DT that encodes register-level details is more
->>> useful? I can't see why there would be any difference in usefulness.
->>
->> Sure. The usefulness comes out of the fact that we do not need to
->> maintain data synchronization across dts and clock provider drivers.
->
-> Only the clock IDs. That's a very small amount of information. And
-> synchronizing the two simply means including a header file that defines
-> the IDs in both places. This is *exactly* why I created the
-> include/dt-bindings/ directory, to house such header files.
->
->> The data lives in one place and only one place. We absolutely need a
->> phandle to a clock in DT link clock consumer devices to their input
->> clocks, so there is no question that should be in DT. Since we're
->> already doing that, why not do away with trying to keep dts and C
->> files in sync and just put all of the data in dts? It's a pure
->> separation of logic and data. The Linux clock provider driver is
->> purely logic and no data, which I imagine would appease the mind of
->> many a computer scientist.
->
-> Separation of code and data is good. However, one can achieve that
-> simply by putting data into C structs/arrays, without having to parse it
-> out of DT.
->
->> Can you return the favor and tell me why putting register level
->> details into DT is inherently a bad idea? I'll drop my case if I can
->> be convinced that putting that level is detail into DT is The Wrong
->> Way, but I'll need more to go on than tradition and status quo.
->
-> Here are a few reasons, in no particular order:
->
-> 1)
->
-> At least for large SoCs (rather than e.g. a simple clock generator
-> chip/crystal with 1 or 2 outputs), clock drivers need a *lot* of data.
-> We can either:
->
-> a) Put that data into the clock driver, so it's "just there" for the
-> clock driver to use.
->
-> b) Represent that data in DT, and write code in the clock driver to
-> parse DT when the driver probe()s.
->
-> Option (a) is very simple.
+Changes since v1:
+- removed unnecessary exynos_pcie_clear_irq_level()
+- updated the bindings documentation
+- used new msi_chip infrastructure
+- removed ARCH_SUPPORTS_MSI
+- replaced #ifdef guards with IS_ENABLED(CONFIG_PCI_MSI)
 
-How can you claim option (a) to be very simple compared to (b)? I think 
-both are as easy / or hard to implement.
+ drivers/pci/host/pci-exynos.c      |   44 +++++++
+ drivers/pci/host/pcie-designware.c |  240 ++++++++++++++++++++++++++++++++++++
+ drivers/pci/host/pcie-designware.h |   14 +++
+ 3 files changed, 298 insertions(+)
 
-> Option (b) entails writing (and executing) a whole bunch of DT parsing
-> code.It's a lot of effort to define the DT binding for the data,
-> convert the data into DT format, and write the parsing code. It wastes
-> execution time at boot. In the end, the result of the parsing is exactly
-> the same data structures that could have been embedded into DT in the
-> first place. This seems like a futile effort.
-
-Not really, consider a new SoC where you don't have any kind of data at 
-all. You need to write the data tables anyway, whether they are under DT 
-or some kernel data struct. The execution time remain in place for 
-parsing DT data though, but I wouldn't think this to be a problem. Also, 
-you should consider multiarch ARM kernel, where same kernel binary 
-should support multiple SoCs, this would entail having clock data for 
-all built in to the kernel, which can be a problem also. It just boils 
-down to balancing things between execution time and memory cost, which 
-IMO, kernel should not decide, but should be decided by people who use 
-the kernel for whatever purpose it may be.
-
->
-> 2)
->
-> If the clock driver knows it's running on e.g. Tegra20 vs. Tegra30, that
-> information alone is enough to fully describe all details of the clock
-> tree present within the SoC. That information is cast in stone in the
-> SoC HW design.
->
-> Philosophically, I believe DT should be used to describe what varies
-> between different uses of a HW block, not the internals of a HW block
-> itself. This means describing the environment around an IP block (e.g.
-> which interrupts sinks an I2C controller is connected to, which GPIOs a
-> board used for an SD card CD line), rather than the internals of a
-> block, which are completely fixed.
->
-> For clocks, this means that the routing of a clock module's
-> inputs/outputs are useful to describe in DT, since they may be connected
-> differently depending on which SoC a clock module is placed into, or
-> which board an SoC is placed into. However, the HW within the block is
-> fixed, so doesn't need to be represented by a data structure whose
-> intent is to represent environmental differences.
-
-You can just as easily claim that anything internal to SoC should be 
-left out from DT, as this is cast in stone (or rather, silicon) also. We 
-should only use it to describe board layout. Everything else, the kernel 
-can 'know' by compile time.
-
->
-> To be honest, I would rather not even put e.g. on-SoC I2C, SPI, SDHCI
-> controllers into DT, since they are 100% defined by the top-level SoC
-> node. However, in practice we must put those nodes into DT for a few
-> reasons:
->
-> a) They act as a container for the I2C/SPI devices that are connected to
-> them, so at least something has to exist in DT.
->
-> b) There's some board-specific parameterization of those controllers
-> such as max bus clock rate for I2C/SPI, bus width for SDHCI, which GPIOs
-> are used for CD/WP for SDHCI, or even whether the controller is
-> enabled/disabled.
->
-> c) Some of the resources those controllers use (IRQs, GPIOs) may also be
-> used by board-specific entities (e.g. off-SoC IRQ source or GPIO sink).
-> The on-SoC devices appear in DT in order to allow representation of the
-> IRQs/GPIOs they use in a consistent manner with off-SoCs devices, for
-> simplicity.
->
-> As such, we end up treating them much like any other off-SoC device in
-> terms of representing them as a DT node.
->
-> 3)
->
-> Why are clocks a special case?
->
-> A "simple-gpio" controller binding and driver was proposed, and we had a
-> very similar conversation to this one then. I believe simple-gpio was
-> rejected for the reasons I presented above.
->
-> pintctrl-simple was initially rejected because it would have ended up
-> being essentially a very complex list of (register, value) writes that
-> the kernel performed at bootup. I'm not sure how pinctrl-simple finally
-> got accepted into the kernel; I think people were just busy and didn't
-> notice it and hence didn't object:-(
->
-> If we take the "DT should represent the register details" argument to
-> extreme, why not have some hyperbole? :-)
->
-> a) Do it for everything. For example, Tegra20 and Tegra30 I2S are
-> semantically the same, but with register offsets moved around rather
-> randomly. Perhaps we should have a mapping table of register field name
-> to offset, bit position, and size in DT, and some automated abstraction
-> layer in the kernel to parse this and re-direct all the register IO so
-> we can use a single driver.
->
-> To me this sounds a bit ridiculous, whereas putting all the clock
-> register details in DT perhaps doesn't (at least depending on exactly
-> what that ends up meaning). However, they're really exactly the same thing.
->
-> b) Why have drivers at all? Shouldn't the kernel just manage the core
-> ARM CPU, memory, MMU, and other standardized low-level tasks, yet all
-> drivers should be written in Forth with the byte-code stored in DT and
-> evaluated by the kernel instead? This even separates the driver code out
-> of the kernel, and really reduces churn:-)
-
-I can turn this around, as you went to this road. Why have DT at all? 
-Personally I hate the whole idea of a devicetree, however am forced to 
-use it as somebody decided it is a good idea to have one. It doesn't 
-really solve any problems, it just creates new ones in a way of 
-political BS where everybody claims they know how DT should be used, and 
-this just prevents people from actually using it at all. Also, it 
-creates just one new unnecessary dependency for boot, previously we had 
-bootloader and kernel images which had to be in sync, now we have 
-bootloader + DT + kernel. What next? Maybe we should move the clock data 
-into a firmware file of its own?
-
-Why do you care so much what actually goes into the devicetree? 
-Shouldn't people be let use it how they see fit? For the clock bindings 
-business this is the same, even if the bindings are there, you are free 
-to use them if you like, and if you don't like them, you can do things 
-differently.
-
-Personally, I have large amount of code which depends on these basic 
-clock bindings right now, and would like to see them go forward. I can 
-of course go back and convert the code to such format that everything is 
-as static tables under kernel, but in that case I don't think I need DT 
-for anything. Also, then people start to complain again that you should 
-move stuff to DT. Grrrr.... :)
-
--Tero
+diff --git a/drivers/pci/host/pci-exynos.c b/drivers/pci/host/pci-exynos.c
+index 94e096b..f062aca 100644
+--- a/drivers/pci/host/pci-exynos.c
++++ b/drivers/pci/host/pci-exynos.c
+@@ -48,6 +48,7 @@ struct exynos_pcie {
+ #define PCIE_IRQ_SPECIAL		0x008
+ #define PCIE_IRQ_EN_PULSE		0x00c
+ #define PCIE_IRQ_EN_LEVEL		0x010
++#define IRQ_MSI_ENABLE			(0x1 << 2)
+ #define PCIE_IRQ_EN_SPECIAL		0x014
+ #define PCIE_PWR_RESET			0x018
+ #define PCIE_CORE_RESET			0x01c
+@@ -342,9 +343,36 @@ static irqreturn_t exynos_pcie_irq_handler(int irq, void *arg)
+ 	return IRQ_HANDLED;
+ }
+ 
++static irqreturn_t exynos_pcie_msi_irq_handler(int irq, void *arg)
++{
++	struct pcie_port *pp = arg;
++
++	dw_handle_msi_irq(pp);
++
++	return IRQ_HANDLED;
++}
++
++static void exynos_pcie_msi_init(struct pcie_port *pp)
++{
++	u32 val;
++	struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
++
++	dw_pcie_msi_init(pp);
++
++	/* enable MSI interrupt */
++	val = exynos_elb_readl(exynos_pcie, PCIE_IRQ_EN_LEVEL);
++	val |= IRQ_MSI_ENABLE;
++	exynos_elb_writel(exynos_pcie, val, PCIE_IRQ_EN_LEVEL);
++	return;
++}
++
+ static void exynos_pcie_enable_interrupts(struct pcie_port *pp)
+ {
+ 	exynos_pcie_enable_irq_pulse(pp);
++
++	if (IS_ENABLED(CONFIG_PCI_MSI))
++		exynos_pcie_msi_init(pp);
++
+ 	return;
+ }
+ 
+@@ -430,6 +458,22 @@ static int add_pcie_port(struct pcie_port *pp, struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		pp->msi_irq = platform_get_irq(pdev, 0);
++		if (!pp->msi_irq) {
++			dev_err(&pdev->dev, "failed to get msi irq\n");
++			return -ENODEV;
++		}
++
++		ret = devm_request_irq(&pdev->dev, pp->msi_irq,
++					exynos_pcie_msi_irq_handler,
++					IRQF_SHARED, "exynos-pcie", pp);
++		if (ret) {
++			dev_err(&pdev->dev, "failed to request msi irq\n");
++			return ret;
++		}
++	}
++
+ 	pp->root_bus_nr = -1;
+ 	pp->ops = &exynos_pcie_host_ops;
+ 
+diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+index c10e9ac..8963017 100644
+--- a/drivers/pci/host/pcie-designware.c
++++ b/drivers/pci/host/pcie-designware.c
+@@ -11,8 +11,11 @@
+  * published by the Free Software Foundation.
+  */
+ 
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/pci.h>
+ #include <linux/pci_regs.h>
+@@ -142,6 +145,204 @@ int dw_pcie_wr_own_conf(struct pcie_port *pp, int where, int size,
+ 	return ret;
+ }
+ 
++static struct irq_chip dw_msi_irq_chip = {
++	.name = "PCI-MSI",
++	.irq_enable = unmask_msi_irq,
++	.irq_disable = mask_msi_irq,
++	.irq_mask = mask_msi_irq,
++	.irq_unmask = unmask_msi_irq,
++};
++
++/* MSI int handler */
++void dw_handle_msi_irq(struct pcie_port *pp)
++{
++	unsigned long val;
++	int i, pos;
++
++	for (i = 0; i < MAX_MSI_CTRLS; i++) {
++		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS + i * 12, 4,
++				(u32 *)&val);
++		if (val) {
++			pos = 0;
++			while ((pos = find_next_bit(&val, 32, pos)) != 32) {
++				generic_handle_irq(pp->msi_irq_start
++					+ (i * 32) + pos);
++				pos++;
++			}
++		}
++		dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_STATUS + i * 12, 4, val);
++	}
++}
++
++void dw_pcie_msi_init(struct pcie_port *pp)
++{
++	pp->msi_data = __get_free_pages(GFP_KERNEL, 0);
++
++	/* program the msi_data */
++	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_LO, 4,
++			virt_to_phys((void *)pp->msi_data));
++	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_HI, 4, 0);
++}
++
++static int find_valid_pos0(struct pcie_port *pp, int msgvec, int pos, int *pos0)
++{
++	int flag = 1;
++
++	do {
++		pos = find_next_zero_bit(pp->msi_irq_in_use,
++				MAX_MSI_IRQS, pos);
++		/*if you have reached to the end then get out from here.*/
++		if (pos == MAX_MSI_IRQS)
++			return -ENOSPC;
++		/*
++		 * Check if this position is at correct offset.nvec is always a
++		 * power of two. pos0 must be nvec bit alligned.
++		 */
++		if (pos % msgvec)
++			pos += msgvec - (pos % msgvec);
++		else
++			flag = 0;
++	} while (flag);
++
++	*pos0 = pos;
++	return 0;
++}
++
++static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
++{
++	int res, bit, irq, pos0, pos1, i;
++	u32 val;
++	struct pcie_port *pp = sys_to_pcie(desc->dev->bus->sysdata);
++
++	if (!pp) {
++		BUG();
++		return -EINVAL;
++	}
++
++	pos0 = find_first_zero_bit(pp->msi_irq_in_use,
++			MAX_MSI_IRQS);
++	if (pos0 % no_irqs) {
++		if (find_valid_pos0(pp, no_irqs, pos0, &pos0))
++			goto no_valid_irq;
++	}
++	if (no_irqs > 1) {
++		pos1 = find_next_bit(pp->msi_irq_in_use,
++				MAX_MSI_IRQS, pos0);
++		/* there must be nvec number of consecutive free bits */
++		while ((pos1 - pos0) < no_irqs) {
++			if (find_valid_pos0(pp, no_irqs, pos1, &pos0))
++				goto no_valid_irq;
++			pos1 = find_next_bit(pp->msi_irq_in_use,
++					MAX_MSI_IRQS, pos0);
++		}
++	}
++
++	irq = (pp->msi_irq_start + pos0);
++
++	if ((irq + no_irqs) > (pp->msi_irq_start + MAX_MSI_IRQS-1))
++		goto no_valid_irq;
++
++	i = 0;
++	while (i < no_irqs) {
++		set_bit(pos0 + i, pp->msi_irq_in_use);
++		irq_alloc_descs((irq + i), (irq + i), 1, 0);
++		irq_set_msi_desc(irq + i, desc);
++		/*Enable corresponding interrupt in MSI interrupt controller */
++		res = ((pos0 + i) / 32) * 12;
++		bit = (pos0 + i) % 32;
++		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, &val);
++		val |= 1 << bit;
++		dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val);
++		i++;
++	}
++
++	*pos = pos0;
++	return irq;
++
++no_valid_irq:
++	*pos = pos0;
++	return -ENOSPC;
++}
++
++static void clear_irq(unsigned int irq)
++{
++	int res, bit, val, pos;
++	struct irq_desc *desc;
++	struct msi_desc *msi;
++	struct pcie_port *pp;
++
++	/* get the port structure */
++	desc = irq_to_desc(irq);
++	msi = irq_desc_get_msi_desc(desc);
++	pp = sys_to_pcie(msi->dev->bus->sysdata);
++	if (!pp) {
++		BUG();
++		return;
++	}
++
++	pos = irq - pp->msi_irq_start;
++
++	irq_free_desc(irq);
++
++	clear_bit(pos, pp->msi_irq_in_use);
++
++	/* Disable corresponding interrupt on MSI interrupt controller */
++	res = (pos / 32) * 12;
++	bit = pos % 32;
++	dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, &val);
++	val &= ~(1 << bit);
++	dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val);
++}
++
++static int dw_msi_setup_irq(struct msi_chip *chip, struct pci_dev *pdev,
++			struct msi_desc *desc)
++{
++	int irq, pos, msgvec;
++	u16 msg_ctr;
++	struct msi_msg msg;
++	struct pcie_port *pp = sys_to_pcie(pdev->bus->sysdata);
++
++	if (!pp) {
++		BUG();
++		return -EINVAL;
++	}
++
++	pci_read_config_word(pdev, desc->msi_attrib.pos+PCI_MSI_FLAGS,
++				&msg_ctr);
++	msgvec = (msg_ctr&PCI_MSI_FLAGS_QSIZE) >> 4;
++	if (msgvec == 0)
++		msgvec = (msg_ctr & PCI_MSI_FLAGS_QMASK) >> 1;
++	if (msgvec > 5)
++		msgvec = 0;
++
++	irq = assign_irq((1 << msgvec), desc, &pos);
++	if (irq < 0)
++		return irq;
++
++	msg_ctr &= ~PCI_MSI_FLAGS_QSIZE;
++	msg_ctr |= msgvec << 4;
++	pci_write_config_word(pdev, desc->msi_attrib.pos + PCI_MSI_FLAGS,
++				msg_ctr);
++	desc->msi_attrib.multiple = msgvec;
++
++	msg.address_lo = virt_to_phys((void *)pp->msi_data);
++	msg.address_hi = 0x0;
++	msg.data = pos;
++	write_msi_msg(irq, &msg);
++
++	return 0;
++}
++
++static void dw_msi_teardown_irq(struct msi_chip *chip, unsigned int irq)
++{
++	clear_irq(irq);
++}
++
++static struct msi_chip dw_pcie_msi_chip = {
++	.setup_irq = dw_msi_setup_irq,
++	.teardown_irq = dw_msi_teardown_irq,
++};
++
+ int dw_pcie_link_up(struct pcie_port *pp)
+ {
+ 	if (pp->ops->link_up)
+@@ -150,6 +351,20 @@ int dw_pcie_link_up(struct pcie_port *pp)
+ 		return 0;
+ }
+ 
++static int dw_pcie_msi_map(struct irq_domain *domain, unsigned int irq,
++			irq_hw_number_t hwirq)
++{
++	irq_set_chip_and_handler(irq, &dw_msi_irq_chip, handle_simple_irq);
++	irq_set_chip_data(irq, domain->host_data);
++	set_irq_flags(irq, IRQF_VALID);
++
++	return 0;
++}
++
++static const struct irq_domain_ops msi_domain_ops = {
++	.map = dw_pcie_msi_map,
++};
++
+ int __init dw_pcie_host_init(struct pcie_port *pp)
+ {
+ 	struct device_node *np = pp->dev->of_node;
+@@ -157,6 +372,8 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+ 	struct of_pci_range_parser parser;
+ 	u32 val;
+ 
++	struct irq_domain *irq_domain;
++
+ 	if (of_pci_range_parser_init(&parser, np)) {
+ 		dev_err(pp->dev, "missing ranges property\n");
+ 		return -EINVAL;
+@@ -223,6 +440,18 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+ 		return -EINVAL;
+ 	}
+ 
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		irq_domain = irq_domain_add_linear(pp->dev->of_node,
++					MAX_MSI_IRQS, &msi_domain_ops,
++					&dw_pcie_msi_chip);
++		if (!irq_domain) {
++			dev_err(pp->dev, "irq domain init failed\n");
++			return -ENXIO;
++		}
++
++		pp->msi_irq_start = irq_find_mapping(irq_domain, 0);
++	}
++
+ 	if (pp->ops->host_init)
+ 		pp->ops->host_init(pp);
+ 
+@@ -485,10 +714,21 @@ int dw_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+ 	return pp->irq;
+ }
+ 
++static void dw_pcie_add_bus(struct pci_bus *bus)
++{
++	if (IS_ENABLED(CONFIG_PCI_MSI)) {
++		struct pcie_port *pp = sys_to_pcie(bus->sysdata);
++
++		dw_pcie_msi_chip.dev = pp->dev;
++		bus->msi = &dw_pcie_msi_chip;
++	}
++}
++
+ static struct hw_pci dw_pci = {
+ 	.setup		= dw_pcie_setup,
+ 	.scan		= dw_pcie_scan_bus,
+ 	.map_irq	= dw_pcie_map_irq,
++	.add_bus	= dw_pcie_add_bus,
+ };
+ 
+ void dw_pcie_setup_rc(struct pcie_port *pp)
+diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
+index 133820f..faccbbf 100644
+--- a/drivers/pci/host/pcie-designware.h
++++ b/drivers/pci/host/pcie-designware.h
+@@ -20,6 +20,14 @@ struct pcie_port_info {
+ 	phys_addr_t	mem_bus_addr;
+ };
+ 
++/*
++ * Maximum number of MSI IRQs can be 256 per controller. But keep
++ * it 32 as of now. Probably we will never need more than 32. If needed,
++ * then increment it in multiple of 32.
++ */
++#define MAX_MSI_IRQS			32
++#define MAX_MSI_CTRLS			(MAX_MSI_IRQS / 32)
++
+ struct pcie_port {
+ 	struct device		*dev;
+ 	u8			root_bus_nr;
+@@ -38,6 +46,10 @@ struct pcie_port {
+ 	int			irq;
+ 	u32			lanes;
+ 	struct pcie_host_ops	*ops;
++	int			msi_irq;
++	int			msi_irq_start;
++	unsigned long		msi_data;
++	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
+ };
+ 
+ struct pcie_host_ops {
+@@ -57,6 +69,8 @@ int cfg_read(void __iomem *addr, int where, int size, u32 *val);
+ int cfg_write(void __iomem *addr, int where, int size, u32 val);
+ int dw_pcie_wr_own_conf(struct pcie_port *pp, int where, int size, u32 val);
+ int dw_pcie_rd_own_conf(struct pcie_port *pp, int where, int size, u32 *val);
++void dw_handle_msi_irq(struct pcie_port *pp);
++void dw_pcie_msi_init(struct pcie_port *pp);
+ int dw_pcie_link_up(struct pcie_port *pp);
+ void dw_pcie_setup_rc(struct pcie_port *pp);
+ int dw_pcie_host_init(struct pcie_port *pp);
+-- 
+1.7.10.4
