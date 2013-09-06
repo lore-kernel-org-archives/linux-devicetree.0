@@ -1,129 +1,187 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v4 3/5] clk: dt: binding for basic multiplexer clock
-Date: Fri, 06 Sep 2013 13:01:15 -0600
-Message-ID: <522A267B.4010200@wwwdotorg.org>
-References: <1377150793-27864-1-git-send-email-mturquette@linaro.org> <1377150793-27864-4-git-send-email-mturquette@linaro.org> <2A930389-012E-45C3-93EB-6B4A41DB2EF5@codeaurora.org> <20130829011425.8231.78802@quantum> <39BAF1F8-41AD-4667-BF76-22BDF709415A@codeaurora.org> <20130830203334.10934.10011@quantum> <522110AA.7040700@wwwdotorg.org> <20130903232219.10934.67434@quantum> <52277DBF.7080104@wwwdotorg.org> <CAPtuhThWHP61FzDBCH5SSFx6kV7==VdF3-M=Lke+cgnrOQL7JQ@mail.gmail.com> <5228EA02.3000200@wwwdotorg.org> <52297BE2.8010603@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/2] sh_eth: add device tree support
+Date: Fri, 06 Sep 2013 23:10:07 +0400
+Message-ID: <522A288F.1040000@cogentembedded.com>
+References: <201308310429.34856.sergei.shtylyov@cogentembedded.com> <20130902085225.GF27891@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52297BE2.8010603@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Matt Sealey <neko@bakuhatsu.net>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ian campbell <ian.campbell@citrix.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130902085225.GF27891@e106331-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "nobuhiro.iwamatsu.yj@renesas.com" <nobuhiro.iwamatsu.yj@renesas.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2013 12:53 AM, Tero Kristo wrote:
-> On 09/05/2013 11:30 PM, Stephen Warren wrote:
+Hello.
 
-...
->> 1)
+On 09/02/2013 12:52 PM, Mark Rutland wrote:
+
+    Don't know why I haven't noticed your mail before...
+
+>> Add support of the device tree probing for the Renesas SH-Mobile SoCs.
+
+>> This work is loosely based on an original patch by Nobuhiro Iwamatsu
+>> <nobuhiro.iwamatsu.yj@renesas.com>.
+
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+>> ---
+>> This patch is against Dave's 'net-next.git' repo.
+
+>>   Documentation/devicetree/bindings/net/sh_eth.txt |   40 +++++++++++++
+>>   drivers/net/ethernet/renesas/sh_eth.c            |   66 ++++++++++++++++++++++-
+>>   2 files changed, 105 insertions(+), 1 deletion(-)
+
+>> Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+>> ===================================================================
+>> --- /dev/null
+>> +++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+>> @@ -0,0 +1,40 @@
+>> +* Renesas Electronics SH EtherMAC
+>> +
+>> +This file provides information on what the device node for the SH EtherMAC
+>> +interface contains.
+>> +
+>> +Required properties:
+>> +- compatible: "renesas,gether-r8a7740" if the device is a part of R8A7740 SoC.
+>> +	      "renesas,ether-r8a7779" if the device is a part of R8A7778/9 SoCs.
+>> +	      "renesas,ether-r8a7790" if the device is a part of R8A7790/1 SoCs.
+
+> What are the functional differences between the blocks in these devices
+> that mean they have different compatible strings?
+
+     RA87740 has Gigabit Ether (GEther) with TSU block (I don't know what TSU 
+stands for) and the register layout completely different from the other SoCs. 
+R8A777x and R8A7790 are 100 Mbit/s Ether without TSU block differing in some 
+minor but vital register details between them; they use so called "R-Car" 
+register layout contrasted to the "Gigabit" layout of R8A7740.
+
+>> +- reg: offset and length of the register set for the device; if the device has
+>> +       TSU registers, you need to specify two register sets here.
+
+> This doesn't explicitly state ordering, and doesn't describe what the
+> first register set is (control registers?). If possible, it would be
+> nice to refer to the set of registers by the name given in
+> documentation; is there any available?
+
+    No, there's not common name (and I only have R8A777x and R8A7790 docs).
+There are two subranges for those SoCs: HDMAC and feLic registers at offsets 
+0x200 and 0x300 from the "reg" prop start.
+
+> I think we should have something like the below to ensure it's explicit.
+> In general we need more consistency in the the way bindings describe reg
+> properties.
+
+> 	- reg: offset and length of:
+> 	     [1] the control registers of the device (required)
+> 	     [2] the TSU registers for the device (optional)
+
+    OK.
+
+>> +- interrupt-parent: the phandle for the interrupt controller that services
+>> +		    interrupts for this device.
+
+> Why is that required?
+
+    I'm not sure, maybe it's not.
+
+>> +- interrupts: interrupt mapping for the interrupt source.
+
+> Interrupts are defined in terms of interrupt-specifiers. How about:
+
+> 	- interrupts: an interrupt-specifier for the sole interrupt
+> 	              generated by the device.
+
+    OK.
+
+>> +- phy-mode: string, operation mode of the PHY interface (a string that
+>> +	    of_get_phy_mode() can understand).
+
+> That looks suspicious. Bindings should *not* refer to Linux internals.
+> Instead, we should document the phy-handle and phy-mode properties and
+
+    There's also "phy" variant in use now in addition to the older 
+"phy-handle". Sigh...
+
+> how they are meant to be used in a generic binding document (I couldn't
+> see a generic document doing this so far...).
+
+    So you want me to create one?
+
+>> +- phy-handle: phandle of the PHY device.
+>> +
+>> +Optional properties:
+>> +- local-mac-address: 6 bytes, MAC address.
+>> +- renesas,no-ether-link: specify when a board does not provide a proper LINK
+>> +			 signal.
+>> +- renesas,ether-link-active-low: specify when the LINK signal is active-low.
+
+> What types are these? I know local-mac-address is a byte-string by
+> ePAPR, presumably the last two are empty (boolean)?
+
+    Exactly.
+
+>> +
+>> +Example (Armadillo800EVA board):
+>> +
+>> +	ethernet@e9a00000 {
+>> +		compatible = "renesas,gether-r8a7740";
+>> +		reg = <0xe9a00000 0x800>, <0xe9a01800 0x800>;
+>> +		interrupt-parent = <&gic>;
+>> +		interrupts = <0 142 0x4>;
+>> +		phy-mode = "mii";
+>> +		phy-handle = <&phy0>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		phy0: ethernet-phy@0 {
+>> +			reg = <0>;
+>> +		};
+
+> The binding didn't state anything about sub-nodes. Is it a general
+> property of phy bindings that they may be embedded within a consumer's
+> node?
+
+    Considering Ethernet PHY subnodes, yes. They hang off MDIO bus controlled 
+by the Ethernet MAC registers.
+
+>> +	};
+>> Index: net-next/drivers/net/ethernet/renesas/sh_eth.c
+>> ===================================================================
+>> --- net-next.orig/drivers/net/ethernet/renesas/sh_eth.c
+>> +++ net-next/drivers/net/ethernet/renesas/sh_eth.c
+[...]
+>> @@ -2600,6 +2603,52 @@ static const struct net_device_ops sh_et
+>>   	.ndo_change_mtu		= eth_change_mtu,
+>>   };
 >>
->> At least for large SoCs (rather than e.g. a simple clock generator
->> chip/crystal with 1 or 2 outputs), clock drivers need a *lot* of data.
->> We can either:
->>
->> a) Put that data into the clock driver, so it's "just there" for the
->> clock driver to use.
->>
->> b) Represent that data in DT, and write code in the clock driver to
->> parse DT when the driver probe()s.
->>
->> Option (a) is very simple.
-> 
-> How can you claim option (a) to be very simple compared to (b)? I think
-> both are as easy / or hard to implement.
+>> +#ifdef CONFIG_OF
+>> +static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
+>> +{
+>> +	struct device_node *np = dev->of_node;
+>> +	struct sh_eth_plat_data *pdata;
+>> +	struct device_node *phy;
+>> +	const char *mac_addr;
+>> +
+>> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+>> +	if (!pdata)
+>> +		return NULL;
+>> +
+>> +	pdata->phy_interface = of_get_phy_mode(np);
+>> +
+>> +	phy = of_parse_phandle(np, "phy-handle", 0);
+>> +	if (!phy || of_property_read_u32(phy, "reg", &pdata->phy)) {
 
-Well, the work required for (b) is a pure super-set of the work require
-for (a), so clearly (a) is less work (perhaps the issue you're debating
-is harder/easier rather than more/less work?)
+> NAK. You didn't describe the format of the phy node, yet you are reading
+> values from it from a logically separate driver.
 
->> Option (b) entails writing (and executing) a whole bunch of DT parsing
->> code.It's a lot of effort to define the DT binding for the data,
->> convert the data into DT format, and write the parsing code. It wastes
->> execution time at boot. In the end, the result of the parsing is exactly
->> the same data structures that could have been embedded into DT in the
->> first place. This seems like a futile effort.
-> 
-> Not really, consider a new SoC where you don't have any kind of data at
-> all. You need to write the data tables anyway, whether they are under DT
-> or some kernel data struct.
+    See Documentation/devicetree/bindings/net/phy.txt. Although I really 
+didn't follow it closely (and it looks pretty obsolete, requiring 
+"device_type" and "linux,phandle" props).
 
-Yes.
+> Thanks,
+> Mark.
 
-But beyond writing the data tables, you also don't/do have to write all
-the DT parsing code based on choosing (a) or (b), etc.
+WBR, Sergei
 
-> The execution time remain in place for
-> parsing DT data though, but I wouldn't think this to be a problem. Also,
-> you should consider multiarch ARM kernel, where same kernel binary
-> should support multiple SoCs, this would entail having clock data for
-> all built in to the kernel, which can be a problem also.
-
-There's no reason that the clock data has to be built into the kernel at
-all; we should support even SoC clock drivers as modules in an initrd.
-Alternatively, drop the unused data from the kernel after boot via
-__init or similar. Alternatively, "pre-link" the clock driver module
-into the kernel in a way that allows it to be unloaded after boot even
-though it was built-in.
-
-...
-> You can just as easily claim that anything internal to SoC should be
-> left out from DT, as this is cast in stone (or rather, silicon) also. We
-> should only use it to describe board layout. Everything else, the kernel
-> can 'know' by compile time.
-
-I did, immediately below:-) And then I went on to explain why that's
-necessary in many cases.
-
-...
-> I can turn this around, as you went to this road. Why have DT at all?
-
-I believe (at least for ARM) the idea was to avoid churn to the kernel
-for supporting the numerous different *boards*.
-
-The kernel needs and contains drivers for HW blocks, and so since
-they're there, they may as well encode everything about the HW block.
-
-However, in most cases, the kernel shouldn't contain drivers for boards;
-boards are built from various common components which have drivers. DT
-is used to describe how those components are inter-connected. Hence, we
-can hopefully remove all board-related churn from the kernel (once the
-DT files are moved out of the kernel).
-
-> Personally I hate the whole idea of a devicetree, however am forced to
-> use it as somebody decided it is a good idea to have one. It doesn't
-> really solve any problems, it just creates new ones in a way of
-> political BS where everybody claims they know how DT should be used, and
-> this just prevents people from actually using it at all. Also, it
-> creates just one new unnecessary dependency for boot, previously we had
-> bootloader and kernel images which had to be in sync, now we have
-> bootloader + DT + kernel. What next? Maybe we should move the clock data
-> into a firmware file of its own?
-
-Well, I can sympathize, but I think the time is past for debating that.
-
-> Why do you care so much what actually goes into the devicetree?
-
-To get DT right.
-
-Even if we went back to board files and mach-xxx specific code rather
-than cleanly separated drivers, it would still be beneficial to have
-much more oversight of board/mach-xxx code than there was previously.
-Board files made it very easy to do SoC-specific hacks. To avoid that,
-in either DT or board files, we're trying to impose standards so that we
-pick correct, generic, appropriate solutions, rather than letting
-everyone run of with isolated ad-hoc solutions.
-
-> Shouldn't people be let use it how they see fit? For the clock bindings
-> business this is the same, even if the bindings are there, you are free
-> to use them if you like, and if you don't like them, you can do things
-> differently.
-
-We'd be better of creating as much standardization as possible, so that
-all SoCs/boards/.. work as similarly as possible, and we achieve maximal
-code reuse, design-reuse, and allow people to understand everything
-rather than just one particular SoC's/board's solution.
-
-If we don't get some re-use and standardization out of DT, we really may
-as well just use board files.
