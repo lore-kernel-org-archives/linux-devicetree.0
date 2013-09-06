@@ -1,187 +1,50 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/2] sh_eth: add device tree support
-Date: Fri, 06 Sep 2013 23:10:07 +0400
-Message-ID: <522A288F.1040000@cogentembedded.com>
-References: <201308310429.34856.sergei.shtylyov@cogentembedded.com> <20130902085225.GF27891@e106331-lin.cambridge.arm.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] ARM: add basic Trusted Foundations support
+Date: Fri, 06 Sep 2013 13:29:31 -0600
+Message-ID: <522A2D1B.3010508@wwwdotorg.org>
+References: <1378351680-14696-1-git-send-email-acourbot@nvidia.com> <1378351680-14696-2-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130902085225.GF27891@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "nobuhiro.iwamatsu.yj@renesas.com" <nobuhiro.iwamatsu.yj@renesas.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1378351680-14696-2-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 09/04/2013 09:27 PM, Alexandre Courbot wrote:
+> Trusted Foundations is a TrustZone-based secure monitor for ARM that
+> can be invoked  using a consistent SMC-based API on all supported
+> platforms. This patch adds initial basic support for Trusted
+> Foundations using the ARM firmware API. Current features are limited
+> to the ability to boot secondary processors.
 
-On 09/02/2013 12:52 PM, Mark Rutland wrote:
+> diff --git a/arch/arm/firmware/trusted_foundations.c b/arch/arm/firmware/trusted_foundations.c
+...
+> +void of_register_trusted_foundations(void)
+> +{
+> +	struct device_node *node;
+> +	struct trusted_foundations_platform_data pdata;
+> +	int err;
+> +
+> +	node = of_find_compatible_node(NULL, NULL, "tl,trusted-foundations");
+> +
+> +	if (!node)
+> +		return;
 
-    Don't know why I haven't noticed your mail before...
+If you're going to revise this patch for the comment below, then I would
+suggest removing the blank line before that if statement.
 
->> Add support of the device tree probing for the Renesas SH-Mobile SoCs.
+> diff --git a/arch/arm/include/asm/trusted_foundations.h b/arch/arm/include/asm/trusted_foundations.h
 
->> This work is loosely based on an original patch by Nobuhiro Iwamatsu
->> <nobuhiro.iwamatsu.yj@renesas.com>.
+Do we need to add the following here:
 
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+#if !IS_ENABLED(CONFIG_OF)
+static inline void register_trusted_foundations(...) {}
+#endif
 
->> ---
->> This patch is against Dave's 'net-next.git' repo.
-
->>   Documentation/devicetree/bindings/net/sh_eth.txt |   40 +++++++++++++
->>   drivers/net/ethernet/renesas/sh_eth.c            |   66 ++++++++++++++++++++++-
->>   2 files changed, 105 insertions(+), 1 deletion(-)
-
->> Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
->> ===================================================================
->> --- /dev/null
->> +++ net-next/Documentation/devicetree/bindings/net/sh_eth.txt
->> @@ -0,0 +1,40 @@
->> +* Renesas Electronics SH EtherMAC
->> +
->> +This file provides information on what the device node for the SH EtherMAC
->> +interface contains.
->> +
->> +Required properties:
->> +- compatible: "renesas,gether-r8a7740" if the device is a part of R8A7740 SoC.
->> +	      "renesas,ether-r8a7779" if the device is a part of R8A7778/9 SoCs.
->> +	      "renesas,ether-r8a7790" if the device is a part of R8A7790/1 SoCs.
-
-> What are the functional differences between the blocks in these devices
-> that mean they have different compatible strings?
-
-     RA87740 has Gigabit Ether (GEther) with TSU block (I don't know what TSU 
-stands for) and the register layout completely different from the other SoCs. 
-R8A777x and R8A7790 are 100 Mbit/s Ether without TSU block differing in some 
-minor but vital register details between them; they use so called "R-Car" 
-register layout contrasted to the "Gigabit" layout of R8A7740.
-
->> +- reg: offset and length of the register set for the device; if the device has
->> +       TSU registers, you need to specify two register sets here.
-
-> This doesn't explicitly state ordering, and doesn't describe what the
-> first register set is (control registers?). If possible, it would be
-> nice to refer to the set of registers by the name given in
-> documentation; is there any available?
-
-    No, there's not common name (and I only have R8A777x and R8A7790 docs).
-There are two subranges for those SoCs: HDMAC and feLic registers at offsets 
-0x200 and 0x300 from the "reg" prop start.
-
-> I think we should have something like the below to ensure it's explicit.
-> In general we need more consistency in the the way bindings describe reg
-> properties.
-
-> 	- reg: offset and length of:
-> 	     [1] the control registers of the device (required)
-> 	     [2] the TSU registers for the device (optional)
-
-    OK.
-
->> +- interrupt-parent: the phandle for the interrupt controller that services
->> +		    interrupts for this device.
-
-> Why is that required?
-
-    I'm not sure, maybe it's not.
-
->> +- interrupts: interrupt mapping for the interrupt source.
-
-> Interrupts are defined in terms of interrupt-specifiers. How about:
-
-> 	- interrupts: an interrupt-specifier for the sole interrupt
-> 	              generated by the device.
-
-    OK.
-
->> +- phy-mode: string, operation mode of the PHY interface (a string that
->> +	    of_get_phy_mode() can understand).
-
-> That looks suspicious. Bindings should *not* refer to Linux internals.
-> Instead, we should document the phy-handle and phy-mode properties and
-
-    There's also "phy" variant in use now in addition to the older 
-"phy-handle". Sigh...
-
-> how they are meant to be used in a generic binding document (I couldn't
-> see a generic document doing this so far...).
-
-    So you want me to create one?
-
->> +- phy-handle: phandle of the PHY device.
->> +
->> +Optional properties:
->> +- local-mac-address: 6 bytes, MAC address.
->> +- renesas,no-ether-link: specify when a board does not provide a proper LINK
->> +			 signal.
->> +- renesas,ether-link-active-low: specify when the LINK signal is active-low.
-
-> What types are these? I know local-mac-address is a byte-string by
-> ePAPR, presumably the last two are empty (boolean)?
-
-    Exactly.
-
->> +
->> +Example (Armadillo800EVA board):
->> +
->> +	ethernet@e9a00000 {
->> +		compatible = "renesas,gether-r8a7740";
->> +		reg = <0xe9a00000 0x800>, <0xe9a01800 0x800>;
->> +		interrupt-parent = <&gic>;
->> +		interrupts = <0 142 0x4>;
->> +		phy-mode = "mii";
->> +		phy-handle = <&phy0>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		phy0: ethernet-phy@0 {
->> +			reg = <0>;
->> +		};
-
-> The binding didn't state anything about sub-nodes. Is it a general
-> property of phy bindings that they may be embedded within a consumer's
-> node?
-
-    Considering Ethernet PHY subnodes, yes. They hang off MDIO bus controlled 
-by the Ethernet MAC registers.
-
->> +	};
->> Index: net-next/drivers/net/ethernet/renesas/sh_eth.c
->> ===================================================================
->> --- net-next.orig/drivers/net/ethernet/renesas/sh_eth.c
->> +++ net-next/drivers/net/ethernet/renesas/sh_eth.c
-[...]
->> @@ -2600,6 +2603,52 @@ static const struct net_device_ops sh_et
->>   	.ndo_change_mtu		= eth_change_mtu,
->>   };
->>
->> +#ifdef CONFIG_OF
->> +static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
->> +{
->> +	struct device_node *np = dev->of_node;
->> +	struct sh_eth_plat_data *pdata;
->> +	struct device_node *phy;
->> +	const char *mac_addr;
->> +
->> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
->> +	if (!pdata)
->> +		return NULL;
->> +
->> +	pdata->phy_interface = of_get_phy_mode(np);
->> +
->> +	phy = of_parse_phandle(np, "phy-handle", 0);
->> +	if (!phy || of_property_read_u32(phy, "reg", &pdata->phy)) {
-
-> NAK. You didn't describe the format of the phy node, yet you are reading
-> values from it from a logically separate driver.
-
-    See Documentation/devicetree/bindings/net/phy.txt. Although I really 
-didn't follow it closely (and it looks pretty obsolete, requiring 
-"device_type" and "linux,phandle" props).
-
-> Thanks,
-> Mark.
-
-WBR, Sergei
-
+So that there is a dummy no-op function for the non-DT-support case? I
+guess Tegra always has CONFIG_OF enabled so that call from
+mach-tegra/common.c in patch 2 will never be an issue, but perhaps it
+might if anyone else uses this?
