@@ -1,74 +1,56 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: kirkwood: change the compatible
- string of the kirkwood-i2s driver
-Date: Fri, 6 Sep 2013 10:31:11 +0100
-Message-ID: <20130906093111.GA18774@sirena.org.uk>
-References: <1378385791-29551-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH V4] regulator: palmas: add support for external control
+ of rails
+Date: Fri, 6 Sep 2013 11:11:42 +0100
+Message-ID: <20130906101142.GA29403@sirena.org.uk>
+References: <1377082096-22296-1-git-send-email-ldewangan@nvidia.com>
+ <20130823095841.GG25263@sirena.org.uk>
+ <522897FD.2030509@nvidia.com>
+ <20130905143431.GI8980@lee--X1>
+ <52289BD4.9060607@nvidia.com>
+ <20130905153432.GD3084@sirena.org.uk>
+ <CAF2Aj3j23ZvfAjZe82jo+fz_vD4k-HMby+eirYj_havYsy8wZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6009518017546012564=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1378385791-29551-1-git-send-email-thomas.petazzoni@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King <linux@arm.linux.org.uk>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAF2Aj3j23ZvfAjZe82jo+fz_vD4k-HMby+eirYj_havYsy8wZA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, mark.rutland@arm.com, Laxman Dewangan <ldewangan@nvidia.com>, "j-keerthy@ti.com" <j-keerthy@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "kishon@ti.com" <kishon@ti.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
 
---===============6009518017546012564==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
-Content-Disposition: inline
-
-
---UugvWAfsgieZRqgk
+--tThc/1wpZn/ma/RB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Sep 05, 2013 at 02:56:31PM +0200, Thomas Petazzoni wrote:
-> The compatible string of the kirkwood-i2s driver was chosen as
-> "marvell,mvebu-audio". Using such a compatible string is not a good
-> idea, since "mvebu" is the name of a large family of SOCs, in which
-> new, unknown SOCs will be coming in the future. It is therefore
+On Thu, Sep 05, 2013 at 10:54:27PM +0100, Lee Jones wrote:
+> Would you like to take it instead then Mark?
 
-Applied, thanks.
+Yes, now that it's slipped into v3.12 it seems more sensible.
 
---UugvWAfsgieZRqgk
+--tThc/1wpZn/ma/RB
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.21 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSKaDcAAoJELSic+t+oim9d7EP/R+fU4/kO3iGSA1dXN55L70P
-kk9P9RHkGI9Id2K/UmkKvEAZ1gxD2bEEPNeO5LbJ4Ewex4t4Bch2ruMI+uQ+XzUW
-PJDej+fOjNcqvqDuWShWzv9eqN7clMmW848RWFRyo8STNIhTw5QXqJWb1Dse5Jzc
-saPAOOKoRWJBtCHBzbOgZubGv1MKulWW9yvifSenlZEjTUe9leztYOHVh2Pr3/mf
-GsGOKRIogRNiA3TkX+f/dNX+RhLfCHC6z+NQDqpz4/PVO2jFwsTTK4QMUXrBoWjj
-ofcAXHy1BmOlQhcvA6GsRzbSqTeZX5NTARsse5mzgX4AHCOC4iBcpVrT7pjqrZ2R
-JwK+ZcaLhxU/9CemEzVN/qLI6qnDMVkPLmjZUrQo0YCI1dJiHsULZuPhnWsgrb8w
-jQZcipM4cgVtOMCx4rEhyxv6L2bLGgjJFHn40OeNbagh9jmvWT9ywDGEO39TgCvY
-KruWOBY7bMpKTlhm2TMd8AQ1LiltXQoBUh0uZ3RTYN2lz9a8Or0pOrIMPySxVitq
-XcyuW8t3Mkj/2RaImEJ5qClh389Gne8LN2u1xzZ4mLs3+n+xlNHE1XAUk5rSf57M
-gV3CfuomG281S1g+J9MHoIc0IYZ2a+VoEwGriEsDBpOMoY/GsvR9+Hi79btwea6T
-X4vDhNnp//5HNEL05WB3
-=g+Y4
+iQIcBAEBAgAGBQJSKapbAAoJELSic+t+oim9Dl4QAIpekcErk25B+bby9Mt/lqpZ
+LlZ7d+bp/UqUcTYtGNbrfqNWrvxN8/hIergNiRm6ryG9DVnXxU1OpZIVL4wdSNif
+r/pSjSkj//g8CtZ7fOG5RkN1ugjeTrBy5cVyikMUBRQb48u10zw8kc8kBcHveFO1
+PGFVvjqyKj9zUPW3Uf9A+kneDbBal04fGtzcsnS98xmr2atrInsCewcB9znmuLqM
+Pt+qfyIwHeqKISroiTyJghFKWBhHs7G74JPN6wFe4U9LmtkIm759RIMf/l5i2ZLF
+TVvnOvwTKVoJKfg1IZFdZHkziAXxpqsDLFoNSglm09vCCkKgrJiWpWlIRHYfWX3c
+p5NXQCRVjGmTeXnJnbPRmTm09XML51XZ8qhH40Osq+fdR1ks36rjoSOqxTcqFaQ4
+l1SSZvTqZ/fdxHA6Th8DlYfSCOz+o+sIPpObwwfnOYC0debC9Uqtn/J1GyOWdP8U
+rRpi1sRakxZ9tA0gUZZUV1gCtp/IOhaUypfS88n84fO2AfgfXbI5JqAnngVWypeY
+ZWm/s5qJMKcQ+BbnXwmuSuH1q4R+gSLA9MFXD4kGY4fz8MCCKJhrMnKtKPZaNBSW
+mkwrySU9c9JYl0KVUt3qYVbJeU/NKlVLOGtfKOGug/r1cW2Ny3/ofhGV5VJXVstY
+Jbxf+S4mnIWZi/D6mFdb
+=Yb6K
 -----END PGP SIGNATURE-----
 
---UugvWAfsgieZRqgk--
-
---===============6009518017546012564==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6009518017546012564==--
+--tThc/1wpZn/ma/RB--
