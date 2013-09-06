@@ -1,15 +1,13 @@
-From: Matt Porter <matt.porter@linaro.org>
-Subject: Re: [PATCH v7 1/3] gpio: bcm281xx: Add GPIO driver
-Date: Fri, 6 Sep 2013 13:14:01 -0400
-Message-ID: <20130906171400.GC10973@ohporter.com>
-References: <1377882914-30152-1-git-send-email-markus.mayer@linaro.org>
- <1377882914-30152-2-git-send-email-markus.mayer@linaro.org>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: [PATCH 2/2] ARM: vexpress: Add CLCD Device Tree properties
+Date: Fri,  6 Sep 2013 18:23:21 +0100
+Message-ID: <1378488201-21146-2-git-send-email-pawel.moll@arm.com>
+References: <1378488201-21146-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1377882914-30152-2-git-send-email-markus.mayer@linaro.org>
+In-Reply-To: <1378488201-21146-1-git-send-email-pawel.moll@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,48 +17,150 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Mayer <markus.mayer@linaro.org>
-Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Christian Daudt <csd@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <mmayer@broadcom.com>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+To: linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBdWcgMzAsIDIwMTMgYXQgMTA6MTU6MTJBTSAtMDcwMCwgTWFya3VzIE1heWVyIHdy
-b3RlOgoKPHNuaXA+Cgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vTWFrZWZpbGUgYi9kcml2
-ZXJzL2dwaW8vTWFrZWZpbGUKPiBpbmRleCBlZjNlOTgzLi5mY2QwNzUxIDEwMDY0NAo+IC0tLSBh
-L2RyaXZlcnMvZ3Bpby9NYWtlZmlsZQo+ICsrKyBiL2RyaXZlcnMvZ3Bpby9NYWtlZmlsZQo+IEBA
-IC0xNiw2ICsxNiw3IEBAIG9iai0kKENPTkZJR19HUElPX0FEUDU1MjApCSs9IGdwaW8tYWRwNTUy
-MC5vCj4gIG9iai0kKENPTkZJR19HUElPX0FEUDU1ODgpCSs9IGdwaW8tYWRwNTU4OC5vCj4gIG9i
-ai0kKENPTkZJR19HUElPX0FNRDgxMTEpCSs9IGdwaW8tYW1kODExMS5vCj4gIG9iai0kKENPTkZJ
-R19HUElPX0FSSVpPTkEpCSs9IGdwaW8tYXJpem9uYS5vCj4gK29iai0kKENPTkZJR19HUElPX0JD
-TV9LT05BKQkrPSBncGlvLWJjbS1rb25hLm8KPiAgb2JqLSQoQ09ORklHX0dQSU9fQlQ4WFgpCSs9
-IGdwaW8tYnQ4eHgubwo+ICBvYmotJChDT05GSUdfR1BJT19DTFBTNzExWCkJKz0gZ3Bpby1jbHBz
-NzExeC5vCj4gIG9iai0kKENPTkZJR19HUElPX0NTNTUzNSkJKz0gZ3Bpby1jczU1MzUubwo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vZ3Bpby1iY20ta29uYS5jIGIvZHJpdmVycy9ncGlvL2dw
-aW8tYmNtLWtvbmEuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uZjBm
-N2E5Ngo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby1iY20ta29uYS5j
-Cj4gQEAgLTAsMCArMSw2MzEgQEAKPiArLyoKPiArICogQ29weXJpZ2h0IChDKSAyMDEyLTIwMTMg
-QnJvYWRjb20gQ29ycG9yYXRpb24KPiArICoKPiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29m
-dHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcgo+ICsgKiBtb2RpZnkgaXQgdW5k
-ZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcwo+ICsgKiBw
-dWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbiB2ZXJzaW9uIDIuCj4gKyAq
-Cj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCAiYXMgaXMiIFdJVEhPVVQgQU5ZIFdB
-UlJBTlRZIG9mIGFueQo+ICsgKiBraW5kLCB3aGV0aGVyIGV4cHJlc3Mgb3IgaW1wbGllZDsgd2l0
-aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5Cj4gKyAqIG9mIE1FUkNIQU5UQUJJTElUWSBv
-ciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKPiArICogR05VIEdl
-bmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPiArICovCj4gKwo+ICsjaW5j
-bHVkZSA8bGludXgvYml0b3BzLmg+CgpOZWVkICNpbmNsdWRlIDxsaW51eC9lcnIuaD4KCj4gKyNp
-bmNsdWRlIDxsaW51eC9pby5oPgo+ICsjaW5jbHVkZSA8bGludXgvZ3Bpby5oPgo+ICsjaW5jbHVk
-ZSA8bGludXgvb2ZfZGV2aWNlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZl9pcnEuaD4KPiArI2lu
-Y2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ICsjaW5jbHVkZSA8bGludXgvaXJxZG9tYWluLmg+Cj4g
-KyNpbmNsdWRlIDxsaW51eC9pcnFjaGlwL2NoYWluZWRfaXJxLmg+Cgo8c25pcD4KCj4gKwlrb25h
-X2dwaW8tPmlycV9kb21haW4gPSBpcnFfZG9tYWluX2FkZF9saW5lYXIoZGV2LT5vZl9ub2RlLAo+
-ICsJCQkJCQkgICAgICBjaGlwLT5uZ3BpbywKPiArCQkJCQkJICAgICAgJmJjbV9rb25hX2lycV9v
-cHMsCj4gKwkJCQkJCSAgICAgIGtvbmFfZ3Bpbyk7Cj4gKwlpZiAoIWtvbmFfZ3Bpby0+aXJxX2Rv
-bWFpbikgewo+ICsJCWRldl9lcnIoZGV2LCAiQ291bGRuJ3QgYWxsb2NhdGUgSVJRIGRvbWFpblxu
-Iik7Cj4gKwkJcmV0dXJuIC1FTlhJTzsKPiArCX0KPiArCj4gKwlyZXMgPSBwbGF0Zm9ybV9nZXRf
-cmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOwo+ICsJa29uYV9ncGlvLT5yZWdfYmFz
-ZSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIHJlcyk7Cj4gKwlpZiAoSVNfRVJSKGtvbmFf
-Z3Bpby0+cmVnX2Jhc2UpKSB7CgpncGlvLWJjbS1rb25hLmM6NTY4OjI6IGVycm9yOiBpbXBsaWNp
-dCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhJU19FUlLigJkKCi1NYXR0CgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+... for V2M-P1 motherboard CLCD (limited to 640x480 16bpp and using
+dedicated video RAM bank) and for V2P-CA9 (up to 1024x768 16bpp).
+
+Signed-off-by: Pawel Moll <pawel.moll@arm.com>
+---
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 25 +++++++++++++++++++++++--
+ arch/arm/boot/dts/vexpress-v2m.dtsi     | 25 +++++++++++++++++++++++--
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts  | 20 ++++++++++++++++++++
+ 3 files changed, 66 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+index ac870fb..91dff88 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -41,7 +41,7 @@
+ 			bank-width = <4>;
+ 		};
+ 
+-		vram@2,00000000 {
++		v2m_vram: vram@2,00000000 {
+ 			compatible = "arm,vexpress-vram";
+ 			reg = <2 0x00000000 0x00800000>;
+ 		};
+@@ -233,6 +233,27 @@
+ 				interrupts = <14>;
+ 				clocks = <&v2m_oscclk1>, <&smbclk>;
+ 				clock-names = "clcdclk", "apb_pclk";
++
++				video-ram = <&v2m_vram>;
++				max-framebuffer-size = <614400>; /* 640x480 16bpp */
++
++				/* This is the best the CLCD can do here */
++				panel-type = "tft";
++				panel-tft-interface = <8 8 8>;
++				display-timings {
++					native-mode = <&v2m_clcd_timing0>;
++					v2m_clcd_timing0: vga {
++						clock-frequency = <25175000>;
++						hactive = <640>;
++						hback-porch = <40>;
++						hfront-porch = <24>;
++						hsync-len = <96>;
++						vactive = <480>;
++						vback-porch = <32>;
++						vfront-porch = <11>;
++						vsync-len = <2>;
++					};
++				};
+ 			};
+ 		};
+ 
+@@ -282,7 +303,7 @@
+ 				/* CLCD clock */
+ 				compatible = "arm,vexpress-osc";
+ 				arm,vexpress-sysreg,func = <1 1>;
+-				freq-range = <23750000 63500000>;
++				freq-range = <23750000 65000000>;
+ 				#clock-cells = <0>;
+ 				clock-output-names = "v2m:oscclk1";
+ 			};
+diff --git a/arch/arm/boot/dts/vexpress-v2m.dtsi b/arch/arm/boot/dts/vexpress-v2m.dtsi
+index f142036..4bc348c 100644
+--- a/arch/arm/boot/dts/vexpress-v2m.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m.dtsi
+@@ -40,7 +40,7 @@
+ 			bank-width = <4>;
+ 		};
+ 
+-		vram@3,00000000 {
++		v2m_vram: vram@3,00000000 {
+ 			compatible = "arm,vexpress-vram";
+ 			reg = <3 0x00000000 0x00800000>;
+ 		};
+@@ -232,6 +232,27 @@
+ 				interrupts = <14>;
+ 				clocks = <&v2m_oscclk1>, <&smbclk>;
+ 				clock-names = "clcdclk", "apb_pclk";
++
++				video-ram = <&v2m_vram>;
++				max-framebuffer-size = <614400>; /* 640x480 16bpp */
++
++				/* This is the best the CLCD can do here */
++				panel-type = "tft";
++				panel-tft-interface = <8 8 8>;
++				display-timings {
++					native-mode = <&v2m_clcd_timing0>;
++					v2m_clcd_timing0: vga {
++						clock-frequency = <25175000>;
++						hactive = <640>;
++						hback-porch = <40>;
++						hfront-porch = <24>;
++						hsync-len = <96>;
++						vactive = <480>;
++						vback-porch = <32>;
++						vfront-porch = <11>;
++						vsync-len = <2>;
++					};
++				};
+ 			};
+ 		};
+ 
+@@ -281,7 +302,7 @@
+ 				/* CLCD clock */
+ 				compatible = "arm,vexpress-osc";
+ 				arm,vexpress-sysreg,func = <1 1>;
+-				freq-range = <23750000 63500000>;
++				freq-range = <23750000 65000000>;
+ 				#clock-cells = <0>;
+ 				clock-output-names = "v2m:oscclk1";
+ 			};
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+index 62d9b22..fbe1c998 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+@@ -73,6 +73,26 @@
+ 		interrupts = <0 44 4>;
+ 		clocks = <&oscclk1>, <&oscclk2>;
+ 		clock-names = "clcdclk", "apb_pclk";
++
++		max-framebuffer-size = <1572864>; /* 1024x768 16bpp */
++
++		/* This is the best the CLCD can do here */
++		panel-type = "tft";
++		panel-tft-interface = <8 8 8>;
++		display-timings {
++			native-mode = <&clcd_timing0>;
++			clcd_timing0: xga {
++				clock-frequency = <63500127>;
++				hactive = <1024>;
++				hback-porch = <152>;
++				hfront-porch = <48>;
++				hsync-len = <104>;
++				vactive = <768>;
++				vback-porch = <23>;
++				vfront-porch = <3>;
++				vsync-len = <4>;
++			};
++		};
+ 	};
+ 
+ 	memory-controller@100e0000 {
+-- 
+1.8.1.2
