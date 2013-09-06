@@ -1,130 +1,63 @@
-From: Koen Kooi <koen@dominion.thruhere.net>
-Subject: Re: [PATCH] ARM: OMAP2+: am335x-bone*: add DT for BeagleBone Black
-Date: Fri, 6 Sep 2013 14:51:01 +0200
-Message-ID: <13CEC5D4-080F-499B-8451-7AFEDE065F27@dominion.thruhere.net>
-References: <1378449204-8601-1-git-send-email-koen@dominion.thruhere.net> <52297CCF.3090200@ti.com> <50E637BB-5A62-477C-B943-9687BC3488BC@dominion.thruhere.net> <A83CF7D5-0A26-4740-9F4D-51E5C1592EEF@dominion.thruhere.net>
-Mime-Version: 1.0 (Mac OS X Mail 6.5 \(1508\))
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <A83CF7D5-0A26-4740-9F4D-51E5C1592EEF@dominion.thruhere.net>
-Sender: linux-omap-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olof@lixom.net
+From: Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
+Date: Fri, 06 Sep 2013 15:30:47 +0200
+Message-ID: <5229D907.7060902@linaro.org>
+References: <52260608.2030202@linaro.org>
+ <CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
+ <5226F2B3.10606@linaro.org>
+ <CAL_JsqKfcudKiTOr-MrHsq6NidG-5t5S0t08ELTSpOuc2LF4RQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <CAL_JsqKfcudKiTOr-MrHsq6NidG-5t5S0t08ELTSpOuc2LF4RQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/boot-architecture>
+List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/boot-architecture>,
+ <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Sender: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 09/05/2013 03:23 PM, Rob Herring wrote:
+> On Wed, Sep 4, 2013 at 3:43 AM, Andre Przywara
+> <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On 09/04/2013 12:00 AM, Rob Herring wrote:
+>>>
+>>> On Tue, Sep 3, 2013 at 10:53 AM, Andre Przywara
+>
+>>> But surely there would be some advantage of reuse by using the
+>>> multi-boot protocol since Xen, grub, and OS tools already support it
+>>> for x86.
+>>
+>>
+>> Yes, but that is x86 only and multiboot is it's nature quite architecture
+>> specific. The current(?) multiboot v2 spec has no official ARM support (only
+>> x86 and MIPS), so this would need to be "invented" first. While this is
+>> technically easy, ARM software currently has no support for multiboot at
+>> all: not in u-boot and not in Xen.
+>> Multiboot support in Xen lives entirely in the x86 directory, and big parts
+>> of it are even in assembly.
+>
+> If so, I cannot find the assembly and most of it seems to be moved out
+> of x86 code now.
 
-Op 6 sep. 2013, om 10:51 heeft Koen Kooi <koen@dominion.thruhere.net> het volgende geschreven:
+There is some code that relocates and maps the multiboot structure: in 
+files in the xen/arch/x86/boot directory, including head.S, reloc.c and 
+setup.c.
+That would need to be completely rewritten, not only because it deals 
+with multiboot v1, but also because it is scattered throughout the x86 
+setup code and the initial page setup is different from ARM.
 
-> 
-> Op 6 sep. 2013, om 09:10 heeft Koen Kooi <koen@dominion.thruhere.net> het volgende geschreven:
-> 
->> 
->> Op 6 sep. 2013, om 08:57 heeft George Cherian <george.cherian@ti.com> het volgende geschreven:
->> 
->>> On 9/6/2013 12:03 PM, Koen Kooi wrote:
->>>> The BeagleBone Black is basically a regular BeagleBone with eMMC and HDMI added,
->>>> so create a common dtsi both can use. MMC support for AM335x still isn't in, so
->>>> only the LDO change has been added.
->>>> 
->>>> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
->>>> ---
->>>> .../{am335x-bone.dts => am335x-bone-common.dtsi}   |   3 -
->>>> arch/arm/boot/dts/am335x-bone.dts                  | 256 +--------------------
->>>> arch/arm/boot/dts/am335x-boneblack.dts             |  18 ++
->>>> 3 files changed, 19 insertions(+), 258 deletions(-)
->>>> copy arch/arm/boot/dts/{am335x-bone.dts => am335x-bone-common.dtsi} (99%)
->>>> create mode 100644 arch/arm/boot/dts/am335x-boneblack.dts
->>> How did you test am335x-boneblack.dtb? where are the Makefile changes for boneblack?
->> 
->> Ah, I missed the makefile in my commit. I have a bunch of other patches on top to make more stuff work.
->> 
->> [..]
->> 
->>>> 
->>>> --- /dev/null
->>>> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
->>>> @@ -0,0 +1,18 @@
->>>> +/*
->>>> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
->>>> + *
->>>> + * This program is free software; you can redistribute it and/or modify
->>>> + * it under the terms of the GNU General Public License version 2 as
->>>> + * published by the Free Software Foundation.
->>>> + */
->>>> +/dts-v1/;
->>>> +
->>>> +#include "am33xx.dtsi"
->>> Why cant we add am33xx.dtsi  in am335x-bone-common.dtsi ?
->> 
->> That didn't work when I tried it. It did work before the preprocessor changes when using /include/
->> 
->>>> +#include "am335x-bone-common.dtsi"
->>>> +
->>>> +&ldo3_reg {
->>>> +	regulator-min-microvolt = <1800000>;
->>>> +	regulator-max-microvolt = <1800000>;
->>>> +	regulator-always-on;
->>>> +};
->>>> +
->>> With this ldo values mmc was not working for me on Boneblack.
->>> got it working with
->>> 
->>> &ldo3_reg {
->>> 	regulator-min-microvolt = <1800000>;
->>> 	regulator-max-microvolt = <3300000>;
->>> 	regulator-always-on;
->>> };
->> 
->> That LDO is shared, the other consumer will get fried if you use 3.3V. I forget if it's DDR3 or HDMI.
-> 
-> On the black the LDOs changed, so for mmc (which (*$)@()$@) still isn't in mainline) you need:
-> 
-> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> index e76d575..ae90a30 100644
-> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> @@ -362,6 +362,13 @@
->                        regulator-always-on;
->                };
->        };
-> +
-> +       vmmcsd_fixed: fixedregulator@0 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vmmcsd_fixed";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +       };
-> };
-> 
-> &cpsw_emac0 {
-> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-> index b4237fc..e092a61 100644
-> --- a/arch/arm/boot/dts/am335x-boneblack.dts
-> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
-> @@ -16,7 +16,12 @@
->        regulator-always-on;
-> };
-> 
-> -&mmc2 {
-> +&mmc1 { 
-> +       vmmc-supply = <&vmmcsd_fixed>;
-> +};
-> +
-> +&mmc2 { 
-> +       vmmc-supply = <&vmmcsd_fixed>;
->        pinctrl-names = "default";
->        pinctrl-0 = <&emmc_pins>;
->        vmmc-supply = <&ldo3_reg>;
+All these things are also done on ARM - but for the device tree already.
+Of course proper multiboot v2 support is doable - but please compare the 
+effort needed for this against this one:
+http://lists.xen.org/archives/html/xen-devel/2013-09/msg00359.html
 
-And links to all the patches:
-
-Card-detect fix: https://github.com/koenkooi/linux/commit/c3c87f330812275ce6aa791e2a81f4c124fe981b
-Add eMMC DT node: https://github.com/koenkooi/linux/commit/22459b61a7e80e05ab1cd02b9ec0a4467bf9fa4b
-Fix mmc regulator: https://github.com/koenkooi/linux/commit/8007217893b7d809782e08fa1f0d56b1083ec00d
-
-As soon as TI gets their act together and the EDMA/MMC patchset is in Linus' tree I'll rebase and submit the above properly.
-
-regards,
-
-Koen
+Regards,
+Andre.
