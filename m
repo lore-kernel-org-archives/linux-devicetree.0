@@ -1,90 +1,46 @@
-From: Joel Fernandes <joelf@ti.com>
-Subject: Re: [PATCH] arm: dts: am33xx: Add mmc nodes for am33xx platform
-Date: Fri, 6 Sep 2013 13:21:46 -0500
-Message-ID: <522A1D3A.8000301@ti.com>
-References: <1378455712-17379-1-git-send-email-george.cherian@ti.com>
-Reply-To: <joelf@ti.com>
+From: "Markus Mayer" <markus.mayer@linaro.org>
+Subject: [PATCH v8 0/3] gpio: bcm281xx: GPIO driver
+Date: Fri, 6 Sep 2013 11:40:43 -0700
+Message-ID: <1378492846-3112-1-git-send-email-markus.mayer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378455712-17379-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, Vinod Koul <vinod.koul@intel.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Christian Daudt <csd@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi George,
+This patch series adds the GPIO driver, and its device tree bindings,
+for the Broadcom bcm281xx family of mobile SoCs.
 
-On 09/06/2013 03:21 AM, George Cherian wrote:
-> Add mmc nodes for am33xx platforms
-> 
-> Signed-off-by: George Cherian <george.cherian@ti.com>
-> ---
-> Verified after applying [1] and [2]
-> [1] - [PATCH v4 0/6] dma: edma: Support scatter-lists of any length - https://lkml.org/lkml/2013/8/29/466
-> [2] - [PATCH v2] ARM: dts: add AM33XX EDMA support - https://lkml.org/lkml/2013/8/26/57
+Changes since v7:
+- Added Signed-off-by to patch 2/3
+- Added Reviewed-by to patch 2/3
+- Added #include <linux/err.h> to patch 1/3
 
-Thanks for the verification.
+Markus Mayer (3):
+  gpio: bcm281xx: Add GPIO driver
+  ARM: bcm281xx: Enable GPIO driver
+  ARM: bcm281xx: Add device node for the GPIO controller
 
-But, this patch should not be applied on its own as it a part of a bigger patch
-I had submitted earlier that includes DTS for other derivative boards and
-bindings Documentation. [3] That's the one to be applied and should be applied
-only after the above patches are merged. I will resubmit this later again once
-pending EDMA changes are merged. Thanks.
+ .../devicetree/bindings/gpio/gpio-bcm-kona.txt     |   52 ++
+ arch/arm/boot/dts/bcm11351.dtsi                    |   16 +
+ arch/arm/mach-bcm/Kconfig                          |    2 +-
+ drivers/gpio/Kconfig                               |    5 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-bcm-kona.c                       |  632 ++++++++++++++++++++
+ 6 files changed, 707 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt
+ create mode 100644 drivers/gpio/gpio-bcm-kona.c
 
-[3] https://lkml.org/lkml/2013/6/25/781
-
-Regards,
-
--Joel
->  arch/arm/boot/dts/am33xx.dtsi | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index b0badff..1df512d 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -236,6 +236,41 @@
->  			status = "disabled";
->  		};
->  
-> +		mmc1: mmc@48061000 {
-> +			compatible = "ti,omap4-hsmmc";
-> +			reg = <0x48060000 0x1000>;
-> +			interrupts = <64>;
-> +			ti,hwmods = "mmc1";
-> +			ti,dual-volt;
-> +			ti,needs-special-reset;
-> +			ti,needs-special-hs-handling;
-> +			dmas = <&edma 24
-> +				&edma 25>;
-> +			dma-names = "tx", "rx";
-> +			status = "disabled";
-> +		};
-> +
-> +		mmc2: mmc@481d8000 {
-> +			compatible = "ti,omap4-hsmmc";
-> +			reg = <0x481d8000 0x1000>;
-> +			interrupts = <28>;
-> +			ti,hwmods = "mmc2";
-> +			ti,needs-special-reset;
-> +			dmas = <&edma 2
-> +				&edma 3>;
-> +			dma-names = "tx", "rx";
-> +			status = "disabled";
-> +		};
-> +
-> +		mmc3: mmc@47810000 {
-> +			compatible = "ti,omap4-hsmmc";
-> +			reg = <0x47810000 0x1000>;
-> +			interrupts = <29>;
-> +			ti,hwmods = "mmc3";
-> +			ti,needs-special-reset;
-> +			status = "disabled";
-> +		};
-> +
->  		wdt2: wdt@44e35000 {
->  			compatible = "ti,omap3-wdt";
->  			ti,hwmods = "wd_timer2";
-> 
+-- 
+1.7.9.5
