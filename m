@@ -1,63 +1,42 @@
-From: Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
-Date: Fri, 06 Sep 2013 15:30:47 +0200
-Message-ID: <5229D907.7060902@linaro.org>
-References: <52260608.2030202@linaro.org>
- <CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
- <5226F2B3.10606@linaro.org>
- <CAL_JsqKfcudKiTOr-MrHsq6NidG-5t5S0t08ELTSpOuc2LF4RQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <CAL_JsqKfcudKiTOr-MrHsq6NidG-5t5S0t08ELTSpOuc2LF4RQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/boot-architecture>
-List-Post: <mailto:boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/boot-architecture>,
- <mailto:boot-architecture-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Errors-To: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Sender: boot-architecture-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCHv2 1/2] ARM: msm: Add support for MSM8974 Dragonboard
+Date: Fri, 6 Sep 2013 09:22:37 -0500
+Message-ID: <20A8A05D-2F56-4127-A494-470833B2DC42@codeaurora.org>
+References: <1378425890-4225-1-git-send-email-rvaswani@codeaurora.org>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1378425890-4225-1-git-send-email-rvaswani@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rohit Vaswani <rvaswani@codeaurora.org>
+Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/2013 03:23 PM, Rob Herring wrote:
-> On Wed, Sep 4, 2013 at 3:43 AM, Andre Przywara
-> <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 09/04/2013 12:00 AM, Rob Herring wrote:
->>>
->>> On Tue, Sep 3, 2013 at 10:53 AM, Andre Przywara
->
->>> But surely there would be some advantage of reuse by using the
->>> multi-boot protocol since Xen, grub, and OS tools already support it
->>> for x86.
->>
->>
->> Yes, but that is x86 only and multiboot is it's nature quite architecture
->> specific. The current(?) multiboot v2 spec has no official ARM support (only
->> x86 and MIPS), so this would need to be "invented" first. While this is
->> technically easy, ARM software currently has no support for multiboot at
->> all: not in u-boot and not in Xen.
->> Multiboot support in Xen lives entirely in the x86 directory, and big parts
->> of it are even in assembly.
->
-> If so, I cannot find the assembly and most of it seems to be moved out
-> of x86 code now.
 
-There is some code that relocates and maps the multiboot structure: in 
-files in the xen/arch/x86/boot directory, including head.S, reloc.c and 
-setup.c.
-That would need to be completely rewritten, not only because it deals 
-with multiboot v1, but also because it is scattered throughout the x86 
-setup code and the initial page setup is different from ARM.
+On Sep 5, 2013, at 7:04 PM, Rohit Vaswani wrote:
 
-All these things are also done on ARM - but for the device tree already.
-Of course proper multiboot v2 support is doable - but please compare the 
-effort needed for this against this one:
-http://lists.xen.org/archives/html/xen-devel/2013-09/msg00359.html
+> This patch adds basic board support for MSM8974 Dragonboard
+> which belongs to the Snapdragon 800 family.
+> For now, just support a basic machine with device tree.
+> 
+> Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
+> ---
+> arch/arm/boot/dts/Makefile        |  3 ++-
+> arch/arm/boot/dts/msm8974-db.dts  |  7 +++++++
+> arch/arm/boot/dts/msm8974.dtsi    | 30 ++++++++++++++++++++++++++++++
+> arch/arm/mach-msm/Kconfig         | 20 ++++++++++++++++++--
+> arch/arm/mach-msm/Makefile        |  1 +
+> arch/arm/mach-msm/board-dt-8974.c | 23 +++++++++++++++++++++++
+> 6 files changed, 81 insertions(+), 3 deletions(-)
+> create mode 100644 arch/arm/boot/dts/msm8974-db.dts
+> create mode 100644 arch/arm/boot/dts/msm8974.dtsi
+> create mode 100644 arch/arm/mach-msm/board-dt-8974.c
 
-Regards,
-Andre.
+As I mentioned before, its the APQ8074 Dragonboard, not MSM8974
+
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
