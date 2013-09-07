@@ -1,91 +1,42 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [RFC PATCHv2 0/4] Add DT support for fixed PHYs
-Date: Sat, 7 Sep 2013 12:27:26 +0200
-Message-ID: <20130907122726.1af7c331@skate>
-References: <1378480701-12908-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<2916397.Vz9aZYzLyb@lenovo>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v4 5/5] clk: dt: binding for basic gate clock
+Date: Sat, 07 Sep 2013 13:56:39 +0200
+Message-ID: <3912118.JkfesUOyv3@flatron>
+References: <1377150793-27864-1-git-send-email-mturquette@linaro.org> <CAD6h2NSr0cM_SWqniC30pYm0mCeziBOzVg-46-814qPMxUwDCQ@mail.gmail.com> <20130904175909.GB31541@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <2916397.Vz9aZYzLyb@lenovo>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <florian@openwrt.org>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130904175909.GB31541@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Tony Lindgren <tony@atomide.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Matt Sealey <neko@bakuhatsu.net>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Dear Florian Fainelli,
+Hi Tony,
 
-On Fri, 06 Sep 2013 21:42:42 +0100, Florian Fainelli wrote:
-
-> > Here is a second version of the patch set that adds a Device Tree
-> > binding and the related code to support fixed PHYs. Marked as RFC,
-> > this patch set is obviously not intended for merging in 3.12.
+On Wednesday 04 of September 2013 10:59:09 Tony Lindgren wrote:
+> * Haojian Zhuang <haojian.zhuang@linaro.org> [130903 20:11]:
+> > We can see that it'll try to find static mapping. What's the static
+> > mapping? If we define iotable in machine driver, we have the static
+> > mapping, just like debug_ll. If we parse everything from DTS file,
+> > it'll always get a new virtual address from vm area. So it always
+> > create a new page mapping even for one register.
 > 
-> Thanks a lot for continuing on this work, I really like the state of it now.
+> I may not follow you here.. But it seems that you've missing something
+> with the static mapping: It's found based on the physical address. So
+> if you create static mappings for your SoC with iotable_init(), those
+> mappings will be available everywhere including drivers when you do
+> ioremap().
 
-Thanks for your feedback.
+The thing is that today we are moving in favour of fully dynamic mapping, 
+based on data from device tree, with as little as possible (or even no) 
+static mapping based on hardcoded values.
 
-> > Since the first version, the changes have been:
-> > 
-> >  * Instead of using a 'fixed-link' property inside the Ethernet device
-> >    DT node, with a fairly cryptic succession of integer values, we now
-> >    use a PHY subnode under the Ethernet device DT node, with explicit
-> >    properties to configure the duplex, speed, pause and other PHY
-> >    properties.
-> > 
-> >  * The PHY address is automatically allocated by the kernel and no
-> >    longer visible in the Device Tree binding.
-> > 
-> >  * The PHY device is created directly when the network driver calls
-> >    of_phy_connect_fixed_link(), and associated to the PHY DT node,
-> >    which allows the existing of_phy_connect() function to work,
-> >    without the need to use the deprecated of_phy_connect_fixed_link().
-> > 
-> > The things I am not entirely happy with yet are:
-> > 
-> >  * The PHY ID is hardcoded to 0xdeadbeef. Ideally, it should be a
-> >    properly reserved vendor/device identifier, but it isn't clear how
-> >    to get one allocated for this purpose.
-> 
-> Right, we should try to get something better, but we obviously cannot use an 
-> already allocated OUI for this. Can we ask the Linux foundation or a Linux-
-> friendly company to allocate one maybe?
+So, back to the original problem, we end up doing multiple dynamic 
+mappings of the same physical page, because there is no refcounting in 
+ioremap and, if it doesn't find a static mapping containing the region 
+we're interested in, it simply creates a new mapping.
 
-According to http://standards.ieee.org/develop/regauth/oui/oui.txt, the
-Linux Foundation doesn't seem to own any OUI. Should we simply be
-contacting some random companies in this list?
-
-> >  * The fixed_phy_register() function in drivers/net/phy/fixed.c has
-> >    some OF references. So ideally, I would have preferred to put this
-> >    code in drivers/of/of_mdio.c, but to call get_phy_device(), we need
-> >    a reference to the mii_bus structure that represents the fixed MDIO
-> >    bus.
-> 
-> This is not a big deal, not everything in drivers/ is consistent with this, 
-> and making the fixed MDIO bus globally accessible does not sound too great.
-
-Indeed.
-
-> >  * There is some error management missing in fixed_phy_register(), but
-> >    it can certainly be added easily. This RFC is meant to sort out the
-> >    general idea.
-> 
-> Do you think you could add these to got beyond the RFC state? The patchset as 
-> it currently is fine with me if you can address these.
-
-Sure, it shouldn't be too difficult.
-
-In the mean time, I'm interested in hearing comments from other people,
-especially from the Device Tree bindings maintainers: while the
-internal implementation details can always be fixed later on, the DT
-binding should obviously get an approval from the DT maintainers.
-
-Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Best regards,
+Tomasz
