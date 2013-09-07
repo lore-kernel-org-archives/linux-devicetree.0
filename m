@@ -1,60 +1,32 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:46846 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757226Ab3IAMsu (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sun, 1 Sep 2013 08:48:50 -0400
-Date: Sun, 1 Sep 2013 13:48:42 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130901124842.GF3084@sirena.org.uk>
-References: <CAPgLHd90UyPGVLUdMV2domFKKDG5inKsXKxcOpvCDbVt-A_t-w@mail.gmail.com>
+Received: from [213.199.154.189] ([213.199.154.189]:6072 "EHLO
+	db8outboundpool.messaging.microsoft.com" rhost-flags-FAIL-FAIL-OK-OK)
+	by vger.kernel.org with ESMTP id S1750793Ab3IGD3k convert rfc822-to-8bit
+	(ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 6 Sep 2013 23:29:40 -0400
+Date: Sat, 7 Sep 2013 11:28:25 +0800
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: mxs: add pinctrl header files
+Message-ID: <20130907032823.GC4624@S2101-09.ap.freescale.net>
+References: <20130812072957.GB25061@S2101-09.ap.freescale.net>
+ <1378127036-24861-1-git-send-email-LW@KARO-electronics.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YH9Qf6Fh2G5kB/85"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <CAPgLHd90UyPGVLUdMV2domFKKDG5inKsXKxcOpvCDbVt-A_t-w@mail.gmail.com>
-Subject: Re: [PATCH -next] spi/qspi: fix missing unlock on error in
- ti_qspi_start_transfer_one()
+In-Reply-To: <1378127036-24861-1-git-send-email-LW@KARO-electronics.de>
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>
 List-ID: <devicetree@vger.kernel.org>
 
+On Mon, Sep 02, 2013 at 03:03:53PM +0200, Lothar Wa�mann wrote:
+> Changes vs. v2:
+> - move header files to arch/arm/boot/dts
+> - update documentation file to use the defined names rather than
+>   numeric values and remove the pinmux-id list
 
---YH9Qf6Fh2G5kB/85
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please copy LAKML for patches going to arch/arm/boot/dts.
 
-On Sun, Sep 01, 2013 at 09:01:00AM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->=20
-> Add the missing unlock before return from function ti_qspi_start_transfer=
-_one()
-> in the error handling case.
+Shawn
 
-Applied, thanks.  There's no need to send this to the devicetree people,
-there is no DT change in this patch.
-
---YH9Qf6Fh2G5kB/85
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSIzenAAoJELSic+t+oim90KQP/RZzanX1skzWbJeBDeh+wFDu
-hoCb9Imh/0O/GxcD673eBw7VdpaSzm8zbxZ3A7H6vINCxYgK1Z7xqueA+ThficCL
-2ounrwFc+OvdeurziNMiVn/UZipGezvh16rTpRdMT5StOP5/Q9sHeIvOGITYVjfo
-ew3/DGuutFX2VnTuiQsNWpi3ZC5/Dgtlm/y1ahnefeQHN1EdThnHMwh8OF8U7jYU
-NOATQ6W9rgiwrKKSFCEzNH/PkcKlXxLQdwq563ycPd82A2z031vybkk1RQv9wDPA
-N3QnU07w4mJk7S/+q5CCmds4VfiAs7ueejLqaTKc7PdcsfEh698Uw4qIWR88XwnQ
-7wyA0STSsQg+vM/uu2sslMSLfKlG7bg2Jjyn+yldzlU1pePjLV+oYmlJ9FtHzyC1
-7rXU66GOcBXzAJHoDps7KnWGhYuxmdgkKNONc1GzQokHVNrE4dcT4TFwMQNEGWgE
-KIlJWcwuIclGNdPNwphuXNix8pw4dYMuXx74s5877tdIeqvY5atfpcIeTjs5s1m+
-kQqffCOFUyZehjZGeMzHV3XtWVNtXogLKMAtYsfTtYiTPmT4Yuy9SsRQVIOGtt8U
-TDGqogf5H+/L6/+Sb9EHmWdjtigpbdxbSQBTaCKUTMhr3juWNhvCEjaWWruf9wbe
-R+s7PVW8RpZ5cYSbF6Qo
-=NY+C
------END PGP SIGNATURE-----
-
---YH9Qf6Fh2G5kB/85--
