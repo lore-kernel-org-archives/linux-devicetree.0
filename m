@@ -1,354 +1,66 @@
-From: Koen Kooi <koen@dominion.thruhere.net>
-Subject: [PATCHv3] ARM: OMAP2+: am335x-bone*: add DT for BeagleBone Black
-Date: Sun,  8 Sep 2013 13:12:26 +0200
-Message-ID: <1378638746-10627-1-git-send-email-koen@dominion.thruhere.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olof@lixom.net, Koen Kooi <koen@dominion.thruhere.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Sun, 8 Sep 2013 14:47:25 +0100
+Message-ID: <20130908134725.GQ29403@sirena.org.uk>
+References: <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com>
+ <20130905020435.GA3970@gmail.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>
+ <522817D7.1010206@freescale.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA0C885@DBDE04.ent.ti.com>
+ <5228369A.9000904@freescale.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA0C907@DBDE04.ent.ti.com>
+ <52284F32.2020302@freescale.com>
+ <20130905135032.GB3084@sirena.org.uk>
+ <20130906023605.GA2292@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WKQ7zUpzoH2KEHMN"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130906023605.GA2292@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Huang Shijie <shijie8@gmail.com>
+Cc: Huang Shijie <b32955@freescale.com>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The BeagleBone Black is basically a regular BeagleBone with eMMC and HDMI added,
-so create a common dtsi both can use.
 
-IMPORTANT: booting the existing am335x-bone.dts will blow up the HDMI transceiver 
-after a dozen boots with an uSD card inserted because LDO will be at 3.3V instead
-of 1.8. 
+--WKQ7zUpzoH2KEHMN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-MMC support for AM335x still isn't in, so only the LDO change has been added.
+On Thu, Sep 05, 2013 at 10:36:44PM -0400, Huang Shijie wrote:
+> On Thu, Sep 05, 2013 at 02:50:32PM +0100, Mark Brown wrote:
 
-Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
----
+> > Looking at the current header there just seem to be defines in there, no
+> > abstraction for the chips.  Perhaps that is what is missing?
 
-Changes since 2:
-	Updated commit message to point out that the existing DT will damage the board.
-Changes since v1:
-	Added the Makefile entry for the new dts
+> we do not need any abstraction for this chip, we only need the SPI NOR=20
+> commands, such as Quad read / DDR quad read.
 
- arch/arm/boot/dts/Makefile                         |   1 +
- .../{am335x-bone.dts => am335x-bone-common.dtsi}   |   3 -
- arch/arm/boot/dts/am335x-bone.dts                  | 256 +--------------------
- arch/arm/boot/dts/am335x-boneblack.dts             |  18 ++
- 4 files changed, 20 insertions(+), 258 deletions(-)
- copy arch/arm/boot/dts/{am335x-bone.dts => am335x-bone-common.dtsi} (99%)
- create mode 100644 arch/arm/boot/dts/am335x-boneblack.dts
+So the abstraction could say what the commands are, or what's supported
+if they're standard?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 641b3c9a..b7c0c52 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -171,6 +171,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
- 	am335x-evm.dtb \
- 	am335x-evmsk.dtb \
- 	am335x-bone.dtb \
-+	am335x-boneblack.dtb \
- 	am3517-evm.dtb \
- 	am3517_mt_ventoux.dtb \
- 	am43x-epos-evm.dtb
-diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone-common.dtsi
-similarity index 99%
-copy from arch/arm/boot/dts/am335x-bone.dts
-copy to arch/arm/boot/dts/am335x-bone-common.dtsi
-index d318987..2f66ded 100644
---- a/arch/arm/boot/dts/am335x-bone.dts
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -5,9 +5,6 @@
-  * it under the terms of the GNU General Public License version 2 as
-  * published by the Free Software Foundation.
-  */
--/dts-v1/;
--
--#include "am33xx.dtsi"
- 
- / {
- 	model = "TI AM335x BeagleBone";
-diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-index d318987..7993c48 100644
---- a/arch/arm/boot/dts/am335x-bone.dts
-+++ b/arch/arm/boot/dts/am335x-bone.dts
-@@ -8,258 +8,4 @@
- /dts-v1/;
- 
- #include "am33xx.dtsi"
--
--/ {
--	model = "TI AM335x BeagleBone";
--	compatible = "ti,am335x-bone", "ti,am33xx";
--
--	cpus {
--		cpu@0 {
--			cpu0-supply = <&dcdc2_reg>;
--		};
--	};
--
--	memory {
--		device_type = "memory";
--		reg = <0x80000000 0x10000000>; /* 256 MB */
--	};
--
--	am33xx_pinmux: pinmux@44e10800 {
--		pinctrl-names = "default";
--		pinctrl-0 = <&clkout2_pin>;
--
--		user_leds_s0: user_leds_s0 {
--			pinctrl-single,pins = <
--				0x54 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a5.gpio1_21 */
--				0x58 (PIN_OUTPUT_PULLUP | MUX_MODE7)	/* gpmc_a6.gpio1_22 */
--				0x5c (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_a7.gpio1_23 */
--				0x60 (PIN_OUTPUT_PULLUP | MUX_MODE7)	/* gpmc_a8.gpio1_24 */
--			>;
--		};
--
--		i2c0_pins: pinmux_i2c0_pins {
--			pinctrl-single,pins = <
--				0x188 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_sda.i2c0_sda */
--				0x18c (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c0_scl.i2c0_scl */
--			>;
--		};
--
--		uart0_pins: pinmux_uart0_pins {
--			pinctrl-single,pins = <
--				0x170 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
--				0x174 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart0_txd.uart0_txd */
--			>;
--		};
--
--		clkout2_pin: pinmux_clkout2_pin {
--			pinctrl-single,pins = <
--				0x1b4 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* xdma_event_intr1.clkout2 */
--			>;
--		};
--
--		cpsw_default: cpsw_default {
--			pinctrl-single,pins = <
--				/* Slave 1 */
--				0x110 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxerr.mii1_rxerr */
--				0x114 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txen.mii1_txen */
--				0x118 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxdv.mii1_rxdv */
--				0x11c (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd3.mii1_txd3 */
--				0x120 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd2.mii1_txd2 */
--				0x124 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd1.mii1_txd1 */
--				0x128 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txd0.mii1_txd0 */
--				0x12c (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_txclk.mii1_txclk */
--				0x130 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxclk.mii1_rxclk */
--				0x134 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd3.mii1_rxd3 */
--				0x138 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd2.mii1_rxd2 */
--				0x13c (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd1.mii1_rxd1 */
--				0x140 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxd0.mii1_rxd0 */
--			>;
--		};
--
--		cpsw_sleep: cpsw_sleep {
--			pinctrl-single,pins = <
--				/* Slave 1 reset value */
--				0x110 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x114 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x118 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x11c (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x120 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x124 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x128 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x12c (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x130 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x134 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x138 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x13c (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x140 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--			>;
--		};
--
--		davinci_mdio_default: davinci_mdio_default {
--			pinctrl-single,pins = <
--				/* MDIO */
--				0x148 (PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
--				0x14c (PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
--			>;
--		};
--
--		davinci_mdio_sleep: davinci_mdio_sleep {
--			pinctrl-single,pins = <
--				/* MDIO reset value */
--				0x148 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--				0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
--			>;
--		};
--	};
--
--	ocp {
--		uart0: serial@44e09000 {
--			pinctrl-names = "default";
--			pinctrl-0 = <&uart0_pins>;
--
--			status = "okay";
--		};
--
--		musb: usb@47400000 {
--			status = "okay";
--
--			control@44e10000 {
--				status = "okay";
--			};
--
--			usb-phy@47401300 {
--				status = "okay";
--			};
--
--			usb-phy@47401b00 {
--				status = "okay";
--			};
--
--			usb@47401000 {
--				status = "okay";
--			};
--
--			usb@47401800 {
--				status = "okay";
--				dr_mode = "host";
--			};
--
--			dma-controller@07402000  {
--				status = "okay";
--			};
--		};
--
--		i2c0: i2c@44e0b000 {
--			pinctrl-names = "default";
--			pinctrl-0 = <&i2c0_pins>;
--
--			status = "okay";
--			clock-frequency = <400000>;
--
--			tps: tps@24 {
--				reg = <0x24>;
--			};
--
--		};
--	};
--
--	leds {
--		pinctrl-names = "default";
--		pinctrl-0 = <&user_leds_s0>;
--
--		compatible = "gpio-leds";
--
--		led@2 {
--			label = "beaglebone:green:heartbeat";
--			gpios = <&gpio1 21 GPIO_ACTIVE_HIGH>;
--			linux,default-trigger = "heartbeat";
--			default-state = "off";
--		};
--
--		led@3 {
--			label = "beaglebone:green:mmc0";
--			gpios = <&gpio1 22 GPIO_ACTIVE_HIGH>;
--			linux,default-trigger = "mmc0";
--			default-state = "off";
--		};
--
--		led@4 {
--			label = "beaglebone:green:usr2";
--			gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
--			default-state = "off";
--		};
--
--		led@5 {
--			label = "beaglebone:green:usr3";
--			gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
--			default-state = "off";
--		};
--	};
--};
--
--/include/ "tps65217.dtsi"
--
--&tps {
--	regulators {
--		dcdc1_reg: regulator@0 {
--			regulator-always-on;
--		};
--
--		dcdc2_reg: regulator@1 {
--			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
--			regulator-name = "vdd_mpu";
--			regulator-min-microvolt = <925000>;
--			regulator-max-microvolt = <1325000>;
--			regulator-boot-on;
--			regulator-always-on;
--		};
--
--		dcdc3_reg: regulator@2 {
--			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
--			regulator-name = "vdd_core";
--			regulator-min-microvolt = <925000>;
--			regulator-max-microvolt = <1150000>;
--			regulator-boot-on;
--			regulator-always-on;
--		};
--
--		ldo1_reg: regulator@3 {
--			regulator-always-on;
--		};
--
--		ldo2_reg: regulator@4 {
--			regulator-always-on;
--		};
--
--		ldo3_reg: regulator@5 {
--			regulator-always-on;
--		};
--
--		ldo4_reg: regulator@6 {
--			regulator-always-on;
--		};
--	};
--};
--
--&cpsw_emac0 {
--	phy_id = <&davinci_mdio>, <0>;
--	phy-mode = "mii";
--};
--
--&cpsw_emac1 {
--	phy_id = <&davinci_mdio>, <1>;
--	phy-mode = "mii";
--};
--
--&mac {
--	pinctrl-names = "default", "sleep";
--	pinctrl-0 = <&cpsw_default>;
--	pinctrl-1 = <&cpsw_sleep>;
--
--};
--
--&davinci_mdio {
--	pinctrl-names = "default", "sleep";
--	pinctrl-0 = <&davinci_mdio_default>;
--	pinctrl-1 = <&davinci_mdio_sleep>;
--};
-+#include "am335x-bone-common.dtsi"
-diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-new file mode 100644
-index 0000000..68d12aa
---- /dev/null
-+++ b/arch/arm/boot/dts/am335x-boneblack.dts
-@@ -0,0 +1,18 @@
-+/*
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+#include "am33xx.dtsi"
-+#include "am335x-bone-common.dtsi"
-+
-+&ldo3_reg {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-always-on;
-+};
-+
--- 
-1.8.2.1
+--WKQ7zUpzoH2KEHMN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSLH/qAAoJELSic+t+oim9H3sP/1fg/sf49nzGXCDOTVf9HT3x
+jyiywkjR+AM7BAbQCuESas5QnRJ6K/+F+zqItQjnePOYWhDPF5PnvVM0ZV3jioGz
+68IqqCyks0WYrM3q/lm/1c7Zac6QXE5j2Ctm31BdYlJM/89nvrXz7CkSU+vNNfIg
+HokK8j/q6vM8LIxxFDdU4t5rwf4/qQN80zm4c/c/XWfVtawkuUgszTTNPXP34Ar1
+o6Acy/DHqd8jS/N6rtGr0VydDrrfe9PrvgiRNq3hZx5PcfKt/aISXWseE/XVXhuR
+I6DiMFsibc64jXnzjWqkEaSMBxHInMDl1g4Hl6NbNBf945Nype0ygWH+f2US70lq
+rM5+EDHC9+5iFMQW9OYIuOdYjPBK43PjNqaQSHxd2T/duWNzInJgUu5slVRNO4FW
+y4AdCWyZrczt2k5AIiA7Zrp4bNXR+st86LU09SIO/zH+UNRZEmT8weY3fl4xslfZ
+qTZxDOx39dLGeRQfK8sH35BgvZQGJPZL5yk1RllnnKxMxwfDfJ5cKFxR3gRgmIBn
+CFOPE6NGKyON0ZkZUfPu2YjlEnGjV0Z9EcNVsTTGk19z1atoAlZnfBWJr2+3ypgo
+K7p6VM/MufzyH0ZvTTjfEH9iTXFvF3GWtflzh0qObcim73itQbomMhoiwe1LqqrS
+aTPkSTSymth2y0mfeZCC
+=d2N3
+-----END PGP SIGNATURE-----
+
+--WKQ7zUpzoH2KEHMN--
