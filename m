@@ -1,103 +1,239 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH] openrisc: clean-up prom.h
-Date: Sun,  8 Sep 2013 14:39:36 -0500
-Message-ID: <1378669176-32548-1-git-send-email-robherring2@gmail.com>
+From: Mike Dunn <mikedunn@newsguy.com>
+Subject: [PATCH v2] pwm: pxa: add device tree support to pwm driver
+Date: Sun,  8 Sep 2013 12:40:18 -0700
+Message-ID: <1378669218-10944-1-git-send-email-mikedunn@newsguy.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-bounces@lists.openrisc.net>
-List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
-List-Archive: <http://lists.openrisc.net/pipermail/linux>
-List-Post: <mailto:linux@lists.openrisc.net>
-List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
-List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
-Sender: linux-bounces@lists.openrisc.net
-Errors-To: linux-bounces@lists.openrisc.net
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <rob.herring@calxeda.com>, linux@lists.openrisc.net
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-pwm@vger.kernel.org
+Cc: Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, Mike Dunn <mikedunn@newsguy.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+This patch adds device tree support to the pxa's pwm driver.  Only an OF match
+table is added; nothing needs to be extracted from the device tree node.  The
+existing platform_device id table is reused for the match table data.  Support
+for inverted polarity is also added.
 
-Clean-up some copy/paste declarations that are not necessary. All the
-functions either don't exist or are already declared in other headers.
-This is needed in preparation of of_irq.h clean-up.
+Tested on a Palm Treo 680 (both platform data and DT cases).
 
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Jonas Bonn <jonas@southpole.se>
-Cc: linux@lists.openrisc.net
+Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
 ---
-This is needed as part of of_irq.h clean-up done in this patch [1].
+Changle log:
+v2:
+- of_match_table contains only the "pxa250-pwm" compatible string; require one
+  device instance per pwm
+- add Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+- add support for polarity flag in DT and implement set_polarity() method
+  (the treo 680 inverts the signal between pwm out and backlight)
+- return -EINVAL instead of -ENODEV if platform data or DT node not found
+- output dev_info string if platform data missing
+- expanded CC list of patch
 
-Rob
+ Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 33 +++++++++++++
+ arch/arm/boot/dts/pxa27x.dtsi                     | 24 ++++++++++
+ drivers/pwm/pwm-pxa.c                             | 57 +++++++++++++++++++++++
+ 3 files changed, 114 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
 
-[1] http://www.spinics.net/lists/kernel/msg1597624.html
-
- arch/openrisc/include/asm/prom.h | 47 ----------------------------------------
- 1 file changed, 47 deletions(-)
-
-diff --git a/arch/openrisc/include/asm/prom.h b/arch/openrisc/include/asm/prom.h
-index bbb34e5..93c9980 100644
---- a/arch/openrisc/include/asm/prom.h
-+++ b/arch/openrisc/include/asm/prom.h
-@@ -14,56 +14,9 @@
-  * the Free Software Foundation; either version 2 of the License, or
-  * (at your option) any later version.
-  */
--
--#include <linux/of.h>	/* linux/of.h gets to determine #include ordering */
--
- #ifndef _ASM_OPENRISC_PROM_H
- #define _ASM_OPENRISC_PROM_H
--#ifdef __KERNEL__
--#ifndef __ASSEMBLY__
+diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+new file mode 100644
+index 0000000..7b09bfa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+@@ -0,0 +1,33 @@
++Marvell pwm controller
++
++Required properties:
++- compatible:
++  for pxa25x, pxa27x, pxa168, pxa910: must be compatible = "marvell,pxa250-pwm";
++- reg: physical base address and length of the registers used by the pwm channel
++  NB: One device instance must be created for each pwm that is used, so the
++  length covers only the register window for one pwm output, not that of the
++  entire pwm controller.  Currently length is 0x10 for all supported devices.
++- #pwm-cells: should be 3.
++   cell 1: the per-chip index of the PWM to use,
++   cell 2: the period in nanoseconds,
++   cell 3: flags; set bit 0 to specify inverse polarity.  The pwm controller
++   does not implement reverse polarity, but some boards may pass the pwm output
++   through an external inverter, which can cause problems if a client device
++   assumes that an increase in the duty cycle results in an increase in output
++   power.  The pwm-backlight is an example of such a client.
++
++Example pwm device node:
++
++pwm0: pwm@40b00000 {
++	compatible = "marvell,pxa250-pwm";
++	reg = <0x40b00000 0x10>;
++	#pwm-cells = <3>;
++};
++
++Example pwm client node:
++
++backlight {
++      	compatible = "pwm-backlight";
++     	pwms = <&pwm0 0 5000000 1>;  /* pwm output is inverted */
++	...
++}
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index d7c5d72..a12fe8e 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -10,5 +10,29 @@
+ 			marvell,intc-priority;
+ 			marvell,intc-nr-irqs = <34>;
+ 		};
++
++		pwm0: pwm@40b00000 {
++			compatible = "marvell,pxa250-pwm";
++			reg = <0x40b00000 0x10>;
++			#pwm-cells = <3>;
++		};
++
++		pwm1: pwm@40b00010 {
++			compatible = "marvell,pxa250-pwm";
++			reg = <0x40b00010 0x10>;
++			#pwm-cells = <3>;
++		};
++
++		pwm2: pwm@40c00000 {
++			compatible = "marvell,pxa250-pwm";
++			reg = <0x40c00000 0x10>;
++			#pwm-cells = <3>;
++		};
++
++		pwm3: pwm@40c00010 {
++			compatible = "marvell,pxa250-pwm";
++			reg = <0x40c00010 0x10>;
++			#pwm-cells = <3>;
++		};
+ 	};
+ };
+diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
+index a4d2164..33e6a7d 100644
+--- a/drivers/pwm/pwm-pxa.c
++++ b/drivers/pwm/pwm-pxa.c
+@@ -19,6 +19,7 @@
+ #include <linux/clk.h>
+ #include <linux/io.h>
+ #include <linux/pwm.h>
++#include <linux/of_device.h>
  
--#include <linux/types.h>
--#include <asm/irq.h>
--#include <linux/irqdomain.h>
--#include <linux/atomic.h>
--#include <linux/of_irq.h>
--#include <linux/of_fdt.h>
--#include <linux/of_address.h>
--#include <linux/proc_fs.h>
--#include <linux/platform_device.h>
- #define HAVE_ARCH_DEVTREE_FIXUPS
+ #include <asm/div64.h>
  
--/* Other Prototypes */
--extern int early_uartlite_console(void);
--
--/* Parse the ibm,dma-window property of an OF node into the busno, phys and
-- * size parameters.
-- */
--void of_parse_dma_window(struct device_node *dn, const void *dma_window_prop,
--		unsigned long *busno, unsigned long *phys, unsigned long *size);
--
--extern void kdump_move_device_tree(void);
--
--/* CPU OF node matching */
--struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
--
--/* Get the MAC address */
--extern const void *of_get_mac_address(struct device_node *np);
--
--/**
-- * of_irq_map_pci - Resolve the interrupt for a PCI device
-- * @pdev:	the device whose interrupt is to be resolved
-- * @out_irq:	structure of_irq filled by this function
-- *
-- * This function resolves the PCI interrupt for a given PCI device. If a
-- * device-node exists for a given pci_dev, it will use normal OF tree
-- * walking. If not, it will implement standard swizzling and walk up the
-- * PCI tree until an device-node is found, at which point it will finish
-- * resolving using the OF tree walking.
-- */
--struct pci_dev;
--extern int of_irq_map_pci(struct pci_dev *pdev, struct of_irq *out_irq);
--
--#endif /* __ASSEMBLY__ */
--#endif /* __KERNEL__ */
- #endif /* _ASM_OPENRISC_PROM_H */
+@@ -48,6 +49,7 @@ struct pxa_pwm_chip {
+ 
+ 	struct clk	*clk;
+ 	void __iomem	*mmio_base;
++	enum pwm_polarity polarity;
+ };
+ 
+ static inline struct pxa_pwm_chip *to_pxa_pwm_chip(struct pwm_chip *chip)
+@@ -88,6 +90,15 @@ static int pxa_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	else
+ 		dc = (pv + 1) * duty_ns / period_ns;
+ 
++	if (pc->polarity == PWM_POLARITY_INVERSED) {
++		if (dc & PWMDCR_FD)
++			dc = 0;	        /* continuously low */
++		else if (dc == 0)
++			dc = PWMDCR_FD; /* continuously high */
++		else
++			dc = 1023 - dc; /* complement duty cycle */
++	}
++
+ 	/* NOTE: the clock to PWM has to be enabled first
+ 	 * before writing to the registers
+ 	 */
+@@ -117,13 +128,51 @@ static void pxa_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	clk_disable_unprepare(pc->clk);
+ }
+ 
++static int pxa_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
++				enum pwm_polarity polarity)
++{
++	struct pxa_pwm_chip *pc = to_pxa_pwm_chip(chip);
++	pc->polarity = polarity;
++	return 0;
++}
++
+ static struct pwm_ops pxa_pwm_ops = {
+ 	.config = pxa_pwm_config,
+ 	.enable = pxa_pwm_enable,
+ 	.disable = pxa_pwm_disable,
++	.set_polarity = pxa_pwm_set_polarity,
+ 	.owner = THIS_MODULE,
+ };
+ 
++#ifdef CONFIG_OF
++/*
++ * Device tree users should create one device instance for each pwm channel.
++ * Hence we dispense with the HAS_SECONDARY_PWM and "tell" the original driver
++ * code that this is a single channel pxa25x-pwm.
++ */
++static struct of_device_id pwm_of_match[] = {
++	{ .compatible = "marvell,pxa250-pwm", .data = &pwm_id_table[0]},
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pwm_of_match);
++
++static const struct platform_device_id *pxa_pwm_get_id_dt(struct device *dev)
++{
++	const struct of_device_id *pwm_pxa_devid =
++		of_match_device(pwm_of_match, dev);
++	if (pwm_pxa_devid)
++		return (const struct platform_device_id *)pwm_pxa_devid->data;
++	else
++		return NULL;
++}
++#else  /* !CONFIG_OF */
++static const struct platform_device_id *pxa_pwm_get_id_dt(struct device *dev)
++{
++	dev_info(dev, "missing platform data\n");
++	return NULL;
++}
++#endif
++
+ static int pwm_probe(struct platform_device *pdev)
+ {
+ 	const struct platform_device_id *id = platform_get_device_id(pdev);
+@@ -131,6 +180,11 @@ static int pwm_probe(struct platform_device *pdev)
+ 	struct resource *r;
+ 	int ret = 0;
+ 
++	if (id == NULL)		/* using device tree */
++		id = pxa_pwm_get_id_dt(&pdev->dev);
++	if (id == NULL)
++		return -EINVAL;
++
+ 	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
+ 	if (pwm == NULL) {
+ 		dev_err(&pdev->dev, "failed to allocate memory\n");
+@@ -145,6 +199,8 @@ static int pwm_probe(struct platform_device *pdev)
+ 	pwm->chip.ops = &pxa_pwm_ops;
+ 	pwm->chip.base = -1;
+ 	pwm->chip.npwm = (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1;
++	pwm->chip.of_xlate = of_pwm_xlate_with_flags;
++	pwm->chip.of_pwm_n_cells = 3;
+ 
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	pwm->mmio_base = devm_ioremap_resource(&pdev->dev, r);
+@@ -176,6 +232,7 @@ static struct platform_driver pwm_driver = {
+ 	.driver		= {
+ 		.name	= "pxa25x-pwm",
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(pwm_of_match),
+ 	},
+ 	.probe		= pwm_probe,
+ 	.remove		= pwm_remove,
 -- 
-1.8.1.2
+1.8.1.5
