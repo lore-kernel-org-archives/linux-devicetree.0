@@ -1,112 +1,52 @@
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Subject: Re: [PATCH v4 12/19] cpufreq: cpufreq-cpu0: remove device tree parsing
- for cpu nodes
-Date: Mon, 09 Sep 2013 10:24:39 +0100
-Message-ID: <522D93D7.4010307@arm.com>
-References: <1374492747-13879-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1376991021-12160-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1376991021-12160-13-git-send-email-Sudeep.KarkadaNagesha@arm.com> <Pine.LNX.4.64.1309061539310.11068@axis700.grange>
+From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Subject: Re: [PATCH] of: Add vendor prefix for Xen hypervisor
+Date: Mon, 9 Sep 2013 11:31:59 +0100
+Message-ID: <alpine.DEB.2.02.1309091131480.6397@kaball.uk.xensource.com>
+References: <1378572566-12688-1-git-send-email-ian.campbell@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1309061539310.11068@axis700.grange>
-Sender: linux-pm-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Shawn Guo <shawn.guo@linaro.org>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Viresh Kumar <viresh.kumar@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jonas Bonn <jonas@southpole.se>, Michal Simek <monstr@monstr.eu>, "Rafael J. Wysocki" <rjw@sisk.pl>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <xen-devel-bounces@lists.xen.org>
+In-Reply-To: <1378572566-12688-1-git-send-email-ian.campbell@citrix.com>
+List-Unsubscribe: <http://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
+	<mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xen.org>
+List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
+List-Subscribe: <http://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
+	<mailto:xen-devel-request@lists.xen.org?subject=subscribe>
+Sender: xen-devel-bounces@lists.xen.org
+Errors-To: xen-devel-bounces@lists.xen.org
+To: Ian Campbell <ian.campbell@citrix.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stefano Stabellini <Stefano.Stabellini@eu.citrix.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, xen-devel@lists.xen.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/13 14:44, Guennadi Liakhovetski wrote:
-> Hi
+On Sat, 7 Sep 2013, Ian Campbell wrote:
+> I suppose vendors of virtual hardware ought to be listed here as well.
 > 
-> On Tue, 20 Aug 2013, Sudeep KarkadaNagesha wrote:
+> Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
+> Cc: Stefano Stabellini <Stefano.Stabellini@eu.citrix.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: devicetree@vger.kernel.org
+
+ack
+
+
+>  Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
+>  1 file changed, 1 insertion(+)
 > 
->> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
->>
->> Now that the cpu device registration initialises the of_node(if available)
->> appropriately for all the cpus, parsing here is redundant.
->>
->> This patch removes all DT parsing and uses cpu->of_node instead.
->>
->> Acked-by: Shawn Guo <shawn.guo@linaro.org>
->> Acked-by: Rob Herring <rob.herring@calxeda.com>
->> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
->> ---
->>  drivers/cpufreq/cpufreq-cpu0.c | 23 ++++-------------------
->>  1 file changed, 4 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.=
->> c
->> index ad1fde2..5b05c26 100644
->> --- a/drivers/cpufreq/cpufreq-cpu0.c
->> +++ b/drivers/cpufreq/cpufreq-cpu0.c
->> @@ -174,29 +174,17 @@ static struct cpufreq_driver cpu0_cpufreq_driver =3D =
->> {
->> =20
->>  static int cpu0_cpufreq_probe(struct platform_device *pdev)
->>  {
->> -=09struct device_node *np, *parent;
->> +=09struct device_node *np;
->>  =09int ret;
->> =20
->> -=09parent =3D of_find_node_by_path("/cpus");
->> -=09if (!parent) {
->> -=09=09pr_err("failed to find OF /cpus\n");
->> -=09=09return -ENOENT;
->> -=09}
->> -
->> -=09for_each_child_of_node(parent, np) {
->> -=09=09if (of_get_property(np, "operating-points", NULL))
->> -=09=09=09break;
->> -=09}
->> +=09cpu_dev =3D &pdev->dev;
->> =20
->> +=09np =3D of_node_get(cpu_dev->of_node);
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 366ce9b..4e4768d 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -69,4 +69,5 @@ via	VIA Technologies, Inc.
+>  wlf	Wolfson Microelectronics
+>  wm	Wondermedia Technologies, Inc.
+>  winbond Winbond Electronics corp.
+> +xen	Xen Hypervisor
+>  xlnx	Xilinx
+> -- 
+> 1.7.10.4
 > 
-> Has this actually been tested? This seems to break cpufreq-cpu0. The 
-> reason is, that this probe function is called not for the DT CPU node, but 
-> for a special virtual cpufreq-cpu0 platform device, typically created by 
-> platforms, using
-> 
-> 	platform_device_register_simple("cpufreq-cpu0", -1, NULL, 0);
-> 
-> which then of course doesn't have on .of_node associated with it.
-> 
-
-Hi Guennadi,
-
-Based on my understanding of the original code:
-        cpu_dev = &pdev->dev;
-	...
-	ret = of_init_opp_table(cpu_dev);
-
-of_init_opp_table needs cpu_dev to be get_cpu_device(0). My
-understanding was that platform using cpufreq-cpu0 sets &pdev->dev to
-get_cpu_device(0). But looks like that's not the case.
-
-Hi Shawn,
-
-Can you please clarify ? The fix would be as below but I would like to
-know if setting cpu_dev to get_cpu_device(0) instead of &pdev->dev has
-any impact on other parts of code using cpu_dev ?
-
-diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
-index cbfffa9..871c336 100644
---- a/drivers/cpufreq/cpufreq-cpu0.c
-+++ b/drivers/cpufreq/cpufreq-cpu0.c
-@@ -177,7 +177,7 @@ static int cpu0_cpufreq_probe(struct platform_device
-*pdev)
-        struct device_node *np;
-        int ret;
-
--       cpu_dev = &pdev->dev;
-+       cpu_dev = get_cpu_device(0);
-
-        np = of_node_get(cpu_dev->of_node);
-        if (!np) {
-
-
-Regards,
-Sudeep
-
-
-
