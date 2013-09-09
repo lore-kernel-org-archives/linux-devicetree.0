@@ -1,86 +1,42 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2] of/platform: add error reporting to of_amba_device_create()
-Date: Mon, 09 Sep 2013 17:05:03 +0100
-Message-ID: <20130909160503.6F9C13E0F23@localhost>
-References: <2891140.lVrJfIiCi5@amdc1032>
+Subject: Re: [PATCH] irq/of: Fix comment typo for irq_of_parse_and_map
+Date: Mon, 09 Sep 2013 17:03:35 +0100
+Message-ID: <20130909160335.2E26A3E0F23@localhost>
+References: <1377913450-30108-1-git-send-email-wangyijing@huawei.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2891140.lVrJfIiCi5@amdc1032>
+In-Reply-To: <1377913450-30108-1-git-send-email-wangyijing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yijing Wang <wangyijing@huawei.com>, Hanjun Guo <guohanjun@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Aug 2013 13:17:29 +0200, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com> wrote:
-> Add error reporting to of_amba_device_create() so the user knows
-> when (and why) some device tree nodes fail to initialize.
+On Sat, 31 Aug 2013 09:44:10 +0800, Yijing Wang <wangyijing@huawei.com> wrote:
+> Fix trivial comment typo for irq_of_parse_and_map().
 > 
-> [ The issue was spotted on Universal C210 board (using revision 0 of
->   ARM Exynos4210 SoC) on which initialization was silently failing
->   for PL330 MDMA1 device tree node (it was using the wrong addres
->   resulting in amba_device_add() returning -ENODEV). ]
-> 
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Signed-off-by: Yijing Wang <wangyijing@huawei.com>
 
-Applied, thanks
+Applied, thanks.
 
 g.
 
 > ---
-> v2:
-> * don't change the return value
-> * don't change the user of of_amba_device_create()
+>  drivers/of/irq.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
 > 
->  drivers/of/platform.c |   19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index 1264923..1752988 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -28,7 +28,7 @@
+>  
+>  /**
+>   * irq_of_parse_and_map - Parse and map an interrupt into linux virq space
+> - * @device: Device node of the device whose interrupt is to be mapped
+> + * @dev: Device node of the device whose interrupt is to be mapped
+>   * @index: Index of the interrupt to map
+>   *
+>   * This function is a wrapper that chains of_irq_map_one() and
+> -- 
+> 1.7.1
 > 
-> Index: b/drivers/of/platform.c
-> ===================================================================
-> --- a/drivers/of/platform.c	2013-08-29 17:04:38.227921054 +0200
-> +++ b/drivers/of/platform.c	2013-08-30 13:13:31.202813954 +0200
-> @@ -268,8 +268,11 @@ static struct amba_device *of_amba_devic
->  		return NULL;
->  
->  	dev = amba_device_alloc(NULL, 0, 0);
-> -	if (!dev)
-> +	if (!dev) {
-> +		pr_err("%s(): amba_device_alloc() failed for %s\n",
-> +		       __func__, node->full_name);
->  		return NULL;
-> +	}
->  
->  	/* setup generic device info */
->  	dev->dev.coherent_dma_mask = ~0;
-> @@ -294,12 +297,18 @@ static struct amba_device *of_amba_devic
->  		dev->irq[i] = irq_of_parse_and_map(node, i);
->  
->  	ret = of_address_to_resource(node, 0, &dev->res);
-> -	if (ret)
-> +	if (ret) {
-> +		pr_err("%s(): of_address_to_resource() failed (%d) for %s\n",
-> +		       __func__, ret, node->full_name);
->  		goto err_free;
-> +	}
->  
->  	ret = amba_device_add(dev, &iomem_resource);
-> -	if (ret)
-> +	if (ret) {
-> +		pr_err("%s(): amba_device_add() failed (%d) for %s\n",
-> +		       __func__, ret, node->full_name);
->  		goto err_free;
-> +	}
->  
->  	return dev;
->  
-> @@ -378,6 +387,10 @@ static int of_platform_bus_create(struct
->  	}
->  
->  	if (of_device_is_compatible(bus, "arm,primecell")) {
-> +		/*
-> +		 * Don't return an error here to keep compatibility with older
-> +		 * device tree files.
-> +		 */
->  		of_amba_device_create(bus, bus_id, platform_data, parent);
->  		return 0;
->  	}
 > 
