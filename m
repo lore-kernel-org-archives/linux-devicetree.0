@@ -1,88 +1,141 @@
-From: <dinguyen@altera.com>
-Subject: [PATCH 0/3] Add support for SD/MMC on SOCFPGA
-Date: Mon, 9 Sep 2013 10:33:50 -0500
-Message-ID: <1378740833-4883-1-git-send-email-dinguyen@altera.com>
+From: Mike Dunn <mikedunn@newsguy.com>
+Subject: Re: [PATCH v2] pwm: pxa: add device tree support to pwm driver
+Date: Mon, 09 Sep 2013 08:37:35 -0700
+Message-ID: <522DEB3F.7090509@newsguy.com>
+References: <1378669218-10944-1-git-send-email-mikedunn@newsguy.com>
+ <201309090249.47407.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dinh.linux@gmail.com
-Cc: Dinh Nguyen <dinguyen@altera.com>, Pavel Machek <pavel@denx.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201309090249.47407.marex@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marex@denx.de>
+Cc: linux-pwm@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@altera.com>
-
-Hi,
-
-Here is a patch series that enables SD/MMC support for the SOCFPGA platform.
-This is the 6th revision of the series. This series is intended for v3.13.
-
-v6:
-- Reuse "samsung,dw-mshc-sdr-timing" binding
-- Clean up dw_mmc-socfpga.c to have only the necessary functions
-	- Remove dw_mci_socfpga_parse_dt(), as we'll let the platform function:
-		socfpga_sysmgr_set_dwmmc_drvsel_smpsel() do that work
-	- Always use SDMMC_CMD_USE_HOLD_REG
-- Add mach-socfpga/system_mgr.c, which contains function that will set the
-  SD/MMC SDR values in the System Manager.
-- Expose an API function in the mach-socfpga platform code so that the SD/MMC
-  driver can use to set the SDR values.
-
-I know that there's a general rule not to have drivers access specific
-function(s) in platform code, but for this case I am really unsure of what
-would be the best solution. The system manager IP block itself does not warrant
-a driver, so a "syscon" driver should suffice. However, there are specific
-register offsets that are needed, these can be defined in either in the SD/MMC 
-or DTS entry. But in order for the DTS entries to be correct, it would need register 
-offset information as well. And I was informed that register offsets were frowned 
-upon in the past.
-   
-So for this go-around, I am exposing an API from the mach-socfpga platform
-code that will only be used by a platform-specific implementation of the SD/MMC
-driver.
-
-v5:
-- Add "altr,ciu-clk-offset" that represents the necessary offset
-	and shift values in the sysmgr phandle. This is used to set
-	the correct CIU clock values.
-    
-v4:
-- Add a complete binding example in documentations
-- Add a phandle entry for "altr,sysmgr" which links the system
-	manager to the SD/MMC IP block that controls the SDR timings.
-- Split up patches
-	1/3 - Add syscon binding to sys-mgr node
-	2/3 - DTS bindings and documentation for SD/MMC on SOCFPGA
-	3/3 - Driver changes to use the bindings
-    
-v3:
-- Explicitly reference synopsis-dw-mshc.txt for base bindings
-- Remove "dw-mshc-ciu-div" as driver can get clock information dts "ciu" entry
-- Fixed indentation issue
-    
-v2:
-- Remove bus-width and extra line in documentation
-- Merge bindings example into a single node in documentation
+On 09/08/2013 05:49 PM, Marek Vasut wrote:
+> Dear Mike Dunn,
+> 
+>> This patch adds device tree support to the pxa's pwm driver.  Only an OF
+>> match table is added; nothing needs to be extracted from the device tree
+>> node.  The existing platform_device id table is reused for the match table
+>> data.  Support for inverted polarity is also added.
+>>
+>> Tested on a Palm Treo 680 (both platform data and DT cases).
+>>
+>> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
+>> ---
+>> Changle log:
+>> v2:
+>> - of_match_table contains only the "pxa250-pwm" compatible string; require
+>> one device instance per pwm
+>> - add Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+>> - add support for polarity flag in DT and implement set_polarity() method
+>>   (the treo 680 inverts the signal between pwm out and backlight)
+>> - return -EINVAL instead of -ENODEV if platform data or DT node not found
+>> - output dev_info string if platform data missing
+>> - expanded CC list of patch
+>>
+>>  Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 33 +++++++++++++
+>>  arch/arm/boot/dts/pxa27x.dtsi                     | 24 ++++++++++
+>>  drivers/pwm/pwm-pxa.c                             | 57
+>> +++++++++++++++++++++++ 3 files changed, 114 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+>> b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt new file mode 100644
+>> index 0000000..7b09bfa
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+>> @@ -0,0 +1,33 @@
+>> +Marvell pwm controller
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +  for pxa25x, pxa27x, pxa168, pxa910: must be compatible =
+>> "marvell,pxa250-pwm"; +- reg: physical base address and length of the
+>> registers used by the pwm channel +  NB: One device instance must be
+>> created for each pwm that is used, so the +  length covers only the
+>> register window for one pwm output, not that of the +  entire pwm
+>> controller.  Currently length is 0x10 for all supported devices. +-
+>> #pwm-cells: should be 3.
+>> +   cell 1: the per-chip index of the PWM to use,
+>> +   cell 2: the period in nanoseconds,
+> 
+> Is there no generic OF prop for this?
 
 
-Dinh Nguyen (3):
-  arm: socfpga: Set the SDMMC clock phase in system manager
-  mmc: dw_mmc-socfpga: Clean up SOCFPGA platform specific functionality
-  arm: dts: socfpga: Add support for SD/MMC
+Yes, all the pwm drivers with DT support have the same definitions for cell 1
+and 2.  Many have #pwm-cells=2, but for those with #pwm-cells=3, all define cell
+3 the same way also.
 
- .../devicetree/bindings/mmc/socfpga-dw-mshc.txt    |   38 ++++++++++++
- arch/arm/boot/dts/socfpga.dtsi                     |   11 ++++
- arch/arm/boot/dts/socfpga_cyclone5.dts             |   12 ++++
- arch/arm/boot/dts/socfpga_vt.dts                   |   12 ++++
- arch/arm/mach-socfpga/Makefile                     |    2 +-
- arch/arm/mach-socfpga/core.h                       |    6 ++
- arch/arm/mach-socfpga/system_mgr.c                 |   32 ++++++++++
- drivers/mmc/host/dw_mmc-pltfm.h                    |    2 +-
- drivers/mmc/host/dw_mmc-socfpga.c                  |   63 +-------------------
- 9 files changed, 115 insertions(+), 63 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
- create mode 100644 arch/arm/mach-socfpga/system_mgr.c
 
--- 
-1.7.9.5
+> 
+>> +   cell 3: flags; set bit 0 to specify inverse polarity.
+> 
+> Do we not have some generic flag to indicate inverted PWM polarity?
 
+
+Yes, enum pwm_polarity, defined in include/linux/pwm.h.  The pwm drivers with
+polarity support all define cell 3 the same way.  The wording in the bindings
+documentation is a little different in each case, but all essentially say the
+same thing.  In Documentation/devicetree/bindings/pwm/ see for example
+atmel-tcb-pwm.txt and pwm-tiecap.txt.
+
+I'm new to device tree, so maybe I am not understanding correctly this and your
+previous question... All DT properties are described as integers lacking any
+type (aside from their bit width), no?
+
+
+> 
+> [...]
+>  
+>> +#ifdef CONFIG_OF
+>> +/*
+>> + * Device tree users should create one device instance for each pwm
+>> channel. + * Hence we dispense with the HAS_SECONDARY_PWM and "tell" the
+>> original driver + * code that this is a single channel pxa25x-pwm.
+>> + */
+> 
+> Above ... pxa250-pwm , no ?
+> 
+>> +static struct of_device_id pwm_of_match[] = {
+>> +	{ .compatible = "marvell,pxa250-pwm", .data = &pwm_id_table[0]},
+> 
+> Surely, data can be NULL, no ?
+
+
+It could, in which case pxa_pwm_get_id_dt() would explicitly return
+&pwm_id_table[0] instead of the .data element of the of_device_id.  Not sure
+which way is better and why.  That dumb platform_device_id table is causing all
+kinds of nuisance :)
+
+
+> 
+> [...]
+> 
+>> @@ -145,6 +199,8 @@ static int pwm_probe(struct platform_device *pdev)
+>>  	pwm->chip.ops = &pxa_pwm_ops;
+>>  	pwm->chip.base = -1;
+>>  	pwm->chip.npwm = (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1;
+>> +	pwm->chip.of_xlate = of_pwm_xlate_with_flags;
+>> +	pwm->chip.of_pwm_n_cells = 3;
+> 
+> Are these two settings needed ?
+
+
+Yes.  See drivers/pwm/core.c:of_pwmchip_add(), where they are set to default
+values of of_pwm_simple_xlate and 2 if left uninitialized.
+
+
+Thanks again Marek,
+Mike
