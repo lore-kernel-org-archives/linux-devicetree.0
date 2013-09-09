@@ -1,57 +1,122 @@
-From: Rohit Vaswani <rvaswani@codeaurora.org>
-Subject: Re: [PATCHv3 1/2] ARM: msm: Add support for APQ8074 Dragonboard
-Date: Mon, 09 Sep 2013 15:30:36 -0700
-Message-ID: <522E4C0C.6080309@codeaurora.org>
-References: <1378495943-2572-1-git-send-email-rvaswani@codeaurora.org> <20130906215051.GA29253@quad.lixom.net> <522E09E6.8040300@codeaurora.org> <FFE100A7-8AD6-4E0D-9F64-120DA3564F89@codeaurora.org> <522E21A8.4060408@wwwdotorg.org> <FA33E8F4-3F85-4D8B-83E1-96F5A8F76CE6@codeaurora.org> <522E3BC9.1030105@wwwdotorg.org> <CA05A23E-41CF-4EC6-BB2D-36105048700B@codeaurora.org> <522E40B2.9010301@codeaurora.org> <49CC46F4-F6CE-4B1A-B0D5-E4BB779755B8@codeaurora.org>
+From: Joel Fernandes <joelf@ti.com>
+Subject: Re: [PATCH] ARM: OMAP2+: am335x-bone*: add DT for BeagleBone Black
+Date: Mon, 9 Sep 2013 18:42:42 -0500
+Message-ID: <522E5CF2.3080108@ti.com>
+References: <1378736961-21005-1-git-send-email-koen@dominion.thruhere.net>
+ <87zjrm81dl.fsf@linaro.org>
+ <BBAC0939-A4F9-4FEA-B137-0307D8787DC3@dominion.thruhere.net>
+ <522E1325.8050906@ti.com>
+ <41952E65-1037-4117-A1AE-8310FED59E3A@dominion.thruhere.net>
+ <522E18C0.9010909@ti.com> <522E269B.7000802@ti.com>
+ <73968C64-F0B0-4ED6-82B8-BD1966ED9D84@dominion.thruhere.net>
+ <522E2B9E.8050404@ti.com>
+Reply-To: joelf@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <49CC46F4-F6CE-4B1A-B0D5-E4BB779755B8@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Olof Johansson <olof@lixom.net>, David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <522E2B9E.8050404@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Koen Kooi <koen@dominion.thruhere.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, tony@atomide.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, bcousson@baylibre.com, olof@lixom.net, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/9/2013 3:04 PM, Kumar Gala wrote:
-> On Sep 9, 2013, at 4:42 PM, Rohit Vaswani wrote:
->
->> On 9/9/2013 2:25 PM, Kumar Gala wrote:
->>> <snip>
->>> On Fri, Sep 06, 2013 at 12:32:22PM -0700, Rohit Vaswani wrote:
->>>>>>>>>> This patch adds basic board support for APQ8074 Dragonboard
->>>>>>>>>> <snip>
->>>>>>>>>> dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
->>>>>>>>>> -	msm8960-cdp.dtb
->>>>>>>>>> +	msm8960-cdp.dtb \
->>>>>>>>>> +	apq8074-dragonboard.dtb
->>>>>>>>> Please add boards alphabetically.
->>>>>>>> Will do.
->>>>>>>>>> dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
->>>>>>>>>> 	armada-370-mirabox.dtb \
->>>>>>>>>> 	armada-370-rd.dtb \
->>>>>>>>>> diff --git a/arch/arm/boot/dts/apq8074-dragonboard.dts b/arch/arm/boot/dts/apq8074-dragonboard.dts
->>>>>>>>>> new file mode 100644
->>>>>>>>>> index 0000000..5b7b6a0
->>>>>>>>>> --- /dev/null
->>>>>>>>>> +++ b/arch/arm/boot/dts/apq8074-dragonboard.dts
->>>>>>>>> arch/arm/boot/dts/ is getting really crowded. It's been working best if the SoC
->>>>>>>>> family or vendor is used as a prefix to keep things a bit more organized. In
->>>>>>>>> that spirit, prefixing these with msm-<foo> makes sense. Can you please do so?
->>>>>>>> Sure. But the board is called an APQ8074 and we wanted to keep the naming consistent with that.
->>>>>>> If we do this we should use qcom, not msm as the prefix.  Match the device tree vendor prefix.
->> Coming back to this, it would be better if the naming to be consistent with what we call our ARCH - msm and not qcom.
->> msm8974-dragonboard signifies quite clearly what the board is.
-> I was saying qcom,apq8074-dragonboard or we can do the dir thing as we don't have that mean qcom/msm device trees.
->
-> - k
+On 09/09/2013 03:12 PM, Joel Fernandes wrote:
+> On 09/09/2013 03:00 PM, Koen Kooi wrote:
+>>
+>> Op 9 sep. 2013, om 21:50 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
+>>
+>>> On 09/09/2013 01:51 PM, Joel Fernandes wrote:
+>>>> On 09/09/2013 01:43 PM, Koen Kooi wrote:
+>>>>>
+>>>>> Op 9 sep. 2013, om 20:27 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
+>>>>>
+>>>>>> On 09/09/2013 10:51 AM, Koen Kooi wrote:
+>>>>>>>
+>>>>>>> Op 9 sep. 2013, om 17:23 heeft Kevin Hilman <khilman@linaro.org> het volgende geschreven:
+>>>>>>>
+>>>>>>>> Koen Kooi <koen@dominion.thruhere.net> writes:
+>>>>>>>>
+>>>>>>>>> The BeagleBone Black is basically a regular BeagleBone with eMMC and HDMI added,
+>>>>>>>>> so create a common dtsi both can use.
+>>>>>>>>>
+>>>>>>>>> IMPORTANT: booting the existing am335x-bone.dts will blow up the HDMI transceiver
+>>>>>>>>> after a dozen boots with an uSD card inserted because LDO will be at 3.3V instead
+>>>>>>>>> of 1.8.
+>>>>>>>>>
+>>>>>>>>> MMC support for AM335x still isn't in, so only the LDO change has been added.
+>>>>>>>>>
+>>>>>>>>> Cc: stable@vger.kernel.org
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+>>>>>>>>> Tested-by: Tom Rini <trini@ti.com>
+>>>>>>>>> Tested-by: Matt Porter <matt.porter@linaro.org>
+>>>>>>>>
+>>>>>>>> I guess the subject should've included v5?
+>>>>>>>
+>>>>>>> Yes, I blame it on being monday :)
+>>>>>>
+>>>>>> The series you're posting will require rebasing on the current MMC DT series
+>>>>>> that is being discussed last couple of weeks on the mailing list which were
+>>>>>> waiting until now as DMA support was missing. Now that DMA support is pulled in,
+>>>>>> it is safe to apply those patches so I will be reposting them shortly.
+>>>>>>
+>>>>>> Please hold off any changes until those patches are posted. This will avoid
+>>>>>> unnecessary conflicts.
+>>>>>
+>>>>> Or you can rebase on top of this patch since it has no dependencies *and* fixes blowing up boards. FWIW, git-rebase, git-cherry-pick and git-am -3 track the rename in my patch just fine.
+>>>>>
+>>>>
+>>>> That's fair enough, since  Kevin Acked and Benoit is pulling it, I'm fine with
+>>>> rebasing on top of it and we avoid any merge conflicts.
+>>>>
+>>>
+>>> I noticed - there were still some comments from Felipe on the v4 series of this
+>>> patch regarding RF cape and HDMI may be breaking it. How are you addressing that?
+>>
+>> Capes will never go into the .dts and HDMI support needs some serious patching before it can get enabled in the DT. And the RF cape isn't being sold since it has no sw support. No need to worry about things in the 3.15/3.16 timeframe. Unless you want this LDO3 fix not to go in ASAP.
+>>
+>> Joel, is there anything relevant *right now* blocking this patch going in? If not, please test it and add your Tested-by: line.
+>>
+> 
+> We don't merge things in hurry and focus is to do things the right way.. I just
+> want to make sure that all possible comments have been addressed.
+> 
+> Otherwise patch looks OK and hope everyone else thinks so too. I am dealing with
+> some merge conflicts right now with my series on top of this though, but they
+> should be easy enough to fix up. That's delaying my testing, but otherwise as
+> such I don't have any objection to this patch (provided the conclusion is that
+> all comments have been addressed..). Thanks!
 
-Sure, that's fine. If there's a consensus on the name to match the 
-compatible strings, could you send a patch out to rename the older 
-dtsi's and I can add the Dragonboard support with it.
+Koen,
 
-Thanks,
-Rohit Vaswani
+One note though, since I don't use HDMI (or BBB much for that matter), I was ok
+with taking a risk of upping the ldo3 regulator voltage to 3.3v on my board
+which I needed to do to get to the boot prompt.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation
+I applied my AM335x DMA and MMC patches and tried to boot with rootfs as MMC1.
+
+With 1.8v, I get the following during boot:
+[    2.236043] mmc0: host doesn't support card's voltages
+[    2.241659] mmc0: error -22 whilst initialising SD card
+
+That's strange because I do have an SDHC card. With 3.3v it works fine.
+
+I will add a note about this to my series. Since this more of an MMC issue than
+anything, and your patch series doesn't enable MMC, you can add my tested-by:
+
+Tested-by: Joel Fernandes <joelf@ti.com>
+
+Later on, the regulator voltage may need to be tweaked for MMC support.
+
+Regards,
+
+-Joel
