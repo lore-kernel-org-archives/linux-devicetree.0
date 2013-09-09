@@ -1,60 +1,56 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v2] pwm: pxa: add device tree support to pwm driver
-Date: Mon, 9 Sep 2013 17:56:42 +0200
-Message-ID: <201309091756.42315.marex@denx.de>
-References: <1378669218-10944-1-git-send-email-mikedunn@newsguy.com>
- <201309090249.47407.marex@denx.de> <522DEB3F.7090509@newsguy.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] ARM: add basic Trusted Foundations support
+Date: Mon, 09 Sep 2013 09:59:20 -0600
+Message-ID: <522DF058.8020509@wwwdotorg.org>
+References: <1378351680-14696-1-git-send-email-acourbot@nvidia.com> <1378351680-14696-2-git-send-email-acourbot@nvidia.com> <522A2D1B.3010508@wwwdotorg.org> <CAAVeFuJF-cu9aPCruGPQk9WHV7VAGhGpU0bU6LToxP38YBnS_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <522DEB3F.7090509@newsguy.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Dunn <mikedunn@newsguy.com>
-Cc: linux-pwm@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAVeFuJF-cu9aPCruGPQk9WHV7VAGhGpU0bU6LToxP38YBnS_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Mike Dunn,
+On 09/09/2013 12:38 AM, Alexandre Courbot wrote:
+> On Sat, Sep 7, 2013 at 4:29 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 09/04/2013 09:27 PM, Alexandre Courbot wrote:
+>>> Trusted Foundations is a TrustZone-based secure monitor for ARM that
+>>> can be invoked  using a consistent SMC-based API on all supported
+>>> platforms. This patch adds initial basic support for Trusted
+>>> Foundations using the ARM firmware API. Current features are limited
+>>> to the ability to boot secondary processors.
 
-[...]
+>>> diff --git a/arch/arm/include/asm/trusted_foundations.h b/arch/arm/include/asm/trusted_foundations.h
+>>
+>> Do we need to add the following here:
+>>
+>> #if !IS_ENABLED(CONFIG_OF)
+>> static inline void register_trusted_foundations(...) {}
+>> #endif
 
-> >> +static struct of_device_id pwm_of_match[] = {
-> >> +	{ .compatible = "marvell,pxa250-pwm", .data = &pwm_id_table[0]},
-> > 
-> > Surely, data can be NULL, no ?
+Uggh. I meant to write **of_**register_trusted_foundations() there.
+
+>> So that there is a dummy no-op function for the non-DT-support case? I
+>> guess Tegra always has CONFIG_OF enabled so that call from
+>> mach-tegra/common.c in patch 2 will never be an issue, but perhaps it
+>> might if anyone else uses this?
 > 
-> It could, in which case pxa_pwm_get_id_dt() would explicitly return
-> &pwm_id_table[0] instead of the .data element of the of_device_id.  Not
-> sure which way is better and why.  That dumb platform_device_id table is
-> causing all kinds of nuisance :)
+> My expectation is that register_trusted_foundations() is called by the
+> platform code once it has established (through whatever mean it likes)
+> that Trusted Foundations is required. For platforms supporting DT,
+> of_register_trusted_foundations() takes care of that. Platforms that
+> don't support DT need another way to decide whether they *need* TF or
+> not. Once a platform decided that it needs TF, its absence is not an
+> option, and therefore I'd think that register_trusted_foundations()
+> should hard-fail if support is not compiled in. Or maybe I missed your
+> point?
 
-Is the pwm_id_table needed at all anymore?
+So yes, you missed my point, but it was my fault:-)
 
-> > [...]
-> > 
-> >> @@ -145,6 +199,8 @@ static int pwm_probe(struct platform_device *pdev)
-> >> 
-> >>  	pwm->chip.ops = &pxa_pwm_ops;
-> >>  	pwm->chip.base = -1;
-> >>  	pwm->chip.npwm = (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1;
-> >> 
-> >> +	pwm->chip.of_xlate = of_pwm_xlate_with_flags;
-> >> +	pwm->chip.of_pwm_n_cells = 3;
-> > 
-> > Are these two settings needed ?
-> 
-> Yes.  See drivers/pwm/core.c:of_pwmchip_add(), where they are set to
-> default values of of_pwm_simple_xlate and 2 if left uninitialized.
-
-OK
-
-Best regards,
-Marek Vasut
+Most of_* can be called irrespective of CONFIG_OF, and since
+of_register_trusted_foundations() is meant to handle internally the "do
+I need to do anything" case, I think it makes sense to be allowed to
+call it unconditionally without determining anything about either
+CONFIG_OF or TF DT node presence?
