@@ -1,36 +1,76 @@
-From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] usb: gadget: Add UDC driver for Aeroflex Gaisler GRUSBDC
-Date: Mon, 09 Sep 2013 07:33:31 +0200
-Message-ID: <522D5DAB.2060707@gaisler.com>
-References: <1376316310-27989-1-git-send-email-andreas@gaisler.com> <521DBC9E.9080001@gaisler.com>
+From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 2/2] DT: Add binding documentation for CM36651 proximity/light
+ sensor
+Date: Mon, 09 Sep 2013 15:10:41 +0900
+Message-ID: <522D6661.8030000@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <521DBC9E.9080001-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, warren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2013-08-28 11:02, Andreas Larsson wrote:
-> On 2013-08-12 16:05, Andreas Larsson wrote:
->> This adds an UDC driver for GRUSBDC USB Device Controller cores
->> available in the
->> GRLIB VHDL IP core library. The driver only supports DMA mode.
->
-> Any comments? It would be great to get feedback soon in case some things
-> need to be changed for this driver to be accepted. Thanks!
+This patch add device tree binding documentation for CM36651
+proximity/light sensor.
 
-Anyone?
+Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ .../devicetree/bindings/iio/light/cm36651.txt      |   24
+++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 2 files changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/cm36651.txt
 
-Is there anything holding it back from being accepted into mainline?
-The patch has been waiting for almost a month now for any reaction.
+diff --git a/Documentation/devicetree/bindings/iio/light/cm36651.txt
+b/Documentation/devicetree/bindings/iio/light/cm36651.txt
+new file mode 100644
+index 0000000..3a6ba38
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/cm36651.txt
+@@ -0,0 +1,24 @@
++* Capella CM36651 I2C Proximity and Color Light sensor
++
++Required properties:
++- compatible: must be "capella,cm36651"
++- reg: the I2C address of the device
++- interrupts: interrupt to which the chip is connected
++- vled-supply: regulator for the sensor device, as covered
++	       in ../../regulator/regulator.txt
++
++Example:
++
++	i2c_cm36651: i2c-gpio {
++		/* ... */
++
++		cm36651@18 {
++			compatible = "capella,cm36651";
++			reg = <0x18>;
++			interrupt-parent = <&gpx0>;
++			interrupts = <2 0>;
++			vled-supply = <&ps_als_reg>;
++		};
++
++		/* ... */
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ec4d713..044796d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -17,6 +17,7 @@ brcm	Broadcom Corporation
+ cavium	Cavium, Inc.
+ chrp	Common Hardware Reference Platform
+ cirrus	Cirrus Logic, Inc.
++capella	Capella Microsystems, Inc
+ cortina	Cortina Systems, Inc.
+ dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
+ davicom	DAVICOM Semiconductor, Inc.
+-- 
+1.7.9.5
 
-Best regards,
-Andreas Larsson
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Beomho Seo, Assistant Engineer
+System S/W Lab., S/W Platform Team, Software Center
+Samsung Electronics
