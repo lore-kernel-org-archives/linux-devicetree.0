@@ -1,36 +1,60 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH 1/5] i2c: rcar: (cosmetic) remove superfluous parenthesis
-Date: Mon,  9 Sep 2013 17:55:16 +0200
-Message-ID: <1378742120-11135-2-git-send-email-g.liakhovetski@gmx.de>
-References: <1378742120-11135-1-git-send-email-g.liakhovetski@gmx.de>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1378742120-11135-1-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-i2c@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v2] pwm: pxa: add device tree support to pwm driver
+Date: Mon, 9 Sep 2013 17:56:42 +0200
+Message-ID: <201309091756.42315.marex@denx.de>
+References: <1378669218-10944-1-git-send-email-mikedunn@newsguy.com>
+ <201309090249.47407.marex@denx.de> <522DEB3F.7090509@newsguy.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <522DEB3F.7090509@newsguy.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Dunn <mikedunn@newsguy.com>
+Cc: linux-pwm@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-A recent patch added even more superfluous parenthesis to those, which
-already were there. Remove them again.
+Dear Mike Dunn,
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
----
- drivers/i2c/busses/i2c-rcar.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+[...]
 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index d2fe11d..15eef94 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -306,7 +306,7 @@ scgd_find:
- 	/*
- 	 * keep icccr value
- 	 */
--	priv->icccr = (scgd << (cdf_width) | cdf);
-+	priv->icccr = scgd << cdf_width | cdf;
- 
- 	return 0;
- }
--- 
-1.7.2.5
+> >> +static struct of_device_id pwm_of_match[] = {
+> >> +	{ .compatible = "marvell,pxa250-pwm", .data = &pwm_id_table[0]},
+> > 
+> > Surely, data can be NULL, no ?
+> 
+> It could, in which case pxa_pwm_get_id_dt() would explicitly return
+> &pwm_id_table[0] instead of the .data element of the of_device_id.  Not
+> sure which way is better and why.  That dumb platform_device_id table is
+> causing all kinds of nuisance :)
 
+Is the pwm_id_table needed at all anymore?
+
+> > [...]
+> > 
+> >> @@ -145,6 +199,8 @@ static int pwm_probe(struct platform_device *pdev)
+> >> 
+> >>  	pwm->chip.ops = &pxa_pwm_ops;
+> >>  	pwm->chip.base = -1;
+> >>  	pwm->chip.npwm = (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1;
+> >> 
+> >> +	pwm->chip.of_xlate = of_pwm_xlate_with_flags;
+> >> +	pwm->chip.of_pwm_n_cells = 3;
+> > 
+> > Are these two settings needed ?
+> 
+> Yes.  See drivers/pwm/core.c:of_pwmchip_add(), where they are set to
+> default values of of_pwm_simple_xlate and 2 if left uninitialized.
+
+OK
+
+Best regards,
+Marek Vasut
