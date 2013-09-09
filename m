@@ -1,60 +1,86 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] regulator: da9210: add Device Tree support
-Date: Mon, 9 Sep 2013 17:04:06 +0100
-Message-ID: <20130909160406.GS29403@sirena.org.uk>
-References: <1378741920-11085-1-git-send-email-g.liakhovetski@gmx.de>
- <1378741920-11085-3-git-send-email-g.liakhovetski@gmx.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XlarKorwDmMoGA5O"
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2] of/platform: add error reporting to of_amba_device_create()
+Date: Mon, 09 Sep 2013 17:05:03 +0100
+Message-ID: <20130909160503.6F9C13E0F23@localhost>
+References: <2891140.lVrJfIiCi5@amdc1032>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1378741920-11085-3-git-send-email-g.liakhovetski@gmx.de>
+In-Reply-To: <2891140.lVrJfIiCi5@amdc1032>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 30 Aug 2013 13:17:29 +0200, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com> wrote:
+> Add error reporting to of_amba_device_create() so the user knows
+> when (and why) some device tree nodes fail to initialize.
+> 
+> [ The issue was spotted on Universal C210 board (using revision 0 of
+>   ARM Exynos4210 SoC) on which initialization was silently failing
+>   for PL330 MDMA1 device tree node (it was using the wrong addres
+>   resulting in amba_device_add() returning -ENODEV). ]
+> 
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 
---XlarKorwDmMoGA5O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied, thanks
 
-On Mon, Sep 09, 2013 at 05:52:00PM +0200, Guennadi Liakhovetski wrote:
-> This patch adds basic Device Tree support to the da9210 regulator driver -
-> with no special properties, since also driver's platform data only contai=
-ns
-> standard regulator initialisation parameters.
->=20
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+g.
+
 > ---
->  drivers/regulator/da9210-regulator.c |    9 ++++++---
-
-I'd expect to see a binding document, even if it is just a very brief
-one documenting the prefix and pointing to the standard regulator
-properties.
-
---XlarKorwDmMoGA5O
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSLfFzAAoJELSic+t+oim9jtIP/1Mocp62UXAiXIdHeUcEimQu
-KD6Q8qc/wjnLPzmReNJ1/IrJi1yv9u4rewCDCTMvEVLxqLzgXpbn4yJYUAllw2LU
-f1hdc1BQfEZ5LebqtVz8jxT4PnzwXZ69YjZ6rZLxoZE0yAUYj9g9gjUANNaBIBdh
-KGVe9xjPmXUJWOARq9PjN1lELdn2QJKpueck5K/U2GZpg7DCGzj1KJ+pfU/SXKUf
-banRQixjOis9a+X+wKYZrH+TBxMj3YeMPw2pRMInKp6v/DOGSnETnKm3KPb1l6nk
-lEH4E5iurqVhkx9viOWyTEp0Bgs/svZEB+TTXaLvvKrAMxXQgq9t5jp2lcPyPk/F
-qpn7ph7BX4B57HtAH6KuhcMrTPWhTzT/6/7PbeIfOP5VTEyezNTjqKTAJcjabNT4
-d2HdcdJrPpgm+hhecV+YIC9BWIKzpBFWGDuGv5x4XTRz/B93Jyu+D3YibafXereR
-6HeZt/NUOftIeoVqJaOq0bpyREQEuiz7NT9/v3kmr3Kfiig+HK11geOcA5BM3wUP
-tnJUdN4HnNNre2kZNLQeav0peCFYkltuc5rp8wQzgekLE/G2pg6WxVjDzQvNbcJt
-LYQJht6ssXjlXRyg7XNJmflC2FHFESztFJ5CGrpJO3kuAN87k4qgHtDkB6CbRqse
-q+WeAY4sRB6hgpNpFItS
-=L25T
------END PGP SIGNATURE-----
-
---XlarKorwDmMoGA5O--
+> v2:
+> * don't change the return value
+> * don't change the user of of_amba_device_create()
+> 
+>  drivers/of/platform.c |   19 ++++++++++++++++---
+>  1 file changed, 16 insertions(+), 3 deletions(-)
+> 
+> Index: b/drivers/of/platform.c
+> ===================================================================
+> --- a/drivers/of/platform.c	2013-08-29 17:04:38.227921054 +0200
+> +++ b/drivers/of/platform.c	2013-08-30 13:13:31.202813954 +0200
+> @@ -268,8 +268,11 @@ static struct amba_device *of_amba_devic
+>  		return NULL;
+>  
+>  	dev = amba_device_alloc(NULL, 0, 0);
+> -	if (!dev)
+> +	if (!dev) {
+> +		pr_err("%s(): amba_device_alloc() failed for %s\n",
+> +		       __func__, node->full_name);
+>  		return NULL;
+> +	}
+>  
+>  	/* setup generic device info */
+>  	dev->dev.coherent_dma_mask = ~0;
+> @@ -294,12 +297,18 @@ static struct amba_device *of_amba_devic
+>  		dev->irq[i] = irq_of_parse_and_map(node, i);
+>  
+>  	ret = of_address_to_resource(node, 0, &dev->res);
+> -	if (ret)
+> +	if (ret) {
+> +		pr_err("%s(): of_address_to_resource() failed (%d) for %s\n",
+> +		       __func__, ret, node->full_name);
+>  		goto err_free;
+> +	}
+>  
+>  	ret = amba_device_add(dev, &iomem_resource);
+> -	if (ret)
+> +	if (ret) {
+> +		pr_err("%s(): amba_device_add() failed (%d) for %s\n",
+> +		       __func__, ret, node->full_name);
+>  		goto err_free;
+> +	}
+>  
+>  	return dev;
+>  
+> @@ -378,6 +387,10 @@ static int of_platform_bus_create(struct
+>  	}
+>  
+>  	if (of_device_is_compatible(bus, "arm,primecell")) {
+> +		/*
+> +		 * Don't return an error here to keep compatibility with older
+> +		 * device tree files.
+> +		 */
+>  		of_amba_device_create(bus, bus_id, platform_data, parent);
+>  		return 0;
+>  	}
+> 
