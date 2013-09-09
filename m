@@ -1,71 +1,45 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 2/2] sh_eth: add device tree support
-Date: Mon, 09 Sep 2013 15:02:40 -0600
-Message-ID: <522E3770.9020305@wwwdotorg.org>
-References: <201309070343.25640.sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 3/3] arm: dts: socfpga: Add support for SD/MMC
+Date: Mon, 09 Sep 2013 15:11:43 -0600
+Message-ID: <522E398F.3080100@wwwdotorg.org>
+References: <1378740833-4883-1-git-send-email-dinguyen@altera.com> <1378740833-4883-4-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201309070343.25640.sergei.shtylyov@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1378740833-4883-4-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinguyen@altera.com
+Cc: dinh.linux@gmail.com, Pavel Machek <pavel@denx.de>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2013 05:43 PM, Sergei Shtylyov wrote:
-> Add support of the device tree probing for the Renesas SH-Mobile SoCs
-> documenting the device tree binding as necessary.
+On 09/09/2013 09:33 AM, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
 > 
-> This work is loosely based on an original patch by Nobuhiro Iwamatsu
-> <nobuhiro.iwamatsu.yj@renesas.com>.
+> Add bindings for SD/MMC for SOCFPGA.
 
-> Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+> diff --git a/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
 
-> +- reg: offset and length of (1) the E-DMAC/feLic register block (required),
-> +       (2) the TSU register block (optional).
+> +* Altera SOCFPGA specific extensions to the Synopsis Designware Mobile
+> +  Storage Host Controller
+> +
+> +The Synopsis designware mobile storage host controller is used to interface
+> +a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
+> +differences between the core Synopsis dw mshc controller properties described
+> +by synopsis-dw-mshc.txt and the properties used by the SOCFPGA specific
+> +extensions to the Synopsis Designware Mobile Storage Host Controller.
+> +
+> +Required Properties:
+> +
+> +* compatible: should be
+> +        - "altr,socfpga-dw-mshc": for controllers with Altera SOCFPGA
+> +          specific extensions.
+> +
+> +* samsung,dw-mshc-sdr-timing: See exynos-dw-mshc.txt for more information about
+> +	this binding.
 
-There's an argument that you should specify reg-names entries to allow
-arbitrary ordering or entries within reg, if there's more than one
-entry. But, I don't think it's mandatory, just something to consider at
-present.
+s/binding/property/
 
-> +- interrupts: interrupt specifier for the sole interrupt.
-> +- phy-mode: string, operation mode of the PHY interface (a string that
-> +	    of_get_phy_mode() can understand).
-
-DT bindings should be OS-agnostic. of_get_phy_mode() is Linux-specific.
-Please spell out the complete list of supported values here, without
-reference to Linux-specific code or documentation.
-
-> +- phy-handle: phandle of the PHY device (there should be a PHY device subnode).
-
-Is this a custom property, or part of some generic PHY subsystem
-binding? If the latter, please reference the DT binding document for
-that subsystem. If it's custom, what kinds of nodes can this phandle
-point at; what kind of interface must the referenced DT node provide (is
-a #phy-cells property required, must its compatible value be one of a
-specific set of values).
-
-> +- #address-cells: number of address cells for the MDIO bus, must be equal to 1.
-> +- #size-cells: number of size cells on the MDIO bus, must be equal to 0.
-
-If this node is expected to contain child nodes, you need to specify
-details of those child nodes. Can you reference the filename of a
-generic MDIO binding? What do the address values mean (perhaps that'd be
-covered by the MDIO binding already, if it's applicable).
-
-> +Optional properties:
-> +- interrupt-parent: the phandle for the interrupt controller that services
-> +		    interrupts for this device.
-> +- local-mac-address: 6 bytes, MAC address.
-> +- renesas,no-ether-link: boolean, specify when a board does not provide a proper
-> +			 Ether LINK signal.
-> +- renesas,ether-link-active-low: boolean, specify when the Ether LINK signal is
-> +  				 active-low instead of normal active-high.
-
-Presumably the link signal is some dedicated signal in the Ethernet MAC
-HW block, and not a generic GPIO? If it's a GPIO, there should be a flag
-in the GPIO property/binding you can use for active low.
-
-Do you need any clocks properties, IP block reset signals, power domains?
+It's odd that this isn't "synopsis," rather than "samsung," if the
+property is generic across all/some uses of the Synopsis core. But, I
+guess this is fine.
