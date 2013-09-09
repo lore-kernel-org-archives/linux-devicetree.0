@@ -1,208 +1,488 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH 1/2] video: ARM CLCD: Add DT support
-Date: Mon, 09 Sep 2013 12:19:19 +0100
-Message-ID: <1378725559.4082.28.camel@hornet>
-References: <1378488201-21146-1-git-send-email-pawel.moll@arm.com>
- <522BAED9.4020301@gmail.com>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCH V2 1/3] scsi: ufs: Allow vendor specific initialization
+Date: Mon, 09 Sep 2013 20:33:00 +0900
+Message-ID: <000901cead50$573ede90$05bc9bb0$%jun@samsung.com>
+References: <1377577093-10068-1-git-send-email-sthumma@codeaurora.org>
+ <1377577093-10068-2-git-send-email-sthumma@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ks_c_5601-1987
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <522BAED9.4020301@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-reply-to: <1377577093-10068-2-git-send-email-sthumma@codeaurora.org>
+Content-language: ko
+Sender: linux-scsi-owner@vger.kernel.org
+To: 'Sujit Reddy Thumma' <sthumma@codeaurora.org>, 'Vinayak Holikatti' <vinholikatti@gmail.com>, 'Santosh Y' <santoshsy@gmail.com>
+Cc: "'James E.J. Bottomley'" <JBottomley@parallels.com>, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2013-09-07 at 23:55 +0100, Sylwester Nawrocki wrote:
-> H --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/video/arm,pl11x.txt
-> > @@ -0,0 +1,87 @@
-> > +* ARM PrimeCell Color LCD Controller (CLCD) PL110/PL111
+Hi Sujit,
+
+On Tue, August 27, 2013, Sujit Reddy Thumma wrote:
+> Some vendor specific controller versions might need to configure
+> vendor specific - registers, clocks, voltage regulators etc. to
+> initialize the host controller UTP layer and Uni-Pro stack.
+> Provide some common initialization operations that can be used
+> to configure vendor specifics. The methods can be extended in
+> future, for example, for power mode transitions.
 > 
-> nit: Shouldn't the abbreviation be CLCDC ?
-
-The commonly used acronym for this cell is CLCD. For what its worth, I
-can make the line read:
-
-ARM PrimeCell Color LCD (CLCD) Controller PL110/PL111
-
-> > +- video-ram: phandle to a node describing specialized video memory
-> > +		(that is *not* described in the top level "memory" node)
-> > +                that must be used as a framebuffer, eg. due to restrictions
-> > +		of the system interconnect; the node must contain a
-> > +		standard reg property describing the address and the size
-> > +		of the memory area
+> The operations are vendor/board specific and hence determined with
+> the help of compatible property in device tree.
 > 
-> It seems the "specialized video memory" is described by some vendor specific
-> DT binding ? Is it documented ? It sounds like you are unnecessarily 
-> repeating the memory node details here.
-
-I appreciate this property being the hardest to swallow, but the problem
-it is trying to solve is quite simple, really. System can be designed in
-such a way that CLCD is *not* able to read data from the main memory. In
-such case there will be a separate block of (usually static) memory
-"next" to CLCD, which *must* be used for the framebuffer. And I've got
-two choices here: to simply define an address and size, or to define a
-phandle to a node with standard reg property. I'll be really grateful
-for ideas how to describe the situation better.
-
-> Perhaps this binding/driver should use the common reserved memory bindings,
-> see thread http://www.spinics.net/lists/devicetree/msg02880.html
-
-No, not really - as I said, this is *not* the main RAM of the system.
-CMA doesn't even know about its existence.
-
-> > +- max-framebuffer-size: maximum size in bytes of the framebuffer the
-> > +			system can handle, eg. in terms of available
-> > +			memory bandwidth
-> > +
-> > +In the simplest case of a display panel being connected directly to the
-> > +CLCD, it can be described in the node:
-> > +
-> > +- panel-dimensions: (optional) array of two numbers (width and height)
-> > +			describing physical dimension in mm of the panel
-> > +- panel-type: (required) must be "tft" or "stn", defines panel type
-> > +- panel-tft-interface: (for "tft" panel type) array of 3 numbers defining
-> > +			widths in bits of the R, G and B components
-> > +- panel-tft-rb-swapped: (for "tft" panel type) if present means that
-> > +			the R&  B components are swapped on the board
-> > +- panel-stn-color: (for "stn" panel type) if present means that
-> > +			the panel is a colour STN display, if missing
-> > +			is a monochrome display
-> > +- panel-stn-dual: (for "stn" panel type) if present means that there
-> > +			are two STN displays connected
-> > +- panel-stn-4bit: (for monochrome "stn" panel) if present means
-> > +			that the monochrome display is connected
-> > +			via 4 bit-wide interface
+> Signed-off-by: Sujit Reddy Thumma <sthumma@codeaurora.org>
+> ---
+>  drivers/scsi/ufs/ufshcd-pci.c    |   8 +-
+>  drivers/scsi/ufs/ufshcd-pltfrm.c |  24 +++++-
+>  drivers/scsi/ufs/ufshcd.c        | 157 +++++++++++++++++++++++++++++++--------
+>  drivers/scsi/ufs/ufshcd.h        |  34 ++++++++-
+>  4 files changed, 187 insertions(+), 36 deletions(-)
 > 
-> Are this vendor specific or common properties ? Shouldn't those be prefixed
-> with the vendor name ?
-
-I have no answer to this question. My guts are telling me - nope. TFT is
-TFT, STN is STN, nothing to do with "arm,". But I welcome other
-opinions.
-
-> Anyway I think we need an RFC to possibly standardize properties that are
-> common across multiple panels and have them listed in a common DT binding.
+> diff --git a/drivers/scsi/ufs/ufshcd-pci.c b/drivers/scsi/ufs/ufshcd-pci.c
+> index a823cf4..6b0d299 100644
+> --- a/drivers/scsi/ufs/ufshcd-pci.c
+> +++ b/drivers/scsi/ufs/ufshcd-pci.c
+> @@ -191,7 +191,13 @@ ufshcd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  		return err;
+>  	}
 > 
-> It sounds a bit disappointing that for same class devices there are being
-> introduced custom DT properties for each available device. For instance,
-> the first 3 properties above look like they could apply to various display
-> panels and controllers.
-
-No argument from here. The Common Display Framework was supposed to
-address this issue. And the first version of this patch used it:
-
-http://thread.gmane.org/gmane.linux.drivers.video-input-infrastructure/63417
-
-But you'll notice that it's been almost 10 months since the last version
-of CDF saw the daylight, and Laurent seems to be too busy with other
-duties to carry on with this. Additionally the KMS/DRM guys don't look
-too kindly on it. The bottom line is: there are 3 different platform
-suffering from lack of DT bindings for CLCD and I've got fed up with
-waiting. Anyway, I've intentionally kept the panel properties in a
-separate section and wrote "can be described", to keep an open way for
-future "display bindings", if and when they appear.
-
-> > +#ifdef CONFIG_OF
-> > +static int clcdfb_of_get_tft_panel(struct device_node *node,
-> > +		struct clcd_panel *panel)
-> > +{
-> > +	int err;
-> > +	u32 rgb[3];
-> > +	int r, g, b;
+> -	err = ufshcd_init(&pdev->dev, &hba, mmio_base, pdev->irq);
+> +	err = ufshcd_alloc_host(&pdev->dev, &hba);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Allocation failed\n");
+> +		return err;
+> +	}
+> +
+> +	err = ufshcd_init(hba, mmio_base, pdev->irq);
+>  	if (err) {
+>  		dev_err(&pdev->dev, "Initialization failed\n");
+>  		return err;
+> diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> index 5e46232..9c94052 100644
+> --- a/drivers/scsi/ufs/ufshcd-pltfrm.c
+> +++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> @@ -35,9 +35,23 @@
 > 
-> Couldn't these be 'unsigned int' ?
-
-They could indeed.
-
-> > +	err = of_property_read_u32_array(node, "panel-tft-interface", rgb, 3);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	r = rgb[0];
-> > +	g = rgb[1];
-> > +	b = rgb[2];
-> > +
-> > +	/* Bypass pixel clock divider, data output on the falling edge */
-> > +	panel->tim2 = TIM2_BCD | TIM2_IPC;
-> > +
-> > +	/* TFT display, vert. comp. interrupt at the start of the back porch */
-> > +	panel->cntl |= CNTL_LCDTFT | CNTL_LCDVCOMP(1);
-> > +
-> > +	if (r>= 4&&  g>= 4&&  b>= 4)
-> > +		panel->caps |= CLCD_CAP_444;
-> > +	if (r>= 5&&  g>= 5&&  b>= 5)
-> > +		panel->caps |= CLCD_CAP_5551;
-> > +	if (r>= 5&&  g>= 6&&  b>= 5)
-> > +		panel->caps |= CLCD_CAP_565;
-> > +	if (r>= 8&&  g>= 8&&  b>= 8)
-> > +		panel->caps |= CLCD_CAP_888;
-> > +
-> > +	if (of_get_property(node, "panel-tft-rb-swapped", NULL))
-> > +		panel->caps&= ~CLCD_CAP_RGB;
-> > +	else
-> > +		panel->caps&= ~CLCD_CAP_BGR;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int clcdfb_of_init_display(struct clcd_fb *fb)
-> > +{
-> > +	struct device_node *node = fb->dev->dev.of_node;
-> > +	u32 max_size;
-> > +	u32 dimensions[2];
-> > +	char *mode_name;
-> > +	int len, err;
-> > +	const char *panel_type;
-> > +
-> > +	fb->panel = devm_kzalloc(&fb->dev->dev, sizeof(*fb->panel), GFP_KERNEL);
-> > +	if (!fb->panel)
-> > +		return -ENOMEM;
-> > +
-> > +	err = of_get_fb_videomode(fb->dev->dev.of_node,&fb->panel->mode,
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/of.h>
 > 
-> 'node' could be reused here.
-
-Of course, well spotted.
-
-> > +			OF_USE_NATIVE_MODE);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	len = snprintf(NULL, 0, "%ux%u@%u", fb->panel->mode.xres,
-> > +			fb->panel->mode.yres, fb->panel->mode.refresh);
-> > +	mode_name = devm_kzalloc(&fb->dev->dev, len + 1, GFP_KERNEL);
-> > +	snprintf(mode_name, len + 1, "%ux%u@%u", fb->panel->mode.xres,
-> > +			fb->panel->mode.yres, fb->panel->mode.refresh);
+>  #include "ufshcd.h"
 > 
-> Don't you want to just use kasprintf() here instead and free mode_name
-> manually in the remove() callback ?
-
-> > +static int clcdfb_of_vram_setup(struct clcd_fb *fb)
-> > +{
-> > +	const __be32 *prop = of_get_property(fb->dev->dev.of_node, "video-ram",
-> > +			NULL);
-> > +	struct device_node *node = of_find_node_by_phandle(be32_to_cpup(prop));
+> +static const struct of_device_id ufs_of_match[];
+> +static struct ufs_hba_variant_ops *get_variant_ops(struct device *dev)
+> +{
+> +	if (dev->of_node) {
+> +		const struct of_device_id *match;
+> +		match = of_match_node(ufs_of_match, dev->of_node);
+> +		if (match)
+> +			return (struct ufs_hba_variant_ops *)match->data;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  #ifdef CONFIG_PM
+>  /**
+>   * ufshcd_pltfrm_suspend - suspend power management function
+> @@ -150,10 +164,18 @@ static int ufshcd_pltfrm_probe(struct platform_device *pdev)
+>  		goto out;
+>  	}
 > 
-> This looks like open coding function of_parse_phandle(), why not just:
+> +	err = ufshcd_alloc_host(dev, &hba);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Allocation failed\n");
+> +		goto out;
+> +	}
+> +
+> +	hba->vops = get_variant_ops(&pdev->dev);
+> +
+>  	pm_runtime_set_active(&pdev->dev);
+>  	pm_runtime_enable(&pdev->dev);
 > 
-> 	struct device_node *node = of_parse_phandle(fb->dev->dev.of_node,
-> 					"video-ram", 0);
-> ?
+> -	err = ufshcd_init(dev, &hba, mmio_base, irq);
+> +	err = ufshcd_init(hba, mmio_base, irq);
+>  	if (err) {
+>  		dev_err(dev, "Intialization failed\n");
+>  		goto out_disable_rpm;
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index a0f5ac2..743696a 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -174,13 +174,14 @@ static inline u32 ufshcd_get_ufs_version(struct ufs_hba *hba)
+>  /**
+>   * ufshcd_is_device_present - Check if any device connected to
+>   *			      the host controller
+> - * @reg_hcs - host controller status register value
+> + * @hba: pointer to adapter instance
+>   *
+>   * Returns 1 if device present, 0 if no device detected
+>   */
+> -static inline int ufshcd_is_device_present(u32 reg_hcs)
+> +static inline int ufshcd_is_device_present(struct ufs_hba *hba)
+>  {
+> -	return (DEVICE_PRESENT & reg_hcs) ? 1 : 0;
+> +	return (ufshcd_readl(hba, REG_CONTROLLER_STATUS) &
+> +						DEVICE_PRESENT) ? 1 : 0;
+>  }
+> 
+>  /**
+> @@ -1483,11 +1484,10 @@ out:
+>   * @hba: per adapter instance
+>   *
+>   * To bring UFS host controller to operational state,
+> - * 1. Check if device is present
+> - * 2. Enable required interrupts
+> - * 3. Configure interrupt aggregation
+> - * 4. Program UTRL and UTMRL base addres
+> - * 5. Configure run-stop-registers
+> + * 1. Enable required interrupts
+> + * 2. Configure interrupt aggregation
+> + * 3. Program UTRL and UTMRL base addres
+> + * 4. Configure run-stop-registers
+>   *
+>   * Returns 0 on success, non-zero value on failure
+>   */
+> @@ -1496,14 +1496,6 @@ static int ufshcd_make_hba_operational(struct ufs_hba *hba)
+>  	int err = 0;
+>  	u32 reg;
+> 
+> -	/* check if device present */
+> -	reg = ufshcd_readl(hba, REG_CONTROLLER_STATUS);
+> -	if (!ufshcd_is_device_present(reg)) {
+> -		dev_err(hba->dev, "cc: Device not present\n");
+> -		err = -ENXIO;
+> -		goto out;
+> -	}
+> -
+>  	/* Enable required interrupts */
+>  	ufshcd_enable_intr(hba, UFSHCD_ENABLE_INTRS);
+> 
+> @@ -1524,6 +1516,7 @@ static int ufshcd_make_hba_operational(struct ufs_hba *hba)
+>  	 * UCRDY, UTMRLDY and UTRLRDY bits must be 1
+>  	 * DEI, HEI bits must be 0
+>  	 */
+> +	reg = ufshcd_readl(hba, REG_CONTROLLER_STATUS);
+>  	if (!(ufshcd_get_lists_status(reg))) {
+>  		ufshcd_enable_run_stop_reg(hba);
+>  	} else {
+> @@ -1570,6 +1563,9 @@ static int ufshcd_hba_enable(struct ufs_hba *hba)
+>  		msleep(5);
+>  	}
+> 
+> +	if (hba->vops && hba->vops->hce_enable_notify)
+> +		hba->vops->hce_enable_notify(hba, PRE_CHANGE);
+> +
+>  	/* start controller initialization sequence */
+>  	ufshcd_hba_start(hba);
+> 
+> @@ -1597,6 +1593,10 @@ static int ufshcd_hba_enable(struct ufs_hba *hba)
+>  		}
+>  		msleep(5);
+>  	}
+> +
+> +	if (hba->vops && hba->vops->hce_enable_notify)
+> +		hba->vops->hce_enable_notify(hba, POST_CHANGE);
+> +
+>  	return 0;
+>  }
+> 
+> @@ -1613,12 +1613,28 @@ static int ufshcd_link_startup(struct ufs_hba *hba)
+>  	/* enable UIC related interrupts */
+>  	ufshcd_enable_intr(hba, UIC_COMMAND_COMPL);
+> 
+> +	if (hba->vops && hba->vops->link_startup_notify)
+> +		hba->vops->link_startup_notify(hba, PRE_CHANGE);
+> +
+>  	ret = ufshcd_dme_link_startup(hba);
+>  	if (ret)
+>  		goto out;
+> 
+> -	ret = ufshcd_make_hba_operational(hba);
+> +	/* check if device is detected by inter-connect layer */
+> +	if (!ufshcd_is_device_present(hba)) {
+> +		dev_err(hba->dev, "%s: Device not present\n", __func__);
+> +		ret = -ENXIO;
+> +		goto out;
+> +	}
+> 
+> +	/* Include any host controller configuration via UIC commands */
+> +	if (hba->vops && hba->vops->link_startup_notify) {
+> +		ret = hba->vops->link_startup_notify(hba, POST_CHANGE);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+> +	ret = ufshcd_make_hba_operational(hba);
+>  out:
+>  	if (ret)
+>  		dev_err(hba->dev, "link startup failed %d\n", ret);
+> @@ -2810,6 +2826,61 @@ static struct scsi_host_template ufshcd_driver_template = {
+>  	.can_queue		= UFSHCD_CAN_QUEUE,
+>  };
+> 
+> +static int ufshcd_variant_hba_init(struct ufs_hba *hba)
+> +{
+> +	int err = 0;
+> +
+> +	if (!hba->vops)
+> +		goto out;
+> +
+> +	if (hba->vops->init) {
+> +		err = hba->vops->init(hba);
+If init() is allowed to access host specific registers,
+setup_clocks() and setup_regulators() may precede init() generally.
+As seeing your description, it seems certain.
+<Quot>
+@init: called when the driver is initialized
+@setup_clocks: called before touching any of the controller registers
+@setup_regulators: called before accessing the host controller
+</Quot>
 
-I'm not sure why did I write it like this (and it's been a while since
-this happened), but you're right - it should be of_parse_phandle().
+Further, possibly init() implementation might substitute all?
 
-Thanks!
+> +		if (err)
+> +			goto out;
+> +	}
+> +
+> +	if (hba->vops->setup_clocks) {
+> +		err = hba->vops->setup_clocks(hba, true);
+> +		if (err)
+> +			goto out_exit;
+> +	}
+> +
+> +	if (hba->vops->setup_regulators) {
+> +		err = hba->vops->setup_regulators(hba, true);
+> +		if (err)
+> +			goto out_clks;
+> +	}
+> +
+> +	goto out;
+> +
+> +out_clks:
+> +	if (hba->vops->setup_clocks)
+> +		hba->vops->setup_clocks(hba, false);
+> +out_exit:
+> +	if (hba->vops->exit)
+> +		hba->vops->exit(hba);
+> +out:
+> +	if (err)
+> +		dev_err(hba->dev, "%s: variant %s init failed err %d\n",
+> +			__func__, hba->vops ? hba->vops->name : "", err);
+> +	return err;
+> +}
+> +
+> +static void ufshcd_variant_hba_exit(struct ufs_hba *hba)
+> +{
+> +	if (!hba->vops)
+> +		return;
+> +
+> +	if (hba->vops->setup_clocks)
+> +		hba->vops->setup_clocks(hba, false);
+> +
+> +	if (hba->vops->setup_regulators)
+> +		hba->vops->setup_regulators(hba, false);
+> +
+> +	if (hba->vops->exit)
+> +		hba->vops->exit(hba);
+It's similar with init() case above.
 
-Pawel
+> +}
+> +
+>  /**
+>   * ufshcd_suspend - suspend power management function
+>   * @hba: per adapter instance
+> @@ -2894,23 +2965,22 @@ void ufshcd_remove(struct ufs_hba *hba)
+>  	ufshcd_hba_stop(hba);
+> 
+>  	scsi_host_put(hba->host);
+> +
+> +	ufshcd_variant_hba_exit(hba);
+>  }
+>  EXPORT_SYMBOL_GPL(ufshcd_remove);
+> 
+>  /**
+> - * ufshcd_init - Driver initialization routine
+> + * ufshcd_alloc_host - allocate Host Bus Adapter (HBA)
+>   * @dev: pointer to device handle
+>   * @hba_handle: driver private handle
+> - * @mmio_base: base register address
+> - * @irq: Interrupt line of device
+>   * Returns 0 on success, non-zero value on failure
+>   */
+> -int ufshcd_init(struct device *dev, struct ufs_hba **hba_handle,
+> -		 void __iomem *mmio_base, unsigned int irq)
+> +int ufshcd_alloc_host(struct device *dev, struct ufs_hba **hba_handle)
+>  {
+>  	struct Scsi_Host *host;
+>  	struct ufs_hba *hba;
+> -	int err;
+> +	int err = 0;
+> 
+>  	if (!dev) {
+>  		dev_err(dev,
+> @@ -2919,13 +2989,6 @@ int ufshcd_init(struct device *dev, struct ufs_hba **hba_handle,
+>  		goto out_error;
+>  	}
+> 
+> -	if (!mmio_base) {
+> -		dev_err(dev,
+> -		"Invalid memory reference for mmio_base is NULL\n");
+> -		err = -ENODEV;
+> -		goto out_error;
+> -	}
+> -
+>  	host = scsi_host_alloc(&ufshcd_driver_template,
+>  				sizeof(struct ufs_hba));
+>  	if (!host) {
+> @@ -2936,9 +2999,40 @@ int ufshcd_init(struct device *dev, struct ufs_hba **hba_handle,
+>  	hba = shost_priv(host);
+>  	hba->host = host;
+>  	hba->dev = dev;
+> +	*hba_handle = hba;
+> +
+> +out_error:
+> +	return err;
+> +}
+> +EXPORT_SYMBOL(ufshcd_alloc_host);
+> +
+> +/**
+> + * ufshcd_init - Driver initialization routine
+> + * @hba: per-adapter instance
+> + * @mmio_base: base register address
+> + * @irq: Interrupt line of device
+> + * Returns 0 on success, non-zero value on failure
+> + */
+> +int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+> +{
+> +	int err;
+> +	struct Scsi_Host *host = hba->host;
+> +	struct device *dev = hba->dev;
+> +
+> +	if (!mmio_base) {
+> +		dev_err(hba->dev,
+> +		"Invalid memory reference for mmio_base is NULL\n");
+> +		err = -ENODEV;
+> +		goto out_error;
+> +	}
+> +
+>  	hba->mmio_base = mmio_base;
+>  	hba->irq = irq;
+> 
+> +	err = ufshcd_variant_hba_init(hba);
+> +	if (err)
+> +		goto out_error;
+> +
+>  	/* Read capabilities registers */
+>  	ufshcd_hba_capabilities(hba);
+> 
+> @@ -3010,8 +3104,6 @@ int ufshcd_init(struct device *dev, struct ufs_hba **hba_handle,
+>  		goto out_remove_scsi_host;
+>  	}
+> 
+> -	*hba_handle = hba;
+> -
+>  	/* Hold auto suspend until async scan completes */
+>  	pm_runtime_get_sync(dev);
+> 
+> @@ -3023,6 +3115,7 @@ out_remove_scsi_host:
+>  	scsi_remove_host(hba->host);
+>  out_disable:
+>  	scsi_host_put(host);
+> +	ufshcd_variant_hba_exit(hba);
+>  out_error:
+>  	return err;
+>  }
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index 8f5624e..72acbc7 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -68,6 +68,8 @@
+>  #define UFSHCD "ufshcd"
+>  #define UFSHCD_DRIVER_VERSION "0.2"
+> 
+> +struct ufs_hba;
+> +
+>  enum dev_cmd_type {
+>  	DEV_CMD_TYPE_NOP		= 0x0,
+>  	DEV_CMD_TYPE_QUERY		= 0x1,
+> @@ -152,6 +154,30 @@ struct ufs_dev_cmd {
+>  	struct ufs_query query;
+>  };
+> 
+> +#define PRE_CHANGE      0
+> +#define POST_CHANGE     1
+> +/**
+> + * struct ufs_hba_variant_ops - variant specific callbacks
+> + * @name: variant name
+> + * @init: called when the driver is initialized
+> + * @exit: called to cleanup everything done in init
+> + * @setup_clocks: called before touching any of the controller registers
+> + * @setup_regulators: called before accessing the host controller
+> + * @hce_enable_notify: called before and after HCE enable bit is set to allow
+> + *                     variant specific Uni-Pro initialization.
+> + * @link_startup_notify: called before and after Link startup is carried out
+> + *                       to allow variant specific Uni-Pro initialization.
+> + */
+> +struct ufs_hba_variant_ops {
+> +	const char *name;
+> +	int	(*init)(struct ufs_hba *);
+> +	void    (*exit)(struct ufs_hba *);
+> +	int     (*setup_clocks)(struct ufs_hba *, bool);
+> +	int     (*setup_regulators)(struct ufs_hba *, bool);
+> +	int     (*hce_enable_notify)(struct ufs_hba *, bool);
+I agree on specific link_startup as HCI specification mentions.
+Actually we also have implemented similar thing in our host driver.
+But I'm not sure of a necessity of hce_enable_notify. Could you explain for that?
+
+> +	int     (*link_startup_notify)(struct ufs_hba *, bool);
+If a host specific implementation doesn't have two fully,
+one of them will be called with flag unnecessarily.
+How about separating into two functions[pre_, post_] for link_startup?
+
+> +};
+> +
+>  /**
+>   * struct ufs_hba - per adapter private structure
+>   * @mmio_base: UFSHCI base register address
+> @@ -171,6 +197,8 @@ struct ufs_dev_cmd {
+>   * @nutrs: Transfer Request Queue depth supported by controller
+>   * @nutmrs: Task Management Queue depth supported by controller
+>   * @ufs_version: UFS Version to which controller complies
+> + * @vops: pointer to variant specific operations
+> + * @priv: pointer to variant specific private data
+>   * @irq: Irq number of the controller
+>   * @active_uic_cmd: handle of active UIC command
+>   * @uic_cmd_mutex: mutex for uic command
+> @@ -217,6 +245,8 @@ struct ufs_hba {
+>  	int nutrs;
+>  	int nutmrs;
+>  	u32 ufs_version;
+> +	struct ufs_hba_variant_ops *vops;
+'const' declaration is expected.
+
+Thanks,
+Seungwon Jeon
+
+> +	void *priv;
+>  	unsigned int irq;
+> 
+>  	struct uic_command *active_uic_cmd;
+> @@ -253,8 +283,8 @@ struct ufs_hba {
+>  #define ufshcd_readl(hba, reg)	\
+>  	readl((hba)->mmio_base + (reg))
+> 
+> -int ufshcd_init(struct device *, struct ufs_hba ** , void __iomem * ,
+> -			unsigned int);
+> +int ufshcd_alloc_host(struct device *, struct ufs_hba **);
+> +int ufshcd_init(struct ufs_hba * , void __iomem * , unsigned int);
+>  void ufshcd_remove(struct ufs_hba *);
+> 
+>  /**
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation.
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-scsi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
