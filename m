@@ -1,14 +1,16 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2] pwm: pxa: add device tree support to pwm driver
-Date: Mon, 09 Sep 2013 12:35:33 -0600
-Message-ID: <522E14F5.1020909@wwwdotorg.org>
-References: <1378669218-10944-1-git-send-email-mikedunn@newsguy.com>
- <20130909120845.GB22197@ulmo> <522E0D72.3080805@newsguy.com>
+From: Joel Fernandes <joelf@ti.com>
+Subject: Re: [PATCH] ARM: OMAP2+: am335x-bone*: add DT for BeagleBone Black
+Date: Mon, 9 Sep 2013 13:27:49 -0500
+Message-ID: <522E1325.8050906@ti.com>
+References: <1378736961-21005-1-git-send-email-koen@dominion.thruhere.net>
+ <87zjrm81dl.fsf@linaro.org>
+ <BBAC0939-A4F9-4FEA-B137-0307D8787DC3@dominion.thruhere.net>
+Reply-To: joelf@ti.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <522E0D72.3080805@newsguy.com>
+In-Reply-To: <BBAC0939-A4F9-4FEA-B137-0307D8787DC3@dominion.thruhere.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,54 +20,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Dunn <mikedunn@newsguy.com>
-Cc: Marek Vasut <marex@denx.de>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
+To: Koen Kooi <koen@dominion.thruhere.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, tony@atomide.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, bcousson@baylibre.com, olof@lixom.net, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2013 12:03 PM, Mike Dunn wrote:
-> On 09/09/2013 05:08 AM, Thierry Reding wrote:
->> On Sun, Sep 08, 2013 at 12:40:18PM -0700, Mike Dunn wrote:
->>> This patch adds device tree support to the pxa's pwm driver.  Only an OF match
-
->>> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-
->>> +Marvell pwm controller
->>> +
->>> +Required properties:
->>> +- compatible:
->>> +  for pxa25x, pxa27x, pxa168, pxa910: must be compatible = "marvell,pxa250-pwm";
->>> +- reg: physical base address and length of the registers used by the pwm channel
->>
->> "pwm" -> "PWM". There are a few more occurrences that I haven't
->> explicitly pointed out.
->>
->>> +  NB: One device instance must be created for each pwm that is used, so the
->>> +  length covers only the register window for one pwm output, not that of the
->>> +  entire pwm controller.  Currently length is 0x10 for all supported devices.
->>
->> I'm not sure I like that very much. It seems a wrong representation of
->> the hardware for the sake of modifying a smaller number of lines in the
->> driver.
+On 09/09/2013 10:51 AM, Koen Kooi wrote:
 > 
-> I don't like it either, but this is an existing driver defect that will need to
-> be corrected.  To do so, I will need to to survey all the supported processors
-> to determine how many pwm outputs is posessed by each.  And there may be some
-> confusion in that regard; the driver says "pxa25x" has one, but my pxa255
-> developer's manual makes no mention of a pwm.  The pxa270 I am testing on has
-> four, but the driver says "pxa27x" has two, so currently (using platform_data
-> with existing driver) two devices are instantiated, each with two pwms.  It
-> seems that there are many variations within a single generation of the processor
-> family, so to correctly identify the number of pwms, processor identification
-> will have to be made on a finer granularity than the current "pxa25x", for
-> example.  I'm guessing that the hardware designers had this
-> one-device-instance-per-pwm approach in mind when they made the decision to
-> segregate the register sets of each pwm.  I really hope that this sin can be
-> forgiven :)
+> Op 9 sep. 2013, om 17:23 heeft Kevin Hilman <khilman@linaro.org> het volgende geschreven:
+> 
+>> Koen Kooi <koen@dominion.thruhere.net> writes:
+>>
+>>> The BeagleBone Black is basically a regular BeagleBone with eMMC and HDMI added,
+>>> so create a common dtsi both can use.
+>>>
+>>> IMPORTANT: booting the existing am335x-bone.dts will blow up the HDMI transceiver
+>>> after a dozen boots with an uSD card inserted because LDO will be at 3.3V instead
+>>> of 1.8.
+>>>
+>>> MMC support for AM335x still isn't in, so only the LDO change has been added.
+>>>
+>>> Cc: stable@vger.kernel.org
+>>>
+>>> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+>>> Tested-by: Tom Rini <trini@ti.com>
+>>> Tested-by: Matt Porter <matt.porter@linaro.org>
+>>
+>> I guess the subject should've included v5?
+> 
+> Yes, I blame it on being monday :)
 
-The DT binding is an ABI, so it needs to correctly represent the HW. As
-such, I'd say that if the binding is wrong, we need to fix it even if it
-means a lot of work.
+The series you're posting will require rebasing on the current MMC DT series
+that is being discussed last couple of weeks on the mailing list which were
+waiting until now as DMA support was missing. Now that DMA support is pulled in,
+it is safe to apply those patches so I will be reposting them shortly.
 
-That said, if each PWM truly is a *completely* independent block, with
-non-overlapping register spaces, there's certainly an argument that it's
-perfectly acceptable to represent each PWM as a separate DT node...
+Please hold off any changes until those patches are posted. This will avoid
+unnecessary conflicts.
+
+Thanks,
+
+-Joel
