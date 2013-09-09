@@ -1,106 +1,112 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH RFC 0/6] ARM: OMAP2+: AM43x/AM335x prcm reset driver
-Date: Mon, 09 Sep 2013 11:06:52 +0200
-Message-ID: <1378717612.4151.6.camel@pizza.hi.pengutronix.de>
-References: <cover.1378129416.git.afzal@ti.com>
-	 <1378375634.3948.10.camel@pizza.hi.pengutronix.de>
-	 <5228A99D.4020702@ti.com>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Subject: Re: [PATCH v4 12/19] cpufreq: cpufreq-cpu0: remove device tree parsing
+ for cpu nodes
+Date: Mon, 09 Sep 2013 10:24:39 +0100
+Message-ID: <522D93D7.4010307@arm.com>
+References: <1374492747-13879-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1376991021-12160-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1376991021-12160-13-git-send-email-Sudeep.KarkadaNagesha@arm.com> <Pine.LNX.4.64.1309061539310.11068@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5228A99D.4020702@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Afzal Mohammed <afzal@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Benoit Cousson <bcousson@baylibre.com>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1309061539310.11068@axis700.grange>
+Sender: linux-pm-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Shawn Guo <shawn.guo@linaro.org>
+Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Viresh Kumar <viresh.kumar@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jonas Bonn <jonas@southpole.se>, Michal Simek <monstr@monstr.eu>, "Rafael J. Wysocki" <rjw@sisk.pl>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 05.09.2013, 21:26 +0530 schrieb Afzal Mohammed:
-> Hi Philipp,
+On 06/09/13 14:44, Guennadi Liakhovetski wrote:
+> Hi
 > 
-> On Thursday 05 September 2013 03:37 PM, Philipp Zabel wrote:
-> > Am Montag, den 02.09.2013, 19:41 +0530 schrieb Afzal Mohammed:
+> On Tue, 20 Aug 2013, Sudeep KarkadaNagesha wrote:
 > 
-> >> Two new reset API's are provided to check whether reset is ready and
-> >> to clear reset. This would be required in case IP needs to mix reset
-> >> handling procedure with power/clock managment procedure to achieve
-> >> proper reset and these procedures are sometimes IP specific that would
-> >> make it difficult to handle reset fully in pm_runtime platform support.
+>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>>
+>> Now that the cpu device registration initialises the of_node(if available)
+>> appropriately for all the cpus, parsing here is redundant.
+>>
+>> This patch removes all DT parsing and uses cpu->of_node instead.
+>>
+>> Acked-by: Shawn Guo <shawn.guo@linaro.org>
+>> Acked-by: Rob Herring <rob.herring@calxeda.com>
+>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>> ---
+>>  drivers/cpufreq/cpufreq-cpu0.c | 23 ++++-------------------
+>>  1 file changed, 4 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.=
+>> c
+>> index ad1fde2..5b05c26 100644
+>> --- a/drivers/cpufreq/cpufreq-cpu0.c
+>> +++ b/drivers/cpufreq/cpufreq-cpu0.c
+>> @@ -174,29 +174,17 @@ static struct cpufreq_driver cpu0_cpufreq_driver =3D =
+>> {
+>> =20
+>>  static int cpu0_cpufreq_probe(struct platform_device *pdev)
+>>  {
+>> -=09struct device_node *np, *parent;
+>> +=09struct device_node *np;
+>>  =09int ret;
+>> =20
+>> -=09parent =3D of_find_node_by_path("/cpus");
+>> -=09if (!parent) {
+>> -=09=09pr_err("failed to find OF /cpus\n");
+>> -=09=09return -ENOENT;
+>> -=09}
+>> -
+>> -=09for_each_child_of_node(parent, np) {
+>> -=09=09if (of_get_property(np, "operating-points", NULL))
+>> -=09=09=09break;
+>> -=09}
+>> +=09cpu_dev =3D &pdev->dev;
+>> =20
+>> +=09np =3D of_node_get(cpu_dev->of_node);
 > 
-> >> client IP handling s/w (DT based) should do as follows:
+> Has this actually been tested? This seems to break cpufreq-cpu0. The 
+> reason is, that this probe function is called not for the DT CPU node, but 
+> for a special virtual cpufreq-cpu0 platform device, typically created by 
+> platforms, using
 > 
-> >> 2. In driver, that require reset to be deasserted,
-> >>  (this is the sequence required for gfx on AM43x/AM335x, this would
-> >>   depend on requirements of the IP)
-> >>
-> >> 	mydriver_probe(struct platform device *pdev)
-> >> 	{
-> >> 		:
-> >> 		:
-> >> 		reset_control_get(&pdev->dev, NULL);
-> >> 		reset_control_clear_reset();
-> >> 		reset_control_deassert();
-> >> 		pm_runtime_get_sync();
-> >> 		if (reset_control_is_reset() != true)
-> >> 			goto err;
-> >> 		reset_control_put();
-> >> 		:
-> >> 		:
-> >> 	}
+> 	platform_device_register_simple("cpufreq-cpu0", -1, NULL, 0);
 > 
-> > if possible, I'd like to move this logic into the reset controller
-> > driver. Can this be reordered to enable power before deasserting the
-> > reset line (assuming it is initially asserted)? In this case, I'd
-> > suggest to just call device_reset:
-> > 
-> > 	pm_runtime_get_sync(&pdev->dev);
-> > 	ret = device_reset(&pdev->dev);
-> > 	if (ret)
-> > 		goto err;
-> > 
-> > The ops.reset callback in the prcm driver then can handle clearing
-> > the reset status bit, deasserting the reset control bit, and waiting for
-> > the reset status bit to be set (or timing out with an error).
+> which then of course doesn't have on .of_node associated with it.
 > 
-> I too would have loved to have it in such a clean way and was initially
-> proceeding in that direction, but there is an issue specific to OMAP
-> family SoC's, which was required to be taken care of (even though
-> present use case for AM335x/AM43x would work [as it does not have
-> hardware supervised clockdomain mode] with a small change in platform
-> level power management support code - a generic one shared with other
-> OMAP family SoC's)
-> 
-> For a module to be reset, clock domain to which the module clock belongs
-> should be set to software supervised mode. During "pm_runtime_get_sync",
-> in OMAP platform level handling code, it first put clockdomain into
-> software supervised mode, enables clock to module, and once module is
-> ready, module will be put to hardware supervised mode. In hardware
-> supervised mode, reset may not happen.
-> 
-> So if device_reset() is done after pm_runtime_get_sync(), reset may not
-> happen as by the time device_reset() is called, clockdomain would be in
-> hardware supervised mode. But in other case, as reset is already
-> deasserted when pm_runtime_get_sync() is called, module would be reset
-> as it first puts to software supervised mode.
-> 
-> And device reset would happen only upon enabling clock to module (if
-> reset was deasserted) by pm_runtime_get_sync(), so reset status has to
-> be checked after pm call, preventing us having device_reset() before
-> pm_runtime_get_sync(), or else in that case we have to sacrifice on
-> reset status checking (which may not be reliable)
-> 
-> Another alternative would have been to integrate this reset handling in
-> low level power management code thus hiding all reset handling from
-> driver, but as far as I know the reset sequence to be done is sometimes
-> IP specific, preventing it.
 
-So if I understand correctly, the only problem is that on OMAP the clock
-needs to be enabled to deassert the reset, but as long as the clock
-domain is in hardware supervised mode, it won't be enabled?
-Would it be possible to create an internal API to switch the clock
-domain to software supervised mode, which can be used both by the code
-behind pm_runtime_get_sync and reset_control_deassert?
+Hi Guennadi,
 
-regards
-Philipp
+Based on my understanding of the original code:
+        cpu_dev = &pdev->dev;
+	...
+	ret = of_init_opp_table(cpu_dev);
+
+of_init_opp_table needs cpu_dev to be get_cpu_device(0). My
+understanding was that platform using cpufreq-cpu0 sets &pdev->dev to
+get_cpu_device(0). But looks like that's not the case.
+
+Hi Shawn,
+
+Can you please clarify ? The fix would be as below but I would like to
+know if setting cpu_dev to get_cpu_device(0) instead of &pdev->dev has
+any impact on other parts of code using cpu_dev ?
+
+diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
+index cbfffa9..871c336 100644
+--- a/drivers/cpufreq/cpufreq-cpu0.c
++++ b/drivers/cpufreq/cpufreq-cpu0.c
+@@ -177,7 +177,7 @@ static int cpu0_cpufreq_probe(struct platform_device
+*pdev)
+        struct device_node *np;
+        int ret;
+
+-       cpu_dev = &pdev->dev;
++       cpu_dev = get_cpu_device(0);
+
+        np = of_node_get(cpu_dev->of_node);
+        if (!np) {
+
+
+Regards,
+Sudeep
+
+
 
