@@ -1,85 +1,71 @@
-From: Joel Fernandes <joelf@ti.com>
-Subject: Re: [PATCH] ARM: OMAP2+: am335x-bone*: add DT for BeagleBone Black
-Date: Mon, 9 Sep 2013 15:12:14 -0500
-Message-ID: <522E2B9E.8050404@ti.com>
-References: <1378736961-21005-1-git-send-email-koen@dominion.thruhere.net> <87zjrm81dl.fsf@linaro.org> <BBAC0939-A4F9-4FEA-B137-0307D8787DC3@dominion.thruhere.net> <522E1325.8050906@ti.com> <41952E65-1037-4117-A1AE-8310FED59E3A@dominion.thruhere.net> <522E18C0.9010909@ti.com> <522E269B.7000802@ti.com> <73968C64-F0B0-4ED6-82B8-BD1966ED9D84@dominion.thruhere.net>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 2/2] sh_eth: add device tree support
+Date: Mon, 09 Sep 2013 15:02:40 -0600
+Message-ID: <522E3770.9020305@wwwdotorg.org>
+References: <201309070343.25640.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <73968C64-F0B0-4ED6-82B8-BD1966ED9D84@dominion.thruhere.net>
-Sender: linux-omap-owner@vger.kernel.org
-To: Koen Kooi <koen@dominion.thruhere.net>
-Cc: Kevin Hilman <khilman@linaro.org>, bcousson@baylibre.com, linux-omap@vger.kernel.org, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olof@lixom.net
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201309070343.25640.sergei.shtylyov@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2013 03:00 PM, Koen Kooi wrote:
+On 09/06/2013 05:43 PM, Sergei Shtylyov wrote:
+> Add support of the device tree probing for the Renesas SH-Mobile SoCs
+> documenting the device tree binding as necessary.
 > 
-> Op 9 sep. 2013, om 21:50 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
-> 
->> On 09/09/2013 01:51 PM, Joel Fernandes wrote:
->>> On 09/09/2013 01:43 PM, Koen Kooi wrote:
->>>>
->>>> Op 9 sep. 2013, om 20:27 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
->>>>
->>>>> On 09/09/2013 10:51 AM, Koen Kooi wrote:
->>>>>>
->>>>>> Op 9 sep. 2013, om 17:23 heeft Kevin Hilman <khilman@linaro.org> het volgende geschreven:
->>>>>>
->>>>>>> Koen Kooi <koen@dominion.thruhere.net> writes:
->>>>>>>
->>>>>>>> The BeagleBone Black is basically a regular BeagleBone with eMMC and HDMI added,
->>>>>>>> so create a common dtsi both can use.
->>>>>>>>
->>>>>>>> IMPORTANT: booting the existing am335x-bone.dts will blow up the HDMI transceiver
->>>>>>>> after a dozen boots with an uSD card inserted because LDO will be at 3.3V instead
->>>>>>>> of 1.8.
->>>>>>>>
->>>>>>>> MMC support for AM335x still isn't in, so only the LDO change has been added.
->>>>>>>>
->>>>>>>> Cc: stable@vger.kernel.org
->>>>>>>>
->>>>>>>> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
->>>>>>>> Tested-by: Tom Rini <trini@ti.com>
->>>>>>>> Tested-by: Matt Porter <matt.porter@linaro.org>
->>>>>>>
->>>>>>> I guess the subject should've included v5?
->>>>>>
->>>>>> Yes, I blame it on being monday :)
->>>>>
->>>>> The series you're posting will require rebasing on the current MMC DT series
->>>>> that is being discussed last couple of weeks on the mailing list which were
->>>>> waiting until now as DMA support was missing. Now that DMA support is pulled in,
->>>>> it is safe to apply those patches so I will be reposting them shortly.
->>>>>
->>>>> Please hold off any changes until those patches are posted. This will avoid
->>>>> unnecessary conflicts.
->>>>
->>>> Or you can rebase on top of this patch since it has no dependencies *and* fixes blowing up boards. FWIW, git-rebase, git-cherry-pick and git-am -3 track the rename in my patch just fine.
->>>>
->>>
->>> That's fair enough, since  Kevin Acked and Benoit is pulling it, I'm fine with
->>> rebasing on top of it and we avoid any merge conflicts.
->>>
->>
->> I noticed - there were still some comments from Felipe on the v4 series of this
->> patch regarding RF cape and HDMI may be breaking it. How are you addressing that?
-> 
-> Capes will never go into the .dts and HDMI support needs some serious patching before it can get enabled in the DT. And the RF cape isn't being sold since it has no sw support. No need to worry about things in the 3.15/3.16 timeframe. Unless you want this LDO3 fix not to go in ASAP.
-> 
-> Joel, is there anything relevant *right now* blocking this patch going in? If not, please test it and add your Tested-by: line.
-> 
+> This work is loosely based on an original patch by Nobuhiro Iwamatsu
+> <nobuhiro.iwamatsu.yj@renesas.com>.
 
-We don't merge things in hurry and focus is to do things the right way.. I just
-want to make sure that all possible comments have been addressed.
+> Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
 
-Otherwise patch looks OK and hope everyone else thinks so too. I am dealing with
-some merge conflicts right now with my series on top of this though, but they
-should be easy enough to fix up. That's delaying my testing, but otherwise as
-such I don't have any objection to this patch (provided the conclusion is that
-all comments have been addressed..). Thanks!
+> +- reg: offset and length of (1) the E-DMAC/feLic register block (required),
+> +       (2) the TSU register block (optional).
 
-Regards,
+There's an argument that you should specify reg-names entries to allow
+arbitrary ordering or entries within reg, if there's more than one
+entry. But, I don't think it's mandatory, just something to consider at
+present.
 
--Joel
+> +- interrupts: interrupt specifier for the sole interrupt.
+> +- phy-mode: string, operation mode of the PHY interface (a string that
+> +	    of_get_phy_mode() can understand).
 
+DT bindings should be OS-agnostic. of_get_phy_mode() is Linux-specific.
+Please spell out the complete list of supported values here, without
+reference to Linux-specific code or documentation.
+
+> +- phy-handle: phandle of the PHY device (there should be a PHY device subnode).
+
+Is this a custom property, or part of some generic PHY subsystem
+binding? If the latter, please reference the DT binding document for
+that subsystem. If it's custom, what kinds of nodes can this phandle
+point at; what kind of interface must the referenced DT node provide (is
+a #phy-cells property required, must its compatible value be one of a
+specific set of values).
+
+> +- #address-cells: number of address cells for the MDIO bus, must be equal to 1.
+> +- #size-cells: number of size cells on the MDIO bus, must be equal to 0.
+
+If this node is expected to contain child nodes, you need to specify
+details of those child nodes. Can you reference the filename of a
+generic MDIO binding? What do the address values mean (perhaps that'd be
+covered by the MDIO binding already, if it's applicable).
+
+> +Optional properties:
+> +- interrupt-parent: the phandle for the interrupt controller that services
+> +		    interrupts for this device.
+> +- local-mac-address: 6 bytes, MAC address.
+> +- renesas,no-ether-link: boolean, specify when a board does not provide a proper
+> +			 Ether LINK signal.
+> +- renesas,ether-link-active-low: boolean, specify when the Ether LINK signal is
+> +  				 active-low instead of normal active-high.
+
+Presumably the link signal is some dedicated signal in the Ethernet MAC
+HW block, and not a generic GPIO? If it's a GPIO, there should be a flag
+in the GPIO property/binding you can use for active low.
+
+Do you need any clocks properties, IP block reset signals, power domains?
