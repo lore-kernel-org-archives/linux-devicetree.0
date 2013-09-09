@@ -1,78 +1,62 @@
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Subject: Re: [PATCH v4 12/19] cpufreq: cpufreq-cpu0: remove device tree parsing
- for cpu nodes
-Date: Mon, 09 Sep 2013 16:24:18 +0100
-Message-ID: <522DE822.3030907@arm.com>
-References: <1374492747-13879-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1376991021-12160-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1376991021-12160-13-git-send-email-Sudeep.KarkadaNagesha@arm.com> <Pine.LNX.4.64.1309061539310.11068@axis700.grange> <522D93D7.4010307@arm.com> <20130909143253.GD4624@S2101-09.ap.freescale.net>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH] ARM: OMAP2+: am335x-bone*: add DT for BeagleBone Black
+Date: Mon, 09 Sep 2013 08:23:50 -0700
+Message-ID: <87zjrm81dl.fsf@linaro.org>
+References: <1378736961-21005-1-git-send-email-koen@dominion.thruhere.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20130909143253.GD4624@S2101-09.ap.freescale.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Viresh Kumar <viresh.kumar@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jonas Bonn <jonas@southpole.se>, Michal Simek <monstr@monstr.eu>, "Rafael J. Wysocki" <rjw@sisk.pl>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1378736961-21005-1-git-send-email-koen@dominion.thruhere.net>
+ (Koen Kooi's message of "Mon, 9 Sep 2013 16:29:21 +0200")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Koen Kooi <koen@dominion.thruhere.net>, bcousson@baylibre.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, tony@atomide.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, olof@lixom.net, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/13 15:32, Shawn Guo wrote:
-> Hi Sudeep,
-> 
-> On Mon, Sep 09, 2013 at 10:24:39AM +0100, Sudeep KarkadaNagesha wrote:
->> Hi Shawn,
->>
->> Can you please clarify ? The fix would be as below but I would like to
->> know if setting cpu_dev to get_cpu_device(0) instead of &pdev->dev has
->> any impact on other parts of code using cpu_dev ?
-> 
-> I'm sorry.  I should have given it a test on hardware before ACKing the
-> changes.
-> 
-> The fix below should not have other impact except the prefix of dev_err
-> [info, dbg] message output ('cpufreq-cpu0:' to 'cpu cpu0:'), which
-> shouldn't be a problem.
+Koen Kooi <koen@dominion.thruhere.net> writes:
+
+> The BeagleBone Black is basically a regular BeagleBone with eMMC and HDMI added,
+> so create a common dtsi both can use.
 >
-Hi Shawn,
+> IMPORTANT: booting the existing am335x-bone.dts will blow up the HDMI transceiver
+> after a dozen boots with an uSD card inserted because LDO will be at 3.3V instead
+> of 1.8.
+>
+> MMC support for AM335x still isn't in, so only the LDO change has been added.
+>
+> Cc: stable@vger.kernel.org
+>
+> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+> Tested-by: Tom Rini <trini@ti.com>
+> Tested-by: Matt Porter <matt.porter@linaro.org>
 
-Ok. But I am bit suspicious about devm_clk_get(cpu_dev, NULL).
-I don't understand completely as how the clock are registered(whether
-with dev_id or with connection_id).
+I guess the subject should've included v5?  Also, if this is to be
+stable material, it will likely need rework since I don't think it will
+apply cleanly to older trees due to DT churn.
 
-A quick grep revealed that i.mx and shmobile is using conection id while
-registering. If the clock is registered with connection id and retrieved
-with cpu_dev(now dev_id is cpu0 and not cpufreq-cpu0), IIUC that would
-break. If we pass pdev->dev for clk_get, it should be fine but again
-IIUC it breaks highbank which gets all the information from DT.
+Anyways, for this patch...
 
-So only solution I can think of is to continue to have the code
-assigning (&pdev->dev)->of_node with cpu device node which is not clean
-and arguable as incorrect since there is no DT node for cpufreq-cpu0.
-I don't have a strong opinion though.
+Acked-by: Kevin Hilman <khilman@linaro.org>
 
-Let me know how would you like to fix this.
+Even though I've probably already fried my HDMI transciever due to using
+the original DTS a lot more than a dozen times.  (and to TI: yes, I'd
+accept a new BB black as a sympathy gift.)  ;)
 
->>
->> diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
->> index cbfffa9..871c336 100644
->> --- a/drivers/cpufreq/cpufreq-cpu0.c
->> +++ b/drivers/cpufreq/cpufreq-cpu0.c
->> @@ -177,7 +177,7 @@ static int cpu0_cpufreq_probe(struct platform_device
->> *pdev)
->>         struct device_node *np;
->>         int ret;
->>
->> -       cpu_dev = &pdev->dev;
->> +       cpu_dev = get_cpu_device(0);
->>
->>         np = of_node_get(cpu_dev->of_node);
->>         if (!np) {
->>
-> 
-> The imx6q-cpufreq driver needs a similar fixing.  Please include the
-> following changes into your fixing patches.  Thanks.
-> 
-Ok no problem I can post the fix based on response for the above question.
+Also, I tested this on both BBW and BBW:
 
-Regard,
-Sudeep
+Tested-by: Kevin Hilman <khilman@linaro.org>
 
+Benoit, assuming this looks good to you, can you queue this for v3.12-rc
+please?   It applies to Linus' HEAD today (which has most of arm-soc
+merged), so it should apply cleanly on top of all your stuff.
 
+Kevin
