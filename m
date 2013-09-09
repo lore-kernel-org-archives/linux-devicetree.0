@@ -1,33 +1,40 @@
 From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH 1/2] DT: add a vendor prefix for Dialog Semiconductor
-Date: Mon,  9 Sep 2013 17:51:59 +0200
-Message-ID: <1378741920-11085-2-git-send-email-g.liakhovetski@gmx.de>
-References: <1378741920-11085-1-git-send-email-g.liakhovetski@gmx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378741920-11085-1-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+Subject: [PATCH 4/5] i2c: rcar: fix clk_get() error handling
+Date: Mon,  9 Sep 2013 17:55:19 +0200
+Message-ID: <1378742120-11135-5-git-send-email-g.liakhovetski@gmx.de>
+References: <1378742120-11135-1-git-send-email-g.liakhovetski@gmx.de>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1378742120-11135-1-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a commonly used "diasemi" prefix for Dialog Semiconductor PLC.
+When clk_get() fails, it returns an error code, not a NULL. This patch
+fixes such an error handling bug.
 
 Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 ---
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ drivers/i2c/busses/i2c-rcar.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 2956800..f8d5a75 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -22,6 +22,7 @@ cortina	Cortina Systems, Inc.
- dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
- davicom	DAVICOM Semiconductor, Inc.
- denx	Denx Software Engineering
-+diasemi	Dialog Semiconductor
- emmicro	EM Microelectronic
- epson	Seiko Epson Corp.
- est	ESTeem Wireless Modems
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index be801b9..7e71cf4 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -234,9 +234,9 @@ static int rcar_i2c_clock_calculate(struct rcar_i2c_priv *priv,
+ 	u32 cdf_width;
+ 	unsigned long rate;
+ 
+-	if (!clkp) {
+-		dev_err(dev, "there is no peripheral_clk\n");
+-		return -EIO;
++	if (IS_ERR(clkp)) {
++		dev_err(dev, "couldn't get clock\n");
++		return PTR_ERR(clkp);
+ 	}
+ 
+ 	switch (priv->devtype) {
 -- 
 1.7.2.5
+
