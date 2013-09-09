@@ -1,66 +1,54 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH v5 1/5] ARM: add basic Trusted Foundations support
-Date: Mon, 9 Sep 2013 15:38:28 +0900
-Message-ID: <CAAVeFuJF-cu9aPCruGPQk9WHV7VAGhGpU0bU6LToxP38YBnS_g@mail.gmail.com>
-References: <1378351680-14696-1-git-send-email-acourbot@nvidia.com>
- <1378351680-14696-2-git-send-email-acourbot@nvidia.com> <522A2D1B.3010508@wwwdotorg.org>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [RFC PATCH 4/4] ARM: dts: am33xx: adopt to cpsw-phy-sel driver
+ to configure phy mode
+Date: Mon, 9 Sep 2013 12:12:47 +0530
+Message-ID: <522D6DE7.5080305@ti.com>
+References: <1378639438-27686-1-git-send-email-mugunthanvnm@ti.com> <1378639438-27686-5-git-send-email-mugunthanvnm@ti.com> <522CBC15.5060008@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <522A2D1B.3010508@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Alexandre Courbot <acourbot@nvidia.com>, Russell King <linux@arm.linux.org.uk>, Tomasz Figa <t.figa@samsung.com>, Dave Martin <Dave.Martin@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <522CBC15.5060008@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: netdev@vger.kernel.org, zonque@gmail.com, davem@davemloft.net, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 7, 2013 at 4:29 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 09/04/2013 09:27 PM, Alexandre Courbot wrote:
->> Trusted Foundations is a TrustZone-based secure monitor for ARM that
->> can be invoked  using a consistent SMC-based API on all supported
->> platforms. This patch adds initial basic support for Trusted
->> Foundations using the ARM firmware API. Current features are limited
->> to the ability to boot secondary processors.
+On Sunday 08 September 2013 11:34 PM, Sergei Shtylyov wrote:
+> Hello.
 >
->> diff --git a/arch/arm/firmware/trusted_foundations.c b/arch/arm/firmware/trusted_foundations.c
-> ...
->> +void of_register_trusted_foundations(void)
->> +{
->> +     struct device_node *node;
->> +     struct trusted_foundations_platform_data pdata;
->> +     int err;
+> On 09/08/2013 03:23 PM, Mugunthan V N wrote:
+>
+>> Add DT entries for the phy mode selection in AM33xx SoC using
+>> cpsw-phy-sel
+>> driver.
+>
+>> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+>> ---
+>>   arch/arm/boot/dts/am33xx.dtsi | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>
+>> diff --git a/arch/arm/boot/dts/am33xx.dtsi
+>> b/arch/arm/boot/dts/am33xx.dtsi
+>> index f9c5da9..4359672 100644
+>> --- a/arch/arm/boot/dts/am33xx.dtsi
+>> +++ b/arch/arm/boot/dts/am33xx.dtsi
+>> @@ -594,6 +594,12 @@
+>>                   /* Filled in by U-Boot */
+>>                   mac-address = [ 00 00 00 00 00 00 ];
+>>               };
 >> +
->> +     node = of_find_compatible_node(NULL, NULL, "tl,trusted-foundations");
->> +
->> +     if (!node)
->> +             return;
+>> +            phy_sel: cpsw_phy_sel@44e10650 {
 >
-> If you're going to revise this patch for the comment below, then I would
-> suggest removing the blank line before that if statement.
+>    Dashes are preferred to uderscores in the device tree names. 
+I tried with dashes but i get the below error.
 
-Sure.
+$ make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm dtbs
+  DTC     arch/arm/boot/dts/am335x-evm.dtb
+Error: arch/arm/boot/dts/am33xx.dtsi:598.11-12 syntax error
+FATAL ERROR: Unable to parse input tree
+make[1]: *** [arch/arm/boot/dts/am335x-evm.dtb] Error 1
+make: *** [dtbs] Error 2
 
->
->> diff --git a/arch/arm/include/asm/trusted_foundations.h b/arch/arm/include/asm/trusted_foundations.h
->
-> Do we need to add the following here:
->
-> #if !IS_ENABLED(CONFIG_OF)
-> static inline void register_trusted_foundations(...) {}
-> #endif
->
-> So that there is a dummy no-op function for the non-DT-support case? I
-> guess Tegra always has CONFIG_OF enabled so that call from
-> mach-tegra/common.c in patch 2 will never be an issue, but perhaps it
-> might if anyone else uses this?
-
-My expectation is that register_trusted_foundations() is called by the
-platform code once it has established (through whatever mean it likes)
-that Trusted Foundations is required. For platforms supporting DT,
-of_register_trusted_foundations() takes care of that. Platforms that
-don't support DT need another way to decide whether they *need* TF or
-not. Once a platform decided that it needs TF, its absence is not an
-option, and therefore I'd think that register_trusted_foundations()
-should hard-fail if support is not compiled in. Or maybe I missed your
-point?
-
-Alex.
+Regards
+Mugunthan V N
