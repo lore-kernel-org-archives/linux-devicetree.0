@@ -1,73 +1,38 @@
-From: Felipe Balbi <balbi@ti.com>
+From: Koen Kooi <koen@dominion.thruhere.net>
 Subject: Re: [PATCHv4] ARM: OMAP2+: am335x-bone*: add DT for BeagleBone Black
-Date: Mon, 9 Sep 2013 09:15:31 -0500
-Message-ID: <20130909141531.GL9325@radagast>
-References: <1378734350-30479-1-git-send-email-koen@dominion.thruhere.net>
-Reply-To: <balbi@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Gt+ay4QFgFrjOKz/"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1378734350-30479-1-git-send-email-koen@dominion.thruhere.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Koen Kooi <koen@dominion.thruhere.net>
+Date: Mon, 9 Sep 2013 16:26:38 +0200
+Message-ID: <A84D17B9-D194-46CC-8D9C-8CB602F2A332@dominion.thruhere.net>
+References: <1378734350-30479-1-git-send-email-koen@dominion.thruhere.net> <20130909141531.GL9325@radagast>
+Mime-Version: 1.0 (Mac OS X Mail 6.5 \(1508\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20130909141531.GL9325@radagast>
+Sender: stable-owner@vger.kernel.org
+To: balbi@ti.com
 Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olof@lixom.net, stable@vger.kernel.org, George Cherian <george.cherian@ti.com>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
---Gt+ay4QFgFrjOKz/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Op 9 sep. 2013, om 16:15 heeft Felipe Balbi <balbi@ti.com> het volgende geschreven:
 
-On Mon, Sep 09, 2013 at 03:45:50PM +0200, Koen Kooi wrote:
-> The BeagleBone Black is basically a regular BeagleBone with eMMC and HDMI=
- added,
-> so create a common dtsi both can use.
->=20
-> IMPORTANT: booting the existing am335x-bone.dts will blow up the HDMI tra=
-nsceiver=20
-> after a dozen boots with an uSD card inserted because LDO will be at 3.3V=
- instead
-> of 1.8.=20
->=20
-> MMC support for AM335x still isn't in, so only the LDO change has been ad=
-ded.
->=20
-> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
-> Tested-by: Tom Rini <trini@ti.com>
-> Tested-by: Matt Porter <matt.porter@linaro.org>
+> Hi,
+> 
+> On Mon, Sep 09, 2013 at 03:45:50PM +0200, Koen Kooi wrote:
+>> The BeagleBone Black is basically a regular BeagleBone with eMMC and HDMI added,
+>> so create a common dtsi both can use.
+>> 
+>> IMPORTANT: booting the existing am335x-bone.dts will blow up the HDMI transceiver 
+>> after a dozen boots with an uSD card inserted because LDO will be at 3.3V instead
+>> of 1.8. 
+>> 
+>> MMC support for AM335x still isn't in, so only the LDO change has been added.
+>> 
+>> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+>> Tested-by: Tom Rini <trini@ti.com>
+>> Tested-by: Matt Porter <matt.porter@linaro.org>
+> 
+> not entirelly related to $SUBJECT but having HDMI listed in BBB DTS will
+> prevent the use of RF cape, no ?
 
-not entirelly related to $SUBJECT but having HDMI listed in BBB DTS will
-prevent the use of RF cape, no ?
-
-Other than that, patch looks ok to me.
-
---=20
-balbi
-
---Gt+ay4QFgFrjOKz/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSLdgDAAoJEIaOsuA1yqREBKIQAKqHuKLQTU5AsGsXErPrfmQ1
-f+M86KifgBeAphi+ergH4mPz0YRi0J8Vdi13kTp7qMlYjAXTUGIB7jFfnuJW8XZ7
-wcpc3SWPpCcJPceP0pJA63GZQLO1t+tOTaWE0xYnsqCqxx5RPoenITzbL6Gh3Zk9
-wTzci1CiZKzNPktAYbOxTza7rDhxfllIigbuegJV2NIiWOmCiovXaNklc0wKturI
-BdTGUJ7A5/wGauy6iweeVLTV79BhVy9JlcC4dA/evH0yMlNWeb99lM9+lAZZl0ab
-8hKZUtaS3sx7RvBCnROR8ne7RZpRHCnvqGFCnsmihZxb7hjR9cyuZTukZZjtvc8Q
-5D+CqJ0W/9/lc0G9zwiHy/ezS+zcNyqquxnxqcv+E2Uwh2pZf2YmBprZt/7GGCIJ
-BFByAv1A+dKVQK+8eHnGJFiiv5eGUYldxutYJp7SYquK92RAOT+PoliRjuEumh7/
-iyomVSX5Ru9CUoRN9/LpEnZLH6PpWmAhz71HV8swS3/zyRRMivYn19KE6SNRG1zh
-sF8mVaWhVnwG/TEq2xGWi7yQPFvFWnNNgZ+JsX/I60wcu76N9kfwxHeR+ZG9z8yV
-+P4azU2rRKD3RSfRrOxosFqylgJYHhs/xTGQNcEMF7+TUl+SpIcvlfynTB9dX8CM
-RmrY5RCNtjRUT1AKxWvu
-=haOy
------END PGP SIGNATURE-----
-
---Gt+ay4QFgFrjOKz/--
+Complete and utter lack of software from TI for the RF cape is preventing the RF cape from working regardless of HDMI entries.
