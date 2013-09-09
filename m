@@ -1,68 +1,234 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Mon, 9 Sep 2013 17:19:24 +0100
-Message-ID: <20130909161924.GT29403@sirena.org.uk>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
- <1521079.WSLhhfqBXl@lem-wkst-02>
- <52261BF0.4090106@wwwdotorg.org>
- <3144247.j2q6H0KWZx@lem-wkst-02>
- <52279524.8090006@wwwdotorg.org>
+From: Rohit Vaswani <rvaswani@codeaurora.org>
+Subject: Re: [PATCHv3 1/2] ARM: msm: Add support for APQ8074 Dragonboard
+Date: Mon, 09 Sep 2013 10:48:22 -0700
+Message-ID: <522E09E6.8040300@codeaurora.org>
+References: <1378495943-2572-1-git-send-email-rvaswani@codeaurora.org> <20130906215051.GA29253@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AAsCVVzXF7rH55eG"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52279524.8090006@wwwdotorg.org>
+In-Reply-To: <20130906215051.GA29253@quad.lixom.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Lars Poeschel <poeschel@lemonage.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+To: Olof Johansson <olof@lixom.net>
+Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 9/6/2013 2:50 PM, Olof Johansson wrote:
+> Hi,
+>
+> Some comments below.
+>
+> On Fri, Sep 06, 2013 at 12:32:22PM -0700, Rohit Vaswani wrote:
+>> This patch adds basic board support for APQ8074 Dragonboard
+>> <snip>
+>>   dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
+>> -	msm8960-cdp.dtb
+>> +	msm8960-cdp.dtb \
+>> +	apq8074-dragonboard.dtb
+> Please add boards alphabetically.
+Will do.
+>
+>>   dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
+>>   	armada-370-mirabox.dtb \
+>>   	armada-370-rd.dtb \
+>> diff --git a/arch/arm/boot/dts/apq8074-dragonboard.dts b/arch/arm/boot/dts/apq8074-dragonboard.dts
+>> new file mode 100644
+>> index 0000000..5b7b6a0
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/apq8074-dragonboard.dts
+> arch/arm/boot/dts/ is getting really crowded. It's been working best if the SoC
+> family or vendor is used as a prefix to keep things a bit more organized. In
+> that spirit, prefixing these with msm-<foo> makes sense. Can you please do so?
 
---AAsCVVzXF7rH55eG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure. But the board is called an APQ8074 and we wanted to keep the 
+naming consistent with that.
+>> @@ -0,0 +1,6 @@
+>> +/include/ "msm8974.dtsi"
+>> +
+>> +/ {
+>> +	model = "Qualcomm APQ8074 Dragonboard";
+>> +	compatible = "qcom,apq8074-dragonboard", "qcom,apq8074";
+>> +};
+> Ok, I'm all for merging a early minimal dts file, but things like memory and
+> a default bootargs tend to make sense.
+>
+>> diff --git a/arch/arm/boot/dts/msm8974.dtsi b/arch/arm/boot/dts/msm8974.dtsi
+>> new file mode 100644
+>> index 0000000..f04b643
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/msm8974.dtsi
+>> @@ -0,0 +1,35 @@
+>> +/dts-v1/;
+>> +
+>> +/include/ "skeleton.dtsi"
+>> +
+>> +/ {
+>> +	model = "Qualcomm MSM8974";
+>> +	compatible = "qcom,msm8974";
+> the board uses "qcom,apq8074" and this overrides this. Which way is it?
 
-On Wed, Sep 04, 2013 at 02:16:36PM -0600, Stephen Warren wrote:
-> On 09/04/2013 03:05 AM, Lars Poeschel wrote:
+So, MSM8974 is the base chip. The APQ8074 is a board based on it with 
+the modem fused. So, apq8074 board compatible overrides the generic chip 
+compatible.
+>
+>> +	interrupt-parent = <&intc>;
+>> +
+>> +	soc: soc { };
+> For files that include this it's ok to use the &phandle syntax, but in this
+> base dtsi, please use proper structure. In other words, move the contents of
+> the soc node up above instead.
 
-> > The driver that tries to use the GPIO requested by this patch before HA=
-S to=20
-> > fail. This is exactly the intention of this patch. We don't want the GP=
-IO to=20
-> > be requested any more, if it is used as an interrupt pin.
+Will do.
+>
+>> +};
+>> +
+>> +&soc {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <1>;
+>> +	ranges;
+>> +	compatible = "simple-bus";
+>> +
+>> +	intc: interrupt-controller@f9000000 {
+>> +		compatible = "qcom,msm-qgic2";
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <3>;
+>> +		reg = <0xf9000000 0x1000>,
+>> +		      <0xf9002000 0x1000>;
+>> +	};
+>> +
+>> +	timer {
+>> +		compatible = "arm,armv7-timer";
+>> +		interrupts = <1 2 0xf08>,
+>> +			     <1 3 0xf08>,
+>> +			     <1 4 0xf08>,
+>> +			     <1 1 0xf08>;
+>> +		clock-frequency = <19200000>;
+>> +	};
+>> +};
+> It'd make a lot of sense to include at least cpu nodes here as well, and
+> ideally basics for the drivers you have already merged, such as uarts.
 
-> That will break existing drivers. There are drivers that request the
-> same GPIO and IRQ. IIRC, the SDHCI CD (Card Detect) GPIO is requested
-> that way.
+Those are scheduled next as separate patches with some additional changes.
+>
+>> diff --git a/arch/arm/mach-msm/Kconfig b/arch/arm/mach-msm/Kconfig
+>> index 905efc8..499e8fe 100644
+>> --- a/arch/arm/mach-msm/Kconfig
+>> +++ b/arch/arm/mach-msm/Kconfig
+>> @@ -1,12 +1,12 @@
+>>   if ARCH_MSM
+>>   
+>>   comment "Qualcomm MSM SoC Type"
+>> -	depends on (ARCH_MSM8X60 || ARCH_MSM8960)
+>> +	depends on ARCH_MSM_DT
+>>   
+>>   choice
+>>   	prompt "Qualcomm MSM SoC Type"
+>>   	default ARCH_MSM7X00A
+>> -	depends on !(ARCH_MSM8X60 || ARCH_MSM8960)
+>> +	depends on !ARCH_MSM_DT
+> This has nothing to do with adding support for dragonboard. Please break
+> out the cleanup separately.
+>
+> I'm not sure what the purpose of ARCH_MSM_DT is either, it just looks to
+> complicate matter here?
 
-Yes, plus input devices and audio jack detection among others.  This
-pattern is very common if the GPIO is actually being used as a GPIO, an
-edge triggered interrupt is used to flag when something happens and the
-state is determined by reading the GPIO state (often with some
-debounce).
+ARCH_MSM_DT is just a combined config to denote the targets that have DT 
+support instead of ORing the chip configs.
+>> +config ARCH_MSM8974
+>> +	bool "MSM8974"
+>> +	select ARM_GIC
+>> +	select CPU_V7
+>> +	select HAVE_ARM_ARCH_TIMER
+>> +	select HAVE_SMP
+>> +	select MSM_SCM if SMP
+>> +	select USE_OF
+>> +
+>> +config ARCH_MSM_DT
+>> +	def_bool y
+>> +	depends on (ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_MSM8974)
+>> +
+>>   config MSM_HAS_DEBUG_UART_HS
+>>   	bool
+>>   
+>> @@ -68,6 +81,7 @@ config MSM_SOC_REV_A
+>>   
+>>   config  ARCH_MSM_ARM11
+>>   	bool
+>> +
+>>   config  ARCH_MSM_SCORPION
+>>   	bool
+>>   
+>> @@ -75,6 +89,7 @@ config  MSM_VIC
+>>   	bool
+>>   
+>>   menu "Qualcomm MSM Board Type"
+>> +	depends on !ARCH_MSM_DT
+>>   
+>>   config MACH_HALIBUT
+>>   	depends on ARCH_MSM
+>> @@ -122,6 +137,7 @@ config MSM_SMD
+>>   
+>>   config MSM_GPIOMUX
+>>   	bool
+>> +	depends on !ARCH_MSM_DT
+>>   	help
+>>   	  Support for MSM V1 TLMM GPIOMUX architecture.
+>
+> All of the above should be in a separate patch and motivated.
+>
+>>   
+>> diff --git a/arch/arm/mach-msm/Makefile b/arch/arm/mach-msm/Makefile
+>> index d257ff4..80e3b15 100644
+>> --- a/arch/arm/mach-msm/Makefile
+>> +++ b/arch/arm/mach-msm/Makefile
+>> @@ -29,5 +29,6 @@ obj-$(CONFIG_ARCH_MSM7X30) += board-msm7x30.o devices-msm7x30.o
+>>   obj-$(CONFIG_ARCH_QSD8X50) += board-qsd8x50.o devices-qsd8x50.o
+>>   obj-$(CONFIG_ARCH_MSM8X60) += board-dt-8660.o
+>>   obj-$(CONFIG_ARCH_MSM8960) += board-dt-8960.o
+>> +obj-$(CONFIG_ARCH_MSM8974) += board-dt-8974.o
+>>   obj-$(CONFIG_MSM_GPIOMUX) += gpiomux.o
+>>   obj-$(CONFIG_ARCH_QSD8X50) += gpiomux-8x50.o
+>> diff --git a/arch/arm/mach-msm/board-dt-8974.c b/arch/arm/mach-msm/board-dt-8974.c
+>> new file mode 100644
+>> index 0000000..01ed8d0
+>> --- /dev/null
+>> +++ b/arch/arm/mach-msm/board-dt-8974.c
+>> @@ -0,0 +1,24 @@
+>> +/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 and
+>> + * only version 2 as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/of_platform.h>
+>> +#include <asm/mach/arch.h>
+>> +
+>> +static const char * const msm8974_dt_match[] __initconst = {
+>> +	"qcom,msm8974",
+>> +	"qcom,apq8074",
+>> +	NULL
+>> +};
+>> +
+>> +DT_MACHINE_START(MSM8974_DT, "Qualcomm MSM (Flattened Device Tree)")
+>> +	.dt_compat = msm8974_dt_match,
+>> +MACHINE_END
+> This file should be shared across SoCs. You should avoid adding a new dt board
+> file for every SoC like this.
 
---AAsCVVzXF7rH55eG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Will club these changes with the ARCH_MSM_DT seperation and send that 
+out as a precursor patch to 8074 support.
+>
+> -Olof
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSLfUJAAoJELSic+t+oim92TEP/12eEMQvYJY2YP8SABmfjV13
-5Eh6w09weaXRuDaBrhJL3ZsR+hUlf20Xo4g9885MybhOFkGaDsfp/ArMEqkUTM3v
-vrfyH7IEUh9fL8hNRJwQr198umth0YnKQFN5AXP0XocWPgAv5l0Qw9dZHNvpQ0Dm
-d1Re7CxUHasCdGnshVjfSEFVgUBARa0AZ1LN5pwZo3GqVFdPpIQpJ1uwa3DGDtWF
-xH5+ccVecLaDdwVH3RvIeeKOG0NPpzboUotJE3/rMUtdIAFGR6ZWYq391NzjMH4f
-GgaJ361JaFJI3oJj8TT31S9AVLNJ9PZGxLU4OXn7MvNqYdTwXLtFvYOJ47zpwQ+X
-ZYp+8lPQUMIJ8SXVsFFhsbPDaBTtdY2fXPKMT/QT45lwpVSdgv+zn6AShTwnyKv9
-KrhpJlwW+qgQRJuv+FYzX3HUbzWI/rcQHNT5PkkT233gW/OpWWbSsOFmAHGdy0ZT
-tvDzQ5ZZ7bhGxCvivf1gQK4D3labD/UEF3dcLhoBMd/1F91/JOetckKULx1OFI06
-50Jck/msRsh3NpM3c+mtXQJoBKS+PZEvOt/yHqgvrcfcmj4RR/sxG7o3T7KCKQ50
-I15wD2X7wGHge2LO92+x00fojsz2UXyRINph5Rp9mQcamfQOKdOTxSi2QqPok/Tw
-NLY9muYN6pt5AsEZQCn8
-=Gq+Y
------END PGP SIGNATURE-----
+Thanks,
+Rohit Vaswani
 
---AAsCVVzXF7rH55eG--
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation
