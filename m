@@ -1,156 +1,83 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH 2/2] i2c: New bus driver for the QUP I2C controller
-Date: Tue, 10 Sep 2013 08:46:50 -0500
-Message-ID: <20130910134650.GO808@joshc.qualcomm.com>
-References: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
- <1377782873-31931-2-git-send-email-iivanov@mm-sol.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 10 Sep 2013 15:56:49 +0200
+Message-ID: <522F2521.4090806@collabora.co.uk>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk> <2052193.CMUEUJFRgS@lem-wkst-02>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1377782873-31931-2-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: wsa@the-dreams.de, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, grant.likely@linaro.org, gavidov@codeaurora.org, sdharia@codeaurora.org, alokc@codeaurora.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2052193.CMUEUJFRgS@lem-wkst-02>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Mark Brown <broonie@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hey Ivan-
-
-Some nits below.
-
-On Thu, Aug 29, 2013 at 04:27:53PM +0300, Ivan T. Ivanov wrote:
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+On 09/10/2013 10:47 AM, Lars Poeschel wrote:
+> On Tuesday 10 September 2013 17:19:24, Mark Brown wrote:
+>> On Wed, Sep 04, 2013 at 02:16:36PM -0600, Stephen Warren wrote:
+>> > On 09/04/2013 03:05 AM, Lars Poeschel wrote:
+>> > > The driver that tries to use the GPIO requested by this patch before HAS
+>> > > to
+>> > > fail. This is exactly the intention of this patch. We don't want the
+>> > > GPIO to be requested any more, if it is used as an interrupt pin.
+>> > 
+>> > That will break existing drivers. There are drivers that request the
+>> > same GPIO and IRQ. IIRC, the SDHCI CD (Card Detect) GPIO is requested
+>> > that way.
+>> 
+>> Yes, plus input devices and audio jack detection among others.  This
+>> pattern is very common if the GPIO is actually being used as a GPIO, an
+>> edge triggered interrupt is used to flag when something happens and the
+>> state is determined by reading the GPIO state (often with some
+>> debounce).
 > 
-> This bus driver supports the QUP i2c hardware controller in the Qualcomm
-> MSM SOCs.  The Qualcomm Universal Peripheral Engine (QUP) is a general
-> purpose data path engine with input/output FIFOs and an embedded i2c
-> mini-core. The driver supports FIFO mode (for low bandwidth	applications)
-
-Rogue tab in your commit message.
-
-> and block mode (interrupt generated for each block-size data transfer).
-> The driver currently does not support DMA transfers.
+> And I say it again for those coming into the discussion late, like it has been 
+> said many many times before: This patch does not break any of this drivers. 
+> They simply request their GPIO from DT and turn it into an irq using 
+> gpio_to_irq, request that irq on their behalf and use it as GPIO and IRQ in 
+> parallel. At least this is not a problem.
 > 
-> Shamelessly based on codeaurora version of the driver.
-> 
-> This controller could be found in the following chip-sets:
-> msm9625, msm8974, msm8610, msm8226, mpq8092.
 
-This may be good to include in the Kconfig help text.
+I agree with Lars and think that we should stop arguing about the limitations of
+this patch and how this doesn't solve:
 
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> ---
->  drivers/i2c/busses/Kconfig   |   10 +
->  drivers/i2c/busses/Makefile  |    1 +
->  drivers/i2c/busses/i2c-qup.c |  909 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 920 insertions(+)
->  create mode 100644 drivers/i2c/busses/i2c-qup.c
-> 
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index fcdd321..c76ddd4 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -777,6 +777,16 @@ config I2C_RCAR
->  	  This driver can also be built as a module.  If so, the module
->  	  will be called i2c-rcar.
->  
-> +config I2C_QUP
-> +	tristate "Qualcomm QUP based I2C controller"
-> +	depends on ARCH_MSM
-> +	help
-> +	  If you say yes to this option, support will be included for the
-> +	  built-in I2C interface on the MSM family processors.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called i2c-qup.
-> +
->  comment "External I2C/SMBus adapter drivers"
->  
->  config I2C_DIOLAN_U2C
-> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-> index d00997f..77127df 100644
-> --- a/drivers/i2c/busses/Makefile
-> +++ b/drivers/i2c/busses/Makefile
-> @@ -76,6 +76,7 @@ obj-$(CONFIG_I2C_OCTEON)	+= i2c-octeon.o
->  obj-$(CONFIG_I2C_XILINX)	+= i2c-xiic.o
->  obj-$(CONFIG_I2C_XLR)		+= i2c-xlr.o
->  obj-$(CONFIG_I2C_RCAR)		+= i2c-rcar.o
-> +obj-$(CONFIG_I2C_QUP)		+= i2c-qup.o
->  
->  # External I2C/SMBus adapter drivers
->  obj-$(CONFIG_I2C_DIOLAN_U2C)	+= i2c-diolan-u2c.o
-> diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-> new file mode 100644
-> index 0000000..3b5ef91
-> --- /dev/null
-> +++ b/drivers/i2c/busses/i2c-qup.c
-[..]
-> +
-> +static int qup_i2c_change_state(struct qup_i2c_dev *qup, u32 state)
-> +{
-> +	if (qup_i2c_poll_state(qup, 0, true) != 0)
-> +		return -EIO;
-> +
-> +	writel(state, qup->base + QUP_STATE);
-> +
-> +	if (qup_i2c_poll_state(qup, state, false) != 0)
-> +		return -EIO;
-> +	return 0;
-> +}
-> +
-> +static void qup_i2c_enable(struct qup_i2c_dev *qup, bool state)
 
-Bit of a confusing name, especially when qup_i2c_enable(qup, false) is
-used. I'd suggest qup_i2c_set_state or qup_i2c_set_enabled.
+a) The fact that platform code has to call:
 
-> +{
-> +	u32 config;
-> +
-> +	if (state) {
-> +		clk_prepare_enable(qup->clk);
-> +		clk_prepare_enable(qup->pclk);
-> +	} else {
-> +		qup_i2c_change_state(qup, QUP_RESET_STATE);
-> +		clk_disable_unprepare(qup->clk);
-> +		config = readl(qup->base + QUP_CONFIG);
-> +		config |= QUP_CLOCK_AUTO_GATE;
-> +		writel(config, qup->base + QUP_CONFIG);
-> +		clk_disable_unprepare(qup->pclk);
-> +	}
-> +}
-[..]
-> +static int qup_i2c_probe(struct platform_device *pdev)
-> +{
-[..]
-> +
-> +	ret = devm_request_irq(qup->dev, qup->irq, qup_i2c_interrupt,
-> +			       IRQF_TRIGGER_HIGH, "i2c_qup", qup);
-> +	if (ret) {
-> +		dev_err(qup->dev, "Request %d IRQ failed\n", qup->irq);
-> +		return ret;
-> +	}
-> +
-> +	disable_irq(qup->irq);
+gpio_request()
+gpio_direction_input()
+request_irq()
 
-How is this not racy, in the case where a pending interrupt is left from
-the bootloader (which seems to be possible based on the comments below)?
+b) That there are complex use cases where the same driver can request both a
+GPIO and the mapped IRQ.
 
-> +
-> +	init_completion(&qup->xfer);
-> +
-> +	ret = clk_set_rate(qup->clk, qup->src_clk_freq);
-> +	if (ret)
-> +		dev_info(qup->dev, "Fail to set core clk, %dHz:%d\n",
-> +			 qup->src_clk_freq, ret);
-> +
-> +	qup_i2c_enable(qup, true);
-> +
-> +	/*
-> +	 * If bootloaders leave a pending interrupt on certain QUP's,
-> +	 * then we reset the core before registering for interrupts.
-> +	 */
-[..]
+The only thing that this patch tries to solve is when a driver expect to request
+a IRQ and it doesn't care if is a real IRQ line from an interrupt controller or
+a GPIO pin mapped as an IRQ.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+With board files we used to explicitly do the GPIO setup
+(gpio_{request,direction_input}) but with DT these board files are gone and we
+need a way to setup a GPIO implicitly when is mapped as an IRQ.
+
+That's the only use case that this patch covers.
+
+In legacy non-DT booting boards files will continue doing whatever are doing now
+to ensure that drivers calling request_irq() will succeed and complex drivers
+can just not define the GPIO-IRQ mapping in the DT and do whatever they need to
+do manually.
+
+Now, if just solving this use case is not enough and we want a more general
+solution then we should start discussing how that solution should look like so
+it can be implemented.
+
+The most concrete idea so far is the one proposed by Stephen to pass a struct
+device to gpiolib functions so GPIO controller drivers know when the same device
+or a different one is requesting a GPIO twice to allow sharing a GPIO or not.
+
+Also, it would be great if we can find a temporary solution so we can finally
+have ethernet working with DT on most OMAP2+ boards. Since I expect that doing
+the mentioned change on gpiolib would take at least a couple of kernel releases.
+
+Thanks a lot and best regards,
+Javier
