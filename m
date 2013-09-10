@@ -1,41 +1,48 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 2/2] sh_eth: add device tree support
-Date: Tue, 10 Sep 2013 22:01:11 +0400
-Message-ID: <522F5E67.8070006@cogentembedded.com>
-References: <201309070343.25640.sergei.shtylyov@cogentembedded.com> <522E3770.9020305@wwwdotorg.org> <522F2F3A.5070406@cogentembedded.com> <522F37A7.90804@wwwdotorg.org>
+From: "Markus Mayer" <markus.mayer@linaro.org>
+Subject: [PATCH v9 0/3] gpio: bcm281xx: GPIO driver
+Date: Tue, 10 Sep 2013 11:07:00 -0700
+Message-ID: <1378836423-12467-1-git-send-email-markus.mayer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <522F37A7.90804@wwwdotorg.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Christian Daudt <csd@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patch series adds the GPIO driver, and its device tree bindings,
+for the Broadcom bcm281xx family of mobile SoCs.
 
-On 09/10/2013 07:15 PM, Stephen Warren wrote:
+Changes since v8:
+- rebased SHA 26b0332e30c7f93e780aaa054bd84e3437f84354
+  (so it'll apply against 3.12-rc1)
+As a result:
+- patch context in patch 2/3 changed by automatic merge
+- patch context in patch 3/3 changed by manual merge
 
->>> Do you need any clocks properties, IP block reset signals, power domains?
+Markus Mayer (3):
+  gpio: bcm281xx: Add GPIO driver
+  ARM: bcm281xx: Enable GPIO driver
+  ARM: bcm281xx: Add device node for the GPIO controller
 
->>     Currently not.
+ .../devicetree/bindings/gpio/gpio-bcm-kona.txt     |   52 ++
+ arch/arm/boot/dts/bcm11351.dtsi                    |   16 +
+ arch/arm/mach-bcm/Kconfig                          |    2 +-
+ drivers/gpio/Kconfig                               |    5 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-bcm-kona.c                       |  632 ++++++++++++++++++++
+ 6 files changed, 707 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt
+ create mode 100644 drivers/gpio/gpio-bcm-kona.c
 
-> What does "currently" mean? Does that mean that the Linux driver simply
-> doesn't touch those entities at present?
-
-    There's Ether clock but the driver doesn't manipulate it directly, 
-assumingly it does this thru the runtime PM interface. As for the others, I 
-simply don't know.
-
-> If so, that's not enough to say
-> that those entities should not be described in the DT binding. We should
-> strive to make the binding completely describe all aspects of the HW,
-> irrespective of whether a particular driver happens to use that
-> information at present.
-
-    There's no DT representation for the clocks in SH-Mobile subarch yet.
-The same applies to the other entities you mentioned.
-
-WBR, Sergei
-
+-- 
+1.7.9.5
