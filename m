@@ -1,130 +1,445 @@
-From: "Fernandes, Joel" <joelf@ti.com>
-Subject: Re: [PATCH] ARM: OMAP2+: am335x-bone*: add DT for BeagleBone Black
-Date: Tue, 10 Sep 2013 05:53:16 +0000
-Message-ID: <3D397F11-B184-4DC0-BEE2-90C91DBABB0B@ti.com>
-References: <1378736961-21005-1-git-send-email-koen@dominion.thruhere.net>
- <87zjrm81dl.fsf@linaro.org>
- <BBAC0939-A4F9-4FEA-B137-0307D8787DC3@dominion.thruhere.net>
- <522E1325.8050906@ti.com>
- <41952E65-1037-4117-A1AE-8310FED59E3A@dominion.thruhere.net>
- <522E18C0.9010909@ti.com> <522E269B.7000802@ti.com>
- <73968C64-F0B0-4ED6-82B8-BD1966ED9D84@dominion.thruhere.net>
- <522E2B9E.8050404@ti.com> <522E5CF2.3080108@ti.com>,
- <36F35544-5E8D-4595-8B0C-2020130AE804@dominion.thruhere.net>
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
+Subject: Re: [PATCH v9 2/3] DMA: Freescale: Add new 8-channel DMA engine device
+ tree nodes
+Date: Tue, 10 Sep 2013 14:00:52 +0800
+Message-ID: <522EB594.7020907@freescale.com>
+References: <1377861980-7027-1-git-send-email-hongbo.zhang@freescale.com> <1377861980-7027-3-git-send-email-hongbo.zhang@freescale.com> <20130902155636.GA18206@e106331-lin.cambridge.arm.com> <5225A57E.4030003@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <36F35544-5E8D-4595-8B0C-2020130AE804@dominion.thruhere.net>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Koen Kooi <koen@dominion.thruhere.net>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "tony@atomide.com" <tony@atomide.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "olof@lixom.net" <olof@lixom.net>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5225A57E.4030003@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Mark? ping.
 
-
-On Sep 10, 2013, at 12:45 AM, "Koen Kooi" <koen@dominion.thruhere.net> wrote:
-
-> 
-> Op 10 sep. 2013, om 01:42 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
-> 
->> On 09/09/2013 03:12 PM, Joel Fernandes wrote:
->>> On 09/09/2013 03:00 PM, Koen Kooi wrote:
->>>> 
->>>> Op 9 sep. 2013, om 21:50 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
->>>> 
->>>>> On 09/09/2013 01:51 PM, Joel Fernandes wrote:
->>>>>> On 09/09/2013 01:43 PM, Koen Kooi wrote:
->>>>>>> 
->>>>>>> Op 9 sep. 2013, om 20:27 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
->>>>>>> 
->>>>>>>> On 09/09/2013 10:51 AM, Koen Kooi wrote:
->>>>>>>>> 
->>>>>>>>> Op 9 sep. 2013, om 17:23 heeft Kevin Hilman <khilman@linaro.org> het volgende geschreven:
->>>>>>>>> 
->>>>>>>>>> Koen Kooi <koen@dominion.thruhere.net> writes:
->>>>>>>>>> 
->>>>>>>>>>> The BeagleBone Black is basically a regular BeagleBone with eMMC and HDMI added,
->>>>>>>>>>> so create a common dtsi both can use.
->>>>>>>>>>> 
->>>>>>>>>>> IMPORTANT: booting the existing am335x-bone.dts will blow up the HDMI transceiver
->>>>>>>>>>> after a dozen boots with an uSD card inserted because LDO will be at 3.3V instead
->>>>>>>>>>> of 1.8.
->>>>>>>>>>> 
->>>>>>>>>>> MMC support for AM335x still isn't in, so only the LDO change has been added.
->>>>>>>>>>> 
->>>>>>>>>>> Cc: stable@vger.kernel.org
->>>>>>>>>>> 
->>>>>>>>>>> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
->>>>>>>>>>> Tested-by: Tom Rini <trini@ti.com>
->>>>>>>>>>> Tested-by: Matt Porter <matt.porter@linaro.org>
->>>>>>>>>> 
->>>>>>>>>> I guess the subject should've included v5?
->>>>>>>>> 
->>>>>>>>> Yes, I blame it on being monday :)
->>>>>>>> 
->>>>>>>> The series you're posting will require rebasing on the current MMC DT series
->>>>>>>> that is being discussed last couple of weeks on the mailing list which were
->>>>>>>> waiting until now as DMA support was missing. Now that DMA support is pulled in,
->>>>>>>> it is safe to apply those patches so I will be reposting them shortly.
->>>>>>>> 
->>>>>>>> Please hold off any changes until those patches are posted. This will avoid
->>>>>>>> unnecessary conflicts.
->>>>>>> 
->>>>>>> Or you can rebase on top of this patch since it has no dependencies *and* fixes blowing up boards. FWIW, git-rebase, git-cherry-pick and git-am -3 track the rename in my patch just fine.
->>>>>> 
->>>>>> That's fair enough, since  Kevin Acked and Benoit is pulling it, I'm fine with
->>>>>> rebasing on top of it and we avoid any merge conflicts.
->>>>> 
->>>>> I noticed - there were still some comments from Felipe on the v4 series of this
->>>>> patch regarding RF cape and HDMI may be breaking it. How are you addressing that?
->>>> 
->>>> Capes will never go into the .dts and HDMI support needs some serious patching before it can get enabled in the DT. And the RF cape isn't being sold since it has no sw support. No need to worry about things in the 3.15/3.16 timeframe. Unless you want this LDO3 fix not to go in ASAP.
->>>> 
->>>> Joel, is there anything relevant *right now* blocking this patch going in? If not, please test it and add your Tested-by: line.
->>> 
->>> We don't merge things in hurry and focus is to do things the right way.. I just
->>> want to make sure that all possible comments have been addressed.
->>> 
->>> Otherwise patch looks OK and hope everyone else thinks so too. I am dealing with
->>> some merge conflicts right now with my series on top of this though, but they
->>> should be easy enough to fix up. That's delaying my testing, but otherwise as
->>> such I don't have any objection to this patch (provided the conclusion is that
->>> all comments have been addressed..). Thanks!
->> 
->> Koen,
->> 
->> One note though, since I don't use HDMI (or BBB much for that matter), I was ok
->> with taking a risk of upping the ldo3 regulator voltage to 3.3v on my board
->> which I needed to do to get to the boot prompt.
->> I applied my AM335x DMA and MMC patches and tried to boot with rootfs as MMC1.
->> 
->> With 1.8v, I get the following during boot:
->> [    2.236043] mmc0: host doesn't support card's voltages
->> [    2.241659] mmc0: error -22 whilst initialising SD card
->> 
->> That's strange because I do have an SDHC card. With 3.3v it works fine.
->> 
->> I will add a note about this to my series. Since this more of an MMC issue than
->> anything, and your patch series doesn't enable MMC, you can add my tested-by:
->> 
->> Tested-by: Joel Fernandes <joelf@ti.com>
->> 
->> Later on, the regulator voltage may need to be tweaked for MMC support.
-> 
-> See https://lkml.org/lkml/2013/9/6/95 and https://lkml.org/lkml/2013/9/6/183
-
-Ok since you said in above thread you'll rebase the card detect and the regulator fixes , I'll let you do that and drop my drop my hacked mmc1 patch for BBB from my series.
-
-Regards,
-
--Joel
+On 09/03/2013 05:01 PM, Hongbo Zhang wrote:
+> On 09/02/2013 11:58 PM, Mark Rutland wrote:
+>> Hi,
+>>
+>> On Fri, Aug 30, 2013 at 12:26:19PM +0100, hongbo.zhang@freescale.com 
+>> wrote:
+>>> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+>>>
+>>> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this 
+>>> patch adds
+>>> the device tree nodes for them.
+>>>
+>>> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+>>> ---
+>>>   .../devicetree/bindings/powerpc/fsl/dma.txt        |   67 
+>>> ++++++++++++++++
+>>>   arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
+>>>   arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   82 
+>>> ++++++++++++++++++++
+>>>   arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   82 
+>>> ++++++++++++++++++++
+>>>   arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
+>>>   5 files changed, 235 insertions(+), 4 deletions(-)
+>>>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
+>>>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt 
+>>> b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+>>> index ddf17af..332ac77 100644
+>>> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+>>> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+>>> @@ -126,6 +126,73 @@ Example:
+>>>                  };
+>>>          };
+>>>
+>>> +** Freescale Elo3 DMA Controller
+>>> +   This is EloPlus controller with 8 channels, used in Freescale 
+>>> Txxx and Bxxx
+>> I was under the impression EloPlus was the previous revision. Should
+>> that say Elo3, or is Elo3 considered to be an EloPlus implementation?
+> In this patch 1/3 I revise the doc to make it clear we have Elo and 
+> EloPlus, and I'm adding another new Elo3. Yes the only difference 
+> between Elo3 and EloPlus is channel numbers(8 channels vs 4 channels), 
+> so we can call "Elo3 is an 8-channel EloPlus"
+>>> +   series chips, such as t1040, t4240, b4860.
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible        : must include "fsl,elo3-dma"
+>>> +- reg               : <registers specifier for DMA general status reg>
+>> The example has two reg entries. What both are should be specified. From
+>> what you described last time, it sounds like each is a status register
+>> for four channels.
+>>
+>> Presumably the first covers the channels at 0x0,0x80,0x100,0x180, and
+>> the second covers the channels at 0x300,0x380,0x400,0x480? If the
+>> registers have specific names in a datasheet, it would be worth
+>> mentioning them.
+> Yes, each is a status register for four channels, you got it -- this 
+> means my statement works.
+> Is it necessary to specify all the register names?
+> I can describe my two registers, but in other cases the reg entryies 
+> can cover tens even hundreds of registers, just a summary is OK I think.
+>> If the specification of the DMA controller allows for more channels, it
+>> may be worth describing that case now.
+> This DMA controller doesn't allows for more channels. (Even if it 
+> does, it should be another new controller)
+>>> +- ranges            : describes the mapping between the address 
+>>> space of the
+>>> +                      DMA channels and the address space of the DMA 
+>>> controller
+>> This looks odd as a required property, and I'm slightly confused. Is
+>> this used to map the reg values of the DMA channels, or is it used when
+>> mapping the DMA address space (for which dma-ranges exists in ePAPR and
+>> other bindings).
+> It is used to map the reg values of DMA channels.
+>>> +
+>>> +- DMA channel nodes:
+>>> +        - compatible        : must include "fsl,eloplus-dma-channel"
+>>> +        - reg               : <registers specifier for channel>
+>> What does this represent? What are valid values?
+>>
+>> In the example below it looks like these are offsets of control
+>> registers within the dma controller.
+> Yes, they are offsets of control registers within dma controller, but 
+> the contents in these registers are for dma channels.
+> Physically we have dma controller registers and dma channel registers, 
+> they are in one continuous physical address space, we divide all these 
+> registers into two controller/channel parts, according to contents in 
+> these registers, common status registers for all channels are called 
+> dma controller registers, otherwise channel specific registers are 
+> called dma channel registers.
+>> If the reg property may have any value, how do they get mapped to bits
+>> in the status register(s)?
+> In fact, each channel has its own status register(and also other 
+> registers), the dma controller status register is just aggregation of 
+> all channel status register. (that seems duplicated somehow, maybe 
+> this is due to hardware compatibility with legacy one, and the device 
+> tree just describes the physical hardware without lie)
+>> May some channels be unusable for some reason, or will all eight
+>> channels be wired on any given Elo3 DMA?
+> Sorry, not get your point clearly, maybe you are clear now because of 
+> my previous explanations.
+>> Cheers,
+>> Mark.
+>>
+>>> +        - interrupts        : <interrupt specifier for DMA channel 
+>>> IRQ>
+>>> +        - interrupt-parent  : optional, if needed for interrupt 
+>>> mapping
+>>> +
+>>> +Example:
+>>> +dma@100300 {
+>>> +       #address-cells = <1>;
+>>> +       #size-cells = <1>;
+>>> +       compatible = "fsl,elo3-dma";
+>>> +       reg = <0x100300 0x4>,
+>>> +             <0x100600 0x4>;
+>>> +       ranges = <0x0 0x100100 0x500>;
+>>> +       dma-channel@0 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x0 0x80>;
+>>> +               interrupts = <28 2 0 0>;
+>>> +       };
+>>> +       dma-channel@80 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x80 0x80>;
+>>> +               interrupts = <29 2 0 0>;
+>>> +       };
+>>> +       dma-channel@100 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x100 0x80>;
+>>> +               interrupts = <30 2 0 0>;
+>>> +       };
+>>> +       dma-channel@180 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x180 0x80>;
+>>> +               interrupts = <31 2 0 0>;
+>>> +       };
+>>> +       dma-channel@300 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x300 0x80>;
+>>> +               interrupts = <76 2 0 0>;
+>>> +       };
+>>> +       dma-channel@380 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x380 0x80>;
+>>> +               interrupts = <77 2 0 0>;
+>>> +       };
+>>> +       dma-channel@400 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x400 0x80>;
+>>> +               interrupts = <78 2 0 0>;
+>>> +       };
+>>> +       dma-channel@480 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x480 0x80>;
+>>> +               interrupts = <79 2 0 0>;
+>>> +       };
+>>> +};
+>>> +
+>>>   Note on DMA channel compatible properties: The compatible property 
+>>> must say
+>>>   "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by 
+>>> the Elo DMA
+>>>   driver (fsldma).  Any DMA channel used by fsldma cannot be used by 
+>>> another
+>>> diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi 
+>>> b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+>>> index 7399154..ea53ea1 100644
+>>> --- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+>>> +++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+>>> @@ -223,13 +223,13 @@
+>>>                  reg = <0xe2000 0x1000>;
+>>>          };
+>>>
+>>> -/include/ "qoriq-dma-0.dtsi"
+>>> +/include/ "elo3-dma-0.dtsi"
+>>>          dma@100300 {
+>>>                  fsl,iommu-parent = <&pamu0>;
+>>>                  fsl,liodn-reg = <&guts 0x580>; /* DMA1LIODNR */
+>>>          };
+>>>
+>>> -/include/ "qoriq-dma-1.dtsi"
+>>> +/include/ "elo3-dma-1.dtsi"
+>>>          dma@101300 {
+>>>                  fsl,iommu-parent = <&pamu0>;
+>>>                  fsl,liodn-reg = <&guts 0x584>; /* DMA2LIODNR */
+>>> diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi 
+>>> b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
+>>> new file mode 100644
+>>> index 0000000..3c210e0
+>>> --- /dev/null
+>>> +++ b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
+>>> @@ -0,0 +1,82 @@
+>>> +/*
+>>> + * QorIQ Elo3 DMA device tree stub [ controller @ offset 0x100000 ]
+>>> + *
+>>> + * Copyright 2013 Freescale Semiconductor Inc.
+>>> + *
+>>> + * Redistribution and use in source and binary forms, with or without
+>>> + * modification, are permitted provided that the following 
+>>> conditions are met:
+>>> + *     * Redistributions of source code must retain the above 
+>>> copyright
+>>> + *       notice, this list of conditions and the following disclaimer.
+>>> + *     * Redistributions in binary form must reproduce the above 
+>>> copyright
+>>> + *       notice, this list of conditions and the following 
+>>> disclaimer in the
+>>> + *       documentation and/or other materials provided with the 
+>>> distribution.
+>>> + *     * Neither the name of Freescale Semiconductor nor the
+>>> + *       names of its contributors may be used to endorse or 
+>>> promote products
+>>> + *       derived from this software without specific prior written 
+>>> permission.
+>>> + *
+>>> + *
+>>> + * ALTERNATIVELY, this software may be distributed under the terms 
+>>> of the
+>>> + * GNU General Public License ("GPL") as published by the Free 
+>>> Software
+>>> + * Foundation, either version 2 of that License or (at your option) 
+>>> any
+>>> + * later version.
+>>> + *
+>>> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' 
+>>> AND ANY
+>>> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+>>> THE IMPLIED
+>>> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+>>> PURPOSE ARE
+>>> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE 
+>>> FOR ANY
+>>> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+>>> CONSEQUENTIAL DAMAGES
+>>> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
+>>> OR SERVICES;
+>>> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+>>> CAUSED AND
+>>> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+>>> LIABILITY, OR TORT
+>>> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF 
+>>> THE USE OF THIS
+>>> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>>> + */
+>>> +
+>>> +dma0: dma@100300 {
+>>> +       #address-cells = <1>;
+>>> +       #size-cells = <1>;
+>>> +       compatible = "fsl,elo3-dma";
+>>> +       reg = <0x100300 0x4>,
+>>> +             <0x100600 0x4>;
+>>> +       ranges = <0x0 0x100100 0x500>;
+>>> +       dma-channel@0 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x0 0x80>;
+>>> +               interrupts = <28 2 0 0>;
+>>> +       };
+>>> +       dma-channel@80 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x80 0x80>;
+>>> +               interrupts = <29 2 0 0>;
+>>> +       };
+>>> +       dma-channel@100 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x100 0x80>;
+>>> +               interrupts = <30 2 0 0>;
+>>> +       };
+>>> +       dma-channel@180 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x180 0x80>;
+>>> +               interrupts = <31 2 0 0>;
+>>> +       };
+>>> +       dma-channel@300 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x300 0x80>;
+>>> +               interrupts = <76 2 0 0>;
+>>> +       };
+>>> +       dma-channel@380 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x380 0x80>;
+>>> +               interrupts = <77 2 0 0>;
+>>> +       };
+>>> +       dma-channel@400 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x400 0x80>;
+>>> +               interrupts = <78 2 0 0>;
+>>> +       };
+>>> +       dma-channel@480 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x480 0x80>;
+>>> +               interrupts = <79 2 0 0>;
+>>> +       };
+>>> +};
+>>> diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi 
+>>> b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
+>>> new file mode 100644
+>>> index 0000000..cccf3bb
+>>> --- /dev/null
+>>> +++ b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
+>>> @@ -0,0 +1,82 @@
+>>> +/*
+>>> + * QorIQ Elo3 DMA device tree stub [ controller @ offset 0x101000 ]
+>>> + *
+>>> + * Copyright 2013 Freescale Semiconductor Inc.
+>>> + *
+>>> + * Redistribution and use in source and binary forms, with or without
+>>> + * modification, are permitted provided that the following 
+>>> conditions are met:
+>>> + *     * Redistributions of source code must retain the above 
+>>> copyright
+>>> + *       notice, this list of conditions and the following disclaimer.
+>>> + *     * Redistributions in binary form must reproduce the above 
+>>> copyright
+>>> + *       notice, this list of conditions and the following 
+>>> disclaimer in the
+>>> + *       documentation and/or other materials provided with the 
+>>> distribution.
+>>> + *     * Neither the name of Freescale Semiconductor nor the
+>>> + *       names of its contributors may be used to endorse or 
+>>> promote products
+>>> + *       derived from this software without specific prior written 
+>>> permission.
+>>> + *
+>>> + *
+>>> + * ALTERNATIVELY, this software may be distributed under the terms 
+>>> of the
+>>> + * GNU General Public License ("GPL") as published by the Free 
+>>> Software
+>>> + * Foundation, either version 2 of that License or (at your option) 
+>>> any
+>>> + * later version.
+>>> + *
+>>> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' 
+>>> AND ANY
+>>> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+>>> THE IMPLIED
+>>> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+>>> PURPOSE ARE
+>>> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE 
+>>> FOR ANY
+>>> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+>>> CONSEQUENTIAL DAMAGES
+>>> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
+>>> OR SERVICES;
+>>> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+>>> CAUSED AND
+>>> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+>>> LIABILITY, OR TORT
+>>> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF 
+>>> THE USE OF THIS
+>>> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>>> + */
+>>> +
+>>> +dma1: dma@101300 {
+>>> +       #address-cells = <1>;
+>>> +       #size-cells = <1>;
+>>> +       compatible = "fsl,elo3-dma";
+>>> +       reg = <0x101300 0x4>,
+>>> +             <0x101600 0x4>;
+>>> +       ranges = <0x0 0x101100 0x500>;
+>>> +       dma-channel@0 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x0 0x80>;
+>>> +               interrupts = <32 2 0 0>;
+>>> +       };
+>>> +       dma-channel@80 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x80 0x80>;
+>>> +               interrupts = <33 2 0 0>;
+>>> +       };
+>>> +       dma-channel@100 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x100 0x80>;
+>>> +               interrupts = <34 2 0 0>;
+>>> +       };
+>>> +       dma-channel@180 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x180 0x80>;
+>>> +               interrupts = <35 2 0 0>;
+>>> +       };
+>>> +       dma-channel@300 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x300 0x80>;
+>>> +               interrupts = <80 2 0 0>;
+>>> +       };
+>>> +       dma-channel@380 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x380 0x80>;
+>>> +               interrupts = <81 2 0 0>;
+>>> +       };
+>>> +       dma-channel@400 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x400 0x80>;
+>>> +               interrupts = <82 2 0 0>;
+>>> +       };
+>>> +       dma-channel@480 {
+>>> +               compatible = "fsl,eloplus-dma-channel";
+>>> +               reg = <0x480 0x80>;
+>>> +               interrupts = <83 2 0 0>;
+>>> +       };
+>>> +};
+>>> diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi 
+>>> b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
+>>> index bd611a9..ec95c60 100644
+>>> --- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
+>>> +++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
+>>> @@ -387,8 +387,8 @@
+>>>                  reg        = <0xea000 0x4000>;
+>>>          };
+>>>
+>>> -/include/ "qoriq-dma-0.dtsi"
+>>> -/include/ "qoriq-dma-1.dtsi"
+>>> +/include/ "elo3-dma-0.dtsi"
+>>> +/include/ "elo3-dma-1.dtsi"
+>>>
+>>>   /include/ "qoriq-espi-0.dtsi"
+>>>          spi@110000 {
+>>> -- 
+>>> 1.7.9.5
+>>>
+>>>
+>>>
+>>>
+>
