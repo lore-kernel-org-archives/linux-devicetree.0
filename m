@@ -1,62 +1,31 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 2/2] sh_eth: add device tree support
-Date: Wed, 11 Sep 2013 01:48:21 +0400
-Message-ID: <522F93A5.6010709@cogentembedded.com>
-References: <201309070343.25640.sergei.shtylyov@cogentembedded.com> <522E3770.9020305@wwwdotorg.org> <522F2F3A.5070406@cogentembedded.com> <522F37A7.90804@wwwdotorg.org> <522F5E67.8070006@cogentembedded.com> <522F7BF1.80100@wwwdotorg.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [GIT PULL] Device tree updates for v3.12
+Date: Tue, 10 Sep 2013 17:06:39 -0500
+Message-ID: <522F97EF.5050303@gmail.com>
+References: <CACxGe6v8hO4sRX_KGcH=YBAMrF8mQHqWdxXEvVwoC2pVS5Yv9Q@mail.gmail.com> <CA+bK7J5cAWFPLTBR2afNLm2JaKFH4_dJO_NpVL5gom0iX+L2dQ@mail.gmail.com> <CA+55aFzBbKXJnaG_6X8Fff_APGJ3EkbG0thsbithDXtiEJjdHA@mail.gmail.com> <CA+bK7J4F=X97HUQP6Tt8RkVe5vttE_Sw4Pd7kT19k_KGDFfpKA@mail.gmail.com> <CA+55aFwkAQGRo9mLa2GVeVgzToRZr=Ny8LTogzgOpO6_4BJY1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <522F7BF1.80100@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+55aFwkAQGRo9mLa2GVeVgzToRZr=Ny8LTogzgOpO6_4BJY1Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Tim Bird <tbird20d@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anton Blanchard <anton@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 09/10/2013 04:44 PM, Linus Torvalds wrote:
+> On Tue, Sep 10, 2013 at 2:39 PM, Tim Bird <tbird20d@gmail.com> wrote:
+>>
+>> Well, I'm not sure how many bits of randomness this will add anyway.
+>> The way we're using device tree, we get the same values every boot, on
+>> all instances of the same phone model.  So this seems of little value.
+> 
+> If I recall correctly, somebody said that things like ethernet MAC
+> addresses etc sometimes come from DT. Is my memory going, or is that
+> true but very rare?
 
-On 09/11/2013 12:07 AM, Stephen Warren wrote:
+It is true and fairly common. You can also have serial numbers in the
+DT, but that is more rare. The bootloader will also add the kernel
+command line, initrd start and end addresses.
 
->>>>> Do you need any clocks properties, IP block reset signals, power
->>>>> domains?
-
->>>>      Currently not.
-
->>> What does "currently" mean? Does that mean that the Linux driver simply
->>> doesn't touch those entities at present?
-
->>     There's Ether clock but the driver doesn't manipulate it directly,
->> assumingly it does this thru the runtime PM interface. As for the
->> others, I simply don't know.
-
-> If there's a clock, it should be represented in DT, even if the kernel
-> somehow gets access to the clock through some means other than parsing DT.
-
-    Frankly speaking, I don't see the point.
-
->>> If so, that's not enough to say
->>> that those entities should not be described in the DT binding. We should
->>> strive to make the binding completely describe all aspects of the HW,
->>> irrespective of whether a particular driver happens to use that
->>> information at present.
-
->>     There's no DT representation for the clocks in SH-Mobile subarch yet.
->> The same applies to the other entities you mentioned.
-
-> You can still write the binding to say that the appropriate clock
-> property must be present; the overall format of this property won't be
-> affected by the representation chosen for the SH-Mobile clocks.
-
-    Where can I find an example of such property, independent of the parent 
-clock node? All I could find with quick search refers with a phandle to a 
-clock node (we don't have now).
-
-> It seems like it'd be best to get the basic resources (like clocks)
-> represented in DT before trying to build blocks that use them.
-
-    We don't use them directly. And we need the Ether device tree support 
-*now*, while clock-related work will probably take months (there are plans to 
-switch Sh-Mobile to CCF in like 6 months).
-
-WBR, Sergei
-
+Rob
