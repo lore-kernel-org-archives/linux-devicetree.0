@@ -1,105 +1,126 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RESEND PATCH v2] pwm: pxa: add device tree support to pwm driver
-Date: Tue, 10 Sep 2013 18:54:46 +0200
-Message-ID: <20130910165445.GA22111@ulmo>
-References: <1378751420-19227-1-git-send-email-mikedunn@newsguy.com>
- <522E3B5B.90406@wwwdotorg.org> <522F40A3.9030701@newsguy.com>
- <522F4CF9.3070601@wwwdotorg.org>
+Subject: Re: [PATCH] pwm-backlight: add support for device tree gpio control
+Date: Tue, 10 Sep 2013 19:21:31 +0200
+Message-ID: <20130910172130.GC22111@ulmo>
+References: <1378236372-15711-1-git-send-email-mikedunn@newsguy.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4135495452256513068=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <522F4CF9.3070601@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Marek Vasut <marex@denx.de>, linux-pwm@vger.kernel.org, Mike Dunn <mikedunn@newsguy.com>, Pawel Moll <pawel.moll@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zCKi3GIZzVBPywwA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1378236372-15711-1-git-send-email-mikedunn@newsguy.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Dunn <mikedunn@newsguy.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jg1.han@samsung.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
 
---===============4135495452256513068==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
-Content-Disposition: inline
-
-
---liOOAslEiF7prFVr
+--zCKi3GIZzVBPywwA
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 10, 2013 at 10:46:49AM -0600, Stephen Warren wrote:
-> On 09/10/2013 09:54 AM, Mike Dunn wrote:
-> > On 09/09/2013 02:19 PM, Stephen Warren wrote:
-> >> On 09/09/2013 12:30 PM, Mike Dunn wrote:
-[...]
-> >>> +- reg: physical base address and length of the registers used by the=
- pwm channel
-> >>> +  NB: One device instance must be created for each pwm that is used,=
- so the
-> >>> +  length covers only the register window for one pwm output, not tha=
-t of the
-> >>> +  entire pwm controller.  Currently length is 0x10 for all supported=
- devices.
-> >>> +- #pwm-cells: should be 3.
-> >>> +   cell 1: the per-chip index of the PWM to use,
-> >>
-> >> That cell shouldn't be needed if you really want to have one DT node p=
-er
-> >> PWM channel.
-> >=20
-> > Yes, but I was afraid to deviate from the format used by the other PWM
-> > controllers.  (But in that case, it should at least be documented as "m=
-ust be
-> > zero". Thanks.)  If going my owm way is acceptable, I'll define my own
-> > of_xlate() parser and remove this cell.
+On Tue, Sep 03, 2013 at 12:26:12PM -0700, Mike Dunn wrote:
+> This patch adds support for controlling an arbitrary number of gpios to t=
+he
+> pwm-backlight driver.  This was left as a TODO when initial device tree s=
+upport
+> was added by Thierry a while back.  This functionality replaces the callb=
+acks
+> that are passed in the platform data for non-DT cases.  Users can avail
+> themselves of this feature by adding a 'gpios' property to the 'backlight=
+' node.
+> When the update_status() callback in backlight_ops runs, the gpios listed=
+ in the
+> property are asserted/deasserted if the specified brightness is non-zero/=
+zero.
 >=20
-> I don't think there's any issue with deviating; that's exactly what
-> #pwm-cells is for.
+> Tested on a pxa270-based Palm Treo 680.
+>=20
+> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
+> ---
+>=20
+> Thanks for looking!
+>=20
+>  .../bindings/video/backlight/pwm-backlight.txt     |   4 +
+>  drivers/video/backlight/pwm_bl.c                   | 128 +++++++++++++++=
++++---
+>  2 files changed, 113 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backli=
+ght.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.t=
+xt
+> index 1e4fc72..4583e68 100644
+> --- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+> +++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+> @@ -14,6 +14,9 @@ Required properties:
+>  Optional properties:
+>    - pwm-names: a list of names for the PWM devices specified in the
+>                 "pwms" property (see PWM binding[0])
+> +  - gpios:     An arbitrary number of gpios that must be asserted when t=
+he
+> +               backlight is on, and de-asserted when off.  They will be =
+asserted
+> +               in the order they appear, and de-asserted in reverse orde=
+r.
 
-Agreed, I have no objections to using a custom .of_xlate().
+Do you have a real setup that actually needs multiple GPIOs? Usually
+such a setup requires some kind of timing or other additional constraint
+which can't be represented by this simple binding.
+
+Looking at the Palm Treo code it seems like the reason why multiple
+GPIOs are needed is because one is to enable the backlight, while the
+other is in fact used to enable the LCD panel. I have been working on a
+patch series to provide simple panel support, specifically to allow the
+separation of backlight and panel power sequencing. Would such a method
+work for your use-case as well? The work that I'm doing is somewhat DRM
+centric, and I don't think there's a DRM driver for PXA, but perhaps it
+would be a good occasion to look at converting the PXA display drivers
+to DRM... =3D)
+
+That said, I've had a patch similar to yours in a local tree (in fact in
+the same branch as the panel work I've been doing) for quite some time,
+which allows a single "enable" GPIO to be specified. I haven't gotten
+around to sending it out yet, but I'll do that shortly. The patch is a
+little more involved because it exposes the GPIO via platform data as
+well and therefore has to update a number of board files, too. While
+going over the various board files I found only a single board which can
+actually make use of the new functionality (which I also converted in
+the patch). Any other cases couldn't be implemented by the simple change
+so I suspect they can't either using your proposed binding.
+
+I've been trying for a while to come up with a way to support more use-
+cases, and I keep coming back to the same solution. Since the DT binding
+for power sequences was shot down some time ago, we probably have to
+represent any kind of sequencing in C code. So instead of trying to fit
+everything into a single binding, I think a more maintainable solution
+would be to create separate drivers for the more complex use-cases. That
+could either be done by using separate compatible values within the
+pwm-backlight driver or via completely different drivers. In the latter
+case we should probably think about exporting some of the pwm-backlight
+functionality so that drivers can easily reuse some of the code.
 
 Thierry
 
---liOOAslEiF7prFVr
+--zCKi3GIZzVBPywwA
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.21 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSL07VAAoJEN0jrNd/PrOhM8MP/A/+6TvKJr4NsAI6a2n7oB4j
-TIqfsiVbCmG2nmDP1nMurPmrKv6jOV1u0ex563YUUD6x5Wlvt8ovjahwDEq/Y7dx
-r9ts7DQh7CezerITxCro89qWEsWID4hCy6MEsn5eJSNWtEJ/z34JGQqQPJ8rNbO6
-9vJw8ajnwje8wxE28LeZQSs5x8P/BfOOqKgyPOrY9WkfAhZhzV3ckX+Yk4HkKRjd
-vZ6RdXJMt3zKDs0e1nucuELpYdC2RJUMQkKif962NrEISUzS5y2abgrsn8Q+xAdo
-mjTvmK3O32RO3oM1vFLYzmA9nNYAzR0tFq+heM1W30rqiZuDQiXXYo7qrljJCvR2
-mq2xZMjbJpSpfrYb7EMikOjgb58XVw/DIPt/VsN3KjIWbxDCvGxwl5lWHsuUH2yN
-NjwF3rwzHiG3rbRdVEuNMcSKiTaWiyhfKWw9EkEEtt7lwsUUBZ+KSeU+oFg5wYOx
-3aQJ7Dg+QAtM+Odzr46fIDeXBQktRJMLk10+7MECoDlEobp/y5xetPDGiwFc/qiq
-7elSpIJg4W8TYoF+0pUTOkExvHqaEndcWOcqg68EKT48T7wOA+nLvnVHutIMs7i3
-a+pmuWA2eFeRnoa/c40lWiZ64ccgSQyi6TtghAcZ9QAcUqCQrHqnrMnGduMy5e8K
-P11oN/irDcCiTBC1nFti
-=JCNF
+iQIcBAEBAgAGBQJSL1UaAAoJEN0jrNd/PrOhcfwQALBQ7DgM+bzY+NfalVQZktj/
+Mupf/Enksv9XOFOB76I5npxaPISzUG98ORQjak4wznL5t/QQj01e8FJCm7aN6YM+
+BLdjRYf2tKt4EkUfnn/DNv9+CRFjpS5pNmU82SqknaoJ/V6ZyEJGbiNUhgUkirPo
+QVTjKb8tN6qvW3IVsOFUWiO6cQDA0luKmIN9p7yN1NByFVGToVKLTjuI0oi4gXOk
+kZeXF2cQF7+jooq1VD5/Q7nDUsUfU5orMhoH6Jiig1TPvAYTRY3EWE8iuOvLcKBU
+jaEo43Cd7qNpw7p7Jf8P5oAIudN1ljR1yeFJfuJnbtfTOJxdLX6cHjkjfMrHwctI
+7vUSvB+hbK6OAOwW6lR+k2x/e0fPC/gpa3+8GL4hCRRt4dxRCoIK+gAIUnWQ0KMW
+NVrRqMJE3q6FzZ7Reise4h/YFLYqMN59UoVi8lxq3vJRmRgtJkH3QNIMFt2y+X8B
+Y6kw0K7Cc325nckAhFodYT8PzUVOIMXpn8R5lVWB+ekaNRg08gpZ/AQwptjCzRu4
+cc8/Fus88InoL3P1PW1aGHRVv1Xwc/jFfDuKL3uz+vFER3AgNUwAAIg895mURRLu
+twIOFCvbwr406ksrRC/I66gzgn29X86scLvj1b3vT90DM+WV7ghMUzAiHlI6dyeU
+xI6mv38p5Q5EU6iAAqYE
+=lyVK
 -----END PGP SIGNATURE-----
 
---liOOAslEiF7prFVr--
-
-
---===============4135495452256513068==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4135495452256513068==--
+--zCKi3GIZzVBPywwA--
