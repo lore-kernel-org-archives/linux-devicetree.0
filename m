@@ -1,56 +1,49 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH 0/3] ARM: dts: Enable EDMA, MMC and SPI on AM33XX for
- v3.13
-Date: Tue, 10 Sep 2013 21:40:01 +0200
-Message-ID: <522F7591.6010409@baylibre.com>
-References: <1378841079-15796-1-git-send-email-joelf@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] drivers: of: fix build break if asm/dma-contiguous.h
+ is missing
+Date: Tue, 10 Sep 2013 14:45:19 -0500
+Message-ID: <522F76CF.6080907@gmail.com>
+References: <1378804400-31716-1-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378841079-15796-1-git-send-email-joelf@ti.com>
+In-Reply-To: <1378804400-31716-1-git-send-email-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Fernandes <joelf@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Devicetree Discuss <devicetree@vger.kernel.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@secretlab.ca>, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joel,
+On 09/10/2013 04:13 AM, Marek Szyprowski wrote:
+> It is not needed to include asm/dma-contiguous.h header to compile
+> reserved memory initialization code, so remove it to avoid build break
+> on architectures without CMA support.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Thanks for the repost.
+Acked-by: Rob Herring <rob.herring@calxeda.com>
 
-I'll applied that one now.
+I can apply this or it can go with other CMA stuff.
 
-Regards,
-Benoit
+Aren't there also some comments from Grant to address as well?
 
-On 10/09/2013 21:24, Joel Fernandes wrote:
-> Here are last few patches required to add EDMA and MMC/SPI support for AM33xx.
->
-> Now that all dependent DMA patches and fixes are in linux next or mainline, except
-> for [1] which should go in for 3.12 -rc cycle, it is safe to enable MMC and SPI support
-> and this patch series enables it. These are originally Matt Porter's patches with
-> changes to make it work with recent kernels, addition of irq, memory resources and
-> enable other extra properties.
->
-> These patches should cleanly apply on master branch after Koen's patch [2] for basic
-> BBB DT support is applied.
->
-> MMC support is enabled for: Beaglebone, AM335x EVM and EVM-SK boards. MMC support
-> for BBB is intentionally not added due to custom fixes and other patches that are
-> in Koen's tree and which will be separately submitted by him.
->
-> [1] http://marc.info/?l=linux-omap&m=137883926226451&w=2
-> [2] http://comments.gmane.org/gmane.linux.kernel.stable/63648
->
-> Matt Porter (3):
->    ARM: dts: add AM33XX EDMA support
->    ARM: dts: add AM33XX SPI DMA support
->    ARM: dts: add AM33XX MMC support and documentation
->
->   .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      | 26 +++++++++-
->   arch/arm/boot/dts/am335x-bone.dts                  | 11 ++++
->   arch/arm/boot/dts/am335x-evm.dts                   |  7 +++
->   arch/arm/boot/dts/am335x-evmsk.dts                 |  7 +++
->   arch/arm/boot/dts/am33xx.dtsi                      | 60 ++++++++++++++++++++++
->   5 files changed, 110 insertions(+), 1 deletion(-)
->
+Rob
+
+> ---
+>  drivers/of/of_reserved_mem.c |    2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index a754b84..0fe40c7 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -11,8 +11,6 @@
+>   * License or (at your optional) any later version of the license.
+>   */
+>  
+> -#include <asm/dma-contiguous.h>
+> -
+>  #include <linux/memblock.h>
+>  #include <linux/err.h>
+>  #include <linux/of.h>
+> 
