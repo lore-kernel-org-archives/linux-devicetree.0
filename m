@@ -1,42 +1,58 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v4 12/19] cpufreq: cpufreq-cpu0: remove device tree
- parsing for cpu nodes
-Date: Tue, 10 Sep 2013 19:19:50 +0800
-Message-ID: <20130910111947.GH5815@S2101-09.ap.freescale.net>
-References: <1374492747-13879-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <1376991021-12160-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <1376991021-12160-13-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <Pine.LNX.4.64.1309061539310.11068@axis700.grange>
- <522D93D7.4010307@arm.com>
- <20130909143253.GD4624@S2101-09.ap.freescale.net>
- <522DE822.3030907@arm.com>
- <20130910024404.GC5815@S2101-09.ap.freescale.net>
- <522EFAD1.4020709@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] regulator: core: add support for configuring turn-on
+ time through constraints
+Date: Tue, 10 Sep 2013 13:09:22 +0100
+Message-ID: <20130910120922.GH29403@sirena.org.uk>
+References: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com>
+ <1378811888-2268-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="k+UaUX7feRqSnTdd"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <522EFAD1.4020709@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Viresh Kumar <viresh.kumar@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jonas Bonn <jonas@southpole.se>, Michal Simek <monstr@monstr.eu>, "Rafael J. Wysocki" <rjw@sisk.pl>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+In-Reply-To: <1378811888-2268-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2013 at 11:56:17AM +0100, Sudeep KarkadaNagesha wrote:
-> > So we only need to change all clkdev registration to use "cpu0" as
-> > dev_id intstead of "cpufreq-cpu0.0", something like below.
-> > 
-> > And for imx, it should work even without the changes, because we have
-> > device tree lookup ready there, and those clk_register_clkdev() calls
-> > can just be removed now.  But I prefer to include the change and leave
-> > the cleanup to another patch for keeping the change log clear.
-> > 
-> Ok makes sense, do you want me to include this patch also as fix.
-> I can send a series to fix this if you OK:
-> 1. Fix in cpufreq-cpu0
-> 2. Fix in i.MX driver and platform file
-> 3. Patch below
 
-Yes, please.  Thanks.
+--k+UaUX7feRqSnTdd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Shawn
+On Tue, Sep 10, 2013 at 04:48:08PM +0530, Laxman Dewangan wrote:
+
+> +- regulator-enable-time: Turn ON time for regulator(in uS)
+
+This is unclear - what is a "turn on time" and is this in addition to or
+separate from the underlying enable time of the device?  It needs to be
+clear that this is the time taken for the voltage to ramp to spec.  I'd
+also expect it to be clear that this is not something that should need
+to be provided normally.
+
+Please ALSO avoid capitalising words FOR no reason.
+
+--k+UaUX7feRqSnTdd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSLwvvAAoJELSic+t+oim92isP/RAhwsBYnQzNmYWep3Rgf0Ss
+NIOSnP+2NtngKXOcAtCFH4Y2hbJSvPty0IwlAGBvWNVfYR1A6ZFhbN3w63hG6agH
+N/7Dp9U8DGkX57GhcuYCQX06tAJjtCsAA9nunhPojnU+yE8aLkPkTMLE//ahV0iU
+1rAA7Do56fxe5ZfQ8e1HGxz4Z8ywQrD7mylTFyyr2vgXVd3Skl7X30SfONpUmFl5
+vPQ1yA5et9WoNvpDb8GM01maDE/l0sug3p9G+T0bZ+kr1IDcza8QtQ2bCsUzL1bz
+gn0UZQBmSVwk+HFZ3nVhkgWypg4sbK1+Eic9tD8+crHW6jIpOL+IKLHaE/Gp8PJe
+VxFAP31W8v/hauO1WHTA5yV797yrtgT7pgClVTlldNXqnIFuOTe8350vW36GTU0f
+xqJIQaroiz7W21DDcbHMtE7bsNp4noit+uHqutFB+VCmRkGE3uQYCMmQdcCP/Cu1
+l1DLwpAMqK//LcR35zcXoLKk7Z4AXGcLoNxw0W6F9cjRSt8Te8YLhQBxhRyGgFsG
+1GROLr0w2Tg6l2j9CmbS9MHwVuZe+NslFaziUkQk+FNZ2rbJueZ39dJlo/ili3YE
+6iVVhfvX2ATNa2hhO2LgvQu4Dt/KCMgu5AkocdqGzyaRT0qvvY3XnEcpRVehMOnj
+KSNov+aTGyTjRlIOAAO9
+=17z8
+-----END PGP SIGNATURE-----
+
+--k+UaUX7feRqSnTdd--
