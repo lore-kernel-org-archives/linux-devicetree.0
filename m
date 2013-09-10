@@ -1,126 +1,77 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] pwm-backlight: add support for device tree gpio control
-Date: Tue, 10 Sep 2013 19:21:31 +0200
-Message-ID: <20130910172130.GC22111@ulmo>
-References: <1378236372-15711-1-git-send-email-mikedunn@newsguy.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 1/2] video: ARM CLCD: Add DT support
+Date: Tue, 10 Sep 2013 11:32:41 -0600
+Message-ID: <522F57B9.5000001@wwwdotorg.org>
+References: <1378808726-32535-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zCKi3GIZzVBPywwA"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1378236372-15711-1-git-send-email-mikedunn@newsguy.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Dunn <mikedunn@newsguy.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jg1.han@samsung.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, Marek Vasut <marex@denx.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1378808726-32535-1-git-send-email-pawel.moll@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/10/2013 04:25 AM, Pawel Moll wrote:
+> This patch adds basic DT bindings for the PL11x CLCD cells
+> and make their fbdev driver use them.
 
---zCKi3GIZzVBPywwA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> diff --git a/Documentation/devicetree/bindings/video/arm,pl11x.txt b/Documentation/devicetree/bindings/video/arm,pl11x.txt
 
-On Tue, Sep 03, 2013 at 12:26:12PM -0700, Mike Dunn wrote:
-> This patch adds support for controlling an arbitrary number of gpios to t=
-he
-> pwm-backlight driver.  This was left as a TODO when initial device tree s=
-upport
-> was added by Thierry a while back.  This functionality replaces the callb=
-acks
-> that are passed in the platform data for non-DT cases.  Users can avail
-> themselves of this feature by adding a 'gpios' property to the 'backlight=
-' node.
-> When the update_status() callback in backlight_ops runs, the gpios listed=
- in the
-> property are asserted/deasserted if the specified brightness is non-zero/=
-zero.
->=20
-> Tested on a pxa270-based Palm Treo 680.
->=20
-> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
-> ---
->=20
-> Thanks for looking!
->=20
->  .../bindings/video/backlight/pwm-backlight.txt     |   4 +
->  drivers/video/backlight/pwm_bl.c                   | 128 +++++++++++++++=
-+++---
->  2 files changed, 113 insertions(+), 19 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backli=
-ght.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.t=
-xt
-> index 1e4fc72..4583e68 100644
-> --- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-> +++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-> @@ -14,6 +14,9 @@ Required properties:
->  Optional properties:
->    - pwm-names: a list of names for the PWM devices specified in the
->                 "pwms" property (see PWM binding[0])
-> +  - gpios:     An arbitrary number of gpios that must be asserted when t=
-he
-> +               backlight is on, and de-asserted when off.  They will be =
-asserted
-> +               in the order they appear, and de-asserted in reverse orde=
-r.
+> +Optional properties:
+> +
+> +- video-ram: phandle to a node describing specialized video memory
+> +		(that is *not* described in the top level "memory" node)
+> +		that must be used as a framebuffer, eg. due to restrictions
+> +		of the system interconnect; the node must contain a
+> +		standard reg property describing the address and the size
+> +		of the memory area
 
-Do you have a real setup that actually needs multiple GPIOs? Usually
-such a setup requires some kind of timing or other additional constraint
-which can't be represented by this simple binding.
+Should this use the "CMA bindings" that are being proposed at the moment?
 
-Looking at the Palm Treo code it seems like the reason why multiple
-GPIOs are needed is because one is to enable the backlight, while the
-other is in fact used to enable the LCD panel. I have been working on a
-patch series to provide simple panel support, specifically to allow the
-separation of backlight and panel power sequencing. Would such a method
-work for your use-case as well? The work that I'm doing is somewhat DRM
-centric, and I don't think there's a DRM driver for PXA, but perhaps it
-would be a good occasion to look at converting the PXA display drivers
-to DRM... =3D)
+Even if not, I'm not quite clear on what the referenced node is supposed
+to contain; is just a reg property enough, so you'd see the following at
+a completely arbitrary location in the DT:
 
-That said, I've had a patch similar to yours in a local tree (in fact in
-the same branch as the panel work I've been doing) for quite some time,
-which allows a single "enable" GPIO to be specified. I haven't gotten
-around to sending it out yet, but I'll do that shortly. The patch is a
-little more involved because it exposes the GPIO via platform data as
-well and therefore has to update a number of board files, too. While
-going over the various board files I found only a single board which can
-actually make use of the new functionality (which I also converted in
-the patch). Any other cases couldn't be implemented by the simple change
-so I suspect they can't either using your proposed binding.
+framebuffer-mem {
+    reg = <0x80000000 0x00100000>;
+};
 
-I've been trying for a while to come up with a way to support more use-
-cases, and I keep coming back to the same solution. Since the DT binding
-for power sequences was shot down some time ago, we probably have to
-represent any kind of sequencing in C code. So instead of trying to fit
-everything into a single binding, I think a more maintainable solution
-would be to create separate drivers for the more complex use-cases. That
-could either be done by using separate compatible values within the
-pwm-backlight driver or via completely different drivers. In the latter
-case we should probably think about exporting some of the pwm-backlight
-functionality so that drivers can easily reuse some of the code.
+I'm not sure what the benefit of making this a standalone node is; why
+not just put the base/size directly into the video-ram property in the
+CLCD node?
 
-Thierry
+> +- max-framebuffer-size: maximum size in bytes of the framebuffer the
+> +			system can handle, eg. in terms of available
+> +			memory bandwidth
 
---zCKi3GIZzVBPywwA
-Content-Type: application/pgp-signature
+Size doesn't imply bandwidth, due to the potential for varying bpp,
+frame-rates, margin/porch sizes, etc. If this is a bandwidth limit,
+shouldn't we instead represent that value directly, perhaps along with
+some multiplier to convert theoretical bandwidth to practical bandwidth
+(to account for memory protocol and controller overheads)?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
+...
+> +- panel-type: (required) must be "tft" or "stn", defines panel type
+...
+> +- panel-stn-4bit: (for monochrome "stn" panel) if present means
+> +			that the monochrome display is connected
+> +			via 4 bit-wide interface
 
-iQIcBAEBAgAGBQJSL1UaAAoJEN0jrNd/PrOhcfwQALBQ7DgM+bzY+NfalVQZktj/
-Mupf/Enksv9XOFOB76I5npxaPISzUG98ORQjak4wznL5t/QQj01e8FJCm7aN6YM+
-BLdjRYf2tKt4EkUfnn/DNv9+CRFjpS5pNmU82SqknaoJ/V6ZyEJGbiNUhgUkirPo
-QVTjKb8tN6qvW3IVsOFUWiO6cQDA0luKmIN9p7yN1NByFVGToVKLTjuI0oi4gXOk
-kZeXF2cQF7+jooq1VD5/Q7nDUsUfU5orMhoH6Jiig1TPvAYTRY3EWE8iuOvLcKBU
-jaEo43Cd7qNpw7p7Jf8P5oAIudN1ljR1yeFJfuJnbtfTOJxdLX6cHjkjfMrHwctI
-7vUSvB+hbK6OAOwW6lR+k2x/e0fPC/gpa3+8GL4hCRRt4dxRCoIK+gAIUnWQ0KMW
-NVrRqMJE3q6FzZ7Reise4h/YFLYqMN59UoVi8lxq3vJRmRgtJkH3QNIMFt2y+X8B
-Y6kw0K7Cc325nckAhFodYT8PzUVOIMXpn8R5lVWB+ekaNRg08gpZ/AQwptjCzRu4
-cc8/Fus88InoL3P1PW1aGHRVv1Xwc/jFfDuKL3uz+vFER3AgNUwAAIg895mURRLu
-twIOFCvbwr406ksrRC/I66gzgn29X86scLvj1b3vT90DM+WV7ghMUzAiHlI6dyeU
-xI6mv38p5Q5EU6iAAqYE
-=lyVK
------END PGP SIGNATURE-----
+I just wanted to confirm that those are a complete/direct representation
+of all the HW options the module supports?
 
---zCKi3GIZzVBPywwA--
+> +- display-timings: standard display timings sub-node, see
+> +			Documentation/devicetree/bindings/video/display-timing.txt
+
+Should that be in a "Required sub-nodes" section (I assume required not
+optional) rather than "Optional Properties"?
