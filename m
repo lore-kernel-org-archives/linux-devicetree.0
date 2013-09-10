@@ -1,86 +1,53 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 2/2] sh_eth: add device tree support
-Date: Tue, 10 Sep 2013 09:15:51 -0600
-Message-ID: <522F37A7.90804@wwwdotorg.org>
-References: <201309070343.25640.sergei.shtylyov@cogentembedded.com> <522E3770.9020305@wwwdotorg.org> <522F2F3A.5070406@cogentembedded.com>
+From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] i2c: New bus driver for the QUP I2C controller
+Date: Tue, 10 Sep 2013 10:36:12 -0500
+Message-ID: <20130910153612.GQ808@joshc.qualcomm.com>
+References: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
+ <1377782873-31931-2-git-send-email-iivanov@mm-sol.com>
+ <20130910134650.GO808@joshc.qualcomm.com>
+ <1378825856.960.47.camel@iivanov-dev.int.mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <522F2F3A.5070406@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1378825856.960.47.camel-yvhxILDKWb8ylMT5ByZ5bDRGLm/uyL/D0E9HWUfgJXw@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TZUIDd8j+nm9g@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2013 08:39 AM, Sergei Shtylyov wrote:
-> Hello.
+On Tue, Sep 10, 2013 at 06:10:56PM +0300, Ivan T. Ivanov wrote:
+> On Tue, 2013-09-10 at 08:46 -0500, Josh Cartwright wrote: 
+> > Hey Ivan-
+> > 
+> > Some nits below.
+> > 
+> > On Thu, Aug 29, 2013 at 04:27:53PM +0300, Ivan T. Ivanov wrote:
+[..]
+> > > +static int qup_i2c_probe(struct platform_device *pdev)
+> > > +{
+> > [..]
+> > > +
+> > > +	ret = devm_request_irq(qup->dev, qup->irq, qup_i2c_interrupt,
+> > > +			       IRQF_TRIGGER_HIGH, "i2c_qup", qup);
+> > > +	if (ret) {
+> > > +		dev_err(qup->dev, "Request %d IRQ failed\n", qup->irq);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	disable_irq(qup->irq);
+> > 
+> > How is this not racy, in the case where a pending interrupt is left from
+> > the bootloader (which seems to be possible based on the comments below)?
 > 
-> On 10-09-2013 1:02, Stephen Warren wrote:
-> 
->>> Add support of the device tree probing for the Renesas SH-Mobile SoCs
->>> documenting the device tree binding as necessary.
-> 
->>> This work is loosely based on an original patch by Nobuhiro Iwamatsu
->>> <nobuhiro.iwamatsu.yj@renesas.com>.
-> 
->>> Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
-> 
->>> +- reg: offset and length of (1) the E-DMAC/feLic register block
->>> (required),
->>> +       (2) the TSU register block (optional).
-> 
->> There's an argument that you should specify reg-names entries to allow
->> arbitrary ordering or entries within reg, if there's more than one
->> entry. But, I don't think it's mandatory, just something to consider at
->> present.
-> 
->    I also don't think it's needed, the driver has happily worked without
-> resource names so far.
-> 
->>> +- interrupts: interrupt specifier for the sole interrupt.
->>> +- phy-mode: string, operation mode of the PHY interface (a string that
->>> +        of_get_phy_mode() can understand).
-> 
->> DT bindings should be OS-agnostic. of_get_phy_mode() is Linux-specific.
->> Please spell out the complete list of supported values here, without
->> reference to Linux-specific code or documentation.
-> 
->    I don't think listing the numerous values of this standrd property in
-> every file describing an Ethernet device is practical. How about I
-> create file ethernet.txt in the same directory (don't know why I'm the
-> first to do it despite many other driver using this property)?
+> Yes it looks weird. Interrupt handler will check and exit if there
+> is no message for transfer. I am looking for better way to handle this.
 
-We must list the values somewhere. Creating an ethernet.txt, documenting
-them there, and modifying the description of this property to reference
-ethernet.txt would be fine.
+Below in probe() it looks like a controller reset is issued.  I'm
+wondering if the best way to fix this is to move that up so it happens
+sooner (so we can assume here that the controller is in a
+non-interrupting state).
 
->>> +- phy-handle: phandle of the PHY device (there should be a PHY
->>> device subnode).
-> 
->> Is this a custom property, or part of some generic PHY subsystem
->> binding?
-> 
->    The latter.
-> 
->> If the latter, please reference the DT binding document for
->> that subsystem.
-> 
->    Unfortunately, phy.txt in the same directory describes only
-> properties of the "ethernet-phy" nodes. I think the new ethernet.txt
-> would be more fitting for the purpose.
-
-That's fine, so long as it's documented somewhere, and this document
-references that place.
-
->> Do you need any clocks properties, IP block reset signals, power domains?
-> 
->    Currently not.
-
-What does "currently" mean? Does that mean that the Linux driver simply
-doesn't touch those entities at present? If so, that's not enough to say
-that those entities should not be described in the DT binding. We should
-strive to make the binding completely describe all aspects of the HW,
-irrespective of whether a particular driver happens to use that
-information at present.
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
