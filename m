@@ -1,58 +1,87 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] regulator: core: add support for configuring turn-on
- time through constraints
-Date: Tue, 10 Sep 2013 13:09:22 +0100
-Message-ID: <20130910120922.GH29403@sirena.org.uk>
-References: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com>
- <1378811888-2268-2-git-send-email-ldewangan@nvidia.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] i2c: qup: Add device tree bindings information
+Date: Tue, 10 Sep 2013 15:08:57 +0300
+Message-ID: <1378814937.960.37.camel@iivanov-dev.int.mm-sol.com>
+References: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
+	 <3A0F4153-1C55-4008-8EB1-D6FA60D87CEA@codeaurora.org>
+	 <1377797186.30358.14.camel@localhost>
+	 <767E9FBB-2975-4795-9C7E-69E302511FF2@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="k+UaUX7feRqSnTdd"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1378811888-2268-2-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <767E9FBB-2975-4795-9C7E-69E302511FF2-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TZUIDd8j+nm9g@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---k+UaUX7feRqSnTdd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Kumar,
 
-On Tue, Sep 10, 2013 at 04:48:08PM +0530, Laxman Dewangan wrote:
+On Fri, 2013-08-30 at 10:21 -0500, Kumar Gala wrote: 
+> On Aug 29, 2013, at 12:26 PM, Ivan T. Ivanov wrote:
 
-> +- regulator-enable-time: Turn ON time for regulator(in uS)
+<snip>
 
-This is unclear - what is a "turn on time" and is this in addition to or
-separate from the underlying enable time of the device?  It needs to be
-clear that this is the time taken for the voltage to ramp to spec.  I'd
-also expect it to be clear that this is not something that should need
-to be provided normally.
+> >>> +
+> >>> +Optional properties :
+> >>> + - Child nodes conforming to i2c bus binding
+> >>> + - clock-frequency : Desired I2C bus clock frequency in Hz. If
+> >>> +		not set thedefault frequency is 100kHz
+> >>> + - qcom,src-freq : Frequency of the source clocking this bus in Hz.
+> >>> +		Divider value is set based on soruce-frequency and
+> >>> +		desired I2C bus frequency. If this value is not
+> >>> +		provided, the source clock is assumed to be running
+> >>> +		at 19.2 MHz.
+> >> 
+> >> I'd spell out frequency instead of 'freq' to be consistent with 'clock-frequency'
+> > 
+> > ok.
+> > 
+> >> 
+> >> Is the frequency of the 'iface' clock?  Can we not use clk_get_rate?
+> > 
+> > It is for 'core' clock. I think that for higher I2C bus frequencies,
+> > 'core' clock have to be higher, but I am not sure what is relation.
+> 
+> Ok, can we use clk_get_rate on the 'core' clk to get its frequency instead of needing a DT prop for it?
 
-Please ALSO avoid capitalising words FOR no reason.
+Probably I didn't explain it well. The 'core' clock have to be
+accelerated before higher bus frequencies could be achieved.  
 
---k+UaUX7feRqSnTdd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> 
+> > 
+> >> 
+> >>> +
+> >>> +Aliases: An alias may optionally be used to bind the I2C controller
+> >>> +to bus number. Aliases are of the form i2c<n> where <n> is an integer
+> >>> +representing the bus number to use.
+> >>> +
+> >>> +Example:
+> >>> +
+> >>> + aliases {
+> >>> +		i2c0 = &i2c_A;
+> >>> +		i2c1 = &i2c_B;
+> >>> +		i2c2 = &i2c_C;
+> >>> + };
+> >> 
+> >> What is the purpose here?
+> > 
+> > Define on which I2C bus this controller operate. I2C client 
+> > drivers usually do i2c_get_adapter(bus_number) before its
+> > registration. This is for drivers before invention of
+> > of_i2c_register_devices(), I believe.
+> 
+> Since this is for upstream why dont we use of_i2c_register_devices() and remove this stuff related to aliases.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
+Adapter driver already is using of_i2c_register_devices(). Also OF
+helper function will/or is already part of i2c_register_adapter().
+Attempt here was to make it compatible with older i2c client drivers.
 
-iQIcBAEBAgAGBQJSLwvvAAoJELSic+t+oim92isP/RAhwsBYnQzNmYWep3Rgf0Ss
-NIOSnP+2NtngKXOcAtCFH4Y2hbJSvPty0IwlAGBvWNVfYR1A6ZFhbN3w63hG6agH
-N/7Dp9U8DGkX57GhcuYCQX06tAJjtCsAA9nunhPojnU+yE8aLkPkTMLE//ahV0iU
-1rAA7Do56fxe5ZfQ8e1HGxz4Z8ywQrD7mylTFyyr2vgXVd3Skl7X30SfONpUmFl5
-vPQ1yA5et9WoNvpDb8GM01maDE/l0sug3p9G+T0bZ+kr1IDcza8QtQ2bCsUzL1bz
-gn0UZQBmSVwk+HFZ3nVhkgWypg4sbK1+Eic9tD8+crHW6jIpOL+IKLHaE/Gp8PJe
-VxFAP31W8v/hauO1WHTA5yV797yrtgT7pgClVTlldNXqnIFuOTe8350vW36GTU0f
-xqJIQaroiz7W21DDcbHMtE7bsNp4noit+uHqutFB+VCmRkGE3uQYCMmQdcCP/Cu1
-l1DLwpAMqK//LcR35zcXoLKk7Z4AXGcLoNxw0W6F9cjRSt8Te8YLhQBxhRyGgFsG
-1GROLr0w2Tg6l2j9CmbS9MHwVuZe+NslFaziUkQk+FNZ2rbJueZ39dJlo/ili3YE
-6iVVhfvX2ATNa2hhO2LgvQu4Dt/KCMgu5AkocdqGzyaRT0qvvY3XnEcpRVehMOnj
-KSNov+aTGyTjRlIOAAO9
-=17z8
------END PGP SIGNATURE-----
+Regards,
+Ivan
 
---k+UaUX7feRqSnTdd--
+> 
+> - k
+> 
