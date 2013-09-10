@@ -1,87 +1,51 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] i2c: qup: Add device tree bindings information
-Date: Tue, 10 Sep 2013 15:08:57 +0300
-Message-ID: <1378814937.960.37.camel@iivanov-dev.int.mm-sol.com>
-References: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
-	 <3A0F4153-1C55-4008-8EB1-D6FA60D87CEA@codeaurora.org>
-	 <1377797186.30358.14.camel@localhost>
-	 <767E9FBB-2975-4795-9C7E-69E302511FF2@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] regulator: palmas: configure enable time for LDOs
+Date: Tue, 10 Sep 2013 13:10:17 +0100
+Message-ID: <20130910121017.GI29403@sirena.org.uk>
+References: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <767E9FBB-2975-4795-9C7E-69E302511FF2-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TZUIDd8j+nm9g@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WgiIge0Euz4ksITr"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Kumar,
+--WgiIge0Euz4ksITr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, 2013-08-30 at 10:21 -0500, Kumar Gala wrote: 
-> On Aug 29, 2013, at 12:26 PM, Ivan T. Ivanov wrote:
+On Tue, Sep 10, 2013 at 04:48:07PM +0530, Laxman Dewangan wrote:
+> As per datasheet (Referred TPS65913), the on-time for LDO is
+> 500micro second. If LDO6 is in vibrator mode then the on-time
+> is 2000us.
 
-<snip>
+Applied, thanks.
 
-> >>> +
-> >>> +Optional properties :
-> >>> + - Child nodes conforming to i2c bus binding
-> >>> + - clock-frequency : Desired I2C bus clock frequency in Hz. If
-> >>> +		not set thedefault frequency is 100kHz
-> >>> + - qcom,src-freq : Frequency of the source clocking this bus in Hz.
-> >>> +		Divider value is set based on soruce-frequency and
-> >>> +		desired I2C bus frequency. If this value is not
-> >>> +		provided, the source clock is assumed to be running
-> >>> +		at 19.2 MHz.
-> >> 
-> >> I'd spell out frequency instead of 'freq' to be consistent with 'clock-frequency'
-> > 
-> > ok.
-> > 
-> >> 
-> >> Is the frequency of the 'iface' clock?  Can we not use clk_get_rate?
-> > 
-> > It is for 'core' clock. I think that for higher I2C bus frequencies,
-> > 'core' clock have to be higher, but I am not sure what is relation.
-> 
-> Ok, can we use clk_get_rate on the 'core' clk to get its frequency instead of needing a DT prop for it?
+--WgiIge0Euz4ksITr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Probably I didn't explain it well. The 'core' clock have to be
-accelerated before higher bus frequencies could be achieved.  
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-> 
-> > 
-> >> 
-> >>> +
-> >>> +Aliases: An alias may optionally be used to bind the I2C controller
-> >>> +to bus number. Aliases are of the form i2c<n> where <n> is an integer
-> >>> +representing the bus number to use.
-> >>> +
-> >>> +Example:
-> >>> +
-> >>> + aliases {
-> >>> +		i2c0 = &i2c_A;
-> >>> +		i2c1 = &i2c_B;
-> >>> +		i2c2 = &i2c_C;
-> >>> + };
-> >> 
-> >> What is the purpose here?
-> > 
-> > Define on which I2C bus this controller operate. I2C client 
-> > drivers usually do i2c_get_adapter(bus_number) before its
-> > registration. This is for drivers before invention of
-> > of_i2c_register_devices(), I believe.
-> 
-> Since this is for upstream why dont we use of_i2c_register_devices() and remove this stuff related to aliases.
+iQIcBAEBAgAGBQJSLwwmAAoJELSic+t+oim9dCQQAJpUsIXVyCimwvbS6etMum0j
+9F9fhSBnRtfU6NqD5cO7vYafElSnmYSWmUVMsLtHyQYcOmkI/+8LpSa9UtTX35jn
+5iaSygTg4thBLDrMdU0JyWuXdh+fZyMlu5u3tTM2Q/XYpvOmLMbzGS7OsCdUcE36
+M8GZa9Nk2r/mTAnjQykoIcArj8bI6g5Nv6+MICl4IjIogUUaOkYJnEGJBz/COoZK
+jFRd5tFV/DG2/qWGubncvTFheMe9a1ugF+TbVHFz7IUrPUiDr8XNPOuOP6RAv+LT
+tQ5qbk3BMVYmzLjW/OjwcG7E47Jq9q7akaCfBD+NZ2ZdOybIjwBDp6tCS1iSYgF0
+DwZ15KVpYRSUTabPZtBG9CTKlJQycTWB0gy/FOh3I6IZMcNXkIZBqK+jW5+cFwlz
+1D6WTwS+aiREvr5GHigxULZ/GHjPf9k+lfv2uBjfPPKD+dh6SQ7yiVJKIKA3ktyk
+6O0JXcCkWu4EJ0PyyY/frP98V+Y6i7eq23n8cowWg+kJavdKOXz3D1wVi3Al3HFv
+rckGN++D+WayCmcHDuLGEnupayVdKKMIpz2lP0BUJ+CNdAifzN/dEmF5IqrlPA96
+KwWbRxbtoeqW991MfQopBnMx6vIibptDTxHPf/ku5WhvQ1U3TxjjRWyq5xaaM3iI
+JO8Sbz0Q1khNar2DA/+Z
+=4hDU
+-----END PGP SIGNATURE-----
 
-Adapter driver already is using of_i2c_register_devices(). Also OF
-helper function will/or is already part of i2c_register_adapter().
-Attempt here was to make it compatible with older i2c client drivers.
-
-Regards,
-Ivan
-
-> 
-> - k
-> 
+--WgiIge0Euz4ksITr--
