@@ -1,15 +1,18 @@
-From: Mike Dunn <mikedunn@newsguy.com>
-Subject: Re: [PATCH v2] pwm: pxa: add device tree support to pwm driver
-Date: Tue, 10 Sep 2013 07:53:15 -0700
-Message-ID: <522F325B.4090602@newsguy.com>
-References: <1378669218-10944-1-git-send-email-mikedunn@newsguy.com>
- <20130909120845.GB22197@ulmo> <522E0D72.3080805@newsguy.com>
- <522E14F5.1020909@wwwdotorg.org>
+From: Joel Fernandes <joelf@ti.com>
+Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 10 Sep 2013 10:00:24 -0500
+Message-ID: <522F3408.6050608@ti.com>
+References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org>
+ <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com>
+ <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com>
+ <51F8CC35.1070704@collabora.co.uk> <522EC392.8070002@ti.com>
+ <522F1BF0.8080608@collabora.co.uk>
+Reply-To: joelf@ti.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <522E14F5.1020909@wwwdotorg.org>
+In-Reply-To: <522F1BF0.8080608@collabora.co.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,63 +22,134 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Marek Vasut <marex@denx.de>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Grant Likely <grant.likely@linaro.org>, Alexander Holler <holler@ahsoftware.de>, Linux-OMAP <linux-omap@vger.kernel.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Jon Hunter <jgchunter@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2013 11:35 AM, Stephen Warren wrote:
-> On 09/09/2013 12:03 PM, Mike Dunn wrote:
->> On 09/09/2013 05:08 AM, Thierry Reding wrote:
->>> On Sun, Sep 08, 2013 at 12:40:18PM -0700, Mike Dunn wrote:
->>>> This patch adds device tree support to the pxa's pwm driver.  Only an OF match
-> 
->>>> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-> 
->>>> +Marvell pwm controller
->>>> +
->>>> +Required properties:
->>>> +- compatible:
->>>> +  for pxa25x, pxa27x, pxa168, pxa910: must be compatible = "marvell,pxa250-pwm";
->>>> +- reg: physical base address and length of the registers used by the pwm channel
+On 09/10/2013 08:17 AM, Javier Martinez Canillas wrote:
+> On 09/10/2013 09:00 AM, Joel Fernandes wrote:
+>> On 07/31/2013 03:35 AM, Javier Martinez Canillas wrote:
+>>> On 07/31/2013 01:44 AM, Linus Walleij wrote:
+>>>> On Tue, Jul 30, 2013 at 6:30 AM, Grant Likely <grant.likely@linaro.org> wrote:
+>>>>> On Mon, Jul 29, 2013 at 6:36 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>>>>>> To solve this dilemma, perform an interrupt consistency check
+>>>>>> when adding a GPIO chip: if the chip is both gpio-controller and
+>>>>>> interrupt-controller, walk all children of the device tree,
+>>>>>> check if these in turn reference the interrupt-controller, and
+>>>>>> if they do, loop over the interrupts used by that child and
+>>>>>> perform gpio_reques() and gpio_direction_input() on these,
+>>>>>> making them unreachable from the GPIO side.
+>>>>>
+>>>>> Ugh, that's pretty awful, and it doesn't actually solve the root
+>>>>> problem of the GPIO and IRQ subsystems not cooperating. It's also a
+>>>>> very DT-centric solution even though we're going to see the exact same
+>>>>> issue on ACPI machines.
+>>>>
+>>>> The problem is that the patches for OMAP that I applied
+>>>> and now have had to revert solves it in an even uglier way,
+>>>> leading to breaking boards, as was noticed.
+>>>>
+>>>> The approach in this patch has the potential to actually
+>>>> work without regressing a bunch of boards...
+>>>>
+>>>> Whether this is a problem in ACPI or not remains to be seen,
+>>>> but I'm not sure about that. Device trees allows for a GPIO line
+>>>> to be used as an interrupt source and GPIO line orthogonally,
+>>>> and that is the root of this problem. Does ACPI have the same
+>>>> problem, or does it impose natural restrictions on such use
+>>>> cases?
+>>>>
 >>>
->>> "pwm" -> "PWM". There are a few more occurrences that I haven't
->>> explicitly pointed out.
+>>> I agree with Linus here. The problem is that GPIO controllers that can work as
+>>> IRQ sources are treated in the kernel as if there where two separate controlers
+>>> that are rather orthogonal: an irq_chip and a gpio_chip.
+>>> But DT allows to use a GPIO line as an IRQ just by using an omap-gpio phandle as
+>>> "interrupt-parent".
 >>>
->>>> +  NB: One device instance must be created for each pwm that is used, so the
->>>> +  length covers only the register window for one pwm output, not that of the
->>>> +  entire pwm controller.  Currently length is 0x10 for all supported devices.
+>>> So, there should be a place where both irq_chip and gpio_chip has to be related
+>>> somehow to properly configure a GPIO (request it and setting it as input) when
+>>> used as an IRQ by DT.
 >>>
->>> I'm not sure I like that very much. It seems a wrong representation of
->>> the hardware for the sake of modifying a smaller number of lines in the
->>> driver.
+>>> My patch for OMAP used an irq_domain_ops .map function handler to configure the
+>>> GPIO when a IRQ was mapped since that seemed to me as the best place to do it.
+>>> This worked well in OMAP2+ platforms but unfortunately broke OMAP1 platforms
+>>> since they are still using legacy domain mapping thus not call .map.
 >>
->> I don't like it either, but this is an existing driver defect that will need to
->> be corrected.  To do so, I will need to to survey all the supported processors
->> to determine how many pwm outputs is posessed by each.  And there may be some
->> confusion in that regard; the driver says "pxa25x" has one, but my pxa255
->> developer's manual makes no mention of a pwm.  The pxa270 I am testing on has
->> four, but the driver says "pxa27x" has two, so currently (using platform_data
->> with existing driver) two devices are instantiated, each with two pwms.  It
->> seems that there are many variations within a single generation of the processor
->> family, so to correctly identify the number of pwms, processor identification
->> will have to be made on a finer granularity than the current "pxa25x", for
->> example.  I'm guessing that the hardware designers had this
->> one-device-instance-per-pwm approach in mind when they made the decision to
->> segregate the register sets of each pwm.  I really hope that this sin can be
->> forgiven :)
+>> Just wondering- why .map not called for omap1? irq_create_mapping does seem to
+>> call  -> irq_domain_associate which calls map function. For omap case, GPIO
+>> driver does call irq_create_mapping, just like omap2+ no?
+>>
 > 
-> The DT binding is an ABI, so it needs to correctly represent the HW. As
-> such, I'd say that if the binding is wrong, we need to fix it even if it
-> means a lot of work.
+> That is what I understood too when writing the patch but I remember someone
+> mentioning legacy domain mapping not calling the .map function handler as a
+> possible cause for the OMAP1 regression and since Linus decided to revert the
+> patches in favor of a more general solution I didn't care to check if that was
+> true or not. Now looking at irq_create_mapping() I see that my assumption was
+> correct so I don't know what was the bug that caused the OMAP1 regression.
+
+Only stuff you deleted from the chip_init function was:
+
+-       for (j = 0; j < bank->width; j++) {
+-               int irq = irq_create_mapping(bank->domain, j);
+-               irq_set_lockdep_class(irq, &gpio_lock_class);
+-               irq_set_chip_data(irq, bank);
+-               if (bank->is_mpuio) {
+-                       omap_mpuio_alloc_gc(bank, irq, bank->width);
+-               } else {
+-                       irq_set_chip_and_handler(irq, &gpio_irq_chip,
+-                                                handle_simple_irq);
+-                       set_irq_flags(irq, IRQF_VALID);
+-               }
+
+and you moved all of it to the .map function in your patch. Not sure what could
+be breaking OMAP1 cases.
+You could potentially add that back with some #ifdef for OMAP1?
+
+Either way, map should be called looks like. If its not called, then the above
+block can be explicity called for OMAP1 case in omap_chip_gpio_init.
+
+What was strange is one person reported that mappings were not created for
+OMAP1. But I am wondering what you changed could result in not creating that
+mapping. Really nothing..
+
+I think your initial patch is much better than fixing up DT but then I may be
+missing other problems with your patch that Linus's patch addresses.
+
+>> Further, if for any reason the .map is not called. Can you not call gpio_request
+>> yourself direct in omap_gpio_chip_init function?
+>>
 > 
-> That said, if each PWM truly is a *completely* independent block, with
-> non-overlapping register spaces, there's certainly an argument that it's
-> perfectly acceptable to represent each PWM as a separate DT node...
+> No, since you can't request a GPIO for all GPIO pins in the bank. Users have to
+> do it explicitly (or implicitly in the case of GPIO mapped as IRQ in DT).
 
+Ah since you split the patch up into 2, I missed the gpio_request stuff. Ok,
+that makes sense.
 
-Thanks Stephen.  Yes, each pwm output has its own registers with no common
-control registers.  The only commonality is that they all share a clock in the
-clock unit.  But this is handled in the clock manager.
+>> Does it really matter if you call gpio_request from .map or from the chip_init
+>> function?
+>>
+> 
+> Yes it does, because in DT the core calls irq_create_of_mapping() ->
+> irq_create_mapping() -> .map(). That way only are requested the GPIO pins that
+> are mapped as IRQ and not all of them.
 
-Thanks,
-Mike
+>> Also on a different note.. this would call gpio_request for *every* gpio line,
+>> but isn't that what your original patch that got reverted was doing in
+>> omap_gpio_chip_init:
+>>
+>> +       if (!bank->chip.of_node)
+>> +               for (j = 0; j < bank->width; j++)
+>> +                       irq_create_mapping(bank->domain, j);
+>>
+> 
+> No it won't. This is only needed for the legacy (non-DT) boot since no one calls
+> irq_create_mapping() so it has to be called explicitly.
+> 
+> And in that case .map will be called but gpio_request() won't since the call is
+> made only when bank->chip.of_node is not NULL.
+
+Ok, thanks for the explanation. That makes sense to me.
+
+Regards,
+
+-Joel
