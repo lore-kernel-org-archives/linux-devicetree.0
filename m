@@ -1,59 +1,81 @@
-From: "Christian Daudt" <csd@broadcom.com>
-Subject: Re: [PATCH v9 1/3] gpio: bcm281xx: Add GPIO driver
-Date: Tue, 10 Sep 2013 14:14:24 -0700
-Message-ID: <522F8BB0.6010301@broadcom.com>
-References: <1378836423-12467-1-git-send-email-markus.mayer@linaro.org>
- <1378836423-12467-2-git-send-email-markus.mayer@linaro.org>
- <522F7AE3.6050105@wwwdotorg.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 10 Sep 2013 23:23:03 +0200
+Message-ID: <522F8DB7.8070800@collabora.co.uk>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk> <2052193.CMUEUJFRgS@lem-wkst-02> <522F2521.4090806@collabora.co.uk> <522F7878.30800@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <522F7AE3.6050105@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <522F7878.30800@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <mmayer@broadcom.com>, Matt Porter <matt.porter@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Cc: Lars Poeschel <poeschel@lemonage.de>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, joelf@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-On 13-09-10 01:02 PM, Stephen Warren wrote:
-> On 09/10/2013 12:07 PM, Markus Mayer wrote:
->> From: Markus Mayer <mmayer@broadcom.com>
->>
->> Add the GPIO driver for the Broadcom bcm281xx family of mobile SoCs.
->> These GPIO controllers may contain up to 8 banks where each bank
->> includes 32 pins that can be driven high or low and act as an edge
->> sensitive interrupt.
-> The binding,
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+On 09/10/2013 09:52 PM, Stephen Warren wrote:
+> On 09/10/2013 07:56 AM, Javier Martinez Canillas wrote:
+> ...
+>> The only thing that this patch tries to solve is when a driver expect to request
+>> a IRQ and it doesn't care if is a real IRQ line from an interrupt controller or
+>> a GPIO pin mapped as an IRQ.
+> 
+> That can be solved in the interrupt chip driver. The fact the previous
+> attempt didn't work doesn't mean that it's impossible.
 >
-> although ...
->
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt b/Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt
->> +This GPIO driver is used in the following Broadcom SoCs:
->> +  BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
-> Given that, I would expect the documentation of the compatible property
-> to enumerate the compatible values for all of those different chips,
-> although the driver could choose to only bind to e.g. brcm,bcm11351-gpio
-> or brcm,kona-gpio, since they're all compatible with it.
->
-How would this help ? All of these chips are part of the same family and 
-thus quite similar (the primary difference being on the memory 
-controller and packaging), and we can't know a priori on which 
-variations bugs will happen, if any. So listing out a number of 
-theoretical compatible properties in the documentation that most likely 
-will never get used anyone doesn't seem to serve a purpose. If we were 
-to need a workaround triggered on compatible, it would more likely be 
-over a specific rev of the chip instead of the model within this family 
-(as we have already done for rev a2 in cache-l2x0.c)
 
-  Thanks,
-    csd
+Indeed. Unfortunately that patch-set got merged as a fix quite late on the -rc
+cycle so it was safer to just revert the patches instead of analyzing the
+regression and providing a fix.
+
+If Linus is fond about taking a local fix for gpio-omap then we can try again
+as a RFC with a better test coverage than before (although the patches had
+several tested and acked-by but no one tested on OMAP1 until the patches were
+merged) getting some TI folks in the loop who have access to those ancient OMAP1
+devices. That way we can repost as a patch just once we are definitely sure that
+it won't cause a regression on any OMAP platform.
+
+>> With board files we used to explicitly do the GPIO setup
+>> (gpio_{request,direction_input}) but with DT these board files are gone and we
+>> need a way to setup a GPIO implicitly when is mapped as an IRQ.
+> 
+> Well, that's just an example of hacking around something in a board file
+> that should have been fixed in the GPIO/IRQ controller.
+> 
+>> That's the only use case that this patch covers.
+> ...
+>> Also, it would be great if we can find a temporary solution so we can finally
+>> have ethernet working with DT on most OMAP2+ boards. Since I expect that doing
+>> the mentioned change on gpiolib would take at least a couple of kernel releases.
+> 
+> Really? I thought this patch was error-checking to make sure that
+> different drivers didn't request a GPIO and an IRQ that are actually the
+> same signal. This patch shouldn't affect any functionality except in
+> cases where there's a bug in the DT (incorrect GPIO/IRQ passed to some
+> driver).
+> 
+
+Yes, it doesn't do any error-checking neither prevent a driver to request a GPIO
+and an IRQ that are the same signal (as long as this is supported by the
+GPIO/IRQ controller and its driver). The only thing that Linus patch does is to
+auto request a GPIO for pins that are mapped as IRQ in DT (i.e: interrupt-parent
+= <&gpio6>).
+
+The name of the function introduced by Linus is
+of_gpiochip_interrupt_consistency_check() but probably a better name is
+of_gpiochip_autorequest_irq() or something like that.
+
+A similar behavior could be obtained by let's say calling gpio_request() in
+irq_create_of_mapping() if you wanted to add the logic in the IRQ chip DT core
+instead of doing it in the GPIO chip DT core as Linus does with his patch.
+
+That's why I don't understand why Linus patch could be an issue for drivers that
+needs to request both the GPIO and the mapped IRQ.
+
+If this is already supported then nothing will break. If the driver tries to
+request the GPIO twice because this is already made by the DT core then I think
+is a bug in the driver and has to be fixed to support DT since there won't be
+any need to do this manually anymore.
+
+Best regards,
+Javier
