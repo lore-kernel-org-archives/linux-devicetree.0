@@ -1,90 +1,54 @@
-From: Duan Fugang-B38611 <B38611@freescale.com>
-Subject: RE: [PATCH v2 2/4] ARM: dts: add fec phy reset for imx6sl evk board
-Date: Tue, 10 Sep 2013 01:26:49 +0000
-Message-ID: <9848F2DB572E5649BA045B288BE08FBE016A7AB8@039-SN2MPN1-023.039d.mgd.msft.net>
-References: <1378182385-9205-1-git-send-email-B38611@freescale.com>
- <1378182385-9205-3-git-send-email-B38611@freescale.com>
- <20130909145333.GA5815@S2101-09.ap.freescale.net>
+From: Xiubo Li-B47053 <B47053@freescale.com>
+Subject: RE: [PATCHv3 1/4] pwm: Add Freescale FTM PWM driver support
+Date: Tue, 10 Sep 2013 02:35:34 +0000
+Message-ID: <1DD289F6464F0949A2FCA5AA6DC23F828135D9@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1378454907-22728-1-git-send-email-Li.Xiubo@freescale.com>
+ <1378454907-22728-2-git-send-email-Li.Xiubo@freescale.com>
+ <20130909122008.GC22197@ulmo> <20130909150346.GV30088@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130909145333.GA5815@S2101-09.ap.freescale.net>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130909150346.GV30088@pengutronix.de>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Guo Shawn-R65073 <r65073@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Lu Jingchang-B35083 <B35083@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Shawn Guo [mailto:shawn.guo@linaro.org]
-Sent: Monday, September 09, 2013 10:54 PM + 800
+> Subject: Re: [PATCHv3 1/4] pwm: Add Freescale FTM PWM driver support
+> 
+> On Mon, Sep 09, 2013 at 02:20:09PM +0200, Thierry Reding wrote:
+> > On Fri, Sep 06, 2013 at 04:08:24PM +0800, Xiubo Li wrote:
+> > > The FTM PWM device can be found on Vybrid VF610 Tower and Layerscape
+> LS-1 SoCs.
+> > >
+> > > Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> > > Signed-off-by: Jingchang Lu <b35083@freescale.com>
+> > > ---
+> > >  drivers/pwm/Kconfig       |  10 +
+> > >  drivers/pwm/Makefile      |   1 +
+> > >  drivers/pwm/pwm-fsl-ftm.c | 505
+> > > ++++++++++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 516 insertions(+)
+> > >  create mode 100644 drivers/pwm/pwm-fsl-ftm.c
+> >
+> > This looks pretty good to me. I noticed that you didn't Cc Sascha who
+> > commented on this a lot. Can you please resend with him Cc'ed to make
+> > sure he sees this version of the series?
+> 
+> I'm already aware of this, no need to resend. I'll have a look over it
+> tomorrow.
+> 
 
-> To: Duan Fugang-B38611
-> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH v2 2/4] ARM: dts: add fec phy reset for imx6sl evk
-> board
-> 
-> On Tue, Sep 03, 2013 at 12:26:23PM +0800, Fugang Duan wrote:
-> > Add fec phy gpio reset for imx6sl evk board. imx6sl evk board use
-> > GPIO4_21 to do phy reset, so add phy-reset-gpios and
-> > phy-reset-duration propery initial for fec device node.
-> >
-> > Signed-off-by: Fugang Duan  <B38611@freescale.com>
-> 
-> I have to drop this patch for now, because it causes a regression for me.
-> 
-> Before this patch, we can at least get a working fec driver in kernel if
-> U-Boot sets it up properly, e.g. we download kernel from network.  But
-> with the patch, the fec driver stops working on linux-next in the same use
-> case.
-> 
-> Shawn
+I'm very sorry, next time I will.
 
-Shawn, you cannot drop this patch.
-1. Why do you get a working fec driver in kernel if U-Boot sets it up properly ?
-   Because the phy reset done by uboot, kernel cannot depend on uboot.
-   And even so, the driver still have problem for unit test.
-2. You see freescale internal kernel(3.10.9) work fine. There have one driver patch don't upstream.
-   I will send it out to net tree for review.
 
-Thanks,
-Andy
-> 
-> > ---
-> >  arch/arm/boot/dts/imx6sl-evk.dts |    3 +++
-> >  1 files changed, 3 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/imx6sl-evk.dts
-> > b/arch/arm/boot/dts/imx6sl-evk.dts
-> > index 2886a59..c4d32a5 100644
-> > --- a/arch/arm/boot/dts/imx6sl-evk.dts
-> > +++ b/arch/arm/boot/dts/imx6sl-evk.dts
-> > @@ -23,6 +23,8 @@
-> >  	pinctrl-names = "default";
-> >  	pinctrl-0 = <&pinctrl_fec_1>;
-> >  	phy-mode = "rmii";
-> > +	phy-reset-gpios = <&gpio4 21 0>; /* GPIO4_21 */
-> > +	phy-reset-duration = <1>;
-> >  	status = "okay";
-> >  };
-> >
-> > @@ -38,6 +40,7 @@
-> >  				MX6SL_PAD_SD2_DAT7__GPIO5_IO00    0x17059
-> >  				MX6SL_PAD_SD2_DAT6__GPIO4_IO29    0x17059
-> >  				MX6SL_PAD_REF_CLK_32K__GPIO3_IO22 0x17059
-> > +				MX6SL_PAD_FEC_TX_CLK__GPIO4_IO21  0x80000000
-> >  			>;
-> >  		};
-> >  	};
-> > --
-> > 1.7.1
-> >
-> >
+Thanks very much.
+
+--
+Best Regards,
+Xiubo
+
+
+
