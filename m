@@ -1,63 +1,81 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] regulator: core: add support for configuring turn-on
- time through constraints
-Date: Tue, 10 Sep 2013 17:33:58 +0100
-Message-ID: <20130910163358.GP29403@sirena.org.uk>
-References: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com>
- <1378811888-2268-2-git-send-email-ldewangan@nvidia.com>
- <20130910120922.GH29403@sirena.org.uk>
- <522F1B40.3040801@nvidia.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RESEND PATCH v2] pwm: pxa: add device tree support to pwm driver
+Date: Tue, 10 Sep 2013 10:46:49 -0600
+Message-ID: <522F4CF9.3070601@wwwdotorg.org>
+References: <1378751420-19227-1-git-send-email-mikedunn@newsguy.com>
+ <522E3B5B.90406@wwwdotorg.org> <522F40A3.9030701@newsguy.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7316+HbuJYr43y0H"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <522F1B40.3040801@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <522F40A3.9030701@newsguy.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Dunn <mikedunn@newsguy.com>
+Cc: Marek Vasut <marex@denx.de>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
+On 09/10/2013 09:54 AM, Mike Dunn wrote:
+> On 09/09/2013 02:19 PM, Stephen Warren wrote:
+>> On 09/09/2013 12:30 PM, Mike Dunn wrote:
+>>> This patch adds device tree support to the pxa's pwm driver.  Only an OF match
+>>> table is added; nothing needs to be extracted from the device tree node.  The
+>>> existing platform_device id table is reused for the match table data.  Support
+>>> for inverted polarity is also added.
+>>>
+>>> Tested on a Palm Treo 680 (both platform data and DT cases).
+>>
+>>> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+>>
+>>> +Marvell pwm controller
+>>
+>> s/pwm/PWM/ throughout.
+>>
+>>> +
+>>> +Required properties:
+>>> +- compatible:
+>>> +  for pxa25x, pxa27x, pxa168, pxa910: must be compatible = "marvell,pxa250-pwm";
+>>
+>> I think you want a separate compatible value for each HW, to allow for
+>> any HW-specific quirks to be enabled later if required. So, you could
+>> document "marvell,pxa250-pwm" as the basic compatible value that a
+>> driver can bind to, yet also document the other values as being required
+>> for the relevant HW?
+> 
+> IOW...
+> - compatible: should be one of:
+>   - "marvell,pxa250-pwm"
+>   - "marvell,pxa270-pwm"
+>   - "marvell,pxa168-pwm"
+>   - "marvell,pxa910-pwm"
+> 
+> Even though the driver makes no functional distinction currently?
 
---7316+HbuJYr43y0H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes (although it's fine to make the driver only look for the first of
+those, since you say they're all compatible, and currently the driver
+doesn't care about exactly which HW is in use).
 
-On Tue, Sep 10, 2013 at 06:44:40PM +0530, Laxman Dewangan wrote:
+>>> +- reg: physical base address and length of the registers used by the pwm channel
+>>> +  NB: One device instance must be created for each pwm that is used, so the
+>>> +  length covers only the register window for one pwm output, not that of the
+>>> +  entire pwm controller.  Currently length is 0x10 for all supported devices.
+>>> +- #pwm-cells: should be 3.
+>>> +   cell 1: the per-chip index of the PWM to use,
+>>
+>> That cell shouldn't be needed if you really want to have one DT node per
+>> PWM channel.
+> 
+> Yes, but I was afraid to deviate from the format used by the other PWM
+> controllers.  (But in that case, it should at least be documented as "must be
+> zero". Thanks.)  If going my owm way is acceptable, I'll define my own
+> of_xlate() parser and remove this cell.
 
-> Here my intention for turn-on time is the time from OFF state to ON
-> state and the ON voltage settled on this time.
-> This time is separate from underlying enable time of the device i.e.
-> will not get added.
-> We observe in some of platform that some of regulator is taking more
-> time than time given as per datasheet.
-> Yes, completely agree that this is not the data provided normally,
-> just we observe on scope that some of platform shows  more than the
-> datasheet value and hence this patch.
-
-So, put this in the binding document then! :P  This was more a request
-to improve the detail in the binding than anything else.
-
---7316+HbuJYr43y0H
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSL0nzAAoJELSic+t+oim9Pn4QAJMFmNplzGJv7Q8YhCrxFVZy
-dUdM43gvzYZD+mJPclyWNFJaGg4aQWAFUCFxhaHC+A8i2J13XpyJtjh9DHpu5u7S
-EQvY1B49uP4J/79RgClQzpAcwKjJ8evpsFzn+r7e5p+5NFcG8t6sFBAT2JSB2v/7
-SxzAxWtODQWswY/NIeFL/KsPkNfJM8IUtcgq4pEa7e2LAIYR2vOby8Eg5KQgN+s7
-54ayDo2qyroeoZnrNQTrTUYlSgX/cGYcKugK8yZhjc3Lb14OUoIQwIuPRmGkJEj9
-SyfqG4zf3cJ/igXMIjn4VOJz0RZMXgT2LkrEJYrmqXk3pat3tuA2TL8Cx0wgfIV0
-Bu3ViNknIuDWO7GHWPG3rQzIcu9lsYq2ATmObEQvD5D8AgI4K4uGgbuhtlGH/1kL
-qOX2PapH7mslhHu4CogY6MTD9Al2j8X24jlMwNt+kj+Mho2dDJYMuLSBdao5nlNx
-/TlAfFggYj3qPZyKBNe9AOPfnLAVAe/AjBmodW58dY1TkRaK5bsO/u+6e18X0/Kj
-yS3s6yX9DZiCy2vvYxEsr3pjjipBrAytr1GLj4KCttrf+Bmr5qfm/AmZ7kZ4z2V6
-t/hkpW8NZRKAIfR/xvj/b8xC55thiaBYtvt45c7JLFtK0lN6TXllfaJNY/b4uOof
-5TRfPzsNB7m55TdEKwf9
-=tVsN
------END PGP SIGNATURE-----
-
---7316+HbuJYr43y0H--
+I don't think there's any issue with deviating; that's exactly what
+#pwm-cells is for.
