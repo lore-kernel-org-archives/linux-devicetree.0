@@ -1,57 +1,39 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v9 1/3] gpio: bcm281xx: Add GPIO driver
-Date: Tue, 10 Sep 2013 16:17:54 -0600
-Message-ID: <522F9A92.1040205@wwwdotorg.org>
-References: <1378836423-12467-1-git-send-email-markus.mayer@linaro.org>
- <1378836423-12467-2-git-send-email-markus.mayer@linaro.org>
- <522F7AE3.6050105@wwwdotorg.org> <522F8BB0.6010301@broadcom.com>
+From: Theodore Ts'o <tytso@mit.edu>
+Subject: Re: [GIT PULL] Device tree updates for v3.12
+Date: Tue, 10 Sep 2013 18:19:39 -0400
+Message-ID: <20130910221939.GC11063@thunk.org>
+References: <CACxGe6v8hO4sRX_KGcH=YBAMrF8mQHqWdxXEvVwoC2pVS5Yv9Q@mail.gmail.com>
+ <CA+bK7J5cAWFPLTBR2afNLm2JaKFH4_dJO_NpVL5gom0iX+L2dQ@mail.gmail.com>
+ <CA+55aFzBbKXJnaG_6X8Fff_APGJ3EkbG0thsbithDXtiEJjdHA@mail.gmail.com>
+ <CA+bK7J4F=X97HUQP6Tt8RkVe5vttE_Sw4Pd7kT19k_KGDFfpKA@mail.gmail.com>
+ <CA+55aFwkAQGRo9mLa2GVeVgzToRZr=Ny8LTogzgOpO6_4BJY1Q@mail.gmail.com>
+ <522F97EF.5050303@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <522F8BB0.6010301@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christian Daudt <csd@broadcom.com>
-Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <mmayer@broadcom.com>, Matt Porter <matt.porter@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <522F97EF.5050303@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Tim Bird <tbird20d@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anton Blanchard <anton@samba.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2013 03:14 PM, Christian Daudt wrote:
-> Hi Stephen,
-> On 13-09-10 01:02 PM, Stephen Warren wrote:
->> On 09/10/2013 12:07 PM, Markus Mayer wrote:
->>> From: Markus Mayer <mmayer@broadcom.com>
->>>
->>> Add the GPIO driver for the Broadcom bcm281xx family of mobile SoCs.
->>> These GPIO controllers may contain up to 8 banks where each bank
->>> includes 32 pins that can be driven high or low and act as an edge
->>> sensitive interrupt.
->> The binding,
->> Reviewed-by: Stephen Warren <swarren@nvidia.com>
->>
->> although ...
->>
->>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt
->>> b/Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt
->>> +This GPIO driver is used in the following Broadcom SoCs:
->>> +  BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
->> Given that, I would expect the documentation of the compatible property
->> to enumerate the compatible values for all of those different chips,
->> although the driver could choose to only bind to e.g. brcm,bcm11351-gpio
->> or brcm,kona-gpio, since they're all compatible with it.
->>
-> How would this help ? All of these chips are part of the same family and
-> thus quite similar (the primary difference being on the memory
-> controller and packaging), and we can't know a priori on which
-> variations bugs will happen, if any.
+On Tue, Sep 10, 2013 at 05:06:39PM -0500, Rob Herring wrote:
+> > If I recall correctly, somebody said that things like ethernet MAC
+> > addresses etc sometimes come from DT. Is my memory going, or is that
+> > true but very rare?
+> 
+> It is true and fairly common. You can also have serial numbers in the
+> DT, but that is more rare. The bootloader will also add the kernel
+> command line, initrd start and end addresses.
 
-That's exactly why the DT should include a compatible value that
-precisely describes the chip; so that information is there if it's
-needed in the future.
+Stuff which is common across a large number of devices is rather less
+useful to merge in.  Is there some fixed way that things like serial
+numbers and MAC addresses are tagged as such in the device tree?
+
+Those are really the interesting bits to pass to
+add_device_randomness().  What we want is stuff which is unique to the
+device --- SP 800-90 (the NIST SPEC on Secure Random Number
+Generators) refers to this as "personalization strings".
+
+	    	      	      - Ted
