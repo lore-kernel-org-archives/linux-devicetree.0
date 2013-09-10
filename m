@@ -1,45 +1,59 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] Device tree updates for v3.12
-Date: Tue, 10 Sep 2013 13:50:37 -0700
-Message-ID: <CA+55aFzBbKXJnaG_6X8Fff_APGJ3EkbG0thsbithDXtiEJjdHA@mail.gmail.com>
-References: <CACxGe6v8hO4sRX_KGcH=YBAMrF8mQHqWdxXEvVwoC2pVS5Yv9Q@mail.gmail.com>
-	<CA+bK7J5cAWFPLTBR2afNLm2JaKFH4_dJO_NpVL5gom0iX+L2dQ@mail.gmail.com>
+From: "Christian Daudt" <csd@broadcom.com>
+Subject: Re: [PATCH v9 1/3] gpio: bcm281xx: Add GPIO driver
+Date: Tue, 10 Sep 2013 14:14:24 -0700
+Message-ID: <522F8BB0.6010301@broadcom.com>
+References: <1378836423-12467-1-git-send-email-markus.mayer@linaro.org>
+ <1378836423-12467-2-git-send-email-markus.mayer@linaro.org>
+ <522F7AE3.6050105@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+bK7J5cAWFPLTBR2afNLm2JaKFH4_dJO_NpVL5gom0iX+L2dQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Bird <tbird20d@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <522F7AE3.6050105@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <mmayer@broadcom.com>, Matt Porter <matt.porter@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2013 at 11:40 AM, Tim Bird <tbird20d@gmail.com> wrote:
-> How much time does it add to boot to feed the device tree into the
-> random number pool.
+Hi Stephen,
+On 13-09-10 01:02 PM, Stephen Warren wrote:
+> On 09/10/2013 12:07 PM, Markus Mayer wrote:
+>> From: Markus Mayer <mmayer@broadcom.com>
+>>
+>> Add the GPIO driver for the Broadcom bcm281xx family of mobile SoCs.
+>> These GPIO controllers may contain up to 8 banks where each bank
+>> includes 32 pins that can be driven high or low and act as an edge
+>> sensitive interrupt.
+> The binding,
+> Reviewed-by: Stephen Warren <swarren@nvidia.com>
 >
-> Some of the device trees are expected to get pretty big.  If it's over
-> a millisecond, IMHO, it should be configurable (but this is not).
+> although ...
+>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt b/Documentation/devicetree/bindings/gpio/gpio-bcm-kona.txt
+>> +This GPIO driver is used in the following Broadcom SoCs:
+>> +  BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
+> Given that, I would expect the documentation of the compatible property
+> to enumerate the compatible values for all of those different chips,
+> although the driver could choose to only bind to e.g. brcm,bcm11351-gpio
+> or brcm,kona-gpio, since they're all compatible with it.
+>
+How would this help ? All of these chips are part of the same family and 
+thus quite similar (the primary difference being on the memory 
+controller and packaging), and we can't know a priori on which 
+variations bugs will happen, if any. So listing out a number of 
+theoretical compatible properties in the documentation that most likely 
+will never get used anyone doesn't seem to serve a purpose. If we were 
+to need a workaround triggered on compatible, it would more likely be 
+over a specific rev of the chip instead of the model within this family 
+(as we have already done for rev a2 in cache-l2x0.c)
 
-It's detinitely not a very fast operation. "add_device_randomness()"
-does four full "mix_pool_bytes()" operations, and those each iterate
-over the input set one byte at a time.
-
-It was kind of designed for things like mixing in ethernet MAC
-addresses etc, so at the time that was written, the thinking was that
-it would be just a few bytes, maybe tens of bytes.
-
-I don't know how big flattened device trees can be, but I guess we're
-talking a couple of kB?
-
-So it might even be a better idea to feed the device tree to a hashing
-function (eg SHA1 or even just MD5), and then just mix in the hash. At
-least most block hash functions do things a word at a time. It does
-*not* need to be cryptographically secure, so MD5 would be plenty good
-enough - the only point of the hash would be to give a meaningful
-number of result bits from the source array.
-
-Of course, maybe even the stupid add_device_randomness() is fast
-enough. I just wanted to point out that it definitely isn't some
-optimized thing.
-
-                Linus
+  Thanks,
+    csd
