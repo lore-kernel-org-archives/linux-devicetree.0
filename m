@@ -1,47 +1,45 @@
-From: Joel Fernandes <joelf@ti.com>
-Subject: Re: [PATCH 0/3] ARM: dts: Enable EDMA, MMC and SPI on AM33XX for
- v3.13
-Date: Tue, 10 Sep 2013 15:14:56 -0500
-Message-ID: <522F7DC0.7030603@ti.com>
-References: <1378841079-15796-1-git-send-email-joelf@ti.com> <5EB8AE91-A996-4CF1-86B7-C8FDEC177E89@dominion.thruhere.net>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] Device tree updates for v3.12
+Date: Tue, 10 Sep 2013 13:50:37 -0700
+Message-ID: <CA+55aFzBbKXJnaG_6X8Fff_APGJ3EkbG0thsbithDXtiEJjdHA@mail.gmail.com>
+References: <CACxGe6v8hO4sRX_KGcH=YBAMrF8mQHqWdxXEvVwoC2pVS5Yv9Q@mail.gmail.com>
+	<CA+bK7J5cAWFPLTBR2afNLm2JaKFH4_dJO_NpVL5gom0iX+L2dQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5EB8AE91-A996-4CF1-86B7-C8FDEC177E89@dominion.thruhere.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Koen Kooi <koen@dominion.thruhere.net>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Nishanth Menon <nm@ti.com>, Devicetree Discuss <devicetree@vger.kernel.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+bK7J5cAWFPLTBR2afNLm2JaKFH4_dJO_NpVL5gom0iX+L2dQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tim Bird <tbird20d@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2013 02:39 PM, Koen Kooi wrote:
-> 
-> Op 10 sep. 2013, om 21:24 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
-> 
->> Here are last few patches required to add EDMA and MMC/SPI support for AM33xx.
->>
->> Now that all dependent DMA patches and fixes are in linux next or mainline, except
->> for [1] which should go in for 3.12 -rc cycle, it is safe to enable MMC and SPI support
->> and this patch series enables it. These are originally Matt Porter's patches with
->> changes to make it work with recent kernels, addition of irq, memory resources and
->> enable other extra properties.
->>
->> These patches should cleanly apply on master branch after Koen's patch [2] for basic
->> BBB DT support is applied.
->>
->> MMC support is enabled for: Beaglebone, AM335x EVM and EVM-SK boards. MMC support
->> for BBB is intentionally not added due to custom fixes and other patches that are
->> in Koen's tree and which will be separately submitted by him.
-> 
-> Correct, but your patches for MMC support on BBW are missing the card detect entries to make it hotplug work.
+On Tue, Sep 10, 2013 at 11:40 AM, Tim Bird <tbird20d@gmail.com> wrote:
+> How much time does it add to boot to feed the device tree into the
+> random number pool.
+>
+> Some of the device trees are expected to get pretty big.  If it's over
+> a millisecond, IMHO, it should be configurable (but this is not).
 
-I thought it was determined that this would be submitted by you separately after
-rebasing as we discussed [1] and [2].
+It's detinitely not a very fast operation. "add_device_randomness()"
+does four full "mix_pool_bytes()" operations, and those each iterate
+over the input set one byte at a time.
 
-[1] https://lkml.org/lkml/2013/9/6/183
-[2] http://marc.info/?l=linux-omap&m=137879246709612&w=2
+It was kind of designed for things like mixing in ethernet MAC
+addresses etc, so at the time that was written, the thinking was that
+it would be just a few bytes, maybe tens of bytes.
 
+I don't know how big flattened device trees can be, but I guess we're
+talking a couple of kB?
 
-Regards,
+So it might even be a better idea to feed the device tree to a hashing
+function (eg SHA1 or even just MD5), and then just mix in the hash. At
+least most block hash functions do things a word at a time. It does
+*not* need to be cryptographically secure, so MD5 would be plenty good
+enough - the only point of the hash would be to give a meaningful
+number of result bits from the source array.
 
--Joel
+Of course, maybe even the stupid add_device_randomness() is fast
+enough. I just wanted to point out that it definitely isn't some
+optimized thing.
+
+                Linus
