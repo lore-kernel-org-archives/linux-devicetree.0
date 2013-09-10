@@ -1,74 +1,42 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v2 1/2] video: ARM CLCD: Add DT support
-Date: Tue, 10 Sep 2013 20:43:24 +0100
-Message-ID: <20130910194324.GE12758@n2100.arm.linux.org.uk>
-References: <1378808726-32535-1-git-send-email-pawel.moll@arm.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 10 Sep 2013 13:52:24 -0600
+Message-ID: <522F7878.30800@wwwdotorg.org>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk> <2052193.CMUEUJFRgS@lem-wkst-02> <522F2521.4090806@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1378808726-32535-1-git-send-email-pawel.moll@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <522F2521.4090806@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Lars Poeschel <poeschel@lemonage.de>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2013 at 11:25:25AM +0100, Pawel Moll wrote:
-> +#ifdef CONFIG_OF
-> +static int clcdfb_of_get_tft_panel(struct device_node *node,
-> +		struct clcd_panel *panel)
-> +{
-> +	int err;
-> +	u32 rgb[3];
-> +
-> +	err = of_property_read_u32_array(node, "panel-tft-interface", rgb, 3);
-> +	if (err)
-> +		return err;
-> +
-> +	/* Bypass pixel clock divider, data output on the falling edge */
-> +	panel->tim2 = TIM2_BCD | TIM2_IPC;
-> +
-> +	/* TFT display, vert. comp. interrupt at the start of the back porch */
-> +	panel->cntl |= CNTL_LCDTFT | CNTL_LCDVCOMP(1);
-> +
-> +	if (rgb[0] >= 4 && rgb[1] >= 4 && rgb[2] >= 4)
-> +		panel->caps |= CLCD_CAP_444;
-> +	if (rgb[0] >= 5 && rgb[1] >= 5 && rgb[2] >= 5)
-> +		panel->caps |= CLCD_CAP_5551;
-> +	if (rgb[0] >= 5 && rgb[1] >= 6 && rgb[2] >= 5)
-> +		panel->caps |= CLCD_CAP_565;
-> +	if (rgb[0] >= 8 && rgb[1] >= 8 && rgb[2] >= 8)
-> +		panel->caps |= CLCD_CAP_888;
+On 09/10/2013 07:56 AM, Javier Martinez Canillas wrote:
+...
+> The only thing that this patch tries to solve is when a driver expect to request
+> a IRQ and it doesn't care if is a real IRQ line from an interrupt controller or
+> a GPIO pin mapped as an IRQ.
 
-This definitely isn't right.  Why does a panel which has 8 bits of RGB
-get to indicate that it supports everything below it?
+That can be solved in the interrupt chip driver. The fact the previous
+attempt didn't work doesn't mean that it's impossible.
 
-This is not how this hardware works.  Look at table A-7 in the TRM.
-If you wire the CLCD controller directly to a panel which is 8-bit RGB
-only, it can't support any of the other formats.
+> With board files we used to explicitly do the GPIO setup
+> (gpio_{request,direction_input}) but with DT these board files are gone and we
+> need a way to setup a GPIO implicitly when is mapped as an IRQ.
 
-The CLCD controller itself can only support on the hardware 8-bits of
-RGB or 5 bits of RGB plus an intensity bit, so that's two formats.
+Well, that's just an example of hacking around something in a board file
+that should have been fixed in the GPIO/IRQ controller.
 
-However, things are complicated by ARMs addition of an external mux
-on the CLCD output, which gives us the other format possibilities
-by munging the signals to give appropriate formats in the framebuffer
-memory.  In other words, in RGB444 mode, the mux ends up taking
-red from CLD[4:1], green from CLD[9:7,5], blue from CLD[14:13,11:10].
+> That's the only use case that this patch covers.
+...
+> Also, it would be great if we can find a temporary solution so we can finally
+> have ethernet working with DT on most OMAP2+ boards. Since I expect that doing
+> the mentioned change on gpiolib would take at least a couple of kernel releases.
 
-So, it's not true that if you have a RGB888 panel, you can support
-all the lower BPPs.
-
-This is one of the dangers of directly converting what's in the kernel
-to DT properties without getting the hardware documentation and fully
-understanding that first - remember, DT properties are supposed to be
-based on the hardware, not the Linux implementation.
+Really? I thought this patch was error-checking to make sure that
+different drivers didn't request a GPIO and an IRQ that are actually the
+same signal. This patch shouldn't affect any functionality except in
+cases where there's a bug in the DT (incorrect GPIO/IRQ passed to some
+driver).
