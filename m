@@ -1,50 +1,47 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 2/2] sh_eth: add device tree support
-Date: Tue, 10 Sep 2013 14:07:13 -0600
-Message-ID: <522F7BF1.80100@wwwdotorg.org>
-References: <201309070343.25640.sergei.shtylyov@cogentembedded.com> <522E3770.9020305@wwwdotorg.org> <522F2F3A.5070406@cogentembedded.com> <522F37A7.90804@wwwdotorg.org> <522F5E67.8070006@cogentembedded.com>
+From: Joel Fernandes <joelf@ti.com>
+Subject: Re: [PATCH 0/3] ARM: dts: Enable EDMA, MMC and SPI on AM33XX for
+ v3.13
+Date: Tue, 10 Sep 2013 15:14:56 -0500
+Message-ID: <522F7DC0.7030603@ti.com>
+References: <1378841079-15796-1-git-send-email-joelf@ti.com> <5EB8AE91-A996-4CF1-86B7-C8FDEC177E89@dominion.thruhere.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <522F5E67.8070006@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5EB8AE91-A996-4CF1-86B7-C8FDEC177E89@dominion.thruhere.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Koen Kooi <koen@dominion.thruhere.net>
+Cc: Benoit Cousson <bcousson@baylibre.com>, Nishanth Menon <nm@ti.com>, Devicetree Discuss <devicetree@vger.kernel.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2013 12:01 PM, Sergei Shtylyov wrote:
-> Hello.
+On 09/10/2013 02:39 PM, Koen Kooi wrote:
 > 
-> On 09/10/2013 07:15 PM, Stephen Warren wrote:
+> Op 10 sep. 2013, om 21:24 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
 > 
->>>> Do you need any clocks properties, IP block reset signals, power
->>>> domains?
+>> Here are last few patches required to add EDMA and MMC/SPI support for AM33xx.
+>>
+>> Now that all dependent DMA patches and fixes are in linux next or mainline, except
+>> for [1] which should go in for 3.12 -rc cycle, it is safe to enable MMC and SPI support
+>> and this patch series enables it. These are originally Matt Porter's patches with
+>> changes to make it work with recent kernels, addition of irq, memory resources and
+>> enable other extra properties.
+>>
+>> These patches should cleanly apply on master branch after Koen's patch [2] for basic
+>> BBB DT support is applied.
+>>
+>> MMC support is enabled for: Beaglebone, AM335x EVM and EVM-SK boards. MMC support
+>> for BBB is intentionally not added due to custom fixes and other patches that are
+>> in Koen's tree and which will be separately submitted by him.
 > 
->>>     Currently not.
-> 
->> What does "currently" mean? Does that mean that the Linux driver simply
->> doesn't touch those entities at present?
-> 
->    There's Ether clock but the driver doesn't manipulate it directly,
-> assumingly it does this thru the runtime PM interface. As for the
-> others, I simply don't know.
+> Correct, but your patches for MMC support on BBW are missing the card detect entries to make it hotplug work.
 
-If there's a clock, it should be represented in DT, even if the kernel
-somehow gets access to the clock through some means other than parsing DT.
+I thought it was determined that this would be submitted by you separately after
+rebasing as we discussed [1] and [2].
 
->> If so, that's not enough to say
->> that those entities should not be described in the DT binding. We should
->> strive to make the binding completely describe all aspects of the HW,
->> irrespective of whether a particular driver happens to use that
->> information at present.
-> 
->    There's no DT representation for the clocks in SH-Mobile subarch yet.
-> The same applies to the other entities you mentioned.
+[1] https://lkml.org/lkml/2013/9/6/183
+[2] http://marc.info/?l=linux-omap&m=137879246709612&w=2
 
-You can still write the binding to say that the appropriate clock
-property must be present; the overall format of this property won't be
-affected by the representation chosen for the SH-Mobile clocks.
 
-It seems like it'd be best to get the basic resources (like clocks)
-represented in DT before trying to build blocks that use them.
+Regards,
+
+-Joel
