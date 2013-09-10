@@ -1,51 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: palmas: configure enable time for LDOs
-Date: Tue, 10 Sep 2013 13:10:17 +0100
-Message-ID: <20130910121017.GI29403@sirena.org.uk>
-References: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 2/2] regulator: core: add support for configuring turn-on
+ time through constraints
+Date: Tue, 10 Sep 2013 18:44:40 +0530
+Message-ID: <522F1B40.3040801@nvidia.com>
+References: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com> <1378811888-2268-2-git-send-email-ldewangan@nvidia.com> <20130910120922.GH29403@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WgiIge0Euz4ksITr"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130910120922.GH29403@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 10 September 2013 05:39 PM, Mark Brown wrote:
+> * PGP Signed by an unknown key
+>
+> On Tue, Sep 10, 2013 at 04:48:08PM +0530, Laxman Dewangan wrote:
+>
+>> +- regulator-enable-time: Turn ON time for regulator(in uS)
+> This is unclear - what is a "turn on time" and is this in addition to or
+> separate from the underlying enable time of the device?  It needs to be
+> clear that this is the time taken for the voltage to ramp to spec.  I'd
+> also expect it to be clear that this is not something that should need
+> to be provided normally.
 
---WgiIge0Euz4ksITr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Here my intention for turn-on time is the time from OFF state to ON 
+state and the ON voltage settled on this time.
+This time is separate from underlying enable time of the device i.e. 
+will not get added.
+We observe in some of platform that some of regulator is taking more 
+time than time given as per datasheet.
+Yes, completely agree that this is not the data provided normally, just 
+we observe on scope that some of platform shows  more than the datasheet 
+value and hence this patch.
 
-On Tue, Sep 10, 2013 at 04:48:07PM +0530, Laxman Dewangan wrote:
-> As per datasheet (Referred TPS65913), the on-time for LDO is
-> 500micro second. If LDO6 is in vibrator mode then the on-time
-> is 2000us.
+The same rail on other design does not show the enable time more than 
+datasheet and on that case, we will not provide this value.
 
-Applied, thanks.
 
---WgiIge0Euz4ksITr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSLwwmAAoJELSic+t+oim9dCQQAJpUsIXVyCimwvbS6etMum0j
-9F9fhSBnRtfU6NqD5cO7vYafElSnmYSWmUVMsLtHyQYcOmkI/+8LpSa9UtTX35jn
-5iaSygTg4thBLDrMdU0JyWuXdh+fZyMlu5u3tTM2Q/XYpvOmLMbzGS7OsCdUcE36
-M8GZa9Nk2r/mTAnjQykoIcArj8bI6g5Nv6+MICl4IjIogUUaOkYJnEGJBz/COoZK
-jFRd5tFV/DG2/qWGubncvTFheMe9a1ugF+TbVHFz7IUrPUiDr8XNPOuOP6RAv+LT
-tQ5qbk3BMVYmzLjW/OjwcG7E47Jq9q7akaCfBD+NZ2ZdOybIjwBDp6tCS1iSYgF0
-DwZ15KVpYRSUTabPZtBG9CTKlJQycTWB0gy/FOh3I6IZMcNXkIZBqK+jW5+cFwlz
-1D6WTwS+aiREvr5GHigxULZ/GHjPf9k+lfv2uBjfPPKD+dh6SQ7yiVJKIKA3ktyk
-6O0JXcCkWu4EJ0PyyY/frP98V+Y6i7eq23n8cowWg+kJavdKOXz3D1wVi3Al3HFv
-rckGN++D+WayCmcHDuLGEnupayVdKKMIpz2lP0BUJ+CNdAifzN/dEmF5IqrlPA96
-KwWbRxbtoeqW991MfQopBnMx6vIibptDTxHPf/ku5WhvQ1U3TxjjRWyq5xaaM3iI
-JO8Sbz0Q1khNar2DA/+Z
-=4hDU
------END PGP SIGNATURE-----
-
---WgiIge0Euz4ksITr--
+> Please ALSO avoid capitalising words FOR no reason.
+>
+>
+My bad, will take care.
