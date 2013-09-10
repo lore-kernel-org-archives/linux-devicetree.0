@@ -1,61 +1,61 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [RFC PATCH 4/4] ARM: dts: am33xx: adopt to cpsw-phy-sel driver
- to configure phy mode
-Date: Tue, 10 Sep 2013 16:55:32 +0400
-Message-ID: <522F16C4.5030600@cogentembedded.com>
-References: <1378639438-27686-1-git-send-email-mugunthanvnm@ti.com> <1378639438-27686-5-git-send-email-mugunthanvnm@ti.com> <522CBC15.5060008@cogentembedded.com> <522D6DE7.5080305@ti.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] ARM: add basic Trusted Foundations support
+Date: Tue, 10 Sep 2013 14:04:31 +0100
+Message-ID: <20130910130431.GE27966@mudshark.cambridge.arm.com>
+References: <1378351680-14696-1-git-send-email-acourbot@nvidia.com>
+ <1378351680-14696-2-git-send-email-acourbot@nvidia.com>
+ <5228CEDB.1090306@gmail.com>
+ <CAAVeFu+MGGBfmm1jwtKGP_d3EjkLdf5B_E_5RT___PVh1e=8jw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <522D6DE7.5080305@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: netdev@vger.kernel.org, zonque@gmail.com, davem@davemloft.net, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFu+MGGBfmm1jwtKGP_d3EjkLdf5B_E_5RT___PVh1e=8jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi guys,
 
-On 09-09-2013 10:42, Mugunthan V N wrote:
+On Mon, Sep 09, 2013 at 07:15:31AM +0100, Alexandre Courbot wrote:
+> On Fri, Sep 6, 2013 at 3:35 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On 09/04/2013 10:27 PM, Alexandre Courbot wrote:
+> >> Trusted Foundations is a TrustZone-based secure monitor for ARM that
+> >> can be invoked  using a consistent SMC-based API on all supported
+> >> platforms. This patch adds initial basic support for Trusted
+> >> Foundations using the ARM firmware API. Current features are limited
+> >> to the ability to boot secondary processors.
 
->>> Add DT entries for the phy mode selection in AM33xx SoC using
->>> cpsw-phy-sel
->>> driver.
+[...]
 
->>> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
->>> ---
->>>    arch/arm/boot/dts/am33xx.dtsi | 6 ++++++
->>>    1 file changed, 6 insertions(+)
+> >> +Example:
+> >> +     firmware {
+> >> +             compatible = "tl,trusted-foundations";
+> >> +             version-major = <2>;
+> >> +             version-minor = <8>;
+> >> +     };
+> >
+> > I'm wondering how we fit this in with PSCI bindings? Both are pieces of
+> > firmware functionality and may co-exist. There's nothing incompatible
+> > here, but there should be some commonality. Will future versions of
+> > Trusted Foundations follow the SMC calling conventions doc? What about
+> > armv8 support.
+> 
+> I don't have any information about the future of TF unfortunately,
+> excepted that it should remain backward-compatible. What is this SMC
+> calling convention doc your are talking about btw? Is there a standard
+> calling convention defined by ARM?
 
->>> diff --git a/arch/arm/boot/dts/am33xx.dtsi
->>> b/arch/arm/boot/dts/am33xx.dtsi
->>> index f9c5da9..4359672 100644
->>> --- a/arch/arm/boot/dts/am33xx.dtsi
->>> +++ b/arch/arm/boot/dts/am33xx.dtsi
->>> @@ -594,6 +594,12 @@
->>>                    /* Filled in by U-Boot */
->>>                    mac-address = [ 00 00 00 00 00 00 ];
->>>                };
->>> +
->>> +            phy_sel: cpsw_phy_sel@44e10650 {
+SMC calling convention:
 
->>     Dashes are preferred to uderscores in the device tree names.
+https://silver.arm.com/download/download.tm?pv=1435186
 
-> I tried with dashes but i get the below error.
+PSCI:
 
-> $ make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm dtbs
->    DTC     arch/arm/boot/dts/am335x-evm.dtb
-> Error: arch/arm/boot/dts/am33xx.dtsi:598.11-12 syntax error
-> FATAL ERROR: Unable to parse input tree
-> make[1]: *** [arch/arm/boot/dts/am335x-evm.dtb] Error 1
-> make: *** [dtbs] Error 2
+https://silver.arm.com/download/download.tm?pv=1421585
 
-    Hm, perhaps the dashes can't be used in the labels but I was talking of 
-the names. Dashes in the node names should be definitely valid.
+Although access to these documents requires you to go through a
+click-through license.
 
-> Regards
-> Mugunthan V N
-
-WBR, Sergei
-
-
+Will
