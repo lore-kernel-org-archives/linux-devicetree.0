@@ -1,92 +1,107 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH 1/2] i2c: qup: Add device tree bindings information
-Date: Tue, 10 Sep 2013 08:59:07 -0500
-Message-ID: <20130910135907.GP808@joshc.qualcomm.com>
-References: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
- <3A0F4153-1C55-4008-8EB1-D6FA60D87CEA@codeaurora.org>
- <1377797186.30358.14.camel@localhost>
- <767E9FBB-2975-4795-9C7E-69E302511FF2@codeaurora.org>
- <1378814937.960.37.camel@iivanov-dev.int.mm-sol.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 2/2] sh_eth: add device tree support
+Date: Tue, 10 Sep 2013 18:39:54 +0400
+Message-ID: <522F2F3A.5070406@cogentembedded.com>
+References: <201309070343.25640.sergei.shtylyov@cogentembedded.com> <522E3770.9020305@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1378814937.960.37.camel@iivanov-dev.int.mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Kumar Gala <galak@codeaurora.org>, wsa@the-dreams.de, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, grant.likely@linaro.org, gavidov@codeaurora.org, sdharia@codeaurora.org, alokc@codeaurora.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <522E3770.9020305@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[Hmm.  Fixing b0rked LKML address; that might explain why I am not
-seeing Kumar's replies.]
+Hello.
 
-On Tue, Sep 10, 2013 at 03:08:57PM +0300, Ivan T. Ivanov wrote:
-> Hi Kumar,
-> 
-> On Fri, 2013-08-30 at 10:21 -0500, Kumar Gala wrote: 
-> > On Aug 29, 2013, at 12:26 PM, Ivan T. Ivanov wrote:
-> > >>> +
-> > >>> +Optional properties :
-> > >>> + - Child nodes conforming to i2c bus binding
-> > >>> + - clock-frequency : Desired I2C bus clock frequency in Hz. If
-> > >>> +		not set thedefault frequency is 100kHz
-> > >>> + - qcom,src-freq : Frequency of the source clocking this bus in Hz.
-> > >>> +		Divider value is set based on soruce-frequency and
-> > >>> +		desired I2C bus frequency. If this value is not
-> > >>> +		provided, the source clock is assumed to be running
-> > >>> +		at 19.2 MHz.
-> > >> 
-> > >> I'd spell out frequency instead of 'freq' to be consistent with 'clock-frequency'
-> > > 
-> > > ok.
-> > > 
-> > >> 
-> > >> Is the frequency of the 'iface' clock?  Can we not use clk_get_rate?
-> > > 
-> > > It is for 'core' clock. I think that for higher I2C bus frequencies,
-> > > 'core' clock have to be higher, but I am not sure what is relation.
-> > 
-> > Ok, can we use clk_get_rate on the 'core' clk to get its frequency instead of needing a DT prop for it?
-> 
-> Probably I didn't explain it well. The 'core' clock have to be
-> accelerated before higher bus frequencies could be achieved.
+On 10-09-2013 1:02, Stephen Warren wrote:
 
-I think what Kumar is suggesting is that the QUP driver not do an
-explicit clk_set_rate() at all (which AFAICT is what's currently being
-done to set the consuming clock to the rate specified in
-'qcom,src-freq'), but instead assume that the consuming clock has
-already been setup properly.  Then the driver just uses clk_get_rate()
-and clock-frequency to calculate how to setup any internal dividers.
+>> Add support of the device tree probing for the Renesas SH-Mobile SoCs
+>> documenting the device tree binding as necessary.
 
-> > >>> +Aliases: An alias may optionally be used to bind the I2C controller
-> > >>> +to bus number. Aliases are of the form i2c<n> where <n> is an integer
-> > >>> +representing the bus number to use.
-> > >>> +
-> > >>> +Example:
-> > >>> +
-> > >>> + aliases {
-> > >>> +		i2c0 = &i2c_A;
-> > >>> +		i2c1 = &i2c_B;
-> > >>> +		i2c2 = &i2c_C;
-> > >>> + };
-> > >> 
-> > >> What is the purpose here?
-> > > 
-> > > Define on which I2C bus this controller operate. I2C client 
-> > > drivers usually do i2c_get_adapter(bus_number) before its
-> > > registration. This is for drivers before invention of
-> > > of_i2c_register_devices(), I believe.
-> > 
-> > Since this is for upstream why dont we use of_i2c_register_devices() and remove this stuff related to aliases.
-> 
-> Adapter driver already is using of_i2c_register_devices(). Also OF
-> helper function will/or is already part of i2c_register_adapter().
-> Attempt here was to make it compatible with older i2c client drivers.
+>> This work is loosely based on an original patch by Nobuhiro Iwamatsu
+>> <nobuhiro.iwamatsu.yj@renesas.com>.
 
-I agree with Kumar on removing this.  If we decide it is something worth
-keeping, logic to support it doesn't belong in the QUP driver, but in
-the i2c core.
+>> Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+>> +- reg: offset and length of (1) the E-DMAC/feLic register block (required),
+>> +       (2) the TSU register block (optional).
+
+> There's an argument that you should specify reg-names entries to allow
+> arbitrary ordering or entries within reg, if there's more than one
+> entry. But, I don't think it's mandatory, just something to consider at
+> present.
+
+    I also don't think it's needed, the driver has happily worked without 
+resource names so far.
+
+>> +- interrupts: interrupt specifier for the sole interrupt.
+>> +- phy-mode: string, operation mode of the PHY interface (a string that
+>> +	    of_get_phy_mode() can understand).
+
+> DT bindings should be OS-agnostic. of_get_phy_mode() is Linux-specific.
+> Please spell out the complete list of supported values here, without
+> reference to Linux-specific code or documentation.
+
+    I don't think listing the numerous values of this standrd property in 
+every file describing an Ethernet device is practical. How about I create file 
+ethernet.txt in the same directory (don't know why I'm the first to do it 
+despite many other driver using this property)?
+
+>> +- phy-handle: phandle of the PHY device (there should be a PHY device subnode).
+
+> Is this a custom property, or part of some generic PHY subsystem
+> binding?
+
+    The latter.
+
+> If the latter, please reference the DT binding document for
+> that subsystem.
+
+    Unfortunately, phy.txt in the same directory describes only properties of 
+the "ethernet-phy" nodes. I think the new ethernet.txt would be more fitting 
+for the purpose.
+
+> If it's custom, what kinds of nodes can this phandle
+> point at; what kind of interface must the referenced DT node provide (is
+> a #phy-cells property required, must its compatible value be one of a
+> specific set of values).
+
+    This is described by the phy.txt in the same directory.
+
+>> +- #address-cells: number of address cells for the MDIO bus, must be equal to 1.
+>> +- #size-cells: number of size cells on the MDIO bus, must be equal to 0.
+
+> If this node is expected to contain child nodes, you need to specify
+> details of those child nodes.
+
+    They are specified in phy.txt (this file is somewhat obsolete though).
+
+> Can you reference the filename of a generic MDIO binding?
+
+    OK.
+
+> What do the address values mean (perhaps that'd be
+> covered by the MDIO binding already, if it's applicable).
+
+>> +Optional properties:
+>> +- interrupt-parent: the phandle for the interrupt controller that services
+>> +		    interrupts for this device.
+>> +- local-mac-address: 6 bytes, MAC address.
+>> +- renesas,no-ether-link: boolean, specify when a board does not provide a proper
+>> +			 Ether LINK signal.
+>> +- renesas,ether-link-active-low: boolean, specify when the Ether LINK signal is
+>> +  				 active-low instead of normal active-high.
+
+> Presumably the link signal is some dedicated signal in the Ethernet MAC
+> HW block, and not a generic GPIO?
+
+    Indeed.
+
+> Do you need any clocks properties, IP block reset signals, power domains?
+
+    Currently not.
+
+WBR, Sergei
+
