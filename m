@@ -1,46 +1,59 @@
-From: "Markus Mayer" <markus.mayer@linaro.org>
-Subject: [PATCH v9 2/3] ARM: bcm281xx: Enable GPIO driver
-Date: Tue, 10 Sep 2013 11:07:02 -0700
-Message-ID: <1378836423-12467-3-git-send-email-markus.mayer@linaro.org>
-References: <1378836423-12467-1-git-send-email-markus.mayer@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] regulator: core: add support for configuring turn-on
+ time through constraints
+Date: Tue, 10 Sep 2013 19:19:30 +0100
+Message-ID: <20130910181930.GE29403@sirena.org.uk>
+References: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com>
+ <1378811888-2268-2-git-send-email-ldewangan@nvidia.com>
+ <522F3691.3090805@wwwdotorg.org>
+ <20130910165153.GQ29403@sirena.org.uk>
+ <522F5815.4070109@wwwdotorg.org>
+ <20130910173830.GA4708@sirena.org.uk>
+ <522F5AC5.90101@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1378836423-12467-1-git-send-email-markus.mayer@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Christian Daudt <csd@broadcom.com>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PJ1SAQMcJwP6CXso"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <522F5AC5.90101@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, rob.herring@calxeda.com, mark.rutland@arm.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Turn on the bcm281xx GPIO driver in the kernel configuration.
 
-Signed-off-by: Markus Mayer <markus.mayer@linaro.org>
-Reviewed-by: Christian Daudt <csd@broadcom.com>
----
- arch/arm/mach-bcm/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--PJ1SAQMcJwP6CXso
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 69d67f7..7f6fca8 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -9,7 +9,7 @@ config ARCH_BCM
- 	select CLKSRC_OF
- 	select GENERIC_CLOCKEVENTS
- 	select GENERIC_TIME
--	select GPIO_BCM
-+	select GPIO_BCM_KONA
- 	select SPARSE_IRQ
- 	select TICK_ONESHOT
- 	select CACHE_L2X0
--- 
-1.7.9.5
+On Tue, Sep 10, 2013 at 11:45:41AM -0600, Stephen Warren wrote:
+
+> Sounds reasonable. It's a little long but regulator-enable-ramp-delay
+> might be better since all the common regulator properties to date are
+> named regulator-xxx.
+
+Yes, I just didn't bother typing the whole thing out.
+
+--PJ1SAQMcJwP6CXso
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSL2KvAAoJELSic+t+oim9Nv0P/3uWChLKzPEpGS2Xhm+3YuQ/
+qIsowpKpBEYh7F2pbI7q2Gszre6UJXz1PjCOtZ6nBZ32wPnotoxMHoYzT8SSd/fc
+IpFhr0OS3FQbCZp7asdpj1YRoakwOuywdtCky/q1EQS2AK6Fol+q/MonwYqFSHwO
+FU2EehTHOMEIfDjTxHVKSXyqO+j9ppii4agdM2CUo+6QUclSLj3Ii/ZhVHOezj77
+s/5rlloHEXUrrcNLIuXElyocKf8as0wi1+DoCkGSEviuuOtAJqRqc+/kKBd5sqoC
+HaEYlOv8B/H3L6SQSeBsBC5Kq6+HzgLn8w+biPxZ/AZxvQOYM5qT7rzAqpQKbOYl
+HkY1hpIyudiLyQHFP0sXbB8uMidf40fh8umjOooi+GVu3UtNchiZRRUZLPumXvrg
+f8d2mWuE58IBa3FayAKsVrL7VheDFpkJ3nRZKXDXah6uYyGtsZPQtYkOSOkX2j0i
+nOHoEE1jOG73dZnTl+h9rN1xyeCQ0sch8+7/wYGFkG9k5uX4IXz4nesuzt2S+2f5
+B9kDJuhCaE0mPm6gdq735RW+krzCmOfG0raTtSiI9Hk3dER/xAU34VHlls9oWR13
+3f/OB7HfZ7Jz3RHtsga5HtC+UBqqPWUmwZ0m9YcVBvU50cglzlhkXsBkKq+TNBBc
+y+dX84fafh2kgyNvGVDI
+=lDbN
+-----END PGP SIGNATURE-----
+
+--PJ1SAQMcJwP6CXso--
