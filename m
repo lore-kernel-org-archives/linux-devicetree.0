@@ -1,59 +1,105 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] regulator: core: add support for configuring turn-on
- time through constraints
-Date: Tue, 10 Sep 2013 17:51:53 +0100
-Message-ID: <20130910165153.GQ29403@sirena.org.uk>
-References: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com>
- <1378811888-2268-2-git-send-email-ldewangan@nvidia.com>
- <522F3691.3090805@wwwdotorg.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RESEND PATCH v2] pwm: pxa: add device tree support to pwm driver
+Date: Tue, 10 Sep 2013 18:54:46 +0200
+Message-ID: <20130910165445.GA22111@ulmo>
+References: <1378751420-19227-1-git-send-email-mikedunn@newsguy.com>
+ <522E3B5B.90406@wwwdotorg.org> <522F40A3.9030701@newsguy.com>
+ <522F4CF9.3070601@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="i/YlyGmJHSYJ/xms"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <522F3691.3090805@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============4135495452256513068=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <522F4CF9.3070601@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, rob.herring@calxeda.com, mark.rutland@arm.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com
+Cc: Marek Vasut <marex@denx.de>, linux-pwm@vger.kernel.org, Mike Dunn <mikedunn@newsguy.com>, Pawel Moll <pawel.moll@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
 
---i/YlyGmJHSYJ/xms
-Content-Type: text/plain; charset=us-ascii
+--===============4135495452256513068==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
 Content-Disposition: inline
 
-On Tue, Sep 10, 2013 at 09:11:13AM -0600, Stephen Warren wrote:
 
-> > +- regulator-enable-time: Turn ON time for regulator(in uS)
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Bike-shedding slightly: This isn't really the time it takes to enable a
-> regulator, but the time the voltage takes to become stable, or settle.
-> Perhaps name the property regulator-settle-time/regulator-settle-delay?
+On Tue, Sep 10, 2013 at 10:46:49AM -0600, Stephen Warren wrote:
+> On 09/10/2013 09:54 AM, Mike Dunn wrote:
+> > On 09/09/2013 02:19 PM, Stephen Warren wrote:
+> >> On 09/09/2013 12:30 PM, Mike Dunn wrote:
+[...]
+> >>> +- reg: physical base address and length of the registers used by the=
+ pwm channel
+> >>> +  NB: One device instance must be created for each pwm that is used,=
+ so the
+> >>> +  length covers only the register window for one pwm output, not tha=
+t of the
+> >>> +  entire pwm controller.  Currently length is 0x10 for all supported=
+ devices.
+> >>> +- #pwm-cells: should be 3.
+> >>> +   cell 1: the per-chip index of the PWM to use,
+> >>
+> >> That cell shouldn't be needed if you really want to have one DT node p=
+er
+> >> PWM channel.
+> >=20
+> > Yes, but I was afraid to deviate from the format used by the other PWM
+> > controllers.  (But in that case, it should at least be documented as "m=
+ust be
+> > zero". Thanks.)  If going my owm way is acceptable, I'll define my own
+> > of_xlate() parser and remove this cell.
+>=20
+> I don't think there's any issue with deviating; that's exactly what
+> #pwm-cells is for.
 
-The normal term would be ramp delay.  It's not usually the time taken to
-completely settle, it's usually quoted as the time taken to reach within
-some proportion of the target voltage.
+Agreed, I have no objections to using a custom .of_xlate().
 
---i/YlyGmJHSYJ/xms
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thierry
+
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.21 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSL04mAAoJELSic+t+oim9Y2MQAJ0XCscbJlcsgpNA3BIDk0zF
-QRSS8Vu107NYU8YZHnArv+58f4N/POocYr0QTZQOFHTF21OG7Vyd9nMy8tBjugbM
-TIsB7Ui/0AfpR2pQ7RNPRC/T1RuWlEnBYERHfvuaLrZq5KV36rdimq9WlQ01fuRt
-nJItcwLVSoz8d8RzgaUZ2T9VP2ucGPTgXP19jizqBECGUhrnQkCtxYdAqYqyEAQL
-M5X/sTEvjTEJw8fepRS4qeNPjzFZ8fRIXb9gYlQJ+8aWRAatff+a1JXY4KqgOgFL
-DqdV4uklnHFlhgXSQxpthBG+nd5C1mg4H6fAb4KZ8il5HtRO+GTKw+s3YClcVYJ3
-5mp90Yo55VBlbDHE9G0iNb96HNIU8XcqDagTgydkm2tVHsPT63wdQb28gb5M05/c
-sSbFoQA5VlynL+Q5yAnlChoDYwaVLthfG1LswdRdy8unVJCB3bfXs4pkkTYs809b
-jRnRo0KM92vyAlpYXoeexIJYYD4Hcsl2M/s8YH1NbHYdPe7FJA0pnjuPlpR+qUzg
-iSKHsE3k4HCOI/DEnoTSNdGBK/sRO+fKDm1mMvVdmHrPc5jNbYKDIJny3cRD94VH
-i0AJe/ht/+N9s7+3ENsbE+T3C9qNelhhl3NflAnntdQnfnkg55doCgWYUbYfR9Ye
-fMQQC0vGd7QjBpAWtLa5
-=WxUD
+iQIcBAEBAgAGBQJSL07VAAoJEN0jrNd/PrOhM8MP/A/+6TvKJr4NsAI6a2n7oB4j
+TIqfsiVbCmG2nmDP1nMurPmrKv6jOV1u0ex563YUUD6x5Wlvt8ovjahwDEq/Y7dx
+r9ts7DQh7CezerITxCro89qWEsWID4hCy6MEsn5eJSNWtEJ/z34JGQqQPJ8rNbO6
+9vJw8ajnwje8wxE28LeZQSs5x8P/BfOOqKgyPOrY9WkfAhZhzV3ckX+Yk4HkKRjd
+vZ6RdXJMt3zKDs0e1nucuELpYdC2RJUMQkKif962NrEISUzS5y2abgrsn8Q+xAdo
+mjTvmK3O32RO3oM1vFLYzmA9nNYAzR0tFq+heM1W30rqiZuDQiXXYo7qrljJCvR2
+mq2xZMjbJpSpfrYb7EMikOjgb58XVw/DIPt/VsN3KjIWbxDCvGxwl5lWHsuUH2yN
+NjwF3rwzHiG3rbRdVEuNMcSKiTaWiyhfKWw9EkEEtt7lwsUUBZ+KSeU+oFg5wYOx
+3aQJ7Dg+QAtM+Odzr46fIDeXBQktRJMLk10+7MECoDlEobp/y5xetPDGiwFc/qiq
+7elSpIJg4W8TYoF+0pUTOkExvHqaEndcWOcqg68EKT48T7wOA+nLvnVHutIMs7i3
+a+pmuWA2eFeRnoa/c40lWiZ64ccgSQyi6TtghAcZ9QAcUqCQrHqnrMnGduMy5e8K
+P11oN/irDcCiTBC1nFti
+=JCNF
 -----END PGP SIGNATURE-----
 
---i/YlyGmJHSYJ/xms--
+--liOOAslEiF7prFVr--
+
+
+--===============4135495452256513068==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4135495452256513068==--
