@@ -1,21 +1,16 @@
-From: Joel Fernandes <joelf@ti.com>
-Subject: Re: [PATCH] ARM: OMAP2+: am335x-bone*: add DT for BeagleBone Black
-Date: Mon, 9 Sep 2013 18:42:42 -0500
-Message-ID: <522E5CF2.3080108@ti.com>
-References: <1378736961-21005-1-git-send-email-koen@dominion.thruhere.net>
- <87zjrm81dl.fsf@linaro.org>
- <BBAC0939-A4F9-4FEA-B137-0307D8787DC3@dominion.thruhere.net>
- <522E1325.8050906@ti.com>
- <41952E65-1037-4117-A1AE-8310FED59E3A@dominion.thruhere.net>
- <522E18C0.9010909@ti.com> <522E269B.7000802@ti.com>
- <73968C64-F0B0-4ED6-82B8-BD1966ED9D84@dominion.thruhere.net>
- <522E2B9E.8050404@ti.com>
-Reply-To: joelf@ti.com
+From: Duan Fugang-B38611 <B38611@freescale.com>
+Subject: RE: [PATCH v2 2/4] ARM: dts: add fec phy reset for imx6sl evk board
+Date: Tue, 10 Sep 2013 01:26:49 +0000
+Message-ID: <9848F2DB572E5649BA045B288BE08FBE016A7AB8@039-SN2MPN1-023.039d.mgd.msft.net>
+References: <1378182385-9205-1-git-send-email-B38611@freescale.com>
+ <1378182385-9205-3-git-send-email-B38611@freescale.com>
+ <20130909145333.GA5815@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <522E2B9E.8050404@ti.com>
+In-Reply-To: <20130909145333.GA5815@S2101-09.ap.freescale.net>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,98 +20,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Koen Kooi <koen@dominion.thruhere.net>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, tony@atomide.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, bcousson@baylibre.com, olof@lixom.net, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2013 03:12 PM, Joel Fernandes wrote:
-> On 09/09/2013 03:00 PM, Koen Kooi wrote:
->>
->> Op 9 sep. 2013, om 21:50 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
->>
->>> On 09/09/2013 01:51 PM, Joel Fernandes wrote:
->>>> On 09/09/2013 01:43 PM, Koen Kooi wrote:
->>>>>
->>>>> Op 9 sep. 2013, om 20:27 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
->>>>>
->>>>>> On 09/09/2013 10:51 AM, Koen Kooi wrote:
->>>>>>>
->>>>>>> Op 9 sep. 2013, om 17:23 heeft Kevin Hilman <khilman@linaro.org> het volgende geschreven:
->>>>>>>
->>>>>>>> Koen Kooi <koen@dominion.thruhere.net> writes:
->>>>>>>>
->>>>>>>>> The BeagleBone Black is basically a regular BeagleBone with eMMC and HDMI added,
->>>>>>>>> so create a common dtsi both can use.
->>>>>>>>>
->>>>>>>>> IMPORTANT: booting the existing am335x-bone.dts will blow up the HDMI transceiver
->>>>>>>>> after a dozen boots with an uSD card inserted because LDO will be at 3.3V instead
->>>>>>>>> of 1.8.
->>>>>>>>>
->>>>>>>>> MMC support for AM335x still isn't in, so only the LDO change has been added.
->>>>>>>>>
->>>>>>>>> Cc: stable@vger.kernel.org
->>>>>>>>>
->>>>>>>>> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
->>>>>>>>> Tested-by: Tom Rini <trini@ti.com>
->>>>>>>>> Tested-by: Matt Porter <matt.porter@linaro.org>
->>>>>>>>
->>>>>>>> I guess the subject should've included v5?
->>>>>>>
->>>>>>> Yes, I blame it on being monday :)
->>>>>>
->>>>>> The series you're posting will require rebasing on the current MMC DT series
->>>>>> that is being discussed last couple of weeks on the mailing list which were
->>>>>> waiting until now as DMA support was missing. Now that DMA support is pulled in,
->>>>>> it is safe to apply those patches so I will be reposting them shortly.
->>>>>>
->>>>>> Please hold off any changes until those patches are posted. This will avoid
->>>>>> unnecessary conflicts.
->>>>>
->>>>> Or you can rebase on top of this patch since it has no dependencies *and* fixes blowing up boards. FWIW, git-rebase, git-cherry-pick and git-am -3 track the rename in my patch just fine.
->>>>>
->>>>
->>>> That's fair enough, since  Kevin Acked and Benoit is pulling it, I'm fine with
->>>> rebasing on top of it and we avoid any merge conflicts.
->>>>
->>>
->>> I noticed - there were still some comments from Felipe on the v4 series of this
->>> patch regarding RF cape and HDMI may be breaking it. How are you addressing that?
->>
->> Capes will never go into the .dts and HDMI support needs some serious patching before it can get enabled in the DT. And the RF cape isn't being sold since it has no sw support. No need to worry about things in the 3.15/3.16 timeframe. Unless you want this LDO3 fix not to go in ASAP.
->>
->> Joel, is there anything relevant *right now* blocking this patch going in? If not, please test it and add your Tested-by: line.
->>
+From: Shawn Guo [mailto:shawn.guo@linaro.org]
+Sent: Monday, September 09, 2013 10:54 PM + 800
+
+> To: Duan Fugang-B38611
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH v2 2/4] ARM: dts: add fec phy reset for imx6sl evk
+> board
 > 
-> We don't merge things in hurry and focus is to do things the right way.. I just
-> want to make sure that all possible comments have been addressed.
+> On Tue, Sep 03, 2013 at 12:26:23PM +0800, Fugang Duan wrote:
+> > Add fec phy gpio reset for imx6sl evk board. imx6sl evk board use
+> > GPIO4_21 to do phy reset, so add phy-reset-gpios and
+> > phy-reset-duration propery initial for fec device node.
+> >
+> > Signed-off-by: Fugang Duan  <B38611@freescale.com>
 > 
-> Otherwise patch looks OK and hope everyone else thinks so too. I am dealing with
-> some merge conflicts right now with my series on top of this though, but they
-> should be easy enough to fix up. That's delaying my testing, but otherwise as
-> such I don't have any objection to this patch (provided the conclusion is that
-> all comments have been addressed..). Thanks!
+> I have to drop this patch for now, because it causes a regression for me.
+> 
+> Before this patch, we can at least get a working fec driver in kernel if
+> U-Boot sets it up properly, e.g. we download kernel from network.  But
+> with the patch, the fec driver stops working on linux-next in the same use
+> case.
+> 
+> Shawn
 
-Koen,
+Shawn, you cannot drop this patch.
+1. Why do you get a working fec driver in kernel if U-Boot sets it up properly ?
+   Because the phy reset done by uboot, kernel cannot depend on uboot.
+   And even so, the driver still have problem for unit test.
+2. You see freescale internal kernel(3.10.9) work fine. There have one driver patch don't upstream.
+   I will send it out to net tree for review.
 
-One note though, since I don't use HDMI (or BBB much for that matter), I was ok
-with taking a risk of upping the ldo3 regulator voltage to 3.3v on my board
-which I needed to do to get to the boot prompt.
-
-I applied my AM335x DMA and MMC patches and tried to boot with rootfs as MMC1.
-
-With 1.8v, I get the following during boot:
-[    2.236043] mmc0: host doesn't support card's voltages
-[    2.241659] mmc0: error -22 whilst initialising SD card
-
-That's strange because I do have an SDHC card. With 3.3v it works fine.
-
-I will add a note about this to my series. Since this more of an MMC issue than
-anything, and your patch series doesn't enable MMC, you can add my tested-by:
-
-Tested-by: Joel Fernandes <joelf@ti.com>
-
-Later on, the regulator voltage may need to be tweaked for MMC support.
-
-Regards,
-
--Joel
+Thanks,
+Andy
+> 
+> > ---
+> >  arch/arm/boot/dts/imx6sl-evk.dts |    3 +++
+> >  1 files changed, 3 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/imx6sl-evk.dts
+> > b/arch/arm/boot/dts/imx6sl-evk.dts
+> > index 2886a59..c4d32a5 100644
+> > --- a/arch/arm/boot/dts/imx6sl-evk.dts
+> > +++ b/arch/arm/boot/dts/imx6sl-evk.dts
+> > @@ -23,6 +23,8 @@
+> >  	pinctrl-names = "default";
+> >  	pinctrl-0 = <&pinctrl_fec_1>;
+> >  	phy-mode = "rmii";
+> > +	phy-reset-gpios = <&gpio4 21 0>; /* GPIO4_21 */
+> > +	phy-reset-duration = <1>;
+> >  	status = "okay";
+> >  };
+> >
+> > @@ -38,6 +40,7 @@
+> >  				MX6SL_PAD_SD2_DAT7__GPIO5_IO00    0x17059
+> >  				MX6SL_PAD_SD2_DAT6__GPIO4_IO29    0x17059
+> >  				MX6SL_PAD_REF_CLK_32K__GPIO3_IO22 0x17059
+> > +				MX6SL_PAD_FEC_TX_CLK__GPIO4_IO21  0x80000000
+> >  			>;
+> >  		};
+> >  	};
+> > --
+> > 1.7.1
+> >
+> >
