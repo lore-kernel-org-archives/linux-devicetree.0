@@ -1,379 +1,133 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: [PATCH v2 1/2] video: ARM CLCD: Add DT support
-Date: Tue, 10 Sep 2013 11:25:25 +0100
-Message-ID: <1378808726-32535-1-git-send-email-pawel.moll@arm.com>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Subject: Re: [PATCH v4 12/19] cpufreq: cpufreq-cpu0: remove device tree parsing
+ for cpu nodes
+Date: Tue, 10 Sep 2013 11:56:17 +0100
+Message-ID: <522EFAD1.4020709@arm.com>
+References: <1374492747-13879-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1376991021-12160-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1376991021-12160-13-git-send-email-Sudeep.KarkadaNagesha@arm.com> <Pine.LNX.4.64.1309061539310.11068@axis700.grange> <522D93D7.4010307@arm.com> <20130909143253.GD4624@S2101-09.ap.freescale.net> <522DE822.3030907@arm.com> <20130910024404.GC5815@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20130910024404.GC5815@S2101-09.ap.freescale.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Viresh Kumar <viresh.kumar@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jonas Bonn <jonas@southpole.se>, Michal Simek <monstr@monstr.eu>, "Rafael J. Wysocki" <rjw@sisk.pl>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic DT bindings for the PL11x CLCD cells
-and make their fbdev driver use them.
+On 10/09/13 03:44, Shawn Guo wrote:
+> On Mon, Sep 09, 2013 at 04:24:18PM +0100, Sudeep KarkadaNagesha wrote:
+>> Hi Shawn,
+>>
+>> Ok. But I am bit suspicious about devm_clk_get(cpu_dev, NULL).
+>> I don't understand completely as how the clock are registered(whether
+>> with dev_id or with connection_id).
+> 
+> As the connection_id of devm_clk_get() call here is NULL, the clock
+> lookup should be registered with a proper dev_id in clk_register_clkdev()
+> call.  And that's what you have seen with imx and shmobile code.
+> 
+>
+>> A quick grep revealed that i.mx and shmobile is using conection id while
+>> registering.
+> 
+> They are using dev_id.
+> 
+Yes correct. I misunderstood, was expecting caller to pass dev and clk
+layer extract dev_name so that even when device name is changed the clk
+registration need not be changed.
 
-Signed-off-by: Pawel Moll <pawel.moll@arm.com>
----
+>> If the clock is registered with connection id and retrieved
+>> with cpu_dev(now dev_id is cpu0 and not cpufreq-cpu0), IIUC that would
+>> break. If we pass pdev->dev for clk_get, it should be fine but again
+>> IIUC it breaks highbank which gets all the information from DT.
+> 
+> If the clock lookup is from DT, we should be just fine, since it will
+> work as long as the DT node with 'clocks' property (/cpus/cpu@0 in this
+> case) is attached to the struct device pointer of devm_clk_get() call.
+> 
+This can be ignored if we are registering with "cpu0" as below in your
+patch.
 
-Changes since v1:
-- minor code cleanups as suggested by Sylwester Nawrocki
+>> So only solution I can think of is to continue to have the code
+>> assigning (&pdev->dev)->of_node with cpu device node which is not clean
+>> and arguable as incorrect since there is no DT node for cpufreq-cpu0.
+>> I don't have a strong opinion though.
+>>
+>> Let me know how would you like to fix this.
+> 
+> So we only need to change all clkdev registration to use "cpu0" as
+> dev_id intstead of "cpufreq-cpu0.0", something like below.
+> 
+> And for imx, it should work even without the changes, because we have
+> device tree lookup ready there, and those clk_register_clkdev() calls
+> can just be removed now.  But I prefer to include the change and leave
+> the cleanup to another patch for keeping the change log clear.
+> 
+Ok makes sense, do you want me to include this patch also as fix.
+I can send a series to fix this if you OK:
+1. Fix in cpufreq-cpu0
+2. Fix in i.MX driver and platform file
+3. Patch below
 
- .../devicetree/bindings/video/arm,pl11x.txt        |  87 +++++++++
- drivers/video/Kconfig                              |   1 +
- drivers/video/amba-clcd.c                          | 211 +++++++++++++++++++++
- 3 files changed, 299 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/arm,pl11x.txt
+Regards,
+Sudeep
 
-diff --git a/Documentation/devicetree/bindings/video/arm,pl11x.txt b/Documentation/devicetree/bindings/video/arm,pl11x.txt
-new file mode 100644
-index 0000000..7eb77aa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/arm,pl11x.txt
-@@ -0,0 +1,87 @@
-+* ARM PrimeCell Color LCD (CLCD) Controller PL110/PL111
-+
-+See also Documentation/devicetree/bindings/arm/primecell.txt
-+
-+Required properties:
-+
-+- compatible: must be one of:
-+			"arm,pl110", "arm,primecell"
-+			"arm,pl111", "arm,primecell"
-+- reg: base address and size of the control registers block
-+- interrupts: either a single interrupt specifier representing the
-+		combined interrupt output (CLCDINTR) or an array of
-+		four interrupt specifiers for CLCDMBEINTR,
-+		CLCDVCOMPINTR, CLCDLNBUINTR, CLCDFUFINTR; in the
-+		latter case interrupt names must be specified
-+		(see below)
-+- interrupt-names: when four interrupts are specified, their names:
-+			"mbe", "vcomp", "lnbu", "fuf"
-+			must be specified in order respective to the
-+			interrupt specifiers
-+- clocks: contains phandle and clock specifier pairs for the entries
-+		in the clock-names property. See
-+		Documentation/devicetree/binding/clock/clock-bindings.txt
-+- clocks names: should contain "clcdclk" and "apb_pclk"
-+
-+Optional properties:
-+
-+- video-ram: phandle to a node describing specialized video memory
-+		(that is *not* described in the top level "memory" node)
-+		that must be used as a framebuffer, eg. due to restrictions
-+		of the system interconnect; the node must contain a
-+		standard reg property describing the address and the size
-+		of the memory area
-+- max-framebuffer-size: maximum size in bytes of the framebuffer the
-+			system can handle, eg. in terms of available
-+			memory bandwidth
-+
-+In the simplest case of a display panel being connected directly to the
-+CLCD, it can be described in the node:
-+
-+- panel-dimensions: (optional) array of two numbers (width and height)
-+			describing physical dimension in mm of the panel
-+- panel-type: (required) must be "tft" or "stn", defines panel type
-+- panel-tft-interface: (for "tft" panel type) array of 3 numbers defining
-+			widths in bits of the R, G and B components
-+- panel-tft-rb-swapped: (for "tft" panel type) if present means that
-+			the R & B components are swapped on the board
-+- panel-stn-color: (for "stn" panel type) if present means that
-+			the panel is a colour STN display, if missing
-+			is a monochrome display
-+- panel-stn-dual: (for "stn" panel type) if present means that there
-+			are two STN displays connected
-+- panel-stn-4bit: (for monochrome "stn" panel) if present means
-+			that the monochrome display is connected
-+			via 4 bit-wide interface
-+- display-timings: standard display timings sub-node, see
-+			Documentation/devicetree/bindings/video/display-timing.txt
-+
-+Example:
-+
-+			clcd@1f0000 {
-+				compatible = "arm,pl111", "arm,primecell";
-+				reg = <0x1f0000 0x1000>;
-+				interrupts = <14>;
-+				clocks = <&v2m_oscclk1>, <&smbclk>;
-+				clock-names = "clcdclk", "apb_pclk";
-+
-+				video-ram = <&v2m_vram>;
-+				max-framebuffer-size = <614400>; /* 640x480 16bpp */
-+
-+				panel-type = "tft";
-+				panel-tft-interface = <8 8 8>;
-+				display-timings {
-+					native-mode = <&v2m_clcd_timing0>;
-+					v2m_clcd_timing0: vga {
-+						clock-frequency = <25175000>;
-+						hactive = <640>;
-+						hback-porch = <40>;
-+						hfront-porch = <24>;
-+						hsync-len = <96>;
-+						vactive = <480>;
-+						vback-porch = <32>;
-+						vfront-porch = <11>;
-+						vsync-len = <2>;
-+					};
-+				};
-+			};
-diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-index 4cf1e1d..375bf63 100644
---- a/drivers/video/Kconfig
-+++ b/drivers/video/Kconfig
-@@ -316,6 +316,7 @@ config FB_ARMCLCD
- 	select FB_CFB_FILLRECT
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
-+	select VIDEOMODE_HELPERS if OF
- 	help
- 	  This framebuffer device driver is for the ARM PrimeCell PL110
- 	  Colour LCD controller.  ARM PrimeCells provide the building
-diff --git a/drivers/video/amba-clcd.c b/drivers/video/amba-clcd.c
-index 0a2cce7..7f36964 100644
---- a/drivers/video/amba-clcd.c
-+++ b/drivers/video/amba-clcd.c
-@@ -25,6 +25,11 @@
- #include <linux/amba/clcd.h>
- #include <linux/clk.h>
- #include <linux/hardirq.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <video/of_display_timing.h>
-+#include <video/of_videomode.h>
- 
- #include <asm/sizes.h>
- 
-@@ -542,6 +547,209 @@ static int clcdfb_register(struct clcd_fb *fb)
- 	return ret;
- }
- 
-+#ifdef CONFIG_OF
-+static int clcdfb_of_get_tft_panel(struct device_node *node,
-+		struct clcd_panel *panel)
-+{
-+	int err;
-+	u32 rgb[3];
-+
-+	err = of_property_read_u32_array(node, "panel-tft-interface", rgb, 3);
-+	if (err)
-+		return err;
-+
-+	/* Bypass pixel clock divider, data output on the falling edge */
-+	panel->tim2 = TIM2_BCD | TIM2_IPC;
-+
-+	/* TFT display, vert. comp. interrupt at the start of the back porch */
-+	panel->cntl |= CNTL_LCDTFT | CNTL_LCDVCOMP(1);
-+
-+	if (rgb[0] >= 4 && rgb[1] >= 4 && rgb[2] >= 4)
-+		panel->caps |= CLCD_CAP_444;
-+	if (rgb[0] >= 5 && rgb[1] >= 5 && rgb[2] >= 5)
-+		panel->caps |= CLCD_CAP_5551;
-+	if (rgb[0] >= 5 && rgb[1] >= 6 && rgb[2] >= 5)
-+		panel->caps |= CLCD_CAP_565;
-+	if (rgb[0] >= 8 && rgb[1] >= 8 && rgb[2] >= 8)
-+		panel->caps |= CLCD_CAP_888;
-+
-+	if (of_get_property(node, "panel-tft-rb-swapped", NULL))
-+		panel->caps &= ~CLCD_CAP_RGB;
-+	else
-+		panel->caps &= ~CLCD_CAP_BGR;
-+
-+	return 0;
-+}
-+
-+static int clcdfb_snprintf_mode(char *buf, int size, struct fb_videomode *mode)
-+{
-+	return snprintf(buf, size, "%ux%u@%u", mode->xres, mode->yres,
-+			mode->refresh);
-+}
-+
-+static int clcdfb_of_init_display(struct clcd_fb *fb)
-+{
-+	struct device_node *node = fb->dev->dev.of_node;
-+	int err, len;
-+	char *mode_name;
-+	u32 max_size;
-+	u32 dimensions[2];
-+	const char *panel_type;
-+
-+	fb->panel = devm_kzalloc(&fb->dev->dev, sizeof(*fb->panel), GFP_KERNEL);
-+	if (!fb->panel)
-+		return -ENOMEM;
-+
-+	err = of_get_fb_videomode(node, &fb->panel->mode, OF_USE_NATIVE_MODE);
-+	if (err)
-+		return err;
-+
-+	len = clcdfb_snprintf_mode(NULL, 0, &fb->panel->mode);
-+	mode_name = devm_kzalloc(&fb->dev->dev, len + 1, GFP_KERNEL);
-+	clcdfb_snprintf_mode(mode_name, len + 1, &fb->panel->mode);
-+	fb->panel->mode.name = mode_name;
-+
-+	err = of_property_read_u32(node, "max-framebuffer-size", &max_size);
-+	if (!err)
-+		fb->panel->bpp = max_size / (fb->panel->mode.xres *
-+				fb->panel->mode.yres) * 8;
-+	else
-+		fb->panel->bpp = 32;
-+
-+#ifdef CONFIG_CPU_BIG_ENDIAN
-+	fb->panel->cntl |= CNTL_BEBO;
-+#endif
-+
-+	if (of_property_read_u32_array(node, "panel-dimensions",
-+			dimensions, 2) == 0) {
-+		fb->panel->width = dimensions[0];
-+		fb->panel->height = dimensions[1];
-+	} else {
-+		fb->panel->width = -1;
-+		fb->panel->height = -1;
-+	}
-+
-+	panel_type = of_get_property(node, "panel-type", &len);
-+	if (strncmp(panel_type, "tft", len) == 0)
-+		return clcdfb_of_get_tft_panel(node, fb->panel);
-+	else
-+		return -EINVAL;
-+}
-+
-+static int clcdfb_of_vram_setup(struct clcd_fb *fb)
-+{
-+	struct device_node *node = of_parse_phandle(fb->dev->dev.of_node,
-+			"video-ram", 0);
-+	u64 size;
-+	int err;
-+
-+	if (!node)
-+		return -ENODEV;
-+
-+	err = clcdfb_of_init_display(fb);
-+	if (err)
-+		return err;
-+
-+	fb->fb.screen_base = of_iomap(node, 0);
-+	if (!fb->fb.screen_base)
-+		return -ENOMEM;
-+
-+	fb->fb.fix.smem_start = of_translate_address(node,
-+			of_get_address(node, 0, &size, NULL));
-+	fb->fb.fix.smem_len = size;
-+
-+	return 0;
-+}
-+
-+static int clcdfb_of_vram_mmap(struct clcd_fb *fb, struct vm_area_struct *vma)
-+{
-+	unsigned long off, user_size, kernel_size;
-+
-+	off = vma->vm_pgoff << PAGE_SHIFT;
-+	user_size = vma->vm_end - vma->vm_start;
-+	kernel_size = fb->fb.fix.smem_len;
-+
-+	if (off >= kernel_size || user_size > (kernel_size - off))
-+		return -ENXIO;
-+
-+	return remap_pfn_range(vma, vma->vm_start,
-+			__phys_to_pfn(fb->fb.fix.smem_start) + vma->vm_pgoff,
-+			user_size,
-+			pgprot_writecombine(vma->vm_page_prot));
-+}
-+
-+static void clcdfb_of_vram_remove(struct clcd_fb *fb)
-+{
-+	iounmap(fb->fb.screen_base);
-+}
-+
-+static int clcdfb_of_dma_setup(struct clcd_fb *fb)
-+{
-+	unsigned long framesize;
-+	dma_addr_t dma;
-+	int err;
-+
-+	err = clcdfb_of_init_display(fb);
-+	if (err)
-+		return err;
-+
-+	framesize = fb->panel->mode.xres * fb->panel->mode.yres *
-+			fb->panel->bpp / 8;
-+	fb->fb.screen_base = dma_alloc_writecombine(&fb->dev->dev, framesize,
-+			&dma, GFP_KERNEL);
-+	if (!fb->fb.screen_base)
-+		return -ENOMEM;
-+
-+	fb->fb.fix.smem_start = dma;
-+	fb->fb.fix.smem_len = framesize;
-+
-+	return 0;
-+}
-+
-+static int clcdfb_of_dma_mmap(struct clcd_fb *fb, struct vm_area_struct *vma)
-+{
-+	return dma_mmap_writecombine(&fb->dev->dev, vma, fb->fb.screen_base,
-+			fb->fb.fix.smem_start, fb->fb.fix.smem_len);
-+}
-+
-+static void clcdfb_of_dma_remove(struct clcd_fb *fb)
-+{
-+	dma_free_writecombine(&fb->dev->dev, fb->fb.fix.smem_len,
-+			fb->fb.screen_base, fb->fb.fix.smem_start);
-+}
-+
-+static struct clcd_board *clcdfb_of_get_board(struct amba_device *dev)
-+{
-+	struct clcd_board *board = devm_kzalloc(&dev->dev, sizeof(*board),
-+			GFP_KERNEL);
-+	struct device_node *node = dev->dev.of_node;
-+
-+	if (!board)
-+		return NULL;
-+
-+	board->name = of_node_full_name(node);
-+	board->caps = CLCD_CAP_ALL;
-+	board->check = clcdfb_check;
-+	board->decode = clcdfb_decode;
-+	if (of_find_property(node, "video-ram", NULL)) {
-+		board->setup = clcdfb_of_vram_setup;
-+		board->mmap = clcdfb_of_vram_mmap;
-+		board->remove = clcdfb_of_vram_remove;
-+	} else {
-+		board->setup = clcdfb_of_dma_setup;
-+		board->mmap = clcdfb_of_dma_mmap;
-+		board->remove = clcdfb_of_dma_remove;
-+	}
-+
-+	return board;
-+}
-+#else
-+static struct clcd_board *clcdfb_of_get_board(struct amba_dev *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int clcdfb_probe(struct amba_device *dev, const struct amba_id *id)
- {
- 	struct clcd_board *board = dev->dev.platform_data;
-@@ -549,6 +757,9 @@ static int clcdfb_probe(struct amba_device *dev, const struct amba_id *id)
- 	int ret;
- 
- 	if (!board)
-+		board = clcdfb_of_get_board(dev);
-+
-+	if (!board)
- 		return -EINVAL;
- 
- 	ret = amba_request_regions(dev, NULL);
--- 
-1.8.1.2
+> 
+> ---8<----------
+> 
+> diff --git a/arch/arm/mach-imx/clk-imx27.c b/arch/arm/mach-imx/clk-imx27.c
+> index c3cfa41..c6b40f3 100644
+> --- a/arch/arm/mach-imx/clk-imx27.c
+> +++ b/arch/arm/mach-imx/clk-imx27.c
+> @@ -285,7 +285,7 @@ int __init mx27_clocks_init(unsigned long fref)
+>  	clk_register_clkdev(clk[ata_ahb_gate], "ata", NULL);
+>  	clk_register_clkdev(clk[rtc_ipg_gate], NULL, "imx21-rtc");
+>  	clk_register_clkdev(clk[scc_ipg_gate], "scc", NULL);
+> -	clk_register_clkdev(clk[cpu_div], NULL, "cpufreq-cpu0.0");
+> +	clk_register_clkdev(clk[cpu_div], NULL, "cpu0");
+>  	clk_register_clkdev(clk[emi_ahb_gate], "emi_ahb" , NULL);
+>  
+>  	mxc_timer_init(MX27_IO_ADDRESS(MX27_GPT1_BASE_ADDR), MX27_INT_GPT1);
+> diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c b/arch/arm/mach-imx/clk-imx51-imx53.c
+> index 1a56a33..de1964c 100644
+> --- a/arch/arm/mach-imx/clk-imx51-imx53.c
+> +++ b/arch/arm/mach-imx/clk-imx51-imx53.c
+> @@ -328,7 +328,7 @@ static void __init mx5_clocks_common_init(unsigned long rate_ckil,
+>  	clk_register_clkdev(clk[ssi2_ipg_gate], NULL, "imx-ssi.1");
+>  	clk_register_clkdev(clk[ssi3_ipg_gate], NULL, "imx-ssi.2");
+>  	clk_register_clkdev(clk[sdma_gate], NULL, "imx35-sdma");
+> -	clk_register_clkdev(clk[cpu_podf], NULL, "cpufreq-cpu0.0");
+> +	clk_register_clkdev(clk[cpu_podf], NULL, "cpu0");
+>  	clk_register_clkdev(clk[iim_gate], "iim", NULL);
+>  	clk_register_clkdev(clk[dummy], NULL, "imx2-wdt.0");
+>  	clk_register_clkdev(clk[dummy], NULL, "imx2-wdt.1");
+> diff --git a/arch/arm/mach-shmobile/clock-r8a73a4.c b/arch/arm/mach-shmobile/clock-r8a73a4.c
+> index 8ea5ef6..5bd2e85 100644
+> --- a/arch/arm/mach-shmobile/clock-r8a73a4.c
+> +++ b/arch/arm/mach-shmobile/clock-r8a73a4.c
+> @@ -555,7 +555,7 @@ static struct clk_lookup lookups[] = {
+>  	CLKDEV_CON_ID("pll2h",			&pll2h_clk),
+>  
+>  	/* CPU clock */
+> -	CLKDEV_DEV_ID("cpufreq-cpu0",		&z_clk),
+> +	CLKDEV_DEV_ID("cpu0",			&z_clk),
+>  
+>  	/* DIV6 */
+>  	CLKDEV_CON_ID("zb",			&div6_clks[DIV6_ZB]),
+> diff --git a/arch/arm/mach-shmobile/clock-sh73a0.c b/arch/arm/mach-shmobile/clock-sh73a0.c
+> index 1942eae..c92c023 100644
+> --- a/arch/arm/mach-shmobile/clock-sh73a0.c
+> +++ b/arch/arm/mach-shmobile/clock-sh73a0.c
+> @@ -616,7 +616,7 @@ static struct clk_lookup lookups[] = {
+>  	CLKDEV_DEV_ID("smp_twd", &twd_clk), /* smp_twd */
+>  
+>  	/* DIV4 clocks */
+> -	CLKDEV_DEV_ID("cpufreq-cpu0", &div4_clks[DIV4_Z]),
+> +	CLKDEV_DEV_ID("cpu0", &div4_clks[DIV4_Z]),
+>  
+>  	/* DIV6 clocks */
+>  	CLKDEV_CON_ID("vck1_clk", &div6_clks[DIV6_VCK1]),
+> 
+> 
+
+
