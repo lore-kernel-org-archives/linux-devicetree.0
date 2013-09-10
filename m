@@ -1,104 +1,42 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 2/2] regulator: core: add support for configuring turn-on time through constraints
-Date: Tue, 10 Sep 2013 16:48:08 +0530
-Message-ID: <1378811888-2268-2-git-send-email-ldewangan@nvidia.com>
-References: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v4 12/19] cpufreq: cpufreq-cpu0: remove device tree
+ parsing for cpu nodes
+Date: Tue, 10 Sep 2013 19:19:50 +0800
+Message-ID: <20130910111947.GH5815@S2101-09.ap.freescale.net>
+References: <1374492747-13879-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <1376991021-12160-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <1376991021-12160-13-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <Pine.LNX.4.64.1309061539310.11068@axis700.grange>
+ <522D93D7.4010307@arm.com>
+ <20130909143253.GD4624@S2101-09.ap.freescale.net>
+ <522DE822.3030907@arm.com>
+ <20130910024404.GC5815@S2101-09.ap.freescale.net>
+ <522EFAD1.4020709@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378811888-2268-1-git-send-email-ldewangan@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <522EFAD1.4020709@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, Laxman Dewangan <ldewangan@nvidia.com>
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Viresh Kumar <viresh.kumar@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jonas Bonn <jonas@southpole.se>, Michal Simek <monstr@monstr.eu>, "Rafael J. Wysocki" <rjw@sisk.pl>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-The Turn-ON time of the regulator depends on the regulator device's
-electrical characteristics. Sometimes regulator turn-on time also
-depends on the capacitive load on the given platform and it can be
-more than the datasheet value.
+On Tue, Sep 10, 2013 at 11:56:17AM +0100, Sudeep KarkadaNagesha wrote:
+> > So we only need to change all clkdev registration to use "cpu0" as
+> > dev_id intstead of "cpufreq-cpu0.0", something like below.
+> > 
+> > And for imx, it should work even without the changes, because we have
+> > device tree lookup ready there, and those clk_register_clkdev() calls
+> > can just be removed now.  But I prefer to include the change and leave
+> > the cleanup to another patch for keeping the change log clear.
+> > 
+> Ok makes sense, do you want me to include this patch also as fix.
+> I can send a series to fix this if you OK:
+> 1. Fix in cpufreq-cpu0
+> 2. Fix in i.MX driver and platform file
+> 3. Patch below
 
-The driver provides the enable-time as per datasheet.
+Yes, please.  Thanks.
 
-Add support for configure the enable time through regulator constraints
-so that regulator core can take this value for enable time for that
-regulator.
-
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
- .../devicetree/bindings/regulator/regulator.txt    |    1 +
- drivers/regulator/core.c                           |    2 ++
- drivers/regulator/of_regulator.c                   |    6 ++++++
- include/linux/regulator/machine.h                  |    2 ++
- 4 files changed, 11 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 2bd8f09..f04b165 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -14,6 +14,7 @@ Optional properties:
- - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
-   For hardwares which support disabling ramp rate, it should be explicitly
-   intialised to zero (regulator-ramp-delay = <0>) for disabling ramp delay.
-+- regulator-enable-time: Turn ON time for regulator(in uS)
- 
- Deprecated properties:
- - regulator-compatible: If a regulator chip contains multiple
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index a01b8b3..8dea3a4 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1186,6 +1186,8 @@ overflow_err:
- 
- static int _regulator_get_enable_time(struct regulator_dev *rdev)
- {
-+	if (rdev->constraints->enable_time)
-+		return rdev->constraints->enable_time;
- 	if (!rdev->desc->ops->enable_time)
- 		return rdev->desc->enable_time;
- 	return rdev->desc->ops->enable_time(rdev);
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 7827384..3152c03 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -23,6 +23,8 @@ static void of_get_regulation_constraints(struct device_node *np,
- 	const __be32 *min_uA, *max_uA, *ramp_delay;
- 	struct property *prop;
- 	struct regulation_constraints *constraints = &(*init_data)->constraints;
-+	int ret;
-+	u32 pval;
- 
- 	constraints->name = of_get_property(np, "regulator-name", NULL);
- 
-@@ -73,6 +75,10 @@ static void of_get_regulation_constraints(struct device_node *np,
- 		else
- 			constraints->ramp_disable = true;
- 	}
-+
-+	ret = of_property_read_u32(np, "regulator-enable-time", &pval);
-+	if (!ret)
-+		constraints->enable_time = pval;
- }
- 
- /**
-diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
-index 999b20c..a9cf1af 100644
---- a/include/linux/regulator/machine.h
-+++ b/include/linux/regulator/machine.h
-@@ -95,6 +95,7 @@ struct regulator_state {
-  * @initial_state: Suspend state to set by default.
-  * @initial_mode: Mode to set at startup.
-  * @ramp_delay: Time to settle down after voltage change (unit: uV/us)
-+ * @enable_time: Turn ON time of the rails (unit: us)
-  */
- struct regulation_constraints {
- 
-@@ -129,6 +130,7 @@ struct regulation_constraints {
- 	unsigned int initial_mode;
- 
- 	unsigned int ramp_delay;
-+	unsigned int enable_time;
- 
- 	/* constraint flags */
- 	unsigned always_on:1;	/* regulator never off when system is on */
--- 
-1.7.1.1
+Shawn
