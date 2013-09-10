@@ -1,105 +1,81 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 1/2] i2c: qup: Add device tree bindings information
-Date: Tue, 10 Sep 2013 17:43:25 +0300
-Message-ID: <1378824205.960.41.camel@iivanov-dev.int.mm-sol.com>
-References: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
-	 <3A0F4153-1C55-4008-8EB1-D6FA60D87CEA@codeaurora.org>
-	 <1377797186.30358.14.camel@localhost>
-	 <767E9FBB-2975-4795-9C7E-69E302511FF2@codeaurora.org>
-	 <1378814937.960.37.camel@iivanov-dev.int.mm-sol.com>
-	 <20130910135907.GP808@joshc.qualcomm.com>
+From: Mike Dunn <mikedunn@newsguy.com>
+Subject: Re: [PATCH v2] pwm: pxa: add device tree support to pwm driver
+Date: Tue, 10 Sep 2013 07:53:15 -0700
+Message-ID: <522F325B.4090602@newsguy.com>
+References: <1378669218-10944-1-git-send-email-mikedunn@newsguy.com>
+ <20130909120845.GB22197@ulmo> <522E0D72.3080805@newsguy.com>
+ <522E14F5.1020909@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20130910135907.GP808@joshc.qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Kumar Gala <galak@codeaurora.org>, wsa@the-dreams.de, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, grant.likely@linaro.org, gavidov@codeaurora.org, sdharia@codeaurora.org, alokc@codeaurora.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <522E14F5.1020909@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Marek Vasut <marex@denx.de>, linux-pwm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, 
-
-On Tue, 2013-09-10 at 08:59 -0500, Josh Cartwright wrote: 
-> [Hmm.  Fixing b0rked LKML address; that might explain why I am not
-> seeing Kumar's replies.]
+On 09/09/2013 11:35 AM, Stephen Warren wrote:
+> On 09/09/2013 12:03 PM, Mike Dunn wrote:
+>> On 09/09/2013 05:08 AM, Thierry Reding wrote:
+>>> On Sun, Sep 08, 2013 at 12:40:18PM -0700, Mike Dunn wrote:
+>>>> This patch adds device tree support to the pxa's pwm driver.  Only an OF match
 > 
-
-Yes, sorry about this.
-
-> On Tue, Sep 10, 2013 at 03:08:57PM +0300, Ivan T. Ivanov wrote:
-> > Hi Kumar,
-> > 
-> > On Fri, 2013-08-30 at 10:21 -0500, Kumar Gala wrote: 
-> > > On Aug 29, 2013, at 12:26 PM, Ivan T. Ivanov wrote:
-> > > >>> +
-> > > >>> +Optional properties :
-> > > >>> + - Child nodes conforming to i2c bus binding
-> > > >>> + - clock-frequency : Desired I2C bus clock frequency in Hz. If
-> > > >>> +		not set thedefault frequency is 100kHz
-> > > >>> + - qcom,src-freq : Frequency of the source clocking this bus in Hz.
-> > > >>> +		Divider value is set based on soruce-frequency and
-> > > >>> +		desired I2C bus frequency. If this value is not
-> > > >>> +		provided, the source clock is assumed to be running
-> > > >>> +		at 19.2 MHz.
-> > > >> 
-> > > >> I'd spell out frequency instead of 'freq' to be consistent with 'clock-frequency'
-> > > > 
-> > > > ok.
-> > > > 
-> > > >> 
-> > > >> Is the frequency of the 'iface' clock?  Can we not use clk_get_rate?
-> > > > 
-> > > > It is for 'core' clock. I think that for higher I2C bus frequencies,
-> > > > 'core' clock have to be higher, but I am not sure what is relation.
-> > > 
-> > > Ok, can we use clk_get_rate on the 'core' clk to get its frequency instead of needing a DT prop for it?
-> > 
-> > Probably I didn't explain it well. The 'core' clock have to be
-> > accelerated before higher bus frequencies could be achieved.
+>>>> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
 > 
-> I think what Kumar is suggesting is that the QUP driver not do an
-> explicit clk_set_rate() at all (which AFAICT is what's currently being
-> done to set the consuming clock to the rate specified in
-> 'qcom,src-freq'), but instead assume that the consuming clock has
-> already been setup properly.  Then the driver just uses clk_get_rate()
-> and clock-frequency to calculate how to setup any internal dividers.
-
-Yes, I think I got it, but the point is that clock is not already set 
-and it is driver responsibility to do that.
-
+>>>> +Marvell pwm controller
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:
+>>>> +  for pxa25x, pxa27x, pxa168, pxa910: must be compatible = "marvell,pxa250-pwm";
+>>>> +- reg: physical base address and length of the registers used by the pwm channel
+>>>
+>>> "pwm" -> "PWM". There are a few more occurrences that I haven't
+>>> explicitly pointed out.
+>>>
+>>>> +  NB: One device instance must be created for each pwm that is used, so the
+>>>> +  length covers only the register window for one pwm output, not that of the
+>>>> +  entire pwm controller.  Currently length is 0x10 for all supported devices.
+>>>
+>>> I'm not sure I like that very much. It seems a wrong representation of
+>>> the hardware for the sake of modifying a smaller number of lines in the
+>>> driver.
+>>
+>> I don't like it either, but this is an existing driver defect that will need to
+>> be corrected.  To do so, I will need to to survey all the supported processors
+>> to determine how many pwm outputs is posessed by each.  And there may be some
+>> confusion in that regard; the driver says "pxa25x" has one, but my pxa255
+>> developer's manual makes no mention of a pwm.  The pxa270 I am testing on has
+>> four, but the driver says "pxa27x" has two, so currently (using platform_data
+>> with existing driver) two devices are instantiated, each with two pwms.  It
+>> seems that there are many variations within a single generation of the processor
+>> family, so to correctly identify the number of pwms, processor identification
+>> will have to be made on a finer granularity than the current "pxa25x", for
+>> example.  I'm guessing that the hardware designers had this
+>> one-device-instance-per-pwm approach in mind when they made the decision to
+>> segregate the register sets of each pwm.  I really hope that this sin can be
+>> forgiven :)
 > 
-> > > >>> +Aliases: An alias may optionally be used to bind the I2C controller
-> > > >>> +to bus number. Aliases are of the form i2c<n> where <n> is an integer
-> > > >>> +representing the bus number to use.
-> > > >>> +
-> > > >>> +Example:
-> > > >>> +
-> > > >>> + aliases {
-> > > >>> +		i2c0 = &i2c_A;
-> > > >>> +		i2c1 = &i2c_B;
-> > > >>> +		i2c2 = &i2c_C;
-> > > >>> + };
-> > > >> 
-> > > >> What is the purpose here?
-> > > > 
-> > > > Define on which I2C bus this controller operate. I2C client 
-> > > > drivers usually do i2c_get_adapter(bus_number) before its
-> > > > registration. This is for drivers before invention of
-> > > > of_i2c_register_devices(), I believe.
-> > > 
-> > > Since this is for upstream why dont we use of_i2c_register_devices() and remove this stuff related to aliases.
-> > 
-> > Adapter driver already is using of_i2c_register_devices(). Also OF
-> > helper function will/or is already part of i2c_register_adapter().
-> > Attempt here was to make it compatible with older i2c client drivers.
+> The DT binding is an ABI, so it needs to correctly represent the HW. As
+> such, I'd say that if the binding is wrong, we need to fix it even if it
+> means a lot of work.
 > 
-> I agree with Kumar on removing this.  If we decide it is something worth
-> keeping, logic to support it doesn't belong in the QUP driver, but in
-> the i2c core.
+> That said, if each PWM truly is a *completely* independent block, with
+> non-overlapping register spaces, there's certainly an argument that it's
+> perfectly acceptable to represent each PWM as a separate DT node...
 
-I don't have strong objection here, will remove aliases support.
 
-Regards,
-Ivan 
-> 
+Thanks Stephen.  Yes, each pwm output has its own registers with no common
+control registers.  The only commonality is that they all share a clock in the
+clock unit.  But this is handled in the clock manager.
+
+Thanks,
+Mike
