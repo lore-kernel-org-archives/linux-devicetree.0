@@ -1,39 +1,69 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Tue, 10 Sep 2013 16:34:20 -0600
-Message-ID: <522F9E6C.2010905@wwwdotorg.org>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk> <2052193.CMUEUJFRgS@lem-wkst-02> <522F78CB.2020507@wwwdotorg.org> <20130910213718.GH29403@sirena.org.uk>
+From: "Christian Daudt" <csd@broadcom.com>
+Subject: Re: [PATCH v9 3/3] ARM: bcm281xx: Add device node for the GPIO
+ controller
+Date: Tue, 10 Sep 2013 15:32:26 -0700
+Message-ID: <522F9DFA.8000807@broadcom.com>
+References: <1378836423-12467-1-git-send-email-markus.mayer@linaro.org>
+ <1378836423-12467-4-git-send-email-markus.mayer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20130910213718.GH29403@sirena.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lars Poeschel <poeschel@lemonage.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1378836423-12467-4-git-send-email-markus.mayer@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Mayer <markus.mayer@linaro.org>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2013 03:37 PM, Mark Brown wrote:
-> On Tue, Sep 10, 2013 at 01:53:47PM -0600, Stephen Warren wrote:
-> 
->> Doesn't this patch call gpio_request() on the GPIO first, and
->> hence prevent the driver's own gpio_request() from succeeding,
->> since the GPIO is already requested? If this is not a problem, it
->> sounds like a bug in gpio_request() not ensuring mutual exclusion
->> for the GPIO.
-> 
-> Or at the very least something that's likely to break in the
-> future.
+On 13-09-10 11:07 AM, Markus Mayer wrote:
+> Add the GPIO controller device node for the Broadcom bcm281xx family of
+> mobile SoCs.
+>
+> Signed-off-by: Markus Mayer <markus.mayer@linaro.org>
+> Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
+> Reviewed-by: Matt Porter <matt.porter@linaro.org>
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>   arch/arm/boot/dts/bcm11351.dtsi |   16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+> index 05a5aab..77af396 100644
+> --- a/arch/arm/boot/dts/bcm11351.dtsi
+> +++ b/arch/arm/boot/dts/bcm11351.dtsi
+> @@ -68,6 +68,22 @@
+>   		clock-frequency = <32768>;
+>   	};
+>   
+> +	gpio: gpio@35003000 {
+> +		compatible = "brcm,bcm11351-gpio", "brcm,kona-gpio";
+> +		reg = <0x35003000 0x800>;
+> +		interrupts =
+> +		       <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH
+> +			GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH
+> +			GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH
+> +			GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
+> +			GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH
+> +			GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
+> +		#gpio-cells = <2>;
+> +		#interrupt-cells = <2>;
+> +		gpio-controller;
+> +		interrupt-controller;
+> +	};
+> +
+>   	sdio1: sdio@3f180000 {
+>   		compatible = "brcm,kona-sdhci";
+>   		reg = <0x3f180000 0x10000>;
+Applied to bcm armsoc/for-3.13/dt
 
-Looking at the GPIO code, it already prevents double-requests:
-
->         if (test_and_set_bit(FLAG_REQUESTED, &desc->flags) == 0) {
->                 desc_set_label(desc, label ? : "?");
->                 status = 0;
->         } else {
->                 status = -EBUSY;
->                 module_put(chip->owner);
->                 goto done;
->         }
-
-And I tested it in practice, and it really does fail.
+  thanks,
+    csd
