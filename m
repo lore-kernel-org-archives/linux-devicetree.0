@@ -1,96 +1,62 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [v3] powerpc/mpc85xx: Update the clock device tree nodes
-Date: Tue, 10 Sep 2013 16:46:46 -0500
-Message-ID: <1378849606.12204.359.camel@snotra.buserror.net>
-References: <1370480811-13700-1-git-send-email-Yuantian.Tang@freescale.com>
- <20130823200827.GA29737@home.buserror.net>
- <D07C73A334FF604B95B3CBD2A545D07B1503BE58@039-SN2MPN1-012.039d.mgd.msft.net>
- <1377536416.3033.18.camel@snotra.buserror.net>
- <D07C73A334FF604B95B3CBD2A545D07B1503F161@039-SN2MPN1-012.039d.mgd.msft.net>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 2/2] sh_eth: add device tree support
+Date: Wed, 11 Sep 2013 01:48:21 +0400
+Message-ID: <522F93A5.6010709@cogentembedded.com>
+References: <201309070343.25640.sergei.shtylyov@cogentembedded.com> <522E3770.9020305@wwwdotorg.org> <522F2F3A.5070406@cogentembedded.com> <522F37A7.90804@wwwdotorg.org> <522F5E67.8070006@cogentembedded.com> <522F7BF1.80100@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B1503F161@039-SN2MPN1-012.039d.mgd.msft.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Tang Yuantian-B29983 <B29983@freescale.com>
-Cc: Wood Scott-B07421 <B07421@freescale.com>, Mike Turquette <mturquette@linaro.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <522F7BF1.80100@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-08-26 at 21:49 -0500, Tang Yuantian-B29983 wrote:
-> > > > > +		};
-> > > > > +		pll1: pll1@820 {
-> > > > > +			#clock-cells = <1>;
-> > > > > +			reg = <0x820>;
-> > > > > +			compatible = "fsl,core-pll-clock";
-> > > > > +			clocks = <&clockgen>;
-> > > > > +			clock-output-names = "pll1", "pll1-div2", "pll1-
-> > div4";
-> > > > > +		};
-> > > >
-> > > > Please leave a blank line between properties and nodes, and between
-> > nodes.
-> > > >
-> > > OK, will add.
-> > >
-> > > > What does reg represent?  Where is the binding for this?
-> > > >
-> > > > The compatible is too vague.
-> > > Reg is register offset.
-> > 
-> > With no size?
-> 
-> No size is needed.
+Hello.
 
-Yes, it is.  Register blocks have size -- even if it's just a single
-register.
+On 09/11/2013 12:07 AM, Stephen Warren wrote:
 
-> > > It is too later to change since the clock driver is merged for months
-> > > although I sent this patch first.
-> > 
-> > It should not have gone in without an approved binding.  It seems it went
-> > in via Mike Turquette (why is a non-ARM-specific tree using linux-arm-
-> > kernel as its list, BTW?).  No ack from Ben, Kumar, or me is shown in the
-> > commit.
-> The Linux common clock framework is not ARM specific. Any other arch can use it.
+>>>>> Do you need any clocks properties, IP block reset signals, power
+>>>>> domains?
 
-Sure, it just seemed an odd choice of mailing list for something that
-isn't ARM-specific.
+>>>>      Currently not.
 
-> > In any case, you can preserve compatibility with existing trees without
-> > using this compatible in new trees.  The driver can check for both
-> > compatibles, with a comment indicating that "fsl,core-mux-clock" is
-> > deprecated and for compatibility only.
-> It is sub-clock node, is it really necessary to think about compatibility?
-> I think that's the node clockgen's responsibility.
+>>> What does "currently" mean? Does that mean that the Linux driver simply
+>>> doesn't touch those entities at present?
 
-It describes registers, so yes, you need to consider compatibility.  A
-clock provider is not responsible for figuring out how to program
-devices that consume its clocks, nor should it make any assumptions
-about such devices.
- 
-> > > Besides, it is not too bad because other arch use the similar name.
-> > 
-> > I don't follow.  This is a specific Freescale register interface, not a
-> > general concept.
-> > 
-> > In any case, which "similar names" are you referring to?  A search in
-> > arch/arm/boot/dts for "mux" with "clk" or "clock" turns up
-> > "allwinner,sun4i-apb1-mux-clk" which is much more specific than
-> > "fsl,core-mux-clock".
-> Ok, I will change the compatible string.
-> Do you think "fsl,ppc-core-*" is ok?
+>>     There's Ether clock but the driver doesn't manipulate it directly,
+>> assumingly it does this thru the runtime PM interface. As for the
+>> others, I simply don't know.
 
-No.  How about "fsl,qoriq-chassis1-*" (for e500mc/e5500) and
-fsl,qoriq-chassis2-*" (for e6500)?
+> If there's a clock, it should be represented in DT, even if the kernel
+> somehow gets access to the clock through some means other than parsing DT.
 
--Scott
+    Frankly speaking, I don't see the point.
+
+>>> If so, that's not enough to say
+>>> that those entities should not be described in the DT binding. We should
+>>> strive to make the binding completely describe all aspects of the HW,
+>>> irrespective of whether a particular driver happens to use that
+>>> information at present.
+
+>>     There's no DT representation for the clocks in SH-Mobile subarch yet.
+>> The same applies to the other entities you mentioned.
+
+> You can still write the binding to say that the appropriate clock
+> property must be present; the overall format of this property won't be
+> affected by the representation chosen for the SH-Mobile clocks.
+
+    Where can I find an example of such property, independent of the parent 
+clock node? All I could find with quick search refers with a phandle to a 
+clock node (we don't have now).
+
+> It seems like it'd be best to get the basic resources (like clocks)
+> represented in DT before trying to build blocks that use them.
+
+    We don't use them directly. And we need the Ether device tree support 
+*now*, while clock-related work will probably take months (there are plans to 
+switch Sh-Mobile to CCF in like 6 months).
+
+WBR, Sergei
+
