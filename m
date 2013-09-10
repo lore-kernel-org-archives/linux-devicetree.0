@@ -1,174 +1,86 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 2/2] i2c: New bus driver for the QUP I2C controller
-Date: Tue, 10 Sep 2013 18:10:56 +0300
-Message-ID: <1378825856.960.47.camel@iivanov-dev.int.mm-sol.com>
-References: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
-	 <1377782873-31931-2-git-send-email-iivanov@mm-sol.com>
-	 <20130910134650.GO808@joshc.qualcomm.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 2/2] sh_eth: add device tree support
+Date: Tue, 10 Sep 2013 09:15:51 -0600
+Message-ID: <522F37A7.90804@wwwdotorg.org>
+References: <201309070343.25640.sergei.shtylyov@cogentembedded.com> <522E3770.9020305@wwwdotorg.org> <522F2F3A.5070406@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20130910134650.GO808@joshc.qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: wsa@the-dreams.de, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, grant.likely@linaro.org, gavidov@codeaurora.org, sdharia@codeaurora.org, alokc@codeaurora.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel, linux-arm-msm@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <522F2F3A.5070406@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi, 
-
-On Tue, 2013-09-10 at 08:46 -0500, Josh Cartwright wrote: 
-> Hey Ivan-
+On 09/10/2013 08:39 AM, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Some nits below.
+> On 10-09-2013 1:02, Stephen Warren wrote:
 > 
-> On Thu, Aug 29, 2013 at 04:27:53PM +0300, Ivan T. Ivanov wrote:
-> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> > 
-> > This bus driver supports the QUP i2c hardware controller in the Qualcomm
-> > MSM SOCs.  The Qualcomm Universal Peripheral Engine (QUP) is a general
-> > purpose data path engine with input/output FIFOs and an embedded i2c
-> > mini-core. The driver supports FIFO mode (for low bandwidth	applications)
+>>> Add support of the device tree probing for the Renesas SH-Mobile SoCs
+>>> documenting the device tree binding as necessary.
 > 
-> Rogue tab in your commit message.
+>>> This work is loosely based on an original patch by Nobuhiro Iwamatsu
+>>> <nobuhiro.iwamatsu.yj@renesas.com>.
+> 
+>>> Index: net-next/Documentation/devicetree/bindings/net/sh_eth.txt
+> 
+>>> +- reg: offset and length of (1) the E-DMAC/feLic register block
+>>> (required),
+>>> +       (2) the TSU register block (optional).
+> 
+>> There's an argument that you should specify reg-names entries to allow
+>> arbitrary ordering or entries within reg, if there's more than one
+>> entry. But, I don't think it's mandatory, just something to consider at
+>> present.
+> 
+>    I also don't think it's needed, the driver has happily worked without
+> resource names so far.
+> 
+>>> +- interrupts: interrupt specifier for the sole interrupt.
+>>> +- phy-mode: string, operation mode of the PHY interface (a string that
+>>> +        of_get_phy_mode() can understand).
+> 
+>> DT bindings should be OS-agnostic. of_get_phy_mode() is Linux-specific.
+>> Please spell out the complete list of supported values here, without
+>> reference to Linux-specific code or documentation.
+> 
+>    I don't think listing the numerous values of this standrd property in
+> every file describing an Ethernet device is practical. How about I
+> create file ethernet.txt in the same directory (don't know why I'm the
+> first to do it despite many other driver using this property)?
 
-Will fix.
+We must list the values somewhere. Creating an ethernet.txt, documenting
+them there, and modifying the description of this property to reference
+ethernet.txt would be fine.
 
+>>> +- phy-handle: phandle of the PHY device (there should be a PHY
+>>> device subnode).
 > 
-> > and block mode (interrupt generated for each block-size data transfer).
-> > The driver currently does not support DMA transfers.
-> > 
-> > Shamelessly based on codeaurora version of the driver.
-> > 
-> > This controller could be found in the following chip-sets:
-> > msm9625, msm8974, msm8610, msm8226, mpq8092.
+>> Is this a custom property, or part of some generic PHY subsystem
+>> binding?
 > 
-> This may be good to include in the Kconfig help text.
+>    The latter.
+> 
+>> If the latter, please reference the DT binding document for
+>> that subsystem.
+> 
+>    Unfortunately, phy.txt in the same directory describes only
+> properties of the "ethernet-phy" nodes. I think the new ethernet.txt
+> would be more fitting for the purpose.
 
-Will do.
+That's fine, so long as it's documented somewhere, and this document
+references that place.
 
+>> Do you need any clocks properties, IP block reset signals, power domains?
 > 
-> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> > ---
-> >  drivers/i2c/busses/Kconfig   |   10 +
-> >  drivers/i2c/busses/Makefile  |    1 +
-> >  drivers/i2c/busses/i2c-qup.c |  909 ++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 920 insertions(+)
-> >  create mode 100644 drivers/i2c/busses/i2c-qup.c
-> > 
-> > diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> > index fcdd321..c76ddd4 100644
-> > --- a/drivers/i2c/busses/Kconfig
-> > +++ b/drivers/i2c/busses/Kconfig
-> > @@ -777,6 +777,16 @@ config I2C_RCAR
-> >  	  This driver can also be built as a module.  If so, the module
-> >  	  will be called i2c-rcar.
-> >  
-> > +config I2C_QUP
-> > +	tristate "Qualcomm QUP based I2C controller"
-> > +	depends on ARCH_MSM
-> > +	help
-> > +	  If you say yes to this option, support will be included for the
-> > +	  built-in I2C interface on the MSM family processors.
-> > +
-> > +	  This driver can also be built as a module.  If so, the module
-> > +	  will be called i2c-qup.
-> > +
-> >  comment "External I2C/SMBus adapter drivers"
-> >  
-> >  config I2C_DIOLAN_U2C
-> > diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-> > index d00997f..77127df 100644
-> > --- a/drivers/i2c/busses/Makefile
-> > +++ b/drivers/i2c/busses/Makefile
-> > @@ -76,6 +76,7 @@ obj-$(CONFIG_I2C_OCTEON)	+= i2c-octeon.o
-> >  obj-$(CONFIG_I2C_XILINX)	+= i2c-xiic.o
-> >  obj-$(CONFIG_I2C_XLR)		+= i2c-xlr.o
-> >  obj-$(CONFIG_I2C_RCAR)		+= i2c-rcar.o
-> > +obj-$(CONFIG_I2C_QUP)		+= i2c-qup.o
-> >  
-> >  # External I2C/SMBus adapter drivers
-> >  obj-$(CONFIG_I2C_DIOLAN_U2C)	+= i2c-diolan-u2c.o
-> > diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-> > new file mode 100644
-> > index 0000000..3b5ef91
-> > --- /dev/null
-> > +++ b/drivers/i2c/busses/i2c-qup.c
-> [..]
-> > +
-> > +static int qup_i2c_change_state(struct qup_i2c_dev *qup, u32 state)
-> > +{
-> > +	if (qup_i2c_poll_state(qup, 0, true) != 0)
-> > +		return -EIO;
-> > +
-> > +	writel(state, qup->base + QUP_STATE);
-> > +
-> > +	if (qup_i2c_poll_state(qup, state, false) != 0)
-> > +		return -EIO;
-> > +	return 0;
-> > +}
-> > +
-> > +static void qup_i2c_enable(struct qup_i2c_dev *qup, bool state)
-> 
-> Bit of a confusing name, especially when qup_i2c_enable(qup, false) is
-> used. I'd suggest qup_i2c_set_state or qup_i2c_set_enabled.
+>    Currently not.
 
-Indeed. I prefer qup_i2c_set_enabled.
+What does "currently" mean? Does that mean that the Linux driver simply
+doesn't touch those entities at present? If so, that's not enough to say
+that those entities should not be described in the DT binding. We should
+strive to make the binding completely describe all aspects of the HW,
+irrespective of whether a particular driver happens to use that
+information at present.
 
-> 
-> > +{
-> > +	u32 config;
-> > +
-> > +	if (state) {
-> > +		clk_prepare_enable(qup->clk);
-> > +		clk_prepare_enable(qup->pclk);
-> > +	} else {
-> > +		qup_i2c_change_state(qup, QUP_RESET_STATE);
-> > +		clk_disable_unprepare(qup->clk);
-> > +		config = readl(qup->base + QUP_CONFIG);
-> > +		config |= QUP_CLOCK_AUTO_GATE;
-> > +		writel(config, qup->base + QUP_CONFIG);
-> > +		clk_disable_unprepare(qup->pclk);
-> > +	}
-> > +}
-> [..]
-> > +static int qup_i2c_probe(struct platform_device *pdev)
-> > +{
-> [..]
-> > +
-> > +	ret = devm_request_irq(qup->dev, qup->irq, qup_i2c_interrupt,
-> > +			       IRQF_TRIGGER_HIGH, "i2c_qup", qup);
-> > +	if (ret) {
-> > +		dev_err(qup->dev, "Request %d IRQ failed\n", qup->irq);
-> > +		return ret;
-> > +	}
-> > +
-> > +	disable_irq(qup->irq);
-> 
-> How is this not racy, in the case where a pending interrupt is left from
-> the bootloader (which seems to be possible based on the comments below)?
-
-Yes it looks weird. Interrupt handler will check and exit if there
-is no message for transfer. I am looking for better way to handle this.
-
-Thanks, 
-Ivan
-
-> 
-> > +
-> > +	init_completion(&qup->xfer);
-> > +
-> > +	ret = clk_set_rate(qup->clk, qup->src_clk_freq);
-> > +	if (ret)
-> > +		dev_info(qup->dev, "Fail to set core clk, %dHz:%d\n",
-> > +			 qup->src_clk_freq, ret);
-> > +
-> > +	qup_i2c_enable(qup, true);
-> > +
-> > +	/*
-> > +	 * If bootloaders leave a pending interrupt on certain QUP's,
-> > +	 * then we reset the core before registering for interrupts.
-> > +	 */
-> [..]
-> 
