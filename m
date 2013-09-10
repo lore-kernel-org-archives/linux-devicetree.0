@@ -1,73 +1,50 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 2/2] sh_eth: add device tree support
-Date: Tue, 10 Sep 2013 16:21:25 -0600
-Message-ID: <522F9B65.1020606@wwwdotorg.org>
-References: <201309070343.25640.sergei.shtylyov@cogentembedded.com> <522E3770.9020305@wwwdotorg.org> <522F2F3A.5070406@cogentembedded.com> <522F37A7.90804@wwwdotorg.org> <522F5E67.8070006@cogentembedded.com> <522F7BF1.80100@wwwdotorg.org> <522F93A5.6010709@cogentembedded.com>
+From: "Christian Daudt" <csd@broadcom.com>
+Subject: Re: [PATCH v9 2/3] ARM: bcm281xx: Enable GPIO driver
+Date: Tue, 10 Sep 2013 15:32:02 -0700
+Message-ID: <522F9DE2.8080605@broadcom.com>
+References: <1378836423-12467-1-git-send-email-markus.mayer@linaro.org>
+ <1378836423-12467-3-git-send-email-markus.mayer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <522F93A5.6010709@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, nobuhiro.iwamatsu.yj@renesas.com, rob@landley.net, linux-doc@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1378836423-12467-3-git-send-email-markus.mayer@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Mayer <markus.mayer@linaro.org>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Tim Kryger <tim.kryger@linaro.org>, Matt Porter <matt.porter@linaro.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2013 03:48 PM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 09/11/2013 12:07 AM, Stephen Warren wrote:
-> 
->>>>>> Do you need any clocks properties, IP block reset signals, power
->>>>>> domains?
-> 
->>>>>      Currently not.
-> 
->>>> What does "currently" mean? Does that mean that the Linux driver simply
->>>> doesn't touch those entities at present?
-> 
->>>     There's Ether clock but the driver doesn't manipulate it directly,
->>> assumingly it does this thru the runtime PM interface. As for the
->>> others, I simply don't know.
-> 
->> If there's a clock, it should be represented in DT, even if the kernel
->> somehow gets access to the clock through some means other than parsing
->> DT.
-> 
->    Frankly speaking, I don't see the point.
+On 13-09-10 11:07 AM, Markus Mayer wrote:
+> Turn on the bcm281xx GPIO driver in the kernel configuration.
+>
+> Signed-off-by: Markus Mayer <markus.mayer@linaro.org>
+> Reviewed-by: Christian Daudt <csd@broadcom.com>
+> ---
+>   arch/arm/mach-bcm/Kconfig |    2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> index 69d67f7..7f6fca8 100644
+> --- a/arch/arm/mach-bcm/Kconfig
+> +++ b/arch/arm/mach-bcm/Kconfig
+> @@ -9,7 +9,7 @@ config ARCH_BCM
+>   	select CLKSRC_OF
+>   	select GENERIC_CLOCKEVENTS
+>   	select GENERIC_TIME
+> -	select GPIO_BCM
+> +	select GPIO_BCM_KONA
+>   	select SPARSE_IRQ
+>   	select TICK_ONESHOT
+>   	select CACHE_L2X0
+Applied to armsoc/for-3.13/soc
 
-To be honest, that doesn't exactly make me care about reviewing the
-binding then.
-
->>>> If so, that's not enough to say
->>>> that those entities should not be described in the DT binding. We
->>>> should
->>>> strive to make the binding completely describe all aspects of the HW,
->>>> irrespective of whether a particular driver happens to use that
->>>> information at present.
-> 
->>> There's no DT representation for the clocks in SH-Mobile subarch yet.
->>> The same applies to the other entities you mentioned.
-> 
->> You can still write the binding to say that the appropriate clock
->> property must be present; the overall format of this property won't be
->> affected by the representation chosen for the SH-Mobile clocks.
-> 
->    Where can I find an example of such property, independent of the
-> parent clock node? All I could find with quick search refers with a
-> phandle to a clock node (we don't have now).
-
-All clock property definitions are independent of the source of the clock.
-
-Now the actual value you put in the DT file is dependent on which source
-it's describing.
-
->> It seems like it'd be best to get the basic resources (like clocks)
->> represented in DT before trying to build blocks that use them.
-> 
->    We don't use them directly. And we need the Ether device tree support *now*, while clock-related work will probably take months (there are plans to switch Sh-Mobile to CCF in like 6 months). 
-
-What/who is "we". If it's just a matter of the driver-vs-runtime-pm
-code, then it's not relevant.
-
-I don't think needing something now is a good excuse.
+  thanks,
+    csd
