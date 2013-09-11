@@ -1,92 +1,87 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
-Date: Wed, 11 Sep 2013 18:14:54 +0200
-Message-ID: <523096FE.8080901@collabora.co.uk>
-References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com> <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com> <344239800.bDEkDg48ZQ@avalon> <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com> <52308C91.2000105@ahsoftware.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH RFC] of: add a basic memory driver
+Date: Wed, 11 Sep 2013 11:40:48 -0500
+Message-ID: <52309D10.9020708@gmail.com>
+References: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52308C91.2000105@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Holler <holler@ahsoftware.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio@elopez.com.ar>
+Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, rob.herring@calxeda.com, david.lanzendoerfer@o2s.ch, grant.likely@linaro.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/2013 05:30 PM, Alexander Holler wrote:
-> Am 22.08.2013 00:02, schrieb Linus Walleij:
->> On Tue, Aug 20, 2013 at 12:04 AM, Laurent Pinchart
->> <laurent.pinchart@ideasonboard.com> wrote:
->>> On Wednesday 31 July 2013 01:44:53 Linus Walleij wrote:
->> 
->>>> I don't see how sharing works here, or how another user, i.e. another one
->>>> than the user wanting to recieve the IRQ, can validly request such a line?
->>>> What would the usecase for that valid request be?
->>>
->>> When the GPIO is wired to a status signal (such as an MMC card detect signal)
->>> the driver might want to read the state of the signal independently of the
->>> interrupt handler.
->> 
->> That is true. But for such a complex usecase I think it's reasonable that
->> we only specify the GPIO in the device tree, and the driver utilizing the
->> IRQ need to take that and perform gpio_to_irq() on it, and then it still
->> works to use it both ways.
-> 
-> Hmm, the problem is that DT is seen as fixed. So if someone marks a GPIO
-> as an IRQ, it can never be used otherwise. So if you really go this way,
-> you should make this pretty clear in the documentation.
-> 
-
-DT is fixed because that describes the hardware which is fixed of course. So if
-a chip IRQ line is connected to a GPIO pin in a controller that should be
-described in the DT and that pin can't be used for anything else.
-
-> Looking from the other side, why do you want to mark GPIOs as IRQs in
-> the DT at all? 
-
-Because from the component point-of-view that is wired to the SoC, that GPIO is
-an IRQ line and so it has to be described.
-
-> And how will this be done? I found the way it was done in
-> the reverted patch very confusing because it needed an IRQ number. That
-> IRQ number depends on the mapping and isn't hw specific (and currently
-> just human doable because of the simple mapping).
-> 
-
-That's is not true. You don't define an IRQ number what you define is a GPIO
-number that is mapped as IRQ. The GPIO number does not depend on the mapping and
-it only depends on the GPIO controller.
-
-This has absolutely nothing to do with the reverted patches and is described in
-Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
-
-The only difference is that the reverted patches did actually take an action
-when a GPIO pin was mapped as an IRQ (requesting the GPIO and as input).
-
-So for example in an OMAP board DT you can define something like this:
-
-ethernet@5,0 {
-        compatible = "smsc,lan9221", "smsc,lan9115";
-        interrupt-parent = <&gpio6>;
-        interrupts = <16 8>;
-};
-
-Since each OMAP GPIO bank has 32 GPIO pins, then what you are defining is that
-the GPIO 176 (5 * 32 + 16) will be mapped as the IRQ line for the ethernet
-controller.
-
-I explained the exact use case I'm trying to solve in the thread "Re: [PATCH v3]
-gpio: interrupt consistency check for OF GPIO IRQs" [1] if you need more
-context. I'm sure others cc'ed in this thread have different (but similar)
-requirements.
-
-> Regards,
-> 
-> Alexander Holler
->
-
-Thanks a lot and best regards,
-Javier
-
-
-[1]: http://www.kernelhub.org/?p=2&msg=326503
+T24gMDkvMTAvMjAxMyAwODo0MyBQTSwgRW1pbGlvIEzDs3BleiB3cm90ZToKPiBUaGlzIGRyaXZl
+cidzIG9ubHkgam9iIGlzIHRvIGNsYWltIGFuZCBlbnN1cmUgdGhhdCB0aGUgbmVjZXNzYXJ5IGNs
+b2NrCj4gZm9yIG1lbW9yeSBvcGVyYXRpb24gb24gYSBEVC1lbmFibGVkIG1hY2hpbmUgcmVtYWlu
+cyBlbmFibGVkLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEVtaWxpbyBMw7NwZXogPGVtaWxpb0BlbG9w
+ZXouY29tLmFyPgo+IC0tLQo+IAo+IEhpLAo+IAo+IEkgYW0gY3VycmVudGx5IGZhY2luZyBhbiBp
+c3N1ZSB3aXRoIHRoZSBjbG9jayBzZXR1cDogYSBjcml0aWNhbCBidXQKPiB1bmNsYWltZWQgY2xv
+Y2sgZ2V0cyBkaXNhYmxlZCBhcyBhIHNpZGUgZWZmZWN0IG9mIGRpc2FibGluZyBvbmUgb2YgaXRz
+Cj4gY2hpbGRyZW4uIFRoZSBjbG9jayBzZXR1cCBsb29rcyBzb21ldGhpbmcgbGlrZSB0aGlzOgo+
+IAo+ICAgICAgIFBMTAo+ICAgICAgICB8Cj4gIC0tLS0tLS0tLS0tLQo+ICB8ICAgICAgICAgIHwK
+PiBERFIgICAgICAgT3RoZXJzCj4gICAgICAgICAgICAgfAo+ICAgICAgICAgICBwZXJpcGgKClRo
+aXMgd291bGQgYmUgbW9yZSBhY2N1cmF0ZToKCiAgICAgICBQTEwKICAgICAgICB8CiAtLS0tLS0t
+LS0tLS0tLS0tCiB8ICAgICAgICAgICAgICB8CkREUiBDdHJsciAgICAgT3RoZXJzCiB8CkREUgoK
+U28gaGF2aW5nIGEgRERSIGNvbnRyb2xsZXIgbm9kZSB3aXRoIGEgY2xvY2sgaXMgdGhlIHJpZ2h0
+IHdheSB0byBkbwp0aGlzLiBUaGVyZSBhcmUgb3RoZXIgcG9zc2libGUgbmVlZHMgZm9yIGRlc2Ny
+aWJpbmcgdGhlIEREUiBjb250cm9sbGVyCnN1Y2ggYXMgbG93IHBvd2VyIG1vZGVzIGFuZCBFQ0Mu
+CgpSb2IKCj4gCj4gVGhlIFBMTCBjbG9jayBpcyBtYXJrZWQgd2l0aCB0aGUgQ0xLX0lHTk9SRV9V
+TlVTRUQgZmxhZywgc28gb24gYSBub3JtYWwKPiBib290IGl0IHJlbWFpbnMgb24sIGV2ZW4gYWZ0
+ZXIgdGhlIHVudXNlZCBjbG9ja3MgY2xlYW51cCBjb2RlIHJ1bnMuIFRoZQo+IHByb2JsZW0gb2Nj
+dXJzIHdoZW4gc29tZW9uZSBlbmFibGVzICJwZXJpcGgiIGFuZCB0aGVuLCBsYXRlciBvbiwgZGlz
+YWJsZXMKPiBpdDogdGhlIGZyYW1ld29yayBzdGFydHMgZGlzYWJsaW5nIGNsb2NrcyB1cHdhcmRz
+IG9uIHRoZSB0cmVlLCAKPiBldmVudHVhbGx5IHN3aXRjaGluZyB0aGUgUExMIG9mZiAoYW5kIHRo
+YXQga2lsbHMgdGhlIG1hY2hpbmUsIGFzIHRoZSBtZW1vcnkKPiBjbG9jayBpcyBzaHV0IGRvd24p
+Lgo+IAo+IFRoZXJlJ3MgdHdvIHBvc3NpYmxlIHNvbHV0aW9ucyBJIGNhbiB0aGluayBvZjoKPiAg
+MSkgYWRkIHNvbWUgZXh0cmEgY2hlY2tzIG9uIHRoZSBmcmFtZXdvcmsgdG8gbm90IHR1cm4gb2Zm
+IGNsb2NrcyBtYXJrZWQKPiAgICAgd2l0aCBzdWNoIGEgZmxhZyBvbiB0aGUgbm9uLWV4cGxpY2l0
+IGNhc2UgKGllLCB3aGVuIEknbSBkaXNhYmxpbmcKPiAgICAgc29tZSBvdGhlciBjbG9jaykKPiAg
+MikgY3JlYXRlIGFuIGFjdHVhbCB1c2VyIG9mIHRoZSBERFIgY2xvY2ssIHRoYXQgd2F5IGl0IHdv
+bid0IGdldAo+ICAgICBkaXNhYmxlZCBzaW1wbHkgYmVjYXVzZSBpdCdzIGJlaW5nIHVzZWQuCj4g
+Cj4gSSBjb25zaWRlcmVkIDEpIGFuZCBpbXBsZW1lbnRlZCBpdCwgYnV0IHRoZSByZXN1bHQgd2Fz
+IG5vdCBwcmV0dHkuIFRoaXMgCj4gcGF0Y2ggaXMgbXkgdGFrZSBvbiAyKS4gUGxlYXNlIGxldCBt
+ZSBrbm93IHdoYXQgeW91IHRoaW5rOyBhbGwgZmVlZGJhY2sKPiBpcyB3ZWxjb21lIDopCj4gCj4g
+Q2hlZXJzLAo+IAo+IEVtaWxpbwo+IAo+ICBkcml2ZXJzL29mL0tjb25maWcgICAgIHwgIDYgKysr
+KysrCj4gIGRyaXZlcnMvb2YvTWFrZWZpbGUgICAgfCAgMSArCj4gIGRyaXZlcnMvb2Yvb2ZfbWVt
+b3J5LmMgfCAzMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMyBmaWxlcyBjaGFu
+Z2VkLCAzNyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL29mL29m
+X21lbW9yeS5jCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvS2NvbmZpZyBiL2RyaXZlcnMv
+b2YvS2NvbmZpZwo+IGluZGV4IDlkMjAwOWEuLmY2YzVlMjAgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
+cy9vZi9LY29uZmlnCj4gKysrIGIvZHJpdmVycy9vZi9LY29uZmlnCj4gQEAgLTgwLDQgKzgwLDEw
+IEBAIGNvbmZpZyBPRl9SRVNFUlZFRF9NRU0KPiAgCWhlbHAKPiAgCSAgSW5pdGlhbGl6YXRpb24g
+Y29kZSBmb3IgRE1BIHJlc2VydmVkIG1lbW9yeQo+ICAKPiArY29uZmlnIE9GX01FTU9SWQo+ICsJ
+ZGVwZW5kcyBvbiBDT01NT05fQ0xLCj4gKwlkZWZfYm9vbCB5Cj4gKwloZWxwCj4gKwkgIFNpbXBs
+ZSBtZW1vcnkgaW5pdGlhbGl6YXRpb24KPiArCj4gIGVuZG1lbnUgIyBPRgo+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL29mL01ha2VmaWxlIGIvZHJpdmVycy9vZi9NYWtlZmlsZQo+IGluZGV4IGVkOTY2
+MGEuLjE1ZjAxNjcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9vZi9NYWtlZmlsZQo+ICsrKyBiL2Ry
+aXZlcnMvb2YvTWFrZWZpbGUKPiBAQCAtMTAsMyArMTAsNCBAQCBvYmotJChDT05GSUdfT0ZfUENJ
+KQkrPSBvZl9wY2kubwo+ICBvYmotJChDT05GSUdfT0ZfUENJX0lSUSkgICs9IG9mX3BjaV9pcnEu
+bwo+ICBvYmotJChDT05GSUdfT0ZfTVREKQkrPSBvZl9tdGQubwo+ICBvYmotJChDT05GSUdfT0Zf
+UkVTRVJWRURfTUVNKSArPSBvZl9yZXNlcnZlZF9tZW0ubwo+ICtvYmotJChDT05GSUdfT0ZfTUVN
+T1JZKSArPSBvZl9tZW1vcnkubwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL29mX21lbW9yeS5j
+IGIvZHJpdmVycy9vZi9vZl9tZW1vcnkuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXgg
+MDAwMDAwMC4uYTgzM2Y3YQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL29mL29mX21l
+bW9yeS5jCj4gQEAgLTAsMCArMSwzMCBAQAo+ICsvKgo+ICsgKiBTaW1wbGUgbWVtb3J5IGRyaXZl
+cgo+ICsgKi8KPiArCj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgo+ICsjaW5jbHVkZSA8bGludXgv
+Y2xrLmg+Cj4gKwo+ICtzdGF0aWMgaW50IF9faW5pdCBvZl9tZW1vcnlfZW5hYmxlKHZvaWQpCj4g
+K3sKPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7Cj4gKwlzdHJ1Y3QgY2xrICpjbGs7Cj4gKwo+
+ICsJbnAgPSBvZl9maW5kX25vZGVfYnlfcGF0aCgiL21lbW9yeSIpOwo+ICsJaWYgKCFucCkgewo+
+ICsJCXByX2Vycigibm8gL21lbW9yeSBvbiBEVCFcbiIpOwo+ICsJCXJldHVybiAwOwo+ICsJfQo+
+ICsKPiArCWNsayA9IG9mX2Nsa19nZXQobnAsIDApOwo+ICsJaWYgKCFJU19FUlIoY2xrKSkgewo+
+ICsJCWNsa19wcmVwYXJlX2VuYWJsZShjbGspOwo+ICsJCWNsa19wdXQoY2xrKTsKPiArCX0KPiAr
+Cj4gKwlvZl9ub2RlX3B1dChucCk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK2Rldmlj
+ZV9pbml0Y2FsbChvZl9tZW1vcnlfZW5hYmxlKTsKPiAKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
