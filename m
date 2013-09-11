@@ -1,52 +1,101 @@
-From: Koen Kooi <koen@dominion.thruhere.net>
-Subject: Re: [PATCH 0/3] ARM: dts: Enable EDMA, MMC and SPI on AM33XX for v3.13
-Date: Wed, 11 Sep 2013 07:18:32 +0200
-Message-ID: <88E4C15C-B1AA-4A39-A5E1-CF9E8420C2BE@dominion.thruhere.net>
-References: <1378841079-15796-1-git-send-email-joelf@ti.com> <5EB8AE91-A996-4CF1-86B7-C8FDEC177E89@dominion.thruhere.net> <522F7DC0.7030603@ti.com>
-Mime-Version: 1.0 (Mac OS X Mail 6.5 \(1508\))
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+From: Joel Fernandes <joelf@ti.com>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Wed, 11 Sep 2013 00:24:09 -0500
+Message-ID: <522FFE79.9030602@ti.com>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk> <2052193.CMUEUJFRgS@lem-wkst-02> <522F2521.4090806@collabora.co.uk> <522F7878.30800@wwwdotorg.org> <522F8DB7.8070800@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <522F7DC0.7030603@ti.com>
+In-Reply-To: <522F8DB7.8070800@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Fernandes <joelf@ti.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Nishanth Menon <nm@ti.com>, Devicetree Discuss <devicetree@vger.kernel.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <poeschel@lemonage.de>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.co>
 List-Id: devicetree@vger.kernel.org
 
+On 09/10/2013 04:23 PM, Javier Martinez Canillas wrote:
+> On 09/10/2013 09:52 PM, Stephen Warren wrote:
+>> On 09/10/2013 07:56 AM, Javier Martinez Canillas wrote:
+>> ...
+>>> The only thing that this patch tries to solve is when a driver expect to request
+>>> a IRQ and it doesn't care if is a real IRQ line from an interrupt controller or
+>>> a GPIO pin mapped as an IRQ.
+>>
+>> That can be solved in the interrupt chip driver. The fact the previous
+>> attempt didn't work doesn't mean that it's impossible.
+>>
+> 
+> Indeed. Unfortunately that patch-set got merged as a fix quite late on the -rc
+> cycle so it was safer to just revert the patches instead of analyzing the
+> regression and providing a fix.
+> 
+> If Linus is fond about taking a local fix for gpio-omap then we can try again
+> as a RFC with a better test coverage than before (although the patches had
+> several tested and acked-by but no one tested on OMAP1 until the patches were
+> merged) getting some TI folks in the loop who have access to those ancient OMAP1
+> devices. That way we can repost as a patch just once we are definitely sure that
+> it won't cause a regression on any OMAP platform.
+> 
+>>> With board files we used to explicitly do the GPIO setup
+>>> (gpio_{request,direction_input}) but with DT these board files are gone and we
+>>> need a way to setup a GPIO implicitly when is mapped as an IRQ.
+>>
+>> Well, that's just an example of hacking around something in a board file
+>> that should have been fixed in the GPIO/IRQ controller.
+>>
+>>> That's the only use case that this patch covers.
+>> ...
+>>> Also, it would be great if we can find a temporary solution so we can finally
+>>> have ethernet working with DT on most OMAP2+ boards. Since I expect that doing
+>>> the mentioned change on gpiolib would take at least a couple of kernel releases.
+>>
+>> Really? I thought this patch was error-checking to make sure that
+>> different drivers didn't request a GPIO and an IRQ that are actually the
+>> same signal. This patch shouldn't affect any functionality except in
+>> cases where there's a bug in the DT (incorrect GPIO/IRQ passed to some
+>> driver).
+>>
+> 
+> Yes, it doesn't do any error-checking neither prevent a driver to request a GPIO
+> and an IRQ that are the same signal (as long as this is supported by the
+> GPIO/IRQ controller and its driver). The only thing that Linus patch does is to
+> auto request a GPIO for pins that are mapped as IRQ in DT (i.e: interrupt-parent
+> = <&gpio6>).
+> 
+> The name of the function introduced by Linus is
+> of_gpiochip_interrupt_consistency_check() but probably a better name is
+> of_gpiochip_autorequest_irq() or something like that.
+> 
+> A similar behavior could be obtained by let's say calling gpio_request() in
+> irq_create_of_mapping() if you wanted to add the logic in the IRQ chip DT core
+> instead of doing it in the GPIO chip DT core as Linus does with his patch.
+> 
+> That's why I don't understand why Linus patch could be an issue for drivers that
+> needs to request both the GPIO and the mapped IRQ.
+> 
+> If this is already supported then nothing will break. If the driver tries to
+> request the GPIO twice because this is already made by the DT core then I think
+> is a bug in the driver and has to be fixed to support DT since there won't be
+> any need to do this manually anymore.
 
-Op 10 sep. 2013, om 22:14 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
+Quick question- Wouldn't this mean that there have to be 2 code paths in the
+driver then.. One for DT-case where gpio_request double request is prevented,
+and one for non-DT case where you would do the gpio_request followed by
+request_irq. I'm not sure if there are drivers today that use DT and need to
+converted to prevent the double request? If there are, and such drivers are also
+used on non-DT platform, then we would have to fork 2 different code paths while
+requesting an IRQ for DT/non-DT in the driver..
 
-> On 09/10/2013 02:39 PM, Koen Kooi wrote:
->> 
->> Op 10 sep. 2013, om 21:24 heeft Joel Fernandes <joelf@ti.com> het volgende geschreven:
->> 
->>> Here are last few patches required to add EDMA and MMC/SPI support for AM33xx.
->>> 
->>> Now that all dependent DMA patches and fixes are in linux next or mainline, except
->>> for [1] which should go in for 3.12 -rc cycle, it is safe to enable MMC and SPI support
->>> and this patch series enables it. These are originally Matt Porter's patches with
->>> changes to make it work with recent kernels, addition of irq, memory resources and
->>> enable other extra properties.
->>> 
->>> These patches should cleanly apply on master branch after Koen's patch [2] for basic
->>> BBB DT support is applied.
->>> 
->>> MMC support is enabled for: Beaglebone, AM335x EVM and EVM-SK boards. MMC support
->>> for BBB is intentionally not added due to custom fixes and other patches that are
->>> in Koen's tree and which will be separately submitted by him.
->> 
->> Correct, but your patches for MMC support on BBW are missing the card detect entries to make it hotplug work.
-> 
-> I thought it was determined that this would be submitted by you separately after
-> rebasing as we discussed [1] and [2].
+Also this path kind of enforces that the driver author must be aware whether
+driver is being used on DT or non-DT platform.. Linus mentioned enforcing of
+semantics, this is also enforcing semantics no?
 
-I have no problem submitting that, I just think it's weird that the patch you submitted contains a known broken version for BBW.
+Looks like the correct fix for this as discussed in this thread should be to
+associate the struct device with the GPIO request, remember it and use the info
+during request_irq. This is provided that the old pattern of gpio_request and
+request_irq is continued to be used and working. I know this is some time away
+so I'm not too opinionated about it.
 
-> 
-> [1] https://lkml.org/lkml/2013/9/6/183
-> [2] http://marc.info/?l=linux-omap&m=137879246709612&w=2
-> 
-> 
-> Regards,
-> 
-> -Joel
+Regards,
+
+-Joel
