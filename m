@@ -1,127 +1,128 @@
-From: Mike Dunn <mikedunn@newsguy.com>
-Subject: Re: [PATCH] pwm-backlight: add support for device tree gpio control
-Date: Wed, 11 Sep 2013 04:40:22 -0700
-Message-ID: <523056A6.5060000@newsguy.com>
-References: <1378236372-15711-1-git-send-email-mikedunn@newsguy.com> <20130910172130.GC22111@ulmo>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v2 1/2] video: ARM CLCD: Add DT support
+Date: Wed, 11 Sep 2013 12:45:31 +0100
+Message-ID: <1378899931.4082.75.camel@hornet>
+References: <1378808726-32535-1-git-send-email-pawel.moll@arm.com>
+ <522F57B9.5000001@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130910172130.GC22111@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jg1.han@samsung.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, Marek Vasut <marex@denx.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <522F57B9.5000001@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2013 10:21 AM, Thierry Reding wrote:
-> On Tue, Sep 03, 2013 at 12:26:12PM -0700, Mike Dunn wrote:
->> This patch adds support for controlling an arbitrary number of gpios to the
->> pwm-backlight driver.  This was left as a TODO when initial device tree support
->> was added by Thierry a while back.  This functionality replaces the callbacks
->> that are passed in the platform data for non-DT cases.  Users can avail
->> themselves of this feature by adding a 'gpios' property to the 'backlight' node.
->> When the update_status() callback in backlight_ops runs, the gpios listed in the
->> property are asserted/deasserted if the specified brightness is non-zero/zero.
->>
->> Tested on a pxa270-based Palm Treo 680.
->>
->> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
->> ---
->>
->> Thanks for looking!
->>
->>  .../bindings/video/backlight/pwm-backlight.txt     |   4 +
->>  drivers/video/backlight/pwm_bl.c                   | 128 ++++++++++++++++++---
->>  2 files changed, 113 insertions(+), 19 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
->> index 1e4fc72..4583e68 100644
->> --- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
->> +++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
->> @@ -14,6 +14,9 @@ Required properties:
->>  Optional properties:
->>    - pwm-names: a list of names for the PWM devices specified in the
->>                 "pwms" property (see PWM binding[0])
->> +  - gpios:     An arbitrary number of gpios that must be asserted when the
->> +               backlight is on, and de-asserted when off.  They will be asserted
->> +               in the order they appear, and de-asserted in reverse order.
-> 
-> Do you have a real setup that actually needs multiple GPIOs? Usually
-> such a setup requires some kind of timing or other additional constraint
-> which can't be represented by this simple binding.
-> 
-> Looking at the Palm Treo code it seems like the reason why multiple
-> GPIOs are needed is because one is to enable the backlight, while the
-> other is in fact used to enable the LCD panel. 
-
-
-There are actually four GPIOs involved!  (There is an embarrasingly horrible
-hack in arch/arm/mach-pxa/palmtreo.c that handles the others.)  One is almost
-certainly simply backlight power.  The other three are probably LCD related.
-Timing doesn't seem to be an issue, but the order is important.  This is
-reverse-engineered without any schematics, and honestly, I'm still guessing with
-regard to how the board is wired.  It probably is not appropriate to manage all
-four gpios in the backlight driver, but at least one needs to be, so I thought
-I'd go ahead and prepare a patch that adds gpio support.  From what you are
-telling me, I guess my approach was too simplistic.
-
-
-> I have been working on a
-> patch series to provide simple panel support, specifically to allow the
-> separation of backlight and panel power sequencing. Would such a method
-> work for your use-case as well? 
-
-
-Sounds like it would, from what I know.
-
-
-> The work that I'm doing is somewhat DRM
-> centric, and I don't think there's a DRM driver for PXA, but perhaps it
-> would be a good occasion to look at converting the PXA display drivers
-> to DRM... =)
-
-
-OK, thanks.  I'll look into it.  I'm clueless about DRM...  All I can say at
-this point is that I'm not using X windows, and there is not really any hardware
-acceleration in the pxa's lcd controller.
-
-
-> 
-> That said, I've had a patch similar to yours in a local tree (in fact in
-> the same branch as the panel work I've been doing) for quite some time,
-> which allows a single "enable" GPIO to be specified. I haven't gotten
-> around to sending it out yet, but I'll do that shortly. The patch is a
-> little more involved because it exposes the GPIO via platform data as
-> well and therefore has to update a number of board files, too. While
-> going over the various board files I found only a single board which can
-> actually make use of the new functionality (which I also converted in
-> the patch). Any other cases couldn't be implemented by the simple change
-> so I suspect they can't either using your proposed binding.
-
-
-Really?  Are we talking about the callbacks in struct
-platform_pwm_backlight_data?  I thought the majority of them just
-requested/released a gpio in init()/exit(), and wiggled it in notify().  I must
-be missing something.
-
-
-> 
-> I've been trying for a while to come up with a way to support more use-
-> cases, and I keep coming back to the same solution. Since the DT binding
-> for power sequences was shot down some time ago, we probably have to
-> represent any kind of sequencing in C code. So instead of trying to fit
-> everything into a single binding, I think a more maintainable solution
-> would be to create separate drivers for the more complex use-cases. That
-> could either be done by using separate compatible values within the
-> pwm-backlight driver or via completely different drivers. In the latter
-> case we should probably think about exporting some of the pwm-backlight
-> functionality so that drivers can easily reuse some of the code.
-
-
-I guess I'll wait for your patch and for everything else to shake out... I may
-be able to help out if you want to delegate some things.  Thanks for the reviews
-and the info.  Any other pointers appreciated.  BTW, I'm working on a simple
-patch to the pwm-backlight driver that will fix my inverted pwm output problem.
-
-Thanks again,
-Mike
+T24gVHVlLCAyMDEzLTA5LTEwIGF0IDE4OjMyICswMTAwLCBTdGVwaGVuIFdhcnJlbiB3cm90ZToK
+PiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gKwo+ID4gKy0gdmlkZW8tcmFtOiBwaGFuZGxl
+IHRvIGEgbm9kZSBkZXNjcmliaW5nIHNwZWNpYWxpemVkIHZpZGVvIG1lbW9yeQo+ID4gKwkJKHRo
+YXQgaXMgKm5vdCogZGVzY3JpYmVkIGluIHRoZSB0b3AgbGV2ZWwgIm1lbW9yeSIgbm9kZSkKPiA+
+ICsJCXRoYXQgbXVzdCBiZSB1c2VkIGFzIGEgZnJhbWVidWZmZXIsIGVnLiBkdWUgdG8gcmVzdHJp
+Y3Rpb25zCj4gPiArCQlvZiB0aGUgc3lzdGVtIGludGVyY29ubmVjdDsgdGhlIG5vZGUgbXVzdCBj
+b250YWluIGEKPiA+ICsJCXN0YW5kYXJkIHJlZyBwcm9wZXJ0eSBkZXNjcmliaW5nIHRoZSBhZGRy
+ZXNzIGFuZCB0aGUgc2l6ZQo+ID4gKwkJb2YgdGhlIG1lbW9yeSBhcmVhCj4gCj4gU2hvdWxkIHRo
+aXMgdXNlIHRoZSAiQ01BIGJpbmRpbmdzIiB0aGF0IGFyZSBiZWluZyBwcm9wb3NlZCBhdCB0aGUg
+bW9tZW50PwoKSSBleHBlY3RlZCB0aGlzIGJpdCB0byBiZSB0aGUgaGFyZGVzdCB0byBnZXQgdGhy
+b3VnaCA6LSkKClRoZSBtZW1vcnkgaW4gcXVlc3Rpb24gaXMgKm5vdCogYSBwYXJ0IG9mICJub3Jt
+YWwiIFJBTSwgdGhlcmVmb3JlIENNQQpkb2Vzbid0IGV2ZW4ga25vdyBhYm91dCBpdC4gVGhlIHNp
+dHVhdGlvbiBJIGhhdmUgdG8gZGVhbCB3aXRoIGlzIGEKc3lzdGVtIHdoZW4gQ0xDRCdzIEFIQiBt
+YXN0ZXIgY2FuICpub3QqIGFjY2VzcyB0aGUgbm9ybWFsIFJBTSwgc28gdGhlCmRlc2lnbmVycyBr
+aW5kbHkgOy0pIHByb3ZpZGVkIHNvbWUgc3RhdGljIFJBTSB3aGljaCBpdCBjYW4gYWRkcmVzcy4K
+Cj4gRXZlbiBpZiBub3QsIEknbSBub3QgcXVpdGUgY2xlYXIgb24gd2hhdCB0aGUgcmVmZXJlbmNl
+ZCBub2RlIGlzIHN1cHBvc2VkCj4gdG8gY29udGFpbjsgaXMganVzdCBhIHJlZyBwcm9wZXJ0eSBl
+bm91Z2gsIHNvIHlvdSdkIHNlZSB0aGUgZm9sbG93aW5nIGF0Cj4gYSBjb21wbGV0ZWx5IGFyYml0
+cmFyeSBsb2NhdGlvbiBpbiB0aGUgRFQ6Cj4gCj4gZnJhbWVidWZmZXItbWVtIHsKPiAgICAgcmVn
+ID0gPDB4ODAwMDAwMDAgMHgwMDEwMDAwMD47Cj4gfTsKClRoZSBwbGFjZSB3b3VsZG4ndCBiZSBy
+YW5kb20sIG5vLiBHZXR0aW5nIGJhY2sgdG8gbXkgc2NlbmFyaW8sIHRoZQoidmlkZW8iIFJBTSwg
+YmVpbmcgY2xvc2UgdG8gQ0xDRCwgaXMgKG9idmlvdXNseSkgYWxzbyBhZGRyZXNzYWJsZSBieSB0
+aGUKY29yZSwgYXMgYW55IG90aGVyIG1lbW9yeS1tYXBwZWQgZGV2aWNlLiBTbyBpdHMgcG9zaXRp
+b24gaXMgZGV0ZXJtaW5lZApieSB0aGUgcGxhdGZvcm0gbWVtb3J5IG1hcDoKClwgewoJI2FkZHJl
+c3MtY2VsbCA9IDwyPjsKCSNzaXplLWNlbGwgPSA8Mj47CglzdGF0aWMtbWVtb3J5LWJ1cyB7CgkJ
+I2FkZHJlc3MtY2VsbCA9IDwyPjsKCQkjc2l6ZS1jZWxsID0gPDE+OwoJCXJhbmdlcyA9IDwyIDAg
+MCAweDE4MDAwMDAwIDY0TT47CgkJbW90aGVyYm9hcmQgewoJCQlyYW5nZXM7IAoJCQl2aWRlby1y
+YW0gewoJCQkJcmVnID0gPDIgMCA4TUI+OwoJCQl9OwoJCX07Cgl9Owp9OwoKRnJvbSB0aGUgY29y
+ZSdzIHBlcnNwZWN0aXZlIGl0J3MganVzdCBhIGJpdCBvZiBleHRyYSBtZW1vcnksIHlvdSBjb3Vs
+ZCwKZm9yIGV4YW1wbGUsIHB1dCBhIE1URCByYW0gZGlzayBvbiBpdC4gSXQgc2VlbXMgdG8gZGVz
+ZXJ2ZSBhCnJlcHJlc2VudGF0aW9uIGluIHRoZSB0cmVlIHRoZW4uCgo+IEknbSBub3Qgc3VyZSB3
+aGF0IHRoZSBiZW5lZml0IG9mIG1ha2luZyB0aGlzIGEgc3RhbmRhbG9uZSBub2RlIGlzOyB3aHkK
+PiBub3QganVzdCBwdXQgdGhlIGJhc2Uvc2l6ZSBkaXJlY3RseSBpbnRvIHRoZSB2aWRlby1yYW0g
+cHJvcGVydHkgaW4gdGhlCj4gQ0xDRCBub2RlPwoKVGhpcyBpcyBjZXJ0YWlubHkgYW4gb3B0aW9u
+LiBJJ3ZlIGNvbnNpZGVyZWQgdGhpcyBhcyB3ZWxsLCBidXQgdGhvdWdodAp0aGF0IHRoZSBhYm92
+ZSBtYWRlIG1vcmUgc2Vuc2UuCgpIYXZpbmcgc2FpZCB0aGF0LCB0aGVyZSBpcyBhY3R1YWxseSBh
+IHVzZSBjYXNlLCBhbHRob3VnaCBhIHZlcnkKbm9uLXByb2JhYmxlIG9uZSwgZm9yIGhhdmluZyBh
+IGRpcmVjdCBudW1iZXIgdGhlcmUuLi4gVGhlIGludGVyY29ubmVjdAp0aGF0IENMQ0QgaXMgY29u
+bmVjdGVkIHRvIGNvdWxkIGhhdmUgZGlmZmVyZW50IG1hcHBpbmcgdGhhbiB0aGUKcHJvY2Vzc29y
+J3Mgb25lLiBJbiBvdGhlciB3b3JkLCB0aGUgbWVtb3J5IHNlZW4gYnkgdGhlIGNvcmUgYXQgWCwg
+Y291bGQKYmUgYWNjZXNzZWQgYnkgdGhlIENMQ0QgYXQgWS4gT3IsIGluIGV2ZW4gbW9yZSBxdWly
+a3kgc2l0dWF0aW9uLCB0aGUKY29yZSBtYXkgbm90IGhhdmUgYWNjZXNzIHRvIHRoZSBtZW1vcnkg
+YXQgYWxsLCB3aXRoIHRoZSBncmFwaGljcyBiZWluZwpnZW5lcmF0ZWQgb25seSBieSBHUFUgKG9y
+IGFueSBvdGhlciB0aGlyZCBwYXJ0eSkuIFRoZW4gdGhlIHZhbHVlIHdvdWxkCm1lYW4gInRoZSBh
+ZGRyZXNzIHlvdSBoYXZlIHRvIHVzZSB3aGVuIGdlbmVyYXRpbmcgQU1CQSByZWFkIHRyYW5zYWN0
+aW9ucwp0byBiZSBnZXQgc29tZSBtZWFuaW5nZnVsIGRhdGEiIGFuZCB3b3VsZCBoYXZlIHRvIGJl
+IGtub3duIGV4cGxpY2l0bHkuCgpJIGd1ZXNzIGl0IHdvbid0IGJlIGhhcmQgdG8gY29udmluY2Ug
+bWUgaXQncyBhIGJldHRlciBvcHRpb24gOy0pCgo+ID4gKy0gbWF4LWZyYW1lYnVmZmVyLXNpemU6
+IG1heGltdW0gc2l6ZSBpbiBieXRlcyBvZiB0aGUgZnJhbWVidWZmZXIgdGhlCj4gPiArCQkJc3lz
+dGVtIGNhbiBoYW5kbGUsIGVnLiBpbiB0ZXJtcyBvZiBhdmFpbGFibGUKPiA+ICsJCQltZW1vcnkg
+YmFuZHdpZHRoCj4gCj4gU2l6ZSBkb2Vzbid0IGltcGx5IGJhbmR3aWR0aCwgZHVlIHRvIHRoZSBw
+b3RlbnRpYWwgZm9yIHZhcnlpbmcgYnBwLAo+IGZyYW1lLXJhdGVzLCBtYXJnaW4vcG9yY2ggc2l6
+ZXMsIGV0Yy4gSWYgdGhpcyBpcyBhIGJhbmR3aWR0aCBsaW1pdCwKPiBzaG91bGRuJ3Qgd2UgaW5z
+dGVhZCByZXByZXNlbnQgdGhhdCB2YWx1ZSBkaXJlY3RseSwgcGVyaGFwcyBhbG9uZyB3aXRoCj4g
+c29tZSBtdWx0aXBsaWVyIHRvIGNvbnZlcnQgdGhlb3JldGljYWwgYmFuZHdpZHRoIHRvIHByYWN0
+aWNhbCBiYW5kd2lkdGgKPiAodG8gYWNjb3VudCBmb3IgbWVtb3J5IHByb3RvY29sIGFuZCBjb250
+cm9sbGVyIG92ZXJoZWFkcyk/CgpJdCdzIGEgKm1lbW9yeSBpbnRlcmZhY2UqIGJhbmR3aWR0aCwg
+c28gc3luY2hyb25pemF0aW9uIGZpZWxkcyBhcmUKaXJyZWxldmFudCBoZXJlLiBBbmQgdGhlIGJw
+cCBsaW1pdCBpcyBhY3R1YWxseSBiZWluZyBjYWxjdWxhdGVkIGZyb20KdGhpcyB2YWx1ZSwgbm90
+IHRoZSBvdGhlciB3YXkgcm91bmQuIEJ1dCBJIGZvcmdvdCBhYm91dCBkaWZmZXJpbmcgZnJhbWUK
+cmF0ZXMsIHRoYXQncyBmYWN0LiBTbyBpdCBwcm9iYWJseSBzaG91bGQgYmU6CgotIG1heC1tZW1v
+cnktYmFuZHdpZHRoOiBtYXhpbXVtIGJhbmR3aWR0aCBpbiBieXRlcyBwZXIgc2Vjb25kIHRoYXQg
+dGhlCgkJCWNlbGwncyBtZW1vcnkgaW50ZXJmYWNlIGNhbiBoYW5kbGUKCmFuZCBjYW4gYmUgdGhl
+biB1c2VkIHRvIGNhbGN1bGF0ZSBtYXhpbXVtIGJwcCBkZXBlbmRpbmcgb24gdGhlIHNlbGVjdGVk
+Cm1vZGUuCgpBcyB0byB0aGUgbXVsdGlwbGllcnMuLi4gQWx0aG91Z2ggSSBob3BlIHRoYXQgdGhl
+IFNPQyBkZXNpZ25lciBjYW4KcHJvdmlkZSB0aGVvcmV0aWNhbCB0aHJvdWdocHV0IGRhdGEsIHRo
+ZSBvbmx5IHByYWN0aWNhbCB3YXkgb2YgZ2V0dGluZwp0aGUgdmFsdWUgSSB3YXMgYWJsZSB0byBj
+b21lIHVwIHdpdGggd2FzIGp1c3QgdHJ5aW5nIGRpZmZlcmVudApjb21iaW5hdGlvbnMgdGlsbCBj
+cm9zcyB0aGUgbGluZSwgc28gdGhlcmUgaXNuJ3QgbXVjaCBtYXRoIHRvIGJlIGRvbmUKZnVydGhl
+ci4KCj4gLi4uCj4gPiArLSBwYW5lbC10eXBlOiAocmVxdWlyZWQpIG11c3QgYmUgInRmdCIgb3Ig
+InN0biIsIGRlZmluZXMgcGFuZWwgdHlwZQo+IC4uLgo+ID4gKy0gcGFuZWwtc3RuLTRiaXQ6IChm
+b3IgbW9ub2Nocm9tZSAic3RuIiBwYW5lbCkgaWYgcHJlc2VudCBtZWFucwo+ID4gKwkJCXRoYXQg
+dGhlIG1vbm9jaHJvbWUgZGlzcGxheSBpcyBjb25uZWN0ZWQKPiA+ICsJCQl2aWEgNCBiaXQtd2lk
+ZSBpbnRlcmZhY2UKPiAKPiBJIGp1c3Qgd2FudGVkIHRvIGNvbmZpcm0gdGhhdCB0aG9zZSBhcmUg
+YSBjb21wbGV0ZS9kaXJlY3QgcmVwcmVzZW50YXRpb24KPiBvZiBhbGwgdGhlIEhXIG9wdGlvbnMg
+dGhlIG1vZHVsZSBzdXBwb3J0cz8KClllcy4gVEZUIG9yIFNUTi4gVGhlcmUgY2FuIGJlIG9uZSBv
+ciBTVE4gcGFuZWxzIGNvbm5lY3RlZC4gU1ROKHMpIGNhbiBiZQpjb2xvciBvciBtb25vLiBNb25v
+IFNUTihzKSBjYW4gYmUgZHJpdmVuIHZpYSA0IG9yIDggYml0IHdpZGUgaW50ZXJmYWNlcy4KRGlz
+Y2xhaW1lcjogSSdtIG5vdCB0cnlpbmcgdG8gcHJldGVuZCBhbiBleHBlcnQgaGVyZS4gSSdtIGp1
+c3QgYmFzaW5nCnRoZSBhYm92ZSBvbiB0aGUgY2VsbCdzIHNwZWMuCgo+ID4gKy0gZGlzcGxheS10
+aW1pbmdzOiBzdGFuZGFyZCBkaXNwbGF5IHRpbWluZ3Mgc3ViLW5vZGUsIHNlZQo+ID4gKwkJCURv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9kaXNwbGF5LXRpbWluZy50eHQK
+PiAKPiBTaG91bGQgdGhhdCBiZSBpbiBhICJSZXF1aXJlZCBzdWItbm9kZXMiIHNlY3Rpb24gKEkg
+YXNzdW1lIHJlcXVpcmVkIG5vdAo+IG9wdGlvbmFsKSByYXRoZXIgdGhhbiAiT3B0aW9uYWwgUHJv
+cGVydGllcyI/CgpSaWdodCwgdGhlIHdob2xlICJwYW5lbCIgc2VjdGlvbiBpcyBrZXB0IHNlcGFy
+YXRlbHkgaW4gYSBob3BlIHRoYXQgQ0RGCihvciBEUk0gb3Igd2hhdGV2ZXIgOy0pIGdlbmVyaWMg
+ZGlzcGxheSBwaXBlbGluZSBiaW5kaW5ncyB3aWxsIGRlcHJlY2F0ZQppdC4gU28gdGhlIGRpc3Bs
+YXktdGltaW5ncyBpcyByZXF1aXJlZCB3aGVuIG9wdGlvbmFsIHBhbmVsIHByb3BlcnRpZXMKYXJl
+IHByZXNlbnQuIE1heWJlIEkgc2hvdWxkIHNwbGl0IHRoZW0gaW50byBhIHNlcGFyYXRlIHN1Yi1u
+b2RlPwpTb21ldGhpbmcgYWxvbmcgdGhlc2UgbGluZXMgKGluY2x1ZGluZyB0aGUgYmFuZHdpZHRo
+IGV4YW1wbGUpOgoKY2xjZEAxZjAwMDAgewogICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHBsMTEx
+IiwgImFybSxwcmltZWNlbGwiOwogICAgICAgIAogICAgICAgIG1heC1tZW1vcnktYmFuZHdpZHRo
+ID0gPDM2ODY0MDAwPjsgLyogYnBzLCA2NDB4NDgwQDYwIDE2YnBwICovCiAgICAgICAgCiAgICAg
+ICAgcGFuZWwgewogICAgICAgICAgICAgICAgdHlwZSA9ICJ0ZnQiOwogICAgICAgICAgICAgICAg
+dGZ0LWludGVyZmFjZSA9IDw4IDggOD47CiAgICAgICAgICAgICAgICBkaXNwbGF5LXRpbWluZ3Mg
+ewogICAgICAgICAgICAgICAgICAgICAgICAuLi4KICAgICAgICAgICAgICAgIH0gICAgICAgCiAg
+ICAgICAgfTsgICAgICAKfTsKClRoZW4gdGhlIHBhbmVsIHN1Ym5vZGUgd291bGQgYmUgb3B0aW9u
+YWwsIGJ1dCB0eXBlIGFuZCBkaXNwbGF5LXRpbWluZ3MKaW5zaWRlIHdvdWxkIGJlIHJlcXVpcmVk
+LgoKQWxzbywgSSB3aWxsIGhhdmUgYW5vdGhlciBsb29rIGF0IHdoYXQgdGhlIENERiBpcyBvZmZl
+cmluZywgdG8gbWFrZSBpdAphcyBmdXR1cmUtcHJvb2YgYXMgcG9zc2libGUuCgpQYXdlxYIKCgoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbAo=
