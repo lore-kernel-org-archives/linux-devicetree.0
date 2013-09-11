@@ -1,67 +1,127 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
-Date: Wed, 11 Sep 2013 12:30:02 +0100
-Message-ID: <20130911113002.GP29403@sirena.org.uk>
-References: <20130905020435.GA3970@gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>
- <522817D7.1010206@freescale.com>
- <522D3B79.3060707@freescale.com>
- <20130909151450.GI29403@sirena.org.uk>
- <522EC33B.9000009@freescale.com>
- <20130910180704.GB29403@sirena.org.uk>
- <522FD78A.6080900@freescale.com>
- <20130911104126.GN29403@sirena.org.uk>
- <52304BFF.4060007@freescale.com>
+From: Mike Dunn <mikedunn@newsguy.com>
+Subject: Re: [PATCH] pwm-backlight: add support for device tree gpio control
+Date: Wed, 11 Sep 2013 04:40:22 -0700
+Message-ID: <523056A6.5060000@newsguy.com>
+References: <1378236372-15711-1-git-send-email-mikedunn@newsguy.com> <20130910172130.GC22111@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uUnxkf+iQvOgVlY3"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52304BFF.4060007@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Huang Shijie <b32955@freescale.com>
-Cc: Huang Shijie <shijie8@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130910172130.GC22111@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jg1.han@samsung.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
+On 09/10/2013 10:21 AM, Thierry Reding wrote:
+> On Tue, Sep 03, 2013 at 12:26:12PM -0700, Mike Dunn wrote:
+>> This patch adds support for controlling an arbitrary number of gpios to the
+>> pwm-backlight driver.  This was left as a TODO when initial device tree support
+>> was added by Thierry a while back.  This functionality replaces the callbacks
+>> that are passed in the platform data for non-DT cases.  Users can avail
+>> themselves of this feature by adding a 'gpios' property to the 'backlight' node.
+>> When the update_status() callback in backlight_ops runs, the gpios listed in the
+>> property are asserted/deasserted if the specified brightness is non-zero/zero.
+>>
+>> Tested on a pxa270-based Palm Treo 680.
+>>
+>> Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
+>> ---
+>>
+>> Thanks for looking!
+>>
+>>  .../bindings/video/backlight/pwm-backlight.txt     |   4 +
+>>  drivers/video/backlight/pwm_bl.c                   | 128 ++++++++++++++++++---
+>>  2 files changed, 113 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+>> index 1e4fc72..4583e68 100644
+>> --- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+>> +++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+>> @@ -14,6 +14,9 @@ Required properties:
+>>  Optional properties:
+>>    - pwm-names: a list of names for the PWM devices specified in the
+>>                 "pwms" property (see PWM binding[0])
+>> +  - gpios:     An arbitrary number of gpios that must be asserted when the
+>> +               backlight is on, and de-asserted when off.  They will be asserted
+>> +               in the order they appear, and de-asserted in reverse order.
+> 
+> Do you have a real setup that actually needs multiple GPIOs? Usually
+> such a setup requires some kind of timing or other additional constraint
+> which can't be represented by this simple binding.
+> 
+> Looking at the Palm Treo code it seems like the reason why multiple
+> GPIOs are needed is because one is to enable the backlight, while the
+> other is in fact used to enable the LCD panel. 
 
---uUnxkf+iQvOgVlY3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 11, 2013 at 06:54:55PM +0800, Huang Shijie wrote:
+There are actually four GPIOs involved!  (There is an embarrasingly horrible
+hack in arch/arm/mach-pxa/palmtreo.c that handles the others.)  One is almost
+certainly simply backlight power.  The other three are probably LCD related.
+Timing doesn't seem to be an issue, but the order is important.  This is
+reverse-engineered without any schematics, and honestly, I'm still guessing with
+regard to how the board is wired.  It probably is not appropriate to manage all
+four gpios in the backlight driver, but at least one needs to be, so I thought
+I'd go ahead and prepare a patch that adds gpio support.  From what you are
+telling me, I guess my approach was too simplistic.
 
-> The LUT registers needs to be filled with the SPI NOR command, such
-> Fast-read/Quad-read.
-> So the Quadspi driver needs to know the spi commands, and that's why the
-> SPI driver has
-> references to the spi command opcodes.
 
-Indeed - what I was wondering was if those opcodes could be requested
-=66rom the flash driver rather than coded in there.  The driver needs to
-write the commands to the device but it's not clear to me if it really
-needs to know the specific commands.
+> I have been working on a
+> patch series to provide simple panel support, specifically to allow the
+> separation of backlight and panel power sequencing. Would such a method
+> work for your use-case as well? 
 
---uUnxkf+iQvOgVlY3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
+Sounds like it would, from what I know.
 
-iQIcBAEBAgAGBQJSMFQ3AAoJELSic+t+oim99JQP/jxDl9TG6UWgNRWyDbmBdjOP
-wmMAPIyJ0CXKGZioRHXlW3BCfDZRVZOT6+OXPH41uyHDzV/KucLe+hrSBbaXUdIW
-k5+sZAdfPQeWxx64vYaCbzGM8addTWvoHPj9cjiIU1SgPhQrRCtwTKAU9JW8DnIV
-YTaNfw6fnOFKJfLL/lCmVb0EeTvtApp6BpBBJY5Z+cXNrIpo+dsJ1i+zOb97+xfJ
-q8RkC1wuZ+zJs457/ucgNrRhKG+ys3UQdfUQ/NG/Nn7iohyHxtpG+EIf67R0UBui
-hjcC6hrZEWGDI/GZ+K3Sc6YdtWKU1LVqP0SHA102ewgY9mMYwtsra4YahX6XFdKQ
-1oh/g3fWe6jqR0UdynHf+MYprj1vRURIDbj+bMhEplv/+29IC/40eHlOHFy2be5/
-FOYKquJyBwjFLuKWkRWHd3DP8ajmSXJdUicABu68tz0Xk6o/HqkgAacDDGcIfaYr
-0hE9ahGcDD2/e5isFdxEL6mi6X3UX6qooZub7/m8shWJkLh9n9NP8qQDTG865I8r
-qSXTYIk45R/BshzXJRldA8cEYVQdA2gyDRFfsYmq4I7aNYH7Z3xcPLX9ujwHZN37
-yamH38lt3sC3218G54dvb4zvGUVNwCNhmu4C5oMXnq4jGcyWu99AwUK62WVW11mr
-t4H13sgtJbXEpd7uN2W8
-=izYP
------END PGP SIGNATURE-----
 
---uUnxkf+iQvOgVlY3--
+> The work that I'm doing is somewhat DRM
+> centric, and I don't think there's a DRM driver for PXA, but perhaps it
+> would be a good occasion to look at converting the PXA display drivers
+> to DRM... =)
+
+
+OK, thanks.  I'll look into it.  I'm clueless about DRM...  All I can say at
+this point is that I'm not using X windows, and there is not really any hardware
+acceleration in the pxa's lcd controller.
+
+
+> 
+> That said, I've had a patch similar to yours in a local tree (in fact in
+> the same branch as the panel work I've been doing) for quite some time,
+> which allows a single "enable" GPIO to be specified. I haven't gotten
+> around to sending it out yet, but I'll do that shortly. The patch is a
+> little more involved because it exposes the GPIO via platform data as
+> well and therefore has to update a number of board files, too. While
+> going over the various board files I found only a single board which can
+> actually make use of the new functionality (which I also converted in
+> the patch). Any other cases couldn't be implemented by the simple change
+> so I suspect they can't either using your proposed binding.
+
+
+Really?  Are we talking about the callbacks in struct
+platform_pwm_backlight_data?  I thought the majority of them just
+requested/released a gpio in init()/exit(), and wiggled it in notify().  I must
+be missing something.
+
+
+> 
+> I've been trying for a while to come up with a way to support more use-
+> cases, and I keep coming back to the same solution. Since the DT binding
+> for power sequences was shot down some time ago, we probably have to
+> represent any kind of sequencing in C code. So instead of trying to fit
+> everything into a single binding, I think a more maintainable solution
+> would be to create separate drivers for the more complex use-cases. That
+> could either be done by using separate compatible values within the
+> pwm-backlight driver or via completely different drivers. In the latter
+> case we should probably think about exporting some of the pwm-backlight
+> functionality so that drivers can easily reuse some of the code.
+
+
+I guess I'll wait for your patch and for everything else to shake out... I may
+be able to help out if you want to delegate some things.  Thanks for the reviews
+and the info.  Any other pointers appreciated.  BTW, I'm working on a simple
+patch to the pwm-backlight driver that will fix my inverted pwm output problem.
+
+Thanks again,
+Mike
