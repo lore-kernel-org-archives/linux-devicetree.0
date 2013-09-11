@@ -1,88 +1,73 @@
-From: Tang Yuantian-B29983 <B29983@freescale.com>
-Subject: RE: [v3] powerpc/mpc85xx: Update the clock device tree nodes
-Date: Wed, 11 Sep 2013 03:24:35 +0000
-Message-ID: <D07C73A334FF604B95B3CBD2A545D07B15074280@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1370480811-13700-1-git-send-email-Yuantian.Tang@freescale.com>
- <20130823200827.GA29737@home.buserror.net>
- <D07C73A334FF604B95B3CBD2A545D07B1503BE58@039-SN2MPN1-012.039d.mgd.msft.net>
- <1377536416.3033.18.camel@snotra.buserror.net>
- <D07C73A334FF604B95B3CBD2A545D07B1503F161@039-SN2MPN1-012.039d.mgd.msft.net>
- <1378849606.12204.359.camel@snotra.buserror.net>
+From: Arun Kumar K <arunkk.samsung@gmail.com>
+Subject: Re: [PATCH v7 13/13] V4L: Add driver for s5k4e5 image sensor
+Date: Wed, 11 Sep 2013 10:40:26 +0530
+Message-ID: <CALt3h78uVgjBKuc-++HVajwTKekFTPinAZ14BMKJmEGrg6OUyQ@mail.gmail.com>
+References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
+	<1377066881-5423-14-git-send-email-arun.kk@samsung.com>
+	<5228E34B.307@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1378849606.12204.359.camel@snotra.buserror.net>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Wood Scott-B07421 <B07421@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Mike Turquette <mturquette@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5228E34B.307@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, kilyeon.im@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-T0ssIHdpbGwgdXBkYXRlIHBlciB5b3VyIHN1Z2dlc3Rpb25zLg0KDQpUaGFua3MsDQpZdWFudGlh
-bg0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1C
-MDc0MjENCj4gU2VudDogMjAxM+W5tDnmnIgxMeaXpSDmmJ/mnJ/kuIkgNTo0Nw0KPiBUbzogVGFu
-ZyBZdWFudGlhbi1CMjk5ODMNCj4gQ2M6IFdvb2QgU2NvdHQtQjA3NDIxOyBnYWxha0BrZXJuZWwu
-Y3Jhc2hpbmcub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2
-QGxpc3RzLm96bGFicy5vcmc7IE1pa2UgVHVycXVldHRlDQo+IFN1YmplY3Q6IFJlOiBbdjNdIHBv
-d2VycGMvbXBjODV4eDogVXBkYXRlIHRoZSBjbG9jayBkZXZpY2UgdHJlZSBub2Rlcw0KPiANCj4g
-T24gTW9uLCAyMDEzLTA4LTI2IGF0IDIxOjQ5IC0wNTAwLCBUYW5nIFl1YW50aWFuLUIyOTk4MyB3
-cm90ZToNCj4gPiA+ID4gPiA+ICsJCX07DQo+ID4gPiA+ID4gPiArCQlwbGwxOiBwbGwxQDgyMCB7
-DQo+ID4gPiA+ID4gPiArCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiA+ID4gPiA+ID4gKwkJCXJl
-ZyA9IDwweDgyMD47DQo+ID4gPiA+ID4gPiArCQkJY29tcGF0aWJsZSA9ICJmc2wsY29yZS1wbGwt
-Y2xvY2siOw0KPiA+ID4gPiA+ID4gKwkJCWNsb2NrcyA9IDwmY2xvY2tnZW4+Ow0KPiA+ID4gPiA+
-ID4gKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJwbGwxIiwgInBsbDEtZGl2MiIsICJwbGwxLQ0K
-PiA+ID4gZGl2NCI7DQo+ID4gPiA+ID4gPiArCQl9Ow0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gUGxl
-YXNlIGxlYXZlIGEgYmxhbmsgbGluZSBiZXR3ZWVuIHByb3BlcnRpZXMgYW5kIG5vZGVzLCBhbmQN
-Cj4gPiA+ID4gPiBiZXR3ZWVuDQo+ID4gPiBub2Rlcy4NCj4gPiA+ID4gPg0KPiA+ID4gPiBPSywg
-d2lsbCBhZGQuDQo+ID4gPiA+DQo+ID4gPiA+ID4gV2hhdCBkb2VzIHJlZyByZXByZXNlbnQ/ICBX
-aGVyZSBpcyB0aGUgYmluZGluZyBmb3IgdGhpcz8NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFRoZSBj
-b21wYXRpYmxlIGlzIHRvbyB2YWd1ZS4NCj4gPiA+ID4gUmVnIGlzIHJlZ2lzdGVyIG9mZnNldC4N
-Cj4gPiA+DQo+ID4gPiBXaXRoIG5vIHNpemU/DQo+ID4NCj4gPiBObyBzaXplIGlzIG5lZWRlZC4N
-Cj4gDQo+IFllcywgaXQgaXMuICBSZWdpc3RlciBibG9ja3MgaGF2ZSBzaXplIC0tIGV2ZW4gaWYg
-aXQncyBqdXN0IGEgc2luZ2xlDQo+IHJlZ2lzdGVyLg0KPiANCj4gPiA+ID4gSXQgaXMgdG9vIGxh
-dGVyIHRvIGNoYW5nZSBzaW5jZSB0aGUgY2xvY2sgZHJpdmVyIGlzIG1lcmdlZCBmb3INCj4gPiA+
-ID4gbW9udGhzIGFsdGhvdWdoIEkgc2VudCB0aGlzIHBhdGNoIGZpcnN0Lg0KPiA+ID4NCj4gPiA+
-IEl0IHNob3VsZCBub3QgaGF2ZSBnb25lIGluIHdpdGhvdXQgYW4gYXBwcm92ZWQgYmluZGluZy4g
-IEl0IHNlZW1zIGl0DQo+ID4gPiB3ZW50IGluIHZpYSBNaWtlIFR1cnF1ZXR0ZSAod2h5IGlzIGEg
-bm9uLUFSTS1zcGVjaWZpYyB0cmVlIHVzaW5nDQo+ID4gPiBsaW51eC1hcm0tIGtlcm5lbCBhcyBp
-dHMgbGlzdCwgQlRXPykuICBObyBhY2sgZnJvbSBCZW4sIEt1bWFyLCBvciBtZQ0KPiA+ID4gaXMg
-c2hvd24gaW4gdGhlIGNvbW1pdC4NCj4gPiBUaGUgTGludXggY29tbW9uIGNsb2NrIGZyYW1ld29y
-ayBpcyBub3QgQVJNIHNwZWNpZmljLiBBbnkgb3RoZXIgYXJjaA0KPiBjYW4gdXNlIGl0Lg0KPiAN
-Cj4gU3VyZSwgaXQganVzdCBzZWVtZWQgYW4gb2RkIGNob2ljZSBvZiBtYWlsaW5nIGxpc3QgZm9y
-IHNvbWV0aGluZyB0aGF0DQo+IGlzbid0IEFSTS1zcGVjaWZpYy4NCj4gDQo+ID4gPiBJbiBhbnkg
-Y2FzZSwgeW91IGNhbiBwcmVzZXJ2ZSBjb21wYXRpYmlsaXR5IHdpdGggZXhpc3RpbmcgdHJlZXMN
-Cj4gPiA+IHdpdGhvdXQgdXNpbmcgdGhpcyBjb21wYXRpYmxlIGluIG5ldyB0cmVlcy4gIFRoZSBk
-cml2ZXIgY2FuIGNoZWNrDQo+ID4gPiBmb3IgYm90aCBjb21wYXRpYmxlcywgd2l0aCBhIGNvbW1l
-bnQgaW5kaWNhdGluZyB0aGF0DQo+ID4gPiAiZnNsLGNvcmUtbXV4LWNsb2NrIiBpcyBkZXByZWNh
-dGVkIGFuZCBmb3IgY29tcGF0aWJpbGl0eSBvbmx5Lg0KPiA+IEl0IGlzIHN1Yi1jbG9jayBub2Rl
-LCBpcyBpdCByZWFsbHkgbmVjZXNzYXJ5IHRvIHRoaW5rIGFib3V0DQo+IGNvbXBhdGliaWxpdHk/
-DQo+ID4gSSB0aGluayB0aGF0J3MgdGhlIG5vZGUgY2xvY2tnZW4ncyByZXNwb25zaWJpbGl0eS4N
-Cj4gDQo+IEl0IGRlc2NyaWJlcyByZWdpc3RlcnMsIHNvIHllcywgeW91IG5lZWQgdG8gY29uc2lk
-ZXIgY29tcGF0aWJpbGl0eS4gIEENCj4gY2xvY2sgcHJvdmlkZXIgaXMgbm90IHJlc3BvbnNpYmxl
-IGZvciBmaWd1cmluZyBvdXQgaG93IHRvIHByb2dyYW0gZGV2aWNlcw0KPiB0aGF0IGNvbnN1bWUg
-aXRzIGNsb2Nrcywgbm9yIHNob3VsZCBpdCBtYWtlIGFueSBhc3N1bXB0aW9ucyBhYm91dCBzdWNo
-DQo+IGRldmljZXMuDQo+IA0KPiA+ID4gPiBCZXNpZGVzLCBpdCBpcyBub3QgdG9vIGJhZCBiZWNh
-dXNlIG90aGVyIGFyY2ggdXNlIHRoZSBzaW1pbGFyIG5hbWUuDQo+ID4gPg0KPiA+ID4gSSBkb24n
-dCBmb2xsb3cuICBUaGlzIGlzIGEgc3BlY2lmaWMgRnJlZXNjYWxlIHJlZ2lzdGVyIGludGVyZmFj
-ZSwNCj4gPiA+IG5vdCBhIGdlbmVyYWwgY29uY2VwdC4NCj4gPiA+DQo+ID4gPiBJbiBhbnkgY2Fz
-ZSwgd2hpY2ggInNpbWlsYXIgbmFtZXMiIGFyZSB5b3UgcmVmZXJyaW5nIHRvPyAgQSBzZWFyY2gN
-Cj4gPiA+IGluIGFyY2gvYXJtL2Jvb3QvZHRzIGZvciAibXV4IiB3aXRoICJjbGsiIG9yICJjbG9j
-ayIgdHVybnMgdXANCj4gPiA+ICJhbGx3aW5uZXIsc3VuNGktYXBiMS1tdXgtY2xrIiB3aGljaCBp
-cyBtdWNoIG1vcmUgc3BlY2lmaWMgdGhhbg0KPiA+ID4gImZzbCxjb3JlLW11eC1jbG9jayIuDQo+
-ID4gT2ssIEkgd2lsbCBjaGFuZ2UgdGhlIGNvbXBhdGlibGUgc3RyaW5nLg0KPiA+IERvIHlvdSB0
-aGluayAiZnNsLHBwYy1jb3JlLSoiIGlzIG9rPw0KPiANCj4gTm8uICBIb3cgYWJvdXQgImZzbCxx
-b3JpcS1jaGFzc2lzMS0qIiAoZm9yIGU1MDBtYy9lNTUwMCkgYW5kIGZzbCxxb3JpcS0NCj4gY2hh
-c3NpczItKiIgKGZvciBlNjUwMCk/DQo+IA0KPiAtU2NvdHQNCj4gDQoNCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxp
-c3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3Jn
-L2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+Hi Sylwester,
+
+On Fri, Sep 6, 2013 at 1:32 AM, Sylwester Nawrocki
+<sylvester.nawrocki@gmail.com> wrote:
+> On 08/21/2013 08:34 AM, Arun Kumar K wrote:
+>>
+>> This patch adds subdev driver for Samsung S5K4E5 raw image sensor.
+>> Like s5k6a3, it is also another fimc-is firmware controlled
+>> sensor. This minimal sensor driver doesn't do any I2C communications
+>> as its done by ISP firmware. It can be updated if needed to a
+>> regular sensor driver by adding the I2C communication.
+>>
+>> Signed-off-by: Arun Kumar K<arun.kk@samsung.com>
+>> Reviewed-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
+>> ---
+>>   .../devicetree/bindings/media/i2c/s5k4e5.txt       |   43 +++
+>>   drivers/media/i2c/Kconfig                          |    8 +
+>>   drivers/media/i2c/Makefile                         |    1 +
+>>   drivers/media/i2c/s5k4e5.c                         |  361
+>> ++++++++++++++++++++
+>>   4 files changed, 413 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/media/i2c/s5k4e5.txt
+>>   create mode 100644 drivers/media/i2c/s5k4e5.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/s5k4e5.txt
+>> b/Documentation/devicetree/bindings/media/i2c/s5k4e5.txt
+>> new file mode 100644
+>> index 0000000..5af462c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/s5k4e5.txt
+>> @@ -0,0 +1,43 @@
+>> +* Samsung S5K4E5 Raw Image Sensor
+>> +
+>> +S5K4E5 is a raw image sensor with maximum resolution of 2560x1920
+>> +pixels. Data transfer is carried out via MIPI CSI-2 port and controls
+>> +via I2C bus.
+>> +
+>> +Required Properties:
+>> +- compatible   : must be "samsung,s5k4e5"
+>> +- reg          : I2C device address
+>> +- gpios                : reset gpio pin
+>
+>
+> I guess this should be "reset-gpios". How about changing description to:
+>
+> - reset-gpios   : specifier of a GPIO connected to the RESET pin;
+>
+>
+> ?
+
+If I name it to reset-gpios, the function of_get_gpio_flags() in the driver
+fails. This function searches for the entry with name "gpios". Is it still
+recommended to use a custom name and parse it explicitly?
+
+Regards
+Arun
