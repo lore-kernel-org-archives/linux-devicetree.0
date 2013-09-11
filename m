@@ -1,65 +1,71 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
-Date: Wed, 11 Sep 2013 09:16:43 +0200
-Message-ID: <523018DB.7080004@ahsoftware.de>
-References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com> <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com> <51F8CC35.1070704@collabora.co.uk> <522EC392.8070002@ti.com> <522F1BF0.8080608@collabora.co.uk> <522F3408.6050608@ti.com> <52301655.6080801@ahsoftware.de>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH 5/5] i2c: rcar: use per-device clock
+Date: Wed, 11 Sep 2013 09:20:21 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1309110908570.26942@axis700.grange>
+References: <1378742120-11135-1-git-send-email-g.liakhovetski@gmx.de>
+ <1378742120-11135-6-git-send-email-g.liakhovetski@gmx.de>
+ <CANqRtoSKOOLs1KiOx1gYU9LAH=K9hzZP8xTkgCF8s1=R0Vm3Yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52301655.6080801@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: joelf@ti.com
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoSKOOLs1KiOx1gYU9LAH=K9hzZP8xTkgCF8s1=R0Vm3Yg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-i2c@vger.kernel.org, SH-Linux <linux-sh@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 11.09.2013 09:05, schrieb Alexander Holler:
-> Am 10.09.2013 17:00, schrieb Joel Fernandes:
->
->> I think your initial patch is much better than fixing up DT but then I
->> may be
->> missing other problems with your patch that Linus's patch addresses.
->
-> The initial patch had the problem that it not only did introduce
-> irq-mappings for only those gpios which are marked as IRQs, but it
-> requested those gpios too and preconfigured them
->
-> And that breaks every driver which uses gpios for IRQs.
->
-> To summarize what happens if a driver uses a gpio as irq:
->
-> gpio_request() // This works only if the gpio was not requested before
-> gpio_direction_input()
-> gpio_to_irq() // This needs an irq-mapping
-> request_threaded_irq()
->
-> So I would suggest multiple steps to change that:
->
-> 1. Create a mapping for every gpio found in DT (or all gpios if no DT is
-> used). I think that is what Linus patch does (sorry, I haven't really
-> followed this thread and didn't look in deep at the patch).
->
-> 2. Implement gpio_request_for_irq()
-> This would just be a small macro for gpio_request(); gpio_direction_input()
->
-> 3. Change all drivers which do use gpio_to_irq() to use
-> gpio_request_for_irq() instead of gpio_request() and
-> gpio_direction_input(). This will end up with a big series of more or
-> less trivial patches (I count 677 occurences of gpio_to_irq) and might
-> be splitted.
->
-> 4. request gpios and set them to input when a gpio is marked as an IRQ
-> in the DT and DT is used. Change gpio_rquest_for_irq() to a NOP if DT is
-> used or leave it as it is for the none-dt case.
+Hi Magnus,
 
-But I still see a possible problem with requesting a gpio (centralized) 
-if it is marked as IRQ in DT: it does this always.
+On Wed, 11 Sep 2013, Magnus Damm wrote:
 
-I'm not sure, but there might be cases where this isn't wanted. Just 
-that a GPIO is marked as IRQ in the DT for one driver, doesn't mean that 
-this driver will be really used (and something else might use the GPIO 
-instead).
+> Hi Guennadi,
+> 
+> On Tue, Sep 10, 2013 at 12:55 AM, Guennadi Liakhovetski
+> <g.liakhovetski@gmx.de> wrote:
+> > Using the same clock for all device instances is non-portable and obtaining
+> > clock references by an ID without using a device pointer is discouraged.
+> > This is also not needed, because on platforms, where this driver is used,
+> > suitable clocks are available for the I2C controllers, that are children of
+> > the peripheral clock and just pass its rate 1-to-1 to controllers. This
+> > patch switches the driver to obtain references to correct clocks.
+> >
+> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> > ---
+> >  drivers/i2c/busses/i2c-rcar.c |    2 +-
+> >  1 files changed, 1 insertions(+), 1 deletions(-)
+> >
+> > diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+> > index 7e71cf4..7b986cb 100644
+> > --- a/drivers/i2c/busses/i2c-rcar.c
+> > +++ b/drivers/i2c/busses/i2c-rcar.c
+> > @@ -227,7 +227,7 @@ static int rcar_i2c_clock_calculate(struct rcar_i2c_priv *priv,
+> >                                     u32 bus_speed,
+> >                                     struct device *dev)
+> >  {
+> > -       struct clk *clkp = clk_get(NULL, "peripheral_clk");
+> > +       struct clk *clkp = clk_get(dev, NULL);
+> >         u32 scgd, cdf;
+> >         u32 round, ick;
+> >         u32 scl;
+> 
+> I agree that passing struct device to clk_get() is a good idea. Thanks
+> for spotting this.
+> 
+> What are the run-time dependencies for this patch? Do all affected I2C
+> controllers have MSTP bits with proper parents already, or will this
+> patch cause breakage for some SoCs?
 
-Regards,
+Currently (Simon's devel branch of 5 days ago as of commit 5cbe867) I only 
+see r8a7778 and r8a7779 using i2c-rcar. They both define clocks like
 
-Alexander Holler
+	CLKDEV_DEV_ID("i2c-rcar.0", &mstp_clks[MSTP030]), /* I2C0 */
+
+and similarly for I2C1 - I2C3. So, it looks like it should work, but would 
+be nice to test.
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
