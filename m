@@ -1,62 +1,57 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH 2/5] i2c: rcar: get clock rate only once and simplify
- calculation
-Date: Wed, 11 Sep 2013 09:03:27 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1309110854200.26942@axis700.grange>
-References: <1378742120-11135-1-git-send-email-g.liakhovetski@gmx.de>
- <1378742120-11135-3-git-send-email-g.liakhovetski@gmx.de>
- <CANqRtoRF8CD4hO4m23dqAtNCKvAqHo-+JhZud43SYePB4w5Ong@mail.gmail.com>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
+Date: Wed, 11 Sep 2013 09:05:57 +0200
+Message-ID: <52301655.6080801@ahsoftware.de>
+References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com> <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com> <51F8CC35.1070704@collabora.co.uk> <522EC392.8070002@ti.com> <522F1BF0.8080608@collabora.co.uk> <522F3408.6050608@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANqRtoRF8CD4hO4m23dqAtNCKvAqHo-+JhZud43SYePB4w5Ong-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <522F3408.6050608@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: joelf@ti.com
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus
+Am 10.09.2013 17:00, schrieb Joel Fernandes:
 
-Thanks for your comments
+> I think your initial patch is much better than fixing up DT but then I may be
+> missing other problems with your patch that Linus's patch addresses.
 
-On Wed, 11 Sep 2013, Magnus Damm wrote:
+The initial patch had the problem that it not only did introduce 
+irq-mappings for only those gpios which are marked as IRQs, but it 
+requested those gpios too and preconfigured them
 
-> Hi Guennadi,
-> 
-> On Tue, Sep 10, 2013 at 12:55 AM, Guennadi Liakhovetski
-> <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org> wrote:
-> > There is no need to repeatedly query clock frequency, where it is not
-> > expected to change. The complete loop can also trivially be replaced with
-> > a simple division. A further loop below the one, being simplified, could
-> > also be replaced, but that would get more complicated.
-> >
-> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Thanks for your efforts. What makes you think that you should assume
-> that the clock frequency doesn't change?
+And that breaks every driver which uses gpios for IRQs.
 
-Sorry, maybe I didn't explain well enough in the patch description. 
-Please, have a look at the patch. It removes repeated clock rate readings 
-inside a tight loop. I'm aware that the clock rate can change, but there 
-should be a way to make sure, that beginning now and until a certain later 
-point of time the rate doesn't change. Presumably this should be done by 
-locking the clock. I'm not sure this is currently supported by the clock 
-API. Neither clk_get(), nor clk_prepare() nor clk_enable() seem to have 
-the semantics of locking the clock's frequency. Maybe the one who actually 
-prepared the clock should become its owner, but I don't think this is 
-currently the expected behaviour. In either case, I don't think calling 
-clk_get_rate() repeatedly inside _that_ loop makes sense - the rate can 
-anyway be changed after the loop, so, it doesn't add any security.
+To summarize what happens if a driver uses a gpio as irq:
 
-Thanks
-Guennadi
+gpio_request() // This works only if the gpio was not requested before
+gpio_direction_input()
+gpio_to_irq() // This needs an irq-mapping
+request_threaded_irq()
 
-> As you already know, we want drivers to be reusable across multiple
-> SoCs. Assuming it that it would be fixed based on one particular SoC
-> doesn't guarantee that that's the case on other SoCs. Which SoCs did
-> you take into consideration?
+So I would suggest multiple steps to change that:
 
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+1. Create a mapping for every gpio found in DT (or all gpios if no DT is 
+used). I think that is what Linus patch does (sorry, I haven't really 
+followed this thread and didn't look in deep at the patch).
+
+2. Implement gpio_request_for_irq()
+This would just be a small macro for gpio_request(); gpio_direction_input()
+
+3. Change all drivers which do use gpio_to_irq() to use 
+gpio_request_for_irq() instead of gpio_request() and 
+gpio_direction_input(). This will end up with a big series of more or 
+less trivial patches (I count 677 occurences of gpio_to_irq) and might 
+be splitted.
+
+4. request gpios and set them to input when a gpio is marked as an IRQ 
+in the DT and DT is used. Change gpio_rquest_for_irq() to a NOP if DT is 
+used or leave it as it is for the none-dt case.
+
+
+Regards,
+
+Alexander Holler
+
