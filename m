@@ -1,13 +1,14 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCH] ARM: socfpga: dts: Add support for terasic SoCkit
-Date: Wed, 11 Sep 2013 10:54:44 +0200
-Message-ID: <1378889684-10467-1-git-send-email-s.trumtrar@pengutronix.de>
-References: <1378888451-28096-1-git-send-email-s.trumtrar@pengutronix.de>
+From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
+Subject: Re: [PATCH RFC] of: add a basic memory driver
+Date: Wed, 11 Sep 2013 06:34:01 -0300
+Message-ID: <52303909.5050103@elopez.com.ar>
+References: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
+ <20130911075400.GG2746@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1378888451-28096-1-git-send-email-s.trumtrar@pengutronix.de>
+In-Reply-To: <20130911075400.GG2746@lukather>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,88 +18,170 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Steffen Trumtrar <s.trumtrar@pengutronix.de>, kernel@pengutronix.de, Dinh Nguyen <dinguyen@altera.com>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, rob.herring@calxeda.com, david.lanzendoerfer@o2s.ch, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds basic support for the terasic SoCkit board.
-The board includes an Altera Cyclone 5 SoC.
+Hi Maxime,
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
----
-Hi!
-This patch depends on and was tested with
-	the series "socfpga: dts: cleanups"
-    and the series "Add support for SD/MMC on SOCFPGA" in v5
-    and the series "arm: dts: Add clock entries for timers in SOCFPGA" in v4
-    and the series "Enable ethernet support for SOCFPGA"
+El 11/09/13 04:54, Maxime Ripard escribi=F3:
+> Hi Emilio,
+>
+> On Tue, Sep 10, 2013 at 10:43:01PM -0300, Emilio L=F3pez wrote:
+>> This driver's only job is to claim and ensure that the necessary clock
+>> for memory operation on a DT-enabled machine remains enabled.
+>>
+>> Signed-off-by: Emilio L=F3pez <emilio@elopez.com.ar>
+>> ---
+>>
+>> Hi,
+>>
+>> I am currently facing an issue with the clock setup: a critical but
+>> unclaimed clock gets disabled as a side effect of disabling one of its
+>> children. The clock setup looks something like this:
+>>
+>>        PLL
+>>         |
+>>   ------------
+>>   |          |
+>> DDR       Others
+>>              |
+>>            periph
+>>
+>> The PLL clock is marked with the CLK_IGNORE_UNUSED flag, so on a normal
+>> boot it remains on, even after the unused clocks cleanup code runs. The
+>> problem occurs when someone enables "periph" and then, later on, disables
+>> it: the framework starts disabling clocks upwards on the tree,
+>> eventually switching the PLL off (and that kills the machine, as the mem=
+ory
+>> clock is shut down).
+>
+> That looks like a bug in the clock framework. I'd expect it to at least
+> behave in the same way when disabling the unused clocks at late startup
+> and when going up disabling some clocks' parent later on.
 
-Regards,
-Steffen
+Yes, I kind of expected the same, and the flag description seems to =
 
- arch/arm/boot/dts/Makefile                    |  1 +
- arch/arm/boot/dts/socfpga_cyclone5_sockit.dts | 41 +++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
- create mode 100644 arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+imply so too:
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 79a1fa1..e2e28e3 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -212,6 +212,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE) += emev2-kzm9d.dtb \
- 	sh7372-mackerel.dtb
- dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += emev2-kzm9d-reference.dtb
- dtb-$(CONFIG_ARCH_SOCFPGA) += socfpga_cyclone5_socdk.dtb \
-+	socfpga_cyclone5_sockit.dtb \
- 	socfpga_vt.dtb
- dtb-$(CONFIG_ARCH_SPEAR13XX) += spear1310-evb.dtb \
- 	spear1340-evb.dtb
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-new file mode 100644
-index 0000000..f935460
---- /dev/null
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
-@@ -0,0 +1,41 @@
-+/*
-+ *  Copyright (C) 2013 Steffen Trumtrar <s.trumtrar@pengutronix.de>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+/include/ "socfpga_cyclone5.dtsi"
-+
-+/ {
-+	model = "Terasic SoCkit";
-+	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,57600";
-+	};
-+
-+	memory {
-+		name = "memory";
-+		device_type = "memory";
-+		reg = <0x0 0x40000000>; /* 1GB */
-+	};
-+};
-+
-+&gmac1 {
-+	status = "okay";
-+};
-+
-+&mmc {
-+	status = "okay";
-+};
--- 
-1.8.4.rc3
+     #define CLK_IGNORE_UNUSED	BIT(3) /* do not gate even if unused */
+
+>> There's two possible solutions I can think of:
+>>   1) add some extra checks on the framework to not turn off clocks marked
+>>      with such a flag on the non-explicit case (ie, when I'm disabling
+>>      some other clock)
+>>
+>>   2) create an actual user of the DDR clock, that way it won't get
+>>      disabled simply because it's being used.
+>>
+>> I considered 1) and implemented it, but the result was not pretty.
+>
+> What was not pretty about it?
+
+It required adding an extra parameter to __clk_disable/__clk_unprepare =
+
+to keep track of the call's explicitness, and ignore the =
+
+disable/unprepare callback on the implicit case (when =
+
+__clk_disable/__clk_unprepare is called recursively) if the flag is set. =
+
+This also means adding a wrapping function to at least __clk_unprepare, =
+
+so as to to not break callers outside of the clk framework. Overall it =
+
+felt too hacky for something that could be properly handled by the =
+
+generic code if it had at least 1 user.
+
+I would like to hear Mike's thoughts on this; maybe CLK_IGNORE_UNUSED is =
+
+not what we think it should be.
+
+>> This patch is my take on 2). Please let me know what you think; all
+>> feedback is welcome :)
+>>
+>> Cheers,
+>>
+>> Emilio
+>>
+>>   drivers/of/Kconfig     |  6 ++++++
+>>   drivers/of/Makefile    |  1 +
+>>   drivers/of/of_memory.c | 30 ++++++++++++++++++++++++++++++
+>>   3 files changed, 37 insertions(+)
+>>   create mode 100644 drivers/of/of_memory.c
+>>
+>> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+>> index 9d2009a..f6c5e20 100644
+>> --- a/drivers/of/Kconfig
+>> +++ b/drivers/of/Kconfig
+>> @@ -80,4 +80,10 @@ config OF_RESERVED_MEM
+>>   	help
+>>   	  Initialization code for DMA reserved memory
+>>
+>> +config OF_MEMORY
+>> +	depends on COMMON_CLK
+>> +	def_bool y
+>> +	help
+>> +	  Simple memory initialization
+>> +
+>>   endmenu # OF
+>> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+>> index ed9660a..15f0167 100644
+>> --- a/drivers/of/Makefile
+>> +++ b/drivers/of/Makefile
+>> @@ -10,3 +10,4 @@ obj-$(CONFIG_OF_PCI)	+=3D of_pci.o
+>>   obj-$(CONFIG_OF_PCI_IRQ)  +=3D of_pci_irq.o
+>>   obj-$(CONFIG_OF_MTD)	+=3D of_mtd.o
+>>   obj-$(CONFIG_OF_RESERVED_MEM) +=3D of_reserved_mem.o
+>> +obj-$(CONFIG_OF_MEMORY) +=3D of_memory.o
+>> diff --git a/drivers/of/of_memory.c b/drivers/of/of_memory.c
+>> new file mode 100644
+>> index 0000000..a833f7a
+>> --- /dev/null
+>> +++ b/drivers/of/of_memory.c
+>> @@ -0,0 +1,30 @@
+>> +/*
+>> + * Simple memory driver
+>> + */
+>> +
+>> +#include <linux/of.h>
+>> +#include <linux/clk.h>
+>> +
+>> +static int __init of_memory_enable(void)
+>> +{
+>> +	struct device_node *np;
+>> +	struct clk *clk;
+>> +
+>> +	np =3D of_find_node_by_path("/memory");
+>> +	if (!np) {
+>> +		pr_err("no /memory on DT!\n");
+>> +		return 0;
+>> +	}
+>> +
+>> +	clk =3D of_clk_get(np, 0);
+>> +	if (!IS_ERR(clk)) {
+>> +		clk_prepare_enable(clk);
+>> +		clk_put(clk);
+>> +	}
+>> +
+>> +	of_node_put(np);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +device_initcall(of_memory_enable);
+>
+> I like this idea as well. But imho, both 1 and 2 should be done. 2) is
+> only about memory devices, while 1) is much more generic.
+>
+> And fwiw, the Marvell Armada 370 is also in this case of having a
+> gatable clock for the DDR that could potentially be disabled (but is
+> not, since it has no other users than the DDR itself, and as such, no
+> one ever calls clk_disable on it).
+
+Nice to know, thanks for the information :)
+
+Cheers,
+
+Emilio
