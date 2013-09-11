@@ -1,82 +1,41 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v2 3/6] extcon-gpio: Add support for active-low presence
- detect pins
-Date: Tue, 10 Sep 2013 19:25:13 -0700
-Message-ID: <20130911022513.GA5251@roeck-us.net>
-References: <1377836978-24082-1-git-send-email-linux@roeck-us.net>
- <1377836978-24082-4-git-send-email-linux@roeck-us.net>
- <522FD20C.6080404@samsung.com>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Wed, 11 Sep 2013 10:38:02 +0800
+Message-ID: <522FD78A.6080900@freescale.com>
+References: <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com> <20130905020435.GA3970@gmail.com> <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com> <522817D7.1010206@freescale.com> <522D3B79.3060707@freescale.com> <20130909151450.GI29403@sirena.org.uk> <522EC33B.9000009@freescale.com> <20130910180704.GB29403@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <522FD20C.6080404@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=GB2312
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130910180704.GB29403@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Huang Shijie <shijie8@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+=D3=DA 2013=C4=EA09=D4=C211=C8=D5 02:07, Mark Brown =D0=B4=B5=C0:
+> The code to work out what opcodes to send to the device should be spl=
+it
+> out of the device driver so that other drivers talking to these chips
+this code should be in the MTD code, not in the drivers.
+I have spilted this code, please see patch 3 & patch 4.
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-v2: Document gpio_active_low variable in gpio_extcon_platform_data
-    Rewrite active-low logic to be easier to read.
 
- drivers/extcon/extcon-gpio.c       |    4 ++++
- include/linux/extcon/extcon-gpio.h |    5 +++++
- 2 files changed, 9 insertions(+)
+> don't need to reimplement the logic and new chips with new opcodes do=
+n't
+> need to be added to multiple drivers.
+Since there is no standard for SPI-NOR commands, we _should_ add new
+code for
+new chips with new opcodes. For example, if a new chip supports the
+quad-read with
+a new command 0xef, we can submit a small patch for m25p80 to fix it.
 
-diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index 862743b..8491f86 100644
---- a/drivers/extcon/extcon-gpio.c
-+++ b/drivers/extcon/extcon-gpio.c
-@@ -34,6 +34,7 @@
- struct gpio_extcon_data {
- 	struct extcon_dev edev;
- 	unsigned gpio;
-+	bool gpio_active_low;
- 	const char *state_on;
- 	const char *state_off;
- 	int irq;
-@@ -49,6 +50,8 @@ static void gpio_extcon_work(struct work_struct *work)
- 			     work);
- 
- 	state = gpio_get_value(data->gpio);
-+	if (data->gpio_active_low)
-+		state = !state;
- 	extcon_set_state(&data->edev, state);
- }
- 
-@@ -96,6 +99,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
- 
- 	extcon_data->edev.name = pdata->name;
- 	extcon_data->gpio = pdata->gpio;
-+	extcon_data->gpio_active_low = pdata->gpio_active_low;
- 	extcon_data->state_on = pdata->state_on;
- 	extcon_data->state_off = pdata->state_off;
- 	if (pdata->state_on && pdata->state_off)
-diff --git a/include/linux/extcon/extcon-gpio.h b/include/linux/extcon/extcon-gpio.h
-index 2d8307f..51ef15c 100644
---- a/include/linux/extcon/extcon-gpio.h
-+++ b/include/linux/extcon/extcon-gpio.h
-@@ -27,6 +27,10 @@
-  * struct gpio_extcon_platform_data - A simple GPIO-controlled extcon device.
-  * @name	The name of this GPIO extcon device.
-  * @gpio	Corresponding GPIO.
-+ * @gpio_active_low:
-+ * 		Boolean describing whether gpio active state is 1 or 0
-+ * 		If true, low state of gpio means active.
-+ * 		If false, high state of gpio means active.
-  * @debounce	Debounce time for GPIO IRQ in ms.
-  * @irq_flags	IRQ Flags (e.g., IRQF_TRIGGER_LOW).
-  * @state_on	print_state is overriden with state_on if attached. If Null,
-@@ -41,6 +45,7 @@
- struct gpio_extcon_platform_data {
- 	const char *name;
- 	unsigned gpio;
-+	bool gpio_active_low;
- 	unsigned long debounce;
- 	unsigned long irq_flags;
- 
--- 
-1.7.9.7
+We have to do it in such way, no shortcut.
+
+
+thanks
+Huang Shijie
+
+
+
+
