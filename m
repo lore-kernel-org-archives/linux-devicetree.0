@@ -1,70 +1,46 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
-Date: Wed, 11 Sep 2013 16:07:05 +0100
-Message-ID: <20130911150705.GT29403@sirena.org.uk>
-References: <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>
- <522817D7.1010206@freescale.com>
- <522D3B79.3060707@freescale.com>
- <20130909151450.GI29403@sirena.org.uk>
- <522EC33B.9000009@freescale.com>
- <20130910180704.GB29403@sirena.org.uk>
- <522FD78A.6080900@freescale.com>
- <20130911104126.GN29403@sirena.org.uk>
- <52304BFF.4060007@freescale.com>
- <1378908315.2627.392.camel@shinybook.infradead.org>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
+Date: Wed, 11 Sep 2013 17:30:25 +0200
+Message-ID: <52308C91.2000105@ahsoftware.de>
+References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com> <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com> <344239800.bDEkDg48ZQ@avalon> <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rOxm5kX/3wI4eitB"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1378908315.2627.392.camel@shinybook.infradead.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Huang Shijie <b32955@freescale.com>, Huang Shijie <shijie8@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Am 22.08.2013 00:02, schrieb Linus Walleij:
+> On Tue, Aug 20, 2013 at 12:04 AM, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+>> On Wednesday 31 July 2013 01:44:53 Linus Walleij wrote:
+> 
+>>> I don't see how sharing works here, or how another user, i.e. another one
+>>> than the user wanting to recieve the IRQ, can validly request such a line?
+>>> What would the usecase for that valid request be?
+>>
+>> When the GPIO is wired to a status signal (such as an MMC card detect signal)
+>> the driver might want to read the state of the signal independently of the
+>> interrupt handler.
+> 
+> That is true. But for such a complex usecase I think it's reasonable that
+> we only specify the GPIO in the device tree, and the driver utilizing the
+> IRQ need to take that and perform gpio_to_irq() on it, and then it still
+> works to use it both ways.
 
---rOxm5kX/3wI4eitB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hmm, the problem is that DT is seen as fixed. So if someone marks a GPIO
+as an IRQ, it can never be used otherwise. So if you really go this way,
+you should make this pretty clear in the documentation.
 
-On Wed, Sep 11, 2013 at 03:05:15PM +0100, David Woodhouse wrote:
+Looking from the other side, why do you want to mark GPIOs as IRQs in
+the DT at all? And how will this be done? I found the way it was done in
+the reverted patch very confusing because it needed an IRQ number. That
+IRQ number depends on the mapping and isn't hw specific (and currently
+just human doable because of the simple mapping).
 
-> Why can't the flash driver *provide* the required information?
+Regards,
 
-Yeah, that's my question too...
-
-> So far I seem to have got it into my head that we have a SPI controller
-> which is connected to more than one device, and we can't send commands
-> to one without sending to the other... and that means that we have to
-> send a *NOP* to the "unwanted" device. Is that right?
-
-That shouldn't be the case, SPI has a chip select line which is asserted
-to talk to a particular chip, while it's not asserted the slaves should
-ignore any activity on the bus.  If activity on one slave affects
-another something is broken, this is the first time I noticed that being
-an issue but I might've missed some of the MTD side of this thread.
-
---rOxm5kX/3wI4eitB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSMIcSAAoJELSic+t+oim9fkMQAI/Ep5QSXbRc/J33NxMd3s9c
-2DrV5RgCfuYcqfOiMdTTnrRx7IYWc4yYvch72U/CtOSb4gfmdGM9ZKJAoHCpL+tD
-YW25DYDGLFRaBtu+hwAB9UvnvjXIwHBnGdRDuoNmnsAiPAQr8Atw2e5v/W3C3cdE
-husLhhKCAKMJ45NyRE/ZO1sCKXFCMMr5ZnyKR/LOjLNYD54dMV0NXTkWASK4T8fo
-D3qE1AfP9RsL5qMjSMHwys+WEleI9XO7JJOW3BSfLReQO7qGVKnfDN2GlRztDzvh
-WCtE+kk6zlVYFu0H4lFpGRPprvcYrdcbn3NJgHIpsQpb3TL9p8IkJ+HpBnpGmLV5
-QD3Ny2FUKR3J1Jajyob6e4pilccnosYickj4Uf6tXvb+tuiGodhLGC0bsZIaWgEf
-vFevtPkCRAHBz6D5BJ31qnZAxvyduoxb2wTCXqgd7t8W1iBKUYAyMx5pueh4+H71
-/kFut1tbeI8bejcMh9JRfLX2Va9Zt9uQlw5COTcdo+MPm0zJSX/TbV4jvJ3sSHRB
-WNIMrH8uHDsizMPvVbeb7TDuqsgUSMRvsOKgyQIryb54QlII9qkLfDLZvyZF2Jxl
-2SRc803otfLIR2/pni9yq5NLUdAYoRiTpjQs2fxm4tICpiP7KI3YDMNIO1gdInDN
-QZog5lj2QOg/WmKD5MLE
-=3v7l
------END PGP SIGNATURE-----
-
---rOxm5kX/3wI4eitB--
+Alexander Holler
