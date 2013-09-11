@@ -1,61 +1,38 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V2] regulator: core: add support for configuring turn-on
- time through constraints
-Date: Wed, 11 Sep 2013 11:59:48 -0600
-Message-ID: <5230AF94.60007@wwwdotorg.org>
-References: <1378904331-5665-1-git-send-email-ldewangan@nvidia.com> <5230A593.9010401@wwwdotorg.org> <5230AC5E.2020504@nvidia.com> <5230AC61.30904@wwwdotorg.org> <5230B1CE.3090709@nvidia.com>
+From: David Brown <davidb@codeaurora.org>
+Subject: Re: [PATCH 1/2] ARM: msm: Add support for MSM8974 Dragonboard
+Date: Wed, 11 Sep 2013 11:00:06 -0700
+Message-ID: <20130911180006.GA12624@codeaurora.org>
+References: <1375743779-24993-1-git-send-email-rvaswani@codeaurora.org>
+ <1375780486.2725.7.camel@iivanov-dev.int.mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5230B1CE.3090709@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1375780486.2725.7.camel@iivanov-dev.int.mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rohit Vaswani <rvaswani@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-arm-msm@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/2013 12:09 PM, Laxman Dewangan wrote:
-> On Wednesday 11 September 2013 11:16 PM, Stephen Warren wrote:
->> On 09/11/2013 11:46 AM, Laxman Dewangan wrote:
->>> On Wednesday 11 September 2013 10:47 PM, Stephen Warren wrote:
->>>> - regulator-enable-ramp-delay: The time taken, in uSec, for the supply
->>>> rail to reach the target voltage, plus/minus whatever tolerance the
->>>> board design requires, once the regulator output itself has ramped up.
->>>> This value is in addition to whatever built-in ramp time is inherent in
->>>> the regulator's own internal design or configuration. This property
->>>> describes the additional ramp time required due to board design issues
->>>> such as trace capacitance and load on the supply.
->>>>
->>>> That's text repeats "additional" a bit, but I think describes the
->>>> situation correctly?
->>> I wanted to provide the absolute delay rather than additional delay on
->>> top of inherit delay from device.
->> I suppose that either is fine from a DT perspective. But, the regulator
->> drivers already know their internal delay, so presumably driver code
->> will have to take the value from DT, and subtract out whatever delay the
->> driver already embodies, in order to calculate the extra delay required?
->> Or, if this property is set, does the driver-specified delay just get
->> ignored?
-> 
-> Yes, if property is available then driver-specified delay get ignored.
-> Delay will be used from dt provided value.
+On Tue, Aug 06, 2013 at 12:14:46PM +0300, Ivan T. Ivanov wrote:
 
-I'm not sure whether I prefer one option or the other. Perhaps Mark can
-decide?
+>Attached patch enables earlyprink for this board.
+>
+>[920] booting linux @ 0x8000, ramdisk @ 0x2000000 (1067699), tags/device tree @ 0x1e00000
+>Uncompressing Linux... done, booting the kernel.
+>[    0.000000] Booting Linux on physical CPU 0x0
+>[    0.000000] Linux version 3.11.0-rc4-00003-g7c8394e (iivanov@dev) (gcc version 4.6.3 (GCC) ) #502 SMP PREEMPT Tue Aug 6 12:09:07 EEST3
+>[    0.000000] CPU: ARMv7 Processor [512f06f0] revision 0 (ARMv7), cr=10c5387d
+>[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction cache
+>[    0.000000] Machine: Qualcomm MSM (Flattened Device Tree), model: Qualcomm MSM8974 Dragonboard
 
-That said, what if the internal ramp rate of the regulator itself is
-configurable, and can change at run-time. Won't that affect the total
-time? If so, having this property represent the additional time might
-better allow the total time to be recalculated based on internal
-regulator ramp delay changes. Perhaps the additional time varies if the
-internal ramp rate varies though, so perhaps it's not worth thinking
-about this situation.
+We'll need to have either Rohit include this in his patch series, or
+you'll have to format this as a valid patch.
 
-I'd suggest the following text if this property represents the total time:
+Thanks,
+David
 
-- regulator-enable-ramp-delay: The time taken, in uSec, for the supply
-rail to reach the target voltage, plus/minus whatever tolerance the
-board design requires. This property describes the total system ramp
-time required due to the combination of internal ramping of the
-regulator itself, and board design issues such as trace capacitance and
-load on the supply.
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
