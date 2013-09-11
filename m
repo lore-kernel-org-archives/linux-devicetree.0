@@ -1,53 +1,113 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V2] regulator: core: add support for configuring turn-on
- time through constraints
-Date: Wed, 11 Sep 2013 23:16:06 +0530
-Message-ID: <5230AC5E.2020504@nvidia.com>
-References: <1378904331-5665-1-git-send-email-ldewangan@nvidia.com> <5230A593.9010401@wwwdotorg.org>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
+Date: Wed, 11 Sep 2013 19:42:06 +0200
+Message-ID: <5230AB6E.1070807@ahsoftware.de>
+References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com> <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com> <344239800.bDEkDg48ZQ@avalon> <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com> <52308C91.2000105@ahsoftware.de> <523096FE.8080901@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5230A593.9010401@wwwdotorg.org>
+In-Reply-To: <523096FE.8080901@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 September 2013 10:47 PM, Stephen Warren wrote:
-> On 09/11/2013 06:58 AM, Laxman Dewangan wrote:
->> The Turn-on time of the regulator depends on the regulator device's
->> electrical characteristics. Sometimes regulator turn-on time also
->> depends on the capacitive load on the given platform and it can be
->> more than the datasheet value.
+Am 11.09.2013 18:14, schrieb Javier Martinez Canillas:
+> On 09/11/2013 05:30 PM, Alexander Holler wrote:
+>> Am 22.08.2013 00:02, schrieb Linus Walleij:
+>>> On Tue, Aug 20, 2013 at 12:04 AM, Laurent Pinchart
+>>> <laurent.pinchart@ideasonboard.com> wrote:
+>>>> On Wednesday 31 July 2013 01:44:53 Linus Walleij wrote:
+>>>
+>>>>> I don't see how sharing works here, or how another user, i.e. another one
+>>>>> than the user wanting to recieve the IRQ, can validly request such a line?
+>>>>> What would the usecase for that valid request be?
+>>>>
+>>>> When the GPIO is wired to a status signal (such as an MMC card detect signal)
+>>>> the driver might want to read the state of the signal independently of the
+>>>> interrupt handler.
+>>>
+>>> That is true. But for such a complex usecase I think it's reasonable that
+>>> we only specify the GPIO in the device tree, and the driver utilizing the
+>>> IRQ need to take that and perform gpio_to_irq() on it, and then it still
+>>> works to use it both ways.
 >>
->> The driver provides the enable-time as per datasheet.
+>> Hmm, the problem is that DT is seen as fixed. So if someone marks a GPIO
+>> as an IRQ, it can never be used otherwise. So if you really go this way,
+>> you should make this pretty clear in the documentation.
 >>
->> Add support for configure the enable ramp time through regulator
->> constraints so that regulator core can take this value for enable
->> time for that regulator.
->> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
->>   - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
->>     For hardwares which support disabling ramp rate, it should be explicitly
->>     intialised to zero (regulator-ramp-delay = <0>) for disabling ramp delay.
->> +- regulator-enable-ramp-delay: Turn-on time for regulator(in uSec). This is
->> +  the time time taken to reach within some proportion of the target voltage
->> +  from off state.
-> This is still a bit unclear. What proportion of the target voltage?
-> There's no mention that this describes the delay due to the
-> board/environment rather than the delay due to the internal operation of
-> the regulator itself. How about:
 >
-> - regulator-enable-ramp-delay: The time taken, in uSec, for the supply
-> rail to reach the target voltage, plus/minus whatever tolerance the
-> board design requires, once the regulator output itself has ramped up.
-> This value is in addition to whatever built-in ramp time is inherent in
-> the regulator's own internal design or configuration. This property
-> describes the additional ramp time required due to board design issues
-> such as trace capacitance and load on the supply.
+> DT is fixed because that describes the hardware which is fixed of course. So if
+> a chip IRQ line is connected to a GPIO pin in a controller that should be
+> described in the DT and that pin can't be used for anything else.
 >
-> That's text repeats "additional" a bit, but I think describes the
-> situation correctly?
 
-I wanted to provide the absolute delay rather than additional delay on 
-top of inherit delay from device.
+If you request an gpio for every gpio which defined as IRQ centrally, 
+drivers can't just use that gpio as gpio afterwards. And there might be 
+one driver which uses the irq but another one which wants the gpio. But 
+if you define a gpio as irq in dt, you take away that choice.
+
+>> Looking from the other side, why do you want to mark GPIOs as IRQs in
+>> the DT at all?
+>
+> Because from the component point-of-view that is wired to the SoC, that GPIO is
+> an IRQ line and so it has to be described.
+>
+>> And how will this be done? I found the way it was done in
+>> the reverted patch very confusing because it needed an IRQ number. That
+>> IRQ number depends on the mapping and isn't hw specific (and currently
+>> just human doable because of the simple mapping).
+>>
+>
+> That's is not true. You don't define an IRQ number what you define is a GPIO
+> number that is mapped as IRQ. The GPIO number does not depend on the mapping and
+> it only depends on the GPIO controller.
+>
+> This has absolutely nothing to do with the reverted patches and is described in
+> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
+>
+> The only difference is that the reverted patches did actually take an action
+> when a GPIO pin was mapped as an IRQ (requesting the GPIO and as input).
+>
+> So for example in an OMAP board DT you can define something like this:
+>
+> ethernet@5,0 {
+>          compatible = "smsc,lan9221", "smsc,lan9115";
+>          interrupt-parent = <&gpio6>;
+>          interrupts = <16 8>;
+> };
+>
+> Since each OMAP GPIO bank has 32 GPIO pins, then what you are defining is that
+> the GPIO 176 (5 * 32 + 16) will be mapped as the IRQ line for the ethernet
+> controller.
+>
+> I explained the exact use case I'm trying to solve in the thread "Re: [PATCH v3]
+> gpio: interrupt consistency check for OF GPIO IRQs" [1] if you need more
+> context. I'm sure others cc'ed in this thread have different (but similar)
+> requirements.
+
+So I would extend my previous proposal
+(http://www.mail-archive.com/linux-omap@vger.kernel.org/msg95202.html)
+for a gpio_request_as_irq() such, that I would change that to 
+request_irq_new(number, irq_controller) where the irq_controller would 
+be the gpio-controller in case of omap (while marking gpio_to_irq() as 
+deprecated).
+
+So request_irq_new() would than do the following on omap if the 
+irq-controller is a gpio-controller:
+
+gpio_request() // This works only if the gpio was not requested before
+gpio_direction_input()
+(build irq-mapping)
+gpio_to_irq() // This needs an irq-mapping
+return request_threaded_irq()
+
+and all drivers could replace the above sequence just with 
+request_irq_new(number_from_dt, irq-controller_from_dt).
+
+How's that?
+
+Regards,
+
+Alexander Holler
