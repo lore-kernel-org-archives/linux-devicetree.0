@@ -1,91 +1,69 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Wed, 11 Sep 2013 13:43:50 -0600
-Message-ID: <5230C7F6.3080803@wwwdotorg.org>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk> <2052193.CMUEUJFRgS@lem-wkst-02> <522F78CB.2020507@wwwdotorg.org> <20130910213718.GH29403@sirena.org.uk> <522F9E6C.2010905@wwwdotorg.org> <522FBED9.9000305@collabora.co.uk>
+From: Tim Bird <tbird20d@gmail.com>
+Subject: Re: [GIT PULL] Device tree updates for v3.12
+Date: Wed, 11 Sep 2013 13:21:15 -0700
+Message-ID: <CA+bK7J4s1y5-CfwmNB3gN5Ed800AnuH6vHe8+jRmq+pyPu9o0A@mail.gmail.com>
+References: <CACxGe6v8hO4sRX_KGcH=YBAMrF8mQHqWdxXEvVwoC2pVS5Yv9Q@mail.gmail.com>
+	<CA+bK7J5cAWFPLTBR2afNLm2JaKFH4_dJO_NpVL5gom0iX+L2dQ@mail.gmail.com>
+	<CA+55aFzBbKXJnaG_6X8Fff_APGJ3EkbG0thsbithDXtiEJjdHA@mail.gmail.com>
+	<CA+8MBbLVC2==zpNV1zV3OoiSQoKfptAGqF1EQNtrhFUCn=0h7A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <522FBED9.9000305@collabora.co.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Mark Brown <broonie@kernel.org>, Lars Poeschel <poeschel@lemonage.de>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, joelf@ti.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+8MBbLVC2==zpNV1zV3OoiSQoKfptAGqF1EQNtrhFUCn=0h7A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Luck <tony.luck@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2013 06:52 PM, Javier Martinez Canillas wrote:
-> On 09/11/2013 12:34 AM, Stephen Warren wrote:
->> On 09/10/2013 03:37 PM, Mark Brown wrote:
->>> On Tue, Sep 10, 2013 at 01:53:47PM -0600, Stephen Warren wrote:
->>>
->>>> Doesn't this patch call gpio_request() on the GPIO first, and
->>>> hence prevent the driver's own gpio_request() from succeeding,
->>>> since the GPIO is already requested? If this is not a problem, it
->>>> sounds like a bug in gpio_request() not ensuring mutual exclusion
->>>> for the GPIO.
->>>
->>> Or at the very least something that's likely to break in the
->>> future.
->>
->> Looking at the GPIO code, it already prevents double-requests:
->>
->>>         if (test_and_set_bit(FLAG_REQUESTED, &desc->flags) == 0) {
->>>                 desc_set_label(desc, label ? : "?");
->>>                 status = 0;
->>>         } else {
->>>                 status = -EBUSY;
->>>                 module_put(chip->owner);
->>>                 goto done;
->>>         }
->>
->> And I tested it in practice, and it really does fail.
->>
-> 
-> I'm a bit confused now. Doesn't the fact that gpio_request() prevents
-> double-requests mean that the use-case that you say that have not been covered
-> by this patch can't actually happen?
-> 
-> I mean, if when using board files an explicit call to gpio_request() is made by
-> platform code then a driver can't call gpio_request() for the same gpio. So this
-> patch shouldn't cause any regression since is just auto-requesting a GPIO when
-> is mapped as an IRQ in a DT which basically will be the same that was made by
-> board files before.
+Thanks.  This gives me an order-of-magnitude measurement for this sort of thing.
+I'll measure it directly myself on our hardware as soon as I can.
 
-I'm not familiar with the board file path; Linus describe this.
+I've heard an ugly rumor that the device tree from our silicon vendor
+may grow to be
+as big as 130K in the near future. I'm still following up to see if
+there's any truth
+to this (so don't quote me on it), but if it does get that big it
+might be an issue.  As
+stated previously, the vast majority of our device tree files consists
+of values that
+are not device-specific.
 
-It sounds like that path is for the case where a driver /only/ cares
-about using a pin as an IRQ, and hence the driver only calls
-request_irq(). The board file is (earlier) calling gpio_request() in
-order to set up that input pin to work correctly as an IRQ. Hence, there
-is no double-call to gpio_request().
+I'll keep an eye on it and propose something if it turns out to be a real issue.
 
-The case I said wouldn't work is:
 
-* This patch calls gpio_request() in order to make the pin work as an IRQ.
+On Wed, Sep 11, 2013 at 10:02 AM, Tony Luck <tony.luck@gmail.com> wrote:
+> On Tue, Sep 10, 2013 at 1:50 PM, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>> Of course, maybe even the stupid add_device_randomness() is fast
+>> enough. I just wanted to point out that it definitely isn't some
+>> optimized thing.
+>
+> When I posted the patch that mixes in the whole SMBIOS table:
+>
+> commit d114a33387472555188f142ed8e98acdb8181c6d
+> Author: Tony Luck <tony.luck@intel.com>
+> Date:   Fri Jul 20 13:15:20 2012 -0700
+>
+>     dmi: Feed DMI table to /dev/random driver
+>
+> I asked whether there was any size issue - as it tends to be a few
+> kilobytes on laptops and desktops, and tens of kilobytes on servers.
+> The answer I got back then was not to worry - digesting a few kilobytes
+> wouldn't be a problem.  I just threw in a debug message to check and saw:
+>
+> dmi_walk_early: added 10342 bytes in 339968 cycles
+>
+> So a couple of hundred microseconds for me.
+>
+> There are plenty of machine specific values buried in there (e.g. serial
+> numbers for all the DIMMs) ... so this looks like a good use of this
+> much boot time.
+>
+> -Tony
 
-* Driver uses the pin as both a GPIO and an IRQ, and hence calls
-gpio_request() and request_irq().
 
-So, there's a double-call to gpio_request(), which fails, and the driver
-fails to probe.
 
-I believe this situation is exactly what cause the original patch to the
-OMAP driver to be reverted; that patch should have touched the HW
-directly to solve the problem when the IRQ was requested, rather than
-calling into the GPIO subsystem (which also has the side-effect of
-touching the HW in the same way as desired).
-
-> To give you an example of an use-case that this patch is trying to solve:
-> 
-> OMAP SoCs have a General-Purpose Memory Controller (GPMC) that can be used to
-> interface with Pseudo-SRAM devices such as ethernet controllers. So with board
-> files we currently have this (arch/arm/mach-omap2/gpmc-smsc911x.c):
-> ...
-
-As we discussed on IRC (so mainly for the record in the mailing list
-archive), I believe that if a driver wants to use a pin as an interrupt
-and only an interrupt, even if the pin has the capability in HW to be a
-GPIO (or absolutely anything else at all), then the only call in the
-entire kernel (board code, DT core code, IRQ core, driver, ...) should
-be a single request_irq(), and the IRQ chip driver needs to program the
-HW appropriately to make that work.
+-- 
+ -- Tim Bird
+Senior Software Engineer, Sony Mobile
+Architecture Group Chair, CE Workgroup, Linux Foundation
