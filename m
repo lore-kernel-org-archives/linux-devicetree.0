@@ -1,44 +1,52 @@
-From: Tony Luck <tony.luck@gmail.com>
-Subject: Re: [GIT PULL] Device tree updates for v3.12
-Date: Wed, 11 Sep 2013 10:02:40 -0700
-Message-ID: <CA+8MBbLVC2==zpNV1zV3OoiSQoKfptAGqF1EQNtrhFUCn=0h7A@mail.gmail.com>
-References: <CACxGe6v8hO4sRX_KGcH=YBAMrF8mQHqWdxXEvVwoC2pVS5Yv9Q@mail.gmail.com>
-	<CA+bK7J5cAWFPLTBR2afNLm2JaKFH4_dJO_NpVL5gom0iX+L2dQ@mail.gmail.com>
-	<CA+55aFzBbKXJnaG_6X8Fff_APGJ3EkbG0thsbithDXtiEJjdHA@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V2] regulator: core: add support for configuring turn-on
+ time through constraints
+Date: Wed, 11 Sep 2013 11:17:07 -0600
+Message-ID: <5230A593.9010401@wwwdotorg.org>
+References: <1378904331-5665-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+55aFzBbKXJnaG_6X8Fff_APGJ3EkbG0thsbithDXtiEJjdHA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Tim Bird <tbird20d@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1378904331-5665-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: broonie@kernel.org, rob.herring@calxeda.com, mark.rutland@arm.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2013 at 1:50 PM, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> Of course, maybe even the stupid add_device_randomness() is fast
-> enough. I just wanted to point out that it definitely isn't some
-> optimized thing.
+On 09/11/2013 06:58 AM, Laxman Dewangan wrote:
+> The Turn-on time of the regulator depends on the regulator device's
+> electrical characteristics. Sometimes regulator turn-on time also
+> depends on the capacitive load on the given platform and it can be
+> more than the datasheet value.
+> 
+> The driver provides the enable-time as per datasheet.
+> 
+> Add support for configure the enable ramp time through regulator
+> constraints so that regulator core can take this value for enable
+> time for that regulator.
 
-When I posted the patch that mixes in the whole SMBIOS table:
+> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
 
-commit d114a33387472555188f142ed8e98acdb8181c6d
-Author: Tony Luck <tony.luck@intel.com>
-Date:   Fri Jul 20 13:15:20 2012 -0700
+>  - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
+>    For hardwares which support disabling ramp rate, it should be explicitly
+>    intialised to zero (regulator-ramp-delay = <0>) for disabling ramp delay.
+> +- regulator-enable-ramp-delay: Turn-on time for regulator(in uSec). This is
+> +  the time time taken to reach within some proportion of the target voltage
+> +  from off state.
 
-    dmi: Feed DMI table to /dev/random driver
+This is still a bit unclear. What proportion of the target voltage?
+There's no mention that this describes the delay due to the
+board/environment rather than the delay due to the internal operation of
+the regulator itself. How about:
 
-I asked whether there was any size issue - as it tends to be a few
-kilobytes on laptops and desktops, and tens of kilobytes on servers.
-The answer I got back then was not to worry - digesting a few kilobytes
-wouldn't be a problem.  I just threw in a debug message to check and saw:
+- regulator-enable-ramp-delay: The time taken, in uSec, for the supply
+rail to reach the target voltage, plus/minus whatever tolerance the
+board design requires, once the regulator output itself has ramped up.
+This value is in addition to whatever built-in ramp time is inherent in
+the regulator's own internal design or configuration. This property
+describes the additional ramp time required due to board design issues
+such as trace capacitance and load on the supply.
 
-dmi_walk_early: added 10342 bytes in 339968 cycles
-
-So a couple of hundred microseconds for me.
-
-There are plenty of machine specific values buried in there (e.g. serial
-numbers for all the DIMMs) ... so this looks like a good use of this
-much boot time.
-
--Tony
+That's text repeats "additional" a bit, but I think describes the
+situation correctly?
