@@ -1,87 +1,44 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH RFC] of: add a basic memory driver
-Date: Wed, 11 Sep 2013 11:40:48 -0500
-Message-ID: <52309D10.9020708@gmail.com>
-References: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
+From: Tony Luck <tony.luck@gmail.com>
+Subject: Re: [GIT PULL] Device tree updates for v3.12
+Date: Wed, 11 Sep 2013 10:02:40 -0700
+Message-ID: <CA+8MBbLVC2==zpNV1zV3OoiSQoKfptAGqF1EQNtrhFUCn=0h7A@mail.gmail.com>
+References: <CACxGe6v8hO4sRX_KGcH=YBAMrF8mQHqWdxXEvVwoC2pVS5Yv9Q@mail.gmail.com>
+	<CA+bK7J5cAWFPLTBR2afNLm2JaKFH4_dJO_NpVL5gom0iX+L2dQ@mail.gmail.com>
+	<CA+55aFzBbKXJnaG_6X8Fff_APGJ3EkbG0thsbithDXtiEJjdHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio@elopez.com.ar>
-Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, rob.herring@calxeda.com, david.lanzendoerfer@o2s.ch, grant.likely@linaro.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+55aFzBbKXJnaG_6X8Fff_APGJ3EkbG0thsbithDXtiEJjdHA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Tim Bird <tbird20d@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkvMTAvMjAxMyAwODo0MyBQTSwgRW1pbGlvIEzDs3BleiB3cm90ZToKPiBUaGlzIGRyaXZl
-cidzIG9ubHkgam9iIGlzIHRvIGNsYWltIGFuZCBlbnN1cmUgdGhhdCB0aGUgbmVjZXNzYXJ5IGNs
-b2NrCj4gZm9yIG1lbW9yeSBvcGVyYXRpb24gb24gYSBEVC1lbmFibGVkIG1hY2hpbmUgcmVtYWlu
-cyBlbmFibGVkLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEVtaWxpbyBMw7NwZXogPGVtaWxpb0BlbG9w
-ZXouY29tLmFyPgo+IC0tLQo+IAo+IEhpLAo+IAo+IEkgYW0gY3VycmVudGx5IGZhY2luZyBhbiBp
-c3N1ZSB3aXRoIHRoZSBjbG9jayBzZXR1cDogYSBjcml0aWNhbCBidXQKPiB1bmNsYWltZWQgY2xv
-Y2sgZ2V0cyBkaXNhYmxlZCBhcyBhIHNpZGUgZWZmZWN0IG9mIGRpc2FibGluZyBvbmUgb2YgaXRz
-Cj4gY2hpbGRyZW4uIFRoZSBjbG9jayBzZXR1cCBsb29rcyBzb21ldGhpbmcgbGlrZSB0aGlzOgo+
-IAo+ICAgICAgIFBMTAo+ICAgICAgICB8Cj4gIC0tLS0tLS0tLS0tLQo+ICB8ICAgICAgICAgIHwK
-PiBERFIgICAgICAgT3RoZXJzCj4gICAgICAgICAgICAgfAo+ICAgICAgICAgICBwZXJpcGgKClRo
-aXMgd291bGQgYmUgbW9yZSBhY2N1cmF0ZToKCiAgICAgICBQTEwKICAgICAgICB8CiAtLS0tLS0t
-LS0tLS0tLS0tCiB8ICAgICAgICAgICAgICB8CkREUiBDdHJsciAgICAgT3RoZXJzCiB8CkREUgoK
-U28gaGF2aW5nIGEgRERSIGNvbnRyb2xsZXIgbm9kZSB3aXRoIGEgY2xvY2sgaXMgdGhlIHJpZ2h0
-IHdheSB0byBkbwp0aGlzLiBUaGVyZSBhcmUgb3RoZXIgcG9zc2libGUgbmVlZHMgZm9yIGRlc2Ny
-aWJpbmcgdGhlIEREUiBjb250cm9sbGVyCnN1Y2ggYXMgbG93IHBvd2VyIG1vZGVzIGFuZCBFQ0Mu
-CgpSb2IKCj4gCj4gVGhlIFBMTCBjbG9jayBpcyBtYXJrZWQgd2l0aCB0aGUgQ0xLX0lHTk9SRV9V
-TlVTRUQgZmxhZywgc28gb24gYSBub3JtYWwKPiBib290IGl0IHJlbWFpbnMgb24sIGV2ZW4gYWZ0
-ZXIgdGhlIHVudXNlZCBjbG9ja3MgY2xlYW51cCBjb2RlIHJ1bnMuIFRoZQo+IHByb2JsZW0gb2Nj
-dXJzIHdoZW4gc29tZW9uZSBlbmFibGVzICJwZXJpcGgiIGFuZCB0aGVuLCBsYXRlciBvbiwgZGlz
-YWJsZXMKPiBpdDogdGhlIGZyYW1ld29yayBzdGFydHMgZGlzYWJsaW5nIGNsb2NrcyB1cHdhcmRz
-IG9uIHRoZSB0cmVlLCAKPiBldmVudHVhbGx5IHN3aXRjaGluZyB0aGUgUExMIG9mZiAoYW5kIHRo
-YXQga2lsbHMgdGhlIG1hY2hpbmUsIGFzIHRoZSBtZW1vcnkKPiBjbG9jayBpcyBzaHV0IGRvd24p
-Lgo+IAo+IFRoZXJlJ3MgdHdvIHBvc3NpYmxlIHNvbHV0aW9ucyBJIGNhbiB0aGluayBvZjoKPiAg
-MSkgYWRkIHNvbWUgZXh0cmEgY2hlY2tzIG9uIHRoZSBmcmFtZXdvcmsgdG8gbm90IHR1cm4gb2Zm
-IGNsb2NrcyBtYXJrZWQKPiAgICAgd2l0aCBzdWNoIGEgZmxhZyBvbiB0aGUgbm9uLWV4cGxpY2l0
-IGNhc2UgKGllLCB3aGVuIEknbSBkaXNhYmxpbmcKPiAgICAgc29tZSBvdGhlciBjbG9jaykKPiAg
-MikgY3JlYXRlIGFuIGFjdHVhbCB1c2VyIG9mIHRoZSBERFIgY2xvY2ssIHRoYXQgd2F5IGl0IHdv
-bid0IGdldAo+ICAgICBkaXNhYmxlZCBzaW1wbHkgYmVjYXVzZSBpdCdzIGJlaW5nIHVzZWQuCj4g
-Cj4gSSBjb25zaWRlcmVkIDEpIGFuZCBpbXBsZW1lbnRlZCBpdCwgYnV0IHRoZSByZXN1bHQgd2Fz
-IG5vdCBwcmV0dHkuIFRoaXMgCj4gcGF0Y2ggaXMgbXkgdGFrZSBvbiAyKS4gUGxlYXNlIGxldCBt
-ZSBrbm93IHdoYXQgeW91IHRoaW5rOyBhbGwgZmVlZGJhY2sKPiBpcyB3ZWxjb21lIDopCj4gCj4g
-Q2hlZXJzLAo+IAo+IEVtaWxpbwo+IAo+ICBkcml2ZXJzL29mL0tjb25maWcgICAgIHwgIDYgKysr
-KysrCj4gIGRyaXZlcnMvb2YvTWFrZWZpbGUgICAgfCAgMSArCj4gIGRyaXZlcnMvb2Yvb2ZfbWVt
-b3J5LmMgfCAzMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMyBmaWxlcyBjaGFu
-Z2VkLCAzNyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL29mL29m
-X21lbW9yeS5jCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvS2NvbmZpZyBiL2RyaXZlcnMv
-b2YvS2NvbmZpZwo+IGluZGV4IDlkMjAwOWEuLmY2YzVlMjAgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
-cy9vZi9LY29uZmlnCj4gKysrIGIvZHJpdmVycy9vZi9LY29uZmlnCj4gQEAgLTgwLDQgKzgwLDEw
-IEBAIGNvbmZpZyBPRl9SRVNFUlZFRF9NRU0KPiAgCWhlbHAKPiAgCSAgSW5pdGlhbGl6YXRpb24g
-Y29kZSBmb3IgRE1BIHJlc2VydmVkIG1lbW9yeQo+ICAKPiArY29uZmlnIE9GX01FTU9SWQo+ICsJ
-ZGVwZW5kcyBvbiBDT01NT05fQ0xLCj4gKwlkZWZfYm9vbCB5Cj4gKwloZWxwCj4gKwkgIFNpbXBs
-ZSBtZW1vcnkgaW5pdGlhbGl6YXRpb24KPiArCj4gIGVuZG1lbnUgIyBPRgo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL29mL01ha2VmaWxlIGIvZHJpdmVycy9vZi9NYWtlZmlsZQo+IGluZGV4IGVkOTY2
-MGEuLjE1ZjAxNjcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9vZi9NYWtlZmlsZQo+ICsrKyBiL2Ry
-aXZlcnMvb2YvTWFrZWZpbGUKPiBAQCAtMTAsMyArMTAsNCBAQCBvYmotJChDT05GSUdfT0ZfUENJ
-KQkrPSBvZl9wY2kubwo+ICBvYmotJChDT05GSUdfT0ZfUENJX0lSUSkgICs9IG9mX3BjaV9pcnEu
-bwo+ICBvYmotJChDT05GSUdfT0ZfTVREKQkrPSBvZl9tdGQubwo+ICBvYmotJChDT05GSUdfT0Zf
-UkVTRVJWRURfTUVNKSArPSBvZl9yZXNlcnZlZF9tZW0ubwo+ICtvYmotJChDT05GSUdfT0ZfTUVN
-T1JZKSArPSBvZl9tZW1vcnkubwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL29mX21lbW9yeS5j
-IGIvZHJpdmVycy9vZi9vZl9tZW1vcnkuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXgg
-MDAwMDAwMC4uYTgzM2Y3YQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL29mL29mX21l
-bW9yeS5jCj4gQEAgLTAsMCArMSwzMCBAQAo+ICsvKgo+ICsgKiBTaW1wbGUgbWVtb3J5IGRyaXZl
-cgo+ICsgKi8KPiArCj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgo+ICsjaW5jbHVkZSA8bGludXgv
-Y2xrLmg+Cj4gKwo+ICtzdGF0aWMgaW50IF9faW5pdCBvZl9tZW1vcnlfZW5hYmxlKHZvaWQpCj4g
-K3sKPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7Cj4gKwlzdHJ1Y3QgY2xrICpjbGs7Cj4gKwo+
-ICsJbnAgPSBvZl9maW5kX25vZGVfYnlfcGF0aCgiL21lbW9yeSIpOwo+ICsJaWYgKCFucCkgewo+
-ICsJCXByX2Vycigibm8gL21lbW9yeSBvbiBEVCFcbiIpOwo+ICsJCXJldHVybiAwOwo+ICsJfQo+
-ICsKPiArCWNsayA9IG9mX2Nsa19nZXQobnAsIDApOwo+ICsJaWYgKCFJU19FUlIoY2xrKSkgewo+
-ICsJCWNsa19wcmVwYXJlX2VuYWJsZShjbGspOwo+ICsJCWNsa19wdXQoY2xrKTsKPiArCX0KPiAr
-Cj4gKwlvZl9ub2RlX3B1dChucCk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK2Rldmlj
-ZV9pbml0Y2FsbChvZl9tZW1vcnlfZW5hYmxlKTsKPiAKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Tue, Sep 10, 2013 at 1:50 PM, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> Of course, maybe even the stupid add_device_randomness() is fast
+> enough. I just wanted to point out that it definitely isn't some
+> optimized thing.
+
+When I posted the patch that mixes in the whole SMBIOS table:
+
+commit d114a33387472555188f142ed8e98acdb8181c6d
+Author: Tony Luck <tony.luck@intel.com>
+Date:   Fri Jul 20 13:15:20 2012 -0700
+
+    dmi: Feed DMI table to /dev/random driver
+
+I asked whether there was any size issue - as it tends to be a few
+kilobytes on laptops and desktops, and tens of kilobytes on servers.
+The answer I got back then was not to worry - digesting a few kilobytes
+wouldn't be a problem.  I just threw in a debug message to check and saw:
+
+dmi_walk_early: added 10342 bytes in 339968 cycles
+
+So a couple of hundred microseconds for me.
+
+There are plenty of machine specific values buried in there (e.g. serial
+numbers for all the DIMMs) ... so this looks like a good use of this
+much boot time.
+
+-Tony
