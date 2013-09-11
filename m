@@ -1,70 +1,67 @@
-From: Koen Kooi <koen@dominion.thruhere.net>
-Subject: [PATCHv2 1/2] arm: bone: dts: add CD for mmc1
-Date: Wed, 11 Sep 2013 13:02:26 +0200
-Message-ID: <1378897347-11840-2-git-send-email-koen@dominion.thruhere.net>
-References: <1378897347-11840-1-git-send-email-koen@dominion.thruhere.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378897347-11840-1-git-send-email-koen@dominion.thruhere.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexander Holler <holler@ahsoftware.de>, Koen Kooi <koen@dominion.thruhere.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Wed, 11 Sep 2013 12:30:02 +0100
+Message-ID: <20130911113002.GP29403@sirena.org.uk>
+References: <20130905020435.GA3970@gmail.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>
+ <522817D7.1010206@freescale.com>
+ <522D3B79.3060707@freescale.com>
+ <20130909151450.GI29403@sirena.org.uk>
+ <522EC33B.9000009@freescale.com>
+ <20130910180704.GB29403@sirena.org.uk>
+ <522FD78A.6080900@freescale.com>
+ <20130911104126.GN29403@sirena.org.uk>
+ <52304BFF.4060007@freescale.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uUnxkf+iQvOgVlY3"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52304BFF.4060007@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Huang Shijie <b32955@freescale.com>
+Cc: Huang Shijie <shijie8@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alexander Holler <holler@ahsoftware.de>
 
-This enables the use of MMC cards even when no card was inserted at boot.
+--uUnxkf+iQvOgVlY3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alexander Holler <holler@ahsoftware.de>
-Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
----
+On Wed, Sep 11, 2013 at 06:54:55PM +0800, Huang Shijie wrote:
 
-Changes since v1:
-	None, simple repost
+> The LUT registers needs to be filled with the SPI NOR command, such
+> Fast-read/Quad-read.
+> So the Quadspi driver needs to know the spi commands, and that's why the
+> SPI driver has
+> references to the spi command opcodes.
 
- arch/arm/boot/dts/am335x-bone-common.dtsi | 14 ++++++++++++++
- arch/arm/boot/dts/am335x-bone.dts         |  4 ----
- 2 files changed, 14 insertions(+), 4 deletions(-)
+Indeed - what I was wondering was if those opcodes could be requested
+=66rom the flash driver rather than coded in there.  The driver needs to
+write the commands to the device but it's not clear to me if it really
+needs to know the specific commands.
 
-diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index 2f66ded..ced256c 100644
---- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -107,6 +107,11 @@
- 				0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
- 			>;
- 		};
-+		mmc1_pins: pinmux_mmc1_pins {
-+			pinctrl-single,pins = <
-+				0x160 (PIN_INPUT | MUX_MODE7) /* GPIO0_6 */
-+			>;
-+		};
- 	};
- 
- 	ocp {
-@@ -260,3 +265,12 @@
- 	pinctrl-0 = <&davinci_mdio_default>;
- 	pinctrl-1 = <&davinci_mdio_sleep>;
- };
-+
-+&mmc1 {
-+	status = "okay";
-+	vmmc-supply = <&ldo3_reg>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
-+};
-diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-index d5f43fe..d34469c 100644
---- a/arch/arm/boot/dts/am335x-bone.dts
-+++ b/arch/arm/boot/dts/am335x-bone.dts
-@@ -16,7 +16,3 @@
- 	regulator-always-on;
- };
- 
--&mmc1 {
--	status = "okay";
--	vmmc-supply = <&ldo3_reg>;
--};
--- 
-1.8.2.1
+--uUnxkf+iQvOgVlY3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSMFQ3AAoJELSic+t+oim99JQP/jxDl9TG6UWgNRWyDbmBdjOP
+wmMAPIyJ0CXKGZioRHXlW3BCfDZRVZOT6+OXPH41uyHDzV/KucLe+hrSBbaXUdIW
+k5+sZAdfPQeWxx64vYaCbzGM8addTWvoHPj9cjiIU1SgPhQrRCtwTKAU9JW8DnIV
+YTaNfw6fnOFKJfLL/lCmVb0EeTvtApp6BpBBJY5Z+cXNrIpo+dsJ1i+zOb97+xfJ
+q8RkC1wuZ+zJs457/ucgNrRhKG+ys3UQdfUQ/NG/Nn7iohyHxtpG+EIf67R0UBui
+hjcC6hrZEWGDI/GZ+K3Sc6YdtWKU1LVqP0SHA102ewgY9mMYwtsra4YahX6XFdKQ
+1oh/g3fWe6jqR0UdynHf+MYprj1vRURIDbj+bMhEplv/+29IC/40eHlOHFy2be5/
+FOYKquJyBwjFLuKWkRWHd3DP8ajmSXJdUicABu68tz0Xk6o/HqkgAacDDGcIfaYr
+0hE9ahGcDD2/e5isFdxEL6mi6X3UX6qooZub7/m8shWJkLh9n9NP8qQDTG865I8r
+qSXTYIk45R/BshzXJRldA8cEYVQdA2gyDRFfsYmq4I7aNYH7Z3xcPLX9ujwHZN37
+yamH38lt3sC3218G54dvb4zvGUVNwCNhmu4C5oMXnq4jGcyWu99AwUK62WVW11mr
+t4H13sgtJbXEpd7uN2W8
+=izYP
+-----END PGP SIGNATURE-----
+
+--uUnxkf+iQvOgVlY3--
