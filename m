@@ -1,101 +1,176 @@
-From: Joel Fernandes <joelf@ti.com>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Wed, 11 Sep 2013 00:24:09 -0500
-Message-ID: <522FFE79.9030602@ti.com>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk> <2052193.CMUEUJFRgS@lem-wkst-02> <522F2521.4090806@collabora.co.uk> <522F7878.30800@wwwdotorg.org> <522F8DB7.8070800@collabora.co.uk>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH] ARM: DTS: DRA7: Add TPS659038 PMIC nodes
+Date: Wed, 11 Sep 2013 11:00:10 +0530
+Message-ID: <522FFFE2.2000705@ti.com>
+References: <1377495411-21984-1-git-send-email-j-keerthy@ti.com>
+ <522E1FB2.10809@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <522F8DB7.8070800@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <poeschel@lemonage.de>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.co>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <522E1FB2.10809@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, balajitk@ti.com, pawel.moll@arm.com, Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2013 04:23 PM, Javier Martinez Canillas wrote:
-> On 09/10/2013 09:52 PM, Stephen Warren wrote:
->> On 09/10/2013 07:56 AM, Javier Martinez Canillas wrote:
->> ...
->>> The only thing that this patch tries to solve is when a driver expect to request
->>> a IRQ and it doesn't care if is a real IRQ line from an interrupt controller or
->>> a GPIO pin mapped as an IRQ.
+On Tuesday 10 September 2013 12:51 AM, Nishanth Menon wrote:
+> On 08/26/2013 12:36 AM, Keerthy wrote:
+>> The Patch adds nodes for TPS659038 PMIC for DRA7 boards.
 >>
->> That can be solved in the interrupt chip driver. The fact the previous
->> attempt didn't work doesn't mean that it's impossible.
+>> It is based on top of:
+>> http://comments.gmane.org/gmane.linux.ports.arm.omap/102459.
 >>
-> 
-> Indeed. Unfortunately that patch-set got merged as a fix quite late on the -rc
-> cycle so it was safer to just revert the patches instead of analyzing the
-> regression and providing a fix.
-> 
-> If Linus is fond about taking a local fix for gpio-omap then we can try again
-> as a RFC with a better test coverage than before (although the patches had
-> several tested and acked-by but no one tested on OMAP1 until the patches were
-> merged) getting some TI folks in the loop who have access to those ancient OMAP1
-> devices. That way we can repost as a patch just once we are definitely sure that
-> it won't cause a regression on any OMAP platform.
-> 
->>> With board files we used to explicitly do the GPIO setup
->>> (gpio_{request,direction_input}) but with DT these board files are gone and we
->>> need a way to setup a GPIO implicitly when is mapped as an IRQ.
+>> Documentation:	Documentation/devicetree/bindings/mfd/palmas.txt
+>> 		Documentation/devicetree/bindings/regulator/palmas-pmic.txt		
 >>
->> Well, that's just an example of hacking around something in a board file
->> that should have been fixed in the GPIO/IRQ controller.
+>> Boot Tested on DRA7 d1 Board.
 >>
->>> That's the only use case that this patch covers.
->> ...
->>> Also, it would be great if we can find a temporary solution so we can finally
->>> have ethernet working with DT on most OMAP2+ boards. Since I expect that doing
->>> the mentioned change on gpiolib would take at least a couple of kernel releases.
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>   arch/arm/boot/dts/dra7-evm.dts |  118 ++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 118 insertions(+)
 >>
->> Really? I thought this patch was error-checking to make sure that
->> different drivers didn't request a GPIO and an IRQ that are actually the
->> same signal. This patch shouldn't affect any functionality except in
->> cases where there's a bug in the DT (incorrect GPIO/IRQ passed to some
->> driver).
+>> Index: linux/arch/arm/boot/dts/dra7-evm.dts
+>> ===================================================================
+>> --- linux.orig/arch/arm/boot/dts/dra7-evm.dts	2013-08-26 09:57:52.496173554 +0530
+>> +++ linux/arch/arm/boot/dts/dra7-evm.dts	2013-08-26 10:38:44.995414695 +0530
+>> @@ -93,6 +93,119 @@
+>>   	pinctrl-names = "default";
+>>   	pinctrl-0 = <&i2c1_pins>;
+>>   	clock-frequency = <400000>;
+>> +
+>> +	tps659038: tps659038@58 {
+>> +		compatible = "ti,tps659038";
+>> +		reg = <0x58>;
+>> +
+>> +		tps659038_pmic {
+>> +			compatible = "ti,tps659038-pmic";
+>> +
+>> +			regulators {
+>> +				smps123_reg: smps123 {
+>> +					/* VDD_MPU */
+>> +						regulator-name = "smps123";
+>> +						regulator-min-microvolt = < 850000>;
+>> +						regulator-max-microvolt = <1250000>;
+>> +						regulator-always-on;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				smps45_reg: smps45 {
+>> +						/* VDD_DSPEVE */
+>> +						regulator-name = "smps45";
+>> +						regulator-min-microvolt = < 850000>;
+>> +						regulator-max-microvolt = <1150000>;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				smps6_reg: smps6 {
+>> +						/* VDD_GPU - over VDD_SMPS6 */
+>> +						regulator-name = "smps6";
+>> +						regulator-min-microvolt = <850000>;
+>> +						regulator-max-microvolt = <12500000>;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				smps7_reg: smps7 {
+>> +						/* CORE_VDD */
+>> +						regulator-name = "smps7";
+>> +						regulator-min-microvolt = <850000>;
+>> +						regulator-max-microvolt = <1030000>;
+>> +						regulator-always-on;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				smps8_reg: smps8 {
+>> +						/* VDD_IVAHD */
+>> +						regulator-name = "smps8";
+>> +						regulator-min-microvolt = < 850000>;
+>> +						regulator-max-microvolt = <1250000>;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				smps9_reg: smps9 {
+>> +						/* VDDS1V8 */
+>> +						regulator-name = "smps9";
+>> +						regulator-min-microvolt = <1800000>;
+>> +						regulator-max-microvolt = <1800000>;
+>> +						regulator-always-on;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				ldo1_reg: ldo1 {
+>> +						/* LDO1_OUT --> SDIO  */
+>> +						regulator-name = "ldo1";
+>> +						regulator-min-microvolt = <1800000>;
+>> +						regulator-max-microvolt = <3300000>;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				ldo2_reg: ldo2 {
+>> +						/* VDD_RTCIO */
+>> +						/* LDO2 -> VDDSHV5, LDO2 also goes to CAN_PHY_3V3 */
+>> +						regulator-name = "ldo2";
+>> +						regulator-min-microvolt = <3300000>;
+>> +						regulator-max-microvolt = <3300000>;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				ldo3_reg: ldo3 {
+>> +						/* VDDA_1V8_PHY */
+>> +						regulator-name = "ldo3";
+>> +						regulator-min-microvolt = <1800000>;
+>> +						regulator-max-microvolt = <1800000>;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				ldo9_reg: ldo9 {
+>> +						/* VDD_RTC */
+>> +						regulator-name = "ldo9";
+>> +						regulator-min-microvolt = <1050000>;
+>> +						regulator-max-microvolt = <1050000>;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				ldoln_reg: ldoln {
+>> +						/* VDDA_1V8_PLL */
+>> +						regulator-name = "ldoln";
+>> +						regulator-min-microvolt = <1800000>;
+>> +						regulator-max-microvolt = <1800000>;
+>> +						regulator-always-on;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				ldousb_reg: ldousb {
+>> +						/* VDDA_3V_USB: VDDA_USBHS33 */
+>> +						regulator-name = "ldousb";
+>> +						regulator-min-microvolt = <3300000>;
+>> +						regulator-max-microvolt = <3300000>;
+>> +						regulator-boot-on;
+>> +					};
+>> +
+>> +				};
+>> +			};
+>> +		};
+>>   };
+>>   
+>>   &i2c2 {
 >>
-> 
-> Yes, it doesn't do any error-checking neither prevent a driver to request a GPIO
-> and an IRQ that are the same signal (as long as this is supported by the
-> GPIO/IRQ controller and its driver). The only thing that Linus patch does is to
-> auto request a GPIO for pins that are mapped as IRQ in DT (i.e: interrupt-parent
-> = <&gpio6>).
-> 
-> The name of the function introduced by Linus is
-> of_gpiochip_interrupt_consistency_check() but probably a better name is
-> of_gpiochip_autorequest_irq() or something like that.
-> 
-> A similar behavior could be obtained by let's say calling gpio_request() in
-> irq_create_of_mapping() if you wanted to add the logic in the IRQ chip DT core
-> instead of doing it in the GPIO chip DT core as Linus does with his patch.
-> 
-> That's why I don't understand why Linus patch could be an issue for drivers that
-> needs to request both the GPIO and the mapped IRQ.
-> 
-> If this is already supported then nothing will break. If the driver tries to
-> request the GPIO twice because this is already made by the DT core then I think
-> is a bug in the driver and has to be fixed to support DT since there won't be
-> any need to do this manually anymore.
+> Acked-by: Nishanth Menon <nm@ti.com>
+>
+Thanks Nishanth.
 
-Quick question- Wouldn't this mean that there have to be 2 code paths in the
-driver then.. One for DT-case where gpio_request double request is prevented,
-and one for non-DT case where you would do the gpio_request followed by
-request_irq. I'm not sure if there are drivers today that use DT and need to
-converted to prevent the double request? If there are, and such drivers are also
-used on non-DT platform, then we would have to fork 2 different code paths while
-requesting an IRQ for DT/non-DT in the driver..
+Benoit,
 
-Also this path kind of enforces that the driver author must be aware whether
-driver is being used on DT or non-DT platform.. Linus mentioned enforcing of
-semantics, this is also enforcing semantics no?
-
-Looks like the correct fix for this as discussed in this thread should be to
-associate the struct device with the GPIO request, remember it and use the info
-during request_irq. This is provided that the old pattern of gpio_request and
-request_irq is continued to be used and working. I know this is some time away
-so I'm not too opinionated about it.
+Could you pull this patch?
 
 Regards,
-
--Joel
+Keerthy
