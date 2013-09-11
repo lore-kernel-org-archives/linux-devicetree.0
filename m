@@ -1,76 +1,124 @@
-From: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>
-Subject: [PATCH RFC] of: add a basic memory driver
-Date: Tue, 10 Sep 2013 22:43:01 -0300
-Message-ID: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/6] extcon-gpio: If the gpio driver/chip supports debounce,
+ use it
+Date: Tue, 10 Sep 2013 18:57:28 -0700
+Message-ID: <522FCE08.5000704@roeck-us.net>
+References: <1377836978-24082-1-git-send-email-linux@roeck-us.net> <1377836978-24082-3-git-send-email-linux@roeck-us.net> <522FC476.7060100@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, grant.likely@linaro.org, rob.herring@calxeda.com
-Cc: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, devicetree@vger.kernel.org, david.lanzendoerfer@o2s.ch, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <522FC476.7060100@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBkcml2ZXIncyBvbmx5IGpvYiBpcyB0byBjbGFpbSBhbmQgZW5zdXJlIHRoYXQgdGhlIG5l
-Y2Vzc2FyeSBjbG9jawpmb3IgbWVtb3J5IG9wZXJhdGlvbiBvbiBhIERULWVuYWJsZWQgbWFjaGlu
-ZSByZW1haW5zIGVuYWJsZWQuCgpTaWduZWQtb2ZmLWJ5OiBFbWlsaW8gTMOzcGV6IDxlbWlsaW9A
-ZWxvcGV6LmNvbS5hcj4KLS0tCgpIaSwKCkkgYW0gY3VycmVudGx5IGZhY2luZyBhbiBpc3N1ZSB3
-aXRoIHRoZSBjbG9jayBzZXR1cDogYSBjcml0aWNhbCBidXQKdW5jbGFpbWVkIGNsb2NrIGdldHMg
-ZGlzYWJsZWQgYXMgYSBzaWRlIGVmZmVjdCBvZiBkaXNhYmxpbmcgb25lIG9mIGl0cwpjaGlsZHJl
-bi4gVGhlIGNsb2NrIHNldHVwIGxvb2tzIHNvbWV0aGluZyBsaWtlIHRoaXM6CgogICAgICBQTEwK
-ICAgICAgIHwKIC0tLS0tLS0tLS0tLQogfCAgICAgICAgICB8CkREUiAgICAgICBPdGhlcnMKICAg
-ICAgICAgICAgfAogICAgICAgICAgcGVyaXBoCgpUaGUgUExMIGNsb2NrIGlzIG1hcmtlZCB3aXRo
-IHRoZSBDTEtfSUdOT1JFX1VOVVNFRCBmbGFnLCBzbyBvbiBhIG5vcm1hbApib290IGl0IHJlbWFp
-bnMgb24sIGV2ZW4gYWZ0ZXIgdGhlIHVudXNlZCBjbG9ja3MgY2xlYW51cCBjb2RlIHJ1bnMuIFRo
-ZQpwcm9ibGVtIG9jY3VycyB3aGVuIHNvbWVvbmUgZW5hYmxlcyAicGVyaXBoIiBhbmQgdGhlbiwg
-bGF0ZXIgb24sIGRpc2FibGVzCml0OiB0aGUgZnJhbWV3b3JrIHN0YXJ0cyBkaXNhYmxpbmcgY2xv
-Y2tzIHVwd2FyZHMgb24gdGhlIHRyZWUsIApldmVudHVhbGx5IHN3aXRjaGluZyB0aGUgUExMIG9m
-ZiAoYW5kIHRoYXQga2lsbHMgdGhlIG1hY2hpbmUsIGFzIHRoZSBtZW1vcnkKY2xvY2sgaXMgc2h1
-dCBkb3duKS4KClRoZXJlJ3MgdHdvIHBvc3NpYmxlIHNvbHV0aW9ucyBJIGNhbiB0aGluayBvZjoK
-IDEpIGFkZCBzb21lIGV4dHJhIGNoZWNrcyBvbiB0aGUgZnJhbWV3b3JrIHRvIG5vdCB0dXJuIG9m
-ZiBjbG9ja3MgbWFya2VkCiAgICB3aXRoIHN1Y2ggYSBmbGFnIG9uIHRoZSBub24tZXhwbGljaXQg
-Y2FzZSAoaWUsIHdoZW4gSSdtIGRpc2FibGluZwogICAgc29tZSBvdGhlciBjbG9jaykKIDIpIGNy
-ZWF0ZSBhbiBhY3R1YWwgdXNlciBvZiB0aGUgRERSIGNsb2NrLCB0aGF0IHdheSBpdCB3b24ndCBn
-ZXQKICAgIGRpc2FibGVkIHNpbXBseSBiZWNhdXNlIGl0J3MgYmVpbmcgdXNlZC4KCkkgY29uc2lk
-ZXJlZCAxKSBhbmQgaW1wbGVtZW50ZWQgaXQsIGJ1dCB0aGUgcmVzdWx0IHdhcyBub3QgcHJldHR5
-LiBUaGlzIApwYXRjaCBpcyBteSB0YWtlIG9uIDIpLiBQbGVhc2UgbGV0IG1lIGtub3cgd2hhdCB5
-b3UgdGhpbms7IGFsbCBmZWVkYmFjawppcyB3ZWxjb21lIDopCgpDaGVlcnMsCgpFbWlsaW8KCiBk
-cml2ZXJzL29mL0tjb25maWcgICAgIHwgIDYgKysrKysrCiBkcml2ZXJzL29mL01ha2VmaWxlICAg
-IHwgIDEgKwogZHJpdmVycy9vZi9vZl9tZW1vcnkuYyB8IDMwICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKwogMyBmaWxlcyBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9k
-ZSAxMDA2NDQgZHJpdmVycy9vZi9vZl9tZW1vcnkuYwoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2Yv
-S2NvbmZpZyBiL2RyaXZlcnMvb2YvS2NvbmZpZwppbmRleCA5ZDIwMDlhLi5mNmM1ZTIwIDEwMDY0
-NAotLS0gYS9kcml2ZXJzL29mL0tjb25maWcKKysrIGIvZHJpdmVycy9vZi9LY29uZmlnCkBAIC04
-MCw0ICs4MCwxMCBAQCBjb25maWcgT0ZfUkVTRVJWRURfTUVNCiAJaGVscAogCSAgSW5pdGlhbGl6
-YXRpb24gY29kZSBmb3IgRE1BIHJlc2VydmVkIG1lbW9yeQogCitjb25maWcgT0ZfTUVNT1JZCisJ
-ZGVwZW5kcyBvbiBDT01NT05fQ0xLCisJZGVmX2Jvb2wgeQorCWhlbHAKKwkgIFNpbXBsZSBtZW1v
-cnkgaW5pdGlhbGl6YXRpb24KKwogZW5kbWVudSAjIE9GCmRpZmYgLS1naXQgYS9kcml2ZXJzL29m
-L01ha2VmaWxlIGIvZHJpdmVycy9vZi9NYWtlZmlsZQppbmRleCBlZDk2NjBhLi4xNWYwMTY3IDEw
-MDY0NAotLS0gYS9kcml2ZXJzL29mL01ha2VmaWxlCisrKyBiL2RyaXZlcnMvb2YvTWFrZWZpbGUK
-QEAgLTEwLDMgKzEwLDQgQEAgb2JqLSQoQ09ORklHX09GX1BDSSkJKz0gb2ZfcGNpLm8KIG9iai0k
-KENPTkZJR19PRl9QQ0lfSVJRKSAgKz0gb2ZfcGNpX2lycS5vCiBvYmotJChDT05GSUdfT0ZfTVRE
-KQkrPSBvZl9tdGQubwogb2JqLSQoQ09ORklHX09GX1JFU0VSVkVEX01FTSkgKz0gb2ZfcmVzZXJ2
-ZWRfbWVtLm8KK29iai0kKENPTkZJR19PRl9NRU1PUlkpICs9IG9mX21lbW9yeS5vCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL29mL29mX21lbW9yeS5jIGIvZHJpdmVycy9vZi9vZl9tZW1vcnkuYwpuZXcg
-ZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5hODMzZjdhCi0tLSAvZGV2L251bGwKKysr
-IGIvZHJpdmVycy9vZi9vZl9tZW1vcnkuYwpAQCAtMCwwICsxLDMwIEBACisvKgorICogU2ltcGxl
-IG1lbW9yeSBkcml2ZXIKKyAqLworCisjaW5jbHVkZSA8bGludXgvb2YuaD4KKyNpbmNsdWRlIDxs
-aW51eC9jbGsuaD4KKworc3RhdGljIGludCBfX2luaXQgb2ZfbWVtb3J5X2VuYWJsZSh2b2lkKQor
-eworCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7CisJc3RydWN0IGNsayAqY2xrOworCisJbnAgPSBv
-Zl9maW5kX25vZGVfYnlfcGF0aCgiL21lbW9yeSIpOworCWlmICghbnApIHsKKwkJcHJfZXJyKCJu
-byAvbWVtb3J5IG9uIERUIVxuIik7CisJCXJldHVybiAwOworCX0KKworCWNsayA9IG9mX2Nsa19n
-ZXQobnAsIDApOworCWlmICghSVNfRVJSKGNsaykpIHsKKwkJY2xrX3ByZXBhcmVfZW5hYmxlKGNs
-ayk7CisJCWNsa19wdXQoY2xrKTsKKwl9CisKKwlvZl9ub2RlX3B1dChucCk7CisKKwlyZXR1cm4g
-MDsKK30KKworZGV2aWNlX2luaXRjYWxsKG9mX21lbW9yeV9lbmFibGUpOwotLSAKMS44LjQKCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
-a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsCg==
+On 09/10/2013 06:16 PM, Chanwoo Choi wrote:
+> Hi Guenter
+>
+> I agree to use gpio_set_debounce() API but, I suggest following patch to code clean.
+> and I'd like you to use declarative sentence on patch name instead of 'If ...'.
+>
+> On 08/30/2013 01:29 PM, Guenter Roeck wrote:
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> ---
+>>   drivers/extcon/extcon-gpio.c |    5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+>> index 77d35a7..973600e 100644
+>> --- a/drivers/extcon/extcon-gpio.c
+>> +++ b/drivers/extcon/extcon-gpio.c
+>> @@ -111,6 +111,11 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>>   	if (ret < 0)
+>>   		goto err;
+>>
+>> +	/* Use gpio debounce if available. If so, don't debounce in software. */
+>> +	if (pdata->debounce &&
+>> +	    !gpio_set_debounce(extcon_data->gpio, pdata->debounce * 1000))
+>> +		extcon_data->debounce_jiffies = 0;
+>> +
+>>   	INIT_DELAYED_WORK(&extcon_data->work, gpio_extcon_work);
+>>
+>>   	extcon_data->irq = gpio_to_irq(extcon_data->gpio);
+>>
+>
+> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+> index 3943ce2..0777e72 100644
+> --- a/drivers/extcon/extcon-gpio.c
+> +++ b/drivers/extcon/extcon-gpio.c
+> @@ -56,8 +56,10 @@ static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
+>   {
+>          struct gpio_extcon_data *extcon_data = dev_id;
+>
+> -       queue_delayed_work(system_power_efficient_wq, &extcon_data->work,
+> -                             extcon_data->debounce_jiffies);
+> +       if (extcon_data->debounce_jiffies)
+> +               queue_delayed_work(system_power_efficient_wq,
+> +                                  &extcon_data->work,
+> +                                  extcon_data->debounce_jiffies);
+
+I am a bit lost about this one. The above means that the workqueue would not be executed
+at all if debounce_jiffies is 0 (and if pdata->debounce is 0), meaning an event would
+never be generated. With the original code, the workqueue will be executed immediately
+if debounce_jiffies is 0, which I think is exactly what we need.
+
+>          return IRQ_HANDLED;
+>   }
+>
+> @@ -100,7 +102,14 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>          extcon_data->state_off = pdata->state_off;
+>          if (pdata->state_on && pdata->state_off)
+>                  extcon_data->edev.print_state = extcon_gpio_print_state;
+> -       extcon_data->debounce_jiffies = msecs_to_jiffies(pdata->debounce);
+> +       extcon_data->debounce_jiffies = 0;
+> +       if (pdata->debounce) {
+> +               ret = gpio_set_debounce(extcon_data->gpio,
+> +                                       pdata->debounce * 1000);
+> +               if (ret < 0)
+> +                       extcon_data->debounce_jiffies =
+> +                               msecs_to_jiffies(pdata->debounce);
+> +       }
+>
+Ok, though it is unnecessary to initialize debounce_jiffies (it is pre-initialized
+from the allocation), so I'll drop that line.
+
+>          ret = extcon_dev_register(&extcon_data->edev, &pdev->dev);
+>          if (ret < 0)
+> @@ -111,11 +120,6 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>          if (ret < 0)
+>                  goto err;
+>
+> -       /* Use gpio debounce if available. If so, don't debounce in software. */
+> -       if (pdata->debounce &&
+> -           !gpio_set_debounce(extcon_data->gpio, pdata->debounce * 1000))
+> -               extcon_data->debounce_jiffies = 0;
+> -
+>          INIT_DELAYED_WORK(&extcon_data->work, gpio_extcon_work);
+>
+>          extcon_data->irq = gpio_to_irq(extcon_data->gpio);
+> @@ -146,7 +150,8 @@ static int gpio_extcon_remove(struct platform_device *pdev)
+>   {
+>          struct gpio_extcon_data *extcon_data = platform_get_drvdata(pdev);
+>
+> -       cancel_delayed_work_sync(&extcon_data->work);
+> +       if (extcon_data->debounce_jiffies)
+> +               cancel_delayed_work_sync(&extcon_data->work);
+
+I think we would have to call cancel_work_sync() in the else case to make sure
+that no work is in the process of being executed - which just turns out to execute
+the same code as cancel_delayed_work_sync(). So the if/else would just add complexity
+with no real gain.
+
+Thanks,
+Guenter
+
+>          free_irq(extcon_data->irq, extcon_data);
+>          extcon_dev_unregister(&extcon_data->edev);
+>
+>
+> Thanks,
+> Chanwoo Choi
+>
+>
