@@ -1,67 +1,50 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from fw-tnat.cambridge.arm.com ([217.140.96.21]:52421 "EHLO
-	cam-smtp0.cambridge.arm.com" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1762603Ab3IDOYv (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 4 Sep 2013 10:24:51 -0400
-Date: Wed, 4 Sep 2013 15:24:22 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] Documentation: dt: i2c: Add LPS001WP to the Trivial
- Devices list
-Message-ID: <20130904142422.GM18206@e106331-lin.cambridge.arm.com>
-References: <1378302655-13258-1-git-send-email-lee.jones@linaro.org>
+Received: from mail-bk0-f50.google.com ([209.85.214.50]:50923 "EHLO
+	mail-bk0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754604Ab3IKLPK (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 11 Sep 2013 07:15:10 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1378302655-13258-1-git-send-email-lee.jones@linaro.org>
+Date: Wed, 11 Sep 2013 19:15:08 +0800
+Message-ID: <CAPgLHd8gJpytHLNUyzKGmsOVe-1pnCORCvXMJY6q7ikMzQXmMw@mail.gmail.com>
+Subject: [PATCH] spi: fix return value check in dspi_probe()
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "jic23@cam.ac.uk" <jic23@cam.ac.uk>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org"@arm.com
+To: broonie@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Lee,
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Cheers for producing a binding.
+In case of error, the function devm_ioremap_resource() returns
+ERR_PTR() and never returns NULL. The NULL test in the return
+value check should be replaced with IS_ERR().
 
-On Wed, Sep 04, 2013 at 02:50:55PM +0100, Lee Jones wrote:
-> LPS001WP is a Pressure and Temperature sensor.
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index ad6a738..6038807e6 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -57,6 +57,7 @@ st-micro,24c256		i2c serial eeprom  (24cxx)
->  stm,m41t00		Serial Access TIMEKEEPER
->  stm,m41t62		Serial real-time clock (RTC) with alarm
->  stm,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
-> +stm,lps001wp		Pressure and Temperature sensor
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/spi/spi-fsl-dspi.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-As I hinted at in the other thread [1], I don't think this can be
-documented as a trivial binding -- the driver expects a couple of
-regulators which should be described in the binding (or the driver
-shouldn't be using them...).
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 6cd07d1..4e44575 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -476,15 +476,9 @@ static int dspi_probe(struct platform_device *pdev)
+ 	master->bus_num = bus_num;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		dev_err(&pdev->dev, "can't get platform resource\n");
+-		ret = -EINVAL;
+-		goto out_master_put;
+-	}
+-
+ 	dspi->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (!dspi->base) {
+-		ret = -EINVAL;
++	if (IS_ERR(dspi->base)) {
++		ret = PTR_ERR(dspi->base);
+ 		goto out_master_put;
+ 	}
+ 
 
-Also, in the other thread the "st," prefix was used [2], while "stm," is
-listed at the prefix in the binding. As far as I can see, "st," should
-be used, as it's in vendor-prefixes and "stm," is not.
-
-I'm happy to cook up a patch adding deprecation notes and corrected
-strings for the existing incorrect "stm," bindings.
-
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-September/196561.html
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-September/196558.html
-
-Thanks,
-Mark.
-
->  taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
->  ti,tsc2003		I2C Touch-Screen Controller
->  ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
-> -- 
-> 1.8.1.2
-> 
-> 
