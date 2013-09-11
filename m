@@ -1,113 +1,181 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC 4/5] gpiolib: add gpiod_get() and gpiod_put() functions
-Date: Wed, 11 Sep 2013 15:57:29 +0200
-Message-ID: <20130911135728.GA24351@ulmo>
-References: <1378294169-22661-1-git-send-email-acourbot@nvidia.com>
- <1378294169-22661-5-git-send-email-acourbot@nvidia.com>
- <52279082.5010105@wwwdotorg.org>
- <CAAVeFuJCCnx+kY46BTkqTbno-j9YwV=GN3dS1aLzxc+ZYWxEdA@mail.gmail.com>
+From: David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Wed, 11 Sep 2013 15:05:15 +0100
+Message-ID: <1378908315.2627.392.camel@shinybook.infradead.org>
+References: <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com>
+	 <20130905020435.GA3970@gmail.com>
+	 <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>
+	 <522817D7.1010206@freescale.com> <522D3B79.3060707@freescale.com>
+	 <20130909151450.GI29403@sirena.org.uk> <522EC33B.9000009@freescale.com>
+	 <20130910180704.GB29403@sirena.org.uk> <522FD78A.6080900@freescale.com>
+	 <20130911104126.GN29403@sirena.org.uk> <52304BFF.4060007@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
-Return-path: <linux-arch-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAVeFuJCCnx+kY46BTkqTbno-j9YwV=GN3dS1aLzxc+ZYWxEdA@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <acourbot@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-doc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg="sha-1"; protocol="application/x-pkcs7-signature";
+	boundary="=-CTEHiBcJjbfpl7r9qqlo"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52304BFF.4060007@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Huang Shijie <b32955@freescale.com>
+Cc: Mark Brown <broonie@kernel.org>, Huang Shijie <shijie8@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-CTEHiBcJjbfpl7r9qqlo
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 05, 2013 at 12:44:34PM +0900, Alexandre Courbot wrote:
-> On Thu, Sep 5, 2013 at 4:56 AM, Stephen Warren <swarren@wwwdotorg.org> wr=
-ote:
-> > On 09/04/2013 05:29 AM, Alexandre Courbot wrote:
-> >> Add gpiod_get() and gpiod_put() functions that provide safer handling =
-of
-> >> GPIOs.
-> >>
-> >> These functions put the GPIO framework in line with the conventions of
-> >> other frameworks in the kernel, and help ensure every GPIO is declared
-> >> properly and valid while it is used.
-> >
-> >> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consum=
-er.h
-> >
-> >> +struct gpio_desc *__must_check gpiod_get(struct device *dev,
-> >> +                                      const char *con_id);
-> >> +void gpiod_put(struct gpio_desc *desc);
-> >
-> > It might be nice to add an "int index" parameter to this function. For
-> > example, a bit-banged parallel bus protocol driver might have 1
-> > chip-select GPIO, 1 clock GPIO, and 8 data GPIOs. gpiod_get(dev, "bus",
-> > 0)..gpiod_get(dev, "bus", 7) might be nicer than gpiod_get(dev,
-> > "bus0")..gpiod_get(dev, "bus7")? Possibly for client-simplicity,
-> > implement both gpiod_get(dev, con_id) (as an inline wrapper for ...) and
-> > gpiod_get_index(dev, con_id, index)?
-> >
-> > In DT terms, this would map to:
-> >
-> > cs-gpios =3D <&gpio 3 0>;
-> > clock-gpios =3D <&gpio 5 0>;
-> > bus-gpios =3D <&gpio 10 0 ... &gpio 17 0>;
-> >
-> > ... and with the mapping table registration mechanism, we could
-> > presumably add "int index" to struct gpiod_lookup.
+On Wed, 2013-09-11 at 18:54 +0800, Huang Shijie wrote:
+> =E4=BA=8E 2013=E5=B9=B409=E6=9C=8811=E6=97=A5 18:41, Mark Brown =E5=86=99=
+=E9=81=93:
+> > So why does the SPI driver have references to the opcodes in it?
+> I admit that the Freescale's quadspi controller is very special
+> (it is designed too coupled with the SPI Nor FLASH),
+> it is driven by the LUT registers.
 >=20
-> Having the index argument of of_get_named_gpiod_flags() propagated
-> into gpiod_get() is something I also thought about (see the cover
-> letter), but I really can't make up my mind about it.
->=20
-> On the one hand, having several GPIO per DT property is already
-> allowed, and presumably used in bindings already. It might also make
-> sense to have several lines under the same name, e.g. for bitbanging.
->=20
-> On the other hand, I'm afraid people will abuse this, and group all
-> the GPIOs for a device under a single property instead of using proper
-> names.
+> I just quote the comment from the patch 1:
 
-I wouldn't worry about this too much. Preventing abuse is a large part
-of why we have DT bindings reviews and I think that regardless of what
-the implementation allows us to, that shouldn't influence the way how
-bindings are defined.
+That didn't really answer the question, for me. I'm still not entirely
+clear what's going on.
 
-After all the bindings would ideally be usable on any other OS as well,
-so it should be sound irrespective of the specific implementation.
+What *actually* happens, on the wire(s), when the flash driver asks the
+SPI controller to perform a transaction?
 
-I think having a gpiod_get_index(dev, con_id, index) with an inline
-wrapper gpiod_get(dev, con_id) will give us the same functionality that
-we have using the current set of helpers from include/linux/of_gpio.h
-and allows non-DT to specify them in an analogous way.
+Why can't the flash driver *provide* the required information?
 
-In my opinion that's enough for now. We can always refactor common
-patterns (such as busses with 0..n GPIOs) when they start to emerge.
+So far I seem to have got it into my head that we have a SPI controller
+which is connected to more than one device, and we can't send commands
+to one without sending to the other... and that means that we have to
+send a *NOP* to the "unwanted" device. Is that right?
 
-Thierry
+The LUT registers just seem to be a controller-specific implementation
+detail which doesn't really explain the fundamental issue.
 
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature
+It does sound like the general case should ideally be solved by the
+driver for the *device* telling the SPI controller what to send as a
+'NOP' command, if it really has to send something on this channel when
+we didn't ask it to.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSMHbIAAoJEN0jrNd/PrOhfMwP/33SflnaUq0Sxc16i7J+nufj
-0ZLXTNxGll6byP3UbICgiIevBKANz+pXmZyVNbNVsBiFiWmp0UE4U6T5m3cLUJec
-/JK3QIdZZCBYnJ6dNCAmzUcQUt5dLpj8UDbNwQwKX1kgF6IWqwnFifLKGeUS1L+/
-E5Jh+td2kggcdyuBzxeONE8WRISsWmPOV3uBD8+7p9aQjOr5IZwJT1CHS4oAAiBA
-mmkFTTiXvzClOR1qmhSzJJTYkdo5kiA8KTGsMUDo1Z6ZgW7a4ufqQydrhGDSOXsM
-OMFjWErdxeYUw8AMvVJmqvSkXUHiXFihYV8nKMZnoRU8INbPbs28gu5Jzi51bDFO
-SeNSN4PGP4aVjgtuDiytwPe+9euSsH8EX6/xPAf5KKmUIVnAwt8WgjV0a5QbGB2i
-k4MCxy3zunvi8D6B8/cKUnTtAhkGjn2sY4txYWMmg0Sep2wXeQGVWCYXo/RCt8HT
-ms9kCiUqzh3rU3MFE0cTvA74QovILFw9zUcuH+mXN37BVifZQPVgxZcEHUx+Tu10
-6++a9Q2i2kV0Y8RfxjWxIRpBQEBFXwi4z6G+tXKinfZW7fb4ySGlQ2T8dWCEzvz+
-xpqdn+FlM7ryTXeC8W7eMcP4CL3IKBxXrynvzThgtQghCJW2D/KcbPJDnOuM0NTS
-r3telgNvSvJvenJRyrb8
-=TxGY
------END PGP SIGNATURE-----
+But since we don't actually *probe* SPI devices (do we?) and we rely on
+them being enumerated in the device-tree or manually 'added' by other
+methods, perhaps putting the NOP command into the device tree is the
+better approach. At least it solves the issue of what to use as the NOP
+command when the m25p80 driver is probing the first of the two chips,
+before it's *tried* to identify the second.
 
---HcAYCG3uE/tztfnV--
+Or have I completely missed the point here, somewhere?
+
+--=20
+dwmw2
+
+
+--=-CTEHiBcJjbfpl7r9qqlo
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIISxDCCBjQw
+ggQcoAMCAQICAR4wDQYJKoZIhvcNAQEFBQAwfTELMAkGA1UEBhMCSUwxFjAUBgNVBAoTDVN0YXJ0
+Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNpZ25pbmcxKTAn
+BgNVBAMTIFN0YXJ0Q29tIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTA3MTAyNDIxMDE1NVoX
+DTE3MTAyNDIxMDE1NVowgYwxCzAJBgNVBAYTAklMMRYwFAYDVQQKEw1TdGFydENvbSBMdGQuMSsw
+KQYDVQQLEyJTZWN1cmUgRGlnaXRhbCBDZXJ0aWZpY2F0ZSBTaWduaW5nMTgwNgYDVQQDEy9TdGFy
+dENvbSBDbGFzcyAxIFByaW1hcnkgSW50ZXJtZWRpYXRlIENsaWVudCBDQTCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBAMcJg8zOLdgasSmkLhOrlr6KMoOMpohBllVHrdRvEg/q6r8jR+EK
+75xCGhR8ToREoqe7zM9/UnC6TS2y9UKTpT1v7RSMzR0t6ndl0TWBuUr/UXBhPk+Kmy7bI4yW4urC
++y7P3/1/X7U8ocb8VpH/Clt+4iq7nirMcNh6qJR+xjOhV+VHzQMALuGYn5KZmc1NbJQYclsGkDxD
+z2UbFqE2+6vIZoL+jb9x4Pa5gNf1TwSDkOkikZB1xtB4ZqtXThaABSONdfmv/Z1pua3FYxnCFmdr
+/+N2JLKutIxMYqQOJebr/f/h5t95m4JgrM3Y/w7YX9d7YAL9jvN4SydHsU6n65cCAwEAAaOCAa0w
+ggGpMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgEGMB0GA1UdDgQWBBRTcu2SnODaywFc
+fH6WNU7y1LhRgjAfBgNVHSMEGDAWgBROC+8apEBbpRdphzDKNGhD0EGu8jBmBggrBgEFBQcBAQRa
+MFgwJwYIKwYBBQUHMAGGG2h0dHA6Ly9vY3NwLnN0YXJ0c3NsLmNvbS9jYTAtBggrBgEFBQcwAoYh
+aHR0cDovL3d3dy5zdGFydHNzbC5jb20vc2ZzY2EuY3J0MFsGA1UdHwRUMFIwJ6AloCOGIWh0dHA6
+Ly93d3cuc3RhcnRzc2wuY29tL3Nmc2NhLmNybDAnoCWgI4YhaHR0cDovL2NybC5zdGFydHNzbC5j
+b20vc2ZzY2EuY3JsMIGABgNVHSAEeTB3MHUGCysGAQQBgbU3AQIBMGYwLgYIKwYBBQUHAgEWImh0
+dHA6Ly93d3cuc3RhcnRzc2wuY29tL3BvbGljeS5wZGYwNAYIKwYBBQUHAgEWKGh0dHA6Ly93d3cu
+c3RhcnRzc2wuY29tL2ludGVybWVkaWF0ZS5wZGYwDQYJKoZIhvcNAQEFBQADggIBAAqDCH14qywG
+XLhjjF6uHLkjd02hcdh9hrw+VUsv+q1eeQWB21jWj3kJ96AUlPCoEGZ/ynJNScWy6QMVQjbbMXlt
+UfO4n4bGGdKo3awPWp61tjAFgraLJgDk+DsSvUD6EowjMTNx25GQgyYJ5RPIzKKR9tQW8gGK+2+R
+HxkUCTbYFnL6kl8Ch507rUdPPipJ9CgJFws3kDS3gOS5WFMxcjO5DwKfKSETEPrHh7p5shuuNktv
+sv6hxHTLhiMKX893gxdT3XLS9OKmCv87vkINQcNEcIIoFWbP9HORz9v3vQwR4e3ksLc2JZOAFK+s
+sS5XMEoznzpihEP0PLc4dCBYjbvSD7kxgDwZ+Aj8Q9PkbvE9sIPP7ON0fz095HdThKjiVJe6vofq
++n6b1NBc8XdrQvBmunwxD5nvtTW4vtN6VY7mUCmxsCieuoBJ9OlqmsVWQvifIYf40dJPZkk9YgGT
+zWLpXDSfLSplbY2LL9C9U0ptvjcDjefLTvqSFc7tw1sEhF0n/qpA2r0GpvkLRDmcSwVyPvmjFBGq
+Up/pNy8ZuPGQmHwFi2/14+xeSUDG2bwnsYJQG2EdJCB6luQ57GEnTA/yKZSTKI8dDQa8Sd3zfXb1
+9mOgSF0bBdXbuKhEpuP9wirslFe6fQ1t5j5R0xi72MZ8ikMu1RQZKCyDbMwazlHiMIIGQjCCBSqg
+AwIBAgIDBoXOMA0GCSqGSIb3DQEBBQUAMIGMMQswCQYDVQQGEwJJTDEWMBQGA1UEChMNU3RhcnRD
+b20gTHRkLjErMCkGA1UECxMiU2VjdXJlIERpZ2l0YWwgQ2VydGlmaWNhdGUgU2lnbmluZzE4MDYG
+A1UEAxMvU3RhcnRDb20gQ2xhc3MgMSBQcmltYXJ5IEludGVybWVkaWF0ZSBDbGllbnQgQ0EwHhcN
+MTMwNTAyMDYyMDQ2WhcNMTQwNTAzMTIxNDAyWjBdMRkwFwYDVQQNExBNd0k3ODIxNTRpV21lZVkw
+MRwwGgYDVQQDDBNkd213MkBpbmZyYWRlYWQub3JnMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZy
+YWRlYWQub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvWGuRDHiXVpOgaFkBaz8
+c3jQTfiEw7j0iKZnktCQi0xjY29QJ7GwL+fgQlbofXgYTm8E9fWERvw2tAy2BxHzAPguBzziS7JN
+hsGP9lf3L8hFJBvmdyyyj8b9A6Oi7s3JLtMRWIvyvE+DbuTkP+htuT4+XuTJr8Y5yIqd1WXr2gJk
+ANr77vTyjeNxceevP58Tqr0f+4v5g6+vNARO3bk3SaVQPDUTwGrpoPtLh3d+mQzZ4iiW3MwQS7Wr
+UVT3l2aTVHCpgtAaBs3zHWarvmIqhbWj8zdcnELNzwqTrOjaoWxuWY4k05GGfzmdjOBUiL7FDNvI
+ZwweJEPwJAQI72YhUwIDAQABo4IC2TCCAtUwCQYDVR0TBAIwADALBgNVHQ8EBAMCBLAwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMB0GA1UdDgQWBBSs0hZhUgQwqGVXzLuH6pJH0hMZwTAf
+BgNVHSMEGDAWgBRTcu2SnODaywFcfH6WNU7y1LhRgjAeBgNVHREEFzAVgRNkd213MkBpbmZyYWRl
+YWQub3JnMIIBTAYDVR0gBIIBQzCCAT8wggE7BgsrBgEEAYG1NwECAzCCASowLgYIKwYBBQUHAgEW
+Imh0dHA6Ly93d3cuc3RhcnRzc2wuY29tL3BvbGljeS5wZGYwgfcGCCsGAQUFBwICMIHqMCcWIFN0
+YXJ0Q29tIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MAMCAQEagb5UaGlzIGNlcnRpZmljYXRlIHdh
+cyBpc3N1ZWQgYWNjb3JkaW5nIHRvIHRoZSBDbGFzcyAxIFZhbGlkYXRpb24gcmVxdWlyZW1lbnRz
+IG9mIHRoZSBTdGFydENvbSBDQSBwb2xpY3ksIHJlbGlhbmNlIG9ubHkgZm9yIHRoZSBpbnRlbmRl
+ZCBwdXJwb3NlIGluIGNvbXBsaWFuY2Ugb2YgdGhlIHJlbHlpbmcgcGFydHkgb2JsaWdhdGlvbnMu
+MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuc3RhcnRzc2wuY29tL2NydHUxLWNybC5jcmww
+gY4GCCsGAQUFBwEBBIGBMH8wOQYIKwYBBQUHMAGGLWh0dHA6Ly9vY3NwLnN0YXJ0c3NsLmNvbS9z
+dWIvY2xhc3MxL2NsaWVudC9jYTBCBggrBgEFBQcwAoY2aHR0cDovL2FpYS5zdGFydHNzbC5jb20v
+Y2VydHMvc3ViLmNsYXNzMS5jbGllbnQuY2EuY3J0MCMGA1UdEgQcMBqGGGh0dHA6Ly93d3cuc3Rh
+cnRzc2wuY29tLzANBgkqhkiG9w0BAQUFAAOCAQEACFLDQnyO8+XA/TiTltjJ/ZAvM+qmBEKN43Vd
++Wio2lM/Wq/scJpkupXGHrl9CueobkDxMAogXbMxqLZYO13PvgjMh+PHxDPnQv8EGxOig+k/Hqvc
+qEdTlm9YEHcbXbWS6XB+zRO7VVIpGMYQ1f1qCOcukxmwIm6iMSHXbOr/7paQm4bO0ULptjBotfiO
+Zo6q8No6SroQlOSyc6v8FYSxTNIAXMaM2FYkjqrxgdnJmSIAfr11gROuF69WuOICxP0zTEjJle+7
+aO9lUWNaWMWPMyFSNCxF6kkRuvUCami7vlhLOTRC1kb+OMhx7keN9At3tdTI3rtuFeSB1Pa3VXVs
+0DCCBkIwggUqoAMCAQICAwaFzjANBgkqhkiG9w0BAQUFADCBjDELMAkGA1UEBhMCSUwxFjAUBgNV
+BAoTDVN0YXJ0Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNp
+Z25pbmcxODA2BgNVBAMTL1N0YXJ0Q29tIENsYXNzIDEgUHJpbWFyeSBJbnRlcm1lZGlhdGUgQ2xp
+ZW50IENBMB4XDTEzMDUwMjA2MjA0NloXDTE0MDUwMzEyMTQwMlowXTEZMBcGA1UEDRMQTXdJNzgy
+MTU0aVdtZWVZMDEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzEiMCAGCSqGSIb3DQEJARYT
+ZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL1hrkQx
+4l1aToGhZAWs/HN40E34hMO49IimZ5LQkItMY2NvUCexsC/n4EJW6H14GE5vBPX1hEb8NrQMtgcR
+8wD4Lgc84kuyTYbBj/ZX9y/IRSQb5ncsso/G/QOjou7NyS7TEViL8rxPg27k5D/obbk+Pl7kya/G
+OciKndVl69oCZADa++708o3jcXHnrz+fE6q9H/uL+YOvrzQETt25N0mlUDw1E8Bq6aD7S4d3fpkM
+2eIoltzMEEu1q1FU95dmk1RwqYLQGgbN8x1mq75iKoW1o/M3XJxCzc8Kk6zo2qFsblmOJNORhn85
+nYzgVIi+xQzbyGcMHiRD8CQECO9mIVMCAwEAAaOCAtkwggLVMAkGA1UdEwQCMAAwCwYDVR0PBAQD
+AgSwMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDAdBgNVHQ4EFgQUrNIWYVIEMKhlV8y7
+h+qSR9ITGcEwHwYDVR0jBBgwFoAUU3Ltkpzg2ssBXHx+ljVO8tS4UYIwHgYDVR0RBBcwFYETZHdt
+dzJAaW5mcmFkZWFkLm9yZzCCAUwGA1UdIASCAUMwggE/MIIBOwYLKwYBBAGBtTcBAgMwggEqMC4G
+CCsGAQUFBwIBFiJodHRwOi8vd3d3LnN0YXJ0c3NsLmNvbS9wb2xpY3kucGRmMIH3BggrBgEFBQcC
+AjCB6jAnFiBTdGFydENvbSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTADAgEBGoG+VGhpcyBjZXJ0
+aWZpY2F0ZSB3YXMgaXNzdWVkIGFjY29yZGluZyB0byB0aGUgQ2xhc3MgMSBWYWxpZGF0aW9uIHJl
+cXVpcmVtZW50cyBvZiB0aGUgU3RhcnRDb20gQ0EgcG9saWN5LCByZWxpYW5jZSBvbmx5IGZvciB0
+aGUgaW50ZW5kZWQgcHVycG9zZSBpbiBjb21wbGlhbmNlIG9mIHRoZSByZWx5aW5nIHBhcnR5IG9i
+bGlnYXRpb25zLjA2BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLnN0YXJ0c3NsLmNvbS9jcnR1
+MS1jcmwuY3JsMIGOBggrBgEFBQcBAQSBgTB/MDkGCCsGAQUFBzABhi1odHRwOi8vb2NzcC5zdGFy
+dHNzbC5jb20vc3ViL2NsYXNzMS9jbGllbnQvY2EwQgYIKwYBBQUHMAKGNmh0dHA6Ly9haWEuc3Rh
+cnRzc2wuY29tL2NlcnRzL3N1Yi5jbGFzczEuY2xpZW50LmNhLmNydDAjBgNVHRIEHDAahhhodHRw
+Oi8vd3d3LnN0YXJ0c3NsLmNvbS8wDQYJKoZIhvcNAQEFBQADggEBAAhSw0J8jvPlwP04k5bYyf2Q
+LzPqpgRCjeN1XfloqNpTP1qv7HCaZLqVxh65fQrnqG5A8TAKIF2zMai2WDtdz74IzIfjx8Qz50L/
+BBsTooPpPx6r3KhHU5ZvWBB3G121kulwfs0Tu1VSKRjGENX9agjnLpMZsCJuojEh12zq/+6WkJuG
+ztFC6bYwaLX4jmaOqvDaOkq6EJTksnOr/BWEsUzSAFzGjNhWJI6q8YHZyZkiAH69dYETrhevVrji
+AsT9M0xIyZXvu2jvZVFjWljFjzMhUjQsRepJEbr1Ampou75YSzk0QtZG/jjIce5HjfQLd7XUyN67
+bhXkgdT2t1V1bNAxggNvMIIDawIBATCBlDCBjDELMAkGA1UEBhMCSUwxFjAUBgNVBAoTDVN0YXJ0
+Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNpZ25pbmcxODA2
+BgNVBAMTL1N0YXJ0Q29tIENsYXNzIDEgUHJpbWFyeSBJbnRlcm1lZGlhdGUgQ2xpZW50IENBAgMG
+hc4wCQYFKw4DAhoFAKCCAa8wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUx
+DxcNMTMwOTExMTQwNTE1WjAjBgkqhkiG9w0BCQQxFgQU2lWZqEga+gTLHVxppN5WmX+djVgwgaUG
+CSsGAQQBgjcQBDGBlzCBlDCBjDELMAkGA1UEBhMCSUwxFjAUBgNVBAoTDVN0YXJ0Q29tIEx0ZC4x
+KzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNpZ25pbmcxODA2BgNVBAMTL1N0
+YXJ0Q29tIENsYXNzIDEgUHJpbWFyeSBJbnRlcm1lZGlhdGUgQ2xpZW50IENBAgMGhc4wgacGCyqG
+SIb3DQEJEAILMYGXoIGUMIGMMQswCQYDVQQGEwJJTDEWMBQGA1UEChMNU3RhcnRDb20gTHRkLjEr
+MCkGA1UECxMiU2VjdXJlIERpZ2l0YWwgQ2VydGlmaWNhdGUgU2lnbmluZzE4MDYGA1UEAxMvU3Rh
+cnRDb20gQ2xhc3MgMSBQcmltYXJ5IEludGVybWVkaWF0ZSBDbGllbnQgQ0ECAwaFzjANBgkqhkiG
+9w0BAQEFAASCAQBpVdpkvSipf7jBSlOjrcaKc1skwphRELRQ/GVN7/JU/2y4WTZNNntCM/qz5LTm
+AyeFgmuNV4U4HqwXucy1/DNPENAfbLjWlL3ZKA75NMS6ZMiIXAxtIWhyNTj0uqvz/FvmXa+4kTqQ
+VguTipGPzSxms2Fo9nP6D9YuKDmc3F17vEWbYzHovGv44eHzlZgR9i1RtNHxc9hP3InS/+rizd4F
+xCa1O3AB+ytVmfcZDZO0QKVUsydfOKYQIzOLSzHsCA9rt1chLWxEcyeMRvIMuriUP6cZoGlqHwuA
+NYb85acIxGC3iXKrSgioOodyIEa6ZT0FjdYO0jf0txzZmFdH7zQcAAAAAAAA
+
+
+--=-CTEHiBcJjbfpl7r9qqlo--
+
