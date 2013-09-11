@@ -1,104 +1,76 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 2/6] extcon-gpio: If the gpio driver/chip supports
- debounce, use it
-Date: Wed, 11 Sep 2013 10:16:38 +0900
-Message-ID: <522FC476.7060100@samsung.com>
-References: <1377836978-24082-1-git-send-email-linux@roeck-us.net>
- <1377836978-24082-3-git-send-email-linux@roeck-us.net>
+From: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>
+Subject: [PATCH RFC] of: add a basic memory driver
+Date: Tue, 10 Sep 2013 22:43:01 -0300
+Message-ID: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1377836978-24082-3-git-send-email-linux@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, grant.likely@linaro.org, rob.herring@calxeda.com
+Cc: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, devicetree@vger.kernel.org, david.lanzendoerfer@o2s.ch, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter
-
-I agree to use gpio_set_debounce() API but, I suggest following patch to code clean.
-and I'd like you to use declarative sentence on patch name instead of 'If ...'.
-
-On 08/30/2013 01:29 PM, Guenter Roeck wrote:
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  drivers/extcon/extcon-gpio.c |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-> index 77d35a7..973600e 100644
-> --- a/drivers/extcon/extcon-gpio.c
-> +++ b/drivers/extcon/extcon-gpio.c
-> @@ -111,6 +111,11 @@ static int gpio_extcon_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		goto err;
->  
-> +	/* Use gpio debounce if available. If so, don't debounce in software. */
-> +	if (pdata->debounce &&
-> +	    !gpio_set_debounce(extcon_data->gpio, pdata->debounce * 1000))
-> +		extcon_data->debounce_jiffies = 0;
-> +
->  	INIT_DELAYED_WORK(&extcon_data->work, gpio_extcon_work);
->  
->  	extcon_data->irq = gpio_to_irq(extcon_data->gpio);
-> 
-
-diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index 3943ce2..0777e72 100644
---- a/drivers/extcon/extcon-gpio.c
-+++ b/drivers/extcon/extcon-gpio.c
-@@ -56,8 +56,10 @@ static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
- {
-        struct gpio_extcon_data *extcon_data = dev_id;
- 
--       queue_delayed_work(system_power_efficient_wq, &extcon_data->work,
--                             extcon_data->debounce_jiffies);
-+       if (extcon_data->debounce_jiffies)
-+               queue_delayed_work(system_power_efficient_wq,
-+                                  &extcon_data->work,
-+                                  extcon_data->debounce_jiffies);
-        return IRQ_HANDLED;
- }
- 
-@@ -100,7 +102,14 @@ static int gpio_extcon_probe(struct platform_device *pdev)
-        extcon_data->state_off = pdata->state_off;
-        if (pdata->state_on && pdata->state_off)
-                extcon_data->edev.print_state = extcon_gpio_print_state;
--       extcon_data->debounce_jiffies = msecs_to_jiffies(pdata->debounce);
-+       extcon_data->debounce_jiffies = 0;
-+       if (pdata->debounce) {
-+               ret = gpio_set_debounce(extcon_data->gpio,
-+                                       pdata->debounce * 1000);
-+               if (ret < 0)
-+                       extcon_data->debounce_jiffies =
-+                               msecs_to_jiffies(pdata->debounce);
-+       }
- 
-        ret = extcon_dev_register(&extcon_data->edev, &pdev->dev);
-        if (ret < 0)
-@@ -111,11 +120,6 @@ static int gpio_extcon_probe(struct platform_device *pdev)
-        if (ret < 0)
-                goto err;
- 
--       /* Use gpio debounce if available. If so, don't debounce in software. */
--       if (pdata->debounce &&
--           !gpio_set_debounce(extcon_data->gpio, pdata->debounce * 1000))
--               extcon_data->debounce_jiffies = 0;
--
-        INIT_DELAYED_WORK(&extcon_data->work, gpio_extcon_work);
- 
-        extcon_data->irq = gpio_to_irq(extcon_data->gpio);
-@@ -146,7 +150,8 @@ static int gpio_extcon_remove(struct platform_device *pdev)
- {
-        struct gpio_extcon_data *extcon_data = platform_get_drvdata(pdev);
- 
--       cancel_delayed_work_sync(&extcon_data->work);
-+       if (extcon_data->debounce_jiffies)
-+               cancel_delayed_work_sync(&extcon_data->work);
-        free_irq(extcon_data->irq, extcon_data);
-        extcon_dev_unregister(&extcon_data->edev);
-
-
-Thanks,
-Chanwoo Choi
+VGhpcyBkcml2ZXIncyBvbmx5IGpvYiBpcyB0byBjbGFpbSBhbmQgZW5zdXJlIHRoYXQgdGhlIG5l
+Y2Vzc2FyeSBjbG9jawpmb3IgbWVtb3J5IG9wZXJhdGlvbiBvbiBhIERULWVuYWJsZWQgbWFjaGlu
+ZSByZW1haW5zIGVuYWJsZWQuCgpTaWduZWQtb2ZmLWJ5OiBFbWlsaW8gTMOzcGV6IDxlbWlsaW9A
+ZWxvcGV6LmNvbS5hcj4KLS0tCgpIaSwKCkkgYW0gY3VycmVudGx5IGZhY2luZyBhbiBpc3N1ZSB3
+aXRoIHRoZSBjbG9jayBzZXR1cDogYSBjcml0aWNhbCBidXQKdW5jbGFpbWVkIGNsb2NrIGdldHMg
+ZGlzYWJsZWQgYXMgYSBzaWRlIGVmZmVjdCBvZiBkaXNhYmxpbmcgb25lIG9mIGl0cwpjaGlsZHJl
+bi4gVGhlIGNsb2NrIHNldHVwIGxvb2tzIHNvbWV0aGluZyBsaWtlIHRoaXM6CgogICAgICBQTEwK
+ICAgICAgIHwKIC0tLS0tLS0tLS0tLQogfCAgICAgICAgICB8CkREUiAgICAgICBPdGhlcnMKICAg
+ICAgICAgICAgfAogICAgICAgICAgcGVyaXBoCgpUaGUgUExMIGNsb2NrIGlzIG1hcmtlZCB3aXRo
+IHRoZSBDTEtfSUdOT1JFX1VOVVNFRCBmbGFnLCBzbyBvbiBhIG5vcm1hbApib290IGl0IHJlbWFp
+bnMgb24sIGV2ZW4gYWZ0ZXIgdGhlIHVudXNlZCBjbG9ja3MgY2xlYW51cCBjb2RlIHJ1bnMuIFRo
+ZQpwcm9ibGVtIG9jY3VycyB3aGVuIHNvbWVvbmUgZW5hYmxlcyAicGVyaXBoIiBhbmQgdGhlbiwg
+bGF0ZXIgb24sIGRpc2FibGVzCml0OiB0aGUgZnJhbWV3b3JrIHN0YXJ0cyBkaXNhYmxpbmcgY2xv
+Y2tzIHVwd2FyZHMgb24gdGhlIHRyZWUsIApldmVudHVhbGx5IHN3aXRjaGluZyB0aGUgUExMIG9m
+ZiAoYW5kIHRoYXQga2lsbHMgdGhlIG1hY2hpbmUsIGFzIHRoZSBtZW1vcnkKY2xvY2sgaXMgc2h1
+dCBkb3duKS4KClRoZXJlJ3MgdHdvIHBvc3NpYmxlIHNvbHV0aW9ucyBJIGNhbiB0aGluayBvZjoK
+IDEpIGFkZCBzb21lIGV4dHJhIGNoZWNrcyBvbiB0aGUgZnJhbWV3b3JrIHRvIG5vdCB0dXJuIG9m
+ZiBjbG9ja3MgbWFya2VkCiAgICB3aXRoIHN1Y2ggYSBmbGFnIG9uIHRoZSBub24tZXhwbGljaXQg
+Y2FzZSAoaWUsIHdoZW4gSSdtIGRpc2FibGluZwogICAgc29tZSBvdGhlciBjbG9jaykKIDIpIGNy
+ZWF0ZSBhbiBhY3R1YWwgdXNlciBvZiB0aGUgRERSIGNsb2NrLCB0aGF0IHdheSBpdCB3b24ndCBn
+ZXQKICAgIGRpc2FibGVkIHNpbXBseSBiZWNhdXNlIGl0J3MgYmVpbmcgdXNlZC4KCkkgY29uc2lk
+ZXJlZCAxKSBhbmQgaW1wbGVtZW50ZWQgaXQsIGJ1dCB0aGUgcmVzdWx0IHdhcyBub3QgcHJldHR5
+LiBUaGlzIApwYXRjaCBpcyBteSB0YWtlIG9uIDIpLiBQbGVhc2UgbGV0IG1lIGtub3cgd2hhdCB5
+b3UgdGhpbms7IGFsbCBmZWVkYmFjawppcyB3ZWxjb21lIDopCgpDaGVlcnMsCgpFbWlsaW8KCiBk
+cml2ZXJzL29mL0tjb25maWcgICAgIHwgIDYgKysrKysrCiBkcml2ZXJzL29mL01ha2VmaWxlICAg
+IHwgIDEgKwogZHJpdmVycy9vZi9vZl9tZW1vcnkuYyB8IDMwICsrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKwogMyBmaWxlcyBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9vZi9vZl9tZW1vcnkuYwoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2Yv
+S2NvbmZpZyBiL2RyaXZlcnMvb2YvS2NvbmZpZwppbmRleCA5ZDIwMDlhLi5mNmM1ZTIwIDEwMDY0
+NAotLS0gYS9kcml2ZXJzL29mL0tjb25maWcKKysrIGIvZHJpdmVycy9vZi9LY29uZmlnCkBAIC04
+MCw0ICs4MCwxMCBAQCBjb25maWcgT0ZfUkVTRVJWRURfTUVNCiAJaGVscAogCSAgSW5pdGlhbGl6
+YXRpb24gY29kZSBmb3IgRE1BIHJlc2VydmVkIG1lbW9yeQogCitjb25maWcgT0ZfTUVNT1JZCisJ
+ZGVwZW5kcyBvbiBDT01NT05fQ0xLCisJZGVmX2Jvb2wgeQorCWhlbHAKKwkgIFNpbXBsZSBtZW1v
+cnkgaW5pdGlhbGl6YXRpb24KKwogZW5kbWVudSAjIE9GCmRpZmYgLS1naXQgYS9kcml2ZXJzL29m
+L01ha2VmaWxlIGIvZHJpdmVycy9vZi9NYWtlZmlsZQppbmRleCBlZDk2NjBhLi4xNWYwMTY3IDEw
+MDY0NAotLS0gYS9kcml2ZXJzL29mL01ha2VmaWxlCisrKyBiL2RyaXZlcnMvb2YvTWFrZWZpbGUK
+QEAgLTEwLDMgKzEwLDQgQEAgb2JqLSQoQ09ORklHX09GX1BDSSkJKz0gb2ZfcGNpLm8KIG9iai0k
+KENPTkZJR19PRl9QQ0lfSVJRKSAgKz0gb2ZfcGNpX2lycS5vCiBvYmotJChDT05GSUdfT0ZfTVRE
+KQkrPSBvZl9tdGQubwogb2JqLSQoQ09ORklHX09GX1JFU0VSVkVEX01FTSkgKz0gb2ZfcmVzZXJ2
+ZWRfbWVtLm8KK29iai0kKENPTkZJR19PRl9NRU1PUlkpICs9IG9mX21lbW9yeS5vCmRpZmYgLS1n
+aXQgYS9kcml2ZXJzL29mL29mX21lbW9yeS5jIGIvZHJpdmVycy9vZi9vZl9tZW1vcnkuYwpuZXcg
+ZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5hODMzZjdhCi0tLSAvZGV2L251bGwKKysr
+IGIvZHJpdmVycy9vZi9vZl9tZW1vcnkuYwpAQCAtMCwwICsxLDMwIEBACisvKgorICogU2ltcGxl
+IG1lbW9yeSBkcml2ZXIKKyAqLworCisjaW5jbHVkZSA8bGludXgvb2YuaD4KKyNpbmNsdWRlIDxs
+aW51eC9jbGsuaD4KKworc3RhdGljIGludCBfX2luaXQgb2ZfbWVtb3J5X2VuYWJsZSh2b2lkKQor
+eworCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7CisJc3RydWN0IGNsayAqY2xrOworCisJbnAgPSBv
+Zl9maW5kX25vZGVfYnlfcGF0aCgiL21lbW9yeSIpOworCWlmICghbnApIHsKKwkJcHJfZXJyKCJu
+byAvbWVtb3J5IG9uIERUIVxuIik7CisJCXJldHVybiAwOworCX0KKworCWNsayA9IG9mX2Nsa19n
+ZXQobnAsIDApOworCWlmICghSVNfRVJSKGNsaykpIHsKKwkJY2xrX3ByZXBhcmVfZW5hYmxlKGNs
+ayk7CisJCWNsa19wdXQoY2xrKTsKKwl9CisKKwlvZl9ub2RlX3B1dChucCk7CisKKwlyZXR1cm4g
+MDsKK30KKworZGV2aWNlX2luaXRjYWxsKG9mX21lbW9yeV9lbmFibGUpOwotLSAKMS44LjQKCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
+a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
+bmVsCg==
