@@ -1,61 +1,84 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] drivers: of: fix build break if asm/dma-contiguous.h is
- missing
-Date: Wed, 11 Sep 2013 08:35:31 -0700
-Message-ID: <20130911153531.GB28449@roeck-us.net>
-References: <1378804400-31716-1-git-send-email-m.szyprowski@samsung.com>
- <522F76CF.6080907@gmail.com>
- <52300E5A.7010202@samsung.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v2 1/2] video: ARM CLCD: Add DT support
+Date: Wed, 11 Sep 2013 17:02:22 +0100
+Message-ID: <1378915342.4082.140.camel@hornet>
+References: <1378808726-32535-1-git-send-email-pawel.moll@arm.com>
+ <20130910194324.GE12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52300E5A.7010202@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Rob Herring <robherring2@gmail.com>, linux-kernel@vger.kernel.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@secretlab.ca>, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130910194324.GE12758@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2013 at 08:31:54AM +0200, Marek Szyprowski wrote:
-> Hello,
-> 
-> On 9/10/2013 9:45 PM, Rob Herring wrote:
-> >On 09/10/2013 04:13 AM, Marek Szyprowski wrote:
-> >> It is not needed to include asm/dma-contiguous.h header to compile
-> >> reserved memory initialization code, so remove it to avoid build break
-> >> on architectures without CMA support.
-> >>
-> >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >
-> >Acked-by: Rob Herring <rob.herring@calxeda.com>
-> >
-> >I can apply this or it can go with other CMA stuff.
-> 
-> I think it will be best if I push it to Linus asap to fix the build break
-> on arm64 and mips, introduced by my pull request. It is really strange that
-> I got no report from linux-next about that issue, although this patch was
-> there for about 2 weeks.
-> 
-If you refer to the the kisskb builds, arm64 is not on its build list.
-The cavium_octeon build error does show up:
-	http://kisskb.ellerman.id.au/kisskb/buildresult/9483218/
-
-The error is also seen in mips:nlm_xlp_defconfig, which is part
-of my build set but not on kisskb (just don't ask me why I added it ;).
-
-Guenter
-
-> >Aren't there also some comments from Grant to address as well?
-> 
-> Right, I'm working on providing an update which will address the issues
-> pointed by Grant, but I got sick and had to take some days off. I still
-> didn't recover completely, but I hope I will manage to finish them by
-> the end of the week.
-> 
-> Best regards
-> -- 
-> Marek Szyprowski
-> Samsung R&D Institute Poland
-> 
-> 
-> 
+T24gVHVlLCAyMDEzLTA5LTEwIGF0IDIwOjQzICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
+dXggd3JvdGU6Cj4gT24gVHVlLCBTZXAgMTAsIDIwMTMgYXQgMTE6MjU6MjVBTSArMDEwMCwgUGF3
+ZWwgTW9sbCB3cm90ZToKPiA+ICsjaWZkZWYgQ09ORklHX09GCj4gPiArc3RhdGljIGludCBjbGNk
+ZmJfb2ZfZ2V0X3RmdF9wYW5lbChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsCj4gPiArCQlzdHJ1
+Y3QgY2xjZF9wYW5lbCAqcGFuZWwpCj4gPiArewo+ID4gKwlpbnQgZXJyOwo+ID4gKwl1MzIgcmdi
+WzNdOwo+ID4gKwo+ID4gKwllcnIgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMl9hcnJheShub2RlLCAi
+cGFuZWwtdGZ0LWludGVyZmFjZSIsIHJnYiwgMyk7Cj4gPiArCWlmIChlcnIpCj4gPiArCQlyZXR1
+cm4gZXJyOwo+ID4gKwo+ID4gKwkvKiBCeXBhc3MgcGl4ZWwgY2xvY2sgZGl2aWRlciwgZGF0YSBv
+dXRwdXQgb24gdGhlIGZhbGxpbmcgZWRnZSAqLwo+ID4gKwlwYW5lbC0+dGltMiA9IFRJTTJfQkNE
+IHwgVElNMl9JUEM7Cj4gPiArCj4gPiArCS8qIFRGVCBkaXNwbGF5LCB2ZXJ0LiBjb21wLiBpbnRl
+cnJ1cHQgYXQgdGhlIHN0YXJ0IG9mIHRoZSBiYWNrIHBvcmNoICovCj4gPiArCXBhbmVsLT5jbnRs
+IHw9IENOVExfTENEVEZUIHwgQ05UTF9MQ0RWQ09NUCgxKTsKPiA+ICsKPiA+ICsJaWYgKHJnYlsw
+XSA+PSA0ICYmIHJnYlsxXSA+PSA0ICYmIHJnYlsyXSA+PSA0KQo+ID4gKwkJcGFuZWwtPmNhcHMg
+fD0gQ0xDRF9DQVBfNDQ0Owo+ID4gKwlpZiAocmdiWzBdID49IDUgJiYgcmdiWzFdID49IDUgJiYg
+cmdiWzJdID49IDUpCj4gPiArCQlwYW5lbC0+Y2FwcyB8PSBDTENEX0NBUF81NTUxOwo+ID4gKwlp
+ZiAocmdiWzBdID49IDUgJiYgcmdiWzFdID49IDYgJiYgcmdiWzJdID49IDUpCj4gPiArCQlwYW5l
+bC0+Y2FwcyB8PSBDTENEX0NBUF81NjU7Cj4gPiArCWlmIChyZ2JbMF0gPj0gOCAmJiByZ2JbMV0g
+Pj0gOCAmJiByZ2JbMl0gPj0gOCkKPiA+ICsJCXBhbmVsLT5jYXBzIHw9IENMQ0RfQ0FQXzg4ODsK
+PiAKPiBUaGlzIGRlZmluaXRlbHkgaXNuJ3QgcmlnaHQuICBXaHkgZG9lcyBhIHBhbmVsIHdoaWNo
+IGhhcyA4IGJpdHMgb2YgUkdCCj4gZ2V0IHRvIGluZGljYXRlIHRoYXQgaXQgc3VwcG9ydHMgZXZl
+cnl0aGluZyBiZWxvdyBpdD8KPiAKPiBUaGlzIGlzIG5vdCBob3cgdGhpcyBoYXJkd2FyZSB3b3Jr
+cy4gIExvb2sgYXQgdGFibGUgQS03IGluIHRoZSBUUk0uCj4gSWYgeW91IHdpcmUgdGhlIENMQ0Qg
+Y29udHJvbGxlciBkaXJlY3RseSB0byBhIHBhbmVsIHdoaWNoIGlzIDgtYml0IFJHQgo+IG9ubHks
+IGl0IGNhbid0IHN1cHBvcnQgYW55IG9mIHRoZSBvdGhlciBmb3JtYXRzLgo+IAo+IFRoZSBDTENE
+IGNvbnRyb2xsZXIgaXRzZWxmIGNhbiBvbmx5IHN1cHBvcnQgb24gdGhlIGhhcmR3YXJlIDgtYml0
+cyBvZgo+IFJHQiBvciA1IGJpdHMgb2YgUkdCIHBsdXMgYW4gaW50ZW5zaXR5IGJpdCwgc28gdGhh
+dCdzIHR3byBmb3JtYXRzLgoKSSBtdXN0IGFkbWl0IEkgZGlkbid0IGNoZWNrZWQgdGhlIFBMMTEw
+IENMRCBtdWx0aXBsZXhpbmcgc2NoZW1lLCBuYWl2ZWx5CmV4cGVjdGluZyBpdCB0byBiZSB0aGUg
+c2FtZSBhcyBQTDExMS4gTXkgYmFkLCB0aGFua3MgZm9yIHBvaW50aW5nIHRoaXMKb3V0LgoKVGhl
+IGNvZGUgYWJvdmUgd29ya3MgZm9yIFBMMTExIC0gdGhlIHNpZ25hbHMgYXJlIGxhaWQgc28gd2l0
+aCBmdWxsIDg4OAp3aXJpbmcgYW5kIDQ0NCBtb2RlIHRoZSBib3R0b20gYml0cyBhcmUgcmVzZXJ2
+ZWQgKHNlZSB0YWJsZSBBLjEwKS4gSW4KcmVhbGl0eSB0aGV5J3JlIHplcm9zLCBzbyB0aGUgY29s
+b3VyIHNwYWNlIGlzIG5hcnJvd2VkLgoKU2VlbXMgdGhhdCB0aGUgY29kZSB3aWxsIGhhdmUgdG8g
+YmVoYXZlIGRpZmZlcmVudGx5IGZvciBQTDExMCBhbmQgUEwxMTEKaGVyZS4KCj4gSG93ZXZlciwg
+dGhpbmdzIGFyZSBjb21wbGljYXRlZCBieSBBUk1zIGFkZGl0aW9uIG9mIGFuIGV4dGVybmFsIG11
+eAo+IG9uIHRoZSBDTENEIG91dHB1dCwgd2hpY2ggZ2l2ZXMgdXMgdGhlIG90aGVyIGZvcm1hdCBw
+b3NzaWJpbGl0aWVzCj4gYnkgbXVuZ2luZyB0aGUgc2lnbmFscyB0byBnaXZlIGFwcHJvcHJpYXRl
+IGZvcm1hdHMgaW4gdGhlIGZyYW1lYnVmZmVyCj4gbWVtb3J5LiAgSW4gb3RoZXIgd29yZHMsIGlu
+IFJHQjQ0NCBtb2RlLCB0aGUgbXV4IGVuZHMgdXAgdGFraW5nCj4gcmVkIGZyb20gQ0xEWzQ6MV0s
+IGdyZWVuIGZyb20gQ0xEWzk6Nyw1XSwgYmx1ZSBmcm9tIENMRFsxNDoxMywxMToxMF0uCgpJdCdz
+IHRoZSBWZXJzYXRpbGUgQUIvUEIgaGFja2VkIENMQ0QsIFBMMTEwLzExMSBoeWJyaWQsIHJpZ2h0
+PyBJdApkb2Vzbid0IHJlYWxseSBmYWxsIGludG8gdGhlICJhcm0scGwxMTAiIGFuZCAiYXJtLHBs
+MTExIiBjb21wYXRpYmxlCnZhbHVlLCBzbyB3b3VsZCBuZWVkIHRvIGJlIHNvbWV0aGluZyBsaWtl
+ICJhcm0sdmVyc2F0aWxlLGNsY2RjIiBhbmQKcmVxdWlyZSBjdXN0b20gY29kZS4gSSBkb24ndCB0
+aGluayBJIHdhbnQgdG8gc29sdmUgdGhpcyBwcm9ibGVtIHJpZ2h0Cm5vdy4KCj4gVGhpcyBpcyBv
+bmUgb2YgdGhlIGRhbmdlcnMgb2YgZGlyZWN0bHkgY29udmVydGluZyB3aGF0J3MgaW4gdGhlIGtl
+cm5lbAo+IHRvIERUIHByb3BlcnRpZXMgd2l0aG91dCBnZXR0aW5nIHRoZSBoYXJkd2FyZSBkb2N1
+bWVudGF0aW9uIGFuZCBmdWxseQo+IHVuZGVyc3RhbmRpbmcgdGhhdCBmaXJzdCAtIHJlbWVtYmVy
+LCBEVCBwcm9wZXJ0aWVzIGFyZSBzdXBwb3NlZCB0byBiZQo+IGJhc2VkIG9uIHRoZSBoYXJkd2Fy
+ZSwgbm90IHRoZSBMaW51eCBpbXBsZW1lbnRhdGlvbi4KCkkgZG9uJ3QgdGhpbmsgSSd2ZSBkaXJl
+Y3RseSBjb252ZXJ0ZWQgd2hhdCdzIGluIHRoZSBrZXJuZWwgdG8gRFQKcHJvcGVydGllcy4gVGhl
+cmUgaXMgbm8gImNhcHMiIHByb3BlcnR5IGluIHRoZSBiaW5kaW5nLiBUaGVyZSBpcyBvbmx5Cmlu
+Zm9ybWF0aW9uIGhvdyBpcyB0aGUgY2VsbCB3aXJlZCB1cCB0byBhIHBhbmVsLCBhbmQgdGhpcyBp
+bmZvcm1hdGlvbiBpcwp2YWxpZCBmb3IgYm90aCBQTDExMCBhbmQgUEwxMTEgYXMgaXQgaXMuIE15
+IGZhdWx0IEkndmUgYmVsaWV2ZWQgd2hlbiB3YXMKdG9sZCB0aGF0ICJ0aGUgdHdvIGFyZSBiYXNp
+Y2FsbHkgdGhlIHNhbWUuIiBhbmQgc2hvdWxkIGhhdmUgY29tcGFyZWQgdGhlClRSTXMgaW4gZGV0
+YWlscy4KCldpbGwgZml4IHRoZSBjb2RlLgoKUGF3ZcWCCgoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
