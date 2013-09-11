@@ -1,52 +1,78 @@
-From: Huang Shijie <b32955@freescale.com>
-Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
-Date: Wed, 11 Sep 2013 18:54:55 +0800
-Message-ID: <52304BFF.4060007@freescale.com>
-References: <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com> <20130905020435.GA3970@gmail.com> <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com> <522817D7.1010206@freescale.com> <522D3B79.3060707@freescale.com> <20130909151450.GI29403@sirena.org.uk> <522EC33B.9000009@freescale.com> <20130910180704.GB29403@sirena.org.uk> <522FD78A.6080900@freescale.com> <20130911104126.GN29403@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=GB2312
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130911104126.GN29403@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Huang Shijie <shijie8@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Koen Kooi <koen@dominion.thruhere.net>
+Subject: Re: [PATCH 2/2] am335x-boneblack: add eMMC DT entry
+Date: Wed, 11 Sep 2013 12:57:12 +0200
+Message-ID: <341E26D5-851E-433A-BC53-3B3A43B78D46@dominion.thruhere.net>
+References: <1378879946-13037-1-git-send-email-koen@dominion.thruhere.net> <1378879946-13037-3-git-send-email-koen@dominion.thruhere.net> <523040B5.60407@ti.com>
+Mime-Version: 1.0 (Mac OS X Mail 6.5 \(1508\))
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <523040B5.60407@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: linux-omap@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-=D3=DA 2013=C4=EA09=D4=C211=C8=D5 18:41, Mark Brown =D0=B4=B5=C0:
-> So why does the SPI driver have references to the opcodes in it?
-I admit that the Freescale's quadspi controller is very special
-(it is designed too coupled with the SPI Nor FLASH),
-it is driven by the LUT registers.
 
-I just quote the comment from the patch 1:
+Op 11 sep. 2013, om 12:06 heeft Sekhar Nori <nsekhar@ti.com> het volgende geschreven:
 
+> On Wednesday 11 September 2013 11:42 AM, Koen Kooi wrote:
+>> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+>> ---
+>> arch/arm/boot/dts/am335x-bone-common.dtsi |  7 +++++++
+>> arch/arm/boot/dts/am335x-boneblack.dts    | 15 +++++++++++++++
+>> 2 files changed, 22 insertions(+)
+>> 
+>> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+>> index ced256c..9c61fef 100644
+>> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
+>> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+>> @@ -241,6 +241,13 @@
+>> 			regulator-always-on;
+>> 		};
+>> 	};
+>> +
+>> +	vmmcsd_fixed: fixedregulator@0 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vmmcsd_fixed";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +	};
+>> };
+>> 
+>> &cpsw_emac0 {
+>> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+>> index 197cadf..c09947a 100644
+>> --- a/arch/arm/boot/dts/am335x-boneblack.dts
+>> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
+>> @@ -15,3 +15,18 @@
+>> 	regulator-max-microvolt = <1800000>;
+>> 	regulator-always-on;
+>> };
+>> +
+>> +&mmc1 { 
+>> +	vmmc-supply = <&vmmcsd_fixed>;
+>> +};
+>> +
+>> +&mmc2 { 
+>> +	vmmc-supply = <&vmmcsd_fixed>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&emmc_pins>;
+>> +	bus-width = <8>;
+>> +	ti,non-removable;
+> 
+> There is a standard binding available for this: "non-removable"
+> There should not be a need to introduce a TI specific binding for this
+> (I know this is not your fault).
+> 
+> I will send a patch to change the existing .dts files and update the
+> driver - can you drop this line for now so we don't introduce more
+> incompatibilities? I can send a patch adding "non-removable" to this
+> node as part of my clean-up series.
 
--------------------------------------------------------------
-(2) The definition of the LUT register shows below:
+Sure, I'll send a v2 shortly. Thank you very much for killing another ti, prefixed node!
 
----------------------------------------------------
-| INSTR1 | PAD1 | OPRND1 | INSTR0 | PAD0 | OPRND0 |
----------------------------------------------------
+regards,
 
-There are several types of INSTRx, such as:
-CMD : the SPI NOR command.
-ADDR : the address for the SPI NOR command.
-DUMMY : the dummy cycles needed by the SPI NOR command.
-=2E...
--------------------------------------------------------------------
-
-The LUT registers needs to be filled with the SPI NOR command, such
-=46ast-read/Quad-read.
-So the Quadspi driver needs to know the spi commands, and that's why th=
-e
-SPI driver has
-references to the spi command opcodes.
-
-=20
-thanks
-Huang Shijie
-
-
-
+Koen
 
