@@ -1,46 +1,61 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
-Date: Wed, 11 Sep 2013 17:30:25 +0200
-Message-ID: <52308C91.2000105@ahsoftware.de>
-References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com> <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com> <344239800.bDEkDg48ZQ@avalon> <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] drivers: of: fix build break if asm/dma-contiguous.h is
+ missing
+Date: Wed, 11 Sep 2013 08:35:31 -0700
+Message-ID: <20130911153531.GB28449@roeck-us.net>
+References: <1378804400-31716-1-git-send-email-m.szyprowski@samsung.com>
+ <522F76CF.6080907@gmail.com>
+ <52300E5A.7010202@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52300E5A.7010202@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Rob Herring <robherring2@gmail.com>, linux-kernel@vger.kernel.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@secretlab.ca>, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Laura Abbott <lauraa@codeaurora.org>, Olof Johansson <olof@lixom.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kumar Gala <galak@codeaurora.org>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 22.08.2013 00:02, schrieb Linus Walleij:
-> On Tue, Aug 20, 2013 at 12:04 AM, Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
->> On Wednesday 31 July 2013 01:44:53 Linus Walleij wrote:
+On Wed, Sep 11, 2013 at 08:31:54AM +0200, Marek Szyprowski wrote:
+> Hello,
 > 
->>> I don't see how sharing works here, or how another user, i.e. another one
->>> than the user wanting to recieve the IRQ, can validly request such a line?
->>> What would the usecase for that valid request be?
->>
->> When the GPIO is wired to a status signal (such as an MMC card detect signal)
->> the driver might want to read the state of the signal independently of the
->> interrupt handler.
+> On 9/10/2013 9:45 PM, Rob Herring wrote:
+> >On 09/10/2013 04:13 AM, Marek Szyprowski wrote:
+> >> It is not needed to include asm/dma-contiguous.h header to compile
+> >> reserved memory initialization code, so remove it to avoid build break
+> >> on architectures without CMA support.
+> >>
+> >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> >
+> >Acked-by: Rob Herring <rob.herring@calxeda.com>
+> >
+> >I can apply this or it can go with other CMA stuff.
 > 
-> That is true. But for such a complex usecase I think it's reasonable that
-> we only specify the GPIO in the device tree, and the driver utilizing the
-> IRQ need to take that and perform gpio_to_irq() on it, and then it still
-> works to use it both ways.
+> I think it will be best if I push it to Linus asap to fix the build break
+> on arm64 and mips, introduced by my pull request. It is really strange that
+> I got no report from linux-next about that issue, although this patch was
+> there for about 2 weeks.
+> 
+If you refer to the the kisskb builds, arm64 is not on its build list.
+The cavium_octeon build error does show up:
+	http://kisskb.ellerman.id.au/kisskb/buildresult/9483218/
 
-Hmm, the problem is that DT is seen as fixed. So if someone marks a GPIO
-as an IRQ, it can never be used otherwise. So if you really go this way,
-you should make this pretty clear in the documentation.
+The error is also seen in mips:nlm_xlp_defconfig, which is part
+of my build set but not on kisskb (just don't ask me why I added it ;).
 
-Looking from the other side, why do you want to mark GPIOs as IRQs in
-the DT at all? And how will this be done? I found the way it was done in
-the reverted patch very confusing because it needed an IRQ number. That
-IRQ number depends on the mapping and isn't hw specific (and currently
-just human doable because of the simple mapping).
+Guenter
 
-Regards,
-
-Alexander Holler
+> >Aren't there also some comments from Grant to address as well?
+> 
+> Right, I'm working on providing an update which will address the issues
+> pointed by Grant, but I got sick and had to take some days off. I still
+> didn't recover completely, but I hope I will manage to finish them by
+> the end of the week.
+> 
+> Best regards
+> -- 
+> Marek Szyprowski
+> Samsung R&D Institute Poland
+> 
+> 
+> 
