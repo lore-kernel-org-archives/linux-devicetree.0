@@ -1,42 +1,45 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH/RESEND 1/2] gpio: rcar: Remove #gpio-range-cells DT property usage
-Date: Wed, 11 Sep 2013 15:51:01 +0200
-Message-ID: <1378907462-19247-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1378907462-19247-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1378907462-19247-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-gpio-owner@vger.kernel.org
+Subject: [PATCH/RESEND 0/2] ARM: shmobile: Remove #gpio-ranges-cells property
+Date: Wed, 11 Sep 2013 15:51:00 +0200
+Message-ID: <1378907462-19247-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org, linux-gpio@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Commit a1bc260bb5f5d95da854be7898202d788e94448d ("gpio: clean up
-gpio-ranges documentation") deprecated the #gpio-range-cells property.
-Replace its usage with a hardcoded value in the gpio-rcar driver.
+(Resending due to wrong copy&paste in mailing list e-mail addresses, sorry for
+the noise.)
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- drivers/gpio/gpio-rcar.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+The property has been deprecated and unused since commit
+d9fe0039c4247383c2783923a3860227813b4d82 ("gpio: implement gpio-ranges binding
+document fix"). Remove it.
 
-diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
-index e3745eb..6038966 100644
---- a/drivers/gpio/gpio-rcar.c
-+++ b/drivers/gpio/gpio-rcar.c
-@@ -293,10 +293,9 @@ static void gpio_rcar_parse_pdata(struct gpio_rcar_priv *p)
- 	if (pdata) {
- 		p->config = *pdata;
- 	} else if (IS_ENABLED(CONFIG_OF) && np) {
--		ret = of_parse_phandle_with_args(np, "gpio-ranges",
--				"#gpio-range-cells", 0, &args);
--		p->config.number_of_pins = ret == 0 && args.args_count == 3
--					 ? args.args[2]
-+		ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0,
-+						       &args);
-+		p->config.number_of_pins = ret == 0 ? args.args[2]
- 					 : RCAR_MAX_GPIO_PER_BANK;
- 		p->config.gpio_base = -1;
- 	}
+This is a v3.12 fix, based on top of the latest mainline master branch.
+Regression and backward compatibility issue should not occur, as:
+
+- The first patch hardcodes the number of gpio-range cells to 3, which was the
+  value used by all boards so far.
+
+- The second patch removes a property from .dtsi files that isn't used anymore
+  since the above-mentioned commit.
+
+However, care must be taken to merge the patches in the correct order. Linus,
+Simon, would you like to two patches to go through a single tree, or should
+Linus provide a stable branch ?
+
+Laurent Pinchart (2):
+  gpio: rcar: Remove #gpio-range-cells DT property usage
+  ARM: shmobile: Remove #gpio-ranges-cells DT property
+
+ arch/arm/boot/dts/r8a7778.dtsi | 1 -
+ arch/arm/boot/dts/r8a7779.dtsi | 1 -
+ arch/arm/boot/dts/r8a7790.dtsi | 1 -
+ drivers/gpio/gpio-rcar.c       | 7 +++----
+ 4 files changed, 3 insertions(+), 7 deletions(-)
+
 -- 
-1.8.1.5
+Regards,
+
+Laurent Pinchart
 
