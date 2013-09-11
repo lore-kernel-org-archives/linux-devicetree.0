@@ -1,69 +1,109 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
-Date: Wed, 11 Sep 2013 13:35:53 +0100
-Message-ID: <20130911123553.GS29403@sirena.org.uk>
-References: <522817D7.1010206@freescale.com>
- <522D3B79.3060707@freescale.com>
- <20130909151450.GI29403@sirena.org.uk>
- <522EC33B.9000009@freescale.com>
- <20130910180704.GB29403@sirena.org.uk>
- <522FD78A.6080900@freescale.com>
- <20130911104126.GN29403@sirena.org.uk>
- <52304BFF.4060007@freescale.com>
- <20130911113002.GP29403@sirena.org.uk>
- <20980858CB6D3A4BAE95CA194937D5E73EA0EAA7@DBDE04.ent.ti.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2] regulator: core: add support for configuring turn-on time through constraints
+Date: Wed, 11 Sep 2013 18:28:51 +0530
+Message-ID: <1378904331-5665-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="P1JQkLuGKYyNXo1a"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA0EAA7@DBDE04.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: Huang Shijie <b32955@freescale.com>, Huang Shijie <shijie8@gmail.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org
+Cc: rob.herring@calxeda.com, mark.rutland@arm.com, swarren@wwwdotorg.org, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+The Turn-on time of the regulator depends on the regulator device's
+electrical characteristics. Sometimes regulator turn-on time also
+depends on the capacitive load on the given platform and it can be
+more than the datasheet value.
 
---P1JQkLuGKYyNXo1a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The driver provides the enable-time as per datasheet.
 
-On Wed, Sep 11, 2013 at 12:26:10PM +0000, Gupta, Pekon wrote:
-> Hi Mark, Shijie,
+Add support for configure the enable ramp time through regulator
+constraints so that regulator core can take this value for enable
+time for that regulator.
 
-> > Indeed - what I was wondering was if those opcodes could be requested
-> > from the flash driver rather than coded in there.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+Changes from V1:
+- Change property name to regulator-enable-ramp-delay and add more details
+  in DT doc.
+- add the valid pointer check for constraints before accessing it.
 
-> As the talk is going in SPI framework direction, therefore requesting again..
-> please do not clutter the *generic* SPI framework to pass on opcodes from
-> flash-driver (like m25p80). (Q)SPI framework should remain generic and
-> independent of any upper layer drivers.
+ .../devicetree/bindings/regulator/regulator.txt    |    3 +++
+ drivers/regulator/core.c                           |    2 ++
+ drivers/regulator/of_regulator.c                   |    6 ++++++
+ include/linux/regulator/machine.h                  |    2 ++
+ 4 files changed, 13 insertions(+), 0 deletions(-)
 
-No, this isn't about the SPI framework doing this - this is about
-something outside the SPI framework being able tell the SPI controllers
-that want to know what the opcodes are so we don't have to do this in
-every driver that may be affected.
-
---P1JQkLuGKYyNXo1a
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSMGOmAAoJELSic+t+oim9DxgP/1jg0CSr2Rawl3g96b0xvuxw
-v8JJYQ22eBTzjqDlWed7tKITRAkbO54uWOv16G9AwlwuKPuMFgMaeMALnyJ1QVdh
-RuMRHwpN6NWfDKSSe/ikyqaxUGVS/V23hU1lay/FidlH/vO6w++BfJiBmBpkam3E
-rHyPXbAbt3J2OaokzL/I8Yh+A2sEHKip42qe00stxSVwZkStQs9vDZDqn+wej+7z
-Mv1VlwSRb0cYDU819jGaBuy/dTSiUJ1qRnVhHvgAQNK6CyyO54Dks7VFiyc5PBUT
-px5ItJBsIagizFqgmfb/rkOyXz1+/0r8XP+ANrfEOumYkGNerUsZwFGBATzHjVDL
-pFiTaNZhEB4evzMC2xSLZQCLIZexAWLfUzSqegbqjFxZ62UEBI4oUcTy/Bz7/F/w
-BLZmekeiomuemHalCTFrFUtumSk46/gmvzklE/ioW/OFkdHYcDiZFIHzLRNagtzb
-YEfiLtbE8Lf0KbvPwIxRzrbmB/3yye/KRKK8GMAHzWYrdwcFsm29r7GjaXk1bOqH
-lOZytmu82eRUhyl/CJgK1caa+Uqfro02wmSuiTcBjJnG198aLn6Idin/APel7kgq
-lQKxroBwbt1X2iRkbw3LkFIn6p/Fdt7XvlIA8f6yX6gjwBWd70csyO1PpXRrdGuo
-G9HAT51H7Wq9ztTMLEIG
-=00wZ
------END PGP SIGNATURE-----
-
---P1JQkLuGKYyNXo1a--
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index 2bd8f09..1939f61 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -14,6 +14,9 @@ Optional properties:
+ - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
+   For hardwares which support disabling ramp rate, it should be explicitly
+   intialised to zero (regulator-ramp-delay = <0>) for disabling ramp delay.
++- regulator-enable-ramp-delay: Turn-on time for regulator(in uSec). This is
++  the time time taken to reach within some proportion of the target voltage
++  from off state.
+ 
+ Deprecated properties:
+ - regulator-compatible: If a regulator chip contains multiple
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index a01b8b3..5217c19 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -1186,6 +1186,8 @@ overflow_err:
+ 
+ static int _regulator_get_enable_time(struct regulator_dev *rdev)
+ {
++	if (rdev->constraints && rdev->constraints->enable_time)
++		return rdev->constraints->enable_time;
+ 	if (!rdev->desc->ops->enable_time)
+ 		return rdev->desc->enable_time;
+ 	return rdev->desc->ops->enable_time(rdev);
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 7827384..ea4f36f 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -23,6 +23,8 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 	const __be32 *min_uA, *max_uA, *ramp_delay;
+ 	struct property *prop;
+ 	struct regulation_constraints *constraints = &(*init_data)->constraints;
++	int ret;
++	u32 pval;
+ 
+ 	constraints->name = of_get_property(np, "regulator-name", NULL);
+ 
+@@ -73,6 +75,10 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 		else
+ 			constraints->ramp_disable = true;
+ 	}
++
++	ret = of_property_read_u32(np, "regulator-enable-ramp-delay", &pval);
++	if (!ret)
++		constraints->enable_time = pval;
+ }
+ 
+ /**
+diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
+index 999b20c..670d154 100644
+--- a/include/linux/regulator/machine.h
++++ b/include/linux/regulator/machine.h
+@@ -95,6 +95,7 @@ struct regulator_state {
+  * @initial_state: Suspend state to set by default.
+  * @initial_mode: Mode to set at startup.
+  * @ramp_delay: Time to settle down after voltage change (unit: uV/us)
++ * @enable_time: Turn-on time of the rails (unit: uS)
+  */
+ struct regulation_constraints {
+ 
+@@ -129,6 +130,7 @@ struct regulation_constraints {
+ 	unsigned int initial_mode;
+ 
+ 	unsigned int ramp_delay;
++	unsigned int enable_time;
+ 
+ 	/* constraint flags */
+ 	unsigned always_on:1;	/* regulator never off when system is on */
+-- 
+1.7.1.1
