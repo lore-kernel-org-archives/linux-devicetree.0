@@ -1,45 +1,59 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH/RESEND 0/2] ARM: shmobile: Remove #gpio-ranges-cells property
-Date: Wed, 11 Sep 2013 15:51:00 +0200
-Message-ID: <1378907462-19247-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
+Subject: [PATCH/RESEND 2/2] ARM: shmobile: Remove #gpio-ranges-cells DT property
+Date: Wed, 11 Sep 2013 15:51:02 +0200
+Message-ID: <1378907462-19247-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1378907462-19247-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1378907462-19247-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-gpio-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org, linux-gpio@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-(Resending due to wrong copy&paste in mailing list e-mail addresses, sorry for
-the noise.)
+This property is no longer required by the GPIO binding. Remove it.
 
-The property has been deprecated and unused since commit
-d9fe0039c4247383c2783923a3860227813b4d82 ("gpio: implement gpio-ranges binding
-document fix"). Remove it.
-
-This is a v3.12 fix, based on top of the latest mainline master branch.
-Regression and backward compatibility issue should not occur, as:
-
-- The first patch hardcodes the number of gpio-range cells to 3, which was the
-  value used by all boards so far.
-
-- The second patch removes a property from .dtsi files that isn't used anymore
-  since the above-mentioned commit.
-
-However, care must be taken to merge the patches in the correct order. Linus,
-Simon, would you like to two patches to go through a single tree, or should
-Linus provide a stable branch ?
-
-Laurent Pinchart (2):
-  gpio: rcar: Remove #gpio-range-cells DT property usage
-  ARM: shmobile: Remove #gpio-ranges-cells DT property
-
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
  arch/arm/boot/dts/r8a7778.dtsi | 1 -
  arch/arm/boot/dts/r8a7779.dtsi | 1 -
  arch/arm/boot/dts/r8a7790.dtsi | 1 -
- drivers/gpio/gpio-rcar.c       | 7 +++----
- 4 files changed, 3 insertions(+), 7 deletions(-)
+ 3 files changed, 3 deletions(-)
 
+diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
+index 45ac404..3577aba 100644
+--- a/arch/arm/boot/dts/r8a7778.dtsi
++++ b/arch/arm/boot/dts/r8a7778.dtsi
+@@ -96,6 +96,5 @@
+ 	pfc: pfc@fffc0000 {
+ 		compatible = "renesas,pfc-r8a7778";
+ 		reg = <0xfffc000 0x118>;
+-		#gpio-range-cells = <3>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index 23a6244..ebbe507 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -188,7 +188,6 @@
+ 	pfc: pfc@fffc0000 {
+ 		compatible = "renesas,pfc-r8a7779";
+ 		reg = <0xfffc0000 0x23c>;
+-		#gpio-range-cells = <3>;
+ 	};
+ 
+ 	thermal@ffc48000 {
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 3b879e7..9851398 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -148,7 +148,6 @@
+ 	pfc: pfc@e6060000 {
+ 		compatible = "renesas,pfc-r8a7790";
+ 		reg = <0 0xe6060000 0 0x250>;
+-		#gpio-range-cells = <3>;
+ 	};
+ 
+ 	sdhi0: sdhi@ee100000 {
 -- 
-Regards,
-
-Laurent Pinchart
+1.8.1.5
 
