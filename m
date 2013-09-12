@@ -1,72 +1,62 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
-Date: Thu, 12 Sep 2013 17:57:00 +0200
-Message-ID: <5231E44C.9070800@ahsoftware.de>
-References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org>
- <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com>
- <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com>
- <344239800.bDEkDg48ZQ@avalon>
- <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com>
- <52308C91.2000105@ahsoftware.de> <523096FE.8080901@collabora.co.uk>
- <5230AB6E.1070807@ahsoftware.de> <5231817F.8000901@ahsoftware.de>
- <5231934D.4060706@collabora.co.uk> <52319741.5050407@ahsoftware.de>
- <5231A0F8.1070505@ahsoftware.de> <5231A4FE.1070704@ahsoftware.de>
- <5231A791.9080600@ahsoftware.de> <5231DB88.90605@wwwdotorg.org>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 3/3] ARM: dts: Disable I2C controllers by default on
+ Exynos5250
+Date: Thu, 12 Sep 2013 17:59:24 +0200
+Message-ID: <7196639.0uobgTXfLN@amdc1227>
+References: <1378982427-5802-1-git-send-email-broonie@kernel.org>
+ <2175767.kktjrZWOAr@amdc1227> <5231D7BB.6050702@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5231DB88.90605@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5231D7BB.6050702@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jon Hunter <jgchunter@gmail.com>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Brown <broonie@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linaro-kernel@vger.kernel.org, Mark Brown <broonie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 12.09.2013 17:19, schrieb Stephen Warren:
->
-> IRQs, DMA channels, and GPIOs are all different things. Their bindings
-> are defined independently. While it's good to define new types of
-> bindings consistently with other bindings, this hasn't always happened,
-> so you can make zero assumptions about the IRQ bindings by reading the
-> documentation for any other kind of binding.
->
-> Multiple interrupts are defined as follows:
->
-> 	// Optional; otherwise inherited from parent/grand-parent/...
-> 	interrupt-parent = <&gpio6>;
-> 	// Must be in a fixed order, unless binding defines that the
-> 	// optional interrupt-names property is to be used.
-> 	interrupts = <1 IRQF_TRIGGER_HIGH> <2 IRQF_TRIGGER_LOW>;
-> 	// Optional; binding for device defines whether it must
-> 	// be present
-> 	interrupt-names = "foo", "bar";
->
-> If you need multiple interrupts, each with a different parent, you need
-> to use an interrupt-map property (Google it for a more complete
-> explanation I guess). Unlike "interrupts", "interrupt-map" has a phandle
-> in each entry, and hence each entry can refer to a different IRQ
-> controller. You end up defining a dummy interrupt controller node (which
-> may be the leaf node with multiple IRQ outputs, which then points at
-> itself as the interrupt parent), pointing the leaf node's
-> interrupt-parent at that node, and then having interrupt-map "demux" the
-> N interrupt outputs to the various interrupt controllers.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
->
+On Thursday 12 of September 2013 09:03:23 Stephen Warren wrote:
+> On 09/12/2013 06:58 AM, Tomasz Figa wrote:
+> > Hi Mark,
+> > 
+> > On Thursday 12 of September 2013 11:40:27 Mark Brown wrote:
+> >> From: Mark Brown <broonie@linaro.org>
+> >> 
+> >> Ensure that unused I2C controllers are not activated, causing problems
+> >> due to inappropriate pinmuxing or similar, by marking the controllers
+> >> as
+> >> disabled by default and requiring boards to explicitly enable those
+> >> that
+> >> are in use.
+> >> 
+> >> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts
+> >> 
+> >>  	i2c@12C60000 {
+> >> 
+> >> +		status = "okay";
+> > 
+> > I would keep the status properties at the end of all properties,
+> > indicating that at this point the description is complete and also to
+> > be consistent with other dts files around.
+> 
+> DT doesn't define any kind of ordering for the properties AFAIK, so the
+> order shouldn't matter in practice; it conveys no semantic
+> representation as far as the parsing code is concerned even if a human
+> may be influenced otherwise:-)
 
-What a mess. I assume that is the price that bindings don't have to change.
+Well, this is somehow similar to code, maybe not exactly in case of 
+ordering, but coding style and conventions. Unreadable code can do exactly 
+the same thing as readable code, while we somehow prefer the readable one.
 
-Thanks for clarifying that,
+> Just as an FYI, the rule I've been trying to follow in Tegra DT files is
+> that properties that are overridden from any included .dtsi file come
+> first, followed by any new properties. Still, there's no particular
+> reason anyone else has to follow that layout.
 
-Alexander Holler
+On Exynos I've been trying to keep status as the last property, compatible 
+as first, followed by reg and without any specific order of any other 
+properties. Again, this is simply to keep some consistence across the dtses 
+making them easier to read.
+
+Best regards,
+Tomasz
