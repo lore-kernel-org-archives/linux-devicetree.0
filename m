@@ -1,84 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
-Date: Thu, 12 Sep 2013 15:40:02 +0100
-Message-ID: <20130912144002.GT29403@sirena.org.uk>
-References: <52304BFF.4060007@freescale.com>
- <20130911113002.GP29403@sirena.org.uk>
- <523186DF.4070203@freescale.com>
- <1378982395.2627.416.camel@shinybook.infradead.org>
- <20980858CB6D3A4BAE95CA194937D5E73EA0EE8B@DBDE04.ent.ti.com>
- <1378984665.2627.423.camel@shinybook.infradead.org>
- <20130912114831.GL29403@sirena.org.uk>
- <1378987323.2627.429.camel@shinybook.infradead.org>
- <20130912134345.GQ29403@sirena.org.uk>
- <1378994596.2627.449.camel@shinybook.infradead.org>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH v4] powerpc/mpc85xx: Update the clock device tree nodes
+Date: Thu, 12 Sep 2013 09:44:12 -0500
+Message-ID: <1378997052.2536.5.camel@snotra.buserror.net>
+References: <1378882632-9053-1-git-send-email-Yuantian.Tang@freescale.com>
+ <1378948229.12204.486.camel@snotra.buserror.net>
+ <D07C73A334FF604B95B3CBD2A545D07B150748AA@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jPSbFJU26WoBJ9pH"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1378994596.2627.449.camel@shinybook.infradead.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: "Gupta, Pekon" <pekon@ti.com>, Huang Shijie <b32955@freescale.com>, Huang Shijie <shijie8@gmail.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B150748AA@039-SN2MPN1-013.039d.mgd.msft.net>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+To: Tang Yuantian-B29983 <B29983@freescale.com>
+Cc: Wood Scott-B07421 <B07421@freescale.com>, Li Yang-Leo-R58472 <r58472@freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---jPSbFJU26WoBJ9pH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Sep 12, 2013 at 03:03:16PM +0100, David Woodhouse wrote:
-
-> Not so in this case. The controller driver appears "know", in advance,
-> what commands are going to be sent. It preloads its buffers (the LUT)
-> with what it *expects* us to send, and when we make a request it'll just
-> trigger a send from the appropriate buffer. And it will crap itself if
-> we actually try to send anything *different*.
-
-> Or so I understand it.
-
-Yes, that was pretty much my understanding of what was going on here -
-clearly the way the driver is currently figuring out what the commands
-are isn't good enough.
-
-> So to go back to your question: the commands that it "knows" we are
-> going to send are indeed specific to (one particular type of) SPI NOR
-> flash. But there's nothing on the MTD side which justifies that
-> assumption. Even if you use a different type of SPI NOR flash which uses
-> different opcodes for its commands, this broken scheme will fall over.
-
-Right, the specific opcodes do need to variable at least and should be
-being provided by the driver for the flash - but is the generic format
-of the commands and requirement to send them abstractable?  Given that
-it's apparently been baked into hardware and based on having a quick
-scan through drivers/mtd/devices I'd guess so but...
-
-> Unless, as I say, I've completely misunderstood what's going on here.
-> Huang?
-
-...like you say some clarity would be good.
-
---jPSbFJU26WoBJ9pH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSMdI+AAoJELSic+t+oim9peAP/3EimMqbs4wjlFS+Rm9YLS5B
-AVe3kCjqNRp+hl4R9OuY/izGJpdIp+VHbIuSknWfFuCTm1svi9WrtPzEWuvFpkSv
-GhfXCacwehuix8TCjdpYS5XaNWvTaH8Otwg5hNWWYnCuDdXC54WOdXlIwB4uUwdq
-KQXnBS9YZSoa9IhUTdhj4Ix5nEAHpPhhMVPM2OTFAEEBKvgTnDg/nRXpaQKDhWC+
-Qj/OgwjmcJErlx5BFYGPBVTjXZ7AaWQtvVYpEHwLua8gBHY9Musw5D7aFjRAW84n
-Cg6q7YGyTT8Wg/mA/b1oxi6mkbZA2cDneHlVHCWYlaJBafqvdIz0ehwmntg1kQ9M
-/G/jSKCW8ub2/WI0YCnFwxNbH7ApM8RxH7CwF+OyTccfOzcegtxEKZ3K0+2kFRlZ
-WkBCraqc/ug+b4jgfZyDuBcWCliO4blpxFAthrGEDnBG6aqkRdB2bN2kVtypoNoe
-ejqDLcSWOwmD6rLWaJz0ur+Bac9t6YkEAy5zhYNhKkM1npmfC6imrStKW0XFOulT
-f/TN9VJSGjkgw1I4yG1Uo87ebxhfRu7Ez7oWC1GzBDrltb6+B6Ywoch1HMTDF5U2
-VZAOKDA09CQsFup8r4oEO5f5svpTXZ+ljrpOekPgH4SbZbWqw9Dkk6LN9IRNTtun
-Q9jD+yk8tkdE3v076oZW
-=Rnfo
------END PGP SIGNATURE-----
-
---jPSbFJU26WoBJ9pH--
+T24gV2VkLCAyMDEzLTA5LTExIGF0IDIwOjMxIC0wNTAwLCBUYW5nIFl1YW50aWFuLUIyOTk4MyB3
+cm90ZToKPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPiBGcm9tOiBXb29kIFNjb3R0
+LUIwNzQyMQo+ID4gU2VudDogMjAxM+W5tDnmnIgxMuaXpSDmmJ/mnJ/lm5sgOToxMAo+ID4gVG86
+IFRhbmcgWXVhbnRpYW4tQjI5OTgzCj4gPiBDYzogZ2FsYWtAa2VybmVsLmNyYXNoaW5nLm9yZzsg
+bGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7Cj4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgTGkgWWFuZy1MZW8tUjU4NDcyCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0XSBwb3dl
+cnBjL21wYzg1eHg6IFVwZGF0ZSB0aGUgY2xvY2sgZGV2aWNlIHRyZWUKPiA+IG5vZGVzCj4gPiAK
+PiA+IFRoaXMgZGVzY3JpcHRpb24gb2YgInJlZyIgaXMgb3Zlcmx5IHNwZWNpZmljIChhc3N1bWVz
+IGhvdyB0aGUgcGFyZW50Cj4gPiBub2RlJ3MgcmFuZ2VzIGFyZSBzZXQgdXApLCBpbmNvbXBsZXRl
+ICh0aGVyZSdzIGEgc2l6ZSBhcyB3ZWxsIGFzIHRoZQo+ID4gb2Zmc2V0KSwgYW5kIGRvZXMgbm90
+IGFwcGx5IHRvIHRoZSBjbG9ja2dlbiBub2RlIGl0c2VsZiAoeW91IHByb2JhYmx5Cj4gPiBzaG91
+bGRuJ3QgbHVtcCB0aGVtIHRvZ2V0aGVyIGxpa2UgdGhpcykuCj4gPiAKPiBEbyB5b3UgbWVhbiBJ
+IHNob3VsZCBleHBsYWluIHRoZSBSRUcgb2YgY2xvY2tnZW4gYW5kIGl0cyBjaGlsZCBub2RlIHJl
+c3BlY3RpdmVseT8KPiAKPiA+ID4gKy0gY2xvY2tzIDogc2hhbGwgYmUgdGhlIGlucHV0IHBhcmVu
+dCBjbG9jayBwaGFuZGxlIGZvciB0aGUgY2xvY2suCj4gPiAKPiA+IE5vdCByZXF1aXJlZCBvbiB0
+aGUgY2xvY2tnZW4gbm9kZQo+ID4gCj4gUmVxdWlyZWQgYnkgY2hpbGQgbm9kZSBvZiBjbG9ja2dl
+bi4KCk15IHBvaW50IGlzIHRoYXQgeW91J3JlIGx1bXBpbmcgc2V2ZXJhbCBkaWZmZXJlbnQgdHlw
+ZXMgb2Ygbm9kZXMKdG9nZXRoZXIgd2l0aCBvbmUgYmluZGluZywgd2hlbiBzb21lIHBhcnRzIG9m
+IHRoZSBiaW5kaW5nIGFyZSBub3QKYXBwbGljYWJsZSB0byB0aGUgY2xvY2tnZW4gbm9kZS4KCi1T
+Y290dAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpM
+aW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0
+dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
