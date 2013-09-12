@@ -1,60 +1,60 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/2] video: ARM CLCD: Add DT support
-Date: Thu, 12 Sep 2013 23:38:37 +0100
-Message-ID: <20130912223837.GS12758@n2100.arm.linux.org.uk>
-References: <1378488201-21146-1-git-send-email-pawel.moll@arm.com>
- <522BAED9.4020301@gmail.com> <1378725559.4082.28.camel@hornet>
- <522F91F8.6010207@gmail.com> <1378907036.4082.105.camel@hornet>
- <5230DD1C.6060606@gmail.com> <1378999425.13571.54.camel@hornet>
- <1379009416.13571.68.camel@hornet> <52323E01.2070902@wwwdotorg.org>
+From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
+Date: Thu, 12 Sep 2013 15:47:37 -0700
+Message-ID: <20130912224737.GA24937@codeaurora.org>
+References: <1379003839-16068-1-git-send-email-galak@codeaurora.org>
+ <CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com>
+ <25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org>
+ <CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com>
+ <3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52323E01.2070902@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <3E38F48E-EE41-4564-84A1-36CF07B08811-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org list" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 04:19:45PM -0600, Stephen Warren wrote:
-> On 09/12/2013 12:10 PM, Pawel Moll wrote:
-> > Such approach would also solve problem with bizarre cases like the
-> > Versatile's (not Express ;-) muxer Russell mentioned (where there is a
-> > de-facto custom wiring used). And no, I had a look at pinmux bindings
-> > and I don't think they fit here at all...
-> > 
-> > Thoughts?
-> 
-> I think pinctrl would work just fine here. However, I suspect there's
-> little need for pinctrl. pinctrl is required when one module may impose
-> requirements on another module's muxable pins. I assume that the
-> configuration for pins on CLCD is only relevant for CLCD itself, so
-> there's no need to export an interface by which something else can
-> configure the pins.
+On Thu, Sep 12, 2013 at 12:55:36PM -0500, Kumar Gala wrote:
+>
+>On Sep 12, 2013, at 12:06 PM, Olof Johansson wrote:
 
-Well, the hardware is much like this:
+>> My original request to please use a common prefix for your product
+>> families stands. Please prefix with msm-*, or if you have to, qcom-*
+>> instead, since you guys can't seem to make your mind up on standard
+>> prefixes (msm, apq, etc).
+>
+>This is silly, I dont see the reason to go with
+>qcom-apq<SOC>-<BOARD>.dts and than in the future drop qcom- when we
+>mostly likely shift to a dir structure.  As engineers we are all too
+>aware of the lack of sanity in marketing names, but its what we have
+>so we have to live with it.
 
-CLCD ---> Mux ---> output
+At least what we'd decided a year or two ago was to call _everything_
+with an msm* prefix.  If marketing comes up with cute prefixes for
+things, we would basically ignore them.  So, under that, it should be
+an msm8074-dragonboard.  Admittedly, it might be a little confusing
+with the name of the product having the apq in it, but as others have
+pointed out, I think there is less confusing than not having a common
+prefix on our MSM products.
 
-and the mux is controlled by a register, and will manipulate the output
-from the CLCD controller such that the framebuffer contents can be
-RGB565, BGR565, XRGB1555, XBGR1555 or RGB888.
+At least so far, there are no chips where apq vs msm actually
+distinguishes anything.  In fact, a simple "decoder ring" would point
+out that the 'apq' usually corresponds with the second digit being a
+zero.  It doesn't help that we've added an 'mpq' prefix as well.
 
-(Actually, the Versatile mux can only support one of the 1555 formats,
-but I forget which it is.)
+I don't really see how to satisfy all of this other than qcom-apq*, or
+just continue to use msm*.
 
-I'm not sure that its worth describing all these in DT explicitly, but
-maybe encoding it as a special "versatile" version of the CLCD primecell
-instead - especially as the external mux takes care of the colour
-component order rather than the CLCD controller (and that requires a
-bit of board specific code to deal with.)
+David
+
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
