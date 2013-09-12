@@ -1,62 +1,77 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Disable I2C controllers by default on
- Exynos5250
-Date: Thu, 12 Sep 2013 17:59:24 +0200
-Message-ID: <7196639.0uobgTXfLN@amdc1227>
-References: <1378982427-5802-1-git-send-email-broonie@kernel.org>
- <2175767.kktjrZWOAr@amdc1227> <5231D7BB.6050702@wwwdotorg.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v2 1/2] video: ARM CLCD: Add DT support
+Date: Thu, 12 Sep 2013 16:56:09 +0100
+Message-ID: <20130912155609.GO12758@n2100.arm.linux.org.uk>
+References: <1378808726-32535-1-git-send-email-pawel.moll@arm.com>
+ <522F57B9.5000001@wwwdotorg.org> <1378899931.4082.75.camel@hornet>
+ <5230AAEB.2030607@wwwdotorg.org> <1378991033.13571.33.camel@hornet>
+ <5231D5FA.4060508@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5231D7BB.6050702@wwwdotorg.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <5231D5FA.4060508@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Brown <broonie@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linaro-kernel@vger.kernel.org, Mark Brown <broonie@linaro.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 12 of September 2013 09:03:23 Stephen Warren wrote:
-> On 09/12/2013 06:58 AM, Tomasz Figa wrote:
-> > Hi Mark,
+On Thu, Sep 12, 2013 at 08:55:54AM -0600, Stephen Warren wrote:
+> On 09/12/2013 07:03 AM, Pawel Moll wrote:
+> > Ok, so I'll make it a arm,pl11x,specific property. Actually two
+> > properties - one bit I missed was the dual STN panel case, where they
+> > have separate frame buffers. Something along the lines of:
 > > 
-> > On Thursday 12 of September 2013 11:40:27 Mark Brown wrote:
-> >> From: Mark Brown <broonie@linaro.org>
-> >> 
-> >> Ensure that unused I2C controllers are not activated, causing problems
-> >> due to inappropriate pinmuxing or similar, by marking the controllers
-> >> as
-> >> disabled by default and requiring boards to explicitly enable those
-> >> that
-> >> are in use.
-> >> 
-> >> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts
-> >> 
-> >>  	i2c@12C60000 {
-> >> 
-> >> +		status = "okay";
+> > Optional:
 > > 
-> > I would keep the status properties at the end of all properties,
-> > indicating that at this point the description is complete and also to
-> > be consistent with other dts files around.
+> > - arm,pl11x,framebuffer-base: a pair of two values, address and size,
+> > 				defining the framebuffer for the upper
+> > 				(or the only one) panel
+> > - arm,pl11x,lower-framebuffer-base: as above, for the lower STN panel,
+> > 					when present
+> > 
+> > Being very hardware-specific, it covers all possible quirky scenarios,
+> > at the same time does not exclude the option of using the CMA region
+> > phandles, if a particular system needed it.
 > 
-> DT doesn't define any kind of ordering for the properties AFAIK, so the
-> order shouldn't matter in practice; it conveys no semantic
-> representation as far as the parsing code is concerned even if a human
-> may be influenced otherwise:-)
+> What do "upper" and "lower" mean in this context? I assume this somehow
+> refers to placement of the displays on the board.
 
-Well, this is somehow similar to code, maybe not exactly in case of 
-ordering, but coding style and conventions. Unreadable code can do exactly 
-the same thing as readable code, while we somehow prefer the readable one.
+CLCD is only one controller - it can only produce one image from one
+framebuffer.
 
-> Just as an FYI, the rule I've been trying to follow in Tegra DT files is
-> that properties that are overridden from any included .dtsi file come
-> first, followed by any new properties. Still, there's no particular
-> reason anyone else has to follow that layout.
+What this refers to is a requirement for dual STN displays - rather
+than starting at one corner and working logically to the opposite
+corner, these start at one corner and half way through the display at
+the same time.  So you scan out the upper half of the image at the
+same time that you scan out the lower half of the image.
 
-On Exynos I've been trying to keep status as the last property, compatible 
-as first, followed by reg and without any specific order of any other 
-properties. Again, this is simply to keep some consistence across the dtses 
-making them easier to read.
+In order to give an image on the display where the conventional formula
+works:
 
-Best regards,
-Tomasz
+	address = start + y * bytes_per_line + x * bits_per_pixel / 8
+
+this means that the "upper" and "lower" start addresses are related to
+the parameters of the display - you want the lower half to start at
+the address where y = panel_y_res / 2 and x = 0.
+
+You may also wish to change the start address (if you have enough RAM)
+to support page flipping - where you switch between two framebuffers -
+one which is currently being displayed while the other is being updated
+by the CPU.  You would use this to provide smooth video playback for
+example.
+
+So, DT has no business directly encoding this information - it should
+be calculated from the information provided by the panel and the
+timings required, and all that the CLCD driver should know is that
+"we have this RAM which starts here, and extends for N bytes" - or
+to use system memory instead.
