@@ -1,37 +1,73 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
-Date: Thu, 12 Sep 2013 14:26:53 -0500
-Message-ID: <584008C3-983C-4423-A76E-38DD67C2F1D9@codeaurora.org>
-References: <1379003839-16068-1-git-send-email-galak@codeaurora.org> <CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com> <25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org> <CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com> <3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org> <CAOesGMhN0jEx065cpf989P-JbuxPiOaPRsP4BD3VoW-n5ebP+w@mail.gmail.com> <9DD9D9A7-ED55-412F-A18D-599D1E365003@codeaurora.org> <523205E1.2040704@gmail.com> <CAOesGMhSZzpyT5XyECByLnvef0E+92y+uaXByiG0Vpm9f05AxQ@mail.gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMhSZzpyT5XyECByLnvef0E+92y+uaXByiG0Vpm9f05AxQ@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robherring2@gmail.com>, David Brown <davidb@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: devicetree-request-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: Your mail to devicetree-request-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Date: Thu, 12 Sep 2013 15:30:03 -0400
+Message-ID: <S1753413Ab3ILTaD/20130912193003Z+230@vger.kernel.org>
+References: <87mwnhzww3.fsf@topper.koldfront.dk>
+Reply-To: devicetree-approval-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-approval-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87mwnhzww3.fsf-sHhdpH+TVm9CeT/6QKL052SdvHPH+/yF@public.gmane.org>, from gldd-devicetree-discuss-2@m.gmane.org (Gmane Admin)
+To: gldd-devicetree-discuss-2@m.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This pre-recorded message is being sent in response to your recent
+email to devicetree-request-u79uwXL29TaiAVqoAR/hOA@public.gmane.org
 
-On Sep 12, 2013, at 1:46 PM, Olof Johansson wrote:
+All routine administrative requests (including subscriptions and
+unsubscriptions) concerning this mailing list are handled by an
+automated server.  Please read this message carefully to find the
+information relevant to you.
 
-> On Thu, Sep 12, 2013 at 11:20 AM, Rob Herring <robherring2@gmail.com> wrote:
-> 
->> As Stephen W has pointed out previously, the dtb filename itself is or
->> may be an ABI and the bootloader may be hardcoded to a name. So we
->> should avoid future renames.
-> 
-> We still have the choice of producing the dtb files under
-> arch/arm/boot/dts even if we move dts/dtsi files one level deeper, as
-> long as we keep the filenames consistent. So we can do a move, just
-> not a rename.
+SUBSCRIBING
+===========
 
+To subscribe to devicetree, send the following in the body (not
+the subject line) of an email message to "Majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org":
 
-Looking at arch/arm/boot/dts/ we are all over the place, so what's the naming convention we are going forward with?
+	subscribe devicetree
 
-- k
+This will subscribe the account from which you send the message to
+the devicetree list.
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+If you wish to subscribe another address instead (such as a local
+redistribution list), you can use a command of the form:
+
+	subscribe devicetree other-address@your_site.your_net
+
+UNSUBSCRIBING
+=============
+
+To unsubscribe from devicetree, send the following in the body (not
+the subject line) of an email message to "Majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org":
+
+	unsubscribe devicetree
+
+This will unsubscribe the account from which you send the message.
+If you are subscribed with some other address, you'll have to send
+a command of the following form instead:
+
+	unsubscribe devicetree other-address@your_site.your_net
+
+If you don't know what address you are subscribed with, you can send
+the following command to see who else is on the list (assuming that
+information isn't designated "private" by the owner of the list):
+
+	who devicetree
+
+If you want to search non-private lists at this server, you can do that
+by sending a command like:
+
+	which string
+
+This will return a list of all entries on all lists that contain "string".
+
+HELP
+====
+
+To find out more about the automated server and the commands it
+understands, send the following command to "Majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org":
+
+	help
+
+If you feel you need to reach a human, send email to:
+
+	devicetree-approval-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
