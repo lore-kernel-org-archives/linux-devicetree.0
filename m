@@ -1,69 +1,92 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: dts: Disable I2C controllers by default on
- Exynos5250
-Date: Fri, 13 Sep 2013 00:42:25 +0100
-Message-ID: <20130912234225.GZ29403@sirena.org.uk>
-References: <1378982427-5802-1-git-send-email-broonie@kernel.org>
- <1657964.f1bIFjAZ98@amdc1227>
- <20130912200013.GU29403@sirena.org.uk>
- <1462876.u3JagxpM84@flatron>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 1/2] tick: broadcast: Deny per-cpu clockevents from being
+ broadcast sources
+Date: Thu, 12 Sep 2013 16:48:32 -0700
+Message-ID: <54e79f60-d0c4-4897-ab16-ecd50ae7ec0d@DB9EHSMHS019.ehs.local>
+References: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1379004640-15117-2-git-send-email-soren.brinkmann@xilinx.com>
+ <alpine.DEB.2.02.1309122224420.4089@ionos.tec.linutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="18II17TkgouCCESf"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1462876.u3JagxpM84@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linaro-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.02.1309122224420.4089@ionos.tec.linutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---18II17TkgouCCESf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Sep 13, 2013 at 01:02:11AM +0200, Tomasz Figa wrote:
-> On Thursday 12 of September 2013 21:00:13 Mark Brown wrote:
-
-> > > i2c@12CA0000 does look like a normal hardware I2C controller, which
-> > > needs some extra properties like samsung,i2c-sda-delay or
-> > > samsung,i2c-max-bus-
-
-> > Shouldn't these have sane defaults?
-
-> AFAIK those parameters are highly board specific so it would be hard to=
-=20
-> set any reasonable default for them.
-
-At least the maximum bus frequency should be able to be set to 100Hz by
-default, that's the minimum from the I2C spec though pretty much
-everything does at least 400Hz.  sda-delay should really be able to
-default to either zero or something per-SoC, I don't remember having to
-tune it when using board files and I2C is generally pretty robust so
-it'd be surprising if it were that sensitive to system design.
-
---18II17TkgouCCESf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSMlFeAAoJELSic+t+oim9i74P/0YEIR+jiGrQvHn3XlDpDHyY
-qyD/Wpavhdyciv7wEiXzsY3VHlSJeGtSFZd3OIIXZ8SOJDLpdDwAKqW8MYbkmku5
-xoMqRWO66wW4aHHeIlKcRxlb5/uYmw54G65hOxpUYMH9G/iCgC6kuacrGrGpVAX6
-gI6+Dfcr7tUS1vmJmrrHWoEEEZDwBJM5kYiKLh8pewhwUFJtCU6fqEJ41Zrkc8VO
-LPflMBh37Mtj2leA/JPNxUOOSlSUcJy7FBn+uq1nh+qR0cPiyPmylNM5UJlQpRIu
-g23Cr/nfxyw/Rw9KuY05UjjObdV32h2NHWbaVfDXAOCnNTTINygKU36M7J0xTbiu
-NpiOJHFcDkv63+p+CL2m5ezjn+RHwDhZQnyOLAX3muOhD9iShEfvAnn5phdhsPnn
-wunA0QcB+qe1egdKkVHO4p36E+km5hmfTbXsJEChRcSj+g+jN5Gr8733ttxX9xdM
-YQwsdHdaLRzU20TVvU0zLYqr/c2aBAmdz77t/NshqRdq9xfcMJsxjn5ZCOz1D87c
-HwKLjjq4hBSWagOFdhUxgoQhT/gYDODKunPD3jy5NmeQf9tuKRQ93Npq4QKS+DgQ
-2xWFGyanMz/efugkBLSs64MLMQ8qQq+FtJDccCofktACYsHJ7bZeKrdtNcJoD4ys
-D012RfkpJ9lR4HhYDrkK
-=zSkz
------END PGP SIGNATURE-----
-
---18II17TkgouCCESf--
+SGkgVGhvbWFzLAoKT24gVGh1LCBTZXAgMTIsIDIwMTMgYXQgMTA6MzA6MTVQTSArMDIwMCwgVGhv
+bWFzIEdsZWl4bmVyIHdyb3RlOgo+IE9uIFRodSwgMTIgU2VwIDIwMTMsIFNvcmVuIEJyaW5rbWFu
+biB3cm90ZToKPiA+IEZyb206IFN0ZXBoZW4gQm95ZCA8c2JveWRAY29kZWF1cm9yYS5vcmc+Cj4g
+PiAKPiA+IE9uIG1vc3QgQVJNIHN5c3RlbXMgdGhlIHBlci1jcHUgY2xvY2tldmVudHMgYXJlIHRy
+dWx5IHBlci1jcHUgaW4KPiA+IHRoZSBzZW5zZSB0aGF0IHRoZXkgY2FuJ3QgYmUgY29udHJvbGxl
+ZCBvbiBhbnkgb3RoZXIgQ1BVIGJlc2lkZXMKPiA+IHRoZSBDUFUgdGhhdCB0aGV5IGludGVycnVw
+dC4gSWYgb25lIG9mIHRoZXNlIGNsb2NrZXZlbnRzIHdlcmUgdG8KPiA+IGJlY29tZSBhIGJyb2Fk
+Y2FzdCBzb3VyY2Ugd2Ugd2lsbCBydW4gaW50byBhIGxvdCBvZiB0cm91YmxlCj4gPiBiZWNhdXNl
+IHRoZSBicm9hZGNhc3Qgc291cmNlIGlzIGVuYWJsZWQgb24gdGhlIGZpcnN0IENQVSB0byBnbwo+
+ID4gaW50byBkZWVwIGlkbGUgKGlmIHRoYXQgQ1BVIHN1ZmZlcnMgZnJvbSBGRUFUX0MzX1NUT1Ap
+IGFuZCB0aGF0Cj4gPiBjb3VsZCBiZSBhIGRpZmZlcmVudCBDUFUgdGhhbiB3aGF0IHRoZSBjbG9j
+a2V2ZW50IGlzIGludGVycnVwdGluZwo+ID4gKG9yIGV2ZW4gd29yc2UgdGhlIENQVSB0aGF0IHRo
+ZSBjbG9ja2V2ZW50IGludGVycnVwdHMgY291bGQgYmUKPiA+IG9mZmxpbmUpLgo+ID4gCj4gPiBU
+aGVvcmV0aWNhbGx5IGl0J3MgcG9zc2libGUgdG8gc3VwcG9ydCBwZXItY3B1IGNsb2NrZXZlbnRz
+IGFzIHRoZQo+ID4gYnJvYWRjYXN0IHNvdXJjZSBidXQgc28gZmFyIHdlIGhhdmVuJ3QgbmVlZGVk
+IHRoaXMgYW5kIHN1cHBvcnRpbmcKPiA+IGl0IGlzIHJhdGhlciBjb21wbGljYXRlZC4gTGV0J3Mg
+anVzdCBkZW55IHRoZSBwb3NzaWJpbGl0eSBmb3Igbm93Cj4gPiB1bnRpbCB0aGlzIGJlY29tZXMg
+YSByZWFsaXR5IChsZXQncyBob3BlIGl0IG5ldmVyIGRvZXMhKS4KPiAKPiBXZWxsLCB3ZSBjYW4n
+dCBkbyBpdCB0aGlzIHdheS4gVGhlcmUgYXJlIGdsb2JhbGx5IGFjY2Vzc2libGUgY2xvY2sKPiBl
+dmVudCBkZXZpY2VzIHdoaWNoIGRlbGl2ZXIgb25seSB0byBjcHUwLiBTbyB0aGUgbWFzayBjaGVj
+ayBtaWdodCBiZQo+IGNhdXNpbmcgZmFpbHVyZSBoZXJlLgo+IAo+IEp1c3QgYWRkIGEgZmVhdHVy
+ZSBmbGFnIENMT0NLX0VWVF9GRUFUX1BFUkNQVSB0byB0aGUgY2xvY2sgZXZlbnQKPiBkZXZpY2Ug
+YW5kIGNoZWNrIGZvciBpdC4KCkkgZ2F2ZSBpdCBhIHNob3QuIElzIHRoaXMgd2hhdCB5b3UgaW1h
+Z2luZToKZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvYXJtX2dsb2JhbF90aW1lci5j
+IGIvZHJpdmVycy9jbG9ja3NvdXJjZS9hcm1fZ2xvYmFsX3RpbWVyLmMKaW5kZXggYjY2YzFmMy4u
+YzYzOWIxYSAxMDA2NDQKLS0tIGEvZHJpdmVycy9jbG9ja3NvdXJjZS9hcm1fZ2xvYmFsX3RpbWVy
+LmMKKysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9hcm1fZ2xvYmFsX3RpbWVyLmMKQEAgLTE2OSw3
+ICsxNjksOCBAQCBzdGF0aWMgaW50IGd0X2Nsb2NrZXZlbnRzX2luaXQoc3RydWN0IGNsb2NrX2V2
+ZW50X2RldmljZSAqY2xrKQogICAgICAgIGludCBjcHUgPSBzbXBfcHJvY2Vzc29yX2lkKCk7CiAK
+ICAgICAgICBjbGstPm5hbWUgPSAiYXJtX2dsb2JhbF90aW1lciI7Ci0gICAgICAgY2xrLT5mZWF0
+dXJlcyA9IENMT0NLX0VWVF9GRUFUX1BFUklPRElDIHwgQ0xPQ0tfRVZUX0ZFQVRfT05FU0hPVDsK
+KyAgICAgICBjbGstPmZlYXR1cmVzID0gQ0xPQ0tfRVZUX0ZFQVRfUEVSSU9ESUMgfCBDTE9DS19F
+VlRfRkVBVF9PTkVTSE9UIHwKKyAgICAgICAgICAgICAgIENMT0NLX0VWVF9GRUFUX1BFUkNQVTsK
+ICAgICAgICBjbGstPnNldF9tb2RlID0gZ3RfY2xvY2tldmVudF9zZXRfbW9kZTsKICAgICAgICBj
+bGstPnNldF9uZXh0X2V2ZW50ID0gZ3RfY2xvY2tldmVudF9zZXRfbmV4dF9ldmVudDsKICAgICAg
+ICBjbGstPmNwdW1hc2sgPSBjcHVtYXNrX29mKGNwdSk7CmRpZmYgLS1naXQgYS9pbmNsdWRlL2xp
+bnV4L2Nsb2NrY2hpcHMuaCBiL2luY2x1ZGUvbGludXgvY2xvY2tjaGlwcy5oCmluZGV4IDA4NTc5
+MjIuLjQ5M2FhMDIgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvY2xvY2tjaGlwcy5oCisrKyBi
+L2luY2x1ZGUvbGludXgvY2xvY2tjaGlwcy5oCkBAIC02MCw2ICs2MCw3IEBAIGVudW0gY2xvY2tf
+ZXZlbnRfbW9kZSB7CiAgKiBDb3JlIHNoYWxsIHNldCB0aGUgaW50ZXJydXB0IGFmZmluaXR5IGR5
+bmFtaWNhbGx5IGluIGJyb2FkY2FzdCBtb2RlCiAgKi8KICNkZWZpbmUgQ0xPQ0tfRVZUX0ZFQVRf
+RFlOSVJRICAgICAgICAgIDB4MDAwMDIwCisjZGVmaW5lIENMT0NLX0VWVF9GRUFUX1BFUkNQVSAg
+ICAgICAgICAweDAwMDA0MAogCiAvKioKICAqIHN0cnVjdCBjbG9ja19ldmVudF9kZXZpY2UgLSBj
+bG9jayBldmVudCBkZXZpY2UgZGVzY3JpcHRvcgpkaWZmIC0tZ2l0IGEva2VybmVsL3RpbWUvdGlj
+ay1icm9hZGNhc3QuYyBiL2tlcm5lbC90aW1lL3RpY2stYnJvYWRjYXN0LmMKaW5kZXggZDM1Mzll
+NS4uZGU0YzVkOCAxMDA2NDQKLS0tIGEva2VybmVsL3RpbWUvdGljay1icm9hZGNhc3QuYworKysg
+Yi9rZXJuZWwvdGltZS90aWNrLWJyb2FkY2FzdC5jCkBAIC03MCwxNiArNzAsMTQgQEAgc3RhdGlj
+IGJvb2wgdGlja19jaGVja19icm9hZGNhc3RfZGV2aWNlKHN0cnVjdCBjbG9ja19ldmVudF9kZXZp
+Y2UgKmN1cmRldiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVj
+dCBjbG9ja19ldmVudF9kZXZpY2UgKm5ld2RldikKIHsKICAgICAgICBpZiAoKG5ld2Rldi0+ZmVh
+dHVyZXMgJiBDTE9DS19FVlRfRkVBVF9EVU1NWSkgfHwKLSAgICAgICAgICAgKG5ld2Rldi0+ZmVh
+dHVyZXMgJiBDTE9DS19FVlRfRkVBVF9DM1NUT1ApKQorICAgICAgICAgICAobmV3ZGV2LT5mZWF0
+dXJlcyAmIENMT0NLX0VWVF9GRUFUX0MzU1RPUCkgfHwKKyAgICAgICAgICAgKG5ld2Rldi0+ZmVh
+dHVyZXMgJiBDTE9DS19FVlRfRkVBVF9QRVJDUFUpKQogICAgICAgICAgICAgICAgcmV0dXJuIGZh
+bHNlOwogCiAgICAgICAgaWYgKHRpY2tfYnJvYWRjYXN0X2RldmljZS5tb2RlID09IFRJQ0tERVZf
+TU9ERV9PTkVTSE9UICYmCiAgICAgICAgICAgICEobmV3ZGV2LT5mZWF0dXJlcyAmIENMT0NLX0VW
+VF9GRUFUX09ORVNIT1QpKQogICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOwogCi0gICAgICAg
+aWYgKGNwdW1hc2tfZXF1YWwobmV3ZGV2LT5jcHVtYXNrLCBjcHVtYXNrX29mKHNtcF9wcm9jZXNz
+b3JfaWQoKSkpKQotICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOwotCiAgICAgICAgcmV0dXJu
+ICFjdXJkZXYgfHwgbmV3ZGV2LT5yYXRpbmcgPiBjdXJkZXYtPnJhdGluZzsKIH0KCklmIHRoaXMg
+aXMgdGhlIHdheSB0byBnbywgSSBjYW4gcHJlcGFyZSB0aGlzIGluIGEgdjIuCgoJVGhhbmtzLAoJ
+U8O2cmVuCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwK
