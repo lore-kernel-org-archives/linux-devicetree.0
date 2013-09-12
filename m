@@ -1,146 +1,104 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v2 1/2] video: ARM CLCD: Add DT support
-Date: Thu, 12 Sep 2013 14:03:53 +0100
-Message-ID: <1378991033.13571.33.camel@hornet>
-References: <1378808726-32535-1-git-send-email-pawel.moll@arm.com>
- <522F57B9.5000001@wwwdotorg.org> <1378899931.4082.75.camel@hornet>
- <5230AAEB.2030607@wwwdotorg.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 1/7] usb: dwc3: get "usb_phy" only if the platform indicates
+ the presence of PHY
+Date: Thu, 12 Sep 2013 16:11:59 +0300
+Message-ID: <5231BD9F.4020105@ti.com>
+References: <1378136591-7463-1-git-send-email-kishon@ti.com> <1378136591-7463-2-git-send-email-kishon@ti.com> <52319912.8030203@ti.com> <CAFp+6iE+xbSWWp2bNc5MRSUrA4Fi6qVU4vhR4+mtZHZGidkMGg@mail.gmail.com> <52319FC4.8040703@ti.com> <CAFp+6iGzV4auP0AeySen2Qk6wEJM-xsTnQmfwMQDtp2tg1FMkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5230AAEB.2030607@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iGzV4auP0AeySen2Qk6wEJM-xsTnQmfwMQDtp2tg1FMkQ@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, george.cherian@ti.com, Greg KH <gregkh@linuxfoundation.org>, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIFdlZCwgMjAxMy0wOS0xMSBhdCAxODozOSArMDEwMCwgU3RlcGhlbiBXYXJyZW4gd3JvdGU6
-Cj4gPiBGcm9tIHRoZSBjb3JlJ3MgcGVyc3BlY3RpdmUgaXQncyBqdXN0IGEgYml0IG9mIGV4dHJh
-IG1lbW9yeSwgeW91IGNvdWxkLAo+ID4gZm9yIGV4YW1wbGUsIHB1dCBhIE1URCByYW0gZGlzayBv
-biBpdC4gSXQgc2VlbXMgdG8gZGVzZXJ2ZSBhCj4gPiByZXByZXNlbnRhdGlvbiBpbiB0aGUgdHJl
-ZSB0aGVuLgo+IAo+IFllcywgdGhhdCdzIGEgZ29vZCBwb2ludC4gUGVyaGFwcyBpdCBpcyByZWFz
-b25hYmxlIHRvIHJlcHJlc2VudCB0aGUKPiBtZW1vcnkgc29tZXdoZXJlIHRoZW4uCj4gCj4gSSBk
-b24ndCBzZWUgd2h5IHRoaXMgbWVtb3J5IGNvdWxkbid0IGV4aXN0IGluIHRoZSByZWd1bGFyIC9t
-ZW1vcnkgbm9kZTsKPiBpdCBpcyBhZnRlciBhbGwgKGFkbWl0dGVkbHkgc2xvdykgUkFNLiBPYnZp
-b3VzbHkgeW91J2Qgd2FudCB0byBjb3ZlciB0aGUKPiByZWdpb24gd2l0aCBhIC9tZW1yZXNlcnZl
-LyB0byBhdm9pZCBpdCBiZWluZyB1c2VkIGp1c3QgbGlrZSBhbnkgb3RoZXIKPiBSQU0uIAoKVGhp
-cyB3b3VsZCBiZSBwcmV0dHkgdHJpY2t5IGluIG15IHBhcnRpY3VsYXIgY2FzZS4uLiBUaGUgc3Jh
-bSBjaGlwIGxpdmVzCm9uIGEgbW90aGVyYm9hcmQsIHdoaWNoIGxpdmVzIGJlaGluZCBhIHN0YXRp
-YyBtZW1vcnkgaW50ZXJmYWNlIChDaGlwClNlbGVjdCArIG9mZnNldCkuIEFuZCB0aGUgbWVtcmVz
-ZXJ2ZSBjYW4gb25seSB0YWtlICJ0b3AgbGV2ZWwiIGFkZHJlc3MsCndoaWNoIGNhbiBiZSBkaWZm
-ZXJlbnQgZGVwZW5kaW5nIG9uIHRoZSB0ZXN0IGNoaXAgKFNvQykgb3IgRlBHQSBTTU0KYmVpbmcg
-dXNlZC4KCj4gUGVyaGFwcyB0aGUgQ0xDRCBjb3VsZCByZWZlcmVuY2UgdGhlIG1lbXJlc2VydmUg
-dGhlbj8KCkhvdyBkbyB5b3UgbWVhbiByZWZlcmVuY2UgdGhlIG1lbXJlc2VydmU/IEl0J3Mgbm90
-IGEgbm9kZSwgSSBkb24ndCB0aGluayB5b3UgY2FuIGdldAphIHBoYW5kbGUgdG8gaXQuLi4KCj4g
-QWx0ZXJuYXRpdmVseSwgaWYgeW91IHdhbnQgdG8gcmVwcmVzZW50IHRoZSByZWdpb24gYXMgYSBy
-ZWd1bGFyIG5vZGUKPiByYXRoZXIgdGhhbiBhIC9tZW1vcnkgZW50cnksIEknZCBleHBlY3QgdGhl
-cmUgdG8gYmUgYSBiaW5kaW5nIGRlZmluaW5nCj4gd2hhdCB0aGF0IG5vZGUgd2FzLCBhbmQgdGhl
-IG5vZGUgdG8gYXQgbGVhc3QgaGF2ZSBhIGNvbXBhdGlibGUgdmFsdWUgYXMKPiB3ZWxsLiBJJ20g
-bm90IHN1cmUgaG93IHlvdSB3b3VsZCBpbmRpY2F0ZSB0aGF0IHRoZSBub2RlIHNob3VsZCBiZSBN
-VEQKPiB2cy4gYSByZXNvdXJjZSBmb3IgQ0xDRCB0aG91Z2g7IHBlcmhhcHMgeW91J2QgdXNlIGEg
-ZGlmZmVyZW50IGNvbXBhdGlibGUKPiB2YWx1ZSBkZXBlbmRpbmcgb24gdGhlIGludGVuZGVkIHVz
-ZSBvZiB0aGUgbWVtb3J5PwoKWWVzLCB0aGF0J3MgZXhhY3RseSB3aGF0IEkgaGF2ZSBub3c6Cgog
-ICAgICAgICAgICAgICAgcHNyYW1AMSwwMDAwMDAwMCB7IAogICAgICAgICAgICAgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gImFybSx2ZXhwcmVzcy1wc3JhbSIsICJtdGQtcmFtIjsKICAgICAgICAg
-ICAgICAgICAgICAgICAgcmVnID0gPDEgMHgwMDAwMDAwMCAweDAyMDAwMDAwPjsKICAgICAgICAg
-ICAgICAgICAgICAgICAgYmFuay13aWR0aCA9IDw0PjsKICAgICAgICAgICAgICAgIH07CiAgICAg
-ICAgICAgICAgICAKICAgICAgICAgICAgICAgIHZyYW1AMiwwMDAwMDAwMCB7CiAgICAgICAgICAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHZleHByZXNzLXZyYW0iOwogICAgICAgICAg
-ICAgICAgICAgICAgICByZWcgPSA8MiAweDAwMDAwMDAwIDB4MDA4MDAwMDA+OwogICAgICAgICAg
-ICAgICAgfTsKCndoaWNoIGFsbG93cyBtdGQgdG8gdXNlIHRoZSBwc3JhbS4KCj4gPj4gSSdtIG5v
-dCBzdXJlIHdoYXQgdGhlIGJlbmVmaXQgb2YgbWFraW5nIHRoaXMgYSBzdGFuZGFsb25lIG5vZGUg
-aXM7IHdoeQo+ID4+IG5vdCBqdXN0IHB1dCB0aGUgYmFzZS9zaXplIGRpcmVjdGx5IGludG8gdGhl
-IHZpZGVvLXJhbSBwcm9wZXJ0eSBpbiB0aGUKPiA+PiBDTENEIG5vZGU/Cj4gPiAKPiA+IFRoaXMg
-aXMgY2VydGFpbmx5IGFuIG9wdGlvbi4gSSd2ZSBjb25zaWRlcmVkIHRoaXMgYXMgd2VsbCwgYnV0
-IHRob3VnaHQKPiA+IHRoYXQgdGhlIGFib3ZlIG1hZGUgbW9yZSBzZW5zZS4KPiA+IAo+ID4gSGF2
-aW5nIHNhaWQgdGhhdCwgdGhlcmUgaXMgYWN0dWFsbHkgYSB1c2UgY2FzZSwgYWx0aG91Z2ggYSB2
-ZXJ5Cj4gPiBub24tcHJvYmFibGUgb25lLCBmb3IgaGF2aW5nIGEgZGlyZWN0IG51bWJlciB0aGVy
-ZS4uLiBUaGUgaW50ZXJjb25uZWN0Cj4gPiB0aGF0IENMQ0QgaXMgY29ubmVjdGVkIHRvIGNvdWxk
-IGhhdmUgZGlmZmVyZW50IG1hcHBpbmcgdGhhbiB0aGUKPiA+IHByb2Nlc3NvcidzIG9uZS4gSW4g
-b3RoZXIgd29yZCwgdGhlIG1lbW9yeSBzZWVuIGJ5IHRoZSBjb3JlIGF0IFgsIGNvdWxkCj4gPiBi
-ZSBhY2Nlc3NlZCBieSB0aGUgQ0xDRCBhdCBZLiBPciwgaW4gZXZlbiBtb3JlIHF1aXJreSBzaXR1
-YXRpb24sIHRoZQo+ID4gY29yZSBtYXkgbm90IGhhdmUgYWNjZXNzIHRvIHRoZSBtZW1vcnkgYXQg
-YWxsLCB3aXRoIHRoZSBncmFwaGljcyBiZWluZwo+ID4gZ2VuZXJhdGVkIG9ubHkgYnkgR1BVIChv
-ciBhbnkgb3RoZXIgdGhpcmQgcGFydHkpLiBUaGVuIHRoZSB2YWx1ZSB3b3VsZAo+ID4gbWVhbiAi
-dGhlIGFkZHJlc3MgeW91IGhhdmUgdG8gdXNlIHdoZW4gZ2VuZXJhdGluZyBBTUJBIHJlYWQgdHJh
-bnNhY3Rpb25zCj4gPiB0byBiZSBnZXQgc29tZSBtZWFuaW5nZnVsIGRhdGEiIGFuZCB3b3VsZCBo
-YXZlIHRvIGJlIGtub3duIGV4cGxpY2l0bHkuCj4gPiAKPiA+IEkgZ3Vlc3MgaXQgd29uJ3QgYmUg
-aGFyZCB0byBjb252aW5jZSBtZSBpdCdzIGEgYmV0dGVyIG9wdGlvbiA7LSkKPiAKPiBUaGF0J3Mg
-dHJ1ZS4gRXZlcnl0aGluZyBpbiBEVCBpcyBjdXJyZW50bHkgc2V0IHVwIHRvIGRlc2NyaWJlIHRo
-ZSBDUFUncwo+IG1lbW9yeSBtYXAuIEVpdGhlciB3ZSBuZWVkIHRvIGFkZCBzb21lIG1vcmUgcHJv
-cGVydGllcyB0byBkZXNjcmliZSB0aGUKPiBwb3RlbnRpYWxseSBkaWZmZXJlbnQgbWVtb3J5IG1h
-cCBmb3Igb3RoZXIgYnVzIG1hc3RlcnMsIGFuZC9vciB3ZSBzaG91bGQKPiByZXByZXNlbnQgdGhl
-IHZhcmlvdXMgYnVzZXMgaW4gRFQsIGFuZCBhbnkgZHJpdmVyIGRvaW5nIERNQSBzaG91bGQgYXNr
-Cj4gZWFjaCBidXMncyBkcml2ZXIgaW4gdHVybiB0byB0cmFuc2xhdGUgdGhlIGNvcmUtdmlzaWJs
-ZSBhZGRyZXNzIHRvIGEgYnVzCj4gYWRkcmVzcyBzbyB3ZSBjYW4gZXZlbnR1YWxseSBlbmQgdXAg
-d2l0aCB0aGUgYWRkcmVzcyBuZWVkZWQgYnkgdGhlIGJ1cwo+IG1hc3RlcnMuCj4gCj4gVGhhdCBp
-cyBpbmRlZWQgY29tcGxleCwgYW5kIGNvdWxkIGF0IGxlYXN0IGluIG1hbnkgc2l0dWF0aW9ucyBz
-aW1wbGUgYmUKPiBzaG9ydC1jaXJjdWl0ZWQgYnkgcHV0dGluZyB0aGUgcmVsZXZhbnQgYmFzZSBh
-ZGRyZXNzIGluIGVhY2ggb3RoZXIgYnVzCj4gbWFzdGVyJ3Mgb3duIG5vZGUvcHJvcGVydHkuIEhv
-cGVmdWxseSB3ZSB3b3VsZG4ndCBnZXQgYml0dGVuIGJ5IGhvdwo+IG5vbi1nZW5lcmFsIHRoYXQg
-Y291bGQgYmUuCgpPaywgc28gSSdsbCBtYWtlIGl0IGEgYXJtLHBsMTF4LHNwZWNpZmljIHByb3Bl
-cnR5LiBBY3R1YWxseSB0d28KcHJvcGVydGllcyAtIG9uZSBiaXQgSSBtaXNzZWQgd2FzIHRoZSBk
-dWFsIFNUTiBwYW5lbCBjYXNlLCB3aGVyZSB0aGV5CmhhdmUgc2VwYXJhdGUgZnJhbWUgYnVmZmVy
-cy4gU29tZXRoaW5nIGFsb25nIHRoZSBsaW5lcyBvZjoKCk9wdGlvbmFsOgoKLSBhcm0scGwxMXgs
-ZnJhbWVidWZmZXItYmFzZTogYSBwYWlyIG9mIHR3byB2YWx1ZXMsIGFkZHJlc3MgYW5kIHNpemUs
-CgkJCQlkZWZpbmluZyB0aGUgZnJhbWVidWZmZXIgZm9yIHRoZSB1cHBlcgoJCQkJKG9yIHRoZSBv
-bmx5IG9uZSkgcGFuZWwKLSBhcm0scGwxMXgsbG93ZXItZnJhbWVidWZmZXItYmFzZTogYXMgYWJv
-dmUsIGZvciB0aGUgbG93ZXIgU1ROIHBhbmVsLAoJCQkJCXdoZW4gcHJlc2VudAoKQmVpbmcgdmVy
-eSBoYXJkd2FyZS1zcGVjaWZpYywgaXQgY292ZXJzIGFsbCBwb3NzaWJsZSBxdWlya3kgc2NlbmFy
-aW9zLAphdCB0aGUgc2FtZSB0aW1lIGRvZXMgbm90IGV4Y2x1ZGUgdGhlIG9wdGlvbiBvZiB1c2lu
-ZyB0aGUgQ01BIHJlZ2lvbgpwaGFuZGxlcywgaWYgYSBwYXJ0aWN1bGFyIHN5c3RlbSBuZWVkZWQg
-aXQuCgo+ID4gLSBtYXgtbWVtb3J5LWJhbmR3aWR0aDogbWF4aW11bSBiYW5kd2lkdGggaW4gYnl0
-ZXMgcGVyIHNlY29uZCB0aGF0IHRoZQo+ID4gCQkJY2VsbCdzIG1lbW9yeSBpbnRlcmZhY2UgY2Fu
-IGhhbmRsZQo+ID4gCj4gPiBhbmQgY2FuIGJlIHRoZW4gdXNlZCB0byBjYWxjdWxhdGUgbWF4aW11
-bSBicHAgZGVwZW5kaW5nIG9uIHRoZSBzZWxlY3RlZAo+ID4gbW9kZS4KPiAKPiBZZXMsIHRoYXQn
-cyBhIGJldHRlciBwcm9wZXJ0eSBkZWZpbml0aW9uLgoKT2ssIEknbGwgZ28gdGhhdCB3YXkgdGhl
-bi4gV2hldGhlciBkZXJpdmVkIGZyb20gdGhlIHN5c3RlbSBkZXNpZ24KY2hhcmFjdGVyaXN0aWNz
-IG9yIGJ5ICJoYW5kcyBvbiBleHBlcmltZW50cyIsIHNlZW1zIGhhcmR3YXJlLXkgZW5vdWdoLgoK
-PiA+Pj4gKy0gZGlzcGxheS10aW1pbmdzOiBzdGFuZGFyZCBkaXNwbGF5IHRpbWluZ3Mgc3ViLW5v
-ZGUsIHNlZQo+ID4+PiArCQkJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVv
-L2Rpc3BsYXktdGltaW5nLnR4dAo+ID4+Cj4gPj4gU2hvdWxkIHRoYXQgYmUgaW4gYSAiUmVxdWly
-ZWQgc3ViLW5vZGVzIiBzZWN0aW9uIChJIGFzc3VtZSByZXF1aXJlZCBub3QKPiA+PiBvcHRpb25h
-bCkgcmF0aGVyIHRoYW4gIk9wdGlvbmFsIFByb3BlcnRpZXMiPwo+ID4gCj4gPiBSaWdodCwgdGhl
-IHdob2xlICJwYW5lbCIgc2VjdGlvbiBpcyBrZXB0IHNlcGFyYXRlbHkgaW4gYSBob3BlIHRoYXQg
-Q0RGCj4gPiAob3IgRFJNIG9yIHdoYXRldmVyIDstKSBnZW5lcmljIGRpc3BsYXkgcGlwZWxpbmUg
-YmluZGluZ3Mgd2lsbCBkZXByZWNhdGUKPiA+IGl0LiBTbyB0aGUgZGlzcGxheS10aW1pbmdzIGlz
-IHJlcXVpcmVkIHdoZW4gb3B0aW9uYWwgcGFuZWwgcHJvcGVydGllcwo+ID4gYXJlIHByZXNlbnQu
-IE1heWJlIEkgc2hvdWxkIHNwbGl0IHRoZW0gaW50byBhIHNlcGFyYXRlIHN1Yi1ub2RlPwo+ID4g
-U29tZXRoaW5nIGFsb25nIHRoZXNlIGxpbmVzIChpbmNsdWRpbmcgdGhlIGJhbmR3aWR0aCBleGFt
-cGxlKToKPiAKPiBJIHdvdWxkIGFzc3VtZSB0aGF0IFRGVC12cy1TVE4gaXMgYSBwcmV0dHkgZGly
-ZWN0IHJlcHJlc2VudGF0aW9uIG9mIHRoZQo+IEhXIChJTyBidXMgdG8gcGFuZWwgaW4gcGFydGlj
-dWxhciksIGFuZCBoZW5jZSB3b3VsZG4ndCBiZSByZXBsYWNlZCBieQo+IENERj8gSSB3b3VsZCBl
-eHBlY3QgQ0RGIHRvIHJlcHJlc2VudCB0aGUgbW9yZSBnZW5lcmljIHByb3BlcnRpZXMuIEJ1dCwg
-SQo+IGhhdmVuJ3QgYmVlbiBmb2xsb3dpbmcgQ0RGIHRvbyBjbG9zZWx5LCBzbyBwZXJoYXBzIHRo
-YXQncyBub3QgdHJ1ZS4KCkknbSBub3QgZXhwZWN0aW5nIENERiAqYmluZGluZ3MqIHRvIGNhcnJ5
-IHRoaXMgaW5mb3JtYXRpb24sIG5vLiBJJ20KZXhwZWN0aW5nIENERiBjb3JlIHRvIHByb3ZpZGUg
-bWUgd2l0aCB0aGlzIGRhdGEgaW4gcnVudGltZSAoaGVyZSdzIHRoZQpwYW5lbDsgd2hhdCBraW5k
-IG9mIHBhbmVsIGFyZSB5b3U/IHdoYXQgbW9kZXMgZG8geW91IHByb3ZpZGU/IGV0Yy4pIGFuZAp0
-aGlzIGlzIHdoYXQgbXkgaW5pdGlhbCBleHBlcmltZW50cyB1c2VkLiBUaGUgQ0xDRCBub2RlIG9u
-bHkgaGFkIHRoZQp2aWRlby1yYW0gYW5kIGJhbmR3aWR0aC1saWtlIHByb3BlcnRpZXMgcGx1cyBh
-IHBoYW5kbGUgdG8gdGhlIGRpc3BsYXkuIAoKPiBJZiB5b3UncmUgZXhwZWN0aW5nIHRoaXMgYmlu
-ZGluZyB0byBjaGFuZ2UgaWYvd2hlbiBDREYgYXBwZWFycywgcGVyaGFwcwo+IGl0J2QgYmUgYmV0
-dGVyIHRvIHdhaXQgZm9yIENERiwgb3IgcGxhbiBmb3IgYSBuZXcgY29tcGF0aWJsZSBwcm9wZXJ0
-eSBhdAo+IHRoYXQgdGltZSwgb3IgYWRkIHNvbWUgcHJvcGVydHkgaW5kaWNhdGluZyBvbGQtc3R5
-bGUgY29uZmlndXJhdGlvbiB2cwo+IG5ldy1zdHlsZSBjb25maWd1cmF0aW9uIG9uY2UgQ0RGIGlz
-IHN1cHBvcnRlZD8KCkknbSBleHBlY3RpbmcgdGhlIHBhbmVsIGRlc2NyaXB0aW9uIGluc2lkZSB0
-aGUgQ0xDRCBub2RlIHRvIGJlCmRlcHJlY2F0ZWQsIG5vdCBjaGFuZ2VkLCBieSB0aGUgbXl0aGlj
-YWwgQ0RGLiBBcyB0byB3YWl0aW5nIGZvciBpdC4uLgp3ZWxsLiBJdCdzIGJlZW4gb3ZlciBhIHll
-YXIgc2luY2UgZmlyc3QgcHJvcG9zYWwgKCJnZW5lcmljIHBhbmVsCmZyYW1ld29yayIgYXMgd2Fz
-IGl0IGNhbGxlZCB0aGVuIDstKS4gQW5kIG92ZXIgMiB5ZWFycyBzaW5jZSBWRSBnYWluZWQKIkRU
-IHN1cHBvcnQgZXhjZXB0IGZvciBDTENELCB3aGljaCBzaG91bGQgYmUgcmVhZHkgc29vbiIgOy0p
-IEFuZCB0aGFuIDIKb3IgMyBuZXcgcGxhdGZvcm1zIGhhZCB0byBrZWVwIGF1eGRhdGEgb25seSBm
-b3IgQ0xDRCdzIHNha2UuIFNvLCBzdXJlIC0Kd2UgY2FuIHdhaXQgOi0pCgpQYXdlxYIKCgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+On 09/12/2013 02:26 PM, Vivek Gautam wrote:
+> Hi,
+> 
+> 
+> On Thu, Sep 12, 2013 at 4:34 PM, Roger Quadros <rogerq@ti.com> wrote:
+>> Hi,
+>>
+>> On 09/12/2013 01:47 PM, Vivek Gautam wrote:
+>>> On Thu, Sep 12, 2013 at 4:06 PM, Roger Quadros <rogerq@ti.com> wrote:
+>>>> Hi Kishon,
+>>>>
+>>>> On 09/02/2013 06:43 PM, Kishon Vijay Abraham I wrote:
+>>>>> There can be systems which does not have a external usb_phy, so get
+>>>>> usb_phy only if usb-phy property is added in the case of dt boot or if
+>>>>> platform_data indicates the presence of PHY. Also remove checking if
+>>>>> return value is -ENXIO since it's now changed to always enable usb_phy layer.
+>>>>>
+>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>> ---
+>>>>>  drivers/usb/dwc3/Kconfig         |    1 +
+>>>>>  drivers/usb/dwc3/core.c          |   60 +++++++++++++++++---------------------
+>>>>>  drivers/usb/dwc3/platform_data.h |    1 +
+>>>>>  3 files changed, 28 insertions(+), 34 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+>>>>> index f969ea2..cfc16dd 100644
+>>>>> --- a/drivers/usb/dwc3/Kconfig
+>>>>> +++ b/drivers/usb/dwc3/Kconfig
+>>>>> @@ -2,6 +2,7 @@ config USB_DWC3
+>>>>>       tristate "DesignWare USB3 DRD Core Support"
+>>>>>       depends on (USB || USB_GADGET) && GENERIC_HARDIRQS && HAS_DMA
+>>>>>       depends on EXTCON
+>>>>> +     select USB_PHY
+>>>>>       select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
+>>>>>       help
+>>>>>         Say Y or M here if your system has a Dual Role SuperSpeed
+>>>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>>>> index 474162e..428c29e 100644
+>>>>> --- a/drivers/usb/dwc3/core.c
+>>>>> +++ b/drivers/usb/dwc3/core.c
+>>>>> @@ -387,16 +387,38 @@ static int dwc3_probe(struct platform_device *pdev)
+>>>>>       if (node) {
+>>>>>               dwc->maximum_speed = of_usb_get_maximum_speed(node);
+>>>>>
+>>>>> -             dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
+>>>>> -             dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
+>>>>> +             if (of_property_read_bool(node, "usb-phy")) {
+>>>>> +                     dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev,
+>>>>> +                             "usb-phy", 0);
+>>>>> +                     if (IS_ERR(dwc->usb2_phy))
+>>>>> +                             return PTR_ERR(dwc->usb2_phy);
+>>>>> +                     dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev,
+>>>>> +                             "usb-phy", 1);
+>>>>> +                     if (IS_ERR(dwc->usb3_phy))
+>>>>> +                             return PTR_ERR(dwc->usb3_phy);
+>>>>
+>>>> Some DWC3 instances use only usb2_phy. e.g. on DRA7 the 2nd dwc3 instance doesn't use usb3_phy.
+>>>> This needs to be a valid case and driver shouldn't error out.
+>>>
+>>> So, i think adding flexibility to DWC3 to have either
+>>> usb2-phy/usb3-phy or both of them seems to be valid point.
+>>> Any suggestions ?
+>>>
+>>
+>> For high speed operation we need only usb2_phy but for super speed we need both usb2_phy
+>> and usb3_phy.
+>>
+>> Why would a dwc3 controller use only usb3_phy? A USB3.0 interface has to be compatible with
+>> USB2.0 as well, no?
+> 
+> True and for that reason we need both UTMI+ interface as well as PIPE3
+> interface, right ?
+> But as also mentioned in the thread:
+> https://lkml.org/lkml/2013/9/12/181, on Samsung exynos5
+> architecturally same block is managing UTMI+ and PIPE3 interfaces,
+> which is handled by phy-samsung-usb3 driver and denoted by "usb3_phy:
+> usbphy@12100000" node in "arch/arm/boot/dts/exynos5250.dtsi".
+> 
+> So on exynos5250, DWC3 really needs just usb3-phy, which is compatible
+> for USB 2.0 as well.
+
+I'm not familiar with exynos5250 dwc3, but looking at the dts file I can see both usb3_phy
+and usb2_phy nodes and both are referenced in the dwc3 node.
+
+The ehci and ohci controllers don't reference any PHY.
+
+cheers,
+-roger
