@@ -1,51 +1,92 @@
-From: Afzal Mohammed <afzal@ti.com>
-Subject: Re: [PATCH RFC 0/6] ARM: OMAP2+: AM43x/AM335x prcm reset driver
-Date: Thu, 12 Sep 2013 17:39:34 +0530
-Message-ID: <5231AEFE.5000206@ti.com>
-References: <cover.1378129416.git.afzal@ti.com>
- <1378375634.3948.10.camel@pizza.hi.pengutronix.de> <5228A99D.4020702@ti.com>
- <1378717612.4151.6.camel@pizza.hi.pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1378717612.4151.6.camel@pizza.hi.pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Benoit Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH v2 2/2] regulator: da9210: add Device Tree support
+Date: Thu, 12 Sep 2013 14:28:35 +0200
+Message-ID: <1378988915-10539-3-git-send-email-g.liakhovetski@gmx.de>
+References: <1378988915-10539-1-git-send-email-g.liakhovetski@gmx.de>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1378988915-10539-1-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+This patch adds basic Device Tree support to the da9210 regulator driver -
+with no special properties, since also driver's platform data only contains
+standard regulator initialisation parameters.
 
-On Monday 09 September 2013 02:36 PM, Philipp Zabel wrote:
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+---
 
-> So if I understand correctly, the only problem is that on OMAP the clock
-> needs to be enabled to deassert the reset, but as long as the clock
-> domain is in hardware supervised mode, it won't be enabled?
+v2: add DT documentation
 
-Yes, enabling clock with reset deassertion might not reset the module if
-the clock domain is in hardware supervised mode.
+ .../devicetree/bindings/regulator/da9210.txt       |   21 ++++++++++++++++++++
+ drivers/regulator/da9210-regulator.c               |    9 +++++--
+ 2 files changed, 27 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/da9210.txt
 
-> Would it be possible to create an internal API to switch the clock
-> domain to software supervised mode, which can be used both by the code
-> behind pm_runtime_get_sync and reset_control_deassert?
+diff --git a/Documentation/devicetree/bindings/regulator/da9210.txt b/Documentation/devicetree/bindings/regulator/da9210.txt
+new file mode 100644
+index 0000000..f120f22
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/da9210.txt
+@@ -0,0 +1,21 @@
++* Dialog Semiconductor DA9210 Voltage Regulator
++
++Required properties:
++
++- compatible:	must be "diasemi,da9210"
++- reg:		the i2c slave address of the regulator. It should be 0x68.
++
++Any standard regulator properties can be used to configure the single da9210
++DCDC.
++
++Example:
++
++	da9210@68 {
++		compatible = "diasemi,da9210";
++		reg = <0x68>;
++
++		regulator-min-microvolt = <900000>;
++		regulator-max-microvolt = <1000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
+diff --git a/drivers/regulator/da9210-regulator.c b/drivers/regulator/da9210-regulator.c
+index f0fe54b..f7ccff14 100644
+--- a/drivers/regulator/da9210-regulator.c
++++ b/drivers/regulator/da9210-regulator.c
+@@ -25,6 +25,7 @@
+ #include <linux/slab.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
+ #include <linux/regmap.h>
+ 
+ #include "da9210-regulator.h"
+@@ -126,7 +127,8 @@ static int da9210_i2c_probe(struct i2c_client *i2c,
+ 			    const struct i2c_device_id *id)
+ {
+ 	struct da9210 *chip;
+-	struct da9210_pdata *pdata = i2c->dev.platform_data;
++	struct device *dev = &i2c->dev;
++	struct da9210_pdata *pdata = dev_get_platdata(dev);
+ 	struct regulator_dev *rdev = NULL;
+ 	struct regulator_config config = { };
+ 	int error;
+@@ -147,10 +149,11 @@ static int da9210_i2c_probe(struct i2c_client *i2c,
+ 	}
+ 
+ 	config.dev = &i2c->dev;
+-	if (pdata)
+-		config.init_data = &pdata->da9210_constraints;
++	config.init_data = pdata ? &pdata->da9210_constraints :
++		of_get_regulator_init_data(dev, dev->of_node);
+ 	config.driver_data = chip;
+ 	config.regmap = chip->regmap;
++	config.of_node = dev->of_node;
+ 
+ 	rdev = regulator_register(&da9210_reg, &config);
+ 	if (IS_ERR(rdev)) {
+-- 
+1.7.2.5
 
-I will see if that is acceptable.
-
-Another option that would have to be explored is invoking device_reset()
-(taking care of clear, deassert & status checking as you suggested)
-midway through pm_run_time_get_sync(), when the clockdomain is in
-software supervised mode with reset driver taking care of any particular
-sequence in the case of multiple reset signals, instead of the IP driver
-requiring to take care of it.
-
-Regards
-Afzal
