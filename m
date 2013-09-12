@@ -1,43 +1,72 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Disable I2C controllers by default on
- Exynos5250
-Date: Thu, 12 Sep 2013 17:55:59 +0200
-Message-ID: <1657964.f1bIFjAZ98@amdc1227>
-References: <1378982427-5802-1-git-send-email-broonie@kernel.org>
- <2175767.kktjrZWOAr@amdc1227> <20130912135233.GS29403@sirena.org.uk>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
+Date: Thu, 12 Sep 2013 17:57:00 +0200
+Message-ID: <5231E44C.9070800@ahsoftware.de>
+References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org>
+ <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com>
+ <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com>
+ <344239800.bDEkDg48ZQ@avalon>
+ <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com>
+ <52308C91.2000105@ahsoftware.de> <523096FE.8080901@collabora.co.uk>
+ <5230AB6E.1070807@ahsoftware.de> <5231817F.8000901@ahsoftware.de>
+ <5231934D.4060706@collabora.co.uk> <52319741.5050407@ahsoftware.de>
+ <5231A0F8.1070505@ahsoftware.de> <5231A4FE.1070704@ahsoftware.de>
+ <5231A791.9080600@ahsoftware.de> <5231DB88.90605@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20130912135233.GS29403@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linaro-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5231DB88.90605@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jon Hunter <jgchunter@gmail.com>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 12 of September 2013 14:52:33 Mark Brown wrote:
-> On Thu, Sep 12, 2013 at 02:58:59PM +0200, Tomasz Figa wrote:
-> > On Thursday 12 of September 2013 11:40:27 Mark Brown wrote:
-> Please delete unneeded context from your mails, it makes it much easier
-> to find the new content.
+Am 12.09.2013 17:19, schrieb Stephen Warren:
+>
+> IRQs, DMA channels, and GPIOs are all different things. Their bindings
+> are defined independently. While it's good to define new types of
+> bindings consistently with other bindings, this hasn't always happened,
+> so you can make zero assumptions about the IRQ bindings by reading the
+> documentation for any other kind of binding.
+>
+> Multiple interrupts are defined as follows:
+>
+> 	// Optional; otherwise inherited from parent/grand-parent/...
+> 	interrupt-parent = <&gpio6>;
+> 	// Must be in a fixed order, unless binding defines that the
+> 	// optional interrupt-names property is to be used.
+> 	interrupts = <1 IRQF_TRIGGER_HIGH> <2 IRQF_TRIGGER_LOW>;
+> 	// Optional; binding for device defines whether it must
+> 	// be present
+> 	interrupt-names = "foo", "bar";
+>
+> If you need multiple interrupts, each with a different parent, you need
+> to use an interrupt-map property (Google it for a more complete
+> explanation I guess). Unlike "interrupts", "interrupt-map" has a phandle
+> in each entry, and hence each entry can refer to a different IRQ
+> controller. You end up defining a dummy interrupt controller node (which
+> may be the leaf node with multiple IRQ outputs, which then points at
+> itself as the interrupt parent), pointing the leaf node's
+> interrupt-parent at that node, and then having interrupt-map "demux" the
+> N interrupt outputs to the various interrupt controllers.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+>
 
-I always snip unnecessary parts of quoted message if its really long, but 
-if its length is in acceptable range then I try to keep the whole message 
-just for reference.
+What a mess. I assume that is the price that bindings don't have to change.
 
-> > > +	i2c@12CA0000 {
-> > > +		status = "okay";
-> > 
-> > Hmm, no other properties needed here?
-> 
-> Apparently not, it looks like the binding for the aribtrator doesn't sit
-> as a child of the bus it's arbitrating - this is the controller
-> referenced from the arbitrator node.
+Thanks for clarifying that,
 
-i2c@12CA0000 does look like a normal hardware I2C controller, which needs 
-some extra properties like samsung,i2c-sda-delay or samsung,i2c-max-bus-
-freq. However they are specified in cros5250-common.dtsi, so I'd say that 
-this might be better place for the status override as well.
-
-Best regards,
-Tomasz
+Alexander Holler
