@@ -1,212 +1,61 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
-Date: Thu, 12 Sep 2013 08:28:59 +0200
-Message-ID: <20130912062859.GM30088@pengutronix.de>
-References: <1378958611-4274-1-git-send-email-xobs@kosagi.com>
- <1378958611-4274-4-git-send-email-xobs@kosagi.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys
+ part and Exynos part
+Date: Thu, 12 Sep 2013 12:04:36 +0530
+Message-ID: <5231607C.10702@ti.com>
+References: <002801ce8376$a807dbf0$f81793d0$@samsung.com> <51ED49D6.9050209@ti.com> <000701ce8741$fe47deb0$fad79c10$@samsung.com> <51EE22DF.6090902@ti.com> <001301ce8772$522dfc50$f689f4f0$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1378958611-4274-4-git-send-email-xobs@kosagi.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Sean Cross <xobs@kosagi.com>
-Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <001301ce8772$522dfc50$f689f4f0$@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: 'Pratyush Anand' <pratyush.anand@st.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sean,
+Hi Jingoo,
 
-Several more comments.
+On Tuesday 23 July 2013 12:30 PM, Jingoo Han wrote:
+> On Tuesday, July 23, 2013 3:30 PM, Kishon Vijay Abraham I wrote:
+>> On Tuesday 23 July 2013 06:44 AM, Jingoo Han wrote:
+>>> On Tuesday, July 23, 2013 12:04 AM, Kishon Vijay Abraham I wrote:
+>>>> On Thursday 18 July 2013 10:51 AM, Jingoo Han wrote:
+>>>>> Exynos PCIe IP consists of Synopsys specific part and Exynos
+>>>>> specific part. Only core block is a Synopsys designware part;
+>>>>> other parts are Exynos specific.
+>>>>> Also, the Synopsys designware part can be shared with other
+>>>>> platforms; thus, it can be split two parts such as Synopsys
+>>>>> designware part and Exynos specific part.
+>>>>
+>>>> some more queries and comments..
+>>>
+>> .
+>> .
+>> <snip>
+>> .
+>> .
+>>>>> +			of_pci_range_to_resource(&range, np, &pp->cfg);
+>>>>> +			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
+>>>>> +			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
+>>>>> +		}
+>>>>> +	}
+>>>>> +
+>>>>> +	pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
+>>>>> +				resource_size(&pp->cfg));
+>>>>
+>>>> Why is configuraion space divided into two?
+>>>
+>>> Sorry, I don't know the exact reason. :(
+>>> Pratyush Anand may know about this.
+>>> Pratyush Anand, could you answer the question?
+>>>
+>>> Also, if you find some problems, please let me know.
 
-Shawn,
+One more query..
 
-A question about a clk_set_parent inside.
+Where is inbound translation configuration done in your driver? how should it
+be done?
 
-On Thu, Sep 12, 2013 at 04:03:31AM +0000, Sean Cross wrote:
-> +
-> +#define IMX6_ENTER_RESET 0
-> +#define IMX6_EXIT_RESET 1
-
-These are unused
-
-> +
-> +#define IMX6_POWER_OFF 0
-> +#define IMX6_POWER_ON 1
-
-unused aswell
-
-> +static int pcie_phy_poll_ack(void __iomem *dbi_base, int max_iterations,
-> +			     int exp_val)
-> +{
-> +	u32 val;
-> +	u32 wait_counter = 0;
-> +
-> +	do {
-> +		val = readl(dbi_base + PCIE_PHY_STAT);
-> +		val = (val >> PCIE_PHY_STAT_ACK_LOC) & 0x1;
-> +		wait_counter++;
-> +	} while ((wait_counter < max_iterations) && (val != exp_val));
-
-may_iterations is never something else than 100 so you should drop the
-argument.
-Also I would prefer a real timeout here rather than a counter.
-
-> +
-> +	if (val != exp_val)
-> +		return -1;
-
-By saying "A negative error value" I actually meant one of
-include/uapi/asm-generic/errno*
-
-> +static int pcie_phy_write(void __iomem *dbi_base, int addr, int data)
-> +{
-> +	u32 var;
-> +
-> +	/* write addr */
-> +	/* cap addr */
-> +	if (pcie_phy_wait_ack(dbi_base, addr))
-> +		return -1;
-> +
-> +	var = data << PCIE_PHY_CTRL_DATA_LOC;
-> +	writel(var, dbi_base + PCIE_PHY_CTRL);
-> +
-> +	/* capture data */
-> +	var |= (0x1 << PCIE_PHY_CTRL_CAP_DAT_LOC);
-> +	writel(var, dbi_base + PCIE_PHY_CTRL);
-> +
-> +	/* wait for ack */
-
-Drop this comment.
-
-> +	if (pcie_phy_poll_ack(dbi_base, 100, 1))
-> +		return -1;
-> +
-
-...
-
-> +static int imx6_pcie_deassert_core_reset(struct pcie_port *pp)
-> +{
-> +	int ret;
-> +	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pp);
-> +
-> +	if (imx6_pcie->power_on_gpio >= 0)
-> +		gpio_set_value(imx6_pcie->power_on_gpio, IMX6_POWER_ON);
-
-in probe you used gpio_is_valid(). Why not here?
-
-> +
-> +	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
-> +			IMX6Q_GPR1_PCIE_TEST_PD, 0 << 18);
-> +	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
-> +			IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
-> +
-> +	ret = clk_set_parent(imx6_pcie->lvds1_sel, imx6_pcie->sata_ref);
-> +	if (ret) {
-> +		dev_err(pp->dev, "unable to set lvds1_gate parent\n");
-> +		goto err_set_parent;
-> +	}
-
-I'm unsure this should be done here. Shawn, should we do this in SoC
-code?
-
-> +
-> +	ret = clk_prepare_enable(imx6_pcie->pcie_ref_125m);
-> +	if (ret) {
-> +		dev_err(pp->dev, "unable to enable pcie_ref_125m\n");
-> +		goto err_pcie_ref;
-> +	}
-> +
-> +	ret = clk_prepare_enable(imx6_pcie->lvds1_gate);
-> +	if (ret) {
-> +		dev_err(pp->dev, "unable to enable lvds1_gate\n");
-> +		goto err_lvds1_gate;
-> +	}
-> +
-> +	ret = clk_prepare_enable(imx6_pcie->pcie_axi);
-> +	if (ret) {
-> +		dev_err(pp->dev, "unable to enable pcie_axi\n");
-> +		goto err_pcie_axi;
-> +	}
-> +
-> +	/* allow the clocks to stabilize */
-> +	usleep_range(100, 200);
-> +
-> +	return 0;
-> +
-> +err_pcie_axi:
-> +	clk_disable(imx6_pcie->lvds1_gate);
-
-The counterpart of clk_prepare_enable is clk_disable_unprepare.
-
-> +			return;
-> +		}
-> +	}
-> +
-> +	return;
-
-unnecessary return
-
-> +
-> +	imx6_pcie->power_on_gpio = of_get_named_gpio(np, "power-on-gpio", 0);
-> +	if (gpio_is_valid(imx6_pcie->power_on_gpio))
-> +		devm_gpio_request_one(&pdev->dev, imx6_pcie->power_on_gpio,
-> +				    GPIOF_OUT_INIT_LOW,
-> +				    "PCIe power enable");
-
-devm_gpio_request_one can still fail.
-
-> +
-> +	imx6_pcie->wake_up_gpio = of_get_named_gpio(np, "wake-up-gpio", 0);
-> +	if (gpio_is_valid(imx6_pcie->wake_up_gpio))
-> +		devm_gpio_request_one(&pdev->dev, imx6_pcie->wake_up_gpio,
-> +				    GPIOF_IN,
-> +				    "PCIe wake up");
-> +
-> +	imx6_pcie->disable_gpio = of_get_named_gpio(np, "disable-gpio", 0);
-> +	if (gpio_is_valid(imx6_pcie->disable_gpio))
-> +		devm_gpio_request_one(&pdev->dev, imx6_pcie->disable_gpio,
-> +				    GPIOF_OUT_INIT_HIGH,
-> +				    "PCIe disable endpoint");
-> +
-> +	/* Fetch clocks */
-> +	imx6_pcie->lvds1_sel = clk_get(&pdev->dev, "lvds1_sel");
-> +	if (IS_ERR(imx6_pcie->lvds1_sel)) {
-> +		dev_err(&pdev->dev,
-> +			"lvds1_sel clock missing or invalid\n");
-> +		ret = PTR_ERR(imx6_pcie->lvds1_sel);
-> +		goto err;
-> +	}
-> +
-> +	imx6_pcie->lvds1_gate = clk_get(&pdev->dev, "lvds1_gate");
-> +	if (IS_ERR(imx6_pcie->lvds1_gate)) {
-> +		dev_err(&pdev->dev,
-> +			"lvds1_gate clock select missing or invalid\n");
-> +		ret = PTR_ERR(imx6_pcie->lvds1_gate);
-> +		goto err;
-> +	}
-
-devm_clk_get(). Otherwise you need to release the clock un
-unregister/probe failure.
-
-> +static int __exit imx6_pcie_remove(struct platform_device *pdev)
-> +{
-> +	struct imx6_pcie *imx6_pcie = platform_get_drvdata(pdev);
-> +
-> +	clk_disable_unprepare(imx6_pcie->pcie_axi);
-> +	clk_disable_unprepare(imx6_pcie->lvds1_gate);
-> +	clk_disable_unprepare(imx6_pcie->pcie_ref_125m);
-
-Still no unregister for the pcie controller?
-
-> +
-> +	return 0;
-> +}
-> +
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks
+Kishon
