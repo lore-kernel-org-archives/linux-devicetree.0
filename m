@@ -1,43 +1,53 @@
 From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH 0/2] arm: zynq: Enable global timer
-Date: Thu, 12 Sep 2013 09:50:38 -0700
-Message-ID: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 2/2] arm: zynq: Enable arm_global_timer
+Date: Thu, 12 Sep 2013 09:50:40 -0700
+Message-ID: <1379004640-15117-3-git-send-email-soren.brinkmann@xilinx.com>
+References: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Zynq is based on an ARM Cortex-A9 MPCore, which features the
+arm_global_timer in its SCU. Therefore enable the timer for Zynq.
 
-I'm sitting on this for a while and was waiting for Stephen's patch to
-get merged somewhere. Unfortunately that didn't happen yet.
-The patch to enable the global timer is pretty straight forward.
-Stephen's patch is the result of this thread: https://lkml.org/lkml/2013/7/22/649
-and required to prevent the global_timer from becoming the broadcast
-device, since the system will hang otherwise.
-
-Soren Brinkmann (1):
-  arm: zynq: Enable arm_global_timer
-
-Stephen Boyd (1):
-  tick: broadcast: Deny per-cpu clockevents from being broadcast sources
-
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+---
  arch/arm/boot/dts/zynq-7000.dtsi | 8 ++++++++
  arch/arm/mach-zynq/Kconfig       | 1 +
- kernel/time/tick-broadcast.c     | 3 +++
- 3 files changed, 12 insertions(+)
+ 2 files changed, 9 insertions(+)
 
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index e32b92b..eaacb39 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -92,6 +92,14 @@
+ 			};
+ 		};
+ 
++		global_timer: global_timer@f8f00200 {
++			compatible = "arm,cortex-a9-global-timer";
++			reg = <0xf8f00200 0x20>;
++			interrupts = <1 11 0x301>;
++			interrupt-parent = <&intc>;
++			clocks = <&clkc 4>;
++		};
++
+ 		ttc0: ttc0@f8001000 {
+ 			interrupt-parent = <&intc>;
+ 			interrupts = < 0 10 4 0 11 4 0 12 4 >;
+diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig
+index 04f8a4a..6b04260 100644
+--- a/arch/arm/mach-zynq/Kconfig
++++ b/arch/arm/mach-zynq/Kconfig
+@@ -13,5 +13,6 @@ config ARCH_ZYNQ
+ 	select HAVE_SMP
+ 	select SPARSE_IRQ
+ 	select CADENCE_TTC_TIMER
++	select ARM_GLOBAL_TIMER
+ 	help
+ 	  Support for Xilinx Zynq ARM Cortex A9 Platform
 -- 
 1.8.4
