@@ -1,36 +1,102 @@
-From: Huang Shijie <b32955@freescale.com>
-Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
-Date: Thu, 12 Sep 2013 17:18:23 +0800
-Message-ID: <523186DF.4070203@freescale.com>
-References: <20130905020435.GA3970@gmail.com> <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com> <522817D7.1010206@freescale.com> <522D3B79.3060707@freescale.com> <20130909151450.GI29403@sirena.org.uk> <522EC33B.9000009@freescale.com> <20130910180704.GB29403@sirena.org.uk> <522FD78A.6080900@freescale.com> <20130911104126.GN29403@sirena.org.uk> <52304BFF.4060007@freescale.com> <20130911113002.GP29403@sirena.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 1/5] ARM: add basic Trusted Foundations support
+Date: Thu, 12 Sep 2013 11:18:09 +0200
+Message-ID: <CACRpkdYLbG3uMfces=jv=G+ysqejW5kdLjKwLvNvghPns5RmWA@mail.gmail.com>
+References: <1378351680-14696-1-git-send-email-acourbot@nvidia.com>
+	<1378351680-14696-2-git-send-email-acourbot@nvidia.com>
+	<5228CEDB.1090306@gmail.com>
+	<CAAVeFu+MGGBfmm1jwtKGP_d3EjkLdf5B_E_5RT___PVh1e=8jw@mail.gmail.com>
+	<20130910130431.GE27966@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=GB2312
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130911113002.GP29403@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Huang Shijie <shijie8@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130910130431.GE27966@mudshark.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robherring2@gmail.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Olof Johansson <olof@lixom.net>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-=D3=DA 2013=C4=EA09=D4=C211=C8=D5 19:30, Mark Brown =D0=B4=B5=C0:
-> Indeed - what I was wondering was if those opcodes could be requested
-> from the flash driver rather than coded in there.  The driver needs t=
-o
-> write the commands to the device but it's not clear to me if it reall=
-y
-> needs to know the specific commands.
-yes. The driver uses the commands to find the _right_ LUT index, and
-uses the LUT index to
-trigger the controller.
+On Tue, Sep 10, 2013 at 3:04 PM, Will Deacon <will.deacon@arm.com> wrote:
+> On Mon, Sep 09, 2013 at 07:15:31AM +0100, Alexandre Courbot wrote:
 
-=46or example, LUT0-LUT3 is used for the READ_STATUS, the driver will
-match the
-0 index for the NOR's read status operation (0x05), and then the driver
-write 0 to the QSPI_IPCR
-register to trigger the operation.
+>> I don't have any information about the future of TF unfortunately,
+>> excepted that it should remain backward-compatible. What is this SMC
+>> calling convention doc your are talking about btw? Is there a standard
+>> calling convention defined by ARM?
+>
+> SMC calling convention:
+> https://silver.arm.com/download/download.tm?pv=1435186
 
-thanks
-Huang Shijie
+According to the SMC calling convention r0 should be
+the SMC function identifier.
 
++static void __naked tf_generic_smc(u32 type, u32 subtype, u32 arg)
++{
++       asm volatile(
++               ".arch_extension        sec\n\t"
++               "stmfd  sp!, {r4 - r11, lr}\n\t"
++               __asmeq("%0", "r0")
++               __asmeq("%1", "r1")
++               __asmeq("%2", "r2")
++               "mov    r3, #0\n\t"
++               "mov    r4, #0\n\t"
++               "smc    #0\n\t"
++               "ldmfd  sp!, {r4 - r11, pc}"
++               :
++               : "r" (type), "r" (subtype), "r" (arg)
++               : "memory");
++}
 
+So type == function identifier? Or are these two totally
+different things, such that trusted foundations are already
+a different beast that what the SMC calling convention
+specifies?
+
+Anyway:
+r0,r1,r2 = type/subtype/arg.
+
++#define TF_SET_CPU_BOOT_ADDR_SMC 0xfffff200
+(...)
++static int tf_set_cpu_boot_addr(int cpu, unsigned long boot_addr)
++{
++       tf_generic_smc(TF_SET_CPU_BOOT_ADDR_SMC, boot_addr, 0);
++
++       return 0;
++}
+
+What kind of a "subtype" is the boot address? I could have
+accepted it if the *last* thing, the argument contained the boot
+address. With the type/subtype/arg convention it would be
+more natural if the "subtype" was something like 0.
+
+Should the SMC function rather have this signature:
+
+tf_generic_smc(u32 type, u32 arg1, u32 arg2)
+
+?
+
+Then *sometimes* arg1 is a subtype, if the "type" is
+such that it takes a subtype?
+
+(That's a rough guess.)
+
+So to begin with the arguments to tf_generic_smc() are either
+confusingly named or tf_set_cpu_boot_addr() begins the
+journey with violating the function signature.
+
+I also wonder what kind if "type" starts its enumerator on
+0xfffff200? Wouldn't it be more natural if it was e.g. 1?
+It looks like the TF_SET_CPU_BOOT_ADDR_SMC
+reflects some bit-wise encoding scheme, so some details
+here wouldn't hurt?
+
+The main thing is that the patch has to say that this
+is an API toward trusted foundations, that it has nothing
+to do with the SMC calling conventions, and only pertain
+to devices that use trusted foundations, so as to avoid
+any confusion.
+
+Then I'm game :-)
+
+Yours,
+Linus Walleij
