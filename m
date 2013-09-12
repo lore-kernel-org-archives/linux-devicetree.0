@@ -1,84 +1,49 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: [PATCH 2/3] ARM: dts: Leave Exynos5250 SPI controller disabled by default
-Date: Thu, 12 Sep 2013 11:40:26 +0100
-Message-ID: <1378982427-5802-2-git-send-email-broonie@kernel.org>
-References: <1378982427-5802-1-git-send-email-broonie@kernel.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1378982427-5802-1-git-send-email-broonie@kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linaro-kernel@vger.kernel.org, Mark Brown <broonie@linaro.org>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
+Date: Thu, 12 Sep 2013 12:41:26 +0200
+Message-ID: <20130912104126.GS30088@pengutronix.de>
+References: <1378958611-4274-1-git-send-email-xobs@kosagi.com>
+ <1378958611-4274-4-git-send-email-xobs@kosagi.com>
+ <20130912062859.GM30088@pengutronix.de>
+ <6FF3113C3FCC43A4A0D711C8656A4C03@kosagi.com>
+ <20130912070131.GO30088@pengutronix.de>
+ <65E0D2C79B2B43D28CC77454F44ECCFA@kosagi.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <65E0D2C79B2B43D28CC77454F44ECCFA@kosagi.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Sean Cross <xobs@kosagi.com>
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Mark Brown <broonie@linaro.org>
+On Thu, Sep 12, 2013 at 03:11:45PM +0800, Sean Cross wrote:
+> > Even if it should be configurable I'm still unsure whether this should
+> > be done at pci driver level.
+> 
+> I'm a bit wary of including clock setup like this in the SoC code, as
+> different boards might be different.  If a board designer wants to run
+> LVDS2 to the PCIe slot, that's entirely acceptable.  It might not
+> actually ever get done, but it seems like the sort of board-specific
+> thing that device tree was designed to handle.
 
-Rather than requiring each board to explicitly disable the SPI controllers
-it is not using instead require boards to enable those that they are using.
-This is less work overall since normally at most one of the controllers is
-in use and avoids issues caused by inappropriate pinmuxing.
+The devicetree was designed to handle hardware descriptions, not
+configuration options.
 
-Signed-off-by: Mark Brown <broonie@linaro.org>
----
- arch/arm/boot/dts/exynos5250-smdk5250.dts | 10 ++--------
- arch/arm/boot/dts/exynos5250.dtsi         |  3 +++
- 2 files changed, 5 insertions(+), 8 deletions(-)
+Chosing the clock parent is probably in the grey area between hardware
+description and configuration, so I assume when we find a good reason to
+add this option to the devicetree then it's acceptable to add it there.
 
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index f86d567..67d3c43 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -184,11 +184,9 @@
- 		status = "disabled";
- 	};
- 
--	spi_0: spi@12d20000 {
--		status = "disabled";
--	};
--
- 	spi_1: spi@12d30000 {
-+		status = "okay";
-+
- 		w25q80bw@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -214,10 +212,6 @@
- 		};
- 	};
- 
--	spi_2: spi@12d40000 {
--		status = "disabled";
--	};
--
- 	hdmi {
- 		hpd-gpio = <&gpx3 7 0>;
- 	};
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index c863113..a886ee4 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -344,6 +344,7 @@
- 
- 	spi_0: spi@12d20000 {
- 		compatible = "samsung,exynos4210-spi";
-+		status = "disabled";
- 		reg = <0x12d20000 0x100>;
- 		interrupts = <0 66 0>;
- 		dmas = <&pdma0 5
-@@ -359,6 +360,7 @@
- 
- 	spi_1: spi@12d30000 {
- 		compatible = "samsung,exynos4210-spi";
-+		status = "disabled";
- 		reg = <0x12d30000 0x100>;
- 		interrupts = <0 67 0>;
- 		dmas = <&pdma1 5
-@@ -374,6 +376,7 @@
- 
- 	spi_2: spi@12d40000 {
- 		compatible = "samsung,exynos4210-spi";
-+		status = "disabled";
- 		reg = <0x12d40000 0x100>;
- 		interrupts = <0 68 0>;
- 		dmas = <&pdma0 7
+But we shouldn't add this option for something that, as you say, 'might
+not actually ever get done'. Just hardcode the clock selection in SoC
+code for now. If someone ever finds the good reason to make this configurable
+then he will speak up and we can discuss this again.
+
+Sascha
+
 -- 
-1.8.4.rc3
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
