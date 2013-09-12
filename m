@@ -1,47 +1,50 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [RFC PATCH 1/4] DRIVERS: IRQCHIP: Add crossbar irqchip driver
-Date: Fri, 13 Sep 2013 00:12:24 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1309130010110.4089@ionos.tec.linutronix.de>
-References: <1379000351-15672-1-git-send-email-r.sricharan@ti.com> <1379000351-15672-2-git-send-email-r.sricharan@ti.com> <20130912205417.GA539@radagast> <alpine.DEB.2.02.1309122334370.4089@ionos.tec.linutronix.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] video: ARM CLCD: Add DT support
+Date: Thu, 12 Sep 2013 16:19:45 -0600
+Message-ID: <52323E01.2070902@wwwdotorg.org>
+References: <1378488201-21146-1-git-send-email-pawel.moll@arm.com>  <522BAED9.4020301@gmail.com> <1378725559.4082.28.camel@hornet>  <522F91F8.6010207@gmail.com> <1378907036.4082.105.camel@hornet>  <5230DD1C.6060606@gmail.com> <1378999425.13571.54.camel@hornet> <1379009416.13571.68.camel@hornet>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1309122334370.4089-3cz04HxQygjZikZi3RtOZ1XZhhPuCNm+@public.gmane.org>
+In-Reply-To: <1379009416.13571.68.camel@hornet>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Sep 2013, Thomas Gleixner wrote:
-
-> On Thu, 12 Sep 2013, Felipe Balbi wrote:
+On 09/12/2013 12:10 PM, Pawel Moll wrote:
+> On Thu, 2013-09-12 at 16:23 +0100, Pawel Moll wrote:
+>> Anyway, I think I've got an idea how to render the problem custom panel
+>> properties invalid. If so, I'll send another version of the patch.
 > 
-> > On Thu, Sep 12, 2013 at 09:09:08PM +0530, Sricharan R wrote:
-> > > +unsigned int crossbar_request_irq(struct irq_data *d)
-> > > +{
-> > > +	int cb_no = d->hwirq;
-> > > +	int virq = allocate_free_irq(cb_no);
-> > > +	void *irq = &cb->crossbar_map[cb_no].hwirq;
-> > > +	int err;
-> > > +
-> > > +	err = request_threaded_irq(virq, crossbar_irq, NULL,
-> > > +				   0, "CROSSBAR", irq);
-> > 
-> > this is wrong, why don't you just set crossbar up as a chained handler.
+> So, instead of describing the panel I thought I'd go lower level and try
+> to describe the CLCD's signal functions. It gets down to something like
+> this:
 > 
-> That's just a detail, which does not solve the underlying problem of
-> the crossbar -> GIC mapping.
+> 8<----
+> - arm,pl11x,panel-data-pads: array of 24 cells, each of them describing
+> 				a function of one of the CLD pads,
+> 				starting from 0 up to 23; each pad can
+> 				be described by one of the following values:
+> 	- 0: reserved (not connected)
+> 	- 0x100-0x107: color upper STN panel data 0 to 7
+...
+> Such approach would also solve problem with bizarre cases like the
+> Versatile's (not Express ;-) muxer Russell mentioned (where there is a
+> de-facto custom wiring used). And no, I had a look at pinmux bindings
+> and I don't think they fit here at all...
+> 
+> Thoughts?
 
-And actually the thing is the other way round:
-
-GIC distributes to crossbar, so the underlying GIC irq would be the
-chained handler.
-
-Still does not solve the setup/request_irq issue.
-
-Thanks,
-
-	tglx
+I think pinctrl would work just fine here. However, I suspect there's
+little need for pinctrl. pinctrl is required when one module may impose
+requirements on another module's muxable pins. I assume that the
+configuration for pins on CLCD is only relevant for CLCD itself, so
+there's no need to export an interface by which something else can
+configure the pins. Now, if any of the pins could be e.g. "GPIO", then
+this argument might not apply. Hence, I think pinctrl is only "possible"
+here, not "required", and the approach above seems fine to me.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
