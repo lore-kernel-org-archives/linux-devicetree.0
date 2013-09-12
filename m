@@ -1,74 +1,98 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
-Date: Thu, 12 Sep 2013 11:04:46 -0700
-Message-ID: <CAOesGMhN0jEx065cpf989P-JbuxPiOaPRsP4BD3VoW-n5ebP+w@mail.gmail.com>
-References: <1379003839-16068-1-git-send-email-galak@codeaurora.org>
-	<CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com>
-	<25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org>
-	<CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com>
-	<3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH 1/2] video: ARM CLCD: Add DT support
+Date: Thu, 12 Sep 2013 19:10:16 +0100
+Message-ID: <1379009416.13571.68.camel@hornet>
+References: <1378488201-21146-1-git-send-email-pawel.moll@arm.com>
+ <522BAED9.4020301@gmail.com> <1378725559.4082.28.camel@hornet>
+ <522F91F8.6010207@gmail.com> <1378907036.4082.105.camel@hornet>
+ <5230DD1C.6060606@gmail.com> <1378999425.13571.54.camel@hornet>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1378999425.13571.54.camel@hornet>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 10:55 AM, Kumar Gala <galak@codeaurora.org> wrote:
->
-> On Sep 12, 2013, at 12:06 PM, Olof Johansson wrote:
->
->> On Thu, Sep 12, 2013 at 9:53 AM, Kumar Gala <galak@codeaurora.org> wrote:
->>>
->>> On Sep 12, 2013, at 11:46 AM, Olof Johansson wrote:
->>>
->>>> On Thu, Sep 12, 2013 at 9:37 AM, Kumar Gala <galak@codeaurora.org> wrote:
->>>>> Use the Qualcomm vendor prefix (qcom) as the directory name for
->>>>> Qualcomm MSM devicetrees going forward.
->>>>>
->>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
->>>>
->>>> Let's not move just one platform like this. If we are to do this, we
->>>> should move everything, and that will be really painful and needs to
->>>> be done in a controlled manner, probably scripted and right before a
->>>> -rc1 or such.
->>>
->>>
->>> Than I suggest we deal with it when we pull the device trees out of the kernel tree.
->>>
->>> As such, I'd tell Rohit to go forward with the file being named apq8074-dragonboard.dtb for the time being.
->>
->> My original request to please use a common prefix for your product
->> families stands. Please prefix with msm-*, or if you have to, qcom-*
->> instead, since you guys can't seem to make your mind up on standard
->> prefixes (msm, apq, etc).
->
-> This is silly, I dont see the reason to go with qcom-apq<SOC>-<BOARD>.dts and than in the future drop qcom- when we mostly likely shift to a dir structure.
->
-> As engineers we are all too aware of the lack of sanity in marketing names, but its what we have so we have to live with it.
-
-And we all have a choice whether we let the marketing people's
-insanity spread into our engineering projects, or if we keep it as
-sane as possible in spite of them.
-
-I wouldn't have an objection here if there was some sort of rationale
-between what "apq" and "msm" means. But it seems like qualcomm rolls a
-dice and decides if a platform will have one name or the other.
-Dragonboard dmesg says msm<foo>. DTS file for the same board says apq.
-DTSI file says one thing, overridden by the dts to something else.
-Total chaos.
-
-I would be fine with adding two instead of one (after all, platforms
-like TI has this for AM* vs OMAP*, etc), but there _has_ to be some
-sort of consistency or you might just as well assign a random string
-as name.
-
-So, if you can't come up with a reasonable, rational and consistent
-naming scheme (which, apparantly, you can't since your marketing guys
-are in control of this and they don't get it right), then at least
-prefix with a common string for the platform. That's all I'm asking.
-
-
--Olof
+T24gVGh1LCAyMDEzLTA5LTEyIGF0IDE2OjIzICswMTAwLCBQYXdlbCBNb2xsIHdyb3RlOgo+IEFu
+eXdheSwgSSB0aGluayBJJ3ZlIGdvdCBhbiBpZGVhIGhvdyB0byByZW5kZXIgdGhlIHByb2JsZW0g
+Y3VzdG9tIHBhbmVsCj4gcHJvcGVydGllcyBpbnZhbGlkLiBJZiBzbywgSSdsbCBzZW5kIGFub3Ro
+ZXIgdmVyc2lvbiBvZiB0aGUgcGF0Y2guCgpTbywgaW5zdGVhZCBvZiBkZXNjcmliaW5nIHRoZSBw
+YW5lbCBJIHRob3VnaHQgSSdkIGdvIGxvd2VyIGxldmVsIGFuZCB0cnkKdG8gZGVzY3JpYmUgdGhl
+IENMQ0QncyBzaWduYWwgZnVuY3Rpb25zLiBJdCBnZXRzIGRvd24gdG8gc29tZXRoaW5nIGxpa2UK
+dGhpczoKCjg8LS0tLQotIGFybSxwbDExeCxwYW5lbC1kYXRhLXBhZHM6IGFycmF5IG9mIDI0IGNl
+bGxzLCBlYWNoIG9mIHRoZW0gZGVzY3JpYmluZwoJCQkJYSBmdW5jdGlvbiBvZiBvbmUgb2YgdGhl
+IENMRCBwYWRzLAoJCQkJc3RhcnRpbmcgZnJvbSAwIHVwIHRvIDIzOyBlYWNoIHBhZCBjYW4KCQkJ
+CWJlIGRlc2NyaWJlZCBieSBvbmUgb2YgdGhlIGZvbGxvd2luZyB2YWx1ZXM6CgktIDA6IHJlc2Vy
+dmVkIChub3QgY29ubmVjdGVkKQoJLSAweDEwMC0weDEwNzogY29sb3IgdXBwZXIgU1ROIHBhbmVs
+IGRhdGEgMCB0byA3CgktIDB4MTEwLTB4MTE3OiBjb2xvciBsb3dlciBTVE4gcGFuZWwgZGF0YSAw
+IHRvIDcKCS0gMHgyMDAtMHgyMDc6IG1vbm8gdXBwZXIgU1ROIHBhbmVsIGRhdGEgMCB0byA3Cgkt
+IDB4MjEwLTB4MjE3OiBtb25vIGxvd2VyIFNUTiBwYW5lbCBkYXRhIDAgdG8gNwoJLSAweDMwMC0w
+eDMwNzogcmVkIGNvbXBvbmVudCBiaXQgMCB0byA3IG9mIFRGVCBwYW5lbCBkYXRhCgktIDB4MzEw
+LTB4MzE3OiBncmVlbiBjb21wb25lbnQgYml0IDAgdG8gNyBvZiBURlQgcGFuZWwgZGF0YQoJLSAw
+eDMyMC0weDMyNzogYmx1ZSBjb21wb25lbnQgYml0IDAgdG8gNyBvZiBURlQgcGFuZWwgZGF0YQoJ
+LSAweDMzMDogaW50ZW5zaXR5IGJpdCBvZiBURlQgcGFuZWwgZGF0YQoJCQkJRXhhbXBsZSBzZXQg
+b2YgdmFsdWVzIGZvciBzdGFuZGFyZAoJCQkJcGFuZWwgaW50ZXJmYWNlczoKCS0gUEwxMTAgc2lu
+Z2xlIGNvbG91ciBTVE4gcGFuZWw6CgkJCTwweDEwNyAweDEwNiAweDEwNSAweDEwNCAweDEwMyAw
+eDEwMiAweDEwMSAweDEwMD4sCgkJCTwwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwPjsK
+CS0gUEwxMTAgZHVhbCBjb2xvdXIgU1ROIHBhbmVsOgoJCQk8MHgxMDcgMHgxMDYgMHgxMDUgMHgx
+MDQgMHgxMDMgMHgxMDIgMHgxMDEgMHgxMDA+LAoJCQk8MHgxMTcgMHgxMTYgMHgxMTUgMHgxMTQg
+MHgxMTMgMHgxMTIgMHgxMTEgMHgxMTA+LAoJCQk8MCAwIDAgMCAwIDAgMCAwPjsKCS0gUEwxMTAg
+c2luZ2xlIG1vbm8gNC1iaXQgU1ROIHBhbmVsOgoJCQk8MHgyMDMgMHgyMDIgMHgyMDEgMHgyMDA+
+LAoJCQk8MCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwPjsKCS0gUEwxMTAg
+ZHVhbCBtb25vIDQtYml0IFNUTiBwYW5lbDoKCQkJPDB4MjAzIDB4MjAyIDB4MjAxIDB4MjAwPiwg
+PDAgMCAwIDA+LAoJCQk8MHgyMTMgMHgyMTIgMHgyMTEgMHgyMTA+LAoJCQk8MCAwIDAgMCAwIDAg
+MCAwIDAgMCAwIDA+OwoJLSBQTDExMCBzaW5nbGUgbW9ubyA4LWJpdCBTVE4gcGFuZWw6CgkJCTww
+eDIwNyAweDIwNiAweDIwNSAweDIwNCAweDIwMyAweDIwMiAweDIwMSAweDIwMD4sCgkJCTwwIDAg
+MCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwPjsKCS0gUEwxMTAgZHVhbCBtb25vIDgtYml0IFNU
+TiBwYW5lbDoKCQkJPDB4MjA3IDB4MjA2IDB4MjA1IDB4MjA0IDB4MjAzIDB4MjAyIDB4MjAxIDB4
+MjAwPiwKCQkJPDB4MjE3IDB4MjE2IDB4MjE1IDB4MjE0IDB4MjEzIDB4MjEyIDB4MjExIDB4MjEw
+PiwKCQkJPDAgMCAwIDAgMCAwIDAgMD47CgktIFBMMTEwIFRGVCAoMTopNTo1OjUgcGFuZWw6CgkJ
+CTwweDMzMCAweDMwMCAweDMwMSAweDMwMiAweDMwMyAweDMwND4sCgkJCTwweDMzMCAweDMxMCAw
+eDMxMSAweDMxMiAweDMxMyAweDMxND4sCgkJCTwweDMzMCAweDMyMCAweDMyMSAweDMyMiAweDMy
+MyAweDMyND4sCgkJCTwwIDAgMCAwIDAgMD4KCS0gUEwxMTAgYW5kIFBMMTExIFRGVCBSR0IgODg4
+IHBhbmVsOgoJCQk8MHgzMDAgMHgzMDEgMHgzMDIgMHgzMDMgMHgzMDQgMHgzMDUgMHgzMDYgMHgz
+MDc+LAoJCQk8MHgzMTAgMHgzMTEgMHgzMTIgMHgzMTMgMHgzMTQgMHgzMTUgMHgzMTYgMHgzMTc+
+LAoJCQk8MHgzMjAgMHgzMjEgMHgzMjIgMHgzMjMgMHgzMjQgMHgzMjUgMHgzMjYgMHgzMjc+OwoJ
+LSBQTDExMSBzaW5nbGUgY29sb3VyIFNUTiBwYW5lbDoKCQkJPDB4MTAwIDB4MTAxIDB4MTAyIDB4
+MTAzIDB4MTA0IDB4MTA1IDB4MTA2IDB4MTA3PiwKCQkJPDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAw
+IDAgMCAwIDA+OwoJLSBQTDExMSBkdWFsIGNvbG91ciBTVE4gcGFuZWw6CgkJCTwweDEwMCAweDEw
+MSAweDEwMiAweDEwMyAweDEwNCAweDEwNSAweDEwNiAweDEwNz4sCgkJCTwweDExMCAweDExMSAw
+eDExMiAweDExMyAweDExNCAweDExNSAweDExNiAweDExNz4sCgkJCTwwIDAgMCAwIDAgMCAwIDA+
+OwoJLSBQTDExMSBzaW5nbGUgbW9ubyA0LWJpdCBTVE4gcGFuZWw6CgkJCTwweDIwMCAweDIwMSAw
+eDIwMiAweDIwMz4sCgkJCTwwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDA+
+OwoJLSBQTDExMSBkdWFsIG1vbm8gNC1iaXQgU1ROIHBhbmVsOgoJCQk8MHgyMDAgMHgyMDEgMHgy
+MDIgMHgyMDM+LCA8MCAwIDAgMD4sCgkJCTwweDIxMCAweDIxMSAweDIxMiAweDIxMz4sCgkJCTww
+IDAgMCAwIDAgMCAwIDAgMCAwIDAgMD47CgktIFBMMTExIHNpbmdsZSBtb25vIDgtYml0IFNUTiBw
+YW5lbDoKCQkJPDB4MjAwIDB4MjAxIDB4MjAyIDB4MjAzIDB4MjA0IDB4MjA1IDB4MjA2IDB4MjA3
+PiwKCQkJPDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDA+OwoJLSBQTDExMSBkdWFsIG1v
+bm8gOC1iaXQgU1ROIHBhbmVsOgoJCQk8MHgyMDAgMHgyMDEgMHgyMDIgMHgyMDMgMHgyMDQgMHgy
+MDUgMHgyMDYgMHgyMDc+LAoJCQk8MHgyMTAgMHgyMTEgMHgyMTIgMHgyMTMgMHgyMTQgMHgyMTUg
+MHgyMTYgMHgyMTc+LAoJCQk8MCAwIDAgMCAwIDAgMCAwPjsKCS0gUEwxMTEgVEZUIDQ6NDo0IHBh
+bmVsOgoJCQk8MCAwIDAgMD4sIDwweDMwMCAweDMwMSAweDMwMiAweDMwMz4sCgkJCTwwIDAgMCAw
+PiwgPDB4MzEwIDB4MzExIDB4MzEyIDB4MzEzPiwKCQkJPDAgMCAwIDA+LCA8MHgzMjAgMHgzMjEg
+MHgzMjIgMHgzMjM+OwoJLSBQTDExMSBURlQgNTo2OjUgcGFuZWw6CgkJCTwwIDAgMD4sIDwweDMw
+MCAweDMwMSAweDMwMiAweDMwMyAweDMwND4sCgkJCTwwIDA+LCA8MHgzMTAgMHgzMTEgMHgzMTIg
+MHgzMTMgMHgzMTQgMHgzMTU+LAoJCQk8MCAwIDA+LCA8MHgzMjAgMHgzMjEgMHgzMjIgMHgzMjMg
+MHgzMjQ+OwoJLSBQTDExMSBURlQgKDEpOjU6NTo1IHBhbmVsOgoJCQk8MCAwIDA+LCA8MHgzMDAg
+MHgzMDEgMHgzMDIgMHgzMDMgMHgzMDQ+LAoJCQk8MCAwPiwgPDB4MzMwIDB4MzEwIDB4MzExIDB4
+MzEyIDB4MzEzIDB4MzE0PiwKCQkJPDAgMCAwPiwgPDB4MzIwIDB4MzIxIDB4MzIyIDB4MzIzIDB4
+MzI0PjsKODwtLS0tCgpPZiBjb3Vyc2UgdGhlIGV4YW1wbGVzIGFib3ZlIGNvdWxkIGJlICNkZWZp
+bmVkLgoKU3VjaCBhcHByb2FjaCB3b3VsZCBhbHNvIHNvbHZlIHByb2JsZW0gd2l0aCBiaXphcnJl
+IGNhc2VzIGxpa2UgdGhlClZlcnNhdGlsZSdzIChub3QgRXhwcmVzcyA7LSkgbXV4ZXIgUnVzc2Vs
+bCBtZW50aW9uZWQgKHdoZXJlIHRoZXJlIGlzIGEKZGUtZmFjdG8gY3VzdG9tIHdpcmluZyB1c2Vk
+KS4gQW5kIG5vLCBJIGhhZCBhIGxvb2sgYXQgcGlubXV4IGJpbmRpbmdzCmFuZCBJIGRvbid0IHRo
+aW5rIHRoZXkgZml0IGhlcmUgYXQgYWxsLi4uCgpUaG91Z2h0cz8KClBhd2XFggoKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
