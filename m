@@ -1,52 +1,36 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
-Date: Thu, 12 Sep 2013 10:55:27 +0200
-Message-ID: <5231817F.8000901@ahsoftware.de>
-References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com> <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com> <344239800.bDEkDg48ZQ@avalon> <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com> <52308C91.2000105@ahsoftware.de> <523096FE.8080901@collabora.co.uk> <5230AB6E.1070807@ahsoftware.de>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Thu, 12 Sep 2013 17:18:23 +0800
+Message-ID: <523186DF.4070203@freescale.com>
+References: <20130905020435.GA3970@gmail.com> <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com> <522817D7.1010206@freescale.com> <522D3B79.3060707@freescale.com> <20130909151450.GI29403@sirena.org.uk> <522EC33B.9000009@freescale.com> <20130910180704.GB29403@sirena.org.uk> <522FD78A.6080900@freescale.com> <20130911104126.GN29403@sirena.org.uk> <52304BFF.4060007@freescale.com> <20130911113002.GP29403@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5230AB6E.1070807@ahsoftware.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Content-Type: text/plain; charset=GB2312
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130911113002.GP29403@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Huang Shijie <shijie8@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 11.09.2013 19:42, schrieb Alexander Holler:
-> Am 11.09.2013 18:14, schrieb Javier Martinez Canillas:
+=D3=DA 2013=C4=EA09=D4=C211=C8=D5 19:30, Mark Brown =D0=B4=B5=C0:
+> Indeed - what I was wondering was if those opcodes could be requested
+> from the flash driver rather than coded in there.  The driver needs t=
+o
+> write the commands to the device but it's not clear to me if it reall=
+y
+> needs to know the specific commands.
+yes. The driver uses the commands to find the _right_ LUT index, and
+uses the LUT index to
+trigger the controller.
 
->> So for example in an OMAP board DT you can define something like this:
->>
->> ethernet@5,0 {
->>          compatible = "smsc,lan9221", "smsc,lan9115";
->>          interrupt-parent = <&gpio6>;
->>          interrupts = <16 8>;
->> };
->>
->> Since each OMAP GPIO bank has 32 GPIO pins, then what you are defining
->> is that
->> the GPIO 176 (5 * 32 + 16) will be mapped as the IRQ line for the
->> ethernet
->> controller.
+=46or example, LUT0-LUT3 is used for the READ_STATUS, the driver will
+match the
+0 index for the NOR's read status operation (0x05), and then the driver
+write 0 to the QSPI_IPCR
+register to trigger the operation.
 
-By the way, how do you define two GPIOs/IRQs from different
-gpio-banks/irq-controllers wuth that scheme?
+thanks
+Huang Shijie
 
-Would that be like below?
 
- ethernet@5,0 {
-          compatible = "smsc,lan9221", "smsc,lan9115";
-          interrupt-parent = <&gpio6>;
-          interrupts = <16 8>;
-          interrupt-parent = <&gpio7>;
-          interrupts = <1 IRQF_TRIGGER_FALLING>; /* GPIO7_1 */
- };
-
-So multiple definitions of interrupt-parent are allowed and the order
-does matter? And such does work? Sorry for asking, but I'm relatively
-new to DT. ;)
-
-Regards,
-
-Alexander Holler
