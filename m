@@ -1,89 +1,70 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2] regulator: core: add support for configuring turn-on
- time through constraints
-Date: Thu, 12 Sep 2013 11:12:29 +0100
-Message-ID: <20130912101229.GD29403@sirena.org.uk>
-References: <1378904331-5665-1-git-send-email-ldewangan@nvidia.com>
- <5230A593.9010401@wwwdotorg.org>
- <5230AC5E.2020504@nvidia.com>
- <5230AC61.30904@wwwdotorg.org>
- <5230B1CE.3090709@nvidia.com>
- <5230AF94.60007@wwwdotorg.org>
+From: Pratyush Anand <pratyush.anand@st.com>
+Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys
+ part and Exynos part
+Date: Thu, 12 Sep 2013 15:48:03 +0530
+Message-ID: <20130912101803.GB5995@pratyush-vbox>
+References: <51ED49D6.9050209@ti.com>
+ <000701ce8741$fe47deb0$fad79c10$@samsung.com>
+ <51EE22DF.6090902@ti.com>
+ <001301ce8772$522dfc50$f689f4f0$@samsung.com>
+ <5231607C.10702@ti.com>
+ <003501ceaf87$cda45db0$68ed1910$%han@samsung.com>
+ <20130912093018.GA2124@pratyush-vbox>
+ <52318CCC.4040604@ti.com>
+ <20130912095213.GA5995@pratyush-vbox>
+ <5231925B.3030104@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E4rQ6ZnlkSybhf/y"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5230AF94.60007@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>
+In-Reply-To: <5231925B.3030104@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 12, 2013 at 06:07:23PM +0800, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Thursday 12 September 2013 03:22 PM, Pratyush Anand wrote:
+> > Hi Kishon,
+> > 
+> > On Thu, Sep 12, 2013 at 05:43:40PM +0800, Kishon Vijay Abraham I wrote:
+> >> Hi,
+> >>
+> >> On Thursday 12 September 2013 03:00 PM, Pratyush Anand wrote:
+> >>> Hi Jingoo,
+> >>>
+> >>>
+> >>> On Thu, Sep 12, 2013 at 03:15:04PM +0800, Jingoo Han wrote:
+> >>>> On Tuesday 23 July 2013 12:30 PM, Kishon Vijay Abraham I wrote:
+> >>>>>>> .
+> >>>>>>> .
 
---E4rQ6ZnlkSybhf/y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[...]
 
-On Wed, Sep 11, 2013 at 11:59:48AM -0600, Stephen Warren wrote:
-> On 09/11/2013 12:09 PM, Laxman Dewangan wrote:
+> >> when I do ifconfig eth0 up, I get *r8169 0000:01:00.0 eth0: link up.*
+> >> But I dont receive any packets and ping also fails and the tx and rx packet
+> >> count is also 0. Could it be related to inbound translation?
+> > 
+> > A PCIe analyser log would tell a definite cause. Most likely either
+> > inbound translation is not working or INTx/MSI is not working.
+> 
+> I have enabled only legacy interrupts. Whenever I connect or disconnect
+> ethernet cable I get link up/link down message and also the interrupt count for
+> eth0 increases. So I'm not doubting INTx interrupts as such.
+> 
+> btw configuring inbound translation once in dw_pcie_host_init enough is it? I
+> mean we use the same registers for configuring outbound translation also no? So
+> doesn't the inbound configuration gets lost?
 
-> >> I suppose that either is fine from a DT perspective. But, the regulator
-> >> drivers already know their internal delay, so presumably driver code
-> >> will have to take the value from DT, and subtract out whatever delay the
-> >> driver already embodies, in order to calculate the extra delay required?
-> >> Or, if this property is set, does the driver-specified delay just get
-> >> ignored?
+No, you write at the same register, but you program direction as
+inbound. There are different resources for each viewport in inbound
+and outbound direction.
 
-> > Yes, if property is available then driver-specified delay get ignored.
-> > Delay will be used from dt provided value.
+Regards
+Pratyush
 
-> I'm not sure whether I prefer one option or the other. Perhaps Mark can
-> decide?
-
-The drivers don't implement their own delays, this is already factored
-out of them into the framework.  It seems simpler from both a user and
-implementation point of view for the delay specified in the DT to just
-completely override what the drivers know.
-
-> That said, what if the internal ramp rate of the regulator itself is
-> configurable, and can change at run-time. Won't that affect the total
-> time? If so, having this property represent the additional time might
-> better allow the total time to be recalculated based on internal
-> regulator ramp delay changes. Perhaps the additional time varies if the
-> internal ramp rate varies though, so perhaps it's not worth thinking
-> about this situation.
-
-There's very little use case for varying the ramp rate from cold at run
-time - it's mostly just used to limit inrush current on initial power
-on.  I think it's OK to just say that if someone specifies a fixed dleay
-and varies the ramp rate then they probably aren't being sensible and
-get to keep all the pieces.
-
-> - regulator-enable-ramp-delay: The time taken, in uSec, for the supply
-
-microseconds.
-
---E4rQ6ZnlkSybhf/y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSMZOKAAoJELSic+t+oim9vPYP/RCOT2PUyiy3Zj0RTK2tfeUf
-H/PUwKA571c7RlbsdtfABTSrPr6C8boLMAmADfoXTBMWUDI5eVOFctZvqCxN+ZoE
-wO9xgSaStIETTsRD5q030dezTZLvxAYSSlE6c+gaQn2yRPjE7eBaMkMJP9zbaEEI
-4lA152wPn+ceSYANvhqkWZcWb6nJnG+URY3EThDzctIfJfqSI0Qo45YEkBDuzyuA
-VdHyXdyONksEDRh/noJcXuE5rWRVW/X5e13BHwX1SljXQ+FdRDb6s2VemJagON9u
-oG61MBnW6JVc0T0figveaCJt200bIMdhGyREh4QmMHySl+o9PZvkx3N5H3YeW7rX
-6FmOzQ0XdHwrmioMUgeVluHE1baVNGuoUiCMduKBX0jDDJ/Ue+GVXErLW0YPPMjO
-fgmncm+MBM592W2MMrNKnbpiTTXUM0MTSXYq6s9sDgmhFYWF7xekwp75jQ5XP20g
-d8XRdBGB/V1ou/sUPM8BblAzIXJ/+vru3g/yNRnJbn2HZy5IE72cq3g7DBwj+9tq
-zwBSIN4SX4eKJI3KEhXiXv0J76hf8rviR7WJnCKzH271qZ8Y0b/hjqy7Sv4RL2EO
-VCgpljjNh2o5/+a/I6oTC2PP19IcYKMisAxDb0eLCu74o8rMQidb+xShkBF+DzY+
-zVDaCtKpqYeV25jf8B3m
-=IZ83
------END PGP SIGNATURE-----
-
---E4rQ6ZnlkSybhf/y--
+> 
+> Thanks
+> Kishon
