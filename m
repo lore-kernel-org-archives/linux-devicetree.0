@@ -1,16 +1,14 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v2 1/2] video: ARM CLCD: Add DT support
-Date: Thu, 12 Sep 2013 16:41:20 +0100
-Message-ID: <20130912154120.GN12758@n2100.arm.linux.org.uk>
-References: <1378808726-32535-1-git-send-email-pawel.moll@arm.com>
- <522F57B9.5000001@wwwdotorg.org> <1378899931.4082.75.camel@hornet>
- <5230AAEB.2030607@wwwdotorg.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 1/4] arm: bone: dts: add CD for mmc1
+Date: Thu, 12 Sep 2013 11:15:58 -0500
+Message-ID: <5231E8BE.7080009@ti.com>
+References: <1379000532-27376-1-git-send-email-koen@dominion.thruhere.net>
+ <1379000532-27376-2-git-send-email-koen@dominion.thruhere.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <5230AAEB.2030607@wwwdotorg.org>
+In-Reply-To: <1379000532-27376-2-git-send-email-koen@dominion.thruhere.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,33 +18,82 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Koen Kooi <koen@dominion.thruhere.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, swarren@wwwdotorg.org, tony@atomide.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, bcousson@baylibre.com, Alexander Holler <holler@ahsoftware.de>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2013 at 11:39:55AM -0600, Stephen Warren wrote:
-> I don't know how constrained of a system CLCD is, but I do know that
-> mode validation is a very complex process in some real-life graphics
-> drivers.
+nitpick minor comment:
+$subject: ARM: dts: am335x-bone: add card detect for mmc1
 
-Apart from maximum memory bus bandwidth, probably maximum output
-bandwidth, maximum resolution (determined by what will fit in the
-registers and RAM) there aren't that much constraints.  The hardware
-block is quite simple in that regard.
+btw, please use V3 in $subject next time. --subject-prefix "PATCH V3"
+when generating patch should do the job.
 
-More the problem is to deal with two situations:
-1. you have a particular panel connected to it which requires a certain
-   fixed timing regime.
-2. you have the CLCD connected to a VGA or HDMI connector where the
-   timing is dependent on the connected display.
+On 09/12/2013 10:42 AM, Koen Kooi wrote:
+> From: Alexander Holler <holler@ahsoftware.de>
+> 
+> This enables the use of MMC cards even when no card was inserted at boot.
+> 
+> Signed-off-by: Alexander Holler <holler@ahsoftware.de>
+> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+> ---
+> 
+> Changes since v2:
+> 	None, again a simple repost
+> 
+> Changes since v1:
+> 	None, simple repost
+> 
+>  arch/arm/boot/dts/am335x-bone-common.dtsi | 14 ++++++++++++++
+>  arch/arm/boot/dts/am335x-bone.dts         |  4 ----
+>  2 files changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> index 2f66ded..ced256c 100644
+> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
+> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> @@ -107,6 +107,11 @@
+>  				0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
+>  			>;
+>  		};
 
-The former would be the subject of some kind of *common* DT
-representation of the timing requirements of the connected panel.
-For the latter, DT needs to specify how the EDID data is retrieved,
-or if there is no mechanism for that, being able to provide a set
-of allowable timing parameters (such as min/max vsync, min/max
-hsync, max dotclock - in other words, the data which used to be
-provided to X11 in the past.)
+An EOL here would be nice to separate the nodes.
 
-None of that is specific to CLCD though: it's the same problem as
-the SA11x0 LCD controller or any other scanned video controller.
+> +		mmc1_pins: pinmux_mmc1_pins {
+> +			pinctrl-single,pins = <
+> +				0x160 (PIN_INPUT | MUX_MODE7) /* GPIO0_6 */
+> +			>;
+> +		};
+>  	};
+>  
+>  	ocp {
+> @@ -260,3 +265,12 @@
+>  	pinctrl-0 = <&davinci_mdio_default>;
+>  	pinctrl-1 = <&davinci_mdio_sleep>;
+>  };
+> +
+> +&mmc1 {
+> +	status = "okay";
+> +	vmmc-supply = <&ldo3_reg>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc1_pins>;
+> +	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
+> +	cd-inverted;
+> +};
+> diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+> index d5f43fe..d34469c 100644
+> --- a/arch/arm/boot/dts/am335x-bone.dts
+> +++ b/arch/arm/boot/dts/am335x-bone.dts
+> @@ -16,7 +16,3 @@
+>  	regulator-always-on;
+>  };
+>  
+> -&mmc1 {
+> -	status = "okay";
+> -	vmmc-supply = <&ldo3_reg>;
+> -};
+> 
+
+
+-- 
+Regards,
+Nishanth Menon
