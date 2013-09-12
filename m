@@ -1,102 +1,361 @@
-From: Tang Yuantian-B29983 <B29983@freescale.com>
-Subject: RE: [PATCH v4] powerpc/mpc85xx: Update the clock device tree nodes
-Date: Thu, 12 Sep 2013 01:31:49 +0000
-Message-ID: <D07C73A334FF604B95B3CBD2A545D07B150748AA@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1378882632-9053-1-git-send-email-Yuantian.Tang@freescale.com>
- <1378948229.12204.486.camel@snotra.buserror.net>
+From: Milo Kim <milo.kim@ti.com>
+Subject: [PATCH v3 1/4] mfd: add LP3943 MFD driver
+Date: Thu, 12 Sep 2013 10:32:04 +0900
+Message-ID: <1378949524-6143-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1378948229.12204.486.camel@snotra.buserror.net>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Wood Scott-B07421 <B07421@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Li Yang-Leo-R58472 <r58472@freescale.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Milo Kim <milo.kim@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIx
-DQo+IFNlbnQ6IDIwMTPlubQ55pyIMTLml6Ug5pif5pyf5ZubIDk6MTANCj4gVG86IFRhbmcgWXVh
-bnRpYW4tQjI5OTgzDQo+IENjOiBnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnOyBsaW51eHBwYy1k
-ZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IExpIFlh
-bmctTGVvLVI1ODQ3Mg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0XSBwb3dlcnBjL21wYzg1eHg6
-IFVwZGF0ZSB0aGUgY2xvY2sgZGV2aWNlIHRyZWUNCj4gbm9kZXMNCj4gDQo+IE9uIFdlZCwgMjAx
-My0wOS0xMSBhdCAxNDo1NyArMDgwMCwgWXVhbnRpYW4uVGFuZ0BmcmVlc2NhbGUuY29tIHdyb3Rl
-Og0KPiA+IEZyb206IFRhbmcgWXVhbnRpYW4gPHl1YW50aWFuLnRhbmdAZnJlZXNjYWxlLmNvbT4N
-Cj4gPg0KPiA+IFRoZSBmb2xsb3dpbmcgU29DcyB3aWxsIGJlIGFmZmVjdGVkOiBwMjA0MSwgcDMw
-NDEsIHA0MDgwLCBwNTAyMCwNCj4gPiBwNTA0MCwgYjQ0MjAsIGI0ODYwLCB0NDI0MA0KPiA+DQo+
-ID4gU2lnbmVkLW9mZi1ieTogVGFuZyBZdWFudGlhbiA8WXVhbnRpYW4uVGFuZ0BmcmVlc2NhbGUu
-Y29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IExpIFlhbmcgPGxlb2xpQGZyZWVzY2FsZS5jb20+DQo+
-ID4gLS0tDQo+ID4gdjQ6DQo+ID4gCS0gYWRkIGJpbmRpbmcgZG9jdW1lbnQNCj4gPiAJLSB1cGRh
-dGUgY29tcGF0aWJsZSBzdHJpbmcNCj4gPiAJLSB1cGRhdGUgdGhlIHJlZyBwcm9wZXJ0eQ0KPiA+
-IHYzOg0KPiA+IAktIGZpeCB0eXBvDQo+ID4gdjI6DQo+ID4gCS0gYWRkIHQ0MjQwLCBiNDQyMCwg
-YjQ4NjAgc3VwcG9ydA0KPiA+IAktIHJlbW92ZSBwbGwvNCBjbG9jayBmcm9tIHAyMDQxLCBwMzA0
-MSBhbmQgcDUwMjAgYm9hcmQNCj4gPg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9j
-ay9jb3JlbmV0LWNsb2NrLnR4dCAgICB8ICA4MA0KPiArKysrKysrKysrKysrKysNCj4gPiAgYXJj
-aC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDQyMHNpLXBvc3QuZHRzaSAgICAgICAgfCAgMzQgKysr
-KysrLQ0KPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0NDIwc2ktcHJlLmR0c2kgICAg
-ICAgICB8ICAgMiArDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ4NjBzaS1wb3N0
-LmR0c2kgICAgICAgIHwgIDM0ICsrKysrKy0NCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
-bC9iNDg2MHNpLXByZS5kdHNpICAgICAgICAgfCAgIDQgKw0KPiA+ICBhcmNoL3Bvd2VycGMvYm9v
-dC9kdHMvZnNsL3AyMDQxc2ktcG9zdC5kdHNpICAgICAgICB8ICA1OSArKysrKysrKysrLQ0KPiA+
-ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AyMDQxc2ktcHJlLmR0c2kgICAgICAgICB8ICAg
-NCArDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kgICAg
-ICAgIHwgIDU5ICsrKysrKysrKystDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMw
-NDFzaS1wcmUuZHRzaSAgICAgICAgIHwgICA0ICsNCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
-L2ZzbC9wNDA4MHNpLXBvc3QuZHRzaSAgICAgICAgfCAxMTENCj4gKysrKysrKysrKysrKysrKysr
-KystDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDQwODBzaS1wcmUuZHRzaSAgICAg
-ICAgIHwgICA4ICsrDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0
-LmR0c2kgICAgICAgIHwgIDQxICsrKysrKystDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9m
-c2wvcDUwMjBzaS1wcmUuZHRzaSAgICAgICAgIHwgICAyICsNCj4gPiAgYXJjaC9wb3dlcnBjL2Jv
-b3QvZHRzL2ZzbC9wNTA0MHNpLXBvc3QuZHRzaSAgICAgICAgfCAgNTkgKysrKysrKysrKy0NCj4g
-PiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNpLXByZS5kdHNpICAgICAgICAgfCAg
-IDQgKw0KPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwc2ktcG9zdC5kdHNpICAg
-ICAgICB8ICA4NA0KPiArKysrKysrKysrKysrKystDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0
-cy9mc2wvdDQyNDBzaS1wcmUuZHRzaSAgICAgICAgIHwgIDEyICsrKw0KPiA+ICAxNyBmaWxlcyBj
-aGFuZ2VkLCA1OTMgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+
-ID4gMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jb3JlbmV0
-LWNsb2NrLnR4dA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9jbG9jay9jb3JlbmV0LWNsb2NrLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2NvcmVuZXQtY2xvY2sudHh0DQo+ID4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi41MWVhYjc1DQo+ID4gLS0tIC9kZXYvbnVs
-bA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jb3Jl
-bmV0LWNsb2NrLnR4dA0KPiA+IEBAIC0wLDAgKzEsODAgQEANCj4gPiArRGV2aWNlIFRyZWUgQ2xv
-Y2sgYmluZGluZ3MgZm9yIEZyZWVzY2FsZSBQb3dlclBDIGNvcmVuZXQgcGxhdGZvcm0NCj4gPiAr
-DQo+ID4gK1RoaXMgYmluZGluZyB1c2VzIHRoZSBjb21tb24gY2xvY2sgYmluZGluZ1sxXS4NCj4g
-PiArDQo+ID4gK1sxXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xv
-Y2stYmluZGluZ3MudHh0DQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICst
-IGNvbXBhdGlibGUgOiBzaGFsbCBiZSBvbmUgb3IgbW9yZSBvZiB0aGUgZm9sbG93aW5nOg0KPiAN
-Cj4gU2hhbGwgaW5jbHVkZS4uLg0KPiANCj4gPiArCS0gImZzbCw8Y2hpcD4tY2xvY2tnZW4iOiBm
-b3IgY2hpcCBzcGVjaWZpYyBjbG9jayBibG9jaw0KPiA+ICsJLSAiZnNsLHFvcmlxLWNsb2NrZ2Vu
-LVsxLDJdLjAiOiBmb3IgY2hhc3NpcyAxLjAgYW5kIDIuMCBjbG9jaw0KPiA+ICsJCWJsb2NrIHJl
-c3BlY3RpdmVseS4NCj4gPiArCS0gImZzbCxxb3JpcS1jaGFzc2lzWzEsMl0tY29yZS1wbGwiIC0g
-Zm9yIGEgY29yZSBQTEwgY2xvY2sNCj4gPiArCS0gImZzbCxxb3JpcS1jaGFzc2lzWzEsMl0tY29y
-ZS1tdXgiIC0gZm9yIGEgY29yZSBtdWx0aXBsZXhlciBjbG9jay4NCj4gPiArCQlEaXZpZGVkIGZy
-b20gdGhlIGNvcmUgUExMIGNsb2NrDQo+IA0KPiBIbW0sIHRoZXJlJ3MgYSBiaXQgb2YgYSBtaXNt
-YXRjaCBoZXJlIGJldHdlZW4gImNoYXNzaXMyIiBhbmQgdGhlICIyLjAiDQo+IG9uIHRoZSBjbG9j
-a2dlbiBub2RlLi4uIHBlcmhhcHMgaXQgc2hvdWxkIGJlICJmc2wscW9yaXEtY29yZS1wbGwtMi4w
-IiwNCj4gZXRjLg0KPiANCj4gPiArCS0gImZpeGVkLWNsb2NrIiAtIGZyb20gY29tbW9uIGNsb2Nr
-IGJpbmRpbmc7IHNob3VsZCBiZSBvdXRwdXQgY2xvY2sNCj4gPiArCQlvZiBvc2NpbGxhdG9yDQo+
-ID4gKy0gcmVnIDogc2hhbGwgYmUgdGhlIGNvbnRyb2wgcmVnaXN0ZXIgb2Zmc2V0IGZyb20gY2xv
-Y2sgYmxvY2sgYmFzZQ0KPiBhZGRyZXNzLg0KPiANCj4gVGhpcyBkZXNjcmlwdGlvbiBvZiAicmVn
-IiBpcyBvdmVybHkgc3BlY2lmaWMgKGFzc3VtZXMgaG93IHRoZSBwYXJlbnQNCj4gbm9kZSdzIHJh
-bmdlcyBhcmUgc2V0IHVwKSwgaW5jb21wbGV0ZSAodGhlcmUncyBhIHNpemUgYXMgd2VsbCBhcyB0
-aGUNCj4gb2Zmc2V0KSwgYW5kIGRvZXMgbm90IGFwcGx5IHRvIHRoZSBjbG9ja2dlbiBub2RlIGl0
-c2VsZiAoeW91IHByb2JhYmx5DQo+IHNob3VsZG4ndCBsdW1wIHRoZW0gdG9nZXRoZXIgbGlrZSB0
-aGlzKS4NCj4gDQpEbyB5b3UgbWVhbiBJIHNob3VsZCBleHBsYWluIHRoZSBSRUcgb2YgY2xvY2tn
-ZW4gYW5kIGl0cyBjaGlsZCBub2RlIHJlc3BlY3RpdmVseT8NCg0KPiA+ICstIGNsb2NrcyA6IHNo
-YWxsIGJlIHRoZSBpbnB1dCBwYXJlbnQgY2xvY2sgcGhhbmRsZSBmb3IgdGhlIGNsb2NrLg0KPiAN
-Cj4gTm90IHJlcXVpcmVkIG9uIHRoZSBjbG9ja2dlbiBub2RlDQo+IA0KUmVxdWlyZWQgYnkgY2hp
-bGQgbm9kZSBvZiBjbG9ja2dlbi4NCg0KUmVnYXJkcywNCll1YW50aWFuDQo+IC1TY290dA0KPiAN
-Cg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhw
-cGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczov
-L2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+LP3943 has 16 output pins which can be used as GPIO expander and PWM generator.
+
+* Regmap I2C interface for R/W LP3943 registers
+
+* Atomic operations for output pin assignment
+  The driver should check whether requested pin is available or not.
+  If the pin is already used, pin request returns as a failure.
+  A driver data, 'pin_used' is checked when gpio_request() and
+  pwm_request() are called. If the pin is available, then pin_used is set.
+  And it is cleared when gpio_free() and pwm_free().
+
+* Device tree support
+  Compatible strings for GPIO and PWM driver.
+  LP3943 platform data is PWM related, so parsing the device tree is
+  implemented in the PWM driver.
+
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Milo Kim <milo.kim@ti.com>
+---
+* Patch v3
+  Now, output pin number is exactly matched with enum value of '
+  lp3943_pwm_output'.
+  Use dev_get_platdata() helper function in probe().
+  Use module_i2c_driver() for initcall.
+
+* Patch v2
+  Handle atomic operations for output pin assignment.
+
+ drivers/mfd/Kconfig        |   11 ++++
+ drivers/mfd/Makefile       |    1 +
+ drivers/mfd/lp3943.c       |  148 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/lp3943.h |  114 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 274 insertions(+)
+ create mode 100644 drivers/mfd/lp3943.c
+ create mode 100644 include/linux/mfd/lp3943.h
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index e0e46f5..7058358 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -715,6 +715,17 @@ config MFD_DM355EVM_MSP
+ 	  boards.  MSP430 firmware manages resets and power sequencing,
+ 	  inputs from buttons and the IR remote, LEDs, an RTC, and more.
+ 
++config MFD_LP3943
++	tristate "TI/National Semiconductor LP3943 MFD Driver"
++	depends on I2C
++	select MFD_CORE
++	select REGMAP_I2C
++	help
++	  Support for the TI/National Semiconductor LP3943.
++	  This driver consists of GPIO and PWM drivers.
++	  With these functionalities, it can be used for LED string control or
++	  general usage such like a GPIO controller and a PWM controller.
++
+ config MFD_LP8788
+ 	bool "TI LP8788 Power Management Unit Driver"
+ 	depends on I2C=y && GENERIC_HARDIRQS
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 15b905c..a6d2b22 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -102,6 +102,7 @@ obj-$(CONFIG_PMIC_DA9052)	+= da9052-core.o
+ obj-$(CONFIG_MFD_DA9052_SPI)	+= da9052-spi.o
+ obj-$(CONFIG_MFD_DA9052_I2C)	+= da9052-i2c.o
+ 
++obj-$(CONFIG_MFD_LP3943)	+= lp3943.o
+ obj-$(CONFIG_MFD_LP8788)	+= lp8788.o lp8788-irq.o
+ 
+ da9055-objs			:= da9055-core.o da9055-i2c.o
+diff --git a/drivers/mfd/lp3943.c b/drivers/mfd/lp3943.c
+new file mode 100644
+index 0000000..d25cc0a
+--- /dev/null
++++ b/drivers/mfd/lp3943.c
+@@ -0,0 +1,148 @@
++/*
++ * TI/National Semiconductor LP3943 MFD Core Driver
++ *
++ * Copyright 2013 Texas Instruments
++ *
++ * Author: Milo Kim <milo.kim@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#include <linux/err.h>
++#include <linux/gpio.h>
++#include <linux/i2c.h>
++#include <linux/mfd/core.h>
++#include <linux/mfd/lp3943.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/slab.h>
++
++#define LP3943_MAX_REGISTERS		0x09
++
++/* Register configuration for pin MUX */
++static const struct lp3943_reg_cfg lp3943_mux_cfg[] = {
++	/* address, mask, shift */
++	{ LP3943_REG_MUX0, 0x03, 0 },
++	{ LP3943_REG_MUX0, 0x0C, 2 },
++	{ LP3943_REG_MUX0, 0x30, 4 },
++	{ LP3943_REG_MUX0, 0xC0, 6 },
++	{ LP3943_REG_MUX1, 0x03, 0 },
++	{ LP3943_REG_MUX1, 0x0C, 2 },
++	{ LP3943_REG_MUX1, 0x30, 4 },
++	{ LP3943_REG_MUX1, 0xC0, 6 },
++	{ LP3943_REG_MUX2, 0x03, 0 },
++	{ LP3943_REG_MUX2, 0x0C, 2 },
++	{ LP3943_REG_MUX2, 0x30, 4 },
++	{ LP3943_REG_MUX2, 0xC0, 6 },
++	{ LP3943_REG_MUX3, 0x03, 0 },
++	{ LP3943_REG_MUX3, 0x0C, 2 },
++	{ LP3943_REG_MUX3, 0x30, 4 },
++	{ LP3943_REG_MUX3, 0xC0, 6 },
++};
++
++static struct mfd_cell lp3943_devs[] = {
++	{
++		.name = "lp3943-pwm",
++		.of_compatible = "ti,lp3943-pwm",
++	},
++	{
++		.name = "lp3943-gpio",
++		.of_compatible = "ti,lp3943-gpio",
++	},
++};
++
++int lp3943_read_byte(struct lp3943 *lp3943, u8 reg, u8 *read)
++{
++	int ret;
++	unsigned int val;
++
++	ret = regmap_read(lp3943->regmap, reg, &val);
++	if (ret < 0)
++		return ret;
++
++	*read = (u8)val;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(lp3943_read_byte);
++
++int lp3943_write_byte(struct lp3943 *lp3943, u8 reg, u8 data)
++{
++	return regmap_write(lp3943->regmap, reg, data);
++}
++EXPORT_SYMBOL_GPL(lp3943_write_byte);
++
++int lp3943_update_bits(struct lp3943 *lp3943, u8 reg, u8 mask, u8 data)
++{
++	return regmap_update_bits(lp3943->regmap, reg, mask, data);
++}
++EXPORT_SYMBOL_GPL(lp3943_update_bits);
++
++static const struct regmap_config lp3943_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = LP3943_MAX_REGISTERS,
++};
++
++static int lp3943_probe(struct i2c_client *cl, const struct i2c_device_id *id)
++{
++	struct lp3943 *lp3943;
++	struct device *dev = &cl->dev;
++
++	lp3943 = devm_kzalloc(dev, sizeof(*lp3943), GFP_KERNEL);
++	if (!lp3943)
++		return -ENOMEM;
++
++	lp3943->regmap = devm_regmap_init_i2c(cl, &lp3943_regmap_config);
++	if (IS_ERR(lp3943->regmap))
++		return PTR_ERR(lp3943->regmap);
++
++	lp3943->pdata = dev_get_platdata(dev);
++	lp3943->dev = dev;
++	lp3943->mux_cfg = lp3943_mux_cfg;
++	i2c_set_clientdata(cl, lp3943);
++
++	return mfd_add_devices(dev, -1, lp3943_devs, ARRAY_SIZE(lp3943_devs),
++			       NULL, 0, NULL);
++}
++
++static int lp3943_remove(struct i2c_client *cl)
++{
++	struct lp3943 *lp3943 = i2c_get_clientdata(cl);
++
++	mfd_remove_devices(lp3943->dev);
++	return 0;
++}
++
++static const struct i2c_device_id lp3943_ids[] = {
++	{ "lp3943", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, lp3943_ids);
++
++#ifdef CONFIG_OF
++static const struct of_device_id lp3943_of_match[] = {
++	{ .compatible = "ti,lp3943", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, lp3943_of_match);
++#endif
++
++static struct i2c_driver lp3943_driver = {
++	.probe = lp3943_probe,
++	.remove = lp3943_remove,
++	.driver = {
++		.name = "lp3943",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(lp3943_of_match),
++	},
++	.id_table = lp3943_ids,
++};
++
++module_i2c_driver(lp3943_driver);
++
++MODULE_DESCRIPTION("LP3943 MFD Core Driver");
++MODULE_AUTHOR("Milo Kim");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/lp3943.h b/include/linux/mfd/lp3943.h
+new file mode 100644
+index 0000000..3490db7
+--- /dev/null
++++ b/include/linux/mfd/lp3943.h
+@@ -0,0 +1,114 @@
++/*
++ * TI/National Semiconductor LP3943 Device
++ *
++ * Copyright 2013 Texas Instruments
++ *
++ * Author: Milo Kim <milo.kim@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#ifndef __MFD_LP3943_H__
++#define __MFD_LP3943_H__
++
++#include <linux/gpio.h>
++#include <linux/pwm.h>
++#include <linux/regmap.h>
++
++/* Registers */
++#define LP3943_REG_GPIO_A		0x00
++#define LP3943_REG_GPIO_B		0x01
++#define LP3943_REG_PRESCALE0		0x02
++#define LP3943_REG_PWM0			0x03
++#define LP3943_REG_PRESCALE1		0x04
++#define LP3943_REG_PWM1			0x05
++#define LP3943_REG_MUX0			0x06
++#define LP3943_REG_MUX1			0x07
++#define LP3943_REG_MUX2			0x08
++#define LP3943_REG_MUX3			0x09
++
++/* Bit description for LP3943_REG_MUX0 ~ 3 */
++#define LP3943_GPIO_IN			0x00
++#define LP3943_GPIO_OUT_HIGH		0x00
++#define LP3943_GPIO_OUT_LOW		0x01
++#define LP3943_DIM_PWM0			0x02
++#define LP3943_DIM_PWM1			0x03
++
++#define LP3943_NUM_PWMS			2
++
++enum lp3943_pwm_output {
++	LP3943_PWM_OUT0,
++	LP3943_PWM_OUT1,
++	LP3943_PWM_OUT2,
++	LP3943_PWM_OUT3,
++	LP3943_PWM_OUT4,
++	LP3943_PWM_OUT5,
++	LP3943_PWM_OUT6,
++	LP3943_PWM_OUT7,
++	LP3943_PWM_OUT8,
++	LP3943_PWM_OUT9,
++	LP3943_PWM_OUT10,
++	LP3943_PWM_OUT11,
++	LP3943_PWM_OUT12,
++	LP3943_PWM_OUT13,
++	LP3943_PWM_OUT14,
++	LP3943_PWM_OUT15,
++};
++
++/*
++ * struct lp3943_pwm_map
++ * @output: Output pins which are mapped to each PWM channel
++ * @num_outputs: Number of outputs
++ */
++struct lp3943_pwm_map {
++	enum lp3943_pwm_output *output;
++	int num_outputs;
++};
++
++/*
++ * struct lp3943_platform_data
++ * @pwms: Output channel definitions for PWM channel 0 and 1
++ */
++struct lp3943_platform_data {
++	struct lp3943_pwm_map *pwms[LP3943_NUM_PWMS];
++};
++
++/*
++ * struct lp3943_reg_cfg
++ * @reg: Register address
++ * @mask: Register bit mask to be updated
++ * @shift: Register bit shift
++ */
++struct lp3943_reg_cfg {
++	u8 reg;
++	u8 mask;
++	u8 shift;
++};
++
++/*
++ * struct lp3943
++ * @dev: Parent device pointer
++ * @regmap: Used for I2C communication on accessing registers
++ * @pdata: LP3943 platform specific data
++ * @mux_cfg: Register configuration for pin MUX
++ * @pin_used: Bit mask for output pin used.
++ *	      This bitmask is used for pin assignment management.
++ *	      1 = pin used, 0 = available.
++ *	      Only LSB 16 bits are used, but it is unsigned long type
++ *	      for atomic bitwise operations.
++ */
++struct lp3943 {
++	struct device *dev;
++	struct regmap *regmap;
++	struct lp3943_platform_data *pdata;
++	const struct lp3943_reg_cfg *mux_cfg;
++	unsigned long pin_used;
++};
++
++int lp3943_read_byte(struct lp3943 *lp3943, u8 reg, u8 *read);
++int lp3943_write_byte(struct lp3943 *lp3943, u8 reg, u8 data);
++int lp3943_update_bits(struct lp3943 *lp3943, u8 reg, u8 mask, u8 data);
++#endif
+-- 
+1.7.9.5
