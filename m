@@ -1,49 +1,36 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
-Date: Thu, 12 Sep 2013 12:41:26 +0200
-Message-ID: <20130912104126.GS30088@pengutronix.de>
-References: <1378958611-4274-1-git-send-email-xobs@kosagi.com>
- <1378958611-4274-4-git-send-email-xobs@kosagi.com>
- <20130912062859.GM30088@pengutronix.de>
- <6FF3113C3FCC43A4A0D711C8656A4C03@kosagi.com>
- <20130912070131.GO30088@pengutronix.de>
- <65E0D2C79B2B43D28CC77454F44ECCFA@kosagi.com>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [PATCH] ARM: dts: Disable Exynos5250 I2S controllers by default
+Date: Thu, 12 Sep 2013 19:42:57 +0900
+Message-ID: <06ff01ceafa4$d81671d0$88435570$@org>
+References: <1378491435-15624-1-git-send-email-broonie@kernel.org>
+ <20130910173548.GA18878@e106331-lin.cambridge.arm.com>
+ <20130910174113.GB4708@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <65E0D2C79B2B43D28CC77454F44ECCFA@kosagi.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Sean Cross <xobs@kosagi.com>
-Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20130910174113.GB4708@sirena.org.uk>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Mark Brown' <broonie@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>
+Cc: rob.herring@calxeda.com, 'Pawel Moll' <Pawel.Moll@arm.com>, 'Stephen Warren' <swarren@wwwdotorg.org>, linux-samsung-soc@vger.kernel.org, linaro-kernel@lists.linaro.org, 'devicetree' <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 03:11:45PM +0800, Sean Cross wrote:
-> > Even if it should be configurable I'm still unsure whether this should
-> > be done at pci driver level.
+Mark Brown wrote:
 > 
-> I'm a bit wary of including clock setup like this in the SoC code, as
-> different boards might be different.  If a board designer wants to run
-> LVDS2 to the PCIe slot, that's entirely acceptable.  It might not
-> actually ever get done, but it seems like the sort of board-specific
-> thing that device tree was designed to handle.
+> On Tue, Sep 10, 2013 at 06:35:48PM +0100, Mark Rutland wrote:
+> 
+> > It seems far more sensible to me to mark devices disabled by default in
+> > shared dtsi files and then okay them as needed in particular dts files.
+> > I'd be happy with more of this.
+> 
+> Yeah, me too - though only for devices that have an external impact, for
+> things that are internal only (eg, a crypto engine) it makes sense to
+> enable them by default since they should normally be usable regardless
+> of the system configuration.
 
-The devicetree was designed to handle hardware descriptions, not
-configuration options.
+(+ DT ML)
 
-Chosing the clock parent is probably in the grey area between hardware
-description and configuration, so I assume when we find a good reason to
-add this option to the devicetree then it's acceptable to add it there.
+Makes sense but I need to get the opinions from DT guys...
 
-But we shouldn't add this option for something that, as you say, 'might
-not actually ever get done'. Just hardcode the clock selection in SoC
-code for now. If someone ever finds the good reason to make this configurable
-then he will speak up and we can discuss this again.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+- Kukjin
