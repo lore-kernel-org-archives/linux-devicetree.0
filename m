@@ -1,93 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/2] ARM: ux500: skip redefined regulator names on v60plus
- board
-Date: Thu, 12 Sep 2013 15:45:41 +0200
-Message-ID: <1378993541-24403-1-git-send-email-linus.walleij@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] ARM: dts: Leave Exynos5250 SPI controller disabled
+ by default
+Date: Thu, 12 Sep 2013 14:50:28 +0100
+Message-ID: <20130912135028.GR29403@sirena.org.uk>
+References: <1378982427-5802-1-git-send-email-broonie@kernel.org>
+ <1378982427-5802-2-git-send-email-broonie@kernel.org>
+ <10382663.35TJtu8bGt@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XfgxuImQih7pKHD1"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <10382663.35TJtu8bGt@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linaro-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These regulator rail names are already set in the
-ste-href.dtsi file included by this file, this is just redoing
-the naming for no benefit, so delete it.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/arm/boot/dts/ste-hrefv60plus.dts | 50 -----------------------------------
- 1 file changed, 50 deletions(-)
+--XfgxuImQih7pKHD1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/ste-hrefv60plus.dts b/arch/arm/boot/dts/ste-hrefv60plus.dts
-index 0e2be7a..bb3cfc7 100644
---- a/arch/arm/boot/dts/ste-hrefv60plus.dts
-+++ b/arch/arm/boot/dts/ste-hrefv60plus.dts
-@@ -74,55 +74,5 @@
- 
- 			status = "okay";
- 		};
--
--		prcmu@80157000 {
--			ab8500 {
--				ab8500-regulators {
--					ab8500_ldo_aux1_reg: ab8500_ldo_aux1 {
--						regulator-name = "V-DISPLAY";
--					};
--
--					ab8500_ldo_aux2_reg: ab8500_ldo_aux2 {
--						regulator-name = "V-eMMC1";
--					};
--
--					ab8500_ldo_aux3_reg: ab8500_ldo_aux3 {
--						regulator-name = "V-MMC-SD";
--					};
--
--					ab8500_ldo_intcore_reg: ab8500_ldo_intcore {
--						regulator-name = "V-INTCORE";
--					};
--
--					ab8500_ldo_tvout_reg: ab8500_ldo_tvout {
--						regulator-name = "V-TVOUT";
--					};
--
--					ab8500_ldo_usb_reg: ab8500_ldo_usb {
--						regulator-name = "dummy";
--					};
--
--					ab8500_ldo_audio_reg: ab8500_ldo_audio {
--						regulator-name = "V-AUD";
--					};
--
--					ab8500_ldo_anamic1_reg: ab8500_ldo_anamic1 {
--						regulator-name = "V-AMIC1";
--					};
--
--					ab8500_ldo_anamic2_reg: ab8500_ldo_anamic2 {
--						regulator-name = "V-AMIC2";
--					};
--
--					ab8500_ldo_dmic_reg: ab8500_ldo_dmic {
--						regulator-name = "V-DMIC";
--					};
--
--					ab8500_ldo_ana_reg: ab8500_ldo_ana {
--						regulator-name = "V-CSI/DSI";
--					};
--				};
--			};
--		};
- 	};
- };
--- 
-1.8.3.1
+On Thu, Sep 12, 2013 at 01:56:44PM +0200, Tomasz Figa wrote:
+
+> I wonder if exynos5250-arndale shouldn't be also considered in this patch.
+
+There are no SPI devices on that board (at least not ones that are
+currently instantiated by the DT).
+
+--XfgxuImQih7pKHD1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSMcahAAoJELSic+t+oim9vGcQAJ1yXG/0Nl3/7nHDCutWRjOQ
+oKG+DeeMC/hu0qZ+MoEAxDg0ofdLk6l5Szbrkzp6X60nB7WGXodaRe2dSwBuT++d
+hh5jtB8Siu0VsyzOx4k/Q1cSMQY8/1ZGXMj3jUGxxn2GaikFGqZp+PvqVhJKxab+
+D2EpL7XsQcMF5uLabbjnRpBr407/2bz0ZuH9kaMLYHFcxSQRFxBWU/+ijpdtxSkm
+Vk6sY2wUpaLc1Jl0M9ktWifeRflIaNZj9QgK2xz4vdcJg3JcN45BDBKrC6CEwrC7
+zHh+r0p6OBIKogjZ95ElPbl+0LDMQbmlWGvbHZWIhPviShYRRUSWJOKRe2bUQLbF
+mzwNC0P3HjKuV2sjqxnKvREyaIxZ/FkOmlZJA07aonfMV+liShBhFemlblv7xhmm
+r26/tV5bqL5jJbASu+pn7Bx0UnryKAy+Mt603ODVh1dqS28UWEHEiDqSot8PsBp8
+MeIn52ROQbsG7qQhR7W1F/ro1JLPiNfPfZQ7Eyv4v/egYfk/AkcM7COdsAOLJ+hG
+pzh1uqn2gd/l2TRVMrftC9KARcykYwd/0OA5V7EOQr0enccCRf+npw6D+OQtlapd
+I709k0Ep5I0Df+sQaOlsej/gzJ00A7V6cP/lnjFZFcTPzlvZQC54lAKr9ikWyoe3
+CMi978p76M1eI0aEp+oC
+=IwAY
+-----END PGP SIGNATURE-----
+
+--XfgxuImQih7pKHD1--
