@@ -1,67 +1,154 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH 1/2] video: ARM CLCD: Add DT support
-Date: Thu, 12 Sep 2013 16:23:45 +0100
-Message-ID: <1378999425.13571.54.camel@hornet>
-References: <1378488201-21146-1-git-send-email-pawel.moll@arm.com>
- <522BAED9.4020301@gmail.com> <1378725559.4082.28.camel@hornet>
- <522F91F8.6010207@gmail.com> <1378907036.4082.105.camel@hornet>
- <5230DD1C.6060606@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 4/4] Documentation: add LP3943 DT bindings and document
+Date: Thu, 12 Sep 2013 16:24:55 +0100
+Message-ID: <20130912152455.GN11227@lee--X1>
+References: <1378949700-6384-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5230DD1C.6060606@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1378949700-6384-1-git-send-email-milo.kim@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDEzLTA5LTExIGF0IDIyOjE0ICswMTAwLCBTeWx3ZXN0ZXIgTmF3cm9ja2kgd3Jv
-dGU6Cj4gWWVzLCBJIHdhc24ndCBhd2FyZSB0aGVuIHRoYXQgeW91ciAidmlkZW8gUkFNIiBpcyBh
-IHNlcGFyYXRlIGNoaXAgYXR0YWNoZWQKPiB0byBhIGRpc3RpbmN0IGJ1cy4KPiBNeSBpZGVhIHdh
-cyB0byByZXVzZSBtZW1vcnkgbm9kZSBzdHJ1Y3R1cmUsIGluY2x1ZGluZyAicmVzZXJ2ZWQtbWVt
-b3J5Igo+IGNvbXBhdGlibGUgdmFsdWUgKG5vdGUgdGhlcmUgYXJlIHNvbWUgZml4dXBzIHBlbmRp
-bmcgYW5kIHRob3NlIG5hbWVzIGFyZQo+IHN1YmplY3QgdG8gY2hhbmdlKS4gTm90IHN1cmUgYWJv
-dXQgdGhlIHByb3BlcnR5IGluIENMQ0QgZGV2aWNlIG5vZGUKPiBjb250YWluaW5nIHBoYW5kbGUg
-dG8gdGhlIG1lbW9yeSBub2RlIChjdXJyZW50bHkgJ21lbW9yeS1yZWdpb24nKS4KCkFzIEkganVz
-dCB0b2xkIFN0ZXZlbiwgSSdsbCBqdXN0IG1ha2UgaXQgcGFpbmZ1bGx5IGxvdy1sZXZlbCBwcm9w
-ZXJ0eQpkZWZpbmluZyAiYWRkcmVzcyB5b3UgaGF2ZSB0byBnZW5lcmF0ZSB0byBhY2Nlc3MgYmFz
-ZSBvZiB0aGUKZnJhbWVidWZmZXIiLiBPZiBjb3Vyc2Ugb25lIGNhbiBzdGlsbCBnbyB0aGUgQ01B
-IHdheSwgaWYgc3VjaCBuZWVkCmFyaXNlcy4KCj4gPiBPaywgSSBzZWUgd2hhdCB5b3UncmUgc2F5
-aW5nLiBZZXMsIHRoaXMgY291bGQgYmUgZG9uZS4gTm8sIEkgZG9uJ3QgY2xhaW0KPiA+IHRvIGhh
-dmUgZW5vdWdoIGV4cGVydGlzZSBlaXRoZXIgKG1pY3JvbWV0ZXJzPz8/IDotTyA7LSkgVGhlIG90
-aGVyIHRoaW5nCj4gPiBpcyB0aGF0IEkgZG9uJ3QgcmVhbGx5IGV4cGVjdCBnZW5lcmljIENERiBi
-aW5kaW5ncyB0byBjb3ZlciBzdWNoIHRoaW5ncy4KPiA+IFRoZXkgd2lsbCAoaG9wZWZ1bGx5KSBv
-bmx5IGRlc2NyaWJlIHdoYXQncyBjb25uZWN0ZWQgd2l0aCB3aGF0LiBBbmQgdGhlCj4gPiBkcml2
-ZXJzIHNob3VsZCBrbm93IGhvdy4gT2YgY291cnNlIHRoZXkgbWF5IG5lZWQgdGhlIGRpbWVuc2lv
-bnMmICBhbGlrZQo+ID4gaW4gdGhlIHRyZWUgKG9mIGNvdXJzZSBoYXZpbmcgdGhlbSBzdGFuZGFy
-ZGlzZWQgd291bGQgaGVscCBoZXJlKSwgYnV0Cj4gPiBpdCdzIG5vdCBhIENERiBqb2IgdG8gcHJv
-dmlkZSB0aG9zZS4KPiAKPiBPZiBjb3Vyc2UgaXQncyBhbHdheXMgZWFzaWVyIHRvIGRlZmluZSBj
-b3VwbGUgb2YgRFQgcHJvcGVydGllcyB0aGF0IHdvdWxkCj4gY292ZXIgcGFydCBvZiBmdW5jdGlv
-bmFsaXR5IG9mIHNvbWUgc3BlY2lmaWMgZGV2aWNlLiBCdXQgdGhlbiBzdWNoIAo+IHByb3BlcnRp
-ZXMgc2hvdWxkIGJlIHByZWZpeGVkIHdpdGggdmVuZG9yIG5hbWUgQUZBSVUsIHNpbmNlIHRoZXkg
-YXJlCj4gbm90IGFwcHJvdmVkIGFzIGNvbW1vbiBvbmVzIGFuZCB1c2VmdWwgZm9yIHdpZGVyIHNl
-dCBvZiBkZXZpY2VzLgoKVGhpcyBpcyBhIHBvbGljeSB0aGF0IGNoYW5nZWQgbWFueSB0aW1lcyBh
-bHJlYWR5Li4uCgpBbnl3YXksIEkgdGhpbmsgSSd2ZSBnb3QgYW4gaWRlYSBob3cgdG8gcmVuZGVy
-IHRoZSBwcm9ibGVtIGN1c3RvbSBwYW5lbApwcm9wZXJ0aWVzIGludmFsaWQuIElmIHNvLCBJJ2xs
-IHNlbmQgYW5vdGhlciB2ZXJzaW9uIG9mIHRoZSBwYXRjaC4KCj4gIEZyb20gdGhlIGRldmljZSB0
-cmVlIHBlcnNwZWN0aXZlIENERiBpcyBqdXN0IGEgY29sbGVjdGlvbiBvZiAoZGlzcGxheQo+IHJl
-bGF0ZWQpIGRldmljZXMgYW5kIGEgY29tcGxldGUgc2V0IG9mIERUIHByb3BlcnRpZXMgd2lsbCBi
-ZSBuZWVkZWQgdG8KPiBkZXNjcmliZSB0aGVtLiBDZXJ0YWlubHkgc29tZSBzaGFyZSBvZiBkZXZp
-Y2Utc3BlY2lmaWMgcHJvcGVydGllcyBzaG91bGQKPiBiZSBleHBlY3RlZC4gTGlua3MgYmV0d2Vl
-biAoc3ViKWRldmljZXMgY2FuIGJlIGFscmVhZHkgZGVzY3JpYmVkIGluIERUIGJ5Cj4gdGhlIGJp
-bmRpbmcgZG9jdW1lbnRlZCBpbiB2aWRlby1pbnRlcmZhY2VzLnR4dC4KCldoZXRoZXIgdG8gdXNl
-IHRoZSB2NGwgc2NoZW1lIG9yIG5vdCBzdGlsbCBzZWVtcyB0byBiZSBhIGJvbmUgb2YKY29udGVu
-dGlvbiBiZXR3ZWVuIHRoZSB2aWRlbyBhbmQgdGhlIERSTS9LTVMgZm9saywgc28gSSB3b3VsZG4n
-dCBkcmF3CmFueSBjb25jbHVzaW9ucyB5ZXQuCgpQYXdlxYIKCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thu, 12 Sep 2013, Milo Kim wrote:
+
+> Bindings for LP3943 MFD, GPIO and PWM controller are added.
+> And LP3943 driver document is added also.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Samuel Ortiz <sameo@linux.intel.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Milo Kim <milo.kim@ti.com>
+> ---
+>  Documentation/00-INDEX                             |    2 +
+>  .../devicetree/bindings/gpio/gpio-lp3943.txt       |   37 ++++++++++=
+++
+>  Documentation/devicetree/bindings/mfd/lp3943.txt   |   33 ++++++++++=
++
+>  .../devicetree/bindings/pwm/pwm-lp3943.txt         |   58 ++++++++++=
+++++++++
+>  Documentation/lp3943.txt                           |   62 ++++++++++=
+++++++++++
+
+I don't think we want driver documentation here.
+
+>  5 files changed, 192 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-lp394=
+3.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/lp3943.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-lp3943.=
+txt
+>  create mode 100644 Documentation/lp3943.txt
+>=20
+> diff --git a/Documentation/00-INDEX b/Documentation/00-INDEX
+> index 0c4cc68..5dd921f 100644
+> --- a/Documentation/00-INDEX
+> +++ b/Documentation/00-INDEX
+> @@ -285,6 +285,8 @@ logo.gif
+>  	- full colour GIF image of Linux logo (penguin - Tux).
+>  logo.txt
+>  	- info on creator of above logo & site to get additional images fro=
+m.
+> +lp3943.txt
+> +	- info on LP3943 MFD driver structure.
+
+-- " --
+
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-lp3943.txt b=
+/Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
+> diff --git a/Documentation/devicetree/bindings/mfd/lp3943.txt b/Docum=
+entation/devicetree/bindings/mfd/lp3943.txt
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-lp3943.txt b/D=
+ocumentation/devicetree/bindings/pwm/pwm-lp3943.txt
+> diff --git a/Documentation/lp3943.txt b/Documentation/lp3943.txt
+> new file mode 100644
+> index 0000000..576ebd0
+> --- /dev/null
+> +++ b/Documentation/lp3943.txt
+> @@ -0,0 +1,62 @@
+> +TI/National Semiconductor LP3943 MFD driver
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +LP3943 is an integrated device capable of driving 16 output channels=
+=2E
+> +It can be used for GPIO expander and PWM generators.
+> +LP3493 registers are controlled via the I2C interface.
+> +
+> +Driver structure
+> +----------------
+> +                                  LED control    General usage for a=
+ device
+> +                                  ___________   ____________________=
+________
+> +
+> +  LP3943 MFD ---- GPIO expander    leds-gpio        eg) HW enable pi=
+n
+> +              |
+> +              --- PWM generator    leds-pwm         eg) PWM input
+> +
+> +
+> +Why do we need GPIO and PWM drivers instead of LED driver?
+> +To support LED control and general usage, GPIO and PWM drivers are n=
+ecessary.
+> +
+> +According to the datasheet(1), it's just a LED driver which has 16 c=
+hannels.
+> +But here is another application, a GPIO expander.(2)
+> +
+> +  (1) http://www.ti.com/lit/ds/snvs256b/snvs256b.pdf
+> +  (2) http://www.ti.com/lit/an/snva287a/snva287a.pdf
+> +
+> +Internal two PWM channels are used for LED dimming effect.
+> +And each output pin can be used as a GPIO as well.
+> +LED functionality can work with GPIOs or PWMs.
+> +LEDs can be controlled with legacy leds-gpio(static brightness) or
+> +leds-pwm drivers(dynamic brightness control).
+> +Additionally, it can be used for generic GPIO and PWM controller.
+> +For example, a GPIO is HW enable pin of a device.
+> +PWM is input pin of a backlight device.
+> +
+> +
+> +LP3943 PWM port map
+> +-------------------
+> +Each PWM channel can be mapped to one or multiple output pins.
+> +
+> +For example, PWM 0 is used for a backlight device.
+> +PWM 1 is for RGB LEDs.
+> +
+> +  PWM channel    Output pins    PWM consumer
+> +  ___________    ___________    ____________
+> +  PWM 0          pin 1          backlight
+> +  PWM 1          pin 7, 8, 9    RGB LEDs
+> +
+> +Then, PWM port map is as below.
+> +PWM 0: num_outputs =3D 1, output =3D pin 1
+> +PWM 1: num_outputs =3D 3, output =3D pin 7, 8, 9
+> +
+> +The 'lp3943_pwm_map' structure is used for this feature.
+> +
+> +
+> +Device tree supported
+> +---------------------
+> +Please refer to the documents below.
+> +
+> +Documentation/devicetree/bindings/mfd/lp3943.txt
+> +Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
+> +Documentation/devicetree/bindings/pwm/pwm-lp3943.txt
+
+Why do you need to document your driver in this way?
+
+If this stuff is really important (and most of it really isn't), then
+put it either in the commit log or in the driver.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
