@@ -1,178 +1,609 @@
-From: David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
-Date: Thu, 12 Sep 2013 12:17:45 +0100
-Message-ID: <1378984665.2627.423.camel@shinybook.infradead.org>
-References: <20130905020435.GA3970@gmail.com>
-	 <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>
-	 <522817D7.1010206@freescale.com> <522D3B79.3060707@freescale.com>
-	 <20130909151450.GI29403@sirena.org.uk> <522EC33B.9000009@freescale.com>
-	 <20130910180704.GB29403@sirena.org.uk> <522FD78A.6080900@freescale.com>
-	 <20130911104126.GN29403@sirena.org.uk> <52304BFF.4060007@freescale.com>
-	 <20130911113002.GP29403@sirena.org.uk> <523186DF.4070203@freescale.com>
-	 <1378982395.2627.416.camel@shinybook.infradead.org>
-	 <20980858CB6D3A4BAE95CA194937D5E73EA0EE8B@DBDE04.ent.ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 3/7] drivers: phy: usb3/pipe3: Adapt pipe3 driver to Generic
+ PHY Framework
+Date: Thu, 12 Sep 2013 14:19:57 +0300
+Message-ID: <5231A35D.7060006@ti.com>
+References: <1378136591-7463-1-git-send-email-kishon@ti.com> <1378136591-7463-4-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="sha-1"; protocol="application/x-pkcs7-signature";
-	boundary="=-RuDMjEoHsAycxKPwfUPA"
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA0EE8B@DBDE04.ent.ti.com>
+In-Reply-To: <1378136591-7463-4-git-send-email-kishon@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: Huang Shijie <b32955@freescale.com>, Mark Brown <broonie@kernel.org>, Huang Shijie <shijie8@gmail.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: balbi@ti.com, bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, linux@arm.linux.org.uk, grant.likely@linaro.org, s.nawrocki@samsung.com, galak@codeaurora.org, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, george.cherian@ti.com, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Kishon,
 
---=-RuDMjEoHsAycxKPwfUPA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 09/02/2013 06:43 PM, Kishon Vijay Abraham I wrote:
+> Adapted omap-usb3 PHY driver to Generic PHY Framework and moved phy-omap-usb3
+> driver in drivers/usb/phy to drivers/phy and also renamed the file to
+> phy-omap-pipe3 since this same driver will be used for SATA PHY and
+> PCIE PHY.
 
-On Thu, 2013-09-12 at 10:56 +0000, Gupta, Pekon wrote:
->=20
-> And when the spi_transfer reaches spi/.../qspi-controller.c driver, then
-> you can populate your LUT with info present in spi_transfer. And initiate
-> the actual transfer on SPI bus.
+I would suggest to split the renaming and PHY adaptation into 2 separate patches.
 
-Right. The issue here is that the LUT is currently *pre-populated*, with
-an incestuously-"known" set of commands that the slave is expected to
-support.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  Documentation/devicetree/bindings/usb/usb-phy.txt  |    5 +-
+>  drivers/phy/Kconfig                                |   10 +
+>  drivers/phy/Makefile                               |    1 +
+>  .../phy/phy-omap-usb3.c => phy/phy-omap-pipe3.c}   |  206 +++++++++++---------
 
-For each "known" command, at controller init time we pick an index in
-the LUT, then pre-configure that index to send the command in question.
+how about naming it to phy-ti-pipe3.c as it is used on OMAP as well as non-OMAP e.g. DRA7.
 
-Then when we're asked to actually *do* a transaction, we hope that it's
-one of the "known" ones, look up the right index to use, and just
-trigger the transaction.
+>  drivers/usb/phy/Kconfig                            |   11 --
+>  drivers/usb/phy/Makefile                           |    1 -
+>  include/linux/phy/omap_pipe3.h                     |   52 +++++
+>  7 files changed, 177 insertions(+), 109 deletions(-)
+>  rename drivers/{usb/phy/phy-omap-usb3.c => phy/phy-omap-pipe3.c} (57%)
+>  create mode 100644 include/linux/phy/omap_pipe3.h
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
+> index c0245c8..36bdb17 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
+> @@ -21,10 +21,11 @@ usb2phy@4a0ad080 {
+>  	#phy-cells = <0>;
+>  };
+>  
+> -OMAP USB3 PHY
+> +OMAP PIPE3 PHY
+>  
+>  Required properties:
+> - - compatible: Should be "ti,omap-usb3"
+> + - compatible: Should be "ti,omap-usb3", "ti,omap-pipe3", "ti,omap-sata"
+> +   or "ti,omap-pcie"
+>   - reg : Address and length of the register set for the device.
+>   - reg-names: The names of the register addresses corresponding to the registers
+>     filled in "reg".
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index ac239ac..5c2e7a0 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -27,6 +27,16 @@ config OMAP_USB2
+>  	  The USB OTG controller communicates with the comparator using this
+>  	  driver.
+>  
+> +config OMAP_PIPE3
+> +	tristate "OMAP PIPE3 PHY Driver"
+> +	select GENERIC_PHY
+> +	select OMAP_CONTROL_USB
+how about
+	depends on OMAP_CONTROL_USB
 
-We shouldn't have that horrid incestuous preconfiguration.
+Also, if this is TI/OMAP it might as well depend on ARCH_OMAP.
 
-When we get an actual request for a transfer, we should find an unused
-slot in the LUT, *write* the appropriate values for the transaction
-we're being asked to make, then trigger it.
+> +	help
+> +	  Enable this to support the PIPE3 PHY that is part of SOC. This
 
-Obviously the immediate optimisation is to be able to *reuse* LUT
-configuration so you're not writing to the LUT over and over again for
-the *same* transactions, but let's not overcomplicate things to start
-with.
+worth mentioning TI OMAP/DRA SoCs.
 
-I certainly don't see why we should have the controller knowing in
-advance what the commands will be.
+> +	  driver takes care of all the PHY functionality apart from comparator.
+> +	  This driver interacts with the "OMAP Control PHY Driver" to power
+> +	  on/off the PHY.
+> +
+>  config TWL4030_USB
+>  	tristate "TWL4030 USB Transceiver Driver"
+>  	depends on TWL4030_CORE && REGULATOR_TWL4030 && USB_MUSB_OMAP2PLUS
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 0dd8a98..48bf9f2 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -4,4 +4,5 @@
+>  
+>  obj-$(CONFIG_GENERIC_PHY)	+= phy-core.o
+>  obj-$(CONFIG_OMAP_USB2)		+= phy-omap-usb2.o
+> +obj-$(CONFIG_OMAP_PIPE3)	+= phy-omap-pipe3.o
+>  obj-$(CONFIG_TWL4030_USB)	+= phy-twl4030-usb.o
+> diff --git a/drivers/usb/phy/phy-omap-usb3.c b/drivers/phy/phy-omap-pipe3.c
+> similarity index 57%
+> rename from drivers/usb/phy/phy-omap-usb3.c
+> rename to drivers/phy/phy-omap-pipe3.c
+> index 4004f82..ee9a901 100644
+> --- a/drivers/usb/phy/phy-omap-usb3.c
+> +++ b/drivers/phy/phy-omap-pipe3.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * omap-usb3 - USB PHY, talking to dwc3 controller in OMAP.
+> + * omap-pipe3 - PHY driver for SATA, USB and PCIE in OMAP platforms
+>   *
+>   * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
+>   * This program is free software; you can redistribute it and/or modify
+> @@ -19,7 +19,8 @@
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+> -#include <linux/usb/omap_usb.h>
+> +#include <linux/phy/omap_pipe3.h>
+> +#include <linux/phy/phy.h>
+>  #include <linux/of.h>
+>  #include <linux/clk.h>
+>  #include <linux/err.h>
+> @@ -52,17 +53,17 @@
+>  
+>  /*
+>   * This is an Empirical value that works, need to confirm the actual
+> - * value required for the USB3PHY_PLL_CONFIGURATION2.PLL_IDLE status
+> - * to be correctly reflected in the USB3PHY_PLL_STATUS register.
+> + * value required for the PIPE3PHY_PLL_CONFIGURATION2.PLL_IDLE status
+> + * to be correctly reflected in the PIPE3PHY_PLL_STATUS register.
+>   */
+>  # define PLL_IDLE_TIME  100;
+>  
+> -struct usb_dpll_map {
+> +struct pipe3_dpll_map {
+>  	unsigned long rate;
+> -	struct usb_dpll_params params;
+> +	struct pipe3_dpll_params params;
+>  };
+>  
+> -static struct usb_dpll_map dpll_map[] = {
+> +static struct pipe3_dpll_map dpll_map[] = {
+>  	{12000000, {1250, 5, 4, 20, 0} },	/* 12 MHz */
+>  	{16800000, {3125, 20, 4, 20, 0} },	/* 16.8 MHz */
+>  	{19200000, {1172, 8, 4, 20, 65537} },	/* 19.2 MHz */
+> @@ -71,7 +72,7 @@ static struct usb_dpll_map dpll_map[] = {
+>  	{38400000, {3125, 47, 4, 20, 92843} },	/* 38.4 MHz */
+>  };
+>  
+> -static struct usb_dpll_params *omap_usb3_get_dpll_params(unsigned long rate)
+> +static struct pipe3_dpll_params *omap_pipe3_get_dpll_params(unsigned long rate)
+>  {
+>  	int i;
+>  
+> @@ -83,110 +84,113 @@ static struct usb_dpll_params *omap_usb3_get_dpll_params(unsigned long rate)
+>  	return 0;
+>  }
+>  
+> -static int omap_usb3_suspend(struct usb_phy *x, int suspend)
+> +static int omap_pipe3_power_off(struct phy *x)
+>  {
+> -	struct omap_usb *phy = phy_to_omapusb(x);
+> -	int	val;
+> +	struct omap_pipe3 *phy = phy_get_drvdata(x);
+> +	int val;
+>  	int timeout = PLL_IDLE_TIME;
+>  
+> -	if (suspend && !phy->is_suspended) {
+> -		val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
+> -		val |= PLL_IDLE;
+> -		omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
+> -
+> -		do {
+> -			val = omap_usb_readl(phy->pll_ctrl_base, PLL_STATUS);
+> -			if (val & PLL_TICOPWDN)
+> -				break;
+> -			udelay(1);
+> -		} while (--timeout);
+> -
+> -		omap_control_usb_phy_power(phy->control_dev, 0);
+> -
+> -		phy->is_suspended	= 1;
+> -	} else if (!suspend && phy->is_suspended) {
+> -		phy->is_suspended	= 0;
+> -
+> -		val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
+> -		val &= ~PLL_IDLE;
+> -		omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
+> -
+> -		do {
+> -			val = omap_usb_readl(phy->pll_ctrl_base, PLL_STATUS);
+> -			if (!(val & PLL_TICOPWDN))
+> -				break;
+> -			udelay(1);
+> -		} while (--timeout);
+> -	}
+> +	val = omap_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
+> +	val |= PLL_IDLE;
+> +	omap_pipe3_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
+> +
+> +	do {
+> +		val = omap_pipe3_readl(phy->pll_ctrl_base, PLL_STATUS);
+> +		if (val & PLL_TICOPWDN)
+> +			break;
+> +		udelay(1);
 
-(Although hey - if you want to *guess* and prepopulate the LUT with the
-most likely options at init time, that would be fine. As long as you can
-cope with then being asked to send something unexpected, and rewrite the
-LUT as needed.)
+Is it better to sleep instead of udelay?
 
---=20
-dwmw2
+> +	} while (--timeout);
+> +
+> +	omap_control_usb_phy_power(phy->control_dev, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static int omap_pipe3_power_on(struct phy *x)
+> +{
+> +	struct omap_pipe3 *phy = phy_get_drvdata(x);
+> +	int val;
+> +	int timeout = PLL_IDLE_TIME;
+> +
+> +	val = omap_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
+> +	val &= ~PLL_IDLE;
+> +	omap_pipe3_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
+> +
+> +	do {
+> +		val = omap_pipe3_readl(phy->pll_ctrl_base, PLL_STATUS);
+> +		if (!(val & PLL_TICOPWDN))
+> +			break;
+> +		udelay(1);
 
+here too.
 
---=-RuDMjEoHsAycxKPwfUPA
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+> +	} while (--timeout);
+>  
+>  	return 0;
+>  }
+>  
+> -static void omap_usb_dpll_relock(struct omap_usb *phy)
+> +static void omap_pipe3_dpll_relock(struct omap_pipe3 *phy)
+>  {
+>  	u32		val;
+>  	unsigned long	timeout;
+>  
+> -	omap_usb_writel(phy->pll_ctrl_base, PLL_GO, SET_PLL_GO);
+> +	omap_pipe3_writel(phy->pll_ctrl_base, PLL_GO, SET_PLL_GO);
+>  
+>  	timeout = jiffies + msecs_to_jiffies(20);
+>  	do {
+> -		val = omap_usb_readl(phy->pll_ctrl_base, PLL_STATUS);
+> +		val = omap_pipe3_readl(phy->pll_ctrl_base, PLL_STATUS);
+>  		if (val & PLL_LOCK)
+>  			break;
+>  	} while (!WARN_ON(time_after(jiffies, timeout)));
+>  }
+>  
+> -static int omap_usb_dpll_lock(struct omap_usb *phy)
+> +static int omap_pipe3_dpll_lock(struct omap_pipe3 *phy)
+>  {
+>  	u32			val;
+>  	unsigned long		rate;
+> -	struct usb_dpll_params *dpll_params;
+> +	struct pipe3_dpll_params *dpll_params;
+>  
+>  	rate = clk_get_rate(phy->sys_clk);
+> -	dpll_params = omap_usb3_get_dpll_params(rate);
+> +	dpll_params = omap_pipe3_get_dpll_params(rate);
+>  	if (!dpll_params) {
+>  		dev_err(phy->dev,
+>  			  "No DPLL configuration for %lu Hz SYS CLK\n", rate);
+>  		return -EINVAL;
+>  	}
+>  
+> -	val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION1);
+> +	val = omap_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION1);
+>  	val &= ~PLL_REGN_MASK;
+>  	val |= dpll_params->n << PLL_REGN_SHIFT;
+> -	omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION1, val);
+> +	omap_pipe3_writel(phy->pll_ctrl_base, PLL_CONFIGURATION1, val);
+>  
+> -	val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
+> +	val = omap_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
+>  	val &= ~PLL_SELFREQDCO_MASK;
+>  	val |= dpll_params->freq << PLL_SELFREQDCO_SHIFT;
+> -	omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
+> +	omap_pipe3_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
+>  
+> -	val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION1);
+> +	val = omap_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION1);
+>  	val &= ~PLL_REGM_MASK;
+>  	val |= dpll_params->m << PLL_REGM_SHIFT;
+> -	omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION1, val);
+> +	omap_pipe3_writel(phy->pll_ctrl_base, PLL_CONFIGURATION1, val);
+>  
+> -	val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION4);
+> +	val = omap_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION4);
+>  	val &= ~PLL_REGM_F_MASK;
+>  	val |= dpll_params->mf << PLL_REGM_F_SHIFT;
+> -	omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION4, val);
+> +	omap_pipe3_writel(phy->pll_ctrl_base, PLL_CONFIGURATION4, val);
+>  
+> -	val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION3);
+> +	val = omap_pipe3_readl(phy->pll_ctrl_base, PLL_CONFIGURATION3);
+>  	val &= ~PLL_SD_MASK;
+>  	val |= dpll_params->sd << PLL_SD_SHIFT;
+> -	omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION3, val);
+> +	omap_pipe3_writel(phy->pll_ctrl_base, PLL_CONFIGURATION3, val);
+>  
+> -	omap_usb_dpll_relock(phy);
+> +	omap_pipe3_dpll_relock(phy);
+>  
+>  	return 0;
+>  }
+>  
+> -static int omap_usb3_init(struct usb_phy *x)
+> +static int omap_pipe3_init(struct phy *x)
+>  {
+> -	struct omap_usb	*phy = phy_to_omapusb(x);
+> +	struct omap_pipe3 *phy = phy_get_drvdata(x);
+>  	int ret;
+>  
+> -	ret = omap_usb_dpll_lock(phy);
+> +	ret = omap_pipe3_dpll_lock(phy);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -195,9 +199,18 @@ static int omap_usb3_init(struct usb_phy *x)
+>  	return 0;
+>  }
+>  
+> -static int omap_usb3_probe(struct platform_device *pdev)
+> +static struct phy_ops ops = {
+> +	.init		= omap_pipe3_init,
+> +	.power_on	= omap_pipe3_power_on,
+> +	.power_off	= omap_pipe3_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int omap_pipe3_probe(struct platform_device *pdev)
+>  {
+> -	struct omap_usb *phy;
+> +	struct omap_pipe3 *phy;
+> +	struct phy *generic_phy;
+> +	struct phy_provider *phy_provider;
+>  	struct resource *res;
+>  	struct device_node *node = pdev->dev.of_node;
+>  	struct device_node *control_node;
+> @@ -208,7 +221,7 @@ static int omap_usb3_probe(struct platform_device *pdev)
+>  
+>  	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
+>  	if (!phy) {
+> -		dev_err(&pdev->dev, "unable to alloc mem for OMAP USB3 PHY\n");
+> +		dev_err(&pdev->dev, "unable to alloc mem for OMAP PIPE3 PHY\n");
+>  		return -ENOMEM;
+>  	}
+>  
+> @@ -219,13 +232,6 @@ static int omap_usb3_probe(struct platform_device *pdev)
+>  
+>  	phy->dev		= &pdev->dev;
+>  
+> -	phy->phy.dev		= phy->dev;
+> -	phy->phy.label		= "omap-usb3";
+> -	phy->phy.init		= omap_usb3_init;
+> -	phy->phy.set_suspend	= omap_usb3_suspend;
+> -	phy->phy.type		= USB_PHY_TYPE_USB3;
+> -
+> -	phy->is_suspended	= 1;
+>  	phy->wkupclk = devm_clk_get(phy->dev, "usb_phy_cm_clk32k");
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIISxDCCBjQw
-ggQcoAMCAQICAR4wDQYJKoZIhvcNAQEFBQAwfTELMAkGA1UEBhMCSUwxFjAUBgNVBAoTDVN0YXJ0
-Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNpZ25pbmcxKTAn
-BgNVBAMTIFN0YXJ0Q29tIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTA3MTAyNDIxMDE1NVoX
-DTE3MTAyNDIxMDE1NVowgYwxCzAJBgNVBAYTAklMMRYwFAYDVQQKEw1TdGFydENvbSBMdGQuMSsw
-KQYDVQQLEyJTZWN1cmUgRGlnaXRhbCBDZXJ0aWZpY2F0ZSBTaWduaW5nMTgwNgYDVQQDEy9TdGFy
-dENvbSBDbGFzcyAxIFByaW1hcnkgSW50ZXJtZWRpYXRlIENsaWVudCBDQTCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBAMcJg8zOLdgasSmkLhOrlr6KMoOMpohBllVHrdRvEg/q6r8jR+EK
-75xCGhR8ToREoqe7zM9/UnC6TS2y9UKTpT1v7RSMzR0t6ndl0TWBuUr/UXBhPk+Kmy7bI4yW4urC
-+y7P3/1/X7U8ocb8VpH/Clt+4iq7nirMcNh6qJR+xjOhV+VHzQMALuGYn5KZmc1NbJQYclsGkDxD
-z2UbFqE2+6vIZoL+jb9x4Pa5gNf1TwSDkOkikZB1xtB4ZqtXThaABSONdfmv/Z1pua3FYxnCFmdr
-/+N2JLKutIxMYqQOJebr/f/h5t95m4JgrM3Y/w7YX9d7YAL9jvN4SydHsU6n65cCAwEAAaOCAa0w
-ggGpMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgEGMB0GA1UdDgQWBBRTcu2SnODaywFc
-fH6WNU7y1LhRgjAfBgNVHSMEGDAWgBROC+8apEBbpRdphzDKNGhD0EGu8jBmBggrBgEFBQcBAQRa
-MFgwJwYIKwYBBQUHMAGGG2h0dHA6Ly9vY3NwLnN0YXJ0c3NsLmNvbS9jYTAtBggrBgEFBQcwAoYh
-aHR0cDovL3d3dy5zdGFydHNzbC5jb20vc2ZzY2EuY3J0MFsGA1UdHwRUMFIwJ6AloCOGIWh0dHA6
-Ly93d3cuc3RhcnRzc2wuY29tL3Nmc2NhLmNybDAnoCWgI4YhaHR0cDovL2NybC5zdGFydHNzbC5j
-b20vc2ZzY2EuY3JsMIGABgNVHSAEeTB3MHUGCysGAQQBgbU3AQIBMGYwLgYIKwYBBQUHAgEWImh0
-dHA6Ly93d3cuc3RhcnRzc2wuY29tL3BvbGljeS5wZGYwNAYIKwYBBQUHAgEWKGh0dHA6Ly93d3cu
-c3RhcnRzc2wuY29tL2ludGVybWVkaWF0ZS5wZGYwDQYJKoZIhvcNAQEFBQADggIBAAqDCH14qywG
-XLhjjF6uHLkjd02hcdh9hrw+VUsv+q1eeQWB21jWj3kJ96AUlPCoEGZ/ynJNScWy6QMVQjbbMXlt
-UfO4n4bGGdKo3awPWp61tjAFgraLJgDk+DsSvUD6EowjMTNx25GQgyYJ5RPIzKKR9tQW8gGK+2+R
-HxkUCTbYFnL6kl8Ch507rUdPPipJ9CgJFws3kDS3gOS5WFMxcjO5DwKfKSETEPrHh7p5shuuNktv
-sv6hxHTLhiMKX893gxdT3XLS9OKmCv87vkINQcNEcIIoFWbP9HORz9v3vQwR4e3ksLc2JZOAFK+s
-sS5XMEoznzpihEP0PLc4dCBYjbvSD7kxgDwZ+Aj8Q9PkbvE9sIPP7ON0fz095HdThKjiVJe6vofq
-+n6b1NBc8XdrQvBmunwxD5nvtTW4vtN6VY7mUCmxsCieuoBJ9OlqmsVWQvifIYf40dJPZkk9YgGT
-zWLpXDSfLSplbY2LL9C9U0ptvjcDjefLTvqSFc7tw1sEhF0n/qpA2r0GpvkLRDmcSwVyPvmjFBGq
-Up/pNy8ZuPGQmHwFi2/14+xeSUDG2bwnsYJQG2EdJCB6luQ57GEnTA/yKZSTKI8dDQa8Sd3zfXb1
-9mOgSF0bBdXbuKhEpuP9wirslFe6fQ1t5j5R0xi72MZ8ikMu1RQZKCyDbMwazlHiMIIGQjCCBSqg
-AwIBAgIDBoXOMA0GCSqGSIb3DQEBBQUAMIGMMQswCQYDVQQGEwJJTDEWMBQGA1UEChMNU3RhcnRD
-b20gTHRkLjErMCkGA1UECxMiU2VjdXJlIERpZ2l0YWwgQ2VydGlmaWNhdGUgU2lnbmluZzE4MDYG
-A1UEAxMvU3RhcnRDb20gQ2xhc3MgMSBQcmltYXJ5IEludGVybWVkaWF0ZSBDbGllbnQgQ0EwHhcN
-MTMwNTAyMDYyMDQ2WhcNMTQwNTAzMTIxNDAyWjBdMRkwFwYDVQQNExBNd0k3ODIxNTRpV21lZVkw
-MRwwGgYDVQQDDBNkd213MkBpbmZyYWRlYWQub3JnMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZy
-YWRlYWQub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvWGuRDHiXVpOgaFkBaz8
-c3jQTfiEw7j0iKZnktCQi0xjY29QJ7GwL+fgQlbofXgYTm8E9fWERvw2tAy2BxHzAPguBzziS7JN
-hsGP9lf3L8hFJBvmdyyyj8b9A6Oi7s3JLtMRWIvyvE+DbuTkP+htuT4+XuTJr8Y5yIqd1WXr2gJk
-ANr77vTyjeNxceevP58Tqr0f+4v5g6+vNARO3bk3SaVQPDUTwGrpoPtLh3d+mQzZ4iiW3MwQS7Wr
-UVT3l2aTVHCpgtAaBs3zHWarvmIqhbWj8zdcnELNzwqTrOjaoWxuWY4k05GGfzmdjOBUiL7FDNvI
-ZwweJEPwJAQI72YhUwIDAQABo4IC2TCCAtUwCQYDVR0TBAIwADALBgNVHQ8EBAMCBLAwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMB0GA1UdDgQWBBSs0hZhUgQwqGVXzLuH6pJH0hMZwTAf
-BgNVHSMEGDAWgBRTcu2SnODaywFcfH6WNU7y1LhRgjAeBgNVHREEFzAVgRNkd213MkBpbmZyYWRl
-YWQub3JnMIIBTAYDVR0gBIIBQzCCAT8wggE7BgsrBgEEAYG1NwECAzCCASowLgYIKwYBBQUHAgEW
-Imh0dHA6Ly93d3cuc3RhcnRzc2wuY29tL3BvbGljeS5wZGYwgfcGCCsGAQUFBwICMIHqMCcWIFN0
-YXJ0Q29tIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MAMCAQEagb5UaGlzIGNlcnRpZmljYXRlIHdh
-cyBpc3N1ZWQgYWNjb3JkaW5nIHRvIHRoZSBDbGFzcyAxIFZhbGlkYXRpb24gcmVxdWlyZW1lbnRz
-IG9mIHRoZSBTdGFydENvbSBDQSBwb2xpY3ksIHJlbGlhbmNlIG9ubHkgZm9yIHRoZSBpbnRlbmRl
-ZCBwdXJwb3NlIGluIGNvbXBsaWFuY2Ugb2YgdGhlIHJlbHlpbmcgcGFydHkgb2JsaWdhdGlvbnMu
-MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuc3RhcnRzc2wuY29tL2NydHUxLWNybC5jcmww
-gY4GCCsGAQUFBwEBBIGBMH8wOQYIKwYBBQUHMAGGLWh0dHA6Ly9vY3NwLnN0YXJ0c3NsLmNvbS9z
-dWIvY2xhc3MxL2NsaWVudC9jYTBCBggrBgEFBQcwAoY2aHR0cDovL2FpYS5zdGFydHNzbC5jb20v
-Y2VydHMvc3ViLmNsYXNzMS5jbGllbnQuY2EuY3J0MCMGA1UdEgQcMBqGGGh0dHA6Ly93d3cuc3Rh
-cnRzc2wuY29tLzANBgkqhkiG9w0BAQUFAAOCAQEACFLDQnyO8+XA/TiTltjJ/ZAvM+qmBEKN43Vd
-+Wio2lM/Wq/scJpkupXGHrl9CueobkDxMAogXbMxqLZYO13PvgjMh+PHxDPnQv8EGxOig+k/Hqvc
-qEdTlm9YEHcbXbWS6XB+zRO7VVIpGMYQ1f1qCOcukxmwIm6iMSHXbOr/7paQm4bO0ULptjBotfiO
-Zo6q8No6SroQlOSyc6v8FYSxTNIAXMaM2FYkjqrxgdnJmSIAfr11gROuF69WuOICxP0zTEjJle+7
-aO9lUWNaWMWPMyFSNCxF6kkRuvUCami7vlhLOTRC1kb+OMhx7keN9At3tdTI3rtuFeSB1Pa3VXVs
-0DCCBkIwggUqoAMCAQICAwaFzjANBgkqhkiG9w0BAQUFADCBjDELMAkGA1UEBhMCSUwxFjAUBgNV
-BAoTDVN0YXJ0Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNp
-Z25pbmcxODA2BgNVBAMTL1N0YXJ0Q29tIENsYXNzIDEgUHJpbWFyeSBJbnRlcm1lZGlhdGUgQ2xp
-ZW50IENBMB4XDTEzMDUwMjA2MjA0NloXDTE0MDUwMzEyMTQwMlowXTEZMBcGA1UEDRMQTXdJNzgy
-MTU0aVdtZWVZMDEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzEiMCAGCSqGSIb3DQEJARYT
-ZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL1hrkQx
-4l1aToGhZAWs/HN40E34hMO49IimZ5LQkItMY2NvUCexsC/n4EJW6H14GE5vBPX1hEb8NrQMtgcR
-8wD4Lgc84kuyTYbBj/ZX9y/IRSQb5ncsso/G/QOjou7NyS7TEViL8rxPg27k5D/obbk+Pl7kya/G
-OciKndVl69oCZADa++708o3jcXHnrz+fE6q9H/uL+YOvrzQETt25N0mlUDw1E8Bq6aD7S4d3fpkM
-2eIoltzMEEu1q1FU95dmk1RwqYLQGgbN8x1mq75iKoW1o/M3XJxCzc8Kk6zo2qFsblmOJNORhn85
-nYzgVIi+xQzbyGcMHiRD8CQECO9mIVMCAwEAAaOCAtkwggLVMAkGA1UdEwQCMAAwCwYDVR0PBAQD
-AgSwMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDAdBgNVHQ4EFgQUrNIWYVIEMKhlV8y7
-h+qSR9ITGcEwHwYDVR0jBBgwFoAUU3Ltkpzg2ssBXHx+ljVO8tS4UYIwHgYDVR0RBBcwFYETZHdt
-dzJAaW5mcmFkZWFkLm9yZzCCAUwGA1UdIASCAUMwggE/MIIBOwYLKwYBBAGBtTcBAgMwggEqMC4G
-CCsGAQUFBwIBFiJodHRwOi8vd3d3LnN0YXJ0c3NsLmNvbS9wb2xpY3kucGRmMIH3BggrBgEFBQcC
-AjCB6jAnFiBTdGFydENvbSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTADAgEBGoG+VGhpcyBjZXJ0
-aWZpY2F0ZSB3YXMgaXNzdWVkIGFjY29yZGluZyB0byB0aGUgQ2xhc3MgMSBWYWxpZGF0aW9uIHJl
-cXVpcmVtZW50cyBvZiB0aGUgU3RhcnRDb20gQ0EgcG9saWN5LCByZWxpYW5jZSBvbmx5IGZvciB0
-aGUgaW50ZW5kZWQgcHVycG9zZSBpbiBjb21wbGlhbmNlIG9mIHRoZSByZWx5aW5nIHBhcnR5IG9i
-bGlnYXRpb25zLjA2BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLnN0YXJ0c3NsLmNvbS9jcnR1
-MS1jcmwuY3JsMIGOBggrBgEFBQcBAQSBgTB/MDkGCCsGAQUFBzABhi1odHRwOi8vb2NzcC5zdGFy
-dHNzbC5jb20vc3ViL2NsYXNzMS9jbGllbnQvY2EwQgYIKwYBBQUHMAKGNmh0dHA6Ly9haWEuc3Rh
-cnRzc2wuY29tL2NlcnRzL3N1Yi5jbGFzczEuY2xpZW50LmNhLmNydDAjBgNVHRIEHDAahhhodHRw
-Oi8vd3d3LnN0YXJ0c3NsLmNvbS8wDQYJKoZIhvcNAQEFBQADggEBAAhSw0J8jvPlwP04k5bYyf2Q
-LzPqpgRCjeN1XfloqNpTP1qv7HCaZLqVxh65fQrnqG5A8TAKIF2zMai2WDtdz74IzIfjx8Qz50L/
-BBsTooPpPx6r3KhHU5ZvWBB3G121kulwfs0Tu1VSKRjGENX9agjnLpMZsCJuojEh12zq/+6WkJuG
-ztFC6bYwaLX4jmaOqvDaOkq6EJTksnOr/BWEsUzSAFzGjNhWJI6q8YHZyZkiAH69dYETrhevVrji
-AsT9M0xIyZXvu2jvZVFjWljFjzMhUjQsRepJEbr1Ampou75YSzk0QtZG/jjIce5HjfQLd7XUyN67
-bhXkgdT2t1V1bNAxggNvMIIDawIBATCBlDCBjDELMAkGA1UEBhMCSUwxFjAUBgNVBAoTDVN0YXJ0
-Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNpZ25pbmcxODA2
-BgNVBAMTL1N0YXJ0Q29tIENsYXNzIDEgUHJpbWFyeSBJbnRlcm1lZGlhdGUgQ2xpZW50IENBAgMG
-hc4wCQYFKw4DAhoFAKCCAa8wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUx
-DxcNMTMwOTEyMTExNzQ1WjAjBgkqhkiG9w0BCQQxFgQULwPXOGE+XEv1a9eO0IWNTAcyDuQwgaUG
-CSsGAQQBgjcQBDGBlzCBlDCBjDELMAkGA1UEBhMCSUwxFjAUBgNVBAoTDVN0YXJ0Q29tIEx0ZC4x
-KzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNpZ25pbmcxODA2BgNVBAMTL1N0
-YXJ0Q29tIENsYXNzIDEgUHJpbWFyeSBJbnRlcm1lZGlhdGUgQ2xpZW50IENBAgMGhc4wgacGCyqG
-SIb3DQEJEAILMYGXoIGUMIGMMQswCQYDVQQGEwJJTDEWMBQGA1UEChMNU3RhcnRDb20gTHRkLjEr
-MCkGA1UECxMiU2VjdXJlIERpZ2l0YWwgQ2VydGlmaWNhdGUgU2lnbmluZzE4MDYGA1UEAxMvU3Rh
-cnRDb20gQ2xhc3MgMSBQcmltYXJ5IEludGVybWVkaWF0ZSBDbGllbnQgQ0ECAwaFzjANBgkqhkiG
-9w0BAQEFAASCAQCNfeqqKjZvzx7JRRSXyLPql8K176HvYZifwFFLFl/vHdrmRrSzXrbS/hJysdE8
-W7QB42GZ5igNi70F5l7LqQ6xgovGqGLWmwRiIgzg69MfIxsNCpkEPvu/AleZ3Fh2prSYCtYFi/r4
-MZeJGDinRWfqdEAaPz0nTa1r3ZvwHxmerSa/JOSalWjt7fztw20lO1x2nCtJ0kIbht45p9AFY4fX
-GCcaGsyYDlVBKfLZ7CzeflbEX4XfRnJ7kQeovCG25I/SV4y1dYDYd1PfcHrkV0JUpCZsg3kXKbfa
-qkOQ5h8CK2ZtB+DWPk/wmMtsNRByNwpjOXe8VssUKLh3jgP5HdUfAAAAAAAA
+As this is no longer USB specific, we need to make the clock binding generic as well.
 
+>  	if (IS_ERR(phy->wkupclk)) {
+>  		dev_err(&pdev->dev, "unable to get usb_phy_cm_clk32k\n");
+> @@ -251,6 +257,11 @@ static int omap_usb3_probe(struct platform_device *pdev)
+>  		dev_err(&pdev->dev, "Failed to get control device phandle\n");
+>  		return -EINVAL;
+>  	}
+> +	phy_provider = devm_of_phy_provider_register(phy->dev,
+> +			of_phy_simple_xlate);
+> +	if (IS_ERR(phy_provider))
+> +		return PTR_ERR(phy_provider);
+> +
+>  	control_pdev = of_find_device_by_node(control_node);
+>  	if (!control_pdev) {
+>  		dev_err(&pdev->dev, "Failed to get control device\n");
+> @@ -260,23 +271,27 @@ static int omap_usb3_probe(struct platform_device *pdev)
+>  	phy->control_dev = &control_pdev->dev;
+>  
+>  	omap_control_usb_phy_power(phy->control_dev, 0);
+> -	usb_add_phy_dev(&phy->phy);
+>  
+>  	platform_set_drvdata(pdev, phy);
+> -
+>  	pm_runtime_enable(phy->dev);
+> +
+> +	generic_phy = devm_phy_create(phy->dev, &ops, NULL);
+> +	if (IS_ERR(generic_phy))
+> +		return PTR_ERR(generic_phy);
+> +
+> +	phy_set_drvdata(generic_phy, phy);
+> +
+>  	pm_runtime_get(&pdev->dev);
+>  
+>  	return 0;
+>  }
+>  
+> -static int omap_usb3_remove(struct platform_device *pdev)
+> +static int omap_pipe3_remove(struct platform_device *pdev)
+>  {
+> -	struct omap_usb *phy = platform_get_drvdata(pdev);
+> +	struct omap_pipe3 *phy = platform_get_drvdata(pdev);
+>  
+>  	clk_unprepare(phy->wkupclk);
+>  	clk_unprepare(phy->optclk);
+> -	usb_remove_phy(&phy->phy);
+>  	if (!pm_runtime_suspended(&pdev->dev))
+>  		pm_runtime_put(&pdev->dev);
+>  	pm_runtime_disable(&pdev->dev);
+> @@ -286,10 +301,9 @@ static int omap_usb3_remove(struct platform_device *pdev)
+>  
+>  #ifdef CONFIG_PM_RUNTIME
+>  
+> -static int omap_usb3_runtime_suspend(struct device *dev)
+> +static int omap_pipe3_runtime_suspend(struct device *dev)
+>  {
+> -	struct platform_device	*pdev = to_platform_device(dev);
+> -	struct omap_usb	*phy = platform_get_drvdata(pdev);
+> +	struct omap_pipe3	*phy = dev_get_drvdata(dev);
+>  
+>  	clk_disable(phy->wkupclk);
+>  	clk_disable(phy->optclk);
+> @@ -297,11 +311,10 @@ static int omap_usb3_runtime_suspend(struct device *dev)
+>  	return 0;
+>  }
+>  
+> -static int omap_usb3_runtime_resume(struct device *dev)
+> +static int omap_pipe3_runtime_resume(struct device *dev)
+>  {
+>  	u32 ret = 0;
+> -	struct platform_device	*pdev = to_platform_device(dev);
+> -	struct omap_usb	*phy = platform_get_drvdata(pdev);
+> +	struct omap_pipe3	*phy = dev_get_drvdata(dev);
+>  
+>  	ret = clk_enable(phy->optclk);
+>  	if (ret) {
+> @@ -324,38 +337,41 @@ err1:
+>  	return ret;
+>  }
+>  
+> -static const struct dev_pm_ops omap_usb3_pm_ops = {
+> -	SET_RUNTIME_PM_OPS(omap_usb3_runtime_suspend, omap_usb3_runtime_resume,
+> -		NULL)
+> +static const struct dev_pm_ops omap_pipe3_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(omap_pipe3_runtime_suspend,
+> +		omap_pipe3_runtime_resume, NULL)
+>  };
+>  
+> -#define DEV_PM_OPS     (&omap_usb3_pm_ops)
+> +#define DEV_PM_OPS     (&omap_pipe3_pm_ops)
+>  #else
+>  #define DEV_PM_OPS     NULL
+>  #endif
+>  
+>  #ifdef CONFIG_OF
+> -static const struct of_device_id omap_usb3_id_table[] = {
+> +static const struct of_device_id omap_pipe3_id_table[] = {
+> +	{ .compatible = "ti,omap-pipe3" },
 
---=-RuDMjEoHsAycxKPwfUPA--
+why do you need "omap-pipe3", isn't sata, pcie and usb3 sufficient?
+
+> +	{ .compatible = "ti,omap-sata" },
+> +	{ .compatible = "ti,omap-pcie" },
+>  	{ .compatible = "ti,omap-usb3" },
+>  	{}
+>  };
+> -MODULE_DEVICE_TABLE(of, omap_usb3_id_table);
+> +MODULE_DEVICE_TABLE(of, omap_pipe3_id_table);
+>  #endif
+>  
+> -static struct platform_driver omap_usb3_driver = {
+> -	.probe		= omap_usb3_probe,
+> -	.remove		= omap_usb3_remove,
+> +static struct platform_driver omap_pipe3_driver = {
+> +	.probe		= omap_pipe3_probe,
+> +	.remove		= omap_pipe3_remove,
+>  	.driver		= {
+> -		.name	= "omap-usb3",
+> +		.name	= "omap-pipe3",
+>  		.owner	= THIS_MODULE,
+>  		.pm	= DEV_PM_OPS,
+> -		.of_match_table = of_match_ptr(omap_usb3_id_table),
+> +		.of_match_table = of_match_ptr(omap_pipe3_id_table),
+>  	},
+>  };
+>  
+> -module_platform_driver(omap_usb3_driver);
+> +module_platform_driver(omap_pipe3_driver);
+>  
+> -MODULE_ALIAS("platform: omap_usb3");
+> +MODULE_ALIAS("platform: omap_pipe3");
+>  MODULE_AUTHOR("Texas Instruments Inc.");
+> -MODULE_DESCRIPTION("OMAP USB3 phy driver");
+> +MODULE_DESCRIPTION("OMAP PIPE3 phy driver");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+> index d69cdad..0210e03 100644
+> --- a/drivers/usb/phy/Kconfig
+> +++ b/drivers/usb/phy/Kconfig
+> @@ -66,17 +66,6 @@ config OMAP_CONTROL_USB
+>  	  power on the USB2 PHY is present in OMAP4 and OMAP5. OMAP5 has an
+>  	  additional register to power on USB3 PHY.
+>  
+> -config OMAP_USB3
+> -	tristate "OMAP USB3 PHY Driver"
+> -	depends on ARCH_OMAP2PLUS || COMPILE_TEST
+> -	select OMAP_CONTROL_USB
+> -	select USB_PHY
+> -	help
+> -	  Enable this to support the USB3 PHY that is part of SOC. This
+> -	  driver takes care of all the PHY functionality apart from comparator.
+> -	  This driver interacts with the "OMAP Control USB Driver" to power
+> -	  on/off the PHY.
+> -
+>  config AM335X_CONTROL_USB
+>  	tristate
+>  
+> diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
+> index 51968d7..d1c9683 100644
+> --- a/drivers/usb/phy/Makefile
+> +++ b/drivers/usb/phy/Makefile
+> @@ -13,7 +13,6 @@ obj-$(CONFIG_ISP1301_OMAP)		+= phy-isp1301-omap.o
+>  obj-$(CONFIG_MV_U3D_PHY)		+= phy-mv-u3d-usb.o
+>  obj-$(CONFIG_NOP_USB_XCEIV)		+= phy-generic.o
+>  obj-$(CONFIG_OMAP_CONTROL_USB)		+= phy-omap-control.o
+> -obj-$(CONFIG_OMAP_USB3)			+= phy-omap-usb3.o
+>  obj-$(CONFIG_SAMSUNG_USBPHY)		+= phy-samsung-usb.o
+>  obj-$(CONFIG_SAMSUNG_USB2PHY)		+= phy-samsung-usb2.o
+>  obj-$(CONFIG_SAMSUNG_USB3PHY)		+= phy-samsung-usb3.o
+> diff --git a/include/linux/phy/omap_pipe3.h b/include/linux/phy/omap_pipe3.h
+> new file mode 100644
+> index 0000000..7329056
+> --- /dev/null
+> +++ b/include/linux/phy/omap_pipe3.h
+
+ti_pipe3.h ?
+
+> @@ -0,0 +1,52 @@
+> +/*
+> + * omap_pipe3.h -- omap pipe3 phy header file
+> + *
+> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#ifndef __DRIVERS_OMAP_PIPE3_H
+> +#define __DRIVERS_OMAP_PIPE3_H
+> +
+> +#include <linux/io.h>
+> +
+> +struct pipe3_dpll_params {
+> +	u16	m;
+> +	u8	n;
+> +	u8	freq:3;
+> +	u8	sd;
+> +	u32	mf;
+> +};
+> +
+> +struct omap_pipe3 {
+> +	void __iomem		*pll_ctrl_base;
+> +	struct device		*dev;
+> +	struct device		*control_dev;
+> +	struct clk		*wkupclk;
+> +	struct clk		*sys_clk;
+
+sysclk. To be consistent with others?
+
+> +	struct clk		*optclk;
+> +};
+> +
+> +static inline u32 omap_pipe3_readl(void __iomem *addr, unsigned offset)
+> +{
+> +	return __raw_readl(addr + offset);
+> +}
+> +
+> +static inline void omap_pipe3_writel(void __iomem *addr, unsigned offset,
+> +	u32 data)
+> +{
+> +	__raw_writel(data, addr + offset);
+> +}
+> +
+> +#endif /* __DRIVERS_OMAP_PIPE3_H */
+> 
+
+cheers,
+-roger
 
