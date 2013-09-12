@@ -1,73 +1,29 @@
-From: Koen Kooi <koen@dominion.thruhere.net>
-Subject: [PATCH 1/4] arm: bone: dts: add CD for mmc1
-Date: Thu, 12 Sep 2013 17:42:09 +0200
-Message-ID: <1379000532-27376-2-git-send-email-koen@dominion.thruhere.net>
-References: <1379000532-27376-1-git-send-email-koen@dominion.thruhere.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379000532-27376-1-git-send-email-koen@dominion.thruhere.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexander Holler <holler@ahsoftware.de>, Koen Kooi <koen@dominion.thruhere.net>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 2/3] ARM: dts: Leave Exynos5250 SPI controller disabled by
+ default
+Date: Thu, 12 Sep 2013 17:51:58 +0200
+Message-ID: <3266701.1laYrVSaLy@amdc1227>
+References: <1378982427-5802-1-git-send-email-broonie@kernel.org>
+ <10382663.35TJtu8bGt@amdc1227> <20130912135028.GR29403@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20130912135028.GR29403@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linaro-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alexander Holler <holler@ahsoftware.de>
+On Thursday 12 of September 2013 14:50:28 Mark Brown wrote:
+> On Thu, Sep 12, 2013 at 01:56:44PM +0200, Tomasz Figa wrote:
+> > I wonder if exynos5250-arndale shouldn't be also considered in this
+> > patch.
+> There are no SPI devices on that board (at least not ones that are
+> currently instantiated by the DT).
 
-This enables the use of MMC cards even when no card was inserted at boot.
+I can see a bunch of nodes simply adding status = "disabled" in dts of 
+arndale.
 
-Signed-off-by: Alexander Holler <holler@ahsoftware.de>
-Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
----
-
-Changes since v2:
-	None, again a simple repost
-
-Changes since v1:
-	None, simple repost
-
- arch/arm/boot/dts/am335x-bone-common.dtsi | 14 ++++++++++++++
- arch/arm/boot/dts/am335x-bone.dts         |  4 ----
- 2 files changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index 2f66ded..ced256c 100644
---- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -107,6 +107,11 @@
- 				0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
- 			>;
- 		};
-+		mmc1_pins: pinmux_mmc1_pins {
-+			pinctrl-single,pins = <
-+				0x160 (PIN_INPUT | MUX_MODE7) /* GPIO0_6 */
-+			>;
-+		};
- 	};
- 
- 	ocp {
-@@ -260,3 +265,12 @@
- 	pinctrl-0 = <&davinci_mdio_default>;
- 	pinctrl-1 = <&davinci_mdio_sleep>;
- };
-+
-+&mmc1 {
-+	status = "okay";
-+	vmmc-supply = <&ldo3_reg>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
-+};
-diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-index d5f43fe..d34469c 100644
---- a/arch/arm/boot/dts/am335x-bone.dts
-+++ b/arch/arm/boot/dts/am335x-bone.dts
-@@ -16,7 +16,3 @@
- 	regulator-always-on;
- };
- 
--&mmc1 {
--	status = "okay";
--	vmmc-supply = <&ldo3_reg>;
--};
--- 
-1.8.2.1
+Best regards,
+Tomasz
