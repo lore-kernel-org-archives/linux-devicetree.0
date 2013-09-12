@@ -1,140 +1,89 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
-Date: Thu, 12 Sep 2013 12:11:25 +0200
-Message-ID: <5231934D.4060706@collabora.co.uk>
-References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com> <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com> <344239800.bDEkDg48ZQ@avalon> <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com> <52308C91.2000105@ahsoftware.de> <523096FE.8080901@collabora.co.uk> <5230AB6E.1070807@ahsoftware.de> <5231817F.8000901@ahsoftware.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2] regulator: core: add support for configuring turn-on
+ time through constraints
+Date: Thu, 12 Sep 2013 11:12:29 +0100
+Message-ID: <20130912101229.GD29403@sirena.org.uk>
+References: <1378904331-5665-1-git-send-email-ldewangan@nvidia.com>
+ <5230A593.9010401@wwwdotorg.org>
+ <5230AC5E.2020504@nvidia.com>
+ <5230AC61.30904@wwwdotorg.org>
+ <5230B1CE.3090709@nvidia.com>
+ <5230AF94.60007@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5231817F.8000901@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Holler <holler@ahsoftware.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="E4rQ6ZnlkSybhf/y"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5230AF94.60007@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2013 10:55 AM, Alexander Holler wrote:
-> Am 11.09.2013 19:42, schrieb Alexander Holler:
->> Am 11.09.2013 18:14, schrieb Javier Martinez Canillas:
-> 
->>> So for example in an OMAP board DT you can define something like this:
->>>
->>> ethernet@5,0 {
->>>          compatible = "smsc,lan9221", "smsc,lan9115";
->>>          interrupt-parent = <&gpio6>;
->>>          interrupts = <16 8>;
->>> };
->>>
->>> Since each OMAP GPIO bank has 32 GPIO pins, then what you are defining
->>> is that
->>> the GPIO 176 (5 * 32 + 16) will be mapped as the IRQ line for the
->>> ethernet
->>> controller.
-> 
-> By the way, how do you define two GPIOs/IRQs from different
-> gpio-banks/irq-controllers wuth that scheme?
-> 
 
-That is indeed a very good question and I don't have a definite answer.
+--E4rQ6ZnlkSybhf/y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Would that be like below?
-> 
->  ethernet@5,0 {
->           compatible = "smsc,lan9221", "smsc,lan9115";
->           interrupt-parent = <&gpio6>;
->           interrupts = <16 8>;
->           interrupt-parent = <&gpio7>;
->           interrupts = <1 IRQF_TRIGGER_FALLING>; /* GPIO7_1 */
->  };
->
+On Wed, Sep 11, 2013 at 11:59:48AM -0600, Stephen Warren wrote:
+> On 09/11/2013 12:09 PM, Laxman Dewangan wrote:
 
-I just looked at
-Documentation/devicetree/bindings/interrupt-controller/interrupts.txt and it
-doesn't mention that use-case (same device using two different interrupts from
-two different interrupt-controller).
+> >> I suppose that either is fine from a DT perspective. But, the regulator
+> >> drivers already know their internal delay, so presumably driver code
+> >> will have to take the value from DT, and subtract out whatever delay the
+> >> driver already embodies, in order to calculate the extra delay required?
+> >> Or, if this property is set, does the driver-specified delay just get
+> >> ignored?
 
-So I went and look at the source in drivers/of/irq.c and noticed that the
-"interrupts" property and its "interrupt-parent" is parsed by the
-of_irq_map_one() function.
+> > Yes, if property is available then driver-specified delay get ignored.
+> > Delay will be used from dt provided value.
 
-/**
- * of_irq_map_one - Resolve an interrupt for a device
- * @device: the device whose interrupt is to be resolved
- * @index: index of the interrupt to resolve
- * @out_irq: structure of_irq filled by this function
- *
- * This function resolves an interrupt, walking the tree, for a given
- * device-tree node. It's the high level pendant to of_irq_map_raw().
- */
-int of_irq_map_one(struct device_node *device, int index, struct of_irq *out_irq)
-{
-        struct device_node *p;
-        ...
-        /* Get the interrupts property */
-        intspec = of_get_property(device, "interrupts", &intlen);
-        ...
-        /* Look for the interrupt parent. */
-        p = of_irq_find_parent(device);
-        ...
-}
+> I'm not sure whether I prefer one option or the other. Perhaps Mark can
+> decide?
 
-/**
- * of_irq_find_parent - Given a device node, find its interrupt parent node
- * @child: pointer to device node
- *
- * Returns a pointer to the interrupt parent node, or NULL if the interrupt
- * parent could not be determined.
- */
-struct device_node *of_irq_find_parent(struct device_node *child)
-{
-	struct device_node *p;
-	const __be32 *parp;
+The drivers don't implement their own delays, this is already factored
+out of them into the framework.  It seems simpler from both a user and
+implementation point of view for the delay specified in the DT to just
+completely override what the drivers know.
 
-	if (!of_node_get(child))
-		return NULL;
+> That said, what if the internal ramp rate of the regulator itself is
+> configurable, and can change at run-time. Won't that affect the total
+> time? If so, having this property represent the additional time might
+> better allow the total time to be recalculated based on internal
+> regulator ramp delay changes. Perhaps the additional time varies if the
+> internal ramp rate varies though, so perhaps it's not worth thinking
+> about this situation.
 
-	do {
-		parp = of_get_property(child, "interrupt-parent", NULL);
-		if (parp == NULL)
-			p = of_get_parent(child);
-		else {
-			if (of_irq_workarounds & OF_IMAP_NO_PHANDLE)
-				p = of_node_get(of_irq_dflt_pic);
-			else
-				p = of_find_node_by_phandle(be32_to_cpup(parp));
-		}
-		of_node_put(child);
-		child = p;
-	} while (p && of_get_property(p, "#interrupt-cells", NULL) == NULL);
+There's very little use case for varying the ramp rate from cold at run
+time - it's mostly just used to limit inrush current on initial power
+on.  I think it's OK to just say that if someone specifies a fixed dleay
+and varies the ramp rate then they probably aren't being sensible and
+get to keep all the pieces.
 
-	return p;
-}
+> - regulator-enable-ramp-delay: The time taken, in uSec, for the supply
 
-So, if I understood the code correctly the DT IRQ core doesn't expect a device
-node to have more than one "interrupt-parent" property.
+microseconds.
 
-It *should* work though if you have multiple "interrupts" properties defined and
-all of them have the same "interrupt-parent":
+--E4rQ6ZnlkSybhf/y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-       interrupt-parent = <&gpio6>;
-       interrupts = <1 IRQF_TRIGGER_HIGH>; /* GPIO6_1 */
-       interrupts = <2 IRQF_TRIGGER_LOW>; /* GPIO6_2 */
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-since of_irq_map_one() will be called for each "interrupts" and the correct
-"interrupt-parent" will get obtained by of_irq_find_parent().
+iQIcBAEBAgAGBQJSMZOKAAoJELSic+t+oim9vPYP/RCOT2PUyiy3Zj0RTK2tfeUf
+H/PUwKA571c7RlbsdtfABTSrPr6C8boLMAmADfoXTBMWUDI5eVOFctZvqCxN+ZoE
+wO9xgSaStIETTsRD5q030dezTZLvxAYSSlE6c+gaQn2yRPjE7eBaMkMJP9zbaEEI
+4lA152wPn+ceSYANvhqkWZcWb6nJnG+URY3EThDzctIfJfqSI0Qo45YEkBDuzyuA
+VdHyXdyONksEDRh/noJcXuE5rWRVW/X5e13BHwX1SljXQ+FdRDb6s2VemJagON9u
+oG61MBnW6JVc0T0figveaCJt200bIMdhGyREh4QmMHySl+o9PZvkx3N5H3YeW7rX
+6FmOzQ0XdHwrmioMUgeVluHE1baVNGuoUiCMduKBX0jDDJ/Ue+GVXErLW0YPPMjO
+fgmncm+MBM592W2MMrNKnbpiTTXUM0MTSXYq6s9sDgmhFYWF7xekwp75jQ5XP20g
+d8XRdBGB/V1ou/sUPM8BblAzIXJ/+vru3g/yNRnJbn2HZy5IE72cq3g7DBwj+9tq
+zwBSIN4SX4eKJI3KEhXiXv0J76hf8rviR7WJnCKzH271qZ8Y0b/hjqy7Sv4RL2EO
+VCgpljjNh2o5/+a/I6oTC2PP19IcYKMisAxDb0eLCu74o8rMQidb+xShkBF+DzY+
+zVDaCtKpqYeV25jf8B3m
+=IZ83
+-----END PGP SIGNATURE-----
 
-> So multiple definitions of interrupt-parent are allowed and the order
-> does matter? And such does work? Sorry for asking, but I'm relatively
-> new to DT. ;)
->
-
-No worries, I'm very new to DT too so let's wait for Grant, Stephen or Linus to
-give us a definite answer :)
-
-> Regards,
-> 
-> Alexander Holler
-> 
-
-Best regards,
-Javier
+--E4rQ6ZnlkSybhf/y--
