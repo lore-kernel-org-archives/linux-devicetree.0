@@ -1,42 +1,56 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH] ARM: dts: Disable Exynos5250 I2S controllers by default
-Date: Thu, 12 Sep 2013 13:15:15 +0200
-Message-ID: <3071955.IukkWJSFK6@amdc1227>
-References: <1378491435-15624-1-git-send-email-broonie@kernel.org>
- <20130910174113.GB4708@sirena.org.uk> <06ff01ceafa4$d81671d0$88435570$@org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] regulator: da9210: add Device Tree binding documentation
+Date: Thu, 12 Sep 2013 12:17:09 +0100
+Message-ID: <20130912111708.GJ29403@sirena.org.uk>
+References: <1378741920-11085-1-git-send-email-g.liakhovetski@gmx.de>
+ <1378741920-11085-3-git-send-email-g.liakhovetski@gmx.de>
+ <20130909160406.GS29403@sirena.org.uk>
+ <Pine.LNX.4.64.1309121254330.4632@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <06ff01ceafa4$d81671d0$88435570$@org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>
-Cc: 'Mark Brown' <broonie@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, rob.herring@calxeda.com, 'Pawel Moll' <Pawel.Moll@arm.com>, 'Stephen Warren' <swarren@wwwdotorg.org>, linux-samsung-soc@vger.kernel.org, linaro-kernel@lists.linaro.org, 'devicetree' <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LkPui+4YGLu0bCC3"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1309121254330.4632@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
 
-On Thursday 12 of September 2013 19:42:57 Kukjin Kim wrote:
-> Mark Brown wrote:
-> > On Tue, Sep 10, 2013 at 06:35:48PM +0100, Mark Rutland wrote:
-> > > It seems far more sensible to me to mark devices disabled by default
-> > > in
-> > > shared dtsi files and then okay them as needed in particular dts
-> > > files.
-> > > I'd be happy with more of this.
-> > 
-> > Yeah, me too - though only for devices that have an external impact,
-> > for
-> > things that are internal only (eg, a crypto engine) it makes sense to
-> > enable them by default since they should normally be usable regardless
-> > of the system configuration.
-> 
-> (+ DT ML)
-> 
-> Makes sense but I need to get the opinions from DT guys...
+--LkPui+4YGLu0bCC3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, this patch should have been posted to the DT ML indeed, but it has 
-been already acked by Mark Rutland, one of DT binding maintainers.
+On Thu, Sep 12, 2013 at 12:57:20PM +0200, Guennadi Liakhovetski wrote:
 
-Best regards,
-Tomasz
+> Is a separate patch like this one ok or you'd prefer me to re-post the=20
+> original series and merge this with the DT implementation?
+
+Please repost, the bindings and the code really ought to be reviewed
+together.
+
+--LkPui+4YGLu0bCC3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSMaKxAAoJELSic+t+oim9hgoQAJFYvwFsKugB2z02tJRlorAX
+PK0aKgiUcNfgce0jQq93rVfTICRnHWLweMpXP2bkxTujhFu6nH1zUuG3va4Gs/a7
+i32kZQx9DQ4lbE9kcDQZfTic4g/0knGNChXEMKDiTbqVke9G+JWiilsW6by/jCpa
+/fM/UucnYIa5Mixtrs5Gv4J00NBQRDXnxdXdLFcxVrBdsDo2EsV9gCB8DOYZDZ+J
+Kpj+YxjyoK9L+lmHoGrrLp6IJsQmw5GghjbTQgyoiZoE5/Si8+6psNqmlQQDuDq3
+aaOlJhzGHyxsWIXzF58N6itWapV/9WYClzYvMnxlO2hbmnpi0EHMvXA/uC6fYN+t
+KfUCMzxoYvpyV784wOzD91r6tNqsJKmwuS8Lrva4vqo4uhcA5qdUOrCWttZGn8Rg
+TNl48UyiRHTLi2D2c2ltRZMfvdieO64QAVmNWpcvtHk7kHDr2RmR4t/gYOeg0wkh
++1/M+wSkAD3L220LDLbFFyjOcoi4mZVHSUyiLffj1rZNzqrSLKqGaXJdiQ/jjdA5
+zSZ4hE0eRurHE1fIXMkxqxBwEd3lMzxUe2aDQ7BY+kjKOlzcHdgTWtDmtQQQJl5y
+6a2ZFKUxHzzq8OahJUqPGDl5TVzotrAwk8v1DCkdQJGVQc/AAiJVtRKsKUaCRCxK
+pCR9763oT1rwzTEDKsBn
+=Es+0
+-----END PGP SIGNATURE-----
+
+--LkPui+4YGLu0bCC3--
