@@ -1,103 +1,47 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
-Date: Thu, 12 Sep 2013 13:20:17 -0500
-Message-ID: <523205E1.2040704@gmail.com>
-References: <1379003839-16068-1-git-send-email-galak@codeaurora.org> <CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com> <25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org> <CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com> <3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org> <CAOesGMhN0jEx065cpf989P-JbuxPiOaPRsP4BD3VoW-n5ebP+w@mail.gmail.com> <9DD9D9A7-ED55-412F-A18D-599D1E365003@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma
+ reserved memory
+Date: Thu, 12 Sep 2013 13:22:25 -0500
+Message-ID: <13185491-534E-4547-8412-5704346EA2DC@codeaurora.org>
+References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com>
+ <1377527959-5080-4-git-send-email-m.szyprowski@samsung.com>
+ <20130829224637.D09183E1222@localhost> <52209278.8040106@samsung.com>
+ <DAF223EB-C84C-4E82-A24A-ACD0A3A0559F@codeaurora.org>
+ <20130909160154.8D7183E0F23@localhost>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9DD9D9A7-ED55-412F-A18D-599D1E365003@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Olof Johansson <olof@lixom.net>, David Brown <davidb@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130909160154.8D7183E0F23@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Laura Abbott <lauraa@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Marc <marc.ceeeee@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, Ian Campbell <ian.campbell@citrix.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2013 01:15 PM, Kumar Gala wrote:
-> 
-> On Sep 12, 2013, at 1:04 PM, Olof Johansson wrote:
-> 
->> On Thu, Sep 12, 2013 at 10:55 AM, Kumar Gala <galak@codeaurora.org>
->> wrote:
->>> 
->>> On Sep 12, 2013, at 12:06 PM, Olof Johansson wrote:
->>> 
->>>> On Thu, Sep 12, 2013 at 9:53 AM, Kumar Gala
->>>> <galak@codeaurora.org> wrote:
->>>>> 
->>>>> On Sep 12, 2013, at 11:46 AM, Olof Johansson wrote:
->>>>> 
->>>>>> On Thu, Sep 12, 2013 at 9:37 AM, Kumar Gala
->>>>>> <galak@codeaurora.org> wrote:
->>>>>>> Use the Qualcomm vendor prefix (qcom) as the directory
->>>>>>> name for Qualcomm MSM devicetrees going forward.
->>>>>>> 
->>>>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
->>>>>> 
->>>>>> Let's not move just one platform like this. If we are to do
->>>>>> this, we should move everything, and that will be really
->>>>>> painful and needs to be done in a controlled manner,
->>>>>> probably scripted and right before a -rc1 or such.
->>>>> 
->>>>> 
->>>>> Than I suggest we deal with it when we pull the device trees
->>>>> out of the kernel tree.
->>>>> 
->>>>> As such, I'd tell Rohit to go forward with the file being
->>>>> named apq8074-dragonboard.dtb for the time being.
->>>> 
->>>> My original request to please use a common prefix for your
->>>> product families stands. Please prefix with msm-*, or if you
->>>> have to, qcom-* instead, since you guys can't seem to make your
->>>> mind up on standard prefixes (msm, apq, etc).
->>> 
->>> This is silly, I dont see the reason to go with
->>> qcom-apq<SOC>-<BOARD>.dts and than in the future drop qcom- when
->>> we mostly likely shift to a dir structure.
->>> 
->>> As engineers we are all too aware of the lack of sanity in
->>> marketing names, but its what we have so we have to live with
->>> it.
->> 
->> And we all have a choice whether we let the marketing people's 
->> insanity spread into our engineering projects, or if we keep it as 
->> sane as possible in spite of them.
->> 
->> I wouldn't have an objection here if there was some sort of
->> rationale between what "apq" and "msm" means. But it seems like
->> qualcomm rolls a dice and decides if a platform will have one name
->> or the other. Dragonboard dmesg says msm<foo>. DTS file for the
->> same board says apq. DTSI file says one thing, overridden by the
->> dts to something else. Total chaos.
->> 
->> I would be fine with adding two instead of one (after all,
->> platforms like TI has this for AM* vs OMAP*, etc), but there _has_
->> to be some sort of consistency or you might just as well assign a
->> random string as name.
->> 
->> So, if you can't come up with a reasonable, rational and
->> consistent naming scheme (which, apparantly, you can't since your
->> marketing guys are in control of this and they don't get it right),
->> then at least prefix with a common string for the platform. That's
->> all I'm asking.
->> 
->> 
->> -Olof
-> 
-> I'm not sure get why the insanity of naming impacts anything, those
-> people that care about the platforms know what names mean what.  Plus
-> we have this same set of having to be in the know for other SoC
-> already.  Freescale does this all the time in PPC land, they just do
-> it with numbers and not prefixes.
-> 
-> I suggested doing a qcom/ dir, as it addresses your concern, of
-> putting all of our mess in one place.  Just because every other
-> SoC/mach/plat hasn't done that should stop us from at least doing it
-> for qcom.
-> 
 
-As Stephen W has pointed out previously, the dtb filename itself is or
-may be an ABI and the bootloader may be hardcoded to a name. So we
-should avoid future renames.
+On Sep 9, 2013, at 11:01 AM, Grant Likely wrote:
 
-Rob
+> 
+> The generic form for do-not-touch memory:
+> 	compatible = "reserved-memory";
+> - I've dropped '-region' because I think it is redundant
+> - The kernel will not make use of this memory except for when a driver picks it up
+> 
+> For contiguous memory:
+> 	compatible = "contiguous-memory", "reserved-memory"
+
+Should the phandle references still be 'memory-region' ?
+
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
