@@ -1,113 +1,212 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 1/3] video: xilinxfb: Use standard variable name convention
-Date: Thu, 12 Sep 2013 07:54:32 +0200
-Message-ID: <7016a90750626ba866dddc6f85cfdd71943f6891.1378965270.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-19560-1378965274-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu
-Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
+Date: Thu, 12 Sep 2013 08:28:59 +0200
+Message-ID: <20130912062859.GM30088@pengutronix.de>
+References: <1378958611-4274-1-git-send-email-xobs@kosagi.com>
+ <1378958611-4274-4-git-send-email-xobs@kosagi.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1378958611-4274-4-git-send-email-xobs@kosagi.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Sean Cross <xobs@kosagi.com>
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+Sean,
 
---=_mimegpg-monstr-desktop-19560-1378965274-0001
+Several more comments.
 
-s/op/pdev/ in xilinxfb_of_probe().
-No functional chagnes.
+Shawn,
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- drivers/video/xilinxfb.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+A question about a clk_set_parent inside.
 
-diff --git a/drivers/video/xilinxfb.c b/drivers/video/xilinxfb.c
-index 84c664e..123cd70 100644
---- a/drivers/video/xilinxfb.c
-+++ b/drivers/video/xilinxfb.c
-@@ -413,7 +413,7 @@ static int xilinxfb_release(struct device *dev)
-  * OF bus binding
-  */
+On Thu, Sep 12, 2013 at 04:03:31AM +0000, Sean Cross wrote:
+> +
+> +#define IMX6_ENTER_RESET 0
+> +#define IMX6_EXIT_RESET 1
 
--static int xilinxfb_of_probe(struct platform_device *op)
-+static int xilinxfb_of_probe(struct platform_device *pdev)
- {
- 	const u32 *prop;
- 	u32 tft_access = 0;
-@@ -427,7 +427,7 @@ static int xilinxfb_of_probe(struct platform_device *op)
- 	/* Allocate the driver data region */
- 	drvdata = kzalloc(sizeof(*drvdata), GFP_KERNEL);
- 	if (!drvdata) {
--		dev_err(&op->dev, "Couldn't allocate device private record\n");
-+		dev_err(&pdev->dev, "Couldn't allocate device private record\n");
- 		return -ENOMEM;
- 	}
+These are unused
 
-@@ -435,7 +435,7 @@ static int xilinxfb_of_probe(struct platform_device *op)
- 	 * To check whether the core is connected directly to DCR or BUS
- 	 * interface and initialize the tft_access accordingly.
- 	 */
--	of_property_read_u32(op->dev.of_node, "xlnx,dcr-splb-slave-if",
-+	of_property_read_u32(pdev->dev.of_node, "xlnx,dcr-splb-slave-if",
- 			     &tft_access);
+> +
+> +#define IMX6_POWER_OFF 0
+> +#define IMX6_POWER_ON 1
 
- 	/*
-@@ -459,29 +459,29 @@ static int xilinxfb_of_probe(struct platform_device *op)
- 	}
- #endif
+unused aswell
 
--	prop = of_get_property(op->dev.of_node, "phys-size", &size);
-+	prop = of_get_property(pdev->dev.of_node, "phys-size", &size);
- 	if ((prop) && (size >= sizeof(u32)*2)) {
- 		pdata.screen_width_mm = prop[0];
- 		pdata.screen_height_mm = prop[1];
- 	}
+> +static int pcie_phy_poll_ack(void __iomem *dbi_base, int max_iterations,
+> +			     int exp_val)
+> +{
+> +	u32 val;
+> +	u32 wait_counter = 0;
+> +
+> +	do {
+> +		val = readl(dbi_base + PCIE_PHY_STAT);
+> +		val = (val >> PCIE_PHY_STAT_ACK_LOC) & 0x1;
+> +		wait_counter++;
+> +	} while ((wait_counter < max_iterations) && (val != exp_val));
 
--	prop = of_get_property(op->dev.of_node, "resolution", &size);
-+	prop = of_get_property(pdev->dev.of_node, "resolution", &size);
- 	if ((prop) && (size >= sizeof(u32)*2)) {
- 		pdata.xres = prop[0];
- 		pdata.yres = prop[1];
- 	}
+may_iterations is never something else than 100 so you should drop the
+argument.
+Also I would prefer a real timeout here rather than a counter.
 
--	prop = of_get_property(op->dev.of_node, "virtual-resolution", &size);
-+	prop = of_get_property(pdev->dev.of_node, "virtual-resolution", &size);
- 	if ((prop) && (size >= sizeof(u32)*2)) {
- 		pdata.xvirt = prop[0];
- 		pdata.yvirt = prop[1];
- 	}
+> +
+> +	if (val != exp_val)
+> +		return -1;
 
--	if (of_find_property(op->dev.of_node, "rotate-display", NULL))
-+	if (of_find_property(pdev->dev.of_node, "rotate-display", NULL))
- 		pdata.rotate_screen = 1;
+By saying "A negative error value" I actually meant one of
+include/uapi/asm-generic/errno*
 
--	dev_set_drvdata(&op->dev, drvdata);
--	return xilinxfb_assign(op, drvdata, &pdata);
-+	dev_set_drvdata(&pdev->dev, drvdata);
-+	return xilinxfb_assign(pdev, drvdata, &pdata);
- }
+> +static int pcie_phy_write(void __iomem *dbi_base, int addr, int data)
+> +{
+> +	u32 var;
+> +
+> +	/* write addr */
+> +	/* cap addr */
+> +	if (pcie_phy_wait_ack(dbi_base, addr))
+> +		return -1;
+> +
+> +	var = data << PCIE_PHY_CTRL_DATA_LOC;
+> +	writel(var, dbi_base + PCIE_PHY_CTRL);
+> +
+> +	/* capture data */
+> +	var |= (0x1 << PCIE_PHY_CTRL_CAP_DAT_LOC);
+> +	writel(var, dbi_base + PCIE_PHY_CTRL);
+> +
+> +	/* wait for ack */
 
- static int xilinxfb_of_remove(struct platform_device *op)
---
-1.8.2.3
+Drop this comment.
 
+> +	if (pcie_phy_poll_ack(dbi_base, 100, 1))
+> +		return -1;
+> +
 
---=_mimegpg-monstr-desktop-19560-1378965274-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
+...
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
+> +static int imx6_pcie_deassert_core_reset(struct pcie_port *pp)
+> +{
+> +	int ret;
+> +	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pp);
+> +
+> +	if (imx6_pcie->power_on_gpio >= 0)
+> +		gpio_set_value(imx6_pcie->power_on_gpio, IMX6_POWER_ON);
 
-iEYEABECAAYFAlIxVxoACgkQykllyylKDCGdzwCfdxp9/Zoup/55nFaGT6bhYXNe
-adMAmwYy++wCUNYil+qCiFUgufrRocHN
-=I9A8
------END PGP SIGNATURE-----
+in probe you used gpio_is_valid(). Why not here?
 
---=_mimegpg-monstr-desktop-19560-1378965274-0001--
+> +
+> +	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+> +			IMX6Q_GPR1_PCIE_TEST_PD, 0 << 18);
+> +	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+> +			IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
+> +
+> +	ret = clk_set_parent(imx6_pcie->lvds1_sel, imx6_pcie->sata_ref);
+> +	if (ret) {
+> +		dev_err(pp->dev, "unable to set lvds1_gate parent\n");
+> +		goto err_set_parent;
+> +	}
+
+I'm unsure this should be done here. Shawn, should we do this in SoC
+code?
+
+> +
+> +	ret = clk_prepare_enable(imx6_pcie->pcie_ref_125m);
+> +	if (ret) {
+> +		dev_err(pp->dev, "unable to enable pcie_ref_125m\n");
+> +		goto err_pcie_ref;
+> +	}
+> +
+> +	ret = clk_prepare_enable(imx6_pcie->lvds1_gate);
+> +	if (ret) {
+> +		dev_err(pp->dev, "unable to enable lvds1_gate\n");
+> +		goto err_lvds1_gate;
+> +	}
+> +
+> +	ret = clk_prepare_enable(imx6_pcie->pcie_axi);
+> +	if (ret) {
+> +		dev_err(pp->dev, "unable to enable pcie_axi\n");
+> +		goto err_pcie_axi;
+> +	}
+> +
+> +	/* allow the clocks to stabilize */
+> +	usleep_range(100, 200);
+> +
+> +	return 0;
+> +
+> +err_pcie_axi:
+> +	clk_disable(imx6_pcie->lvds1_gate);
+
+The counterpart of clk_prepare_enable is clk_disable_unprepare.
+
+> +			return;
+> +		}
+> +	}
+> +
+> +	return;
+
+unnecessary return
+
+> +
+> +	imx6_pcie->power_on_gpio = of_get_named_gpio(np, "power-on-gpio", 0);
+> +	if (gpio_is_valid(imx6_pcie->power_on_gpio))
+> +		devm_gpio_request_one(&pdev->dev, imx6_pcie->power_on_gpio,
+> +				    GPIOF_OUT_INIT_LOW,
+> +				    "PCIe power enable");
+
+devm_gpio_request_one can still fail.
+
+> +
+> +	imx6_pcie->wake_up_gpio = of_get_named_gpio(np, "wake-up-gpio", 0);
+> +	if (gpio_is_valid(imx6_pcie->wake_up_gpio))
+> +		devm_gpio_request_one(&pdev->dev, imx6_pcie->wake_up_gpio,
+> +				    GPIOF_IN,
+> +				    "PCIe wake up");
+> +
+> +	imx6_pcie->disable_gpio = of_get_named_gpio(np, "disable-gpio", 0);
+> +	if (gpio_is_valid(imx6_pcie->disable_gpio))
+> +		devm_gpio_request_one(&pdev->dev, imx6_pcie->disable_gpio,
+> +				    GPIOF_OUT_INIT_HIGH,
+> +				    "PCIe disable endpoint");
+> +
+> +	/* Fetch clocks */
+> +	imx6_pcie->lvds1_sel = clk_get(&pdev->dev, "lvds1_sel");
+> +	if (IS_ERR(imx6_pcie->lvds1_sel)) {
+> +		dev_err(&pdev->dev,
+> +			"lvds1_sel clock missing or invalid\n");
+> +		ret = PTR_ERR(imx6_pcie->lvds1_sel);
+> +		goto err;
+> +	}
+> +
+> +	imx6_pcie->lvds1_gate = clk_get(&pdev->dev, "lvds1_gate");
+> +	if (IS_ERR(imx6_pcie->lvds1_gate)) {
+> +		dev_err(&pdev->dev,
+> +			"lvds1_gate clock select missing or invalid\n");
+> +		ret = PTR_ERR(imx6_pcie->lvds1_gate);
+> +		goto err;
+> +	}
+
+devm_clk_get(). Otherwise you need to release the clock un
+unregister/probe failure.
+
+> +static int __exit imx6_pcie_remove(struct platform_device *pdev)
+> +{
+> +	struct imx6_pcie *imx6_pcie = platform_get_drvdata(pdev);
+> +
+> +	clk_disable_unprepare(imx6_pcie->pcie_axi);
+> +	clk_disable_unprepare(imx6_pcie->lvds1_gate);
+> +	clk_disable_unprepare(imx6_pcie->pcie_ref_125m);
+
+Still no unregister for the pcie controller?
+
+> +
+> +	return 0;
+> +}
+> +
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
