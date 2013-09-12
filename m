@@ -1,141 +1,104 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH RFC] of: add a basic memory driver
-Date: Wed, 11 Sep 2013 17:21:32 -0700
-Message-ID: <20130912002132.27384.14149@quantum>
-References: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
- <20130911075400.GG2746@lukather> <52303909.5050103@elopez.com.ar>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 3/6] extcon-gpio: Add support for active-low presence
+ detect pins
+Date: Wed, 11 Sep 2013 17:23:32 -0700
+Message-ID: <52310984.30809@roeck-us.net>
+References: <1377836978-24082-1-git-send-email-linux@roeck-us.net> <1377836978-24082-4-git-send-email-linux@roeck-us.net> <522FD20C.6080404@samsung.com> <20130911022513.GA5251@roeck-us.net> <52310355.7060004@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52303909.5050103@elopez.com.ar>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: grant.likely@linaro.org, devicetree@vger.kernel.org, david.lanzendoerfer@o2s.ch, linux-arm-kernel@lists.infradead.org, rob.herring@calxeda.com
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52310355.7060004@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBFbWlsaW8gTMOzcGV6ICgyMDEzLTA5LTExIDAyOjM0OjAxKQo+IEhpIE1heGltZSwK
-PiAKPiBFbCAxMS8wOS8xMyAwNDo1NCwgTWF4aW1lIFJpcGFyZCBlc2NyaWJpw7M6Cj4gPiBIaSBF
-bWlsaW8sCj4gPgo+ID4gT24gVHVlLCBTZXAgMTAsIDIwMTMgYXQgMTA6NDM6MDFQTSAtMDMwMCwg
-RW1pbGlvIEzDs3BleiB3cm90ZToKPiA+PiBUaGlzIGRyaXZlcidzIG9ubHkgam9iIGlzIHRvIGNs
-YWltIGFuZCBlbnN1cmUgdGhhdCB0aGUgbmVjZXNzYXJ5IGNsb2NrCj4gPj4gZm9yIG1lbW9yeSBv
-cGVyYXRpb24gb24gYSBEVC1lbmFibGVkIG1hY2hpbmUgcmVtYWlucyBlbmFibGVkLgo+ID4+Cj4g
-Pj4gU2lnbmVkLW9mZi1ieTogRW1pbGlvIEzDs3BleiA8ZW1pbGlvQGVsb3Blei5jb20uYXI+Cj4g
-Pj4gLS0tCj4gPj4KPiA+PiBIaSwKPiA+Pgo+ID4+IEkgYW0gY3VycmVudGx5IGZhY2luZyBhbiBp
-c3N1ZSB3aXRoIHRoZSBjbG9jayBzZXR1cDogYSBjcml0aWNhbCBidXQKPiA+PiB1bmNsYWltZWQg
-Y2xvY2sgZ2V0cyBkaXNhYmxlZCBhcyBhIHNpZGUgZWZmZWN0IG9mIGRpc2FibGluZyBvbmUgb2Yg
-aXRzCj4gPj4gY2hpbGRyZW4uIFRoZSBjbG9jayBzZXR1cCBsb29rcyBzb21ldGhpbmcgbGlrZSB0
-aGlzOgo+ID4+Cj4gPj4gICAgICAgIFBMTAo+ID4+ICAgICAgICAgfAo+ID4+ICAgLS0tLS0tLS0t
-LS0tCj4gPj4gICB8ICAgICAgICAgIHwKPiA+PiBERFIgICAgICAgT3RoZXJzCj4gPj4gICAgICAg
-ICAgICAgIHwKPiA+PiAgICAgICAgICAgIHBlcmlwaAo+ID4+Cj4gPj4gVGhlIFBMTCBjbG9jayBp
-cyBtYXJrZWQgd2l0aCB0aGUgQ0xLX0lHTk9SRV9VTlVTRUQgZmxhZywgc28gb24gYSBub3JtYWwK
-PiA+PiBib290IGl0IHJlbWFpbnMgb24sIGV2ZW4gYWZ0ZXIgdGhlIHVudXNlZCBjbG9ja3MgY2xl
-YW51cCBjb2RlIHJ1bnMuIFRoZQo+ID4+IHByb2JsZW0gb2NjdXJzIHdoZW4gc29tZW9uZSBlbmFi
-bGVzICJwZXJpcGgiIGFuZCB0aGVuLCBsYXRlciBvbiwgZGlzYWJsZXMKPiA+PiBpdDogdGhlIGZy
-YW1ld29yayBzdGFydHMgZGlzYWJsaW5nIGNsb2NrcyB1cHdhcmRzIG9uIHRoZSB0cmVlLAo+ID4+
-IGV2ZW50dWFsbHkgc3dpdGNoaW5nIHRoZSBQTEwgb2ZmIChhbmQgdGhhdCBraWxscyB0aGUgbWFj
-aGluZSwgYXMgdGhlIG1lbW9yeQo+ID4+IGNsb2NrIGlzIHNodXQgZG93bikuCj4gPgo+ID4gVGhh
-dCBsb29rcyBsaWtlIGEgYnVnIGluIHRoZSBjbG9jayBmcmFtZXdvcmsuIEknZCBleHBlY3QgaXQg
-dG8gYXQgbGVhc3QKPiA+IGJlaGF2ZSBpbiB0aGUgc2FtZSB3YXkgd2hlbiBkaXNhYmxpbmcgdGhl
-IHVudXNlZCBjbG9ja3MgYXQgbGF0ZSBzdGFydHVwCj4gPiBhbmQgd2hlbiBnb2luZyB1cCBkaXNh
-Ymxpbmcgc29tZSBjbG9ja3MnIHBhcmVudCBsYXRlciBvbi4KPiAKPiBZZXMsIEkga2luZCBvZiBl
-eHBlY3RlZCB0aGUgc2FtZSwgYW5kIHRoZSBmbGFnIGRlc2NyaXB0aW9uIHNlZW1zIHRvIAo+IGlt
-cGx5IHNvIHRvbzoKPiAKPiAgICAgICNkZWZpbmUgQ0xLX0lHTk9SRV9VTlVTRUQgIEJJVCgzKSAv
-KiBkbyBub3QgZ2F0ZSBldmVuIGlmIHVudXNlZCAqLwo+IAo+ID4+IFRoZXJlJ3MgdHdvIHBvc3Np
-YmxlIHNvbHV0aW9ucyBJIGNhbiB0aGluayBvZjoKPiA+PiAgIDEpIGFkZCBzb21lIGV4dHJhIGNo
-ZWNrcyBvbiB0aGUgZnJhbWV3b3JrIHRvIG5vdCB0dXJuIG9mZiBjbG9ja3MgbWFya2VkCj4gPj4g
-ICAgICB3aXRoIHN1Y2ggYSBmbGFnIG9uIHRoZSBub24tZXhwbGljaXQgY2FzZSAoaWUsIHdoZW4g
-SSdtIGRpc2FibGluZwo+ID4+ICAgICAgc29tZSBvdGhlciBjbG9jaykKPiA+Pgo+ID4+ICAgMikg
-Y3JlYXRlIGFuIGFjdHVhbCB1c2VyIG9mIHRoZSBERFIgY2xvY2ssIHRoYXQgd2F5IGl0IHdvbid0
-IGdldAo+ID4+ICAgICAgZGlzYWJsZWQgc2ltcGx5IGJlY2F1c2UgaXQncyBiZWluZyB1c2VkLgo+
-ID4+Cj4gPj4gSSBjb25zaWRlcmVkIDEpIGFuZCBpbXBsZW1lbnRlZCBpdCwgYnV0IHRoZSByZXN1
-bHQgd2FzIG5vdCBwcmV0dHkuCj4gPgo+ID4gV2hhdCB3YXMgbm90IHByZXR0eSBhYm91dCBpdD8K
-PiAKPiBJdCByZXF1aXJlZCBhZGRpbmcgYW4gZXh0cmEgcGFyYW1ldGVyIHRvIF9fY2xrX2Rpc2Fi
-bGUvX19jbGtfdW5wcmVwYXJlIAo+IHRvIGtlZXAgdHJhY2sgb2YgdGhlIGNhbGwncyBleHBsaWNp
-dG5lc3MsIGFuZCBpZ25vcmUgdGhlIAo+IGRpc2FibGUvdW5wcmVwYXJlIGNhbGxiYWNrIG9uIHRo
-ZSBpbXBsaWNpdCBjYXNlICh3aGVuIAo+IF9fY2xrX2Rpc2FibGUvX19jbGtfdW5wcmVwYXJlIGlz
-IGNhbGxlZCByZWN1cnNpdmVseSkgaWYgdGhlIGZsYWcgaXMgc2V0LiAKPiBUaGlzIGFsc28gbWVh
-bnMgYWRkaW5nIGEgd3JhcHBpbmcgZnVuY3Rpb24gdG8gYXQgbGVhc3QgX19jbGtfdW5wcmVwYXJl
-LCAKPiBzbyBhcyB0byB0byBub3QgYnJlYWsgY2FsbGVycyBvdXRzaWRlIG9mIHRoZSBjbGsgZnJh
-bWV3b3JrLiBPdmVyYWxsIGl0IAo+IGZlbHQgdG9vIGhhY2t5IGZvciBzb21ldGhpbmcgdGhhdCBj
-b3VsZCBiZSBwcm9wZXJseSBoYW5kbGVkIGJ5IHRoZSAKPiBnZW5lcmljIGNvZGUgaWYgaXQgaGFk
-IGF0IGxlYXN0IDEgdXNlci4KPiAKPiBJIHdvdWxkIGxpa2UgdG8gaGVhciBNaWtlJ3MgdGhvdWdo
-dHMgb24gdGhpczsgbWF5YmUgQ0xLX0lHTk9SRV9VTlVTRUQgaXMgCj4gbm90IHdoYXQgd2UgdGhp
-bmsgaXQgc2hvdWxkIGJlLgoKQ0xLX0lHTk9SRV9VTlVTRUQgd2FzIG9ubHkgbWVhbnQgdG8gc29s
-dmUgdGhlIGlzc3VlIG9mIGdhdGluZyB1bmNsYWltZWQKY2xvY2tzIGR1cmluZyBjbGtfZGlzYWJs
-ZV91bnVzZWQgdGhhdCB3ZSBkbyBub3Qgd2FudCB0byBnYXRlIGF0IHRoYXQKcG9pbnQgaW4gdGlt
-ZS4gVG8gdGhhdCBlbmQgaXQgaXMgZG9pbmcgdGhlIHJpZ2h0IHRoaW5nIGZvciB5b3VyIHBsYXRm
-b3JtCmFuZCBJIGRvbid0IHNlZSBhIGJ1ZyBoZXJlLgoKWW91ciBpc3N1ZSBpcyB0aGF0IHlvdSBo
-YXZlIGEgbm9ybWFsIGNsa19kaXNhYmxlIGNoYWluIGFmZmVjdGluZyB0aGUKY2xvY2suIEFsd2F5
-cyB0aGUgcmlnaHQgd2F5IHRvIGRvIHRoaXMgaXMgdG8gaGF2ZSBhIGRyaXZlciBjbGFpbSB0aGF0
-CmNsb2NrIHdpdGggY2xrX2dldCBhbmQgY2FsbCBjbGtfZW5hYmxlIG9uIGl0LiBUaGF0IGlzIGhv
-dyB0aGUgY2xrIEFQSQp3b3Jrcy4gVGhpcyBpcyB3aGF0IHlvdXIgMikgYXBwcm9hY2ggZG9lcyBh
-bmQgaXMgcHJvYmFibHkgVGhlIFJpZ2h0ClRoaW5nLgoKQWx0ZXJuYXRpdmVseSBhIG5ldyBmbGFn
-IGNvdWxkIGJlIGFkZGVkLCBDTEtfQUxXT04uIFRoaXMgZmxhZyBzaG91bGQgYmUKZGlzY3Vzc2Vk
-IGJ1dCBpdCBjb3VsZCBkbyBhIG51bWJlciBvZiB0aGluZ3M6CgoxKSBhbnkgYXR0ZW1wdHMgdG8g
-ZGlzYWJsZSBhIGNsayB3aXRoIHRoaXMgZmxhZyBzZXQgd2lsbCBhbHdheXMgZmFpbApzaWxlbnRs
-eSAoc2luY2UgY2xrX2Rpc2FibGUgaGFzIHZvaWQgcmV0dXJuIHR5cGUpLgoKMikgc2FtZSBhcyAx
-KSBhYm92ZSBidXQgdGhlIGNsb2NrIGZyYW1ld29yayBjb3VsZCBhZGRpdGlvbmFsbHkgY2FsbApj
-bGtfZW5hYmxlIG9uIGl0IGFmdGVyIHJlZ2lzdGVyaW5nIHRoZSBjbG9jayB3aXRoIHRoZSBDTEtf
-QUxXT04gZmxhZyBzZXQKCkFueXdheXMgSSB0aGluayBhIG5ldyBmbGFnIGxpa2UgQ0xLX0FMV09O
-IHNob3VsZCBvbmx5IHJlYWxseSBleGlzdCB0bwpzb2x2ZSB0aGlzIHByb2JsZW0gZm9yIGNsb2Nr
-cyB0aGF0IGRvIG5vdCBoYXZlIGRyaXZlcnMgaW4gTGludXguIFNpbmNlCnlvdSB3ZW50IHRvIHRo
-ZSB0cm91YmxlIG9mIHdyaXRpbmcgYSBzbWFsbCBkcml2ZXIgdGhlbiBJIHRoaW5rIGp1c3QKY2xh
-aW1pbmcgdGhlIGNsb2NrIGFuZCBlbmFibGluZyBpdCB0aGVyZSBpcyB0aGUgYmVzdCBzb2x1dGlv
-bi4KClJlZ2FyZHMsCk1pa2UKCj4gCj4gPj4gVGhpcyBwYXRjaCBpcyBteSB0YWtlIG9uIDIpLiBQ
-bGVhc2UgbGV0IG1lIGtub3cgd2hhdCB5b3UgdGhpbms7IGFsbAo+ID4+IGZlZWRiYWNrIGlzIHdl
-bGNvbWUgOikKPiA+Pgo+ID4+IENoZWVycywKPiA+Pgo+ID4+IEVtaWxpbwo+ID4+Cj4gPj4gICBk
-cml2ZXJzL29mL0tjb25maWcgICAgIHwgIDYgKysrKysrCj4gPj4gICBkcml2ZXJzL29mL01ha2Vm
-aWxlICAgIHwgIDEgKwo+ID4+ICAgZHJpdmVycy9vZi9vZl9tZW1vcnkuYyB8IDMwICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKwo+ID4+ICAgMyBmaWxlcyBjaGFuZ2VkLCAzNyBpbnNlcnRp
-b25zKCspCj4gPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9vZi9vZl9tZW1vcnkuYwo+
-ID4+Cj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvS2NvbmZpZyBiL2RyaXZlcnMvb2YvS2Nv
-bmZpZwo+ID4+IGluZGV4IDlkMjAwOWEuLmY2YzVlMjAgMTAwNjQ0Cj4gPj4gLS0tIGEvZHJpdmVy
-cy9vZi9LY29uZmlnCj4gPj4gKysrIGIvZHJpdmVycy9vZi9LY29uZmlnCj4gPj4gQEAgLTgwLDQg
-KzgwLDEwIEBAIGNvbmZpZyBPRl9SRVNFUlZFRF9NRU0KPiA+PiAgICAgIGhlbHAKPiA+PiAgICAg
-ICAgSW5pdGlhbGl6YXRpb24gY29kZSBmb3IgRE1BIHJlc2VydmVkIG1lbW9yeQo+ID4+Cj4gPj4g
-K2NvbmZpZyBPRl9NRU1PUlkKPiA+PiArICAgIGRlcGVuZHMgb24gQ09NTU9OX0NMSwo+ID4+ICsg
-ICAgZGVmX2Jvb2wgeQo+ID4+ICsgICAgaGVscAo+ID4+ICsgICAgICBTaW1wbGUgbWVtb3J5IGlu
-aXRpYWxpemF0aW9uCj4gPj4gKwo+ID4+ICAgZW5kbWVudSAjIE9GCj4gPj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvb2YvTWFrZWZpbGUgYi9kcml2ZXJzL29mL01ha2VmaWxlCj4gPj4gaW5kZXggZWQ5
-NjYwYS4uMTVmMDE2NyAxMDA2NDQKPiA+PiAtLS0gYS9kcml2ZXJzL29mL01ha2VmaWxlCj4gPj4g
-KysrIGIvZHJpdmVycy9vZi9NYWtlZmlsZQo+ID4+IEBAIC0xMCwzICsxMCw0IEBAIG9iai0kKENP
-TkZJR19PRl9QQ0kpICAgICAgICs9IG9mX3BjaS5vCj4gPj4gICBvYmotJChDT05GSUdfT0ZfUENJ
-X0lSUSkgICs9IG9mX3BjaV9pcnEubwo+ID4+ICAgb2JqLSQoQ09ORklHX09GX01URCkgICAgICAg
-Kz0gb2ZfbXRkLm8KPiA+PiAgIG9iai0kKENPTkZJR19PRl9SRVNFUlZFRF9NRU0pICs9IG9mX3Jl
-c2VydmVkX21lbS5vCj4gPj4gK29iai0kKENPTkZJR19PRl9NRU1PUlkpICs9IG9mX21lbW9yeS5v
-Cj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2Yvb2ZfbWVtb3J5LmMgYi9kcml2ZXJzL29mL29m
-X21lbW9yeS5jCj4gPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+PiBpbmRleCAwMDAwMDAwLi5h
-ODMzZjdhCj4gPj4gLS0tIC9kZXYvbnVsbAo+ID4+ICsrKyBiL2RyaXZlcnMvb2Yvb2ZfbWVtb3J5
-LmMKPiA+PiBAQCAtMCwwICsxLDMwIEBACj4gPj4gKy8qCj4gPj4gKyAqIFNpbXBsZSBtZW1vcnkg
-ZHJpdmVyCj4gPj4gKyAqLwo+ID4+ICsKPiA+PiArI2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4gPj4g
-KyNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPiA+PiArCj4gPj4gK3N0YXRpYyBpbnQgX19pbml0IG9m
-X21lbW9yeV9lbmFibGUodm9pZCkKPiA+PiArewo+ID4+ICsgICAgc3RydWN0IGRldmljZV9ub2Rl
-ICpucDsKPiA+PiArICAgIHN0cnVjdCBjbGsgKmNsazsKPiA+PiArCj4gPj4gKyAgICBucCA9IG9m
-X2ZpbmRfbm9kZV9ieV9wYXRoKCIvbWVtb3J5Iik7Cj4gPj4gKyAgICBpZiAoIW5wKSB7Cj4gPj4g
-KyAgICAgICAgICAgIHByX2Vycigibm8gL21lbW9yeSBvbiBEVCFcbiIpOwo+ID4+ICsgICAgICAg
-ICAgICByZXR1cm4gMDsKPiA+PiArICAgIH0KPiA+PiArCj4gPj4gKyAgICBjbGsgPSBvZl9jbGtf
-Z2V0KG5wLCAwKTsKPiA+PiArICAgIGlmICghSVNfRVJSKGNsaykpIHsKPiA+PiArICAgICAgICAg
-ICAgY2xrX3ByZXBhcmVfZW5hYmxlKGNsayk7Cj4gPj4gKyAgICAgICAgICAgIGNsa19wdXQoY2xr
-KTsKPiA+PiArICAgIH0KPiA+PiArCj4gPj4gKyAgICBvZl9ub2RlX3B1dChucCk7Cj4gPj4gKwo+
-ID4+ICsgICAgcmV0dXJuIDA7Cj4gPj4gK30KPiA+PiArCj4gPj4gK2RldmljZV9pbml0Y2FsbChv
-Zl9tZW1vcnlfZW5hYmxlKTsKPiA+Cj4gPiBJIGxpa2UgdGhpcyBpZGVhIGFzIHdlbGwuIEJ1dCBp
-bWhvLCBib3RoIDEgYW5kIDIgc2hvdWxkIGJlIGRvbmUuIDIpIGlzCj4gPiBvbmx5IGFib3V0IG1l
-bW9yeSBkZXZpY2VzLCB3aGlsZSAxKSBpcyBtdWNoIG1vcmUgZ2VuZXJpYy4KPiA+Cj4gPiBBbmQg
-ZndpdywgdGhlIE1hcnZlbGwgQXJtYWRhIDM3MCBpcyBhbHNvIGluIHRoaXMgY2FzZSBvZiBoYXZp
-bmcgYQo+ID4gZ2F0YWJsZSBjbG9jayBmb3IgdGhlIEREUiB0aGF0IGNvdWxkIHBvdGVudGlhbGx5
-IGJlIGRpc2FibGVkIChidXQgaXMKPiA+IG5vdCwgc2luY2UgaXQgaGFzIG5vIG90aGVyIHVzZXJz
-IHRoYW4gdGhlIEREUiBpdHNlbGYsIGFuZCBhcyBzdWNoLCBubwo+ID4gb25lIGV2ZXIgY2FsbHMg
-Y2xrX2Rpc2FibGUgb24gaXQpLgo+IAo+IE5pY2UgdG8ga25vdywgdGhhbmtzIGZvciB0aGUgaW5m
-b3JtYXRpb24gOikKPiAKPiBDaGVlcnMsCj4gCj4gRW1pbGlvCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 09/11/2013 04:57 PM, Chanwoo Choi wrote:
+> Hi Guenter,
+>
+> As I mentioned on previous reply, I modify patch name as following:
+> extcon-gpio: Add support for active-low presence detect pins
+> ->
+> extcon: gpio: Add support for active-low presence detect pins
+>
+> I prefer you could add patch description. Also, you should test
+
+As mentioned before, I sent out v2 of this patch before I read your comments
+to the previous patch.
+
+> on extcon latest branch to protect merge conflict. This patch
+> has conflict issue on extcon-linus branch. I fix up and applied it.
+>
+I'll make sure to so that in the future.
+
+> And I think you might use tab size is 4 characters. you should change tab size
+> from 4 characters to 8 characters. You can check linux kernel coding sytle on
+
+Thanks for the reminder, but the problem is a different one. See below.
+
+> "/kernel/Documentation/CodingStyle - chapter 1: Indentation".
+>
+> On 09/11/2013 11:25 AM, Guenter Roeck wrote:
+>>
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> ---
+>> v2: Document gpio_active_low variable in gpio_extcon_platform_data
+>>      Rewrite active-low logic to be easier to read.
+>>
+>>   drivers/extcon/extcon-gpio.c       |    4 ++++
+>>   include/linux/extcon/extcon-gpio.h |    5 +++++
+>>   2 files changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+>> index 862743b..8491f86 100644
+>> --- a/drivers/extcon/extcon-gpio.c
+>> +++ b/drivers/extcon/extcon-gpio.c
+>> @@ -34,6 +34,7 @@
+>>   struct gpio_extcon_data {
+>>   	struct extcon_dev edev;
+>>   	unsigned gpio;
+>> +	bool gpio_active_low;
+>>   	const char *state_on;
+>>   	const char *state_off;
+>>   	int irq;
+>> @@ -49,6 +50,8 @@ static void gpio_extcon_work(struct work_struct *work)
+>>   			     work);
+>>
+>>   	state = gpio_get_value(data->gpio);
+>> +	if (data->gpio_active_low)
+>> +		state = !state;
+>>   	extcon_set_state(&data->edev, state);
+>>   }
+>>
+>> @@ -96,6 +99,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>>
+>>   	extcon_data->edev.name = pdata->name;
+>>   	extcon_data->gpio = pdata->gpio;
+>> +	extcon_data->gpio_active_low = pdata->gpio_active_low;
+>>   	extcon_data->state_on = pdata->state_on;
+>>   	extcon_data->state_off = pdata->state_off;
+>>   	if (pdata->state_on && pdata->state_off)
+>> diff --git a/include/linux/extcon/extcon-gpio.h b/include/linux/extcon/extcon-gpio.h
+>> index 2d8307f..51ef15c 100644
+>> --- a/include/linux/extcon/extcon-gpio.h
+>> +++ b/include/linux/extcon/extcon-gpio.h
+>> @@ -27,6 +27,10 @@
+>>    * struct gpio_extcon_platform_data - A simple GPIO-controlled extcon device.
+>>    * @name	The name of this GPIO extcon device.
+>>    * @gpio	Corresponding GPIO.
+>> + * @gpio_active_low:
+>> + * 		Boolean describing whether gpio active state is 1 or 0
+>> + * 		If true, low state of gpio means active.
+>> + * 		If false, high state of gpio means active.
+>
+> I think you may use tab size is 4 characters.
+>
+No, that isn't it. When I cut-and-pasted your proposed text I was not careful enough
+and did not remove a space after the '*'. No idea how it got there, but it isn't the
+tab setting.
+
+Usually I _do_ run my patches through checkpatch.pl to avoid problems like that.
+Sorry, my bad; looks like I was shooting too quickly last night and didn't do that.
+
+Guenter
