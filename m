@@ -1,70 +1,59 @@
-From: Pratyush Anand <pratyush.anand@st.com>
-Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys
- part and Exynos part
-Date: Thu, 12 Sep 2013 15:48:03 +0530
-Message-ID: <20130912101803.GB5995@pratyush-vbox>
-References: <51ED49D6.9050209@ti.com>
- <000701ce8741$fe47deb0$fad79c10$@samsung.com>
- <51EE22DF.6090902@ti.com>
- <001301ce8772$522dfc50$f689f4f0$@samsung.com>
- <5231607C.10702@ti.com>
- <003501ceaf87$cda45db0$68ed1910$%han@samsung.com>
- <20130912093018.GA2124@pratyush-vbox>
- <52318CCC.4040604@ti.com>
- <20130912095213.GA5995@pratyush-vbox>
- <5231925B.3030104@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Thu, 12 Sep 2013 11:19:35 +0100
+Message-ID: <20130912101935.GE29403@sirena.org.uk>
+References: <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com>
+ <20130905020435.GA3970@gmail.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>
+ <522817D7.1010206@freescale.com>
+ <522D3B79.3060707@freescale.com>
+ <52318953.6090405@freescale.com>
+ <1378979431.2627.402.camel@shinybook.infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QfWJdLrspkYEar8t"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5231925B.3030104@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1378979431.2627.402.camel@shinybook.infradead.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Huang Shijie <b32955@freescale.com>, Huang Shijie <shijie8@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 06:07:23PM +0800, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On Thursday 12 September 2013 03:22 PM, Pratyush Anand wrote:
-> > Hi Kishon,
-> > 
-> > On Thu, Sep 12, 2013 at 05:43:40PM +0800, Kishon Vijay Abraham I wrote:
-> >> Hi,
-> >>
-> >> On Thursday 12 September 2013 03:00 PM, Pratyush Anand wrote:
-> >>> Hi Jingoo,
-> >>>
-> >>>
-> >>> On Thu, Sep 12, 2013 at 03:15:04PM +0800, Jingoo Han wrote:
-> >>>> On Tuesday 23 July 2013 12:30 PM, Kishon Vijay Abraham I wrote:
-> >>>>>>> .
-> >>>>>>> .
 
-[...]
+--QfWJdLrspkYEar8t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> >> when I do ifconfig eth0 up, I get *r8169 0000:01:00.0 eth0: link up.*
-> >> But I dont receive any packets and ping also fails and the tx and rx packet
-> >> count is also 0. Could it be related to inbound translation?
-> > 
-> > A PCIe analyser log would tell a definite cause. Most likely either
-> > inbound translation is not working or INTx/MSI is not working.
-> 
-> I have enabled only legacy interrupts. Whenever I connect or disconnect
-> ethernet cable I get link up/link down message and also the interrupt count for
-> eth0 increases. So I'm not doubting INTx interrupts as such.
-> 
-> btw configuring inbound translation once in dw_pcie_host_init enough is it? I
-> mean we use the same registers for configuring outbound translation also no? So
-> doesn't the inbound configuration gets lost?
+On Thu, Sep 12, 2013 at 10:50:31AM +0100, David Woodhouse wrote:
 
-No, you write at the same register, but you program direction as
-inbound. There are different resources for each viewport in inbound
-and outbound direction.
+> Conceptually speaking, could it not be an additional argument to
+> spi_write_then_read() ?=20
 
-Regards
-Pratyush
+Note that spi_write_then_read() is just a helper for building up a spi
+transfer in a common pattern.
 
-> 
-> Thanks
-> Kishon
+--QfWJdLrspkYEar8t
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSMZU0AAoJELSic+t+oim9OgwP/A3NE3wLHszemOMajGaIJ1G5
+0RzzyNmrbRq6zsVfe7IWuEJ6aQeZOpR6MqUP5G5F+FugHbmz9XS4Ooixg7kIoxay
+szEWH1i9iiYl205oJkCpOHvJmoEMxQCnODT56aRj67tIxjF6l3b/UVQbkRkJfG9u
+wse+3wXk9D3NG+8Zhv85/8xmUadr89HlFW4mphmDBBNN9S7S0lvHiYFGI8tcxy3F
++vqN7oshMLI9KBYwf998BSoFjIEjnOHove6dFV2XYyYvSzO6qsuBGCEHO6KUkP4k
+QL8gioNcrDIPZmX3D55Ffjhf83C9KbS1W2s48RDTlQjkRdUWq06W7cE7TpcSPND1
+iRySOT1rDFMxTT2NkvknaQB8M/6+2YEtH+jQDM8lcWpEGNsGD/8Q0ozvj9nauC+X
+J5y/i096Bm/uV8zNOKU9QSPddIXCUIcZi6M06OIMEmeS4ThMAmi5DHTDEXMjJzIk
+QAzddXjAgcSWUV/zr5PPWoVSN0Nm+Vab/QgeEmQ5FuzAsba0yTViTQYHWYkA1DRp
+gJQnAIRdDqUyzqlu2MCEnnYF1ji3wn31fOGMNu4/GLBjEdnBEkhwBYITTNShhSdx
+XlsZLjCDE/OogbqC6iL9+BaWcOKIvLtKuW5VNx4RkX3ILxXuBVXgum8mUu/cVAc0
+HwWsOSVcA9c+6F/UrYK7
+=lNm/
+-----END PGP SIGNATURE-----
+
+--QfWJdLrspkYEar8t--
