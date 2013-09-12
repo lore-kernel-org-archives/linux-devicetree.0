@@ -1,60 +1,70 @@
-From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
-Date: Thu, 12 Sep 2013 15:47:37 -0700
-Message-ID: <20130912224737.GA24937@codeaurora.org>
-References: <1379003839-16068-1-git-send-email-galak@codeaurora.org>
- <CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com>
- <25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org>
- <CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com>
- <3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [RFC PATCH 1/4] DRIVERS: IRQCHIP: Add crossbar irqchip driver
+Date: Thu, 12 Sep 2013 18:51:38 -0400
+Message-ID: <5232457A.8080709@ti.com>
+References: <1379000351-15672-1-git-send-email-r.sricharan@ti.com> <1379000351-15672-2-git-send-email-r.sricharan@ti.com> <alpine.DEB.2.02.1309122201530.4089@ionos.tec.linutronix.de> <523228B5.5070507@ti.com> <alpine.DEB.2.02.1309122335440.4089@ionos.tec.linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3E38F48E-EE41-4564-84A1-36CF07B08811-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org list" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1309122335440.4089@ionos.tec.linutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Sricharan R <r.sricharan@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 12:55:36PM -0500, Kumar Gala wrote:
->
->On Sep 12, 2013, at 12:06 PM, Olof Johansson wrote:
+On Thursday 12 September 2013 06:22 PM, Thomas Gleixner wrote:
+> On Thu, 12 Sep 2013, Santosh Shilimkar wrote:
+>> Specifically for the IRQ case addressed here, the cross-bar IP
+>> sits between the interrupt controller and peripheral interrupts.
+>>
+>> CPU <-- GIC  <----- CROSSBAR <----- PERIPHERAL IRQs
+>>
+>> Just to expand it better, cross-bar input IRQ lines are more than
+>> what a GIC IRQ controller can support.
+>> e.q Total 250 peripheral IRQ lines out of which GIC support
+>> only 160 IRQ lines.
+>>
+>> So the idea here is to dynamically map the IRQ lines at
+>> cross-bar level to pick based on request_irq() so that one
+>> can optimize the use of limited IRQ lines at the GIC level.
+>> Strictly speaking the need is just establish the IRQ
+>> connection from peripheral to GIC and thats achieved
+>> at the request_irq() level.
+>>
+>> Earlier approach was to statically build this connections
+>> using the DT information in a separate driver probe but
+>> it had limitations of fixing the IRQ map and taking away
+>> flexibility what this IP provide. 
+>>  
+>> Hope this gives better picture to you behind the patch
+>> series.
+> 
+> Yes. I halfways understand what you are trying to achieve.
+> 
+> So CROSSBAR is a routing block between the peripheral and the GIC in
+> order to expand the number of possible interrupts.
+> 
+> Now the real question is, how that expansion mechanism is supposed to
+> work. There are two possible scenarios:
+> 
+> 1) Expand the number of handled interrupts beyond the GIC capacity:
+> 
+>    That requires a mechanism in CROSSBAR to map several CROSSBAR
+>    interrupts to a particular GIC interrupt and provide a demux
+>    mechanism to invoke the shared handlers.
+> 
+This is not possible in hardware and not supported. Hardware has
+no notion of muxing multiple IRQ's to generate 1 IRQ or ack etc
+functionality. Its a simple MUX to tie knots between input and output
+wires.
 
->> My original request to please use a common prefix for your product
->> families stands. Please prefix with msm-*, or if you have to, qcom-*
->> instead, since you guys can't seem to make your mind up on standard
->> prefixes (msm, apq, etc).
->
->This is silly, I dont see the reason to go with
->qcom-apq<SOC>-<BOARD>.dts and than in the future drop qcom- when we
->mostly likely shift to a dir structure.  As engineers we are all too
->aware of the lack of sanity in marketing names, but its what we have
->so we have to live with it.
+> 2) Provide a mapping mechanism between possibly 250 interrupt numbers
+>    and a limitation of a total 160 active interrupts by the underlying
+>    GIC.
+> 
+This is the need and problem we are trying to solve.
 
-At least what we'd decided a year or two ago was to call _everything_
-with an msm* prefix.  If marketing comes up with cute prefixes for
-things, we would basically ignore them.  So, under that, it should be
-an msm8074-dragonboard.  Admittedly, it might be a little confusing
-with the name of the product having the apq in it, but as others have
-pointed out, I think there is less confusing than not having a common
-prefix on our MSM products.
+Regards,
+Santosh
 
-At least so far, there are no chips where apq vs msm actually
-distinguishes anything.  In fact, a simple "decoder ring" would point
-out that the 'apq' usually corresponds with the second digit being a
-zero.  It doesn't help that we've added an 'mpq' prefix as well.
-
-I don't really see how to satisfy all of this other than qcom-apq*, or
-just continue to use msm*.
-
-David
-
--- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
