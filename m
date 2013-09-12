@@ -1,157 +1,109 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 1/7] usb: dwc3: get "usb_phy" only if the platform
- indicates the presence of PHY
-Date: Thu, 12 Sep 2013 13:36:02 +0300
-Message-ID: <52319912.8030203@ti.com>
-References: <1378136591-7463-1-git-send-email-kishon@ti.com>
- <1378136591-7463-2-git-send-email-kishon@ti.com>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [PATCH v2 5/7] ARM: dts: Update DP controller DT Node for Exynos5
+ based SoCs
+Date: Thu, 12 Sep 2013 19:36:56 +0900
+Message-ID: <06f501ceafa4$00ed4490$02c7cdb0$@org>
+References: <1375183178-8201-1-git-send-email-vikas.sajjan@linaro.org>
+ <1375183178-8201-6-git-send-email-vikas.sajjan@linaro.org>
+ <002d01cea207$ff2c57d0$fd850770$%han@samsung.com>
+ <CAD025yQ62VW4ou67GEi5=WwQy+j5r80haBp--ioPiw9U0o-e=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1378136591-7463-2-git-send-email-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, george.cherian@ti.com, linux-omap@vger.kernel.org, linux@arm.linux.org.uk, s.nawrocki@samsung.com, pawel.moll@arm.com, swarren@wwwdotorg.org, tony@atomide.com, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linux-usb@vger.kernel.org, balbi@ti.com, bcousson@baylibre.com, galak@codeaurora.org, grant.likely@linaro.org, rob@landley.net, linux-arm-kernel@lists.infradead.org, ian.campbell@citrix.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAD025yQ62VW4ou67GEi5=WwQy+j5r80haBp--ioPiw9U0o-e=Q@mail.gmail.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Vikas Sajjan' <vikas.sajjan@linaro.org>, 'Jingoo Han' <jg1.han@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, 'Tomasz Figa' <t.figa@samsung.com>, 'devicetree' <devicetree@vger.kernel.org>, 'InKi Dae' <inki.dae@samsung.com>, 'Ajay kumar' <ajaynumb@gmail.com>, 'Patch Tracking' <patches@linaro.org>, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-On 09/02/2013 06:43 PM, Kishon Vijay Abraham I wrote:
-> There can be systems which does not have a external usb_phy, so get
-> usb_phy only if usb-phy property is added in the case of dt boot or if
-> platform_data indicates the presence of PHY. Also remove checking if
-> return value is -ENXIO since it's now changed to always enable usb_phy layer.
+Vikas Sajjan wrote:
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/usb/dwc3/Kconfig         |    1 +
->  drivers/usb/dwc3/core.c          |   60 +++++++++++++++++---------------------
->  drivers/usb/dwc3/platform_data.h |    1 +
->  3 files changed, 28 insertions(+), 34 deletions(-)
+> Hi Mr. Jingoo Han,
 > 
-> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-> index f969ea2..cfc16dd 100644
-> --- a/drivers/usb/dwc3/Kconfig
-> +++ b/drivers/usb/dwc3/Kconfig
-> @@ -2,6 +2,7 @@ config USB_DWC3
->  	tristate "DesignWare USB3 DRD Core Support"
->  	depends on (USB || USB_GADGET) && GENERIC_HARDIRQS && HAS_DMA
->  	depends on EXTCON
-> +	select USB_PHY
->  	select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
->  	help
->  	  Say Y or M here if your system has a Dual Role SuperSpeed
-> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> index 474162e..428c29e 100644
-> --- a/drivers/usb/dwc3/core.c
-> +++ b/drivers/usb/dwc3/core.c
-> @@ -387,16 +387,38 @@ static int dwc3_probe(struct platform_device *pdev)
->  	if (node) {
->  		dwc->maximum_speed = of_usb_get_maximum_speed(node);
->  
-> -		dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
-> -		dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
-> +		if (of_property_read_bool(node, "usb-phy")) {
-> +			dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev,
-> +				"usb-phy", 0);
-> +			if (IS_ERR(dwc->usb2_phy))
-> +				return PTR_ERR(dwc->usb2_phy);
-> +			dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev,
-> +				"usb-phy", 1);
-> +			if (IS_ERR(dwc->usb3_phy))
-> +				return PTR_ERR(dwc->usb3_phy);
-
-Some DWC3 instances use only usb2_phy. e.g. on DRA7 the 2nd dwc3 instance doesn't use usb3_phy.
-This needs to be a valid case and driver shouldn't error out.
-
-> +		} else {
-> +			dwc->usb2_phy = NULL;
-> +			dwc->usb3_phy = NULL;
-> +		}
->  
->  		dwc->needs_fifo_resize = of_property_read_bool(node, "tx-fifo-resize");
->  		dwc->dr_mode = of_usb_get_dr_mode(node);
->  	} else if (pdata) {
->  		dwc->maximum_speed = pdata->maximum_speed;
->  
-> -		dwc->usb2_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-> -		dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
-> +		if (pdata->has_phy) {
-> +			dwc->usb2_phy = devm_usb_get_phy(dev,
-> +				USB_PHY_TYPE_USB2);
-> +			if (IS_ERR(dwc->usb2_phy))
-> +				return PTR_ERR(dwc->usb2_phy);
-> +			dwc->usb3_phy = devm_usb_get_phy(dev,
-> +				USB_PHY_TYPE_USB3);
-> +			if (IS_ERR(dwc->usb3_phy))
-> +				return PTR_ERR(dwc->usb3_phy);
-
-same here?
-
-> +		} else {
-> +			dwc->usb2_phy = NULL;
-> +			dwc->usb3_phy = NULL;
-> +		}
->  
->  		dwc->needs_fifo_resize = pdata->tx_fifo_resize;
->  		dwc->dr_mode = pdata->dr_mode;
-> @@ -409,36 +431,6 @@ static int dwc3_probe(struct platform_device *pdev)
->  	if (dwc->maximum_speed == USB_SPEED_UNKNOWN)
->  		dwc->maximum_speed = USB_SPEED_SUPER;
->  
-> -	if (IS_ERR(dwc->usb2_phy)) {
-> -		ret = PTR_ERR(dwc->usb2_phy);
-> -
-> -		/*
-> -		 * if -ENXIO is returned, it means PHY layer wasn't
-> -		 * enabled, so it makes no sense to return -EPROBE_DEFER
-> -		 * in that case, since no PHY driver will ever probe.
-> -		 */
-> -		if (ret == -ENXIO)
-> -			return ret;
-> -
-> -		dev_err(dev, "no usb2 phy configured\n");
-> -		return -EPROBE_DEFER;
-> -	}
-> -
-> -	if (IS_ERR(dwc->usb3_phy)) {
-> -		ret = PTR_ERR(dwc->usb3_phy);
-> -
-> -		/*
-> -		 * if -ENXIO is returned, it means PHY layer wasn't
-> -		 * enabled, so it makes no sense to return -EPROBE_DEFER
-> -		 * in that case, since no PHY driver will ever probe.
-> -		 */
-> -		if (ret == -ENXIO)
-> -			return ret;
-> -
-> -		dev_err(dev, "no usb3 phy configured\n");
-> -		return -EPROBE_DEFER;
-> -	}
-> -
->  	dwc->xhci_resources[0].start = res->start;
->  	dwc->xhci_resources[0].end = dwc->xhci_resources[0].start +
->  					DWC3_XHCI_REGS_END;
-> diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
-> index 7db34f0..5a5e068 100644
-> --- a/drivers/usb/dwc3/platform_data.h
-> +++ b/drivers/usb/dwc3/platform_data.h
-> @@ -24,4 +24,5 @@ struct dwc3_platform_data {
->  	enum usb_device_speed maximum_speed;
->  	enum usb_dr_mode dr_mode;
->  	bool tx_fifo_resize;
-> +	bool has_phy;
->  };
+> On 26 August 2013 08:27, Jingoo Han <jg1.han@samsung.com> wrote:
+> > On Tuesday, July 30, 2013 8:20 PM, Vikas Sajjan wrote:
+> >>
+> >> Moves the properties of DP controller to exynos5.dtsi which are common
+> >> across exynos5 SoCs like Exynos5250 and Exynos5420.
+> >>
+> >> The PHY DP Node is based on Jingoo Han's <jg1.han@samsung.com> patch at
+> >> https://patchwork.linuxtv.org/patch/19189/
+> >>
+> >> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+> >> ---
+> >>  arch/arm/boot/dts/exynos5.dtsi            |   11 +++++++++++
+> >>  arch/arm/boot/dts/exynos5250-arndale.dts  |    3 ++-
+> >>  arch/arm/boot/dts/exynos5250-smdk5250.dts |    3 ++-
+> >>  arch/arm/boot/dts/exynos5250.dtsi         |   21 +++++++++------------
+> >>  4 files changed, 24 insertions(+), 14 deletions(-)
+> >>
+> >
+> > [....]
+> >
+> >> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> b/arch/arm/boot/dts/exynos5250.dtsi
+> >> index 238bdb2..1c017dc 100644
+> >> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> >> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> >> @@ -614,20 +614,17 @@
+> >>               interrupts = <0 94 0>;
+> >>       };
+> >>
+> >> -     dp-controller {
+> >> -             compatible = "samsung,exynos5-dp";
+> >> -             reg = <0x145b0000 0x1000>;
+> >> -             interrupts = <10 3>;
+> >> -             interrupt-parent = <&combiner>;
+> >> +     dp_phy: video-phy@10040720 {
+> >> +             compatible = "samsung,exynos5250-dp-video-phy";
+> >> +             reg = <0x10040720 4>;
+> >> +             #phy-cells = <0>;
+> >> +     };
+> >
+> > Oops!!!
+> >
+> > This patch should be reverted.
+> > Or, fix patch should be re-sent.
+> > 'dp phy' driver is not yet merged to mainline kernel.
+> >
 > 
+> As you suggest, since the DP-PHY driver is NOT yet in mainline, we may
+> have to keep this patch reverted till your patch series gets merged to
+> have DP working on exynos5 .
+> 
+OK, got it. Please send patch fixing this issue for v3.12. Of course, we
+need this from v3.13 which will be including the DP-PHY driver.
 
-cheers,
--roger
+Thanks,
+Kukjin
+
+> >
+> >> +
+> >> +     dp-controller@145b0000 {
+> >>               clocks = <&clock 342>;
+> >>               clock-names = "dp";
+> >> -             #address-cells = <1>;
+> >> -             #size-cells = <0>;
+> >> -
+> >> -             dptx-phy {
+> >> -                     reg = <0x10040720>;
+> >> -                     samsung,enable-mask = <1>;
+> >> -             };
+> >> +             phys = <&dp_phy>;
+> >> +             phy-names = "dp";
+> >>       };
+> >
+> > Thus, 'dptx-phy' node should be used until dp phy driver is merged.
+> >
+> > Vikas Sajjan,
+> > Please test your patch on real boards when you send your patch.
+> >
+> 
+> I tested the patch before sending on Exynos5250-SMDK5250 using  Kishon
+> Vijay Abraham's series at http://lwn.net/Articles/559487/
+>  which contains DP-PHY driver posted by you
+>  1.  phy: Add driver for Exynos DP PHY
+>  2.  video: exynos_dp: remove non-DT support for Exynos Display Port
+>  3.  video: exynos_dp: Use the generic PHY driver
