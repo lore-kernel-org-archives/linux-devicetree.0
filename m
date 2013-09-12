@@ -1,86 +1,39 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RFC PATCH 5/6] extcon-gpio: Describe devicetree bindings
-Date: Thu, 12 Sep 2013 09:53:04 -0700
-Message-ID: <20130912165304.GA12202@roeck-us.net>
-References: <1377836978-24082-1-git-send-email-linux@roeck-us.net>
- <1377836978-24082-6-git-send-email-linux@roeck-us.net>
- <20130912164100.GF22013@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
+Date: Thu, 12 Sep 2013 11:53:47 -0500
+Message-ID: <25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org>
+References: <1379003839-16068-1-git-send-email-galak@codeaurora.org> <CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130912164100.GF22013@e106331-lin.cambridge.arm.com>
+In-Reply-To: <CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+To: Olof Johansson <olof@lixom.net>
+Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 05:41:00PM +0100, Mark Rutland wrote:
-> On Fri, Aug 30, 2013 at 05:29:37AM +0100, Guenter Roeck wrote:
-> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> > ---
-> >  .../devicetree/bindings/extcon/extcon-gpio         |   23 ++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio
-> > 
-> > diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio b/Documentation/devicetree/bindings/extcon/extcon-gpio
-> > new file mode 100644
-> > index 0000000..091ddc6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio
-> > @@ -0,0 +1,23 @@
-> > +Device-Tree bindings for extcon/extcon-gpio driver
-> 
-> Bindings shouldn't refer to Linux-specifics like particular drivers.
-> What class of hardware are you actually trying to describe?
-> 
-Agreed. Question is where to put the bindings, as they are not really 
-specific to the extcon driver. The extcon driver merely implements 
-the bindings. This is why the "compatible" statement reads "gpio-connector"
-and not "extcon-something".
 
-The bindings describe a connector managed through gpio pins.
+On Sep 12, 2013, at 11:46 AM, Olof Johansson wrote:
 
-> > +
-> > +Required properties:
-> > +	- compatible = "gpio-connector";
-> > +	- presence-detect-gpios - presence detect gpio pin
-> > +
-> > +Optional properties:
-> > +	- debounce-interval - debounce interval in milli-seconds
-> > +	- state-on - on (connected) state
-> > +	- state-off - off (disconnected) state
-> > +	  Depending on the type of connector or cable, states may
-> > +	  for example be reported as "connected"/"disconnected"
-> > +	  or "inserted"/"removed".
+> On Thu, Sep 12, 2013 at 9:37 AM, Kumar Gala <galak@codeaurora.org> wrote:
+>> Use the Qualcomm vendor prefix (qcom) as the directory name for
+>> Qualcomm MSM devicetrees going forward.
+>> 
+>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
 > 
-> I don't understand what the state-* properties describe. Do these
-> provide semantic information to drivers? What is the full set of valid
-> values?
-> 
-That is merely text which is ultimately passed on to the user.
-Guess 'semantic information' might be a way to phrase it.
+> Let's not move just one platform like this. If we are to do this, we
+> should move everything, and that will be really painful and needs to
+> be done in a controlled manner, probably scripted and right before a
+> -rc1 or such.
 
-> > +
-> > +Example node:
-> > +
-> > +	some-connector {
-> > +		compatible = "gpio-connector";
-> > +		presence-detect-gpios = <&gpio1 7 1>;
-> > +		debounce-interval = <1>;
-> > +		state-on = "connected";
-> > +		state-on = "disconnected";
-> > +	};
-> 
-> I'm not sure how much value this adds to bindings over describing the
-> gpios directly. This seems to add a layer of indirection because of
-> Linux internals.
-> 
-Not sure I understand what you mean with "describing the gpios directly".
-Can you elaborate and/or provide an example ?
 
-How would you describe the use of gpio pins used to detect board presence ?
-That doesn't seem very Linux specific to me.
+Than I suggest we deal with it when we pull the device trees out of the kernel tree.
 
-Thanks,
-Guenter
+As such, I'd tell Rohit to go forward with the file being named apq8074-dragonboard.dtb for the time being.
+
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
