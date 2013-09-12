@@ -1,63 +1,34 @@
-From: Mike Dunn <mikedunn@newsguy.com>
-Subject: [PATCH] pwm-backlight: allow for non-increasing brightness levels
-Date: Thu, 12 Sep 2013 11:35:52 -0700
-Message-ID: <1379010952-8928-1-git-send-email-mikedunn@newsguy.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com
-Cc: Mike Dunn <mikedunn@newsguy.com>, Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jg1.han@samsung.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, Marek Vasut <marex@denx.de>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
+Date: Thu, 12 Sep 2013 11:46:33 -0700
+Message-ID: <CAOesGMhSZzpyT5XyECByLnvef0E+92y+uaXByiG0Vpm9f05AxQ@mail.gmail.com>
+References: <1379003839-16068-1-git-send-email-galak@codeaurora.org>
+	<CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com>
+	<25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org>
+	<CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com>
+	<3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org>
+	<CAOesGMhN0jEx065cpf989P-JbuxPiOaPRsP4BD3VoW-n5ebP+w@mail.gmail.com>
+	<9DD9D9A7-ED55-412F-A18D-599D1E365003@codeaurora.org>
+	<523205E1.2040704@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <523205E1.2040704@gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Kumar Gala <galak@codeaurora.org>, David Brown <davidb@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently the driver assumes that the values specified in the brightness-levels
-device tree property increase as they are parsed from left to right.  But boards
-that invert the signal between the PWM output and the backlight will need to
-specify decreasing brightness-levels.  This patch removes the assumption that
-the last element of the array is the max value, and instead searches the array
-for the max value and uses that as the normalizing value when determining the
-duty cycle.
+On Thu, Sep 12, 2013 at 11:20 AM, Rob Herring <robherring2@gmail.com> wrote:
 
-Signed-off-by: Mike Dunn <mikedunn@newsguy.com>
----
- drivers/video/backlight/pwm_bl.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+> As Stephen W has pointed out previously, the dtb filename itself is or
+> may be an ABI and the bootloader may be hardcoded to a name. So we
+> should avoid future renames.
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 1fea627..d66aaa0 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -27,6 +27,7 @@ struct pwm_bl_data {
- 	unsigned int		period;
- 	unsigned int		lth_brightness;
- 	unsigned int		*levels;
-+	unsigned int		max_level;
- 	int			(*notify)(struct device *,
- 					  int brightness);
- 	void			(*notify_after)(struct device *,
-@@ -57,7 +58,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
- 
- 		if (pb->levels) {
- 			duty_cycle = pb->levels[brightness];
--			max = pb->levels[max];
-+			max = pb->levels[pb->max_level];
- 		} else {
- 			duty_cycle = brightness;
- 		}
-@@ -195,7 +196,15 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 	}
- 
- 	if (data->levels) {
--		max = data->levels[data->max_brightness];
-+		int i, max_value = 0, max_idx = 0;
-+		for (i = 0; i <= data->max_brightness; i++) {
-+			if (data->levels[i] > max_value) {
-+				max_value = data->levels[i];
-+				max_idx = i;
-+			}
-+		}
-+		pb->max_level = max_idx;
-+		max = data->levels[max_idx];
- 		pb->levels = data->levels;
- 	} else
- 		max = data->max_brightness;
--- 
-1.8.1.5
+We still have the choice of producing the dtb files under
+arch/arm/boot/dts even if we move dts/dtsi files one level deeper, as
+long as we keep the filenames consistent. So we can do a move, just
+not a rename.
+
+
+-Olof
