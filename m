@@ -1,149 +1,50 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v9 2/3] DMA: Freescale: Add new 8-channel DMA engine
- device tree nodes
-Date: Thu, 12 Sep 2013 18:15:41 +0100
-Message-ID: <20130912171541.GH22013@e106331-lin.cambridge.arm.com>
-References: <1377861980-7027-1-git-send-email-hongbo.zhang@freescale.com>
- <1377861980-7027-3-git-send-email-hongbo.zhang@freescale.com>
- <20130902155636.GA18206@e106331-lin.cambridge.arm.com>
- <5225A57E.4030003@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
+Date: Thu, 12 Sep 2013 12:55:36 -0500
+Message-ID: <3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org>
+References: <1379003839-16068-1-git-send-email-galak@codeaurora.org> <CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com> <25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org> <CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5225A57E.4030003@freescale.com>
-Content-Language: en-US
+In-Reply-To: <CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hongbo Zhang <hongbo.zhang@freescale.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "djbw@fb.com" <djbw@fb.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Olof Johansson <olof@lixom.net>
+Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 03, 2013 at 10:01:50AM +0100, Hongbo Zhang wrote:
-> On 09/02/2013 11:58 PM, Mark Rutland wrote:
-> > Hi,
-> >
-> > On Fri, Aug 30, 2013 at 12:26:19PM +0100, hongbo.zhang@freescale.com wrote:
-> >> From: Hongbo Zhang <hongbo.zhang@freescale.com>
-> >>
-> >> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch adds
-> >> the device tree nodes for them.
-> >>
-> >> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
-> >> ---
-> >>   .../devicetree/bindings/powerpc/fsl/dma.txt        |   67 ++++++++++++++++
-> >>   arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
-> >>   arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   82 ++++++++++++++++++++
-> >>   arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   82 ++++++++++++++++++++
-> >>   arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
-> >>   5 files changed, 235 insertions(+), 4 deletions(-)
-> >>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
-> >>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> >> index ddf17af..332ac77 100644
-> >> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> >> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> >> @@ -126,6 +126,73 @@ Example:
-> >>                  };
-> >>          };
-> >>
-> >> +** Freescale Elo3 DMA Controller
-> >> +   This is EloPlus controller with 8 channels, used in Freescale Txxx and Bxxx
-> > I was under the impression EloPlus was the previous revision. Should
-> > that say Elo3, or is Elo3 considered to be an EloPlus implementation?
-> In this patch 1/3 I revise the doc to make it clear we have Elo and
-> EloPlus, and I'm adding another new Elo3. Yes the only difference
-> between Elo3 and EloPlus is channel numbers(8 channels vs 4 channels),
-> so we can call "Elo3 is an 8-channel EloPlus"
 
-Ok.
+On Sep 12, 2013, at 12:06 PM, Olof Johansson wrote:
 
-> >> +   series chips, such as t1040, t4240, b4860.
-> >> +
-> >> +Required properties:
-> >> +
-> >> +- compatible        : must include "fsl,elo3-dma"
-> >> +- reg               : <registers specifier for DMA general status reg>
-> > The example has two reg entries. What both are should be specified. From
-> > what you described last time, it sounds like each is a status register
-> > for four channels.
-> >
-> > Presumably the first covers the channels at 0x0,0x80,0x100,0x180, and
-> > the second covers the channels at 0x300,0x380,0x400,0x480? If the
-> > registers have specific names in a datasheet, it would be worth
-> > mentioning them.
-> Yes, each is a status register for four channels, you got it -- this
-> means my statement works.
-> Is it necessary to specify all the register names?
-> I can describe my two registers, but in other cases the reg entryies can
-> cover tens even hundreds of registers, just a summary is OK I think.
+> On Thu, Sep 12, 2013 at 9:53 AM, Kumar Gala <galak@codeaurora.org> wrote:
+>> 
+>> On Sep 12, 2013, at 11:46 AM, Olof Johansson wrote:
+>> 
+>>> On Thu, Sep 12, 2013 at 9:37 AM, Kumar Gala <galak@codeaurora.org> wrote:
+>>>> Use the Qualcomm vendor prefix (qcom) as the directory name for
+>>>> Qualcomm MSM devicetrees going forward.
+>>>> 
+>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+>>> 
+>>> Let's not move just one platform like this. If we are to do this, we
+>>> should move everything, and that will be really painful and needs to
+>>> be done in a controlled manner, probably scripted and right before a
+>>> -rc1 or such.
+>> 
+>> 
+>> Than I suggest we deal with it when we pull the device trees out of the kernel tree.
+>> 
+>> As such, I'd tell Rohit to go forward with the file being named apq8074-dragonboard.dtb for the time being.
+> 
+> My original request to please use a common prefix for your product
+> families stands. Please prefix with msm-*, or if you have to, qcom-*
+> instead, since you guys can't seem to make your mind up on standard
+> prefixes (msm, apq, etc).
 
-I think there should at least be a description of which channels each
-reg entry corresponds to. I see this hasn't been done so far for the
-older Elo DMAs, but they only had 4 channels max, and one status reg.
+This is silly, I dont see the reason to go with qcom-apq<SOC>-<BOARD>.dts and than in the future drop qcom- when we mostly likely shift to a dir structure.  As engineers we are all too aware of the lack of sanity in marketing names, but its what we have so we have to live with it.
 
-> > If the specification of the DMA controller allows for more channels, it
-> > may be worth describing that case now.
-> This DMA controller doesn't allows for more channels. (Even if it does,
-> it should be another new controller)
+- k
 
-Ok.
-
-> >> +- ranges            : describes the mapping between the address space of the
-> >> +                      DMA channels and the address space of the DMA controller
-> > This looks odd as a required property, and I'm slightly confused. Is
-> > this used to map the reg values of the DMA channels, or is it used when
-> > mapping the DMA address space (for which dma-ranges exists in ePAPR and
-> > other bindings).
-> It is used to map the reg values of DMA channels.
-
-Ok, I guess that makes sense.
-
-> >> +
-> >> +- DMA channel nodes:
-> >> +        - compatible        : must include "fsl,eloplus-dma-channel"
-> >> +        - reg               : <registers specifier for channel>
-> > What does this represent? What are valid values?
-> >
-> > In the example below it looks like these are offsets of control
-> > registers within the dma controller.
-> Yes, they are offsets of control registers within dma controller, but
-> the contents in these registers are for dma channels.
-> Physically we have dma controller registers and dma channel registers,
-> they are in one continuous physical address space, we divide all these
-> registers into two controller/channel parts, according to contents in
-> these registers, common status registers for all channels are called dma
-> controller registers, otherwise channel specific registers are called
-> dma channel registers.
-
-I see, so this reg represents a channels channel specific registers
-(which are distinct from the shared status registers). I was confused
-initially as to what address space they were in, but that makes sense
-with your description of ranges above.
-
-> > If the reg property may have any value, how do they get mapped to bits
-> > in the status register(s)?
-> In fact, each channel has its own status register(and also other
-> registers), the dma controller status register is just aggregation of
-> all channel status register. (that seems duplicated somehow, maybe this
-> is due to hardware compatibility with legacy one, and the device tree
-> just describes the physical hardware without lie)
-
-My question here was stupid, thanks for the explanation :)
-
-> > May some channels be unusable for some reason, or will all eight
-> > channels be wired on any given Elo3 DMA?
-> Sorry, not get your point clearly, maybe you are clear now because of my
-> previous explanations.
-
-I assume that on any El03 DMA, there won't be a case where you can't
-describe the channel at 0x80, for instance. It will always be present
-(but it might not be wired up to anything any therefore be useful)?
-
-This was related to my concerns about the status register description --
-if the channels at 0x0,0x80,0x100,0x180 weren't wired, what would get
-described in the dt? I guess that would never actually happen because
-all 8 channels must always be present in the Elo3 IP block.
-
-Thanks,
-Mark.
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
