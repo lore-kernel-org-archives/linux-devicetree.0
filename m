@@ -1,55 +1,52 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys part
- and Exynos part
-Date: Thu, 12 Sep 2013 16:15:04 +0900
-Message-ID: <003501ceaf87$cda45db0$68ed1910$%han@samsung.com>
-References: <002801ce8376$a807dbf0$f81793d0$@samsung.com>
- <51ED49D6.9050209@ti.com> <000701ce8741$fe47deb0$fad79c10$@samsung.com>
- <51EE22DF.6090902@ti.com> <001301ce8772$522dfc50$f689f4f0$@samsung.com>
- <5231607C.10702@ti.com>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
+Date: Thu, 12 Sep 2013 10:55:27 +0200
+Message-ID: <5231817F.8000901@ahsoftware.de>
+References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com> <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com> <344239800.bDEkDg48ZQ@avalon> <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com> <52308C91.2000105@ahsoftware.de> <523096FE.8080901@collabora.co.uk> <5230AB6E.1070807@ahsoftware.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <5231607C.10702@ti.com>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Kishon Vijay Abraham I' <kishon@ti.com>
-Cc: 'Pratyush Anand' <pratyush.anand@st.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5230AB6E.1070807@ahsoftware.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 July 2013 12:30 PM, Kishon Vijay Abraham I wrote:
-> >> .
-> >> .
-> >>>>> +			of_pci_range_to_resource(&range, np, &pp->cfg);
-> >>>>> +			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
-> >>>>> +			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
-> >>>>> +		}
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
-> >>>>> +				resource_size(&pp->cfg));
-> >>>>
-> >>>> Why is configuraion space divided into two?
-> >>>
-> >>> Sorry, I don't know the exact reason. :(
-> >>> Pratyush Anand may know about this.
-> >>> Pratyush Anand, could you answer the question?
-> >>>
-> >>> Also, if you find some problems, please let me know.
-> 
-> One more query..
-> 
-> Where is inbound translation configuration done in your driver? how should it
-> be done?
+Am 11.09.2013 19:42, schrieb Alexander Holler:
+> Am 11.09.2013 18:14, schrieb Javier Martinez Canillas:
 
-Hi Kishon,
+>> So for example in an OMAP board DT you can define something like this:
+>>
+>> ethernet@5,0 {
+>>          compatible = "smsc,lan9221", "smsc,lan9115";
+>>          interrupt-parent = <&gpio6>;
+>>          interrupts = <16 8>;
+>> };
+>>
+>> Since each OMAP GPIO bank has 32 GPIO pins, then what you are defining
+>> is that
+>> the GPIO 176 (5 * 32 + 16) will be mapped as the IRQ line for the
+>> ethernet
+>> controller.
 
-Sorry, I cannot understand your question exactly.
-However, the following thread would be helpful.
+By the way, how do you define two GPIOs/IRQs from different
+gpio-banks/irq-controllers wuth that scheme?
 
-http://www.spinics.net/lists/arm-kernel/msg252078.html
-https://lkml.org/lkml/2013/6/17/890
+Would that be like below?
 
-Best regards.
-Jingoo Han
+ ethernet@5,0 {
+          compatible = "smsc,lan9221", "smsc,lan9115";
+          interrupt-parent = <&gpio6>;
+          interrupts = <16 8>;
+          interrupt-parent = <&gpio7>;
+          interrupts = <1 IRQF_TRIGGER_FALLING>; /* GPIO7_1 */
+ };
+
+So multiple definitions of interrupt-parent are allowed and the order
+does matter? And such does work? Sorry for asking, but I'm relatively
+new to DT. ;)
+
+Regards,
+
+Alexander Holler
