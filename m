@@ -1,7 +1,7 @@
 From: Milo Kim <milo.kim@ti.com>
-Subject: [PATCH 4/4] Documentation: add LP3943 DT bindings and document
-Date: Thu, 12 Sep 2013 10:34:23 +0900
-Message-ID: <1378949663-6338-1-git-send-email-milo.kim@ti.com>
+Subject: [PATCH v3 4/4] Documentation: add LP3943 DT bindings and document
+Date: Thu, 12 Sep 2013 10:35:00 +0900
+Message-ID: <1378949700-6384-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
