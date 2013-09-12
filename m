@@ -1,74 +1,102 @@
-From: Milo Kim <milo.kim@ti.com>
-Subject: [PATCH v3 0/4] LP3943 MFD driver for a GPIO expander and a PWM generator
-Date: Thu, 12 Sep 2013 10:30:41 +0900
-Message-ID: <1378949441-6073-1-git-send-email-milo.kim@ti.com>
+From: Tang Yuantian-B29983 <B29983@freescale.com>
+Subject: RE: [PATCH v4] powerpc/mpc85xx: Update the clock device tree nodes
+Date: Thu, 12 Sep 2013 01:31:49 +0000
+Message-ID: <D07C73A334FF604B95B3CBD2A545D07B150748AA@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1378882632-9053-1-git-send-email-Yuantian.Tang@freescale.com>
+ <1378948229.12204.486.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Milo Kim <milo.kim@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1378948229.12204.486.camel@snotra.buserror.net>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Wood Scott-B07421 <B07421@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Li Yang-Leo-R58472 <r58472@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-LP3943 is an integrated device capable of driving 16 output channels.
-It can be used for GPIO expander and PWM generators.
-LP3493 registers are controlled via the I2C interface.
-
-This patch-set consists of four parts - MFD, GPIO, PWM and documents.
-
-Major updates in v3:
-
-* MFD
-  Lee Jones pointed confusing pin number notation.
-  Now, each output pin number is exactly matched to each enum value.
-
-  LP3943 has a static configuration from platform data or the device tree,
-  So, I keep the driver structure instead of using the pin control subsystem.
-  (https://lkml.org/lkml/2013/8/14/490)
-
-* PWM
-  Do not emulate 'set_polarity' function in case of unsupported feature by
-  the chip.
-  Code fixes based on Thierry Reding's comments.
-  (https://lkml.org/lkml/2013/8/14/188)
-
-* Documentation
-  From Thierry's suggestion, detailed driver description was moved to
-  'Documentation/lp3943.txt'.
-  Fix device tree bindings from maintainers' comments.
-  (https://lkml.org/lkml/2013/7/31/226)
-  (https://lkml.org/lkml/2013/8/14/569)
-
-Milo Kim (4):
-  mfd: add LP3943 MFD driver
-  gpio: add LP3943 I2C GPIO expander driver
-  pwm: add LP3943 PWM driver
-  Documentation: add LP3943 DT bindings and document
-
- Documentation/00-INDEX                             |    2 +
- .../devicetree/bindings/gpio/gpio-lp3943.txt       |   37 +++
- Documentation/devicetree/bindings/mfd/lp3943.txt   |   33 ++
- .../devicetree/bindings/pwm/pwm-lp3943.txt         |   58 ++++
- Documentation/lp3943.txt                           |   62 ++++
- drivers/gpio/Kconfig                               |    8 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-lp3943.c                         |  242 +++++++++++++++
- drivers/mfd/Kconfig                                |   11 +
- drivers/mfd/Makefile                               |    1 +
- drivers/mfd/lp3943.c                               |  148 +++++++++
- drivers/pwm/Kconfig                                |   10 +
- drivers/pwm/Makefile                               |    1 +
- drivers/pwm/pwm-lp3943.c                           |  314 ++++++++++++++++++++
- include/linux/mfd/lp3943.h                         |  114 +++++++
- 15 files changed, 1042 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/lp3943.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-lp3943.txt
- create mode 100644 Documentation/lp3943.txt
- create mode 100644 drivers/gpio/gpio-lp3943.c
- create mode 100644 drivers/mfd/lp3943.c
- create mode 100644 drivers/pwm/pwm-lp3943.c
- create mode 100644 include/linux/mfd/lp3943.h
-
--- 
-1.7.9.5
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIx
+DQo+IFNlbnQ6IDIwMTPlubQ55pyIMTLml6Ug5pif5pyf5ZubIDk6MTANCj4gVG86IFRhbmcgWXVh
+bnRpYW4tQjI5OTgzDQo+IENjOiBnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnOyBsaW51eHBwYy1k
+ZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IExpIFlh
+bmctTGVvLVI1ODQ3Mg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0XSBwb3dlcnBjL21wYzg1eHg6
+IFVwZGF0ZSB0aGUgY2xvY2sgZGV2aWNlIHRyZWUNCj4gbm9kZXMNCj4gDQo+IE9uIFdlZCwgMjAx
+My0wOS0xMSBhdCAxNDo1NyArMDgwMCwgWXVhbnRpYW4uVGFuZ0BmcmVlc2NhbGUuY29tIHdyb3Rl
+Og0KPiA+IEZyb206IFRhbmcgWXVhbnRpYW4gPHl1YW50aWFuLnRhbmdAZnJlZXNjYWxlLmNvbT4N
+Cj4gPg0KPiA+IFRoZSBmb2xsb3dpbmcgU29DcyB3aWxsIGJlIGFmZmVjdGVkOiBwMjA0MSwgcDMw
+NDEsIHA0MDgwLCBwNTAyMCwNCj4gPiBwNTA0MCwgYjQ0MjAsIGI0ODYwLCB0NDI0MA0KPiA+DQo+
+ID4gU2lnbmVkLW9mZi1ieTogVGFuZyBZdWFudGlhbiA8WXVhbnRpYW4uVGFuZ0BmcmVlc2NhbGUu
+Y29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IExpIFlhbmcgPGxlb2xpQGZyZWVzY2FsZS5jb20+DQo+
+ID4gLS0tDQo+ID4gdjQ6DQo+ID4gCS0gYWRkIGJpbmRpbmcgZG9jdW1lbnQNCj4gPiAJLSB1cGRh
+dGUgY29tcGF0aWJsZSBzdHJpbmcNCj4gPiAJLSB1cGRhdGUgdGhlIHJlZyBwcm9wZXJ0eQ0KPiA+
+IHYzOg0KPiA+IAktIGZpeCB0eXBvDQo+ID4gdjI6DQo+ID4gCS0gYWRkIHQ0MjQwLCBiNDQyMCwg
+YjQ4NjAgc3VwcG9ydA0KPiA+IAktIHJlbW92ZSBwbGwvNCBjbG9jayBmcm9tIHAyMDQxLCBwMzA0
+MSBhbmQgcDUwMjAgYm9hcmQNCj4gPg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9j
+ay9jb3JlbmV0LWNsb2NrLnR4dCAgICB8ICA4MA0KPiArKysrKysrKysrKysrKysNCj4gPiAgYXJj
+aC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDQyMHNpLXBvc3QuZHRzaSAgICAgICAgfCAgMzQgKysr
+KysrLQ0KPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0NDIwc2ktcHJlLmR0c2kgICAg
+ICAgICB8ICAgMiArDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ4NjBzaS1wb3N0
+LmR0c2kgICAgICAgIHwgIDM0ICsrKysrKy0NCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
+bC9iNDg2MHNpLXByZS5kdHNpICAgICAgICAgfCAgIDQgKw0KPiA+ICBhcmNoL3Bvd2VycGMvYm9v
+dC9kdHMvZnNsL3AyMDQxc2ktcG9zdC5kdHNpICAgICAgICB8ICA1OSArKysrKysrKysrLQ0KPiA+
+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AyMDQxc2ktcHJlLmR0c2kgICAgICAgICB8ICAg
+NCArDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kgICAg
+ICAgIHwgIDU5ICsrKysrKysrKystDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMw
+NDFzaS1wcmUuZHRzaSAgICAgICAgIHwgICA0ICsNCj4gPiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRz
+L2ZzbC9wNDA4MHNpLXBvc3QuZHRzaSAgICAgICAgfCAxMTENCj4gKysrKysrKysrKysrKysrKysr
+KystDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDQwODBzaS1wcmUuZHRzaSAgICAg
+ICAgIHwgICA4ICsrDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0
+LmR0c2kgICAgICAgIHwgIDQxICsrKysrKystDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9m
+c2wvcDUwMjBzaS1wcmUuZHRzaSAgICAgICAgIHwgICAyICsNCj4gPiAgYXJjaC9wb3dlcnBjL2Jv
+b3QvZHRzL2ZzbC9wNTA0MHNpLXBvc3QuZHRzaSAgICAgICAgfCAgNTkgKysrKysrKysrKy0NCj4g
+PiAgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTA0MHNpLXByZS5kdHNpICAgICAgICAgfCAg
+IDQgKw0KPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwc2ktcG9zdC5kdHNpICAg
+ICAgICB8ICA4NA0KPiArKysrKysrKysrKysrKystDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0
+cy9mc2wvdDQyNDBzaS1wcmUuZHRzaSAgICAgICAgIHwgIDEyICsrKw0KPiA+ICAxNyBmaWxlcyBj
+aGFuZ2VkLCA1OTMgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+
+ID4gMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jb3JlbmV0
+LWNsb2NrLnR4dA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9jbG9jay9jb3JlbmV0LWNsb2NrLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2NvcmVuZXQtY2xvY2sudHh0DQo+ID4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi41MWVhYjc1DQo+ID4gLS0tIC9kZXYvbnVs
+bA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jb3Jl
+bmV0LWNsb2NrLnR4dA0KPiA+IEBAIC0wLDAgKzEsODAgQEANCj4gPiArRGV2aWNlIFRyZWUgQ2xv
+Y2sgYmluZGluZ3MgZm9yIEZyZWVzY2FsZSBQb3dlclBDIGNvcmVuZXQgcGxhdGZvcm0NCj4gPiAr
+DQo+ID4gK1RoaXMgYmluZGluZyB1c2VzIHRoZSBjb21tb24gY2xvY2sgYmluZGluZ1sxXS4NCj4g
+PiArDQo+ID4gK1sxXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xv
+Y2stYmluZGluZ3MudHh0DQo+ID4gKw0KPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICst
+IGNvbXBhdGlibGUgOiBzaGFsbCBiZSBvbmUgb3IgbW9yZSBvZiB0aGUgZm9sbG93aW5nOg0KPiAN
+Cj4gU2hhbGwgaW5jbHVkZS4uLg0KPiANCj4gPiArCS0gImZzbCw8Y2hpcD4tY2xvY2tnZW4iOiBm
+b3IgY2hpcCBzcGVjaWZpYyBjbG9jayBibG9jaw0KPiA+ICsJLSAiZnNsLHFvcmlxLWNsb2NrZ2Vu
+LVsxLDJdLjAiOiBmb3IgY2hhc3NpcyAxLjAgYW5kIDIuMCBjbG9jaw0KPiA+ICsJCWJsb2NrIHJl
+c3BlY3RpdmVseS4NCj4gPiArCS0gImZzbCxxb3JpcS1jaGFzc2lzWzEsMl0tY29yZS1wbGwiIC0g
+Zm9yIGEgY29yZSBQTEwgY2xvY2sNCj4gPiArCS0gImZzbCxxb3JpcS1jaGFzc2lzWzEsMl0tY29y
+ZS1tdXgiIC0gZm9yIGEgY29yZSBtdWx0aXBsZXhlciBjbG9jay4NCj4gPiArCQlEaXZpZGVkIGZy
+b20gdGhlIGNvcmUgUExMIGNsb2NrDQo+IA0KPiBIbW0sIHRoZXJlJ3MgYSBiaXQgb2YgYSBtaXNt
+YXRjaCBoZXJlIGJldHdlZW4gImNoYXNzaXMyIiBhbmQgdGhlICIyLjAiDQo+IG9uIHRoZSBjbG9j
+a2dlbiBub2RlLi4uIHBlcmhhcHMgaXQgc2hvdWxkIGJlICJmc2wscW9yaXEtY29yZS1wbGwtMi4w
+IiwNCj4gZXRjLg0KPiANCj4gPiArCS0gImZpeGVkLWNsb2NrIiAtIGZyb20gY29tbW9uIGNsb2Nr
+IGJpbmRpbmc7IHNob3VsZCBiZSBvdXRwdXQgY2xvY2sNCj4gPiArCQlvZiBvc2NpbGxhdG9yDQo+
+ID4gKy0gcmVnIDogc2hhbGwgYmUgdGhlIGNvbnRyb2wgcmVnaXN0ZXIgb2Zmc2V0IGZyb20gY2xv
+Y2sgYmxvY2sgYmFzZQ0KPiBhZGRyZXNzLg0KPiANCj4gVGhpcyBkZXNjcmlwdGlvbiBvZiAicmVn
+IiBpcyBvdmVybHkgc3BlY2lmaWMgKGFzc3VtZXMgaG93IHRoZSBwYXJlbnQNCj4gbm9kZSdzIHJh
+bmdlcyBhcmUgc2V0IHVwKSwgaW5jb21wbGV0ZSAodGhlcmUncyBhIHNpemUgYXMgd2VsbCBhcyB0
+aGUNCj4gb2Zmc2V0KSwgYW5kIGRvZXMgbm90IGFwcGx5IHRvIHRoZSBjbG9ja2dlbiBub2RlIGl0
+c2VsZiAoeW91IHByb2JhYmx5DQo+IHNob3VsZG4ndCBsdW1wIHRoZW0gdG9nZXRoZXIgbGlrZSB0
+aGlzKS4NCj4gDQpEbyB5b3UgbWVhbiBJIHNob3VsZCBleHBsYWluIHRoZSBSRUcgb2YgY2xvY2tn
+ZW4gYW5kIGl0cyBjaGlsZCBub2RlIHJlc3BlY3RpdmVseT8NCg0KPiA+ICstIGNsb2NrcyA6IHNo
+YWxsIGJlIHRoZSBpbnB1dCBwYXJlbnQgY2xvY2sgcGhhbmRsZSBmb3IgdGhlIGNsb2NrLg0KPiAN
+Cj4gTm90IHJlcXVpcmVkIG9uIHRoZSBjbG9ja2dlbiBub2RlDQo+IA0KUmVxdWlyZWQgYnkgY2hp
+bGQgbm9kZSBvZiBjbG9ja2dlbi4NCg0KUmVnYXJkcywNCll1YW50aWFuDQo+IC1TY290dA0KPiAN
+Cg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhw
+cGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczov
+L2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
