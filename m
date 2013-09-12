@@ -1,105 +1,74 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v4] powerpc/mpc85xx: Update the clock device tree nodes
-Date: Wed, 11 Sep 2013 20:10:29 -0500
-Message-ID: <1378948229.12204.486.camel@snotra.buserror.net>
-References: <1378882632-9053-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Milo Kim <milo.kim@ti.com>
+Subject: [PATCH v3 0/4] LP3943 MFD driver for a GPIO expander and a PWM generator
+Date: Thu, 12 Sep 2013 10:30:41 +0900
+Message-ID: <1378949441-6073-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1378882632-9053-1-git-send-email-Yuantian.Tang@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Yuantian.Tang@freescale.com
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Milo Kim <milo.kim@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-09-11 at 14:57 +0800, Yuantian.Tang@freescale.com wrote:
-> From: Tang Yuantian <yuantian.tang@freescale.com>
-> 
-> The following SoCs will be affected: p2041, p3041, p4080,
-> p5020, p5040, b4420, b4860, t4240
-> 
-> Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
-> Signed-off-by: Li Yang <leoli@freescale.com>
-> ---
-> v4:
-> 	- add binding document
-> 	- update compatible string
-> 	- update the reg property
-> v3:
-> 	- fix typo
-> v2:
-> 	- add t4240, b4420, b4860 support
-> 	- remove pll/4 clock from p2041, p3041 and p5020 board
-> 
->  .../devicetree/bindings/clock/corenet-clock.txt    |  80 +++++++++++++++
->  arch/powerpc/boot/dts/fsl/b4420si-post.dtsi        |  34 ++++++-
->  arch/powerpc/boot/dts/fsl/b4420si-pre.dtsi         |   2 +
->  arch/powerpc/boot/dts/fsl/b4860si-post.dtsi        |  34 ++++++-
->  arch/powerpc/boot/dts/fsl/b4860si-pre.dtsi         |   4 +
->  arch/powerpc/boot/dts/fsl/p2041si-post.dtsi        |  59 ++++++++++-
->  arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi         |   4 +
->  arch/powerpc/boot/dts/fsl/p3041si-post.dtsi        |  59 ++++++++++-
->  arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi         |   4 +
->  arch/powerpc/boot/dts/fsl/p4080si-post.dtsi        | 111 ++++++++++++++++++++-
->  arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi         |   8 ++
->  arch/powerpc/boot/dts/fsl/p5020si-post.dtsi        |  41 +++++++-
->  arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi         |   2 +
->  arch/powerpc/boot/dts/fsl/p5040si-post.dtsi        |  59 ++++++++++-
->  arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi         |   4 +
->  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |  84 +++++++++++++++-
->  arch/powerpc/boot/dts/fsl/t4240si-pre.dtsi         |  12 +++
->  17 files changed, 593 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/corenet-clock.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/corenet-clock.txt b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> new file mode 100644
-> index 0000000..51eab75
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/corenet-clock.txt
-> @@ -0,0 +1,80 @@
-> +Device Tree Clock bindings for Freescale PowerPC corenet platform
-> +
-> +This binding uses the common clock binding[1].
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible : shall be one or more of the following:
+LP3943 is an integrated device capable of driving 16 output channels.
+It can be used for GPIO expander and PWM generators.
+LP3493 registers are controlled via the I2C interface.
 
-Shall include...
+This patch-set consists of four parts - MFD, GPIO, PWM and documents.
 
-> +	- "fsl,<chip>-clockgen": for chip specific clock block
-> +	- "fsl,qoriq-clockgen-[1,2].0": for chassis 1.0 and 2.0 clock
-> +		block respectively.
-> +	- "fsl,qoriq-chassis[1,2]-core-pll" - for a core PLL clock
-> +	- "fsl,qoriq-chassis[1,2]-core-mux" - for a core multiplexer clock.
-> +		Divided from the core PLL clock
+Major updates in v3:
 
-Hmm, there's a bit of a mismatch here between "chassis2" and the "2.0"
-on the clockgen node... perhaps it should be "fsl,qoriq-core-pll-2.0",
-etc.
+* MFD
+  Lee Jones pointed confusing pin number notation.
+  Now, each output pin number is exactly matched to each enum value.
 
-> +	- "fixed-clock" - from common clock binding; should be output clock
-> +		of oscillator
-> +- reg : shall be the control register offset from clock block base address.
+  LP3943 has a static configuration from platform data or the device tree,
+  So, I keep the driver structure instead of using the pin control subsystem.
+  (https://lkml.org/lkml/2013/8/14/490)
 
-This description of "reg" is overly specific (assumes how the parent
-node's ranges are set up), incomplete (there's a size as well as the
-offset), and does not apply to the clockgen node itself (you probably
-shouldn't lump them together like this).
+* PWM
+  Do not emulate 'set_polarity' function in case of unsupported feature by
+  the chip.
+  Code fixes based on Thierry Reding's comments.
+  (https://lkml.org/lkml/2013/8/14/188)
 
-> +- clocks : shall be the input parent clock phandle for the clock.
+* Documentation
+  From Thierry's suggestion, detailed driver description was moved to
+  'Documentation/lp3943.txt'.
+  Fix device tree bindings from maintainers' comments.
+  (https://lkml.org/lkml/2013/7/31/226)
+  (https://lkml.org/lkml/2013/8/14/569)
 
-Not required on the clockgen node
+Milo Kim (4):
+  mfd: add LP3943 MFD driver
+  gpio: add LP3943 I2C GPIO expander driver
+  pwm: add LP3943 PWM driver
+  Documentation: add LP3943 DT bindings and document
 
--Scott
+ Documentation/00-INDEX                             |    2 +
+ .../devicetree/bindings/gpio/gpio-lp3943.txt       |   37 +++
+ Documentation/devicetree/bindings/mfd/lp3943.txt   |   33 ++
+ .../devicetree/bindings/pwm/pwm-lp3943.txt         |   58 ++++
+ Documentation/lp3943.txt                           |   62 ++++
+ drivers/gpio/Kconfig                               |    8 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-lp3943.c                         |  242 +++++++++++++++
+ drivers/mfd/Kconfig                                |   11 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/lp3943.c                               |  148 +++++++++
+ drivers/pwm/Kconfig                                |   10 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-lp3943.c                           |  314 ++++++++++++++++++++
+ include/linux/mfd/lp3943.h                         |  114 +++++++
+ 15 files changed, 1042 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/lp3943.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-lp3943.txt
+ create mode 100644 Documentation/lp3943.txt
+ create mode 100644 drivers/gpio/gpio-lp3943.c
+ create mode 100644 drivers/mfd/lp3943.c
+ create mode 100644 drivers/pwm/pwm-lp3943.c
+ create mode 100644 include/linux/mfd/lp3943.h
+
+-- 
+1.7.9.5
