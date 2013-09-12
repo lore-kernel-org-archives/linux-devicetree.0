@@ -1,79 +1,166 @@
-From: Pratyush Anand <pratyush.anand@st.com>
-Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys
- part and Exynos part
-Date: Thu, 12 Sep 2013 16:16:02 +0530
-Message-ID: <20130912104602.GC5995@pratyush-vbox>
-References: <000701ce8741$fe47deb0$fad79c10$@samsung.com>
- <51EE22DF.6090902@ti.com>
- <001301ce8772$522dfc50$f689f4f0$@samsung.com>
- <5231607C.10702@ti.com>
- <003501ceaf87$cda45db0$68ed1910$%han@samsung.com>
- <20130912093018.GA2124@pratyush-vbox>
- <52318CCC.4040604@ti.com>
- <20130912095213.GA5995@pratyush-vbox>
- <5231925B.3030104@ti.com>
- <20130912101803.GB5995@pratyush-vbox>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH 1/7] usb: dwc3: get "usb_phy" only if the platform
+ indicates the presence of PHY
+Date: Thu, 12 Sep 2013 16:17:08 +0530
+Message-ID: <CAFp+6iE+xbSWWp2bNc5MRSUrA4Fi6qVU4vhR4+mtZHZGidkMGg@mail.gmail.com>
+References: <1378136591-7463-1-git-send-email-kishon@ti.com>
+	<1378136591-7463-2-git-send-email-kishon@ti.com>
+	<52319912.8030203@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130912101803.GB5995@pratyush-vbox>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52319912.8030203@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, george.cherian@ti.com, Greg KH <gregkh@linuxfoundation.org>, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>"linux-kernel@vger.kernel.org" <lin>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 03:48:03PM +0530, Pratyush Anand wrote:
-> On Thu, Sep 12, 2013 at 06:07:23PM +0800, Kishon Vijay Abraham I wrote:
-> > Hi,
-> > 
-> > On Thursday 12 September 2013 03:22 PM, Pratyush Anand wrote:
-> > > Hi Kishon,
-> > > 
-> > > On Thu, Sep 12, 2013 at 05:43:40PM +0800, Kishon Vijay Abraham I wrote:
-> > >> Hi,
-> > >>
-> > >> On Thursday 12 September 2013 03:00 PM, Pratyush Anand wrote:
-> > >>> Hi Jingoo,
-> > >>>
-> > >>>
-> > >>> On Thu, Sep 12, 2013 at 03:15:04PM +0800, Jingoo Han wrote:
-> > >>>> On Tuesday 23 July 2013 12:30 PM, Kishon Vijay Abraham I wrote:
-> > >>>>>>> .
-> > >>>>>>> .
-> 
-> [...]
-> 
-> > >> when I do ifconfig eth0 up, I get *r8169 0000:01:00.0 eth0: link up.*
-> > >> But I dont receive any packets and ping also fails and the tx and rx packet
-> > >> count is also 0. Could it be related to inbound translation?
-> > > 
-> > > A PCIe analyser log would tell a definite cause. Most likely either
-> > > inbound translation is not working or INTx/MSI is not working.
-> > 
-> > I have enabled only legacy interrupts. Whenever I connect or disconnect
-> > ethernet cable I get link up/link down message and also the interrupt count for
-> > eth0 increases. So I'm not doubting INTx interrupts as such.
+On Thu, Sep 12, 2013 at 4:06 PM, Roger Quadros <rogerq@ti.com> wrote:
+> Hi Kishon,
+>
+> On 09/02/2013 06:43 PM, Kishon Vijay Abraham I wrote:
+>> There can be systems which does not have a external usb_phy, so get
+>> usb_phy only if usb-phy property is added in the case of dt boot or if
+>> platform_data indicates the presence of PHY. Also remove checking if
+>> return value is -ENXIO since it's now changed to always enable usb_phy layer.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/usb/dwc3/Kconfig         |    1 +
+>>  drivers/usb/dwc3/core.c          |   60 +++++++++++++++++---------------------
+>>  drivers/usb/dwc3/platform_data.h |    1 +
+>>  3 files changed, 28 insertions(+), 34 deletions(-)
+>>
+>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+>> index f969ea2..cfc16dd 100644
+>> --- a/drivers/usb/dwc3/Kconfig
+>> +++ b/drivers/usb/dwc3/Kconfig
+>> @@ -2,6 +2,7 @@ config USB_DWC3
+>>       tristate "DesignWare USB3 DRD Core Support"
+>>       depends on (USB || USB_GADGET) && GENERIC_HARDIRQS && HAS_DMA
+>>       depends on EXTCON
+>> +     select USB_PHY
+>>       select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
+>>       help
+>>         Say Y or M here if your system has a Dual Role SuperSpeed
+>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>> index 474162e..428c29e 100644
+>> --- a/drivers/usb/dwc3/core.c
+>> +++ b/drivers/usb/dwc3/core.c
+>> @@ -387,16 +387,38 @@ static int dwc3_probe(struct platform_device *pdev)
+>>       if (node) {
+>>               dwc->maximum_speed = of_usb_get_maximum_speed(node);
+>>
+>> -             dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
+>> -             dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
+>> +             if (of_property_read_bool(node, "usb-phy")) {
+>> +                     dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev,
+>> +                             "usb-phy", 0);
+>> +                     if (IS_ERR(dwc->usb2_phy))
+>> +                             return PTR_ERR(dwc->usb2_phy);
+>> +                     dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev,
+>> +                             "usb-phy", 1);
+>> +                     if (IS_ERR(dwc->usb3_phy))
+>> +                             return PTR_ERR(dwc->usb3_phy);
+>
+> Some DWC3 instances use only usb2_phy. e.g. on DRA7 the 2nd dwc3 instance doesn't use usb3_phy.
+> This needs to be a valid case and driver shouldn't error out.
 
-Just a question, what is the MRRS of your RC? if it is 128, can you
-try with passing pci=pcie_bus_peer2peer  in your bootargs.
+So, i think adding flexibility to DWC3 to have either
+usb2-phy/usb3-phy or both of them seems to be valid point.
+Any suggestions ?
 
-Again, analyser will help a lot in diagnosing such issues.
+>
+>> +             } else {
+>> +                     dwc->usb2_phy = NULL;
+>> +                     dwc->usb3_phy = NULL;
+>> +             }
+>>
+>>               dwc->needs_fifo_resize = of_property_read_bool(node, "tx-fifo-resize");
+>>               dwc->dr_mode = of_usb_get_dr_mode(node);
+>>       } else if (pdata) {
+>>               dwc->maximum_speed = pdata->maximum_speed;
+>>
+>> -             dwc->usb2_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+>> -             dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
+>> +             if (pdata->has_phy) {
+>> +                     dwc->usb2_phy = devm_usb_get_phy(dev,
+>> +                             USB_PHY_TYPE_USB2);
+>> +                     if (IS_ERR(dwc->usb2_phy))
+>> +                             return PTR_ERR(dwc->usb2_phy);
+>> +                     dwc->usb3_phy = devm_usb_get_phy(dev,
+>> +                             USB_PHY_TYPE_USB3);
+>> +                     if (IS_ERR(dwc->usb3_phy))
+>> +                             return PTR_ERR(dwc->usb3_phy);
+>
+> same here?
+>
+>> +             } else {
+>> +                     dwc->usb2_phy = NULL;
+>> +                     dwc->usb3_phy = NULL;
+>> +             }
+>>
+>>               dwc->needs_fifo_resize = pdata->tx_fifo_resize;
+>>               dwc->dr_mode = pdata->dr_mode;
+>> @@ -409,36 +431,6 @@ static int dwc3_probe(struct platform_device *pdev)
+>>       if (dwc->maximum_speed == USB_SPEED_UNKNOWN)
+>>               dwc->maximum_speed = USB_SPEED_SUPER;
+>>
+>> -     if (IS_ERR(dwc->usb2_phy)) {
+>> -             ret = PTR_ERR(dwc->usb2_phy);
+>> -
+>> -             /*
+>> -              * if -ENXIO is returned, it means PHY layer wasn't
+>> -              * enabled, so it makes no sense to return -EPROBE_DEFER
+>> -              * in that case, since no PHY driver will ever probe.
+>> -              */
+>> -             if (ret == -ENXIO)
+>> -                     return ret;
+>> -
+>> -             dev_err(dev, "no usb2 phy configured\n");
+>> -             return -EPROBE_DEFER;
+>> -     }
+>> -
+>> -     if (IS_ERR(dwc->usb3_phy)) {
+>> -             ret = PTR_ERR(dwc->usb3_phy);
+>> -
+>> -             /*
+>> -              * if -ENXIO is returned, it means PHY layer wasn't
+>> -              * enabled, so it makes no sense to return -EPROBE_DEFER
+>> -              * in that case, since no PHY driver will ever probe.
+>> -              */
+>> -             if (ret == -ENXIO)
+>> -                     return ret;
+>> -
+>> -             dev_err(dev, "no usb3 phy configured\n");
+>> -             return -EPROBE_DEFER;
+>> -     }
+>> -
+>>       dwc->xhci_resources[0].start = res->start;
+>>       dwc->xhci_resources[0].end = dwc->xhci_resources[0].start +
+>>                                       DWC3_XHCI_REGS_END;
+>> diff --git a/drivers/usb/dwc3/platform_data.h b/drivers/usb/dwc3/platform_data.h
+>> index 7db34f0..5a5e068 100644
+>> --- a/drivers/usb/dwc3/platform_data.h
+>> +++ b/drivers/usb/dwc3/platform_data.h
+>> @@ -24,4 +24,5 @@ struct dwc3_platform_data {
+>>       enum usb_device_speed maximum_speed;
+>>       enum usb_dr_mode dr_mode;
+>>       bool tx_fifo_resize;
+>> +     bool has_phy;
+>>  };
+>>
+>
+> cheers,
+> -roger
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-Regards
-Pratyush
-> > 
-> > btw configuring inbound translation once in dw_pcie_host_init enough is it? I
-> > mean we use the same registers for configuring outbound translation also no? So
-> > doesn't the inbound configuration gets lost?
-> 
-> No, you write at the same register, but you program direction as
-> inbound. There are different resources for each viewport in inbound
-> and outbound direction.
-> 
-> Regards
-> Pratyush
-> 
-> > 
-> > Thanks
-> > Kishon
+
+
+-- 
+Best Regards
+Vivek
