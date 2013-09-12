@@ -1,27 +1,43 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
-Date: Thu, 12 Sep 2013 09:46:31 -0700
-Message-ID: <CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com>
-References: <1379003839-16068-1-git-send-email-galak@codeaurora.org>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH 0/2] arm: zynq: Enable global timer
+Date: Thu, 12 Sep 2013 09:50:38 -0700
+Message-ID: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1379003839-16068-1-git-send-email-galak@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 9:37 AM, Kumar Gala <galak@codeaurora.org> wrote:
-> Use the Qualcomm vendor prefix (qcom) as the directory name for
-> Qualcomm MSM devicetrees going forward.
->
-> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+Hi all,
 
-Let's not move just one platform like this. If we are to do this, we
-should move everything, and that will be really painful and needs to
-be done in a controlled manner, probably scripted and right before a
--rc1 or such.
+I'm sitting on this for a while and was waiting for Stephen's patch to
+get merged somewhere. Unfortunately that didn't happen yet.
+The patch to enable the global timer is pretty straight forward.
+Stephen's patch is the result of this thread: https://lkml.org/lkml/2013/7/22/649
+and required to prevent the global_timer from becoming the broadcast
+device, since the system will hang otherwise.
 
+Soren Brinkmann (1):
+  arm: zynq: Enable arm_global_timer
 
--Olof
+Stephen Boyd (1):
+  tick: broadcast: Deny per-cpu clockevents from being broadcast sources
+
+ arch/arm/boot/dts/zynq-7000.dtsi | 8 ++++++++
+ arch/arm/mach-zynq/Kconfig       | 1 +
+ kernel/time/tick-broadcast.c     | 3 +++
+ 3 files changed, 12 insertions(+)
+
+-- 
+1.8.4
