@@ -1,93 +1,50 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] i2c: qup: Add device tree bindings information
-Date: Thu, 12 Sep 2013 17:28:40 +0100
-Message-ID: <20130912162840.GE22013@e106331-lin.cambridge.arm.com>
-References: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
+From: Rohit Vaswani <rvaswani@codeaurora.org>
+Subject: Re: [PATCH 1/2] ARM: msm: Add support for MSM8974 Dragonboard
+Date: Thu, 12 Sep 2013 09:34:57 -0700
+Message-ID: <5231ED31.7080102@codeaurora.org>
+References: <1375743779-24993-1-git-send-email-rvaswani@codeaurora.org>  <1375780486.2725.7.camel@iivanov-dev.int.mm-sol.com>  <20130911180006.GA12624@codeaurora.org> <1378994706.16481.6.camel@iivanov-dev.int.mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1378994706.16481.6.camel@iivanov-dev.int.mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: "wsa@the-dreams.de" <wsa@the-dreams.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "gavidov@codeaurora.org" <gavidov@codeaurora.org>, "sdharia@codeaurora.org" <sdharia@codeaurora.org>, "alokc@codeaurora.org" <alokc@codeaurora.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel" <linux-kernel@vger.kernel>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Cc: David Brown <davidb@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-arm-msm@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2013 at 02:27:52PM +0100, Ivan T. Ivanov wrote:
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> 
-> The Qualcomm Universal Peripherial (QUP) wraps I2C mini-core and
-> provide input and output FIFO's for it. I2C controller can operate
-> as master with supported bus speeds of 100Kbps and 400Kbps.
-> 
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-qup.txt |   99 +++++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qup.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-qup.txt b/Documentation/devicetree/bindings/i2c/i2c-qup.txt
-> new file mode 100644
-> index 0000000..c682726
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-qup.txt
-> @@ -0,0 +1,99 @@
-> +Qualcomm Universal Periferial (QUP) I2C controller
-> +
-> +Required properties:
-> + - compatible : should be "qcom,i2c-qup"
-> + - reg : Offset and length of the register region for the device
-> + - interrupts : core interrupt
+On 9/12/2013 7:05 AM, Ivan T. Ivanov wrote:
+> Hi,
+>
+> On Wed, 2013-09-11 at 11:00 -0700, David Brown wrote:
+>> On Tue, Aug 06, 2013 at 12:14:46PM +0300, Ivan T. Ivanov wrote:
+>>
+>>> Attached patch enables earlyprink for this board.
+>>>
+>>> [920] booting linux @ 0x8000, ramdisk @ 0x2000000 (1067699), tags/device tree @ 0x1e00000
+>>> Uncompressing Linux... done, booting the kernel.
+>>> [    0.000000] Booting Linux on physical CPU 0x0
+>>> [    0.000000] Linux version 3.11.0-rc4-00003-g7c8394e (iivanov@dev) (gcc version 4.6.3 (GCC) ) #502 SMP PREEMPT Tue Aug 6 12:09:07 EEST3
+>>> [    0.000000] CPU: ARMv7 Processor [512f06f0] revision 0 (ARMv7), cr=10c5387d
+>>> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction cache
+>>> [    0.000000] Machine: Qualcomm MSM (Flattened Device Tree), model: Qualcomm MSM8974 Dragonboard
+>> We'll need to have either Rohit include this in his patch series, or
+>> you'll have to format this as a valid patch.
+> I don't have preferences. Rohit could you send this patch
+> with you changes?
 
-How about the following:
+Yep. Will fixup this as part of the initial support.
+> Regards,
+> Ivan
+>
+>> Thanks,
+>> David
+>>
+>
 
-- interrupts: interrupt-specifier for the core interrupt.
-
-> +
-> + - pinctrl-names: Should contain only one value - "default".
-> + - pinctrl-0: Should specify pin control group used for this controller.
-> +
-> + - clocks : phandles to clock instances of the device tree nodes
-
-Clocks aren't just phandles, they have a clock-specifier component. This
-should probably be something like:
-
- - clocks: a list of phandle + clock-specifier pairs for each entry in
-           clock-names
-
-> + - clock-names :
-> +		"core" : Allow access to FIFO buffers and registers
-
-Huh? That description doesn't seem to descripe the hardware.
-
-> +		"iface" : Clock used by QUP interface
-
-Which interface? The slave interface the CPUs access, or the interface
-to the I2C devices?
-
-Are these the only clock inputs to the device?
-
-Is there a regulator input that might need to be specified?
-
-> +
-> + - #address-cells : should be <1> Address cells for I2C device address
-> + - #size-cells : should be <0> I2C addresses have no size component.
-> +
-> +Optional properties :
-> + - Child nodes conforming to i2c bus binding
-> + - clock-frequency : Desired I2C bus clock frequency in Hz. If
-> +		not set thedefault frequency is 100kHz
-
-Why is this necessary?
-
-> + - qcom,src-freq : Frequency of the source clocking this bus in Hz.
-> +		Divider value is set based on soruce-frequency and
-> +		desired I2C bus frequency. If this value is not
-> +		provided, the source clock is assumed to be running
-> +		at 19.2 MHz.
-
-This looks like it should be a clock input.
 
 Thanks,
-Mark.
+Rohit Vaswani
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation
