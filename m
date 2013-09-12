@@ -1,101 +1,61 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [PATCH] RFC: interrupt consistency check for OF GPIO IRQs
-Date: Thu, 12 Sep 2013 13:37:53 +0200
-Message-ID: <5231A791.9080600@ahsoftware.de>
-References: <1375101368-17645-1-git-send-email-linus.walleij@linaro.org> <CACxGe6uNJNMdZ1HYGgCtLM2t2TWGCR6btjOHVmP=vDXXvvFfRg@mail.gmail.com> <CACRpkdYjJL6FZwEbB7XLnb9QtjB=3LeE9Ny6KQ4PkM3zpdNqqg@mail.gmail.com> <344239800.bDEkDg48ZQ@avalon> <CACRpkdavR=fv+y1RCNfdgQypPuRbO6isOSwGsABDrYiGeMdyZw@mail.gmail.com> <52308C91.2000105@ahsoftware.de> <523096FE.8080901@collabora.co.uk> <5230AB6E.1070807@ahsoftware.de> <5231817F.8000901@ahsoftware.de> <5231934D.4060706@collabora.co.uk> <52319741.5050407@ahsoftware.de> <5231A0F8.1070505@ahsoftware.de> <5231A4FE.1070704@ahsoftware.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Thu, 12 Sep 2013 12:48:31 +0100
+Message-ID: <20130912114831.GL29403@sirena.org.uk>
+References: <522EC33B.9000009@freescale.com>
+ <20130910180704.GB29403@sirena.org.uk>
+ <522FD78A.6080900@freescale.com>
+ <20130911104126.GN29403@sirena.org.uk>
+ <52304BFF.4060007@freescale.com>
+ <20130911113002.GP29403@sirena.org.uk>
+ <523186DF.4070203@freescale.com>
+ <1378982395.2627.416.camel@shinybook.infradead.org>
+ <20980858CB6D3A4BAE95CA194937D5E73EA0EE8B@DBDE04.ent.ti.com>
+ <1378984665.2627.423.camel@shinybook.infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5231A4FE.1070704@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="K0TrC9+ge8acwStm"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1378984665.2627.423.camel@shinybook.infradead.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: "Gupta, Pekon" <pekon@ti.com>, Huang Shijie <b32955@freescale.com>, Huang Shijie <shijie8@gmail.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 12.09.2013 13:26, schrieb Alexander Holler:
-> Am 12.09.2013 13:09, schrieb Alexander Holler:
->> Am 12.09.2013 12:28, schrieb Alexander Holler:
->>> Am 12.09.2013 12:11, schrieb Javier Martinez Canillas:
->>>> On 09/12/2013 10:55 AM, Alexander Holler wrote:
->>>
-...
->>>
->>>> So, if I understood the code correctly the DT IRQ core doesn't expect
->>>> a device
->>>> node to have more than one "interrupt-parent" property.
->>>>
->>>> It *should* work though if you have multiple "interrupts" properties
->>>> defined and
->>>> all of them have the same "interrupt-parent":
->>>>
->>>>         interrupt-parent = <&gpio6>;
->>>>         interrupts = <1 IRQF_TRIGGER_HIGH>; /* GPIO6_1 */
->>>>         interrupts = <2 IRQF_TRIGGER_LOW>; /* GPIO6_2 */
->>>>
->>>> since of_irq_map_one() will be called for each "interrupts" and the
->>>> correct
->>>> "interrupt-parent" will get obtained by of_irq_find_parent().
->>>
->>> I assumed that answer. So to make such a scenario possible, something
->>> like this might be neccessary:
->>>
->>>           interrupts = <&gpio6 1 IRQF_TRIGGER_HIGH>; /* GPIO6_1 */
->>>           interrupts = <&gpio7 2 IRQF_TRIGGER_LOW>; /* GPIO7_2 */
->>>
->>> or, to be compatible
->>>
->>>           interrupts = <1 IRQF_TRIGGER_HIGH &gpio6>; /* GPIO6_1 */
->>>           interrupts = <1 IRQF_TRIGGER_LOW &gpio7>; /* GPIO7_1 */
->>>
->>> Another problem is the naming. In all the above cases, the driver would
->>> not know which IRQ he should use for what. Maybe the order defines it,
->>> but that wouldn't be very verbose. And I think just changing the name
->>> would make travelling the tree impossible, as only the driver itself
->>> would know the name and it's meaning.
->>
->> On a second look, travelling the tree is still possible if the solution
->> would be like above (without that interrupt-parent). So if a driver
->> requires two interrupts he could use
->>
->>        interrupt-foo = <1 IRQF_TRIGGER_HIGH &gpio6>; /* GPIO6_1 */
->>        interrupt-bar = <1 IRQF_TRIGGER_LOW &gpio7>; /* GPIO7_1 */
->>
->> And travelling the tree will still be possible because walking from the
->> interrupt-controllers (those gpio) downwards would end up at the
->> interrupt definitions, so the name of them isn't needed to find them in
->> the tree.
->
-> I've just seen how they solved it for dma:
->
->              dmas = <&edma0 16
->                  &edma0 17>;
->              dma-names = "rx", "tx";
->
-> so it would be like
->
->        interrupts = <1 IRQF_TRIGGER_HIGH &gpio6>; /* GPIO6_1 */
->        interrupts = <1 IRQF_TRIGGER_LOW &gpio7>; /* GPIO7_1 */
->        interrupt-names = "foo", "bar";
->
-> Or this would be possible:
->
->        interrupt-parent = <&gpio6 &gpio7>;
->        interrupts = <1 IRQF_TRIGGER_HIGH>; /* GPIO6_1 */
->        interrupts = <1 IRQF_TRIGGER_LOW>; /* GPIO7_1 */
->        interrupt-names = "foo", "bar";
->
 
-And looking at how gpios are defined, I think it should be like that:
+--K0TrC9+ge8acwStm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Sep 12, 2013 at 12:17:45PM +0100, David Woodhouse wrote:
 
-           interrupts = <&gpio6 1 IRQF_TRIGGER_HIGH
-                         &gpio7 2 IRQF_TRIGGER_LOW
-           >;
-           interrupt-names = "foo", "bar";
+> Right. The issue here is that the LUT is currently *pre-populated*, with
+> an incestuously-"known" set of commands that the slave is expected to
+> support.
 
-So without that interrupt-parent.
+So, to repeat my earlier question can someone tell me what a LUT is?
 
-Regards,
+--K0TrC9+ge8acwStm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Alexander
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSMaoMAAoJELSic+t+oim9pvYP/2Dbvhltva3762Cq32s40xLu
+CZTNiAfk9ffqUbJ0jSNOlHyvnT5XmFuKtRYCpnhN5ZxiXzzOROvn7lyCMEgiC3sR
+iRXxd/5XeO47CiDx1/h9vUKTZJrld0oYIL3YYpsC/RBAeRALM2LoLlsL6hMU1gAV
+vfFnz4gwMTPEtw9clhhzK+ZetFMx81QkLxZInbUXLcjxwEu5TZCWQEGuoSX4tf8Y
+c8UyXQki8dVPOBsTJt5Re0oV2M2rD4n7euFgrEYy8977gHO9hKQ16x/wRLz8LlOm
+8fvhEtQObwR8ZZ0yaWy/ARqR6GQw0kr2iJbcG6WuvJYLQ4mzrx2PuOV4Q1ESN3oq
+qWjCP81HkLnHj/gpcnv6kcNMbNzu7Zf3VFwVQgV2+aDDhS6JmHFKtq1Peb/Cf1Ed
+OnIPSbFZgt3de2wKKGeTiHQSekYUteippiLjb9KDWceWQbXDD0vgb7Lc6zlftund
+Y0w64OpBw07ltA/UoKyqisfWYuz6EleRfrcoWJXFk25/InJcv+bUIGqcXRHZK6o0
+oaZgmocIYf3pH9Oa09m8D2ZC7nkKw1ethQr66+svvUSkpJrVJ05TRy4AFhFmhF8W
+CMDjRjgvdf/NgYjBnsi15kjXbujtdUxnWt38l2mfWUXiWxYiOZbxSbna7jO7kVay
+DEY/NgIvWF3jlLDScu++
+=VWzm
+-----END PGP SIGNATURE-----
+
+--K0TrC9+ge8acwStm--
