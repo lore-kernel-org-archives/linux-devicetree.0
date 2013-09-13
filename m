@@ -1,81 +1,63 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/2] tick: broadcast: Deny per-cpu clockevents from being
- broadcast sources
-Date: Fri, 13 Sep 2013 08:25:19 -0700
-Message-ID: <53ddc00f-1033-481b-be37-978bd4410c10@TX2EHSMHS034.ehs.local>
-References: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com>
- <1379004640-15117-2-git-send-email-soren.brinkmann@xilinx.com>
- <alpine.DEB.2.02.1309122224420.4089@ionos.tec.linutronix.de>
- <54e79f60-d0c4-4897-ab16-ecd50ae7ec0d@DB9EHSMHS019.ehs.local>
- <alpine.DEB.2.02.1309131643500.4089@ionos.tec.linutronix.de>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] ARM: dts: am335x-boneblack: add eMMC DT entry
+Date: Fri, 13 Sep 2013 08:27:06 -0700
+Message-ID: <20130913152705.GN7189@atomide.com>
+References: <1379010935-25943-1-git-send-email-koen@dominion.thruhere.net>
+ <1379010935-25943-3-git-send-email-koen@dominion.thruhere.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1309131643500.4089@ionos.tec.linutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1379010935-25943-3-git-send-email-koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBTZXAgMTMsIDIwMTMgYXQgMDQ6NDU6MTJQTSArMDIwMCwgVGhvbWFzIEdsZWl4bmVy
-IHdyb3RlOgo+IE9uIFRodSwgMTIgU2VwIDIwMTMsIFPDtnJlbiBCcmlua21hbm4gd3JvdGU6Cj4g
-PiBPbiBUaHUsIFNlcCAxMiwgMjAxMyBhdCAxMDozMDoxNVBNICswMjAwLCBUaG9tYXMgR2xlaXhu
-ZXIgd3JvdGU6Cj4gPiBJIGdhdmUgaXQgYSBzaG90LiBJcyB0aGlzIHdoYXQgeW91IGltYWdpbmU6
-Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbG9ja3NvdXJjZS9hcm1fZ2xvYmFsX3RpbWVyLmMg
-Yi9kcml2ZXJzL2Nsb2Nrc291cmNlL2FybV9nbG9iYWxfdGltZXIuYwo+ID4gaW5kZXggYjY2YzFm
-My4uYzYzOWIxYSAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvYXJtX2dsb2Jh
-bF90aW1lci5jCj4gPiArKysgYi9kcml2ZXJzL2Nsb2Nrc291cmNlL2FybV9nbG9iYWxfdGltZXIu
-Ywo+ID4gQEAgLTE2OSw3ICsxNjksOCBAQCBzdGF0aWMgaW50IGd0X2Nsb2NrZXZlbnRzX2luaXQo
-c3RydWN0IGNsb2NrX2V2ZW50X2RldmljZSAqY2xrKQo+ID4gICAgICAgICBpbnQgY3B1ID0gc21w
-X3Byb2Nlc3Nvcl9pZCgpOwo+ID4gIAo+ID4gICAgICAgICBjbGstPm5hbWUgPSAiYXJtX2dsb2Jh
-bF90aW1lciI7Cj4gPiAtICAgICAgIGNsay0+ZmVhdHVyZXMgPSBDTE9DS19FVlRfRkVBVF9QRVJJ
-T0RJQyB8IENMT0NLX0VWVF9GRUFUX09ORVNIT1Q7Cj4gPiArICAgICAgIGNsay0+ZmVhdHVyZXMg
-PSBDTE9DS19FVlRfRkVBVF9QRVJJT0RJQyB8IENMT0NLX0VWVF9GRUFUX09ORVNIT1QgfAo+ID4g
-KyAgICAgICAgICAgICAgIENMT0NLX0VWVF9GRUFUX1BFUkNQVTsKPiA+ICAgICAgICAgY2xrLT5z
-ZXRfbW9kZSA9IGd0X2Nsb2NrZXZlbnRfc2V0X21vZGU7Cj4gPiAgICAgICAgIGNsay0+c2V0X25l
-eHRfZXZlbnQgPSBndF9jbG9ja2V2ZW50X3NldF9uZXh0X2V2ZW50Owo+ID4gICAgICAgICBjbGst
-PmNwdW1hc2sgPSBjcHVtYXNrX29mKGNwdSk7Cj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51
-eC9jbG9ja2NoaXBzLmggYi9pbmNsdWRlL2xpbnV4L2Nsb2NrY2hpcHMuaAo+ID4gaW5kZXggMDg1
-NzkyMi4uNDkzYWEwMiAxMDA2NDQKPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvY2xvY2tjaGlwcy5o
-Cj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2Nsb2NrY2hpcHMuaAo+ID4gQEAgLTYwLDYgKzYwLDcg
-QEAgZW51bSBjbG9ja19ldmVudF9tb2RlIHsKPiA+ICAgKiBDb3JlIHNoYWxsIHNldCB0aGUgaW50
-ZXJydXB0IGFmZmluaXR5IGR5bmFtaWNhbGx5IGluIGJyb2FkY2FzdCBtb2RlCj4gPiAgICovCj4g
-PiAgI2RlZmluZSBDTE9DS19FVlRfRkVBVF9EWU5JUlEgICAgICAgICAgMHgwMDAwMjAKPiA+ICsj
-ZGVmaW5lIENMT0NLX0VWVF9GRUFUX1BFUkNQVSAgICAgICAgICAweDAwMDA0MAo+ID4gIAo+ID4g
-IC8qKgo+ID4gICAqIHN0cnVjdCBjbG9ja19ldmVudF9kZXZpY2UgLSBjbG9jayBldmVudCBkZXZp
-Y2UgZGVzY3JpcHRvcgo+ID4gZGlmZiAtLWdpdCBhL2tlcm5lbC90aW1lL3RpY2stYnJvYWRjYXN0
-LmMgYi9rZXJuZWwvdGltZS90aWNrLWJyb2FkY2FzdC5jCj4gPiBpbmRleCBkMzUzOWU1Li5kZTRj
-NWQ4IDEwMDY0NAo+ID4gLS0tIGEva2VybmVsL3RpbWUvdGljay1icm9hZGNhc3QuYwo+ID4gKysr
-IGIva2VybmVsL3RpbWUvdGljay1icm9hZGNhc3QuYwo+ID4gQEAgLTcwLDE2ICs3MCwxNCBAQCBz
-dGF0aWMgYm9vbCB0aWNrX2NoZWNrX2Jyb2FkY2FzdF9kZXZpY2Uoc3RydWN0IGNsb2NrX2V2ZW50
-X2RldmljZSAqY3VyZGV2LAo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHN0cnVjdCBjbG9ja19ldmVudF9kZXZpY2UgKm5ld2RldikKPiA+ICB7Cj4gPiAgICAgICAg
-IGlmICgobmV3ZGV2LT5mZWF0dXJlcyAmIENMT0NLX0VWVF9GRUFUX0RVTU1ZKSB8fAo+ID4gLSAg
-ICAgICAgICAgKG5ld2Rldi0+ZmVhdHVyZXMgJiBDTE9DS19FVlRfRkVBVF9DM1NUT1ApKQo+ID4g
-KyAgICAgICAgICAgKG5ld2Rldi0+ZmVhdHVyZXMgJiBDTE9DS19FVlRfRkVBVF9DM1NUT1ApIHx8
-Cj4gPiArICAgICAgICAgICAobmV3ZGV2LT5mZWF0dXJlcyAmIENMT0NLX0VWVF9GRUFUX1BFUkNQ
-VSkpCj4gPiAgICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOwo+ID4gIAo+ID4gICAgICAgICBp
-ZiAodGlja19icm9hZGNhc3RfZGV2aWNlLm1vZGUgPT0gVElDS0RFVl9NT0RFX09ORVNIT1QgJiYK
-PiA+ICAgICAgICAgICAgICEobmV3ZGV2LT5mZWF0dXJlcyAmIENMT0NLX0VWVF9GRUFUX09ORVNI
-T1QpKQo+ID4gICAgICAgICAgICAgICAgIHJldHVybiBmYWxzZTsKPiA+ICAKPiA+IC0gICAgICAg
-aWYgKGNwdW1hc2tfZXF1YWwobmV3ZGV2LT5jcHVtYXNrLCBjcHVtYXNrX29mKHNtcF9wcm9jZXNz
-b3JfaWQoKSkpKQo+ID4gLSAgICAgICAgICAgICAgIHJldHVybiBmYWxzZTsKPiA+IC0KPiA+ICAg
-ICAgICAgcmV0dXJuICFjdXJkZXYgfHwgbmV3ZGV2LT5yYXRpbmcgPiBjdXJkZXYtPnJhdGluZzsK
-PiA+ICB9Cj4gPiAKPiA+IElmIHRoaXMgaXMgdGhlIHdheSB0byBnbywgSSBjYW4gcHJlcGFyZSB0
-aGlzIGluIGEgdjIuCj4gCj4gTG9va3MgZ29vZCB0byBtZS4gVGhlIGxhc3QganVuayBvZiB0aGUg
-cGF0Y2ggd29uJ3QgYXBwbHkgb24gbWFpbmxpbmUsCj4gYnV0IHRoYXRzIHRoZSBsZWFzdCBvZiBt
-eSB3b3JyaWVzLiA6KQoKT2YgY291cnNlLiBJJ2xsIHNwbGl0IHRoaXMgaW50byBzbWFsbGVyIGNo
-dW5rcyBhbmQgc2VuZCBvdXQgYSB2Mi4KCglUaGFua3MsCglTw7ZyZW4KCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+* Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org> [130912 11:43]:
+> The pinmux is specified in am335x-bone-common.dtsi to be reused by the eMMC cape.
+> 
+> Signed-off-by: Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/am335x-bone-common.dtsi | 22 ++++++++++++++++++++++
+>  arch/arm/boot/dts/am335x-boneblack.dts    | 14 ++++++++++++++
+>  2 files changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> index 0d95d54..bc8d1a2 100644
+> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
+> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> @@ -113,6 +113,21 @@
+>  				0x160 (PIN_INPUT | MUX_MODE7) /* GPIO0_6 */
+>  			>;
+>  		};
+> +
+> +		emmc_pins: pinmux_emmc_pins {
+> +			pinctrl-single,pins = <
+> +				0x80 (PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn1.mmc1_clk, INPUT_PULLUP | MODE2 */
+> +				0x84 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_csn2.mmc1_cmd, INPUT_PULLUP | MODE2 */
+> +				0x00 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad0.mmc1_dat0, INPUT_PULLUP | MODE1 */
+> +				0x04 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad1.mmc1_dat1, INPUT_PULLUP | MODE1 */
+> +				0x08 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad2.mmc1_dat2, INPUT_PULLUP | MODE1 */
+> +				0x0c (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad3.mmc1_dat3, INPUT_PULLUP | MODE1 */
+> +				0x10 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad4.mmc1_dat4, INPUT_PULLUP | MODE1 */
+> +				0x14 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad5.mmc1_dat5, INPUT_PULLUP | MODE1 */
+> +				0x18 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad6.mmc1_dat6, INPUT_PULLUP | MODE1 */
+> +				0x1c (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad7.mmc1_dat7, INPUT_PULLUP | MODE1 */
+> +			>;
+> +		};
+>  	};
+>  
+>  	ocp {
+
+Here you can now use just the defines to make it a bit shorter:
+
+0x80 (PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn1.mmc1_clk */
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
