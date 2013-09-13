@@ -1,58 +1,38 @@
 From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] ARM: dts: am335x-boneblack: add eMMC DT entry
-Date: Fri, 13 Sep 2013 08:27:06 -0700
-Message-ID: <20130913152705.GN7189@atomide.com>
-References: <1379010935-25943-1-git-send-email-koen@dominion.thruhere.net>
- <1379010935-25943-3-git-send-email-koen@dominion.thruhere.net>
+Subject: Re: [PATCH 0/3] mmc: omap_hsmmc: get rid of ti,non-removable
+Date: Fri, 13 Sep 2013 08:37:33 -0700
+Message-ID: <20130913153732.GO7189@atomide.com>
+References: <cover.1379066249.git.nsekhar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1379010935-25943-3-git-send-email-koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <cover.1379066249.git.nsekhar-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Linux MMC Mailing List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org> [130912 11:43]:
-> The pinmux is specified in am335x-bone-common.dtsi to be reused by the eMMC cape.
-> 
-> Signed-off-by: Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
-> ---
->  arch/arm/boot/dts/am335x-bone-common.dtsi | 22 ++++++++++++++++++++++
->  arch/arm/boot/dts/am335x-boneblack.dts    | 14 ++++++++++++++
->  2 files changed, 36 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> index 0d95d54..bc8d1a2 100644
-> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> @@ -113,6 +113,21 @@
->  				0x160 (PIN_INPUT | MUX_MODE7) /* GPIO0_6 */
->  			>;
->  		};
-> +
-> +		emmc_pins: pinmux_emmc_pins {
-> +			pinctrl-single,pins = <
-> +				0x80 (PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn1.mmc1_clk, INPUT_PULLUP | MODE2 */
-> +				0x84 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_csn2.mmc1_cmd, INPUT_PULLUP | MODE2 */
-> +				0x00 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad0.mmc1_dat0, INPUT_PULLUP | MODE1 */
-> +				0x04 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad1.mmc1_dat1, INPUT_PULLUP | MODE1 */
-> +				0x08 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad2.mmc1_dat2, INPUT_PULLUP | MODE1 */
-> +				0x0c (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad3.mmc1_dat3, INPUT_PULLUP | MODE1 */
-> +				0x10 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad4.mmc1_dat4, INPUT_PULLUP | MODE1 */
-> +				0x14 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad5.mmc1_dat5, INPUT_PULLUP | MODE1 */
-> +				0x18 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad6.mmc1_dat6, INPUT_PULLUP | MODE1 */
-> +				0x1c (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad7.mmc1_dat7, INPUT_PULLUP | MODE1 */
-> +			>;
-> +		};
->  	};
->  
->  	ocp {
+* Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> [130913 03:18]:
+> Get rid of TI specific binding ti,non-removable in favour of the
+> generic binding present for the same purpose.
 
-Here you can now use just the defines to make it a bit shorter:
+Looks like there's a different handling in the MMC driver
+for no_regulator_off_init that's needed for eMMC. That needs to
+be sorted out and tested first.
+ 
+> This patch set does not support the old binding anymore. So, yes,
+> it does introduce an ABI breakage. IMHO, it is not really worth
+> supporting both bindings ATM since DT-usage in OMAP is still very
+> nascent and almost always DTB and uImage are upgraded together.
 
-0x80 (PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn1.mmc1_clk */
+The old bindings must be supported. It's not like we can just drop
+them. We should just keep the old binding and parse it the same way
+as the generic binding. That's a minimal amount of code.
+
+After the issue with no_regulator_off_init has been solved, then
+we can naturally update the existing .dts files to use the generic
+binding.
 
 Regards,
 
