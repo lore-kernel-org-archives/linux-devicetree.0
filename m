@@ -1,203 +1,557 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/2] tick: broadcast: Deny per-cpu clockevents from being
- broadcast sources
-Date: Fri, 13 Sep 2013 09:23:47 -0700
-Message-ID: <2a29ccc9-6aea-47ca-9306-4f17d7cc2fe4@DB9EHSMHS013.ehs.local>
-References: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com>
- <1379004640-15117-2-git-send-email-soren.brinkmann@xilinx.com>
- <alpine.DEB.2.02.1309122224420.4089@ionos.tec.linutronix.de>
- <5232CC15.8090208@linaro.org>
- <CAM4v1pPQwBfQ3V6M2VGsc-Fh+VhLkQE2JZeoVc=_3kniODNEhA@mail.gmail.com>
- <5232EB72.9050904@linux.vnet.ibm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] Documentation: DT: arm: define CPU topology bindings
+Date: Fri, 13 Sep 2013 17:39:51 +0100
+Message-ID: <20130913163950.GB5408@e102568-lin.cambridge.arm.com>
+References: <1376559743-31848-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1376559743-31848-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1376559743-31848-3-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5232EB72.9050904@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Preeti U Murthy <preeti@linux.vnet.ibm.com>
-Cc: Preeti Murthy <preeti.lkml@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Preeti,
+[replying to self]
 
-On Fri, Sep 13, 2013 at 04:09:46PM +0530, Preeti U Murthy wrote:
-> Hi Soren,
->=20
-> On 09/13/2013 03:50 PM, Preeti Murthy wrote:
-> > Hi,
-> >=20
-> > So the patch that Daniel points out http://lwn.net/Articles/566270/=
- ,
-> > enables broadcast functionality
-> > without using an external global clock device. It uses one of the p=
-er cpu
-> > clock devices to enable the broadcast functionality.
-> >=20
-> > The way it achieves this is by creating a pseudo clock device and
-> > associating it with one of the cpus clock device and
-> > by having a hrtimer queued on the same cpu. This pseudo clock devic=
-e acts
-> > as the broadcast device, and the
-> >  per cpu clock device that it is associated with acts as the broadc=
-ast
-> > source.
-> >=20
-> > The disadvantages that Soren mentions in having a per cpu clock dev=
-ice as
-> > the broadcast source can be overcome
-> > by following the approach proposed in this patch n the way describe=
-d below:
-> >=20
-> > 1. What if the cpu, whose clock device is the broadcast source goes=
- offline?
-> >=20
-> > The solution that the above patch proposes is associate the pseudo =
-clock
-> > device with another cpu and move the hrtimer
-> > whose function is explained in the next point to another cpu. The b=
-roadcast
-> > functionality continues to remain active transparently.
-> >=20
-> > 2. The cpu that requires broadcast functionality is different from =
-the cpu
-> > whose clock device is the broadcast source.
-> > So how will the former cpu program/control the clock device of the =
-latter
-> > cpu?
-> >=20
-> > The above patch queues a hrtimer on the cpu whose clock device is t=
-he
-> > broadcast source, which expires at
-> > max(tick_broadcast_period,  dev->next_event), where tick_broadcast_=
-period
-> > is what we define and dev is the
-> > pseudo device whose next event is set by the broadcast framework.
-> >=20
-> > On expiry of this hrtimer, do broadcast handling and reprogram the =
-hrtimer
-> > with same as above,
-> > max(tick_broadcast_period,  dev->next_event).
-> >=20
-> > This ensures that a cpu that requires broadcast function to be acti=
-vated
-> > need not program the broadcast source,
-> > which also happens to be a per cpu clock device. The hrtimer queued=
- on the
-> > cpu whose clock device is the
-> > broadcast source takes care of when to do broadcast handling.
-> > tick_broadcast_period ensures that we do
-> > not miss wakeups. This is introduced to overcome the constraint of =
-a cpu
-> > not being able to program the clock
-> > device of another cpu.
-> >=20
-> > Soren, do let me know if the above approach described in the patch =
-has not
-> > addressed any of the challenges
-> > that you see with having a  per cpu clock device as the broadcast s=
-ource.
-> >=20
-> > Regards
-> > Preeti U Murthy
-> >=20
-> >=20
-> > On Fri, Sep 13, 2013 at 1:55 PM, Daniel Lezcano
-> > <daniel.lezcano@linaro.org>wrote:
-> >=20
-> >> On 09/12/2013 10:30 PM, Thomas Gleixner wrote:
-> >>> On Thu, 12 Sep 2013, Soren Brinkmann wrote:
-> >>>> From: Stephen Boyd <sboyd@codeaurora.org>
-> >>>>
-> >>>> On most ARM systems the per-cpu clockevents are truly per-cpu in
-> >>>> the sense that they can't be controlled on any other CPU besides
-> >>>> the CPU that they interrupt. If one of these clockevents were to
-> >>>> become a broadcast source we will run into a lot of trouble
-> >>>> because the broadcast source is enabled on the first CPU to go
-> >>>> into deep idle (if that CPU suffers from FEAT_C3_STOP) and that
-> >>>> could be a different CPU than what the clockevent is interruptin=
-g
-> >>>> (or even worse the CPU that the clockevent interrupts could be
-> >>>> offline).
-> >>>>
-> >>>> Theoretically it's possible to support per-cpu clockevents as th=
-e
-> >>>> broadcast source but so far we haven't needed this and supportin=
-g
-> >>>> it is rather complicated. Let's just deny the possibility for no=
-w
-> >>>> until this becomes a reality (let's hope it never does!).
-> >>>
-> >>> Well, we can't do it this way. There are globally accessible cloc=
-k
-> >>> event devices which deliver only to cpu0. So the mask check might=
- be
-> >>> causing failure here.
-> >>>
-> >>> Just add a feature flag CLOCK_EVT_FEAT_PERCPU to the clock event
-> >>> device and check for it.
-> >>
-> >> It sounds probably more understandable than dealing with the cpuma=
-sks.
-> >>
-> >> I am wondering if this is semantically opposed to
-> >> http://lwn.net/Articles/566270/ ?
-> >>
-> >> [PATCH V3 0/6] cpuidle/ppc: Enable broadcast support for deep idle=
- states
-> >>
-> >>   -- Daniel
->=20
-> So the point I am trying to make is that the fix that you have propos=
-ed
-> on this thread is valid. It is difficult to ensure that a per cpu clo=
-ck
-> device doubles up as the broadcast source without significant code
-> changes to the current broadcast code and the timer code.
->=20
-> But the patch [PATCH V3 0/6] cpuidle/ppc: Enable broadcast support fo=
-r
-> deep idle states, attempts to overcome the disadvantage on certain
-> architectures of not having an external clock device to perform
-> broadcast *without* significant code changes in broadcast or timer.
->=20
-> This patch does not conflict with what you are proposing in this thre=
-ad
-> of having a feature flag CLOCK_EVT_FEAT_PERCPU, since the pseudo cloc=
-k
-> device that the patch introduces will not have this flag set anyway.
->=20
-> So ideally architectures, without having a planned infrastructure in
-> them cannot nominate their per cpu clock device as the broadcast sour=
-ce.
-> And if they do have some infrastructure to support a per cpu clock
-> device as broadcast source, they should ensure that the device passes
-> your test as is proposed in this patch. So your fix is valid IMHO. Th=
-at
-> said it is still possible to manage without an external clock device =
-for
-> performing broadcast.
+Bindings defined in this patch have been hanging in the balance for
+quite a while, I would ask DT maintainers (and everyone else) please to have
+a look and provide an ACK/NACK as they deem fit, thank you very much.
 
-Thanks for the explanation but now I'm a little confused. That's a lot =
-of
-details and I'm lacking the in depth knowledge to fully understand
-everything.
+Comments welcome.
 
-Is it correct to say, that your patch series enables per cpu devices to
-be the broadcast device - for PPC?
-And that would mean, that even though you have a per cpu device, you'd
-deliberately not set the FEAT_PERCPU flag, because on PPC a per cpu
-timer is a valid broadcast device?
+Thanks,
+Lorenzo
 
-Assuming that is not going into an utterly wrong direction: How would w=
-e
-close on this one? AFAIK, ARM does not have this capability and I guess
-it won't be added. So, should I go forward with the fix proposed by
-Thomas? Should we rename the FEAT_PERCPU flag to something else, given
-that PPC may use per cpu devices for broadcasting and the sole usage of
-that flag is to prevent such a device from becoming the broadcast devic=
-e?
+On Thu, Aug 15, 2013 at 10:42:23AM +0100, Lorenzo Pieralisi wrote:
+> The advent of multi-cluster ARM systems requires a mechanism to describe
+> how in hierarchical terms CPUs are connected in ARM SoCs so that the kernel
+> can initialize and map resources like IRQs and memory space to specific
+> group(s) of CPUs.
+> 
+> The CPU topology is made up of multiple hierarchy levels whose bottom
+> layers (aka leaf nodes in device tree syntax) contain links to the HW
+> CPUs in the system.
+> 
+> The topology bindings are generic for both 32-bit and 64-bit systems and
+> lay the groundwork on top of which affinity schemes can be built.
+> 
+> This patch provides the documentation in the kernel required to define the
+> device tree bindings describing the CPU topology for ARM 32-bit and 64-bit
+> systems.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/topology.txt | 492 +++++++++++++++++++++
+>  1 file changed, 492 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/topology.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
+> new file mode 100644
+> index 0000000..73fe7dd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/topology.txt
+> @@ -0,0 +1,492 @@
+> +===========================================
+> +ARM topology binding description
+> +===========================================
+> +
+> +===========================================
+> +1 - Introduction
+> +===========================================
+> +
+> +In an ARM system, the hierarchy of CPUs is defined through three entities that
+> +are used to describe the layout of physical CPUs in the system:
+> +
+> +- cluster
+> +- core
+> +- thread
+> +
+> +The cpu nodes (bindings defined in [1]) represent the devices that
+> +correspond to physical CPUs and are to be mapped to the hierarchy levels.
+> +
+> +The bottom hierarchy level sits at core or thread level depending on whether
+> +symmetric multi-threading (SMT) is supported or not.
+> +
+> +For instance in a system where CPUs support SMT, "cpu" nodes represent all
+> +threads existing in the system and map to the hierarchy level "thread" above.
+> +In systems where SMT is not supported "cpu" nodes represent all cores present
+> +in the system and map to the hierarchy level "core" above.
+> +
+> +ARM topology bindings allow one to associate cpu nodes with hierarchical groups
+> +corresponding to the system hierarchy; syntactically they are defined as device
+> +tree nodes.
+> +
+> +The remainder of this document provides the topology bindings for ARM, based
+> +on the ePAPR standard, available from:
+> +
+> +http://www.power.org/documentation/epapr-version-1-1/
+> +
+> +If not stated otherwise, whenever a reference to a cpu node phandle is made its
+> +value must point to a cpu node compliant with the cpu node bindings as
+> +documented in [1].
+> +A topology description containing phandles to cpu nodes that are not compliant
+> +with bindings standardized in [1] is therefore considered invalid.
+> +
+> +===========================================
+> +2 - cpu-map node
+> +===========================================
+> +
+> +The ARM CPU topology is defined within the cpu-map node, which is a direct
+> +child of the cpus node and provides a container where the actual topology
+> +nodes are listed.
+> +
+> +- cpu-map node
+> +
+> +       Usage: Optional - Provide ARM CPU topology to the OS
+> +
+> +       Description: The cpu-map node is just a container node where its
+> +                    subnodes describe the CPU topology
+> +
+> +       Node name must be "cpu-map".
+> +
+> +       The cpu-map node's parent node must be the cpus node.
+> +
+> +       The cpu-map node's child nodes can be:
+> +
+> +       - one or more cluster nodes
+> +
+> +       Any other configuration is considered invalid.
+> +
+> +The cpu-map node can only contain three types of child nodes:
+> +
+> +- cluster node
+> +- core node
+> +- thread node
+> +
+> +whose bindings are described in paragraph 3.
+> +
+> +The nodes describing the CPU topology (cluster/core/thread) can only be
+> +defined within the cpu-map node.
+> +Any other configuration is consider invalid and therefore must be ignored.
+> +
+> +===========================================
+> +2.1 - cpu-map child nodes naming convention
+> +===========================================
+> +
+> +cpu-map child nodes must follow a naming convention where the node name
+> +must be "clusterN", "coreN", "threadN" depending on the node type (ie
+> +cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes which
+> +are siblings within a single common parent node must be given a unique and
+> +sequential N value, starting from 0).
+> +cpu-map child nodes which do not share a common parent node can have the same
+> +name (ie same number N as other cpu-map child nodes at different device tree
+> +levels) since name uniqueness will be guaranteed by the device tree hierarchy.
+> +
+> +===========================================
+> +3 - cluster/core/thread node bindings
+> +===========================================
+> +
+> +Bindings for cluster/cpu/thread nodes are defined as follows:
+> +
+> +- cluster node
+> +
+> +        Description: must be declared within a cpu-map node, one node
+> +                     per cluster. A system can contain several layers of
+> +                     clustering and cluster nodes can be contained in parent
+> +                     cluster nodes.
+> +
+> +       The cluster node name must be "clusterN" as described in 2.1 above.
+> +       A cluster node can not be a leaf node.
+> +
+> +       A cluster node's child nodes must be:
+> +
+> +       - one or more cluster nodes; or
+> +       - one or more core nodes
+> +
+> +       Any other configuration is considered invalid.
+> +
+> +- core node
+> +
+> +       Description: must be declared in a cluster node, one node per core in
+> +                    the cluster. If the system does not support SMT, core
+> +                    nodes are leaf nodes, otherwise they become containers of
+> +                    thread nodes.
+> +
+> +       The core node name must be "coreN" as described in 2.1 above.
+> +
+> +       A core node must be a leaf node if SMT is not supported.
+> +
+> +       Properties for core nodes that are leaf nodes:
+> +
+> +       - cpu
+> +               Usage: required
+> +               Value type: <phandle>
+> +               Definition: a phandle to the cpu node that corresponds to the
+> +                           core node.
+> +
+> +       If a core node is not a leaf node (CPUs supporting SMT) a core node's
+> +       child nodes can be:
+> +
+> +       - one or more thread nodes
+> +
+> +       Any other configuration is considered invalid.
+> +
+> +- thread node
+> +
+> +       Description: must be declared in a core node, one node per thread
+> +                    in the core if the system supports SMT. Thread nodes are
+> +                    always leaf nodes in the device tree.
+> +
+> +       The thread node name must be "threadN" as described in 2.1 above.
+> +
+> +       A thread node must be a leaf node.
+> +
+> +       A thread node must contain the following property:
+> +
+> +       - cpu
+> +               Usage: required
+> +               Value type: <phandle>
+> +               Definition: a phandle to the cpu node that corresponds to
+> +                           the thread node.
+> +
+> +===========================================
+> +4 - Example dts
+> +===========================================
+> +
+> +Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters):
+> +
+> +cpus {
+> +       #size-cells = <0>;
+> +       #address-cells = <2>;
+> +
+> +       cpu-map {
+> +               cluster0 {
+> +                       cluster0 {
+> +                               core0 {
+> +                                       thread0 {
+> +                                               cpu = <&CPU0>;
+> +                                       };
+> +                                       thread1 {
+> +                                               cpu = <&CPU1>;
+> +                                       };
+> +                               };
+> +
+> +                               core1 {
+> +                                       thread0 {
+> +                                               cpu = <&CPU2>;
+> +                                       };
+> +                                       thread1 {
+> +                                               cpu = <&CPU3>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       cluster1 {
+> +                               core0 {
+> +                                       thread0 {
+> +                                               cpu = <&CPU4>;
+> +                                       };
+> +                                       thread1 {
+> +                                               cpu = <&CPU5>;
+> +                                       };
+> +                               };
+> +
+> +                               core1 {
+> +                                       thread0 {
+> +                                               cpu = <&CPU6>;
+> +                                       };
+> +                                       thread1 {
+> +                                               cpu = <&CPU7>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cluster1 {
+> +                       cluster0 {
+> +                               core0 {
+> +                                       thread0 {
+> +                                               cpu = <&CPU8>;
+> +                                       };
+> +                                       thread1 {
+> +                                               cpu = <&CPU9>;
+> +                                       };
+> +                               };
+> +                               core1 {
+> +                                       thread0 {
+> +                                               cpu = <&CPU10>;
+> +                                       };
+> +                                       thread1 {
+> +                                               cpu = <&CPU11>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+> +                       cluster1 {
+> +                               core0 {
+> +                                       thread0 {
+> +                                               cpu = <&CPU12>;
+> +                                       };
+> +                                       thread1 {
+> +                                               cpu = <&CPU13>;
+> +                                       };
+> +                               };
+> +                               core1 {
+> +                                       thread0 {
+> +                                               cpu = <&CPU14>;
+> +                                       };
+> +                                       thread1 {
+> +                                               cpu = <&CPU15>;
+> +                                       };
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +       CPU0: cpu@0 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x0 0x0>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU1: cpu@1 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x0 0x1>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU2: cpu@100 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x0 0x100>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU3: cpu@101 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x0 0x101>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU4: cpu@10000 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x0 0x10000>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU5: cpu@10001 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x0 0x10001>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU6: cpu@10100 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x0 0x10100>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU7: cpu@10101 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x0 0x10101>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU8: cpu@100000000 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x1 0x0>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU9: cpu@100000001 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x1 0x1>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU10: cpu@100000100 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x1 0x100>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU11: cpu@100000101 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x1 0x101>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU12: cpu@100010000 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x1 0x10000>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU13: cpu@100010001 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x1 0x10001>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU14: cpu@100010100 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x1 0x10100>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +
+> +       CPU15: cpu@100010101 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a57";
+> +               reg = <0x1 0x10101>;
+> +               enable-method = "spin-table";
+> +               cpu-release-addr = <0 0x20000000>;
+> +       };
+> +};
+> +
+> +Example 2 (ARM 32-bit, dual-cluster, 8-cpu system, no SMT):
+> +
+> +cpus {
+> +       #size-cells = <0>;
+> +       #address-cells = <1>;
+> +
+> +       cpu-map {
+> +               cluster0 {
+> +                       core0 {
+> +                               cpu = <&CPU0>;
+> +                       };
+> +                       core1 {
+> +                               cpu = <&CPU1>;
+> +                       };
+> +                       core2 {
+> +                               cpu = <&CPU2>;
+> +                       };
+> +                       core3 {
+> +                               cpu = <&CPU3>;
+> +                       };
+> +               };
+> +
+> +               cluster1 {
+> +                       core0 {
+> +                               cpu = <&CPU4>;
+> +                       };
+> +                       core1 {
+> +                               cpu = <&CPU5>;
+> +                       };
+> +                       core2 {
+> +                               cpu = <&CPU6>;
+> +                       };
+> +                       core3 {
+> +                               cpu = <&CPU7>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       CPU0: cpu@0 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a15";
+> +               reg = <0x0>;
+> +       };
+> +
+> +       CPU1: cpu@1 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a15";
+> +               reg = <0x1>;
+> +       };
+> +
+> +       CPU2: cpu@2 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a15";
+> +               reg = <0x2>;
+> +       };
+> +
+> +       CPU3: cpu@3 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a15";
+> +               reg = <0x3>;
+> +       };
+> +
+> +       CPU4: cpu@100 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a7";
+> +               reg = <0x100>;
+> +       };
+> +
+> +       CPU5: cpu@101 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a7";
+> +               reg = <0x101>;
+> +       };
+> +
+> +       CPU6: cpu@102 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a7";
+> +               reg = <0x102>;
+> +       };
+> +
+> +       CPU7: cpu@103 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a7";
+> +               reg = <0x103>;
+> +       };
+> +};
+> +
+> +Example 3 (ARM 32-bit, cortex-a8 single core):
+> +
+> +cpus {
+> +       #size-cells = <0>;
+> +       #address-cells = <1>;
+> +
+> +       cpu-map {
+> +               cluster0 {
+> +                       core0 {
+> +                               cpu = <&CPU0>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       CPU0: cpu@0 {
+> +               device_type = "cpu";
+> +               compatible = "arm,cortex-a8";
+> +               reg = <0x0>;
+> +       };
+> +};
+> +
+> +===============================================================================
+> +[1] ARM Linux kernel documentation
+> +    Documentation/devicetree/bindings/arm/cpus.txt
+> --
+> 1.8.2.2
+> 
 
-	Thanks,
-	S=C3=B6ren
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
