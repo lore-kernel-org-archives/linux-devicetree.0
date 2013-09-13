@@ -1,54 +1,77 @@
-From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/3] mmc: omap_hsmmc: get rid of ti,non-removable
-Date: Sat, 14 Sep 2013 03:37:46 +0530
-Message-ID: <52338CB2.1040100@ti.com>
-References: <cover.1379066249.git.nsekhar@ti.com> <20130913153732.GO7189@atomide.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCHv4 4/4] Documentation: Add device tree bindings for Freescale
+ FTM PWM.
+Date: Fri, 13 Sep 2013 16:34:18 -0600
+Message-ID: <523392EA.6050909@wwwdotorg.org>
+References: <1379051922-4930-1-git-send-email-Li.Xiubo@freescale.com> <1379051922-4930-5-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130913153732.GO7189-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Linux MMC Mailing List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1379051922-4930-5-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: r65073@freescale.com, thierry.reding@gmail.com, s.hauer@pengutronix.de, t.figa@samsung.com, grant.likely@linaro.org, linux@arm.linux.org.uk, rob@landley.net, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 September 2013 09:07 PM, Tony Lindgren wrote:
-> * Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> [130913 03:18]:
->> Get rid of TI specific binding ti,non-removable in favour of the
->> generic binding present for the same purpose.
->
-> Looks like there's a different handling in the MMC driver
-> for no_regulator_off_init that's needed for eMMC. That needs to
-> be sorted out and tested first.
->
-Hi Sekhar,
+On 09/12/2013 11:58 PM, Xiubo Li wrote:
+> This adds the Document for Freescale FTM PWM driver under
+> Documentation/devicetree/bindings/pwm/.
 
-no_regulator_off_init is needed for eMMC detection on omap4 platforms.
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
 
->> This patch set does not support the old binding anymore. So, yes,
->> it does introduce an ABI breakage. IMHO, it is not really worth
->> supporting both bindings ATM since DT-usage in OMAP is still very
->> nascent and almost always DTB and uImage are upgraded together.
->
-> The old bindings must be supported. It's not like we can just drop
-> them. We should just keep the old binding and parse it the same way
-> as the generic binding. That's a minimal amount of code.
->
-> After the issue with no_regulator_off_init has been solved, then
-> we can naturally update the existing .dts files to use the generic
-> binding.
->
-> Regards,
->
-> Tony
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+> +Required properties:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- clock-names : Includes the following module clock source entries:
+> +    "ftm0" (system clock),
+> +    "ftm0_fix_sel" (fixed frequency clock),
+> +    "ftm0_ext_sel" (external clock)
+> +- clocks : Must contain an entry list for entries in clock-names.
+
+s/an entry list/a clock specifier/
+s/for entries/for each entry/
+
+> +- fsl,pwm-counter-clk: The FTM PWM counter clock source, should be one of the
+> +  entries in clock-names.
+
+So the IP block has 3 input clocks, and also a mux to select which one
+to use? That sounds slightly unusual, but possible.
+
+If there is really only 1 clock input to the IP block, and the mux is
+part of some other module, then this binding should have only 1 entry in
+clocks.
+
+> +- For each channel's pinctrl, the "chN-active" and "chN-idle" states should be
+> +  implemented at the same time.
+
+I still don't believe that multiple pinctrl states active at once is
+something that the pinctrl bindings conceptually support. CC+=LinusW, do
+we want to allow this?
+
+Assuming this is allowed, you'd want to write something more like the
+following:
+
+pinctrl-names: Must include "chN-active" and "chN-idle" for each channel
+ID N in range 0..7.
+pinctrl-NNN: One property must exist for each entry in pinctrl-names.
+See ../pinctrl/pinctrl-bindings.txt for details of the property values.
+> +Example:
+> +
+> +pwm0: pwm@40038000 {
+> +		compatible = "fsl,vf610-ftm-pwm";
+> +		reg = <0x40038000 0x1000>;
+> +		#pwm-cells = <3>;
+> +		clock-names = "ftm0", "ftm0_fix_sel", "ftm0_ext_sel";
+> +		clocks = <&clks VF610_CLK_FTM0>,
+> +			<&clks VF610_CLK_FTM0_FIX_SEL>,
+> +			<&clks VF610_CLK_FTM0_EXT_SEL>;
+> +		pinctrl-names = "ch0-active", "ch0-idle", "ch1-active", "ch1-idle",
+> +		....;
+> +		pinctrl-0 = <&pinctrl_pwm0_ch0_active>;
+> +		pinctrl-1 = <&pinctrl_pwm0_ch0_idle>;
+> +		pinctrl-2 = <&pinctrl_pwm0_ch1_active>;
+> +		pinctrl-3 = <&pinctrl_pwm0_ch1_idle>;
+> +		...
+> +		fsl,pwm-counter-clk = "ftm0_ext_sel";
+> +};
+
