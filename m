@@ -1,68 +1,38 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 12/12] ARM: dts: mvebu: Add a new set of registers to the PMSU node
-Date: Fri, 13 Sep 2013 12:06:41 +0200
-Message-ID: <1379066801-16276-13-git-send-email-gregory.clement@free-electrons.com>
-References: <1379066801-16276-1-git-send-email-gregory.clement@free-electrons.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 3/3] ARM: OMAP2+: BBB DT: mark eMMC as non removable
+Date: Fri, 13 Sep 2013 15:39:46 +0530
+Message-ID: <f77adcf96d225b43e38058ddadcab76a9df6914a.1379066249.git.nsekhar@ti.com>
+References: <cover.1379066249.git.nsekhar@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379066801-16276-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.1379066249.git.nsekhar-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>, Atsushi Yamagata <yamagata-SisyDS/t9hATBYAz+LHnZg@public.gmane.org>, Hironobu Shibata <h-shibata-SisyDS/t9hATBYAz+LHnZg@public.gmane.org>, Tomonori Kimura <kimura-SisyDS/t9hATBYAz+LHnZg@public.gmane.org>
+To: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Linux MMC Mailing List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Power Management Unit Service block also controls the Coherency
-Fabric subsystem. This new set of registers is needed for the CPU idle
-implementation for the Armada XP, it allows to enter in a deep CPU
-idle state where the Coherency Fabric and the L2 cache are powerdown.
+Mark the eMMC module on BeagleBone black as non removable.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt | 12 +++++++-----
- arch/arm/boot/dts/armada-xp.dtsi                             |  2 +-
- 2 files changed, 8 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/am335x-boneblack.dts |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
-index 926b4d6..8a9db0c 100644
---- a/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
-+++ b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
-@@ -7,14 +7,16 @@ Required properties:
- - compatible: "marvell,armada-370-xp-pmsu"
- 
- - reg: Should contain PMSU registers location and length. First pair
--  for the per-CPU SW Reset Control registers, second pair for the
--  Power Management Service Unit.
-+  for the per-CPU SW Reset Control registers, second pair for the CPU
-+  Power Management Service Unit registers, third pair for the Fabric Power
-+  Management Service Unit registers.
- 
- Example:
- 
--armada-370-xp-pmsu@d0022000 {
-+armada-370-xp-pmsu@22000 {
- 	compatible = "marvell,armada-370-xp-pmsu";
--	reg = <0xd0022100 0x430>,
--	      <0xd0020800 0x20>;
-+	reg = <0x22100 0x430>,
-+	      <0x20800 0x20>,
-+	      <0x22000 0x24>;
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index f4703cf..58515dc 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -25,6 +25,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&emmc_pins>;
+ 	bus-width = <8>;
++	non-removable;
+ 	status = "okay";
+ 	ti,vcc-aux-disable-is-sleep;
  };
- 
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index def125c..c79cd53 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -48,7 +48,7 @@
- 
- 			armada-370-xp-pmsu@22000 {
- 				compatible = "marvell,armada-370-xp-pmsu";
--				reg = <0x22100 0x430>, <0x20800 0x20>;
-+				reg = <0x22100 0x430>, <0x20800 0x20>, <0x22000 0x24>;
- 			};
- 
- 			serial@12200 {
 -- 
-1.8.1.2
+1.7.10.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
