@@ -1,111 +1,104 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] dt: update PSCI binding documentation for v0.2
-Date: Fri, 13 Sep 2013 14:23:29 -0500
-Message-ID: <CAL_JsqJ-SY5MsnbETnK6k4GRHhtgiYztMo+bW7i85A4aWYjrPg@mail.gmail.com>
-References: <1377564633-31638-1-git-send-email-robherring2@gmail.com>
-	<20130903095235.GD18206@e106331-lin.cambridge.arm.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
+Date: Fri, 13 Sep 2013 12:48:22 -0700
+Message-ID: <20130913194822.GA12117@roeck-us.net>
+References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
+ <20130913170005.GB5681@roeck-us.net>
+ <c6755ff6-104d-40fe-a753-0e165cff1e10@AM1EHSMHS004.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130903095235.GD18206-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c6755ff6-104d-40fe-a753-0e165cff1e10@AM1EHSMHS004.ehs.local>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 3, 2013 at 4:52 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Tue, Aug 27, 2013 at 01:50:33AM +0100, Rob Herring wrote:
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->
-> Hi Rob,
->
-> Sorry for the delay on reviewing this.
->
->>
->> The PSCI spec from ARM has been updated to 0.2 version. Update the
->> binding document to reflect the spec changes. For the binding, the
->> major changes are the addition of psci_version, affinity_info,
->> migrate_info_type, migrate_info_up_cpu, system_reset and system_off
->> functions. The recommended function ID numbering has also changed.
->>
->> This update also defines 32 and 64 bit calling conventions. The calling
->> convention is defined on a per function ID basis.
->>
->> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> Cc: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
->> Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
->> Cc: Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
->> Cc: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>,
->> Cc: Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>
->> Cc: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->> v3: This version implements Mark's suggested binding with -32 and -64 suffixes.
->>
->>  Documentation/devicetree/bindings/arm/psci.txt | 62 +++++++++++++++++++-------
->>  1 file changed, 46 insertions(+), 16 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
->> index 433afe9..209bb04 100644
->> --- a/Documentation/devicetree/bindings/arm/psci.txt
->> +++ b/Documentation/devicetree/bindings/arm/psci.txt
->> @@ -1,16 +1,17 @@
->>  * Power State Coordination Interface (PSCI)
->>
->>  Firmware implementing the PSCI functions described in ARM document number
->> -ARM DEN 0022A ("Power State Coordination Interface System Software on ARM
->> +ARM DEN 0022B ("Power State Coordination Interface System Software on ARM
->>  processors") can be used by Linux to initiate various CPU-centric power
->>  operations.
->>
->> -Issue A of the specification describes functions for CPU suspend, hotplug
->> -and migration of secure software.
->> +Issue B of the specification describes functions for CPU suspend, hotplug,
->> +migration of secure software, and system level reset and powerdown.
->>
->>  Functions are invoked by trapping to the privilege level of the PSCI
->>  firmware (specified as part of the binding below) and passing arguments
->> -in a manner similar to that specified by AAPCS:
->> +as defined in ARM document "SMC Calling Convention" (ARM DEN 0028) in a manner
->> +similar to that specified by AAPCS:
->>
->>        r0             => 32-bit Function ID / return value
->>       {r1 - r3}       => Parameters
->> @@ -21,10 +22,10 @@ to #0.
->>
->>  Main node required properties:
->>
->> - - compatible    : Must be "arm,psci"
->> + - compatible    : Must contain "arm,psci-0.2" or "arm,psci"
->>
->> - - method        : The method of calling the PSCI firmware. Permitted
->> -                   values are:
->> + - method        : The method defines the calling convention for the PSCI
->> +                   firmware. Permitted values are:
->>
->>                     "smc" : SMC #0, with the register assignments specified
->>                          in this binding.
->> @@ -32,24 +33,53 @@ Main node required properties:
->>                     "hvc" : HVC #0, with the register assignments specified
->>                          in this binding.
->>
->> + - psci_version  : Function ID for PSCI_VERSION operation. Required for
->> +                   "arm,psci-0.2" compatible version or later.
->> +
->
-> While this seems sensible, I'm not sure that this needs to be mandatory.
+On Fri, Sep 13, 2013 at 10:26:04AM -0700, S=F6ren Brinkmann wrote:
+> On Fri, Sep 13, 2013 at 10:00:05AM -0700, Guenter Roeck wrote:
+> > On Thu, Sep 12, 2013 at 05:55:37PM -0700, Soren Brinkmann wrote:
+> > > Add a driver for SILabs 570, 571, 598, 599 programmable oscillato=
+rs.
+> > > The devices generate low-jitter clock signals and are reprogramma=
+ble via
+> > > an I2C interface.
+> > >=20
+> > > Cc: Guenter Roeck <linux@roeck-us.net>
+> > > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> > > ---
+[ ... ]
 
-It is quite pointless to have at all if we don't make it mandatory. I
-would accept that it is pointless and the compatible string should
-always reflect the version anyway, but ARM added the call and states
-it is mandatory in the PSCI doc. I guess we could have mandatory for
-the firmware to implement, but optional in the DT binding? That seems
-silly though.
+> > > +	/* Applying a new frequency can take up to 10ms */
+> > > +	usleep_range(10000, 10001);
+> >=20
+> > One microsecond range doesn't really buy anything besides forcing t=
+he compiler
+> > to generate extra code. Why not just use 10000 ?
+> That's due to checkpatch. I originally had 'msleep(10)' and checkpatc=
+h
+> suggested to use 'usleep_range()'. Then I put
+> 'usleep_range(10000, 10000)' and checkpatch suggested to not use the
+> same values for MIN and MAX, so I added the 1 to the MAX value.
+> If it is considered to be safe and okay to put in MIN=3DMAX=3D10000, =
+I'll
+> change it accordingly.
+>=20
+Guess what checkpatch means is to put in something resonable,
+such as maybe (10000, 12000). (10000, 10001) just defeats checkpatch
+which doesn't really provide any value. So either provide a reasonable
+and acceptable range or use a single value.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[ ... ]
+
+> > > +	match =3D of_match_node(clk_si570_of_match, client->dev.of_node=
+);
+> > > +	if (!match)
+> > > +		return -EINVAL;
+> >=20
+> > Seems unusual. Is this really needed ? It precludes the driver from=
+ being used
+> > in a non-devicetree environment, for example. I would guess that th=
+ere is a match
+> > if client->dev.of_node is set. Otherwise, this code would be needed=
+ in every
+> > driver supporting devicetree, and I don't recall seeing that.
+> >=20
+> > > +	ddata =3D match->data;
+> > > +
+> > You should be able to get this information (ie the pointer to si570=
+_device_data)
+> > from id->driver_data. That would be more consistent with other i2c =
+devices.
+> I think I copied this approach from the other clk-si... driver. I'll
+> do some research on your suggestion and change it. Could you point me=
+ to
+> an example for your proposal?
+>=20
+drivers/hwmon/lm90.c or drivers/hwmon/max6697.c.
+
+> > > +
+> > > +	if (of_property_read_u32(client->dev.of_node, "factory-fout",
+> > > +				&factory_fout)) {
+> > > +		dev_warn(&client->dev,
+> > > +			"DTS does not contain factory-fout, using default\n");
+> >=20
+> > Is that really worth a warning ?
+> My understanding is, that the default output frequency is part-specif=
+ic
+> and required to calculate the frequency of the internal crystal. Henc=
+e,
+> if you do not provide the correct default output frequency for your p=
+art, all
+> frequencies generated by this driver will be off, unless the here use=
+d
+> default matches your part. Please correct me if I'm wrong, otherwise,=
+ I
+> think it's worth a warning.
+>=20
+Maybe the property should be mandatory ?
+
+Thanks,
+Guenter
