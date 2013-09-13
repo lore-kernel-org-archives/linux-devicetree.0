@@ -1,57 +1,62 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 1/2] ARM: msm: Add support for MSM8974 Dragonboard
-Date: Fri, 13 Sep 2013 09:56:52 +0300
-Message-ID: <1379055412.16481.7.camel@iivanov-dev.int.mm-sol.com>
-References: <1375743779-24993-1-git-send-email-rvaswani@codeaurora.org>
-	 <1375780486.2725.7.camel@iivanov-dev.int.mm-sol.com>
-	 <20130911180006.GA12624@codeaurora.org>
-	 <1378994706.16481.6.camel@iivanov-dev.int.mm-sol.com>
-	 <5231ED31.7080102@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5231ED31.7080102@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rohit Vaswani <rvaswani@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: [RFC PATCH 0/4] pinctrl: at91: various fixes
+Date: Fri, 13 Sep 2013 09:43:33 +0200
+Message-ID: <1379058213-3245-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2013-09-12 at 09:34 -0700, Rohit Vaswani wrote: 
-> On 9/12/2013 7:05 AM, Ivan T. Ivanov wrote:
-> > Hi,
-> >
-> > On Wed, 2013-09-11 at 11:00 -0700, David Brown wrote:
-> >> On Tue, Aug 06, 2013 at 12:14:46PM +0300, Ivan T. Ivanov wrote:
-> >>
-> >>> Attached patch enables earlyprink for this board.
-> >>>
-> >>> [920] booting linux @ 0x8000, ramdisk @ 0x2000000 (1067699), tags/device tree @ 0x1e00000
-> >>> Uncompressing Linux... done, booting the kernel.
-> >>> [    0.000000] Booting Linux on physical CPU 0x0
-> >>> [    0.000000] Linux version 3.11.0-rc4-00003-g7c8394e (iivanov@dev) (gcc version 4.6.3 (GCC) ) #502 SMP PREEMPT Tue Aug 6 12:09:07 EEST3
-> >>> [    0.000000] CPU: ARMv7 Processor [512f06f0] revision 0 (ARMv7), cr=10c5387d
-> >>> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction cache
-> >>> [    0.000000] Machine: Qualcomm MSM (Flattened Device Tree), model: Qualcomm MSM8974 Dragonboard
-> >> We'll need to have either Rohit include this in his patch series, or
-> >> you'll have to format this as a valid patch.
-> > I don't have preferences. Rohit could you send this patch
-> > with you changes?
-> 
-> Yep. Will fixup this as part of the initial support.
+Hello,
 
-Thanks, 
-Ivan
+This patch series fixes some errors in the pinctrl drivers:
+- typos in dt-binding macros and pinctrl-at91 driver (patch 1)
+- fix several at91-pinctrl functions (patch 2 and 3)
+- rework the debounce config handling (patches 4)
 
-> > Regards,
-> > Ivan
-> >
-> >> Thanks,
-> >> David
-> >>
-> >
-> 
-> 
-> Thanks,
-> Rohit Vaswani
-> 
+The last point is the most important one: the at91sam9x5/pio3 controller
+does not provide a per pin debounce time config. Instead it provides a
+common debounce time for all the pins on a given bank (PIOX).
+
+In this series I proposed 2 solutions to gracefully handle this limitation:
+1) Handle debounce time conflicts at config time (PATCH 4/4).
+   In other words, all the pins on a given bank using the debounce option must
+   use the same debounce time. If a device tries to configure a pin with
+   conflicting a debounce time, this will result in an -EINVAL error return
+   during the pin configuration.
+2) Provide a device tree property to define the default debounce time on a
+   given bank (PATCH alt 4/4)
+
+
+I prefer the first solution, as it provides a more future proof approach:
+- the generic pinconf layer provides a per pin debounce time config and if
+  we plan to support it we should take this into consideration
+- IMHO we should be able to (re)configure the debounce time after bootup and
+  the second solution does not provide any way to do this
+
+I might be wrong, so please feel free to share your thoughts about this.
+
+Best Regards,
+
+Boris
+
+
+Boris BREZILLON (4):
+  pinctrl: at91: fix typos
+  pinctrl: at91: reset caller's config variable before setting flags
+  pinctrl: at91: fix get_debounce/deglitch functions for sam9x5
+    controller
+  pinctrl: at91: check for debounce time conflicts
+
+ drivers/pinctrl/pinctrl-at91.c     |   60 +++++++++++++++++++++++++++---------
+ include/dt-bindings/pinctrl/at91.h |    2 +-
+ 2 files changed, 46 insertions(+), 16 deletions(-)
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
