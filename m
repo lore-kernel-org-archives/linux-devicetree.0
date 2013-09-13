@@ -1,92 +1,76 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/2] tick: broadcast: Deny per-cpu clockevents from being
- broadcast sources
-Date: Thu, 12 Sep 2013 16:48:32 -0700
-Message-ID: <54e79f60-d0c4-4897-ab16-ecd50ae7ec0d@DB9EHSMHS019.ehs.local>
-References: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com>
- <1379004640-15117-2-git-send-email-soren.brinkmann@xilinx.com>
- <alpine.DEB.2.02.1309122224420.4089@ionos.tec.linutronix.de>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [RFC PATCH 1/4] DRIVERS: IRQCHIP: Add crossbar irqchip driver
+Date: Fri, 13 Sep 2013 02:26:03 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1309130138550.4089@ionos.tec.linutronix.de>
+References: <1379000351-15672-1-git-send-email-r.sricharan@ti.com> <1379000351-15672-2-git-send-email-r.sricharan@ti.com> <alpine.DEB.2.02.1309122201530.4089@ionos.tec.linutronix.de> <523228B5.5070507@ti.com> <alpine.DEB.2.02.1309122335440.4089@ionos.tec.linutronix.de>
+ <5232457A.8080709@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1309122224420.4089@ionos.tec.linutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5232457A.8080709-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhvbWFzLAoKT24gVGh1LCBTZXAgMTIsIDIwMTMgYXQgMTA6MzA6MTVQTSArMDIwMCwgVGhv
-bWFzIEdsZWl4bmVyIHdyb3RlOgo+IE9uIFRodSwgMTIgU2VwIDIwMTMsIFNvcmVuIEJyaW5rbWFu
-biB3cm90ZToKPiA+IEZyb206IFN0ZXBoZW4gQm95ZCA8c2JveWRAY29kZWF1cm9yYS5vcmc+Cj4g
-PiAKPiA+IE9uIG1vc3QgQVJNIHN5c3RlbXMgdGhlIHBlci1jcHUgY2xvY2tldmVudHMgYXJlIHRy
-dWx5IHBlci1jcHUgaW4KPiA+IHRoZSBzZW5zZSB0aGF0IHRoZXkgY2FuJ3QgYmUgY29udHJvbGxl
-ZCBvbiBhbnkgb3RoZXIgQ1BVIGJlc2lkZXMKPiA+IHRoZSBDUFUgdGhhdCB0aGV5IGludGVycnVw
-dC4gSWYgb25lIG9mIHRoZXNlIGNsb2NrZXZlbnRzIHdlcmUgdG8KPiA+IGJlY29tZSBhIGJyb2Fk
-Y2FzdCBzb3VyY2Ugd2Ugd2lsbCBydW4gaW50byBhIGxvdCBvZiB0cm91YmxlCj4gPiBiZWNhdXNl
-IHRoZSBicm9hZGNhc3Qgc291cmNlIGlzIGVuYWJsZWQgb24gdGhlIGZpcnN0IENQVSB0byBnbwo+
-ID4gaW50byBkZWVwIGlkbGUgKGlmIHRoYXQgQ1BVIHN1ZmZlcnMgZnJvbSBGRUFUX0MzX1NUT1Ap
-IGFuZCB0aGF0Cj4gPiBjb3VsZCBiZSBhIGRpZmZlcmVudCBDUFUgdGhhbiB3aGF0IHRoZSBjbG9j
-a2V2ZW50IGlzIGludGVycnVwdGluZwo+ID4gKG9yIGV2ZW4gd29yc2UgdGhlIENQVSB0aGF0IHRo
-ZSBjbG9ja2V2ZW50IGludGVycnVwdHMgY291bGQgYmUKPiA+IG9mZmxpbmUpLgo+ID4gCj4gPiBU
-aGVvcmV0aWNhbGx5IGl0J3MgcG9zc2libGUgdG8gc3VwcG9ydCBwZXItY3B1IGNsb2NrZXZlbnRz
-IGFzIHRoZQo+ID4gYnJvYWRjYXN0IHNvdXJjZSBidXQgc28gZmFyIHdlIGhhdmVuJ3QgbmVlZGVk
-IHRoaXMgYW5kIHN1cHBvcnRpbmcKPiA+IGl0IGlzIHJhdGhlciBjb21wbGljYXRlZC4gTGV0J3Mg
-anVzdCBkZW55IHRoZSBwb3NzaWJpbGl0eSBmb3Igbm93Cj4gPiB1bnRpbCB0aGlzIGJlY29tZXMg
-YSByZWFsaXR5IChsZXQncyBob3BlIGl0IG5ldmVyIGRvZXMhKS4KPiAKPiBXZWxsLCB3ZSBjYW4n
-dCBkbyBpdCB0aGlzIHdheS4gVGhlcmUgYXJlIGdsb2JhbGx5IGFjY2Vzc2libGUgY2xvY2sKPiBl
-dmVudCBkZXZpY2VzIHdoaWNoIGRlbGl2ZXIgb25seSB0byBjcHUwLiBTbyB0aGUgbWFzayBjaGVj
-ayBtaWdodCBiZQo+IGNhdXNpbmcgZmFpbHVyZSBoZXJlLgo+IAo+IEp1c3QgYWRkIGEgZmVhdHVy
-ZSBmbGFnIENMT0NLX0VWVF9GRUFUX1BFUkNQVSB0byB0aGUgY2xvY2sgZXZlbnQKPiBkZXZpY2Ug
-YW5kIGNoZWNrIGZvciBpdC4KCkkgZ2F2ZSBpdCBhIHNob3QuIElzIHRoaXMgd2hhdCB5b3UgaW1h
-Z2luZToKZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvYXJtX2dsb2JhbF90aW1lci5j
-IGIvZHJpdmVycy9jbG9ja3NvdXJjZS9hcm1fZ2xvYmFsX3RpbWVyLmMKaW5kZXggYjY2YzFmMy4u
-YzYzOWIxYSAxMDA2NDQKLS0tIGEvZHJpdmVycy9jbG9ja3NvdXJjZS9hcm1fZ2xvYmFsX3RpbWVy
-LmMKKysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9hcm1fZ2xvYmFsX3RpbWVyLmMKQEAgLTE2OSw3
-ICsxNjksOCBAQCBzdGF0aWMgaW50IGd0X2Nsb2NrZXZlbnRzX2luaXQoc3RydWN0IGNsb2NrX2V2
-ZW50X2RldmljZSAqY2xrKQogICAgICAgIGludCBjcHUgPSBzbXBfcHJvY2Vzc29yX2lkKCk7CiAK
-ICAgICAgICBjbGstPm5hbWUgPSAiYXJtX2dsb2JhbF90aW1lciI7Ci0gICAgICAgY2xrLT5mZWF0
-dXJlcyA9IENMT0NLX0VWVF9GRUFUX1BFUklPRElDIHwgQ0xPQ0tfRVZUX0ZFQVRfT05FU0hPVDsK
-KyAgICAgICBjbGstPmZlYXR1cmVzID0gQ0xPQ0tfRVZUX0ZFQVRfUEVSSU9ESUMgfCBDTE9DS19F
-VlRfRkVBVF9PTkVTSE9UIHwKKyAgICAgICAgICAgICAgIENMT0NLX0VWVF9GRUFUX1BFUkNQVTsK
-ICAgICAgICBjbGstPnNldF9tb2RlID0gZ3RfY2xvY2tldmVudF9zZXRfbW9kZTsKICAgICAgICBj
-bGstPnNldF9uZXh0X2V2ZW50ID0gZ3RfY2xvY2tldmVudF9zZXRfbmV4dF9ldmVudDsKICAgICAg
-ICBjbGstPmNwdW1hc2sgPSBjcHVtYXNrX29mKGNwdSk7CmRpZmYgLS1naXQgYS9pbmNsdWRlL2xp
-bnV4L2Nsb2NrY2hpcHMuaCBiL2luY2x1ZGUvbGludXgvY2xvY2tjaGlwcy5oCmluZGV4IDA4NTc5
-MjIuLjQ5M2FhMDIgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvY2xvY2tjaGlwcy5oCisrKyBi
-L2luY2x1ZGUvbGludXgvY2xvY2tjaGlwcy5oCkBAIC02MCw2ICs2MCw3IEBAIGVudW0gY2xvY2tf
-ZXZlbnRfbW9kZSB7CiAgKiBDb3JlIHNoYWxsIHNldCB0aGUgaW50ZXJydXB0IGFmZmluaXR5IGR5
-bmFtaWNhbGx5IGluIGJyb2FkY2FzdCBtb2RlCiAgKi8KICNkZWZpbmUgQ0xPQ0tfRVZUX0ZFQVRf
-RFlOSVJRICAgICAgICAgIDB4MDAwMDIwCisjZGVmaW5lIENMT0NLX0VWVF9GRUFUX1BFUkNQVSAg
-ICAgICAgICAweDAwMDA0MAogCiAvKioKICAqIHN0cnVjdCBjbG9ja19ldmVudF9kZXZpY2UgLSBj
-bG9jayBldmVudCBkZXZpY2UgZGVzY3JpcHRvcgpkaWZmIC0tZ2l0IGEva2VybmVsL3RpbWUvdGlj
-ay1icm9hZGNhc3QuYyBiL2tlcm5lbC90aW1lL3RpY2stYnJvYWRjYXN0LmMKaW5kZXggZDM1Mzll
-NS4uZGU0YzVkOCAxMDA2NDQKLS0tIGEva2VybmVsL3RpbWUvdGljay1icm9hZGNhc3QuYworKysg
-Yi9rZXJuZWwvdGltZS90aWNrLWJyb2FkY2FzdC5jCkBAIC03MCwxNiArNzAsMTQgQEAgc3RhdGlj
-IGJvb2wgdGlja19jaGVja19icm9hZGNhc3RfZGV2aWNlKHN0cnVjdCBjbG9ja19ldmVudF9kZXZp
-Y2UgKmN1cmRldiwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVj
-dCBjbG9ja19ldmVudF9kZXZpY2UgKm5ld2RldikKIHsKICAgICAgICBpZiAoKG5ld2Rldi0+ZmVh
-dHVyZXMgJiBDTE9DS19FVlRfRkVBVF9EVU1NWSkgfHwKLSAgICAgICAgICAgKG5ld2Rldi0+ZmVh
-dHVyZXMgJiBDTE9DS19FVlRfRkVBVF9DM1NUT1ApKQorICAgICAgICAgICAobmV3ZGV2LT5mZWF0
-dXJlcyAmIENMT0NLX0VWVF9GRUFUX0MzU1RPUCkgfHwKKyAgICAgICAgICAgKG5ld2Rldi0+ZmVh
-dHVyZXMgJiBDTE9DS19FVlRfRkVBVF9QRVJDUFUpKQogICAgICAgICAgICAgICAgcmV0dXJuIGZh
-bHNlOwogCiAgICAgICAgaWYgKHRpY2tfYnJvYWRjYXN0X2RldmljZS5tb2RlID09IFRJQ0tERVZf
-TU9ERV9PTkVTSE9UICYmCiAgICAgICAgICAgICEobmV3ZGV2LT5mZWF0dXJlcyAmIENMT0NLX0VW
-VF9GRUFUX09ORVNIT1QpKQogICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOwogCi0gICAgICAg
-aWYgKGNwdW1hc2tfZXF1YWwobmV3ZGV2LT5jcHVtYXNrLCBjcHVtYXNrX29mKHNtcF9wcm9jZXNz
-b3JfaWQoKSkpKQotICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOwotCiAgICAgICAgcmV0dXJu
-ICFjdXJkZXYgfHwgbmV3ZGV2LT5yYXRpbmcgPiBjdXJkZXYtPnJhdGluZzsKIH0KCklmIHRoaXMg
-aXMgdGhlIHdheSB0byBnbywgSSBjYW4gcHJlcGFyZSB0aGlzIGluIGEgdjIuCgoJVGhhbmtzLAoJ
-U8O2cmVuCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWFybS1rZXJuZWwK
+On Thu, 12 Sep 2013, Santosh Shilimkar wrote:
+> On Thursday 12 September 2013 06:22 PM, Thomas Gleixner wrote:
+> > Now the real question is, how that expansion mechanism is supposed to
+> > work. There are two possible scenarios:
+> > 
+> > 1) Expand the number of handled interrupts beyond the GIC capacity:
+> > 
+> >    That requires a mechanism in CROSSBAR to map several CROSSBAR
+> >    interrupts to a particular GIC interrupt and provide a demux
+> >    mechanism to invoke the shared handlers.
+> > 
+> This is not possible in hardware and not supported. Hardware has
+> no notion of muxing multiple IRQ's to generate 1 IRQ or ack etc
+> functionality. Its a simple MUX to tie knots between input and output
+> wires.
+
+It's not a MUX. It's a ROUTING mechanism. That's similar to the
+mechanisms which are used by MSI[X]. We assign arbitrary interrupt
+numbers to a device and route them to some underlying limited hardware
+interrupt controller.
+
+> > 2) Provide a mapping mechanism between possibly 250 interrupt numbers
+> >    and a limitation of a total 160 active interrupts by the underlying
+> >    GIC.
+> > 
+> This is the need and problem we are trying to solve.
+
+Let me summarize:
+
+   - GIC supports up to 160 interrupts
+
+   - CROSSBAR supports up to 250 interrupts 
+
+   - CROSSBAR routes up to 160 out of 250 interrupts to the GIC ones
+
+   - Drivers request a CROSSBAR interrupt number which must be mapped
+     to some arbitrary available GIC irq number
+
+So basically the CROSSBAR mechanism is pretty much the same as MSI[X]
+just in a different flavour and with a different set of semantics and
+limitations, i.e. poor mans MSI[X] with a new level of bogosity.
+
+So if CROSSBAR is going to be the new fangled SoC MSI[X] long term
+equivalent then you better provide some infrastructure for that and
+make the drivers ready to use it. Maybe check with the PCI/MSI folks
+to share some of the interfaces.
+
+If that whole thing is another onetime HW designers wet dream, then
+please go back to the limited but completely functional (Who is going
+to use more than 160 peripheral interrupts????) device tree model. I
+really have no interest to support hardware designer brain farts.
+
+Thanks,
+
+	tglx
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
