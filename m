@@ -1,64 +1,142 @@
-From: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/4] arm: omap: display: Create omapdrm inside omap_display_init
-Date: Fri, 13 Sep 2013 16:02:33 +0530
-Message-ID: <5232E9C1.7070806@ti.com>
-References: <1379063679-4869-1-git-send-email-archit@ti.com> <1379063679-4869-2-git-send-email-archit@ti.com> <5232D9C8.9020809@ti.com> <5232DCFE.5050700@ti.com> <5232DD53.3010706@ti.com> <5232DF61.6000109@ti.com> <5232E00E.9040400@ti.com> <5232E2A8.10409@ti.com> <5232E63E.9020804@ti.com> <5232E7E2.7050606@ti.com>
+From: Preeti U Murthy <preeti-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] tick: broadcast: Deny per-cpu clockevents from being
+ broadcast sources
+Date: Fri, 13 Sep 2013 16:09:46 +0530
+Message-ID: <5232EB72.9050904@linux.vnet.ibm.com>
+References: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com> <1379004640-15117-2-git-send-email-soren.brinkmann@xilinx.com> <alpine.DEB.2.02.1309122224420.4089@ionos.tec.linutronix.de> <5232CC15.8090208@linaro.org> <CAM4v1pPQwBfQ3V6M2VGsc-Fh+VhLkQE2JZeoVc=_3kniODNEhA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5232E7E2.7050606-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAM4v1pPQwBfQ3V6M2VGsc-Fh+VhLkQE2JZeoVc=_3kniODNEhA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andygro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Preeti Murthy <preeti.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 September 2013 03:54 PM, Tomi Valkeinen wrote:
-> On 13/09/13 13:17, Archit Taneja wrote:
->> On Friday 13 September 2013 03:32 PM, Tomi Valkeinen wrote:
->>> On 13/09/13 12:51, Archit Taneja wrote:
+Hi Soren,
+
+On 09/13/2013 03:50 PM, Preeti Murthy wrote:
+> Hi,
+> 
+> So the patch that Daniel points out http://lwn.net/Articles/566270/ ,
+> enables broadcast functionality
+> without using an external global clock device. It uses one of the per cpu
+> clock devices to enable the broadcast functionality.
+> 
+> The way it achieves this is by creating a pseudo clock device and
+> associating it with one of the cpus clock device and
+> by having a hrtimer queued on the same cpu. This pseudo clock device acts
+> as the broadcast device, and the
+>  per cpu clock device that it is associated with acts as the broadcast
+> source.
+> 
+> The disadvantages that Soren mentions in having a per cpu clock device as
+> the broadcast source can be overcome
+> by following the approach proposed in this patch n the way described below:
+> 
+> 1. What if the cpu, whose clock device is the broadcast source goes offline?
+> 
+> The solution that the above patch proposes is associate the pseudo clock
+> device with another cpu and move the hrtimer
+> whose function is explained in the next point to another cpu. The broadcast
+> functionality continues to remain active transparently.
+> 
+> 2. The cpu that requires broadcast functionality is different from the cpu
+> whose clock device is the broadcast source.
+> So how will the former cpu program/control the clock device of the latter
+> cpu?
+> 
+> The above patch queues a hrtimer on the cpu whose clock device is the
+> broadcast source, which expires at
+> max(tick_broadcast_period,  dev->next_event), where tick_broadcast_period
+> is what we define and dev is the
+> pseudo device whose next event is set by the broadcast framework.
+> 
+> On expiry of this hrtimer, do broadcast handling and reprogram the hrtimer
+> with same as above,
+> max(tick_broadcast_period,  dev->next_event).
+> 
+> This ensures that a cpu that requires broadcast function to be activated
+> need not program the broadcast source,
+> which also happens to be a per cpu clock device. The hrtimer queued on the
+> cpu whose clock device is the
+> broadcast source takes care of when to do broadcast handling.
+> tick_broadcast_period ensures that we do
+> not miss wakeups. This is introduced to overcome the constraint of a cpu
+> not being able to program the clock
+> device of another cpu.
+> 
+> Soren, do let me know if the above approach described in the patch has not
+> addressed any of the challenges
+> that you see with having a  per cpu clock device as the broadcast source.
+> 
+> Regards
+> Preeti U Murthy
+> 
+> 
+> On Fri, Sep 13, 2013 at 1:55 PM, Daniel Lezcano
+> <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>wrote:
+> 
+>> On 09/12/2013 10:30 PM, Thomas Gleixner wrote:
+>>> On Thu, 12 Sep 2013, Soren Brinkmann wrote:
+>>>> From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>
+>>>> On most ARM systems the per-cpu clockevents are truly per-cpu in
+>>>> the sense that they can't be controlled on any other CPU besides
+>>>> the CPU that they interrupt. If one of these clockevents were to
+>>>> become a broadcast source we will run into a lot of trouble
+>>>> because the broadcast source is enabled on the first CPU to go
+>>>> into deep idle (if that CPU suffers from FEAT_C3_STOP) and that
+>>>> could be a different CPU than what the clockevent is interrupting
+>>>> (or even worse the CPU that the clockevent interrupts could be
+>>>> offline).
+>>>>
+>>>> Theoretically it's possible to support per-cpu clockevents as the
+>>>> broadcast source but so far we haven't needed this and supporting
+>>>> it is rather complicated. Let's just deny the possibility for now
+>>>> until this becomes a reality (let's hope it never does!).
 >>>
->>>> The calls in omap_generic_init() check the machine type via
->>>> of_machine_is_compatible(), even if it's a multiplatform image, the dtb
->>>> should be only of one platform. So it wouldn't be called at all.
+>>> Well, we can't do it this way. There are globally accessible clock
+>>> event devices which deliver only to cpu0. So the mask check might be
+>>> causing failure here.
 >>>
->>> Hmm. BeagleBone is "ti,am33xx". The "Generic AM33XX (Flattened Device
->>> Tree)" machine definition uses omap_generic_init(). So if I'm not
->>> missing something here, omap_generic_init() is called for BeagleBone.
+>>> Just add a feature flag CLOCK_EVT_FEAT_PERCPU to the clock event
+>>> device and check for it.
 >>
->> I was talking about the calls within omap_generic_init() :
+>> It sounds probably more understandable than dealing with the cpumasks.
 >>
->> omap_generic_init(void)
->> {
->>      ...
->>      if (of_machine_is_compatible("ti,omap4-panda")) {
->>          omap4_panda_display_init_of();
->>          legacy_init_ehci_clk("auxclk3_ck");
+>> I am wondering if this is semantically opposed to
+>> http://lwn.net/Articles/566270/ ?
 >>
->>      }
->> }
+>> [PATCH V3 0/6] cpuidle/ppc: Enable broadcast support for deep idle states
 >>
->> omap4_panda_display_init_of() would be called only if a panda board dtb
->> was used. Are you talking about these display calls, or something else?
->
-> Ah, right. I was looking at the DSS DT branch. There we have
-> omapdss_init_of() call from omap_generic_init(). So that is a problem,
-> but not in the mainline.
->
-> You're right, the current mainline doesn't call the DSS init function on
-> am33xx. But it does create omapfb and omapdrm devices, as you noted.
->
-> Well, those devices don't do any actual harm, but I agree that they
-> shouldn't be there. It's probably best to move the device creation into
-> display.c, as you did. Just include omapfb also, and maybe remove the
-> DMM creation as a first patch.
+>>   -- Daniel
 
-Sure, I'll do that.
+So the point I am trying to make is that the fix that you have proposed
+on this thread is valid. It is difficult to ensure that a per cpu clock
+device doubles up as the broadcast source without significant code
+changes to the current broadcast code and the timer code.
 
-I'm not sure either about how to deal with the direct call to 
-omapdss_init_of().
+But the patch [PATCH V3 0/6] cpuidle/ppc: Enable broadcast support for
+deep idle states, attempts to overcome the disadvantage on certain
+architectures of not having an external clock device to perform
+broadcast *without* significant code changes in broadcast or timer.
 
-Archit
+This patch does not conflict with what you are proposing in this thread
+of having a feature flag CLOCK_EVT_FEAT_PERCPU, since the pseudo clock
+device that the patch introduces will not have this flag set anyway.
+
+So ideally architectures, without having a planned infrastructure in
+them cannot nominate their per cpu clock device as the broadcast source.
+And if they do have some infrastructure to support a per cpu clock
+device as broadcast source, they should ensure that the device passes
+your test as is proposed in this patch. So your fix is valid IMHO. That
+said it is still possible to manage without an external clock device for
+performing broadcast.
+
+Regards
+Preeti U Murthy
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
