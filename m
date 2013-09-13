@@ -1,121 +1,54 @@
-From: Benson Leung <bleung@chromium.org>
-Subject: [PATCH] Input: gpio_keys - wakeup_trigger
-Date: Fri, 13 Sep 2013 14:52:40 -0700
-Message-ID: <1379109160-32437-1-git-send-email-bleung@chromium.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, david@protonic.nl
-Cc: bleung@chromium.org, dianders@chromium.org
+From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/3] mmc: omap_hsmmc: get rid of ti,non-removable
+Date: Sat, 14 Sep 2013 03:37:46 +0530
+Message-ID: <52338CB2.1040100@ti.com>
+References: <cover.1379066249.git.nsekhar@ti.com> <20130913153732.GO7189@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130913153732.GO7189-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Linux MMC Mailing List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow wakeup_trigger to be defined per gpio button. Currently, all
-gpio buttons are set up as IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING.
-It may be more appropriate to only wake the system on one edge, for example
-if the gpio is for a Lid Switch.
+On Friday 13 September 2013 09:07 PM, Tony Lindgren wrote:
+> * Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> [130913 03:18]:
+>> Get rid of TI specific binding ti,non-removable in favour of the
+>> generic binding present for the same purpose.
+>
+> Looks like there's a different handling in the MMC driver
+> for no_regulator_off_init that's needed for eMMC. That needs to
+> be sorted out and tested first.
+>
+Hi Sekhar,
 
-Signed-off-by: Benson Leung <bleung@chromium.org>
----
- .../devicetree/bindings/gpio/gpio_keys.txt         |  7 +++++++
- drivers/input/keyboard/gpio_keys.c                 | 23 ++++++++++++++++++++--
- include/linux/gpio_keys.h                          |  3 +++
- 3 files changed, 31 insertions(+), 2 deletions(-)
+no_regulator_off_init is needed for eMMC detection on omap4 platforms.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_keys.txt b/Documentation/devicetree/bindings/gpio/gpio_keys.txt
-index 5c2c021..243f569 100644
---- a/Documentation/devicetree/bindings/gpio/gpio_keys.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio_keys.txt
-@@ -20,6 +20,13 @@ Optional subnode-properties:
- 	- debounce-interval: Debouncing interval time in milliseconds.
- 	  If not specified defaults to 5.
- 	- gpio-key,wakeup: Boolean, button can wake-up the system.
-+	- gpio-key,wakeup-trigger : Specifies the type of wakeup behavior.
-+	  <1> == Rising Edge Trigger
-+	  <2> == Falling Edge Trigger
-+	  <3> == Both Rising and Falling Edge Trigger
-+	  <4> == Level High Trigger
-+	  <8> == Level Low Trigger
-+	  If not specified, defaults to <3> == Both Rising and Falling.
- 
- Example nodes:
- 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index 440ce32..28b6992 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -40,6 +40,7 @@ struct gpio_button_data {
- 	spinlock_t lock;
- 	bool disabled;
- 	bool key_pressed;
-+	unsigned long irqflags;
- };
- 
- struct gpio_keys_drvdata {
-@@ -493,6 +494,8 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 		irqflags = 0;
- 	}
- 
-+	bdata->irqflags = irqflags;
-+
- 	input_set_capability(input, button->type ?: EV_KEY, button->code);
- 
- 	/*
-@@ -643,6 +646,9 @@ gpio_keys_get_devtree_pdata(struct device *dev)
- 		if (of_property_read_u32(pp, "debounce-interval",
- 					 &button->debounce_interval))
- 			button->debounce_interval = 5;
-+
-+		of_property_read_u32(pp, "gpio-key,wakeup-trigger",
-+				     &button->wakeup_trigger);
- 	}
- 
- 	if (pdata->nbuttons == 0) {
-@@ -811,8 +817,14 @@ static int gpio_keys_suspend(struct device *dev)
- 	if (device_may_wakeup(dev)) {
- 		for (i = 0; i < ddata->pdata->nbuttons; i++) {
- 			struct gpio_button_data *bdata = &ddata->data[i];
--			if (bdata->button->wakeup)
-+			if (bdata->button->wakeup) {
-+				unsigned int flags;
-+				flags = bdata->button->wakeup_trigger &
-+					IRQF_TRIGGER_MASK;
-+				if (flags && flags != bdata->irqflags)
-+					irq_set_irq_type(bdata->irq, flags);
- 				enable_irq_wake(bdata->irq);
-+			}
- 		}
- 	} else {
- 		mutex_lock(&input->mutex);
-@@ -834,8 +846,15 @@ static int gpio_keys_resume(struct device *dev)
- 	if (device_may_wakeup(dev)) {
- 		for (i = 0; i < ddata->pdata->nbuttons; i++) {
- 			struct gpio_button_data *bdata = &ddata->data[i];
--			if (bdata->button->wakeup)
-+			if (bdata->button->wakeup) {
-+				unsigned int flags;
-+				flags = bdata->button->wakeup_trigger &
-+					IRQF_TRIGGER_MASK;
- 				disable_irq_wake(bdata->irq);
-+				if (flags && flags != bdata->irqflags)
-+					irq_set_irq_type(bdata->irq,
-+							 bdata->irqflags);
-+			}
- 		}
- 	} else {
- 		mutex_lock(&input->mutex);
-diff --git a/include/linux/gpio_keys.h b/include/linux/gpio_keys.h
-index a7e977f..d8d5a4f 100644
---- a/include/linux/gpio_keys.h
-+++ b/include/linux/gpio_keys.h
-@@ -15,6 +15,9 @@ struct gpio_keys_button {
- 	bool can_disable;
- 	int value;		/* axis value for EV_ABS */
- 	unsigned int irq;	/* Irq number in case of interrupt keys */
-+
-+	/* trigger value (IRQF_TRIGGER_*) while used as a wake-up source */
-+	unsigned int wakeup_trigger;
- };
- 
- struct gpio_keys_platform_data {
--- 
-1.8.4
+>> This patch set does not support the old binding anymore. So, yes,
+>> it does introduce an ABI breakage. IMHO, it is not really worth
+>> supporting both bindings ATM since DT-usage in OMAP is still very
+>> nascent and almost always DTB and uImage are upgraded together.
+>
+> The old bindings must be supported. It's not like we can just drop
+> them. We should just keep the old binding and parse it the same way
+> as the generic binding. That's a minimal amount of code.
+>
+> After the issue with no_regulator_off_init has been solved, then
+> we can naturally update the existing .dts files to use the generic
+> binding.
+>
+> Regards,
+>
+> Tony
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
