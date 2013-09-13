@@ -1,555 +1,219 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] Documentation: DT: arm: define CPU topology bindings
-Date: Fri, 13 Sep 2013 17:39:51 +0100
-Message-ID: <20130913163950.GB5408@e102568-lin.cambridge.arm.com>
-References: <1376559743-31848-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1376559743-31848-3-git-send-email-lorenzo.pieralisi@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+From: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3] PWM: PXA: add device tree support to PWM driver
+Date: Fri, 13 Sep 2013 09:54:41 -0700
+Message-ID: <1379091281-23662-1-git-send-email-mikedunn@newsguy.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1376559743-31848-3-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[replying to self]
+This patch adds device tree support to the PXA's PWM driver.  Only an OF match
+table is added; nothing needs to be extracted from the device tree node.  The
+existing ID table is reused for the match table data.
 
-Bindings defined in this patch have been hanging in the balance for
-quite a while, I would ask DT maintainers (and everyone else) please to have
-a look and provide an ACK/NACK as they deem fit, thank you very much.
+Tested on a Palm Treo 680 (both platform data and DT cases).
 
-Comments welcome.
+Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+---
+Changle log:
+v3:
+- remove support for the polarity flag
+- remove per-chip pwm index cell; define custom of_xlate()
+   (now #pwm-cells = <1>)
+- "compatible" strings for all devices added to OF match table
+- various stylistic changes recommended by reviewers
 
-Thanks,
-Lorenzo
+v2:
+- of_match_table contains only the "pxa250-pwm" compatible string; require one
+  device instance per pwm
+- add Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+- add support for polarity flag in DT and implement set_polarity() method
+  (the treo 680 inverts the signal between pwm out and backlight)
+- return -EINVAL instead of -ENODEV if platform data or DT node not found
+- output dev_info string if platform data missing
+- expanded CC list of patch
 
-On Thu, Aug 15, 2013 at 10:42:23AM +0100, Lorenzo Pieralisi wrote:
-> The advent of multi-cluster ARM systems requires a mechanism to describe
-> how in hierarchical terms CPUs are connected in ARM SoCs so that the kernel
-> can initialize and map resources like IRQs and memory space to specific
-> group(s) of CPUs.
-> 
-> The CPU topology is made up of multiple hierarchy levels whose bottom
-> layers (aka leaf nodes in device tree syntax) contain links to the HW
-> CPUs in the system.
-> 
-> The topology bindings are generic for both 32-bit and 64-bit systems and
-> lay the groundwork on top of which affinity schemes can be built.
-> 
-> This patch provides the documentation in the kernel required to define the
-> device tree bindings describing the CPU topology for ARM 32-bit and 64-bit
-> systems.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/topology.txt | 492 +++++++++++++++++++++
->  1 file changed, 492 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/topology.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
-> new file mode 100644
-> index 0000000..73fe7dd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/topology.txt
-> @@ -0,0 +1,492 @@
-> +===========================================
-> +ARM topology binding description
-> +===========================================
-> +
-> +===========================================
-> +1 - Introduction
-> +===========================================
-> +
-> +In an ARM system, the hierarchy of CPUs is defined through three entities that
-> +are used to describe the layout of physical CPUs in the system:
-> +
-> +- cluster
-> +- core
-> +- thread
-> +
-> +The cpu nodes (bindings defined in [1]) represent the devices that
-> +correspond to physical CPUs and are to be mapped to the hierarchy levels.
-> +
-> +The bottom hierarchy level sits at core or thread level depending on whether
-> +symmetric multi-threading (SMT) is supported or not.
-> +
-> +For instance in a system where CPUs support SMT, "cpu" nodes represent all
-> +threads existing in the system and map to the hierarchy level "thread" above.
-> +In systems where SMT is not supported "cpu" nodes represent all cores present
-> +in the system and map to the hierarchy level "core" above.
-> +
-> +ARM topology bindings allow one to associate cpu nodes with hierarchical groups
-> +corresponding to the system hierarchy; syntactically they are defined as device
-> +tree nodes.
-> +
-> +The remainder of this document provides the topology bindings for ARM, based
-> +on the ePAPR standard, available from:
-> +
-> +http://www.power.org/documentation/epapr-version-1-1/
-> +
-> +If not stated otherwise, whenever a reference to a cpu node phandle is made its
-> +value must point to a cpu node compliant with the cpu node bindings as
-> +documented in [1].
-> +A topology description containing phandles to cpu nodes that are not compliant
-> +with bindings standardized in [1] is therefore considered invalid.
-> +
-> +===========================================
-> +2 - cpu-map node
-> +===========================================
-> +
-> +The ARM CPU topology is defined within the cpu-map node, which is a direct
-> +child of the cpus node and provides a container where the actual topology
-> +nodes are listed.
-> +
-> +- cpu-map node
-> +
-> +       Usage: Optional - Provide ARM CPU topology to the OS
-> +
-> +       Description: The cpu-map node is just a container node where its
-> +                    subnodes describe the CPU topology
-> +
-> +       Node name must be "cpu-map".
-> +
-> +       The cpu-map node's parent node must be the cpus node.
-> +
-> +       The cpu-map node's child nodes can be:
-> +
-> +       - one or more cluster nodes
-> +
-> +       Any other configuration is considered invalid.
-> +
-> +The cpu-map node can only contain three types of child nodes:
-> +
-> +- cluster node
-> +- core node
-> +- thread node
-> +
-> +whose bindings are described in paragraph 3.
-> +
-> +The nodes describing the CPU topology (cluster/core/thread) can only be
-> +defined within the cpu-map node.
-> +Any other configuration is consider invalid and therefore must be ignored.
-> +
-> +===========================================
-> +2.1 - cpu-map child nodes naming convention
-> +===========================================
-> +
-> +cpu-map child nodes must follow a naming convention where the node name
-> +must be "clusterN", "coreN", "threadN" depending on the node type (ie
-> +cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes which
-> +are siblings within a single common parent node must be given a unique and
-> +sequential N value, starting from 0).
-> +cpu-map child nodes which do not share a common parent node can have the same
-> +name (ie same number N as other cpu-map child nodes at different device tree
-> +levels) since name uniqueness will be guaranteed by the device tree hierarchy.
-> +
-> +===========================================
-> +3 - cluster/core/thread node bindings
-> +===========================================
-> +
-> +Bindings for cluster/cpu/thread nodes are defined as follows:
-> +
-> +- cluster node
-> +
-> +        Description: must be declared within a cpu-map node, one node
-> +                     per cluster. A system can contain several layers of
-> +                     clustering and cluster nodes can be contained in parent
-> +                     cluster nodes.
-> +
-> +       The cluster node name must be "clusterN" as described in 2.1 above.
-> +       A cluster node can not be a leaf node.
-> +
-> +       A cluster node's child nodes must be:
-> +
-> +       - one or more cluster nodes; or
-> +       - one or more core nodes
-> +
-> +       Any other configuration is considered invalid.
-> +
-> +- core node
-> +
-> +       Description: must be declared in a cluster node, one node per core in
-> +                    the cluster. If the system does not support SMT, core
-> +                    nodes are leaf nodes, otherwise they become containers of
-> +                    thread nodes.
-> +
-> +       The core node name must be "coreN" as described in 2.1 above.
-> +
-> +       A core node must be a leaf node if SMT is not supported.
-> +
-> +       Properties for core nodes that are leaf nodes:
-> +
-> +       - cpu
-> +               Usage: required
-> +               Value type: <phandle>
-> +               Definition: a phandle to the cpu node that corresponds to the
-> +                           core node.
-> +
-> +       If a core node is not a leaf node (CPUs supporting SMT) a core node's
-> +       child nodes can be:
-> +
-> +       - one or more thread nodes
-> +
-> +       Any other configuration is considered invalid.
-> +
-> +- thread node
-> +
-> +       Description: must be declared in a core node, one node per thread
-> +                    in the core if the system supports SMT. Thread nodes are
-> +                    always leaf nodes in the device tree.
-> +
-> +       The thread node name must be "threadN" as described in 2.1 above.
-> +
-> +       A thread node must be a leaf node.
-> +
-> +       A thread node must contain the following property:
-> +
-> +       - cpu
-> +               Usage: required
-> +               Value type: <phandle>
-> +               Definition: a phandle to the cpu node that corresponds to
-> +                           the thread node.
-> +
-> +===========================================
-> +4 - Example dts
-> +===========================================
-> +
-> +Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters):
-> +
-> +cpus {
-> +       #size-cells = <0>;
-> +       #address-cells = <2>;
-> +
-> +       cpu-map {
-> +               cluster0 {
-> +                       cluster0 {
-> +                               core0 {
-> +                                       thread0 {
-> +                                               cpu = <&CPU0>;
-> +                                       };
-> +                                       thread1 {
-> +                                               cpu = <&CPU1>;
-> +                                       };
-> +                               };
-> +
-> +                               core1 {
-> +                                       thread0 {
-> +                                               cpu = <&CPU2>;
-> +                                       };
-> +                                       thread1 {
-> +                                               cpu = <&CPU3>;
-> +                                       };
-> +                               };
-> +                       };
-> +
-> +                       cluster1 {
-> +                               core0 {
-> +                                       thread0 {
-> +                                               cpu = <&CPU4>;
-> +                                       };
-> +                                       thread1 {
-> +                                               cpu = <&CPU5>;
-> +                                       };
-> +                               };
-> +
-> +                               core1 {
-> +                                       thread0 {
-> +                                               cpu = <&CPU6>;
-> +                                       };
-> +                                       thread1 {
-> +                                               cpu = <&CPU7>;
-> +                                       };
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cluster1 {
-> +                       cluster0 {
-> +                               core0 {
-> +                                       thread0 {
-> +                                               cpu = <&CPU8>;
-> +                                       };
-> +                                       thread1 {
-> +                                               cpu = <&CPU9>;
-> +                                       };
-> +                               };
-> +                               core1 {
-> +                                       thread0 {
-> +                                               cpu = <&CPU10>;
-> +                                       };
-> +                                       thread1 {
-> +                                               cpu = <&CPU11>;
-> +                                       };
-> +                               };
-> +                       };
-> +
-> +                       cluster1 {
-> +                               core0 {
-> +                                       thread0 {
-> +                                               cpu = <&CPU12>;
-> +                                       };
-> +                                       thread1 {
-> +                                               cpu = <&CPU13>;
-> +                                       };
-> +                               };
-> +                               core1 {
-> +                                       thread0 {
-> +                                               cpu = <&CPU14>;
-> +                                       };
-> +                                       thread1 {
-> +                                               cpu = <&CPU15>;
-> +                                       };
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
-> +       CPU0: cpu@0 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x0 0x0>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU1: cpu@1 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x0 0x1>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU2: cpu@100 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x0 0x100>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU3: cpu@101 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x0 0x101>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU4: cpu@10000 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x0 0x10000>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU5: cpu@10001 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x0 0x10001>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU6: cpu@10100 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x0 0x10100>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU7: cpu@10101 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x0 0x10101>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU8: cpu@100000000 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x1 0x0>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU9: cpu@100000001 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x1 0x1>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU10: cpu@100000100 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x1 0x100>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU11: cpu@100000101 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x1 0x101>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU12: cpu@100010000 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x1 0x10000>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU13: cpu@100010001 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x1 0x10001>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU14: cpu@100010100 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x1 0x10100>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +
-> +       CPU15: cpu@100010101 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a57";
-> +               reg = <0x1 0x10101>;
-> +               enable-method = "spin-table";
-> +               cpu-release-addr = <0 0x20000000>;
-> +       };
-> +};
-> +
-> +Example 2 (ARM 32-bit, dual-cluster, 8-cpu system, no SMT):
-> +
-> +cpus {
-> +       #size-cells = <0>;
-> +       #address-cells = <1>;
-> +
-> +       cpu-map {
-> +               cluster0 {
-> +                       core0 {
-> +                               cpu = <&CPU0>;
-> +                       };
-> +                       core1 {
-> +                               cpu = <&CPU1>;
-> +                       };
-> +                       core2 {
-> +                               cpu = <&CPU2>;
-> +                       };
-> +                       core3 {
-> +                               cpu = <&CPU3>;
-> +                       };
-> +               };
-> +
-> +               cluster1 {
-> +                       core0 {
-> +                               cpu = <&CPU4>;
-> +                       };
-> +                       core1 {
-> +                               cpu = <&CPU5>;
-> +                       };
-> +                       core2 {
-> +                               cpu = <&CPU6>;
-> +                       };
-> +                       core3 {
-> +                               cpu = <&CPU7>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       CPU0: cpu@0 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a15";
-> +               reg = <0x0>;
-> +       };
-> +
-> +       CPU1: cpu@1 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a15";
-> +               reg = <0x1>;
-> +       };
-> +
-> +       CPU2: cpu@2 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a15";
-> +               reg = <0x2>;
-> +       };
-> +
-> +       CPU3: cpu@3 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a15";
-> +               reg = <0x3>;
-> +       };
-> +
-> +       CPU4: cpu@100 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a7";
-> +               reg = <0x100>;
-> +       };
-> +
-> +       CPU5: cpu@101 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a7";
-> +               reg = <0x101>;
-> +       };
-> +
-> +       CPU6: cpu@102 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a7";
-> +               reg = <0x102>;
-> +       };
-> +
-> +       CPU7: cpu@103 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a7";
-> +               reg = <0x103>;
-> +       };
-> +};
-> +
-> +Example 3 (ARM 32-bit, cortex-a8 single core):
-> +
-> +cpus {
-> +       #size-cells = <0>;
-> +       #address-cells = <1>;
-> +
-> +       cpu-map {
-> +               cluster0 {
-> +                       core0 {
-> +                               cpu = <&CPU0>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       CPU0: cpu@0 {
-> +               device_type = "cpu";
-> +               compatible = "arm,cortex-a8";
-> +               reg = <0x0>;
-> +       };
-> +};
-> +
-> +===============================================================================
-> +[1] ARM Linux kernel documentation
-> +    Documentation/devicetree/bindings/arm/cpus.txt
-> --
-> 1.8.2.2
-> 
+ Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 31 ++++++++++++
+ arch/arm/boot/dts/pxa27x.dtsi                     | 24 +++++++++
+ drivers/pwm/pwm-pxa.c                             | 62 +++++++++++++++++++++++
+ 3 files changed, 117 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+
+diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+new file mode 100644
+index 0000000..6fcf90c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+@@ -0,0 +1,31 @@
++Marvell PWM controller
++
++Required properties:
++- compatible: should be one of:
++  - "marvell,pxa250-pwm"
++  - "marvell,pxa270-pwm"
++  - "marvell,pxa168-pwm"
++  - "marvell,pxa910-pwm"
++- reg: physical base address and length of the registers used by the PWM channel
++  NB: One device instance must be created for each PWM that is used, so the
++  length covers only the register window for one PWM output, not that of the
++  entire PWM controller.  Currently length is 0x10 for all supported devices.
++- #pwm-cells: should be 1.  This cell is used to specify the period in
++  nanoseconds.  (Because one device instance is created for each PWM output,
++  the per-chip index is superflous and not used.)
++
++Example PWM device node:
++
++pwm0: pwm@40b00000 {
++	compatible = "marvell,pxa250-pwm";
++	reg = <0x40b00000 0x10>;
++	#pwm-cells = <1>;
++};
++
++Example PWM client node:
++
++backlight {
++	compatible = "pwm-backlight";
++	pwms = <&pwm0 5000000>;
++	...
++}
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index d7c5d72..5057c41 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -10,5 +10,29 @@
+ 			marvell,intc-priority;
+ 			marvell,intc-nr-irqs = <34>;
+ 		};
++
++		pwm0: pwm@40b00000 {
++			compatible = "marvell,pxa270-pwm";
++			reg = <0x40b00000 0x10>;
++			#pwm-cells = <1>;
++		};
++
++		pwm1: pwm@40b00010 {
++			compatible = "marvell,pxa270-pwm";
++			reg = <0x40b00010 0x10>;
++			#pwm-cells = <1>;
++		};
++
++		pwm2: pwm@40c00000 {
++			compatible = "marvell,pxa270-pwm";
++			reg = <0x40c00000 0x10>;
++			#pwm-cells = <1>;
++		};
++
++		pwm3: pwm@40c00010 {
++			compatible = "marvell,pxa270-pwm";
++			reg = <0x40c00010 0x10>;
++			#pwm-cells = <1>;
++		};
+ 	};
+ };
+diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
+index a4d2164..91b1cff 100644
+--- a/drivers/pwm/pwm-pxa.c
++++ b/drivers/pwm/pwm-pxa.c
+@@ -19,6 +19,7 @@
+ #include <linux/clk.h>
+ #include <linux/io.h>
+ #include <linux/pwm.h>
++#include <linux/of_device.h>
+ 
+ #include <asm/div64.h>
+ 
+@@ -124,6 +125,59 @@ static struct pwm_ops pxa_pwm_ops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++#ifdef CONFIG_OF
++/*
++ * Device tree users must create one device instance for each pwm channel.
++ * Hence we dispense with the HAS_SECONDARY_PWM and "tell" the original driver
++ * code that this is a single channel pxa25x-pwm.  Currently all devices are
++ * supported identically.
++ */
++static struct of_device_id pwm_of_match[] = {
++	{ .compatible = "marvell,pxa250-pwm", .data = &pwm_id_table[0]},
++	{ .compatible = "marvell,pxa270-pwm", .data = &pwm_id_table[0]},
++	{ .compatible = "marvell,pxa168-pwm", .data = &pwm_id_table[0]},
++	{ .compatible = "marvell,pxa910-pwm", .data = &pwm_id_table[0]},
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pwm_of_match);
++
++static const struct platform_device_id *pxa_pwm_get_id_dt(struct device *dev)
++{
++	const struct of_device_id *id = of_match_device(pwm_of_match, dev);
++	if (id)
++		return (const struct platform_device_id *)id->data;
++	else
++		return NULL;
++}
++
++struct pwm_device *
++pxa_pwm_of_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
++{
++	struct pwm_device *pwm;
++
++	pwm = pwm_request_from_chip(pc, 0, NULL);
++	if (IS_ERR(pwm))
++		return pwm;
++
++	pwm_set_period(pwm, args->args[0]);
++
++	return pwm;
++}
++
++#else  /* !CONFIG_OF */
++static const struct platform_device_id *pxa_pwm_get_id_dt(struct device *dev)
++{
++	dev_err(dev, "missing platform data\n");
++	return NULL;
++}
++
++struct pwm_device *
++pxa_pwm_of_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
++{
++	return NULL;
++}
++#endif
++
+ static int pwm_probe(struct platform_device *pdev)
+ {
+ 	const struct platform_device_id *id = platform_get_device_id(pdev);
+@@ -131,6 +185,11 @@ static int pwm_probe(struct platform_device *pdev)
+ 	struct resource *r;
+ 	int ret = 0;
+ 
++	if (id == NULL)		/* using device tree */
++		id = pxa_pwm_get_id_dt(&pdev->dev);
++	if (id == NULL)
++		return -EINVAL;
++
+ 	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
+ 	if (pwm == NULL) {
+ 		dev_err(&pdev->dev, "failed to allocate memory\n");
+@@ -145,6 +204,8 @@ static int pwm_probe(struct platform_device *pdev)
+ 	pwm->chip.ops = &pxa_pwm_ops;
+ 	pwm->chip.base = -1;
+ 	pwm->chip.npwm = (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1;
++	pwm->chip.of_xlate = pxa_pwm_of_xlate;
++	pwm->chip.of_pwm_n_cells = 1;
+ 
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	pwm->mmio_base = devm_ioremap_resource(&pdev->dev, r);
+@@ -176,6 +237,7 @@ static struct platform_driver pwm_driver = {
+ 	.driver		= {
+ 		.name	= "pxa25x-pwm",
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(pwm_of_match),
+ 	},
+ 	.probe		= pwm_probe,
+ 	.remove		= pwm_remove,
+-- 
+1.8.1.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
