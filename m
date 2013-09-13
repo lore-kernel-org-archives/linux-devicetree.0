@@ -1,44 +1,46 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/3] ARM: dts: Disable I2C controllers by default on Exynos5250
-Date: Thu, 12 Sep 2013 09:03:23 -0600
-Message-ID: <5231D7BB.6050702@wwwdotorg.org>
-References: <1378982427-5802-1-git-send-email-broonie@kernel.org> <1378982427-5802-3-git-send-email-broonie@kernel.org> <2175767.kktjrZWOAr@amdc1227>
+From: Huang Shijie <shijie8@gmail.com>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Thu, 12 Sep 2013 23:14:47 -0400
+Message-ID: <20130913031444.GB3051@gmail.com>
+References: <52304BFF.4060007@freescale.com>
+ <20130911113002.GP29403@sirena.org.uk>
+ <523186DF.4070203@freescale.com>
+ <1378982395.2627.416.camel@shinybook.infradead.org>
+ <20980858CB6D3A4BAE95CA194937D5E73EA0EE8B@DBDE04.ent.ti.com>
+ <1378984665.2627.423.camel@shinybook.infradead.org>
+ <20130912114831.GL29403@sirena.org.uk>
+ <1378987323.2627.429.camel@shinybook.infradead.org>
+ <20130912134345.GQ29403@sirena.org.uk>
+ <1378994596.2627.449.camel@shinybook.infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2175767.kktjrZWOAr@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linaro-kernel@vger.kernel.org, Mark Brown <broonie@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1378994596.2627.449.camel@shinybook.infradead.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Mark Brown <broonie@kernel.org>, "Gupta, Pekon" <pekon@ti.com>, Huang Shijie <b32955@freescale.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2013 06:58 AM, Tomasz Figa wrote:
-> Hi Mark,
+On Thu, Sep 12, 2013 at 03:03:16PM +0100, David Woodhouse wrote:
+> On Thu, 2013-09-12 at 14:43 +0100, Mark Brown wrote:
+> > 
 > 
-> On Thursday 12 of September 2013 11:40:27 Mark Brown wrote:
->> From: Mark Brown <broonie@linaro.org>
->>
->> Ensure that unused I2C controllers are not activated, causing problems
->> due to inappropriate pinmuxing or similar, by marking the controllers as
->> disabled by default and requiring boards to explicitly enable those that
->> are in use.
+> So to go back to your question: the commands that it "knows" we are
+> going to send are indeed specific to (one particular type of) SPI NOR
+> flash. But there's nothing on the MTD side which justifies that
+> assumption. Even if you use a different type of SPI NOR flash which uses
+> different opcodes for its commands, this broken scheme will fall over.
 
->> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts
+Beside the quad-read/ddr-quad-read commands, all the commands needed by
+this driver is common. If we do not enable the quad-read, this driver
+can works with the fast-read mode.
 
->>  	i2c@12C60000 {
->> +		status = "okay";
-> 
-> I would keep the status properties at the end of all properties, indicating 
-> that at this point the description is complete and also to be consistent 
-> with other dts files around.
+If we use a different NOR which uses different opcodes
+(different quad-read opcodes ?), i should add a small patch to fix it. 
 
-DT doesn't define any kind of ordering for the properties AFAIK, so the
-order shouldn't matter in practice; it conveys no semantic
-representation as far as the parsing code is concerned even if a human
-may be influenced otherwise:-)
 
-Just as an FYI, the rule I've been trying to follow in Tegra DT files is
-that properties that are overridden from any included .dtsi file come
-first, followed by any new properties. Still, there's no particular
-reason anyone else has to follow that layout.
+I think i should follow Mark's advice to split out the quad-read code.
+
+thanks
+Huang Shijie
