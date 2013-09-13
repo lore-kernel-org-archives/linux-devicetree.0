@@ -1,41 +1,203 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v8 12/12] V4L: Add driver for s5k4e5 image sensor
-Date: Fri, 13 Sep 2013 10:14:07 -0600
-Message-ID: <523339CF.9070604@wwwdotorg.org>
-References: <1378987669-10870-1-git-send-email-arun.kk@samsung.com>  <1378987669-10870-13-git-send-email-arun.kk@samsung.com> <1379076935.4396.13.camel@pizza.hi.pengutronix.de>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 1/2] tick: broadcast: Deny per-cpu clockevents from being
+ broadcast sources
+Date: Fri, 13 Sep 2013 09:23:47 -0700
+Message-ID: <2a29ccc9-6aea-47ca-9306-4f17d7cc2fe4@DB9EHSMHS013.ehs.local>
+References: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1379004640-15117-2-git-send-email-soren.brinkmann@xilinx.com>
+ <alpine.DEB.2.02.1309122224420.4089@ionos.tec.linutronix.de>
+ <5232CC15.8090208@linaro.org>
+ <CAM4v1pPQwBfQ3V6M2VGsc-Fh+VhLkQE2JZeoVc=_3kniODNEhA@mail.gmail.com>
+ <5232EB72.9050904@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1379076935.4396.13.camel@pizza.hi.pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Arun Kumar K <arun.kk@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, hverkuil@xs4all.nl, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5232EB72.9050904@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Preeti U Murthy <preeti@linux.vnet.ibm.com>
+Cc: Preeti Murthy <preeti.lkml@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2013 06:55 AM, Philipp Zabel wrote:
-> Hi Arun,
-> 
-> Am Donnerstag, den 12.09.2013, 17:37 +0530 schrieb Arun Kumar K:
->> This patch adds subdev driver for Samsung S5K4E5 raw image sensor.
->> Like s5k6a3, it is also another fimc-is firmware controlled
->> sensor. This minimal sensor driver doesn't do any I2C communications
->> as its done by ISP firmware. It can be updated if needed to a
->> regular sensor driver by adding the I2C communication.
-... [untrimmed patch] ...
->> +Example:
->> +
->> +	i2c-isp@13130000 {
->> +		s5k4e5@20 {
->> +			compatible = "samsung,s5k4e5";
->> +			reg = <0x20>;
->> +			gpios = <&gpx1 2 1>;
-> 
-> This probably should be 'reset-gpios', too.
-... [untrimmed patch] ...
-> 
-> regards
-> Philipp
+Hi Preeti,
 
-Please delete unnecessary context when replying so that people don't
-have to scroll through hundreds of lines of patch to see a 1-line comment.
+On Fri, Sep 13, 2013 at 04:09:46PM +0530, Preeti U Murthy wrote:
+> Hi Soren,
+>=20
+> On 09/13/2013 03:50 PM, Preeti Murthy wrote:
+> > Hi,
+> >=20
+> > So the patch that Daniel points out http://lwn.net/Articles/566270/=
+ ,
+> > enables broadcast functionality
+> > without using an external global clock device. It uses one of the p=
+er cpu
+> > clock devices to enable the broadcast functionality.
+> >=20
+> > The way it achieves this is by creating a pseudo clock device and
+> > associating it with one of the cpus clock device and
+> > by having a hrtimer queued on the same cpu. This pseudo clock devic=
+e acts
+> > as the broadcast device, and the
+> >  per cpu clock device that it is associated with acts as the broadc=
+ast
+> > source.
+> >=20
+> > The disadvantages that Soren mentions in having a per cpu clock dev=
+ice as
+> > the broadcast source can be overcome
+> > by following the approach proposed in this patch n the way describe=
+d below:
+> >=20
+> > 1. What if the cpu, whose clock device is the broadcast source goes=
+ offline?
+> >=20
+> > The solution that the above patch proposes is associate the pseudo =
+clock
+> > device with another cpu and move the hrtimer
+> > whose function is explained in the next point to another cpu. The b=
+roadcast
+> > functionality continues to remain active transparently.
+> >=20
+> > 2. The cpu that requires broadcast functionality is different from =
+the cpu
+> > whose clock device is the broadcast source.
+> > So how will the former cpu program/control the clock device of the =
+latter
+> > cpu?
+> >=20
+> > The above patch queues a hrtimer on the cpu whose clock device is t=
+he
+> > broadcast source, which expires at
+> > max(tick_broadcast_period,  dev->next_event), where tick_broadcast_=
+period
+> > is what we define and dev is the
+> > pseudo device whose next event is set by the broadcast framework.
+> >=20
+> > On expiry of this hrtimer, do broadcast handling and reprogram the =
+hrtimer
+> > with same as above,
+> > max(tick_broadcast_period,  dev->next_event).
+> >=20
+> > This ensures that a cpu that requires broadcast function to be acti=
+vated
+> > need not program the broadcast source,
+> > which also happens to be a per cpu clock device. The hrtimer queued=
+ on the
+> > cpu whose clock device is the
+> > broadcast source takes care of when to do broadcast handling.
+> > tick_broadcast_period ensures that we do
+> > not miss wakeups. This is introduced to overcome the constraint of =
+a cpu
+> > not being able to program the clock
+> > device of another cpu.
+> >=20
+> > Soren, do let me know if the above approach described in the patch =
+has not
+> > addressed any of the challenges
+> > that you see with having a  per cpu clock device as the broadcast s=
+ource.
+> >=20
+> > Regards
+> > Preeti U Murthy
+> >=20
+> >=20
+> > On Fri, Sep 13, 2013 at 1:55 PM, Daniel Lezcano
+> > <daniel.lezcano@linaro.org>wrote:
+> >=20
+> >> On 09/12/2013 10:30 PM, Thomas Gleixner wrote:
+> >>> On Thu, 12 Sep 2013, Soren Brinkmann wrote:
+> >>>> From: Stephen Boyd <sboyd@codeaurora.org>
+> >>>>
+> >>>> On most ARM systems the per-cpu clockevents are truly per-cpu in
+> >>>> the sense that they can't be controlled on any other CPU besides
+> >>>> the CPU that they interrupt. If one of these clockevents were to
+> >>>> become a broadcast source we will run into a lot of trouble
+> >>>> because the broadcast source is enabled on the first CPU to go
+> >>>> into deep idle (if that CPU suffers from FEAT_C3_STOP) and that
+> >>>> could be a different CPU than what the clockevent is interruptin=
+g
+> >>>> (or even worse the CPU that the clockevent interrupts could be
+> >>>> offline).
+> >>>>
+> >>>> Theoretically it's possible to support per-cpu clockevents as th=
+e
+> >>>> broadcast source but so far we haven't needed this and supportin=
+g
+> >>>> it is rather complicated. Let's just deny the possibility for no=
+w
+> >>>> until this becomes a reality (let's hope it never does!).
+> >>>
+> >>> Well, we can't do it this way. There are globally accessible cloc=
+k
+> >>> event devices which deliver only to cpu0. So the mask check might=
+ be
+> >>> causing failure here.
+> >>>
+> >>> Just add a feature flag CLOCK_EVT_FEAT_PERCPU to the clock event
+> >>> device and check for it.
+> >>
+> >> It sounds probably more understandable than dealing with the cpuma=
+sks.
+> >>
+> >> I am wondering if this is semantically opposed to
+> >> http://lwn.net/Articles/566270/ ?
+> >>
+> >> [PATCH V3 0/6] cpuidle/ppc: Enable broadcast support for deep idle=
+ states
+> >>
+> >>   -- Daniel
+>=20
+> So the point I am trying to make is that the fix that you have propos=
+ed
+> on this thread is valid. It is difficult to ensure that a per cpu clo=
+ck
+> device doubles up as the broadcast source without significant code
+> changes to the current broadcast code and the timer code.
+>=20
+> But the patch [PATCH V3 0/6] cpuidle/ppc: Enable broadcast support fo=
+r
+> deep idle states, attempts to overcome the disadvantage on certain
+> architectures of not having an external clock device to perform
+> broadcast *without* significant code changes in broadcast or timer.
+>=20
+> This patch does not conflict with what you are proposing in this thre=
+ad
+> of having a feature flag CLOCK_EVT_FEAT_PERCPU, since the pseudo cloc=
+k
+> device that the patch introduces will not have this flag set anyway.
+>=20
+> So ideally architectures, without having a planned infrastructure in
+> them cannot nominate their per cpu clock device as the broadcast sour=
+ce.
+> And if they do have some infrastructure to support a per cpu clock
+> device as broadcast source, they should ensure that the device passes
+> your test as is proposed in this patch. So your fix is valid IMHO. Th=
+at
+> said it is still possible to manage without an external clock device =
+for
+> performing broadcast.
+
+Thanks for the explanation but now I'm a little confused. That's a lot =
+of
+details and I'm lacking the in depth knowledge to fully understand
+everything.
+
+Is it correct to say, that your patch series enables per cpu devices to
+be the broadcast device - for PPC?
+And that would mean, that even though you have a per cpu device, you'd
+deliberately not set the FEAT_PERCPU flag, because on PPC a per cpu
+timer is a valid broadcast device?
+
+Assuming that is not going into an utterly wrong direction: How would w=
+e
+close on this one? AFAIK, ARM does not have this capability and I guess
+it won't be added. So, should I go forward with the fix proposed by
+Thomas? Should we rename the FEAT_PERCPU flag to something else, given
+that PPC may use per cpu devices for broadcasting and the sole usage of
+that flag is to prevent such a device from becoming the broadcast devic=
+e?
+
+	Thanks,
+	S=C3=B6ren
