@@ -1,134 +1,57 @@
-From: Xiubo Li <Li.Xiubo@freescale.com>
-Subject: [PATCHv4 2/4] ARM: dts: Add Freescale FTM PWM node for VF610.
-Date: Fri, 13 Sep 2013 13:58:40 +0800
-Message-ID: <1379051922-4930-3-git-send-email-Li.Xiubo@freescale.com>
-References: <1379051922-4930-1-git-send-email-Li.Xiubo@freescale.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH 1/2] ARM: msm: Add support for MSM8974 Dragonboard
+Date: Fri, 13 Sep 2013 09:56:52 +0300
+Message-ID: <1379055412.16481.7.camel@iivanov-dev.int.mm-sol.com>
+References: <1375743779-24993-1-git-send-email-rvaswani@codeaurora.org>
+	 <1375780486.2725.7.camel@iivanov-dev.int.mm-sol.com>
+	 <20130911180006.GA12624@codeaurora.org>
+	 <1378994706.16481.6.camel@iivanov-dev.int.mm-sol.com>
+	 <5231ED31.7080102@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379051922-4930-1-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: r65073@freescale.com, thierry.reding@gmail.com
-Cc: s.hauer@pengutronix.de, swarren@wwwdotorg.org, t.figa@samsung.com, grant.likely@linaro.org, linux@arm.linux.org.uk, rob@landley.net, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <5231ED31.7080102@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rohit Vaswani <rvaswani@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds devicetree node for VF610, and there are 8 channels supported
-by default.
+On Thu, 2013-09-12 at 09:34 -0700, Rohit Vaswani wrote: 
+> On 9/12/2013 7:05 AM, Ivan T. Ivanov wrote:
+> > Hi,
+> >
+> > On Wed, 2013-09-11 at 11:00 -0700, David Brown wrote:
+> >> On Tue, Aug 06, 2013 at 12:14:46PM +0300, Ivan T. Ivanov wrote:
+> >>
+> >>> Attached patch enables earlyprink for this board.
+> >>>
+> >>> [920] booting linux @ 0x8000, ramdisk @ 0x2000000 (1067699), tags/device tree @ 0x1e00000
+> >>> Uncompressing Linux... done, booting the kernel.
+> >>> [    0.000000] Booting Linux on physical CPU 0x0
+> >>> [    0.000000] Linux version 3.11.0-rc4-00003-g7c8394e (iivanov@dev) (gcc version 4.6.3 (GCC) ) #502 SMP PREEMPT Tue Aug 6 12:09:07 EEST3
+> >>> [    0.000000] CPU: ARMv7 Processor [512f06f0] revision 0 (ARMv7), cr=10c5387d
+> >>> [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction cache
+> >>> [    0.000000] Machine: Qualcomm MSM (Flattened Device Tree), model: Qualcomm MSM8974 Dragonboard
+> >> We'll need to have either Rohit include this in his patch series, or
+> >> you'll have to format this as a valid patch.
+> > I don't have preferences. Rohit could you send this patch
+> > with you changes?
+> 
+> Yep. Will fixup this as part of the initial support.
 
-Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
----
- arch/arm/boot/dts/vf610.dtsi | 83 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 82 insertions(+), 1 deletion(-)
+Thanks, 
+Ivan
 
-diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-index 67d929c..9b200ef 100644
---- a/arch/arm/boot/dts/vf610.dtsi
-+++ b/arch/arm/boot/dts/vf610.dtsi
-@@ -140,6 +140,17 @@
- 				clock-names = "pit";
- 			};
- 
-+			pwm0: pwm@40038000 {
-+				compatible = "fsl,vf610-ftm-pwm";
-+				#pwm-cells = <3>;
-+				reg = <0x40038000 0x1000>;
-+				clock-names = "ftm0", "ftm0_fix_sel", "ftm0_ext_sel";
-+				clocks = <&clks VF610_CLK_FTM0>,
-+					<&clks VF610_CLK_FTM0_FIX_SEL>,
-+					<&clks VF610_CLK_FTM0_EXT_SEL>;
-+				status = "disabled";
-+			};
-+
- 			wdog@4003e000 {
- 				compatible = "fsl,vf610-wdt", "fsl,imx21-wdt";
- 				reg = <0x4003e000 0x1000>;
-@@ -270,16 +281,86 @@
- 				};
- 
- 				pwm0 {
--					pinctrl_pwm0_1: pwm0grp_1 {
-+					pinctrl_pwm0_ch0_active: pwm0grp_ch0_active {
- 						fsl,pins = <
- 						VF610_PAD_PTB0__FTM0_CH0	0x1582
-+						>;
-+					};
-+					pinctrl_pwm0_ch0_idle: pwm0grp_ch0_idle {
-+						fsl,pins = <
-+						VF610_PAD_PTB0__FTM0_CH0	0x0000
-+						>;
-+					};
-+					pinctrl_pwm0_ch1_active: pwm0grp_ch1_active {
-+						fsl,pins = <
- 						VF610_PAD_PTB1__FTM0_CH1	0x1582
-+						>;
-+					};
-+					pinctrl_pwm0_ch1_idle: pwm0grp_ch1_idle {
-+						fsl,pins = <
-+						VF610_PAD_PTB1__FTM0_CH1	0x0000
-+						>;
-+					};
-+					pinctrl_pwm0_ch2_active: pwm0grp_ch2_active {
-+						fsl,pins = <
- 						VF610_PAD_PTB2__FTM0_CH2	0x1582
-+						>;
-+					};
-+					pinctrl_pwm0_ch2_idle: pwm0grp_ch2_idle {
-+						fsl,pins = <
-+						VF610_PAD_PTB2__FTM0_CH2	0x0000
-+						>;
-+					};
-+					pinctrl_pwm0_ch3_active: pwm0grp_ch3_active {
-+						fsl,pins = <
- 						VF610_PAD_PTB3__FTM0_CH3	0x1582
-+						>;
-+					};
-+					pinctrl_pwm0_ch3_idle: pwm0grp_ch3_idle {
-+						fsl,pins = <
-+						VF610_PAD_PTB3__FTM0_CH3	0x0000
-+						>;
-+					};
-+					pinctrl_pwm0_ch4_active: pwm0grp_ch4_active {
-+						fsl,pins = <
-+						VF610_PAD_PTB4__FTM0_CH4	0x1582
-+						>;
-+					};
-+					pinctrl_pwm0_ch4_idle: pwm0grp_ch4_idle {
-+						fsl,pins = <
-+						VF610_PAD_PTB4__FTM0_CH4	0x0000
-+						>;
-+					};
-+					pinctrl_pwm0_ch5_active: pwm0grp_ch5_active {
-+						fsl,pins = <
-+						VF610_PAD_PTB5__FTM0_CH5	0x1582
-+						>;
-+					};
-+					pinctrl_pwm0_ch5_idle: pwm0grp_ch5_idle {
-+						fsl,pins = <
-+						VF610_PAD_PTB5__FTM0_CH5	0x0000
-+						>;
-+					};
-+					pinctrl_pwm0_ch6_active: pwm0grp_ch6_active {
-+						fsl,pins = <
- 						VF610_PAD_PTB6__FTM0_CH6	0x1582
-+						>;
-+					};
-+					pinctrl_pwm0_ch6_idle: pwm0grp_ch6_idle {
-+						fsl,pins = <
-+						VF610_PAD_PTB6__FTM0_CH6	0x0000
-+						>;
-+					};
-+					pinctrl_pwm0_ch7_active: pwm0grp_ch7_active {
-+						fsl,pins = <
- 						VF610_PAD_PTB7__FTM0_CH7	0x1582
- 						>;
- 					};
-+					pinctrl_pwm0_ch7_idle: pwm0grp_ch7_idle {
-+						fsl,pins = <
-+						VF610_PAD_PTB7__FTM0_CH7	0x0000
-+						>;
-+					};
- 				};
- 
- 				qspi0 {
--- 
-1.8.0
+> > Regards,
+> > Ivan
+> >
+> >> Thanks,
+> >> David
+> >>
+> >
+> 
+> 
+> Thanks,
+> Rohit Vaswani
+> 
