@@ -1,80 +1,57 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [RFC PATCH 1/4] DRIVERS: IRQCHIP: Add crossbar irqchip driver
-Date: Thu, 12 Sep 2013 21:42:03 -0400
-Message-ID: <52326D6B.2010003@ti.com>
-References: <1379000351-15672-1-git-send-email-r.sricharan@ti.com> <1379000351-15672-2-git-send-email-r.sricharan@ti.com> <alpine.DEB.2.02.1309122201530.4089@ionos.tec.linutronix.de> <523228B5.5070507@ti.com> <alpine.DEB.2.02.1309122335440.4089@ionos.tec.linutronix.de> <5232457A.8080709@ti.com> <alpine.DEB.2.02.1309130138550.4089@ionos.tec.linutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1309130138550.4089@ionos.tec.linutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Sricharan R <r.sricharan@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
+Date: Thu, 12 Sep 2013 21:05:52 -0500
+Message-ID: <9EA264FE-7621-458D-8333-9340DDBFC4EE@codeaurora.org>
+References: <1379003839-16068-1-git-send-email-galak@codeaurora.org> <CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com> <25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org> <CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com> <3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org> <20130912224737.GA24937@codeaurora.org>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20130912224737.GA24937@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: David Brown <davidb@codeaurora.org>
+Cc: Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 12 September 2013 08:26 PM, Thomas Gleixner wrote:
-> On Thu, 12 Sep 2013, Santosh Shilimkar wrote:
->> On Thursday 12 September 2013 06:22 PM, Thomas Gleixner wrote:
->>> Now the real question is, how that expansion mechanism is supposed to
->>> work. There are two possible scenarios:
->>>
->>> 1) Expand the number of handled interrupts beyond the GIC capacity:
->>>
->>>    That requires a mechanism in CROSSBAR to map several CROSSBAR
->>>    interrupts to a particular GIC interrupt and provide a demux
->>>    mechanism to invoke the shared handlers.
->>>
->> This is not possible in hardware and not supported. Hardware has
->> no notion of muxing multiple IRQ's to generate 1 IRQ or ack etc
->> functionality. Its a simple MUX to tie knots between input and output
->> wires.
-> 
-> It's not a MUX. It's a ROUTING mechanism. That's similar to the
-> mechanisms which are used by MSI[X]. We assign arbitrary interrupt
-> numbers to a device and route them to some underlying limited hardware
-> interrupt controller.
-> 
->>> 2) Provide a mapping mechanism between possibly 250 interrupt numbers
->>>    and a limitation of a total 160 active interrupts by the underlying
->>>    GIC.
->>>
->> This is the need and problem we are trying to solve.
-> 
-> Let me summarize:
-> 
->    - GIC supports up to 160 interrupts
-> 
->    - CROSSBAR supports up to 250 interrupts 
-> 
->    - CROSSBAR routes up to 160 out of 250 interrupts to the GIC ones
-> 
->    - Drivers request a CROSSBAR interrupt number which must be mapped
->      to some arbitrary available GIC irq number
-> 
-Correct.
 
-> So basically the CROSSBAR mechanism is pretty much the same as MSI[X]
-> just in a different flavour and with a different set of semantics and
-> limitations, i.e. poor mans MSI[X] with a new level of bogosity.
-> 
-> So if CROSSBAR is going to be the new fangled SoC MSI[X] long term
-> equivalent then you better provide some infrastructure for that and
-> make the drivers ready to use it. Maybe check with the PCI/MSI folks
-> to share some of the interfaces.
->
-> If that whole thing is another onetime HW designers wet dream, then
-> please go back to the limited but completely functional (Who is going
-> to use more than 160 peripheral interrupts????) device tree model. I
-> really have no interest to support hardware designer brain farts.
-> 
-Thanks for clear NAK for irqchip approach. I should have looped you
-in the discussion where I was also suggesting against the irqchip
-approach. We will try to look at MSI stuff but if its get too
-complicated am going to fall-back to the initial probe based
-approach to achieve the functionality.
+On Sep 12, 2013, at 5:47 PM, David Brown wrote:
 
-Thanks again for clear direction and useful discussion.
+> On Thu, Sep 12, 2013 at 12:55:36PM -0500, Kumar Gala wrote:
+>> 
+>> On Sep 12, 2013, at 12:06 PM, Olof Johansson wrote:
+> 
+>>> My original request to please use a common prefix for your product
+>>> families stands. Please prefix with msm-*, or if you have to, qcom-*
+>>> instead, since you guys can't seem to make your mind up on standard
+>>> prefixes (msm, apq, etc).
+>> 
+>> This is silly, I dont see the reason to go with
+>> qcom-apq<SOC>-<BOARD>.dts and than in the future drop qcom- when we
+>> mostly likely shift to a dir structure.  As engineers we are all too
+>> aware of the lack of sanity in marketing names, but its what we have
+>> so we have to live with it.
+> 
+> At least what we'd decided a year or two ago was to call _everything_
+> with an msm* prefix.  If marketing comes up with cute prefixes for
+> things, we would basically ignore them.  So, under that, it should be
+> an msm8074-dragonboard.  Admittedly, it might be a little confusing
+> with the name of the product having the apq in it, but as others have
+> pointed out, I think there is less confusing than not having a common
+> prefix on our MSM products.
+> 
+> At least so far, there are no chips where apq vs msm actually
+> distinguishes anything.  In fact, a simple "decoder ring" would point
+> out that the 'apq' usually corresponds with the second digit being a
+> zero.  It doesn't help that we've added an 'mpq' prefix as well.
+> 
+> I don't really see how to satisfy all of this other than qcom-apq*, or
+> just continue to use msm*.
 
-Regards,
-Santosh
+
+I think msm has run out of steam, especially as more SoCs come out of Qualcomm that aren't just targeting phones & tablets.
+
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
