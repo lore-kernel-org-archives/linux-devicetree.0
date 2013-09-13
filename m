@@ -1,104 +1,126 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
-Date: Fri, 13 Sep 2013 12:48:22 -0700
-Message-ID: <20130913194822.GA12117@roeck-us.net>
-References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com>
- <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
- <20130913170005.GB5681@roeck-us.net>
- <c6755ff6-104d-40fe-a753-0e165cff1e10@AM1EHSMHS004.ehs.local>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: arm: cpus/cpu nodes bindings
+ updates
+Date: Fri, 13 Sep 2013 15:51:56 -0500
+Message-ID: <52337AEC.9080302@gmail.com>
+References: <1376559743-31848-1-git-send-email-lorenzo.pieralisi@arm.com> <1376559743-31848-2-git-send-email-lorenzo.pieralisi@arm.com> <520CE665.8060907@gmail.com> <20130815152238.GF17839@e102568-lin.cambridge.arm.com> <20130913165708.GC5408@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c6755ff6-104d-40fe-a753-0e165cff1e10@AM1EHSMHS004.ehs.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130913165708.GC5408-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 13, 2013 at 10:26:04AM -0700, S=F6ren Brinkmann wrote:
-> On Fri, Sep 13, 2013 at 10:00:05AM -0700, Guenter Roeck wrote:
-> > On Thu, Sep 12, 2013 at 05:55:37PM -0700, Soren Brinkmann wrote:
-> > > Add a driver for SILabs 570, 571, 598, 599 programmable oscillato=
-rs.
-> > > The devices generate low-jitter clock signals and are reprogramma=
-ble via
-> > > an I2C interface.
-> > >=20
-> > > Cc: Guenter Roeck <linux@roeck-us.net>
-> > > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> > > ---
-[ ... ]
+On 09/13/2013 11:57 AM, Lorenzo Pieralisi wrote:
+> Hi Rob, all,
+> 
+> On Thu, Aug 15, 2013 at 04:22:38PM +0100, Lorenzo Pieralisi wrote:
+>> [adding Andrew, Gregory and Thomas to check the Marvell compatible names]
+>>
+>> On Thu, Aug 15, 2013 at 03:32:05PM +0100, Rob Herring wrote:
+>>> On 08/15/2013 04:42 AM, Lorenzo Pieralisi wrote:
+>>>> In order to extend the current cpu nodes bindings to newer CPUs
+>>>> inclusive of AArch64 and to update support for older ARM CPUs this
+>>>> patch updates device tree documentation for the cpu nodes bindings.
+>>>>
+>>>> Main changes:
+>>>>     - adds 64-bit bindings
+>>>>     - define usage of #address-cells
+>>>>     - defines behaviour on pre and post v7 uniprocessor systems
+>>>>     - adds ARM 11MPcore specific reg property definition
+>>>>
+>>>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/arm/cpus.txt | 424 ++++++++++++++++++++++---
+>>>>  1 file changed, 377 insertions(+), 47 deletions(-)
+>>>>
+>>>
+>>> The binding looks mostly fine to me.
+> 
+> These bindings have still not received an ACK, and need review by
+> Marvell guys in copy for the new compatible strings below.
 
-> > > +	/* Applying a new frequency can take up to 10ms */
-> > > +	usleep_range(10000, 10001);
-> >=20
-> > One microsecond range doesn't really buy anything besides forcing t=
-he compiler
-> > to generate extra code. Why not just use 10000 ?
-> That's due to checkpatch. I originally had 'msleep(10)' and checkpatc=
-h
-> suggested to use 'usleep_range()'. Then I put
-> 'usleep_range(10000, 10000)' and checkpatch suggested to not use the
-> same values for MIN and MAX, so I added the 1 to the MAX value.
-> If it is considered to be safe and okay to put in MIN=3DMAX=3D10000, =
-I'll
-> change it accordingly.
->=20
-Guess what checkpatch means is to put in something resonable,
-such as maybe (10000, 12000). (10000, 10001) just defeats checkpatch
-which doesn't really provide any value. So either provide a reasonable
-and acceptable range or use a single value.
+If you can't get comment, then leave them out if they are not used
+already. If they are used, then tough shit when they want to change.
 
-[ ... ]
+> 
+> Most importantly, we need to make a decision on the pre v7 uniprocessor
+> systems, where MPIDR/CPUID are non-existent and the reg property is a
+> pure SW enumeration. Current bindings (ie this patch) define
+> 
+> #address-cells = <0>;
+> 
+> for those processors (and there are a number of dts in the kernel with that
+> set-up); Grant and Benjamin had a strong feeling against this choice, I
+> have to make a decision on how to proceed, please let me know.
 
-> > > +	match =3D of_match_node(clk_si570_of_match, client->dev.of_node=
-);
-> > > +	if (!match)
-> > > +		return -EINVAL;
-> >=20
-> > Seems unusual. Is this really needed ? It precludes the driver from=
- being used
-> > in a non-devicetree environment, for example. I would guess that th=
-ere is a match
-> > if client->dev.of_node is set. Otherwise, this code would be needed=
- in every
-> > driver supporting devicetree, and I don't recall seeing that.
-> >=20
-> > > +	ddata =3D match->data;
-> > > +
-> > You should be able to get this information (ie the pointer to si570=
-_device_data)
-> > from id->driver_data. That would be more consistent with other i2c =
-devices.
-> I think I copied this approach from the other clk-si... driver. I'll
-> do some research on your suggestion and change it. Could you point me=
- to
-> an example for your proposal?
->=20
-drivers/hwmon/lm90.c or drivers/hwmon/max6697.c.
+I agree that we should define #address-cells to 1 and reg will be simply
+0,1,2,etc. in this case.
 
-> > > +
-> > > +	if (of_property_read_u32(client->dev.of_node, "factory-fout",
-> > > +				&factory_fout)) {
-> > > +		dev_warn(&client->dev,
-> > > +			"DTS does not contain factory-fout, using default\n");
-> >=20
-> > Is that really worth a warning ?
-> My understanding is, that the default output frequency is part-specif=
-ic
-> and required to calculate the frequency of the internal crystal. Henc=
-e,
-> if you do not provide the correct default output frequency for your p=
-art, all
-> frequencies generated by this driver will be off, unless the here use=
-d
-> default matches your part. Please correct me if I'm wrong, otherwise,=
- I
-> think it's worth a warning.
->=20
-Maybe the property should be mandatory ?
+This change and fixing the example as I pointed out are what I was
+waiting to see.
 
-Thanks,
-Guenter
+Rob
+
+> 
+> Comments welcome.
+> 
+> Lorenzo
+> 
+>>>
+>>> [snip]
+>>>
+>>>> +			    "faraday,fa526"
+>>>> +			    "intel,sa110"
+>>>> +			    "intel,sa1100"
+>>>> +			    "marvell,feroceon"
+>>>> +			    "marvell,mohawk"
+>>>> +			    "marvell,pj4"
+>>>> +			    "marvell,sheeva-v7"
+>>>> +			    "marvell,xsc3"
+>>>> +			    "marvell,xscale"
+>>>
+>>> Better make sure the Marvell folks are happy with these. We don't need
+>>> another rename here. I'm too annoyed with all the renames to pay attention.
+>>
+>> Ok, I will verify that, I copied maintainers in.
+>>
+>> On a side note I have just noticed that last cycle some dts were merged in the
+>> kernel with cpu nodes that are not compliant (not picking on anyone,
+>> eg am4372.dtsi).
+>> Please prevent this from happening from now onwards, really please.
+>>
+>>>> +
+>>>> +Example 4 (ARM Cortex-A57 64-bit system running OS in AArch64):
+>>>> +
+>>>
+>>> Going back to my comments that the dtb can't be dependent on the OS,
+>>> these 2 examples don't make sense.
+>>
+>> Gah, my bad sorry, I missed the examples while removing dependency on the OS
+>> from the bindings.
+>>
+>>>> +
+>>>> +Example 5 (ARM Cortex-A57 64-bit system running OS in AArch32):
+>>>
+>>> This example should be removed.
+>>
+>> Yes, consider it done, see above.
+>>
+>> Thanks,
+>> Lorenzo
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
