@@ -1,72 +1,124 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] Documentation: DT: arm: define CPU topology bindings
-Date: Fri, 13 Sep 2013 16:07:11 -0500
-Message-ID: <52337E7F.9010802@gmail.com>
-References: <1376559743-31848-1-git-send-email-lorenzo.pieralisi@arm.com> <1376559743-31848-3-git-send-email-lorenzo.pieralisi@arm.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
+Date: Fri, 13 Sep 2013 14:14:43 -0700
+Message-ID: <20130913211443.GA9511@roeck-us.net>
+References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
+ <20130913170005.GB5681@roeck-us.net>
+ <c6755ff6-104d-40fe-a753-0e165cff1e10@AM1EHSMHS004.ehs.local>
+ <20130913194822.GA12117@roeck-us.net>
+ <4b7029c7-8617-4c3d-9544-4245293b77f1@CO9EHSMHS014.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1376559743-31848-3-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <dave.martin-5wv7dgnIgG8@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4b7029c7-8617-4c3d-9544-4245293b77f1@CO9EHSMHS014.ehs.local>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/15/2013 04:42 AM, Lorenzo Pieralisi wrote:
-> The advent of multi-cluster ARM systems requires a mechanism to describe
-> how in hierarchical terms CPUs are connected in ARM SoCs so that the kernel
-> can initialize and map resources like IRQs and memory space to specific
-> group(s) of CPUs.
-> 
-> The CPU topology is made up of multiple hierarchy levels whose bottom
-> layers (aka leaf nodes in device tree syntax) contain links to the HW
-> CPUs in the system.
-> 
-> The topology bindings are generic for both 32-bit and 64-bit systems and
-> lay the groundwork on top of which affinity schemes can be built.
+On Fri, Sep 13, 2013 at 02:05:49PM -0700, S=F6ren Brinkmann wrote:
+> On Fri, Sep 13, 2013 at 12:48:22PM -0700, Guenter Roeck wrote:
+> > On Fri, Sep 13, 2013 at 10:26:04AM -0700, S=F6ren Brinkmann wrote:
+> > > On Fri, Sep 13, 2013 at 10:00:05AM -0700, Guenter Roeck wrote:
+> > > > On Thu, Sep 12, 2013 at 05:55:37PM -0700, Soren Brinkmann wrote=
+:
+> > > > > Add a driver for SILabs 570, 571, 598, 599 programmable oscil=
+lators.
+> > > > > The devices generate low-jitter clock signals and are reprogr=
+ammable via
+> > > > > an I2C interface.
+> > > > >=20
+> > > > > Cc: Guenter Roeck <linux@roeck-us.net>
+> > > > > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> > > > > ---
+> > [ ... ]
+> >=20
+> > > > > +	/* Applying a new frequency can take up to 10ms */
+> > > > > +	usleep_range(10000, 10001);
+> > > >=20
+> > > > One microsecond range doesn't really buy anything besides forci=
+ng the compiler
+> > > > to generate extra code. Why not just use 10000 ?
+> > > That's due to checkpatch. I originally had 'msleep(10)' and check=
+patch
+> > > suggested to use 'usleep_range()'. Then I put
+> > > 'usleep_range(10000, 10000)' and checkpatch suggested to not use =
+the
+> > > same values for MIN and MAX, so I added the 1 to the MAX value.
+> > > If it is considered to be safe and okay to put in MIN=3DMAX=3D100=
+00, I'll
+> > > change it accordingly.
+> > >=20
+> > Guess what checkpatch means is to put in something resonable,
+> > such as maybe (10000, 12000). (10000, 10001) just defeats checkpatc=
+h
+> > which doesn't really provide any value. So either provide a reasona=
+ble
+> > and acceptable range or use a single value.
+> All right. I'll make it 10000 then, for MIN and MAX.
+>=20
+> >=20
+> > [ ... ]
+> >=20
+> > > > > +	match =3D of_match_node(clk_si570_of_match, client->dev.of_=
+node);
+> > > > > +	if (!match)
+> > > > > +		return -EINVAL;
+> > > >=20
+> > > > Seems unusual. Is this really needed ? It precludes the driver =
+from being used
+> > > > in a non-devicetree environment, for example. I would guess tha=
+t there is a match
+> > > > if client->dev.of_node is set. Otherwise, this code would be ne=
+eded in every
+> > > > driver supporting devicetree, and I don't recall seeing that.
+> > > >=20
+> > > > > +	ddata =3D match->data;
+> > > > > +
+> > > > You should be able to get this information (ie the pointer to s=
+i570_device_data)
+> > > > from id->driver_data. That would be more consistent with other =
+i2c devices.
+> > > I think I copied this approach from the other clk-si... driver. I=
+'ll
+> > > do some research on your suggestion and change it. Could you poin=
+t me to
+> > > an example for your proposal?
+> > >=20
+> > drivers/hwmon/lm90.c or drivers/hwmon/max6697.c.
+> Thanks.
+>=20
+> >=20
+> > > > > +
+> > > > > +	if (of_property_read_u32(client->dev.of_node, "factory-fout=
+",
+> > > > > +				&factory_fout)) {
+> > > > > +		dev_warn(&client->dev,
+> > > > > +			"DTS does not contain factory-fout, using default\n");
+> > > >=20
+> > > > Is that really worth a warning ?
+> > > My understanding is, that the default output frequency is part-sp=
+ecific
+> > > and required to calculate the frequency of the internal crystal. =
+Hence,
+> > > if you do not provide the correct default output frequency for yo=
+ur part, all
+> > > frequencies generated by this driver will be off, unless the here=
+ used
+> > > default matches your part. Please correct me if I'm wrong, otherw=
+ise, I
+> > > think it's worth a warning.
+> > >=20
+> > Maybe the property should be mandatory ?
+> It's actually listed as required property in the documentation. I'll
+> make it mandatory in the code as well and let probe() fail if it's no=
+t
+> provided.
+>=20
+Ok.
 
-By affinity schemes, you mean further bindings? Do we need this binding
-until that point?
-
-As is, I don't have much comment.
-
-[snip]
-
-> +Example 3 (ARM 32-bit, cortex-a8 single core):
-> +
-> +cpus {
-> +	#size-cells = <0>;
-> +	#address-cells = <1>;
-> +
-> +	cpu-map {
-> +		cluster0 {
-> +			core0 {
-> +				cpu = <&CPU0>;
-> +			};
-> +		};
-> +	};
-
-This example seems utterly pointless. I think we should be specific that
-single core does not contain a cpu-map. I suppose we could have a
-threaded, single core case, but let's address that if we ever do.
-
-Rob
-
-> +
-> +	CPU0: cpu@0 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a8";
-> +		reg = <0x0>;
-> +	};
-> +};
-> +
-> +===============================================================================
-> +[1] ARM Linux kernel documentation
-> +    Documentation/devicetree/bindings/arm/cpus.txt
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Guenter
