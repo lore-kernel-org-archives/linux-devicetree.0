@@ -1,728 +1,391 @@
-From: Guenter Roeck <linux@roeck-us.net>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
 Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
-Date: Fri, 13 Sep 2013 10:00:05 -0700
-Message-ID: <20130913170005.GB5681@roeck-us.net>
+Date: Fri, 13 Sep 2013 10:26:04 -0700
+Message-ID: <c6755ff6-104d-40fe-a753-0e165cff1e10@AM1EHSMHS004.ehs.local>
 References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com>
  <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
+ <20130913170005.GB5681@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
+In-Reply-To: <20130913170005.GB5681@roeck-us.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Hyun Kwon <hyunk@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 05:55:37PM -0700, Soren Brinkmann wrote:
-> Add a driver for SILabs 570, 571, 598, 599 programmable oscillators.
-> The devices generate low-jitter clock signals and are reprogrammable =
-via
-> an I2C interface.
->=20
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> ---
->  .../devicetree/bindings/clock/silabs,si570.txt     |  31 ++
->  drivers/clk/Kconfig                                |  10 +
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/clk-si570.c                            | 546 +++++++++++=
-++++++++++
->  4 files changed, 588 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/silabs,si=
-570.txt
->  create mode 100644 drivers/clk/clk-si570.c
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/silabs,si570.txt=
- b/Documentation/devicetree/bindings/clock/silabs,si570.txt
-> new file mode 100644
-> index 0000000..099f0ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/silabs,si570.txt
-> @@ -0,0 +1,31 @@
-> +Binding for Silicon Labs 570, 571, 598 and 599  programmable
-> +I2C clock generators.
-> +
-> +Reference
-> +This binding uses the common clock binding[1]. Details about the dev=
-ices can be
-> +found in the data sheets[2][3].
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +[2] Si57x Data Sheet
-> +    http://www.silabs.com/Support%20Documents/TechnicalDocs/si570.pd=
-f
-> +[3] Si59x Data Sheet
-> +    http://www.silabs.com/Support%20Documents/TechnicalDocs/si598-99=
-=2Epdf
-> +
-> +Required properties:
-> + - compatible: Shall be one of "silabs,si57x", "silabs,si59x".
-
-This should probably explicitly list all supported devices, not "x".
-After all, there might at some point be an incompatible device which
-still matches the "x".
-
-> + - reg: I2C device address.
-> + - #clock-cells: From common clock bindings: Shall be 0.
-> + - factory-fout: Factory set default frequency
-> +
-> +Optional properties:
-> + - initial-fout: Initial output frequency to set during probe
-> + - temperature-stability-7ppm: Indicate a device with a temperature =
-stability
-> +			       of 7ppm
-> +
-> +Example:
-> +	si570: clock-generator@5d {
-> +		#clock-cells =3D <0>;
-> +		compatible =3D "silabs,si570";
-> +		reg =3D <0x5d>;
-> +		factory-fout =3D <156250000>;
-> +	};
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 279407a..f5afabc 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -64,6 +64,16 @@ config COMMON_CLK_SI5351
->  	  This driver supports Silicon Labs 5351A/B/C programmable clock
->  	  generators.
-> =20
-> +config COMMON_CLK_SI570
-> +	tristate "Clock driver for SiLabs 57x/59x"
-
-Better state something like "SiLabs Si570 and compatible chips"
-
-> +	depends on I2C
-> +	depends on OF
-> +	select REGMAP_I2C
-> +	help
-> +	---help---
-> +	  This driver supports Silicon Labs 570/571/598/599 programmable
-> +	  clock generators.
-> +
->  config COMMON_CLK_S2MPS11
->  	tristate "Clock driver for S2MPS11 MFD"
->  	depends on MFD_SEC_CORE
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 7b11106..c0e94b3 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -40,6 +40,7 @@ obj-$(CONFIG_COMMON_CLK_AXI_CLKGEN) +=3D clk-axi-cl=
-kgen.o
->  obj-$(CONFIG_COMMON_CLK_WM831X) +=3D clk-wm831x.o
->  obj-$(CONFIG_COMMON_CLK_MAX77686) +=3D clk-max77686.o
->  obj-$(CONFIG_COMMON_CLK_SI5351) +=3D clk-si5351.o
-> +obj-$(CONFIG_COMMON_CLK_SI570) +=3D clk-si570.o
->  obj-$(CONFIG_COMMON_CLK_S2MPS11) +=3D clk-s2mps11.o
->  obj-$(CONFIG_CLK_TWL6040)	+=3D clk-twl6040.o
->  obj-$(CONFIG_CLK_PPC_CORENET)	+=3D clk-ppc-corenet.o
-> diff --git a/drivers/clk/clk-si570.c b/drivers/clk/clk-si570.c
-> new file mode 100644
-> index 0000000..960d689
-> --- /dev/null
-> +++ b/drivers/clk/clk-si570.c
-> @@ -0,0 +1,546 @@
-> +/*
-> + * Driver for Silicon Labs Si570/Si571 Programmable XO/VCXO
-> + *
-> + * Copyright (C) 2010, 2011 Ericsson AB.
-> + * Copyright (C) 2011 Guenter Roeck.
-> + * Copyright (C) 2011 - 2013 Xilinx Inc.
-> + *
-> + * Author: Guenter Roeck <guenter.roeck@ericsson.com>
-> + *	   S=F6ren Brinkmann <soren.brinkmann@xilinx.com>
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License as published=
- by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/delay.h>
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +/* Si570 registers */
-> +#define SI570_REG_HS_N1		7
-> +#define SI570_REG_N1_RFREQ0	8
-> +#define SI570_REG_RFREQ1	9
-> +#define SI570_REG_RFREQ2	10
-> +#define SI570_REG_RFREQ3	11
-> +#define SI570_REG_RFREQ4	12
-> +#define SI570_REG_CONTROL	135
-> +#define SI570_REG_FREEZE_DCO	137
-> +#define SI570_DIV_OFFSET_7PPM	6
-> +
-> +#define HS_DIV_SHIFT		5
-> +#define HS_DIV_MASK		0xe0
-> +#define HS_DIV_OFFSET		4
-> +#define N1_6_2_MASK		0x1f
-> +#define N1_1_0_MASK		0xc0
-> +#define RFREQ_37_32_MASK	0x3f
-> +
-> +#define SI570_FOUT_FACTORY_DFLT	156250000LL
-> +#define SI598_FOUT_FACTORY_DFLT	10000000LL
-> +
-> +#define SI570_MIN_FREQ		10000000L
-> +#define SI570_MAX_FREQ		1417500000L
-> +#define SI598_MAX_FREQ		525000000L
-> +
-> +#define FDCO_MIN		4850000000LL
-> +#define FDCO_MAX		5670000000LL
-> +
-> +#define SI570_CNTRL_RECALL	(1 << 0)
-> +#define SI570_CNTRL_FREEZE_M	(1 << 5)
-> +#define SI570_CNTRL_NEWFREQ	(1 << 6)
-> +
-> +#define SI570_FREEZE_DCO	(1 << 4)
-> +
-> +/**
-> + * struct clk_si570:
-> + * @hw:	Clock hw struct
-> + * @regmap:	Device's regmap
-> + * @div_offset:	Rgister offset for dividers
-> + * @max_freq:	Maximum frequency for this device
-> + * @fxtal:	Factory xtal frequency
-> + * @n1:		Clock divider N1
-> + * @hs_div:	Clock divider HSDIV
-> + * @rfreq:	Clock multiplier RFREQ
-> + * @frequency:	Current output frequency
-> + * @i2c_client:	I2C client pointer
-> + */
-> +struct clk_si570 {
-> +	struct clk_hw hw;
-> +	struct regmap *regmap;
-> +	unsigned int div_offset;
-> +	u64 max_freq;
-> +	u64 fxtal;
-> +	unsigned int n1;
-> +	unsigned int hs_div;
-> +	u64 rfreq;
-> +	u64 frequency;
-> +	struct i2c_client *i2c_client;
-> +};
-> +#define to_clk_si570(_hw)	container_of(_hw, struct clk_si570, hw)
-> +
-> +/**
-> + * struct si570_device_data:
-> + * @max_freq:	Maximum output frequency
-> + * @default_fout:	Default factory output frequency value
-> + */
-> +struct si570_device_data {
-> +	u64 max_freq;
-> +	u32 default_fout;
-> +};
-> +
-> +static const struct si570_device_data si57x_ddata =3D {
-> +	.max_freq =3D SI570_MAX_FREQ,
-> +	.default_fout =3D SI570_FOUT_FACTORY_DFLT
-> +};
-> +
-> +static const struct si570_device_data si59x_ddata =3D {
-> +	.max_freq =3D SI598_MAX_FREQ,
-> +	.default_fout =3D SI598_FOUT_FACTORY_DFLT
-> +};
-> +
-> +/**
-> + * si570_get_divs() - Read clock dividers from HW
-> + * @data:	Pointer to struct clk_si570
-> + * @rfreq:	Fractional multiplier (output)
-> + * @n1:		Divider N1 (output)
-> + * @hs_div:	Divider HSDIV (output)
-> + * Returns 0 on success, negative errno otherwise.
-> + *
-> + * Retrieve clock dividers and multipliers from the HW.
-> + */
-> +static int si570_get_divs(struct clk_si570 *data, u64 *rfreq,
-> +		unsigned int *n1, unsigned int *hs_div)
-
-I would suggest to align continuation lines with the opening (,
-though that is really up to you (and the maintainer).
-
-> +{
-> +	int err;
-> +	u8 reg[6];
-> +	u64 tmp;
-> +
-> +	err =3D regmap_bulk_read(data->regmap, SI570_REG_HS_N1 + data->div_=
-offset,
-> +			reg, ARRAY_SIZE(reg));
-> +	if (err)
-> +		return err;
-> +
-> +	*hs_div =3D ((reg[0] & HS_DIV_MASK) >> HS_DIV_SHIFT) + HS_DIV_OFFSE=
-T;
-> +	*n1 =3D ((reg[0] & N1_6_2_MASK) << 2) + ((reg[1] & N1_1_0_MASK) >> =
-6) + 1;
-> +	/* Handle invalid cases */
-> +	if (*n1 > 1)
-> +		*n1 &=3D ~1;
-> +
-> +	tmp =3D reg[1] & RFREQ_37_32_MASK;
-> +	tmp =3D (tmp << 8) + reg[2];
-> +	tmp =3D (tmp << 8) + reg[3];
-> +	tmp =3D (tmp << 8) + reg[4];
-> +	tmp =3D (tmp << 8) + reg[5];
-> +	*rfreq =3D tmp;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * si570_get_defaults() - Get default values
-> + * @data:	Driver data structure
-> + * @fout:	Factory frequency output
-> + * Returns 0 on success, negative errno otherwise.
-> + */
-> +static int si570_get_defaults(struct clk_si570 *data, u64 fout)
-> +{
-> +	int err;
-> +	u64 fdco;
-> +
-> +	regmap_write(data->regmap, SI570_REG_CONTROL, SI570_CNTRL_RECALL);
-> +
-> +	err =3D si570_get_divs(data, &data->rfreq, &data->n1, &data->hs_div=
-);
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * Accept optional precision loss to avoid arithmetic overflows.
-> +	 * Acceptable per Silicon Labs Application Note AN334.
-> +	 */
-> +	fdco =3D fout * data->n1 * data->hs_div;
-> +	if (fdco >=3D (1LL << 36))
-> +		data->fxtal =3D div64_u64(fdco << 24, data->rfreq >> 4);
-> +	else
-> +		data->fxtal =3D div64_u64(fdco << 28, data->rfreq);
-> +
-> +	data->frequency =3D fout;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * si570_update_rfreq() - Update clock multiplier
-> + * @data:	Driver data structure
-> + * Passes on regmap_bulk_write() return value.
-> + */
-> +static int si570_update_rfreq(struct clk_si570 *data)
-> +{
-> +	u8 reg[5];
-> +
-> +	reg[0] =3D ((data->n1 - 1) << 6) |
-> +		((data->rfreq >> 32) & RFREQ_37_32_MASK);
-> +	reg[1] =3D (data->rfreq >> 24) & 0xff;
-> +	reg[2] =3D (data->rfreq >> 16) & 0xff;
-> +	reg[3] =3D (data->rfreq >> 8) & 0xff;
-> +	reg[4] =3D data->rfreq & 0xff;
-> +
-> +	return regmap_bulk_write(data->regmap, SI570_REG_N1_RFREQ0 +
-> +			data->div_offset, reg, ARRAY_SIZE(reg));
-> +}
-> +
-> +/**
-> + * si570_calc_divs() - Caluclate clock dividers
-> + * @frequency:	Target frequency
-> + * @data:	Driver data structure
-> + * @out_rfreq:	RFREG fractional multiplier (output)
-> + * @out_n1:	Clock divider N1 (output)
-> + * @out_hs_div:	Clock divider HSDIV (output)
-> + * Returns 0 on success, negative errno otherwise.
-> + *
-> + * Calculate the clock dividers (@out_hs_div, @out_n1) and clock mul=
-tiplier
-> + * (@out_rfreq) for a given target @frequency.
-> + */
-> +static int si570_calc_divs(unsigned long frequency, struct clk_si570=
- *data,
-> +		u64 *out_rfreq, unsigned int *out_n1, unsigned int *out_hs_div)
-> +{
-> +	int i;
-> +	unsigned int n1, hs_div;
-> +	u64 fdco, best_fdco =3D ULLONG_MAX;
-> +	static const uint8_t si570_hs_div_values[] =3D { 11, 9, 7, 6, 5, 4 =
-};
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(si570_hs_div_values); i++) {
-> +		hs_div =3D si570_hs_div_values[i];
-> +		/* Calculate lowest possible value for n1 */
-> +		n1 =3D div_u64(div_u64(FDCO_MIN, hs_div), frequency);
-> +		if (!n1 || (n1 & 1))
-> +			n1++;
-> +		while (n1 <=3D 128) {
-> +			fdco =3D (u64)frequency * (u64)hs_div * (u64)n1;
-> +			if (fdco > FDCO_MAX)
-> +				break;
-> +			if (fdco >=3D FDCO_MIN && fdco < best_fdco) {
-> +				*out_n1 =3D n1;
-> +				*out_hs_div =3D hs_div;
-> +				*out_rfreq =3D div64_u64(fdco << 28, data->fxtal);
-> +				best_fdco =3D fdco;
-> +			}
-> +			n1 +=3D (n1 =3D=3D 1 ? 1 : 2);
-> +		}
-> +	}
-> +
-> +	if (best_fdco =3D=3D ULLONG_MAX)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static unsigned long si570_recalc_rate(struct clk_hw *hw,
-> +		unsigned long parent_rate)
-> +{
-> +	int err;
-> +	u64 rfreq, rate;
-> +	unsigned int n1, hs_div;
-> +	struct clk_si570 *data =3D to_clk_si570(hw);
-> +
-> +	err =3D si570_get_divs(data, &rfreq, &n1, &hs_div);
-> +	if (err) {
-> +		dev_err(&data->i2c_client->dev, "unable to recalc rate\n");
-> +		return data->frequency;
-> +	}
-> +
-> +	rfreq =3D div_u64(rfreq, hs_div * n1);
-> +	rate =3D (data->fxtal * rfreq) >> 28;
-> +
-> +	return rate;
-> +}
-> +
-> +static long si570_round_rate(struct clk_hw *hw, unsigned long rate,
-> +		unsigned long *parent_rate)
-> +{
-> +	int err;
-> +	u64 rfreq;
-> +	unsigned int n1, hs_div;
-> +	struct clk_si570 *data =3D to_clk_si570(hw);
-> +
-> +	if (!rate)
-> +		return 0;
-> +
-> +	if (div64_u64(abs(rate - data->frequency) * 10000LL,
-> +				data->frequency) < 35) {
-> +		rfreq =3D div64_u64((data->rfreq * rate) +
-> +				div64_u64(data->frequency, 2), data->frequency);
-> +		n1 =3D data->n1;
-> +		hs_div =3D data->hs_div;
-> +
-> +	} else {
-> +		err =3D si570_calc_divs(rate, data, &rfreq, &n1, &hs_div);
-> +		if (err) {
-> +			dev_err(&data->i2c_client->dev,
-> +					"unable to round rate\n");
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	return rate;
-> +}
-> +
-> +/**
-> + * si570_set_frequency() - Adjust output frequency
-> + * @data:	Driver data structure
-> + * @frequency:	Target frequency
-> + * Returns 0 on success.
-> + *
-> + * Update output frequency for big frequency changes (> 3,500 ppm).
-> + */
-> +static int si570_set_frequency(struct clk_si570 *data, unsigned long=
- frequency)
-> +{
-> +	int err;
-> +
-> +	err =3D si570_calc_divs(frequency, data, &data->rfreq, &data->n1,
-> +			&data->hs_div);
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * The DCO reg should be accessed with a read-modify-write operatio=
-n
-> +	 * per AN334
-> +	 */
-> +	regmap_write(data->regmap, SI570_REG_FREEZE_DCO, SI570_FREEZE_DCO);
-> +	regmap_write(data->regmap, SI570_REG_HS_N1 + data->div_offset,
-> +				  ((data->hs_div - HS_DIV_OFFSET) <<
-> +				   HS_DIV_SHIFT)
-> +				  | (((data->n1 - 1) >> 2) & N1_6_2_MASK));
-
-This is an example where the alignment to ( would really help.
-
-	regmap_write(data->regmap, SI570_REG_HS_N1 + data->div_offset,
-		     ((data->hs_div - HS_DIV_OFFSET) << HS_DIV_SHIFT)
-		     | (((data->n1 - 1) >> 2) & N1_6_2_MASK));
-
-> +	si570_update_rfreq(data);
-> +	regmap_write(data->regmap, SI570_REG_FREEZE_DCO, 0);
-> +	regmap_write(data->regmap, SI570_REG_CONTROL, SI570_CNTRL_NEWFREQ);
-> +
-> +	/* Applying a new frequency can take up to 10ms */
-> +	usleep_range(10000, 10001);
-
-One microsecond range doesn't really buy anything besides forcing the c=
-ompiler
-to generate extra code. Why not just use 10000 ?
-
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * si570_set_frequency_small() - Adjust output frequency
-> + * @data:	Driver data structure
-> + * @frequency:	Target frequency
-> + * Returns 0 on success.
-> + *
-> + * Update output frequency for small frequency changes (< 3,500 ppm)=
-=2E
-> + */
-> +static int si570_set_frequency_small(struct clk_si570 *data,
-> +				     unsigned long frequency)
-> +{
-> +	/*
-> +	 * This is a re-implementation of DIV_ROUND_CLOSEST
-> +	 * using the div64_u64 function lieu of letting the compiler
-> +	 * insert EABI calls
-> +	 */
-> +	data->rfreq =3D div64_u64((data->rfreq * frequency) +
-> +			div_u64(data->frequency, 2), data->frequency);
-> +	regmap_write(data->regmap, SI570_REG_CONTROL, SI570_CNTRL_FREEZE_M)=
-;
-> +	si570_update_rfreq(data);
-> +	regmap_write(data->regmap, SI570_REG_CONTROL, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int si570_set_rate(struct clk_hw *hw, unsigned long rate,
-> +		unsigned long parent_rate)
-> +{
-> +	struct clk_si570 *data =3D to_clk_si570(hw);
-> +	struct i2c_client *client =3D data->i2c_client;
-> +	int err;
-> +
-> +	if (rate < SI570_MIN_FREQ || rate > data->max_freq) {
-> +		dev_warn(&client->dev,
-> +			"requested frequency %lu Hz is out of range\n", rate);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (div64_u64(abs(rate - data->frequency) * 10000LL,
-> +				data->frequency) < 35)
-> +		err =3D si570_set_frequency_small(data, rate);
-> +	else
-> +		err =3D si570_set_frequency(data, rate);
-> +
-> +	if (err)
-> +		return err;
-> +
-> +	data->frequency =3D rate;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct clk_ops si570_clk_ops =3D {
-> +	.recalc_rate =3D si570_recalc_rate,
-> +	.round_rate =3D si570_round_rate,
-> +	.set_rate =3D si570_set_rate,
-> +};
-> +
-> +static const struct of_device_id clk_si570_of_match[] =3D {
-> +	{ .compatible =3D "silabs,si57x", .data =3D &si57x_ddata },
-> +	{ .compatible =3D "silabs,si59x", .data =3D &si59x_ddata },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, clk_si570_of_match);
-> +
-> +static bool si570_regmap_is_volatile(struct device *dev, unsigned in=
-t reg)
-> +{
-> +	switch (reg) {
-> +	case 135:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static bool si570_regmap_is_writeable(struct device *dev, unsigned i=
-nt reg)
-> +{
-> +	switch (reg) {
-> +	case 7 ... 18:
-> +	case 135:
-> +	case 137:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static struct regmap_config si570_regmap_config =3D {
-> +	.reg_bits =3D 8,
-> +	.val_bits =3D 8,
-> +	.cache_type =3D REGCACHE_RBTREE,
-> +	.max_register =3D 137,
-> +	.writeable_reg =3D si570_regmap_is_writeable,
-> +	.volatile_reg =3D si570_regmap_is_volatile,
-> +};
-> +
-> +static int si570_probe(struct i2c_client *client,
-> +		const struct i2c_device_id *id)
-> +{
-> +	struct clk_si570 *data;
-> +	struct clk_init_data init;
-> +	struct clk *clk;
-> +	u32 initial_fout, factory_fout;
-> +	int err;
-> +	const struct of_device_id *match;
-> +	const struct si570_device_data *ddata;
-> +
-> +	data =3D devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	match =3D of_match_node(clk_si570_of_match, client->dev.of_node);
-> +	if (!match)
-> +		return -EINVAL;
-
-Seems unusual. Is this really needed ? It precludes the driver from bei=
-ng used
-in a non-devicetree environment, for example. I would guess that there =
-is a match
-if client->dev.of_node is set. Otherwise, this code would be needed in =
-every
-driver supporting devicetree, and I don't recall seeing that.
-
-> +	ddata =3D match->data;
-> +
-You should be able to get this information (ie the pointer to si570_dev=
-ice_data)
-from id->driver_data. That would be more consistent with other i2c devi=
-ces.
-
-> +	init.ops =3D &si570_clk_ops;
-> +	init.flags =3D CLK_IS_ROOT;
-> +	init.num_parents =3D 0;
-> +	data->hw.init =3D &init;
-> +	data->max_freq =3D ddata->max_freq;
-> +	data->i2c_client =3D client;
-> +
-> +	if (of_property_read_bool(client->dev.of_node,
-> +				"temperature-stability-7ppm"))
-> +		data->div_offset =3D SI570_DIV_OFFSET_7PPM;
-> +
-> +	if (of_property_read_string(client->dev.of_node, "clock-output-name=
-s",
-> +			&init.name))
-> +		init.name =3D client->dev.of_node->name;
-> +
-> +	if (of_property_read_u32(client->dev.of_node, "factory-fout",
-> +				&factory_fout)) {
-> +		dev_warn(&client->dev,
-> +			"DTS does not contain factory-fout, using default\n");
-
-Is that really worth a warning ?
-
-> +		factory_fout =3D ddata->default_fout;
-> +	}
-> +
-> +	data->regmap =3D devm_regmap_init_i2c(client, &si570_regmap_config)=
-;
-> +	if (IS_ERR(data->regmap)) {
-> +		dev_err(&client->dev, "failed to allocate register map\n");
-> +		return PTR_ERR(data->regmap);
-> +	}
-> +
-> +	i2c_set_clientdata(client, data);
-> +	err =3D si570_get_defaults(data, factory_fout);
-> +	if (err)
-> +		return err;
-> +
-> +	clk =3D devm_clk_register(&client->dev, &data->hw);
-> +	if (IS_ERR(clk)) {
-> +		dev_err(&client->dev, "clock registration failed\n");
-> +		return PTR_ERR(clk);
-> +	}
-> +	err =3D of_clk_add_provider(client->dev.of_node, of_clk_src_simple_=
-get,
-> +			clk);
-> +	if (err) {
-> +		dev_err(&client->dev, "unable to add clk provider\n");
-> +		return err;
-> +	}
-> +
-> +	/*
-> +	 * Read the requested initial fout from either platform data or the
-> +	 * device tree
-> +	 */
-> +	if (!of_property_read_u32(client->dev.of_node, "initial-fout",
-> +				&initial_fout)) {
-> +		err =3D clk_set_rate(clk, initial_fout);
-> +		if (err)
-> +			dev_warn(&client->dev,
-> +					"unable to set initial output frequency %u: %d\n",
-> +					initial_fout, err);
-> +	}
-> +
-> +	/* Display a message indicating that we've successfully registered =
-*/
-> +	dev_info(&client->dev, "registered, current frequency %llu Hz\n",
-> +			data->frequency);
-> +
-> +	return 0;
-> +}
-> +
-> +static int si570_remove(struct i2c_client *client)
-> +{
-> +	struct clk_si570 *data =3D i2c_get_clientdata(client);
-> +
-> +	of_clk_del_provider(client->dev.of_node);
-> +	clk_unregister(data->hw.clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct i2c_device_id si570_id[] =3D {
-> +	{ "si570", 0 },
-> +	{ "si571", 0 },
-> +	{ "si598", 1 },
-> +	{ "si599", 1 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, si570_id);
-> +
-> +static struct i2c_driver si570_driver =3D {
-> +	.driver =3D {
-> +		.name	=3D "si570",
-> +		.of_match_table =3D of_match_ptr(clk_si570_of_match),
-> +	},
-> +	.probe		=3D si570_probe,
-> +	.remove		=3D si570_remove,
-> +	.id_table	=3D si570_id,
-> +};
-> +module_i2c_driver(si570_driver);
-> +
-> +MODULE_AUTHOR("Guenter Roeck <guenter.roeck@ericsson.com>");
-> +MODULE_AUTHOR("Soeren Brinkmann <soren.brinkmann@xilinx.com");
-> +MODULE_DESCRIPTION("Si570 driver");
-> +MODULE_LICENSE("GPL");
-> --=20
-> 1.8.4
->=20
->=20
+T24gRnJpLCBTZXAgMTMsIDIwMTMgYXQgMTA6MDA6MDVBTSAtMDcwMCwgR3VlbnRlciBSb2VjayB3
+cm90ZToKPiBPbiBUaHUsIFNlcCAxMiwgMjAxMyBhdCAwNTo1NTozN1BNIC0wNzAwLCBTb3JlbiBC
+cmlua21hbm4gd3JvdGU6Cj4gPiBBZGQgYSBkcml2ZXIgZm9yIFNJTGFicyA1NzAsIDU3MSwgNTk4
+LCA1OTkgcHJvZ3JhbW1hYmxlIG9zY2lsbGF0b3JzLgo+ID4gVGhlIGRldmljZXMgZ2VuZXJhdGUg
+bG93LWppdHRlciBjbG9jayBzaWduYWxzIGFuZCBhcmUgcmVwcm9ncmFtbWFibGUgdmlhCj4gPiBh
+biBJMkMgaW50ZXJmYWNlLgo+ID4gCj4gPiBDYzogR3VlbnRlciBSb2VjayA8bGludXhAcm9lY2st
+dXMubmV0Pgo+ID4gU2lnbmVkLW9mZi1ieTogU29yZW4gQnJpbmttYW5uIDxzb3Jlbi5icmlua21h
+bm5AeGlsaW54LmNvbT4KPiA+IC0tLQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nr
+L3NpbGFicyxzaTU3MC50eHQgICAgIHwgIDMxICsrCj4gPiAgZHJpdmVycy9jbGsvS2NvbmZpZyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTAgKwo+ID4gIGRyaXZlcnMvY2xrL01h
+a2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKPiA+ICBkcml2ZXJz
+L2Nsay9jbGstc2k1NzAuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDU0NiArKysrKysr
+KysrKysrKysrKysrKysKPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDU4OCBpbnNlcnRpb25zKCspCj4g
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9j
+bG9jay9zaWxhYnMsc2k1NzAudHh0Cj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xr
+L2Nsay1zaTU3MC5jCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvY2xvY2svc2lsYWJzLHNpNTcwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9jbG9jay9zaWxhYnMsc2k1NzAudHh0Cj4gPiBuZXcgZmlsZSBtb2RlIDEw
+MDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uMDk5ZjBlZQo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3NpbGFicyxzaTU3MC50
+eHQKPiA+IEBAIC0wLDAgKzEsMzEgQEAKPiA+ICtCaW5kaW5nIGZvciBTaWxpY29uIExhYnMgNTcw
+LCA1NzEsIDU5OCBhbmQgNTk5ICBwcm9ncmFtbWFibGUKPiA+ICtJMkMgY2xvY2sgZ2VuZXJhdG9y
+cy4KPiA+ICsKPiA+ICtSZWZlcmVuY2UKPiA+ICtUaGlzIGJpbmRpbmcgdXNlcyB0aGUgY29tbW9u
+IGNsb2NrIGJpbmRpbmdbMV0uIERldGFpbHMgYWJvdXQgdGhlIGRldmljZXMgY2FuIGJlCj4gPiAr
+Zm91bmQgaW4gdGhlIGRhdGEgc2hlZXRzWzJdWzNdLgo+ID4gKwo+ID4gK1sxXSBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0Cj4gPiArWzJd
+IFNpNTd4IERhdGEgU2hlZXQKPiA+ICsgICAgaHR0cDovL3d3dy5zaWxhYnMuY29tL1N1cHBvcnQl
+MjBEb2N1bWVudHMvVGVjaG5pY2FsRG9jcy9zaTU3MC5wZGYKPiA+ICtbM10gU2k1OXggRGF0YSBT
+aGVldAo+ID4gKyAgICBodHRwOi8vd3d3LnNpbGFicy5jb20vU3VwcG9ydCUyMERvY3VtZW50cy9U
+ZWNobmljYWxEb2NzL3NpNTk4LTk5LnBkZgo+ID4gKwo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
+Cj4gPiArIC0gY29tcGF0aWJsZTogU2hhbGwgYmUgb25lIG9mICJzaWxhYnMsc2k1N3giLCAic2ls
+YWJzLHNpNTl4Ii4KPiAKPiBUaGlzIHNob3VsZCBwcm9iYWJseSBleHBsaWNpdGx5IGxpc3QgYWxs
+IHN1cHBvcnRlZCBkZXZpY2VzLCBub3QgIngiLgo+IEFmdGVyIGFsbCwgdGhlcmUgbWlnaHQgYXQg
+c29tZSBwb2ludCBiZSBhbiBpbmNvbXBhdGlibGUgZGV2aWNlIHdoaWNoCj4gc3RpbGwgbWF0Y2hl
+cyB0aGUgIngiLgpPa2F5LCBJJ2xsIG1ha2UgaXQgZXhwbGljaXRseSBsaXN0IDU3MCwgNTcxLCA1
+OTggYW5kIDU5OS4KCj4gCj4gPiArIC0gcmVnOiBJMkMgZGV2aWNlIGFkZHJlc3MuCj4gPiArIC0g
+I2Nsb2NrLWNlbGxzOiBGcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nczogU2hhbGwgYmUgMC4KPiA+
+ICsgLSBmYWN0b3J5LWZvdXQ6IEZhY3Rvcnkgc2V0IGRlZmF1bHQgZnJlcXVlbmN5Cj4gPiArCj4g
+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICsgLSBpbml0aWFsLWZvdXQ6IEluaXRpYWwgb3V0
+cHV0IGZyZXF1ZW5jeSB0byBzZXQgZHVyaW5nIHByb2JlCj4gPiArIC0gdGVtcGVyYXR1cmUtc3Rh
+YmlsaXR5LTdwcG06IEluZGljYXRlIGEgZGV2aWNlIHdpdGggYSB0ZW1wZXJhdHVyZSBzdGFiaWxp
+dHkKPiA+ICsJCQkgICAgICAgb2YgN3BwbQo+ID4gKwo+ID4gK0V4YW1wbGU6Cj4gPiArCXNpNTcw
+OiBjbG9jay1nZW5lcmF0b3JANWQgewo+ID4gKwkJI2Nsb2NrLWNlbGxzID0gPDA+Owo+ID4gKwkJ
+Y29tcGF0aWJsZSA9ICJzaWxhYnMsc2k1NzAiOwo+ID4gKwkJcmVnID0gPDB4NWQ+Owo+ID4gKwkJ
+ZmFjdG9yeS1mb3V0ID0gPDE1NjI1MDAwMD47Cj4gPiArCX07Cj4gPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9jbGsvS2NvbmZpZyBiL2RyaXZlcnMvY2xrL0tjb25maWcKPiA+IGluZGV4IDI3OTQwN2Eu
+LmY1YWZhYmMgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2Nsay9LY29uZmlnCj4gPiArKysgYi9k
+cml2ZXJzL2Nsay9LY29uZmlnCj4gPiBAQCAtNjQsNiArNjQsMTYgQEAgY29uZmlnIENPTU1PTl9D
+TEtfU0k1MzUxCj4gPiAgCSAgVGhpcyBkcml2ZXIgc3VwcG9ydHMgU2lsaWNvbiBMYWJzIDUzNTFB
+L0IvQyBwcm9ncmFtbWFibGUgY2xvY2sKPiA+ICAJICBnZW5lcmF0b3JzLgo+ID4gIAo+ID4gK2Nv
+bmZpZyBDT01NT05fQ0xLX1NJNTcwCj4gPiArCXRyaXN0YXRlICJDbG9jayBkcml2ZXIgZm9yIFNp
+TGFicyA1N3gvNTl4Igo+IAo+IEJldHRlciBzdGF0ZSBzb21ldGhpbmcgbGlrZSAiU2lMYWJzIFNp
+NTcwIGFuZCBjb21wYXRpYmxlIGNoaXBzIgpTb3VuZHMgZ29vZCB0byBtZS4gSSdsbCBjaGFuZ2Ug
+dGhpcy4KCj4gCj4gPiArCWRlcGVuZHMgb24gSTJDCj4gPiArCWRlcGVuZHMgb24gT0YKPiA+ICsJ
+c2VsZWN0IFJFR01BUF9JMkMKPiA+ICsJaGVscAo+ID4gKwktLS1oZWxwLS0tCj4gPiArCSAgVGhp
+cyBkcml2ZXIgc3VwcG9ydHMgU2lsaWNvbiBMYWJzIDU3MC81NzEvNTk4LzU5OSBwcm9ncmFtbWFi
+bGUKPiA+ICsJICBjbG9jayBnZW5lcmF0b3JzLgo+ID4gKwo+ID4gIGNvbmZpZyBDT01NT05fQ0xL
+X1MyTVBTMTEKPiA+ICAJdHJpc3RhdGUgIkNsb2NrIGRyaXZlciBmb3IgUzJNUFMxMSBNRkQiCj4g
+PiAgCWRlcGVuZHMgb24gTUZEX1NFQ19DT1JFCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsv
+TWFrZWZpbGUgYi9kcml2ZXJzL2Nsay9NYWtlZmlsZQo+ID4gaW5kZXggN2IxMTEwNi4uYzBlOTRi
+MyAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvY2xrL01ha2VmaWxlCj4gPiArKysgYi9kcml2ZXJz
+L2Nsay9NYWtlZmlsZQo+ID4gQEAgLTQwLDYgKzQwLDcgQEAgb2JqLSQoQ09ORklHX0NPTU1PTl9D
+TEtfQVhJX0NMS0dFTikgKz0gY2xrLWF4aS1jbGtnZW4ubwo+ID4gIG9iai0kKENPTkZJR19DT01N
+T05fQ0xLX1dNODMxWCkgKz0gY2xrLXdtODMxeC5vCj4gPiAgb2JqLSQoQ09ORklHX0NPTU1PTl9D
+TEtfTUFYNzc2ODYpICs9IGNsay1tYXg3NzY4Ni5vCj4gPiAgb2JqLSQoQ09ORklHX0NPTU1PTl9D
+TEtfU0k1MzUxKSArPSBjbGstc2k1MzUxLm8KPiA+ICtvYmotJChDT05GSUdfQ09NTU9OX0NMS19T
+STU3MCkgKz0gY2xrLXNpNTcwLm8KPiA+ICBvYmotJChDT05GSUdfQ09NTU9OX0NMS19TMk1QUzEx
+KSArPSBjbGstczJtcHMxMS5vCj4gPiAgb2JqLSQoQ09ORklHX0NMS19UV0w2MDQwKQkrPSBjbGst
+dHdsNjA0MC5vCj4gPiAgb2JqLSQoQ09ORklHX0NMS19QUENfQ09SRU5FVCkJKz0gY2xrLXBwYy1j
+b3JlbmV0Lm8KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9jbGstc2k1NzAuYyBiL2RyaXZl
+cnMvY2xrL2Nsay1zaTU3MC5jCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAw
+MDAwMC4uOTYwZDY4OQo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIvZHJpdmVycy9jbGsvY2xr
+LXNpNTcwLmMKPiA+IEBAIC0wLDAgKzEsNTQ2IEBACj4gPiArLyoKPiA+ICsgKiBEcml2ZXIgZm9y
+IFNpbGljb24gTGFicyBTaTU3MC9TaTU3MSBQcm9ncmFtbWFibGUgWE8vVkNYTwo+ID4gKyAqCj4g
+PiArICogQ29weXJpZ2h0IChDKSAyMDEwLCAyMDExIEVyaWNzc29uIEFCLgo+ID4gKyAqIENvcHly
+aWdodCAoQykgMjAxMSBHdWVudGVyIFJvZWNrLgo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxMSAt
+IDIwMTMgWGlsaW54IEluYy4KPiA+ICsgKgo+ID4gKyAqIEF1dGhvcjogR3VlbnRlciBSb2VjayA8
+Z3VlbnRlci5yb2Vja0Blcmljc3Nvbi5jb20+Cj4gPiArICoJICAgU8O2cmVuIEJyaW5rbWFubiA8
+c29yZW4uYnJpbmttYW5uQHhpbGlueC5jb20+Cj4gPiArICoKPiA+ICsgKiBUaGlzIHByb2dyYW0g
+aXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQo+
+ID4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vu
+c2UgYXMgcHVibGlzaGVkIGJ5Cj4gPiArICogdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsg
+ZWl0aGVyIHZlcnNpb24gMiBvZiB0aGUgTGljZW5zZSwgb3IKPiA+ICsgKiAoYXQgeW91ciBvcHRp
+b24pIGFueSBsYXRlciB2ZXJzaW9uLgo+ID4gKyAqCj4gPiArICogVGhpcyBwcm9ncmFtIGlzIGRp
+c3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2lsbCBiZSB1c2VmdWwsCj4gPiArICogYnV0
+IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkg
+b2YKPiA+ICsgKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBV
+UlBPU0UuICBTZWUgdGhlCj4gPiArICogR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1v
+cmUgZGV0YWlscy4KPiA+ICsgKi8KPiA+ICsKPiA+ICsjaW5jbHVkZSA8bGludXgvY2xrLXByb3Zp
+ZGVyLmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4
+L21vZHVsZS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9pMmMuaD4KPiA+ICsjaW5jbHVkZSA8bGlu
+dXgvcmVnbWFwLmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KPiA+ICsKPiA+ICsvKiBT
+aTU3MCByZWdpc3RlcnMgKi8KPiA+ICsjZGVmaW5lIFNJNTcwX1JFR19IU19OMQkJNwo+ID4gKyNk
+ZWZpbmUgU0k1NzBfUkVHX04xX1JGUkVRMAk4Cj4gPiArI2RlZmluZSBTSTU3MF9SRUdfUkZSRVEx
+CTkKPiA+ICsjZGVmaW5lIFNJNTcwX1JFR19SRlJFUTIJMTAKPiA+ICsjZGVmaW5lIFNJNTcwX1JF
+R19SRlJFUTMJMTEKPiA+ICsjZGVmaW5lIFNJNTcwX1JFR19SRlJFUTQJMTIKPiA+ICsjZGVmaW5l
+IFNJNTcwX1JFR19DT05UUk9MCTEzNQo+ID4gKyNkZWZpbmUgU0k1NzBfUkVHX0ZSRUVaRV9EQ08J
+MTM3Cj4gPiArI2RlZmluZSBTSTU3MF9ESVZfT0ZGU0VUXzdQUE0JNgo+ID4gKwo+ID4gKyNkZWZp
+bmUgSFNfRElWX1NISUZUCQk1Cj4gPiArI2RlZmluZSBIU19ESVZfTUFTSwkJMHhlMAo+ID4gKyNk
+ZWZpbmUgSFNfRElWX09GRlNFVAkJNAo+ID4gKyNkZWZpbmUgTjFfNl8yX01BU0sJCTB4MWYKPiA+
+ICsjZGVmaW5lIE4xXzFfMF9NQVNLCQkweGMwCj4gPiArI2RlZmluZSBSRlJFUV8zN18zMl9NQVNL
+CTB4M2YKPiA+ICsKPiA+ICsjZGVmaW5lIFNJNTcwX0ZPVVRfRkFDVE9SWV9ERkxUCTE1NjI1MDAw
+MExMCj4gPiArI2RlZmluZSBTSTU5OF9GT1VUX0ZBQ1RPUllfREZMVAkxMDAwMDAwMExMCj4gPiAr
+Cj4gPiArI2RlZmluZSBTSTU3MF9NSU5fRlJFUQkJMTAwMDAwMDBMCj4gPiArI2RlZmluZSBTSTU3
+MF9NQVhfRlJFUQkJMTQxNzUwMDAwMEwKPiA+ICsjZGVmaW5lIFNJNTk4X01BWF9GUkVRCQk1MjUw
+MDAwMDBMCj4gPiArCj4gPiArI2RlZmluZSBGRENPX01JTgkJNDg1MDAwMDAwMExMCj4gPiArI2Rl
+ZmluZSBGRENPX01BWAkJNTY3MDAwMDAwMExMCj4gPiArCj4gPiArI2RlZmluZSBTSTU3MF9DTlRS
+TF9SRUNBTEwJKDEgPDwgMCkKPiA+ICsjZGVmaW5lIFNJNTcwX0NOVFJMX0ZSRUVaRV9NCSgxIDw8
+IDUpCj4gPiArI2RlZmluZSBTSTU3MF9DTlRSTF9ORVdGUkVRCSgxIDw8IDYpCj4gPiArCj4gPiAr
+I2RlZmluZSBTSTU3MF9GUkVFWkVfRENPCSgxIDw8IDQpCj4gPiArCj4gPiArLyoqCj4gPiArICog
+c3RydWN0IGNsa19zaTU3MDoKPiA+ICsgKiBAaHc6CUNsb2NrIGh3IHN0cnVjdAo+ID4gKyAqIEBy
+ZWdtYXA6CURldmljZSdzIHJlZ21hcAo+ID4gKyAqIEBkaXZfb2Zmc2V0OglSZ2lzdGVyIG9mZnNl
+dCBmb3IgZGl2aWRlcnMKPiA+ICsgKiBAbWF4X2ZyZXE6CU1heGltdW0gZnJlcXVlbmN5IGZvciB0
+aGlzIGRldmljZQo+ID4gKyAqIEBmeHRhbDoJRmFjdG9yeSB4dGFsIGZyZXF1ZW5jeQo+ID4gKyAq
+IEBuMToJCUNsb2NrIGRpdmlkZXIgTjEKPiA+ICsgKiBAaHNfZGl2OglDbG9jayBkaXZpZGVyIEhT
+RElWCj4gPiArICogQHJmcmVxOglDbG9jayBtdWx0aXBsaWVyIFJGUkVRCj4gPiArICogQGZyZXF1
+ZW5jeToJQ3VycmVudCBvdXRwdXQgZnJlcXVlbmN5Cj4gPiArICogQGkyY19jbGllbnQ6CUkyQyBj
+bGllbnQgcG9pbnRlcgo+ID4gKyAqLwo+ID4gK3N0cnVjdCBjbGtfc2k1NzAgewo+ID4gKwlzdHJ1
+Y3QgY2xrX2h3IGh3Owo+ID4gKwlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7Cj4gPiArCXVuc2lnbmVk
+IGludCBkaXZfb2Zmc2V0Owo+ID4gKwl1NjQgbWF4X2ZyZXE7Cj4gPiArCXU2NCBmeHRhbDsKPiA+
+ICsJdW5zaWduZWQgaW50IG4xOwo+ID4gKwl1bnNpZ25lZCBpbnQgaHNfZGl2Owo+ID4gKwl1NjQg
+cmZyZXE7Cj4gPiArCXU2NCBmcmVxdWVuY3k7Cj4gPiArCXN0cnVjdCBpMmNfY2xpZW50ICppMmNf
+Y2xpZW50Owo+ID4gK307Cj4gPiArI2RlZmluZSB0b19jbGtfc2k1NzAoX2h3KQljb250YWluZXJf
+b2YoX2h3LCBzdHJ1Y3QgY2xrX3NpNTcwLCBodykKPiA+ICsKPiA+ICsvKioKPiA+ICsgKiBzdHJ1
+Y3Qgc2k1NzBfZGV2aWNlX2RhdGE6Cj4gPiArICogQG1heF9mcmVxOglNYXhpbXVtIG91dHB1dCBm
+cmVxdWVuY3kKPiA+ICsgKiBAZGVmYXVsdF9mb3V0OglEZWZhdWx0IGZhY3Rvcnkgb3V0cHV0IGZy
+ZXF1ZW5jeSB2YWx1ZQo+ID4gKyAqLwo+ID4gK3N0cnVjdCBzaTU3MF9kZXZpY2VfZGF0YSB7Cj4g
+PiArCXU2NCBtYXhfZnJlcTsKPiA+ICsJdTMyIGRlZmF1bHRfZm91dDsKPiA+ICt9Owo+ID4gKwo+
+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc2k1NzBfZGV2aWNlX2RhdGEgc2k1N3hfZGRhdGEgPSB7
+Cj4gPiArCS5tYXhfZnJlcSA9IFNJNTcwX01BWF9GUkVRLAo+ID4gKwkuZGVmYXVsdF9mb3V0ID0g
+U0k1NzBfRk9VVF9GQUNUT1JZX0RGTFQKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBjb25zdCBz
+dHJ1Y3Qgc2k1NzBfZGV2aWNlX2RhdGEgc2k1OXhfZGRhdGEgPSB7Cj4gPiArCS5tYXhfZnJlcSA9
+IFNJNTk4X01BWF9GUkVRLAo+ID4gKwkuZGVmYXVsdF9mb3V0ID0gU0k1OThfRk9VVF9GQUNUT1JZ
+X0RGTFQKPiA+ICt9Owo+ID4gKwo+ID4gKy8qKgo+ID4gKyAqIHNpNTcwX2dldF9kaXZzKCkgLSBS
+ZWFkIGNsb2NrIGRpdmlkZXJzIGZyb20gSFcKPiA+ICsgKiBAZGF0YToJUG9pbnRlciB0byBzdHJ1
+Y3QgY2xrX3NpNTcwCj4gPiArICogQHJmcmVxOglGcmFjdGlvbmFsIG11bHRpcGxpZXIgKG91dHB1
+dCkKPiA+ICsgKiBAbjE6CQlEaXZpZGVyIE4xIChvdXRwdXQpCj4gPiArICogQGhzX2RpdjoJRGl2
+aWRlciBIU0RJViAob3V0cHV0KQo+ID4gKyAqIFJldHVybnMgMCBvbiBzdWNjZXNzLCBuZWdhdGl2
+ZSBlcnJubyBvdGhlcndpc2UuCj4gPiArICoKPiA+ICsgKiBSZXRyaWV2ZSBjbG9jayBkaXZpZGVy
+cyBhbmQgbXVsdGlwbGllcnMgZnJvbSB0aGUgSFcuCj4gPiArICovCj4gPiArc3RhdGljIGludCBz
+aTU3MF9nZXRfZGl2cyhzdHJ1Y3QgY2xrX3NpNTcwICpkYXRhLCB1NjQgKnJmcmVxLAo+ID4gKwkJ
+dW5zaWduZWQgaW50ICpuMSwgdW5zaWduZWQgaW50ICpoc19kaXYpCj4gCj4gSSB3b3VsZCBzdWdn
+ZXN0IHRvIGFsaWduIGNvbnRpbnVhdGlvbiBsaW5lcyB3aXRoIHRoZSBvcGVuaW5nICgsCj4gdGhv
+dWdoIHRoYXQgaXMgcmVhbGx5IHVwIHRvIHlvdSAoYW5kIHRoZSBtYWludGFpbmVyKS4KSG1tLCBJ
+IGRvbid0IHJlYWxseSBsaWtlIHRoYXQgc2luY2UgaXQgaXMgaGlnaCBtYWludGVuYW5jZSBhbmQg
+aXMgZWFzaWx5Cm1lc3NlZCB1cCBieSBzZWFyY2ggYW5kIHJlcGxhY2Ugb3BlcmF0aW9ucyBhbmQg
+c2ltaWxhci4gVGhlcmVmb3JlIEkgcmVseQpvbiB2aW0ncyBzbWFydCBpbmRlbnQuCgo+IAo+ID4g
+K3sKPiA+ICsJaW50IGVycjsKPiA+ICsJdTggcmVnWzZdOwo+ID4gKwl1NjQgdG1wOwo+ID4gKwo+
+ID4gKwllcnIgPSByZWdtYXBfYnVsa19yZWFkKGRhdGEtPnJlZ21hcCwgU0k1NzBfUkVHX0hTX04x
+ICsgZGF0YS0+ZGl2X29mZnNldCwKPiA+ICsJCQlyZWcsIEFSUkFZX1NJWkUocmVnKSk7Cj4gPiAr
+CWlmIChlcnIpCj4gPiArCQlyZXR1cm4gZXJyOwo+ID4gKwo+ID4gKwkqaHNfZGl2ID0gKChyZWdb
+MF0gJiBIU19ESVZfTUFTSykgPj4gSFNfRElWX1NISUZUKSArIEhTX0RJVl9PRkZTRVQ7Cj4gPiAr
+CSpuMSA9ICgocmVnWzBdICYgTjFfNl8yX01BU0spIDw8IDIpICsgKChyZWdbMV0gJiBOMV8xXzBf
+TUFTSykgPj4gNikgKyAxOwo+ID4gKwkvKiBIYW5kbGUgaW52YWxpZCBjYXNlcyAqLwo+ID4gKwlp
+ZiAoKm4xID4gMSkKPiA+ICsJCSpuMSAmPSB+MTsKPiA+ICsKPiA+ICsJdG1wID0gcmVnWzFdICYg
+UkZSRVFfMzdfMzJfTUFTSzsKPiA+ICsJdG1wID0gKHRtcCA8PCA4KSArIHJlZ1syXTsKPiA+ICsJ
+dG1wID0gKHRtcCA8PCA4KSArIHJlZ1szXTsKPiA+ICsJdG1wID0gKHRtcCA8PCA4KSArIHJlZ1s0
+XTsKPiA+ICsJdG1wID0gKHRtcCA8PCA4KSArIHJlZ1s1XTsKPiA+ICsJKnJmcmVxID0gdG1wOwo+
+ID4gKwo+ID4gKwlyZXR1cm4gMDsKPiA+ICt9Cj4gPiArCj4gPiArLyoqCj4gPiArICogc2k1NzBf
+Z2V0X2RlZmF1bHRzKCkgLSBHZXQgZGVmYXVsdCB2YWx1ZXMKPiA+ICsgKiBAZGF0YToJRHJpdmVy
+IGRhdGEgc3RydWN0dXJlCj4gPiArICogQGZvdXQ6CUZhY3RvcnkgZnJlcXVlbmN5IG91dHB1dAo+
+ID4gKyAqIFJldHVybnMgMCBvbiBzdWNjZXNzLCBuZWdhdGl2ZSBlcnJubyBvdGhlcndpc2UuCj4g
+PiArICovCj4gPiArc3RhdGljIGludCBzaTU3MF9nZXRfZGVmYXVsdHMoc3RydWN0IGNsa19zaTU3
+MCAqZGF0YSwgdTY0IGZvdXQpCj4gPiArewo+ID4gKwlpbnQgZXJyOwo+ID4gKwl1NjQgZmRjbzsK
+PiA+ICsKPiA+ICsJcmVnbWFwX3dyaXRlKGRhdGEtPnJlZ21hcCwgU0k1NzBfUkVHX0NPTlRST0ws
+IFNJNTcwX0NOVFJMX1JFQ0FMTCk7Cj4gPiArCj4gPiArCWVyciA9IHNpNTcwX2dldF9kaXZzKGRh
+dGEsICZkYXRhLT5yZnJlcSwgJmRhdGEtPm4xLCAmZGF0YS0+aHNfZGl2KTsKPiA+ICsJaWYgKGVy
+cikKPiA+ICsJCXJldHVybiBlcnI7Cj4gPiArCj4gPiArCS8qCj4gPiArCSAqIEFjY2VwdCBvcHRp
+b25hbCBwcmVjaXNpb24gbG9zcyB0byBhdm9pZCBhcml0aG1ldGljIG92ZXJmbG93cy4KPiA+ICsJ
+ICogQWNjZXB0YWJsZSBwZXIgU2lsaWNvbiBMYWJzIEFwcGxpY2F0aW9uIE5vdGUgQU4zMzQuCj4g
+PiArCSAqLwo+ID4gKwlmZGNvID0gZm91dCAqIGRhdGEtPm4xICogZGF0YS0+aHNfZGl2Owo+ID4g
+KwlpZiAoZmRjbyA+PSAoMUxMIDw8IDM2KSkKPiA+ICsJCWRhdGEtPmZ4dGFsID0gZGl2NjRfdTY0
+KGZkY28gPDwgMjQsIGRhdGEtPnJmcmVxID4+IDQpOwo+ID4gKwllbHNlCj4gPiArCQlkYXRhLT5m
+eHRhbCA9IGRpdjY0X3U2NChmZGNvIDw8IDI4LCBkYXRhLT5yZnJlcSk7Cj4gPiArCj4gPiArCWRh
+dGEtPmZyZXF1ZW5jeSA9IGZvdXQ7Cj4gPiArCj4gPiArCXJldHVybiAwOwo+ID4gK30KPiA+ICsK
+PiA+ICsvKioKPiA+ICsgKiBzaTU3MF91cGRhdGVfcmZyZXEoKSAtIFVwZGF0ZSBjbG9jayBtdWx0
+aXBsaWVyCj4gPiArICogQGRhdGE6CURyaXZlciBkYXRhIHN0cnVjdHVyZQo+ID4gKyAqIFBhc3Nl
+cyBvbiByZWdtYXBfYnVsa193cml0ZSgpIHJldHVybiB2YWx1ZS4KPiA+ICsgKi8KPiA+ICtzdGF0
+aWMgaW50IHNpNTcwX3VwZGF0ZV9yZnJlcShzdHJ1Y3QgY2xrX3NpNTcwICpkYXRhKQo+ID4gK3sK
+PiA+ICsJdTggcmVnWzVdOwo+ID4gKwo+ID4gKwlyZWdbMF0gPSAoKGRhdGEtPm4xIC0gMSkgPDwg
+NikgfAo+ID4gKwkJKChkYXRhLT5yZnJlcSA+PiAzMikgJiBSRlJFUV8zN18zMl9NQVNLKTsKPiA+
+ICsJcmVnWzFdID0gKGRhdGEtPnJmcmVxID4+IDI0KSAmIDB4ZmY7Cj4gPiArCXJlZ1syXSA9IChk
+YXRhLT5yZnJlcSA+PiAxNikgJiAweGZmOwo+ID4gKwlyZWdbM10gPSAoZGF0YS0+cmZyZXEgPj4g
+OCkgJiAweGZmOwo+ID4gKwlyZWdbNF0gPSBkYXRhLT5yZnJlcSAmIDB4ZmY7Cj4gPiArCj4gPiAr
+CXJldHVybiByZWdtYXBfYnVsa193cml0ZShkYXRhLT5yZWdtYXAsIFNJNTcwX1JFR19OMV9SRlJF
+UTAgKwo+ID4gKwkJCWRhdGEtPmRpdl9vZmZzZXQsIHJlZywgQVJSQVlfU0laRShyZWcpKTsKPiA+
+ICt9Cj4gPiArCj4gPiArLyoqCj4gPiArICogc2k1NzBfY2FsY19kaXZzKCkgLSBDYWx1Y2xhdGUg
+Y2xvY2sgZGl2aWRlcnMKPiA+ICsgKiBAZnJlcXVlbmN5OglUYXJnZXQgZnJlcXVlbmN5Cj4gPiAr
+ICogQGRhdGE6CURyaXZlciBkYXRhIHN0cnVjdHVyZQo+ID4gKyAqIEBvdXRfcmZyZXE6CVJGUkVH
+IGZyYWN0aW9uYWwgbXVsdGlwbGllciAob3V0cHV0KQo+ID4gKyAqIEBvdXRfbjE6CUNsb2NrIGRp
+dmlkZXIgTjEgKG91dHB1dCkKPiA+ICsgKiBAb3V0X2hzX2RpdjoJQ2xvY2sgZGl2aWRlciBIU0RJ
+ViAob3V0cHV0KQo+ID4gKyAqIFJldHVybnMgMCBvbiBzdWNjZXNzLCBuZWdhdGl2ZSBlcnJubyBv
+dGhlcndpc2UuCj4gPiArICoKPiA+ICsgKiBDYWxjdWxhdGUgdGhlIGNsb2NrIGRpdmlkZXJzIChA
+b3V0X2hzX2RpdiwgQG91dF9uMSkgYW5kIGNsb2NrIG11bHRpcGxpZXIKPiA+ICsgKiAoQG91dF9y
+ZnJlcSkgZm9yIGEgZ2l2ZW4gdGFyZ2V0IEBmcmVxdWVuY3kuCj4gPiArICovCj4gPiArc3RhdGlj
+IGludCBzaTU3MF9jYWxjX2RpdnModW5zaWduZWQgbG9uZyBmcmVxdWVuY3ksIHN0cnVjdCBjbGtf
+c2k1NzAgKmRhdGEsCj4gPiArCQl1NjQgKm91dF9yZnJlcSwgdW5zaWduZWQgaW50ICpvdXRfbjEs
+IHVuc2lnbmVkIGludCAqb3V0X2hzX2RpdikKPiA+ICt7Cj4gPiArCWludCBpOwo+ID4gKwl1bnNp
+Z25lZCBpbnQgbjEsIGhzX2RpdjsKPiA+ICsJdTY0IGZkY28sIGJlc3RfZmRjbyA9IFVMTE9OR19N
+QVg7Cj4gPiArCXN0YXRpYyBjb25zdCB1aW50OF90IHNpNTcwX2hzX2Rpdl92YWx1ZXNbXSA9IHsg
+MTEsIDksIDcsIDYsIDUsIDQgfTsKPiA+ICsKPiA+ICsJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJ
+WkUoc2k1NzBfaHNfZGl2X3ZhbHVlcyk7IGkrKykgewo+ID4gKwkJaHNfZGl2ID0gc2k1NzBfaHNf
+ZGl2X3ZhbHVlc1tpXTsKPiA+ICsJCS8qIENhbGN1bGF0ZSBsb3dlc3QgcG9zc2libGUgdmFsdWUg
+Zm9yIG4xICovCj4gPiArCQluMSA9IGRpdl91NjQoZGl2X3U2NChGRENPX01JTiwgaHNfZGl2KSwg
+ZnJlcXVlbmN5KTsKPiA+ICsJCWlmICghbjEgfHwgKG4xICYgMSkpCj4gPiArCQkJbjErKzsKPiA+
+ICsJCXdoaWxlIChuMSA8PSAxMjgpIHsKPiA+ICsJCQlmZGNvID0gKHU2NClmcmVxdWVuY3kgKiAo
+dTY0KWhzX2RpdiAqICh1NjQpbjE7Cj4gPiArCQkJaWYgKGZkY28gPiBGRENPX01BWCkKPiA+ICsJ
+CQkJYnJlYWs7Cj4gPiArCQkJaWYgKGZkY28gPj0gRkRDT19NSU4gJiYgZmRjbyA8IGJlc3RfZmRj
+bykgewo+ID4gKwkJCQkqb3V0X24xID0gbjE7Cj4gPiArCQkJCSpvdXRfaHNfZGl2ID0gaHNfZGl2
+Owo+ID4gKwkJCQkqb3V0X3JmcmVxID0gZGl2NjRfdTY0KGZkY28gPDwgMjgsIGRhdGEtPmZ4dGFs
+KTsKPiA+ICsJCQkJYmVzdF9mZGNvID0gZmRjbzsKPiA+ICsJCQl9Cj4gPiArCQkJbjEgKz0gKG4x
+ID09IDEgPyAxIDogMik7Cj4gPiArCQl9Cj4gPiArCX0KPiA+ICsKPiA+ICsJaWYgKGJlc3RfZmRj
+byA9PSBVTExPTkdfTUFYKQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gPiArCj4gPiArCXJldHVy
+biAwOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgdW5zaWduZWQgbG9uZyBzaTU3MF9yZWNhbGNf
+cmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywKPiA+ICsJCXVuc2lnbmVkIGxvbmcgcGFyZW50X3JhdGUp
+Cj4gPiArewo+ID4gKwlpbnQgZXJyOwo+ID4gKwl1NjQgcmZyZXEsIHJhdGU7Cj4gPiArCXVuc2ln
+bmVkIGludCBuMSwgaHNfZGl2Owo+ID4gKwlzdHJ1Y3QgY2xrX3NpNTcwICpkYXRhID0gdG9fY2xr
+X3NpNTcwKGh3KTsKPiA+ICsKPiA+ICsJZXJyID0gc2k1NzBfZ2V0X2RpdnMoZGF0YSwgJnJmcmVx
+LCAmbjEsICZoc19kaXYpOwo+ID4gKwlpZiAoZXJyKSB7Cj4gPiArCQlkZXZfZXJyKCZkYXRhLT5p
+MmNfY2xpZW50LT5kZXYsICJ1bmFibGUgdG8gcmVjYWxjIHJhdGVcbiIpOwo+ID4gKwkJcmV0dXJu
+IGRhdGEtPmZyZXF1ZW5jeTsKPiA+ICsJfQo+ID4gKwo+ID4gKwlyZnJlcSA9IGRpdl91NjQocmZy
+ZXEsIGhzX2RpdiAqIG4xKTsKPiA+ICsJcmF0ZSA9IChkYXRhLT5meHRhbCAqIHJmcmVxKSA+PiAy
+ODsKPiA+ICsKPiA+ICsJcmV0dXJuIHJhdGU7Cj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyBsb25n
+IHNpNTcwX3JvdW5kX3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVuc2lnbmVkIGxvbmcgcmF0ZSwK
+PiA+ICsJCXVuc2lnbmVkIGxvbmcgKnBhcmVudF9yYXRlKQo+ID4gK3sKPiA+ICsJaW50IGVycjsK
+PiA+ICsJdTY0IHJmcmVxOwo+ID4gKwl1bnNpZ25lZCBpbnQgbjEsIGhzX2RpdjsKPiA+ICsJc3Ry
+dWN0IGNsa19zaTU3MCAqZGF0YSA9IHRvX2Nsa19zaTU3MChodyk7Cj4gPiArCj4gPiArCWlmICgh
+cmF0ZSkKPiA+ICsJCXJldHVybiAwOwo+ID4gKwo+ID4gKwlpZiAoZGl2NjRfdTY0KGFicyhyYXRl
+IC0gZGF0YS0+ZnJlcXVlbmN5KSAqIDEwMDAwTEwsCj4gPiArCQkJCWRhdGEtPmZyZXF1ZW5jeSkg
+PCAzNSkgewo+ID4gKwkJcmZyZXEgPSBkaXY2NF91NjQoKGRhdGEtPnJmcmVxICogcmF0ZSkgKwo+
+ID4gKwkJCQlkaXY2NF91NjQoZGF0YS0+ZnJlcXVlbmN5LCAyKSwgZGF0YS0+ZnJlcXVlbmN5KTsK
+PiA+ICsJCW4xID0gZGF0YS0+bjE7Cj4gPiArCQloc19kaXYgPSBkYXRhLT5oc19kaXY7Cj4gPiAr
+Cj4gPiArCX0gZWxzZSB7Cj4gPiArCQllcnIgPSBzaTU3MF9jYWxjX2RpdnMocmF0ZSwgZGF0YSwg
+JnJmcmVxLCAmbjEsICZoc19kaXYpOwo+ID4gKwkJaWYgKGVycikgewo+ID4gKwkJCWRldl9lcnIo
+JmRhdGEtPmkyY19jbGllbnQtPmRldiwKPiA+ICsJCQkJCSJ1bmFibGUgdG8gcm91bmQgcmF0ZVxu
+Iik7Cj4gPiArCQkJcmV0dXJuIDA7Cj4gPiArCQl9Cj4gPiArCX0KPiA+ICsKPiA+ICsJcmV0dXJu
+IHJhdGU7Cj4gPiArfQo+ID4gKwo+ID4gKy8qKgo+ID4gKyAqIHNpNTcwX3NldF9mcmVxdWVuY3ko
+KSAtIEFkanVzdCBvdXRwdXQgZnJlcXVlbmN5Cj4gPiArICogQGRhdGE6CURyaXZlciBkYXRhIHN0
+cnVjdHVyZQo+ID4gKyAqIEBmcmVxdWVuY3k6CVRhcmdldCBmcmVxdWVuY3kKPiA+ICsgKiBSZXR1
+cm5zIDAgb24gc3VjY2Vzcy4KPiA+ICsgKgo+ID4gKyAqIFVwZGF0ZSBvdXRwdXQgZnJlcXVlbmN5
+IGZvciBiaWcgZnJlcXVlbmN5IGNoYW5nZXMgKD4gMyw1MDAgcHBtKS4KPiA+ICsgKi8KPiA+ICtz
+dGF0aWMgaW50IHNpNTcwX3NldF9mcmVxdWVuY3koc3RydWN0IGNsa19zaTU3MCAqZGF0YSwgdW5z
+aWduZWQgbG9uZyBmcmVxdWVuY3kpCj4gPiArewo+ID4gKwlpbnQgZXJyOwo+ID4gKwo+ID4gKwll
+cnIgPSBzaTU3MF9jYWxjX2RpdnMoZnJlcXVlbmN5LCBkYXRhLCAmZGF0YS0+cmZyZXEsICZkYXRh
+LT5uMSwKPiA+ICsJCQkmZGF0YS0+aHNfZGl2KTsKPiA+ICsJaWYgKGVycikKPiA+ICsJCXJldHVy
+biBlcnI7Cj4gPiArCj4gPiArCS8qCj4gPiArCSAqIFRoZSBEQ08gcmVnIHNob3VsZCBiZSBhY2Nl
+c3NlZCB3aXRoIGEgcmVhZC1tb2RpZnktd3JpdGUgb3BlcmF0aW9uCj4gPiArCSAqIHBlciBBTjMz
+NAo+ID4gKwkgKi8KPiA+ICsJcmVnbWFwX3dyaXRlKGRhdGEtPnJlZ21hcCwgU0k1NzBfUkVHX0ZS
+RUVaRV9EQ08sIFNJNTcwX0ZSRUVaRV9EQ08pOwo+ID4gKwlyZWdtYXBfd3JpdGUoZGF0YS0+cmVn
+bWFwLCBTSTU3MF9SRUdfSFNfTjEgKyBkYXRhLT5kaXZfb2Zmc2V0LAo+ID4gKwkJCQkgICgoZGF0
+YS0+aHNfZGl2IC0gSFNfRElWX09GRlNFVCkgPDwKPiA+ICsJCQkJICAgSFNfRElWX1NISUZUKQo+
+ID4gKwkJCQkgIHwgKCgoZGF0YS0+bjEgLSAxKSA+PiAyKSAmIE4xXzZfMl9NQVNLKSk7Cj4gCj4g
+VGhpcyBpcyBhbiBleGFtcGxlIHdoZXJlIHRoZSBhbGlnbm1lbnQgdG8gKCB3b3VsZCByZWFsbHkg
+aGVscC4KPiAKPiAJcmVnbWFwX3dyaXRlKGRhdGEtPnJlZ21hcCwgU0k1NzBfUkVHX0hTX04xICsg
+ZGF0YS0+ZGl2X29mZnNldCwKPiAJCSAgICAgKChkYXRhLT5oc19kaXYgLSBIU19ESVZfT0ZGU0VU
+KSA8PCBIU19ESVZfU0hJRlQpCj4gCQkgICAgIHwgKCgoZGF0YS0+bjEgLSAxKSA+PiAyKSAmIE4x
+XzZfMl9NQVNLKSk7CkkgYWdyZWUgb24gdGhpcyBvbmUuIEknbGwgbG9vayBpbnRvIG1ha2luZyB0
+aGlzIGxvb2sgYSBsaXR0bGUgcHJldHRpZXIgOikKCj4gCj4gPiArCXNpNTcwX3VwZGF0ZV9yZnJl
+cShkYXRhKTsKPiA+ICsJcmVnbWFwX3dyaXRlKGRhdGEtPnJlZ21hcCwgU0k1NzBfUkVHX0ZSRUVa
+RV9EQ08sIDApOwo+ID4gKwlyZWdtYXBfd3JpdGUoZGF0YS0+cmVnbWFwLCBTSTU3MF9SRUdfQ09O
+VFJPTCwgU0k1NzBfQ05UUkxfTkVXRlJFUSk7Cj4gPiArCj4gPiArCS8qIEFwcGx5aW5nIGEgbmV3
+IGZyZXF1ZW5jeSBjYW4gdGFrZSB1cCB0byAxMG1zICovCj4gPiArCXVzbGVlcF9yYW5nZSgxMDAw
+MCwgMTAwMDEpOwo+IAo+IE9uZSBtaWNyb3NlY29uZCByYW5nZSBkb2Vzbid0IHJlYWxseSBidXkg
+YW55dGhpbmcgYmVzaWRlcyBmb3JjaW5nIHRoZSBjb21waWxlcgo+IHRvIGdlbmVyYXRlIGV4dHJh
+IGNvZGUuIFdoeSBub3QganVzdCB1c2UgMTAwMDAgPwpUaGF0J3MgZHVlIHRvIGNoZWNrcGF0Y2gu
+IEkgb3JpZ2luYWxseSBoYWQgJ21zbGVlcCgxMCknIGFuZCBjaGVja3BhdGNoCnN1Z2dlc3RlZCB0
+byB1c2UgJ3VzbGVlcF9yYW5nZSgpJy4gVGhlbiBJIHB1dAondXNsZWVwX3JhbmdlKDEwMDAwLCAx
+MDAwMCknIGFuZCBjaGVja3BhdGNoIHN1Z2dlc3RlZCB0byBub3QgdXNlIHRoZQpzYW1lIHZhbHVl
+cyBmb3IgTUlOIGFuZCBNQVgsIHNvIEkgYWRkZWQgdGhlIDEgdG8gdGhlIE1BWCB2YWx1ZS4KSWYg
+aXQgaXMgY29uc2lkZXJlZCB0byBiZSBzYWZlIGFuZCBva2F5IHRvIHB1dCBpbiBNSU49TUFYPTEw
+MDAwLCBJJ2xsCmNoYW5nZSBpdCBhY2NvcmRpbmdseS4KCj4gCj4gPiArCj4gPiArCXJldHVybiAw
+Owo+ID4gK30KPiA+ICsKPiA+ICsvKioKPiA+ICsgKiBzaTU3MF9zZXRfZnJlcXVlbmN5X3NtYWxs
+KCkgLSBBZGp1c3Qgb3V0cHV0IGZyZXF1ZW5jeQo+ID4gKyAqIEBkYXRhOglEcml2ZXIgZGF0YSBz
+dHJ1Y3R1cmUKPiA+ICsgKiBAZnJlcXVlbmN5OglUYXJnZXQgZnJlcXVlbmN5Cj4gPiArICogUmV0
+dXJucyAwIG9uIHN1Y2Nlc3MuCj4gPiArICoKPiA+ICsgKiBVcGRhdGUgb3V0cHV0IGZyZXF1ZW5j
+eSBmb3Igc21hbGwgZnJlcXVlbmN5IGNoYW5nZXMgKDwgMyw1MDAgcHBtKS4KPiA+ICsgKi8KPiA+
+ICtzdGF0aWMgaW50IHNpNTcwX3NldF9mcmVxdWVuY3lfc21hbGwoc3RydWN0IGNsa19zaTU3MCAq
+ZGF0YSwKPiA+ICsJCQkJICAgICB1bnNpZ25lZCBsb25nIGZyZXF1ZW5jeSkKPiA+ICt7Cj4gPiAr
+CS8qCj4gPiArCSAqIFRoaXMgaXMgYSByZS1pbXBsZW1lbnRhdGlvbiBvZiBESVZfUk9VTkRfQ0xP
+U0VTVAo+ID4gKwkgKiB1c2luZyB0aGUgZGl2NjRfdTY0IGZ1bmN0aW9uIGxpZXUgb2YgbGV0dGlu
+ZyB0aGUgY29tcGlsZXIKPiA+ICsJICogaW5zZXJ0IEVBQkkgY2FsbHMKPiA+ICsJICovCj4gPiAr
+CWRhdGEtPnJmcmVxID0gZGl2NjRfdTY0KChkYXRhLT5yZnJlcSAqIGZyZXF1ZW5jeSkgKwo+ID4g
+KwkJCWRpdl91NjQoZGF0YS0+ZnJlcXVlbmN5LCAyKSwgZGF0YS0+ZnJlcXVlbmN5KTsKPiA+ICsJ
+cmVnbWFwX3dyaXRlKGRhdGEtPnJlZ21hcCwgU0k1NzBfUkVHX0NPTlRST0wsIFNJNTcwX0NOVFJM
+X0ZSRUVaRV9NKTsKPiA+ICsJc2k1NzBfdXBkYXRlX3JmcmVxKGRhdGEpOwo+ID4gKwlyZWdtYXBf
+d3JpdGUoZGF0YS0+cmVnbWFwLCBTSTU3MF9SRUdfQ09OVFJPTCwgMCk7Cj4gPiArCj4gPiArCXJl
+dHVybiAwOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgaW50IHNpNTcwX3NldF9yYXRlKHN0cnVj
+dCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsCj4gPiArCQl1bnNpZ25lZCBsb25nIHBh
+cmVudF9yYXRlKQo+ID4gK3sKPiA+ICsJc3RydWN0IGNsa19zaTU3MCAqZGF0YSA9IHRvX2Nsa19z
+aTU3MChodyk7Cj4gPiArCXN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSBkYXRhLT5pMmNfY2xp
+ZW50Owo+ID4gKwlpbnQgZXJyOwo+ID4gKwo+ID4gKwlpZiAocmF0ZSA8IFNJNTcwX01JTl9GUkVR
+IHx8IHJhdGUgPiBkYXRhLT5tYXhfZnJlcSkgewo+ID4gKwkJZGV2X3dhcm4oJmNsaWVudC0+ZGV2
+LAo+ID4gKwkJCSJyZXF1ZXN0ZWQgZnJlcXVlbmN5ICVsdSBIeiBpcyBvdXQgb2YgcmFuZ2VcbiIs
+IHJhdGUpOwo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gPiArCX0KPiA+ICsKPiA+ICsJaWYgKGRp
+djY0X3U2NChhYnMocmF0ZSAtIGRhdGEtPmZyZXF1ZW5jeSkgKiAxMDAwMExMLAo+ID4gKwkJCQlk
+YXRhLT5mcmVxdWVuY3kpIDwgMzUpCj4gPiArCQllcnIgPSBzaTU3MF9zZXRfZnJlcXVlbmN5X3Nt
+YWxsKGRhdGEsIHJhdGUpOwo+ID4gKwllbHNlCj4gPiArCQllcnIgPSBzaTU3MF9zZXRfZnJlcXVl
+bmN5KGRhdGEsIHJhdGUpOwo+ID4gKwo+ID4gKwlpZiAoZXJyKQo+ID4gKwkJcmV0dXJuIGVycjsK
+PiA+ICsKPiA+ICsJZGF0YS0+ZnJlcXVlbmN5ID0gcmF0ZTsKPiA+ICsKPiA+ICsJcmV0dXJuIDA7
+Cj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgY2xrX29wcyBzaTU3MF9jbGtf
+b3BzID0gewo+ID4gKwkucmVjYWxjX3JhdGUgPSBzaTU3MF9yZWNhbGNfcmF0ZSwKPiA+ICsJLnJv
+dW5kX3JhdGUgPSBzaTU3MF9yb3VuZF9yYXRlLAo+ID4gKwkuc2V0X3JhdGUgPSBzaTU3MF9zZXRf
+cmF0ZSwKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lk
+IGNsa19zaTU3MF9vZl9tYXRjaFtdID0gewo+ID4gKwl7IC5jb21wYXRpYmxlID0gInNpbGFicyxz
+aTU3eCIsIC5kYXRhID0gJnNpNTd4X2RkYXRhIH0sCj4gPiArCXsgLmNvbXBhdGlibGUgPSAic2ls
+YWJzLHNpNTl4IiwgLmRhdGEgPSAmc2k1OXhfZGRhdGEgfSwKPiA+ICsJeyB9LAo+ID4gK307Cj4g
+PiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgY2xrX3NpNTcwX29mX21hdGNoKTsKPiA+ICsKPiA+
+ICtzdGF0aWMgYm9vbCBzaTU3MF9yZWdtYXBfaXNfdm9sYXRpbGUoc3RydWN0IGRldmljZSAqZGV2
+LCB1bnNpZ25lZCBpbnQgcmVnKQo+ID4gK3sKPiA+ICsJc3dpdGNoIChyZWcpIHsKPiA+ICsJY2Fz
+ZSAxMzU6Cj4gPiArCQlyZXR1cm4gdHJ1ZTsKPiA+ICsJZGVmYXVsdDoKPiA+ICsJCXJldHVybiBm
+YWxzZTsKPiA+ICsJfQo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgYm9vbCBzaTU3MF9yZWdtYXBf
+aXNfd3JpdGVhYmxlKHN0cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IHJlZykKPiA+ICt7
+Cj4gPiArCXN3aXRjaCAocmVnKSB7Cj4gPiArCWNhc2UgNyAuLi4gMTg6Cj4gPiArCWNhc2UgMTM1
+Ogo+ID4gKwljYXNlIDEzNzoKPiA+ICsJCXJldHVybiB0cnVlOwo+ID4gKwlkZWZhdWx0Ogo+ID4g
+KwkJcmV0dXJuIGZhbHNlOwo+ID4gKwl9Cj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyBzdHJ1Y3Qg
+cmVnbWFwX2NvbmZpZyBzaTU3MF9yZWdtYXBfY29uZmlnID0gewo+ID4gKwkucmVnX2JpdHMgPSA4
+LAo+ID4gKwkudmFsX2JpdHMgPSA4LAo+ID4gKwkuY2FjaGVfdHlwZSA9IFJFR0NBQ0hFX1JCVFJF
+RSwKPiA+ICsJLm1heF9yZWdpc3RlciA9IDEzNywKPiA+ICsJLndyaXRlYWJsZV9yZWcgPSBzaTU3
+MF9yZWdtYXBfaXNfd3JpdGVhYmxlLAo+ID4gKwkudm9sYXRpbGVfcmVnID0gc2k1NzBfcmVnbWFw
+X2lzX3ZvbGF0aWxlLAo+ID4gK307Cj4gPiArCj4gPiArc3RhdGljIGludCBzaTU3MF9wcm9iZShz
+dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAo+ID4gKwkJY29uc3Qgc3RydWN0IGkyY19kZXZpY2Vf
+aWQgKmlkKQo+ID4gK3sKPiA+ICsJc3RydWN0IGNsa19zaTU3MCAqZGF0YTsKPiA+ICsJc3RydWN0
+IGNsa19pbml0X2RhdGEgaW5pdDsKPiA+ICsJc3RydWN0IGNsayAqY2xrOwo+ID4gKwl1MzIgaW5p
+dGlhbF9mb3V0LCBmYWN0b3J5X2ZvdXQ7Cj4gPiArCWludCBlcnI7Cj4gPiArCWNvbnN0IHN0cnVj
+dCBvZl9kZXZpY2VfaWQgKm1hdGNoOwo+ID4gKwljb25zdCBzdHJ1Y3Qgc2k1NzBfZGV2aWNlX2Rh
+dGEgKmRkYXRhOwo+ID4gKwo+ID4gKwlkYXRhID0gZGV2bV9remFsbG9jKCZjbGllbnQtPmRldiwg
+c2l6ZW9mKCpkYXRhKSwgR0ZQX0tFUk5FTCk7Cj4gPiArCWlmICghZGF0YSkKPiA+ICsJCXJldHVy
+biAtRU5PTUVNOwo+ID4gKwo+ID4gKwltYXRjaCA9IG9mX21hdGNoX25vZGUoY2xrX3NpNTcwX29m
+X21hdGNoLCBjbGllbnQtPmRldi5vZl9ub2RlKTsKPiA+ICsJaWYgKCFtYXRjaCkKPiA+ICsJCXJl
+dHVybiAtRUlOVkFMOwo+IAo+IFNlZW1zIHVudXN1YWwuIElzIHRoaXMgcmVhbGx5IG5lZWRlZCA/
+IEl0IHByZWNsdWRlcyB0aGUgZHJpdmVyIGZyb20gYmVpbmcgdXNlZAo+IGluIGEgbm9uLWRldmlj
+ZXRyZWUgZW52aXJvbm1lbnQsIGZvciBleGFtcGxlLiBJIHdvdWxkIGd1ZXNzIHRoYXQgdGhlcmUg
+aXMgYSBtYXRjaAo+IGlmIGNsaWVudC0+ZGV2Lm9mX25vZGUgaXMgc2V0LiBPdGhlcndpc2UsIHRo
+aXMgY29kZSB3b3VsZCBiZSBuZWVkZWQgaW4gZXZlcnkKPiBkcml2ZXIgc3VwcG9ydGluZyBkZXZp
+Y2V0cmVlLCBhbmQgSSBkb24ndCByZWNhbGwgc2VlaW5nIHRoYXQuCj4gCj4gPiArCWRkYXRhID0g
+bWF0Y2gtPmRhdGE7Cj4gPiArCj4gWW91IHNob3VsZCBiZSBhYmxlIHRvIGdldCB0aGlzIGluZm9y
+bWF0aW9uIChpZSB0aGUgcG9pbnRlciB0byBzaTU3MF9kZXZpY2VfZGF0YSkKPiBmcm9tIGlkLT5k
+cml2ZXJfZGF0YS4gVGhhdCB3b3VsZCBiZSBtb3JlIGNvbnNpc3RlbnQgd2l0aCBvdGhlciBpMmMg
+ZGV2aWNlcy4KSSB0aGluayBJIGNvcGllZCB0aGlzIGFwcHJvYWNoIGZyb20gdGhlIG90aGVyIGNs
+ay1zaS4uLiBkcml2ZXIuIEknbGwKZG8gc29tZSByZXNlYXJjaCBvbiB5b3VyIHN1Z2dlc3Rpb24g
+YW5kIGNoYW5nZSBpdC4gQ291bGQgeW91IHBvaW50IG1lIHRvCmFuIGV4YW1wbGUgZm9yIHlvdXIg
+cHJvcG9zYWw/Cgo+IAo+ID4gKwlpbml0Lm9wcyA9ICZzaTU3MF9jbGtfb3BzOwo+ID4gKwlpbml0
+LmZsYWdzID0gQ0xLX0lTX1JPT1Q7Cj4gPiArCWluaXQubnVtX3BhcmVudHMgPSAwOwo+ID4gKwlk
+YXRhLT5ody5pbml0ID0gJmluaXQ7Cj4gPiArCWRhdGEtPm1heF9mcmVxID0gZGRhdGEtPm1heF9m
+cmVxOwo+ID4gKwlkYXRhLT5pMmNfY2xpZW50ID0gY2xpZW50Owo+ID4gKwo+ID4gKwlpZiAob2Zf
+cHJvcGVydHlfcmVhZF9ib29sKGNsaWVudC0+ZGV2Lm9mX25vZGUsCj4gPiArCQkJCSJ0ZW1wZXJh
+dHVyZS1zdGFiaWxpdHktN3BwbSIpKQo+ID4gKwkJZGF0YS0+ZGl2X29mZnNldCA9IFNJNTcwX0RJ
+Vl9PRkZTRVRfN1BQTTsKPiA+ICsKPiA+ICsJaWYgKG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKGNs
+aWVudC0+ZGV2Lm9mX25vZGUsICJjbG9jay1vdXRwdXQtbmFtZXMiLAo+ID4gKwkJCSZpbml0Lm5h
+bWUpKQo+ID4gKwkJaW5pdC5uYW1lID0gY2xpZW50LT5kZXYub2Zfbm9kZS0+bmFtZTsKPiA+ICsK
+PiA+ICsJaWYgKG9mX3Byb3BlcnR5X3JlYWRfdTMyKGNsaWVudC0+ZGV2Lm9mX25vZGUsICJmYWN0
+b3J5LWZvdXQiLAo+ID4gKwkJCQkmZmFjdG9yeV9mb3V0KSkgewo+ID4gKwkJZGV2X3dhcm4oJmNs
+aWVudC0+ZGV2LAo+ID4gKwkJCSJEVFMgZG9lcyBub3QgY29udGFpbiBmYWN0b3J5LWZvdXQsIHVz
+aW5nIGRlZmF1bHRcbiIpOwo+IAo+IElzIHRoYXQgcmVhbGx5IHdvcnRoIGEgd2FybmluZyA/Ck15
+IHVuZGVyc3RhbmRpbmcgaXMsIHRoYXQgdGhlIGRlZmF1bHQgb3V0cHV0IGZyZXF1ZW5jeSBpcyBw
+YXJ0LXNwZWNpZmljCmFuZCByZXF1aXJlZCB0byBjYWxjdWxhdGUgdGhlIGZyZXF1ZW5jeSBvZiB0
+aGUgaW50ZXJuYWwgY3J5c3RhbC4gSGVuY2UsCmlmIHlvdSBkbyBub3QgcHJvdmlkZSB0aGUgY29y
+cmVjdCBkZWZhdWx0IG91dHB1dCBmcmVxdWVuY3kgZm9yIHlvdXIgcGFydCwgYWxsCmZyZXF1ZW5j
+aWVzIGdlbmVyYXRlZCBieSB0aGlzIGRyaXZlciB3aWxsIGJlIG9mZiwgdW5sZXNzIHRoZSBoZXJl
+IHVzZWQKZGVmYXVsdCBtYXRjaGVzIHlvdXIgcGFydC4gUGxlYXNlIGNvcnJlY3QgbWUgaWYgSSdt
+IHdyb25nLCBvdGhlcndpc2UsIEkKdGhpbmsgaXQncyB3b3J0aCBhIHdhcm5pbmcuCgoJU8O2cmVu
+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
