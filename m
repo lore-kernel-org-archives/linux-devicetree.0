@@ -1,63 +1,43 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
-Date: Fri, 13 Sep 2013 11:13:24 +0100
-Message-ID: <CACxGe6sOyNNEATsnRdu9=_nPE1q6V4MDaDKvk4QvJiSgq6jXmg@mail.gmail.com>
-References: <52260608.2030202@linaro.org> <CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
- <1378284256.17510.60.camel@kazak.uk.xensource.com> <CAL_Jsq+82xfNCD3LmNE6VD1mp4Vzbm-hPPaMjwg9+ab3moXP_w@mail.gmail.com>
+From: Archit Taneja <archit@ti.com>
+Subject: Re: [PATCH 1/4] arm: omap: display: Create omapdrm inside omap_display_init
+Date: Fri, 13 Sep 2013 15:47:34 +0530
+Message-ID: <5232E63E.9020804@ti.com>
+References: <1379063679-4869-1-git-send-email-archit@ti.com> <1379063679-4869-2-git-send-email-archit@ti.com> <5232D9C8.9020809@ti.com> <5232DCFE.5050700@ti.com> <5232DD53.3010706@ti.com> <5232DF61.6000109@ti.com> <5232E00E.9040400@ti.com> <5232E2A8.10409@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+82xfNCD3LmNE6VD1mp4Vzbm-hPPaMjwg9+ab3moXP_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Dennis Gilmore <dennis-OMEdqnBlyiw@public.gmane.org>, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5232E2A8.10409@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: tony@atomide.com, linux-omap@vger.kernel.org, robdclark@gmail.com, devicetree@vger.kernel.org, Andy Gross <andygro@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 4, 2013 at 5:41 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> For u-boot Andre has proposed some syntactic sugar over the "fdt"
->> command to make boot.scr more trivial to use. We would of course need to
->> implement support for using it in the relevant distro tools (but they
->> tend to be very distro/machine specific already, e.g. Debian's
->> flash-kernel)
+On Friday 13 September 2013 03:32 PM, Tomi Valkeinen wrote:
+> On 13/09/13 12:51, Archit Taneja wrote:
 >
-> And being machine specific is a PITA. flash-kernel is certainly not
-> something we want to expand on. There is not much love for boot.scr
-> either. There is work to address what are not really machine
-> differences, but largely vendor u-boot differences:
+>> The calls in omap_generic_init() check the machine type via
+>> of_machine_is_compatible(), even if it's a multiplatform image, the dtb
+>> should be only of one platform. So it wouldn't be called at all.
 >
-> http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg119025.html
->
-> One option for u-boot which already supports syslinux style menu files
-> is to adopt the syslinux multiboot parsing support:
->
-> http://www.syslinux.org/wiki/index.php/Doc/mboot
+> Hmm. BeagleBone is "ti,am33xx". The "Generic AM33XX (Flattened Device
+> Tree)" machine definition uses omap_generic_init(). So if I'm not
+> missing something here, omap_generic_init() is called for BeagleBone.
 
-Even building it into U-Boot is problematic because it leaves older
-machines out in the cold. Leif's port of Grub to U-Boot is far more
-interesting since the distro can now be in control of the code that
-loads the images and jumps into the kernel/hypervisor.
+I was talking about the calls within omap_generic_init() :
 
-> We need to back-up and consider what this looks like in the end for
-> all the pieces and get input from folks on grub, UEFI, and armv8. The
-> UEFI answer may be this is a grub problem. For armv8, this proposal
-> does match up well as the kernel boot interface for v8 is DT. Despite
-> some claims, ACPI will not completely replace DT because of this.
+omap_generic_init(void)
+{
+	...
+	if (of_machine_is_compatible("ti,omap4-panda")) {
+		omap4_panda_display_init_of();
+		legacy_init_ehci_clk("auxclk3_ck");
 
-Yes, for UEFI it is absolutely an OS loader problem. UEFI provides an
-API and runtime environment. Grub is in general moving towards a boot
-menu system and a tool for loading images. Actual booting however
-should be done by a separate OS loader application. For Linux, this
-will be an in-kernel UEFI Stub. For Xen I would recommend taking the
-Linux EFI stub code and doing the same thing. There really isn't a
-need for a multiboot spec when you can rely on a runtime execution
-environment for setting things up exactly as you want them.
+	}
+}
 
-Multiboot only makes sense to me when you need to rely on firmware or
-something else out of your control to load the images in a particular
-way.
+omap4_panda_display_init_of() would be called only if a panda board dtb 
+was used. Are you talking about these display calls, or something else?
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Archit
+
