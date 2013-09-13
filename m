@@ -1,121 +1,41 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH] memory: add a basic OF-based memory driver
-Date: Fri, 13 Sep 2013 08:49:06 -0700
-Message-ID: <CAOesGMj=b5c_1v-nAejUzuOMfx44AHr2=yfoPepHYsh0=t0wOQ@mail.gmail.com>
-References: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
-	<1379032225-6425-1-git-send-email-emilio@elopez.com.ar>
-	<CAOesGMiUMniKRLRgGPsimR0bXWQFbx+SL5dUJXOb8t0JfEcHsg@mail.gmail.com>
-	<52326ADC.8040703@elopez.com.ar>
-	<CAL_JsqJACEtSRaDg0TcYODzhpsHFGa4mFSYa_R3qspypEKH+hQ@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v8 12/12] V4L: Add driver for s5k4e5 image sensor
+Date: Fri, 13 Sep 2013 10:14:07 -0600
+Message-ID: <523339CF.9070604@wwwdotorg.org>
+References: <1378987669-10870-1-git-send-email-arun.kk@samsung.com>  <1378987669-10870-13-git-send-email-arun.kk@samsung.com> <1379076935.4396.13.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJACEtSRaDg0TcYODzhpsHFGa4mFSYa_R3qspypEKH+hQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?ISO-8859-1?Q?David_Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1379076935.4396.13.camel@pizza.hi.pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Arun Kumar K <arun.kk@samsung.com>, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, hverkuil@xs4all.nl, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 13, 2013 at 7:00 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
-ote:
-> On Thu, Sep 12, 2013 at 8:31 PM, Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org=
-> wrote:
->> Hi Olof,
->>
->> El 12/09/13 21:57, Olof Johansson escribi=F3:
->>
->>> On Thu, Sep 12, 2013 at 5:30 PM, Emilio L=F3pez <emilio-0Z03zUJReD6Xj1p+fO2waQ@public.gmane.org=
-ar>
->>> wrote:
->>>>
->>>> This driver's only job is to claim and ensure the necessary clock
->>>> for memory operation on a DT-powered machine remains enabled.
->>>>
->>>> Signed-off-by: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
->>>> ---
->>>>
->>>> I believe this new patch should resolve all the concerns raised; a=
-s
->>>> always, all feedback is welcome :)
->>>
->>>
->>> I think you're going about this the wrong way.
->>>
->>> If you have a problem with a clock not staying on, shouldn't you ju=
-st
->>> marking it appropriately in the clock table instead, making sure it=
-'s
->>> initialized with at least one reference to it?
->>
->>
->> If by "the clock table" you mean the tree as handled by the common c=
-lock
->> framework, there is no such flag available as of today; see Mike's r=
-eply for
->> more information.
->>
->> Personally I feel that if the general case can solve our problems (i=
-n this
->> case, having a consumer who prepares and enables the clock), we shou=
-ld avoid
->> adding special cases to the framework.
->>
->>
->>> I believe that is how
->>> some of the other platforms handle this, and it's a lot cleaner tha=
-n
->>> adding a fake binding and a fake driver just to grab a single clock=
-=2E
->>
->>
->> The binding doesn't have to be fake; it is actually describing the m=
-emory
->> controller hardware:
->>
->> mc: mc@0123000 {
->>         compatible =3D "simple-memory-controller";
->>         reg =3D <0x0123000 0x400>;
->>         clocks =3D <&pll5 1>;
->> };
->>
->> If one day we get docs and/or have any special features we may need =
-from the
->> controller, we can use something like
->>
->> mc: mc@0123000 {
->>         compatible =3D "vendor,awesome-mc", "simple-memory-controlle=
-r";
->>         reg =3D <0x0123000 0x400>;
->>         clocks =3D <&pll5 1>;
->> };
->
-> Better, but this is still wrong. DT describes the hardware. There is
-> no such h/w as a simple-memory-controller. The fact that you have a
-> simple-memory-ctrlr kernel driver is a kernel
-> feature/artifact/limitation. Describe the h/w with a meaningful
-> compatible string and put that string in the simple memory controller
-> driver match table. If someday we have a real driver for said memory
-> controller, then it is only a kernel change to use a different driver=
-=2E
+On 09/13/2013 06:55 AM, Philipp Zabel wrote:
+> Hi Arun,
+> 
+> Am Donnerstag, den 12.09.2013, 17:37 +0530 schrieb Arun Kumar K:
+>> This patch adds subdev driver for Samsung S5K4E5 raw image sensor.
+>> Like s5k6a3, it is also another fimc-is firmware controlled
+>> sensor. This minimal sensor driver doesn't do any I2C communications
+>> as its done by ISP firmware. It can be updated if needed to a
+>> regular sensor driver by adding the I2C communication.
+... [untrimmed patch] ...
+>> +Example:
+>> +
+>> +	i2c-isp@13130000 {
+>> +		s5k4e5@20 {
+>> +			compatible = "samsung,s5k4e5";
+>> +			reg = <0x20>;
+>> +			gpios = <&gpx1 2 1>;
+> 
+> This probably should be 'reset-gpios', too.
+... [untrimmed patch] ...
+> 
+> regards
+> Philipp
 
-
-We discussed this over IRC last night -- I still think it makes more
-sense to make the clock driver for sunxi aware of this and just add a
-reference to the clock at init time.
-
-This is never going to differ from board to board (today the clock
-name is the same on all sunxi platforms -- pll5_ddr. And the need will
-likewise be there for all platforms at this time.
-
-If and when it changes in the future, we can reevaluate. But this
-doesn't have to be driven by device tree at this time, it seems to
-just make things overly complicated and contrived.
-
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please delete unnecessary context when replying so that people don't
+have to scroll through hundreds of lines of patch to see a 1-line comment.
