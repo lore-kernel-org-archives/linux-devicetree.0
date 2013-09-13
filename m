@@ -1,65 +1,112 @@
-From: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v4] powerpc/mpc85xx: Update the clock device tree nodes
-Date: Fri, 13 Sep 2013 02:50:22 +0000
-Message-ID: <D07C73A334FF604B95B3CBD2A545D07B15089208@039-SN2MPN1-011.039d.mgd.msft.net>
-References: <1378882632-9053-1-git-send-email-Yuantian.Tang@freescale.com>
-	 <1378948229.12204.486.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150748AA@039-SN2MPN1-013.039d.mgd.msft.net>
- <1378997052.2536.5.camel@snotra.buserror.net>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Fri, 13 Sep 2013 11:06:42 +0800
+Message-ID: <52328142.8080001@freescale.com>
+References: <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com>	 <20130905020435.GA3970@gmail.com>	 <20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>	 <522817D7.1010206@freescale.com> <522D3B79.3060707@freescale.com>	 <52318953.6090405@freescale.com>	 <1378979431.2627.402.camel@shinybook.infradead.org>	 <20130913025827.GA3051@gmail.com>	 <1378999322.4210.95.camel@i7.infradead.org>	 <20130913041208.GD3051@gmail.com> <1379003172.4210.114.camel@i7.infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1378997052.2536.5.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1379003172.4210.114.camel@i7.infradead.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Huang Shijie <shijie8@gmail.com>, Mark Brown <broonie@kernel.org>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIx
-DQo+IFNlbnQ6IDIwMTPlubQ55pyIMTLml6Ug5pif5pyf5ZubIDIyOjQ0DQo+IFRvOiBUYW5nIFl1
-YW50aWFuLUIyOTk4Mw0KPiBDYzogV29vZCBTY290dC1CMDc0MjE7IGdhbGFrQGtlcm5lbC5jcmFz
-aGluZy5vcmc7IGxpbnV4cHBjLQ0KPiBkZXZAbGlzdHMub3psYWJzLm9yZzsgZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmc7IExpIFlhbmctTGVvLVI1ODQ3Mg0KPiBTdWJqZWN0OiBSZTogW1BBVENI
-IHY0XSBwb3dlcnBjL21wYzg1eHg6IFVwZGF0ZSB0aGUgY2xvY2sgZGV2aWNlIHRyZWUNCj4gbm9k
-ZXMNCj4gDQo+IE9uIFdlZCwgMjAxMy0wOS0xMSBhdCAyMDozMSAtMDUwMCwgVGFuZyBZdWFudGlh
-bi1CMjk5ODMgd3JvdGU6DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4g
-RnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gPiA+IFNlbnQ6IDIwMTPlubQ55pyIMTLml6Ug5pif
-5pyf5ZubIDk6MTANCj4gPiA+IFRvOiBUYW5nIFl1YW50aWFuLUIyOTk4Mw0KPiA+ID4gQ2M6IGdh
-bGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0K
-PiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IExpIFlhbmctTGVvLVI1ODQ3Mg0KPiA+
-ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2NF0gcG93ZXJwYy9tcGM4NXh4OiBVcGRhdGUgdGhlIGNs
-b2NrIGRldmljZQ0KPiA+ID4gdHJlZSBub2Rlcw0KPiA+ID4NCj4gPiA+IFRoaXMgZGVzY3JpcHRp
-b24gb2YgInJlZyIgaXMgb3Zlcmx5IHNwZWNpZmljIChhc3N1bWVzIGhvdyB0aGUgcGFyZW50DQo+
-ID4gPiBub2RlJ3MgcmFuZ2VzIGFyZSBzZXQgdXApLCBpbmNvbXBsZXRlICh0aGVyZSdzIGEgc2l6
-ZSBhcyB3ZWxsIGFzIHRoZQ0KPiA+ID4gb2Zmc2V0KSwgYW5kIGRvZXMgbm90IGFwcGx5IHRvIHRo
-ZSBjbG9ja2dlbiBub2RlIGl0c2VsZiAoeW91DQo+ID4gPiBwcm9iYWJseSBzaG91bGRuJ3QgbHVt
-cCB0aGVtIHRvZ2V0aGVyIGxpa2UgdGhpcykuDQo+ID4gPg0KPiA+IERvIHlvdSBtZWFuIEkgc2hv
-dWxkIGV4cGxhaW4gdGhlIFJFRyBvZiBjbG9ja2dlbiBhbmQgaXRzIGNoaWxkIG5vZGUNCj4gcmVz
-cGVjdGl2ZWx5Pw0KPiA+DQo+ID4gPiA+ICstIGNsb2NrcyA6IHNoYWxsIGJlIHRoZSBpbnB1dCBw
-YXJlbnQgY2xvY2sgcGhhbmRsZSBmb3IgdGhlIGNsb2NrLg0KPiA+ID4NCj4gPiA+IE5vdCByZXF1
-aXJlZCBvbiB0aGUgY2xvY2tnZW4gbm9kZQ0KPiA+ID4NCj4gPiBSZXF1aXJlZCBieSBjaGlsZCBu
-b2RlIG9mIGNsb2NrZ2VuLg0KPiANCj4gTXkgcG9pbnQgaXMgdGhhdCB5b3UncmUgbHVtcGluZyBz
-ZXZlcmFsIGRpZmZlcmVudCB0eXBlcyBvZiBub2RlcyB0b2dldGhlcg0KPiB3aXRoIG9uZSBiaW5k
-aW5nLCB3aGVuIHNvbWUgcGFydHMgb2YgdGhlIGJpbmRpbmcgYXJlIG5vdCBhcHBsaWNhYmxlIHRv
-DQo+IHRoZSBjbG9ja2dlbiBub2RlLg0KPiANCk5vdCBzZXZlcmFsLCBqdXN0IHR3byB0eXBlcyBv
-ZiBub2Rlcy4NCk9uZSBpcyBjbG9ja2dlbiBub2RlLCB0aGUgb3RoZXIgaXMgUExMIGFuZCBtdXgg
-bm9kZXMuDQoNClRoZSByZWFzb24gdGhleSBsdW1wZWQgdG9nZXRoZXIgaXMgdGhhdCB0aGUgY2xv
-Y2tnZW4gbm9kZSBpcyBub3Qgb25seSBJUCBibG9jaw0KTm9kZSBidXQgYWxzbyBhIGNsb2NrIHBy
-b3ZpZGVyIG5vZGUuDQoNCkF0IGZpcnN0LCBJIHdhbnQgdG8gYWRkIGEgZXh0cmEgZml4ZWQtY2xv
-Y2sgbm9kZSBhbmQgbW92ZSB0aGUgY2xvY2stZnJlcXVlbmN5IG9mIGNsb2NrZ2VuIA0KTm9kZSB0
-byBpdCwgYnV0IGl0IGlzIGFnYWluc3QgdGhlIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgd2hpY2gg
-SSB0aGluayBpdCBpcyBub3QgYSBiaWcgZGVhbCwNCkJlY2F1c2Ugbm9ib2R5IGhhc24ndCB1c2Vk
-IGl0IHlldC4NCklmIEkgYWRkIGEgZXh0cmEgbm9kZSB3aXRoIHRoZSBjbG9jay1mcmVxdWVuY3kg
-cHJvcGVydHkgYW5kIGRvbid0IG1vdmUgdGhlDQpjbG9jay1mcmVxdWVuY3kgcHJvcGVydHkgb2Yg
-Y2xvY2tnZW4sIHRoYXQgd291bGQgYmUgcmVkdW5kYW50IGJlY2F1c2UgYm90aCBjbG9ja2dlbiBu
-b2RlDQphbmQgdGhlIGV4dHJhIG5vZGUgaGF2ZSB0aGUgc2FtZSBjbG9jay1mcmVxdWVuY3kgbm9k
-ZS4NClNvLCBJIGNob29zZSB3aGF0IEkgZGlkIG5vdy4NCiANCkNvdWxkIHlvdSBnaXZlIG1lIHNv
-bWUgc3VnZ2VzdGlvbnMgb24gdGhpcz8NClJlZ2FyZHMsDQpZdWFudGlhbg0KDQo+IC1TY290dA0K
-PiANCg0K
+=E4=BA=8E 2013=E5=B9=B409=E6=9C=8813=E6=97=A5 00:26, David Woodhouse =E5=
+=86=99=E9=81=93:
+> On Fri, 2013-09-13 at 00:12 -0400, Huang Shijie wrote:
+>> I will send you the datasheet tomorrow.
+> Thanks. Although according to the date header on your email, it is
+> *already* tomorrow. Any chance of fixing your clock, please?
+>
+I was at home then. but now i am at office.
+>> Mark and you want to create the LUT instruction sequence at the runt=
+ime,
+>> But there is some disadvantage if we do so:
+>>    [1] low efficiency:
+>>        If you want to change the LUT regitster, you should unlock th=
+e LUT
+>>        register, and change the LUT regitsters, and lock the LUT
+>>        regitsters again.
+> Although there aren't *that* many operations we perform, so you'd qui=
+te
+> quickly find yourself using things which are *already* programmed int=
+o
+> the LUT instead of having to re-program them again, surely?
+>
+If we can not parse out the SPI NOR commands, we can not quickly find t=
+he
+LUT which already programmed last time.
+>>    [2] we may can not create all the LUT instruction sequence at the
+>>        runtime. For example, the buffer program(OPCODE_PP):
+>>        the m25p80_write() may write 256bytes at a time, but the Quad=
+spi
+>>        controller only has a 64-byte TX-FIFO, so the controller shou=
+ld
+>>        write a 64bytes firstly, then sends to the NOR with a read-st=
+atus
+>>        command. Do you want to create a read-status LUT instruction
+>>        sequence at run time? This is not good solution, we should
+>>        pre-populate the read-status LUT information.
+> I'm not entirely sure I understand this. What *exactly* happens "on t=
+he
+> wire" in this case? Do you really send an OPCODE_RDSR (0x05) byte on =
+the
+> wire somehow, when you're supposed to be in the middle of sending the
+> page data to the chip? How does the chip handle that?
+>
+Yes, I really need to send an OPCODE_RDSR in the middle of sending page
+data (Page Program) to the chip.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The NOR chip can accept the data input from 1-byte to 256bytes.
+So it can handle this.
+
+>>    [3] We may can not create the LUT instruction sequence at the run=
+time,
+>>        since we can not get enough information from the spi_transfer=
+{}.
+>>        A whole LUT instruction sequence may needs the following info=
+:
+>>         1.) spi command.
+>>         2.) lines info: single line, dual lines, quad lines.
+>>         3.) Address width: 3 bytes address or 4 bytes address.
+>>         4.) instruction type: Read or write or other.
+>>         5.) length info: how many bytes for this transaction .
+>>         6.) dummy info: how many dummy is needed for this transactio=
+n.
+>>
+>>        We can not get the dummy info from the spi_transfer{}
+> Again, what does that actually *mean*, on the wire?
+Please see the datasheet of the NOR:
+www.spansion.com/Support/Datasheets/S25FL128S_256S_00.pdf
+
+
+Please see the page 100, the Quad I/O Read, the figure 10.37 shows
+the dummy.
+
+The dummy is just a delay in a command sequence.
+The dummy maybe only several clock cycles, less then 8 bit.
+
+> I thought SPI was just 'send some bytes, fetch some bytes'. Why is th=
+e
+> controller doing anything other than that?
+>
+As the time goes on, the SPI devices or SPI controllers have become mor=
+e=20
+and more complicated.
+
+
+If the Quadspi controller can not know the SPI NOR commands explicitly,=
+=20
+it can not fill the
+LUT correctly, and at last it can not work.
+
+
+
+
+thanks
+Huang Shijie
+
+
