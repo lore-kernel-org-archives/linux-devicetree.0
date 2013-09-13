@@ -1,76 +1,108 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [RFC PATCH 1/4] DRIVERS: IRQCHIP: Add crossbar irqchip driver
-Date: Fri, 13 Sep 2013 02:26:03 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1309130138550.4089@ionos.tec.linutronix.de>
-References: <1379000351-15672-1-git-send-email-r.sricharan@ti.com> <1379000351-15672-2-git-send-email-r.sricharan@ti.com> <alpine.DEB.2.02.1309122201530.4089@ionos.tec.linutronix.de> <523228B5.5070507@ti.com> <alpine.DEB.2.02.1309122335440.4089@ionos.tec.linutronix.de>
- <5232457A.8080709@ti.com>
+From: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>
+Subject: [PATCH] memory: add a basic OF-based memory driver
+Date: Thu, 12 Sep 2013 21:30:25 -0300
+Message-ID: <1379032225-6425-1-git-send-email-emilio@elopez.com.ar>
+References: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5232457A.8080709-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, grant.likely@linaro.org, rob.herring@calxeda.com, gregkh@linuxfoundation.org
+Cc: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, devicetree@vger.kernel.org, david.lanzendoerfer@o2s.ch, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Sep 2013, Santosh Shilimkar wrote:
-> On Thursday 12 September 2013 06:22 PM, Thomas Gleixner wrote:
-> > Now the real question is, how that expansion mechanism is supposed to
-> > work. There are two possible scenarios:
-> > 
-> > 1) Expand the number of handled interrupts beyond the GIC capacity:
-> > 
-> >    That requires a mechanism in CROSSBAR to map several CROSSBAR
-> >    interrupts to a particular GIC interrupt and provide a demux
-> >    mechanism to invoke the shared handlers.
-> > 
-> This is not possible in hardware and not supported. Hardware has
-> no notion of muxing multiple IRQ's to generate 1 IRQ or ack etc
-> functionality. Its a simple MUX to tie knots between input and output
-> wires.
-
-It's not a MUX. It's a ROUTING mechanism. That's similar to the
-mechanisms which are used by MSI[X]. We assign arbitrary interrupt
-numbers to a device and route them to some underlying limited hardware
-interrupt controller.
-
-> > 2) Provide a mapping mechanism between possibly 250 interrupt numbers
-> >    and a limitation of a total 160 active interrupts by the underlying
-> >    GIC.
-> > 
-> This is the need and problem we are trying to solve.
-
-Let me summarize:
-
-   - GIC supports up to 160 interrupts
-
-   - CROSSBAR supports up to 250 interrupts 
-
-   - CROSSBAR routes up to 160 out of 250 interrupts to the GIC ones
-
-   - Drivers request a CROSSBAR interrupt number which must be mapped
-     to some arbitrary available GIC irq number
-
-So basically the CROSSBAR mechanism is pretty much the same as MSI[X]
-just in a different flavour and with a different set of semantics and
-limitations, i.e. poor mans MSI[X] with a new level of bogosity.
-
-So if CROSSBAR is going to be the new fangled SoC MSI[X] long term
-equivalent then you better provide some infrastructure for that and
-make the drivers ready to use it. Maybe check with the PCI/MSI folks
-to share some of the interfaces.
-
-If that whole thing is another onetime HW designers wet dream, then
-please go back to the limited but completely functional (Who is going
-to use more than 160 peripheral interrupts????) device tree model. I
-really have no interest to support hardware designer brain farts.
-
-Thanks,
-
-	tglx
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBkcml2ZXIncyBvbmx5IGpvYiBpcyB0byBjbGFpbSBhbmQgZW5zdXJlIHRoZSBuZWNlc3Nh
+cnkgY2xvY2sKZm9yIG1lbW9yeSBvcGVyYXRpb24gb24gYSBEVC1wb3dlcmVkIG1hY2hpbmUgcmVt
+YWlucyBlbmFibGVkLgoKU2lnbmVkLW9mZi1ieTogRW1pbGlvIEzDs3BleiA8ZW1pbGlvQGVsb3Bl
+ei5jb20uYXI+Ci0tLQoKSSBiZWxpZXZlIHRoaXMgbmV3IHBhdGNoIHNob3VsZCByZXNvbHZlIGFs
+bCB0aGUgY29uY2VybnMgcmFpc2VkOyBhcwphbHdheXMsIGFsbCBmZWVkYmFjayBpcyB3ZWxjb21l
+IDopCgpDaGFuZ2VzIGZyb20gUkZDOgotIE1vdmUgZnJvbSBkcml2ZXJzL29mIHRvIGRyaXZlcnMv
+bWVtb3J5Ci0gTWFrZSBhIHByb3BlciBkcml2ZXIgaW5zdGVhZCBvZiB1c2luZyBhbiBpbml0Y2Fs
+bAotIEJpbmRpbmcgZG9jdW1lbnQgZm9yIHRoZSBuZXcgInNpbXBsZS1tZW1vcnktY29udHJvbGxl
+ciIKCiAuLi4vc2ltcGxlLW1lbW9yeS1jb250cm9sbGVyLnR4dCAgICAgICAgICAgICAgICAgICB8
+IDE5ICsrKysrKysrCiBkcml2ZXJzL21lbW9yeS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8IDExICsrKysrCiBkcml2ZXJzL21lbW9yeS9NYWtlZmlsZSAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAxICsKIGRyaXZlcnMvbWVtb3J5L3NpbXBsZS1tYy5jICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgNTcgKysrKysrKysrKysrKysrKysrKysrKwogNCBmaWxlcyBjaGFu
+Z2VkLCA4OCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL21lbW9yeS1jb250cm9sbGVycy9zaW1wbGUtbWVtb3J5LWNvbnRy
+b2xsZXIudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZW1vcnkvc2ltcGxlLW1jLmMK
+CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNv
+bnRyb2xsZXJzL3NpbXBsZS1tZW1vcnktY29udHJvbGxlci50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbWVtb3J5LWNvbnRyb2xsZXJzL3NpbXBsZS1tZW1vcnktY29udHJv
+bGxlci50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uZDM3NjgzYgotLS0g
+L2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZW1vcnkt
+Y29udHJvbGxlcnMvc2ltcGxlLW1lbW9yeS1jb250cm9sbGVyLnR4dApAQCAtMCwwICsxLDE5IEBA
+CitEZXZpY2UgVHJlZSBDbG9jayBiaW5kaW5nIGZvciBhIHNpbXBsZSBtZW1vcnkgY29udHJvbGxl
+ci4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZSA6IHNoYWxsIGJlICJzaW1w
+bGUtbWVtb3J5LWNvbnRyb2xsZXIiCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIHJlZyAgICAg
+ICAgOiBtYXkgY29udGFpbiB0aGUgcmVnaXN0ZXIgc3BhY2UgZm9yIHRoZSBjb250cm9sbGVyLiBU
+aGlzCisgICAgICAgICAgICAgICBwcm9wZXJ0eSBpcyBjdXJyZW50bHkgaWdub3JlZCBieSB0aGUg
+ZHJpdmVyCistIGNsb2NrcyAgICAgOiBtYXkgY29udGFpbiBhIHBoYW5kbGUgdG8gdGhlIGNsb2Nr
+IHRoYXQgaXMgY3VycmVudGx5IGJlaW5nCisgICAgICAgICAgICAgICB1c2VkIG9uIHRoZSBjb250
+cm9sbGVyLiBUaGlzIGNsb2NrIHNoYWxsIHJlbWFpbiBlbmFibGVkCisgICAgICAgICAgICAgICBk
+dXJpbmcgc3lzdGVtIG9wZXJhdGlvbi4KKworRXhhbXBsZToKKworbWM6IG1jQDAxMjMwMDAgewor
+CWNvbXBhdGlibGUgPSAic2ltcGxlLW1lbW9yeS1jb250cm9sbGVyIjsKKwlyZWcgPSA8MHgwMTIz
+MDAwIDB4NDAwPjsKKwljbG9ja3MgPSA8JnBsbDUgMT47Cit9OwpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9tZW1vcnkvS2NvbmZpZyBiL2RyaXZlcnMvbWVtb3J5L0tjb25maWcKaW5kZXggMjlhMTFkYi4u
+NGE2ZGY2NSAxMDA2NDQKLS0tIGEvZHJpdmVycy9tZW1vcnkvS2NvbmZpZworKysgYi9kcml2ZXJz
+L21lbW9yeS9LY29uZmlnCkBAIC01MCw0ICs1MCwxNSBAQCBjb25maWcgVEVHUkEzMF9NQwogCSAg
+YW5hbHlzaXMsIGVzcGVjaWFsbHkgZm9yIElPTU1VL1NNTVUoU3lzdGVtIE1lbW9yeSBNYW5hZ2Vt
+ZW50CiAJICBVbml0KSBtb2R1bGUuCiAKK2NvbmZpZyBTSU1QTEVfTUMKKwlib29sICJTaW1wbGUg
+bWVtb3J5IGNvbnRyb2xsZXIiCisJZGVmYXVsdCB5CisJZGVwZW5kcyBvbiBPRiAmJiBDT01NT05f
+Q0xLCisJaGVscAorCSAgVGhpcyBkcml2ZXIgaXMgYWJsZSB0byBtYW5hZ2UgYSBzaW1wbGUgbWVt
+b3J5IGNvbnRyb2xsZXIgd2hvc2UKKwkgIG9ubHkgbmVlZHMgY29uc2lzdCBvZiBrZWVwaW5nIG9u
+ZSBjbG9jayBlbmFibGVkLiBUaGUKKwkgIGNvbnRyb2xsZXIgbXVzdCBiZSBkZWZpbmVkIG9uIHRo
+ZSBkZXZpY2UgdHJlZSBhcyBjb21wYXRpYmxlCisJICB3aXRoICJzaW1wbGUtbWVtb3J5LWNvbnRy
+b2xsZXIiOyBzZWUgdGhlIGNvcnJlc3BvbmRpbmcgYmluZGluZworCSAgZG9jdW1lbnQgZm9yIG1v
+cmUgZGV0YWlscy4KKwogZW5kaWYKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVtb3J5L01ha2VmaWxl
+IGIvZHJpdmVycy9tZW1vcnkvTWFrZWZpbGUKaW5kZXggOTY5ZDkyMy4uZTA5NTNlNSAxMDA2NDQK
+LS0tIGEvZHJpdmVycy9tZW1vcnkvTWFrZWZpbGUKKysrIGIvZHJpdmVycy9tZW1vcnkvTWFrZWZp
+bGUKQEAgLTksMyArOSw0IEBAIG9iai0kKENPTkZJR19USV9FTUlGKQkJKz0gZW1pZi5vCiBvYmot
+JChDT05GSUdfTVZFQlVfREVWQlVTKQkrPSBtdmVidS1kZXZidXMubwogb2JqLSQoQ09ORklHX1RF
+R1JBMjBfTUMpCSs9IHRlZ3JhMjAtbWMubwogb2JqLSQoQ09ORklHX1RFR1JBMzBfTUMpCSs9IHRl
+Z3JhMzAtbWMubworb2JqLSQoQ09ORklHX1NJTVBMRV9NQykJCSs9IHNpbXBsZS1tYy5vCmRpZmYg
+LS1naXQgYS9kcml2ZXJzL21lbW9yeS9zaW1wbGUtbWMuYyBiL2RyaXZlcnMvbWVtb3J5L3NpbXBs
+ZS1tYy5jCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLmU1ODM3MWQKLS0tIC9k
+ZXYvbnVsbAorKysgYi9kcml2ZXJzL21lbW9yeS9zaW1wbGUtbWMuYwpAQCAtMCwwICsxLDU3IEBA
+CisvKgorICogU2ltcGxlIG1lbW9yeSBjb250cm9sbGVyIGRyaXZlcgorICoKKyAqIENvcHlyaWdo
+dCAyMDEzIEVtaWxpbyBMw7NwZXogPGVtaWxpb0BlbG9wZXouY29tLmFyPgorICoKKyAqIFRoaXMg
+cHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3Ig
+bW9kaWZ5CisgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBM
+aWNlbnNlIGFzIHB1Ymxpc2hlZCBieQorICogdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsg
+ZWl0aGVyIHZlcnNpb24gMiBvZiB0aGUgTGljZW5zZSwgb3IKKyAqIChhdCB5b3VyIG9wdGlvbikg
+YW55IGxhdGVyIHZlcnNpb24uCisgKgorICogVGhpcyBwcm9ncmFtIGlzIGRpc3RyaWJ1dGVkIGlu
+IHRoZSBob3BlIHRoYXQgaXQgd2lsbCBiZSB1c2VmdWwsCisgKiBidXQgV0lUSE9VVCBBTlkgV0FS
+UkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBvZgorICogTUVSQ0hBTlRB
+QklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQorICog
+R05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KKyAqLworCisjaW5j
+bHVkZSA8bGludXgvb2YuaD4KKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4KKyNpbmNsdWRlIDxsaW51
+eC9tb2R1bGUuaD4KKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KKworc3RhdGlj
+IGludCBzaW1wbGVfbWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKK3sKKwlz
+dHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcGRldi0+ZGV2Lm9mX25vZGU7CisJc3RydWN0IGNsayAq
+Y2xrOworCisJaWYgKCFucCkKKwkJcmV0dXJuIC1FTk9ERVY7CisKKwljbGsgPSBvZl9jbGtfZ2V0
+KG5wLCAwKTsKKwlpZiAoIUlTX0VSUihjbGspKSB7CisJCWNsa19wcmVwYXJlX2VuYWJsZShjbGsp
+OworCQljbGtfcHV0KGNsayk7CisJfQorCisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyBjb25zdCBz
+dHJ1Y3Qgb2ZfZGV2aWNlX2lkIHNpbXBsZV9tY19vZl9tYXRjaFtdID0geworCXsgLmNvbXBhdGli
+bGUgPSAic2ltcGxlLW1lbW9yeS1jb250cm9sbGVyIiwgfSwKKwl7IC8qIHNlbnRpbmVsICovIH0s
+Cit9OworCitzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBzaW1wbGVfbWNfZHJpdmVyID0g
+eworCS5wcm9iZSA9IHNpbXBsZV9tY19wcm9iZSwKKwkuZHJpdmVyID0geworCQkubmFtZSA9ICJz
+aW1wbGUtbWMiLAorCQkub3duZXIgPSBUSElTX01PRFVMRSwKKwkJLm9mX21hdGNoX3RhYmxlID0g
+b2ZfbWF0Y2hfcHRyKHNpbXBsZV9tY19vZl9tYXRjaCksCisJfSwKK307CisKK21vZHVsZV9wbGF0
+Zm9ybV9kcml2ZXIoc2ltcGxlX21jX2RyaXZlcik7CisKK01PRFVMRV9BVVRIT1IoIkVtaWxpbyBM
+w7NwZXogPGVtaWxpb0BlbG9wZXouY29tLmFyPiIpOworTU9EVUxFX0RFU0NSSVBUSU9OKCJTaW1w
+bGUgbWVtb3J5IGNvbnRyb2xsZXIgZHJpdmVyIik7CitNT0RVTEVfTElDRU5TRSgiR1BMIik7Ci0t
+IAoxLjguNAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwK
