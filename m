@@ -1,38 +1,65 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
-Date: Fri, 13 Sep 2013 10:21:43 +0800
-Message-ID: <523276B7.20807@freescale.com>
-References: <593AEF6C47F46446852B067021A273D6D984000B@MUCSE039.lantiq.com>	<20130905020435.GA3970@gmail.com>	<20980858CB6D3A4BAE95CA194937D5E73EA0C7F4@DBDE04.ent.ti.com>	<522817D7.1010206@freescale.com>	<522D3B79.3060707@freescale.com>	<52318953.6090405@freescale.com>	<1378979431.2627.402.camel@shinybook.infradead.org>	<20130913025827.GA3051@gmail.com>	<1378999322.4210.95.camel@i7.infradead.org>	<20130913041208.GD3051@gmail.com> <CAOMZO5C54wCdEOHJmwVLk_zkh-twjis1ys20Gd1+T+ygM+A6bg@mail.gmail.com>
+From: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v4] powerpc/mpc85xx: Update the clock device tree nodes
+Date: Fri, 13 Sep 2013 02:50:22 +0000
+Message-ID: <D07C73A334FF604B95B3CBD2A545D07B15089208@039-SN2MPN1-011.039d.mgd.msft.net>
+References: <1378882632-9053-1-git-send-email-Yuantian.Tang@freescale.com>
+	 <1378948229.12204.486.camel@snotra.buserror.net>
+	 <D07C73A334FF604B95B3CBD2A545D07B150748AA@039-SN2MPN1-013.039d.mgd.msft.net>
+ <1378997052.2536.5.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5C54wCdEOHJmwVLk_zkh-twjis1ys20Gd1+T+ygM+A6bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1378997052.2536.5.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org" <thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org>, "b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=E4=BA=8E 2013=E5=B9=B409=E6=9C=8813=E6=97=A5 00:27, Fabio Estevam =E5=86=
-=99=E9=81=93:
-> On Fri, Sep 13, 2013 at 1:12 AM, Huang Shijie<shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>  wro=
-te:
->
->> I will send you the datasheet tomorrow.
-> The Vybrid reference manual is available at:
-> http://cache.freescale.com/files/32bit/doc/ref_manual/VYBRIDRM.pdf
->
-> (Chapter 30 is the one for QuadSPI)
->
-Hi Fabio:
-
-thanks a lot !  :)
-
-Huang Shijie
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIx
+DQo+IFNlbnQ6IDIwMTPlubQ55pyIMTLml6Ug5pif5pyf5ZubIDIyOjQ0DQo+IFRvOiBUYW5nIFl1
+YW50aWFuLUIyOTk4Mw0KPiBDYzogV29vZCBTY290dC1CMDc0MjE7IGdhbGFrQGtlcm5lbC5jcmFz
+aGluZy5vcmc7IGxpbnV4cHBjLQ0KPiBkZXZAbGlzdHMub3psYWJzLm9yZzsgZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmc7IExpIFlhbmctTGVvLVI1ODQ3Mg0KPiBTdWJqZWN0OiBSZTogW1BBVENI
+IHY0XSBwb3dlcnBjL21wYzg1eHg6IFVwZGF0ZSB0aGUgY2xvY2sgZGV2aWNlIHRyZWUNCj4gbm9k
+ZXMNCj4gDQo+IE9uIFdlZCwgMjAxMy0wOS0xMSBhdCAyMDozMSAtMDUwMCwgVGFuZyBZdWFudGlh
+bi1CMjk5ODMgd3JvdGU6DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4g
+RnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gPiA+IFNlbnQ6IDIwMTPlubQ55pyIMTLml6Ug5pif
+5pyf5ZubIDk6MTANCj4gPiA+IFRvOiBUYW5nIFl1YW50aWFuLUIyOTk4Mw0KPiA+ID4gQ2M6IGdh
+bGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0K
+PiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IExpIFlhbmctTGVvLVI1ODQ3Mg0KPiA+
+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2NF0gcG93ZXJwYy9tcGM4NXh4OiBVcGRhdGUgdGhlIGNs
+b2NrIGRldmljZQ0KPiA+ID4gdHJlZSBub2Rlcw0KPiA+ID4NCj4gPiA+IFRoaXMgZGVzY3JpcHRp
+b24gb2YgInJlZyIgaXMgb3Zlcmx5IHNwZWNpZmljIChhc3N1bWVzIGhvdyB0aGUgcGFyZW50DQo+
+ID4gPiBub2RlJ3MgcmFuZ2VzIGFyZSBzZXQgdXApLCBpbmNvbXBsZXRlICh0aGVyZSdzIGEgc2l6
+ZSBhcyB3ZWxsIGFzIHRoZQ0KPiA+ID4gb2Zmc2V0KSwgYW5kIGRvZXMgbm90IGFwcGx5IHRvIHRo
+ZSBjbG9ja2dlbiBub2RlIGl0c2VsZiAoeW91DQo+ID4gPiBwcm9iYWJseSBzaG91bGRuJ3QgbHVt
+cCB0aGVtIHRvZ2V0aGVyIGxpa2UgdGhpcykuDQo+ID4gPg0KPiA+IERvIHlvdSBtZWFuIEkgc2hv
+dWxkIGV4cGxhaW4gdGhlIFJFRyBvZiBjbG9ja2dlbiBhbmQgaXRzIGNoaWxkIG5vZGUNCj4gcmVz
+cGVjdGl2ZWx5Pw0KPiA+DQo+ID4gPiA+ICstIGNsb2NrcyA6IHNoYWxsIGJlIHRoZSBpbnB1dCBw
+YXJlbnQgY2xvY2sgcGhhbmRsZSBmb3IgdGhlIGNsb2NrLg0KPiA+ID4NCj4gPiA+IE5vdCByZXF1
+aXJlZCBvbiB0aGUgY2xvY2tnZW4gbm9kZQ0KPiA+ID4NCj4gPiBSZXF1aXJlZCBieSBjaGlsZCBu
+b2RlIG9mIGNsb2NrZ2VuLg0KPiANCj4gTXkgcG9pbnQgaXMgdGhhdCB5b3UncmUgbHVtcGluZyBz
+ZXZlcmFsIGRpZmZlcmVudCB0eXBlcyBvZiBub2RlcyB0b2dldGhlcg0KPiB3aXRoIG9uZSBiaW5k
+aW5nLCB3aGVuIHNvbWUgcGFydHMgb2YgdGhlIGJpbmRpbmcgYXJlIG5vdCBhcHBsaWNhYmxlIHRv
+DQo+IHRoZSBjbG9ja2dlbiBub2RlLg0KPiANCk5vdCBzZXZlcmFsLCBqdXN0IHR3byB0eXBlcyBv
+ZiBub2Rlcy4NCk9uZSBpcyBjbG9ja2dlbiBub2RlLCB0aGUgb3RoZXIgaXMgUExMIGFuZCBtdXgg
+bm9kZXMuDQoNClRoZSByZWFzb24gdGhleSBsdW1wZWQgdG9nZXRoZXIgaXMgdGhhdCB0aGUgY2xv
+Y2tnZW4gbm9kZSBpcyBub3Qgb25seSBJUCBibG9jaw0KTm9kZSBidXQgYWxzbyBhIGNsb2NrIHBy
+b3ZpZGVyIG5vZGUuDQoNCkF0IGZpcnN0LCBJIHdhbnQgdG8gYWRkIGEgZXh0cmEgZml4ZWQtY2xv
+Y2sgbm9kZSBhbmQgbW92ZSB0aGUgY2xvY2stZnJlcXVlbmN5IG9mIGNsb2NrZ2VuIA0KTm9kZSB0
+byBpdCwgYnV0IGl0IGlzIGFnYWluc3QgdGhlIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgd2hpY2gg
+SSB0aGluayBpdCBpcyBub3QgYSBiaWcgZGVhbCwNCkJlY2F1c2Ugbm9ib2R5IGhhc24ndCB1c2Vk
+IGl0IHlldC4NCklmIEkgYWRkIGEgZXh0cmEgbm9kZSB3aXRoIHRoZSBjbG9jay1mcmVxdWVuY3kg
+cHJvcGVydHkgYW5kIGRvbid0IG1vdmUgdGhlDQpjbG9jay1mcmVxdWVuY3kgcHJvcGVydHkgb2Yg
+Y2xvY2tnZW4sIHRoYXQgd291bGQgYmUgcmVkdW5kYW50IGJlY2F1c2UgYm90aCBjbG9ja2dlbiBu
+b2RlDQphbmQgdGhlIGV4dHJhIG5vZGUgaGF2ZSB0aGUgc2FtZSBjbG9jay1mcmVxdWVuY3kgbm9k
+ZS4NClNvLCBJIGNob29zZSB3aGF0IEkgZGlkIG5vdy4NCiANCkNvdWxkIHlvdSBnaXZlIG1lIHNv
+bWUgc3VnZ2VzdGlvbnMgb24gdGhpcz8NClJlZ2FyZHMsDQpZdWFudGlhbg0KDQo+IC1TY290dA0K
+PiANCg0K
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
