@@ -1,95 +1,69 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] memory: add a basic OF-based memory driver
-Date: Fri, 13 Sep 2013 09:00:48 -0500
-Message-ID: <CAL_JsqJACEtSRaDg0TcYODzhpsHFGa4mFSYa_R3qspypEKH+hQ@mail.gmail.com>
-References: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
-	<1379032225-6425-1-git-send-email-emilio@elopez.com.ar>
-	<CAOesGMiUMniKRLRgGPsimR0bXWQFbx+SL5dUJXOb8t0JfEcHsg@mail.gmail.com>
-	<52326ADC.8040703@elopez.com.ar>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] drm: omap: Enable DT support for DMM
+Date: Fri, 13 Sep 2013 10:14:34 -0400
+Message-ID: <CAF6AEGu7eRFhrQZUD-43AOHNQtRWeyxYga1dnir=qUo1mQ9ebA@mail.gmail.com>
+References: <1379063679-4869-1-git-send-email-archit@ti.com>
+	<1379063679-4869-4-git-send-email-archit@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52326ADC.8040703@elopez.com.ar>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
-Cc: Olof Johansson <olof@lixom.net>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?ISO-8859-1?Q?David_Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379063679-4869-4-git-send-email-archit-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Valkeinen, Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andygro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DRI Development <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 8:31 PM, Emilio L=F3pez <emilio@elopez.com.ar> =
-wrote:
-> Hi Olof,
+On Fri, Sep 13, 2013 at 5:14 AM, Archit Taneja <archit-l0cyMroinI0@public.gmane.org> wrote:
+> Enable use of DT for DMM/Tiler.
 >
-> El 12/09/13 21:57, Olof Johansson escribi=F3:
->
->> On Thu, Sep 12, 2013 at 5:30 PM, Emilio L=F3pez <emilio@elopez.com.a=
-r>
->> wrote:
->>>
->>> This driver's only job is to claim and ensure the necessary clock
->>> for memory operation on a DT-powered machine remains enabled.
->>>
->>> Signed-off-by: Emilio L=F3pez <emilio@elopez.com.ar>
->>> ---
->>>
->>> I believe this new patch should resolve all the concerns raised; as
->>> always, all feedback is welcome :)
->>
->>
->> I think you're going about this the wrong way.
->>
->> If you have a problem with a clock not staying on, shouldn't you jus=
-t
->> marking it appropriately in the clock table instead, making sure it'=
-s
->> initialized with at least one reference to it?
->
->
-> If by "the clock table" you mean the tree as handled by the common cl=
-ock
-> framework, there is no such flag available as of today; see Mike's re=
-ply for
-> more information.
->
-> Personally I feel that if the general case can solve our problems (in=
- this
-> case, having a consumer who prepares and enables the clock), we shoul=
-d avoid
-> adding special cases to the framework.
->
->
->> I believe that is how
->> some of the other platforms handle this, and it's a lot cleaner than
->> adding a fake binding and a fake driver just to grab a single clock.
->
->
-> The binding doesn't have to be fake; it is actually describing the me=
-mory
-> controller hardware:
->
-> mc: mc@0123000 {
->         compatible =3D "simple-memory-controller";
->         reg =3D <0x0123000 0x400>;
->         clocks =3D <&pll5 1>;
-> };
->
-> If one day we get docs and/or have any special features we may need f=
-rom the
-> controller, we can use something like
->
-> mc: mc@0123000 {
->         compatible =3D "vendor,awesome-mc", "simple-memory-controller=
-";
->         reg =3D <0x0123000 0x400>;
->         clocks =3D <&pll5 1>;
-> };
+> Originally worked on by Andy Gross.
 
-Better, but this is still wrong. DT describes the hardware. There is
-no such h/w as a simple-memory-controller. The fact that you have a
-simple-memory-ctrlr kernel driver is a kernel
-feature/artifact/limitation. Describe the h/w with a meaningful
-compatible string and put that string in the simple memory controller
-driver match table. If someday we have a real driver for said memory
-controller, then it is only a kernel change to use a different driver.
+looks good.. but do we want to get information about # of LUT's, etc,
+from DT?  Or did we decide that we can reliably get this from the hw?
+I lost track of that discussion (I guess Andy would remember)..
 
-Rob
+BR,
+-R
+
+> Cc: Andy Gross <andygro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: DRI Development <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+> Signed-off-by: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/gpu/drm/omapdrm/omap_dmm_tiler.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
+> index acf6678..59f17de 100644
+> --- a/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
+> +++ b/drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
+> @@ -968,12 +968,23 @@ static const struct dev_pm_ops omap_dmm_pm_ops = {
+>  };
+>  #endif
+>
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id dmm_of_match[] = {
+> +       { .compatible = "ti,omap4-dmm", },
+> +       { .compatible = "ti,omap5-dmm", },
+> +       {},
+> +};
+> +#else
+> +#define dmm_of_match NULL
+> +#endif
+> +
+>  struct platform_driver omap_dmm_driver = {
+>         .probe = omap_dmm_probe,
+>         .remove = omap_dmm_remove,
+>         .driver = {
+>                 .owner = THIS_MODULE,
+>                 .name = DMM_DRIVER_NAME,
+> +               .of_match_table = dmm_of_match,
+>  #ifdef CONFIG_PM
+>                 .pm = &omap_dmm_pm_ops,
+>  #endif
+> --
+> 1.8.1.2
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
