@@ -1,96 +1,135 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: Re: [RFC PATCH 1/4] DRIVERS: IRQCHIP: Add crossbar irqchip driver
-Date: Fri, 13 Sep 2013 14:02:59 +0530
-Message-ID: <5232CDBB.6040202@ti.com>
-References: <1379000351-15672-1-git-send-email-r.sricharan@ti.com>
- <1379000351-15672-2-git-send-email-r.sricharan@ti.com>
- <alpine.DEB.2.02.1309122201530.4089@ionos.tec.linutronix.de>
- <523228B5.5070507@ti.com>
- <alpine.DEB.2.02.1309122335440.4089@ionos.tec.linutronix.de>
- <5232457A.8080709@ti.com>
- <alpine.DEB.2.02.1309130138550.4089@ionos.tec.linutronix.de>
- <52326D6B.2010003@ti.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] i2c: qup: Add device tree bindings information
+Date: Fri, 13 Sep 2013 12:13:15 +0300
+Message-ID: <1379063595.16481.19.camel@iivanov-dev.int.mm-sol.com>
+References: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
+	 <20130912162840.GE22013@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52326D6B.2010003@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, tony@atomide.com, linus.walleij@linaro.org, rnayak@ti.com, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130912162840.GE22013-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <alokc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TZUIDd8j+nm9g@public.gmane.org" <linux-kernel-u79uwXL29TZUIDd8j+nm9g@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 September 2013 07:12 AM, Santosh Shilimkar wrote:
-> On Thursday 12 September 2013 08:26 PM, Thomas Gleixner wrote:
->> On Thu, 12 Sep 2013, Santosh Shilimkar wrote:
->>> On Thursday 12 September 2013 06:22 PM, Thomas Gleixner wrote:
->>>> Now the real question is, how that expansion mechanism is supposed to
->>>> work. There are two possible scenarios:
->>>>
->>>> 1) Expand the number of handled interrupts beyond the GIC capacity:
->>>>
->>>>    That requires a mechanism in CROSSBAR to map several CROSSBAR
->>>>    interrupts to a particular GIC interrupt and provide a demux
->>>>    mechanism to invoke the shared handlers.
->>>>
->>> This is not possible in hardware and not supported. Hardware has
->>> no notion of muxing multiple IRQ's to generate 1 IRQ or ack etc
->>> functionality. Its a simple MUX to tie knots between input and output
->>> wires.
->> It's not a MUX. It's a ROUTING mechanism. That's similar to the
->> mechanisms which are used by MSI[X]. We assign arbitrary interrupt
->> numbers to a device and route them to some underlying limited hardware
->> interrupt controller.
->>
->>>> 2) Provide a mapping mechanism between possibly 250 interrupt numbers
->>>>    and a limitation of a total 160 active interrupts by the underlying
->>>>    GIC.
->>>>
->>> This is the need and problem we are trying to solve.
->> Let me summarize:
->>
->>    - GIC supports up to 160 interrupts
->>
->>    - CROSSBAR supports up to 250 interrupts 
->>
->>    - CROSSBAR routes up to 160 out of 250 interrupts to the GIC ones
->>
->>    - Drivers request a CROSSBAR interrupt number which must be mapped
->>      to some arbitrary available GIC irq number
->>
-> Correct.
->
->> So basically the CROSSBAR mechanism is pretty much the same as MSI[X]
->> just in a different flavour and with a different set of semantics and
->> limitations, i.e. poor mans MSI[X] with a new level of bogosity.
->>
->> So if CROSSBAR is going to be the new fangled SoC MSI[X] long term
->> equivalent then you better provide some infrastructure for that and
->> make the drivers ready to use it. Maybe check with the PCI/MSI folks
->> to share some of the interfaces.
->>
->> If that whole thing is another onetime HW designers wet dream, then
->> please go back to the limited but completely functional (Who is going
->> to use more than 160 peripheral interrupts????) device tree model. I
->> really have no interest to support hardware designer brain farts.
->>
-> Thanks for clear NAK for irqchip approach. I should have looped you
-> in the discussion where I was also suggesting against the irqchip
-> approach. We will try to look at MSI stuff but if its get too
-> complicated am going to fall-back to the initial probe based
-> approach to achieve the functionality.
->
-> Thanks again for clear direction and useful discussion.
- Thanks for the feedback. I will look in to the MSI driver and
- see if how that would work.
+Hi Mark, 
 
-Regards,
- Sricharan
+On Thu, 2013-09-12 at 17:28 +0100, Mark Rutland wrote: 
+> On Thu, Aug 29, 2013 at 02:27:52PM +0100, Ivan T. Ivanov wrote:
+> > From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > 
+> > The Qualcomm Universal Peripherial (QUP) wraps I2C mini-core and
+> > provide input and output FIFO's for it. I2C controller can operate
+> > as master with supported bus speeds of 100Kbps and 400Kbps.
+> > 
+> > Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/i2c/i2c-qup.txt |   99 +++++++++++++++++++++
+> >  1 file changed, 99 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qup.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-qup.txt b/Documentation/devicetree/bindings/i2c/i2c-qup.txt
+> > new file mode 100644
+> > index 0000000..c682726
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/i2c/i2c-qup.txt
+> > @@ -0,0 +1,99 @@
+> > +Qualcomm Universal Periferial (QUP) I2C controller
+> > +
+> > +Required properties:
+> > + - compatible : should be "qcom,i2c-qup"
+> > + - reg : Offset and length of the register region for the device
+> > + - interrupts : core interrupt
+> 
+> How about the following:
+> 
+> - interrupts: interrupt-specifier for the core interrupt.
+
+Ok.
+
+> 
+> > +
+> > + - pinctrl-names: Should contain only one value - "default".
+> > + - pinctrl-0: Should specify pin control group used for this controller.
+> > +
+> > + - clocks : phandles to clock instances of the device tree nodes
+> 
+> Clocks aren't just phandles, they have a clock-specifier component. This
+> should probably be something like:
+> 
+>  - clocks: a list of phandle + clock-specifier pairs for each entry in
+>            clock-names
+
+Right now MSM clocks [1] are just phandles, I should add #clock-cells = <0>.
+
+> 
+> > + - clock-names :
+> > +		"core" : Allow access to FIFO buffers and registers
+> 
+> Huh? That description doesn't seem to descripe the hardware.
+
+How about: Allow access to I2C core FIFO buffers and registers.
+
+> 
+> > +		"iface" : Clock used by QUP interface
+> 
+> Which interface? The slave interface the CPUs access, or the interface
+> to the I2C devices?
+
+
+My understanding for this is that QUP is wrapping I2C core. QUP is
+interface to I2C core.
+
+> 
+> Are these the only clock inputs to the device?
+
+Yep.
+
+> 
+> Is there a regulator input that might need to be specified?
+> 
+
+No. Power management is done via clock gating.
+
+> > +
+> > + - #address-cells : should be <1> Address cells for I2C device address
+> > + - #size-cells : should be <0> I2C addresses have no size component.
+> > +
+> > +Optional properties :
+> > + - Child nodes conforming to i2c bus binding
+> > + - clock-frequency : Desired I2C bus clock frequency in Hz. If
+> > +		not set thedefault frequency is 100kHz
+> 
+> Why is this necessary?
+
+This is how I2C bus frequency could be specified. It is standard
+I2C property. Not sure that I get the question.
+
+> 
+> > + - qcom,src-freq : Frequency of the source clocking this bus in Hz.
+> > +		Divider value is set based on soruce-frequency and
+> > +		desired I2C bus frequency. If this value is not
+> > +		provided, the source clock is assumed to be running
+> > +		at 19.2 MHz.
+> 
+> This looks like it should be a clock input.
+
+Thanks, I will change it.
+
+Regard,
+Ivan
+
+[1] https://lkml.org/lkml/2013/7/24/729
+
+
+> 
+> Thanks,
+> Mark.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
