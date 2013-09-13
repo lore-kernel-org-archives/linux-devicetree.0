@@ -1,47 +1,95 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: Disable Exynos5250 I2S controllers by default
-Date: Fri, 13 Sep 2013 15:53:42 +0200
-Message-ID: <4193371.msAsz94Hhu@amdc1227>
-References: <1379074196-9834-1-git-send-email-broonie@kernel.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] memory: add a basic OF-based memory driver
+Date: Fri, 13 Sep 2013 09:00:48 -0500
+Message-ID: <CAL_JsqJACEtSRaDg0TcYODzhpsHFGa4mFSYa_R3qspypEKH+hQ@mail.gmail.com>
+References: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
+	<1379032225-6425-1-git-send-email-emilio@elopez.com.ar>
+	<CAOesGMiUMniKRLRgGPsimR0bXWQFbx+SL5dUJXOb8t0JfEcHsg@mail.gmail.com>
+	<52326ADC.8040703@elopez.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1379074196-9834-1-git-send-email-broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52326ADC.8040703@elopez.com.ar>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
+Cc: Olof Johansson <olof@lixom.net>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?ISO-8859-1?Q?David_Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Thu, Sep 12, 2013 at 8:31 PM, Emilio L=F3pez <emilio@elopez.com.ar> =
+wrote:
+> Hi Olof,
+>
+> El 12/09/13 21:57, Olof Johansson escribi=F3:
+>
+>> On Thu, Sep 12, 2013 at 5:30 PM, Emilio L=F3pez <emilio@elopez.com.a=
+r>
+>> wrote:
+>>>
+>>> This driver's only job is to claim and ensure the necessary clock
+>>> for memory operation on a DT-powered machine remains enabled.
+>>>
+>>> Signed-off-by: Emilio L=F3pez <emilio@elopez.com.ar>
+>>> ---
+>>>
+>>> I believe this new patch should resolve all the concerns raised; as
+>>> always, all feedback is welcome :)
+>>
+>>
+>> I think you're going about this the wrong way.
+>>
+>> If you have a problem with a clock not staying on, shouldn't you jus=
+t
+>> marking it appropriately in the clock table instead, making sure it'=
+s
+>> initialized with at least one reference to it?
+>
+>
+> If by "the clock table" you mean the tree as handled by the common cl=
+ock
+> framework, there is no such flag available as of today; see Mike's re=
+ply for
+> more information.
+>
+> Personally I feel that if the general case can solve our problems (in=
+ this
+> case, having a consumer who prepares and enables the clock), we shoul=
+d avoid
+> adding special cases to the framework.
+>
+>
+>> I believe that is how
+>> some of the other platforms handle this, and it's a lot cleaner than
+>> adding a fake binding and a fake driver just to grab a single clock.
+>
+>
+> The binding doesn't have to be fake; it is actually describing the me=
+mory
+> controller hardware:
+>
+> mc: mc@0123000 {
+>         compatible =3D "simple-memory-controller";
+>         reg =3D <0x0123000 0x400>;
+>         clocks =3D <&pll5 1>;
+> };
+>
+> If one day we get docs and/or have any special features we may need f=
+rom the
+> controller, we can use something like
+>
+> mc: mc@0123000 {
+>         compatible =3D "vendor,awesome-mc", "simple-memory-controller=
+";
+>         reg =3D <0x0123000 0x400>;
+>         clocks =3D <&pll5 1>;
+> };
 
-On Friday 13 of September 2013 13:09:53 Mark Brown wrote:
-> From: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Rather than requiring each board to explicitly disable the I2S
-> controllers it is not using instead require boards to enable those that
-> they are using.
-> 
-> This is required for audio operation on Arndale, one of the unused I2S
-> controllers is pinmuxed with the LDO enable GPIOs for the WM1811A.
-> 
-> Signed-off-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Acked-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/exynos5250-arndale.dts  | 4 ++++
->  arch/arm/boot/dts/exynos5250-smdk5250.dts | 8 --------
->  arch/arm/boot/dts/exynos5250.dtsi         | 3 +++
->  3 files changed, 7 insertions(+), 8 deletions(-)
+Better, but this is still wrong. DT describes the hardware. There is
+no such h/w as a simple-memory-controller. The fact that you have a
+simple-memory-ctrlr kernel driver is a kernel
+feature/artifact/limitation. Describe the h/w with a meaningful
+compatible string and put that string in the simple memory controller
+driver match table. If someday we have a real driver for said memory
+controller, then it is only a kernel change to use a different driver.
 
-For the whole series,
-
-Acked-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
-Best regards,
-Tomasz
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
