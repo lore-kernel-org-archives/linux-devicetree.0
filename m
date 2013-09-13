@@ -1,124 +1,121 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
-Date: Fri, 13 Sep 2013 14:14:43 -0700
-Message-ID: <20130913211443.GA9511@roeck-us.net>
-References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com>
- <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
- <20130913170005.GB5681@roeck-us.net>
- <c6755ff6-104d-40fe-a753-0e165cff1e10@AM1EHSMHS004.ehs.local>
- <20130913194822.GA12117@roeck-us.net>
- <4b7029c7-8617-4c3d-9544-4245293b77f1@CO9EHSMHS014.ehs.local>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4b7029c7-8617-4c3d-9544-4245293b77f1@CO9EHSMHS014.ehs.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
+From: Benson Leung <bleung@chromium.org>
+Subject: [PATCH] Input: gpio_keys - wakeup_trigger
+Date: Fri, 13 Sep 2013 14:52:40 -0700
+Message-ID: <1379109160-32437-1-git-send-email-bleung@chromium.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, david@protonic.nl
+Cc: bleung@chromium.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 13, 2013 at 02:05:49PM -0700, S=F6ren Brinkmann wrote:
-> On Fri, Sep 13, 2013 at 12:48:22PM -0700, Guenter Roeck wrote:
-> > On Fri, Sep 13, 2013 at 10:26:04AM -0700, S=F6ren Brinkmann wrote:
-> > > On Fri, Sep 13, 2013 at 10:00:05AM -0700, Guenter Roeck wrote:
-> > > > On Thu, Sep 12, 2013 at 05:55:37PM -0700, Soren Brinkmann wrote=
-:
-> > > > > Add a driver for SILabs 570, 571, 598, 599 programmable oscil=
-lators.
-> > > > > The devices generate low-jitter clock signals and are reprogr=
-ammable via
-> > > > > an I2C interface.
-> > > > >=20
-> > > > > Cc: Guenter Roeck <linux@roeck-us.net>
-> > > > > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> > > > > ---
-> > [ ... ]
-> >=20
-> > > > > +	/* Applying a new frequency can take up to 10ms */
-> > > > > +	usleep_range(10000, 10001);
-> > > >=20
-> > > > One microsecond range doesn't really buy anything besides forci=
-ng the compiler
-> > > > to generate extra code. Why not just use 10000 ?
-> > > That's due to checkpatch. I originally had 'msleep(10)' and check=
-patch
-> > > suggested to use 'usleep_range()'. Then I put
-> > > 'usleep_range(10000, 10000)' and checkpatch suggested to not use =
-the
-> > > same values for MIN and MAX, so I added the 1 to the MAX value.
-> > > If it is considered to be safe and okay to put in MIN=3DMAX=3D100=
-00, I'll
-> > > change it accordingly.
-> > >=20
-> > Guess what checkpatch means is to put in something resonable,
-> > such as maybe (10000, 12000). (10000, 10001) just defeats checkpatc=
-h
-> > which doesn't really provide any value. So either provide a reasona=
-ble
-> > and acceptable range or use a single value.
-> All right. I'll make it 10000 then, for MIN and MAX.
->=20
-> >=20
-> > [ ... ]
-> >=20
-> > > > > +	match =3D of_match_node(clk_si570_of_match, client->dev.of_=
-node);
-> > > > > +	if (!match)
-> > > > > +		return -EINVAL;
-> > > >=20
-> > > > Seems unusual. Is this really needed ? It precludes the driver =
-from being used
-> > > > in a non-devicetree environment, for example. I would guess tha=
-t there is a match
-> > > > if client->dev.of_node is set. Otherwise, this code would be ne=
-eded in every
-> > > > driver supporting devicetree, and I don't recall seeing that.
-> > > >=20
-> > > > > +	ddata =3D match->data;
-> > > > > +
-> > > > You should be able to get this information (ie the pointer to s=
-i570_device_data)
-> > > > from id->driver_data. That would be more consistent with other =
-i2c devices.
-> > > I think I copied this approach from the other clk-si... driver. I=
-'ll
-> > > do some research on your suggestion and change it. Could you poin=
-t me to
-> > > an example for your proposal?
-> > >=20
-> > drivers/hwmon/lm90.c or drivers/hwmon/max6697.c.
-> Thanks.
->=20
-> >=20
-> > > > > +
-> > > > > +	if (of_property_read_u32(client->dev.of_node, "factory-fout=
-",
-> > > > > +				&factory_fout)) {
-> > > > > +		dev_warn(&client->dev,
-> > > > > +			"DTS does not contain factory-fout, using default\n");
-> > > >=20
-> > > > Is that really worth a warning ?
-> > > My understanding is, that the default output frequency is part-sp=
-ecific
-> > > and required to calculate the frequency of the internal crystal. =
-Hence,
-> > > if you do not provide the correct default output frequency for yo=
-ur part, all
-> > > frequencies generated by this driver will be off, unless the here=
- used
-> > > default matches your part. Please correct me if I'm wrong, otherw=
-ise, I
-> > > think it's worth a warning.
-> > >=20
-> > Maybe the property should be mandatory ?
-> It's actually listed as required property in the documentation. I'll
-> make it mandatory in the code as well and let probe() fail if it's no=
-t
-> provided.
->=20
-Ok.
+Allow wakeup_trigger to be defined per gpio button. Currently, all
+gpio buttons are set up as IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING.
+It may be more appropriate to only wake the system on one edge, for example
+if the gpio is for a Lid Switch.
 
-Thanks,
-Guenter
+Signed-off-by: Benson Leung <bleung@chromium.org>
+---
+ .../devicetree/bindings/gpio/gpio_keys.txt         |  7 +++++++
+ drivers/input/keyboard/gpio_keys.c                 | 23 ++++++++++++++++++++--
+ include/linux/gpio_keys.h                          |  3 +++
+ 3 files changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio_keys.txt b/Documentation/devicetree/bindings/gpio/gpio_keys.txt
+index 5c2c021..243f569 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio_keys.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio_keys.txt
+@@ -20,6 +20,13 @@ Optional subnode-properties:
+ 	- debounce-interval: Debouncing interval time in milliseconds.
+ 	  If not specified defaults to 5.
+ 	- gpio-key,wakeup: Boolean, button can wake-up the system.
++	- gpio-key,wakeup-trigger : Specifies the type of wakeup behavior.
++	  <1> == Rising Edge Trigger
++	  <2> == Falling Edge Trigger
++	  <3> == Both Rising and Falling Edge Trigger
++	  <4> == Level High Trigger
++	  <8> == Level Low Trigger
++	  If not specified, defaults to <3> == Both Rising and Falling.
+ 
+ Example nodes:
+ 
+diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+index 440ce32..28b6992 100644
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -40,6 +40,7 @@ struct gpio_button_data {
+ 	spinlock_t lock;
+ 	bool disabled;
+ 	bool key_pressed;
++	unsigned long irqflags;
+ };
+ 
+ struct gpio_keys_drvdata {
+@@ -493,6 +494,8 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+ 		irqflags = 0;
+ 	}
+ 
++	bdata->irqflags = irqflags;
++
+ 	input_set_capability(input, button->type ?: EV_KEY, button->code);
+ 
+ 	/*
+@@ -643,6 +646,9 @@ gpio_keys_get_devtree_pdata(struct device *dev)
+ 		if (of_property_read_u32(pp, "debounce-interval",
+ 					 &button->debounce_interval))
+ 			button->debounce_interval = 5;
++
++		of_property_read_u32(pp, "gpio-key,wakeup-trigger",
++				     &button->wakeup_trigger);
+ 	}
+ 
+ 	if (pdata->nbuttons == 0) {
+@@ -811,8 +817,14 @@ static int gpio_keys_suspend(struct device *dev)
+ 	if (device_may_wakeup(dev)) {
+ 		for (i = 0; i < ddata->pdata->nbuttons; i++) {
+ 			struct gpio_button_data *bdata = &ddata->data[i];
+-			if (bdata->button->wakeup)
++			if (bdata->button->wakeup) {
++				unsigned int flags;
++				flags = bdata->button->wakeup_trigger &
++					IRQF_TRIGGER_MASK;
++				if (flags && flags != bdata->irqflags)
++					irq_set_irq_type(bdata->irq, flags);
+ 				enable_irq_wake(bdata->irq);
++			}
+ 		}
+ 	} else {
+ 		mutex_lock(&input->mutex);
+@@ -834,8 +846,15 @@ static int gpio_keys_resume(struct device *dev)
+ 	if (device_may_wakeup(dev)) {
+ 		for (i = 0; i < ddata->pdata->nbuttons; i++) {
+ 			struct gpio_button_data *bdata = &ddata->data[i];
+-			if (bdata->button->wakeup)
++			if (bdata->button->wakeup) {
++				unsigned int flags;
++				flags = bdata->button->wakeup_trigger &
++					IRQF_TRIGGER_MASK;
+ 				disable_irq_wake(bdata->irq);
++				if (flags && flags != bdata->irqflags)
++					irq_set_irq_type(bdata->irq,
++							 bdata->irqflags);
++			}
+ 		}
+ 	} else {
+ 		mutex_lock(&input->mutex);
+diff --git a/include/linux/gpio_keys.h b/include/linux/gpio_keys.h
+index a7e977f..d8d5a4f 100644
+--- a/include/linux/gpio_keys.h
++++ b/include/linux/gpio_keys.h
+@@ -15,6 +15,9 @@ struct gpio_keys_button {
+ 	bool can_disable;
+ 	int value;		/* axis value for EV_ABS */
+ 	unsigned int irq;	/* Irq number in case of interrupt keys */
++
++	/* trigger value (IRQF_TRIGGER_*) while used as a wake-up source */
++	unsigned int wakeup_trigger;
+ };
+ 
+ struct gpio_keys_platform_data {
+-- 
+1.8.4
+
