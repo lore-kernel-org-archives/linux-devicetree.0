@@ -1,87 +1,84 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] tick: broadcast: Deny per-cpu clockevents from being
- broadcast sources
-Date: Fri, 13 Sep 2013 16:45:12 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1309131643500.4089@ionos.tec.linutronix.de>
-References: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com> <1379004640-15117-2-git-send-email-soren.brinkmann@xilinx.com> <alpine.DEB.2.02.1309122224420.4089@ionos.tec.linutronix.de>
- <54e79f60-d0c4-4897-ab16-ecd50ae7ec0d@DB9EHSMHS019.ehs.local>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC PATCH 1/4] DRIVERS: IRQCHIP: Add crossbar irqchip driver
+Date: Fri, 13 Sep 2013 10:55:46 -0400
+Message-ID: <52332772.5040203@ti.com>
+References: <1379000351-15672-1-git-send-email-r.sricharan@ti.com> <1379000351-15672-2-git-send-email-r.sricharan@ti.com> <alpine.DEB.2.02.1309122201530.4089@ionos.tec.linutronix.de> <523228B5.5070507@ti.com> <alpine.DEB.2.02.1309122335440.4089@ionos.tec.linutronix.de> <5232457A.8080709@ti.com> <alpine.DEB.2.02.1309130138550.4089@ionos.tec.linutronix.de> <52326D6B.2010003@ti.com> <alpine.DEB.2.02.1309131142540.4089@ionos.tec.linutronix.de>
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-581853902-1379083513=:4089"
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54e79f60-d0c4-4897-ab16-ecd50ae7ec0d-K5ybuo5XL++GljRhoabY2LjjLBE8jN/0@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1309131142540.4089-3cz04HxQygjZikZi3RtOZ1XZhhPuCNm+@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-15?Q?S=F6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, rnayak-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-581853902-1379083513=:4089
-Content-Type: TEXT/PLAIN; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Thu, 12 Sep 2013, Sören Brinkmann wrote:
-> On Thu, Sep 12, 2013 at 10:30:15PM +0200, Thomas Gleixner wrote:
-> I gave it a shot. Is this what you imagine:
-> diff --git a/drivers/clocksource/arm_global_timer.c b/drivers/clocksource/arm_global_timer.c
-> index b66c1f3..c639b1a 100644
-> --- a/drivers/clocksource/arm_global_timer.c
-> +++ b/drivers/clocksource/arm_global_timer.c
-> @@ -169,7 +169,8 @@ static int gt_clockevents_init(struct clock_event_device *clk)
->         int cpu = smp_processor_id();
->  
->         clk->name = "arm_global_timer";
-> -       clk->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
-> +       clk->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT |
-> +               CLOCK_EVT_FEAT_PERCPU;
->         clk->set_mode = gt_clockevent_set_mode;
->         clk->set_next_event = gt_clockevent_set_next_event;
->         clk->cpumask = cpumask_of(cpu);
-> diff --git a/include/linux/clockchips.h b/include/linux/clockchips.h
-> index 0857922..493aa02 100644
-> --- a/include/linux/clockchips.h
-> +++ b/include/linux/clockchips.h
-> @@ -60,6 +60,7 @@ enum clock_event_mode {
->   * Core shall set the interrupt affinity dynamically in broadcast mode
->   */
->  #define CLOCK_EVT_FEAT_DYNIRQ          0x000020
-> +#define CLOCK_EVT_FEAT_PERCPU          0x000040
->  
->  /**
->   * struct clock_event_device - clock event device descriptor
-> diff --git a/kernel/time/tick-broadcast.c b/kernel/time/tick-broadcast.c
-> index d3539e5..de4c5d8 100644
-> --- a/kernel/time/tick-broadcast.c
-> +++ b/kernel/time/tick-broadcast.c
-> @@ -70,16 +70,14 @@ static bool tick_check_broadcast_device(struct clock_event_device *curdev,
->                                         struct clock_event_device *newdev)
->  {
->         if ((newdev->features & CLOCK_EVT_FEAT_DUMMY) ||
-> -           (newdev->features & CLOCK_EVT_FEAT_C3STOP))
-> +           (newdev->features & CLOCK_EVT_FEAT_C3STOP) ||
-> +           (newdev->features & CLOCK_EVT_FEAT_PERCPU))
->                 return false;
->  
->         if (tick_broadcast_device.mode == TICKDEV_MODE_ONESHOT &&
->             !(newdev->features & CLOCK_EVT_FEAT_ONESHOT))
->                 return false;
->  
-> -       if (cpumask_equal(newdev->cpumask, cpumask_of(smp_processor_id())))
-> -               return false;
-> -
->         return !curdev || newdev->rating > curdev->rating;
->  }
+On Friday 13 September 2013 10:24 AM, Thomas Gleixner wrote:
+> On Thu, 12 Sep 2013, Santosh Shilimkar wrote:
+>> On Thursday 12 September 2013 08:26 PM, Thomas Gleixner wrote:
+>>> Let me summarize:
+>>>
+>>>    - GIC supports up to 160 interrupts
+>>>
+>>>    - CROSSBAR supports up to 250 interrupts 
+>>>
+>>>    - CROSSBAR routes up to 160 out of 250 interrupts to the GIC ones
+>>>
+>>>    - Drivers request a CROSSBAR interrupt number which must be mapped
+>>>      to some arbitrary available GIC irq number
+>>>
+>> Correct.
+>>
+>>> So basically the CROSSBAR mechanism is pretty much the same as MSI[X]
+>>> just in a different flavour and with a different set of semantics and
+>>> limitations, i.e. poor mans MSI[X] with a new level of bogosity.
+>>>
+>>> So if CROSSBAR is going to be the new fangled SoC MSI[X] long term
+>>> equivalent then you better provide some infrastructure for that and
+>>> make the drivers ready to use it. Maybe check with the PCI/MSI folks
+>>> to share some of the interfaces.
+>>>
+>>> If that whole thing is another onetime HW designers wet dream, then
+>>> please go back to the limited but completely functional (Who is going
+>>> to use more than 160 peripheral interrupts????) device tree model. I
+>>> really have no interest to support hardware designer brain farts.
+>>>
+>> Thanks for clear NAK for irqchip approach. I should have looped you
+>> in the discussion where I was also suggesting against the irqchip
+>> approach. We will try to look at MSI stuff but if its get too
+>> complicated am going to fall-back to the initial probe based
+>> approach to achieve the functionality.
 > 
-> If this is the way to go, I can prepare this in a v2.
+> Before you dig into MSI, lets talk about irq domains first.
+> 
+> GIC implements a legacy irq domain, i.e. a linear domain of all
+> possible GIC interrupts with a 1:1 mapping.
+> 
+> So why can't you make use of irq domains and have the whole routing
+> business implemented sanely?
+> 
+> What's needed is in gic_init_bases():
+> 
+>        if (of_property_read(node, "routable_irqs", &nr_routable_irqs) {
+>        	  irq_domain_add_legacy(nr_gic_irqs);
+>        } else {
+>        	  irq_domain_add_legacy(nr_per_cpu_irqs);
+> 	  irq_domain_add_linear(nr_routable_irqs);
+>        }
+> 
+> Now that separate domain has an xlate function which grabs a free GIC
+> irq from a bitmap and returns the hardware irq number in the gic
+> space. The map/unmap callbacks take care of setting up / tearing down
+> the route in the crossbar.
+> 
+> Thoughts?
+> 
+This sounds pretty good idea. We will explore above option.
+Thanks Thomas.
 
-Looks good to me. The last junk of the patch won't apply on mainline,
-but thats the least of my worries. :)
+Regards,
+Santosh
 
-Thanks,
-
-	tglx
---8323329-581853902-1379083513=:4089--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
