@@ -1,39 +1,63 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: All device tree bindings need maintainer ack or just the 'interesting'
- ones.
-Date: Sat, 14 Sep 2013 13:07:30 +0100
-Message-ID: <52345182.1080609@kernel.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 10/38] Documentation: dt: iio: Add binding for LPS001WP
+Date: Sat, 14 Sep 2013 13:08:29 +0100
+Message-ID: <523451BD.4080003@kernel.org>
+References: <1378817379-8238-1-git-send-email-lee.jones@linaro.org>
+ <1378817379-8238-11-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1378817379-8238-11-git-send-email-lee.jones@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, arnd@arndb.de, linux-iio@vger.kernel.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, denis.ciocca@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
-
-I'm getting a lot of IIO related device tree bindings at the moment.
-Most are pretty trivial e.g.
-
-http://marc.info/?l=linux-iio&m=137881790217809&w=2
-
-I know you are probably still working out how the device tree maintainership
-is going to work in the long run, but in the meantime do you want me to hold
-these on an Ack from one of the maintainers and/or to ensure that they are all posted
-to devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org?
-
-Really the question is do you want to be completely treated like any other subsystem,
-where, if a driver touches it, in how ever trivial a fashion, the assumption is it
-would be unwise to not attempt to get an Ack from the relevant maintainer.
-
-There are plenty of more 'interesting' IIO binding questions out there and obviously
-those need the input from the list and maintainers!
-
-In the meantime, we'll send everything to devicetree-u79uwXL29TaiAVqoAR/hOA@public.gmane.org
-
-Jonathan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+added devicetree list cc.
+On 09/10/13 13:49, Lee Jones wrote:
+> LPS001WP is a Pressure and Temperature sensor.
+> 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  .../devicetree/bindings/iio/pressure/lps001wp.txt   | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/pressure/lps001wp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/pressure/lps001wp.txt b/Documentation/devicetree/bindings/iio/pressure/lps001wp.txt
+> new file mode 100644
+> index 0000000..3294a65c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/pressure/lps001wp.txt
+> @@ -0,0 +1,21 @@
+> +* STMicroelectronics Pressure Sensor
+> +
+> +Required properties:
+> +  - compatible: Should be "st,lps001wp_press"
+> +  - reg: The I2C address of the sensor
+> +
+> +Optional properties:
+> +  - vdd-supply: Phandle to the Vdd supply regulator
+> +  - vddio-supply: Phandle to the Vdd-IO supply regulator
+> +
+> +Example:
+> +
+> +i2c@80128000 {
+> +        lps001wp@5c {
+> +                compatible = "st,lps001wp_press";
+> +                reg = <0x5c>;
+> +
+> +                vdd-supply = <&ab8500_ldo_aux1_reg>;
+> +                vddio-supply = <&db8500_vsmps2_reg>;
+> +        };
+> +};
+> -- 1.8.1.2 -- To unsubscribe from this list: send the line "unsubscribe linux-iio" in the body of a message to
+> majordomo@vger.kernel.org More majordomo info at http://vger.kernel.org/majordomo-info.html
