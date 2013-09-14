@@ -1,63 +1,78 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH] Input: gpio_keys - wakeup_trigger
-Date: Sat, 14 Sep 2013 14:16:47 +0200
-Message-ID: <106090496.3hTZTLSVzK@flatron>
-References: <1379109160-32437-1-git-send-email-bleung@chromium.org>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm: dts: socfpga: Add support for SD/MMC
+Date: Sat, 14 Sep 2013 14:30:45 +0200
+Message-ID: <1963011.uUY4o6LRbA@flatron>
+References: <1378740833-4883-1-git-send-email-dinguyen@altera.com> <1378740833-4883-4-git-send-email-dinguyen@altera.com> <522E398F.3080100@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1379109160-32437-1-git-send-email-bleung@chromium.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Benson Leung <bleung@chromium.org>
-Cc: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, david@protonic.nl, dianders@chromium.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <522E398F.3080100-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benson,
-
-On Friday 13 of September 2013 14:52:40 Benson Leung wrote:
-> Allow wakeup_trigger to be defined per gpio button. Currently, all
-> gpio buttons are set up as IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING.
-> It may be more appropriate to only wake the system on one edge, for
-> example if the gpio is for a Lid Switch.
+On Monday 09 of September 2013 15:11:43 Stephen Warren wrote:
+> On 09/09/2013 09:33 AM, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> > From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> > 
+> > Add bindings for SD/MMC for SOCFPGA.
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+> > b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+> > 
+> > +* Altera SOCFPGA specific extensions to the Synopsis Designware
+> > Mobile
+> > +  Storage Host Controller
+> > +
+> > +The Synopsis designware mobile storage host controller is used to
+> > interface +a SoC with storage medium such as eMMC or SD/MMC cards.
+> > This file documents +differences between the core Synopsis dw mshc
+> > controller properties described +by synopsis-dw-mshc.txt and the
+> > properties used by the SOCFPGA specific +extensions to the Synopsis
+> > Designware Mobile Storage Host Controller. +
+> > +Required Properties:
+> > +
+> > +* compatible: should be
+> > +        - "altr,socfpga-dw-mshc": for controllers with Altera SOCFPGA
+> > +          specific extensions.
+> > +
+> > +* samsung,dw-mshc-sdr-timing: See exynos-dw-mshc.txt for more
+> > information about +	this binding.
 > 
-> Signed-off-by: Benson Leung <bleung@chromium.org>
-> ---
->  .../devicetree/bindings/gpio/gpio_keys.txt         |  7 +++++++
->  drivers/input/keyboard/gpio_keys.c                 | 23
-> ++++++++++++++++++++-- include/linux/gpio_keys.h                       
->   |  3 +++
->  3 files changed, 31 insertions(+), 2 deletions(-)
+> s/binding/property/
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio_keys.txt
-> b/Documentation/devicetree/bindings/gpio/gpio_keys.txt index
-> 5c2c021..243f569 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio_keys.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio_keys.txt
-> @@ -20,6 +20,13 @@ Optional subnode-properties:
->  	- debounce-interval: Debouncing interval time in milliseconds.
->  	  If not specified defaults to 5.
->  	- gpio-key,wakeup: Boolean, button can wake-up the system.
-> +	- gpio-key,wakeup-trigger : Specifies the type of wakeup behavior.
-> +	  <1> == Rising Edge Trigger
-> +	  <2> == Falling Edge Trigger
-> +	  <3> == Both Rising and Falling Edge Trigger
-> +	  <4> == Level High Trigger
-> +	  <8> == Level Low Trigger
-> +	  If not specified, defaults to <3> == Both Rising and Falling.
+> It's odd that this isn't "synopsis," rather than "samsung," if the
+> property is generic across all/some uses of the Synopsis core. But, I
+> guess this is fine.
 
-I don't like two things in this patch.
+Just as a side note, correct name is Synopsys, not Synopsis. There are
+multiple places around Documentation/devicetree where this typo is
+present[1]. Should we consider correcting this or the typo will have
+to stay?
 
-First is that this looks completely like a configuration option, not 
-hardware description, so it's not something that should be put into DT. 
-Especially that users might want to use another wake-up trigger depending 
-on their use cases. I'd rather see this as a sysfs entry.
-
-Another thing is that this driver assumes that key events are indicated by 
-edges on the GPIO line, so I don't think level trigger setting make any 
-sense here. I'd rather allow three settings here (through a sysfs knob) - 
-key down, key up, key down or up.
+[1] git grep -i synopsis Documentation/devicetree/
+Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:* Samsung Exynos specific extensions to the Synopsis Designware Mobile
+Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
+Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:differences between the core Synopsis dw mshc controller properties described
+Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:by synopsis-dw-mshc.txt and the properties used by the Samsung Exynos specific
+Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:extensions to the Synopsis Designware Mobile Storage Host Controller.
+Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:* Rockchip specific extensions to the Synopsis Designware Mobile
+Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
+Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:differences between the core Synopsis dw mshc controller properties described
+Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:by synopsis-dw-mshc.txt and the properties used by the Rockchip specific
+Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:extensions to the Synopsis Designware Mobile Storage Host Controller.
+Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:* Synopsis Designware Mobile Storage Host Controller
+Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
+Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:properties used by the Synopsis Designware Mobile Storage Host Controller.
+Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:     - snps,dw-mshc: for controllers compliant with synopsis dw-mshc.
+Documentation/devicetree/bindings/pci/designware-pcie.txt:* Synopsis Designware PCIe interface
 
 Best regards,
 Tomasz
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
