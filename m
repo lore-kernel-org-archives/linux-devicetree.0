@@ -1,94 +1,73 @@
-From: Preeti U Murthy <preeti-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] tick: broadcast: Deny per-cpu clockevents from being
- broadcast sources
-Date: Sat, 14 Sep 2013 05:53:10 +0530
-Message-ID: <5233AC6E.1040002@linux.vnet.ibm.com>
-References: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com> <1379004640-15117-2-git-send-email-soren.brinkmann@xilinx.com> <alpine.DEB.2.02.1309122224420.4089@ionos.tec.linutronix.de> <5232CC15.8090208@linaro.org> <CAM4v1pPQwBfQ3V6M2VGsc-Fh+VhLkQE2JZeoVc=_3kniODNEhA@mail.gmail.com> <5232EB72.9050904@linux.vnet.ibm.com> <2a29ccc9-6aea-47ca-9306-4f17d7cc2fe4@DB9EHSMHS013.ehs.local>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
+Date: Fri, 13 Sep 2013 20:40:54 -0500
+Message-ID: <CAL_JsqKnNHywcR21XhrjFyGs1DjZnbAFybraRKmxNmELLH-qPA@mail.gmail.com>
+References: <52260608.2030202@linaro.org>
+	<CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
+	<1378284256.17510.60.camel@kazak.uk.xensource.com>
+	<CAL_Jsq+82xfNCD3LmNE6VD1mp4Vzbm-hPPaMjwg9+ab3moXP_w@mail.gmail.com>
+	<CACxGe6sOyNNEATsnRdu9=_nPE1q6V4MDaDKvk4QvJiSgq6jXmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2a29ccc9-6aea-47ca-9306-4f17d7cc2fe4-K5ybuo5XL+/T7m58JnLnSLjjLBE8jN/0@public.gmane.org>
+In-Reply-To: <CACxGe6sOyNNEATsnRdu9=_nPE1q6V4MDaDKvk4QvJiSgq6jXmg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Preeti Murthy <preeti.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "svaidy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org" <svaidy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Dennis Gilmore <dennis-OMEdqnBlyiw@public.gmane.org>, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Soren,
+On Fri, Sep 13, 2013 at 5:13 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Wed, Sep 4, 2013 at 5:41 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> For u-boot Andre has proposed some syntactic sugar over the "fdt"
+>>> command to make boot.scr more trivial to use. We would of course need to
+>>> implement support for using it in the relevant distro tools (but they
+>>> tend to be very distro/machine specific already, e.g. Debian's
+>>> flash-kernel)
+>>
+>> And being machine specific is a PITA. flash-kernel is certainly not
+>> something we want to expand on. There is not much love for boot.scr
+>> either. There is work to address what are not really machine
+>> differences, but largely vendor u-boot differences:
+>>
+>> http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg119025.html
+>>
+>> One option for u-boot which already supports syslinux style menu files
+>> is to adopt the syslinux multiboot parsing support:
+>>
+>> http://www.syslinux.org/wiki/index.php/Doc/mboot
+>
+> Even building it into U-Boot is problematic because it leaves older
+> machines out in the cold. Leif's port of Grub to U-Boot is far more
+> interesting since the distro can now be in control of the code that
+> loads the images and jumps into the kernel/hypervisor.
 
-On 09/13/2013 09:53 PM, S=C3=B6ren Brinkmann wrote:
-> Hi Preeti,
-> Thanks for the explanation but now I'm a little confused. That's a lo=
-t of
-> details and I'm lacking the in depth knowledge to fully understand
-> everything.
->=20
-> Is it correct to say, that your patch series enables per cpu devices =
-to
-> be the broadcast device - for PPC?
+Considering there is no distro support for grub on ARM yet, it may be
+more interesting in the long run, but it is not for the short term. So
+there needs to be something that is supportable on both u-boot and
+grub (or any other bootloader).
 
-Not really. We have a pseudo clock device, which is registered as the
-broadcast device. This clock device has all the features of an external
-clock device that the broadcast framework expects from a broadcast
-device like !CLOCK_FEAT_C3STOP & !FEAT_PERCPU that you introduce in you=
-r
-patch.
+>
+>> We need to back-up and consider what this looks like in the end for
+>> all the pieces and get input from folks on grub, UEFI, and armv8. The
+>> UEFI answer may be this is a grub problem. For armv8, this proposal
+>> does match up well as the kernel boot interface for v8 is DT. Despite
+>> some claims, ACPI will not completely replace DT because of this.
+>
+> Yes, for UEFI it is absolutely an OS loader problem. UEFI provides an
+> API and runtime environment. Grub is in general moving towards a boot
+> menu system and a tool for loading images. Actual booting however
+> should be done by a separate OS loader application. For Linux, this
+> will be an in-kernel UEFI Stub. For Xen I would recommend taking the
+> Linux EFI stub code and doing the same thing. There really isn't a
+> need for a multiboot spec when you can rely on a runtime execution
+> environment for setting things up exactly as you want them.
 
-It as though we trick the broadcast framework into believing that we
-have an external device, while in reality the pseudo device is just a d=
-ummy.
+You've lost me as well. How do you see the flow working with UEFI for
+a user running bare metal OS, installing Xen, and rebooting running
+Xen.
 
-So if this is a pseudo device, which gets registered as the broadcast
-device, how do we program it to handle broadcast events? That is where
-the per cpu device steps in. It serves as the clock source to this
-pseudo device. Meaning we program the per cpu device for the next
-broadcast event using a hrtimer framework that we introduce, which call=
-s
-pseudo_dev->event_handler on expiry. This is nothing but the broadcast
-handler.
-
-Therefore we are able to manage broadcast without having to have an
-explicit clock device for the purpose.
-
-> And that would mean, that even though you have a per cpu device, you'=
-d
-> deliberately not set the FEAT_PERCPU flag, because on PPC a per cpu
-> timer is a valid broadcast device?
-
-No we would set the FEAT_PERCPU for the per cpu device on PPC. As I
-mentioned above this is not going to be registered as the broadcast
-device. We would however not set this flag for the pseudo device, that
-we register as the broadcast device.
-
->=20
-> Assuming that is not going into an utterly wrong direction: How would=
- we
-> close on this one? AFAIK, ARM does not have this capability and I gue=
-ss
-> it won't be added. So, should I go forward with the fix proposed by
-> Thomas? Should we rename the FEAT_PERCPU flag to something else, give=
-n
-> that PPC may use per cpu devices for broadcasting and the sole usage =
-of
-> that flag is to prevent such a device from becoming the broadcast dev=
-ice?
-
-You can go ahead with this fix because as explained above, when we
-register a broadcast device we use a pseudo device which has the
-features that the broadcast framework approves. The per cpu device does
-not register itself with the broadcast framework. It merely programs
-itself for the next broadcast event. Hence this fix will not hinder the
-broadcast support on PPC.
->=20
-> 	Thanks,
-> 	S=C3=B6ren
->=20
->=20
-Regards
-Preeti U Murthy
-
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
