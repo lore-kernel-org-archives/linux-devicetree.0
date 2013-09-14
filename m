@@ -1,72 +1,125 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Dennis Gilmore <dennis-OMEdqnBlyiw@public.gmane.org>
 Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
-Date: Fri, 13 Sep 2013 20:40:54 -0500
-Message-ID: <CAL_JsqKnNHywcR21XhrjFyGs1DjZnbAFybraRKmxNmELLH-qPA@mail.gmail.com>
+Date: Fri, 13 Sep 2013 23:06:38 -0500
+Message-ID: <20130913230638.787aa3d5@adria.ausil.us>
 References: <52260608.2030202@linaro.org>
 	<CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
 	<1378284256.17510.60.camel@kazak.uk.xensource.com>
 	<CAL_Jsq+82xfNCD3LmNE6VD1mp4Vzbm-hPPaMjwg9+ab3moXP_w@mail.gmail.com>
-	<CACxGe6sOyNNEATsnRdu9=_nPE1q6V4MDaDKvk4QvJiSgq6jXmg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6sOyNNEATsnRdu9=_nPE1q6V4MDaDKvk4QvJiSgq6jXmg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAL_Jsq+82xfNCD3LmNE6VD1mp4Vzbm-hPPaMjwg9+ab3moXP_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Dennis Gilmore <dennis-OMEdqnBlyiw@public.gmane.org>, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 13, 2013 at 5:13 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Wed, Sep 4, 2013 at 5:41 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> For u-boot Andre has proposed some syntactic sugar over the "fdt"
->>> command to make boot.scr more trivial to use. We would of course need to
->>> implement support for using it in the relevant distro tools (but they
->>> tend to be very distro/machine specific already, e.g. Debian's
->>> flash-kernel)
->>
->> And being machine specific is a PITA. flash-kernel is certainly not
->> something we want to expand on. There is not much love for boot.scr
->> either. There is work to address what are not really machine
->> differences, but largely vendor u-boot differences:
->>
->> http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg119025.html
->>
->> One option for u-boot which already supports syslinux style menu files
->> is to adopt the syslinux multiboot parsing support:
->>
->> http://www.syslinux.org/wiki/index.php/Doc/mboot
->
-> Even building it into U-Boot is problematic because it leaves older
-> machines out in the cold. Leif's port of Grub to U-Boot is far more
-> interesting since the distro can now be in control of the code that
-> loads the images and jumps into the kernel/hypervisor.
-
-Considering there is no distro support for grub on ARM yet, it may be
-more interesting in the long run, but it is not for the short term. So
-there needs to be something that is supportable on both u-boot and
-grub (or any other bootloader).
-
->
->> We need to back-up and consider what this looks like in the end for
->> all the pieces and get input from folks on grub, UEFI, and armv8. The
->> UEFI answer may be this is a grub problem. For armv8, this proposal
->> does match up well as the kernel boot interface for v8 is DT. Despite
->> some claims, ACPI will not completely replace DT because of this.
->
-> Yes, for UEFI it is absolutely an OS loader problem. UEFI provides an
-> API and runtime environment. Grub is in general moving towards a boot
-> menu system and a tool for loading images. Actual booting however
-> should be done by a separate OS loader application. For Linux, this
-> will be an in-kernel UEFI Stub. For Xen I would recommend taking the
-> Linux EFI stub code and doing the same thing. There really isn't a
-> need for a multiboot spec when you can rely on a runtime execution
-> environment for setting things up exactly as you want them.
-
-You've lost me as well. How do you see the flow working with UEFI for
-a user running bare metal OS, installing Xen, and rebooting running
-Xen.
-
-Rob
+LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMQ0KDQpFbCBXZWQs
+IDQgU2VwIDIwMTMgMTE6NDE6MDEgLTA1MDANClJvYiBIZXJyaW5nIDxyb2JoZXJyaW5nMkBnbWFp
+bC5jb20+IGVzY3JpYmnzOg0KPiBBZGRpbmcgRGVubmlzIGZvciBhIGRpc3RybyBwZXJzcGVjdGl2
+ZS4NCj4gDQo+IE9uIFdlZCwgU2VwIDQsIDIwMTMgYXQgMzo0NCBBTSwgSWFuIENhbXBiZWxsDQo+
+IDxJYW4uQ2FtcGJlbGxAY2l0cml4LmNvbT4gd3JvdGU6DQo+ID4gT24gVHVlLCAyMDEzLTA5LTAz
+IGF0IDE3OjAwIC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4gPj4gT24gVHVlLCBTZXAgMywg
+MjAxMyBhdCAxMDo1MyBBTSwgQW5kcmUgUHJ6eXdhcmENCj4gPj4gPGFuZHJlLnByenl3YXJhQGxp
+bmFyby5vcmc+IHdyb3RlOg0KPiA+PiA+IEhpLA0KPiA+PiA+DQo+ID4+ID4gYSBub3JtYWwgTGlu
+dXgga2VybmVsIGN1cnJlbnRseSBzdXBwb3J0cyByZWFkaW5nIHRoZSBzdGFydCBhbmQNCj4gPj4g
+PiBlbmQgYWRkcmVzcyBvZiBhIHNpbmdsZSBiaW5hcnkgYmxvYiB2aWEgdGhlIEZEVCdzIC9jaG9z
+ZW4gbm9kZS4NCj4gPj4gPiBUaGlzIHdpbGwgYmUgaW50ZXJwcmV0ZWQgYXMgdGhlIGxvY2F0aW9u
+IG9mIGFuIGluaXRpYWwgUkFNIGRpc2suDQo+ID4+ID4NCj4gPj4gPiBUaGUgWGVuIGh5cGVydmlz
+b3IgaXRzZWxmIGlzIGEga2VybmVsLCBidXQgbmVlZHMgdXAgdG8gX3R3b18NCj4gPj4gPiBiaW5h
+cmllcyBmb3IgcHJvcGVyIG9wZXJhdGlvbjogYSBEb20wIExpbnV4IGtlcm5lbCBhbmQgaXQncw0K
+PiA+PiA+IGFzc29jaWF0ZWQgaW5pdHJkLiBPbiB4ODYgdGhpcyBpcyBzb2x2ZWQgdmlhIHRoZSBt
+dWx0aWJvb3QNCj4gPj4gPiBwcm90b2NvbCB1c2VkIGJ5IHRoZSBHcnViIGJvb3Rsb2FkZXIsIHdo
+aWNoIHN1cHBvcnRzIHRvIHBhc3MgYW4NCj4gPj4gPiBhcmJpdHJhcnkgbnVtYmVyIG9mIGJpbmFy
+eSBtb2R1bGVzIHRvIGFueSBrZXJuZWwuDQo+ID4+ID4NCj4gPj4gPiBTaW5jZSBpbiB0aGUgQVJN
+IHdvcmxkIHdlIGhhdmUgdGhlIHZlcnNhdGlsZSBkZXZpY2UgdHJlZSwgd2UNCj4gPj4gPiBkb24n
+dCBuZWVkIHRvIGltcGxlbWVudCB0aGUgbXVsaXRib290IHByb3RvY29sLg0KPiA+Pg0KPiA+PiBC
+dXQgc3VyZWx5IHRoZXJlIHdvdWxkIGJlIHNvbWUgYWR2YW50YWdlIG9mIHJldXNlIGJ5IHVzaW5n
+IHRoZQ0KPiA+PiBtdWx0aS1ib290IHByb3RvY29sIHNpbmNlIFhlbiwgZ3J1YiwgYW5kIE9TIHRv
+b2xzIGFscmVhZHkgc3VwcG9ydA0KPiA+PiBpdCBmb3IgeDg2Lg0KPiA+DQo+ID4gTXVsdGlib290
+IGlzIHByZXR0eSB4ODYgc3BlY2lmaWMgKGFsdGhvdWdoIE1CMiBoYXMgYSBNSVBTIHBvcnQpIGFu
+ZA0KPiA+IGNvdmVycyBtb3JlIHN0dWZmIHRoYW4gd2Ugc3RyaWN0bHkgcmVxdWlyZSAoZS5nLiBv
+biB4ODYgaXQgaGFzDQo+ID4gcmVxdWlyZW1lbnRzIGFyb3VuZCB3aGljaCBwcm9jZXNzb3IgbW9k
+ZSB5b3UgZW50ZXIgaW4sIGhhcyBwYWdpbmcNCj4gPiBlbmFibGVkIGV0YykuDQo+ID4NCj4gPj4g
+PiBTbyBJJ2QgbGlrZSB0byBwcm9wb3NlIGEgbmV3IGJpbmRpbmcgd2hpY2ggZGVub3RlcyBiaW5h
+cnkNCj4gPj4gPiBtb2R1bGVzIGEga2VybmVsIGNhbiB1c2UgYXQgaXQncyBvd24gZGlzY3JldGlv
+bi4NCj4gPj4gPiBUaGUgbmVlZCBpcyB0cmlnZ2VyZWQgYnkgdGhlIFhlbiBoeXBlcnZpc29yICh3
+aGljaCBhbHJlYWR5IHVzZXMNCj4gPj4gPiBhIHZlcnkgc2ltaWxhciBzY2hlbWUpLCBidXQgdGhl
+IGFwcHJvYWNoIGlzIGRlbGliZXJhdGVseSBjaG9zZW4NCj4gPj4gPiB0byBiZSBhcyBnZW5lcmlj
+IGFzIHBvc3NpYmxlIHRvIGFsbG93IGZ1dHVyZSB1c2VzIChsaWtlIHBhc3NpbmcNCj4gPj4gPiBm
+aXJtd2FyZSBibG9icyBmb3IgZGV2aWNlcyBvciB0aGUgbGlrZSkuDQo+ID4+ID4gQ3JlZGl0cyBm
+b3IgdGhpcyBnbyB0byBJYW4gQ2FtcGJlbGwsIHdobyBzdGFydGVkIHNvbWV0aGluZyB2ZXJ5DQo+
+ID4+ID4gc2ltaWxhciBbMV0gZm9yIHRoZSBYZW4gaHlwZXJ2aXNvci4gVGhlIGludGVudGlvbiBv
+ZiB0aGlzDQo+ID4+ID4gcHJvcG9zYWwgaXMgdG8gbWFrZSB0aGlzIGdlbmVyaWMgYW5kIHB1Ymxp
+Y2x5IGRvY3VtZW50ZWQuDQo+ID4+DQo+ID4+IENhbiB5b3UgZGVzY3JpYmUgaG93IHlvdSBzZWUg
+dGhlIGJvb3QgZmxvdyB3b3JraW5nIHN0YXJ0aW5nIHdpdGggT1MNCj4gPj4gaW5zdGFsbGVyIHdy
+aXRlcyBrZXJuZWwsIGluaXRyZCwgeGVuIGFuZCA/Pz8gdG8gZGlzay4NCj4gPg0KPiA+IEtlcm5l
+bCBhbmQgaW5pdHJkIGFyZSB3cml0dGVuIHRvIC9ib290IGluIHRoZSB1c3VhbCB3YXkgKHByb2Jh
+Ymx5DQo+ID4gZnJvbSBrZXJuZWwuZGViIG9yIHdoYXRldmVyKS4gWGVuIHdvdWxkIGFsc28gbm9y
+bWFsbHkgY29tZSBmcm9tIGENCj4gPiBkaXN0cm8gcGFja2FnZSAoYWxzbyBpbiAvYm9vdCkuDQo+
+ID4NCj4gPj4gSG93IGRvZXMgdGhlIGJvb3Rsb2FkZXIga25vdyB3aGF0IHRvIGxvYWQ/DQo+ID4N
+Cj4gPiBJdCdzIGluIHRoZSBib290bG9hZGVyIGNvbmZpZywgZS5nLiBib290LnNjciBvciBncnVi
+LmNmZywgd2hpY2ggYXJlDQo+ID4gZWl0aGVyIGhhbmQgd3JpdHRlbiBvciBwcm9kdWNlZCBieSB0
+aGUgZGlzdHJvcyB0b29saW5nLg0KPiA+DQo+ID4gZ3J1YiBvbiBBUk0gY291bGQgY29uc3VtZSB0
+aGUgc2FtZSBzdGFuemFzIGFzIGFyZSB1c2VkIGJ5IGdydWIgb24NCj4gPiB4ODYgdG8gYm9vdCBY
+ZW4gKHdoaWNoIGFyZSBwcm9kdWNlZCBieSB1cGRhdGUtZ3J1Yik6DQo+ID4gICAgICAgICBlY2hv
+ICAgICdMb2FkaW5nIFhlbiA0LjEtYW1kNjQgLi4uJw0KPiA+ICAgICAgICAgbXVsdGlib290ICAg
+ICAgIC94ZW4tNC4xLWFtZDY0Lmd6IHBsYWNlaG9sZGVyDQo+ID4gICAgICAgICBlY2hvICAgICdM
+b2FkaW5nIExpbnV4IDMuMTAtMi1hbWQ2NCAuLi4nDQo+ID4gICAgICAgICBtb2R1bGUgIC92bWxp
+bnV6LTMuMTAtMi1hbWQ2NCBwbGFjZWhvbGRlcg0KPiA+IHJvb3Q9L2Rldi9tYXBwZXIvZGlza3Mt
+cm9vdCBybyByZXN1bWU9L2Rldi9tYXBwZXIvZGlza3Mtc3dhcCBxdWlldA0KPiA+IGVjaG8gICAg
+J0xvYWRpbmcgaW5pdGlhbCByYW1kaXNrIC4uLicNCj4gPiBtb2R1bGUgIC9pbml0cmQuaW1nLTMu
+MTAtMi1hbWQ2NA0KPiA+DQo+ID4gU2luY2UgdGhlcmUgaXMgbm8gbXVsdGlib290IG9uIEFSTSAo
+YW5kIG5ldmVyIHdpbGwgYmUpIHRoaXMgaXMgc2FmZS4NCj4gPg0KPiA+IElmIG11bHRpYm9vdCBl
+dmVyIGRvZXMgY29tZSB0byBBUk0gaXQgd2lsbCBuZWNlc3NhcmlseSBiZSBtdWx0aWJvb3QyDQo+
+ID4gd2hpY2ggdXNlcyBhIGRpZmZlcmVudCBrZXl3b3JkLg0KPiANCj4gUmlnaHQsIHRoaXMgaXMg
+anVzdCBhIHRleHQgZmlsZSB3aXRoIGEgbGlzdCBvZiBiaW5hcmllcy4gSXQgaXMgbm90DQo+IHJl
+YWxseSB0aGUgbXVsdGlib290IHNwZWMuIFRoZXJlIGlzIG5vIHJlYXNvbiBmb3IgdGhpcyBwYXJ0
+IHRvIGJlDQo+IGRpZmZlcmVudCBmb3IgZ3J1YiBvbiBBUk0uIFRoZXJlIGlzIGEgYmlnIGFkdmFu
+dGFnZSB0byByZXVzaW5nIHRoZQ0KPiBkaXN0cm8gc2lkZSB0b29saW5nLiBJZiB0aGVyZSBpc24n
+dCByZWFsbHkgbXVjaCByZXVzZSBvbiB0aGUNCj4gYm9vdGxvYWRlciBzaWRlLCB0aGVuIEknbSBm
+aW5lIHdpdGggYSBkaWZmZXJlbnQgYm9vdGxvYWRlciB0byBYZW4NCj4gaW50ZXJmYWNlLiBJIHdv
+dWxkIGxpa2UgdG8gaGVhciB0aGF0IGZyb20gZm9sa3Mgd29ya2luZyBvbiBncnViDQo+IHRob3Vn
+aC4NCj4gDQo+ID4gRm9yIHUtYm9vdCBBbmRyZSBoYXMgcHJvcG9zZWQgc29tZSBzeW50YWN0aWMg
+c3VnYXIgb3ZlciB0aGUgImZkdCINCj4gPiBjb21tYW5kIHRvIG1ha2UgYm9vdC5zY3IgbW9yZSB0
+cml2aWFsIHRvIHVzZS4gV2Ugd291bGQgb2YgY291cnNlDQo+ID4gbmVlZCB0byBpbXBsZW1lbnQg
+c3VwcG9ydCBmb3IgdXNpbmcgaXQgaW4gdGhlIHJlbGV2YW50IGRpc3RybyB0b29scw0KPiA+IChi
+dXQgdGhleSB0ZW5kIHRvIGJlIHZlcnkgZGlzdHJvL21hY2hpbmUgc3BlY2lmaWMgYWxyZWFkeSwg
+ZS5nLg0KPiA+IERlYmlhbidzIGZsYXNoLWtlcm5lbCkNCj4gDQo+IEFuZCBiZWluZyBtYWNoaW5l
+IHNwZWNpZmljIGlzIGEgUElUQS4gZmxhc2gta2VybmVsIGlzIGNlcnRhaW5seSBub3QNCj4gc29t
+ZXRoaW5nIHdlIHdhbnQgdG8gZXhwYW5kIG9uLiBUaGVyZSBpcyBub3QgbXVjaCBsb3ZlIGZvciBi
+b290LnNjcg0KPiBlaXRoZXIuIFRoZXJlIGlzIHdvcmsgdG8gYWRkcmVzcyB3aGF0IGFyZSBub3Qg
+cmVhbGx5IG1hY2hpbmUNCj4gZGlmZmVyZW5jZXMsIGJ1dCBsYXJnZWx5IHZlbmRvciB1LWJvb3Qg
+ZGlmZmVyZW5jZXM6DQo+IA0KPiBodHRwOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vdS1ib290QGxp
+c3RzLmRlbnguZGUvbXNnMTE5MDI1Lmh0bWwNCg0KdS1ib290IHN0aWxsIGhhcyBxdWl0ZSBhIGJp
+dCBvZiB3b3JrIHRoYXQgbmVlZHMgdG8gYmUgZG9uZSB0byBtYWtlDQp0aGluZ3Mgc3RhbmRhcmQg
+YWNyb3NzIHRoZSBib2FyZC4gSSBob3BlIHdlIHdpbGwgZ2V0IHRoZXJlLiBidXQgaXQgd2lsbA0K
+cmVxdWlyZSB2ZW5kb3JzIHRvIHVwZGF0ZSB0aGVpciB1LWJvb3QgYnVpbGRzLiBldmVuIGZvciBn
+cnViIHRvIGJlIGENCnZpYWJsZSBvcHRpb24gdS1ib290IG5lZWRzIHVwZGF0ZWQuDQoNCj4gT25l
+IG9wdGlvbiBmb3IgdS1ib290IHdoaWNoIGFscmVhZHkgc3VwcG9ydHMgc3lzbGludXggc3R5bGUg
+bWVudSBmaWxlcw0KPiBpcyB0byBhZG9wdCB0aGUgc3lzbGludXggbXVsdGlib290IHBhcnNpbmcg
+c3VwcG9ydDoNCj4gDQo+IGh0dHA6Ly93d3cuc3lzbGludXgub3JnL3dpa2kvaW5kZXgucGhwL0Rv
+Yy9tYm9vdA0KDQpJIHdvdWxkIGxpa2UgdG8gaGF2ZSB1LWJvb3Qgc3VwcG9ydCBtb3JlIG9mIHN5
+c2xpbnV4IHRoYW4gaXQgZG9lcyB0b2RheS4NCg0KPiANCj4gV2UgbmVlZCB0byBiYWNrLXVwIGFu
+ZCBjb25zaWRlciB3aGF0IHRoaXMgbG9va3MgbGlrZSBpbiB0aGUgZW5kIGZvcg0KPiBhbGwgdGhl
+IHBpZWNlcyBhbmQgZ2V0IGlucHV0IGZyb20gZm9sa3Mgb24gZ3J1YiwgVUVGSSwgYW5kIGFybXY4
+LiBUaGUNCj4gVUVGSSBhbnN3ZXIgbWF5IGJlIHRoaXMgaXMgYSBncnViIHByb2JsZW0uIEZvciBh
+cm12OCwgdGhpcyBwcm9wb3NhbA0KPiBkb2VzIG1hdGNoIHVwIHdlbGwgYXMgdGhlIGtlcm5lbCBi
+b290IGludGVyZmFjZSBmb3IgdjggaXMgRFQuIERlc3BpdGUNCj4gc29tZSBjbGFpbXMsIEFDUEkg
+d2lsbCBub3QgY29tcGxldGVseSByZXBsYWNlIERUIGJlY2F1c2Ugb2YgdGhpcy4NCj4gDQo+IFJv
+Yg0KDQpncnViIG9uIGFybSBzdGlsbCBuZWVkcyBhIGJpdCBvZiB3b3JrLiBhcyBkb2VzIHUtYm9v
+dC4gdWx0aW1hdGVseQ0KaGF2aW5nIHRoaW5ncyBsb29rIHRoZSBzYW1lIGJldHdlZW4geDg2IGFu
+ZCBhcm0gZm9yIHRoZSB1c2VyIGlzIHRoZQ0KYmVzdCBvcHRpb24uIHNvIGlmIHUtYm9vdCBzdXBw
+b3J0ZWQgc3lzbGludXgncyBtYm9vdCBzcGVjIGFuZCBncnViDQpzdXBwb3J0ZWQgdGhlIHNhbWUg
+c3ludGF4IGluIGJvdGggY2FzZXMsIHJlZ2FyZGxlc3Mgb2YgaWYgdGhlDQppbXBsZW1lbnRhdGlv
+biB2YXJpZWQgd2lsZGx5LCB0aGUgQVBJIGZvciBsYWNrIG9mIGEgYmV0dGVyIHdvcmQgc2hvdWxk
+DQpiZSBjb25zaXN0ZW50Lg0KDQpEZW5uaXMNCi0tLS0tQkVHSU4gUEdQIFNJR05BVFVSRS0tLS0t
+DQpWZXJzaW9uOiBHbnVQRyB2Mi4wLjIxIChHTlUvTGludXgpDQoNCmlFWUVBUkVDQUFZRkFsSXo0
+Tk1BQ2drUWtTeG00N0JhV2ZmWDhRQ2d0U0ZGSGZnSG9uZ2VjejlBRVNHNDNSc1cNCi80OEFuMTMx
+bEJvU21qd2NKT2xXTmtRVXhJM0xYQzVmDQo9ZlFxaA0KLS0tLS1FTkQgUEdQIFNJR05BVFVSRS0t
+LS0tDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
