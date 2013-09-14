@@ -1,126 +1,105 @@
-From: Dennis Gilmore <dennis-OMEdqnBlyiw@public.gmane.org>
-Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
-Date: Fri, 13 Sep 2013 23:06:38 -0500
-Message-ID: <20130913230638.787aa3d5@adria.ausil.us>
-References: <52260608.2030202@linaro.org>
-	<CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com>
-	<1378284256.17510.60.camel@kazak.uk.xensource.com>
-	<CAL_Jsq+82xfNCD3LmNE6VD1mp4Vzbm-hPPaMjwg9+ab3moXP_w@mail.gmail.com>
+From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
+Date: Sat, 14 Sep 2013 10:53:53 +0530
+Message-ID: <CA+V-a8sVyJ1TrTSiaj8vpaD+f_qJ5Hp287E3HuHJ_pRzzmdAvg@mail.gmail.com>
+References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com>
+	<523395DC.5080009@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+82xfNCD3LmNE6VD1mp4Vzbm-hPPaMjwg9+ab3moXP_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <523395DC.5080009-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMQ0KDQpFbCBXZWQs
-IDQgU2VwIDIwMTMgMTE6NDE6MDEgLTA1MDANClJvYiBIZXJyaW5nIDxyb2JoZXJyaW5nMkBnbWFp
-bC5jb20+IGVzY3JpYmnzOg0KPiBBZGRpbmcgRGVubmlzIGZvciBhIGRpc3RybyBwZXJzcGVjdGl2
-ZS4NCj4gDQo+IE9uIFdlZCwgU2VwIDQsIDIwMTMgYXQgMzo0NCBBTSwgSWFuIENhbXBiZWxsDQo+
-IDxJYW4uQ2FtcGJlbGxAY2l0cml4LmNvbT4gd3JvdGU6DQo+ID4gT24gVHVlLCAyMDEzLTA5LTAz
-IGF0IDE3OjAwIC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4gPj4gT24gVHVlLCBTZXAgMywg
-MjAxMyBhdCAxMDo1MyBBTSwgQW5kcmUgUHJ6eXdhcmENCj4gPj4gPGFuZHJlLnByenl3YXJhQGxp
-bmFyby5vcmc+IHdyb3RlOg0KPiA+PiA+IEhpLA0KPiA+PiA+DQo+ID4+ID4gYSBub3JtYWwgTGlu
-dXgga2VybmVsIGN1cnJlbnRseSBzdXBwb3J0cyByZWFkaW5nIHRoZSBzdGFydCBhbmQNCj4gPj4g
-PiBlbmQgYWRkcmVzcyBvZiBhIHNpbmdsZSBiaW5hcnkgYmxvYiB2aWEgdGhlIEZEVCdzIC9jaG9z
-ZW4gbm9kZS4NCj4gPj4gPiBUaGlzIHdpbGwgYmUgaW50ZXJwcmV0ZWQgYXMgdGhlIGxvY2F0aW9u
-IG9mIGFuIGluaXRpYWwgUkFNIGRpc2suDQo+ID4+ID4NCj4gPj4gPiBUaGUgWGVuIGh5cGVydmlz
-b3IgaXRzZWxmIGlzIGEga2VybmVsLCBidXQgbmVlZHMgdXAgdG8gX3R3b18NCj4gPj4gPiBiaW5h
-cmllcyBmb3IgcHJvcGVyIG9wZXJhdGlvbjogYSBEb20wIExpbnV4IGtlcm5lbCBhbmQgaXQncw0K
-PiA+PiA+IGFzc29jaWF0ZWQgaW5pdHJkLiBPbiB4ODYgdGhpcyBpcyBzb2x2ZWQgdmlhIHRoZSBt
-dWx0aWJvb3QNCj4gPj4gPiBwcm90b2NvbCB1c2VkIGJ5IHRoZSBHcnViIGJvb3Rsb2FkZXIsIHdo
-aWNoIHN1cHBvcnRzIHRvIHBhc3MgYW4NCj4gPj4gPiBhcmJpdHJhcnkgbnVtYmVyIG9mIGJpbmFy
-eSBtb2R1bGVzIHRvIGFueSBrZXJuZWwuDQo+ID4+ID4NCj4gPj4gPiBTaW5jZSBpbiB0aGUgQVJN
-IHdvcmxkIHdlIGhhdmUgdGhlIHZlcnNhdGlsZSBkZXZpY2UgdHJlZSwgd2UNCj4gPj4gPiBkb24n
-dCBuZWVkIHRvIGltcGxlbWVudCB0aGUgbXVsaXRib290IHByb3RvY29sLg0KPiA+Pg0KPiA+PiBC
-dXQgc3VyZWx5IHRoZXJlIHdvdWxkIGJlIHNvbWUgYWR2YW50YWdlIG9mIHJldXNlIGJ5IHVzaW5n
-IHRoZQ0KPiA+PiBtdWx0aS1ib290IHByb3RvY29sIHNpbmNlIFhlbiwgZ3J1YiwgYW5kIE9TIHRv
-b2xzIGFscmVhZHkgc3VwcG9ydA0KPiA+PiBpdCBmb3IgeDg2Lg0KPiA+DQo+ID4gTXVsdGlib290
-IGlzIHByZXR0eSB4ODYgc3BlY2lmaWMgKGFsdGhvdWdoIE1CMiBoYXMgYSBNSVBTIHBvcnQpIGFu
-ZA0KPiA+IGNvdmVycyBtb3JlIHN0dWZmIHRoYW4gd2Ugc3RyaWN0bHkgcmVxdWlyZSAoZS5nLiBv
-biB4ODYgaXQgaGFzDQo+ID4gcmVxdWlyZW1lbnRzIGFyb3VuZCB3aGljaCBwcm9jZXNzb3IgbW9k
-ZSB5b3UgZW50ZXIgaW4sIGhhcyBwYWdpbmcNCj4gPiBlbmFibGVkIGV0YykuDQo+ID4NCj4gPj4g
-PiBTbyBJJ2QgbGlrZSB0byBwcm9wb3NlIGEgbmV3IGJpbmRpbmcgd2hpY2ggZGVub3RlcyBiaW5h
-cnkNCj4gPj4gPiBtb2R1bGVzIGEga2VybmVsIGNhbiB1c2UgYXQgaXQncyBvd24gZGlzY3JldGlv
-bi4NCj4gPj4gPiBUaGUgbmVlZCBpcyB0cmlnZ2VyZWQgYnkgdGhlIFhlbiBoeXBlcnZpc29yICh3
-aGljaCBhbHJlYWR5IHVzZXMNCj4gPj4gPiBhIHZlcnkgc2ltaWxhciBzY2hlbWUpLCBidXQgdGhl
-IGFwcHJvYWNoIGlzIGRlbGliZXJhdGVseSBjaG9zZW4NCj4gPj4gPiB0byBiZSBhcyBnZW5lcmlj
-IGFzIHBvc3NpYmxlIHRvIGFsbG93IGZ1dHVyZSB1c2VzIChsaWtlIHBhc3NpbmcNCj4gPj4gPiBm
-aXJtd2FyZSBibG9icyBmb3IgZGV2aWNlcyBvciB0aGUgbGlrZSkuDQo+ID4+ID4gQ3JlZGl0cyBm
-b3IgdGhpcyBnbyB0byBJYW4gQ2FtcGJlbGwsIHdobyBzdGFydGVkIHNvbWV0aGluZyB2ZXJ5DQo+
-ID4+ID4gc2ltaWxhciBbMV0gZm9yIHRoZSBYZW4gaHlwZXJ2aXNvci4gVGhlIGludGVudGlvbiBv
-ZiB0aGlzDQo+ID4+ID4gcHJvcG9zYWwgaXMgdG8gbWFrZSB0aGlzIGdlbmVyaWMgYW5kIHB1Ymxp
-Y2x5IGRvY3VtZW50ZWQuDQo+ID4+DQo+ID4+IENhbiB5b3UgZGVzY3JpYmUgaG93IHlvdSBzZWUg
-dGhlIGJvb3QgZmxvdyB3b3JraW5nIHN0YXJ0aW5nIHdpdGggT1MNCj4gPj4gaW5zdGFsbGVyIHdy
-aXRlcyBrZXJuZWwsIGluaXRyZCwgeGVuIGFuZCA/Pz8gdG8gZGlzay4NCj4gPg0KPiA+IEtlcm5l
-bCBhbmQgaW5pdHJkIGFyZSB3cml0dGVuIHRvIC9ib290IGluIHRoZSB1c3VhbCB3YXkgKHByb2Jh
-Ymx5DQo+ID4gZnJvbSBrZXJuZWwuZGViIG9yIHdoYXRldmVyKS4gWGVuIHdvdWxkIGFsc28gbm9y
-bWFsbHkgY29tZSBmcm9tIGENCj4gPiBkaXN0cm8gcGFja2FnZSAoYWxzbyBpbiAvYm9vdCkuDQo+
-ID4NCj4gPj4gSG93IGRvZXMgdGhlIGJvb3Rsb2FkZXIga25vdyB3aGF0IHRvIGxvYWQ/DQo+ID4N
-Cj4gPiBJdCdzIGluIHRoZSBib290bG9hZGVyIGNvbmZpZywgZS5nLiBib290LnNjciBvciBncnVi
-LmNmZywgd2hpY2ggYXJlDQo+ID4gZWl0aGVyIGhhbmQgd3JpdHRlbiBvciBwcm9kdWNlZCBieSB0
-aGUgZGlzdHJvcyB0b29saW5nLg0KPiA+DQo+ID4gZ3J1YiBvbiBBUk0gY291bGQgY29uc3VtZSB0
-aGUgc2FtZSBzdGFuemFzIGFzIGFyZSB1c2VkIGJ5IGdydWIgb24NCj4gPiB4ODYgdG8gYm9vdCBY
-ZW4gKHdoaWNoIGFyZSBwcm9kdWNlZCBieSB1cGRhdGUtZ3J1Yik6DQo+ID4gICAgICAgICBlY2hv
-ICAgICdMb2FkaW5nIFhlbiA0LjEtYW1kNjQgLi4uJw0KPiA+ICAgICAgICAgbXVsdGlib290ICAg
-ICAgIC94ZW4tNC4xLWFtZDY0Lmd6IHBsYWNlaG9sZGVyDQo+ID4gICAgICAgICBlY2hvICAgICdM
-b2FkaW5nIExpbnV4IDMuMTAtMi1hbWQ2NCAuLi4nDQo+ID4gICAgICAgICBtb2R1bGUgIC92bWxp
-bnV6LTMuMTAtMi1hbWQ2NCBwbGFjZWhvbGRlcg0KPiA+IHJvb3Q9L2Rldi9tYXBwZXIvZGlza3Mt
-cm9vdCBybyByZXN1bWU9L2Rldi9tYXBwZXIvZGlza3Mtc3dhcCBxdWlldA0KPiA+IGVjaG8gICAg
-J0xvYWRpbmcgaW5pdGlhbCByYW1kaXNrIC4uLicNCj4gPiBtb2R1bGUgIC9pbml0cmQuaW1nLTMu
-MTAtMi1hbWQ2NA0KPiA+DQo+ID4gU2luY2UgdGhlcmUgaXMgbm8gbXVsdGlib290IG9uIEFSTSAo
-YW5kIG5ldmVyIHdpbGwgYmUpIHRoaXMgaXMgc2FmZS4NCj4gPg0KPiA+IElmIG11bHRpYm9vdCBl
-dmVyIGRvZXMgY29tZSB0byBBUk0gaXQgd2lsbCBuZWNlc3NhcmlseSBiZSBtdWx0aWJvb3QyDQo+
-ID4gd2hpY2ggdXNlcyBhIGRpZmZlcmVudCBrZXl3b3JkLg0KPiANCj4gUmlnaHQsIHRoaXMgaXMg
-anVzdCBhIHRleHQgZmlsZSB3aXRoIGEgbGlzdCBvZiBiaW5hcmllcy4gSXQgaXMgbm90DQo+IHJl
-YWxseSB0aGUgbXVsdGlib290IHNwZWMuIFRoZXJlIGlzIG5vIHJlYXNvbiBmb3IgdGhpcyBwYXJ0
-IHRvIGJlDQo+IGRpZmZlcmVudCBmb3IgZ3J1YiBvbiBBUk0uIFRoZXJlIGlzIGEgYmlnIGFkdmFu
-dGFnZSB0byByZXVzaW5nIHRoZQ0KPiBkaXN0cm8gc2lkZSB0b29saW5nLiBJZiB0aGVyZSBpc24n
-dCByZWFsbHkgbXVjaCByZXVzZSBvbiB0aGUNCj4gYm9vdGxvYWRlciBzaWRlLCB0aGVuIEknbSBm
-aW5lIHdpdGggYSBkaWZmZXJlbnQgYm9vdGxvYWRlciB0byBYZW4NCj4gaW50ZXJmYWNlLiBJIHdv
-dWxkIGxpa2UgdG8gaGVhciB0aGF0IGZyb20gZm9sa3Mgd29ya2luZyBvbiBncnViDQo+IHRob3Vn
-aC4NCj4gDQo+ID4gRm9yIHUtYm9vdCBBbmRyZSBoYXMgcHJvcG9zZWQgc29tZSBzeW50YWN0aWMg
-c3VnYXIgb3ZlciB0aGUgImZkdCINCj4gPiBjb21tYW5kIHRvIG1ha2UgYm9vdC5zY3IgbW9yZSB0
-cml2aWFsIHRvIHVzZS4gV2Ugd291bGQgb2YgY291cnNlDQo+ID4gbmVlZCB0byBpbXBsZW1lbnQg
-c3VwcG9ydCBmb3IgdXNpbmcgaXQgaW4gdGhlIHJlbGV2YW50IGRpc3RybyB0b29scw0KPiA+IChi
-dXQgdGhleSB0ZW5kIHRvIGJlIHZlcnkgZGlzdHJvL21hY2hpbmUgc3BlY2lmaWMgYWxyZWFkeSwg
-ZS5nLg0KPiA+IERlYmlhbidzIGZsYXNoLWtlcm5lbCkNCj4gDQo+IEFuZCBiZWluZyBtYWNoaW5l
-IHNwZWNpZmljIGlzIGEgUElUQS4gZmxhc2gta2VybmVsIGlzIGNlcnRhaW5seSBub3QNCj4gc29t
-ZXRoaW5nIHdlIHdhbnQgdG8gZXhwYW5kIG9uLiBUaGVyZSBpcyBub3QgbXVjaCBsb3ZlIGZvciBi
-b290LnNjcg0KPiBlaXRoZXIuIFRoZXJlIGlzIHdvcmsgdG8gYWRkcmVzcyB3aGF0IGFyZSBub3Qg
-cmVhbGx5IG1hY2hpbmUNCj4gZGlmZmVyZW5jZXMsIGJ1dCBsYXJnZWx5IHZlbmRvciB1LWJvb3Qg
-ZGlmZmVyZW5jZXM6DQo+IA0KPiBodHRwOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vdS1ib290QGxp
-c3RzLmRlbnguZGUvbXNnMTE5MDI1Lmh0bWwNCg0KdS1ib290IHN0aWxsIGhhcyBxdWl0ZSBhIGJp
-dCBvZiB3b3JrIHRoYXQgbmVlZHMgdG8gYmUgZG9uZSB0byBtYWtlDQp0aGluZ3Mgc3RhbmRhcmQg
-YWNyb3NzIHRoZSBib2FyZC4gSSBob3BlIHdlIHdpbGwgZ2V0IHRoZXJlLiBidXQgaXQgd2lsbA0K
-cmVxdWlyZSB2ZW5kb3JzIHRvIHVwZGF0ZSB0aGVpciB1LWJvb3QgYnVpbGRzLiBldmVuIGZvciBn
-cnViIHRvIGJlIGENCnZpYWJsZSBvcHRpb24gdS1ib290IG5lZWRzIHVwZGF0ZWQuDQoNCj4gT25l
-IG9wdGlvbiBmb3IgdS1ib290IHdoaWNoIGFscmVhZHkgc3VwcG9ydHMgc3lzbGludXggc3R5bGUg
-bWVudSBmaWxlcw0KPiBpcyB0byBhZG9wdCB0aGUgc3lzbGludXggbXVsdGlib290IHBhcnNpbmcg
-c3VwcG9ydDoNCj4gDQo+IGh0dHA6Ly93d3cuc3lzbGludXgub3JnL3dpa2kvaW5kZXgucGhwL0Rv
-Yy9tYm9vdA0KDQpJIHdvdWxkIGxpa2UgdG8gaGF2ZSB1LWJvb3Qgc3VwcG9ydCBtb3JlIG9mIHN5
-c2xpbnV4IHRoYW4gaXQgZG9lcyB0b2RheS4NCg0KPiANCj4gV2UgbmVlZCB0byBiYWNrLXVwIGFu
-ZCBjb25zaWRlciB3aGF0IHRoaXMgbG9va3MgbGlrZSBpbiB0aGUgZW5kIGZvcg0KPiBhbGwgdGhl
-IHBpZWNlcyBhbmQgZ2V0IGlucHV0IGZyb20gZm9sa3Mgb24gZ3J1YiwgVUVGSSwgYW5kIGFybXY4
-LiBUaGUNCj4gVUVGSSBhbnN3ZXIgbWF5IGJlIHRoaXMgaXMgYSBncnViIHByb2JsZW0uIEZvciBh
-cm12OCwgdGhpcyBwcm9wb3NhbA0KPiBkb2VzIG1hdGNoIHVwIHdlbGwgYXMgdGhlIGtlcm5lbCBi
-b290IGludGVyZmFjZSBmb3IgdjggaXMgRFQuIERlc3BpdGUNCj4gc29tZSBjbGFpbXMsIEFDUEkg
-d2lsbCBub3QgY29tcGxldGVseSByZXBsYWNlIERUIGJlY2F1c2Ugb2YgdGhpcy4NCj4gDQo+IFJv
-Yg0KDQpncnViIG9uIGFybSBzdGlsbCBuZWVkcyBhIGJpdCBvZiB3b3JrLiBhcyBkb2VzIHUtYm9v
-dC4gdWx0aW1hdGVseQ0KaGF2aW5nIHRoaW5ncyBsb29rIHRoZSBzYW1lIGJldHdlZW4geDg2IGFu
-ZCBhcm0gZm9yIHRoZSB1c2VyIGlzIHRoZQ0KYmVzdCBvcHRpb24uIHNvIGlmIHUtYm9vdCBzdXBw
-b3J0ZWQgc3lzbGludXgncyBtYm9vdCBzcGVjIGFuZCBncnViDQpzdXBwb3J0ZWQgdGhlIHNhbWUg
-c3ludGF4IGluIGJvdGggY2FzZXMsIHJlZ2FyZGxlc3Mgb2YgaWYgdGhlDQppbXBsZW1lbnRhdGlv
-biB2YXJpZWQgd2lsZGx5LCB0aGUgQVBJIGZvciBsYWNrIG9mIGEgYmV0dGVyIHdvcmQgc2hvdWxk
-DQpiZSBjb25zaXN0ZW50Lg0KDQpEZW5uaXMNCi0tLS0tQkVHSU4gUEdQIFNJR05BVFVSRS0tLS0t
-DQpWZXJzaW9uOiBHbnVQRyB2Mi4wLjIxIChHTlUvTGludXgpDQoNCmlFWUVBUkVDQUFZRkFsSXo0
-Tk1BQ2drUWtTeG00N0JhV2ZmWDhRQ2d0U0ZGSGZnSG9uZ2VjejlBRVNHNDNSc1cNCi80OEFuMTMx
-bEJvU21qd2NKT2xXTmtRVXhJM0xYQzVmDQo9ZlFxaA0KLS0tLS1FTkQgUEdQIFNJR05BVFVSRS0t
-LS0tDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Stephen,
+
+This patch should have been marked as RFC.
+
+Thanks for the review.
+
+On Sat, Sep 14, 2013 at 4:16 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wro=
+te:
+> On 09/13/2013 05:57 AM, Prabhakar Lad wrote:
+>> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> This patch fixes the DT binding properties of adv7343 decoder.
+>> The pdata which was being read from the DT property, is removed
+>> as this can done internally in the driver using cable detection
+>> register.
+>>
+>> This patch also removes the pdata of ADV7343 which was passed from
+>> DA850 machine.
+>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/D=
+ocumentation/devicetree/bindings/media/i2c/adv7343.txt
+>
+>>  Required Properties :
+>>  - compatible: Must be "adi,adv7343"
+>> +- reg: I2C device address.
+>> +- vddio-supply: I/O voltage supply.
+>> +- vddcore-supply: core voltage supply.
+>> +- vaa-supply: Analog power supply.
+>> +- pvdd-supply: PLL power supply.
+>
+> Old DTs won't contain those properties. This breaks the DT ABI if those
+> properties are required. Is that acceptable?
+>
+As of now adv7343 via DT binding is not enabled in any platforms
+so this wont break any DT ABI.
+
+> If it is, I think we should document that older versions of the binding
+> didn't require those properties, so they may in fact be missing.
+>
+> I note that this patch doesn't actually update the driver to
+> regulator_get() anything. Shouldn't it?
+>
+As of now the driver isn=92t enabling/accepting the regulators,
+so should I add those in DT properties or not ?
+
+>>  Optional Properties :
+>> -- adi,power-mode-sleep-mode: on enable the current consumption is reduc=
+ed to
+>> -                           micro ampere level. All DACs and the interna=
+l PLL
+>> -                           circuit are disabled.
+>> -- adi,power-mode-pll-ctrl: PLL and oversampling control. This control a=
+llows
+>> -                        internal PLL 1 circuit to be powered down and t=
+he
+>> -                        oversampling to be switched off.
+>> -- ad,adv7343-power-mode-dac: array configuring the power on/off DAC's 1=
+..6,
+>> -                           0 =3D OFF and 1 =3D ON, Default value when t=
+his
+>> -                           property is not specified is <0 0 0 0 0 0>.
+>> -- ad,adv7343-sd-config-dac-out: array configure SD DAC Output's 1 and 2=
+, 0 =3D OFF
+>> -                              and 1 =3D ON, Default value when this pro=
+perty is
+>> -                              not specified is <0 0>.
+>
+> At a very quick glance, it's not really clear why those properties are
+> being removed. They seem like HW configuration, so might be fine to put
+> into DT. What replaces these?
+
+Yes these were HW configuration but, its now internally handled in
+the driver.  The 'ad,adv7343-power-mode-dac' property which enabled the
+DAC's 1..6 , so now in the driver by default all the DAC's are enabled by
+default and enable unconnected DAC auto power down. Similarly
+'ad,adv7343-sd-config-dac-out' property enabled SD DAC's 1..2 but
+now is enabled by reading the CABLE DETECT register which tells
+the status of DAC1/2.
+
+Regards,
+--Prabhakar
