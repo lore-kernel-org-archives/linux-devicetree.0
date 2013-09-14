@@ -1,53 +1,63 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 13/38] Documentation: dt: iio: Add binding for LSM303DLH
-Date: Sat, 14 Sep 2013 13:09:37 +0100
-Message-ID: <52345201.6040501@kernel.org>
-References: <1378817379-8238-1-git-send-email-lee.jones@linaro.org> <1378817379-8238-14-git-send-email-lee.jones@linaro.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH] Input: gpio_keys - wakeup_trigger
+Date: Sat, 14 Sep 2013 14:16:47 +0200
+Message-ID: <106090496.3hTZTLSVzK@flatron>
+References: <1379109160-32437-1-git-send-email-bleung@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1378817379-8238-14-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, denis.ciocca-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1379109160-32437-1-git-send-email-bleung@chromium.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Benson Leung <bleung@chromium.org>
+Cc: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, david@protonic.nl, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree list cc.
-On 09/10/13 13:49, Lee Jones wrote:
-> LSM303DLH is a Magnetometer Sensor
+Hi Benson,
+
+On Friday 13 of September 2013 14:52:40 Benson Leung wrote:
+> Allow wakeup_trigger to be defined per gpio button. Currently, all
+> gpio buttons are set up as IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING.
+> It may be more appropriate to only wake the system on one edge, for
+> example if the gpio is for a Lid Switch.
 > 
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Benson Leung <bleung@chromium.org>
 > ---
->  .../bindings/iio/magnetometer/lsm303dlh.txt         | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/lsm303dlh.txt
+>  .../devicetree/bindings/gpio/gpio_keys.txt         |  7 +++++++
+>  drivers/input/keyboard/gpio_keys.c                 | 23
+> ++++++++++++++++++++-- include/linux/gpio_keys.h                       
+>   |  3 +++
+>  3 files changed, 31 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/lsm303dlh.txt b/Documentation/devicetree/bindings/iio/magnetometer/lsm303dlh.txt
-> new file mode 100644
-> index 0000000..5938369
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/magnetometer/lsm303dlh.txt
-> @@ -0,0 +1,21 @@
-> +* STMicroelectronics Magnetometer Sensor
-> +
-> +Required properties:
-> +  - compatible: Should be "st,lsm303dlh_magn"
-> +  - reg: The I2C address of the sensor
-> +
-> +Optional properties:
-> +  - vdd-supply: Phandle to the Vdd supply regulator
-> +  - vddio-supply: Phandle to the Vdd-IO supply regulator
-> +
-> +Example:
-> +
-> +i2c@80128000 {
-> +	lsm303dlh_magn@1e {
-> +		compatible = "st,lsm303dlh_magn";
-> +		reg = <0x1e>;
-> +
-> +		vdd-supply = <&ab8500_ldo_aux1_reg>;
-> +		vddio-supply = <&db8500_vsmps2_reg>;
-> +	};
-> +};
-> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio_keys.txt
+> b/Documentation/devicetree/bindings/gpio/gpio_keys.txt index
+> 5c2c021..243f569 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio_keys.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio_keys.txt
+> @@ -20,6 +20,13 @@ Optional subnode-properties:
+>  	- debounce-interval: Debouncing interval time in milliseconds.
+>  	  If not specified defaults to 5.
+>  	- gpio-key,wakeup: Boolean, button can wake-up the system.
+> +	- gpio-key,wakeup-trigger : Specifies the type of wakeup behavior.
+> +	  <1> == Rising Edge Trigger
+> +	  <2> == Falling Edge Trigger
+> +	  <3> == Both Rising and Falling Edge Trigger
+> +	  <4> == Level High Trigger
+> +	  <8> == Level Low Trigger
+> +	  If not specified, defaults to <3> == Both Rising and Falling.
+
+I don't like two things in this patch.
+
+First is that this looks completely like a configuration option, not 
+hardware description, so it's not something that should be put into DT. 
+Especially that users might want to use another wake-up trigger depending 
+on their use cases. I'd rather see this as a sysfs entry.
+
+Another thing is that this driver assumes that key events are indicated by 
+edges on the GPIO line, so I don't think level trigger setting make any 
+sense here. I'd rather allow three settings here (through a sysfs knob) - 
+key down, key up, key down or up.
+
+Best regards,
+Tomasz
+
