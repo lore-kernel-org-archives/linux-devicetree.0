@@ -1,78 +1,57 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm: dts: socfpga: Add support for SD/MMC
-Date: Sat, 14 Sep 2013 14:30:45 +0200
-Message-ID: <1963011.uUY4o6LRbA@flatron>
-References: <1378740833-4883-1-git-send-email-dinguyen@altera.com> <1378740833-4883-4-git-send-email-dinguyen@altera.com> <522E398F.3080100@wwwdotorg.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [RFC PATCH alt 4/4] pinctrl: at91: rework debounce configuration
+Date: Sat, 14 Sep 2013 18:31:37 +0200
+Message-ID: <20130914163137.GA11420@ns203013.ovh.net>
+References: <1379058213-3245-1-git-send-email-b.brezillon@overkiz.com>
+ <1379058813-3489-1-git-send-email-b.brezillon@overkiz.com>
+ <52339479.6030402@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <522E398F.3080100-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52339479.6030402@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Jiri Kosina <jkosina@suse.cz>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 of September 2013 15:11:43 Stephen Warren wrote:
-> On 09/09/2013 09:33 AM, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
-> > From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> > 
-> > Add bindings for SD/MMC for SOCFPGA.
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-> > b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-> > 
-> > +* Altera SOCFPGA specific extensions to the Synopsis Designware
-> > Mobile
-> > +  Storage Host Controller
-> > +
-> > +The Synopsis designware mobile storage host controller is used to
-> > interface +a SoC with storage medium such as eMMC or SD/MMC cards.
-> > This file documents +differences between the core Synopsis dw mshc
-> > controller properties described +by synopsis-dw-mshc.txt and the
-> > properties used by the SOCFPGA specific +extensions to the Synopsis
-> > Designware Mobile Storage Host Controller. +
-> > +Required Properties:
-> > +
-> > +* compatible: should be
-> > +        - "altr,socfpga-dw-mshc": for controllers with Altera SOCFPGA
-> > +          specific extensions.
-> > +
-> > +* samsung,dw-mshc-sdr-timing: See exynos-dw-mshc.txt for more
-> > information about +	this binding.
+On 16:40 Fri 13 Sep     , Stephen Warren wrote:
+> On 09/13/2013 01:53 AM, Boris BREZILLON wrote:
+> > AT91 SoCs do not support per pin debounce time configuration.
+> > Instead you have to configure a debounce time which will be used for all
+> > pins of a given bank (PIOA, PIOB, ...).
 > 
-> s/binding/property/
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
 > 
-> It's odd that this isn't "synopsis," rather than "samsung," if the
-> property is generic across all/some uses of the Synopsis core. But, I
-> guess this is fine.
+> > +Optional properties for iomux controller:
+> > +- atmel,default-debounce-div: array of debounce divisors (one divisor per bank)
+> > +  which describes the debounce timing in use for all pins of a given bank
+> > +  configured with the DEBOUNCE option (see the following description).
+> > +  Debounce timing is obtained with this formula:
+> > +  Tdebounce = 2 * (debouncediv + 1) / Fslowclk
+> > +  with Fslowclk = 32KHz
+> > +
+> >  Required properties for pin configuration node:
+> >  - atmel,pins: 4 integers array, represents a group of pins mux and config
+> >    setting. The format is atmel,pins = <PIN_BANK PIN_BANK_NUM PERIPH CONFIG>.
+> > @@ -91,7 +99,6 @@ DEGLITCH	(1 << 2): indicate this pin need deglitch.
+> >  PULL_DOWN	(1 << 3): indicate this pin need a pull down.
+> >  DIS_SCHMIT	(1 << 4): indicate this pin need to disable schmit trigger.
+> >  DEBOUNCE	(1 << 16): indicate this pin need debounce.
+> > -DEBOUNCE_VAL	(0x3fff << 17): debounce val.
+> 
+> This change would break the DT ABI since it removes a feature that's
+> already present.
+> 
+> I suppose it's still up to the Atmel maintainers to decide whether this
+> is appropriate, or whether the impact to out-of-tree DT files would be
+> problematic.
 
-Just as a side note, correct name is Synopsys, not Synopsis. There are
-multiple places around Documentation/devicetree where this typo is
-present[1]. Should we consider correcting this or the typo will have
-to stay?
+I does ask Boris to break the DT ABI
 
-[1] git grep -i synopsis Documentation/devicetree/
-Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:* Samsung Exynos specific extensions to the Synopsis Designware Mobile
-Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
-Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:differences between the core Synopsis dw mshc controller properties described
-Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:by synopsis-dw-mshc.txt and the properties used by the Samsung Exynos specific
-Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:extensions to the Synopsis Designware Mobile Storage Host Controller.
-Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:* Rockchip specific extensions to the Synopsis Designware Mobile
-Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
-Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:differences between the core Synopsis dw mshc controller properties described
-Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:by synopsis-dw-mshc.txt and the properties used by the Rockchip specific
-Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:extensions to the Synopsis Designware Mobile Storage Host Controller.
-Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:* Synopsis Designware Mobile Storage Host Controller
-Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
-Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:properties used by the Synopsis Designware Mobile Storage Host Controller.
-Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:     - snps,dw-mshc: for controllers compliant with synopsis dw-mshc.
-Documentation/devicetree/bindings/pci/designware-pcie.txt:* Synopsis Designware PCIe interface
+as anyway no one use it and the current ABI is wrong
 
-Best regards,
-Tomasz
+and as this is the new SoC the impact of out-of-tree board is limited if ever
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+J.
