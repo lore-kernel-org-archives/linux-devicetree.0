@@ -1,73 +1,50 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
-Date: Sat, 14 Sep 2013 10:01:03 +0200
-Message-ID: <523417BF.7030505@gmail.com>
-References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com> <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com> <20130913170005.GB5681@roeck-us.net> <c6755ff6-104d-40fe-a753-0e165cff1e10@AM1EHSMHS004.ehs.local>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH 1/3] arm: socfpga: Set the SDMMC clock phase in system
+ manager
+Date: Sat, 14 Sep 2013 13:00:31 +0200
+Message-ID: <20130914110031.GB15077@amd.pavel.ucw.cz>
+References: <1378740833-4883-1-git-send-email-dinguyen@altera.com>
+ <1378740833-4883-2-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c6755ff6-104d-40fe-a753-0e165cff1e10-dAX9Bq04yCSXHCJdrdq+zrjjLBE8jN/0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1378740833-4883-2-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinguyen@altera.com
+Cc: dinh.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2013 07:26 PM, S=C3=B6ren Brinkmann wrote:
-> On Fri, Sep 13, 2013 at 10:00:05AM -0700, Guenter Roeck wrote:
->> On Thu, Sep 12, 2013 at 05:55:37PM -0700, Soren Brinkmann wrote:
->>> Add a driver for SILabs 570, 571, 598, 599 programmable oscillators=
-=2E
->>> The devices generate low-jitter clock signals and are reprogrammabl=
-e via
->>> an I2C interface.
->>>
->>> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->>> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> ---
-[...]
->>> diff --git a/drivers/clk/clk-si570.c b/drivers/clk/clk-si570.c
->>> new file mode 100644
->>> index 0000000..960d689
->>> --- /dev/null
->>> +++ b/drivers/clk/clk-si570.c
->>> @@ -0,0 +1,546 @@
-[...]
->>> +	match =3D of_match_node(clk_si570_of_match, client->dev.of_node);
->>> +	if (!match)
->>> +		return -EINVAL;
->>
->> Seems unusual. Is this really needed ? It precludes the driver from =
-being used
->> in a non-devicetree environment, for example. I would guess that the=
-re is a match
->> if client->dev.of_node is set. Otherwise, this code would be needed =
-in every
->> driver supporting devicetree, and I don't recall seeing that.
->>
->>> +	ddata =3D match->data;
->>> +
->> You should be able to get this information (ie the pointer to si570_=
-device_data)
->> from id->driver_data. That would be more consistent with other i2c d=
-evices.
-> I think I copied this approach from the other clk-si... driver. I'll
-> do some research on your suggestion and change it. Could you point me=
- to
-> an example for your proposal?
+Hi!
 
-Soeren,
+> From: Dinh Nguyen <dinguyen@altera.com>
+> 
+> Add functionality in the System Manager to set the SDR settings for the
+> SD/MMC IP.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+> Cc: Pavel Machek <pavel@denx.de>
 
-I sent a patch for the match removal in clk-si5351 [1].
-Mike must have missed it, I will resend soon.
-You can take that as "an example for the proposal" above.
+> +void socfpga_sysmgr_set_dwmmc_drvsel_smpsel(void)
+> +{
+> +	struct device_node *np;
+> +	u32 timing[2];
+> +	u32 hs_timing;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-dw-mshc");
+> +	of_property_read_u32_array(np, "samsung,dw-mshc-sdr-timing", timing, 2);
+> +	hs_timing = SYSMGR_SDMMC_CTRL_SET(timing[0], timing[1]);
+> +	writel(hs_timing, sys_manager_base_addr + SYSMGR_SDMMCGRP_CTRL_OFFSET);
+> +}
+> +EXPORT_SYMBOL(socfpga_sysmgr_set_dwmmc_drvsel_smpsel);
 
-Sebastian
+To get the abstraction right, would it make sense to have timing
+parameters as arguments to socfpga_sysmgr_set_dwmmc_drvsel_smpsel(),
+so that sysmgr code is not walking MMC's device tree directly?
 
-[1] https://lkml.org/lkml/2013/9/3/484
+Thanks,
+									Pavel
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
