@@ -1,36 +1,141 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma reserved memory
-Date: Sun, 15 Sep 2013 13:50:18 +0100
-Message-ID: <20130915125018.D51F0C42C64@trevor.secretlab.ca>
-References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com> <1377527959-5080-4-git-send-email-m.szyprowski@samsung.com> <20130829224637.D09183E1222@localhost> <52209278.8040106@samsung.com> <DAF223EB-C84C-4E82-A24A-ACD0A3A0559F@codeaurora.org> <20130909160154.8D7183E0F23@localhost> <13185491-534E-4547-8412-5704346EA2DC@codeaurora.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 05/16] hwmon: lm75: expose to thermal fw via DT nodes
+Date: Sun, 15 Sep 2013 16:22:06 -0700
+Message-ID: <5236411E.6040204@roeck-us.net>
+References: <1379282563-14650-1-git-send-email-eduardo.valentin@ti.com> <1379282563-14650-6-git-send-email-eduardo.valentin@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <13185491-534E-4547-8412-5704346EA2DC-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1379282563-14650-6-git-send-email-eduardo.valentin-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
+Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Sep 2013 13:22:25 -0500, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> 
-> On Sep 9, 2013, at 11:01 AM, Grant Likely wrote:
-> 
-> > 
-> > The generic form for do-not-touch memory:
-> > 	compatible = "reserved-memory";
-> > - I've dropped '-region' because I think it is redundant
-> > - The kernel will not make use of this memory except for when a driver picks it up
-> > 
-> > For contiguous memory:
-> > 	compatible = "contiguous-memory", "reserved-memory"
-> 
-> Should the phandle references still be 'memory-region' ?
+On 09/15/2013 03:02 PM, Eduardo Valentin wrote:
+> This patch adds to lm75 temperature sensor the possibility
+> to expose itself as thermal zone device, registered on the
+> thermal framework.
+>
+> The thermal zone is built only if a device tree node
+> describing a thermal zone for this sensor is present
+> inside the lm75 DT node. Otherwise, the driver behavior
+> will be the same.
+>
+> Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
+> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
+> ---
+>   drivers/hwmon/lm75.c | 46 +++++++++++++++++++++++++++++++++++++++++-----
+>   1 file changed, 41 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+> index c03b490..2ba09ef 100644
+> --- a/drivers/hwmon/lm75.c
+> +++ b/drivers/hwmon/lm75.c
+> @@ -27,6 +27,8 @@
+>   #include <linux/hwmon-sysfs.h>
+>   #include <linux/err.h>
+>   #include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/thermal.h>
+>   #include "lm75.h"
+>
+>
+> @@ -70,6 +72,7 @@ static const u8 LM75_REG_TEMP[3] = {
+>   /* Each client has this additional data */
+>   struct lm75_data {
+>   	struct device		*hwmon_dev;
+> +	struct thermal_zone_device	*tz;
+>   	struct mutex		update_lock;
+>   	u8			orig_conf;
+>   	u8			resolution;	/* In bits, between 9 and 12 */
+> @@ -90,22 +93,42 @@ static struct lm75_data *lm75_update_device(struct device *dev);
+>
+>   /*-----------------------------------------------------------------------*/
+>
+> +static inline long lm75_reg_to_mc(s16 temp, u8 resolution)
+> +{
+> +	return ((temp >> (16 - resolution)) * 1000) >> (resolution - 8);
+> +}
+> +
+>   /* sysfs attributes for hwmon */
+>
+> +static int lm75_read_temp(void *dev, long *temp)
+> +{
+> +	struct lm75_data *data = lm75_update_device(dev);
+> +	long temperature;
+> +
+> +	if (IS_ERR(data))
+> +		return PTR_ERR(data);
+> +
+> +	temperature = lm75_reg_to_mc(data->temp[0], data->resolution);
+> +	if (temperature < 0)
+> +		dev_warn(data->hwmon_dev,
+> +			 "operating in negative temp: %ld\n", temperature);
 
-I would think so.
+Please drop this warning. It is not the responsibility of the chip driver
+to declare valid operational conditions, much less an arbitrary one
+like zero degrees C.
 
-It is only redundent in the reserved region node because the binding
-says the node is a child of the "reserved-regions" node.  :-)
+Guenter
 
-g.
+> +
+> +	*temp = temperature;
+> +
+> +	return 0;
+> +}
+> +
+>   static ssize_t show_temp(struct device *dev, struct device_attribute *da,
+>   			 char *buf)
+>   {
+>   	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
+>   	struct lm75_data *data = lm75_update_device(dev);
+> -	long temp;
+>
+>   	if (IS_ERR(data))
+>   		return PTR_ERR(data);
+>
+> -	temp = ((data->temp[attr->index] >> (16 - data->resolution)) * 1000)
+> -	       >> (data->resolution - 8);
+> -
+> -	return sprintf(buf, "%ld\n", temp);
+> +	return sprintf(buf, "%ld\n", lm75_reg_to_mc(data->temp[attr->index],
+> +						    data->resolution));
+>   }
+>
+>   static ssize_t set_temp(struct device *dev, struct device_attribute *da,
+> @@ -271,6 +294,17 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>   		goto exit_remove;
+>   	}
+>
+> +	data->tz = thermal_zone_of_sensor_register(&client->dev,
+> +						   0,
+> +						   &client->dev,
+> +						   lm75_read_temp, NULL);
+> +	if (IS_ERR(data->tz)) {
+> +		dev_warn(&client->dev,
+> +			 "Could not parse thermal data in device tree: %ld\n",
+> +			 PTR_ERR(data->tz));
+> +		data->tz = NULL;
+> +	}
+> +
+>   	dev_info(&client->dev, "%s: sensor '%s'\n",
+>   		 dev_name(data->hwmon_dev), client->name);
+>
+> @@ -285,6 +319,8 @@ static int lm75_remove(struct i2c_client *client)
+>   {
+>   	struct lm75_data *data = i2c_get_clientdata(client);
+>
+> +	/* thermal zone life cycle is not our responsibility */
+> +	thermal_zone_of_sensor_unregister(&client->dev, data->tz);
+>   	hwmon_device_unregister(data->hwmon_dev);
+>   	sysfs_remove_group(&client->dev.kobj, &lm75_group);
+>   	lm75_write_value(client, LM75_REG_CONF, data->orig_conf);
+>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
