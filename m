@@ -1,202 +1,53 @@
-From: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 07/16] thermal: ti-soc-thermal: use thermal DT infrastructure
-Date: Sun, 15 Sep 2013 18:02:34 -0400
-Message-ID: <1379282563-14650-8-git-send-email-eduardo.valentin@ti.com>
-References: <1379282563-14650-1-git-send-email-eduardo.valentin@ti.com>
+From: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] LP3943 MFD driver for a GPIO expander and a PWM
+ generator
+Date: Mon, 16 Sep 2013 07:47:24 +0900
+Message-ID: <523638FC.1030006@ti.com>
+References: <1378949441-6073-1-git-send-email-milo.kim@ti.com> <20130912152809.GO11227@lee--X1> <20130915111730.GA9765@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379282563-14650-1-git-send-email-eduardo.valentin-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20130915111730.GA9765@ulmo>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch improves the ti-soc-thermal driver by adding the
-support to build the thermal zones based on DT nodes.
+Hi Lee,
 
-The driver will have two options now to build the thermal
-zones. The first option is the zones originally coded
-in this driver. So, the driver behavior will be same
-if there is no DT node describing the zones. The second
-option, when it is found a DT node with thermal data,
-will used the common infrastructure to build the thermal
-zone and bind its cooling devices.
+On 09/15/2013 08:17 PM, Thierry Reding wrote:
+> On Thu, Sep 12, 2013 at 04:28:09PM +0100, Lee Jones wrote:
+>>> * Documentation
+>>>    From Thierry's suggestion, detailed driver description was moved to
+>>>    'Documentation/lp3943.txt'.
+>>
+>> Really? Why here? Do we really want 1000's of driver docs in /Documentation?
 
-In case the driver loads thermal data using the legacy
-mode, this driver still adds to the system
-a cpufreq cooling device. Loading the thermal data from
-DT, the driver assumes someone else will add the cpufreq
-cooling device, like the cpufreq driver.
+There is no subdirectory for GPIO and PWM documents under 'Documentation'.
+That's why I put LP3943 documentation here.
 
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
----
- drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 77 +++++++++++++++++-----
- 1 file changed, 62 insertions(+), 15 deletions(-)
+>> No other driver does this (intel gained from a glancing look).
 
-diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-index 4f8b9af..1d373ec 100644
---- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-@@ -31,6 +31,7 @@
- #include <linux/cpufreq.h>
- #include <linux/cpumask.h>
- #include <linux/cpu_cooling.h>
-+#include <linux/of.h>
- 
- #include "ti-thermal.h"
- #include "ti-bandgap.h"
-@@ -44,6 +45,7 @@ struct ti_thermal_data {
- 	enum thermal_device_mode mode;
- 	struct work_struct thermal_wq;
- 	int sensor_id;
-+	bool our_zone;
- };
- 
- static void ti_thermal_work(struct work_struct *work)
-@@ -75,11 +77,10 @@ static inline int ti_thermal_hotspot_temperature(int t, int s, int c)
- 
- /* thermal zone ops */
- /* Get temperature callback function for thermal zone*/
--static inline int ti_thermal_get_temp(struct thermal_zone_device *thermal,
--				      unsigned long *temp)
-+static inline int __ti_thermal_get_temp(void *devdata, long *temp)
- {
- 	struct thermal_zone_device *pcb_tz = NULL;
--	struct ti_thermal_data *data = thermal->devdata;
-+	struct ti_thermal_data *data = devdata;
- 	struct ti_bandgap *bgp;
- 	const struct ti_temp_sensor *s;
- 	int ret, tmp, slope, constant;
-@@ -117,6 +118,14 @@ static inline int ti_thermal_get_temp(struct thermal_zone_device *thermal,
- 	return ret;
- }
- 
-+static inline int ti_thermal_get_temp(struct thermal_zone_device *thermal,
-+				      unsigned long *temp)
-+{
-+	struct ti_thermal_data *data = thermal->devdata;
-+
-+	return __ti_thermal_get_temp(data, temp);
-+}
-+
- /* Bind callback functions for thermal zone */
- static int ti_thermal_bind(struct thermal_zone_device *thermal,
- 			   struct thermal_cooling_device *cdev)
-@@ -229,11 +238,9 @@ static int ti_thermal_get_trip_temp(struct thermal_zone_device *thermal,
- 	return 0;
- }
- 
--/* Get the temperature trend callback functions for thermal zone */
--static int ti_thermal_get_trend(struct thermal_zone_device *thermal,
--				int trip, enum thermal_trend *trend)
-+static int __ti_thermal_get_trend(void *p, long *trend)
- {
--	struct ti_thermal_data *data = thermal->devdata;
-+	struct ti_thermal_data *data = p;
- 	struct ti_bandgap *bgp;
- 	int id, tr, ret = 0;
- 
-@@ -244,6 +251,22 @@ static int ti_thermal_get_trend(struct thermal_zone_device *thermal,
- 	if (ret)
- 		return ret;
- 
-+	*trend = tr;
-+
-+	return 0;
-+}
-+
-+/* Get the temperature trend callback functions for thermal zone */
-+static int ti_thermal_get_trend(struct thermal_zone_device *thermal,
-+				int trip, enum thermal_trend *trend)
-+{
-+	int ret;
-+	long tr;
-+
-+	ret = __ti_thermal_get_trend(thermal->devdata, &tr);
-+	if (ret)
-+		return ret;
-+
- 	if (tr > 0)
- 		*trend = THERMAL_TREND_RAISING;
- 	else if (tr < 0)
-@@ -307,16 +330,23 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
- 	if (!data)
- 		return -EINVAL;
- 
--	/* Create thermal zone */
--	data->ti_thermal = thermal_zone_device_register(domain,
-+	/* in case this is specified by DT */
-+	data->ti_thermal = thermal_zone_of_sensor_register(bgp->dev, id,
-+					data, __ti_thermal_get_temp,
-+					__ti_thermal_get_trend);
-+	if (IS_ERR(data->ti_thermal)) {
-+		/* Create thermal zone */
-+		data->ti_thermal = thermal_zone_device_register(domain,
- 				OMAP_TRIP_NUMBER, 0, data, &ti_thermal_ops,
- 				NULL, FAST_TEMP_MONITORING_RATE,
- 				FAST_TEMP_MONITORING_RATE);
--	if (IS_ERR(data->ti_thermal)) {
--		dev_err(bgp->dev, "thermal zone device is NULL\n");
--		return PTR_ERR(data->ti_thermal);
-+		if (IS_ERR(data->ti_thermal)) {
-+			dev_err(bgp->dev, "thermal zone device is NULL\n");
-+			return PTR_ERR(data->ti_thermal);
-+		}
-+		data->ti_thermal->polling_delay = FAST_TEMP_MONITORING_RATE;
-+		data->our_zone = true;
- 	}
--	data->ti_thermal->polling_delay = FAST_TEMP_MONITORING_RATE;
- 	ti_bandgap_set_sensor_data(bgp, id, data);
- 	ti_bandgap_write_update_interval(bgp, data->sensor_id,
- 					data->ti_thermal->polling_delay);
-@@ -330,7 +360,13 @@ int ti_thermal_remove_sensor(struct ti_bandgap *bgp, int id)
- 
- 	data = ti_bandgap_get_sensor_data(bgp, id);
- 
--	thermal_zone_device_unregister(data->ti_thermal);
-+	if (data && data->ti_thermal) {
-+		if (data->our_zone)
-+			thermal_zone_device_unregister(data->ti_thermal);
-+		else
-+			thermal_zone_of_sensor_unregister(bgp->dev,
-+							  data->ti_thermal);
-+	}
- 
- 	return 0;
- }
-@@ -349,6 +385,15 @@ int ti_thermal_report_sensor_temperature(struct ti_bandgap *bgp, int id)
- int ti_thermal_register_cpu_cooling(struct ti_bandgap *bgp, int id)
- {
- 	struct ti_thermal_data *data;
-+	struct device_node *np = bgp->dev->of_node;
-+
-+	/*
-+	 * We are assuming here that if one deploys the zone
-+	 * using DT, then it must be aware that the cooling device
-+	 * loading has to happen via cpufreq driver.
-+	 */
-+	if (of_find_property(np, "#sensor-cells", NULL))
-+		return 0;
- 
- 	data = ti_bandgap_get_sensor_data(bgp, id);
- 	if (!data || IS_ERR(data))
-@@ -379,7 +424,9 @@ int ti_thermal_unregister_cpu_cooling(struct ti_bandgap *bgp, int id)
- 	struct ti_thermal_data *data;
- 
- 	data = ti_bandgap_get_sensor_data(bgp, id);
--	cpufreq_cooling_unregister(data->cool_dev);
-+
-+	if (data && data->cool_dev)
-+		cpufreq_cooling_unregister(data->cool_dev);
- 
- 	return 0;
- }
--- 
-1.8.2.1.342.gfa7285d
+I thought it's no issue because I still found few driver documentations 
+in that location.
+It sounds like people are moving those into other subdirectories.
+Thanks for this information.
+
+> Well, perhaps the top-level Documentation directory isn't optimal, but I
+> think it's a lot better than the commit description. Perhaps an 'mfd'
+> subdirectory could be created where documentation such as this could be
+> put.
+
+I agree Thierry.
+If you don't mind, can I create a MFD subdirectory with this patch-set 
+in next version, v4?
+Any other ideas are welcome.
+
+Best regards,
+Milo
+
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
