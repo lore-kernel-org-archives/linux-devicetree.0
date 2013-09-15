@@ -1,92 +1,66 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] leds: lp55xx: enable setting default trigger
-Date: Sun, 15 Sep 2013 12:50:17 +0200
-Message-ID: <1379242217-32398-1-git-send-email-linus.walleij@linaro.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] LP3943 MFD driver for a GPIO expander and a PWM
+ generator
+Date: Sun, 15 Sep 2013 13:17:32 +0200
+Message-ID: <20130915111730.GA9765@ulmo>
+References: <1378949441-6073-1-git-send-email-milo.kim@ti.com>
+ <20130912152809.GO11227@lee--X1>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130912152809.GO11227@lee--X1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Kim Milo <Milo.Kim-l0cyMroinI0@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables setting a default trigger on an LP55xx channel,
-either from platform data or device tree. This mechanism is
-identical to the mechanism for GPIO LEDs and references the
-common LEDs device tree bindings.
 
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/leds/leds-lp55xx.txt | 10 +++++++---
- drivers/leds/leds-lp55xx-common.c                      |  3 +++
- include/linux/platform_data/leds-lp55xx.h              |  1 +
- 3 files changed, 11 insertions(+), 3 deletions(-)
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-index a61727f..d221e75 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-@@ -17,12 +17,15 @@ Optional properties:
-          2: D1~6 with VOUT, D7~9 with VDD
-          3: D1~9 are connected to VOUT
- 
--Alternatively, each child can have specific channel name
--- chan-name: Name of each channel name
-+Alternatively, each child can have a specific channel name and trigger:
-+- chan-name (optional): name of channel
-+- linux,default-trigger (optional): see
-+  Documentation/devicetree/bindings/leds/common.txt
- 
- example 1) LP5521
- 3 LED channels, external clock used. Channel names are 'lp5521_pri:channel0',
--'lp5521_pri:channel1' and 'lp5521_pri:channel2'
-+'lp5521_pri:channel1' and 'lp5521_pri:channel2', with a heartbeat trigger
-+on channel 0.
- 
- lp5521@32 {
- 	compatible = "national,lp5521";
-@@ -33,6 +36,7 @@ lp5521@32 {
- 	chan0 {
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
-+		linux,default-trigger = "heartbeat";
- 	};
- 
- 	chan1 {
-diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index 351825b..075acf5 100644
---- a/drivers/leds/leds-lp55xx-common.c
-+++ b/drivers/leds/leds-lp55xx-common.c
-@@ -165,6 +165,7 @@ static int lp55xx_init_led(struct lp55xx_led *led,
- 	led->led_current = pdata->led_config[chan].led_current;
- 	led->max_current = pdata->led_config[chan].max_current;
- 	led->chan_nr = pdata->led_config[chan].chan_nr;
-+	led->cdev.default_trigger = pdata->led_config[chan].default_trigger;
- 
- 	if (led->chan_nr >= max_channel) {
- 		dev_err(dev, "Use channel numbers between 0 and %d\n",
-@@ -586,6 +587,8 @@ int lp55xx_of_populate_pdata(struct device *dev, struct device_node *np)
- 		of_property_read_string(child, "chan-name", &cfg[i].name);
- 		of_property_read_u8(child, "led-cur", &cfg[i].led_current);
- 		of_property_read_u8(child, "max-cur", &cfg[i].max_current);
-+		cfg[i].default_trigger =
-+			of_get_property(child, "linux,default-trigger", NULL);
- 
- 		i++;
- 	}
-diff --git a/include/linux/platform_data/leds-lp55xx.h b/include/linux/platform_data/leds-lp55xx.h
-index 51a2ff5..c32de4d 100644
---- a/include/linux/platform_data/leds-lp55xx.h
-+++ b/include/linux/platform_data/leds-lp55xx.h
-@@ -22,6 +22,7 @@
- 
- struct lp55xx_led_config {
- 	const char *name;
-+	const char *default_trigger;
- 	u8 chan_nr;
- 	u8 led_current; /* mA x10, 0 if led is not connected */
- 	u8 max_current;
--- 
-1.8.3.1
+On Thu, Sep 12, 2013 at 04:28:09PM +0100, Lee Jones wrote:
+> > * Documentation
+> >   From Thierry's suggestion, detailed driver description was moved to
+> >   'Documentation/lp3943.txt'.
+>=20
+> Really? Why here? Do we really want 1000's of driver docs in /Documentati=
+on?
+>=20
+> No other driver does this (intel gained from a glancing look).
 
+Well, perhaps the top-level Documentation directory isn't optimal, but I
+think it's a lot better than the commit description. Perhaps an 'mfd'
+subdirectory could be created where documentation such as this could be
+put.
+
+Thierry
+
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSNZdKAAoJEN0jrNd/PrOhOOoP/jyU0KhmBc2DLMHUsNyVwW5J
+vXal5EKRPwHl/XjdS76/vfgH28htNFOups1PRph60Y/7uRj1ftBFqlXJkV99tbSy
+Jq+LL/FFxpDgCJZg5ExzRLksFzc38107m6XbGQhe7Mct5pPehmrAN+fMMTd0SdFs
+039IXajUh3oLlx4Oxr//EAhYXWy440yI0YTHbK90bWPjLy17IpzJkRYGQSRf3m6c
+ar14icHYMiG2k326GYpEImtrH77DuNNVnvrRM5FJM7u01jsUL81E3qxulAlelAu+
+khU+FXUmZCwSNyRMq/Mt0lHKPygXNGz7qj4M/oHo3bFo7B2WzoTc1uFA1w2t8Mse
+CZZarCw5lcsPEBlcJdONReAaJLoo5c4cXJV3SaLsCDbjGlWzylu99Cm62wlQoHLl
+XJwT+tv4tt+5tZzd2D1ZXWj1QJZrVthDc4WaTk5hXCKQtTnoaNO5GEYxjNPD7cWl
+lhh9hmsSoQFuAgHJRi4JkpVyi6vb7vylTUKQPWK/kLTVARlPhW/GyCZltaUzfr5B
+LhBmQnQ/Po+CTXuohQlDZXISsLb0UO4pMI6uwBwR54awI/MdKLryetYJuJ1G6ORB
+SaF25kZI2yqDCc8TcXhN3JNjRy4A9oY34rpGWedbHQOFeX233BoVfdfd5V5JwS+g
+5RlR7IGFM0PmuYO4prSW
+=9x/B
+-----END PGP SIGNATURE-----
+
+--jI8keyz6grp/JLjh--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
