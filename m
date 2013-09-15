@@ -1,85 +1,128 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
-Date: Sun, 15 Sep 2013 13:23:42 +0100
-Message-ID: <20130915122342.C82F6C42C16@trevor.secretlab.ca>
-References: <52260608.2030202@linaro.org> <CAL_JsqK9PjpScRO8561PhcyKkxhuL4pgMTCh2-UG_ubybJTcCw@mail.gmail.com> <1378284256.17510.60.camel@kazak.uk.xensource.com> <CAL_Jsq+82xfNCD3LmNE6VD1mp4Vzbm-hPPaMjwg9+ab3moXP_w@mail.gmail.com> <CACxGe6sOyNNEATsnRdu9=_nPE1q6V4MDaDKvk4QvJiSgq6jXmg@mail.gmail.com> <CAL_JsqKnNHywcR21XhrjFyGs1DjZnbAFybraRKmxNmELLH-qPA@mail.gmail.com>
+Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma reserved memory
+Date: Sun, 15 Sep 2013 13:48:00 +0100
+Message-ID: <20130915124800.B6A43C42C62@trevor.secretlab.ca>
+References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com> <1377527959-5080-4-git-send-email-m.szyprowski@samsung.com> <20130829224637.D09183E1222@localhost> <52209278.8040106@samsung.com> <DAF223EB-C84C-4E82-A24A-ACD0A3A0559F@codeaurora.org> <20130909160154.8D7183E0F23@localhost> <BA65D7E3-8C15-4B44-95E2-E5DC862DDDE0@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKnNHywcR21XhrjFyGs1DjZnbAFybraRKmxNmELLH-qPA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <BA65D7E3-8C15-4B44-95E2-E5DC862DDDE0-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Dennis Gilmore <dennis-OMEdqnBlyiw@public.gmane.org>, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Sep 2013 20:40:54 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Sep 13, 2013 at 5:13 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > On Wed, Sep 4, 2013 at 5:41 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>> For u-boot Andre has proposed some syntactic sugar over the "fdt"
-> >>> command to make boot.scr more trivial to use. We would of course need to
-> >>> implement support for using it in the relevant distro tools (but they
-> >>> tend to be very distro/machine specific already, e.g. Debian's
-> >>> flash-kernel)
-> >>
-> >> And being machine specific is a PITA. flash-kernel is certainly not
-> >> something we want to expand on. There is not much love for boot.scr
-> >> either. There is work to address what are not really machine
-> >> differences, but largely vendor u-boot differences:
-> >>
-> >> http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg119025.html
-> >>
-> >> One option for u-boot which already supports syslinux style menu files
-> >> is to adopt the syslinux multiboot parsing support:
-> >>
-> >> http://www.syslinux.org/wiki/index.php/Doc/mboot
-> >
-> > Even building it into U-Boot is problematic because it leaves older
-> > machines out in the cold. Leif's port of Grub to U-Boot is far more
-> > interesting since the distro can now be in control of the code that
-> > loads the images and jumps into the kernel/hypervisor.
+On Tue, 10 Sep 2013 14:53:29 -0500, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
 > 
-> Considering there is no distro support for grub on ARM yet, it may be
-> more interesting in the long run, but it is not for the short term. So
-> there needs to be something that is supportable on both u-boot and
-> grub (or any other bootloader)
+> On Sep 9, 2013, at 11:01 AM, Grant Likely wrote:
+> 
+> > On Fri, 30 Aug 2013 15:26:24 -0500, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> >> On Aug 30, 2013, at 7:39 AM, Marek Szyprowski wrote:
+> >>> On 8/30/2013 12:46 AM, Grant Likely wrote:
+> >>>> On Mon, 26 Aug 2013 16:39:18 +0200, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> >>>>> +	- "reserved-memory-region" - compatibility is defined, given
+> >>>>> +	  region is assigned for exclusive usage for by the respective
+> >>>>> +	  devices.
+> >>>> 
+> >>>> BTW, just so you're aware there is already a binding for marking regions
+> >>>> as reserved. It was recently added to arch/powerpc/kernel/prom.c.
+> >>>> Unfortunately it doesn't look like it got documented. Search for
+> >>>> "reserved-ranges". However, I don't think it blocks your work here. That
+> >>>> binding doesn't provide any way for matching devices to reserved ranges.
+> >>>> It is only for telling the kernel "hands of that memory".
+> >>> 
+> >>> ok, good to know.
+> >> 
+> >> So I think the most generic compatible should effectively be the same
+> >> as 'reserved-ranges', ie this region shouldn't be touched by the
+> >> kernel.
+> >> 
+> >> Than we can build on top of that with more specific compatibles.
+> >> 
+> >> I have examples from FSL networking SoCs where we would carve out
+> >> memory for backing storage managed completely by the HW and Linux
+> >> wouldn't need to touch it, however we might have a
+> >> "fsl,qman-backing-store" compat encase we might want some debug code
+> >> in linux to look at the region of memory.
+> >> 
+> >> I've got examples at qualcomm where we have shared data structures in
+> >> specific memory regions between different processors that aren't cache
+> >> coherent, so want the memory not to be marked as cacheable by Linux
+> >> when it accesses it.  Again we'd have a "qcom,smem" prop on top of the
+> >> "reserved-memory-region".
+> > 
+> > I think that is a reasonable approach, and works really well for regions
+> > associated with specific hardware because the hardware driver can be
+> > responsible for wiring it up to CMA or manage the region directly.
+> > Whatever the driver desires to do.
+> > 
+> > It still remains what to do for generic regions that any device can use.
+> > As I've previously said, I don't like calling out "CMA" specifically in
+> > the compatible property because that happens to be a Linux
+> > implementation specific details. Two years from now someone may propose
+> > a new allocator that should take over what used to be handled by CMA
+> > (kind of like how CMA may end up taking over from ION)....
+> > 
+> > Alright, I've thought about it some more and it probably does make sense
+> > to use an additional compatible string. Marek originally suggested
+> > "linux,contiguous-memory-region". I later suggested "shareable-memory-region",
+> > but that's actually a worse name because it doesn't have any reference
+> > to what the region is for (I was fixating on the kernel being able to
+> > use unallocated pages; but that is also an implementation detail). I
+> > exercise my right to change my mind and agree that contiguous is
+> > appropriate here. But instead of calling out the contiguous allocator,
+> > the binding should specifically lay out the usage model for these
+> > regions. I would change the contiguous-memory binding to state the
+> > following:
+> > 	Contiguous-memory is a region of general purpose memory from
+> > 	which large buffers of contiguous memory can be allocated.
+> > 	Contiguous buffers are often used for DMA buffers. The operating
+> > 	system may use the memory for any purpose, but must immediately
+> > 	release the pages if a contiguous buffer is required.
+> > 
+> > So the way I read things, the current proposal would be:
+> > 
+> > The generic form for do-not-touch memory:
+> > 	compatible = "reserved-memory";
+> > - I've dropped '-region' because I think it is redundant
+> > - The kernel will not make use of this memory except for when a driver picks it up
+> > 
+> > For contiguous memory:
+> > 	compatible = "contiguous-memory", "reserved-memory"
+> 
+> Hmm.., what's an example of a generic use of this compatible set that isn't linux/CMA specific?
 
-True.
+My point was to decouple it from the Linux specific CMA implementation.
+I was talking to Jesse Barker about a binding for ION regions (which
+should eventually move to CMA). He needs pretty much the same binding.
 
 > 
-> >
-> >> We need to back-up and consider what this looks like in the end for
-> >> all the pieces and get input from folks on grub, UEFI, and armv8. The
-> >> UEFI answer may be this is a grub problem. For armv8, this proposal
-> >> does match up well as the kernel boot interface for v8 is DT. Despite
-> >> some claims, ACPI will not completely replace DT because of this.
-> >
-> > Yes, for UEFI it is absolutely an OS loader problem. UEFI provides an
-> > API and runtime environment. Grub is in general moving towards a boot
-> > menu system and a tool for loading images. Actual booting however
-> > should be done by a separate OS loader application. For Linux, this
-> > will be an in-kernel UEFI Stub. For Xen I would recommend taking the
-> > Linux EFI stub code and doing the same thing. There really isn't a
-> > need for a multiboot spec when you can rely on a runtime execution
-> > environment for setting things up exactly as you want them.
+> > For contiguous memory that Linux will use by default if a specific
+> > region isn't specified.
+> > 	compatible = "contiguous-memory", "reserved-memory"
+> > 	linux,default-contiguous-region;
+> > - I stuck with a linux, prefix here because I haven't come up with a
+> >   non-linux way to describe this.
+> > 
+> > Memory that specific hardware can pick up:
+> > 	compatible = "qcom,smem", "reserved-memory"
+> > 
+> > Nodes with a 'size' property and without a 'reg' property need to have a
+> > region allocated and reserved. The allocated region needs to be cached
+> > somewhere. We could create a data structure for tracking the reserved
+> > regions, or could write it in directly. While I shudder at the thought of
+> > modifying the device tree at runtime by the kernel, it might just be the
+> > sanest implementation at this time. I'd like to see what the
+> > implementation looks like. (Since this is potentially controversial, I
+> > would recommend implementing the exact regions in on patch, and add
+> > dynamically allocated regions as a follow-up patch)
 > 
-> You've lost me as well. How do you see the flow working with UEFI for
-> a user running bare metal OS, installing Xen, and rebooting running
-> Xen.
+> curious, what's the example for this situation of not having a 'reg' but having a size?
 
-I see I've caused confusion. I wasn't disputing the proposed binding,
-but rather stating that none of the Xen or Linux specific boot code
-should be built directly into UEFI. It should be contained in a separate
-UEFI OS Loader applications (GRUB + stub).
-
-As for the question above, I see the Xen installer adding stanzas to the
-Grub configuration to boo the xen kernel instead of the Linux kernel.
-Here there are two options (the Xen folks can decide which is best)
-a) The Xen kernel has an EFI stub which uses a "linux=" argument to
-specify the Linux kernel image to load.
-b) GRUB is Xen-aware and adds the extra images to the dtb.
-
-In either case, the Xen loader is completely separate from UEFI and
-therefore under our own control.
+The way it was described to me was to allocate a region, but not care
+where it actually existed in RAM. I don't know how important a
+requirement it is.
 
 g.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
