@@ -1,76 +1,92 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v3] PWM: PXA: add device tree support to PWM driver
-Date: Sun, 15 Sep 2013 16:07:04 +0200
-Message-ID: <201309151607.04244.marex@denx.de>
-References: <1379091281-23662-1-git-send-email-mikedunn@newsguy.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [RFCv2 1/3] ARM: OMAP2+: hwmod-data: Add SSI information
+Date: Sun, 15 Sep 2013 22:44:14 +0200
+Message-ID: <1379277856-24571-2-git-send-email-sre@debian.org>
+References: <1379277856-24571-1-git-send-email-sre@debian.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379091281-23662-1-git-send-email-mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1379277856-24571-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, =?UTF-8?q?=27Beno=C3=AEt=20Cousson=27?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Mike Dunn,
+This patch adds Synchronous Serial Interface (SSI) hwmod support for
+OMAP34xx SoCs.
 
-> This patch adds device tree support to the PXA's PWM driver.  Only an OF
-> match table is added; nothing needs to be extracted from the device tree
-> node.  The existing ID table is reused for the match table data.
-> 
-> Tested on a Palm Treo 680 (both platform data and DT cases).
-> 
-> Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-> ---
-> Changle log:
-> v3:
-> - remove support for the polarity flag
-> - remove per-chip pwm index cell; define custom of_xlate()
->    (now #pwm-cells = <1>)
-> - "compatible" strings for all devices added to OF match table
-> - various stylistic changes recommended by reviewers
-> 
-> v2:
-> - of_match_table contains only the "pxa250-pwm" compatible string; require
-> one device instance per pwm
-> - add Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-> - add support for polarity flag in DT and implement set_polarity() method
->   (the treo 680 inverts the signal between pwm out and backlight)
-> - return -EINVAL instead of -ENODEV if platform data or DT node not found
-> - output dev_info string if platform data missing
-> - expanded CC list of patch
-> 
->  Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 31 ++++++++++++
->  arch/arm/boot/dts/pxa27x.dtsi                     | 24 +++++++++
->  drivers/pwm/pwm-pxa.c                             | 62
-> +++++++++++++++++++++++ 3 files changed, 117 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-> b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt new file mode 100644
-> index 0000000..6fcf90c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-> @@ -0,0 +1,31 @@
-> +Marvell PWM controller
-> +
-> +Required properties:
-> +- compatible: should be one of:
-> +  - "marvell,pxa250-pwm"
-> +  - "marvell,pxa270-pwm"
-> +  - "marvell,pxa168-pwm"
-> +  - "marvell,pxa910-pwm"
+Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/mach-omap2/omap_hwmod_3xxx_data.c | 48 ++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-This really is something I dont quite understand. Why should the driver list 
-_every_ _single_ existing CPU that contains such PWM block? Is there any 
-agreement about that? For me, it'd make much more sense to list only the CPUs 
-where the IP block actually changed in some way, so that the differences can be 
-discerned that way.
+diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
+index 0c3a427..9e56fab 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
+@@ -3693,6 +3693,53 @@ static struct omap_hwmod_ocp_if omap3xxx_l4_core__aes = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
++/*
++ * 'ssi' class
++ * synchronous serial interface (multichannel and full-duplex serial if)
++ */
++
++static struct omap_hwmod_class_sysconfig omap34xx_ssi_sysc = {
++	.rev_offs	= 0x0000,
++	.sysc_offs	= 0x0010,
++	.syss_offs	= 0x0014,
++	.sysc_flags	= (SYSC_HAS_AUTOIDLE | SYSC_HAS_EMUFREE |
++			   SYSC_HAS_MIDLEMODE | SYSC_HAS_SIDLEMODE |
++			   SYSC_HAS_SOFTRESET | SYSS_HAS_RESET_STATUS),
++	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
++			   SIDLE_SMART_WKUP | MSTANDBY_FORCE | MSTANDBY_NO |
++			   MSTANDBY_SMART | MSTANDBY_SMART_WKUP),
++	.sysc_fields	= &omap_hwmod_sysc_type1,
++};
++
++static struct omap_hwmod_class omap34xx_ssi_hwmod_class = {
++	.name	= "ssi",
++	.sysc	= &omap34xx_ssi_sysc,
++};
++
++static struct omap_hwmod omap34xx_ssi_hwmod = {
++	.name		= "ssi",
++	.class		= &omap34xx_ssi_hwmod_class,
++	.clkdm_name	= "core_l4_clkdm",
++	.main_clk	= "ssi_ssr_fck",
++	.prcm		= {
++		.omap2 = {
++			.prcm_reg_id		= 1,
++			.module_bit		= OMAP3430_EN_SSI_SHIFT,
++			.module_offs		= CORE_MOD,
++			.idlest_reg_id		= 1,
++			.idlest_idle_bit	= OMAP3430ES2_ST_SSI_IDLE_SHIFT,
++		},
++	},
++};
++
++/* L4 CORE -> SSI */
++static struct omap_hwmod_ocp_if omap34xx_l4_core__ssi = {
++	.master		= &omap3xxx_l4_core_hwmod,
++	.slave		= &omap34xx_ssi_hwmod,
++	.clk		= "ssi_ick",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
++
+ static struct omap_hwmod_ocp_if *omap3xxx_hwmod_ocp_ifs[] __initdata = {
+ 	&omap3xxx_l3_main__l4_core,
+ 	&omap3xxx_l3_main__l4_per,
+@@ -3818,6 +3865,7 @@ static struct omap_hwmod_ocp_if *omap34xx_hwmod_ocp_ifs[] __initdata = {
+ #ifdef CONFIG_OMAP_IOMMU_IVA2
+ 	&omap3xxx_l3_main__mmu_iva,
+ #endif
++	&omap34xx_l4_core__ssi,
+ 	NULL
+ };
+ 
+-- 
+1.8.4.rc3
 
-Best regards,
-Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
