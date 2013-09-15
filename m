@@ -1,69 +1,76 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] Documentation: add LP3943 DT bindings and document
-Date: Sun, 15 Sep 2013 13:27:56 +0200
-Message-ID: <20130915112755.GB9765@ulmo>
-References: <1378949700-6384-1-git-send-email-milo.kim@ti.com>
- <20130912152455.GN11227@lee--X1>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v3] PWM: PXA: add device tree support to PWM driver
+Date: Sun, 15 Sep 2013 16:07:04 +0200
+Message-ID: <201309151607.04244.marex@denx.de>
+References: <1379091281-23662-1-git-send-email-mikedunn@newsguy.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130912152455.GN11227@lee--X1>
+In-Reply-To: <1379091281-23662-1-git-send-email-mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Dear Mike Dunn,
 
---ZoaI/ZTpAVc4A5k6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This patch adds device tree support to the PXA's PWM driver.  Only an OF
+> match table is added; nothing needs to be extracted from the device tree
+> node.  The existing ID table is reused for the match table data.
+> 
+> Tested on a Palm Treo 680 (both platform data and DT cases).
+> 
+> Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changle log:
+> v3:
+> - remove support for the polarity flag
+> - remove per-chip pwm index cell; define custom of_xlate()
+>    (now #pwm-cells = <1>)
+> - "compatible" strings for all devices added to OF match table
+> - various stylistic changes recommended by reviewers
+> 
+> v2:
+> - of_match_table contains only the "pxa250-pwm" compatible string; require
+> one device instance per pwm
+> - add Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+> - add support for polarity flag in DT and implement set_polarity() method
+>   (the treo 680 inverts the signal between pwm out and backlight)
+> - return -EINVAL instead of -ENODEV if platform data or DT node not found
+> - output dev_info string if platform data missing
+> - expanded CC list of patch
+> 
+>  Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 31 ++++++++++++
+>  arch/arm/boot/dts/pxa27x.dtsi                     | 24 +++++++++
+>  drivers/pwm/pwm-pxa.c                             | 62
+> +++++++++++++++++++++++ 3 files changed, 117 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+> b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt new file mode 100644
+> index 0000000..6fcf90c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+> @@ -0,0 +1,31 @@
+> +Marvell PWM controller
+> +
+> +Required properties:
+> +- compatible: should be one of:
+> +  - "marvell,pxa250-pwm"
+> +  - "marvell,pxa270-pwm"
+> +  - "marvell,pxa168-pwm"
+> +  - "marvell,pxa910-pwm"
 
-On Thu, Sep 12, 2013 at 04:24:55PM +0100, Lee Jones wrote:
-> On Thu, 12 Sep 2013, Milo Kim wrote:
-[...]
-> > diff --git a/Documentation/lp3943.txt b/Documentation/lp3943.txt
-> > new file mode 100644
-> > index 0000000..576ebd0
-> > --- /dev/null
-> > +++ b/Documentation/lp3943.txt
-[...]
-> If this stuff is really important (and most of it really isn't), then
-> put it either in the commit log or in the driver.
+This really is something I dont quite understand. Why should the driver list 
+_every_ _single_ existing CPU that contains such PWM block? Is there any 
+agreement about that? For me, it'd make much more sense to list only the CPUs 
+where the IP block actually changed in some way, so that the differences can be 
+discerned that way.
 
-I can only speak for myself, but the initial driver commit message is
-about the last place I look for this kind of information. I'd expect it
-to be either somewhere in Documentation/ or in one of the source files.
-In this case I'd probably look at the MFD core driver source file. More
-likely, even, I'd just go google "LP3943" and grab a public datasheet
-=66rom TI where all of this can hopefully be found.
-
-Thierry
-
---ZoaI/ZTpAVc4A5k6
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSNZm7AAoJEN0jrNd/PrOhLdQP/RahXyucPoSbeWP0AOpQdyeA
-nwZ9SA3eTylBK8N2RKDGAWErFQAG+NutyPZLx902wNpnJyuY6NjQvsS+yTxsf7zl
-PNH2sa9TBRbJDvna05ijoUeAYilkfcTWxh6Bo2+UvJaSnxYAITRiXm1n+egO2/fd
-HoKi9/CiG22xIKJrpIFf6Nlwp3t1F5T7tUhNWSrgR8DXRSmU9s8XLTC5kOBYekaI
-Yy9+30jmcgnxGZDkkW1sDGFPe/FeiMUaY3q5um5ah5PjKpYU+vhQY15HN7K67o5I
-Fi38fM4XFNvqgwhM65ivjaPWeaZ26Gd81JpBBx382UBZZNph35i/i26cxXqkTTOn
-dBJyNH5dD4R8yAc+ninzpWVpjCkWYdmCMelVOjLIWZHEQJ4Y1pcX5YX+cFMIiZOY
-3h+35DF2DYD8Y+uJeug0+lNwmNqRx4RBYGrWol1d8hi4CPM1Jn7iEWxl4aO+HwJK
-hOzFVHK083MG1NPlDQJCtVlaDrSJFrpqP0kOnvjEFulxXlurTXvLjGDSFkVTWS/I
-HibS+v3AnhCWakjQEXC2HEPsbklmIMCavLRQNjc3pNPEtEt32N1qTWZEUtG+X5EV
-XOFQDbCSfZzLYH37zoB41hr4boiQLsDRAqigDBWW5wT8l9iJMdaFn3ZNe7XKqh0n
-yiLPNKbSkZSfb5ewqc2E
-=5WER
------END PGP SIGNATURE-----
-
---ZoaI/ZTpAVc4A5k6--
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
