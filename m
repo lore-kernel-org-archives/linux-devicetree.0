@@ -1,66 +1,69 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] LP3943 MFD driver for a GPIO expander and a PWM
- generator
-Date: Sun, 15 Sep 2013 13:17:32 +0200
-Message-ID: <20130915111730.GA9765@ulmo>
-References: <1378949441-6073-1-git-send-email-milo.kim@ti.com>
- <20130912152809.GO11227@lee--X1>
+Subject: Re: [PATCH v3 4/4] Documentation: add LP3943 DT bindings and document
+Date: Sun, 15 Sep 2013 13:27:56 +0200
+Message-ID: <20130915112755.GB9765@ulmo>
+References: <1378949700-6384-1-git-send-email-milo.kim@ti.com>
+ <20130912152455.GN11227@lee--X1>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+	protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130912152809.GO11227@lee--X1>
+In-Reply-To: <20130912152455.GN11227@lee--X1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---jI8keyz6grp/JLjh
+--ZoaI/ZTpAVc4A5k6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 12, 2013 at 04:28:09PM +0100, Lee Jones wrote:
-> > * Documentation
-> >   From Thierry's suggestion, detailed driver description was moved to
-> >   'Documentation/lp3943.txt'.
->=20
-> Really? Why here? Do we really want 1000's of driver docs in /Documentati=
-on?
->=20
-> No other driver does this (intel gained from a glancing look).
+On Thu, Sep 12, 2013 at 04:24:55PM +0100, Lee Jones wrote:
+> On Thu, 12 Sep 2013, Milo Kim wrote:
+[...]
+> > diff --git a/Documentation/lp3943.txt b/Documentation/lp3943.txt
+> > new file mode 100644
+> > index 0000000..576ebd0
+> > --- /dev/null
+> > +++ b/Documentation/lp3943.txt
+[...]
+> If this stuff is really important (and most of it really isn't), then
+> put it either in the commit log or in the driver.
 
-Well, perhaps the top-level Documentation directory isn't optimal, but I
-think it's a lot better than the commit description. Perhaps an 'mfd'
-subdirectory could be created where documentation such as this could be
-put.
+I can only speak for myself, but the initial driver commit message is
+about the last place I look for this kind of information. I'd expect it
+to be either somewhere in Documentation/ or in one of the source files.
+In this case I'd probably look at the MFD core driver source file. More
+likely, even, I'd just go google "LP3943" and grab a public datasheet
+=66rom TI where all of this can hopefully be found.
 
 Thierry
 
---jI8keyz6grp/JLjh
+--ZoaI/ZTpAVc4A5k6
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.21 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSNZdKAAoJEN0jrNd/PrOhOOoP/jyU0KhmBc2DLMHUsNyVwW5J
-vXal5EKRPwHl/XjdS76/vfgH28htNFOups1PRph60Y/7uRj1ftBFqlXJkV99tbSy
-Jq+LL/FFxpDgCJZg5ExzRLksFzc38107m6XbGQhe7Mct5pPehmrAN+fMMTd0SdFs
-039IXajUh3oLlx4Oxr//EAhYXWy440yI0YTHbK90bWPjLy17IpzJkRYGQSRf3m6c
-ar14icHYMiG2k326GYpEImtrH77DuNNVnvrRM5FJM7u01jsUL81E3qxulAlelAu+
-khU+FXUmZCwSNyRMq/Mt0lHKPygXNGz7qj4M/oHo3bFo7B2WzoTc1uFA1w2t8Mse
-CZZarCw5lcsPEBlcJdONReAaJLoo5c4cXJV3SaLsCDbjGlWzylu99Cm62wlQoHLl
-XJwT+tv4tt+5tZzd2D1ZXWj1QJZrVthDc4WaTk5hXCKQtTnoaNO5GEYxjNPD7cWl
-lhh9hmsSoQFuAgHJRi4JkpVyi6vb7vylTUKQPWK/kLTVARlPhW/GyCZltaUzfr5B
-LhBmQnQ/Po+CTXuohQlDZXISsLb0UO4pMI6uwBwR54awI/MdKLryetYJuJ1G6ORB
-SaF25kZI2yqDCc8TcXhN3JNjRy4A9oY34rpGWedbHQOFeX233BoVfdfd5V5JwS+g
-5RlR7IGFM0PmuYO4prSW
-=9x/B
+iQIcBAEBAgAGBQJSNZm7AAoJEN0jrNd/PrOhLdQP/RahXyucPoSbeWP0AOpQdyeA
+nwZ9SA3eTylBK8N2RKDGAWErFQAG+NutyPZLx902wNpnJyuY6NjQvsS+yTxsf7zl
+PNH2sa9TBRbJDvna05ijoUeAYilkfcTWxh6Bo2+UvJaSnxYAITRiXm1n+egO2/fd
+HoKi9/CiG22xIKJrpIFf6Nlwp3t1F5T7tUhNWSrgR8DXRSmU9s8XLTC5kOBYekaI
+Yy9+30jmcgnxGZDkkW1sDGFPe/FeiMUaY3q5um5ah5PjKpYU+vhQY15HN7K67o5I
+Fi38fM4XFNvqgwhM65ivjaPWeaZ26Gd81JpBBx382UBZZNph35i/i26cxXqkTTOn
+dBJyNH5dD4R8yAc+ninzpWVpjCkWYdmCMelVOjLIWZHEQJ4Y1pcX5YX+cFMIiZOY
+3h+35DF2DYD8Y+uJeug0+lNwmNqRx4RBYGrWol1d8hi4CPM1Jn7iEWxl4aO+HwJK
+hOzFVHK083MG1NPlDQJCtVlaDrSJFrpqP0kOnvjEFulxXlurTXvLjGDSFkVTWS/I
+HibS+v3AnhCWakjQEXC2HEPsbklmIMCavLRQNjc3pNPEtEt32N1qTWZEUtG+X5EV
+XOFQDbCSfZzLYH37zoB41hr4boiQLsDRAqigDBWW5wT8l9iJMdaFn3ZNe7XKqh0n
+yiLPNKbSkZSfb5ewqc2E
+=5WER
 -----END PGP SIGNATURE-----
 
---jI8keyz6grp/JLjh--
+--ZoaI/ZTpAVc4A5k6--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
