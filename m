@@ -1,75 +1,36 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm: zynq: Enable arm_global_timer
-Date: Sun, 15 Sep 2013 13:40:36 +0100
-Message-ID: <20130915124036.A66A8C42C3C@trevor.secretlab.ca>
-References: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com> <1379004640-15117-3-git-send-email-soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma reserved memory
+Date: Sun, 15 Sep 2013 13:50:18 +0100
+Message-ID: <20130915125018.D51F0C42C64@trevor.secretlab.ca>
+References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com> <1377527959-5080-4-git-send-email-m.szyprowski@samsung.com> <20130829224637.D09183E1222@localhost> <52209278.8040106@samsung.com> <DAF223EB-C84C-4E82-A24A-ACD0A3A0559F@codeaurora.org> <20130909160154.8D7183E0F23@localhost> <13185491-534E-4547-8412-5704346EA2DC@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379004640-15117-3-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <13185491-534E-4547-8412-5704346EA2DC-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Sep 2013 09:50:40 -0700, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> Zynq is based on an ARM Cortex-A9 MPCore, which features the
-> arm_global_timer in its SCU. Therefore enable the timer for Zynq.
+On Thu, 12 Sep 2013 13:22:25 -0500, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
 > 
-> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/zynq-7000.dtsi | 8 ++++++++
->  arch/arm/mach-zynq/Kconfig       | 1 +
->  2 files changed, 9 insertions(+)
+> On Sep 9, 2013, at 11:01 AM, Grant Likely wrote:
 > 
-> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-> index e32b92b..eaacb39 100644
-> --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> @@ -92,6 +92,14 @@
->  			};
->  		};
->  
-> +		global_timer: global_timer@f8f00200 {
+> > 
+> > The generic form for do-not-touch memory:
+> > 	compatible = "reserved-memory";
+> > - I've dropped '-region' because I think it is redundant
+> > - The kernel will not make use of this memory except for when a driver picks it up
+> > 
+> > For contiguous memory:
+> > 	compatible = "contiguous-memory", "reserved-memory"
+> 
+> Should the phandle references still be 'memory-region' ?
 
-Nit: node names and property names use '-' not '_'. Plus the generic
-names principle suggests the node should be names 'timer' not
-'global_timer'. The following would be fine:
+I would think so.
 
-		global_timer: timer@f8f00200 {
-
-(There's a distinction between node names and labels. '_' is fine in
-labels since it doesn't get output into the compiled .dtb.
+It is only redundent in the reserved region node because the binding
+says the node is a child of the "reserved-regions" node.  :-)
 
 g.
-
-> +			compatible = "arm,cortex-a9-global-timer";
-> +			reg = <0xf8f00200 0x20>;
-> +			interrupts = <1 11 0x301>;
-> +			interrupt-parent = <&intc>;
-> +			clocks = <&clkc 4>;
-> +		};
-> +
->  		ttc0: ttc0@f8001000 {
->  			interrupt-parent = <&intc>;
->  			interrupts = < 0 10 4 0 11 4 0 12 4 >;
-> diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig
-> index 04f8a4a..6b04260 100644
-> --- a/arch/arm/mach-zynq/Kconfig
-> +++ b/arch/arm/mach-zynq/Kconfig
-> @@ -13,5 +13,6 @@ config ARCH_ZYNQ
->  	select HAVE_SMP
->  	select SPARSE_IRQ
->  	select CADENCE_TTC_TIMER
-> +	select ARM_GLOBAL_TIMER
->  	help
->  	  Support for Xilinx Zynq ARM Cortex A9 Platform
-> -- 
-> 1.8.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
