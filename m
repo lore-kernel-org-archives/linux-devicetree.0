@@ -1,143 +1,129 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 05/16] hwmon: lm75: expose to thermal fw via DT nodes
-Date: Sun, 15 Sep 2013 16:22:06 -0700
-Message-ID: <5236411E.6040204@roeck-us.net>
-References: <1379282563-14650-1-git-send-email-eduardo.valentin@ti.com> <1379282563-14650-6-git-send-email-eduardo.valentin@ti.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] memory: add a basic OF-based memory driver
+Date: Sun, 15 Sep 2013 13:43:25 +0100
+Message-ID: <20130915124325.B1DF2C42C5C@trevor.secretlab.ca>
+References: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
+ <1379032225-6425-1-git-send-email-emilio@elopez.com.ar>
+ <CAOesGMiUMniKRLRgGPsimR0bXWQFbx+SL5dUJXOb8t0JfEcHsg@mail.gmail.com>
+ <52326ADC.8040703@elopez.com.ar>
+ <CAL_JsqJACEtSRaDg0TcYODzhpsHFGa4mFSYa_R3qspypEKH+hQ@mail.gmail.com>
+ <CAOesGMj=b5c_1v-nAejUzuOMfx44AHr2=yfoPepHYsh0=t0wOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379282563-14650-6-git-send-email-eduardo.valentin-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
-Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============8659759560565633653=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOesGMj=b5c_1v-nAejUzuOMfx44AHr2=yfoPepHYsh0=t0wOQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>, Rob Herring <robherring2@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2013 03:02 PM, Eduardo Valentin wrote:
-> This patch adds to lm75 temperature sensor the possibility
-> to expose itself as thermal zone device, registered on the
-> thermal framework.
->
-> The thermal zone is built only if a device tree node
-> describing a thermal zone for this sensor is present
-> inside the lm75 DT node. Otherwise, the driver behavior
-> will be the same.
->
-> Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
-> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
-> ---
->   drivers/hwmon/lm75.c | 46 +++++++++++++++++++++++++++++++++++++++++-----
->   1 file changed, 41 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-> index c03b490..2ba09ef 100644
-> --- a/drivers/hwmon/lm75.c
-> +++ b/drivers/hwmon/lm75.c
-> @@ -27,6 +27,8 @@
->   #include <linux/hwmon-sysfs.h>
->   #include <linux/err.h>
->   #include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/thermal.h>
->   #include "lm75.h"
->
->
-> @@ -70,6 +72,7 @@ static const u8 LM75_REG_TEMP[3] = {
->   /* Each client has this additional data */
->   struct lm75_data {
->   	struct device		*hwmon_dev;
-> +	struct thermal_zone_device	*tz;
->   	struct mutex		update_lock;
->   	u8			orig_conf;
->   	u8			resolution;	/* In bits, between 9 and 12 */
-> @@ -90,22 +93,42 @@ static struct lm75_data *lm75_update_device(struct device *dev);
->
->   /*-----------------------------------------------------------------------*/
->
-> +static inline long lm75_reg_to_mc(s16 temp, u8 resolution)
-> +{
-> +	return ((temp >> (16 - resolution)) * 1000) >> (resolution - 8);
-> +}
-> +
->   /* sysfs attributes for hwmon */
->
-> +static int lm75_read_temp(void *dev, long *temp)
-> +{
-> +	struct lm75_data *data = lm75_update_device(dev);
-> +	long temperature;
-> +
-> +	if (IS_ERR(data))
-> +		return PTR_ERR(data);
-> +
-> +	temperature = lm75_reg_to_mc(data->temp[0], data->resolution);
-> +	if (temperature < 0)
-> +		dev_warn(data->hwmon_dev,
-> +			 "operating in negative temp: %ld\n", temperature);
+--===============8659759560565633653==
+Content-Type: text/plain
 
-Please drop this warning. It is not the responsibility of the chip driver
-to declare valid operational conditions, much less an arbitrary one
-like zero degrees C.
+On Fri, 13 Sep 2013 08:49:06 -0700, Olof Johansson <olof@lixom.net> wrote:
+> On Fri, Sep 13, 2013 at 7:00 AM, Rob Herring <robherring2@gmail.com> wrote:
+> > On Thu, Sep 12, 2013 at 8:31 PM, Emilio López <emilio@elopez.com.ar> wrote:
+> >> Hi Olof,
+> >>
+> >> El 12/09/13 21:57, Olof Johansson escribió:
+> >>
+> >>> On Thu, Sep 12, 2013 at 5:30 PM, Emilio López <emilio@elopez.com.ar>
+> >>> wrote:
+> >>>>
+> >>>> This driver's only job is to claim and ensure the necessary clock
+> >>>> for memory operation on a DT-powered machine remains enabled.
+> >>>>
+> >>>> Signed-off-by: Emilio López <emilio@elopez.com.ar>
+> >>>> ---
+> >>>>
+> >>>> I believe this new patch should resolve all the concerns raised; as
+> >>>> always, all feedback is welcome :)
+> >>>
+> >>>
+> >>> I think you're going about this the wrong way.
+> >>>
+> >>> If you have a problem with a clock not staying on, shouldn't you just
+> >>> marking it appropriately in the clock table instead, making sure it's
+> >>> initialized with at least one reference to it?
+> >>
+> >>
+> >> If by "the clock table" you mean the tree as handled by the common clock
+> >> framework, there is no such flag available as of today; see Mike's reply for
+> >> more information.
+> >>
+> >> Personally I feel that if the general case can solve our problems (in this
+> >> case, having a consumer who prepares and enables the clock), we should avoid
+> >> adding special cases to the framework.
+> >>
+> >>
+> >>> I believe that is how
+> >>> some of the other platforms handle this, and it's a lot cleaner than
+> >>> adding a fake binding and a fake driver just to grab a single clock.
+> >>
+> >>
+> >> The binding doesn't have to be fake; it is actually describing the memory
+> >> controller hardware:
+> >>
+> >> mc: mc@0123000 {
+> >>         compatible = "simple-memory-controller";
+> >>         reg = <0x0123000 0x400>;
+> >>         clocks = <&pll5 1>;
+> >> };
+> >>
+> >> If one day we get docs and/or have any special features we may need from the
+> >> controller, we can use something like
+> >>
+> >> mc: mc@0123000 {
+> >>         compatible = "vendor,awesome-mc", "simple-memory-controller";
+> >>         reg = <0x0123000 0x400>;
+> >>         clocks = <&pll5 1>;
+> >> };
+> >
+> > Better, but this is still wrong. DT describes the hardware. There is
+> > no such h/w as a simple-memory-controller. The fact that you have a
+> > simple-memory-ctrlr kernel driver is a kernel
+> > feature/artifact/limitation. Describe the h/w with a meaningful
+> > compatible string and put that string in the simple memory controller
+> > driver match table. If someday we have a real driver for said memory
+> > controller, then it is only a kernel change to use a different driver.
+> 
+> 
+> We discussed this over IRC last night -- I still think it makes more
+> sense to make the clock driver for sunxi aware of this and just add a
+> reference to the clock at init time.
+> 
+> This is never going to differ from board to board (today the clock
+> name is the same on all sunxi platforms -- pll5_ddr. And the need will
+> likewise be there for all platforms at this time.
+> 
+> If and when it changes in the future, we can reevaluate. But this
+> doesn't have to be driven by device tree at this time, it seems to
+> just make things overly complicated and contrived.
 
-Guenter
+I agree. Creating a new platform driver + device tree binding just to
+claim a clock that must not be disables does not look like the right
+approach to me either.
 
-> +
-> +	*temp = temperature;
-> +
-> +	return 0;
-> +}
-> +
->   static ssize_t show_temp(struct device *dev, struct device_attribute *da,
->   			 char *buf)
->   {
->   	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
->   	struct lm75_data *data = lm75_update_device(dev);
-> -	long temp;
->
->   	if (IS_ERR(data))
->   		return PTR_ERR(data);
->
-> -	temp = ((data->temp[attr->index] >> (16 - data->resolution)) * 1000)
-> -	       >> (data->resolution - 8);
-> -
-> -	return sprintf(buf, "%ld\n", temp);
-> +	return sprintf(buf, "%ld\n", lm75_reg_to_mc(data->temp[attr->index],
-> +						    data->resolution));
->   }
->
->   static ssize_t set_temp(struct device *dev, struct device_attribute *da,
-> @@ -271,6 +294,17 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
->   		goto exit_remove;
->   	}
->
-> +	data->tz = thermal_zone_of_sensor_register(&client->dev,
-> +						   0,
-> +						   &client->dev,
-> +						   lm75_read_temp, NULL);
-> +	if (IS_ERR(data->tz)) {
-> +		dev_warn(&client->dev,
-> +			 "Could not parse thermal data in device tree: %ld\n",
-> +			 PTR_ERR(data->tz));
-> +		data->tz = NULL;
-> +	}
-> +
->   	dev_info(&client->dev, "%s: sensor '%s'\n",
->   		 dev_name(data->hwmon_dev), client->name);
->
-> @@ -285,6 +319,8 @@ static int lm75_remove(struct i2c_client *client)
->   {
->   	struct lm75_data *data = i2c_get_clientdata(client);
->
-> +	/* thermal zone life cycle is not our responsibility */
-> +	thermal_zone_of_sensor_unregister(&client->dev, data->tz);
->   	hwmon_device_unregister(data->hwmon_dev);
->   	sysfs_remove_group(&client->dev.kobj, &lm75_group);
->   	lm75_write_value(client, LM75_REG_CONF, data->orig_conf);
->
+g.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--===============8659759560565633653==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8659759560565633653==--
