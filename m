@@ -1,58 +1,78 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 19/28] arm: set initrd_start/initrd_end for fdt scan
-Date: Mon, 16 Sep 2013 18:09:15 -0500
-Message-ID: <1379372965-22359-20-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 11/28] arm: use early_init_dt_scan
+Date: Mon, 16 Sep 2013 18:09:07 -0500
+Message-ID: <1379372965-22359-12-git-send-email-robherring2@gmail.com>
 References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-In order to unify the initrd scanning for DT across architectures, make
-arm set initrd_start and initrd_end instead of the physical addresses.
-This is aligned with all other architectures.
+Convert arm to use new early_init_dt_scan function.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 Cc: Russell King <linux@arm.linux.org.uk>
 Cc: linux-arm-kernel@lists.infradead.org
 ---
- arch/arm/mm/init.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/arm/kernel/devtree.c | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index febaee7..9eeb1cd 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -77,11 +77,11 @@ static int __init parse_tag_initrd2(const struct tag *tag)
- 
- __tagtable(ATAG_INITRD2, parse_tag_initrd2);
- 
--#ifdef CONFIG_OF_FLATTREE
-+#if defined(CONFIG_OF_FLATTREE) && defined(CONFIG_BLK_DEV_INITRD)
- void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
+diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+index f35906b..04050f7 100644
+--- a/arch/arm/kernel/devtree.c
++++ b/arch/arm/kernel/devtree.c
+@@ -183,7 +183,6 @@ bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
+  */
+ const struct machine_desc * __init setup_machine_fdt(unsigned int dt_phys)
  {
--	phys_initrd_start = start;
--	phys_initrd_size = end - start;
-+	initrd_start = (unsigned long)__va(start);
-+	initrd_end = (unsigned long)__va(end);
- }
- #endif /* CONFIG_OF_FLATTREE */
+-	struct boot_param_header *devtree;
+ 	const struct machine_desc *mdesc, *mdesc_best = NULL;
+ 	unsigned int score, mdesc_score = ~1;
+ 	unsigned long dt_root;
+@@ -199,14 +198,9 @@ const struct machine_desc * __init setup_machine_fdt(unsigned int dt_phys)
+ 	if (!dt_phys)
+ 		return NULL;
  
-@@ -351,6 +351,11 @@ void __init arm_memblock_init(struct meminfo *mi,
- 	memblock_reserve(__pa(_stext), _end - _stext);
- #endif
- #ifdef CONFIG_BLK_DEV_INITRD
-+	/* FDT scan will populate initrd_start */
-+	if (initrd_start) {
-+		phys_initrd_start = __virt_to_phys(initrd_start);
-+		phys_initrd_size = initrd_end - initrd_start;
-+	}
- 	if (phys_initrd_size &&
- 	    !memblock_is_region_memory(phys_initrd_start, phys_initrd_size)) {
- 		pr_err("INITRD: 0x%08llx+0x%08lx is not a memory region - disabling initrd\n",
+-	devtree = phys_to_virt(dt_phys);
+-
+-	/* check device tree validity */
+-	if (be32_to_cpu(devtree->magic) != OF_DT_HEADER)
+-		return NULL;
++	early_init_dt_scan(phys_to_virt(dt_phys));
+ 
+ 	/* Search the mdescs for the 'best' compatible value match */
+-	initial_boot_params = devtree;
+ 	dt_root = of_get_flat_dt_root();
+ 	for_each_machine_desc(mdesc) {
+ 		score = of_flat_dt_match(dt_root, mdesc->dt_compat);
+@@ -240,13 +234,6 @@ const struct machine_desc * __init setup_machine_fdt(unsigned int dt_phys)
+ 		model = "<unknown>";
+ 	pr_info("Machine: %s, model: %s\n", mdesc_best->name, model);
+ 
+-	/* Retrieve various information from the /chosen node */
+-	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
+-	/* Initialize {size,address}-cells info */
+-	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+-	/* Setup memory, calling early_init_dt_add_memory_arch */
+-	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+-
+ 	/* Change machine number to match the mdesc we're using */
+ 	__machine_arch_type = mdesc_best->nr;
+ 
 -- 
 1.8.1.2
