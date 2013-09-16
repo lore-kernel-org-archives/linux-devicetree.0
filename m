@@ -1,57 +1,31 @@
-From: Seungwon Jeon <tgih.jun@samsung.com>
-Subject: RE: [PATCH] dts: Fix misspelling of Synopsys
-Date: Tue, 17 Sep 2013 07:35:55 +0900
-Message-ID: <000701ceb32d$1bcb4690$5361d3b0$%jun@samsung.com>
-References: <1379365068-18539-1-git-send-email-dinguyen@altera.com>
- <20130916214544.GA15242@quad.lixom.net> <52377CD4.30308@gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: "memory" binding issues
+Date: Tue, 17 Sep 2013 08:42:19 +1000
+Message-ID: <1379371339.3721.42.camel@pasglop>
+References: <1379300274.4098.77.camel@pasglop>
+	 <0A20DA07-7B18-4BD5-AF32-172022B92611@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <52377CD4.30308@gmail.com>
-Content-language: ko
-Sender: linux-mmc-owner@vger.kernel.org
-To: 'Rob Herring' <robherring2@gmail.com>, 'Olof Johansson' <olof@lixom.net>
-Cc: dinguyen@altera.com, dinh.linux@gmail.com, 'Pavel Machek' <pavel@denx.de>, 'Arnd Bergmann' <arnd@arndb.de>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Stephen Warren' <swarren@wwwdotorg.org>, 'Ian Campbell' <ian.campbell@citrix.com>, 'Chris Ball' <cjb@laptop.org>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Tomasz Figa' <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0A20DA07-7B18-4BD5-AF32-172022B92611@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>, m.szyprowski@samsung.com, swarren@nvidia.com, rob.herring@calxeda.com, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, September 17, 2013, Rob Herring wrote:
-> On 09/16/2013 04:45 PM, Olof Johansson wrote:
-> > On Mon, Sep 16, 2013 at 03:57:48PM -0500, dinguyen@altera.com wrote:
-> >> From: Dinh Nguyen <dinguyen@altera.com>
-> >>
-> >> s/Synopsis/Synopsys
-> >> s/synopsis/synopsys
-> >>
-> >> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-> >> Cc: Pavel Machek <pavel@denx.de>
-> >> CC: Arnd Bergmann <arnd@arndb.de>
-> >> CC: Olof Johansson <olof@lixom.net>
-> >> Cc: Rob Herring <rob.herring@calxeda.com>
-> >> Cc: Pawel Moll <pawel.moll@arm.com>
-> >> Cc: Mark Rutland <mark.rutland@arm.com>
-> >> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> >> Cc: Ian Campbell <ian.campbell@citrix.com>
-> >> Cc: Chris Ball <cjb@laptop.org>
-> >> Cc: Jaehoon Chung <jh80.chung@samsung.com>
-> >> Cc: Seungwon Jeon <tgih.jun@samsung.com>
-> >> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> >> Cc: devicetree@vger.kernel.org
-> >> Cc: linux-mmc@vger.kernel.org
-> >> CC: linux-arm-kernel@lists.infradead.org
-> >
-> > Acked-by: Olof Johansson <olof@lixom.net>
-> >
-> >
-> > Looks like this is best taken through the DT tree, but if they don't have any
-> > other fixes we can take it through arm-soc, just let me know.
-> 
-> Yes. I'll take it.
-Rob, thanks for taking.
+On Mon, 2013-09-16 at 10:22 -0500, Kumar Gala wrote:
+> Where is Jermey's binding documented ?
 
-Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+It looks like I actually came up with this binding :-) Jeremy reminded
+me yesterday. It was posted to the DT list a while back, arguably we
+should have merged it.
 
+> Is there concern of "breaking" whatever got merged in powerpc?
 
-Thanks,
-Seungwon Jeon
+No. I'm happy to switch over to something else but if anybody uses the
+current one we have on powerpc, we can keep the code to support it as
+well, it's not a lot of it.
 
+Cheers,
+Ben.
