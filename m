@@ -1,34 +1,34 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 07/20] Documentation: dt: iio: Add binding for LPS001WP
-Date: Mon, 16 Sep 2013 17:02:13 +0100
-Message-ID: <1379347346-823-8-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 09/20] Documentation: dt: iio: Add binding for L3G4200D
+Date: Mon, 16 Sep 2013 17:02:15 +0100
+Message-ID: <1379347346-823-10-git-send-email-lee.jones@linaro.org>
 References: <1379347346-823-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379347346-823-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, denis.ciocca-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1379347346-823-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, jic23@cam.ac.uk
+Cc: arnd@arndb.de, linus.walleij@linaro.org, denis.ciocca@st.com, linux-iio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-LPS001WP is a Pressure and Temperature sensor.
+L3G4200D is a Gyroscope Sensor
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../devicetree/bindings/iio/pressure/lps001wp.txt   | 21 +++++++++++++++++++++
+ .../devicetree/bindings/iio/gyro/l3g4200d.txt       | 21 +++++++++++++++++++++
  1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/pressure/lps001wp.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/gyro/l3g4200d.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/pressure/lps001wp.txt b/Documentation/devicetree/bindings/iio/pressure/lps001wp.txt
+diff --git a/Documentation/devicetree/bindings/iio/gyro/l3g4200d.txt b/Documentation/devicetree/bindings/iio/gyro/l3g4200d.txt
 new file mode 100644
-index 0000000..45cb45c
+index 0000000..3ca2b9c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/pressure/lps001wp.txt
++++ b/Documentation/devicetree/bindings/iio/gyro/l3g4200d.txt
 @@ -0,0 +1,21 @@
-+* STMicroelectronics Pressure Sensor
++* STMicroelectronics Gyroscope Sensor
 +
 +Required properties:
-+  - compatible: Should be "st,lps001wp"
++  - compatible: Should be "st,l3g4200d"
 +  - reg: The I2C address of the sensor
 +
 +Optional properties:
@@ -38,18 +38,13 @@ index 0000000..45cb45c
 +Example:
 +
 +i2c@80128000 {
-+        lps001wp@5c {
-+                compatible = "st,lps001wp";
-+                reg = <0x5c>;
++	l3g4200d@68 {
++		compatible = "st,l3g4200d";
++		reg = <0x68>;
 +
-+                vdd-supply = <&ab8500_ldo_aux1_reg>;
-+                vddio-supply = <&db8500_vsmps2_reg>;
-+        };
++		vdd-supply = <&ab8500_ldo_aux1_reg>;
++		vddio-supply = <&db8500_vsmps2_reg>;
++	};
 +};
 -- 
 1.8.1.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
