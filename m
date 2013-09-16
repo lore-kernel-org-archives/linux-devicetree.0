@@ -1,80 +1,71 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH] leds: lp55xx: enable setting default trigger
-Date: Mon, 16 Sep 2013 09:47:04 -0700
-Message-ID: <CAK5ve-+bLMJy7DicB_qJ0Yx6U7h9ACr0AwBkOh6Nf+pC4A+Jgg@mail.gmail.com>
-References: <1379242217-32398-1-git-send-email-linus.walleij@linaro.org> <523645E2.9040108@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
+Date: Mon, 16 Sep 2013 09:49:27 -0700
+Message-ID: <20130916164927.GB21352@roeck-us.net>
+References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
+ <52373314.5070806@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <523645E2.9040108@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Richard Purdie <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52373314.5070806@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 15, 2013 at 4:42 PM, Milo Kim <milo.kim@ti.com> wrote:
-> On 09/15/2013 07:50 PM, Linus Walleij wrote:
->>
->> This enables setting a default trigger on an LP55xx channel,
->> either from platform data or device tree. This mechanism is
->> identical to the mechanism for GPIO LEDs and references the
->> common LEDs device tree bindings.
->>
->> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->
->
-> Acked-by: Milo Kim <milo.kim@ti.com>
->
+On Mon, Sep 16, 2013 at 10:34:28AM -0600, Stephen Warren wrote:
+> On 09/12/2013 06:55 PM, Soren Brinkmann wrote:
+> > Add a driver for SILabs 570, 571, 598, 599 programmable oscillators.
+> > The devices generate low-jitter clock signals and are reprogrammable via
+> > an I2C interface.
+> 
+> > diff --git a/Documentation/devicetree/bindings/clock/silabs,si570.txt b/Documentation/devicetree/bindings/clock/silabs,si570.txt
+> 
+> > +Required properties:
+> > + - compatible: Shall be one of "silabs,si57x", "silabs,si59x".
+> > + - reg: I2C device address.
+> > + - #clock-cells: From common clock bindings: Shall be 0.
+> > + - factory-fout: Factory set default frequency
+> 
+> So, there's no way to query this from the device at all? Looking at the
+> data-sheet, all the frequency generation parameters are in registers,
+> and the device supports I2C read commands. As such, I'm not convinced
+> this property is necessary.
+> 
+Unfortunately, the chip does not report the factory setting for fout,
+so the property is needed. The chip can not be programmed without it.
 
-Thanks, I merged it into my branch.
+> > +Optional properties:
+> > + - initial-fout: Initial output frequency to set during probe
+> 
+> "probe" is a Linux-specific concept. This property should be removed. If
+> the driver is asked to set a specific frequency, it should do so, but I
+> don't think it should program something pro-actively just because it
+> starts up.
+> 
+> If this property is acceptable, it'd be better to describe it more along
+> the lines of the following:
+> 
+> initial-fout: The frequency at which the system requires the clock to
+> operate.
+> 
+It should probably be something like "clock-frequency". In many use cases
+the programmed frequency is set to a constant frequency at system startup
+and never changed, similar to other clocks.
 
--Bryan
+Guenter
 
->
->> ---
->>   Documentation/devicetree/bindings/leds/leds-lp55xx.txt | 10 +++++++---
->>   drivers/leds/leds-lp55xx-common.c                      |  3 +++
->>   include/linux/platform_data/leds-lp55xx.h              |  1 +
->>   3 files changed, 11 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->> b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->> index a61727f..d221e75 100644
->> --- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->> +++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->> @@ -17,12 +17,15 @@ Optional properties:
->>            2: D1~6 with VOUT, D7~9 with VDD
->>            3: D1~9 are connected to VOUT
->>
->> -Alternatively, each child can have specific channel name
->> -- chan-name: Name of each channel name
->> +Alternatively, each child can have a specific channel name and trigger:
->> +- chan-name (optional): name of channel
->> +- linux,default-trigger (optional): see
->> +  Documentation/devicetree/bindings/leds/common.txt
->>
->>   example 1) LP5521
->>   3 LED channels, external clock used. Channel names are
->> 'lp5521_pri:channel0',
->> -'lp5521_pri:channel1' and 'lp5521_pri:channel2'
->> +'lp5521_pri:channel1' and 'lp5521_pri:channel2', with a heartbeat trigger
->> +on channel 0.
->>
->>   lp5521@32 {
->>         compatible = "national,lp5521";
->> @@ -33,6 +36,7 @@ lp5521@32 {
->>         chan0 {
->>                 led-cur = /bits/ 8 <0x2f>;
->>                 max-cur = /bits/ 8 <0x5f>;
->> +               linux,default-trigger = "heartbeat";
->>         };
->
->
-> And this DT example works well with 'ledtrig-heartbeat' module.
->
-> Tested-by: Milo Kim <milo.kim@ti.com>
->
-> Thanks.
->
-> Best regards,
-> Milo
+> > + - temperature-stability-7ppm: Indicate a device with a temperature stability
+> > +			       of 7ppm
+> > +
+> > +Example:
+> > +	si570: clock-generator@5d {
+> > +		#clock-cells = <0>;
+> > +		compatible = "silabs,si570";
+> > +		reg = <0x5d>;
+> > +		factory-fout = <156250000>;
+> > +	};
+> 
+> 
