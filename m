@@ -1,73 +1,65 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 13/28] c6x: use early_init_dt_scan
-Date: Mon, 16 Sep 2013 18:09:09 -0500
-Message-ID: <1379372965-22359-14-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 10/28] arc: use early_init_dt_scan
+Date: Mon, 16 Sep 2013 18:09:06 -0500
+Message-ID: <1379372965-22359-11-git-send-email-robherring2@gmail.com>
 References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, linux-c6x-dev@linux-c6x.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Vineet Gupta <vgupta@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-Convert c6x to use new early_init_dt_scan function.
+Convert arc to use new early_init_dt_scan function.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Mark Salter <msalter@redhat.com>
-Cc: Aurelien Jacquiot <a-jacquiot@ti.com>
-Cc: linux-c6x-dev@linux-c6x.org
+Cc: Vineet Gupta <vgupta@synopsys.com>
 ---
- arch/c6x/kernel/devicetree.c | 19 -------------------
- arch/c6x/kernel/setup.c      |  2 +-
- 2 files changed, 1 insertion(+), 20 deletions(-)
+ arch/arc/kernel/devtree.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
-diff --git a/arch/c6x/kernel/devicetree.c b/arch/c6x/kernel/devicetree.c
-index 5e8c838..d28a92f 100644
---- a/arch/c6x/kernel/devicetree.c
-+++ b/arch/c6x/kernel/devicetree.c
-@@ -10,28 +10,9 @@
-  *
+diff --git a/arch/arc/kernel/devtree.c b/arch/arc/kernel/devtree.c
+index eeb613a..1ab6f35 100644
+--- a/arch/arc/kernel/devtree.c
++++ b/arch/arc/kernel/devtree.c
+@@ -27,7 +27,6 @@
   */
- #include <linux/init.h>
--#include <linux/of.h>
--#include <linux/of_fdt.h>
- #include <linux/initrd.h>
- #include <linux/memblock.h>
+ struct machine_desc * __init setup_machine_fdt(void *dt)
+ {
+-	struct boot_param_header *devtree = dt;
+ 	struct machine_desc *mdesc = NULL, *mdesc_best = NULL;
+ 	unsigned int score, mdesc_score = ~1;
+ 	unsigned long dt_root;
+@@ -36,11 +35,9 @@ struct machine_desc * __init setup_machine_fdt(void *dt)
+ 	char manufacturer[16];
+ 	unsigned long len;
  
--void __init early_init_devtree(void *params)
--{
--	/* Setup flat device-tree pointer */
--	initial_boot_params = params;
--
--	/* Retrieve various informations from the /chosen node of the
--	 * device-tree, including the platform type, initrd location and
--	 * size and more ...
--	 */
+-	/* check device tree validity */
+-	if (be32_to_cpu(devtree->magic) != OF_DT_HEADER)
++	if (!early_init_dt_scan(dt))
+ 		return NULL;
+ 
+-	initial_boot_params = devtree;
+ 	dt_root = of_get_flat_dt_root();
+ 
+ 	/*
+@@ -85,15 +82,6 @@ struct machine_desc * __init setup_machine_fdt(void *dt)
+ 
+ 	pr_info("Board \"%s\" from %s (Manufacturer)\n", model, manufacturer);
+ 
+-	/* Retrieve various information from the /chosen node */
 -	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
 -
--	/* Scan memory nodes and rebuild MEMBLOCKs */
+-	/* Initialize {size,address}-cells info */
 -	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+-
+-	/* Setup memory, calling early_init_dt_add_memory_arch */
 -	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
--}
 -
--
- #ifdef CONFIG_BLK_DEV_INITRD
- void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
- {
-diff --git a/arch/c6x/kernel/setup.c b/arch/c6x/kernel/setup.c
-index 0e5a812..731db4b 100644
---- a/arch/c6x/kernel/setup.c
-+++ b/arch/c6x/kernel/setup.c
-@@ -287,7 +287,7 @@ notrace void __init machine_init(unsigned long dt_ptr)
- 		fdt = dtb;
- 
- 	/* Do some early initialization based on the flat device tree */
--	early_init_devtree(fdt);
-+	early_init_dt_scan(fdt);
- 
- 	parse_early_param();
- }
+ 	clk = of_get_flat_dt_prop(dt_root, "clock-frequency", &len);
+ 	if (clk)
+ 		arc_set_core_freq(of_read_ulong(clk, len/4));
 -- 
 1.8.1.2
