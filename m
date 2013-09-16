@@ -1,110 +1,171 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
-Date: Mon, 16 Sep 2013 09:40:45 +0200
-Message-ID: <20130916074045.GT30088@pengutronix.de>
-References: <1379310497-12362-1-git-send-email-xobs@kosagi.com>
- <1379310497-12362-4-git-send-email-xobs@kosagi.com>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma
+ reserved memory
+Date: Mon, 16 Sep 2013 10:17:25 +0200
+Message-ID: <5236BE95.3030305@samsung.com>
+References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com>
+ <1377527959-5080-4-git-send-email-m.szyprowski@samsung.com>
+ <20130829224637.D09183E1222@localhost> <52209278.8040106@samsung.com>
+ <DAF223EB-C84C-4E82-A24A-ACD0A3A0559F@codeaurora.org>
+ <20130909160154.8D7183E0F23@localhost> <5236AF64.80607@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1379310497-12362-4-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+In-reply-to: <5236AF64.80607-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Zhu Richard-R65037 <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2013 at 05:48:17AM +0000, Sean Cross wrote:
-> Add support for the PCIe port present on the i.MX6 family of controllers.
-> These use the Synopsis Designware core tied to their own PHY.
-> 
-> diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
-> index 971356b..d30ff63 100644
-> --- a/arch/arm/mach-imx/clk-imx6q.c
-> +++ b/arch/arm/mach-imx/clk-imx6q.c
-> @@ -623,6 +623,18 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
->  	if (ret)
->  		pr_warn("failed to set up CLKO: %d\n", ret);
->  
-> +	/*
-> +	 * All existing boards with PCIe use LVDS1
-> +	 */
-> +	if (IS_ENABLED(CONFIG_PCI_IMX6)) {
-> +		clk_set_parent(clk[lvds1_sel], clk[sata_ref]);
 
-This is fine,
+On 9/16/2013 9:12 AM, Marek Szyprowski wrote:
+> Hello,
+>
+> On 9/9/2013 6:01 PM, Grant Likely wrote:
+>> On Fri, 30 Aug 2013 15:26:24 -0500, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> 
+>> wrote:
+>> > On Aug 30, 2013, at 7:39 AM, Marek Szyprowski wrote:
+>> > > On 8/30/2013 12:46 AM, Grant Likely wrote:
+>> > >> On Mon, 26 Aug 2013 16:39:18 +0200, Marek Szyprowski 
+>> <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> > >> > +    - "reserved-memory-region" - compatibility is defined, given
+>> > >> > +      region is assigned for exclusive usage for by the 
+>> respective
+>> > >> > +      devices.
+>> > >>
+>> > >> BTW, just so you're aware there is already a binding for marking 
+>> regions
+>> > >> as reserved. It was recently added to arch/powerpc/kernel/prom.c.
+>> > >> Unfortunately it doesn't look like it got documented. Search for
+>> > >> "reserved-ranges". However, I don't think it blocks your work 
+>> here. That
+>> > >> binding doesn't provide any way for matching devices to reserved 
+>> ranges.
+>> > >> It is only for telling the kernel "hands of that memory".
+>> > >
+>> > > ok, good to know.
+>> >
+>> > So I think the most generic compatible should effectively be the same
+>> > as 'reserved-ranges', ie this region shouldn't be touched by the
+>> > kernel.
+>> >
+>> > Than we can build on top of that with more specific compatibles.
+>> >
+>> > I have examples from FSL networking SoCs where we would carve out
+>> > memory for backing storage managed completely by the HW and Linux
+>> > wouldn't need to touch it, however we might have a
+>> > "fsl,qman-backing-store" compat encase we might want some debug code
+>> > in linux to look at the region of memory.
+>> >
+>> > I've got examples at qualcomm where we have shared data structures in
+>> > specific memory regions between different processors that aren't cache
+>> > coherent, so want the memory not to be marked as cacheable by Linux
+>> > when it accesses it.  Again we'd have a "qcom,smem" prop on top of the
+>> > "reserved-memory-region".
+>>
+>> I think that is a reasonable approach, and works really well for regions
+>> associated with specific hardware because the hardware driver can be
+>> responsible for wiring it up to CMA or manage the region directly.
+>> Whatever the driver desires to do.
+>>
+>> It still remains what to do for generic regions that any device can use.
+>> As I've previously said, I don't like calling out "CMA" specifically in
+>> the compatible property because that happens to be a Linux
+>> implementation specific details. Two years from now someone may propose
+>> a new allocator that should take over what used to be handled by CMA
+>> (kind of like how CMA may end up taking over from ION)....
+>>
+>> Alright, I've thought about it some more and it probably does make sense
+>> to use an additional compatible string. Marek originally suggested
+>> "linux,contiguous-memory-region". I later suggested 
+>> "shareable-memory-region",
+>> but that's actually a worse name because it doesn't have any reference
+>> to what the region is for (I was fixating on the kernel being able to
+>> use unallocated pages; but that is also an implementation detail). I
+>> exercise my right to change my mind and agree that contiguous is
+>> appropriate here. But instead of calling out the contiguous allocator,
+>> the binding should specifically lay out the usage model for these
+>> regions. I would change the contiguous-memory binding to state the
+>> following:
+>>     Contiguous-memory is a region of general purpose memory from
+>>     which large buffers of contiguous memory can be allocated.
+>>     Contiguous buffers are often used for DMA buffers. The operating
+>>     system may use the memory for any purpose, but must immediately
+>>     release the pages if a contiguous buffer is required.
+>>
+>> So the way I read things, the current proposal would be:
+>>
+>> The generic form for do-not-touch memory:
+>>     compatible = "reserved-memory";
+>>   - I've dropped '-region' because I think it is redundant
+>>   - The kernel will not make use of this memory except for when a 
+>> driver picks it up
+>>
+>> For contiguous memory:
+>>     compatible = "contiguous-memory", "reserved-memory"
+>>
+>> For contiguous memory that Linux will use by default if a specific
+>> region isn't specified.
+>>     compatible = "contiguous-memory", "reserved-memory"
+>>     linux,default-contiguous-region;
+>>   - I stuck with a linux, prefix here because I haven't come up with a
+>>     non-linux way to describe this.
+>>
+>> Memory that specific hardware can pick up:
+>>     compatible = "qcom,smem", "reserved-memory"
+>>
+>> Nodes with a 'size' property and without a 'reg' property need to have a
+>> region allocated and reserved. The allocated region needs to be cached
+>> somewhere. We could create a data structure for tracking the reserved
+>> regions, or could write it in directly. While I shudder at the 
+>> thought of
+>> modifying the device tree at runtime by the kernel, it might just be the
+>> sanest implementation at this time. I'd like to see what the
+>> implementation looks like. (Since this is potentially controversial, I
+>> would recommend implementing the exact regions in on patch, and add
+>> dynamically allocated regions as a follow-up patch)
+>>
+>> As far as proper implementation is concerned, I think it should be
+>> explicit in the binding that the kernel should automatically exclude
+>> anything under the reserved-memory node, regardless of the compatible
+>> value. Merely being a child of the reserved-memory node immediately
+>> means that it is a reserved memory region.
+>
+> It looks that my proposal for the reserved memory nodes causes much more
+> controversy than I expected when I've sent a pull request to Linus:
+> https://lkml.org/lkml/2013/9/15/151
+> http://www.spinics.net/lists/arm-kernel/msg273548.html
+>
+> Fixing those issues requires further discussion. Frankly, right now I
+> really have no idea which way should I go. The /reserved-ranges node 
+> seems
+> to be easy to match particular reserved memory region with a given 
+> device.
 
-> +		clk_prepare_enable(clk[lvds1_gate]);
-> +		clk_prepare_enable(clk[pcie_ref_125m]);
-> +		clk_prepare_enable(clk[sata_ref_100m]);
-> +		clk_prepare_enable(clk[pcie_axi]);
+Huh, I've hurried to much. It should be:
 
-but the clocks should be really enabled in the driver that needs them.
+The /reserved-ranges node approach seems to be easy to implement, but it
+makes much harder to to match particular reserved memory region with a given
+device.
 
-> +static int pcie_phy_poll_ack(void __iomem *dbi_base, int exp_val)
-> +{
-> +	u32 val;
-> +	u32 max_iterations = 10;
-> +	u32 wait_counter = 0;
-> +
-> +	do {
-> +		val = readl(dbi_base + PCIE_PHY_STAT);
-> +		val = (val >> PCIE_PHY_STAT_ACK_LOC) & 0x1;
-> +		wait_counter++;
+> I'm also not really convinced if it makes sense to add a code for finding
+> and matching a reserved memory region to every device driver, which might
+> need it. I would really like to get some more feedback on the Ben's
+> comment.
+>
+> In any case, the code will also change significantly, so I assume that 
+> the
+> best, what can be done now is to revert the current version and start 
+> from
+> the scratch with a new, complete proposal.
 
-		if (val == exp_val)
-			return 0;
-
-> +		udelay(1);
-
-Avoids the udelay when the value is correct during the first iteration.
-
-> +	} while ((wait_counter < max_iterations) && (val != exp_val));
-> +
-> +	if (val != exp_val)
-> +		return -ETIMEDOUT;
-> +
-> +	return 0;
-> +}
-> +
-
-...
-
-> +/* Read from the 16-bit PCIe PHY control registers (not memory-mapped) */
-> +static int pcie_phy_read(void __iomem *dbi_base, int addr , int *data)
-> +{
-> +	u32 val, phy_ctl;
-> +	int ret;
-> +
-> +	ret = pcie_phy_wait_ack(dbi_base, addr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* assert Read signal */
-> +	phy_ctl = 0x1 << PCIE_PHY_CTRL_RD_LOC;
-> +	writel(phy_ctl, dbi_base + PCIE_PHY_CTRL);
-> +
-> +	ret = pcie_phy_poll_ack(dbi_base, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val = readl(dbi_base + PCIE_PHY_STAT);
-> +	*data = (val & (0xffff << PCIE_PHY_STAT_DATA_LOC));
-
-This works because PCIE_PHY_STAT_DATA_LOC is 0. Otherwise you would have
-to do:
-
-	*data = (val >> PCIE_PHY_STAT_DATA_LOC) & 0xfff;
-
-I suggest to simply drop the bogus zero bit shift.
-
-Sascha
-
+Best regards
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Marek Szyprowski
+Samsung R&D Institute Poland
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
