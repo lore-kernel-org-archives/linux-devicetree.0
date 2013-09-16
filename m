@@ -1,75 +1,94 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 03/28] of: create unflatten_and_copy_device_tree
-Date: Mon, 16 Sep 2013 18:08:59 -0500
-Message-ID: <1379372965-22359-4-git-send-email-robherring2@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH 01/28] c6x: use boot_command_line instead of private c6x_command_line
+Date: Mon, 16 Sep 2013 18:08:57 -0500
+Message-ID: <1379372965-22359-2-git-send-email-robherring2@gmail.com>
 References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379372965-22359-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, linux-c6x-dev@linux-c6x.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Rob Herring <rob.herring@calxeda.com>
 
-Several architectures using DT support built-in dtb's in the init
-section. These platforms need to copy the dtb from init since the
-strings are referenced after unflattening. Every arch has their own
-copying routine which do the same thing. Create a common function,
-unflatten_and_copy_device_tree, to copy the dtb when unflattening the
-dtb.
+Save some pointless copying of the kernel command line and just use
+boot_command_line instead.
 
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Also remove default_command_line as it is not referenced anywhere, and
+the DT code already handles the default command line.
+
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Cc: Mark Salter <msalter@redhat.com>
+Cc: Aurelien Jacquiot <a-jacquiot@ti.com>
+Cc: linux-c6x-dev@linux-c6x.org
 ---
- drivers/of/fdt.c       | 13 +++++++++++++
- include/linux/of_fdt.h |  2 ++
- 2 files changed, 15 insertions(+)
+ arch/c6x/include/asm/setup.h |  2 --
+ arch/c6x/kernel/devicetree.c |  2 +-
+ arch/c6x/kernel/setup.c      | 11 +----------
+ 3 files changed, 2 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 229dd9d..eca1810 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -802,6 +802,19 @@ void __init unflatten_device_tree(void)
- 	of_alias_scan(early_init_dt_alloc_memory_arch);
+diff --git a/arch/c6x/include/asm/setup.h b/arch/c6x/include/asm/setup.h
+index ecead15..6968044 100644
+--- a/arch/c6x/include/asm/setup.h
++++ b/arch/c6x/include/asm/setup.h
+@@ -14,8 +14,6 @@
+ #include <uapi/asm/setup.h>
+ 
+ #ifndef __ASSEMBLY__
+-extern char c6x_command_line[COMMAND_LINE_SIZE];
+-
+ extern int c6x_add_memory(phys_addr_t start, unsigned long size);
+ 
+ extern unsigned long ram_start;
+diff --git a/arch/c6x/kernel/devicetree.c b/arch/c6x/kernel/devicetree.c
+index 9e15ab9..5e8c838 100644
+--- a/arch/c6x/kernel/devicetree.c
++++ b/arch/c6x/kernel/devicetree.c
+@@ -24,7 +24,7 @@ void __init early_init_devtree(void *params)
+ 	 * device-tree, including the platform type, initrd location and
+ 	 * size and more ...
+ 	 */
+-	of_scan_flat_dt(early_init_dt_scan_chosen, c6x_command_line);
++	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
+ 
+ 	/* Scan memory nodes and rebuild MEMBLOCKs */
+ 	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+diff --git a/arch/c6x/kernel/setup.c b/arch/c6x/kernel/setup.c
+index f4e72bd..0e5a812 100644
+--- a/arch/c6x/kernel/setup.c
++++ b/arch/c6x/kernel/setup.c
+@@ -68,13 +68,6 @@ unsigned long ram_end;
+ static unsigned long dma_start __initdata;
+ static unsigned long dma_size __initdata;
+ 
+-char c6x_command_line[COMMAND_LINE_SIZE];
+-
+-#if defined(CONFIG_CMDLINE_BOOL)
+-static const char default_command_line[COMMAND_LINE_SIZE] __section(.cmdline) =
+-	CONFIG_CMDLINE;
+-#endif
+-
+ struct cpuinfo_c6x {
+ 	const char *cpu_name;
+ 	const char *cpu_voltage;
+@@ -296,8 +289,6 @@ notrace void __init machine_init(unsigned long dt_ptr)
+ 	/* Do some early initialization based on the flat device tree */
+ 	early_init_devtree(fdt);
+ 
+-	/* parse_early_param needs a boot_command_line */
+-	strlcpy(boot_command_line, c6x_command_line, COMMAND_LINE_SIZE);
+ 	parse_early_param();
  }
  
-+void __init unflatten_and_copy_device_tree(void)
-+{
-+	int size = __be32_to_cpu(initial_boot_params->totalsize);
-+	void *dt = early_init_dt_alloc_memory_arch(size,
-+		__alignof__(struct boot_param_header));
-+
-+	if (dt) {
-+		memcpy(dt, initial_boot_params, size);
-+		initial_boot_params = dt;
-+	}
-+	unflatten_device_tree();
-+}
-+
- #endif /* CONFIG_OF_EARLY_FLATTREE */
+@@ -309,7 +300,7 @@ void __init setup_arch(char **cmdline_p)
+ 	printk(KERN_INFO "Initializing kernel\n");
  
- /* Feed entire flattened device tree into the random pool */
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index a478c62..58c28a8 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -118,9 +118,11 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
+ 	/* Initialize command line */
+-	*cmdline_p = c6x_command_line;
++	*cmdline_p = boot_command_line;
  
- /* Other Prototypes */
- extern void unflatten_device_tree(void);
-+extern void unflatten_and_copy_device_tree(void);
- extern void early_init_devtree(void *);
- #else /* CONFIG_OF_FLATTREE */
- static inline void unflatten_device_tree(void) {}
-+static inline void unflatten_and_copy_device_tree(void) {}
- #endif /* CONFIG_OF_FLATTREE */
- 
- #endif /* __ASSEMBLY__ */
+ 	memory_end = ram_end;
+ 	memory_end &= ~(PAGE_SIZE - 1);
 -- 
 1.8.1.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
