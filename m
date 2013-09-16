@@ -1,126 +1,60 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 2/9] irqdomain: Introduce __irq_create_mapping()
-Date: Mon, 16 Sep 2013 10:31:59 +0200
-Message-ID: <1379320326-13241-3-git-send-email-treding@nvidia.com>
-References: <1379320326-13241-1-git-send-email-treding@nvidia.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379320326-13241-1-git-send-email-treding@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 0/3] Add PCIe support for i.MX6q
+Date: Mon, 16 Sep 2013 08:20:51 +0000
+Message-ID: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zhu Richard-R65037 <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a version of irq_create_mapping() that propagates the precise
-error code instead of returning 0 for all errors. It will be used in
-subsequent patches to allow further propagation of error codes.
+This patchset adds support for the PCI Express port present on
+the i.MX6 SoC.  The port is based on Synopsis Designware IP with
+a custom PHY.
 
-To avoid code duplication, implement irq_create_mapping() as a wrapper
-around the new __irq_create_mapping().
+Changes since v5:
+ - Changed "compatible" to "fsl,imx6q-pcie"
+ - Moved clock_prepare_enable calls back into driver
+ - Removed clk lookups for lvds[12]_gate
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- kernel/irq/irqdomain.c | 59 +++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 39 insertions(+), 20 deletions(-)
+Changes since v4:
+ - Add an abort exception handler
+ - Fix register ordering in imx6q-iomuxc-gpr.h
+ - Enable sata_ref_100m during clock initialization
+ - Minor changes to lvds[12]_gate definitions
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 706724e..d2a3b01 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -374,30 +374,21 @@ unsigned int irq_create_direct_mapping(struct irq_domain *domain)
- }
- EXPORT_SYMBOL_GPL(irq_create_direct_mapping);
- 
--/**
-- * irq_create_mapping() - Map a hardware interrupt into linux irq space
-- * @domain: domain owning this hardware interrupt or NULL for default domain
-- * @hwirq: hardware irq number in that domain space
-- *
-- * Only one mapping per hardware interrupt is permitted. Returns a linux
-- * irq number.
-- * If the sense/trigger is to be specified, set_irq_type() should be called
-- * on the number returned from that call.
-- */
--unsigned int irq_create_mapping(struct irq_domain *domain,
--				irq_hw_number_t hwirq)
-+static int __irq_create_mapping(struct irq_domain *domain,
-+				irq_hw_number_t hwirq, unsigned int *virqp)
- {
--	unsigned int hint;
--	int virq;
-+	unsigned int hint, virq;
-+	int ret;
- 
--	pr_debug("irq_create_mapping(0x%p, 0x%lx)\n", domain, hwirq);
-+	pr_debug("__irq_create_mapping(0x%p, 0x%lx, %p)\n", domain, hwirq,
-+		 virqp);
- 
- 	/* Look for default domain if nececssary */
- 	if (domain == NULL)
- 		domain = irq_default_domain;
- 	if (domain == NULL) {
- 		WARN(1, "%s(, %lx) called with NULL domain\n", __func__, hwirq);
--		return 0;
-+		return -ENODEV;
- 	}
- 	pr_debug("-> using domain @%p\n", domain);
- 
-@@ -405,7 +396,11 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
- 	virq = irq_find_mapping(domain, hwirq);
- 	if (virq) {
- 		pr_debug("-> existing mapping on virq %d\n", virq);
--		return virq;
-+
-+		if (virqp)
-+			*virqp = virq;
-+
-+		return 0;
- 	}
- 
- 	/* Allocate a virtual interrupt number */
-@@ -417,17 +412,41 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
- 		virq = irq_alloc_desc_from(1, of_node_to_nid(domain->of_node));
- 	if (virq <= 0) {
- 		pr_debug("-> virq allocation failed\n");
--		return 0;
-+		return virq ? : -ENOSPC;
- 	}
- 
--	if (irq_domain_associate(domain, virq, hwirq)) {
-+	ret = irq_domain_associate(domain, virq, hwirq);
-+	if (ret) {
- 		irq_free_desc(virq);
--		return 0;
-+		return ret;
- 	}
- 
- 	pr_debug("irq %lu on domain %s mapped to virtual irq %u\n",
- 		hwirq, of_node_full_name(domain->of_node), virq);
- 
-+	if (virqp)
-+		*virqp = virq;
-+
-+	return 0;
-+}
-+/**
-+ * irq_create_mapping() - Map a hardware interrupt into linux irq space
-+ * @domain: domain owning this hardware interrupt or NULL for default domain
-+ * @hwirq: hardware irq number in that domain space
-+ *
-+ * Only one mapping per hardware interrupt is permitted. Returns a linux
-+ * irq number.
-+ * If the sense/trigger is to be specified, set_irq_type() should be called
-+ * on the number returned from that call.
-+ */
-+unsigned int irq_create_mapping(struct irq_domain *domain,
-+				irq_hw_number_t hwirq)
-+{
-+	unsigned int virq;
-+
-+	if (__irq_create_mapping(domain, hwirq, &virq))
-+		return 0;
-+
- 	return virq;
- }
- EXPORT_SYMBOL_GPL(irq_create_mapping);
+Changes since v3:
+ - Moved clock initialization to board clock file
+ - Reworked memory range layout
+ - Reduced the duration of several sleep calls
+
+Changes since v2:
+ - Reworked source file with Sascha Hauer's suggestions
+
+Changes since v1:
+ - Use the Designware controller code for BAR initialization
+
+Sean Cross (3):
+  ARM: imx: Add LVDS general-purpose clocks to i.MX6Q
+  ARM: imx6q: Add PCIe bits to GPR syscon definition
+  PCI: imx6: Add support for i.MX6 PCIe controller
+
+ .../devicetree/bindings/clock/imx6q-clock.txt      |    4 +
+ .../devicetree/bindings/pci/designware-pcie.txt    |    7 +-
+ arch/arm/boot/dts/imx6qdl.dtsi                     |   16 +
+ arch/arm/mach-imx/Kconfig                          |    2 +
+ arch/arm/mach-imx/clk-imx6q.c                      |   24 +-
+ drivers/pci/host/Kconfig                           |    6 +
+ drivers/pci/host/Makefile                          |    1 +
+ drivers/pci/host/pci-imx6.c                        |  576 ++++++++++++++++++++
+ include/linux/mfd/syscon/imx6q-iomuxc-gpr.h        |    8 +
+ 9 files changed, 642 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/pci/host/pci-imx6.c
+
 -- 
-1.8.4
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
