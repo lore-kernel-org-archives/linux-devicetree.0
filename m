@@ -1,47 +1,71 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
-Date: Mon, 16 Sep 2013 11:50:24 -0700
-Message-ID: <CAOesGMgCvnuX918pt6vT0_QsHdfJ8b813iu2tXRHvdpL8GZ3dg@mail.gmail.com>
-References: <1379003839-16068-1-git-send-email-galak@codeaurora.org>
-	<CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com>
-	<25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org>
-	<CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com>
-	<3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org>
-	<20130912224737.GA24937@codeaurora.org>
-	<9EA264FE-7621-458D-8333-9340DDBFC4EE@codeaurora.org>
-	<52374DD1.9040209@codeaurora.org>
-	<AEBF64D7-5359-4E37-8263-B81209620192@codeaurora.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
+Date: Mon, 16 Sep 2013 12:14:53 -0700
+Message-ID: <20130916191453.GA9023@roeck-us.net>
+References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
+ <52373314.5070806@wwwdotorg.org>
+ <20130916164927.GB21352@roeck-us.net>
+ <5237390E.5070203@wwwdotorg.org>
+ <20130916173540.GA3481@roeck-us.net>
+ <52374FF7.8040604@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AEBF64D7-5359-4E37-8263-B81209620192@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Rohit Vaswani <rvaswani@codeaurora.org>, David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52374FF7.8040604@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2013 at 11:46 AM, Kumar Gala <galak@codeaurora.org> wrote:
+On Mon, Sep 16, 2013 at 12:37:43PM -0600, Stephen Warren wrote:
+> On 09/16/2013 11:35 AM, Guenter Roeck wrote:
+> > On Mon, Sep 16, 2013 at 10:59:58AM -0600, Stephen Warren wrote:
+> >> On 09/16/2013 10:49 AM, Guenter Roeck wrote:
+> >>> On Mon, Sep 16, 2013 at 10:34:28AM -0600, Stephen Warren wrote:
+> >>>> On 09/12/2013 06:55 PM, Soren Brinkmann wrote:
+> >>>>> Add a driver for SILabs 570, 571, 598, 599 programmable oscillators.
+> >>>>> The devices generate low-jitter clock signals and are reprogrammable via
+> >>>>> an I2C interface.
+> ...
+> >>>>> +Optional properties:
+> >>>>> + - initial-fout: Initial output frequency to set during probe
+> >>>>
+> >>>> "probe" is a Linux-specific concept. This property should be removed. If
+> >>>> the driver is asked to set a specific frequency, it should do so, but I
+> >>>> don't think it should program something pro-actively just because it
+> >>>> starts up.
+> >>>>
+> >>>> If this property is acceptable, it'd be better to describe it more along
+> >>>> the lines of the following:
+> >>>>
+> >>>> initial-fout: The frequency at which the system requires the clock to
+> >>>> operate.
+> >>>
+> >>> It should probably be something like "clock-frequency". In many use cases
+> >>> the programmed frequency is set to a constant frequency at system startup
+> >>> and never changed, similar to other clocks.
+> >>
+> >> I was going to suggest that too, but re-considered since I think
+> >> clock-frequency is more appropriate for fixed-frequency clocks, rather
+> >> than to specify the value at which a programmable clock generator should
+> >> operate?
+> >>
+> >> I don't think we have a good story yet for how to represent
+> >> how-we-want-the-clock-tree-configured, as opposed to representing the HW
+> >> itself (which is what DT should be more about).
+> >
+> > In many cases the chip _is_ used to generate a fixed frequency, so we will
+> > have to have a means to describe it. That it _can_ be used differently is a
+> > different matter. After all, that is true for many clock generators.
+> 
+> Perhaps if clock-frequency is specified, the driver should refuse to
+> provide anything else. If clock-frequency isn't specified, the driver
+> shouldn't touch the HW when it initializes, but should honor any
+> requests that come in from other drivers? That would maintain what I
+> feel is clock-frequency's connection to being a fixed clock.
+> 
+Ok with me, if that is in line with other clock drivers.
 
-> I think the two options are either:
->
-> qcom-msm*, qcom-apq*, etc
->
-> or
->
-> qcom/msm-*, qcom/apq*, etc
->
-> I'm guessing we'll end up without the dir and in the future have:
->
-> qcom/qcom-msm-*, qcom/qcom-apq-*
->
-> Olof???
-
-
-When you create the dir, you can go from qcom-msm-* to qcom/msm-*, but
-still produce qcom-msm-*.dtb as the build output. We care about
-keeping the DTB name stable, not DTS. As long as they just conform to
-those two patterns it's easy to handle through makefile targets.
-
-
-
--Olof
+Guenter
