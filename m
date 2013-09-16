@@ -1,42 +1,59 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [RFCv2 3/3] ARM: dts: N900: Add SSI information
-Date: Mon, 16 Sep 2013 21:10:32 +0300
-Message-ID: <20130916181032.GB30568@blackmetal.musicnaut.iki.fi>
-References: <1379277856-24571-1-git-send-email-sre@debian.org>
- <1379277856-24571-4-git-send-email-sre@debian.org>
- <CAAwP0s0e-gYkNA78eQH7x2VJbM1byaisUeqU8YbbeWUbKwsxCQ@mail.gmail.com>
- <20130916150147.GA14047@earth.universe>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC PATCH alt 4/4] pinctrl: at91: rework debounce configuration
+Date: Mon, 16 Sep 2013 12:14:09 -0600
+Message-ID: <52374A71.5090305@wwwdotorg.org>
+References: <1379058213-3245-1-git-send-email-b.brezillon@overkiz.com> <1379058813-3489-1-git-send-email-b.brezillon@overkiz.com> <52339479.6030402@wwwdotorg.org> <52340B68.5020505@overkiz.com> <523734B2.6050208@wwwdotorg.org> <52373D6D.4010109@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130916150147.GA14047-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <martinez.javier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap@>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52373D6D.4010109@overkiz.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: boris brezillon <b.brezillon@overkiz.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Jiri Kosina <jkosina@suse.cz>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Sep 16, 2013 at 05:01:47PM +0200, Sebastian Reichel wrote:
-> > Is the Synchronous Serial Interface (SSI)  only supported by
-> > OMAP34xx/OMAP35xx SoC and not by OMAP36xx/OMAP37xx SoC?
-> > 
-> > I'm asking this since if SSI is supported by both we should add the
-> > device nodes in omap3.dtsi instead of omap34xx.dtsi.
-> > 
-> > I thought that all OMAP3 SoC supported SSI and all OMAP4 SoC supported
-> > HSI but I guess I was wrong...
+On 09/16/2013 11:18 AM, boris brezillon wrote:
+> Hello Stephen,
 > 
-> I just do not know. Information about the SSI core is not included
-> in the public OMAP TRM. It only lists the memory space as reserved.
+> On 16/09/2013 18:41, Stephen Warren wrote:
+>> On 09/14/2013 01:08 AM, boris brezillon wrote:
+...
+>>> Let's say you have one device using multiple configuration of pins
+>>> ("default", "xxx", "yyy").
+>>> The "default" config needs a particular debounce time on a given pin and
+>>> the "xxx" and "yyy"
+>>> configs need different debounce time on the same pin.
+>>>
+>>> How would you solve this with this patch approach ?
+>>
+>> Each state has a different pin configuration node, and hence can specify
+>> a different debounce value. ...
+...
+> Actually it does: this patch removes the debounce time setting option from
+> the pin config description. The only thing you can do is enable or
+> disable the debounce filter.
 > 
-> Thus I only included it in OMAP34xx, which is used in Nokia N900 and
-> must support SSI.
+> The atmel,default-debounce-div property is not part of the pin group (or
+> pin state) node, it is a global property you define for the whole pinctrl
+> controller (pinctrl node
+> property):
+> 
+> pinctrl {
+>         atmel,default-debounce-div=<100...
+...
 
-I think N9 and N950 (OMAP3630) are using pretty much the same driver.
+Oh, I see. Sorry.
 
-A.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It seems this HW has been designed to just set that configuration up
+once and be done with it.
+
+There really isn't a way to make anything more complex or dynamic work
+correctly. If you try to put the debounce config into a per-state node
+rather than the top-level, how will you reconcile any conflicts? What if
+the gpio-keys default state's node says 10ms, whereas the SDHCI
+controller's default state's node says 100ms? Both those states need to
+be active at the same time. The only way to avoid conflict resolution
+issues like that is to prevent them, and just put the debounce config at
+the top-level, and hence program it once when the driver starts, i.e.
+make the DT exactly match the HW capabilities.
