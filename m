@@ -1,58 +1,46 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
-Date: Mon, 16 Sep 2013 10:34:28 -0600
-Message-ID: <52373314.5070806@wwwdotorg.org>
-References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com> <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm: dts: socfpga: Add support for SD/MMC
+Date: Mon, 16 Sep 2013 10:36:19 -0600
+Message-ID: <52373383.7030601@wwwdotorg.org>
+References: <1378740833-4883-1-git-send-email-dinguyen@altera.com> <1378740833-4883-4-git-send-email-dinguyen@altera.com> <522E398F.3080100@wwwdotorg.org> <1963011.uUY4o6LRbA@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1963011.uUY4o6LRbA@flatron>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2013 06:55 PM, Soren Brinkmann wrote:
-> Add a driver for SILabs 570, 571, 598, 599 programmable oscillators.
-> The devices generate low-jitter clock signals and are reprogrammable via
-> an I2C interface.
+On 09/14/2013 06:30 AM, Tomasz Figa wrote:
+...
+> Just as a side note, correct name is Synopsys, not Synopsis. There are
+> multiple places around Documentation/devicetree where this typo is
+> present[1]. Should we consider correcting this or the typo will have
+> to stay?
+> 
+> [1] git grep -i synopsis Documentation/devicetree/
+> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:* Samsung Exynos specific extensions to the Synopsis Designware Mobile
+> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
+> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:differences between the core Synopsis dw mshc controller properties described
+> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:by synopsis-dw-mshc.txt and the properties used by the Samsung Exynos specific
+> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:extensions to the Synopsis Designware Mobile Storage Host Controller.
+> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:* Rockchip specific extensions to the Synopsis Designware Mobile
+> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
+> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:differences between the core Synopsis dw mshc controller properties described
+> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:by synopsis-dw-mshc.txt and the properties used by the Rockchip specific
+> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:extensions to the Synopsis Designware Mobile Storage Host Controller.
+> Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:* Synopsis Designware Mobile Storage Host Controller
+> Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
+> Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:properties used by the Synopsis Designware Mobile Storage Host Controller.
+> Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:     - snps,dw-mshc: for controllers compliant with synopsis dw-mshc.
+> Documentation/devicetree/bindings/pci/designware-pcie.txt:* Synopsis Designware PCIe interface
 
-> diff --git a/Documentation/devicetree/bindings/clock/silabs,si570.txt b/Documentation/devicetree/bindings/clock/silabs,si570.txt
-
-> +Required properties:
-> + - compatible: Shall be one of "silabs,si57x", "silabs,si59x".
-> + - reg: I2C device address.
-> + - #clock-cells: From common clock bindings: Shall be 0.
-> + - factory-fout: Factory set default frequency
-
-So, there's no way to query this from the device at all? Looking at the
-data-sheet, all the frequency generation parameters are in registers,
-and the device supports I2C read commands. As such, I'm not convinced
-this property is necessary.
-
-> +Optional properties:
-> + - initial-fout: Initial output frequency to set during probe
-
-"probe" is a Linux-specific concept. This property should be removed. If
-the driver is asked to set a specific frequency, it should do so, but I
-don't think it should program something pro-actively just because it
-starts up.
-
-If this property is acceptable, it'd be better to describe it more along
-the lines of the following:
-
-initial-fout: The frequency at which the system requires the clock to
-operate.
-
-> + - temperature-stability-7ppm: Indicate a device with a temperature stability
-> +			       of 7ppm
-> +
-> +Example:
-> +	si570: clock-generator@5d {
-> +		#clock-cells = <0>;
-> +		compatible = "silabs,si570";
-> +		reg = <0x5d>;
-> +		factory-fout = <156250000>;
-> +	};
-
+Those typos only appear to exist in free-form text and not in any
+property names/values. As such, they can all easily be fixed without
+impacting any DT content or ABI.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
