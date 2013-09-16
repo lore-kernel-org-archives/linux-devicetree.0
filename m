@@ -1,144 +1,85 @@
-From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/7] usb: dwc3: get "usb_phy" only if the platform
- indicates the presence of PHY
-Date: Mon, 16 Sep 2013 14:10:25 +0530
-Message-ID: <CAFp+6iG=A5C3VY4sOT0qY10CSzdb2yCv1JVPW00K+MFHjcSqhA@mail.gmail.com>
-References: <1378136591-7463-1-git-send-email-kishon@ti.com>
-	<1378136591-7463-2-git-send-email-kishon@ti.com>
-	<52319912.8030203@ti.com>
-	<CAFp+6iE+xbSWWp2bNc5MRSUrA4Fi6qVU4vhR4+mtZHZGidkMGg@mail.gmail.com>
-	<52319FC4.8040703@ti.com>
-	<CAFp+6iGzV4auP0AeySen2Qk6wEJM-xsTnQmfwMQDtp2tg1FMkQ@mail.gmail.com>
-	<5231BD9F.4020105@ti.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: arm: cpus/cpu nodes
+ bindings updates
+Date: Mon, 16 Sep 2013 09:55:28 +0100
+Message-ID: <20130916085528.GA22390@e102568-lin.cambridge.arm.com>
+References: <1376559743-31848-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1376559743-31848-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <520CE665.8060907@gmail.com>
+ <20130815152238.GF17839@e102568-lin.cambridge.arm.com>
+ <20130913165708.GC5408@e102568-lin.cambridge.arm.com>
+ <52337AEC.9080302@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5231BD9F.4020105-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <52337AEC.9080302-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, george.cherian-l0cyMroinI0@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Sep 13, 2013 at 09:51:56PM +0100, Rob Herring wrote:
+> On 09/13/2013 11:57 AM, Lorenzo Pieralisi wrote:
+> > Hi Rob, all,
+> > 
+> > On Thu, Aug 15, 2013 at 04:22:38PM +0100, Lorenzo Pieralisi wrote:
+> >> [adding Andrew, Gregory and Thomas to check the Marvell compatible names]
+> >>
+> >> On Thu, Aug 15, 2013 at 03:32:05PM +0100, Rob Herring wrote:
+> >>> On 08/15/2013 04:42 AM, Lorenzo Pieralisi wrote:
+> >>>> In order to extend the current cpu nodes bindings to newer CPUs
+> >>>> inclusive of AArch64 and to update support for older ARM CPUs this
+> >>>> patch updates device tree documentation for the cpu nodes bindings.
+> >>>>
+> >>>> Main changes:
+> >>>>     - adds 64-bit bindings
+> >>>>     - define usage of #address-cells
+> >>>>     - defines behaviour on pre and post v7 uniprocessor systems
+> >>>>     - adds ARM 11MPcore specific reg property definition
+> >>>>
+> >>>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> >>>> ---
+> >>>>  Documentation/devicetree/bindings/arm/cpus.txt | 424 ++++++++++++++++++++++---
+> >>>>  1 file changed, 377 insertions(+), 47 deletions(-)
+> >>>>
+> >>>
+> >>> The binding looks mostly fine to me.
+> > 
+> > These bindings have still not received an ACK, and need review by
+> > Marvell guys in copy for the new compatible strings below.
+> 
+> If you can't get comment, then leave them out if they are not used
+> already. If they are used, then tough shit when they want to change.
+> 
+> > 
+> > Most importantly, we need to make a decision on the pre v7 uniprocessor
+> > systems, where MPIDR/CPUID are non-existent and the reg property is a
+> > pure SW enumeration. Current bindings (ie this patch) define
+> > 
+> > #address-cells = <0>;
+> > 
+> > for those processors (and there are a number of dts in the kernel with that
+> > set-up); Grant and Benjamin had a strong feeling against this choice, I
+> > have to make a decision on how to proceed, please let me know.
+> 
+> I agree that we should define #address-cells to 1 and reg will be simply
+> 0,1,2,etc. in this case.
 
+Ok, so this means that when these bindings are finally acked and queued
+for merging, there will be a slew of dts in the kernel that will need
+patching (again) and this is likely to ruffle feathers. Honestly I would
+leave this task to platform maintainers, if we all agree.
 
-On Thu, Sep 12, 2013 at 6:41 PM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
-> On 09/12/2013 02:26 PM, Vivek Gautam wrote:
->> Hi,
->>
->>
->> On Thu, Sep 12, 2013 at 4:34 PM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
->>> Hi,
->>>
->>> On 09/12/2013 01:47 PM, Vivek Gautam wrote:
->>>> On Thu, Sep 12, 2013 at 4:06 PM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
->>>>> Hi Kishon,
->>>>>
->>>>> On 09/02/2013 06:43 PM, Kishon Vijay Abraham I wrote:
->>>>>> There can be systems which does not have a external usb_phy, so get
->>>>>> usb_phy only if usb-phy property is added in the case of dt boot or if
->>>>>> platform_data indicates the presence of PHY. Also remove checking if
->>>>>> return value is -ENXIO since it's now changed to always enable usb_phy layer.
->>>>>>
->>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->>>>>> ---
->>>>>>  drivers/usb/dwc3/Kconfig         |    1 +
->>>>>>  drivers/usb/dwc3/core.c          |   60 +++++++++++++++++---------------------
->>>>>>  drivers/usb/dwc3/platform_data.h |    1 +
->>>>>>  3 files changed, 28 insertions(+), 34 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
->>>>>> index f969ea2..cfc16dd 100644
->>>>>> --- a/drivers/usb/dwc3/Kconfig
->>>>>> +++ b/drivers/usb/dwc3/Kconfig
->>>>>> @@ -2,6 +2,7 @@ config USB_DWC3
->>>>>>       tristate "DesignWare USB3 DRD Core Support"
->>>>>>       depends on (USB || USB_GADGET) && GENERIC_HARDIRQS && HAS_DMA
->>>>>>       depends on EXTCON
->>>>>> +     select USB_PHY
->>>>>>       select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
->>>>>>       help
->>>>>>         Say Y or M here if your system has a Dual Role SuperSpeed
->>>>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
->>>>>> index 474162e..428c29e 100644
->>>>>> --- a/drivers/usb/dwc3/core.c
->>>>>> +++ b/drivers/usb/dwc3/core.c
->>>>>> @@ -387,16 +387,38 @@ static int dwc3_probe(struct platform_device *pdev)
->>>>>>       if (node) {
->>>>>>               dwc->maximum_speed = of_usb_get_maximum_speed(node);
->>>>>>
->>>>>> -             dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
->>>>>> -             dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
->>>>>> +             if (of_property_read_bool(node, "usb-phy")) {
->>>>>> +                     dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev,
->>>>>> +                             "usb-phy", 0);
->>>>>> +                     if (IS_ERR(dwc->usb2_phy))
->>>>>> +                             return PTR_ERR(dwc->usb2_phy);
->>>>>> +                     dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev,
->>>>>> +                             "usb-phy", 1);
->>>>>> +                     if (IS_ERR(dwc->usb3_phy))
->>>>>> +                             return PTR_ERR(dwc->usb3_phy);
->>>>>
->>>>> Some DWC3 instances use only usb2_phy. e.g. on DRA7 the 2nd dwc3 instance doesn't use usb3_phy.
->>>>> This needs to be a valid case and driver shouldn't error out.
->>>>
->>>> So, i think adding flexibility to DWC3 to have either
->>>> usb2-phy/usb3-phy or both of them seems to be valid point.
->>>> Any suggestions ?
->>>>
->>>
->>> For high speed operation we need only usb2_phy but for super speed we need both usb2_phy
->>> and usb3_phy.
->>>
->>> Why would a dwc3 controller use only usb3_phy? A USB3.0 interface has to be compatible with
->>> USB2.0 as well, no?
->>
->> True and for that reason we need both UTMI+ interface as well as PIPE3
->> interface, right ?
->> But as also mentioned in the thread:
->> https://lkml.org/lkml/2013/9/12/181, on Samsung exynos5
->> architecturally same block is managing UTMI+ and PIPE3 interfaces,
->> which is handled by phy-samsung-usb3 driver and denoted by "usb3_phy:
->> usbphy@12100000" node in "arch/arm/boot/dts/exynos5250.dtsi".
->>
->> So on exynos5250, DWC3 really needs just usb3-phy, which is compatible
->> for USB 2.0 as well.
->
-> I'm not familiar with exynos5250 dwc3, but looking at the dts file I can see both usb3_phy
-> and usb2_phy nodes and both are referenced in the dwc3 node.
+> This change and fixing the example as I pointed out are what I was
+> waiting to see.
 
-Right, and that's what we intend to fix.
-Exynos5250 dwc3 is not in the need of both usb2_phy and usb3_phy.
-In fact usb3_phy handle (which is served by phy-samsung-usb3 driver)
-sets up the UTMI+ as well as PIPE3 phy on DWC3.
-I know this looks different from the usual OMAP style of phy for dwc3.
+Perfect, given that I got feedback from Andrew, I will be posting a
+final version very soon.
 
-Hi Sylwester,
-  any suggestions here ? As contained in the exynos5250 user manual
-too, there's only one block of PHY handling both UTMI+ and PIPE3
-interfaces, and the set of registers (same base address) also indicate
-one block of PHY. So we have the usb3_phy (phy-samsung-usb3 driver)
-which setup the entire PHY require for DWC3 operation, and thereby we
-__shouldn't__ need usb2_phy (phy-samsung-usb2 driver which actually
-setup the PHY for a separate USB 2.0 controller on exynos5250) for
-DWC3.
+Lorenzo
 
->
-> The ehci and ohci controllers don't reference any PHY.
-
-ehci-s5p and ohci-exynos are not using devm_usb_get_phy_by_phandle()
-api until now, so they don't need to have the PHY handlers in their
-node.
-
->
-> cheers,
-> -roger
-
-
-
--- 
-Best Regards
-Vivek
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
