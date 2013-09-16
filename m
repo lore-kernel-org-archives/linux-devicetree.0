@@ -1,30 +1,78 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3] PWM: PXA: add device tree support to PWM driver
-Date: Mon, 16 Sep 2013 13:45:31 -0600
-Message-ID: <52375FDB.8090405@wwwdotorg.org>
-References: <1379091281-23662-1-git-send-email-mikedunn@newsguy.com> <201309151607.04244.marex@denx.de> <523718D3.4050003@newsguy.com> <201309161710.15800.marex@denx.de>
+Subject: Re: [PATCH v3 1/2] video: ARM CLCD: Add DT support
+Date: Mon, 16 Sep 2013 13:52:32 -0600
+Message-ID: <52376180.1090001@wwwdotorg.org>
+References: <1379351934-25415-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201309161710.15800.marex-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <1379351934-25415-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2013 09:10 AM, Marek Vasut wrote:
+On 09/16/2013 11:18 AM, Pawel Moll wrote:
+> This patch adds basic DT bindings for the PL11x CLCD controllers
+> and make their fbdev driver use them (initially only TFT panels
+> are supported).
+
+> diff --git a/Documentation/devicetree/bindings/video/arm,pl11x.txt b/Documentation/devicetree/bindings/video/arm,pl11x.txt
+
+> +- interrupts: either a single interrupt specifier representing the
+> +		combined interrupt output (CLCDINTR) or an array of
+> +		four interrupt specifiers for CLCDMBEINTR,
+> +		CLCDVCOMPINTR, CLCDLNBUINTR, CLCDFUFINTR; in the
+> +		latter case interrupt names must be specified
+> +		(see below)
+> +- interrupt-names: when four interrupts are specified, their names:
+> +			"mbe", "vcomp", "lnbu", "fuf"
+> +			must be specified in order respective to the
+> +			interrupt specifiers
+
+I think the binding should either always use names as the key, or use
+indices in interrupts as the key. Hence, I'd word that more like:
+
+- interrupt-names: either the single entry "combined" representing a
+			combined interrupt output (CLCDINTR), or the
+			four entries "mbe", "vcomp", "lnbu", "fuf"
+			representing the individual CLCDMBEINTR,
+			CLCDVCOMPINTR, CLCDLNBUINTR, CLCDFUFINTR
+			interrupts.
+- interrupts: contains an interrupt specifier for each entry in
+		 interrupt-names.
+
+> +- arm,pl11x,panel-data-pads: array of 24 cells, each of them describing
+> +				a function of one of the CLD pads,
+> +				starting from 0 up to 23; each pad can
+> +				be described by one of the following values:
+> +	- 0: reserved (not connected)
+> +	- 0x100-0x107: color upper STN panel data 0 to 7
 ...
-> OK, to push it ad-absurdum, shall we not start listing every single revision of 
-> the CPU as well? Like pxa250a0 250a1 etc ? Yes , this many-to-one mapping is 
 
-It's not about CPU revisions, it's about revisions of the SoC that
-contain the IP block.
+I assume those are the raw values that go into the HW?
 
-> something I don't quite understand, that's why I'd love to see a good reasoning 
-> from Stephen.
+> +				Example sets of values for standard
+> +				panel interfaces:
+> +	- PL110 single colour STN panel:
+> +			<0x107 0x106 0x105 0x104 0x103 0x102 0x101 0x100>,
+> +			<0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0>;
 
-Please see the earlier discussions.
+The indentation of the introductory text seems a little odd. Do we
+really need so many examples?
+
+> +Optional properties:
+> +
+> +- arm,pl11x,framebuffer-base: a pair of two values, address and size,
+> +				defining the framebuffer to be used;
+> +				to be used only if it is *not*
+> +				part of normal memory, as described
+> +				in /memory node
+
+If the framebuffer is part of /memory, what happens then? Is the address
+not fixed (so the HW isn't yet set up) and hence a driver should
+allocate it?
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
