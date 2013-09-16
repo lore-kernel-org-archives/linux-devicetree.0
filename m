@@ -1,118 +1,78 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 24/28] arc: use common of_flat_dt_match_machine
-Date: Mon, 16 Sep 2013 18:09:20 -0500
-Message-ID: <1379372965-22359-25-git-send-email-robherring2@gmail.com>
-References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Vineet Gupta <vgupta@synopsys.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] mtd: atmel_nand: remove unneeded ifdef CONFIG_OF
+Date: Mon, 16 Sep 2013 16:11:35 -0700
+Message-ID: <CAN8TOE85D=JOU7f5+p6nTFgbCh0SZa+kfBNWD9rmDPxOZ9aEig@mail.gmail.com>
+References: <1378200028-15415-1-git-send-email-josh.wu@atmel.com>
+	<20130911230207.GE4550@ld-irv-0074.broadcom.com>
+	<5232DAAD.4020700@atmel.com>
+	<20130913182144.GF4550@ld-irv-0074.broadcom.com>
+	<CAOesGMjczRxKhDS9W9SZk4ivuxEsn0Mp6j0Xotz+qZgoKO4=xg@mail.gmail.com>
+	<CAN8TOE965=_HfK0aqB6oUWF66xXZEdwFR8AL9KcwRmQ0AWmisg@mail.gmail.com>
+	<CAOesGMjYUOerSSZvM6VVLQNQP=Dft6CwNELqP9tyT=Hz0-2qLQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMjYUOerSSZvM6VVLQNQP=Dft6CwNELqP9tyT=Hz0-2qLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+On Mon, Sep 16, 2013 at 3:54 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Mon, Sep 16, 2013 at 3:50 PM, Brian Norris
+> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Mon, Sep 16, 2013 at 3:28 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>> Guys,
+>>> Can we please get less fumbling around on this and just merge a fix,
+>>> please? You guys have broken the PXA3xx builds for the whole merge
+>>> window, while there's been a patch sitting in linux-next with
+>>> _exactly_ this contents since August 30, committed by David.
+>>
+>> How about you read the thread you're responding to? This is a
+>> different driver, and it is not broken.
+>
+> Ah, oops, my apologies. I came across this when searching for the
+> (committed) patch in my mail history and didn't notice the driver name
+> differences. :)
 
-Convert arc to use the common of_flat_dt_match_machine function.
+Unacceptable. Humans never make mistakes. ;)
 
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Vineet Gupta <vgupta@synopsys.com>
----
- arch/arc/kernel/devtree.c | 65 +++++++++++++----------------------------------
- 1 file changed, 18 insertions(+), 47 deletions(-)
+>> If you look at the thread for the patch which fixes the actual
+>> breakage (in pxa3xx), you will see a plain and clear explanation of
+>> the situation.
+>>
+>> http://lists.infradead.org/pipermail/linux-mtd/2013-September/048595.html
+>> http://lists.infradead.org/pipermail/linux-mtd/2013-September/048598.html
+>>
+>> David has been sufficiently notified, and he is not acting. I have
+>> even pinged him on our IRC channel, with no response, although I'm not
+>> surprised.
+>>
+>> (BTW, I assume the "committed by David" is simply because of
+>> git-rebase. It doesn't necessarily reflect his acknowledgment of the
+>> patch. I can only assume that it was an oversight on his part.)
+>
+> That in itself seems broken; if he is pulling code from you he shouldn't rebase.
 
-diff --git a/arch/arc/kernel/devtree.c b/arch/arc/kernel/devtree.c
-index 1ab6f35..b45aa5a 100644
---- a/arch/arc/kernel/devtree.c
-+++ b/arch/arc/kernel/devtree.c
-@@ -18,6 +18,19 @@
- #include <asm/clk.h>
- #include <asm/mach_desc.h>
- 
-+static void * __init arch_get_next_mach(const char *const **match)
-+{
-+	static struct machine_desc *mdesc = __arch_info_begin;
-+	struct machine_desc *m = mdesc;
-+
-+	if (m >= __arch_info_end)
-+		return NULL;
-+
-+	mdesc++;
-+	*match = m->dt_compat;
-+	return m;
-+}
-+
- /**
-  * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
-  * @dt:		virtual address pointer to dt blob
-@@ -27,64 +40,22 @@
-  */
- struct machine_desc * __init setup_machine_fdt(void *dt)
- {
--	struct machine_desc *mdesc = NULL, *mdesc_best = NULL;
--	unsigned int score, mdesc_score = ~1;
-+	struct machine_desc *mdesc;
- 	unsigned long dt_root;
--	const char *model, *compat;
- 	void *clk;
--	char manufacturer[16];
- 	unsigned long len;
- 
- 	if (!early_init_dt_scan(dt))
- 		return NULL;
- 
--	dt_root = of_get_flat_dt_root();
--
--	/*
--	 * The kernel could be multi-platform enabled, thus could have many
--	 * "baked-in" machine descriptors. Search thru all for the best
--	 * "compatible" string match.
--	 */
--	for_each_machine_desc(mdesc) {
--		score = of_flat_dt_match(dt_root, mdesc->dt_compat);
--		if (score > 0 && score < mdesc_score) {
--			mdesc_best = mdesc;
--			mdesc_score = score;
--		}
--	}
--	if (!mdesc_best) {
--		const char *prop;
--		long size;
--
--		pr_err("\n unrecognized device tree list:\n[ ");
--
--		prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
--		if (prop) {
--			while (size > 0) {
--				printk("'%s' ", prop);
--				size -= strlen(prop) + 1;
--				prop += strlen(prop) + 1;
--			}
--		}
--		printk("]\n\n");
--
-+	mdesc = of_flat_dt_match_machine(NULL, arch_get_next_mach);
-+	if (!mdesc)
- 		machine_halt();
--	}
--
--	/* compat = "<manufacturer>,<model>" */
--	compat =  mdesc_best->dt_compat[0];
--
--	model = strchr(compat, ',');
--	if (model)
--		model++;
--
--	strlcpy(manufacturer, compat, model ? model - compat : strlen(compat));
--
--	pr_info("Board \"%s\" from %s (Manufacturer)\n", model, manufacturer);
- 
-+	dt_root = of_get_flat_dt_root();
- 	clk = of_get_flat_dt_prop(dt_root, "clock-frequency", &len);
- 	if (clk)
- 		arc_set_core_freq(of_read_ulong(clk, len/4));
- 
--	return mdesc_best;
-+	return mdesc;
- }
--- 
-1.8.1.2
+Well, the repo I commit to (l2-mtd.git) was originally Artem's
+creation and was intended to collect things that had been reviewed,
+allowing David a last chance to review and reject or Sign-Off (or in
+this case, break) patches. We haven't traditionally stuck to the "once
+it's in git, it's permanent" philosophy, and I'm not sure of my
+opinion of it. It may or may not have prevented this error, as I am
+not sure why David left this patch out in the first place.
+
+>> Anyway, I don't care if the patch goes in via another tree, as long as
+>> this debacle (notably, for the pxa3xx_nand driver, not the atmel_nand
+>> driver) is resolved.
+>
+> Ok. Russell was asking what the status of the fix was as well. I'll
+> queue it up with our current fixes for -rc2.
+
+Sounds good.
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
