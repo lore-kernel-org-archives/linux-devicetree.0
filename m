@@ -1,49 +1,50 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 0/3] Add PCIe support for i.MX6q
-Date: Mon, 16 Sep 2013 17:11:01 +0800
-Message-ID: <20130916091059.GM31147@S2101-09.ap.freescale.net>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
+Date: Mon, 16 Sep 2013 11:25:01 +0200
+Message-ID: <20130916092501.GY30088@pengutronix.de>
 References: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
+ <1379319655-20210-4-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1379319655-20210-1-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zhu Richard-R65037 <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+In-Reply-To: <1379319655-20210-4-git-send-email-xobs@kosagi.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Sean Cross <xobs@kosagi.com>
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zhu Richard-R65037 <r65037@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, tharvey@gateworks.com, bhelgaas@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2013 at 08:20:51AM +0000, Sean Cross wrote:
-> Sean Cross (3):
->   ARM: imx: Add LVDS general-purpose clocks to i.MX6Q
->   ARM: imx6q: Add PCIe bits to GPR syscon definition
->   PCI: imx6: Add support for i.MX6 PCIe controller
-
-The series looks good to me except that the devm_clk_get() should be
-used in driver .probe function rather than clk_get().  I will wait for
-another couple of days.  If there is no comments coming up, I can fix
-it up and apply the series.
-
-Shawn
-
+On Mon, Sep 16, 2013 at 08:20:54AM +0000, Sean Cross wrote:
+> Add support for the PCIe port present on the i.MX6 family of controllers.
+> These use the Synopsis Designware core tied to their own PHY.
 > 
->  .../devicetree/bindings/clock/imx6q-clock.txt      |    4 +
->  .../devicetree/bindings/pci/designware-pcie.txt    |    7 +-
->  arch/arm/boot/dts/imx6qdl.dtsi                     |   16 +
->  arch/arm/mach-imx/Kconfig                          |    2 +
->  arch/arm/mach-imx/clk-imx6q.c                      |   24 +-
->  drivers/pci/host/Kconfig                           |    6 +
->  drivers/pci/host/Makefile                          |    1 +
->  drivers/pci/host/pci-imx6.c                        |  576 ++++++++++++++++++++
->  include/linux/mfd/syscon/imx6q-iomuxc-gpr.h        |    8 +
->  9 files changed, 642 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/pci/host/pci-imx6.c
-> 
-> -- 
-> 1.7.9.5
-> 
+> +static int pcie_phy_poll_ack(void __iomem *dbi_base, int exp_val)
+> +{
+> +	u32 val;
+> +	u32 max_iterations = 10;
+> +	u32 wait_counter = 0;
+> +
+> +	do {
+> +		val = readl(dbi_base + PCIE_PHY_STAT);
+> +		val = (val >> PCIE_PHY_STAT_ACK_LOC) & 0x1;
+> +		wait_counter++;
+> +
+> +		if (val == exp_val)
+> +			return 0;
+> +
+> +		udelay(1);
+> +	} while ((wait_counter < max_iterations) && (val != exp_val));
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The test for val != exp_val is unnecessary now of course.
+
+With this and the devm_clk_get Shawn mentioned:
+
+Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
