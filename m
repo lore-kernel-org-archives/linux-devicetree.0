@@ -1,78 +1,118 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] mtd: atmel_nand: remove unneeded ifdef CONFIG_OF
-Date: Mon, 16 Sep 2013 16:11:35 -0700
-Message-ID: <CAN8TOE85D=JOU7f5+p6nTFgbCh0SZa+kfBNWD9rmDPxOZ9aEig@mail.gmail.com>
-References: <1378200028-15415-1-git-send-email-josh.wu@atmel.com>
-	<20130911230207.GE4550@ld-irv-0074.broadcom.com>
-	<5232DAAD.4020700@atmel.com>
-	<20130913182144.GF4550@ld-irv-0074.broadcom.com>
-	<CAOesGMjczRxKhDS9W9SZk4ivuxEsn0Mp6j0Xotz+qZgoKO4=xg@mail.gmail.com>
-	<CAN8TOE965=_HfK0aqB6oUWF66xXZEdwFR8AL9KcwRmQ0AWmisg@mail.gmail.com>
-	<CAOesGMjYUOerSSZvM6VVLQNQP=Dft6CwNELqP9tyT=Hz0-2qLQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMjYUOerSSZvM6VVLQNQP=Dft6CwNELqP9tyT=Hz0-2qLQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH 23/28] of: introduce common FDT machine related functions
+Date: Mon, 16 Sep 2013 18:09:19 -0500
+Message-ID: <1379372965-22359-24-git-send-email-robherring2@gmail.com>
+References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2013 at 3:54 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Mon, Sep 16, 2013 at 3:50 PM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Mon, Sep 16, 2013 at 3:28 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>> Guys,
->>> Can we please get less fumbling around on this and just merge a fix,
->>> please? You guys have broken the PXA3xx builds for the whole merge
->>> window, while there's been a patch sitting in linux-next with
->>> _exactly_ this contents since August 30, committed by David.
->>
->> How about you read the thread you're responding to? This is a
->> different driver, and it is not broken.
->
-> Ah, oops, my apologies. I came across this when searching for the
-> (committed) patch in my mail history and didn't notice the driver name
-> differences. :)
+From: Rob Herring <rob.herring@calxeda.com>
 
-Unacceptable. Humans never make mistakes. ;)
+Introduce common of_flat_dt_match_machine and
+of_flat_dt_get_machine_name functions to unify architectures' handling
+of machine level model and compatible properties.
 
->> If you look at the thread for the patch which fixes the actual
->> breakage (in pxa3xx), you will see a plain and clear explanation of
->> the situation.
->>
->> http://lists.infradead.org/pipermail/linux-mtd/2013-September/048595.html
->> http://lists.infradead.org/pipermail/linux-mtd/2013-September/048598.html
->>
->> David has been sufficiently notified, and he is not acting. I have
->> even pinged him on our IRC channel, with no response, although I'm not
->> surprised.
->>
->> (BTW, I assume the "committed by David" is simply because of
->> git-rebase. It doesn't necessarily reflect his acknowledgment of the
->> patch. I can only assume that it was an oversight on his part.)
->
-> That in itself seems broken; if he is pulling code from you he shouldn't rebase.
+Several architectures match the root compatible string with an arch
+specific list of machine descriptors duplicating the same search
+algorithm. Create a common implementation with a simple architecture
+specific hook to iterate over each machine's match table.
 
-Well, the repo I commit to (l2-mtd.git) was originally Artem's
-creation and was intended to collect things that had been reviewed,
-allowing David a last chance to review and reject or Sign-Off (or in
-this case, break) patches. We haven't traditionally stuck to the "once
-it's in git, it's permanent" philosophy, and I'm not sure of my
-opinion of it. It may or may not have prevented this error, as I am
-not sure why David left this patch out in the first place.
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@linaro.org>
+---
+ drivers/of/fdt.c       | 60 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_fdt.h |  4 ++++
+ 2 files changed, 64 insertions(+)
 
->> Anyway, I don't care if the patch goes in via another tree, as long as
->> this debacle (notably, for the pxa3xx_nand driver, not the atmel_nand
->> driver) is resolved.
->
-> Ok. Russell was asking what the status of the fix was as well. I'll
-> queue it up with our current fixes for -rc2.
-
-Sounds good.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 83cdeb5..e21d1dc 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -619,6 +619,66 @@ int __init of_scan_flat_dt_by_path(const char *path,
+ 		return ret;
+ }
+ 
++const char *of_flat_dt_get_machine_name(void)
++{
++	const char *name;
++	unsigned long dt_root = of_get_flat_dt_root();
++
++	name = of_get_flat_dt_prop(dt_root, "model", NULL);
++	if (!name)
++		name = of_get_flat_dt_prop(dt_root, "compatible", NULL);
++	return name;
++}
++
++/**
++ * of_flat_dt_match_machine - Iterate match tables to find matching machine.
++ *
++ * @default_match: A machine specific ptr to return in case of no match.
++ * @get_next_compat: callback function to return next compatible match table.
++ *
++ * Iterate through machine match tables to find the best match for the machine
++ * compatible string in the FDT.
++ */
++void * __init of_flat_dt_match_machine(void *default_match,
++				       void * (*get_next_compat)(const char * const**))
++{
++	void *data = NULL;
++	void *best_data = default_match;
++	const char *const *compat;
++	unsigned long dt_root;
++	unsigned int best_score = ~1, score = 0;
++
++	dt_root = of_get_flat_dt_root();
++	while ((data = get_next_compat(&compat))) {
++		score = of_flat_dt_match(dt_root, compat);
++		if (score > 0 && score < best_score) {
++			best_data = data;
++			best_score = score;
++		}
++	}
++	if (!best_data) {
++		const char *prop;
++		long size;
++
++		pr_err("\n unrecognized device tree list:\n[ ");
++
++		prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
++		if (prop) {
++			while (size > 0) {
++				printk("'%s' ", prop);
++				size -= strlen(prop) + 1;
++				prop += strlen(prop) + 1;
++			}
++		}
++		printk("]\n\n");
++		return NULL;
++	}
++
++	pr_info("Machine model: %s\n", of_flat_dt_get_machine_name());
++
++	return best_data;
++}
++
+ #ifdef CONFIG_BLK_DEV_INITRD
+ /**
+  * early_init_dt_check_for_initrd - Decode initrd location from flat tree
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index b365f5a..985a744 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -108,6 +108,10 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
+ 
+ extern bool early_init_dt_scan(void *params);
+ 
++const char *of_flat_dt_get_machine_name(void);
++extern void *of_flat_dt_match_machine(void *default_match,
++		void * (*get_next_compat)(const char * const**));
++
+ /* Other Prototypes */
+ extern void unflatten_device_tree(void);
+ extern void unflatten_and_copy_device_tree(void);
+-- 
+1.8.1.2
