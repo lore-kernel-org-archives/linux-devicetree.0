@@ -1,70 +1,73 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 09/28] of: Introduce common early_init_dt_scan
-Date: Mon, 16 Sep 2013 18:09:05 -0500
-Message-ID: <1379372965-22359-10-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 07/28] xtensa: use unflatten_and_copy_device_tree
+Date: Mon, 16 Sep 2013 18:09:03 -0500
+Message-ID: <1379372965-22359-8-git-send-email-robherring2@gmail.com>
 References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-xtensa@linux-xtensa.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-Most architectures scan the all the same items early in the FDT and none
-are really architecture specific. Create a common early_init_dt_scan to
-unify the early scan of root, memory, and chosen nodes in the flattened
-DT.
+Use the common unflatten_and_copy_device_tree to copy the built-in FDT
+out of init section.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Chris Zankel <chris@zankel.net>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: linux-xtensa@linux-xtensa.org
 ---
- drivers/of/fdt.c       | 18 ++++++++++++++++++
- include/linux/of_fdt.h |  2 ++
- 2 files changed, 20 insertions(+)
+ arch/xtensa/kernel/setup.c | 19 +------------------
+ 1 file changed, 1 insertion(+), 18 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index eca1810..0714dd4 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -785,6 +785,24 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
+diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
+index 946fb8d..fc31ec1 100644
+--- a/arch/xtensa/kernel/setup.c
++++ b/arch/xtensa/kernel/setup.c
+@@ -21,11 +21,8 @@
+ #include <linux/screen_info.h>
+ #include <linux/bootmem.h>
+ #include <linux/kernel.h>
+-
+-#ifdef CONFIG_OF
+ #include <linux/of_fdt.h>
+ #include <linux/of_platform.h>
+-#endif
+ 
+ #if defined(CONFIG_VGA_CONSOLE) || defined(CONFIG_DUMMY_CONSOLE)
+ # include <linux/console.h>
+@@ -252,17 +249,6 @@ void __init early_init_devtree(void *params)
+ 		of_scan_flat_dt(early_init_dt_scan_memory, NULL);
  }
- #endif
  
-+bool __init early_init_dt_scan(void *params)
-+{
-+	/* Setup flat device-tree pointer */
-+	initial_boot_params = params;
-+
-+	/* check device tree validity */
-+	if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER)
-+		return false;
-+
-+	/* Retrieve various information from the /chosen node */
-+	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
-+	/* Initialize {size,address}-cells info */
-+	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-+	/* Setup memory, calling early_init_dt_add_memory_arch */
-+	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
-+	return true;
-+}
-+
- /**
-  * unflatten_device_tree - create tree of device_nodes from flat blob
-  *
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 58c28a8..73e1651 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -116,6 +116,8 @@ extern void early_init_dt_setup_initrd_arch(u64 start, u64 end);
- extern int early_init_dt_scan_root(unsigned long node, const char *uname,
- 				   int depth, void *data);
+-static void __init copy_devtree(void)
+-{
+-	void *alloc = early_init_dt_alloc_memory_arch(
+-			be32_to_cpu(initial_boot_params->totalsize), 8);
+-	if (alloc) {
+-		memcpy(alloc, initial_boot_params,
+-				be32_to_cpu(initial_boot_params->totalsize));
+-		initial_boot_params = alloc;
+-	}
+-}
+-
+ static int __init xtensa_device_probe(void)
+ {
+ 	of_platform_populate(NULL, NULL, NULL, NULL);
+@@ -525,10 +511,7 @@ void __init setup_arch(char **cmdline_p)
  
-+extern bool early_init_dt_scan(void *params);
-+
- /* Other Prototypes */
- extern void unflatten_device_tree(void);
- extern void unflatten_and_copy_device_tree(void);
+ 	bootmem_init();
+ 
+-#ifdef CONFIG_OF
+-	copy_devtree();
+-	unflatten_device_tree();
+-#endif
++	unflatten_and_copy_device_tree();
+ 
+ 	platform_setup(cmdline_p);
+ 
 -- 
 1.8.1.2
