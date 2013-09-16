@@ -1,75 +1,44 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [RFCv2 3/3] ARM: dts: N900: Add SSI information
-Date: Mon, 16 Sep 2013 08:11:06 -0500
-Message-ID: <20130916131106.GA14873@kahuna>
-References: <1379277856-24571-1-git-send-email-sre@debian.org>
- <1379277856-24571-4-git-send-email-sre@debian.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: devicetree: arm: cpus/cpu nodes
+ bindings updates
+Date: Mon, 16 Sep 2013 09:32:06 -0400
+Message-ID: <20130916133206.GF19937@titan.lakedaemon.net>
+References: <1379330464-27917-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1379330464-27917-2-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1379277856-24571-4-git-send-email-sre@debian.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Reichel <sre@debian.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?iso-8859-1?Q?'Beno=EEt?= Cousson' <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+In-Reply-To: <1379330464-27917-2-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Dave Martin <dave.martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22:44-20130915, Sebastian Reichel wrote:
-> Add SSI device tree data for OMAP34xx and Nokia N900.
+On Mon, Sep 16, 2013 at 12:21:03PM +0100, Lorenzo Pieralisi wrote:
+> In order to extend the current cpu nodes bindings to newer CPUs
+> inclusive of AArch64 and to update support for older ARM CPUs this
+> patch updates device tree documentation for the cpu nodes bindings.
 > 
-> Signed-off-by: Sebastian Reichel <sre@debian.org>
+> Main changes:
+>     - adds 64-bit bindings
+>     - define usage of #address-cells
+>     - defines behaviour on pre and post v7 uniprocessor systems
+>     - adds ARM 11MPcore specific reg property definition
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/hsi/omap_ssi.txt | 73 ++++++++++++++++++++++
->  arch/arm/boot/dts/omap3-n900.dts                   |  8 +++
->  arch/arm/boot/dts/omap34xx.dtsi                    | 49 +++++++++++++++
->  3 files changed, 130 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hsi/omap_ssi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hsi/omap_ssi.txt b/Documentation/devicetree/bindings/hsi/omap_ssi.txt
-> new file mode 100644
-> index 0000000..e3597eb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hsi/omap_ssi.txt
-> @@ -0,0 +1,73 @@
-> +OMAP SSI controller bindings
-> +
-> +Required properties:
-> +- compatible:		Should be set to the following value
-> +                        ti,omap3-ssi (applicable to OMAP34xx devices)
-> +- ti,hwmods:		Name of the hwmod associated to the controller, which
-> +			is "ssi".
-> +- reg:			Contains SSI register address range (base address and
-> +			length).
-> +- reg-names:		Contains the names of the address ranges. It's
-> +                        expected, that "sys" and "gdd" address ranges are
-> +			provided.
-> +- interrupts: 		Contains the interrupt information for the controller.
-> +- interrupt-names:      Contains the names of the interrupts. It's expected,
-> +			that "gdd_mpu" is provided.
-> +- ranges		Required as an empty node
-> +- #address-cells	Should be set to <1>
-> +- #size-cells		Should be set to <1>
-> +
-> +Each port is represented as a sub-node of the ti,omap3-ssi device.
-> +
-> +Required Port sub-node properties:
-> +- compatible:		Should be set to the following value
-> +                        ti,omap3-ssi-port (applicable to OMAP34xx devices)
-> +- reg:			Contains port's register address range (base address
-> +			and length).
-> +- reg-names:		Contains the names of the address ranges. It's
-> +                        expected, that "tx" and "rx" address ranges are
-> +			provided.
-> +- interrupt-parent	Should be a phandle for the interrupt controller
-> +- interrupts:		Contains the interrupt information for the port.
-> +- interrupt-names:	Contains the names of the interrupts. It's expected,
-> +			that "mpu_irq0" and "mpu_irq1" are provided.
-> +- ti,ssi-cawake-gpio:	Defines which GPIO pin is used to signify CAWAKE
-> +			events for the port. This is an optional board-specific
-> +			property. If it's missing the port will not be
-> +			enabled.
-> +
-This belongs to patch which introduces SSI driver, no?
--- 
-Regards,
-Nishanth Menon
+>  Documentation/devicetree/bindings/arm/cpus.txt | 391 ++++++++++++++++++++++---
+>  1 file changed, 344 insertions(+), 47 deletions(-)
+
+For the Marvell bits:
+
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
