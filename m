@@ -1,156 +1,69 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v8 02/12] [media] exynos5-fimc-is: Add driver core files
-Date: Mon, 16 Sep 2013 23:59:24 +0200
-Message-ID: <52377F3C.5070508@gmail.com>
-References: <1378987669-10870-1-git-send-email-arun.kk@samsung.com> <1378987669-10870-3-git-send-email-arun.kk@samsung.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 1/2] mtd: atmel_nand: remove unneeded ifdef CONFIG_OF
+Date: Mon, 16 Sep 2013 15:28:38 -0700
+Message-ID: <CAOesGMjczRxKhDS9W9SZk4ivuxEsn0Mp6j0Xotz+qZgoKO4=xg@mail.gmail.com>
+References: <1378200028-15415-1-git-send-email-josh.wu@atmel.com>
+	<20130911230207.GE4550@ld-irv-0074.broadcom.com>
+	<5232DAAD.4020700@atmel.com>
+	<20130913182144.GF4550@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1378987669-10870-3-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>
-Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, hverkuil@xs4all.nl, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130913182144.GF4550-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2013 02:07 PM, Arun Kumar K wrote:
+Guys,
+
+On Fri, Sep 13, 2013 at 11:21 AM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> + devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 >
-> +static int fimc_is_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =&pdev->dev;
-> +	struct resource *res;
-> +	struct fimc_is *is;
-> +	void __iomem *regs;
-> +	struct device_node *node;
-> +	int irq, ret;
-> +	int i;
-> +
-> +	dev_dbg(dev, "FIMC-IS Probe Enter\n");
-> +
-> +	if (!pdev->dev.of_node)
+> On Fri, Sep 13, 2013 at 05:28:13PM +0800, Josh Wu wrote:
+>> On 9/12/2013 7:02 AM, Brian Norris wrote:
+>> >On Tue, Sep 03, 2013 at 05:20:27PM +0800, Josh Wu wrote:
+>> >>Since following commit
+>> >>   f3b391425d21e6138e57b2432d91134e0bc2b975
+>
+> ...
+>
+>> >>   (of_mtd: Add no-op stubs to support CONFIG_OF=n)
+>> >>
+>> >>implements the stub for CONFIG_OF=n. Now we can safely remove all
+>> >>CONFIG_OF in atmel_nand. (Thanks to Ezequiel Garcia's for this protype)
+>> >I'm not quite so sure about this patch, as I was about the pxa3xx patch.
+>> >With pxa3xx, the compiler can easily tell that pxa3xx_nand_probe_dt()
+>> >will return 0 without doing anything in the !CONFIG_OF case (and so will
+>> >likely remove the dead code), so it's no benefit to have the #ifdef. But
+>> >in this driver, the atmel_of_init_port() function can't be trivially
+>> >determined to do nothing (and in fact, it does something in either
+>> >CONFIG_OF=y or =n case). It's only protected by the 'if
+>> >(pdev->dev.of_node)' check, which the compiler can't predict.
+>>
+>> I understand your concern here.
+>>
+>> >
+>> >So, I don't know if we should remove the #ifdef at the expense of likely
+>> >significantly larger code. I won't protest, but I won't merge it yet
+>> >either. Perhaps others have better ideas, or perhaps you can find a good
+>> >way to work around this -- e.g., check the of_* helpers for -ENOSYS early
+>> >in atmel_of_init_port()?
 
-nit: Could be simplified to:
 
-  	if (!dev->of_node)
+Can we please get less fumbling around on this and just merge a fix,
+please? You guys have broken the PXA3xx builds for the whole merge
+window, while there's been a patch sitting in linux-next with
+_exactly_ this contents since August 30, committed by David.
 
-> +		return -ENODEV;
-> +
-> +	is = devm_kzalloc(&pdev->dev, sizeof(*is), GFP_KERNEL);
-> +	if (!is)
-> +		return -ENOMEM;
-> +
-> +	is->pdev = pdev;
-> +
-> +	is->drvdata = fimc_is_get_drvdata(pdev);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	regs = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(regs))
-> +		return PTR_ERR(regs);
-> +
-> +	/* Get the PMU base */
-> +	node = of_parse_phandle(dev->of_node, "samsung,pmu", 0);
-> +	if (!node)
-> +		return -ENODEV;
-> +	is->pmu_regs = of_iomap(node, 0);
-> +	if (!is->pmu_regs)
-> +		return -ENOMEM;
-> +
-> +	irq = irq_of_parse_and_map(dev->of_node, 0);
-> +	if (irq<  0) {
-> +		dev_err(dev, "Failed to get IRQ\n");
-> +		return irq;
-> +	}
-> +
-> +	ret = fimc_is_configure_clocks(is);
-> +	if (ret<  0) {
-> +		dev_err(dev, "clocks configuration failed\n");
-> +		goto err_clk;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, is);
-> +	pm_runtime_enable(dev);
-> +
-> +	ret = pm_runtime_get_sync(dev);
-> +	if (ret<  0)
-> +		goto err_pm;
+If this is't fixed within the next few days I'll just pick that patch
+up and include it in our next batch of arm-soc fixes. This is
+ridiculous.
 
-Is activating the device at this point really needed ? Perhaps you
-could drop the pm_runtime_get/put calls ?
 
-> +	is->alloc_ctx = vb2_dma_contig_init_ctx(dev);
-> +	if (IS_ERR(is->alloc_ctx)) {
-> +		ret = PTR_ERR(is->alloc_ctx);
-> +		goto err_vb;
-> +	}
-> +
-> +	/* Get IS-sensor contexts */
-> +	ret = fimc_is_parse_sensor(is);
-> +	if (ret<  0)
-> +		goto err_vb;
-> +
-> +	/* Initialize FIMC Pipeline */
-> +	for (i = 0; i<  is->drvdata->num_instances; i++) {
-> +		ret = fimc_is_pipeline_init(&is->pipeline[i], i, is);
-> +		if (ret<  0)
-> +			goto err_sd;
-> +	}
-> +
-> +	/* Initialize FIMC Interface */
-> +	ret = fimc_is_interface_init(&is->interface, regs, irq);
-> +	if (ret<  0)
-> +		goto err_sd;
-> +
-> +	pm_runtime_put(dev);
-> +
-> +	dev_dbg(dev, "FIMC-IS registered successfully\n");
-> +
-> +	return 0;
-> +
-> +err_sd:
-> +	fimc_is_pipelines_destroy(is);
-> +err_vb:
-> +	vb2_dma_contig_cleanup_ctx(is->alloc_ctx);
-> +err_pm:
-> +	pm_runtime_put(dev);
-> +err_clk:
-> +	fimc_is_put_clocks(is);
-> +
-> +	return ret;
-> +}
-> +
-> +int fimc_is_clk_enable(struct fimc_is *is)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_enable(is->clock[IS_CLK_ISP]);
-> +	if (ret)
-> +		return ret;
-> +	ret = clk_enable(is->clock[IS_CLK_MCU_ISP]);
-
-Shouldn't you disable the first enabled clock when this call fails ?
-
-> +	return ret;
-> +}
-[...]
-> +static void *fimc_is_get_drvdata(struct platform_device *pdev)
-> +{
-> +	struct fimc_is_drvdata *driver_data = NULL;
-> +
-> +	if (pdev->dev.of_node) {
-
-pdev->dev.of_node is being tested against NULL before call to this
-function, you could make this code slightly simpler with that assumption.
-
-> +		const struct of_device_id *match;
-> +		match = of_match_node(exynos5_fimc_is_match,
-> +				pdev->dev.of_node);
-> +		if (match)
-> +			driver_data = (struct fimc_is_drvdata *)match->data;
-> +	}
-> +	return driver_data;
-> +}
-
+-Olof
 --
-Thanks,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
