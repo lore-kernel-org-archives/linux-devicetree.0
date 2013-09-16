@@ -1,8 +1,7 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 02/28] openrisc: use boot_command_line instead of
-	private cmd_line
-Date: Mon, 16 Sep 2013 18:08:58 -0500
-Message-ID: <1379372965-22359-3-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 05/28] openrisc: use unflatten_and_copy_device_tree
+Date: Mon, 16 Sep 2013 18:09:01 -0500
+Message-ID: <1379372965-22359-6-git-send-email-robherring2@gmail.com>
 References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,69 +23,61 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-Save some pointless copying of the kernel command line and just use
-boot_command_line instead. The DT code already handles CONFIG_CMDLINE,
-so a separate copy is not needed.
+Use the common unflatten_and_copy_device_tree to copy the built-in FDT
+out of init section. This moves the copy later in the boot, but there
+do not appear to be any references to strings in the FDT before the copy.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 Cc: Jonas Bonn <jonas@southpole.se>
 Cc: linux@lists.openrisc.net
 ---
- arch/openrisc/kernel/prom.c  | 7 +------
- arch/openrisc/kernel/setup.c | 4 +---
- 2 files changed, 2 insertions(+), 9 deletions(-)
+ arch/openrisc/kernel/prom.c  | 13 -------------
+ arch/openrisc/kernel/setup.c |  2 +-
+ 2 files changed, 1 insertion(+), 14 deletions(-)
 
 diff --git a/arch/openrisc/kernel/prom.c b/arch/openrisc/kernel/prom.c
-index a63e768..bf3fd05 100644
+index bf3fd05..3b94972 100644
 --- a/arch/openrisc/kernel/prom.c
 +++ b/arch/openrisc/kernel/prom.c
-@@ -47,8 +47,6 @@
- #include <asm/sections.h>
- #include <asm/setup.h>
+@@ -55,8 +55,6 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
  
--extern char cmd_line[COMMAND_LINE_SIZE];
--
- void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+ void __init early_init_devtree(void *params)
  {
- 	size &= PAGE_MASK;
-@@ -67,15 +65,12 @@ void __init early_init_devtree(void *params)
- 	 * device-tree, including the platform type, initrd location and
- 	 * size, TCE reserve, and more ...
- 	 */
--	of_scan_flat_dt(early_init_dt_scan_chosen, cmd_line);
-+	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
+-	void *alloc;
+-
+ 	/* Setup flat device-tree pointer */
+ 	initial_boot_params = params;
  
- 	/* Scan memory nodes and rebuild MEMBLOCKs */
- 	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+@@ -72,17 +70,6 @@ void __init early_init_devtree(void *params)
  	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
  
--	/* Save command line for /proc/cmdline and then parse parameters */
--	strlcpy(boot_command_line, cmd_line, COMMAND_LINE_SIZE);
--
  	memblock_allow_resize();
+-
+-	/* We must copy the flattend device tree from init memory to regular
+-	 * memory because the device tree references the strings in it
+-	 * directly.
+-	 */
+-
+-	alloc = __va(memblock_alloc(initial_boot_params->totalsize, PAGE_SIZE));
+-
+-	memcpy(alloc, initial_boot_params, initial_boot_params->totalsize);
+-
+-	initial_boot_params = alloc;
+ }
  
- 	/* We must copy the flattend device tree from init memory to regular
+ #ifdef CONFIG_BLK_DEV_INITRD
 diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
-index d7359ff..719c5c8 100644
+index 719c5c8..09a769b 100644
 --- a/arch/openrisc/kernel/setup.c
 +++ b/arch/openrisc/kernel/setup.c
-@@ -50,8 +50,6 @@
- 
- #include "vmlinux.h"
- 
--char __initdata cmd_line[COMMAND_LINE_SIZE] = CONFIG_CMDLINE;
--
- static unsigned long __init setup_memory(void)
+@@ -283,7 +283,7 @@ void __init setup_arch(char **cmdline_p)
  {
- 	unsigned long bootmap_size;
-@@ -316,7 +314,7 @@ void __init setup_arch(char **cmdline_p)
- 		conswitchp = &dummy_con;
- #endif
+ 	unsigned long max_low_pfn;
  
--	*cmdline_p = cmd_line;
-+	*cmdline_p = boot_command_line;
+-	unflatten_device_tree();
++	unflatten_and_copy_device_tree();
  
- 	printk(KERN_INFO "OpenRISC Linux -- http://openrisc.net\n");
- }
+ 	setup_cpuinfo();
+ 
 -- 
 1.8.1.2
