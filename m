@@ -1,73 +1,80 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC PATCH alt 4/4] pinctrl: at91: rework debounce configuration
-Date: Mon, 16 Sep 2013 10:41:22 -0600
-Message-ID: <523734B2.6050208@wwwdotorg.org>
-References: <1379058213-3245-1-git-send-email-b.brezillon@overkiz.com> <1379058813-3489-1-git-send-email-b.brezillon@overkiz.com> <52339479.6030402@wwwdotorg.org> <52340B68.5020505@overkiz.com>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH] leds: lp55xx: enable setting default trigger
+Date: Mon, 16 Sep 2013 09:47:04 -0700
+Message-ID: <CAK5ve-+bLMJy7DicB_qJ0Yx6U7h9ACr0AwBkOh6Nf+pC4A+Jgg@mail.gmail.com>
+References: <1379242217-32398-1-git-send-email-linus.walleij@linaro.org> <523645E2.9040108@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52340B68.5020505-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <523645E2.9040108@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Richard Purdie <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/14/2013 01:08 AM, boris brezillon wrote:
-> Hello Stephen,
->=20
-> Le 14/09/2013 00:40, Stephen Warren a =E9crit :
->> On 09/13/2013 01:53 AM, Boris BREZILLON wrote:
->>> AT91 SoCs do not support per pin debounce time configuration.
->>> Instead you have to configure a debounce time which will be used fo=
-r all
->>> pins of a given bank (PIOA, PIOB, ...).
-=2E..
->>>   Required properties for pin configuration node:
-=2E..
->>> -DEBOUNCE_VAL    (0x3fff << 17): debounce val.
+On Sun, Sep 15, 2013 at 4:42 PM, Milo Kim <milo.kim@ti.com> wrote:
+> On 09/15/2013 07:50 PM, Linus Walleij wrote:
 >>
->> This change would break the DT ABI since it removes a feature that's
->> already present.
-=2E..
->> I suppose it's still up to the Atmel maintainers to decide whether t=
-his
->> is appropriate, or whether the impact to out-of-tree DT files would =
-be
->> problematic.
+>> This enables setting a default trigger on an LP55xx channel,
+>> either from platform data or device tree. This mechanism is
+>> identical to the mechanism for GPIO LEDs and references the
+>> common LEDs device tree bindings.
 >>
->> Assuming the DT ABI can be broken, I think I'd prefer to do so, rath=
-er
->> than take "non-alt" patch 4/4, since a per-pin DEBOUNCE_VAL clearly
->> doesn't correctly model the HW, assuming the patch description is
->> correct. I don't think arguments re: the generic pinconf debounce
->> property hold; if the Linux-specific/internal generic property doesn=
-'t
->> apply, the DT binding should not be bent to adjust to it, but should
->> rather still represent the HW itself.
->=20
-> What about the last point in my list: "reconfigure debounce after
-> startup" ?
->=20
-> Here is an example that may be problematic:
->=20
-> Let's say you have one device using multiple configuration of pins
-> ("default", "xxx", "yyy").
-> The "default" config needs a particular debounce time on a given pin =
-and
-> the "xxx" and "yyy"
-> configs need different debounce time on the same pin.
->=20
-> How would you solve this with this patch approach ?
+>> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>
+>
+> Acked-by: Milo Kim <milo.kim@ti.com>
+>
 
-Each state has a different pin configuration node, and hence can specif=
-y
-a different debounce value. This patch has no impact on that (it just
-changes whether the state-specific node specifies the debounce value in
-a single standalone property, or encodes it into each entry in the pins
-property, all within the same node).
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I merged it into my branch.
+
+-Bryan
+
+>
+>> ---
+>>   Documentation/devicetree/bindings/leds/leds-lp55xx.txt | 10 +++++++---
+>>   drivers/leds/leds-lp55xx-common.c                      |  3 +++
+>>   include/linux/platform_data/leds-lp55xx.h              |  1 +
+>>   3 files changed, 11 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+>> b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+>> index a61727f..d221e75 100644
+>> --- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+>> +++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+>> @@ -17,12 +17,15 @@ Optional properties:
+>>            2: D1~6 with VOUT, D7~9 with VDD
+>>            3: D1~9 are connected to VOUT
+>>
+>> -Alternatively, each child can have specific channel name
+>> -- chan-name: Name of each channel name
+>> +Alternatively, each child can have a specific channel name and trigger:
+>> +- chan-name (optional): name of channel
+>> +- linux,default-trigger (optional): see
+>> +  Documentation/devicetree/bindings/leds/common.txt
+>>
+>>   example 1) LP5521
+>>   3 LED channels, external clock used. Channel names are
+>> 'lp5521_pri:channel0',
+>> -'lp5521_pri:channel1' and 'lp5521_pri:channel2'
+>> +'lp5521_pri:channel1' and 'lp5521_pri:channel2', with a heartbeat trigger
+>> +on channel 0.
+>>
+>>   lp5521@32 {
+>>         compatible = "national,lp5521";
+>> @@ -33,6 +36,7 @@ lp5521@32 {
+>>         chan0 {
+>>                 led-cur = /bits/ 8 <0x2f>;
+>>                 max-cur = /bits/ 8 <0x5f>;
+>> +               linux,default-trigger = "heartbeat";
+>>         };
+>
+>
+> And this DT example works well with 'ledtrig-heartbeat' module.
+>
+> Tested-by: Milo Kim <milo.kim@ti.com>
+>
+> Thanks.
+>
+> Best regards,
+> Milo
