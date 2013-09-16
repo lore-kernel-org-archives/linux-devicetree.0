@@ -1,119 +1,154 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Mon, 16 Sep 2013 11:09:08 -0600
-Message-ID: <52373B34.4060709@wwwdotorg.org>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <522FBED9.9000305@collabora.co.uk> <5230C7F6.3080803@wwwdotorg.org> <3653629.tapNZSuWhS@lem-wkst-02>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <3653629.tapNZSuWhS@lem-wkst-02>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, joelf@ti.com
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v3 2/2] ARM: vexpress: Add CLCD Device Tree properties
+Date: Mon, 16 Sep 2013 18:18:54 +0100
+Message-ID: <1379351934-25415-2-git-send-email-pawel.moll@arm.com>
+References: <1379351934-25415-1-git-send-email-pawel.moll@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379351934-25415-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2013 10:03 AM, Lars Poeschel wrote:
-> On Monday 16 September 2013 13:43:50, Stephen Warren wrote:
->> On 09/10/2013 06:52 PM, Javier Martinez Canillas wrote:
->>> On 09/11/2013 12:34 AM, Stephen Warren wrote:
->>>> On 09/10/2013 03:37 PM, Mark Brown wrote:
->>>>> On Tue, Sep 10, 2013 at 01:53:47PM -0600, Stephen Warren wrote:
->>>>>> Doesn't this patch call gpio_request() on the GPIO first, and
->>>>>> hence prevent the driver's own gpio_request() from succeeding,
->>>>>> since the GPIO is already requested? If this is not a problem, it
->>>>>> sounds like a bug in gpio_request() not ensuring mutual exclusion
->>>>>> for the GPIO.
->>>>>
->>>>> Or at the very least something that's likely to break in the
->>>>> future.
->>>>
->>>> Looking at the GPIO code, it already prevents double-requests:
->>>>>         if (test_and_set_bit(FLAG_REQUESTED, &desc->flags) == 0) {
->>>>>         
->>>>>                 desc_set_label(desc, label ? : "?");
->>>>>                 status = 0;
->>>>>         
->>>>>         } else {
->>>>>         
->>>>>                 status = -EBUSY;
->>>>>                 module_put(chip->owner);
->>>>>                 goto done;
->>>>>         
->>>>>         }
->>>>
->>>> And I tested it in practice, and it really does fail.
->>>
->>> I'm a bit confused now. Doesn't the fact that gpio_request() prevents
->>> double-requests mean that the use-case that you say that have not been
->>> covered by this patch can't actually happen?
->>>
->>> I mean, if when using board files an explicit call to gpio_request() is
->>> made by platform code then a driver can't call gpio_request() for the
->>> same gpio. So this patch shouldn't cause any regression since is just
->>> auto-requesting a GPIO when is mapped as an IRQ in a DT which basically
->>> will be the same that was made by board files before.
->>
->> I'm not familiar with the board file path; Linus describe this.
-> 
-> It seems Linus is busy, I'll try to help out.
-> 
->> It sounds like that path is for the case where a driver /only/ cares
->> about using a pin as an IRQ, and hence the driver only calls
->> request_irq(). The board file is (earlier) calling gpio_request() in
->> order to set up that input pin to work correctly as an IRQ. Hence, there
->> is no double-call to gpio_request().
-> 
-> No, a board file is not a path or something. A board file describes the wirings 
-> and specifics of an (embedded) computer in C code. The complete knowledge of 
-> how things are connected on a board and which drivers to use is in this piece 
-> of code. Devicetree replaces legacy board files. These two do pretty much the 
-> same, but board files have more power, because they are executed and can 
-> contain whatever code is needed to setup a board.
-> But you are right, the driver only calls request_irq(), the board file set up 
-> the pin before and told the driver which irq to use.
+... for V2M-P1 motherboard CLCD (limited to 640x480 16bpp and using
+dedicated video RAM bank) and for V2P-CA9 (up to 1024x768 16bpp).
 
-path == code path, or execution path. I'm well aware of what board files
-are in general.
+Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 22 +++++++++++++++++++++-
+ arch/arm/boot/dts/vexpress-v2m.dtsi     | 22 +++++++++++++++++++++-
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts  | 19 +++++++++++++++++++
+ 3 files changed, 61 insertions(+), 2 deletions(-)
 
-I'm just not familiar with board files that employ this particular hack.
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/ve=
+xpress-v2m-rs1.dtsi
+index ac870fb..8226149 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -233,6 +233,26 @@
+ =09=09=09=09interrupts =3D <14>;
+ =09=09=09=09clocks =3D <&v2m_oscclk1>, <&smbclk>;
+ =09=09=09=09clock-names =3D "clcdclk", "apb_pclk";
++
++=09=09=09=09arm,pl11x,panel-data-pads =3D <0x300 0x301 0x302 0x303 0x304 0=
+x305 0x306 0x307>,
++=09=09=09=09=09=09=09    <0x310 0x311 0x312 0x313 0x314 0x315 0x316 0x317>=
+,
++=09=09=09=09=09=09=09    <0x320 0x321 0x322 0x323 0x324 0x325 0x326 0x327>=
+;
++=09=09=09=09arm,pl11x,framebuffer-base =3D <0x18000000 0x00800000>;
++=09=09=09=09max-memory-bandwidth =3D <36864000>; /* Bps, 640x480@60 16bpp =
+*/
++=09=09=09=09display-timings {
++=09=09=09=09=09native-mode =3D <&v2m_clcd_timing0>;
++=09=09=09=09=09v2m_clcd_timing0: vga {
++=09=09=09=09=09=09clock-frequency =3D <25175000>;
++=09=09=09=09=09=09hactive =3D <640>;
++=09=09=09=09=09=09hback-porch =3D <40>;
++=09=09=09=09=09=09hfront-porch =3D <24>;
++=09=09=09=09=09=09hsync-len =3D <96>;
++=09=09=09=09=09=09vactive =3D <480>;
++=09=09=09=09=09=09vback-porch =3D <32>;
++=09=09=09=09=09=09vfront-porch =3D <11>;
++=09=09=09=09=09=09vsync-len =3D <2>;
++=09=09=09=09=09};
++=09=09=09=09};
+ =09=09=09};
+ =09=09};
+=20
+@@ -282,7 +302,7 @@
+ =09=09=09=09/* CLCD clock */
+ =09=09=09=09compatible =3D "arm,vexpress-osc";
+ =09=09=09=09arm,vexpress-sysreg,func =3D <1 1>;
+-=09=09=09=09freq-range =3D <23750000 63500000>;
++=09=09=09=09freq-range =3D <23750000 65000000>;
+ =09=09=09=09#clock-cells =3D <0>;
+ =09=09=09=09clock-output-names =3D "v2m:oscclk1";
+ =09=09=09};
+diff --git a/arch/arm/boot/dts/vexpress-v2m.dtsi b/arch/arm/boot/dts/vexpre=
+ss-v2m.dtsi
+index f142036..4befe1c 100644
+--- a/arch/arm/boot/dts/vexpress-v2m.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m.dtsi
+@@ -232,6 +232,26 @@
+ =09=09=09=09interrupts =3D <14>;
+ =09=09=09=09clocks =3D <&v2m_oscclk1>, <&smbclk>;
+ =09=09=09=09clock-names =3D "clcdclk", "apb_pclk";
++
++=09=09=09=09arm,pl11x,panel-data-pads =3D <0x300 0x301 0x302 0x303 0x304 0=
+x305 0x306 0x307>,
++=09=09=09=09=09=09=09    <0x310 0x311 0x312 0x313 0x314 0x315 0x316 0x317>=
+,
++=09=09=09=09=09=09=09    <0x320 0x321 0x322 0x323 0x324 0x325 0x326 0x327>=
+;
++=09=09=09=09arm,pl11x,framebuffer-base =3D <0x4c000000 0x00800000>;
++=09=09=09=09max-memory-bandwidth =3D <36864000>; /* Bps, 640x480@60 16bpp =
+*/
++=09=09=09=09display-timings {
++=09=09=09=09=09native-mode =3D <&v2m_clcd_timing0>;
++=09=09=09=09=09v2m_clcd_timing0: vga {
++=09=09=09=09=09=09clock-frequency =3D <25175000>;
++=09=09=09=09=09=09hactive =3D <640>;
++=09=09=09=09=09=09hback-porch =3D <40>;
++=09=09=09=09=09=09hfront-porch =3D <24>;
++=09=09=09=09=09=09hsync-len =3D <96>;
++=09=09=09=09=09=09vactive =3D <480>;
++=09=09=09=09=09=09vback-porch =3D <32>;
++=09=09=09=09=09=09vfront-porch =3D <11>;
++=09=09=09=09=09=09vsync-len =3D <2>;
++=09=09=09=09=09};
++=09=09=09=09};
+ =09=09=09};
+ =09=09};
+=20
+@@ -281,7 +301,7 @@
+ =09=09=09=09/* CLCD clock */
+ =09=09=09=09compatible =3D "arm,vexpress-osc";
+ =09=09=09=09arm,vexpress-sysreg,func =3D <1 1>;
+-=09=09=09=09freq-range =3D <23750000 63500000>;
++=09=09=09=09freq-range =3D <23750000 65000000>;
+ =09=09=09=09#clock-cells =3D <0>;
+ =09=09=09=09clock-output-names =3D "v2m:oscclk1";
+ =09=09=09};
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vex=
+press-v2p-ca9.dts
+index 62d9b22..5eb68b8 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+@@ -73,6 +73,25 @@
+ =09=09interrupts =3D <0 44 4>;
+ =09=09clocks =3D <&oscclk1>, <&oscclk2>;
+ =09=09clock-names =3D "clcdclk", "apb_pclk";
++
++=09=09arm,pl11x,panel-data-pads =3D <0x300 0x301 0x302 0x303 0x304 0x305 0=
+x306 0x307>,
++=09=09=09=09=09    <0x310 0x311 0x312 0x313 0x314 0x315 0x316 0x317>,
++=09=09=09=09=09    <0x320 0x321 0x322 0x323 0x324 0x325 0x326 0x327>;
++=09=09max-memory-bandwidth =3D <94371840>; /* Bps, 1024x768@60 16bpp */
++=09=09display-timings {
++=09=09=09native-mode =3D <&clcd_timing0>;
++=09=09=09clcd_timing0: xga {
++=09=09=09=09clock-frequency =3D <63500127>;
++=09=09=09=09hactive =3D <1024>;
++=09=09=09=09hback-porch =3D <152>;
++=09=09=09=09hfront-porch =3D <48>;
++=09=09=09=09hsync-len =3D <104>;
++=09=09=09=09vactive =3D <768>;
++=09=09=09=09vback-porch =3D <23>;
++=09=09=09=09vfront-porch =3D <3>;
++=09=09=09=09vsync-len =3D <4>;
++=09=09=09};
++=09=09};
+ =09};
+=20
+ =09memory-controller@100e0000 {
+--=20
+1.8.1.2
 
->> The case I said wouldn't work is:
->>
->> * This patch calls gpio_request() in order to make the pin work as an IRQ.
->>
->> * Driver uses the pin as both a GPIO and an IRQ, and hence calls
->> gpio_request() and request_irq().
->>
->> So, there's a double-call to gpio_request(), which fails, and the driver
->> fails to probe.
-> 
-> Again, no. In that case you don't define your pin as irq in the device tree, 
-> but only as gpio. The driver knows how to handle gpios and turn them into irqs 
-> so you have to present it a gpio not an irq. In that case the patch will not 
-> call gpio_request() and there is no double-call to gpio_request().
 
-That is a way to make this patch work, yes. However, there's no
-guarantee that every driver or DT binding works this way. Forcing
-bindings to work that way is forcing Linux-internal details upon
-bindings, which should not be done. Put another way, I don't believe
-there's any rule when writing DT bindings that states that bindings must
-not describe the same pin as both a GPIO and an IRQ, although admittedly
-that may be unusual.
-
-...
-> I agree with you that it would be the best if the only call would be 
-> request_irq and the chip driver programs the HW appropriately. It would be a 
-> dream, but unfortunately this is not possible at the moment. This is something 
-> that Linus pointed out very very early in this whole discussion. The gpio and 
-> irq frameworks don't share any information. The irq framework has no chance to 
-> program the HW, because it will never find the related gpio.
-> For this to work the frameworks have to change (and possibly all drivers/board 
-> files/whatever using request_irq() and/or request_gpio()) have to change.
-> That is something that I do not dare to do alone.
-
-This is a controller-specific issue, and has nothing to do with the GPIO
-or IRQ frameworks. The driver for the combined irq/gpio_chip simply
-needs to program the HW when the IRQ is requested or set up. The Tegra
-driver already works this way, so there's actual proof that it is
-possible to do this in practice.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
