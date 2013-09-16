@@ -1,63 +1,79 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
-Date: Mon, 16 Sep 2013 12:37:43 -0600
-Message-ID: <52374FF7.8040604@wwwdotorg.org>
-References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com> <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com> <52373314.5070806@wwwdotorg.org> <20130916164927.GB21352@roeck-us.net> <5237390E.5070203@wwwdotorg.org> <20130916173540.GA3481@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
+Date: Mon, 16 Sep 2013 13:46:08 -0500
+Message-ID: <AEBF64D7-5359-4E37-8263-B81209620192@codeaurora.org>
+References: <1379003839-16068-1-git-send-email-galak@codeaurora.org> <CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com> <25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org> <CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com> <3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org> <20130912224737.GA24937@codeaurora.org> <9EA264FE-7621-458D-8333-9340DDBFC4EE@codeaurora.org> <52374DD1.9040209@codeaurora.org>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130916173540.GA3481-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <52374DD1.9040209-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org list" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2013 11:35 AM, Guenter Roeck wrote:
-> On Mon, Sep 16, 2013 at 10:59:58AM -0600, Stephen Warren wrote:
->> On 09/16/2013 10:49 AM, Guenter Roeck wrote:
->>> On Mon, Sep 16, 2013 at 10:34:28AM -0600, Stephen Warren wrote:
->>>> On 09/12/2013 06:55 PM, Soren Brinkmann wrote:
->>>>> Add a driver for SILabs 570, 571, 598, 599 programmable oscillators.
->>>>> The devices generate low-jitter clock signals and are reprogrammable via
->>>>> an I2C interface.
-...
->>>>> +Optional properties:
->>>>> + - initial-fout: Initial output frequency to set during probe
->>>>
->>>> "probe" is a Linux-specific concept. This property should be removed. If
->>>> the driver is asked to set a specific frequency, it should do so, but I
->>>> don't think it should program something pro-actively just because it
->>>> starts up.
->>>>
->>>> If this property is acceptable, it'd be better to describe it more along
->>>> the lines of the following:
->>>>
->>>> initial-fout: The frequency at which the system requires the clock to
->>>> operate.
->>>
->>> It should probably be something like "clock-frequency". In many use cases
->>> the programmed frequency is set to a constant frequency at system startup
->>> and never changed, similar to other clocks.
->>
->> I was going to suggest that too, but re-considered since I think
->> clock-frequency is more appropriate for fixed-frequency clocks, rather
->> than to specify the value at which a programmable clock generator should
->> operate?
->>
->> I don't think we have a good story yet for how to represent
->> how-we-want-the-clock-tree-configured, as opposed to representing the HW
->> itself (which is what DT should be more about).
->
-> In many cases the chip _is_ used to generate a fixed frequency, so we will
-> have to have a means to describe it. That it _can_ be used differently is a
-> different matter. After all, that is true for many clock generators.
 
-Perhaps if clock-frequency is specified, the driver should refuse to
-provide anything else. If clock-frequency isn't specified, the driver
-shouldn't touch the HW when it initializes, but should honor any
-requests that come in from other drivers? That would maintain what I
-feel is clock-frequency's connection to being a fixed clock.
+On Sep 16, 2013, at 1:28 PM, Rohit Vaswani wrote:
+
+> On 9/12/2013 7:05 PM, Kumar Gala wrote:
+>> On Sep 12, 2013, at 5:47 PM, David Brown wrote:
+>> 
+>>> On Thu, Sep 12, 2013 at 12:55:36PM -0500, Kumar Gala wrote:
+>>>> On Sep 12, 2013, at 12:06 PM, Olof Johansson wrote:
+>>>>> My original request to please use a common prefix for your product
+>>>>> families stands. Please prefix with msm-*, or if you have to, qcom-*
+>>>>> instead, since you guys can't seem to make your mind up on standard
+>>>>> prefixes (msm, apq, etc).
+>>>> This is silly, I dont see the reason to go with
+>>>> qcom-apq<SOC>-<BOARD>.dts and than in the future drop qcom- when we
+>>>> mostly likely shift to a dir structure.  As engineers we are all too
+>>>> aware of the lack of sanity in marketing names, but its what we have
+>>>> so we have to live with it.
+>>> At least what we'd decided a year or two ago was to call _everything_
+>>> with an msm* prefix.  If marketing comes up with cute prefixes for
+>>> things, we would basically ignore them.  So, under that, it should be
+>>> an msm8074-dragonboard.  Admittedly, it might be a little confusing
+>>> with the name of the product having the apq in it, but as others have
+>>> pointed out, I think there is less confusing than not having a common
+>>> prefix on our MSM products.
+>>> 
+>>> At least so far, there are no chips where apq vs msm actually
+>>> distinguishes anything.  In fact, a simple "decoder ring" would point
+>>> out that the 'apq' usually corresponds with the second digit being a
+>>> zero.  It doesn't help that we've added an 'mpq' prefix as well.
+>>> 
+>>> I don't really see how to satisfy all of this other than qcom-apq*, or
+>>> just continue to use msm*.
+> 
+> I think going ahead with what David mentioned  for msm* works if we can be consistent or if we want to explicitly mention apq in the file name, then
+> we can rename them to be qcom-msm* or qcom-apq* if people care about the differences between them.
+> 
+>> 
+>> I think msm has run out of steam, especially as more SoCs come out of Qualcomm that aren't just targeting phones & tablets.
+>> 
+>> - k
+
+I think the two options are either:
+
+qcom-msm*, qcom-apq*, etc
+
+or 
+
+qcom/msm-*, qcom/apq*, etc
+
+I'm guessing we'll end up without the dir and in the future have:
+
+qcom/qcom-msm-*, qcom/qcom-apq-*
+
+Olof???
+
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
