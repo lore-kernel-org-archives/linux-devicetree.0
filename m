@@ -1,37 +1,54 @@
-From: Arun Kumar K <arunkk.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 12/12] V4L: Add driver for s5k4e5 image sensor
-Date: Mon, 16 Sep 2013 11:29:14 +0530
-Message-ID: <CALt3h78TezzNoET+st6RBUH6Fefj_HX5A6NkeTit5SYb2EQ_Rw@mail.gmail.com>
-References: <1378987669-10870-1-git-send-email-arun.kk@samsung.com>
-	<1378987669-10870-13-git-send-email-arun.kk@samsung.com>
-	<1379076935.4396.13.camel@pizza.hi.pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v5 0/3] Add PCIe support for i.MX6q
+Date: Mon, 16 Sep 2013 05:48:14 +0000
+Message-ID: <1379310497-12362-1-git-send-email-xobs@kosagi.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379076935.4396.13.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kilyeon.im-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zhu Richard-R65037 <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+This patchset adds support for the PCI Express port present on
+the i.MX6 SoC.  The port is based on Synopsis Designware IP with
+a custom PHY.
 
->> +Example:
->> +
->> +     i2c-isp@13130000 {
->> +             s5k4e5@20 {
->> +                     compatible = "samsung,s5k4e5";
->> +                     reg = <0x20>;
->> +                     gpios = <&gpx1 2 1>;
->
-> This probably should be 'reset-gpios', too.
->
+Changes since v4:
+ - Add an abort exception handler
+ - Fix register ordering in imx6q-iomuxc-gpr.h
+ - Enable sata_ref_100m during clock initialization
+ - Minor changes to lvds[12]_gate definitions
 
-Yes thats right. I missed updating the example.
-Thanks for pointing out.
+Changes since v3:
+ - Moved clock initialization to board clock file
+ - Reworked memory range layout
+ - Reduced the duration of several sleep calls
 
-Regards
-Arun
+Changes since v2:
+ - Reworked source file with Sascha Hauer's suggestions
+
+Changes since v1:
+ - Use the Designware controller code for BAR initialization
+
+Sean Cross (3):
+  ARM: imx: Add LVDS general-purpose clocks to i.MX6Q
+  ARM: imx6q: Add PCIe bits to GPR syscon definition
+  PCI: imx6: Add support for i.MX6 PCIe controller
+
+ .../devicetree/bindings/clock/imx6q-clock.txt      |    4 +
+ .../devicetree/bindings/pci/designware-pcie.txt    |    5 +
+ arch/arm/boot/dts/imx6qdl.dtsi                     |   16 +
+ arch/arm/mach-imx/Kconfig                          |    2 +
+ arch/arm/mach-imx/clk-imx6q.c                      |   34 +-
+ drivers/pci/host/Kconfig                           |    6 +
+ drivers/pci/host/Makefile                          |    1 +
+ drivers/pci/host/pci-imx6.c                        |  499 ++++++++++++++++++++
+ include/linux/mfd/syscon/imx6q-iomuxc-gpr.h        |    8 +
+ 9 files changed, 574 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pci/host/pci-imx6.c
+
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
