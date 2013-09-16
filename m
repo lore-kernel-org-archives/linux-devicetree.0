@@ -1,77 +1,38 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: OMAP5: Add VGIC interrupts for KVM
-Date: Mon, 16 Sep 2013 19:24:59 -0400
-Message-ID: <5237934B.3090705@ti.com>
-References: <1379373423-10486-1-git-send-email-alexander.tarasikov@gmail.com> <1379373423-10486-2-git-send-email-alexander.tarasikov@gmail.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: "memory" binding issues
+Date: Tue, 17 Sep 2013 09:47:19 +1000
+Message-ID: <1379375239.3721.51.camel@pasglop>
+References: <1379300274.4098.77.camel@pasglop>
+	 <52372F2A.2050003@wwwdotorg.org> <1379371567.3721.46.camel@pasglop>
+	 <CAOesGMgE1jiF5OHsmPQz2z66Bcqu0HeAj=taE1vmFK-0-0s2TQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379373423-10486-2-git-send-email-alexander.tarasikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAOesGMgE1jiF5OHsmPQz2z66Bcqu0HeAj=taE1vmFK-0-0s2TQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Tarasikov <alexander.tarasikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 16 September 2013 07:17 PM, Alexander Tarasikov wrote:
-> 	This adds the interrupt configuration for the
-> 	Cortex-A15 GIC to make KVM work in HYP mode
-> ---
->  arch/arm/boot/dts/omap5.dtsi | 1 +
->  1 file changed, 1 insertion(+)
+On Mon, 2013-09-16 at 15:48 -0700, Olof Johansson wrote:
+> > A node that has a "reg" property should have the corresponding unit
+> > address.
 > 
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> index 07be2cd..8026a4e 100644
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -63,6 +63,7 @@
->  		      <0x48212000 0x1000>,
->  		      <0x48214000 0x2000>,
->  		      <0x48216000 0x2000>;
-> +		interrupts = <1 9 0xf04>;
->  	};
->  
->  	/*
+> No, absolutely _NOT_ a requirement. Unit address is only required if
+> needed to disambiguate two properties with the same name.
 > 
-Interrupt configuration already exist
-but what is missing is the maintenance interrupt.
-I was planning to post a patch to add that. Patch
-is end of the email. The end result is same as your
-patch but more readable and as per the recent clean-up
-of dts.
+> If there are no ambiguities, then leaving off the unit address is much
+> preferred.
 
-Regards,
-Santosh
+I disagree :-)
 
->From e4aa21948baccc24ad9682e92f7188d5c8d55286 Mon Sep 17 00:00:00 2001
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Date: Thu, 12 Sep 2013 15:53:13 -0400
-Subject: [PATCH] ARM: dts: OMAP5: Add maintenance interrupt for
- virtualisation
+Also this would be only true of our find_node_by_path was capable of
+handling it, which it isn't. Thus you end up with generic code looking
+for /memory and finding nothing ... 
 
-Add a maintenance IRQ using PPI 9 to OMAP5 device tree
-needed for virtualisation.
-
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/omap5.dtsi |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 07be2cd..6de6148 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -63,6 +63,7 @@
- 		      <0x48212000 0x1000>,
- 		      <0x48214000 0x2000>,
- 		      <0x48216000 0x2000>;
-+		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
- 	};
- 
- 	/*
--- 
-1.7.9.5
-
+Cheers,
+Ben.
 
 
 --
