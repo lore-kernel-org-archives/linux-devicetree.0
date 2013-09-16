@@ -1,48 +1,54 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma
- reserved memory
-Date: Mon, 16 Sep 2013 17:25:44 +1000
-Message-ID: <1379316344.3721.6.camel@pasglop>
-References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com>
- <1377527959-5080-4-git-send-email-m.szyprowski@samsung.com>
- <20130829224637.D09183E1222@localhost> <52209278.8040106@samsung.com>
- <DAF223EB-C84C-4E82-A24A-ACD0A3A0559F@codeaurora.org>
- <20130909160154.8D7183E0F23@localhost> <5236AF64.80607@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 4/4] Documentation: add LP3943 DT bindings and document
+Date: Mon, 16 Sep 2013 08:30:00 +0100
+Message-ID: <20130916073000.GA3999@lee--X1>
+References: <1378949700-6384-1-git-send-email-milo.kim@ti.com>
+ <20130912152455.GN11227@lee--X1>
+ <20130915112755.GB9765@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5236AF64.80607@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linaro-mm-sig@lists.linaro.org, Laura Abbott <lauraa@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <tomasz.figa@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@secretlab.ca>, Marc <marc.ceeeee@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Nishanth Peethambaran <nishanth.p@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130915112755.GB9765@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Milo Kim <milo.kim@ti.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-09-16 at 09:12 +0200, Marek Szyprowski wrote:
-> 
-> Fixing those issues requires further discussion. Frankly, right now I
-> really have no idea which way should I go. The /reserved-ranges node seems
-> to be easy to match particular reserved memory region with a given device.
-> I'm also not really convinced if it makes sense to add a code for finding
-> and matching a reserved memory region to every device driver, which might
-> need it. I would really like to get some more feedback on the Ben's
-> comment.
-> 
-> In any case, the code will also change significantly, so I assume that the
-> best, what can be done now is to revert the current version and start from
-> the scratch with a new, complete proposal.
+On Sun, 15 Sep 2013, Thierry Reding wrote:
 
-Yes, let's do that. I will try to help. It shouldn't be that a big deal.
+> On Thu, Sep 12, 2013 at 04:24:55PM +0100, Lee Jones wrote:
+> > On Thu, 12 Sep 2013, Milo Kim wrote:
+> [...]
+> > > diff --git a/Documentation/lp3943.txt b/Documentation/lp3943.txt
+> > > new file mode 100644
+> > > index 0000000..576ebd0
+> > > --- /dev/null
+> > > +++ b/Documentation/lp3943.txt
+> [...]
+> > If this stuff is really important (and most of it really isn't), th=
+en
+> > put it either in the commit log or in the driver.
+>=20
+> I can only speak for myself, but the initial driver commit message is
+> about the last place I look for this kind of information. I'd expect =
+it
+> to be either somewhere in Documentation/ or in one of the source file=
+s.
+> In this case I'd probably look at the MFD core driver source file. Mo=
+re
+> likely, even, I'd just go google "LP3943" and grab a public datasheet
+> from TI where all of this can hopefully be found.
 
-Worst case, how many of us will meet physically next month in Edinburgh ?
+The latter option is the most common. If the datasheet is publicly
+available, then there is no rhyme nor reason to put it in the kernel
+source too. /Documentation is already overloaded, it would be even
+more so if each and every driver residing in the kernel decided to
+bulk it up further.
 
-Cheers,
-Ben.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
