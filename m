@@ -1,76 +1,82 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 22/28] openrisc: remove unnecessary prom.c includes
-Date: Mon, 16 Sep 2013 18:09:18 -0500
-Message-ID: <1379372965-22359-23-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 20/28] arm64: set initrd_start/initrd_end for fdt scan
+Date: Mon, 16 Sep 2013 18:09:16 -0500
+Message-ID: <1379372965-22359-21-git-send-email-robherring2@gmail.com>
 References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-bounces@lists.openrisc.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
-List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
-List-Archive: <http://lists.openrisc.net/pipermail/linux>
-List-Post: <mailto:linux@lists.openrisc.net>
-List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
-List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
-Sender: linux-bounces@lists.openrisc.net
-Errors-To: linux-bounces@lists.openrisc.net
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux@lists.openrisc.net
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-It appears openrisc prom.c was just copied from another arch with a
-bunch of unnecessary includes. Remove all the unecessary ones.
+In order to unify the initrd scanning for DT across architectures, make
+arm64 use initrd_start and initrd_end instead of the physical addresses.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Jonas Bonn <jonas@southpole.se>
-Cc: linux@lists.openrisc.net
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- arch/openrisc/kernel/prom.c | 22 ----------------------
- 1 file changed, 22 deletions(-)
+ arch/arm64/mm/init.c | 24 ++++++------------------
+ 1 file changed, 6 insertions(+), 18 deletions(-)
 
-diff --git a/arch/openrisc/kernel/prom.c b/arch/openrisc/kernel/prom.c
-index 2aae474..6a44340 100644
---- a/arch/openrisc/kernel/prom.c
-+++ b/arch/openrisc/kernel/prom.c
-@@ -18,34 +18,12 @@
-  *
-  */
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index de2de5d..8261f4e 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -39,17 +39,9 @@
  
--#include <stdarg.h>
--#include <linux/kernel.h>
--#include <linux/string.h>
- #include <linux/init.h>
--#include <linux/threads.h>
--#include <linux/spinlock.h>
- #include <linux/types.h>
--#include <linux/pci.h>
--#include <linux/stringify.h>
--#include <linux/delay.h>
--#include <linux/initrd.h>
--#include <linux/bitops.h>
--#include <linux/module.h>
--#include <linux/kexec.h>
--#include <linux/debugfs.h>
--#include <linux/irq.h>
- #include <linux/memblock.h>
- #include <linux/of_fdt.h>
+ #include "mm.h"
  
--#include <asm/prom.h>
- #include <asm/page.h>
--#include <asm/processor.h>
--#include <asm/irq.h>
--#include <linux/io.h>
--#include <asm/mmu.h>
--#include <asm/pgtable.h>
--#include <asm/sections.h>
--#include <asm/setup.h>
+-static unsigned long phys_initrd_start __initdata = 0;
+-static unsigned long phys_initrd_size __initdata = 0;
+-
+ phys_addr_t memstart_addr __read_mostly = 0;
  
- void __init early_init_devtree(void *params)
+-void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
+-{
+-	phys_initrd_start = start;
+-	phys_initrd_size = end - start;
+-}
+-
++#ifdef CONFIG_BLK_DEV_INITRD
+ static int __init early_initrd(char *p)
  {
+ 	unsigned long start, size;
+@@ -59,12 +51,13 @@ static int __init early_initrd(char *p)
+ 	if (*endp == ',') {
+ 		size = memparse(endp + 1, NULL);
+ 
+-		phys_initrd_start = start;
+-		phys_initrd_size = size;
++		initrd_start = (unsigned long)__va(start);
++		initrd_end = (unsigned long)__va(start + size);
+ 	}
+ 	return 0;
+ }
+ early_param("initrd", early_initrd);
++#endif
+ 
+ #define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
+ 
+@@ -137,13 +130,8 @@ void __init arm64_memblock_init(void)
+ 	/* Register the kernel text, kernel data and initrd with memblock */
+ 	memblock_reserve(__pa(_text), _end - _text);
+ #ifdef CONFIG_BLK_DEV_INITRD
+-	if (phys_initrd_size) {
+-		memblock_reserve(phys_initrd_start, phys_initrd_size);
+-
+-		/* Now convert initrd to virtual addresses */
+-		initrd_start = __phys_to_virt(phys_initrd_start);
+-		initrd_end = initrd_start + phys_initrd_size;
+-	}
++	if (initrd_start)
++		memblock_reserve(__virt_to_phys(initrd_start), initrd_end - initrd_start);
+ #endif
+ 
+ 	/*
 -- 
 1.8.1.2
