@@ -1,50 +1,41 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
-Date: Mon, 16 Sep 2013 11:25:01 +0200
-Message-ID: <20130916092501.GY30088@pengutronix.de>
-References: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
- <1379319655-20210-4-git-send-email-xobs@kosagi.com>
+From: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/2] DMM DT adaptation
+Date: Mon, 16 Sep 2013 15:00:13 +0530
+Message-ID: <1379323815-14130-1-git-send-email-archit@ti.com>
+References: <1379063679-4869-1-git-send-email-archit@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1379319655-20210-4-git-send-email-xobs@kosagi.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Sean Cross <xobs@kosagi.com>
-Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zhu Richard-R65037 <r65037@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, tharvey@gateworks.com, bhelgaas@google.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379063679-4869-1-git-send-email-archit-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2013 at 08:20:54AM +0000, Sean Cross wrote:
-> Add support for the PCIe port present on the i.MX6 family of controllers.
-> These use the Synopsis Designware core tied to their own PHY.
-> 
-> +static int pcie_phy_poll_ack(void __iomem *dbi_base, int exp_val)
-> +{
-> +	u32 val;
-> +	u32 max_iterations = 10;
-> +	u32 wait_counter = 0;
-> +
-> +	do {
-> +		val = readl(dbi_base + PCIE_PHY_STAT);
-> +		val = (val >> PCIE_PHY_STAT_ACK_LOC) & 0x1;
-> +		wait_counter++;
-> +
-> +		if (val == exp_val)
-> +			return 0;
-> +
-> +		udelay(1);
-> +	} while ((wait_counter < max_iterations) && (val != exp_val));
+The DMM/Tiler block can used by omapdrm to allocate frame buffers. With the
+removal of address and irq data from the omap4 hwmods, the probe of DMM driver
+fails and omapdrm isn't able to utilize the DMM hardware.
 
-The test for val != exp_val is unnecessary now of course.
+Add DMM bindings for omap4 and omap5.
 
-With this and the devm_clk_get Shawn mentioned:
+Changes in v2:
+- No changes, split out into a separate series containing only DT related parts.
 
-Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
+Archit Taneja (2):
+  arm: dts: omap4+: Add DMM bindings
+  drm: omap: Enable DT support for DMM
 
-Sascha
+ Documentation/devicetree/bindings/arm/omap/dmm.txt | 17 +++++++++++++++++
+ arch/arm/boot/dts/omap4.dtsi                       |  7 +++++++
+ arch/arm/boot/dts/omap5.dtsi                       |  7 +++++++
+ drivers/gpu/drm/omapdrm/omap_dmm_tiler.c           | 11 +++++++++++
+ 4 files changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/dmm.txt
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.8.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
