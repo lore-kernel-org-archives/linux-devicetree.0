@@ -1,74 +1,197 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] memory: add a basic OF-based memory driver
-Date: Mon, 16 Sep 2013 07:55:29 -0500
-Message-ID: <CAL_Jsq+iYJBCKoM7S2wC1PVVM1sktmX6dWDpoKzYAvB7Q7j_8A@mail.gmail.com>
-References: <1378863781-4235-1-git-send-email-emilio@elopez.com.ar>
-	<1379032225-6425-1-git-send-email-emilio@elopez.com.ar>
-	<CAOesGMiUMniKRLRgGPsimR0bXWQFbx+SL5dUJXOb8t0JfEcHsg@mail.gmail.com>
-	<52326ADC.8040703@elopez.com.ar>
-	<CAL_JsqJACEtSRaDg0TcYODzhpsHFGa4mFSYa_R3qspypEKH+hQ@mail.gmail.com>
-	<CAOesGMj=b5c_1v-nAejUzuOMfx44AHr2=yfoPepHYsh0=t0wOQ@mail.gmail.com>
-	<20130915124325.B1DF2C42C5C@trevor.secretlab.ca>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [RFCv2 3/3] ARM: dts: N900: Add SSI information
+Date: Mon, 16 Sep 2013 15:05:49 +0200
+Message-ID: <CAAwP0s0e-gYkNA78eQH7x2VJbM1byaisUeqU8YbbeWUbKwsxCQ@mail.gmail.com>
+References: <1379277856-24571-1-git-send-email-sre@debian.org> <1379277856-24571-4-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130915124325.B1DF2C42C5C-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?ISO-8859-1?Q?David_Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1379277856-24571-4-git-send-email-sre@debian.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>
+Cc: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 15, 2013 at 7:43 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>=
- wrote:
-> On Fri, 13 Sep 2013 08:49:06 -0700, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> w=
-rote:
->> On Fri, Sep 13, 2013 at 7:00 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
- wrote:
->> > On Thu, Sep 12, 2013 at 8:31 PM, Emilio L=F3pez <emilio-0Z03zUJReD7QT0dZR+AlfA@public.gmane.org=
-=2Ear> wrote:
-
-[snip]
-
->> > Better, but this is still wrong. DT describes the hardware. There =
-is
->> > no such h/w as a simple-memory-controller. The fact that you have =
-a
->> > simple-memory-ctrlr kernel driver is a kernel
->> > feature/artifact/limitation. Describe the h/w with a meaningful
->> > compatible string and put that string in the simple memory control=
-ler
->> > driver match table. If someday we have a real driver for said memo=
-ry
->> > controller, then it is only a kernel change to use a different dri=
-ver.
->>
->>
->> We discussed this over IRC last night -- I still think it makes more
->> sense to make the clock driver for sunxi aware of this and just add =
-a
->> reference to the clock at init time.
->>
->> This is never going to differ from board to board (today the clock
->> name is the same on all sunxi platforms -- pll5_ddr. And the need wi=
-ll
->> likewise be there for all platforms at this time.
->>
->> If and when it changes in the future, we can reevaluate. But this
->> doesn't have to be driven by device tree at this time, it seems to
->> just make things overly complicated and contrived.
+On Sun, Sep 15, 2013 at 10:44 PM, Sebastian Reichel <sre@debian.org> wrote:
+> Add SSI device tree data for OMAP34xx and Nokia N900.
 >
-> I agree. Creating a new platform driver + device tree binding just to
-> claim a clock that must not be disables does not look like the right
-> approach to me either.
+> Signed-off-by: Sebastian Reichel <sre@debian.org>
+> ---
+>  Documentation/devicetree/bindings/hsi/omap_ssi.txt | 73 ++++++++++++++++++++++
+>  arch/arm/boot/dts/omap3-n900.dts                   |  8 +++
+>  arch/arm/boot/dts/omap34xx.dtsi                    | 49 +++++++++++++++
+>  3 files changed, 130 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hsi/omap_ssi.txt
+>
+> diff --git a/Documentation/devicetree/bindings/hsi/omap_ssi.txt b/Documentation/devicetree/bindings/hsi/omap_ssi.txt
+> new file mode 100644
+> index 0000000..e3597eb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hsi/omap_ssi.txt
+> @@ -0,0 +1,73 @@
+> +OMAP SSI controller bindings
+> +
+> +Required properties:
+> +- compatible:          Should be set to the following value
+> +                        ti,omap3-ssi (applicable to OMAP34xx devices)
+> +- ti,hwmods:           Name of the hwmod associated to the controller, which
+> +                       is "ssi".
+> +- reg:                 Contains SSI register address range (base address and
+> +                       length).
+> +- reg-names:           Contains the names of the address ranges. It's
+> +                        expected, that "sys" and "gdd" address ranges are
+> +                       provided.
+> +- interrupts:          Contains the interrupt information for the controller.
+> +- interrupt-names:      Contains the names of the interrupts. It's expected,
+> +                       that "gdd_mpu" is provided.
+> +- ranges               Required as an empty node
+> +- #address-cells       Should be set to <1>
+> +- #size-cells          Should be set to <1>
+> +
+> +Each port is represented as a sub-node of the ti,omap3-ssi device.
+> +
+> +Required Port sub-node properties:
+> +- compatible:          Should be set to the following value
+> +                        ti,omap3-ssi-port (applicable to OMAP34xx devices)
+> +- reg:                 Contains port's register address range (base address
+> +                       and length).
+> +- reg-names:           Contains the names of the address ranges. It's
+> +                        expected, that "tx" and "rx" address ranges are
+> +                       provided.
+> +- interrupt-parent     Should be a phandle for the interrupt controller
+> +- interrupts:          Contains the interrupt information for the port.
+> +- interrupt-names:     Contains the names of the interrupts. It's expected,
+> +                       that "mpu_irq0" and "mpu_irq1" are provided.
+> +- ti,ssi-cawake-gpio:  Defines which GPIO pin is used to signify CAWAKE
+> +                       events for the port. This is an optional board-specific
+> +                       property. If it's missing the port will not be
+> +                       enabled.
+> +
+> +Example for Nokia N900:
+> +
+> +ssi-controller@48058000 {
+> +       compatible = "ti,omap3-ssi";
+> +       ti,hwmods = "ssi";
+> +
+> +       reg = <0x48058000 0x1000>,
+> +             <0x48059000 0x1000>;
+> +       reg-names = "sys",
+> +                   "gdd";
+> +
+> +       interrupts = <55>;
+> +       interrupt-names = "gdd_mpu";
+> +
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +       ranges;
+> +
+> +       ssi-port@0 {
+> +               compatible = "ti,omap3-ssi-port";
+> +
+> +               reg = <0x4805a000 0x800>,
+> +                     <0x4805a800 0x800>;
+> +               reg-names = "tx",
+> +                           "rx";
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <51>,
+> +                            <52>;
+> +               interrupt-names = "mpu_irq0",
+> +                                 "mpu_irq1";
+> +
+> +               ti,ssi-cawake-gpio = <&gpio5 23 GPIO_ACTIVE_HIGH>; /* 151 */
+> +       }
+> +}
+> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+> index 0582356..cc4a3e2 100644
+> --- a/arch/arm/boot/dts/omap3-n900.dts
+> +++ b/arch/arm/boot/dts/omap3-n900.dts
+> @@ -186,6 +186,14 @@
+>         power = <50>;
+>  };
+>
+> +&ssi_port1 {
+> +       ti,ssi-cawake-gpio = <&gpio5 23 GPIO_ACTIVE_HIGH>; /* 151 */
+> +};
+> +
+> +&ssi_port2 {
+> +       status = "disabled";
+> +};
+> +
+>  &uart1 {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&uart1_pins>;
+> diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
+> index 5355d61..393b7a7 100644
+> --- a/arch/arm/boot/dts/omap34xx.dtsi
+> +++ b/arch/arm/boot/dts/omap34xx.dtsi
+> @@ -25,4 +25,53 @@
+>                         clock-latency = <300000>; /* From legacy driver */
+>                 };
+>         };
+> +
+> +       ocp {
+> +               ssi: ssi-controller@48058000 {
+> +                       compatible = "ti,omap3-ssi";
+> +                       ti,hwmods = "ssi";
+> +
+> +                       reg = <0x48058000 0x1000>,
+> +                             <0x48059000 0x1000>;
+> +                       reg-names = "sys",
+> +                                   "gdd";
+> +
+> +                       interrupts = <55>;
+> +                       interrupt-names = "gdd_mpu";
+> +
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges;
+> +
+> +                       ssi_port1: ssi-port@0 {
+> +                               compatible = "ti,omap3-ssi-port";
+> +
+> +                               reg = <0x4805a000 0x800>,
+> +                                     <0x4805a800 0x800>;
+> +                               reg-names = "tx",
+> +                                           "rx";
+> +
+> +                               interrupt-parent = <&intc>;
+> +                               interrupts = <51>,
+> +                                            <52>;
+> +                               interrupt-names = "mpu_irq0",
+> +                                                 "mpu_irq1";
+> +                       };
+> +
+> +                       ssi_port2: ssi-port@1 {
+> +                               compatible = "ti,omap3-ssi-port";
+> +
+> +                               reg = <0x4805b000 0x800>,
+> +                                     <0x4805b800 0x800>;
+> +                               reg-names = "tx",
+> +                                           "rx";
+> +
+> +                               interrupt-parent = <&intc>;
+> +                               interrupts = <53>,
+> +                                            <54>;
+> +                               interrupt-names = "mpu_irq0",
+> +                                                 "mpu_irq1";
+> +                       };
+> +               };
+> +       };
+>  };
+> --
+> 1.8.4.rc3
 
-Maybe a driver is overkill, but fully describing the h/w would be a
-good thing. Only defining the h/w that Linux currently uses is not a
-good practice (although admittedly hard to avoid).
+Hi Sebastian,
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is the Synchronous Serial Interface (SSI)  only supported by
+OMAP34xx/OMAP35xx SoC and not by OMAP36xx/OMAP37xx SoC?
+
+I'm asking this since if SSI is supported by both we should add the
+device nodes in omap3.dtsi instead of omap34xx.dtsi.
+
+I thought that all OMAP3 SoC supported SSI and all OMAP4 SoC supported
+HSI but I guess I was wrong...
+
+Thanks a lot and best regards,
+Javier
