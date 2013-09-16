@@ -1,118 +1,70 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 23/28] of: introduce common FDT machine related functions
-Date: Mon, 16 Sep 2013 18:09:19 -0500
-Message-ID: <1379372965-22359-24-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 17/28] xtensa: use early_init_dt_scan
+Date: Mon, 16 Sep 2013 18:09:13 -0500
+Message-ID: <1379372965-22359-18-git-send-email-robherring2@gmail.com>
 References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-xtensa@linux-xtensa.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-Introduce common of_flat_dt_match_machine and
-of_flat_dt_get_machine_name functions to unify architectures' handling
-of machine level model and compatible properties.
-
-Several architectures match the root compatible string with an arch
-specific list of machine descriptors duplicating the same search
-algorithm. Create a common implementation with a simple architecture
-specific hook to iterate over each machine's match table.
+Convert xtensa to use new early_init_dt_scan function.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Chris Zankel <chris@zankel.net>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: linux-xtensa@linux-xtensa.org
 ---
- drivers/of/fdt.c       | 60 ++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_fdt.h |  4 ++++
- 2 files changed, 64 insertions(+)
+ arch/xtensa/kernel/setup.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 83cdeb5..e21d1dc 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -619,6 +619,66 @@ int __init of_scan_flat_dt_by_path(const char *path,
- 		return ret;
+diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
+index fc31ec1..65974a8 100644
+--- a/arch/xtensa/kernel/setup.c
++++ b/arch/xtensa/kernel/setup.c
+@@ -219,9 +219,13 @@ static int __init parse_bootparam(const bp_tag_t* tag)
  }
  
-+const char *of_flat_dt_get_machine_name(void)
-+{
-+	const char *name;
-+	unsigned long dt_root = of_get_flat_dt_root();
-+
-+	name = of_get_flat_dt_prop(dt_root, "model", NULL);
-+	if (!name)
-+		name = of_get_flat_dt_prop(dt_root, "compatible", NULL);
-+	return name;
-+}
-+
-+/**
-+ * of_flat_dt_match_machine - Iterate match tables to find matching machine.
-+ *
-+ * @default_match: A machine specific ptr to return in case of no match.
-+ * @get_next_compat: callback function to return next compatible match table.
-+ *
-+ * Iterate through machine match tables to find the best match for the machine
-+ * compatible string in the FDT.
-+ */
-+void * __init of_flat_dt_match_machine(void *default_match,
-+				       void * (*get_next_compat)(const char * const**))
-+{
-+	void *data = NULL;
-+	void *best_data = default_match;
-+	const char *const *compat;
-+	unsigned long dt_root;
-+	unsigned int best_score = ~1, score = 0;
-+
-+	dt_root = of_get_flat_dt_root();
-+	while ((data = get_next_compat(&compat))) {
-+		score = of_flat_dt_match(dt_root, compat);
-+		if (score > 0 && score < best_score) {
-+			best_data = data;
-+			best_score = score;
-+		}
-+	}
-+	if (!best_data) {
-+		const char *prop;
-+		long size;
-+
-+		pr_err("\n unrecognized device tree list:\n[ ");
-+
-+		prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
-+		if (prop) {
-+			while (size > 0) {
-+				printk("'%s' ", prop);
-+				size -= strlen(prop) + 1;
-+				prop += strlen(prop) + 1;
-+			}
-+		}
-+		printk("]\n\n");
-+		return NULL;
-+	}
-+
-+	pr_info("Machine model: %s\n", of_flat_dt_get_machine_name());
-+
-+	return best_data;
-+}
-+
- #ifdef CONFIG_BLK_DEV_INITRD
- /**
-  * early_init_dt_check_for_initrd - Decode initrd location from flat tree
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index b365f5a..985a744 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -108,6 +108,10 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
+ #ifdef CONFIG_OF
++bool __initdata dt_memory_scan = false;
  
- extern bool early_init_dt_scan(void *params);
- 
-+const char *of_flat_dt_get_machine_name(void);
-+extern void *of_flat_dt_match_machine(void *default_match,
-+		void * (*get_next_compat)(const char * const**));
+ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+ {
++	if (!dt_memory_scan)
++		return;
 +
- /* Other Prototypes */
- extern void unflatten_device_tree(void);
- extern void unflatten_and_copy_device_tree(void);
+ 	size &= PAGE_MASK;
+ 	add_sysmem_bank(MEMORY_TYPE_CONVENTIONAL, base, base + size);
+ }
+@@ -233,20 +237,13 @@ void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+ 
+ void __init early_init_devtree(void *params)
+ {
+-	/* Setup flat device-tree pointer */
+-	initial_boot_params = params;
++	if (sysmem.nr_banks == 0)
++		dt_memory_scan = true;
+ 
+-	/* Retrieve various informations from the /chosen node of the
+-	 * device-tree, including the platform type, initrd location and
+-	 * size, TCE reserve, and more ...
+-	 */
+-	if (!command_line[0])
+-		of_scan_flat_dt(early_init_dt_scan_chosen, command_line);
++	early_init_dt_scan(params);
+ 
+-	/* Scan memory nodes and rebuild MEMBLOCKs */
+-	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+-	if (sysmem.nr_banks == 0)
+-		of_scan_flat_dt(early_init_dt_scan_memory, NULL);
++	if (!command_line[0])
++		strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
+ }
+ 
+ static int __init xtensa_device_probe(void)
 -- 
 1.8.1.2
