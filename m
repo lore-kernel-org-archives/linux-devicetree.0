@@ -1,50 +1,40 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: devicetree: arm: cpus/cpu nodes
- bindings updates
-Date: Mon, 16 Sep 2013 21:28:16 +0200
-Message-ID: <52375BD0.9030303@free-electrons.com>
-References: <1379330464-27917-1-git-send-email-lorenzo.pieralisi@arm.com> <1379330464-27917-2-git-send-email-lorenzo.pieralisi@arm.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 00/12] clk/exynos convert clock IDs to macros
+Date: Mon, 16 Sep 2013 12:37:09 -0700
+Message-ID: <20130916193709.27384.86101@quantum>
+References: <1378462361-13680-1-git-send-email-a.hajda@samsung.com>
+ <8412301.YP2zzplWoe@amdc1227>
+ <070001ceafa5$d4d81a40$7e884ec0$%kim@samsung.com>
+ <523716C9.3000204@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379330464-27917-2-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <523716C9.3000204-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <dave.martin-5wv7dgnIgG8@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: 'Tomasz Figa' <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Andrzej Hajda' <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Kyungmin Park' <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16/09/2013 13:21, Lorenzo Pieralisi wrote:
-> In order to extend the current cpu nodes bindings to newer CPUs
-> inclusive of AArch64 and to update support for older ARM CPUs this
-> patch updates device tree documentation for the cpu nodes bindings.
+Quoting Sylwester Nawrocki (2013-09-16 07:33:45)
+> On 09/12/2013 12:50 PM, Kukjin Kim wrote:
+> > Well...I'm not sure changing to use macro is better or not at this moment...
 > 
-> Main changes:
->     - adds 64-bit bindings
->     - define usage of #address-cells
->     - defines behaviour on pre and post v7 uniprocessor systems
->     - adds ARM 11MPcore specific reg property definition
-> 
+> I think it is. ;) It's really less error prone to have symbolic names instead
+> of the plain numbers. The clock ids are defined in one place and it is more
+> clear what a clock is by looking at symbolic name. It's especially annoying 
+> to use plain numbers where are are many clock in a single node, like 10 or 
+> more. What are you main concerns with this ?
 
-For the Marvell (EBU) related part
-
-Acked-by:Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-I would like to point that pj4b could be split in two flavors:
-pj4b (currently used by Armada 370) and pj4b-mp (currently used
-by Armada XP). The motivation for a such split would be for the errata
-fix which can be different between pj4b and pj4b_mp. As we can
-detect them at runtime, we don't need it from the device tree.
-So we can live with a single pj4b binding.
+I think having the symbolic names is a win for readability.
 
 Regards,
+Mike
 
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+> 
+> --
+> Regards,
+> Sylwester
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
