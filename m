@@ -1,46 +1,73 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm: dts: socfpga: Add support for SD/MMC
-Date: Mon, 16 Sep 2013 10:36:19 -0600
-Message-ID: <52373383.7030601@wwwdotorg.org>
-References: <1378740833-4883-1-git-send-email-dinguyen@altera.com> <1378740833-4883-4-git-send-email-dinguyen@altera.com> <522E398F.3080100@wwwdotorg.org> <1963011.uUY4o6LRbA@flatron>
+Subject: Re: [RFC PATCH alt 4/4] pinctrl: at91: rework debounce configuration
+Date: Mon, 16 Sep 2013 10:41:22 -0600
+Message-ID: <523734B2.6050208@wwwdotorg.org>
+References: <1379058213-3245-1-git-send-email-b.brezillon@overkiz.com> <1379058813-3489-1-git-send-email-b.brezillon@overkiz.com> <52339479.6030402@wwwdotorg.org> <52340B68.5020505@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1963011.uUY4o6LRbA@flatron>
+In-Reply-To: <52340B68.5020505-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/14/2013 06:30 AM, Tomasz Figa wrote:
-...
-> Just as a side note, correct name is Synopsys, not Synopsis. There are
-> multiple places around Documentation/devicetree where this typo is
-> present[1]. Should we consider correcting this or the typo will have
-> to stay?
-> 
-> [1] git grep -i synopsis Documentation/devicetree/
-> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:* Samsung Exynos specific extensions to the Synopsis Designware Mobile
-> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
-> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:differences between the core Synopsis dw mshc controller properties described
-> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:by synopsis-dw-mshc.txt and the properties used by the Samsung Exynos specific
-> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt:extensions to the Synopsis Designware Mobile Storage Host Controller.
-> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:* Rockchip specific extensions to the Synopsis Designware Mobile
-> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
-> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:differences between the core Synopsis dw mshc controller properties described
-> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:by synopsis-dw-mshc.txt and the properties used by the Rockchip specific
-> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt:extensions to the Synopsis Designware Mobile Storage Host Controller.
-> Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:* Synopsis Designware Mobile Storage Host Controller
-> Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:The Synopsis designware mobile storage host controller is used to interface
-> Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:properties used by the Synopsis Designware Mobile Storage Host Controller.
-> Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt:     - snps,dw-mshc: for controllers compliant with synopsis dw-mshc.
-> Documentation/devicetree/bindings/pci/designware-pcie.txt:* Synopsis Designware PCIe interface
+On 09/14/2013 01:08 AM, boris brezillon wrote:
+> Hello Stephen,
+>=20
+> Le 14/09/2013 00:40, Stephen Warren a =E9crit :
+>> On 09/13/2013 01:53 AM, Boris BREZILLON wrote:
+>>> AT91 SoCs do not support per pin debounce time configuration.
+>>> Instead you have to configure a debounce time which will be used fo=
+r all
+>>> pins of a given bank (PIOA, PIOB, ...).
+=2E..
+>>>   Required properties for pin configuration node:
+=2E..
+>>> -DEBOUNCE_VAL    (0x3fff << 17): debounce val.
+>>
+>> This change would break the DT ABI since it removes a feature that's
+>> already present.
+=2E..
+>> I suppose it's still up to the Atmel maintainers to decide whether t=
+his
+>> is appropriate, or whether the impact to out-of-tree DT files would =
+be
+>> problematic.
+>>
+>> Assuming the DT ABI can be broken, I think I'd prefer to do so, rath=
+er
+>> than take "non-alt" patch 4/4, since a per-pin DEBOUNCE_VAL clearly
+>> doesn't correctly model the HW, assuming the patch description is
+>> correct. I don't think arguments re: the generic pinconf debounce
+>> property hold; if the Linux-specific/internal generic property doesn=
+'t
+>> apply, the DT binding should not be bent to adjust to it, but should
+>> rather still represent the HW itself.
+>=20
+> What about the last point in my list: "reconfigure debounce after
+> startup" ?
+>=20
+> Here is an example that may be problematic:
+>=20
+> Let's say you have one device using multiple configuration of pins
+> ("default", "xxx", "yyy").
+> The "default" config needs a particular debounce time on a given pin =
+and
+> the "xxx" and "yyy"
+> configs need different debounce time on the same pin.
+>=20
+> How would you solve this with this patch approach ?
 
-Those typos only appear to exist in free-form text and not in any
-property names/values. As such, they can all easily be fixed without
-impacting any DT content or ABI.
+Each state has a different pin configuration node, and hence can specif=
+y
+a different debounce value. This patch has no impact on that (it just
+changes whether the state-specific node specifies the debounce value in
+a single standalone property, or encodes it into each entry in the pins
+property, all within the same node).
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
