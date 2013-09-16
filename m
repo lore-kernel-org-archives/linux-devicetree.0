@@ -1,109 +1,52 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] ARM: imx: Add LVDS general-purpose clocks to
- i.MX6Q
-Date: Mon, 16 Sep 2013 14:23:37 +0800
-Message-ID: <20130916062335.GH31147@S2101-09.ap.freescale.net>
-References: <1379310497-12362-1-git-send-email-xobs@kosagi.com>
- <1379310497-12362-2-git-send-email-xobs@kosagi.com>
+From: Archit Taneja <archit-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/4] drm: omap: Enable DT support for DMM
+Date: Mon, 16 Sep 2013 11:58:19 +0530
+Message-ID: <5236A503.90507@ti.com>
+References: <1379063679-4869-1-git-send-email-archit@ti.com> <1379063679-4869-4-git-send-email-archit@ti.com> <CAF6AEGu7eRFhrQZUD-43AOHNQtRWeyxYga1dnir=qUo1mQ9ebA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1379310497-12362-2-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAF6AEGu7eRFhrQZUD-43AOHNQtRWeyxYga1dnir=qUo1mQ9ebA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zhu Richard-R65037 <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Valkeinen, Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andygro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DRI Development <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2013 at 05:48:15AM +0000, Sean Cross wrote:
-> The i.MX6 has two general-purpose LVDS clocks that can be driven
-> from a variety of sources.  This patch adds a mux and a gate for
-> both of these clocks.
-> 
-> Signed-off-by: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/imx6q-clock.txt      |    4 ++++
->  arch/arm/mach-imx/clk-imx6q.c                      |   22 +++++++++++++++++++-
->  2 files changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-> index 5a90a72..35e82c7 100644
-> --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-> @@ -215,6 +215,10 @@ clocks and IDs.
->  	cko2      		200
->  	cko      		201
->  	vdoa      		202
-> +	lvds1_sel		203
-> +	lvds2_sel		204
-> +	lvds1_gate		205
-> +	lvds2_gate		206
->  
->  Examples:
->  
-> diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
-> index 9181a24..971356b 100644
-> --- a/arch/arm/mach-imx/clk-imx6q.c
-> +++ b/arch/arm/mach-imx/clk-imx6q.c
-> @@ -217,6 +217,11 @@ static const char *cko2_sels[] = {
->  	"uart_serial", "spdif", "asrc", "hsi_tx",
->  };
->  static const char *cko_sels[] = { "cko1", "cko2", };
-> +static const char *lvds_sels[] = {
-> +	"dummy", "dummy", "dummy", "dummy", "dummy", "dummy",
-> +	"pll4_audio", "pll5_video", "pll8_mlb", "enet_ref",
-> +	"pcie_ref", "sata_ref",
-> +};
->  
->  enum mx6q_clks {
->  	dummy, ckil, ckih, osc, pll2_pfd0_352m, pll2_pfd1_594m, pll2_pfd2_396m,
-> @@ -251,7 +256,8 @@ enum mx6q_clks {
->  	ssi2_ipg, ssi3_ipg, rom, usbphy1, usbphy2, ldb_di0_div_3_5, ldb_di1_div_3_5,
->  	sata_ref, sata_ref_100m, pcie_ref, pcie_ref_125m, enet_ref, usbphy1_gate,
->  	usbphy2_gate, pll4_post_div, pll5_post_div, pll5_video_div, eim_slow,
-> -	spdif, cko2_sel, cko2_podf, cko2, cko, vdoa, clk_max
-> +	spdif, cko2_sel, cko2_podf, cko2, cko, vdoa,
-> +	lvds1_sel, lvds2_sel, lvds1_gate, lvds2_gate, clk_max
->  };
->  
->  static struct clk *clk[clk_max];
-> @@ -342,6 +348,18 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
->  			base + 0xe0, 0, 2, 0, clk_enet_ref_table,
->  			&imx_ccm_lock);
->  
-> +	clk[lvds1_sel] = imx_clk_mux("lvds1_sel", base + 0x160, 0, 5, lvds_sels, ARRAY_SIZE(lvds_sels));
-> +	clk[lvds2_sel] = imx_clk_mux("lvds2_sel", base + 0x160, 5, 5, lvds_sels, ARRAY_SIZE(lvds_sels));
-> +
-> +	/*
-> +	 * lvds1_gate and lvds2_gate are pseudo-gates.  Both can be
-> +	 * independently configured as clock inputs or outputs.  We treat
-> +	 * the "output_enable" bit as a gate, even though it's really just
-> +	 * enabling clock output.
-> +	 */
-> +	clk[lvds1_gate] = imx_clk_gate("lvds1_gate", "dummy", base + 0x160, 10);
-> +	clk[lvds2_gate] = imx_clk_gate("lvds2_gate", "dummy", base + 0x160, 11);
-> +
->  	/*                                name              parent_name        reg       idx */
->  	clk[pll2_pfd0_352m] = imx_clk_pfd("pll2_pfd0_352m", "pll2_bus",     base + 0x100, 0);
->  	clk[pll2_pfd1_594m] = imx_clk_pfd("pll2_pfd1_594m", "pll2_bus",     base + 0x100, 1);
-> @@ -569,6 +587,8 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
->  	clk_register_clkdev(clk[cko1_sel], "cko1_sel", NULL);
->  	clk_register_clkdev(clk[ahb], "ahb", NULL);
->  	clk_register_clkdev(clk[cko1], "cko1", NULL);
-> +	clk_register_clkdev(clk[lvds1_gate], "lvds1_gate", NULL);
-> +	clk_register_clkdev(clk[lvds2_gate], "lvds2_gate", NULL);
+On Friday 13 September 2013 07:44 PM, Rob Clark wrote:
+> On Fri, Sep 13, 2013 at 5:14 AM, Archit Taneja <archit-l0cyMroinI0@public.gmane.org> wrote:
+>> Enable use of DT for DMM/Tiler.
+>>
+>> Originally worked on by Andy Gross.
+>
+> looks good.. but do we want to get information about # of LUT's, etc,
+> from DT?  Or did we decide that we can reliably get this from the hw?
+> I lost track of that discussion (I guess Andy would remember)..
 
-Again, I do not think you need these clk lookups.
+I am not aware of the discussion either. But looks like we get the LUT 
+info from the HW registers in omap_dmm_probe:
 
-Shawn
+         hwinfo = readl(omap_dmm->base + DMM_PAT_HWINFO);
+         omap_dmm->num_engines = (hwinfo >> 24) & 0x1F;
+         omap_dmm->num_lut = (hwinfo >> 16) & 0x1F;
+         omap_dmm->container_width = 256;
+         omap_dmm->container_height = 128;
 
->  	clk_register_clkdev(clk[arm], NULL, "cpu0");
->  	clk_register_clkdev(clk[pll4_post_div], "pll4_post_div", NULL);
->  	clk_register_clkdev(clk[pll4_audio], "pll4_audio", NULL);
-> -- 
-> 1.7.9.5
-> 
+         atomic_set(&omap_dmm->engine_counter, omap_dmm->num_engines);
 
+         /* read out actual LUT width and height */
+         pat_geom = readl(omap_dmm->base + DMM_PAT_GEOMETRY);
+         omap_dmm->lut_width = ((pat_geom >> 16) & 0xF) << 5;
+         omap_dmm->lut_height = ((pat_geom >> 24) & 0xF) << 5;
+
+         /* increment LUT by one if on OMAP5 */
+         /* LUT has twice the height, and is split into a separate 
+container */
+         if (omap_dmm->lut_height != omap_dmm->container_height)
+                 omap_dmm->num_lut++;
+
+
+Archit
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
