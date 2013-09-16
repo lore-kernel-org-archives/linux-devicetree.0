@@ -1,40 +1,45 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 00/12] clk/exynos convert clock IDs to macros
-Date: Mon, 16 Sep 2013 12:37:09 -0700
-Message-ID: <20130916193709.27384.86101@quantum>
-References: <1378462361-13680-1-git-send-email-a.hajda@samsung.com>
- <8412301.YP2zzplWoe@amdc1227>
- <070001ceafa5$d4d81a40$7e884ec0$%kim@samsung.com>
- <523716C9.3000204@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3] PWM: PXA: add device tree support to PWM driver
+Date: Mon, 16 Sep 2013 13:44:49 -0600
+Message-ID: <52375FB1.5050700@wwwdotorg.org>
+References: <1379091281-23662-1-git-send-email-mikedunn@newsguy.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <523716C9.3000204-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1379091281-23662-1-git-send-email-mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Tomasz Figa' <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Andrzej Hajda' <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Kyungmin Park' <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sylwester Nawrocki (2013-09-16 07:33:45)
-> On 09/12/2013 12:50 PM, Kukjin Kim wrote:
-> > Well...I'm not sure changing to use macro is better or not at this moment...
+On 09/13/2013 10:54 AM, Mike Dunn wrote:
+> This patch adds device tree support to the PXA's PWM driver.  Only an OF match
+> table is added; nothing needs to be extracted from the device tree node.  The
+> existing ID table is reused for the match table data.
 > 
-> I think it is. ;) It's really less error prone to have symbolic names instead
-> of the plain numbers. The clock ids are defined in one place and it is more
-> clear what a clock is by looking at symbolic name. It's especially annoying 
-> to use plain numbers where are are many clock in a single node, like 10 or 
-> more. What are you main concerns with this ?
+> Tested on a Palm Treo 680 (both platform data and DT cases).
 
-I think having the symbolic names is a win for readability.
+> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
 
-Regards,
-Mike
+> +- compatible: should be one of:
+> +  - "marvell,pxa250-pwm"
+> +  - "marvell,pxa270-pwm"
+> +  - "marvell,pxa168-pwm"
+> +  - "marvell,pxa910-pwm"
 
-> 
-> --
-> Regards,
-> Sylwester
+Not just one of, but possible more than one...
+
+> diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+
+> +		pwm0: pwm@40b00000 {
+> +			compatible = "marvell,pxa270-pwm";
+
+I thought the assertion was that pax270 and pxa250 were both compatible?
+If so, that should be:
+
+		compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
