@@ -1,150 +1,212 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma
- reserved memory
-Date: Mon, 16 Sep 2013 09:12:36 +0200
-Message-ID: <5236AF64.80607@samsung.com>
-References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com>
- <1377527959-5080-4-git-send-email-m.szyprowski@samsung.com>
- <20130829224637.D09183E1222@localhost> <52209278.8040106@samsung.com>
- <DAF223EB-C84C-4E82-A24A-ACD0A3A0559F@codeaurora.org>
- <20130909160154.8D7183E0F23@localhost>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 2/7] usb: dwc3: adapt dwc3 core to use Generic PHY Framework
+Date: Mon, 16 Sep 2013 10:25:09 +0300
+Message-ID: <5236B255.1020105@ti.com>
+References: <1378136591-7463-1-git-send-email-kishon@ti.com> <1378136591-7463-3-git-send-email-kishon@ti.com> <5231BF7A.3080104@ti.com> <5236725E.2090302@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20130909160154.8D7183E0F23@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5236725E.2090302@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: balbi@ti.com, bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, linux@arm.linux.org.uk, grant.likely@linaro.org, s.nawrocki@samsung.com, galak@codeaurora.org, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, george.cherian@ti.com, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi,
 
-On 9/9/2013 6:01 PM, Grant Likely wrote:
-> On Fri, 30 Aug 2013 15:26:24 -0500, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> > On Aug 30, 2013, at 7:39 AM, Marek Szyprowski wrote:
-> > > On 8/30/2013 12:46 AM, Grant Likely wrote:
-> > >> On Mon, 26 Aug 2013 16:39:18 +0200, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> > >> > +	- "reserved-memory-region" - compatibility is defined, given
-> > >> > +	  region is assigned for exclusive usage for by the respective
-> > >> > +	  devices.
-> > >>
-> > >> BTW, just so you're aware there is already a binding for marking regions
-> > >> as reserved. It was recently added to arch/powerpc/kernel/prom.c.
-> > >> Unfortunately it doesn't look like it got documented. Search for
-> > >> "reserved-ranges". However, I don't think it blocks your work here. That
-> > >> binding doesn't provide any way for matching devices to reserved ranges.
-> > >> It is only for telling the kernel "hands of that memory".
-> > >
-> > > ok, good to know.
-> >
-> > So I think the most generic compatible should effectively be the same
-> > as 'reserved-ranges', ie this region shouldn't be touched by the
-> > kernel.
-> >
-> > Than we can build on top of that with more specific compatibles.
-> >
-> > I have examples from FSL networking SoCs where we would carve out
-> > memory for backing storage managed completely by the HW and Linux
-> > wouldn't need to touch it, however we might have a
-> > "fsl,qman-backing-store" compat encase we might want some debug code
-> > in linux to look at the region of memory.
-> >
-> > I've got examples at qualcomm where we have shared data structures in
-> > specific memory regions between different processors that aren't cache
-> > coherent, so want the memory not to be marked as cacheable by Linux
-> > when it accesses it.  Again we'd have a "qcom,smem" prop on top of the
-> > "reserved-memory-region".
->
-> I think that is a reasonable approach, and works really well for regions
-> associated with specific hardware because the hardware driver can be
-> responsible for wiring it up to CMA or manage the region directly.
-> Whatever the driver desires to do.
->
-> It still remains what to do for generic regions that any device can use.
-> As I've previously said, I don't like calling out "CMA" specifically in
-> the compatible property because that happens to be a Linux
-> implementation specific details. Two years from now someone may propose
-> a new allocator that should take over what used to be handled by CMA
-> (kind of like how CMA may end up taking over from ION)....
->
-> Alright, I've thought about it some more and it probably does make sense
-> to use an additional compatible string. Marek originally suggested
-> "linux,contiguous-memory-region". I later suggested "shareable-memory-region",
-> but that's actually a worse name because it doesn't have any reference
-> to what the region is for (I was fixating on the kernel being able to
-> use unallocated pages; but that is also an implementation detail). I
-> exercise my right to change my mind and agree that contiguous is
-> appropriate here. But instead of calling out the contiguous allocator,
-> the binding should specifically lay out the usage model for these
-> regions. I would change the contiguous-memory binding to state the
-> following:
-> 	Contiguous-memory is a region of general purpose memory from
-> 	which large buffers of contiguous memory can be allocated.
-> 	Contiguous buffers are often used for DMA buffers. The operating
-> 	system may use the memory for any purpose, but must immediately
-> 	release the pages if a contiguous buffer is required.
->
-> So the way I read things, the current proposal would be:
->
-> The generic form for do-not-touch memory:
-> 	compatible = "reserved-memory";
->   - I've dropped '-region' because I think it is redundant
->   - The kernel will not make use of this memory except for when a driver picks it up
->
-> For contiguous memory:
-> 	compatible = "contiguous-memory", "reserved-memory"
->
-> For contiguous memory that Linux will use by default if a specific
-> region isn't specified.
-> 	compatible = "contiguous-memory", "reserved-memory"
-> 	linux,default-contiguous-region;
->   - I stuck with a linux, prefix here because I haven't come up with a
->     non-linux way to describe this.
->
-> Memory that specific hardware can pick up:
-> 	compatible = "qcom,smem", "reserved-memory"
->
-> Nodes with a 'size' property and without a 'reg' property need to have a
-> region allocated and reserved. The allocated region needs to be cached
-> somewhere. We could create a data structure for tracking the reserved
-> regions, or could write it in directly. While I shudder at the thought of
-> modifying the device tree at runtime by the kernel, it might just be the
-> sanest implementation at this time. I'd like to see what the
-> implementation looks like. (Since this is potentially controversial, I
-> would recommend implementing the exact regions in on patch, and add
-> dynamically allocated regions as a follow-up patch)
->
-> As far as proper implementation is concerned, I think it should be
-> explicit in the binding that the kernel should automatically exclude
-> anything under the reserved-memory node, regardless of the compatible
-> value. Merely being a child of the reserved-memory node immediately
-> means that it is a reserved memory region.
+On 09/16/2013 05:52 AM, Kishon Vijay Abraham I wrote:
+> On Thursday 12 September 2013 06:49 PM, Roger Quadros wrote:
+>> On 09/02/2013 06:43 PM, Kishon Vijay Abraham I wrote:
+>>> Adapted dwc3 core to use the Generic PHY Framework. So for init, exit,
+>>> power_on and power_off the following APIs are used phy_init(), phy_exit(),
+>>> phy_power_on() and phy_power_off().
+>>>
+>>> However using the old USB phy library wont be removed till the PHYs of all
+>>> other SoC's using dwc3 core is adapted to the Generic PHY Framework.
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/usb/dwc3.txt |    6 ++-
+>>>   drivers/usb/dwc3/Kconfig                       |    1 +
+>>>   drivers/usb/dwc3/core.c                        |   49 ++++++++++++++++++++++++
+>>>   drivers/usb/dwc3/core.h                        |    7 ++++
+>>>   4 files changed, 61 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> index e807635..471366d 100644
+>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>>> @@ -6,11 +6,13 @@ Required properties:
+>>>    - compatible: must be "snps,dwc3"
+>>>    - reg : Address and length of the register set for the device
+>>>    - interrupts: Interrupts used by the dwc3 controller.
+>>> +
+>>> +Optional properties:
+>>>    - usb-phy : array of phandle for the PHY device.  The first element
+>>>      in the array is expected to be a handle to the USB2/HS PHY and
+>>>      the second element is expected to be a handle to the USB3/SS PHY
+>>> -
+>>> -Optional properties:
+>>> + - phys: from the *Generic PHY* bindings
+>>> + - phy-names: from the *Generic PHY* bindings
+>>>    - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+>>>
+>>>   This is usually a subnode to DWC3 glue to which it is connected.
+>>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+>>> index cfc16dd..ad7ce83 100644
+>>> --- a/drivers/usb/dwc3/Kconfig
+>>> +++ b/drivers/usb/dwc3/Kconfig
+>>> @@ -3,6 +3,7 @@ config USB_DWC3
+>>>       depends on (USB || USB_GADGET) && GENERIC_HARDIRQS && HAS_DMA
+>>>       depends on EXTCON
+>>>       select USB_PHY
+>>> +    select GENERIC_PHY
+>>>       select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
+>>>       help
+>>>         Say Y or M here if your system has a Dual Role SuperSpeed
+>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>> index 428c29e..485d365 100644
+>>> --- a/drivers/usb/dwc3/core.c
+>>> +++ b/drivers/usb/dwc3/core.c
+>>> @@ -82,6 +82,12 @@ static void dwc3_core_soft_reset(struct dwc3 *dwc)
+>>>
+>>>       usb_phy_init(dwc->usb2_phy);
+>>>       usb_phy_init(dwc->usb3_phy);
+>>> +
+>>> +    if (dwc->usb2_generic_phy)
+>>> +        phy_init(dwc->usb2_generic_phy);
+>>> +    if (dwc->usb3_generic_phy)
+>>> +        phy_init(dwc->usb3_generic_phy);
+>>> +
+>>>       mdelay(100);
+>>>
+>>>       /* Clear USB3 PHY reset */
+>>> @@ -343,6 +349,11 @@ static void dwc3_core_exit(struct dwc3 *dwc)
+>>>   {
+>>>       usb_phy_shutdown(dwc->usb2_phy);
+>>>       usb_phy_shutdown(dwc->usb3_phy);
+>>> +
+>>> +    if (dwc->usb2_generic_phy)
+>>> +        phy_power_off(dwc->usb2_generic_phy);
+>>> +    if (dwc->usb3_generic_phy)
+>>> +        phy_power_off(dwc->usb3_generic_phy);
+>>>   }
+>>>
+>>>   #define DWC3_ALIGN_MASK        (16 - 1)
+>>> @@ -427,6 +438,23 @@ static int dwc3_probe(struct platform_device *pdev)
+>>>           dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
+>>>       }
+>>>
+>>> +    if (of_property_read_bool(node, "phys") || pdata->has_phy) {
+>>> +        dwc->usb2_generic_phy = devm_phy_get(dev, "usb2-phy");
+>>> +        if (IS_ERR(dwc->usb2_generic_phy)) {
+>>> +            dev_err(dev, "no usb2 phy configured yet");
+>>> +            return PTR_ERR(dwc->usb2_generic_phy);
+>>> +        }
+>>> +
+>>> +        dwc->usb3_generic_phy = devm_phy_get(dev, "usb3-phy");
+>>> +        if (IS_ERR(dwc->usb3_generic_phy)) {
+>>> +            dev_err(dev, "no usb3 phy configured yet");
+>>> +            return PTR_ERR(dwc->usb3_generic_phy);
+>>> +        }
+>>> +    } else {
+>>> +        dwc->usb2_generic_phy = NULL;
+>>> +        dwc->usb3_generic_phy = NULL;
+>>> +    }
+>>> +
+>>>       /* default to superspeed if no maximum_speed passed */
+>>>       if (dwc->maximum_speed == USB_SPEED_UNKNOWN)
+>>>           dwc->maximum_speed = USB_SPEED_SUPER;
+>>> @@ -450,6 +478,11 @@ static int dwc3_probe(struct platform_device *pdev)
+>>>       usb_phy_set_suspend(dwc->usb2_phy, 0);
+>>>       usb_phy_set_suspend(dwc->usb3_phy, 0);
+>>>
+>>> +    if (dwc->usb2_generic_phy)
+>>> +        phy_power_on(dwc->usb2_generic_phy);
+>>> +    if (dwc->usb3_generic_phy)
+>>> +        phy_power_on(dwc->usb3_generic_phy);
+>>> +
+>>>       spin_lock_init(&dwc->lock);
+>>>       platform_set_drvdata(pdev, dwc);
+>>>
+>>> @@ -576,6 +609,11 @@ static int dwc3_remove(struct platform_device *pdev)
+>>>       usb_phy_set_suspend(dwc->usb2_phy, 1);
+>>>       usb_phy_set_suspend(dwc->usb3_phy, 1);
+>>>
+>>> +    if (dwc->usb2_generic_phy)
+>>
+>> if (IS_ERR())
+> 
+> I assign NULL to usb2_generic_phy and usb3_generic_phy in case the dts entry doesn't have a *phys* property.
+> The IS_ERR of usb2_generic_phy is treated as an error condition and probe will fail.
 
-It looks that my proposal for the reserved memory nodes causes much more
-controversy than I expected when I've sent a pull request to Linus:
-https://lkml.org/lkml/2013/9/15/151
-http://www.spinics.net/lists/arm-kernel/msg273548.html
+OK.
 
-Fixing those issues requires further discussion. Frankly, right now I
-really have no idea which way should I go. The /reserved-ranges node seems
-to be easy to match particular reserved memory region with a given device.
-I'm also not really convinced if it makes sense to add a code for finding
-and matching a reserved memory region to every device driver, which might
-need it. I would really like to get some more feedback on the Ben's
-comment.
+>>
+>>> +        phy_power_off(dwc->usb2_generic_phy);
+>>> +    if (dwc->usb3_generic_phy)
+>>
+>> if (IS_ERR())
+>>
+>> here and everywhere else in this patch.
+>>
+>>> +        phy_power_off(dwc->usb3_generic_phy);
+>>> +
+>>>       pm_runtime_put(&pdev->dev);
+>>>       pm_runtime_disable(&pdev->dev);
+>>>
+>>> @@ -673,6 +711,11 @@ static int dwc3_suspend(struct device *dev)
+>>>       usb_phy_shutdown(dwc->usb3_phy);
+>>>       usb_phy_shutdown(dwc->usb2_phy);
+>>>
+>>> +    if (dwc->usb2_generic_phy)
+>>> +        phy_exit(dwc->usb2_generic_phy);
+>>> +    if (dwc->usb3_generic_phy)
+>>> +        phy_exit(dwc->usb3_generic_phy);
+>>> +
+>>>       return 0;
+>>>   }
+>>>
+>>> @@ -683,6 +726,12 @@ static int dwc3_resume(struct device *dev)
+>>>
+>>>       usb_phy_init(dwc->usb3_phy);
+>>>       usb_phy_init(dwc->usb2_phy);
+>>> +
+>>> +    if (dwc->usb2_generic_phy)
+>>> +        phy_init(dwc->usb2_generic_phy);
+>>> +    if (dwc->usb3_generic_phy)
+>>> +        phy_init(dwc->usb3_generic_phy);
+>>> +
+>>>       msleep(100);
+>>>
+>>>       spin_lock_irqsave(&dwc->lock, flags);
+>>> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+>>> index f8af8d4..01ec7d7 100644
+>>> --- a/drivers/usb/dwc3/core.h
+>>> +++ b/drivers/usb/dwc3/core.h
+>>> @@ -31,6 +31,8 @@
+>>>   #include <linux/usb/gadget.h>
+>>>   #include <linux/usb/otg.h>
+>>>
+>>> +#include <linux/phy/phy.h>
+>>> +
+>>>   /* Global constants */
+>>>   #define DWC3_EP0_BOUNCE_SIZE    512
+>>>   #define DWC3_ENDPOINTS_NUM    32
+>>> @@ -613,6 +615,8 @@ struct dwc3_scratchpad_array {
+>>>    * @dr_mode: requested mode of operation
+>>>    * @usb2_phy: pointer to USB2 PHY
+>>>    * @usb3_phy: pointer to USB3 PHY
+>>> + * @usb2_generic_phy: pointer to USB2 PHY
+>>> + * @usb3_generic_phy: pointer to USB3 PHY
+>>
+>> Why duplicate usbX_phy and usbX_generic_phy? Can't we just have one
+>> for each type and call it usbX_phy?
+> 
+> There was an already existing phy library in usb which usesusb_phy. There might still be users using the existing usb phy library. Until all the users have completely migrated to the generic PHY framework, this would co-exist.
+> 
+OK.
 
-In any case, the code will also change significantly, so I assume that the
-best, what can be done now is to revert the current version and start from
-the scratch with a new, complete proposal.
-
-Best regards
--- 
-Marek Szyprowski
-Samsung R&D Institute Poland
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
