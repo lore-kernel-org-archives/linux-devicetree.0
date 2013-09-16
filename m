@@ -1,66 +1,104 @@
-From: Sebastian Reichel <sre@debian.org>
-Subject: Re: [RFCv2 3/3] ARM: dts: N900: Add SSI information
-Date: Mon, 16 Sep 2013 17:01:47 +0200
-Message-ID: <20130916150147.GA14047@earth.universe>
-References: <1379277856-24571-1-git-send-email-sre@debian.org>
- <1379277856-24571-4-git-send-email-sre@debian.org>
- <CAAwP0s0e-gYkNA78eQH7x2VJbM1byaisUeqU8YbbeWUbKwsxCQ@mail.gmail.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v3] PWM: PXA: add device tree support to PWM driver
+Date: Mon, 16 Sep 2013 17:10:15 +0200
+Message-ID: <201309161710.15800.marex@denx.de>
+References: <1379091281-23662-1-git-send-email-mikedunn@newsguy.com> <201309151607.04244.marex@denx.de> <523718D3.4050003@newsguy.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAwP0s0e-gYkNA78eQH7x2VJbM1byaisUeqU8YbbeWUbKwsxCQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Javier Martinez Canillas <martinez.javier@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <523718D3.4050003-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Dear Mike Dunn,
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 09/15/2013 07:07 AM, Marek Vasut wrote:
+> > Dear Mike Dunn,
+> > 
+> >> This patch adds device tree support to the PXA's PWM driver.  Only an OF
+> >> match table is added; nothing needs to be extracted from the device tree
+> >> node.  The existing ID table is reused for the match table data.
+> >> 
+> >> Tested on a Palm Treo 680 (both platform data and DT cases).
+> >> 
+> >> Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+> >> ---
+> >> Changle log:
+> >> v3:
+> >> - remove support for the polarity flag
+> >> - remove per-chip pwm index cell; define custom of_xlate()
+> >> 
+> >>    (now #pwm-cells = <1>)
+> >> 
+> >> - "compatible" strings for all devices added to OF match table
+> >> - various stylistic changes recommended by reviewers
+> >> 
+> >> v2:
+> >> - of_match_table contains only the "pxa250-pwm" compatible string;
+> >> require one device instance per pwm
+> >> - add Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+> >> - add support for polarity flag in DT and implement set_polarity()
+> >> method
+> >> 
+> >>   (the treo 680 inverts the signal between pwm out and backlight)
+> >> 
+> >> - return -EINVAL instead of -ENODEV if platform data or DT node not
+> >> found - output dev_info string if platform data missing
+> >> - expanded CC list of patch
+> >> 
+> >>  Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 31 ++++++++++++
+> >>  arch/arm/boot/dts/pxa27x.dtsi                     | 24 +++++++++
+> >>  drivers/pwm/pwm-pxa.c                             | 62
+> >> 
+> >> +++++++++++++++++++++++ 3 files changed, 117 insertions(+)
+> >> 
+> >>  create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+> >> b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt new file mode 100644
+> >> index 0000000..6fcf90c
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+> >> @@ -0,0 +1,31 @@
+> >> +Marvell PWM controller
+> >> +
+> >> +Required properties:
+> >> +- compatible: should be one of:
+> >> +  - "marvell,pxa250-pwm"
+> >> +  - "marvell,pxa270-pwm"
+> >> +  - "marvell,pxa168-pwm"
+> >> +  - "marvell,pxa910-pwm"
+> > 
+> > This really is something I dont quite understand. Why should the driver
+> > list _every_ _single_ existing CPU that contains such PWM block? Is
+> > there any agreement about that? For me, it'd make much more sense to
+> > list only the CPUs where the IP block actually changed in some way, so
+> > that the differences can be discerned that way.
+> 
+> I believe that this was Stephen's suggestion.
+> 
+> I actually don't object myself.  For the price of a few strings, it
+> - clearly shows which SoCs the driver supports
+> - ensures that any future differences are handled cleanly (e.g., if a hw
+> bug in one is discovered and a work-around is implemented)
+> - keeps thngs clean if support for another processor which does have pwm hw
+> differences is added
+> 
+> Especially the third point... otherwise, you have the case of a somewhat
+> confusing many-to-one mapping of processors to compatible strings.
 
-Hi,
+OK, to push it ad-absurdum, shall we not start listing every single revision of 
+the CPU as well ? Like pxa250a0 250a1 etc ? Yes , this many-to-one mapping is 
+something I don't quite understand, that's why I'd love to see a good reasoning 
+from Stephen.
 
-> Is the Synchronous Serial Interface (SSI)  only supported by
-> OMAP34xx/OMAP35xx SoC and not by OMAP36xx/OMAP37xx SoC?
->=20
-> I'm asking this since if SSI is supported by both we should add the
-> device nodes in omap3.dtsi instead of omap34xx.dtsi.
->=20
-> I thought that all OMAP3 SoC supported SSI and all OMAP4 SoC supported
-> HSI but I guess I was wrong...
-
-I just do not know. Information about the SSI core is not included
-in the public OMAP TRM. It only lists the memory space as reserved.
-
-Thus I only included it in OMAP34xx, which is used in Nokia N900 and
-must support SSI.
-
--- Sebastian
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSNx1bAAoJENju1/PIO/qaOVUQAKFOU5QX6CGyWq647P1idzBq
-VwzZpJUSScmjcZBMlvD2ogMREJhOyPr6gsj4ClzlYCkH1drGrBHCgSsIt4PdnYh2
-JXODjsAtdSMg6hC9r4eG4KECSoXLNduRvhzLB/ejNMwJuCFwuHX3x9JCCIBReg+g
-4/Vxf6x5kJJr7bZuG3Mw66/MAQh87w/l0k4LVDiQP/U2Jd7dWvyYiOCbYwngaOwY
-mFUr6lR2nltamKytJkiNOP55uNKywhwXJ/pTse8NQdQQZ92ymn64RglshJ4/1R76
-PsXwfz7aWoyYvdZUSHVBM0XXszLxqghPYcsdXyQnrImVPh9fxMJxoJ2EJxkrvaRG
-DnYKr7C8+60aahGY676yM2dyfiK0EanZ1nWXb3kYq6ZednUaV7f+wsHsHzc3PtJd
-yQx3dCus6bGieVPxYCp0UUS9AsR6MbnOXa1HRkUkEl42LZwCE8N6pcOJJq2tyRi1
-JH1r2WXHEYC0y26yxLBJ1NF6DoOf66h48OU/VhOdqg//W74JSuu1D/7zMj/Pb9v+
-llZZfBsPYNxErUtZ1yCAKD+5RTsns4vv1pN7a+ANJ6I+dAZss0MBRArD6QUlYug8
-yY4gFmfAPSJV6lGA/ohLMNAyfINkz+4WtgIqXzeaAufo3S0nrLSZag6ReD+j+fGA
-iMffh7ZQBKn/4M0pdYHD
-=aYve
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
