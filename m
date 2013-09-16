@@ -1,55 +1,126 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: All device tree bindings need maintainer ack or just the 'interesting'
- ones.
-Date: Mon, 16 Sep 2013 11:17:47 -0500
-Message-ID: <52372F2B.3030504@gmail.com>
-References: <52345182.1080609@kernel.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
+Date: Mon, 16 Sep 2013 10:24:08 -0600
+Message-ID: <523730A8.9060201@wwwdotorg.org>
+References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com> <523395DC.5080009@wwwdotorg.org> <CA+V-a8sVyJ1TrTSiaj8vpaD+f_qJ5Hp287E3HuHJ_pRzzmdAvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52345182.1080609-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CA+V-a8sVyJ1TrTSiaj8vpaD+f_qJ5Hp287E3HuHJ_pRzzmdAvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/14/2013 07:07 AM, Jonathan Cameron wrote:
-> Hi All,
-> 
-> I'm getting a lot of IIO related device tree bindings at the moment.
-> Most are pretty trivial e.g.
-> 
-> http://marc.info/?l=linux-iio&m=137881790217809&w=2
+On 09/13/2013 11:23 PM, Prabhakar Lad wrote:
+> Hi Stephen,
+>=20
+> This patch should have been marked as RFC.
+>=20
+> Thanks for the review.
+>=20
+> On Sat, Sep 14, 2013 at 4:16 AM, Stephen Warren <swarren-3lzwWm7+WeqIh2JisoIxyg@public.gmane.org=
+g> wrote:
+>> On 09/13/2013 05:57 AM, Prabhakar Lad wrote:
+>>> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>
+>>> This patch fixes the DT binding properties of adv7343 decoder.
+>>> The pdata which was being read from the DT property, is removed
+>>> as this can done internally in the driver using cable detection
+>>> register.
+>>>
+>>> This patch also removes the pdata of ADV7343 which was passed from
+>>> DA850 machine.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.tx=
+t b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+>>
+>>>  Required Properties :
+>>>  - compatible: Must be "adi,adv7343"
+>>> +- reg: I2C device address.
+>>> +- vddio-supply: I/O voltage supply.
+>>> +- vddcore-supply: core voltage supply.
+>>> +- vaa-supply: Analog power supply.
+>>> +- pvdd-supply: PLL power supply.
+>>
+>> Old DTs won't contain those properties. This breaks the DT ABI if th=
+ose
+>> properties are required. Is that acceptable?
+>
+> As of now adv7343 via DT binding is not enabled in any platforms
+> so this wont break any DT ABI.
 
-Looks reasonable. My only comment is '-' is preferred over '_'.
+Well, if the binding has already been written, it technically already i=
+s
+an ABI. Perhaps the binding can be fixed if it isn't in use yet, but
+this is definitely not the correct approach to DT.
 
-> I know you are probably still working out how the device tree maintainership
-> is going to work in the long run, but in the meantime do you want me to hold
-> these on an Ack from one of the maintainers and/or to ensure that they are all posted
-> to devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org?
+>> If it is, I think we should document that older versions of the bind=
+ing
+>> didn't require those properties, so they may in fact be missing.
+>>
+>> I note that this patch doesn't actually update the driver to
+>> regulator_get() anything. Shouldn't it?
+>
+> As of now the driver isn=92t enabling/accepting the regulators,
+> so should I add those in DT properties or not ?
 
-I think if it is something self-contained to a node using existing
-binding definitions and typically just a new compatible string like the
-above case, then they don't need an ack. The main requirement in this
-case is that compatible strings and other properties are documented. For
-new or changes to common bindings, then they should be acked. If in
-doubt, you can always require an ack on a case by case basis.
+The binding should describe the HW, not what the driver does/doesn't ye=
+t
+do. I wrote the above because it looked like the driver was broken, not
+to encourage you to remove properties from the binding. How does the
+driver work if it doesn't enable the required regulators though, I
+wonder? I suppose the boards this driver has been tested on all must
+used fixed (non-SW-controlled) regulators.
 
-> Really the question is do you want to be completely treated like any other subsystem,
-> where, if a driver touches it, in how ever trivial a fashion, the assumption is it
-> would be unwise to not attempt to get an Ack from the relevant maintainer.
-> 
-> There are plenty of more 'interesting' IIO binding questions out there and obviously
-> those need the input from the list and maintainers!
-> 
-> In the meantime, we'll send everything to devicetree-u79uwXL29TaiAVqoAR/hOA@public.gmane.org
+>>>  Optional Properties :
+>>> -- adi,power-mode-sleep-mode: on enable the current consumption is =
+reduced to
+>>> -                           micro ampere level. All DACs and the in=
+ternal PLL
+>>> -                           circuit are disabled.
+>>> -- adi,power-mode-pll-ctrl: PLL and oversampling control. This cont=
+rol allows
+>>> -                        internal PLL 1 circuit to be powered down =
+and the
+>>> -                        oversampling to be switched off.
+>>> -- ad,adv7343-power-mode-dac: array configuring the power on/off DA=
+C's 1..6,
+>>> -                           0 =3D OFF and 1 =3D ON, Default value w=
+hen this
+>>> -                           property is not specified is <0 0 0 0 0=
+ 0>.
+>>> -- ad,adv7343-sd-config-dac-out: array configure SD DAC Output's 1 =
+and 2, 0 =3D OFF
+>>> -                              and 1 =3D ON, Default value when thi=
+s property is
+>>> -                              not specified is <0 0>.
+>>
+>> At a very quick glance, it's not really clear why those properties a=
+re
+>> being removed. They seem like HW configuration, so might be fine to =
+put
+>> into DT. What replaces these?
+>=20
+> Yes these were HW configuration but, its now internally handled in
+> the driver.  The 'ad,adv7343-power-mode-dac' property which enabled t=
+he
+> DAC's 1..6 , so now in the driver by default all the DAC's are enable=
+d by
+> default and enable unconnected DAC auto power down. Similarly
+> 'ad,adv7343-sd-config-dac-out' property enabled SD DAC's 1..2 but
+> now is enabled by reading the CABLE DETECT register which tells
+> the status of DAC1/2.
 
-That should always be the case whether we require an ack or not.
-
-Rob
-
+OK, that's probably fine for the two properties you mentioned (you
+didn't describe two of them...). Some more discussion on why SW doesn't
+need these options might be useful in the patch description. Note that
+the discussion should be written for software in general (i.e. any OS's
+driver), and not for Linux's specific driver, since DT is not tied to
+any one OS.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
