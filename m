@@ -1,110 +1,58 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 27/28] metag: use common of_flat_dt_match_machine
-Date: Mon, 16 Sep 2013 18:09:23 -0500
-Message-ID: <1379372965-22359-28-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 19/28] arm: set initrd_start/initrd_end for fdt scan
+Date: Mon, 16 Sep 2013 18:09:15 -0500
+Message-ID: <1379372965-22359-20-git-send-email-robherring2@gmail.com>
 References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, James Hogan <james.hogan@imgtec.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-Convert metag to use the common of_flat_dt_get_machine_name function.
+In order to unify the initrd scanning for DT across architectures, make
+arm set initrd_start and initrd_end instead of the physical addresses.
+This is aligned with all other architectures.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: James Hogan <james.hogan@imgtec.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- arch/metag/kernel/devtree.c | 67 ++++++++++++---------------------------------
- 1 file changed, 18 insertions(+), 49 deletions(-)
+ arch/arm/mm/init.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/metag/kernel/devtree.c b/arch/metag/kernel/devtree.c
-index 2c6ee6d..b26bcb4 100644
---- a/arch/metag/kernel/devtree.c
-+++ b/arch/metag/kernel/devtree.c
-@@ -28,6 +28,19 @@ void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
- 	return alloc_bootmem_align(size, align);
- }
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index febaee7..9eeb1cd 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -77,11 +77,11 @@ static int __init parse_tag_initrd2(const struct tag *tag)
  
-+static void * __init arch_get_next_mach(const char *const **match)
-+{
-+	static struct machine_desc *mdesc = __arch_info_begin;
-+	struct machine_desc *m = mdesc;
-+
-+	if (m >= __arch_info_end)
-+		return NULL;
-+
-+	mdesc++;
-+	*match = m->dt_compat;
-+	return m;
-+}
-+
- /**
-  * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
-  * @dt:		virtual address pointer to dt blob
-@@ -37,56 +50,12 @@ void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
-  */
- struct machine_desc * __init setup_machine_fdt(void *dt)
+ __tagtable(ATAG_INITRD2, parse_tag_initrd2);
+ 
+-#ifdef CONFIG_OF_FLATTREE
++#if defined(CONFIG_OF_FLATTREE) && defined(CONFIG_BLK_DEV_INITRD)
+ void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
  {
--	struct boot_param_header *devtree = dt;
--	struct machine_desc *mdesc, *mdesc_best = NULL;
--	unsigned int score, mdesc_score = ~1;
--	unsigned long dt_root;
--	const char *model;
--
--	/* check device tree validity */
--	if (be32_to_cpu(devtree->magic) != OF_DT_HEADER)
--		return NULL;
--
--	/* Search the mdescs for the 'best' compatible value match */
--	initial_boot_params = devtree;
--	dt_root = of_get_flat_dt_root();
--
--	for_each_machine_desc(mdesc) {
--		score = of_flat_dt_match(dt_root, mdesc->dt_compat);
--		if (score > 0 && score < mdesc_score) {
--			mdesc_best = mdesc;
--			mdesc_score = score;
--		}
--	}
--	if (!mdesc_best) {
--		const char *prop;
--		long size;
--
--		pr_err("\nError: unrecognized/unsupported device tree compatible list:\n[ ");
--
--		prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
--		if (prop) {
--			while (size > 0) {
--				printk("'%s' ", prop);
--				size -= strlen(prop) + 1;
--				prop += strlen(prop) + 1;
--			}
--		}
--		printk("]\n\n");
-+	struct machine_desc *mdesc;
- 
-+	early_init_dt_scan(dt);
-+	mdesc = of_flat_dt_match_machine(NULL, arch_get_next_mach);
-+	if (!mdesc)
- 		dump_machine_table(); /* does not return */
--	}
--
--	model = of_get_flat_dt_prop(dt_root, "model", NULL);
--	if (!model)
--		model = of_get_flat_dt_prop(dt_root, "compatible", NULL);
--	if (!model)
--		model = "<unknown>";
--	pr_info("Machine: %s, model: %s\n", mdesc_best->name, model);
--
--	/* Retrieve various information from the /chosen node */
--	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
--
--	return mdesc_best;
- 
-+	return mdesc;
+-	phys_initrd_start = start;
+-	phys_initrd_size = end - start;
++	initrd_start = (unsigned long)__va(start);
++	initrd_end = (unsigned long)__va(end);
  }
+ #endif /* CONFIG_OF_FLATTREE */
+ 
+@@ -351,6 +351,11 @@ void __init arm_memblock_init(struct meminfo *mi,
+ 	memblock_reserve(__pa(_stext), _end - _stext);
+ #endif
+ #ifdef CONFIG_BLK_DEV_INITRD
++	/* FDT scan will populate initrd_start */
++	if (initrd_start) {
++		phys_initrd_start = __virt_to_phys(initrd_start);
++		phys_initrd_size = initrd_end - initrd_start;
++	}
+ 	if (phys_initrd_size &&
+ 	    !memblock_is_region_memory(phys_initrd_start, phys_initrd_size)) {
+ 		pr_err("INITRD: 0x%08llx+0x%08lx is not a memory region - disabling initrd\n",
 -- 
 1.8.1.2
