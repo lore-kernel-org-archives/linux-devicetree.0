@@ -1,44 +1,30 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Subject: Re: [PATCH v3] PWM: PXA: add device tree support to PWM driver
-Date: Mon, 16 Sep 2013 13:44:49 -0600
-Message-ID: <52375FB1.5050700@wwwdotorg.org>
-References: <1379091281-23662-1-git-send-email-mikedunn@newsguy.com>
+Date: Mon, 16 Sep 2013 13:45:31 -0600
+Message-ID: <52375FDB.8090405@wwwdotorg.org>
+References: <1379091281-23662-1-git-send-email-mikedunn@newsguy.com> <201309151607.04244.marex@denx.de> <523718D3.4050003@newsguy.com> <201309161710.15800.marex@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379091281-23662-1-git-send-email-mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <201309161710.15800.marex-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2013 10:54 AM, Mike Dunn wrote:
-> This patch adds device tree support to the PXA's PWM driver.  Only an OF match
-> table is added; nothing needs to be extracted from the device tree node.  The
-> existing ID table is reused for the match table data.
-> 
-> Tested on a Palm Treo 680 (both platform data and DT cases).
+On 09/16/2013 09:10 AM, Marek Vasut wrote:
+...
+> OK, to push it ad-absurdum, shall we not start listing every single revision of 
+> the CPU as well? Like pxa250a0 250a1 etc ? Yes , this many-to-one mapping is 
 
-> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+It's not about CPU revisions, it's about revisions of the SoC that
+contain the IP block.
 
-> +- compatible: should be one of:
-> +  - "marvell,pxa250-pwm"
-> +  - "marvell,pxa270-pwm"
-> +  - "marvell,pxa168-pwm"
-> +  - "marvell,pxa910-pwm"
+> something I don't quite understand, that's why I'd love to see a good reasoning 
+> from Stephen.
 
-Not just one of, but possible more than one...
-
-> diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-
-> +		pwm0: pwm@40b00000 {
-> +			compatible = "marvell,pxa270-pwm";
-
-I thought the assertion was that pax270 and pxa250 were both compatible?
-If so, that should be:
-
-		compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
+Please see the earlier discussions.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
