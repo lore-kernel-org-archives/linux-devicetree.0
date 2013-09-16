@@ -1,42 +1,106 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [RFCv2 3/3] ARM: dts: N900: Add SSI information
-Date: Mon, 16 Sep 2013 19:25:41 +0200
-Message-ID: <CABxcv==p02u8goDGJHFW0HtoPetxsRk+nmujnTqNDcGuVY0+mg@mail.gmail.com>
-References: <1379277856-24571-1-git-send-email-sre@debian.org>
-	<1379277856-24571-4-git-send-email-sre@debian.org>
-	<CAAwP0s0e-gYkNA78eQH7x2VJbM1byaisUeqU8YbbeWUbKwsxCQ@mail.gmail.com>
-	<20130916150147.GA14047@earth.universe>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
+Date: Mon, 16 Sep 2013 10:35:40 -0700
+Message-ID: <20130916173540.GA3481@roeck-us.net>
+References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
+ <52373314.5070806@wwwdotorg.org>
+ <20130916164927.GB21352@roeck-us.net>
+ <5237390E.5070203@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130916150147.GA14047@earth.universe>
-Sender: linux-doc-owner@vger.kernel.org
-To: Javier Martinez Canillas <martinez.javier@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vg>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5237390E.5070203-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2013 at 5:01 PM, Sebastian Reichel <sre@debian.org> wrote:
-> Hi,
->
->> Is the Synchronous Serial Interface (SSI)  only supported by
->> OMAP34xx/OMAP35xx SoC and not by OMAP36xx/OMAP37xx SoC?
->>
->> I'm asking this since if SSI is supported by both we should add the
->> device nodes in omap3.dtsi instead of omap34xx.dtsi.
->>
->> I thought that all OMAP3 SoC supported SSI and all OMAP4 SoC supported
->> HSI but I guess I was wrong...
->
-> I just do not know. Information about the SSI core is not included
-> in the public OMAP TRM. It only lists the memory space as reserved.
->
-> Thus I only included it in OMAP34xx, which is used in Nokia N900 and
-> must support SSI.
->
+On Mon, Sep 16, 2013 at 10:59:58AM -0600, Stephen Warren wrote:
+> On 09/16/2013 10:49 AM, Guenter Roeck wrote:
+> > On Mon, Sep 16, 2013 at 10:34:28AM -0600, Stephen Warren wrote:
+> >> On 09/12/2013 06:55 PM, Soren Brinkmann wrote:
+> >>> Add a driver for SILabs 570, 571, 598, 599 programmable oscillators.
+> >>> The devices generate low-jitter clock signals and are reprogrammable via
+> >>> an I2C interface.
+> >>
+> >>> diff --git a/Documentation/devicetree/bindings/clock/silabs,si570.txt b/Documentation/devicetree/bindings/clock/silabs,si570.txt
+> >>
+> >>> +Required properties:
+> >>> + - compatible: Shall be one of "silabs,si57x", "silabs,si59x".
+> >>> + - reg: I2C device address.
+> >>> + - #clock-cells: From common clock bindings: Shall be 0.
+> >>> + - factory-fout: Factory set default frequency
+> >>
+> >> So, there's no way to query this from the device at all? Looking at the
+> >> data-sheet, all the frequency generation parameters are in registers,
+> >> and the device supports I2C read commands. As such, I'm not convinced
+> >> this property is necessary.
+> >
+> > Unfortunately, the chip does not report the factory setting for fout,
+> > so the property is needed. The chip can not be programmed without it.
+> 
+> So fout is not the default overall output frequency, but rather
+> something internal that that feeds into the frequency generation
+> process, and the registers in the device only describe that frequency
+> generation process, not the frequency that feeds into it?
+> 
+Here is what the datasheet has to say:
 
-I see... hopefully someone from TI can shed some light on this.
+"The device's default output frequency is set at the
+factory and can be reprogrammed through the two-wire
+I2C serial port. Once the device is powered down, it will
+return to its factory-set default output frequency."
 
-> -- Sebastian
->
+So it is a default output frequency. However, the chip not report
+what it is, and it can be programmed to other frequencies (and
+commonly is). In reality it is a reference frequency which happens
+to match the output frequency if all registers are at their
+default (post-reset) setting.
 
-Best regards,
-Javier
+Correct, the registers only describe the frequency generation process relative
+to the reference frequency, so that frequency has to be known to calculate
+the correct register values for other frequencies.
+
+> If so, it might be worth enhancing the binding documentation to briefly
+> describe that. Presumably the details are all in the HW documentation,
+> but it'd be nice if the binding doc was obviously correct without having
+> to fully understand the entire HW documentation.
+> 
+> >>> +Optional properties:
+> >>> + - initial-fout: Initial output frequency to set during probe
+> >>
+> >> "probe" is a Linux-specific concept. This property should be removed. If
+> >> the driver is asked to set a specific frequency, it should do so, but I
+> >> don't think it should program something pro-actively just because it
+> >> starts up.
+> >>
+> >> If this property is acceptable, it'd be better to describe it more along
+> >> the lines of the following:
+> >>
+> >> initial-fout: The frequency at which the system requires the clock to
+> >> operate.
+> >
+> > It should probably be something like "clock-frequency". In many use cases
+> > the programmed frequency is set to a constant frequency at system startup
+> > and never changed, similar to other clocks.
+> 
+> I was going to suggest that too, but re-considered since I think
+> clock-frequency is more appropriate for fixed-frequency clocks, rather
+> than to specify the value at which a programmable clock generator should
+> operate?
+> 
+> I don't think we have a good story yet for how to represent
+> how-we-want-the-clock-tree-configured, as opposed to representing the HW
+> itself (which is what DT should be more about).
+> 
+In many cases the chip _is_ used to generate a fixed frequency, so we will
+have to have a means to describe it. That it _can_ be used differently is a
+different matter. After all, that is true for many clock generators.
+
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
