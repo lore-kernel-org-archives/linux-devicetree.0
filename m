@@ -1,173 +1,119 @@
-From: Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PROPOSAL] ARM/FDT: passing multiple binaries to a kernel
-Date: Mon, 16 Sep 2013 19:01:26 +0200
-Message-ID: <52373966.9000504@linaro.org>
-References: <52260608.2030202@linaro.org> <20130915123744.48AD1C42C2D@trevor.secretlab.ca>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Mon, 16 Sep 2013 11:09:08 -0600
+Message-ID: <52373B34.4060709@wwwdotorg.org>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <522FBED9.9000305@collabora.co.uk> <5230C7F6.3080803@wwwdotorg.org> <3653629.tapNZSuWhS@lem-wkst-02>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130915123744.48AD1C42C2D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, boot-architecture-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Julien Grall <julien.grall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <3653629.tapNZSuWhS@lem-wkst-02>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, joelf@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2013 02:37 PM, Grant Likely wrote:
-> On Tue, 03 Sep 2013 17:53:44 +0200, Andre Przywara <andre.przywara-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Hi,
+On 09/16/2013 10:03 AM, Lars Poeschel wrote:
+> On Monday 16 September 2013 13:43:50, Stephen Warren wrote:
+>> On 09/10/2013 06:52 PM, Javier Martinez Canillas wrote:
+>>> On 09/11/2013 12:34 AM, Stephen Warren wrote:
+>>>> On 09/10/2013 03:37 PM, Mark Brown wrote:
+>>>>> On Tue, Sep 10, 2013 at 01:53:47PM -0600, Stephen Warren wrote:
+>>>>>> Doesn't this patch call gpio_request() on the GPIO first, and
+>>>>>> hence prevent the driver's own gpio_request() from succeeding,
+>>>>>> since the GPIO is already requested? If this is not a problem, it
+>>>>>> sounds like a bug in gpio_request() not ensuring mutual exclusion
+>>>>>> for the GPIO.
+>>>>>
+>>>>> Or at the very least something that's likely to break in the
+>>>>> future.
+>>>>
+>>>> Looking at the GPIO code, it already prevents double-requests:
+>>>>>         if (test_and_set_bit(FLAG_REQUESTED, &desc->flags) == 0) {
+>>>>>         
+>>>>>                 desc_set_label(desc, label ? : "?");
+>>>>>                 status = 0;
+>>>>>         
+>>>>>         } else {
+>>>>>         
+>>>>>                 status = -EBUSY;
+>>>>>                 module_put(chip->owner);
+>>>>>                 goto done;
+>>>>>         
+>>>>>         }
+>>>>
+>>>> And I tested it in practice, and it really does fail.
+>>>
+>>> I'm a bit confused now. Doesn't the fact that gpio_request() prevents
+>>> double-requests mean that the use-case that you say that have not been
+>>> covered by this patch can't actually happen?
+>>>
+>>> I mean, if when using board files an explicit call to gpio_request() is
+>>> made by platform code then a driver can't call gpio_request() for the
+>>> same gpio. So this patch shouldn't cause any regression since is just
+>>> auto-requesting a GPIO when is mapped as an IRQ in a DT which basically
+>>> will be the same that was made by board files before.
 >>
->> a normal Linux kernel currently supports reading the start and end
->> address of a single binary blob via the FDT's /chosen node.
->> This will be interpreted as the location of an initial RAM disk.
+>> I'm not familiar with the board file path; Linus describe this.
+> 
+> It seems Linus is busy, I'll try to help out.
+> 
+>> It sounds like that path is for the case where a driver /only/ cares
+>> about using a pin as an IRQ, and hence the driver only calls
+>> request_irq(). The board file is (earlier) calling gpio_request() in
+>> order to set up that input pin to work correctly as an IRQ. Hence, there
+>> is no double-call to gpio_request().
+> 
+> No, a board file is not a path or something. A board file describes the wirings 
+> and specifics of an (embedded) computer in C code. The complete knowledge of 
+> how things are connected on a board and which drivers to use is in this piece 
+> of code. Devicetree replaces legacy board files. These two do pretty much the 
+> same, but board files have more power, because they are executed and can 
+> contain whatever code is needed to setup a board.
+> But you are right, the driver only calls request_irq(), the board file set up 
+> the pin before and told the driver which irq to use.
+
+path == code path, or execution path. I'm well aware of what board files
+are in general.
+
+I'm just not familiar with board files that employ this particular hack.
+
+>> The case I said wouldn't work is:
 >>
->> The Xen hypervisor itself is a kernel, but needs up to _two_ binaries
->> for proper operation: a Dom0 Linux kernel and it's associated initrd.
->> On x86 this is solved via the multiboot protocol used by the Grub
->> bootloader, which supports to pass an arbitrary number of binary modules
->> to any kernel.
+>> * This patch calls gpio_request() in order to make the pin work as an IRQ.
 >>
->> Since in the ARM world we have the versatile device tree, we don't need
->> to implement the mulitboot protocol.
+>> * Driver uses the pin as both a GPIO and an IRQ, and hence calls
+>> gpio_request() and request_irq().
 >>
->> So I'd like to propose a new binding which denotes binary modules a
->> kernel can use at it's own discretion.
->> The need is triggered by the Xen hypervisor (which already uses a very
->> similar scheme), but the approach is deliberately chosen to be as
->> generic as possible to allow future uses (like passing firmware blobs
->> for devices or the like).
->> Credits for this go to Ian Campbell, who started something very similar
->> [1] for the Xen hypervisor. The intention of this proposal is to make
->> this generic and publicly documented.
->>
->> Looking forward to any comments!
->>
->> Thanks,
->> Andre.
->>
->> [1]
->> http://xenbits.xen.org/gitweb/?p=xen.git;a=blob;f=docs/misc/arm/device-tree/booting.txt;h=94cd3f18a4e1317a35e1255bf5c6e1e091001d1a;hb=HEAD
->> ----------------------------
->> * Multiple boot modules device tree bindings
->>
->> Boot loaders wanting to pass multiple additional binaries to a kernel
->> shall add a node "module" for each binary blob under the /chosen node
->> with the following properties:
->>
->> - compatible:
->>       compatible = "boot,module";
->>     A bootloader may add names to more specifically describe the module,
->>     e.g. Xen may use "xen,dom0-kernel" or "xen,dom0-ramdisk".
->>     If possible a kernel should be able to use modules even without a
->>     descriptive naming, by enumerating them in order and using hard-coded
->>     meanings for each module (e.g. first is kernel, second is initrd).
->>
->> - reg: specifies the base physical address and size of a region in
->>     memory where the bootloader loaded the respective binary data to.
->>
->> - bootargs:
->>     An optional property describing arguments to use for this module.
->>     Could be a command line or configuration data.
->>
->> Example:
->> /chosen {
->>       #size-cells = <0x1>;
->>       #address-cells = <0x1>;
->>       module@0 {
->>           compatible = "xen,linux-zimage", "xen,multiboot-module",
->> "boot,module";
->>           reg = <0x80000000 0x003dcff8>;
->>           bootargs = "console=hvc0 earlyprintk ro root=/dev/sda1 nosmp";
->>       };
->>       module@1 {
->>           compatible = "xen,linux-initrd", "xen,multiboot-module",
->> "boot,module";
->>           reg = <0x08000000 0x00123456>;
->>       };
+>> So, there's a double-call to gpio_request(), which fails, and the driver
+>> fails to probe.
+> 
+> Again, no. In that case you don't define your pin as irq in the device tree, 
+> but only as gpio. The driver knows how to handle gpios and turn them into irqs 
+> so you have to present it a gpio not an irq. In that case the patch will not 
+> call gpio_request() and there is no double-call to gpio_request().
 
-Grant,
+That is a way to make this patch work, yes. However, there's no
+guarantee that every driver or DT binding works this way. Forcing
+bindings to work that way is forcing Linux-internal details upon
+bindings, which should not be done. Put another way, I don't believe
+there's any rule when writing DT bindings that states that bindings must
+not describe the same pin as both a GPIO and an IRQ, although admittedly
+that may be unusual.
 
-thanks for looking at this. Appreciate your comments.
+...
+> I agree with you that it would be the best if the only call would be 
+> request_irq and the chip driver programs the HW appropriately. It would be a 
+> dream, but unfortunately this is not possible at the moment. This is something 
+> that Linus pointed out very very early in this whole discussion. The gpio and 
+> irq frameworks don't share any information. The irq framework has no chance to 
+> program the HW, because it will never find the related gpio.
+> For this to work the frameworks have to change (and possibly all drivers/board 
+> files/whatever using request_irq() and/or request_gpio()) have to change.
+> That is something that I do not dare to do alone.
 
-> The moment you pull in a 'reg' property, your required to property parse
-> #size-cells and #address-cells and also 'ranges' which is missing from
-> the above.
-
-You mean that early boot code has to read #size-cells and #address-cells 
-and act accordingly when parsing the reg property? So just more code in 
-early boot? But that would easily open the door for 64bit addresses for 
-instance, right?
-
-> I don't necessarily object to that, but it can be a lot to
-> ask for during early boot.
-
-I don't think Xen in particular has a lot of problems with that. The DT 
-implementation is quite capable (see Julien's latest updates).
-
- > It also looks really weird in the chosen node.
-
-TBH this initrd syntax looks a bit weird to me in general, not following 
-the nice and well defined DT way (no compatible, separate properties for 
-start and length, ...)
-
-> For boot time artifacts like this, I'd rather see a duplication of
-> the linux,initrd- pattern. Something like:
-> /chosen {
-> 	xen,linux-zimage-start = <0x80000000>;
-> 	xen,linux-zimage-end = <0x803dcff8>;
-> 	linux,initrd-start = <0x8000000>;
-> 	linux,initrd-end = <0x8123456>;
-> }
-
-To me that sounds like a hack to avoid more coding work.
-The problem with that is that it would introduce a Xen specific property 
-(actually two).
-So from a user's perspective you want:
-
-a) generic properties to support future OSes without much hassle (using 
-the DT's compatible semantic)
-b) specifying load address and length in the normal way
-c) adding command lines
-d) potentially adding more arbitrary properties
-e) allowing an arbitrary number of modules
-
-To just go ahead with another hard-coded property to make life easier 
-for us kernel level developers doesn't sound very convincing to me.
-And especially supporting multiple modules would be very hackish then.
-
-> If have two reason for this; consistency and simplicity. Consistent
-> because it matches what Linux already uses,
-
-But this is actually not consistent with the rest of the DT 
-architecture. Defining an own node for that looks like a perfect match 
-to me in the DT world.
-
-> and really easy to parse
-> without mucking with ranges or #address/size-cells. The assumption is
-> that during early boot the system is dealing with a 1:1 mapped physical
-> address and there isn't any bus translations that need to be processed.
-
-I see your point with early boot code constraints. But my idea was to 
-create a flexible and generic solution, so that there will be a 
-framework for bootloaders to specify blobs without needing updates every 
-time someone comes up with a need for one. On x86 there was once such a 
-need for microcode updates which couldn't be easily satisfied because 
-Linux/x86 itself does not support the multiboot protocol.
-
-> Question: what is the need for the xen,linux-initrd node? Why can't the
-> existing "linux,initrd-*" properties continue to be used?
-
-The main driver for this was to avoid patching bootloaders just to boot 
-Xen specifically. Rather we want to patch bootloaders to support some 
-kind of "multiboot" protocol once and let Xen piggy-back on this. I 
-think that is somewhat driven by experiences in the x86 world, were 
-especially kernel people are reluctant to support something just for 
-Xen's need.
-
-Regards,
-Andre.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is a controller-specific issue, and has nothing to do with the GPIO
+or IRQ frameworks. The driver for the combined irq/gpio_chip simply
+needs to program the HW when the IRQ is requested or set up. The Tegra
+driver already works this way, so there's actual proof that it is
+possible to do this in practice.
