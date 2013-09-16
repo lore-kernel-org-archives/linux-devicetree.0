@@ -1,59 +1,68 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC PATCH alt 4/4] pinctrl: at91: rework debounce configuration
-Date: Mon, 16 Sep 2013 12:14:09 -0600
-Message-ID: <52374A71.5090305@wwwdotorg.org>
-References: <1379058213-3245-1-git-send-email-b.brezillon@overkiz.com> <1379058813-3489-1-git-send-email-b.brezillon@overkiz.com> <52339479.6030402@wwwdotorg.org> <52340B68.5020505@overkiz.com> <523734B2.6050208@wwwdotorg.org> <52373D6D.4010109@overkiz.com>
+From: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: msm: Move msm devicetrees under a Qualcomm dir
+Date: Mon, 16 Sep 2013 11:28:33 -0700
+Message-ID: <52374DD1.9040209@codeaurora.org>
+References: <1379003839-16068-1-git-send-email-galak@codeaurora.org> <CAOesGMisWLwYKotGDFPW6PyHJs=_+fohTdC08SGjsv2FXaa7Fg@mail.gmail.com> <25E0B143-658E-4CCC-A88A-0AF70FFF33CE@codeaurora.org> <CAOesGMhfdvyJ_2AA2e8iO_2e=q7KgpyNbcriPKFw-RLormG6bA@mail.gmail.com> <3E38F48E-EE41-4564-84A1-36CF07B08811@codeaurora.org> <20130912224737.GA24937@codeaurora.org> <9EA264FE-7621-458D-8333-9340DDBFC4EE@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52373D6D.4010109@overkiz.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: boris brezillon <b.brezillon@overkiz.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Richard Genoud <richard.genoud@gmail.com>, Jiri Kosina <jkosina@suse.cz>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9EA264FE-7621-458D-8333-9340DDBFC4EE-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org list" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2013 11:18 AM, boris brezillon wrote:
-> Hello Stephen,
-> 
-> On 16/09/2013 18:41, Stephen Warren wrote:
->> On 09/14/2013 01:08 AM, boris brezillon wrote:
-...
->>> Let's say you have one device using multiple configuration of pins
->>> ("default", "xxx", "yyy").
->>> The "default" config needs a particular debounce time on a given pin and
->>> the "xxx" and "yyy"
->>> configs need different debounce time on the same pin.
->>>
->>> How would you solve this with this patch approach ?
+On 9/12/2013 7:05 PM, Kumar Gala wrote:
+> On Sep 12, 2013, at 5:47 PM, David Brown wrote:
+>
+>> On Thu, Sep 12, 2013 at 12:55:36PM -0500, Kumar Gala wrote:
+>>> On Sep 12, 2013, at 12:06 PM, Olof Johansson wrote:
+>>>> My original request to please use a common prefix for your product
+>>>> families stands. Please prefix with msm-*, or if you have to, qcom-*
+>>>> instead, since you guys can't seem to make your mind up on standard
+>>>> prefixes (msm, apq, etc).
+>>> This is silly, I dont see the reason to go with
+>>> qcom-apq<SOC>-<BOARD>.dts and than in the future drop qcom- when we
+>>> mostly likely shift to a dir structure.  As engineers we are all too
+>>> aware of the lack of sanity in marketing names, but its what we have
+>>> so we have to live with it.
+>> At least what we'd decided a year or two ago was to call _everything_
+>> with an msm* prefix.  If marketing comes up with cute prefixes for
+>> things, we would basically ignore them.  So, under that, it should be
+>> an msm8074-dragonboard.  Admittedly, it might be a little confusing
+>> with the name of the product having the apq in it, but as others have
+>> pointed out, I think there is less confusing than not having a common
+>> prefix on our MSM products.
 >>
->> Each state has a different pin configuration node, and hence can specify
->> a different debounce value. ...
-...
-> Actually it does: this patch removes the debounce time setting option from
-> the pin config description. The only thing you can do is enable or
-> disable the debounce filter.
-> 
-> The atmel,default-debounce-div property is not part of the pin group (or
-> pin state) node, it is a global property you define for the whole pinctrl
-> controller (pinctrl node
-> property):
-> 
-> pinctrl {
->         atmel,default-debounce-div=<100...
-...
+>> At least so far, there are no chips where apq vs msm actually
+>> distinguishes anything.  In fact, a simple "decoder ring" would point
+>> out that the 'apq' usually corresponds with the second digit being a
+>> zero.  It doesn't help that we've added an 'mpq' prefix as well.
+>>
+>> I don't really see how to satisfy all of this other than qcom-apq*, or
+>> just continue to use msm*.
 
-Oh, I see. Sorry.
+I think going ahead with what David mentioned  for msm* works if we can 
+be consistent or if we want to explicitly mention apq in the file name, 
+then
+we can rename them to be qcom-msm* or qcom-apq* if people care about the 
+differences between them.
 
-It seems this HW has been designed to just set that configuration up
-once and be done with it.
+>
+> I think msm has run out of steam, especially as more SoCs come out of Qualcomm that aren't just targeting phones & tablets.
+>
+> - k
+>
 
-There really isn't a way to make anything more complex or dynamic work
-correctly. If you try to put the debounce config into a per-state node
-rather than the top-level, how will you reconcile any conflicts? What if
-the gpio-keys default state's node says 10ms, whereas the SDHCI
-controller's default state's node says 100ms? Both those states need to
-be active at the same time. The only way to avoid conflict resolution
-issues like that is to prevent them, and just put the debounce config at
-the top-level, and hence program it once when the driver starts, i.e.
-make the DT exactly match the HW capabilities.
+
+Thanks,
+Rohit Vaswani
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
