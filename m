@@ -1,82 +1,67 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH 1/2] Documentation: devicetree: arm: cpus/cpu nodes
  bindings updates
-Date: Mon, 16 Sep 2013 09:55:28 +0100
-Message-ID: <20130916085528.GA22390@e102568-lin.cambridge.arm.com>
+Date: Mon, 16 Sep 2013 09:57:23 +0100
+Message-ID: <20130916085723.GB22390@e102568-lin.cambridge.arm.com>
 References: <1376559743-31848-1-git-send-email-lorenzo.pieralisi@arm.com>
  <1376559743-31848-2-git-send-email-lorenzo.pieralisi@arm.com>
  <520CE665.8060907@gmail.com>
  <20130815152238.GF17839@e102568-lin.cambridge.arm.com>
  <20130913165708.GC5408@e102568-lin.cambridge.arm.com>
- <52337AEC.9080302@gmail.com>
+ <20130915083658.GH23705@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52337AEC.9080302-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20130915083658.GH23705-g2DYL2Zd6BY@public.gmane.org>
 Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 13, 2013 at 09:51:56PM +0100, Rob Herring wrote:
-> On 09/13/2013 11:57 AM, Lorenzo Pieralisi wrote:
-> > Hi Rob, all,
-> > 
-> > On Thu, Aug 15, 2013 at 04:22:38PM +0100, Lorenzo Pieralisi wrote:
-> >> [adding Andrew, Gregory and Thomas to check the Marvell compatible names]
-> >>
-> >> On Thu, Aug 15, 2013 at 03:32:05PM +0100, Rob Herring wrote:
-> >>> On 08/15/2013 04:42 AM, Lorenzo Pieralisi wrote:
-> >>>> In order to extend the current cpu nodes bindings to newer CPUs
-> >>>> inclusive of AArch64 and to update support for older ARM CPUs this
-> >>>> patch updates device tree documentation for the cpu nodes bindings.
-> >>>>
-> >>>> Main changes:
-> >>>>     - adds 64-bit bindings
-> >>>>     - define usage of #address-cells
-> >>>>     - defines behaviour on pre and post v7 uniprocessor systems
-> >>>>     - adds ARM 11MPcore specific reg property definition
-> >>>>
-> >>>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> >>>> ---
-> >>>>  Documentation/devicetree/bindings/arm/cpus.txt | 424 ++++++++++++++++++++++---
-> >>>>  1 file changed, 377 insertions(+), 47 deletions(-)
-> >>>>
-> >>>
-> >>> The binding looks mostly fine to me.
-> > 
-> > These bindings have still not received an ACK, and need review by
-> > Marvell guys in copy for the new compatible strings below.
+On Sun, Sep 15, 2013 at 09:36:58AM +0100, Andrew Lunn wrote:
+> > > > > +			    "faraday,fa526"
+> > > > > +			    "intel,sa110"
+> > > > > +			    "intel,sa1100"
+> > > > > +			    "marvell,feroceon"
+> > > > > +			    "marvell,mohawk"
+> > > > > +			    "marvell,pj4"
+> > > > > +			    "marvell,sheeva-v7"
+> > > > > +			    "marvell,xsc3"
+> > > > > +			    "marvell,xscale"
+> > > > 
+> > > > Better make sure the Marvell folks are happy with these. We don't need
+> > > > another rename here. I'm too annoyed with all the renames to pay attention.
+> > > 
+> > > Ok, I will verify that, I copied maintainers in.
 > 
-> If you can't get comment, then leave them out if they are not used
-> already. If they are used, then tough shit when they want to change.
+> Hi Lorenzo
 > 
-> > 
-> > Most importantly, we need to make a decision on the pre v7 uniprocessor
-> > systems, where MPIDR/CPUID are non-existent and the reg property is a
-> > pure SW enumeration. Current bindings (ie this patch) define
-> > 
-> > #address-cells = <0>;
-> > 
-> > for those processors (and there are a number of dts in the kernel with that
-> > set-up); Grant and Benjamin had a strong feeling against this choice, I
-> > have to make a decision on how to proceed, please let me know.
+> Here are the compatibility strings we would like, and a comment about
+> which SoCs will/do use them.
 > 
-> I agree that we should define #address-cells to 1 and reg will be simply
-> 0,1,2,etc. in this case.
+> "marvell,feroceon"  - Orion5x
+> "marvell,sheeva-v5" - Mv78xx0, Kirkwood
+> "marvell,pj4a"      - Dove
+> "marvell,pj4b"      - Armada XP, Armada 370, Armada 1500
+> "marvell,mohawk"    - Armada 100
+> 
+> "marvell,xscale" & "marvell,xsc3" should be removed.
+> 
+> The compatibility strings are not correct, or present in all the
+> current <soc>.dtsi files. 
+> 
+> orion5x cpus needs adding.
+> mv78xx0 needs adding.
+> kirkwood.dtsi needs changing.
+> armada-370-xp.dtsi need changing.
+> armada-xp-mv*.dtsi needs changing.
+> 
+> We will deal with these in the next cycle.
 
-Ok, so this means that when these bindings are finally acked and queued
-for merging, there will be a slew of dts in the kernel that will need
-patching (again) and this is likely to ruffle feathers. Honestly I would
-leave this task to platform maintainers, if we all agree.
-
-> This change and fixing the example as I pointed out are what I was
-> waiting to see.
-
-Perfect, given that I got feedback from Andrew, I will be posting a
-final version very soon.
+Thank you very much Andrew, appreciated. I will update the document
+accordingly and should be able to post a final version very soon.
 
 Lorenzo
 
