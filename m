@@ -1,88 +1,50 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/9] of/irq: Introduce __of_irq_to_resource()
-Date: Mon, 16 Sep 2013 16:29:15 -0500
-Message-ID: <5237782B.3030804@gmail.com>
-References: <1379320326-13241-1-git-send-email-treding@nvidia.com> <1379320326-13241-6-git-send-email-treding@nvidia.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH] dts: Fix misspelling of Synopsys
+Date: Mon, 16 Sep 2013 14:45:44 -0700
+Message-ID: <20130916214544.GA15242@quad.lixom.net>
+References: <1379365068-18539-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379320326-13241-6-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1379365068-18539-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2013 03:32 AM, Thierry Reding wrote:
-> This is a version of of_irq_to_resource() that propagates the precise
-> error code instead of returning 0 for all errors. It will be used in
-> subsequent patches to allow further propagation of error codes.
+On Mon, Sep 16, 2013 at 03:57:48PM -0500, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 > 
-> To avoid code duplication, implement of_irq_to_resource() as a wrapper
-> around the new __of_irq_to_resource().
+> s/Synopsis/Synopsys
+> s/synopsis/synopsys
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> CC: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+> Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+> Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 
-I think the callers in this case are manageable to update as well.
-Several cases could simply use irq_of_parse_and_map instead as they just
-pass in a NULL resource.
+Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 
-Rob
 
-> 
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/of/irq.c | 33 +++++++++++++++++++++++++--------
->  1 file changed, 25 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 8225289..57396fd 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -343,15 +343,15 @@ int of_irq_map_one(struct device_node *device, int index, struct of_irq *out_irq
->  }
->  EXPORT_SYMBOL_GPL(of_irq_map_one);
->  
-> -/**
-> - * of_irq_to_resource - Decode a node's IRQ and return it as a resource
-> - * @dev: pointer to device tree node
-> - * @index: zero-based index of the irq
-> - * @r: pointer to resource structure to return result into.
-> - */
-> -int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
-> +static int __of_irq_to_resource(struct device_node *dev, unsigned int index,
-> +				struct resource *r)
->  {
-> -	int irq = irq_of_parse_and_map(dev, index);
-> +	unsigned int irq;
-> +	int ret;
-> +
-> +	ret = of_irq_get(dev, index, &irq);
-> +	if (ret)
-> +		return ret;
->  
->  	/* Only dereference the resource if both the
->  	 * resource and the irq are valid. */
-> @@ -373,6 +373,23 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
->  
->  	return irq;
->  }
-> +
-> +/**
-> + * of_irq_to_resource - Decode a node's IRQ and return it as a resource
-> + * @dev: pointer to device tree node
-> + * @index: zero-based index of the irq
-> + * @r: pointer to resource structure to return result into.
-> + */
-> +int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
-> +{
-> +	int ret;
-> +
-> +	ret = __of_irq_to_resource(dev, index, r);
-> +	if (ret < 0)
-> +		return 0;
-> +
-> +	return ret;
-> +}
->  EXPORT_SYMBOL_GPL(of_irq_to_resource);
->  
->  /**
-> 
+Looks like this is best taken through the DT tree, but if they don't have any
+other fixes we can take it through arm-soc, just let me know.
+
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
