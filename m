@@ -1,69 +1,93 @@
-From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [RFC] binding for nvec mfd device
-Date: Tue, 17 Sep 2013 09:53:02 +0200
-Message-ID: <17687182.lGWlO75r41@fb07-iapwap2.physik.uni-giessen.de>
-References: <1416005.VvfEeGuSWa@ax5200p> <2910047.nJ4yDntMXS@ax5200p> <51F97B92.1040707@wwwdotorg.org>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: "memory" binding issues
+Date: Tue, 17 Sep 2013 09:56:39 +0200
+Message-ID: <1815499.tpfeUKmP6V@flatron>
+References: <1379300274.4098.77.camel@pasglop> <1379371567.3721.46.camel@pasglop> <CAOesGMgE1jiF5OHsmPQz2z66Bcqu0HeAj=taE1vmFK-0-0s2TQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51F97B92.1040707-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMgE1jiF5OHsmPQz2z66Bcqu0HeAj=taE1vmFK-0-0s2TQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-Am Mittwoch, 31. Juli 2013, 15:03:14 schrieb Stephen Warren:
-> The generic I2C bindings already define that the other chips on the I2C
-> bus appear directly underneath the I2C controller's DT node. Perhaps it
-> isn't a big issue to change that, since each I2C controller can define
-> the layout of its own node?
+On Monday 16 of September 2013 15:48:22 Olof Johansson wrote:
+> On Mon, Sep 16, 2013 at 3:46 PM, Benjamin Herrenschmidt
 > 
-> Anyway, we can probably get away without introducing multiple levels by
-> adding some more bits or cells into the reg address for I2C child nodes:
+> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> > On Mon, 2013-09-16 at 10:17 -0600, Stephen Warren wrote:
+> >> On 09/15/2013 08:57 PM, Benjamin Herrenschmidt wrote:
+> >> > [resent to the right list this time around]
+> >> > 
+> >> > Hi folks !
+> >> > 
+> >> > So I don't have the bandwidth to follow closely what's going on,
+> >> > but I
+> >> > just today noticed the crackpot that went into 3.11 as part of
+> >> > commit:
+> >> > 
+> >> > 9d8eab7af79cb4ce2de5de39f82c455b1f796963
+> >> > drivers: of: add initialization code for dma reserved memory
+> >> > 
+> >> > Fist of all, do NOT add (or change) a binding as part of a patch
+> >> > implementing code, it's gross.
+> >> 
+> >> Personally, I would argue the opposite; it's much easier to see
+> >> what's
+> >> going on when it's all together in one patch.
+> > 
+> > One patch series eventually, but not the same patch.
+> > 
+> >> Ensuring ABI stability can
+> >> only be achieved through code review, i.e. splitting into separate
+> >> DT/code patches won't achieve that, so that argument doesn't affect
+> >> this.
+> >> 
+> >> ...
+> >> 
+> >> > Additionally, it has the following issues:
+> >> >  - It describes the "memory" node as /memory, which is WRONG
+> >> > 
+> >> > It should be "/memory@unit-address, this is important because the
+> >> > Linux
+> >> > kernel of_find_device_by_path() isn't smart enough to do partial
+> >> > searches (unlike the real OFW one) and thus to ignore the unit
+> >> > address
+> >> > for search purposes, and you *need* the unit address if you have
+> >> > multiple memory nodes (which you typically do on NUMA machines).
+> >> 
+> >> Perhaps /memory should have had a unit-address, but it never has had
+> >> on
+> > 
+> >> ARM; see arch/arm/boot/dts/skeleton.dtsi which says:
+> > Well, this is a mistake ARM folks might have done from day one but it
+> > should still be fixed :-)
+> > 
+> > A node that has a "reg" property should have the corresponding unit
+> > address.
 > 
-> i2c@xxxxxxxx {
-> 	compatible = "nvidia,tegra20-i2c";
-> 	... resources
-> 	#address-cells = <2>;
+> No, absolutely _NOT_ a requirement. Unit address is only required if
+> needed to disambiguate two properties with the same name.
 > 
-> 	codec {
-> 		// 0 means external slave, 0x1c is slave's address
-> 		reg = <0 0x1c>;
-> 		...
-> 	};
-> 
-> 	tegraslave {
-> 		// 0 means internal slave, 0x80 is controller's address
-> 		reg = <1 0x80>;
-> 		...
-> 	};
-> };
-> 
-> ... where each of those child nodes could be repeated N times. We could
-> also or in 0x80000000 to the reg values in the child nodes rather than
-> using a separate cell if we wanted.
+> If there are no ambiguities, then leaving off the unit address is much
+> preferred.
 
-thinking a little more about this, this is way to complicated. "Master" and 
-"Slave" functions are properties of the same i2c controller. Therefore, just 
-adding a small property to the i2c controller node saying "enable slave 
-support" is sufficient, as all the resources are shared (which is another good 
-argument that it is the same device, hence same node). I would just add the 
-slave i2c address, which is all the slave driver needs, e.g.
-"slave-address = <8c>;" to enable slave mode operation. Both modes can be 
-enabled at the same time (for loopback comm). AFAIK, if only the slave part is 
-used, the master part shouldn't hurt if programmed (same as other way around).
+I'm afraid that I must disagree. For consistency I'd rather go with what 
+Ben said. Please see ePAPR chapter 2.2.1.1, which clearly defines how 
+nodes should be named.
 
-The difficult part is how to specify the master if only the slave is used. As 
-the master is naturally on the same bus as the slave, it should be a child 
-node of the controller. Therefore it needs a special i2c address, maybe 
-0x80000000 as you mentioned above, but this will be rejected by the i2c core. 
-Instantiating the nvec as an i2c client could be another problem.
+Having unit-address whenever the node has a reg property has the nice 
+property of eliminating the need to rename any nodes when adding new one. 
+(Consider the case that you have one subnode somewhere and you omit the 
+unit-address and then you find out that you have to add another subnode 
+with the same name, but another reg value.)
 
-It looks like that the i2c subsystem needs some modifications to allow to 
-specify a master device which is attached to a slave controller. Maybe someone 
-from the i2c folks (cc'ed) can comment on this?
+Best regards,
+Tomasz
 
-Marc
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
