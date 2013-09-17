@@ -1,71 +1,176 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: All device tree bindings need maintainer ack or just the
- 'interesting' ones.
-Date: Tue, 17 Sep 2013 14:30:26 +0100
-Message-ID: <20130917133025.GD26737@e106331-lin.cambridge.arm.com>
-References: <52345182.1080609@kernel.org>
- <52372F2B.3030504@gmail.com>
- <20130917081003.GU16984@lee--X1>
- <20130917112433.GB26737@e106331-lin.cambridge.arm.com>
- <20130917120730.GW16984@lee--X1>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] watchdog: s3c2410_wdt: parse watchdog dt node to read
+ PMU registers adresses
+Date: Tue, 17 Sep 2013 15:30:55 +0200
+Message-ID: <3395282.rv7qzo3E3P@amdc1227>
+References: <1379414623-26329-1-git-send-email-l.krishna@samsung.com>
+ <1379414623-26329-4-git-send-email-l.krishna@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130917120730.GW16984@lee--X1>
+In-reply-to: <1379414623-26329-4-git-send-email-l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2013 at 01:07:30PM +0100, Lee Jones wrote:
-> On Tue, 17 Sep 2013, Mark Rutland wrote:
->=20
-> > On Tue, Sep 17, 2013 at 09:10:03AM +0100, Lee Jones wrote:
-> > > > > http://marc.info/?l=3Dlinux-iio&m=3D137881790217809&w=3D2
-> > > >=20
-> > > > Looks reasonable. My only comment is '-' is preferred over '_'.
-> > >=20
-> > > Ah, in the node name you mean. Yes, I can change that.
-> > >=20
-> > > The compatible string has to stay the same however, as it has to =
-match
-> > > the device name which can't be changed due to possible userspace
-> > > breakage.
-> >=20
-> > I'm not sure I follow why the compatible string must be identical t=
-o the
-> > name appearing to userspace.
->=20
-> It doesn't. It has to be identical to the device name, which I'm
-> guessing is used when populating sysfs.
+Hi Leela,
 
-I still don't understand why the device name must be identical to the
-compatible string.
+Please see my comments below.
 
-The string "st,lsm303dlh_magn" (with the "st," prefix) appears nowhere
-in v3.12-rc1, and the compatible string in the dt doesn't seem to get
-assigned to the device in the i2c core or in
-drivers/iio/magnetometer/st_magn_i2c.c.
+On Tuesday 17 of September 2013 16:13:42 Leela Krishna Amudala wrote:
+> This patch parses the watchdog node to read pmu wdt sys registers
+> addresses and do mask/unmask enable/disable of WDT in probe and s2r
+> scenarios.
+> 
+> Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   14 ++++-
+>  drivers/watchdog/s3c2410_wdt.c                     |   56
+> ++++++++++++++++++++ 2 files changed, 69 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+> b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt index
+> 2aa486c..4c798e3 100644
+> --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+> @@ -7,8 +7,20 @@ occurred.
+>  Required properties:
+>  - compatible : should be "samsung,s3c2410-wdt"
 
-I don't see how the "st,lsm303dlh_magn" string could be getting to
-userspace already such that it could be relying on it.
+Since the WDT block of Exynos 5420 needs some extra configuration in PMU 
+registers, it is no longer compatible with samsung.s3c2410-wdt. Please 
+introduce separate compatible ("samsung,exynos5420-wdt") and make the 
+driver handle the additional configuration only if running on a device with 
+this compatible value.
 
-Am I missing something?
+I'd suggest introducing quirk system to the driver and adding a 
+NEEDS_PMU_CONFIG quirk selected by DT match entry with "samsung,exynos5420-
+wdt" compatible.
 
-Thanks,
-Mark.
+>  - reg : base physical address of the controller and length of memory
+> mapped -	region.
+> +	region and the optional (addresses and length of memory mapped regions
+> +	of) PMU registers for masking/unmasking WDT.
+>  - interrupts : interrupt number to the cpu.
+> 
+>  Optional properties:
+>  - timeout-sec : contains the watchdog timeout in seconds.
+> +- reset-mask-bit: bit number in the PMU registers to program mask/unmask
+> WDT. +
 
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
->=20
+I believe this is mandatory on Exynos 5420 and unused on previous SoCs. It 
+should be handled depending on compatible value.
+
+>
+[...]
+> +static void s3c2410wdt_mask_and_disable_reset(int mask, struct
+> s3c2410_wdt *wdt) +{
+> +	unsigned int value;
+> +
+> +	if (IS_ERR(wdt->pmu_disable_reg) || IS_ERR(wdt->pmu_mask_reset_reg)
+> +					 || (wdt->pmu_mask_bit < 0))
+> +		return;
+
+This function could be called only if respective quirk is active and the 
+check above could be dropped.
+
+> +
+> +	if (mask) {
+> +		value = readl(wdt->pmu_disable_reg);
+> +		value |= (1 << wdt->pmu_mask_bit);
+> +		writel(value, wdt->pmu_disable_reg);
+> +
+> +		value = readl(wdt->pmu_mask_reset_reg);
+> +		value |= (1 << wdt->pmu_mask_bit);
+> +		writel(value, wdt->pmu_mask_reset_reg);
+> +	} else {
+> +		value = readl(wdt->pmu_disable_reg);
+> +		value &= ~(1 << wdt->pmu_mask_bit);
+> +		writel(value, wdt->pmu_disable_reg);
+> +
+> +		value = readl(wdt->pmu_mask_reset_reg);
+> +		value &= ~(1 << wdt->pmu_mask_bit);
+> +		writel(value, wdt->pmu_mask_reset_reg);
+> +	}
+
+This can be greatly simplified by moving readl and writel outside the 
+conditional block, i.e.
+
+	u32 disable, mask_reset;
+
+	disable = readl(wdt->pmu_disable_reg);
+	mask_reset = readl(wdt->pmu_mask_reset_reg);
+
+	if (mask) {
+		disable |= (1 << wdt->pmu_mask_bit);
+		mask_reset |= (1 << wdt->pmu_mask_bit);
+	} else {
+		disable &= ~(1 << wdt->pmu_mask_bit);
+		mask_reset &= ~(1 << wdt->pmu_mask_bit);
+	}
+
+	writel(disable, wdt->pmu_disable_reg);
+	writel(mask_reset, wdt->pmu_mask_reset_reg);
+
+> +}
+> +
+>  static int s3c2410wdt_keepalive(struct watchdog_device *wdd)
+>  {
+>  	struct s3c2410_wdt *wdt = watchdog_get_drvdata(wdd);
+> @@ -341,6 +371,8 @@ static int s3c2410wdt_probe(struct platform_device
+> *pdev) unsigned int wtcon;
+>  	int started = 0;
+>  	int ret;
+> +	struct resource *res;
+> +	unsigned int mask_bit;
+> 
+>  	DBG("%s: probe=%p\n", __func__, pdev);
+> 
+> @@ -369,6 +401,25 @@ static int s3c2410wdt_probe(struct platform_device
+> *pdev) goto err;
+>  	}
+
+The code added below could be handled conditionally and missing PMU 
+registers could simply trigger an error.
+
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	wdt->pmu_disable_reg = devm_ioremap_resource(&pdev->dev, res);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> +	wdt->pmu_mask_reset_reg = devm_ioremap_resource(&pdev->dev, res);
+> +
+> +	if (!IS_ERR(wdt->pmu_disable_reg) && !IS_ERR(wdt->pmu_mask_reset_reg))
+> { +		if (pdev->dev.of_node) {
+> +			if (of_property_read_u32(pdev->dev.of_node,
+> +							"reset-mask-bit",
+> +							&mask_bit)) {
+> +				dev_warn(dev, "reset-mask-bit not specified\n");
+> +				wdt->pmu_mask_bit = -EINVAL;
+> +			} else {
+> +				wdt->pmu_mask_bit = mask_bit;
+> +			}
+> +		}
+> +	}
+> +
+>  	DBG("probe: mapped reg_base=%p\n", wdt->reg_base);
+> 
+>  	wdt->clock = devm_clk_get(dev, "watchdog");
+> @@ -444,6 +495,7 @@ static int s3c2410wdt_probe(struct platform_device
+> *pdev) (wtcon & S3C2410_WTCON_RSTEN) ? "en" : "dis",
+>  		 (wtcon & S3C2410_WTCON_INTEN) ? "en" : "dis");
+> 
+> +	s3c2410wdt_mask_and_disable_reset(0, wdt);
+
+The call above (and further call to this function bellow) could happen 
+conditionally.
+
+Best regards,
+Tomasz
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
