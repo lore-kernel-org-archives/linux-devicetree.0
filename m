@@ -1,45 +1,39 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] video: ARM CLCD: Add DT support
-Date: Tue, 17 Sep 2013 17:51:56 +0100
-Message-ID: <1379436716.9205.25.camel@hornet>
-References: <1379351934-25415-1-git-send-email-pawel.moll@arm.com>
-	 <52376180.1090001@wwwdotorg.org> <1379435799.9205.16.camel@hornet>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: DRA7: provide arch-timer frequenecy parameter
+Date: Tue, 17 Sep 2013 12:55:57 -0400
+Message-ID: <5238899D.60903@ti.com>
+References: <1379436433-24914-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379435799.9205.16.camel@hornet>
+In-Reply-To: <1379436433-24914-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, R Sricharan <r.sricharan-l0cyMroinI0@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Uh, sorry, missed one...
+On Tuesday 17 September 2013 12:47 PM, Nishanth Menon wrote:
+> CNTFREQ isn't pre-programmed on DRA7 just like O5, so provide the
+> same. Without a valid value arch_timer_init results in div0 crash.
+s/same/timer frequency via DT
+> Providing the same is a safer alternative.
+Above statement won't be necessary. 
 
-On Tue, 2013-09-17 at 17:36 +0100, Pawel Moll wrote:
-> On Mon, 2013-09-16 at 20:52 +0100, Stephen Warren wrote:
-> > > +- arm,pl11x,panel-data-pads: array of 24 cells, each of them des=
-cribing
-> > > +				a function of one of the CLD pads,
-> > > +				starting from 0 up to 23; each pad can
-> > > +				be described by one of the following values:
-> > > +	- 0: reserved (not connected)
-> > > +	- 0x100-0x107: color upper STN panel data 0 to 7
-> > ...
-> >=20
-> > I assume those are the raw values that go into the HW?
+> Cc: R Sricharan <r.sricharan-l0cyMroinI0@public.gmane.org>
+> Cc: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+> Cc: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+> Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+> 
+> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> ---
+> 
+Apart from minor change log fix,
 
-No, they can be considered "labels", defining the way pads are used
-(wired). Then, basing on this information, the driver is configuring th=
-e
-cell, eg. selecting STN or TFT mode (thus switching the output between
-panel formatter and raw RGB data source).
-
-Pawe=C5=82
+Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
