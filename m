@@ -1,37 +1,117 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: All device tree bindings need maintainer ack or just the
- 'interesting' ones.
-Date: Tue, 17 Sep 2013 12:24:33 +0100
-Message-ID: <20130917112433.GB26737@e106331-lin.cambridge.arm.com>
-References: <52345182.1080609@kernel.org>
- <52372F2B.3030504@gmail.com>
- <20130917081003.GU16984@lee--X1>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V3] regulator: core: add support for configuring turn-on time through constraints
+Date: Tue, 17 Sep 2013 17:15:54 +0530
+Message-ID: <1379418354-27269-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130917081003.GU16984@lee--X1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2013 at 09:10:03AM +0100, Lee Jones wrote:
-> > > http://marc.info/?l=linux-iio&m=137881790217809&w=2
-> > 
-> > Looks reasonable. My only comment is '-' is preferred over '_'.
-> 
-> Ah, in the node name you mean. Yes, I can change that.
-> 
-> The compatible string has to stay the same however, as it has to match
-> the device name which can't be changed due to possible userspace
-> breakage.
+The Turn-on time of the regulator depends on the regulator device's
+electrical characteristics. Sometimes regulator turn-on time also
+depends on the capacitive load on the given platform and it can be
+more than the datasheet value.
 
-I'm not sure I follow why the compatible string must be identical to the
-name appearing to userspace.
+The driver provides the enable-time as per datasheet.
 
-Thanks,
-Mark.
+Add support for configure the enable ramp time through regulator
+constraints so that regulator core can take this value for enable
+time for that regulator.
+
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Changes from V1:
+- Change property name to regulator-enable-ramp-delay and add more details
+  in DT doc.
+- add the valid pointer check for constraints before accessing it.
+
+Changes from V2:
+- Rephrase the descripton of property regulator-enable-ramp-delay.
+
+ .../devicetree/bindings/regulator/regulator.txt    |    4 ++++
+ drivers/regulator/core.c                           |    2 ++
+ drivers/regulator/of_regulator.c                   |    6 ++++++
+ include/linux/regulator/machine.h                  |    2 ++
+ 4 files changed, 14 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index 2bd8f09..ca81945 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -14,6 +14,10 @@ Optional properties:
+ - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
+   For hardwares which support disabling ramp rate, it should be explicitly
+   intialised to zero (regulator-ramp-delay = <0>) for disabling ramp delay.
++- regulator-enable-ramp-delay: Turn-on time for regulator(in microsecond).
++  This is the time time taken to reach the target voltage from off state.
++  The delay specified in the DT to just completely override what the drivers
++  know.
+ 
+ Deprecated properties:
+ - regulator-compatible: If a regulator chip contains multiple
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index a01b8b3..5217c19 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -1186,6 +1186,8 @@ overflow_err:
+ 
+ static int _regulator_get_enable_time(struct regulator_dev *rdev)
+ {
++	if (rdev->constraints && rdev->constraints->enable_time)
++		return rdev->constraints->enable_time;
+ 	if (!rdev->desc->ops->enable_time)
+ 		return rdev->desc->enable_time;
+ 	return rdev->desc->ops->enable_time(rdev);
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 7827384..ea4f36f 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -23,6 +23,8 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 	const __be32 *min_uA, *max_uA, *ramp_delay;
+ 	struct property *prop;
+ 	struct regulation_constraints *constraints = &(*init_data)->constraints;
++	int ret;
++	u32 pval;
+ 
+ 	constraints->name = of_get_property(np, "regulator-name", NULL);
+ 
+@@ -73,6 +75,10 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 		else
+ 			constraints->ramp_disable = true;
+ 	}
++
++	ret = of_property_read_u32(np, "regulator-enable-ramp-delay", &pval);
++	if (!ret)
++		constraints->enable_time = pval;
+ }
+ 
+ /**
+diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
+index 999b20c..670d154 100644
+--- a/include/linux/regulator/machine.h
++++ b/include/linux/regulator/machine.h
+@@ -95,6 +95,7 @@ struct regulator_state {
+  * @initial_state: Suspend state to set by default.
+  * @initial_mode: Mode to set at startup.
+  * @ramp_delay: Time to settle down after voltage change (unit: uV/us)
++ * @enable_time: Turn-on time of the rails (unit: uS)
+  */
+ struct regulation_constraints {
+ 
+@@ -129,6 +130,7 @@ struct regulation_constraints {
+ 	unsigned int initial_mode;
+ 
+ 	unsigned int ramp_delay;
++	unsigned int enable_time;
+ 
+ 	/* constraint flags */
+ 	unsigned always_on:1;	/* regulator never off when system is on */
+-- 
+1.7.1.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
