@@ -1,35 +1,67 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
-Date: Tue, 17 Sep 2013 10:14:01 -0600
-Message-ID: <52387FC9.1080905@wwwdotorg.org>
-References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com> <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com> <52373314.5070806@wwwdotorg.org> <20130916164927.GB21352@roeck-us.net> <5237390E.5070203@wwwdotorg.org> <20130916173540.GA3481@roeck-us.net> <52374FF7.8040604@wwwdotorg.org> <52380BD5.8080105@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3] PWM: PXA: add device tree support to PWM driver
+Date: Tue, 17 Sep 2013 10:17:23 -0600
+Message-ID: <52388093.2000401@wwwdotorg.org>
+References: <1379091281-23662-1-git-send-email-mikedunn@newsguy.com> <52375FB1.5050700@wwwdotorg.org> <5238621D.3050504@newsguy.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52380BD5.8080105@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Hyun Kwon <hyunk@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5238621D.3050504-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2013 01:59 AM, Sebastian Hesselbarth wrote:
-> On 09/16/2013 08:37 PM, Stephen Warren wrote:
-...
->> Perhaps if clock-frequency is specified, the driver should refuse to
->> provide anything else. If clock-frequency isn't specified, the driver
->> shouldn't touch the HW when it initializes, but should honor any
->> requests that come in from other drivers? That would maintain what I
->> feel is clock-frequency's connection to being a fixed clock.
+On 09/17/2013 08:07 AM, Mike Dunn wrote:
+> On 09/16/2013 12:44 PM, Stephen Warren wrote:
+>> On 09/13/2013 10:54 AM, Mike Dunn wrote:
+>>> This patch adds device tree support to the PXA's PWM driver.  Only an OF match
+>>> table is added; nothing needs to be extracted from the device tree node.  The
+>>> existing ID table is reused for the match table data.
+>>>
+>>> Tested on a Palm Treo 680 (both platform data and DT cases).
+>>
+>>> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+>>
+>>> +- compatible: should be one of:
+>>> +  - "marvell,pxa250-pwm"
+>>> +  - "marvell,pxa270-pwm"
+>>> +  - "marvell,pxa168-pwm"
+>>> +  - "marvell,pxa910-pwm"
+>>
+>> Not just one of, but possible more than one...
 > 
-> For the clk-si5351 programmable clock driver in mainline, it already
-> uses "clock-frequency" for initial clock setup but allows to set it
-> later on. IMHO that is ok, because from a initial point-of-view, an
-> initial frequency is fixed. As soon as the driver takes over, the user
-> is free to do whatever he wants and should not be limited by DT.
-> 
-> But if we vote against that approach, we should probably also modifiy
-> clk-si5351 accordingly.
+> So the phrasing should be "compatible: should be among:" ?
 
-I suppose that approach isn't unreasonable. So, if there's precedent for
-it, this driver may as well follow it.
+I think I've seen "One or more of".
+
+
+>>> diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+>>
+>>> +		pwm0: pwm@40b00000 {
+>>> +			compatible = "marvell,pxa270-pwm";
+>>
+>> I thought the assertion was that pax270 and pxa250 were both compatible?
+>> If so, that should be:
+>>
+>> 		compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
+> 
+> 
+> Indeed.  Currently, they are all the same.  By that logic, shouldn't it be
+> 
+> compatible = "marvell,pxa250-pwm", "marvell,pxa270-pwm", "marvell,pxa168-pwm",
+> "marvell,pxa910-pwm";
+
+compatible should include:
+
+* The exact HW model (so the driver knows exactly which HW is present in
+order to enable any bug quirks).
+* The "first" HW model this HW is compatible with, since this is what
+the driver will bind to (ignoring the possibility of bug quirks).
+
+So, you don't need to include all the values, just two in this case.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
