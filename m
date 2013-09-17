@@ -1,73 +1,71 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH v4 0/2] ARM: dts: Beaglebone MMC fixes
-Date: Tue, 17 Sep 2013 15:30:23 +0200
-Message-ID: <5238596F.9080806@baylibre.com>
-References: <1379010935-25943-1-git-send-email-koen@dominion.thruhere.net>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: All device tree bindings need maintainer ack or just the
+ 'interesting' ones.
+Date: Tue, 17 Sep 2013 14:30:26 +0100
+Message-ID: <20130917133025.GD26737@e106331-lin.cambridge.arm.com>
+References: <52345182.1080609@kernel.org>
+ <52372F2B.3030504@gmail.com>
+ <20130917081003.GU16984@lee--X1>
+ <20130917112433.GB26737@e106331-lin.cambridge.arm.com>
+ <20130917120730.GW16984@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379010935-25943-1-git-send-email-koen@dominion.thruhere.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Koen Kooi <koen@dominion.thruhere.net>
-Cc: linux-kernel@vger.kernel.org, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130917120730.GW16984@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Koen,
+On Tue, Sep 17, 2013 at 01:07:30PM +0100, Lee Jones wrote:
+> On Tue, 17 Sep 2013, Mark Rutland wrote:
+>=20
+> > On Tue, Sep 17, 2013 at 09:10:03AM +0100, Lee Jones wrote:
+> > > > > http://marc.info/?l=3Dlinux-iio&m=3D137881790217809&w=3D2
+> > > >=20
+> > > > Looks reasonable. My only comment is '-' is preferred over '_'.
+> > >=20
+> > > Ah, in the node name you mean. Yes, I can change that.
+> > >=20
+> > > The compatible string has to stay the same however, as it has to =
+match
+> > > the device name which can't be changed due to possible userspace
+> > > breakage.
+> >=20
+> > I'm not sure I follow why the compatible string must be identical t=
+o the
+> > name appearing to userspace.
+>=20
+> It doesn't. It has to be identical to the device name, which I'm
+> guessing is used when populating sysfs.
 
-On 12/09/2013 20:35, Koen Kooi wrote:
-> Here are two patches to fix MMC on beaglebone, one fixes card detect on BBW,
-> the other adds the eMMC entry for BBB and its fixed regulator. After that mmc1
-> gets a nice speed boost by moving to 4-bit mode and LED triggers get assigned.
->
-> This series depends on:
->
-> http://comments.gmane.org/gmane.linux.kernel.stable/63648
-> https://lkml.org/lkml/2013/9/10/454
-> http://comments.gmane.org/gmane.linux.kernel.mmc/22381
+I still don't understand why the device name must be identical to the
+compatible string.
 
-I've just applied it on top of Joel's one.
+The string "st,lsm303dlh_magn" (with the "st," prefix) appears nowhere
+in v3.12-rc1, and the compatible string in the dt doesn't seem to get
+assigned to the device in the i2c core or in
+drivers/iio/magnetometer/st_magn_i2c.c.
+
+I don't see how the "st,lsm303dlh_magn" string could be getting to
+userspace already such that it could be relying on it.
+
+Am I missing something?
 
 Thanks,
-Benoit
+Mark.
 
->
-> Or as git-cherry would put it:
->
-> [koen@rrMBP patches]$ git cherry -v
-> + 564fc88cc64387af5312e2abd8019c75a13223b2 ARM: OMAP2+: am335x-bone*: add DT for BeagleBone Black
-> + e5133ed98acc1c3e01c370b851041a8ca629cd15 ARM: EDMA: Fix clearing of unused list for DT DMA resources
-> + ac71bb58605d3bdd5d14af770a639fb3ff11c612 ARM: dts: add AM33XX EDMA support
-> + 31a8270a299c57c7de7510f44d9dc36fd1787243 ARM: dts: add AM33XX SPI DMA support
-> + 4fa0a4cb9ea17da30cf43085c03e5ec1361a4fc2 ARM: dts: add AM33XX MMC support and documentation
-> + 0553f50bd45f019a0cc11050e2f20bddbf07dfe0 ARM: dts: am335x-bone: add CD for mmc1
-> + 7d64f765630a2921a63b82f93f9959a6de37f29d ARM: dts: am335x-boneblack: add eMMC DT entry
-> + dc96cd4003e2668d8ec7e7fe19e402e97a198f81 ARM: dts: am335x-bone-common: switch mmc1 to 4-bit mode
-> + f8262e78830cda56c936724549ba9f04dddde312 ARM: dts: am335x-bone-common: add cpu0 and mmc1 triggers
->
-> Also available as a git branch at https://github.com/koenkooi/linux/commits/mainline
->
-> Changes since v3:
-> 	Addressed Nishants nitpicks for commit messages
-> 	Addressed Russ' comments about moving LDO3 for mmc1 out of the common dtsi
->
-> Changes since v2:
-> 	Missing pinmux entries for eMMC added
->
-> Changes since v1:
-> 	Removed ti,non-removable entry from eMMC node, see http://marc.info/?l=linux-arm-kernel&m=137889435710552&w=2
-> ---
->
-> Alexander Holler (1):
->    arm: bone: dts: add CD for mmc1
->
-> Koen Kooi (3):
->    am335x-boneblack: add eMMC DT entry
->    ARM: am335x-bone-common: switch mmc1 to 4-bit mode
->    ARM: dts: am335x-bone-common: add cpu0 and mmc1 triggers
->
->   arch/arm/boot/dts/am335x-bone-common.dtsi | 39 +++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/am335x-bone.dts         |  1 -
->   arch/arm/boot/dts/am335x-boneblack.dts    | 14 +++++++++++
->   3 files changed, 53 insertions(+), 1 deletion(-)
->
+>=20
+> --=20
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
