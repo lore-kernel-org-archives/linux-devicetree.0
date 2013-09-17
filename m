@@ -1,87 +1,41 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] video: ARM CLCD: Add DT support
-Date: Tue, 17 Sep 2013 17:36:39 +0100
-Message-ID: <1379435799.9205.16.camel@hornet>
-References: <1379351934-25415-1-git-send-email-pawel.moll@arm.com>
-	 <52376180.1090001@wwwdotorg.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: "memory" binding issues
+Date: Tue, 17 Sep 2013 09:43:07 -0700
+Message-ID: <20130917164307.GA31327@quad.lixom.net>
+References: <1379300274.4098.77.camel@pasglop>
+ <1379371567.3721.46.camel@pasglop>
+ <CAOesGMgE1jiF5OHsmPQz2z66Bcqu0HeAj=taE1vmFK-0-0s2TQ@mail.gmail.com>
+ <1815499.tpfeUKmP6V@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52376180.1090001-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1815499.tpfeUKmP6V@flatron>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-09-16 at 20:52 +0100, Stephen Warren wrote:
-> I think the binding should either always use names as the key, or use
-> indices in interrupts as the key. Hence, I'd word that more like:
->=20
-> - interrupt-names: either the single entry "combined" representing a
-> 			combined interrupt output (CLCDINTR), or the
-> 			four entries "mbe", "vcomp", "lnbu", "fuf"
-> 			representing the individual CLCDMBEINTR,
-> 			CLCDVCOMPINTR, CLCDLNBUINTR, CLCDFUFINTR
-> 			interrupts.
-> - interrupts: contains an interrupt specifier for each entry in
-> 		 interrupt-names.
+On Tue, Sep 17, 2013 at 09:56:39AM +0200, Tomasz Figa wrote:
+> I'm afraid that I must disagree. For consistency I'd rather go with what 
+> Ben said. Please see ePAPR chapter 2.2.1.1, which clearly defines how 
+> nodes should be named.
 
-Cool, works for me.
+2.2.1.1 is there to point out that unit address _has_ to reflect reg.
 
-> > +- arm,pl11x,panel-data-pads: array of 24 cells, each of them descr=
-ibing
-> > +				a function of one of the CLD pads,
-> > +				starting from 0 up to 23; each pad can
-> > +				be described by one of the following values:
-> > +	- 0: reserved (not connected)
-> > +	- 0x100-0x107: color upper STN panel data 0 to 7
-> ...
->=20
-> I assume those are the raw values that go into the HW?
->=20
-> > +				Example sets of values for standard
-> > +				panel interfaces:
-> > +	- PL110 single colour STN panel:
-> > +			<0x107 0x106 0x105 0x104 0x103 0x102 0x101 0x100>,
-> > +			<0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0>;
->=20
-> The indentation of the introductory text seems a little odd.=20
+2.2.3 says that unit addresses can be omitted.
 
-It follows the first paragraph of this property description. But I may
-re-format all this stuff. Really looking forward some the formal
-syntax :-)
+> Having unit-address whenever the node has a reg property has the nice 
+> property of eliminating the need to rename any nodes when adding new one. 
+> (Consider the case that you have one subnode somewhere and you omit the 
+> unit-address and then you find out that you have to add another subnode 
+> with the same name, but another reg value.)
 
-> Do we really need so many examples?
-
-They cover all standard cases. If I was to write a tree for a new
-platform not knowing anything about CLCD, I think I'd appreciate this
-and don't believe this extra kB or two is a problem. Do you?
-
-> > +Optional properties:
-> > +
-> > +- arm,pl11x,framebuffer-base: a pair of two values, address and si=
-ze,
-> > +				defining the framebuffer to be used;
-> > +				to be used only if it is *not*
-> > +				part of normal memory, as described
-> > +				in /memory node
->=20
-> If the framebuffer is part of /memory, what happens then? Is the addr=
-ess
-> not fixed (so the HW isn't yet set up) and hence a driver should
-> allocate it?
-
-Yes, if it wants to display anything :-) And as this is a normal and
-expected behaviour, I don't think it deserves a note in the
-documentation. I'm open to any suggestions that would make the wording
-above emphasize the "weirdness" of situations requiring the property.
-
-Pawe=C5=82
+This motivation doesn't bother me at all -- it should be relatively rare.
 
 
+-Olof
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
