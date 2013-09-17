@@ -1,70 +1,87 @@
-From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] arm: dts: socfpga: Change some types of gate-clk type to periph-clk type
-Date: Tue, 17 Sep 2013 11:31:25 -0500
-Message-ID: <1379435486-25981-1-git-send-email-dinguyen@altera.com>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] video: ARM CLCD: Add DT support
+Date: Tue, 17 Sep 2013 17:36:39 +0100
+Message-ID: <1379435799.9205.16.camel@hornet>
+References: <1379351934-25415-1-git-send-email-pawel.moll@arm.com>
+	 <52376180.1090001@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52376180.1090001-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+On Mon, 2013-09-16 at 20:52 +0100, Stephen Warren wrote:
+> I think the binding should either always use names as the key, or use
+> indices in interrupts as the key. Hence, I'd word that more like:
+>=20
+> - interrupt-names: either the single entry "combined" representing a
+> 			combined interrupt output (CLCDINTR), or the
+> 			four entries "mbe", "vcomp", "lnbu", "fuf"
+> 			representing the individual CLCDMBEINTR,
+> 			CLCDVCOMPINTR, CLCDLNBUINTR, CLCDFUFINTR
+> 			interrupts.
+> - interrupts: contains an interrupt specifier for each entry in
+> 		 interrupt-names.
 
-Some of the clocks that were designated gate-clk did not have a gate, so
-change those clocks to be of periph-clk type.
+Cool, works for me.
 
-Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
----
- arch/arm/boot/dts/socfpga.dtsi |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> > +- arm,pl11x,panel-data-pads: array of 24 cells, each of them descr=
+ibing
+> > +				a function of one of the CLD pads,
+> > +				starting from 0 up to 23; each pad can
+> > +				be described by one of the following values:
+> > +	- 0: reserved (not connected)
+> > +	- 0x100-0x107: color upper STN panel data 0 to 7
+> ...
+>=20
+> I assume those are the raw values that go into the HW?
+>=20
+> > +				Example sets of values for standard
+> > +				panel interfaces:
+> > +	- PL110 single colour STN panel:
+> > +			<0x107 0x106 0x105 0x104 0x103 0x102 0x101 0x100>,
+> > +			<0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0>;
+>=20
+> The indentation of the introductory text seems a little odd.=20
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 1ee6079..acd6c3a 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -245,14 +245,14 @@
- 
- 				mpu_periph_clk: mpu_periph_clk {
- 					#clock-cells = <0>;
--					compatible = "altr,socfpga-gate-clk";
-+					compatible = "altr,socfpga-perip-clk";
- 					clocks = <&mpuclk>;
- 					fixed-divider = <4>;
- 					};
- 
- 				mpu_l2_ram_clk: mpu_l2_ram_clk {
- 					#clock-cells = <0>;
--					compatible = "altr,socfpga-gate-clk";
-+					compatible = "altr,socfpga-perip-clk";
- 					clocks = <&mpuclk>;
- 					fixed-divider = <2>;
- 					};
-@@ -266,8 +266,9 @@
- 
- 				l3_main_clk: l3_main_clk {
- 					#clock-cells = <0>;
--					compatible = "altr,socfpga-gate-clk";
-+					compatible = "altr,socfpga-perip-clk";
- 					clocks = <&mainclk>;
-+					fixed-divider = <1>;
- 					};
- 
- 				l3_mp_clk: l3_mp_clk {
--- 
-1.7.9.5
+It follows the first paragraph of this property description. But I may
+re-format all this stuff. Really looking forward some the formal
+syntax :-)
+
+> Do we really need so many examples?
+
+They cover all standard cases. If I was to write a tree for a new
+platform not knowing anything about CLCD, I think I'd appreciate this
+and don't believe this extra kB or two is a problem. Do you?
+
+> > +Optional properties:
+> > +
+> > +- arm,pl11x,framebuffer-base: a pair of two values, address and si=
+ze,
+> > +				defining the framebuffer to be used;
+> > +				to be used only if it is *not*
+> > +				part of normal memory, as described
+> > +				in /memory node
+>=20
+> If the framebuffer is part of /memory, what happens then? Is the addr=
+ess
+> not fixed (so the HW isn't yet set up) and hence a driver should
+> allocate it?
+
+Yes, if it wants to display anything :-) And as this is a normal and
+expected behaviour, I don't think it deserves a note in the
+documentation. I'm open to any suggestions that would make the wording
+above emphasize the "weirdness" of situations requiring the property.
+
+Pawe=C5=82
 
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
