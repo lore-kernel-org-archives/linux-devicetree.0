@@ -1,47 +1,78 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH 1/4] DRIVERS: IRQCHIP: Add crossbar irqchip driver
-Date: Tue, 17 Sep 2013 14:26:22 +0200
-Message-ID: <CACRpkdYzaoZUunoNDNirV5Bt-G6p-avFV8A=iznDKjK2biqwrw@mail.gmail.com>
-References: <1379000351-15672-1-git-send-email-r.sricharan@ti.com>
-	<1379000351-15672-2-git-send-email-r.sricharan@ti.com>
-	<alpine.DEB.2.02.1309122201530.4089@ionos.tec.linutronix.de>
-	<523228B5.5070507@ti.com>
-	<alpine.DEB.2.02.1309122335440.4089@ionos.tec.linutronix.de>
-	<5232457A.8080709@ti.com>
-	<alpine.DEB.2.02.1309130138550.4089@ionos.tec.linutronix.de>
-	<52326D6B.2010003@ti.com>
-	<alpine.DEB.2.02.1309131142540.4089@ionos.tec.linutronix.de>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/9] of/irq: Defer interrupt reference resolution
+Date: Tue, 17 Sep 2013 14:43:01 +0200
+Message-ID: <20130917124300.GB6757@ulmo>
+References: <1379320326-13241-1-git-send-email-treding@nvidia.com>
+ <52383B07.5030806@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1309131142540.4089@ionos.tec.linutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Sricharan R <r.sricharan@ti.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Rajendra Nayak <rnayak@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52383B07.5030806-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 13, 2013 at 4:24 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
 
-> So why can't you make use of irq domains and have the whole routing
-> business implemented sanely?
->
-> What's needed is in gic_init_bases():
->
->        if (of_property_read(node, "routable_irqs", &nr_routable_irqs) {
->           irq_domain_add_legacy(nr_gic_irqs);
->        } else {
->           irq_domain_add_legacy(nr_per_cpu_irqs);
->           irq_domain_add_linear(nr_routable_irqs);
->        }
->
-> Now that separate domain has an xlate function which grabs a free GIC
-> irq from a bitmap and returns the hardware irq number in the gic
-> space. The map/unmap callbacks take care of setting up / tearing down
-> the route in the crossbar.
+--1LKvkjL3sHcu1TtY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is obviously the right approach, it's exactly what .map should do
-the only special thing here being that we have hardware to perform
-the mapping ... bah why didn't I realize this :-(
+On Tue, Sep 17, 2013 at 01:20:39PM +0200, Alexandre Belloni wrote:
+> Hi Thierry,
+>=20
+> On 16/09/2013 10:31, Thierry Reding wrote:
+> > Hi,
+> >
+> > This small series allows interrupt references from the device tree to be
+> > resolved at driver probe time, rather than at device creation time. The
+> > current implementation resolves such references while devices are added
+> > during the call to of_platform_populate(), which happens very early in
+> > the boot process. This causes probe ordering issues, because all devices
+> > that are an interrupt parent for other devices need to have been probed
+> > by that time. This is worked around for primary interrupt controllers by
+> > initializing them using a device tree specific way (of_irq_init()), but
+> > it doesn't work for something like a GPIO controller that is itself a
+> > platform device and an interrupt parent for other devices at the same
+> > time.
+[...]
+> I believe this will solve the issue I was hitting back in June where
+> of_i2c_register_devices() failed to get the IRQ while doing it at probe
+> time was working fine:
+>=20
+> http://www.spinics.net/lists/linux-i2c/msg12523.html
+>=20
+> I couldn't test your patches yet though. I'll try to test as soon as I
+> get some free time.
 
-Yours,
-Linus Walleij
+Yes, this series precisely aims at fixing situations as those. It'd be
+great if you could give the series a spin to verify that it really works
+for your case.
+
+Thierry
+
+--1LKvkjL3sHcu1TtY
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSOE5UAAoJEN0jrNd/PrOh3voP/1hw9WEb6DSu58FjkPwBUHq9
+hTmxcJnZu17WBZenis03iBhLbriJkARhFifMNEGsVtPF2lw7hIq56r1edgzX5iC+
+ktSmzJoR2D51SDdwxYPTtJRtJKX6DF6TC1s6rGBVZsuwK+R2aIBwmHB6lDaQQcOG
+a8phB8yCknKBAGE7RJ4rIzesltd3z7SjMuhha7x10pYCMxjhgGnQ4AqG2SXdcMwZ
+bGak47drOWWvVrjQvZ+fjmy309rK79SoWfpvRPTL06erWHsrSLQRyGBew+uZQmt0
+G6iIHcxr9MUeO2WtQeLkb2E3nIPzBNaADT/M1Ow+VNhSIILW6rSBVIlD+EstROp6
+hXvrohTJp5i4NJjAD/Y/71lPLpUH8S0+DGh8xv/cK1HbE56XImPqraVn9vuY+8UA
+BRC5jsiqswVvdjGJrYtM30oNkxJJH1tPHwAhxN1XtWtX1X6wJlf+dPFlhIwsy1L4
+5uLLvTFTrXvZVV0FMTAheVyeoNOYZf3iXF1IkBdAbVhHCFaGd3J7eNq7pm98nJo1
+Y/M9DNefMa7BagU54ZuJO97oF+sY30EjEspeCjiFnMPOcSPPj0gml+rr/Gj8/am8
+7F9RA+31coPCsel/EY+vRDUT/aHQIP4uWrfeAolL1uo9dzamaGRUZMoHIJsIid/s
+Px/lRrlyE326OtkqeyUH
+=PMhD
+-----END PGP SIGNATURE-----
+
+--1LKvkjL3sHcu1TtY--
