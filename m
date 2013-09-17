@@ -1,50 +1,70 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: DRA7: provide arch-timer frequenecy parameter
-Date: Tue, 17 Sep 2013 11:47:13 -0500
-Message-ID: <1379436433-24914-1-git-send-email-nm@ti.com>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Tue, 17 Sep 2013 18:49:35 +0200
+Message-ID: <20130917164935.GG14747@book.gsilab.sittig.org>
+References: <20130912205644.GW29403@sirena.org.uk>
+ <52329AD3.2050608@freescale.com>
+ <20130913102127.GD29403@sirena.org.uk>
+ <52366F97.5030402@freescale.com>
+ <20130916101912.GY29403@sirena.org.uk>
+ <5236DD17.5090203@freescale.com>
+ <20130916110634.GC29403@sirena.org.uk>
+ <5237BB01.3080700@freescale.com>
+ <20130917105142.GO21013@sirena.org.uk>
+ <20130917150548.GE14747@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, R Sricharan <r.sricharan-l0cyMroinI0@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130917150548.GE14747@book.gsilab.sittig.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Huang Shijie <b32955@freescale.com>, Huang Shijie <shijie8@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Gupta, Pekon" <pekon@ti.com>, "thomas.langer@lantiq.com" <thomas.langer@lantiq.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "b44548@freescale.com" <b44548@freescale.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "b18965@freescale.com" <b18965@freescale.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "lznuaa@gmail.com" <lznuaa@gmail.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.or>
 List-Id: devicetree@vger.kernel.org
 
-CNTFREQ isn't pre-programmed on DRA7 just like O5, so provide the
-same. Without a valid value arch_timer_init results in div0 crash.
-Providing the same is a safer alternative.
+On Tue, Sep 17, 2013 at 17:05 +0200, Gerhard Sittig wrote:
+> 
+> I liked the S25F datasheet that was referenced here recently,
+> it's useful for the discussion that is going on here.  I liked
+> the "Serial Peripheral Interface with Multi-I/O" subtitle, which
+> suggests that SPI gets enhanced while nothing of it is specific
+> to flash chips.  And I liked the sequence diagrams for their
+> overview or introduction nature, which you can compare to the SPI
+> message submission API in the Linux kernel which connects SPI
+> slave drivers and SPI controller drivers.
 
-Cc: R Sricharan <r.sricharan-l0cyMroinI0@public.gmane.org>
-Cc: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
-Cc: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+noticed that I should have provided the URL so those interested
+need not search in the thread
 
-Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
----
+www.spansion.com/Support/Datasheets/S25FL128S_256S_00.pdf
 
-Based on Benoit's for_3.13/dts branch. 
-http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
-Without this patch, div0 error occurs(seen on 3.12-rc1 tag): http://pastebin.com/B2sDauS9
+> The datasheet had "block diagrams" (section 3.16) [ ... ]
+> And the datasheet had "sequence diagrams" (section 4.2.1) [ ... ]
 
- arch/arm/boot/dts/dra7.dtsi |    1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index c01ef76..b478beb 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -50,6 +50,7 @@
- 			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-+		clock-frequency = <6144000>;
- 	};
- 
- 	gic: interrupt-controller@48211000 {
+and the relevant design items for the SPI subsystem are:
+- express those "phases" of communicating a flash chip related
+  "command" in terms of SPI message submission data structures
+  (spi_message, spi_transfer)
+- make new SPI master drivers support the optional data rate,
+  multi-line transfer, dummy bit times, etc features _if_ their
+  controller hardware supports them
+- announce support of these optional features such that slave
+  drivers can query them
+- make SPI slave drivers (specifically SPI attached MTD, i.e.
+  m25p80) map their flash access operations to respective SPI
+  transactions, by introducing an appropriate translation helper
+
+and keep all of the "enhanced modes of SPI communication"
+independent from their motivation by and use in flash chip
+drivers
+
+and keep internals of one specific flash chip instruction set out
+of the SPI transport layer
+
+
+virtually yours
+Gerhard Sittig
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
