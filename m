@@ -1,29 +1,101 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 26/28] arm64: use common of_flat_dt_get_machine_name
-Date: Tue, 17 Sep 2013 09:53:09 +0100
-Message-ID: <04084AD8-8E63-490F-90FB-88BAEF891BD2@arm.com>
-References: <1379372965-22359-1-git-send-email-robherring2@gmail.com> <1379372965-22359-27-git-send-email-robherring2@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 6.5 \(1508\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 00/11] Fix AM335x-evm analog audio support
+Date: Tue, 17 Sep 2013 12:25:59 +0300
+Message-ID: <cover.1379409268.git.jsarha@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379372965-22359-27-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: peter.ujfalusi-l0cyMroinI0@public.gmane.org, joelf-l0cyMroinI0@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17 Sep 2013, at 00:09, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> Convert arm64 to use the common of_flat_dt_get_machine_name function.
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 
-Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+The first version of patches can been found here:
+http://mailman.alsa-project.org/pipermail/alsa-devel/2013-September/066178.html
+
+Changes for v2
+ - Dropped our "ASoC: davinci-mcasp: Add pinctrl support" since
+   driver core is taking care of this now.
+ - Cleanup am33xx audio build
+ - Add regulators to tlv320aic3x DT binding document
+ - Remove dm365-voice-codec-audio DT support as it has never
+   been tested an probably does not work
+ - Add output pins and Line In connector to davinci-evm-audio DT binding doc
+ - Remove asp_chan_q and ram_chan_q properties from mcasp DT node
+   in DT mode mcasp is hardcoded to event queue 0 (highest priority)
+ - Add pins to tlv320aic3x DT bindings document. If I misunderstood
+   Marks comment and this patch is not needed, then just leave it out
+ Changes based on TI internal discussions
+ - Move system clock rate logic away from from evm_hw_params soc-op
+ - Remove unnecesary #if defined(CONFIG_OF) from davinci-evm.c
+ - Make dma property DT binding document more exact
+ - Add only "dma" reg location instead of separate "dma-tx" and "dma-rx"
+ - Primarily look for "mpu" reg property, but fall back to index 0 if not found
+ - Remove interrupt property from mcasp DT node as it is not used
+ - Remove #address-cells and #size-cells mcasp properties as they are not needed
+
+This set of patches fixes the basic audio support for am335x-evm. It
+should also be relatively simple to add the necessary nodes to
+relevant dts files to get BeagleBone + AudioCape and am335x-evmsk
+working too.
+
+The patch set depends on following patches:
+
+[PATCH v11 4/8] ARM: dts: add AM33XX EDMA support 
+     https://lkml.org/lkml/2013/6/18/49
+
+[PATCH v11 5/8] ARM: dts: add AM33XX SPI DMA support
+     https://lkml.org/lkml/2013/6/18/55
+
+[PATCH v2] ARM: EDMA: Fix clearing of unused list for DT DMA resources
+     https://lkml.org/lkml/2013/7/22/441
+
+I have tried my best not to break the existing support for older
+davinci boards, but since I do not have those boards I can not be
+sure.
+
+Some commit comments refer to a dmaengine based davinci audio
+implementation which is planned for but nothing has been done yet.
+
+Best regards,
+Jyri
+
+Darren Etheridge (1):
+  ARM/dts: am335x-evm: Add audio support for am335x-evm.dts
+
+Hebbar, Gururaja (2):
+  ASoC: davinci-evm: Add device tree binding
+  ASoC: davinci: Add support for AM33xx SoC Audio
+
+Jyri Sarha (7):
+  ASoC: davinci-evm: Move sysclk logic away from evm_hw_params
+  ASoC: davinci-mcasp: Add DMA register locations to DT
+  ASoC: davinci-mcasp: Extract DMA channels directly from DT
+  ASoC: davinci-mcasp: Remove interrupt property from DT bindings doc
+  ASoC: tlv320aic3x: Add regulators to DT bindings document
+  ASoC: tlv320aic3x: Add codec pins to DT bindings document
+  ARM/dts: am33xx: mcasp: Add new dma register location to reg-property
+
+Pantelis Antoniou (1):
+  ARM/dts: am33xx: Add mcasp0 and mcasp1 device tree entries
+
+ .../bindings/sound/davinci-evm-audio.txt           |   58 ++++++
+ .../bindings/sound/davinci-mcasp-audio.txt         |   15 +-
+ .../devicetree/bindings/sound/tlv320aic3x.txt      |   26 +++
+ arch/arm/boot/dts/am335x-evm.dts                   |   56 ++++++
+ arch/arm/boot/dts/am33xx.dtsi                      |   25 +++
+ include/linux/platform_data/davinci_asp.h          |    2 +
+ sound/soc/davinci/Kconfig                          |   18 +-
+ sound/soc/davinci/Makefile                         |    1 +
+ sound/soc/davinci/davinci-evm.c                    |  184 +++++++++++++++++---
+ sound/soc/davinci/davinci-mcasp.c                  |  106 +++++++----
+ 10 files changed, 428 insertions(+), 63 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/davinci-evm-audio.txt
+
+-- 
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
