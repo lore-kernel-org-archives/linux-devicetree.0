@@ -1,51 +1,37 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: All device tree bindings need maintainer ack or just the
- 'interesting' ones.
-Date: Tue, 17 Sep 2013 13:07:30 +0100
-Message-ID: <20130917120730.GW16984@lee--X1>
-References: <52345182.1080609@kernel.org>
- <52372F2B.3030504@gmail.com>
- <20130917081003.GU16984@lee--X1>
- <20130917112433.GB26737@e106331-lin.cambridge.arm.com>
+From: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 13/28] c6x: use early_init_dt_scan
+Date: Tue, 17 Sep 2013 08:00:18 -0400
+Message-ID: <1379419218.1817.0.camel@deneb.redhat.com>
+References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
+	 <1379372965-22359-14-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130917112433.GB26737-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <1379372965-22359-14-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Sep 2013, Mark Rutland wrote:
+On Mon, 2013-09-16 at 18:09 -0500, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> 
+> Convert c6x to use new early_init_dt_scan function.
+> 
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Cc: Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>
+> Cc: linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org
+> ---
+>  arch/c6x/kernel/devicetree.c | 19 -------------------
+>  arch/c6x/kernel/setup.c      |  2 +-
+>  2 files changed, 1 insertion(+), 20 deletions(-)
 
-> On Tue, Sep 17, 2013 at 09:10:03AM +0100, Lee Jones wrote:
-> > > > http://marc.info/?l=3Dlinux-iio&m=3D137881790217809&w=3D2
-> > >=20
-> > > Looks reasonable. My only comment is '-' is preferred over '_'.
-> >=20
-> > Ah, in the node name you mean. Yes, I can change that.
-> >=20
-> > The compatible string has to stay the same however, as it has to ma=
-tch
-> > the device name which can't be changed due to possible userspace
-> > breakage.
->=20
-> I'm not sure I follow why the compatible string must be identical to =
-the
-> name appearing to userspace.
+Acked-by: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-It doesn't. It has to be identical to the device name, which I'm
-guessing is used when populating sysfs.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
