@@ -1,58 +1,54 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: "memory" binding issues
-Date: Tue, 17 Sep 2013 14:33:51 -0700
-Message-ID: <CAOesGMjt6RsvYRjXxpB=v-Ro6iyUN=YzkDd1mfHqCDJJDRJvLg@mail.gmail.com>
-References: <1379300274.4098.77.camel@pasglop>
-	<5238C4D1.6060500@gmail.com>
-	<CAOesGMh0F09OAR4bepGSCE5Z5OZ56fBmDPBSfwZ+NB9RgcE0Vw@mail.gmail.com>
-	<2179723.s3DLWi0P8b@flatron>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V3] regulator: core: add support for configuring turn-on
+ time through constraints
+Date: Tue, 17 Sep 2013 15:33:51 -0600
+Message-ID: <5238CABF.4010606@wwwdotorg.org>
+References: <1379418354-27269-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2179723.s3DLWi0P8b@flatron>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: frowand.list@gmail.com, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Stephen Warren <swarren@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379418354-27269-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2013 at 2:19 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On Tuesday 17 of September 2013 14:15:52 Olof Johansson wrote:
->> On Tue, Sep 17, 2013 at 2:08 PM, Frank Rowand <frowand.list@gmail.com>
-> wrote:
->> > On 9/17/2013 9:43 AM, Olof Johansson wrote:
->> >> On Tue, Sep 17, 2013 at 09:56:39AM +0200, Tomasz Figa wrote:
->> >>> I'm afraid that I must disagree. For consistency I'd rather go with
->> >>> what Ben said. Please see ePAPR chapter 2.2.1.1, which clearly
->> >>> defines how nodes should be named.
->> >>
->> >> 2.2.1.1 is there to point out that unit address _has_ to reflect reg.
->> >>
->> >> 2.2.3 says that unit addresses can be omitted.
->> >
->> > 2.2.3 is talking about path names.
->> >
->> > 2.2.1.1 is talking about node names.
->> >
->> > 2.2.1.1 _does_ require the unit address in the node name, 2.2.3 does
->> > not remove that requirement.
->>
->> Sigh, that's horrible. OF clearly doesn't require it.
->>
->> I guess people prefer to follow ePAPR even though it's broken? That
->> means someone needs to cleanup the current dts files. Any takers?
->
-> I don't think it's broken, why do you think so? It's at least consistent.
-> Probably not perfect and not complete, but IMHO a reasonable base for
-> further work. (Also at least something written down that people can learn
-> from and/or refer to.)
+On 09/17/2013 05:45 AM, Laxman Dewangan wrote:
+> The Turn-on time of the regulator depends on the regulator device's
+> electrical characteristics. Sometimes regulator turn-on time also
+> depends on the capacitive load on the given platform and it can be
+> more than the datasheet value.
+> 
+> The driver provides the enable-time as per datasheet.
+> 
+> Add support for configure the enable ramp time through regulator
+> constraints so that regulator core can take this value for enable
+> time for that regulator.
 
-So, I stand corrected. It seems that at least one legacy system I'm
-looking at always specifies unit address as well. I don't like it but
-I'll stop arguing.
+> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
 
-Ben: The interesting part is that it does _not_ specify it on /memory
-though. Nor, of course, on /cpus or /openprom. So assuming /memory@0
-exists will break even on some powerpc platforms.
+> +- regulator-enable-ramp-delay: Turn-on time for regulator(in microsecond).
 
+You need a space before (. You don't even need the brackets.
+microseconds not microsecond.
 
--Olof
+> +  This is the time time taken to reach the target voltage from off state.
+> +  The delay specified in the DT to just completely override what the drivers
+> +  know.
+
+This description references driver behaviour which it really shouldn't.
+Instead, it should describe the HW itself. How about the following text,
+which I suggested last time:
+
+- regulator-enable-ramp-delay: The time taken, in microseconds, for the
+supply rail to reach the target voltage, plus/minus whatever tolerance
+the board design requires. This property describes the total system ramp
+time required due to the combination of internal ramping of the
+regulator itself, and board design issues such as trace capacitance and
+load on the supply.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
