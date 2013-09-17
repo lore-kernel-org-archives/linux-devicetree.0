@@ -1,40 +1,49 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: "memory" binding issues
-Date: Tue, 17 Sep 2013 09:43:07 -0700
-Message-ID: <20130917164307.GA31327@quad.lixom.net>
-References: <1379300274.4098.77.camel@pasglop>
- <1379371567.3721.46.camel@pasglop>
- <CAOesGMgE1jiF5OHsmPQz2z66Bcqu0HeAj=taE1vmFK-0-0s2TQ@mail.gmail.com>
- <1815499.tpfeUKmP6V@flatron>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: DRA7: provide arch-timer frequenecy parameter
+Date: Tue, 17 Sep 2013 11:47:13 -0500
+Message-ID: <1379436433-24914-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1815499.tpfeUKmP6V@flatron>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, R Sricharan <r.sricharan-l0cyMroinI0@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2013 at 09:56:39AM +0200, Tomasz Figa wrote:
-> I'm afraid that I must disagree. For consistency I'd rather go with what 
-> Ben said. Please see ePAPR chapter 2.2.1.1, which clearly defines how 
-> nodes should be named.
+CNTFREQ isn't pre-programmed on DRA7 just like O5, so provide the
+same. Without a valid value arch_timer_init results in div0 crash.
+Providing the same is a safer alternative.
 
-2.2.1.1 is there to point out that unit address _has_ to reflect reg.
+Cc: R Sricharan <r.sricharan-l0cyMroinI0@public.gmane.org>
+Cc: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+Cc: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 
-2.2.3 says that unit addresses can be omitted.
+Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+---
 
-> Having unit-address whenever the node has a reg property has the nice 
-> property of eliminating the need to rename any nodes when adding new one. 
-> (Consider the case that you have one subnode somewhere and you omit the 
-> unit-address and then you find out that you have to add another subnode 
-> with the same name, but another reg value.)
+Based on Benoit's for_3.13/dts branch. 
+http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
+Without this patch, div0 error occurs(seen on 3.12-rc1 tag): http://pastebin.com/B2sDauS9
 
-This motivation doesn't bother me at all -- it should be relatively rare.
+ arch/arm/boot/dts/dra7.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index c01ef76..b478beb 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -50,6 +50,7 @@
+ 			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
++		clock-frequency = <6144000>;
+ 	};
+ 
+ 	gic: interrupt-controller@48211000 {
+-- 
+1.7.9.5
 
--Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
