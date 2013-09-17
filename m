@@ -1,63 +1,35 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv6 01/45] CLK: TI: Add DPLL clock support
-Date: Tue, 17 Sep 2013 09:09:36 -0700
-Message-ID: <20130917160936.GB9994@atomide.com>
-References: <1377782197-10611-1-git-send-email-t-kristo@ti.com>
- <1377782197-10611-2-git-send-email-t-kristo@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
+Date: Tue, 17 Sep 2013 10:14:01 -0600
+Message-ID: <52387FC9.1080905@wwwdotorg.org>
+References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com> <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com> <52373314.5070806@wwwdotorg.org> <20130916164927.GB21352@roeck-us.net> <5237390E.5070203@wwwdotorg.org> <20130916173540.GA3481@roeck-us.net> <52374FF7.8040604@wwwdotorg.org> <52380BD5.8080105@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1377782197-10611-2-git-send-email-t-kristo-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52380BD5.8080105@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Hyun Kwon <hyunk@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> [130829 06:24]:
-> The OMAP clock driver now supports DPLL clock type. This patch also
-> adds support for DT DPLL nodes.
+On 09/17/2013 01:59 AM, Sebastian Hesselbarth wrote:
+> On 09/16/2013 08:37 PM, Stephen Warren wrote:
 ...
+>> Perhaps if clock-frequency is specified, the driver should refuse to
+>> provide anything else. If clock-frequency isn't specified, the driver
+>> shouldn't touch the HW when it initializes, but should honor any
+>> requests that come in from other drivers? That would maintain what I
+>> feel is clock-frequency's connection to being a fixed clock.
+> 
+> For the clk-si5351 programmable clock driver in mainline, it already
+> uses "clock-frequency" for initial clock setup but allows to set it
+> later on. IMHO that is ok, because from a initial point-of-view, an
+> initial frequency is fixed. As soon as the driver takes over, the user
+> is free to do whatever he wants and should not be limited by DT.
+> 
+> But if we vote against that approach, we should probably also modifiy
+> clk-si5351 accordingly.
 
-> +- reg-names : array of the register names for controlling the device, sorted
-> +  in the same order as the reg property.
-> +	"control" - contains the control register base address
-> +        "idlest" - contains the idle status register base address
-> +        "autoidle" - contains the autoidle register base address
-> +        "mult-div1" - contains the multiplier / divider register base address
-
-FYI, looks like there's some tab vs spaces issue with the
-formatting above.
-
-> +Examples:
-> +	dpll_core_ck: dpll_core_ck@44e00490 {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,omap4-dpll-core-clock";
-> +		clocks = <&sys_clkin_ck>, <&sys_clkin_ck>;
-> +		reg = <0x44e00490 0x4>, <0x44e0045c 0x4>, <0x0 0x4>,
-> +				<0x44e00468 0x4>;
-> +		reg-names = "control", "idlest", "autoidle", "mult-div1";
-> +	};
-> +
-> +	dpll2_ck: dpll2_ck@48004004 {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,omap3-dpll-clock";
-> +		clocks = <&sys_ck>, <&dpll2_fck>;
-> +		ti,modes = <0xa2>;
-> +		reg = <0x48004004 0x4>, <0x48004024 0x4>, <0x48004034 0x4>,
-> +			<0x48004040 0x4>;
-> +		reg-names = "control", "idlest", "autoidle", "mult-div1";
-> +		ti,clkdm-name = "dpll2_clkdm";
-> +	};
-
-Do you need the reg-names at all? You may be able to do that
-automatically in the driver based on the compatible flags if
-you only have few different types.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I suppose that approach isn't unreasonable. So, if there's precedent for
+it, this driver may as well follow it.
