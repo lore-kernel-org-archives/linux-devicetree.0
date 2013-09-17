@@ -1,39 +1,37 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 0/2] Fixes for STi SOCs
-Date: Tue, 17 Sep 2013 10:26:43 +0100
-Message-ID: <1379410003-9911-1-git-send-email-srinivas.kandagatla@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: [PATCH 0/4] Add watchdog DT nodes and parse it to read PMU registers
+ addresses
+Date: Tue, 17 Sep 2013 16:13:39 +0530
+Message-ID: <1379414623-26329-1-git-send-email-l.krishna@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: wim@iguana.be, kgene.kim@samsung.com, devicetree@vger.kernel.org, t.figa@samsung.com, dianders@chromium.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+This patchset does the following things
+	- Fixes the watchdog DT node name to follow convention
+	- Adds watchdog DT node to Exynos5420 SoC
+	- parse the watchdog device node to read pmu wdt sys registers
+	  addresses and do mask/unmask enable/disable of WDT in probe
+	  and s2r scenarios.
 
-Hi Arnd/Olof, 
+This patch set is rebased on Kgene's for-next branch and tested on SMDK5420
 
-These two are very minor fixes for STi SOCs.
-One of the fix is a typo and other is to add two new options to
-multi_v7_defconfig to get STi SOC based boards boot with nfs root with serial
-console.
+Leela Krishna Amudala (4):
+  ARM: dts: Fix the watchdog DT node name for Exynos5
+  ARM: dts: add watchdog device tree node for exynos5420
+  watchdog: s3c2410_wdt: parse watchdog dt node to read PMU registers
+    adresses
+  ARM: dts: exynos: add PMU registers addresses and mask bit to
+    watchdog node
 
-These patches are based on v3.12-rc1.
-
-Thanks,
-srini
-
-Srinivas Kandagatla (2):
-  ARM: STi: OF: Fix a typo in pincfg header
-  ARM: multi_v7_defconfig: Fix STi support
-
- arch/arm/boot/dts/st-pincfg.h       |    2 +-
- arch/arm/configs/multi_v7_defconfig |    3 +++
- 2 files changed, 4 insertions(+), 1 deletions(-)
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |   14 ++++-
+ arch/arm/boot/dts/exynos5.dtsi                     |    4 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |    4 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |    7 +++
+ drivers/watchdog/s3c2410_wdt.c                     |   56 ++++++++++++++++++++
+ 5 files changed, 81 insertions(+), 4 deletions(-)
 
 -- 
-1.7.6.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
