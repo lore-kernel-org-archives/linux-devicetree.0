@@ -1,72 +1,35 @@
-From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 2/2] DT: Add documentation for cm36651 proximity/light sensor
-Date: Tue, 17 Sep 2013 13:58:20 +0900
-Message-ID: <5237E16C.1040101@samsung.com>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 04/28] arc: use unflatten_and_copy_device_tree
+Date: Tue, 17 Sep 2013 05:27:01 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA2307514C261@IN01WEMBXA.internal.synopsys.com>
+References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
+ <1379372965-22359-5-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Meerwald l <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 09/17/2013 04:39 AM, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>
+> Use the common unflatten_and_copy_device_tree to copy the built-in FDT
+> out of init section.
+>
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
-This patch add device tree binding documentation for CM36651 proximity/ light sensor.
+I tested the series - works great !
 
-Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/iio/light/cm36651.txt      |   24 ++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 2 files changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/cm36651.txt
+Acked by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/iio/light/cm36651.txt b/Documentation/devicetree/bindings/iio/light/cm36651.txt
-new file mode 100644
-index 0000000..3a6ba38
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/cm36651.txt
-@@ -0,0 +1,24 @@
-+* Capella CM36651 I2C Proximity and Color Light sensor
-+
-+Required properties:
-+- compatible: must be "capella,cm36651"
-+- reg: the I2C address of the device
-+- interrupts: interrupt to which the chip is connected
-+- vled-supply: regulator for the sensor device, as covered
-+	       in ../../regulator/regulator.txt
-+
-+Example:
-+
-+	i2c_cm36651: i2c-gpio {
-+		/* ... */
-+
-+		cm36651@18 {
-+			compatible = "capella,cm36651";
-+			reg = <0x18>;
-+			interrupt-parent = <&gpx0>;
-+			interrupts = <2 0>;
-+			vled-supply = <&ps_als_reg>;
-+		};
-+
-+		/* ... */
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ec4d713..044796d 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -17,6 +17,7 @@ brcm	Broadcom Corporation
- cavium	Cavium, Inc.
- chrp	Common Hardware Reference Platform
- cirrus	Cirrus Logic, Inc.
-+capella	Capella Microsystems, Inc
- cortina	Cortina Systems, Inc.
- dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
- davicom	DAVICOM Semiconductor, Inc.
--- 
-1.7.9.5
-
--- 
-Beomho Seo, Assistant Engineer
-System S/W Lab., S/W Platform Team, Software Center
-Samsung Electronics
+Thx,
+-Vineet
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
