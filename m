@@ -1,66 +1,69 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3] PWM: PXA: add device tree support to PWM driver
-Date: Tue, 17 Sep 2013 10:17:23 -0600
-Message-ID: <52388093.2000401@wwwdotorg.org>
-References: <1379091281-23662-1-git-send-email-mikedunn@newsguy.com> <52375FB1.5050700@wwwdotorg.org> <5238621D.3050504@newsguy.com>
+From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] arm: dts: socfpga: Change some types of gate-clk type to periph-clk type
+Date: Tue, 17 Sep 2013 11:31:25 -0500
+Message-ID: <1379435486-25981-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5238621D.3050504-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2013 08:07 AM, Mike Dunn wrote:
-> On 09/16/2013 12:44 PM, Stephen Warren wrote:
->> On 09/13/2013 10:54 AM, Mike Dunn wrote:
->>> This patch adds device tree support to the PXA's PWM driver.  Only an OF match
->>> table is added; nothing needs to be extracted from the device tree node.  The
->>> existing ID table is reused for the match table data.
->>>
->>> Tested on a Palm Treo 680 (both platform data and DT cases).
->>
->>> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
->>
->>> +- compatible: should be one of:
->>> +  - "marvell,pxa250-pwm"
->>> +  - "marvell,pxa270-pwm"
->>> +  - "marvell,pxa168-pwm"
->>> +  - "marvell,pxa910-pwm"
->>
->> Not just one of, but possible more than one...
-> 
-> So the phrasing should be "compatible: should be among:" ?
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-I think I've seen "One or more of".
+Some of the clocks that were designated gate-clk did not have a gate, so
+change those clocks to be of periph-clk type.
+
+Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+---
+ arch/arm/boot/dts/socfpga.dtsi |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 1ee6079..acd6c3a 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -245,14 +245,14 @@
+ 
+ 				mpu_periph_clk: mpu_periph_clk {
+ 					#clock-cells = <0>;
+-					compatible = "altr,socfpga-gate-clk";
++					compatible = "altr,socfpga-perip-clk";
+ 					clocks = <&mpuclk>;
+ 					fixed-divider = <4>;
+ 					};
+ 
+ 				mpu_l2_ram_clk: mpu_l2_ram_clk {
+ 					#clock-cells = <0>;
+-					compatible = "altr,socfpga-gate-clk";
++					compatible = "altr,socfpga-perip-clk";
+ 					clocks = <&mpuclk>;
+ 					fixed-divider = <2>;
+ 					};
+@@ -266,8 +266,9 @@
+ 
+ 				l3_main_clk: l3_main_clk {
+ 					#clock-cells = <0>;
+-					compatible = "altr,socfpga-gate-clk";
++					compatible = "altr,socfpga-perip-clk";
+ 					clocks = <&mainclk>;
++					fixed-divider = <1>;
+ 					};
+ 
+ 				l3_mp_clk: l3_mp_clk {
+-- 
+1.7.9.5
 
 
->>> diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
->>
->>> +		pwm0: pwm@40b00000 {
->>> +			compatible = "marvell,pxa270-pwm";
->>
->> I thought the assertion was that pax270 and pxa250 were both compatible?
->> If so, that should be:
->>
->> 		compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
-> 
-> 
-> Indeed.  Currently, they are all the same.  By that logic, shouldn't it be
-> 
-> compatible = "marvell,pxa250-pwm", "marvell,pxa270-pwm", "marvell,pxa168-pwm",
-> "marvell,pxa910-pwm";
-
-compatible should include:
-
-* The exact HW model (so the driver knows exactly which HW is present in
-order to enable any bug quirks).
-* The "first" HW model this HW is compatible with, since this is what
-the driver will bind to (ignoring the possibility of bug quirks).
-
-So, you don't need to include all the values, just two in this case.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
