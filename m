@@ -1,919 +1,208 @@
-From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5] mmc: sdhci-msm: Add support for MSM chipsets
-Date: Tue, 17 Sep 2013 17:55:32 +0300
-Message-ID: <52386D64.4030306@mm-sol.com>
-References: <1379341388-20912-1-git-send-email-gdjakov@mm-sol.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Tue, 17 Sep 2013 17:05:48 +0200
+Message-ID: <20130917150548.GE14747@book.gsilab.sittig.org>
+References: <20130913041208.GD3051@gmail.com>
+ <20130912205644.GW29403@sirena.org.uk>
+ <52329AD3.2050608@freescale.com>
+ <20130913102127.GD29403@sirena.org.uk>
+ <52366F97.5030402@freescale.com>
+ <20130916101912.GY29403@sirena.org.uk>
+ <5236DD17.5090203@freescale.com>
+ <20130916110634.GC29403@sirena.org.uk>
+ <5237BB01.3080700@freescale.com>
+ <20130917105142.GO21013@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379341388-20912-1-git-send-email-gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130917105142.GO21013-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Asutosh Das <asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Venkat Gopalakrishnan <venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sahitya Tummala <stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>, "thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org" <thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Georgi,
+[ a lurker tries to summarize, and to outline an approach to
+  introducing generic support for enhanced SPI communication,
+  where QuadSPI just becomes "a byproduct" enabled by extensions
+  to the common infrastructure ]
 
-Thanks for the patch.
-
-I have some commnets below.
-
-On 09/16/2013 05:23 PM, Georgi Djakov wrote:
-> This platform driver adds the support of Secure Digital Host Controller
-> Interface compliant controller found in Qualcomm MSM chipsets.
+On Tue, Sep 17, 2013 at 11:51 +0100, Mark Brown wrote:
 > 
-> CC: Asutosh Das <asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> CC: Venkat Gopalakrishnan <venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> CC: Sahitya Tummala <stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> CC: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes from v4:
-> - Simplified sdhci_msm_vreg_disable() and sdhci_msm_set_vdd_io_vol()
-> - Use devm_ioremap_resource() instead of devm_ioremap()
-> - Converted IS_ERR_OR_NULL to IS_ERR
-> - Disable regulators in sdhci_msm_remove()
-> - Check for DT node at the beginning in sdhci_msm_probe()
-> - Removed more redundant code
-> - Changes in some error messages
-> - Minor fixes
+> On Tue, Sep 17, 2013 at 10:14:25AM +0800, Huang Shijie wrote:
 > 
-> Changes from v3:
-> - Allocate memory for all required structs at once
-> - Added termination entry in sdhci_msm_dt_match[]
-> - Fixed a missing sdhci_pltfm_free() in probe()
-> - Removed redundant of_match_ptr
-> - Removed the unneeded function sdhci_msm_vreg_reset()
+> > The dummy is just a delay in a command sequence.
+> > The dummy maybe only several clock cycles, less then 8 bit.
 > 
-> Changes from v2:
-> - Added DT bindings for clocks
-> - Moved voltage regulators data to platform data
-> - Removed unneeded includes
-> - Removed obsolete and wrapper functions
-> - Removed error checking where unnecessary
-> - Removed redundant _clk suffix from clock names
-> - Just return instead of goto where possible
-> - Minor fixes
-> 
-> Changes from v1:
-> - GPIO references are replaced by pinctrl
-> - DT parsing is done mostly by mmc_of_parse()
-> - Use of_match_device() for DT matching
-> - A few minor changes
-> 
->  .../devicetree/bindings/mmc/sdhci-msm.txt          |   71 +++
->  drivers/mmc/host/Kconfig                           |   13 +
->  drivers/mmc/host/Makefile                          |    1 +
->  drivers/mmc/host/sdhci-msm.c                       |  627 ++++++++++++++++++++
->  4 files changed, 712 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->  create mode 100644 drivers/mmc/host/sdhci-msm.c
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> new file mode 100644
-> index 0000000..ee112da
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -0,0 +1,71 @@
-> +* Qualcomm SDHCI controller (sdhci-msm)
-> +
-> +This file documents differences between the core properties in mmc.txt
-> +and the properties used by the sdhci-msm driver.
-> +
-> +Required properties:
-> +- compatible: should be "qcom,sdhci-msm"
-> +- reg: should contain SDHC, SD Core register map
-> +- reg-names: indicates various resources passed to driver (via reg proptery) by name
-> +	"reg-names" examples are "hc_mem" and "core_mem"
-> +- interrupts: should contain SDHC interrupts
-> +- interrupt-names: indicates interrupts passed to driver (via interrupts property) by name
-> +	"interrupt-names" examples are "hc_irq" and "pwr_irq"
-> +- <supply-name>-supply: phandle to the regulator device tree node
-> +	"supply-name" examples are "vdd" and "vdd-io"
-> +- pinctrl-names: Should contain only one value - "default".
-> +- pinctrl-0: Should specify pin control groups used for this controller.
-> +- clocks: phandles to clock instances of the device tree nodes
-> +- clock-names:
-> +	iface: Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
-> +	core: SDC MMC clock (MCLK) (required)
-> +	bus: SDCC bus voter clock (optional)
-> +
-> +Optional properties:
-> +- qcom,bus-speed-mode - specifies supported bus speed modes by host
-> +	The supported bus speed modes are :
-> +	"HS200_1p8v" - indicates that host can support HS200 at 1.8v
-> +	"HS200_1p2v" - indicates that host can support HS200 at 1.2v
-> +	"DDR_1p8v" - indicates that host can support DDR mode at 1.8v
-> +	"DDR_1p2v" - indicates that host can support DDR mode at 1.2v
-> +
-> +In the following, <supply> can be vdd (flash core voltage) or vdd-io (I/O voltage).
-> +- qcom,<supply>-always-on - specifies whether supply should be kept "on" always.
-> +- qcom,<supply>-lpm-sup - specifies whether supply can be kept in low power mode (lpm).
-> +- qcom,<supply>-voltage-level - specifies voltage levels for supply. Should be
-> +specified in pairs (min, max), units uV.
-> +- qcom,<supply>-current-level - specifies load levels for supply in lpm or high power mode
-> +	(hpm). Should be specified in pairs (lpm, hpm), units uA.
-> +
-> +Example:
-> +
-> +	aliases {
-> +		sdhc1 = &sdhc_1;
-> +	};
-> +
-> +	sdhc_1: qcom,sdhc@f9824900 {
-> +		compatible = "qcom,sdhci-msm";
-> +		reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
-> +		reg-names = "hc_mem", "core_mem";
-> +		interrupts = <0 123 0>, <0 138 0>;
-> +		interrupt-names = "hc_irq", "pwr_irq";
-> +		bus-width = <4>;
-> +		non-removable;
-> +
-> +		vdd-supply = <&pm8941_l21>;
-> +		vdd-io-supply = <&pm8941_l13>;
-> +		qcom,vdd-voltage-level = <2950000 2950000>;
-> +		qcom,vdd-current-level = <9000 800000>;
-> +		qcom,vdd-io-always-on;
-> +		qcom,vdd-io-lpm-sup;
-> +		qcom,vdd-io-voltage-level = <1800000 2950000>;
-> +		qcom,vdd-io-current-level = <6 22000>;
-> +		qcom,bus-speed-mode = "HS200_1p8v", "DDR_1p8v";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sdc1_clk &sdc1_cmd &sdc1_data>;
-> +
-> +		clocks = <&iface>, <&core>, <&bus>;
-> +		clock-names = "iface", "core", "bus";
-> +
-> +	};
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 7fc5099..e8da488 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -322,6 +322,19 @@ config MMC_ATMELMCI
->  
->  	  If unsure, say N.
->  
-> +config MMC_SDHCI_MSM
-> +	tristate "Qualcomm SDHCI Controller Support"
-> +	depends on ARCH_MSM
-> +	depends on MMC_SDHCI_PLTFM
-> +	help
-> +	  This selects the Secure Digital Host Controller Interface (SDHCI)
-> +	  support present in MSM SOCs from Qualcomm. The controller
-> +	  supports SD/MMC/SDIO devices.
-> +
-> +	  If you have a controller with this interface, say Y or M here.
-> +
-> +	  If unsure, say N.
-> +
->  config MMC_MSM
->  	tristate "Qualcomm SDCC Controller Support"
->  	depends on MMC && ARCH_MSM
-> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> index c41d0c3..5faed14 100644
-> --- a/drivers/mmc/host/Makefile
-> +++ b/drivers/mmc/host/Makefile
-> @@ -61,6 +61,7 @@ obj-$(CONFIG_MMC_SDHCI_OF_ESDHC)	+= sdhci-of-esdhc.o
->  obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+= sdhci-of-hlwd.o
->  obj-$(CONFIG_MMC_SDHCI_BCM_KONA)	+= sdhci-bcm-kona.o
->  obj-$(CONFIG_MMC_SDHCI_BCM2835)		+= sdhci-bcm2835.o
-> +obj-$(CONFIG_MMC_SDHCI_MSM)		+= sdhci-msm.o
->  
->  ifeq ($(CONFIG_CB710_DEBUG),y)
->  	CFLAGS-cb710-mmc	+= -DDEBUG
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> new file mode 100644
-> index 0000000..c746a9b
-> --- /dev/null
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -0,0 +1,627 @@
-> +/*
-> + * drivers/mmc/host/sdhci-msm.c - Qualcomm MSM SDHCI Platform
-> + * driver source file
-> + *
-> + * Copyright (c) 2013, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/pinctrl/consumer.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#include "sdhci-pltfm.h"
-> +
-> +#define CORE_HC_MODE		0x78
-> +#define HC_MODE_EN		0x1
-> +
-> +#define CORE_POWER		0x0
-> +#define CORE_SW_RST		(1 << 7)
-> +
-> +#define CORE_PWRCTL_STATUS	0xdc
-> +#define CORE_PWRCTL_MASK	0xe0
-> +#define CORE_PWRCTL_CLEAR	0xe4
-> +#define CORE_PWRCTL_CTL		0xe8
-> +
-> +#define CORE_PWRCTL_BUS_OFF	0x01
-> +#define CORE_PWRCTL_BUS_ON	(1 << 1)
-> +#define CORE_PWRCTL_IO_LOW	(1 << 2)
-> +#define CORE_PWRCTL_IO_HIGH	(1 << 3)
-> +
-> +#define CORE_PWRCTL_BUS_SUCCESS	0x01
-> +#define CORE_PWRCTL_BUS_FAIL	(1 << 1)
-> +#define CORE_PWRCTL_IO_SUCCESS	(1 << 2)
-> +#define CORE_PWRCTL_IO_FAIL	(1 << 3)
-> +
-> +#define INT_MASK		0xf
-> +
-> +/* This structure keeps information per regulator */
-> +struct sdhci_msm_reg_data {
-> +	/* voltage regulator handle */
+> This is what the delay_usecs field in the spi_transfer struct is for,
+> the flash code should be using that to ensure that the minimum delay
+> requirement is met.
 
-useless comment, please remove it.
+Not quite.  You talk about 'delay_usecs' which is about letting
+time pass by between partial transfers.  The "dummies" mentioned
+here in this thread are "bit times with _clock pulses_" that get
+inserted between transfers with single and multiple data lines.
 
-> +	struct regulator *reg;
-> +	/* regulator name */
+Compare this with M25P opcodes READ 0x03 vs FAST_READ 0x0b, where
+the latter "communicates" a dummy byte before real data is
+returned.  So far (AFAICS) those dummy bit cycles always were
+multiples of 8 bits, i.e. complete bytes.  So they could be done
+with bitbang as well as get simulated with "traditional" SPI
+transfers by just sending another byte without looking at the
+received data.
 
-useless comment
 
-> +	const char *name;
-> +	/* voltage level to be set */
-> +	u32 low_vol_level;
-> +	u32 high_vol_level;
-> +	/* Load values for low power and high power mode */
-> +	u32 lpm_uA;
-> +	u32 hpm_uA;
-> +
-> +	/* is this regulator needs to be always on? */
-> +	bool is_always_on;
-> +	/* is low power mode setting required for this regulator? */
-> +	bool lpm_sup;
-> +};
-> +
-> +struct sdhci_msm_pltfm_data {
-> +	u32 caps;				/* Supported UHS-I Modes */
-> +	u32 caps2;				/* More capabilities */
-> +	struct sdhci_msm_reg_data vdd_data;	/* VDD/VCC regulator info */
-> +	struct sdhci_msm_reg_data vdd_io_data;	/* VDD IO regulator info */
-> +};
-> +
-> +struct sdhci_msm_host {
-> +	struct platform_device *pdev;
-> +	void __iomem *core_mem;	/* MSM SDCC mapped address */
-> +	int pwr_irq;		/* power irq */
-> +	struct clk *clk;	/* main SD/MMC bus clock */
-> +	struct clk *pclk;	/* SDHC peripheral bus clock */
-> +	struct clk *bus_clk;	/* SDHC bus voter clock */
-> +	struct sdhci_msm_pltfm_data pdata;
-> +	struct mmc_host *mmc;
-> +	struct sdhci_pltfm_data sdhci_msm_pdata;
-> +};
-> +
-> +enum vdd_io_level {
-> +	/* set vdd_io_data->low_vol_level */
-> +	VDD_IO_LOW,
-> +	/* set vdd_io_data->high_vol_level */
-> +	VDD_IO_HIGH,
-> +	/*
-> +	 * set whatever there in voltage_level (third argument) of
-> +	 * sdhci_msm_set_vdd_io_vol() function.
-> +	 */
-> +	VDD_IO_SET_LEVEL,
-> +};
-> +
-> +#define MAX_PROP_SIZE 32
-> +static int sdhci_msm_dt_parse_vreg_info(struct device *dev,
-> +					struct sdhci_msm_reg_data *vreg,
-> +					const char *vreg_name)
-> +{
-> +	int len, ret = 0;
+[ difference in quality compared to "traditional" SPI ]
 
-ret is not used you can remove it and return 0 at the function end.
+There is a new qualitiy here that there are e.g. only 6 "dummy
+bits" involved, which appear to be encoded in hardware, and are
+hard to do with "old" SPI controllers.  But OTOH those old
+controllers won't do dual or quad data line transfers either, so
+they won't need to do sub-byte dummy cycles.
 
-> +	const __be32 *prop;
-> +	char prop_name[MAX_PROP_SIZE];
-> +	struct device_node *np = dev->of_node;
-> +
-> +	snprintf(prop_name, MAX_PROP_SIZE, "%s-supply", vreg_name);
-> +	if (!of_parse_phandle(np, prop_name, 0)) {
-> +		dev_info(dev, "No vreg data found for %s\n", vreg_name);
-> +		return -EINVAL;
-> +	}
-> +
-> +	vreg->name = vreg_name;
-> +
-> +	snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-always-on", vreg_name);
-> +	if (of_get_property(np, prop_name, NULL))
-> +		vreg->is_always_on = true;
-> +
-> +	snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-lpm-sup", vreg_name);
-> +	if (of_get_property(np, prop_name, NULL))
-> +		vreg->lpm_sup = true;
-> +
-> +	snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-voltage-level", vreg_name);
-> +	prop = of_get_property(np, prop_name, &len);
-> +	if (!prop || (len != (2 * sizeof(__be32)))) {
-> +		dev_warn(dev, "%s %s property\n",
-> +			 prop ? "invalid format" : "no", prop_name);
-> +	} else {
-> +		vreg->low_vol_level = be32_to_cpup(&prop[0]);
-> +		vreg->high_vol_level = be32_to_cpup(&prop[1]);
-> +	}
-> +
-> +	snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-current-level", vreg_name);
-> +	prop = of_get_property(np, prop_name, &len);
-> +	if (!prop || (len != (2 * sizeof(__be32)))) {
-> +		dev_warn(dev, "%s %s property\n",
-> +			 prop ? "invalid format" : "no", prop_name);
-> +	} else {
-> +		vreg->lpm_uA = be32_to_cpup(&prop[0]);
-> +		vreg->hpm_uA = be32_to_cpup(&prop[1]);
-> +	}
-> +
-> +	dev_dbg(dev, "%s: %s%svol=[%d %d]uV, curr=[%d %d]uA\n",
-> +		vreg->name, vreg->is_always_on ? "always_on, " : "",
-> +		vreg->lpm_sup ? "lpm_sup, " : "", vreg->low_vol_level,
-> +		vreg->high_vol_level, vreg->lpm_uA, vreg->hpm_uA);
-> +
-> +	return ret;
-> +}
-> +
-> +/* Parse platform data */
+I liked the S25F datasheet that was referenced here recently,
+it's useful for the discussion that is going on here.  I liked
+the "Serial Peripheral Interface with Multi-I/O" subtitle, which
+suggests that SPI gets enhanced while nothing of it is specific
+to flash chips.  And I liked the sequence diagrams for their
+overview or introduction nature, which you can compare to the SPI
+message submission API in the Linux kernel which connects SPI
+slave drivers and SPI controller drivers.
 
-parse devicetree data ?
 
-> +static int sdhci_msm_populate_pdata(struct device *dev,
-> +					struct sdhci_msm_pltfm_data *pdata)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	int len, i;
-> +
-> +	if (sdhci_msm_dt_parse_vreg_info(dev, &pdata->vdd_data, "vdd")) {
-> +		dev_err(dev, "failed parsing vdd data\n");
-> +		return -EINVAL;
-> +	}
-> +	if (sdhci_msm_dt_parse_vreg_info(dev, &pdata->vdd_io_data, "vdd-io")) {
-> +		dev_err(dev, "failed parsing vdd-io data\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	len = of_property_count_strings(np, "qcom,bus-speed-mode");
-> +
-> +	for (i = 0; i < len; i++) {
-> +		const char *name = NULL;
-> +
-> +		of_property_read_string_index(np,
-> +					"qcom,bus-speed-mode", i, &name);
-> +		if (!name)
-> +			continue;
-> +
-> +		if (!strncmp(name, "HS200_1p8v", sizeof("HS200_1p8v")))
-> +			pdata->caps2 |= MMC_CAP2_HS200_1_8V_SDR;
-> +		else if (!strncmp(name, "HS200_1p2v", sizeof("HS200_1p2v")))
-> +			pdata->caps2 |= MMC_CAP2_HS200_1_2V_SDR;
-> +		else if (!strncmp(name, "DDR_1p8v", sizeof("DDR_1p8v")))
-> +			pdata->caps |= MMC_CAP_1_8V_DDR | MMC_CAP_UHS_DDR50;
-> +		else if (!strncmp(name, "DDR_1p2v", sizeof("DDR_1p2v")))
-> +			pdata->caps |= MMC_CAP_1_2V_DDR | MMC_CAP_UHS_DDR50;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/* Regulator utility functions */
-> +static int sdhci_msm_vreg_init_reg(struct device *dev,
-> +				   struct sdhci_msm_reg_data *vreg)
-> +{
-> +	int ret = 0;
+[ automatic feature use in the MTD layer considered harmful ]
 
-could you remove ret variable, please.
+The datasheet had "block diagrams" (section 3.16) which
+demonstrated that transfers which involve multiple data lines do
+depend on
+- the SPI slave (the chip) supporting it
+- the SPI controller (the chip, IP block) supporting it
+- the wiring required to do it (the board)
+- all involved software (the drivers) supporting it and
+  (optionally) wanting to use it
 
-> +	/* Get the regulator handle */
+which is why the flash chip's capability alone does not suffice
+to enable the use of such an optional feature.  And users or
+admins may want to control the use of optional features for
+development, or diagnostics, or compatibility, or whatever
+reason.
 
-useless comment
 
-> +	vreg->reg = devm_regulator_get(dev, vreg->name);
-> +	if (IS_ERR(vreg->reg)) {
-> +		ret = PTR_ERR(vreg->reg);
-> +		dev_err(dev, "devm_regulator_get(%s) failed. ret=%d\n",
-> +			vreg->name, ret);
-> +		return ret;
+[ generic support for enhanced SPI communication ]
 
-just return PTR_ERR(vreg->reg)
+And the datasheet had "sequence diagrams" (section 4.2.1) which
+one may use to check whether those "phases" in the course of
+communicating "a command" can get expressed by means of the SPI
+message submission API (struct spi_message, and struct
+spi_transfer).  Currently "use DDR", "use single/dual/quad data
+lines", "append dummy _bits_" appear to be missing, but might get
+added similar to the existing "control the CS line".
 
-> +	}
-> +
-> +	/* sanity check */
-> +	if (!vreg->high_vol_level || !vreg->hpm_uA) {
+The previous discussion suggests that we
+- need to express the enhanced modes of SPI communication in
+  terms of SPI message submission data structures (I believe that
+  his can be done with a few straight forward extensions which
+  remain neutral to existing setups)
+- make SPI masters (controller drivers) support those optional
+  additional features _if_ the hardware supports it (read: do
+  nothing for existing drivers, and only add optional support to
+  new drivers)
+- announce the SPI master's optional support for enhanced
+  features (do we have such a query API already? or is this
+  another leap in quality for SPI?  I think bit order and SPI
+  modes 0-3 may already get matched but are not explicitly
+  queried)
+- make SPI slave drivers optionally query those master
+  capabilities (plus other sources of configuration information)
+  before they may adjust the SPI messages which they create and
+  emit (which again is to do nothing for all SPI slaves, except
+  for another translation layer in those MTD drivers which happen
+  to use SPI for communication to the chip)
 
-if this is sanity check shouldn't you check low_vol_level and lpm_uA as
-well?
+The point is that the M25P80 driver needs to get split into what
+is currently there (flash chip handling, detection of features
+and geometry), plus a translation layer which maps "flash chip
+access" level operations (erase/write/read) to specific "SPI
+messages which carry out that access".
 
-> +		dev_err(dev, "%s invalid constraints specified\n", vreg->name);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sdhci_msm_vreg_enable(struct sdhci_msm_reg_data *vreg)
-> +{
-> +	int ret = 0;
-> +
-> +	/* Put regulator in HPM (high power mode) */
-> +	ret = regulator_set_optimum_mode(vreg->reg, vreg->hpm_uA);
-> +	if (ret < 0) {
-> +		pr_err("regulator_set_optimum_mode(%s,uA_load=%d) fail (%d)\n",
-> +			vreg->name, vreg->hpm_uA, ret);
+Consideration of optional features and adjusting the construction
+of SPI messages (instruction opcodes, address field length,
+delay/dummy flags, number of data lines, double data rate, et al)
+all occur within that translation helper.  Because the flash chip
+driver should not do this alone.  This helper later may even be
+usable for other kinds of SPI slaves as well (or serve as a
+template).
 
-use dev_err() instead.
+These enhanced modes of SPI communication may be inspired by or
+may only now become visible because of flash chips, but they
+should fit into the overall SPI setup and shall be re-usable for
+other SPI slaves in the future.
 
-> +		return ret;
-> +	}
-> +
-> +	if (!regulator_is_enabled(vreg->reg)) {
-> +		/* Set voltage level */
-> +		ret = regulator_set_voltage(vreg->reg, vreg->high_vol_level,
-> +						vreg->high_vol_level);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = regulator_enable(vreg->reg);
-> +	if (ret) {
-> +		pr_err("regulator_enable(%s) fail (%d)\n", vreg->name, ret);
 
-use dev_err().
+[ potential "LUT" optimization, implementation details ]
 
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sdhci_msm_vreg_disable(struct sdhci_msm_reg_data *vreg)
-> +{
-> +	int ret = 0;
+Putting the "run this many dummy _bit_ cycles" at the "end" of a
+partial transfer, like is done today for "delay for this many
+microseconds", might help those controllers which want to get fed
+a data pattern which automatically modifies characteristics of
+subsequent data transmission.  But this is just an implementation
+detail, another optional optimization (hopefully this "LUT" thing
+is an option and not mandatory).
 
-IMO no need to initialize ret variable?
+Implementing the "run this partial transfer and _then_ switch to
+multiple data lines or double data rate" is another option which
+may help better map those features to hardware implementations.
 
-> +
-> +	if (!regulator_is_enabled(vreg->reg))
-> +		return 0;
-> +
-> +	/* Never disable regulator marked as always_on */
-> +	if (vreg->is_always_on) {
-> +		if (vreg->lpm_sup) {
-> +			/* Put always_on regulator in LPM (low power mode) */
-> +			ret = regulator_set_optimum_mode(vreg->reg,
-> +				vreg->lpm_uA);
-> +			if (ret < 0)
-> +				return ret;
-> +		}
-> +	} else {
-> +		ret = regulator_disable(vreg->reg);
-> +		if (ret) {
-> +			pr_err("regulator_disable(%s) fail (%d)\n",
-> +				vreg->name, ret);
+But I feel that these extensions need to remain isolated to
+partial SPI message transfers or at the most to individual SPI
+messages, and cannot get setup in advance nor should they apply
+globally.  It's just not true that every SPI slave is a flash
+chip.  If one of the slaves is a flash chip, no other slave needs
+to be.  And even if there are several flash chips, potentially of
+the same type or with similar capabilities, they need not be
+connected in identical ways.
 
-dev_err(), please.
+I certainly don't want the physical SPI communication to change
+in arbitrary ways unexpectedly just because I happen to send a
+random byte of data to an arbitrary slave that is attached to the
+bus (like an EEPROM or LCD or any random sensor).  BTW I still
+hope that I overestimate the hardware implementation's greed
+(haven't checked the QuadSPI controller reference manual).  This
+LUT feature should be optional, and everything that may be
+changed in automatic ways should be adjustable by software in the
+transfer setup phase as well -- without being forced to transfer
+any data as a trigger.
 
-> +			return ret;
-> +		}
-> +
-> +		ret = regulator_set_optimum_mode(vreg->reg, 0);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		/* Set min. voltage level to 0 */
-> +		ret = regulator_set_voltage(vreg->reg, 0, vreg->high_vol_level);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sdhci_msm_setup_vreg(struct sdhci_msm_pltfm_data *pdata,
-> +				bool enable, bool is_init)
-> +{
-> +	int ret = 0, i;
 
-no need to initialize ret variable?
+There's a question whether an SPI master's
+.transfer_one_message() callback (or common code which dispatches
+messages to SPI controllers) should actively reject messages
+which require features that aren't supported by the controller.
+Or whether these flags need to tell "required, reject if not met"
+and "optional, please use if available" apart.
 
-> +	struct sdhci_msm_reg_data *vreg_table[2];
-> +
-> +	vreg_table[0] = &pdata->vdd_data;
-> +	vreg_table[1] = &pdata->vdd_io_data;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(vreg_table); i++) {
-> +		if (vreg_table[i]) {
+And one may think of multi data line communication with arbitrary
+numbers of lines and asymetric Rx/Tx numbers as well.  It may not
+apply to current SPI implementations, but I've seen UARTs which
+can bundle 1+4 or 2+3 or 3+2 or 4+1 lines, in addition to the
+regular 1x RX and 1x TX setup.
 
-could you invert the logic here:
+It's essential to represent dummy cycles in terms of _bit_
+numbers, since full bytes no longer universally apply (think:
+software bitbang, not everything is done in hardware).  And there
+are SPI controllers or slaves (can't remember who implemented it)
+where the presence of dummies is known, yet their number isn't,
+and the end of dummies and start of payload gets determined from
+a dummy data byte pattern.  Is this generic enough a feature to
+get represented in the SPI message submission API?
 
-		if (!vreg_table[i])
-			continue;
 
-by that way you will save one tab below.
-
-> +			if (enable)
-> +				ret = sdhci_msm_vreg_enable(vreg_table[i]);
-> +			else
-> +				ret = sdhci_msm_vreg_disable(vreg_table[i]);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-
-blank line ?
-
-> +	return 0;
-> +}
-> +
-> +/* This init function should be called only once for each SDHC slot */
-> +static int sdhci_msm_vreg_init(struct device *dev,
-> +				struct sdhci_msm_pltfm_data *pdata)
-> +{
-> +	struct sdhci_msm_reg_data *curr_vdd_reg = &pdata->vdd_data;
-> +	struct sdhci_msm_reg_data *curr_vdd_io_reg = &pdata->vdd_io_data;
-> +	int ret = 0;
-
-no need to initialize ret variable.
-
-> +
-> +	ret = sdhci_msm_vreg_init_reg(dev, curr_vdd_reg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = sdhci_msm_vreg_init_reg(dev, curr_vdd_io_reg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int sdhci_msm_set_vdd_io_vol(struct sdhci_msm_pltfm_data *pdata,
-> +				    enum vdd_io_level level,
-> +				    unsigned int voltage_level)
-> +{
-> +	int set_level;
-> +	struct sdhci_msm_reg_data *vdd_io_reg = &pdata->vdd_io_data;
-> +
-> +	if (!regulator_is_enabled(vdd_io_reg->reg))
-> +		return 0;
-> +
-> +	switch (level) {
-> +	case VDD_IO_LOW:
-> +		set_level = vdd_io_reg->low_vol_level;
-> +		break;
-> +	case VDD_IO_HIGH:
-> +		set_level = vdd_io_reg->high_vol_level;
-> +		break;
-> +	case VDD_IO_SET_LEVEL:
-> +		set_level = voltage_level;
-> +		break;
-> +	default:
-> +		pr_err("invalid vdd_io level = %d", level);
-> +		return -EINVAL;
-> +	}
-
-add blank line here, please.
-
-> +	return regulator_set_voltage(vdd_io_reg->reg, set_level, set_level);
-> +}
-> +
-> +static irqreturn_t sdhci_msm_pwr_irq(int irq, void *data)
-> +{
-> +	struct sdhci_msm_host *msm_host = (struct sdhci_msm_host *)data;
-> +	u8 irq_status = 0;
-> +	u8 irq_ack = 0;
-> +	int ret = 0;
-
-no need to initialize irq_status and ret, right?
-
-> +
-> +	irq_status = readb_relaxed(msm_host->core_mem + CORE_PWRCTL_STATUS);
-> +	pr_debug("%s: Received IRQ(%d), status=0x%x\n",
-> +		 mmc_hostname(msm_host->mmc), irq, irq_status);
-
-dev_dbg() ?
-
-> +
-> +	/* Clear the interrupt */
-> +	writeb_relaxed(irq_status, (msm_host->core_mem + CORE_PWRCTL_CLEAR));
-
-why you use writeb here, but in .probe you use writel?
-
-> +	/*
-> +	 * SDHC has core_mem and hc_mem device memory and these memory
-> +	 * addresses do not fall within 1KB region. Hence, any update to
-> +	 * core_mem address space would require an mb() to ensure this gets
-> +	 * completed before its next update to registers within hc_mem.
-> +	 */
-> +	mb();
-> +
-> +	/* Handle BUS ON/OFF */
-> +	if (irq_status & (CORE_PWRCTL_BUS_ON | CORE_PWRCTL_BUS_OFF)) {
-> +		bool flag = (irq_status & CORE_PWRCTL_BUS_ON) ? 1 : 0;
-> +		ret = sdhci_msm_setup_vreg(&msm_host->pdata, flag, false);
-> +		if (ret)
-> +			irq_ack |= CORE_PWRCTL_BUS_FAIL;
-> +		else
-> +			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
-> +	}
-> +	/* Handle IO LOW/HIGH */
-> +	if (irq_status & (CORE_PWRCTL_IO_LOW | CORE_PWRCTL_IO_HIGH)) {
-> +		/* Switch voltage */
-> +		int io_status = (irq_status & CORE_PWRCTL_IO_LOW) ?
-> +		    VDD_IO_LOW : VDD_IO_HIGH;
-> +		ret = sdhci_msm_set_vdd_io_vol(&msm_host->pdata, io_status, 0);
-> +		if (ret)
-> +			irq_ack |= CORE_PWRCTL_IO_FAIL;
-> +		else
-> +			irq_ack |= CORE_PWRCTL_IO_SUCCESS;
-> +	}
-> +
-> +	/* ACK status to the core */
-> +	writeb_relaxed(irq_ack, (msm_host->core_mem + CORE_PWRCTL_CTL));
-> +	/*
-> +	 * SDHC has core_mem and hc_mem device memory and these memory
-> +	 * addresses do not fall within 1KB region. Hence, any update to
-> +	 * core_mem address space would require an mb() to ensure this gets
-> +	 * completed before its next update to registers within hc_mem.
-> +	 */
-> +	mb();
-> +
-> +	pr_debug("%s: Handled IRQ(%d), ret=%d, ack=0x%x\n",
-> +		 mmc_hostname(msm_host->mmc), irq, ret, irq_ack);
-
-dev_dbg() ?
-
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +/* This function returns the max. current supported by VDD rail in mA */
-> +static u32 sdhci_msm_get_vdd_max_current(struct sdhci_msm_host *host)
-> +{
-> +	return host->pdata.vdd_data.hpm_uA / 1000;
-> +}
-> +
-> +static const struct of_device_id sdhci_msm_dt_match[] = {
-> +	{.compatible = "qcom,sdhci-msm"},
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
-> +
-> +static int sdhci_msm_probe(struct platform_device *pdev)
-> +{
-> +	struct sdhci_host *host;
-> +	struct sdhci_pltfm_host *pltfm_host;
-> +	struct sdhci_msm_host *msm_host;
-> +	struct resource *core_memres = NULL;
-> +	int ret = 0, dead = 0;
-
-no need to initialize ret and dead variables.
-
-> +	struct pinctrl *pinctrl;
-> +
-> +	if (!pdev->dev.of_node) {
-> +		dev_err(&pdev->dev, "No device tree data\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	msm_host = devm_kzalloc(&pdev->dev, sizeof(*msm_host), GFP_KERNEL);
-> +	if (!msm_host)
-> +		return -ENOMEM;
-> +
-> +	host = sdhci_pltfm_init(pdev, &msm_host->sdhci_msm_pdata, 0);
-> +	if (IS_ERR(host)) {
-> +		dev_err(mmc_dev(host->mmc), "sdhci_pltfm_init error\n");
-> +		return PTR_ERR(host);
-> +	}
-> +
-> +	pltfm_host = sdhci_priv(host);
-> +	pltfm_host->priv = msm_host;
-> +	msm_host->mmc = host->mmc;
-> +	msm_host->pdev = pdev;
-> +
-> +	ret = mmc_of_parse(host->mmc);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed parsing mmc device tree\n");
-> +		goto pltfm_free;
-> +	}
-> +
-> +	/* Extract platform data */
-
-needless comment, again.
-
-> +	ret = sdhci_msm_populate_pdata(&pdev->dev, &msm_host->pdata);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "DT parsing error\n");
-> +		goto pltfm_free;
-> +	}
-> +
-> +	/* Setup pins */
-> +	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
-> +	if (IS_ERR(pinctrl))
-> +		dev_warn(&pdev->dev, "pins are not configured by the driver\n");
-> +
-> +	/* Setup SDCC bus voter clock. */
-> +	msm_host->bus_clk = devm_clk_get(&pdev->dev, "bus");
-> +	if (!IS_ERR(msm_host->bus_clk)) {
-> +		/* Vote for max. clk rate for max. performance */
-> +		ret = clk_set_rate(msm_host->bus_clk, INT_MAX);
-> +		if (ret)
-> +			goto pltfm_free;
-> +		ret = clk_prepare_enable(msm_host->bus_clk);
-> +		if (ret)
-> +			goto pltfm_free;
-> +	}
-> +
-> +	/* Setup main peripheral bus clock */
-> +	msm_host->pclk = devm_clk_get(&pdev->dev, "iface");
-> +	if (!IS_ERR(msm_host->pclk)) {
-> +		ret = clk_prepare_enable(msm_host->pclk);
-> +		if (ret) {
-> +			dev_err(&pdev->dev,
-> +				"Main peripheral clock setup failed (%d)\n",
-> +				ret);
-> +			goto bus_clk_disable;
-> +		}
-> +	}
-> +
-> +	/* Setup SDC MMC clock */
-> +	msm_host->clk = devm_clk_get(&pdev->dev, "core");
-> +	if (IS_ERR(msm_host->clk)) {
-> +		ret = PTR_ERR(msm_host->clk);
-> +		dev_err(&pdev->dev, "SDC MMC clock setup failed (%d)\n", ret);
-> +		goto pclk_disable;
-> +	}
-> +
-> +	ret = clk_prepare_enable(msm_host->clk);
-> +	if (ret)
-> +		goto pclk_disable;
-> +
-> +	/* Setup regulators */
-> +	ret = sdhci_msm_vreg_init(&pdev->dev, &msm_host->pdata);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Regulator setup failed (%d)\n", ret);
-> +		goto clk_disable;
-> +	}
-> +
-> +	/* Reset the core and Enable SDHC mode */
-
-this comment should go few lines below.
-
-> +	core_memres = platform_get_resource_byname(pdev,
-> +						   IORESOURCE_MEM, "core_mem");
-> +	msm_host->core_mem = devm_ioremap_resource(&pdev->dev, core_memres);
-> +
-> +	if (IS_ERR(msm_host->core_mem)) {
-> +		dev_err(&pdev->dev, "Failed to remap registers\n");
-> +		ret = PTR_ERR(msm_host->core_mem);
-> +		goto vreg_disable;
-> +	}
-> +
-> +	/* Set SW_RST bit in POWER register (Offset 0x0) */
-
-those comments are stupid, please remove them.
-
-> +	writel_relaxed(CORE_SW_RST, msm_host->core_mem + CORE_POWER);
-> +	/* Set HC_MODE_EN bit in HC_MODE register */
-> +	writel_relaxed(HC_MODE_EN, (msm_host->core_mem + CORE_HC_MODE));
-> +
-
-are all interrupts disabled at this point?
-
-> +	/*
-> +	 * Following are the deviations from SDHC spec v3.0 -
-> +	 * 1. Card detection is handled using separate GPIO.
-> +	 * 2. Bus power control is handled by interacting with PMIC.
-> +	 */
-> +	host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
-> +
-> +	/* Setup PWRCTL irq */
-> +	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
-> +	if (msm_host->pwr_irq < 0) {
-> +		dev_err(&pdev->dev, "Failed to get pwr_irq by name (%d)\n",
-> +			msm_host->pwr_irq);
-> +		goto vreg_disable;
-> +	}
-> +	ret = devm_request_threaded_irq(&pdev->dev, msm_host->pwr_irq, NULL,
-> +					sdhci_msm_pwr_irq, IRQF_ONESHOT,
-> +					dev_name(&pdev->dev), host);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Request threaded irq(%d) failed (%d)\n",
-> +			msm_host->pwr_irq, ret);
-> +		goto vreg_disable;
-> +	}
-> +
-> +	/* Enable pwr irq interrupts */
-> +	writel_relaxed(INT_MASK, (msm_host->core_mem + CORE_PWRCTL_MASK));
-> +
-> +	/* Set host capabilities */
-
-useless comment
-
-> +	msm_host->mmc->caps |= msm_host->pdata.caps;
-> +	msm_host->mmc->caps2 |= msm_host->pdata.caps2;
-> +
-> +	ret = sdhci_add_host(host);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Add host failed (%d)\n", ret);
-> +		goto vreg_disable;
-> +	}
-> +
-> +	/* Set core clk rate */
-
-useless comment
-
-> +	ret = clk_set_rate(msm_host->clk, host->max_clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "MClk rate set failed (%d)\n", ret);
-> +		goto remove_host;
-> +	}
-> +
-> +	host->mmc->max_current_180 = host->mmc->max_current_300 =
-> +	host->mmc->max_current_330 = sdhci_msm_get_vdd_max_current(msm_host);
-> +
-> +	/* Successful initialization */
-
-useless comment
-
-> +	return 0;
-> +
-> +remove_host:
-> +	dead = (readl_relaxed(host->ioaddr + SDHCI_INT_STATUS) == 0xffffffff);
-> +	sdhci_remove_host(host, dead);
-> +vreg_disable:
-> +	if (!IS_ERR(msm_host->pdata.vdd_data.reg))
-> +		sdhci_msm_vreg_disable(&msm_host->pdata.vdd_data);
-> +	if (!IS_ERR(msm_host->pdata.vdd_io_data.reg))
-> +		sdhci_msm_vreg_disable(&msm_host->pdata.vdd_io_data);
-> +clk_disable:
-> +	if (!IS_ERR(msm_host->clk))
-> +		clk_disable_unprepare(msm_host->clk);
-> +pclk_disable:
-> +	if (!IS_ERR(msm_host->pclk))
-> +		clk_disable_unprepare(msm_host->pclk);
-> +bus_clk_disable:
-> +	if (!IS_ERR(msm_host->bus_clk))
-> +		clk_disable_unprepare(msm_host->bus_clk);
-> +pltfm_free:
-> +	sdhci_pltfm_free(pdev);
-> +	return ret;
-> +}
-> +
-> +static int sdhci_msm_remove(struct platform_device *pdev)
-> +{
-> +	struct sdhci_host *host = platform_get_drvdata(pdev);
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = pltfm_host->priv;
-> +	int dead = (readl_relaxed(host->ioaddr + SDHCI_INT_STATUS) ==
-> +		    0xffffffff);
-> +
-> +	sdhci_remove_host(host, dead);
-> +	sdhci_pltfm_free(pdev);
-> +	sdhci_msm_vreg_disable(&msm_host->pdata.vdd_data);
-> +	sdhci_msm_vreg_disable(&msm_host->pdata.vdd_io_data);
-> +	clk_disable_unprepare(msm_host->clk);
-> +	clk_disable_unprepare(msm_host->pclk);
-> +	if (!IS_ERR(msm_host->bus_clk))
-> +		clk_disable_unprepare(msm_host->bus_clk);
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver sdhci_msm_driver = {
-> +	.probe = sdhci_msm_probe,
-> +	.remove = sdhci_msm_remove,
-> +	.driver = {
-> +		   .name = "sdhci_msm",
-> +		   .owner = THIS_MODULE,
-> +		   .of_match_table = sdhci_msm_dt_match,
-> +		   },
-
-this bracket should be under ".driver".
-
-> +};
-> +
-> +module_platform_driver(sdhci_msm_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm Secure Digital Host Controller Interface driver");
-> +MODULE_LICENSE("GPL v2");
-> 
-
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
