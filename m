@@ -1,128 +1,187 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv3 2/8] mailbox/omap: add support for parsing dt devices
-Date: Tue, 17 Sep 2013 17:28:41 -0500
-Message-ID: <5238D799.40405@ti.com>
-References: <1375825216-18119-1-git-send-email-s-anna@ti.com>
- <BB39592C-0DAC-49A4-A782-583D7EB858AF@codeaurora.org>
- <52027CDC.8080205@ti.com>
- <FF52B913-A5AB-4516-BDA6-ED0BCFFBD4D1@codeaurora.org>
- <5202A927.4030708@ti.com>
- <CE2B6412-870F-4B43-9466-BE291E4E7210@codeaurora.org>
- <5203BCEE.9090902@ti.com> <52385CC1.7040908@baylibre.com>
+From: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 06/16] hwmon: tmp102: expose to thermal fw via DT nodes
+Date: Tue, 17 Sep 2013 18:29:45 -0400
+Message-ID: <5238D7D9.9010203@ti.com>
+References: <1379282563-14650-1-git-send-email-eduardo.valentin@ti.com> <1379282563-14650-7-git-send-email-eduardo.valentin@ti.com> <523643D4.30208@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52385CC1.7040908@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, Jassi Brar <jaswinder.singh@linaro.org>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="DRL6iNjCceenODkoGtIA3TOmsuj8cbFR2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <523643D4.30208-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+--DRL6iNjCceenODkoGtIA3TOmsuj8cbFR2
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> On 08/08/2013 17:44, Suman Anna wrote:
->> On 08/08/2013 09:34 AM, Kumar Gala wrote:
->>>
->>> On Aug 7, 2013, at 3:08 PM, Suman Anna wrote:
->>>
->>>> On 08/07/2013 12:41 PM, Kumar Gala wrote:
->>>>>
->>>>> On Aug 7, 2013, at 11:59 AM, Suman Anna wrote:
->>>>>
->>>>>> Kumar,
->>>>>>
->>>>>>>> Logic has been added to the OMAP2+ mailbox code to
->>>>>>>> parse the mailbox dt nodes and construct the different
->>>>>>>> mailboxes associated with the instance. The design is
->>>>>>>> based on gathering the same information that was being
->>>>>>>> passed previously through the platform data, except for
->>>>>>>> the interrupt type configuration information.
->>>>>>>>
->>>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>>>>>> ---
->>>>>>>> .../devicetree/bindings/mailbox/omap-mailbox.txt   |  43 +++++++
->>>>>>>> drivers/mailbox/mailbox-omap2.c                    | 130
->>>>>>>> ++++++++++++++++++---
->>>>>>>> 2 files changed, 158 insertions(+), 15 deletions(-)
->>>>>>>> create mode 100644
->>>>>>>> Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
->>>>>>>>
->>>>>>>> diff --git
->>>>>>>> a/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
->>>>>>>> b/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
->>>>>>>> new file mode 100644
->>>>>>>> index 0000000..8ffb08a
->>>>>>>> --- /dev/null
->>>>>>>> +++ b/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
->>>>>>>> @@ -0,0 +1,43 @@
->>>>>>>> +OMAP2+ Mailbox Driver
->>>>>>>> +
->>>>>>>> +Required properties:
->>>>>>>> +- compatible:        Should be one of the following,
->>>>>>>> +                "ti,omap2-mailbox" for
->>>>>>>> +                OMAP2420, OMAP2430, OMAP3430, OMAP3630 SoCs
->>>>>>>> +                "ti,omap4-mailbox" for
->>>>>>>> +                OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
->>>>>>>> +- reg:            Contains the mailbox register address range
->>>>>>>> (base address
->>>>>>>> +            and length)
->>>>>>>> +- interrupts:         Contains the interrupt information for
->>>>>>>> the mailbox
->>>>>>>> +            device. The format is dependent on which interrupt
->>>>>>>> +            controller the OMAP device uses
->>>>>>>> +- ti,hwmods:        Name of the hwmod associated with the mailbox
->>>>>>>> +- ti,mbox-num-users:    Number of targets (processor devices)
->>>>>>>> that the mailbox device
->>>>>>>> +            can interrupt
->>>>>>>> +- ti,mbox-num-fifos:    Number of h/w fifos within the mailbox
->>>>>>>> device
->>>>>>>
->>>>>>> Isn't "ti,mbox-num-users", "ti,mbox-num-fifos" this SoC specific,
->>>>>>> why do we need to encode in the device tree.  Can we not have a
->>>>>>> more SoC specific compatiable and encode such info in the driver
->>>>>>> as part of the .data field in of_device_id ?
->>>>>>
->>>>>> They are IP design parameters for the number of h/w fifos and
->>>>>> interrupts
->>>>>> coming out of the IP block, with the functionality identical. This
->>>>>> information could not be read from any registers. Until OMAP5, we
->>>>>> always
->>>>>> had a single IP in the SoC and so these could been encoded in the
->>>>>> driver. But in DRA7xx, a new SoC, we have 13 mailboxes which have
->>>>>> differing number of these properties even though the functional IP
->>>>>> block
->>>>>> is same.
->>>>>
->>>>> Ah, I see.  Since you've got examples of the same IP with different
->>>>> design params in a given SoC than this makes sense.
->>>>>
->>>>> Is that true of ti,mbox-num-users?
->>>>
->>>> Yes, it is true of both "ti,mbox-num-users" and "ti,mbox-num-fifos".
->>>
->>> So I think it would be good to update the binding to convey that SoCs
->>> might have multiple mbox units w/different design pararms (maybe a
->>> short blurb as part of the intro).
+On 15-09-2013 19:33, Guenter Roeck wrote:
+> On 09/15/2013 03:02 PM, Eduardo Valentin wrote:
+>> This patch adds to tmp102 temperature sensor the possibility
+>> to expose itself as thermal zone device, registered on the
+>> thermal framework.
 >>
->> Sure will do. Will wait for Benoit also to come back on this series if I
->> need to address any further review comments.
-> 
-> I had the same concern than Kumar originally, so if nobody has anymore
-> complain with this binding, that fine to me. At least for the DTS part.
-> 
+>> The thermal zone is built only if a device tree node
+>> describing a thermal zone for this sensor is present
+>> inside the tmp102 DT node. Otherwise, the driver behavior
+>> will be the same.
+>>
+>> Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
+>> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>> Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
+>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   drivers/hwmon/tmp102.c | 28 ++++++++++++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
+>> index d7b47ab..e432444 100644
+>> --- a/drivers/hwmon/tmp102.c
+>> +++ b/drivers/hwmon/tmp102.c
+>> @@ -27,6 +27,8 @@
+>>   #include <linux/mutex.h>
+>>   #include <linux/device.h>
+>>   #include <linux/jiffies.h>
+>> +#include <linux/thermal.h>
+>> +#include <linux/of.h>
+>>
+>>   #define    DRIVER_NAME "tmp102"
+>>
+>> @@ -50,6 +52,7 @@
+>>
+>>   struct tmp102 {
+>>       struct device *hwmon_dev;
+>> +    struct thermal_zone_device *tz;
+>>       struct mutex lock;
+>>       u16 config_orig;
+>>       unsigned long last_update;
+>> @@ -93,6 +96,19 @@ static struct tmp102 *tmp102_update_device(struct
+>> i2c_client *client)
+>>       return tmp102;
+>>   }
+>>
+>> +static int tmp102_read_temp(void *dev, long *temp)
+>> +{
+>> +    struct tmp102 *tmp102 =3D tmp102_update_device(to_i2c_client(dev)=
+);
+>> +
+>> +    if (tmp102->temp[0] < 0)
+>> +        dev_warn(tmp102->hwmon_dev,
+>> +             "operating in negative temp: %d\n", tmp102->temp[0]);
+>> +
+>=20
+> Please drop this warning.
+>=20
 
-Thanks for the review. I will be re-spinning the series soon to address
-comments from Kevin on a different patch in this series, so planning to
-make some DT binding changes as well as part of that.
+Done for both drivers.
 
-regards
-Suman
+> Guenter
+>=20
+>> +    *temp =3D tmp102->temp[0];
+>> +
+>> +    return 0;
+>> +}
+>> +
+>>   static ssize_t tmp102_show_temp(struct device *dev,
+>>                   struct device_attribute *attr,
+>>                   char *buf)
+>> @@ -204,6 +220,16 @@ static int tmp102_probe(struct i2c_client *client=
+,
+>>           goto fail_remove_sysfs;
+>>       }
+>>
+>> +    tmp102->tz =3D thermal_zone_of_sensor_register(&client->dev, 0,
+>> +                             &client->dev,
+>> +                             tmp102_read_temp, NULL);
+>> +    if (IS_ERR(tmp102->tz)) {
+>> +        dev_warn(&client->dev,
+>> +             "Could not parse thermal data in device tree: %ld\n",
+>> +             PTR_ERR(tmp102->tz));
+>=20
+> Please drop this warning. You already create error messages in
+> thermal_zone_of_sensor_register(). That should be sufficient.
+> The same applies to the lm75 patch.
+
+OK. Done for both.
+
+>=20
+> As a side note, I would suggest to provide devm_ functions for
+> registration.
+> We are introducing those for hwmon registration, which enables us to re=
+move
+> most _remove functions. It would be great if we can keep it that way.
+>=20
+
+Right. This side note is taken. Actually this is on my todo list for
+quite a while. But I believe this should not block this series, should
+it? I will be probably cleaning the thermal framework code after this
+current work is accepted at least.
+
+> On a higher level, I don't think it is a good idea to make thermal zone=
+s
+> and thermal zone data mandatory. Many systems may neither need nor want=
+ it.
+>=20
+
+Well, I agree with you. Did you see something hard required in the patch
+I sent. I made it so that it could continue the driver probe without
+thermal zones, as you requested.
+
+
+I will repost both patches in reply to our thread.
+
+Eduardo
+
+> Guenter
+>=20
+>> +        tmp102->tz =3D NULL;
+>> +    }
+>> +
+>>       dev_info(&client->dev, "initialized\n");
+>>
+>>       return 0;
+>> @@ -220,6 +246,8 @@ static int tmp102_remove(struct i2c_client *client=
+)
+>>   {
+>>       struct tmp102 *tmp102 =3D i2c_get_clientdata(client);
+>>
+>> +    /* thermal zone life cycle is not our responsibility */
+>> +    thermal_zone_of_sensor_unregister(&client->dev, tmp102->tz);
+>>       hwmon_device_unregister(tmp102->hwmon_dev);
+>>       sysfs_remove_group(&client->dev.kobj, &tmp102_attr_group);
+>>
+>>
+>=20
+>=20
+>=20
+
+
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
+
+
+--DRL6iNjCceenODkoGtIA3TOmsuj8cbFR2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlI4190ACgkQCXcVR3XQvP3GHQD7BSUEBuqajjm7XMykeo4s84gh
+YvCXQ3BdSnWdNxFAFzEA+gOqYkg5KhWl04akhJi7zDXBCG8PXjgLMo3SIYcrywbq
+=xKEY
+-----END PGP SIGNATURE-----
+
+--DRL6iNjCceenODkoGtIA3TOmsuj8cbFR2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
