@@ -1,39 +1,41 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] pwm-backlight: allow for non-increasing brightness levels
-Date: Tue, 17 Sep 2013 11:36:22 +0200
-Message-ID: <20130917093622.GB30088@pengutronix.de>
-References: <1379010952-8928-1-git-send-email-mikedunn@newsguy.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 1/2] ARM: STi: OF: Fix a typo in pincfg header
+Date: Tue, 17 Sep 2013 10:27:27 +0100
+Message-ID: <1379410047-9972-1-git-send-email-srinivas.kandagatla@st.com>
+References: <1379410003-9911-1-git-send-email-srinivas.kandagatla@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1379010952-8928-1-git-send-email-mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1379410003-9911-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 
-On Thu, Sep 12, 2013 at 11:35:52AM -0700, Mike Dunn wrote:
-> Currently the driver assumes that the values specified in the brightness-levels
-> device tree property increase as they are parsed from left to right.  But boards
-> that invert the signal between the PWM output and the backlight will need to
-> specify decreasing brightness-levels.  This patch removes the assumption that
-> the last element of the array is the max value, and instead searches the array
-> for the max value and uses that as the normalizing value when determining the
-> duty cycle.
+This patch fixes a typo for OD define in st-pincfg header file.
 
-Note there's also support for inverted PWMs in the PWM framework
-provided your hardware supports this.
+Reported-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/st-pincfg.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Sascha
-
+diff --git a/arch/arm/boot/dts/st-pincfg.h b/arch/arm/boot/dts/st-pincfg.h
+index 8c45d85..4851c38 100644
+--- a/arch/arm/boot/dts/st-pincfg.h
++++ b/arch/arm/boot/dts/st-pincfg.h
+@@ -15,7 +15,7 @@
+ /* Pull Up */
+ #define PU			(1 << 26)
+ /* Open Drain */
+-#define OD			(1 << 26)
++#define OD			(1 << 25)
+ #define RT			(1 << 23)
+ #define INVERTCLK		(1 << 22)
+ #define CLKNOTDATA		(1 << 21)
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.6.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
