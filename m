@@ -1,73 +1,145 @@
-From: Arun Kumar K <arunkk.samsung@gmail.com>
-Subject: Re: [PATCH v7 01/13] [media] exynos5-is: Adding media device driver
- for exynos5
-Date: Tue, 17 Sep 2013 16:59:26 +0530
-Message-ID: <CALt3h79YMgdkju17SF8M3NKLkJ+6Gjzy2vwXDYTXc8B-GaecyQ@mail.gmail.com>
-References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
-	<1377066881-5423-2-git-send-email-arun.kk@samsung.com>
-	<52377DE5.3070808@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/4] regulator: as3722: add regulator driver for AMS
+ AS3722
+Date: Tue, 17 Sep 2013 12:41:33 +0100
+Message-ID: <20130917114133.GV21013@sirena.org.uk>
+References: <1379400338-20704-1-git-send-email-ldewangan@nvidia.com>
+ <1379400338-20704-4-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <52377DE5.3070808@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, kilyeon.im@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ipiAXJWFVZGVDOzf"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1379400338-20704-4-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: lee.jones@linaro.org, sameo@linux.intel.com, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, florian.lobmaier@ams.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
 
->
->
-> I'd like to propose a little re-design of this binding. The reason is that
-> I've noticed issues related to the power domain and FIMC-LITE, FIMC-IS
-> clocks
-> handling sequences. This lead to a failure to disable the ISP power domain
-> and to complete the system suspend/resume cycle. Not sure if this happens on
-> Exynos5 SoCs, nevertheless IMHO it would be more reasonable to make
-> FIMC-LITE
-> device nodes child nodes of FIMC-IS. FIMC-LITE seems to be an integral part
-> of the FIMC-IS subsystem.
->
-> Then fimc-is node would be placed at root level, with fimc-lite nodes as its
-> subnodes:
->
-> fimc-is {
->         compatible = "exynos5250-fimc-is";
->         reg = <...>;
->         ...
->         #address-cells = <1>;
->         #size-cells = <1>;
->         ranges;
->
->         fimc_lite_0: fimc-lite@12390000 {
->                 compatible = "samsung,exynos4212-fimc-lite";
->                 ...
->         };
->
->         fimc_lite_1: fimc-lite@123A0000 {
->                 compatible = "samsung,exynos4212-fimc-lite";
->                 ...
->         };
->
->         fimc_lite_2: fimc-lite@123B0000 {
->                 compatible = "samsung,exynos4212-fimc-lite";
->                 ...
->         };
->
->         i2c0_isp: i2c-isp@12130000 {
->                 ...
->         };
->
->         ...
-> };
->
+--ipiAXJWFVZGVDOzf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Wont this make fimc-is to be enabled to use fimc-lite?
-As such there is no dependency like that in hardware and we can
-use fimc-lite alone in DMA out mode without fimc-is.
-If its modified as per your suggestion, how will the scenario of
-sensor -> mipi-csis -> fimc-lite -> memory look like without fimc-is?
+On Tue, Sep 17, 2013 at 12:15:37PM +0530, Laxman Dewangan wrote:
 
-Regards
-Arun
+> +               ams,enable-oc-config: Enable overcurrent configuration of the
+> +               ams,oc-trip-threshold-perphase: Overcurrent trip threshold
+> +               ams,oc-alarm-threshold-perphase: Overcurrent alarm threshold
+
+These look like you should be implementing the current setting
+operations in the framework, probably mapping to the alarm limit if
+nothing else.
+
+> +static int as3722_ldo_get_voltage_sel(struct regulator_dev *rdev)
+> +{
+> +	int ret;
+> +
+> +	ret = regulator_get_voltage_sel_regmap(rdev);
+> +	if (ret >= 0x40)
+> +		ret -= 0x1B;
+> +	return ret;
+> +}
+
+This looks very strange.  What's going on here?  A gap in the selectors?
+If that's the case you probably want to be using linear ranges.
+
+> +static struct regulator_ops as3722_ldo_extcntrl_ops = {
+> +	.get_voltage_sel = as3722_ldo_get_voltage_sel,
+> +	.set_voltage_sel = as3722_ldo_set_voltage_sel,
+> +	.list_voltage = regulator_list_voltage_linear,
+> +};
+
+You ought to be providing map_voltage() too, same for some if not all of
+the other regulators.
+
+> +static unsigned int as3722_sd_get_mode(struct regulator_dev *dev)
+> +{
+> +	struct as3722_regulators *as3722_regs = rdev_get_drvdata(dev);
+> +	struct as3722 *as3722 = as3722_regs->as3722;
+> +	int id = rdev_get_id(dev);
+> +	u32 val;
+> +	int ret;
+> +
+> +	if (!as3722_reg_lookup[id].control_reg)
+> +		return -ERANGE;
+
+That seems a bit of a random error code.  -ENOTSUPP?
+
+> +static int as3722_sd_list_voltage(struct regulator_dev *rdev, unsigned selector)
+> +{
+> +	if (selector >= AS3722_SD2_VSEL_MAX)
+> +		return -EINVAL;
+> +
+> +	selector++;
+> +	if (selector <= 0x40)
+> +		return 600000 + selector * 12500;
+> +	if (selector <= 0x70)
+> +		return 1400000 + (selector - 0x40) * 25000;
+> +	if (selector <= 0x7F)
+> +		return 2600000 + (selector - 0x70) * 50000;
+> +	return -EINVAL;
+> +}
+
+Use linear ranges.
+
+> +static struct of_regulator_match as3722_regulator_matches[] = {
+> +	{.name = "sd0", },
+
+	{ .name = "sd0", },
+
+> +		config.of_node = as3722_regulator_matches[id].of_node;
+> +		rdev = regulator_register(&as3722_regs->desc[id], &config);
+> +		if (IS_ERR(rdev)) {
+
+devm_regualtor_register().
+
+> +		if (reg_config->ext_control) {
+> +			ret = regulator_enable_regmap(rdev);
+> +			if (ret < 0) {
+> +				dev_err(&pdev->dev,
+> +					"Regulator %d enable failed: %d\n",
+> +					id, ret);
+> +				goto scrub;
+> +			}
+
+This looks wrong...  why is the regualtor being enabled by something
+other than the core?
+
+> +static int __init as3722_regulator_init(void)
+> +{
+> +	return platform_driver_register(&as3722_regulator_driver);
+> +}
+> +subsys_initcall(as3722_regulator_init);
+> +
+> +static void __exit as3722_regulator_exit(void)
+> +{
+> +	platform_driver_unregister(&as3722_regulator_driver);
+> +}
+> +module_exit(as3722_regulator_exit);
+
+module_platform_driver().
+
+--ipiAXJWFVZGVDOzf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSOD/qAAoJELSic+t+oim9DqcQAIBbKCBKPeK8AlIDAhHLT89S
+yn6317kv6wFizBhyDwBOFAX2S92Cyniyuhk8859QdXag4fAh0kVTDmz+qZuwxr1e
+7hwUmh25DhnPniwHkSwNRKx+DOWCq1/ZQ5L0suwgqNbGb67/uWjzETtLWDrvbVOf
+Xt/q6ZRtgc0JaWIHI4oMkZh4n/n+NRzzCgVDIiHiHFEsNdsxL6IgAeS0otWOpajN
+YvDbkym7fespZPUij3wRGGExbpRzNgRh489MjbDJI/IJrzMggHvRSPDaOXMyYVOi
+9yQL6RDCjF0tNqTK+vWQ5jPYcv60/TjclDEVLoKWTrcSHbwNVLNKNXVzMUdvZkFo
+ETaqBrb7Inih8sxqJp+r5LsJYye97Mnc92cNFS9+z/hwbNeGOxEtidJee/0pLFFj
+x9LMbXQpmV52KoRsbqlxbWwOzGGr+OeIhvBC7LPqrPqcZ3NXzQ8jbOWZaAtrzzh5
+FJbyGVNOQti/MZ7gMcF2e4bG5pT/SWWzo1G7ilauclDT67ctg9JC3noGzXifh4iy
+1W9e2XNBpXzQ1kCXwCv87uNFvKVv3oILLRxHwSyA0paWU+wxg9AsD6+V1TnBkruJ
+FamdR0Ev6/2qWZQHj3krG6bkycJZxdkX23egp3M5dc58ROCViVmFcIh7NuJ0KMl6
+NiGJD7iXahNKD/86JLRV
+=cozY
+-----END PGP SIGNATURE-----
+
+--ipiAXJWFVZGVDOzf--
