@@ -1,123 +1,61 @@
-From: John Crispin <john@phrozen.org>
-Subject: Re: [PATCH 15/28] mips: use early_init_dt_scan
-Date: Tue, 17 Sep 2013 06:32:36 +0200
-Message-ID: <5237DB64.1020805@phrozen.org>
-References: <1379372965-22359-1-git-send-email-robherring2@gmail.com> <1379372965-22359-16-git-send-email-robherring2@gmail.com>
+From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/2] iio: cm36651: Add CM36651 proximity/light sensor driver
+Date: Tue, 17 Sep 2013 13:58:18 +0900
+Message-ID: <5237E16A.6070301@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379372965-22359-16-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org >> Peter Meerwald l" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17/09/13 01:09, Rob Herring wrote:
-> From: Rob Herring<rob.herring@calxeda.com>
->
-> Convert mips to use new early_init_dt_scan function.
->
-> Remove early_init_dt_scan_memory_arch
->
-> Signed-off-by: Rob Herring<rob.herring@calxeda.com>
-> Cc: Ralf Baechle<ralf@linux-mips.org>
-> Cc: linux-mips@linux-mips.org
-> ---
+Hello all,
 
-Acked-by: John Crispin <blogic@openwrt.org>
+Thank you for your review. I have revised v1 driver.
+Please give your feedback at that time.
 
+This patch is second revision for Capella CM36651 proximity and RGB light sensor driver.
+The driver exposes five channels: Red, Green, Blue, Clear and proximity.
+It also support detection proximity event.
 
-Thanks for this series ...
+This driver supports:
+	- Event: rising and falling proximity events.
+	- Reading channels through read_raw_callback.
 
+v2 changed below:
+	- Add a new entry in alphabetical order at Kconfig.
+	- Use #define register and commands.
+	- Use CM36651_* prefix.
+	- Use i2c_smbus_* APIs.
+	- Fixed cm36651_read_output() function.
+	- Code cleanup
 
+>From 493802a4f3788579789b6f03dffaaf3a0d9fc225 Mon Sep 17 00:00:00 2001
+From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Date: Tue, 17 Sep 2013 11:59:47 +0900
+Subject: [PATCH 0/2] *** SUBJECT HERE ***
 
+*** BLURB HERE ***
 
+Beomho Seo (2):
+  iio: cm36651: Add CM36651 proximity/light sensor driver
+  DT: Add binding documentation for CM36651 proximity/light sensor
 
+ .../devicetree/bindings/iio/light/cm36651.txt      |   24 +
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ drivers/iio/light/Kconfig                          |   11 +
+ drivers/iio/light/cm36651.c                        |  591 ++++++++++++++++++++
+ 4 files changed, 627 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/cm36651.txt
+ create mode 100644 drivers/iio/light/cm36651.c
 
+-- 
+1.7.9.5
 
->   arch/mips/include/asm/prom.h |  3 ---
->   arch/mips/kernel/prom.c      | 39 +++------------------------------------
->   2 files changed, 3 insertions(+), 39 deletions(-)
->
-> diff --git a/arch/mips/include/asm/prom.h b/arch/mips/include/asm/prom.h
-> index 1e7e096..e3dbd0e 100644
-> --- a/arch/mips/include/asm/prom.h
-> +++ b/arch/mips/include/asm/prom.h
-> @@ -17,9 +17,6 @@
->   #include<linux/types.h>
->   #include<asm/bootinfo.h>
->
-> -extern int early_init_dt_scan_memory_arch(unsigned long node,
-> -	const char *uname, int depth, void *data);
-> -
->   extern void device_tree_init(void);
->
->   static inline unsigned long pci_address_to_pio(phys_addr_t address)
-> diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-> index 0fa0b69..67a4c53 100644
-> --- a/arch/mips/kernel/prom.c
-> +++ b/arch/mips/kernel/prom.c
-> @@ -17,8 +17,6 @@
->   #include<linux/debugfs.h>
->   #include<linux/of.h>
->   #include<linux/of_fdt.h>
-> -#include<linux/of_irq.h>
-> -#include<linux/of_platform.h>
->
->   #include<asm/page.h>
->   #include<asm/prom.h>
-> @@ -40,13 +38,6 @@ char *mips_get_machine_name(void)
->   }
->
->   #ifdef CONFIG_OF
-> -int __init early_init_dt_scan_memory_arch(unsigned long node,
-> -					  const char *uname, int depth,
-> -					  void *data)
-> -{
-> -	return early_init_dt_scan_memory(node, uname, depth, data);
-> -}
-> -
->   void __init early_init_dt_add_memory_arch(u64 base, u64 size)
->   {
->   	return add_memory_region(base, size, BOOT_MEM_RAM);
-> @@ -78,36 +69,12 @@ int __init early_init_dt_scan_model(unsigned long node,	const char *uname,
->   	return 0;
->   }
->
-> -void __init early_init_devtree(void *params)
-> -{
-> -	/* Setup flat device-tree pointer */
-> -	initial_boot_params = params;
-> -
-> -	/* Retrieve various informations from the /chosen node of the
-> -	 * device-tree, including the platform type, initrd location and
-> -	 * size, and more ...
-> -	 */
-> -	of_scan_flat_dt(early_init_dt_scan_chosen, arcs_cmdline);
-> -
-> -
-> -	/* Scan memory nodes */
-> -	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-> -	of_scan_flat_dt(early_init_dt_scan_memory_arch, NULL);
-> -
-> -	/* try to load the mips machine name */
-> -	of_scan_flat_dt(early_init_dt_scan_model, NULL);
-> -}
-> -
->   void __init __dt_setup_arch(struct boot_param_header *bph)
->   {
-> -	if (be32_to_cpu(bph->magic) != OF_DT_HEADER) {
-> -		pr_err("DTB has bad magic, ignoring builtin OF DTB\n");
-> -
-> +	if (!early_init_dt_scan(bph))
->   		return;
-> -	}
-> -
-> -	initial_boot_params = bph;
->
-> -	early_init_devtree(initial_boot_params);
-> +	/* try to load the mips machine name */
-> +	of_scan_flat_dt(early_init_dt_scan_model, NULL);
->   }
->   #endif
+Best regards,
+-- 
+Beomho Seo, Assistant Engineer
+System S/W Lab., S/W Platform Team, Software Center
+Samsung Electronics
