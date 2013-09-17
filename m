@@ -1,121 +1,46 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: new platform for Energy Micro's EFM32 Cortex-M3 SoCs
-Date: Tue, 17 Sep 2013 22:45:25 +0200
-Message-ID: <201309172245.25367.arnd@arndb.de>
-References: <1379447884-14025-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v7 01/13] [media] exynos5-is: Adding media device driver
+ for exynos5
+Date: Tue, 17 Sep 2013 22:50:24 +0200
+Message-ID: <5238C090.6090201@gmail.com>
+References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com> <1377066881-5423-2-git-send-email-arun.kk@samsung.com> <52377DE5.3070808@gmail.com> <CALt3h79YMgdkju17SF8M3NKLkJ+6Gjzy2vwXDYTXc8B-GaecyQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379447884-14025-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CALt3h79YMgdkju17SF8M3NKLkJ+6Gjzy2vwXDYTXc8B-GaecyQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arunkk.samsung@gmail.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, kilyeon.im@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 17 September 2013, Uwe Kleine-K=C3=B6nig wrote:
->  arch/arm/Kconfig                               |  16 +++-
->  arch/arm/Kconfig.debug                         |  16 ++++
->  arch/arm/Makefile                              |   1 +
->  arch/arm/configs/efm32_defconfig               | 104 +++++++++++++++=
-++++++++++
->  arch/arm/mach-efm32/Makefile                   |   1 +
->  arch/arm/mach-efm32/Makefile.boot              |   2 +
->  arch/arm/mach-efm32/cmu.h                      |  15 ++++
->  arch/arm/mach-efm32/common.c                   |  19 +++++
->  arch/arm/mach-efm32/common.h                   |   1 +
->  arch/arm/mach-efm32/dtmachine.c                |  31 ++++++++
->  arch/arm/mach-efm32/include/mach/debug-macro.S |  48 ++++++++++++
->  arch/arm/mach-efm32/include/mach/entry-macro.S |   5 ++
->  arch/arm/mach-efm32/include/mach/io.h          |   6 ++
->  arch/arm/mach-efm32/include/mach/irqs.h        |   6 ++
->  arch/arm/mach-efm32/include/mach/timex.h       |   7 ++
+Hi Arun,
 
-You should be able to add NOMMU platforms in combination with CONFIG_MU=
-LTIPLATFORM
-now, which gets rid of most of these files.
+On 09/17/2013 01:29 PM, Arun Kumar K wrote:
+> Wont this make fimc-is to be enabled to use fimc-lite?
 
+Hmm, it would be runtime PM active, yes. But it doesn't mean the
+Cortex-A5's firmware would need to be running.
 
-> diff --git a/arch/arm/mach-efm32/Makefile b/arch/arm/mach-efm32/Makef=
-ile
-> new file mode 100644
-> index 0000000..081f45a
-> --- /dev/null
-> +++ b/arch/arm/mach-efm32/Makefile
-> @@ -0,0 +1 @@
-> +obj-y +=3D common.o dtmachine.o
+> As such there is no dependency like that in hardware and we can
+> use fimc-lite alone in DMA out mode without fimc-is.
 
-Just merge the two files into one.
+If you are sure about it, then fimc-lite nodes could stay at root level.
+Still, it would be more appropriate IMO to have the FIMC-IS sub-/peripheral
+devices, like I2C or SPI bus controllers, instantiated by the FIMC-IS 
+driver.
 
-> +
-> +void __init efm32_init_time(void)
-> +{
-> +	of_clk_init(NULL);
-> +	clocksource_of_init();
-> +}
+And what about "glue logic" linking FIMC-LITEs with the rest of the
+imaging subsystem ? Are you sure the is no some weird inter-dependencies ?
+Note that there is no board files any more, where we could hack some
+details.
 
-When Sebastian Hesselbarth's patches for of_clk_init() are merged, this=
- function can go away.
-> +static void __init efm32_init(void)
-> +{
-> +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-> +}
-> +
+> If its modified as per your suggestion, how will the scenario of
+> sensor ->  mipi-csis ->  fimc-lite ->  memory look like without fimc-is?
 
-And this one is already unnecessary.
+The exynos5-fimc-is module would need to be loaded for that. If you're
+sure the hardware can work independently, we could leave out the fimc-lite
+nodes at root level.
 
-> +static const char *const efm32gg_compat[] __initconst =3D {
-> +	"efm32,dk3750",
-> +	NULL
-> +};
-> +
-> +DT_MACHINE_START(EFM32DT, "EFM32 (Device Tree Support)")
-> +	.init_irq =3D irqchip_init,
-
-Same for irqchip_init, which is the default when omitted.
-
-> diff --git a/arch/arm/mach-efm32/include/mach/debug-macro.S b/arch/ar=
-m/mach-efm32/include/mach/debug-macro.S
-> new file mode 100644
-> index 0000000..c58915c
-> --- /dev/null
-> +++ b/arch/arm/mach-efm32/include/mach/debug-macro.S
-
-Please move this to arch/arm/include/debug/ like the other such impleme=
-ntations.
-
-> diff --git a/arch/arm/mach-efm32/include/mach/entry-macro.S b/arch/ar=
-m/mach-efm32/include/mach/entry-macro.S
-> new file mode 100644
-> index 0000000..f0c0f7d
-> --- /dev/null
-> +++ b/arch/arm/mach-efm32/include/mach/entry-macro.S
-> @@ -0,0 +1,5 @@
-> +		.macro	get_irqnr_preamble, base, tmp
-> +		.endm
-> +
-> +		.macro	arch_ret_to_user, tmp1, tmp2
-> +		.endm
-
-And use set_handle_irq() to register a handler from your irqchip driver
-to get rid of this one.
-
-> --- /dev/null
-> +++ b/arch/arm/mach-efm32/include/mach/irqs.h
-> @@ -0,0 +1,6 @@
-> +#ifndef __MACH_IRQS_H__
-> +#define __MACH_IRQS_H__
-> +
-> +#define NR_IRQS			82
-> +
-> +#endif /* __MACH_IRQS_H__ */
-
-This should not be needed if you have the proper IRQ domain support, wh=
-ich I think you do.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sylwester
