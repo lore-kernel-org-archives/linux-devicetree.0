@@ -1,98 +1,73 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/4] mfd: add support for AMS AS3722 PMIC
-Date: Tue, 17 Sep 2013 12:24:44 +0100
-Message-ID: <20130917112444.GU21013@sirena.org.uk>
-References: <1379400338-20704-1-git-send-email-ldewangan@nvidia.com>
- <1379400338-20704-2-git-send-email-ldewangan@nvidia.com>
+From: Arun Kumar K <arunkk.samsung@gmail.com>
+Subject: Re: [PATCH v7 01/13] [media] exynos5-is: Adding media device driver
+ for exynos5
+Date: Tue, 17 Sep 2013 16:59:26 +0530
+Message-ID: <CALt3h79YMgdkju17SF8M3NKLkJ+6Gjzy2vwXDYTXc8B-GaecyQ@mail.gmail.com>
+References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com>
+	<1377066881-5423-2-git-send-email-arun.kk@samsung.com>
+	<52377DE5.3070808@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2F7AbV2suvT8PGoH"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1379400338-20704-2-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: lee.jones@linaro.org, sameo@linux.intel.com, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, florian.lobmaier@ams.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <52377DE5.3070808@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, kilyeon.im@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylwester,
 
---2F7AbV2suvT8PGoH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>
+>
+> I'd like to propose a little re-design of this binding. The reason is that
+> I've noticed issues related to the power domain and FIMC-LITE, FIMC-IS
+> clocks
+> handling sequences. This lead to a failure to disable the ISP power domain
+> and to complete the system suspend/resume cycle. Not sure if this happens on
+> Exynos5 SoCs, nevertheless IMHO it would be more reasonable to make
+> FIMC-LITE
+> device nodes child nodes of FIMC-IS. FIMC-LITE seems to be an integral part
+> of the FIMC-IS subsystem.
+>
+> Then fimc-is node would be placed at root level, with fimc-lite nodes as its
+> subnodes:
+>
+> fimc-is {
+>         compatible = "exynos5250-fimc-is";
+>         reg = <...>;
+>         ...
+>         #address-cells = <1>;
+>         #size-cells = <1>;
+>         ranges;
+>
+>         fimc_lite_0: fimc-lite@12390000 {
+>                 compatible = "samsung,exynos4212-fimc-lite";
+>                 ...
+>         };
+>
+>         fimc_lite_1: fimc-lite@123A0000 {
+>                 compatible = "samsung,exynos4212-fimc-lite";
+>                 ...
+>         };
+>
+>         fimc_lite_2: fimc-lite@123B0000 {
+>                 compatible = "samsung,exynos4212-fimc-lite";
+>                 ...
+>         };
+>
+>         i2c0_isp: i2c-isp@12130000 {
+>                 ...
+>         };
+>
+>         ...
+> };
+>
 
-On Tue, Sep 17, 2013 at 12:15:35PM +0530, Laxman Dewangan wrote:
+Wont this make fimc-is to be enabled to use fimc-lite?
+As such there is no dependency like that in hardware and we can
+use fimc-lite alone in DMA out mode without fimc-is.
+If its modified as per your suggestion, how will the scenario of
+sensor -> mipi-csis -> fimc-lite -> memory look like without fimc-is?
 
-> +MFD driver adds following mfd devices with their compatible values:
-> +as3722-gpio: The compatible value of this as3722 gpio driver is
-> +	     "ams,as3722-gpio";
-> +as3722-regulator: The compatible value of this as3722 regulator driver is
-> +	     "ams,as3722-regulator";
-> +as3722-rtc: The compatible value of this as3722 rtc driver is
-> +	     "ams,as3722-rtc";
-> +as3722-adc: The compatible value of this as3722 adc driver is
-> +	     "ams,as3722-adc";
-> +as3722-power-off: he compatible value of this as3722 power off driver is
-> +	     "ams,as3722-power-off".
-
-Personally I find this to be exposing implementation details of Linux -
-unless there is something reusable about the binding that'd allow it to
-be used to describe the contents of the chip the subnodes really aren't=20
-adding any information that wasn't present from just knowing the parent
-chip.  If there were relocatable IPs it'd be a bit different.
-
-> +#define reg_range(min, max)	{.range_min =3D min, .range_max =3D max,}
-> +static const struct regmap_range as3722_readable_ranges[] =3D {
-> +	reg_range(AS3722_SD0_VOLTAGE_REG, AS3722_SD6_VOLTAGE_REG),
-> +	reg_range(AS3722_GPIO0_CONTROL_REG, AS3722_LDO7_VOLTAGE_REG),
-
-If this macro is useful it should be a generic thing in the header, not
-done driver local.
-
-> +static const struct regmap_access_table as3722_volatile_table =3D {
-> +	.no_ranges =3D as3722_voltaile_ranges,
-> +	.n_no_ranges =3D ARRAY_SIZE(as3722_voltaile_ranges),
-> +};
-
-This looks wrong - the registers listed in _volatile_ranges are in fact
-the ones that are not volatile.  I'd rename _volatile_ranges to
-something like _cacheable_ranges.
-
-> +static int __init as3722_i2c_init(void)
-> +{
-> +	return i2c_add_driver(&as3722_i2c_driver);
-> +}
-> +subsys_initcall(as3722_i2c_init);
-> +
-> +static void __exit as3722_i2c_exit(void)
-> +{
-> +	i2c_del_driver(&as3722_i2c_driver);
-> +}
-> +module_exit(as3722_i2c_exit);
-
-Modern systems should be able to use module_i2c_driver() and deferred
-probing - is this not working well?
-
---2F7AbV2suvT8PGoH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSODv5AAoJELSic+t+oim9jZ8P/idmFHPapqV0CQm7y9Pxw4Ij
-dUehc9jrgF5bU3w7WE4qxZy4sxKS5ixSIoSuNuAMG9nuN+yEi/2MXJtfOUpen8ky
-dBwmM2J/65sbLl0pd3XE/fuutHp1ieT/Ncf56KBU2N03XE6RV/exe+XZ+D6hbCbH
-W06f9LAyxi+Na4u3oxlyc16T+QsAcXHTku0248/9SqMdDMqYOqm35SqvUoupojMB
-T9CkjSV56JbI2MYmf4FAIek1U4oG2anEy6XjhzZ3o9pV9pPI1PitmebhGVQO9Hqa
-Nbh5srfovfheX4ngZgqE9jlbKnIjMS0Zyw5ds4mNS1tu/Ku/Nmynvq8Y5aGsv1Nf
-UdUqonxtzqHE0ILnefir3eRHnUb6E/VGyeh79dmBUFyx8hHTZWrfqOCll7e+xR5B
-1o2RV8NliIO7UjLOq+LRZd+fnlv8zNA6PH/s19KMY5Mt4VkMpRHktsBiJtnMOBPe
-hbNNtvF3U/aTf2b2Fy/NuAzx+lSWmLgOXui85xdB3efY4DYNCljaOeYlQq7nV5lG
-0stRER29XOAttTjSK5bCCAusMSfELzlx5EkIlG04k6O8bcVdIMUbxxehxr0rl7Qz
-ZmSFfn0XrCVZlTWnsca7kFA5Y5dNJ42DLROxirrWGRCAri6Rr3FkBL0CySeeSu88
-Ie1UTJVrDCNWMzYz0Qg4
-=dTEc
------END PGP SIGNATURE-----
-
---2F7AbV2suvT8PGoH--
+Regards
+Arun
