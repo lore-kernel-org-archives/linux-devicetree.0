@@ -1,46 +1,56 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v7 01/13] [media] exynos5-is: Adding media device driver
- for exynos5
-Date: Tue, 17 Sep 2013 22:50:24 +0200
-Message-ID: <5238C090.6090201@gmail.com>
-References: <1377066881-5423-1-git-send-email-arun.kk@samsung.com> <1377066881-5423-2-git-send-email-arun.kk@samsung.com> <52377DE5.3070808@gmail.com> <CALt3h79YMgdkju17SF8M3NKLkJ+6Gjzy2vwXDYTXc8B-GaecyQ@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: "memory" binding issues
+Date: Tue, 17 Sep 2013 14:08:33 -0700
+Message-ID: <5238C4D1.6060500@gmail.com>
+References: <1379300274.4098.77.camel@pasglop> <1379371567.3721.46.camel@pasglop> <CAOesGMgE1jiF5OHsmPQz2z66Bcqu0HeAj=taE1vmFK-0-0s2TQ@mail.gmail.com> <1815499.tpfeUKmP6V@flatron> <20130917164307.GA31327@quad.lixom.net>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CALt3h79YMgdkju17SF8M3NKLkJ+6Gjzy2vwXDYTXc8B-GaecyQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arunkk.samsung@gmail.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, kilyeon.im@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130917164307.GA31327-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arun,
+On 9/17/2013 9:43 AM, Olof Johansson wrote:
+> On Tue, Sep 17, 2013 at 09:56:39AM +0200, Tomasz Figa wrote:
+>> I'm afraid that I must disagree. For consistency I'd rather go with what 
+>> Ben said. Please see ePAPR chapter 2.2.1.1, which clearly defines how 
+>> nodes should be named.
+> 
+> 2.2.1.1 is there to point out that unit address _has_ to reflect reg.
+> 
+> 2.2.3 says that unit addresses can be omitted.
 
-On 09/17/2013 01:29 PM, Arun Kumar K wrote:
-> Wont this make fimc-is to be enabled to use fimc-lite?
+2.2.3 is talking about path names.
 
-Hmm, it would be runtime PM active, yes. But it doesn't mean the
-Cortex-A5's firmware would need to be running.
+2.2.1.1 is talking about node names.
 
-> As such there is no dependency like that in hardware and we can
-> use fimc-lite alone in DMA out mode without fimc-is.
+2.2.1.1 _does_ require the unit address in the node name, 2.2.3 does not
+remove that requirement.
 
-If you are sure about it, then fimc-lite nodes could stay at root level.
-Still, it would be more appropriate IMO to have the FIMC-IS sub-/peripheral
-devices, like I2C or SPI bus controllers, instantiated by the FIMC-IS 
-driver.
+-Frank
 
-And what about "glue logic" linking FIMC-LITEs with the rest of the
-imaging subsystem ? Are you sure the is no some weird inter-dependencies ?
-Note that there is no board files any more, where we could hack some
-details.
+> 
+>> Having unit-address whenever the node has a reg property has the nice 
+>> property of eliminating the need to rename any nodes when adding new one. 
+>> (Consider the case that you have one subnode somewhere and you omit the 
+>> unit-address and then you find out that you have to add another subnode 
+>> with the same name, but another reg value.)
+> 
+> This motivation doesn't bother me at all -- it should be relatively rare.
+> 
+> 
+> -Olof
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-> If its modified as per your suggestion, how will the scenario of
-> sensor ->  mipi-csis ->  fimc-lite ->  memory look like without fimc-is?
-
-The exynos5-fimc-is module would need to be loaded for that. If you're
-sure the hardware can work independently, we could leave out the fimc-lite
-nodes at root level.
-
-Regards,
-Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
