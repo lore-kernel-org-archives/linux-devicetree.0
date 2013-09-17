@@ -1,93 +1,69 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC] binding for nvec mfd device
-Date: Tue, 17 Sep 2013 15:48:12 -0600
-Message-ID: <5238CE1C.3050107@wwwdotorg.org>
-References: <1416005.VvfEeGuSWa@ax5200p> <2910047.nJ4yDntMXS@ax5200p> <51F97B92.1040707@wwwdotorg.org> <17687182.lGWlO75r41@fb07-iapwap2.physik.uni-giessen.de>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: "memory" binding issues
+Date: Wed, 18 Sep 2013 07:56:46 +1000
+Message-ID: <1379455006.6148.0.camel@pasglop>
+References: <1379300274.4098.77.camel@pasglop>
+	 <1379371567.3721.46.camel@pasglop>
+	 <CAOesGMgE1jiF5OHsmPQz2z66Bcqu0HeAj=taE1vmFK-0-0s2TQ@mail.gmail.com>
+	 <1815499.tpfeUKmP6V@flatron> <20130917164307.GA31327@quad.lixom.net>
+	 <5238C4D1.6060500@gmail.com>
+	 <CAOesGMh0F09OAR4bepGSCE5Z5OZ56fBmDPBSfwZ+NB9RgcE0Vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <17687182.lGWlO75r41-D3pzGp0ZKuDWZbiwp4sFPyrtisivX6KghOMvlBiLbJSELgA04lAiVw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMh0F09OAR4bepGSCE5Z5OZ56fBmDPBSfwZ+NB9RgcE0Vw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2013 01:53 AM, Marc Dietrich wrote:
-> Hi Stephen,
-> 
-> Am Mittwoch, 31. Juli 2013, 15:03:14 schrieb Stephen Warren:
->> The generic I2C bindings already define that the other chips on the I2C
->> bus appear directly underneath the I2C controller's DT node. Perhaps it
->> isn't a big issue to change that, since each I2C controller can define
->> the layout of its own node?
+
+On Tue, 2013-09-17 at 14:15 -0700, Olof Johansson wrote:
+> Sigh, that's horrible. OF clearly doesn't require it.
+
+Doesn't it ?
+
+All OF implementations will create it, you would have to explicitly
+remove the encode-unit method of the parent to make it disappear...
+
+All I can find in 1275 is:
+
+<<
+Some nodes in the device tree do not represent physical devices. These
+system nodes are used instead for various
+general firmware purposes. System nodes do not have physical addresses.
+Their node names have a driver name
+field but not a unit address field.
 >>
->> Anyway, we can probably get away without introducing multiple levels by
->> adding some more bits or cells into the reg address for I2C child nodes:
->>
->> i2c@xxxxxxxx {
->> 	compatible = "nvidia,tegra20-i2c";
->> 	... resources
->> 	#address-cells = <2>;
->>
->> 	codec {
->> 		// 0 means external slave, 0x1c is slave's address
->> 		reg = <0 0x1c>;
->> 		...
->> 	};
->>
->> 	tegraslave {
->> 		// 0 means internal slave, 0x80 is controller's address
->> 		reg = <1 0x80>;
->> 		...
->> 	};
->> };
->>
->> ... where each of those child nodes could be repeated N times. We could
->> also or in 0x80000000 to the reg values in the child nodes rather than
->> using a separate cell if we wanted.
-> 
-> thinking a little more about this, this is way to complicated.
 
-Really, this seems extremely simple to me.
+That implies that such nodes also don't have a "reg" property (ie. "do
+not have physical address").
 
-> "Master" and 
-> "Slave" functions are properties of the same i2c controller. Therefore, just 
-> adding a small property to the i2c controller node saying "enable slave 
-> support" is sufficient, as all the resources are shared (which is another good 
-> argument that it is the same device, hence same node). I would just add the 
-> slave i2c address, which is all the slave driver needs, e.g.
+I don't see anything else, if anything, the definition of the node name
+seems to not have provisions for a missing unit address.
 
-Perhaps so for this one controller, but we should strive to create a
-binding style that can work with any I2C controller that can be master
-or slave. For a general binding, I think we need to support multiple
-slave addresses. The style above seems to support that with little
-complexity.
+The only case in OF that I know where the unit address is not present is
+wildcard nodes (also known as protocol nodes) which also don't have a
+"reg" property such as used by some SCSI controllers when the fcode
+doesn't want to probe the bus at boot and requires the unit address to
+be explicitly passed in the "open" call. This is clearly not the case
+here.
 
-> "slave-address = <8c>;" to enable slave mode operation. Both modes can be 
-> enabled at the same time (for loopback comm). AFAIK, if only the slave part is 
-> used, the master part shouldn't hurt if programmed (same as other way around).
-> 
-> The difficult part is how to specify the master if only the slave is used. As 
-> the master is naturally on the same bus as the slave, it should be a child 
-> node of the controller. Therefore it needs a special i2c address, maybe 
+Or did I miss something ?
 
-Why would the external I2C master be represented in the DT bindings at
-all? It's not really a SW-accessible entity; its presence is only
-observable not something you can initiate interaction with.
+> I guess people prefer to follow ePAPR even though it's broken? That
+> means someone needs to cleanup the current dts files. Any takers?
 
-I assume you're not talking about the Tegra I2C controller when you say
-"master" above; that is already represented in the DT as the top-level
-I2C node.
+It's not broken. I don't understand why you are so adamant about
+that :-)
 
-> 0x80000000 as you mentioned above, but this will be rejected by the i2c core. 
-> Instantiating the nvec as an i2c client could be another problem.
-...
-> It looks like that the i2c subsystem needs some modifications to allow to 
-> specify a master device which is attached to a slave controller. Maybe someone 
-> from the i2c folks (cc'ed) can comment on this?
+Cheers,
+Ben.
 
-Yes, you certainly will need some enhancements to the I2C core to
-support slave mode. I suggest that I2C drivers gain an .of_xlate
-callback which translates child node DT reg values (addresses) into the
-(master-vs-slave, I2C address) pair.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
