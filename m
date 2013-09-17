@@ -1,53 +1,71 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 3/4] regulator: as3722: add regulator driver for AMS AS3722
-Date: Tue, 17 Sep 2013 17:45:28 +0530
-Message-ID: <523847E0.2020400@nvidia.com>
-References: <1379400338-20704-1-git-send-email-ldewangan@nvidia.com> <1379400338-20704-4-git-send-email-ldewangan@nvidia.com> <20130917114133.GV21013@sirena.org.uk>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/4] mfd: add support for AMS AS3722 PMIC
+Date: Tue, 17 Sep 2013 17:52:46 +0530
+Message-ID: <52384996.8050704@nvidia.com>
+References: <1379400338-20704-1-git-send-email-ldewangan@nvidia.com> <1379400338-20704-2-git-send-email-ldewangan@nvidia.com> <20130917112444.GU21013@sirena.org.uk> <5238450F.6090303@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20130917114133.GV21013@sirena.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "lee.jones@linaro.org" <lee.jones@linaro.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob@landley.net" <rob@landley.net>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5238450F.6090303-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 17 September 2013 05:33 PM, Laxman Dewangan wrote:
+> On Tuesday 17 September 2013 04:54 PM, Mark Brown wrote:
+>> * PGP Signed by an unknown key
+>>
+>> On Tue, Sep 17, 2013 at 12:15:35PM +0530, Laxman Dewangan wrote:
+>>
+>>> +MFD driver adds following mfd devices with their compatible values:
+>>> +as3722-gpio: The compatible value of this as3722 gpio driver is
+>>> +         "ams,as3722-gpio";
+>>> +as3722-regulator: The compatible value of this as3722 regulator 
+>>> driver is
+>>> +         "ams,as3722-regulator";
+>>> +as3722-rtc: The compatible value of this as3722 rtc driver is
+>>> +         "ams,as3722-rtc";
+>>> +as3722-adc: The compatible value of this as3722 adc driver is
+>>> +         "ams,as3722-adc";
+>>> +as3722-power-off: he compatible value of this as3722 power off 
+>>> driver is
+>>> +         "ams,as3722-power-off".
+>> Personally I find this to be exposing implementation details of Linux -
+>> unless there is something reusable about the binding that'd allow it to
+>> be used to describe the contents of the chip the subnodes really aren't
+>> adding any information that wasn't present from just knowing the parent
+>> chip.  If there were relocatable IPs it'd be a bit different.
+>
+> Ok, then can we fix the the sub node name and parse these when adding 
+> mfd devices and set the pdev->dev.of_node of child devices.
+> Like
+> parent_node {
+>     ...
+>     child1_node {
+>         ...
+>     };
+>
+>     child1_node {
+Sorry, just wanted to say child2_node here.
 
->> +static int as3722_ldo_get_voltage_sel(struct regulator_dev *rdev)
->> +{
->> +	int ret;
->> +
->> +	ret = regulator_get_voltage_sel_regmap(rdev);
->> +	if (ret >= 0x40)
->> +		ret -= 0x1B;
->> +	return ret;
->> +}
-> This looks very strange.  What's going on here?  A gap in the selectors?
-> If that's the case you probably want to be using linear ranges.
+> ...
+>     };
+> };
+>
+>
+> and fix the node name of child1 and child2 and have this as part of 
+> mfd-cell's of_node_name.
+> So when we add the mfd devices, we look for these fixed name and if 
+> matches then set the dev->of_node for that child sub device.
+>
+> This will avoid the code for getting child node pointer from parent 
+> node in each driver. We fix the child node name in any case.
+>
+>
 
-Yes device does not want to be configure the vsel to 0x25 to 0x3F
-
-   01h-24h : V_LDO1=0.8V+ldo1_vsel*25mV
-   25h-3Fh : do not use
-   40h-7Fh : V_LDO1=1.725V+(ldo1_vsel-40h)*25mV
-
-Let me use linear range.
-
->> +		if (reg_config->ext_control) {
->> +			ret = regulator_enable_regmap(rdev);
->> +			if (ret < 0) {
->> +				dev_err(&pdev->dev,
->> +					"Regulator %d enable failed: %d\n",
->> +					id, ret);
->> +				goto scrub;
->> +			}
-> This looks wrong...  why is the regualtor being enabled by something
-> other than the core?
-
-When the rail is configured externally controlled then we are not 
-providing the enable/disable callback to enable through register access. 
-So core will not be able to enable it.
-Here, we are making sure that it is enabled through register write.
-After that enable/disable can be done by device-input pin toggeling.
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
