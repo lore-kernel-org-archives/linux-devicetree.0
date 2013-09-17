@@ -1,97 +1,91 @@
-From: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCHv3 2/8] mailbox/omap: add support for parsing dt devices
-Date: Tue, 17 Sep 2013 15:44:33 +0200
-Message-ID: <52385CC1.7040908@baylibre.com>
-References: <1375825216-18119-1-git-send-email-s-anna@ti.com> <BB39592C-0DAC-49A4-A782-583D7EB858AF@codeaurora.org> <52027CDC.8080205@ti.com> <FF52B913-A5AB-4516-BDA6-ED0BCFFBD4D1@codeaurora.org> <5202A927.4030708@ti.com> <CE2B6412-870F-4B43-9466-BE291E4E7210@codeaurora.org> <5203BCEE.9090902@ti.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: All device tree bindings need maintainer ack or just the
+ 'interesting' ones.
+Date: Tue, 17 Sep 2013 14:48:41 +0100
+Message-ID: <20130917134841.GX16984@lee--X1>
+References: <52345182.1080609@kernel.org>
+ <52372F2B.3030504@gmail.com>
+ <20130917081003.GU16984@lee--X1>
+ <20130917112433.GB26737@e106331-lin.cambridge.arm.com>
+ <20130917120730.GW16984@lee--X1>
+ <20130917133025.GD26737@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5203BCEE.9090902-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130917133025.GD26737-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
+On Tue, 17 Sep 2013, Mark Rutland wrote:
 
-On 08/08/2013 17:44, Suman Anna wrote:
-> On 08/08/2013 09:34 AM, Kumar Gala wrote:
->>
->> On Aug 7, 2013, at 3:08 PM, Suman Anna wrote:
->>
->>> On 08/07/2013 12:41 PM, Kumar Gala wrote:
->>>>
->>>> On Aug 7, 2013, at 11:59 AM, Suman Anna wrote:
->>>>
->>>>> Kumar,
->>>>>
->>>>>>> Logic has been added to the OMAP2+ mailbox code to
->>>>>>> parse the mailbox dt nodes and construct the different
->>>>>>> mailboxes associated with the instance. The design is
->>>>>>> based on gathering the same information that was being
->>>>>>> passed previously through the platform data, except for
->>>>>>> the interrupt type configuration information.
->>>>>>>
->>>>>>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
->>>>>>> ---
->>>>>>> .../devicetree/bindings/mailbox/omap-mailbox.txt   |  43 +++++++
->>>>>>> drivers/mailbox/mailbox-omap2.c                    | 130 ++++++++++++++++++---
->>>>>>> 2 files changed, 158 insertions(+), 15 deletions(-)
->>>>>>> create mode 100644 Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt b/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
->>>>>>> new file mode 100644
->>>>>>> index 0000000..8ffb08a
->>>>>>> --- /dev/null
->>>>>>> +++ b/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
->>>>>>> @@ -0,0 +1,43 @@
->>>>>>> +OMAP2+ Mailbox Driver
->>>>>>> +
->>>>>>> +Required properties:
->>>>>>> +- compatible:		Should be one of the following,
->>>>>>> +			    "ti,omap2-mailbox" for
->>>>>>> +				OMAP2420, OMAP2430, OMAP3430, OMAP3630 SoCs
->>>>>>> +			    "ti,omap4-mailbox" for
->>>>>>> +				OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
->>>>>>> +- reg:			Contains the mailbox register address range (base address
->>>>>>> +			and length)
->>>>>>> +- interrupts: 		Contains the interrupt information for the mailbox
->>>>>>> +			device. The format is dependent on which interrupt
->>>>>>> +			controller the OMAP device uses
->>>>>>> +- ti,hwmods:		Name of the hwmod associated with the mailbox
->>>>>>> +- ti,mbox-num-users:	Number of targets (processor devices) that the mailbox device
->>>>>>> +			can interrupt
->>>>>>> +- ti,mbox-num-fifos:	Number of h/w fifos within the mailbox device
->>>>>>
->>>>>> Isn't "ti,mbox-num-users", "ti,mbox-num-fifos" this SoC specific, why do we need to encode in the device tree.  Can we not have a more SoC specific compatiable and encode such info in the driver as part of the .data field in of_device_id ?
->>>>>
->>>>> They are IP design parameters for the number of h/w fifos and interrupts
->>>>> coming out of the IP block, with the functionality identical. This
->>>>> information could not be read from any registers. Until OMAP5, we always
->>>>> had a single IP in the SoC and so these could been encoded in the
->>>>> driver. But in DRA7xx, a new SoC, we have 13 mailboxes which have
->>>>> differing number of these properties even though the functional IP block
->>>>> is same.
->>>>
->>>> Ah, I see.  Since you've got examples of the same IP with different design params in a given SoC than this makes sense.
->>>>
->>>> Is that true of ti,mbox-num-users?
->>>
->>> Yes, it is true of both "ti,mbox-num-users" and "ti,mbox-num-fifos".
->>
->> So I think it would be good to update the binding to convey that SoCs might have multiple mbox units w/different design pararms (maybe a short blurb as part of the intro).
->
-> Sure will do. Will wait for Benoit also to come back on this series if I
-> need to address any further review comments.
+> On Tue, Sep 17, 2013 at 01:07:30PM +0100, Lee Jones wrote:
+> > On Tue, 17 Sep 2013, Mark Rutland wrote:
+> >=20
+> > > On Tue, Sep 17, 2013 at 09:10:03AM +0100, Lee Jones wrote:
+> > > > > > http://marc.info/?l=3Dlinux-iio&m=3D137881790217809&w=3D2
+> > > > >=20
+> > > > > Looks reasonable. My only comment is '-' is preferred over '_=
+'.
+> > > >=20
+> > > > Ah, in the node name you mean. Yes, I can change that.
+> > > >=20
+> > > > The compatible string has to stay the same however, as it has t=
+o match
+> > > > the device name which can't be changed due to possible userspac=
+e
+> > > > breakage.
+> > >=20
+> > > I'm not sure I follow why the compatible string must be identical=
+ to the
+> > > name appearing to userspace.
+> >=20
+> > It doesn't. It has to be identical to the device name, which I'm
+> > guessing is used when populating sysfs.
+>=20
+> I still don't understand why the device name must be identical to the
+> compatible string.
+>=20
+> The string "st,lsm303dlh_magn" (with the "st," prefix) appears nowher=
+e
+> in v3.12-rc1
 
-I had the same concern than Kumar originally, so if nobody has anymore 
-complain with this binding, that fine to me. At least for the DTS part.
+You're looking at an old patchset. We found out that the Snowball
+schematic was actually incorrect and we have a LSM303DLHC.
 
-Regards,
-Benoit
+git grep -i lsm303dlhc_magn v3.12-rc1
+  drivers/iio/magnetometer/st_magn.h:
+    #define LSM303DLHC_MAGN_DEV_NAME   "lsm303dlhc_magn"
 
+> and the compatible string in the dt doesn't seem to get
+> assigned to the device in the i2c core or in
+> drivers/iio/magnetometer/st_magn_i2c.c.
+
+It does:
+  drivers/i2c/busses/*.c: of_i2c_register_devices();
+  drivers/of/of_i2c.c:    |-> of_modalias_node();
+                            |-> i2c_new_device();
+
+> I don't see how the "st,lsm303dlh_magn" string could be getting to
+> userspace already such that it could be relying on it.
+>=20
+> Am I missing something?
+>=20
+> Thanks,
+> Mark.
+>=20
+> >=20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
