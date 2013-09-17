@@ -1,93 +1,97 @@
-From: Tang Yuantian-B29983 <B29983-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v4] powerpc/mpc85xx: Update the clock device tree nodes
-Date: Tue, 17 Sep 2013 07:19:31 +0000
-Message-ID: <D07C73A334FF604B95B3CBD2A545D07B1509DEFA@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1378882632-9053-1-git-send-email-Yuantian.Tang@freescale.com>
-	 <1378948229.12204.486.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B150748AA@039-SN2MPN1-013.039d.mgd.msft.net>
-	 <1378997052.2536.5.camel@snotra.buserror.net>
-	 <D07C73A334FF604B95B3CBD2A545D07B15089208@039-SN2MPN1-011.039d.mgd.msft.net>
- <1379363970.2536.151.camel@snotra.buserror.net>
+From: Lu Jingchang-B35083 <B35083@freescale.com>
+Subject: RE: [PATCH 3/3] dma: Add Freescale eDMA engine driver support
+Date: Tue, 17 Sep 2013 07:37:48 +0000
+Message-ID: <B56CDBE15CE27145A4B77D2D24263E85223E0C@039-SN1MPN1-003.039d.mgd.msft.net>
+References: <1378374799-16357-1-git-send-email-b35083@freescale.com>
+ <20130917045359.GN17188@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379363970.2536.151.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130917045359.GN17188@intel.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Li Yang-Leo-R58472 <r58472-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "djbw@fb.com" <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-PiA+ID4gT24gV2VkLCAyMDEzLTA5LTExIGF0IDIwOjMxIC0wNTAwLCBUYW5nIFl1YW50aWFuLUIy
-OTk4MyB3cm90ZToNCj4gPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4g
-PiA+IEZyb206IFdvb2QgU2NvdHQtQjA3NDIxDQo+ID4gPiA+ID4gU2VudDogMjAxM+W5tDnmnIgx
-MuaXpSDmmJ/mnJ/lm5sgOToxMA0KPiA+ID4gPiA+IFRvOiBUYW5nIFl1YW50aWFuLUIyOTk4Mw0K
-PiA+ID4gPiA+IENjOiBnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnOyBsaW51eHBwYy1kZXZAbGlz
-dHMub3psYWJzLm9yZzsNCj4gPiA+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTGkg
-WWFuZy1MZW8tUjU4NDcyDQo+ID4gPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2NF0gcG93ZXJw
-Yy9tcGM4NXh4OiBVcGRhdGUgdGhlIGNsb2NrIGRldmljZQ0KPiA+ID4gPiA+IHRyZWUgbm9kZXMN
-Cj4gPiA+ID4gPg0KPiA+ID4gPiA+IFRoaXMgZGVzY3JpcHRpb24gb2YgInJlZyIgaXMgb3Zlcmx5
-IHNwZWNpZmljIChhc3N1bWVzIGhvdyB0aGUNCj4gPiA+ID4gPiBwYXJlbnQgbm9kZSdzIHJhbmdl
-cyBhcmUgc2V0IHVwKSwgaW5jb21wbGV0ZSAodGhlcmUncyBhIHNpemUgYXMNCj4gPiA+ID4gPiB3
-ZWxsIGFzIHRoZSBvZmZzZXQpLCBhbmQgZG9lcyBub3QgYXBwbHkgdG8gdGhlIGNsb2NrZ2VuIG5v
-ZGUNCj4gPiA+ID4gPiBpdHNlbGYgKHlvdSBwcm9iYWJseSBzaG91bGRuJ3QgbHVtcCB0aGVtIHRv
-Z2V0aGVyIGxpa2UgdGhpcykuDQo+ID4gPiA+ID4NCj4gPiA+ID4gRG8geW91IG1lYW4gSSBzaG91
-bGQgZXhwbGFpbiB0aGUgUkVHIG9mIGNsb2NrZ2VuIGFuZCBpdHMgY2hpbGQNCj4gPiA+ID4gbm9k
-ZQ0KPiA+ID4gcmVzcGVjdGl2ZWx5Pw0KPiA+ID4gPg0KPiA+ID4gPiA+ID4gKy0gY2xvY2tzIDog
-c2hhbGwgYmUgdGhlIGlucHV0IHBhcmVudCBjbG9jayBwaGFuZGxlIGZvciB0aGUNCj4gY2xvY2su
-DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBOb3QgcmVxdWlyZWQgb24gdGhlIGNsb2NrZ2VuIG5vZGUN
-Cj4gPiA+ID4gPg0KPiA+ID4gPiBSZXF1aXJlZCBieSBjaGlsZCBub2RlIG9mIGNsb2NrZ2VuLg0K
-PiA+ID4NCj4gPiA+IE15IHBvaW50IGlzIHRoYXQgeW91J3JlIGx1bXBpbmcgc2V2ZXJhbCBkaWZm
-ZXJlbnQgdHlwZXMgb2Ygbm9kZXMNCj4gPiA+IHRvZ2V0aGVyIHdpdGggb25lIGJpbmRpbmcsIHdo
-ZW4gc29tZSBwYXJ0cyBvZiB0aGUgYmluZGluZyBhcmUgbm90DQo+ID4gPiBhcHBsaWNhYmxlIHRv
-IHRoZSBjbG9ja2dlbiBub2RlLg0KPiA+ID4NCj4gPiBOb3Qgc2V2ZXJhbCwganVzdCB0d28gdHlw
-ZXMgb2Ygbm9kZXMuDQo+ID4gT25lIGlzIGNsb2NrZ2VuIG5vZGUsIHRoZSBvdGhlciBpcyBQTEwg
-YW5kIG11eCBub2Rlcy4NCj4gDQo+IGNsb2NrZ2VuICsgUExMICsgbXV4ID0gMyA9IHNldmVyYWwg
-Oi0pDQo+IA0KPiA+IFRoZSByZWFzb24gdGhleSBsdW1wZWQgdG9nZXRoZXIgaXMgdGhhdCB0aGUg
-Y2xvY2tnZW4gbm9kZSBpcyBub3Qgb25seQ0KPiA+IElQIGJsb2NrIE5vZGUgYnV0IGFsc28gYSBj
-bG9jayBwcm92aWRlciBub2RlDQo+IA0KPiBJIGRvbid0IHVuZGVyc3RhbmQgd2h5IHRoYXQgbWVy
-aXRzIGx1bXBpbmcgdGhlbSB0b2dldGhlci4NCj4gDQo+IEp1c3QgZGVzY3JpYmUgdGhlbSBzZXBh
-cmF0ZWx5Lg0KPiANCkl0IGlzIG5vdCB0aGF0IGVhc3kgdG8gc2VwYXJhdGUgdGhlbSBiZWNhdXNl
-IGNsb2NrZ2VuIG5vZGUgcGxheXMgdHdvIHR5cGVzDQpPZiByb2xlcy4gVGFrZSBSRUcgcHJvcGVy
-dHkgYXMgZXhhbXBsZToNCkFzIElQIGJsb2NrIG5vZGUsIFJFRyBzaG91bGQgYmUgcmVnID0gPDB4
-ZTEwMDAgMHgxMDAwPiwgd2hpbGUgYXMNCkNsb2NrIHByb3ZpZGVyIG5vZGUsIGl0IHNob3VsZCBi
-ZSByZWcgPSA8MHhhYmMgMHg0PiBvciBubyByZWcgYXQgYWxsKGZvciBmaXhlZCBjbG9jaykuDQoN
-Cj4gPiBBdCBmaXJzdCwgSSB3YW50IHRvIGFkZCBhIGV4dHJhIGZpeGVkLWNsb2NrIG5vZGUgYW5k
-IG1vdmUgdGhlDQo+ID4gY2xvY2stZnJlcXVlbmN5IG9mIGNsb2NrZ2VuIE5vZGUgdG8gaXQsIGJ1
-dCBpdCBpcyBhZ2FpbnN0IHRoZSBiYWNrd2FyZA0KPiA+IGNvbXBhdGliaWxpdHkNCj4gDQo+IFJp
-Z2h0Lg0KPiANCj4gPiB3aGljaCBJIHRoaW5rIGl0IGlzIG5vdCBhIGJpZyBkZWFsLCBCZWNhdXNl
-IG5vYm9keSBoYXNuJ3QgdXNlZCBpdCB5ZXQuDQo+IA0KPiBUaGUgcG9pbnQgaXMgaXQgd2lsbCBy
-ZXF1aXJlIHVwZGF0aW5nIFUtQm9vdCB0byB1c2UgaXQsIHZlcnN1cyBleGlzdGluZw0KPiBVLUJv
-b3RzIHdoaWNoIGFscmVhZHkgcGF0Y2ggdXAgdGhlIGNsb2NrLWZyZXF1ZW5jeSBpbiB0aGUgY2xv
-Y2tnZW4gbm9kZS4NCj4gQW5kIHRoZXJlJ3Mgbm90aGluZyBzZW1hbnRpY2FsbHkgd3Jvbmcgd2l0
-aCB0aGUgd2F5IGl0IGN1cnJlbnRseSBpcy4NCj4gDQpZZXMsIG5vdGhpbmcgd3JvbmcgYWJvdXQg
-aXQuDQpCdXQgd2Ugd2lsbCBrZWVwIGFkZGluZyB0aGUgY2xvY2tnZW4teC55IG5vZGUgYWxsIHRo
-ZSB0aW1lIGluIHVib290Lg0KSWYgd2UgaGF2ZSBvbmUgZXh0cmEgbm9kZSB0byBrZWVwIGNsb2Nr
-LWZyZXF1ZW5jeSwgaXQgd291bGQgYmUgdXBkYXRlZCBvbmx5IG9uY2UuDQoNCj4gPiBJZiBJIGFk
-ZCBhIGV4dHJhIG5vZGUgd2l0aCB0aGUgY2xvY2stZnJlcXVlbmN5IHByb3BlcnR5IGFuZCBkb24n
-dCBtb3ZlDQo+ID4gdGhlIGNsb2NrLWZyZXF1ZW5jeSBwcm9wZXJ0eSBvZiBjbG9ja2dlbiwgdGhh
-dCB3b3VsZCBiZSByZWR1bmRhbnQNCj4gPiBiZWNhdXNlIGJvdGggY2xvY2tnZW4gbm9kZSBhbmQg
-dGhlIGV4dHJhIG5vZGUgaGF2ZSB0aGUgc2FtZSBjbG9jay0NCj4gZnJlcXVlbmN5IG5vZGUuDQo+
-ID4gU28sIEkgY2hvb3NlIHdoYXQgSSBkaWQgbm93Lg0KPiANCj4gSSdtIG5vdCBjb21wbGFpbmlu
-ZyBhYm91dCBob3cgeW91IHN0cnVjdHVyZWQgdGhlIG5vZGVzLCBqdXN0IGhvdyB5b3UNCj4gZG9j
-dW1lbnRlZCB0aGVtLg0KPiANCkFzIEkgc2FpZCBpdCBpcyBoYXJkIHRvIGRvY3VtZW50IGNsb2Nr
-Z2VuIG5vZGUgaWYgd2UgZG9uJ3Qgc2VwYXJhdGUgaXRzDQp0d28gcm9sZXMuDQpJIHRoaW5rIHRo
-ZSBmb2xsb3dpbmcgc3RydWN0dXJlIGlzIGJldHRlci4NCg0KKyAgIGNsb2NrZ2VuOiBnbG9iYWwt
-dXRpbGl0aWVzQGUxMDAwIHsNCisgICAgICAgY29tcGF0aWJsZSA9ICJmc2wscDUwMjAtY2xvY2tn
-ZW4iLCAiZnNsLHFvcmlxLWNsb2NrZ2VuLTEuMCI7DQorICAgICAgIHJlZyA9IDwweGUxMDAwIDB4
-MTAwMD47DQorICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KKyAgICAgICAjc2l6ZS1jZWxs
-cyA9IDwxPjsNCgkgIA0KCSAgU3lzY2xrOnN5c2NsayB7DQoJICAJY29tcGF0aWJsZSA9ICJmc2ws
-cW9yaXEtc3lzY2xrIiwgImZpeGVkLWNsb2NrIjsNCiAgICAgICAJY2xvY2stb3V0cHV0LW5hbWVz
-ID0gInN5c2NsayI7DQogICAgICAgCSNjbG9jay1jZWxscyA9IDwwPjsgICANCgkJY2xvY2stZnJl
-cXVlbmN5ID0gPDA+OwkJDQoJICB9DQorICAgICAgIHBsbDA6IHBsbDBAODAwIHsNCisgICAgICAg
-ICAgICNjbG9jay1jZWxscyA9IDwxPjsNCisgICAgICAgICAgIHJlZyA9IDwweDgwMCAweDQ+Ow0K
-KyAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wscW9yaXEtY2hhc3NpczEtY29yZS1wbGwiOw0K
-KyAgICAgICAgICAgY2xvY2tzID0gPCYgU3lzY2xrID47DQorICAgICAgICAgICBjbG9jay1vdXRw
-dXQtbmFtZXMgPSAicGxsMCIsICJwbGwwLWRpdjIiOw0KKyAgICAgICB9Ow0KDQpSZWdhcmRzLA0K
-WXVhbnRpYW4NCg0KPiAtU2NvdHQNCj4gDQoNCg==
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> -----Original Message-----
+> From: Vinod Koul [mailto:vinod.koul@intel.com]
+> Sent: Tuesday, September 17, 2013 12:54 PM
+> To: Lu Jingchang-B35083
+> Cc: djbw@fb.com; shawn.guo@linaro.org; linux-kernel@vger.kernel.org;
+> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; Wang
+> Huan-B18965
+> Subject: Re: [PATCH 3/3] dma: Add Freescale eDMA engine driver support
+> 
+> I need ACK from DT maintainers on the above parts
+Should I cc this to one of the DT maintainers? Thanks.
+
+> 
+> > +static int fsl_edma_control(struct dma_chan *chan, enum dma_ctrl_cmd
+> cmd,
+> > +		unsigned long arg)
+> > +{
+> > +	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
+> > +	struct dma_slave_config *cfg = (void *)arg;
+> > +
+> > +	switch (cmd) {
+> > +	case DMA_TERMINATE_ALL:
+> > +		fsl_edma_disable_request(fsl_chan);
+> > +		fsl_chan->edesc = NULL;
+> you need to hold the lock here to prevent race here!
+Thanks, I will fix this in the next version of the patch.
+
+> 
+> > +		vchan_free_chan_resources(&fsl_chan->vchan);
+> > +		return 0;
+> > +
+> > +	case DMA_SLAVE_CONFIG:
+> > +		fsl_chan->fsc.dir = cfg->direction;
+> > +		if (cfg->direction == DMA_DEV_TO_MEM) {
+> > +			fsl_chan->fsc.dev_addr = cfg->src_addr;
+> > +			fsl_chan->fsc.addr_width = cfg->src_addr_width;
+> > +			fsl_chan->fsc.burst = cfg->src_maxburst;
+> > +			fsl_chan->fsc.attr = fsl_edma_get_tcd_attr(cfg-
+> >src_addr_width);
+> > +		} else if (cfg->direction == DMA_MEM_TO_DEV) {
+> > +			fsl_chan->fsc.dev_addr = cfg->dst_addr;
+> > +			fsl_chan->fsc.addr_width = cfg->dst_addr_width;
+> > +			fsl_chan->fsc.burst = cfg->dst_maxburst;
+> > +			fsl_chan->fsc.attr = fsl_edma_get_tcd_attr(cfg-
+> >dst_addr_width);
+> > +		} else {
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		if (!cfg->slave_id) {
+> > +			return -EINVAL;
+> should you check for this first, you wrote the channel with config above
+> and now
+> returning error?
+Yes, the slave id should be checked first, thanks!
+
+> > +	spin_lock_irqsave(&fsl_chan->vchan.lock, flags);
+> > +	vdesc = vchan_find_desc(&fsl_chan->vchan, cookie);
+> > +	if (fsl_chan->edesc && cookie == fsl_chan->edesc->vdesc.tx.cookie)
+> > +		txstate->residue = fsl_edma_desc_residue(fsl_chan, vdesc, 1);
+> why not use true/false for the last bool arg?
+Thanks, I will use true/false instead.
+
+
+
+
+
+
+Best Regards,
+Jingchang
