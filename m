@@ -1,91 +1,66 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: All device tree bindings need maintainer ack or just the
- 'interesting' ones.
-Date: Tue, 17 Sep 2013 14:48:41 +0100
-Message-ID: <20130917134841.GX16984@lee--X1>
-References: <52345182.1080609@kernel.org>
- <52372F2B.3030504@gmail.com>
- <20130917081003.GU16984@lee--X1>
- <20130917112433.GB26737@e106331-lin.cambridge.arm.com>
- <20130917120730.GW16984@lee--X1>
- <20130917133025.GD26737@e106331-lin.cambridge.arm.com>
+From: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3] PWM: PXA: add device tree support to PWM driver
+Date: Tue, 17 Sep 2013 07:07:25 -0700
+Message-ID: <5238621D.3050504@newsguy.com>
+References: <1379091281-23662-1-git-send-email-mikedunn@newsguy.com> <52375FB1.5050700@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130917133025.GD26737-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <52375FB1.5050700-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Sep 2013, Mark Rutland wrote:
+On 09/16/2013 12:44 PM, Stephen Warren wrote:
+> On 09/13/2013 10:54 AM, Mike Dunn wrote:
+>> This patch adds device tree support to the PXA's PWM driver.  Only an OF match
+>> table is added; nothing needs to be extracted from the device tree node.  The
+>> existing ID table is reused for the match table data.
+>>
+>> Tested on a Palm Treo 680 (both platform data and DT cases).
+> 
+>> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+> 
+>> +- compatible: should be one of:
+>> +  - "marvell,pxa250-pwm"
+>> +  - "marvell,pxa270-pwm"
+>> +  - "marvell,pxa168-pwm"
+>> +  - "marvell,pxa910-pwm"
+> 
+> Not just one of, but possible more than one...
 
-> On Tue, Sep 17, 2013 at 01:07:30PM +0100, Lee Jones wrote:
-> > On Tue, 17 Sep 2013, Mark Rutland wrote:
-> >=20
-> > > On Tue, Sep 17, 2013 at 09:10:03AM +0100, Lee Jones wrote:
-> > > > > > http://marc.info/?l=3Dlinux-iio&m=3D137881790217809&w=3D2
-> > > > >=20
-> > > > > Looks reasonable. My only comment is '-' is preferred over '_=
-'.
-> > > >=20
-> > > > Ah, in the node name you mean. Yes, I can change that.
-> > > >=20
-> > > > The compatible string has to stay the same however, as it has t=
-o match
-> > > > the device name which can't be changed due to possible userspac=
-e
-> > > > breakage.
-> > >=20
-> > > I'm not sure I follow why the compatible string must be identical=
- to the
-> > > name appearing to userspace.
-> >=20
-> > It doesn't. It has to be identical to the device name, which I'm
-> > guessing is used when populating sysfs.
->=20
-> I still don't understand why the device name must be identical to the
-> compatible string.
->=20
-> The string "st,lsm303dlh_magn" (with the "st," prefix) appears nowher=
-e
-> in v3.12-rc1
 
-You're looking at an old patchset. We found out that the Snowball
-schematic was actually incorrect and we have a LSM303DLHC.
+So the phrasing should be "compatible: should be among:" ?
 
-git grep -i lsm303dlhc_magn v3.12-rc1
-  drivers/iio/magnetometer/st_magn.h:
-    #define LSM303DLHC_MAGN_DEV_NAME   "lsm303dlhc_magn"
 
-> and the compatible string in the dt doesn't seem to get
-> assigned to the device in the i2c core or in
-> drivers/iio/magnetometer/st_magn_i2c.c.
+> 
+>> diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+> 
+>> +		pwm0: pwm@40b00000 {
+>> +			compatible = "marvell,pxa270-pwm";
+> 
+> I thought the assertion was that pax270 and pxa250 were both compatible?
+> If so, that should be:
+> 
+> 		compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
 
-It does:
-  drivers/i2c/busses/*.c: of_i2c_register_devices();
-  drivers/of/of_i2c.c:    |-> of_modalias_node();
-                            |-> i2c_new_device();
 
-> I don't see how the "st,lsm303dlh_magn" string could be getting to
-> userspace already such that it could be relying on it.
->=20
-> Am I missing something?
->=20
-> Thanks,
-> Mark.
->=20
-> >=20
+Indeed.  Currently, they are all the same.  By that logic, shouldn't it be
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+compatible = "marvell,pxa250-pwm", "marvell,pxa270-pwm", "marvell,pxa168-pwm",
+"marvell,pxa910-pwm";
+
+I am admittedly fuzzy on device tree, but this is starting to seem strange.
+
+Anyway, I'll defer to your judgement and resubmit if you can give me precise
+guidance on the above.  Thanks again for the review.
+
+Thanks,
+Mike
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
