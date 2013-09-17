@@ -1,16 +1,17 @@
 From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v11 0/8] PHY framework
-Date: Tue, 17 Sep 2013 10:41:07 -0500
-Message-ID: <20130917154107.GH15645@radagast>
-References: <1377063973-22044-1-git-send-email-kishon@ti.com>
- <521B0E79.6060506@ti.com> <20130827192059.GZ3005@radagast>
- <5225FF63.6080608@ti.com> <20130903155030.GA21525@kroah.com>
- <5226F5E2.5010409@ti.com>
+Subject: Re: [PATCH 1/7] usb: dwc3: get "usb_phy" only if the platform
+ indicates the presence of PHY
+Date: Tue, 17 Sep 2013 10:45:09 -0500
+Message-ID: <20130917154509.GJ15645@radagast>
+References: <1378136591-7463-1-git-send-email-kishon@ti.com>
+ <1378136591-7463-2-git-send-email-kishon@ti.com>
+ <52319912.8030203@ti.com>
+ <CAFp+6iE+xbSWWp2bNc5MRSUrA4Fi6qVU4vhR4+mtZHZGidkMGg@mail.gmail.com>
 Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0949962772359670020=="
+Content-Type: multipart/mixed; boundary="===============6693026817336966748=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5226F5E2.5010409@ti.com>
+In-Reply-To: <CAFp+6iE+xbSWWp2bNc5MRSUrA4Fi6qVU4vhR4+mtZHZGidkMGg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,115 +21,126 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, stern@rowland.harvard.edu, grant.likely@linaro.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, george.cherian@ti.com, arnd@arndb.de, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, broonie@kernel.org, Andrew Morton <akpm@linux-foundation.org>
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, george.cherian@ti.com, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, linux-omap@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>, Greg KH <gregkh@linuxfoundation.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <bcousson>
 List-Id: devicetree@vger.kernel.org
 
---===============0949962772359670020==
+--===============6693026817336966748==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YPJ8CVbwFUtL7OFW"
+	protocol="application/pgp-signature"; boundary="UK1lfQXsnwKrySH9"
 Content-Disposition: inline
 
---YPJ8CVbwFUtL7OFW
+--UK1lfQXsnwKrySH9
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 04, 2013 at 02:27:06PM +0530, Kishon Vijay Abraham I wrote:
-> On Tuesday 03 September 2013 09:20 PM, Greg KH wrote:
-> > On Tue, Sep 03, 2013 at 08:55:23PM +0530, Kishon Vijay Abraham I wrote:
-> >> Hi Greg,
+Hi,
+
+On Thu, Sep 12, 2013 at 04:17:08PM +0530, Vivek Gautam wrote:
+> On Thu, Sep 12, 2013 at 4:06 PM, Roger Quadros <rogerq@ti.com> wrote:
+> > Hi Kishon,
+> >
+> > On 09/02/2013 06:43 PM, Kishon Vijay Abraham I wrote:
+> >> There can be systems which does not have a external usb_phy, so get
+> >> usb_phy only if usb-phy property is added in the case of dt boot or if
+> >> platform_data indicates the presence of PHY. Also remove checking if
+> >> return value is -ENXIO since it's now changed to always enable usb_phy=
+ layer.
 > >>
-> >> On Wednesday 28 August 2013 12:50 AM, Felipe Balbi wrote:
-> >>> Hi,
-> >>>
-> >>> On Mon, Aug 26, 2013 at 01:44:49PM +0530, Kishon Vijay Abraham I wrot=
-e:
-> >>>> On Wednesday 21 August 2013 11:16 AM, Kishon Vijay Abraham I wrote:
-> >>>>> Added a generic PHY framework that provides a set of APIs for the P=
-HY drivers
-> >>>>> to create/destroy a PHY and APIs for the PHY users to obtain a refe=
-rence to
-> >>>>> the PHY with or without using phandle.
-> >>>>>
-> >>>>> This framework will be of use only to devices that uses external PH=
-Y (PHY
-> >>>>> functionality is not embedded within the controller).
-> >>>>>
-> >>>>> The intention of creating this framework is to bring the phy driver=
-s spread
-> >>>>> all over the Linux kernel to drivers/phy to increase code re-use an=
-d to
-> >>>>> increase code maintainability.
-> >>>>>
-> >>>>> Comments to make PHY as bus wasn't done because PHY devices can be =
-part of
-> >>>>> other bus and making a same device attached to multiple bus leads t=
-o bad
-> >>>>> design.
-> >>>>>
-> >>>>> If the PHY driver has to send notification on connect/disconnect, t=
-he PHY
-> >>>>> driver should make use of the extcon framework. Using this susbsyst=
-em
-> >>>>> to use extcon framwork will have to be analysed.
-> >>>>>
-> >>>>> You can find this patch series @
-> >>>>> git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git =
-testing
-> >>>>
-> >>>> Looks like there are not further comments on this series. Can you ta=
-ke this in
-> >>>> your misc tree?
-> >>>
-> >>> Do you want me to queue these for you ? There are quite a few users f=
-or
-> >>> this framework already and I know of at least 2 others which will show
-> >>> up for v3.13.
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> ---
+> >>  drivers/usb/dwc3/Kconfig         |    1 +
+> >>  drivers/usb/dwc3/core.c          |   60 +++++++++++++++++------------=
+---------
+> >>  drivers/usb/dwc3/platform_data.h |    1 +
+> >>  3 files changed, 28 insertions(+), 34 deletions(-)
 > >>
-> >> Can you queue this patch series? There are quite a few users already f=
-or this
-> >> framework.
-> >=20
-> > It will have to wait for 3.13 as the merge window for new features has
-> > been closed for a week or so.  Sorry, I'll queue this up after 3.12-rc1
-> > is out.
+> >> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> >> index f969ea2..cfc16dd 100644
+> >> --- a/drivers/usb/dwc3/Kconfig
+> >> +++ b/drivers/usb/dwc3/Kconfig
+> >> @@ -2,6 +2,7 @@ config USB_DWC3
+> >>       tristate "DesignWare USB3 DRD Core Support"
+> >>       depends on (USB || USB_GADGET) && GENERIC_HARDIRQS && HAS_DMA
+> >>       depends on EXTCON
+> >> +     select USB_PHY
+> >>       select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
+> >>       help
+> >>         Say Y or M here if your system has a Dual Role SuperSpeed
+> >> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> >> index 474162e..428c29e 100644
+> >> --- a/drivers/usb/dwc3/core.c
+> >> +++ b/drivers/usb/dwc3/core.c
+> >> @@ -387,16 +387,38 @@ static int dwc3_probe(struct platform_device *pd=
+ev)
+> >>       if (node) {
+> >>               dwc->maximum_speed =3D of_usb_get_maximum_speed(node);
+> >>
+> >> -             dwc->usb2_phy =3D devm_usb_get_phy_by_phandle(dev, "usb-=
+phy", 0);
+> >> -             dwc->usb3_phy =3D devm_usb_get_phy_by_phandle(dev, "usb-=
+phy", 1);
+> >> +             if (of_property_read_bool(node, "usb-phy")) {
+> >> +                     dwc->usb2_phy =3D devm_usb_get_phy_by_phandle(de=
+v,
+> >> +                             "usb-phy", 0);
+> >> +                     if (IS_ERR(dwc->usb2_phy))
+> >> +                             return PTR_ERR(dwc->usb2_phy);
+> >> +                     dwc->usb3_phy =3D devm_usb_get_phy_by_phandle(de=
+v,
+> >> +                             "usb-phy", 1);
+> >> +                     if (IS_ERR(dwc->usb3_phy))
+> >> +                             return PTR_ERR(dwc->usb3_phy);
+> >
+> > Some DWC3 instances use only usb2_phy. e.g. on DRA7 the 2nd dwc3 instan=
+ce doesn't use usb3_phy.
+> > This needs to be a valid case and driver shouldn't error out.
 >=20
-> Alright, thanks.
+> So, i think adding flexibility to DWC3 to have either
+> usb2-phy/usb3-phy or both of them seems to be valid point.
+> Any suggestions ?
 
-Just a gentle ping on this one...
+I've gone through that. There's no easy way to make USB3 PHY optional.
 
-cheers
+For platforms which actually have the USB3 side of things, not
+initializing the PHY kills dwc3.
+
+I've been trying to understand what it is that the USB3 PHY generates
+and gets backfed into dwc3, but so far no luck.
+
+I even have a patch for that, which I have dropped when I found out
+about this problem.
 
 --=20
 balbi
 
---YPJ8CVbwFUtL7OFW
+--UK1lfQXsnwKrySH9
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSOHgTAAoJEIaOsuA1yqREH7QP/RrRhj27omVfupAPeHzOVlYD
-HtXIlK9wsVeD36xJP+ZjCgLWCuzLCz2lR0rXYjJDwcTw6+RiJHxVUrhdrO8dIeXT
-jvGjSmz+QtV7dSrN7vQtsNRUdYxOgvV9IOtnKRz1EgepcvDcrri16y9xz0hxH8b+
-jS1fp7shRuF5vz+/mk1hryyKmhMH34T8HK2uEz/XTQuw58V8CNP0dxNPXXeprIXv
-IGCubSvWr2igiQBmRpsKiyczoH1YgovXE3mY4VcrTLuu/M8PwcpCtddrJUP4j8vI
-jAyU2NZ3B4IsjcbQzA56R72FcXfk00D90oyg3KF1CM7ABcH9jFBkYNLNXVV87v9P
-BeZOEiGoSCZvPOyPqQ2i0sOMTrFLsqDZOSv5dIL+Ai9VT80qo1aZHz21QWJ9J522
-S/ez8SbWeuEBcqE6gqyA0CgwwubSWQEqUZYFi2ryXGBMi09JE10SOBdlhWcXMXQp
-WXMBAK/J2cFsn9iWEXgAr1tF4NdQlZyqvZ4cgppbKsy+ImpfMUXgME948Yp49fnn
-EoRXpb6BgS6cZUeazoaVWSC38lDdVdYOIvERcWLu3oxUwOE3ykQq0E6IeKjxXnHW
-21S1vvGfwFN2ODw1nYUW10UFGuFz16OfHZJ5T1Uehl1zks6UFOWcA0kdsKjheOlZ
-iWGOFMZF6lEMV8/o+A+h
-=1Rub
+iQIcBAEBAgAGBQJSOHkFAAoJEIaOsuA1yqREI+QP+wXTnOtz61O0X2jqImlVG463
+mjX+fp5xf82wkFmsaVHzvnji1iqdc7ArvOjejIlhDpvtaA9TftAGCvS5OKYFBAjy
+Vf4ZtbFmw0gh82MOcmHQCWibV+5M9MiwYf16zsZXFXLUPWCm+VvShrZR2ESEJ1Xe
+sruFZWLFf8xFGt8HpWhrQUQejnvaBVEQDhjuF4muGu8c3TYsxLmSr/CqymZm9FMH
+J2z7QkbAYHFi6sPBFJbPPoHrSLZzbmeAFYQdyZ/GJYjiu9XKvb2DLewbkBXDm/fT
+re8PcDg0ddG05eOG9PSd7nuzyVw3c5EcpjXU5UAHNAM+lLnFQ6ajizTeMH2YDEAA
+CXDuVfq6QYgQ69xO3JejubFrvc6EF7dqjG30fpm2YALLtKnbzfFSWOKbzp9yKG4n
+SFZMkosMHe9LiCEOsMuv187ClWCdmYkQalwq5++PA4drOcQ/KDgTZAD6EgU0Drma
+S4ekQnfuZCXHc2Ryw1ek/hE51OI0Sy97Ww9S1JFtTnvZ4PV0Om2RdwEivDwbmC66
+aA8LIZo6X66okEsRk+lUlneHDDgdQ92gEv1OhYf/2JRVPBHhy+6Qd66DLwd+HOW0
+01csfFM7IZhAVuP0J5ZbQB1+k8bL2Q7IhW/XhbOJlypJVAWuoWaUNPTRCHb7Jp4K
+YqAhR/yarpQxFKP+zTfV
+=OIPS
 -----END PGP SIGNATURE-----
 
---YPJ8CVbwFUtL7OFW--
+--UK1lfQXsnwKrySH9--
 
 
---===============0949962772359670020==
+--===============6693026817336966748==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -139,4 +151,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============0949962772359670020==--
+--===============6693026817336966748==--
