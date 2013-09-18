@@ -1,58 +1,90 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: "memory" binding issues
-Date: Wed, 18 Sep 2013 10:28:44 -0600
-Message-ID: <5239D4BC.3030600@wwwdotorg.org>
-References: <1379300274.4098.77.camel@pasglop> <1379371567.3721.46.camel@pasglop> <CAOesGMgE1jiF5OHsmPQz2z66Bcqu0HeAj=taE1vmFK-0-0s2TQ@mail.gmail.com> <1815499.tpfeUKmP6V@flatron> <20130917164307.GA31327@quad.lixom.net> <5238C4D1.6060500@gmail.com> <CAOesGMh0F09OAR4bepGSCE5Z5OZ56fBmDPBSfwZ+NB9RgcE0Vw@mail.gmail.com>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] video: ARM CLCD: Add DT support
+Date: Wed, 18 Sep 2013 17:39:23 +0100
+Message-ID: <1379522363.9244.12.camel@hornet>
+References: <1379351934-25415-1-git-send-email-pawel.moll@arm.com>
+	 <52376180.1090001@wwwdotorg.org> <1379435799.9205.16.camel@hornet>
+	 <5238CBE9.2060800@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMh0F09OAR4bepGSCE5Z5OZ56fBmDPBSfwZ+NB9RgcE0Vw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5238CBE9.2060800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2013 03:15 PM, Olof Johansson wrote:
-> On Tue, Sep 17, 2013 at 2:08 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 9/17/2013 9:43 AM, Olof Johansson wrote:
->>> On Tue, Sep 17, 2013 at 09:56:39AM +0200, Tomasz Figa wrote:
->>>> I'm afraid that I must disagree. For consistency I'd rather go with what
->>>> Ben said. Please see ePAPR chapter 2.2.1.1, which clearly defines how
->>>> nodes should be named.
->>>
->>> 2.2.1.1 is there to point out that unit address _has_ to reflect reg.
->>>
->>> 2.2.3 says that unit addresses can be omitted.
->>
->> 2.2.3 is talking about path names.
->>
->> 2.2.1.1 is talking about node names.
->>
->> 2.2.1.1 _does_ require the unit address in the node name, 2.2.3 does not
->> remove that requirement.
-> 
-> Sigh, that's horrible. OF clearly doesn't require it.
-> 
-> I guess people prefer to follow ePAPR even though it's broken? That
-> means someone needs to cleanup the current dts files. Any takers?
+On Tue, 2013-09-17 at 22:38 +0100, Stephen Warren wrote:
+> >>> +Optional properties:
+> >>> +
+> >>> +- arm,pl11x,framebuffer-base: a pair of two values, address and =
+size,
+> >>> +				defining the framebuffer to be used;
+> >>> +				to be used only if it is *not*
+> >>> +				part of normal memory, as described
+> >>> +				in /memory node
+> >>
+> >> If the framebuffer is part of /memory, what happens then? Is the a=
+ddress
+> >> not fixed (so the HW isn't yet set up) and hence a driver should
+> >> allocate it?
+> >=20
+> > Yes, if it wants to display anything :-) And as this is a normal an=
+d
+> > expected behaviour, I don't think it deserves a note in the
+> > documentation. I'm open to any suggestions that would make the word=
+ing
+> > above emphasize the "weirdness" of situations requiring the propert=
+y.
+>=20
+> Perhaps:
+>=20
+> A pair of two values, address and size, defining the framebuffer to b=
+e
+> used. If not present, the framebuffer may be located anywhere in memo=
+ry.
 
-FWIW, I investigated enhancing dtc to enforce this rule. Here are the
-results:
+Works with me, thanks!
 
-********** TEST SUMMARY
-*     Total testcases:	1446
-*                PASS:	1252
-*                FAIL:	58
-*   Bad configuration:	136
-* Strange test result:	0
-**********
+On Tue, 2013-09-17 at 22:34 +0100, Stephen Warren wrote:
+> > On Tue, 2013-09-17 at 17:36 +0100, Pawel Moll wrote:
+> >> On Mon, 2013-09-16 at 20:52 +0100, Stephen Warren wrote:
+> >>>> +- arm,pl11x,panel-data-pads: array of 24 cells, each of them de=
+scribing
+> >>>> +				a function of one of the CLD pads,
+> >>>> +				starting from 0 up to 23; each pad can
+> >>>> +				be described by one of the following values:
+> >>>> +	- 0: reserved (not connected)
+> >>>> +	- 0x100-0x107: color upper STN panel data 0 to 7
+> >>> ...
+> >>>
+> >>> I assume those are the raw values that go into the HW?
+> >=20
+> > No, they can be considered "labels", defining the way pads are used
+> > (wired). Then, basing on this information, the driver is configurin=
+g the
+> > cell, eg. selecting STN or TFT mode (thus switching the output betw=
+een
+> > panel formatter and raw RGB data source).
+>=20
+> Oh, why not just use the raw values from the HW registers for this?
 
-That's just in dtc itself, and not any of the *.dts in the kernel or
-U-Boot source trees...
+How do you mean? Based on the the way the "LCD data" lines are wired up=
+,
+the driver has to decide whether to select STN (LCDControl &=3D ~(1<<5)=
+)
+or TFT mode (LCDControl |=3D 1<<5), then figures out what memory pixel
+formats are possible (based on this will set LCDControl[3..1] in
+runtime, depending on the mode selected by the user). There isn't a
+separate register as such configuring output pads. It's just the way
+they can used depends on the way they're wired up.
 
-I'll see how much of patch it takes to fix up all the test-cases in dtc.
+Pawe=C5=82
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
