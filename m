@@ -1,81 +1,51 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 06/11] ASoC: davinci: Add support for
- AM33xx SoC Audio
-Date: Wed, 18 Sep 2013 19:09:46 +0100
-Message-ID: <20130918180946.GF21013@sirena.org.uk>
-References: <cover.1379409268.git.jsarha@ti.com>
- <c59efc1524b19f50dc37606bfa246dde9c20d312.1379409268.git.jsarha@ti.com>
- <20130918144723.GU21013@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2902586541495767404=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20130918144723.GU21013@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: jsarha@ti.com
-Cc: nm@ti.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, joelf@ti.com, gururaja.hebbar@ti.com, detheridge@ti.com
+From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/4] arm: zynq: Enable global timer
+Date: Wed, 18 Sep 2013 11:48:34 -0700
+Message-ID: <1379530118-22813-1-git-send-email-soren.brinkmann@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Preeti Murthy <preeti.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
---===============2902586541495767404==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rz/qo3iW6Lu5yGf1"
-Content-Disposition: inline
+here's a v2. I reused the subject from my v1 submission although the focus of
+this series moved a bit towards the timer subsystem.
+I replaced Stephen's fix to prevent per cpu devices from becoming
+the broadcast device with Thomas' proposal, but I kept the original commit
+message. I split the whole approach in small chunks that I found reasonable.
 
+In 4/4, I picked up Grant's comment regarding the DT node name.
 
---rz/qo3iW6Lu5yGf1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v2:
+ - drop 1/2 of the original series
+ - implement preventing per cpu devices from becoming broadcast device according
+   to Thomas' proposal
+   - introduce new CLOCK_EVT_FEAT_PERCPU flag
+   - set the flag for the arm_global_timer
+   - filter per cpu devices based on this flag when choosing the broadcast
+     device
+ - rename DT node to avoid '_'s
+ 
 
-On Wed, Sep 18, 2013 at 03:47:23PM +0100, Mark Brown wrote:
-> On Tue, Sep 17, 2013 at 12:26:05PM +0300, jsarha@ti.com wrote:
-> > From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
-> >=20
-> > AM33xx uses same McASP IP as the Davinci Platform. This patch updates
-> > Kconfig and makefile to enable build for McASP, PCM & Codec drivers.
->=20
-> Applied, thanks.
+Soren Brinkmann (4):
+  clockchips: Add FEAT_PERCPU clockevent flag
+  clocksource/arm_global_timer: Set FEAT_PERCPU flag
+  tick: broadcast: Deny per-cpu clockevents from being broadcast sources
+  arm: zynq: Enable arm_global_timer
 
-Dropped since this breaks x86 builds due to dma_alloc_writecombine() not
-being defined (our DMA APIs really aren't wonderful...).
+ arch/arm/boot/dts/zynq-7000.dtsi       | 8 ++++++++
+ arch/arm/mach-zynq/Kconfig             | 1 +
+ drivers/clocksource/arm_global_timer.c | 3 ++-
+ include/linux/clockchips.h             | 1 +
+ kernel/time/tick-broadcast.c           | 1 +
+ 5 files changed, 13 insertions(+), 1 deletion(-)
 
---rz/qo3iW6Lu5yGf1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+-- 
+1.8.4
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSOexnAAoJELSic+t+oim9ADEP/05AQsoBIhWO9krViYbO0ibx
-SlpiFrzFa9DAW5h7xbrXbL+MO1YURo+Fzf18x04tipg8PplnPYn/guqlH1SGSxCM
-Y6XXKtTfTwut4yPjq1dNfBrtbq3Hh/C+939lUR7BIVDYMdP3iD3Hiib/8PDQM6Ue
-CXtXxXJkPcZxN4kCRBqxo3dE8R+f7sgcY8tqQRXq1ssYZl1mSu/oBo4bMKZ4CEPi
-CNLqh1qgtMlr2bA2eekN73dracKAjwimdznB4JRCsJwCza5uM2zO67JLvXWI4+8m
-oEQylVTbTCJza07Z9DhVP9Rj0Qjax/HbGCSzjsQInV0xs8Wvw6z52epBbIOvgKmT
-YwnX2ggj2FRQMw+I23+jIbv7smTIjy/K1ScZmFY5uylJe7i3bR7ZsmH/NkCAsfPu
-M/wzxrj0oCIy8tzaIMBZoGQWs/YeJ1f/89z5pmGbh/RJv/l03ADr3MexsHxNlyy3
-ZAagw6VUcL4BmWW+eMAzggGztjQMuYLrviir22++FJqqef4gf7IFZo+Tl8eyV9kb
-TM1q/Ad/rcuB7vSJ8I+KbmLbin/4SwcKUAxwqnhiTl285bTo7J0n60HiLBSqfiic
-kyYgt2sxsDtrETVOZ/3gWQzKL7fAHkPi8lLiouhVRGThbpUBWDdEiYwXPL7jqXkv
-xbddTS3XLePyJHG444dE
-=bdJE
------END PGP SIGNATURE-----
-
---rz/qo3iW6Lu5yGf1--
-
---===============2902586541495767404==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2902586541495767404==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
