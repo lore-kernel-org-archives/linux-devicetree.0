@@ -1,125 +1,67 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v7 05/10] usb: musb: omap2430: Don't use omap_get_control_dev()
-Date: Wed, 18 Sep 2013 15:48:57 +0300
-Message-ID: <1379508542-22389-6-git-send-email-rogerq@ti.com>
-References: <1379508542-22389-1-git-send-email-rogerq@ti.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH REPOST] ARM: tegra: use dt-binding header for key code
+Date: Wed, 18 Sep 2013 18:52:32 +0530
+Message-ID: <1379510552-23401-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1379508542-22389-1-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com, bcousson@baylibre.com
-Cc: tony@atomide.com, george.cherian@ti.com, kishon@ti.com, bigeasy@linutronix.de, sergei.shtylyov@cogentembedded.com, thomas.langer@lantiq.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: swarren@nvidia.com
+Cc: linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-omap_get_control_dev() is being deprecated as it doesn't support
-multiple instances. As control device is present only from OMAP4
-onwards which supports DT only, we use phandles to get the
-reference to the control device.
+In place of hardcoding the key code in DTS file and comment the
+key code as side notes, use the key code macro defines in the
+dt-bindings/input/input.h directly.
 
-Also get rid of "ti,has-mailbox" property as it is redundant and
-we can determine that from whether "ctrl-module" property is present
-or not. Get rid of has_mailbox from musb_hdrc_platform_data as well.
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 ---
- Documentation/devicetree/bindings/usb/omap-usb.txt |    4 ---
- drivers/usb/musb/omap2430.c                        |   25 +++++++++++--------
- include/linux/usb/musb.h                           |    2 -
- 3 files changed, 14 insertions(+), 17 deletions(-)
+Reposting this patch as it was sent earlier when merge window was closed.
 
-diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
-index 6d8ab9c..f67573c 100644
---- a/Documentation/devicetree/bindings/usb/omap-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
-@@ -3,9 +3,6 @@ OMAP GLUE AND OTHER OMAP SPECIFIC COMPONENTS
- OMAP MUSB GLUE
-  - compatible : Should be "ti,omap4-musb" or "ti,omap3-musb"
-  - ti,hwmods : must be "usb_otg_hs"
-- - ti,has-mailbox : to specify that omap uses an external mailbox
--   (in control module) to communicate with the musb core during device connect
--   and disconnect.
-  - multipoint : Should be "1" indicating the musb controller supports
-    multipoint. This is a MUSB configuration-specific setting.
-  - num-eps : Specifies the number of endpoints. This is also a
-@@ -28,7 +25,6 @@ SOC specific device node entry
- usb_otg_hs: usb_otg_hs@4a0ab000 {
- 	compatible = "ti,omap4-musb";
- 	ti,hwmods = "usb_otg_hs";
--	ti,has-mailbox;
- 	multipoint = <1>;
- 	num-eps = <16>;
- 	ram-bits = <12>;
-diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
-index 59d2245..4512a05 100644
---- a/drivers/usb/musb/omap2430.c
-+++ b/drivers/usb/musb/omap2430.c
-@@ -38,6 +38,7 @@
- #include <linux/delay.h>
- #include <linux/usb/musb-omap.h>
- #include <linux/usb/omap_control_usb.h>
-+#include <linux/of_platform.h>
+ arch/arm/boot/dts/tegra114-dalmore.dts |    9 +++++----
+ 1 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
+index 6023028..05a3aae 100644
+--- a/arch/arm/boot/dts/tegra114-dalmore.dts
++++ b/arch/arm/boot/dts/tegra114-dalmore.dts
+@@ -1,5 +1,6 @@
+ /dts-v1/;
  
- #include "musb_core.h"
- #include "omap2430.h"
-@@ -509,8 +510,12 @@ static int omap2430_probe(struct platform_device *pdev)
- 	glue->dev			= &pdev->dev;
- 	glue->musb			= musb;
- 	glue->status			= OMAP_MUSB_UNKNOWN;
-+	glue->control_otghs = ERR_PTR(-ENODEV);
++#include <dt-bindings/input/input.h>
+ #include "tegra114.dtsi"
  
- 	if (np) {
-+		struct device_node *control_node;
-+		struct platform_device *control_pdev;
-+
- 		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
- 		if (!pdata) {
- 			dev_err(&pdev->dev,
-@@ -539,22 +544,20 @@ static int omap2430_probe(struct platform_device *pdev)
- 		of_property_read_u32(np, "ram-bits", (u32 *)&config->ram_bits);
- 		of_property_read_u32(np, "power", (u32 *)&pdata->power);
- 		config->multipoint = of_property_read_bool(np, "multipoint");
--		pdata->has_mailbox = of_property_read_bool(np,
--		    "ti,has-mailbox");
+ / {
+@@ -1081,26 +1082,26 @@
+ 		home {
+ 			label = "Home";
+ 			gpios = <&gpio TEGRA_GPIO(I, 5) GPIO_ACTIVE_LOW>;
+-			linux,code = <102>; /* KEY_HOME */
++			linux,code = <KEY_HOME>;
+ 		};
  
- 		pdata->board_data	= data;
- 		pdata->config		= config;
--	}
+ 		power {
+ 			label = "Power";
+ 			gpios = <&gpio TEGRA_GPIO(Q, 0) GPIO_ACTIVE_LOW>;
+-			linux,code = <116>; /* KEY_POWER */
++			linux,code = <KEY_POWER>;
+ 			gpio-key,wakeup;
+ 		};
  
--	if (pdata->has_mailbox) {
--		glue->control_otghs = omap_get_control_dev();
--		if (IS_ERR(glue->control_otghs)) {
--			dev_vdbg(&pdev->dev, "Failed to get control device\n");
--			ret = PTR_ERR(glue->control_otghs);
--			goto err2;
-+		control_node = of_parse_phandle(np, "ctrl-module", 0);
-+		if (control_node) {
-+			control_pdev = of_find_device_by_node(control_node);
-+			if (!control_pdev) {
-+				dev_err(&pdev->dev, "Failed to get control device\n");
-+				ret = -EINVAL;
-+				goto err2;
-+			}
-+			glue->control_otghs = &control_pdev->dev;
- 		}
--	} else {
--		glue->control_otghs = ERR_PTR(-ENODEV);
- 	}
- 	pdata->platform_ops		= &omap2430_ops;
+ 		volume_down {
+ 			label = "Volume Down";
+ 			gpios = <&gpio TEGRA_GPIO(R, 1) GPIO_ACTIVE_LOW>;
+-			linux,code = <114>; /* KEY_VOLUMEDOWN */
++			linux,code = <KEY_VOLUMEDOWN>;
+ 		};
  
-diff --git a/include/linux/usb/musb.h b/include/linux/usb/musb.h
-index 053c268..eb50525 100644
---- a/include/linux/usb/musb.h
-+++ b/include/linux/usb/musb.h
-@@ -99,8 +99,6 @@ struct musb_hdrc_platform_data {
- 	/* MUSB_HOST, MUSB_PERIPHERAL, or MUSB_OTG */
- 	u8		mode;
- 
--	u8		has_mailbox:1;
--
- 	/* for clk_get() */
- 	const char	*clock;
+ 		volume_up {
+ 			label = "Volume Up";
+ 			gpios = <&gpio TEGRA_GPIO(R, 2) GPIO_ACTIVE_LOW>;
+-			linux,code = <115>; /* KEY_VOLUMEUP */
++			linux,code = <KEY_VOLUMEUP>;
+ 		};
+ 	};
  
 -- 
-1.7.4.1
-
+1.7.1.1
