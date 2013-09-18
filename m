@@ -1,85 +1,100 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 03/28] of: create unflatten_and_copy_device_tree
-Date: Tue, 17 Sep 2013 22:15:51 -0500
-Message-ID: <20130918031551.B301FC42C99@trevor.secretlab.ca>
-References: <1379372965-22359-1-git-send-email-robherring2@gmail.com> <1379372965-22359-4-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379372965-22359-4-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <rob.herring@calxeda.com>
+From: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] watchdog: s3c2410_wdt: parse watchdog dt node to read
+ PMU registers adresses
+Date: Wed, 18 Sep 2013 12:20:31 +0530
+Message-ID: <CAL1wa8eWKNL3kdfjqxqaLsAtc8nqgiPW34SBk4gozAR1jnRaSg@mail.gmail.com>
+References: <1379414623-26329-1-git-send-email-l.krishna@samsung.com>
+ <1379414623-26329-4-git-send-email-l.krishna@samsung.com> <3395282.rv7qzo3E3P@amdc1227>
+ <CAD=FV=XQSLULsYanJCCFehxrs9LESZ=KO8XgyzZaacL4GNeXPA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=XQSLULsYanJCCFehxrs9LESZ=KO8XgyzZaacL4GNeXPA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Sep 2013 18:08:59 -0500, Rob Herring <robherring2@gmail.com> wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> Several architectures using DT support built-in dtb's in the init
-> section. These platforms need to copy the dtb from init since the
-> strings are referenced after unflattening. Every arch has their own
-> copying routine which do the same thing. Create a common function,
-> unflatten_and_copy_device_tree, to copy the dtb when unflattening the
-> dtb.
+Tomasz,
 
-This set of changes looks fine by me, but it does raise a question:
-For the platforms using memblock; would it work to use memblock_reserve
-on the region containing the device tree? That would avoid an
-unnecessary copy of the data. Can anyone tell me if it is legal to do a
-memblock_reserve on an __init section?
+On Wed, Sep 18, 2013 at 10:04 AM, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> Tomasz,
+>
+> On Tue, Sep 17, 2013 at 6:30 AM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>> --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+>>> +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+>>> @@ -7,8 +7,20 @@ occurred.
+>>>  Required properties:
+>>>  - compatible : should be "samsung,s3c2410-wdt"
+>>
+>> Since the WDT block of Exynos 5420 needs some extra configuration in PMU
+>> registers, it is no longer compatible with samsung.s3c2410-wdt. Please
+>> introduce separate compatible ("samsung,exynos5420-wdt") and make the
+>> driver handle the additional configuration only if running on a device with
+>> this compatible value.
+>>
+>> I'd suggest introducing quirk system to the driver and adding a
+>> NEEDS_PMU_CONFIG quirk selected by DT match entry with "samsung,exynos5420-
+>> wdt" compatible.
+>>
+>>>  - reg : base physical address of the controller and length of memory
+>>> mapped -      region.
+>>> +     region and the optional (addresses and length of memory mapped regions
+>>> +     of) PMU registers for masking/unmasking WDT.
+>>>  - interrupts : interrupt number to the cpu.
+>>>
+>>>  Optional properties:
+>>>  - timeout-sec : contains the watchdog timeout in seconds.
+>>> +- reset-mask-bit: bit number in the PMU registers to program mask/unmask
+>>> WDT. +
+>>
+>> I believe this is mandatory on Exynos 5420 and unused on previous SoCs. It
+>> should be handled depending on compatible value.
+>
+> I think at least 5250 needs something similar.  I believe we got away
+> with it in the past since other (non-WDT) code was tweaking with this
+> bit, but that was a little bit gross.  Leela Krishna can correct me if
+> I'm wrong.
+>
 
-Also, I think the patch needs to add documentation for the function that
-states when it is appropriate to use the function, and that it shouldn't
-be used when DT memory has been reserved.
+Yes, 5250 also needs this reset-mask-bit, but not required by SoCs
+other than Exynos5xxx.
+Hence I kept it as optional parameter.
 
-Acked-by: Grant Likely <grant.likely@linaro.org>
+I took care of this code such that it won't break on older SoCs.
 
-> 
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> ---
->  drivers/of/fdt.c       | 13 +++++++++++++
->  include/linux/of_fdt.h |  2 ++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 229dd9d..eca1810 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -802,6 +802,19 @@ void __init unflatten_device_tree(void)
->  	of_alias_scan(early_init_dt_alloc_memory_arch);
->  }
->  
-> +void __init unflatten_and_copy_device_tree(void)
-> +{
-> +	int size = __be32_to_cpu(initial_boot_params->totalsize);
-> +	void *dt = early_init_dt_alloc_memory_arch(size,
-> +		__alignof__(struct boot_param_header));
-> +
-> +	if (dt) {
-> +		memcpy(dt, initial_boot_params, size);
-> +		initial_boot_params = dt;
-> +	}
-> +	unflatten_device_tree();
-> +}
-> +
->  #endif /* CONFIG_OF_EARLY_FLATTREE */
->  
->  /* Feed entire flattened device tree into the random pool */
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index a478c62..58c28a8 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -118,9 +118,11 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
->  
->  /* Other Prototypes */
->  extern void unflatten_device_tree(void);
-> +extern void unflatten_and_copy_device_tree(void);
->  extern void early_init_devtree(void *);
->  #else /* CONFIG_OF_FLATTREE */
->  static inline void unflatten_device_tree(void) {}
-> +static inline void unflatten_and_copy_device_tree(void) {}
->  #endif /* CONFIG_OF_FLATTREE */
->  
->  #endif /* __ASSEMBLY__ */
-> -- 
-> 1.8.1.2
-> 
+If you notice the code in probe function, I used the check condition
+
+if (!IS_ERR(wdt->pmu_disable_reg) && !IS_ERR(wdt->pmu_mask_reset_reg)) {
+}
+
+i.e., if any of the PMU register address is not mentioned in the DT
+node it simply skips reading reset-mask-bit
+and continues execution (which may happen in older SoC DT node).
+
+..also, in s3c2410wdt_mask_and_disable_reset() function, below
+condition check is happening
+
+if (IS_ERR(wdt->pmu_disable_reg) || IS_ERR(wdt->pmu_mask_reset_reg)
+                                || (wdt->pmu_mask_bit < 0))
+        return;
+
+i.e., if any of the registers is not specified in DT node simply
+return without programming
+PMU registers(which is true in case of older SoCs).
+
+If you think this doesn't sounds good way of handling older SoCs.
+I'll add new compatible string for Exynos5xxx and do like what you said. :)
+
+Best Wishes,
+Leela Krishna Amudala
+
+> -Doug
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
