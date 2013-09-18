@@ -1,25 +1,47 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH REPOST] ARM: tegra: use dt-binding header for key code
-Date: Wed, 18 Sep 2013 22:08:54 +0530
-Message-ID: <5239D71E.3040005@nvidia.com>
-References: <1379510552-23401-1-git-send-email-ldewangan@nvidia.com> <5239C6AC.10403@nvidia.com>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/2] move of_find_next_cache_node to DT core
+Date: Wed, 18 Sep 2013 17:18:54 +0100
+Message-ID: <5239D26E.5090505@arm.com>
+References: <1379501585-12532-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <20130918145116.D53A5C42CDF@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5239C6AC.10403@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130918145116.D53A5C42CDF-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 18 September 2013 08:58 PM, Stephen Warren wrote:
-> On 09/18/2013 07:22 AM, Laxman Dewangan wrote:
->> In place of hardcoding the key code in DTS file and comment the
->> key code as side notes, use the key code macro defines in the
->> dt-bindings/input/input.h directly.
-> I can apply this, but aren't there many other Tegra DT files that need
-> conversion too?
-Yes, I am planning to this in next few days. I will post different 
-patches for different boards.
-If it is fine to you, it can be applied this patch.
+On 18/09/13 15:51, Grant Likely wrote:
+> On Wed, 18 Sep 2013 11:53:03 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org> wrote:
+>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
+>>
+>> Hi,
+>>
+>> The cache bindings are generic and used by many other architectures
+>> apart from PPC. These patches fixes and move the existing definition
+>> of of_find_next_cache_node to DT common code.
+>>
+>> Regards,
+>> Sudeep
+> 
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> 
+> However, do you have a user for this function on other architectures
+> yet? I'd like to see a user for the function in the same patch series..
+> 
+
+Yes I have posted an RFC[1] following this series implementing cacheinfo
+for ARM similar to x86 implementation. I was not sure if it's good idea
+to combine it as its still initial RFC version.
+
+Regards,
+Sudeep
+
+[1] https://lkml.org/lkml/2013/9/18/340
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
