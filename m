@@ -1,323 +1,70 @@
-From: <hongbo.zhang@freescale.com>
-Subject: [PATCH v10 2/3] DMA: Freescale: Add new 8-channel DMA engine device tree nodes
-Date: Wed, 18 Sep 2013 18:15:32 +0800
-Message-ID: <1379499333-4745-3-git-send-email-hongbo.zhang@freescale.com>
-References: <1379499333-4745-1-git-send-email-hongbo.zhang@freescale.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Update arch timer node with clock frequency
+Date: Wed, 18 Sep 2013 11:23:19 +0100
+Message-ID: <20130918102319.GF26737@e106331-lin.cambridge.arm.com>
+References: <1379499113-20342-1-git-send-email-yuvaraj.cd@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379499333-4745-1-git-send-email-hongbo.zhang@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, vinod.koul@intel.com, djbw@fb.com
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Hongbo Zhang <hongbo.zhang@freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1379499113-20342-1-git-send-email-yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yuvaraj Kumar C D <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
+[adding lakml]
 
-Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch adds
-the device tree nodes for them.
+On Wed, Sep 18, 2013 at 11:11:53AM +0100, Yuvaraj Kumar C D wrote:
+> Without the "clock-frequency" property in arch timer node, could able
+> to see the below crash dump.
 
-Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
----
- .../devicetree/bindings/powerpc/fsl/dma.txt        |   69 ++++++++++++++++
- arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
- arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   82 ++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   82 ++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
- 5 files changed, 237 insertions(+), 4 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
- create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
+Why does this cause the below crash specifically? What is CNTFRQ reading
+as?
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-index 0584168..414fe42 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-@@ -128,6 +128,75 @@ Example:
- 		};
- 	};
- 
-+** Freescale Elo3 DMA Controller
-+   DMA controller which has same function as EloPlus except that Elo3 has 8
-+   channels while EloPlus has only 4, it is used in Freescale Txxx and Bxxx
-+   series chips, such as t1040, t4240, b4860.
-+
-+Required properties:
-+
-+- compatible        : must include "fsl,elo3-dma"
-+- reg               : DMA General Status Registers, i.e. DGSR0 which contains
-+                      status for channel 1~4, and DGSR1 for channel 5~8
-+- ranges            : describes the mapping between the address space of the
-+                      DMA channels and the address space of the DMA controller
-+
-+- DMA channel nodes:
-+        - compatible        : must include "fsl,eloplus-dma-channel"
-+        - reg               : DMA channel specific registers
-+        - interrupts        : interrupt specifier for DMA channel IRQ
-+        - interrupt-parent  : optional, if needed for interrupt mapping
-+
-+Example:
-+dma@100300 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "fsl,elo3-dma";
-+	reg = <0x100300 0x4>,
-+	      <0x100600 0x4>;
-+	ranges = <0x0 0x100100 0x500>;
-+	dma-channel@0 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x0 0x80>;
-+		interrupts = <28 2 0 0>;
-+	};
-+	dma-channel@80 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x80 0x80>;
-+		interrupts = <29 2 0 0>;
-+	};
-+	dma-channel@100 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x100 0x80>;
-+		interrupts = <30 2 0 0>;
-+	};
-+	dma-channel@180 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x180 0x80>;
-+		interrupts = <31 2 0 0>;
-+	};
-+	dma-channel@300 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x300 0x80>;
-+		interrupts = <76 2 0 0>;
-+	};
-+	dma-channel@380 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x380 0x80>;
-+		interrupts = <77 2 0 0>;
-+	};
-+	dma-channel@400 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x400 0x80>;
-+		interrupts = <78 2 0 0>;
-+	};
-+	dma-channel@480 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x480 0x80>;
-+		interrupts = <79 2 0 0>;
-+	};
-+};
-+
- Note on DMA channel compatible properties: The compatible property must say
- "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
- driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
-diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-index 7399154..ea53ea1 100644
---- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-@@ -223,13 +223,13 @@
- 		reg = <0xe2000 0x1000>;
- 	};
- 
--/include/ "qoriq-dma-0.dtsi"
-+/include/ "elo3-dma-0.dtsi"
- 	dma@100300 {
- 		fsl,iommu-parent = <&pamu0>;
- 		fsl,liodn-reg = <&guts 0x580>; /* DMA1LIODNR */
- 	};
- 
--/include/ "qoriq-dma-1.dtsi"
-+/include/ "elo3-dma-1.dtsi"
- 	dma@101300 {
- 		fsl,iommu-parent = <&pamu0>;
- 		fsl,liodn-reg = <&guts 0x584>; /* DMA2LIODNR */
-diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
-new file mode 100644
-index 0000000..3c210e0
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
-@@ -0,0 +1,82 @@
-+/*
-+ * QorIQ Elo3 DMA device tree stub [ controller @ offset 0x100000 ]
-+ *
-+ * Copyright 2013 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *       notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *       notice, this list of conditions and the following disclaimer in the
-+ *       documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *       names of its contributors may be used to endorse or promote products
-+ *       derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+dma0: dma@100300 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "fsl,elo3-dma";
-+	reg = <0x100300 0x4>,
-+	      <0x100600 0x4>;
-+	ranges = <0x0 0x100100 0x500>;
-+	dma-channel@0 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x0 0x80>;
-+		interrupts = <28 2 0 0>;
-+	};
-+	dma-channel@80 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x80 0x80>;
-+		interrupts = <29 2 0 0>;
-+	};
-+	dma-channel@100 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x100 0x80>;
-+		interrupts = <30 2 0 0>;
-+	};
-+	dma-channel@180 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x180 0x80>;
-+		interrupts = <31 2 0 0>;
-+	};
-+	dma-channel@300 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x300 0x80>;
-+		interrupts = <76 2 0 0>;
-+	};
-+	dma-channel@380 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x380 0x80>;
-+		interrupts = <77 2 0 0>;
-+	};
-+	dma-channel@400 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x400 0x80>;
-+		interrupts = <78 2 0 0>;
-+	};
-+	dma-channel@480 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x480 0x80>;
-+		interrupts = <79 2 0 0>;
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
-new file mode 100644
-index 0000000..cccf3bb
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
-@@ -0,0 +1,82 @@
-+/*
-+ * QorIQ Elo3 DMA device tree stub [ controller @ offset 0x101000 ]
-+ *
-+ * Copyright 2013 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *       notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *       notice, this list of conditions and the following disclaimer in the
-+ *       documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *       names of its contributors may be used to endorse or promote products
-+ *       derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+dma1: dma@101300 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "fsl,elo3-dma";
-+	reg = <0x101300 0x4>,
-+	      <0x101600 0x4>;
-+	ranges = <0x0 0x101100 0x500>;
-+	dma-channel@0 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x0 0x80>;
-+		interrupts = <32 2 0 0>;
-+	};
-+	dma-channel@80 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x80 0x80>;
-+		interrupts = <33 2 0 0>;
-+	};
-+	dma-channel@100 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x100 0x80>;
-+		interrupts = <34 2 0 0>;
-+	};
-+	dma-channel@180 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x180 0x80>;
-+		interrupts = <35 2 0 0>;
-+	};
-+	dma-channel@300 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x300 0x80>;
-+		interrupts = <80 2 0 0>;
-+	};
-+	dma-channel@380 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x380 0x80>;
-+		interrupts = <81 2 0 0>;
-+	};
-+	dma-channel@400 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x400 0x80>;
-+		interrupts = <82 2 0 0>;
-+	};
-+	dma-channel@480 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x480 0x80>;
-+		interrupts = <83 2 0 0>;
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-index bd611a9..ec95c60 100644
---- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-@@ -387,8 +387,8 @@
- 		reg	   = <0xea000 0x4000>;
- 	};
- 
--/include/ "qoriq-dma-0.dtsi"
--/include/ "qoriq-dma-1.dtsi"
-+/include/ "elo3-dma-0.dtsi"
-+/include/ "elo3-dma-1.dtsi"
- 
- /include/ "qoriq-espi-0.dtsi"
- 	spi@110000 {
--- 
-1.7.9.5
+Your firmware or bootloader should set CNTFRQ -- setting the
+clock-frequency is a work-around for buggy firmware/bootloaders that
+should be avoided as far as possible.
+
+Is it not possible to fix your firmware or bootlaoder to set CNTFRQ?
+
+Thanks,
+Mark.
+
+> 
+> [<c0014e28>] (unwind_backtrace+0x0/0xf4) from [<c0011808>] (show_stack+0x10/0x14)
+> [<c0011808>] (show_stack+0x10/0x14) from [<c036ac1c>] (dump_stack+0x7c/0xb0)
+> [<c036ac1c>] (dump_stack+0x7c/0xb0) from [<c01ab760>] (Ldiv0_64+0x8/0x18)
+> [<c01ab760>] (Ldiv0_64+0x8/0x18) from [<c0062f60>] (clockevents_config.part.2+0x1c/0x74)
+> [<c0062f60>] (clockevents_config.part.2+0x1c/0x74) from [<c0062fd8>] (clockevents_config_and_register+0x20/0x2c)
+> [<c0062fd8>] (clockevents_config_and_register+0x20/0x2c) from [<c02b8e8c>] (arch_timer_setup+0xa8/0x134)
+> [<c02b8e8c>] (arch_timer_setup+0xa8/0x134) from [<c04b47b4>] (arch_timer_init+0x1f4/0x24c)
+> [<c04b47b4>] (arch_timer_init+0x1f4/0x24c) from [<c04b40d8>] (clocksource_of_init+0x34/0x58)
+> [<c04b40d8>] (clocksource_of_init+0x34/0x58) from [<c049ed8c>] (time_init+0x20/0x2c)
+> [<c049ed8c>] (time_init+0x20/0x2c) from [<c049b95c>] (start_kernel+0x1e0/0x39c)
+> 
+> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos5250.dtsi |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index 7d7cc77..668ce5d 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -96,6 +96,7 @@
+>  			     <1 14 0xf08>,
+>  			     <1 11 0xf08>,
+>  			     <1 10 0xf08>;
+> +		clock-frequency = <24000000>;
+>  	};
+>  
+>  	mct@101C0000 {
+> -- 
+> 1.7.9.5
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
