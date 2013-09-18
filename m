@@ -1,1008 +1,191 @@
-From: Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5] mmc: sdhci-msm: Add support for MSM chipsets
-Date: Wed, 18 Sep 2013 18:42:01 +0300
-Message-ID: <5239C9C9.6060704@mm-sol.com>
-References: <1379341388-20912-1-git-send-email-gdjakov@mm-sol.com> <52386D64.4030306@mm-sol.com>
+From: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Wed, 18 Sep 2013 10:40:22 -0500
+Message-ID: <1379518822.753.91.camel@shinybook.infradead.org>
+References: <20130912205644.GW29403@sirena.org.uk>
+	 <52329AD3.2050608@freescale.com> <20130913102127.GD29403@sirena.org.uk>
+	 <52366F97.5030402@freescale.com> <20130916101912.GY29403@sirena.org.uk>
+	 <5236DD17.5090203@freescale.com> <20130916110634.GC29403@sirena.org.uk>
+	 <5237BB01.3080700@freescale.com> <20130917105142.GO21013@sirena.org.uk>
+	 <20130917150548.GE14747@book.gsilab.sittig.org>
+	 <20130917191318.GJ21013@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg="sha-1"; protocol="application/x-pkcs7-signature";
+	boundary="=-a1+59GytZmpxOiJ/31I5"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52386D64.4030306-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20130917191318.GJ21013-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Asutosh Das <asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Venkat Gopalakrishnan <venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sahitya Tummala <stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>, "thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org" <thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stan,
 
-Thank you for the detailed review on this patch.
+--=-a1+59GytZmpxOiJ/31I5
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-RfAbzVI5XHIrxW3CyBPK"
 
-On 09/17/2013 05:55 PM, Stanimir Varbanov wrote:
-> Hi Georgi,
->
-> Thanks for the patch.
->
-> I have some commnets below.
->
-> On 09/16/2013 05:23 PM, Georgi Djakov wrote:
->> This platform driver adds the support of Secure Digital Host Controller
->> Interface compliant controller found in Qualcomm MSM chipsets.
->>
->> CC: Asutosh Das <asutoshd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> CC: Venkat Gopalakrishnan <venkatg-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> CC: Sahitya Tummala <stummala-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> CC: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Signed-off-by: Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes from v4:
->> - Simplified sdhci_msm_vreg_disable() and sdhci_msm_set_vdd_io_vol()
->> - Use devm_ioremap_resource() instead of devm_ioremap()
->> - Converted IS_ERR_OR_NULL to IS_ERR
->> - Disable regulators in sdhci_msm_remove()
->> - Check for DT node at the beginning in sdhci_msm_probe()
->> - Removed more redundant code
->> - Changes in some error messages
->> - Minor fixes
->>
->> Changes from v3:
->> - Allocate memory for all required structs at once
->> - Added termination entry in sdhci_msm_dt_match[]
->> - Fixed a missing sdhci_pltfm_free() in probe()
->> - Removed redundant of_match_ptr
->> - Removed the unneeded function sdhci_msm_vreg_reset()
->>
->> Changes from v2:
->> - Added DT bindings for clocks
->> - Moved voltage regulators data to platform data
->> - Removed unneeded includes
->> - Removed obsolete and wrapper functions
->> - Removed error checking where unnecessary
->> - Removed redundant _clk suffix from clock names
->> - Just return instead of goto where possible
->> - Minor fixes
->>
->> Changes from v1:
->> - GPIO references are replaced by pinctrl
->> - DT parsing is done mostly by mmc_of_parse()
->> - Use of_match_device() for DT matching
->> - A few minor changes
->>
->>   .../devicetree/bindings/mmc/sdhci-msm.txt          |   71 +++
->>   drivers/mmc/host/Kconfig                           |   13 +
->>   drivers/mmc/host/Makefile                          |    1 +
->>   drivers/mmc/host/sdhci-msm.c                       |  627 ++++++++++++++++++++
->>   4 files changed, 712 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>   create mode 100644 drivers/mmc/host/sdhci-msm.c
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> new file mode 100644
->> index 0000000..ee112da
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> @@ -0,0 +1,71 @@
->> +* Qualcomm SDHCI controller (sdhci-msm)
->> +
->> +This file documents differences between the core properties in mmc.txt
->> +and the properties used by the sdhci-msm driver.
->> +
->> +Required properties:
->> +- compatible: should be "qcom,sdhci-msm"
->> +- reg: should contain SDHC, SD Core register map
->> +- reg-names: indicates various resources passed to driver (via reg proptery) by name
->> +	"reg-names" examples are "hc_mem" and "core_mem"
->> +- interrupts: should contain SDHC interrupts
->> +- interrupt-names: indicates interrupts passed to driver (via interrupts property) by name
->> +	"interrupt-names" examples are "hc_irq" and "pwr_irq"
->> +- <supply-name>-supply: phandle to the regulator device tree node
->> +	"supply-name" examples are "vdd" and "vdd-io"
->> +- pinctrl-names: Should contain only one value - "default".
->> +- pinctrl-0: Should specify pin control groups used for this controller.
->> +- clocks: phandles to clock instances of the device tree nodes
->> +- clock-names:
->> +	iface: Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
->> +	core: SDC MMC clock (MCLK) (required)
->> +	bus: SDCC bus voter clock (optional)
->> +
->> +Optional properties:
->> +- qcom,bus-speed-mode - specifies supported bus speed modes by host
->> +	The supported bus speed modes are :
->> +	"HS200_1p8v" - indicates that host can support HS200 at 1.8v
->> +	"HS200_1p2v" - indicates that host can support HS200 at 1.2v
->> +	"DDR_1p8v" - indicates that host can support DDR mode at 1.8v
->> +	"DDR_1p2v" - indicates that host can support DDR mode at 1.2v
->> +
->> +In the following, <supply> can be vdd (flash core voltage) or vdd-io (I/O voltage).
->> +- qcom,<supply>-always-on - specifies whether supply should be kept "on" always.
->> +- qcom,<supply>-lpm-sup - specifies whether supply can be kept in low power mode (lpm).
->> +- qcom,<supply>-voltage-level - specifies voltage levels for supply. Should be
->> +specified in pairs (min, max), units uV.
->> +- qcom,<supply>-current-level - specifies load levels for supply in lpm or high power mode
->> +	(hpm). Should be specified in pairs (lpm, hpm), units uA.
->> +
->> +Example:
->> +
->> +	aliases {
->> +		sdhc1 = &sdhc_1;
->> +	};
->> +
->> +	sdhc_1: qcom,sdhc@f9824900 {
->> +		compatible = "qcom,sdhci-msm";
->> +		reg = <0xf9824900 0x11c>, <0xf9824000 0x800>;
->> +		reg-names = "hc_mem", "core_mem";
->> +		interrupts = <0 123 0>, <0 138 0>;
->> +		interrupt-names = "hc_irq", "pwr_irq";
->> +		bus-width = <4>;
->> +		non-removable;
->> +
->> +		vdd-supply = <&pm8941_l21>;
->> +		vdd-io-supply = <&pm8941_l13>;
->> +		qcom,vdd-voltage-level = <2950000 2950000>;
->> +		qcom,vdd-current-level = <9000 800000>;
->> +		qcom,vdd-io-always-on;
->> +		qcom,vdd-io-lpm-sup;
->> +		qcom,vdd-io-voltage-level = <1800000 2950000>;
->> +		qcom,vdd-io-current-level = <6 22000>;
->> +		qcom,bus-speed-mode = "HS200_1p8v", "DDR_1p8v";
->> +
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&sdc1_clk &sdc1_cmd &sdc1_data>;
->> +
->> +		clocks = <&iface>, <&core>, <&bus>;
->> +		clock-names = "iface", "core", "bus";
->> +
->> +	};
->> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
->> index 7fc5099..e8da488 100644
->> --- a/drivers/mmc/host/Kconfig
->> +++ b/drivers/mmc/host/Kconfig
->> @@ -322,6 +322,19 @@ config MMC_ATMELMCI
->>
->>   	  If unsure, say N.
->>
->> +config MMC_SDHCI_MSM
->> +	tristate "Qualcomm SDHCI Controller Support"
->> +	depends on ARCH_MSM
->> +	depends on MMC_SDHCI_PLTFM
->> +	help
->> +	  This selects the Secure Digital Host Controller Interface (SDHCI)
->> +	  support present in MSM SOCs from Qualcomm. The controller
->> +	  supports SD/MMC/SDIO devices.
->> +
->> +	  If you have a controller with this interface, say Y or M here.
->> +
->> +	  If unsure, say N.
->> +
->>   config MMC_MSM
->>   	tristate "Qualcomm SDCC Controller Support"
->>   	depends on MMC && ARCH_MSM
->> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
->> index c41d0c3..5faed14 100644
->> --- a/drivers/mmc/host/Makefile
->> +++ b/drivers/mmc/host/Makefile
->> @@ -61,6 +61,7 @@ obj-$(CONFIG_MMC_SDHCI_OF_ESDHC)	+= sdhci-of-esdhc.o
->>   obj-$(CONFIG_MMC_SDHCI_OF_HLWD)		+= sdhci-of-hlwd.o
->>   obj-$(CONFIG_MMC_SDHCI_BCM_KONA)	+= sdhci-bcm-kona.o
->>   obj-$(CONFIG_MMC_SDHCI_BCM2835)		+= sdhci-bcm2835.o
->> +obj-$(CONFIG_MMC_SDHCI_MSM)		+= sdhci-msm.o
->>
->>   ifeq ($(CONFIG_CB710_DEBUG),y)
->>   	CFLAGS-cb710-mmc	+= -DDEBUG
->> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->> new file mode 100644
->> index 0000000..c746a9b
->> --- /dev/null
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -0,0 +1,627 @@
->> +/*
->> + * drivers/mmc/host/sdhci-msm.c - Qualcomm MSM SDHCI Platform
->> + * driver source file
->> + *
->> + * Copyright (c) 2013, The Linux Foundation. All rights reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 and
->> + * only version 2 as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/pinctrl/consumer.h>
->> +#include <linux/regulator/consumer.h>
->> +
->> +#include "sdhci-pltfm.h"
->> +
->> +#define CORE_HC_MODE		0x78
->> +#define HC_MODE_EN		0x1
->> +
->> +#define CORE_POWER		0x0
->> +#define CORE_SW_RST		(1 << 7)
->> +
->> +#define CORE_PWRCTL_STATUS	0xdc
->> +#define CORE_PWRCTL_MASK	0xe0
->> +#define CORE_PWRCTL_CLEAR	0xe4
->> +#define CORE_PWRCTL_CTL		0xe8
->> +
->> +#define CORE_PWRCTL_BUS_OFF	0x01
->> +#define CORE_PWRCTL_BUS_ON	(1 << 1)
->> +#define CORE_PWRCTL_IO_LOW	(1 << 2)
->> +#define CORE_PWRCTL_IO_HIGH	(1 << 3)
->> +
->> +#define CORE_PWRCTL_BUS_SUCCESS	0x01
->> +#define CORE_PWRCTL_BUS_FAIL	(1 << 1)
->> +#define CORE_PWRCTL_IO_SUCCESS	(1 << 2)
->> +#define CORE_PWRCTL_IO_FAIL	(1 << 3)
->> +
->> +#define INT_MASK		0xf
->> +
->> +/* This structure keeps information per regulator */
->> +struct sdhci_msm_reg_data {
->> +	/* voltage regulator handle */
->
-> useless comment, please remove it.
 
-Ok.
+--=-RfAbzVI5XHIrxW3CyBPK
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->
->> +	struct regulator *reg;
->> +	/* regulator name */
->
-> useless comment
+On Tue, 2013-09-17 at 20:13 +0100, Mark Brown wrote:
+>=20
+> > [ potential "LUT" optimization, implementation details ]
+>=20
+> AFAICT the big issue with the LUTs in this controller is that they are
+> expensive to reprogram so things are going to work better if there is a
+> small set of known operations that will happen repeatedly.  Otherwise
+> walking the transfer list at runtime isn't too hard.
 
-Ok.
+I think you can drop the word "known" there. With decent management of
+the LUT as a kind of LRU cache of recent operations, surely you'll
+quickly get into a situation where the operations you're actually
+*doing* on the flash are all already in the LUT and you're never
+actually *having* to reprogram it?
 
->
->> +	const char *name;
->> +	/* voltage level to be set */
->> +	u32 low_vol_level;
->> +	u32 high_vol_level;
->> +	/* Load values for low power and high power mode */
->> +	u32 lpm_uA;
->> +	u32 hpm_uA;
->> +
->> +	/* is this regulator needs to be always on? */
->> +	bool is_always_on;
->> +	/* is low power mode setting required for this regulator? */
->> +	bool lpm_sup;
->> +};
->> +
->> +struct sdhci_msm_pltfm_data {
->> +	u32 caps;				/* Supported UHS-I Modes */
->> +	u32 caps2;				/* More capabilities */
->> +	struct sdhci_msm_reg_data vdd_data;	/* VDD/VCC regulator info */
->> +	struct sdhci_msm_reg_data vdd_io_data;	/* VDD IO regulator info */
->> +};
->> +
->> +struct sdhci_msm_host {
->> +	struct platform_device *pdev;
->> +	void __iomem *core_mem;	/* MSM SDCC mapped address */
->> +	int pwr_irq;		/* power irq */
->> +	struct clk *clk;	/* main SD/MMC bus clock */
->> +	struct clk *pclk;	/* SDHC peripheral bus clock */
->> +	struct clk *bus_clk;	/* SDHC bus voter clock */
->> +	struct sdhci_msm_pltfm_data pdata;
->> +	struct mmc_host *mmc;
->> +	struct sdhci_pltfm_data sdhci_msm_pdata;
->> +};
->> +
->> +enum vdd_io_level {
->> +	/* set vdd_io_data->low_vol_level */
->> +	VDD_IO_LOW,
->> +	/* set vdd_io_data->high_vol_level */
->> +	VDD_IO_HIGH,
->> +	/*
->> +	 * set whatever there in voltage_level (third argument) of
->> +	 * sdhci_msm_set_vdd_io_vol() function.
->> +	 */
->> +	VDD_IO_SET_LEVEL,
->> +};
->> +
->> +#define MAX_PROP_SIZE 32
->> +static int sdhci_msm_dt_parse_vreg_info(struct device *dev,
->> +					struct sdhci_msm_reg_data *vreg,
->> +					const char *vreg_name)
->> +{
->> +	int len, ret = 0;
->
-> ret is not used you can remove it and return 0 at the function end.
+You don't need to have them set up in advance. Although once you have it
+correctly doing the LUT management at runtime, sticking some expected
+operations into the LUT at startup in *anticipation* can't hurt. But
+let's not talk about that yet.
 
-Ok.
+--=20
+David Woodhouse                            Open Source Technology Centre
+David.Woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org                              Intel Corporation
 
->
->> +	const __be32 *prop;
->> +	char prop_name[MAX_PROP_SIZE];
->> +	struct device_node *np = dev->of_node;
->> +
->> +	snprintf(prop_name, MAX_PROP_SIZE, "%s-supply", vreg_name);
->> +	if (!of_parse_phandle(np, prop_name, 0)) {
->> +		dev_info(dev, "No vreg data found for %s\n", vreg_name);
->> +		return -EINVAL;
->> +	}
->> +
->> +	vreg->name = vreg_name;
->> +
->> +	snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-always-on", vreg_name);
->> +	if (of_get_property(np, prop_name, NULL))
->> +		vreg->is_always_on = true;
->> +
->> +	snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-lpm-sup", vreg_name);
->> +	if (of_get_property(np, prop_name, NULL))
->> +		vreg->lpm_sup = true;
->> +
->> +	snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-voltage-level", vreg_name);
->> +	prop = of_get_property(np, prop_name, &len);
->> +	if (!prop || (len != (2 * sizeof(__be32)))) {
->> +		dev_warn(dev, "%s %s property\n",
->> +			 prop ? "invalid format" : "no", prop_name);
->> +	} else {
->> +		vreg->low_vol_level = be32_to_cpup(&prop[0]);
->> +		vreg->high_vol_level = be32_to_cpup(&prop[1]);
->> +	}
->> +
->> +	snprintf(prop_name, MAX_PROP_SIZE, "qcom,%s-current-level", vreg_name);
->> +	prop = of_get_property(np, prop_name, &len);
->> +	if (!prop || (len != (2 * sizeof(__be32)))) {
->> +		dev_warn(dev, "%s %s property\n",
->> +			 prop ? "invalid format" : "no", prop_name);
->> +	} else {
->> +		vreg->lpm_uA = be32_to_cpup(&prop[0]);
->> +		vreg->hpm_uA = be32_to_cpup(&prop[1]);
->> +	}
->> +
->> +	dev_dbg(dev, "%s: %s%svol=[%d %d]uV, curr=[%d %d]uA\n",
->> +		vreg->name, vreg->is_always_on ? "always_on, " : "",
->> +		vreg->lpm_sup ? "lpm_sup, " : "", vreg->low_vol_level,
->> +		vreg->high_vol_level, vreg->lpm_uA, vreg->hpm_uA);
->> +
->> +	return ret;
->> +}
->> +
->> +/* Parse platform data */
->
-> parse devicetree data ?
+--=-RfAbzVI5XHIrxW3CyBPK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-Yes, devicetree.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
 
->
->> +static int sdhci_msm_populate_pdata(struct device *dev,
->> +					struct sdhci_msm_pltfm_data *pdata)
->> +{
->> +	struct device_node *np = dev->of_node;
->> +	int len, i;
->> +
->> +	if (sdhci_msm_dt_parse_vreg_info(dev, &pdata->vdd_data, "vdd")) {
->> +		dev_err(dev, "failed parsing vdd data\n");
->> +		return -EINVAL;
->> +	}
->> +	if (sdhci_msm_dt_parse_vreg_info(dev, &pdata->vdd_io_data, "vdd-io")) {
->> +		dev_err(dev, "failed parsing vdd-io data\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	len = of_property_count_strings(np, "qcom,bus-speed-mode");
->> +
->> +	for (i = 0; i < len; i++) {
->> +		const char *name = NULL;
->> +
->> +		of_property_read_string_index(np,
->> +					"qcom,bus-speed-mode", i, &name);
->> +		if (!name)
->> +			continue;
->> +
->> +		if (!strncmp(name, "HS200_1p8v", sizeof("HS200_1p8v")))
->> +			pdata->caps2 |= MMC_CAP2_HS200_1_8V_SDR;
->> +		else if (!strncmp(name, "HS200_1p2v", sizeof("HS200_1p2v")))
->> +			pdata->caps2 |= MMC_CAP2_HS200_1_2V_SDR;
->> +		else if (!strncmp(name, "DDR_1p8v", sizeof("DDR_1p8v")))
->> +			pdata->caps |= MMC_CAP_1_8V_DDR | MMC_CAP_UHS_DDR50;
->> +		else if (!strncmp(name, "DDR_1p2v", sizeof("DDR_1p2v")))
->> +			pdata->caps |= MMC_CAP_1_2V_DDR | MMC_CAP_UHS_DDR50;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +/* Regulator utility functions */
->> +static int sdhci_msm_vreg_init_reg(struct device *dev,
->> +				   struct sdhci_msm_reg_data *vreg)
->> +{
->> +	int ret = 0;
->
-> could you remove ret variable, please.
+iQIcBAABAgAGBQJSOclnAAoJEGN2LNpn4vNZIAcQAMZGKxJj9g5x6rYkBSGnR4fh
+dkYGjIBlFGr6phhJM5niSFbwEsPyf32uwLdTEYoKK0ZfErxdDyz4ZuaDjBj7Zzr1
+blOelL+jRC3ws2fw87F7CWg2GYmUG9ulNS91gVR2pYgbNqenVaY0nQqr+z66N7DR
+E+zFajrjIGK9l+2+meYlLyG+0C4x1pFtvNYttsFGFoLxezfZY5Hz0oG8HrOLJg9U
+f3KQBVZ7WZNc2vhImJLoaUTfJ8BrTCAXOi8MJLqDrxjxHHrY475b/L0FmwJScuqE
+suGzxYkTLnMUzlTxCF/k3HAV8V2ekZufB5v4EAwz6H8kcJYVjD6Sl6koPzpkPDg9
+xS0SUTZyq35u5CdO8GgulUWJH4RASEmWYq7aO9W2OgL4DXs11EFp0p8EKbNJpIdb
+qm4znooGrqTU8VtlX9qPPk43m9Kw/Uil3Mp8mmmYI2ADKY2NnVd+mZX3LqXO9cL9
+SjGtpY4KO5lxiVrXVDvNe2MOyvptieIVlcYdf44k3rBkq4QHKTWahb6+QwU+YbKm
+FocW8X0MFSbeG4UV+n60u8o1cyt18sQ9DK+i1oKecSWtAkOu4796yGuX/ETtEuSa
+/iwtkQ/gjXZilzUb3LKzfbEM3EB34WAY88FLB4gQzVqI3lIIfGlFpWe+3LvJ0yyg
+26hm4WniKBeLFKdCxS6W
+=vXJ3
+-----END PGP SIGNATURE-----
 
-Ok.
+--=-RfAbzVI5XHIrxW3CyBPK--
 
->
->> +	/* Get the regulator handle */
->
-> useless comment
+--=-a1+59GytZmpxOiJ/31I5
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
-Ok.
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIISxDCCBjQw
+ggQcoAMCAQICAR4wDQYJKoZIhvcNAQEFBQAwfTELMAkGA1UEBhMCSUwxFjAUBgNVBAoTDVN0YXJ0
+Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNpZ25pbmcxKTAn
+BgNVBAMTIFN0YXJ0Q29tIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTA3MTAyNDIxMDE1NVoX
+DTE3MTAyNDIxMDE1NVowgYwxCzAJBgNVBAYTAklMMRYwFAYDVQQKEw1TdGFydENvbSBMdGQuMSsw
+KQYDVQQLEyJTZWN1cmUgRGlnaXRhbCBDZXJ0aWZpY2F0ZSBTaWduaW5nMTgwNgYDVQQDEy9TdGFy
+dENvbSBDbGFzcyAxIFByaW1hcnkgSW50ZXJtZWRpYXRlIENsaWVudCBDQTCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBAMcJg8zOLdgasSmkLhOrlr6KMoOMpohBllVHrdRvEg/q6r8jR+EK
+75xCGhR8ToREoqe7zM9/UnC6TS2y9UKTpT1v7RSMzR0t6ndl0TWBuUr/UXBhPk+Kmy7bI4yW4urC
++y7P3/1/X7U8ocb8VpH/Clt+4iq7nirMcNh6qJR+xjOhV+VHzQMALuGYn5KZmc1NbJQYclsGkDxD
+z2UbFqE2+6vIZoL+jb9x4Pa5gNf1TwSDkOkikZB1xtB4ZqtXThaABSONdfmv/Z1pua3FYxnCFmdr
+/+N2JLKutIxMYqQOJebr/f/h5t95m4JgrM3Y/w7YX9d7YAL9jvN4SydHsU6n65cCAwEAAaOCAa0w
+ggGpMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgEGMB0GA1UdDgQWBBRTcu2SnODaywFc
+fH6WNU7y1LhRgjAfBgNVHSMEGDAWgBROC+8apEBbpRdphzDKNGhD0EGu8jBmBggrBgEFBQcBAQRa
+MFgwJwYIKwYBBQUHMAGGG2h0dHA6Ly9vY3NwLnN0YXJ0c3NsLmNvbS9jYTAtBggrBgEFBQcwAoYh
+aHR0cDovL3d3dy5zdGFydHNzbC5jb20vc2ZzY2EuY3J0MFsGA1UdHwRUMFIwJ6AloCOGIWh0dHA6
+Ly93d3cuc3RhcnRzc2wuY29tL3Nmc2NhLmNybDAnoCWgI4YhaHR0cDovL2NybC5zdGFydHNzbC5j
+b20vc2ZzY2EuY3JsMIGABgNVHSAEeTB3MHUGCysGAQQBgbU3AQIBMGYwLgYIKwYBBQUHAgEWImh0
+dHA6Ly93d3cuc3RhcnRzc2wuY29tL3BvbGljeS5wZGYwNAYIKwYBBQUHAgEWKGh0dHA6Ly93d3cu
+c3RhcnRzc2wuY29tL2ludGVybWVkaWF0ZS5wZGYwDQYJKoZIhvcNAQEFBQADggIBAAqDCH14qywG
+XLhjjF6uHLkjd02hcdh9hrw+VUsv+q1eeQWB21jWj3kJ96AUlPCoEGZ/ynJNScWy6QMVQjbbMXlt
+UfO4n4bGGdKo3awPWp61tjAFgraLJgDk+DsSvUD6EowjMTNx25GQgyYJ5RPIzKKR9tQW8gGK+2+R
+HxkUCTbYFnL6kl8Ch507rUdPPipJ9CgJFws3kDS3gOS5WFMxcjO5DwKfKSETEPrHh7p5shuuNktv
+sv6hxHTLhiMKX893gxdT3XLS9OKmCv87vkINQcNEcIIoFWbP9HORz9v3vQwR4e3ksLc2JZOAFK+s
+sS5XMEoznzpihEP0PLc4dCBYjbvSD7kxgDwZ+Aj8Q9PkbvE9sIPP7ON0fz095HdThKjiVJe6vofq
++n6b1NBc8XdrQvBmunwxD5nvtTW4vtN6VY7mUCmxsCieuoBJ9OlqmsVWQvifIYf40dJPZkk9YgGT
+zWLpXDSfLSplbY2LL9C9U0ptvjcDjefLTvqSFc7tw1sEhF0n/qpA2r0GpvkLRDmcSwVyPvmjFBGq
+Up/pNy8ZuPGQmHwFi2/14+xeSUDG2bwnsYJQG2EdJCB6luQ57GEnTA/yKZSTKI8dDQa8Sd3zfXb1
+9mOgSF0bBdXbuKhEpuP9wirslFe6fQ1t5j5R0xi72MZ8ikMu1RQZKCyDbMwazlHiMIIGQjCCBSqg
+AwIBAgIDBoXOMA0GCSqGSIb3DQEBBQUAMIGMMQswCQYDVQQGEwJJTDEWMBQGA1UEChMNU3RhcnRD
+b20gTHRkLjErMCkGA1UECxMiU2VjdXJlIERpZ2l0YWwgQ2VydGlmaWNhdGUgU2lnbmluZzE4MDYG
+A1UEAxMvU3RhcnRDb20gQ2xhc3MgMSBQcmltYXJ5IEludGVybWVkaWF0ZSBDbGllbnQgQ0EwHhcN
+MTMwNTAyMDYyMDQ2WhcNMTQwNTAzMTIxNDAyWjBdMRkwFwYDVQQNExBNd0k3ODIxNTRpV21lZVkw
+MRwwGgYDVQQDDBNkd213MkBpbmZyYWRlYWQub3JnMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZy
+YWRlYWQub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvWGuRDHiXVpOgaFkBaz8
+c3jQTfiEw7j0iKZnktCQi0xjY29QJ7GwL+fgQlbofXgYTm8E9fWERvw2tAy2BxHzAPguBzziS7JN
+hsGP9lf3L8hFJBvmdyyyj8b9A6Oi7s3JLtMRWIvyvE+DbuTkP+htuT4+XuTJr8Y5yIqd1WXr2gJk
+ANr77vTyjeNxceevP58Tqr0f+4v5g6+vNARO3bk3SaVQPDUTwGrpoPtLh3d+mQzZ4iiW3MwQS7Wr
+UVT3l2aTVHCpgtAaBs3zHWarvmIqhbWj8zdcnELNzwqTrOjaoWxuWY4k05GGfzmdjOBUiL7FDNvI
+ZwweJEPwJAQI72YhUwIDAQABo4IC2TCCAtUwCQYDVR0TBAIwADALBgNVHQ8EBAMCBLAwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMB0GA1UdDgQWBBSs0hZhUgQwqGVXzLuH6pJH0hMZwTAf
+BgNVHSMEGDAWgBRTcu2SnODaywFcfH6WNU7y1LhRgjAeBgNVHREEFzAVgRNkd213MkBpbmZyYWRl
+YWQub3JnMIIBTAYDVR0gBIIBQzCCAT8wggE7BgsrBgEEAYG1NwECAzCCASowLgYIKwYBBQUHAgEW
+Imh0dHA6Ly93d3cuc3RhcnRzc2wuY29tL3BvbGljeS5wZGYwgfcGCCsGAQUFBwICMIHqMCcWIFN0
+YXJ0Q29tIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MAMCAQEagb5UaGlzIGNlcnRpZmljYXRlIHdh
+cyBpc3N1ZWQgYWNjb3JkaW5nIHRvIHRoZSBDbGFzcyAxIFZhbGlkYXRpb24gcmVxdWlyZW1lbnRz
+IG9mIHRoZSBTdGFydENvbSBDQSBwb2xpY3ksIHJlbGlhbmNlIG9ubHkgZm9yIHRoZSBpbnRlbmRl
+ZCBwdXJwb3NlIGluIGNvbXBsaWFuY2Ugb2YgdGhlIHJlbHlpbmcgcGFydHkgb2JsaWdhdGlvbnMu
+MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuc3RhcnRzc2wuY29tL2NydHUxLWNybC5jcmww
+gY4GCCsGAQUFBwEBBIGBMH8wOQYIKwYBBQUHMAGGLWh0dHA6Ly9vY3NwLnN0YXJ0c3NsLmNvbS9z
+dWIvY2xhc3MxL2NsaWVudC9jYTBCBggrBgEFBQcwAoY2aHR0cDovL2FpYS5zdGFydHNzbC5jb20v
+Y2VydHMvc3ViLmNsYXNzMS5jbGllbnQuY2EuY3J0MCMGA1UdEgQcMBqGGGh0dHA6Ly93d3cuc3Rh
+cnRzc2wuY29tLzANBgkqhkiG9w0BAQUFAAOCAQEACFLDQnyO8+XA/TiTltjJ/ZAvM+qmBEKN43Vd
++Wio2lM/Wq/scJpkupXGHrl9CueobkDxMAogXbMxqLZYO13PvgjMh+PHxDPnQv8EGxOig+k/Hqvc
+qEdTlm9YEHcbXbWS6XB+zRO7VVIpGMYQ1f1qCOcukxmwIm6iMSHXbOr/7paQm4bO0ULptjBotfiO
+Zo6q8No6SroQlOSyc6v8FYSxTNIAXMaM2FYkjqrxgdnJmSIAfr11gROuF69WuOICxP0zTEjJle+7
+aO9lUWNaWMWPMyFSNCxF6kkRuvUCami7vlhLOTRC1kb+OMhx7keN9At3tdTI3rtuFeSB1Pa3VXVs
+0DCCBkIwggUqoAMCAQICAwaFzjANBgkqhkiG9w0BAQUFADCBjDELMAkGA1UEBhMCSUwxFjAUBgNV
+BAoTDVN0YXJ0Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNp
+Z25pbmcxODA2BgNVBAMTL1N0YXJ0Q29tIENsYXNzIDEgUHJpbWFyeSBJbnRlcm1lZGlhdGUgQ2xp
+ZW50IENBMB4XDTEzMDUwMjA2MjA0NloXDTE0MDUwMzEyMTQwMlowXTEZMBcGA1UEDRMQTXdJNzgy
+MTU0aVdtZWVZMDEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzEiMCAGCSqGSIb3DQEJARYT
+ZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL1hrkQx
+4l1aToGhZAWs/HN40E34hMO49IimZ5LQkItMY2NvUCexsC/n4EJW6H14GE5vBPX1hEb8NrQMtgcR
+8wD4Lgc84kuyTYbBj/ZX9y/IRSQb5ncsso/G/QOjou7NyS7TEViL8rxPg27k5D/obbk+Pl7kya/G
+OciKndVl69oCZADa++708o3jcXHnrz+fE6q9H/uL+YOvrzQETt25N0mlUDw1E8Bq6aD7S4d3fpkM
+2eIoltzMEEu1q1FU95dmk1RwqYLQGgbN8x1mq75iKoW1o/M3XJxCzc8Kk6zo2qFsblmOJNORhn85
+nYzgVIi+xQzbyGcMHiRD8CQECO9mIVMCAwEAAaOCAtkwggLVMAkGA1UdEwQCMAAwCwYDVR0PBAQD
+AgSwMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDAdBgNVHQ4EFgQUrNIWYVIEMKhlV8y7
+h+qSR9ITGcEwHwYDVR0jBBgwFoAUU3Ltkpzg2ssBXHx+ljVO8tS4UYIwHgYDVR0RBBcwFYETZHdt
+dzJAaW5mcmFkZWFkLm9yZzCCAUwGA1UdIASCAUMwggE/MIIBOwYLKwYBBAGBtTcBAgMwggEqMC4G
+CCsGAQUFBwIBFiJodHRwOi8vd3d3LnN0YXJ0c3NsLmNvbS9wb2xpY3kucGRmMIH3BggrBgEFBQcC
+AjCB6jAnFiBTdGFydENvbSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTADAgEBGoG+VGhpcyBjZXJ0
+aWZpY2F0ZSB3YXMgaXNzdWVkIGFjY29yZGluZyB0byB0aGUgQ2xhc3MgMSBWYWxpZGF0aW9uIHJl
+cXVpcmVtZW50cyBvZiB0aGUgU3RhcnRDb20gQ0EgcG9saWN5LCByZWxpYW5jZSBvbmx5IGZvciB0
+aGUgaW50ZW5kZWQgcHVycG9zZSBpbiBjb21wbGlhbmNlIG9mIHRoZSByZWx5aW5nIHBhcnR5IG9i
+bGlnYXRpb25zLjA2BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLnN0YXJ0c3NsLmNvbS9jcnR1
+MS1jcmwuY3JsMIGOBggrBgEFBQcBAQSBgTB/MDkGCCsGAQUFBzABhi1odHRwOi8vb2NzcC5zdGFy
+dHNzbC5jb20vc3ViL2NsYXNzMS9jbGllbnQvY2EwQgYIKwYBBQUHMAKGNmh0dHA6Ly9haWEuc3Rh
+cnRzc2wuY29tL2NlcnRzL3N1Yi5jbGFzczEuY2xpZW50LmNhLmNydDAjBgNVHRIEHDAahhhodHRw
+Oi8vd3d3LnN0YXJ0c3NsLmNvbS8wDQYJKoZIhvcNAQEFBQADggEBAAhSw0J8jvPlwP04k5bYyf2Q
+LzPqpgRCjeN1XfloqNpTP1qv7HCaZLqVxh65fQrnqG5A8TAKIF2zMai2WDtdz74IzIfjx8Qz50L/
+BBsTooPpPx6r3KhHU5ZvWBB3G121kulwfs0Tu1VSKRjGENX9agjnLpMZsCJuojEh12zq/+6WkJuG
+ztFC6bYwaLX4jmaOqvDaOkq6EJTksnOr/BWEsUzSAFzGjNhWJI6q8YHZyZkiAH69dYETrhevVrji
+AsT9M0xIyZXvu2jvZVFjWljFjzMhUjQsRepJEbr1Ampou75YSzk0QtZG/jjIce5HjfQLd7XUyN67
+bhXkgdT2t1V1bNAxggNvMIIDawIBATCBlDCBjDELMAkGA1UEBhMCSUwxFjAUBgNVBAoTDVN0YXJ0
+Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNpZ25pbmcxODA2
+BgNVBAMTL1N0YXJ0Q29tIENsYXNzIDEgUHJpbWFyeSBJbnRlcm1lZGlhdGUgQ2xpZW50IENBAgMG
+hc4wCQYFKw4DAhoFAKCCAa8wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUx
+DxcNMTMwOTE4MTU0MDMwWjAjBgkqhkiG9w0BCQQxFgQUFLScm0mOmxnbOhjEAIHwcZHsKaEwgaUG
+CSsGAQQBgjcQBDGBlzCBlDCBjDELMAkGA1UEBhMCSUwxFjAUBgNVBAoTDVN0YXJ0Q29tIEx0ZC4x
+KzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNpZ25pbmcxODA2BgNVBAMTL1N0
+YXJ0Q29tIENsYXNzIDEgUHJpbWFyeSBJbnRlcm1lZGlhdGUgQ2xpZW50IENBAgMGhc4wgacGCyqG
+SIb3DQEJEAILMYGXoIGUMIGMMQswCQYDVQQGEwJJTDEWMBQGA1UEChMNU3RhcnRDb20gTHRkLjEr
+MCkGA1UECxMiU2VjdXJlIERpZ2l0YWwgQ2VydGlmaWNhdGUgU2lnbmluZzE4MDYGA1UEAxMvU3Rh
+cnRDb20gQ2xhc3MgMSBQcmltYXJ5IEludGVybWVkaWF0ZSBDbGllbnQgQ0ECAwaFzjANBgkqhkiG
+9w0BAQEFAASCAQA8xEmYLTFkBJM0voDxUC2WqSEdBPcDqHkyHfndetV3E51u/rWeeSfo4R4K6h64
+70qAnr2u32kvqrJcPMvysYQXGh7/g6WGvCKwU880Ee4n6YS5pdS5FuZdErXUB1LJa6y6IP6veTko
+MY0SsKjGvXqy8f6uFMuqV8VZdnZD0zg4lnnjbg1ZlwhQxVF/I0AcxW9sETP4YqyG5nu4y/yOsU1N
+jHoepNeQnw5A5K1IOZl8W4roAF+KNUXenNbE22b4+w+UhgGtkyADZqvdlGa8o0sm2h4ALUXxvaHV
+rphqriMT1dxCdpeWdvY90P30VJXr3gfsOYKTFvCmq1/kpI14Qd0VAAAAAAAA
 
->
->> +	vreg->reg = devm_regulator_get(dev, vreg->name);
->> +	if (IS_ERR(vreg->reg)) {
->> +		ret = PTR_ERR(vreg->reg);
->> +		dev_err(dev, "devm_regulator_get(%s) failed. ret=%d\n",
->> +			vreg->name, ret);
->> +		return ret;
->
-> just return PTR_ERR(vreg->reg)
 
-Ok.
-
->
->> +	}
->> +
->> +	/* sanity check */
->> +	if (!vreg->high_vol_level || !vreg->hpm_uA) {
->
-> if this is sanity check shouldn't you check low_vol_level and lpm_uA as
-> well?
-
-Yes, I'll improve it. Thanks!
-
->
->> +		dev_err(dev, "%s invalid constraints specified\n", vreg->name);
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int sdhci_msm_vreg_enable(struct sdhci_msm_reg_data *vreg)
->> +{
->> +	int ret = 0;
->> +
->> +	/* Put regulator in HPM (high power mode) */
->> +	ret = regulator_set_optimum_mode(vreg->reg, vreg->hpm_uA);
->> +	if (ret < 0) {
->> +		pr_err("regulator_set_optimum_mode(%s,uA_load=%d) fail (%d)\n",
->> +			vreg->name, vreg->hpm_uA, ret);
->
-> use dev_err() instead.
-
-Ok.
-
->
->> +		return ret;
->> +	}
->> +
->> +	if (!regulator_is_enabled(vreg->reg)) {
->> +		/* Set voltage level */
->> +		ret = regulator_set_voltage(vreg->reg, vreg->high_vol_level,
->> +						vreg->high_vol_level);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	ret = regulator_enable(vreg->reg);
->> +	if (ret) {
->> +		pr_err("regulator_enable(%s) fail (%d)\n", vreg->name, ret);
->
-> use dev_err().
-
-Ok.
-
->
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int sdhci_msm_vreg_disable(struct sdhci_msm_reg_data *vreg)
->> +{
->> +	int ret = 0;
->
-> IMO no need to initialize ret variable?
-
-Agree.
-
->
->> +
->> +	if (!regulator_is_enabled(vreg->reg))
->> +		return 0;
->> +
->> +	/* Never disable regulator marked as always_on */
->> +	if (vreg->is_always_on) {
->> +		if (vreg->lpm_sup) {
->> +			/* Put always_on regulator in LPM (low power mode) */
->> +			ret = regulator_set_optimum_mode(vreg->reg,
->> +				vreg->lpm_uA);
->> +			if (ret < 0)
->> +				return ret;
->> +		}
->> +	} else {
->> +		ret = regulator_disable(vreg->reg);
->> +		if (ret) {
->> +			pr_err("regulator_disable(%s) fail (%d)\n",
->> +				vreg->name, ret);
->
-> dev_err(), please.
-
-Ok.
-
->
->> +			return ret;
->> +		}
->> +
->> +		ret = regulator_set_optimum_mode(vreg->reg, 0);
->> +		if (ret < 0)
->> +			return ret;
->> +
->> +		/* Set min. voltage level to 0 */
->> +		ret = regulator_set_voltage(vreg->reg, 0, vreg->high_vol_level);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int sdhci_msm_setup_vreg(struct sdhci_msm_pltfm_data *pdata,
->> +				bool enable, bool is_init)
->> +{
->> +	int ret = 0, i;
->
-> no need to initialize ret variable?
-
-Agree.
-
->
->> +	struct sdhci_msm_reg_data *vreg_table[2];
->> +
->> +	vreg_table[0] = &pdata->vdd_data;
->> +	vreg_table[1] = &pdata->vdd_io_data;
->> +
->> +	for (i = 0; i < ARRAY_SIZE(vreg_table); i++) {
->> +		if (vreg_table[i]) {
->
-> could you invert the logic here:
->
-> 		if (!vreg_table[i])
-> 			continue;
->
-> by that way you will save one tab below.
-
-Yes, thanks!
-
->
->> +			if (enable)
->> +				ret = sdhci_msm_vreg_enable(vreg_table[i]);
->> +			else
->> +				ret = sdhci_msm_vreg_disable(vreg_table[i]);
->> +			if (ret)
->> +				return ret;
->> +		}
->> +	}
->
-> blank line ?
-
-Ok.
-
->
->> +	return 0;
->> +}
->> +
->> +/* This init function should be called only once for each SDHC slot */
->> +static int sdhci_msm_vreg_init(struct device *dev,
->> +				struct sdhci_msm_pltfm_data *pdata)
->> +{
->> +	struct sdhci_msm_reg_data *curr_vdd_reg = &pdata->vdd_data;
->> +	struct sdhci_msm_reg_data *curr_vdd_io_reg = &pdata->vdd_io_data;
->> +	int ret = 0;
->
-> no need to initialize ret variable.
-
-Agree.
-
->
->> +
->> +	ret = sdhci_msm_vreg_init_reg(dev, curr_vdd_reg);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = sdhci_msm_vreg_init_reg(dev, curr_vdd_io_reg);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return 0;
->> +}
->> +
->> +static int sdhci_msm_set_vdd_io_vol(struct sdhci_msm_pltfm_data *pdata,
->> +				    enum vdd_io_level level,
->> +				    unsigned int voltage_level)
->> +{
->> +	int set_level;
->> +	struct sdhci_msm_reg_data *vdd_io_reg = &pdata->vdd_io_data;
->> +
->> +	if (!regulator_is_enabled(vdd_io_reg->reg))
->> +		return 0;
->> +
->> +	switch (level) {
->> +	case VDD_IO_LOW:
->> +		set_level = vdd_io_reg->low_vol_level;
->> +		break;
->> +	case VDD_IO_HIGH:
->> +		set_level = vdd_io_reg->high_vol_level;
->> +		break;
->> +	case VDD_IO_SET_LEVEL:
->> +		set_level = voltage_level;
->> +		break;
->> +	default:
->> +		pr_err("invalid vdd_io level = %d", level);
->> +		return -EINVAL;
->> +	}
->
-> add blank line here, please.
-
-Ok.
-
->
->> +	return regulator_set_voltage(vdd_io_reg->reg, set_level, set_level);
->> +}
->> +
->> +static irqreturn_t sdhci_msm_pwr_irq(int irq, void *data)
->> +{
->> +	struct sdhci_msm_host *msm_host = (struct sdhci_msm_host *)data;
->> +	u8 irq_status = 0;
->> +	u8 irq_ack = 0;
->> +	int ret = 0;
->
-> no need to initialize irq_status and ret, right?
-
-Agree.
-
->
->> +
->> +	irq_status = readb_relaxed(msm_host->core_mem + CORE_PWRCTL_STATUS);
->> +	pr_debug("%s: Received IRQ(%d), status=0x%x\n",
->> +		 mmc_hostname(msm_host->mmc), irq, irq_status);
->
-> dev_dbg() ?
-
-Ok.
-
->
->> +
->> +	/* Clear the interrupt */
->> +	writeb_relaxed(irq_status, (msm_host->core_mem + CORE_PWRCTL_CLEAR));
->
-> why you use writeb here, but in .probe you use writel?
-
- From the limited documentation I have, it seems that only 4 bits from 
-these registers are defined and used, so I prefer to keep it this way.
-
->
->> +	/*
->> +	 * SDHC has core_mem and hc_mem device memory and these memory
->> +	 * addresses do not fall within 1KB region. Hence, any update to
->> +	 * core_mem address space would require an mb() to ensure this gets
->> +	 * completed before its next update to registers within hc_mem.
->> +	 */
->> +	mb();
->> +
->> +	/* Handle BUS ON/OFF */
->> +	if (irq_status & (CORE_PWRCTL_BUS_ON | CORE_PWRCTL_BUS_OFF)) {
->> +		bool flag = (irq_status & CORE_PWRCTL_BUS_ON) ? 1 : 0;
->> +		ret = sdhci_msm_setup_vreg(&msm_host->pdata, flag, false);
->> +		if (ret)
->> +			irq_ack |= CORE_PWRCTL_BUS_FAIL;
->> +		else
->> +			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
->> +	}
->> +	/* Handle IO LOW/HIGH */
->> +	if (irq_status & (CORE_PWRCTL_IO_LOW | CORE_PWRCTL_IO_HIGH)) {
->> +		/* Switch voltage */
->> +		int io_status = (irq_status & CORE_PWRCTL_IO_LOW) ?
->> +		    VDD_IO_LOW : VDD_IO_HIGH;
->> +		ret = sdhci_msm_set_vdd_io_vol(&msm_host->pdata, io_status, 0);
->> +		if (ret)
->> +			irq_ack |= CORE_PWRCTL_IO_FAIL;
->> +		else
->> +			irq_ack |= CORE_PWRCTL_IO_SUCCESS;
->> +	}
->> +
->> +	/* ACK status to the core */
->> +	writeb_relaxed(irq_ack, (msm_host->core_mem + CORE_PWRCTL_CTL));
->> +	/*
->> +	 * SDHC has core_mem and hc_mem device memory and these memory
->> +	 * addresses do not fall within 1KB region. Hence, any update to
->> +	 * core_mem address space would require an mb() to ensure this gets
->> +	 * completed before its next update to registers within hc_mem.
->> +	 */
->> +	mb();
->> +
->> +	pr_debug("%s: Handled IRQ(%d), ret=%d, ack=0x%x\n",
->> +		 mmc_hostname(msm_host->mmc), irq, ret, irq_ack);
->
-> dev_dbg() ?
-
-Ok.
-
->
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +/* This function returns the max. current supported by VDD rail in mA */
->> +static u32 sdhci_msm_get_vdd_max_current(struct sdhci_msm_host *host)
->> +{
->> +	return host->pdata.vdd_data.hpm_uA / 1000;
->> +}
->> +
->> +static const struct of_device_id sdhci_msm_dt_match[] = {
->> +	{.compatible = "qcom,sdhci-msm"},
->> +	{},
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
->> +
->> +static int sdhci_msm_probe(struct platform_device *pdev)
->> +{
->> +	struct sdhci_host *host;
->> +	struct sdhci_pltfm_host *pltfm_host;
->> +	struct sdhci_msm_host *msm_host;
->> +	struct resource *core_memres = NULL;
->> +	int ret = 0, dead = 0;
->
-> no need to initialize ret and dead variables.
-
-Agree.
-
->
->> +	struct pinctrl *pinctrl;
->> +
->> +	if (!pdev->dev.of_node) {
->> +		dev_err(&pdev->dev, "No device tree data\n");
->> +		return -ENOENT;
->> +	}
->> +
->> +	msm_host = devm_kzalloc(&pdev->dev, sizeof(*msm_host), GFP_KERNEL);
->> +	if (!msm_host)
->> +		return -ENOMEM;
->> +
->> +	host = sdhci_pltfm_init(pdev, &msm_host->sdhci_msm_pdata, 0);
->> +	if (IS_ERR(host)) {
->> +		dev_err(mmc_dev(host->mmc), "sdhci_pltfm_init error\n");
->> +		return PTR_ERR(host);
->> +	}
->> +
->> +	pltfm_host = sdhci_priv(host);
->> +	pltfm_host->priv = msm_host;
->> +	msm_host->mmc = host->mmc;
->> +	msm_host->pdev = pdev;
->> +
->> +	ret = mmc_of_parse(host->mmc);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "failed parsing mmc device tree\n");
->> +		goto pltfm_free;
->> +	}
->> +
->> +	/* Extract platform data */
->
-> needless comment, again.
->
-
-Ok.
-
->> +	ret = sdhci_msm_populate_pdata(&pdev->dev, &msm_host->pdata);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "DT parsing error\n");
->> +		goto pltfm_free;
->> +	}
->> +
->> +	/* Setup pins */
->> +	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
->> +	if (IS_ERR(pinctrl))
->> +		dev_warn(&pdev->dev, "pins are not configured by the driver\n");
->> +
->> +	/* Setup SDCC bus voter clock. */
->> +	msm_host->bus_clk = devm_clk_get(&pdev->dev, "bus");
->> +	if (!IS_ERR(msm_host->bus_clk)) {
->> +		/* Vote for max. clk rate for max. performance */
->> +		ret = clk_set_rate(msm_host->bus_clk, INT_MAX);
->> +		if (ret)
->> +			goto pltfm_free;
->> +		ret = clk_prepare_enable(msm_host->bus_clk);
->> +		if (ret)
->> +			goto pltfm_free;
->> +	}
->> +
->> +	/* Setup main peripheral bus clock */
->> +	msm_host->pclk = devm_clk_get(&pdev->dev, "iface");
->> +	if (!IS_ERR(msm_host->pclk)) {
->> +		ret = clk_prepare_enable(msm_host->pclk);
->> +		if (ret) {
->> +			dev_err(&pdev->dev,
->> +				"Main peripheral clock setup failed (%d)\n",
->> +				ret);
->> +			goto bus_clk_disable;
->> +		}
->> +	}
->> +
->> +	/* Setup SDC MMC clock */
->> +	msm_host->clk = devm_clk_get(&pdev->dev, "core");
->> +	if (IS_ERR(msm_host->clk)) {
->> +		ret = PTR_ERR(msm_host->clk);
->> +		dev_err(&pdev->dev, "SDC MMC clock setup failed (%d)\n", ret);
->> +		goto pclk_disable;
->> +	}
->> +
->> +	ret = clk_prepare_enable(msm_host->clk);
->> +	if (ret)
->> +		goto pclk_disable;
->> +
->> +	/* Setup regulators */
->> +	ret = sdhci_msm_vreg_init(&pdev->dev, &msm_host->pdata);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Regulator setup failed (%d)\n", ret);
->> +		goto clk_disable;
->> +	}
->> +
->> +	/* Reset the core and Enable SDHC mode */
->
-> this comment should go few lines below.
->
-
-Ok.
-
->> +	core_memres = platform_get_resource_byname(pdev,
->> +						   IORESOURCE_MEM, "core_mem");
->> +	msm_host->core_mem = devm_ioremap_resource(&pdev->dev, core_memres);
->> +
->> +	if (IS_ERR(msm_host->core_mem)) {
->> +		dev_err(&pdev->dev, "Failed to remap registers\n");
->> +		ret = PTR_ERR(msm_host->core_mem);
->> +		goto vreg_disable;
->> +	}
->> +
->> +	/* Set SW_RST bit in POWER register (Offset 0x0) */
->
-> those comments are stupid, please remove them.
->
-
-Ok.
-
->> +	writel_relaxed(CORE_SW_RST, msm_host->core_mem + CORE_POWER);
->> +	/* Set HC_MODE_EN bit in HC_MODE register */
->> +	writel_relaxed(HC_MODE_EN, (msm_host->core_mem + CORE_HC_MODE));
->> +
->
-> are all interrupts disabled at this point?
->
-
-Yes, they are enabled later.
-
->> +	/*
->> +	 * Following are the deviations from SDHC spec v3.0 -
->> +	 * 1. Card detection is handled using separate GPIO.
->> +	 * 2. Bus power control is handled by interacting with PMIC.
->> +	 */
->> +	host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
->> +
->> +	/* Setup PWRCTL irq */
->> +	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
->> +	if (msm_host->pwr_irq < 0) {
->> +		dev_err(&pdev->dev, "Failed to get pwr_irq by name (%d)\n",
->> +			msm_host->pwr_irq);
->> +		goto vreg_disable;
->> +	}
->> +	ret = devm_request_threaded_irq(&pdev->dev, msm_host->pwr_irq, NULL,
->> +					sdhci_msm_pwr_irq, IRQF_ONESHOT,
->> +					dev_name(&pdev->dev), host);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Request threaded irq(%d) failed (%d)\n",
->> +			msm_host->pwr_irq, ret);
->> +		goto vreg_disable;
->> +	}
->> +
->> +	/* Enable pwr irq interrupts */
->> +	writel_relaxed(INT_MASK, (msm_host->core_mem + CORE_PWRCTL_MASK));
->> +
->> +	/* Set host capabilities */
->
-> useless comment
->
-
-Ok. I'll remove it.
-
->> +	msm_host->mmc->caps |= msm_host->pdata.caps;
->> +	msm_host->mmc->caps2 |= msm_host->pdata.caps2;
->> +
->> +	ret = sdhci_add_host(host);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Add host failed (%d)\n", ret);
->> +		goto vreg_disable;
->> +	}
->> +
->> +	/* Set core clk rate */
->
-> useless comment
->
-
-Ok.
-
->> +	ret = clk_set_rate(msm_host->clk, host->max_clk);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "MClk rate set failed (%d)\n", ret);
->> +		goto remove_host;
->> +	}
->> +
->> +	host->mmc->max_current_180 = host->mmc->max_current_300 =
->> +	host->mmc->max_current_330 = sdhci_msm_get_vdd_max_current(msm_host);
->> +
->> +	/* Successful initialization */
->
-> useless comment
->
-
-Ok.
-
->> +	return 0;
->> +
->> +remove_host:
->> +	dead = (readl_relaxed(host->ioaddr + SDHCI_INT_STATUS) == 0xffffffff);
->> +	sdhci_remove_host(host, dead);
->> +vreg_disable:
->> +	if (!IS_ERR(msm_host->pdata.vdd_data.reg))
->> +		sdhci_msm_vreg_disable(&msm_host->pdata.vdd_data);
->> +	if (!IS_ERR(msm_host->pdata.vdd_io_data.reg))
->> +		sdhci_msm_vreg_disable(&msm_host->pdata.vdd_io_data);
->> +clk_disable:
->> +	if (!IS_ERR(msm_host->clk))
->> +		clk_disable_unprepare(msm_host->clk);
->> +pclk_disable:
->> +	if (!IS_ERR(msm_host->pclk))
->> +		clk_disable_unprepare(msm_host->pclk);
->> +bus_clk_disable:
->> +	if (!IS_ERR(msm_host->bus_clk))
->> +		clk_disable_unprepare(msm_host->bus_clk);
->> +pltfm_free:
->> +	sdhci_pltfm_free(pdev);
->> +	return ret;
->> +}
->> +
->> +static int sdhci_msm_remove(struct platform_device *pdev)
->> +{
->> +	struct sdhci_host *host = platform_get_drvdata(pdev);
->> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +	struct sdhci_msm_host *msm_host = pltfm_host->priv;
->> +	int dead = (readl_relaxed(host->ioaddr + SDHCI_INT_STATUS) ==
->> +		    0xffffffff);
->> +
->> +	sdhci_remove_host(host, dead);
->> +	sdhci_pltfm_free(pdev);
->> +	sdhci_msm_vreg_disable(&msm_host->pdata.vdd_data);
->> +	sdhci_msm_vreg_disable(&msm_host->pdata.vdd_io_data);
->> +	clk_disable_unprepare(msm_host->clk);
->> +	clk_disable_unprepare(msm_host->pclk);
->> +	if (!IS_ERR(msm_host->bus_clk))
->> +		clk_disable_unprepare(msm_host->bus_clk);
->> +	return 0;
->> +}
->> +
->> +static struct platform_driver sdhci_msm_driver = {
->> +	.probe = sdhci_msm_probe,
->> +	.remove = sdhci_msm_remove,
->> +	.driver = {
->> +		   .name = "sdhci_msm",
->> +		   .owner = THIS_MODULE,
->> +		   .of_match_table = sdhci_msm_dt_match,
->> +		   },
->
-> this bracket should be under ".driver".
-
-Ok. Thanks!
-
-BR,
-Georgi
+--=-a1+59GytZmpxOiJ/31I5--
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
