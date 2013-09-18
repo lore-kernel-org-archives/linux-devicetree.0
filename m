@@ -1,7 +1,7 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v2 09/10] of/i2c: Resolve interrupt references at probe time
-Date: Wed, 18 Sep 2013 15:24:51 +0200
-Message-ID: <1379510692-32435-10-git-send-email-treding@nvidia.com>
+Subject: [PATCH v2 06/10] of/irq: Return errors from of_irq_to_resource()
+Date: Wed, 18 Sep 2013 15:24:48 +0200
+Message-ID: <1379510692-32435-7-git-send-email-treding@nvidia.com>
 References: <1379510692-32435-1-git-send-email-treding@nvidia.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1379510692-32435-1-git-send-email-treding@nvidia.com>
@@ -10,82 +10,101 @@ To: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ralf Baechle <ralf@linux-mips.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Instead of resolving interrupt references at device creation time, delay
-resolution until probe time. At device creation time, there is nothing
-that can be done if an interrupt parent isn't ready yet, and the device
-will end up with an invalid interrupt number (0).
+Update of_irq_to_resource() to return 0 on success and a negative error
+code on failure. This allows the precise nature of the failure to be
+determined in the caller and errors to be propagated appropriately.
 
-If the interrupt reference is resolved at probe time, the device's probe
-can be deferred, so that it's interrupt resolution can be retried after
-more devices (possibly including its interrupt parent) have been probed.
-
-However, individual drivers shouldn't be required to do that themselves,
-over and over again, so this commit implements this functionality within
-the I2C core.
+While at it, make the index parameter unsigned. Accessing negative
+indices is invalid, so we might as well enforce that by using the right
+data type.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
 Changes in v2:
-- use __irq_of_parse_and_map() instead of of_irq_get()
+- convert existing callers instead of using compatible wrapper
 
- drivers/i2c/i2c-core.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/83xx/mpc832x_rdb.c  |  2 +-
+ drivers/net/ethernet/marvell/mv643xx_eth.c |  5 +++--
+ drivers/of/irq.c                           | 14 +++++++++++---
+ include/linux/of_irq.h                     |  2 +-
+ 4 files changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 29d3f04..5b4f289 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -236,6 +236,22 @@ int i2c_recover_bus(struct i2c_adapter *adap)
- 	return adap->bus_recovery_info->recover_bus(adap);
- }
+diff --git a/arch/powerpc/platforms/83xx/mpc832x_rdb.c b/arch/powerpc/platforms/83xx/mpc832x_rdb.c
+index eff5baa..b198e73 100644
+--- a/arch/powerpc/platforms/83xx/mpc832x_rdb.c
++++ b/arch/powerpc/platforms/83xx/mpc832x_rdb.c
+@@ -89,7 +89,7 @@ static int __init of_fsl_spi_probe(char *type, char *compatible, u32 sysclk,
+ 			goto err;
  
-+static int of_i2c_probe(struct i2c_client *client)
-+{
-+	struct device_node *np = client->dev.of_node;
+ 		ret = of_irq_to_resource(np, 0, &res[1]);
+-		if (ret == NO_IRQ)
++		if (ret)
+ 			goto err;
+ 
+ 		pdev = platform_device_alloc("mpc83xx_spi", i);
+diff --git a/drivers/net/ethernet/marvell/mv643xx_eth.c b/drivers/net/ethernet/marvell/mv643xx_eth.c
+index 7fb5677..bd713bd 100644
+--- a/drivers/net/ethernet/marvell/mv643xx_eth.c
++++ b/drivers/net/ethernet/marvell/mv643xx_eth.c
+@@ -2489,9 +2489,10 @@ static int mv643xx_eth_shared_of_add_port(struct platform_device *pdev,
+ 	ppd.shared = pdev;
+ 
+ 	memset(&res, 0, sizeof(res));
+-	if (!of_irq_to_resource(pnp, 0, &res)) {
++	ret = of_irq_to_resource(pnp, 0, &res);
++	if (ret) {
+ 		dev_err(&pdev->dev, "missing interrupt on %s\n", pnp->name);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	if (of_property_read_u32(pnp, "reg", &ppd.port_number)) {
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 6ad46fd..e4f38c0 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -341,10 +341,18 @@ EXPORT_SYMBOL_GPL(of_irq_map_one);
+  * @dev: pointer to device tree node
+  * @index: zero-based index of the irq
+  * @r: pointer to resource structure to return result into.
++ *
++ * Returns zero on success or a negative error code on failure.
+  */
+-int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
++int of_irq_to_resource(struct device_node *dev, unsigned int index,
++		       struct resource *r)
+ {
+-	int irq = irq_of_parse_and_map(dev, index);
++	unsigned int irq;
 +	int ret;
 +
-+	/* skip if the device node specifies no interrupts */
-+	if (of_get_property(np, "interrupts", NULL)) {
-+		ret = __irq_of_parse_and_map(client->dev.of_node, 0,
-+					     &client->irq);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int i2c_device_probe(struct device *dev)
- {
- 	struct i2c_client	*client = i2c_verify_client(dev);
-@@ -254,6 +270,12 @@ static int i2c_device_probe(struct device *dev)
- 					client->flags & I2C_CLIENT_WAKE);
- 	dev_dbg(dev, "probe\n");
++	ret = __irq_of_parse_and_map(dev, index, &irq);
++	if (ret)
++		return ret;
  
-+	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
-+		status = of_i2c_probe(client);
-+		if (status)
-+			return status;
-+	}
-+
- 	status = driver->probe(client, i2c_match_id(driver->id_table, client));
- 	if (status) {
- 		client->driver = NULL;
-@@ -1002,7 +1024,6 @@ static void of_i2c_register_devices(struct i2c_adapter *adap)
- 			continue;
- 		}
- 
--		info.irq = irq_of_parse_and_map(node, 0);
- 		info.of_node = of_node_get(node);
- 		info.archdata = &dev_ad;
- 
-@@ -1016,7 +1037,6 @@ static void of_i2c_register_devices(struct i2c_adapter *adap)
- 			dev_err(&adap->dev, "of_i2c: Failure registering %s\n",
- 				node->full_name);
- 			of_node_put(node);
--			irq_dispose_mapping(info.irq);
- 			continue;
- 		}
+ 	/* Only dereference the resource if both the
+ 	 * resource and the irq are valid. */
+@@ -364,7 +372,7 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
+ 		r->name = name ? name : dev->full_name;
  	}
+ 
+-	return irq;
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(of_irq_to_resource);
+ 
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index 11da949..6d62b73 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -67,7 +67,7 @@ extern int of_irq_map_one(struct device_node *device, int index,
+ extern int irq_create_of_mapping(struct device_node *controller,
+ 				 const u32 *intspec, unsigned int intsize,
+ 				 unsigned int *virqp);
+-extern int of_irq_to_resource(struct device_node *dev, int index,
++extern int of_irq_to_resource(struct device_node *dev, unsigned int index,
+ 			      struct resource *r);
+ extern int of_irq_count(struct device_node *dev);
+ extern int of_irq_to_resource_table(struct device_node *dev,
 -- 
 1.8.4
