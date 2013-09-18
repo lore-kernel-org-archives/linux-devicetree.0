@@ -1,192 +1,75 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 06/16] hwmon: tmp102: expose to thermal fw via DT nodes
-Date: Wed, 18 Sep 2013 08:57:32 -0700
-Message-ID: <20130918155732.GA17160@roeck-us.net>
-References: <1379282563-14650-1-git-send-email-eduardo.valentin@ti.com>
- <1379282563-14650-7-git-send-email-eduardo.valentin@ti.com>
- <523643D4.30208@roeck-us.net>
- <5238D7D9.9010203@ti.com>
- <20130918111849.GA9148@roeck-us.net>
- <5239B8B5.6050702@ti.com>
- <20130918151746.GA17065@roeck-us.net>
- <5239CCAA.7030505@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] Add the Quadspi driver for vf610-twr
+Date: Wed, 18 Sep 2013 17:00:24 +0100
+Message-ID: <20130918160024.GB21013@sirena.org.uk>
+References: <20130913102127.GD29403@sirena.org.uk>
+ <52366F97.5030402@freescale.com>
+ <20130916101912.GY29403@sirena.org.uk>
+ <5236DD17.5090203@freescale.com>
+ <20130916110634.GC29403@sirena.org.uk>
+ <5237BB01.3080700@freescale.com>
+ <20130917105142.GO21013@sirena.org.uk>
+ <20130917150548.GE14747@book.gsilab.sittig.org>
+ <20130917191318.GJ21013@sirena.org.uk>
+ <1379518822.753.91.camel@shinybook.infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Nc+Vvx0JXuqp7Zy0"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5239CCAA.7030505-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1379518822.753.91.camel-Fexsq3y4057IgHVZqg5X0TlWvGAXklZc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>, "thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org" <thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b18965-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2013 at 11:54:18AM -0400, Eduardo Valentin wrote:
-> On 18-09-2013 11:17, Guenter Roeck wrote:
-> > On Wed, Sep 18, 2013 at 10:29:09AM -0400, Eduardo Valentin wrote:
-> >> On 18-09-2013 07:18, Guenter Roeck wrote:
-> >>> On Tue, Sep 17, 2013 at 06:29:45PM -0400, Eduardo Valentin wrote:
-> >>>> On 15-09-2013 19:33, Guenter Roeck wrote:
-> >>>>> On 09/15/2013 03:02 PM, Eduardo Valentin wrote:
-> >>>>>> This patch adds to tmp102 temperature sensor the possibility to
-> >>>>>> expose itself as thermal zone device, registered on the thermal
-> >>>>>> framework.
-> >>>>>>
-> >>>>>> The thermal zone is built only if a device tree node describing
-> >>>>>> a thermal zone for this sensor is present inside the tmp102 DT
-> >>>>>> node. Otherwise, the driver behavior will be the same.
-> >>>>>>
-> >>>>>> Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org> Cc: Guenter Roeck
-> >>>>>> <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org Cc:
-> >>>>>> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org Signed-off-by: Eduardo Valentin
-> >>>>>> <eduardo.valentin-l0cyMroinI0@public.gmane.org> --- drivers/hwmon/tmp102.c | 28
-> >>>>>> ++++++++++++++++++++++++++++ 1 file changed, 28 insertions(+)
-> >>>>>>
-> >>>>>> diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c 
-> >>>>>> index d7b47ab..e432444 100644 --- a/drivers/hwmon/tmp102.c +++
-> >>>>>> b/drivers/hwmon/tmp102.c @@ -27,6 +27,8 @@ #include
-> >>>>>> <linux/mutex.h> #include <linux/device.h> #include
-> >>>>>> <linux/jiffies.h> +#include <linux/thermal.h> +#include
-> >>>>>> <linux/of.h>
-> >>>>>>
-> >>>>>> #define    DRIVER_NAME "tmp102"
-> >>>>>>
-> >>>>>> @@ -50,6 +52,7 @@
-> >>>>>>
-> >>>>>> struct tmp102 { struct device *hwmon_dev; +    struct
-> >>>>>> thermal_zone_device *tz; struct mutex lock; u16 config_orig; 
-> >>>>>> unsigned long last_update; @@ -93,6 +96,19 @@ static struct
-> >>>>>> tmp102 *tmp102_update_device(struct i2c_client *client) return
-> >>>>>> tmp102; }
-> >>>>>>
-> >>>>>> +static int tmp102_read_temp(void *dev, long *temp) +{ +
-> >>>>>> struct tmp102 *tmp102 =
-> >>>>>> tmp102_update_device(to_i2c_client(dev)); + +    if
-> >>>>>> (tmp102->temp[0] < 0) +        dev_warn(tmp102->hwmon_dev, +
-> >>>>>> "operating in negative temp: %d\n", tmp102->temp[0]); +
-> >>>>>
-> >>>>> Please drop this warning.
-> >>>>>
-> >>>>
-> >>>> Done for both drivers.
-> >>>>
-> >>>>> Guenter
-> >>>>>
-> >>>>>> +    *temp = tmp102->temp[0]; + +    return 0; +} + static
-> >>>>>> ssize_t tmp102_show_temp(struct device *dev, struct
-> >>>>>> device_attribute *attr, char *buf) @@ -204,6 +220,16 @@ static
-> >>>>>> int tmp102_probe(struct i2c_client *client, goto
-> >>>>>> fail_remove_sysfs; }
-> >>>>>>
-> >>>>>> +    tmp102->tz = thermal_zone_of_sensor_register(&client->dev,
-> >>>>>> 0, +                             &client->dev, +
-> >>>>>> tmp102_read_temp, NULL); +    if (IS_ERR(tmp102->tz)) { +
-> >>>>>> dev_warn(&client->dev, +             "Could not parse thermal
-> >>>>>> data in device tree: %ld\n", +
-> >>>>>> PTR_ERR(tmp102->tz));
-> >>>>>
-> >>>>> Please drop this warning. You already create error messages in 
-> >>>>> thermal_zone_of_sensor_register(). That should be sufficient. The
-> >>>>> same applies to the lm75 patch.
-> >>>>
-> >>>> OK. Done for both.
-> >>>>
-> >>>>>
-> >>>>> As a side note, I would suggest to provide devm_ functions for 
-> >>>>> registration. We are introducing those for hwmon registration,
-> >>>>> which enables us to remove most _remove functions. It would be
-> >>>>> great if we can keep it that way.
-> >>>>>
-> >>>>
-> >>>> Right. This side note is taken. Actually this is on my todo list
-> >>>> for quite a while. But I believe this should not block this series,
-> >>>> should it? I will be probably cleaning the thermal framework code
-> >>>> after this current work is accepted at least.
-> >>>>
-> >>>>> On a higher level, I don't think it is a good idea to make
-> >>>>> thermal zones and thermal zone data mandatory. Many systems may
-> >>>>> neither need nor want it.
-> >>>>>
-> >>>>
-> >>>> Well, I agree with you. Did you see something hard required in the
-> >>>> patch I sent. I made it so that it could continue the driver probe
-> >>>> without thermal zones, as you requested.
-> >>>>
-> >>> If it is not mandatory you should not dump an error message to the
-> >>> console in the thermal registration function. Since you do, you at
-> >>> least consider it mandatory if that function is called.
-> >>>
-> >>> So please either drop the error message from the registration
-> >>> function or add a check into the drivers to only register into the
-> >>> thermal subsystem if there is a respective thermal entry for that
-> >>> sensor in the devicetree data.
-> >>>
-> >>> There are systes out there with literally dozens of temperature
-> >>> sensors. In many cases, those are purely for system health
-> >>> monitoring, not for thermal management. I don't want to end up in a
-> >>> situation where users complain about dozens of error messages on the
-> >>> console and no way to avoid it but providing dummy thermal subsystem
-> >>> data.
-> >>>
-> >>
-> >> Now I see.
-> >>
-> >>
-> >> Then I will rollback to the previous version in which lm sensors were
-> >> first probing for thermal properties within their dt node. Something like:
-> >> diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
-> >> index dc96598..cb1c663 100644
-> >> --- a/drivers/hwmon/tmp102.c
-> >> +++ b/drivers/hwmon/tmp102.c
-> >> @@ -216,11 +216,13 @@ static int tmp102_probe(struct i2c_client *client,
-> >>                 goto fail_remove_sysfs;
-> >>         }
-> >>
-> >> -       tmp102->tz = thermal_zone_of_sensor_register(&client->dev, 0,
-> >> -                                                    &client->dev,
-> >> -                                                    tmp102_read_temp,
-> >> NULL);
-> >> -       if (IS_ERR(tmp102->tz))
-> >> -               tmp102->tz = NULL;
-> >> +       if ((of_find_property(client->dev.of_node, "#sensor-cells", NULL)) {
-> >> +               tmp102->tz =
-> >> thermal_zone_of_sensor_register(&client->dev, 0,
-> >> +                                                            &client->dev,
-> >> +
-> >> tmp102_read_temp, NULL);
-> >> +               if (IS_ERR(tmp102->tz))
-> >> +                       tmp102->tz = NULL;
-> >> +       }
-> >>
-> >>         dev_info(&client->dev, "initialized\n");
-> >>
-> >>
-> >> Does it sound reasonable?
-> >>
-> > Personally I would prefer if the registration code fails silently.
-> > Pushing the above code into each driver is just adding the same code
-> > repeatedly all over the place.
-> 
-> Fair enough. It becomes tedious and just duplicating code. I agree.
-> 
-> So I will keep the v2 I just sent and remove the annoying error messages
-> from of-thermal.c while registering the sensors.
-> 
-> > 
-> > Also, each sensor instance will still result in an error if there
-> > is no global "thermal-zones" entry. Checking for that global entry
-> > in each driver would be even more excessive, and I just don't like
-> > that noisyness.
-> > 
-> > Also, I think you'll need to create devicetree bindings documents
-> > for the two sensors.
-> > 
-> 
-> Why would I? There is only one extra property and that is already
-> documented. I think the sensor still falls into the dummy dt node.
-> 
-I'll leave that up to the devicetree folks to decide.
 
-Guenter
+--Nc+Vvx0JXuqp7Zy0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Sep 18, 2013 at 10:40:22AM -0500, David Woodhouse wrote:
+> On Tue, 2013-09-17 at 20:13 +0100, Mark Brown wrote:
+
+> > > [ potential "LUT" optimization, implementation details ]
+
+> > AFAICT the big issue with the LUTs in this controller is that they are
+> > expensive to reprogram so things are going to work better if there is a
+> > small set of known operations that will happen repeatedly.  Otherwise
+> > walking the transfer list at runtime isn't too hard.
+
+> I think you can drop the word "known" there. With decent management of
+> the LUT as a kind of LRU cache of recent operations, surely you'll
+> quickly get into a situation where the operations you're actually
+> *doing* on the flash are all already in the LUT and you're never
+> actually *having* to reprogram it?
+
+Yeah, assuming it's not too annoying to identify the repeated patterns
+and doesn't blow up horribly just caching should work fine.
+
+--Nc+Vvx0JXuqp7Zy0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSOc4VAAoJELSic+t+oim99dEP/RrP3dTPaEwOvbYZdx2qOg0c
+tx3jH9uJ+T6EbMZdZCM5IEKq++NbzuoPJAyOr1HVCD53EYD7+rawuw992X9pMhHY
+YEbhYQxgT1aikaqlJBMZ2PtsYXhCahEPoRfpH5AshK+4WkSltb9KJtheMCGB8h/W
+kxKfrtPpnDPjwI7iu/W3BhJFYU0fvy4U/UCnmAVNnZoR68y4U9VjXotrzus7luA0
+3fQZSMtVBRB08Vj+vG7Tk1FsQqsTDACSDagFRglveHznRdY9sIbEhXSnHDlsJouF
+/JMmuN7tJNujCvRiOz7UWmvKMlSHFt1kothZlBFU0LEUvzGKAbp7LhMiEmxAWOYg
+c69yfRE01qvsQxT8W0hSwEhek4lVehD+38yJtxp7+KDtZ8NvVJhgkTmOZdEFA+ni
+KZmRE+qsbHIgneyMk+irPYPhHOotzIKa7hHF6a42LNh3VRQvaR1injyS00nGeV9q
+8LGzGVY22f6Sh2WOmkN+4Fl6UzKMXwZR8Vhije1VyAUc5EKsfpHwaxmxltysUtzG
+1slG6uNMnfd9YVIRgJiPd/sllNgU0I40QxzQwa/VxGqqqJrcFGtXiIA3bMGvlr3h
+p9QqTR5vPcfd+ZIrEo0KGy8qfNI9PuhP1zJckqM9VzoDQ9skYF20y8LkSFll0Pxe
+1iB8I5lygKum0/8/AH+e
+=KsIK
+-----END PGP SIGNATURE-----
+
+--Nc+Vvx0JXuqp7Zy0--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
