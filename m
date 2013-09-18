@@ -1,165 +1,128 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: "memory" binding issues
-Date: Wed, 18 Sep 2013 18:21:36 +1000
-Message-ID: <1379492496.6148.35.camel@pasglop>
-References: <1379300274.4098.77.camel@pasglop>
-	 <20130918025714.A69D8C42C8F@trevor.secretlab.ca>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCHv2 3/4] of: provide a binding for fixed link PHYs
+Date: Wed, 18 Sep 2013 10:21:11 +0100
+Message-ID: <CAGVrzcbVTenhVC4tQznJFqVpO08ruxLyy1ZiLmw6Bu1=3zbGZg@mail.gmail.com>
+References: <1378480701-12908-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1378480701-12908-4-git-send-email-thomas.petazzoni@free-electrons.com> <20130918042923.5D845C42CF7@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130918025714.A69D8C42C8F-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <20130918042923.5D845C42CF7-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2013-09-17 at 21:57 -0500, Grant Likely wrote:
+Hello,
 
-> >  - It provides no indication of what a given region is used for (or used
-> > by). In the example, "display_region" is a label (thus information that
-> > is lost) and unless it's referenced by another node there is no good way
-> > to know what this region is about which is quite annoying.
-> 
-> Does this actually matter? In most cases the regions are completely
-> anonymous until referenced by a specific device and by default the
-> kernel should not use until it knows what the region is for.
+2013/9/18 Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>:
+> On Fri,  6 Sep 2013 17:18:20 +0200, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> Some Ethernet MACs have a "fixed link", and are not connected to a
+>> normal MDIO-managed PHY device. For those situations, a Device Tree
+>> binding allows to describe a "fixed link" using a special PHY node.
+>>
+>> This patch adds:
+>>
+>>  * A documentation for the fixed PHY Device Tree binding.
+>>
+>>  * An of_phy_is_fixed_link() function that an Ethernet driver can call
+>>    on its PHY phandle to find out whether it's a fixed link PHY or
+>>    not. It should typically be used to know if
+>>    of_phy_register_fixed_link() should be called.
+>>
+>>  * An of_phy_register_fixed_link() function that instantiates the
+>>    fixed PHY into the PHY subsystem, so that when the driver calls
+>>    of_phy_connect(), the PHY device associated to the OF node will be
+>>    found.
+>>
+>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>
+> Hi Thomas,
+>
+> The implemenation in this series looks like it is in good shape, so I'll
+> restrict my comments to be binding...
+>
+>> ---
+>>  .../devicetree/bindings/net/fixed-link.txt         | 34 ++++++++++++++++++++++
+>>  drivers/of/of_mdio.c                               | 24 +++++++++++++++
+>>  include/linux/of_mdio.h                            | 15 ++++++++++
+>>  3 files changed, 73 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/fixed-link.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/fixed-link.txt b/Documentation/devicetree/bindings/net/fixed-link.txt
+>> new file mode 100644
+>> index 0000000..9f2a1a50
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/fixed-link.txt
+>> @@ -0,0 +1,34 @@
+>> +Fixed link Device Tree binding
+>> +------------------------------
+>> +
+>> +Some Ethernet MACs have a "fixed link", and are not connected to a
+>> +normal MDIO-managed PHY device. For those situations, a Device Tree
+>> +binding allows to describe a "fixed link".
+>> +
+>> +Such a fixed link situation is described by creating a PHY node as a
+>> +sub-node of an Ethernet device, with the following properties:
+>> +
+>> +* 'fixed-link' (boolean, mandatory), to indicate that this PHY is a
+>> +  fixed link PHY.
+>> +* 'speed' (integer, mandatory), to indicate the link speed. Accepted
+>> +  values are 10, 100 and 1000
+>> +* 'full-duplex' (boolean, optional), to indicate that full duplex is
+>> +  used. When absent, half duplex is assumed.
+>> +* 'pause' (boolean, optional), to indicate that pause should be
+>> +  enabled.
+>> +* 'asym-pause' (boolean, optional), to indicate that asym_pause should
+>> +  be enabled.
+>
+> I understand what you're trying to do here, but it causes a troublesome
+> leakage of implementation detail into the binding, making the whole
+> thing look very odd. This binding tries to make a fixed link look
+> exactly like a real PHY even to the point of including a phandle to the
+> phy. But having a phandle to a node which is *always* a direct child of
+> the MAC node is redundant and a rather looney. Yes, doing it that way
+> makes it easy for of_phy_find_device() to be transparent for fixed link,
+> but that should *not* drive bindings, especially when that makes the
+> binding really rather weird.
 
-First it's handy for the developer to know for
-debug/diagnostic/you-name-it purposes. You don't always know what the
-heck the firmware is doing and there are some cases where such regions
-exist independently of any specific device.
+This is not exactly true in the sense that the "new" binding just
+re-shuffles the properties representation into something that is
+clearer and more extendible but there is not much difference in the
+semantics.
 
-The ability of the node of the driver to have a phandle pointing to a is
-indeed a nice feature and that's a good point in favor of making them
-nodes. But I would be against *requiring* it.
+>
+> Second, this new binding doesn't provide anything over and above the
+> existing fixed-link binding. It may not be pretty, but it is
+> estabilshed.
 
-I might have some architecture code that knows that this region is for
-use by some internal DMA translation cache or god knows what without
-having a clear device node as the "owner" of the region, there are going
-to be a few special cases like that and we still want to be able to
-identify it.
+In fact it does, the old one is obscure and not easily extendable
+because we rely on an integer array to represent the various
+properties, so at least this new one makes it easy to extend the
+binding to support a possibly new fixed-link property. Being able to
+deprecate a fundamentaly badly designed binding should still be a
+prerogative, software is flexible and can deal with both with little
+cost.
 
-So I would definitely want them named. Guess what ? They are all
-children of /reserved-memory right ? So their individual name doesn't
-matter one bit, thus the node name can perfectly well serve that
-purpose.
+>
+> That said, I do agree that the current Linux implementation is not good
+> because it cannot handle a fixed-link property transparently. That's a
+> deficiency in the Linux implementation and it should be fixed.
+> of_phy_connect() currently requires the phy phandle to be passed in.
+> Part of the reason it was done this way is that some drivers connect to
+> multiple 'phys'. A soulition could be to make the phy handle optional.
+> If it is empty then go looking for either a phy-device or fixed-link
+> property. Otherwise use the provided node.
 
-> We can however add properties to give the kernel hints on the usage. For
-> instance, if a regions isn't in use at boot time, then it would be fine
-> for the kernel to use it for movable pages up until the time a device
-> asks for the region (ie. CMA regions can be used this way).
-
-Let's not get into something overly Linux-centric though...
-
-> >  - The "memory-region" property is a phandle to a "reserved-memory"
-> > region, this is not intuitive. If anything, the property should have
-> > been called "reserved-memory-region".
-> 
-> Sure. I don't see the problem, but I have no problem changing it if you
-> feel strongly about it.
-
-Well it all boils down to whether we turn that whole thing into a way to
-describe arbitrary memory regions (and not just reserved ones), for
-example, CMA stuff as mentioned above doesn't strictly need to be
-reserved, in which case, we would call the whole thing /memory-regions
-and the property could be named the same. In that case we do want a
-specific property however in each region node to indicate whether it
-should be strictly reserved or not.
-
-But I would argue against that unless we have a very clear use case,
-because it's starting to smell a lot like trying to solve world hunger
-with over engineering :-)
- 
-> >  - The way the "compatible" property is documented breaks a basic
-> > premise that the device-tree is a hardware description and not some
-> > convenient way to pass linux specific kernel parameters accross. It is
-> > *ok* to pass some linux specific stuff and to make compromise based on
-> > what a driver generally might expect but the whole business of using
-> > that to describe what to put in CMA is pushing it pretty far ...
-> 
-> I disagree. Originally I had the same reaction, but I've been swayed to
-> the point of view that setting aside regions is actually a pretty
-> hardware-centric thing because it describes how the hardware needs to be
-> used.
-
-I would still not use the "compatible" property for that. Maybe
-recommended-usage ? Or simply "usage" property with well defined
-semantics ? "reserved" would be one, "consistent-memory" would be
-another (not strictly reserved but thrown into the CMA pool at first
-notice) etc... ?
-
->  I've already used the example of a framebuffer. It may not stricly
-> be hardware, but it is a description of how the hardware is setup that
-> the kernel should respect. Similarly, the size and placement of CMA
-> regions are more than merely a software parameter because they are
-> defined specifically to support the hardware devices.
-
-Right and the advantage of using a node with a "reg" property here is
-that a region can actually be made of separate ranges.
-
-> >  - The implementation of early_init_dt_scan_reserved_mem() will not work
-> > on a setup whose /memory node has a unit address (typically /memory@0)
-> 
-> Agreed, that should be fixed. It should work regardless of whether or
-> not the memory node(s) have a unit address.
-> 
-> > Now, I'd like to understand why not use the simpler binding originally
-> > proposed by Jeremy, which had the advantage of proposing a unique name
-> > per region in the traditional form "vendor,name", which then allows
-> > drivers to pick up the region directly if they wish to query, remove or
-> > update it in the tree for example (because they changed the framebuffer
-> > address for example and want kexec to continue working).
-> 
-> Hmmm... I don't follow. How is query/remove/update any more or less
-> difficult between the two approaches? Updating the reg property should
-> be doable in-place with both methods, but finding a specific region
-> associated with a device is explicit in the nodes-and-phandles approach.
-> (unless the 'name' part of vendor,name is an instance name and the
-> device node has a property containing the name; ie "acme,framebuffer1",
-> "acme,framebuffer2", and then in the device node something like:
-> framebuffer-region = "acme,framebuffer2";)
-> 
-> > I don't object to having a node per region, though it seemed unnecessary
-> > at the time, but in any case, the current binding is crap and need to be
-> > fixed urgently before its use spreads.
-> 
-> It seems to me that the 'top-level' objection is the creation of a new
-> binding using a node per region. I think it is warrented. If you
-> disagree strongly then we'll revert the whole series and try again for
-> v3.13. Otherwise I think the other objections are fixable in this cycle.
-
-No. I don't fundamentally object to using a node per region, it does
-have some advantages indeed as I have mentioned in a few places.
-
-My main issues are:
-
- - Documentation of the "memory" binding. This is a separate thing that
-shouldn't have been there and should not document the node without the
-unit address (it's ok to specify I suppose that it can be ommitted
-though I don't like it).
-
- - Location. I don't want that under /memory. I have to deal with
-machines with multiple /memory nodes and regions potentially straddling
-them.
-
- - The choice of properties for describing, naming and defining their
-usage. I think we can come to an agreement here.
-
-In fact the use of a node per region is the *least* of my worries :-)
-
-Cheers,
-Ben.
-
-
-> g.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-
-
+I do not quite follow you on this one, and I fear we might be leaking
+some Linux probing heuristic into Device Tree bindings by implicitely
+saying "not including a PHY phandle means connecting to a fixed-PHY
+link." This would also dramatically change the current behavior for
+most drivers where they might refuse probing if no corresponding PHY
+device node is present and they are not designed to connect to a fixed
+PHY one.
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
