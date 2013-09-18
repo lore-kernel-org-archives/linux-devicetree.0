@@ -1,130 +1,105 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [tpmdd-devel] [PATCH] tpm: Add support for Atmel I2C TPMs
-Date: Tue, 17 Sep 2013 17:56:58 -0600
-Message-ID: <20130917235658.GC345@obsidianresearch.com>
-References: <20130911205807.GA21467@obsidianresearch.com>
- <20130911230841.GB4251@obsidianresearch.com>
- <201309120124.00067.PeterHuewe@gmx.de>
- <201309120152.36878.PeterHuewe@gmx.de>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Adding aliases to mmc
+Date: Tue, 17 Sep 2013 21:06:44 -0300
+Message-ID: <CAOMZO5AT3bduZ0=EtWHuHVg6tSWrdr_ZjX5PLu815o0qgkeSig@mail.gmail.com>
+References: <CAOMZO5CJ36JHJMaiG3QVdtpBoWd_ZyHQuRTrKHz4bLP39gpJtQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201309120152.36878.PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
+In-Reply-To: <CAOMZO5CJ36JHJMaiG3QVdtpBoWd_ZyHQuRTrKHz4bLP39gpJtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter H?we <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
-Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Leonidas Da Silva Barbosa <leosilva-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ashley Lai <ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org>, Rajiv Andrade <mail-ZlhrYzitvtWsTnJN9+BGXg@public.gmane.org>, Peter Huewe <peter.huewe-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>, Teddy Reed <teddy-KaFzXBG2u9Ng9hUCZPvPmw@public.gmane.org>
+To: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 01:52:36AM +0200, Peter H?we wrote:
-> Hi,
-> 
-> 
-> > I think I'll stage them (nuvoton, st and atmel) all in a temporary branch
-> > "testing-and-review" so it's easier for people to try them out.
-> > This branch might rebase and change all the time, but maybe it makes things
-> > easier (and patches can be squashed afterwards easily if needed).
-> > 
-> > 
-> > But since you'll be sending a v2, I'll wait until the v2.
-> I staged everything here for the moment
-> https://github.com/PeterHuewe/linux-tpmdd/tree/testing-and-review
+Hi Dirk,
 
-I put up a branch on my github that has the drivers as well as parts
-of a major cleanup as we both vaugely discussed.
+On Tue, Sep 17, 2013 at 3:04 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Dirk,
+>
+> I have adapted your patch at:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-July/111022.html
+>
+> and tested it on 3.12-rc1 on a mx6qsabresd board.
+>
+> Do you have plans to submit it? Maybe as a RFC?
+>
+> It solves the mmcblkX order issue on my tests and it would be nice we
+> could have this problem addressed.
 
-Not finished yet, but maybe by the time you get back. It is big, I'm
-just going to keep it on github for the moment.
+I simplied your patch a bit:
 
-commit dfd68b37beb8806b0a061af71436017d0b6c577e
-Author: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Date:   Sat Sep 14 19:21:12 2013 -0600
+diff --git a/drivers/mmc/card/block.c b/drivers/mmc/card/block.c
+index 1a3163f..94f842b 100644
+--- a/drivers/mmc/card/block.c
++++ b/drivers/mmc/card/block.c
+@@ -2026,7 +2026,7 @@ static struct mmc_blk_data
+*mmc_blk_alloc_req(struct mmc_card *card,
+     struct mmc_blk_data *md;
+     int devidx, ret;
 
-    tpm: Pull everything related to /dev/tpmX into tpm-dev.c
-    
-    This cleans up all the identical file_operations sprinkled about in
-    the drivers.
-    
-    To support this the way the chip structure is recovered in tpm_open
-    is switched to use container_of rather than searching, otherwise this
-    is just a copy of function content from tpm.c to tpm-dev.c and the
-    resulting cleanup from making the functions static.
-    
-    Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+-    devidx = find_first_zero_bit(dev_use, max_devices);
++    devidx = find_next_zero_bit(dev_use, max_devices, card->host->devidx);
+     if (devidx >= max_devices)
+         return ERR_PTR(-ENOSPC);
+     __set_bit(devidx, dev_use);
+@@ -2044,7 +2044,8 @@ static struct mmc_blk_data
+*mmc_blk_alloc_req(struct mmc_card *card,
+      * index anymore so we keep track of a name index.
+      */
+     if (!subname) {
+-        md->name_idx = find_first_zero_bit(name_use, max_devices);
++        md->name_idx = find_next_zero_bit(name_use, max_devices,
++                card->host->devidx);
+         __set_bit(md->name_idx, name_use);
+     } else
+         md->name_idx = ((struct mmc_blk_data *)
+diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c
+b/drivers/mmc/host/sdhci-esdhc-imx.c
+index abc8cf0..e11a6af 100644
+--- a/drivers/mmc/host/sdhci-esdhc-imx.c
++++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+@@ -524,8 +524,9 @@ static int sdhci_esdhc_imx_probe(struct
+platform_device *pdev)
+     struct sdhci_pltfm_host *pltfm_host;
+     struct sdhci_host *host;
+     struct esdhc_platform_data *boarddata;
+-    int err;
++    int err, ret;
+     struct pltfm_imx_data *imx_data;
++    struct device_node *np = pdev->dev.of_node;
 
-commit 9d83865080be4fce23c3247754c640aacd30c25e
-Author: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Date:   Sat Sep 14 18:51:54 2013 -0600
+     host = sdhci_pltfm_init(pdev, &sdhci_esdhc_imx_pdata, 0);
+     if (IS_ERR(host))
+@@ -602,6 +603,13 @@ static int sdhci_esdhc_imx_probe(struct
+platform_device *pdev)
+                     host->mmc->parent->platform_data);
+     }
 
-    tpm: Store devname in the tpm_chip
-    
-    Just put the memory directly in the chip structure, rather than
-    a 2nd dedicated kalloc.
-    
-    Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
++
++    if (np) {
++        ret = of_alias_get_id(np, "mmcblk");
++        if (ret >= 0)
++            host->mmc->devidx = ret;
++    }
++
+     /* write_protect */
+     if (boarddata->wp_type == ESDHC_WP_GPIO) {
+         err = mmc_gpio_request_ro(host->mmc, boarddata->wp_gpio);
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 3b0c33a..8209f72 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -362,6 +362,8 @@ struct mmc_host {
 
-commit 4b05342eb38db16afb5698dd7b79ce21b56e669b
-Author: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Date:   Sat Sep 14 18:47:43 2013 -0600
+     unsigned int        slotno;    /* used for sdio acpi binding */
 
-    tpm: Create a tpm_class_ops structure and use it
-    
-    This replaces the static initialization of a tpm_vendor_specific
-    structure in the drivers with the standard Linux idiom of providing
-    a const structure of function pointers.
-    
-    As the first clean up step this just changes the names and copies
-    ops into chip->vendor exactly as before.
-    
-    Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
++    /* preferred mmc block device index (mmcblkX) */
++    unsigned int        devidx;
+     unsigned long        private[0] ____cacheline_aligned;
+ };
 
-commit 4e1a392500e4f588ec685703d0c1066c93135eaa
-Author: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Date:   Sat Sep 14 17:55:30 2013 -0600
-
-    tpm: xen-tpmfront: Fix default durations
-    
-    All the default durations were being set to 10 minutes which is
-    way too long for the timeouts. Normal values for the longest
-    duration are around 5 mins, and short duration ar around .5s.
-    
-    Further, these are just the default, tpm_get_timeouts will set
-    them to values from the TPM (or throw an error).
-    
-    Just remove them.
-    
-    Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-
-commit 181416f763b9adf2cf8f9cf0ca4d377a16b255d7
-Author: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Date:   Sat Sep 14 17:36:29 2013 -0600
-
-    tpm atmel: Call request_region with the correct base
-    
-    Commit e0dd03caf20d040a0a86b6bd74028ec9bda545f5
-    changed the code path here so that ateml_get_base_addr
-    no longer directly altered the tpm_vendor_specific
-    structure, and instead placed the base address on the stack.
-    
-    The commit missed updating the request_region call, which
-    would have resulted in request_region being called with 0
-    as the base address.
-    
-    I don't know if request_region(0, ..) will fail, if so the
-    driver has been broken since 2006 and we should remove it
-    from the tree as it has no users.
-    
-    Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-
-commit c41042057dc3fd156c8cb264a18dac1ce2bdf90a
-Author: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Date:   Sat Sep 14 16:57:58 2013 -0600
-
-    tpm: ibmvtpm: Use %zd formatting for size_t format arguments
-    
-    This suppresses compile warnings on 32 bit builds.
-    
-    Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+What do you think?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
