@@ -1,70 +1,108 @@
-From: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2] ARM: dts: DRA7: provide arch-timer frequenecy parameter
-Date: Wed, 18 Sep 2013 17:03:27 +0530
-Message-ID: <52398F87.6090108@ti.com>
-References: <5238899D.60903@ti.com> <1379437288-10831-1-git-send-email-nm@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 4/4] ARM: STi: Add I2C config to B2000 and B2020 boards
+Date: Wed, 18 Sep 2013 12:40:32 +0100
+Message-ID: <20130918114032.GD16984@lee--X1>
+References: <1379498483-4236-1-git-send-email-maxime.coquelin@st.com>
+ <1379498483-4236-5-git-send-email-maxime.coquelin@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379437288-10831-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1379498483-4236-5-git-send-email-maxime.coquelin@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime COQUELIN <maxime.coquelin@st.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, srinivas.kandagatla@st.com, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, stephen.gallimore@st.com, stuart.menefy@st.com, gabriel.fernandez@st.com, olivier.clergeaud@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 18 Sep 2013, Maxime COQUELIN wrote:
 
-On Tuesday 17 September 2013 10:31 PM, Nishanth Menon wrote:
-> CNTFREQ isn't pre-programmed on DRA7 just like O5, so provide the
-> timer frequency via DT. Without a valid value arch_timer_init results
-> in div0 crash.
->
-> Cc: R Sricharan <r.sricharan-l0cyMroinI0@public.gmane.org>
-> Cc: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
-> Cc: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
->
-> Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> This patch supplies I2C configuration to B2000 and B2020
+> based on either STiH415 or STiH416 SoCs.
+>=20
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
 > ---
->
-> Based on Benoit's for_3.13/dts branch. 
-> http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
->
-> Crash log: http://pastebin.com/B2sDauS9
->
-> V2: commit message update
-> V1: https://patchwork.kernel.org/patch/2903261/
->
->  arch/arm/boot/dts/dra7.dtsi |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index c98997b..71c2749 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -50,6 +50,7 @@
->  			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
->  			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
->  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-> +		clock-frequency = <6144000>;
+>  arch/arm/boot/dts/stih41x-b2000.dtsi |    7 +++++++
+>  arch/arm/boot/dts/stih41x-b2020.dtsi |   20 ++++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/stih41x-b2000.dtsi b/arch/arm/boot/dts=
+/stih41x-b2000.dtsi
+> index 8e694d2..346cc4bc 100644
+> --- a/arch/arm/boot/dts/stih41x-b2000.dtsi
+> +++ b/arch/arm/boot/dts/stih41x-b2000.dtsi
+> @@ -37,5 +37,12 @@
+>  			};
+>  		};
+> =20
+> +		/* HDMI Tx I2C */
+> +		i2c1: i2c@fed41000{
+
+nit: Space before the '{'
+
+> +			status =3D "okay";
+
+Consider enabling the node at the bottom.
+
+> +
+> +			/* HDMI V1.3a supports Standard mode only */
+> +			clock-frequency =3D <100000>;
+> +		};
 >  	};
->  
->  	gic: interrupt-controller@48211000 {
-This is not the right way to pass the frequency. In fact, initially the frequency value was present
-when the dts was added, but had to revert it back based on the feedbacks. Please refer below.
-  
+>  };
+> diff --git a/arch/arm/boot/dts/stih41x-b2020.dtsi b/arch/arm/boot/dts=
+/stih41x-b2020.dtsi
+> index 133e181..10b98da 100644
+> --- a/arch/arm/boot/dts/stih41x-b2020.dtsi
+> +++ b/arch/arm/boot/dts/stih41x-b2020.dtsi
+> @@ -38,5 +38,25 @@
+>  				default-state =3D "off";
+>  			};
+>  		};
+> +
+> +		i2c0: i2c@fed40000{
 
-http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg93832.html
+As above.
 
+> +			status =3D "okay";
+> +		};
+> +
+> +		/* HDMI Tx I2C */
+> +		i2c1: i2c@fed41000{
 
-Also posted the below patch to fix this,
+As above.
 
-    http://marc.info/?l=linux-omap&m=137950345528918&w=2
+> +			status =3D "okay";
 
-Regards,
- Sricharan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As above.
+
+> +			/* HDMI V1.3a supports Standard mode only */
+> +			clock-frequency =3D <100000>;
+> +		};
+> +
+> +		sbc_i2c0: i2c@fe540000{
+
+As above.
+
+> +			status =3D "okay";
+> +		};
+> +
+> +		sbc_i2c1: i2c@fe541000{
+
+Are these nodes referenced by phandle at all?
+
+If not, consider dropping the <lable>:s
+
+> +			status =3D "okay";
+> +		};
+>  	};
+>  };
+
+Odd tabbing here.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
