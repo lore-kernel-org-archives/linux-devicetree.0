@@ -1,40 +1,48 @@
-From: Maxime COQUELIN <maxime.coquelin@st.com>
-Subject: [PATCH 0/4] Add I2C support to ST SoCs
-Date: Wed, 18 Sep 2013 12:01:19 +0200
-Message-ID: <1379498483-4236-1-git-send-email-maxime.coquelin@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, srinivas.kandagatla@st.com, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
-Cc: stephen.gallimore@st.com, stuart.menefy@st.com, Lee Jones <lee.jones@linaro.org>, gabriel.fernandez@st.com, olivier.clergeaud@st.com, Maxime Coquelin <maxime.coquelin@st.com>
+From: Yuvaraj Kumar C D <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: Update arch timer node with clock frequency
+Date: Wed, 18 Sep 2013 15:41:53 +0530
+Message-ID: <1379499113-20342-1-git-send-email-yuvaraj.cd@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The goal of this series is to add I2C support to ST SoCs.
-The DT definition is added for STiH415 and STiH416 SoCs on
-B2000 and B2020 boards.
+Without the "clock-frequency" property in arch timer node, could able
+to see the below crash dump.
 
-Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+[<c0014e28>] (unwind_backtrace+0x0/0xf4) from [<c0011808>] (show_stack+0x10/0x14)
+[<c0011808>] (show_stack+0x10/0x14) from [<c036ac1c>] (dump_stack+0x7c/0xb0)
+[<c036ac1c>] (dump_stack+0x7c/0xb0) from [<c01ab760>] (Ldiv0_64+0x8/0x18)
+[<c01ab760>] (Ldiv0_64+0x8/0x18) from [<c0062f60>] (clockevents_config.part.2+0x1c/0x74)
+[<c0062f60>] (clockevents_config.part.2+0x1c/0x74) from [<c0062fd8>] (clockevents_config_and_register+0x20/0x2c)
+[<c0062fd8>] (clockevents_config_and_register+0x20/0x2c) from [<c02b8e8c>] (arch_timer_setup+0xa8/0x134)
+[<c02b8e8c>] (arch_timer_setup+0xa8/0x134) from [<c04b47b4>] (arch_timer_init+0x1f4/0x24c)
+[<c04b47b4>] (arch_timer_init+0x1f4/0x24c) from [<c04b40d8>] (clocksource_of_init+0x34/0x58)
+[<c04b40d8>] (clocksource_of_init+0x34/0x58) from [<c049ed8c>] (time_init+0x20/0x2c)
+[<c049ed8c>] (time_init+0x20/0x2c) from [<c049b95c>] (start_kernel+0x1e0/0x39c)
 
-Maxime Coquelin (4):
-  i2c: busses: i2c-st: Add ST I2C controller
-  ARM: STi: Supply I2C configuration to STiH416 SoC
-  ARM: STi: Supply I2C configuration to STiH415 SoC
-  ARM: STi: Add I2C config to B2000 and B2020 boards
+Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos5250.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/bindings/i2c/i2c-st.txt |   35 ++
- arch/arm/boot/dts/stih415-pinctrl.dtsi           |   36 ++
- arch/arm/boot/dts/stih415.dtsi                   |   57 ++
- arch/arm/boot/dts/stih416-pinctrl.dtsi           |   35 ++
- arch/arm/boot/dts/stih416.dtsi                   |   57 ++
- arch/arm/boot/dts/stih41x-b2000.dtsi             |    7 +
- arch/arm/boot/dts/stih41x-b2020.dtsi             |   20 +
- drivers/i2c/busses/Kconfig                       |   10 +
- drivers/i2c/busses/Makefile                      |    1 +
- drivers/i2c/busses/i2c-st.c                      |  713 ++++++++++++++++++++++
- drivers/i2c/busses/i2c-st.h                      |  216 +++++++
- 11 files changed, 1187 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-st.txt
- create mode 100644 drivers/i2c/busses/i2c-st.c
- create mode 100644 drivers/i2c/busses/i2c-st.h
-
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 7d7cc77..668ce5d 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -96,6 +96,7 @@
+ 			     <1 14 0xf08>,
+ 			     <1 11 0xf08>,
+ 			     <1 10 0xf08>;
++		clock-frequency = <24000000>;
+ 	};
+ 
+ 	mct@101C0000 {
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
