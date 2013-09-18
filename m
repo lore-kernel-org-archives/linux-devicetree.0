@@ -1,46 +1,83 @@
-From: Yuvaraj Kumar C D <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: Update arch timer node with clock frequency
-Date: Wed, 18 Sep 2013 15:41:53 +0530
-Message-ID: <1379499113-20342-1-git-send-email-yuvaraj.cd@samsung.com>
+From: <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v10 0/3] DMA: Freescale: Add support for 8-channel DMA engine
+Date: Wed, 18 Sep 2013 18:15:30 +0800
+Message-ID: <1379499333-4745-1-git-send-email-hongbo.zhang@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Without the "clock-frequency" property in arch timer node, could able
-to see the below crash dump.
+From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-[<c0014e28>] (unwind_backtrace+0x0/0xf4) from [<c0011808>] (show_stack+0x10/0x14)
-[<c0011808>] (show_stack+0x10/0x14) from [<c036ac1c>] (dump_stack+0x7c/0xb0)
-[<c036ac1c>] (dump_stack+0x7c/0xb0) from [<c01ab760>] (Ldiv0_64+0x8/0x18)
-[<c01ab760>] (Ldiv0_64+0x8/0x18) from [<c0062f60>] (clockevents_config.part.2+0x1c/0x74)
-[<c0062f60>] (clockevents_config.part.2+0x1c/0x74) from [<c0062fd8>] (clockevents_config_and_register+0x20/0x2c)
-[<c0062fd8>] (clockevents_config_and_register+0x20/0x2c) from [<c02b8e8c>] (arch_timer_setup+0xa8/0x134)
-[<c02b8e8c>] (arch_timer_setup+0xa8/0x134) from [<c04b47b4>] (arch_timer_init+0x1f4/0x24c)
-[<c04b47b4>] (arch_timer_init+0x1f4/0x24c) from [<c04b40d8>] (clocksource_of_init+0x34/0x58)
-[<c04b40d8>] (clocksource_of_init+0x34/0x58) from [<c049ed8c>] (time_init+0x20/0x2c)
-[<c049ed8c>] (time_init+0x20/0x2c) from [<c049b95c>] (start_kernel+0x1e0/0x39c)
+Hi DMA and DT maintainers, please have a look at these V10 patches.
 
-Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/exynos5250.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch set
+adds support this DMA engine.
 
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 7d7cc77..668ce5d 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -96,6 +96,7 @@
- 			     <1 14 0xf08>,
- 			     <1 11 0xf08>,
- 			     <1 10 0xf08>;
-+		clock-frequency = <24000000>;
- 	};
- 
- 	mct@101C0000 {
+V9->V10 changes:
+- update binding description text, mainly about the reg property and also Elo3
+  DMA controller specification
+
+V8->V9 changes:
+- add "Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>" into patch [1/3]
+- update reg entry <0x100300 0x4 0x100600 0x4> to two seperate ones
+  <0x100300 0x4>, <0x100600 0x4> in patch [2/3]
+- and also use "QorIQ Elo3 DMA" to mention previous "QorIQ DMA" in [2/3]
+
+V7->V8 changes:
+- change the word "mapping" to "specifier" for reg and interrupts description
+
+V6->V7 changes:
+- only remove unnecessary "CHIP-dma" explanations in [1/3]
+
+V5->V6 changes:
+- minor updates of descriptions in binding document and Kconfig
+- remove [4/4], that should be another patch in future
+
+V4->V5 changes:
+- update description in the dt binding document, to make it more resonable
+- add new patch [4/4] to eliminate a compiling warning which already exists
+  for a long time
+
+V3->V4 changes:
+- introduce new patch [1/3] to revise the legacy dma binding document
+- and then add new paragraph to describe new dt node binding in [2/3]
+- rebase to latest kernel v3.11-rc1
+
+V2->V3 changes:
+- edit Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+- edit text string in Kconfig and the driver files, using "elo series" to
+  mention all the current "elo*"
+
+V1->V2 changes:
+- removed the codes handling the register dgsr1, since it isn't used currently
+- renamed the DMA DT compatible to "fsl,elo3-dma"
+- renamed the new dts files to "elo3-dma-<n>.dtsi"
+
+Hongbo Zhang (3):
+  DMA: Freescale: revise device tree binding document
+  DMA: Freescale: Add new 8-channel DMA engine device tree nodes
+  DMA: Freescale: update driver to support 8-channel DMA engine
+
+ .../devicetree/bindings/powerpc/fsl/dma.txt        |  137 ++++++++++++++------
+ arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
+ arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   82 ++++++++++++
+ arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   82 ++++++++++++
+ arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
+ drivers/dma/Kconfig                                |    9 +-
+ drivers/dma/fsldma.c                               |    9 +-
+ drivers/dma/fsldma.h                               |    2 +-
+ 8 files changed, 280 insertions(+), 49 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
+
 -- 
 1.7.9.5
+
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
