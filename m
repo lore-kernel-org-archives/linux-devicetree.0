@@ -1,39 +1,21 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 20/28] arm64: set initrd_start/initrd_end for fdt scan
-Date: Tue, 17 Sep 2013 22:36:51 -0500
-Message-ID: <20130918033651.3FA9AC42CA8@trevor.secretlab.ca>
-References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
- <1379372965-22359-21-git-send-email-robherring2@gmail.com>
- <8639E68F-4CCB-4E34-82BF-18EDA98BB978@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8639E68F-4CCB-4E34-82BF-18EDA98BB978@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robherring2@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Subject: Re: [PATCH 21/28] of: remove early_init_dt_setup_initrd_arch
+Date: Tue, 17 Sep 2013 22:39:00 -0500
+Message-ID: <20130918033900.D66BCC42CAF@trevor.secretlab.ca>
+References: <1379372965-22359-1-git-send-email-robherring2@gmail.com> <1379372965-22359-22-git-send-email-robherring2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1379372965-22359-22-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@arm.linux.org.uk>, Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, James Hogan <james.hogan@imgtec.com>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Jonas Bonn <jonas@southpole.se>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Sep 2013 09:50:04 +0100, Catalin Marinas <catalin.marinas@arm.com> wrote:
-> On 17 Sep 2013, at 00:09, Rob Herring <robherring2@gmail.com> wrote:
-> > From: Rob Herring <rob.herring@calxeda.com>
-> > 
-> > In order to unify the initrd scanning for DT across architectures, make
-> > arm64 use initrd_start and initrd_end instead of the physical addresses.
-> > 
-> > Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Cc: linux-arm-kernel@lists.infradead.org
+On Mon, 16 Sep 2013 18:09:17 -0500, Rob Herring <robherring2@gmail.com> wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
 > 
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> All arches do essentially the same thing now for
+> early_init_dt_setup_initrd_arch, so it can now be removed.
+> 
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+
 Acked-by: Grant Likely <grant.likely@linaro.org>
