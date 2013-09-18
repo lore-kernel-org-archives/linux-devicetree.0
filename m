@@ -1,38 +1,65 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 23/28] of: introduce common FDT machine related functions
-Date: Tue, 17 Sep 2013 22:44:25 -0500
-Message-ID: <20130918034425.357F4C42CF1@trevor.secretlab.ca>
-References: <1379372965-22359-1-git-send-email-robherring2@gmail.com> <1379372965-22359-24-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379372965-22359-24-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 18/28] of: create default early_init_dt_add_memory_arch
+Date: Tue, 17 Sep 2013 22:33:58 -0500
+Message-ID: <20130918033358.51CA1C42C9E@trevor.secretlab.ca>
+References: <1379372965-22359-1-git-send-email-robherring2@gmail.com> <1379372965-22359-19-git-send-email-robherring2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1379372965-22359-19-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Hogan <james.hogan@imgtec.com>, Michal Simek <monstr@monstr.eu>, Jonas Bonn <jonas@southpole.se>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, linux-arm-kernel@lists.infradead.org, microblaze-uclinux@itee.uq.edu.au, linux@lists.openrisc.net
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Sep 2013 18:09:19 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On Mon, 16 Sep 2013 18:09:14 -0500, Rob Herring <robherring2@gmail.com> wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
 > 
-> Introduce common of_flat_dt_match_machine and
-> of_flat_dt_get_machine_name functions to unify architectures' handling
-> of machine level model and compatible properties.
-> 
-> Several architectures match the root compatible string with an arch
-> specific list of machine descriptors duplicating the same search
-> algorithm. Create a common implementation with a simple architecture
-> specific hook to iterate over each machine's match table.
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Create a weak version of early_init_dt_add_memory_arch which uses
+> memblock or is an empty function when memblock is not enabled. This
+> will unify all architectures except ones with custom memory bank
+> structs.
 
-Nice!
+Two comments below, but otherwise:
 
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Grant Likely <grant.likely@linaro.org>
 
-Thanks for doing this whole series. It's some really good improvements.
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 0714dd4..a9dce7a 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -688,6 +688,17 @@ u64 __init dt_mem_next_cell(int s, __be32 **cellp)
+>  	return of_read_number(p, s);
+>  }
+>  
+> +void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+> +{
+> +#ifdef CONFIG_HAVE_MEMBLOCK
+> +	base &= PAGE_MASK;
+> +	size &= PAGE_MASK;
+> +	memblock_add(base, size);
+> +#else
+> +	pr_err("%s: ignoring memory (%llx, %llx)\n", __func__, base, size);
+> +#endif
+> +}
+> +
+
+Can you do it this way instead:
+
+#ifdef CONFIG_HAVE_MEMBLOCK
+void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+{
+	base &= PAGE_MASK;
+	size &= PAGE_MASK;
+	memblock_add(base, size);
+}
+#endif
+
+If the platform doesn't provide an early_init_dt_add_memory_arch()
+function and it doesn't have a memblock implementation, then the build
+should outright fail. I don't see a scenario where we would want to
+successfully build the kernel without a working add memory function.
+
+Also, can you group this function with the common __weak
+early_init_dt_alloc_memory_arch() implementation? It would be good to
+group all the memblock specific functions together.
 
 g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
