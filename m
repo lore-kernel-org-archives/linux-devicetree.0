@@ -1,76 +1,61 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2] ARM: dts: DRA7: provide arch-timer frequenecy parameter
-Date: Wed, 18 Sep 2013 08:02:32 -0500
-Message-ID: <5239A468.2070105@ti.com>
-References: <5238899D.60903@ti.com> <1379437288-10831-1-git-send-email-nm@ti.com> <52398F87.6090108@ti.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: STi: Supply I2C configuration to STiH416 SoC
+Date: Wed, 18 Sep 2013 13:57:06 +0100
+Message-ID: <5239A322.5010004@st.com>
+References: <1379498483-4236-1-git-send-email-maxime.coquelin@st.com> <1379498483-4236-3-git-send-email-maxime.coquelin@st.com> <20130918120340.GF16984@lee--X1> <84625B87D65BCF478CC1E9C886A4C314DEF1BD9578@SAFEX1MAIL4.st.com>
+Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52398F87.6090108-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
-Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <84625B87D65BCF478CC1E9C886A4C314DEF1BD9578-+EwDPpWUVoSs+H57zxxw29BPR1lH4CV8@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen GALLIMORE <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, Stuart MENEFY <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Olivier CLERGEAUD <olivier.clergeaud-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/18/2013 06:33 AM, Sricharan R wrote:
-> Hi,
+On 18/09/13 13:46, Maxime COQUELIN wrote:
+> On 09/18/2013 02:03 PM, Lee Jones wrote:
+>>> >> This patch supplies I2C configuration to STiH416 SoC.
+>>> >>
+>>> >> Cc: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+>>> >> Signed-off-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+>>> >> ---
+>>> >>  arch/arm/boot/dts/stih416-pinctrl.dtsi |   35 ++++++++++++++++++++
+>>> >>  arch/arm/boot/dts/stih416.dtsi         |   57 ++++++++++++++++++++++++++++++++
+>>> >>  2 files changed, 92 insertions(+)
+>>> >>
+>>> >> diff --git a/arch/arm/boot/dts/stih416-pinctrl.dtsi b/arch/arm/boot/dts/stih416-pinctrl.dtsi
+>> > I genuinely don't know the answer to this question, but are these
+>> > nodes identical to the ones you've just put in the stih415 DTSI file?
+>> > If so, I think it will be worth creating a stih41x DTSI rather than
+>> > duplicating lots of stuff unnecessarily.
+> There are close to be identical indeed.
+> For the clocks and pinctrl, the references names are the same, but they are
+> pointing on different nodes, as STiH415 and STiH416 have their own
+> clocks and pinctrl dtsi files.
 > 
-> On Tuesday 17 September 2013 10:31 PM, Nishanth Menon wrote:
->> CNTFREQ isn't pre-programmed on DRA7 just like O5, so provide the
->> timer frequency via DT. Without a valid value arch_timer_init results
->> in div0 crash.
->>
->> Cc: R Sricharan <r.sricharan-l0cyMroinI0@public.gmane.org>
->> Cc: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
->> Cc: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
->>
->> Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
->> ---
->>
->> Based on Benoit's for_3.13/dts branch. 
->> http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
->>
->> Crash log: http://pastebin.com/B2sDauS9
->>
->> V2: commit message update
->> V1: https://patchwork.kernel.org/patch/2903261/
->>
->>  arch/arm/boot/dts/dra7.dtsi |    1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index c98997b..71c2749 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->> +++ b/arch/arm/boot/dts/dra7.dtsi
->> @@ -50,6 +50,7 @@
->>  			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
->>  			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
->>  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
->> +		clock-frequency = <6144000>;
->>  	};
->>  
->>  	gic: interrupt-controller@48211000 {
-> This is not the right way to pass the frequency. In fact, initially the frequency value was present
-> when the dts was added, but had to revert it back based on the feedbacks. Please refer below.
->   
-> 
-> http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg93832.html
-> 
-> 
-> Also posted the below patch to fix this,
-> 
->     http://marc.info/?l=linux-omap&m=137950345528918&w=2
+> Srini, what is opinion about this?
 
-Thanks for a better alternative. at least my boot tests indicate that
-the patch works fine.
+There is already a stih41x.dtsi file, but I don't think it is the right
+place for the pinctrl nodes there.
+
+Am not OK with the idea of common pinctrl nodes for STiH415 and STiH416
+for two reasons.
+
+1> If we common up the pinctrl nodes, it will be very difficult to
+accommodate new pinctrls layout which is not guaranteed to be in same
+layout in future SOCs.
+
+2> The retiming values in the pinctrl nodes tend to change as per SOC,
+so it will be difficult to manage it if we common it up.
+
+Am sure we can come up with a dt layout which can reduce duplication,
+but we have to be careful here not to lose the flexiblity to accommodate
+new picntrl layouts, new retimings values based on SOC.
 
 
--- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks,
+srini
+
+>> >
