@@ -1,118 +1,105 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V4] regulator: core: add support for configuring turn-on time through constraints
-Date: Wed, 18 Sep 2013 18:18:02 +0530
-Message-ID: <1379508482-10550-1-git-send-email-ldewangan@nvidia.com>
+From: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: STi: Add I2C config to B2000 and B2020 boards
+Date: Wed, 18 Sep 2013 14:36:18 +0200
+Message-ID: <84625B87D65BCF478CC1E9C886A4C314DEF1BD9576@SAFEX1MAIL4.st.com>
+References: <1379498483-4236-1-git-send-email-maxime.coquelin@st.com>
+ <1379498483-4236-5-git-send-email-maxime.coquelin@st.com>
+ <20130918114032.GD16984@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: swarren@nvidia.com, rob.herring@calxeda.com, mark.rutland@arm.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen GALLIMORE <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, Stuart MENEFY <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Olivier CLERGEAUD <olivier.clergeaud-lpHj6iFQ3dU@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The turn-on time of the regulator depends on the regulator device's
-electrical characteristics. Sometimes regulator turn-on time also
-depends on the capacitive load on the given platform and it can be
-more than the datasheet value.
+Hi Lee,
 
-The driver provides the enable-time as per datasheet.
-
-Add support for configure the enable ramp time through regulator
-constraints so that regulator core can take this value for enable
-time for that regulator.
-
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
-Changes from V1: 
-- Change property name to regulator-enable-ramp-delay and add more details
-  in DT doc.
-- add the valid pointer check for constraints before accessing it.
-
-Changes from V2: 
-- Rephrase the descripton of property regulator-enable-ramp-delay.
-Changes from V3: 
-- Use the description provided by Stephen to describe
-  regulator-enable-ramp-delay.
-
- .../devicetree/bindings/regulator/regulator.txt    |    5 +++++
- drivers/regulator/core.c                           |    2 ++
- drivers/regulator/of_regulator.c                   |    6 ++++++
- include/linux/regulator/machine.h                  |    2 ++
- 4 files changed, 15 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 2bd8f09..e2c7f1e 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -14,6 +14,11 @@ Optional properties:
- - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
-   For hardwares which support disabling ramp rate, it should be explicitly
-   intialised to zero (regulator-ramp-delay = <0>) for disabling ramp delay.
-+- regulator-enable-ramp-delay: The time taken, in microseconds, for the supply
-+  rail to reach the target voltage, plus/minus whatever tolerance the board
-+  design requires. This property describes the total system ramp time
-+  required due to the combination of internal ramping of the regulator itself,
-+  and board design issues such as trace capacitance and load on the supply.
- 
- Deprecated properties:
- - regulator-compatible: If a regulator chip contains multiple
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index b698e2b..4eefcc3 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1167,6 +1167,8 @@ overflow_err:
- 
- static int _regulator_get_enable_time(struct regulator_dev *rdev)
- {
-+	if (rdev->constraints && rdev->constraints->enable_time)
-+		return rdev->constraints->enable_time;
- 	if (!rdev->desc->ops->enable_time)
- 		return rdev->desc->enable_time;
- 	return rdev->desc->ops->enable_time(rdev);
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 7827384..ea4f36f 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -23,6 +23,8 @@ static void of_get_regulation_constraints(struct device_node *np,
- 	const __be32 *min_uA, *max_uA, *ramp_delay;
- 	struct property *prop;
- 	struct regulation_constraints *constraints = &(*init_data)->constraints;
-+	int ret;
-+	u32 pval;
- 
- 	constraints->name = of_get_property(np, "regulator-name", NULL);
- 
-@@ -73,6 +75,10 @@ static void of_get_regulation_constraints(struct device_node *np,
- 		else
- 			constraints->ramp_disable = true;
- 	}
-+
-+	ret = of_property_read_u32(np, "regulator-enable-ramp-delay", &pval);
-+	if (!ret)
-+		constraints->enable_time = pval;
- }
- 
- /**
-diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
-index a9f7c55..730e638 100644
---- a/include/linux/regulator/machine.h
-+++ b/include/linux/regulator/machine.h
-@@ -95,6 +95,7 @@ struct regulator_state {
-  * @initial_state: Suspend state to set by default.
-  * @initial_mode: Mode to set at startup.
-  * @ramp_delay: Time to settle down after voltage change (unit: uV/us)
-+ * @enable_time: Turn-on time of the rails (unit: microseconds)
-  */
- struct regulation_constraints {
- 
-@@ -129,6 +130,7 @@ struct regulation_constraints {
- 	unsigned int initial_mode;
- 
- 	unsigned int ramp_delay;
-+	unsigned int enable_time;
- 
- 	/* constraint flags */
- 	unsigned always_on:1;	/* regulator never off when system is on */
--- 
-1.7.1.1
-
+On 09/18/2013 01:40 PM, Lee Jones wrote:
+> On Wed, 18 Sep 2013, Maxime COQUELIN wrote:
+>
+>> This patch supplies I2C configuration to B2000 and B2020
+>> based on either STiH415 or STiH416 SoCs.
+>>
+>> Cc: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+>> Signed-off-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/stih41x-b2000.dtsi |    7 +++++++
+>>  arch/arm/boot/dts/stih41x-b2020.dtsi |   20 ++++++++++++++++++++
+>>  2 files changed, 27 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/stih41x-b2000.dtsi b/arch/arm/boot/dts/stih41x-b2000.dtsi
+>> index 8e694d2..346cc4bc 100644
+>> --- a/arch/arm/boot/dts/stih41x-b2000.dtsi
+>> +++ b/arch/arm/boot/dts/stih41x-b2000.dtsi
+>> @@ -37,5 +37,12 @@
+>>  			};
+>>  		};
+>>  
+>> +		/* HDMI Tx I2C */
+>> +		i2c1: i2c@fed41000{
+> nit: Space before the '{'
+Ok. It will be fixed for all nodes in next series.
+>
+>> +			status = "okay";
+> Consider enabling the node at the bottom.
+>
+>> +
+>> +			/* HDMI V1.3a supports Standard mode only */
+>> +			clock-frequency = <100000>;
+>> +		};
+>>  	};
+>>  };
+>> diff --git a/arch/arm/boot/dts/stih41x-b2020.dtsi b/arch/arm/boot/dts/stih41x-b2020.dtsi
+>> index 133e181..10b98da 100644
+>> --- a/arch/arm/boot/dts/stih41x-b2020.dtsi
+>> +++ b/arch/arm/boot/dts/stih41x-b2020.dtsi
+>> @@ -38,5 +38,25 @@
+>>  				default-state = "off";
+>>  			};
+>>  		};
+>> +
+>> +		i2c0: i2c@fed40000{
+> As above.
+>
+>> +			status = "okay";
+>> +		};
+>> +
+>> +		/* HDMI Tx I2C */
+>> +		i2c1: i2c@fed41000{
+> As above.
+>
+>> +			status = "okay";
+> As above.
+>
+>> +			/* HDMI V1.3a supports Standard mode only */
+>> +			clock-frequency = <100000>;
+>> +		};
+>> +
+>> +		sbc_i2c0: i2c@fe540000{
+> As above.
+>
+>> +			status = "okay";
+>> +		};
+>> +
+>> +		sbc_i2c1: i2c@fe541000{
+> Are these nodes referenced by phandle at all?
+>
+> If not, consider dropping the <lable>:s
+It was references in an previous internal version of this series.
+This is no more the case, so I will drop the labels.
+>
+>> +			status = "okay";
+>> +		};
+>>  	};
+>>  };
+> Odd tabbing here.
+>
+Thanks,
+Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
