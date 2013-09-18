@@ -1,62 +1,205 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm: zynq: Enable arm_global_timer
-Date: Wed, 18 Sep 2013 10:05:18 -0700
-Message-ID: <9c796de2-4f19-4104-ae69-60f963a65d03@CH1EHSMHS028.ehs.local>
-References: <1379004640-15117-1-git-send-email-soren.brinkmann@xilinx.com>
- <1379004640-15117-3-git-send-email-soren.brinkmann@xilinx.com>
- <20130915124036.A66A8C42C3C@trevor.secretlab.ca>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 06/16] hwmon: tmp102: expose to thermal fw via DT nodes
+Date: Wed, 18 Sep 2013 10:08:19 -0700
+Message-ID: <20130918170819.GA26398@roeck-us.net>
+References: <1379282563-14650-1-git-send-email-eduardo.valentin@ti.com>
+ <1379282563-14650-7-git-send-email-eduardo.valentin@ti.com>
+ <523643D4.30208@roeck-us.net>
+ <5238D7D9.9010203@ti.com>
+ <20130918111849.GA9148@roeck-us.net>
+ <5239B8B5.6050702@ti.com>
+ <20130918151746.GA17065@roeck-us.net>
+ <5239CCAA.7030505@ti.com>
+ <20130918155732.GA17160@roeck-us.net>
+ <5239D383.50009@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130915124036.A66A8C42C3C-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <5239D383.50009-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 15, 2013 at 01:40:36PM +0100, Grant Likely wrote:
-> On Thu, 12 Sep 2013 09:50:40 -0700, Soren Brinkmann <soren.brinkmann@=
-xilinx.com> wrote:
-> > Zynq is based on an ARM Cortex-A9 MPCore, which features the
-> > arm_global_timer in its SCU. Therefore enable the timer for Zynq.
-> >=20
-> > Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/zynq-7000.dtsi | 8 ++++++++
-> >  arch/arm/mach-zynq/Kconfig       | 1 +
-> >  2 files changed, 9 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/z=
-ynq-7000.dtsi
-> > index e32b92b..eaacb39 100644
-> > --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> > +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> > @@ -92,6 +92,14 @@
-> >  			};
-> >  		};
-> > =20
-> > +		global_timer: global_timer@f8f00200 {
->=20
-> Nit: node names and property names use '-' not '_'. Plus the generic
-> names principle suggests the node should be names 'timer' not
-> 'global_timer'. The following would be fine:
-That is really good to know. When I wrote this line, I read through a
-couple of other dtses and was unable to identify a consistent system
-behind node/label names.
+On Wed, Sep 18, 2013 at 12:23:31PM -0400, Eduardo Valentin wrote:
+> On 18-09-2013 11:57, Guenter Roeck wrote:
+> > On Wed, Sep 18, 2013 at 11:54:18AM -0400, Eduardo Valentin wrote:
+> >> On 18-09-2013 11:17, Guenter Roeck wrote:
+> >>> On Wed, Sep 18, 2013 at 10:29:09AM -0400, Eduardo Valentin wrote:
+> >>>> On 18-09-2013 07:18, Guenter Roeck wrote:
+> >>>>> On Tue, Sep 17, 2013 at 06:29:45PM -0400, Eduardo Valentin wrote:
+> >>>>>> On 15-09-2013 19:33, Guenter Roeck wrote:
+> >>>>>>> On 09/15/2013 03:02 PM, Eduardo Valentin wrote:
+> >>>>>>>> This patch adds to tmp102 temperature sensor the possibility to
+> >>>>>>>> expose itself as thermal zone device, registered on the thermal
+> >>>>>>>> framework.
+> >>>>>>>>
+> >>>>>>>> The thermal zone is built only if a device tree node describing
+> >>>>>>>> a thermal zone for this sensor is present inside the tmp102 DT
+> >>>>>>>> node. Otherwise, the driver behavior will be the same.
+> >>>>>>>>
+> >>>>>>>> Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org> Cc: Guenter Roeck
+> >>>>>>>> <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org Cc:
+> >>>>>>>> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org Signed-off-by: Eduardo Valentin
+> >>>>>>>> <eduardo.valentin-l0cyMroinI0@public.gmane.org> --- drivers/hwmon/tmp102.c | 28
+> >>>>>>>> ++++++++++++++++++++++++++++ 1 file changed, 28 insertions(+)
+> >>>>>>>>
+> >>>>>>>> diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c 
+> >>>>>>>> index d7b47ab..e432444 100644 --- a/drivers/hwmon/tmp102.c +++
+> >>>>>>>> b/drivers/hwmon/tmp102.c @@ -27,6 +27,8 @@ #include
+> >>>>>>>> <linux/mutex.h> #include <linux/device.h> #include
+> >>>>>>>> <linux/jiffies.h> +#include <linux/thermal.h> +#include
+> >>>>>>>> <linux/of.h>
+> >>>>>>>>
+> >>>>>>>> #define    DRIVER_NAME "tmp102"
+> >>>>>>>>
+> >>>>>>>> @@ -50,6 +52,7 @@
+> >>>>>>>>
+> >>>>>>>> struct tmp102 { struct device *hwmon_dev; +    struct
+> >>>>>>>> thermal_zone_device *tz; struct mutex lock; u16 config_orig; 
+> >>>>>>>> unsigned long last_update; @@ -93,6 +96,19 @@ static struct
+> >>>>>>>> tmp102 *tmp102_update_device(struct i2c_client *client) return
+> >>>>>>>> tmp102; }
+> >>>>>>>>
+> >>>>>>>> +static int tmp102_read_temp(void *dev, long *temp) +{ +
+> >>>>>>>> struct tmp102 *tmp102 =
+> >>>>>>>> tmp102_update_device(to_i2c_client(dev)); + +    if
+> >>>>>>>> (tmp102->temp[0] < 0) +        dev_warn(tmp102->hwmon_dev, +
+> >>>>>>>> "operating in negative temp: %d\n", tmp102->temp[0]); +
+> >>>>>>>
+> >>>>>>> Please drop this warning.
+> >>>>>>>
+> >>>>>>
+> >>>>>> Done for both drivers.
+> >>>>>>
+> >>>>>>> Guenter
+> >>>>>>>
+> >>>>>>>> +    *temp = tmp102->temp[0]; + +    return 0; +} + static
+> >>>>>>>> ssize_t tmp102_show_temp(struct device *dev, struct
+> >>>>>>>> device_attribute *attr, char *buf) @@ -204,6 +220,16 @@ static
+> >>>>>>>> int tmp102_probe(struct i2c_client *client, goto
+> >>>>>>>> fail_remove_sysfs; }
+> >>>>>>>>
+> >>>>>>>> +    tmp102->tz = thermal_zone_of_sensor_register(&client->dev,
+> >>>>>>>> 0, +                             &client->dev, +
+> >>>>>>>> tmp102_read_temp, NULL); +    if (IS_ERR(tmp102->tz)) { +
+> >>>>>>>> dev_warn(&client->dev, +             "Could not parse thermal
+> >>>>>>>> data in device tree: %ld\n", +
+> >>>>>>>> PTR_ERR(tmp102->tz));
+> >>>>>>>
+> >>>>>>> Please drop this warning. You already create error messages in 
+> >>>>>>> thermal_zone_of_sensor_register(). That should be sufficient. The
+> >>>>>>> same applies to the lm75 patch.
+> >>>>>>
+> >>>>>> OK. Done for both.
+> >>>>>>
+> >>>>>>>
+> >>>>>>> As a side note, I would suggest to provide devm_ functions for 
+> >>>>>>> registration. We are introducing those for hwmon registration,
+> >>>>>>> which enables us to remove most _remove functions. It would be
+> >>>>>>> great if we can keep it that way.
+> >>>>>>>
+> >>>>>>
+> >>>>>> Right. This side note is taken. Actually this is on my todo list
+> >>>>>> for quite a while. But I believe this should not block this series,
+> >>>>>> should it? I will be probably cleaning the thermal framework code
+> >>>>>> after this current work is accepted at least.
+> >>>>>>
+> >>>>>>> On a higher level, I don't think it is a good idea to make
+> >>>>>>> thermal zones and thermal zone data mandatory. Many systems may
+> >>>>>>> neither need nor want it.
+> >>>>>>>
+> >>>>>>
+> >>>>>> Well, I agree with you. Did you see something hard required in the
+> >>>>>> patch I sent. I made it so that it could continue the driver probe
+> >>>>>> without thermal zones, as you requested.
+> >>>>>>
+> >>>>> If it is not mandatory you should not dump an error message to the
+> >>>>> console in the thermal registration function. Since you do, you at
+> >>>>> least consider it mandatory if that function is called.
+> >>>>>
+> >>>>> So please either drop the error message from the registration
+> >>>>> function or add a check into the drivers to only register into the
+> >>>>> thermal subsystem if there is a respective thermal entry for that
+> >>>>> sensor in the devicetree data.
+> >>>>>
+> >>>>> There are systes out there with literally dozens of temperature
+> >>>>> sensors. In many cases, those are purely for system health
+> >>>>> monitoring, not for thermal management. I don't want to end up in a
+> >>>>> situation where users complain about dozens of error messages on the
+> >>>>> console and no way to avoid it but providing dummy thermal subsystem
+> >>>>> data.
+> >>>>>
+> >>>>
+> >>>> Now I see.
+> >>>>
+> >>>>
+> >>>> Then I will rollback to the previous version in which lm sensors were
+> >>>> first probing for thermal properties within their dt node. Something like:
+> >>>> diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
+> >>>> index dc96598..cb1c663 100644
+> >>>> --- a/drivers/hwmon/tmp102.c
+> >>>> +++ b/drivers/hwmon/tmp102.c
+> >>>> @@ -216,11 +216,13 @@ static int tmp102_probe(struct i2c_client *client,
+> >>>>                 goto fail_remove_sysfs;
+> >>>>         }
+> >>>>
+> >>>> -       tmp102->tz = thermal_zone_of_sensor_register(&client->dev, 0,
+> >>>> -                                                    &client->dev,
+> >>>> -                                                    tmp102_read_temp,
+> >>>> NULL);
+> >>>> -       if (IS_ERR(tmp102->tz))
+> >>>> -               tmp102->tz = NULL;
+> >>>> +       if ((of_find_property(client->dev.of_node, "#sensor-cells", NULL)) {
+> >>>> +               tmp102->tz =
+> >>>> thermal_zone_of_sensor_register(&client->dev, 0,
+> >>>> +                                                            &client->dev,
+> >>>> +
+> >>>> tmp102_read_temp, NULL);
+> >>>> +               if (IS_ERR(tmp102->tz))
+> >>>> +                       tmp102->tz = NULL;
+> >>>> +       }
+> >>>>
+> >>>>         dev_info(&client->dev, "initialized\n");
+> >>>>
+> >>>>
+> >>>> Does it sound reasonable?
+> >>>>
+> >>> Personally I would prefer if the registration code fails silently.
+> >>> Pushing the above code into each driver is just adding the same code
+> >>> repeatedly all over the place.
+> >>
+> >> Fair enough. It becomes tedious and just duplicating code. I agree.
+> >>
+> >> So I will keep the v2 I just sent and remove the annoying error messages
+> >> from of-thermal.c while registering the sensors.
+> >>
+> >>>
+> >>> Also, each sensor instance will still result in an error if there
+> >>> is no global "thermal-zones" entry. Checking for that global entry
+> >>> in each driver would be even more excessive, and I just don't like
+> >>> that noisyness.
+> >>>
+> >>> Also, I think you'll need to create devicetree bindings documents
+> >>> for the two sensors.
+> >>>
+> >>
+> >> Why would I? There is only one extra property and that is already
+> >> documented. I think the sensor still falls into the dummy dt node.
+> >>
+> > I'll leave that up to the devicetree folks to decide.
+> 
+> OK. Fair enough. Let s see what they have to say. Mark, Pawel, Stephen?
+> 
+> Guenter, any other objections a part from those I already fixed?
+> 
+Not in the drivers, except that I am quite sure that the unregister call
+will cause a NULL pointer access if the passed thermal zone is NULL.
+I'll comment on that separetely in the related patch.
 
->=20
-> 		global_timer: timer@f8f00200 {
-All right, I'll change it to this.
-
-=09
-	Thanks,
-	S=C3=B6ren
-
-
+Guenter
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
