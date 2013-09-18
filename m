@@ -1,110 +1,55 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 07/10] of/irq: Propagate errors in of_irq_to_resource_table()
-Date: Wed, 18 Sep 2013 15:24:49 +0200
-Message-ID: <1379510692-32435-8-git-send-email-treding@nvidia.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH v2 01/10] of/irq: Rework of_irq_count()
+Date: Wed, 18 Sep 2013 15:24:43 +0200
+Message-ID: <1379510692-32435-2-git-send-email-treding@nvidia.com>
 References: <1379510692-32435-1-git-send-email-treding@nvidia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379510692-32435-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1379510692-32435-1-git-send-email-treding@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-mips@linux-mips.org, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Now that all helpers return precise error codes, this function can
-propagate these errors to the caller properly.
+The of_irq_to_resource() helper that is used to implement of_irq_count()
+tries to resolve interrupts and in fact creates a mapping for resolved
+interrupts. That's pretty heavy lifting for something that claims to
+just return the number of interrupts requested by a given device node.
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Instead, use the more lightweight of_irq_map_one(), which, despite the
+name, doesn't create an actual mapping. Perhaps a better name would be
+of_irq_translate_one().
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
-Changes in v2:
-- return 0 on success or a negative error code on failure
-- convert callers to new calling convention
+ drivers/of/irq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- arch/mips/lantiq/irq.c       |  2 +-
- arch/mips/lantiq/xway/gptu.c |  6 ++++--
- drivers/of/irq.c             | 14 ++++++++------
- drivers/tty/serial/lantiq.c  |  2 +-
- 4 files changed, 14 insertions(+), 10 deletions(-)
-
-diff --git a/arch/mips/lantiq/irq.c b/arch/mips/lantiq/irq.c
-index eb3e186..5bb7ee6 100644
---- a/arch/mips/lantiq/irq.c
-+++ b/arch/mips/lantiq/irq.c
-@@ -389,7 +389,7 @@ int __init icu_of_init(struct device_node *node, struct device_node *parent)
- 
- 		ret = of_irq_to_resource_table(eiu_node,
- 						ltq_eiu_irq, exin_avail);
--		if (ret != exin_avail)
-+		if (ret < 0)
- 			panic("failed to load external irq resources\n");
- 
- 		if (request_mem_region(res.start, resource_size(&res),
-diff --git a/arch/mips/lantiq/xway/gptu.c b/arch/mips/lantiq/xway/gptu.c
-index 850821d..0c4b134 100644
---- a/arch/mips/lantiq/xway/gptu.c
-+++ b/arch/mips/lantiq/xway/gptu.c
-@@ -137,10 +137,12 @@ static int gptu_probe(struct platform_device *pdev)
- {
- 	struct clk *clk;
- 	struct resource *res;
-+	int ret;
- 
--	if (of_irq_to_resource_table(pdev->dev.of_node, irqres, 6) != 6) {
-+	ret = of_irq_to_resource_table(pdev->dev.of_node, irqres, 6);
-+	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to get IRQ list\n");
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index e4f38c0..6d7f824 100644
+index 1752988..5f44388 100644
 --- a/drivers/of/irq.c
 +++ b/drivers/of/irq.c
-@@ -397,18 +397,20 @@ int of_irq_count(struct device_node *dev)
-  * @res: array of resources to fill in
-  * @nr_irqs: the number of IRQs (and upper bound for num of @res elements)
-  *
-- * Returns the size of the filled in table (up to @nr_irqs).
-+ * Returns 0 on success or a negative error code on failure.
+@@ -368,9 +368,10 @@ EXPORT_SYMBOL_GPL(of_irq_to_resource);
   */
- int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
- 		int nr_irqs)
+ int of_irq_count(struct device_node *dev)
  {
--	int i;
-+	int i, ret;
++	struct of_irq irq;
+ 	int nr = 0;
  
--	for (i = 0; i < nr_irqs; i++, res++)
--		if (!of_irq_to_resource(dev, i, res))
--			break;
-+	for (i = 0; i < nr_irqs; i++, res++) {
-+		ret = of_irq_to_resource(dev, i, res);
-+		if (ret < 0)
-+			return ret;
-+	}
+-	while (of_irq_to_resource(dev, nr, NULL))
++	while (of_irq_map_one(dev, nr, &irq) == 0)
+ 		nr++;
  
--	return i;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(of_irq_to_resource_table);
- 
-diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
-index 88d01e0..e59efdc 100644
---- a/drivers/tty/serial/lantiq.c
-+++ b/drivers/tty/serial/lantiq.c
-@@ -686,7 +686,7 @@ lqasc_probe(struct platform_device *pdev)
- 
- 	mmres = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	ret = of_irq_to_resource_table(node, irqres, 3);
--	if (!mmres || (ret != 3)) {
-+	if (!mmres || (ret < 0)) {
- 		dev_err(&pdev->dev,
- 			"failed to get memory/irq for serial port\n");
- 		return -ENODEV;
+ 	return nr;
 -- 
 1.8.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
