@@ -1,61 +1,83 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH] clk: si570: Add a driver for SI570 oscillators
-Date: Wed, 18 Sep 2013 13:41:01 -0700
-Message-ID: <3551eb15-319d-4304-b213-2b0d9672419b@AM1EHSMHS019.ehs.local>
-References: <1379033737-30015-1-git-send-email-soren.brinkmann@xilinx.com>
- <1379033737-30015-2-git-send-email-soren.brinkmann@xilinx.com>
- <52373314.5070806@wwwdotorg.org>
- <20130916164927.GB21352@roeck-us.net>
- <5237390E.5070203@wwwdotorg.org>
- <20130916173540.GA3481@roeck-us.net>
- <52374FF7.8040604@wwwdotorg.org>
- <52380BD5.8080105@gmail.com>
- <52387FC9.1080905@wwwdotorg.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [dtc RFC PATCH] Enforce node name unit-address presence/absence
+Date: Wed, 18 Sep 2013 13:41:16 -0700
+Message-ID: <CAOesGMg0Rrmew0iK-Gtrx_UiODhpro_S2xUxQi0gZ+7PJmBHnw@mail.gmail.com>
+References: <1379535836-12726-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52387FC9.1080905@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Hyun Kwon <hyunk@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379535836-12726-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2013 at 10:14:01AM -0600, Stephen Warren wrote:
-> On 09/17/2013 01:59 AM, Sebastian Hesselbarth wrote:
-> > On 09/16/2013 08:37 PM, Stephen Warren wrote:
-> ...
-> >> Perhaps if clock-frequency is specified, the driver should refuse =
-to
-> >> provide anything else. If clock-frequency isn't specified, the dri=
-ver
-> >> shouldn't touch the HW when it initializes, but should honor any
-> >> requests that come in from other drivers? That would maintain what=
- I
-> >> feel is clock-frequency's connection to being a fixed clock.
-> >=20
-> > For the clk-si5351 programmable clock driver in mainline, it alread=
-y
-> > uses "clock-frequency" for initial clock setup but allows to set it
-> > later on. IMHO that is ok, because from a initial point-of-view, an
-> > initial frequency is fixed. As soon as the driver takes over, the u=
-ser
-> > is free to do whatever he wants and should not be limited by DT.
-> >=20
-> > But if we vote against that approach, we should probably also modif=
-iy
-> > clk-si5351 accordingly.
->=20
-> I suppose that approach isn't unreasonable. So, if there's precedent =
-for
-> it, this driver may as well follow it.
+On Wed, Sep 18, 2013 at 1:23 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>
+> ePAPR 1.1 section 2.2.1.1 "Node Name Requirements" specifies that any
+> node that has a reg property must include a unit address in its name
+> with value matching the first entry in its reg property. Conversely, if
+> a node does not have a reg property, the node name must not include a
+> unit address.
+>
+> Implement a check for this. The code doesn't validate the format of the
+> unit address; ePAPR implies this may vary from binding to binding, so
+> I'm not sure that it's possible to validate the value itself.
+>
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> This depends on my previous patch "Ensure all tests have matching reg
+> and unit address".
+>
+> Note that this patch should not yet be applied; it will cause many real-
+> world *.dts files to fail to compile. Those need to be fixed first.
+> However, if/when that happens, this patch may be useful.
+> ---
+>  checks.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+>
+> diff --git a/checks.c b/checks.c
+> index ee96a25..c80a055 100644
+> --- a/checks.c
+> +++ b/checks.c
+> @@ -287,9 +287,25 @@ NODE_ERROR(node_name_chars, PROPNODECHARS "@");
+>  static void check_node_name_format(struct check *c, struct node *dt,
+>                                    struct node *node)
+>  {
+> -       if (strchr(get_unitname(node), '@'))
+> +       const char *unitname;
+> +       struct property *prop;
+> +
+> +       unitname = get_unitname(node);
+> +
+> +       if (strchr(unitname, '@'))
+>                 FAIL(c, "Node %s has multiple '@' characters in name",
+>                      node->fullpath);
+> +
+> +       prop = get_property(node, "reg");
+> +       if (prop) {
+> +               if (!unitname[0])
+> +                       FAIL(c, "Node %s has a reg property, but no unit name",
+> +                           node->fullpath);
+> +       } else {
+> +               if (unitname[0])
+> +                       FAIL(c, "Node %s has a unit name, but no reg property",
+> +                           node->fullpath);
 
-All right, this sounds the most flexible to me and requires the least
-changes as well :).
-I think all I have to change for v2 in regards of this, is to rename th=
-e
-property to 'clock-frequency'. I'll do that and send out v2 later today=
-=2E
+These checks are very useful, even though they might sort of cross
+over the domain to what a dtc linter would do instead of the compiler.
 
-	S=C3=B6ren
+Anyway, I think it'd be better to produce warnings than errors for
+this. That way we could also merge it now while the trees are fixed
+up.
+
+Also, maybe warn for @0x<foo>, which is another unpreferred syntax, it
+should just be @<foo> (with foo being in hex).
+
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
