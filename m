@@ -1,233 +1,134 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v2 08/10] of/platform: Resolve interrupt references at probe time
-Date: Wed, 18 Sep 2013 15:24:50 +0200
-Message-ID: <1379510692-32435-9-git-send-email-treding@nvidia.com>
+Subject: [PATCH v2 03/10] irqdomain: Introduce __irq_create_mapping()
+Date: Wed, 18 Sep 2013 15:24:45 +0200
+Message-ID: <1379510692-32435-4-git-send-email-treding@nvidia.com>
 References: <1379510692-32435-1-git-send-email-treding@nvidia.com>
-Return-path: <sparclinux-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1379510692-32435-1-git-send-email-treding@nvidia.com>
-Sender: sparclinux-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ralf Baechle <ralf@linux-mips.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Interrupt references are currently resolved very early (when a device is
-created). This has the disadvantage that it will fail in cases where the
-interrupt parent hasn't been probed and no IRQ domain for it has been
-registered yet. To work around that various drivers use explicit
-initcall ordering to force interrupt parents to be probed before devices
-that need them are created. That's error prone and doesn't always work.
-If a platform device uses an interrupt line connected to a different
-platform device (such as a GPIO controller), both will be created in the
-same batch, and the GPIO controller won't have been probed by its driver
-when the depending platform device is created. Interrupt resolution will
-fail in that case.
+This is a version of irq_create_mapping() that propagates the precise
+error code instead of returning 0 for all errors. It will be used in
+subsequent patches to allow further propagation of error codes.
 
-Another common workaround is for drivers to explicitly resolve interrupt
-references at probe time. This is suboptimal, however, because it will
-require every driver to duplicate the code.
-
-This patch adds support for late interrupt resolution to the platform
-driver core, by resolving the references right before a device driver's
-.probe() function will be called. This not only delays the resolution
-until a much later time (giving interrupt parents a better chance of
-being probed in the meantime), but it also allows the platform driver
-core to queue the device for deferred probing if the interrupt parent
-hasn't registered its IRQ domain yet.
+To avoid code duplication, implement irq_create_mapping() as a wrapper
+around the new __irq_create_mapping().
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
-Changes in v2:
-- split off IRQ parsing into separate function to make code flow simpler
-- add comments to point out some aspects of the implementation
-- make code idempotent (as pointed out by Grygorii Strashko
+ kernel/irq/irqdomain.c | 59 +++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 39 insertions(+), 20 deletions(-)
 
- drivers/base/platform.c     |   4 ++
- drivers/of/platform.c       | 107 +++++++++++++++++++++++++++++++++++++++++---
- include/linux/of_platform.h |   7 +++
- 3 files changed, 112 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 4f8bef3..8dcf835 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -481,6 +481,10 @@ static int platform_drv_probe(struct device *_dev)
- 	struct platform_device *dev = to_platform_device(_dev);
- 	int ret;
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 706724e..d2a3b01 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -374,30 +374,21 @@ unsigned int irq_create_direct_mapping(struct irq_domain *domain)
+ }
+ EXPORT_SYMBOL_GPL(irq_create_direct_mapping);
  
-+	ret = of_platform_probe(dev);
-+	if (ret)
-+		return ret;
-+
- 	if (ACPI_HANDLE(_dev))
- 		acpi_dev_pm_attach(_dev, true);
- 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 9b439ac..df6d56e 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -142,7 +142,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 				  struct device *parent)
+-/**
+- * irq_create_mapping() - Map a hardware interrupt into linux irq space
+- * @domain: domain owning this hardware interrupt or NULL for default domain
+- * @hwirq: hardware irq number in that domain space
+- *
+- * Only one mapping per hardware interrupt is permitted. Returns a linux
+- * irq number.
+- * If the sense/trigger is to be specified, set_irq_type() should be called
+- * on the number returned from that call.
+- */
+-unsigned int irq_create_mapping(struct irq_domain *domain,
+-				irq_hw_number_t hwirq)
++static int __irq_create_mapping(struct irq_domain *domain,
++				irq_hw_number_t hwirq, unsigned int *virqp)
  {
- 	struct platform_device *dev;
--	int rc, i, num_reg = 0, num_irq;
-+	int rc, i, num_reg = 0;
- 	struct resource *res, temp_res;
+-	unsigned int hint;
+-	int virq;
++	unsigned int hint, virq;
++	int ret;
  
- 	dev = platform_device_alloc("", -1);
-@@ -153,23 +153,21 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 	if (of_can_translate_address(np))
- 		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
- 			num_reg++;
--	num_irq = of_irq_count(np);
+-	pr_debug("irq_create_mapping(0x%p, 0x%lx)\n", domain, hwirq);
++	pr_debug("__irq_create_mapping(0x%p, 0x%lx, %p)\n", domain, hwirq,
++		 virqp);
  
- 	/* Populate the resource table */
--	if (num_irq || num_reg) {
--		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
-+	if (num_reg) {
-+		res = kzalloc(sizeof(*res) * num_reg, GFP_KERNEL);
- 		if (!res) {
- 			platform_device_put(dev);
- 			return NULL;
- 		}
+ 	/* Look for default domain if nececssary */
+ 	if (domain == NULL)
+ 		domain = irq_default_domain;
+ 	if (domain == NULL) {
+ 		WARN(1, "%s(, %lx) called with NULL domain\n", __func__, hwirq);
+-		return 0;
++		return -ENODEV;
+ 	}
+ 	pr_debug("-> using domain @%p\n", domain);
  
--		dev->num_resources = num_reg + num_irq;
-+		dev->num_resources = num_reg;
- 		dev->resource = res;
- 		for (i = 0; i < num_reg; i++, res++) {
- 			rc = of_address_to_resource(np, i, res);
- 			WARN_ON(rc);
- 		}
--		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+@@ -405,7 +396,11 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
+ 	virq = irq_find_mapping(domain, hwirq);
+ 	if (virq) {
+ 		pr_debug("-> existing mapping on virq %d\n", virq);
+-		return virq;
++
++		if (virqp)
++			*virqp = virq;
++
++		return 0;
  	}
  
- 	dev->dev.of_node = of_node_get(np);
-@@ -490,4 +488,101 @@ int of_platform_populate(struct device_node *root,
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(of_platform_populate);
-+
-+/**
-+ * of_platform_parse_irq() - parse interrupt resource from device node
-+ * @pdev: pointer to platform device
-+ *
-+ * Returns 0 on success or a negative error code on failure.
-+ */
-+static int of_platform_parse_irq(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	unsigned int num_res = pdev->num_resources;
-+	struct resource *res = pdev->resource;
-+	unsigned int num_irq, num, c;
-+	int ret = 0;
-+
-+	num_irq = of_irq_count(pdev->dev.of_node);
-+	if (!num_irq)
-+		return 0;
-+
-+	/*
-+	 * Deferred probing may cause this function to be called multiple
-+	 * times, so check if all interrupts have been parsed already and
-+	 * return early.
-+	 */
-+	for (c = 0; c < num_irq; c++)
-+		if (platform_get_irq(pdev, c) < 0)
-+			break;
-+
-+	if (c == num_irq)
-+		return 0;
-+
-+	num = num_res + num_irq;
-+
-+	/*
-+	 * Note that in case we're called twice on the same device (due to
-+	 * deferred probing for example) this will simply be a nop because
-+	 * krealloc() returns the input pointer if the size of the memory
-+	 * block that it points to is larger than or equal to the new size
-+	 * being requested.
-+	 */
-+	res = krealloc(res, num * sizeof(*res), GFP_KERNEL);
-+	if (!res)
-+		return -ENOMEM;
-+
-+	pdev->resource = res;
-+	res += num_res;
-+
-+	/*
-+	 * It is possible for this to fail. If so, not that the number of
-+	 * resources is not updated, so that the next call to this function
-+	 * will parse all interrupts again. Otherwise we can't keep track of
-+	 * how many we've parsed so far.
-+	 */
-+	ret = of_irq_to_resource_table(np, res, num_irq);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * All interrupts are guaranteed to have been parsed and stored in
-+	 * the resource table, so the number of resources can now safely be
-+	 * updated.
-+	 */
-+	pdev->num_resources += num_irq;
-+
-+	return 0;
-+}
-+
-+/**
-+ * of_platform_probe() - OF specific initialization at probe time
-+ * @pdev: pointer to a platform device
-+ *
-+ * This function is called by the driver core to perform devicetree-specific
-+ * setup for a given platform device at probe time. If a device's resources
-+ * as specified in the device tree are not available yet, this function can
-+ * return -EPROBE_DEFER and cause the device to be probed again later, when
-+ * other drivers that potentially provide the missing resources have been
-+ * probed in turn.
-+ *
-+ * Note that because of the above, all code executed by this function must
-+ * be prepared to be run multiple times on the same device (i.e. it must be
-+ * idempotent).
-+ *
-+ * Returns 0 on success or a negative error code on failure.
-+ */
-+int of_platform_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	if (!pdev->dev.of_node)
-+		return 0;
-+
-+	ret = of_platform_parse_irq(pdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
- #endif /* CONFIG_OF_ADDRESS */
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 05cb4a9..92fc4f6 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -72,6 +72,8 @@ extern int of_platform_populate(struct device_node *root,
- 				const struct of_device_id *matches,
- 				const struct of_dev_auxdata *lookup,
- 				struct device *parent);
-+
-+extern int of_platform_probe(struct platform_device *pdev);
- #else
- static inline int of_platform_populate(struct device_node *root,
- 					const struct of_device_id *matches,
-@@ -80,6 +82,11 @@ static inline int of_platform_populate(struct device_node *root,
- {
- 	return -ENODEV;
- }
-+
-+static inline int of_platform_probe(struct platform_device *pdev)
-+{
-+	return 0;
-+}
- #endif
+ 	/* Allocate a virtual interrupt number */
+@@ -417,17 +412,41 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
+ 		virq = irq_alloc_desc_from(1, of_node_to_nid(domain->of_node));
+ 	if (virq <= 0) {
+ 		pr_debug("-> virq allocation failed\n");
+-		return 0;
++		return virq ? : -ENOSPC;
+ 	}
  
- #endif	/* _LINUX_OF_PLATFORM_H */
+-	if (irq_domain_associate(domain, virq, hwirq)) {
++	ret = irq_domain_associate(domain, virq, hwirq);
++	if (ret) {
+ 		irq_free_desc(virq);
+-		return 0;
++		return ret;
+ 	}
+ 
+ 	pr_debug("irq %lu on domain %s mapped to virtual irq %u\n",
+ 		hwirq, of_node_full_name(domain->of_node), virq);
+ 
++	if (virqp)
++		*virqp = virq;
++
++	return 0;
++}
++/**
++ * irq_create_mapping() - Map a hardware interrupt into linux irq space
++ * @domain: domain owning this hardware interrupt or NULL for default domain
++ * @hwirq: hardware irq number in that domain space
++ *
++ * Only one mapping per hardware interrupt is permitted. Returns a linux
++ * irq number.
++ * If the sense/trigger is to be specified, set_irq_type() should be called
++ * on the number returned from that call.
++ */
++unsigned int irq_create_mapping(struct irq_domain *domain,
++				irq_hw_number_t hwirq)
++{
++	unsigned int virq;
++
++	if (__irq_create_mapping(domain, hwirq, &virq))
++		return 0;
++
+ 	return virq;
+ }
+ EXPORT_SYMBOL_GPL(irq_create_mapping);
 -- 
 1.8.4
-
