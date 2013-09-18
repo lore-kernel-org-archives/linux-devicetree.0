@@ -1,146 +1,228 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: new platform for Energy Micro's EFM32 Cortex-M3
- SoCs
-Date: Wed, 18 Sep 2013 17:34:24 +0200
-Message-ID: <20130918153424.GR24802@pengutronix.de>
-References: <1379447884-14025-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <201309172245.25367.arnd@arndb.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 5/6] extcon-gpio: Describe devicetree bindings
+Date: Wed, 18 Sep 2013 16:38:28 +0100
+Message-ID: <20130918153828.GB17453@e106331-lin.cambridge.arm.com>
+References: <1377836978-24082-1-git-send-email-linux@roeck-us.net>
+ <1377836978-24082-6-git-send-email-linux@roeck-us.net>
+ <20130912164100.GF22013@e106331-lin.cambridge.arm.com>
+ <20130912165304.GA12202@roeck-us.net>
+ <20130916142147.GF30650@e106331-lin.cambridge.arm.com>
+ <20130916151953.GA5801@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201309172245.25367.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <20130916151953.GA5801-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Mon, Sep 16, 2013 at 04:19:53PM +0100, Guenter Roeck wrote:
+> On Mon, Sep 16, 2013 at 03:21:47PM +0100, Mark Rutland wrote:
+> > On Thu, Sep 12, 2013 at 05:53:04PM +0100, Guenter Roeck wrote:
+> > > On Thu, Sep 12, 2013 at 05:41:00PM +0100, Mark Rutland wrote:
+> > > > On Fri, Aug 30, 2013 at 05:29:37AM +0100, Guenter Roeck wrote:
+> > > > > Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> > > > > ---
+> > > > >  .../devicetree/bindings/extcon/extcon-gpio         |   23 ++++++++++++++++++++
+> > > > >  1 file changed, 23 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio
+> > > > > 
+> > > > > diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio b/Documentation/devicetree/bindings/extcon/extcon-gpio
+> > > > > new file mode 100644
+> > > > > index 0000000..091ddc6
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/extcon/extcon-gpio
+> > > > > @@ -0,0 +1,23 @@
+> > > > > +Device-Tree bindings for extcon/extcon-gpio driver
+> > > > 
+> > > > Bindings shouldn't refer to Linux-specifics like particular drivers.
+> > > > What class of hardware are you actually trying to describe?
+> > > > 
+> > > Agreed. Question is where to put the bindings, as they are not really 
+> > > specific to the extcon driver. The extcon driver merely implements 
+> > > the bindings. This is why the "compatible" statement reads "gpio-connector"
+> > > and not "extcon-something".
+> > > 
+> > > The bindings describe a connector managed through gpio pins.
+> > 
+> > Ok, then that's what the binding document should state.
+> > 
+> > > 
+> > > > > +
+> > > > > +Required properties:
+> > > > > +	- compatible = "gpio-connector";
+> > > > > +	- presence-detect-gpios - presence detect gpio pin
+> > > > > +
+> > > > > +Optional properties:
+> > > > > +	- debounce-interval - debounce interval in milli-seconds
+> > > > > +	- state-on - on (connected) state
+> > > > > +	- state-off - off (disconnected) state
+> > > > > +	  Depending on the type of connector or cable, states may
+> > > > > +	  for example be reported as "connected"/"disconnected"
+> > > > > +	  or "inserted"/"removed".
+> > > > 
+> > > > I don't understand what the state-* properties describe. Do these
+> > > > provide semantic information to drivers? What is the full set of valid
+> > > > values?
+> > > > 
+> > > That is merely text which is ultimately passed on to the user.
+> > > Guess 'semantic information' might be a way to phrase it.
+> > 
+> > Where do these end up appearing to the user? Through names in the
+> 
+> Yes.
+> 
+> > filesystem? That's an ABI, which should be thoroughly described...
+> > 
+> Tricky, as I can not really describe how the extcon driver implements it.
+> I can add something like above explanation, ie that the implementation is
+> expected to pass the property to the user. Would that be acceptable ?
+> 
+> > If it's arbitrary, why is it necessary at all? Surely sensible names for
+> > the state of the connector can be coded in the driver for the device
+> > attached to said connectors (which can be consistent and later changed
+> > if necessary)...
+> > 
+> Good point. I took a "hint" from the implementation in the extcon driver,
+> which lets one do that. But doesn't your comment apply to pretty much all
+> "label" and similar properties in the various devicetree descriptions ?
 
-On Tue, Sep 17, 2013 at 10:45:25PM +0200, Arnd Bergmann wrote:
-> On Tuesday 17 September 2013, Uwe Kleine-K=F6nig wrote:
-> >  arch/arm/Kconfig                               |  16 +++-
-> >  arch/arm/Kconfig.debug                         |  16 ++++
-> >  arch/arm/Makefile                              |   1 +
-> >  arch/arm/configs/efm32_defconfig               | 104 +++++++++++++=
-++++++++++++
-> >  arch/arm/mach-efm32/Makefile                   |   1 +
-> >  arch/arm/mach-efm32/Makefile.boot              |   2 +
-> >  arch/arm/mach-efm32/cmu.h                      |  15 ++++
-> >  arch/arm/mach-efm32/common.c                   |  19 +++++
-> >  arch/arm/mach-efm32/common.h                   |   1 +
-> >  arch/arm/mach-efm32/dtmachine.c                |  31 ++++++++
-> >  arch/arm/mach-efm32/include/mach/debug-macro.S |  48 ++++++++++++
-> >  arch/arm/mach-efm32/include/mach/entry-macro.S |   5 ++
-> >  arch/arm/mach-efm32/include/mach/io.h          |   6 ++
-> >  arch/arm/mach-efm32/include/mach/irqs.h        |   6 ++
-> >  arch/arm/mach-efm32/include/mach/timex.h       |   7 ++
->=20
-> You should be able to add NOMMU platforms in combination with
-> CONFIG_MULTIPLATFORM now, which gets rid of most of these files.
-in next ARCH_MULTIPLATFORM still depends on MMU. What am I missing?
-=20
-> > diff --git a/arch/arm/mach-efm32/Makefile b/arch/arm/mach-efm32/Mak=
-efile
-> > new file mode 100644
-> > index 0000000..081f45a
-> > --- /dev/null
-> > +++ b/arch/arm/mach-efm32/Makefile
-> > @@ -0,0 +1 @@
-> > +obj-y +=3D common.o dtmachine.o
->=20
-> Just merge the two files into one.
-ok.
+I am also very much not a fan of those properties. They all give an
+ill-defined ABI where Linux-specific details are in the DT. I don't see
+why such properties should be necessary when it's possible to write
+drivers in such a way as to not require them.
 
-> > +
-> > +void __init efm32_init_time(void)
-> > +{
-> > +	of_clk_init(NULL);
-> > +	clocksource_of_init();
-> > +}
->=20
-> When Sebastian Hesselbarth's patches for of_clk_init() are merged,
-> this function can go away.
-Do you have a link?
+> 
+> > > 
+> > > > > +
+> > > > > +Example node:
+> > > > > +
+> > > > > +	some-connector {
+> > > > > +		compatible = "gpio-connector";
+> > > > > +		presence-detect-gpios = <&gpio1 7 1>;
+> > > > > +		debounce-interval = <1>;
+> > > > > +		state-on = "connected";
+> > > > > +		state-on = "disconnected";
+> > 
+> > I don't think that's a valid dts. I assume the second is meant to be
+> > "state-off"?
+> > 
+> Yes, obviously.
+> 
+> > > > > +	};
+> > > > 
+> > > > I'm not sure how much value this adds to bindings over describing the
+> > > > gpios directly. This seems to add a layer of indirection because of
+> > > > Linux internals.
+> > > > 
+> > > Not sure I understand what you mean with "describing the gpios directly".
+> > > Can you elaborate and/or provide an example ?
+> > 
+> > Take a look at the MMC bindings [1], specifically the cd-gpios and
+> > wp-gpios properties. I don't see why the connection of the GPIO needs to
+> > be described by a wrapper device that doesn't really exist, when it can
+> > be described directly.
+> > 
+> Question is - described to what or for what ? 
+> 
+> I think what you are saying is that describing a generic connector via
+> devicetree is not acceptable, even though it _does_ describe hardware.
+> I would have to describe a specific connector for a specific hardware
+> instead, which in turn would need its own driver. Is that correct ?
 
-> > +static void __init efm32_init(void)
-> > +{
-> > +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL=
-);
-> > +}
-> > +
->=20
-> And this one is already unnecessary.
-fine.
+Regardless of how the connector is described, the block of hardware it
+connects to will have to be described, and some description of the
+connector will be necessary (either in the node for the block, or by
+phandle to a node for the connector). I agree that having a combined IP
+block + connector driver for each permutation is not good.
 
-> > +static const char *const efm32gg_compat[] __initconst =3D {
-> > +	"efm32,dk3750",
-> > +	NULL
-> > +};
-> > +
-> > +DT_MACHINE_START(EFM32DT, "EFM32 (Device Tree Support)")
-> > +	.init_irq =3D irqchip_init,
->=20
-> Same for irqchip_init, which is the default when omitted.
-ok.
+What I'm worried about is that we're pushing bindings for simple cases
+(i.e. presences detect for single connectors detected via GPIOs) that we
+have other mechanisms for describing (e.g. directly describing said
+GPIOs), without considering the more general case and designing the
+bindings to support that more general case from the start. We'll end up
+designing bindings that are not flexible enough to describe the cases
+that we already know exist, and then we'll have real pain attempting to
+retrofit those cases into the binding.
 
->=20
-> > diff --git a/arch/arm/mach-efm32/include/mach/debug-macro.S b/arch/=
-arm/mach-efm32/include/mach/debug-macro.S
-> > new file mode 100644
-> > index 0000000..c58915c
-> > --- /dev/null
-> > +++ b/arch/arm/mach-efm32/include/mach/debug-macro.S
->=20
-> Please move this to arch/arm/include/debug/ like the other such
-> implementations.
-I don't mind, but I thought this is only for devices that are expected
-to be available on >1 platform.
-=20
-> > diff --git a/arch/arm/mach-efm32/include/mach/entry-macro.S b/arch/=
-arm/mach-efm32/include/mach/entry-macro.S
-> > new file mode 100644
-> > index 0000000..f0c0f7d
-> > --- /dev/null
-> > +++ b/arch/arm/mach-efm32/include/mach/entry-macro.S
-> > @@ -0,0 +1,5 @@
-> > +		.macro	get_irqnr_preamble, base, tmp
-> > +		.endm
-> > +
-> > +		.macro	arch_ret_to_user, tmp1, tmp2
-> > +		.endm
->=20
-> And use set_handle_irq() to register a handler from your irqchip driv=
-er
-> to get rid of this one.
-ISTR that I tried that, but I don't remember the details. I will retry.
-=20
-> > --- /dev/null
-> > +++ b/arch/arm/mach-efm32/include/mach/irqs.h
-> > @@ -0,0 +1,6 @@
-> > +#ifndef __MACH_IRQS_H__
-> > +#define __MACH_IRQS_H__
-> > +
-> > +#define NR_IRQS			82
-> > +
-> > +#endif /* __MACH_IRQS_H__ */
->=20
-> This should not be needed if you have the proper IRQ domain support,
-> which I think you do.
-OK.
+The only existing consumer of extcon dt bindings seems to be omap-usb,
+which seems to want a single extcon device describing the "USB" and
+"USB-HOST" cables. I'm not happy with this binding staying in mainline
+as-is, as it makes several assumptions that limits how future extcon
+bindings can be implemented:
+* It assumes an extcon provider (for lack of a better name) only has at
+  most one cable of each type.
+* It assumes the same extcon provider provides all cables required.
+* It assumes extcon providers are referred to by phandle only (no
+  additional cells of identifying information).
 
-Thanks for your comments
-Uwe
+I think we need to consider the general case first, where a device
+monitors the state of multiple cables, which may be of uniform or
+disparate types.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+I think it makes more sense to have a clk or gpio style binding, e.g.
+
+gpio: {
+	...
+};
+
+cables: some-extcon-provider {
+	compatible = "vendor,cable-detect";
+	/*
+	 * This cable detector provides state detection for a power
+	 * cable (0), and up to 8 USB host cables (1-8).
+	 */
+	#cable-detect-cells = <1>;
+};
+
+gpio-cable: some-gpio-detection {
+	compatible = "linux,gpio-cable-detect";
+	gpios = <&gpio 4 2 3>;
+	/*
+	 * Maybe multiple GPIOs could be allowed instead?
+	 */
+	#cable-detect-cells = <0>;
+};
+
+some-extcon-consumer {
+	compatible = "vendor,usb-host-device";
+
+	/*
+	 * This could instead be separate power-cables and usb-cables
+	 * properties like the gpio bindings, but then describing an
+	 * arbitrary subset of USB host cables becomes difficult (you
+	 * end up needing separate usbX-gpios properties, from the
+	 * start).
+	 */
+	cables = <&cable 0>,
+		 <&cable 5>,
+		 <&cable 6>;,
+		 <&gpio-cable>;
+	cable-names = "power", "usb3", "usb4", "usb6";
+};
+
+Another concern is that extcon handles more than just a binary state for
+each cable type, and the precise definition of these states is
+Linux-specific AFAICS. I'd prefer to keep this concern out of the DT as
+much as possible -- an extcon driver should know the types of its
+cables, and the consumer should know the types it expects to request. As
+such, there's no need to encode "USB-HOST" and friends in the DT -- only
+the name of the particular instance of that type of cable should appear.
+This obviously makes it difficult to have generic wrappers such as those
+using GPIOs -- a platform may require an arbitrary set of GPIOs which
+detect an arbitrary value when a certain cable is in a specific state.
+
+We *need* to consider the general case before we start proliferating
+bindings, or we'll end up creating bindings that cannot express the
+general case. Shortcuts we take early on to make implementation easier
+create real problems for us later on, because they become ABI.
+
+Cheers,
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
