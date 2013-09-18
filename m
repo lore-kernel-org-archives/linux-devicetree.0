@@ -1,90 +1,56 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCHv3 02/16] drivers: thermal: introduce device tree parser
-Date: Wed, 18 Sep 2013 12:11:23 -0700
-Message-ID: <1379531483.1787.55.camel@joe-AO722>
-References: <5239F6D8.1020907@ti.com>
-	 <1379530923-29268-1-git-send-email-eduardo.valentin@ti.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFCv2 2/3] ARM: OMAP2+: HSI: Introduce OMAP SSI driver
+Date: Wed, 18 Sep 2013 12:23:31 -0700
+Message-ID: <20130918192331.GD9994@atomide.com>
+References: <1379277856-24571-1-git-send-email-sre@debian.org>
+ <1379277856-24571-3-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379530923-29268-1-git-send-email-eduardo.valentin@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com, grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1379277856-24571-3-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, =?utf-8?Q?'Beno=C3=AEt?= Cousson' <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-09-18 at 15:02 -0400, Eduardo Valentin wrote:
-> This patch introduces a device tree bindings for
-> describing the hardware thermal behavior and limits.
-> Also a parser to read and interpret the data and feed
-> it in the thermal framework is presented.
+* Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> [130915 13:56]:
+> This patch adds an OMAP SSI driver to the HSI framework.
 
-trivial notes:
+Thanks for working on this.
+ 
+> +config OMAP_SSI
+> +	tristate "OMAP SSI hardware driver"
+> +	depends on ARCH_OMAP && HSI
+> +	default n
+> +	---help---
+> +	  SSI is a legacy version of HSI. It is usually used to connect
+> +	  an application engine with a cellular modem.
+> +	  If you say Y here, you will enable the OMAP SSI hardware driver.
 
-> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-[]
-> +static int of_thermal_get_trend(struct thermal_zone_device *tz, int trip,
-> +				enum thermal_trend *trend)
-> +{
-> +	struct __thermal_zone *data = tz->devdata;
-> +	long dev_trend;
-> +	int r;
-> +
-> +	if (!data->get_trend)
-> +		return -EINVAL;
-> +
-> +	r = data->get_trend(data->sensor_data, &dev_trend);
-> +	if (r)
-> +		return r;
-> +
-> +	if (dev_trend > 0)
-> +		*trend = THERMAL_TREND_RAISING;
-> +	else if (dev_trend < 0)
-> +		*trend = THERMAL_TREND_DROPPING;
-> +	else
-> +		*trend = THERMAL_TREND_STABLE;
-> +
-> +	return 0;
-> +}
+You can drop the "default n" line here, it's the default.
 
-If readings are within some non zero noise level,
-perhaps stable should be returned.
+> +/* TODO: HACK: define omap_pm_get_dev_context_loss_count, because it is defined
+> + * in arch/arm/mach-omap2/omap-pm.h and thus not available via #include */
+> +int omap_pm_get_dev_context_loss_count(struct device *dev);
 
-> +static struct __thermal_zone *
-> +thermal_of_build_thermal_zone(struct device_node *np)
-> +{
-> +	struct device_node *child, *gchild;
-> +	struct __thermal_zone *tz;
-> +	int ret, i;
-> +	u32 prop;
-> +
-> +	if (!np) {
-> +		pr_err("no thermal zone np\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	tz = kzalloc(sizeof(*tz), GFP_KERNEL);
-> +	if (!tz) {
-> +		pr_err("not enough memory for thermal of zone\n");
+You can drop this and related calls completely and rely on some
+SSI configuration registers instead to detect if context was lost.
 
-Unnecessary OOM message.
-All allocs without GFP_NOWARN get a dump_stack()
+The reason for that is that the context loss count should be
+implemented in Linux generic way if needed at all and we can leave
+out a dependency to that.
 
-> +int __init of_parse_thermal_zones(void)
-> +{
-[]
-> +		ops = kzalloc(sizeof(*ops), GFP_KERNEL);
-> +		if (!ops) {
-> +			pr_err("no memory available for thermal ops\n");
-> +			return 0;
-> +		}
-> +		memcpy(ops, &of_thermal_ops, sizeof(*ops));
-> +
-> +		tzp = kzalloc(sizeof(*tzp), GFP_KERNEL);
-> +		if (!ops) {
-> +			pr_err("no memory available for thermal zone params\n");
-> +			return 0;
-> +		}
+If there's a chance that the context is only partially lost,
+then of course something else is needed. So far I have not
+hit that issue for MMC or serial at least, but you'd have to
+test this with off-idle to verify it.
 
-a couple more OOMs.
+Regards,
+
+Tony
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
