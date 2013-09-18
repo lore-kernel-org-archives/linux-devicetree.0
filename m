@@ -1,85 +1,39 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 09/28] of: Introduce common early_init_dt_scan
-Date: Tue, 17 Sep 2013 22:24:19 -0500
-Message-ID: <20130918032419.AE8CDC42C9B@trevor.secretlab.ca>
-References: <1379372965-22359-1-git-send-email-robherring2@gmail.com> <1379372965-22359-10-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379372965-22359-10-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 20/28] arm64: set initrd_start/initrd_end for fdt scan
+Date: Tue, 17 Sep 2013 22:36:51 -0500
+Message-ID: <20130918033651.3FA9AC42CA8@trevor.secretlab.ca>
+References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
+ <1379372965-22359-21-git-send-email-robherring2@gmail.com>
+ <8639E68F-4CCB-4E34-82BF-18EDA98BB978@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8639E68F-4CCB-4E34-82BF-18EDA98BB978@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robherring2@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Sep 2013 18:09:05 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On Tue, 17 Sep 2013 09:50:04 +0100, Catalin Marinas <catalin.marinas@arm.com> wrote:
+> On 17 Sep 2013, at 00:09, Rob Herring <robherring2@gmail.com> wrote:
+> > From: Rob Herring <rob.herring@calxeda.com>
+> > 
+> > In order to unify the initrd scanning for DT across architectures, make
+> > arm64 use initrd_start and initrd_end instead of the physical addresses.
+> > 
+> > Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: linux-arm-kernel@lists.infradead.org
 > 
-> Most architectures scan the all the same items early in the FDT and none
-> are really architecture specific. Create a common early_init_dt_scan to
-> unify the early scan of root, memory, and chosen nodes in the flattened
-> DT.
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-One caveat below, but otherwise:
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> ---
->  drivers/of/fdt.c       | 18 ++++++++++++++++++
->  include/linux/of_fdt.h |  2 ++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index eca1810..0714dd4 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -785,6 +785,24 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
->  }
->  #endif
->  
-> +bool __init early_init_dt_scan(void *params)
-> +{
-> +	/* Setup flat device-tree pointer */
-> +	initial_boot_params = params;
-> +
-> +	/* check device tree validity */
-> +	if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER)
-> +		return false;
-
-If the test fails, then clear initial_boot_params to NULL. Similarly, if
-params is NULL, then bail before dereferencing it.
-
-> +
-> +	/* Retrieve various information from the /chosen node */
-> +	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
-> +	/* Initialize {size,address}-cells info */
-> +	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-> +	/* Setup memory, calling early_init_dt_add_memory_arch */
-> +	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
-> +	return true;
-> +}
-> +
->  /**
->   * unflatten_device_tree - create tree of device_nodes from flat blob
->   *
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index 58c28a8..73e1651 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -116,6 +116,8 @@ extern void early_init_dt_setup_initrd_arch(u64 start, u64 end);
->  extern int early_init_dt_scan_root(unsigned long node, const char *uname,
->  				   int depth, void *data);
->  
-> +extern bool early_init_dt_scan(void *params);
-> +
->  /* Other Prototypes */
->  extern void unflatten_device_tree(void);
->  extern void unflatten_and_copy_device_tree(void);
-> -- 
-> 1.8.1.2
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Grant Likely <grant.likely@linaro.org>
