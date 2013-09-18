@@ -1,152 +1,135 @@
-From: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv2 06/16] hwmon: tmp102: expose to thermal fw via DT nodes
-Date: Wed, 18 Sep 2013 10:17:51 -0400
-Message-ID: <5239B60F.6060805@ti.com>
-References: <523643D4.30208@roeck-us.net> <1379457245-17810-1-git-send-email-eduardo.valentin@ti.com> <20130918110649.GA9050@roeck-us.net>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] usb: dwc3: core: clarify usb-phy array binding
+Date: Wed, 18 Sep 2013 09:21:18 -0500
+Message-ID: <20130918142118.GJ21559@radagast>
+References: <1376062832-23288-1-git-send-email-galak@codeaurora.org>
+ <20130809162848.GW27325@e106331-lin.cambridge.arm.com>
+ <1A03353A-9299-4D73-9786-4ECBC1DD4E05@codeaurora.org>
+ <20130812180553.GD27954@radagast>
+ <20130813133410.GO27165@e106331-lin.cambridge.arm.com>
+ <20130827185329.GT3005@radagast>
+ <20130828160151.GA17229@e106331-lin.cambridge.arm.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="eQqh0HifVpMjiCS7wIV3Hh6eDBxE1j7WA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130918110649.GA9050-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZG+WKzXzVby2T9Ro"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130828160151.GA17229-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---eQqh0HifVpMjiCS7wIV3Hh6eDBxE1j7WA
-Content-Type: text/plain; charset=ISO-8859-1
+--ZG+WKzXzVby2T9Ro
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 18-09-2013 07:06, Guenter Roeck wrote:
-> On Tue, Sep 17, 2013 at 06:34:05PM -0400, Eduardo Valentin wrote:
->> This patch adds to tmp102 temperature sensor the possibility
->> to expose itself as thermal zone device, registered on the
->> thermal framework.
->>
->> The thermal zone is built only if a device tree node
->> describing a thermal zone for this sensor is present
->> inside the tmp102 DT node. Otherwise, the driver behavior
->> will be the same.
->>
->> Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
->> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->> Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
->> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
->> ---
->>  drivers/hwmon/tmp102.c | 20 ++++++++++++++++++++
->>  1 file changed, 20 insertions(+)
->>
->> ---
->>
->> Guenter,
->>
->> Here is a version without the warnings, as requested.
->>
->> Eduardo
->>
->> diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
->> index d7b47ab..dc96598 100644
->> --- a/drivers/hwmon/tmp102.c
->> +++ b/drivers/hwmon/tmp102.c
->> @@ -27,6 +27,8 @@
->>  #include <linux/mutex.h>
->>  #include <linux/device.h>
->>  #include <linux/jiffies.h>
->> +#include <linux/thermal.h>
->> +#include <linux/of.h>
->> =20
->>  #define	DRIVER_NAME "tmp102"
->> =20
->> @@ -50,6 +52,7 @@
->> =20
->>  struct tmp102 {
->>  	struct device *hwmon_dev;
->> +	struct thermal_zone_device *tz;
->>  	struct mutex lock;
->>  	u16 config_orig;
->>  	unsigned long last_update;
->> @@ -93,6 +96,15 @@ static struct tmp102 *tmp102_update_device(struct i=
-2c_client *client)
->>  	return tmp102;
->>  }
->> =20
->> +static int tmp102_read_temp(void *dev, long *temp)
->> +{
->> +	struct tmp102 *tmp102 =3D tmp102_update_device(to_i2c_client(dev));
->> +
->> +	*temp =3D tmp102->temp[0];
->> +
->> +	return 0;
->> +}
->> +
->>  static ssize_t tmp102_show_temp(struct device *dev,
->>  				struct device_attribute *attr,
->>  				char *buf)
->> @@ -204,6 +216,12 @@ static int tmp102_probe(struct i2c_client *client=
-,
->>  		goto fail_remove_sysfs;
->>  	}
->> =20
->> +	tmp102->tz =3D thermal_zone_of_sensor_register(&client->dev, 0,
->> +						     &client->dev,
->> +						     tmp102_read_temp, NULL);
->> +	if (IS_ERR(tmp102->tz))
->> +		tmp102->tz =3D NULL;
->> +
->>  	dev_info(&client->dev, "initialized\n");
->> =20
->>  	return 0;
->> @@ -220,6 +238,8 @@ static int tmp102_remove(struct i2c_client *client=
-)
->>  {
->>  	struct tmp102 *tmp102 =3D i2c_get_clientdata(client);
->> =20
->> +	/* thermal zone life cycle is not our responsibility */
->=20
-> This comment does not provide any value. Please drop it from both drive=
-rs.
-> Sorry I missed that earlier.
+Hi,
 
-Yeah, I even forgot to drop it myself. No problem, I am resending both
-without it.
+On Wed, Aug 28, 2013 at 05:01:51PM +0100, Mark Rutland wrote:
+> > > So it's not physically possible for someone to just wire up a single =
+phy
+> > > to the device, either USB2-only or USB3?
+> >=20
+> > of course it is :-) In fact, TI has done it. But it causes a whole bunch
+> > of other problems to support that sort of model. For one, in some
+> > systems, a clock generated by the USB3 PHY is backfed into the IP and if
+> > USB3 PHY isn't running, the dwc3 IP won't start.
+>=20
+> That sounds like a mess. But unless I've misunderstood, that doesn't
 
->=20
->> +	thermal_zone_of_sensor_unregister(&client->dev, tmp102->tz);
->>  	hwmon_device_unregister(tmp102->hwmon_dev);
->>  	sysfs_remove_group(&client->dev.kobj, &tmp102_attr_group);
->> =20
->> --=20
->> 1.8.2.1.342.gfa7285d
->>
->>
->=20
->=20
+well, it is :-)
 
+> sound like a general problem with having one phy, but rather an
+> integration issue on a specific system? Presumably in that case as long
+> as the phy was brought up before poking the rest of the IP, the unit
+> would function correctly.
+
+right, but what 'brings up' the PHY is usb_phy_init(). If we don't add
+usb3phy to DTS or skip usb3phy in case maximum-speed < superspeed, then
+we're screwed :-)
+
+> > I even wrote a patch making USB3 PHY optional, but didn't push it
+> > exactly because it broke some other systems and I can't guarantee users
+> > won't mess up their DTS/pdata.
+>=20
+> Does that mean that their dts or pdata are wrong at the moment, but
+> they're spared because the driver bails out due to a missing phy? If
+> their pdata's wrong, that should be fixable relatively easily, but if
+> the dt is wrong then I'm not sure how we can support those systems
+> sensibly. That sounds like an ideal candidate for a dt quirks
+> mechanism...
+
+hmm, the idea of the patch was:
+
+	switch (maximum-speed) {
+	case SUPER:
+		grab_and_initialize_usb3_phy();
+		grab_and_initialize_usb2_phy();
+		break;
+	case HIGH:
+	case FULL:
+	case LOW:
+		grab_and_initialize_usb2_phy();
+		break;
+	}
+
+now, imagine someone wants to run his dwc3 in highspeed mode, we
+wouldn't initialize USB3 PHY which could cause the whole IP to break.
+
+I tried poking around on device's registers to see if there was any way
+to detect that the IP needs somethin back from USB3 PHY, but couldn't
+find anything.
+
+Since we can't know how the IP was integrated, it's best to leave it
+alone and require NOP xceiv to be used.
+
+> > > You can describe the USB2-only case in the dt by only listing the fir=
+st
+> > > phy (though the driver won't support it as it expects both to be
+> > > present), but it's impossible to describe that you've wired up a sing=
+le
+> > > phy that's USB3 capable.
+> >=20
+> > you might be right there...
+>=20
+> Would it be possible to have something like (an optional) usb-phy-names?
+> If not present, we assume the current situation, if present then we use
+> it to figure out which phys are present. Maybe I'm missing something
+> that makes that impossible?
+
+you're missing the point regarding the IP possibly needing something
+back from the PHY (e.g. a clock which PHY generates).
 
 --=20
-You have got to be excited about what you are doing. (L. Lamport)
+balbi
 
-Eduardo Valentin
-
-
---eQqh0HifVpMjiCS7wIV3Hh6eDBxE1j7WA
+--ZG+WKzXzVby2T9Ro
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iF4EAREIAAYFAlI5thUACgkQCXcVR3XQvP0lngEAhQICzdeYzsSzgPXFWiX29Mgz
-PvrAgBBLlAE5f1dNcG4BAPh1HwdOljoSiVPK+iWS6ZgYzojrhdesgU0q398L3LRg
-=Vzxg
+iQIcBAEBAgAGBQJSObbdAAoJEIaOsuA1yqRE6IYQAKF8C18dLDvC69UJMAwoKC9S
+lyQO39Xra/UeqjFCPjrsO651v3nSR+7w9gAy6p5Yal1VANBqkUigTtjPCNLPkQ68
+7pj+rSKt3FXX5gTLLx8G9TNRLADcVvRzdVTQJlh1pVj+wXoeQ4hQUdV1LdS5QTJX
+x1oo+mMVF3ahdflnyEcRchAsctm7iO4WdlwxFo2tW3XbyHVkZhgq8CbPQn+PZIfg
+LQNlDMSSc8lCge2dCoIhYgS8/avNmckeTq/rG2Cpy7jF525eMUqJNI9SwUWzByAT
+7Yho+Z9O5wmrRpQuOacm5BdmuFGe70P3o5XKnmLbIMXnC90g9Hr/1RyA9gfqq5Vn
+2xvL4rMK09rN9k0SMNn4/ZYyVODQVIxz6kxmNJju4fVob/3Ao/yo2DRVGdTG53TU
+YwrB9jsl1I8+4AGTlj1d0528YHorqRhwNn/l3znqh651nT7IoKvyvyCniw1nNrYF
+pFcOJZcwM6kgqdsZxK4cp08FHHjRtNH5pwGhiat65KcEaMJvQh0MgnizHrzmhrpN
+hirRE/AN8DuQVXDXvEuK9iDEx418j6xN4+UN+Yk+pGYyqptBs+ewrApHVDQnNd7t
+GJKfB6ZBcidmo/5b9qb/iST/0FnMmqvycYppYGclEgTfhhwfuyou3F8Dt0QmErwe
+9ota4HKfY+LVKg2o3u5L
+=7jUi
 -----END PGP SIGNATURE-----
 
---eQqh0HifVpMjiCS7wIV3Hh6eDBxE1j7WA--
+--ZG+WKzXzVby2T9Ro--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
