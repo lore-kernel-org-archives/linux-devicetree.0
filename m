@@ -1,45 +1,53 @@
-From: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Adding aliases to mmc
-Date: Wed, 18 Sep 2013 07:47:01 +0200
-Message-ID: <52393E55.6080200@gmail.com>
-References: <CAOMZO5CJ36JHJMaiG3QVdtpBoWd_ZyHQuRTrKHz4bLP39gpJtQ@mail.gmail.com>
+From: Gururaja Hebbar <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 05/11] ASoC: davinci-mcasp: Remove interrupt property
+ from DT bindings doc
+Date: Wed, 18 Sep 2013 11:20:08 +0530
+Message-ID: <52393F10.4090405@ti.com>
+References: <cover.1379409268.git.jsarha@ti.com> <1b47734e397bfac8846dcfc194fd1ab63f320d1a.1379409268.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5CJ36JHJMaiG3QVdtpBoWd_ZyHQuRTrKHz4bLP39gpJtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1b47734e397bfac8846dcfc194fd1ab63f320d1a.1379409268.git.jsarha-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: jsarha-l0cyMroinI0@public.gmane.org
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, joelf-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+On Tuesday 17 September 2013 02:56 PM, jsarha-l0cyMroinI0@public.gmane.org wrote:
+> From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+> 
+> Davinci McASP driver does use interrupts for anything ATM.
 
-Am 17.09.2013 20:04, schrieb Fabio Estevam:
-> Hi Dirk,
->
-> I have adapted your patch at:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-July/111022.html
->
-> and tested it on 3.12-rc1 on a mx6qsabresd board.
->
-> Do you have plans to submit it? Maybe as a RFC?
->
-> It solves the mmcblkX order issue on my tests and it would be nice we
-> could have this problem addressed.
+s/does use/does not use
 
-If I remember the history correctly, instead of the approach linked 
-above, I've submitted an alternative solution:
-
-http://marc.info/?l=linux-mmc&m=134423822729031
-
-But this hasn't found it's way into mainline, too.
-
-Best regards
-
-Dirk
-
-
+> 
+> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../bindings/sound/davinci-mcasp-audio.txt         |    2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
+> index 68e0f47..b5e7b78 100644
+> --- a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
+> +++ b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
+> @@ -11,7 +11,6 @@ Required properties:
+>  - reg-names : The mandatory reg-range must be named "mpu" and the optional DMA
+>  	      reg-range must be named "dma". For backward compatibility it is
+>  	      good to keep "mpu" first in the list.
+> -- interrupts : Interrupt number for McASP
+>  - op-mode : I2S/DIT ops mode.
+>  - tdm-slots : Slots for TDM operation.
+>  - num-serializer : Serializers used by McASP.
+> @@ -40,7 +39,6 @@ mcasp0: mcasp0@1d00000 {
+>  	#size-cells = <0>;
+>  	reg = <0x100000 0x3000>;
+>  	reg-names "mpu";
+> -	interrupts = <82 83>;
+>  	op-mode = <0>;		/* MCASP_IIS_MODE */
+>  	tdm-slots = <2>;
+>  	num-serializer = <16>;
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
