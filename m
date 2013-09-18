@@ -1,43 +1,40 @@
-From: "Bird, Tim" <Tim.Bird@sonymobile.com>
-Subject: [ARM attend] Any news on agenda? Device tree documentation discussion
-Date: Wed, 18 Sep 2013 23:35:27 +0200
-Message-ID: <F5184659D418E34EA12B1903EE5EF5FD8538E865C1@seldmbx02.corpusers.net>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: new cpu iteration code...
+Date: Wed, 18 Sep 2013 17:37:26 -0400 (EDT)
+Message-ID: <20130918.173726.1443745664398441126.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "ksummit-2013-discuss@lists.linuxfoundation.org" <ksummit-2013-discuss@lists.linuxfoundation.org>, "olof@lixom.net" <olof@lixom.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I'm interested in the ARM kernel summit - particularly any
-sessions having to do with device tree. Is there an agenda or
-session list available for the ARM summit yet?
 
-I have other meetings Wednesday (Oct 23), but heard that
-there might be device tree sessions on Wednesday afternoon.
-If so, and if these are open for me to attend, I would like to know
-so I can re-arrange my schedule to attend.
+I'm getting a flood of kernel log warnings on bootup now with
+the generic of_get_cpu_node() code, it is wrong for sparc64
+on several levels.
 
-I have recently proposed a project for doing some device tree
-documentation, to be sponsored by the CE Workgroup of the
-Linux Foundation.
-See http://elinux.org/Device-tree_documentation_project
+There is never a root "/cpus" node, so this code always fails.
+Usually the "cpu" nodes are simply listed at the top-level.
 
-There will also be lots of sessions on device tree at ELC Europe
-later that week. The meetings in Edinburgh should be a good
-opportunity to discuss the utility of such a project, and its goals
-and scope.
+The correct way to go about this is to use something like:
 
-Thanks,
- -- Tim 
+	struct device_node *dp;
+
+	for_each_node_by_type(dp, "cpu") {
+	}
+
+and therefore be agnostic as to the layout of the device
+tree wrt. cpu nodes.
+
+Secondly, the property to use to get the physical cpu number is not
+only different on sparc from what this code uses, but varies.  It can
+be either "upa-portid" or "portid".  The "reg" property represents
+various things and will be different for different cpu types and thus
+is not a good candidate for fetching this information.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
