@@ -1,113 +1,67 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCHv2 06/16] hwmon: tmp102: expose to thermal fw via DT nodes
-Date: Wed, 18 Sep 2013 04:06:49 -0700
-Message-ID: <20130918110649.GA9050@roeck-us.net>
-References: <523643D4.30208@roeck-us.net>
- <1379457245-17810-1-git-send-email-eduardo.valentin@ti.com>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma
+ reserved memory
+Date: Wed, 18 Sep 2013 13:07:03 +0200
+Message-ID: <52398957.9010505@samsung.com>
+References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com>
+ <1377527959-5080-4-git-send-email-m.szyprowski@samsung.com>
+ <20130829224637.D09183E1222@localhost> <52209278.8040106@samsung.com>
+ <DAF223EB-C84C-4E82-A24A-ACD0A3A0559F@codeaurora.org>
+ <20130909160154.8D7183E0F23@localhost> <5236AF64.80607@samsung.com>
+ <1379316344.3721.6.camel@pasglop>
+ <CACxGe6s_JY7GpjXN7gwADV0oE+BnQfJX4AaXTZURumfepa3NiA@mail.gmail.com>
+ <20130918034848.A8E76C42CF4@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1379457245-17810-1-git-send-email-eduardo.valentin-l0cyMroinI0@public.gmane.org>
+In-reply-to: <20130918034848.A8E76C42CF4-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
-Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2013 at 06:34:05PM -0400, Eduardo Valentin wrote:
-> This patch adds to tmp102 temperature sensor the possibility
-> to expose itself as thermal zone device, registered on the
-> thermal framework.
-> 
-> The thermal zone is built only if a device tree node
-> describing a thermal zone for this sensor is present
-> inside the tmp102 DT node. Otherwise, the driver behavior
-> will be the same.
-> 
-> Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
-> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/hwmon/tmp102.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> ---
-> 
-> Guenter,
-> 
-> Here is a version without the warnings, as requested.
-> 
-> Eduardo
-> 
-> diff --git a/drivers/hwmon/tmp102.c b/drivers/hwmon/tmp102.c
-> index d7b47ab..dc96598 100644
-> --- a/drivers/hwmon/tmp102.c
-> +++ b/drivers/hwmon/tmp102.c
-> @@ -27,6 +27,8 @@
->  #include <linux/mutex.h>
->  #include <linux/device.h>
->  #include <linux/jiffies.h>
-> +#include <linux/thermal.h>
-> +#include <linux/of.h>
->  
->  #define	DRIVER_NAME "tmp102"
->  
-> @@ -50,6 +52,7 @@
->  
->  struct tmp102 {
->  	struct device *hwmon_dev;
-> +	struct thermal_zone_device *tz;
->  	struct mutex lock;
->  	u16 config_orig;
->  	unsigned long last_update;
-> @@ -93,6 +96,15 @@ static struct tmp102 *tmp102_update_device(struct i2c_client *client)
->  	return tmp102;
->  }
->  
-> +static int tmp102_read_temp(void *dev, long *temp)
-> +{
-> +	struct tmp102 *tmp102 = tmp102_update_device(to_i2c_client(dev));
-> +
-> +	*temp = tmp102->temp[0];
-> +
-> +	return 0;
-> +}
-> +
->  static ssize_t tmp102_show_temp(struct device *dev,
->  				struct device_attribute *attr,
->  				char *buf)
-> @@ -204,6 +216,12 @@ static int tmp102_probe(struct i2c_client *client,
->  		goto fail_remove_sysfs;
->  	}
->  
-> +	tmp102->tz = thermal_zone_of_sensor_register(&client->dev, 0,
-> +						     &client->dev,
-> +						     tmp102_read_temp, NULL);
-> +	if (IS_ERR(tmp102->tz))
-> +		tmp102->tz = NULL;
-> +
->  	dev_info(&client->dev, "initialized\n");
->  
->  	return 0;
-> @@ -220,6 +238,8 @@ static int tmp102_remove(struct i2c_client *client)
->  {
->  	struct tmp102 *tmp102 = i2c_get_clientdata(client);
->  
-> +	/* thermal zone life cycle is not our responsibility */
 
-This comment does not provide any value. Please drop it from both drivers.
-Sorry I missed that earlier.
+On 9/18/2013 5:48 AM, Grant Likely wrote:
+> On Mon, 16 Sep 2013 06:43:08 -0700, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > On Mon, Sep 16, 2013 at 12:25 AM, Benjamin Herrenschmidt
+> > <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> > > On Mon, 2013-09-16 at 09:12 +0200, Marek Szyprowski wrote:
+> > >>
+> > >> Fixing those issues requires further discussion. Frankly, right now I
+> > >> really have no idea which way should I go. The /reserved-ranges node seems
+> > >> to be easy to match particular reserved memory region with a given device.
+> > >> I'm also not really convinced if it makes sense to add a code for finding
+> > >> and matching a reserved memory region to every device driver, which might
+> > >> need it. I would really like to get some more feedback on the Ben's
+> > >> comment.
+> > >>
+> > >> In any case, the code will also change significantly, so I assume that the
+> > >> best, what can be done now is to revert the current version and start from
+> > >> the scratch with a new, complete proposal.
+> > >
+> > > Yes, let's do that. I will try to help. It shouldn't be that a big deal.
+> >
+> > I think we can get the concerns sorted quickly. I'm at meetings all
+> > day today in SJC, but I'll take a look at it this evening. I'll be in
+> > Edinburgh. We're holding an ARM summit at the same time so a bunch of
+> > affected ARM folks will be there.
+>
+> After reading through the entirety of the other thread, I think this can
+> be fixed. My preference would be to fix in now rather than waiting
+> another cycle. If you haven't sent the revert yet then please hold off
+> for a bit (I can't tell at the moment since I'm currently on an airplane
+> and I didn't update my tree before leaving the ground).
 
-> +	thermal_zone_of_sensor_unregister(&client->dev, tmp102->tz);
->  	hwmon_device_unregister(tmp102->hwmon_dev);
->  	sysfs_remove_group(&client->dev.kobj, &tmp102_attr_group);
->  
-> -- 
-> 1.8.2.1.342.gfa7285d
-> 
-> 
+I've didn't send revert yet, I can wait a few days more if you see that the
+issues can be fixed instead of redoing all from scratch.
+
+Best regards
+-- 
+Marek Szyprowski
+Samsung R&D Institute Poland
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
