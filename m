@@ -1,63 +1,56 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCHv2 3/4] of: provide a binding for fixed link PHYs
-Date: Wed, 18 Sep 2013 18:11:12 +0200
-Message-ID: <20130918181112.56c10dde@skate>
-References: <1378480701-12908-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1378480701-12908-4-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20130918042923.5D845C42CF7@trevor.secretlab.ca>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4] regulator: core: add support for configuring turn-on
+ time through constraints
+Date: Wed, 18 Sep 2013 17:13:29 +0100
+Message-ID: <20130918161329.GC21013@sirena.org.uk>
+References: <1379508482-10550-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+hZM3YBJafcqGfHn"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130918042923.5D845C42CF7-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1379508482-10550-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Grant Likely,
 
-On Tue, 17 Sep 2013 23:29:23 -0500, Grant Likely wrote:
+--+hZM3YBJafcqGfHn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> I understand what you're trying to do here, but it causes a troublesome
-> leakage of implementation detail into the binding, making the whole
-> thing look very odd. This binding tries to make a fixed link look
-> exactly like a real PHY even to the point of including a phandle to the
-> phy. But having a phandle to a node which is *always* a direct child of
-> the MAC node is redundant and a rather looney. Yes, doing it that way
-> makes it easy for of_phy_find_device() to be transparent for fixed link,
-> but that should *not* drive bindings, especially when that makes the
-> binding really rather weird.
-> 
-> Second, this new binding doesn't provide anything over and above the
-> existing fixed-link binding. It may not be pretty, but it is
-> estabilshed.
+On Wed, Sep 18, 2013 at 06:18:02PM +0530, Laxman Dewangan wrote:
+> The turn-on time of the regulator depends on the regulator device's
+> electrical characteristics. Sometimes regulator turn-on time also
+> depends on the capacitive load on the given platform and it can be
+> more than the datasheet value.
 
-Have you followed the past discussions about this patch set? Basically
-the *only* feedback I received on RFCv1 is that the fixed-link property
-sucks, and everybody (including the known Device Tree binding
-maintainer Mark Rutland) suggested to not use the fixed-link mechanism.
-See http://article.gmane.org/gmane.linux.network/276932, where Mark
-said:
+Applied, thanks.
 
-""
-I'm not sure grouping these values together is the best way of handling
-this. It's rather opaque, and inflexible for future extension.
-""
+--+hZM3YBJafcqGfHn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-So, please DT maintainers, tell me what you want. I honestly don't care
-whether fixed-link or a separate node is chosen. However, I do care
-about being dragged around between two solutions just because the
-former DT maintainer and the new DT maintainers do not agree.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-Thanks,
+iQIcBAEBAgAGBQJSOdElAAoJELSic+t+oim9A9AP/3sD+fGhZG0KxDf/qgGsHKMV
+T5fEROdvqTo4IRNCY+TuLVeSKuuWbfhZaWNkU2NYca9XuAhPHZmB8vBkxV0IBV6O
+AGAezW2L4f0kmveCc4PGdu/aNAiHawgOo1qjXySrt3A7BfXbXjOObDu4IydvQW+O
+EEaKodWZw2YHg+PRq5QUyP2118QkSE4S8jA5COr3YOzLWi/X7iaSqPL+WLpZ37xm
+hcXWXfAN3z9zFVj+ex5IBYgJaxQUTnVRRJVRW5b0GZl5/UQ7dJHra5okp4/EdXG5
+sqXON/leCntc9Q8/wxLOdS7q67oeWuOvDs3UMNPJ/Ec2oRwO31JkWhh/H3E49cPf
+FcFwALVhG24ml7gsO/BL6BhdNZICjRc7jgCCyCZALYuvtu1N4ho1I64ng28idZA9
+kdwA7mbBJI2yBVQ+s1KQ9TSbjRiZiOAjRR5ac/UNnvKjMXqWb5edPJZVHzvlQgjs
+3eRNr9ZKrvhtAvkeJcQVGwJXtKwrMghcqnu6rtSfBgYTx7QX5Qm9KzuWj2H0f6GS
+FmZckkpz1Z0TV3CUsvkJ4USBfLCNKkVADYaGsIsHrdrhmiCK3qxT3EgP4qkRF84s
+iJnk4CTGhROEjuFKNkjnBC5QK1rbfRWXzHRR9iSOxXwLAl5a20grSSE1DwGnTzWX
+UYIOG7u+YbZoy8l0uQGu
+=vLZP
+-----END PGP SIGNATURE-----
 
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+--+hZM3YBJafcqGfHn--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
