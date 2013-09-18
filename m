@@ -1,67 +1,69 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma
- reserved memory
-Date: Wed, 18 Sep 2013 13:07:03 +0200
-Message-ID: <52398957.9010505@samsung.com>
-References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com>
- <1377527959-5080-4-git-send-email-m.szyprowski@samsung.com>
- <20130829224637.D09183E1222@localhost> <52209278.8040106@samsung.com>
- <DAF223EB-C84C-4E82-A24A-ACD0A3A0559F@codeaurora.org>
- <20130909160154.8D7183E0F23@localhost> <5236AF64.80607@samsung.com>
- <1379316344.3721.6.camel@pasglop>
- <CACxGe6s_JY7GpjXN7gwADV0oE+BnQfJX4AaXTZURumfepa3NiA@mail.gmail.com>
- <20130918034848.A8E76C42CF4@trevor.secretlab.ca>
+From: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V2] ARM: dts: DRA7: provide arch-timer frequenecy parameter
+Date: Wed, 18 Sep 2013 17:03:27 +0530
+Message-ID: <52398F87.6090108@ti.com>
+References: <5238899D.60903@ti.com> <1379437288-10831-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20130918034848.A8E76C42CF4-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1379437288-10831-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On 9/18/2013 5:48 AM, Grant Likely wrote:
-> On Mon, 16 Sep 2013 06:43:08 -0700, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > On Mon, Sep 16, 2013 at 12:25 AM, Benjamin Herrenschmidt
-> > <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> > > On Mon, 2013-09-16 at 09:12 +0200, Marek Szyprowski wrote:
-> > >>
-> > >> Fixing those issues requires further discussion. Frankly, right now I
-> > >> really have no idea which way should I go. The /reserved-ranges node seems
-> > >> to be easy to match particular reserved memory region with a given device.
-> > >> I'm also not really convinced if it makes sense to add a code for finding
-> > >> and matching a reserved memory region to every device driver, which might
-> > >> need it. I would really like to get some more feedback on the Ben's
-> > >> comment.
-> > >>
-> > >> In any case, the code will also change significantly, so I assume that the
-> > >> best, what can be done now is to revert the current version and start from
-> > >> the scratch with a new, complete proposal.
-> > >
-> > > Yes, let's do that. I will try to help. It shouldn't be that a big deal.
-> >
-> > I think we can get the concerns sorted quickly. I'm at meetings all
-> > day today in SJC, but I'll take a look at it this evening. I'll be in
-> > Edinburgh. We're holding an ARM summit at the same time so a bunch of
-> > affected ARM folks will be there.
+On Tuesday 17 September 2013 10:31 PM, Nishanth Menon wrote:
+> CNTFREQ isn't pre-programmed on DRA7 just like O5, so provide the
+> timer frequency via DT. Without a valid value arch_timer_init results
+> in div0 crash.
 >
-> After reading through the entirety of the other thread, I think this can
-> be fixed. My preference would be to fix in now rather than waiting
-> another cycle. If you haven't sent the revert yet then please hold off
-> for a bit (I can't tell at the moment since I'm currently on an airplane
-> and I didn't update my tree before leaving the ground).
+> Cc: R Sricharan <r.sricharan-l0cyMroinI0@public.gmane.org>
+> Cc: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+> Cc: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+>
+> Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> ---
+>
+> Based on Benoit's for_3.13/dts branch. 
+> http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
+>
+> Crash log: http://pastebin.com/B2sDauS9
+>
+> V2: commit message update
+> V1: https://patchwork.kernel.org/patch/2903261/
+>
+>  arch/arm/boot/dts/dra7.dtsi |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index c98997b..71c2749 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -50,6 +50,7 @@
+>  			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+>  			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+>  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
+> +		clock-frequency = <6144000>;
+>  	};
+>  
+>  	gic: interrupt-controller@48211000 {
+This is not the right way to pass the frequency. In fact, initially the frequency value was present
+when the dts was added, but had to revert it back based on the feedbacks. Please refer below.
+  
 
-I've didn't send revert yet, I can wait a few days more if you see that the
-issues can be fixed instead of redoing all from scratch.
-
-Best regards
--- 
-Marek Szyprowski
-Samsung R&D Institute Poland
+http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg93832.html
 
 
+Also posted the below patch to fix this,
+
+    http://marc.info/?l=linux-omap&m=137950345528918&w=2
+
+Regards,
+ Sricharan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
