@@ -1,69 +1,90 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Update arch timer node with clock frequency
-Date: Wed, 18 Sep 2013 11:23:19 +0100
-Message-ID: <20130918102319.GF26737@e106331-lin.cambridge.arm.com>
-References: <1379499113-20342-1-git-send-email-yuvaraj.cd@samsung.com>
+From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [GIT PULL] ARM: DTS: Fix OMAP bugs for 3.12-rc
+Date: Wed, 18 Sep 2013 12:24:12 +0200
+Message-ID: <CAFqH_52=NOZLHX4VZRMkUFpmJQJZ6egNZsckMJ=+QjVXO1=ofg@mail.gmail.com>
+References: <52397523.4050209@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1379499113-20342-1-git-send-email-yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <52397523.4050209-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuvaraj Kumar C D <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+To: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[adding lakml]
+Hi Benoit,
 
-On Wed, Sep 18, 2013 at 11:11:53AM +0100, Yuvaraj Kumar C D wrote:
-> Without the "clock-frequency" property in arch timer node, could able
-> to see the below crash dump.
 
-Why does this cause the below crash specifically? What is CNTFRQ reading
-as?
+2013/9/18 Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>:
+> Hi Tony,
+>
+> Please pull few fixes for OMAP DTS.
+>
+> Thanks,
+> Benoit
+>
+>
+>
+> The following changes since commit 272b98c6455f00884f0350f775c5342358ebb73f:
+>
+>   Linux 3.12-rc1 (2013-09-16 16:17:51 -0400)
+>
+> are available in the git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git tags/for_3.12-rc2/dts_signed
+>
+> for you to fetch changes up to 775d2418f309052641d94c896f73dc779cf7ba1b:
+>
+>   ARM: dts: Fix muxing and regulator for wl12xx on the SDIO bus for blaze (2013-09-18 11:14:42 +0200)
+>
+> ----------------------------------------------------------------
+> Fix BBB LDO voltage to avoid HDMI destruction
+> Fix OMAP5 wrong attribute
+> Fix typo in beagle xM strings
+>
+> ----------------------------------------------------------------
+> Felipe Balbi (2):
+>       ARM: dts: OMAP5: fix reg property size
+>       ARM: dts: OMAP5: fix ocp2scp DTS data
+>
+> Koen Kooi (1):
+>       ARM: dts: am335x-bone*: add DT for BeagleBone Black
+>
+> Robert Nelson (1):
+>       ARM: dts: omap3-beagle-xm: fix string error in compatible property
+>
+> Tony Lindgren (2):
+>       ARM: dts: Fix muxing and regulator for wl12xx on the SDIO bus for pandaboard
+>       ARM: dts: Fix muxing and regulator for wl12xx on the SDIO bus for blaze
+>
+>  arch/arm/boot/dts/Makefile                |   1 +
+>  arch/arm/boot/dts/am335x-bone-common.dtsi | 262 ++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/am335x-bone.dts         | 256 +----------------------------
+>  arch/arm/boot/dts/am335x-boneblack.dts    |  17 ++
+>  arch/arm/boot/dts/omap3-beagle-xm.dts     |   2 +-
+>  arch/arm/boot/dts/omap4-panda-common.dtsi |  46 +++++-
+>  arch/arm/boot/dts/omap4-sdp.dts           |  39 ++++-
+>  arch/arm/boot/dts/omap5.dtsi              |   7 +-
+>  8 files changed, 369 insertions(+), 261 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/am335x-bone-common.dtsi
+>  create mode 100644 arch/arm/boot/dts/am335x-boneblack.dts
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Your firmware or bootloader should set CNTFRQ -- setting the
-clock-frequency is a work-around for buggy firmware/bootloaders that
-should be avoided as far as possible.
+On July 5th, I sent the following patch
 
-Is it not possible to fix your firmware or bootlaoder to set CNTFRQ?
+    http://www.spinics.net/lists/linux-omap/msg96935.html
 
-Thanks,
-Mark.
+and on Sep 10th I sent the same patch rebased with upstream and Acked
+by Javier. I consider this patch as a fix, as is required to make the
+sound work on IGEP boards but it's not included in this pull request.
+Maybe you forget it due your email change. Can you consider adding
+this patch, at least, in your next pull request? Thanks in advance.
 
-> 
-> [<c0014e28>] (unwind_backtrace+0x0/0xf4) from [<c0011808>] (show_stack+0x10/0x14)
-> [<c0011808>] (show_stack+0x10/0x14) from [<c036ac1c>] (dump_stack+0x7c/0xb0)
-> [<c036ac1c>] (dump_stack+0x7c/0xb0) from [<c01ab760>] (Ldiv0_64+0x8/0x18)
-> [<c01ab760>] (Ldiv0_64+0x8/0x18) from [<c0062f60>] (clockevents_config.part.2+0x1c/0x74)
-> [<c0062f60>] (clockevents_config.part.2+0x1c/0x74) from [<c0062fd8>] (clockevents_config_and_register+0x20/0x2c)
-> [<c0062fd8>] (clockevents_config_and_register+0x20/0x2c) from [<c02b8e8c>] (arch_timer_setup+0xa8/0x134)
-> [<c02b8e8c>] (arch_timer_setup+0xa8/0x134) from [<c04b47b4>] (arch_timer_init+0x1f4/0x24c)
-> [<c04b47b4>] (arch_timer_init+0x1f4/0x24c) from [<c04b40d8>] (clocksource_of_init+0x34/0x58)
-> [<c04b40d8>] (clocksource_of_init+0x34/0x58) from [<c049ed8c>] (time_init+0x20/0x2c)
-> [<c049ed8c>] (time_init+0x20/0x2c) from [<c049b95c>] (start_kernel+0x1e0/0x39c)
-> 
-> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/exynos5250.dtsi |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 7d7cc77..668ce5d 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -96,6 +96,7 @@
->  			     <1 14 0xf08>,
->  			     <1 11 0xf08>,
->  			     <1 10 0xf08>;
-> +		clock-frequency = <24000000>;
->  	};
->  
->  	mct@101C0000 {
-> -- 
-> 1.7.9.5
-> 
-> 
+Merci beaucoup,
+    Enric
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
