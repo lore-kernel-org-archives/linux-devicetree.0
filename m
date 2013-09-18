@@ -1,68 +1,118 @@
-From: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: exynos5: add pwm DT nodes to Exynos5250 and
- Exynos5420
-Date: Wed, 18 Sep 2013 17:59:16 +0530
-Message-ID: <1379507356-16866-1-git-send-email-l.krishna@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V4] regulator: core: add support for configuring turn-on time through constraints
+Date: Wed, 18 Sep 2013 18:18:02 +0530
+Message-ID: <1379508482-10550-1-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: broonie@kernel.org
+Cc: swarren@nvidia.com, rob.herring@calxeda.com, mark.rutland@arm.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the device-tree binding for the PWM controller to Exynos5250 and Exynos5420
+The turn-on time of the regulator depends on the regulator device's
+electrical characteristics. Sometimes regulator turn-on time also
+depends on the capacitive load on the given platform and it can be
+more than the datasheet value.
 
-Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+The driver provides the enable-time as per datasheet.
+
+Add support for configure the enable ramp time through regulator
+constraints so that regulator core can take this value for enable
+time for that regulator.
+
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 ---
- arch/arm/boot/dts/exynos5250.dtsi |    9 +++++++++
- arch/arm/boot/dts/exynos5420.dtsi |    9 +++++++++
- 2 files changed, 18 insertions(+)
+Changes from V1: 
+- Change property name to regulator-enable-ramp-delay and add more details
+  in DT doc.
+- add the valid pointer check for constraints before accessing it.
 
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 864ae90..99abc72 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -521,6 +521,15 @@
- 		};
- 	};
+Changes from V2: 
+- Rephrase the descripton of property regulator-enable-ramp-delay.
+Changes from V3: 
+- Use the description provided by Stephen to describe
+  regulator-enable-ramp-delay.
+
+ .../devicetree/bindings/regulator/regulator.txt    |    5 +++++
+ drivers/regulator/core.c                           |    2 ++
+ drivers/regulator/of_regulator.c                   |    6 ++++++
+ include/linux/regulator/machine.h                  |    2 ++
+ 4 files changed, 15 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index 2bd8f09..e2c7f1e 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -14,6 +14,11 @@ Optional properties:
+ - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
+   For hardwares which support disabling ramp rate, it should be explicitly
+   intialised to zero (regulator-ramp-delay = <0>) for disabling ramp delay.
++- regulator-enable-ramp-delay: The time taken, in microseconds, for the supply
++  rail to reach the target voltage, plus/minus whatever tolerance the board
++  design requires. This property describes the total system ramp time
++  required due to the combination of internal ramping of the regulator itself,
++  and board design issues such as trace capacitance and load on the supply.
  
-+	pwm: pwm@12dd0000 {
-+		compatible = "samsung,exynos4210-pwm";
-+		reg = <0x12dd0000 0x100>;
-+		samsung,pwm-outputs = <0>, <1>, <2>, <3>;
-+		#pwm-cells = <3>;
-+		clocks = <&clock 311>;
-+		clock-names = "timers";
-+	};
-+
- 	amba {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index d537cd7..80afc8b 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -206,6 +206,15 @@
- 		clock-names = "uart", "clk_uart_baud0";
- 	};
+ Deprecated properties:
+ - regulator-compatible: If a regulator chip contains multiple
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index b698e2b..4eefcc3 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -1167,6 +1167,8 @@ overflow_err:
  
-+	pwm: pwm@12dd0000 {
-+		compatible = "samsung,exynos4210-pwm";
-+		reg = <0x12dd0000 0x100>;
-+		samsung,pwm-outputs = <0>, <1>, <2>, <3>;
-+		#pwm-cells = <3>;
-+		clocks = <&clock 279>;
-+		clock-names = "timers";
-+	};
+ static int _regulator_get_enable_time(struct regulator_dev *rdev)
+ {
++	if (rdev->constraints && rdev->constraints->enable_time)
++		return rdev->constraints->enable_time;
+ 	if (!rdev->desc->ops->enable_time)
+ 		return rdev->desc->enable_time;
+ 	return rdev->desc->ops->enable_time(rdev);
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 7827384..ea4f36f 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -23,6 +23,8 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 	const __be32 *min_uA, *max_uA, *ramp_delay;
+ 	struct property *prop;
+ 	struct regulation_constraints *constraints = &(*init_data)->constraints;
++	int ret;
++	u32 pval;
+ 
+ 	constraints->name = of_get_property(np, "regulator-name", NULL);
+ 
+@@ -73,6 +75,10 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 		else
+ 			constraints->ramp_disable = true;
+ 	}
 +
- 	dp_phy: video-phy@10040728 {
- 		compatible = "samsung,exynos5250-dp-video-phy";
- 		reg = <0x10040728 4>;
++	ret = of_property_read_u32(np, "regulator-enable-ramp-delay", &pval);
++	if (!ret)
++		constraints->enable_time = pval;
+ }
+ 
+ /**
+diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
+index a9f7c55..730e638 100644
+--- a/include/linux/regulator/machine.h
++++ b/include/linux/regulator/machine.h
+@@ -95,6 +95,7 @@ struct regulator_state {
+  * @initial_state: Suspend state to set by default.
+  * @initial_mode: Mode to set at startup.
+  * @ramp_delay: Time to settle down after voltage change (unit: uV/us)
++ * @enable_time: Turn-on time of the rails (unit: microseconds)
+  */
+ struct regulation_constraints {
+ 
+@@ -129,6 +130,7 @@ struct regulation_constraints {
+ 	unsigned int initial_mode;
+ 
+ 	unsigned int ramp_delay;
++	unsigned int enable_time;
+ 
+ 	/* constraint flags */
+ 	unsigned always_on:1;	/* regulator never off when system is on */
 -- 
-1.7.10.4
+1.7.1.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
