@@ -1,47 +1,75 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma reserved memory
-Date: Tue, 17 Sep 2013 22:48:48 -0500
-Message-ID: <20130918034848.A8E76C42CF4@trevor.secretlab.ca>
-References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com> <1377527959-5080-4-git-send-email-m.szyprowski@samsung.com> <20130829224637.D09183E1222@localhost> <52209278.8040106@samsung.com> <DAF223EB-C84C-4E82-A24A-ACD0A3A0559F@codeaurora.org> <20130909160154.8D7183E0F23@localhost> <5236AF64.80607@samsung.com> <1379316344.3721.6.camel@pasglop> <CACxGe6s_JY7GpjXN7gwADV0oE+BnQfJX4AaXTZURumfepa3NiA@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6s_JY7GpjXN7gwADV0oE+BnQfJX4AaXTZURumfepa3NiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 19/28] arm: set initrd_start/initrd_end for fdt scan
+Date: Tue, 17 Sep 2013 22:36:29 -0500
+Message-ID: <20130918033629.0D236C42C83@trevor.secretlab.ca>
+References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
+ <1379372965-22359-20-git-send-email-robherring2@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1379372965-22359-20-git-send-email-robherring2@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Sep 2013 06:43:08 -0700, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Mon, Sep 16, 2013 at 12:25 AM, Benjamin Herrenschmidt
-> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> > On Mon, 2013-09-16 at 09:12 +0200, Marek Szyprowski wrote:
-> >>
-> >> Fixing those issues requires further discussion. Frankly, right now I
-> >> really have no idea which way should I go. The /reserved-ranges node seems
-> >> to be easy to match particular reserved memory region with a given device.
-> >> I'm also not really convinced if it makes sense to add a code for finding
-> >> and matching a reserved memory region to every device driver, which might
-> >> need it. I would really like to get some more feedback on the Ben's
-> >> comment.
-> >>
-> >> In any case, the code will also change significantly, so I assume that the
-> >> best, what can be done now is to revert the current version and start from
-> >> the scratch with a new, complete proposal.
-> >
-> > Yes, let's do that. I will try to help. It shouldn't be that a big deal.
+On Mon, 16 Sep 2013 18:09:15 -0500, Rob Herring <robherring2@gmail.com> wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
 > 
-> I think we can get the concerns sorted quickly. I'm at meetings all
-> day today in SJC, but I'll take a look at it this evening. I'll be in
-> Edinburgh. We're holding an ARM summit at the same time so a bunch of
-> affected ARM folks will be there.
+> In order to unify the initrd scanning for DT across architectures, make
+> arm set initrd_start and initrd_end instead of the physical addresses.
+> This is aligned with all other architectures.
+> 
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: linux-arm-kernel@lists.infradead.org
 
-After reading through the entirety of the other thread, I think this can
-be fixed. My preference would be to fix in now rather than waiting
-another cycle. If you haven't sent the revert yet then please hold off
-for a bit (I can't tell at the moment since I'm currently on an airplane
-and I didn't update my tree before leaving the ground).
+Acked-by: Grant Likely <grant.likely@linaro.org>
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  arch/arm/mm/init.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> index febaee7..9eeb1cd 100644
+> --- a/arch/arm/mm/init.c
+> +++ b/arch/arm/mm/init.c
+> @@ -77,11 +77,11 @@ static int __init parse_tag_initrd2(const struct tag *tag)
+>  
+>  __tagtable(ATAG_INITRD2, parse_tag_initrd2);
+>  
+> -#ifdef CONFIG_OF_FLATTREE
+> +#if defined(CONFIG_OF_FLATTREE) && defined(CONFIG_BLK_DEV_INITRD)
+>  void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
+>  {
+> -	phys_initrd_start = start;
+> -	phys_initrd_size = end - start;
+> +	initrd_start = (unsigned long)__va(start);
+> +	initrd_end = (unsigned long)__va(end);
+>  }
+>  #endif /* CONFIG_OF_FLATTREE */
+>  
+> @@ -351,6 +351,11 @@ void __init arm_memblock_init(struct meminfo *mi,
+>  	memblock_reserve(__pa(_stext), _end - _stext);
+>  #endif
+>  #ifdef CONFIG_BLK_DEV_INITRD
+> +	/* FDT scan will populate initrd_start */
+> +	if (initrd_start) {
+> +		phys_initrd_start = __virt_to_phys(initrd_start);
+> +		phys_initrd_size = initrd_end - initrd_start;
+> +	}
+>  	if (phys_initrd_size &&
+>  	    !memblock_is_region_memory(phys_initrd_start, phys_initrd_size)) {
+>  		pr_err("INITRD: 0x%08llx+0x%08lx is not a memory region - disabling initrd\n",
+> -- 
+> 1.8.1.2
+> 
