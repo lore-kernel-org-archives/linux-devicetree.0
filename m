@@ -1,65 +1,58 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: [GIT PULL] ARM: DTS: Fix OMAP bugs for 3.12-rc
-Date: Wed, 18 Sep 2013 11:40:51 +0200
-Message-ID: <52397523.4050209@baylibre.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 00/11] Fix AM335x-evm analog audio support
+Date: Wed, 18 Sep 2013 10:42:52 +0100
+Message-ID: <20130918094252.GM21013@sirena.org.uk>
+References: <cover.1379409268.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: "khilman@linaro.org" <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0yM48dKbQb4SmPLM"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1379409268.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jsarha-l0cyMroinI0@public.gmane.org
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, joelf-l0cyMroinI0@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
 
-Please pull few fixes for OMAP DTS.
+--0yM48dKbQb4SmPLM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Benoit
+On Tue, Sep 17, 2013 at 12:25:59PM +0300, jsarha-l0cyMroinI0@public.gmane.org wrote:
+> From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+>=20
+> The first version of patches can been found here:
+> http://mailman.alsa-project.org/pipermail/alsa-devel/2013-September/06617=
+8.html
 
+Please remember to always CC maintainers on patches.
 
+--0yM48dKbQb4SmPLM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The following changes since commit 272b98c6455f00884f0350f775c5342358ebb73f:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-  Linux 3.12-rc1 (2013-09-16 16:17:51 -0400)
+iQIcBAEBAgAGBQJSOXWYAAoJELSic+t+oim9CgEP/RAG54eOKGo4CegA9RNAqDeC
+K6g0SMRYKI/RVZVkEW1Pl3F2gsC90WEqiZxH++oD/SvD1CCxXmLN2WvbW+8kRN70
+UfPXIGGft1WYFx0TT6p2NVGunD3tUgxuWVmB8ZEQNjeh7T2d/MVQ68ckWibfI/gV
+T+8n8SCiEbpWYIW/g7lcLndjAYMFJ4AR+zWrUp+7cBND6BwBOH7ruG0ppJoIZUrd
+pXAhTkBvrO4yKwFCrr2/s9P7wZRObxJwJpGh2TcnRZCWkjN7cQuZwzgpbr5WqMr7
+Z4v4ZX4E/Y+sgAiekZYB9iuxjStcUT1ewq60zsJIOyLm8q5TzvdDBn+jc+N6/NVd
+F0zyUH59ZdXU+M+D2G+l8dwd/sB9MSJvUn3NS/RcqX1NpwTXysqEvLOOFg3fGu0o
+EB/+7pLHAXgmSGwerMtk7Uj8qdxgwUy/UfMPjx0iFCoBH1Lri2YeVWhTe6Mn+SvW
+YNM0ZbirVMnWZoPdZPkx9ScP7qHxyNPOoRJWJcMB3FYfTHj7Sz1XW8Vn+Vr6xm67
+DXh7TcMe0MYFFiEpKkyL4aTBDy+vPofsOB2Qm4TEBmprRClBmRErLhy+InDdzPxE
+FesvKb2LNwbLUzftnoRd88TWkGY/DYpL2Y6DJiWoew00PRUbhYA4Eupamkx+QJl6
+yDwp+bze3aHBr7wGb63m
+=Dmst
+-----END PGP SIGNATURE-----
 
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git tags/for_3.12-rc2/dts_signed
-
-for you to fetch changes up to 775d2418f309052641d94c896f73dc779cf7ba1b:
-
-  ARM: dts: Fix muxing and regulator for wl12xx on the SDIO bus for blaze (2013-09-18 11:14:42 +0200)
-
-----------------------------------------------------------------
-Fix BBB LDO voltage to avoid HDMI destruction
-Fix OMAP5 wrong attribute
-Fix typo in beagle xM strings
-
-----------------------------------------------------------------
-Felipe Balbi (2):
-      ARM: dts: OMAP5: fix reg property size
-      ARM: dts: OMAP5: fix ocp2scp DTS data
-
-Koen Kooi (1):
-      ARM: dts: am335x-bone*: add DT for BeagleBone Black
-
-Robert Nelson (1):
-      ARM: dts: omap3-beagle-xm: fix string error in compatible property
-
-Tony Lindgren (2):
-      ARM: dts: Fix muxing and regulator for wl12xx on the SDIO bus for pandaboard
-      ARM: dts: Fix muxing and regulator for wl12xx on the SDIO bus for blaze
-
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/am335x-bone-common.dtsi | 262 ++++++++++++++++++++++++++++++
- arch/arm/boot/dts/am335x-bone.dts         | 256 +----------------------------
- arch/arm/boot/dts/am335x-boneblack.dts    |  17 ++
- arch/arm/boot/dts/omap3-beagle-xm.dts     |   2 +-
- arch/arm/boot/dts/omap4-panda-common.dtsi |  46 +++++-
- arch/arm/boot/dts/omap4-sdp.dts           |  39 ++++-
- arch/arm/boot/dts/omap5.dtsi              |   7 +-
- 8 files changed, 369 insertions(+), 261 deletions(-)
- create mode 100644 arch/arm/boot/dts/am335x-bone-common.dtsi
- create mode 100644 arch/arm/boot/dts/am335x-boneblack.dts
+--0yM48dKbQb4SmPLM--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
