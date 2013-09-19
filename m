@@ -1,70 +1,78 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] mfd: core: introduce of_node_name for mfd sub devices
-Date: Thu, 19 Sep 2013 12:55:01 +0100
-Message-ID: <20130919115501.GM21013@sirena.org.uk>
-References: <1379579392-1794-1-git-send-email-ldewangan@nvidia.com>
- <20130919083050.GH16984@lee--X1>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] Documentation: add LP3943 DT bindings and document
+Date: Thu, 19 Sep 2013 12:56:30 +0100
+Message-ID: <20130919115629.GF22389@lee--X1>
+References: <1378949700-6384-1-git-send-email-milo.kim@ti.com>
+ <20130912152455.GN11227@lee--X1>
+ <20130915112755.GB9765@ulmo>
+ <20130916073000.GA3999@lee--X1>
+ <20130919112545.GC10852@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FAVlh7XA/4iOdtaa"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130919083050.GH16984@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20130919112545.GC10852@ulmo>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 19 Sep 2013, Thierry Reding wrote:
 
---FAVlh7XA/4iOdtaa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Mon, Sep 16, 2013 at 08:30:00AM +0100, Lee Jones wrote:
+> > On Sun, 15 Sep 2013, Thierry Reding wrote:
+> >=20
+> > > On Thu, Sep 12, 2013 at 04:24:55PM +0100, Lee Jones wrote:
+> > > > On Thu, 12 Sep 2013, Milo Kim wrote:
+> > > [...]
+> > > > > diff --git a/Documentation/lp3943.txt b/Documentation/lp3943.=
+txt
+> > > > > new file mode 100644
+> > > > > index 0000000..576ebd0
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/lp3943.txt
+> > > [...]
+> > > > If this stuff is really important (and most of it really isn't)=
+, then
+> > > > put it either in the commit log or in the driver.
+> > >=20
+> > > I can only speak for myself, but the initial driver commit messag=
+e is
+> > > about the last place I look for this kind of information. I'd exp=
+ect it
+> > > to be either somewhere in Documentation/ or in one of the source =
+files.
+> > > In this case I'd probably look at the MFD core driver source file=
+=2E More
+> > > likely, even, I'd just go google "LP3943" and grab a public datas=
+heet
+> > > from TI where all of this can hopefully be found.
+> >=20
+> > The latter option is the most common. If the datasheet is publicly
+> > available, then there is no rhyme nor reason to put it in the kerne=
+l
+> > source too. /Documentation is already overloaded, it would be even
+> > more so if each and every driver residing in the kernel decided to
+> > bulk it up further.
+>=20
+> Okay. So in this case perhaps Milo should simply drop the documentati=
+on
+> file. Perhaps link to the public datasheet from on of the source file=
+s,
+> although that could be problematic if the URL isn't permanent.
 
-On Thu, Sep 19, 2013 at 09:30:50AM +0100, Lee Jones wrote:
+I'm not sure even that's required.
 
-> I'm not entirely sure this is what Mark was saying. I think he was
-> complaining about the existence of the sub-nodes rather than how the
-> MFD Core assigns their of_node. My take is that the chip is really a
-> single device which provides different bits of functionality. To break
-> that functionality up and disperse the drivers into various subsystems
-> is a Linuxisum. By providing each functional block with its own node
-> you're describing how we do things in Linux, rather than specifying a
-> single node for the AS3722 which would probably be the norm.
+I just Googled it and found the datasheet on the first hit.
 
-Yes, that's exactly what I was thinking of.
-
-> Do the sub-nodes have their own properties? If so, it would be worth
-> breaking them up as other OSes could reuse the specifics. If they do,
-> then you need so put them in the binding. If they don't, then you do
-> not require sub-nodes. The MFD core will ensure the sub-devices are
-> probed and there is no requirement for the of_node to be assigned.
-
-You do see some reusable IP blocks (like the regualtors on the wm831x
-PMICs for example, they're repeated blocks) which can be reused but
-generally they have a register base as part of the binding.  Personally
-if it's just a property or two I'd probably just put them on the root
-node for the device.
-
---FAVlh7XA/4iOdtaa
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSOuYSAAoJELSic+t+oim9LlcP/iXsJl5JsRYOAqGLP0TfnNHw
-fKuYUMnbJvoZ8hvXh1SQ0YyzshUQLJHixsJFqRZX9sNiG2ZRqMjb/dpBAhpv7R5f
-J+skTM3eiN7q9qBwEKBSibiVsCq1l8jOi8FG+Ls+ETTMhHMlnu9mYYTyorXQsCcR
-hS9UxZpcVEzh6jOkDYUcPIzf/GQKH0ThvSmtPGDcx0C4kEH+Rv8nSopZ73fS/B7a
-+5opYK3jVDbglmISC4gkWyarCdxiE8Gt13ASOSfbVS05BOtaLHPgyQh5Hqju+3D1
-nvEPKe8AGqeSL3TfJLbdnIS23jJlZnQRCCBS27A0mQ2pCAPwSjuo4MajpuZL3Kp0
-KAsWzyn0Sgo9W8eba1o16nCuNg6UFQk8Ri+L/Y1cdzXtop99YucgSSZmGu+VPH58
-DSdjAteGbO4M3DB3i7Mu02ZIjWUhEeniIz1U1AhrtWLVl8ccYfQjQ6gfA09o706/
-doGdwWgjZLC1o7dl16f4pFOMeJ8QFfEg/6S5qogxVpiCSuc7JZwvakKW6y387hzS
-lVquNhMWzRDVmA2wPrd9SVU+UH62oB4r/52m/ZxkwSMxYBmHv17hZcttdkvgvMcX
-2rnjaoqD5THOQXhefv2m1VTAj9al0sLG08lelWFWsI605TSguyL/VNmJ0q/bNrsX
-QDablCSTvH9oAHhyYNfj
-=idoZ
------END PGP SIGNATURE-----
-
---FAVlh7XA/4iOdtaa--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
