@@ -1,241 +1,150 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v2] clk: si570: Add a driver for SI570 oscillators
-Date: Thu, 19 Sep 2013 09:01:01 -0700
-Message-ID: <6401b71c-8c18-4735-8b40-9692cd788336@VA3EHSMHS037.ehs.local>
-References: <1379544219-23579-1-git-send-email-soren.brinkmann@xilinx.com>
- <20130919131712.GB24088@roeck-us.net>
+From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
+Date: Thu, 19 Sep 2013 21:36:32 +0530
+Message-ID: <CA+V-a8vY-qsdUoUUH=3HOg-UAZZPujOLPHFC_udNWFtksgzRRA@mail.gmail.com>
+References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com>
+ <523395DC.5080009@wwwdotorg.org> <CA+V-a8sVyJ1TrTSiaj8vpaD+f_qJ5Hp287E3HuHJ_pRzzmdAvg@mail.gmail.com>
+ <523730A8.9060201@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130919131712.GB24088@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <523730A8.9060201-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 19, 2013 at 06:17:12AM -0700, Guenter Roeck wrote:
-> On Wed, Sep 18, 2013 at 03:43:38PM -0700, Soren Brinkmann wrote:
-> > Add a driver for SILabs 570, 571, 598, 599 programmable oscillators=
-=2E
-> > The devices generate low-jitter clock signals and are reprogrammabl=
-e via
-> > an I2C interface.
-> >=20
-> > Cc: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> > ---
-> > v2:
-> >  - document clock-output-names in bindings documentation
-> >  - don't use wildcards in compatibility string
-> >  - change Kconfig entry to "... 570 and compatible devices"
-> >  - change some indentation flaws
-> >  - use 10000 as MIN and MAX value in usleep_range
-> >  - fail probe() if 'factory-fout' is not provided in DT
-> >    - default factory fout #defines removed
-> >  - use i2c driver_data instead of OF data
-> >    - remove some related structs and data
-> >  - rename DT property 'initial-fout' =3D> 'clock-frequency' (like s=
-i5351
-> >    driver)
-> >  - add some more details regarding the 'factory-fout' DT property
-> >=20
-> >  .../devicetree/bindings/clock/silabs,si570.txt     |  38 ++
-> >  drivers/clk/Kconfig                                |  10 +
-> >  drivers/clk/Makefile                               |   1 +
-> >  drivers/clk/clk-si570.c                            | 517 +++++++++=
-++++++++++++
-> >  4 files changed, 566 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/silabs,=
-si570.txt
-> >  create mode 100644 drivers/clk/clk-si570.c
-> >=20
-[...]
-> > diff --git a/drivers/clk/clk-si570.c b/drivers/clk/clk-si570.c
-> > new file mode 100644
-> > index 0000000..c20dfce
-> > --- /dev/null
-> > +++ b/drivers/clk/clk-si570.c
-[...]
-> > +static unsigned long si570_recalc_rate(struct clk_hw *hw,
-> > +		unsigned long parent_rate)
-> > +{
-> > +	int err;
-> > +	u64 rfreq, rate;
-> > +	unsigned int n1, hs_div;
-> > +	struct clk_si570 *data =3D to_clk_si570(hw);
-> > +
-> > +	err =3D si570_get_divs(data, &rfreq, &n1, &hs_div);
-> > +	if (err) {
-> > +		dev_err(&data->i2c_client->dev, "unable to recalc rate\n");
->=20
-> [ Not really helpful that you can not return an error here ]
-IIUC, the CCF does not really support error reporting for this function=
-=2E I
-think a return value of recalc_rate is always interpreted as frequency.
-Hence, I decided to take the last point of certainty and return the las=
+Hi Stephen,
+
+On Mon, Sep 16, 2013 at 9:54 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>=
+ wrote:
+> On 09/13/2013 11:23 PM, Prabhakar Lad wrote:
+>> Hi Stephen,
+>>
+>> This patch should have been marked as RFC.
+>>
+>> Thanks for the review.
+>>
+>> On Sat, Sep 14, 2013 at 4:16 AM, Stephen Warren <swarren@wwwdotorg.o=
+rg> wrote:
+>>> On 09/13/2013 05:57 AM, Prabhakar Lad wrote:
+>>>> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>
+>>>> This patch fixes the DT binding properties of adv7343 decoder.
+>>>> The pdata which was being read from the DT property, is removed
+>>>> as this can done internally in the driver using cable detection
+>>>> register.
+>>>>
+>>>> This patch also removes the pdata of ADV7343 which was passed from
+>>>> DA850 machine.
+>>>
+>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.t=
+xt b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+>>>
+>>>>  Required Properties :
+>>>>  - compatible: Must be "adi,adv7343"
+>>>> +- reg: I2C device address.
+>>>> +- vddio-supply: I/O voltage supply.
+>>>> +- vddcore-supply: core voltage supply.
+>>>> +- vaa-supply: Analog power supply.
+>>>> +- pvdd-supply: PLL power supply.
+>>>
+>>> Old DTs won't contain those properties. This breaks the DT ABI if t=
+hose
+>>> properties are required. Is that acceptable?
+>>
+>> As of now adv7343 via DT binding is not enabled in any platforms
+>> so this wont break any DT ABI.
+>
+> Well, if the binding has already been written, it technically already=
+ is
+> an ABI. Perhaps the binding can be fixed if it isn't in use yet, but
+> this is definitely not the correct approach to DT.
+>
+Ok
+
+>>> If it is, I think we should document that older versions of the bin=
+ding
+>>> didn't require those properties, so they may in fact be missing.
+>>>
+>>> I note that this patch doesn't actually update the driver to
+>>> regulator_get() anything. Shouldn't it?
+>>
+>> As of now the driver isn=92t enabling/accepting the regulators,
+>> so should I add those in DT properties or not ?
+>
+> The binding should describe the HW, not what the driver does/doesn't =
+yet
+> do. I wrote the above because it looked like the driver was broken, n=
+ot
+> to encourage you to remove properties from the binding.
+OK
+
+> How does the
+> driver work if it doesn't enable the required regulators though, I
+> wonder? I suppose the boards this driver has been tested on all must
+> used fixed (non-SW-controlled) regulators.
+>
+on all the boards on which this decoder is connected the power to it
+is provided by static circuit and not by regulators, So for this how wo=
+uld
+you suggest to add the DT nodes for regulators ?
+
+>>>>  Optional Properties :
+>>>> -- adi,power-mode-sleep-mode: on enable the current consumption is=
+ reduced to
+>>>> -                           micro ampere level. All DACs and the i=
+nternal PLL
+>>>> -                           circuit are disabled.
+>>>> -- adi,power-mode-pll-ctrl: PLL and oversampling control. This con=
+trol allows
+>>>> -                        internal PLL 1 circuit to be powered down=
+ and the
+>>>> -                        oversampling to be switched off.
+>>>> -- ad,adv7343-power-mode-dac: array configuring the power on/off D=
+AC's 1..6,
+>>>> -                           0 =3D OFF and 1 =3D ON, Default value =
+when this
+>>>> -                           property is not specified is <0 0 0 0 =
+0 0>.
+>>>> -- ad,adv7343-sd-config-dac-out: array configure SD DAC Output's 1=
+ and 2, 0 =3D OFF
+>>>> -                              and 1 =3D ON, Default value when th=
+is property is
+>>>> -                              not specified is <0 0>.
+>>>
+>>> At a very quick glance, it's not really clear why those properties =
+are
+>>> being removed. They seem like HW configuration, so might be fine to=
+ put
+>>> into DT. What replaces these?
+>>
+>> Yes these were HW configuration but, its now internally handled in
+>> the driver.  The 'ad,adv7343-power-mode-dac' property which enabled =
+the
+>> DAC's 1..6 , so now in the driver by default all the DAC's are enabl=
+ed by
+>> default and enable unconnected DAC auto power down. Similarly
+>> 'ad,adv7343-sd-config-dac-out' property enabled SD DAC's 1..2 but
+>> now is enabled by reading the CABLE DETECT register which tells
+>> the status of DAC1/2.
+>
+> OK, that's probably fine for the two properties you mentioned (you
+> didn't describe two of them...). Some more discussion on why SW doesn=
+'t
+> need these options might be useful in the patch description. Note tha=
 t
-known frequency.
-
->=20
-> > +		return data->frequency;
-> > +	}
-> > +
-> > +	rfreq =3D div_u64(rfreq, hs_div * n1);
-> > +	rate =3D (data->fxtal * rfreq) >> 28;
-> > +
-> > +	return rate;
-> > +}
-[...]
-> > +static int si570_set_rate(struct clk_hw *hw, unsigned long rate,
-> > +		unsigned long parent_rate)
-> > +{
-> > +	struct clk_si570 *data =3D to_clk_si570(hw);
-> > +	struct i2c_client *client =3D data->i2c_client;
-> > +	int err;
-> > +
-> > +	if (rate < SI570_MIN_FREQ || rate > data->max_freq) {
-> > +		dev_warn(&client->dev,
-> > +			"requested frequency %lu Hz is out of range\n", rate);
->=20
-> Shouldn't this be dev_err ?
-You're probably right. I'll change this.
-
->=20
-> > +		return -EINVAL;
-> > +	}
-[...]
-> > +static int si570_probe(struct i2c_client *client,
-> > +		const struct i2c_device_id *id)
-> > +{
-> > +	struct clk_si570 *data;
-> > +	struct clk_init_data init;
-> > +	struct clk *clk;
-> > +	u32 initial_fout, factory_fout;
-> > +	int err;
-> > +
-> > +	data =3D devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-> > +	if (!data)
-> > +		return -ENOMEM;
-> > +
-> > +	init.ops =3D &si570_clk_ops;
-> > +	init.flags =3D CLK_IS_ROOT;
-> > +	init.num_parents =3D 0;
-> > +	data->hw.init =3D &init;
-> > +	data->max_freq =3D id->driver_data;
-> > +	data->i2c_client =3D client;
-> > +
-> > +	if (of_property_read_bool(client->dev.of_node,
-> > +				"temperature-stability-7ppm"))
-> > +		data->div_offset =3D SI570_DIV_OFFSET_7PPM;
-> > +
-> Just noticed that you dropped platform data support. Doesn't matter m=
-uch for me
-> right now, but in my previous company we used the chip on an x86 syst=
-em which
-> does not support devicetree. Would be nice to keep it and derive plat=
-form data
-> from devicetree data if provided, like other drivers do it.
-I'll look into this. The issue I have with that is, I can hardly test i=
-t
-since we only use this on Zynq which uses DT. So, I'd rather prefer to
-not include it unless somebody volunteers to test it.
-
-> The 7ppm option is only relevant for si570/si751 and not supported on
-> si598/si599. You should mention that in the bindings document and che=
-ck for it.
-Right, I'll add a note in the doc. And ignore it for devices this does
-not apply.
-
-> Even better would be if it can be auto-detected; in that case you wou=
-ld not need
-> the property at all. Unfortunately I don't have access to a chip, so =
-I have
-> no idea if that is possible and can not check it myself either.
-I didn't see any way to detect this during runtime. And we don't have
-such a device either.
-
->=20
-> > +	if (of_property_read_string(client->dev.of_node, "clock-output-na=
-mes",
-> > +			&init.name))
-> > +		init.name =3D client->dev.of_node->name;
-> > +
-> > +	err =3D of_property_read_u32(client->dev.of_node, "factory-fout",
-> > +			&factory_fout);
-> > +	if (err) {
-> > +		dev_err(&client->dev, "'factory-fout' property missing\n");
-> > +		return err;
-> > +	}
-> > +
-> > +	data->regmap =3D devm_regmap_init_i2c(client, &si570_regmap_confi=
-g);
-> > +	if (IS_ERR(data->regmap)) {
-> > +		dev_err(&client->dev, "failed to allocate register map\n");
-> > +		return PTR_ERR(data->regmap);
-> > +	}
-> > +
-> > +	i2c_set_clientdata(client, data);
-> > +	err =3D si570_get_defaults(data, factory_fout);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	clk =3D devm_clk_register(&client->dev, &data->hw);
-> > +	if (IS_ERR(clk)) {
-> > +		dev_err(&client->dev, "clock registration failed\n");
-> > +		return PTR_ERR(clk);
-> > +	}
-> > +	err =3D of_clk_add_provider(client->dev.of_node, of_clk_src_simpl=
-e_get,
-> > +			clk);
-> > +	if (err) {
-> > +		dev_err(&client->dev, "unable to add clk provider\n");
-> > +		return err;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Read the requested initial fout from either platform data or t=
-he
-> > +	 * device tree
-> > +	 */
->=20
-> But you don't do anything with platform data.
-copy&paste error. I'll remove it.
-
->=20
-> > +	if (!of_property_read_u32(client->dev.of_node, "clock-frequency",
-> > +				&initial_fout)) {
-> > +		err =3D clk_set_rate(clk, initial_fout);
-> > +		if (err)
-> > +			dev_warn(&client->dev,
-> > +					"unable to set initial output frequency %u: %d\n",
-> > +					initial_fout, err);
->=20
-> No bailout ?
->=20
-> Also it seems that this generates two error messages, once in the cod=
-e which
-> experiences the error and once here.
-I remove the message here.
-
->=20
-> Maybe it would be better to just bail out and return the error.
-> After all, something is seriously wrong and the system won't operate
-> as specified.
-I do more think of a spurious error (typo in DT prop giving an f out of
-range,...)  and a driver actually controlling this clock generator late=
-r.
-In that case later calls to clk_set_rate() might succeed and everything=
+> the discussion should be written for software in general (i.e. any OS=
 's
-fine or the driver can handle the error. In case of using this device a=
-s
-a fixed clock, bailing out here might make more sense though. I'd prefe=
-r
-leaving it like this.
+> driver), and not for Linux's specific driver, since DT is not tied to
+> any one OS.
+OK will update the description.
 
-
-	Thanks,
-	S=C3=B6ren
-
-
+Regards,
+--Prabhakar Lad
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
