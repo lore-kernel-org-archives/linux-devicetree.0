@@ -1,67 +1,45 @@
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: new cpu iteration code...
-Date: Thu, 19 Sep 2013 10:21:24 +0100
-Message-ID: <523AC214.4040601@arm.com>
-References: <20130918.173726.1443745664398441126.davem@davemloft.net>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 06/11] ASoC: davinci: Add support for
+ AM33xx SoC Audio
+Date: Thu, 19 Sep 2013 12:31:25 +0300
+Message-ID: <523AC46D.3060802@ti.com>
+References: <cover.1379409268.git.jsarha@ti.com> <c59efc1524b19f50dc37606bfa246dde9c20d312.1379409268.git.jsarha@ti.com> <20130918144723.GU21013@sirena.org.uk> <20130918180946.GF21013@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130918.173726.1443745664398441126.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+In-Reply-To: <20130918180946.GF21013-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, joelf-l0cyMroinI0@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On 09/18/2013 09:09 PM, Mark Brown wrote:
+> On Wed, Sep 18, 2013 at 03:47:23PM +0100, Mark Brown wrote:
+>> On Tue, Sep 17, 2013 at 12:26:05PM +0300, jsarha-l0cyMroinI0@public.gmane.org wrote:
+>>> From: "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+>>>
+>>> AM33xx uses same McASP IP as the Davinci Platform. This patch updates
+>>> Kconfig and makefile to enable build for McASP, PCM & Codec drivers.
+>>
+>> Applied, thanks.
+>
+> Dropped since this breaks x86 builds due to dma_alloc_writecombine() not
+> being defined (our DMA APIs really aren't wonderful...).
+>
 
-On 18/09/13 22:37, David Miller wrote:
-> 
-> I'm getting a flood of kernel log warnings on bootup now with
-> the generic of_get_cpu_node() code, it is wrong for sparc64
-> on several levels.
-> 
-> There is never a root "/cpus" node, so this code always fails.
-> Usually the "cpu" nodes are simply listed at the top-level.
-> 
+I added SOC_AM33XX-dependency to SND_AM33XX_SOC_EVM config and it 
+appears to fix at least the "warning: (SND_AM33XX_SOC_EVM) selects 
+..."-problem. I'll send an updated patch series (this time with 
+maintainers in CC) shortly after/if my
 
-As per ePAPR:
-3.6 CPUS Node Properties
-A cpus node is required for all device trees. It does not represent a
-real device in the system, but acts as a container for child cpu nodes
-which represent the systems CPUs. #address-cells and #size-cells are
-required property.
+% make ARCH=x86_64 allmodconfig && make -j 4
 
-> The correct way to go about this is to use something like:
-> 
-> 	struct device_node *dp;
-> 
-> 	for_each_node_by_type(dp, "cpu") {
-> 	}
-> 
-> and therefore be agnostic as to the layout of the device
-> tree wrt. cpu nodes.
-> 
-> Secondly, the property to use to get the physical cpu number is not
-> only different on sparc from what this code uses, but varies.  It can
-> be either "upa-portid" or "portid".  The "reg" property represents
-> various things and will be different for different cpu types and thus
-> is not a good candidate for fetching this information.
+finishes without errors. Sorry for not testing that myself first time 
+around.
 
-The value of "reg" defines a unique CPU/thread id for the CPU/threads
-represented by the CPU node. This is again a deviation from ePAPR.
-
-I could not find any binding document or dts file with "upa-portid" or
-"portid" to think about possible solution.
-
-I am yet to understand definition of backward compatibility and
-adherence to ePAPR from device tree perspective. Do we consider this as
-broken DT as it doesn't adhere to ePAPR or do we need to have backward
-compatibility here ?
-
-Regards,
-Sudeep
-
+Best regards,
+Jyri
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
