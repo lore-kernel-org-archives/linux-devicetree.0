@@ -1,75 +1,88 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 5/6] extcon-gpio: Describe devicetree bindings
-Date: Thu, 19 Sep 2013 19:35:06 +0100
-Message-ID: <20130919183506.GJ21013@sirena.org.uk>
-References: <1377836978-24082-1-git-send-email-linux@roeck-us.net>
- <1377836978-24082-6-git-send-email-linux@roeck-us.net>
- <20130912164100.GF22013@e106331-lin.cambridge.arm.com>
- <20130912165304.GA12202@roeck-us.net>
- <20130916142147.GF30650@e106331-lin.cambridge.arm.com>
- <20130916151953.GA5801@roeck-us.net>
- <20130918153828.GB17453@e106331-lin.cambridge.arm.com>
- <20130919164245.GG21013@sirena.org.uk>
- <20130919182850.GA22775@roeck-us.net>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v2] clk: si570: Add a driver for SI570 oscillators
+Date: Thu, 19 Sep 2013 11:40:36 -0700
+Message-ID: <2c474f75-8d0c-497b-ad64-8cd4beb09956@CO9EHSMHS013.ehs.local>
+References: <1379544219-23579-1-git-send-email-soren.brinkmann@xilinx.com>
+ <20130919180512.5246.73360@quantum>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PPcTO7KkkZ/DEnPS"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20130919182850.GA22775-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20130919180512.5246.73360@quantum>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hyun Kwon <hyunk@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---PPcTO7KkkZ/DEnPS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Sep 19, 2013 at 11:28:50AM -0700, Guenter Roeck wrote:
-> On Thu, Sep 19, 2013 at 05:42:45PM +0100, Mark Brown wrote:
-
-> > Many of the things described only have passive components attached, or
-> > things that otherwise don't need drivers - things like power inputs or
-> > headphone connectors, they're mainly providing information to allow
-> > userspace to behave differently (eg, display a charging indicator in the
-> > UI).  It's not 100% true but by and by large if detection is being done
-> > using a GPIO it's probably something like that.
-
-> Correct. However, gpio based 'detect' pins typically need debounce support
-> which is not directly available through the gpio userspace API. I tried to add
-> that earlier, but was told to use extcon instead as it provides the necessary
-> infrastructure. Now it almost looks like I can not use it either because the
-> required devicetree bindings may be considered unacceptable.
-
-Yes, I'm trying to explain to Mark why there are drivers just purely for
-the connector without any software for the connected device.
-
---PPcTO7KkkZ/DEnPS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSO0PXAAoJELSic+t+oim9oUMP/26unBLbw5V+rqTsD1Qov8f/
-zWs1/WBqOSIRClNCPRfIKSbT8kD0GqHgasB8aJvND8JkHRSLJAq1nvdGL8IS6V1/
-UCtkAjII4auLwsh8o3gwrMsuNM7CuAaLJuEXg05TB6nU1Qjx+qpuMUTfbJZG411u
-JNoxYr9IA7ROIs1wPDcMyRT54RQEV90GQ/yOWJ0aamfE9bTY+FzPqg46PBEk0jn5
-l2xbVv/PpTKmxGQZYEZVYAJ5snJzf9Fjr8lLstzsCStRFlIazuEESl7EDTNhxvdR
-SES58htyugQkavU73mhbMhOJfKZC7HlSYJUdSEc+kZXomT9rBsVzFZBkg/tcuM++
-IBjJMhHLseWqkhgsE+4ExtfNTW+TexRbvn4sX0t66EiRN/akNW5spKkWFsvYiyc9
-IU1PIo+v/Io0aOTv2Jo9pjUrZeIH0ibufD24u9qm7fU/dgReXVw/X3FXTrJpupt6
-Z702x427pWvFwnGy8DsVoRRDc+XG/0IAoGDRvkmjQ/uNLrDfjRgKf+l7AkR4kPig
-22A5/ofjSDoFsz8P/i7Gcow28rcjnybhGClL5T8r453vH1qvTFYCekltpwerrgFu
-Xpat+GOWoC5aXEERGdHf6DzVhry5jp/takq0ligglujKH6nHEA5nnpSKNxRTxpNy
-Q/epTLiX3xQ17ukbx9YA
-=XYpv
------END PGP SIGNATURE-----
-
---PPcTO7KkkZ/DEnPS--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBTZXAgMTksIDIwMTMgYXQgMTE6MDU6MTJBTSAtMDcwMCwgTWlrZSBUdXJxdWV0dGUg
+d3JvdGU6Cj4gUXVvdGluZyBTb3JlbiBCcmlua21hbm4gKDIwMTMtMDktMTggMTU6NDM6MzgpCj4g
+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Np
+bGFicyxzaTU3MC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2sv
+c2lsYWJzLHNpNTcwLnR4dAo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAw
+MDAuLjdhYjVjOGIKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9jbG9jay9zaWxhYnMsc2k1NzAudHh0Cj4gPiBAQCAtMCwwICsxLDM4
+IEBACj4gPiArQmluZGluZyBmb3IgU2lsaWNvbiBMYWJzIDU3MCwgNTcxLCA1OTggYW5kIDU5OSBw
+cm9ncmFtbWFibGUKPiA+ICtJMkMgY2xvY2sgZ2VuZXJhdG9ycy4KPiA+ICsKPiA+ICtSZWZlcmVu
+Y2UKPiA+ICtUaGlzIGJpbmRpbmcgdXNlcyB0aGUgY29tbW9uIGNsb2NrIGJpbmRpbmdbMV0uIERl
+dGFpbHMgYWJvdXQgdGhlIGRldmljZXMgY2FuIGJlCj4gPiArZm91bmQgaW4gdGhlIGRhdGEgc2hl
+ZXRzWzJdWzNdLgo+ID4gKwo+ID4gK1sxXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0Cj4gPiArWzJdIFNpNTcwLzU3MSBEYXRhIFNoZWV0
+Cj4gPiArICAgIGh0dHA6Ly93d3cuc2lsYWJzLmNvbS9TdXBwb3J0JTIwRG9jdW1lbnRzL1RlY2hu
+aWNhbERvY3Mvc2k1NzAucGRmCj4gPiArWzNdIFNpNTk4LzU5OSBEYXRhIFNoZWV0Cj4gPiArICAg
+IGh0dHA6Ly93d3cuc2lsYWJzLmNvbS9TdXBwb3J0JTIwRG9jdW1lbnRzL1RlY2huaWNhbERvY3Mv
+c2k1OTgtOTkucGRmCj4gPiArCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICsgLSBjb21w
+YXRpYmxlOiBTaGFsbCBiZSBvbmUgb2YgInNpbGFicyxzaTU3MCIsICJzaWxhYnMsc2k1NzEiLAo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJzaWxhYnMsc2k1OTgiLCAic2lsYWJz
+LHNpNTk5Igo+ID4gKyAtIHJlZzogSTJDIGRldmljZSBhZGRyZXNzLgo+ID4gKyAtICNjbG9jay1j
+ZWxsczogRnJvbSBjb21tb24gY2xvY2sgYmluZGluZ3M6IFNoYWxsIGJlIDAuCj4gPiArIC0gZmFj
+dG9yeS1mb3V0OiBGYWN0b3J5IHNldCBkZWZhdWx0IGZyZXF1ZW5jeS4gVGhpcyBmcmVxdWVuY3kg
+aXMgcGFydCBzcGVjaWZpYy4KPiA+ICsgICAgICAgICAgICAgICAgVGhlIGNvcnJlY3QgZnJlcXVl
+bmN5IGZvciB0aGUgcGFydCB1c2VkIGhhcyB0byBiZSBwcm92aWRlZCBpbgo+ID4gKyAgICAgICAg
+ICAgICAgICBvcmRlciB0byBnZW5lcmF0ZSB0aGUgY29ycmVjdCBvdXRwdXQgZnJlcXVlbmNpZXMu
+IEZvciBtb3JlCj4gPiArICAgICAgICAgICAgICAgIGRldGFpbHMsIHBsZWFzZSByZWZlciB0byB0
+aGUgZGF0YSBzaGVldC4KPiA+ICsKPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gKyAtIGNs
+b2NrLW91dHB1dC1uYW1lczogRnJvbSBjb21tb24gY2xvY2sgYmluZGluZ3MuIFJlY29tbWVuZGVk
+IHRvIGJlICJzaTU3MCIuCj4gPiArIC0gY2xvY2stZnJlcXVlbmN5OiBPdXRwdXQgZnJlcXVlbmN5
+IHRvIGdlbmVyYXRlLiBUaGlzIGRlZmluZXMgdGhlIG91dHB1dAo+ID4gKyAgICAgICAgICAgICAg
+ICAgICBmcmVxdWVuY3kgc2V0IGR1cmluZyBib290LiBJdCBjYW4gYmUgcmVwcm9ncmFtbWVkIGR1
+cmluZwo+ID4gKyAgICAgICAgICAgICAgICAgICBydW50aW1lIHVzaW5nIHRoZSBjb21tb24gY2xv
+Y2sgZnJhbWV3b3JrLgo+ID4gKyAtIHRlbXBlcmF0dXJlLXN0YWJpbGl0eS03cHBtOiBJbmRpY2F0
+ZSBhIGRldmljZSB3aXRoIGEgdGVtcGVyYXR1cmUgc3RhYmlsaXR5Cj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgb2YgN3BwbQo+IAo+IFNvbWUgRFQgYmluZGluZyBiaWtlLXNoZWRk
+aW5nOgo+IAo+IFNob3VsZCB0aGlzIGJlICJ0ZW1wZXJhdHVyZS1zdGFiaWxpdHktcHBtID0gPDc+
+OyIgPyBEbyB5b3UgdGhpbmsgdGhhdAo+IHRoaXMgdmFsdWUgbWlnaHQgY2hhbmdlIGluIHRoZSBm
+dXR1cmU/CldlbGwsIGFjY29yZGluZyB0byB0aGUgZGF0YSBzaGVldCBhbGwgZGV2aWNlcyBiZWhh
+dmUgdGhlIHNhbWUgYW5kIG9ubHkKdGhlIHNpNTcwLzU3MSB3aXRoIGEgdGVtcGVyYXR1cmUgc3Rh
+YmlsaXR5IG9mIDdwcG0gKHRoZXJlIGFyZSBhY3R1YWxseQpzb21lIG1vcmUgY2hvaWNlcyBmb3Ig
+dGhpcykgbmVlZCBzb21lIHNwZWNpYWwgYXR0ZW50aW9uLgpTbywgdGhlIG9ubHkgY2FzZSB3ZSBy
+ZWFsbHkgY2FyZSBhYm91dCBhbmQgaGFzIHRvIGJlIHRyZWF0ZWQgZGlmZmVyZW50bHkKaXMgdGhl
+IDdwcG0gY2FzZS4KSSBkb24ndCBtaW5kIGhvdyB3ZSBkZXRlY3QgaXQsIGJ1dCB3aXRoIHRoaXMg
+Ym9vbGVhbiBwcm9wZXJ0eSBpdCByZXN1bHRzCmluIHRoZSBsZWFzdCBsaW5lcyBvZiBjb2RlLCBJ
+IHRoaW5rLgoKPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9jbGstc2k1NzAuYyBiL2Ry
+aXZlcnMvY2xrL2Nsay1zaTU3MC5jCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXgg
+MDAwMDAwMC4uYzIwZGZjZQo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIvZHJpdmVycy9jbGsv
+Y2xrLXNpNTcwLmMKPiA+IEBAIC0wLDAgKzEsNTE3IEBACj4gPHNuaXA+Cj4gPiArc3RhdGljIGJv
+b2wgc2k1NzBfcmVnbWFwX2lzX3ZvbGF0aWxlKHN0cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQg
+aW50IHJlZykKPiA+ICt7Cj4gPiArICAgICAgIHN3aXRjaCAocmVnKSB7Cj4gPiArICAgICAgIGNh
+c2UgMTM1Ogo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiB0cnVlOwo+ID4gKyAgICAgICBkZWZh
+dWx0Ogo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBmYWxzZTsKPiA+ICsgICAgICAgfQo+ID4g
+K30KPiA+ICsKPiA+ICtzdGF0aWMgYm9vbCBzaTU3MF9yZWdtYXBfaXNfd3JpdGVhYmxlKHN0cnVj
+dCBkZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IHJlZykKPiA+ICt7Cj4gPiArICAgICAgIHN3aXRj
+aCAocmVnKSB7Cj4gPiArICAgICAgIGNhc2UgNyAuLi4gMTg6Cj4gPiArICAgICAgIGNhc2UgMTM1
+Ogo+ID4gKyAgICAgICBjYXNlIDEzNzoKPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gdHJ1ZTsK
+PiA+ICsgICAgICAgZGVmYXVsdDoKPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gZmFsc2U7Cj4g
+PiArICAgICAgIH0KPiA+ICt9Cj4gCj4gU2hvdWxkIG1hZ2ljIG51bWJlcnMgYWJvdmUgYmUgc3lt
+Ym9saWMgY29uc3RhbnRzPwpJJ2xsIGNoYW5nZSBpdC4gQ29ycmVzcG9uZGluZyAjZGVmaW5lcyBh
+bHJlYWR5IGV4aXN0IGFueXdheS4KCglTw7ZyZW4KCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
