@@ -1,43 +1,56 @@
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: new cpu iteration code...
-Date: Thu, 19 Sep 2013 15:03:36 +0100
-Message-ID: <523B0438.7000902@arm.com>
-References: <20130918.173726.1443745664398441126.davem@davemloft.net> <523AC214.4040601@arm.com> <523AFB6C.5070300@gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH] ARM: at91/at91-pinctrl documentation: add missing sam9x5
+ compatible string
+Date: Thu, 19 Sep 2013 16:05:51 +0200
+Message-ID: <523B04BF.80209@atmel.com>
+References: <1377609965-22154-1-git-send-email-b.brezillon@overkiz.com> <521CBE58.9060402@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <523AFB6C.5070300-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <521CBE58.9060402@atmel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Boris BREZILLON <b.brezillon@overkiz.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Richard Genoud <richard.genoud@gmail.com>, Jiri Kosina <jkosina@suse.cz>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/09/13 14:26, Rob Herring wrote:
-> On 09/19/2013 04:21 AM, Sudeep KarkadaNagesha wrote:
->> Hi David,
+On 27/08/2013 16:57, Nicolas Ferre :
+> On 27/08/2013 15:26, Boris BREZILLON :
+>> Add missing "atmel,at91sam9x5-pinctrl" compatible string to the
+>> documentation.
 >>
->> On 18/09/13 22:37, David Miller wrote:
->>>
->>> I'm getting a flood of kernel log warnings on bootup now with
->>> the generic of_get_cpu_node() code, it is wrong for sparc64
->>> on several levels.
->>>
->>> There is never a root "/cpus" node, so this code always fails.
->>> Usually the "cpu" nodes are simply listed at the top-level.
->>>
+>> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+>
+> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+
+Linus, it seems that you were not in copy of the original email.
+
+Anyway, do you want that I re-send to you or you can pick it on patchwork?
+
+Here it is:
+https://patchwork.kernel.org/patch/2850188/
+
+>> ---
+>>    .../bindings/pinctrl/atmel,at91-pinctrl.txt        |    2 +-
+>>    1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> As per ePAPR:
-> 
-> Sparc is OpenFirmware not FDT which the ePAPR is concerned with.
-> 
-Thanks, I wasn't aware that SPARC is not using FDT.
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>> index 648d60e..cf7c7bc 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
+>> @@ -18,7 +18,7 @@ mode) this pin can work on and the 'config' configures various pad settings
+>>    such as pull-up, multi drive, etc.
+>>
+>>    Required properties for iomux controller:
+>> -- compatible: "atmel,at91rm9200-pinctrl"
+>> +- compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinctrl"
+>>    - atmel,mux-mask: array of mask (periph per bank) to describe if a pin can be
+>>      configured in this periph mode. All the periph and bank need to be describe.
+>>
+>>
+>
+>
 
-Regards,
-Sudeep
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Nicolas Ferre
