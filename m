@@ -1,83 +1,66 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [dtc PATCH] Ensure all tests have matching reg and unit address
-Date: Fri, 20 Sep 2013 08:52:32 +1000
-Message-ID: <20130919225232.GG3551@voom.redhat.com>
-References: <1379535782-12667-1-git-send-email-swarren@wwwdotorg.org>
- <20130919121818.GB3551@voom.redhat.com>
- <523B3935.2090904@wwwdotorg.org>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH 17/51] DMA-API: block: nvme-core: replace
+ dma_set_mask()+dma_set_coherent_mask() with new helper
+Date: Thu, 19 Sep 2013 22:42:00 +0100
+Message-ID: <E1VMlz6-0007h9-WF@rmk-PC.arm.linux.org.uk>
+References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7lMq7vMTJT4tNk0a"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <523B3935.2090904@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Jon Loeliger <jdl@jdl.com>, Olof Johansson <olof@lixom.net>, frowand.list@gmail.com, Tomasz Figa <tomasz.figa@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20130919212235.GD12758@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: alsa-devel@alsa-project.org, b43-dev@lists.infradead.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, e1000-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-ide@vger.kernel.org, linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, linux-nvme@lists.infradead.org, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, uclinux-dist-devel@blackfin.uclinux.org
+Cc: Matthew Wilcox <willy@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
+Replace the following sequence:
 
---7lMq7vMTJT4tNk0a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+	dma_set_mask(dev, mask);
+	dma_set_coherent_mask(dev, mask);
 
-On Thu, Sep 19, 2013 at 11:49:41AM -0600, Stephen Warren wrote:
-> On 09/19/2013 06:18 AM, David Gibson wrote:
-> > On Wed, Sep 18, 2013 at 02:23:02PM -0600, Stephen Warren wrote:
-> >> From: Stephen Warren <swarren@nvidia.com>
-> >>=20
-> >> ePAPR 1.1 section 2.2.1.1 "Node Name Requirements" specifies that
-> >> any node that has a reg property must include a unit address in
-> >> its name with value matching the first entry in its reg property.
-> >> Conversely, if a node does not have a reg property, the node name
-> >> must not include a unit address.
-> >>=20
-> >> Adjust all the dtc test-cases to conform to this rule.
-> >>=20
-> >> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> >=20
-> > Yeah, the testcase examples were built as purely syntactic
-> > exercises without really considering dt content conventions.
-> > Fixing them up is arguably unnnecessary, but certainly doesn't hurt
-> > and makes them better as examples.
-> >=20
-> > Applied and pushed.
->=20
-> Strange; I see that the git author field ended up as you rather than
-> me. Did you need to apply the patch manually for some reason (if so,
-> what did I do wrong?) or did something go wrong in the patch
-> application process?
+with a call to the new helper dma_set_mask_and_coherent().
 
-Oh, dammit.  git citool did that when I added my S-o-b, and I forgot
-to fix it up.  I just patched it up and did a push -f, I hope not too
-many people have pulled in the meantime :(.
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+ drivers/block/nvme-core.c |   10 ++++------
+ 1 files changed, 4 insertions(+), 6 deletions(-)
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---7lMq7vMTJT4tNk0a
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSO4AwAAoJEGw4ysog2bOS3/wQALky3Ze+6SDh8s5Hlne1dRSg
-SJlEVe6EGQsThZVdm+jGrzuEDoNUVglxI46GaaodPjuvH8HsSJAYKKS+kxQ08jnR
-hip3+hxP2USyUJ9P3Ucz/FpSoJy+pmy0SK+D3WsdZTFU1pGTjlDL5B6kHH4YSIgn
-IXMn9WnrEb+XsK67p2eK0h5Ru82Ht6EYzwaMM+HmAaiHosP78ThXEdraI0H6DhLG
-piv2yctkwGC2auLQtIn6TLSA4wbule3RfApu/sKkxMN+oESveoradci2ApVmeQSt
-2F64cIUwTG0AIKX/10jUw+qObFXYlC6Ct9eKkukHo2ozAYrSHf/tezHQ07KN0j5O
-erjiuw1CP878Kd/zJCGtdr+zBu4iwzChOxwqphXg7QnLMwDVKmuI7otAXrAioPTb
-bogsmJmwHpQn5yQuMOLh8fUxEmwNe9oX7ngl/JFY/kqcVJWQaa5GrJ5H2nIKxtrD
-VK/yZJUri7pRCW1fLKGKUhThDDakrsmhkFqGTp4eqKQ6gr2yJ3F1lomyZp5lU4UV
-uPXzKtTJ91Xn5M5ErGhqsDrbJn6HYthyXqfh6jafIHbuPJBrysNDGN66THZirVbV
-yrOJ8un8CANMmFT3jIdjrCBASy+mPD4/jEga8qVvQKEe3iS9kulbm/G7tuHn8swy
-V5eeFstVJUHbtzTQbd/w
-=JfYx
------END PGP SIGNATURE-----
-
---7lMq7vMTJT4tNk0a--
+diff --git a/drivers/block/nvme-core.c b/drivers/block/nvme-core.c
+index da52092..26d03fa 100644
+--- a/drivers/block/nvme-core.c
++++ b/drivers/block/nvme-core.c
+@@ -1949,12 +1949,9 @@ static int nvme_dev_map(struct nvme_dev *dev)
+ 	if (pci_request_selected_regions(pdev, bars, "nvme"))
+ 		goto disable_pci;
+ 
+-	if (!dma_set_mask(&pdev->dev, DMA_BIT_MASK(64)))
+-		dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
+-	else if (!dma_set_mask(&pdev->dev, DMA_BIT_MASK(32)))
+-		dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
+-	else
+-		goto disable_pci;
++	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)) &&
++	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)))
++		goto disable;
+ 
+ 	pci_set_drvdata(pdev, dev);
+ 	dev->bar = ioremap(pci_resource_start(pdev, 0), 8192);
+@@ -2168,6 +2165,7 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ 	INIT_LIST_HEAD(&dev->namespaces);
+ 	dev->pci_dev = pdev;
++
+ 	result = nvme_set_instance(dev);
+ 	if (result)
+ 		goto free;
+-- 
+1.7.4.4
