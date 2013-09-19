@@ -1,75 +1,54 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: new cpu iteration code...
-Date: Thu, 19 Sep 2013 08:26:04 -0500
-Message-ID: <523AFB6C.5070300@gmail.com>
-References: <20130918.173726.1443745664398441126.davem@davemloft.net> <523AC214.4040601@arm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 07/11] ASoC: tlv320aic3x: Add regulators to DT
+ bindings document
+Date: Thu, 19 Sep 2013 14:29:55 +0100
+Message-ID: <20130919132955.GS21013@sirena.org.uk>
+References: <cover.1379590035.git.jsarha@ti.com>
+ <1b88bfa3793d807ff6e325df1bbff6cb4eb976e6.1379590036.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TRAzd1zqvkbVQS90"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <523AC214.4040601-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1b88bfa3793d807ff6e325df1bbff6cb4eb976e6.1379590036.git.jsarha-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
-Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, joelf-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/2013 04:21 AM, Sudeep KarkadaNagesha wrote:
-> Hi David,
-> 
-> On 18/09/13 22:37, David Miller wrote:
->>
->> I'm getting a flood of kernel log warnings on bootup now with
->> the generic of_get_cpu_node() code, it is wrong for sparc64
->> on several levels.
->>
->> There is never a root "/cpus" node, so this code always fails.
->> Usually the "cpu" nodes are simply listed at the top-level.
->>
-> 
-> As per ePAPR:
 
-Sparc is OpenFirmware not FDT which the ePAPR is concerned with.
+--TRAzd1zqvkbVQS90
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 3.6 CPUS Node Properties
-> A cpus node is required for all device trees. It does not represent a
-> real device in the system, but acts as a container for child cpu nodes
-> which represent the systems CPUs. #address-cells and #size-cells are
-> required property.
-> 
->> The correct way to go about this is to use something like:
->>
->> 	struct device_node *dp;
->>
->> 	for_each_node_by_type(dp, "cpu") {
->> 	}
->>
->> and therefore be agnostic as to the layout of the device
->> tree wrt. cpu nodes.
->>
->> Secondly, the property to use to get the physical cpu number is not
->> only different on sparc from what this code uses, but varies.  It can
->> be either "upa-portid" or "portid".  The "reg" property represents
->> various things and will be different for different cpu types and thus
->> is not a good candidate for fetching this information.
-> 
-> The value of "reg" defines a unique CPU/thread id for the CPU/threads
-> represented by the CPU node. This is again a deviation from ePAPR.
-> 
-> I could not find any binding document or dts file with "upa-portid" or
-> "portid" to think about possible solution.
-> 
-> I am yet to understand definition of backward compatibility and
-> adherence to ePAPR from device tree perspective. Do we consider this as
-> broken DT as it doesn't adhere to ePAPR or do we need to have backward
-> compatibility here ?
+On Thu, Sep 19, 2013 at 02:29:40PM +0300, Jyri Sarha wrote:
+> Add regulator properties to tlv320aic3x DT bindings document.
 
-The simple solution here is to just remove the warning. It doesn't
-appear to me that sparc ever sets the cpu device of_node pointer.
+Similarly for this and the other CODEC patch, are these changed?
 
-Are there any cases on where sparc does have a /cpus node? If so we'd
-need to make of_get_cpu_node a weak function or depend on a kconfig option.
+--TRAzd1zqvkbVQS90
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Rob
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSOvxQAAoJELSic+t+oim9qgMP/35GIxpqHMRAac682dOlnijS
+MgSrMvYeIszJXK/ILS6Y+pQbndMUE2QVwosV9GTq/HXjfZsct+z/5vILoHAL25b8
+wdqOHPmouAHMz3ZCR/SVtsKpesQ0VUsp1GrHV4/5cwfyttLGfyBtsuH5U8Tz0gkO
+4zzy59HTANyHbRpknc2mVzAMj2NdEpcmVKNFrWSpZB45XE+uXTT7iQI0L9JDEU1Q
+NWVfBNBhFk8mn6TypnqiOFmxgiXQHeHVzuE3ofgFeXQ05Yvl8IgEF7XkjLQI5Cy3
+KcQZtzGyduzNsWPEdqszIOsSvD5/QkO7rwYwfl5urYNhmMsgya7WdBgAXpmC20hO
+10TKUwdr+2SXzIGkT8Dvsg5w/q69WAktR9zQYRFodjuuvkalbFntKo8k8WbuN7xa
+O2eUxab+mMIZiV8PwuZEGKsJRdrxgsgcCKCcLKi6Z1v823WaHt23TC4enP+WQU3B
+e+wD2rI+qrhGgrlxcFe0AtR8bTMjexV3kPgCrFvTEYLmg0OWnX/H8y5D9NIx0tcS
+iNR+DdpeAteL4doR7ug2Zb0KYoU4XIM5NER7aBLu8vRARn3vjJky9dI6hOX5cBLl
+6+w9P0kZHUwD1aOlZ0dxrlBj7LRuqJS8RYgcM+ErQuuCjOc9FnCDyn2iXj4RrH3D
+0Nr2Y6UTB/zdGQbCb6/A
+=WQ5L
+-----END PGP SIGNATURE-----
+
+--TRAzd1zqvkbVQS90--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
