@@ -1,77 +1,334 @@
-From: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: STi: Supply I2C configuration to STiH416 SoC
-Date: Thu, 19 Sep 2013 09:16:27 +0200
-Message-ID: <84625B87D65BCF478CC1E9C886A4C314DEF1BD9579@SAFEX1MAIL4.st.com>
-References: <1379498483-4236-1-git-send-email-maxime.coquelin@st.com>
- <1379498483-4236-3-git-send-email-maxime.coquelin@st.com>
- <20130918120340.GF16984@lee--X1>
- <84625B87D65BCF478CC1E9C886A4C314DEF1BD9578@SAFEX1MAIL4.st.com>
- <5239A322.5010004@st.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] mtd: plat_nand: add further DT bindings and documentation
+Date: Thu, 19 Sep 2013 00:28:43 -0700
+Message-ID: <20130919072843.GC31275@brian-ubuntu>
+References: <20130824181459.GF3464@edkhil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20130824181459.GF3464@edkhil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen GALLIMORE <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, Stuart MENEFY <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Olivier CLERGEAUD <olivier.clergeaud-qxv4g6HH51o@public.gmane.org>
+To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Srini,
++ devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, remove old list
 
-On 09/18/2013 03:17 PM, Srinivas KANDAGATLA wrote:
-> On 18/09/13 13:46, Maxime COQUELIN wrote:
->> On 09/18/2013 02:03 PM, Lee Jones wrote:
->>>>>> This patch supplies I2C configuration to STiH416 SoC.
->>>>>>
->>>>>> Cc: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
->>>>>> Signed-off-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
->>>>>> ---
->>>>>>  arch/arm/boot/dts/stih416-pinctrl.dtsi |   35 ++++++++++++++++++++
->>>>>>  arch/arm/boot/dts/stih416.dtsi         |   57 ++++++++++++++++++++++++++++++++
->>>>>>  2 files changed, 92 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/stih416-pinctrl.dtsi b/arch/arm/boot/dts/stih416-pinctrl.dtsi
->>>> I genuinely don't know the answer to this question, but are these
->>>> nodes identical to the ones you've just put in the stih415 DTSI file?
->>>> If so, I think it will be worth creating a stih41x DTSI rather than
->>>> duplicating lots of stuff unnecessarily.
->> There are close to be identical indeed.
->> For the clocks and pinctrl, the references names are the same, but they are
->> pointing on different nodes, as STiH415 and STiH416 have their own
->> clocks and pinctrl dtsi files.
->>
->> Srini, what is opinion about this?
-> There is already a stih41x.dtsi file, but I don't think it is the right
-> place for the pinctrl nodes there.
->
-> Am not OK with the idea of common pinctrl nodes for STiH415 and STiH416
-> for two reasons.
->
-> 1> If we common up the pinctrl nodes, it will be very difficult to
-> accommodate new pinctrls layout which is not guaranteed to be in same
-> layout in future SOCs.
->
-> 2> The retiming values in the pinctrl nodes tend to change as per SOC,
-> so it will be difficult to manage it if we common it up.
->
-> Am sure we can come up with a dt layout which can reduce duplication,
-> but we have to be careful here not to lose the flexiblity to accommodate
-> new picntrl layouts, new retimings values based on SOC.
-Ok. What do you think of declaring the i2c nodes inside the stih41x.dtsi
-file,
-and overload them with the pinctrl and clock properties in the stih416
-and stih415 dtsi files?
+Hi Alexander,
 
-Regards,
-Maxime
->
->
-> thanks,
-> srini
->
->
+Sorry for some delay on this. I haven't really had time to look closely
+at this previously, and apparently, any users of plat_nand.c are pretty
+quiet (or gone?). Your code isn't too invasive, and it seems pretty
+reasonable that this simple driver can support platform devices
+initialized both via traditional platform structures and via device
+tree.
 
+On Sat, Aug 24, 2013 at 07:14:59PM +0100, Alexander Clouter wrote:
+> I have run this via the linux-mtd folks before[1], but I get the
+> impression everyone is either too busy or does not want to make the
+> judgement call about plat_nand's future; linux-mtd pointed me here. :)
+> 
+> I have been busy porting an ARM board (that uses plat_nand) to
+> devicetree and stumbled on John Crispin's patch from last year[2].
+> There was not much online about how to use it, so I went about
+> building upon his work it what seemed to be natural and a good fit.
+> 
+> Attached is the work I have done to the driver its-self (including the
+> much needed bindings documentation), whilst on my github page I have
+> put up an example of its usage:
+> 
+> https://github.com/jimdigriz/ts78xx/blob/plat-nand/arch/arm/mach-orion5x/board-ts7800.c
+> https://github.com/jimdigriz/ts78xx/blob/plat-nand/arch/arm/boot/dts/orion5x-ts7800.dts
+> 
+> Am I going in the right direction here?  plat_nand, by its nature, is
+> not very DT, the alternative would be a custom driver for my
+> platform[3] but then are we not just littering drivers/mtd/nand rather
+> than arch/arm/mach-foobar?  Is plat_nand going to be marked deprecated?
+> 
+> Meanwhile, the plat_nand driver does currently have some devicetree
+> support but it is currently unusable, and more so as there is no
+> documentation on how to use it.
+> 
+> The patch below adds the much needed documentation as well as adds some
+> common properties (bank-width, chip-delay, bbt-use-flash and nr-chips)
+> removing further use of the platform_nand_data struct.
+> 
+> So, what am I to do.  Forget plat_nand as it is going to be marked
+> deprecated and write a dedicated driver[4]?  If not, what do I need to
+> do/change/improve to get this ready for for prime time action?
+> 
+> Cheers
+> 
+> [1] http://lists.infradead.org/pipermail/linux-mtd/2013-March/046371.html
+> [2] http://lists.infradead.org/pipermail/linux-mtd/2012-April/041025.html
+> [3] I could also support the NAND used by arch/arm/mach-ep93xx/ts72xx.c
+> 	but the whole SoC has not been ported to DT
+> [4] which ironically it was recommended[5] I used plat_nand when I did this
+> 	(although a lot	changes in four years) originally by Hartley who had
+> 	just moved the ts72xx to plat_nand[6]
+> [5] http://lists.infradead.org/pipermail/linux-mtd/2009-October/027563.html
+> [6] http://lists.infradead.org/pipermail/linux-mtd/2009-February/024555.html
+> 
+> Signed-off-by: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
+> ---
+>   .../devicetree/bindings/mtd/plat-nand.txt          |   93 ++++++++++++++++++++
+>   drivers/mtd/nand/plat_nand.c                       |   53 ++++++++---
+>   2 files changed, 134 insertions(+), 12 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/mtd/plat-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/plat-nand.txt b/Documentation/devicetree/bindings/mtd/plat-nand.txt
+> new file mode 100644
+> index 0000000..d534bfa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/plat-nand.txt
+> @@ -0,0 +1,93 @@
+> +NAND support for Generic NAND driver
+> +
+> +Required properties:
+> +- compatible : "gen_nand"
+> +- reg : Array of base physical addresses of the NAND and the length of memory
+> +	mapped regions.  You *should* have a "nand_data" reg which is the
+> +	data io region (if not named, then the first reg is used for
+> +	IO_ADDR_R/IO_ADDR_W), additional regs are platform defined
+
+How might you envision additonal "platform-defined" resources being
+included? Are you suggesting they could be utilized by platform code's
+bus notifier, as show in your example below?
+
+Also, I wouldn't use the word "should"; either you "must" name the
+resource or you "may" (and it's optional). It may also be reasonable to
+drop the names altogether and just state that the first reg range must
+represent the nand_data.
+
+> +- nr-chips : Number of physical chips
+
+Prefix with "nand," like the others? It's possible this would be a
+useful binding for other drivers at some point.
+
+> +
+> +Optional properties:
+> +- reg-name : "nand_data" *should* be defined, additional ones are platform
+> +		defined
+
+Again, I don't think you should use "should" here.
+
+> +- bank-width : Width in bytes of the device. Default is 1 (8bit), 2 (16bit)
+> +		implies NAND_BUSWIDTH_16 and any other value is invalid
+
+Use nand-bus-width. See:
+  Documentation/devicetree/bindings/mtd/nand.txt
+Then you can also re-use the helpers from include/linux/of_mtd.h and
+reuse the documentation (just note the supported properties here and
+then refer to nand.txt, similar to how you refer to partition.txt).
+
+> +- chip-delay : Chip dependent delay for transferring data from array to read
+> +		registers in usecs
+
+I guess you might as well prefix this with "nand," as well.
+
+> +- bbt-use-flash : Use a flash based bad block table.  Default, OOB identifier
+> +		is saved in OOB area
+
+There is an existing nand-on-flash-bbt binding in nand.txt for this
+purpose.
+
+> +
+> +The device tree may optionally contain sub-nodes describing partitions of the
+> +address space. See partition.txt for more detail.
+> +
+> +Example:
+> +
+> +nand@800 {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	compatible = "ts,nand", "gen_nand";
+> +	reg =   <0x800 0x04>,
+> +		<0x804 0x04>;
+> +	reg-names = "nand_ctrl", "nand_data";
+> +	nr-chips = <1>;
+> +	chip-delay = <15>;
+> +	bbt-use-flash;
+> +
+> +	partition@0 {
+> +		label = "mbr";
+> +		reg = <0x00000000 0x20000>;
+> +		read-only;
+> +	};
+> +
+> +	partition@20000 {
+> +		label = "kernel";
+> +		reg = <0x00020000 0x400000>;
+> +	};
+> +
+> +	partition@420000 {
+> +		label = "initrd";
+> +		reg = <0x00420000 0x400000>;
+> +	};
+> +
+> +	partition@820000 {
+> +		label = "rootfs";
+> +		reg = <0x00820000 0x1f7e0000>;
+> +	};
+> +};
+> +
+> +N.B. to use the plat-nand driver, the platform board code does still need to
+> +	setup platform_nand_data and hook it into the platform_device so
+> +	the callbacks (for at least .cmd_ctrl and .dev_ready) are available.
+> +
+> +Example:
+> +
+> +static struct platform_nand_data ts7800_nand_data = {
+> +        .ctrl   = {
+> +                .cmd_ctrl               = ts7800_nand_cmd_ctrl,
+> +                .dev_ready              = ts7800_nand_dev_ready,
+> +        },
+> +};
+> +
+> +static int ts7800_platform_notifier(struct notifier_block *nb,
+> +                                  unsigned long event, void *__dev)
+> +{
+> +        struct device *dev = __dev;
+> +
+> +        if (event != BUS_NOTIFY_ADD_DEVICE)
+> +                return NOTIFY_DONE;
+> +
+> +        if (of_device_is_compatible(dev->of_node, "ts,nand"))
+> +                dev->platform_data = &ts7800_nand_data;
+> +
+> +        return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block ts7800_platform_nb = {
+> +        .notifier_call = ts7800_platform_notifier,
+> +};
+> +
+> +void __init ts7800_init(void)
+> +{
+> +        bus_register_notifier(&platform_bus_type, &ts7800_platform_nb);
+> +}
+
+I'm not quite sure what to say about this platform code example. It may
+be an acceptable route if that's the only option. But there may be
+alternatives that don't involve relegating this to platform board code.
+
+Perhaps the platform_data callback routines could be provided for
+device-tree enabled systems via the plat_nand driver's of_match_table
+(matching against, e.g., "ts,nand")? Basically, the of_device_id.data
+subfield could hold a platform_nand_ctrl struct.
+
+> diff --git a/drivers/mtd/nand/plat_nand.c b/drivers/mtd/nand/plat_nand.c
+> index c004566..1407db5 100644
+> --- a/drivers/mtd/nand/plat_nand.c
+> +++ b/drivers/mtd/nand/plat_nand.c
+> @@ -12,6 +12,7 @@
+>   #include <linux/io.h>
+>   #include <linux/module.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/of.h>
+>   #include <linux/slab.h>
+>   #include <linux/mtd/mtd.h>
+>   #include <linux/mtd/nand.h>
+> @@ -23,7 +24,7 @@ struct plat_nand_data {
+>   	void __iomem		*io_base;
+>   };
+> -static const char *part_probe_types[] = { "cmdlinepart", NULL };
+> +static const char *part_probe_types[] = { "cmdlinepart", "ofpart", NULL };
+
+Since these are the defaults (see mtdpart.c, default_mtd_part_types),
+you can just remove this and pass NULL instead.
+
+>   /*
+>    * Probe for the NAND device.
+> @@ -42,14 +43,11 @@ static int plat_nand_probe(struct platform_device *pdev)
+>   		return -EINVAL;
+>   	}
+> -	if (pdata->chip.nr_chips < 1) {
+> -		dev_err(&pdev->dev, "invalid number of chips specified\n");
+> -		return -EINVAL;
+> -	}
+> -
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand_data");
+>   	if (!res)
+> -		return -ENXIO;
+> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		if (!res)
+> +			return -ENXIO;
+
+This fall-back (from get_resource_byname() to get_resource()) is a
+little awkward IMO. This relates to the discussion above--are we going
+to require a resource name? If not, then I think we don't even want to
+get the resource by name at all; even if it has an (optional) name, we
+just get it from index 0.
+
+>   	/* Allocate memory for the device structure (and zero it) */
+>   	data = kzalloc(sizeof(struct plat_nand_data), GFP_KERNEL);
+> @@ -79,15 +77,40 @@ static int plat_nand_probe(struct platform_device *pdev)
+>   	data->chip.IO_ADDR_R = data->io_base;
+>   	data->chip.IO_ADDR_W = data->io_base;
+> +
+> +	if (pdev->dev.of_node) {
+> +		int i;
+> +
+> +		if (!of_property_read_u32(pdev->dev.of_node,
+> +						"nr-chips", &i))
+> +			data->chip.numchips = i;
+> +		if (!of_property_read_u32(pdev->dev.of_node,
+> +						"chip-delay", &i))
+> +			data->chip.chip_delay = (u8)i;
+> +		if (!of_property_read_u32(pdev->dev.of_node,
+> +						"bank-width", &i)) {
+
+of_get_nand_bus_width()?
+
+> +			if (i == 2)
+> +				data->chip.options |= NAND_BUSWIDTH_16;
+> +			else if (i != 1) {
+> +				dev_warn(&pdev->dev,
+> +					"%d bit bus width out of range\n", i);
+> +			}
+> +		}
+> +		if (of_get_property(pdev->dev.of_node, "bbt-use-flash", &i))
+
+of_get_nand_on_flash_bbt()?
+
+> +			data->chip.bbt_options |= NAND_BBT_USE_FLASH;
+> +	} else {
+> +		data->chip.numchips = pdata->chip.nr_chips;
+> +		data->chip.chip_delay = pdata->chip.chip_delay;
+> +		data->chip.options |= pdata->chip.options;
+> +		data->chip.bbt_options |= pdata->chip.bbt_options;
+> +	}
+> +
+>   	data->chip.cmd_ctrl = pdata->ctrl.cmd_ctrl;
+>   	data->chip.dev_ready = pdata->ctrl.dev_ready;
+>   	data->chip.select_chip = pdata->ctrl.select_chip;
+>   	data->chip.write_buf = pdata->ctrl.write_buf;
+>   	data->chip.read_buf = pdata->ctrl.read_buf;
+>   	data->chip.read_byte = pdata->ctrl.read_byte;
+> -	data->chip.chip_delay = pdata->chip.chip_delay;
+> -	data->chip.options |= pdata->chip.options;
+> -	data->chip.bbt_options |= pdata->chip.bbt_options;
+>   	data->chip.ecc.hwctl = pdata->ctrl.hwcontrol;
+>   	data->chip.ecc.layout = pdata->chip.ecclayout;
+> @@ -102,8 +125,14 @@ static int plat_nand_probe(struct platform_device *pdev)
+>   			goto out;
+>   	}
+> +	if (data->chip.numchips < 1) {
+> +		dev_err(&pdev->dev, "invalid number of chips specified\n");
+> +		err = -EINVAL;
+> +		goto out;
+> +	}
+> +
+>   	/* Scan to find existence of the device */
+> -	if (nand_scan(&data->mtd, pdata->chip.nr_chips)) {
+> +	if (nand_scan(&data->mtd, data->chip.numchips)) {
+>   		err = -ENXIO;
+>   		goto out;
+>   	}
+
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
