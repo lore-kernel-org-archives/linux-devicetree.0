@@ -1,118 +1,119 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [dtc RFC PATCH] Enforce node name unit-address presence/absence
-Date: Thu, 19 Sep 2013 22:33:24 +1000
-Message-ID: <20130919123324.GE3551@voom.redhat.com>
-References: <1379535836-12726-1-git-send-email-swarren@wwwdotorg.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [RFC PATCH 10/15] ARM: omap5: hwmod: Add ocp2scp3 and sata hwmods
+Date: Thu, 19 Sep 2013 16:22:27 +0300
+Message-ID: <1379596947-15213-1-git-send-email-rogerq@ti.com>
+References: <1379595943-14622-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4Epv4kl9IRBfg3rk"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1379535836-12726-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1379595943-14622-1-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com, bcousson@baylibre.com, tony@atomide.com
+Cc: balajitk@ti.com, kishon@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Keshava Munegowda <keshava_mgowda@ti.com>
 
---4Epv4kl9IRBfg3rk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Create hwmods for ocp2scp3 and sata modules.
 
-On Wed, Sep 18, 2013 at 02:23:56PM -0600, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> ePAPR 1.1 section 2.2.1.1 "Node Name Requirements" specifies that any
-> node that has a reg property must include a unit address in its name
-> with value matching the first entry in its reg property. Conversely, if
-> a node does not have a reg property, the node name must not include a
-> unit address.
->=20
-> Implement a check for this. The code doesn't validate the format of the
-> unit address; ePAPR implies this may vary from binding to binding, so
-> I'm not sure that it's possible to validate the value itself.
->=20
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> This depends on my previous patch "Ensure all tests have matching reg
-> and unit address".
->=20
-> Note that this patch should not yet be applied; it will cause many real-
-> world *.dts files to fail to compile. Those need to be fixed first.
-> However, if/when that happens, this patch may be useful.
-> ---
->  checks.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
->=20
-> diff --git a/checks.c b/checks.c
-> index ee96a25..c80a055 100644
-> --- a/checks.c
-> +++ b/checks.c
-> @@ -287,9 +287,25 @@ NODE_ERROR(node_name_chars, PROPNODECHARS "@");
->  static void check_node_name_format(struct check *c, struct node *dt,
->  				   struct node *node)
->  {
-> -	if (strchr(get_unitname(node), '@'))
-> +	const char *unitname;
-> +	struct property *prop;
-> +
-> +	unitname =3D get_unitname(node);
-> +
-> +	if (strchr(unitname, '@'))
->  		FAIL(c, "Node %s has multiple '@' characters in name",
->  		     node->fullpath);
-> +
-> +	prop =3D get_property(node, "reg");
-> +	if (prop) {
-> +		if (!unitname[0])
-> +			FAIL(c, "Node %s has a reg property, but no unit name",
-> +			    node->fullpath);
-> +	} else {
-> +		if (unitname[0])
-> +			FAIL(c, "Node %s has a unit name, but no reg property",
-> +			    node->fullpath);
-> +	}
->  }
->  NODE_ERROR(node_name_format, NULL, &node_name_chars);
+[Roger Q] Clean up.
 
-I'd prefer to see this implemented as a new check, rather than
-extending node_name_format.  It will be a bit more verbose, but it
-keeps the low-level syntactic check seperate from the higher-level
-semantic / linting check.
+CC: Benoit Cousson <bcousson@baylibre.com>
+Signed-off-by: Balaji T K <balajitk@ti.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm/mach-omap2/omap_hwmod_54xx_data.c |   72 ++++++++++++++++++++++++++++
+ 1 files changed, 72 insertions(+), 0 deletions(-)
 
-It also allows it to be configured as a warning seperately from the
-simpler check.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---4Epv4kl9IRBfg3rk
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSOu8UAAoJEGw4ysog2bOStEgQAJAEGguCvUCzdoGZAyVP5fJ+
-JioFSS/hTndBrExve4GnkwRsZEhJEtbMtf3dw8ij46KVtIEvlxavzqdBFQKJ0bd9
-H85REGc1hUL+elM2U5NbbzolfMpl9Jw6YhP4RnXGJbTTFoi2vm396rMKJiYVOiSP
-JTKMtzKAsJJA6Mjc0DsVPFaye1qSFzVkx+OJdJxo4KIGO6hM+wq9TI9bpjNG8wOc
-VBaQoGr8/pYnzRF83fK9KIGFMcPpUAQKhAIps9Od6TwVJgOgfgIfAujT4c5S8BaU
-VL6TMKZwpkNRw+hEwo70X3b3f36tfGiEYmEO6WnBHNdBICRtQWDkpBF5ZQVrOIcF
-AdQcZXmo4il8Xh2LHFaqgKrpkcN+S7bfKARaRGKurvCrkj5h0SkHJRyeTTLgBQB0
-aL1zK0OPm28xqCCJfwgEafFdwazY+dygsBWJ3475YWsK1Aw2xSsqSXBjnQiksXcN
-pbDP2KKlc6mOOAwLqGg8quHie7weY1e52pO91n0BbsbZH0hCi4xcCMXGexr54Nfb
-kLNaW2tWZ2IPh/rlgNuOmDWdHZEyVGEKa9Cs/gfhvg7gBLLdZ8qxi5Y+W8QWXb51
-cEbvnSzVIwGWRKeLkOol0qJbaB3j8TgQiss4GCkeHa8RNja2GDoBpE5sALw+aHjH
-bHK0eFlJfki2XluQ4LN0
-=rXYH
------END PGP SIGNATURE-----
-
---4Epv4kl9IRBfg3rk--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/mach-omap2/omap_hwmod_54xx_data.c b/arch/arm/mach-omap2/omap_hwmod_54xx_data.c
+index 3dae6b9..2b698b8 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_54xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_54xx_data.c
+@@ -1545,6 +1545,76 @@ static struct omap_hwmod omap54xx_wd_timer2_hwmod = {
+ 	},
+ };
+ 
++/*
++ * 'ocp2scp' class
++ * bridge to transform ocp interface protocol to scp (serial control port)
++ * protocol
++ */
++/* ocp2scp3 */
++static struct omap_hwmod omap54xx_ocp2scp3_hwmod;
++/* l4_cfg -> ocp2scp3 */
++static struct omap_hwmod_ocp_if omap54xx_l4_cfg__ocp2scp3 = {
++	.master		= &omap54xx_l4_cfg_hwmod,
++	.slave		= &omap54xx_ocp2scp3_hwmod,
++	.clk		= "l4_root_clk_div",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
++
++static struct omap_hwmod omap54xx_ocp2scp3_hwmod = {
++	.name		= "ocp2scp3",
++	.class		= &omap54xx_ocp2scp_hwmod_class,
++	.clkdm_name	= "l3init_clkdm",
++	.prcm = {
++		.omap4 = {
++			.clkctrl_offs = OMAP54XX_CM_L3INIT_OCP2SCP3_CLKCTRL_OFFSET,
++			.context_offs = OMAP54XX_RM_L3INIT_OCP2SCP3_CONTEXT_OFFSET,
++			.modulemode   = MODULEMODE_HWCTRL,
++		},
++	},
++};
++
++/*
++ * 'sata' class
++ * sata:  serial ata interface  gen2 compliant   ( 1 rx/ 1 tx)
++ */
++
++static struct omap_hwmod_class_sysconfig omap54xx_sata_sysc = {
++	.sysc_offs	= 0x0000,
++	.sysc_flags	= (SYSC_HAS_MIDLEMODE | SYSC_HAS_SIDLEMODE),
++	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
++			   SIDLE_SMART_WKUP | MSTANDBY_FORCE | MSTANDBY_NO |
++			   MSTANDBY_SMART | MSTANDBY_SMART_WKUP),
++	.sysc_fields	= &omap_hwmod_sysc_type2,
++};
++
++static struct omap_hwmod_class omap54xx_sata_hwmod_class = {
++	.name	= "sata",
++	.sysc	= &omap54xx_sata_sysc,
++};
++
++/* sata */
++static struct omap_hwmod omap54xx_sata_hwmod = {
++	.name		= "sata",
++	.class		= &omap54xx_sata_hwmod_class,
++	.clkdm_name	= "l3init_clkdm",
++	.flags		= HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY,
++	.main_clk	= "func_48m_fclk",
++	.prcm = {
++		.omap4 = {
++			.clkctrl_offs = OMAP54XX_CM_L3INIT_SATA_CLKCTRL_OFFSET,
++			.context_offs = OMAP54XX_RM_L3INIT_SATA_CONTEXT_OFFSET,
++			.modulemode   = MODULEMODE_SWCTRL,
++		},
++	},
++};
++
++/* l4_cfg -> sata */
++static struct omap_hwmod_ocp_if omap54xx_l4_cfg__sata = {
++	.master		= &omap54xx_l4_cfg_hwmod,
++	.slave		= &omap54xx_sata_hwmod,
++	.clk		= "l3_iclk_div",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
+ 
+ /*
+  * Interfaces
+@@ -2192,6 +2262,8 @@ static struct omap_hwmod_ocp_if *omap54xx_hwmod_ocp_ifs[] __initdata = {
+ 	&omap54xx_l4_per__uart6,
+ 	&omap54xx_l4_cfg__usb_otg_ss,
+ 	&omap54xx_l4_wkup__wd_timer2,
++	&omap54xx_l4_cfg__ocp2scp3,
++	&omap54xx_l4_cfg__sata,
+ 	NULL,
+ };
+ 
+-- 
+1.7.4.1
