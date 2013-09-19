@@ -1,63 +1,48 @@
-From: Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: git issue / [PATCH] MIPS: fix invalid symbolic link file
-Date: Thu, 19 Sep 2013 15:39:20 +0200
-Message-ID: <20130919133920.GA22468@linux-mips.org>
-References: <1379596148-32520-1-git-send-email-maddy@linux.vnet.ibm.com>
+From: "Sarha, Jyri" <jsarha@ti.com>
+Subject: RE: [PATCH v3 01/11] ASoC: davinci-evm: Move sysclk logic away from
+ evm_hw_params
+Date: Thu, 19 Sep 2013 13:43:50 +0000
+Message-ID: <0EB243F40EB34A418EAED8001C4B3AD019E84280@DNCE05.ent.ti.com>
+References: <cover.1379590035.git.jsarha@ti.com>
+ <dad0f7eb787d3f65848425a67d668e3935033195.1379590036.git.jsarha@ti.com>,<20130919132316.GR21013@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <git-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1379596148-32520-1-git-send-email-maddy@linux.vnet.ibm.com>
-Sender: git-owner@vger.kernel.org
-To: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, git@vger.kernel.org
-Cc: steven.hill@imgtec.com, mmarek@suse.cz, swarren@nvidia.com, linux-mips@linux-mips.org, linux-kbuild@vger.kernel.org, james.hogan@imgtec.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130919132316.GR21013@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "Fernandes, Joel" <joelf@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 19, 2013 at 06:39:08PM +0530, Madhavan Srinivasan wrote:
+As I described in cover letter on these patches did change:
 
-(Git folks, please read on.)
+  [PATCH v2 05/11] ASoC: davinci-mcasp: Remove interrupt property from DT bindin
+   - restore binding but make it optional and add interrupt-names property
+  [PATCH v2 06/11] ASoC: davinci: Add support for AM33xx SoC Audio
+   - SND_DAVINCI_SOC help "Machine driver for ..." -> "Platform driver for ..."
+   - SND_AM33XX_SOC_EVM depends on SND_DAVINCI_SOC && SOC_AM33XX
+   - SND_AM33XX_SOC_EVM does not selcet SND_DAVINCI_SOC
+  [PATCH v2 09/11] ARM/dts: am33xx: Add mcasp0 and mcasp1 device tree entries
+   - restore interrupt property and add interrupt-names property----
 
->    Commit 3b29aa5ba204c created a symlink file in include/dt-bindings.
->    Even though commit diff is fine, symlink is invalid.
->    ls -lb shows a newline character at the end of the filename.
-> 
-> lrwxrwxrwx 1 maddy maddy 35 Sep 19 18:11 dt-bindings ->
-> ../../../../../include/dt-bindings\n
-> 
-> Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-> ---
->  arch/mips/boot/dts/include/dt-bindings |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/mips/boot/dts/include/dt-bindings b/arch/mips/boot/dts/include/dt-bindings
-> index 68ae388..08c00e4 120000
-> --- a/arch/mips/boot/dts/include/dt-bindings
-> +++ b/arch/mips/boot/dts/include/dt-bindings
-> @@ -1 +1 @@
-> -../../../../../include/dt-bindings
-> +../../../../../include/dt-bindings
-> \ No newline at end of file
-> -- 
-> 1.7.10.4
+Best regards,
+Jyri
 
-I applied your patch - but now git-show shows it as an empty commit and
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-  ls -lb arch/mips/boot/dts/include/dt-bindings
+________________________________________
+From: Mark Brown [broonie@kernel.org]
+Sent: Thursday, September 19, 2013 4:23 PM
+To: Sarha, Jyri
+Cc: alsa-devel@alsa-project.org; devicetree@vger.kernel.org; linux-omap@vger.kernel.org; Ujfalusi, Peter; liam.r.girdwood@linux.intel.com; grant.likely@linaro.org; rob.herring@calxeda.com; Fernandes, Joel
+Subject: Re: [PATCH v3 01/11] ASoC: davinci-evm: Move sysclk logic away from evm_hw_params
 
-still shows the \n at the end of the link target.  Things are looking ok
-now that I manually fixed the link and commited the result.  I hope
-git-push and git-pull are going to handle this correct.
+On Thu, Sep 19, 2013 at 02:29:34PM +0300, Jyri Sarha wrote:
+> The sysclk rate does not change runtime so it should be initialized at
+> init time.
 
-So, I wonder if this is a git bug.
+Are there any updates from the version already applied (I only dropped
+the patch to allow the extra builds, not this one).
 
-The original patch that introduced the symlink with the \n is kernel
-commit 3b29aa5ba204c62b3ec8f9f5b1ebd6e5d74f75d3 and is archived in
-patchwork at http://patchwork.linux-mips.org/patch/5745/  The patch
-file contains a \n at the end - but one would expect that from a
-patch file that has been transfered via email, so I'm not sure how this
-is supposed to work with emailed patches?!?
-
-Anyway, I'm not too fond of sylinks in the tree or in patches and I'm
-wondering if we could get rid of them for something more bullet proof.
-
-  Ralf
