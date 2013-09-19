@@ -1,719 +1,135 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2] clk: si570: Add a driver for SI570 oscillators
-Date: Thu, 19 Sep 2013 06:17:12 -0700
-Message-ID: <20130919131712.GB24088@roeck-us.net>
-References: <1379544219-23579-1-git-send-email-soren.brinkmann@xilinx.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [dtc RFC PATCH] Enforce node name unit-address presence/absence
+Date: Thu, 19 Sep 2013 22:27:23 +1000
+Message-ID: <20130919122723.GC3551@voom.redhat.com>
+References: <1379535836-12726-1-git-send-email-swarren@wwwdotorg.org>
+ <CAOesGMg0Rrmew0iK-Gtrx_UiODhpro_S2xUxQi0gZ+7PJmBHnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="p2kqVDKq5asng8Dg"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1379544219-23579-1-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
+In-Reply-To: <CAOesGMg0Rrmew0iK-Gtrx_UiODhpro_S2xUxQi0gZ+7PJmBHnw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2013 at 03:43:38PM -0700, Soren Brinkmann wrote:
-> Add a driver for SILabs 570, 571, 598, 599 programmable oscillators.
-> The devices generate low-jitter clock signals and are reprogrammable =
-via
-> an I2C interface.
+
+--p2kqVDKq5asng8Dg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Sep 18, 2013 at 01:41:16PM -0700, Olof Johansson wrote:
+> On Wed, Sep 18, 2013 at 1:23 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> w=
+rote:
+> > From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >
+> > ePAPR 1.1 section 2.2.1.1 "Node Name Requirements" specifies that any
+> > node that has a reg property must include a unit address in its name
+> > with value matching the first entry in its reg property. Conversely, if
+> > a node does not have a reg property, the node name must not include a
+> > unit address.
+> >
+> > Implement a check for this. The code doesn't validate the format of the
+> > unit address; ePAPR implies this may vary from binding to binding, so
+> > I'm not sure that it's possible to validate the value itself.
+> >
+> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > This depends on my previous patch "Ensure all tests have matching reg
+> > and unit address".
+> >
+> > Note that this patch should not yet be applied; it will cause many real-
+> > world *.dts files to fail to compile. Those need to be fixed first.
+> > However, if/when that happens, this patch may be useful.
+> > ---
+> >  checks.c | 18 +++++++++++++++++-
+> >  1 file changed, 17 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/checks.c b/checks.c
+> > index ee96a25..c80a055 100644
+> > --- a/checks.c
+> > +++ b/checks.c
+> > @@ -287,9 +287,25 @@ NODE_ERROR(node_name_chars, PROPNODECHARS "@");
+> >  static void check_node_name_format(struct check *c, struct node *dt,
+> >                                    struct node *node)
+> >  {
+> > -       if (strchr(get_unitname(node), '@'))
+> > +       const char *unitname;
+> > +       struct property *prop;
+> > +
+> > +       unitname =3D get_unitname(node);
+> > +
+> > +       if (strchr(unitname, '@'))
+> >                 FAIL(c, "Node %s has multiple '@' characters in name",
+> >                      node->fullpath);
+> > +
+> > +       prop =3D get_property(node, "reg");
+> > +       if (prop) {
+> > +               if (!unitname[0])
+> > +                       FAIL(c, "Node %s has a reg property, but no uni=
+t name",
+> > +                           node->fullpath);
+> > +       } else {
+> > +               if (unitname[0])
+> > +                       FAIL(c, "Node %s has a unit name, but no reg pr=
+operty",
+> > +                           node->fullpath);
 >=20
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> ---
-> v2:
->  - document clock-output-names in bindings documentation
->  - don't use wildcards in compatibility string
->  - change Kconfig entry to "... 570 and compatible devices"
->  - change some indentation flaws
->  - use 10000 as MIN and MAX value in usleep_range
->  - fail probe() if 'factory-fout' is not provided in DT
->    - default factory fout #defines removed
->  - use i2c driver_data instead of OF data
->    - remove some related structs and data
->  - rename DT property 'initial-fout' =3D> 'clock-frequency' (like si5=
-351
->    driver)
->  - add some more details regarding the 'factory-fout' DT property
->=20
->  .../devicetree/bindings/clock/silabs,si570.txt     |  38 ++
->  drivers/clk/Kconfig                                |  10 +
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/clk-si570.c                            | 517 +++++++++++=
-++++++++++
->  4 files changed, 566 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/silabs,si=
-570.txt
->  create mode 100644 drivers/clk/clk-si570.c
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/silabs,si570.txt=
- b/Documentation/devicetree/bindings/clock/silabs,si570.txt
-> new file mode 100644
-> index 0000000..7ab5c8b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/silabs,si570.txt
-> @@ -0,0 +1,38 @@
-> +Binding for Silicon Labs 570, 571, 598 and 599 programmable
-> +I2C clock generators.
-> +
-> +Reference
-> +This binding uses the common clock binding[1]. Details about the dev=
-ices can be
-> +found in the data sheets[2][3].
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +[2] Si570/571 Data Sheet
-> +    http://www.silabs.com/Support%20Documents/TechnicalDocs/si570.pd=
-f
-> +[3] Si598/599 Data Sheet
-> +    http://www.silabs.com/Support%20Documents/TechnicalDocs/si598-99=
-=2Epdf
-> +
-> +Required properties:
-> + - compatible: Shall be one of "silabs,si570", "silabs,si571",
-> +			       "silabs,si598", "silabs,si599"
-> + - reg: I2C device address.
-> + - #clock-cells: From common clock bindings: Shall be 0.
-> + - factory-fout: Factory set default frequency. This frequency is pa=
-rt specific.
-> +		 The correct frequency for the part used has to be provided in
-> +		 order to generate the correct output frequencies. For more
-> +		 details, please refer to the data sheet.
-> +
-> +Optional properties:
-> + - clock-output-names: From common clock bindings. Recommended to be=
- "si570".
-> + - clock-frequency: Output frequency to generate. This defines the o=
-utput
-> +		    frequency set during boot. It can be reprogrammed during
-> +		    runtime using the common clock framework.
-> + - temperature-stability-7ppm: Indicate a device with a temperature =
-stability
-> +			       of 7ppm
-> +
-> +Example:
-> +	si570: clock-generator@5d {
-> +		#clock-cells =3D <0>;
-> +		compatible =3D "silabs,si570";
-> +		reg =3D <0x5d>;
-> +		factory-fout =3D <156250000>;
-> +	};
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 279407a..349b88a 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -64,6 +64,16 @@ config COMMON_CLK_SI5351
->  	  This driver supports Silicon Labs 5351A/B/C programmable clock
->  	  generators.
-> =20
-> +config COMMON_CLK_SI570
-> +	tristate "Clock driver for SiLabs 570 and compatible devices"
-> +	depends on I2C
-> +	depends on OF
-> +	select REGMAP_I2C
-> +	help
-> +	---help---
-> +	  This driver supports Silicon Labs 570/571/598/599 programmable
-> +	  clock generators.
-> +
->  config COMMON_CLK_S2MPS11
->  	tristate "Clock driver for S2MPS11 MFD"
->  	depends on MFD_SEC_CORE
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 7b11106..c0e94b3 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -40,6 +40,7 @@ obj-$(CONFIG_COMMON_CLK_AXI_CLKGEN) +=3D clk-axi-cl=
-kgen.o
->  obj-$(CONFIG_COMMON_CLK_WM831X) +=3D clk-wm831x.o
->  obj-$(CONFIG_COMMON_CLK_MAX77686) +=3D clk-max77686.o
->  obj-$(CONFIG_COMMON_CLK_SI5351) +=3D clk-si5351.o
-> +obj-$(CONFIG_COMMON_CLK_SI570) +=3D clk-si570.o
->  obj-$(CONFIG_COMMON_CLK_S2MPS11) +=3D clk-s2mps11.o
->  obj-$(CONFIG_CLK_TWL6040)	+=3D clk-twl6040.o
->  obj-$(CONFIG_CLK_PPC_CORENET)	+=3D clk-ppc-corenet.o
-> diff --git a/drivers/clk/clk-si570.c b/drivers/clk/clk-si570.c
-> new file mode 100644
-> index 0000000..c20dfce
-> --- /dev/null
-> +++ b/drivers/clk/clk-si570.c
-> @@ -0,0 +1,517 @@
-> +/*
-> + * Driver for Silicon Labs Si570/Si571 Programmable XO/VCXO
-> + *
-> + * Copyright (C) 2010, 2011 Ericsson AB.
-> + * Copyright (C) 2011 Guenter Roeck.
-> + * Copyright (C) 2011 - 2013 Xilinx Inc.
-> + *
-> + * Author: Guenter Roeck <guenter.roeck@ericsson.com>
-> + *	   S=F6ren Brinkmann <soren.brinkmann@xilinx.com>
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License as published=
- by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/delay.h>
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +/* Si570 registers */
-> +#define SI570_REG_HS_N1		7
-> +#define SI570_REG_N1_RFREQ0	8
-> +#define SI570_REG_RFREQ1	9
-> +#define SI570_REG_RFREQ2	10
-> +#define SI570_REG_RFREQ3	11
-> +#define SI570_REG_RFREQ4	12
-> +#define SI570_REG_CONTROL	135
-> +#define SI570_REG_FREEZE_DCO	137
-> +#define SI570_DIV_OFFSET_7PPM	6
-> +
-> +#define HS_DIV_SHIFT		5
-> +#define HS_DIV_MASK		0xe0
-> +#define HS_DIV_OFFSET		4
-> +#define N1_6_2_MASK		0x1f
-> +#define N1_1_0_MASK		0xc0
-> +#define RFREQ_37_32_MASK	0x3f
-> +
-> +#define SI570_MIN_FREQ		10000000L
-> +#define SI570_MAX_FREQ		1417500000L
-> +#define SI598_MAX_FREQ		525000000L
-> +
-> +#define FDCO_MIN		4850000000LL
-> +#define FDCO_MAX		5670000000LL
-> +
-> +#define SI570_CNTRL_RECALL	(1 << 0)
-> +#define SI570_CNTRL_FREEZE_M	(1 << 5)
-> +#define SI570_CNTRL_NEWFREQ	(1 << 6)
-> +
-> +#define SI570_FREEZE_DCO	(1 << 4)
-> +
-> +/**
-> + * struct clk_si570:
-> + * @hw:	Clock hw struct
-> + * @regmap:	Device's regmap
-> + * @div_offset:	Rgister offset for dividers
-> + * @max_freq:	Maximum frequency for this device
-> + * @fxtal:	Factory xtal frequency
-> + * @n1:		Clock divider N1
-> + * @hs_div:	Clock divider HSDIV
-> + * @rfreq:	Clock multiplier RFREQ
-> + * @frequency:	Current output frequency
-> + * @i2c_client:	I2C client pointer
-> + */
-> +struct clk_si570 {
-> +	struct clk_hw hw;
-> +	struct regmap *regmap;
-> +	unsigned int div_offset;
-> +	u64 max_freq;
-> +	u64 fxtal;
-> +	unsigned int n1;
-> +	unsigned int hs_div;
-> +	u64 rfreq;
-> +	u64 frequency;
-> +	struct i2c_client *i2c_client;
-> +};
-> +#define to_clk_si570(_hw)	container_of(_hw, struct clk_si570, hw)
-> +
-> +/**
-> + * si570_get_divs() - Read clock dividers from HW
-> + * @data:	Pointer to struct clk_si570
-> + * @rfreq:	Fractional multiplier (output)
-> + * @n1:		Divider N1 (output)
-> + * @hs_div:	Divider HSDIV (output)
-> + * Returns 0 on success, negative errno otherwise.
-> + *
-> + * Retrieve clock dividers and multipliers from the HW.
-> + */
-> +static int si570_get_divs(struct clk_si570 *data, u64 *rfreq,
-> +		unsigned int *n1, unsigned int *hs_div)
-> +{
-> +	int err;
-> +	u8 reg[6];
-> +	u64 tmp;
-> +
-> +	err =3D regmap_bulk_read(data->regmap, SI570_REG_HS_N1 + data->div_=
-offset,
-> +			reg, ARRAY_SIZE(reg));
-> +	if (err)
-> +		return err;
-> +
-> +	*hs_div =3D ((reg[0] & HS_DIV_MASK) >> HS_DIV_SHIFT) + HS_DIV_OFFSE=
-T;
-> +	*n1 =3D ((reg[0] & N1_6_2_MASK) << 2) + ((reg[1] & N1_1_0_MASK) >> =
-6) + 1;
-> +	/* Handle invalid cases */
-> +	if (*n1 > 1)
-> +		*n1 &=3D ~1;
-> +
-> +	tmp =3D reg[1] & RFREQ_37_32_MASK;
-> +	tmp =3D (tmp << 8) + reg[2];
-> +	tmp =3D (tmp << 8) + reg[3];
-> +	tmp =3D (tmp << 8) + reg[4];
-> +	tmp =3D (tmp << 8) + reg[5];
-> +	*rfreq =3D tmp;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * si570_get_defaults() - Get default values
-> + * @data:	Driver data structure
-> + * @fout:	Factory frequency output
-> + * Returns 0 on success, negative errno otherwise.
-> + */
-> +static int si570_get_defaults(struct clk_si570 *data, u64 fout)
-> +{
-> +	int err;
-> +	u64 fdco;
-> +
-> +	regmap_write(data->regmap, SI570_REG_CONTROL, SI570_CNTRL_RECALL);
-> +
-> +	err =3D si570_get_divs(data, &data->rfreq, &data->n1, &data->hs_div=
-);
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * Accept optional precision loss to avoid arithmetic overflows.
-> +	 * Acceptable per Silicon Labs Application Note AN334.
-> +	 */
-> +	fdco =3D fout * data->n1 * data->hs_div;
-> +	if (fdco >=3D (1LL << 36))
-> +		data->fxtal =3D div64_u64(fdco << 24, data->rfreq >> 4);
-> +	else
-> +		data->fxtal =3D div64_u64(fdco << 28, data->rfreq);
-> +
-> +	data->frequency =3D fout;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * si570_update_rfreq() - Update clock multiplier
-> + * @data:	Driver data structure
-> + * Passes on regmap_bulk_write() return value.
-> + */
-> +static int si570_update_rfreq(struct clk_si570 *data)
-> +{
-> +	u8 reg[5];
-> +
-> +	reg[0] =3D ((data->n1 - 1) << 6) |
-> +		((data->rfreq >> 32) & RFREQ_37_32_MASK);
-> +	reg[1] =3D (data->rfreq >> 24) & 0xff;
-> +	reg[2] =3D (data->rfreq >> 16) & 0xff;
-> +	reg[3] =3D (data->rfreq >> 8) & 0xff;
-> +	reg[4] =3D data->rfreq & 0xff;
-> +
-> +	return regmap_bulk_write(data->regmap, SI570_REG_N1_RFREQ0 +
-> +			data->div_offset, reg, ARRAY_SIZE(reg));
-> +}
-> +
-> +/**
-> + * si570_calc_divs() - Caluclate clock dividers
-> + * @frequency:	Target frequency
-> + * @data:	Driver data structure
-> + * @out_rfreq:	RFREG fractional multiplier (output)
-> + * @out_n1:	Clock divider N1 (output)
-> + * @out_hs_div:	Clock divider HSDIV (output)
-> + * Returns 0 on success, negative errno otherwise.
-> + *
-> + * Calculate the clock dividers (@out_hs_div, @out_n1) and clock mul=
-tiplier
-> + * (@out_rfreq) for a given target @frequency.
-> + */
-> +static int si570_calc_divs(unsigned long frequency, struct clk_si570=
- *data,
-> +		u64 *out_rfreq, unsigned int *out_n1, unsigned int *out_hs_div)
-> +{
-> +	int i;
-> +	unsigned int n1, hs_div;
-> +	u64 fdco, best_fdco =3D ULLONG_MAX;
-> +	static const uint8_t si570_hs_div_values[] =3D { 11, 9, 7, 6, 5, 4 =
-};
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(si570_hs_div_values); i++) {
-> +		hs_div =3D si570_hs_div_values[i];
-> +		/* Calculate lowest possible value for n1 */
-> +		n1 =3D div_u64(div_u64(FDCO_MIN, hs_div), frequency);
-> +		if (!n1 || (n1 & 1))
-> +			n1++;
-> +		while (n1 <=3D 128) {
-> +			fdco =3D (u64)frequency * (u64)hs_div * (u64)n1;
-> +			if (fdco > FDCO_MAX)
-> +				break;
-> +			if (fdco >=3D FDCO_MIN && fdco < best_fdco) {
-> +				*out_n1 =3D n1;
-> +				*out_hs_div =3D hs_div;
-> +				*out_rfreq =3D div64_u64(fdco << 28, data->fxtal);
-> +				best_fdco =3D fdco;
-> +			}
-> +			n1 +=3D (n1 =3D=3D 1 ? 1 : 2);
-> +		}
-> +	}
-> +
-> +	if (best_fdco =3D=3D ULLONG_MAX)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static unsigned long si570_recalc_rate(struct clk_hw *hw,
-> +		unsigned long parent_rate)
-> +{
-> +	int err;
-> +	u64 rfreq, rate;
-> +	unsigned int n1, hs_div;
-> +	struct clk_si570 *data =3D to_clk_si570(hw);
-> +
-> +	err =3D si570_get_divs(data, &rfreq, &n1, &hs_div);
-> +	if (err) {
-> +		dev_err(&data->i2c_client->dev, "unable to recalc rate\n");
+> These checks are very useful, even though they might sort of cross
+> over the domain to what a dtc linter would do instead of the compiler.
 
-[ Not really helpful that you can not return an error here ]
+So, I think inside the compiler is the best place for a linter anyway
+- that way people will actually run it.
 
-> +		return data->frequency;
-> +	}
-> +
-> +	rfreq =3D div_u64(rfreq, hs_div * n1);
-> +	rate =3D (data->fxtal * rfreq) >> 28;
-> +
-> +	return rate;
-> +}
-> +
-> +static long si570_round_rate(struct clk_hw *hw, unsigned long rate,
-> +		unsigned long *parent_rate)
-> +{
-> +	int err;
-> +	u64 rfreq;
-> +	unsigned int n1, hs_div;
-> +	struct clk_si570 *data =3D to_clk_si570(hw);
-> +
-> +	if (!rate)
-> +		return 0;
-> +
-> +	if (div64_u64(abs(rate - data->frequency) * 10000LL,
-> +				data->frequency) < 35) {
-> +		rfreq =3D div64_u64((data->rfreq * rate) +
-> +				div64_u64(data->frequency, 2), data->frequency);
-> +		n1 =3D data->n1;
-> +		hs_div =3D data->hs_div;
-> +
-> +	} else {
-> +		err =3D si570_calc_divs(rate, data, &rfreq, &n1, &hs_div);
-> +		if (err) {
-> +			dev_err(&data->i2c_client->dev,
-> +					"unable to round rate\n");
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	return rate;
-> +}
-> +
-> +/**
-> + * si570_set_frequency() - Adjust output frequency
-> + * @data:	Driver data structure
-> + * @frequency:	Target frequency
-> + * Returns 0 on success.
-> + *
-> + * Update output frequency for big frequency changes (> 3,500 ppm).
-> + */
-> +static int si570_set_frequency(struct clk_si570 *data, unsigned long=
- frequency)
-> +{
-> +	int err;
-> +
-> +	err =3D si570_calc_divs(frequency, data, &data->rfreq, &data->n1,
-> +			&data->hs_div);
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * The DCO reg should be accessed with a read-modify-write operatio=
-n
-> +	 * per AN334
-> +	 */
-> +	regmap_write(data->regmap, SI570_REG_FREEZE_DCO, SI570_FREEZE_DCO);
-> +	regmap_write(data->regmap, SI570_REG_HS_N1 + data->div_offset,
-> +			((data->hs_div - HS_DIV_OFFSET) << HS_DIV_SHIFT) |
-> +			(((data->n1 - 1) >> 2) & N1_6_2_MASK));
-> +	si570_update_rfreq(data);
-> +	regmap_write(data->regmap, SI570_REG_FREEZE_DCO, 0);
-> +	regmap_write(data->regmap, SI570_REG_CONTROL, SI570_CNTRL_NEWFREQ);
-> +
-> +	/* Applying a new frequency can take up to 10ms */
-> +	usleep_range(10000, 10000);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * si570_set_frequency_small() - Adjust output frequency
-> + * @data:	Driver data structure
-> + * @frequency:	Target frequency
-> + * Returns 0 on success.
-> + *
-> + * Update output frequency for small frequency changes (< 3,500 ppm)=
-=2E
-> + */
-> +static int si570_set_frequency_small(struct clk_si570 *data,
-> +				     unsigned long frequency)
-> +{
-> +	/*
-> +	 * This is a re-implementation of DIV_ROUND_CLOSEST
-> +	 * using the div64_u64 function lieu of letting the compiler
-> +	 * insert EABI calls
-> +	 */
-> +	data->rfreq =3D div64_u64((data->rfreq * frequency) +
-> +			div_u64(data->frequency, 2), data->frequency);
-> +	regmap_write(data->regmap, SI570_REG_CONTROL, SI570_CNTRL_FREEZE_M)=
-;
-> +	si570_update_rfreq(data);
-> +	regmap_write(data->regmap, SI570_REG_CONTROL, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int si570_set_rate(struct clk_hw *hw, unsigned long rate,
-> +		unsigned long parent_rate)
-> +{
-> +	struct clk_si570 *data =3D to_clk_si570(hw);
-> +	struct i2c_client *client =3D data->i2c_client;
-> +	int err;
-> +
-> +	if (rate < SI570_MIN_FREQ || rate > data->max_freq) {
-> +		dev_warn(&client->dev,
-> +			"requested frequency %lu Hz is out of range\n", rate);
+The entire checks infrastructure was built specifically to allow
+linting inside the compiler - I just never had time to implement many
+checks beyond the basics.
 
-Shouldn't this be dev_err ?
+> Anyway, I think it'd be better to produce warnings than errors for
+> this. That way we could also merge it now while the trees are fixed
+> up.
 
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (div64_u64(abs(rate - data->frequency) * 10000LL,
-> +				data->frequency) < 35)
-> +		err =3D si570_set_frequency_small(data, rate);
-> +	else
-> +		err =3D si570_set_frequency(data, rate);
-> +
-> +	if (err)
-> +		return err;
-> +
-> +	data->frequency =3D rate;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct clk_ops si570_clk_ops =3D {
-> +	.recalc_rate =3D si570_recalc_rate,
-> +	.round_rate =3D si570_round_rate,
-> +	.set_rate =3D si570_set_rate,
-> +};
-> +
-> +static bool si570_regmap_is_volatile(struct device *dev, unsigned in=
-t reg)
-> +{
-> +	switch (reg) {
-> +	case 135:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static bool si570_regmap_is_writeable(struct device *dev, unsigned i=
-nt reg)
-> +{
-> +	switch (reg) {
-> +	case 7 ... 18:
-> +	case 135:
-> +	case 137:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static struct regmap_config si570_regmap_config =3D {
-> +	.reg_bits =3D 8,
-> +	.val_bits =3D 8,
-> +	.cache_type =3D REGCACHE_RBTREE,
-> +	.max_register =3D 137,
-> +	.writeable_reg =3D si570_regmap_is_writeable,
-> +	.volatile_reg =3D si570_regmap_is_volatile,
-> +};
-> +
-> +static int si570_probe(struct i2c_client *client,
-> +		const struct i2c_device_id *id)
-> +{
-> +	struct clk_si570 *data;
-> +	struct clk_init_data init;
-> +	struct clk *clk;
-> +	u32 initial_fout, factory_fout;
-> +	int err;
-> +
-> +	data =3D devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	init.ops =3D &si570_clk_ops;
-> +	init.flags =3D CLK_IS_ROOT;
-> +	init.num_parents =3D 0;
-> +	data->hw.init =3D &init;
-> +	data->max_freq =3D id->driver_data;
-> +	data->i2c_client =3D client;
-> +
-> +	if (of_property_read_bool(client->dev.of_node,
-> +				"temperature-stability-7ppm"))
-> +		data->div_offset =3D SI570_DIV_OFFSET_7PPM;
-> +
-Just noticed that you dropped platform data support. Doesn't matter muc=
-h for me
-right now, but in my previous company we used the chip on an x86 system=
- which
-does not support devicetree. Would be nice to keep it and derive platfo=
-rm data
-from devicetree data if provided, like other drivers do it.
+Yes, I agree.
 
-The 7ppm option is only relevant for si570/si751 and not supported on
-si598/si599. You should mention that in the bindings document and check=
- for it.
-Even better would be if it can be auto-detected; in that case you would=
- not need
-the property at all. Unfortunately I don't have access to a chip, so I =
-have
-no idea if that is possible and can not check it myself either.
+> Also, maybe warn for @0x<foo>, which is another unpreferred syntax, it
+> should just be @<foo> (with foo being in hex).
 
-> +	if (of_property_read_string(client->dev.of_node, "clock-output-name=
-s",
-> +			&init.name))
-> +		init.name =3D client->dev.of_node->name;
-> +
-> +	err =3D of_property_read_u32(client->dev.of_node, "factory-fout",
-> +			&factory_fout);
-> +	if (err) {
-> +		dev_err(&client->dev, "'factory-fout' property missing\n");
-> +		return err;
-> +	}
-> +
-> +	data->regmap =3D devm_regmap_init_i2c(client, &si570_regmap_config)=
-;
-> +	if (IS_ERR(data->regmap)) {
-> +		dev_err(&client->dev, "failed to allocate register map\n");
-> +		return PTR_ERR(data->regmap);
-> +	}
-> +
-> +	i2c_set_clientdata(client, data);
-> +	err =3D si570_get_defaults(data, factory_fout);
-> +	if (err)
-> +		return err;
-> +
-> +	clk =3D devm_clk_register(&client->dev, &data->hw);
-> +	if (IS_ERR(clk)) {
-> +		dev_err(&client->dev, "clock registration failed\n");
-> +		return PTR_ERR(clk);
-> +	}
-> +	err =3D of_clk_add_provider(client->dev.of_node, of_clk_src_simple_=
-get,
-> +			clk);
-> +	if (err) {
-> +		dev_err(&client->dev, "unable to add clk provider\n");
-> +		return err;
-> +	}
-> +
-> +	/*
-> +	 * Read the requested initial fout from either platform data or the
-> +	 * device tree
-> +	 */
+Well.. that comes to validating the contents of the unit address.  And
+as Ben points out that needs per bus type information to know how
+they're conventionally formatted.
 
-But you don't do anything with platform data.
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-> +	if (!of_property_read_u32(client->dev.of_node, "clock-frequency",
-> +				&initial_fout)) {
-> +		err =3D clk_set_rate(clk, initial_fout);
-> +		if (err)
-> +			dev_warn(&client->dev,
-> +					"unable to set initial output frequency %u: %d\n",
-> +					initial_fout, err);
+--p2kqVDKq5asng8Dg
+Content-Type: application/pgp-signature
 
-No bailout ?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-Also it seems that this generates two error messages, once in the code =
-which
-experiences the error and once here.
+iQIcBAEBAgAGBQJSOu2rAAoJEGw4ysog2bOSTDkQAM4xAolQxe+p38i6R3ztw+UH
+5qho1CKwoBaIb+77rmlgiurk5XG3rWwTD+eCSJ2zPFcLuPuQo7V+O6ipJXgslOUj
+5ceMloJEmZiaVZ/SfJglJN5RxgbkvIlGd9vbKQL3pZWtp/0joky7/FjZTg+k+F/6
+NMOyIvDduBoP3qhIV/xGQb0he9nxme9l9BF9IRT45MeBHYyWAOynC8OsHLDQnKrc
+qAqsJeieq3avtXEFI7GPMNJjDoul7CeY+SRHIW5Fuk0OKyR/aJzoXECilKfcvXs6
+SI56CVZFU9mMtkTVfrS/GRRxSH9eF3oCGrXYDRcRWq40krzIjZm4NHqkgucj/8Dq
+4dSosSdxSHUqLQMgXwqypuj5TAjtGK6lxql6AOEAWn9FKm3gOaGk/DL4uHtKqNG9
+kVcHwJhGRMTMsuJeDCJl7ZekjkfCZxUAbEj1ZLN56qPJ4oyN85p2FvOw1D9hKaii
+We3xECv7ZvKq9UqsRk7gjvX614WjydsVAcaO7jUxPUExPEgsvGHvKLKiJ4xcxrj3
+nCV3sds/NTqYD/GU8wnyEowr0TbpPIh5E1WuRC+t9Fg3VnT2nWNG+A5ar+O30VjT
+Rw2wOw6KKKpQsNNaDTp/2AvsY1SqX5aPAslHYNE2146JmdJlZiHO+PyIXUz1DGNg
+WfyjnLat/MqoDi+JzNGR
+=l3W6
+-----END PGP SIGNATURE-----
 
-Maybe it would be better to just bail out and return the error.
-After all, something is seriously wrong and the system won't operate
-as specified.
-
-> +	}
-> +
-> +	/* Display a message indicating that we've successfully registered =
-*/
-> +	dev_info(&client->dev, "registered, current frequency %llu Hz\n",
-> +			data->frequency);
-> +
-> +	return 0;
-> +}
-> +
-> +static int si570_remove(struct i2c_client *client)
-> +{
-> +	struct clk_si570 *data =3D i2c_get_clientdata(client);
-> +
-> +	of_clk_del_provider(client->dev.of_node);
-> +	clk_unregister(data->hw.clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct i2c_device_id si570_id[] =3D {
-> +	{ "si570", SI570_MAX_FREQ },
-> +	{ "si571", SI570_MAX_FREQ },
-> +	{ "si598", SI598_MAX_FREQ },
-> +	{ "si599", SI598_MAX_FREQ },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, si570_id);
-> +
-> +static const struct of_device_id clk_si570_of_match[] =3D {
-> +	{ .compatible =3D "silabs,si570" },
-> +	{ .compatible =3D "silabs,si571" },
-> +	{ .compatible =3D "silabs,si598" },
-> +	{ .compatible =3D "silabs,si599" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, clk_si570_of_match);
-> +
-> +static struct i2c_driver si570_driver =3D {
-> +	.driver =3D {
-> +		.name	=3D "si570",
-> +		.of_match_table =3D of_match_ptr(clk_si570_of_match),
-> +	},
-> +	.probe		=3D si570_probe,
-> +	.remove		=3D si570_remove,
-> +	.id_table	=3D si570_id,
-> +};
-> +module_i2c_driver(si570_driver);
-> +
-> +MODULE_AUTHOR("Guenter Roeck <guenter.roeck@ericsson.com>");
-> +MODULE_AUTHOR("Soeren Brinkmann <soren.brinkmann@xilinx.com");
-> +MODULE_DESCRIPTION("Si570 driver");
-> +MODULE_LICENSE("GPL");
-> --=20
-> 1.8.4
->=20
->=20
+--p2kqVDKq5asng8Dg--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
