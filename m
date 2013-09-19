@@ -1,62 +1,131 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: dts: bcm11351: Use GIC/IRQ defines for sdio interrupts
-Date: Thu, 19 Sep 2013 13:18:26 -0400
-Message-ID: <1379611106-18338-1-git-send-email-matt.porter@linaro.org>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH] ASoC: generic: Add generic DT based simple codec
+Date: Thu, 19 Sep 2013 19:34:03 +0200
+Message-ID: <20130919193403.30ac5764@armhf>
+References: <20130919105437.75e0f0a3@armhf>
+	<20130919104028.GI21013@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130919104028.GI21013-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Trivial patch to make use of GIC/IRQ defines on the bcm11351 sdio
-interrupt properties.
+On Thu, 19 Sep 2013 11:40:28 +0100
+Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/bcm11351.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> On Thu, Sep 19, 2013 at 10:54:37AM +0200, Jean-Francois Moine wrote:
+> > This patch adds a simple sound codec which is described by the DT.
+> > This codec may be used when no specific codec action is needed.
+>=20
+> Hrm.  I'm generally not enthusiastic about this sort of thing because=
+ it
+> requires every user of the device to understand the capabilities of t=
+he
+> device instead of being able to just say they have a device of type X=
+ -
+> it seems better to type the data in once in a driver and then referen=
+ce
+> it.  That said...
 
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 05a5aab..5fc64ab 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -71,28 +71,28 @@
- 	sdio1: sdio@3f180000 {
- 		compatible = "brcm,kona-sdhci";
- 		reg = <0x3f180000 0x10000>;
--		interrupts = <0x0 77 0x4>;
-+		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
- 	};
- 
- 	sdio2: sdio@3f190000 {
- 		compatible = "brcm,kona-sdhci";
- 		reg = <0x3f190000 0x10000>;
--		interrupts = <0x0 76 0x4>;
-+		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
- 	};
- 
- 	sdio3: sdio@3f1a0000 {
- 		compatible = "brcm,kona-sdhci";
- 		reg = <0x3f1a0000 0x10000>;
--		interrupts = <0x0 74 0x4>;
-+		interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
- 	};
- 
- 	sdio4: sdio@3f1b0000 {
- 		compatible = "brcm,kona-sdhci";
- 		reg = <0x3f1b0000 0x10000>;
--		interrupts = <0x0 73 0x4>;
-+		interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
- 		status = "disabled";
- 	};
- 
--- 
-1.8.4
+Well, first, the codecs hdmi and dmic have no DT support.
+Then, from the Cubox point of vue, the codec hdmi offers playback
+and capture while the Cubox has only playback (via the tda998x HDMI
+transmitter), and, also, the codec spdif transmitter has a lot of
+sample rates while the Dove audio device supports only 44.1, 48 and 96
+kHz.
 
+So, instead of adding new hdmi and spdif_transmitter codecs,
+I thought it could be useful to have a generic codec with DT support.
+
+On the other hand, as the first use of this codec is for the Cubox,
+an other solution could be to have the codec included in the kirkwood
+driver (declared by DT as either i2s or s/pdif). This would simplify
+the use or not of s/pdif in this driver.
+
+> > +Child 'capture' and 'playback' required properties:
+> > +- stream-name: name of the stream
+>=20
+> What does this mean in the binding?
+
+Indeed, the stream name could be implicit (either "Playback" or
+"Capture"), but, as the users are aware of it, a more friendly
+name is nicer ("S/PDIF Playback").
+
+> > +Formats:
+> > +	"s8"
+> > +	"u8"
+>=20
+> I'd cut this down to just the PCM formats for now - many of the forma=
+ts
+> you list there aren't terribly well defined even within ALSA, I don't
+> think some of them have ever been used at all.  A binding document
+> should really document what things mean as well.
+
+I have no idea about which format is used or not, and there is no
+explanation about their meanings in the uapi (but I can search them..).
+
+Otherwise, for Dove, we need at least "s16_le", "s24_le" and "s32_le"
+and, perhaps, "iec958_subframe_le" and "iec958_subframe_be".
+
+So, what do you think should be the format set?
+
+> > +Rates:
+> > +	5512
+> > +	8000
+>=20
+> This shouldn't be a list of defined rates, it should allow any number=
+,
+> and it should support ranges since while some devices do enumerate
+> specific rates simpler devices often just support a continuous range =
+of
+> rates.
+
+There cannot be any number because the rates are coded by discrete
+values in a bitmap.
+
+=46or the continuous range, I was thinking about the value '0' followed
+by the min and max rates. Have you any other syntax in mind?
+
+> > --- a/sound/soc/generic/Kconfig
+> > +++ b/sound/soc/generic/Kconfig
+>=20
+> CODEC drivers should go in codecs.
+
+OK.
+
+> > +#define DRV_NAME "simple-codec"
+>=20
+> Just write the string in the one place where it is used.
+
+OK.
+
+> > +static char *format_tb[] =3D {
+> > +	"s8", "u8", "s16_le", "s16_be",
+> > +	"u16_le", "u16_be", "s24_le", "s24_be",
+> > +	"u24_le", "u24_be", "s32_le", "s32_be",
+> > +	"u32_le", "u32_be", "float_le", "float_be",
+> > +
+> > +	"float64_le", "float64_be", "iec958_subframe_le", "iec958_subfram=
+e_be",
+> > +	"mu_law", "a_law", "ima_adpcm", "mpeg",
+> > +	"gsm", "", "", "",
+> > +	"", "", "", "special",
+>=20
+> This seems a bit obscure and fragile - an explicit lookup table would=
+ be
+> better I think.
+
+OK.
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
