@@ -1,78 +1,74 @@
-From: Junio C Hamano <gitster-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: git issue / [PATCH] MIPS: fix invalid symbolic link file
-Date: Thu, 19 Sep 2013 09:37:41 -0700
-Message-ID: <xmqqsix0u5re.fsf@gitster.dls.corp.google.com>
-References: <1379596148-32520-1-git-send-email-maddy@linux.vnet.ibm.com>
-	<20130919133920.GA22468@linux-mips.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 5/6] extcon-gpio: Describe devicetree bindings
+Date: Thu, 19 Sep 2013 17:42:45 +0100
+Message-ID: <20130919164245.GG21013@sirena.org.uk>
+References: <1377836978-24082-1-git-send-email-linux@roeck-us.net>
+ <1377836978-24082-6-git-send-email-linux@roeck-us.net>
+ <20130912164100.GF22013@e106331-lin.cambridge.arm.com>
+ <20130912165304.GA12202@roeck-us.net>
+ <20130916142147.GF30650@e106331-lin.cambridge.arm.com>
+ <20130916151953.GA5801@roeck-us.net>
+ <20130918153828.GB17453@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QC2OnzLPmgM3Ncx9"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130919133920.GA22468-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org> (Ralf Baechle's message
-	of "Thu, 19 Sep 2013 15:39:20 +0200")
+Content-Disposition: inline
+In-Reply-To: <20130918153828.GB17453-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: Madhavan Srinivasan <maddy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, git-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, steven.hill-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, mmarek-AlSwsSmVLrQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org> writes:
 
->> diff --git a/arch/mips/boot/dts/include/dt-bindings b/arch/mips/boot/dts/include/dt-bindings
->> index 68ae388..08c00e4 120000
->> --- a/arch/mips/boot/dts/include/dt-bindings
->> +++ b/arch/mips/boot/dts/include/dt-bindings
->> @@ -1 +1 @@
->> -../../../../../include/dt-bindings
->> +../../../../../include/dt-bindings
->> \ No newline at end of file
->> -- 
->> 1.7.10.4
->
-> I applied your patch - but now git-show shows it as an empty commit and
->
->   ls -lb arch/mips/boot/dts/include/dt-bindings
->
-> still shows the \n at the end of the link target.
-> ...
-> So, I wonder if this is a git bug.
+--QC2OnzLPmgM3Ncx9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sounds as if "git am" is losing the important bit of information
-that new content ends with an incomplete line.
+On Wed, Sep 18, 2013 at 04:38:28PM +0100, Mark Rutland wrote:
+> On Mon, Sep 16, 2013 at 04:19:53PM +0100, Guenter Roeck wrote:
 
-However, it does not reproduce for me.
+> > I think what you are saying is that describing a generic connector via
+> > devicetree is not acceptable, even though it _does_ describe hardware.
+> > I would have to describe a specific connector for a specific hardware
+> > instead, which in turn would need its own driver. Is that correct ?
 
-    $ rm -fr /var/tmp/x && mkdir /var/tmp/x && cd /var/tmp/x
-    $ git init
-    $ ln -s 'a
-    ' b
-    $ git add b
-    $ git commit -m initial
-    $ ln -f -s a b
-    $ git add b
-    $ git commit -m fix
-    $ git format-patch -1
-    $ git checkout HEAD^
-    $ git am 0001-*
-    $ git diff HEAD^ HEAD
-    diff --git a/b b/b
-    index 7898192..2e65efe 120000
-    --- a/b
-    +++ b/b
-    @@ -1 +1 @@
-    -a
-    +a
-    \ No newline at end of file
+> Regardless of how the connector is described, the block of hardware it
+> connects to will have to be described, and some description of the
+> connector will be necessary (either in the node for the block, or by
+> phandle to a node for the connector). I agree that having a combined IP
+> block + connector driver for each permutation is not good.
 
-I see the same with v1.7.10 (which may not match your version;
-v1.7.10.4 is what was used by the patch submitter to prepare the
-patch, and you did not say how you are applying the patches in your
-message) and with more recent Git.  There is no such breakage.
+Many of the things described only have passive components attached, or
+things that otherwise don't need drivers - things like power inputs or
+headphone connectors, they're mainly providing information to allow
+userspace to behave differently (eg, display a charging indicator in the
+UI).  It's not 100% true but by and by large if detection is being done
+using a GPIO it's probably something like that.
 
-I briefly suspected that you might be passing "--whitespace=fix" to
-"am" and that may be incorrectly "fixing" the incomplete line, but
-that is not the case.  I get the same result if I add the option to
-"am" in the above transcript.
+--QC2OnzLPmgM3Ncx9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-How are you applying the patch?  What is your Git version?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSOymCAAoJELSic+t+oim9PXQP/0a+jgxqfxO6JZ6TbalHx6r2
+HAf4JyhuDDZtdmiAZ5LY7JV1ke84qxTDLZE4P9OlSiK6/UW3PGoEt9RTS2cDJCuC
+SL2SUBaBeKX4XQTr4i6NPWjwl5Qv8oUq0Un8jb1eZY8DYabPbdWUcgLjnCZp6y16
+6sUqrv0/OLpCcHb72dEcKpYoZqrZQxecHiFhxgnunc1rgco4FfhK7PldtbMp01FZ
+bJNnhpPKL0kCFaj6YMYFKYmBQ11nTj81NJI16DOVZlFVZRJNxA6bEvh4e/NDpUyi
+2smp/edpQqkGybGSvcke/GaZOCApFZV92NvvKCtungk1+IV3jLX4s/JKhTMLAfqT
+4bhC7KmVuDdnQZgrjv1JJDocntvxCx3LhB9gkO68xw2C5DNd9AAhjtr/UyQvxymq
+7R5td/KumhVvNTL7FowUh8zjkaaOLcxN/XJnug+/BQlFwbRkiWKRrHe/gi7untu+
+2S8LrbqvXV3WYdWMDFRfp7lq3WJUkW7Qj/I35bqnmrmHiDpDbn4CqK6K130+3l5M
+C1hzQ8+JSh8o0isctR7v8f3xRK8bJlaDTOaNaNP1znCqxlGaWXLv6x80F0Sh/TWl
+4QPbslMbSd/JCJ9dBu43auLJgNEnBhwDauVAsA0nL+Tiy4fOdFACExOtxkxoHaD9
+7xD5w1ZBVoT28N8clyqO
+=lsDU
+-----END PGP SIGNATURE-----
+
+--QC2OnzLPmgM3Ncx9--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
