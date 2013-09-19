@@ -1,33 +1,39 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: git issue / [PATCH] MIPS: fix invalid symbolic link file
-Date: Thu, 19 Sep 2013 14:36:47 -0600
-Message-ID: <523B605F.8090402@wwwdotorg.org>
-References: <1379596148-32520-1-git-send-email-maddy@linux.vnet.ibm.com> <20130919133920.GA22468@linux-mips.org> <523B555E.2070508@kdbg.org>
+From: Benson Leung <bleung@chromium.org>
+Subject: Re: [PATCH] Input: gpio_keys - wakeup_trigger
+Date: Thu, 19 Sep 2013 13:43:43 -0700
+Message-ID: <CANLzEkufu+MA67tBi9eXDTzPrSqT9jUNpMiCqeqckJog1JdVbA@mail.gmail.com>
+References: <1379109160-32437-1-git-send-email-bleung@chromium.org>
+	<106090496.3hTZTLSVzK@flatron>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <523B555E.2070508@kdbg.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Johannes Sixt <j6t@kdbg.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, git@vger.kernel.org, steven.hill@imgtec.com, mmarek@suse.cz, swarren@nvidia.com, linux-mips@linux-mips.org, linux-kbuild@vger.kernel.org, james.hogan@imgtec.com
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <106090496.3hTZTLSVzK@flatron>
+Sender: linux-input-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, david@protonic.nl, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/2013 01:49 PM, Johannes Sixt wrote:
-> Am 19.09.2013 15:39, schrieb Ralf Baechle:
->> The original patch that introduced the symlink with the \n is kernel
->> commit 3b29aa5ba204c62b3ec8f9f5b1ebd6e5d74f75d3 and is archived in
->> patchwork at http://patchwork.linux-mips.org/patch/5745/  The patch
->> file contains a \n at the end - but one would expect that from a
->> patch file that has been transfered via email, so I'm not sure how this
->> is supposed to work with emailed patches?!?
-> 
-> The mbox file I downloaded from this link looks like this:
-...
-> but it should look like this:
-...
-> Whoever or whatever moved the '\ No newline at end of file' line above
-> the patch text is to blame.
+Hi Tomasz,
 
-That sounds like a patchwork problem; the original copy of the message I
-received looks correct.
+On Sat, Sep 14, 2013 at 5:16 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> I don't like two things in this patch.
+>
+> First is that this looks completely like a configuration option, not
+> hardware description, so it's not something that should be put into DT.
+> Especially that users might want to use another wake-up trigger depending
+> on their use cases. I'd rather see this as a sysfs entry.
+>
+> Another thing is that this driver assumes that key events are indicated by
+> edges on the GPIO line, so I don't think level trigger setting make any
+> sense here. I'd rather allow three settings here (through a sysfs knob) -
+> key down, key up, key down or up.
+
+Thanks for your feedback. I agree with your suggestions. I will move
+this from platform data and DT to a sysfs property with three settings
+: rising, falling, both.
+
+
+-- 
+Benson Leung
+Software Engineer, Chrom* OS
+bleung@chromium.org
