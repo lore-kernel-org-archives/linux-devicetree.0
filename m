@@ -1,62 +1,84 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: kirkwood: fix loss of external clock at probe time
-Date: Thu, 19 Sep 2013 12:06:42 +0100
-Message-ID: <20130919110642.GK21013@sirena.org.uk>
-References: <20130919114957.1fede091@armhf>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] Documentation: add LP3943 DT bindings and document
+Date: Thu, 19 Sep 2013 13:25:46 +0200
+Message-ID: <20130919112545.GC10852@ulmo>
+References: <1378949700-6384-1-git-send-email-milo.kim@ti.com>
+ <20130912152455.GN11227@lee--X1>
+ <20130915112755.GB9765@ulmo>
+ <20130916073000.GA3999@lee--X1>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gphVtybrzJJtG9bX"
+	protocol="application/pgp-signature"; boundary="ZwgA9U+XZDXt4+m+"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130919114957.1fede091@armhf>
+In-Reply-To: <20130916073000.GA3999@lee--X1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---gphVtybrzJJtG9bX
+--ZwgA9U+XZDXt4+m+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 19, 2013 at 11:49:57AM +0200, Jean-Francois Moine wrote:
+On Mon, Sep 16, 2013 at 08:30:00AM +0100, Lee Jones wrote:
+> On Sun, 15 Sep 2013, Thierry Reding wrote:
+>=20
+> > On Thu, Sep 12, 2013 at 04:24:55PM +0100, Lee Jones wrote:
+> > > On Thu, 12 Sep 2013, Milo Kim wrote:
+> > [...]
+> > > > diff --git a/Documentation/lp3943.txt b/Documentation/lp3943.txt
+> > > > new file mode 100644
+> > > > index 0000000..576ebd0
+> > > > --- /dev/null
+> > > > +++ b/Documentation/lp3943.txt
+> > [...]
+> > > If this stuff is really important (and most of it really isn't), then
+> > > put it either in the commit log or in the driver.
+> >=20
+> > I can only speak for myself, but the initial driver commit message is
+> > about the last place I look for this kind of information. I'd expect it
+> > to be either somewhere in Documentation/ or in one of the source files.
+> > In this case I'd probably look at the MFD core driver source file. More
+> > likely, even, I'd just go google "LP3943" and grab a public datasheet
+> > from TI where all of this can hopefully be found.
+>=20
+> The latter option is the most common. If the datasheet is publicly
+> available, then there is no rhyme nor reason to put it in the kernel
+> source too. /Documentation is already overloaded, it would be even
+> more so if each and every driver residing in the kernel decided to
+> bulk it up further.
 
->  	priv->extclk = devm_clk_get(&pdev->dev, "extclk");
-> -	if (!IS_ERR(priv->extclk)) {
-> +	if (IS_ERR(priv->extclk)) {
-> +		if (np && of_property_match_string(np, "clock-names", "extclk") >= 0)
-> +			return -EPROBE_DEFER;
-> +	} else {
+Okay. So in this case perhaps Milo should simply drop the documentation
+file. Perhaps link to the public datasheet from on of the source files,
+although that could be problematic if the URL isn't permanent.
 
-This one really does seem like something the clock API ought to be
-doing, either as standard or with a separate helper - essentially every
-driver ought to be doing this for robustness.  Doing it on general
-failures is more tricky but in the specific case where we know the clock
-should be present but we don't have the driver loaded yet.
+Thierry
 
---gphVtybrzJJtG9bX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--ZwgA9U+XZDXt4+m+
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.21 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSOtq/AAoJELSic+t+oim9wjoP/RmbQAo77BoNulLzF6nWnauP
-/OorEo0B/3OQHUdjMMLESzcYV0FDtaa939w+/oBZ+S8kvB7HL+VxM6XCEibyddyR
-r279IsfuWETIFiUzmzquAjAHtYIiGC7iMSMpZ/Rxg9UHki73X8BghBhnJe1AL2gR
-h3pWdsbpExbW02UGbG4f65519au4dHSCQOJmzVHSjCleB/MgrNhpwcfatrQw4Nc5
-jV0JK83j1gDx9TRmFQWNCjiySP2Ne4ZMPiqO/rx4Qf34Rz4iLghPHj7eCJxC2CIn
-ELAHl52gDIljuJ56SJ1ZFq/tNV8enTPlPgFQBAT9rQ6kXGpZLenzkZnY1PuKimRk
-hbcl3JtLO7CVw+KM5YIAf9pMCO3AYHGnOc4eGBcpDQqzvzUyUhyQnw51y3xdysYT
-Tb8o1kJigrB5aKtXL0HZFf1so0rYXsHkksy2LEEyXid51JL7P6y2j/rhLM4kouLk
-Aqeixw+Nciia9XxwVjsRPTBqPZfAdhZ8AXRp/JjWAfleUPf94ylhPd7igQ8syrbZ
-y62V9NVYmzGu4fARbC05qMqCXfm10B2KASNe6GuyNoXW9VG7aKmkaf7AZmTHeR9N
-83BJysfJhRGjrv/MqbLmVKI2rmgcArzIxfEvbN90kgTv8cLKIrR08ixDPA47PAnb
-KI+EWuovNyVUF2aOV+gw
-=zYFh
+iQIcBAEBAgAGBQJSOt85AAoJEN0jrNd/PrOhjscP/2SXdcZcZU0onMPETW8arnDl
+R/0HkhqIz1jDnDXD6SPT3kDb7gfAJdgAmMApeKxePvPBrf5co82DWcR1imufJ5wX
+/Sm2pMXxRpcNATqsR1PF67wf7EZLIJnme5St3gVli4TJ53zPe0LnVnyGD6LXcigL
+1vDHx9QMvg2nK0CI8D5ne1lz/mZKWNPhhigzFfwqscfc2h/blZUjk5bdl7N5bFHP
+YDfNSF1ItyLWOgoqCj8Yt0ek6hzhcN38DLPXWkW0nkHVwjlAHvK2gT95aho1Gm0C
+7zEjsE4HIr+bwn5NHhP2LNkn5haW874HOrvKNZseWiFCVh8dZR2TGrHxjq1jxRJJ
+1yDrrCQ8aj8GSUGIm+u8WAXd0DqVqme9sblx20ganXRm4yOaorMweo4vsNqSOecU
+iHQqSpZJ5OsaMdmGthUHI4E73Tpy0C/VW26JyR61ISxVjjDcdCOSVTjLFhPsy62e
+uOEk3SK12VFv1k2SlWkLA9Gvql9tt7W0t1cmJqQTvPnPrdxvcfGie0rTrEA1jon0
+xWqUklXuqRQ+cL1XRsyxyFQxyC+O+bIXEHzrQDASkrP7Lcuxj31S0gFbaAfEQ5K1
+/etjrPUuFr9s4C25/wjxVIYMKVwNYiDzvZw4mRDiQC6HDdm27z9SqtkbSEnmmuC8
+HDZuKg/Ja7sR50GqBtLj
+=Hpmj
 -----END PGP SIGNATURE-----
 
---gphVtybrzJJtG9bX--
+--ZwgA9U+XZDXt4+m+--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
