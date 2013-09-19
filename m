@@ -1,69 +1,76 @@
-From: Guenter Roeck <linux@roeck-us.net>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Subject: Re: [PATCH v2] clk: si570: Add a driver for SI570 oscillators
-Date: Thu, 19 Sep 2013 14:11:12 -0700
-Message-ID: <20130919211112.GA11537@roeck-us.net>
+Date: Thu, 19 Sep 2013 14:15:35 -0700
+Message-ID: <20130919211535.GB11537@roeck-us.net>
 References: <1379544219-23579-1-git-send-email-soren.brinkmann@xilinx.com>
- <20130919131712.GB24088@roeck-us.net>
- <6401b71c-8c18-4735-8b40-9692cd788336@VA3EHSMHS037.ehs.local>
- <20130919164438.GA7461@roeck-us.net>
- <86ee8eea-7a98-443b-a156-46f3db1f9678@CO1EHSMHS031.ehs.local>
+ <20130919180512.5246.73360@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <86ee8eea-7a98-443b-a156-46f3db1f9678@CO1EHSMHS031.ehs.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
+In-Reply-To: <20130919180512.5246.73360@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 19, 2013 at 01:59:38PM -0700, S=F6ren Brinkmann wrote:
-> On Thu, Sep 19, 2013 at 09:44:38AM -0700, Guenter Roeck wrote:
-> > On Thu, Sep 19, 2013 at 09:01:01AM -0700, S=F6ren Brinkmann wrote:
-> > > On Thu, Sep 19, 2013 at 06:17:12AM -0700, Guenter Roeck wrote:
-> > > > On Wed, Sep 18, 2013 at 03:43:38PM -0700, Soren Brinkmann wrote=
-:
-> [...]
-> > > > > +	if (of_property_read_bool(client->dev.of_node,
-> > > > > +				"temperature-stability-7ppm"))
-> > > > > +		data->div_offset =3D SI570_DIV_OFFSET_7PPM;
-> > > > > +
-> > > > Just noticed that you dropped platform data support. Doesn't ma=
-tter much for me
-> > > > right now, but in my previous company we used the chip on an x8=
-6 system which
-> > > > does not support devicetree. Would be nice to keep it and deriv=
-e platform data
-> > > > from devicetree data if provided, like other drivers do it.
-> > > I'll look into this. The issue I have with that is, I can hardly =
-test it
-> > > since we only use this on Zynq which uses DT. So, I'd rather pref=
-er to
-> > > not include it unless somebody volunteers to test it.
-> > >=20
-> > Fair enough. I can not test it myself anymore, and my previous empl=
-oyer
-> > now has a strict non-contributions-to-linux policy, so I guess they=
- won't
-> > test it either or at least not publish any test results. Leave it o=
-ut.
-> >=20
-> > > > The 7ppm option is only relevant for si570/si751 and not suppor=
-ted on
-> > > > si598/si599. You should mention that in the bindings document a=
-nd check for it.
-> > > Right, I'll add a note in the doc. And ignore it for devices this=
- does
-> > > not apply.
-> > >=20
-> > I would bail out, but that is your call.
-> Correct me if I'm wrong, but in general drivers do not test for
-> unsupported properties. So, in case we have one of the supported 59x
-> device, we should not test whether a (unsupported) property is presen=
-t,
-> just to fail in that case, IMHO.
->=20
-Ok with me if that is the accepted way of handling this condition.
+On Thu, Sep 19, 2013 at 11:05:12AM -0700, Mike Turquette wrote:
+> Quoting Soren Brinkmann (2013-09-18 15:43:38)
+> > diff --git a/Documentation/devicetree/bindings/clock/silabs,si570.txt b/Documentation/devicetree/bindings/clock/silabs,si570.txt
+> > new file mode 100644
+> > index 0000000..7ab5c8b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/silabs,si570.txt
+> > @@ -0,0 +1,38 @@
+> > +Binding for Silicon Labs 570, 571, 598 and 599 programmable
+> > +I2C clock generators.
+> > +
+> > +Reference
+> > +This binding uses the common clock binding[1]. Details about the devices can be
+> > +found in the data sheets[2][3].
+> > +
+> > +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > +[2] Si570/571 Data Sheet
+> > +    http://www.silabs.com/Support%20Documents/TechnicalDocs/si570.pdf
+> > +[3] Si598/599 Data Sheet
+> > +    http://www.silabs.com/Support%20Documents/TechnicalDocs/si598-99.pdf
+> > +
+> > +Required properties:
+> > + - compatible: Shall be one of "silabs,si570", "silabs,si571",
+> > +                              "silabs,si598", "silabs,si599"
+> > + - reg: I2C device address.
+> > + - #clock-cells: From common clock bindings: Shall be 0.
+> > + - factory-fout: Factory set default frequency. This frequency is part specific.
+> > +                The correct frequency for the part used has to be provided in
+> > +                order to generate the correct output frequencies. For more
+> > +                details, please refer to the data sheet.
+> > +
+> > +Optional properties:
+> > + - clock-output-names: From common clock bindings. Recommended to be "si570".
+> > + - clock-frequency: Output frequency to generate. This defines the output
+> > +                   frequency set during boot. It can be reprogrammed during
+> > +                   runtime using the common clock framework.
+> > + - temperature-stability-7ppm: Indicate a device with a temperature stability
+> > +                              of 7ppm
+> 
+> Some DT binding bike-shedding:
+> 
+> Should this be "temperature-stability-ppm = <7>;" ? Do you think that
+> this value might change in the future?
+> 
+Valid values are 7, 20, and 50 as far as I know. Problem is that the value is
+not used directly, but only to hint that a specific set of registers shall be
+used.
+
+Given that, it may in fact be better to use an explicit number. Even though the
+two register sets are specified by <7> in one case and <20,50> in the other
+today, there may at some point be yet another value which might use the 7 ppm
+register set or the 20/50 ppm register set ... or yet another register set.
+An explicit number would cover all future accuracy ranges, not just the
+existing ones.
 
 Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
