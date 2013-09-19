@@ -1,98 +1,74 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [dtc RFC PATCH] Enforce node name unit-address presence/absence
-Date: Thu, 19 Sep 2013 22:31:03 +1000
-Message-ID: <20130919123103.GD3551@voom.redhat.com>
-References: <1379535836-12726-1-git-send-email-swarren@wwwdotorg.org>
- <CAOesGMg0Rrmew0iK-Gtrx_UiODhpro_S2xUxQi0gZ+7PJmBHnw@mail.gmail.com>
- <523A30FC.3060309@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 01/11] ASoC: davinci-evm: Move sysclk
+ logic away from evm_hw_params
+Date: Thu, 19 Sep 2013 14:23:16 +0100
+Message-ID: <20130919132316.GR21013@sirena.org.uk>
+References: <cover.1379590035.git.jsarha@ti.com>
+ <dad0f7eb787d3f65848425a67d668e3935033195.1379590036.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J5MfuwkIyy7RmF4Q"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <523A30FC.3060309@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Olof Johansson <olof@lixom.net>, Jon Loeliger <jdl@jdl.com>, Frank Rowand <frowand.list@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@nvidia.com>
+Content-Type: multipart/mixed; boundary="===============3374363470222491925=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <dad0f7eb787d3f65848425a67d668e3935033195.1379590036.git.jsarha@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, liam.r.girdwood@linux.intel.com, joelf@ti.com, rob.herring@calxeda.com, peter.ujfalusi@ti.com, grant.likely@linaro.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---J5MfuwkIyy7RmF4Q
+--===============3374363470222491925==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xYza636WGbju2Spp"
+Content-Disposition: inline
+
+
+--xYza636WGbju2Spp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 18, 2013 at 05:02:20PM -0600, Stephen Warren wrote:
-> On 09/18/2013 02:41 PM, Olof Johansson wrote:
-> > On Wed, Sep 18, 2013 at 1:23 PM, Stephen Warren <swarren@wwwdotorg.org>=
- wrote:
-> >> From: Stephen Warren <swarren@nvidia.com>
-> >>
-> >> ePAPR 1.1 section 2.2.1.1 "Node Name Requirements" specifies that any
-> >> node that has a reg property must include a unit address in its name
-> >> with value matching the first entry in its reg property. Conversely, if
-> >> a node does not have a reg property, the node name must not include a
-> >> unit address.
-> >>
-> >> Implement a check for this. The code doesn't validate the format of the
-> >> unit address; ePAPR implies this may vary from binding to binding, so
-> >> I'm not sure that it's possible to validate the value itself.
-> ...
-> > Anyway, I think it'd be better to produce warnings than errors for
-> > this. That way we could also merge it now while the trees are fixed
-> > up.
->=20
-> Yes, that makes sense.
->=20
-> > Also, maybe warn for @0x<foo>, which is another unpreferred syntax, it
-> > should just be @<foo> (with foo being in hex).
->=20
-> ePAPR doesn't seem to disallow that; it explicitly says that the
-> unit-address consists of the characters from table 2-1, which is the
-> same table of characters used for the node name itself. However, it does
-> state that the binding for a particular bus may impose additional
-> restrictions; should I implement such a check but limit it to the root
-> node or specific known bus types? That would require explicitly
-> whitelisting the check for a lot of bus types, given that each I2C/...
-> controller binding is a bus type...
+On Thu, Sep 19, 2013 at 02:29:34PM +0300, Jyri Sarha wrote:
+> The sysclk rate does not change runtime so it should be initialized at
+> init time.
 
-Yeah, I think that's the wrong approach.  Instead I think we need a
-table of bus type -> unit address validation functions.  That way we
-can start with the common ones - plain memory address, PCI, USB and
-I2C, then add more as we need them.
+Are there any updates from the version already applied (I only dropped
+the patch to allow the extra builds, not this one).
 
-I actually started implementing this once, but I seem to have lost the
-patch.
-
-One thing to bear in mind if you do have a crack at this - the correct
-encoding of reg -> unit address isn't always unique, although it
-usually is.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---J5MfuwkIyy7RmF4Q
-Content-Type: application/pgp-signature
+--xYza636WGbju2Spp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSOu6HAAoJEGw4ysog2bOS3xkP/1ARiMSKexL9sT7Mdf+KWIL5
-HmNRWhi6kj+eAsJxh7bSEiBQ+ReD9SfWu68l3A/WhlqFcVxCgabTDMt9Vkn9xQsK
-DM9yXjlI8T0MK6+GLpaHgsZs1fBPypUGwOmJ48yi2AjwFw2k5IWBhOaY0eacycdA
-PBZjY+MlwtWrBE6lN9ItD1MQYy+GzN5RzkEcqIYxIoysB61jgYDni2WlPOMdN6mg
-ffi+h9ciaD3HwYa3bRUqnz0Sg3CBo+Ji6z7e7oG5tVTaPOXEzo6Yb3PtrCfH2z6j
-3MdWM/qn57XvdlfOaTsnfnMwKBA09HlruNK2FaowyQXCQ9/ewZuyBdQCN3hVrQGA
-bXt9s+v3AXybHwv2sqrTmnNiUKRHYLEcYX82L08eclTLtg1wngAmF3tYTmB+taDX
-kb5U4Tm5KYglYv/iInIaAx/qcf4l5WGSERfSXlMCVI/5LgbYaQtoJDcRbZ7M6bJ+
-b7nDEw1WdWjzlzAbHIAbMro41vai9SMvUDaaTofUA3LHXySl3Z64EmDLZgNQX7sD
-dmFJMOcO6qT0mdTpBmnS4kY3mslefzEU9NpsCBOcPwvJS5avjbS+PpCbgB36kKEQ
-xPXwvHuXKsnGDn2c5EcfsRROpbQAmdqmosZUV5O5frRCdgH+oQ0A7VKhap/xB1nS
-qzhjRgyFkz0YqaeEZkWT
-=Dtw8
+iQIcBAEBAgAGBQJSOvrBAAoJELSic+t+oim9sIMP/1OJJWxWj23iC6/R2mNmQTEP
+pYjTan2t7VHKehEzpyyjZKUFVTHf1TzEZxcScymv5IO5nHl1BF3dqTA9vDy0TdIL
+1lG0X/OmKAESMdI2JoWv9mW8I8tpsF++CwmNxd41Ww7+6c3/BJFt1YUD26PQE+BM
+cWsymodjDjiVdB73GqsalsRCPCh8O5ngqPZDRlKF5PcgQtLn19CyFGttlVtF6yA5
+Yh4G+tIsZwAAUPxnE2NM3WS3Pomu/FM07slPh+CtPDO+DfwqdXwx21XVa4p5SVvd
+ec3M8QTa3jpmuE4WPg9sSKXbT+VEbONRxlbpN9ot6iouMpvFnIQYsDhwdyltoY22
+7fnpGgIC8Eo1uli4VmXhMhTDPuGbVkWgpHgVGMa2zUX3cfJsmVESJA0MVk8pM7tW
++uualifrXN6MPemltbl2Gxub4qctYcj4i2XVvVvKX952NxSkRKbs7r+zxhdOAcT1
++qxO+am9ng2n/LLpmaMwp1VmXAlkoDAbtyfr2P2zcRc3wCrBZNxdNAhBk66TBCFo
+pSJklnjDBLmal1N1FiUnSO6nceZwJ5RbP3SOeS/zvys9of8WzYoSslQ3EG3wKI9q
+RqXyWfqE2Ku5HMJ+X6MPwyYwKvpIMf2a824LK17VEvfJZvoKS+LbgmYu+Bs5FmHp
+VBzT4FJ7QDOLTq5ife1v
+=cwIE
 -----END PGP SIGNATURE-----
 
---J5MfuwkIyy7RmF4Q--
+--xYza636WGbju2Spp--
+
+--===============3374363470222491925==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3374363470222491925==--
