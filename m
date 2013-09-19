@@ -1,153 +1,164 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4] dt: update PSCI binding documentation for v0.2
-Date: Thu, 19 Sep 2013 16:24:28 -0500
-Message-ID: <1379625868-5395-1-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH 01/51] DMA-API: provide a helper to set both
+ DMA and coherent DMA masks
+Date: Thu, 19 Sep 2013 22:25:58 +0100
+Message-ID: <E1VMlja-0007fA-HU@rmk-PC.arm.linux.org.uk>
+References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20130919212235.GD12758@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org, b43-dev@lists.infradead.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, e1000-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-ide@vger.kernel.org, linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, linux-nvme@lists.infradead.org, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, uclinux-dist-devel@blackfin.uclinux.org
+Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Provide a helper to set both the DMA and coherent DMA masks to the
+same value - this avoids duplicated code in a number of drivers,
+sometimes with buggy error handling, and also allows us identify
+which drivers do things differently.
 
-The PSCI spec from ARM has been updated to 0.2 version. Update the
-binding document to reflect the spec changes. For the binding, the
-major changes are the addition of psci_version, affinity_info,
-migrate_info_type, migrate_info_up_cpu, system_reset and system_off
-functions. The recommended function ID numbering has also changed.
-
-This update also defines 32 and 64 bit calling conventions. The calling
-convention is defined on a per function ID basis.
-
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Cc: Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>,
-Cc: Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>
-Cc: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 ---
-v4: Reword last paragraph concerning calling convention used for
-functions without -32 or -64 suffix.
+ Documentation/DMA-API-HOWTO.txt |   37 ++++++++++++++++++++++---------------
+ Documentation/DMA-API.txt       |    8 ++++++++
+ include/linux/dma-mapping.h     |   14 ++++++++++++++
+ 3 files changed, 44 insertions(+), 15 deletions(-)
 
-v3: This version implements Mark's suggested binding with -32 and -64
- suffixes.
-
- Documentation/devicetree/bindings/arm/psci.txt | 64 +++++++++++++++++++-------
- 1 file changed, 48 insertions(+), 16 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
-index 433afe9..8675ec2 100644
---- a/Documentation/devicetree/bindings/arm/psci.txt
-+++ b/Documentation/devicetree/bindings/arm/psci.txt
-@@ -1,16 +1,17 @@
- * Power State Coordination Interface (PSCI)
+diff --git a/Documentation/DMA-API-HOWTO.txt b/Documentation/DMA-API-HOWTO.txt
+index 14129f1..5e98303 100644
+--- a/Documentation/DMA-API-HOWTO.txt
++++ b/Documentation/DMA-API-HOWTO.txt
+@@ -101,14 +101,23 @@ style to do this even if your device holds the default setting,
+ because this shows that you did think about these issues wrt. your
+ device.
  
- Firmware implementing the PSCI functions described in ARM document number
--ARM DEN 0022A ("Power State Coordination Interface System Software on ARM
-+ARM DEN 0022B ("Power State Coordination Interface System Software on ARM
- processors") can be used by Linux to initiate various CPU-centric power
- operations.
+-The query is performed via a call to dma_set_mask():
++The query is performed via a call to dma_set_mask_and_coherent():
  
--Issue A of the specification describes functions for CPU suspend, hotplug
--and migration of secure software.
-+Issue B of the specification describes functions for CPU suspend, hotplug,
-+migration of secure software, and system level reset and powerdown.
+-	int dma_set_mask(struct device *dev, u64 mask);
++	int dma_set_mask_and_coherent(struct device *dev, u64 mask);
  
- Functions are invoked by trapping to the privilege level of the PSCI
- firmware (specified as part of the binding below) and passing arguments
--in a manner similar to that specified by AAPCS:
-+as defined in ARM document "SMC Calling Convention" (ARM DEN 0028) in a manner
-+similar to that specified by AAPCS:
+-The query for consistent allocations is performed via a call to
+-dma_set_coherent_mask():
++which will query the mask for both streaming and coherent APIs together.
++If you have some special requirements, then the following two separate
++queries can be used instead:
  
- 	 r0		=> 32-bit Function ID / return value
- 	{r1 - r3}	=> Parameters
-@@ -21,10 +22,10 @@ to #0.
- 
- Main node required properties:
- 
-- - compatible    : Must be "arm,psci"
-+ - compatible    : Must contain "arm,psci-0.2" or "arm,psci"
- 
-- - method        : The method of calling the PSCI firmware. Permitted
--                   values are:
-+ - method        : The method defines the calling convention for the PSCI
-+                   firmware. Permitted values are:
- 
-                    "smc" : SMC #0, with the register assignments specified
- 		           in this binding.
-@@ -32,24 +33,55 @@ Main node required properties:
-                    "hvc" : HVC #0, with the register assignments specified
- 		           in this binding.
- 
-+ - psci_version  : Function ID for PSCI_VERSION operation. Required for
-+                   "arm,psci-0.2" compatible version or later.
+-	int dma_set_coherent_mask(struct device *dev, u64 mask);
++	The query for streaming mappings is performed via a call to
++	dma_set_mask():
 +
- Main node optional properties:
- 
-- - cpu_suspend   : Function ID for CPU_SUSPEND operation
-+ - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
++		int dma_set_mask(struct device *dev, u64 mask);
 +
-+ - cpu_off                : Function ID for CPU_OFF operation
++	The query for consistent allocations is performed via a call
++	to dma_set_coherent_mask():
 +
-+ - cpu_on[-<32|64]        : Function ID for CPU_ON operation
++		int dma_set_coherent_mask(struct device *dev, u64 mask);
+ 
+ Here, dev is a pointer to the device struct of your device, and mask
+ is a bit mask describing which bits of an address your device
+@@ -137,7 +146,7 @@ exactly why.
+ 
+ The standard 32-bit addressing device would do something like this:
+ 
+-	if (dma_set_mask(dev, DMA_BIT_MASK(32))) {
++	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))) {
+ 		printk(KERN_WARNING
+ 		       "mydev: No suitable DMA available.\n");
+ 		goto ignore_this_device;
+@@ -171,22 +180,20 @@ If a card is capable of using 64-bit consistent allocations as well,
+ 
+ 	int using_dac, consistent_using_dac;
+ 
+-	if (!dma_set_mask(dev, DMA_BIT_MASK(64))) {
++	if (!dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64))) {
+ 		using_dac = 1;
+ 	   	consistent_using_dac = 1;
+-		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
+-	} else if (!dma_set_mask(dev, DMA_BIT_MASK(32))) {
++	} else if (!dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))) {
+ 		using_dac = 0;
+ 		consistent_using_dac = 0;
+-		dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+ 	} else {
+ 		printk(KERN_WARNING
+ 		       "mydev: No suitable DMA available.\n");
+ 		goto ignore_this_device;
+ 	}
+ 
+-dma_set_coherent_mask() will always be able to set the same or a
+-smaller mask as dma_set_mask(). However for the rare case that a
++The coherent coherent mask will always be able to set the same or a
++smaller mask as the streaming mask. However for the rare case that a
+ device driver only uses consistent allocations, one would have to
+ check the return value from dma_set_coherent_mask().
+ 
+@@ -199,9 +206,9 @@ Finally, if your device can only drive the low 24-bits of
+ 		goto ignore_this_device;
+ 	}
+ 
+-When dma_set_mask() is successful, and returns zero, the kernel saves
+-away this mask you have provided.  The kernel will use this
+-information later when you make DMA mappings.
++When dma_set_mask() or dma_set_mask_and_coherent() is successful, and
++returns zero, the kernel saves away this mask you have provided.  The
++kernel will use this information later when you make DMA mappings.
+ 
+ There is a case which we are aware of at this time, which is worth
+ mentioning in this documentation.  If your device supports multiple
+diff --git a/Documentation/DMA-API.txt b/Documentation/DMA-API.txt
+index 78a6c56..e865279 100644
+--- a/Documentation/DMA-API.txt
++++ b/Documentation/DMA-API.txt
+@@ -142,6 +142,14 @@ internal API for use by the platform than an external API for use by
+ driver writers.
+ 
+ int
++dma_set_mask_and_coherent(struct device *dev, u64 mask)
 +
-+ - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
- 
-- - cpu_off       : Function ID for CPU_OFF operation
-+ - migrate[-<32|64]       : Function ID for MIGRATE operation
- 
-- - cpu_on        : Function ID for CPU_ON operation
-+ - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
- 
-- - migrate       : Function ID for MIGRATE operation
-+ - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
- 
-+ - system_reset           : Function ID for SYSTEM_RESET operation
++Checks to see if the mask is possible and updates the device
++streaming and coherent DMA mask parameters if it is.
 +
-+ - system_off             : Function ID for SYSTEM_OFF operation
++Returns: 0 if successful and a negative error if not.
 +
-+Some functions have have separate IDs for 32-bit and 64-bit calling
-+conventions. These separate function IDs are described with function names with
-+"-64" and "-32" suffixes (e.g. cpu_on-64). Where a function name does not have
-+a suffix, the ID may be used with either calling convention depending on the
-+CPU state -- AArch32 callers should use the 32-bit calling convention, and
-+AArch64 callers should use the 64-bit calling convention.
++int
+ dma_set_mask(struct device *dev, u64 mask)
  
- Example:
+ Checks to see if the mask is possible and updates the device
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 3a8d0a2..ec951f9 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -97,6 +97,20 @@ static inline int dma_set_coherent_mask(struct device *dev, u64 mask)
+ }
+ #endif
  
- 	psci {
--		compatible	= "arm,psci";
-+		compatible	= "arm,psci-0.2";
- 		method		= "smc";
--		cpu_suspend	= <0x95c10000>;
--		cpu_off		= <0x95c10001>;
--		cpu_on		= <0x95c10002>;
--		migrate		= <0x95c10003>;
-+		psci_version	= <0x84000000>;
-+		cpu_suspend-32	= <0x84000001>;
-+		cpu_suspend-64	= <0xc4000001>;
-+		cpu_off		= <0x84000002>;
-+		cpu_on-32	= <0x84000003>;
-+		cpu_on-64	= <0xc4000003>;
-+		affinity_info-32 = <0x84000004>;
-+		affinity_info-64 = <0xc4000004>;
-+		migrate-32	= <0x84000005>;
-+		migrate-64	= <0xc4000005>;
-+		migrate_info_type = <0x84000006>;
-+		migrate_info_up_cpu-32 = <0x84000007>;
-+		migrate_info_up_cpu-64 = <0xc4000007>;
-+		system_off	= <0x84000008>;
-+		system_reset	= <0x84000009>;
- 	};
++/*
++ * Set both the DMA mask and the coherent DMA mask to the same thing.
++ * Note that we don't check the return value from dma_set_coherent_mask()
++ * as the DMA API guarantees that the coherent DMA mask can be set to
++ * the same or smaller than the streaming DMA mask.
++ */
++static inline int dma_set_mask_and_coherent(struct device *dev, u64 mask)
++{
++	int rc = dma_set_mask(dev, mask);
++	if (rc == 0)
++		dma_set_coherent_mask(dev, mask);
++	return rc;
++}
 +
+ extern u64 dma_get_required_mask(struct device *dev);
+ 
+ static inline unsigned int dma_get_max_seg_size(struct device *dev)
 -- 
-1.8.1.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.4.4
