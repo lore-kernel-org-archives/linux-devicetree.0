@@ -1,75 +1,86 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: new platform for Energy Micro's EFM32 Cortex-M3
- SoCs
-Date: Thu, 19 Sep 2013 14:19:26 +0200
-Message-ID: <20130919121926.GT24802@pengutronix.de>
-References: <1379447884-14025-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <201309172245.25367.arnd@arndb.de>
- <20130918153424.GR24802@pengutronix.de>
- <201309191328.12717.arnd@arndb.de>
- <523AE162.3040100@gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] mfd: core: introduce of_node_name for mfd sub devices
+Date: Thu, 19 Sep 2013 13:22:40 +0100
+Message-ID: <20130919122240.GI22389@lee--X1>
+References: <1379579392-1794-1-git-send-email-ldewangan@nvidia.com>
+ <20130919083050.GH16984@lee--X1>
+ <20130919115501.GM21013@sirena.org.uk>
+ <20130919120051.GG22389@lee--X1>
+ <523AEE07.9090405@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <523AE162.3040100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <523AEE07.9090405-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Thu, Sep 19, 2013 at 01:34:58PM +0200, Sebastian Hesselbarth wrote:
-> On 09/19/13 13:28, Arnd Bergmann wrote:
-> >On Wednesday 18 September 2013, Uwe Kleine-K=F6nig wrote:
-> >>On Tue, Sep 17, 2013 at 10:45:25PM +0200, Arnd Bergmann wrote:
-> >>>On Tuesday 17 September 2013, Uwe Kleine-K=F6nig wrote:
-> [...]
-> >>>>+
-> >>>>+void __init efm32_init_time(void)
-> >>>>+{
-> >>>>+	of_clk_init(NULL);
-> >>>>+	clocksource_of_init();
-> >>>>+}
-> >>>
-> >>>When Sebastian Hesselbarth's patches for of_clk_init() are merged,
-> >>>this function can go away.
-> >>Do you have a link?
-> >
-> >http://lmgtfy.com/?q=3Dhesselbarth+of_clk_init ;-)
-Hmm, I checked my linux-arm-kernel mailbox and failed to find the
-series. Not reproducable though. Thanks.
-
-> >
-> >I've put Sebastian on Cc, I guess he can comment on the status of hi=
+> >>>Do the sub-nodes have their own properties? If so, it would be wor=
+th
+> >>>breaking them up as other OSes could reuse the specifics. If they =
+do,
+> >>>then you need so put them in the binding. If they don't, then you =
+do
+> >>>not require sub-nodes. The MFD core will ensure the sub-devices ar=
+e
+> >>>probed and there is no requirement for the of_node to be assigned.
+> >>You do see some reusable IP blocks (like the regualtors on the wm83=
+1x
+> >>PMICs for example, they're repeated blocks) which can be reused but
+> >>generally they have a register base as part of the binding.  Person=
+ally
+> >>if it's just a property or two I'd probably just put them on the ro=
+ot
+> >>node for the device.
+> >Agreed. Besides, there doesn't seem to be *any* sub-device propertie=
 s
-> >patches, so we can come up with a plan for dealing with the dependen=
-cy
-> >here.
+> >defined in the binding document. So what are you trying to achieve
+> >with the child nodes?
 >=20
-> Patch set has been sent yesterday, still waiting for ACK's.
+> I wanted to have the DT like:
 >=20
-> Olof already mentioned to (a) take it in arm-soc early and (b) have
-> a topic branch to depend on.
+> as3722 {
+>                 compatible =3D "ams,as3722";
+>                 reg =3D <0x40>;
 >=20
-> I guess I will prepare that topic branch and Olof can take it (or fal=
-l
-> back to creating it on his own, if I fail to do it right).
-I assume that means that it's expected to land in 3.13, and my efm32
-patch at least not earlier. So please tell me when there is a branch to
-depend on.
+>                 #interrupt-controller;
+>                 .....
+>=20
+>=20
+>                 regulators {
+>                             ldo1-in-supply =3D <..>;
+>                             ....
+>                             sd0 {
+>                                     regulator-name =3D "vdd-cpu";
+>                                     .....
+>                             };
+>                             sd1 {
+>                                     regulator-name =3D "vdd-ddr";
+>                                     .....
+>                             };
+>                             ....
+>             };
+> };
+>=20
+> And regulator driver should get the regulator node by their
+> pdev->dev.of_node.
+> Currently, in most of driver, we are having the code on regulator
+> driver to get "regulators" node from parent node which I want to
+> avoid.
 
-Thanks
-Uwe
+Ah, I see. Yes, I believe the regulators should have their own node,
+complete with a compatible string. To have each regulator listed
+separately in the parent node seems a little messy. Just out of
+interest, how many regulators are we talking about here?
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
