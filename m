@@ -1,85 +1,109 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2] clk: si570: Add a driver for SI570 oscillators
-Date: Wed, 18 Sep 2013 17:23:08 -0700
-Message-ID: <20130919002308.GA11266@roeck-us.net>
-References: <1379544219-23579-1-git-send-email-soren.brinkmann@xilinx.com>
- <1379545361.1787.87.camel@joe-AO722>
- <0da25c5c-660c-4836-8179-6e7c51fd0d9f@CO9EHSMHS005.ehs.local>
- <1379546336.1787.95.camel@joe-AO722>
- <1119f60e-99dd-45f8-8d91-2b0fa8b7f03b@DB8EHSMHS027.ehs.local>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: "memory" binding issues
+Date: Thu, 19 Sep 2013 10:29:57 +1000
+Message-ID: <20130919002957.GA3551@voom.redhat.com>
+References: <1379300274.4098.77.camel@pasglop>
+ <1379371567.3721.46.camel@pasglop>
+ <CAOesGMgE1jiF5OHsmPQz2z66Bcqu0HeAj=taE1vmFK-0-0s2TQ@mail.gmail.com>
+ <1815499.tpfeUKmP6V@flatron>
+ <20130917164307.GA31327@quad.lixom.net>
+ <5238C4D1.6060500@gmail.com>
+ <CAOesGMh0F09OAR4bepGSCE5Z5OZ56fBmDPBSfwZ+NB9RgcE0Vw@mail.gmail.com>
+ <5239D4BC.3030600@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1119f60e-99dd-45f8-8d91-2b0fa8b7f03b@DB8EHSMHS027.ehs.local>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Joe Perches <joe@perches.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
+In-Reply-To: <5239D4BC.3030600-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2013 at 04:32:59PM -0700, S=F6ren Brinkmann wrote:
-> On Wed, Sep 18, 2013 at 04:18:56PM -0700, Joe Perches wrote:
-> > On Wed, 2013-09-18 at 16:09 -0700, S=F6ren Brinkmann wrote:
-> > > On Wed, Sep 18, 2013 at 04:02:41PM -0700, Joe Perches wrote:
-> > > > On Wed, 2013-09-18 at 15:43 -0700, Soren Brinkmann wrote:
-> > > > > Add a driver for SILabs 570, 571, 598, 599 programmable oscil=
-lators.
-> > > > > The devices generate low-jitter clock signals and are reprogr=
-ammable via
-> > > > > an I2C interface.
-> > > > []
-> > > > > v2:
-> > > > []
-> > > > >  - use 10000 as MIN and MAX value in usleep_range
-> > > > []
-> > > > > diff --git a/drivers/clk/clk-si570.c b/drivers/clk/clk-si570.=
-c
-> > > > []
-> > > > > +static int si570_set_frequency(struct clk_si570 *data, unsig=
-ned long frequency)
-> > > > > +{
-> > > > []
-> > > > > +	/* Applying a new frequency can take up to 10ms */
-> > > > > +	usleep_range(10000, 10000);
-> > > >=20
-> > > > Generally it's nicer to have an actual range for usleep_range.
-> > > Well, as I said in the discussion with Guenther. I'm flexible and=
- nobody
-> > > objected when I said to make both equal. A real range doesn't mak=
-e sense
-> > > here though, but I don't know what's common practice for cases li=
-ke
-> > > this.
+
+--cWoXeonUoKmBZSoM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Sep 18, 2013 at 10:28:44AM -0600, Stephen Warren wrote:
+> On 09/17/2013 03:15 PM, Olof Johansson wrote:
+> > On Tue, Sep 17, 2013 at 2:08 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+> >> On 9/17/2013 9:43 AM, Olof Johansson wrote:
+> >>> On Tue, Sep 17, 2013 at 09:56:39AM +0200, Tomasz Figa wrote:
+> >>>> I'm afraid that I must disagree. For consistency I'd rather go with =
+what
+> >>>> Ben said. Please see ePAPR chapter 2.2.1.1, which clearly defines how
+> >>>> nodes should be named.
+> >>>
+> >>> 2.2.1.1 is there to point out that unit address _has_ to reflect reg.
+> >>>
+> >>> 2.2.3 says that unit addresses can be omitted.
+> >>
+> >> 2.2.3 is talking about path names.
+> >>
+> >> 2.2.1.1 is talking about node names.
+> >>
+> >> 2.2.1.1 _does_ require the unit address in the node name, 2.2.3 does n=
+ot
+> >> remove that requirement.
 > >=20
-> > udelay is normal, but I guess you don't need atomic context.
-> After checkpatch correcting me a few times I went with what
-> Documentation/timers/timers-howto.txt suggests. But yes, then we have
-> this situation, that I want to sleep 10ms, but not longer using a
-> *_range function. I guess it is very application specific whether a
-> longer delay here is acceptable or not.
+> > Sigh, that's horrible. OF clearly doesn't require it.
+> >=20
+> > I guess people prefer to follow ePAPR even though it's broken? That
+> > means someone needs to cleanup the current dts files. Any takers?
 >=20
-You really want to sleep and not call udelay for 10ms. The idea behind =
-usleep_range
-is that you give the kernel some slack. In this case, you could for exa=
-mple make it
-10-12 ms. That doesn't make much difference for the driver, but it migh=
-t save a
-timer interrupt in the kernel because it might be able to coalesce more=
- than one
-event. After all, it doesn't have to be _exactly_ 10 ms, which is what =
-you are
-claiming with the fixed number. Prior to usleep_range, you would have h=
-appily
-called msleep(10) without realizing that it might sleep up to 20 ms on =
-you.
-Keep that in mind ...
-
-> You're right. I'll add a delay there as well. The 'rang' question
-> applies here as well.
+> FWIW, I investigated enhancing dtc to enforce this rule. Here are the
+> results:
 >=20
-Same thing, really. You could make it 100-200uS. That doesn't make much
-difference for this driver, but it might make a difference for overall
-performance, especially if everyone is playing nicely.
+> ********** TEST SUMMARY
+> *     Total testcases:	1446
+> *                PASS:	1252
+> *                FAIL:	58
+> *   Bad configuration:	136
+> * Strange test result:	0
+> **********
+>=20
+> That's just in dtc itself, and not any of the *.dts in the kernel or
+> U-Boot source trees...
 
-Guenter
+Uh.. yeah.  The trees in the dtc testsuite are rather contrived and
+not good examples of device trees in general.  They're really purely
+examples of dts syntax, and don't at all resemble typical dt contents.
+
+> I'll see how much of patch it takes to fix up all the test-cases in dtc.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--cWoXeonUoKmBZSoM
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSOkWFAAoJEGw4ysog2bOSI10QAKzRG3vFvtyoOj/cGovp/Xkv
+NC6BNfAZRVN0Ky3lX/e93EaGRo5DK/l1+7nFizDHNm1J8PUR+v2R3rZCdodQ136f
+gOyyEONI+s3Q1kdnGT9Zk+Y1aCtAZx+g//aAPf7O886b8oR/6CrCcciFz11EgjYn
+ZG6X8Xu0BOlSZjb1X54PzTJcZiNudcdMsRuwgfTHFeV5urzp7cvZKnx+dE+07Ymi
+p7SQld3GljrM8h9FRDKjbVpTS7RKNvzriY7PaVRUdRGDLEMz2xDclt7GJA8lMvkD
+vny24kljhk561KhR2OyD2YPgtC7GL0nIqGxIayVwT1UMiHpB7mgtebSS0tMSwiy2
+QP3BIcAzrZMASNFGfxmvRR8eZ8Pra9Eq3pgjnK78zPYkQp1XCra8f40R/eRB4GTm
+QE9mDdSO1TsnwnL+XcjeQHBtyz+yPRc3p7gijaQ9BWhzxJHBqk3eyfMiZmr1YRTb
+W3YfrsFdo7txX+D6lVOUafFrxzcgt1e8MEfxE2/vrw0tbLPArdOwGIliRrMspiZ4
+0m98EZQDehHlHM2mBJ5kURz2nrz0WjOAX0bA5ASm3Sx7r36DxZ7YRACWhZxTKYji
+AektCHbMPESZeUS0WRLQzywri7JqQEOttM92ZuapBsEnIbPOacQmd5R8RPJQflUD
+8uj2MTnvnm+EHFinG6OM
+=ql/g
+-----END PGP SIGNATURE-----
+
+--cWoXeonUoKmBZSoM--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
