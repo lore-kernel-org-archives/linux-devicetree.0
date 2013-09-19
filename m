@@ -1,65 +1,70 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 05/11] ASoC: davinci-mcasp: Remove interrupt property
- from DT bindings doc
-Date: Thu, 19 Sep 2013 14:46:16 +0300
-Message-ID: <523AE408.2020108@ti.com>
-References: <cover.1379409268.git.jsarha@ti.com> <1b47734e397bfac8846dcfc194fd1ab63f320d1a.1379409268.git.jsarha@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] mfd: core: introduce of_node_name for mfd sub devices
+Date: Thu, 19 Sep 2013 12:55:01 +0100
+Message-ID: <20130919115501.GM21013@sirena.org.uk>
+References: <1379579392-1794-1-git-send-email-ldewangan@nvidia.com>
+ <20130919083050.GH16984@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1b47734e397bfac8846dcfc194fd1ab63f320d1a.1379409268.git.jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jsarha-l0cyMroinI0@public.gmane.org
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joelf-l0cyMroinI0@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FAVlh7XA/4iOdtaa"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130919083050.GH16984@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2013 12:26 PM, jsarha-l0cyMroinI0@public.gmane.org wrote:
-> From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
->=20
-> Davinci McASP driver does use interrupts for anything ATM.
->=20
-> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 
-Do not remove the interrupts. Even if they are not used they need to be
-described in DT so in the future if we want we can use them.
-The DT describes the HW and not the Linux implementation for the HW...
+--FAVlh7XA/4iOdtaa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> ---
->  .../bindings/sound/davinci-mcasp-audio.txt         |    2 --
->  1 file changed, 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/sound/davinci-mcasp-au=
-dio.txt b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.t=
-xt
-> index 68e0f47..b5e7b78 100644
-> --- a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
-> +++ b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
-> @@ -11,7 +11,6 @@ Required properties:
->  - reg-names : The mandatory reg-range must be named "mpu" and the op=
-tional DMA
->  	      reg-range must be named "dma". For backward compatibility it =
-is
->  	      good to keep "mpu" first in the list.
-> -- interrupts : Interrupt number for McASP
->  - op-mode : I2S/DIT ops mode.
->  - tdm-slots : Slots for TDM operation.
->  - num-serializer : Serializers used by McASP.
-> @@ -40,7 +39,6 @@ mcasp0: mcasp0@1d00000 {
->  	#size-cells =3D <0>;
->  	reg =3D <0x100000 0x3000>;
->  	reg-names "mpu";
-> -	interrupts =3D <82 83>;
->  	op-mode =3D <0>;		/* MCASP_IIS_MODE */
->  	tdm-slots =3D <2>;
->  	num-serializer =3D <16>;
->=20
+On Thu, Sep 19, 2013 at 09:30:50AM +0100, Lee Jones wrote:
 
+> I'm not entirely sure this is what Mark was saying. I think he was
+> complaining about the existence of the sub-nodes rather than how the
+> MFD Core assigns their of_node. My take is that the chip is really a
+> single device which provides different bits of functionality. To break
+> that functionality up and disperse the drivers into various subsystems
+> is a Linuxisum. By providing each functional block with its own node
+> you're describing how we do things in Linux, rather than specifying a
+> single node for the AS3722 which would probably be the norm.
 
---=20
-P=E9ter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, that's exactly what I was thinking of.
+
+> Do the sub-nodes have their own properties? If so, it would be worth
+> breaking them up as other OSes could reuse the specifics. If they do,
+> then you need so put them in the binding. If they don't, then you do
+> not require sub-nodes. The MFD core will ensure the sub-devices are
+> probed and there is no requirement for the of_node to be assigned.
+
+You do see some reusable IP blocks (like the regualtors on the wm831x
+PMICs for example, they're repeated blocks) which can be reused but
+generally they have a register base as part of the binding.  Personally
+if it's just a property or two I'd probably just put them on the root
+node for the device.
+
+--FAVlh7XA/4iOdtaa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSOuYSAAoJELSic+t+oim9LlcP/iXsJl5JsRYOAqGLP0TfnNHw
+fKuYUMnbJvoZ8hvXh1SQ0YyzshUQLJHixsJFqRZX9sNiG2ZRqMjb/dpBAhpv7R5f
+J+skTM3eiN7q9qBwEKBSibiVsCq1l8jOi8FG+Ls+ETTMhHMlnu9mYYTyorXQsCcR
+hS9UxZpcVEzh6jOkDYUcPIzf/GQKH0ThvSmtPGDcx0C4kEH+Rv8nSopZ73fS/B7a
++5opYK3jVDbglmISC4gkWyarCdxiE8Gt13ASOSfbVS05BOtaLHPgyQh5Hqju+3D1
+nvEPKe8AGqeSL3TfJLbdnIS23jJlZnQRCCBS27A0mQ2pCAPwSjuo4MajpuZL3Kp0
+KAsWzyn0Sgo9W8eba1o16nCuNg6UFQk8Ri+L/Y1cdzXtop99YucgSSZmGu+VPH58
+DSdjAteGbO4M3DB3i7Mu02ZIjWUhEeniIz1U1AhrtWLVl8ccYfQjQ6gfA09o706/
+doGdwWgjZLC1o7dl16f4pFOMeJ8QFfEg/6S5qogxVpiCSuc7JZwvakKW6y387hzS
+lVquNhMWzRDVmA2wPrd9SVU+UH62oB4r/52m/ZxkwSMxYBmHv17hZcttdkvgvMcX
+2rnjaoqD5THOQXhefv2m1VTAj9al0sLG08lelWFWsI605TSguyL/VNmJ0q/bNrsX
+QDablCSTvH9oAHhyYNfj
+=idoZ
+-----END PGP SIGNATURE-----
+
+--FAVlh7XA/4iOdtaa--
