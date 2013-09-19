@@ -1,69 +1,91 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH] mfd: core: introduce of_node_name for mfd sub devices
-Date: Thu, 19 Sep 2013 18:24:13 +0530
-Message-ID: <523AF3F5.1030909@nvidia.com>
-References: <1379579392-1794-1-git-send-email-ldewangan@nvidia.com> <20130919083050.GH16984@lee--X1> <20130919115501.GM21013@sirena.org.uk> <20130919120051.GG22389@lee--X1> <523AEE07.9090405@nvidia.com> <20130919122240.GI22389@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130919122240.GI22389@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: dts: add initial VF610 Cosmic/Cosmic+ board support
+Date: Thu, 19 Sep 2013 08:40:44 -0400
+Message-ID: <1379594444-11268-1-git-send-email-matt.porter@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 19 September 2013 05:52 PM, Lee Jones wrote:
->>>>> Do the sub-nodes have their own properties? If so, it would be worth
->>>>> breaking them up as other OSes could reuse the specifics. If they do,
->>>>> then you need so put them in the binding. If they don't, then you do
->>>>> not require sub-nodes. The MFD core will ensure the sub-devices are
->>>>> probed and there is no requirement for the of_node to be assigned.
->>>> You do see some reusable IP blocks (like the regualtors on the wm831x
->>>> PMICs for example, they're repeated blocks) which can be reused but
->>>> generally they have a register base as part of the binding.  Personally
->>>> if it's just a property or two I'd probably just put them on the root
->>>> node for the device.
->>> Agreed. Besides, there doesn't seem to be *any* sub-device properties
->>> defined in the binding document. So what are you trying to achieve
->>> with the child nodes?
->> I wanted to have the DT like:
->>
->> as3722 {
->>                  compatible = "ams,as3722";
->>                  reg = <0x40>;
->>
->>                  #interrupt-controller;
->>                  .....
->>
->>
->>                  regulators {
->>                              ldo1-in-supply = <..>;
->>                              ....
->>                              sd0 {
->>                                      regulator-name = "vdd-cpu";
->>                                      .....
->>                              };
->>                              sd1 {
->>                                      regulator-name = "vdd-ddr";
->>                                      .....
->>                              };
->>                              ....
->>              };
->> };
->>
->> And regulator driver should get the regulator node by their
->> pdev->dev.of_node.
->> Currently, in most of driver, we are having the code on regulator
->> driver to get "regulators" node from parent node which I want to
->> avoid.
-> Ah, I see. Yes, I believe the regulators should have their own node,
-> complete with a compatible string. To have each regulator listed
-> separately in the parent node seems a little messy. Just out of
-> interest, how many regulators are we talking about here?
->
-There is 7 DCDC step down and 10 LDOs.
-It is more readable if sub-module properties are grouped and defined on 
-different sub-node in place of having this in single parent node.
+Add initial PHYTEC VF610 Cosmic/Cosmic+ board support with
+UART and FEC enabled.
 
+Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile         |  1 +
+ arch/arm/boot/dts/vf610-cosmic.dts | 46 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+ create mode 100644 arch/arm/boot/dts/vf610-cosmic.dts
 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index cc0f1fb..b0d6156 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -142,6 +142,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
+ 	imx6q-sbc6x.dtb \
+ 	imx6q-wandboard.dtb \
+ 	imx6sl-evk.dtb \
++	vf610-cosmic.dtb \
+ 	vf610-twr.dtb
+ dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
+ 	imx23-olinuxino.dtb \
+diff --git a/arch/arm/boot/dts/vf610-cosmic.dts b/arch/arm/boot/dts/vf610-cosmic.dts
+new file mode 100644
+index 0000000..c3bd4d4f
+--- /dev/null
++++ b/arch/arm/boot/dts/vf610-cosmic.dts
+@@ -0,0 +1,46 @@
++/*
++ * Copyright 2013 Freescale Semiconductor, Inc.
++ * Copyright 2013 Linaro Limited
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++/dts-v1/;
++#include "vf610.dtsi"
++
++/ {
++	model = "PHYTEC Cosmic/Cosmic+ Board";
++	compatible = "phytec,vf610-cosmic", "fsl,vf610";
++
++	chosen {
++		bootargs = "console=ttyLP1,115200";
++	};
++
++	memory {
++		reg = <0x80000000 0x10000000>;
++	};
++
++	clocks {
++		enet_ext {
++			compatible = "fixed-clock";
++			clock-frequency = <50000000>;
++		};
++	};
++
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1_1>;
++	status = "okay";
++};
++
++&fec1 {
++	phy-mode = "rmii";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1_1>;
++	status = "okay";
++};
+-- 
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
