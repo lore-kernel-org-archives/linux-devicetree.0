@@ -1,91 +1,99 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: dts: add initial VF610 Cosmic/Cosmic+ board support
-Date: Thu, 19 Sep 2013 08:40:44 -0400
-Message-ID: <1379594444-11268-1-git-send-email-matt.porter@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH 2/4] ARM: STi: Supply I2C configuration to STiH416 SoC
+Date: Thu, 19 Sep 2013 13:59:52 +0100
+Message-ID: <523AF548.30400@st.com>
+References: <1379498483-4236-1-git-send-email-maxime.coquelin@st.com> <1379498483-4236-3-git-send-email-maxime.coquelin@st.com> <20130918120340.GF16984@lee--X1> <84625B87D65BCF478CC1E9C886A4C314DEF1BD9578@SAFEX1MAIL4.st.com> <5239A322.5010004@st.com> <84625B87D65BCF478CC1E9C886A4C314DEF1BD9579@SAFEX1MAIL4.st.com>
+Reply-To: srinivas.kandagatla@st.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <84625B87D65BCF478CC1E9C886A4C314DEF1BD9579@SAFEX1MAIL4.st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime COQUELIN <maxime.coquelin@st.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Stephen GALLIMORE <stephen.gallimore@st.com>, Stuart MENEFY <stuart.menefy@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Olivier CLERGEAUD <olivier.clergeaud@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Add initial PHYTEC VF610 Cosmic/Cosmic+ board support with
-UART and FEC enabled.
+On 19/09/13 08:16, Maxime COQUELIN wrote:
+> Hi Srini,
+> 
+> On 09/18/2013 03:17 PM, Srinivas KANDAGATLA wrote:
+>> On 18/09/13 13:46, Maxime COQUELIN wrote:
+>>> On 09/18/2013 02:03 PM, Lee Jones wrote:
+>>>>>>> This patch supplies I2C configuration to STiH416 SoC.
+>>>>>>>
+>>>>>>> Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>>>>>>> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+>>>>>>> ---
+>>>>>>>  arch/arm/boot/dts/stih416-pinctrl.dtsi |   35 ++++++++++++++++++++
+>>>>>>>  arch/arm/boot/dts/stih416.dtsi         |   57 ++++++++++++++++++++++++++++++++
+>>>>>>>  2 files changed, 92 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/arch/arm/boot/dts/stih416-pinctrl.dtsi b/arch/arm/boot/dts/stih416-pinctrl.dtsi
+>>>>> I genuinely don't know the answer to this question, but are these
+>>>>> nodes identical to the ones you've just put in the stih415 DTSI file?
+>>>>> If so, I think it will be worth creating a stih41x DTSI rather than
+>>>>> duplicating lots of stuff unnecessarily.
+>>> There are close to be identical indeed.
+>>> For the clocks and pinctrl, the references names are the same, but they are
+>>> pointing on different nodes, as STiH415 and STiH416 have their own
+>>> clocks and pinctrl dtsi files.
+>>>
+>>> Srini, what is opinion about this?
+>> There is already a stih41x.dtsi file, but I don't think it is the right
+>> place for the pinctrl nodes there.
+>>
+>> Am not OK with the idea of common pinctrl nodes for STiH415 and STiH416
+>> for two reasons.
+>>
+>> 1> If we common up the pinctrl nodes, it will be very difficult to
+>> accommodate new pinctrls layout which is not guaranteed to be in same
+>> layout in future SOCs.
+>>
+>> 2> The retiming values in the pinctrl nodes tend to change as per SOC,
+>> so it will be difficult to manage it if we common it up.
+>>
+>> Am sure we can come up with a dt layout which can reduce duplication,
+>> but we have to be careful here not to lose the flexiblity to accommodate
+>> new picntrl layouts, new retimings values based on SOC.
+> Ok. What do you think of declaring the i2c nodes inside the stih41x.dtsi
+> file,
+> and overload them with the pinctrl and clock properties in the stih416
+> and stih415 dtsi files?
+Am not very comfortable with this idea.
 
-Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/Makefile         |  1 +
- arch/arm/boot/dts/vf610-cosmic.dts | 46 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
- create mode 100644 arch/arm/boot/dts/vf610-cosmic.dts
+As there is no guarantee that the interrupt number/memory map and the
+i2c numbering will be same in future SOCs or other IPs.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index cc0f1fb..b0d6156 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -142,6 +142,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
- 	imx6q-sbc6x.dtb \
- 	imx6q-wandboard.dtb \
- 	imx6sl-evk.dtb \
-+	vf610-cosmic.dtb \
- 	vf610-twr.dtb
- dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
- 	imx23-olinuxino.dtb \
-diff --git a/arch/arm/boot/dts/vf610-cosmic.dts b/arch/arm/boot/dts/vf610-cosmic.dts
-new file mode 100644
-index 0000000..c3bd4d4f
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610-cosmic.dts
-@@ -0,0 +1,46 @@
-+/*
-+ * Copyright 2013 Freescale Semiconductor, Inc.
-+ * Copyright 2013 Linaro Limited
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+/dts-v1/;
-+#include "vf610.dtsi"
-+
-+/ {
-+	model = "PHYTEC Cosmic/Cosmic+ Board";
-+	compatible = "phytec,vf610-cosmic", "fsl,vf610";
-+
-+	chosen {
-+		bootargs = "console=ttyLP1,115200";
-+	};
-+
-+	memory {
-+		reg = <0x80000000 0x10000000>;
-+	};
-+
-+	clocks {
-+		enet_ext {
-+			compatible = "fixed-clock";
-+			clock-frequency = <50000000>;
-+		};
-+	};
-+
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1_1>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	phy-mode = "rmii";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1_1>;
-+	status = "okay";
-+};
--- 
-1.8.4
+You might be already aware that the number of i2cs on each SOC are
+different as example on STiH415 we have 10 SSCs and on STiH416 we have
+11 SSCs. So, At what point you decide that which devices/IPs should be
+in stih41x and which should in stih415/Stih416?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Each i2c node will save around 5 lines if we common it up, but if the
+interrupt number or map changes this difference will be negligible.
+
+Common up at this level and mixing un-common ones in stih415.dtsi or
+stih416.dtsi will add confusion to readers as the information is split
+at multiple places.
+
+IMO the common up idea sounds good but reduces the readability and has
+no effect on final dtb size.
+
+Thanks,
+srini
+
+
+> 
+> Regards,
+> Maxime
+>>
+>>
+>> thanks,
+>> srini
+>>
+>>
+> 
+> 
+> 
+
