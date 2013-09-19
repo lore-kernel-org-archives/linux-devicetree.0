@@ -1,89 +1,76 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [RFC PATCH 15/15] arm: dts: dra7: add sata node
-Date: Thu, 19 Sep 2013 16:24:19 +0300
-Message-ID: <1379597059-15405-1-git-send-email-rogerq@ti.com>
-References: <1379595943-14622-1-git-send-email-rogerq@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: new cpu iteration code...
+Date: Thu, 19 Sep 2013 08:26:04 -0500
+Message-ID: <523AFB6C.5070300@gmail.com>
+References: <20130918.173726.1443745664398441126.davem@davemloft.net> <523AC214.4040601@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379595943-14622-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com, bcousson@baylibre.com, tony@atomide.com
-Cc: balajitk@ti.com, kishon@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <523AC214.4040601-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Balaji T K <balajitk@ti.com>
+On 09/19/2013 04:21 AM, Sudeep KarkadaNagesha wrote:
+> Hi David,
+> 
+> On 18/09/13 22:37, David Miller wrote:
+>>
+>> I'm getting a flood of kernel log warnings on bootup now with
+>> the generic of_get_cpu_node() code, it is wrong for sparc64
+>> on several levels.
+>>
+>> There is never a root "/cpus" node, so this code always fails.
+>> Usually the "cpu" nodes are simply listed at the top-level.
+>>
+> 
+> As per ePAPR:
 
-Add support for sata controller.
+Sparc is OpenFirmware not FDT which the ePAPR is concerned with.
 
-[Roger Q] Clean up.
+> 3.6 CPUS Node Properties
+> A cpus node is required for all device trees. It does not represent a
+> real device in the system, but acts as a container for child cpu nodes
+> which represent the systems CPUs. #address-cells and #size-cells are
+> required property.
+> 
+>> The correct way to go about this is to use something like:
+>>
+>> 	struct device_node *dp;
+>>
+>> 	for_each_node_by_type(dp, "cpu") {
+>> 	}
+>>
+>> and therefore be agnostic as to the layout of the device
+>> tree wrt. cpu nodes.
+>>
+>> Secondly, the property to use to get the physical cpu number is not
+>> only different on sparc from what this code uses, but varies.  It can
+>> be either "upa-portid" or "portid".  The "reg" property represents
+>> various things and will be different for different cpu types and thus
+>> is not a good candidate for fetching this information.
+> 
+> The value of "reg" defines a unique CPU/thread id for the CPU/threads
+> represented by the CPU node. This is again a deviation from ePAPR.
+> 
+> I could not find any binding document or dts file with "upa-portid" or
+> "portid" to think about possible solution.
+> 
+> I am yet to understand definition of backward compatibility and
+> adherence to ePAPR from device tree perspective. Do we consider this as
+> broken DT as it doesn't adhere to ePAPR or do we need to have backward
+> compatibility here ?
 
-CC: Benoit Cousson <bcousson@baylibre.com>
-Signed-off-by: Balaji T K <balajitk@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi |   49 +++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 49 insertions(+), 0 deletions(-)
+The simple solution here is to just remove the warning. It doesn't
+appear to me that sparc ever sets the cpu device of_node pointer.
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index ce9a0f0..545545d 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -426,6 +426,55 @@
- 			dma-names = "tx", "rx";
- 		};
- 
-+		omap_control_sata: control-phy@4a002374 {
-+			compatible = "ti,control-phy-pipe3";
-+			reg = <0x4a002374 0x4>;
-+			reg-names = "power";
-+			clocks = <&sys_clkin1>;
-+			clock-names = "sysclk";
-+		};
-+
-+		ocp2scp3: ocp2scp3@4a090000 {
-+			compatible = "ti,omap-ocp2scp";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			ti,hwmods = "ocp2scp3";
-+			reg = <0x4a090000 0x1f>; /* ocp2scp3 */
-+			reg-names = "ocp2scp3";
-+			sata_phy: sataphy@4A096000 {
-+				compatible = "ti,phy-pipe3-sata";
-+				reg = <0x4A096000 0x80>, /* phy_rx */
-+				      <0x4A096400 0x64>, /* phy_tx */
-+				      <0x4A096800 0x40>; /* pll_ctrl */
-+				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
-+				ctrl-module = <&omap_control_sata>;
-+				clocks = <&sata_ref_clk>,
-+					 <&sys_clkin1>;
-+				clock-names = "optclk", "sysclk";
-+				#phy-cells = <0>;
-+			};
-+		};
-+
-+		sata: sata@4a141100 {
-+			compatible = "ti,sata";
-+			ti,hwmods = "sata";
-+			reg = <0x4a141100 0x7>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			dwc-ahci@4a140000 {
-+				  compatible = "snps,dwc-ahci";
-+				  reg = <0x4a140000 0x1100>;
-+				  interrupts = <0 54 0x4>;
-+				  phys = <&sata_phy>;
-+				  phy-names = "sata-phy";
-+				  clocks = <&sata_ref_clk>;
-+				  clock-names = "optclk";
-+			};
-+		};
-+
-+
- 		mcspi1: spi@48098000 {
- 			compatible = "ti,omap4-mcspi";
- 			reg = <0x48098000 0x200>;
--- 
-1.7.4.1
+Are there any cases on where sparc does have a /cpus node? If so we'd
+need to make of_get_cpu_node a weak function or depend on a kconfig option.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
