@@ -1,69 +1,73 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCHv2 3/4] of: provide a binding for fixed link PHYs
-Date: Thu, 19 Sep 2013 08:36:52 +0200
-Message-ID: <20130919063652.GQ30088@pengutronix.de>
-References: <1378480701-12908-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1378480701-12908-4-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130918042923.5D845C42CF7@trevor.secretlab.ca>
- <CAGVrzcbVTenhVC4tQznJFqVpO08ruxLyy1ZiLmw6Bu1=3zbGZg@mail.gmail.com>
- <20130918150031.D9034C42CDF@trevor.secretlab.ca>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: [PATCH RESEND 0/3] ARM: dts: mxs: add pinctrl header files
+Date: Thu, 19 Sep 2013 08:59:46 +0200
+Message-ID: <1379573990-27556-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130918150031.D9034C42CDF-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2013 at 10:00:31AM -0500, Grant Likely wrote:
-> On Wed, 18 Sep 2013 10:21:11 +0100, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > >
-> > > I understand what you're trying to do here, but it causes a troublesome
-> > > leakage of implementation detail into the binding, making the whole
-> > > thing look very odd. This binding tries to make a fixed link look
-> > > exactly like a real PHY even to the point of including a phandle to the
-> > > phy. But having a phandle to a node which is *always* a direct child of
-> > > the MAC node is redundant and a rather looney. Yes, doing it that way
-> > > makes it easy for of_phy_find_device() to be transparent for fixed link,
-> > > but that should *not* drive bindings, especially when that makes the
-> > > binding really rather weird.
-> > 
-> > This is not exactly true in the sense that the "new" binding just
-> > re-shuffles the properties representation into something that is
-> > clearer and more extendible but there is not much difference in the
-> > semantics.
-> 
-> That's not my point in the above paragraph. My point is a binding that
-> consists of a phandle to a node that is always a direct child is goofy
-> and wrong.
+These patches add header files for the MXS arch and convert the DTS
+files to use the pad definitions from those files rather than
+hardcoding the numerical pinctrl values.
 
-It's not necessarily a direct child. Most of these fixed links are really
-ethernet switches. These are (mostly) i2c devices which are under their
-corresponding i2c bus node. Using a phandle from the ethernet MAC to
-the port of a switch not only provides the link information, but also the
-information to which port of the switch the MAC is connected.
+The conversion from numerical representation to symbolic names has
+been done with a perl script that checked the definitions for
+consistency of the pin function comments and the numerical values
+used. This revealed an inconsistency in:
+arch/arm/boot/dts/imx28-apx4devkit.dts, which pretended to use
+MX28_PAD_SSP2_SS0__GPIO_2_19 (equivalent to 0x2133) in the comment,
+but actually was using MX28_PAD_SSP2_SS0__AUART3_TX by the numerical
+value 0x2131.
 
-Another situation is that some SoCs have a MDIO bus external to the MAC
-and possibly shared for multiple ethernet MACs. This also requires a
-phandle from the MAC to the MDIO bus.
+I decided to use the (possibly unintended) assignment
+MX28_PAD_SSP2_SS0__AUART3_TX because that is what is actually
+configured without this patch.
 
-So we have the situation that we need a phandle from the MAC to something
-that provides a link. For consistency it would be good to always use a
-phandle instead of having an inflexible 'fixed-link' property.
-
-You're right, the binding doesn't provide anything new, but I think it
-straightens things up for the future.
-
-Sascha
-
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+ arch/arm/boot/dts/imx23-evk.dts                                 |    6 
+ arch/arm/boot/dts/imx23-olinuxino.dts                           |   12 
+ arch/arm/boot/dts/imx23-stmp378x_devb.dts                       |    6 
+ arch/arm/boot/dts/imx23.dtsi                                    |   58 -
+ arch/arm/boot/dts/imx28-apf28dev.dts                            |   12 
+ arch/arm/boot/dts/imx28-apx4devkit.dts                          |   22 
+ arch/arm/boot/dts/imx28-cfa10036.dts                            |   18 
+ arch/arm/boot/dts/imx28-cfa10037.dts                            |   12 
+ arch/arm/boot/dts/imx28-cfa10049.dts                            |   72 -
+ arch/arm/boot/dts/imx28-cfa10055.dts                            |   24 
+ arch/arm/boot/dts/imx28-cfa10056.dts                            |   18 
+ arch/arm/boot/dts/imx28-cfa10057.dts                            |   18 
+ arch/arm/boot/dts/imx28-cfa10058.dts                            |   12 
+ arch/arm/boot/dts/imx28-evk.dts                                 |   24 
+ arch/arm/boot/dts/imx28-m28evk.dts                              |   12 
+ arch/arm/boot/dts/imx28-sps1.dts                                |    6 
+ arch/arm/boot/dts/imx28.dtsi                                    |  242 ++---
+ b/Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt |  859 ------------------
+ b/arch/arm/boot/dts/imx23-evk.dts                               |   10 
+ b/arch/arm/boot/dts/imx23-olinuxino.dts                         |    6 
+ b/arch/arm/boot/dts/imx23-pinfunc.h                             |  333 ++++++
+ b/arch/arm/boot/dts/imx23-stmp378x_devb.dts                     |    6 
+ b/arch/arm/boot/dts/imx23.dtsi                                  |  163 +--
+ b/arch/arm/boot/dts/imx28-apf28.dts                             |    2 
+ b/arch/arm/boot/dts/imx28-apf28dev.dts                          |   24 
+ b/arch/arm/boot/dts/imx28-apx4devkit.dts                        |   38 
+ b/arch/arm/boot/dts/imx28-cfa10036.dts                          |    8 
+ b/arch/arm/boot/dts/imx28-cfa10037.dts                          |    6 
+ b/arch/arm/boot/dts/imx28-cfa10049.dts                          |   84 -
+ b/arch/arm/boot/dts/imx28-cfa10055.dts                          |   56 -
+ b/arch/arm/boot/dts/imx28-cfa10056.dts                          |   20 
+ b/arch/arm/boot/dts/imx28-cfa10057.dts                          |   48 -
+ b/arch/arm/boot/dts/imx28-cfa10058.dts                          |   12 
+ b/arch/arm/boot/dts/imx28-evk.dts                               |   32 
+ b/arch/arm/boot/dts/imx28-m28evk.dts                            |   16 
+ b/arch/arm/boot/dts/imx28-pinfunc.h                             |  506 ++++++++++
+ b/arch/arm/boot/dts/imx28-sps1.dts                              |    8 
+ b/arch/arm/boot/dts/imx28.dtsi                                  |  337 +++----
+ b/arch/arm/boot/dts/mxs-pinfunc.h                               |   31 
+ 39 files changed, 1628 insertions(+), 1551 deletions(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
