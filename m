@@ -1,79 +1,69 @@
-From: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Adding aliases to mmc
-Date: Thu, 19 Sep 2013 07:22:16 +0200
-Message-ID: <523A8A08.2060508@gmail.com>
-References: <CAOMZO5CJ36JHJMaiG3QVdtpBoWd_ZyHQuRTrKHz4bLP39gpJtQ@mail.gmail.com> <5239C40C.9030503@wwwdotorg.org> <5239DC65.3080803@gmail.com> <5239DF55.8010308@wwwdotorg.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC PATCHv2 3/4] of: provide a binding for fixed link PHYs
+Date: Thu, 19 Sep 2013 08:36:52 +0200
+Message-ID: <20130919063652.GQ30088@pengutronix.de>
+References: <1378480701-12908-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1378480701-12908-4-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20130918042923.5D845C42CF7@trevor.secretlab.ca>
+ <CAGVrzcbVTenhVC4tQznJFqVpO08ruxLyy1ZiLmw6Bu1=3zbGZg@mail.gmail.com>
+ <20130918150031.D9034C42CDF@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5239DF55.8010308-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130918150031.D9034C42CDF-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 18.09.2013 19:13, schrieb Stephen Warren:
-> On 09/18/2013 11:01 AM, Dirk Behme wrote:
->> Am 18.09.2013 17:17, schrieb Stephen Warren:
->>> On 09/17/2013 12:04 PM, Fabio Estevam wrote:
->>>> Hi Dirk,
->>>>
->>>> I have adapted your patch at:
->>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-July/111022.html
->>>>
->>>>
->>>> and tested it on 3.12-rc1 on a mx6qsabresd board.
->>>>
->>>> Do you have plans to submit it? Maybe as a RFC?
->>>>
->>>> It solves the mmcblkX order issue on my tests and it would be nice we
->>>> could have this problem addressed.
->>>
->>> Patches to make mmc block devices have static names have been proposed
->>> in the past and rejected. I think the main reason is that the block
->>> device names are (or can be) dynamic, so anything that assumes a
->>> particular naming scheme is simply broken.
->>>
->>> The correct solution is to use e.g. root=UUID=xxx or root=PARTUUID=xxx,
->>> or similar techniques for other filesystems (e.g. /etc/fstab)
->>
->> To my understanding this doesn't work if you need to have your rootfs on
->> a SD card/eMMC with different UUIDs on each board (SD card/eMMC)?
->
-> That works fine.
->
-> If you're using filesystem UUIDs (root=UUID=), then whatever generates
-> your boot script (which is presumably stored in the filesystem you care
-> about) needs to put the correct UUID into the script when the script is
-> generated. This is presumably part of the install process, or part of a
-> post kernel-install hook, just like generating grub.cfg is.
->
-> If you're using partition UUIDs (root=PARTUUID=), then you can follow
-> that same scheme too...
->
-> ... or if using a recent U-Boot, run the "part uuid" command to
-> determine the partition UUID at run-time, and use that to construct the
-> kernel command-line.
->
-> Any bootloader could implement equivalent functionality. In fact, any
-> bootloader that can read ext* (or whatever filesystem) could in fact
-> read the filesystem UUID too, and apply the same technique to root=UUID=
-> too.
+On Wed, Sep 18, 2013 at 10:00:31AM -0500, Grant Likely wrote:
+> On Wed, 18 Sep 2013 10:21:11 +0100, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > >
+> > > I understand what you're trying to do here, but it causes a troublesome
+> > > leakage of implementation detail into the binding, making the whole
+> > > thing look very odd. This binding tries to make a fixed link look
+> > > exactly like a real PHY even to the point of including a phandle to the
+> > > phy. But having a phandle to a node which is *always* a direct child of
+> > > the MAC node is redundant and a rather looney. Yes, doing it that way
+> > > makes it easy for of_phy_find_device() to be transparent for fixed link,
+> > > but that should *not* drive bindings, especially when that makes the
+> > > binding really rather weird.
+> > 
+> > This is not exactly true in the sense that the "new" binding just
+> > re-shuffles the properties representation into something that is
+> > clearer and more extendible but there is not much difference in the
+> > semantics.
+> 
+> That's not my point in the above paragraph. My point is a binding that
+> consists of a phandle to a node that is always a direct child is goofy
+> and wrong.
 
-If you have an embedded system were you just care a little about boot 
-time you don't want to do anything like U-Boot's "part uuid" every 
-time you boot. Or even worse, you just have a minimalistic boot loader 
-(e.g. U-Boot's SPL) which doesn't know anything about UUIDs and file 
-systems.
+It's not necessarily a direct child. Most of these fixed links are really
+ethernet switches. These are (mostly) i2c devices which are under their
+corresponding i2c bus node. Using a phandle from the ethernet MAC to
+the port of a switch not only provides the link information, but also the
+information to which port of the switch the MAC is connected.
 
-As mentioned above, no I don't think UUIDs work for production 
-embedded systems.
+Another situation is that some SoCs have a MDIO bus external to the MAC
+and possibly shared for multiple ethernet MACs. This also requires a
+phandle from the MAC to the MDIO bus.
 
-Best regards
+So we have the situation that we need a phandle from the MAC to something
+that provides a link. For consistency it would be good to always use a
+phandle instead of having an inflexible 'fixed-link' property.
 
-Dirk
+You're right, the binding doesn't provide anything new, but I think it
+straightens things up for the future.
 
+Sascha
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
