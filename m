@@ -1,71 +1,60 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: am335x-boneblack: move fixed regulator to board level
-Date: Thu, 19 Sep 2013 12:12:44 -0500
-Message-ID: <1379610764-758-1-git-send-email-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: dts: bcm11351: Use GIC/IRQ defines for sdio interrupts
+Date: Thu, 19 Sep 2013 13:18:26 -0400
+Message-ID: <1379611106-18338-1-git-send-email-matt.porter@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joel Fernandes <joelf-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-3.3V fixed regulator does not belong to TPS node - as a result
-the fixed regulator is never probed and MMC is continually deferred due
-to lack of regulator.
+Trivial patch to make use of GIC/IRQ defines on the bcm11351 sdio
+interrupt properties.
 
-Move the fixed regulator to be at root of platform.
-
-Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
+ arch/arm/boot/dts/bcm11351.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Based on: (benoit's for_3.13/dts branch)
-https://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
- +
-https://patchwork.kernel.org/patch/2902711/
-
-Test Log:
-before: http://pastebin.com/UuCsBg2d
-After: http://pastebin.com/149FWujf
-notice how "vmmcsd_fixed: 3300 mV " does not appear in the log before the patch.
-
- arch/arm/boot/dts/am335x-bone-common.dtsi |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index 56361ce..fe2742e 100644
---- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -215,6 +215,13 @@
- 			default-state = "off";
- 		};
+diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+index 05a5aab..5fc64ab 100644
+--- a/arch/arm/boot/dts/bcm11351.dtsi
++++ b/arch/arm/boot/dts/bcm11351.dtsi
+@@ -71,28 +71,28 @@
+ 	sdio1: sdio@3f180000 {
+ 		compatible = "brcm,kona-sdhci";
+ 		reg = <0x3f180000 0x10000>;
+-		interrupts = <0x0 77 0x4>;
++		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+ 		status = "disabled";
  	};
-+
-+	vmmcsd_fixed: fixedregulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vmmcsd_fixed";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
- };
  
- /include/ "tps65217.dtsi"
-@@ -259,13 +266,6 @@
- 			regulator-always-on;
- 		};
+ 	sdio2: sdio@3f190000 {
+ 		compatible = "brcm,kona-sdhci";
+ 		reg = <0x3f190000 0x10000>;
+-		interrupts = <0x0 76 0x4>;
++		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+ 		status = "disabled";
  	};
--
--	vmmcsd_fixed: fixedregulator@0 {
--		compatible = "regulator-fixed";
--		regulator-name = "vmmcsd_fixed";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--	};
- };
  
- &cpsw_emac0 {
+ 	sdio3: sdio@3f1a0000 {
+ 		compatible = "brcm,kona-sdhci";
+ 		reg = <0x3f1a0000 0x10000>;
+-		interrupts = <0x0 74 0x4>;
++		interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
+ 		status = "disabled";
+ 	};
+ 
+ 	sdio4: sdio@3f1b0000 {
+ 		compatible = "brcm,kona-sdhci";
+ 		reg = <0x3f1b0000 0x10000>;
+-		interrupts = <0x0 73 0x4>;
++		interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
+ 		status = "disabled";
+ 	};
+ 
 -- 
-1.7.9.5
+1.8.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
