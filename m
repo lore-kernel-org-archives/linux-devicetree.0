@@ -1,61 +1,51 @@
-From: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 2/2] PXA: add PWM nodes to pxa27x.dtsi
-Date: Fri, 20 Sep 2013 09:12:47 -0700
-Message-ID: <1379693567-15860-3-git-send-email-mikedunn@newsguy.com>
-References: <1379693567-15860-1-git-send-email-mikedunn@newsguy.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379693567-15860-1-git-send-email-mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/9] ARM: OMAP2+: omap-usb-host: Get rid of
+ platform_data from struct usbhs_phy_data
+Date: Fri, 20 Sep 2013 09:18:22 -0700
+Message-ID: <20130920161822.GR9994@atomide.com>
+References: <1376561909-4406-1-git-send-email-rogerq@ti.com>
+ <1376561909-4406-4-git-send-email-rogerq@ti.com>
+ <20130920154406.GV26101@radagast>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130920154406.GV26101@radagast>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds PWM nodes for each of the four channels present on the
-pxa270.
+* Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [130920 08:52]:
+> Hi,
+> 
+> On Thu, Aug 15, 2013 at 01:18:23PM +0300, Roger Quadros wrote:
+> > The platform data bits can be inferred from the other members of
+> > struct usbhs_phy_data. So get rid of the platform_data member.
+> > 
+> > Build the platform data for the PHY device in usbhs_init_phys() instead.
+> > 
+> > Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> 
+> Tony, do I get your Acked-by here and all following arch/arm/mach-omap2*
+> patches in this series ?
 
-Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/pxa27x.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+If you can merge just this series without the .dts changes
+into an immutable topic branch against let's say v3.12-rc2
+when it comes out, then yes I can ack them:
 
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index d7c5d72..a705469 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -10,5 +10,29 @@
- 			marvell,intc-priority;
- 			marvell,intc-nr-irqs = <34>;
- 		};
-+
-+		pwm0: pwm@40b00000 {
-+			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
-+			reg = <0x40b00000 0x10>;
-+			#pwm-cells = <1>;
-+		};
-+
-+		pwm1: pwm@40b00010 {
-+			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
-+			reg = <0x40b00010 0x10>;
-+			#pwm-cells = <1>;
-+		};
-+
-+		pwm2: pwm@40c00000 {
-+			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
-+			reg = <0x40c00000 0x10>;
-+			#pwm-cells = <1>;
-+		};
-+
-+		pwm3: pwm@40c00010 {
-+			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
-+			reg = <0x40c00010 0x10>;
-+			#pwm-cells = <1>;
-+		};
- 	};
- };
--- 
-1.8.1.5
+Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 
+That way I can also pull in the topic branch as needed to
+avoid self inflicted merge conflicts ;) And Benoit can
+set up a separate .dts branch based on your branch to make
+sure the dependencies are in place before merging that one
+upstream.
+
+Regards,
+
+Tony
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
