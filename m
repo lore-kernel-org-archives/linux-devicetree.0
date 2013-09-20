@@ -1,73 +1,36 @@
-From: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
-Subject: Re: [PATCH] ARM: dts: Update arch timer node with clock frequency
-Date: Fri, 20 Sep 2013 10:27:41 +0530
-Message-ID: <CAKuRcOLfRwJohWMhc=QMew87SXtBmkPUJwW7UzNry_gFuC-81Q@mail.gmail.com>
-References: <1379499113-20342-1-git-send-email-yuvaraj.cd@samsung.com>
-	<20130918102319.GF26737@e106331-lin.cambridge.arm.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [ARM attend] Any news on agenda? Device tree documentation discussion
+Date: Thu, 19 Sep 2013 22:30:16 -0700
+Message-ID: <CAOesGMhVjw0y50McCPPLeFvcr0NNkCO+BszT4zZELWYSgb0-GQ@mail.gmail.com>
+References: <F5184659D418E34EA12B1903EE5EF5FD8538E865C1@seldmbx02.corpusers.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130918102319.GF26737@e106331-lin.cambridge.arm.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <marc.zyngier@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <F5184659D418E34EA12B1903EE5EF5FD8538E865C1-g6SuDuYnGwr25NRYziZxW8m4BeyDBExM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Bird, Tim" <Tim.Bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Resending it as it bounced from kernel mailing group
+On Wed, Sep 18, 2013 at 2:35 PM, Bird, Tim <Tim.Bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+> I'm interested in the ARM kernel summit - particularly any
+> sessions having to do with device tree. Is there an agenda or
+> session list available for the ARM summit yet?
 
-On Wed, Sep 18, 2013 at 3:53 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> [adding lakml]
->
-> On Wed, Sep 18, 2013 at 11:11:53AM +0100, Yuvaraj Kumar C D wrote:
->> Without the "clock-frequency" property in arch timer node, could able
->> to see the below crash dump.
->
-> Why does this cause the below crash specifically? What is CNTFRQ reading
-> as?
-Return value of arch_timer_get_cntfrq() is 0
->
-> Your firmware or bootloader should set CNTFRQ -- setting the
-> clock-frequency is a work-around for buggy firmware/bootloaders that
-> should be avoided as far as possible.
-Why kernel should depend on bootloader/firmware  to set CNTFRQ? Any
-specific reasons?
-Should'nt be indepenedent each other(kernel and bootloader/firmware)?
->
-> Is it not possible to fix your firmware or bootlaoder to set CNTFRQ?
->
-> Thanks,
-> Mark.
->
->>
->> [<c0014e28>] (unwind_backtrace+0x0/0xf4) from [<c0011808>] (show_stack+0x10/0x14)
->> [<c0011808>] (show_stack+0x10/0x14) from [<c036ac1c>] (dump_stack+0x7c/0xb0)
->> [<c036ac1c>] (dump_stack+0x7c/0xb0) from [<c01ab760>] (Ldiv0_64+0x8/0x18)
->> [<c01ab760>] (Ldiv0_64+0x8/0x18) from [<c0062f60>] (clockevents_config.part.2+0x1c/0x74)
->> [<c0062f60>] (clockevents_config.part.2+0x1c/0x74) from [<c0062fd8>] (clockevents_config_and_register+0x20/0x2c)
->> [<c0062fd8>] (clockevents_config_and_register+0x20/0x2c) from [<c02b8e8c>] (arch_timer_setup+0xa8/0x134)
->> [<c02b8e8c>] (arch_timer_setup+0xa8/0x134) from [<c04b47b4>] (arch_timer_init+0x1f4/0x24c)
->> [<c04b47b4>] (arch_timer_init+0x1f4/0x24c) from [<c04b40d8>] (clocksource_of_init+0x34/0x58)
->> [<c04b40d8>] (clocksource_of_init+0x34/0x58) from [<c049ed8c>] (time_init+0x20/0x2c)
->> [<c049ed8c>] (time_init+0x20/0x2c) from [<c049b95c>] (start_kernel+0x1e0/0x39c)
->>
->> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos5250.dtsi |    1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> index 7d7cc77..668ce5d 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -96,6 +96,7 @@
->>                            <1 14 0xf08>,
->>                            <1 11 0xf08>,
->>                            <1 10 0xf08>;
->> +             clock-frequency = <24000000>;
->>       };
->>
->>       mct@101C0000 {
->> --
->> 1.7.9.5
->>
->>
+No, I asked the KS PC a while back for the rough outline (break times,
+etc), but I'm guessing they might not have them yet either.
+
+> I have other meetings Wednesday (Oct 23), but heard that
+> there might be device tree sessions on Wednesday afternoon.
+> If so, and if these are open for me to attend, I would like to know
+> so I can re-arrange my schedule to attend.
+
+Yes, the general idea is to schedule them on Wed PM, and allow a wider
+audience at those sessions.
+
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
