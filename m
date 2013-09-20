@@ -1,57 +1,127 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: Adding aliases to mmc
-Date: Fri, 20 Sep 2013 10:10:17 -0600
-Message-ID: <523C7369.8060301@wwwdotorg.org>
-References: <CAOMZO5CJ36JHJMaiG3QVdtpBoWd_ZyHQuRTrKHz4bLP39gpJtQ@mail.gmail.com>,<5239C40C.9030503@wwwdotorg.org> <60BA5429A0E1584BA3633194F6F993B50E7CE937@NA-MBX-03.mgc.mentorg.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 1/2] PWM: PXA: add device tree support to PWM driver
+Date: Fri, 20 Sep 2013 09:12:46 -0700
+Message-ID: <1379693567-15860-2-git-send-email-mikedunn@newsguy.com>
+References: <1379693567-15860-1-git-send-email-mikedunn@newsguy.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <60BA5429A0E1584BA3633194F6F993B50E7CE937-0dz9ie/QGrnnlEkxMdpx1dQH9K4/4qFeAL8bYrjMMd8@public.gmane.org>
+In-Reply-To: <1379693567-15860-1-git-send-email-mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Chaiken, Alison" <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2013 12:30 AM, Chaiken, Alison wrote:
-> Stephen Warren writes:
->> Patches to make mmc block devices have static names have been proposed
->> in the past and rejected. I think the main reason is that the block
->> device names are (or can be) dynamic, so anything that assumes a
->> particular naming scheme is simply broken.
-> 
-> Why may network devices have static IPs and yet storage devices can't have static names? 
+This patch adds device tree support to the PXA's PWM driver.  Nothing
+needs to be extracted from the device tree node by the PWM device.
+Client devices need only specify the period; the per-chip index is
+implicitly zero because one device node must be present for each PWM
+output in use.  This approach is more convenient due to the wide
+variability in the number of PWM channels present across the various PXA
+variants, and is made possible by the fact that the register sets for
+each PWM channel are segregated from each other.  An of_xlate() method
+is added to parse this single-cell node.  The existing ID table is
+reused for the match table data.
 
-Ethernet devices have MAC addresses as their unique ID. Block devices
-have PARTUUIDs and filesystems have UUIDs. The IP address is keyed to
-the MAC address.
+Tested on a Palm Treo 680 (both platform data and DT cases).
 
-(In desktop distributions these days, I believe that MAC address
-typically drives device name via renaming, and then device name indexes
-the network configuration, which then determines the IP. Alternatively,
-MAC address drives IP address via DHCP).
+Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/pwm/pwm-pxa.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 51 insertions(+), 1 deletion(-)
 
-To my mind, using UUIDs as the key rather than device name is exactly
-the same situation, not a different one.
+diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
+index a4d2164..e928cc8 100644
+--- a/drivers/pwm/pwm-pxa.c
++++ b/drivers/pwm/pwm-pxa.c
+@@ -19,6 +19,7 @@
+ #include <linux/clk.h>
+ #include <linux/io.h>
+ #include <linux/pwm.h>
++#include <linux/of_device.h>
+ 
+ #include <asm/div64.h>
+ 
+@@ -124,6 +125,45 @@ static struct pwm_ops pxa_pwm_ops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++#ifdef CONFIG_OF
++/*
++ * Device tree users must create one device instance for each pwm channel.
++ * Hence we dispense with the HAS_SECONDARY_PWM and "tell" the original driver
++ * code that this is a single channel pxa25x-pwm.  Currently all devices are
++ * supported identically.
++ */
++static struct of_device_id pwm_of_match[] = {
++	{ .compatible = "marvell,pxa250-pwm", .data = &pwm_id_table[0]},
++	{ .compatible = "marvell,pxa270-pwm", .data = &pwm_id_table[0]},
++	{ .compatible = "marvell,pxa168-pwm", .data = &pwm_id_table[0]},
++	{ .compatible = "marvell,pxa910-pwm", .data = &pwm_id_table[0]},
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pwm_of_match);
++#else
++static struct of_device_id *pwm_of_match;
++#endif
++
++static const struct platform_device_id *pxa_pwm_get_id_dt(struct device *dev)
++{
++	const struct of_device_id *id = of_match_device(pwm_of_match, dev);
++	return id ? id->data : NULL;
++}
++
++static struct pwm_device *
++pxa_pwm_of_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
++{
++	struct pwm_device *pwm;
++
++	pwm = pwm_request_from_chip(pc, 0, NULL);
++	if (IS_ERR(pwm))
++		return pwm;
++
++	pwm_set_period(pwm, args->args[0]);
++
++	return pwm;
++}
++
+ static int pwm_probe(struct platform_device *pdev)
+ {
+ 	const struct platform_device_id *id = platform_get_device_id(pdev);
+@@ -131,6 +171,12 @@ static int pwm_probe(struct platform_device *pdev)
+ 	struct resource *r;
+ 	int ret = 0;
+ 
++	if (IS_ENABLED(CONFIG_OF) && id == NULL)
++		id = pxa_pwm_get_id_dt(&pdev->dev);
++
++	if (id == NULL)
++		return -EINVAL;
++
+ 	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
+ 	if (pwm == NULL) {
+ 		dev_err(&pdev->dev, "failed to allocate memory\n");
+@@ -145,7 +191,10 @@ static int pwm_probe(struct platform_device *pdev)
+ 	pwm->chip.ops = &pxa_pwm_ops;
+ 	pwm->chip.base = -1;
+ 	pwm->chip.npwm = (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1;
+-
++	if (IS_ENABLED(CONFIG_OF)) {
++		pwm->chip.of_xlate = pxa_pwm_of_xlate;
++		pwm->chip.of_pwm_n_cells = 1;
++	}
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	pwm->mmio_base = devm_ioremap_resource(&pdev->dev, r);
+ 	if (IS_ERR(pwm->mmio_base))
+@@ -176,6 +225,7 @@ static struct platform_driver pwm_driver = {
+ 	.driver		= {
+ 		.name	= "pxa25x-pwm",
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(pwm_of_match),
+ 	},
+ 	.probe		= pwm_probe,
+ 	.remove		= pwm_remove,
+-- 
+1.8.1.5
 
-...
-> I understand that there is a widespread desire to institute a new level of quality control in the device-tree, but if we are agreeing on a new rule, let's be explicit about it.
-
-(please word-wrap your email)
-
-I don't believe this has anything at all to do with device tree; my
-first experience with this issue was long before DT.
-
-The issue is that block device IDs cannot be equal to controller IDs, since:
-
-* Mount an SD card -> assigned an ID at run-time
-* Physically unplug it  -> ID kept since it's still referenced
-* Plug a new card back in -> assigned a new ID at run-time
-
-Therefore, there's no 1:1 match possible between SD/MMC controllers and
-SD/MMC block device names. It's dynamic.
-
-The same is true of USB mass storage devices too, I believe.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
