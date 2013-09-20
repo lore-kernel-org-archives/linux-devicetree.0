@@ -1,51 +1,62 @@
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH 26/51] DMA-API: usb: ohci-sa1111: add a note
-	about DMA masks
-Date: Thu, 19 Sep 2013 22:51:02 +0100
-Message-ID: <E1VMm7q-0007iO-68@rmk-PC.arm.linux.org.uk>
-References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V2 0/5] Add AMS AS3722 mfd, GPIO, regulator and RTC driver
+Date: Fri, 20 Sep 2013 18:00:09 +0530
+Message-ID: <1379680214-9143-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20130919212235.GD12758@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: alsa-devel@alsa-project.org, b43-dev@lists.infradead.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, e1000-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-ide@vger.kernel.org, linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, linux-nvme@lists.infradead.org, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, uclinux-dist-devel@blackfin.uclinux.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a comment to explain why this driver doesn't call any of the DMA
-API dma_set_mask() functions.
+This series add the driver support for AMS AS3722 PMIC. The driver includes
+MFD, GPIO, regulator and RTC.
 
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
- drivers/usb/host/ohci-sa1111.c |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+Changes from V1:
+- Remove compatible string from DT for subnode.
+- Add macro in regmap.h for definign range.
+- Nit cleanups in driver and use module_i2c_driver/module_platform_driver.
+- Use linear_range and added regulator_map_* on regulators.
+- Move OC configuration to regulator_current limit setting.
+- Get rid of clk32k out configuration from RTC. Will add clock driver.
 
-diff --git a/drivers/usb/host/ohci-sa1111.c b/drivers/usb/host/ohci-sa1111.c
-index 17b2a7d..aa9e127 100644
---- a/drivers/usb/host/ohci-sa1111.c
-+++ b/drivers/usb/host/ohci-sa1111.c
-@@ -185,6 +185,12 @@ static int ohci_hcd_sa1111_probe(struct sa1111_dev *dev)
- 	if (usb_disabled())
- 		return -ENODEV;
- 
-+	/*
-+	 * We don't call dma_set_mask_and_coherent() here because the
-+	 * DMA mask has already been appropraitely setup by the core
-+	 * SA-1111 bus code (which includes bug workarounds.)
-+	 */
-+
- 	hcd = usb_create_hcd(&ohci_sa1111_hc_driver, &dev->dev, "sa1111");
- 	if (!hcd)
- 		return -ENOMEM;
--- 
-1.7.4.4
+
+Laxman Dewangan (5):
+  regmap: add helper macro to set min/max range of register
+  mfd: add support for AMS AS3722 PMIC
+  gpio: add support for AMS AS3722 gpio driver
+  regulator: as3722: add regulator driver for AMS AS3722
+  drivers/rtc/rtc-as3722: add RTC driver
+
+ .../devicetree/bindings/gpio/gpio-as3722.txt       |   62 ++
+ Documentation/devicetree/bindings/mfd/as3722.txt   |   47 +
+ .../bindings/regulator/as3722-regulator.txt        |   91 ++
+ drivers/gpio/Kconfig                               |    6 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-as3722.c                         |  435 ++++++++++
+ drivers/mfd/Kconfig                                |   12 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/as3722.c                               |  448 ++++++++++
+ drivers/regulator/Kconfig                          |    8 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/as3722-regulator.c               |  917 ++++++++++++++++++++
+ drivers/rtc/Kconfig                                |   10 +
+ drivers/rtc/Makefile                               |    1 +
+ drivers/rtc/rtc-as3722.c                           |  296 +++++++
+ include/linux/mfd/as3722.h                         |  423 +++++++++
+ include/linux/regmap.h                             |    2 +
+ 17 files changed, 2761 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-as3722.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/as3722.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/as3722-regulator.txt
+ create mode 100644 drivers/gpio/gpio-as3722.c
+ create mode 100644 drivers/mfd/as3722.c
+ create mode 100644 drivers/regulator/as3722-regulator.c
+ create mode 100644 drivers/rtc/rtc-as3722.c
+ create mode 100644 include/linux/mfd/as3722.h
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
