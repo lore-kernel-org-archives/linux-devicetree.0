@@ -1,47 +1,151 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/10] iio: at91_adc: Cocci spatch "noderef"
-Date: Fri, 20 Sep 2013 09:26:22 +0200
-Message-ID: <523BF89E.4000508@atmel.com>
-References: <1379604755850-858421494-0-diffsplit-thomas@m3y3r.de> <1379604755852-604229709-3-diffsplit-thomas@m3y3r.de>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Patch V2] drivers: power: Add support for bq24735 charger
+Date: Fri, 20 Sep 2013 09:53:03 +0200
+Message-ID: <20130920075302.GB8575@ulmo>
+References: <1379607514-11200-1-git-send-email-rklein@nvidia.com>
+ <20130919202706.GB4470@ulmo>
+ <523B6257.4040302@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379604755852-604229709-3-diffsplit-thomas-VsYtu1Qij5c@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Meyer <thomas-VsYtu1Qij5c@public.gmane.org>, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0eh6TmSyL6TZE2Uz"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <523B6257.4040302-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/09/2013 23:42, Thomas Meyer :
-> sizeof when applied to a pointer typed expression gives the size of the
-> pointer.
-> Found by coccinelle spatch "misc/noderef.cocci"
->
-> Signed-off-by: Thomas Meyer <thomas-VsYtu1Qij5c@public.gmane.org>
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+--0eh6TmSyL6TZE2Uz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->
-> diff -u -p a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
-> --- a/drivers/iio/adc/at91_adc.c
-> +++ b/drivers/iio/adc/at91_adc.c
-> @@ -279,7 +279,7 @@ static int at91_adc_trigger_init(struct
->   	int i, ret;
->
->   	st->trig = devm_kzalloc(&idev->dev,
-> -				st->trigger_number * sizeof(st->trig),
-> +				st->trigger_number * sizeof(*st->trig),
->   				GFP_KERNEL);
->
->   	if (st->trig == NULL) {
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+On Thu, Sep 19, 2013 at 04:45:11PM -0400, Rhyland Klein wrote:
+> On 9/19/2013 4:27 PM, Thierry Reding wrote:
+> > * PGP Signed by an unknown key
+> >=20
+> > On Thu, Sep 19, 2013 at 12:18:33PM -0400, Rhyland Klein wrote:
+> >> From: Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>
+> >> Adding driver support for bq24735 charger chipset.
+> ...snip
+> >=20
+> >> +             return -ENOMEM;
+> >> +     }
+> >> +
+> >> +     charger_device->pdata =3D client->dev.platform_data;
+> >> +
+> >> +     if (!charger_device->pdata && client->dev.of_node)
+> >=20
+> > If you use IS_ENABLED(CONFIG_OF) here, the compiler will see that it
+> > evaluates to 0 if OF is not selected, in which case it will be clever
+> > enough to see that bq24735_parse_dt_data() is not used and just discard
+> > it (because it is static). Then the #ifdefery above is not needed and
+> > you will get compile coverage whether or not OF has been selected. Which
+> > is a good thing.
+> >=20
+> > That said, I've mentioned before that you may want to not support the
+> > non-DT at all since there's no immediate need, so this may not even be
+> > an issue.
+>=20
+> The main reason I don't want to break non-DT support (or just not
+> implement it) is that this driver is going to be used in our downstream
+> kernels, and I prefer to minimize the patches they will have on top of
+> it so we don't diverge.
 
+I was under the impression that our downstream kernels used DT for a lot
+of devices already. This doesn't look like a very special binding, and I
+don't see a reason why we'd have to use platform data in our downstream
+kernels.
 
--- 
-Nicolas Ferre
+> >> +     name =3D charger_device->pdata->name;
+> >> +     if (!name) {
+> >> +             name =3D kasprintf(GFP_KERNEL, "bq24735-%s",
+> >> +                              dev_name(&client->dev));
+> >=20
+> > Won't the device name already include bq24735 because of the driver
+> > name?
+>=20
+> In my experience this comes up with a name like "bq24735-5-0009". Thats
+> why I added the bq24735 in the beginning, so the name is more descriptive.
+
+Yes, you're right. Perhaps in that case it's even easier to just stick
+with a static string such as "bq24735" or "bq24735-charger". It's likely
+to be the only device of that type in a machine. If you want to include
+the device name, perhaps something like "%s/bq24735" (5-0009/bq24735) is
+clearer that 5-0009 is actually the bus-specific name.
+
+> > Also I don't see where charging is disabled. Or enabled when AC power is
+> > plugged after the device has been probed. How does that work?
+>=20
+> I believe charging is auto-disabled when the adapter is unplugged, but I
+> will verify and if that doesn't seem to be the case. This is something
+> that should likely be added to the ISR (enable/disable).
+
+I can very well imagine that it's auto-disabled when the power supply is
+unplugged, but probably more importantly charging should be reenabled
+when the supply is plugged again.
+
+> >> +#define BQ24735_CHG_OPT_REG          0x12
+> >> +#define BQ24735_CHG_OPT_CHARGE_ENABLE        (1 << 0)
+> >> +#define BQ24735_ENABLE_CHARGING              0
+> >> +#define BQ24735_DISABLE_CHARGING     1
+> >=20
+> > I don't think these are really useful. The field is already named
+> > CHARGE_ENABLE, so it should be pretty clear what you're supposed to put
+> > in here. For that matter, I'm not a huge fan of the whole "update bits"
+> > API because it encourages these things and they are just confusing.
+>=20
+> The only thing about the enable bit is that isn't kind of inverted what
+> what you might expect. 1 is disabling. Thats why I think the bit
+> definitions for enable/disable make sense. What would you suggest to
+> replace the "update bits" API?
+
+Well, especially for single bits I find it much more intuitive to do
+something like this:
+
+	value =3D read();
+	value |=3D ENABLE;
+	write(value);
+
+or
+
+	value =3D read();
+	value &=3D ~ENABLE;
+	write(value);
+
+And if the meaning of the bit is inverted, then you can just rename
+ENABLE to DISABLE. "update bits" might be fine for fields wider than a
+single bit, but even in those cases, I find something like the above
+much easier to read. But perhaps that's just personal preference.
+
+Thierry
+
+--0eh6TmSyL6TZE2Uz
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSO/7eAAoJEN0jrNd/PrOhmnsP/08lv4ERwi0uF/kd4URz6XZ4
+EVt3+tm/uaKgWZXRCEiZGDvZlCY/6pnXpQ1dPZPqozuOny+f0N1Mcw+BoF7Id436
+fBsObcdWq8YrcUX13BN8QWPd5NxV6M2pm+SOfmes9H92EOJ/4xhhjPuELt8EpStK
+ugvyw6pxYVW/lPNd+s22Bv419mbU7oOYO3FVo3ew5+Bn0qpbNYnriyLMFgH4T1rF
+dFWnpHdEBZrqPiHqR56RsPRuOl+WeRcZBji2gStWigkHM2DFlJj5yo5d695D3Irg
+pA6R8Mn71s1TXNVDAvCmBhiJY57/+gSFQJFVUTaXj8K+4FZ4n3cWNAjs76Ss4bNU
+D+SUejHBiitFfBqFqhK+7MDhHRuLxJBUgb7Q654xauUnJXwN334UEVSUCe8l6BzY
+MmNuCOkqNVTYBD0wrdiRAjrwXLF/I/vPPdTmnXG1blk5bdy+01P5gcKtaSYTugXT
+NCJTVXoDDSYAdS7tyf6HOdzg5jXpyyI2G6pP2ZRwlWZZiGBJ7d/oImx3o1hERQ1D
+PsNH2Al1+oQLMRe+WCixLemBc+tQVeqFGTF2D/8vhpWpUFNXFapc9DO37zDoTGkk
+UPkwCgmhV+nr3w01MOELZgwDkd/BoRGV5O00wmSaTn/s6Yt78mmHBo7nxBeTGhnd
+EovnbdJ8mFq5RsZ80M9g
+=Om+c
+-----END PGP SIGNATURE-----
+
+--0eh6TmSyL6TZE2Uz--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
