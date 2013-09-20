@@ -1,148 +1,62 @@
-From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [Patch V2] drivers: power: Add support for bq24735 charger
-Date: Fri, 20 Sep 2013 12:21:30 -0400
-Message-ID: <523C760A.8060402@nvidia.com>
-References: <1379607514-11200-1-git-send-email-rklein@nvidia.com> <20130919202706.GB4470@ulmo> <523B6257.4040302@nvidia.com> <20130920075302.GB8575@ulmo>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] ARM: dts: am335x-boneblack: move fixed regulator to
+ board level
+Date: Fri, 20 Sep 2013 11:21:54 -0500
+Message-ID: <20130920162154.GB18721@radagast>
+References: <1379610764-758-1-git-send-email-nm@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130920075302.GB8575@ulmo>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1379610764-758-1-git-send-email-nm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joel Fernandes <joelf@ti.com>, Sekhar Nori <nsekhar@ti.com>, Balaji T K <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/20/2013 3:53 AM, Thierry Reding wrote:
-> * PGP Signed by an unknown key
-> 
-> On Thu, Sep 19, 2013 at 04:45:11PM -0400, Rhyland Klein wrote:
->> On 9/19/2013 4:27 PM, Thierry Reding wrote:
->>>> Old Signed by an unknown key
->>>
->>> On Thu, Sep 19, 2013 at 12:18:33PM -0400, Rhyland Klein wrote:
->>>> From: Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>
->>>> Adding driver support for bq24735 charger chipset.
->> ...snip
->>>
->>>> +             return -ENOMEM;
->>>> +     }
->>>> +
->>>> +     charger_device->pdata = client->dev.platform_data;
->>>> +
->>>> +     if (!charger_device->pdata && client->dev.of_node)
->>>
->>> If you use IS_ENABLED(CONFIG_OF) here, the compiler will see that it
->>> evaluates to 0 if OF is not selected, in which case it will be clever
->>> enough to see that bq24735_parse_dt_data() is not used and just discard
->>> it (because it is static). Then the #ifdefery above is not needed and
->>> you will get compile coverage whether or not OF has been selected. Which
->>> is a good thing.
->>>
->>> That said, I've mentioned before that you may want to not support the
->>> non-DT at all since there's no immediate need, so this may not even be
->>> an issue.
->>
->> The main reason I don't want to break non-DT support (or just not
->> implement it) is that this driver is going to be used in our downstream
->> kernels, and I prefer to minimize the patches they will have on top of
->> it so we don't diverge.
-> 
-> I was under the impression that our downstream kernels used DT for a lot
-> of devices already. This doesn't look like a very special binding, and I
-> don't see a reason why we'd have to use platform data in our downstream
-> kernels.
+--uZ3hkaAS1mZxFaxD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Specifically, there is a platform that uses this part where the chip
-itself isn't connected to an i2c bus (From what I understand). In that
-case, they actually add callbacks into the platform data and then use
-them to configure the charger.
+On Thu, Sep 19, 2013 at 12:12:44PM -0500, Nishanth Menon wrote:
+> 3.3V fixed regulator does not belong to TPS node - as a result
+> the fixed regulator is never probed and MMC is continually deferred due
+> to lack of regulator.
+>=20
+> Move the fixed regulator to be at root of platform.
+>=20
+> Signed-off-by: Nishanth Menon <nm@ti.com>
 
-> 
->>>> +     name = charger_device->pdata->name;
->>>> +     if (!name) {
->>>> +             name = kasprintf(GFP_KERNEL, "bq24735-%s",
->>>> +                              dev_name(&client->dev));
->>>
->>> Won't the device name already include bq24735 because of the driver
->>> name?
->>
->> In my experience this comes up with a name like "bq24735-5-0009". Thats
->> why I added the bq24735 in the beginning, so the name is more descriptive.
-> 
-> Yes, you're right. Perhaps in that case it's even easier to just stick
-> with a static string such as "bq24735" or "bq24735-charger". It's likely
-> to be the only device of that type in a machine. If you want to include
-> the device name, perhaps something like "%s/bq24735" (5-0009/bq24735) is
-> clearer that 5-0009 is actually the bus-specific name.
+Tested-by: Felipe Balbi <balbi@ti.com>
 
-I prefer to have the bus identifier included in some way just because in
-theory there could be multiple chargers and this will make their names
-unique in sysfs. I am fine with either way, I simply followed the model
-I saw in other drivers (like the sbs-battery driver). In fact, many
-driver seem to just use the dev_name(), but I think either way is fine.
-Maybe Anton or David have a preference.
+I boot tested this on my BBB.
 
-> 
->>> Also I don't see where charging is disabled. Or enabled when AC power is
->>> plugged after the device has been probed. How does that work?
->>
->> I believe charging is auto-disabled when the adapter is unplugged, but I
->> will verify and if that doesn't seem to be the case. This is something
->> that should likely be added to the ISR (enable/disable).
-> 
-> I can very well imagine that it's auto-disabled when the power supply is
-> unplugged, but probably more importantly charging should be reenabled
-> when the supply is plugged again.
-> 
->>>> +#define BQ24735_CHG_OPT_REG          0x12
->>>> +#define BQ24735_CHG_OPT_CHARGE_ENABLE        (1 << 0)
->>>> +#define BQ24735_ENABLE_CHARGING              0
->>>> +#define BQ24735_DISABLE_CHARGING     1
->>>
->>> I don't think these are really useful. The field is already named
->>> CHARGE_ENABLE, so it should be pretty clear what you're supposed to put
->>> in here. For that matter, I'm not a huge fan of the whole "update bits"
->>> API because it encourages these things and they are just confusing.
->>
->> The only thing about the enable bit is that isn't kind of inverted what
->> what you might expect. 1 is disabling. Thats why I think the bit
->> definitions for enable/disable make sense. What would you suggest to
->> replace the "update bits" API?
-> 
-> Well, especially for single bits I find it much more intuitive to do
-> something like this:
-> 
-> 	value = read();
-> 	value |= ENABLE;
-> 	write(value);
-> 
-> or
-> 
-> 	value = read();
-> 	value &= ~ENABLE;
-> 	write(value);
-> 
-> And if the meaning of the bit is inverted, then you can just rename
-> ENABLE to DISABLE. "update bits" might be fine for fields wider than a
-> single bit, but even in those cases, I find something like the above
-> much easier to read. But perhaps that's just personal preference.
+--=20
+balbi
 
-I see your point I think your examples work fine for me. And since we
-don't use any of the larger bit fields currently, we don't have to worry
-about those cases right now.
+--uZ3hkaAS1mZxFaxD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> 
-> Thierry
-> 
-> * Unknown Key
-> * 0x7F3EB3A1
-> 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-thanks again,
-Rhyland
+iQIcBAEBAgAGBQJSPHYiAAoJEIaOsuA1yqREHSEQAKi0DhleC2WEbC4rvDJCRbsW
+3Pve0Yt9VmCvoI2dqmE2N8UnVVLzhDE/RGySQFGvJhnLcsW5tqVR8uYJ88JAYFOO
+ukh7oIcgHLLGLYHtSpljRXk7ai+0OGmlbCRcCrsJ56uLo5mslVGhsQGLM2xKrMwm
+ilfDmroqmseb7E9SoRlyGhJQGT46hTnzl4Y+1h1xAEOjejU998FZZFx4WhWn67X1
+h/J4tveBu/dq2JQO+cqvC2c0rb9Uh3Vj6oY73mHEclAqoUQeVsLWEHp3BV94/kg6
+gggc8gtvBHmE7fQg7ng9B4j5BcM3u2jFI/0nlmGJlU+wZtVhadKxpnpMBSOtcZ+l
+Pg5Xao5jleqAMOyWSME1orS0J97qXDiKZkeef/eeMDrd6L0Nx4AXqCuNA+813rss
+TY5i3f7fxejiQyeN/IKKMxiPjFDNEhc00A1gmWJcIrBo0IcIFAw9KA78MfRo2VqR
+9lWdUlv6/1jqOG2AtgJgeYAqvlniHe4Alxl0hAmC2oRukEa9DafwvmISiC84kQuA
+cM9CdhT4lu3WxFlWgCywkN7uVrUkq/J9wIGwLeNiGKfZB5LUM+0y6cBpZqamKD4V
+5QTrXqz4Z/+/OwdWJGgyymg06fd1l1/z0bmPq/0y7VPU/PU4kOW4fyYIovHq4Iz1
+OSOsj5ydBbjUA8tfVo6D
+=otsE
+-----END PGP SIGNATURE-----
 
-
--- 
-nvpublic
+--uZ3hkaAS1mZxFaxD--
