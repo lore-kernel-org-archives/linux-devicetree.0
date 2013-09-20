@@ -1,150 +1,94 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch V2] drivers: power: Add support for bq24735 charger
-Date: Fri, 20 Sep 2013 09:53:03 +0200
-Message-ID: <20130920075302.GB8575@ulmo>
-References: <1379607514-11200-1-git-send-email-rklein@nvidia.com>
- <20130919202706.GB4470@ulmo>
- <523B6257.4040302@nvidia.com>
+Subject: Re: [PATCH v4] PWM: PXA: add device tree support to PWM driver
+Date: Fri, 20 Sep 2013 09:58:20 +0200
+Message-ID: <20130920075819.GC8575@ulmo>
+References: <1379519982-7618-1-git-send-email-mikedunn@newsguy.com>
+ <20130919122807.GH10852@ulmo>
+ <523B2C0B.4050204@newsguy.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0eh6TmSyL6TZE2Uz"
+	protocol="application/pgp-signature"; boundary="s9fJI615cBHmzTOP"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <523B6257.4040302-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <523B2C0B.4050204-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---0eh6TmSyL6TZE2Uz
+--s9fJI615cBHmzTOP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 19, 2013 at 04:45:11PM -0400, Rhyland Klein wrote:
-> On 9/19/2013 4:27 PM, Thierry Reding wrote:
-> > * PGP Signed by an unknown key
+On Thu, Sep 19, 2013 at 09:53:31AM -0700, Mike Dunn wrote:
+> On 09/19/2013 05:28 AM, Thierry Reding wrote:
+> > On Wed, Sep 18, 2013 at 08:59:42AM -0700, Mike Dunn wrote:
+> > [...]
+> >> Only an OF match table is added;
+> > [...]
 > >=20
-> > On Thu, Sep 19, 2013 at 12:18:33PM -0400, Rhyland Klein wrote:
-> >> From: Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>
-> >> Adding driver support for bq24735 charger chipset.
-> ...snip
+> > That's no longer true. You also add a custom .of_xlate() function.
+>=20
+>=20
+> Is it acceptable to re-word the commit message in susbequent versions?
+
+Yes, of course. The commit message should be an accurate description of
+the patch. If as a result of review the patch changes in ways that make
+the commit message wrong, then it must be updated as well.
+
+> >> diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.=
+dtsi
 > >=20
-> >> +             return -ENOMEM;
-> >> +     }
+> > I think this belongs in a separate patch so it can go through the
+> > arm-soc tree.
+>=20
+>=20
+> Is there anyone else or another list that should be CC'd in this case?  T=
+hanks.
+
+Well, the PXA maintainers would be the most likely to take the dtsi
+change through their tree. Usually the mach trees are merged into
+arm-soc, which then goes into Linus' tree.
+
+> >> +{
+> >> +	struct pwm_device *pwm;
 > >> +
-> >> +     charger_device->pdata =3D client->dev.platform_data;
-> >> +
-> >> +     if (!charger_device->pdata && client->dev.of_node)
 > >=20
-> > If you use IS_ENABLED(CONFIG_OF) here, the compiler will see that it
-> > evaluates to 0 if OF is not selected, in which case it will be clever
-> > enough to see that bq24735_parse_dt_data() is not used and just discard
-> > it (because it is static). Then the #ifdefery above is not needed and
-> > you will get compile coverage whether or not OF has been selected. Which
-> > is a good thing.
-> >=20
-> > That said, I've mentioned before that you may want to not support the
-> > non-DT at all since there's no immediate need, so this may not even be
-> > an issue.
+> > You probably want to check that pc->of_pwm_n_cells at least 1 here.
 >=20
-> The main reason I don't want to break non-DT support (or just not
-> implement it) is that this driver is going to be used in our downstream
-> kernels, and I prefer to minimize the patches they will have on top of
-> it so we don't diverge.
-
-I was under the impression that our downstream kernels used DT for a lot
-of devices already. This doesn't look like a very special binding, and I
-don't see a reason why we'd have to use platform data in our downstream
-kernels.
-
-> >> +     name =3D charger_device->pdata->name;
-> >> +     if (!name) {
-> >> +             name =3D kasprintf(GFP_KERNEL, "bq24735-%s",
-> >> +                              dev_name(&client->dev));
-> >=20
-> > Won't the device name already include bq24735 because of the driver
-> > name?
 >=20
-> In my experience this comes up with a name like "bq24735-5-0009". Thats
-> why I added the bq24735 in the beginning, so the name is more descriptive.
+> Well OK, but I didn't bother because it's explicitly set to one elsewhere=
+ in
+> this source file.
 
-Yes, you're right. Perhaps in that case it's even easier to just stick
-with a static string such as "bq24735" or "bq24735-charger". It's likely
-to be the only device of that type in a machine. If you want to include
-the device name, perhaps something like "%s/bq24735" (5-0009/bq24735) is
-clearer that 5-0009 is actually the bus-specific name.
-
-> > Also I don't see where charging is disabled. Or enabled when AC power is
-> > plugged after the device has been probed. How does that work?
->=20
-> I believe charging is auto-disabled when the adapter is unplugged, but I
-> will verify and if that doesn't seem to be the case. This is something
-> that should likely be added to the ISR (enable/disable).
-
-I can very well imagine that it's auto-disabled when the power supply is
-unplugged, but probably more importantly charging should be reenabled
-when the supply is plugged again.
-
-> >> +#define BQ24735_CHG_OPT_REG          0x12
-> >> +#define BQ24735_CHG_OPT_CHARGE_ENABLE        (1 << 0)
-> >> +#define BQ24735_ENABLE_CHARGING              0
-> >> +#define BQ24735_DISABLE_CHARGING     1
-> >=20
-> > I don't think these are really useful. The field is already named
-> > CHARGE_ENABLE, so it should be pretty clear what you're supposed to put
-> > in here. For that matter, I'm not a huge fan of the whole "update bits"
-> > API because it encourages these things and they are just confusing.
->=20
-> The only thing about the enable bit is that isn't kind of inverted what
-> what you might expect. 1 is disabling. Thats why I think the bit
-> definitions for enable/disable make sense. What would you suggest to
-> replace the "update bits" API?
-
-Well, especially for single bits I find it much more intuitive to do
-something like this:
-
-	value =3D read();
-	value |=3D ENABLE;
-	write(value);
-
-or
-
-	value =3D read();
-	value &=3D ~ENABLE;
-	write(value);
-
-And if the meaning of the bit is inverted, then you can just rename
-ENABLE to DISABLE. "update bits" might be fine for fields wider than a
-single bit, but even in those cases, I find something like the above
-much easier to read. But perhaps that's just personal preference.
+Okay, nevermind. It's probably fine as is.
 
 Thierry
 
---0eh6TmSyL6TZE2Uz
+--s9fJI615cBHmzTOP
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.21 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSO/7eAAoJEN0jrNd/PrOhmnsP/08lv4ERwi0uF/kd4URz6XZ4
-EVt3+tm/uaKgWZXRCEiZGDvZlCY/6pnXpQ1dPZPqozuOny+f0N1Mcw+BoF7Id436
-fBsObcdWq8YrcUX13BN8QWPd5NxV6M2pm+SOfmes9H92EOJ/4xhhjPuELt8EpStK
-ugvyw6pxYVW/lPNd+s22Bv419mbU7oOYO3FVo3ew5+Bn0qpbNYnriyLMFgH4T1rF
-dFWnpHdEBZrqPiHqR56RsPRuOl+WeRcZBji2gStWigkHM2DFlJj5yo5d695D3Irg
-pA6R8Mn71s1TXNVDAvCmBhiJY57/+gSFQJFVUTaXj8K+4FZ4n3cWNAjs76Ss4bNU
-D+SUejHBiitFfBqFqhK+7MDhHRuLxJBUgb7Q654xauUnJXwN334UEVSUCe8l6BzY
-MmNuCOkqNVTYBD0wrdiRAjrwXLF/I/vPPdTmnXG1blk5bdy+01P5gcKtaSYTugXT
-NCJTVXoDDSYAdS7tyf6HOdzg5jXpyyI2G6pP2ZRwlWZZiGBJ7d/oImx3o1hERQ1D
-PsNH2Al1+oQLMRe+WCixLemBc+tQVeqFGTF2D/8vhpWpUFNXFapc9DO37zDoTGkk
-UPkwCgmhV+nr3w01MOELZgwDkd/BoRGV5O00wmSaTn/s6Yt78mmHBo7nxBeTGhnd
-EovnbdJ8mFq5RsZ80M9g
-=Om+c
+iQIcBAEBAgAGBQJSPAAbAAoJEN0jrNd/PrOhAqIQAJ4D+83aWBs7hzIHEvrBBV5b
+QdBw0wWlT53bEbieV7+9TbHdd8V0m3eX2xGKR5YLIj7Un+Huq00NzQG95TNeeuv5
+an0hCPrxScVtZsYL1R+ZTb1qj5VwqF2SXEzqNWo3iJXvNTbzyclp1MRhJy85oq8Z
+GzHgeTqjAMTsFaehq/V3KnoNHadgSyJteMiMzF/jipjfMmGVIjnW0RPKgLE0Cq0n
+HkLEn/t2rhDY+8e/Ko9lc0TJ4eC8FIooujtLwyHJDGdCR0wzSSkBjP9VQbB2+r9+
+vXUQMYyBr3k37ZMeX/BVtyF1dcGJNw+DnxKvJEFRPeqsAuTxHT2fRM829uI5Hqco
+HG4yYHoSgaz1WCo1nBW2B2UlE04djObgEQZvappwHQtlsU7YYvhLm9dwEZPc8WAY
+57Oqk8xGu2VeLsK6etKaFb+btogSU+fYsfOcXIv3x4acZpXKypOrPECLcC/PxgXk
+LMeCyXUWX9flmGhM9ifblvNxMKrp05EvUb5m+XRKCGE7iKkNpoHt7dwbvI1vBfSM
+4CeQUvWlPbknylFcYgCW1QjxxfM2b6fL0mKn8X2wxbxqVLuQZqcksoj06Z3yGZjq
+P7Zu42/ptp/I/sEzxWPRzGVWsEwfDRHKlPEnZGmVaRlm4CyXoDywCiW4kTjkM0nk
+3wneaCtaHEVZOJJWCPGz
+=MRM1
 -----END PGP SIGNATURE-----
 
---0eh6TmSyL6TZE2Uz--
+--s9fJI615cBHmzTOP--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
