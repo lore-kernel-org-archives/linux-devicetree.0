@@ -1,33 +1,49 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RESEND 1/2] gpio: rcar: Remove #gpio-range-cells DT
- property usage
-Date: Fri, 20 Sep 2013 12:06:14 -0700
-Message-ID: <20130920190614.GF22321@verge.net.au>
-References: <1378907462-19247-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1378907462-19247-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <CACRpkdZ4EaUVgYoMP6VMefZgE1T--5hh18RzupQLnbd0KpveAA@mail.gmail.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: am335x-bone-common: correct mux mode for
+ mmc1_cmd
+Date: Fri, 20 Sep 2013 14:11:32 -0500
+Message-ID: <523C9DE4.6040109@ti.com>
+References: <1379698696-21945-1-git-send-email-balajitk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZ4EaUVgYoMP6VMefZgE1T--5hh18RzupQLnbd0KpveAA@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379698696-21945-1-git-send-email-balajitk-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 20, 2013 at 08:36:57PM +0200, Linus Walleij wrote:
-> On Wed, Sep 11, 2013 at 3:51 PM, Laurent Pinchart
-> <laurent.pinchart+renesas@ideasonboard.com> wrote:
+On 09/20/2013 12:38 PM, Balaji T K wrote:
+> correct mux mode for mmc1_cmd to detect eMMC on bone-black
 > 
-> > Commit a1bc260bb5f5d95da854be7898202d788e94448d ("gpio: clean up
-> > gpio-ranges documentation") deprecated the #gpio-range-cells property.
-> > Replace its usage with a hardcoded value in the gpio-rcar driver.
-> >
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Signed-off-by: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/am335x-bone-common.dtsi |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
 > 
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> index 56361ce..90ab56c 100644
+> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
+> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> @@ -117,7 +117,7 @@
+>  		emmc_pins: pinmux_emmc_pins {
+>  			pinctrl-single,pins = <
+>  				0x80 (PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn1.mmc1_clk */
+> -				0x84 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_csn2.mmc1_cmd */
+> +				0x84 (PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn2.mmc1_cmd */
+>  				0x00 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad0.mmc1_dat0 */
+>  				0x04 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad1.mmc1_dat1 */
+>  				0x08 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad2.mmc1_dat2 */
 > 
-> Simon please take the whole set into the SH tree.
+is'nt this a common change? why is it "black only"? if it is so, then
+the pinmux should probably be spun off outside bone-common.dtsi into
+boneblack.dtsi perhaps?
 
-Thanks, will do.
+-- 
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
