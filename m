@@ -1,54 +1,73 @@
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH 33/51] DMA-API: net: nxp/lpc_eth: use
- dma_coerce_mask_and_coherent()
-Date: Thu, 19 Sep 2013 22:58:03 +0100
-Message-ID: <E1VMmEd-0007jF-19@rmk-PC.arm.linux.org.uk>
-References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V2 2/5] mfd: add support for AMS AS3722 PMIC
+Date: Fri, 20 Sep 2013 13:39:30 +0100
+Message-ID: <20130920123930.GB2185@lee--X1>
+References: <1379680214-9143-1-git-send-email-ldewangan@nvidia.com>
+ <1379680214-9143-3-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20130919212235.GD12758@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: alsa-devel@alsa-project.org, b43-dev@lists.infradead.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, e1000-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-ide@vger.kernel.org, linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, linux-nvme@lists.infradead.org, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, uclinux-dist-devel@blackfin.uclinux.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1379680214-9143-3-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Florian Lobmaier <florian.lobmaier@ams.com>
 List-Id: devicetree@vger.kernel.org
 
-The code sequence:
-	pldat->pdev->dev.coherent_dma_mask = 0xFFFFFFFF;
-	pldat->pdev->dev.dma_mask = &pldat->pdev->dev.coherent_dma_mask;
-bypasses the architectures check on the DMA mask.  It can be replaced
-with dma_coerce_mask_and_coherent(), avoiding the direct initialization
-of this mask.
+> The AMS AS3722 is a compact system PMU suitable for mobile phones,
+> tablets etc. It has 4 DC/DC step-down regulators, 3 DC/DC step-down
+> controller, 11 LDOs, RTC, automatic battery, temperature and
+> over-current monitoring, 8 GPIOs, ADC and wathdog.
+>=20
+> Add mfd core driver for the AS3722 to support core functionality.
 
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
- drivers/net/ethernet/nxp/lpc_eth.c |    6 ++++--
- 1 files changed, 4 insertions(+), 2 deletions(-)
+<snip>
 
-diff --git a/drivers/net/ethernet/nxp/lpc_eth.c b/drivers/net/ethernet/nxp/lpc_eth.c
-index a061b93..ba3ca18 100644
---- a/drivers/net/ethernet/nxp/lpc_eth.c
-+++ b/drivers/net/ethernet/nxp/lpc_eth.c
-@@ -1399,8 +1399,10 @@ static int lpc_eth_drv_probe(struct platform_device *pdev)
- 	}
- 
- 	if (pldat->dma_buff_base_v == 0) {
--		pldat->pdev->dev.coherent_dma_mask = 0xFFFFFFFF;
--		pldat->pdev->dev.dma_mask = &pldat->pdev->dev.coherent_dma_mask;
-+		ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+		if (ret)
-+			goto err_out_free_irq;
-+
- 		pldat->dma_buff_size = PAGE_ALIGN(pldat->dma_buff_size);
- 
- 		/* Allocate a chunk of memory for the DMA ethernet buffers
--- 
-1.7.4.4
+> +Example:
+> +--------
+> +ams3722 {
+> +	compatible =3D "ams,as3722";
+> +	reg =3D <0x48>
+> +
+> +	interrupt-parent =3D <&intc>;
+> +	interrupt-controller;
+> +	#interrupt-cells =3D <2>;
+> +
+> +	gpio-controller;
+> +	#gpio-cells =3D <2>;
+> +
+> +	gpio {
+> +		/*
+> +		 * GPIO related properties
+> +		 * Refer document bindings/gpio/gpio-as3722.txt
+> +		 */
+> +	};
+> +
+> +	regulators {
+> +		/*
+> +		 * Regulator related properties
+> +		 * Refer document bindings/regulator/as3722-regulator.txt
+> +		 */
+> +	};
+> +};
+
+I still don't think this is the way to go. If you can justify that
+these sub-devices require their own node, then they should have a
+compatible string. The MFD sub-system will then populate the of_node
+for you and you can use/request them in the normal way.
+
+To reiterate, Mark's issue was not the existence of the compatible
+string, it was with the existence of the child nodes in general.
+
+Personally I think the device should have sub-nodes. It's how  we
+dealt with our DB8500 and AB8500 and it works very well. At the end of
+the day these all-in-one chips do house very different devices. I see
+no harm in describing them that way. I'm sure other OSes can make use
+of the sub-devices in similar ways.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
