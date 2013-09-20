@@ -1,44 +1,36 @@
-From: "Markus Mayer" <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: dts: bcm281xx: Add change disk GPIO
-Date: Fri, 20 Sep 2013 16:29:58 -0700
-Message-ID: <1379719798-18444-1-git-send-email-markus.mayer@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Subject: [PATCH] ARM: DTS: omap3-devkit8000.dts: fix a typo
+Date: Sat, 21 Sep 2013 02:40:14 +0300
+Message-ID: <1379720414-14960-1-git-send-email-aaro.koskinen@iki.fi>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Register GPIO 14 as change disk interrupt for the SD card slot.
+"gpmc,sync-clki-ps" is not defined/documented, it should be
+"gpmc,sync-clk-ps" instead.
 
-Signed-off-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 ---
+ arch/arm/boot/dts/omap3-devkit8000.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This patch depends on [PATCH v9 3/3] ARM: bcm281xx: Add device node for
-the GPIO controller
-(http://lists.infradead.org/pipermail/linux-arm-kernel/2013-September/197399.html)
-and should therefore likely go into Christian's tree.
-
- arch/arm/boot/dts/bcm11351.dtsi |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 05a5aab..d384ed5 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -93,6 +93,7 @@
- 		compatible = "brcm,kona-sdhci";
- 		reg = <0x3f1b0000 0x10000>;
- 		interrupts = <0x0 73 0x4>;
-+		cd-gpios = <&gpio 14 0>;
- 		status = "disabled";
- 	};
+diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
+index 7ef2827..4665421 100644
+--- a/arch/arm/boot/dts/omap3-devkit8000.dts
++++ b/arch/arm/boot/dts/omap3-devkit8000.dts
+@@ -125,7 +125,7 @@
+ 		nand-bus-width = <16>;
  
+ 		gpmc,device-nand;
+-		gpmc,sync-clki-ps = <0>;
++		gpmc,sync-clk-ps = <0>;
+ 		gpmc,cs-on-ns = <0>;
+ 		gpmc,cs-rd-off-ns = <44>;
+ 		gpmc,cs-wr-off-ns = <44>;
 -- 
-1.7.9.5
-
+1.8.4.rc3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
