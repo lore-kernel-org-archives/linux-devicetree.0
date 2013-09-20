@@ -1,103 +1,66 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] DT: Add binding documentation for CM36651
- proximity/light sensor
-Date: Fri, 20 Sep 2013 10:40:10 +0100
-Message-ID: <20130920094010.GG17453@e106331-lin.cambridge.arm.com>
-References: <522D6661.8030000@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
+Date: Fri, 20 Sep 2013 11:52:32 +0200
+Message-ID: <523C1AE0.9020603@samsung.com>
+References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com>
+ <523395DC.5080009@wwwdotorg.org>
+ <CA+V-a8sVyJ1TrTSiaj8vpaD+f_qJ5Hp287E3HuHJ_pRzzmdAvg@mail.gmail.com>
+ <523730A8.9060201@wwwdotorg.org>
+ <CA+V-a8vY-qsdUoUUH=3HOg-UAZZPujOLPHFC_udNWFtksgzRRA@mail.gmail.com>
+ <523B554A.2030701@gmail.com>
+ <CA+V-a8s3PYr7qem6m8au0E7N2Xb_gD37_8uLcdXZjeHppBaC6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <522D6661.8030000-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-reply-to: <CA+V-a8s3PYr7qem6m8au0E7N2Xb_gD37_8uLcdXZjeHppBaC6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org" <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "warren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <warren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 09, 2013 at 07:10:41AM +0100, Beomho Seo wrote:
-> This patch add device tree binding documentation for CM36651
-> proximity/light sensor.
+Hi Prabhakar,
+
+On 09/20/2013 10:11 AM, Prabhakar Lad wrote:
+> OK I will, just send out a fix up patch which fixes the mismatch between
+> names for the rc-cycle, and later send out a patch which removes the
+> platform data usage for next release with proper DT bindings.
+
+I think the binding need to be fully corrected now, I just meant to not
+touch the board file, i.e. leave non-dt support unchanged.
+
+> I'm OK with making regulator properties as optional, But still it would
+> change the meaning of what DT is, we know that the VDD/VDD_IO .. etc
+> pins are required properties (but still making them as optional) :-(
 > 
-> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/light/cm36651.txt      |   24
-> ++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  2 files changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/cm36651.txt
+> I think there might several devices where this situation may arise so
+> just thinking of a alternative solution.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/cm36651.txt
-> b/Documentation/devicetree/bindings/iio/light/cm36651.txt
-> new file mode 100644
-> index 0000000..3a6ba38
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/cm36651.txt
-> @@ -0,0 +1,24 @@
-> +* Capella CM36651 I2C Proximity and Color Light sensor
-> +
-> +Required properties:
-> +- compatible: must be "capella,cm36651"
-> +- reg: the I2C address of the device
-> +- interrupts: interrupt to which the chip is connected
+> say we have property 'software-regulator' which takes true/false(0/1)
+> If set to true we make the regulators as required property or else we
+> assume it is handled and ignore it ?
 
-Nit: I'd prefer something like the below:
+I don't think this is a good idea. You would have to add a similar platform 
+data flag for non-dt, it doesn't sound right. I can see two options here: 
 
-- interrupts: interrupt-specifier for the sole interrupt generated by
-              the device.
+1. Make the regulator properties mandatory and, e.g. define a fixed 
+   voltage GPIO regulator in DT with an empty 'gpio' property. Then
+   pass a phandle to that regulator in the adv7343 *-supply properties.
+   For non-dt similarly a fixed voltage regulator(s) and voltage 
+   supplies  would need to be defined in the board files.
 
-> +- vled-supply: regulator for the sensor device, as covered
-> +	       in ../../regulator/regulator.txt
+2. Make the properties optional and use (devm_)regulator_get_optional()
+   calls in the driver (a recently added function). I must admit I don't 
+   fully understand description of this function, it currently looks 
+   pretty much same as (devm_)regulator_get(). Thus the driver would 
+   need to be handling regulator supplies only when non ERR_PTR() is 
+   returned from regulator_get_optional() and otherwise assume a non 
+   critical error. There is already quite a few example occurrences of 
+   regulator_get_optional() usage.
 
-I assume by the name that this is the regulator for the LED that's used
-alongside the sensor, rather than for the sensor itself?
-
-Is the LED part of the CM36651 unit, or is it external? I couldn't find
-any documentation for the unit.
-
-> +
-> +Example:
-> +
-> +	i2c_cm36651: i2c-gpio {
-> +		/* ... */
-> +
-> +		cm36651@18 {
-> +			compatible = "capella,cm36651";
-> +			reg = <0x18>;
-> +			interrupt-parent = <&gpx0>;
-> +			interrupts = <2 0>;
-> +			vled-supply = <&ps_als_reg>;
-> +		};
-> +
-> +		/* ... */
-> +	};
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index ec4d713..044796d 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -17,6 +17,7 @@ brcm	Broadcom Corporation
->  cavium	Cavium, Inc.
->  chrp	Common Hardware Reference Platform
->  cirrus	Cirrus Logic, Inc.
-> +capella	Capella Microsystems, Inc
-
-The vendor prefix looks OK to me. However, it should apper before cavium
-to maintain the ordering of the file.
-
-Thanks,
-Mark.
-
->  cortina	Cortina Systems, Inc.
->  dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
->  davicom	DAVICOM Semiconductor, Inc.
-> -- 
-> 1.7.9.5
-> 
-> -- 
-> Beomho Seo, Assistant Engineer
-> System S/W Lab., S/W Platform Team, Software Center
-> Samsung Electronics
-> 
+--
+Regards,
+Sylwester
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
