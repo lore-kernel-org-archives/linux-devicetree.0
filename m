@@ -1,27 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC 0/5] New descriptor-based GPIO interface
-Date: Fri, 20 Sep 2013 23:23:46 +0200
-Message-ID: <CACRpkdbFhORYnAUf+BMXtL1LezL7gPJ6gKQnqwvKZjqqCt3A4Q@mail.gmail.com>
-References: <1378294169-22661-1-git-send-email-acourbot@nvidia.com>
-	<CACRpkdYjkDf7c9VxfDTHtFx_upWWRAK8vpXTkrkrRsMjErq1dQ@mail.gmail.com>
-	<20130920193254.GA19130@mithrandir>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4] clk: si570: Add a driver for SI570 oscillators
+Date: Fri, 20 Sep 2013 14:53:08 -0700
+Message-ID: <65b27409-d70f-41d2-ace5-9c3fe65ec24d@CO9EHSMHS003.ehs.local>
+References: <1379698757-25232-1-git-send-email-soren.brinkmann@xilinx.com>
+ <20130920181529.GA31173@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20130920193254.GA19130@mithrandir>
-Sender: linux-arch-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130920181529.GA31173-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 20, 2013 at 9:32 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
+On Fri, Sep 20, 2013 at 11:15:29AM -0700, Guenter Roeck wrote:
+> On Fri, Sep 20, 2013 at 10:39:17AM -0700, Soren Brinkmann wrote:
+[...]
+> > diff --git a/drivers/clk/clk-si570.c b/drivers/clk/clk-si570.c
+> > new file mode 100644
+> > index 0000000..13c2091
+> > --- /dev/null
+> > +++ b/drivers/clk/clk-si570.c
+[...]
+> > +static int si570_probe(struct i2c_client *client,
+[...]
+> > +	/* Read the requested initial output frequency from device tree *=
+/
+> > +	if (!of_property_read_u32(client->dev.of_node, "clock-frequency",
+> > +				&initial_fout)) {
+> > +		err =3D clk_set_rate(clk, initial_fout);
+> > +		if (err) {
+> > +			of_clk_del_provider(client->dev.of_node);
+> > +			clk_unregister(data->hw.clk);
+>=20
+> Is that needed ? I would have thought it isn't because you use a devm=
+_ function
+> to register it.
+>=20
+> Not that I understand the clk code, but getting clk from the registra=
+tion
+> function and unregistering hw.clk (without seting it) sems a bit odd.
+> Is it well defined that you have to unregister hw.clk ?
+You're absolutely right. I'll remove all calls to clk_unregister().
+Thanks for finding that one.
 
-> Given that it seems like there won't be a linux-next from September 28
-> until close to the next merge window, it would be good to get this into
-> linux-next before that so that the series can receive broader testing.
+	S=C3=B6ren
 
-Good point. Alexandre: ready when you are.
 
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
