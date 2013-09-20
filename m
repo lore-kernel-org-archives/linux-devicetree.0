@@ -1,85 +1,57 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] [PATCH] ARM: sunxi: doc: Add sun7i (A20) interrupt table
-Date: Fri, 20 Sep 2013 11:07:17 -0500
-Message-ID: <20130920160717.GB5429@lukather>
-References: <1379675560-30656-1-git-send-email-oliver+list@schinagl.nl>
- <1379675560-30656-2-git-send-email-oliver+list@schinagl.nl>
- <20130920123956.GI17453@e106331-lin.cambridge.arm.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: Adding aliases to mmc
+Date: Fri, 20 Sep 2013 10:10:17 -0600
+Message-ID: <523C7369.8060301@wwwdotorg.org>
+References: <CAOMZO5CJ36JHJMaiG3QVdtpBoWd_ZyHQuRTrKHz4bLP39gpJtQ@mail.gmail.com>,<5239C40C.9030503@wwwdotorg.org> <60BA5429A0E1584BA3633194F6F993B50E7CE937@NA-MBX-03.mgc.mentorg.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130920123956.GI17453-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <60BA5429A0E1584BA3633194F6F993B50E7CE937-0dz9ie/QGrnnlEkxMdpx1dQH9K4/4qFeAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Oliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "maxime-ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org" <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+To: "Chaiken, Alison" <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 09/20/2013 12:30 AM, Chaiken, Alison wrote:
+> Stephen Warren writes:
+>> Patches to make mmc block devices have static names have been proposed
+>> in the past and rejected. I think the main reason is that the block
+>> device names are (or can be) dynamic, so anything that assumes a
+>> particular naming scheme is simply broken.
+> 
+> Why may network devices have static IPs and yet storage devices can't have static names? 
 
---IiVenqGWf+H9Y6IX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ethernet devices have MAC addresses as their unique ID. Block devices
+have PARTUUIDs and filesystems have UUIDs. The IP address is keyed to
+the MAC address.
 
-Hi Mark,
+(In desktop distributions these days, I believe that MAC address
+typically drives device name via renaming, and then device name indexes
+the network configuration, which then determines the IP. Alternatively,
+MAC address drives IP address via DHCP).
 
-On Fri, Sep 20, 2013 at 01:39:56PM +0100, Mark Rutland wrote:
-> On Fri, Sep 20, 2013 at 12:12:40PM +0100, Oliver Schinagl wrote:
-> > From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-> >=20
-> > This patch adds some documentation about the Allwinner sun7i (A20) using
-> > the GIC.
-> >=20
-> > Signed-off-by: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
->=20
-> NAK.
->=20
-> This information is not a binding, and it's not a property of the
-> interrupt controller. It's the integration of a full SoC, which should
-> be described full in a dtsi where it can actually be used.
->=20
-> The only other SoCs that have this are other sunxi variants, and I see
-> no reason to have them here either.
+To my mind, using UUIDs as the key rather than device name is exactly
+the same situation, not a different one.
 
-This was mostly here because we had a very sparse documentation for
-these SoCs when we first submitted the patches, and these informations
-were not easy to find out. So a misplaced documentation is still better
-than no documentation.
+...
+> I understand that there is a widespread desire to institute a new level of quality control in the device-tree, but if we are agreeing on a new rule, let's be explicit about it.
 
-We do have the same documentation for the clocks here, mostly for the
-same reason.
+(please word-wrap your email)
 
-Maxime
+I don't believe this has anything at all to do with device tree; my
+first experience with this issue was long before DT.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+The issue is that block device IDs cannot be equal to controller IDs, since:
 
---IiVenqGWf+H9Y6IX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+* Mount an SD card -> assigned an ID at run-time
+* Physically unplug it  -> ID kept since it's still referenced
+* Plug a new card back in -> assigned a new ID at run-time
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Therefore, there's no 1:1 match possible between SD/MMC controllers and
+SD/MMC block device names. It's dynamic.
 
-iQIcBAEBAgAGBQJSPHK0AAoJEBx+YmzsjxAgv4gP/13dni0QuVK6K/rGCSS7oLj1
-uuNHfAnZPvbDHlLcgIdCClaDEQQB52uLLc1ROSjWGfSQG9dkoQKB0rrGJvk9jpTO
-1BHGvThB6edsUWwajHdxu6VmiwCP7i8fyR6Ya94fbLf7yvE2xlhmZtkCbYnjWRPn
-WWaGx3gXVSlrV82PSqeRxYxj2goWoLDRFfnczGt3TDYCzEJsOBzNsDD6urGgpbBd
-lRxO2HxCV7l05xeDSFwRdakLpFn5/hlEsZZYJdvlr4MPiTniKd8vUJUKCpNMpFb2
-eddShZvRFbeHzgBnL3u9do53NGRWwULi115b6uIkJ8v+EV2KhvcKw3Ut8jwCc31l
-uQ68kw5wvutxDzqW/wDbw6jmHLQHY9CqLoQJf9Ty/pi27k9BOQ8SJDdrhWhfGNbn
-7n+dMnlIzDiJ0YdI+Gw7N2SS9lw+J8QtJAp6fS8yErLn3tN6wInVjnIMTNKkq9G1
-YUUnzatvuwvjoGeKc1Plj0t57Pzx05F9xjmYVTaZzoCk8DyjRPj2ZT6gUwsDhbxr
-m3+kik46kUmJL3GIGD0ox0J9WYC2CJ1eMQLSPWLYFeIW1z3aW5cHpKT8xuJoMCd1
-3gbYljV3MbDX0JtHHohqwZfNMzcVwSYmOICbvxHxLzfoHmhkRT/xVRcYGEHzh/Bf
-uDKq+BRWHGVuaPv9BJFd
-=/xRw
------END PGP SIGNATURE-----
-
---IiVenqGWf+H9Y6IX--
+The same is true of USB mass storage devices too, I believe.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
