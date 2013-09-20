@@ -1,133 +1,102 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC PATCH 15/15] arm: dts: dra7: add sata node
-Date: Fri, 20 Sep 2013 13:19:54 +0300
-Message-ID: <523C214A.30406@ti.com>
-References: <1379595943-14622-1-git-send-email-rogerq@ti.com> <1379597059-15405-1-git-send-email-rogerq@ti.com> <523B05FD.7020200@cogentembedded.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4] dt: update PSCI binding documentation for v0.2
+Date: Fri, 20 Sep 2013 11:20:15 +0100
+Message-ID: <20130920102015.GH17453@e106331-lin.cambridge.arm.com>
+References: <1379625868-5395-1-git-send-email-robherring2@gmail.com>
+ <CAOesGMjNhYTfPOr5NPEC9GWym-nuFE0hX_6+LW9bTv_E3iXbcQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <523B05FD.7020200-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMjNhYTfPOr5NPEC9GWym-nuFE0hX_6+LW9bTv_E3iXbcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Sep 20, 2013 at 05:36:51AM +0100, Olof Johansson wrote:
+> Hi,
 
-On 09/19/2013 05:11 PM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 09/19/2013 05:24 PM, Roger Quadros wrote:
-> 
->> From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-> 
->> Add support for sata controller.
-> 
->> [Roger Q] Clean up.
-> 
->> CC: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/dra7.dtsi |   49 +++++++++++++++++++++++++++++++++++++++++++
->>   1 files changed, 49 insertions(+), 0 deletions(-)
-> 
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index ce9a0f0..545545d 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->> +++ b/arch/arm/boot/dts/dra7.dtsi
->> @@ -426,6 +426,55 @@
->>               dma-names = "tx", "rx";
->>           };
->>
->> +        omap_control_sata: control-phy@4a002374 {
->> +            compatible = "ti,control-phy-pipe3";
->> +            reg = <0x4a002374 0x4>;
->> +            reg-names = "power";
->> +            clocks = <&sys_clkin1>;
->> +            clock-names = "sysclk";
->> +        };
->> +
->> +        ocp2scp3: ocp2scp3@4a090000 {
->> +            compatible = "ti,omap-ocp2scp";
->> +            #address-cells = <1>;
->> +            #size-cells = <1>;
->> +            ranges;
->> +            ti,hwmods = "ocp2scp3";
->> +            reg = <0x4a090000 0x1f>; /* ocp2scp3 */
->> +            reg-names = "ocp2scp3";
->> +            sata_phy: sataphy@4A096000 {
-> 
->    It's better to name the PHY nodes uniformly after already standard "ethernet-phy" and your "control-phy".
-
-OK. will fix it to sata-phy.
+Hi Olof,
 
 > 
->> +                compatible = "ti,phy-pipe3-sata";
->> +                reg = <0x4A096000 0x80>, /* phy_rx */
->> +                      <0x4A096400 0x64>, /* phy_tx */
->> +                      <0x4A096800 0x40>; /* pll_ctrl */
->> +                reg-names = "phy_rx", "phy_tx", "pll_ctrl";
->> +                ctrl-module = <&omap_control_sata>;
->> +                clocks = <&sata_ref_clk>,
->> +                     <&sys_clkin1>;
->> +                clock-names = "optclk", "sysclk";
->> +                #phy-cells = <0>;
->> +            };
->> +        };
->> +
->> +        sata: sata@4a141100 {
->> +            compatible = "ti,sata";
->> +            ti,hwmods = "sata";
->> +            reg = <0x4a141100 0x7>;
->> +            #address-cells = <1>;
->> +            #size-cells = <1>;
->> +            ranges;
->> +            dwc-ahci@4a140000 {
+> Just a quick drive-by. Sorry, I don't know the history of previous
+> review cycles.
 > 
->    Hm, ePAPR spec. [1] says that "the name of a node should be somewhat generic, reflecting the function of the device and not its precise programming model", so it looks like the name should be "sata" as well. I'm a bit at a loss here, not sure why you had to use the nested device nodes.
 > 
-
-ok. will fix it to sata.
-I've nested it because the wrapper registers are not part of the AHCI sata controller.
-They are TI specific registers for power management. 
-Similar setup is on the USB controller. Please see omap_dwc3 node.
-
-But if you have better idea, please let me know.
-
->> +                  compatible = "snps,dwc-ahci";
->> +                  reg = <0x4a140000 0x1100>;
->> +                  interrupts = <0 54 0x4>;
->> +                  phys = <&sata_phy>;
+> On Thu, Sep 19, 2013 at 2:24 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > 
->    Hm, it's the third PHY related generic property I'm encountering. First, there was "phy-handle", then "phy", now "phys"... Seems like a bit too much. :-)
+> >  Main node optional properties:
+> >
+> > - - cpu_suspend   : Function ID for CPU_SUSPEND operation
+> > + - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
+> > +
+> > + - cpu_off                : Function ID for CPU_OFF operation
+> > +
+> > + - cpu_on[-<32|64]        : Function ID for CPU_ON operation
+> > +
+> > + - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
+> >
+> > - - cpu_off       : Function ID for CPU_OFF operation
+> > + - migrate[-<32|64]       : Function ID for MIGRATE operation
+> >
+> > - - cpu_on        : Function ID for CPU_ON operation
+> > + - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
+> >
+> > - - migrate       : Function ID for MIGRATE operation
+> > + - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
+> >
+> > + - system_reset           : Function ID for SYSTEM_RESET operation
+> > +
+> > + - system_off             : Function ID for SYSTEM_OFF operation
+> 
+> All of these should use dashes instead of underscores.
 
-I'm afraid but this is how the designers have made it.
+I also don't like the underscores, but they're an unfortunate historical
+artifact that we can't get rid of (at least for cpu_on, cpu_off, and
+cpu_suspend).
 
-1) control-phy-pipe3 is that part of the PHY which sits in control module space and is different
-from the sata-phy space and hence needs a different node. If it were to me, I would just put this
-resource in sata-phy node, but there was a discussion about this earlier to do it otherwise [1].
+Both Xen and kvmtool are already passing DTs to guests which have
+underscores in the property names, so it's both a boot ABI and a
+userspace ABI.
 
-2) sata-phy (sataphy) is the actual SATA PHY device.
+One aim with this update is to ensure that the new binding maintains a
+level of forward compatibility for OSs -- the PSCI 0.2 binding needs to
+be a superset of the existing PSCI binding to allow Xen and KVM to
+provide PSCI 0.2 functionality without sacrificing the ability to boot
+older guests (kvmtool could be given a flag to choose what version of
+PSCI to provide, but I'm not sure that can be done for Xen).
 
-3) phys is just a reference to the sata_phy and is used via the generic PHY framework.
-It is upto the sata driver to power up/down the phy.
+Given that, I'm not sure if it makes sense to force the rest to have
+dashes rather than underscores -- it'll leave the binding more
+inconsistent.
 
 > 
->> +                  phy-names = "sata-phy";
->> +                  clocks = <&sata_ref_clk>;
->> +                  clock-names = "optclk";
->> +            };
->> +        };
-> 
-> [1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
-> 
+> I also wonder if it would be better to move them into a subnode to
+> keep the namespace a bit cleaner.
 
-cheers,
--roger
+For the compatibility reasons above, I don't think we can do this. At
+least the existing IDs (cpu_on, cpu_off, and cpu_suspend) would need to
+be described in the psci node rather than a child.
 
-[1] - https://lkml.org/lkml/2012/9/10/399
+> 
+> > +Some functions have have separate IDs for 32-bit and 64-bit calling
+> > +conventions. These separate function IDs are described with function names with
+> > +"-64" and "-32" suffixes (e.g. cpu_on-64). Where a function name does not have
+> > +a suffix, the ID may be used with either calling convention depending on the
+> > +CPU state -- AArch32 callers should use the 32-bit calling convention, and
+> > +AArch64 callers should use the 64-bit calling convention.
+> 
+> Why not just make them a possible two-element property with <32 64>,
+> or if only one element, same on both? Seems cleaner.
+
+A 64-bit platform may not have 32-bit call support, and we wouldn't be
+able to describe that with a <32 64> property format. As it is valid for
+a 64-bit OS to make 32-bit calls, we need to not describe a 32-bit call
+ID in that case.
+
+Cheers,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
