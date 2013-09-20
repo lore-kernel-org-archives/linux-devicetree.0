@@ -1,95 +1,181 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] PWM: PXA: add device tree support to PWM driver
-Date: Fri, 20 Sep 2013 09:58:20 +0200
-Message-ID: <20130920075819.GC8575@ulmo>
-References: <1379519982-7618-1-git-send-email-mikedunn@newsguy.com>
- <20130919122807.GH10852@ulmo>
- <523B2C0B.4050204@newsguy.com>
+From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
+Date: Fri, 20 Sep 2013 13:41:42 +0530
+Message-ID: <CA+V-a8s3PYr7qem6m8au0E7N2Xb_gD37_8uLcdXZjeHppBaC6g@mail.gmail.com>
+References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com>
+ <523395DC.5080009@wwwdotorg.org> <CA+V-a8sVyJ1TrTSiaj8vpaD+f_qJ5Hp287E3HuHJ_pRzzmdAvg@mail.gmail.com>
+ <523730A8.9060201@wwwdotorg.org> <CA+V-a8vY-qsdUoUUH=3HOg-UAZZPujOLPHFC_udNWFtksgzRRA@mail.gmail.com>
+ <523B554A.2030701@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="s9fJI615cBHmzTOP"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <523B2C0B.4050204-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <523B554A.2030701-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylwester,
 
---s9fJI615cBHmzTOP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Sep 20, 2013 at 1:19 AM, Sylwester Nawrocki
+<sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 09/19/2013 06:06 PM, Prabhakar Lad wrote:
+>>
+>> On Mon, Sep 16, 2013 at 9:54 PM, Stephen Warren<swarren-3lzwWm7+WeqIh2JisoIxyg@public.gmane.org=
+g>
+>> wrote:
+>>>
+>>> On 09/13/2013 11:23 PM, Prabhakar Lad wrote:
+>>>>
+>>>> On Sat, Sep 14, 2013 at 4:16 AM, Stephen Warren<swarren@wwwdotorg.=
+org>
+>>>> wrote:
+>>>>>
+>>>>> On 09/13/2013 05:57 AM, Prabhakar Lad wrote:
+>>>>>>
+>>>>>> From: "Lad, Prabhakar"<prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>>
+>>>>>> This patch fixes the DT binding properties of adv7343 decoder.
+>>>>>> The pdata which was being read from the DT property, is removed
+>>>>>> as this can done internally in the driver using cable detection
+>>>>>> register.
+>>>>>>
+>>>>>> This patch also removes the pdata of ADV7343 which was passed fr=
+om
+>>>>>> DA850 machine.
+>>>>>
+>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343=
+=2Etxt
+>>>>>> b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+>>>>>
+>>>>>
+>>>>>>   Required Properties :
+>>>>>>   - compatible: Must be "adi,adv7343"
+>>>>>> +- reg: I2C device address.
+>>>>>> +- vddio-supply: I/O voltage supply.
+>>>>>> +- vddcore-supply: core voltage supply.
+>>>>>> +- vaa-supply: Analog power supply.
+>>>>>> +- pvdd-supply: PLL power supply.
+>>>>>
+>>>>>
+>>>>> Old DTs won't contain those properties. This breaks the DT ABI if=
+ those
+>>>>> properties are required. Is that acceptable?
+>>>>
+>>>>
+>>>> As of now adv7343 via DT binding is not enabled in any platforms
+>>>> so this wont break any DT ABI.
+>>>
+>>>
+>>> Well, if the binding has already been written, it technically alrea=
+dy is
+>>> an ABI. Perhaps the binding can be fixed if it isn't in use yet, bu=
+t
+>>> this is definitely not the correct approach to DT.
+>
+>
+> The binding got merged for 3.12-rc1 and the intention of this patch w=
+as
+> to correct that binding. There we some issues like mismatch between n=
+ames
+> of properties documented and used in the driver.
+>
+> After Mark's suggestion Prabhakar removed some properties and the pla=
+tform
+> data usage altogether. IMHO there should be only minimal changes in t=
+hat
+> "fixup" patch, i.e. no platform data usage should be removed. Perhaps=
+ it
+> is fine since that's just code removal. I guess it is better to do th=
+is
+> sort of cleanup for the next kernel release.
+>
+OK I will, just send out a fix up patch which fixes the mismatch betwee=
+n
+names for the rc-cycle, and later send out a patch which removes the
+platform data usage for next release with proper DT bindings.
 
-On Thu, Sep 19, 2013 at 09:53:31AM -0700, Mike Dunn wrote:
-> On 09/19/2013 05:28 AM, Thierry Reding wrote:
-> > On Wed, Sep 18, 2013 at 08:59:42AM -0700, Mike Dunn wrote:
-> > [...]
-> >> Only an OF match table is added;
-> > [...]
-> >=20
-> > That's no longer true. You also add a custom .of_xlate() function.
->=20
->=20
-> Is it acceptable to re-word the commit message in susbequent versions?
+> Also I believe the argument of backward compatibility shouldn't reall=
+y be
+> considered here. The $subject patch is supposed to correct the bindin=
+g
+> before it becomes and ABI.
+>
+>
+>>>>> If it is, I think we should document that older versions of the b=
+inding
+>>>>> didn't require those properties, so they may in fact be missing.
+>>>>>
+>>>>> I note that this patch doesn't actually update the driver to
+>>>>> regulator_get() anything. Shouldn't it?
+>>>>
+>>>>
+>>>> As of now the driver isn=92t enabling/accepting the regulators,
+>>>> so should I add those in DT properties or not ?
+>>>
+>>>
+>>> The binding should describe the HW, not what the driver does/doesn'=
+t yet
+>>> do. I wrote the above because it looked like the driver was broken,=
+ not
+>>> to encourage you to remove properties from the binding.
+>>
+>> OK
+>>
+>>> How does the
+>>> driver work if it doesn't enable the required regulators though, I
+>>> wonder? I suppose the boards this driver has been tested on all mus=
+t
+>>> used fixed (non-SW-controlled) regulators.
+>>>
+>> on all the boards on which this decoder is connected the power to it
+>> is provided by static circuit and not by regulators, So for this how=
+ would
+>> you suggest to add the DT nodes for regulators ?
+>
+>
+> I believe the regulator DT properties should be made optional. Since =
+some
+> (actually all upstream) boards don't bother with software controlled
+> regulators. We might have specified them and have defined relevant fi=
+xed
+> regulator(s) in DT. But I doubt it is sensible, given that it may nev=
+er
+> happen in practice the regulators are required to be controlled by so=
+ftware
+> through the regulators API. Such devices can often be put in a low po=
+wer
+> mode by a write to one of the registers, where their supply current i=
+s at
+> uA level. Looking at the datasheet ADV7343 has SLEEP_MODE in which it=
+s
+> typical current consumption is 5 uA.
+>
+> That said the chip could be supplied from shared voltage regulators a=
+nd
+> the driver would then have to properly request and enable the regulat=
+ors.
+>
+> Anyway I'm inclined to make the regulator properties optional.
+>
+I'm OK with making regulator properties as optional, But still it would
+change the meaning of what DT is, we know that the VDD/VDD_IO .. etc
+pins are required properties (but still making them as optional) :-(
 
-Yes, of course. The commit message should be an accurate description of
-the patch. If as a result of review the patch changes in ways that make
-the commit message wrong, then it must be updated as well.
+I think there might several devices where this situation may arise so
+just thinking of a alternative solution.
 
-> >> diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.=
-dtsi
-> >=20
-> > I think this belongs in a separate patch so it can go through the
-> > arm-soc tree.
->=20
->=20
-> Is there anyone else or another list that should be CC'd in this case?  T=
-hanks.
+say we have property 'software-regulator' which takes true/false(0/1)
+If set to true we make the regulators as required property or else we
+assume it is handled and ignore it ?
 
-Well, the PXA maintainers would be the most likely to take the dtsi
-change through their tree. Usually the mach trees are merged into
-arm-soc, which then goes into Linus' tree.
 
-> >> +{
-> >> +	struct pwm_device *pwm;
-> >> +
-> >=20
-> > You probably want to check that pc->of_pwm_n_cells at least 1 here.
->=20
->=20
-> Well OK, but I didn't bother because it's explicitly set to one elsewhere=
- in
-> this source file.
-
-Okay, nevermind. It's probably fine as is.
-
-Thierry
-
---s9fJI615cBHmzTOP
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSPAAbAAoJEN0jrNd/PrOhAqIQAJ4D+83aWBs7hzIHEvrBBV5b
-QdBw0wWlT53bEbieV7+9TbHdd8V0m3eX2xGKR5YLIj7Un+Huq00NzQG95TNeeuv5
-an0hCPrxScVtZsYL1R+ZTb1qj5VwqF2SXEzqNWo3iJXvNTbzyclp1MRhJy85oq8Z
-GzHgeTqjAMTsFaehq/V3KnoNHadgSyJteMiMzF/jipjfMmGVIjnW0RPKgLE0Cq0n
-HkLEn/t2rhDY+8e/Ko9lc0TJ4eC8FIooujtLwyHJDGdCR0wzSSkBjP9VQbB2+r9+
-vXUQMYyBr3k37ZMeX/BVtyF1dcGJNw+DnxKvJEFRPeqsAuTxHT2fRM829uI5Hqco
-HG4yYHoSgaz1WCo1nBW2B2UlE04djObgEQZvappwHQtlsU7YYvhLm9dwEZPc8WAY
-57Oqk8xGu2VeLsK6etKaFb+btogSU+fYsfOcXIv3x4acZpXKypOrPECLcC/PxgXk
-LMeCyXUWX9flmGhM9ifblvNxMKrp05EvUb5m+XRKCGE7iKkNpoHt7dwbvI1vBfSM
-4CeQUvWlPbknylFcYgCW1QjxxfM2b6fL0mKn8X2wxbxqVLuQZqcksoj06Z3yGZjq
-P7Zu42/ptp/I/sEzxWPRzGVWsEwfDRHKlPEnZGmVaRlm4CyXoDywCiW4kTjkM0nk
-3wneaCtaHEVZOJJWCPGz
-=MRM1
------END PGP SIGNATURE-----
-
---s9fJI615cBHmzTOP--
+Thanks,
+--Prabhakar Lad
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
