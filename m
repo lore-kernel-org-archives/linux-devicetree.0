@@ -1,56 +1,36 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4] clk: si570: Add a driver for SI570 oscillators
-Date: Fri, 20 Sep 2013 14:53:08 -0700
-Message-ID: <65b27409-d70f-41d2-ace5-9c3fe65ec24d@CO9EHSMHS003.ehs.local>
-References: <1379698757-25232-1-git-send-email-soren.brinkmann@xilinx.com>
- <20130920181529.GA31173@roeck-us.net>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 39/51] DMA-API: others: use dma_set_coherent_mask()
+Date: Fri, 20 Sep 2013 17:20:50 -0500
+Message-ID: <20130920222050.GA8763@mtj.dyndns.org>
+References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
+ <E1VMnNq-0007s4-HN@rmk-PC.arm.linux.org.uk>
+ <20130920121652.GA7630@mtj.dyndns.org>
+ <20130920140018.GP25647@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130920181529.GA31173-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20130920140018.GP25647@n2100.arm.linux.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: alsa-devel@alsa-project.org, b43-dev@lists.infradead.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, e1000-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-ide@vger.kernel.org, linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, linux-nvme@lists.infradead.org, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, uclinux-dist-devel@blackfin.uclinux.org, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyun
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 20, 2013 at 11:15:29AM -0700, Guenter Roeck wrote:
-> On Fri, Sep 20, 2013 at 10:39:17AM -0700, Soren Brinkmann wrote:
-[...]
-> > diff --git a/drivers/clk/clk-si570.c b/drivers/clk/clk-si570.c
-> > new file mode 100644
-> > index 0000000..13c2091
-> > --- /dev/null
-> > +++ b/drivers/clk/clk-si570.c
-[...]
-> > +static int si570_probe(struct i2c_client *client,
-[...]
-> > +	/* Read the requested initial output frequency from device tree *=
-/
-> > +	if (!of_property_read_u32(client->dev.of_node, "clock-frequency",
-> > +				&initial_fout)) {
-> > +		err =3D clk_set_rate(clk, initial_fout);
-> > +		if (err) {
-> > +			of_clk_del_provider(client->dev.of_node);
-> > +			clk_unregister(data->hw.clk);
->=20
-> Is that needed ? I would have thought it isn't because you use a devm=
-_ function
-> to register it.
->=20
-> Not that I understand the clk code, but getting clk from the registra=
-tion
-> function and unregistering hw.clk (without seting it) sems a bit odd.
-> Is it well defined that you have to unregister hw.clk ?
-You're absolutely right. I'll remove all calls to clk_unregister().
-Thanks for finding that one.
+Hey,
 
-	S=C3=B6ren
+On Fri, Sep 20, 2013 at 03:00:18PM +0100, Russell King - ARM Linux wrote:
+> Another would be if subsystem maintainers are happy that I carry them,
+> I can add the acks, and then later on towards the end of the cycle,
+> provide a branch subsystem maintainers could pull.
+> 
+> Or... if you can think of something easier...
 
+I'm happy with the latter method and it's likely that you'll end up
+carrying at least some of the patches through your tree anyway.
+Please feel free to add my acks to all libata related patches and
+carry them through your tree.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks and have fun routing.
+
+-- 
+tejun
