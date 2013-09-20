@@ -1,53 +1,42 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 4/5] regulator: as3722: add regulator driver for AMS
- AS3722
-Date: Fri, 20 Sep 2013 18:08:47 +0100
-Message-ID: <20130920170847.GR21013@sirena.org.uk>
-References: <1379680214-9143-1-git-send-email-ldewangan@nvidia.com>
- <1379680214-9143-5-git-send-email-ldewangan@nvidia.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: new cpu iteration code...
+Date: Fri, 20 Sep 2013 13:16:11 -0400 (EDT)
+Message-ID: <20130920.131611.540827848496996215.davem@davemloft.net>
+References: <523AFB6C.5070300@gmail.com>
+	<20130919.133805.1227344435777214810.davem@davemloft.net>
+	<523C7B54.3070706@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3nbTfX4V9Gs/5Yhz"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1379680214-9143-5-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: lee.jones@linaro.org, sameo@linux.intel.com, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Florian Lobmaier <florian.lobmaier@ams.com>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <523C7B54.3070706-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org
+Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+Date: Fri, 20 Sep 2013 17:44:04 +0100
 
---3nbTfX4V9Gs/5Yhz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Makes sense, but as you mentioned before we need to match other property
+> names namely "upa-portid", "portid" or "cpuid" for cpu physical id right
+> ? Are all these 32-bit values ?
 
-On Fri, Sep 20, 2013 at 06:00:13PM +0530, Laxman Dewangan wrote:
-> The AMS AS3722 is a compact system PMU suitable for mobile phones,
-> tablets etc. It has 4 DCDC step down regulators, 3 DCDC step down
-> controller, 11 LDOs.
+Yes they are.  You'll simply have to make the property name string
+to use be something an architecture can define.
 
-Applied, thanks.
+>> I already gave a solution to this problem, make the loop iterator be:
+>> 
+>> 	for_each_node_by_type(dp, "cpu")
+>> 
+> 
+> Does it make sense use this only when /cpus is not found ?
 
---3nbTfX4V9Gs/5Yhz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+No, it should be used universally since it is an implementation that
+should work in all possible layouts.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSPIEbAAoJELSic+t+oim9xDEP/0nU7Qp6D1wCr/LbFIGcnfXD
-56PAT7omsjQy0q7y6bOvnqK82HgD8PNCQq9sxoOOuCSYj7sf6sBUq7BPnQwJZRXz
-0M3NwAZ+Ha8ZSN+Csp7qazEU7L3vfAvTAQZ42NXCwr27yJldmFR38mHuAuv0mxQ+
-ASL4OYTrFyC3TbgYkqBZ3UIz5yej2wtLg86CQGojPjpcXtnB4xry1eTnJg6ec8Id
-EpZQblgtzBHZbA3HxkMrnph2P+1pb6sVtpgcK+iPZA83xAJS9tzLsTb/yHPat3qu
-HgSoBKFqfAX56YFT+PiLsgMNoxsnlqHhS89BrHnFKynOH6LorkT9e57IN42NdCTK
-kAjz+qBn8R+LPtL2pgC5qweJ6dc4QWckV5c3w02HMNA/AOMGZzxmXlCiQ1VvWexG
-rVvJQUzXVSUJxbSDB6qhWSFuwOc7Mc/wtlWOmBfygWsM3ntHaimC96pjCJQlEhmX
-ZjHYAlUor1FTDW4SAxyBuiDytolW3Xga5jA1X0W3qYxlaMPhQLl2t5afvOUkhssd
-DTfKIYuikIujJpOME0D4KtlP4y8I1ndUAyfsMlD0Gt2jCHXtkOyfLMQDwugJh2A5
-8gnAZWThMaNdqVfzDekLJyuQ747v/Z3//zLKTOKw0wVrELIMjPRmv/Cm5aFAHE1p
-DVIQ5jiFcXtZFBZsAQE4
-=5t4b
------END PGP SIGNATURE-----
-
---3nbTfX4V9Gs/5Yhz--
+I do not buy your argument about cost at all.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
