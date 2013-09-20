@@ -1,83 +1,128 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 28/51] DMA-API: sound: fix dma mask handling in a lot of
- drivers
-Date: Fri, 20 Sep 2013 17:36:54 +0100
-Message-ID: <20130920163654.GN21013@sirena.org.uk>
-References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
- <E1VMm9m-0007ij-ER@rmk-PC.arm.linux.org.uk>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: new cpu iteration code...
+Date: Fri, 20 Sep 2013 17:44:04 +0100
+Message-ID: <523C7B54.3070706@arm.com>
+References: <20130918.173726.1443745664398441126.davem@davemloft.net> <523AC214.4040601@arm.com>	<523AFB6C.5070300@gmail.com> <20130919.133805.1227344435777214810.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4406136581201344290=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <E1VMm9m-0007ij-ER@rmk-PC.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, linux-mmc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-nvme@lists.infradead.org, Jaroslav Kysela <perex@perex.cz>, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-ide@vger.kernel.org, devel@driverdev.osuosl.org, linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, e1000-devel@lists.sourceforge.net, b43-dev@lists.infradead.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Timur Tabi <timur@tabi.org>, Kukjin Kim <kgene.kim@samsung.com>, dri-devel@lists.freedesktop.org, Ben Dooks <ben-linux@fluff.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, Eric Miao <eric.y.miao@gmail.com>, Sangbeom Kim <sbkim73@samsu>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130919.133805.1227344435777214810.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org, "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 19/09/13 18:38, David Miller wrote:
+> From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Date: Thu, 19 Sep 2013 08:26:04 -0500
+> 
+>> The simple solution here is to just remove the warning. It doesn't
+>> appear to me that sparc ever sets the cpu device of_node pointer.
+> 
+> Why wouldn't I want sparc to have this functionality now that the
+> code is generically available.
+> 
+Makes sense, but as you mentioned before we need to match other property
+names namely "upa-portid", "portid" or "cpuid" for cpu physical id right
+? Are all these 32-bit values ?
 
---===============4406136581201344290==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NbUNL4d9A9kY58qh"
-Content-Disposition: inline
+>> Are there any cases on where sparc does have a /cpus node? If so we'd
+>> need to make of_get_cpu_node a weak function or depend on a kconfig option.
+> 
+> I already gave a solution to this problem, make the loop iterator be:
+> 
+> 	for_each_node_by_type(dp, "cpu")
+> 
 
+Does it make sense use this only when /cpus is not found ?
+IMHO as the number of node in DT increases(which is the case on ARM
+platforms) parsing entire tree may be expensive(which can be avoided in
+case /cpus is found)
 
---NbUNL4d9A9kY58qh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+How about something like below ? I am not sure if of_n_addr_cells logic works
+for those properties on SPARC.
 
-On Thu, Sep 19, 2013 at 10:53:02PM +0100, Russell King wrote:
-> This code sequence is unsafe in modules:
->=20
-> static u64 mask =3D DMA_BIT_MASK(something);
-> ...
-> 	if (!dev->dma_mask)
-> 		dev->dma_mask =3D &mask;
+Regards,
+Sudeep
 
-Acked-by: Mark Brown <broonie@linaro.org>
+---->8
 
---NbUNL4d9A9kY58qh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index b2cee3d..83512ea 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -280,6 +280,31 @@ static bool __of_find_n_match_cpu_property(struct
+device_node *cpun,
+ 	return false;
+ }
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
++static bool __of_match_cpu_property(struct device_node *cpun, int cpu,
++							unsigned int *thread)
++	/* Check for non-standard "ibm,ppc-interrupt-server#s" property
++	 * for thread ids on PowerPC. If it doesn't exist fallback to
++	 * standard "reg" property.
++	 */
++	if (IS_ENABLED(CONFIG_PPC) &&
++		__of_find_n_match_cpu_property(cpun,
++				"ibm,ppc-interrupt-server#s", cpu, thread))
++		return true;
++	/* Check for "upa-portid" or "portid" property on SPARC */
++	if (IS_ENABLED(CONFIG_SPARC)) {
++		if (__of_find_n_match_cpu_property(cpun, "upa-portid",
++							cpu, thread))
++			return true;
++		if (__of_find_n_match_cpu_property(cpun, "portid",
++							cpu, thread))
++			return true;
++	}
++	if (__of_find_n_match_cpu_property(cpun, "reg", cpu, thread))
++		return true;
++
++	return false;
++}
+ /**
+  * of_get_cpu_node - Get device node associated with the given logical CPU
+  *
+@@ -303,24 +328,17 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int
+*thread)
+ 	struct device_node *cpun, *cpus;
 
-iQIcBAEBAgAGBQJSPHmjAAoJELSic+t+oim9WB4QAINsf282vDwWmQYHGXTeorHo
-q0pJ/9bTwBrSE0KzOK9H6UvL7oxCgzMPOT8RiSjWcdEXX/FavpH1TCf+ETkaYyEA
-NaPvO/uUV/99qWhM/PJQvtv4yxhIR7ENiZKywUuFnWQuc44yGUWBLK8ooA4xXtme
-WMcWyy7SMMcP/+9eBd9aNe1FPYFirsqSrrCpWSR/fD+TWFKMB6HG+OZGNYRFMrRm
-Xet5sWMGwzBiL453M0ujAEHKd/g4VOkweCydEq+2Rt2am6ph+SrMuoQvCDZ1bvbh
-71nyYA+j2xNy8jb7AA9PukWoeXyAI0xRY8zh939Uvdxf4SPUIVgw9wJE5rMRGoT5
-k4We/z2A4m1DGCtg1JQN86HAe7jv3YlGLoPOhsrOnOEV55VnXIz0Lm9x3HjTNfvG
-LcJXBGeHmU3Jvj3JEpA57YDbOhpwx0klK7RS5v6BjIJrJUSwjATqt1WQVr528HDp
-rXQpUqxUL3KObdlA5TYweR2I0KxWe47rw612XGqhRiI+equSdTDP770QsO1nXlsA
-qCfn3Gh7t+hyB3yFZUquWEXwKVv0YMh3Ds/bR2RtZluSl3SzM9n/Dp45w6SMu1LN
-oSpxUS7KNzTPXQp0kns7dDFnJJWXid7mUScjK4rc5pSyBF4NSEqJsmqHm0whd/qL
-uR8J7AFq8DkXx3g+/4gf
-=H53r
------END PGP SIGNATURE-----
+ 	cpus = of_find_node_by_path("/cpus");
+-	if (!cpus) {
+-		pr_warn("Missing cpus node, bailing out\n");
+-		return NULL;
+-	}
+-
+-	for_each_child_of_node(cpus, cpun) {
+-		if (of_node_cmp(cpun->type, "cpu"))
+-			continue;
+-		/* Check for non-standard "ibm,ppc-interrupt-server#s" property
+-		 * for thread ids on PowerPC. If it doesn't exist fallback to
+-		 * standard "reg" property.
+-		 */
+-		if (IS_ENABLED(CONFIG_PPC) &&
+-			__of_find_n_match_cpu_property(cpun,
+-				"ibm,ppc-interrupt-server#s", cpu, thread))
+-			return cpun;
+-		if (__of_find_n_match_cpu_property(cpun, "reg", cpu, thread))
+-			return cpun;
++	if (cpus) {
++		for_each_child_of_node(cpus, cpun) {
++			if (of_node_cmp(cpun->type, "cpu"))
++				continue;
++			if (__of_match_cpu_property(cpun, cpu, thread))
++				return cpun;
++		}
++	} else {
++		for_each_node_by_type(cpun, "cpu")
++			if (__of_match_cpu_property(cpun, cpu, thread))
++				return cpun;
+ 	}
+ 	return NULL;
+ }
 
---NbUNL4d9A9kY58qh--
-
-
---===============4406136581201344290==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4406136581201344290==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
