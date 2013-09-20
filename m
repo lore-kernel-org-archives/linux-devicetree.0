@@ -1,143 +1,179 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 3/5] gpio: add support for AMS AS3722 gpio driver
-Date: Fri, 20 Sep 2013 18:00:12 +0530
-Message-ID: <1379680214-9143-4-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH V2 4/5] regulator: as3722: add regulator driver for AMS AS3722
+Date: Fri, 20 Sep 2013 18:00:13 +0530
+Message-ID: <1379680214-9143-5-git-send-email-ldewangan@nvidia.com>
 References: <1379680214-9143-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1379680214-9143-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: lee.jones@linaro.org, sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org
 Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Laxman Dewangan <ldewangan@nvidia.com>, Florian Lobmaier <florian.lobmaier@ams.com>
 List-Id: devicetree@vger.kernel.org
 
-The AS3722 is a compact system PMU suitable for mobile phones, tablets etc.
+The AMS AS3722 is a compact system PMU suitable for mobile phones,
+tablets etc. It has 4 DCDC step down regulators, 3 DCDC step down
+controller, 11 LDOs.
 
-Add a driver to support accessing the 8 GPIOs found on the AMS AS3722
-PMIC using gpiolib.
+Add a driver to support accessing the DCDC/LDOs found on the AMS
+AS3722 PMIC using regulators.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 Signed-off-by: Florian Lobmaier <florian.lobmaier@ams.com>
 ---
 Changes from V1:
+- Add code to get regulator node handle.
 - Nit cleanups in driver and use module_platform_driver.
+- Use linear_range and added regulator_map_* on regulators.
+- Move OC configuration to regulator_current limit setting.
 
- .../devicetree/bindings/gpio/gpio-as3722.txt       |   62 +++
- drivers/gpio/Kconfig                               |    6 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-as3722.c                         |  435 ++++++++++++++++++++
- 4 files changed, 504 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-as3722.txt
- create mode 100644 drivers/gpio/gpio-as3722.c
+ .../bindings/regulator/as3722-regulator.txt        |   91 ++
+ drivers/regulator/Kconfig                          |    8 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/as3722-regulator.c               |  917 ++++++++++++++++++++
+ 4 files changed, 1017 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/as3722-regulator.txt
+ create mode 100644 drivers/regulator/as3722-regulator.c
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-as3722.txt b/Documentation/devicetree/bindings/gpio/gpio-as3722.txt
+diff --git a/Documentation/devicetree/bindings/regulator/as3722-regulator.txt b/Documentation/devicetree/bindings/regulator/as3722-regulator.txt
 new file mode 100644
-index 0000000..8d46dd3
+index 0000000..caad0c8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-as3722.txt
-@@ -0,0 +1,62 @@
-+GPIO of AMS AS3722 PMIC.
++++ b/Documentation/devicetree/bindings/regulator/as3722-regulator.txt
+@@ -0,0 +1,91 @@
++Regulator of AMS AS3722 PMIC.
++Name of the regulator subnode must be "regulators".
 +
-+Name of GPIO subnode should be "gpio".
-+Required properties:
++Optional properties:
 +--------------------
-+- #address-cells: Number of address of the sub node of this node. Must be 1.
-+- #size-cells: Size of addess cells. Must be 1.
++The input supply of regulators are the optional properties on the
++regulator node. The AS3722 is having 7 DCDC step-down regulators as
++sd[0-6], 10 LDOs as ldo[0-7], ldo[9-11]. The input supply of these
++regulators are provided through following properties:
++vsup-sd2-supply: Input supply for SD2.
++vsup-sd3-supply: Input supply for SD3.
++vsup-sd4-supply: Input supply for SD4.
++vsup-sd5-supply: Input supply for SD5.
++vin-ldo0-supply: Input supply for LDO0.
++vin-ldo1-6-supply: Input supply for LDO1 and LDO6.
++vin-ldo2-5-7-supply: Input supply for LDO2, LDO5 and LDO7.
++vin-ldo3-4-supply: Input supply for LDO3 and LDO4.
++vin-ldo9-10-supply: Input supply for LDO9 and LDO10.
++vin-ldo11-supply: Input supply for LDO11.
 +
-+Sub node:
-+--------
-+The sub nodes provides the configuration of each GPIO pins. The properties of the
-+nodes are as follows:
++Optional nodes:
++--------------
++- regulators : Must contain a sub-node per regulator from the list below.
++	       Each sub-node should contain the constraints and initialization
++	       information for that regulator. See regulator.txt for a
++	       description of standard properties for these sub-nodes.
++	       Additional custom properties  are listed below.
++	       sd[0-6], ldo[0-7], ldo[9-11].
 +
-+Required subnode properties:
-+---------------------------
-+reg: The GPIO number on which the properties need to be applied.
-+
-+Optional subnode properties:
-+---------------------------
-+bias-pull-up: The Pull-up for the pin to be enable.
-+bias-pull-down: Pull down of the pins to be enable.
-+bias-high-impedance: High impedance of the pin to be enable.
-+open-drain: Pin is open drain type.
-+function: IO functionality of the pins. The valid options are:
-+	gpio, intrrupt-output, vsup-vbat-low-undeb, interrupt-input,
-+	pwm-input, voltage-stby, oc-powergood-sd0, powergood-output,
-+	clk32k-output, watchdog-input, soft-reset-input, pwm-output,
-+	vsup-vbat-low-deb, oc-powergood-sd6
-+    Missing the function property will set the pin in GPIO mode.
-+
-+ams,enable-gpio-invert: Enable invert of the signal on GPIO pin.
++	       Optional sub-node properties:
++	       ----------------------------
++		ams,ext-control: External control of the rail. The option of
++			this properties will tell which external input is
++			controlling this rail. Valid values are 0, 1, 2 ad 3.
++			0: There is no external control of this rail.
++			1: Rail is controlled by ENABLE1 input pin.
++			2: Rail is controlled by ENABLE2 input pin.
++			3: Rail is controlled by ENABLE3 input pin.
++		ams,enable-tracking: Enable tracking with SD1, only supported
++			by LDO3.
 +
 +Example:
-+	ams3722:: ams3722 {
++-------
++	ams3722: ams3722 {
 +		compatible = "ams,as3722";
++		reg = <0x40>;
 +		...
-+		gpio-controller;
-+		#gpio-cells = <2>;
 +
-+		gpio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			gpio@0 {
-+				reg = <0>;
-+				bias-pull-down;
-+			};
-+
-+			gpio@1 {
-+				reg = <1>;
-+				bias-pull-up;
-+				ams,enable-gpio-invert;
-+			};
-+
++		regulators {
++			vsup-sd2-supply = <...>;
 +			...
-+			gpio@5 {
-+				reg = <5>;
-+				unction  = "clk32k-output";
++
++			sd0 {
++				regulator-name = "vdd_cpu";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1400000>;
++				regulator-always-on;
++				ams,ext-control = <2>;
 +			};
-+			...
++
++			sd1 {
++				regulator-name = "vdd_core";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1400000>;
++				regulator-always-on;
++				ams,ext-control = <1>;
++			};
++
++			sd2 {
++				regulator-name = "vddio_ddr";
++				regulator-min-microvolt = <1350000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++			};
++
++			sd4 {
++				regulator-name = "avdd-hdmi-pex";
++				regulator-min-microvolt = <1050000>;
++				regulator-max-microvolt = <1050000>;
++				regulator-always-on;
++			};
++
++			sd5 {
++				regulator-name = "vdd-1v8";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++			....
 +		};
-+		...
 +	};
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b6ed304..544a612 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -368,6 +368,12 @@ config GPIO_ARIZONA
- 	help
- 	  Support for GPIOs on Wolfson Arizona class devices.
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 1100205..ce785f4 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -123,6 +123,14 @@ config REGULATOR_AS3711
+ 	  This driver provides support for the voltage regulators on the
+ 	  AS3711 PMIC
  
-+config GPIO_AS3722
-+	bool "AMS AS3722 PMICs GPIO"
++config REGULATOR_AS3722
++	tristate "AMS AS3722 PMIC Regulators"
 +	depends on MFD_AS3722
 +	help
-+	  Select this option to enable GPIO driver for the AMS AS3722 PMIC.
++	  This driver provides support for the voltage regulators on the
++	  AS3722 PMIC. This will enable support for all the software
++	  controllable DCDC/LDO regulators.
 +
- config GPIO_MAX7300
- 	tristate "Maxim MAX7300 GPIO expander"
- 	depends on I2C
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 98e23eb..d1715a0 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_GPIO_ADP5520)	+= gpio-adp5520.o
- obj-$(CONFIG_GPIO_ADP5588)	+= gpio-adp5588.o
- obj-$(CONFIG_GPIO_AMD8111)	+= gpio-amd8111.o
- obj-$(CONFIG_GPIO_ARIZONA)	+= gpio-arizona.o
-+obj-$(CONFIG_GPIO_AS3722)	+= gpio-as3722.o
- obj-$(CONFIG_GPIO_BT8XX)	+= gpio-bt8xx.o
- obj-$(CONFIG_GPIO_CLPS711X)	+= gpio-clps711x.o
- obj-$(CONFIG_GPIO_CS5535)	+= gpio-cs5535.o
-diff --git a/drivers/gpio/gpio-as3722.c b/drivers/gpio/gpio-as3722.c
+ config REGULATOR_DA903X
+ 	tristate "Dialog Semiconductor DA9030/DA9034 regulators"
+ 	depends on PMIC_DA903X
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index c328e08..01c597e 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -18,6 +18,7 @@ obj-$(CONFIG_REGULATOR_AD5398) += ad5398.o
+ obj-$(CONFIG_REGULATOR_ANATOP) += anatop-regulator.o
+ obj-$(CONFIG_REGULATOR_ARIZONA) += arizona-micsupp.o arizona-ldo1.o
+ obj-$(CONFIG_REGULATOR_AS3711) += as3711-regulator.o
++obj-$(CONFIG_REGULATOR_AS3722) += as3722-regulator.o
+ obj-$(CONFIG_REGULATOR_DA903X)	+= da903x.o
+ obj-$(CONFIG_REGULATOR_DA9052)	+= da9052-regulator.o
+ obj-$(CONFIG_REGULATOR_DA9055)	+= da9055-regulator.o
+diff --git a/drivers/regulator/as3722-regulator.c b/drivers/regulator/as3722-regulator.c
 new file mode 100644
-index 0000000..44b5a75
+index 0000000..16a5d26
 --- /dev/null
-+++ b/drivers/gpio/gpio-as3722.c
-@@ -0,0 +1,435 @@
++++ b/drivers/regulator/as3722-regulator.c
+@@ -0,0 +1,917 @@
 +/*
-+ * gpiolib support for ams AS3722 PMICs
++ * Voltage regulator support for AMS AS3722 PMIC
 + *
-+ * Copyright (C) 2013 ams AG
++ * Copyright (C) 2013 ams
 + *
 + * Author: Florian Lobmaier <florian.lobmaier@ams.com>
 + * Author: Laxman Dewangan <ldewangan@nvidia.com>
@@ -158,416 +194,899 @@ index 0000000..44b5a75
 + *
 + */
 +
-+#include <linux/gpio.h>
++#include <linux/err.h>
 +#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/mfd/as3722.h>
 +#include <linux/of.h>
-+#include <linux/of_device.h>
++#include <linux/of_platform.h>
 +#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
 +#include <linux/slab.h>
 +
-+#define AS3722_MAX_GPIO				8
-+#define AS3722_GPIO_MODE_PROP_PULL_UP		0x1
-+#define AS3722_GPIO_MODE_PROP_PULL_DOWN		0x2
-+#define AS3722_GPIO_MODE_PROP_HIGH_IMPED	0x4
-+#define AS3722_GPIO_MODE_PROP_OPEN_DRAIN	0x8
-+
-+struct as3722_gpio_control {
-+	bool enable_gpio_invert;
-+	unsigned mode_prop;
-+	int io_function;
++/* Regulator IDs */
++enum as3722_regulators_id {
++	AS3722_REGULATOR_ID_SD0,
++	AS3722_REGULATOR_ID_SD1,
++	AS3722_REGULATOR_ID_SD2,
++	AS3722_REGULATOR_ID_SD3,
++	AS3722_REGULATOR_ID_SD4,
++	AS3722_REGULATOR_ID_SD5,
++	AS3722_REGULATOR_ID_SD6,
++	AS3722_REGULATOR_ID_LDO0,
++	AS3722_REGULATOR_ID_LDO1,
++	AS3722_REGULATOR_ID_LDO2,
++	AS3722_REGULATOR_ID_LDO3,
++	AS3722_REGULATOR_ID_LDO4,
++	AS3722_REGULATOR_ID_LDO5,
++	AS3722_REGULATOR_ID_LDO6,
++	AS3722_REGULATOR_ID_LDO7,
++	AS3722_REGULATOR_ID_LDO9,
++	AS3722_REGULATOR_ID_LDO10,
++	AS3722_REGULATOR_ID_LDO11,
++	AS3722_REGULATOR_ID_MAX,
 +};
 +
-+struct as3722_gpio {
-+	struct gpio_chip gpio_chip;
++struct as3722_register_mapping {
++	u8 regulator_id;
++	const char *name;
++	const char *sname;
++	u8 vsel_reg;
++	u8 vsel_mask;
++	int n_voltages;
++	u32 enable_reg;
++	u8 enable_mask;
++	u32 control_reg;
++	u8 mode_mask;
++	u32 sleep_ctrl_reg;
++	u8 sleep_ctrl_mask;
++};
++
++struct as3722_regulator_config_data {
++	struct regulator_init_data *reg_init;
++	bool enable_tracking;
++	int ext_control;
++};
++
++struct as3722_regulators {
 +	struct device *dev;
 +	struct as3722 *as3722;
-+	struct as3722_gpio_control gpio_control[AS3722_MAX_GPIO];
++	struct regulator_dev *rdevs[AS3722_REGULATOR_ID_MAX];
++	struct regulator_desc desc[AS3722_REGULATOR_ID_MAX];
++	struct as3722_regulator_config_data
++			reg_config_data[AS3722_REGULATOR_ID_MAX];
 +};
 +
-+struct as3722_gpio_mode_property {
-+	const char *prop;
-+	u32 prop_val;
-+};
-+
-+static char const *as3722_gpio_iosf[] = {
-+	"gpio",
-+	"intrrupt-output",
-+	"vsup-vbat-low-undeb",
-+	"interrupt-input",
-+	"pwm-input",
-+	"voltage-stby",
-+	"oc-powergood-sd0",
-+	"powergood-output",
-+	"clk32k-output",
-+	"watchdog-input",
-+	"unused",
-+	"soft-reset-input",
-+	"pwm-output",
-+	"vsup-vbat-low-deb",
-+	"oc-powergood-sd6",
-+	"unused1"
-+};
-+
-+static const struct as3722_gpio_mode_property const as3722_gpio_mode_props[] = {
++static const struct as3722_register_mapping as3722_reg_lookup[] = {
 +	{
-+		.prop = "bias-pull-up",
-+		.prop_val = AS3722_GPIO_MODE_PROP_PULL_UP,
-+	}, {
-+		.prop = "bias-pull-down",
-+		.prop_val = AS3722_GPIO_MODE_PROP_PULL_DOWN,
-+	}, {
-+		.prop = "bias-high-impedance",
-+		.prop_val = AS3722_GPIO_MODE_PROP_HIGH_IMPED,
-+	}, {
-+		.prop = "open-drain",
-+		.prop_val = AS3722_GPIO_MODE_PROP_OPEN_DRAIN,
++		.regulator_id = AS3722_REGULATOR_ID_SD0,
++		.name = "as3722-sd0",
++		.vsel_reg = AS3722_SD0_VOLTAGE_REG,
++		.vsel_mask = AS3722_SD_VSEL_MASK,
++		.enable_reg = AS3722_SD_CONTROL_REG,
++		.enable_mask = AS3722_SDn_CTRL(0),
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL1_REG,
++		.sleep_ctrl_mask = AS3722_SD0_EXT_ENABLE_MASK,
++		.control_reg = AS3722_SD0_CONTROL_REG,
++		.mode_mask = AS3722_SD0_MODE_FAST,
++		.n_voltages = AS3722_SD0_VSEL_MAX,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_SD1,
++		.name = "as3722-sd1",
++		.vsel_reg = AS3722_SD1_VOLTAGE_REG,
++		.vsel_mask = AS3722_SD_VSEL_MASK,
++		.enable_reg = AS3722_SD_CONTROL_REG,
++		.enable_mask = AS3722_SDn_CTRL(1),
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL1_REG,
++		.sleep_ctrl_mask = AS3722_SD1_EXT_ENABLE_MASK,
++		.control_reg = AS3722_SD1_CONTROL_REG,
++		.mode_mask = AS3722_SD1_MODE_FAST,
++		.n_voltages = AS3722_SD0_VSEL_MAX,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_SD2,
++		.name = "as3722-sd2",
++		.sname = "vsup-sd2",
++		.vsel_reg = AS3722_SD2_VOLTAGE_REG,
++		.vsel_mask = AS3722_SD_VSEL_MASK,
++		.enable_reg = AS3722_SD_CONTROL_REG,
++		.enable_mask = AS3722_SDn_CTRL(2),
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL1_REG,
++		.sleep_ctrl_mask = AS3722_SD2_EXT_ENABLE_MASK,
++		.control_reg = AS3722_SD23_CONTROL_REG,
++		.mode_mask = AS3722_SD2_MODE_FAST,
++		.n_voltages = AS3722_SD2_VSEL_MAX,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_SD3,
++		.name = "as3722-sd3",
++		.sname = "vsup-sd3",
++		.vsel_reg = AS3722_SD3_VOLTAGE_REG,
++		.vsel_mask = AS3722_SD_VSEL_MASK,
++		.enable_reg = AS3722_SD_CONTROL_REG,
++		.enable_mask = AS3722_SDn_CTRL(3),
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL1_REG,
++		.sleep_ctrl_mask = AS3722_SD3_EXT_ENABLE_MASK,
++		.control_reg = AS3722_SD23_CONTROL_REG,
++		.mode_mask = AS3722_SD3_MODE_FAST,
++		.n_voltages = AS3722_SD2_VSEL_MAX,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_SD4,
++		.name = "as3722-sd4",
++		.sname = "vsup-sd4",
++		.vsel_reg = AS3722_SD4_VOLTAGE_REG,
++		.vsel_mask = AS3722_SD_VSEL_MASK,
++		.enable_reg = AS3722_SD_CONTROL_REG,
++		.enable_mask = AS3722_SDn_CTRL(4),
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL2_REG,
++		.sleep_ctrl_mask = AS3722_SD4_EXT_ENABLE_MASK,
++		.control_reg = AS3722_SD4_CONTROL_REG,
++		.mode_mask = AS3722_SD4_MODE_FAST,
++		.n_voltages = AS3722_SD2_VSEL_MAX,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_SD5,
++		.name = "as3722-sd5",
++		.sname = "vsup-sd5",
++		.vsel_reg = AS3722_SD5_VOLTAGE_REG,
++		.vsel_mask = AS3722_SD_VSEL_MASK,
++		.enable_reg = AS3722_SD_CONTROL_REG,
++		.enable_mask = AS3722_SDn_CTRL(5),
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL2_REG,
++		.sleep_ctrl_mask = AS3722_SD5_EXT_ENABLE_MASK,
++		.control_reg = AS3722_SD5_CONTROL_REG,
++		.mode_mask = AS3722_SD5_MODE_FAST,
++		.n_voltages = AS3722_SD2_VSEL_MAX,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_SD6,
++		.name = "as3722-sd6",
++		.vsel_reg = AS3722_SD6_VOLTAGE_REG,
++		.vsel_mask = AS3722_SD_VSEL_MASK,
++		.enable_reg = AS3722_SD_CONTROL_REG,
++		.enable_mask = AS3722_SDn_CTRL(6),
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL2_REG,
++		.sleep_ctrl_mask = AS3722_SD6_EXT_ENABLE_MASK,
++		.control_reg = AS3722_SD6_CONTROL_REG,
++		.mode_mask = AS3722_SD6_MODE_FAST,
++		.n_voltages = AS3722_SD0_VSEL_MAX,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_LDO0,
++		.name = "as3722-ldo0",
++		.sname = "vin-ldo0",
++		.vsel_reg = AS3722_LDO0_VOLTAGE_REG,
++		.vsel_mask = AS3722_LDO0_VSEL_MASK,
++		.enable_reg = AS3722_LDOCONTROL0_REG,
++		.enable_mask = AS3722_LDO0_CTRL,
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL3_REG,
++		.sleep_ctrl_mask = AS3722_LDO0_EXT_ENABLE_MASK,
++		.n_voltages = AS3722_LDO0_NUM_VOLT,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_LDO1,
++		.name = "as3722-ldo1",
++		.sname = "vin-ldo1-6",
++		.vsel_reg = AS3722_LDO1_VOLTAGE_REG,
++		.vsel_mask = AS3722_LDO_VSEL_MASK,
++		.enable_reg = AS3722_LDOCONTROL0_REG,
++		.enable_mask = AS3722_LDO1_CTRL,
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL3_REG,
++		.sleep_ctrl_mask = AS3722_LDO1_EXT_ENABLE_MASK,
++		.n_voltages = AS3722_LDO_NUM_VOLT,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_LDO2,
++		.name = "as3722-ldo2",
++		.sname = "vin-ldo2-5-7",
++		.vsel_reg = AS3722_LDO2_VOLTAGE_REG,
++		.vsel_mask = AS3722_LDO_VSEL_MASK,
++		.enable_reg = AS3722_LDOCONTROL0_REG,
++		.enable_mask = AS3722_LDO2_CTRL,
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL3_REG,
++		.sleep_ctrl_mask = AS3722_LDO2_EXT_ENABLE_MASK,
++		.n_voltages = AS3722_LDO_NUM_VOLT,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_LDO3,
++		.name = "as3722-ldo3",
++		.name = "vin-ldo3-4",
++		.vsel_reg = AS3722_LDO3_VOLTAGE_REG,
++		.vsel_mask = AS3722_LDO3_VSEL_MASK,
++		.enable_reg = AS3722_LDOCONTROL0_REG,
++		.enable_mask = AS3722_LDO3_CTRL,
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL3_REG,
++		.sleep_ctrl_mask = AS3722_LDO3_EXT_ENABLE_MASK,
++		.n_voltages = AS3722_LDO3_NUM_VOLT,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_LDO4,
++		.name = "as3722-ldo4",
++		.name = "vin-ldo3-4",
++		.vsel_reg = AS3722_LDO4_VOLTAGE_REG,
++		.vsel_mask = AS3722_LDO_VSEL_MASK,
++		.enable_reg = AS3722_LDOCONTROL0_REG,
++		.enable_mask = AS3722_LDO4_CTRL,
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL4_REG,
++		.sleep_ctrl_mask = AS3722_LDO4_EXT_ENABLE_MASK,
++		.n_voltages = AS3722_LDO_NUM_VOLT,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_LDO5,
++		.name = "as3722-ldo5",
++		.sname = "vin-ldo2-5-7",
++		.vsel_reg = AS3722_LDO5_VOLTAGE_REG,
++		.vsel_mask = AS3722_LDO_VSEL_MASK,
++		.enable_reg = AS3722_LDOCONTROL0_REG,
++		.enable_mask = AS3722_LDO5_CTRL,
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL4_REG,
++		.sleep_ctrl_mask = AS3722_LDO5_EXT_ENABLE_MASK,
++		.n_voltages = AS3722_LDO_NUM_VOLT,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_LDO6,
++		.name = "as3722-ldo6",
++		.sname = "vin-ldo1-6",
++		.vsel_reg = AS3722_LDO6_VOLTAGE_REG,
++		.vsel_mask = AS3722_LDO_VSEL_MASK,
++		.enable_reg = AS3722_LDOCONTROL0_REG,
++		.enable_mask = AS3722_LDO6_CTRL,
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL4_REG,
++		.sleep_ctrl_mask = AS3722_LDO6_EXT_ENABLE_MASK,
++		.n_voltages = AS3722_LDO_NUM_VOLT,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_LDO7,
++		.name = "as3722-ldo7",
++		.sname = "vin-ldo2-5-7",
++		.vsel_reg = AS3722_LDO7_VOLTAGE_REG,
++		.vsel_mask = AS3722_LDO_VSEL_MASK,
++		.enable_reg = AS3722_LDOCONTROL0_REG,
++		.enable_mask = AS3722_LDO7_CTRL,
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL4_REG,
++		.sleep_ctrl_mask = AS3722_LDO7_EXT_ENABLE_MASK,
++		.n_voltages = AS3722_LDO_NUM_VOLT,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_LDO9,
++		.name = "as3722-ldo9",
++		.sname = "vin-ldo9-10",
++		.vsel_reg = AS3722_LDO9_VOLTAGE_REG,
++		.vsel_mask = AS3722_LDO_VSEL_MASK,
++		.enable_reg = AS3722_LDOCONTROL1_REG,
++		.enable_mask = AS3722_LDO9_CTRL,
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL5_REG,
++		.sleep_ctrl_mask = AS3722_LDO9_EXT_ENABLE_MASK,
++		.n_voltages = AS3722_LDO_NUM_VOLT,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_LDO10,
++		.name = "as3722-ldo10",
++		.sname = "vin-ldo9-10",
++		.vsel_reg = AS3722_LDO10_VOLTAGE_REG,
++		.vsel_mask = AS3722_LDO_VSEL_MASK,
++		.enable_reg = AS3722_LDOCONTROL1_REG,
++		.enable_mask = AS3722_LDO10_CTRL,
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL5_REG,
++		.sleep_ctrl_mask = AS3722_LDO10_EXT_ENABLE_MASK,
++		.n_voltages = AS3722_LDO_NUM_VOLT,
++	},
++	{
++		.regulator_id = AS3722_REGULATOR_ID_LDO11,
++		.name = "as3722-ldo11",
++		.sname = "vin-ldo11",
++		.vsel_reg = AS3722_LDO11_VOLTAGE_REG,
++		.vsel_mask = AS3722_LDO_VSEL_MASK,
++		.enable_reg = AS3722_LDOCONTROL1_REG,
++		.enable_mask = AS3722_LDO11_CTRL,
++		.sleep_ctrl_reg = AS3722_ENABLE_CTRL5_REG,
++		.sleep_ctrl_mask = AS3722_LDO11_EXT_ENABLE_MASK,
++		.n_voltages = AS3722_LDO_NUM_VOLT,
 +	},
 +};
 +
-+static int as3722_gpio_get_mode(unsigned gpio_mode_prop, bool input)
-+{
-+	if (gpio_mode_prop & AS3722_GPIO_MODE_PROP_HIGH_IMPED)
-+		return -EINVAL;
 +
-+	if (gpio_mode_prop & AS3722_GPIO_MODE_PROP_OPEN_DRAIN) {
-+		if (gpio_mode_prop & AS3722_GPIO_MODE_PROP_PULL_UP)
-+			return AS3722_GPIO_MODE_IO_OPEN_DRAIN_PULL_UP;
-+		return AS3722_GPIO_MODE_IO_OPEN_DRAIN;
++static const int as3722_ldo_current[] = { 150000, 300000 };
++static const int as3722_sd016_current[] = { 2500000, 3000000, 3500000 };
++
++static int as3722_current_to_index(int min_uA, int max_uA,
++		const int *curr_table, int n_currents)
++{
++	int i;
++
++	for (i = n_currents - 1; i >= 0; i--) {
++		if ((min_uA <= curr_table[i]) && (curr_table[i] <= max_uA))
++			return i;
 +	}
-+	if (input) {
-+		if (gpio_mode_prop & AS3722_GPIO_MODE_PROP_PULL_UP)
-+			return AS3722_GPIO_MODE_INPUT_PULL_UP;
-+		else if (gpio_mode_prop & AS3722_GPIO_MODE_PROP_PULL_DOWN)
-+			return AS3722_GPIO_MODE_INPUT_PULL_DOWN;
-+		return AS3722_GPIO_MODE_INPUT;
-+	}
-+	if (gpio_mode_prop & AS3722_GPIO_MODE_PROP_PULL_DOWN)
-+		return AS3722_GPIO_MODE_OUTPUT_VDDL;
-+	return AS3722_GPIO_MODE_OUTPUT_VDDH;
++	return -EINVAL;
 +}
 +
-+static inline struct as3722_gpio *to_as3722_gpio(struct gpio_chip *chip)
++static int as3722_ldo_get_current_limit(struct regulator_dev *rdev)
 +{
-+	return container_of(chip, struct as3722_gpio, gpio_chip);
-+}
-+
-+static int as3722_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct as3722_gpio *as3722_gpio = to_as3722_gpio(chip);
-+	struct as3722 *as3722 = as3722_gpio->as3722;
-+	int ret;
-+	u32 reg;
-+	u32 control;
++	struct as3722_regulators *as3722_regs = rdev_get_drvdata(rdev);
++	struct as3722 *as3722 = as3722_regs->as3722;
++	int id = rdev_get_id(rdev);
 +	u32 val;
-+	int mode;
-+	int invert_enable;
++	int ret;
 +
-+	ret = as3722_read(as3722, AS3722_GPIOn_CONTROL_REG(offset), &control);
++	ret = as3722_read(as3722, as3722_reg_lookup[id].vsel_reg, &val);
 +	if (ret < 0) {
-+		dev_err(as3722_gpio->dev,
-+			"GPIO_CONTROL%d_REG read failed: %d\n", offset, ret);
++		dev_err(as3722_regs->dev, "Reg 0x%02x read failed: %d\n",
++			as3722_reg_lookup[id].vsel_reg, ret);
++		return ret;
++	}
++	if (val & AS3722_LDO_ILIMIT_MASK)
++		return 300000;
++	return 150000;
++}
++
++static int as3722_ldo_set_current_limit(struct regulator_dev *rdev,
++		int min_uA, int max_uA)
++{
++	struct as3722_regulators *as3722_regs = rdev_get_drvdata(rdev);
++	struct as3722 *as3722 = as3722_regs->as3722;
++	int id = rdev_get_id(rdev);
++	int ret;
++	u32 reg = 0;
++
++	ret = as3722_current_to_index(min_uA, max_uA, as3722_ldo_current,
++				ARRAY_SIZE(as3722_ldo_current));
++	if (ret < 0) {
++		dev_err(as3722_regs->dev,
++			"Current range min:max = %d:%d does not support\n",
++			min_uA, max_uA);
++		return ret;
++	}
++	if (ret)
++		reg = AS3722_LDO_ILIMIT_BIT;
++	return as3722_update_bits(as3722, as3722_reg_lookup[id].vsel_reg,
++			AS3722_LDO_ILIMIT_MASK, reg);
++}
++
++static struct regulator_ops as3722_ldo0_ops = {
++	.is_enabled = regulator_is_enabled_regmap,
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.list_voltage = regulator_list_voltage_linear,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_current_limit = as3722_ldo_get_current_limit,
++	.set_current_limit = as3722_ldo_set_current_limit,
++};
++
++static struct regulator_ops as3722_ldo0_extcntrl_ops = {
++	.list_voltage = regulator_list_voltage_linear,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_current_limit = as3722_ldo_get_current_limit,
++	.set_current_limit = as3722_ldo_set_current_limit,
++};
++
++static int as3722_ldo3_set_tracking_mode(struct as3722_regulators *as3722_reg,
++		int id, u8 mode)
++{
++	struct as3722 *as3722 = as3722_reg->as3722;
++
++	switch (mode) {
++	case AS3722_LDO3_MODE_PMOS:
++	case AS3722_LDO3_MODE_PMOS_TRACKING:
++	case AS3722_LDO3_MODE_NMOS:
++	case AS3722_LDO3_MODE_SWITCH:
++		return as3722_update_bits(as3722,
++			as3722_reg_lookup[id].vsel_reg,
++			AS3722_LDO3_MODE_MASK, mode);
++
++	default:
++		return -EINVAL;
++	}
++}
++
++static int as3722_ldo3_get_current_limit(struct regulator_dev *rdev)
++{
++	return 150000;
++}
++
++static struct regulator_ops as3722_ldo3_ops = {
++	.is_enabled = regulator_is_enabled_regmap,
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.list_voltage = regulator_list_voltage_linear,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_current_limit = as3722_ldo3_get_current_limit,
++};
++
++static struct regulator_ops as3722_ldo3_extcntrl_ops = {
++	.list_voltage = regulator_list_voltage_linear,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_current_limit = as3722_ldo3_get_current_limit,
++};
++
++#define regulator_lin_range(_min_sel, _max_sel, _min_uV, _step_uV)	\
++	{								\
++		.min_sel = _min_sel,					\
++		.max_sel = _max_sel,					\
++		.uV_step = _step_uV,					\
++		.min_uV = _min_uV,					\
++		.max_uV = _min_uV + (_max_sel - _min_sel + 1) * _step_uV, \
++	}
++
++static const struct regulator_linear_range as3722_ldo_ranges[] = {
++	regulator_lin_range(0x01, 0x24,  800000, 25000),
++	regulator_lin_range(0x40, 0x7F, 1725000, 25000),
++};
++
++static struct regulator_ops as3722_ldo_ops = {
++	.is_enabled = regulator_is_enabled_regmap,
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.map_voltage = regulator_map_voltage_linear_range,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.list_voltage = regulator_list_voltage_linear_range,
++	.get_current_limit = as3722_ldo_get_current_limit,
++	.set_current_limit = as3722_ldo_set_current_limit,
++};
++
++static struct regulator_ops as3722_ldo_extcntrl_ops = {
++	.map_voltage = regulator_map_voltage_linear_range,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.list_voltage = regulator_list_voltage_linear_range,
++	.get_current_limit = as3722_ldo_get_current_limit,
++	.set_current_limit = as3722_ldo_set_current_limit,
++};
++
++static unsigned int as3722_sd_get_mode(struct regulator_dev *rdev)
++{
++	struct as3722_regulators *as3722_regs = rdev_get_drvdata(rdev);
++	struct as3722 *as3722 = as3722_regs->as3722;
++	int id = rdev_get_id(rdev);
++	u32 val;
++	int ret;
++
++	if (!as3722_reg_lookup[id].control_reg)
++		return -ENOTSUPP;
++
++	ret = as3722_read(as3722, as3722_reg_lookup[id].control_reg, &val);
++	if (ret < 0) {
++		dev_err(as3722_regs->dev, "Reg 0x%02x read failed: %d\n",
++			as3722_reg_lookup[id].control_reg, ret);
 +		return ret;
 +	}
 +
-+	invert_enable = !!(control & AS3722_GPIO_INV);
-+	mode = control & AS3722_GPIO_MODE_MASK;
++	if (val & as3722_reg_lookup[id].mode_mask)
++		return REGULATOR_MODE_FAST;
++	else
++		return REGULATOR_MODE_NORMAL;
++}
++
++static int as3722_sd_set_mode(struct regulator_dev *rdev,
++		unsigned int mode)
++{
++	struct as3722_regulators *as3722_regs = rdev_get_drvdata(rdev);
++	struct as3722 *as3722 = as3722_regs->as3722;
++	u8 id = rdev_get_id(rdev);
++	u8 val = 0;
++	int ret;
++
++	if (!as3722_reg_lookup[id].control_reg)
++		return -ERANGE;
++
 +	switch (mode) {
-+	case AS3722_GPIO_MODE_INPUT:
-+	case AS3722_GPIO_MODE_INPUT_PULL_UP:
-+	case AS3722_GPIO_MODE_INPUT_PULL_DOWN:
-+	case AS3722_GPIO_MODE_IO_OPEN_DRAIN:
-+	case AS3722_GPIO_MODE_IO_OPEN_DRAIN_PULL_UP:
-+		reg = AS3722_GPIO_SIGNAL_IN_REG;
-+		break;
-+	case AS3722_GPIO_MODE_OUTPUT_VDDH:
-+	case AS3722_GPIO_MODE_OUTPUT_VDDL:
-+		reg = AS3722_GPIO_SIGNAL_OUT_REG;
++	case REGULATOR_MODE_FAST:
++		val = as3722_reg_lookup[id].mode_mask;
++	case REGULATOR_MODE_NORMAL: /* fall down */
 +		break;
 +	default:
 +		return -EINVAL;
 +	}
 +
-+	ret = as3722_read(as3722, reg, &val);
++	ret = as3722_update_bits(as3722, as3722_reg_lookup[id].control_reg,
++			as3722_reg_lookup[id].mode_mask, val);
 +	if (ret < 0) {
-+		dev_err(as3722_gpio->dev,
-+			"GPIO_SIGNAL_IN_REG read failed: %d\n", ret);
++		dev_err(as3722_regs->dev, "Reg 0x%02x update failed: %d\n",
++			as3722_reg_lookup[id].control_reg, ret);
 +		return ret;
 +	}
-+
-+	val = !!(val & AS3722_GPIOn_SIGNAL(offset));
-+	return (invert_enable) ? !val : val;
-+}
-+
-+static void as3722_gpio_set(struct gpio_chip *chip, unsigned offset,
-+		int value)
-+{
-+	struct as3722_gpio *as3722_gpio = to_as3722_gpio(chip);
-+	struct as3722 *as3722 = as3722_gpio->as3722;
-+	int en_invert = as3722_gpio->gpio_control[offset].enable_gpio_invert;
-+	u32 val;
-+	int ret;
-+
-+	if (value)
-+		val = (en_invert) ? 0 : AS3722_GPIOn_SIGNAL(offset);
-+	else
-+		val = (en_invert) ? AS3722_GPIOn_SIGNAL(offset) : 0;
-+
-+	ret = as3722_update_bits(as3722, AS3722_GPIO_SIGNAL_OUT_REG,
-+			AS3722_GPIOn_SIGNAL(offset), val);
-+	if (ret < 0)
-+		dev_err(as3722_gpio->dev,
-+			"GPIO_SIGNAL_OUT_REG update failed: %d\n", ret);
-+}
-+
-+static int as3722_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct as3722_gpio *as3722_gpio = to_as3722_gpio(chip);
-+	struct as3722 *as3722 = as3722_gpio->as3722;
-+	int mode;
-+
-+	mode = as3722_gpio_get_mode(as3722_gpio->gpio_control[offset].mode_prop,
-+			true);
-+	if (mode < 0) {
-+		dev_err(as3722_gpio->dev,
-+			"Input direction for GPIO %d not supported\n", offset);
-+		return mode;
-+	}
-+
-+	if (as3722_gpio->gpio_control[offset].enable_gpio_invert)
-+		mode |= AS3722_GPIO_INV;
-+
-+	return as3722_write(as3722, AS3722_GPIOn_CONTROL_REG(offset), mode);
-+}
-+
-+static int as3722_gpio_direction_output(struct gpio_chip *chip,
-+		unsigned offset, int value)
-+{
-+	struct as3722_gpio *as3722_gpio = to_as3722_gpio(chip);
-+	struct as3722 *as3722 = as3722_gpio->as3722;
-+	int mode;
-+
-+	mode = as3722_gpio_get_mode(as3722_gpio->gpio_control[offset].mode_prop,
-+			false);
-+	if (mode < 0) {
-+		dev_err(as3722_gpio->dev,
-+			"Output direction for GPIO %d not supported\n", offset);
-+		return mode;
-+	}
-+
-+	as3722_gpio_set(chip, offset, value);
-+	if (as3722_gpio->gpio_control[offset].enable_gpio_invert)
-+		mode |= AS3722_GPIO_INV;
-+	return as3722_write(as3722, AS3722_GPIOn_CONTROL_REG(offset), mode);
-+}
-+
-+static int as3722_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct as3722_gpio *as3722_gpio = to_as3722_gpio(chip);
-+
-+	return as3722_irq_get_virq(as3722_gpio->as3722, offset);
-+}
-+
-+static int as3722_gpio_request(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct as3722_gpio *as3722_gpio = to_as3722_gpio(chip);
-+
-+	if (as3722_gpio->gpio_control[offset].io_function)
-+		return -EBUSY;
-+	return 0;
-+}
-+
-+static int as3722_gpio_set_config(struct as3722_gpio *as3722_gpio,
-+		unsigned int gpio)
-+{
-+	struct as3722 *as3722 = as3722_gpio->as3722;
-+	int ret = 0;
-+	u8 val = 0;
-+
-+	val = AS3722_GPIO_IOSF_VAL(as3722_gpio->gpio_control[gpio].io_function);
-+	ret = as3722_update_bits(as3722, AS3722_GPIOn_CONTROL_REG(gpio),
-+			AS3722_GPIO_IOSF_MASK, val);
-+	if (ret < 0)
-+		dev_err(as3722->dev,
-+			"GPIO%d_CTRL_REG update failed %d\n", gpio, ret);
 +	return ret;
 +}
 +
-+static int as3722_gpio_init_configs(struct as3722_gpio *as3722_gpio)
++static int as3722_sd016_get_current_limit(struct regulator_dev *rdev)
 +{
-+	int ret;
-+	unsigned int i;
-+
-+	for (i = 0; i < AS3722_MAX_GPIO; i++) {
-+		if (!as3722_gpio->gpio_control[i].io_function)
-+			continue;
-+
-+		ret = as3722_gpio_set_config(as3722_gpio, i);
-+		if (ret < 0) {
-+			dev_err(as3722_gpio->dev,
-+				"GPIO %d config failed %d\n", i, ret);
-+			return ret;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int as3722_gpio_dt_subnode(struct as3722_gpio *as3722_gpio,
-+		struct device_node *child, int gpio)
-+{
-+	const char *iosf;
-+	int i;
-+	int ret;
-+	bool found;
-+	unsigned prop_val = 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(as3722_gpio_mode_props); ++i) {
-+		found = of_property_read_bool(child,
-+					as3722_gpio_mode_props[i].prop);
-+		if (found)
-+			prop_val |= as3722_gpio_mode_props[i].prop_val;
-+	}
-+	as3722_gpio->gpio_control[gpio].mode_prop = prop_val;
-+
-+	ret = of_property_read_string(child, "function", &iosf);
-+	if (!ret) {
-+		found = false;
-+		for (i = 0; i < ARRAY_SIZE(as3722_gpio_iosf); ++i) {
-+			if (!strcmp(as3722_gpio_iosf[i], iosf)) {
-+				found = true;
-+				break;
-+			}
-+		}
-+		if (found)
-+			as3722_gpio->gpio_control[gpio].io_function = i;
-+		else
-+			dev_warn(as3722_gpio->dev,
-+				"Child %s io function is invalid\n",
-+				child->name);
-+	}
-+
-+	as3722_gpio->gpio_control[gpio].enable_gpio_invert =
-+			of_property_read_bool(child, "ams,enable-gpio-invert");
-+	return 0;
-+}
-+
-+static int as3722_get_gpio_dt_data(struct platform_device *pdev,
-+		struct as3722_gpio *as3722_gpio)
-+{
-+	struct device_node *np;
-+	struct device_node *child;
-+	unsigned int gpio;
++	struct as3722_regulators *as3722_regs = rdev_get_drvdata(rdev);
++	struct as3722 *as3722 = as3722_regs->as3722;
++	int id = rdev_get_id(rdev);
++	u32 val, reg;
++	int mask;
 +	int ret;
 +
-+	np = of_get_child_by_name(pdev->dev.parent->of_node, "gpio");
-+	if (!np) {
-+		dev_err(&pdev->dev, "Device is not having gpio node\n");
-+		return -ENODEV;
++	switch (id) {
++	case AS3722_REGULATOR_ID_SD0:
++		reg = AS3722_OVCURRENT_REG;
++		mask = AS3722_OVCURRENT_SD0_TRIP_MASK;
++		break;
++	case AS3722_REGULATOR_ID_SD1:
++		reg = AS3722_OVCURRENT_REG;
++		mask = AS3722_OVCURRENT_SD1_TRIP_MASK;
++		break;
++	case AS3722_REGULATOR_ID_SD6:
++		reg = AS3722_OVCURRENT_DEB_REG;
++		mask = AS3722_OVCURRENT_SD6_TRIP_MASK;
++		break;
++	default:
++		return -EINVAL;
 +	}
-+
-+	for_each_child_of_node(np, child) {
-+		ret = of_property_read_u32(child, "reg", &gpio);
-+		if (ret < 0) {
-+			dev_warn(&pdev->dev,
-+				"reg property not present in node %s\n",
-+				child->name);
-+			continue;
-+		}
-+		if (gpio >=  AS3722_MAX_GPIO) {
-+			dev_warn(&pdev->dev,
-+			     "GPIO number %d is more than supported\n", gpio);
-+			continue;
-+		}
-+		ret = as3722_gpio_dt_subnode(as3722_gpio, child, gpio);
-+		if (ret < 0)
-+			dev_warn(&pdev->dev, "gpio %s node parse failed: %d\n",
-+				child->name, ret);
++	ret = as3722_read(as3722, reg, &val);
++	if (ret < 0) {
++		dev_err(as3722_regs->dev, "Reg 0x%02x read failed: %d\n",
++			reg, ret);
++		return ret;
 +	}
-+	return 0;
++	val &= mask;
++	val >>= ffs(mask) - 1;
++	if (val == 3)
++		return -EINVAL;
++	return as3722_sd016_current[val];
 +}
 +
-+static const struct gpio_chip as3722_gpio_chip = {
-+	.label			= "as3722-gpio",
-+	.owner			= THIS_MODULE,
-+	.direction_input	= as3722_gpio_direction_input,
-+	.get			= as3722_gpio_get,
-+	.direction_output	= as3722_gpio_direction_output,
-+	.set			= as3722_gpio_set,
-+	.to_irq			= as3722_gpio_to_irq,
-+	.request		= as3722_gpio_request,
-+	.can_sleep		= 1,
-+	.ngpio			= AS3722_MAX_GPIO,
-+	.base			= -1,
++static int as3722_sd016_set_current_limit(struct regulator_dev *rdev,
++		int min_uA, int max_uA)
++{
++	struct as3722_regulators *as3722_regs = rdev_get_drvdata(rdev);
++	struct as3722 *as3722 = as3722_regs->as3722;
++	int id = rdev_get_id(rdev);
++	int ret;
++	int val;
++	int mask;
++	u32 reg;
++
++	ret = as3722_current_to_index(min_uA, max_uA, as3722_sd016_current,
++				ARRAY_SIZE(as3722_sd016_current));
++	if (ret < 0) {
++		dev_err(as3722_regs->dev,
++			"Current range min:max = %d:%d does not support\n",
++			min_uA, max_uA);
++		return ret;
++	}
++
++	switch (id) {
++	case AS3722_REGULATOR_ID_SD0:
++		reg = AS3722_OVCURRENT_REG;
++		mask = AS3722_OVCURRENT_SD0_TRIP_MASK;
++		break;
++	case AS3722_REGULATOR_ID_SD1:
++		reg = AS3722_OVCURRENT_REG;
++		mask = AS3722_OVCURRENT_SD1_TRIP_MASK;
++		break;
++	case AS3722_REGULATOR_ID_SD6:
++		reg = AS3722_OVCURRENT_DEB_REG;
++		mask = AS3722_OVCURRENT_SD6_TRIP_MASK;
++		break;
++	default:
++		return -EINVAL;
++	}
++	val = ret & mask;
++	val <<= ffs(mask) - 1;
++	return as3722_update_bits(as3722, reg, mask, val);
++}
++
++static const struct regulator_linear_range as3722_sd2345_ranges[] = {
++	regulator_lin_range(0x01, 0x40,  600000, 12500),
++	regulator_lin_range(0x41, 0x70, 1400000, 25000),
++	regulator_lin_range(0x71, 0x7F, 1725000, 50000),
 +};
 +
-+static int as3722_gpio_probe(struct platform_device *pdev)
++static struct regulator_ops as3722_sd016_ops = {
++	.is_enabled = regulator_is_enabled_regmap,
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.list_voltage = regulator_list_voltage_linear,
++	.map_voltage = regulator_map_voltage_linear,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_current_limit = as3722_sd016_get_current_limit,
++	.set_current_limit = as3722_sd016_set_current_limit,
++	.get_mode = as3722_sd_get_mode,
++	.set_mode = as3722_sd_set_mode,
++};
++
++static struct regulator_ops as3722_sd016_extcntrl_ops = {
++	.list_voltage = regulator_list_voltage_linear,
++	.map_voltage = regulator_map_voltage_linear,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_current_limit = as3722_sd016_get_current_limit,
++	.set_current_limit = as3722_sd016_set_current_limit,
++	.get_mode = as3722_sd_get_mode,
++	.set_mode = as3722_sd_set_mode,
++};
++
++static struct regulator_ops as3722_sd2345_ops = {
++	.is_enabled = regulator_is_enabled_regmap,
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.list_voltage = regulator_list_voltage_linear_range,
++	.map_voltage = regulator_map_voltage_linear_range,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.get_mode = as3722_sd_get_mode,
++	.set_mode = as3722_sd_set_mode,
++};
++
++static struct regulator_ops as3722_sd2345_extcntrl_ops = {
++	.list_voltage = regulator_list_voltage_linear_range,
++	.map_voltage = regulator_map_voltage_linear_range,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.get_mode = as3722_sd_get_mode,
++	.set_mode = as3722_sd_set_mode,
++};
++
++static int as3722_extreg_init(struct as3722_regulators *as3722_regs, int id,
++		int ext_pwr_ctrl)
 +{
-+	struct as3722 *as3722 =  dev_get_drvdata(pdev->dev.parent);
-+	struct as3722_gpio *as3722_gpio;
++	int ret;
++	unsigned int val;
++
++	if ((ext_pwr_ctrl < AS3722_EXT_CONTROL_ENABLE1) ||
++		(ext_pwr_ctrl > AS3722_EXT_CONTROL_ENABLE3))
++		return -EINVAL;
++
++	val =  ext_pwr_ctrl << (ffs(as3722_reg_lookup[id].sleep_ctrl_mask) - 1);
++	ret = as3722_update_bits(as3722_regs->as3722,
++			as3722_reg_lookup[id].sleep_ctrl_reg,
++			as3722_reg_lookup[id].sleep_ctrl_mask, val);
++	if (ret < 0)
++		dev_err(as3722_regs->dev, "Reg 0x%02x update failed: %d\n",
++			as3722_reg_lookup[id].sleep_ctrl_reg, ret);
++	return ret;
++}
++
++static struct of_regulator_match as3722_regulator_matches[] = {
++	{ .name = "sd0", },
++	{ .name = "sd1", },
++	{ .name = "sd2", },
++	{ .name = "sd3", },
++	{ .name = "sd4", },
++	{ .name = "sd5", },
++	{ .name = "sd6", },
++	{ .name = "ldo0", },
++	{ .name = "ldo1", },
++	{ .name = "ldo2", },
++	{ .name = "ldo3", },
++	{ .name = "ldo4", },
++	{ .name = "ldo5", },
++	{ .name = "ldo6", },
++	{ .name = "ldo7", },
++	{ .name = "ldo9", },
++	{ .name = "ldo10", },
++	{ .name = "ldo11", },
++};
++
++static int as3722_get_regulator_dt_data(struct platform_device *pdev,
++		struct as3722_regulators *as3722_regs)
++{
++	struct device_node *np;
++	struct as3722_regulator_config_data *reg_config;
++	u32 prop;
++	int id;
 +	int ret;
 +
-+	as3722_gpio = devm_kzalloc(&pdev->dev, sizeof(*as3722_gpio),
++	np = of_get_child_by_name(pdev->dev.parent->of_node, "regulators");
++	if (!np) {
++		dev_err(&pdev->dev, "Device is not having regulators node\n");
++		return -ENODEV;
++	}
++	pdev->dev.of_node = np;
++
++	ret = of_regulator_match(&pdev->dev, np, as3722_regulator_matches,
++			ARRAY_SIZE(as3722_regulator_matches));
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Parsing of regulator node failed: %d\n",
++			ret);
++		return ret;
++	}
++
++	for (id = 0; id < ARRAY_SIZE(as3722_regulator_matches); ++id) {
++		struct device_node *reg_node;
++
++		reg_config = &as3722_regs->reg_config_data[id];
++		reg_config->reg_init = as3722_regulator_matches[id].init_data;
++		reg_node = as3722_regulator_matches[id].of_node;
++
++		if (!reg_config->reg_init || !reg_node)
++			continue;
++
++		ret = of_property_read_u32(reg_node, "ams,ext-control", &prop);
++		if (!ret) {
++			if (prop < 3)
++				reg_config->ext_control = prop;
++			else
++				dev_warn(&pdev->dev,
++					"ext-control have invalid option: %u\n",
++					prop);
++		}
++		reg_config->enable_tracking =
++			of_property_read_bool(reg_node, "ams,enable-tracking");
++	}
++	return 0;
++}
++
++static int as3722_regulator_probe(struct platform_device *pdev)
++{
++	struct as3722 *as3722 = dev_get_drvdata(pdev->dev.parent);
++	struct as3722_regulators *as3722_regs;
++	struct as3722_regulator_config_data *reg_config;
++	struct regulator_dev *rdev;
++	struct regulator_config config = { };
++	struct regulator_ops *ops;
++	int id;
++	int ret;
++
++	as3722_regs = devm_kzalloc(&pdev->dev, sizeof(*as3722_regs),
 +				GFP_KERNEL);
-+	if (!as3722_gpio)
++	if (!as3722_regs)
 +		return -ENOMEM;
 +
-+	ret = as3722_get_gpio_dt_data(pdev, as3722_gpio);
++	as3722_regs->dev = &pdev->dev;
++	as3722_regs->as3722 = as3722;
++	platform_set_drvdata(pdev, as3722_regs);
++
++	ret = as3722_get_regulator_dt_data(pdev, as3722_regs);
 +	if (ret < 0)
 +		return ret;
 +
-+	as3722_gpio->as3722 = as3722;
-+	as3722_gpio->dev = &pdev->dev;
-+	as3722_gpio->gpio_chip = as3722_gpio_chip;
-+	as3722_gpio->gpio_chip.dev = &pdev->dev;
-+	as3722_gpio->gpio_chip.of_node = pdev->dev.parent->of_node;
++	config.dev = &pdev->dev;
++	config.driver_data = as3722_regs;
++	config.regmap = as3722->regmap;
 +
-+	platform_set_drvdata(pdev, as3722_gpio);
++	for (id = 0; id < AS3722_REGULATOR_ID_MAX; id++) {
++		reg_config = &as3722_regs->reg_config_data[id];
 +
-+	ret = as3722_gpio_init_configs(as3722_gpio);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "gpio_init_regs failed\n");
-+		return ret;
-+	}
++		as3722_regs->desc[id].name = as3722_reg_lookup[id].name;
++		as3722_regs->desc[id].supply_name = as3722_reg_lookup[id].sname;
++		as3722_regs->desc[id].id = as3722_reg_lookup[id].regulator_id;
++		as3722_regs->desc[id].n_voltages =
++					as3722_reg_lookup[id].n_voltages;
++		as3722_regs->desc[id].type = REGULATOR_VOLTAGE;
++		as3722_regs->desc[id].owner = THIS_MODULE;
++		as3722_regs->desc[id].enable_reg =
++					as3722_reg_lookup[id].enable_reg;
++		as3722_regs->desc[id].enable_mask =
++					as3722_reg_lookup[id].enable_mask;
++		as3722_regs->desc[id].vsel_reg = as3722_reg_lookup[id].vsel_reg;
++		as3722_regs->desc[id].vsel_mask =
++					as3722_reg_lookup[id].vsel_mask;
++		switch (id) {
++		case AS3722_REGULATOR_ID_LDO0:
++			if (reg_config->ext_control)
++				ops = &as3722_ldo0_extcntrl_ops;
++			else
++				ops = &as3722_ldo0_ops;
++			as3722_regs->desc[id].min_uV = 825000;
++			as3722_regs->desc[id].uV_step = 25000;
++			as3722_regs->desc[id].linear_min_sel = 1;
++			as3722_regs->desc[id].enable_time = 500;
++			break;
++		case AS3722_REGULATOR_ID_LDO3:
++			if (reg_config->ext_control)
++				ops = &as3722_ldo3_extcntrl_ops;
++			else
++				ops = &as3722_ldo3_ops;
++			as3722_regs->desc[id].min_uV = 620000;
++			as3722_regs->desc[id].uV_step = 20000;
++			as3722_regs->desc[id].linear_min_sel = 1;
++			as3722_regs->desc[id].enable_time = 500;
++			if (reg_config->enable_tracking) {
++				ret = as3722_ldo3_set_tracking_mode(as3722_regs,
++					id, AS3722_LDO3_MODE_PMOS_TRACKING);
++				if (ret < 0) {
++					dev_err(&pdev->dev,
++						"LDO3 tracking failed: %d\n",
++						ret);
++					return ret;
++				}
++			}
++			break;
++		case AS3722_REGULATOR_ID_SD0:
++		case AS3722_REGULATOR_ID_SD1:
++		case AS3722_REGULATOR_ID_SD6:
++			if (reg_config->ext_control)
++				ops = &as3722_sd016_extcntrl_ops;
++			else
++				ops = &as3722_sd016_ops;
++			as3722_regs->desc[id].min_uV = 610000;
++			as3722_regs->desc[id].uV_step = 10000;
++			as3722_regs->desc[id].linear_min_sel = 1;
++			break;
++		case AS3722_REGULATOR_ID_SD2:
++		case AS3722_REGULATOR_ID_SD3:
++		case AS3722_REGULATOR_ID_SD4:
++		case AS3722_REGULATOR_ID_SD5:
++			if (reg_config->ext_control)
++				ops = &as3722_sd2345_extcntrl_ops;
++			else
++				ops = &as3722_sd2345_ops;
++			as3722_regs->desc[id].linear_ranges =
++						as3722_sd2345_ranges;
++			as3722_regs->desc[id].n_linear_ranges =
++					ARRAY_SIZE(as3722_sd2345_ranges);
++			break;
++		default:
++			if (reg_config->ext_control)
++				ops = &as3722_ldo_extcntrl_ops;
++			else
++				ops = &as3722_ldo_ops;
++			as3722_regs->desc[id].min_uV = 825000;
++			as3722_regs->desc[id].uV_step = 25000;
++			as3722_regs->desc[id].linear_min_sel = 1;
++			as3722_regs->desc[id].enable_time = 500;
++			as3722_regs->desc[id].linear_ranges = as3722_ldo_ranges;
++			as3722_regs->desc[id].n_linear_ranges =
++						ARRAY_SIZE(as3722_ldo_ranges);
++			break;
++		}
++		as3722_regs->desc[id].ops = ops;
++		config.init_data = reg_config->reg_init;
++		config.of_node = as3722_regulator_matches[id].of_node;
++		rdev = devm_regulator_register(&pdev->dev,
++					&as3722_regs->desc[id], &config);
++		if (IS_ERR(rdev)) {
++			ret = PTR_ERR(rdev);
++			dev_err(&pdev->dev, "regulator %d register failed %d\n",
++				id, ret);
++			return ret;
++		}
 +
-+	ret = gpiochip_add(&as3722_gpio->gpio_chip);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Could not register gpiochip, %d\n",
-+				ret);
-+		return ret;
++		as3722_regs->rdevs[id] = rdev;
++		if (reg_config->ext_control) {
++			ret = regulator_enable_regmap(rdev);
++			if (ret < 0) {
++				dev_err(&pdev->dev,
++					"Regulator %d enable failed: %d\n",
++					id, ret);
++				return ret;
++			}
++			ret = as3722_extreg_init(as3722_regs, id,
++					reg_config->ext_control);
++			if (ret < 0) {
++				dev_err(&pdev->dev,
++					"AS3722 ext control failed: %d", ret);
++				return ret;
++			}
++		}
 +	}
 +	return 0;
 +}
 +
-+static int as3722_gpio_remove(struct platform_device *pdev)
-+{
-+	struct as3722_gpio *as3722_gpio = platform_get_drvdata(pdev);
-+
-+	return gpiochip_remove(&as3722_gpio->gpio_chip);
-+}
-+
-+static const struct of_device_id of_as3722_gpio_match[] = {
-+	{ .compatible = "ams,as3722-gpio", },
++static const struct of_device_id of_as3722_regulator_match[] = {
++	{ .compatible = "ams,as3722-regulator", },
 +	{},
 +};
-+MODULE_DEVICE_TABLE(of, of_as3722_gpio_match);
++MODULE_DEVICE_TABLE(of, of_as3722_regulator_match);
 +
-+static struct platform_driver as3722_gpio_driver = {
++static struct platform_driver as3722_regulator_driver = {
 +	.driver = {
-+		.name = "as3722-gpio",
++		.name = "as3722-regulator",
 +		.owner = THIS_MODULE,
-+		.of_match_table = of_as3722_gpio_match,
++		.of_match_table = of_as3722_regulator_match,
 +	},
-+	.probe = as3722_gpio_probe,
-+	.remove = as3722_gpio_remove,
++	.probe = as3722_regulator_probe,
 +};
 +
-+module_platform_driver(as3722_gpio_driver);
++module_platform_driver(as3722_regulator_driver);
 +
-+MODULE_ALIAS("platform:as3722-gpio");
-+MODULE_DESCRIPTION("GPIO interface for AS3722 PMICs");
++MODULE_ALIAS("platform:as3722-regulator");
++MODULE_DESCRIPTION("AS3722 regulator driver");
 +MODULE_AUTHOR("Florian Lobmaier <florian.lobmaier@ams.com>");
 +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
 +MODULE_LICENSE("GPL");
 -- 
 1.7.1.1
+
