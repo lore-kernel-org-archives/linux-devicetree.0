@@ -1,72 +1,87 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC 0/5] New descriptor-based GPIO interface
-Date: Fri, 20 Sep 2013 21:32:56 +0200
-Message-ID: <20130920193254.GA19130@mithrandir>
-References: <1378294169-22661-1-git-send-email-acourbot@nvidia.com>
- <CACRpkdYjkDf7c9VxfDTHtFx_upWWRAK8vpXTkrkrRsMjErq1dQ@mail.gmail.com>
+From: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: Re: [PATCH 12/51] DMA-API: net: intel/e1000: replace
+ dma_set_mask()+dma_set_coherent_mask() with new helper
+Date: Fri, 20 Sep 2013 12:45:55 -0700
+Message-ID: <1379706355.1972.8.camel@jtkirshe-mobl>
+References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
+ <E1VMluG-0007gV-6y@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYjkDf7c9VxfDTHtFx_upWWRAK8vpXTkrkrRsMjErq1dQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <acourbot@nvidia.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============7923185765950412603=="
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <E1VMluG-0007gV-6y@rmk-PC.arm.linux.org.uk>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, Peter P Waskiewicz Jr <peter.p.waskiewicz.jr@intel.com>, linux-fbdev@vger.kernel.org, linux-nvme@lists.infradead.org, linux-ide@vger.kernel.org, Carolyn Wyborny <carolyn.wyborny@intel.com>, devel@driverdev.osuosl.org, linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, e1000-devel@lists.sourceforge.net, Don Skidmore <donald.c.skidmore@intel.com>, Jesse Brandeburg <jesse.brandeburg@intel.com>, b43-dev@lists.infradead.org, linux-media@vger.kernel.org, Alex Duyck <alexander.h.duyck@intel.com>, devicetree@vger.kernel.org, Greg Rose <gregory.v.rose@intel.com>, dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, netdev@vger.kernel.org, linux-usb
 List-Id: devicetree@vger.kernel.org
 
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--===============7923185765950412603==
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-IwGSEViKnlGxN4Ur4LPe"
+
+
+--=-IwGSEViKnlGxN4Ur4LPe
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 20, 2013 at 08:06:00PM +0200, Linus Walleij wrote:
-> On Wed, Sep 4, 2013 at 1:29 PM, Alexandre Courbot <acourbot@nvidia.com> w=
-rote:
+On Thu, 2013-09-19 at 22:37 +0100, Russell King wrote:
+> Replace the following sequence:
 >=20
-> > Here is a first RFC for the new GPIO interface.
+>         dma_set_mask(dev, mask);
+>         dma_set_coherent_mask(dev, mask);
 >=20
-> I'm quite happy with this, and given that all DT-implementations will sta=
-rt
-> to use it from day 1 I'll happily merge it when you think it's tested eno=
-ugh.
+> with a call to the new helper dma_set_mask_and_coherent().
 >=20
-> On my wishlist is to also switch over the ACPI GPIO driver:
-> drivers/gpio/gpiolib-acpi.c to use the descriptors directly, so
-> I'd like one of the ACPI folks to have a look at this patch set
-> and see how it looks from their angle.
->=20
-> Mika, Rafael, Mathias, and either of you guys have a look
-> at this?
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> ---
+>  drivers/net/ethernet/intel/e1000/e1000_main.c |    9 ++-------
+>  1 files changed, 2 insertions(+), 7 deletions(-)
 
-Given that it seems like there won't be a linux-next from September 28
-until close to the next merge window, it would be good to get this into
-linux-next before that so that the series can receive broader testing. I
-have some patches that could use this, but I'm hesitant to base them on
-these patches because I want at least part of them to go into 3.13.
+Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 
-Thierry
-
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature
+--=-IwGSEViKnlGxN4Ur4LPe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSPKLmAAoJEN0jrNd/PrOheNAP/1mGJ+f6aaJ/NbnUfeMRlB97
-PBWv+0o90GDy+2Q4pgIRLvGYfr/FC6AWHPvy/8A3eksu/AxwmidColMqKfS8K/3n
-vigBR9chWPdWQiA3DSqNDAglp2RNm0fGp5yIt06yRRyUYcTug04nET7iWvwJCbZ3
-e71QfNmcFEsVdN590951JMZswS1ELBzPF+/KWMjXLkR2cqzJ6uGhjoijFXSGjhIV
-/HXo3MC4N5mxRp4ZJLj2x2ABl1Fi+BFGkDeN9LLOmI4KzWK8TGcG44AM65hPkPv2
-57gO6+STphUBF7kNSIeiuOOSLbERlPLOAhQAqDWzqhKdoMsWlYmDA4VSegi7LDZL
-yjrvIy41x39Gga/Bh3+rp87eaQCBIRdw68q6i5EfFHgbYreE2pWt8cfQ6FPBheeV
-0cBZJmJIed1yizv425GaVDaNvAiy58yc7Pic3oiU3ZmisPixe4Jl/OqgzdhPBawO
-X7LQVimNyFSf1zWVdb+IwyVJi1doyNQZWQ2KgeAUXzlOitdfDQA8rdRo17P364ZB
-/yfX7AHSzWZNxpQwo3PDiIfPFtZRg9tPSiUMSXju7BZeEtUO8sAKAKRLy+Ku/wIY
-/9Q0jULABqY+A1ZgVKqoW/FDI9Bk6M1+LH/MfWdKImYGjs/zEHlKQy1WML4MIiUR
-58IJpQ7eTHxCfq9J0Q/O
-=HeqZ
+iQIcBAABCgAGBQJSPKXzAAoJEOVv75VaS+3OXRMP/0inX8RE/LpymWBicNP8WD6j
+xJGDMRHzZ+Frac/Q0qSWiCNSvfBn/WZ9glR0uxnIz51/TjfFzITWZBzcsgeVJlAv
+BAQt/pIzXrw1Qwwcnm3ZGBJ6XhGFQ8rI+6Fv/1nQ7peb1PoVjpM+pkGszhgOD7AZ
+KU0EqTKIIGnRKxdVZwraXXEIrrwCwEnEJnHylot3scVYOEww+8UkQzp1ItDHeXuD
+FQurkbrCawaVB7bctDl45kmo66I+Pn6SLo22LFDI7m8Q92KePKR0pNHv4dLuRrh2
+5j6S2j1jeZca3DT0dFzyV1jgBjOzWmHfA38yHpk0FesH+3DAlTgkTxLc2PpARAww
+cKqu5d/i1rk0INt61H6tp3qYWH7HQ563PW9aIxX82PsRdXtedvTUjtxAZ/kIWAUQ
+uFX5Q0Y0u9XlfC8spRAcUvi9AxKATY/mDXcd1oBFO2yLYWcfo/2R4THAqz/yjhea
+KQQVh9gE2Uc06/fWbh2W+uGdluMNJJSEKTbkNxea2w9+MEGLV9+Cjdfb9x/w4oMf
+vT5rD9lIZh1k9xZGjB++HrOd6Gy6l9j+wYQqIiC0Ut9P5gOjrd2gyhg3xzvz894/
+eYO6FFFLJeQijLVHEU5nUVg+0IQQQaUc0Cq6WGr/USpjapQUq0xuQLLRCaph1uPM
+crlJOl4YrRaaUMl8RxDR
+=UEsD
 -----END PGP SIGNATURE-----
 
---GvXjxJ+pjyke8COw--
+--=-IwGSEViKnlGxN4Ur4LPe--
+
+
+--===============7923185765950412603==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linuxppc-dev mailing list
+Linuxppc-dev@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/linuxppc-dev
+--===============7923185765950412603==--
