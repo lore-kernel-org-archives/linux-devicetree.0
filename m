@@ -1,132 +1,233 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ASoC: kirkwood: clk: probe defer when clock not
- yet ready
-Date: Sat, 21 Sep 2013 19:06:24 +0200
-Message-ID: <20130921190624.1435c26b@armhf>
-References: <20130921120006.47b00fe7@armhf>
-	<20130921104734.GJ12758@n2100.arm.linux.org.uk>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: shmobile: update SDHI DT compatibility string to
+ the <unit>-<soc> format
+Date: Sat, 21 Sep 2013 10:14:09 -0700
+Message-ID: <20130921171409.GA6863@verge.net.au>
+References: <Pine.LNX.4.64.1308291650120.3786@axis700.grange>
+ <1621893.Re68yLczyK@avalon>
+ <20130905060102.GH14960@verge.net.au>
+ <86ob87tpsi.fsf@void.printf.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130921104734.GJ12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <86ob87tpsi.fsf-zkTaxWjgBN6ccd+RBA7C9g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 21 Sep 2013 11:47:34 +0100
-Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+On Thu, Sep 05, 2013 at 01:29:33PM +0100, Chris Ball wrote:
+> Hi,
+> 
+> On Thu, Sep 05 2013, Simon Horman wrote:
+> >> > Ok, the "no real products" is an assumption, that Laurent and Simon kind
+> >> > of agreed upon, so, I'm using it here to avoid having to carry old
+> >> > compatibility strings with us around. If anyone has other information -
+> >> > please shout. Otherwise, I think, it would be the easiest for Chris to ack
+> >> > this and for Simon to pull this via the ARM tree for late 3.12 (possibly,
+> >> > post -rc1) inclusion.
+> >
+> > Thanks, I believe that is a good plan.
+> >
+> > Chris, could we get an Ack?
+> 
+> Acked-by: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
 
-> On Sat, Sep 21, 2013 at 12:00:06PM +0200, Jean-Francois Moine wrote:
-> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> > index a004769..582abc8 100644
-> > --- a/drivers/clk/clk.c
-> > +++ b/drivers/clk/clk.c
-> > @@ -2181,7 +2181,7 @@ EXPORT_SYMBOL_GPL(of_clk_del_provider);
-> >  struct clk *of_clk_get_from_provider(struct of_phandle_args *clksp=
-ec)
-> >  {
-> >  	struct of_clk_provider *provider;
-> > -	struct clk *clk =3D ERR_PTR(-ENOENT);
-> > +	struct clk *clk =3D ERR_PTR(-EPROBE_DEFER);
-> > =20
-> >  	/* Check if we have such a provider in our array */
-> >  	mutex_lock(&of_clk_lock);
-> > diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-> > index 442a313..f8b28d9 100644
-> > --- a/drivers/clk/clkdev.c
-> > +++ b/drivers/clk/clkdev.c
-> > @@ -157,8 +157,13 @@ struct clk *clk_get(struct device *dev, const =
-char *con_id)
-> > =20
-> >  	if (dev) {
-> >  		clk =3D of_clk_get_by_name(dev->of_node, con_id);
-> > -		if (!IS_ERR(clk) && __clk_get(clk))
-> > -			return clk;
-> > +		if (!IS_ERR(clk)) {
-> > +			if (__clk_get(clk))
-> > +				return clk;
-> > +		} else {
-> > +			if (PTR_ERR(clk) =3D=3D -EPROBE_DEFER)
-> > +				return clk;
-> > +		}
->=20
-> Another comment.  This is broken - it will never fall through if a
-> 'dev' is given, because of_clk_get_by_name() will always return an
-> -EPROBE_DEFER error pointer in that case.
->=20
-> So this approach is unworkable.
+Thanks, and sorry for the delay.
 
-> And another comment:
->=20
-> This whole approach is broken - while Mark is correct that we should
-> find a way to return -EPROBE_DEFER if a clock is specified, the solut=
-ion
-> here does not allow that - it will return -EPROBE_DEFER whenever the
-> clock is not found _or_ is not specified.
->=20
-> This has the effect of making the external clock *non*optional for th=
-e
-> kirkwood-i2s driver, which is also completely broken.
+I have queued up the following, And I will push it either in the next
+half hour or some time next week - I have to jump on a plane shortly.
 
-It works fine for me (I tried both cases, with and without the external
-clock).
+Guennadi, it seems that SDHI (and MMCIF) support form
+armadillo800eva-reference never made it into my tree.  And I have dropped
+r8a7740.dtsi changes from the patch below accordingly.  Would you care to
+repost that series with the compatibility string updated?
 
-The scheme is as follows:
 
-- kirkwood-i2s kirkwood_i2s_dev_probe() calls:
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 
-	priv->extclk =3D &pdev->dev, "extclk");
+[PATCH] ARM: shmobile: update SDHI DT compatibility string to the <unit>-<soc> format
 
-- devm_clk_get() calls:
+Currently DT compatibility strings of both types can be found in the kernel
+sources: <unit>-<soc> and <soc>-<unit>, whereas a unique format should be
+followed and the former one is preferred. This patch converts the SDHI
+MMC driver and its users to the common standard. This is safe for now, since
+ATM no real products are using this driver with DT.
 
-	clk =3D clk_get(dev, id);
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+[Removed r8a7740.dtsi portion as it is not applicable]
+Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 17 ++++++++++-------
+ arch/arm/boot/dts/r8a73a4.dtsi                     |  6 +++---
+ arch/arm/boot/dts/r8a7790.dtsi                     |  8 ++++----
+ arch/arm/boot/dts/sh73a0.dtsi                      |  6 +++---
+ drivers/mmc/host/sh_mobile_sdhi.c                  | 16 ++++++++--------
+ 5 files changed, 28 insertions(+), 25 deletions(-)
 
-- clk_get() does:
+diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+index df204e1..6a2a116 100644
+--- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+@@ -9,12 +9,15 @@ compulsory and any optional properties, common to all SD/MMC drivers, as
+ described in mmc.txt, can be used. Additionally the following tmio_mmc-specific
+ optional bindings can be used.
+ 
++Required properties:
++- compatible:	"renesas,sdhi-shmobile" - a generic sh-mobile SDHI unit
++		"renesas,sdhi-sh7372" - SDHI IP on SH7372 SoC
++		"renesas,sdhi-sh73a0" - SDHI IP on SH73A0 SoC
++		"renesas,sdhi-r8a73a4" - SDHI IP on R8A73A4 SoC
++		"renesas,sdhi-r8a7740" - SDHI IP on R8A7740 SoC
++		"renesas,sdhi-r8a7778" - SDHI IP on R8A7778 SoC
++		"renesas,sdhi-r8a7779" - SDHI IP on R8A7779 SoC
++		"renesas,sdhi-r8a7790" - SDHI IP on R8A7790 SoC
++
+ Optional properties:
+ - toshiba,mmc-wrprotect-disable: write-protect detection is unavailable
+-
+-When used with Renesas SDHI hardware, the following compatibility strings
+-configure various model-specific properties:
+-
+-"renesas,sh7372-sdhi":	(default) compatible with SH7372
+-"renesas,r8a7740-sdhi":	compatible with R8A7740: certain MMC/SD commands have to
+-			wait for the interface to become idle.
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index 6c26caa..658fcc5 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -193,7 +193,7 @@
+ 	};
+ 
+ 	sdhi0: sdhi@ee100000 {
+-		compatible = "renesas,r8a73a4-sdhi";
++		compatible = "renesas,sdhi-r8a73a4";
+ 		reg = <0 0xee100000 0 0x100>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 165 4>;
+@@ -202,7 +202,7 @@
+ 	};
+ 
+ 	sdhi1: sdhi@ee120000 {
+-		compatible = "renesas,r8a73a4-sdhi";
++		compatible = "renesas,sdhi-r8a73a4";
+ 		reg = <0 0xee120000 0 0x100>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 166 4>;
+@@ -211,7 +211,7 @@
+ 	};
+ 
+ 	sdhi2: sdhi@ee140000 {
+-		compatible = "renesas,r8a73a4-sdhi";
++		compatible = "renesas,sdhi-r8a73a4";
+ 		reg = <0 0xee140000 0 0x100>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 167 4>;
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 3b879e7..885f9f4 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -152,7 +152,7 @@
+ 	};
+ 
+ 	sdhi0: sdhi@ee100000 {
+-		compatible = "renesas,r8a7790-sdhi";
++		compatible = "renesas,sdhi-r8a7790";
+ 		reg = <0 0xee100000 0 0x100>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 165 4>;
+@@ -161,7 +161,7 @@
+ 	};
+ 
+ 	sdhi1: sdhi@ee120000 {
+-		compatible = "renesas,r8a7790-sdhi";
++		compatible = "renesas,sdhi-r8a7790";
+ 		reg = <0 0xee120000 0 0x100>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 166 4>;
+@@ -170,7 +170,7 @@
+ 	};
+ 
+ 	sdhi2: sdhi@ee140000 {
+-		compatible = "renesas,r8a7790-sdhi";
++		compatible = "renesas,sdhi-r8a7790";
+ 		reg = <0 0xee140000 0 0x100>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 167 4>;
+@@ -179,7 +179,7 @@
+ 	};
+ 
+ 	sdhi3: sdhi@ee160000 {
+-		compatible = "renesas,r8a7790-sdhi";
++		compatible = "renesas,sdhi-r8a7790";
+ 		reg = <0 0xee160000 0 0x100>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 168 4>;
+diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+index ba59a58..3955c76 100644
+--- a/arch/arm/boot/dts/sh73a0.dtsi
++++ b/arch/arm/boot/dts/sh73a0.dtsi
+@@ -196,7 +196,7 @@
+ 	};
+ 
+ 	sdhi0: sdhi@ee100000 {
+-		compatible = "renesas,r8a7740-sdhi";
++		compatible = "renesas,sdhi-r8a7740";
+ 		reg = <0xee100000 0x100>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 83 4
+@@ -208,7 +208,7 @@
+ 
+ 	/* SDHI1 and SDHI2 have no CD pins, no need for CD IRQ */
+ 	sdhi1: sdhi@ee120000 {
+-		compatible = "renesas,r8a7740-sdhi";
++		compatible = "renesas,sdhi-r8a7740";
+ 		reg = <0xee120000 0x100>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 88 4
+@@ -219,7 +219,7 @@
+ 	};
+ 
+ 	sdhi2: sdhi@ee140000 {
+-		compatible = "renesas,r8a7740-sdhi";
++		compatible = "renesas,sdhi-r8a7740";
+ 		reg = <0xee140000 0x100>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 104 4
+diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
+index 87ed3fb..f344659 100644
+--- a/drivers/mmc/host/sh_mobile_sdhi.c
++++ b/drivers/mmc/host/sh_mobile_sdhi.c
+@@ -113,14 +113,14 @@ static const struct sh_mobile_sdhi_ops sdhi_ops = {
+ };
+ 
+ static const struct of_device_id sh_mobile_sdhi_of_match[] = {
+-	{ .compatible = "renesas,shmobile-sdhi" },
+-	{ .compatible = "renesas,sh7372-sdhi" },
+-	{ .compatible = "renesas,sh73a0-sdhi", .data = &sh_mobile_sdhi_of_cfg[0], },
+-	{ .compatible = "renesas,r8a73a4-sdhi", .data = &sh_mobile_sdhi_of_cfg[0], },
+-	{ .compatible = "renesas,r8a7740-sdhi", .data = &sh_mobile_sdhi_of_cfg[0], },
+-	{ .compatible = "renesas,r8a7778-sdhi", .data = &sh_mobile_sdhi_of_cfg[0], },
+-	{ .compatible = "renesas,r8a7779-sdhi", .data = &sh_mobile_sdhi_of_cfg[0], },
+-	{ .compatible = "renesas,r8a7790-sdhi", .data = &sh_mobile_sdhi_of_cfg[0], },
++	{ .compatible = "renesas,sdhi-shmobile" },
++	{ .compatible = "renesas,sdhi-sh7372" },
++	{ .compatible = "renesas,sdhi-sh73a0", .data = &sh_mobile_sdhi_of_cfg[0], },
++	{ .compatible = "renesas,sdhi-r8a73a4", .data = &sh_mobile_sdhi_of_cfg[0], },
++	{ .compatible = "renesas,sdhi-r8a7740", .data = &sh_mobile_sdhi_of_cfg[0], },
++	{ .compatible = "renesas,sdhi-r8a7778", .data = &sh_mobile_sdhi_of_cfg[0], },
++	{ .compatible = "renesas,sdhi-r8a7779", .data = &sh_mobile_sdhi_of_cfg[0], },
++	{ .compatible = "renesas,sdhi-r8a7790", .data = &sh_mobile_sdhi_of_cfg[0], },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, sh_mobile_sdhi_of_match);
+-- 
+1.8.4
 
-	if (dev)			// this is the case
-		clk =3D of_clk_get_by_name(dev->of_node, con_id);
 
-- of_clk_get_by_name() does:
-
-	if (name)			// this is the case
-		index =3D of_property_match_string(np, "clock-names", name);
-
-  Here, if the external clock is declared in the DT, index is >=3D 0.
-  If there is no externel clock in the DT, index is < 0.
-
-	clk =3D of_clk_get(np, index);
- 	if (!IS_ERR(clk))
-		break;
-	else if (name && index >=3D 0) {
-		pr_err("ERROR: could not get clock %s:%s(%i)\n",
- 			np->full_name, name ? name : "", index); =20
- 		return clk;
- 	}
-
-- If the index is < 0, of_clk_get() immediately returns -EINVAL.
-
-  So, kirkwood-i2s knows there is no external clock. DONE.
-
-- otherwise, if the index is >=3D 0 (the external clock is declared in
-  the DT), of_clk_get() gets the phandle (of_parse_phandle_with_args())
-  and gets the clock (of_clk_get_from_provider()).
-
-  This last function returns either the clock (device initialized),
-  a -EPROBE_DEFER error (clock not yet initialized) or some other
-  error (bad DT or clock error).
-
-  So, kirkwood-i2s knows there is a declared external clock and it acts
-  according to the return code (accept, defer or ignore). DONE.
-
-Did I miss something?
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
