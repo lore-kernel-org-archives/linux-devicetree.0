@@ -1,107 +1,106 @@
-From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: All device tree bindings need maintainer ack or just the 'interesting'
- ones.
-Date: Sat, 21 Sep 2013 15:57:42 +0100
-Message-ID: <523DB3E6.3040804@jic23.retrosnub.co.uk>
-References: <52345182.1080609@kernel.org> <52372F2B.3030504@gmail.com> <20130917081003.GU16984@lee--X1> <20130917112433.GB26737@e106331-lin.cambridge.arm.com> <20130917120730.GW16984@lee--X1> <20130917133025.GD26737@e106331-lin.cambridge.arm.com> <20130917134841.GX16984@lee--X1> <20130918135803.GG26737@e106331-lin.cambridge.arm.com> <20130918151119.59DB1C42CDF@trevor.secretlab.ca>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys
+ part and Exynos part
+Date: Sat, 21 Sep 2013 20:26:11 +0530
+Message-ID: <523DB38B.4070307@ti.com>
+References: <000701ce8741$fe47deb0$fad79c10$@samsung.com> <51EE22DF.6090902@ti.com> <001301ce8772$522dfc50$f689f4f0$@samsung.com> <5231607C.10702@ti.com> <003501ceaf87$cda45db0$68ed1910$%han@samsung.com> <20130912093018.GA2124@pratyush-vbox> <52318CCC.4040604@ti.com> <20130912095213.GA5995@pratyush-vbox> <5231925B.3030104@ti.com> <20130912101803.GB5995@pratyush-vbox> <20130912104602.GC5995@pratyush-vbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130918151119.59DB1C42CDF-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130912104602.GC5995@pratyush-vbox>
+Sender: linux-pci-owner@vger.kernel.org
+To: Pratyush Anand <pratyush.anand@st.com>, Jingoo Han <jg1.han@samsung.com>
+Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/18/13 16:11, Grant Likely wrote:
-> On Wed, 18 Sep 2013 14:58:04 +0100, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> On Tue, Sep 17, 2013 at 02:48:41PM +0100, Lee Jones wrote:
->>> On Tue, 17 Sep 2013, Mark Rutland wrote:
+Hi,
+
+On Thursday 12 September 2013 04:16 PM, Pratyush Anand wrote:
+> On Thu, Sep 12, 2013 at 03:48:03PM +0530, Pratyush Anand wrote:
+>> On Thu, Sep 12, 2013 at 06:07:23PM +0800, Kishon Vijay Abraham I wrote:
+>>> Hi,
 >>>
->>>> On Tue, Sep 17, 2013 at 01:07:30PM +0100, Lee Jones wrote:
->>>>> On Tue, 17 Sep 2013, Mark Rutland wrote:
->>>>>
->>>>>> On Tue, Sep 17, 2013 at 09:10:03AM +0100, Lee Jones wrote:
->>>>>>>>> http://marc.info/?l=linux-iio&m=137881790217809&w=2
->>>>>>>> Looks reasonable. My only comment is '-' is preferred over '_'.
->>>>>>> Ah, in the node name you mean. Yes, I can change that.
->>>>>>>
->>>>>>> The compatible string has to stay the same however, as it has to match
->>>>>>> the device name which can't be changed due to possible userspace
->>>>>>> breakage.
->>>>>> I'm not sure I follow why the compatible string must be identical to the
->>>>>> name appearing to userspace.
->>>>> It doesn't. It has to be identical to the device name, which I'm
->>>>> guessing is used when populating sysfs.
->>>> I still don't understand why the device name must be identical to the
->>>> compatible string.
+>>> On Thursday 12 September 2013 03:22 PM, Pratyush Anand wrote:
+>>>> Hi Kishon,
 >>>>
->>>> The string "st,lsm303dlh_magn" (with the "st," prefix) appears nowhere
->>>> in v3.12-rc1
->>> You're looking at an old patchset. We found out that the Snowball
->>> schematic was actually incorrect and we have a LSM303DLHC.
+>>>> On Thu, Sep 12, 2013 at 05:43:40PM +0800, Kishon Vijay Abraham I wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On Thursday 12 September 2013 03:00 PM, Pratyush Anand wrote:
+>>>>>> Hi Jingoo,
+>>>>>>
+>>>>>>
+>>>>>> On Thu, Sep 12, 2013 at 03:15:04PM +0800, Jingoo Han wrote:
+>>>>>>> On Tuesday 23 July 2013 12:30 PM, Kishon Vijay Abraham I wrote:
+>>>>>>>>>> .
+>>>>>>>>>> .
+>>
+>> [...]
+>>
+>>>>> when I do ifconfig eth0 up, I get *r8169 0000:01:00.0 eth0: link up.*
+>>>>> But I dont receive any packets and ping also fails and the tx and rx packet
+>>>>> count is also 0. Could it be related to inbound translation?
+>>>>
+>>>> A PCIe analyser log would tell a definite cause. Most likely either
+>>>> inbound translation is not working or INTx/MSI is not working.
 >>>
->>> git grep -i lsm303dlhc_magn v3.12-rc1
->>>   drivers/iio/magnetometer/st_magn.h:
->>>     #define LSM303DLHC_MAGN_DEV_NAME   "lsm303dlhc_magn"
+>>> I have enabled only legacy interrupts. Whenever I connect or disconnect
+>>> ethernet cable I get link up/link down message and also the interrupt count for
+>>> eth0 increases. So I'm not doubting INTx interrupts as such.
+> 
+> Just a question, what is the MRRS of your RC? if it is 128, can you
+> try with passing pci=pcie_bus_peer2peer  in your bootargs.
+> 
+> Again, analyser will help a lot in diagnosing such issues.
+> 
+> Regards
+> Pratyush
 >>>
->>>> and the compatible string in the dt doesn't seem to get
->>>> assigned to the device in the i2c core or in
->>>> drivers/iio/magnetometer/st_magn_i2c.c.
->>> It does:
->>>   drivers/i2c/busses/*.c: of_i2c_register_devices();
->>>   drivers/of/of_i2c.c:    |-> of_modalias_node();
->>>                             |-> i2c_new_device();
->> Ah, I see.
+>>> btw configuring inbound translation once in dw_pcie_host_init enough is it? I
+>>> mean we use the same registers for configuring outbound translation also no? So
+>>> doesn't the inbound configuration gets lost?
 >>
->> I thought the return of of_modalias_node was only used to *guess* the
->> module which might need to be loaded, rather than also being exposed to
->> userspace as the device name.
->>
->> We've got a leak of Linux implementation details into the dt here, and I
->> don't like it. Thanks to the combination of of_i2c_register device's use
->> of of_modalias_node, and i2c_device_match using the id table after
->> failing to use dt, any driver with a i2c_device_id name implicitly
->> defines a dt binding for "${ARBITRARY_PREFIX},name". The same is true
->> for SPI drivers using spi_device_id. This turns what looks like a Linux
->> internal value into an ABI facing bootloader software.
->>
->> Judging by a quick and dirty grep [1], as of v3.12-rc1 there are ~930
->> suffixes which *may* be accepted with an arbitrary prefix as an I2C
->> compatible string, of which ~750 do not appear in
->> Documentation/devicetree. For SPI there are just over 400, of which just
->> under 400 aren't documented. Both these counts include drivers that may
->> never be built for DT platforms, as I've not filtered the results.
->>
->> Some drivers have an of_match_table (e.g. i2c-hid has a single
->> "hid-over-i2c" entry), but if the I2C core fails to match in the
->> of_match_table it'll still carry on and match the stripped compatible
->> against the i2c_device_id table (where it'll happily match
->> "${VENDOR},hid"). I think if a driver has an of_match_table and we fail
->> to match with of_match_device we should fail rather than falling back to
->> the id table.
->>
->> In the i2c-hid case, I can't see how the "hid-over-i2c" variant can ever
->> work -- of_i2c_register_devices will skip over devices where the
->> compatible string doesn't contain a ','. So our documented compatible
->> string isn't usable, while an undocumented one is...
-> I do appologies for the i2c of_modalias_node mess. At the time is was a
-> quick hack to make it each to bind nodes to i2c devices without changing
-> the drivers. At the time there wasn't much support for device tree. Now
-> it is just painfull.
-My understanding from this discussion is that we don't really have a way to
-back out the existing naming (with _ instead of the preferred -) from
-these bindings without breaking existing ABI.
+>> No, you write at the same register, but you program direction as
+>> inbound. There are different resources for each viewport in inbound
+>> and outbound direction.
 
-Hence, shall I apply the patches that at least document that the ABI we are
-stuck with? (e.g. http://www.spinics.net/lists/devicetree/msg04808.html
-[PATCH 07/20] Documentation: dt: iio: Add binding for LPS001WP )
+I did inbound translation programming like
+static void dw_pcie_prog_viewport_mem_inbound(struct pcie_port *pp)
+{
+	u32 val;
+	void __iomem *val1;
+	void __iomem *dbi_base = pp->dbi_base;
 
-Jonathan
+	/* Program viewport 0 : INBOUND : MEMORY*/
+	val = PCIE_ATU_REGION_INBOUND | (0 & 0xF);
+	dw_pcie_writel_rc(pp, val, dbi_base + PCIE_ATU_VIEWPORT);
+	val1 = ioremap(0x80000000, 0x5fffffff);
+	dw_pcie_writel_rc(pp, 0x80000000, dbi_base + PCIE_ATU_LOWER_BASE);
+	dw_pcie_writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_BASE);
+	/* in_mem_size must be in power of 2 */
+	dw_pcie_writel_rc(pp, 0x5FFFFFFF, dbi_base + PCIE_ATU_LIMIT);
+	dw_pcie_writel_rc(pp, 0x80000000, dbi_base + PCIE_ATU_LOWER_TARGET);
+	dw_pcie_writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_TARGET);
+	dw_pcie_writel_rc(pp, PCIE_ATU_TYPE_MEM, dbi_base + PCIE_ATU_CR1);
+	val = PCIE_ATU_ENABLE;
+	dw_pcie_writel_rc(pp, val, dbi_base + PCIE_ATU_CR2);
+}
 
+I'm using Realtek Semiconductor Co., Ltd. RTL8111/8168B PCI Express
+Gigabit Ethernet controller (TP-LINK TG-3468) (it uses r8169 driver).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+whenever I do a ifconfig ethp up, I get a non fatal error interrupt (after
+Transmitter/Receiver Enable in r8169 driver).
+
+I somehow starting to doubt the DMA address programmed in the ethernet card
+which is in my RAM address range (0x80000000 to 0xBFFFFFFF). Should this
+address be programmed in the BAR of the ethernet card? How should it be done?
+
+My pcie dt data looks like this.
+ranges = <0x00000800 0 0x20000000 0x20000000 0 0x00001000 /* configuration space */
+	  0x81000000 0 0	 0x20001000 0 0x00010000 /* io */
+	  0x82000000 0 0x20011000 0x20011000 0 0x0ffef000>; /* memory */
+
+Thanks
+Kishon
