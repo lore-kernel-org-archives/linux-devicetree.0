@@ -1,192 +1,88 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/7] Staging/iio/adc/touchscreen/MXS: provide devicetree
- adaption
-Date: Sat, 21 Sep 2013 13:42:37 +0100
-Message-ID: <523D943D.705@kernel.org>
-References: <1379593369-22010-1-git-send-email-jbe@pengutronix.de> <1379593369-22010-8-git-send-email-jbe@pengutronix.de>
+From: Michael Olbrich <m.olbrich-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: Adding aliases to mmc
+Date: Sat, 21 Sep 2013 14:30:51 +0200
+Message-ID: <20130921123051.GN1736@pengutronix.de>
+References: <CAOMZO5CJ36JHJMaiG3QVdtpBoWd_ZyHQuRTrKHz4bLP39gpJtQ@mail.gmail.com>
+ <5239C40C.9030503@wwwdotorg.org>
+ <5239DC65.3080803@gmail.com>
+ <5239DF55.8010308@wwwdotorg.org>
+ <523A8A08.2060508@gmail.com>
+ <523C7231.7040701@wwwdotorg.org>
+ <523C79C4.1070308@gmail.com>
+ <523C7FD0.3030006@wwwdotorg.org>
+ <523D2D4F.6030802@gmail.com>
+ <20130921074238.GI30088@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379593369-22010-8-git-send-email-jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130921074238.GI30088-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The device tree list has moved, so I've changed the cc.
+Hi,
 
-Few comments inline.  Basically I'd go for longer more
-descriptive names when the abreviation isn't a really
-well known common one.
-
-
-Note I'm not all that familiar with device tree conventions
-so may be barking up the wrong tree ;)
-On 09/19/13 13:22, Juergen Beisert wrote:
-> This is an RFC for the new touchscreen properties.
+On Sat, Sep 21, 2013 at 09:42:38AM +0200, Sascha Hauer wrote:
+> On Sat, Sep 21, 2013 at 07:23:27AM +0200, Dirk Behme wrote:
+> > Am 20.09.2013 19:03, schrieb Stephen Warren:
+> > >On 09/20/2013 10:37 AM, Dirk Behme wrote:
+> > >>Am 20.09.2013 18:05, schrieb Stephen Warren:
+> > >>>On 09/18/2013 11:22 PM, Dirk Behme wrote:
+> > >>>...
+> > >>>>If you have an embedded system were you just care a little about boot
+> > >>>>time you don't want to do anything like U-Boot's "part uuid" every time
+> > >>>>you boot. Or even worse, you just have a minimalistic boot loader (e.g.
+> > >>>>U-Boot's SPL) which doesn't know anything about UUIDs and file systems.
+> > >>>>
+> > >>>>As mentioned above, no I don't think UUIDs work for production embedded
+> > >>>>systems.
+> > >>>
+> > >>>As I said above, whatever generates the filesystem image can easily
+> > >>>embed the appropriate UUID in the system's boot scripts or bootloader
+> > >>>environment. There's no need to run the "part" command at run-time if
+> > >>>there's a more appropriate flow for your situation.
+> > >>
+> > >>Using a simple boot loader as an example, there are no boot scripts or
+> > >>boot loader environment. The only thing the boot loader does is loading
+> > >>the device tree and the kernel into RAM. Where do you want to embed an
+> > >>UUID in such a product?
+> > >
+> > >I think the initrd would be typical.
+> > 
+> > An embedded system typically doesn't have an initrd. The kernel
+> > boots directly into the rootfs on SD/eMMC.
+> > 
+> > >>To my understanding, the UUID is different for each SD card/eMMC, correct?
+> > >
+> > >Yes by default.
+> > >
+> > >Although for an embedded product with a fixed eMMC, there's no reason
+> > >you couldn't make every device have the same UUID for the fixed device.
+> > 
+> > How do you make the eMMC on 1000 boards have the same UUID?
 > 
-> Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> CC: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
-> CC: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> CC: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
-> CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> ---
->  .../bindings/staging/iio/adc/mxs-lradc.txt         | 36 ++++++++++++--
->  drivers/staging/iio/adc/mxs-lradc.c                | 57 ++++++++++++++--------
->  2 files changed, 67 insertions(+), 26 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> index 4688205..ee05dc3 100644
-> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> @@ -1,7 +1,8 @@
->  * Freescale i.MX28 LRADC device driver
->  
->  Required properties:
-> -- compatible: Should be "fsl,imx28-lradc"
-> +- compatible: Should be "fsl,imx23-lradc" for i.MX23 SoC and "fsl,imx28-lradc"
-> +              for i.MX28 SoC
->  - reg: Address and length of the register set for the device
->  - interrupts: Should contain the LRADC interrupts
->  
-> @@ -9,13 +10,38 @@ Optional properties:
->  - fsl,lradc-touchscreen-wires: Number of wires used to connect the touchscreen
->                                 to LRADC. Valid value is either 4 or 5. If this
->                                 property is not present, then the touchscreen is
-> -                               disabled.
-Do we want that lradc prefix on these other properties?
-> +                               disabled. 5 wires is valid for i.MX28 SoC only.
-> +- fsl,ave-ctrl: number of samples per direction to calculate an average value.
-> +                Allowed value is 1 ... 31, default is 4
-This naming seems less than informative, what about fsl,average_num_samples of average_count
-(ave isn't all that obvious an abrevaition of average).
+> The same way you ensure an identical partition table in these 1000
+> boards. The disk signature is just a four byte value at offset 440 in
+> the MBR. Set this to your birthday or whatever on all boards, pass
+> root=PARTUUID=<yourbirthday>-01 on all boards and you're done.
 
-> +- fsl,ave-delay: delay between consecutive samples. Allowed value is
-> +                 1 ... 2047. It is used if 'fsl,ave-ctrl' > 1, counts at
-> +                 2 kHz and its default is 2 (= 1 ms)
-fsl,average_intersample_delay (I assume any limit of device tree property names is longer than that?)
+Until someone inserts a SD-Card with the same disk signature...
 
-> +- fsl,settling: delay between plate switch to next sample. Allowed value is
-> +                1 ... 2047. It counts at 2 kHz and its default is
-> +                10 (= 5 ms)
->  
-> -Examples:
-> +Example for i.MX23 SoC:
-> +
-> +	lradc@80050000 {
-> +		compatible = "fsl,imx23-lradc";
-> +		reg = <0x80050000 0x2000>;
-> +		interrupts = <36 37 38 39 40 41 42 43 44>;
-> +		status = "okay";
-> +		fsl,lradc-touchscreen-wires = <4>;
-> +		fsl,ave-ctrl = <4>;
-> +		fsl,ave-delay = <2>;
-> +		fsl,settling = <10>;
-> +	};
-> +
-> +Example for i.MX28 SoC:
->  
->  	lradc@80050000 {
->  		compatible = "fsl,imx28-lradc";
->  		reg = <0x80050000 0x2000>;
-> -		interrupts = <10 14 15 16 17 18 19
-> -				20 21 22 23 24 25>;
-> +		interrupts = <10 14 15 16 17 18 19 20 21 22 23 24 25>;
-> +		status = "okay";
-> +		fsl,lradc-touchscreen-wires = <5>;
-> +		fsl,ave-ctrl = <4>;
-> +		fsl,ave-delay = <2>;
-> +		fsl,settling = <10>;
->  	};
-> diff --git a/drivers/staging/iio/adc/mxs-lradc.c b/drivers/staging/iio/adc/mxs-lradc.c
-> index 122475f..ffcb0dd 100644
-> --- a/drivers/staging/iio/adc/mxs-lradc.c
-> +++ b/drivers/staging/iio/adc/mxs-lradc.c
-> @@ -1225,10 +1225,45 @@ MODULE_DEVICE_TABLE(of, mxs_lradc_dt_ids);
->  static int mxs_lradc_probe_touchscreen(struct mxs_lradc *lradc,
->  						struct device_node *lradc_node)
->  {
-> -	/* TODO retrieve from device tree */
-> +	int ret;
-> +	u32 ts_wires = 0, adapt;
-> +
-> +	ret = of_property_read_u32(lradc_node, "fsl,lradc-touchscreen-wires",
-> +				&ts_wires);
-> +	if (ret)
-> +		return -ENODEV; /* touchscreen feature disabled */
-> +
-> +	switch (ts_wires) {
-> +	case 4:
-> +		lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_4WIRE;
-> +		break;
-> +	case 5:
-> +		if (lradc->soc == IMX28_LRADC) {
-> +			lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_5WIRE;
-> +			break;
-> +		}
-> +		/* fall through an error message for i.MX23 */
-> +	default:
-> +		dev_err(lradc->dev,
-> +			"Unsupported number of touchscreen wires (%d)\n",
-> +			ts_wires);
-> +		return -EINVAL;
-> +	}
-> +
->  	lradc->over_sample_cnt = 4;
-> +	ret = of_property_read_u32(lradc_node, "fsl,ave-ctrl", &adapt);
-> +	if (ret == 0)
-> +		lradc->over_sample_cnt = adapt;
-> +
->  	lradc->over_sample_delay = 2;
-> +	ret = of_property_read_u32(lradc_node, "fsl,ave-delay", &adapt);
-> +	if (ret == 0)
-> +		lradc->over_sample_delay = adapt;
-> +
->  	lradc->settling_delay = 10;
-> +	ret = of_property_read_u32(lradc_node, "fsl,settling", &adapt);
-> +	if (ret == 0)
-> +		lradc->settling_delay = adapt;
->  
->  	return 0;
->  }
-> @@ -1244,7 +1279,6 @@ static int mxs_lradc_probe(struct platform_device *pdev)
->  	struct mxs_lradc *lradc;
->  	struct iio_dev *iio;
->  	struct resource *iores;
-> -	uint32_t ts_wires = 0;
->  	int ret = 0, touch_ret;
->  	int i;
->  
-> @@ -1267,25 +1301,6 @@ static int mxs_lradc_probe(struct platform_device *pdev)
->  
->  	touch_ret = mxs_lradc_probe_touchscreen(lradc, node);
->  
-> -	/* Check if touchscreen is enabled in DT. */
-> -	ret = of_property_read_u32(node, "fsl,lradc-touchscreen-wires",
-> -				&ts_wires);
-> -	if (ret)
-> -		dev_info(dev, "Touchscreen not enabled.\n");
-> -	else if (ts_wires == 4)
-> -		lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_4WIRE;
-> -	else if (ts_wires == 5)
-> -		lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_5WIRE;
-> -	else
-> -		dev_warn(dev, "Unsupported number of touchscreen wires (%d)\n",
-> -				ts_wires);
-> -
-> -	if ((lradc->soc == IMX23_LRADC) && (ts_wires == 5)) {
-> -		dev_warn(dev, "No support for 5 wire touches on i.MX23\n");
-> -		dev_warn(dev, "Falling back to 4 wire\n");
-> -		ts_wires = 4;
-> -	}
-> -
->  	/* Grab all IRQ sources */
->  	for (i = 0; i < of_cfg->irq_count; i++) {
->  		lradc->irq[i] = platform_get_irq(pdev, i);
-> 
+Always booting from eMMC is a quite important use case for embedded
+systems. And so far the only reliable solution seems to be an initrd. And
+using an initrd is not acceptable in many cases. Certainly not just to
+figure out where the rootfs is.
+
+Regards,
+Michael
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
