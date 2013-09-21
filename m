@@ -1,77 +1,42 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/2] ASoC: kirkwood: fix loss of
- external clock at probe time
-Date: Sat, 21 Sep 2013 14:36:46 +0100
-Message-ID: <20130921133646.GV21013@sirena.org.uk>
-References: <20130921120036.5730dbfd@armhf>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7680082802425081426=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20130921120036.5730dbfd@armhf>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mike Turquette <mturquette@linaro.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Subject: [PATCH 0/3] ARM: OMAP: convert N950/N9 to DT
+Date: Sat, 21 Sep 2013 16:45:39 +0300
+Message-ID: <1379771142-29087-1-git-send-email-aaro.koskinen@iki.fi>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============7680082802425081426==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uTOHp36N6S0WjZTp"
-Content-Disposition: inline
+This adds DTS for N950/N9 and removes the legacy board file. However,
+I guess the HACK in patch 1 needs to be solved somehow before we can
+do this...
 
+Aaro Koskinen (3):
+  ARM: OMAP2: HACK: hardcode hsmmc2 input clock source for N950/N9
+  ARM: dts: add minimal DT support for Nokia N950 & N9 phones
+  ARM: OMAP2: delete board-rm680
 
---uTOHp36N6S0WjZTp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ arch/arm/boot/dts/Makefile           |   2 +
+ arch/arm/boot/dts/omap3-n9.dts       |  18 ++++
+ arch/arm/boot/dts/omap3-n950-n9.dtsi | 172 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/omap3-n950.dts     |  18 ++++
+ arch/arm/mach-omap2/Kconfig          |   7 --
+ arch/arm/mach-omap2/Makefile         |   1 -
+ arch/arm/mach-omap2/board-generic.c  |  15 +++
+ arch/arm/mach-omap2/board-rm680.c    | 167 ----------------------------------
+ 8 files changed, 225 insertions(+), 175 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap3-n9.dts
+ create mode 100644 arch/arm/boot/dts/omap3-n950-n9.dtsi
+ create mode 100644 arch/arm/boot/dts/omap3-n950.dts
+ delete mode 100644 arch/arm/mach-omap2/board-rm680.c
 
-On Sat, Sep 21, 2013 at 12:00:36PM +0200, Jean-Francois Moine wrote:
-> At probe time, when the clock driver is not yet initialized, the
-> external clock of the kirkwood sound device will not be usable.
->=20
-> This patch fixes this problem defering the device probe.
+-- 
+1.8.4.rc3
 
-Applied, thanks.  It won't do anything without a version of patch 1 but
-there's no build time dependency and it seems like we should get a fix
-into the core for the unspecified vs unregistered problem.
-
---uTOHp36N6S0WjZTp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSPaDrAAoJELSic+t+oim9tGcP/AsPpe1cppna27H3RIMv1IWR
-cw0Z5hunWgENC9JfKPFsi1Oc16Ln57ZQ8gPYad+AcxnF59MV6I9RavTkm+ZwRnsY
-JvCuSV/GqKfke4YMUjpJT0R2ptSCHNMTqDdvKbM0aMdpFnzZQrRqSw0qvf02WWKd
-iUB0m5kD1IlVAW28ppse2z7jlR743mDxcMXM6zDGFjl+Xg+gEaphgICzO8DokwH9
-+CJBIrMcltG3J4SqC3fbEU9PiT8seIndSqB/8G4/R9zxDSQGvbsqWAUCCnH+9s9c
-gl79zzavI80IAuG5h0ngFlaZmPmbmw6Lsxzv3oTiS0IXj/35plHGV/DPwvKHAInQ
-lDT4/keYds0jQTt9rg1YOyaivamLMruWW1pwd9c4KDRPenEwoR6W4nMMe4cRpb/f
-2wFKLIPwlTNwRJLhYxZWeTmLngltEFKxCVtofg+TSOlEVEpUmDEUfkVYMpBLS115
-ygCnLUwos0hp8wyREZIldrlX69t3222TnuydSlmghOQdxDRL/p/Glq+Hx9LolFLk
-pv43QrbP9a0RzURx7j2V6C9db61NZm7fcFHHRnmbQC3dt/yZmSo40235czf9QgXB
-b6xdsOYAMh8pNM2BemhE6GB8+ivvG4NdC5uxAIA+kAdhMaEbj9YgRjQdvWLM0Uy1
-xBpZFnNc709U0Q0z1O8y
-=fIua
------END PGP SIGNATURE-----
-
---uTOHp36N6S0WjZTp--
-
---===============7680082802425081426==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7680082802425081426==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
