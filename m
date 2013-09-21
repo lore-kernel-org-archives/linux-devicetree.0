@@ -1,38 +1,87 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: [PATCH] ARM: DTS: omap3-devkit8000.dts: fix a typo
-Date: Sat, 21 Sep 2013 02:40:14 +0300
-Message-ID: <1379720414-14960-1-git-send-email-aaro.koskinen@iki.fi>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] rename ARCH_BCM to ARCH_BCM_MOBILE
+Date: Fri, 20 Sep 2013 17:23:39 -0700
+Message-ID: <CAOesGMjViyCa+FhNmrESc+WmnW+=wzsqBpj=jHeuCyobAmMojg@mail.gmail.com>
+References: <1379718260-24349-1-git-send-email-csd@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1379718260-24349-1-git-send-email-csd@broadcom.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Christian Daudt <csd@broadcom.com>
+Cc: Christian Daudt <bcm@fixthebug.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, Domenico Andreoli <cavokz@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Matt Porter <matt.porter@linaro.org>, Alex Elder <alex.elder@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-"gpmc,sync-clki-ps" is not defined/documented, it should be
-"gpmc,sync-clk-ps" instead.
+On Fri, Sep 20, 2013 at 4:04 PM, Christian Daudt <csd@broadcom.com> wrote:
+> Currently ARCH_BCM has been used for Broadcom
+> Mobile V7 based SoCs. In order to allow other Broadcom
+> SoCs to also use mach-bcm directory and files, this patch
+> renames the original ARCH_BCM to ARCH_BCM_MOBILE, and
+> uses ARCH_BCM to define any Broadcom chip residing
+> in mach-bcm directory.
+>
+> Signed-off-by: Christian Daudt <csd@broadcom.com>
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index cc0f1fb..dd00e22 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -42,8 +42,6 @@ dtb-$(CONFIG_ARCH_AT91)       += sama5d34ek.dtb
+>  dtb-$(CONFIG_ARCH_AT91)        += sama5d35ek.dtb
+>
+>  dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
+> -dtb-$(CONFIG_ARCH_BCM) += bcm11351-brt.dtb \
+> -       bcm28155-ap.dtb
+>  dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
+>         da850-evm.dtb
+>  dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
+> @@ -101,6 +99,8 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) += kirkwood-cloudbox.dtb \
+>         kirkwood-ts219-6282.dtb \
+>         kirkwood-openblocks_a6.dtb
+>  dtb-$(CONFIG_ARCH_MARCO) += marco-evb.dtb
+> +dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm11351-brt.dtb \
+> +       bcm28155-ap.dtb
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
----
- arch/arm/boot/dts/omap3-devkit8000.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This reordering looks off. The entries should be alphabetically
+ordered, so if anything it should move up above BCM2835.
 
-diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
-index 7ef2827..4665421 100644
---- a/arch/arm/boot/dts/omap3-devkit8000.dts
-+++ b/arch/arm/boot/dts/omap3-devkit8000.dts
-@@ -125,7 +125,7 @@
- 		nand-bus-width = <16>;
- 
- 		gpmc,device-nand;
--		gpmc,sync-clki-ps = <0>;
-+		gpmc,sync-clk-ps = <0>;
- 		gpmc,cs-on-ns = <0>;
- 		gpmc,cs-rd-off-ns = <44>;
- 		gpmc,cs-wr-off-ns = <44>;
--- 
-1.8.4.rc3
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 704d6d3..4207ab4 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -25,7 +25,7 @@ obj-$(CONFIG_SUN4I_TIMER)     += sun4i_timer.o
+>  obj-$(CONFIG_ARCH_TEGRA)       += tegra20_timer.o
+>  obj-$(CONFIG_VT8500_TIMER)     += vt8500_timer.o
+>  obj-$(CONFIG_ARCH_NSPIRE)      += zevio-timer.o
+> -obj-$(CONFIG_ARCH_BCM)         += bcm_kona_timer.o
+> +obj-$(CONFIG_ARCH_BCM_MOBILE)  += bcm_kona_timer.o
+>  obj-$(CONFIG_CADENCE_TTC_TIMER)        += cadence_ttc_timer.o
+>  obj-$(CONFIG_CLKSRC_EXYNOS_MCT)        += exynos_mct.o
+>  obj-$(CONFIG_CLKSRC_SAMSUNG_PWM)       += samsung_pwm_timer.o
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 7fc5099..7e89650 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -251,7 +251,7 @@ config MMC_SDHCI_S3C_DMA
+>
+>  config MMC_SDHCI_BCM_KONA
+>         tristate "SDHCI support on Broadcom KONA platform"
+> -       depends on ARCH_BCM
+> +       depends on ARCH_BCM_MOBILE
+>         select MMC_SDHCI_PLTFM
+>         help
+>           This selects the Broadcom Kona Secure Digital Host Controller
+
+Since nothing breaks (i.e. ARCH_BCM is still there, and will be
+enabled for any ARCH_BCM_MOBILE platform), the above two can go
+through the corresponding subsystem trees as separate patches.
+
+
+With the above fixed:
+
+Acked-by: Olof Johansson <olof@lixom.net>
+
+
+
+-Olof
