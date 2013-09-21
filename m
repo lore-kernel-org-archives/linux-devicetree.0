@@ -1,70 +1,61 @@
-From: Mike Dunn <mikedunn@newsguy.com>
-Subject: [PATCH RESEND v5 0/2] PWM: PXA: add device tree support to PWM driver
-Date: Sat, 21 Sep 2013 12:19:32 -0700
-Message-ID: <1379791174-2369-1-git-send-email-mikedunn@newsguy.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-pwm@vger.kernel.org
-Cc: Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, Mike Dunn <mikedunn@newsguy.com>, Pawel Moll <pawel.moll@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Stephen Warren <swarren@wwwdotorg.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <chao.xie@marvell.com>, Thierry Reding <thierry.reding@gmail.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
+From: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH RESEND v5 2/2] PXA: add PWM nodes to pxa27x.dtsi
+Date: Sat, 21 Sep 2013 12:19:34 -0700
+Message-ID: <1379791174-2369-3-git-send-email-mikedunn@newsguy.com>
+References: <1379791174-2369-1-git-send-email-mikedunn@newsguy.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379791174-2369-1-git-send-email-mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dang! Sorry, please disregard previous patch set.
-RESENDing because previous set did not include the file
-Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+This patch adds PWM nodes for each of the four channels present on the
+pxa270.
 
-This is now a patch set because the changes to pxa27x.dtsi have been moved to a
-separate patch.  This was done so that it can go through the arm-soc tree.
+Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/pxa27x.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-Changle log:
-v5:
-- changes to pxa27x.dtsi moved to a separate patch
-- minor changes in phrasing made to bindings documentation
-- cast removed from void *
-- dummy functions for !CONFIG_OF removed; called only if (IS_ENABLED(CONFIG_OF)
-- if-else block in pxa_pwm_get_id_dt() replaced with ternary operator
-
-v4:
-- add second "compatible" string to pxa27x.dtsi
-- change phrasing in binding doc pxa-pwm.txt to "one or more of"
-
-v3:
-- remove support for the polarity flag
-- remove per-chip pwm index cell; define custom of_xlate()
-   (now #pwm-cells = <1>)
-- "compatible" strings for all devices added to OF match table
-- various stylistic changes recommended by reviewers
-
-v2:
-- of_match_table contains only the "pxa250-pwm" compatible string; require one
-  device instance per pwm
-- add Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-- add support for polarity flag in DT and implement set_polarity() method
-  (the treo 680 inverts the signal between pwm out and backlight)
-- return -EINVAL instead of -ENODEV if platform data or DT node not found
-- output dev_info string if platform data missing
-- expanded CC list of patch
-
-
-Mike Dunn (2):
-  PWM: PXA: add device tree support to PWM driver
-  PXA: add PWM nodes to pxa27x.dtsi
-
- Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 30 +++++++++++++
- arch/arm/boot/dts/pxa27x.dtsi                     | 24 +++++++++++
- drivers/pwm/pwm-pxa.c                             | 52 ++++++++++++++++++++++-
- 3 files changed, 105 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index d7c5d72..a705469 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -10,5 +10,29 @@
+ 			marvell,intc-priority;
+ 			marvell,intc-nr-irqs = <34>;
+ 		};
++
++		pwm0: pwm@40b00000 {
++			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
++			reg = <0x40b00000 0x10>;
++			#pwm-cells = <1>;
++		};
++
++		pwm1: pwm@40b00010 {
++			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
++			reg = <0x40b00010 0x10>;
++			#pwm-cells = <1>;
++		};
++
++		pwm2: pwm@40c00000 {
++			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
++			reg = <0x40c00000 0x10>;
++			#pwm-cells = <1>;
++		};
++
++		pwm3: pwm@40c00010 {
++			compatible = "marvell,pxa270-pwm", "marvell,pxa250-pwm";
++			reg = <0x40c00010 0x10>;
++			#pwm-cells = <1>;
++		};
+ 	};
+ };
 -- 
 1.8.1.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
