@@ -1,29 +1,42 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: Adding aliases to mmc
-Date: Sun, 22 Sep 2013 12:24:24 -0300
-Message-ID: <CAOMZO5CVTRvC1z_xzco1A9FE+GALEHAZe8WNU20sNy+oZdNe+A@mail.gmail.com>
-References: <CAOMZO5CJ36JHJMaiG3QVdtpBoWd_ZyHQuRTrKHz4bLP39gpJtQ@mail.gmail.com>
-	<CAOMZO5AT3bduZ0=EtWHuHVg6tSWrdr_ZjX5PLu815o0qgkeSig@mail.gmail.com>
-	<523E92CB.1080302@gmail.com>
+From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 08/15] ata: ahci_platform: Manage SATA PHY
+Date: Sun, 22 Sep 2013 12:58:17 -0400
+Message-ID: <20130922165817.GD30946@htj.dyndns.org>
+References: <1379595943-14622-1-git-send-email-rogerq@ti.com>
+ <1379595943-14622-9-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <523E92CB.1080302@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@gmail.com>
-Cc: linux-mmc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Michael Olbrich <m.olbrich@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1379595943-14622-9-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dirk,
+On Thu, Sep 19, 2013 at 04:05:36PM +0300, Roger Quadros wrote:
+> From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+> 
+> Some platforms have a PHY hooked up to the
+> SATA controller. The PHY needs to be initialized
+> and powered up for SATA to work. We do that
+> using the PHY framework.
+> 
+> [Roger Q] Cleaned up.
+> 
+> CC: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 
-On Sun, Sep 22, 2013 at 3:48 AM, Dirk Behme <dirk.behme@gmail.com> wrote:
+Looks okay to me although I don't know whether everyone using
+ahci_platform would be happy with requiring phy.  Sergei, does this
+look good to you?
 
-> Do you like to send this as a proper patch? Following the recent discussion
-> it sounds to me that there is really some need for something like this. Then
-> we could discuss the technical details.
+Thanks.
 
-Please do so.
-
-Thanks,
-
-Fabio Estevam
+-- 
+tejun
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
