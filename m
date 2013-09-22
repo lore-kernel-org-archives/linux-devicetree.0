@@ -1,7 +1,7 @@
 From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 4/4] drivers: misc: ti_dac7512: add support for DT matching
-Date: Sun, 22 Sep 2013 21:51:49 +0200
-Message-ID: <1379879509-3608-5-git-send-email-zonque@gmail.com>
+Subject: [PATCH 3/4] drivers: misc: ti_dac7512: provide a SPI ID table
+Date: Sun, 22 Sep 2013 21:51:48 +0200
+Message-ID: <1379879509-3608-4-git-send-email-zonque@gmail.com>
 References: <1379879509-3608-1-git-send-email-zonque@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1379879509-3608-1-git-send-email-zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,73 +10,38 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Only matching is done via DT, no other details can be passed.
+This way, the module can be autoloaded by the SPI core.
 
 Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/misc/ti,dac7512.txt          | 20 ++++++++++++++++++++
- drivers/misc/ti_dac7512.c                            | 10 ++++++++++
- 2 files changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/ti,dac7512.txt
+ drivers/misc/ti_dac7512.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/misc/ti,dac7512.txt b/Documentation/devicetree/bindings/misc/ti,dac7512.txt
-new file mode 100644
-index 0000000..1db4593
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/ti,dac7512.txt
-@@ -0,0 +1,20 @@
-+TI DAC7512 DEVICETREE BINDINGS
-+
-+Required properties:
-+
-+	- "compatible"		Must be set to "ti,dac7512"
-+
-+Property rules described in Documentation/devicetree/bindings/spi/spi-bus.txt
-+apply. In particular, "reg" and "spi-max-frequency" properties must be given.
-+
-+
-+Example:
-+
-+	spi_master {
-+		dac7512: dac7512@0 {
-+			compatible = "ti,dac7512";
-+			reg = <0>; /* CS0 */
-+			spi-max-frequency = <1000000>;
-+		};
-+	};
-+
 diff --git a/drivers/misc/ti_dac7512.c b/drivers/misc/ti_dac7512.c
-index 6393a68..83da711 100644
+index 46dfbf3..6393a68 100644
 --- a/drivers/misc/ti_dac7512.c
 +++ b/drivers/misc/ti_dac7512.c
-@@ -22,6 +22,7 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/spi/spi.h>
-+#include <linux/of.h>
+@@ -72,6 +72,12 @@ static int dac7512_remove(struct spi_device *spi)
+ 	return 0;
+ }
  
- static ssize_t dac7512_store_val(struct device *dev,
- 				 struct device_attribute *attr,
-@@ -78,10 +79,19 @@ static const struct spi_device_id dac7512_id_table[] = {
- };
- MODULE_DEVICE_TABLE(spi, dac7512_id_table);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id dac7512_of_match[] = {
-+	{ .compatible = "ti,dac7512", },
++static const struct spi_device_id dac7512_id_table[] = {
++	{ "dac7512", 0 },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, dac7512_of_match);
-+#endif
++MODULE_DEVICE_TABLE(spi, dac7512_id_table);
 +
  static struct spi_driver dac7512_driver = {
  	.driver = {
  		.name	= "dac7512",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(dac7512_of_match),
+@@ -79,6 +85,7 @@ static struct spi_driver dac7512_driver = {
  	},
  	.probe	= dac7512_probe,
  	.remove	= dac7512_remove,
++	.id_table = dac7512_id_table,
+ };
+ 
+ module_spi_driver(dac7512_driver);
 -- 
 1.8.3.1
 
