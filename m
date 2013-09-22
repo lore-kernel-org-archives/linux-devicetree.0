@@ -1,35 +1,86 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 22/51] DMA-API: amba: get rid of separate dma_mask
-Date: Sun, 22 Sep 2013 07:18:28 -0500
-Message-ID: <20130922121828.58F02C42373@trevor.secretlab.ca>
-References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
- <E1VMm3x-0007hp-Lv@rmk-PC.arm.linux.org.uk>
+Subject: Re: [PATCH 18/28] of: create default early_init_dt_add_memory_arch
+Date: Sun, 22 Sep 2013 07:16:38 -0500
+Message-ID: <20130922121638.D9DCEC42347@trevor.secretlab.ca>
+References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
+ <1379372965-22359-19-git-send-email-robherring2@gmail.com>
+ <20130918033358.51CA1C42C9E@trevor.secretlab.ca>
+ <CAL_JsqKkhPt0hMKvdh+71WN9ERTRvzJKXO9ZV076ks-XGxbn4A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <E1VMm3x-0007hp-Lv@rmk-PC.arm.linux.org.uk>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Russell King <rmk+kernel@arm.linux.org.uk>, alsa-devel@alsa-project.org, b43-dev@lists.infradead.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, e1000-devel@lists.sourceforge.net, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-ide@vger.kernel.org, linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, linux-nvme@lists.infradead.org, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, uclinux-dist-devel@blackfin.uclinux.org
-Cc: Rob Herring <rob.herring@calxeda.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKkhPt0hMKvdh+71WN9ERTRvzJKXO9ZV076ks-XGxbn4A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Jonas Bonn <jonas@southpole.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, James Hogan <james.hogan@imgtec.com>, Catalin Marinas <catalin.marinas@arm.com>, "microblaze-uclinux@itee.uq.edu.au" <microblaze-uclinux@itee.uq.edu.au>, "x86@kernel.org" <x86@kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, linux@lists.openrisc.net, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 19 Sep 2013 22:47:01 +0100, Russell King <rmk+kernel@arm.linux.org.uk> wrote:
-> AMBA Primecell devices always treat streaming and coherent DMA exactly
-> the same, so there's no point in having the masks separated.
+On Wed, 18 Sep 2013 10:09:40 -0500, Rob Herring <robherring2@gmail.com> wrote:
+> On Tue, Sep 17, 2013 at 10:33 PM, Grant Likely <grant.likely@linaro.org> wrote:
+> > On Mon, 16 Sep 2013 18:09:14 -0500, Rob Herring <robherring2@gmail.com> wrote:
+> >> From: Rob Herring <rob.herring@calxeda.com>
+> >>
+> >> Create a weak version of early_init_dt_add_memory_arch which uses
+> >> memblock or is an empty function when memblock is not enabled. This
+> >> will unify all architectures except ones with custom memory bank
+> >> structs.
+> >
+> > Two comments below, but otherwise:
+> >
+> > Acked-by: Grant Likely <grant.likely@linaro.org>
+> >
+> >> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> >> index 0714dd4..a9dce7a 100644
+> >> --- a/drivers/of/fdt.c
+> >> +++ b/drivers/of/fdt.c
+> >> @@ -688,6 +688,17 @@ u64 __init dt_mem_next_cell(int s, __be32 **cellp)
+> >>       return of_read_number(p, s);
+> >>  }
+> >>
+> >> +void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+> >> +{
+> >> +#ifdef CONFIG_HAVE_MEMBLOCK
+> >> +     base &= PAGE_MASK;
+> >> +     size &= PAGE_MASK;
+> >> +     memblock_add(base, size);
+> >> +#else
+> >> +     pr_err("%s: ignoring memory (%llx, %llx)\n", __func__, base, size);
+> >> +#endif
+> >> +}
+> >> +
+> >
+> > Can you do it this way instead:
+> >
+> > #ifdef CONFIG_HAVE_MEMBLOCK
+> > void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+> > {
+> >         base &= PAGE_MASK;
+> >         size &= PAGE_MASK;
+> >         memblock_add(base, size);
+> > }
+> > #endif
+> >
+> > If the platform doesn't provide an early_init_dt_add_memory_arch()
+> > function and it doesn't have a memblock implementation, then the build
+> > should outright fail. I don't see a scenario where we would want to
+> > successfully build the kernel without a working add memory function.
 > 
-> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> metag and x86 both have empty functions. I guess they get memory from
+> a different boot interface.
 
-for the drivers/of/platform.c portion:
-Acked-by: Grant Likely <grant.likely@linaro.org>
+I would put the exceptions into arch/x86 and arch/metag then. The
+default answer should be that early_init_dt_add_memory_arch() works, and
+the build will fail if they aren't implemented. If it really is valid to
+have an empty implementation, then the architecture should have to do
+something special to get that.
 
 g.
