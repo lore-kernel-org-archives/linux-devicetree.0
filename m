@@ -1,100 +1,41 @@
-From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH -next] drivers: CCI: fix the error handle in cci_pmu_probe()
-Date: Sun, 22 Sep 2013 13:04:23 +0800
-Message-ID: <CAPgLHd9jKOp71tN43=oOUN4X_niTonuQExO1yMSy=3odoRqTcQ@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND 0/3] ARM: dts: mxs: add pinctrl header files
+Date: Sun, 22 Sep 2013 14:11:43 +0800
+Message-ID: <20130922061140.GA31787@S2101-09.ap.freescale.net>
+References: <1379573990-27556-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1379573990-27556-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org
-Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+On Thu, Sep 19, 2013 at 08:59:46AM +0200, Lothar Wa=DFmann wrote:
+> These patches add header files for the MXS arch and convert the DTS
+> files to use the pad definitions from those files rather than
+> hardcoding the numerical pinctrl values.
+>=20
+> The conversion from numerical representation to symbolic names has
+> been done with a perl script that checked the definitions for
+> consistency of the pin function comments and the numerical values
+> used. This revealed an inconsistency in:
+> arch/arm/boot/dts/imx28-apx4devkit.dts, which pretended to use
+> MX28_PAD_SSP2_SS0__GPIO_2_19 (equivalent to 0x2133) in the comment,
+> but actually was using MX28_PAD_SSP2_SS0__AUART3_TX by the numerical
+> value 0x2131.
+>=20
+> I decided to use the (possibly unintended) assignment
+> MX28_PAD_SSP2_SS0__AUART3_TX because that is what is actually
+> configured without this patch.
 
-This patch fix the error handle of function cci_pmu_probe():
-- using IS_ERR() instead of NULL test for the return value of
-  devm_ioremap_resource() since it nerver return NULL.
-- remove kfree() for devm_kzalloc allocated memory
-- remove dev_warn() since devm_ioremap_resource() has error message
-  already.
-
-Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
----
- drivers/bus/arm-cci.c | 33 +++++++--------------------------
- 1 file changed, 7 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-index dc6528e..edad26c 100644
---- a/drivers/bus/arm-cci.c
-+++ b/drivers/bus/arm-cci.c
-@@ -565,18 +565,9 @@ static int cci_pmu_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		dev_warn(&pdev->dev, "Failed to get mem resource\n");
--		ret = -EINVAL;
--		goto memalloc_err;
--	};
--
- 	pmu->base = devm_ioremap_resource(&pdev->dev, res);
--	if (!pmu->base) {
--		dev_warn(&pdev->dev, "Failed to ioremap\n");
--		ret = -ENOMEM;
--		goto memalloc_err;
--	}
-+	if (IS_ERR(pmu->base))
-+		return -ENOMEM;
- 
- 	/*
- 	 * CCI PMU has 5 overflow signals - one per counter; but some may be tied
-@@ -601,22 +592,18 @@ static int cci_pmu_probe(struct platform_device *pdev)
- 	if (i < CCI_PMU_MAX_HW_EVENTS) {
- 		dev_warn(&pdev->dev, "In-correct number of interrupts: %d, should be %d\n",
- 			i, CCI_PMU_MAX_HW_EVENTS);
--		ret = -EINVAL;
--		goto memalloc_err;
-+		return -EINVAL;
- 	}
- 
- 	pmu->port_ranges = port_range_by_rev();
- 	if (!pmu->port_ranges) {
- 		dev_warn(&pdev->dev, "CCI PMU version not supported\n");
--		ret = -EINVAL;
--		goto memalloc_err;
-+		return -EINVAL;
- 	}
- 
- 	pmu->cci_pmu = devm_kzalloc(&pdev->dev, sizeof(*(pmu->cci_pmu)), GFP_KERNEL);
--	if (!pmu->cci_pmu) {
--		ret = -ENOMEM;
--		goto memalloc_err;
--	}
-+	if (!pmu->cci_pmu)
-+		return -ENOMEM;
- 
- 	pmu->hw_events.events = pmu->events;
- 	pmu->hw_events.used_mask = pmu->used_mask;
-@@ -624,15 +611,9 @@ static int cci_pmu_probe(struct platform_device *pdev)
- 
- 	ret = cci_pmu_init(pmu->cci_pmu, pdev);
- 	if (ret)
--		goto pmuinit_err;
-+		return ret;
- 
- 	return 0;
--
--pmuinit_err:
--	kfree(pmu->cci_pmu);
--memalloc_err:
--	kfree(pmu);
--	return ret;
- }
- 
- static int cci_platform_probe(struct platform_device *pdev)
+Applied these 3 patches, thanks.
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
