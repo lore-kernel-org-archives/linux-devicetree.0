@@ -1,86 +1,122 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 18/28] of: create default early_init_dt_add_memory_arch
-Date: Sun, 22 Sep 2013 07:16:38 -0500
-Message-ID: <20130922121638.D9DCEC42347@trevor.secretlab.ca>
-References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
- <1379372965-22359-19-git-send-email-robherring2@gmail.com>
- <20130918033358.51CA1C42C9E@trevor.secretlab.ca>
- <CAL_JsqKkhPt0hMKvdh+71WN9ERTRvzJKXO9ZV076ks-XGxbn4A@mail.gmail.com>
+From: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] Documentation: add LP3943 DT bindings and document
+Date: Sun, 22 Sep 2013 23:35:44 +0900
+Message-ID: <523F0040.6050900@ti.com>
+References: <1378949700-6384-1-git-send-email-milo.kim@ti.com> <20130912152455.GN11227@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKkhPt0hMKvdh+71WN9ERTRvzJKXO9ZV076ks-XGxbn4A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Jonas Bonn <jonas@southpole.se>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, James Hogan <james.hogan@imgtec.com>, Catalin Marinas <catalin.marinas@arm.com>, "microblaze-uclinux@itee.uq.edu.au" <microblaze-uclinux@itee.uq.edu.au>, "x86@kernel.org" <x86@kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, linux@lists.openrisc.net, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130912152455.GN11227@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Sep 2013 10:09:40 -0500, Rob Herring <robherring2@gmail.com> wrote:
-> On Tue, Sep 17, 2013 at 10:33 PM, Grant Likely <grant.likely@linaro.org> wrote:
-> > On Mon, 16 Sep 2013 18:09:14 -0500, Rob Herring <robherring2@gmail.com> wrote:
-> >> From: Rob Herring <rob.herring@calxeda.com>
-> >>
-> >> Create a weak version of early_init_dt_add_memory_arch which uses
-> >> memblock or is an empty function when memblock is not enabled. This
-> >> will unify all architectures except ones with custom memory bank
-> >> structs.
-> >
-> > Two comments below, but otherwise:
-> >
-> > Acked-by: Grant Likely <grant.likely@linaro.org>
-> >
-> >> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> >> index 0714dd4..a9dce7a 100644
-> >> --- a/drivers/of/fdt.c
-> >> +++ b/drivers/of/fdt.c
-> >> @@ -688,6 +688,17 @@ u64 __init dt_mem_next_cell(int s, __be32 **cellp)
-> >>       return of_read_number(p, s);
-> >>  }
-> >>
-> >> +void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
-> >> +{
-> >> +#ifdef CONFIG_HAVE_MEMBLOCK
-> >> +     base &= PAGE_MASK;
-> >> +     size &= PAGE_MASK;
-> >> +     memblock_add(base, size);
-> >> +#else
-> >> +     pr_err("%s: ignoring memory (%llx, %llx)\n", __func__, base, size);
-> >> +#endif
-> >> +}
-> >> +
-> >
-> > Can you do it this way instead:
-> >
-> > #ifdef CONFIG_HAVE_MEMBLOCK
-> > void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
-> > {
-> >         base &= PAGE_MASK;
-> >         size &= PAGE_MASK;
-> >         memblock_add(base, size);
-> > }
-> > #endif
-> >
-> > If the platform doesn't provide an early_init_dt_add_memory_arch()
-> > function and it doesn't have a memblock implementation, then the build
-> > should outright fail. I don't see a scenario where we would want to
-> > successfully build the kernel without a working add memory function.
-> 
-> metag and x86 both have empty functions. I guess they get memory from
-> a different boot interface.
 
-I would put the exceptions into arch/x86 and arch/metag then. The
-default answer should be that early_init_dt_add_memory_arch() works, and
-the build will fail if they aren't implemented. If it really is valid to
-have an empty implementation, then the architecture should have to do
-something special to get that.
+Hi Lee,
 
-g.
+On 09/13/2013 12:24 AM, Lee Jones wrote:
+> On Thu, 12 Sep 2013, Milo Kim wrote:
+
+...
+
+>> new file mode 100644
+>> index 0000000..576ebd0
+>> --- /dev/null
+>> +++ b/Documentation/lp3943.txt
+>> @@ -0,0 +1,62 @@
+>> +TI/National Semiconductor LP3943 MFD driver
+>> +===========================================
+>> +
+>> +LP3943 is an integrated device capable of driving 16 output channels.
+>> +It can be used for GPIO expander and PWM generators.
+>> +LP3493 registers are controlled via the I2C interface.
+>> +
+>> +Driver structure
+>> +----------------
+>> +                                  LED control    General usage for a device
+>> +                                  ___________   ____________________________
+>> +
+>> +  LP3943 MFD ---- GPIO expander    leds-gpio        eg) HW enable pin
+>> +              |
+>> +              --- PWM generator    leds-pwm         eg) PWM input
+>> +
+>> +
+>> +Why do we need GPIO and PWM drivers instead of LED driver?
+>> +To support LED control and general usage, GPIO and PWM drivers are necessary.
+>> +
+>> +According to the datasheet(1), it's just a LED driver which has 16 channels.
+>> +But here is another application, a GPIO expander.(2)
+>> +
+>> +  (1) http://www.ti.com/lit/ds/snvs256b/snvs256b.pdf
+>> +  (2) http://www.ti.com/lit/an/snva287a/snva287a.pdf
+>> +
+>> +Internal two PWM channels are used for LED dimming effect.
+>> +And each output pin can be used as a GPIO as well.
+>> +LED functionality can work with GPIOs or PWMs.
+>> +LEDs can be controlled with legacy leds-gpio(static brightness) or
+>> +leds-pwm drivers(dynamic brightness control).
+>> +Additionally, it can be used for generic GPIO and PWM controller.
+>> +For example, a GPIO is HW enable pin of a device.
+>> +PWM is input pin of a backlight device.
+>> +
+>> +
+>> +LP3943 PWM port map
+>> +-------------------
+>> +Each PWM channel can be mapped to one or multiple output pins.
+>> +
+>> +For example, PWM 0 is used for a backlight device.
+>> +PWM 1 is for RGB LEDs.
+>> +
+>> +  PWM channel    Output pins    PWM consumer
+>> +  ___________    ___________    ____________
+>> +  PWM 0          pin 1          backlight
+>> +  PWM 1          pin 7, 8, 9    RGB LEDs
+>> +
+>> +Then, PWM port map is as below.
+>> +PWM 0: num_outputs = 1, output = pin 1
+>> +PWM 1: num_outputs = 3, output = pin 7, 8, 9
+>> +
+>> +The 'lp3943_pwm_map' structure is used for this feature.
+>> +
+>> +
+>> +Device tree supported
+>> +---------------------
+>> +Please refer to the documents below.
+>> +
+>> +Documentation/devicetree/bindings/mfd/lp3943.txt
+>> +Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
+>> +Documentation/devicetree/bindings/pwm/pwm-lp3943.txt
+>
+> Why do you need to document your driver in this way?
+>
+> If this stuff is really important (and most of it really isn't), then
+> put it either in the commit log or in the driver.
+
+Unnecessary documentation makes it noisy, but I think the LP3943 still 
+needs the driver documentation for better understanding.
+
+Many people think LP3943 is just LED driver, but I really want to share 
+the application usages - PWM generators and GPIO expanders.
+If the driver just supports LED functionality, then it would be created 
+as LED class driver. However, this patch-set enables more generic driver 
+usages.
+So, this documentation would be helpful.
+
+And I want to keep the code and the documentation separate.
+If the link address is changed, then only documentation file will be 
+modified, not source file.
+
+So, I'd like to create the fifth patch-set with new MFD documentation 
+subdirectory.
+Additionally, LP3943 platform data example code will be added in the 
+'Documentation/mfd/lp3943.txt'. It's for a platform which doesn't 
+support the device tree.
+
+Best regards,
+Milo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
