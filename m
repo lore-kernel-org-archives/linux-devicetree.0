@@ -1,72 +1,70 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: new cpu iteration code...
-Date: Sun, 22 Sep 2013 16:29:15 -0400 (EDT)
-Message-ID: <20130922.162915.1269060096375052591.davem@davemloft.net>
-References: <20130919.133805.1227344435777214810.davem@davemloft.net>
-	<523C7B54.3070706@arm.com>
-	<523F4F6F.8030209@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 07/10] of/irq: Propagate errors in of_irq_to_resource_table()
+Date: Sun, 22 Sep 2013 16:08:26 -0500
+Message-ID: <CAL_JsqJ+4P26hRrJcrbBmwfNPDAS+1GhXj12B+UvqmZZGjqT0g@mail.gmail.com>
+References: <1379510692-32435-1-git-send-email-treding@nvidia.com>
+	<1379510692-32435-8-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <523F4F6F.8030209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1379510692-32435-8-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Sun, 22 Sep 2013 15:13:35 -0500
+On Wed, Sep 18, 2013 at 8:24 AM, Thierry Reding
+<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Now that all helpers return precise error codes, this function can
+> propagate these errors to the caller properly.
+>
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v2:
+> - return 0 on success or a negative error code on failure
+> - convert callers to new calling convention
 
-> On 09/20/2013 11:44 AM, Sudeep KarkadaNagesha wrote:
->> On 19/09/13 18:38, David Miller wrote:
->>> From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Date: Thu, 19 Sep 2013 08:26:04 -0500
->>>
->>>> The simple solution here is to just remove the warning. It doesn't
->>>> appear to me that sparc ever sets the cpu device of_node pointer.
->>>
->>> Why wouldn't I want sparc to have this functionality now that the
->>> code is generically available.
->>>
->> Makes sense, but as you mentioned before we need to match other property
->> names namely "upa-portid", "portid" or "cpuid" for cpu physical id right
->> ? Are all these 32-bit values ?
->> 
->>>> Are there any cases on where sparc does have a /cpus node? If so we'd
->>>> need to make of_get_cpu_node a weak function or depend on a kconfig option.
->>>
->>> I already gave a solution to this problem, make the loop iterator be:
->>>
->>> 	for_each_node_by_type(dp, "cpu")
->>>
->> 
->> Does it make sense use this only when /cpus is not found ?
->> IMHO as the number of node in DT increases(which is the case on ARM
->> platforms) parsing entire tree may be expensive(which can be avoided in
->> case /cpus is found)
-> 
-> Can't you simply do something like this for the search:
-> 
-> 	cpus = of_find_node_by_path("/cpus");
-> 	if (!cpus && IS_ENABLED(CONFIG_SPARC))
-> 		cpus = of_find_node_by_path("/");
-> 	if (!cpus) {
-> 		pr_warn("Missing cpus node, bailing out\n");
-> 		return NULL;
-> 	}
-> 
-> 	for_each_child_of_node(cpus, cpun) {
+[snip]
 
-This doesn't work either Rob.  Some UltraSPARC-IV systems put the cpu
-nodes under directories representing the cores.
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index e4f38c0..6d7f824 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -397,18 +397,20 @@ int of_irq_count(struct device_node *dev)
+>   * @res: array of resources to fill in
+>   * @nr_irqs: the number of IRQs (and upper bound for num of @res elements)
 
-For the third time, the only thing which will work unilaterally is
-the type base iterator I proposed above.
+You are effectively changing this to require an exact match rather
+than an upper bound. That seems to be okay since that is what all the
+callers want, but the documentation should be updated.
 
-Why is there so much resistence to something which has an extremely
-high likelyhood of working everywhere and not requiring any ifdef
-crapola?
+>   *
+> - * Returns the size of the filled in table (up to @nr_irqs).
+> + * Returns 0 on success or a negative error code on failure.
+>   */
+>  int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
+>                 int nr_irqs)
+>  {
+> -       int i;
+> +       int i, ret;
+>
+> -       for (i = 0; i < nr_irqs; i++, res++)
+> -               if (!of_irq_to_resource(dev, i, res))
+
+The error handling here needs to be updated in the previous patch.
+
+> -                       break;
+> +       for (i = 0; i < nr_irqs; i++, res++) {
+> +               ret = of_irq_to_resource(dev, i, res);
+> +               if (ret < 0)
+> +                       return ret;
+> +       }
+>
+> -       return i;
+> +       return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(of_irq_to_resource_table);
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
