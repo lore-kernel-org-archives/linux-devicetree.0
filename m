@@ -1,71 +1,71 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 07/10] of/irq: Propagate errors in of_irq_to_resource_table()
-Date: Sun, 22 Sep 2013 16:08:26 -0500
-Message-ID: <CAL_JsqJ+4P26hRrJcrbBmwfNPDAS+1GhXj12B+UvqmZZGjqT0g@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 04/10] irqdomain: Return errors from
+ irq_create_of_mapping()
+Date: Sun, 22 Sep 2013 16:14:43 -0500
+Message-ID: <CAL_JsqLQeAQD460f8Lk9eDE2dCzLusC1mXZ-_uaKVFLfhJNryg@mail.gmail.com>
 References: <1379510692-32435-1-git-send-email-treding@nvidia.com>
-	<1379510692-32435-8-git-send-email-treding@nvidia.com>
+ <1379510692-32435-5-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379510692-32435-8-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1379510692-32435-5-git-send-email-treding@nvidia.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-mips@linux-mips.org, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, sparclinux@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Sep 18, 2013 at 8:24 AM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Now that all helpers return precise error codes, this function can
-> propagate these errors to the caller properly.
+<thierry.reding@gmail.com> wrote:
+> Instead of returning 0 for all errors, allow the precise error code to
+> be propagated. This will be used in subsequent patches to allow further
+> propagation of error codes.
 >
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes in v2:
-> - return 0 on success or a negative error code on failure
-> - convert callers to new calling convention
+> The interrupt number corresponding to the new mapping is returned in an
+> output parameter so that the return value is reserved to signal success
+> (== 0) or failure (< 0).
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-[snip]
+One comment below, otherwise:
 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index e4f38c0..6d7f824 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -397,18 +397,20 @@ int of_irq_count(struct device_node *dev)
->   * @res: array of resources to fill in
->   * @nr_irqs: the number of IRQs (and upper bound for num of @res elements)
+Acked-by: Rob Herring <rob.herring@calxeda.com>
 
-You are effectively changing this to require an exact match rather
-than an upper bound. That seems to be okay since that is what all the
-callers want, but the documentation should be updated.
-
->   *
-> - * Returns the size of the filled in table (up to @nr_irqs).
-> + * Returns 0 on success or a negative error code on failure.
->   */
->  int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
->                 int nr_irqs)
+> diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
+> index 905a24b..ae71b14 100644
+> --- a/arch/powerpc/kernel/pci-common.c
+> +++ b/arch/powerpc/kernel/pci-common.c
+> @@ -230,6 +230,7 @@ static int pci_read_irq_line(struct pci_dev *pci_dev)
 >  {
-> -       int i;
-> +       int i, ret;
+>         struct of_irq oirq;
+>         unsigned int virq;
+> +       int ret;
 >
-> -       for (i = 0; i < nr_irqs; i++, res++)
-> -               if (!of_irq_to_resource(dev, i, res))
+>         pr_debug("PCI: Try to map irq for %s...\n", pci_name(pci_dev));
+>
+> @@ -266,8 +267,10 @@ static int pci_read_irq_line(struct pci_dev *pci_dev)
+>                          oirq.size, oirq.specifier[0], oirq.specifier[1],
+>                          of_node_full_name(oirq.controller));
+>
+> -               virq = irq_create_of_mapping(oirq.controller, oirq.specifier,
+> -                                            oirq.size);
+> +               ret = irq_create_of_mapping(oirq.controller, oirq.specifier,
+> +                                           oirq.size, &virq);
+> +               if (ret)
+> +                       virq = NO_IRQ;
+>         }
+>         if(virq == NO_IRQ) {
+>                 pr_debug(" Failed to map !\n");
 
-The error handling here needs to be updated in the previous patch.
+Can you get rid of NO_IRQ usage here instead of adding to it.
 
-> -                       break;
-> +       for (i = 0; i < nr_irqs; i++, res++) {
-> +               ret = of_irq_to_resource(dev, i, res);
-> +               if (ret < 0)
-> +                       return ret;
-> +       }
->
-> -       return i;
-> +       return 0;
->  }
->  EXPORT_SYMBOL_GPL(of_irq_to_resource_table);
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
