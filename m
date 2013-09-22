@@ -1,29 +1,100 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v5] clk: si570: Add a driver for SI570 oscillators
-Date: Sat, 21 Sep 2013 19:31:04 -0700
-Message-ID: <523E5668.2000201@roeck-us.net>
-References: <1379806839-13762-1-git-send-email-soren.brinkmann@xilinx.com>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH -next] drivers: CCI: fix the error handle in cci_pmu_probe()
+Date: Sun, 22 Sep 2013 13:04:23 +0800
+Message-ID: <CAPgLHd9jKOp71tN43=oOUN4X_niTonuQExO1yMSy=3odoRqTcQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1379806839-13762-1-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hyun Kwon <hyunk@xilinx.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org
+Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/21/2013 04:40 PM, Soren Brinkmann wrote:
-> Add a driver for SILabs 570, 571, 598, 599 programmable oscillators.
-> The devices generate low-jitter clock signals and are reprogrammable via
-> an I2C interface.
->
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-Looks good to me. Thanks a lot for picking this up.
+This patch fix the error handle of function cci_pmu_probe():
+- using IS_ERR() instead of NULL test for the return value of
+  devm_ioremap_resource() since it nerver return NULL.
+- remove kfree() for devm_kzalloc allocated memory
+- remove dev_warn() since devm_ioremap_resource() has error message
+  already.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+---
+ drivers/bus/arm-cci.c | 33 +++++++--------------------------
+ 1 file changed, 7 insertions(+), 26 deletions(-)
 
-Guenter
+diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
+index dc6528e..edad26c 100644
+--- a/drivers/bus/arm-cci.c
++++ b/drivers/bus/arm-cci.c
+@@ -565,18 +565,9 @@ static int cci_pmu_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		dev_warn(&pdev->dev, "Failed to get mem resource\n");
+-		ret = -EINVAL;
+-		goto memalloc_err;
+-	};
+-
+ 	pmu->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (!pmu->base) {
+-		dev_warn(&pdev->dev, "Failed to ioremap\n");
+-		ret = -ENOMEM;
+-		goto memalloc_err;
+-	}
++	if (IS_ERR(pmu->base))
++		return -ENOMEM;
+ 
+ 	/*
+ 	 * CCI PMU has 5 overflow signals - one per counter; but some may be tied
+@@ -601,22 +592,18 @@ static int cci_pmu_probe(struct platform_device *pdev)
+ 	if (i < CCI_PMU_MAX_HW_EVENTS) {
+ 		dev_warn(&pdev->dev, "In-correct number of interrupts: %d, should be %d\n",
+ 			i, CCI_PMU_MAX_HW_EVENTS);
+-		ret = -EINVAL;
+-		goto memalloc_err;
++		return -EINVAL;
+ 	}
+ 
+ 	pmu->port_ranges = port_range_by_rev();
+ 	if (!pmu->port_ranges) {
+ 		dev_warn(&pdev->dev, "CCI PMU version not supported\n");
+-		ret = -EINVAL;
+-		goto memalloc_err;
++		return -EINVAL;
+ 	}
+ 
+ 	pmu->cci_pmu = devm_kzalloc(&pdev->dev, sizeof(*(pmu->cci_pmu)), GFP_KERNEL);
+-	if (!pmu->cci_pmu) {
+-		ret = -ENOMEM;
+-		goto memalloc_err;
+-	}
++	if (!pmu->cci_pmu)
++		return -ENOMEM;
+ 
+ 	pmu->hw_events.events = pmu->events;
+ 	pmu->hw_events.used_mask = pmu->used_mask;
+@@ -624,15 +611,9 @@ static int cci_pmu_probe(struct platform_device *pdev)
+ 
+ 	ret = cci_pmu_init(pmu->cci_pmu, pdev);
+ 	if (ret)
+-		goto pmuinit_err;
++		return ret;
+ 
+ 	return 0;
+-
+-pmuinit_err:
+-	kfree(pmu->cci_pmu);
+-memalloc_err:
+-	kfree(pmu);
+-	return ret;
+ }
+ 
+ static int cci_platform_probe(struct platform_device *pdev)
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
