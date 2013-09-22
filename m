@@ -1,122 +1,176 @@
-From: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] Documentation: add LP3943 DT bindings and document
-Date: Sun, 22 Sep 2013 23:35:44 +0900
-Message-ID: <523F0040.6050900@ti.com>
-References: <1378949700-6384-1-git-send-email-milo.kim@ti.com> <20130912152455.GN11227@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130912152455.GN11227@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [RFC] gpio/omap: auto-setup a GPIO when used as an IRQ
+Date: Sun, 22 Sep 2013 16:40:48 +0200
+Message-ID: <1379860848-29020-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Kevin Hilman <khilman@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
+To use a GPIO pin as an interrupt line, two previous configurations
+have to be made:
 
-Hi Lee,
+a) Map the GPIO pin as an interrupt line into the Linux irq space
+b) Enable the GPIO bank and configure the GPIO direction as input
 
-On 09/13/2013 12:24 AM, Lee Jones wrote:
-> On Thu, 12 Sep 2013, Milo Kim wrote:
+Most GPIO/IRQ chip drivers just create a mapping for every single
+GPIO pin with irq_create_mapping() on .probe so users usually can
+assume a) and only have to do b) by using the following sequence:
 
-...
+gpio_request(gpio, "foo IRQ");
+gpio_direction_input(gpio);
 
->> new file mode 100644
->> index 0000000..576ebd0
->> --- /dev/null
->> +++ b/Documentation/lp3943.txt
->> @@ -0,0 +1,62 @@
->> +TI/National Semiconductor LP3943 MFD driver
->> +===========================================
->> +
->> +LP3943 is an integrated device capable of driving 16 output channels.
->> +It can be used for GPIO expander and PWM generators.
->> +LP3493 registers are controlled via the I2C interface.
->> +
->> +Driver structure
->> +----------------
->> +                                  LED control    General usage for a device
->> +                                  ___________   ____________________________
->> +
->> +  LP3943 MFD ---- GPIO expander    leds-gpio        eg) HW enable pin
->> +              |
->> +              --- PWM generator    leds-pwm         eg) PWM input
->> +
->> +
->> +Why do we need GPIO and PWM drivers instead of LED driver?
->> +To support LED control and general usage, GPIO and PWM drivers are necessary.
->> +
->> +According to the datasheet(1), it's just a LED driver which has 16 channels.
->> +But here is another application, a GPIO expander.(2)
->> +
->> +  (1) http://www.ti.com/lit/ds/snvs256b/snvs256b.pdf
->> +  (2) http://www.ti.com/lit/an/snva287a/snva287a.pdf
->> +
->> +Internal two PWM channels are used for LED dimming effect.
->> +And each output pin can be used as a GPIO as well.
->> +LED functionality can work with GPIOs or PWMs.
->> +LEDs can be controlled with legacy leds-gpio(static brightness) or
->> +leds-pwm drivers(dynamic brightness control).
->> +Additionally, it can be used for generic GPIO and PWM controller.
->> +For example, a GPIO is HW enable pin of a device.
->> +PWM is input pin of a backlight device.
->> +
->> +
->> +LP3943 PWM port map
->> +-------------------
->> +Each PWM channel can be mapped to one or multiple output pins.
->> +
->> +For example, PWM 0 is used for a backlight device.
->> +PWM 1 is for RGB LEDs.
->> +
->> +  PWM channel    Output pins    PWM consumer
->> +  ___________    ___________    ____________
->> +  PWM 0          pin 1          backlight
->> +  PWM 1          pin 7, 8, 9    RGB LEDs
->> +
->> +Then, PWM port map is as below.
->> +PWM 0: num_outputs = 1, output = pin 1
->> +PWM 1: num_outputs = 3, output = pin 7, 8, 9
->> +
->> +The 'lp3943_pwm_map' structure is used for this feature.
->> +
->> +
->> +Device tree supported
->> +---------------------
->> +Please refer to the documents below.
->> +
->> +Documentation/devicetree/bindings/mfd/lp3943.txt
->> +Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
->> +Documentation/devicetree/bindings/pwm/pwm-lp3943.txt
->
-> Why do you need to document your driver in this way?
->
-> If this stuff is really important (and most of it really isn't), then
-> put it either in the commit log or in the driver.
+and then request a IRQ with:
 
-Unnecessary documentation makes it noisy, but I think the LP3943 still 
-needs the driver documentation for better understanding.
+irq = gpio_to_irq(gpio);
+request_irq(irq, ...);
 
-Many people think LP3943 is just LED driver, but I really want to share 
-the application usages - PWM generators and GPIO expanders.
-If the driver just supports LED functionality, then it would be created 
-as LED class driver. However, this patch-set enables more generic driver 
-usages.
-So, this documentation would be helpful.
+Some drivers know that their IRQ line is being driven by a GPIO
+and use a similar sequence as the described above but others are
+not aware or don't care wether their IRQ is a real line from an
+interrupt controller or a GPIO pin acting as an IRQ.
 
-And I want to keep the code and the documentation separate.
-If the link address is changed, then only documentation file will be 
-modified, not source file.
+In these cases board files did all the necessary GPIO setup so the
+drivers could only call request_irq() on the provided IRQ.
 
-So, I'd like to create the fifth patch-set with new MFD documentation 
-subdirectory.
-Additionally, LP3943 platform data example code will be added in the 
-'Documentation/mfd/lp3943.txt'. It's for a platform which doesn't 
-support the device tree.
+Unfortuntaly this does not work when booting with Device Trees since
+the OF irq core does neither request the GPIO nor set its direction.
 
-Best regards,
-Milo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+A DTS just defines the GPIO controller phandle as a interrupt-parent
+so drivers get the mapped GPIO-IRQ line but request_irq() fails since
+the setup was never made.
+
+The first attemp to solve this issue was by adding a custom .map()
+irq_domain_ops function handler in the gpio-omap driver that called
+gpio_request_one() to request and setup the GPIO direction as input.
+
+This was made on commits:
+
+0e970cec ("gpio/omap: don't create an IRQ mapping for every GPIO on DT")
+b4419e1a ("gpio/omap: auto request GPIO as input if used as IRQ via DT")
+
+but they got reverted since broke OMAP1 platforms.
+
+This patch solves this issue with a different approach, by doing all
+the needed hardware setup on the GPIO/IRQ chip driver when a call to
+request_irq() is made.
+
+Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+---
+
+Hello,
+
+This patch is an attempt to solve the long standing issue that we have been
+discussing in thread:
+
+"[PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs" [1]
+
+The fix is just for OMAP of course and not a kernel wide solution but Linus
+approach (which I think is the best general solution proposed so far) has
+some resistance so it seems that it won't be merged and we really need a
+solution for OMAP if we want to finish our migration to Device Tree soon.
+
+The patch is based on 3.12-rc1 but is not meant to be merged as a fix for
+this -rc cycle. I would like it to be tested ideally on every OMAP platform
+supported in mainline. So is better to wait until we are sure that this does
+not cause a regression on any platform than ending reverting the patch like
+it happened last time.
+
+Thanks a lot and best regards,
+Javier
+
+[1]: https://lkml.org/lkml/2013/8/26/260 
+
+ drivers/gpio/gpio-omap.c | 54 +++++++++++++++++++++++++++---------------------
+ 1 file changed, 31 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 0ff4355..218ce3d 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -420,6 +420,29 @@ static int _set_gpio_triggering(struct gpio_bank *bank, int gpio,
+ 	return 0;
+ }
+ 
++static void _set_gpio_mode(struct gpio_bank *bank, unsigned offset)
++{
++	if (bank->regs->pinctrl) {
++		void __iomem *reg = bank->base + bank->regs->pinctrl;
++
++		/* Claim the pin for MPU */
++		__raw_writel(__raw_readl(reg) | (1 << offset), reg);
++	}
++
++	if (bank->regs->ctrl && !bank->mod_usage) {
++		void __iomem *reg = bank->base + bank->regs->ctrl;
++		u32 ctrl;
++
++		ctrl = __raw_readl(reg);
++		/* Module is enabled, clocks are not gated */
++		ctrl &= ~GPIO_MOD_CTRL_BIT;
++		__raw_writel(ctrl, reg);
++		bank->context.ctrl = ctrl;
++	}
++
++	bank->mod_usage |= 1 << offset;
++}
++
+ static int gpio_irq_type(struct irq_data *d, unsigned type)
+ {
+ 	struct gpio_bank *bank = irq_data_get_irq_chip_data(d);
+@@ -427,8 +450,8 @@ static int gpio_irq_type(struct irq_data *d, unsigned type)
+ 	int retval;
+ 	unsigned long flags;
+ 
+-	if (WARN_ON(!bank->mod_usage))
+-		return -EINVAL;
++	if (!bank->mod_usage)
++		pm_runtime_get_sync(bank->dev);
+ 
+ #ifdef CONFIG_ARCH_OMAP1
+ 	if (d->irq > IH_MPUIO_BASE)
+@@ -438,6 +461,11 @@ static int gpio_irq_type(struct irq_data *d, unsigned type)
+ 	if (!gpio)
+ 		gpio = irq_to_gpio(bank, d->hwirq);
+ 
++	spin_lock_irqsave(&bank->lock, flags);
++	_set_gpio_mode(bank, GPIO_INDEX(bank, gpio));
++	_set_gpio_direction(bank, GPIO_INDEX(bank, gpio), 1);
++	spin_unlock_irqrestore(&bank->lock, flags);
++
+ 	if (type & ~IRQ_TYPE_SENSE_MASK)
+ 		return -EINVAL;
+ 
+@@ -611,27 +639,7 @@ static int omap_gpio_request(struct gpio_chip *chip, unsigned offset)
+ 	 * request_irq() or set_irq_type().
+ 	 */
+ 	_set_gpio_triggering(bank, offset, IRQ_TYPE_NONE);
+-
+-	if (bank->regs->pinctrl) {
+-		void __iomem *reg = bank->base + bank->regs->pinctrl;
+-
+-		/* Claim the pin for MPU */
+-		__raw_writel(__raw_readl(reg) | (1 << offset), reg);
+-	}
+-
+-	if (bank->regs->ctrl && !bank->mod_usage) {
+-		void __iomem *reg = bank->base + bank->regs->ctrl;
+-		u32 ctrl;
+-
+-		ctrl = __raw_readl(reg);
+-		/* Module is enabled, clocks are not gated */
+-		ctrl &= ~GPIO_MOD_CTRL_BIT;
+-		__raw_writel(ctrl, reg);
+-		bank->context.ctrl = ctrl;
+-	}
+-
+-	bank->mod_usage |= 1 << offset;
+-
++	_set_gpio_mode(bank, offset);
+ 	spin_unlock_irqrestore(&bank->lock, flags);
+ 
+ 	return 0;
+-- 
+1.8.4.rc3
+
