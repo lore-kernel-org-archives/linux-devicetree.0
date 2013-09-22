@@ -1,143 +1,126 @@
-From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Sun, 22 Sep 2013 19:01:47 +0200
-Message-ID: <523F227B.8040102@collabora.co.uk>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <522FBED9.9000305@collabora.co.uk> <5230C7F6.3080803@wwwdotorg.org> <3653629.tapNZSuWhS@lem-wkst-02> <52373B34.4060709@wwwdotorg.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [RFC PATCH 08/15] ata: ahci_platform: Manage SATA PHY
+Date: Sun, 22 Sep 2013 22:22:31 +0400
+Message-ID: <523F3567.80303@cogentembedded.com>
+References: <1379595943-14622-1-git-send-email-rogerq@ti.com> <1379595943-14622-9-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52373B34.4060709-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jgchunter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, joelf-l0cyMroinI0@public.gmane.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1379595943-14622-9-git-send-email-rogerq@ti.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: balbi@ti.com, bcousson@baylibre.com, tony@atomide.com, balajitk@ti.com, kishon@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tejun Heo <tj@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2013 07:09 PM, Stephen Warren wrote:
-> On 09/16/2013 10:03 AM, Lars Poeschel wrote:
->> On Monday 16 September 2013 13:43:50, Stephen Warren wrote:
->>> On 09/10/2013 06:52 PM, Javier Martinez Canillas wrote:
->>>> On 09/11/2013 12:34 AM, Stephen Warren wrote:
->>>>> On 09/10/2013 03:37 PM, Mark Brown wrote:
->>>>>> On Tue, Sep 10, 2013 at 01:53:47PM -0600, Stephen Warren wrote:
->>>>>>> Doesn't this patch call gpio_request() on the GPIO first, and
->>>>>>> hence prevent the driver's own gpio_request() from succeeding,
->>>>>>> since the GPIO is already requested? If this is not a problem, it
->>>>>>> sounds like a bug in gpio_request() not ensuring mutual exclusion
->>>>>>> for the GPIO.
->>>>>>
->>>>>> Or at the very least something that's likely to break in the
->>>>>> future.
->>>>>
->>>>> Looking at the GPIO code, it already prevents double-requests:
->>>>>>         if (test_and_set_bit(FLAG_REQUESTED, &desc->flags) == 0) {
->>>>>>         
->>>>>>                 desc_set_label(desc, label ? : "?");
->>>>>>                 status = 0;
->>>>>>         
->>>>>>         } else {
->>>>>>         
->>>>>>                 status = -EBUSY;
->>>>>>                 module_put(chip->owner);
->>>>>>                 goto done;
->>>>>>         
->>>>>>         }
->>>>>
->>>>> And I tested it in practice, and it really does fail.
->>>>
->>>> I'm a bit confused now. Doesn't the fact that gpio_request() prevents
->>>> double-requests mean that the use-case that you say that have not been
->>>> covered by this patch can't actually happen?
->>>>
->>>> I mean, if when using board files an explicit call to gpio_request() is
->>>> made by platform code then a driver can't call gpio_request() for the
->>>> same gpio. So this patch shouldn't cause any regression since is just
->>>> auto-requesting a GPIO when is mapped as an IRQ in a DT which basically
->>>> will be the same that was made by board files before.
->>>
->>> I'm not familiar with the board file path; Linus describe this.
->> 
->> It seems Linus is busy, I'll try to help out.
->> 
->>> It sounds like that path is for the case where a driver /only/ cares
->>> about using a pin as an IRQ, and hence the driver only calls
->>> request_irq(). The board file is (earlier) calling gpio_request() in
->>> order to set up that input pin to work correctly as an IRQ. Hence, there
->>> is no double-call to gpio_request().
->> 
->> No, a board file is not a path or something. A board file describes the wirings 
->> and specifics of an (embedded) computer in C code. The complete knowledge of 
->> how things are connected on a board and which drivers to use is in this piece 
->> of code. Devicetree replaces legacy board files. These two do pretty much the 
->> same, but board files have more power, because they are executed and can 
->> contain whatever code is needed to setup a board.
->> But you are right, the driver only calls request_irq(), the board file set up 
->> the pin before and told the driver which irq to use.
-> 
-> path == code path, or execution path. I'm well aware of what board files
-> are in general.
-> 
-> I'm just not familiar with board files that employ this particular hack.
-> 
->>> The case I said wouldn't work is:
->>>
->>> * This patch calls gpio_request() in order to make the pin work as an IRQ.
->>>
->>> * Driver uses the pin as both a GPIO and an IRQ, and hence calls
->>> gpio_request() and request_irq().
->>>
->>> So, there's a double-call to gpio_request(), which fails, and the driver
->>> fails to probe.
->> 
->> Again, no. In that case you don't define your pin as irq in the device tree, 
->> but only as gpio. The driver knows how to handle gpios and turn them into irqs 
->> so you have to present it a gpio not an irq. In that case the patch will not 
->> call gpio_request() and there is no double-call to gpio_request().
-> 
-> That is a way to make this patch work, yes. However, there's no
-> guarantee that every driver or DT binding works this way. Forcing
-> bindings to work that way is forcing Linux-internal details upon
-> bindings, which should not be done. Put another way, I don't believe
-> there's any rule when writing DT bindings that states that bindings must
-> not describe the same pin as both a GPIO and an IRQ, although admittedly
-> that may be unusual.
-> 
-> ...
->> I agree with you that it would be the best if the only call would be 
->> request_irq and the chip driver programs the HW appropriately. It would be a 
->> dream, but unfortunately this is not possible at the moment. This is something 
->> that Linus pointed out very very early in this whole discussion. The gpio and 
->> irq frameworks don't share any information. The irq framework has no chance to 
->> program the HW, because it will never find the related gpio.
->> For this to work the frameworks have to change (and possibly all drivers/board 
->> files/whatever using request_irq() and/or request_gpio()) have to change.
->> That is something that I do not dare to do alone.
-> 
-> This is a controller-specific issue, and has nothing to do with the GPIO
-> or IRQ frameworks. The driver for the combined irq/gpio_chip simply
-> needs to program the HW when the IRQ is requested or set up. The Tegra
-> driver already works this way, so there's actual proof that it is
-> possible to do this in practice.
-> 
+Hello.
 
-Hi Stephen,
+On 09/19/2013 05:05 PM, Roger Quadros wrote:
 
-I finally had some time to look at this and tried what you suggested, that is
-programming the hardware directly to do the setup when a IRQ is requested.
+> From: Balaji T K <balajitk@ti.com>
 
-I tested booting my OMAP3 board with DT and legacy booting and it both cases it
-works as expected.
+> Some platforms have a PHY hooked up to the
+> SATA controller. The PHY needs to be initialized
+> and powered up for SATA to work. We do that
+> using the PHY framework.
 
-I sent a RFC patch "[RFC] gpio/omap: auto-setup a GPIO when used as an IRQ" [1].
+> [Roger Q] Cleaned up.
 
-It would be great if I can get some feedback from you to see if that is what you
-meant.
+> CC: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Balaji T K <balajitk@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+[...]
 
-Thanks a lot and best regards,
-Javier
+> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+> index 1145637..94484cb 100644
+> --- a/drivers/ata/ahci.h
+> +++ b/drivers/ata/ahci.h
+> @@ -37,6 +37,7 @@
+>
+>   #include <linux/clk.h>
+>   #include <linux/libata.h>
+> +#include <linux/phy/phy.h>
 
-[1]: https://lkml.org/lkml/2013/9/22/78
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+struct phy;
+
+should suffice.
+
+> @@ -322,6 +323,7 @@ struct ahci_host_priv {
+>   	u32			em_buf_sz;	/* EM buffer size in byte */
+>   	u32			em_msg_type;	/* EM message type */
+>   	struct clk		*clk;		/* Only for platforms supporting clk */
+> +	struct phy		*phy;		/* If platforms use phy */
+>   	void			*plat_data;	/* Other platform data */
+>   };
+>
+> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+> index 2daaee0..f812ffa 100644
+> --- a/drivers/ata/ahci_platform.c
+> +++ b/drivers/ata/ahci_platform.c
+> @@ -23,6 +23,7 @@
+>   #include <linux/platform_device.h>
+>   #include <linux/libata.h>
+>   #include <linux/ahci_platform.h>
+> +#include <linux/phy/phy.h>
+
+    Why include it from both ahci.h and here?
+
+>   #include "ahci.h"
+>
+>   static void ahci_host_stop(struct ata_host *host);
+> @@ -141,16 +142,32 @@ static int ahci_probe(struct platform_device *pdev)
+>   		}
+>   	}
+>
+> +	hpriv->phy = devm_phy_get(dev, "sata-phy");
+> +	if (IS_ERR(hpriv->phy)) {
+> +		dev_err(dev, "can't get phy\n");
+
+    Don't think it's a good idea to complain about missing PHY when the driver 
+doesn't even use it.
+
+> +		/* return only if -EPROBE_DEFER */
+> +		if (PTR_ERR(hpriv->phy) == -EPROBE_DEFER) {
+> +			rc = -EPROBE_DEFER;
+> +			goto disable_unprepare_clk;
+> +		}
+> +	}
+> +
+>   	/*
+>   	 * Some platforms might need to prepare for mmio region access,
+>   	 * which could be done in the following init call. So, the mmio
+>   	 * region shouldn't be accessed before init (if provided) has
+>   	 * returned successfully.
+>   	 */
+> +
+> +	if (!(IS_ERR(hpriv->phy))) {
+
+    () not needed around IS_ERR() invocation.
+
+> +		phy_init(hpriv->phy);
+> +		phy_power_on(hpriv->phy);
+> +	}
+> +
+
+    I think this is misplaced, i.e. it should precede the comment.
+
+>   	if (pdata && pdata->init) {
+>   		rc = pdata->init(dev, hpriv->mmio);
+>   		if (rc)
+> -			goto disable_unprepare_clk;
+> +			goto disable_phy;
+>   	}
+>
+>   	ahci_save_initial_config(dev, hpriv,
+[...]
+> @@ -328,6 +356,7 @@ static SIMPLE_DEV_PM_OPS(ahci_pm_ops, ahci_suspend, ahci_resume);
+>   static const struct of_device_id ahci_of_match[] = {
+>   	{ .compatible = "snps,spear-ahci", },
+>   	{ .compatible = "snps,exynos5440-ahci", },
+> +	{ .compatible = "snps,dwc-ahci", },
+
+    Looks like the binding documentation is incomplete -- it doesn't list 
+"snps,exynos5440-ahci"...
+
+WBR, Sergei
+
