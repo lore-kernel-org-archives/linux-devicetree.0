@@ -1,117 +1,111 @@
-From: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Adding aliases to mmc
-Date: Sun, 22 Sep 2013 08:48:43 +0200
-Message-ID: <523E92CB.1080302@gmail.com>
-References: <CAOMZO5CJ36JHJMaiG3QVdtpBoWd_ZyHQuRTrKHz4bLP39gpJtQ@mail.gmail.com> <CAOMZO5AT3bduZ0=EtWHuHVg6tSWrdr_ZjX5PLu815o0qgkeSig@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: add initial VF610 Cosmic/Cosmic+ board support
+Date: Sun, 22 Sep 2013 15:01:39 +0800
+Message-ID: <20130922070138.GC31787@S2101-09.ap.freescale.net>
+References: <1379594444-11268-1-git-send-email-matt.porter@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5AT3bduZ0=EtWHuHVg6tSWrdr_ZjX5PLu815o0qgkeSig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1379594444-11268-1-git-send-email-matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Olbrich <m.olbrich-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
-
-Am 18.09.2013 02:06, schrieb Fabio Estevam:
-> Hi Dirk,
->
-> On Tue, Sep 17, 2013 at 3:04 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hi Dirk,
->>
->> I have adapted your patch at:
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-July/111022.html
->>
->> and tested it on 3.12-rc1 on a mx6qsabresd board.
->>
->> Do you have plans to submit it? Maybe as a RFC?
->>
->> It solves the mmcblkX order issue on my tests and it would be nice we
->> could have this problem addressed.
->
-> I simplied your patch a bit:
->
-> diff --git a/drivers/mmc/card/block.c b/drivers/mmc/card/block.c
-> index 1a3163f..94f842b 100644
-> --- a/drivers/mmc/card/block.c
-> +++ b/drivers/mmc/card/block.c
-> @@ -2026,7 +2026,7 @@ static struct mmc_blk_data
-> *mmc_blk_alloc_req(struct mmc_card *card,
->       struct mmc_blk_data *md;
->       int devidx, ret;
->
-> -    devidx = find_first_zero_bit(dev_use, max_devices);
-> +    devidx = find_next_zero_bit(dev_use, max_devices, card->host->devidx);
->       if (devidx >= max_devices)
->           return ERR_PTR(-ENOSPC);
->       __set_bit(devidx, dev_use);
-> @@ -2044,7 +2044,8 @@ static struct mmc_blk_data
-> *mmc_blk_alloc_req(struct mmc_card *card,
->        * index anymore so we keep track of a name index.
->        */
->       if (!subname) {
-> -        md->name_idx = find_first_zero_bit(name_use, max_devices);
-> +        md->name_idx = find_next_zero_bit(name_use, max_devices,
-> +                card->host->devidx);
->           __set_bit(md->name_idx, name_use);
->       } else
->           md->name_idx = ((struct mmc_blk_data *)
-> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c
-> b/drivers/mmc/host/sdhci-esdhc-imx.c
-> index abc8cf0..e11a6af 100644
-> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> @@ -524,8 +524,9 @@ static int sdhci_esdhc_imx_probe(struct
-> platform_device *pdev)
->       struct sdhci_pltfm_host *pltfm_host;
->       struct sdhci_host *host;
->       struct esdhc_platform_data *boarddata;
-> -    int err;
-> +    int err, ret;
->       struct pltfm_imx_data *imx_data;
-> +    struct device_node *np = pdev->dev.of_node;
->
->       host = sdhci_pltfm_init(pdev, &sdhci_esdhc_imx_pdata, 0);
->       if (IS_ERR(host))
-> @@ -602,6 +603,13 @@ static int sdhci_esdhc_imx_probe(struct
-> platform_device *pdev)
->                       host->mmc->parent->platform_data);
->       }
->
+On Thu, Sep 19, 2013 at 08:40:44AM -0400, Matt Porter wrote:
+> Add initial PHYTEC VF610 Cosmic/Cosmic+ board support with
+> UART and FEC enabled.
+> 
+> Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile         |  1 +
+>  arch/arm/boot/dts/vf610-cosmic.dts | 46 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 47 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/vf610-cosmic.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index cc0f1fb..b0d6156 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -142,6 +142,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
+>  	imx6q-sbc6x.dtb \
+>  	imx6q-wandboard.dtb \
+>  	imx6sl-evk.dtb \
+> +	vf610-cosmic.dtb \
+>  	vf610-twr.dtb
+>  dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
+>  	imx23-olinuxino.dtb \
+> diff --git a/arch/arm/boot/dts/vf610-cosmic.dts b/arch/arm/boot/dts/vf610-cosmic.dts
+> new file mode 100644
+> index 0000000..c3bd4d4f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/vf610-cosmic.dts
+> @@ -0,0 +1,46 @@
+> +/*
+> + * Copyright 2013 Freescale Semiconductor, Inc.
+> + * Copyright 2013 Linaro Limited
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
 > +
-> +    if (np) {
-> +        ret = of_alias_get_id(np, "mmcblk");
-> +        if (ret >= 0)
-> +            host->mmc->devidx = ret;
-> +    }
+> +/dts-v1/;
+> +#include "vf610.dtsi"
 > +
->       /* write_protect */
->       if (boarddata->wp_type == ESDHC_WP_GPIO) {
->           err = mmc_gpio_request_ro(host->mmc, boarddata->wp_gpio);
-> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> index 3b0c33a..8209f72 100644
-> --- a/include/linux/mmc/host.h
-> +++ b/include/linux/mmc/host.h
-> @@ -362,6 +362,8 @@ struct mmc_host {
->
->       unsigned int        slotno;    /* used for sdio acpi binding */
->
-> +    /* preferred mmc block device index (mmcblkX) */
-> +    unsigned int        devidx;
->       unsigned long        private[0] ____cacheline_aligned;
->   };
->
-> What do you think?
+> +/ {
+> +	model = "PHYTEC Cosmic/Cosmic+ Board";
+> +	compatible = "phytec,vf610-cosmic", "fsl,vf610";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyLP1,115200";
+> +	};
+> +
+> +	memory {
+> +		reg = <0x80000000 0x10000000>;
+> +	};
+> +
+> +	clocks {
+> +		enet_ext {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <50000000>;
+> +		};
 
-Do you like to send this as a proper patch? Following the recent 
-discussion it sounds to me that there is really some need for 
-something like this. Then we could discuss the technical details.
+This is probably copied from vf610-twr.dts.  But per
+Documentation/devicetree/bindings/clock/fixed-clock.txt, #clock-cells is
+a required property.
 
-Best regards
+> +	};
+> +
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart1_1>;
+> +	status = "okay";
+> +};
+> +
+> +&fec1 {
 
-Dirk
+Please sort the nodes alphabetically in label name.
+
+Shawn
+
+> +	phy-mode = "rmii";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_fec1_1>;
+> +	status = "okay";
+> +};
+> -- 
+> 1.8.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
