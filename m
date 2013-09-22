@@ -1,41 +1,74 @@
-From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 08/15] ata: ahci_platform: Manage SATA PHY
-Date: Sun, 22 Sep 2013 12:58:17 -0400
-Message-ID: <20130922165817.GD30946@htj.dyndns.org>
-References: <1379595943-14622-1-git-send-email-rogerq@ti.com>
- <1379595943-14622-9-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2] pwm-backlight: allow for non-increasing brightness levels
+Date: Sun, 22 Sep 2013 09:59:56 -0700
+Message-ID: <1379869196-19377-1-git-send-email-mikedunn@newsguy.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1379595943-14622-9-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 19, 2013 at 04:05:36PM +0300, Roger Quadros wrote:
-> From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-> 
-> Some platforms have a PHY hooked up to the
-> SATA controller. The PHY needs to be initialized
-> and powered up for SATA to work. We do that
-> using the PHY framework.
-> 
-> [Roger Q] Cleaned up.
-> 
-> CC: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Currently the driver assumes that the values specified in the
+brightness-levels device tree property increase as they are parsed from
+left to right.  But boards that invert the signal between the PWM output
+and the backlight will need to specify decreasing brightness-levels.
+This patch removes the assumption that the last element of the array is
+the maximum value, and instead searches the array for the maximum value
+and uses that in the duty cycle calculation.
 
-Looks okay to me although I don't know whether everyone using
-ahci_platform would be happy with requiring phy.  Sergei, does this
-look good to you?
+Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+---
+Changelog:
+v2: 
+- commit message reworded; correct line wrap used
+- 'max_level' variable renamed to 'scale'
+- loop counter variable type changed to unsigned int
+- value held in scale changed from array index to actual maximum level
+- blank lines added around loop for readability
 
-Thanks.
+ drivers/video/backlight/pwm_bl.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 1fea627..5e99b88 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -27,6 +27,7 @@ struct pwm_bl_data {
+ 	unsigned int		period;
+ 	unsigned int		lth_brightness;
+ 	unsigned int		*levels;
++	unsigned int		scale;
+ 	int			(*notify)(struct device *,
+ 					  int brightness);
+ 	void			(*notify_after)(struct device *,
+@@ -57,7 +58,7 @@ static int pwm_backlight_update_status(struct backlight_device *bl)
+ 
+ 		if (pb->levels) {
+ 			duty_cycle = pb->levels[brightness];
+-			max = pb->levels[max];
++			max = pb->scale;
+ 		} else {
+ 			duty_cycle = brightness;
+ 		}
+@@ -195,7 +196,14 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (data->levels) {
+-		max = data->levels[data->max_brightness];
++		unsigned int i;
++
++		for (i = 0; i <= data->max_brightness; i++) {
++			if (data->levels[i] > pb->scale)
++				pb->scale = data->levels[i];
++		}
++
++		max = pb->scale;
+ 		pb->levels = data->levels;
+ 	} else
+ 		max = data->max_brightness;
 -- 
-tejun
+1.8.1.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
