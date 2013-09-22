@@ -1,38 +1,61 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: [PATCH 1/4] drivers: misc: ti_dac7512: drop module version
-Date: Sun, 22 Sep 2013 21:51:46 +0200
-Message-ID: <1379879509-3608-2-git-send-email-zonque@gmail.com>
-References: <1379879509-3608-1-git-send-email-zonque@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379879509-3608-1-git-send-email-zonque@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: broonie@kernel.org, devicetree@vger.kernel.org, Daniel Mack <zonque@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: new cpu iteration code...
+Date: Sun, 22 Sep 2013 15:13:35 -0500
+Message-ID: <523F4F6F.8030209@gmail.com>
+References: <20130918.173726.1443745664398441126.davem@davemloft.net> <523AC214.4040601@arm.com>	<523AFB6C.5070300@gmail.com> <20130919.133805.1227344435777214810.davem@davemloft.net> <523C7B54.3070706@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <523C7B54.3070706-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Providing a module version doesn't add any value, so drop it.
+On 09/20/2013 11:44 AM, Sudeep KarkadaNagesha wrote:
+> On 19/09/13 18:38, David Miller wrote:
+>> From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Date: Thu, 19 Sep 2013 08:26:04 -0500
+>>
+>>> The simple solution here is to just remove the warning. It doesn't
+>>> appear to me that sparc ever sets the cpu device of_node pointer.
+>>
+>> Why wouldn't I want sparc to have this functionality now that the
+>> code is generically available.
+>>
+> Makes sense, but as you mentioned before we need to match other property
+> names namely "upa-portid", "portid" or "cpuid" for cpu physical id right
+> ? Are all these 32-bit values ?
+> 
+>>> Are there any cases on where sparc does have a /cpus node? If so we'd
+>>> need to make of_get_cpu_node a weak function or depend on a kconfig option.
+>>
+>> I already gave a solution to this problem, make the loop iterator be:
+>>
+>> 	for_each_node_by_type(dp, "cpu")
+>>
+> 
+> Does it make sense use this only when /cpus is not found ?
+> IMHO as the number of node in DT increases(which is the case on ARM
+> platforms) parsing entire tree may be expensive(which can be avoided in
+> case /cpus is found)
 
-Signed-off-by: Daniel Mack <zonque@gmail.com>
----
- drivers/misc/ti_dac7512.c | 2 --
- 1 file changed, 2 deletions(-)
+Can't you simply do something like this for the search:
 
-diff --git a/drivers/misc/ti_dac7512.c b/drivers/misc/ti_dac7512.c
-index 9b23722..db47333 100644
---- a/drivers/misc/ti_dac7512.c
-+++ b/drivers/misc/ti_dac7512.c
-@@ -24,7 +24,6 @@
- #include <linux/spi/spi.h>
- 
- #define DAC7512_DRV_NAME	"dac7512"
--#define DRIVER_VERSION		"1.0"
- 
- static ssize_t dac7512_store_val(struct device *dev,
- 				 struct device_attribute *attr,
-@@ -89,4 +88,3 @@ module_spi_driver(dac7512_driver);
- MODULE_AUTHOR("Daniel Mack <daniel@caiaq.de>");
- MODULE_DESCRIPTION("DAC7512 16-bit DAC");
- MODULE_LICENSE("GPL v2");
--MODULE_VERSION(DRIVER_VERSION);
--- 
-1.8.3.1
+	cpus = of_find_node_by_path("/cpus");
+	if (!cpus && IS_ENABLED(CONFIG_SPARC))
+		cpus = of_find_node_by_path("/");
+	if (!cpus) {
+		pr_warn("Missing cpus node, bailing out\n");
+		return NULL;
+	}
+
+	for_each_child_of_node(cpus, cpun) {
+
+Rob
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
