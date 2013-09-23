@@ -1,83 +1,39 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 3/4] watchdog: s3c2410_wdt: parse watchdog dt node to read
- PMU registers adresses
-Date: Mon, 23 Sep 2013 19:11:11 +0200
-Message-ID: <3933206.EMuKSi641Y@amdc1227>
-References: <1379414623-26329-1-git-send-email-l.krishna@samsung.com>
- <CAL1wa8eWKNL3kdfjqxqaLsAtc8nqgiPW34SBk4gozAR1jnRaSg@mail.gmail.com>
- <1918747.quF8QJoP6D@amdc1032>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1918747.quF8QJoP6D@amdc1032>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, Doug Anderson <dianders@chromium.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+From: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH v2 0/4] ARCH_BCM rename
+Date: Mon, 23 Sep 2013 10:20:32 -0700
+Message-ID: <1379956836-5866-1-git-send-email-bcm@fixthebug.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Cc: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alex Elder <alex.elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 23 of September 2013 19:03:10 Bartlomiej Zolnierkiewicz wrote:
-> 
-> Hi,
-> 
-> On Wednesday, September 18, 2013 12:20:31 PM Leela Krishna Amudala wrote:
-> > Tomasz,
-> > 
-> > On Wed, Sep 18, 2013 at 10:04 AM, Doug Anderson <dianders@chromium.org> wrote:
-> > > Tomasz,
-> > >
-> > > On Tue, Sep 17, 2013 at 6:30 AM, Tomasz Figa <t.figa@samsung.com> wrote:
-> > >> I believe this is mandatory on Exynos 5420 and unused on previous SoCs. It
-> > >> should be handled depending on compatible value.
-> > >
-> > > I think at least 5250 needs something similar.  I believe we got away
-> > > with it in the past since other (non-WDT) code was tweaking with this
-> > > bit, but that was a little bit gross.  Leela Krishna can correct me if
-> > > I'm wrong.
-> > >
-> > 
-> > Yes, 5250 also needs this reset-mask-bit, but not required by SoCs
-> > other than Exynos5xxx.
-> > Hence I kept it as optional parameter.
-> > 
-> > I took care of this code such that it won't break on older SoCs.
-> > 
-> > If you notice the code in probe function, I used the check condition
-> > 
-> > if (!IS_ERR(wdt->pmu_disable_reg) && !IS_ERR(wdt->pmu_mask_reset_reg)) {
-> > }
-> > 
-> > i.e., if any of the PMU register address is not mentioned in the DT
-> > node it simply skips reading reset-mask-bit
-> > and continues execution (which may happen in older SoC DT node).
-> > 
-> > ..also, in s3c2410wdt_mask_and_disable_reset() function, below
-> > condition check is happening
-> > 
-> > if (IS_ERR(wdt->pmu_disable_reg) || IS_ERR(wdt->pmu_mask_reset_reg)
-> >                                 || (wdt->pmu_mask_bit < 0))
-> >         return;
-> > 
-> > i.e., if any of the registers is not specified in DT node simply
-> > return without programming
-> > PMU registers(which is true in case of older SoCs).
-> > 
-> > If you think this doesn't sounds good way of handling older SoCs.
-> > I'll add new compatible string for Exynos5xxx and do like what you said. :)
-> 
-> Yes, please re-do the code per Tomasz's suggestions.
-> 
-> This would also allow you to check return values of devm_ioremap_resource()
-> calls in the probe method and require them to succeed in order to register
-> watchdog device (which is unfortunately not what happens currently).
+Rename ARCH_BCM to ARCH_BCM_MOBILE. Currently only the 
+Broadcom mobile SoCs reside in the mach-bcm directory and are 
+chosen by the ARCH_BCM config option.
+ This patchset changes so that ARCH_BCM becomes a menu select
+for Broadcom ARM SoCs. ARCH_BCM_MOBILE is created to signify 
+the (multiplatform) Mobile SoCs.
 
-Now as I think of it, the driver doesn't seem to reconfigure those PMU
-registers in any watchdog API callback, only in probe, remove, suspend
-and resume.
+Christian Daudt (4):
+  rename ARCH_BCM to ARCH_BCM_MOBILE (mach-bcm)
+  rename ARCH_BCM to ARCH_BCM_MOBILE (clocksource)
+  rename ARCH_BCM to ARCH_BCM_MOBILE (mmc)
+  rename ARCH_BCM to ARCH_BCM_MOBILE (dt)
 
-Since we already have PMU "driver" in mach-exynos, which already has
-suspend/resume syscore ops, what about placing such configuration there
-instead?
+ arch/arm/boot/dts/Makefile          |    4 ++--
+ arch/arm/configs/bcm_defconfig      |    1 +
+ arch/arm/configs/multi_v7_defconfig |    1 +
+ arch/arm/mach-bcm/Kconfig           |   20 ++++++++++++++++++--
+ arch/arm/mach-bcm/Makefile          |    2 +-
+ drivers/clocksource/Makefile        |    2 +-
+ drivers/mmc/host/Kconfig            |    2 +-
+ 7 files changed, 25 insertions(+), 7 deletions(-)
 
-Best regards,
-Tomasz
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
