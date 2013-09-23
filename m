@@ -1,219 +1,91 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] MTD: Onenand: Add device tree support for samsung
- onenand
-Date: Mon, 23 Sep 2013 12:08:39 +0100
-Message-ID: <20130923110839.GB16069@e106331-lin.cambridge.arm.com>
-References: <1379925388-25051-1-git-send-email-m.krawczuk@partner.samsung.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [alsa-devel] [PATCH 43/51] DMA-API: dma: edma.c: no need to
+ explicitly initialize DMA masks
+Date: Mon, 23 Sep 2013 15:55:33 +0530
+Message-ID: <20130923102533.GI17188@intel.com>
+References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
+ <E1VMnRj-0007sg-1Z@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <1379925388-25051-1-git-send-email-m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
-Cc: "kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <E1VMnRj-0007sg-1Z@rmk-PC.arm.linux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-nvme@lists.infradead.org, linux-ide@vger.kernel.org, devel@driverdev.osuosl.org, linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, e1000-devel@lists.sourceforge.net, b43-dev@lists.infradead.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, netdev@vger.kernel.org, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, linux-crypto@vger.kernel.org, uclinux-dist-devel@blackfin.uclinux.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2013 at 09:36:28AM +0100, Mateusz Krawczuk wrote:
-> This patch add clk and device tree nodes for samsung onenand driver.
+On Fri, Sep 20, 2013 at 12:15:39AM +0100, Russell King wrote:
+> register_platform_device_full() can setup the DMA mask provided the
+> appropriate member is set in struct platform_device_info.  So lets
+> make that be the case.  This avoids a direct reference to the DMA
+> masks by this driver.
 > 
-> Signed-off-by: Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
-> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+Acked-by: Vinod Koul <vinod.koul@intel.com>
+
+This also brings me question that should we force the driver to use the
+dma_set_mask_and_coherent() API or they have below flexiblity too?
+
+~Vinod
+
 > ---
->  .../devicetree/bindings/mtd/samsung-onenand.txt    | 40 ++++++++++++++++++++++
->  drivers/mtd/onenand/samsung.c                      | 37 +++++++++++++++++++-
->  2 files changed, 76 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+>  drivers/dma/edma.c |    6 ++----
+>  1 files changed, 2 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/samsung-onenand.txt b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
-> new file mode 100644
-> index 0000000..cc46160
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
-> @@ -0,0 +1,40 @@
-> +Device tree bindings for Samsung Onenand
-> +
-> +Required properties:
-> +  - compatible: value should be either of the following.
-> +      (a) "samsung, s3c6400-onenand", for onenand compatible with s3c6400 onenand.
-> +      (b) "samsung, s3c6410-onenand", for onenand compatible with s3c6410 onenand.
-> +      (c) "samsung, s5pc100-onenand", for onenand compatible with s5pc100 onenand.
-> +      (d) "samsung, s5pc110-onenand", for s5pc100-like onenand used
-> +	   on s5pc110 which supports DMA.
-
-These compatible strings shouldn't have spaces.
-
-What are the differences between these, beyond "s5pc110-onenand"
-supporting DMA and the others not supporting DMA?
-
-Can we describe these more generically, or do they differ all over the
-place in register offsets and so on?
-
-> +
-> +Required properties:
-> +
-> + - reg:					The CS line the peripheral
-> +					is connected to
-
-That's not a fantastic description.
-
-As a start, how about something like:
-
- - reg: the offset and length of the control registers.
-
-> + - interrupt-parent, interrupts		Width of the ONENAND device
-> + - 					connected to the Samsung SoC
-> +					in bytes. Must be 1 or 2.
-
-Huh? This makes no sense.
-
-Was this was hacked up from the gpmc-onenand binding?
-
-> +
-> +Optional properties:
-> +
-> + - dma-channel:		DMA Channel index
-
-Is this channel internal to the onenand device? If so, why does it need
-to be described in this way?
-
-Is this an unnecessary carry-over from the gpmc-onenand binding?
-
-> +
-> +For inline partiton table parsing (optional):
-> +
-> + - #address-cells: should be set to 1
-> + - #size-cells: should be set to 1
-> +
-> +Example for an s5pv210 board:
-> +
-> +		onenand@b0000000 {
-> +			compatible = "samsung,s5pc110-onenand";
-> +			reg = <0xb0000000 0x20000>, <0xb0600000 0x2000>;
-
-You only described on reg region above.
-
-Do you expect two, or any arbitrary number of regions?
-
-What does each represent?
-
-> +			interrupt-parent = <&vic1>;
-> +			interrupts = <31>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			clocks = <&clocks NANDXL>;
-> +			clock-names = "gate";
-
-The clocks weren't described in the binding. They should be.
-
-> +			status = "okay";
-> +		};
-> diff --git a/drivers/mtd/onenand/samsung.c b/drivers/mtd/onenand/samsung.c
-> index df7400d..5a2cc4b 100644
-> --- a/drivers/mtd/onenand/samsung.c
-> +++ b/drivers/mtd/onenand/samsung.c
-> @@ -14,6 +14,7 @@
->   *	S5PC110: use DMA
->   */
+> diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
+> index ff50ff4..7f9fe30 100644
+> --- a/drivers/dma/edma.c
+> +++ b/drivers/dma/edma.c
+> @@ -702,11 +702,13 @@ static struct platform_device *pdev0, *pdev1;
+>  static const struct platform_device_info edma_dev_info0 = {
+>  	.name = "edma-dma-engine",
+>  	.id = 0,
+> +	.dma_mask = DMA_BIT_MASK(32),
+>  };
 >  
-> +#include <linux/clk.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/sched.h>
-> @@ -24,6 +25,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
-> +#include <linux/of.h>
->  
->  #include <asm/mach/flash.h>
->  
-> @@ -133,6 +135,7 @@ enum soc_type {
->  struct s3c_onenand {
->  	struct mtd_info	*mtd;
->  	struct platform_device	*pdev;
-> +	struct clk *gate;
->  	enum soc_type	type;
->  	void __iomem	*base;
->  	struct resource *base_res;
-> @@ -859,6 +862,19 @@ static void s3c_onenand_setup(struct mtd_info *mtd)
->  	this->write_bufferram = onenand_write_bufferram;
->  }
->  
-> +static const struct of_device_id onenand_s3c_dt_match[] = {
-> +	{ .compatible = "samsung,s3c6400-onenand",
-> +		.data = (void *)TYPE_S3C6400 },
-> +	{ .compatible = "samsung,s3c6410-onenand",
-> +		.data = (void *)TYPE_S3C6410 },
-> +	{ .compatible = "samsung,s5pc100-onenand",
-> +		.data = (void *)TYPE_S5PC100 },
-> +	{ .compatible = "samsung,s5pc110-onenand",
-> +		.data = (void *)TYPE_S5PC110 },
-> +	{},
-> +};
+>  static const struct platform_device_info edma_dev_info1 = {
+>  	.name = "edma-dma-engine",
+>  	.id = 1,
+> +	.dma_mask = DMA_BIT_MASK(32),
+>  };
 
-What are the differences between these?
 
-Cheers,
-Mark.
-
-> +MODULE_DEVICE_TABLE(of, onenand_s3c_dt_match);
-> +
->  static int s3c_onenand_probe(struct platform_device *pdev)
->  {
->  	struct onenand_platform_data *pdata;
-> @@ -883,12 +899,26 @@ static int s3c_onenand_probe(struct platform_device *pdev)
->  		goto onenand_fail;
+>  
+>  static int edma_init(void)
+> @@ -720,8 +722,6 @@ static int edma_init(void)
+>  			ret = PTR_ERR(pdev0);
+>  			goto out;
+>  		}
+> -		pdev0->dev.dma_mask = &pdev0->dev.coherent_dma_mask;
+> -		pdev0->dev.coherent_dma_mask = DMA_BIT_MASK(32);
 >  	}
 >  
-> +	onenand->gate = clk_get(&pdev->dev, "gate");
-> +	if (IS_ERR(onenand->gate))
-> +		return PTR_ERR(onenand->gate);
-> +	clk_prepare_enable(onenand->gate);
-> +
->  	this = (struct onenand_chip *) &mtd[1];
->  	mtd->priv = this;
->  	mtd->dev.parent = &pdev->dev;
->  	mtd->owner = THIS_MODULE;
->  	onenand->pdev = pdev;
-> -	onenand->type = platform_get_device_id(pdev)->driver_data;
-> +
-> +	if (pdev->dev.of_node) {
-> +		const struct of_device_id *match;
-> +
-> +		match = of_match_node(onenand_s3c_dt_match, pdev->dev.of_node);
-> +		onenand->type = (enum soc_type)match->data;
-> +	} else {
-> +		onenand->type = platform_get_device_id(pdev)->driver_data;
-> +	}
-> +
+>  	if (EDMA_CTLRS == 2) {
+> @@ -731,8 +731,6 @@ static int edma_init(void)
+>  			platform_device_unregister(pdev0);
+>  			ret = PTR_ERR(pdev1);
+>  		}
+> -		pdev1->dev.dma_mask = &pdev1->dev.coherent_dma_mask;
+> -		pdev1->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>  	}
 >  
->  	s3c_onenand_setup(mtd);
->  
-> @@ -1077,6 +1107,10 @@ static int s3c_onenand_remove(struct platform_device *pdev)
->  	kfree(onenand->page_buf);
->  	kfree(onenand);
->  	kfree(mtd);
-> +
-> +	clk_disable_unprepare(onenand->gate);
-> +	clk_put(onenand->gate);
-> +
->  	return 0;
->  }
->  
-> @@ -1125,6 +1159,7 @@ MODULE_DEVICE_TABLE(platform, s3c_onenand_driver_ids);
->  static struct platform_driver s3c_onenand_driver = {
->  	.driver         = {
->  		.name	= "samsung-onenand",
-> +		.of_match_table = of_match_ptr(onenand_s3c_dt_match),
->  		.pm	= &s3c_pm_ops,
->  	},
->  	.id_table	= s3c_onenand_driver_ids,
+>  out:
 > -- 
-> 1.8.1.2
+> 1.7.4.4
 > 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+
+-- 
