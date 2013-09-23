@@ -1,102 +1,105 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH 3/5] mfd: arizona: Add simple microphone detection device tree bindings
-Date: Mon, 23 Sep 2013 19:30:41 +0100
-Message-ID: <1379961043-23762-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1379961043-23762-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379961043-23762-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 36/51] DMA-API: usb: use dma_set_coherent_mask()
+Date: Mon, 23 Sep 2013 19:42:26 +0100
+Message-ID: <20130923184226.GU25647@n2100.arm.linux.org.uk>
+References: <E1VMmHX-0007jq-Cj@rmk-PC.arm.linux.org.uk> <Pine.LNX.4.44L0.1309231418030.1348-100000@iolanthe.rowland.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1309231418030.1348-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvme-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, e1000-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, b43-dev-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Solarflare linux maintainers <linux-net-drivers-s/n/eUQHGBpZroRs9YW3xA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh@lin>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings for several of simpler microphone detection
-pdata fields.
+On Mon, Sep 23, 2013 at 02:27:39PM -0400, Alan Stern wrote:
+> On Thu, 19 Sep 2013, Russell King wrote:
+> 
+> > The correct way for a driver to specify the coherent DMA mask is
+> > not to directly access the field in the struct device, but to use
+> > dma_set_coherent_mask().  Only arch and bus code should access this
+> > member directly.
+> > 
+> > Convert all direct write accesses to using the correct API.
+> > 
+> > Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> 
+> > diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+> > index f6b790c..5b0cd2d 100644
+> > --- a/drivers/usb/host/ehci-platform.c
+> > +++ b/drivers/usb/host/ehci-platform.c
+> 
+> > @@ -91,8 +91,9 @@ static int ehci_platform_probe(struct platform_device *dev)
+> >  		dev->dev.platform_data = &ehci_platform_defaults;
+> >  	if (!dev->dev.dma_mask)
+> >  		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
+> > -	if (!dev->dev.coherent_dma_mask)
+> > -		dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> > +	err = dma_set_coherent_mask(&dev->dev, DMA_BIT_MASK(32));
+> > +	if (err)
+> > +		return err;
+> >  
+> >  	pdata = dev_get_platdata(&dev->dev);
+> 
+> ehci-platform.c is a generic file, intended for use by multiple
+> platforms.  Is it not possible that on some platforms, the arch or bus
+> code may already have initialized the DMA masks?  Isn't something like 
+> this (i.e., DMA bindings) planned for Device Tree?
+> 
+> By eliminating the tests above and calling dma_set_coherent_mask or
+> dma_coerce_mask_and_coherent unconditionally, this patch (and the next)
+> would overwrite those initial settings.
+> 
+> I don't know to what extent the same may be true for the other,
+> platform-specific, drivers changed by this patch.  But it's something 
+> to be aware of.
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
----
- Documentation/devicetree/bindings/mfd/arizona.txt |   23 +++++++++++++++++++++
- drivers/mfd/arizona-core.c                        |   22 ++++++++++++++++++++
- 2 files changed, 45 insertions(+), 0 deletions(-)
+Please check the DMA API documentation:
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index 9eeef62..3ee659d 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -34,6 +34,22 @@ Optional properties:
-   - wlf,reset : GPIO specifier for the GPIO controlling /RESET
-   - wlf,ldoena : GPIO specifier for the GPIO controlling LDOENA
- 
-+  - wlf,micd-detect-debounce : Additional software microphone detection
-+    debounce specified in milliseconds
-+  - wlf,micd-pol-gpio : GPIO specifier for the GPIO controlling the headset
-+    polarity if one exists
-+  - wlf,micd-bias-start-time : Time allowed for MICBIAS to startup prior to
-+    performing microphone detection, specified as per the MICD_BIAS_STARTTIME
-+    bits in the register MIC_DETECT_1
-+  - wlf,micd-rate : Delay between successive microphone detection measurements,
-+    specified as per the MICD_RATE bits in the register MIC_DETECT_1
-+  - wlf,micd-dbtime : Microphone detection hardware debounce level, specified
-+    as per the MICD_DBTIME bits in the register MIC_DETECT_1
-+  - wlf,micd-timeout : Timeout for microphone detection, specified in
-+    milliseconds
-+  - wlf,micd-force-micbias : Force MICBIAS continuously on during microphone
-+    detection
-+
-   - wlf,gpio-defaults : A list of GPIO configuration register values. If
-     absent, no configuration of these registers is performed. If any
-     entry has a value that is out of range for a 16 bit register then
-@@ -57,6 +73,13 @@ codec: wm5102@1a {
- 	gpio-controller;
- 	#gpio-cells = <2>;
- 
-+	wlf,micd-detect-debounce = <10>;
-+	wlf,micd-bias-start-time = <0x1>;
-+	wlf,micd-rate = <0x1>;
-+	wlf,micd-dbtime = <0x1>;
-+	wlf,micd-timeout = <10>;
-+	wlf,micd-force-micbias;
-+
- 	wlf,gpio-defaults = <
- 		0x00000000 /* AIF1TXLRCLK */
- 		0xffffffff
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index b3337ee..1cc6aa0 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -603,6 +603,28 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
- 	arizona_of_get_named_gpio(arizona, "wlf,reset", true, &pdata->reset);
- 	arizona_of_get_named_gpio(arizona, "wlf,ldoena", true, &pdata->ldoena);
- 
-+	arizona_of_read_u32(arizona, "wlf,micd-detect-debounce", false,
-+			    &pdata->micd_detect_debounce);
-+
-+	arizona_of_get_named_gpio(arizona, "wlf,micd-pol-gpio", false,
-+				  &pdata->micd_pol_gpio);
-+
-+	arizona_of_read_u32(arizona, "wlf,micd-bias-start-time", false,
-+			    &pdata->micd_bias_start_time);
-+
-+	arizona_of_read_u32(arizona, "wlf,micd-rate", false,
-+			    &pdata->micd_rate);
-+
-+	arizona_of_read_u32(arizona, "wlf,micd-dbtime", false,
-+			    &pdata->micd_dbtime);
-+
-+	arizona_of_read_u32(arizona, "wlf,micd-timeout", false,
-+			    &pdata->micd_timeout);
-+
-+	pdata->micd_force_micbias =
-+		of_property_read_bool(arizona->dev->of_node,
-+				      "wlf,micd-force-micbias");
-+
- 	arizona_of_get_gpio_defaults(arizona, "wlf,gpio-defaults");
- 
- 	arizona_of_read_u32_array(arizona, "wlf,max-channels-clocked",
--- 
-1.7.2.5
+=====
+For correct operation, you must interrogate the kernel in your device
+probe routine to see if the DMA controller on the machine can properly
+support the DMA addressing limitation your device has.  It is good
+style to do this even if your device holds the default setting,
+because this shows that you did think about these issues wrt. your
+device.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The query is performed via a call to dma_set_mask():
+
+        int dma_set_mask(struct device *dev, u64 mask);
+
+The query for consistent allocations is performed via a call to
+dma_set_coherent_mask():
+
+        int dma_set_coherent_mask(struct device *dev, u64 mask);
+=====
+
+So, All drivers which use DMA are supposed to issue the appropriate
+calls to check the DMA masks before they perform DMA, even if the
+"default" is correct.
+
+And yes, this is all part of sorting out the DT mess - we should
+start not from the current mess (which is really totally haphazard)
+but from the well established position of how the DMA API _should_
+be used.  What that means is that all drivers should be issuing
+these calls as appropriate today.
+
+The default mask setup when the device is created is just that -
+it's a default mask, and it should not be used to decide anything
+about the device.  That's something which the driver should compute
+on its own accord and then inform the various other layers via the
+appropriate call.
+
+Remember, on PCI, even when we have 64-bit, we do not declare PCI
+devices with a 64-bit DMA mask: that's up to PCI device drivers to
+_try_ to set a 64-bit DMA mask, which when successful _allows_ them
+to use 64-bit DMA.  If it fails, they have to only use 32-bit.  If
+they want a smaller mask, the _driver_ has to set the smaller mask,
+not the device creating code.
+
+The reason we're into this (particularly on ARM) is that we got lazy
+because we could get by with declaring a DMA mask at device creation
+time, since all devices were statically declared.  Now it's time to
+get rid of those old lazy ways and start doing things correctly and
+to the requirements of the APIs.
