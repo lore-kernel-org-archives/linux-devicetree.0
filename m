@@ -1,77 +1,92 @@
-From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/6] clk: exynos-audss: convert to platform device
-Date: Tue, 24 Sep 2013 00:50:29 +0200
-Message-ID: <5240C5B5.4090702@gmail.com>
-References: <1379711637-5226-1-git-send-email-abrestic@chromium.org> <1530327.jvk44KuFQA@flatron> <CAL1qeaGjUTrfDaAr1rgsgDaZscjaV7tqi3Jd_-zo2sMtCCFSAQ@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: generic: Add generic DT based simple codec
+Date: Tue, 24 Sep 2013 00:26:48 +0100
+Message-ID: <20130923232648.GL21013@sirena.org.uk>
+References: <20130919105437.75e0f0a3@armhf>
+ <5240B07C.6080404@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HFmY1QOi3uof3bwe"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaGjUTrfDaAr1rgsgDaZscjaV7tqi3Jd_-zo2sMtCCFSAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5240B07C.6080404-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Yadwinder Singh Brar <yadi.brar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rahul Sharma <rahul.sharma@samsung.>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 09/23/2013 11:25 PM, Andrew Bresticker wrote:
->>> +static int exynos_audss_clk_remove(struct platform_device *pdev)
->>> +{
->>> +     of_clk_del_provider(pdev->dev.of_node);
->>> +
->>> +     return 0;
->>>   }
->>
->> Don't we need to unregister all the registered clocks in remove? This also
->> leads to another question: Do we even need removal support for this
->> driver?
->
-> Agreed - I don't think we should support removal of this device, but
-> it looks like __device_release_driver() just ignores the lack of a
-> remove callback or the return value from remove.  I suppose we could
-> just yell that removal is not supported if it is ever attempted.
+--HFmY1QOi3uof3bwe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That might be a good idea, without proper remove() method deferred
-probing will also not work. I'd assume there should be only, e.g.
-WARN() in the remove() callback or it should be properly implemented,
-with clk_unregister() call for each currently registered clock.
+On Mon, Sep 23, 2013 at 03:19:56PM -0600, Stephen Warren wrote:
+> On 09/19/2013 02:54 AM, Jean-Francois Moine wrote:
 
-Note that clk_unregister() is currently not implemented and removal
-of this driver cannot be properly supported at the moment anyway.
+> > +Required properties:
+> > +- compatible: should be "linux,simple-codec".
 
-Not sure what's more appropriate, it's probably better to add
-clk_unregister() calls. This would be effectively a dead code though,
-as long as core_initcall is used.
+> We shouldn't have any Linux-specific bindings. It might be reasonable to
+> define a binding for a "simple CODEC", but there's no reason it should
+> be Linux-specific.
 
->>> +static int __init exynos_audss_clk_init(void)
->>> +{
->>> +     return platform_driver_register(&exynos_audss_clk_driver);
->>> +}
->>> +core_initcall(exynos_audss_clk_init);
->>
->> Does it need to be core_initcall? Drivers depending on clocks provided by
->> this driver should be able to defer probing if they are probed before this
->> driver.
->
-> Unfortunately there are a couple of issues with making this a module_initcall:
->      1. On the Exynos5420, the AudioSS block provides the apb_pclk gate
-> for the ADMA bus, which is probed at postcore_initcall time and does
-> not support deferred probing, and
->      2. the common clock framework doesn't differentiate between the
-> clock not being specified at all and the clock being specified, but
-> the provider not being registered yet (i.e. the case where probe
-> deferral would be appropriate) - it just returns ENOENT in both cases.
+What's the vendor prefix to use then?  The same thought did occur to me
+but I wasn't sure what to suggest instead.
 
-AFAICS this shouldn't be difficult to improve. I guess it has not been
-properly addressed so far because there is currently no properly working
-modular clock provider drivers, using the common clock framework, yet.
-Unless someone bits me to it, I might have a look at that, as I also found
-it a bit it inconvenient.
+> > +- dai-name: name of the codec
 
---
-Regards,
-Sylwester
+> That should be internal to the driver; it's Linux-specific.
+
+I do think it's reasonable to define a name for display purposes however
+this binding doesn't say that, I did say something to that effect
+already IIRC.
+
+> > +Formats:
+> > +	"s8"
+> > +	"u8"
+
+> I think the binding should specify on-the-wire formats, not in-memory
+> formats. For example, if this binding is used to represent an I2S CODEC,
+> it's more important to know whether it supports left-justified,
+> right-justified, DSP mode, etc., and the max number of bits (or perhaps
+> a list of supported numbers of bits) per channel in each case.
+
+I didn't query this myself since my expecation with this is that the
+rest of the wire format properties will come from the binding that pulls
+this together into a card (since this will need to be set at that level
+for other CODECs which are more flexible) so I saw this as providing
+additional information which would normally not be fixed at that level.
+Arguably this could be pushed up there too, though it's not normal to
+fix the word size.
+
+We should really be defining things like signed and unsigned as well as
+the bits per word since they do make a difference, though in practice
+you very rarely see anything except unsigned and some of the formats
+listed don't seem to have ever even been used in Linux.
+
+--HFmY1QOi3uof3bwe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSQM41AAoJELSic+t+oim92dYP/RLX3XsgPH5/BRGHR+/WiZI5
+Dp+yxiPFwtkA7KkPPBJ9UxbK82QFqc6o2W2/5t7753ZR80x0raFVnc9yCf1WKzb1
+L8+uA+2vnUFx31MxPr61UVd7BZQj3YO6L+u/sAqoe1wklJg5XE6tpuD9Ww1kBBEH
+PlP5I6OFiUCI0202F434T2tN1M5WOwH/zTTG/6yFM34CN0RCODoBQWx9gxcU5um8
+rVagN2taYQ4fDX415OCnI11caGoOgg1n91qN989X9m/VmM3dMTiM0roSUM15BwGK
+oHycBsxeR9JbQ0mI2MDaVBaDWkOrB4t5ggVZr3pkZppcEnv5nhCCD3NsUJEFK1PY
+XdRz5W9HptU1mG1X83xLHLPNRVusfGubu5NNLJq9fXLZD83l2swCEExmF9SBQT+0
+N5eYVfPuNZS/42wl7JIxUZRR5gNOp49Ehbt0jwLXX7+i2aBmwK2y2WQIu54qXLkb
+QtjvtrajMFiNI9RPqhRk9fdOeWMZPhQaO2lpsNaMm7CtUHI37gHokSUC0lR3EBXn
+aT0hX3SiKSRPKZDOvzbrmRiYqHQvUHrpD0hAk4eN8ojmWnx/RdOyKYbCW5c76+Cs
+SdaKij+kuSc4ZcwHYJJWwcleyiqqrlJQG6SRBjW6H6FUm2gIOBgAwK3Nx9pqeyfc
+ED5GyvMocx/1pH33pueR
+=p3xX
+-----END PGP SIGNATURE-----
+
+--HFmY1QOi3uof3bwe--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
