@@ -1,37 +1,45 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 5/5] mfd: arizona: Add device tree bindings for MICBIAS
- generators
-Date: Mon, 23 Sep 2013 15:43:27 -0600
-Message-ID: <5240B5FF.6060901@wwwdotorg.org>
-References: <1379961043-23762-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <1379961043-23762-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH 03/10] ARM: OMAP: Initialize PWM backlight enable_gpio field
+Date: Mon, 23 Sep 2013 23:41:00 +0200
+Message-ID: <1379972467-11243-4-git-send-email-treding@nvidia.com>
+References: <1379972467-11243-1-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379961043-23762-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: lee.jones@linaro.org, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, broonie@kernel.org, patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1379972467-11243-1-git-send-email-treding@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Eric Miao <eric.y.miao@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-pwm@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Ben Dooks <ben-linux@fluff.org>, linux-sh@vger.kernel.org, openezx-devel@lists.openezx.org, Guan Xuetao <gxt@mprc.pku.edu.cn>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2013 12:30 PM, Charles Keepax wrote:
-> Add device tree bindings for the pdata needed to configure the MICBIAS
-> generators.
+The GPIO API defines 0 as being a valid GPIO number, so this field needs
+to be initialized explicitly.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ arch/arm/mach-omap2/board-zoom-peripherals.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +  - wlf,micbias1 : Configuration for the micbias regulator, should include 5
-> +    cells.
-> +    The first cell is the output voltage in millivolts
-> +    The second cell a non-zero value indicates an external capacitor is fitted
-
-I think you need some kind of delimiter (e.g. a colon) after "cell"
-there, to separate the line's label and description.
-
-> +    The four cell a non-zero value indicates that the micbias should be
-
-s/four/fourth/
-
-There are lots of cells here with a single-bit flag in them. Can the
-flags be combined into a single cell to reduce the DT size? cpp-based
-named constants should keep the *.dts file readable.
+diff --git a/arch/arm/mach-omap2/board-zoom-peripherals.c b/arch/arm/mach-omap2/board-zoom-peripherals.c
+index a90375d..5ed2884 100644
+--- a/arch/arm/mach-omap2/board-zoom-peripherals.c
++++ b/arch/arm/mach-omap2/board-zoom-peripherals.c
+@@ -227,6 +227,7 @@ static struct platform_pwm_backlight_data zoom_backlight_data = {
+ 	.max_brightness = 127,
+ 	.dft_brightness = 127,
+ 	.pwm_period_ns = 7812500,
++	.enable_gpio = -1,
+ };
+ 
+ static struct platform_device zoom_backlight_pwm = {
+-- 
+1.8.4
