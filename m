@@ -1,79 +1,50 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/10] iio: at91_adc: Cocci spatch "noderef"
-Date: Mon, 23 Sep 2013 14:16:54 +0200
-Message-ID: <52403136.2080503@atmel.com>
-References: <1379604755850-858421494-0-diffsplit-thomas@m3y3r.de> <1379604755852-604229709-3-diffsplit-thomas@m3y3r.de> <523BF89E.4000508@atmel.com> <523C95B0.6070906@kernel.org> <523C971E.5090809@kernel.org>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: [PATCH] ARM: dts: mxs: convert usb0_id_pins_a to use symbolic pin defs
+Date: Mon, 23 Sep 2013 14:20:27 +0200
+Message-ID: <1379938827-23726-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <523C971E.5090809-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thomas Meyer <thomas-VsYtu1Qij5c@public.gmane.org>, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/09/2013 20:42, Jonathan Cameron :
-> On 09/20/13 19:36, Jonathan Cameron wrote:
->> On 09/20/13 08:26, Nicolas Ferre wrote:
->>> On 19/09/2013 23:42, Thomas Meyer :
->>>> sizeof when applied to a pointer typed expression gives the size of the
->>>> pointer.
->>>> Found by coccinelle spatch "misc/noderef.cocci"
->>>>
->>>> Signed-off-by: Thomas Meyer <thomas-VsYtu1Qij5c@public.gmane.org>
->>>
->>> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> Applied to the fixes-togreg branch of
->> git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
->
-> Actually, change of plan. Applied to the togreg branch of that
-> tree.  Whilst technically more correct to have it as you say,
-> we are dealing with the size of a struct iio_trig ** vs
-> a struct iio_trig *  so it isn't actually a bug, just a
-> less than ideal bit of code ;)
+This pin definition had been added after the initial patch to use
+symbolic pin names in DTS files.
 
-Absolutely.
+Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+---
+ arch/arm/boot/dts/imx28.dtsi |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
 
-> It was so obviously a fix I didn't initially check if it
-> was a 'real' bug or not. oops.
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dts=
+i
+index 44151f5..918d419 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -745,11 +745,11 @@
+ 				usb0_id_pins_a: usb0id@0 {
+ 					reg =3D <0>;
+ 					fsl,pinmux-ids =3D <
+-						0x3071 /* MX28_PAD_AUART1_RTS__USB0_ID */
++						MX28_PAD_AUART1_RTS__USB0_ID
+ 					>;
+-					fsl,drive-strength =3D <2>;
+-					fsl,voltage =3D <1>;
+-					fsl,pull-up =3D <1>;
++					fsl,drive-strength =3D <MXS_DRIVE_12mA>;
++					fsl,voltage =3D <MXS_VOLTAGE_HIGH>;
++					fsl,pull-up =3D <MXS_PULL_ENABLE>;
+ 				};
+ 			};
+=20
+--=20
+1.7.2.5
 
-Yes, I took this path myself as well ;-)
-
-Bye,
-
-
->>>> ---
->>>>
->>>> diff -u -p a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
->>>> --- a/drivers/iio/adc/at91_adc.c
->>>> +++ b/drivers/iio/adc/at91_adc.c
->>>> @@ -279,7 +279,7 @@ static int at91_adc_trigger_init(struct
->>>>        int i, ret;
->>>>
->>>>        st->trig = devm_kzalloc(&idev->dev,
->>>> -                st->trigger_number * sizeof(st->trig),
->>>> +                st->trigger_number * sizeof(*st->trig),
->>>>                    GFP_KERNEL);
->>>>
->>>>        if (st->trig == NULL) {
->>>> --
->>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>>
->>>
->>>
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
-
--- 
-Nicolas Ferre
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
