@@ -1,53 +1,108 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/4] regulator: as3722: add regulator driver for AMS AS3722
-Date: Mon, 23 Sep 2013 10:58:29 -0600
-Message-ID: <52407335.3030403@wwwdotorg.org>
-References: <1379400338-20704-1-git-send-email-ldewangan@nvidia.com> <1379400338-20704-4-git-send-email-ldewangan@nvidia.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [RFC] gpio/omap: auto-setup a GPIO when used as an IRQ
+Date: Mon, 23 Sep 2013 19:00:44 +0200
+Message-ID: <524073BC.9080907@collabora.co.uk>
+References: <1379860848-29020-1-git-send-email-javier.martinez@collabora.co.uk> <20130923164519.GF2684@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379400338-20704-4-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: lee.jones@linaro.org, sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, florian.lobmaier@ams.com
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20130923164519.GF2684@atomide.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Jon Hunter <jgchunter@gmail.com>, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2013 12:45 AM, Laxman Dewangan wrote:
-> The AS3722 is a compact system PMU suitable for Mobile Phones,
-> Tablet etc. It has 4 DCDC step down regulators, 3 DCDC step down
-> controller, 11 LDOs.
+On 09/23/2013 06:45 PM, Tony Lindgren wrote:
+> * Javier Martinez Canillas <javier.martinez@collabora.co.uk> [130922 07:49]:
+>> --- a/drivers/gpio/gpio-omap.c
+>> +++ b/drivers/gpio/gpio-omap.c
+>> @@ -420,6 +420,29 @@ static int _set_gpio_triggering(struct gpio_bank *bank, int gpio,
+>>  	return 0;
+>>  }
+>>  
+>> +static void _set_gpio_mode(struct gpio_bank *bank, unsigned offset)
+>> +{
+>> +	if (bank->regs->pinctrl) {
+>> +		void __iomem *reg = bank->base + bank->regs->pinctrl;
+>> +
+>> +		/* Claim the pin for MPU */
+>> +		__raw_writel(__raw_readl(reg) | (1 << offset), reg);
+>> +	}
+>> +
+>> +	if (bank->regs->ctrl && !bank->mod_usage) {
+>> +		void __iomem *reg = bank->base + bank->regs->ctrl;
+>> +		u32 ctrl;
+>> +
+>> +		ctrl = __raw_readl(reg);
+>> +		/* Module is enabled, clocks are not gated */
+>> +		ctrl &= ~GPIO_MOD_CTRL_BIT;
+>> +		__raw_writel(ctrl, reg);
+>> +		bank->context.ctrl = ctrl;
+>> +	}
+>> +
+>> +	bank->mod_usage |= 1 << offset;
+>> +}
+>> +
+>>  static int gpio_irq_type(struct irq_data *d, unsigned type)
+>>  {
+>>  	struct gpio_bank *bank = irq_data_get_irq_chip_data(d);
+>> @@ -427,8 +450,8 @@ static int gpio_irq_type(struct irq_data *d, unsigned type)
+>>  	int retval;
+>>  	unsigned long flags;
+>>  
+>> -	if (WARN_ON(!bank->mod_usage))
+>> -		return -EINVAL;
+>> +	if (!bank->mod_usage)
+>> +		pm_runtime_get_sync(bank->dev);
+>>  
+>>  #ifdef CONFIG_ARCH_OMAP1
+>>  	if (d->irq > IH_MPUIO_BASE)
+>> @@ -438,6 +461,11 @@ static int gpio_irq_type(struct irq_data *d, unsigned type)
+>>  	if (!gpio)
+>>  		gpio = irq_to_gpio(bank, d->hwirq);
+>>  
+>> +	spin_lock_irqsave(&bank->lock, flags);
+>> +	_set_gpio_mode(bank, GPIO_INDEX(bank, gpio));
+>> +	_set_gpio_direction(bank, GPIO_INDEX(bank, gpio), 1);
+>> +	spin_unlock_irqrestore(&bank->lock, flags);
+>> +
+>>  	if (type & ~IRQ_TYPE_SENSE_MASK)
+>>  		return -EINVAL;
+>>
+
+Hi Tony, thanks a lot for your feedback.
+
 > 
-> Add a driver to support accessing the DCDC/LDOs found on the AMS
-> AS3722 PMIC using regulators.
+> Hmm does this still work for legacy platform data based
+> drivers that are doing gpio_request() first?
+> 
 
-> diff --git a/Documentation/devicetree/bindings/regulator/as3722-reguator.txt b/Documentation/devicetree/bindings/regulator/as3722-reguator.txt
+Yes it still work when booting using board files. I tested on my OMAP3 board and
+it worked in both DT and legacy booting mode.
 
-The filename is typo'd
+> And what's the path for clearing things for PM when free_irq()
+> gets called? It seems that this would leave the GPIO bank
+> enabled causing a PM regression?
+> 
 
-> +AMS AS3722 regulator devicetree bindings.
-> +The regulator node is sub node of the AS3722 node.
+Indeed, I did set bank->mod_usage |= 1 << offset so the bank is enabled if the
+device goes to suspended and then resumed but I completely forget about the
+clearing path when the IRQ is freed.
 
-You probably want a blank line to separate the document title from the
-body text.
+Which makes me think that we should probably maintain two usage variables, one
+for GPIO and another one for IRQ and check both of them on the suspend/resume pm
+functions.
 
-> +Optional nodes:
-> +- regulators : Must contain a sub-node per regulator from the list below.
-> +	       Each sub-node should contain the constraints and initialization
-> +	       information for that regulator. See regulator.txt for a
-> +	       description of standard properties for these sub-nodes.
-> +	       Additional custom properties  are listed below.
-> +	       sd[0-6], ldo[0-7], ldo[9-11].
+> Other than the two concerns above it seems that this might
+> be the way to go to fix the regression for the -rc cycle.
+> 
+> Regards,
+> 
+> Tony
+> 
 
-I think you want to prefix that last line with something like: "Valid
-regulator names are: ".
+Great, I'll do these changes when posting as a proper PATCH.
 
-> +		ams,ext-control: External control of the rail. The option of
-> +			this properties will tell which external input is
-> +			controlling this rail. Valid values are 0, 1, 2 ad 3.
-> +			0: There is no external control of this rail.
-> +			1: Rail is controlled by ENABLE1 input pin.
-> +			2: Rail is controlled by ENABLE1 input pin.
-> +			3: Rail is controlled by ENABLE1 input pin.
-
-Those last 3 lines all say the same thing.
+Thanks a lot and best regards,
+Javier
