@@ -1,64 +1,61 @@
 From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Mon, 23 Sep 2013 21:53:07 +0200
-Message-ID: <CACRpkdacx-e01i_h4cj1qMX2zNOiiDshbTV__wi_LfQrLkrL6g@mail.gmail.com>
+Date: Mon, 23 Sep 2013 22:01:24 +0200
+Message-ID: <CACRpkdY=cgtf6_eypfAAv-fvmiNgAYyz4StTgDie5THsbrcumg@mail.gmail.com>
 References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
-	<52279524.8090006@wwwdotorg.org>
-	<20130909161924.GT29403@sirena.org.uk>
-	<2052193.CMUEUJFRgS@lem-wkst-02>
-	<522F78CB.2020507@wwwdotorg.org>
-	<20130910213718.GH29403@sirena.org.uk>
-	<522F9E6C.2010905@wwwdotorg.org>
 	<522FBED9.9000305@collabora.co.uk>
 	<5230C7F6.3080803@wwwdotorg.org>
+	<3653629.tapNZSuWhS@lem-wkst-02>
+	<52373B34.4060709@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5230C7F6.3080803@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <52373B34.4060709@wwwdotorg.org>
+Sender: linux-gpio-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Lars Poeschel <poeschel@lemonage.de>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, joelf@ti.com
+Cc: Lars Poeschel <poeschel@lemonage.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, joelf@ti.com, Laur
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2013 at 9:43 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+On Mon, Sep 16, 2013 at 7:09 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
 
-> I believe this situation is exactly what cause the original patch to the
-> OMAP driver to be reverted; that patch should have touched the HW
-> directly to solve the problem when the IRQ was requested, rather than
-> calling into the GPIO subsystem (which also has the side-effect of
-> touching the HW in the same way as desired).
+> Put another way, I don't believe
+> there's any rule when writing DT bindings that states that bindings must
+> not describe the same pin as both a GPIO and an IRQ, although admittedly
+> that may be unusual.
 
-And that has the side-effect that this line, which is now set up
-in the HW as an input line, can be gpio_request()ed by some other
-code path and set up as output, screwing around with the very
-same registers.
+Actually I think you've won me over here.
 
-I think the kernel should prevent such things.
+But I do not think that this shall be done at the expense of letting
+DT-based drivers do nasty things like setting up the same GPIO
+line as an IRQ (hammering the hardware to do that) and then
+request the same line to be an output line and drive it, for
+example.
 
-But I think you're making it sound like the kernel should not prevent
-such things, but instead give the drivers enough rope to shoot itself
-in the foot if it so desires.
+So the state of the GPIO line has to be tracked: if it is set as
+input and tied to an IRQ it should *not* be possible for the
+other code path to request it and set it as output. But it should
+be possible to set it as input again and read the value.
 
-But a third solution is possible: the driver keep track of whether
-a line is already requested as IRQ and if that happens, will not
-allow gpio_set_direction_output() and other incompatible uses,
-but still allow gpio_set_direction_input() and gpio_get_value(),
-that would be OK.
+Laurent deascribed exactly the latter usecase, which is OK.
 
-In the GPIO descriptor we can flag this, so it would be preferable
-to have that tracking in the gpiolib core rather than the driver
-though.
+>> I agree with you that it would be the best if the only call would be
+>> request_irq and the chip driver programs the HW appropriately. It would be a
+>> dream, but unfortunately this is not possible at the moment. This is something
+>> that Linus pointed out very very early in this whole discussion. The gpio and
+>> irq frameworks don't share any information. The irq framework has no chance to
+>> program the HW, because it will never find the related gpio.
+>> For this to work the frameworks have to change (and possibly all drivers/board
+>> files/whatever using request_irq() and/or request_gpio()) have to change.
+>> That is something that I do not dare to do alone.
+>
+> This is a controller-specific issue, and has nothing to do with the GPIO
+> or IRQ frameworks. The driver for the combined irq/gpio_chip simply
+> needs to program the HW when the IRQ is requested or set up. The Tegra
+> driver already works this way, so there's actual proof that it is
+> possible to do this in practice.
 
-> As we discussed on IRC (so mainly for the record in the mailing list
-> archive), I believe that if a driver wants to use a pin as an interrupt
-> and only an interrupt, even if the pin has the capability in HW to be a
-> GPIO (or absolutely anything else at all), then the only call in the
-> entire kernel (board code, DT core code, IRQ core, driver, ...) should
-> be a single request_irq(), and the IRQ chip driver needs to program the
-> HW appropriately to make that work.
-
-I agree with this, but also think that the kernel should prevent the
-same resource for being used in an incompatible way.
+And how to you block the same line from being gpio_request()ed
+and set as output?
 
 Yours,
 Linus Walleij
