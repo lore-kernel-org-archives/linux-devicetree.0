@@ -1,37 +1,46 @@
-From: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 17/28] xtensa: use early_init_dt_scan
-Date: Mon, 23 Sep 2013 14:53:13 +0400
-Message-ID: <CAMo8BfJco_W1NpE3LgyzozgFXdwsUjb5PWytP6gwY9Hde7KR_A@mail.gmail.com>
-References: <1379372965-22359-1-git-send-email-robherring2@gmail.com>
-	<1379372965-22359-18-git-send-email-robherring2@gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH -next] dma: mmp_pdma: use list_move instead of
+ list_del/list_add
+Date: Mon, 23 Sep 2013 15:32:53 +0530
+Message-ID: <20130923100253.GG17188@intel.com>
+References: <CAPgLHd9SeN1OdCKqTP2w_rFi3TWD=b+7vL4iwx53KwnMF23Nxg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379372965-22359-18-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, "linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org" <linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPgLHd9SeN1OdCKqTP2w_rFi3TWD=b+7vL4iwx53KwnMF23Nxg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: djbw@fb.com, grant.likely@linaro.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2013 at 3:09 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->
-> Convert xtensa to use new early_init_dt_scan function.
->
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>
-> Cc: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org
-> ---
->  arch/xtensa/kernel/setup.c | 21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
+On Mon, Sep 23, 2013 at 02:07:20PM +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> 
+> Using list_move() instead of list_del() + list_add().
+> 
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Applied, thanks
 
-Acked-by: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+~Vinod
+> ---
+>  drivers/dma/mmp_pdma.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/mmp_pdma.c b/drivers/dma/mmp_pdma.c
+> index ff8d7827..558994f 100644
+> --- a/drivers/dma/mmp_pdma.c
+> +++ b/drivers/dma/mmp_pdma.c
+> @@ -798,8 +798,7 @@ static void dma_do_tasklet(unsigned long data)
+>  		 * move the descriptors to a temporary list so we can drop
+>  		 * the lock during the entire cleanup operation
+>  		 */
+> -		list_del(&desc->node);
+> -		list_add(&desc->node, &chain_cleanup);
+> +		list_move(&desc->node, &chain_cleanup);
+>  
+>  		/*
+>  		 * Look for the first list entry which has the ENDIRQEN flag
+> 
 
 -- 
-Thanks.
--- Max
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
