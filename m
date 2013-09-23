@@ -1,82 +1,26 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
-Date: Mon, 23 Sep 2013 15:33:10 -0600
-Message-ID: <5240B396.2010705@wwwdotorg.org>
-References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com> <523C1AE0.9020603@samsung.com> <CA+V-a8u5_rhxTgkVgCbtmGpaZCt2ciu4vABW4t80aSp7csttnw@mail.gmail.com> <3002978.Cb6jL1xtkE@avalon>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/5] mfd: arizona: Add device tree helper functions
+Date: Mon, 23 Sep 2013 15:36:36 -0600
+Message-ID: <5240B464.2010903@wwwdotorg.org>
+References: <1379961043-23762-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3002978.Cb6jL1xtkE@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1379961043-23762-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: lee.jones@linaro.org, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, broonie@kernel.org, patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2013 05:50 AM, Laurent Pinchart wrote:
-> On Monday 23 September 2013 08:18:52 Prabhakar Lad wrote:
->> On Fri, Sep 20, 2013 at 3:22 PM, Sylwester Nawrocki wrote:
->>> On 09/20/2013 10:11 AM, Prabhakar Lad wrote:
->>>> OK I will, just send out a fix up patch which fixes the mismatch between
->>>> names for the rc-cycle, and later send out a patch which removes the
->>>> platform data usage for next release with proper DT bindings.
->>>
->>> I think the binding need to be fully corrected now, I just meant to not
->>> touch the board file, i.e. leave non-dt support unchanged.
->>
->> Ok
->>
->>>> I'm OK with making regulator properties as optional, But still it would
->>>> change the meaning of what DT is, we know that the VDD/VDD_IO .. etc
->>>> pins are required properties (but still making them as optional) :-(
->>>>
->>>> I think there might several devices where this situation may arise so
->>>> just thinking of a alternative solution.
->>>>
->>>> say we have property 'software-regulator' which takes true/false(0/1)
->>>> If set to true we make the regulators as required property or else we
->>>> assume it is handled and ignore it ?
->>>
->>> I don't think this is a good idea. You would have to add a similar
->>> platform data flag for non-dt, it doesn't sound right. I can see two
->>> options here:
->>>
->>> 1. Make the regulator properties mandatory and, e.g. define a fixed
->>>    voltage GPIO regulator in DT with an empty 'gpio' property. Then
->>>    pass a phandle to that regulator in the adv7343 *-supply properties.
->>>    For non-dt similarly a fixed voltage regulator(s) and voltage
->>>    supplies  would need to be defined in the board files.
->>>
->>> 2. Make the properties optional and use (devm_)regulator_get_optional()
->>>    calls in the driver (a recently added function). I must admit I don't
->>>    fully understand description of this function, it currently looks
->>>    pretty much same as (devm_)regulator_get(). Thus the driver would
->>>    need to be handling regulator supplies only when non ERR_PTR() is
->>>    returned from regulator_get_optional() and otherwise assume a non
->>>    critical error. There is already quite a few example occurrences of
->>>    regulator_get_optional() usage.
->>
->> Thanks for pointing it I'll choose option 2 and post the patch.
-> 
-> Isn't regulator_get_optional() intended for devices that can have supplies 
-> unconnected in normal use ?
+On 09/23/2013 12:30 PM, Charles Keepax wrote:
+> Factor out reading of specific device tree bindings into seperate
+> functions in preperation for adding more of them. Whilst we are at is
+> fixup a couple of small issues in the existing binding documentation.
 
-I believe so, yes.
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
 
-> The ADV7343 supplies are mandatory from a hardware 
-> point of view, so I think we should use regulator_get(). Otherwise the driver 
-> won't be able to tell the difference between a regulator that isn't present 
-> yet (for instance because the regulator device/driver hasn't been probed yet), 
-> which should result in deferred probing, and an always-on regulator that has 
-> been left out.
+> -  - AVDD1-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
+> +  - AVDD-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
 
-So I think you want to make the supply properties mandatory in DT (since
-some form of supply is mandatory in HW), yet make the driver support
-broken DTs which don't have those properties, by error-checking the
-return value from regulator_get(). You might want to put a note into DT
-saying that a previous version of the binding didn't require those
-supply properties, so they may be missing from older DTs.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That looks like an incompatible change to the DT ABI.
