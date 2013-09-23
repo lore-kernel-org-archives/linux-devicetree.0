@@ -1,71 +1,35 @@
-From: "Tim Kryger" <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: DT: Add missing UARTs for bcm11351 (bcm281xx)
-Date: Mon, 23 Sep 2013 10:49:57 -0700
-Message-ID: <1379958597-8554-1-git-send-email-tim.kryger@linaro.org>
+From: "Wendy Ng" <wendy.ng@broadcom.com>
+Subject: [PATCH 0/3] thermal: bcm281xx: Add thermal driver
+Date: Mon, 23 Sep 2013 10:51:35 -0700
+Message-ID: <1379958698-7554-1-git-send-email-wendy.ng@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>, Wendy Ng <wendy.ng@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds in three more UARTs that were not declared earlier.
+This patch series adds the support of the thermal driver for Broadcom
+bcm281xx family of SoCs.
 
-Signed-off-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/bcm11351.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Wendy Ng (3):
+  thermal: bcm281xx: Add thermal driver
+  ARM: bcm281xx: Turn on Thermal and HWMON drivers.
+  ARM: bcm281xx: Add thermal driver to device tree.
 
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 05a5aab..98e6bc0 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -49,6 +49,36 @@
- 		reg-io-width = <4>;
- 	};
- 
-+	uart@3e001000 {
-+		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
-+		status = "disabled";
-+		reg = <0x3e001000 0x1000>;
-+		clock-frequency = <13000000>;
-+		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-+
-+	uart@3e002000 {
-+		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
-+		status = "disabled";
-+		reg = <0x3e002000 0x1000>;
-+		clock-frequency = <13000000>;
-+		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-+
-+	uart@3e003000 {
-+		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
-+		status = "disabled";
-+		reg = <0x3e003000 0x1000>;
-+		clock-frequency = <13000000>;
-+		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-+
- 	L2: l2-cache {
- 		compatible = "brcm,bcm11351-a2-pl310-cache";
- 		reg = <0x3ff20000 0x1000>;
+ .../bindings/thermal/bcm-kona-thermal.txt          |   18 +++
+ arch/arm/boot/dts/bcm11351-brt.dts                 |    4 +-
+ arch/arm/boot/dts/bcm11351.dtsi                    |    6 +
+ arch/arm/boot/dts/bcm28155-ap.dts                  |    4 +
+ arch/arm/configs/bcm_defconfig                     |    3 +-
+ drivers/thermal/Kconfig                            |   10 ++
+ drivers/thermal/Makefile                           |    1 +
+ drivers/thermal/bcm_thermal.c                      |  170 ++++++++++++++++++++
+ 8 files changed, 214 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+ create mode 100644 drivers/thermal/bcm_thermal.c
+
 -- 
-1.8.0.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
