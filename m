@@ -1,47 +1,83 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC] gpio/omap: auto-setup a GPIO when used as an IRQ
-Date: Mon, 23 Sep 2013 10:07:24 -0700
-Message-ID: <20130923170724.GG2684@atomide.com>
-References: <1379860848-29020-1-git-send-email-javier.martinez@collabora.co.uk>
- <20130923164519.GF2684@atomide.com>
- <524073BC.9080907@collabora.co.uk>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 3/4] watchdog: s3c2410_wdt: parse watchdog dt node to read
+ PMU registers adresses
+Date: Mon, 23 Sep 2013 19:11:11 +0200
+Message-ID: <3933206.EMuKSi641Y@amdc1227>
+References: <1379414623-26329-1-git-send-email-l.krishna@samsung.com>
+ <CAL1wa8eWKNL3kdfjqxqaLsAtc8nqgiPW34SBk4gozAR1jnRaSg@mail.gmail.com>
+ <1918747.quF8QJoP6D@amdc1032>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <524073BC.9080907@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Jon Hunter <jgchunter@gmail.com>, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1918747.quF8QJoP6D@amdc1032>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Leela Krishna Amudala <l.krishna@samsung.com>, Doug Anderson <dianders@chromium.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Javier Martinez Canillas <javier.martinez@collabora.co.uk> [130923 10:09]:
-> On 09/23/2013 06:45 PM, Tony Lindgren wrote:
-> > 
-> > Hmm does this still work for legacy platform data based
-> > drivers that are doing gpio_request() first?
-> > 
+On Monday 23 of September 2013 19:03:10 Bartlomiej Zolnierkiewicz wrote:
 > 
-> Yes it still work when booting using board files. I tested on my OMAP3 board and
-> it worked in both DT and legacy booting mode.
-
-OK great.
- 
-> > And what's the path for clearing things for PM when free_irq()
-> > gets called? It seems that this would leave the GPIO bank
-> > enabled causing a PM regression?
+> Hi,
+> 
+> On Wednesday, September 18, 2013 12:20:31 PM Leela Krishna Amudala wrote:
+> > Tomasz,
 > > 
+> > On Wed, Sep 18, 2013 at 10:04 AM, Doug Anderson <dianders@chromium.org> wrote:
+> > > Tomasz,
+> > >
+> > > On Tue, Sep 17, 2013 at 6:30 AM, Tomasz Figa <t.figa@samsung.com> wrote:
+> > >> I believe this is mandatory on Exynos 5420 and unused on previous SoCs. It
+> > >> should be handled depending on compatible value.
+> > >
+> > > I think at least 5250 needs something similar.  I believe we got away
+> > > with it in the past since other (non-WDT) code was tweaking with this
+> > > bit, but that was a little bit gross.  Leela Krishna can correct me if
+> > > I'm wrong.
+> > >
+> > 
+> > Yes, 5250 also needs this reset-mask-bit, but not required by SoCs
+> > other than Exynos5xxx.
+> > Hence I kept it as optional parameter.
+> > 
+> > I took care of this code such that it won't break on older SoCs.
+> > 
+> > If you notice the code in probe function, I used the check condition
+> > 
+> > if (!IS_ERR(wdt->pmu_disable_reg) && !IS_ERR(wdt->pmu_mask_reset_reg)) {
+> > }
+> > 
+> > i.e., if any of the PMU register address is not mentioned in the DT
+> > node it simply skips reading reset-mask-bit
+> > and continues execution (which may happen in older SoC DT node).
+> > 
+> > ..also, in s3c2410wdt_mask_and_disable_reset() function, below
+> > condition check is happening
+> > 
+> > if (IS_ERR(wdt->pmu_disable_reg) || IS_ERR(wdt->pmu_mask_reset_reg)
+> >                                 || (wdt->pmu_mask_bit < 0))
+> >         return;
+> > 
+> > i.e., if any of the registers is not specified in DT node simply
+> > return without programming
+> > PMU registers(which is true in case of older SoCs).
+> > 
+> > If you think this doesn't sounds good way of handling older SoCs.
+> > I'll add new compatible string for Exynos5xxx and do like what you said. :)
 > 
-> Indeed, I did set bank->mod_usage |= 1 << offset so the bank is enabled if the
-> device goes to suspended and then resumed but I completely forget about the
-> clearing path when the IRQ is freed.
+> Yes, please re-do the code per Tomasz's suggestions.
 > 
-> Which makes me think that we should probably maintain two usage variables, one
-> for GPIO and another one for IRQ and check both of them on the suspend/resume pm
-> functions.
+> This would also allow you to check return values of devm_ioremap_resource()
+> calls in the probe method and require them to succeed in order to register
+> watchdog device (which is unfortunately not what happens currently).
 
-Yes that it seems that they should be treated separately.
+Now as I think of it, the driver doesn't seem to reconfigure those PMU
+registers in any watchdog API callback, only in probe, remove, suspend
+and resume.
 
-Regards,
+Since we already have PMU "driver" in mach-exynos, which already has
+suspend/resume syscore ops, what about placing such configuration there
+instead?
 
-Tony
+Best regards,
+Tomasz
