@@ -1,69 +1,63 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Mon, 23 Sep 2013 14:12:50 -0600
-Message-ID: <5240A0C2.4010502@wwwdotorg.org>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <52279524.8090006@wwwdotorg.org> <20130909161924.GT29403@sirena.org.uk> <2052193.CMUEUJFRgS@lem-wkst-02> <522F78CB.2020507@wwwdotorg.org> <20130910213718.GH29403@sirena.org.uk> <522F9E6C.2010905@wwwdotorg.org> <522FBED9.9000305@collabora.co.uk> <5230C7F6.3080803@wwwdotorg.org> <CACRpkdacx-e01i_h4cj1qMX2zNOiiDshbTV__wi_LfQrLkrL6g@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC] gpio/omap: auto-setup a GPIO when used as an IRQ
+Date: Mon, 23 Sep 2013 22:15:48 +0200
+Message-ID: <CACRpkdb35DouKsZ+9aWfQmER1vmAaK1dR7VXjoFHTLRR+hBezg@mail.gmail.com>
+References: <1379860848-29020-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdacx-e01i_h4cj1qMX2zNOiiDshbTV__wi_LfQrLkrL6g@mail.gmail.com>
+In-Reply-To: <1379860848-29020-1-git-send-email-javier.martinez@collabora.co.uk>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Lars Poeschel <poeschel@lemonage.de>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, joelf@ti.com
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2013 01:53 PM, Linus Walleij wrote:
-> On Wed, Sep 11, 2013 at 9:43 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> 
->> I believe this situation is exactly what cause the original patch to the
->> OMAP driver to be reverted; that patch should have touched the HW
->> directly to solve the problem when the IRQ was requested, rather than
->> calling into the GPIO subsystem (which also has the side-effect of
->> touching the HW in the same way as desired).
-> 
-> And that has the side-effect that this line, which is now set up
-> in the HW as an input line, can be gpio_request()ed by some other
-> code path and set up as output, screwing around with the very
-> same registers.
-> 
-> I think the kernel should prevent such things.
+On Sun, Sep 22, 2013 at 4:40 PM, Javier Martinez Canillas
+<javier.martinez@collabora.co.uk> wrote:
 
-It might be nice if it could do that.
+> To use a GPIO pin as an interrupt line, two previous configurations
+> have to be made:
+>
+> a) Map the GPIO pin as an interrupt line into the Linux irq space
+> b) Enable the GPIO bank and configure the GPIO direction as input
+>
+> Most GPIO/IRQ chip drivers just create a mapping for every single
+> GPIO pin with irq_create_mapping() on .probe so users usually can
+> assume a) and only have to do b) by using the following sequence:
+>
+> gpio_request(gpio, "foo IRQ");
+> gpio_direction_input(gpio);
+>
+> and then request a IRQ with:
+>
+> irq = gpio_to_irq(gpio);
+> request_irq(irq, ...);
 
-However, that is 100% unrelated to the problem at hand.
+I guess I have to live with this approach, but I'd like to - if possible -
+address my pet issue.
 
-A driver which only cares about an IRQ should be able to call just IRQ
-APIs and have the HW work. Since not all IRQs are GPIOs, the thing that
-causes the HW to work should not involve the GPIO subsystem in any way
-at all.
+- It is OK that the HW get set up as GPIO input by the IRQ
+  request function alone. (Through gpio_irq_type I guess).
 
-So, the first issue - making a correctly configured system functionally
-work without resorting to hacks such as requesting a GPIO to make an IRQ
-work, is one thing. This issue should be solved purely inside the
-specific HW driver.
+- When a second caller calls omap_gpio_request() it should
+  be OK as well, but only if the flags corresponds to the
+  previously enabled input mode. Else it should be
+  disallowed.
 
-Having the kernel detect when two different drivers both request the
-same resource is entirely another thing. The solution to the first issue
-must not rely on any solution to this second issue.
+- The same should happen for _set_gpio_direction() if a pin
+  previously set up for IRQ gets a request to be used as
+  output.
 
-I'm also not convinced it's possible to solve this second issue given
-the current kernel APIs, since there's not enough semantic information;
-requests of GPIOs and IRQs aren't actually tied to a particular driver
-at present (there's no "struct device *dev" parameter to request_irq or
-gpio_request) and so the subsystems can't actually tell who is
-requesting the GPIO/IRQ, and hence can't detect when the same driver, or
-a different driver, is requesting the same core resource for different
-purposes.
+If this cannot be tracked in the driver, it is certainly a candidate
+for something that gpiolib should be doing. And then I'm open to
+solutions to how we can do that.
 
-Equally, I am actually not 100% sure we want the core to prevent this.
-Why shouldn't two different drivers request the same IRQ? Why shouldn't
-at least one driver, perhaps more, request the pin as a GPIO (assuming
-it will only read the GPIO value, not flip the pin to output). This
-exact situation might happen on some Tegra boards where there's a GPIO
-for VBUS_EN that affects 2 USB ports. It's supposed to be driven
-open-collector. If an external entity forces it low, it means
-over-current. Drivers for both ports might want to receive interrupts on
-both edges, and even request the GPIO for input so they can both tell
-which level the signal is at, in order to report OC/not-OC back up to
-higher levels, as soon as any change occurs.
+If this needs to be applied pronto to fix the regression I'm
+happy with that too, if we add a big boilerplate stating the above
+problem and that it needs to be *fixed* at some point.
+
+But in either case I want this to be tested on OMAP1 before
+I apply it, as in a Tested-by tag.
+
+Yours,
+Linus Walleij
