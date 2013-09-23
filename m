@@ -1,140 +1,297 @@
-From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv2 2/3] mmc: dw_mmc-socfpga: Clean up SOCFPGA platform specific functionality
-Date: Mon, 23 Sep 2013 17:35:59 -0500
-Message-ID: <1379975760-18084-2-git-send-email-dinguyen@altera.com>
-References: <1379975760-18084-1-git-send-email-dinguyen@altera.com>
+From: "Wendy Ng" <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] thermal: bcm281xx: Add thermal driver
+Date: Mon, 23 Sep 2013 15:43:54 -0700
+Message-ID: <5240C42A.3030705@broadcom.com>
+References: <1379958698-7554-1-git-send-email-wendy.ng@broadcom.com>
+ <1379958698-7554-2-git-send-email-wendy.ng@broadcom.com>
+ <52408648.7040301@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+ charset=iso-8859-1;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379975760-18084-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <52408648.7040301-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-The SDR timing registers for the SD/MMC IP block for SOCFPGA is located
-in the system manager. This system manager IP block is located outside of
-the SD IP block itself. Therefore, the function to set the SDR timing
-register should be in the platform specific code so that the SD driver can
-be autonomous of any future System Manager changes.
+On 9/23/2013 11:19 AM, Eduardo Valentin wrote:
+> On 23-09-2013 13:51, Wendy Ng wrote:
+>> This adds the support for reading out temperature from Broadcom bcm281xx
+>> SoCs.
+>>
+>> Signed-off-by: Wendy Ng <wendy.ng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>   .../bindings/thermal/bcm-kona-thermal.txt          |   18 +++
+>>   drivers/thermal/Kconfig                            |   10 ++
+>>   drivers/thermal/Makefile                           |    1 +
+>>   drivers/thermal/bcm_thermal.c                      |  170 ++++++++++++++++++++
+>>   4 files changed, 199 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+>>   create mode 100644 drivers/thermal/bcm_thermal.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+>> new file mode 100644
+>> index 0000000..acca99e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+>> @@ -0,0 +1,18 @@
+>> +* Broadcom Kona Thermal Management Unit
+>> +
+>> +This version is for the BCM281xx family of SoCs.
+>> +
+>> +Required properties:
+>> +- compatible : "brcm,bcm11351-thermal", "brcm,kona-thermal"
+>> +- reg : Address range of the thermal register
+>> +- thermal-name: this entry must be specified and it will be passed into
+>> +thermal_zone_device_register().  This name will also be reported under Hwmon
+>> +sysfs 'name' attribute.
+>> +
+>> +Example:
+>> +	thermal@34008000 {
+>> +		compatible = "brcm,bcm11351-thermal", "brcm,kona-thermal";
+>> +		reg = <0x34008000 0x0024>;
+>> +		thermal-name = "bcm_kona_therm";
+>> +		status = "disabled";
+>> +	};
+>> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+>> index dbfc390..7f823f0 100644
+>> --- a/drivers/thermal/Kconfig
+>> +++ b/drivers/thermal/Kconfig
+>> @@ -134,6 +134,16 @@ config KIRKWOOD_THERMAL
+>>   	  Support for the Kirkwood thermal sensor driver into the Linux thermal
+>>   	  framework. Only kirkwood 88F6282 and 88F6283 have this sensor.
+>>   
+>> +config BCM_THERMAL
+>> +	tristate "Temperature sensor on Broadcom BCM281xx family of SoCs"
+>> +	depends on ARCH_BCM
+>> +	default y
+>> +	help
+>> +	  If you say yes here you get support for TMU (Thermal Management
+>> +	  Unit) on Broadcom BCM281xx family of SoCs. This provides thermal
+>> +	  monitoring of CPU clusters, graphics, and SoC glue, but does not
+>> +	  include monitoring of charger temperature.
+>> +
+>>   config DOVE_THERMAL
+>>   	tristate "Temperature sensor on Marvell Dove SoCs"
+>>   	depends on ARCH_DOVE
+>> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+>> index 584b363..3ea8c1c 100644
+>> --- a/drivers/thermal/Makefile
+>> +++ b/drivers/thermal/Makefile
+>> @@ -21,6 +21,7 @@ obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
+>>   obj-$(CONFIG_RCAR_THERMAL)	+= rcar_thermal.o
+>>   obj-$(CONFIG_KIRKWOOD_THERMAL)  += kirkwood_thermal.o
+>>   obj-y				+= samsung/
+>> +obj-$(CONFIG_BCM_THERMAL)       += bcm_thermal.o
+>>   obj-$(CONFIG_DOVE_THERMAL)  	+= dove_thermal.o
+>>   obj-$(CONFIG_DB8500_THERMAL)	+= db8500_thermal.o
+>>   obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
+>> diff --git a/drivers/thermal/bcm_thermal.c b/drivers/thermal/bcm_thermal.c
+>> new file mode 100644
+>> index 0000000..131d3c4
+>> --- /dev/null
+>> +++ b/drivers/thermal/bcm_thermal.c
+>> @@ -0,0 +1,170 @@
+>> +/*
+>> + * Copyright 2013 Broadcom Corporation.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License, version 2,
+>> + * as published by the Free Software Foundation (the "GPL").
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * A copy of the GPL is available at http://www.broadcom.com/licenses/GPLv2.php,
+>> + * or by writing to the Free Software Foundation, Inc.,
+>> + * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+>> + */
+>> +
+>> +/**
+>> +*  Broadcom Thermal Management Unit - bcm_tmu
+>> +*/
+>> +#include <linux/module.h>
+>> +#include <linux/err.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/io.h>
+>> +#include <linux/thermal.h>
+>> +#include <linux/of.h>
+>> +
+>> +/* From TMON Register Database */
+>> +#define TMON_TEMP_VAL_OFFSET			0x0000001c
+>> +#define TMON_TEMP_VAL_TEMP_VAL_SHIFT		0
+>> +#define TMON_TEMP_VAL_TEMP_VAL_MASK		0x000003ff
+>> +
+>> +/* Broadcom Thermal Zone Device Structure */
+>> +struct bcm_thermal_zone_priv {
+>> +	char name[THERMAL_NAME_LENGTH];
+>> +	void __iomem *base;
+>> +};
+>> +
+>> +/* Temperature conversion function for TMON block */
+>> +static long raw_to_mcelsius(u32 raw)
+>> +{
+>> +	/*
+>> +	 * According to Broadcom internal Analog Module Specification
+>> +	 * the formula for converting TMON block output to temperature in
+>> +	 * degree Celsius is:
+>> +	 *	T = 428 - (0.561 * raw)
+>> +	 * Note: the valid operating range for the TMON block is -40C to 125C
+>> +	 */
+>> +	return 428000 - (561 * (long)raw);
+>> +}
+>> +
+>> +/* Get temperature callback function for thermal zone */
+>> +static int bcm_get_temp(struct thermal_zone_device *thermal,
+>> +			unsigned long *temp)
+>> +{
+>> +	u32 raw;
+>> +	long mcelsius;
+>> +	struct bcm_thermal_zone_priv *priv = thermal->devdata;
+>> +
+>> +	if (!priv) {
+>> +		pr_err("%s: thermal zone number %d devdata not initialized.\n",
+>> +			__func__, thermal->id);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	raw = (readl(priv->base + TMON_TEMP_VAL_OFFSET)
+>> +		& TMON_TEMP_VAL_TEMP_VAL_MASK) >> TMON_TEMP_VAL_TEMP_VAL_SHIFT;
+>> +
+>> +	pr_debug("%s: thermal zone number %d raw temp 0x%x\n", __func__,
+>> +		thermal->id, raw);
+>> +
+>> +	mcelsius = raw_to_mcelsius(raw);
+>> +
+>> +	/*
+>> +	 * Since 'mcelsius' might be negative, we need to limit it to smallest
+>> +	 * unsigned value before returning it to thermal framework.
+>> +	 */
+>> +	if (mcelsius < 0)
+>> +		*temp = 0;
+>> +	else
+>> +		*temp = mcelsius;
+>> +
+>> +	pr_debug("%s: thermal zone number %d final temp %d\n", __func__,
+>> +		thermal->id, (int) *temp);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/* Operation callback functions for thermal zone */
+>> +static struct thermal_zone_device_ops bcm_dev_ops = {
+>> +	.get_temp = bcm_get_temp,
+>> +};
+>> +
+>> +static const struct of_device_id bcm_tmu_match_table[] = {
+>> +	{ .compatible = "brcm,kona-thermal" },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, bcm_tmu_match_table);
+>> +
+>> +static int bcm_tmu_probe(struct platform_device *pdev)
+>> +{
+>> +	struct thermal_zone_device *thermal = NULL;
+>> +	struct bcm_thermal_zone_priv *priv;
+>> +	struct resource *res;
+>> +	const char *str;
+>> +
+>> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv) {
+>> +		dev_err(&pdev->dev, "Failed to malloc priv.\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	/* Obtain the tmu name from device tree file */
+>> +	if (of_property_read_string(pdev->dev.of_node, "thermal-name",
+> Hello Wendy,
+>
+> I would prefer we wait until the work for thermal data [1] gets accepted
+> before accepting this driver, specially because you are adding device
+> specific DT entry to help in your registration with the thermal
+> framework. With the mentioned work you wont need it at all.
+>
+> All best,
+>
+> [1] - http://lkml.org/lkml/2013/9/15/122
+Hello Eduardo,
 
-Also, there is no need for "altr,dw-mshc-ciu-div" as the driver can get
-the value of the CIU clock from the common clock API.
+Since your changes are quite extensive, would you recommend me to get 
+your 16 patches into my local workspace and try to integrate the code 
+from my patches on the top of your patches at this time?  Or should I 
+wait until your patches get accepted.
 
-Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-CC: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
----
-v2:
-- Let the mmc driver walk the DTB to get the SDR values
----
----
- drivers/mmc/host/dw_mmc-socfpga.c |   38 +++++++++----------------------------
- 1 file changed, 9 insertions(+), 29 deletions(-)
+Thanks,
+-Wendy
+>> +			&str) == 0) {
+>> +		strlcpy(priv->name, str, sizeof(priv->name));
+>> +	} else {
+>> +		dev_err(&pdev->dev, "Failed to get thermal-name from DT.\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	priv->base = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(priv->base))
+>> +		return PTR_ERR(priv->base);
+>> +
+>> +	thermal = thermal_zone_device_register(priv->name, 0, 0, priv,
+>> +						&bcm_dev_ops, NULL, 0, 0);
+>> +	if (IS_ERR(thermal)) {
+>> +		dev_err(&pdev->dev,
+>> +			"Failed to register Broadcom thermal zone device.\n");
+>> +		return PTR_ERR(thermal);
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, thermal);
+>> +
+>> +	dev_info(&pdev->dev, "Broadcom Thermal Monitor Initialized.\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int bcm_tmu_remove(struct platform_device *pdev)
+>> +{
+>> +	struct thermal_zone_device *broadcom_thermal =
+>> +		platform_get_drvdata(pdev);
+>> +
+>> +	thermal_zone_device_unregister(broadcom_thermal);
+>> +
+>> +	dev_info(&pdev->dev, "Broadcom Thermal Monitor Uninitialized.\n");
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver bcm_tmu_driver = {
+>> +	.driver = {
+>> +		.name = "bcm-thermal",
+>> +		.owner = THIS_MODULE,
+>> +		.of_match_table = bcm_tmu_match_table,
+>> +	},
+>> +	.probe = bcm_tmu_probe,
+>> +	.remove = bcm_tmu_remove,
+>> +};
+>> +
+>> +module_platform_driver(bcm_tmu_driver);
+>> +
+>> +MODULE_DESCRIPTION("Broadcom Thermal Driver");
+>> +MODULE_AUTHOR("Broadcom");
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_ALIAS("platform:bcm-thermal");
+>>
+>
 
-diff --git a/drivers/mmc/host/dw_mmc-socfpga.c b/drivers/mmc/host/dw_mmc-socfpga.c
-index 14b5961..3be2e2a 100644
---- a/drivers/mmc/host/dw_mmc-socfpga.c
-+++ b/drivers/mmc/host/dw_mmc-socfpga.c
-@@ -24,16 +24,12 @@
- #include "dw_mmc.h"
- #include "dw_mmc-pltfm.h"
- 
--#define SYSMGR_SDMMCGRP_CTRL_OFFSET		0x108
--#define DRV_CLK_PHASE_SHIFT_SEL_MASK	0x7
--#define SYSMGR_SDMMC_CTRL_SET(smplsel, drvsel)          \
--	((((smplsel) & 0x7) << 3) | (((drvsel) & 0x7) << 0))
-+extern void socfpga_sysmgr_set_dwmmc_drvsel_smpsel(u32 drvsel, u32 smplsel);
- 
- /* SOCFPGA implementation specific driver private data */
- struct dw_mci_socfpga_priv_data {
--	u8	ciu_div; /* card interface unit divisor */
--	u32	hs_timing; /* bitmask for CIU clock phase shift */
--	struct regmap   *sysreg; /* regmap for system manager register */
-+	u32     drvsel; /*Phase shift for the Drive clock, or tx mode.*/
-+	u32	smplsel; /*Phase shift for the Sample clock, or rx mode.*/
- };
- 
- static int dw_mci_socfpga_priv_init(struct dw_mci *host)
-@@ -45,14 +41,7 @@ static int dw_mci_socfpga_priv_init(struct dw_mci *host)
- 		dev_err(host->dev, "mem alloc failed for private data\n");
- 		return -ENOMEM;
- 	}
--
--	priv->sysreg = syscon_regmap_lookup_by_compatible("altr,sys-mgr");
--	if (IS_ERR(priv->sysreg)) {
--		dev_err(host->dev, "regmap for altr,sys-mgr lookup failed.\n");
--		return PTR_ERR(priv->sysreg);
--	}
- 	host->priv = priv;
--
- 	return 0;
- }
- 
-@@ -61,20 +50,15 @@ static int dw_mci_socfpga_setup_clock(struct dw_mci *host)
- 	struct dw_mci_socfpga_priv_data *priv = host->priv;
- 
- 	clk_disable_unprepare(host->ciu_clk);
--	regmap_write(priv->sysreg, SYSMGR_SDMMCGRP_CTRL_OFFSET,
--		priv->hs_timing);
-+	socfpga_sysmgr_set_dwmmc_drvsel_smpsel(priv->drvsel, priv->smplsel);
- 	clk_prepare_enable(host->ciu_clk);
- 
--	host->bus_hz /= (priv->ciu_div + 1);
- 	return 0;
- }
- 
- static void dw_mci_socfpga_prepare_command(struct dw_mci *host, u32 *cmdr)
- {
--	struct dw_mci_socfpga_priv_data *priv = host->priv;
--
--	if (priv->hs_timing & DRV_CLK_PHASE_SHIFT_SEL_MASK)
--		*cmdr |= SDMMC_CMD_USE_HOLD_REG;
-+	*cmdr |= SDMMC_CMD_USE_HOLD_REG;
- }
- 
- static int dw_mci_socfpga_parse_dt(struct dw_mci *host)
-@@ -82,20 +66,16 @@ static int dw_mci_socfpga_parse_dt(struct dw_mci *host)
- 	struct dw_mci_socfpga_priv_data *priv = host->priv;
- 	struct device_node *np = host->dev->of_node;
- 	u32 timing[2];
--	u32 div = 0;
- 	int ret;
- 
--	ret = of_property_read_u32(np, "altr,dw-mshc-ciu-div", &div);
--	if (ret)
--		dev_info(host->dev, "No dw-mshc-ciu-div specified, assuming 1");
--	priv->ciu_div = div;
--
- 	ret = of_property_read_u32_array(np,
--			"altr,dw-mshc-sdr-timing", timing, 2);
-+		"samsung,dw-mshc-sdr-timing", timing, 2);
- 	if (ret)
- 		return ret;
- 
--	priv->hs_timing = SYSMGR_SDMMC_CTRL_SET(timing[0], timing[1]);
-+	priv->drvsel = timing[0];
-+	priv->smplsel = timing[1];
-+
- 	return 0;
- }
- 
 -- 
-1.7.9.5
+-Wendy
 
 
 --
