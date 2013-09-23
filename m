@@ -1,139 +1,63 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [RFC PATCH 08/15] ata: ahci_platform: Manage SATA PHY
-Date: Mon, 23 Sep 2013 10:42:45 +0300
-Message-ID: <523FF0F5.50504@ti.com>
-References: <1379595943-14622-1-git-send-email-rogerq@ti.com> <1379595943-14622-9-git-send-email-rogerq@ti.com> <523F3567.80303@cogentembedded.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 4/4] Documentation: add LP3943 DT bindings and document
+Date: Mon, 23 Sep 2013 08:58:10 +0100
+Message-ID: <20130923075810.GC2185@lee--X1>
+References: <1378949700-6384-1-git-send-email-milo.kim@ti.com>
+ <20130912152455.GN11227@lee--X1>
+ <523F0040.6050900@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <523F3567.80303@cogentembedded.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: balbi@ti.com, bcousson@baylibre.com, tony@atomide.com, balajitk@ti.com, kishon@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <523F0040.6050900@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <milo.kim@ti.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> >>+++ b/Documentation/lp3943.txt
+> >>@@ -0,0 +1,62 @@
+> >>+TI/National Semiconductor LP3943 MFD driver
+> >>+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-On 09/22/2013 09:22 PM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 09/19/2013 05:05 PM, Roger Quadros wrote:
-> 
->> From: Balaji T K <balajitk@ti.com>
-> 
->> Some platforms have a PHY hooked up to the
->> SATA controller. The PHY needs to be initialized
->> and powered up for SATA to work. We do that
->> using the PHY framework.
-> 
->> [Roger Q] Cleaned up.
-> 
->> CC: Tejun Heo <tj@kernel.org>
->> Signed-off-by: Balaji T K <balajitk@ti.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> [...]
-> 
->> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
->> index 1145637..94484cb 100644
->> --- a/drivers/ata/ahci.h
->> +++ b/drivers/ata/ahci.h
->> @@ -37,6 +37,7 @@
->>
->>   #include <linux/clk.h>
->>   #include <linux/libata.h>
->> +#include <linux/phy/phy.h>
-> 
-> struct phy;
-> 
-> should suffice.
-> 
->> @@ -322,6 +323,7 @@ struct ahci_host_priv {
->>       u32            em_buf_sz;    /* EM buffer size in byte */
->>       u32            em_msg_type;    /* EM message type */
->>       struct clk        *clk;        /* Only for platforms supporting clk */
->> +    struct phy        *phy;        /* If platforms use phy */
->>       void            *plat_data;    /* Other platform data */
->>   };
->>
->> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
->> index 2daaee0..f812ffa 100644
->> --- a/drivers/ata/ahci_platform.c
->> +++ b/drivers/ata/ahci_platform.c
->> @@ -23,6 +23,7 @@
->>   #include <linux/platform_device.h>
->>   #include <linux/libata.h>
->>   #include <linux/ahci_platform.h>
->> +#include <linux/phy/phy.h>
-> 
->    Why include it from both ahci.h and here?
-> 
-OK. will move it to just .c file.
+<snip>
 
->>   #include "ahci.h"
->>
->>   static void ahci_host_stop(struct ata_host *host);
->> @@ -141,16 +142,32 @@ static int ahci_probe(struct platform_device *pdev)
->>           }
->>       }
->>
->> +    hpriv->phy = devm_phy_get(dev, "sata-phy");
->> +    if (IS_ERR(hpriv->phy)) {
->> +        dev_err(dev, "can't get phy\n");
-> 
->    Don't think it's a good idea to complain about missing PHY when the driver doesn't even use it.
+> >Why do you need to document your driver in this way?
+> >
+> >If this stuff is really important (and most of it really isn't), the=
+n
+> >put it either in the commit log or in the driver.
+>=20
+> Unnecessary documentation makes it noisy, but I think the LP3943
+> still needs the driver documentation for better understanding.
+>=20
+> Many people think LP3943 is just LED driver, but I really want to
+> share the application usages - PWM generators and GPIO expanders.
+> If the driver just supports LED functionality, then it would be
+> created as LED class driver. However, this patch-set enables more
+> generic driver usages.
+> So, this documentation would be helpful.
+>=20
+> And I want to keep the code and the documentation separate.
+> If the link address is changed, then only documentation file will be
+> modified, not source file.
+>=20
+> So, I'd like to create the fifth patch-set with new MFD
+> documentation subdirectory.
+> Additionally, LP3943 platform data example code will be added in the
+> 'Documentation/mfd/lp3943.txt'. It's for a platform which doesn't
+> support the device tree.
 
-OK. will change it to dev_dbg() instead.
-> 
->> +        /* return only if -EPROBE_DEFER */
->> +        if (PTR_ERR(hpriv->phy) == -EPROBE_DEFER) {
->> +            rc = -EPROBE_DEFER;
->> +            goto disable_unprepare_clk;
->> +        }
->> +    }
->> +
->>       /*
->>        * Some platforms might need to prepare for mmio region access,
->>        * which could be done in the following init call. So, the mmio
->>        * region shouldn't be accessed before init (if provided) has
->>        * returned successfully.
->>        */
->> +
->> +    if (!(IS_ERR(hpriv->phy))) {
-> 
->    () not needed around IS_ERR() invocation.
+So, I'd actually like to get Sam's opinion on this.
 
-OK.
+NB: The documentation looks pretty rough at the moment. If we decide
+to accept the concept, it will have to be adapted quite a bit before
+full acceptance of the document will be granted.
 
-> 
->> +        phy_init(hpriv->phy);
->> +        phy_power_on(hpriv->phy);
->> +    }
->> +
-> 
->    I think this is misplaced, i.e. it should precede the comment.
-> 
-
-OK.
-
->>       if (pdata && pdata->init) {
->>           rc = pdata->init(dev, hpriv->mmio);
->>           if (rc)
->> -            goto disable_unprepare_clk;
->> +            goto disable_phy;
->>       }
->>
->>       ahci_save_initial_config(dev, hpriv,
-> [...]
->> @@ -328,6 +356,7 @@ static SIMPLE_DEV_PM_OPS(ahci_pm_ops, ahci_suspend, ahci_resume);
->>   static const struct of_device_id ahci_of_match[] = {
->>       { .compatible = "snps,spear-ahci", },
->>       { .compatible = "snps,exynos5440-ahci", },
->> +    { .compatible = "snps,dwc-ahci", },
-> 
->    Looks like the binding documentation is incomplete -- it doesn't list "snps,exynos5440-ahci"...
-
-OK, I'll update it. Thanks for review.
-
-cheers,
--roger
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
