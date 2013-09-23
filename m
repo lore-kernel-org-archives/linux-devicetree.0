@@ -1,75 +1,78 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
-Date: Mon, 23 Sep 2013 13:50:51 +0200
-Message-ID: <3002978.Cb6jL1xtkE@avalon>
-References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com> <523C1AE0.9020603@samsung.com> <CA+V-a8u5_rhxTgkVgCbtmGpaZCt2ciu4vABW4t80aSp7csttnw@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/10] iio: at91_adc: Cocci spatch "noderef"
+Date: Mon, 23 Sep 2013 14:16:54 +0200
+Message-ID: <52403136.2080503@atmel.com>
+References: <1379604755850-858421494-0-diffsplit-thomas@m3y3r.de> <1379604755852-604229709-3-diffsplit-thomas@m3y3r.de> <523BF89E.4000508@atmel.com> <523C95B0.6070906@kernel.org> <523C971E.5090809@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+V-a8u5_rhxTgkVgCbtmGpaZCt2ciu4vABW4t80aSp7csttnw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <523C971E.5090809-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thomas Meyer <thomas-VsYtu1Qij5c@public.gmane.org>, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 23 September 2013 08:18:52 Prabhakar Lad wrote:
-> On Fri, Sep 20, 2013 at 3:22 PM, Sylwester Nawrocki wrote:
-> > On 09/20/2013 10:11 AM, Prabhakar Lad wrote:
-> >> OK I will, just send out a fix up patch which fixes the mismatch between
-> >> names for the rc-cycle, and later send out a patch which removes the
-> >> platform data usage for next release with proper DT bindings.
-> > 
-> > I think the binding need to be fully corrected now, I just meant to not
-> > touch the board file, i.e. leave non-dt support unchanged.
-> 
-> Ok
-> 
-> >> I'm OK with making regulator properties as optional, But still it would
-> >> change the meaning of what DT is, we know that the VDD/VDD_IO .. etc
-> >> pins are required properties (but still making them as optional) :-(
-> >> 
-> >> I think there might several devices where this situation may arise so
-> >> just thinking of a alternative solution.
-> >> 
-> >> say we have property 'software-regulator' which takes true/false(0/1)
-> >> If set to true we make the regulators as required property or else we
-> >> assume it is handled and ignore it ?
-> > 
-> > I don't think this is a good idea. You would have to add a similar
-> > platform data flag for non-dt, it doesn't sound right. I can see two
-> > options here:
-> > 
-> > 1. Make the regulator properties mandatory and, e.g. define a fixed
-> >    voltage GPIO regulator in DT with an empty 'gpio' property. Then
-> >    pass a phandle to that regulator in the adv7343 *-supply properties.
-> >    For non-dt similarly a fixed voltage regulator(s) and voltage
-> >    supplies  would need to be defined in the board files.
-> > 
-> > 2. Make the properties optional and use (devm_)regulator_get_optional()
-> >    calls in the driver (a recently added function). I must admit I don't
-> >    fully understand description of this function, it currently looks
-> >    pretty much same as (devm_)regulator_get(). Thus the driver would
-> >    need to be handling regulator supplies only when non ERR_PTR() is
-> >    returned from regulator_get_optional() and otherwise assume a non
-> >    critical error. There is already quite a few example occurrences of
-> >    regulator_get_optional() usage.
-> 
-> Thanks for pointing it I'll choose option 2 and post the patch.
+On 20/09/2013 20:42, Jonathan Cameron :
+> On 09/20/13 19:36, Jonathan Cameron wrote:
+>> On 09/20/13 08:26, Nicolas Ferre wrote:
+>>> On 19/09/2013 23:42, Thomas Meyer :
+>>>> sizeof when applied to a pointer typed expression gives the size of the
+>>>> pointer.
+>>>> Found by coccinelle spatch "misc/noderef.cocci"
+>>>>
+>>>> Signed-off-by: Thomas Meyer <thomas-VsYtu1Qij5c@public.gmane.org>
+>>>
+>>> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> Applied to the fixes-togreg branch of
+>> git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
+>
+> Actually, change of plan. Applied to the togreg branch of that
+> tree.  Whilst technically more correct to have it as you say,
+> we are dealing with the size of a struct iio_trig ** vs
+> a struct iio_trig *  so it isn't actually a bug, just a
+> less than ideal bit of code ;)
 
-Isn't regulator_get_optional() intended for devices that can have supplies 
-unconnected in normal use ? The ADV7343 supplies are mandatory from a hardware 
-point of view, so I think we should use regulator_get(). Otherwise the driver 
-won't be able to tell the difference between a regulator that isn't present 
-yet (for instance because the regulator device/driver hasn't been probed yet), 
-which should result in deferred probing, and an always-on regulator that has 
-been left out.
+Absolutely.
+
+> It was so obviously a fix I didn't initially check if it
+> was a 'real' bug or not. oops.
+
+Yes, I took this path myself as well ;-)
+
+Bye,
+
+
+>>>> ---
+>>>>
+>>>> diff -u -p a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
+>>>> --- a/drivers/iio/adc/at91_adc.c
+>>>> +++ b/drivers/iio/adc/at91_adc.c
+>>>> @@ -279,7 +279,7 @@ static int at91_adc_trigger_init(struct
+>>>>        int i, ret;
+>>>>
+>>>>        st->trig = devm_kzalloc(&idev->dev,
+>>>> -                st->trigger_number * sizeof(st->trig),
+>>>> +                st->trigger_number * sizeof(*st->trig),
+>>>>                    GFP_KERNEL);
+>>>>
+>>>>        if (st->trig == NULL) {
+>>>> --
+>>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>>
+>>>
+>>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
 
 -- 
-Regards,
-
-Laurent Pinchart
-
+Nicolas Ferre
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
