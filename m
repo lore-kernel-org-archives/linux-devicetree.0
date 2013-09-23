@@ -1,187 +1,137 @@
-From: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 8/9] Staging/iio/adc/touchscreen/MXS: provide devicetree adaption
-Date: Mon, 23 Sep 2013 16:36:37 +0200
-Message-ID: <1379946998-23041-9-git-send-email-jbe@pengutronix.de>
-References: <1379946998-23041-1-git-send-email-jbe@pengutronix.de>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379946998-23041-1-git-send-email-jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [RFC] binding for nvec mfd device
+Date: Mon, 23 Sep 2013 16:52:46 +0200
+Message-ID: <2112732.zfJtNyCk0i@fb07-iapwap2.physik.uni-giessen.de>
+References: <1416005.VvfEeGuSWa@ax5200p> <17687182.lGWlO75r41@fb07-iapwap2.physik.uni-giessen.de> <5238CE1C.3050107@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5238CE1C.3050107-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgAndrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an RFC for the new touchscreen properties.
+Am Dienstag, 17. September 2013, 15:48:12 schrieb Stephen Warren:
+> On 09/17/2013 01:53 AM, Marc Dietrich wrote:
+> > Hi Stephen,
+> > 
+> > Am Mittwoch, 31. Juli 2013, 15:03:14 schrieb Stephen Warren:
+> >> The generic I2C bindings already define that the other chips on the I2C
+> >> bus appear directly underneath the I2C controller's DT node. Perhaps it
+> >> isn't a big issue to change that, since each I2C controller can define
+> >> the layout of its own node?
+> >> 
+> >> Anyway, we can probably get away without introducing multiple levels by
+> >> adding some more bits or cells into the reg address for I2C child nodes:
+> >> 
+> >> i2c@xxxxxxxx {
+> >> 
+> >> 	compatible = "nvidia,tegra20-i2c";
+> >> 	... resources
+> >> 	#address-cells = <2>;
+> >> 	
+> >> 	codec {
+> >> 	
+> >> 		// 0 means external slave, 0x1c is slave's address
+> >> 		reg = <0 0x1c>;
+> >> 		...
+> >> 	
+> >> 	};
+> >> 	
+> >> 	tegraslave {
+> >> 	
+> >> 		// 0 means internal slave, 0x80 is controller's address
+> >> 		reg = <1 0x80>;
+> >> 		...
+> >> 	
+> >> 	};
+> >> 
+> >> };
+> >> 
+> >> ... where each of those child nodes could be repeated N times. We could
+> >> also or in 0x80000000 to the reg values in the child nodes rather than
+> >> using a separate cell if we wanted.
+> > 
+> > thinking a little more about this, this is way to complicated.
+> 
+> Really, this seems extremely simple to me.
+> 
+> > "Master" and
+> > "Slave" functions are properties of the same i2c controller. Therefore,
+> > just adding a small property to the i2c controller node saying "enable
+> > slave support" is sufficient, as all the resources are shared (which is
+> > another good argument that it is the same device, hence same node). I
+> > would just add the slave i2c address, which is all the slave driver
+> > needs, e.g.
+> 
+> Perhaps so for this one controller, but we should strive to create a
+> binding style that can work with any I2C controller that can be master
+> or slave. For a general binding, I think we need to support multiple
+> slave addresses. The style above seems to support that with little
+> complexity.
 
-Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-CC: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-CC: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
-CC: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-CC: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-CC: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
-CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- .../bindings/staging/iio/adc/mxs-lradc.txt         | 36 ++++++++++++--
- arch/arm/boot/dts/imx28-evk.dts                    |  4 ++
- drivers/staging/iio/adc/mxs-lradc.c                | 57 ++++++++++++++--------
- 3 files changed, 71 insertions(+), 26 deletions(-)
+I have no idea how other implementations may look like. The downstream kernel 
+seems to program the slave address in a secondary step after the controller is 
+initialized [1]. So every "client" which binds to the slave driver can use its 
+own address, but only one client at the same time is allowed. As said before, 
+the may also exist devices (!tegra) with multiple slave addresses at the same 
+time.
 
-diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-index 4688205..ee05dc3 100644
---- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-+++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-@@ -1,7 +1,8 @@
- * Freescale i.MX28 LRADC device driver
- 
- Required properties:
--- compatible: Should be "fsl,imx28-lradc"
-+- compatible: Should be "fsl,imx23-lradc" for i.MX23 SoC and "fsl,imx28-lradc"
-+              for i.MX28 SoC
- - reg: Address and length of the register set for the device
- - interrupts: Should contain the LRADC interrupts
- 
-@@ -9,13 +10,38 @@ Optional properties:
- - fsl,lradc-touchscreen-wires: Number of wires used to connect the touchscreen
-                                to LRADC. Valid value is either 4 or 5. If this
-                                property is not present, then the touchscreen is
--                               disabled.
-+                               disabled. 5 wires is valid for i.MX28 SoC only.
-+- fsl,ave-ctrl: number of samples per direction to calculate an average value.
-+                Allowed value is 1 ... 31, default is 4
-+- fsl,ave-delay: delay between consecutive samples. Allowed value is
-+                 1 ... 2047. It is used if 'fsl,ave-ctrl' > 1, counts at
-+                 2 kHz and its default is 2 (= 1 ms)
-+- fsl,settling: delay between plate switch to next sample. Allowed value is
-+                1 ... 2047. It counts at 2 kHz and its default is
-+                10 (= 5 ms)
- 
--Examples:
-+Example for i.MX23 SoC:
-+
-+	lradc@80050000 {
-+		compatible = "fsl,imx23-lradc";
-+		reg = <0x80050000 0x2000>;
-+		interrupts = <36 37 38 39 40 41 42 43 44>;
-+		status = "okay";
-+		fsl,lradc-touchscreen-wires = <4>;
-+		fsl,ave-ctrl = <4>;
-+		fsl,ave-delay = <2>;
-+		fsl,settling = <10>;
-+	};
-+
-+Example for i.MX28 SoC:
- 
- 	lradc@80050000 {
- 		compatible = "fsl,imx28-lradc";
- 		reg = <0x80050000 0x2000>;
--		interrupts = <10 14 15 16 17 18 19
--				20 21 22 23 24 25>;
-+		interrupts = <10 14 15 16 17 18 19 20 21 22 23 24 25>;
-+		status = "okay";
-+		fsl,lradc-touchscreen-wires = <5>;
-+		fsl,ave-ctrl = <4>;
-+		fsl,ave-delay = <2>;
-+		fsl,settling = <10>;
- 	};
-diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
-index 15715d9..aa33393 100644
---- a/arch/arm/boot/dts/imx28-evk.dts
-+++ b/arch/arm/boot/dts/imx28-evk.dts
-@@ -183,6 +183,10 @@
- 
- 			lradc@80050000 {
- 				status = "okay";
-+				fsl,lradc-touchscreen-wires = <4>;
-+				fsl,ave-ctrl = <4>;
-+				fsl,ave-delay = <2>;
-+				fsl,settling = <10>;
- 			};
- 
- 			i2c0: i2c@80058000 {
-diff --git a/drivers/staging/iio/adc/mxs-lradc.c b/drivers/staging/iio/adc/mxs-lradc.c
-index aa1f337..dbc0af6 100644
---- a/drivers/staging/iio/adc/mxs-lradc.c
-+++ b/drivers/staging/iio/adc/mxs-lradc.c
-@@ -1230,10 +1230,45 @@ MODULE_DEVICE_TABLE(of, mxs_lradc_dt_ids);
- static int mxs_lradc_probe_touchscreen(struct mxs_lradc *lradc,
- 						struct device_node *lradc_node)
- {
--	/* TODO retrieve from device tree */
-+	int ret;
-+	u32 ts_wires = 0, adapt;
-+
-+	ret = of_property_read_u32(lradc_node, "fsl,lradc-touchscreen-wires",
-+				&ts_wires);
-+	if (ret)
-+		return -ENODEV; /* touchscreen feature disabled */
-+
-+	switch (ts_wires) {
-+	case 4:
-+		lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_4WIRE;
-+		break;
-+	case 5:
-+		if (lradc->soc == IMX28_LRADC) {
-+			lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_5WIRE;
-+			break;
-+		}
-+		/* fall through an error message for i.MX23 */
-+	default:
-+		dev_err(lradc->dev,
-+			"Unsupported number of touchscreen wires (%d)\n",
-+			ts_wires);
-+		return -EINVAL;
-+	}
-+
- 	lradc->over_sample_cnt = 4;
-+	ret = of_property_read_u32(lradc_node, "fsl,ave-ctrl", &adapt);
-+	if (ret == 0)
-+		lradc->over_sample_cnt = adapt;
-+
- 	lradc->over_sample_delay = 2;
-+	ret = of_property_read_u32(lradc_node, "fsl,ave-delay", &adapt);
-+	if (ret == 0)
-+		lradc->over_sample_delay = adapt;
-+
- 	lradc->settling_delay = 10;
-+	ret = of_property_read_u32(lradc_node, "fsl,settling", &adapt);
-+	if (ret == 0)
-+		lradc->settling_delay = adapt;
- 
- 	return 0;
- }
-@@ -1249,7 +1284,6 @@ static int mxs_lradc_probe(struct platform_device *pdev)
- 	struct mxs_lradc *lradc;
- 	struct iio_dev *iio;
- 	struct resource *iores;
--	uint32_t ts_wires = 0;
- 	int ret = 0, touch_ret;
- 	int i;
- 
-@@ -1275,25 +1309,6 @@ static int mxs_lradc_probe(struct platform_device *pdev)
- 
- 	touch_ret = mxs_lradc_probe_touchscreen(lradc, node);
- 
--	/* Check if touchscreen is enabled in DT. */
--	ret = of_property_read_u32(node, "fsl,lradc-touchscreen-wires",
--				&ts_wires);
--	if (ret)
--		dev_info(dev, "Touchscreen not enabled.\n");
--	else if (ts_wires == 4)
--		lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_4WIRE;
--	else if (ts_wires == 5)
--		lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_5WIRE;
--	else
--		dev_warn(dev, "Unsupported number of touchscreen wires (%d)\n",
--				ts_wires);
--
--	if ((lradc->soc == IMX23_LRADC) && (ts_wires == 5)) {
--		dev_warn(dev, "No support for 5 wire touches on i.MX23\n");
--		dev_warn(dev, "Falling back to 4 wire\n");
--		ts_wires = 4;
--	}
--
- 	/* Grab all IRQ sources */
- 	for (i = 0; i < of_cfg->irq_count; i++) {
- 		lradc->irq[i] = platform_get_irq(pdev, i);
--- 
-1.8.4.rc3
+Your approach above seems fulfill these properties (what about a single slave 
+controller without a master?), but it will be tricky for the slave to find the 
+controller resources it needs. I'm thinking of an insane (but valid) 
+configuration where all i2c ports of the SoC are connected together and one 
+port plays the master and all others are slaves. In this case we need to add a 
+property to the slave node which points to his controller instance.
+
+> > "slave-address = <8c>;" to enable slave mode operation. Both modes can be
+> > enabled at the same time (for loopback comm). AFAIK, if only the slave
+> > part is used, the master part shouldn't hurt if programmed (same as other
+> > way around).
+> > 
+> > The difficult part is how to specify the master if only the slave is used.
+> > As the master is naturally on the same bus as the slave, it should be a
+> > child node of the controller. Therefore it needs a special i2c address,
+> > maybe
+> Why would the external I2C master be represented in the DT bindings at
+> all? It's not really a SW-accessible entity; its presence is only
+> observable not something you can initiate interaction with.
+
+No, we can and nvec does it regulary using a "side"-channel (a tegra gpio 
+connected to a master irq input). This side-channel is non standard and each 
+vendor may do it differently. But you are right, we don't need an entry for 
+the master, but an entry for the driver (the other side of the communication) 
+which binds to the slave controller.
+
+> I assume you're not talking about the Tegra I2C controller when you say
+> "master" above; that is already represented in the DT as the top-level
+> I2C node.
+> 
+> > 0x80000000 as you mentioned above, but this will be rejected by the i2c
+> > core. Instantiating the nvec as an i2c client could be another problem.
+> 
+> ...
+> 
+> > It looks like that the i2c subsystem needs some modifications to allow to
+> > specify a master device which is attached to a slave controller. Maybe
+> > someone from the i2c folks (cc'ed) can comment on this?
+> 
+> Yes, you certainly will need some enhancements to the I2C core to
+> support slave mode. I suggest that I2C drivers gain an .of_xlate
+> callback which translates child node DT reg values (addresses) into the
+> (master-vs-slave, I2C address) pair.
+
+I somehow feared that :-( Now my free time became rather limited recently and 
+I don't feel that I'm the best person to solve these problem(s). Andrey said 
+that he may be interested finishing at least a proper device tree 
+representation (especially to get his great nvec uboot support upstreamed). 
+Kernel support is a different beast and I really hope that the code which 
+lives in staging area currently is not doomed because integration with the i2c 
+subsystem is too complex.
+
+Marc
+
+
+[1] http://nv-tegra.nvidia.com/gitweb/?p=linux-2.6.git;a=blob;f=drivers/i2c/i2c-slave.c;h=280a860cd2e84e15b2c1aef0e938d750f56863dd;hb=rel-roth-ota-1#l120
