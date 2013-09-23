@@ -1,103 +1,89 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] video: ARM CLCD: Add DT support
-Date: Mon, 23 Sep 2013 21:29:26 +0100
-Message-ID: <20130923202926.GX12758@n2100.arm.linux.org.uk>
-References: <1379351934-25415-1-git-send-email-pawel.moll@arm.com> <52376180.1090001@wwwdotorg.org> <1379435799.9205.16.camel@hornet> <5238CBE9.2060800@wwwdotorg.org> <1379522363.9244.12.camel@hornet> <52406646.709@wwwdotorg.org> <20130923160640.GT12758@n2100.arm.linux.org.uk> <52406C97.3010800@wwwdotorg.org> <20130923164302.GW12758@n2100.arm.linux.org.uk> <52409C0C.1000406@wwwdotorg.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 2/9] irqdomain: Introduce __irq_create_mapping()
+Date: Mon, 23 Sep 2013 22:29:36 +0200
+Message-ID: <20130923202935.GA5216@ulmo>
+References: <1379320326-13241-1-git-send-email-treding@nvidia.com>
+ <1379320326-13241-3-git-send-email-treding@nvidia.com>
+ <CACRpkdYo8knzZ+Z-tc7fyEGwX5bt4RvMU3TR3k3UrOj0KRJocw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52409C0C.1000406-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CACRpkdYo8knzZ+Z-tc7fyEGwX5bt4RvMU3TR3k3UrOj0KRJocw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2013 at 01:52:44PM -0600, Stephen Warren wrote:
-> On 09/23/2013 10:43 AM, Russell King - ARM Linux wrote:
-> > On Mon, Sep 23, 2013 at 10:30:15AM -0600, Stephen Warren wrote:
-> >> On 09/23/2013 10:06 AM, Russell King - ARM Linux wrote:
-> >>> On Mon, Sep 23, 2013 at 10:03:18AM -0600, Stephen Warren wrote:
-> >>>> It sounds like you could just put LCDControl & 0x2e in the DT rather
-> >>>> than using values such as 0x100..0x107, which don't appear to match the
-> >>>> register format you mentioned above.
-> >>>
-> >>> No.  Platforms which route the outputs to something like VGA or HDMI can
-> >>> change the framebuffer format.  Your suggestions is far too restrictive.
-> >>
-> >> Surely the DT should describe the HW setup only. Usually, a particular
-> >> HW setup can support multiple different framebuffer formats. Hence, the
-> >> DT wouldn't/shouldn't imply anything about the framebuffer format, but
-> >> simply which wires are connected to the LCD.
-> > 
-> > Quite, and putting the contents of the LCDControl register - even just
-> > bits 5 and 3-1 results in you having to modify the DT and reboot the
-> > kernel just to change the framebuffer format.  That's why I'm objecting
-> > to your comment.
-> 
-> Oh, so these particular registers define both the output signal muxing
-> for the pins and the FB data format? If so, yes it's not correct to put
-> the register values into DT. I assumed that the HW would have a separate
-> representation of those two concepts, in different registers or at least
-> different fields in the same register. If not, there is indeed no choice
-> but to make up some arbitrary values to represent just the pinmuxing :-(
 
-Unfortunately not.  Parameters such as TFT, and dual can be specified by
-DT, but the difficulty comes with the pixel wiring.
+--BXVAT5kNtrzKuDFl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-With a PL110 in TFT mode, the representation of which signals represent
-what are a function of the selected BPP:
+On Mon, Sep 23, 2013 at 09:14:30PM +0200, Linus Walleij wrote:
+> On Mon, Sep 16, 2013 at 10:31 AM, Thierry Reding
+> <thierry.reding@gmail.com> wrote:
+>=20
+> > This is a version of irq_create_mapping() that propagates the precise
+> > error code instead of returning 0 for all errors. It will be used in
+> > subsequent patches to allow further propagation of error codes.
+> >
+> > To avoid code duplication, implement irq_create_mapping() as a wrapper
+> > around the new __irq_create_mapping().
+> >
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+>=20
+> Surprise! I don't like this.
+>=20
+> I think it is better to first go over the call sites and make them
+> all handle negative return numbers rather than pushing the
+> obscure __interface.
+>=20
+> I know from patch 0 that you think it's too much to change these
+> 127 call sites but I don't think so, and I'm happy to merge one
+> big patch changing all the 20 users in drivers/gpio.
+>=20
+> Likewise with the 11 consumers in drivers/pinctrl.
+>=20
+> It's just a a few archs+subsystems and it's just plain work.
 
-Panel:
-24bpp: Blue[7:0]=CLD[23:16] Green[7:0]=CLD[15:8] Red[7:0]=CLD[7:0]
-18bpp: Blue[4:0]=CLD[17:13] Green[4:0]=CLD[11:7] Red[4:0]=CLD[5:1]
-       Intensity = CLD[12], CLD[6], CLD[0]
+Well, the problem is that the current patch changes the signature of the
+function as well, therefore the call sites will have to be updated all
+at once in a single patch to avoid build breakage. And that's excluding
+any potential fallout from new callsites added between the creation of
+the patch and its application.
 
-24bpp signalling is used when a framebuffer format of 24bpp mode is
-selected, otherwise the 18bpp signalling is used.
+Another alternative could be to change the signature in a way that does
+not break compatibility. For instance I think it could work out if we
+change this function to return int instead of unsigned int but keep the
+same semantics to begin with (return 0 on failure). Then update all call
+sites to handle potential negative errors and after that return negative
+error codes. That still wouldn't catch any callers introduced between
+the patch creation and application.
 
-The PL110 in 16bpp does not support for anything but 1555 mode when wired
-up as above, but some people want 565 mode.  That's achievable (and is
-used on Versatile) by adjusting the wiring via a FPGA:
+Thierry
 
-       Blue = CLD[12,17:14] Green = [13,11:7] Blue = CLD[5:1]
+--BXVAT5kNtrzKuDFl
+Content-Type: application/pgp-signature
 
-This gives us the RGB565 mode on PL110.  Now, consider a platform which
-wants to use this - if the panel is wired up directly to the CLCD like
-that, then it will only support RGB565.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-If you were connecting a 4:4:4 panel, a similar thing is possible, and
-may be preferable to have the standard framebuffer format in memory to
-do this.
+iQIcBAEBAgAGBQJSQKSvAAoJEN0jrNd/PrOh0LsP/iAbSX1dVXCmb8C92d91DSva
+PLyYP5BNn5qIrulewqzl5XMEA9zQVg5NjYJZgqzf5n54EVGe/4s24CqCTEeNKohl
+9oE2dc70UHupJmP8Uo94dMi28U94bzDyyGSxmaVoHtiLo1Z7N1djjZyOc3BiGso3
+VVCALPfAWhiZ14w2EXVKKxh2gCP7cqSJzgMkNo+wsZ/nV0Hbx6RWt3JvSMHhVVvZ
+INVR6dbdnHrLHNRpiFXLUQR1G8xOIku/Os0EhyaRmgY/4fDQpmijpL2VtzLP2GF/
+G3zUflzzV7JgFnXRyoWkEIgPd9uxFaxG6F5xf7U9MMUV8zzDZFT+1ZmPhsSl+l30
+yrm6fUFC0QBvVfn/vEZgUllo3pAFoPdXCGV8yB8xwAtb5UIkhwkxYsf+zt/1P2al
+oyKXCVJ3+9Io6rLOYGDHmsI4+R71ztQtWtz2jbC5+dn4nU5he5Xtw1k2bE6+gSHl
+Qu0MjNRgMZxyJJ5uZFNI2ZlTeqlt5gs3CpdjgUlZd1ntgT8BzpX6wWBiCUMhMwZn
+AEX9rUSLcpIPhHLUDc9+P3d60KTL+cwETf7u5IEQPcHrmie+Wm/Hssmtzl3cK1Oo
+I8ut+HoKFqTPzhrdiSbB+zaxVyedim1lX/1fjrxzOrLKWmDmdNfpuITwr9A88qsH
+V5s8sAiD8V8+CQKHpjig
+=89Ks
+-----END PGP SIGNATURE-----
 
-So, the supportable framebuffer foramts depends entirely on how the
-display is wired up to the controller.
-
-Now, for PL111, things are simpler - it supports 5551, 565 and 444 modes
-natively, so supports all the standard framebuffer formats.  The output
-wiring is different and more sane.  In this case, CLD[23] is always the
-MSB blue bit, CLD[15] is always the MSB green bit, and CLD[7] is always
-the MSB red bit.  So here, the wiring matters very much less.
-
-However, even here the "capabilities" play a role.  Does driving a TFT
-444 panel being driven in 24-bit mode make sense?  Yes, it'll work but
-the least significant four bits are lost.  What about the other way
-around?  A TFT 888 panel in 12bpp mode?  Well, in that case the least
-sigificant four bits are marked up as "reserved" - and even if they are
-held at zero, you're going to lose some colour range on the panel because
-white will be equivalent to colour f0f0f0 not ffffff.
-
-Hence, we probably want to have even here some way to say "I want this
-hardware to only support framebuffer formats of X".
-
-My feeling is that even though these capabilities are not part of the
-actual hardware spec, they're well worth implementing directly in DT as
-they're describing what the *hardware* as a whole is capable of.
-
-Moreover, I created the capabilities purely as a way to describe what
-the hardware and panel are capable of.  Isn't that what DT is all about
-too?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--BXVAT5kNtrzKuDFl--
