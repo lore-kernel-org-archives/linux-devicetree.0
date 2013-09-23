@@ -1,51 +1,57 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] usb: dwc3: msm: Add device tree binding information
-Date: Mon, 23 Sep 2013 16:03:18 -0600
-Message-ID: <5240BAA6.9090509@wwwdotorg.org>
-References: <1377091786-5613-1-git-send-email-iivanov@mm-sol.com> <1377091786-5613-2-git-send-email-iivanov@mm-sol.com> <20130923193224.GO30811@radagast>
+Subject: Re: [Patch V2] drivers: power: Add support for bq24735 charger
+Date: Mon, 23 Sep 2013 16:05:30 -0600
+Message-ID: <5240BB2A.8060705@wwwdotorg.org>
+References: <1379607514-11200-1-git-send-email-rklein@nvidia.com> <5240B85D.3050803@wwwdotorg.org> <5240BA4A.4010007@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130923193224.GO30811@radagast>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, idos-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5240BA4A.4010007-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2013 01:32 PM, Felipe Balbi wrote:
-> Hi,
+On 09/23/2013 04:01 PM, Rhyland Klein wrote:
+> On 9/23/2013 5:53 PM, Stephen Warren wrote:
+>> On 09/19/2013 10:18 AM, Rhyland Klein wrote:
+>>> Adding driver support for bq24735 charger chipset.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt
+
+>>> + - ti,charge-current : Used to control and set the charging current. This value
+>>> +   must follow the below guidelines:
+>>> +	bit 0 - 5:	Not used
+>>> +	bit 6:		1 = Adds 64mA of charger current
+>>> +	bit 7:		1 = Adds 128mA of charger current
+>>> +	bit 8:		1 = Adds 256mA of charger current
+>>> +	bit 9:		1 = Adds 512mA of charger current
+>>> +	bit 10:		1 = Adds 1024mA of charger current
+>>> +	bit 11:		1 = Adds 2048mA of charger current
+>>> +	bit 12:		1 = Adds 4096mA of charger current
+>>> +	bit 13 - 15:	Not used
+>>
+>> That's a little odd. Why not just put the number of mA directly into the
+>> property unshifted?
 > 
-> On Wed, Aug 21, 2013 at 04:29:44PM +0300, Ivan T. Ivanov wrote:
->> From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->> 
->> MSM USB3.0 core wrapper consist of USB3.0 IP from Synopsys (SNPS)
->> and HS, SS PHY's control and configuration registers.
->> 
->> It could operate in device mode (SS, HS, FS) and host mode (SS,
->> HS, FS, LS).
->> 
->> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> This is how the hw register is defined, its the literal number of mA.
+> This is cleaned up in the upcoming revision.
+
+OK. If you still want to use the raw register encoding, which seems
+reasonable, why not just say:
+
+ti,charge-current: Value for charge current register as described in the
+HW documentation.
+
+>>> +   Setting the value to < 128mA or > 8.128A terminates charging.
+>>
+>> "terminates charging" is a driver action, not a description of HW. It's
+>> fine to say that what min/max value should be specified in the property
+>> for it to be valid, but not what action SW should take in response to that.
 > 
-> and here's a new version from same patch
+> This isn't sw. This is defined in the HW documentation as to what
+> happens if an invalid value is used.
 
-The binding looks pretty simple, so I don't think it's too contentious.
-
->> diff --git a/Documentation/devicetree/bindings/usb/msm-ssusb.txt
->> b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
-
->> +MSM DWC3 controller wrapper
-
->> +Optional properties : +- gdsc-supply : phandle to the globally
->> distributed switch controller +  regulator node to the USB
->> controller.
-
-If that's a regulator node, why not use xxx-supply properties to
-interface with it?
-
-Aside from that, the binding,
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK, if the HW documentation already says that, I don't see the need for
+the DT binding to also say it; I would suggest just removing that text.
