@@ -1,111 +1,83 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [RFC PATCH 15/15] arm: dts: dra7: add sata node
-Date: Mon, 23 Sep 2013 11:24:12 +0300
-Message-ID: <523FFAAC.3050907@ti.com>
-References: <1379595943-14622-1-git-send-email-rogerq@ti.com> <1379597059-15405-1-git-send-email-rogerq@ti.com> <523B05FD.7020200@cogentembedded.com> <523C214A.30406@ti.com> <523F3AE4.5050709@cogentembedded.com>
+From: Ajit Pal Singh <ajitpal.singh@st.com>
+Subject: Re: [PATCH] thermal: st: Add support for STiH41x thermal sensors
+Date: Mon, 23 Sep 2013 13:56:20 +0530
+Message-ID: <523FFB2C.1090400@st.com>
+References: <ajitpal.singh@st.com> <1379497103-5657-1-git-send-email-ajitpal.singh@st.com> <523A06EE.9090801@ti.com>
+Reply-To: <ajitpal.singh@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <523F3AE4.5050709@cogentembedded.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, kishon@ti.com
-Cc: balbi@ti.com, bcousson@baylibre.com, tony@atomide.com, balajitk@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <523A06EE.9090801@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, Stephen GALLIMORE <stephen.gallimore@st.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/22/2013 09:45 PM, Sergei Shtylyov wrote:
-> On 09/20/2013 02:19 PM, Roger Quadros wrote:
-> 
->>>> From: Balaji T K <balajitk@ti.com>
-> 
->>>> Add support for sata controller.
-> 
->>>> [Roger Q] Clean up.
-> 
->>>> CC: Benoit Cousson <bcousson@baylibre.com>
->>>> Signed-off-by: Balaji T K <balajitk@ti.com>
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> ---
->>>>    arch/arm/boot/dts/dra7.dtsi |   49 +++++++++++++++++++++++++++++++++++++++++++
->>>>    1 files changed, 49 insertions(+), 0 deletions(-)
-> 
->>>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->>>> index ce9a0f0..545545d 100644
->>>> --- a/arch/arm/boot/dts/dra7.dtsi
->>>> +++ b/arch/arm/boot/dts/dra7.dtsi
->>>> @@ -426,6 +426,55 @@
-> [...]
-> 
->>>> +        sata: sata@4a141100 {
->>>> +            compatible = "ti,sata";
->>>> +            ti,hwmods = "sata";
->>>> +            reg = <0x4a141100 0x7>;
-> 
->    Not 0x8 BTW?
+On Thursday 19 September 2013 01:32 AM, Eduardo Valentin wrote:
+> On 18-09-2013 05:38, Ajit Pal Singh wrote:
+>> Adds support for thermal sensors on STiH41x series SOCs.
+>> Single trip point 'THERMAL_TRIP_CRITICAL' is supported.
+>> STIH416 MPE sensor supports interrupt reporting when a preset
+>> threshold temperature is crossed.
+>> For rest of the thermal sensors a polling delay of 10000ms is
+>> set.
+>>
+>> CC: Stephen Gallimore <stephen.gallimore@st.com>
+>> CC: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>> Signed-off-by: Ajit Pal Singh <ajitpal.singh@st.com>
+[snip]
+>> +static irqreturn_t st_thermal_thresh_int(int irq, void *data)
+>> +{
+>> +	struct st_thermal_sensor *sensor = data;
+>> +	struct device *dev = sensor_to_dev(sensor);
+>> +
+>> +	dev_dbg(dev, "%s,called\n", __func__);
+>> +	thermal_zone_device_update(sensor->th_dev);
+>
+> Are you sure you want to do this here? The above call might sleep.
 
-You are right. Two 32 bit registers are used.
-However, in the instance summary, the reference manual says 256 bytes.
-So I think we should use 0x100.
+Have used devm_request_threaded_irq() to register the above threaded irq 
+handler. Calling sleep-able calls from the threaded interrupt handler 
+should be OK ?
+>
+>> +	return IRQ_HANDLED;
+>> +}
+[snip]
+>> +static int st_thermal_notify(struct thermal_zone_device *th,
+>> +			       int trip, enum thermal_trip_type type)
+>> +{
+>> +	struct st_thermal_sensor *sensor = thzone_to_sensor(th);
+>> +	struct device *dev = sensor_to_dev(sensor);
+>> +
+>> +	switch (type) {
+>> +	case THERMAL_TRIP_CRITICAL:
+>> +		/* TODO: Send event to user space */
+>
+> It depends on what you mean by that. The core code will attempt to call
+> the shutdown command, in user space.
 
-> 
->>>> +            #address-cells = <1>;
->>>> +            #size-cells = <1>;
->>>> +            ranges;
->>>> +            dwc-ahci@4a140000 {
-> 
->>>     Hm, ePAPR spec. [1] says that "the name of a node should be somewhat generic, reflecting the function of the device and not its precise programming model", so it looks like the name should be "sata" as well. I'm a bit at a loss here, not sure why you had to use the nested device nodes.
-> 
->> ok. will fix it to sata.
->> I've nested it because the wrapper registers are not part of the AHCI sata controller.
->> They are TI specific registers for power management.
->> Similar setup is on the USB controller. Please see omap_dwc3 node.
-> 
->> But if you have better idea, please let me know.
-> 
->     Don't know, it seems to me that you're over-complicating it by using the nested nodes. You could just have AHCI regs as a first tuple of the "regs" prop, and PM regs as a second tuple.
-> 
+Will remove the comment in the next version of the patch.
+>
+>> +		dev_err(dev, "Critical temp reached:Going for shutdown\n");
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+[snip]
+>> +module_platform_driver(st_thermal_driver);
+>> +MODULE_AUTHOR("STMicroelectronics (R&D) Limited");
+>> +MODULE_DESCRIPTION("STMicroelectronics STIH41x SOC thermal sensor driver");
+>> +MODULE_LICENSE("GPL");
+>
+> GPL v2?
 
-Yes that is possible, and in fact it was that way in Balaji's original code.
-However in that case, won't TI specific handling be need to be done in the ahci_platform driver?
+OK.Will make it GPLv2
+>
 
-As of now, that is limited to using pm_runtime to enable/disable the hardware module so it is generic enough.
-However in the future it would mean reading/writing to the TI wrapper register. If this can be done in ahci_platform
-driver then I don't see any issue and can combine the 2 nodes.
+Thanks
+Ajit Pal Singh
 
->>>> +                  compatible = "snps,dwc-ahci";
->>>> +                  reg = <0x4a140000 0x1100>;
->>>> +                  interrupts = <0 54 0x4>;
->>>> +                  phys = <&sata_phy>;
-> 
->>>     Hm, it's the third PHY related generic property I'm encountering. First, there was "phy-handle", then "phy", now "phys"... Seems like a bit too much. :-)
-> 
->> I'm afraid but this is how the designers have made it.
-> 
->> 1) control-phy-pipe3 is that part of the PHY which sits in control module space and is different
->> from the sata-phy space and hence needs a different node. If it were to me, I would just put this
->> resource in sata-phy node, but there was a discussion about this earlier to do it otherwise [1].
-> 
->> 2) sata-phy (sataphy) is the actual SATA PHY device.
-> 
->> 3) phys is just a reference to the sata_phy and is used via the generic PHY framework.
->> It is upto the sata driver to power up/down the phy.
-> 
->    I understand that it's a reference but why have 3 variants of such phandle containing prop? Is it really possible for a device to have multiple PHYs? Well, remembering our customer's USB, it's indeed possible, however, there 2 PHYs out of 3 are not software controllable...
-> 
-
-If I understand right, are you asking that we don't need "phy-names" property if there can be only one PHY?
-I too think it is redundant. Maybe the PHY framework should be modified to allow users to use phy_get() whithout
-any phy name string. In such case it should return the first PHY. 
-Kishon, any thoughts?
-
->>>> +                  phy-names = "sata-phy";
->>>> +                  clocks = <&sata_ref_clk>;
->>>> +                  clock-names = "optclk";
->>>> +            };
->>>> +        };
-> 
->>> [1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
-> 
-
-cheers,
--roger
