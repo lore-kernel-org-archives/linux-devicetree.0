@@ -1,118 +1,57 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 04/10] irqdomain: Return errors from
- irq_create_of_mapping()
-Date: Mon, 23 Sep 2013 10:13:38 +0200
-Message-ID: <20130923081337.GB11881@ulmo>
-References: <1379510692-32435-1-git-send-email-treding@nvidia.com>
- <1379510692-32435-5-git-send-email-treding@nvidia.com>
- <CAL_JsqLQeAQD460f8Lk9eDE2dCzLusC1mXZ-_uaKVFLfhJNryg@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/7] pinctrl: imx1 core driver
+Date: Mon, 23 Sep 2013 10:21:16 +0200
+Message-ID: <CACRpkdYH6LwmU0jHBVekrvQMKsz4YOeEWeFa-uFqZ=MjGLFZkw@mail.gmail.com>
+References: <1378020488-21129-1-git-send-email-mpa@pengutronix.de>
+	<1378020488-21129-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
-Return-path: <sparclinux-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLQeAQD460f8Lk9eDE2dCzLusC1mXZ-_uaKVFLfhJNryg@mail.gmail.com>
-Sender: sparclinux-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, linux-mips@linux-mips.org, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, sparclinux@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1378020488-21129-2-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Sep 1, 2013 at 9:28 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
 
---Pd0ReVV5GZGQvF3a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Core driver for register formats of imx1/imx21/imx27 processors.
+>
+> The pins of those processors are grouped into ports. Each port has 32
+> pins. The pins mux configuration is controlled by registers with 1 or 2
+> bit per pin, depending on the specific control register.
+>
+> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-On Sun, Sep 22, 2013 at 04:14:43PM -0500, Rob Herring wrote:
-> On Wed, Sep 18, 2013 at 8:24 AM, Thierry Reding
-> <thierry.reding@gmail.com> wrote:
-> > Instead of returning 0 for all errors, allow the precise error code to
-> > be propagated. This will be used in subsequent patches to allow further
-> > propagation of error codes.
-> >
-> > The interrupt number corresponding to the new mapping is returned in an
-> > output parameter so that the return value is reserved to signal success
-> > (=3D=3D 0) or failure (< 0).
-> >
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
->=20
-> One comment below, otherwise:
->=20
-> Acked-by: Rob Herring <rob.herring@calxeda.com>
->=20
-> > diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci=
--common.c
-> > index 905a24b..ae71b14 100644
-> > --- a/arch/powerpc/kernel/pci-common.c
-> > +++ b/arch/powerpc/kernel/pci-common.c
-> > @@ -230,6 +230,7 @@ static int pci_read_irq_line(struct pci_dev *pci_de=
-v)
-> >  {
-> >         struct of_irq oirq;
-> >         unsigned int virq;
-> > +       int ret;
-> >
-> >         pr_debug("PCI: Try to map irq for %s...\n", pci_name(pci_dev));
-> >
-> > @@ -266,8 +267,10 @@ static int pci_read_irq_line(struct pci_dev *pci_d=
-ev)
-> >                          oirq.size, oirq.specifier[0], oirq.specifier[1=
-],
-> >                          of_node_full_name(oirq.controller));
-> >
-> > -               virq =3D irq_create_of_mapping(oirq.controller, oirq.sp=
-ecifier,
-> > -                                            oirq.size);
-> > +               ret =3D irq_create_of_mapping(oirq.controller, oirq.spe=
-cifier,
-> > +                                           oirq.size, &virq);
-> > +               if (ret)
-> > +                       virq =3D NO_IRQ;
-> >         }
-> >         if(virq =3D=3D NO_IRQ) {
-> >                 pr_debug(" Failed to map !\n");
->=20
-> Can you get rid of NO_IRQ usage here instead of adding to it.
+This patch set needs to be rebased and tested on top of v3.12-rc1.
+Or preferably even my "devel" branch in the pinctrl tree.
 
-I was trying to stay consistent with the remainder of the code. PowerPC
-is a pretty heavy user of NO_IRQ. Of all 348 references, more than half
-(182) are in arch/powerpc, so I'd rather like to get a go-ahead from
-Benjamin on this.
+For example:
 
-That said, perhaps we should just go all the way and get rid of NO_IRQ
-for good. Things could get somewhat messy, though. There are a couple of
-these spread through the code:
+> +static int imx1_pinconf_set(struct pinctrl_dev *pctldev,
+> +                            unsigned pin_id, unsigned long config)
+> +{
+> +       struct imx1_pinctrl *ipctl = pinctrl_dev_get_drvdata(pctldev);
+> +       const struct imx1_pinctrl_soc_info *info = ipctl->info;
+> +
+> +       imx1_write_bit(ipctl, pin_id, config & 0x01, MX1_PUEN);
+> +
+> +       dev_dbg(ipctl->dev, "pinconf set pullup pin %s\n",
+> +               info->pins[pin_id].name);
+> +
+> +       return 0;
+> +}
 
-	#ifndef NO_IRQ
-	#define NO_IRQ (-1)
-	#endif
+This function need to change signature.
 
-And this isn't very encouraging either:
+Check commit 03b054e9696c3cbd3d5905ec96da15acd0a2fe8d
 
-	$ git grep 'irq.*=3D.*-1' | wc -l
-	638
+Please resend all 7 patches and add Shawns+Saschas ACKs
+when you have rebased and tested the result.
 
-Thierry
-
---Pd0ReVV5GZGQvF3a
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSP/gxAAoJEN0jrNd/PrOhiNUP/jOZBHSu3iWeYBqVkPQQP52r
-BDEGdRc+LKm5aBO9XwhxGDTRX3igBcFXfYlkvwmllnhJaPU8J6HCxWWffm8qwCZ2
-voRIWxXH7q76QKAE/i7RZwJoASgg1KpLUS0Yv/MVchyOhMMbM2y4GG6IxBRMhA+2
-j37HKuSPPnTNvWdD0vCHv064VD44fBLeIog+a4Y5Ha3FHTkd09s6No364wr+/Hko
-ILMl+Erg38QqDm9Tr5qW37tMqzJ+I0ik6ye+C12iL2Zpiqo9LS8445M2URts18L6
-uPw4xkwCLPA0qcMl/aqpwAlpn48TXLZEmbxZRxBgdJnF7uapdLUeLr4XphpWT4f/
-JqWXZqVepBFu24h1NpPFJ2Mi6muhGyhXDYJ+y43OWtfi5dK6olgx3/Nk7b6URxo1
-cTlfAemyOrho1a32N4L3rjfR79Ub2qnLcrEVRZ9a72t2qFhBjpV5D8WoO4mQaXtd
-27VEKFPFWDL7VIuiUH2mp8hwk7AIWx5h9Ahkdrsxg5KREHsX+vAnkNfEu6IID2nK
-nyEmBH0Nn4exzchhiNd3ONQhU5MIuqtudsAv14EchBpUP+8nWNkGAokV9JHfziW/
-hBO/rq8r6DE6kzrY66mVR3b5734wHY9TidAN9suWcZkHvsFbZJdyr3NWiZxqatoh
-Yb0ygk/unpG2YJa3evJI
-=BnFo
------END PGP SIGNATURE-----
-
---Pd0ReVV5GZGQvF3a--
+Thanks!
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
