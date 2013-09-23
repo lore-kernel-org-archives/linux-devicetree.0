@@ -1,55 +1,192 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [RFC] gpio/omap: auto-setup a GPIO when used as an IRQ
-Date: Mon, 23 Sep 2013 14:35:11 -0400
-Message-ID: <524089DF.600@ti.com>
-References: <1379860848-29020-1-git-send-email-javier.martinez@collabora.co.uk> <20130923164519.GF2684@atomide.com> <524073BC.9080907@collabora.co.uk> <20130923170724.GG2684@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130923170724.GG2684@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Jon Hunter <jgchunter@gmail.com>, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH 1/5] mfd: arizona: Add device tree helper functions
+Date: Mon, 23 Sep 2013 19:30:39 +0100
+Message-ID: <1379961043-23762-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Javier,
+Factor out reading of specific device tree bindings into seperate
+functions in preperation for adding more of them. Whilst we are at is
+fixup a couple of small issues in the existing binding documentation.
 
-On Monday 23 September 2013 01:07 PM, Tony Lindgren wrote:
-> * Javier Martinez Canillas <javier.martinez@collabora.co.uk> [130923 10:09]:
->> On 09/23/2013 06:45 PM, Tony Lindgren wrote:
->>>
->>> Hmm does this still work for legacy platform data based
->>> drivers that are doing gpio_request() first?
->>>
->>
->> Yes it still work when booting using board files. I tested on my OMAP3 board and
->> it worked in both DT and legacy booting mode.
-> 
-> OK great.
->  
->>> And what's the path for clearing things for PM when free_irq()
->>> gets called? It seems that this would leave the GPIO bank
->>> enabled causing a PM regression?
->>>
->>
->> Indeed, I did set bank->mod_usage |= 1 << offset so the bank is enabled if the
->> device goes to suspended and then resumed but I completely forget about the
->> clearing path when the IRQ is freed.
->>
->> Which makes me think that we should probably maintain two usage variables, one
->> for GPIO and another one for IRQ and check both of them on the suspend/resume pm
->> functions.
-> 
-> Yes that it seems that they should be treated separately.
-> 
-As discussed on IRC, the patch as such is fine after the mentioned fixup,
-I would like to hear back if Linus W/Grant is fine with the approach. Not sure
-if I missed the discussion, but the proposed patch is deviation from
-traditional method of doing gpio_request() first up to perform other
-gpio operations.
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/arizona.txt |   12 +-
+ drivers/mfd/arizona-core.c                        |  121 +++++++++++++++------
+ 2 files changed, 95 insertions(+), 38 deletions(-)
 
-Regards,
-Santosh
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index 0e295c9..e2cecfc 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -25,7 +25,7 @@ Required properties:
+   - #gpio-cells : Must be 2. The first cell is the pin number and the
+     second cell is used to specify optional parameters (currently unused).
+ 
+-  - AVDD1-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
++  - AVDD-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
+     SPKVDDL-supply, SPKVDDR-supply : power supplies for the device, as covered
+     in Documentation/devicetree/bindings/regulator/regulator.txt
+ 
+@@ -53,10 +53,10 @@ codec: wm5102@1a {
+ 	#gpio-cells = <2>;
+ 
+ 	wlf,gpio-defaults = <
+-		0x00000000, /* AIF1TXLRCLK */
+-		0xffffffff,
+-		0xffffffff,
+-		0xffffffff,
+-		0xffffffff,
++		0x00000000 /* AIF1TXLRCLK */
++		0xffffffff
++		0xffffffff
++		0xffffffff
++		0xffffffff
+ 	>;
+ };
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 5ac3aa4..986abc5 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -512,42 +512,99 @@ int arizona_of_get_type(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(arizona_of_get_type);
+ 
+-static int arizona_of_get_core_pdata(struct arizona *arizona)
++static int arizona_of_get_named_gpio(struct arizona *arizona,
++				     const char *prop, bool mandatory,
++				     int *gpio)
+ {
+-	int ret, i;
++	int ret;
+ 
+-	arizona->pdata.reset = of_get_named_gpio(arizona->dev->of_node,
+-						 "wlf,reset", 0);
+-	if (arizona->pdata.reset < 0)
+-		arizona->pdata.reset = 0;
+-
+-	arizona->pdata.ldoena = of_get_named_gpio(arizona->dev->of_node,
+-						  "wlf,ldoena", 0);
+-	if (arizona->pdata.ldoena < 0)
+-		arizona->pdata.ldoena = 0;
+-
+-	ret = of_property_read_u32_array(arizona->dev->of_node,
+-					 "wlf,gpio-defaults",
+-					 arizona->pdata.gpio_defaults,
+-					 ARRAY_SIZE(arizona->pdata.gpio_defaults));
+-	if (ret >= 0) {
+-		/*
+-		 * All values are literal except out of range values
+-		 * which are chip default, translate into platform
+-		 * data which uses 0 as chip default and out of range
+-		 * as zero.
+-		 */
+-		for (i = 0; i < ARRAY_SIZE(arizona->pdata.gpio_defaults); i++) {
+-			if (arizona->pdata.gpio_defaults[i] > 0xffff)
+-				arizona->pdata.gpio_defaults[i] = 0;
+-			if (arizona->pdata.gpio_defaults[i] == 0)
+-				arizona->pdata.gpio_defaults[i] = 0x10000;
+-		}
+-	} else {
+-		dev_err(arizona->dev, "Failed to parse GPIO defaults: %d\n",
+-			ret);
++	ret = of_get_named_gpio(arizona->dev->of_node, prop, 0);
++	*gpio = ret;
++	if (ret >= 0)
++		return ret;
++
++	*gpio = 0;
++
++	if (mandatory)
++		dev_err(arizona->dev,
++			"Mandatory DT gpio %s missing/malformed: %d\n",
++			prop, ret);
++
++	return ret;
++}
++
++static int arizona_of_read_u32_array(struct arizona *arizona,
++				     const char *prop, bool mandatory,
++				     u32 *data, size_t num)
++{
++	int ret;
++
++	ret = of_property_read_u32_array(arizona->dev->of_node, prop,
++					 data, num);
++
++	if (ret >= 0)
++		return 0;
++
++	switch (ret) {
++	case -EINVAL:
++		if (mandatory)
++			dev_err(arizona->dev,
++				"Mandatory DT property %s is missing\n",
++				prop);
++		break;
++	default:
++		dev_err(arizona->dev,
++			"DT property %s is malformed: %d\n",
++			prop, ret);
+ 	}
+ 
++	return ret;
++}
++
++static int arizona_of_read_u32(struct arizona *arizona,
++			       const char* prop, bool mandatory,
++			       u32 *data)
++{
++	return arizona_of_read_u32_array(arizona, prop, mandatory, data, 1);
++}
++
++static int arizona_of_get_gpio_defaults(struct arizona *arizona,
++					const char *prop)
++{
++	struct arizona_pdata *pdata = &arizona->pdata;
++	int i, ret;
++
++	ret = arizona_of_read_u32_array(arizona, prop, false,
++					pdata->gpio_defaults,
++					ARRAY_SIZE(pdata->gpio_defaults));
++	if (ret < 0)
++		return ret;
++
++	/*
++	 * All values are literal except out of range values
++	 * which are chip default, translate into platform
++	 * data which uses 0 as chip default and out of range
++	 * as zero.
++	 */
++	for (i = 0; i < ARRAY_SIZE(pdata->gpio_defaults); i++) {
++		if (pdata->gpio_defaults[i] > 0xffff)
++			pdata->gpio_defaults[i] = 0;
++		if (pdata->gpio_defaults[i] == 0)
++			pdata->gpio_defaults[i] = 0x10000;
++	}
++
++	return ret;
++}
++
++static int arizona_of_get_core_pdata(struct arizona *arizona)
++{
++	struct arizona_pdata *pdata = &arizona->pdata;
++
++	arizona_of_get_named_gpio(arizona, "wlf,reset", true, &pdata->reset);
++	arizona_of_get_named_gpio(arizona, "wlf,ldoena", true, &pdata->ldoena);
++
++	arizona_of_get_gpio_defaults(arizona, "wlf,gpio-defaults");
++
+ 	return 0;
+ }
+ 
+-- 
+1.7.2.5
 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
