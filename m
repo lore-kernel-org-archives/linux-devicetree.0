@@ -1,89 +1,97 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/9] irqdomain: Introduce __irq_create_mapping()
-Date: Mon, 23 Sep 2013 22:29:36 +0200
-Message-ID: <20130923202935.GA5216@ulmo>
-References: <1379320326-13241-1-git-send-email-treding@nvidia.com>
- <1379320326-13241-3-git-send-email-treding@nvidia.com>
- <CACRpkdYo8knzZ+Z-tc7fyEGwX5bt4RvMU3TR3k3UrOj0KRJocw@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFCv2 3/3] ARM: dts: N900: Add SSI information
+Date: Mon, 23 Sep 2013 14:35:35 -0600
+Message-ID: <5240A617.1010208@wwwdotorg.org>
+References: <1379277856-24571-1-git-send-email-sre@debian.org> <1379277856-24571-4-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYo8knzZ+Z-tc7fyEGwX5bt4RvMU3TR3k3UrOj0KRJocw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1379277856-24571-4-git-send-email-sre@debian.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>
+Cc: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, =?ISO-8859-1?Q?=27Beno=EEt_Cousson=27?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/15/2013 02:44 PM, Sebastian Reichel wrote:
+> Add SSI device tree data for OMAP34xx and Nokia N900.
 
---BXVAT5kNtrzKuDFl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What is an "SSI" device, ...
 
-On Mon, Sep 23, 2013 at 09:14:30PM +0200, Linus Walleij wrote:
-> On Mon, Sep 16, 2013 at 10:31 AM, Thierry Reding
-> <thierry.reding@gmail.com> wrote:
->=20
-> > This is a version of irq_create_mapping() that propagates the precise
-> > error code instead of returning 0 for all errors. It will be used in
-> > subsequent patches to allow further propagation of error codes.
-> >
-> > To avoid code duplication, implement irq_create_mapping() as a wrapper
-> > around the new __irq_create_mapping().
-> >
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
->=20
-> Surprise! I don't like this.
->=20
-> I think it is better to first go over the call sites and make them
-> all handle negative return numbers rather than pushing the
-> obscure __interface.
->=20
-> I know from patch 0 that you think it's too much to change these
-> 127 call sites but I don't think so, and I'm happy to merge one
-> big patch changing all the 20 users in drivers/gpio.
->=20
-> Likewise with the 11 consumers in drivers/pinctrl.
->=20
-> It's just a a few archs+subsystems and it's just plain work.
+> diff --git a/Documentation/devicetree/bindings/hsi/omap_ssi.txt b/Documentation/devicetree/bindings/hsi/omap_ssi.txt
 
-Well, the problem is that the current patch changes the signature of the
-function as well, therefore the call sites will have to be updated all
-at once in a single patch to avoid build breakage. And that's excluding
-any potential fallout from new callsites added between the creation of
-the patch and its application.
+... and what is the "HSI" subsystem?
 
-Another alternative could be to change the signature in a way that does
-not break compatibility. For instance I think it could work out if we
-change this function to return int instead of unsigned int but keep the
-same semantics to begin with (return 0 on failure). Then update all call
-sites to handle potential negative errors and after that return negative
-error codes. That still wouldn't catch any callers introduced between
-the patch creation and application.
+> +OMAP SSI controller bindings
+> +
+> +Required properties:
+> +- compatible:		Should be set to the following value
+> +                        ti,omap3-ssi (applicable to OMAP34xx devices)
 
-Thierry
+I think that'd be better phrased as:
 
---BXVAT5kNtrzKuDFl
-Content-Type: application/pgp-signature
+	Should include "ti,omap3-ssi".
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
+The binding should not preclude other compatibel values being present
+(e.g. a SoC-specific compatible value, to allow SoC-specific quirks to
+be enabled later).
 
-iQIcBAEBAgAGBQJSQKSvAAoJEN0jrNd/PrOh0LsP/iAbSX1dVXCmb8C92d91DSva
-PLyYP5BNn5qIrulewqzl5XMEA9zQVg5NjYJZgqzf5n54EVGe/4s24CqCTEeNKohl
-9oE2dc70UHupJmP8Uo94dMi28U94bzDyyGSxmaVoHtiLo1Z7N1djjZyOc3BiGso3
-VVCALPfAWhiZ14w2EXVKKxh2gCP7cqSJzgMkNo+wsZ/nV0Hbx6RWt3JvSMHhVVvZ
-INVR6dbdnHrLHNRpiFXLUQR1G8xOIku/Os0EhyaRmgY/4fDQpmijpL2VtzLP2GF/
-G3zUflzzV7JgFnXRyoWkEIgPd9uxFaxG6F5xf7U9MMUV8zzDZFT+1ZmPhsSl+l30
-yrm6fUFC0QBvVfn/vEZgUllo3pAFoPdXCGV8yB8xwAtb5UIkhwkxYsf+zt/1P2al
-oyKXCVJ3+9Io6rLOYGDHmsI4+R71ztQtWtz2jbC5+dn4nU5he5Xtw1k2bE6+gSHl
-Qu0MjNRgMZxyJJ5uZFNI2ZlTeqlt5gs3CpdjgUlZd1ntgT8BzpX6wWBiCUMhMwZn
-AEX9rUSLcpIPhHLUDc9+P3d60KTL+cwETf7u5IEQPcHrmie+Wm/Hssmtzl3cK1Oo
-I8ut+HoKFqTPzhrdiSbB+zaxVyedim1lX/1fjrxzOrLKWmDmdNfpuITwr9A88qsH
-V5s8sAiD8V8+CQKHpjig
-=89Ks
------END PGP SIGNATURE-----
+> +- ti,hwmods:		Name of the hwmod associated to the controller, which
+> +			is "ssi".
 
---BXVAT5kNtrzKuDFl--
+I don't think we should add any more of that, for new bindings.
+
+> +- reg:			Contains SSI register address range (base address and
+> +			length).
+> +- reg-names:		Contains the names of the address ranges. It's
+> +                        expected, that "sys" and "gdd" address ranges are
+> +			provided.
+
+Why two entries in reg-names but only one in reg?
+
+I think it'd be better to write:
+
+reg-names:	Contains the values "sys" and "gdd".
+reg:		Contains a register specifier for each entry in
+		reg-names.
+
+A similar re-ordering/-wording would apply to interrupts/interrupt-names.
+
+> +- ranges		Required as an empty node
+
+s/node/property/
+
+Why must ranges be empty? As long as the content correctly represents
+the bus setup, why does the content matter at all. How about:
+
+ranges		Represents the bus address mapping between the main
+		controller node and the child nodes below.
+
+> +Each port is represented as a sub-node of the ti,omap3-ssi device.
+> +
+> +Required Port sub-node properties:
+> +- compatible:		Should be set to the following value
+> +                        ti,omap3-ssi-port (applicable to OMAP34xx devices)
+
+Hmm. Is it really the case that there is 1 controller with n ports? Are
+the ports really dependent upon some shared resource? Couldn't the ports
+be represented as separate top-level SSI controllers?
+
+> +- interrupts:		Contains the interrupt information for the port.
+> +- interrupt-names:	Contains the names of the interrupts. It's expected,
+> +			that "mpu_irq0" and "mpu_irq1" are provided.
+
+What exactly are those interrupts? "MPU" sounds like an external
+micro-controller/processor...
+
+> +- ti,ssi-cawake-gpio:	Defines which GPIO pin is used to signify CAWAKE
+> +			events for the port. This is an optional board-specific
+> +			property. If it's missing the port will not be
+> +			enabled.
+
+That also sounds like something that's a higher-level protocol, rather
+than whatever low-level transport "SSI" implements. Should this be part
+of a child node that represents the device attached to the SSI controller?
+
+Does the SSI controller (or its ports) not need any clocks, resets,
+regulators, ...?
