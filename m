@@ -1,37 +1,58 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 0/4] dac7512: some cleanups and DT bindings
-Date: Mon, 23 Sep 2013 06:49:51 -0700
-Message-ID: <20130923134951.GA18964@kroah.com>
-References: <1379879509-3608-1-git-send-email-zonque@gmail.com>
- <20130923101940.GZ21013@sirena.org.uk>
- <52401884.2070509@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] spi: s3c64xx: Add missing compatibles
+Date: Mon, 23 Sep 2013 14:50:42 +0100
+Message-ID: <20130923135042.GH21013@sirena.org.uk>
+References: <1379929545-27517-1-git-send-email-m.krawczuk@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eY8wQnuu3RZDiCQc"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <52401884.2070509-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1379929545-27517-1-git-send-email-m.krawczuk@partner.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+Cc: kgene.kim@samsung.com, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2013 at 12:31:32PM +0200, Daniel Mack wrote:
-> On 23.09.2013 12:19, Mark Brown wrote:
-> > On Sun, Sep 22, 2013 at 09:51:45PM +0200, Daniel Mack wrote:
-> >> Here are some trivial things for the ti_dac7512 driver.
-> >>
-> >> Mark, can you take them through your spi tree?
-> > 
-> > I can but it's normally Greg who looks after drivers/misc - probably
-> > best to at least run these by him.
-> 
-> Alright. Greg, I posted the series to LKML yesterday. Can you pick the
-> patches from there or do you want me to resend?
 
-I'll pick them up from there, thanks for pointing them out to me.
+--eY8wQnuu3RZDiCQc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Sep 23, 2013 at 11:45:45AM +0200, Mateusz Krawczuk wrote:
+> Add compatibles for s3c6410, s5pc100 and s5pc110/s5pv210 boards.
+
+>  static const struct of_device_id s3c64xx_spi_dt_match[] = {
+> +	{ .compatible = "samsung,s3c2443-spi",
+> +			.data = (void *)&s3c2443_spi_port_config,
+> +	},
+> +	{ .compatible = "samsung,s3c6410-spi",
+> +			.data = (void *)&s3c6410_spi_port_config,
+> +	},
+
+This is missing s3c6400 and at least one other s3c24xx I think.  They
+can be added later though so applied, thanks.
+
+--eY8wQnuu3RZDiCQc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSQEcvAAoJELSic+t+oim99NkQAJ3onBLT5qwGPqvgkTbHRguh
+j88tNPkcN6C/C82SwrVWOVQRByzhrqcoVbZP8xEXIPyHFjvPUJKCObi+/ztc3UHe
+9sMQ3hx2RcT5IQ3LLUSr993+deStRdu0Yc9MN4pHXJiYd9dclY7RCpAnHl6y8VKU
+BGDijajF/JkLREUSPfVvxq7whVrHrlmODow21zStGPUILmXXLVq8QOEyYrW06rB/
+HU7I8RSuuXhzUAbQzDw5th8+/ebWzwgJxdEzdx/6yHLK2lu0o6kEjB07vuoQ4Rt0
+PSqQ+hjm5BtRy8CfjJhwe34YFLrIGWJ/8igpaUI0u9qsmp7VaVCy6hTiGHzx7+j3
+492HmdGOC/H9WBiWufJSkssCrkSnAcVv9k3ML3/k/YCvKTxoAjgUXTig1u8p1QUB
+dZQ4Pf7QaLsdujjY97VriEw2G2A6116bQF/bERLhcH10sN1MRnSMQZpAoYr6cBp0
+vNZ9YGqtlg1CRBOZ/3ZPx51CgzVdDQafc3J8e3s4nXxy0fVVft8fqU5M3A6rvJOZ
+wHFJL6owMEOUkSPrP2mXxEZ54yBIrA3sk3t2ePzjPtn7uicoTV2o5GX2/Nu9p2Ab
+8Tw5Y5AudsWtt40ky5XKtycbAMeZ8h3eW+L81cjSgxW1cOiH+IVAyd94cWgUQ0ZP
+gi3h0QffMqzNwvvuaU+v
+=cNpF
+-----END PGP SIGNATURE-----
+
+--eY8wQnuu3RZDiCQc--
