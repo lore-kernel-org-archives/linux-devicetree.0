@@ -1,97 +1,87 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 07/10] of/irq: Propagate errors in
- of_irq_to_resource_table()
-Date: Mon, 23 Sep 2013 10:36:06 +0200
-Message-ID: <20130923083605.GC11881@ulmo>
-References: <1379510692-32435-1-git-send-email-treding@nvidia.com>
- <1379510692-32435-8-git-send-email-treding@nvidia.com>
- <CAL_JsqJ+4P26hRrJcrbBmwfNPDAS+1GhXj12B+UvqmZZGjqT0g@mail.gmail.com>
+From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [RFC 4/5] gpiolib: add gpiod_get() and gpiod_put() functions
+Date: Mon, 23 Sep 2013 12:31:27 +0300
+Message-ID: <20130923093127.GA28875@intel.com>
+References: <1378294169-22661-1-git-send-email-acourbot@nvidia.com>
+ <1378294169-22661-5-git-send-email-acourbot@nvidia.com>
+ <52279082.5010105@wwwdotorg.org>
+ <CACRpkdY70r8mL8PSDmexr+_0Ddi-Y8x0RaDF-WWucZM9V8n=yw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="H8ygTp4AXg6deix2"
-Return-path: <sparclinux-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ+4P26hRrJcrbBmwfNPDAS+1GhXj12B+UvqmZZGjqT0g@mail.gmail.com>
-Sender: sparclinux-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ralf Baechle <ralf@linux-mips.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mips@linux-mips.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, sparclinux@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <CACRpkdY70r8mL8PSDmexr+_0Ddi-Y8x0RaDF-WWucZM9V8n=yw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---H8ygTp4AXg6deix2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Sep 22, 2013 at 04:08:26PM -0500, Rob Herring wrote:
-> On Wed, Sep 18, 2013 at 8:24 AM, Thierry Reding
-> <thierry.reding@gmail.com> wrote:
-> > Now that all helpers return precise error codes, this function can
-> > propagate these errors to the caller properly.
+On Fri, Sep 20, 2013 at 08:40:48PM +0200, Linus Walleij wrote:
+> On Wed, Sep 4, 2013 at 9:56 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> > On 09/04/2013 05:29 AM, Alexandre Courbot wrote:
+> >> Add gpiod_get() and gpiod_put() functions that provide safer handling of
+> >> GPIOs.
+> >>
+> >> These functions put the GPIO framework in line with the conventions of
+> >> other frameworks in the kernel, and help ensure every GPIO is declared
+> >> properly and valid while it is used.
 > >
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > ---
-> > Changes in v2:
-> > - return 0 on success or a negative error code on failure
-> > - convert callers to new calling convention
->=20
-> [snip]
->=20
-> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> > index e4f38c0..6d7f824 100644
-> > --- a/drivers/of/irq.c
-> > +++ b/drivers/of/irq.c
-> > @@ -397,18 +397,20 @@ int of_irq_count(struct device_node *dev)
-> >   * @res: array of resources to fill in
-> >   * @nr_irqs: the number of IRQs (and upper bound for num of @res eleme=
-nts)
->=20
-> You are effectively changing this to require an exact match rather
-> than an upper bound. That seems to be okay since that is what all the
-> callers want, but the documentation should be updated.
-
-Done.
-
-> >   *
-> > - * Returns the size of the filled in table (up to @nr_irqs).
-> > + * Returns 0 on success or a negative error code on failure.
-> >   */
-> >  int of_irq_to_resource_table(struct device_node *dev, struct resource =
-*res,
-> >                 int nr_irqs)
-> >  {
-> > -       int i;
-> > +       int i, ret;
+> >> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
 > >
-> > -       for (i =3D 0; i < nr_irqs; i++, res++)
-> > -               if (!of_irq_to_resource(dev, i, res))
->=20
-> The error handling here needs to be updated in the previous patch.
+> >> +struct gpio_desc *__must_check gpiod_get(struct device *dev,
+> >> +                                      const char *con_id);
+> >> +void gpiod_put(struct gpio_desc *desc);
+> >
+> > It might be nice to add an "int index" parameter to this function. For
+> > example, a bit-banged parallel bus protocol driver might have 1
+> > chip-select GPIO, 1 clock GPIO, and 8 data GPIOs. gpiod_get(dev, "bus",
+> > 0)..gpiod_get(dev, "bus", 7) might be nicer than gpiod_get(dev,
+> > "bus0")..gpiod_get(dev, "bus7")? Possibly for client-simplicity,
+> > implement both gpiod_get(dev, con_id) (as an inline wrapper for ...) and
+> > gpiod_get_index(dev, con_id, index)?
+> >
+> > In DT terms, this would map to:
+> >
+> > cs-gpios = <&gpio 3 0>;
+> > clock-gpios = <&gpio 5 0>;
+> > bus-gpios = <&gpio 10 0 ... &gpio 17 0>;
+> >
+> > ... and with the mapping table registration mechanism, we could
+> > presumably add "int index" to struct gpiod_lookup.
+> 
+> This is an interesting usability aspect of the API, so I'd especially
+> like some input from the ACPI people on this as well.
 
-Yes, you're right.
+The index fits well with ACPI as that's the only way we can use to
+distinguish different GPIOs.
 
-Thanks,
-Thierry
+However, in ACPI world the con_id doesn't have any correspondence. For
+example given a DT description:
 
---H8ygTp4AXg6deix2
-Content-Type: application/pgp-signature
+	power-gpios = <&gpio 28 GPIO_ACTIVE_LOW>;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
+would be something like this in the ACPI ASL code:
 
-iQIcBAEBAgAGBQJSP/11AAoJEN0jrNd/PrOh9SkP/0eqpECG/DCrq/PRvyVz1O5b
-HRQn8Z6vwNDHfFBuxndtGEyyp28LmnxqIsFkooksR+VP/ZPnvcL68Db8p7ta3r2l
-9AK8X2uESqu8/zIsqYHM0bjNICoVmwlRfuEUKkMXbta5j2jVH+Z6cgBcf2rhd7Dm
-GAXRuRdnvrRy43GwUS0WzGYWH/zeihR1lI/dzPjaW4AYmfb8PSB43+sHV+Cev5j+
-mldi6zYZa9N+ozEEhD4yY7hhGr5epkLypKFN4ihms9NUuPdBs/vZN1MBc+01PlTd
-Etmy0NfoZDc/0yV+cQczelQ4dweAWFt+7mqNVpPtYWSLY4TiVqMqhTjXHmV8A1lV
-1TMvhzABTRuTqQt9AvKkeFuarNRqBMp5CKLlHYhYJ9ggiXlA8G3xUAUaNoNQqeVG
-OmoMFLpHzfntFyv8k5+WSi5L/aukFh0UPaVk4/O68IK3tfh+cGOGptgszLV2k2Aw
-nKn8xPq3K7ByyEF5F1wmzceSNCiFm8irFVhKWWAIk8HIBHAs5hw1nqPQsscmcIDT
-63AHK92IqEQo+YwO63Z7S8PFgZ3JSl+1LpzpjjP9v68B+UI9jQiaJaQ4sD3CP4L5
-cdF6MYLhPjxwsFY4LkZWRjFBopaI7+l8XMjkobiKed9cQKJyg2DuJAEu19nRMP8s
-txsDsmA/HZfN7bgreMBW
-=bK7L
------END PGP SIGNATURE-----
+	GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionNone,
+        	"\\_SB.PCI0.GPI0", 0x00, ResourceConsumer,,)
+        {   
+                28
+        }
 
---H8ygTp4AXg6deix2--
+I'm thinking that in order to get ACPI implementation work with this we can
+do something like:
+
+	gpiod_get_index(dev, "bus", 0)
+
+	  Here we ignore the con_id and use only the index.
+
+	gpiod_get(dev, "bus")
+
+	  Since we can't map the "bus" to anything, we default to index 0.
+
+We have pretty much similar in the DMA slave helpers where passing "tx"
+gives us the first DMA channel and "rx" the second.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
