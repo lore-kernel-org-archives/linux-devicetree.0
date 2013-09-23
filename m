@@ -1,92 +1,68 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/4] i2c: busses: i2c-st: Add ST I2C controller
-Date: Mon, 23 Sep 2013 15:06:54 -0600
-Message-ID: <5240AD6E.4090905@wwwdotorg.org>
-References: <1379498483-4236-1-git-send-email-maxime.coquelin@st.com> <1379498483-4236-2-git-send-email-maxime.coquelin@st.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] ASoC: generic: Add generic DT based simple
+	codec
+Date: Mon, 23 Sep 2013 15:19:56 -0600
+Message-ID: <5240B07C.6080404@wwwdotorg.org>
+References: <20130919105437.75e0f0a3@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379498483-4236-2-git-send-email-maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stephen.gallimore-qxv4g6HH51o@public.gmane.org, stuart.menefy-qxv4g6HH51o@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, olivier.clergeaud-qxv4g6HH51o@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20130919105437.75e0f0a3@armhf>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/18/2013 04:01 AM, Maxime COQUELIN wrote:
-> This patch adds support to SSC (Synchronous Serial Controller)
-> I2C driver. This IP also supports SPI protocol, but this is not
-> the aim of this driver.
-> 
-> This IP is embedded in all ST SoCs for Set-top box platorms, and
-> supports I2C Standard and Fast modes.
+On 09/19/2013 02:54 AM, Jean-Francois Moine wrote:
+> This patch adds a simple sound codec which is described by the DT.
+> This codec may be used when no specific codec action is needed.
 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-st.txt b/Documentation/devicetree/bindings/i2c/i2c-st.txt
+> diff --git a/Documentation/devicetree/bindings/sound/simple-codec.txt b/Documentation/devicetree/bindings/sound/simple-codec.txt
 
-> +I2C for ST platforms
-
-If the HW block supports both I2C and SPI, the DT binding ought to
-support that too. It's be best to create a single DT binding that
-represents the IP block, and include a property that indicates whether
-the device should operate in I2C or SPI mode.
-
-I suppose you could reasonably define different compatible values for
-those two cases. However, the binding should be titled something more
-like "ST SSC binding, for I2C mode operation" and "ST SSC binding, for
-SPI mode operation", rather than "I2C for ST platforms", since the HW
-includes an SSC block, not an I2C block.
-
-> +Required properties :
-> +- compatible : Must be "st,comms-i2c"
-> +- reg : Offset and length of the register set for the device
-> +- interrupts : the interrupt number
-
-It's an interrupt specifier, not an interrupt number. The format is
-defined by the interrupt controller, not this binding.
-
-> +- clocks : phandle to the I2C clock source
-
-What about clock-names?
-
-> +Recommended (non-standard) properties :
-
-Usually you'd just say "Optional properties:", or perhaps "Recommended
-properties:". I don't think adding "(non-standard)" serves any purpose.
-
-> +- clock-frequency : Desired I2C bus clock frequency in Hz. Otherwise
-> +  the default 100 kHz frequency will be used. As only Normal and Fast modes
-> +  are supported, possible values are 100000 and 400000.
+> +Device-Tree bindings for the simple codec
 > +
-> +Optional (non-standard) properties:
+> +Required properties:
+> +- compatible: should be "linux,simple-codec".
 
-Same here.
+We shouldn't have any Linux-specific bindings. It might be reasonable to
+define a binding for a "simple CODEC", but there's no reason it should
+be Linux-specific.
 
-> +- st,glitches : Enable timing glitch suppression support.
+> +- dai-name: name of the codec
 
-That property name doesn't really convey the "enables" that appears in
-the property description to me...
+That should be internal to the driver; it's Linux-specific.
 
-> +- st,glitch-clk : SCL line timinig glitch suppression value in ns.
-> +- st,glitch-dat : SDA line timinig glitch suppression value in ns.
+> +Optional properties:
+> +- capture: information about capture
+> +- playback: information about playback
+> +At least one of the 'capture' or 'playback' nodes must be present.
 
-s/timinig/timing/
+Judging by the example, those are nodes not properties.
 
-> +- st,hw-glitches : Enable filter glitch suppression support.
-> +- st,hw-glitch-clk : SCL line filter glitch suppression value in us.
-> +- st,hw-glitch-dat : SDA line filter glitch suppression value in us.
+> +Child 'capture' and 'playback' required properties:
+> +- stream-name: name of the stream
 
-Those sound more like runtime configuration rather than HW description.
-Can you rephrase the descriptions (and property names) more along the
-lines of HW properties? Perhaps e.g.:
+Stream name is also probably too Linux-specific.
 
-st,needs-glitch-suppression: The board design needs timing glitch
-suppression enabled to operate reliably.
+> +- formats: list of the supported formats (see below)
+> +- rates: list of the supported rates (see below)
+> +- #channels: minimum and maximum numbers of channels
+> +
+> +Formats:
+> +	"s8"
+> +	"u8"
 
-st,min-scl-pulse-width: The minimum valid SCL pulse width that is
-allowed through the deglitch circuit. In units of ns.
-
-(I just made up those descriptions to give a feel for the flavor of
-description that I expect. They likely need some adjustment to reflect
-whatever they're actually intended to represent in HW).
-
-What is the difference between "glitch" and "hw-glitch"?
+I think the binding should specify on-the-wire formats, not in-memory
+formats. For example, if this binding is used to represent an I2S CODEC,
+it's more important to know whether it supports left-justified,
+right-justified, DSP mode, etc., and the max number of bits (or perhaps
+a list of supported numbers of bits) per channel in each case.
