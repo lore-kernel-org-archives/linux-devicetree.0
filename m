@@ -1,47 +1,48 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: Allow the usage of mmc aliases
-Date: Mon, 23 Sep 2013 15:27:12 -0600
-Message-ID: <5240B230.6000605@wwwdotorg.org>
-References: <1379903897-16019-1-git-send-email-festevam@gmail.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/6] clk: exynos-audss: convert to platform device
+Date: Mon, 23 Sep 2013 23:30:17 +0200
+Message-ID: <1736317.9RH9hT0fWO@flatron>
+References: <1379711637-5226-1-git-send-email-abrestic@chromium.org>
+ <1530327.jvk44KuFQA@flatron>
+ <CAL1qeaGjUTrfDaAr1rgsgDaZscjaV7tqi3Jd_-zo2sMtCCFSAQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379903897-16019-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL1qeaGjUTrfDaAr1rgsgDaZscjaV7tqi3Jd_-zo2sMtCCFSAQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Yadwinder Singh Brar <yadi.brar@samsung.com>, linux-doc@vger.kernel.org, Padmavathi Venna <padma.v@samsung.com>, Tomasz Figa <t.figa@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tushar Behera <tushar.behera@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Sachin Kamat <sachin.kamat@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>, Jiri Kosina <jkosina@suse.cz>Stephe
 List-Id: devicetree@vger.kernel.org
 
-On 09/22/2013 08:38 PM, Fabio Estevam wrote:
-> From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Monday 23 of September 2013 14:25:12 Andrew Bresticker wrote:
+> >> +static int __init exynos_audss_clk_init(void)
+> >> +{
+> >> +     return platform_driver_register(&exynos_audss_clk_driver);
+> >> +}
+> >> +core_initcall(exynos_audss_clk_init);
+> > 
+> > Does it need to be core_initcall? Drivers depending on clocks provided
+> > by this driver should be able to defer probing if they are probed
+> > before this driver.
 > 
-> On embedded devices, there is often a combination of removable mmc
-> devices (e.g. MMC/SD cards) and hard wired ones (e.g. eMMC).
-> Depending on the hardware configuration, the 'mmcblkN' node might
-> change if the removable device is available or not at boot time.
-> 
-> E.g. if the removable device is attached at boot time, it might
-> become mmxblk0. And the hard wired one mmcblk1. But if the removable
-> device isn't there at boot time, the hard wired one will become
-> mmcblk0. This makes it somehow difficult to hard code the root device
-> to the non-removable device and boot fast.
-> 
-> Allow the sdhci-esdhc-imx driver to retrieve the mmc aliases, so that we can 
-> map via the device tree which mmcblk corresponds to the rootfs.
+> Unfortunately there are a couple of issues with making this a
+> module_initcall: 1. On the Exynos5420, the AudioSS block provides the
+> apb_pclk gate for the ADMA bus, which is probed at postcore_initcall
+> time and does not support deferred probing, and
 
-> diff --git a/drivers/mmc/card/block.c b/drivers/mmc/card/block.c
+Just out of curiosity, what is this ADMA bus?
 
-> -	devidx = find_first_zero_bit(dev_use, max_devices);
-> +	devidx = find_next_zero_bit(dev_use, max_devices, card->host->devidx);
+Anyway, I'm fine with this, just wanted to make sure that there is a 
+reason behind it.
 
-I'm not sure if this works; what if the SD card gets detected/removed
-without recycling the device name/ID a few times before the fixed eMMC
-is detected?
-
-So, in the perfect case this will achieve what you want, but not in some
-unusual cases. So I don't think it's a good idea to rely on this.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
