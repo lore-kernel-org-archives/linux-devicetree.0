@@ -1,223 +1,44 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 2/9] usb: phy: nop: Don't use regulator framework for
- RESET line
-Date: Mon, 23 Sep 2013 21:05:30 +0300
-Message-ID: <524082EA.30100@ti.com>
-References: <1376561909-4406-1-git-send-email-rogerq@ti.com>
- <1376561909-4406-3-git-send-email-rogerq@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH V2 3/5] gpio: add support for AMS AS3722 gpio driver
+Date: Mon, 23 Sep 2013 20:06:25 +0200
+Message-ID: <CACRpkdYY2tfU4-E2DdoUUW4K04H08KL70JVp3ZgqW-=RFwh+Aw@mail.gmail.com>
+References: <1379680214-9143-1-git-send-email-ldewangan@nvidia.com>
+	<1379680214-9143-4-git-send-email-ldewangan@nvidia.com>
+	<CACRpkdbJ6N-5RET+cmF=14jKVDnuAZtZwjcKym75ySER2gCpBQ@mail.gmail.com>
+	<524001F3.3060602@nvidia.com>
+	<CACRpkdYVTdh3+ayy96D4=iNO6ZASfTfeQOHF9vdoPjfLDCtB5Q@mail.gmail.com>
+	<5240117C.8060300@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1376561909-4406-3-git-send-email-rogerq@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@ti.com
-Cc: devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, linux-usb@vger.kernel.org, broonie@kernel.org, p.zabel@pengutronix.de, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5240117C.8060300-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Lobmaier <florian.lobmaier-QzQKeY2x7wg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+On Mon, Sep 23, 2013 at 12:01 PM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 
-There is an issue with this patch and is shown below.
-I will send a v3 for this.
+> Ok, I was thinking that we should not call gpiochip_add() from the pin
+> control driver in any new driver
 
-On 08/15/2013 01:18 PM, Roger Quadros wrote:
-> Modelling the RESET line as a regulator supply wasn't a good idea
-> as it kind of abuses the regulator framework and also makes adaptation
-> code more complex.
-> 
-> Instead, manage the RESET gpio line directly in the driver. Update
-> the device tree binding information.
-> 
-> This also makes us easy to migrate to a dedicated GPIO RESET controller
-> whenever it becomes available.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  .../devicetree/bindings/usb/usb-nop-xceiv.txt      |    7 +-
->  drivers/usb/phy/phy-nop.c                          |   71 ++++++++++++++-----
->  2 files changed, 55 insertions(+), 23 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-> index d7e2726..1bd37fa 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-> @@ -15,7 +15,7 @@ Optional properties:
->  
->  - vcc-supply: phandle to the regulator that provides RESET to the PHY.
->  
-> -- reset-supply: phandle to the regulator that provides power to the PHY.
-> +- reset-gpios: Should specify the GPIO for reset.
->  
->  Example:
->  
-> @@ -25,10 +25,9 @@ Example:
->  		clocks = <&osc 0>;
->  		clock-names = "main_clk";
->  		vcc-supply = <&hsusb1_vcc_regulator>;
-> -		reset-supply = <&hsusb1_reset_regulator>;
-> +		reset-gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
->  	};
->  
->  hsusb1_phy is a NOP USB PHY device that gets its clock from an oscillator
->  and expects that clock to be configured to 19.2MHz by the NOP PHY driver.
-> -hsusb1_vcc_regulator provides power to the PHY and hsusb1_reset_regulator
-> -controls RESET.
-> +hsusb1_vcc_regulator provides power to the PHY and GPIO 7 controls RESET.
-> diff --git a/drivers/usb/phy/phy-nop.c b/drivers/usb/phy/phy-nop.c
-> index 55445e5d..1f88c32 100644
-> --- a/drivers/usb/phy/phy-nop.c
-> +++ b/drivers/usb/phy/phy-nop.c
-> @@ -35,6 +35,9 @@
->  #include <linux/clk.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/of.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/gpio.h>
-> +#include <linux/delay.h>
->  
->  struct nop_usb_xceiv {
->  	struct usb_phy phy;
-> @@ -42,6 +45,8 @@ struct nop_usb_xceiv {
->  	struct clk *clk;
->  	struct regulator *vcc;
->  	struct regulator *reset;
-> +	int gpio_reset;
-> +	bool reset_active_low;
->  };
->  
->  static struct platform_device *pd;
-> @@ -70,6 +75,23 @@ static int nop_set_suspend(struct usb_phy *x, int suspend)
->  	return 0;
->  }
->  
-> +static void nop_reset_set(struct nop_usb_xceiv *nop, int asserted)
-> +{
-> +	int value;
-> +
-> +	if (!gpio_is_valid(nop->gpio_reset))
-> +		return;
-> +
-> +	value = asserted;
-> +	if (nop->reset_active_low)
-> +		value = !value;
-> +
-> +	gpio_set_value_cansleep(nop->gpio_reset, value);
-> +
-> +	if (!asserted)
-> +		usleep_range(10000, 20000);
-> +}
-> +
->  static int nop_init(struct usb_phy *phy)
->  {
->  	struct nop_usb_xceiv *nop = dev_get_drvdata(phy->dev);
-> @@ -82,11 +104,8 @@ static int nop_init(struct usb_phy *phy)
->  	if (!IS_ERR(nop->clk))
->  		clk_enable(nop->clk);
->  
-> -	if (!IS_ERR(nop->reset)) {
-> -		/* De-assert RESET */
-> -		if (regulator_enable(nop->reset))
-> -			dev_err(phy->dev, "Failed to de-assert reset\n");
-> -	}
-> +	/* De-assert RESET */
-> +	nop_reset_set(nop, 0);
->  
->  	return 0;
->  }
-> @@ -95,11 +114,8 @@ static void nop_shutdown(struct usb_phy *phy)
->  {
->  	struct nop_usb_xceiv *nop = dev_get_drvdata(phy->dev);
->  
-> -	if (!IS_ERR(nop->reset)) {
-> -		/* Assert RESET */
-> -		if (regulator_disable(nop->reset))
-> -			dev_err(phy->dev, "Failed to assert reset\n");
-> -	}
-> +	/* Assert RESET */
-> +	nop_reset_set(nop, 1);
->  
->  	if (!IS_ERR(nop->clk))
->  		clk_disable(nop->clk);
-> @@ -148,7 +164,6 @@ static int nop_usb_xceiv_probe(struct platform_device *pdev)
->  	int err;
->  	u32 clk_rate = 0;
->  	bool needs_vcc = false;
-> -	bool needs_reset = false;
->  
->  	nop = devm_kzalloc(&pdev->dev, sizeof(*nop), GFP_KERNEL);
->  	if (!nop)
-> @@ -159,20 +174,28 @@ static int nop_usb_xceiv_probe(struct platform_device *pdev)
->  	if (!nop->phy.otg)
->  		return -ENOMEM;
->  
-> +	nop->reset_active_low = true;	/* default behaviour */
-> +
->  	if (dev->of_node) {
->  		struct device_node *node = dev->of_node;
-> +		enum of_gpio_flags flags;
->  
->  		if (of_property_read_u32(node, "clock-frequency", &clk_rate))
->  			clk_rate = 0;
->  
->  		needs_vcc = of_property_read_bool(node, "vcc-supply");
-> -		needs_reset = of_property_read_bool(node, "reset-supply");
-> +		nop->gpio_reset = of_get_named_gpio_flags(node, "reset-gpios",
-> +								0, &flags);
-> +		if (nop->gpio_reset == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +
-> +		nop->reset_active_low = flags & OF_GPIO_ACTIVE_LOW;
->  
->  	} else if (pdata) {
->  		type = pdata->type;
->  		clk_rate = pdata->clk_rate;
->  		needs_vcc = pdata->needs_vcc;
-> -		needs_reset = pdata->needs_reset;
-> +		nop->gpio_reset = pdata->gpio_reset;
->  	}
->  
->  	nop->clk = devm_clk_get(&pdev->dev, "main_clk");
-> @@ -205,12 +228,22 @@ static int nop_usb_xceiv_probe(struct platform_device *pdev)
->  			return -EPROBE_DEFER;
->  	}
->  
-> -	nop->reset = devm_regulator_get(&pdev->dev, "reset");
-> -	if (IS_ERR(nop->reset)) {
-> -		dev_dbg(&pdev->dev, "Error getting reset regulator: %ld\n",
-> -					PTR_ERR(nop->reset));
-> -		if (needs_reset)
-> -			return -EPROBE_DEFER;
-> +	if (gpio_is_valid(nop->gpio_reset)) {
-> +		unsigned long gpio_flags;
-> +
-> +		/* Assert RESET */
-> +		if (nop->reset_active_low)
-> +			gpio_flags = GPIOF_OUT_INIT_HIGH;
-> +		else
-> +			gpio_flags = GPIOF_OUT_INIT_LOW;
+No that is not the case.
 
-The operations inside if/else need to be reversed.
+There are many combined pinctrl+GPIO drivers that register
+both pinctrl devices and gpio_chip and also irq_chip.
 
-> +
-> +		err = devm_gpio_request_one(dev, nop->gpio_reset,
-> +						gpio_flags, dev_name(dev));
-> +		if (err) {
-> +			dev_err(dev, "Error requesting RESET GPIO %d\n",
-> +					nop->gpio_reset);
-> +			return err;
-> +		}
->  	}
->  
->  	nop->dev		= &pdev->dev;
-> 
+When the driver and hardware does multiple things like that
+in the same register range it is usually best to put the combined
+driver in drivers/pinctrl.
 
-cheers,
--roger
+> So this gpio driver can be moved now to the pincntrl folder and can use
+> pincontrol and gpio framework.
+
+Thanks!
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
