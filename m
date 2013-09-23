@@ -1,99 +1,103 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Mon, 23 Sep 2013 14:21:39 -0600
-Message-ID: <5240A2D3.20105@wwwdotorg.org>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de> <522FBED9.9000305@collabora.co.uk> <5230C7F6.3080803@wwwdotorg.org> <3653629.tapNZSuWhS@lem-wkst-02> <52373B34.4060709@wwwdotorg.org> <CACRpkdY=cgtf6_eypfAAv-fvmiNgAYyz4StTgDie5THsbrcumg@mail.gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] video: ARM CLCD: Add DT support
+Date: Mon, 23 Sep 2013 21:29:26 +0100
+Message-ID: <20130923202926.GX12758@n2100.arm.linux.org.uk>
+References: <1379351934-25415-1-git-send-email-pawel.moll@arm.com> <52376180.1090001@wwwdotorg.org> <1379435799.9205.16.camel@hornet> <5238CBE9.2060800@wwwdotorg.org> <1379522363.9244.12.camel@hornet> <52406646.709@wwwdotorg.org> <20130923160640.GT12758@n2100.arm.linux.org.uk> <52406C97.3010800@wwwdotorg.org> <20130923164302.GW12758@n2100.arm.linux.org.uk> <52409C0C.1000406@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY=cgtf6_eypfAAv-fvmiNgAYyz4StTgDie5THsbrcumg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lars Poeschel <poeschel@lemonage.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, joelf@ti.com, Laur
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52409C0C.1000406-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2013 02:01 PM, Linus Walleij wrote:
-> On Mon, Sep 16, 2013 at 7:09 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+On Mon, Sep 23, 2013 at 01:52:44PM -0600, Stephen Warren wrote:
+> On 09/23/2013 10:43 AM, Russell King - ARM Linux wrote:
+> > On Mon, Sep 23, 2013 at 10:30:15AM -0600, Stephen Warren wrote:
+> >> On 09/23/2013 10:06 AM, Russell King - ARM Linux wrote:
+> >>> On Mon, Sep 23, 2013 at 10:03:18AM -0600, Stephen Warren wrote:
+> >>>> It sounds like you could just put LCDControl & 0x2e in the DT rather
+> >>>> than using values such as 0x100..0x107, which don't appear to match the
+> >>>> register format you mentioned above.
+> >>>
+> >>> No.  Platforms which route the outputs to something like VGA or HDMI can
+> >>> change the framebuffer format.  Your suggestions is far too restrictive.
+> >>
+> >> Surely the DT should describe the HW setup only. Usually, a particular
+> >> HW setup can support multiple different framebuffer formats. Hence, the
+> >> DT wouldn't/shouldn't imply anything about the framebuffer format, but
+> >> simply which wires are connected to the LCD.
+> > 
+> > Quite, and putting the contents of the LCDControl register - even just
+> > bits 5 and 3-1 results in you having to modify the DT and reboot the
+> > kernel just to change the framebuffer format.  That's why I'm objecting
+> > to your comment.
 > 
->> Put another way, I don't believe
->> there's any rule when writing DT bindings that states that bindings must
->> not describe the same pin as both a GPIO and an IRQ, although admittedly
->> that may be unusual.
-> 
-> Actually I think you've won me over here.
-> 
-> But I do not think that this shall be done at the expense of letting
-> DT-based drivers do nasty things like setting up the same GPIO
-> line as an IRQ (hammering the hardware to do that) and then
-> request the same line to be an output line and drive it, for
-> example.
-> 
-> So the state of the GPIO line has to be tracked: if it is set as
-> input and tied to an IRQ it should *not* be possible for the
-> other code path to request it and set it as output. But it should
-> be possible to set it as input again and read the value.
-> 
-> Laurent deascribed exactly the latter usecase, which is OK.
-> 
->>> I agree with you that it would be the best if the only call would be
->>> request_irq and the chip driver programs the HW appropriately. It would be a
->>> dream, but unfortunately this is not possible at the moment. This is something
->>> that Linus pointed out very very early in this whole discussion. The gpio and
->>> irq frameworks don't share any information. The irq framework has no chance to
->>> program the HW, because it will never find the related gpio.
->>> For this to work the frameworks have to change (and possibly all drivers/board
->>> files/whatever using request_irq() and/or request_gpio()) have to change.
->>> That is something that I do not dare to do alone.
->>
->> This is a controller-specific issue, and has nothing to do with the GPIO
->> or IRQ frameworks. The driver for the combined irq/gpio_chip simply
->> needs to program the HW when the IRQ is requested or set up. The Tegra
->> driver already works this way, so there's actual proof that it is
->> possible to do this in practice.
-> 
-> And how to you block the same line from being gpio_request()ed
-> and set as output?
+> Oh, so these particular registers define both the output signal muxing
+> for the pins and the FB data format? If so, yes it's not correct to put
+> the register values into DT. I assumed that the HW would have a separate
+> representation of those two concepts, in different registers or at least
+> different fields in the same register. If not, there is indeed no choice
+> but to make up some arbitrary values to represent just the pinmuxing :-(
 
-To be honest, I really don't think this problem is terribly likely to
-occur, so I'm really not convinced that it's worth putting a lot of
-effort into solving it.
+Unfortunately not.  Parameters such as TFT, and dual can be specified by
+DT, but the difficulty comes with the pixel wiring.
 
-If the problem does occur, it's trivial to see that this has happened by
-looking at /proc/interrupts and /sys/kernel/debug/gpio, assuming the
-system doesn't hang when this happens due to an interrupt storm, and if
-it does, it should be pretty easy to track down the problematic register
-write.
+With a PL110 in TFT mode, the representation of which signals represent
+what are a function of the selected BPP:
 
-That said, I'm not outright against the kernel checking for this
-situation. I think it'd work as follows:
+Panel:
+24bpp: Blue[7:0]=CLD[23:16] Green[7:0]=CLD[15:8] Red[7:0]=CLD[7:0]
+18bpp: Blue[4:0]=CLD[17:13] Green[4:0]=CLD[11:7] Red[4:0]=CLD[5:1]
+       Intensity = CLD[12], CLD[6], CLD[0]
 
-The only code that knows the correlation between the IRQ and GPIO in
-question is the combined gpio_chip/irq_chip driver. Everything /has/ to
-be driven through that driver. In some cases, an IRQ may not be related
-to any GPIO at all; there are certainly IRQ controllers which take
-inputs directly from outside the chip, but have no GPIO functionality at
-all on those signals.
+24bpp signalling is used when a framebuffer format of 24bpp mode is
+selected, otherwise the 18bpp signalling is used.
 
-That driver needs to maintain some state that indicates which of its
-IRQs have been requested. Any time a GPIO request (I mean e.g.
-set_output() not request_gpio)) comes in, the request needs to be
-validated against that IRQ usage state. If there's a conflict, deny the
-GPIO request.
+The PL110 in 16bpp does not support for anything but 1555 mode when wired
+up as above, but some people want 565 mode.  That's achievable (and is
+used on Versatile) by adjusting the wiring via a FPGA:
 
-Now, it's quite possible that the code to maintain this state and
-perform the checks will be similar/common across multiple drivers. If
-so, by all means implement the code somewhere common, and have the
-various irq_chip/gpio_chip drivers call into it.
+       Blue = CLD[12,17:14] Green = [13,11:7] Blue = CLD[5:1]
 
-The main thing is that all of this has to be driven/controlled/enabled
-by the gpio_chip/irq_chip driver itself, not as some global/blanket
-feature of the GPIO or IRQ subsystems.
+This gives us the RGB565 mode on PL110.  Now, consider a platform which
+wants to use this - if the panel is wired up directly to the CLCD like
+that, then it will only support RGB565.
 
-Perhaps rather than having the gpio_chip/irq_chip drivers physically
-implement a function which calls this common code, they could set some
-flags/data/... in the struct gpio_chip/irq_chip indicating that they
-desire the core code that implements the error-checking to be enabled.
-That might save some levels of stack. But the key is still that the
-whole scenario is controlled by the end driver, not always assumed to
-apply by the core code.
+If you were connecting a 4:4:4 panel, a similar thing is possible, and
+may be preferable to have the standard framebuffer format in memory to
+do this.
+
+So, the supportable framebuffer foramts depends entirely on how the
+display is wired up to the controller.
+
+Now, for PL111, things are simpler - it supports 5551, 565 and 444 modes
+natively, so supports all the standard framebuffer formats.  The output
+wiring is different and more sane.  In this case, CLD[23] is always the
+MSB blue bit, CLD[15] is always the MSB green bit, and CLD[7] is always
+the MSB red bit.  So here, the wiring matters very much less.
+
+However, even here the "capabilities" play a role.  Does driving a TFT
+444 panel being driven in 24-bit mode make sense?  Yes, it'll work but
+the least significant four bits are lost.  What about the other way
+around?  A TFT 888 panel in 12bpp mode?  Well, in that case the least
+sigificant four bits are marked up as "reserved" - and even if they are
+held at zero, you're going to lose some colour range on the panel because
+white will be equivalent to colour f0f0f0 not ffffff.
+
+Hence, we probably want to have even here some way to say "I want this
+hardware to only support framebuffer formats of X".
+
+My feeling is that even though these capabilities are not part of the
+actual hardware spec, they're well worth implementing directly in DT as
+they're describing what the *hardware* as a whole is capable of.
+
+Moreover, I created the capabilities purely as a way to describe what
+the hardware and panel are capable of.  Isn't that what DT is all about
+too?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
