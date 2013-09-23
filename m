@@ -1,127 +1,78 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 09/10] usb: dwc3: omap: manage "usb_otg_ss_refclk960m"
- clock
-Date: Mon, 23 Sep 2013 16:11:30 +0300
-Message-ID: <52403E02.4070208@ti.com>
-References: <1379508542-22389-1-git-send-email-rogerq@ti.com> <1379508542-22389-10-git-send-email-rogerq@ti.com>
+From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] ARM: dts: add reference voltage property for MXS
+ LRADC
+Date: Mon, 23 Sep 2013 15:39:19 +0200
+Message-ID: <52404487.4080501@digi.com>
+References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com>  <1374501843-19651-3-git-send-email-hector.palacios@digi.com>  <520AA3CD.1040008@kernel.org> <1376491467.18617.41.camel@hornet>  <52153B8E.7050309@free-electrons.com>  <df6d000d-c918-48ec-958c-c8529ae1b75f@email.android.com> <1377190299.2626.9.camel@hornet> <5217E999.7020408@kernel.org> <52403845.5020002@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379508542-22389-10-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <52403845.5020002-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+Hi Alexandre,
 
-On 09/18/2013 03:49 PM, Roger Quadros wrote:
-> "usb_otg_ss_refclk960m" is an optional functional clock to the
-> UBS_OTG_SS module. So manage it in the driver.
-> 
+On 09/23/2013 02:47 PM, Alexandre Belloni wrote:
+> Hector,
+>
+> I'd like to go forward with this and have a chance to see that includ=
+ed
+> in 3.13. Do you mind if I rework your patch series by removing the DT
+> part and then resubmit ?
 
-Just realized that "usb_otg_ss_refclk960m" is in fact functional clock to the 
-PHY and not USB_OTG_SS module. The name is misleading.
+I don't mind at all. Please go ahead.
 
-So please ignore patch 9 and 10.
+>
+> Regards,
+>
+>
+> On 24/08/2013 01:00, Jonathan Cameron wrote:
+>> On 08/22/13 17:51, Pawel Moll wrote:
+>>> On Thu, 2013-08-22 at 07:17 +0100, Jonathan Cameron wrote:
+>>>> I would favour option 2 though some of the discussions going on at=
+ the moment about
+>>>> bindings might result in a generic description of this and any oth=
+er bits of
+>>>>   analog front end.
+>>> Any link to this discussion? devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org doesn't see=
+m to
+>>> be involved (of course I may have simply missed the thread ;-)
+>> Some cc's dropped off the discussion at some point that should have =
+been there
+>> and the topic has 'wandered' somewhat from where it started.
+>>
+>> https://lkml.org/lkml/2013/8/21/409
+>>
+>> and the couple of messages after that are probably the most relevant=
+=2E
+>>
+>> Speaking of which the devicetree list on here was the old one, I've =
+just switched
+>> to the vger list you suggest above.
+>>
+>>
+>>> Pawe=C5=82
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-iio=
+" in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>
+>
 
-cheers,
--roger
 
-
-> Also update device tree binding information.
-> 
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/omap-usb.txt |    4 ++++
->  drivers/usb/dwc3/dwc3-omap.c                       |   13 +++++++++++++
->  2 files changed, 17 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> index f67573c..47c8530 100644
-> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> @@ -47,6 +47,8 @@ OMAP DWC3 GLUE
->   - #address-cells, #size-cells : Must be present if the device has sub-nodes
->   - utmi-mode : controls the source of UTMI/PIPE status for VBUS and OTG ID.
->     It should be set to "1" for HW mode and "2" for SW mode.
-> + - clock : should refer to the clock node that provides 960MHz functional clock.
-> + - clock-names : should be "usb_otg_ss_refclk960m"
->   - ranges: the child address space are mapped 1:1 onto the parent address space
->  
->  Optional Properties:
-> @@ -68,6 +70,8 @@ omap_dwc3 {
->  	#address-cells = <1>;
->  	#size-cells = <1>;
->  	utmi-mode = <2>;
-> +	clocks = <&usb_otg_ss1_refclk960m>;
-> +	clock-names = "usb_otg_ss_refclk960m";
->  	ranges;
->  };
->  
-> diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
-> index 7f7ea62..c33b26c 100644
-> --- a/drivers/usb/dwc3/dwc3-omap.c
-> +++ b/drivers/usb/dwc3/dwc3-omap.c
-> @@ -32,6 +32,7 @@
->  #include <linux/extcon.h>
->  #include <linux/extcon/of_extcon.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/clk.h>
->  
->  #include <linux/usb/otg.h>
->  
-> @@ -119,6 +120,8 @@
->  #define USBOTGSS_UTMI_OTG_STATUS_SESSVALID	(1 << 2)
->  #define USBOTGSS_UTMI_OTG_STATUS_VBUSVALID	(1 << 1)
->  
-> +#define USBOTGSS_REFCLK "usb_otg_ss_refclk960m"
-> +
->  struct dwc3_omap {
->  	/* device lock */
->  	spinlock_t		lock;
-> @@ -144,6 +147,7 @@ struct dwc3_omap {
->  	struct notifier_block	id_nb;
->  
->  	struct regulator	*vbus_reg;
-> +	struct clk		*refclk;
->  };
->  
->  enum omap_dwc3_vbus_id_status {
-> @@ -449,6 +453,12 @@ static int dwc3_omap_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	omap->refclk = devm_clk_get(dev, USBOTGSS_REFCLK);
-> +	if (IS_ERR(omap->refclk)) {
-> +		dev_err(dev, "couldn't get %s\n", USBOTGSS_REFCLK);
-> +		return PTR_ERR(omap->refclk);
-> +	}
-> +
->  	spin_lock_init(&omap->lock);
->  
->  	omap->dev	= dev;
-> @@ -464,6 +474,8 @@ static int dwc3_omap_probe(struct platform_device *pdev)
->  		goto err0;
->  	}
->  
-> +	clk_prepare_enable(omap->refclk);
-> +
->  	reg = dwc3_omap_readl(omap->base, USBOTGSS_REVISION);
->  	omap->revision = reg;
->  	x_major = USBOTGSS_REVISION_XMAJOR(reg);
-> @@ -593,6 +605,7 @@ static int dwc3_omap_remove(struct platform_device *pdev)
->  		extcon_unregister_interest(&omap->extcon_id_dev);
->  	dwc3_omap_disable_irqs(omap);
->  	pm_runtime_put_sync(&pdev->dev);
-> +	clk_disable_unprepare(omap->refclk);
->  	pm_runtime_disable(&pdev->dev);
->  	device_for_each_child(&pdev->dev, NULL, dwc3_omap_remove_core);
->  
-> 
-
+Best regards,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+Hector Palacios
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
