@@ -1,168 +1,97 @@
-From: Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH] MTD: Onenand: Add device tree support for samsung onenand
-Date: Mon, 23 Sep 2013 10:36:28 +0200
-Message-ID: <1379925388-25051-1-git-send-email-m.krawczuk@partner.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 07/10] of/irq: Propagate errors in
+ of_irq_to_resource_table()
+Date: Mon, 23 Sep 2013 10:36:06 +0200
+Message-ID: <20130923083605.GC11881@ulmo>
+References: <1379510692-32435-1-git-send-email-treding@nvidia.com>
+ <1379510692-32435-8-git-send-email-treding@nvidia.com>
+ <CAL_JsqJ+4P26hRrJcrbBmwfNPDAS+1GhXj12B+UvqmZZGjqT0g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="H8ygTp4AXg6deix2"
+Return-path: <sparclinux-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJ+4P26hRrJcrbBmwfNPDAS+1GhXj12B+UvqmZZGjqT0g@mail.gmail.com>
+Sender: sparclinux-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ralf Baechle <ralf@linux-mips.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mips@linux-mips.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, sparclinux@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add clk and device tree nodes for samsung onenand driver.
 
-Signed-off-by: Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
-Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/mtd/samsung-onenand.txt    | 40 ++++++++++++++++++++++
- drivers/mtd/onenand/samsung.c                      | 37 +++++++++++++++++++-
- 2 files changed, 76 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+--H8ygTp4AXg6deix2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/mtd/samsung-onenand.txt b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
-new file mode 100644
-index 0000000..cc46160
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
-@@ -0,0 +1,40 @@
-+Device tree bindings for Samsung Onenand
-+
-+Required properties:
-+  - compatible: value should be either of the following.
-+      (a) "samsung, s3c6400-onenand", for onenand compatible with s3c6400 onenand.
-+      (b) "samsung, s3c6410-onenand", for onenand compatible with s3c6410 onenand.
-+      (c) "samsung, s5pc100-onenand", for onenand compatible with s5pc100 onenand.
-+      (d) "samsung, s5pc110-onenand", for s5pc100-like onenand used
-+	   on s5pc110 which supports DMA.
-+
-+Required properties:
-+
-+ - reg:					The CS line the peripheral
-+					is connected to
-+ - interrupt-parent, interrupts		Width of the ONENAND device
-+ - 					connected to the Samsung SoC
-+					in bytes. Must be 1 or 2.
-+
-+Optional properties:
-+
-+ - dma-channel:		DMA Channel index
-+
-+For inline partiton table parsing (optional):
-+
-+ - #address-cells: should be set to 1
-+ - #size-cells: should be set to 1
-+
-+Example for an s5pv210 board:
-+
-+		onenand@b0000000 {
-+			compatible = "samsung,s5pc110-onenand";
-+			reg = <0xb0000000 0x20000>, <0xb0600000 0x2000>;
-+			interrupt-parent = <&vic1>;
-+			interrupts = <31>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			clocks = <&clocks NANDXL>;
-+			clock-names = "gate";
-+			status = "okay";
-+		};
-diff --git a/drivers/mtd/onenand/samsung.c b/drivers/mtd/onenand/samsung.c
-index df7400d..5a2cc4b 100644
---- a/drivers/mtd/onenand/samsung.c
-+++ b/drivers/mtd/onenand/samsung.c
-@@ -14,6 +14,7 @@
-  *	S5PC110: use DMA
-  */
- 
-+#include <linux/clk.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/sched.h>
-@@ -24,6 +25,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- 
- #include <asm/mach/flash.h>
- 
-@@ -133,6 +135,7 @@ enum soc_type {
- struct s3c_onenand {
- 	struct mtd_info	*mtd;
- 	struct platform_device	*pdev;
-+	struct clk *gate;
- 	enum soc_type	type;
- 	void __iomem	*base;
- 	struct resource *base_res;
-@@ -859,6 +862,19 @@ static void s3c_onenand_setup(struct mtd_info *mtd)
- 	this->write_bufferram = onenand_write_bufferram;
- }
- 
-+static const struct of_device_id onenand_s3c_dt_match[] = {
-+	{ .compatible = "samsung,s3c6400-onenand",
-+		.data = (void *)TYPE_S3C6400 },
-+	{ .compatible = "samsung,s3c6410-onenand",
-+		.data = (void *)TYPE_S3C6410 },
-+	{ .compatible = "samsung,s5pc100-onenand",
-+		.data = (void *)TYPE_S5PC100 },
-+	{ .compatible = "samsung,s5pc110-onenand",
-+		.data = (void *)TYPE_S5PC110 },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, onenand_s3c_dt_match);
-+
- static int s3c_onenand_probe(struct platform_device *pdev)
- {
- 	struct onenand_platform_data *pdata;
-@@ -883,12 +899,26 @@ static int s3c_onenand_probe(struct platform_device *pdev)
- 		goto onenand_fail;
- 	}
- 
-+	onenand->gate = clk_get(&pdev->dev, "gate");
-+	if (IS_ERR(onenand->gate))
-+		return PTR_ERR(onenand->gate);
-+	clk_prepare_enable(onenand->gate);
-+
- 	this = (struct onenand_chip *) &mtd[1];
- 	mtd->priv = this;
- 	mtd->dev.parent = &pdev->dev;
- 	mtd->owner = THIS_MODULE;
- 	onenand->pdev = pdev;
--	onenand->type = platform_get_device_id(pdev)->driver_data;
-+
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match;
-+
-+		match = of_match_node(onenand_s3c_dt_match, pdev->dev.of_node);
-+		onenand->type = (enum soc_type)match->data;
-+	} else {
-+		onenand->type = platform_get_device_id(pdev)->driver_data;
-+	}
-+
- 
- 	s3c_onenand_setup(mtd);
- 
-@@ -1077,6 +1107,10 @@ static int s3c_onenand_remove(struct platform_device *pdev)
- 	kfree(onenand->page_buf);
- 	kfree(onenand);
- 	kfree(mtd);
-+
-+	clk_disable_unprepare(onenand->gate);
-+	clk_put(onenand->gate);
-+
- 	return 0;
- }
- 
-@@ -1125,6 +1159,7 @@ MODULE_DEVICE_TABLE(platform, s3c_onenand_driver_ids);
- static struct platform_driver s3c_onenand_driver = {
- 	.driver         = {
- 		.name	= "samsung-onenand",
-+		.of_match_table = of_match_ptr(onenand_s3c_dt_match),
- 		.pm	= &s3c_pm_ops,
- 	},
- 	.id_table	= s3c_onenand_driver_ids,
--- 
-1.8.1.2
+On Sun, Sep 22, 2013 at 04:08:26PM -0500, Rob Herring wrote:
+> On Wed, Sep 18, 2013 at 8:24 AM, Thierry Reding
+> <thierry.reding@gmail.com> wrote:
+> > Now that all helpers return precise error codes, this function can
+> > propagate these errors to the caller properly.
+> >
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> > Changes in v2:
+> > - return 0 on success or a negative error code on failure
+> > - convert callers to new calling convention
+>=20
+> [snip]
+>=20
+> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> > index e4f38c0..6d7f824 100644
+> > --- a/drivers/of/irq.c
+> > +++ b/drivers/of/irq.c
+> > @@ -397,18 +397,20 @@ int of_irq_count(struct device_node *dev)
+> >   * @res: array of resources to fill in
+> >   * @nr_irqs: the number of IRQs (and upper bound for num of @res eleme=
+nts)
+>=20
+> You are effectively changing this to require an exact match rather
+> than an upper bound. That seems to be okay since that is what all the
+> callers want, but the documentation should be updated.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Done.
+
+> >   *
+> > - * Returns the size of the filled in table (up to @nr_irqs).
+> > + * Returns 0 on success or a negative error code on failure.
+> >   */
+> >  int of_irq_to_resource_table(struct device_node *dev, struct resource =
+*res,
+> >                 int nr_irqs)
+> >  {
+> > -       int i;
+> > +       int i, ret;
+> >
+> > -       for (i =3D 0; i < nr_irqs; i++, res++)
+> > -               if (!of_irq_to_resource(dev, i, res))
+>=20
+> The error handling here needs to be updated in the previous patch.
+
+Yes, you're right.
+
+Thanks,
+Thierry
+
+--H8ygTp4AXg6deix2
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSP/11AAoJEN0jrNd/PrOh9SkP/0eqpECG/DCrq/PRvyVz1O5b
+HRQn8Z6vwNDHfFBuxndtGEyyp28LmnxqIsFkooksR+VP/ZPnvcL68Db8p7ta3r2l
+9AK8X2uESqu8/zIsqYHM0bjNICoVmwlRfuEUKkMXbta5j2jVH+Z6cgBcf2rhd7Dm
+GAXRuRdnvrRy43GwUS0WzGYWH/zeihR1lI/dzPjaW4AYmfb8PSB43+sHV+Cev5j+
+mldi6zYZa9N+ozEEhD4yY7hhGr5epkLypKFN4ihms9NUuPdBs/vZN1MBc+01PlTd
+Etmy0NfoZDc/0yV+cQczelQ4dweAWFt+7mqNVpPtYWSLY4TiVqMqhTjXHmV8A1lV
+1TMvhzABTRuTqQt9AvKkeFuarNRqBMp5CKLlHYhYJ9ggiXlA8G3xUAUaNoNQqeVG
+OmoMFLpHzfntFyv8k5+WSi5L/aukFh0UPaVk4/O68IK3tfh+cGOGptgszLV2k2Aw
+nKn8xPq3K7ByyEF5F1wmzceSNCiFm8irFVhKWWAIk8HIBHAs5hw1nqPQsscmcIDT
+63AHK92IqEQo+YwO63Z7S8PFgZ3JSl+1LpzpjjP9v68B+UI9jQiaJaQ4sD3CP4L5
+cdF6MYLhPjxwsFY4LkZWRjFBopaI7+l8XMjkobiKed9cQKJyg2DuJAEu19nRMP8s
+txsDsmA/HZfN7bgreMBW
+=bK7L
+-----END PGP SIGNATURE-----
+
+--H8ygTp4AXg6deix2--
