@@ -1,65 +1,46 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v5 2/3] usb: phy: Add Qualcomm SS-USB and HS-USB drivers
- for DW PHY's
-Date: Mon, 23 Sep 2013 14:32:51 -0500
-Message-ID: <20130923193251.GP30811@radagast>
-References: <1377091786-5613-1-git-send-email-iivanov@mm-sol.com>
- <1377091786-5613-3-git-send-email-iivanov@mm-sol.com>
-Reply-To: <balbi@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Mon, 23 Sep 2013 21:41:43 +0200
+Message-ID: <CACRpkdZxFpw=EYB4A4nZu7LWjQb6QppVctUsBBDiCMsCBbqm5A@mail.gmail.com>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
+	<52279524.8090006@wwwdotorg.org>
+	<20130909161924.GT29403@sirena.org.uk>
+	<2052193.CMUEUJFRgS@lem-wkst-02>
+	<522F78CB.2020507@wwwdotorg.org>
+	<20130910213718.GH29403@sirena.org.uk>
+	<522F9E6C.2010905@wwwdotorg.org>
+	<522FBED9.9000305@collabora.co.uk>
+	<5230C7F6.3080803@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Sk71+Upln2BLuDmg"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1377091786-5613-3-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: balbi@ti.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5230C7F6.3080803-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jgchunter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, joelf-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---Sk71+Upln2BLuDmg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Sep 11, 2013 at 9:43 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 09/10/2013 06:52 PM, Javier Martinez Canillas wrote:
 
-Hi,
+>> I'm a bit confused now. Doesn't the fact that gpio_request() prevents
+>> double-requests mean that the use-case that you say that have not been covered
+>> by this patch can't actually happen?
+>>
+>> I mean, if when using board files an explicit call to gpio_request() is made by
+>> platform code then a driver can't call gpio_request() for the same gpio. So this
+>> patch shouldn't cause any regression since is just auto-requesting a GPIO when
+>> is mapped as an IRQ in a DT which basically will be the same that was made by
+>> board files before.
+>
+> I'm not familiar with the board file path; Linus describe this.
 
-On Wed, Aug 21, 2013 at 04:29:45PM +0300, Ivan T. Ivanov wrote:
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
->=20
-> These drivers handles control and configuration of the HS
-> and SS USB PHY transceivers. They are part of the driver
-> which manage Synopsys DesignWare USB3 controller stack
-> inside Qualcomm SoC's.
->=20
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+Oh um? Not following, that stuff is right above, what is unclear
+about this that I need to describe?
 
-I can take this one if DT folks agree with bindings proposed on previous
-patch.
-
---=20
-balbi
-
---Sk71+Upln2BLuDmg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSQJdjAAoJEIaOsuA1yqREvbAP/0M8TMSx2bqjHn7K/wUowbP6
-00piB7uQ8xkarDOba0Xo4Dmb45F6SlXwuQLbsKRHgu16vyWdR9lNwrNiHutj1PqK
-VNnBs4UYidpi/DmoAiAztYMzGTvyjr8XjDDuUzQxmRdt6LGpCyIcDeNYLU8tQr+b
-ZDohRNmQvImWj8nNIaSk4Je32LcCJ8EQY+rEcAIMukBQMhiz63SQ9AVySInXFQSf
-fSakwe3MVDYTG3bzmADbCqGhQmYTb28Jox+uBcL6UsMUZR87RKho9QQKCP2eu8E3
-lfgcQmKEqIHUoyFXUjijifPRSY+2+V3+3dcJB3ZoX1yoKTnDv91BCLtJ9zXzx+86
-3EG+l/ANNaVsFYuQQpj/aYoDzS8qchz1znhV+HRuomn1Frs0saw4I8SwvUAf+Sp1
-kfGO+lo2hhHuR4/cHGc5QJlgMjsvD4HDQgcN1tThikmOnbTma4r3F2L8FCjr6aRt
-BHybwhqfl+yJR9fVqKRBYAWMOH1xqE1e+eHn2D3eSl3V6boueo1RUHl3nF9YCL8W
-EF17FzND58bm2YCh3Kpn3ZU939zNBetKwLsFapIo6GDYQFSuxlFtWz2w1V5LKtS7
-0g3679pGRNWgwMCeE6GTV6/u96zxqlB0q5RrR+3Eb+dgerUXT5mueCP+aJX9O/Dh
-lhBDU0eiX8XYvPrneJpS
-=pvDZ
------END PGP SIGNATURE-----
-
---Sk71+Upln2BLuDmg--
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
