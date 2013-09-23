@@ -1,41 +1,187 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 9/9] gpio: tegra: Use module_platform_driver()
-Date: Mon, 23 Sep 2013 21:25:53 +0200
-Message-ID: <CACRpkdbLGThUTteqmEcfda7Tvc08ZFWwe=WpKMyxALQe=LZLVA@mail.gmail.com>
-References: <1379320326-13241-1-git-send-email-treding@nvidia.com>
-	<1379320326-13241-10-git-send-email-treding@nvidia.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v4 1/3] usb: dwc3: msm: Add device tree binding
+ information
+Date: Mon, 23 Sep 2013 14:31:48 -0500
+Message-ID: <20130923193148.GN30811@radagast>
+References: <1376992565-22292-1-git-send-email-iivanov@mm-sol.com>
+ <1376992565-22292-2-git-send-email-iivanov@mm-sol.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379320326-13241-10-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Ll0BBk1HBk/f94B0"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1376992565-22292-2-git-send-email-iivanov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: balbi@ti.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2013 at 10:32 AM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> With the driver core now resolving interrupt references at probe time,
-> it is no longer necessary to force explicit probe ordering using
-> initcalls.
->
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+--Ll0BBk1HBk/f94B0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Aug 20, 2013 at 12:56:03PM +0300, Ivan T. Ivanov wrote:
+> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+>=20
+> MSM USB3.0 core wrapper consist of USB3.0 IP from Synopsys
+> (SNPS) and HS, SS PHY's control and configuration registers.
+>=20
+> It could operate in device mode (SS, HS, FS) and host
+> mode (SS, HS, FS, LS).
+>=20
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+
+Any acks for the DT part ? This patch has been pending forever.
+
 > ---
-> Note that there are potentially many more drivers that can be switched
-> to the generic module_*_driver() interfaces now that interrupts can be
-> resolved later and deferred probe should be able to handle all the
-> ordering issues.
+>  .../devicetree/bindings/usb/msm-ssusb.txt          |  104 ++++++++++++++=
+++++++
+>  1 file changed, 104 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/msm-ssusb.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/msm-ssusb.txt b/Docume=
+ntation/devicetree/bindings/usb/msm-ssusb.txt
+> new file mode 100644
+> index 0000000..cacbd3b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
+> @@ -0,0 +1,104 @@
+> +MSM SuperSpeed DWC3 USB SoC controller
+> +
+> +
+> +DWC3 Highspeed USB PHY
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +Required properities :
+> +- compatible : sould be "qcom,dwc3-hsphy";
+> +- reg : offset and length of the register set in the memory map
+> +- clocks : phandles to clock instances of the device tree nodes
+> +- clock-names :
+> +	"xo" : External reference clock 19 MHz
+> +	"sleep_a" : Sleep clock, used when USB3 core goes into low
+> +	power mode (U3).
+> +<supply-name>-supply : phandle to the regulator device tree node
+> +Required "supply-name" are:
+> +	"v1p8" : 1.8v supply for HSPHY
+> +	"v3p3" : 3.3v supply for HSPHY
+> +	"vbus" : vbus supply for host mode
+> +	"vddcx" : vdd supply for HS-PHY digital circuit operation
+> +
+> +DWC3 Superspeed USB PHY
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +Required properities :
+> +- compatible : sould be "qcom,dwc3-ssphy";
+> +- reg : offset and length of the register set in the memory map
+> +- clocks : phandles to clock instances of the device tree nodes
+> +- clock-names :
+> +	"xo" : External reference clock 19 MHz
+> +	"ref" : Reference clock - used in host mode.
+> +<supply-name>-supply : phandle to the regulator device tree node
+> +Required "supply-name" are:
+> +	"v1p8" : 1.8v supply for SS-PHY
+> +	"vddcx" : vdd supply for SS-PHY digital circuit operation
+> +
+> +DWC3 controller wrapper
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +Required properties :
+> +- compatible : should be "qcom,dwc3"
+> +- reg : offset and length of the register set in the memory map
+> +	offset and length of the TCSR register for routing USB
+> +	signals to either picoPHY0 or picoPHY1.
+> +- clocks : phandles to clock instances of the device tree nodes
+> +- clock-names :
+> +	"core" : Master/Core clock, have to be >=3D 125 MHz for SS
+> +	operation and >=3D 60MHz for HS operation
+> +	"iface" : System bus AXI clock
+> +	"sleep" : Sleep clock, used when USB3 core goes into low
+> +	power mode (U3).
+> +	"utmi" : Generated by HS-PHY. Used to clock the low power
+> +	parts of thr HS Link layer.
+> +Optional properties :
+> +- gdsc-supply : phandle to the globally distributed switch controller
+> +  regulator node to the USB controller.
+> +Required child node:
+> +A child node must exist to represent the core DWC3 IP block. The name of
+> +the node is not important. The content of the node is defined in dwc3.tx=
+t.
+> +
+> +Example device nodes:
+> +
+> +	dwc3_hsphy: phy@f92f8800 {
+> +		compatible =3D "qcom,dwc3-hsphy";
+> +		reg =3D <0xf92f8800 0x30>;
+> +
+> +		clocks =3D <&cxo>, <&usb2a_phy_sleep_cxc>;
+> +		clock-names =3D "xo", "sleep_a";
+> +
+> +		vbus-supply =3D <&supply>;
+> +		vddcx-supply =3D <&supply>;
+> +		v1p8-supply =3D <&supply>;
+> +		v3p3-supply =3D <&supply>;
+> +	};
+> +
+> +	dwc3_ssphy: phy@f92f8830 {
+> +		compatible =3D "qcom,dwc3-ssphy";
+> +		reg =3D <0xf92f8830 0x30>;
+> +
+> +		clocks =3D <&cxo>, <&usb30_mock_utmi_cxc>;
+> +		clock-names =3D "xo", "ref";
+> +
+> +		vddcx-supply =3D <&supply>;
+> +		v1p8-supply =3D <&supply>;
+> +	};
+> +
+> +	usb@fd4ab000 {
+> +		compatible =3D "qcom,dwc3";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +		reg =3D <0xfd4ab000 0x4>;
+> +
+> +		clocks =3D <&usb30_master_cxc>, <&sys_noc_usb3_axi_cxc>,
+> +				<&usb30_sleep_cxc>, <&usb30_mock_utmi_cxc>;
+> +		clock-names =3D "core", "iface", "sleep", "utmi";
+> +
+> +		gdsc-supply =3D <&supply>;
+> +
+> +		ranges;
+> +		dwc3@f9200000 {
+> +			compatible =3D "snps,dwc3";
+> +			reg =3D <0xf9200000 0xcd00>;
+> +			interrupts =3D <0 131 0>;
+> +			usb-phy =3D <&dwc3_hsphy>, <&dwc3_ssphy>;
+> +			tx-fifo-resize;
+> +		};
+> +	};
+> --=20
+> 1.7.9.5
+>=20
 
-Let me see if I get this right: so this would be all GPIO/pinctrl
-drivers which are probed exclusively from the device tree
-so anything that depends explicitly on CONFIG_OF would
-be a candidate?
+--=20
+balbi
 
-I think we have a bit of a problem that some drivers depend
-only on a certain arch or compiles directly for a certain arch
-without any specific Kconfig option so that this may be a
-bit hard to spot, so we should keep an eye out for this
-once this probing scheme is in place.
+--Ll0BBk1HBk/f94B0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Yours,
-Linus Walleij
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSQJckAAoJEIaOsuA1yqREBG8P/3Is9lg5RDz0q3cyaGK9XVnX
+azDKd9mEnLS7NBdKYQccdnNXmbkx2s+6pCpKqcHqjeuUionfsxCYsNfJ4cjTn4Oa
+2SA/+TJzCS3UhO/RiApQrLXAHSbqN5XIi0gAxMYgO0h7grc4puidMdBEsNsflOS0
+2HU1lw8ceY0NlspQTQMoj54GF6Syg9gcwOnKQzH7cpgZc3hCSWqU6rOYO+0VLYRu
+tM94csNA3WBI1YuQ4CVgCxD5JFb3DAnCC2+NQqhYgXKLsD9+xW2isrVhvubLjsLr
+JhoXx0/p89BnTFX6T+XNM+5sXHj5xGKXhO81vrzEqgju9XBWcAS0C8RtTIcDSLwW
+vOL4fhLxoviJiebOSrL9ULn8WZ8AzT0jCY4qun6uJrtllBNMa5UNy5DAaVfVlMI+
+5uyf3sI8Xw1L29vHhH95wULNPju627LNoEXiRT1i6dilpfqqXujYxs0tHcB5erRu
+HBLPSWQ9fzaEIBq8+aik4P9QrNqQFvSIS4Ohu3BZ6xjP7J+iCO5YlxOyqT/lY9Nc
+h/tGegV5sMkb/evaiLaBw12fhX3ZIqeyqaLQ1h/9a6IODWhnduAWIS5KNp/nxdGw
+NScY19WGaxB/Ek3yGPFbx93AbvlhbgDdGp6/96JXAbOtNEhsqMWFqhcJeN90QU6t
+DLZoe+rH7WnVQ9/lxPFU
+=ShyV
+-----END PGP SIGNATURE-----
+
+--Ll0BBk1HBk/f94B0--
