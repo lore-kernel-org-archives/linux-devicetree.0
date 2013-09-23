@@ -1,83 +1,118 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [rtc-linux] [PATCH V2 3/5] gpio: add support for AMS AS3722 gpio driver
-Date: Mon, 23 Sep 2013 10:06:07 +0200
-Message-ID: <CACRpkdbJ6N-5RET+cmF=14jKVDnuAZtZwjcKym75ySER2gCpBQ@mail.gmail.com>
-References: <1379680214-9143-1-git-send-email-ldewangan@nvidia.com>
-	<1379680214-9143-4-git-send-email-ldewangan@nvidia.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 04/10] irqdomain: Return errors from
+ irq_create_of_mapping()
+Date: Mon, 23 Sep 2013 10:13:38 +0200
+Message-ID: <20130923081337.GB11881@ulmo>
+References: <1379510692-32435-1-git-send-email-treding@nvidia.com>
+ <1379510692-32435-5-git-send-email-treding@nvidia.com>
+ <CAL_JsqLQeAQD460f8Lk9eDE2dCzLusC1mXZ-_uaKVFLfhJNryg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1379680214-9143-4-git-send-email-ldewangan@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: rtc-linux@googlegroups.com
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Landley <rob@landley.net>, ijc+devicetree@hellion.org.uk, Grant Likely <grant.likely@linaro.org>, Laxman Dewangan <ldewangan@nvidia.com>, Florian Lobmaier <florian.lobmaier@ams.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
+Return-path: <sparclinux-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLQeAQD460f8Lk9eDE2dCzLusC1mXZ-_uaKVFLfhJNryg@mail.gmail.com>
+Sender: sparclinux-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, linux-mips@linux-mips.org, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, sparclinux@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 20, 2013 at 2:30 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 
-> The AS3722 is a compact system PMU suitable for mobile phones, tablets etc.
->
-> Add a driver to support accessing the 8 GPIOs found on the AMS AS3722
-> PMIC using gpiolib.
->
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Signed-off-by: Florian Lobmaier <florian.lobmaier@ams.com>
+--Pd0ReVV5GZGQvF3a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK...
+On Sun, Sep 22, 2013 at 04:14:43PM -0500, Rob Herring wrote:
+> On Wed, Sep 18, 2013 at 8:24 AM, Thierry Reding
+> <thierry.reding@gmail.com> wrote:
+> > Instead of returning 0 for all errors, allow the precise error code to
+> > be propagated. This will be used in subsequent patches to allow further
+> > propagation of error codes.
+> >
+> > The interrupt number corresponding to the new mapping is returned in an
+> > output parameter so that the return value is reserved to signal success
+> > (=3D=3D 0) or failure (< 0).
+> >
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+>=20
+> One comment below, otherwise:
+>=20
+> Acked-by: Rob Herring <rob.herring@calxeda.com>
+>=20
+> > diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci=
+-common.c
+> > index 905a24b..ae71b14 100644
+> > --- a/arch/powerpc/kernel/pci-common.c
+> > +++ b/arch/powerpc/kernel/pci-common.c
+> > @@ -230,6 +230,7 @@ static int pci_read_irq_line(struct pci_dev *pci_de=
+v)
+> >  {
+> >         struct of_irq oirq;
+> >         unsigned int virq;
+> > +       int ret;
+> >
+> >         pr_debug("PCI: Try to map irq for %s...\n", pci_name(pci_dev));
+> >
+> > @@ -266,8 +267,10 @@ static int pci_read_irq_line(struct pci_dev *pci_d=
+ev)
+> >                          oirq.size, oirq.specifier[0], oirq.specifier[1=
+],
+> >                          of_node_full_name(oirq.controller));
+> >
+> > -               virq =3D irq_create_of_mapping(oirq.controller, oirq.sp=
+ecifier,
+> > -                                            oirq.size);
+> > +               ret =3D irq_create_of_mapping(oirq.controller, oirq.spe=
+cifier,
+> > +                                           oirq.size, &virq);
+> > +               if (ret)
+> > +                       virq =3D NO_IRQ;
+> >         }
+> >         if(virq =3D=3D NO_IRQ) {
+> >                 pr_debug(" Failed to map !\n");
+>=20
+> Can you get rid of NO_IRQ usage here instead of adding to it.
 
-> +Required subnode properties:
-> +---------------------------
-> +reg: The GPIO number on which the properties need to be applied.
-> +
-> +Optional subnode properties:
-> +---------------------------
-> +bias-pull-up: The Pull-up for the pin to be enable.
-> +bias-pull-down: Pull down of the pins to be enable.
-> +bias-high-impedance: High impedance of the pin to be enable.
-> +open-drain: Pin is open drain type.
-> +function: IO functionality of the pins. The valid options are:
-> +       gpio, intrrupt-output, vsup-vbat-low-undeb, interrupt-input,
-> +       pwm-input, voltage-stby, oc-powergood-sd0, powergood-output,
-> +       clk32k-output, watchdog-input, soft-reset-input, pwm-output,
-> +       vsup-vbat-low-deb, oc-powergood-sd6
-> +    Missing the function property will set the pin in GPIO mode.
+I was trying to stay consistent with the remainder of the code. PowerPC
+is a pretty heavy user of NO_IRQ. Of all 348 references, more than half
+(182) are in arch/powerpc, so I'd rather like to get a go-ahead from
+Benjamin on this.
 
-This is pin control. Do not try to shoehorn pin control drivers into
-the GPIO subsystem. Take a good day off, read through
-Documentation/pinctrl.txt and come back with a thoroughly rewritten
-driver in drivers/pinctrl/pinctrl-as3722.c.
+That said, perhaps we should just go all the way and get rid of NO_IRQ
+for good. Things could get somewhat messy, though. There are a couple of
+these spread through the code:
 
-We already have generic device tree bindings for all of the above
-properties, and a library for generic pin config in the pin control
-subsystem to handle them. Look at recent drivers for
-inspiration.
+	#ifndef NO_IRQ
+	#define NO_IRQ (-1)
+	#endif
 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+And this isn't very encouraging either:
 
-Move this driver to the pinctrl subsystem.
+	$ git grep 'irq.*=3D.*-1' | wc -l
+	638
 
-> index b6ed304..544a612 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -368,6 +368,12 @@ config GPIO_ARIZONA
->         help
->           Support for GPIOs on Wolfson Arizona class devices.
->
-> +config GPIO_AS3722
-> +       bool "AMS AS3722 PMICs GPIO"
-> +       depends on MFD_AS3722
-> +       help
-> +         Select this option to enable GPIO driver for the AMS AS3722 PMIC.
+Thierry
 
-It should
-select PINMUX
-select GENERIC_PINCONF
+--Pd0ReVV5GZGQvF3a
+Content-Type: application/pgp-signature
 
-> +static char const *as3722_gpio_iosf[] = {
-> +       "gpio",
-> +       "intrrupt-output",
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-intrrupt?
+iQIcBAEBAgAGBQJSP/gxAAoJEN0jrNd/PrOhiNUP/jOZBHSu3iWeYBqVkPQQP52r
+BDEGdRc+LKm5aBO9XwhxGDTRX3igBcFXfYlkvwmllnhJaPU8J6HCxWWffm8qwCZ2
+voRIWxXH7q76QKAE/i7RZwJoASgg1KpLUS0Yv/MVchyOhMMbM2y4GG6IxBRMhA+2
+j37HKuSPPnTNvWdD0vCHv064VD44fBLeIog+a4Y5Ha3FHTkd09s6No364wr+/Hko
+ILMl+Erg38QqDm9Tr5qW37tMqzJ+I0ik6ye+C12iL2Zpiqo9LS8445M2URts18L6
+uPw4xkwCLPA0qcMl/aqpwAlpn48TXLZEmbxZRxBgdJnF7uapdLUeLr4XphpWT4f/
+JqWXZqVepBFu24h1NpPFJ2Mi6muhGyhXDYJ+y43OWtfi5dK6olgx3/Nk7b6URxo1
+cTlfAemyOrho1a32N4L3rjfR79Ub2qnLcrEVRZ9a72t2qFhBjpV5D8WoO4mQaXtd
+27VEKFPFWDL7VIuiUH2mp8hwk7AIWx5h9Ahkdrsxg5KREHsX+vAnkNfEu6IID2nK
+nyEmBH0Nn4exzchhiNd3ONQhU5MIuqtudsAv14EchBpUP+8nWNkGAokV9JHfziW/
+hBO/rq8r6DE6kzrY66mVR3b5734wHY9TidAN9suWcZkHvsFbZJdyr3NWiZxqatoh
+Yb0ygk/unpG2YJa3evJI
+=BnFo
+-----END PGP SIGNATURE-----
 
-Yours,
-Linus Walleij
+--Pd0ReVV5GZGQvF3a--
