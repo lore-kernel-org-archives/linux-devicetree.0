@@ -1,76 +1,70 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: OMAP2: HACK: hardcode hsmmc2 input clock
- source for N950/N9
-Date: Mon, 23 Sep 2013 10:38:43 -0700
-Message-ID: <20130923173843.GI2684@atomide.com>
-References: <1379771142-29087-1-git-send-email-aaro.koskinen@iki.fi>
- <1379771142-29087-2-git-send-email-aaro.koskinen@iki.fi>
+From: "Tim Kryger" <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: DT: Add missing UARTs for bcm11351 (bcm281xx)
+Date: Mon, 23 Sep 2013 10:49:57 -0700
+Message-ID: <1379958597-8554-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1379771142-29087-2-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org> [130921 06:56]:
-> Without this the eMMC (root file system) cannot be used on N950/N9.
-> Any ideas for a proper solution?
-> 
-> Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-> ---
->  arch/arm/mach-omap2/board-generic.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-> index 39c7838..8be49b3 100644
-> --- a/arch/arm/mach-omap2/board-generic.c
-> +++ b/arch/arm/mach-omap2/board-generic.c
-> @@ -20,6 +20,7 @@
->  #include <asm/mach/arch.h>
->  
->  #include "common.h"
-> +#include "control.h"
->  #include "common-board-devices.h"
->  #include "dss-common.h"
->  
-> @@ -51,12 +52,26 @@ static void __init legacy_init_ehci_clk(char *clkname)
->  	}
->  }
->  
-> +static void __init hsmmc2_input_clk(void)
-> +{
-> +	u32 reg;
-> +
-> +	reg = omap_ctrl_readl(OMAP343X_CONTROL_DEVCONF1);
-> +	reg |= OMAP2_MMCSDIO2ADPCLKISEL;
-> +	omap_ctrl_writel(reg, OMAP343X_CONTROL_DEVCONF1);
-> +}
-> +
->  static void __init omap_generic_init(void)
->  {
->  	omap_sdrc_init(NULL, NULL);
->  
->  	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
->  
-> +	/* HACK: Configure the MMC input clock source on N950/N9. */
-> +	if (of_machine_is_compatible("nokia,omap3-n950") ||
-> +	    of_machine_is_compatible("nokia,omap3-n9"))
-> +		hsmmc2_input_clk();
-> +
->  	/*
->  	 * HACK: call display setup code for selected boards to enable omapdss.
->  	 * This will be removed when omapdss supports DT.
-> 
+This adds in three more UARTs that were not declared earlier.
 
-Can you please update this patch on the quirks series I posted
-few days ago?
+Signed-off-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm11351.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Regards,
+diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+index 05a5aab..98e6bc0 100644
+--- a/arch/arm/boot/dts/bcm11351.dtsi
++++ b/arch/arm/boot/dts/bcm11351.dtsi
+@@ -49,6 +49,36 @@
+ 		reg-io-width = <4>;
+ 	};
+ 
++	uart@3e001000 {
++		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
++		status = "disabled";
++		reg = <0x3e001000 0x1000>;
++		clock-frequency = <13000000>;
++		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++	};
++
++	uart@3e002000 {
++		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
++		status = "disabled";
++		reg = <0x3e002000 0x1000>;
++		clock-frequency = <13000000>;
++		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++	};
++
++	uart@3e003000 {
++		compatible = "brcm,bcm11351-dw-apb-uart", "snps,dw-apb-uart";
++		status = "disabled";
++		reg = <0x3e003000 0x1000>;
++		clock-frequency = <13000000>;
++		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++	};
++
+ 	L2: l2-cache {
+ 		compatible = "brcm,bcm11351-a2-pl310-cache";
+ 		reg = <0x3ff20000 0x1000>;
+-- 
+1.8.0.1
 
-Tony
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
