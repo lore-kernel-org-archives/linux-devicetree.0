@@ -1,40 +1,40 @@
-From: "Wendy Ng" <wendy.ng@broadcom.com>
-Subject: [PATCH 2/3] ARM: bcm281xx: Turn on Thermal and HWMON drivers.
-Date: Mon, 23 Sep 2013 10:51:37 -0700
-Message-ID: <1379958698-7554-3-git-send-email-wendy.ng@broadcom.com>
-References: <1379958698-7554-1-git-send-email-wendy.ng@broadcom.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6] gpio: pcf857x: Add OF support
+Date: Mon, 23 Sep 2013 20:01:18 +0200
+Message-ID: <CACRpkdbipy4RwrxbbB5NUO=MkZ0+gJwXHVRZMb+Mc5e6WTYiaQ@mail.gmail.com>
+References: <1379788789-19801-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379958698-7554-1-git-send-email-wendy.ng@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>, Wendy Ng <wendy.ng@broadcom.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379788789-19801-1-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables the thermal and HWMON drivers for Broadcom bcm281xx SoCs.
+On Sat, Sep 21, 2013 at 8:39 PM, Laurent Pinchart
+<laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
 
-Signed-off-by: Wendy Ng <wendy.ng@broadcom.com>
-Reviewed-by: Markus Mayer <mmayer@broadcom.com>
-Reviewed-by: Christian Daudt <csd@broadcom.com>
----
- arch/arm/configs/bcm_defconfig |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> Add DT bindings for the pcf857x-compatible chips and parse the device
+> tree node in the driver.
+>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpio/gpio-pcf857x.txt      | 71 ++++++++++++++++++++++
+>  drivers/gpio/gpio-pcf857x.c                        | 44 +++++++++++---
+>  2 files changed, 107 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+>
+> Changes since v5:
+>
+> - Renamed pin to line in the DT bindings documentation
+> - Renamed pins-initial-states DT property to lines-initial-states
 
-diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
-index 6e49310..1474661 100644
---- a/arch/arm/configs/bcm_defconfig
-+++ b/arch/arm/configs/bcm_defconfig
-@@ -83,7 +83,8 @@ CONFIG_SERIAL_8250_DW=y
- CONFIG_HW_RANDOM=y
- CONFIG_I2C=y
- CONFIG_I2C_CHARDEV=y
--# CONFIG_HWMON is not set
-+CONFIG_THERMAL=y
-+CONFIG_HWMON=y
- CONFIG_VIDEO_OUTPUT_CONTROL=y
- CONFIG_FB=y
- CONFIG_BACKLIGHT_LCD_SUPPORT=y
--- 
-1.7.9.5
+I can't see any problem with this so patch applied.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
