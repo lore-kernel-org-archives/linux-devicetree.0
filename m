@@ -1,48 +1,82 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/6] clk: exynos-audss: convert to platform device
-Date: Mon, 23 Sep 2013 23:30:17 +0200
-Message-ID: <1736317.9RH9hT0fWO@flatron>
-References: <1379711637-5226-1-git-send-email-abrestic@chromium.org>
- <1530327.jvk44KuFQA@flatron>
- <CAL1qeaGjUTrfDaAr1rgsgDaZscjaV7tqi3Jd_-zo2sMtCCFSAQ@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
+Date: Mon, 23 Sep 2013 15:33:10 -0600
+Message-ID: <5240B396.2010705@wwwdotorg.org>
+References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com> <523C1AE0.9020603@samsung.com> <CA+V-a8u5_rhxTgkVgCbtmGpaZCt2ciu4vABW4t80aSp7csttnw@mail.gmail.com> <3002978.Cb6jL1xtkE@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL1qeaGjUTrfDaAr1rgsgDaZscjaV7tqi3Jd_-zo2sMtCCFSAQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Yadwinder Singh Brar <yadi.brar@samsung.com>, linux-doc@vger.kernel.org, Padmavathi Venna <padma.v@samsung.com>, Tomasz Figa <t.figa@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tushar Behera <tushar.behera@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Sachin Kamat <sachin.kamat@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>, Jiri Kosina <jkosina@suse.cz>Stephe
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3002978.Cb6jL1xtkE@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 23 of September 2013 14:25:12 Andrew Bresticker wrote:
-> >> +static int __init exynos_audss_clk_init(void)
-> >> +{
-> >> +     return platform_driver_register(&exynos_audss_clk_driver);
-> >> +}
-> >> +core_initcall(exynos_audss_clk_init);
-> > 
-> > Does it need to be core_initcall? Drivers depending on clocks provided
-> > by this driver should be able to defer probing if they are probed
-> > before this driver.
+On 09/23/2013 05:50 AM, Laurent Pinchart wrote:
+> On Monday 23 September 2013 08:18:52 Prabhakar Lad wrote:
+>> On Fri, Sep 20, 2013 at 3:22 PM, Sylwester Nawrocki wrote:
+>>> On 09/20/2013 10:11 AM, Prabhakar Lad wrote:
+>>>> OK I will, just send out a fix up patch which fixes the mismatch between
+>>>> names for the rc-cycle, and later send out a patch which removes the
+>>>> platform data usage for next release with proper DT bindings.
+>>>
+>>> I think the binding need to be fully corrected now, I just meant to not
+>>> touch the board file, i.e. leave non-dt support unchanged.
+>>
+>> Ok
+>>
+>>>> I'm OK with making regulator properties as optional, But still it would
+>>>> change the meaning of what DT is, we know that the VDD/VDD_IO .. etc
+>>>> pins are required properties (but still making them as optional) :-(
+>>>>
+>>>> I think there might several devices where this situation may arise so
+>>>> just thinking of a alternative solution.
+>>>>
+>>>> say we have property 'software-regulator' which takes true/false(0/1)
+>>>> If set to true we make the regulators as required property or else we
+>>>> assume it is handled and ignore it ?
+>>>
+>>> I don't think this is a good idea. You would have to add a similar
+>>> platform data flag for non-dt, it doesn't sound right. I can see two
+>>> options here:
+>>>
+>>> 1. Make the regulator properties mandatory and, e.g. define a fixed
+>>>    voltage GPIO regulator in DT with an empty 'gpio' property. Then
+>>>    pass a phandle to that regulator in the adv7343 *-supply properties.
+>>>    For non-dt similarly a fixed voltage regulator(s) and voltage
+>>>    supplies  would need to be defined in the board files.
+>>>
+>>> 2. Make the properties optional and use (devm_)regulator_get_optional()
+>>>    calls in the driver (a recently added function). I must admit I don't
+>>>    fully understand description of this function, it currently looks
+>>>    pretty much same as (devm_)regulator_get(). Thus the driver would
+>>>    need to be handling regulator supplies only when non ERR_PTR() is
+>>>    returned from regulator_get_optional() and otherwise assume a non
+>>>    critical error. There is already quite a few example occurrences of
+>>>    regulator_get_optional() usage.
+>>
+>> Thanks for pointing it I'll choose option 2 and post the patch.
 > 
-> Unfortunately there are a couple of issues with making this a
-> module_initcall: 1. On the Exynos5420, the AudioSS block provides the
-> apb_pclk gate for the ADMA bus, which is probed at postcore_initcall
-> time and does not support deferred probing, and
+> Isn't regulator_get_optional() intended for devices that can have supplies 
+> unconnected in normal use ?
 
-Just out of curiosity, what is this ADMA bus?
+I believe so, yes.
 
-Anyway, I'm fine with this, just wanted to make sure that there is a 
-reason behind it.
+> The ADV7343 supplies are mandatory from a hardware 
+> point of view, so I think we should use regulator_get(). Otherwise the driver 
+> won't be able to tell the difference between a regulator that isn't present 
+> yet (for instance because the regulator device/driver hasn't been probed yet), 
+> which should result in deferred probing, and an always-on regulator that has 
+> been left out.
 
-Best regards,
-Tomasz
+So I think you want to make the supply properties mandatory in DT (since
+some form of supply is mandatory in HW), yet make the driver support
+broken DTs which don't have those properties, by error-checking the
+return value from regulator_get(). You might want to put a note into DT
+saying that a previous version of the binding didn't require those
+supply properties, so they may be missing from older DTs.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
