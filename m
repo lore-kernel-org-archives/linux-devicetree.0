@@ -1,93 +1,64 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: generic: Add generic DT based simple codec
-Date: Tue, 24 Sep 2013 00:26:48 +0100
-Message-ID: <20130923232648.GL21013@sirena.org.uk>
-References: <20130919105437.75e0f0a3@armhf>
- <5240B07C.6080404@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/5] mfd: arizona: Add device tree binding for
+ max_channels_clocked
+Date: Tue, 24 Sep 2013 00:28:32 +0100
+Message-ID: <20130923232832.GM21013@sirena.org.uk>
+References: <1379961043-23762-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1379961043-23762-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <5240B4C2.2080600@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HFmY1QOi3uof3bwe"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6tPBpOxN+lFhHURE"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5240B07C.6080404-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <5240B4C2.2080600@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, lee.jones@linaro.org, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---HFmY1QOi3uof3bwe
+--6tPBpOxN+lFhHURE
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Sep 23, 2013 at 03:19:56PM -0600, Stephen Warren wrote:
-> On 09/19/2013 02:54 AM, Jean-Francois Moine wrote:
+On Mon, Sep 23, 2013 at 03:38:10PM -0600, Stephen Warren wrote:
+> On 09/23/2013 12:30 PM, Charles Keepax wrote:
 
-> > +Required properties:
-> > +- compatible: should be "linux,simple-codec".
+> > +  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
+> > +    each AIF, useful for I2S systems with multiple data lines being mastered.
+> > +    If specified three cells must supplied one for each AIF, specify zero for
+> > +    AIFs that should be handled normally.
 
-> We shouldn't have any Linux-specific bindings. It might be reasonable to
-> define a binding for a "simple CODEC", but there's no reason it should
-> be Linux-specific.
+> What determines the value of this property? Is it really a definition of
+> HW, or some kind of run-time configuration/limit? What goes into each of
+> the 3 cells?
 
-What's the vendor prefix to use then?  The same thought did occur to me
-but I wasn't sure what to suggest instead.
+It's hardware, it's other devices wired in parallel on the bus that use
+the CODEC as a clock master.  Personally I'd have this be set by the
+ASoC machine driver so it's invisible from a DT point of view, that's
+what it's really a property of.
 
-> > +- dai-name: name of the codec
-
-> That should be internal to the driver; it's Linux-specific.
-
-I do think it's reasonable to define a name for display purposes however
-this binding doesn't say that, I did say something to that effect
-already IIRC.
-
-> > +Formats:
-> > +	"s8"
-> > +	"u8"
-
-> I think the binding should specify on-the-wire formats, not in-memory
-> formats. For example, if this binding is used to represent an I2S CODEC,
-> it's more important to know whether it supports left-justified,
-> right-justified, DSP mode, etc., and the max number of bits (or perhaps
-> a list of supported numbers of bits) per channel in each case.
-
-I didn't query this myself since my expecation with this is that the
-rest of the wire format properties will come from the binding that pulls
-this together into a card (since this will need to be set at that level
-for other CODECs which are more flexible) so I saw this as providing
-additional information which would normally not be fixed at that level.
-Arguably this could be pushed up there too, though it's not normal to
-fix the word size.
-
-We should really be defining things like signed and unsigned as well as
-the bits per word since they do make a difference, though in practice
-you very rarely see anything except unsigned and some of the formats
-listed don't seem to have ever even been used in Linux.
-
---HFmY1QOi3uof3bwe
+--6tPBpOxN+lFhHURE
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.21 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSQM41AAoJELSic+t+oim92dYP/RLX3XsgPH5/BRGHR+/WiZI5
-Dp+yxiPFwtkA7KkPPBJ9UxbK82QFqc6o2W2/5t7753ZR80x0raFVnc9yCf1WKzb1
-L8+uA+2vnUFx31MxPr61UVd7BZQj3YO6L+u/sAqoe1wklJg5XE6tpuD9Ww1kBBEH
-PlP5I6OFiUCI0202F434T2tN1M5WOwH/zTTG/6yFM34CN0RCODoBQWx9gxcU5um8
-rVagN2taYQ4fDX415OCnI11caGoOgg1n91qN989X9m/VmM3dMTiM0roSUM15BwGK
-oHycBsxeR9JbQ0mI2MDaVBaDWkOrB4t5ggVZr3pkZppcEnv5nhCCD3NsUJEFK1PY
-XdRz5W9HptU1mG1X83xLHLPNRVusfGubu5NNLJq9fXLZD83l2swCEExmF9SBQT+0
-N5eYVfPuNZS/42wl7JIxUZRR5gNOp49Ehbt0jwLXX7+i2aBmwK2y2WQIu54qXLkb
-QtjvtrajMFiNI9RPqhRk9fdOeWMZPhQaO2lpsNaMm7CtUHI37gHokSUC0lR3EBXn
-aT0hX3SiKSRPKZDOvzbrmRiYqHQvUHrpD0hAk4eN8ojmWnx/RdOyKYbCW5c76+Cs
-SdaKij+kuSc4ZcwHYJJWwcleyiqqrlJQG6SRBjW6H6FUm2gIOBgAwK3Nx9pqeyfc
-ED5GyvMocx/1pH33pueR
-=p3xX
+iQIcBAEBAgAGBQJSQM6dAAoJELSic+t+oim9p5UP/0Ly4KU+DYlk4DxtcqQQmr5d
+Q1FZTh+FEDRu6WqPgEXkQIbwOyr73vUSbzHkQ52qp3ISiENUqznps4FNQjYJTLTt
+c+UZWqoF4ywXCl04s65ltaY+ntdCxdMQX7amFSaaNRqddnZxKSsn4y1L0bRnq7jV
+pegn5P3gY4atV5OMDC3sQESl2HQIhb3SvhCW+nCiVha6P1WsRQUw/5nTrhyOZSGi
+5B8bIvpm2KzVmY0YUNKDnMZyS5axUKW7yDD2XVfZfZFeDECkOK131od9pUhucxhi
+ItzM8w2qtf100uUKUvmgpKYKJLVGn9toia1SD5BEsmWUDUEDlFL9GNhRsYHAu+e1
+AeLYXUoDbzNIqIFwuD/ZXZNCCqafg63yQp0fB1Xw/Hn8wxUSvdkKFTzueYvRfUhF
+abqBjNTm6tysbPTglmFojEEYz321HxRr7eHW1SzOSgTcuwNbv+d2m4cdnCFCS6+A
+Ccbt47e1ZaS42hbmhcQWaCKZVquqqXE0Z8sSSdOboslA3gyyOxFM1jcSPVab6C0U
+Tz1DgDPN/4a2LbGdNomV2idM4bAoExZkXNOqpgaqA5xg4LE8ci84MIsGVdil5N87
+tSm4lGmLWmvxE8DxZFc+08L1kuv2bH71eG5cvnGFz2DbArnK0o6a1TSEQSEpu5ft
+7xBwYzyjJ8OPY99yW/aC
+=I6ps
 -----END PGP SIGNATURE-----
 
---HFmY1QOi3uof3bwe--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--6tPBpOxN+lFhHURE--
