@@ -1,45 +1,77 @@
-From: Christian Daudt <bcm@fixthebug.org>
-Subject: [PATCH v2 4/4] rename ARCH_BCM to ARCH_BCM_MOBILE (dt)
-Date: Mon, 23 Sep 2013 10:20:36 -0700
-Message-ID: <1379956836-5866-5-git-send-email-bcm@fixthebug.org>
-References: <1379956836-5866-1-git-send-email-bcm@fixthebug.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1379956836-5866-1-git-send-email-bcm@fixthebug.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>
-Cc: Domenico Andreoli <cavokz@gmail.com>, Christian Daudt <csd@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Matt Porter <matt.porter@linaro.org>, Alex Elder <alex.elder@linaro.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Christian Daudt <bcm@fixthebug.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: OMAP2: HACK: hardcode hsmmc2 input clock
+ source for N950/N9
+Date: Mon, 23 Sep 2013 10:38:43 -0700
+Message-ID: <20130923173843.GI2684@atomide.com>
+References: <1379771142-29087-1-git-send-email-aaro.koskinen@iki.fi>
+ <1379771142-29087-2-git-send-email-aaro.koskinen@iki.fi>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1379771142-29087-2-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently ARCH_BCM has been used for Broadcom
-Mobile V7 based SoCs. In order to allow other Broadcom
-SoCs to also use mach-bcm directory and files, this patch
-renames the original ARCH_BCM to ARCH_BCM_MOBILE, and
-uses ARCH_BCM to define any Broadcom chip residing
-in mach-bcm directory.
+* Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org> [130921 06:56]:
+> Without this the eMMC (root file system) cannot be used on N950/N9.
+> Any ideas for a proper solution?
+> 
+> Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+> ---
+>  arch/arm/mach-omap2/board-generic.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+> index 39c7838..8be49b3 100644
+> --- a/arch/arm/mach-omap2/board-generic.c
+> +++ b/arch/arm/mach-omap2/board-generic.c
+> @@ -20,6 +20,7 @@
+>  #include <asm/mach/arch.h>
+>  
+>  #include "common.h"
+> +#include "control.h"
+>  #include "common-board-devices.h"
+>  #include "dss-common.h"
+>  
+> @@ -51,12 +52,26 @@ static void __init legacy_init_ehci_clk(char *clkname)
+>  	}
+>  }
+>  
+> +static void __init hsmmc2_input_clk(void)
+> +{
+> +	u32 reg;
+> +
+> +	reg = omap_ctrl_readl(OMAP343X_CONTROL_DEVCONF1);
+> +	reg |= OMAP2_MMCSDIO2ADPCLKISEL;
+> +	omap_ctrl_writel(reg, OMAP343X_CONTROL_DEVCONF1);
+> +}
+> +
+>  static void __init omap_generic_init(void)
+>  {
+>  	omap_sdrc_init(NULL, NULL);
+>  
+>  	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
+>  
+> +	/* HACK: Configure the MMC input clock source on N950/N9. */
+> +	if (of_machine_is_compatible("nokia,omap3-n950") ||
+> +	    of_machine_is_compatible("nokia,omap3-n9"))
+> +		hsmmc2_input_clk();
+> +
+>  	/*
+>  	 * HACK: call display setup code for selected boards to enable omapdss.
+>  	 * This will be removed when omapdss supports DT.
+> 
 
-Signed-off-by: Christian Daudt <bcm@fixthebug.org>
-Acked-by: Olof Johansson <olof@lixom.net>
+Can you please update this patch on the quirks series I posted
+few days ago?
 
-Changes from v1:
- - fix alpha ordering in dts/Makefile
- - break into 4 patches for separate subsys
+Regards,
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index cc0f1fb..2b07eb8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -41,9 +41,9 @@ dtb-$(CONFIG_ARCH_AT91)	+= sama5d33ek.dtb
- dtb-$(CONFIG_ARCH_AT91)	+= sama5d34ek.dtb
- dtb-$(CONFIG_ARCH_AT91)	+= sama5d35ek.dtb
- 
--dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
--dtb-$(CONFIG_ARCH_BCM) += bcm11351-brt.dtb \
-+dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm11351-brt.dtb \
- 	bcm28155-ap.dtb
-+dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
- dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
- 	da850-evm.dtb
- dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
--- 
-1.7.10.4
-
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
