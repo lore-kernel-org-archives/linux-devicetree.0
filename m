@@ -1,57 +1,33 @@
-From: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
-Subject: Device tree node for Freescale Gianfar PTP reference clock source
- selection
-Date: Mon, 23 Sep 2013 11:37:49 +0400
-Message-ID: <523FEFCD.70409@skitlab.ru>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [RFC PATCH 08/15] ata: ahci_platform: Manage SATA PHY
+Date: Mon, 23 Sep 2013 10:37:38 +0300
+Message-ID: <523FEFC2.801@ti.com>
+References: <1379595943-14622-1-git-send-email-rogerq@ti.com> <1379595943-14622-9-git-send-email-rogerq@ti.com> <20130922165817.GD30946@htj.dyndns.org> <523F35E4.6050707@cogentembedded.com> <20130922215107.GD27616@mtj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>, Claudiu Manoil <claudiu.manoil@freescale.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130922215107.GD27616@mtj.dyndns.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, balbi@ti.com, bcousson@baylibre.com, tony@atomide.com, balajitk@ti.com, kishon@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Tejun,
 
-Currently, Freescale Gianfar PTP reference clock source is determined 
-through hard-coded value in gianfar_ptp driver. I don't think that 
-recompilation of the entire module (or even worse - the kernel) is a god 
-idea when we want to change one clock source to another. So, I want to 
-add new device tree binding, which can be used as:
+On 09/23/2013 12:51 AM, Tejun Heo wrote:
+> Hello,
+> 
+> On Sun, Sep 22, 2013 at 10:24:36PM +0400, Sergei Shtylyov wrote:
+>>    Not sure why you asked -- I'm not using this driver, neither I'm
+> 
+> Well, you have better grip of what's going on in the embedded world
+> than me.  I'm mostly curious whether adding dependency on PHY is okay.
+> 
 
-	ptp_clock@24E00 {
-		compatible = "fsl,etsec-ptp";
-		reg = <0x24E00 0xB0>;
-		interrupts = <12 0x8 13 0x8>;
-		interrupt-parent = < &ipic >;
-		fsl,cksel = <0>; /* <-- New entry */
-		fsl,tclk-period = <10>;
-		fsl,tmr-prsc    = <100>;
-		fsl,tmr-add     = <0x999999A4>;
-		fsl,tmr-fiper1  = <0x3B9AC9F6>;
-		fsl,tmr-fiper2  = <0x00018696>;
-		fsl,max-adj     = <659999998>;
-	};
+There is no hard dependency on presence of PHY. The driver will continue
+as usual if devm_phy_get() fails.
+I hope selecting GENERIC_PHY in Kconfig is not an issue.
 
-fsl,cksel acceptable values:
-
-<0> for external clock;
-<1> for eTSEC system clock;
-<2> for eTSEC1 transmit clock;
-<3> for RTC clock input.
-
-I am new in this mailing list, and as far as I know, I have to discuss 
-all updates for device tree files here before sending patch, which uses 
-new attributes.
-
-Also, should I define new bindings in some special way? I want to add 
-description of cksel attribute in 
-/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt. Is it enough or 
-not?
-
-Thanks!
-
--- 
-Regards,
-Aida
+cheers,
+-roger
