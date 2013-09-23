@@ -1,62 +1,46 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 8/8] ARM: dts: omap5: update omap-control-usb node
-Date: Mon, 23 Sep 2013 14:43:47 -0500
-Message-ID: <20130923194347.GE309@radagast>
-References: <1377529713-19762-1-git-send-email-rogerq@ti.com>
- <1377529713-19762-9-git-send-email-rogerq@ti.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] video: ARM CLCD: Add DT support
+Date: Mon, 23 Sep 2013 13:52:44 -0600
+Message-ID: <52409C0C.1000406@wwwdotorg.org>
+References: <1379351934-25415-1-git-send-email-pawel.moll@arm.com> <52376180.1090001@wwwdotorg.org> <1379435799.9205.16.camel@hornet> <5238CBE9.2060800@wwwdotorg.org> <1379522363.9244.12.camel@hornet> <52406646.709@wwwdotorg.org> <20130923160640.GT12758@n2100.arm.linux.org.uk> <52406C97.3010800@wwwdotorg.org> <20130923164302.GW12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E69HUUNAyIJqGpVn"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1377529713-19762-9-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130923164302.GW12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---E69HUUNAyIJqGpVn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 09/23/2013 10:43 AM, Russell King - ARM Linux wrote:
+> On Mon, Sep 23, 2013 at 10:30:15AM -0600, Stephen Warren wrote:
+>> On 09/23/2013 10:06 AM, Russell King - ARM Linux wrote:
+>>> On Mon, Sep 23, 2013 at 10:03:18AM -0600, Stephen Warren wrote:
+>>>> It sounds like you could just put LCDControl & 0x2e in the DT rather
+>>>> than using values such as 0x100..0x107, which don't appear to match the
+>>>> register format you mentioned above.
+>>>
+>>> No.  Platforms which route the outputs to something like VGA or HDMI can
+>>> change the framebuffer format.  Your suggestions is far too restrictive.
+>>
+>> Surely the DT should describe the HW setup only. Usually, a particular
+>> HW setup can support multiple different framebuffer formats. Hence, the
+>> DT wouldn't/shouldn't imply anything about the framebuffer format, but
+>> simply which wires are connected to the LCD.
+> 
+> Quite, and putting the contents of the LCDControl register - even just
+> bits 5 and 3-1 results in you having to modify the DT and reboot the
+> kernel just to change the framebuffer format.  That's why I'm objecting
+> to your comment.
 
-On Mon, Aug 26, 2013 at 06:08:33PM +0300, Roger Quadros wrote:
-> Split USB2 PHY and USB3 PHY into separate omap-control-usb
-> nodes. Get rid of "ti,type" property.
->=20
-> CC: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-
-Benoit ? ping here too...
-
---=20
-balbi
-
---E69HUUNAyIJqGpVn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSQJnzAAoJEIaOsuA1yqREnkoP/2UeaRG5Ld6rJjW3mc0TCG6h
-GF6bVANuq0hw23h9ixMhIc2YdHOtDFX9QTu5CLWQ5WLrpNT5XqQVUpRvtqPwtWUC
-d02kFj6Z1w+2IufUbSZz3I6+iyjDtFHH2ueLP38ETMny0ndIt4XhV10Q7FRogHww
-sVrTbwt1BHGWzSFMC2SGEH/BEx+13pnWQE8FGmkz6dt9jadmLnwJo+bACVyAmL4h
-rfklpDC5OX9grv4AmQujAJWfcCqZTJwZ30cr0UyM2MHwEySdvT2U/1/7arqh/TqE
-HyczSWr48sveAHGHfU7OS/GffMzPqLv5gt0ijGgagUHt3tHhPSrWMUbIB5AVwIgh
-3f0XPVcpSUf3z3Gku9n23L5R/Iuj2hmGxuo8IspjO1qTp0kuY/zGwHGAGTURe+oX
-vhp0pDsuOPg/WoEQqdeQgRgLeNerIhO041phEYLk0MRDyxlu8YL1Wsv1Xa+YBhRj
-OA78ChnxV9xbygyrJ1Qa75vZI3tsQsVD4/RCYU7W9hk/t/twGJj405ECE7Nr5b4q
-PYmCabbXsqcaivezx1P9Vf/uetn55Vf2OvAIaonwhICx4VDsSpZCLohjiGqsYq4x
-tyUNJ4fW3r319bhUV3B0drt8USwAXt3RHVR9QqV/oQdp5z1qzKRZRLr6pcIwMdL1
-hARIFcvwhJB31xTSGxiE
-=lSiI
------END PGP SIGNATURE-----
-
---E69HUUNAyIJqGpVn--
+Oh, so these particular registers define both the output signal muxing
+for the pins and the FB data format? If so, yes it's not correct to put
+the register values into DT. I assumed that the HW would have a separate
+representation of those two concepts, in different registers or at least
+different fields in the same register. If not, there is indeed no choice
+but to make up some arbitrary values to represent just the pinmuxing :-(
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
