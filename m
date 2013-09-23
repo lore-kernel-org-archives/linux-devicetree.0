@@ -1,65 +1,99 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/4] mfd: add support for AMS AS3722 PMIC
-Date: Mon, 23 Sep 2013 10:45:43 -0600
-Message-ID: <52407037.80004@wwwdotorg.org>
-References: <1379400338-20704-1-git-send-email-ldewangan@nvidia.com> <1379400338-20704-2-git-send-email-ldewangan@nvidia.com>
+Subject: Re: [PATCH 2/4] gpio: add support for AMS AS3722 gpio driver
+Date: Mon, 23 Sep 2013 10:53:17 -0600
+Message-ID: <524071FD.5060505@wwwdotorg.org>
+References: <1379400338-20704-1-git-send-email-ldewangan@nvidia.com> <1379400338-20704-3-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1379400338-20704-2-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1379400338-20704-3-git-send-email-ldewangan@nvidia.com>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Laxman Dewangan <ldewangan@nvidia.com>
 Cc: lee.jones@linaro.org, sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, florian.lobmaier@ams.com
 List-Id: devicetree@vger.kernel.org
 
 On 09/17/2013 12:45 AM, Laxman Dewangan wrote:
-> The AMS AS3722 is a compact system PMU suitable for mobile phones,
-> tablets etc. It has 4 DC/DC step-down regulators, 3 DC/DC step-down
-> controller, 11 LDOs, RTC, automatic battery, temperature and
-> over-current monitoring, 8 GPIOs, ADC and wathdog.
+> The AS3722 is a compact system PMU suitable for Mobile Phones, Tablet etc.
 > 
-> Add mfd core driver for the AS3722 to support core functionality.
+> Add a driver to support accessing the 8 GPIOs found on the AMS AS3722
+> PMIC using gpiolib.
 
-Nice patch description.
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-as3722.txt b/Documentation/devicetree/bindings/gpio/gpio-as3722.txt
 
-(although a couple typos: s/wathdog/watchdog/, s/mfd/MFD/)
+> +AMS AS3722 GPIO bindings.
+> +This describe the properties of the gpio sub-node of the AMS AS3722 device tree.
 
-> +Note: This gpio properties will be in the as3722 node.
+Oh, I see that you document each of the PMIC's sub-nodes separately.
+That's something you should explicitly mention in the top-level PMIC
+binding document. You should probably also mention the filenames of the
+binding documents for the child nodes.
 
-Why? If there's a GPIO sub-node, why wouldn't all the GPIO properties
-appear there?
+> +Required properties:
+> +--------------------
+> +- compatible: Must be "ams,as3722-gpio".
+> +- #address-cells: Number of address of the sub node of this node. Must be 1.
 
-> +Sub-node compatible:
-> +-------------------
-> +The of_node of its all child node will have compatible so that it can
-> +get the child node handle and pass as the dev->of_node when registering
-> +mfd devices.
+This isn't the number of addresses in the child node, but rather the
+number of cells in an (a single) address.
 
-That's very much Linux-specific details. Re-phrasing it as follows would
-make more sense:
+> +- #size-cells: Size of addess cells. Must be 1.
 
-==========
-Each HW module within the PMIC is represented as a separate child node
-within the PMIC's main node. These nodes are described below:
+Similarly, this is the number of cells in a size specifier, nothing to
+do with address, and not the size of a cell.
 
-GPIO controller
--------------------
+You should put the GPIO properties (gpio-controller, perhaps
+interrupt-controller?) here instead of at the top level, since this HW
+block is what implements the GPIO controller, and perhaps a
+GPIO-interrupt controller.
 
-Required properties:
-compatible: Must be "ams,as3722-gpio"
-...
+> +Sub node:
+> +--------
+> +The sub nodes provides the configuration of each gpio pins. The properties of the
+> +nodes are as follows:
+> +Required subnode properties:
 
-Regulator
--------------------
+You need a blank line there.
 
-...
-==========
+> +---------------------------
+> +reg: The GPIO number on which the properties need to be applied.
+> +
+> +Optional subnode properties:
+> +---------------------------
+> +bias-pull-up: The Pull-up for the pin to be enable.
+> +bias-pull-down: Pull down of the pins to be enable.
+> +bias-high-impedance: High impedance of the pin to be enable.
+> +open-drain: Pin is Open drain type.
+> +function: IO functionality of the pins. The valid options are:
+> +	gpio, intrrupt-output, vsup-vbat-low-undeb, interrupt-input,
 
-That also has the benefit of fully describing the content of all the
-child nodes in the binding, rather than only mentioning what the
-compatible values should be, and saying nothing else about the nodes.
+intrrupt? undeb?
 
-But, as Mark asked, why are any child nodes needed at all? If e.g. an
-identical/re-usable GPIO HW block appears in many AMS PMICs, it possibly
-makes sense, but otherwise it doesn't.
+> +	pwm-input, voltage-stby, oc-powergood-sd0, powergood-output,
+
+stby might be better written out in full as standby.
+
+> +	clk32k-output, watchdog-input, soft-reset-input, pwm-output,
+> +	vsup-vbat-low-deb, oc-powergood-sd6
+
+deb?
+
+> +    Missing the function property will set the pin in GPIO mode.
+> +
+> +ams,enable-gpio-invert: Enable invert of the signal on GPIO pin.
+
+This looks very much like pinctrl. If there's a real need to be as
+verbose as pinctrl, perhaps this binding should actually be a full
+pinctrl binding? If not, perhaps you can just use the raw HW register
+values (with appropriate #defines to simplify setting up the
+properties). Something like:
+
+pin-configuration = <0xf7348 0x5783 0x92348 ...>;
+
+or:
+
+pin-configruation = <
+    AMS3722_PULL_UP | AMS_GPIO_INVERT ...,
+    ...
+    >;
+
