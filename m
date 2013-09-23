@@ -1,58 +1,35 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] spi: s3c64xx: Add missing compatibles
-Date: Mon, 23 Sep 2013 14:50:42 +0100
-Message-ID: <20130923135042.GH21013@sirena.org.uk>
-References: <1379929545-27517-1-git-send-email-m.krawczuk@partner.samsung.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [RFC PATCH 08/15] ata: ahci_platform: Manage SATA PHY
+Date: Mon, 23 Sep 2013 16:59:09 +0300
+Message-ID: <5240492D.6060204@ti.com>
+References: <1379595943-14622-1-git-send-email-rogerq@ti.com> <1379595943-14622-9-git-send-email-rogerq@ti.com> <20130922165817.GD30946@htj.dyndns.org> <523F35E4.6050707@cogentembedded.com> <20130922215107.GD27616@mtj.dyndns.org> <523FEFC2.801@ti.com> <52403B4F.3070406@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eY8wQnuu3RZDiCQc"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1379929545-27517-1-git-send-email-m.krawczuk@partner.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
-Cc: kgene.kim@samsung.com, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <52403B4F.3070406@cogentembedded.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Tejun Heo <tj@kernel.org>, balbi@ti.com, bcousson@baylibre.com, tony@atomide.com, balajitk@ti.com, kishon@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/23/2013 03:59 PM, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 23-09-2013 11:37, Roger Quadros wrote:
+> 
+>>>>     Not sure why you asked -- I'm not using this driver, neither I'm
+> 
+>>> Well, you have better grip of what's going on in the embedded world
+>>> than me.  I'm mostly curious whether adding dependency on PHY is okay.
+> 
+>> There is no hard dependency on presence of PHY. The driver will continue
+>> as usual if devm_phy_get() fails.
+>> I hope selecting GENERIC_PHY in Kconfig is not an issue.
+> 
+>    Selecting in the AHCI_PLATFORM section? It seems I have overlooked it. No, I don't think it's a good idea. The generic PHY functions seem to be stubbed when GENERIC_PHY=n.
+> 
+OK I will remove the select then.
 
---eY8wQnuu3RZDiCQc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Sep 23, 2013 at 11:45:45AM +0200, Mateusz Krawczuk wrote:
-> Add compatibles for s3c6410, s5pc100 and s5pc110/s5pv210 boards.
-
->  static const struct of_device_id s3c64xx_spi_dt_match[] = {
-> +	{ .compatible = "samsung,s3c2443-spi",
-> +			.data = (void *)&s3c2443_spi_port_config,
-> +	},
-> +	{ .compatible = "samsung,s3c6410-spi",
-> +			.data = (void *)&s3c6410_spi_port_config,
-> +	},
-
-This is missing s3c6400 and at least one other s3c24xx I think.  They
-can be added later though so applied, thanks.
-
---eY8wQnuu3RZDiCQc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSQEcvAAoJELSic+t+oim99NkQAJ3onBLT5qwGPqvgkTbHRguh
-j88tNPkcN6C/C82SwrVWOVQRByzhrqcoVbZP8xEXIPyHFjvPUJKCObi+/ztc3UHe
-9sMQ3hx2RcT5IQ3LLUSr993+deStRdu0Yc9MN4pHXJiYd9dclY7RCpAnHl6y8VKU
-BGDijajF/JkLREUSPfVvxq7whVrHrlmODow21zStGPUILmXXLVq8QOEyYrW06rB/
-HU7I8RSuuXhzUAbQzDw5th8+/ebWzwgJxdEzdx/6yHLK2lu0o6kEjB07vuoQ4Rt0
-PSqQ+hjm5BtRy8CfjJhwe34YFLrIGWJ/8igpaUI0u9qsmp7VaVCy6hTiGHzx7+j3
-492HmdGOC/H9WBiWufJSkssCrkSnAcVv9k3ML3/k/YCvKTxoAjgUXTig1u8p1QUB
-dZQ4Pf7QaLsdujjY97VriEw2G2A6116bQF/bERLhcH10sN1MRnSMQZpAoYr6cBp0
-vNZ9YGqtlg1CRBOZ/3ZPx51CgzVdDQafc3J8e3s4nXxy0fVVft8fqU5M3A6rvJOZ
-wHFJL6owMEOUkSPrP2mXxEZ54yBIrA3sk3t2ePzjPtn7uicoTV2o5GX2/Nu9p2Ab
-8Tw5Y5AudsWtt40ky5XKtycbAMeZ8h3eW+L81cjSgxW1cOiH+IVAyd94cWgUQ0ZP
-gi3h0QffMqzNwvvuaU+v
-=cNpF
------END PGP SIGNATURE-----
-
---eY8wQnuu3RZDiCQc--
+cheers,
+-roger
