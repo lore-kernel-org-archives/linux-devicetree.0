@@ -1,73 +1,168 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 8/9] of/i2c: Resolve interrupt references at probe time
-Date: Mon, 23 Sep 2013 10:35:09 +0200
-Message-ID: <20130923083509.GF3051@katana>
-References: <1379320326-13241-1-git-send-email-treding@nvidia.com>
- <1379320326-13241-9-git-send-email-treding@nvidia.com>
- <20130923073451.GE3051@katana>
- <20130923080230.GA11881@ulmo>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JcvBIhDvR6w3jUPA"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130923080230.GA11881@ulmo>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+From: Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH] MTD: Onenand: Add device tree support for samsung onenand
+Date: Mon, 23 Sep 2013 10:36:28 +0200
+Message-ID: <1379925388-25051-1-git-send-email-m.krawczuk@partner.samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch add clk and device tree nodes for samsung onenand driver.
 
---JcvBIhDvR6w3jUPA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
+Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ .../devicetree/bindings/mtd/samsung-onenand.txt    | 40 ++++++++++++++++++++++
+ drivers/mtd/onenand/samsung.c                      | 37 +++++++++++++++++++-
+ 2 files changed, 76 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/samsung-onenand.txt
 
+diff --git a/Documentation/devicetree/bindings/mtd/samsung-onenand.txt b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+new file mode 100644
+index 0000000..cc46160
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+@@ -0,0 +1,40 @@
++Device tree bindings for Samsung Onenand
++
++Required properties:
++  - compatible: value should be either of the following.
++      (a) "samsung, s3c6400-onenand", for onenand compatible with s3c6400 onenand.
++      (b) "samsung, s3c6410-onenand", for onenand compatible with s3c6410 onenand.
++      (c) "samsung, s5pc100-onenand", for onenand compatible with s5pc100 onenand.
++      (d) "samsung, s5pc110-onenand", for s5pc100-like onenand used
++	   on s5pc110 which supports DMA.
++
++Required properties:
++
++ - reg:					The CS line the peripheral
++					is connected to
++ - interrupt-parent, interrupts		Width of the ONENAND device
++ - 					connected to the Samsung SoC
++					in bytes. Must be 1 or 2.
++
++Optional properties:
++
++ - dma-channel:		DMA Channel index
++
++For inline partiton table parsing (optional):
++
++ - #address-cells: should be set to 1
++ - #size-cells: should be set to 1
++
++Example for an s5pv210 board:
++
++		onenand@b0000000 {
++			compatible = "samsung,s5pc110-onenand";
++			reg = <0xb0000000 0x20000>, <0xb0600000 0x2000>;
++			interrupt-parent = <&vic1>;
++			interrupts = <31>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			clocks = <&clocks NANDXL>;
++			clock-names = "gate";
++			status = "okay";
++		};
+diff --git a/drivers/mtd/onenand/samsung.c b/drivers/mtd/onenand/samsung.c
+index df7400d..5a2cc4b 100644
+--- a/drivers/mtd/onenand/samsung.c
++++ b/drivers/mtd/onenand/samsung.c
+@@ -14,6 +14,7 @@
+  *	S5PC110: use DMA
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/sched.h>
+@@ -24,6 +25,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
++#include <linux/of.h>
+ 
+ #include <asm/mach/flash.h>
+ 
+@@ -133,6 +135,7 @@ enum soc_type {
+ struct s3c_onenand {
+ 	struct mtd_info	*mtd;
+ 	struct platform_device	*pdev;
++	struct clk *gate;
+ 	enum soc_type	type;
+ 	void __iomem	*base;
+ 	struct resource *base_res;
+@@ -859,6 +862,19 @@ static void s3c_onenand_setup(struct mtd_info *mtd)
+ 	this->write_bufferram = onenand_write_bufferram;
+ }
+ 
++static const struct of_device_id onenand_s3c_dt_match[] = {
++	{ .compatible = "samsung,s3c6400-onenand",
++		.data = (void *)TYPE_S3C6400 },
++	{ .compatible = "samsung,s3c6410-onenand",
++		.data = (void *)TYPE_S3C6410 },
++	{ .compatible = "samsung,s5pc100-onenand",
++		.data = (void *)TYPE_S5PC100 },
++	{ .compatible = "samsung,s5pc110-onenand",
++		.data = (void *)TYPE_S5PC110 },
++	{},
++};
++MODULE_DEVICE_TABLE(of, onenand_s3c_dt_match);
++
+ static int s3c_onenand_probe(struct platform_device *pdev)
+ {
+ 	struct onenand_platform_data *pdata;
+@@ -883,12 +899,26 @@ static int s3c_onenand_probe(struct platform_device *pdev)
+ 		goto onenand_fail;
+ 	}
+ 
++	onenand->gate = clk_get(&pdev->dev, "gate");
++	if (IS_ERR(onenand->gate))
++		return PTR_ERR(onenand->gate);
++	clk_prepare_enable(onenand->gate);
++
+ 	this = (struct onenand_chip *) &mtd[1];
+ 	mtd->priv = this;
+ 	mtd->dev.parent = &pdev->dev;
+ 	mtd->owner = THIS_MODULE;
+ 	onenand->pdev = pdev;
+-	onenand->type = platform_get_device_id(pdev)->driver_data;
++
++	if (pdev->dev.of_node) {
++		const struct of_device_id *match;
++
++		match = of_match_node(onenand_s3c_dt_match, pdev->dev.of_node);
++		onenand->type = (enum soc_type)match->data;
++	} else {
++		onenand->type = platform_get_device_id(pdev)->driver_data;
++	}
++
+ 
+ 	s3c_onenand_setup(mtd);
+ 
+@@ -1077,6 +1107,10 @@ static int s3c_onenand_remove(struct platform_device *pdev)
+ 	kfree(onenand->page_buf);
+ 	kfree(onenand);
+ 	kfree(mtd);
++
++	clk_disable_unprepare(onenand->gate);
++	clk_put(onenand->gate);
++
+ 	return 0;
+ }
+ 
+@@ -1125,6 +1159,7 @@ MODULE_DEVICE_TABLE(platform, s3c_onenand_driver_ids);
+ static struct platform_driver s3c_onenand_driver = {
+ 	.driver         = {
+ 		.name	= "samsung-onenand",
++		.of_match_table = of_match_ptr(onenand_s3c_dt_match),
+ 		.pm	= &s3c_pm_ops,
+ 	},
+ 	.id_table	= s3c_onenand_driver_ids,
+-- 
+1.8.1.2
 
-> > This function should be in the CONFIG_OF block.
->=20
-> I'll argue the other way. I think that the whole CONFIG_OF block should
-> be remove, or at least be confined to public functions. The reason that
-> I've chosen to do it this way is that the i2c_device_probe() uses an
-> IS_ENABLED(CONFIG_OF), which will evaluate to 0 if OF isn't selected
-> which in turn will cause the compiler to throw away of_i2c_probe()
-> because it is static and never used.
->=20
-> The big advantage of this is that we get compile coverage for these
-> functions independent of what configuration is built. The same could
-> probably be done for the whole CONFIG_ACPI block. In fact I volunteer to
-> provide that patch if I've convinced you that this is actually better
-> than sprinking the code with the #ifdef blocks that make it harder than
-> necessary to verify that the code builds in all configurations.
-
-Yes, you (easily) did :) Still, I'd like the of_i2c_probe function
-near the other of_* functions.
-
-Thanks,
-
-   Wolfram
-
-
---JcvBIhDvR6w3jUPA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSP/09AAoJEBQN5MwUoCm2GHIP/Rhq+fgMMs0+9m7uXuoeEaO9
-GCTFoirPnLRiofGgNSrMjCIxiGJ7zFNaRMdieA//chsY1342PuSLfuu0PQRB7V2s
-XWjj/XiJSMvPT1JNv+b2GTxq5QQOcRDe72ucCFR2Qziq4qp2lAs5Rn54W84sB7tV
-/DHa7vjfqf87HebvQDbilHWH60rn5Jyxf0uCY/hUKjd0kwYPAff4OlaaCsrT91Zx
-7ydlgVflCzouIoRMWr2uYFQy/jXeptw5YogFnMghc/f0UN1kbaN6bxUVfUxb2Apj
-QW+6TllRVOl+bug8Veuj16nYPrVN2AHEYo/l0HWxBWWxsGS0oPN7qaBXim+UZy65
-5kdy1G50J+bWIpKOuicL96/lWyGR9CqpB1UDbT+X1Nbt3ahRJtUTk67vqBHc0aDF
-MIdjbGdOqvXVOJwwJ4axYTK/sEIimMC9hyXEokRDTrmqmsXztKCtwbjhqmNnd4Rq
-pahY0/vwIrCdZLhPjCEA1Q2J0vosBfMCo+c/Q3F85r7huKTU1Cz8ntJs60LU6jqX
-2yS36m3vv0amhpBbubds7KI+3n+sZ15S+gP+PxMDf3F9e+ucNFHDb+HaTbcrG3jR
-zI1vtkMW+DCgIMy1Gwd2UnVNuHvSHNjsy3VhVwBf79hb0WT3uog4LNz4BBUhLozt
-U52AUCw08/dP31WArXz3
-=PD8g
------END PGP SIGNATURE-----
-
---JcvBIhDvR6w3jUPA--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
