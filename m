@@ -1,67 +1,102 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
-Date: Mon, 23 Sep 2013 08:18:52 +0530
-Message-ID: <CA+V-a8u5_rhxTgkVgCbtmGpaZCt2ciu4vABW4t80aSp7csttnw@mail.gmail.com>
-References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com>
- <523395DC.5080009@wwwdotorg.org> <CA+V-a8sVyJ1TrTSiaj8vpaD+f_qJ5Hp287E3HuHJ_pRzzmdAvg@mail.gmail.com>
- <523730A8.9060201@wwwdotorg.org> <CA+V-a8vY-qsdUoUUH=3HOg-UAZZPujOLPHFC_udNWFtksgzRRA@mail.gmail.com>
- <523B554A.2030701@gmail.com> <CA+V-a8s3PYr7qem6m8au0E7N2Xb_gD37_8uLcdXZjeHppBaC6g@mail.gmail.com>
- <523C1AE0.9020603@samsung.com>
+From: Pratyush Anand <pratyush.anand@st.com>
+Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys
+ part and Exynos part
+Date: Mon, 23 Sep 2013 09:44:28 +0530
+Message-ID: <20130923041427.GC2246@pratyush-vbox>
+References: <000701ce8741$fe47deb0$fad79c10$@samsung.com>
+ <20130912104602.GC5995@pratyush-vbox>
+ <523DB38B.4070307@ti.com>
+ <201309220003.34732.arnd@arndb.de>
+ <523ED192.901@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <523C1AE0.9020603@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LMML <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>, LDOC <linux-doc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Hans Verkuil <hans.verkuil@cisco.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <523ED192.901@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jingoo Han <jg1.han@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+Hi Kishon,
 
-On Fri, Sep 20, 2013 at 3:22 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> Hi Prabhakar,
->
-> On 09/20/2013 10:11 AM, Prabhakar Lad wrote:
->> OK I will, just send out a fix up patch which fixes the mismatch between
->> names for the rc-cycle, and later send out a patch which removes the
->> platform data usage for next release with proper DT bindings.
->
-> I think the binding need to be fully corrected now, I just meant to not
-> touch the board file, i.e. leave non-dt support unchanged.
->
-Ok
 
->> I'm OK with making regulator properties as optional, But still it would
->> change the meaning of what DT is, we know that the VDD/VDD_IO .. etc
->> pins are required properties (but still making them as optional) :-(
->>
->> I think there might several devices where this situation may arise so
->> just thinking of a alternative solution.
->>
->> say we have property 'software-regulator' which takes true/false(0/1)
->> If set to true we make the regulators as required property or else we
->> assume it is handled and ignore it ?
->
-> I don't think this is a good idea. You would have to add a similar platform
-> data flag for non-dt, it doesn't sound right. I can see two options here:
->
-> 1. Make the regulator properties mandatory and, e.g. define a fixed
->    voltage GPIO regulator in DT with an empty 'gpio' property. Then
->    pass a phandle to that regulator in the adv7343 *-supply properties.
->    For non-dt similarly a fixed voltage regulator(s) and voltage
->    supplies  would need to be defined in the board files.
->
-> 2. Make the properties optional and use (devm_)regulator_get_optional()
->    calls in the driver (a recently added function). I must admit I don't
->    fully understand description of this function, it currently looks
->    pretty much same as (devm_)regulator_get(). Thus the driver would
->    need to be handling regulator supplies only when non ERR_PTR() is
->    returned from regulator_get_optional() and otherwise assume a non
->    critical error. There is already quite a few example occurrences of
->    regulator_get_optional() usage.
->
-Thanks for pointing it I'll choose option 2 and post the patch.
+On Sun, Sep 22, 2013 at 07:16:34PM +0800, Kishon Vijay Abraham I wrote:
+> Hi Arnd,
+> 
+> Thanks for replying :-)
+> 
+> On Sunday 22 September 2013 03:33 AM, Arnd Bergmann wrote:
+> > On Saturday 21 September 2013, Kishon Vijay Abraham I wrote:
+> >> {
+> >>         u32 val;
+> >>         void __iomem *val1;
+> >>         void __iomem *dbi_base = pp->dbi_base;
+> >>
+> >>         /* Program viewport 0 : INBOUND : MEMORY*/
+> >>         val = PCIE_ATU_REGION_INBOUND | (0 & 0xF);
+> >>         dw_pcie_writel_rc(pp, val, dbi_base + PCIE_ATU_VIEWPORT);
+> >>         val1 = ioremap(0x80000000, 0x5fffffff);
+> > 
+> > The ioremap here makes no sense at all, and I suspect it will fail anyway,
+> > because you exhaust the vmalloc area size, but since the value is not
+> > used anywhere, it won't matter.
+> > 
+> >>         dw_pcie_writel_rc(pp, 0x80000000, dbi_base + PCIE_ATU_LOWER_BASE);
+> >>         dw_pcie_writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_BASE);
+> >>         /* in_mem_size must be in power of 2 */
+> >>         dw_pcie_writel_rc(pp, 0x5FFFFFFF, dbi_base + PCIE_ATU_LIMIT);
 
-Regards,
---Prabhakar Lad
+This is wrong. You should program here 0xBFFFFFFF.
+
+Translation rule is as follows:
+
+Region between "Start Address" and "End Address" is translated to
+"Target Address" with region size = "End Address" - "Start Address".
+Where: Start Address = (PCIE_ATU_UPPER_BASE | PCIE_ATU_LOWER_BASE)
+        End Address = (PCIE_ATU_UPPER_BASE | PCIE_ATU_LIMIT)
+        Target Address = (PCIE_ATU_UPPER_TARGET | PCIE_ATU_LOWER_TARGET) 
+
+> >>         dw_pcie_writel_rc(pp, 0x80000000, dbi_base + PCIE_ATU_LOWER_TARGET);
+> >>         dw_pcie_writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_TARGET);
+> > 
+> > These numbers need to come from somewhere, you shouldn't just hardcode them, 
+> 
+> right. I'm still in the process of getting it work ;-)
+> > 
+> > I guess you should either program an inbound window covering the entire 64-bit
+> > address space, or you should look at the top-level "memory" nodes to find
+> > the location of physical RAM.
+> > 
+> > I can't see anything wrong with the way it's set up though, unless you have
+> > an IOMMU. Can you confirm that there is no IOMMU (aka SMMU) in your system
+> > that handles the PCIe root complex?
+> 
+> There is a MMU for PCIe root complex but that's disabled.
+> > 
+> >> I somehow starting to doubt the DMA address programmed in the ethernet card
+> >> which is in my RAM address range (0x80000000 to 0xBFFFFFFF). Should this
+> >> address be programmed in the BAR of the ethernet card? How should it be done?
+> > 
+> > No, it should not be in the BAR. The ethernet device driver calls dma_map_*
+> > or pci_map_* interfaces to get a valid token that can be passed into the
+> > device registers that are starting the DMA. You have to ensure that the
+> > dma_map_ops for the device return the value that is set up in the translation.
+> > 
+> > The normal case is an identity mapping between device DMA space and host
+> > memory space, i.e. PCIE_ATU_LOWER_TARGET == PCIE_ATU_LOWER_BASE, so
+> > in the dma_map_single implementation, phys_addr_t == dma_addr_t.
+> > 
+> > If you set up the dma_addr_t space to start at 0 instead, you have to add
+> > the offset in the dma_map_ops.
+> 
+> My DMA address is in 0x80000000 to 0xBFFFFFFF range and I program my inbound
+> translation for this range. Not sure what is missing still :-(
+
+Hope, above modification helps. Let me know.
+
+Regards
+Pratyush
+> 
+> Thanks
+> Kishon
