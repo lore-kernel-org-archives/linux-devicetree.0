@@ -1,124 +1,76 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 43/51] DMA-API: dma: edma.c: no need
-	to	explicitly initialize DMA masks
-Date: Mon, 23 Sep 2013 12:37:55 +0100
-Message-ID: <20130923113755.GT25647@n2100.arm.linux.org.uk>
-References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
- <E1VMnRj-0007sg-1Z@rmk-PC.arm.linux.org.uk>
- <20130923102533.GI17188@intel.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
+Date: Mon, 23 Sep 2013 13:50:51 +0200
+Message-ID: <3002978.Cb6jL1xtkE@avalon>
+References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com> <523C1AE0.9020603@samsung.com> <CA+V-a8u5_rhxTgkVgCbtmGpaZCt2ciu4vABW4t80aSp7csttnw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20130923102533.GI17188@intel.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-nvme@lists.infradead.org, linux-ide@vger.kernel.org, devel@driverdev.osuosl.org, linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, e1000-devel@lists.sourceforge.net, b43-dev@lists.infradead.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, netdev@vger.kernel.org, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, linux-crypto@vger.kernel.org, uclinux-dist-devel@blackfin.uclinux.org, linuxppc-dev@lists.ozlabs.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+V-a8u5_rhxTgkVgCbtmGpaZCt2ciu4vABW4t80aSp7csttnw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2013 at 03:55:33PM +0530, Vinod Koul wrote:
-> On Fri, Sep 20, 2013 at 12:15:39AM +0100, Russell King wrote:
-> > register_platform_device_full() can setup the DMA mask provided the
-> > appropriate member is set in struct platform_device_info.  So lets
-> > make that be the case.  This avoids a direct reference to the DMA
-> > masks by this driver.
+On Monday 23 September 2013 08:18:52 Prabhakar Lad wrote:
+> On Fri, Sep 20, 2013 at 3:22 PM, Sylwester Nawrocki wrote:
+> > On 09/20/2013 10:11 AM, Prabhakar Lad wrote:
+> >> OK I will, just send out a fix up patch which fixes the mismatch between
+> >> names for the rc-cycle, and later send out a patch which removes the
+> >> platform data usage for next release with proper DT bindings.
 > > 
-> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> Acked-by: Vinod Koul <vinod.koul@intel.com>
+> > I think the binding need to be fully corrected now, I just meant to not
+> > touch the board file, i.e. leave non-dt support unchanged.
 > 
-> This also brings me question that should we force the driver to use the
-> dma_set_mask_and_coherent() API or they have below flexiblity too?
+> Ok
+> 
+> >> I'm OK with making regulator properties as optional, But still it would
+> >> change the meaning of what DT is, we know that the VDD/VDD_IO .. etc
+> >> pins are required properties (but still making them as optional) :-(
+> >> 
+> >> I think there might several devices where this situation may arise so
+> >> just thinking of a alternative solution.
+> >> 
+> >> say we have property 'software-regulator' which takes true/false(0/1)
+> >> If set to true we make the regulators as required property or else we
+> >> assume it is handled and ignore it ?
+> > 
+> > I don't think this is a good idea. You would have to add a similar
+> > platform data flag for non-dt, it doesn't sound right. I can see two
+> > options here:
+> > 
+> > 1. Make the regulator properties mandatory and, e.g. define a fixed
+> >    voltage GPIO regulator in DT with an empty 'gpio' property. Then
+> >    pass a phandle to that regulator in the adv7343 *-supply properties.
+> >    For non-dt similarly a fixed voltage regulator(s) and voltage
+> >    supplies  would need to be defined in the board files.
+> > 
+> > 2. Make the properties optional and use (devm_)regulator_get_optional()
+> >    calls in the driver (a recently added function). I must admit I don't
+> >    fully understand description of this function, it currently looks
+> >    pretty much same as (devm_)regulator_get(). Thus the driver would
+> >    need to be handling regulator supplies only when non ERR_PTR() is
+> >    returned from regulator_get_optional() and otherwise assume a non
+> >    critical error. There is already quite a few example occurrences of
+> >    regulator_get_optional() usage.
+> 
+> Thanks for pointing it I'll choose option 2 and post the patch.
 
-There's two issues here:
-1. dma_set_mask_and_coherent() will only work if dev->dma_mask points at
-   some storage for the mask.  This needs to have .dma_mask in the
-   platform_device_info initialised.
+Isn't regulator_get_optional() intended for devices that can have supplies 
+unconnected in normal use ? The ADV7343 supplies are mandatory from a hardware 
+point of view, so I think we should use regulator_get(). Otherwise the driver 
+won't be able to tell the difference between a regulator that isn't present 
+yet (for instance because the regulator device/driver hasn't been probed yet), 
+which should result in deferred probing, and an always-on regulator that has 
+been left out.
 
-2. Yes, this driver should also be calling the appropriate DMA mask setting
-   functions in addition to having the mask initialized at device creation
-   time.
-
-Here's a replacement patch, though maybe it would be better to roll all
-the additions of dma_set_mask_and_coherent() in drivers/dma into one
-patch?  In other words, combine the addition of this with these two
-patches:
-
-	dma: pl330: add dma_set_mask_and_coherent() call
-	dma: pl08x: add dma_set_mask_and_coherent() call
-
-8<=====
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH] DMA-API: dma: edma.c: no need to explicitly initialize DMA
- masks
-
-register_platform_device_full() can setup the DMA mask provided the
-appropriate member is set in struct platform_device_info.  So lets
-make that be the case.  This avoids a direct reference to the DMA
-masks by this driver.
-
-While here, add the dma_set_mask_and_coherent() call which the DMA API
-requires DMA-using drivers to call.
-
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
- drivers/dma/edma.c |   10 ++++++----
- 1 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
-index ff50ff4..fd5e48c 100644
---- a/drivers/dma/edma.c
-+++ b/drivers/dma/edma.c
-@@ -631,6 +631,10 @@ static int edma_probe(struct platform_device *pdev)
- 	struct edma_cc *ecc;
- 	int ret;
- 
-+	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (ret)
-+		return ret;
-+
- 	ecc = devm_kzalloc(&pdev->dev, sizeof(*ecc), GFP_KERNEL);
- 	if (!ecc) {
- 		dev_err(&pdev->dev, "Can't allocate controller\n");
-@@ -702,11 +706,13 @@ static struct platform_device *pdev0, *pdev1;
- static const struct platform_device_info edma_dev_info0 = {
- 	.name = "edma-dma-engine",
- 	.id = 0,
-+	.dma_mask = DMA_BIT_MASK(32),
- };
- 
- static const struct platform_device_info edma_dev_info1 = {
- 	.name = "edma-dma-engine",
- 	.id = 1,
-+	.dma_mask = DMA_BIT_MASK(32),
- };
- 
- static int edma_init(void)
-@@ -720,8 +726,6 @@ static int edma_init(void)
- 			ret = PTR_ERR(pdev0);
- 			goto out;
- 		}
--		pdev0->dev.dma_mask = &pdev0->dev.coherent_dma_mask;
--		pdev0->dev.coherent_dma_mask = DMA_BIT_MASK(32);
- 	}
- 
- 	if (EDMA_CTLRS == 2) {
-@@ -731,8 +735,6 @@ static int edma_init(void)
- 			platform_device_unregister(pdev0);
- 			ret = PTR_ERR(pdev1);
- 		}
--		pdev1->dev.dma_mask = &pdev1->dev.coherent_dma_mask;
--		pdev1->dev.coherent_dma_mask = DMA_BIT_MASK(32);
- 	}
- 
- out:
 -- 
-1.7.4.4
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
