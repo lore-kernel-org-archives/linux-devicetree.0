@@ -1,45 +1,66 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Mon, 23 Sep 2013 21:41:43 +0200
-Message-ID: <CACRpkdZxFpw=EYB4A4nZu7LWjQb6QppVctUsBBDiCMsCBbqm5A@mail.gmail.com>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
-	<52279524.8090006@wwwdotorg.org>
-	<20130909161924.GT29403@sirena.org.uk>
-	<2052193.CMUEUJFRgS@lem-wkst-02>
-	<522F78CB.2020507@wwwdotorg.org>
-	<20130910213718.GH29403@sirena.org.uk>
-	<522F9E6C.2010905@wwwdotorg.org>
-	<522FBED9.9000305@collabora.co.uk>
-	<5230C7F6.3080803@wwwdotorg.org>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 7/8] ARM: dts: omap4: update omap-control-usb nodes
+Date: Mon, 23 Sep 2013 14:43:25 -0500
+Message-ID: <20130923194325.GD309@radagast>
+References: <1377529713-19762-1-git-send-email-rogerq@ti.com>
+ <1377529713-19762-8-git-send-email-rogerq@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ExXT7PjY8AI4Hyfa"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5230C7F6.3080803-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1377529713-19762-8-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jgchunter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, joelf-l0cyMroinI0@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2013 at 9:43 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 09/10/2013 06:52 PM, Javier Martinez Canillas wrote:
+--ExXT7PjY8AI4Hyfa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> I'm a bit confused now. Doesn't the fact that gpio_request() prevents
->> double-requests mean that the use-case that you say that have not been covered
->> by this patch can't actually happen?
->>
->> I mean, if when using board files an explicit call to gpio_request() is made by
->> platform code then a driver can't call gpio_request() for the same gpio. So this
->> patch shouldn't cause any regression since is just auto-requesting a GPIO when
->> is mapped as an IRQ in a DT which basically will be the same that was made by
->> board files before.
->
-> I'm not familiar with the board file path; Linus describe this.
+Hi,
 
-Oh um? Not following, that stuff is right above, what is unclear
-about this that I need to describe?
+On Mon, Aug 26, 2013 at 06:08:32PM +0300, Roger Quadros wrote:
+> Split otghs_ctrl and USB2 PHY power down into separate
+> omap-control-usb nodes. Get rid of "ti,type" property.
+>=20
+> Also get rid of "ti,has-mailbox" property from usb_otg_hs
+> node and provide the ctrl-module phandle.
+>=20
+> CC: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 
-Yours,
-Linus Walleij
+Benoit ? Any comments here ?
+
+--=20
+balbi
+
+--ExXT7PjY8AI4Hyfa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSQJndAAoJEIaOsuA1yqREtogP/jfWIciNInVv5K4gl7y6ObRU
+kTauaD6eux3u+MzIJ34Rn3+q9p4BvOPgmo0XNnfJtOLW86x6Mj0i2KafK/tUhvHg
+w88XXKPoiSAq3g6FghkB9TjUCNEQ6pjceiYLNuDAUeXPYD3tfBm7GHCMZjdEiH6U
+Qb3dqV9NXcYfOhmnZj03h6+jNk1uVzVSURfyha3ARlZ4MikPCq3yWSHC3NGQ20vL
+AZW7bJM9AsneHdB8EGpF5ernIlEFv7kRMolH74zi6ZVX04LqkEi3m4fszYuUlkKX
+dO2oLyxzU79+1qgeTt4bCoNzLsrrzGoq5G9mLVB0sGuMB17ligdxiCH0viJhcuVf
+HmqN0ixwWnolqQX/oYVYMhDtPMVapLmL08cg9GYlynY3t78kVPagdaqPEGNqhiqo
+5aDyFsmHh6QB/5RSTrb981of1c9wLG2fzOnHMVd99umlVDCRWtNgEOi5gstAEMBZ
+oDdd2DHz594kSzOLnUWKUKKlSHNr7MiiKODsEABplNYrIvRpjqfjtHmGoBuzUZKk
+VNv8Pbm9wsMYHEcompqn2w9cFMnnDGKPHzDXahNg3HmSibGV545g61yFuqkpbe2u
+YYQsOz++0UPOV+bDMBFiShYLJWBaQYsA/yIyBgEKOge+b7YRr94UTBXEKe7oB7F9
+G5wpUnbhEnrM1q2BfxN4
+=DIC/
+-----END PGP SIGNATURE-----
+
+--ExXT7PjY8AI4Hyfa--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
