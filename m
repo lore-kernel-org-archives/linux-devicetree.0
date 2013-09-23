@@ -1,95 +1,51 @@
-From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: add initial VF610 Cosmic/Cosmic+ board support
-Date: Mon, 23 Sep 2013 11:14:44 -0400
-Message-ID: <1379949284-19936-1-git-send-email-matt.porter@linaro.org>
+From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: am335x-bone-common: correct mux mode for
+ mmc1_cmd
+Date: Mon, 23 Sep 2013 20:58:48 +0530
+Message-ID: <52405E30.2020001@ti.com>
+References: <1379698696-21945-1-git-send-email-balajitk@ti.com> <523C9DE4.6040109@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <523C9DE4.6040109-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial PHYTEC VF610 Cosmic/Cosmic+ board support with
-UART and FEC enabled.
+On Saturday 21 September 2013 12:41 AM, Nishanth Menon wrote:
+> On 09/20/2013 12:38 PM, Balaji T K wrote:
+>> correct mux mode for mmc1_cmd to detect eMMC on bone-black
+>>
+>> Signed-off-by: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/am335x-bone-common.dtsi |    2 +-
+>>   1 files changed, 1 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+>> index 56361ce..90ab56c 100644
+>> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
+>> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+>> @@ -117,7 +117,7 @@
+>>   		emmc_pins: pinmux_emmc_pins {
+>>   			pinctrl-single,pins = <
+>>   				0x80 (PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn1.mmc1_clk */
+>> -				0x84 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_csn2.mmc1_cmd */
+>> +				0x84 (PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn2.mmc1_cmd */
+>>   				0x00 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad0.mmc1_dat0 */
+>>   				0x04 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad1.mmc1_dat1 */
+>>   				0x08 (PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad2.mmc1_dat2 */
+>>
+> is'nt this a common change? why is it "black only"? if it is so, then
+> the pinmux should probably be spun off outside bone-common.dtsi into
+> boneblack.dtsi perhaps?
+>
 
-Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-Changes since v1:
-	- Add #clocks to the enet clock to comply with fixed-clock binding
-	- Peripheral nodes in alphabetical order
-
- arch/arm/boot/dts/Makefile         |  1 +
- arch/arm/boot/dts/vf610-cosmic.dts | 47 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
- create mode 100644 arch/arm/boot/dts/vf610-cosmic.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index cc0f1fb..b0d6156 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -142,6 +142,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
- 	imx6q-sbc6x.dtb \
- 	imx6q-wandboard.dtb \
- 	imx6sl-evk.dtb \
-+	vf610-cosmic.dtb \
- 	vf610-twr.dtb
- dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
- 	imx23-olinuxino.dtb \
-diff --git a/arch/arm/boot/dts/vf610-cosmic.dts b/arch/arm/boot/dts/vf610-cosmic.dts
-new file mode 100644
-index 0000000..c42e4f9
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610-cosmic.dts
-@@ -0,0 +1,47 @@
-+/*
-+ * Copyright 2013 Freescale Semiconductor, Inc.
-+ * Copyright 2013 Linaro Limited
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+/dts-v1/;
-+#include "vf610.dtsi"
-+
-+/ {
-+	model = "PHYTEC Cosmic/Cosmic+ Board";
-+	compatible = "phytec,vf610-cosmic", "fsl,vf610";
-+
-+	chosen {
-+		bootargs = "console=ttyLP1,115200";
-+	};
-+
-+	memory {
-+		reg = <0x80000000 0x10000000>;
-+	};
-+
-+	clocks {
-+		enet_ext {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <50000000>;
-+		};
-+	};
-+
-+};
-+
-+&fec1 {
-+	phy-mode = "rmii";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1_1>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1_1>;
-+	status = "okay";
-+};
--- 
-1.8.4
-
+It is applicable for add-on eMMC-cape for beagle bone white, so eMMC pinmux can
+remain in bone-common.dtsi.
+However I could test only on beagle bone black which has eMMC on board, since I
+don't have access to eMMC-cape
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
