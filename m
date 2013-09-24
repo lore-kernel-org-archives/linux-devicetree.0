@@ -1,74 +1,87 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
-Date: Tue, 24 Sep 2013 10:31:41 +0200
-Message-ID: <CACRpkdZ7E7MGppbkTiObvTDHdmphnbysMKVc1OZjsPXKVuKttQ@mail.gmail.com>
-References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
-	<522FBED9.9000305@collabora.co.uk>
-	<5230C7F6.3080803@wwwdotorg.org>
-	<3653629.tapNZSuWhS@lem-wkst-02>
-	<52373B34.4060709@wwwdotorg.org>
-	<CACRpkdY=cgtf6_eypfAAv-fvmiNgAYyz4StTgDie5THsbrcumg@mail.gmail.com>
-	<5240A2D3.20105@wwwdotorg.org>
+From: Sricharan R <r.sricharan@ti.com>
+Subject: Re: [RFC] gpio/omap: auto-setup a GPIO when used as an IRQ
+Date: Tue, 24 Sep 2013 14:17:43 +0530
+Message-ID: <524151AF.2040408@ti.com>
+References: <1379860848-29020-1-git-send-email-javier.martinez@collabora.co.uk> <20130923164519.GF2684@atomide.com> <524073BC.9080907@collabora.co.uk> <20130923170724.GG2684@atomide.com> <524141A6.2090701@ti.com> <5241454E.2050602@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5240A2D3.20105@wwwdotorg.org>
+In-Reply-To: <5241454E.2050602@collabora.co.uk>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Lars Poeschel <poeschel@lemonage.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, joelf@ti.com, Laur
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Jon Hunter <jgchunter@gmail.com>, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2013 at 10:21 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 09/23/2013 02:01 PM, Linus Walleij wrote:
-
->> And how to you block the same line from being gpio_request()ed
->> and set as output?
+On Tuesday 24 September 2013 01:24 PM, Javier Martinez Canillas wrote:
+> On 09/24/2013 09:39 AM, Sricharan R wrote:
+>> Hi,
+>> On Monday 23 September 2013 10:37 PM, Tony Lindgren wrote:
+>>> * Javier Martinez Canillas <javier.martinez@collabora.co.uk> [130923 10:09]:
+>>>> On 09/23/2013 06:45 PM, Tony Lindgren wrote:
+>>>>> Hmm does this still work for legacy platform data based
+>>>>> drivers that are doing gpio_request() first?
+>>>>>
+>>>> Yes it still work when booting using board files. I tested on my OMAP3 board and
+>>>> it worked in both DT and legacy booting mode.
+>>> OK great.
+>>>  
+>>>>> And what's the path for clearing things for PM when free_irq()
+>>>>> gets called? It seems that this would leave the GPIO bank
+>>>>> enabled causing a PM regression?
+>>>>>
+>>>> Indeed, I did set bank->mod_usage |= 1 << offset so the bank is enabled if the
+>>>> device goes to suspended and then resumed but I completely forget about the
+>>>> clearing path when the IRQ is freed.
+>>>>
+>>>> Which makes me think that we should probably maintain two usage variables, one
+>>>> for GPIO and another one for IRQ and check both of them on the suspend/resume pm
+>>>> functions.
+>>> Yes that it seems that they should be treated separately.
+>>  To understand, why cant the flag be cleared in gpio_irq_shutdown ?
+> Hi Sricharan,
 >
-> To be honest, I really don't think this problem is terribly likely to
-> occur, so I'm really not convinced that it's worth putting a lot of
-> effort into solving it.
+> Without this patch today drivers do this:
+>
+> gpio_request(gpio, "foo IRQ"); // bank->mod_usage |= 1 << offset
+> gpio_direction_input(gpio);
+>
+> and then request a IRQ with:
+>
+> irq = gpio_to_irq(gpio);
+> request_irq(irq, ...);
+>
+> later on its cleanup path:
+>
+> free_irq(irq, dev);
+> gpio_free(gpio) // bank->mod_usage &= ~(1 << offset);
+>
+> So if you clear the flag on gpio_irq_shutdown then bank module won't be enabled
+> after a suspend making drivers using the GPIO after freeing the IRQ to fail.
+>
+> So the idea is to have something like this:
+>
+> a) Drivers that request both the GPIO and IRQ
+>
+> gpio_request(gpio, "foo IRQ"); // bank->mod_usage |= 1 << offset
+> gpio_direction_input(gpio);
+>
+> irq = gpio_to_irq(gpio);
+> request_irq(irq, ...); // bank->irq_usage |= 1 << offset
+>
+> free_irq(irq, dev); // bank->irq_usage &= ~(1 << offset);
+> gpio_free(gpio) // bank->mod_usage &= ~(1 << offset);
+>
+> b) Drivers that just request the IRQ:
+>
+> irq = gpio_to_irq(gpio);
+> request_irq(irq, ...); // bank->irq_usage |= 1 << offset
+> free_irq(irq, dev); // bank->irq_usage &= ~(1 << offset);
+>
+> So irq_usage or mod_usage is set means that the bank has to be enabled and if
+> both are not set means that the bank module can be disabled.
+>
+ Ok get it. Thanks.
 
-I have a different opionion, I think this is important. As GPIO
-subsystem maintainer I need to be convinced of the integrity
-of the system.
-
-> If the problem does occur, it's trivial to see that this has happened by
-> looking at /proc/interrupts and /sys/kernel/debug/gpio,
-
-I basically want /sys/kernel/debug/gpio to say if a certain line
-is tied for IRQ.
-
-> That driver needs to maintain some state that indicates which of its
-> IRQs have been requested. Any time a GPIO request (I mean e.g.
-> set_output() not request_gpio)) comes in, the request needs to be
-> validated against that IRQ usage state. If there's a conflict, deny the
-> GPIO request.
-
-I think this should be done by gpiolib, and I think it is trivial
-given the right APIs. Putting it in the drivers will just create
-an array of similar-look Rube Goldberg-machines and code
-duplication. There is no point.
-
-> Now, it's quite possible that the code to maintain this state and
-> perform the checks will be similar/common across multiple drivers. If
-> so, by all means implement the code somewhere common, and have the
-> various irq_chip/gpio_chip drivers call into it.
-
-And this is what we should do in gpiolib.
-
-> The main thing is that all of this has to be driven/controlled/enabled
-> by the gpio_chip/irq_chip driver itself, not as some global/blanket
-> feature of the GPIO or IRQ subsystems.
-
-Sure.
-
-> Perhaps rather than having the gpio_chip/irq_chip drivers physically
-> implement a function which calls this common code, they could set some
-> flags/data/... in the struct gpio_chip/irq_chip indicating that they
-> desire the core code that implements the error-checking to be enabled.
-
-I think it should more be like a function they can call to flag
-a GPIO as used for IRQ.
-
-Yours,
-Linus Walleij
+Regards,
+ Sricharan
