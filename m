@@ -1,51 +1,86 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v10 2/3] DMA: Freescale: Add new 8-channel DMA engine
- device tree nodes
-Date: Tue, 24 Sep 2013 11:31:12 -0600
-Message-ID: <5241CC60.5070204@wwwdotorg.org>
-References: <1379499333-4745-1-git-send-email-hongbo.zhang@freescale.com> <1379499333-4745-3-git-send-email-hongbo.zhang@freescale.com> <524074A7.7000001@wwwdotorg.org> <524169E3.7030408@freescale.com>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH] leds-gpio: of: led should not be created if its status is disabled
+Date: Tue, 24 Sep 2013 10:35:50 -0700
+Message-ID: <CAK5ve-K3Kmnai_mCyJGxeYhzWUk+O38pyxwPeTNiMb5+Ujp3zg@mail.gmail.com>
+References: <1380009863-6454-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <524169E3.7030408-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1380009863-6454-1-git-send-email-josh.wu@atmel.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Josh Wu <josh.wu@atmel.com>
+Cc: "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2013 04:30 AM, Hongbo Zhang wrote:
-> On 09/24/2013 01:04 AM, Stephen Warren wrote:
->> On 09/18/2013 04:15 AM, hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
->>> From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>>
->>> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this
->>> patch adds
->>> the device tree nodes for them.
->>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->>> b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->>> +Required properties:
->>> +
->>> +- compatible        : must include "fsl,elo3-dma"
->>> +- reg               : DMA General Status Registers, i.e. DGSR0 which
->>> contains
->>> +                      status for channel 1~4, and DGSR1 for channel 5~8
->> Is that a single entry, which is large enough to cover both registers,
->> or a pair of entries, one per register? Reading the text, I might assume
->> the former, but looking at the examples, it's the latter.
-> My impression is that I cannot tell it is one larger entry or two
-> entries by reading the description text, but the example gives the answer.
-> Is it so important to specify it is only one entry or entries list?
-> I prefer language as concise as possible, especially for the common
-> properties such as reg and interrupt (eg the reg is implicitly offset
-> and length of registers, can be continuous or not), it is difficult or
-> unnecessary or impossible to describe much details, the example can also
-> work as a complementary description, otherwise no need to put an example
-> in the binding document.
+On Tue, Sep 24, 2013 at 1:04 AM, Josh Wu <josh.wu@atmel.com> wrote:
+> now the leds-gpio driver will create every child led node without
+> checking the status is disabled or not.
+>
+> for example, if we have a led node like d3, and its status is disabled:
+>         leds {
+>                 d3 {
+>                         label = "d3";
+>                         gpios = <&pioE 24 0>;
+>                         status = "disabled";
+>                 };
+>         };
+>
+> we except the d3 should not be created. And the gpios should not be
+> request as well.
+>
+> But current driver will create d3 and request its gpio.
+>
+> This patch fix this by using for_each_available_child_of_node() to
+> enumerate all child nodes. So the disabled node will be inavilable.
+>
+> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+> ---
+>  drivers/leds/leds-gpio.c |   14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+> index e8b01e5..9bb4e04 100644
+> --- a/drivers/leds/leds-gpio.c
+> +++ b/drivers/leds/leds-gpio.c
+> @@ -167,23 +167,23 @@ static struct gpio_leds_priv *gpio_leds_create_of(struct platform_device *pdev)
+>  {
+>         struct device_node *np = pdev->dev.of_node, *child;
+>         struct gpio_leds_priv *priv;
+> -       int count, ret;
+> +       int count = 0, ret;
+>
+>         /* count LEDs in this device, so we know how much to allocate */
+> -       count = of_get_child_count(np);
 
-The description of the properties should fully describe them. The
-example is just an example, not a specification of the properties.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can we invent a new API named of_get_available_child_count()? So we
+just need to replace the API here? Besides this, I'm OK for this patch
+actually.
+
+Thanks,
+-Bryan
+
+> -       if (!count)
+> -               return ERR_PTR(-ENODEV);
+> -
+> -       for_each_child_of_node(np, child)
+> +       for_each_available_child_of_node(np, child) {
+> +               count++;
+>                 if (of_get_gpio(child, 0) == -EPROBE_DEFER)
+>                         return ERR_PTR(-EPROBE_DEFER);
+> +       }
+> +       if (!count)
+> +               return ERR_PTR(-ENODEV);
+>
+>         priv = devm_kzalloc(&pdev->dev, sizeof_gpio_leds_priv(count),
+>                         GFP_KERNEL);
+>         if (!priv)
+>                 return ERR_PTR(-ENOMEM);
+>
+> -       for_each_child_of_node(np, child) {
+> +       for_each_available_child_of_node(np, child) {
+>                 struct gpio_led led = {};
+>                 enum of_gpio_flags flags;
+>                 const char *state;
+> --
+> 1.7.9.5
+>
