@@ -1,53 +1,37 @@
-From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3 1/6] clk: exynos-audss: convert to platform device
-Date: Wed, 25 Sep 2013 00:31:25 +0200
-Message-ID: <524212BD.9070204@gmail.com>
-References: <1379982078-23381-1-git-send-email-abrestic@chromium.org> <1380046016-5811-1-git-send-email-abrestic@chromium.org> <524200FB.8010004@gmail.com> <CAL1qeaEpu=YRasZpSvrCTNwC6OGWZgECjwDSFgkAN07eWObmrg@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/5] mfd: arizona: Add device tree helper functions
+Date: Tue, 24 Sep 2013 16:58:40 -0600
+Message-ID: <52421920.8010403@wwwdotorg.org>
+References: <1379961043-23762-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <5240B464.2010903@wwwdotorg.org> <20130924094937.GN3635@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaEpu=YRasZpSvrCTNwC6OGWZgECjwDSFgkAN07eWObmrg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20130924094937.GN3635-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2013 12:12 AM, Andrew Bresticker wrote:
->>> +static int exynos_audss_clk_remove(struct platform_device *pdev)
->>> +{
->>> +       int i;
->>> +
->>> +       of_clk_del_provider(pdev->dev.of_node);
->>> +
->>> +       for (i = 0; i<   EXYNOS_AUDSS_MAX_CLKS; i++) {
->>> +               if (!IS_ERR_OR_NULL(clk_table[i]))
->>> +                       clk_unregister(clk_table[i]);
->>> +       }
+On 09/24/2013 03:49 AM, Charles Keepax wrote:
+> On Mon, Sep 23, 2013 at 03:36:36PM -0600, Stephen Warren wrote:
+>> On 09/23/2013 12:30 PM, Charles Keepax wrote:
+>>> -  - AVDD1-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
+>>> +  - AVDD-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
 >>
->>
->> Since we only get here if all the clocks are registered properly and we
->> always register EXYNOS_AUDSS_MAX_CLKS clocks, couldn't this simply be:
->>
->>
->>          for (i = 0; i<  EXYNOS_AUDSS_MAX_CLKS; i++)
->>                  clk_unregister(clk_table[i]);
->>
->> ?
->
-> Once support is added for Exynos5420, we won't always register
-> EXYNOS_AUDSS_MAX_CLKS clocks, so we'd still need the NULL check.
+>> That looks like an incompatible change to the DT ABI.
+> 
+> The supply name in the driver is AVDD as is the name for the pin
+> on the datasheet, if you specify it as AVDD1 in device tree the
+> current driver will not load.
+> 
+> This appears to have been a copy and paste error from the wm8994
+> which has 2 AVDD supplies and I believe these docs were based
+> on. I would prefer to update the documentation to match what the
+> driver already expects rather than the other way around.
 
-Then couldn't you use clk_data.clk_num in this loop instead of
-EXYNOS_AUDSS_MAX_CLKS ? What I'm trying to avoid is assuming NULL as
-an invalid clock. It's not correct, clock pointers should be only tested
-with ERR_PTR(). Alternatively you could set the whole clk_table array to,
-e.g. ERR_PTR(-EINVAL) beforehand, but that shouldn't be necessary when
-clk_data.clk_num is used, unless there are holes in the array.
-
---
-Regards,
-Sylwester
+OK, if there's no driver anywhere that can possibly work with the
+binding as written, it's likely fine to change the binding.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
