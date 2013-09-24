@@ -1,65 +1,49 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] ARM DT cpus/cpu and topology bindings
-Date: Tue, 24 Sep 2013 17:01:26 +0100
-Message-ID: <20130924160126.GC403@e102568-lin.cambridge.arm.com>
-References: <1379330464-27917-1-git-send-email-lorenzo.pieralisi@arm.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH] ASoC: kirkwood: add S/PDIF support
+Date: Tue, 24 Sep 2013 18:32:41 +0200
+Message-ID: <20130924183241.12a97af4@armhf>
+References: <20130924124122.64834b2a@armhf>
+	<20130924105127.GB12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379330464-27917-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <20130924105127.GB12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[replying to self]
+On Tue, 24 Sep 2013 11:51:27 +0100
+Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
 
-Any further comments on this series ? If not, I think bindings are ready to be
-queued, but for that I need acks from DT maintainers.
+> On Tue, Sep 24, 2013 at 12:41:22PM +0200, Jean-Francois Moine wrote:
+> > This patch adds S/PDIF input/output for mvebu DT boards.
+> >=20
+> > Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+>=20
+> Right, so if this goes in, then we're completely fucked for doing thi=
+s
+> the way that Mark apparantly wants it to be done, because once these
+> DT properties go in, they're there to stay.
 
-The issue with in kernel dts that (re)-need patching owing to re-introduction
-of reg property on pre-v7 UP is still pending.
+Indeed!
 
-Please advise, thank you very much,
-Lorenzo
+The DT properties I propose just reflect the hardware connections of
+the board. There are only i2s-out and spdif-out in the Cubox, while
+there may be kirkwood boards with, say, only spdif-in and spdif-out.
 
-On Mon, Sep 16, 2013 at 12:21:02PM +0100, Lorenzo Pieralisi wrote:
-> This is v2 of a previous posting:
-> 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-August/192322.html
-> 
-> - v2 changes
-> 	- Removed single core cpu-map example
-> 	- Removed OS dependency from cpus/cpu bindings
-> 	- Updated Marvell compatible strings
-> 	- Clarified behaviour on pre ARM v7 uniprocessor systems and updated
-> 	  examples
-> 
-> This patch resumes DT topology/cpu bindings discussions for ARM that were
-> started here:
-> 
-> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-April/031725.html
-> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-April/032450.html
-> 
-> Comments welcome, thanks,
-> Lorenzo
-> 
-> Lorenzo Pieralisi (2):
->   Documentation: devicetree: arm: cpus/cpu nodes bindings updates
->   Documentation: DT: arm: define CPU topology bindings
-> 
->  Documentation/devicetree/bindings/arm/cpus.txt     | 391 +++++++++++++++--
->  Documentation/devicetree/bindings/arm/topology.txt | 474 +++++++++++++++++++++
->  2 files changed, 818 insertions(+), 47 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/topology.txt
-> 
-> -- 
-> 1.8.2.2
-> 
+These definitions do not interfere with your DPCM problem: you assume
+i2s-out and spdif-out for the i2s1 dove device, and that is what I
+assume too, but from the DT. Then, the driver does not need to know the
+type of the audio device (Kirkwood or Dove), nor to know if it is the
+first or the second i2s device of the Dove chip.
 
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
