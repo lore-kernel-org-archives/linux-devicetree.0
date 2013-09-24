@@ -1,91 +1,73 @@
-From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
-Date: Tue, 24 Sep 2013 11:45:32 +0530
-Message-ID: <CA+V-a8v4rOQjLzC3iMkbq8eEXCs4Y_sbxQL1crc+OhR8DvNwjA@mail.gmail.com>
-References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com>
- <523C1AE0.9020603@samsung.com> <CA+V-a8u5_rhxTgkVgCbtmGpaZCt2ciu4vABW4t80aSp7csttnw@mail.gmail.com>
- <3002978.Cb6jL1xtkE@avalon> <5240B396.2010705@wwwdotorg.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH] arm: dts: omap5-uevm: Add status parameter for i2c/spi/uart.
+Date: Tue, 24 Sep 2013 11:57:49 +0530
+Message-ID: <524130E5.8050704@ti.com>
+References: <1380001165-19078-1-git-send-email-sourav.poddar@ti.com> <524126CC.3020300@ti.com> <52412792.1050105@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5240B396.2010705-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52412792.1050105@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sourav Poddar <sourav.poddar@ti.com>
+Cc: bcousson@baylibre.com, tony@atomide.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2013 at 3:03 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 09/23/2013 05:50 AM, Laurent Pinchart wrote:
->> On Monday 23 September 2013 08:18:52 Prabhakar Lad wrote:
->>> On Fri, Sep 20, 2013 at 3:22 PM, Sylwester Nawrocki wrote:
->>>> On 09/20/2013 10:11 AM, Prabhakar Lad wrote:
->>>>> OK I will, just send out a fix up patch which fixes the mismatch between
->>>>> names for the rc-cycle, and later send out a patch which removes the
->>>>> platform data usage for next release with proper DT bindings.
->>>>
->>>> I think the binding need to be fully corrected now, I just meant to not
->>>> touch the board file, i.e. leave non-dt support unchanged.
->>>
->>> Ok
->>>
->>>>> I'm OK with making regulator properties as optional, But still it would
->>>>> change the meaning of what DT is, we know that the VDD/VDD_IO .. etc
->>>>> pins are required properties (but still making them as optional) :-(
->>>>>
->>>>> I think there might several devices where this situation may arise so
->>>>> just thinking of a alternative solution.
->>>>>
->>>>> say we have property 'software-regulator' which takes true/false(0/1)
->>>>> If set to true we make the regulators as required property or else we
->>>>> assume it is handled and ignore it ?
->>>>
->>>> I don't think this is a good idea. You would have to add a similar
->>>> platform data flag for non-dt, it doesn't sound right. I can see two
->>>> options here:
->>>>
->>>> 1. Make the regulator properties mandatory and, e.g. define a fixed
->>>>    voltage GPIO regulator in DT with an empty 'gpio' property. Then
->>>>    pass a phandle to that regulator in the adv7343 *-supply properties.
->>>>    For non-dt similarly a fixed voltage regulator(s) and voltage
->>>>    supplies  would need to be defined in the board files.
->>>>
->>>> 2. Make the properties optional and use (devm_)regulator_get_optional()
->>>>    calls in the driver (a recently added function). I must admit I don't
->>>>    fully understand description of this function, it currently looks
->>>>    pretty much same as (devm_)regulator_get(). Thus the driver would
->>>>    need to be handling regulator supplies only when non ERR_PTR() is
->>>>    returned from regulator_get_optional() and otherwise assume a non
->>>>    critical error. There is already quite a few example occurrences of
->>>>    regulator_get_optional() usage.
->>>
->>> Thanks for pointing it I'll choose option 2 and post the patch.
+On Tuesday 24 September 2013 11:18 AM, Sourav Poddar wrote:
+> On Tuesday 24 September 2013 11:14 AM, Sekhar Nori wrote:
+>> On Tuesday 24 September 2013 11:09 AM, Sourav Poddar wrote:
+>>> omap5 has all devices enable by default.
+>>> Disable thosw not required in omap5 uevm board.
+>> s/thosw/those
 >>
->> Isn't regulator_get_optional() intended for devices that can have supplies
->> unconnected in normal use ?
->
-> I believe so, yes.
->
-Agreed
+>>> Fix the following:
+>>> Added status parameter
+>>> Simulataneously, fix some tab formatting.
+>> s/Simulataneously/Simultaneously
+>>
+>>> Signed-off-by: Sourav Poddar<sourav.poddar@ti.com>
+>>> ---
+>>>   arch/arm/boot/dts/omap5-uevm.dts |   38
+>>> +++++++++++++++++++++++++++++++-------
+>>>   1 files changed, 31 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/omap5-uevm.dts
+>>> b/arch/arm/boot/dts/omap5-uevm.dts
+>>> index 65d7b60..78cf0f2 100644
+>>> --- a/arch/arm/boot/dts/omap5-uevm.dts
+>>> +++ b/arch/arm/boot/dts/omap5-uevm.dts
+>>> @@ -450,6 +450,18 @@
+>>>       };
+>>>   };
+>>>
+>>> +&i2c2 {
+>>> +    status = "disabled";
+>>> +};
+>>> +
+>>> +&i2c3 {
+>>> +    status = "disabled";
+>>> +};
+>>> +
+>>> +&i2c4 {
+>>> +    status = "disabled";
+>>> +};
+>> The right thing to do would be to mark these as disabled in omap5.dtsi
+>> so boards can enable only what they need instead of disable what they
+>> don't need (which is potentially a very long list)
+> Yes, initially I thought so. But saw these varies from soc to soc.
+> On DRA, it is done the way you suggested. For omap5, I saw mmc
+> getting disabled in board dts.
+> 
+> I can change these though. Then, other modules like keypad/mmc should
+> also be disable in
+> dtsi file to have some uniformity. ?
 
->> The ADV7343 supplies are mandatory from a hardware
->> point of view, so I think we should use regulator_get(). Otherwise the driver
->> won't be able to tell the difference between a regulator that isn't present
->> yet (for instance because the regulator device/driver hasn't been probed yet),
->> which should result in deferred probing, and an always-on regulator that has
->> been left out.
->
-> So I think you want to make the supply properties mandatory in DT (since
-> some form of supply is mandatory in HW), yet make the driver support
-> broken DTs which don't have those properties, by error-checking the
-> return value from regulator_get(). You might want to put a note into DT
-> saying that a previous version of the binding didn't require those
-> supply properties, so they may be missing from older DTs.
+Yes, that would be nice. This is usually the norm. One exception that is
+made is that internal modules like RTC, cryptos can be left enabled in
+the <soc>.dtsi so each board doesn't have to enable it. Just make sure
+that the module is such that it can really function on *all* boards.
+Typically that would mean IOs are not present or optional without loss
+of complete functionality.
 
-OK, I'll fix it and repost the patch.
-
-Regards,
---Prabhakar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
