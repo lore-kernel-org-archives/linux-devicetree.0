@@ -1,79 +1,37 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 07/10] ARM: dts: omap5-uevm: Use reset-gpios for hsusb2/3_reset
-Date: Tue, 24 Sep 2013 11:53:53 +0300
-Message-ID: <1380012836-29900-8-git-send-email-rogerq@ti.com>
-References: <1380012836-29900-1-git-send-email-rogerq@ti.com>
+From: takashi.yoshii.zj@renesas.com
+Subject: Re: [PATCH 4/6] ARM: shmobile: emev2: Define SMU clock DT bindings
+Date: Tue, 24 Sep 2013 18:00:59 +0900
+Message-ID: <20130924180059.40485f1c9b841b04c3bb5f04@renesas.com>
+References: <52410F86.4040301@renesas.com>
+	<20130924131331.0e9a5f830f531655b2ea0ebe@ops.dti.ne.jp>
+	<20130924045215.GE3619@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380012836-29900-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20130924045215.GE3619@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, ben.dooks@codethink.co.uk, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Paul Mundt <lethal@linux-sh.org>, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-We no longer need to model the RESET line as a regulator since
-the USB phy-nop driver accepts "reset-gpios" property.
+Hi Simon,
+# I had added wrong From:, sorry.
 
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/omap5-uevm.dts |   26 ++------------------------
- 1 files changed, 2 insertions(+), 24 deletions(-)
+> With this in mind I believe the strings should be:
+> 
+> - renesas,smu-emev2
+> - renesas,smu-clkdiv-emev2
+> - renesas,smu-gclk-emev2
 
-diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-index 65d7b60..506bdc2 100644
---- a/arch/arm/boot/dts/omap5-uevm.dts
-+++ b/arch/arm/boot/dts/omap5-uevm.dts
-@@ -27,21 +27,10 @@
- 		regulator-max-microvolt = <3000000>;
- 	};
- 
--	/* HS USB Port 2 RESET */
--	hsusb2_reset: hsusb2_reset_reg {
--		compatible = "regulator-fixed";
--		regulator-name = "hsusb2_reset";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--		gpio = <&gpio3 16 GPIO_ACTIVE_HIGH>; /* gpio3_80 HUB_NRESET */
--		startup-delay-us = <70000>;
--		enable-active-high;
--	};
--
- 	/* HS USB Host PHY on PORT 2 */
- 	hsusb2_phy: hsusb2_phy {
- 		compatible = "usb-nop-xceiv";
--		reset-supply = <&hsusb2_reset>;
-+		reset-gpios = <&gpio3 16 GPIO_ACTIVE_LOW>; /* gpio3_80 HUB_NRESET */
- 	/**
- 	  * FIXME
- 	  * Put the right clock phandle here when available
-@@ -51,21 +40,10 @@
- 		clock-frequency = <19200000>;
- 	};
- 
--	/* HS USB Port 3 RESET */
--	hsusb3_reset: hsusb3_reset_reg {
--		compatible = "regulator-fixed";
--		regulator-name = "hsusb3_reset";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--		gpio = <&gpio3 15 GPIO_ACTIVE_HIGH>; /* gpio3_79 ETH_NRESET */
--		startup-delay-us = <70000>;
--		enable-active-high;
--	};
--
- 	/* HS USB Host PHY on PORT 3 */
- 	hsusb3_phy: hsusb3_phy {
- 		compatible = "usb-nop-xceiv";
--		reset-supply = <&hsusb3_reset>;
-+		reset-gpios = <&gpio3 15 GPIO_ACTIVE_LOW>; /* gpio3_79 ETH_NRESET */
- 	};
- 
- 	leds {
--- 
-1.7.4.1
+Thank you for pointed it out. I'll fix it in v2.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> To be honest I am not quite sure about the "-clkdiv" and "-gclk"
+Neither am I.
+I'm afread there are many 'not sure' thing for me about DT.
+I know some part might be wrong, which does not follow ePAPR at least.
+But, even I don't know whether I should follow ePAPR or not.
+
+I will wait for response for a while.
+/yoshii
+
