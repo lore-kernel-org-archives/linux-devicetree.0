@@ -1,46 +1,73 @@
-From: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC] gpio/omap: auto-setup a GPIO when used as an IRQ
-Date: Tue, 24 Sep 2013 13:09:18 +0530
-Message-ID: <524141A6.2090701@ti.com>
-References: <1379860848-29020-1-git-send-email-javier.martinez@collabora.co.uk> <20130923164519.GF2684@atomide.com> <524073BC.9080907@collabora.co.uk> <20130923170724.GG2684@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130923170724.GG2684-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Jon Hunter <jgchunter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
+Subject: [PATCH] powerpc/83xx: gianfar_ptp: select 1588 clock source through dts file
+Date: Tue, 24 Sep 2013 11:39:57 +0400
+Message-ID: <1380008397-22980-1-git-send-email-aida.mynzhasova@skitlab.ru>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Monday 23 September 2013 10:37 PM, Tony Lindgren wrote:
-> * Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> [130923 10:09]:
->> On 09/23/2013 06:45 PM, Tony Lindgren wrote:
->>> Hmm does this still work for legacy platform data based
->>> drivers that are doing gpio_request() first?
->>>
->> Yes it still work when booting using board files. I tested on my OMAP3 board and
->> it worked in both DT and legacy booting mode.
-> OK great.
->  
->>> And what's the path for clearing things for PM when free_irq()
->>> gets called? It seems that this would leave the GPIO bank
->>> enabled causing a PM regression?
->>>
->> Indeed, I did set bank->mod_usage |= 1 << offset so the bank is enabled if the
->> device goes to suspended and then resumed but I completely forget about the
->> clearing path when the IRQ is freed.
->>
->> Which makes me think that we should probably maintain two usage variables, one
->> for GPIO and another one for IRQ and check both of them on the suspend/resume pm
->> functions.
-> Yes that it seems that they should be treated separately.
- To understand, why cant the flag be cleared in gpio_irq_shutdown ?
+Currently IEEE 1588 timer reference clock source is determined through
+hard-coded value in gianfar_ptp driver. This patch allows to select ptp
+clock source by means of device tree file node.
 
-Regards,
- Sricharan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For instance:
+
+	fsl,cksel = <0>;
+
+for using external (TSEC_TMR_CLK input) high precision timer
+reference clock.
+
+Other acceptable values:
+
+	<1> : eTSEC system clock
+	<2> : eTSEC1 transmit clock
+	<3> : RTC clock input
+
+When this attribute isn't used, eTSEC system clock will serve as
+IEEE 1588 timer reference clock.
+
+Signed-off-by: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
+---
+ Documentation/devicetree/bindings/net/fsl-tsec-phy.txt | 2 ++
+ drivers/net/ethernet/freescale/gianfar_ptp.c           | 4 +++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+index 2c6be03..2f889f1 100644
+--- a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
++++ b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+@@ -86,6 +86,7 @@ General Properties:
+ 
+ Clock Properties:
+ 
++  - fsl,cksel        Timer reference clock source.
+   - fsl,tclk-period  Timer reference clock period in nanoseconds.
+   - fsl,tmr-prsc     Prescaler, divides the output clock.
+   - fsl,tmr-add      Frequency compensation value.
+@@ -121,6 +122,7 @@ Example:
+ 		reg = <0x24E00 0xB0>;
+ 		interrupts = <12 0x8 13 0x8>;
+ 		interrupt-parent = < &ipic >;
++		fsl,cksel       = <1>;
+ 		fsl,tclk-period = <10>;
+ 		fsl,tmr-prsc    = <100>;
+ 		fsl,tmr-add     = <0x999999A4>;
+diff --git a/drivers/net/ethernet/freescale/gianfar_ptp.c b/drivers/net/ethernet/freescale/gianfar_ptp.c
+index 098f133..e006a09 100644
+--- a/drivers/net/ethernet/freescale/gianfar_ptp.c
++++ b/drivers/net/ethernet/freescale/gianfar_ptp.c
+@@ -452,7 +452,9 @@ static int gianfar_ptp_probe(struct platform_device *dev)
+ 	err = -ENODEV;
+ 
+ 	etsects->caps = ptp_gianfar_caps;
+-	etsects->cksel = DEFAULT_CKSEL;
++
++	if (get_of_u32(node, "fsl,cksel", &etsects->cksel))
++		etsects->cksel = DEFAULT_CKSEL;
+ 
+ 	if (get_of_u32(node, "fsl,tclk-period", &etsects->tclk_period) ||
+ 	    get_of_u32(node, "fsl,tmr-prsc", &etsects->tmr_prsc) ||
+-- 
+1.8.1.2
