@@ -1,90 +1,47 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
-Date: Tue, 24 Sep 2013 11:44:57 +0200
-Message-ID: <6800560.AEqRA3IBkp@avalon>
-References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com> <3002978.Cb6jL1xtkE@avalon> <5240B396.2010705@wwwdotorg.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH V2 1/6] clk: exynos-audss: convert to platform device
+Date: Tue, 24 Sep 2013 11:47:45 +0200
+Message-ID: <52415FC1.4070400@samsung.com>
+References: <1379711637-5226-1-git-send-email-abrestic@chromium.org>
+ <1379982078-23381-1-git-send-email-abrestic@chromium.org>
+ <3549301.xmRx49e0Zc@amdc1227>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5240B396.2010705@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LMML <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>, LDOC <linux-doc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Hans Verkuil <hans.verkuil@cisco.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Sakari Ailus <sakari.ailus@iki.fi>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <3549301.xmRx49e0Zc@amdc1227>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Padmavathi Venna <padma.v@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Tushar Behera <tushar.behera@linaro.org>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Leela Krishna Amudala <l.krishna@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, Jiri Kosina <jkosina@suse.cz>, Stephen Boyd <sboyd@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Sachin Kamat <sachin.kamat@linaro>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 23 September 2013 15:33:10 Stephen Warren wrote:
-> On 09/23/2013 05:50 AM, Laurent Pinchart wrote:
-> > On Monday 23 September 2013 08:18:52 Prabhakar Lad wrote:
-> >> On Fri, Sep 20, 2013 at 3:22 PM, Sylwester Nawrocki wrote:
-> >>> On 09/20/2013 10:11 AM, Prabhakar Lad wrote:
-> >>>> OK I will, just send out a fix up patch which fixes the mismatch
-> >>>> between
-> >>>> names for the rc-cycle, and later send out a patch which removes the
-> >>>> platform data usage for next release with proper DT bindings.
-> >>> 
-> >>> I think the binding need to be fully corrected now, I just meant to not
-> >>> touch the board file, i.e. leave non-dt support unchanged.
-> >> 
-> >> Ok
-> >> 
-> >>>> I'm OK with making regulator properties as optional, But still it would
-> >>>> change the meaning of what DT is, we know that the VDD/VDD_IO .. etc
-> >>>> pins are required properties (but still making them as optional) :-(
-> >>>> 
-> >>>> I think there might several devices where this situation may arise so
-> >>>> just thinking of a alternative solution.
-> >>>> 
-> >>>> say we have property 'software-regulator' which takes true/false(0/1)
-> >>>> If set to true we make the regulators as required property or else we
-> >>>> assume it is handled and ignore it ?
-> >>> 
-> >>> I don't think this is a good idea. You would have to add a similar
-> >>> platform data flag for non-dt, it doesn't sound right. I can see two
-> >>> options here:
-> >>> 
-> >>> 1. Make the regulator properties mandatory and, e.g. define a fixed
-> >>> 
-> >>>    voltage GPIO regulator in DT with an empty 'gpio' property. Then
-> >>>    pass a phandle to that regulator in the adv7343 *-supply properties.
-> >>>    For non-dt similarly a fixed voltage regulator(s) and voltage
-> >>>    supplies  would need to be defined in the board files.
-> >>> 
-> >>> 2. Make the properties optional and use (devm_)regulator_get_optional()
-> >>> 
-> >>>    calls in the driver (a recently added function). I must admit I don't
-> >>>    fully understand description of this function, it currently looks
-> >>>    pretty much same as (devm_)regulator_get(). Thus the driver would
-> >>>    need to be handling regulator supplies only when non ERR_PTR() is
-> >>>    returned from regulator_get_optional() and otherwise assume a non
-> >>>    critical error. There is already quite a few example occurrences of
-> >>>    regulator_get_optional() usage.
-> >> 
-> >> Thanks for pointing it I'll choose option 2 and post the patch.
-> > 
-> > Isn't regulator_get_optional() intended for devices that can have supplies
-> > unconnected in normal use ?
+On 24/09/13 11:20, Tomasz Figa wrote:
+>> +static int exynos_audss_clk_remove(struct platform_device *pdev)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < EXYNOS_AUDSS_MAX_CLKS; i++) {
+>> +		if (clk_table[i])
 > 
-> I believe so, yes.
-> 
-> > The ADV7343 supplies are mandatory from a hardware
-> > point of view, so I think we should use regulator_get(). Otherwise the
-> > driver won't be able to tell the difference between a regulator that
-> > isn't present yet (for instance because the regulator device/driver
-> > hasn't been probed yet), which should result in deferred probing, and an
-> > always-on regulator that has been left out.
-> 
-> So I think you want to make the supply properties mandatory in DT (since
-> some form of supply is mandatory in HW), yet make the driver support
-> broken DTs which don't have those properties, by error-checking the
-> return value from regulator_get(). You might want to put a note into DT
-> saying that a previous version of the binding didn't require those
-> supply properties, so they may be missing from older DTs.
+> I believe clk_register_* functions return ERR_PTR() in case of failure,
+> not NULL, so this should be accounted for either here or at probe time.
+> Possibly checking for registration error in probe() would be the best
+> solution, although bloating the code a bit (but what error path isn't?).
 
-Are there such devices in the wild ?
+After registering all clocks a loop iterating over all entries of the
+clk_table[] array could be added and if any of the entries is ERR_PTR()
+either an error could be just logged or the successfully registered
+clocks could be freed and probe() could fail. It doesn't really seems
+much additional code.
 
--- 
-Regards,
-
-Laurent Pinchart
-
+--
+Thanks,
+Sylwester
