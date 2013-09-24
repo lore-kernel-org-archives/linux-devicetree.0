@@ -1,388 +1,188 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: [RFC 15/15] scripts/dtc: add verbose options
-Date: Tue, 24 Sep 2013 18:52:21 +0200
-Message-ID: <1380041541-17529-16-git-send-email-bcousson@baylibre.com>
-References: <1380041541-17529-1-git-send-email-bcousson@baylibre.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1380041541-17529-1-git-send-email-bcousson@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: olof@lixom.net, devicetree@vger.kernel.org, tomasz.figa@gmail.com, swarren@wwwdotorg.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: khilman@linaro.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fparent@baylibre.com, Benoit Cousson <bcousson@baylibre.com>
+From: Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH 3/3] ARM: s5pc100: Migrate clock handling to Common Clock
+ Framework
+Date: Tue, 24 Sep 2013 18:53:25 +0200
+Message-ID: <1380041605-15736-3-git-send-email-m.krawczuk@partner.samsung.com>
+References: <1380041605-15736-1-git-send-email-m.krawczuk@partner.samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1380041605-15736-1-git-send-email-m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yadi.brar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabien Parent <fparent@baylibre.com>
+This patch migrates the s5pc100 platform to use new clock driver
+using Common Clock Framework.
 
-The verbose option '-B' will show additional messages in addition
-to all validation errors. Right now the level 0 prints every nodes
-which don't have at least one schema associated to it. Level 1
-prints every properties which were not validated due to missing
-constraints.
-Activate the verbose mode by default into the Makefile.
-
-Usage example:
-    dtc -M ./bindings -B 1 file.dts
-
-A count of errors found so far as also been added and is printed
-on each error.
-
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
-Signed-off-by: Benoit Cousson <bcousson@baylibre.com>
+Signed-off-by: Mateusz Krawczuk <m.krawczuk-GrGkmOP51GdLN7c7dRTbYkEOCMrvLtNR@public.gmane.org>
+Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- scripts/Makefile.lib |   2 +-
- scripts/dtc/dtc.c    |  11 ++++-
- scripts/dtc/dtc.h    |   1 +
- scripts/dtc/schema.c | 124 ++++++++++++++++++++++++++++++++++++++++++++-------
- 4 files changed, 118 insertions(+), 20 deletions(-)
+ arch/arm/mach-s5pc100/Kconfig         |  8 ++++++++
+ arch/arm/mach-s5pc100/Makefile        |  4 ++--
+ arch/arm/mach-s5pc100/common.c        | 23 ++++++++++++++++++++++-
+ arch/arm/mach-s5pc100/common.h        | 13 +++++++++++++
+ arch/arm/mach-s5pc100/mach-smdkc100.c |  3 ++-
+ arch/arm/plat-samsung/Kconfig         |  2 +-
+ 6 files changed, 48 insertions(+), 5 deletions(-)
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 358dd69..ea1484e 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -264,7 +264,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
- quiet_cmd_dtc = DTC     $@
- cmd_dtc = $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
- 	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 \
--		-M $(objtree)/bindings \
-+		-M $(objtree)/bindings -B 1 \
- 		-i $(dir $<) $(DTC_FLAGS) \
- 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
- 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
-diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
-index a7881f0..8fee7ca 100644
---- a/scripts/dtc/dtc.c
-+++ b/scripts/dtc/dtc.c
-@@ -99,6 +99,8 @@ static void  __attribute__ ((noreturn)) usage(void)
- 	fprintf(stderr, "\t-M <schema folder>");
- 	fprintf(stderr,
- 		"\t\tCheck the dts using schemas from the specified folder\n");
-+	fprintf(stderr, "\t-B <number>\n");
-+	fprintf(stderr, "\t\tLevel of verbosity from the schema validation\n");
- 	exit(3);
- }
+diff --git a/arch/arm/mach-s5pc100/Kconfig b/arch/arm/mach-s5pc100/Kconfig
+index 15170be..2f27923 100644
+--- a/arch/arm/mach-s5pc100/Kconfig
++++ b/arch/arm/mach-s5pc100/Kconfig
+@@ -11,6 +11,7 @@ config CPU_S5PC100
+ 	bool
+ 	select S5P_EXT_INT
+ 	select SAMSUNG_DMADEV
++	select S5P_CLOCK if !COMMON_CLK
+ 	help
+ 	  Enable S5PC100 CPU support
  
-@@ -111,7 +113,7 @@ int main(int argc, char *argv[])
- 	const char *outname = "-";
- 	const char *depname = NULL;
- 	const char *schemadir = NULL;
--	int force = 0, sort = 0;
-+	int force = 0, sort = 0, verbose = 0;
- 	const char *arg;
- 	int opt;
- 	FILE *outf = NULL;
-@@ -123,7 +125,7 @@ int main(int argc, char *argv[])
- 	minsize    = 0;
- 	padsize    = 0;
+@@ -50,6 +51,13 @@ config S5PC100_SETUP_SPI
+ 	help
+ 	  Common setup code for SPI GPIO configurations.
  
--	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:M:"))
-+	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:M:B:"))
- 			!= EOF) {
- 		switch (opt) {
- 		case 'I':
-@@ -192,6 +194,10 @@ int main(int argc, char *argv[])
- 			parse_checks_option(false, true, optarg);
- 			break;
- 
-+		case 'B':
-+			verbose = strtol(optarg, NULL, 0);
-+			break;
++config COMMON_CLK_S5PC100
++	bool "Common Clock Framework support"
++	default y
++	select COMMON_CLK
++	help
++	  Common setup code for common clock framework.
 +
- 		case 'h':
- 		default:
- 			usage();
-@@ -223,6 +229,7 @@ int main(int argc, char *argv[])
- 	if (streq(inform, "dts")) {
- 		bi = dt_from_source(arg);
- 		if (schemadir) {
-+			set_verbosity_level(verbose);
- 			sdb = build_schema_db(schemadir);
- 			validate_dt(sdb, bi);
- 			free_schema_db(sdb);
-diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
-index 64fdc8a..a4731e0 100644
---- a/scripts/dtc/dtc.h
-+++ b/scripts/dtc/dtc.h
-@@ -293,6 +293,7 @@ int validate_dt(struct schema_db *db, struct boot_info *bi);
- struct schema_db *build_schema_db(const char *dir);
- void free_schema_db(struct schema_db *db);
- void exit_on_schema_validation_failure(int exit);
-+void set_verbosity_level(int verbosity);
- void add_to_schema_db(struct schema_db *db, const char *file);
- struct schema_db *new_schema_db(void);
+ config MACH_SMDKC100
+ 	bool "SMDKC100"
+ 	select CPU_S5PC100
+diff --git a/arch/arm/mach-s5pc100/Makefile b/arch/arm/mach-s5pc100/Makefile
+index 118c711..74b90ec 100644
+--- a/arch/arm/mach-s5pc100/Makefile
++++ b/arch/arm/mach-s5pc100/Makefile
+@@ -11,8 +11,8 @@ obj-				:=
  
-diff --git a/scripts/dtc/schema.c b/scripts/dtc/schema.c
-index e349e01..3a2f831 100644
---- a/scripts/dtc/schema.c
-+++ b/scripts/dtc/schema.c
-@@ -46,6 +46,8 @@
- static const char *const SCHEMA_EXT = ".schema";
- static const char *const VALUE_PROPNAME = "value";
- static int exit_on_failure = 0;
-+static int verbose;
-+static int error_count;
+ # Core
  
- struct str_list {
- 	char *str;
-@@ -57,6 +59,11 @@ struct node_list {
- 	struct node_list *next;
- };
+-obj-y				+= common.o clock.o
+-
++obj-y				+= common.o
++obj-$(CONFIG_S5P_CLOCK)	+= clock.o
+ obj-y				+= dma.o
  
-+struct property_list {
-+	struct property *property;
-+	struct property_list *next;
-+};
+ # machine support
+diff --git a/arch/arm/mach-s5pc100/common.c b/arch/arm/mach-s5pc100/common.c
+index c5a8eea..d8db7b2 100644
+--- a/arch/arm/mach-s5pc100/common.c
++++ b/arch/arm/mach-s5pc100/common.c
+@@ -40,7 +40,13 @@
+ 
+ #include <plat/cpu.h>
+ #include <plat/devs.h>
 +
- struct range {
- 	uint32_t low;
- 	uint32_t high;
-@@ -236,7 +243,7 @@ static void dt_error(struct node_list *path,
++#ifdef CONFIG_S5P_CLOCK
+ #include <plat/clock.h>
++#else
++#include <linux/clk-provider.h>
++#endif
++
+ #include <plat/sdhci.h>
+ #include <plat/adc-core.h>
+ #include <plat/ata-core.h>
+@@ -54,6 +60,18 @@
  
- 	assert(format);
+ #include "common.h"
  
--	fprintf(stderr, "FATAL ERROR");
-+	fprintf(stderr, "[%d] FATAL ERROR", ++error_count);
- 	if (p) {
- 		fprintf(stderr, " in %s:%d:%d",
- 			p->loc.file, p->loc.line, p->loc.col);
-@@ -581,15 +588,42 @@ static int check_value(struct property *p, struct prop_constraints *pc)
- 	return 1;
- }
- 
-+static void remove_from_property_list(struct property *p,
-+				      struct property_list **plist)
++static unsigned long xxti_f, xusbxti_f;
++
++void __init s5pc100_set_xxti_freq(unsigned long freq)
 +{
-+	struct property_list *iter;
-+	struct property_list *next_iter;
-+	struct property_list *prev_iter = NULL;
-+
-+	if (!plist || !*plist)
-+		return;
-+
-+	iter = *plist;
-+	for_each_safe(iter, iter, next_iter) {
-+		if (strcmp(p->name, iter->property->name)) {
-+			prev_iter = iter;
-+			continue;
-+		}
-+
-+		if (prev_iter)
-+			prev_iter->next = iter->next;
-+		else
-+			*plist = iter->next;
-+		free(iter);
-+	}
++	xxti_f = freq;
 +}
 +
- static int validate_properties(struct node *n,
- 			       struct node *schema,
--			       struct node_list *path);
-+			       struct node_list *path,
-+			       struct property_list **plist);
- 
- static int validate_property(struct node *n,
- 			     struct property *p,
- 			     struct prop_constraints *pc,
- 			     struct node *schema,
--			     struct node_list *path)
-+			     struct node_list *path,
-+			     struct property_list **plist)
- {
- 	int ret = 1;
- 
-@@ -598,12 +632,16 @@ static int validate_property(struct node *n,
- 	assert(pc);
- 	assert(path);
- 
-+	if (p && plist)
-+		remove_from_property_list(p, plist);
-+
- 	if (pc->is_required && !p) {
- 		if (pc->can_be_inherited && path->next) {
- 			assert(path->next->n);
- 			ret &= validate_properties(path->next->n,
- 						   schema,
--						   path->next);
-+						   path->next,
-+						   plist);
- 		} else {
- 			DT_ERROR(path, NULL, "Missing property '%s'\n",
- 				 schema->name);
-@@ -636,7 +674,8 @@ end:
- 
- static int validate_properties(struct node *n,
- 			       struct node *schema,
--			       struct node_list *path)
-+			       struct node_list *path,
-+			       struct property_list **plist)
- {
- 	struct property *p;
- 	struct property *iter;
-@@ -652,13 +691,13 @@ static int validate_properties(struct node *n,
- 
- 	iter = n->proplist;
- 	p = get_property_matching_pattern(&iter, pc->name ?: schema->name);
--	ret &= validate_property(n, p, pc, schema, path);
-+	ret &= validate_property(n, p, pc, schema, path, plist);
- 
- 	/* if other properties match the pattern */
- 	while (iter && p) {
- 		p = get_property_matching_pattern(&iter, schema->name);
- 		if (p)
--			ret &= validate_property(n, p, pc, schema, path);
-+			ret &= validate_property(n, p, pc, schema, path, plist);
- 		else
- 			break;
- 	}
-@@ -722,12 +761,14 @@ static struct node *find_parent_node(struct node *schema,
- 
- static int validate_node(struct node *n,
- 			 struct node_constraints *nc,
--			 struct node_list *path);
-+			 struct node_list *path,
-+			 struct property_list **plist);
- 
- static void free_node_constraints(struct node_constraints *nc);
- 
- static int validate_parents(struct node *schema,
--			    struct node_list *path)
-+			    struct node_list *path,
-+			    struct property_list **plist)
- {
- 	struct node *n;
- 	struct node_constraints *nc;
-@@ -746,7 +787,7 @@ static int validate_parents(struct node *schema,
- 		memset(nc, 0, sizeof(*nc));
- 		load_node_constraints(nc, schema);
- 		nc->dt = schema;
--		ret &= validate_node(n, nc, path);
-+		ret &= validate_node(n, nc, path, plist);
- 		free_node_constraints(nc);
- 	}
- 
-@@ -792,7 +833,8 @@ static struct node *find_current_compatible_node(struct node_constraints *nc)
- }
- 
- static int validate_compatible(struct node_constraints *nc,
--			       struct node_list *path)
-+			       struct node_list *path,
-+			       struct property_list **plist)
- {
- 	int ret = 1;
- 	struct node *n;
-@@ -808,12 +850,13 @@ static int validate_compatible(struct node_constraints *nc,
- 	if (!n)
- 		return ret;
- 
--	return ret & validate_parents(n, path);
-+	return ret & validate_parents(n, path, plist);
- }
- 
- static int validate_node(struct node *n,
- 			 struct node_constraints *nc,
--			 struct node_list *path)
-+			 struct node_list *path,
-+			 struct property_list **plist)
- {
- 	struct node *iter;
- 	struct str_list *pattern;
-@@ -828,9 +871,9 @@ static int validate_node(struct node *n,
- 
- 	for (iter = nc->dt->children; iter; iter = iter->next_sibling) {
- 		if (!strcmp(iter->name, "parents"))
--			ret &= validate_parents(iter, path);
-+			ret &= validate_parents(iter, path, plist);
- 		else
--			ret &= validate_properties(n, iter, path);
-+			ret &= validate_properties(n, iter, path, plist);
- 	}
- 
- 	/* Check whether the node has all the required children nodes */
-@@ -915,6 +958,25 @@ end:
- 	return ret;
- }
- 
-+static struct property_list *build_proplist(struct node *node)
++void __init s5pc100_set_xusbxti_freq(unsigned long freq)
 +{
-+	struct property *p;
-+	struct property_list *plist = NULL;
-+	struct property_list *new_plist;
-+
-+	for (p = node->proplist; p; p = p->next) {
-+		new_plist = xmalloc(sizeof(*new_plist));
-+		memset(new_plist, 0, sizeof(*new_plist));
-+
-+		new_plist->next = plist;
-+
-+		plist = new_plist;
-+		plist->property = p;
-+	}
-+
-+	return plist;
++	xusbxti_f = freq;
 +}
 +
- static int for_each_compatible_validate(struct schema_db *db,
- 					struct property *p,
- 					struct node *node,
-@@ -924,23 +986,46 @@ static int for_each_compatible_validate(struct schema_db *db,
- 	int i;
- 	int offset = 0;
- 	int ret = 1;
-+	int has_compatible_in_db = 0;
-+	struct property_list *plist;
-+	struct property_list *plist_next;
-+	char *path_str;
+ static const char name_s5pc100[] = "S5PC100";
  
- 	assert(db);
- 	assert(node);
- 	assert(p);
- 	assert(p->val.type == STRING);
+ static struct cpu_table cpu_ids[] __initdata = {
+@@ -201,13 +219,14 @@ void __init s5pc100_map_io(void)
  
-+	plist = build_proplist(node);
-+
- 	while (offset >= 0 && offset < p->val.len) {
- 		i = 0;
-+		has_compatible_in_db = 0;
- 		while ((nc = get_node_constraints_of(db, p->val.val + offset,
- 						     &i)) != NULL) {
--			ret &= validate_node(node, nc, path);
--			ret &= validate_compatible(nc, path);
-+			ret &= validate_node(node, nc, path, &plist);
-+			ret &= validate_compatible(nc, path, &plist);
-+			has_compatible_in_db = 1;
-+		}
-+
-+		if (!has_compatible_in_db && verbose) {
-+			fprintf(stderr, "[%d] No schema available for '%s'\n",
-+				++error_count, p->val.val + offset);
- 		}
+ void __init s5pc100_init_clocks(int xtal)
+ {
++#ifdef CONFIG_S5P_CLOCK
+ 	printk(KERN_DEBUG "%s: initializing clocks\n", __func__);
  
- 		offset = get_next_string_offset(p, offset);
- 	}
- 
-+	if (verbose > 1) {
-+		for_each_safe(plist, plist, plist_next) {
-+			path_str = build_path(path);
-+			fprintf(stderr, "[%d] Property undefined: '%s%s'\n",
-+				++error_count, path_str, plist->property->name);
-+			free(plist);
-+			free(path_str);
-+		}
-+	}
-+
- 	return ret;
+ 	s3c24xx_register_baseclocks(xtal);
+ 	s5p_register_clocks(xtal);
+ 	s5pc100_register_clocks();
+ 	s5pc100_setup_clocks();
+-	samsung_wdt_reset_init(S3C_VA_WATCHDOG);
++#endif
  }
  
-@@ -998,6 +1083,11 @@ void exit_on_schema_validation_failure(int exit)
- 	exit_on_failure = exit;
+ void __init s5pc100_init_irq(void)
+@@ -216,6 +235,8 @@ void __init s5pc100_init_irq(void)
+ 
+ 	/* VIC0, VIC1, and VIC2 are fully populated. */
+ 	s5p_init_irq(vic, ARRAY_SIZE(vic));
++	s5pc100_clk_init(NULL, xxti_f, xusbxti_f, S3C_VA_SYS);
++	samsung_wdt_reset_init(S3C_VA_WATCHDOG);
  }
  
-+void set_verbosity_level(int verbosity)
-+{
-+	verbose = verbosity;
-+}
-+
- /* Schema DB */
+ static struct bus_type s5pc100_subsys = {
+diff --git a/arch/arm/mach-s5pc100/common.h b/arch/arm/mach-s5pc100/common.h
+index 08d782d..d7d80b8 100644
+--- a/arch/arm/mach-s5pc100/common.h
++++ b/arch/arm/mach-s5pc100/common.h
+@@ -14,6 +14,19 @@
  
- static int is_schema_file(const char *file)
+ #include <linux/reboot.h>
+ 
++void s5pc100_set_xxti_freq(unsigned long freq);
++void s5pc100_set_xusbxti_freq(unsigned long freq);
++
++#ifdef CONFIG_COMMON_CLK_S5PC100
++void s5pc100_clk_init(struct device_node *np,
++			    unsigned long xxti_f, unsigned long xusbxti_f,
++			    void __iomem *reg_base);
++#else
++static inline void s5pc100_clk_init(struct device_node *np,
++			    unsigned long xxti_f, unsigned long xusbxti_f,
++			    void __iomem *reg_base) {}
++#endif
++
+ void s5pc100_init_io(struct map_desc *mach_desc, int size);
+ void s5pc100_init_irq(void);
+ 
+diff --git a/arch/arm/mach-s5pc100/mach-smdkc100.c b/arch/arm/mach-s5pc100/mach-smdkc100.c
+index 7c57a22..1087dcb 100644
+--- a/arch/arm/mach-s5pc100/mach-smdkc100.c
++++ b/arch/arm/mach-s5pc100/mach-smdkc100.c
+@@ -221,7 +221,8 @@ static struct platform_pwm_backlight_data smdkc100_bl_data = {
+ static void __init smdkc100_map_io(void)
+ {
+ 	s5pc100_init_io(NULL, 0);
+-	s3c24xx_init_clocks(12000000);
++	s5pc100_set_xxti_freq(12000000);
++	s5pc100_set_xusbxti_freq(24000000);
+ 	s3c24xx_init_uarts(smdkc100_uartcfgs, ARRAY_SIZE(smdkc100_uartcfgs));
+ 	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
+ }
+diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
+index 2a98613..645f21c 100644
+--- a/arch/arm/plat-samsung/Kconfig
++++ b/arch/arm/plat-samsung/Kconfig
+@@ -91,7 +91,7 @@ config SAMSUNG_CLKSRC
+ 	  used by newer systems such as the S3C64XX.
+ 
+ config S5P_CLOCK
+-	def_bool (ARCH_S5P64X0 || ARCH_S5PC100)
++	def_bool ARCH_S5P64X0
+ 	help
+ 	  Support common clock part for ARCH_S5P and ARCH_EXYNOS SoCs
+ 
 -- 
 1.8.1.2
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
