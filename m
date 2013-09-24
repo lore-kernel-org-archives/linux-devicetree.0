@@ -1,147 +1,69 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: [PATCH 2/6] thermal: exynos: Provide separate TMU data for Exynos4412
-Date: Tue, 24 Sep 2013 10:08:18 +0200
-Message-ID: <1380010102-25817-3-git-send-email-l.majewski@samsung.com>
-References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <eduardo.valentin@ti.com>, Amit Daniel Kachhap <amit.daniel@samsung.com>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Linux PM list <linux-pm@vger.kernel.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v4] media: st-rc: Add ST remote control driver
+Date: Tue, 24 Sep 2013 09:08:47 +0100
+Message-ID: <5241488F.5010000@st.com>
+References: <1379581176-25078-1-git-send-email-srinivas.kandagatla@st.com> <5240A740.7000407@wwwdotorg.org>
+Reply-To: srinivas.kandagatla@st.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5240A740.7000407@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-media@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Up till now Exynos5250 and Exynos4412 had the same definitions for TMU
-data. Following commit changes that, by introducing separate
-exynos4412_default_tmu_data structure.
+Thanks Stephen,
+On 23/09/13 21:40, Stephen Warren wrote:
+> On 09/19/2013 02:59 AM, Srinivas KANDAGATLA wrote:
+>> This patch adds support to ST RC driver, which is basically a IR/UHF
+>> receiver and transmitter. This IP (IRB) is common across all the ST
+>> parts for settop box platforms. IRB is embedded in ST COMMS IP block.
+>> It supports both Rx & Tx functionality.
+>>
+>> In this driver adds only Rx functionality via LIRC codec.
+> 
+>> diff --git a/Documentation/devicetree/bindings/media/st-rc.txt b/Documentation/devicetree/bindings/media/st-rc.txt
+> 
+>> +Required properties:
+>> +	- compatible: should contain "st,comms-irb".
+>> +	- reg: base physical address of the controller and length of memory
+>> +	mapped  region.
+> 
+> Nits:
+> 
+> The indentation is a little odd here; I'd expect the - to be in column
+> 1, at least that's how most other binding docs are written. Not a big
+> deal though.
+> 
+> It'd be nice to indent the continuation lines (e.g. "mapped region") a
+> bit more so it's easier to see where each new entry starts.
+> 
+> There are two spaces in "mapped  region".
+I should have noticed it... I will fix it in next version.
+> 
+>> +	- rx-mode: can be "infrared" or "uhf". rx-mode should be present iff the
+>> +	  rx pins are wired up.
+>> +	- tx-mode: should be "infrared". tx-mode should be present iff the tx
+>> +	  pins are wired up.
+> 
+> Should those property names be prefixed with "st,"; I assume they're
+> specific to this binding rather than something generic that applies to
+> all IR controller bindings? If you expect them to be generic, it's fine.
 
-Since Exynos4412 was chronologically first, the corresponding name for
-TMU registers and default data was renamed.
+Officially these bindings are not specified in ePAPR specs but I see no
+reason for not having these properties as generic ones.
 
-Additionally, new SOC_ARCH_EXYNOS4412 type has been defined.
+Are you ok with that?
 
-Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
----
- drivers/thermal/samsung/exynos_tmu.c      |    7 ++++---
- drivers/thermal/samsung/exynos_tmu.h      |    1 +
- drivers/thermal/samsung/exynos_tmu_data.c |   26 ++++++++++++++++++++------
- drivers/thermal/samsung/exynos_tmu_data.h |    9 ++++++++-
- 4 files changed, 33 insertions(+), 10 deletions(-)
+> 
+>> +	- clocks : phandle with clock-specifier pair.
+> 
+> For what clock?
+Its Clock for IRB block. I will add this in next version.
+> 
+> 
 
-diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-index b43afda..a858cc4 100644
---- a/drivers/thermal/samsung/exynos_tmu.c
-+++ b/drivers/thermal/samsung/exynos_tmu.c
-@@ -488,7 +488,7 @@ static const struct of_device_id exynos_tmu_match[] = {
- 	},
- 	{
- 		.compatible = "samsung,exynos4412-tmu",
--		.data = (void *)EXYNOS5250_TMU_DRV_DATA,
-+		.data = (void *)EXYNOS4412_TMU_DRV_DATA,
- 	},
- 	{
- 		.compatible = "samsung,exynos5250-tmu",
-@@ -630,8 +630,9 @@ static int exynos_tmu_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	if (pdata->type == SOC_ARCH_EXYNOS ||
--		pdata->type == SOC_ARCH_EXYNOS4210 ||
--				pdata->type == SOC_ARCH_EXYNOS5440)
-+	    pdata->type == SOC_ARCH_EXYNOS4210 ||
-+	    pdata->type == SOC_ARCH_EXYNOS4412 ||
-+	    pdata->type == SOC_ARCH_EXYNOS5440)
- 		data->soc = pdata->type;
- 	else {
- 		ret = -EINVAL;
-diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
-index b364c9e..db37df0 100644
---- a/drivers/thermal/samsung/exynos_tmu.h
-+++ b/drivers/thermal/samsung/exynos_tmu.h
-@@ -41,6 +41,7 @@ enum calibration_mode {
- 
- enum soc_type {
- 	SOC_ARCH_EXYNOS4210 = 1,
-+	SOC_ARCH_EXYNOS4412,
- 	SOC_ARCH_EXYNOS,
- 	SOC_ARCH_EXYNOS5440,
- };
-diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
-index 9002499..bd08093 100644
---- a/drivers/thermal/samsung/exynos_tmu_data.c
-+++ b/drivers/thermal/samsung/exynos_tmu_data.c
-@@ -90,8 +90,8 @@ struct exynos_tmu_init_data const exynos4210_default_tmu_data = {
- };
- #endif
- 
--#if defined(CONFIG_SOC_EXYNOS5250) || defined(CONFIG_SOC_EXYNOS4412)
--static const struct exynos_tmu_registers exynos5250_tmu_registers = {
-+#if defined(CONFIG_SOC_EXYNOS4412) || defined(CONFIG_SOC_EXYNOS5250)
-+static const struct exynos_tmu_registers exynos4412_tmu_registers = {
- 	.triminfo_data = EXYNOS_TMU_REG_TRIMINFO,
- 	.triminfo_25_shift = EXYNOS_TRIMINFO_25_SHIFT,
- 	.triminfo_85_shift = EXYNOS_TRIMINFO_85_SHIFT,
-@@ -128,7 +128,7 @@ static const struct exynos_tmu_registers exynos5250_tmu_registers = {
- 	.emul_time_mask = EXYNOS_EMUL_TIME_MASK,
- };
- 
--#define EXYNOS5250_TMU_DATA \
-+#define EXYNOS4412_TMU_DATA \
- 	.threshold_falling = 10, \
- 	.trigger_levels[0] = 85, \
- 	.trigger_levels[1] = 103, \
-@@ -162,15 +162,29 @@ static const struct exynos_tmu_registers exynos5250_tmu_registers = {
- 		.temp_level = 103, \
- 	}, \
- 	.freq_tab_count = 2, \
--	.type = SOC_ARCH_EXYNOS, \
--	.registers = &exynos5250_tmu_registers, \
-+	.registers = &exynos4412_tmu_registers, \
- 	.features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD | \
- 			TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
- 			TMU_SUPPORT_EMUL_TIME)
-+#endif
- 
-+#if defined(CONFIG_SOC_EXYNOS4412)
-+struct exynos_tmu_init_data const exynos4412_default_tmu_data = {
-+	.tmu_data = {
-+		{ EXYNOS4412_TMU_DATA,
-+		.type = SOC_ARCH_EXYNOS4412,
-+		},
-+	},
-+	.tmu_count = 1,
-+};
-+#endif
-+
-+#if defined(CONFIG_SOC_EXYNOS5250)
- struct exynos_tmu_init_data const exynos5250_default_tmu_data = {
- 	.tmu_data = {
--		{ EXYNOS5250_TMU_DATA },
-+		{ EXYNOS4412_TMU_DATA,
-+		.type = SOC_ARCH_EXYNOS,
-+		},
- 	},
- 	.tmu_count = 1,
- };
-diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
-index dc7feb5..b130b1e 100644
---- a/drivers/thermal/samsung/exynos_tmu_data.h
-+++ b/drivers/thermal/samsung/exynos_tmu_data.h
-@@ -138,7 +138,14 @@ extern struct exynos_tmu_init_data const exynos4210_default_tmu_data;
- #define EXYNOS4210_TMU_DRV_DATA (NULL)
- #endif
- 
--#if (defined(CONFIG_SOC_EXYNOS5250) || defined(CONFIG_SOC_EXYNOS4412))
-+#if defined(CONFIG_SOC_EXYNOS4412)
-+extern struct exynos_tmu_init_data const exynos4412_default_tmu_data;
-+#define EXYNOS4412_TMU_DRV_DATA (&exynos4412_default_tmu_data)
-+#else
-+#define EXYNOS4412_TMU_DRV_DATA (NULL)
-+#endif
-+
-+#if defined(CONFIG_SOC_EXYNOS5250)
- extern struct exynos_tmu_init_data const exynos5250_default_tmu_data;
- #define EXYNOS5250_TMU_DRV_DATA (&exynos5250_default_tmu_data)
- #else
--- 
-1.7.10.4
+Thanks,
+srini
