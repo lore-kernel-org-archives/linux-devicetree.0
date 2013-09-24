@@ -1,112 +1,101 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 00/10] pwm-backlight: Add GPIO and power supply support
-Date: Tue, 24 Sep 2013 17:14:46 +0900
-Message-ID: <20130924081446.GA11981@verge.net.au>
-References: <1379972467-11243-1-git-send-email-treding@nvidia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3] gpio: interrupt consistency check for OF GPIO IRQs
+Date: Tue, 24 Sep 2013 10:26:10 +0200
+Message-ID: <CACRpkdZKqW9veHzc1Rgj4oKsjGRATk+Sz8vJaP3EfT4de+bjQA@mail.gmail.com>
+References: <1377526030-32024-1-git-send-email-larsi@wh2.tu-dresden.de>
+	<52279524.8090006@wwwdotorg.org>
+	<20130909161924.GT29403@sirena.org.uk>
+	<2052193.CMUEUJFRgS@lem-wkst-02>
+	<522F78CB.2020507@wwwdotorg.org>
+	<20130910213718.GH29403@sirena.org.uk>
+	<522F9E6C.2010905@wwwdotorg.org>
+	<522FBED9.9000305@collabora.co.uk>
+	<5230C7F6.3080803@wwwdotorg.org>
+	<CACRpkdacx-e01i_h4cj1qMX2zNOiiDshbTV__wi_LfQrLkrL6g@mail.gmail.com>
+	<5240A0C2.4010502@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1379972467-11243-1-git-send-email-treding@nvidia.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Magnus Damm <magnus.damm@gmail.com>, Guan Xuetao <gxt@mprc.pku.edu.cn>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, openezx-devel@lists.openezx.org, linux-samsung-soc@vger.kernel.org, linux-sh@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@deeprootsystems.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5240A0C2.4010502@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <acourbot@nvidia.com>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Lars Poeschel <poeschel@lemonage.de>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, joelf@ti.com
 List-Id: devicetree@vger.kernel.org
 
-[ Cc: Olof Johansson, Kevin Hilman and Arnd Bergman: arm-soc maintainers ]
+On Mon, Sep 23, 2013 at 10:12 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 09/23/2013 01:53 PM, Linus Walleij wrote:
 
-On Mon, Sep 23, 2013 at 11:40:57PM +0200, Thierry Reding wrote:
-> This series adds the ability to specify a GPIO and a power supply to
-> enable a backlight.
-> 
-> Patch 1 refactors the power on and power off sequences into separate
-> functions in preparation for subsequent patches.
-> 
-> Patch 2 adds an optional GPIO to enable a backlight. This patch only
-> includes the field within the platform data so that it can be properly
-> setup before actually being put to use.
-> 
-> Patches 3 to 7 convert all users of the pwm-backlight driver to use the
-> new field. For most of them, this just initializes the field to -1,
-> marking the field as unused.
+>> I think the kernel should prevent such things.
 >
-> Patch 8 uses the new field within the pwm-backlight driver and at the
-> same time allows it to be parsed from device tree.
-> 
-> Patch 9 implements support for an optional power supply. This relies on
-> the regulator core to return a dummy regulator when no supply has been
-> otherwise setup so the driver doesn't have to handle that specially nor
-> require all users to be updated.
-> 
-> Patch 10 adds a way to keep a backlight turned off at boot. This is
-> useful when hooking up a backlight with a subsystem such as DRM which
-> has more explicit semantics as to when a backlight should be turned on.
-> 
-> Due to the dependencies within the series, I propose to take all these
-> patches through the PWM tree, so I'll need acks from OMAP, PXA, Samsung,
-> shmobile and Unicore32 maintainers.
+> It might be nice if it could do that.
+>
+> However, that is 100% unrelated to the problem at hand.
 
-I received some feedback regarding shmobile conflicts when
-arm-soc was merged between v3.11 and v3.12-rc1. With this
-in mind I now have a strong preference for changes inside
-arch/arm/mach-shmobile/ to be taken through my renesas
-tree and thus more importantly through arm-soc if possible.
+I don't think it is unrelated when the old OMAP boardfile-based
+code definately prevents such uses by its strict usage
+of gpio_request() for all IRQ-bound GPIOs.
 
-> Thierry
-> 
-> Thierry Reding (10):
->   pwm-backlight: Refactor backlight power on/off
->   pwm-backlight: Add optional enable GPIO
->   ARM: OMAP: Initialize PWM backlight enable_gpio field
->   ARM: pxa: Initialize PWM backlight enable_gpio field
->   ARM: SAMSUNG: Initialize PWM backlight enable_gpio field
->   ARM: shmobile: Initialize PWM backlight enable_gpio field
->   unicore32: Initialize PWM backlight enable_gpio field
->   pwm-backlight: Use new enable_gpio field
->   pwm-backlight: Use an optional power supply
->   pwm-backlight: Allow backlight to remain disabled on boot
-> 
->  .../bindings/video/backlight/pwm-backlight.txt     |   6 +
->  arch/arm/mach-omap2/board-zoom-peripherals.c       |   1 +
->  arch/arm/mach-pxa/cm-x300.c                        |   1 +
->  arch/arm/mach-pxa/colibri-pxa270-income.c          |   1 +
->  arch/arm/mach-pxa/ezx.c                            |   1 +
->  arch/arm/mach-pxa/hx4700.c                         |   1 +
->  arch/arm/mach-pxa/lpd270.c                         |   1 +
->  arch/arm/mach-pxa/magician.c                       |   1 +
->  arch/arm/mach-pxa/mainstone.c                      |   1 +
->  arch/arm/mach-pxa/mioa701.c                        |   1 +
->  arch/arm/mach-pxa/palm27x.c                        |   1 +
->  arch/arm/mach-pxa/palmtc.c                         |  35 +----
->  arch/arm/mach-pxa/palmte2.c                        |   1 +
->  arch/arm/mach-pxa/pcm990-baseboard.c               |   1 +
->  arch/arm/mach-pxa/raumfeld.c                       |   1 +
->  arch/arm/mach-pxa/tavorevb.c                       |   2 +
->  arch/arm/mach-pxa/viper.c                          |   1 +
->  arch/arm/mach-pxa/z2.c                             |   2 +
->  arch/arm/mach-pxa/zylonite.c                       |   1 +
->  arch/arm/mach-s3c24xx/mach-h1940.c                 |   1 +
->  arch/arm/mach-s3c24xx/mach-rx1950.c                |   1 +
->  arch/arm/mach-s3c64xx/mach-crag6410.c              |   1 +
->  arch/arm/mach-s3c64xx/mach-hmt.c                   |   1 +
->  arch/arm/mach-s3c64xx/mach-smartq.c                |   1 +
->  arch/arm/mach-s3c64xx/mach-smdk6410.c              |   1 +
->  arch/arm/mach-s5p64x0/mach-smdk6440.c              |   1 +
->  arch/arm/mach-s5p64x0/mach-smdk6450.c              |   1 +
->  arch/arm/mach-s5pc100/mach-smdkc100.c              |   1 +
->  arch/arm/mach-s5pv210/mach-smdkv210.c              |   1 +
->  arch/arm/mach-shmobile/board-armadillo800eva.c     |   1 +
->  arch/arm/plat-samsung/dev-backlight.c              |   5 +
->  arch/unicore32/kernel/puv3-nb0916.c                |   1 +
->  drivers/video/backlight/pwm_bl.c                   | 142 ++++++++++++++++-----
->  include/linux/pwm_backlight.h                      |   7 +
->  34 files changed, 162 insertions(+), 64 deletions(-)
-> 
-> -- 
-> 1.8.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+I think not preventing it for the DT boot path is setting lower
+standards for DT code than for boardfile code which is not
+what we should be doing.
+
+> A driver which only cares about an IRQ should be able to call just IRQ
+> APIs and have the HW work. Since not all IRQs are GPIOs, the thing that
+> causes the HW to work should not involve the GPIO subsystem in any way
+> at all.
+
+Yes I have bought into that concept now.
+
+> Having the kernel detect when two different drivers both request the
+> same resource is entirely another thing. The solution to the first issue
+> must not rely on any solution to this second issue.
+
+I understand this stance from a DT point of view - which is about
+resource passing and its syntax and semantics.
+
+>From a GPIO subsystem point of view, in keeping resources under
+kernel control, I naturally do not agree.
+
+> I'm also not convinced it's possible to solve this second issue given
+> the current kernel APIs, since there's not enough semantic information;
+> requests of GPIOs and IRQs aren't actually tied to a particular driver
+> at present (there's no "struct device *dev" parameter to request_irq or
+> gpio_request) and so the subsystems can't actually tell who is
+> requesting the GPIO/IRQ, and hence can't detect when the same driver, or
+> a different driver, is requesting the same core resource for different
+> purposes.
+
+Solving the issue that e.g. two different drivers competing about the
+same resource (as in one driver requesting an IRQ and another one
+requesting a GPIO) is not what I'm after here.
+
+I'm more after the GPIO subsystem having knowledge of a certain
+GPIO line being requested for IRQ, and denying that line to be set
+as input.
+
+Maybe this can actually be achieved quite easily with
+an additional API? Like gpio_lock_as_irq(gpio) which flags this
+in .flags of struct gpio_desc and prevent such things?
+
+Alexandre what do you think about this idea?
+
+> Equally, I am actually not 100% sure we want the core to prevent this.
+> Why shouldn't two different drivers request the same IRQ? Why shouldn't
+> at least one driver, perhaps more, request the pin as a GPIO (assuming
+> it will only read the GPIO value, not flip the pin to output).
+
+But I have already stated that this is OK?
+
+Are we talking past each other now?
+
+> This
+> exact situation might happen on some Tegra boards where there's a GPIO
+> for VBUS_EN that affects 2 USB ports. It's supposed to be driven
+> open-collector. If an external entity forces it low, it means
+> over-current.
+
+You are describing a very good reason for the core to be
+doing exactly what I described I think?
+
+Yours,
+Linus Walleij
