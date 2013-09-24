@@ -1,58 +1,56 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/3] of: Add Panasonic Corporation vendor prefix
-Date: Tue, 24 Sep 2013 12:21:05 +0100
-Message-ID: <20130924112105.GB32390@e106331-lin.cambridge.arm.com>
-References: <1380012714-19073-1-git-send-email-treding@nvidia.com>
- <1380012714-19073-3-git-send-email-treding@nvidia.com>
- <20130924091729.GB31077@e106331-lin.cambridge.arm.com>
- <20130924093027.GC13971@ulmo>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V3 0/3] Add AMS AS3722 mfd, pincontrol, regulator and RTC driver.
+Date: Tue, 24 Sep 2013 17:28:38 +0530
+Message-ID: <1380023921-29867-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130924093027.GC13971@ulmo>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: lee.jones@linaro.org, sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2013 at 10:30:29AM +0100, Thierry Reding wrote:
-> On Tue, Sep 24, 2013 at 10:17:29AM +0100, Mark Rutland wrote:
-> > On Tue, Sep 24, 2013 at 09:51:54AM +0100, Thierry Reding wrote:
-> > > Panasonic is listed as PC on the stock exchange, so use that as the
-> > > vendor prefix.
-> > 
-> > As I suspect this is going to lead to confusion, and there don't seem to
-> > be any bindings using this yet, I'd prefer "panasonic" as the vendor
-> > prefix.
-> 
-> There was some discussion a few months back where it was recommended to
-> use the stock symbols for vendor prefixes where one existed. According
-> to this[0], the symbol for Panasonic Corporation is "PC".
+This series add the driver support for AMS AS3722 PMIC. The driver includes
+MFD, pincontrol and GPIO, regulator and RTC.
 
->From discussions I recall, either stock timers or full names are fine,
-as long as they didn't change over time there was no real preference. I
-do not recall a preference for stock ticker names, but perhaps I missed
-something?
+Changes from V1:
+- Remove compatible string from DT for subnode.
+- Add macro in regmap.h for definign range.
+- Nit cleanups in driver and use module_i2c_driver/module_platform_driver.
+- Use linear_range and added regulator_map_* on regulators.
+- Move OC configuration to regulator_current limit setting.
+- Get rid of clk32k out configuration from RTC. Will add clock driver.
 
-My only concern here is that "pc" may get abused elsewhere in bindings
-as a prefix, and may lead to general confusion due to other meanings for
-"pc". As "panasonic" is clear to any reader without looking in
-vendor-prefixes.txt, and there are no panasonic device bidnings using
-"pc" as a prefix, I think that "panasonic" is preferable as a vendor
-prefix.
+Changes from V2:
+- Drop the already applied patches on V2 series
+	regmap: add helper macro to set min/max range of register
+	regulator: as3722: add regulator driver for AMS AS3722
+- Move the GPIo driver to pincontrol driver to expose the pin configuration
+  through pincontrol.
+- rewrite the DT binding of the mfd.
 
-Thanks,
-Mark.
+Laxman Dewangan (3):
+  mfd: add support for AMS AS3722 PMIC
+  pincntrl: add support for AMS AS3722 pin control driver
+  drivers/rtc/rtc-as3722: add RTC driver
 
-> 
-> Thierry
-> 
-> [0]: http://www.nyse.com/listed/pc.html
+ Documentation/devicetree/bindings/mfd/as3722.txt   |   52 ++
+ .../devicetree/bindings/pinctrl/pinctrl-as3722.txt |   59 ++
+ drivers/mfd/Kconfig                                |   12 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/as3722.c                               |  448 ++++++++++++++
+ drivers/pinctrl/Kconfig                            |   11 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/pinctrl-as3722.c                   |  625 ++++++++++++++++++++
+ drivers/rtc/Kconfig                                |   10 +
+ drivers/rtc/Makefile                               |    1 +
+ drivers/rtc/rtc-as3722.c                           |  296 +++++++++
+ include/linux/mfd/as3722.h                         |  423 +++++++++++++
+ 12 files changed, 1939 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/as3722.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-as3722.txt
+ create mode 100644 drivers/mfd/as3722.c
+ create mode 100644 drivers/pinctrl/pinctrl-as3722.c
+ create mode 100644 drivers/rtc/rtc-as3722.c
+ create mode 100644 include/linux/mfd/as3722.h
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
