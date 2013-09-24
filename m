@@ -1,63 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/9] irqdomain: Introduce __irq_create_mapping()
-Date: Tue, 24 Sep 2013 14:20:44 +0200
-Message-ID: <CACRpkdZMM9RUkRCWG0mYbF9PL-fOdDncpY05xG3F5BF55hn5ug@mail.gmail.com>
-References: <1379320326-13241-1-git-send-email-treding@nvidia.com>
-	<1379320326-13241-3-git-send-email-treding@nvidia.com>
-	<CACRpkdYo8knzZ+Z-tc7fyEGwX5bt4RvMU3TR3k3UrOj0KRJocw@mail.gmail.com>
-	<20130923202935.GA5216@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20130923202935.GA5216@ulmo>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+Subject: [PATCH v5 0/3] ARM: S5PV210: move to common clk framework
+Date: Tue, 24 Sep 2013 14:50:06 +0200
+Message-ID: <1380027009-2239-1-git-send-email-m.krawczuk@partner.samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: rjw@sisk.pl, kgene.kim@samsung.com
+Cc: viresh.kumar@linaro.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, kyungmin.park@samsung.com, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, mturquette@linaro.org, tomasz.figa@gmail.com, thomas.abraham@linaro.org, s.nawrocki@samsung.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, t.stanislaws@samsung.com, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2013 at 10:29 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Mon, Sep 23, 2013 at 09:14:30PM +0200, Linus Walleij wrote:
+This patch series is the new s5pv210 clock implementation
+(using common clk framework).
 
->> I think it is better to first go over the call sites and make them
->> all handle negative return numbers rather than pushing the
->> obscure __interface.
-(...)
->
-> Well, the problem is that the current patch changes the signature of the
-> function as well, therefore the call sites will have to be updated all
-> at once in a single patch to avoid build breakage.
+This implementation is compatible with device tree definition and board
+files.
 
-Hm yeah OK I see the problem, but can we atleast avoid the
-__thing? Like calling the new function irq_create_mapping_strict()
-or whatever.
+This patch series is based on linux-next and has been tested on goni and
+aquila
+boards using board file.
 
-> Another alternative could be to change the signature in a way that does
-> not break compatibility. For instance I think it could work out if we
-> change this function to return int instead of unsigned int but keep the
-> same semantics to begin with (return 0 on failure). Then update all call
-> sites to handle potential negative errors and after that return negative
-> error codes.
+Since v4:
+Corrected mux flags for finpll.
 
-Hm that sounds like an attractive solution to me actually.
+Since v3:
 
-> That still wouldn't catch any callers introduced between
-> the patch creation and application.
+Replace s5pv210_clk_register_finpll, by creating mux finpll
+with xusbxti and xxti as parrents.
 
-Such things happen all the time, just have to be attentive in
-what goes into linux-next...
 
-Another minor thing:
+Mateusz Krawczuk (3):
+  clk: samsung: Add clock driver for s5pc110/s5pv210
+  Cpufreq: s5pv210 cpufreq fixes for CCF
+  ARM: s5pv210: Migrate clock handling to Common Clock Framework
 
-+static int __irq_create_mapping(struct irq_domain *domain,
-+                               irq_hw_number_t hwirq, unsigned int *virqp)
+ .../bindings/clock/samsung,s5pv210-clock.txt       |  75 +++
+ arch/arm/mach-s5pv210/Kconfig                      |   9 +
+ arch/arm/mach-s5pv210/Makefile                     |   4 +-
+ arch/arm/mach-s5pv210/common.c                     |  17 +
+ arch/arm/mach-s5pv210/common.h                     |  10 +
+ arch/arm/mach-s5pv210/mach-goni.c                  |   2 +-
+ arch/arm/mach-s5pv210/mach-smdkv210.c              |   2 +-
+ arch/arm/plat-samsung/Kconfig                      |   2 +-
+ drivers/clk/samsung/Makefile                       |   3 +
+ drivers/clk/samsung/clk-s5pv210.c                  | 673 +++++++++++++++++++++
+ drivers/cpufreq/s5pv210-cpufreq.c                  |   6 +-
+ include/dt-bindings/clock/samsung,s5pv210-clock.h  | 224 +++++++
+ 12 files changed, 1019 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,s5pv210-clock.txt
+ create mode 100644 drivers/clk/samsung/clk-s5pv210.c
+ create mode 100644 include/dt-bindings/clock/samsung,s5pv210-clock.h
 
-Unless you can make a very good case for why there should
-be a "v" in the beginning of virqp, then remove it and call it
-"irqp" simply.
+-- 
+1.8.1.2
 
-All Linux IRQs are virtual and we're already clearly separating
-out those that are not by calling them "hwirq".
-
-Yours,
-Linus Walleij
