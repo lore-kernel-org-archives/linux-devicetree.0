@@ -1,32 +1,68 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/6] serial8250-em: convert to clk_prepare/unprepare
-Date: Tue, 24 Sep 2013 06:41:13 -0700
-Message-ID: <20130924134113.GA7246@kroah.com>
-References: <52410F86.4040301@renesas.com>
- <20130924131039.3c871cad7acb2a068a988d0f@ops.dti.ne.jp>
- <20130924044432.GD3619@verge.net.au>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] mfd: core: introduce of_node_name for mfd sub devices
+Date: Tue, 24 Sep 2013 14:55:22 +0100
+Message-ID: <20130924135522.GA16407@lee--X1>
+References: <1379579392-1794-1-git-send-email-ldewangan@nvidia.com>
+ <20130919083050.GH16984@lee--X1>
+ <20130919115501.GM21013@sirena.org.uk>
+ <20130919120051.GG22389@lee--X1>
+ <523AEE07.9090405@nvidia.com>
+ <20130919122240.GI22389@lee--X1>
+ <5240A88D.8030309@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130924044432.GD3619@verge.net.au>
-Sender: linux-serial-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: takasi-y@ops.dti.ne.jp, SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, ben.dooks@codethink.co.uk, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Paul Mundt <lethal@linux-sh.org>, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <5240A88D.8030309@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Mark Brown <broonie@kernel.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2013 at 01:44:32PM +0900, Simon Horman wrote:
-> [ CCed Greg Kroah-Hartman, the serial maintainer for his review ]
-> 
-> On Tue, Sep 24, 2013 at 01:10:39PM +0900, takasi-y@ops.dti.ne.jp wrote:
-> > From: Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>
-> > 
-> > Add calls to clk_prepare and unprepare so that EMMA Mobile EV2 can
-> > migrate to the common clock framework.
-> > 
-> > Signed-off-by: Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>
-> > [takashi.yoshii.ze@renesas.com: edited for conflicts]
-> > Signed-off-by: Takashi Yoshii <takashi.yoshii.zj@renesas.com>
+> >> And regulator driver should get the regulator node by their
+> >> pdev->dev.of_node.
+> >> Currently, in most of driver, we are having the code on regulator
+> >> driver to get "regulators" node from parent node which I want to
+> >> avoid.
+> >=20
+> > Ah, I see. Yes, I believe the regulators should have their own node=
+,
+>=20
+> The use of a "regulators" node to keep all the regulator configuratio=
+n
+> in one place seems fine...
+>=20
+> > complete with a compatible string.
+>=20
+> ... but I see not reason why that node has to have a separate compati=
+ble
+> property, or /has/ to have a separate driver.
+>=20
+> I think having a compatible value in this node would only be required=
+ if
+> the HW block that implements those registers is actually expected to =
+be
+> shared between n different chips, and hence it's likely that you'd ge=
+t
+> re-use out of a separate binding, driver, etc.
+>=20
+> It's perfectly reasonable for the regulator MFD driver to know that t=
+he
+> binding for the top-level PMIC node has a regulators child node, and =
+go
+> find it by name, and read whatever properties/nodes it needs directly
+> out of it. Writing code that way in no ways implies a need for a
+> compatible value.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Sounds fine.
 
+> > To have each regulator listed
+> > separately in the parent node seems a little messy. Just out of
+> > interest, how many regulators are we talking about here?
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
