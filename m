@@ -1,98 +1,98 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/6] ARM: shmobile: kzm9d-reference:  migrate to common
- clock framework with DT
-Date: Tue, 24 Sep 2013 13:56:44 +0900
-Message-ID: <20130924045644.GG3619@verge.net.au>
-References: <52410F86.4040301@renesas.com>
+From: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] arm: dts: omap5-uevm: Add status parameter for i2c/spi/uart.
+Date: Tue, 24 Sep 2013 11:09:25 +0530
+Message-ID: <1380001165-19078-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52410F86.4040301@renesas.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Takashi Yoshii <takashi.yoshii.zj@renesas.com>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, ben.dooks@codethink.co.uk, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Paul Mundt <lethal@linux-sh.org>, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[ Cc Laurent ]
+omap5 has all devices enable by default.
+Disable thosw not required in omap5 uevm board.
 
-On Tue, Sep 24, 2013 at 01:05:26PM +0900, Takashi Yoshii wrote:
-> This patch series makes kzm9d-reference to move to new clk implementation
->  based on the common clock framework and device tree.
+Fix the following:
+Added status parameter
+Simulataneously, fix some tab formatting.
 
-Magnus, Laurent,
+Signed-off-by: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/omap5-uevm.dts |   38 +++++++++++++++++++++++++++++++-------
+ 1 files changed, 31 insertions(+), 7 deletions(-)
 
-I would appreciate it if you could take a look over the approach taken
-here.
+diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
+index 65d7b60..78cf0f2 100644
+--- a/arch/arm/boot/dts/omap5-uevm.dts
++++ b/arch/arm/boot/dts/omap5-uevm.dts
+@@ -450,6 +450,18 @@
+ 	};
+ };
+ 
++&i2c2 {
++	status = "disabled";
++};
++
++&i2c3 {
++	status = "disabled";
++};
++
++&i2c4 {
++	status = "disabled";
++};
++
+ &i2c5 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c5_pins>;
+@@ -471,7 +483,7 @@
+ };
+ 
+ &mcspi1 {
+-
++	status = "disabled";
+ };
+ 
+ &mcspi2 {
+@@ -490,16 +502,28 @@
+ };
+ 
+ &uart1 {
+-        pinctrl-names = "default";
+-        pinctrl-0 = <&uart1_pins>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>;
++};
++
++&uart2 {
++	status = "disabled";
+ };
+ 
+ &uart3 {
+-        pinctrl-names = "default";
+-        pinctrl-0 = <&uart3_pins>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins>;
++};
++
++&uart4 {
++	status = "disabled";
+ };
+ 
+ &uart5 {
+-        pinctrl-names = "default";
+-        pinctrl-0 = <&uart5_pins>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart5_pins>;
++};
++
++&uart6 {
++	status = "disabled";
+ };
+-- 
+1.7.1
 
-Thanks
-
-> 
-> First three are for preparation.
-> [PATCH 1/6] clocksource: em_sti: convert to clk_prepare/unprepare
-> [PATCH 2/6] serial8250-em: convert to clk_prepare/unprepare
-> [PATCH 3/6] sh: clkfwk: Select sh-/common- clkfwk alternatively
-> 
-> Next one is a proposal document of DT bindings.
-> [PATCH 4/6] ARM: shmobile: emev2: Define SMU clock DT bindings
-> 
-> This is the implementation, and dts which carries clock tree description.
-> [PATCH 5/6] clk: emev2: Add support for emev2 SMU clocks with DT
-> 
-> Last one is small modification needed for migration.
-> [PATCH 6/6] ARM: shmobile: kzm9d-reference: Use common clock
-> 
-> These patches do not remove sh-clkfwk version, even on emev2.
-> kzm9d(without -reference) target still uses sh-clkfwk.
-> I believe this method encourages step-by-step migration on other sh-mobile
->  targets, too.
-> 
-> Patches should be applied and compiled both on
->  v3.12-rc2 and
->  kernel/git/horms/renesas.git tag:renesas-devel-20130922 
-> 
-> Confirmed on kernel/git/horms/renesas.git tag:renesas-devel-20130922 
-> for boot up to command prompt.
-> - kzm9d board / multiplatform + kzm9d-reference configuration
-> - kzm9d board / kzm9d-reference configuration
-> - kzm9d board / kzm9d (with sh-clkfwk) configuration for regression.
-> - ape6evm (with sh-clkfwk) for regression.
-> for compile only
-> - sh7757lcr (in arch/sh with sh-clkfwk) for regression.
-> 
-> 
-> Shinya Kuribayashi (2):
->   clocksource: em_sti: convert to clk_prepare/unprepare
->   serial8250-em: convert to clk_prepare/unprepare
-> 
-> Takashi YOSHII (4):
->   sh: clkfwk: Select sh-/common- clkfwk alternatively
->   ARM: shmobile: emev2: Define SMU clock DT bindings
->   clk: emev2: Add support for emev2 SMU clocks with DT
->   ARM: shmobile: kzm9d-reference: Use common clock framework
-> 
->  .../devicetree/bindings/clock/emev2-clock.txt      |  99 ++++++++++++++++++++
->  arch/arm/Kconfig                                   |   2 +-
->  arch/arm/boot/dts/emev2.dtsi                       |  84 +++++++++++++++++
->  arch/arm/mach-shmobile/Kconfig                     |   1 +
->  arch/arm/mach-shmobile/board-kzm9d-reference.c     |   5 +-
->  arch/sh/Kconfig                                    |   1 +
->  drivers/clk/Makefile                               |   2 +
->  drivers/clk/shmobile/Makefile                      |   5 +
->  drivers/clk/shmobile/clk-emev2.c                   | 104 +++++++++++++++++++++
->  drivers/clocksource/em_sti.c                       |   4 +-
->  drivers/sh/clk/Makefile                            |   3 +-
->  drivers/tty/serial/8250/8250_em.c                  |   6 +-
->  12 files changed, 305 insertions(+), 11 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/emev2-clock.txt
->  create mode 100644 drivers/clk/shmobile/Makefile
->  create mode 100644 drivers/clk/shmobile/clk-emev2.c
-> 
-> -- 
-> 1.8.1.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
