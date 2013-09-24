@@ -1,89 +1,71 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH V3 1/6] clk: exynos-audss: convert to platform device
-Date: Tue, 24 Sep 2013 23:15:39 +0200
-Message-ID: <524200FB.8010004@gmail.com>
-References: <1379982078-23381-1-git-send-email-abrestic@chromium.org> <1380046016-5811-1-git-send-email-abrestic@chromium.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: introduce of_get_available_child_count
+Date: Tue, 24 Sep 2013 16:16:08 -0500
+Message-ID: <52420118.9050501@gmail.com>
+References: <1380045009-21149-1-git-send-email-cooloney@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380046016-5811-1-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Rahul Sharma <rahul.sharma@samsung.com>, Leela Krishna Amudala <l.krishna@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Tushar Behera <tushar.behera@linaro.org>, Doug Anderson <dianders@chromium.org>, Padmavathi Venna <padma.v@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.orgl
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1380045009-21149-1-git-send-email-cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2013 08:06 PM, Andrew Bresticker wrote:
-> +static int exynos_audss_clk_probe(struct platform_device *pdev)
->   {
-[...]
->   	clk_table[EXYNOS_MOUT_AUDSS] = clk_register_mux(NULL, "mout_audss",
->   				mout_audss_p, ARRAY_SIZE(mout_audss_p),
-> @@ -123,13 +124,83 @@ static void __init exynos_audss_clk_init(struct device_node *np)
->   				"div_pcm0", CLK_SET_RATE_PARENT,
->   				reg_base + ASS_CLK_GATE, 5, 0,&lock);
->
-> +	for (i = 0; i<  EXYNOS_AUDSS_MAX_CLKS; i++) {
-> +		if (IS_ERR(clk_table[i])) {
-> +			dev_err(&pdev->dev, "failed to regsiter clock %d\n", i);
+On 09/24/2013 12:50 PM, Bryan Wu wrote:
+> Some drivers keep counting available child by themselves. So
+> introduce a new simple API like of_get_child_count() but for
+> available childs.
+> 
+> Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
 
-typo: regsiter -> register
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-> +			ret = PTR_ERR(clk_table[i]);
-> +			goto unregister;
-> +		}
-> +	}
-> +
-> +	clk_data.clks = clk_table;
-> +	clk_data.clk_num = EXYNOS_AUDSS_MAX_CLKS;
-> +	ret = of_clk_add_provider(pdev->dev.of_node, of_clk_src_onecell_get,
-> +					&clk_data);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to add clock provider\n");
-> +		goto unregister;
-> +	}
-> +
-[...]
-> +	return 0;
-> +
-> +unregister:
-> +	for (i = 0; i<  EXYNOS_AUDSS_MAX_CLKS; i++) {
-> +		if (!IS_ERR_OR_NULL(clk_table[i]))
-> +			clk_unregister(clk_table[i]);
-> +	}
+I assume you have some user and will take this dependency thru that tree?
 
-Couldn't this instead be:
-
-	while (--i >= 0)
-		clk_unregister(clk_table[i]);
-
-?
-> +static int exynos_audss_clk_remove(struct platform_device *pdev)
+>  include/linux/of.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index f95aee3..54c2560 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -226,6 +226,17 @@ static inline int of_get_child_count(const struct device_node *np)
+>  	return num;
+>  }
+>  
+> +static inline int of_get_available_child_count(const struct device_node *np)
 > +{
-> +	int i;
+> +	struct device_node *child;
+> +	int num = 0;
 > +
-> +	of_clk_del_provider(pdev->dev.of_node);
+> +	for_each_available_child_of_node(np, child)
+> +		num++;
 > +
-> +	for (i = 0; i<  EXYNOS_AUDSS_MAX_CLKS; i++) {
-> +		if (!IS_ERR_OR_NULL(clk_table[i]))
-> +			clk_unregister(clk_table[i]);
-> +	}
-
-Since we only get here if all the clocks are registered properly and we
-always register EXYNOS_AUDSS_MAX_CLKS clocks, couldn't this simply be:
-
-	for (i = 0; i < EXYNOS_AUDSS_MAX_CLKS; i++)
-		clk_unregister(clk_table[i]);
-
-?
+> +	return num;
+> +}
+> +
+>  extern struct device_node *of_find_node_with_property(
+>  	struct device_node *from, const char *prop_name);
+>  #define for_each_node_with_property(dn, prop_name) \
+> @@ -376,6 +387,11 @@ static inline int of_get_child_count(const struct device_node *np)
+>  	return 0;
+>  }
+>  
+> +static inline int of_get_available_child_count(const struct device_node *np)
+> +{
 > +	return 0;
 > +}
-
-Otherwise the whole series looks good to me. Feel free to add:
-
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-
+> +
+>  static inline int of_device_is_compatible(const struct device_node *device,
+>  					  const char *name)
+>  {
+> 
 
 --
-Thanks,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
