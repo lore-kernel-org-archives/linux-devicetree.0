@@ -1,54 +1,64 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC v2] gpio/omap: auto-setup a GPIO when used as an IRQ
-Date: Tue, 24 Sep 2013 11:48:53 -0400
-Message-ID: <5241B465.5050604@ti.com>
-References: <1380009480-4975-1-git-send-email-javier.martinez@collabora.co.uk> <20130924154048.GM2684@atomide.com> <5241B3B7.5070701@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
+Date: Tue, 24 Sep 2013 16:52:16 +0100
+Message-ID: <20130924155216.GG3226@sirena.org.uk>
+References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com>
+ <3002978.Cb6jL1xtkE@avalon>
+ <5240B396.2010705@wwwdotorg.org>
+ <6800560.AEqRA3IBkp@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5241B3B7.5070701-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Jon Hunter <jgchunter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, r.sricharan-l0cyMroinI0@public.gmane.org, holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+sHJum3is6Tsg7/J"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6800560.AEqRA3IBkp@avalon>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Rob Landley <rob@landley.net>, Pawel Moll <pawel.moll@arm.com>, LDOC <linux-doc@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <rob.herring@calxeda.com>, Prabhakar Lad <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, LAK <linux-arm-kernel@lists.infradead.org>, LMML <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 24 September 2013 11:45 AM, Balaji T K wrote:
-> On Tuesday 24 September 2013 09:10 PM, Tony Lindgren wrote:
->> * Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> [130924 01:06]:
->>> The OMAP GPIO controller HW requires a pin to be configured in GPIO
->>> input mode in order to operate as an interrupt input. Since drivers
->>> should not be aware of whether an interrupt pin is also a GPIO or not,
->>> the HW should be fully configured/enabled as an IRQ if a driver solely
->>> uses IRQ APIs such as request_irq(), and never calls any GPIO-related
->>> APIs. As such, add the missing HW setup to the OMAP GPIO controller's
->>> irq_chip driver.
->>>
->>> Since this bypasses the GPIO subsystem we have to ensure that another
->>> caller won't be able to request the same GPIO pin that is used as an
->>> IRQ and set its direction as output. Requesting the GPIO and setting
->>> its direction as input is allowed though.
->>
->> Also please mention the regression that this fixes. So far we know
->> that smsc911x for tobi and igep boards in mainline, and also the
-> 
->> MMC card detect for omap4 boards.
-> Hi Tony,
-> 
-> Card detect on omap4 board (sdp and panda) is not based on omap gpio,
-> so I think this fix is not applicable for omap4.
-> 
-> Card detect line for SD card goes to power IC on OMAP4 panda and SDP.
-> 
-I confused Tony mostly. It was OMAP4 SPI based ethernet which uses the
-GPIO as an interrupt line.
 
-So for Panda, its Ethernet driver and not MMC.
+--+sHJum3is6Tsg7/J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Santosh
+On Tue, Sep 24, 2013 at 11:44:57AM +0200, Laurent Pinchart wrote:
+> On Monday 23 September 2013 15:33:10 Stephen Warren wrote:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > So I think you want to make the supply properties mandatory in DT (since
+> > some form of supply is mandatory in HW), yet make the driver support
+> > broken DTs which don't have those properties, by error-checking the
+> > return value from regulator_get(). You might want to put a note into DT
+> > saying that a previous version of the binding didn't require those
+> > supply properties, so they may be missing from older DTs.
+
+> Are there such devices in the wild ?
+
+=46rom v3.12 on the kernel will stub in a dummy supply if one isn't found
+when using DT but I wouldn't mention that in the bindings since it's
+very much fixing up broken DTs rather than a good idea.
+
+--+sHJum3is6Tsg7/J
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSQbUtAAoJELSic+t+oim9jA4P/26rkmuuP5nriq1ksfexe3KT
+45LgsHxK0sW4KDRIhgezhnNgoqRmHRmECRu3CkKuMOKw2I7W31295yP3ge1qgaM9
+AbH810Nvfv530yWr2SovCddiz6YGn+Ayw+i00sD+AvUrBkZf6OBcZailrpSzdOUk
+KqJ1cM7B/F1Cw225DeyZvUoqZdmmirFgN/kEmq9H3GA/efN6wdO5ZU2VGaGgNT8F
+1YGv3r3YNw+EtjpxjbNWLBVoEIDGrdsVHDy6KgSZrPJnwwbA4IkqdtDNNLqi/WSh
+ta/Z4gMnuulcj13e/xWHek8CSY115oCR7+Zv3Chcb+DYJUhXo9HrCF386qHQlqvy
+3o4TioJgMLl/0hpKsLCrpFtPFi+2JBCsxF3tyMdbllZBNhZgt6+PHR2OACUGw0CA
+NraSpp2T4/INUVR0EuIeKwpZ8RQwlqgUtu1ehZr1nNq/wD3dvLw+v57RUPdvTyDP
+xWBJt/jM+wiYppuFkUJeQVil5qcZEOnzBTC4rSbhEd7gjrV6i6G6x/cdlB1pStzC
+flgWprarGf6TXRl9CHa7w8vNDumJUfPptHYIFfDiPeWn6/xbSrGsAo6VnzVDQzHB
+ADWbTSM4ZumEBwHSBTZdAYRwsQ7ANpECWb3UdQjw2Y4Vnx6U3wbMoBPJ56/ic/6D
+SwU86Q3zZ/jTFdNZMBu8
+=Ogxx
+-----END PGP SIGNATURE-----
+
+--+sHJum3is6Tsg7/J--
