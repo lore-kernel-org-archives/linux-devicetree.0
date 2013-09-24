@@ -1,197 +1,143 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFCv2 3/3] ARM: dts: N900: Add SSI information
-Date: Tue, 24 Sep 2013 01:46:56 +0200
-Message-ID: <20130923234656.GB24781@earth.universe>
-References: <1379277856-24571-1-git-send-email-sre@debian.org>
- <1379277856-24571-4-git-send-email-sre@debian.org>
- <5240A617.1010208@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5240A617.1010208-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: [PATCH V2 1/6] clk: exynos-audss: convert to platform device
+Date: Mon, 23 Sep 2013 17:21:13 -0700
+Message-ID: <1379982078-23381-1-git-send-email-abrestic@chromium.org>
+References: <1379711637-5226-1-git-send-email-abrestic@chromium.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1379711637-5226-1-git-send-email-abrestic@chromium.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Rahul Sharma <rahul.sharma@samsung.com>, Leela Krishna Amudala <l.krishna@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Tushar Behera <tushar.behera@linaro.org>, Doug Anderson <dianders@chromium.org>, Padmavathi Venna <padma.v@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
+The Exynos AudioSS clock controller will later be modified to allow
+input clocks to be specified via device-tree in order to support
+multiple Exynos SoCs.  This will introduce a dependency on the core
+SoC clock controller being initialized first so that the AudioSS driver
+can look up its input clocks, but the order in which clock providers
+are probed in of_clk_init() is not guaranteed.  Since deferred probing
+is not supported in of_clk_init() and the AudioSS block is not the core
+controller, we can initialize it later as a platform device.
 
---4SFOXa2GPu3tIq4H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+---
+Changes since v1:
+ - add clk_unregister() calls to remove callback
+ - fixed minor nits from Tomasz
+---
+ drivers/clk/samsung/clk-exynos-audss.c | 78 ++++++++++++++++++++++++++++------
+ 1 file changed, 65 insertions(+), 13 deletions(-)
 
-Hi,
+diff --git a/drivers/clk/samsung/clk-exynos-audss.c b/drivers/clk/samsung/clk-exynos-audss.c
+index 39b40aa..c512efd 100644
+--- a/drivers/clk/samsung/clk-exynos-audss.c
++++ b/drivers/clk/samsung/clk-exynos-audss.c
+@@ -14,6 +14,8 @@
+ #include <linux/clk-provider.h>
+ #include <linux/of_address.h>
+ #include <linux/syscore_ops.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
+ 
+ #include <dt-bindings/clk/exynos-audss-clk.h>
+ 
+@@ -62,24 +64,29 @@ static struct syscore_ops exynos_audss_clk_syscore_ops = {
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ /* register exynos_audss clocks */
+-static void __init exynos_audss_clk_init(struct device_node *np)
++static int exynos_audss_clk_probe(struct platform_device *pdev)
+ {
+-	reg_base = of_iomap(np, 0);
+-	if (!reg_base) {
+-		pr_err("%s: failed to map audss registers\n", __func__);
+-		return;
++	struct resource *res;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	reg_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(reg_base)) {
++		dev_err(&pdev->dev, "failed to map audss registers\n");
++		return PTR_ERR(reg_base);
+ 	}
+ 
+-	clk_table = kzalloc(sizeof(struct clk *) * EXYNOS_AUDSS_MAX_CLKS,
++	clk_table = devm_kzalloc(&pdev->dev,
++				sizeof(struct clk *) * EXYNOS_AUDSS_MAX_CLKS,
+ 				GFP_KERNEL);
+ 	if (!clk_table) {
+-		pr_err("%s: could not allocate clk lookup table\n", __func__);
+-		return;
++		dev_err(&pdev->dev, "could not allocate clk lookup table\n");
++		return -ENOMEM;
+ 	}
+ 
+ 	clk_data.clks = clk_table;
+ 	clk_data.clk_num = EXYNOS_AUDSS_MAX_CLKS;
+-	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
++	of_clk_add_provider(pdev->dev.of_node, of_clk_src_onecell_get,
++				&clk_data);
+ 
+ 	clk_table[EXYNOS_MOUT_AUDSS] = clk_register_mux(NULL, "mout_audss",
+ 				mout_audss_p, ARRAY_SIZE(mout_audss_p),
+@@ -128,8 +135,53 @@ static void __init exynos_audss_clk_init(struct device_node *np)
+ #endif
+ 
+ 	pr_info("Exynos: Audss: clock setup completed\n");
++
++	return 0;
++}
++
++static int exynos_audss_clk_remove(struct platform_device *pdev)
++{
++	int i;
++
++	for (i = 0; i < EXYNOS_AUDSS_MAX_CLKS; i++) {
++		if (clk_table[i])
++			clk_unregister(clk_table[i]);
++	}
++
++	of_clk_del_provider(pdev->dev.of_node);
++
++	return 0;
+ }
+-CLK_OF_DECLARE(exynos4210_audss_clk, "samsung,exynos4210-audss-clock",
+-		exynos_audss_clk_init);
+-CLK_OF_DECLARE(exynos5250_audss_clk, "samsung,exynos5250-audss-clock",
+-		exynos_audss_clk_init);
++
++static const struct of_device_id exynos_audss_clk_of_match[] = {
++	{ .compatible = "samsung,exynos4210-audss-clock", },
++	{ .compatible = "samsung,exynos5250-audss-clock", },
++	{},
++};
++
++static struct platform_driver exynos_audss_clk_driver = {
++	.driver	= {
++		.name = "exynos-audss-clk",
++		.owner = THIS_MODULE,
++		.of_match_table = exynos_audss_clk_of_match,
++	},
++	.probe = exynos_audss_clk_probe,
++	.remove = exynos_audss_clk_remove,
++};
++
++static int __init exynos_audss_clk_init(void)
++{
++	return platform_driver_register(&exynos_audss_clk_driver);
++}
++core_initcall(exynos_audss_clk_init);
++
++static void __init exynos_audss_clk_exit(void)
++{
++	platform_driver_unregister(&exynos_audss_clk_driver);
++}
++module_exit(exynos_audss_clk_exit);
++
++MODULE_AUTHOR("Padmavathi Venna <padma.v@samsung.com>");
++MODULE_DESCRIPTION("Exynos Audio Subsystem Clock Controller");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:exynos-audss-clk");
+-- 
+1.8.4
 
-On Mon, Sep 23, 2013 at 02:35:35PM -0600, Stephen Warren wrote:
-> On 09/15/2013 02:44 PM, Sebastian Reichel wrote:
-> > Add SSI device tree data for OMAP34xx and Nokia N900.
->=20
-> What is an "SSI" device, ...
-
-Synchronous Serial Interface (SSI), which is an interface from
-the OMAP3 for modem connection. It's a legacy variant of
-High-speed Synchronous Serial Interface (HSI). This in turn
-is a standard from MIPI:
-
-http://www.mipi.org/specifications/high-speed-synchronous-serial-interface-=
-hsi
-
->=20
-> > diff --git a/Documentation/devicetree/bindings/hsi/omap_ssi.txt b/Docum=
-entation/devicetree/bindings/hsi/omap_ssi.txt
->=20
-> ... and what is the "HSI" subsystem?
-
-A framework for HSI devices living in drivers/hsi.
-
-> > +OMAP SSI controller bindings
-> > +
-> > +Required properties:
-> > +- compatible:		Should be set to the following value
-> > +                        ti,omap3-ssi (applicable to OMAP34xx devices)
->=20
-> I think that'd be better phrased as:
->=20
-> 	Should include "ti,omap3-ssi".
->=20
-> The binding should not preclude other compatibel values being present
-> (e.g. a SoC-specific compatible value, to allow SoC-specific quirks to
-> be enabled later).
-
-Right. Will be fixed in the next RFC.
-
-> > +- ti,hwmods:		Name of the hwmod associated to the controller, which
-> > +			is "ssi".
->=20
-> I don't think we should add any more of that, for new bindings.
-
-That basically means not adding new drivers until hwmod is completly
-removed, since no new drivers not using DT are accepted anymore.
-
-hwmod still holds some information, which are not yet mapped to DT.
-
-> > +- reg:			Contains SSI register address range (base address and
-> > +			length).
-> > +- reg-names:		Contains the names of the address ranges. It's
-> > +                        expected, that "sys" and "gdd" address ranges =
-are
-> > +			provided.
->=20
-> Why two entries in reg-names but only one in reg?
->=20
-> I think it'd be better to write:
->=20
-> reg-names:	Contains the values "sys" and "gdd".
-> reg:		Contains a register specifier for each entry in
-> 		reg-names.
->=20
-> A similar re-ordering/-wording would apply to interrupts/interrupt-names.
-
-OK. Will be fixed in the next RFC.
-
-> > +- ranges		Required as an empty node
->=20
-> s/node/property/
->=20
-> Why must ranges be empty? As long as the content correctly represents
-> the bus setup, why does the content matter at all. How about:
->=20
-> ranges		Represents the bus address mapping between the main
-> 		controller node and the child nodes below.
-
-OK. Will be fixed in the next RFC.
-
-> > +Each port is represented as a sub-node of the ti,omap3-ssi device.
-> > +
-> > +Required Port sub-node properties:
-> > +- compatible:		Should be set to the following value
-> > +                        ti,omap3-ssi-port (applicable to OMAP34xx devi=
-ces)
->=20
-> Hmm. Is it really the case that there is 1 controller with n ports?
-
-Yes with n=3D2.
-
-> Are the ports really dependent upon some shared resource?
-
-Yes and runtime power management.
-
-> Couldn't the ports be represented as separate top-level SSI
-> controllers?
-
-Maybe with some phandles. The current layout is cleaner IMHO.
-The ports are part of the controller and actually most boards
-only use one of them.
-
-In the original driver only the controller hat platform data
-with memory areas called "port1_rx" etc.
-
-> > +- interrupts:		Contains the interrupt information for the port.
-> > +- interrupt-names:	Contains the names of the interrupts. It's expected,
-> > +			that "mpu_irq0" and "mpu_irq1" are provided.
->=20
-> What exactly are those interrupts? "MPU" sounds like an external
-> micro-controller/processor...
->=20
-> > +- ti,ssi-cawake-gpio:	Defines which GPIO pin is used to signify CAWAKE
-> > +			events for the port. This is an optional board-specific
-> > +			property. If it's missing the port will not be
-> > +			enabled.
->=20
-> That also sounds like something that's a higher-level protocol, rather
-> than whatever low-level transport "SSI" implements. Should this be part
-> of a child node that represents the device attached to the SSI controller?
-
-Both the interrupts and the cawake-gpio are used as irqs for
-starting data transfers. As far as I understand it none of
-them are specific to the attached device.
-
-NOTE: I do not have documentation for the chip. I just ported the
-old patch from Carlos Chinea (who developed the initial driver for
-Nokia) to the new kernel frameworks, since I want to use the
-modem of my Nokia N900.
-
-> Does the SSI controller (or its ports) not need any clocks, resets,
-> regulators, ...?
-
-The only other stuff needed is taken care of by hwmod, which can
-be seen in this patch:
-
-https://lkml.org/lkml/2013/9/15/97
-
-As far as I understand it, this kind of information is not yet
-supported by DT on OMAP boards. On the other hand new OMAP drivers
-are not allowed to add further board code, so temporarily the
-ti,hwmod hack must be used.
-
--- Sebastian
-
---4SFOXa2GPu3tIq4H
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBCAAGBQJSQNLwAAoJENju1/PIO/qaSB8QAJjTPYXtA1JNGzGsctr8LGFE
-zglVED2xVohdqeRbd5JXJYQVGiQQzCdo8WTni/jFJlIXFeeU23yM9T2nrRQoPOUb
-7Spkf2yMzrqNTnG6iW824t84IDPYd9L/2dVx62js9bIv9KVbofE4gZ65pQbi0Plq
-58ZEDmhwb566+ISppV3NaHlRCRIr3Tg4KowU3QYm69lCC/xvehI6jhVGJ8LWKHoM
-BUqIcN4A6iYzy/Gi3OlwbtNGuIoSkEDd3SBdaYkzmLU0tFXvU0baBUZR7zmW/DYP
-LzFKthVgJLLhGmcjQwu5ouNEtvN9qRxN4e/ZNdYZLhxsYK4Doudw6qYPxbTLxnr2
-sXX0ekZqdxb0DcncxXbMxn/M19haezQggNtZAKbZHrTok6j42QWomNeE5mnCajJh
-0gW81cOxLztvf9Tane7mVzJPP+bm5Hte7Xycl0uHpodZcJXa/yWNJKR0a1l1/GqN
-862hSMInUyKHjkrl9qQ5m6ZpMDzuB/5ny3f+Bq29dTLZqSthCRJdQ2Z4Bfq/VuPT
-sFAQvFFJao+HkL/CMkj91My1yfHvtLuRdtxhiJ3T1wcI7SEJImouzYWIZLr+LAIZ
-Y9I49QtfBzDGWWInHQl+hRRevfto2pFtDbi9wDpjvRgOm2QoY4xrBze+VlqEMEGW
-vZIA3gPLC8/RRhpqgVM/
-=8UXS
------END PGP SIGNATURE-----
-
---4SFOXa2GPu3tIq4H--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
