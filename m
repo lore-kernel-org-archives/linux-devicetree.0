@@ -1,75 +1,46 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: [PATCH] leds-gpio: of: led should not be created if its status is disabled
-Date: Tue, 24 Sep 2013 16:04:22 +0800
-Message-ID: <1380009863-6454-1-git-send-email-josh.wu@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-leds-owner@vger.kernel.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: cooloney@gmail.com, rpurdie@rpsys.net
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Josh Wu <josh.wu@atmel.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: [PATCH 1/6] thermal: exynos: fix: Return from exynos_report_trigger()
+ when therm_dev is NULL
+Date: Tue, 24 Sep 2013 10:08:17 +0200
+Message-ID: <1380010102-25817-2-git-send-email-l.majewski@samsung.com>
+References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <eduardo.valentin@ti.com>, Amit Daniel Kachhap <amit.daniel@samsung.com>
+Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Linux PM list <linux-pm@vger.kernel.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-now the leds-gpio driver will create every child led node without
-checking the status is disabled or not.
+The commit 4de0bdaa9677d11406c9becb70c60887c957e1f0
+("thermal: exynos: Add support for instance based register/unregister")
+broke check for presence of therm_dev at global thermal zone in
+exynos_report_trigger().
 
-for example, if we have a led node like d3, and its status is disabled:
-	leds {
-		d3 {
-			label = "d3";
-			gpios = <&pioE 24 0>;
-			status = "disabled";
-		};
-	};
+The resulting wrong test prevents thermal_zone_device_update() call, which
+calls handlers for situation when trip points are passed.
+Such behavior prevents thermal driver from proper reaction (when TMU interrupt
+is raised) in a situation when overheating is detected at TMU hardware.
+This patch fixes it.
 
-we except the d3 should not be created. And the gpios should not be
-request as well.
-
-But current driver will create d3 and request its gpio.
-
-This patch fix this by using for_each_available_child_of_node() to
-enumerate all child nodes. So the disabled node will be inavilable.
-
-Signed-off-by: Josh Wu <josh.wu@atmel.com>
+Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 ---
- drivers/leds/leds-gpio.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/thermal/samsung/exynos_thermal_common.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-index e8b01e5..9bb4e04 100644
---- a/drivers/leds/leds-gpio.c
-+++ b/drivers/leds/leds-gpio.c
-@@ -167,23 +167,23 @@ static struct gpio_leds_priv *gpio_leds_create_of(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node, *child;
- 	struct gpio_leds_priv *priv;
--	int count, ret;
-+	int count = 0, ret;
+diff --git a/drivers/thermal/samsung/exynos_thermal_common.c b/drivers/thermal/samsung/exynos_thermal_common.c
+index f10a6ad..55a912a 100644
+--- a/drivers/thermal/samsung/exynos_thermal_common.c
++++ b/drivers/thermal/samsung/exynos_thermal_common.c
+@@ -310,7 +310,7 @@ void exynos_report_trigger(struct thermal_sensor_conf *conf)
+ 	}
  
- 	/* count LEDs in this device, so we know how much to allocate */
--	count = of_get_child_count(np);
--	if (!count)
--		return ERR_PTR(-ENODEV);
--
--	for_each_child_of_node(np, child)
-+	for_each_available_child_of_node(np, child) {
-+		count++;
- 		if (of_get_gpio(child, 0) == -EPROBE_DEFER)
- 			return ERR_PTR(-EPROBE_DEFER);
-+	}
-+	if (!count)
-+		return ERR_PTR(-ENODEV);
+ 	th_zone = conf->pzone_data;
+-	if (th_zone->therm_dev)
++	if (!th_zone->therm_dev)
+ 		return;
  
- 	priv = devm_kzalloc(&pdev->dev, sizeof_gpio_leds_priv(count),
- 			GFP_KERNEL);
- 	if (!priv)
- 		return ERR_PTR(-ENOMEM);
- 
--	for_each_child_of_node(np, child) {
-+	for_each_available_child_of_node(np, child) {
- 		struct gpio_led led = {};
- 		enum of_gpio_flags flags;
- 		const char *state;
+ 	if (th_zone->bind == false) {
 -- 
-1.7.9.5
-
+1.7.10.4
