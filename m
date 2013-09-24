@@ -1,48 +1,39 @@
-From: "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v6 1/4] ARM: OMAP2+: cleaned-up DT support of various
- ECC schemes
-Date: Tue, 24 Sep 2013 18:04:05 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA15ED7@DBDE04.ent.ti.com>
-References: <1378986619-26765-1-git-send-email-pekon@ti.com>
- <1378986619-26765-2-git-send-email-pekon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1378986619-26765-2-git-send-email-pekon-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: [PATCH V3 4/6] ARM: dts: exynos5250: add input clocks to audss clock controller
+Date: Tue, 24 Sep 2013 11:06:54 -0700
+Message-ID: <1380046016-5811-4-git-send-email-abrestic@chromium.org>
+References: <1379982078-23381-1-git-send-email-abrestic@chromium.org>
+ <1380046016-5811-1-git-send-email-abrestic@chromium.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1380046016-5811-1-git-send-email-abrestic@chromium.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Rahul Sharma <rahul.sharma@samsung.com>, Leela Krishna Amudala <l.krishna@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Tushar Behera <tushar.behera@linaro.org>, Doug Anderson <dianders@chromium.org>, Padmavathi Venna <padma.v@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
+Specify pll_ref, pll_in, sclk_audio, and sclk_pcm_in for the AudioSS
+clock controller.
 
-> 
-> This patch
-> - updates DT binding for selection of ecc-scheme
-> - updates DT binding for detection of ELM h/w engine
-> - removes following obselete ECC schemes
-> 	OMAP_ECC_HAMMING_CODE_DEFAULT (S/W based 1-bit Hamming
-> ECC)
-> 	OMAP_ECC_HAMMING_CODE_HW_ROMCODE (H/W based 1-bit
-> Hamming ECC scheme)
-> - updates DT binding documentation for mtd/gpmc-nand
-> 
-> Signed-off-by: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
-> ---
+Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+---
+Changes since v1:
+ - specified additional input clocks
+---
+ arch/arm/boot/dts/exynos5250.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Dear Olof and other DT Maintainers,
-
-This patch series has missed multiple merge windows, and
-much of the other development work on mtd/nand/omap
-driver is gated due to this.
-So, request you to please review this patch set and Ack it
-if all your mentioned concerns are resolved.
-
-
-With regards, pekon
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 7d7cc77..2d6a93d 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -88,6 +88,8 @@
+ 		compatible = "samsung,exynos5250-audss-clock";
+ 		reg = <0x03810000 0x0C>;
+ 		#clock-cells = <1>;
++		clocks = <&clock 1>, <&clock 7>, <&clock 138>, <&clock 160>;
++		clock-names = "pll_ref", "pll_in", "sclk_audio", "sclk_pcm_in";
+ 	};
+ 
+ 	timer {
+-- 
+1.8.4
