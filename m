@@ -1,47 +1,37 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH V2 1/6] clk: exynos-audss: convert to platform device
-Date: Tue, 24 Sep 2013 11:47:45 +0200
-Message-ID: <52415FC1.4070400@samsung.com>
-References: <1379711637-5226-1-git-send-email-abrestic@chromium.org>
- <1379982078-23381-1-git-send-email-abrestic@chromium.org>
- <3549301.xmRx49e0Zc@amdc1227>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 1/5] mfd: arizona: Add device tree helper functions
+Date: Tue, 24 Sep 2013 10:49:37 +0100
+Message-ID: <20130924094937.GN3635@opensource.wolfsonmicro.com>
+References: <1379961043-23762-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <5240B464.2010903@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <3549301.xmRx49e0Zc@amdc1227>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Padmavathi Venna <padma.v@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Tushar Behera <tushar.behera@linaro.org>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Leela Krishna Amudala <l.krishna@samsung.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, Jiri Kosina <jkosina@suse.cz>, Stephen Boyd <sboyd@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Sachin Kamat <sachin.kamat@linaro>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5240B464.2010903-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/09/13 11:20, Tomasz Figa wrote:
->> +static int exynos_audss_clk_remove(struct platform_device *pdev)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < EXYNOS_AUDSS_MAX_CLKS; i++) {
->> +		if (clk_table[i])
+On Mon, Sep 23, 2013 at 03:36:36PM -0600, Stephen Warren wrote:
+> On 09/23/2013 12:30 PM, Charles Keepax wrote:
+> > -  - AVDD1-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
+> > +  - AVDD-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
 > 
-> I believe clk_register_* functions return ERR_PTR() in case of failure,
-> not NULL, so this should be accounted for either here or at probe time.
-> Possibly checking for registration error in probe() would be the best
-> solution, although bloating the code a bit (but what error path isn't?).
+> That looks like an incompatible change to the DT ABI.
 
-After registering all clocks a loop iterating over all entries of the
-clk_table[] array could be added and if any of the entries is ERR_PTR()
-either an error could be just logged or the successfully registered
-clocks could be freed and probe() could fail. It doesn't really seems
-much additional code.
+The supply name in the driver is AVDD as is the name for the pin
+on the datasheet, if you specify it as AVDD1 in device tree the
+current driver will not load.
 
---
+This appears to have been a copy and paste error from the wm8994
+which has 2 AVDD supplies and I believe these docs were based
+on. I would prefer to update the documentation to match what the
+driver already expects rather than the other way around.
+
 Thanks,
-Sylwester
+Charles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
