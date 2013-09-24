@@ -1,185 +1,79 @@
-From: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCHv4 2/3] ARM: msm: Add support for APQ8074 Dragonboard
-Date: Mon, 23 Sep 2013 20:13:25 -0700
-Message-ID: <1379992406-3541-2-git-send-email-rvaswani@codeaurora.org>
-References: <1379992406-3541-1-git-send-email-rvaswani@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379992406-3541-1-git-send-email-rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Walker <dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Takashi Yoshii <takashi.yoshii.zj@renesas.com>
+Subject: [PATCH 0/6] ARM: shmobile: kzm9d-reference:  migrate to common clock
+ framework with DT
+Date: Tue, 24 Sep 2013 13:05:26 +0900
+Message-ID: <52410F86.4040301@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: SH-Linux <linux-sh@vger.kernel.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, ben.dooks@codethink.co.uk, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Simon Horman <horms@verge.net.au>, Paul Mundt <lethal@linux-sh.org>, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic board support for APQ8074 Dragonboard
-which belongs to the Snapdragon 800 family.
-For now, just support a basic machine with device tree.
+This patch series makes kzm9d-reference to move to new clk implementation
+ based on the common clock framework and device tree.
 
-Signed-off-by: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- arch/arm/Kconfig.debug                         |  9 +++++++
- arch/arm/boot/dts/Makefile                     |  3 ++-
- arch/arm/boot/dts/qcom-apq8074-dragonboard.dts |  6 +++++
- arch/arm/boot/dts/qcom-msm8974.dtsi            | 35 ++++++++++++++++++++++++++
- arch/arm/include/debug/msm.S                   |  5 ++++
- arch/arm/mach-msm/Kconfig                      | 13 ++++++++++
- arch/arm/mach-msm/board-dt.c                   |  9 +++++++
- 7 files changed, 79 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
- create mode 100644 arch/arm/boot/dts/qcom-msm8974.dtsi
+First three are for preparation.
+[PATCH 1/6] clocksource: em_sti: convert to clk_prepare/unprepare
+[PATCH 2/6] serial8250-em: convert to clk_prepare/unprepare
+[PATCH 3/6] sh: clkfwk: Select sh-/common- clkfwk alternatively
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index e18a6fc..959b2c7 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -357,6 +357,15 @@ choice
- 		  Say Y here if you want the debug print routines to direct
- 		  their output to the serial port on MSM 8960 devices.
- 
-+	config DEBUG_MSM8974_UART
-+		bool "Kernel low-level debugging messages via MSM 8974 UART"
-+		depends on ARCH_MSM8974
-+		select MSM_HAS_DEBUG_UART_HS
-+		select DEBUG_MSM_UART
-+		help
-+		  Say Y here if you want the debug print routines to direct
-+		  their output to the serial port on MSM 8974 devices.
-+
- 	config DEBUG_MVEBU_UART
- 		bool "Kernel low-level debugging messages via MVEBU UART (old bootloaders)"
- 		depends on ARCH_MVEBU
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 000cf76..e71a3ec 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -102,7 +102,8 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) += kirkwood-cloudbox.dtb \
- 	kirkwood-openblocks_a6.dtb
- dtb-$(CONFIG_ARCH_MARCO) += marco-evb.dtb
- dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
--	msm8960-cdp.dtb
-+	msm8960-cdp.dtb \
-+	qcom-apq8074-dragonboard.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
- 	armada-370-mirabox.dtb \
- 	armada-370-netgear-rn102.dtb \
-diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-new file mode 100644
-index 0000000..bb6f3c4
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-@@ -0,0 +1,6 @@
-+/include/ "qcom-msm8974.dtsi"
-+
-+/ {
-+	model = "Qualcomm APQ8074 Dragonboard";
-+	compatible = "qcom,apq8074-dragonboard", "qcom,apq8074";
-+};
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-new file mode 100644
-index 0000000..f04b643
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -0,0 +1,35 @@
-+/dts-v1/;
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	model = "Qualcomm MSM8974";
-+	compatible = "qcom,msm8974";
-+	interrupt-parent = <&intc>;
-+
-+	soc: soc { };
-+};
-+
-+&soc {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges;
-+	compatible = "simple-bus";
-+
-+	intc: interrupt-controller@f9000000 {
-+		compatible = "qcom,msm-qgic2";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		reg = <0xf9000000 0x1000>,
-+		      <0xf9002000 0x1000>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <1 2 0xf08>,
-+			     <1 3 0xf08>,
-+			     <1 4 0xf08>,
-+			     <1 1 0xf08>;
-+		clock-frequency = <19200000>;
-+	};
-+};
-diff --git a/arch/arm/include/debug/msm.S b/arch/arm/include/debug/msm.S
-index 9166e1b..9d653d4 100644
---- a/arch/arm/include/debug/msm.S
-+++ b/arch/arm/include/debug/msm.S
-@@ -46,6 +46,11 @@
- #define MSM_DEBUG_UART_PHYS	0x16440000
- #endif
- 
-+#ifdef CONFIG_DEBUG_MSM8974_UART
-+#define MSM_DEBUG_UART_BASE	0xFA71E000
-+#define MSM_DEBUG_UART_PHYS	0xF991E000
-+#endif
-+
- 	.macro	addruart, rp, rv, tmp
- #ifdef MSM_DEBUG_UART_PHYS
- 	ldr	\rp, =MSM_DEBUG_UART_PHYS
-diff --git a/arch/arm/mach-msm/Kconfig b/arch/arm/mach-msm/Kconfig
-index 2586c28..086bcb9 100644
---- a/arch/arm/mach-msm/Kconfig
-+++ b/arch/arm/mach-msm/Kconfig
-@@ -64,6 +64,19 @@ config ARCH_MSM_DT
- 	select SPARSE_IRQ
- 	select USE_OF
- 
-+config ARCH_MSM8974
-+	bool "MSM8974"
-+	select ARM_GIC
-+	select CPU_V7
-+	select HAVE_ARM_ARCH_TIMER
-+	select HAVE_SMP
-+	select MSM_SCM if SMP
-+	select USE_OF
-+
-+config ARCH_MSM_DT
-+	def_bool y
-+	depends on (ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_MSM8974)
-+
- config MSM_HAS_DEBUG_UART_HS
- 	bool
- 
-diff --git a/arch/arm/mach-msm/board-dt.c b/arch/arm/mach-msm/board-dt.c
-index 266a280..5211e80 100644
---- a/arch/arm/mach-msm/board-dt.c
-+++ b/arch/arm/mach-msm/board-dt.c
-@@ -26,7 +26,16 @@ static const char * const msm_dt_match[] __initconst = {
- 	NULL
- };
- 
-+static const char * const apq8074_dt_match[] __initconst = {
-+	"qcom,apq8074-dragonboard",
-+	NULL
-+};
-+
- DT_MACHINE_START(MSM_DT, "Qualcomm MSM (Flattened Device Tree)")
- 	.smp = smp_ops(msm_smp_ops),
- 	.dt_compat = msm_dt_match,
- MACHINE_END
-+
-+DT_MACHINE_START(APQ_DT, "Qualcomm MSM (Flattened Device Tree)")
-+	.dt_compat = apq8074_dt_match,
-+MACHINE_END
+Next one is a proposal document of DT bindings.
+[PATCH 4/6] ARM: shmobile: emev2: Define SMU clock DT bindings
+
+This is the implementation, and dts which carries clock tree description.
+[PATCH 5/6] clk: emev2: Add support for emev2 SMU clocks with DT
+
+Last one is small modification needed for migration.
+[PATCH 6/6] ARM: shmobile: kzm9d-reference: Use common clock
+
+These patches do not remove sh-clkfwk version, even on emev2.
+kzm9d(without -reference) target still uses sh-clkfwk.
+I believe this method encourages step-by-step migration on other sh-mobile
+ targets, too.
+
+Patches should be applied and compiled both on
+ v3.12-rc2 and
+ kernel/git/horms/renesas.git tag:renesas-devel-20130922 
+
+Confirmed on kernel/git/horms/renesas.git tag:renesas-devel-20130922 
+for boot up to command prompt.
+- kzm9d board / multiplatform + kzm9d-reference configuration
+- kzm9d board / kzm9d-reference configuration
+- kzm9d board / kzm9d (with sh-clkfwk) configuration for regression.
+- ape6evm (with sh-clkfwk) for regression.
+for compile only
+- sh7757lcr (in arch/sh with sh-clkfwk) for regression.
+
+
+Shinya Kuribayashi (2):
+  clocksource: em_sti: convert to clk_prepare/unprepare
+  serial8250-em: convert to clk_prepare/unprepare
+
+Takashi YOSHII (4):
+  sh: clkfwk: Select sh-/common- clkfwk alternatively
+  ARM: shmobile: emev2: Define SMU clock DT bindings
+  clk: emev2: Add support for emev2 SMU clocks with DT
+  ARM: shmobile: kzm9d-reference: Use common clock framework
+
+ .../devicetree/bindings/clock/emev2-clock.txt      |  99 ++++++++++++++++++++
+ arch/arm/Kconfig                                   |   2 +-
+ arch/arm/boot/dts/emev2.dtsi                       |  84 +++++++++++++++++
+ arch/arm/mach-shmobile/Kconfig                     |   1 +
+ arch/arm/mach-shmobile/board-kzm9d-reference.c     |   5 +-
+ arch/sh/Kconfig                                    |   1 +
+ drivers/clk/Makefile                               |   2 +
+ drivers/clk/shmobile/Makefile                      |   5 +
+ drivers/clk/shmobile/clk-emev2.c                   | 104 +++++++++++++++++++++
+ drivers/clocksource/em_sti.c                       |   4 +-
+ drivers/sh/clk/Makefile                            |   3 +-
+ drivers/tty/serial/8250/8250_em.c                  |   6 +-
+ 12 files changed, 305 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/emev2-clock.txt
+ create mode 100644 drivers/clk/shmobile/Makefile
+ create mode 100644 drivers/clk/shmobile/clk-emev2.c
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.5
