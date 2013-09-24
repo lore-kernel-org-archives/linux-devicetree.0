@@ -1,143 +1,43 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH V3 5/6] clk: exynos-audss: add support for Exynos 5420
-Date: Tue, 24 Sep 2013 11:06:55 -0700
-Message-ID: <1380046016-5811-5-git-send-email-abrestic@chromium.org>
-References: <1379982078-23381-1-git-send-email-abrestic@chromium.org>
- <1380046016-5811-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1380046016-5811-1-git-send-email-abrestic@chromium.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Rahul Sharma <rahul.sharma@samsung.com>, Leela Krishna Amudala <l.krishna@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Tushar Behera <tushar.behera@linaro.org>, Doug Anderson <dianders@chromium.org>, Padmavathi Venna <padma.v@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [Patch V2] drivers: power: Add support for bq24735 charger
+Date: Tue, 24 Sep 2013 14:13:02 -0400
+Message-ID: <5241D62E.1060705@nvidia.com>
+References: <1379607514-11200-1-git-send-email-rklein@nvidia.com> <20130919202706.GB4470@ulmo> <523B6257.4040302@nvidia.com> <20130920075302.GB8575@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130920075302.GB8575@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The AudioSS block on Exynos 5420 has an additional clock gate for the
-ADMA bus clock.
+On 9/20/2013 3:53 AM, Thierry Reding wrote:
+>>>> +     name = charger_device->pdata->name;
+>>>> +     if (!name) {
+>>>> +             name = kasprintf(GFP_KERNEL, "bq24735-%s",
+>>>> +                              dev_name(&client->dev));
+>>>
+>>> Won't the device name already include bq24735 because of the driver
+>>> name?
+>>
+>> In my experience this comes up with a name like "bq24735-5-0009". Thats
+>> why I added the bq24735 in the beginning, so the name is more descriptive.
+> 
+> Yes, you're right. Perhaps in that case it's even easier to just stick
+> with a static string such as "bq24735" or "bq24735-charger". It's likely
+> to be the only device of that type in a machine. If you want to include
+> the device name, perhaps something like "%s/bq24735" (5-0009/bq24735) is
+> clearer that 5-0009 is actually the bus-specific name.
+> 
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
----
-Changes since v1:
- - added type enum and made comparison against that instead of compatibility
-   string
----
- .../devicetree/bindings/clock/clk-exynos-audss.txt |  7 +++--
- drivers/clk/samsung/clk-exynos-audss.c             | 35 ++++++++++++++++++----
- include/dt-bindings/clk/exynos-audss-clk.h         |  3 +-
- 3 files changed, 36 insertions(+), 9 deletions(-)
+So it turns out if I try to put in a '/' or '\' they are translated to
+'!' in sysfs, so the name comes out to be '5-0009!bq24735'. Perhaps
+'bq24735@5-0009' to still signify that the 5-009 is more of an address
+than chip name? What do you think Thierry?
 
-diff --git a/Documentation/devicetree/bindings/clock/clk-exynos-audss.txt b/Documentation/devicetree/bindings/clock/clk-exynos-audss.txt
-index 85b9e28..180e883 100644
---- a/Documentation/devicetree/bindings/clock/clk-exynos-audss.txt
-+++ b/Documentation/devicetree/bindings/clock/clk-exynos-audss.txt
-@@ -8,8 +8,10 @@ Required Properties:
- 
- - compatible: should be one of the following:
-   - "samsung,exynos4210-audss-clock" - controller compatible with all Exynos4 SoCs.
--  - "samsung,exynos5250-audss-clock" - controller compatible with all Exynos5 SoCs.
--
-+  - "samsung,exynos5250-audss-clock" - controller compatible with Exynos5250
-+    SoCs.
-+  - "samsung,exynos5420-audss-clock" - controller compatible with Exynos5420
-+    SoCs.
- - reg: physical base address and length of the controller's register set.
- 
- - #clock-cells: should be 1.
-@@ -49,6 +51,7 @@ i2s_bus         6
- sclk_i2s        7
- pcm_bus         8
- sclk_pcm        9
-+adma            10      Exynos5420
- 
- Example 1: An example of a clock controller node using the default input
- 	   clock names is listed below.
-diff --git a/drivers/clk/samsung/clk-exynos-audss.c b/drivers/clk/samsung/clk-exynos-audss.c
-index e7e800a..35cae41 100644
---- a/drivers/clk/samsung/clk-exynos-audss.c
-+++ b/drivers/clk/samsung/clk-exynos-audss.c
-@@ -19,6 +19,12 @@
- 
- #include <dt-bindings/clk/exynos-audss-clk.h>
- 
-+enum exynos_audss_clk_type {
-+	TYPE_EXYNOS4210,
-+	TYPE_EXYNOS5250,
-+	TYPE_EXYNOS5420,
-+};
-+
- static DEFINE_SPINLOCK(lock);
- static struct clk **clk_table;
- static void __iomem *reg_base;
-@@ -59,6 +65,16 @@ static struct syscore_ops exynos_audss_clk_syscore_ops = {
- };
- #endif /* CONFIG_PM_SLEEP */
- 
-+static const struct of_device_id exynos_audss_clk_of_match[] = {
-+	{ .compatible = "samsung,exynos4210-audss-clock",
-+	  .data = (void *)TYPE_EXYNOS4210, },
-+	{ .compatible = "samsung,exynos5250-audss-clock",
-+	  .data = (void *)TYPE_EXYNOS5250, },
-+	{ .compatible = "samsung,exynos5420-audss-clock",
-+	  .data = (void *)TYPE_EXYNOS5420, },
-+	{},
-+};
-+
- /* register exynos_audss clocks */
- static int exynos_audss_clk_probe(struct platform_device *pdev)
- {
-@@ -68,6 +84,13 @@ static int exynos_audss_clk_probe(struct platform_device *pdev)
- 	const char *mout_i2s_p[] = {"mout_audss", "cdclk0", "sclk_audio0"};
- 	const char *sclk_pcm_p = "sclk_pcm0";
- 	struct clk *pll_ref, *pll_in, *cdclk, *sclk_audio, *sclk_pcm_in;
-+	const struct of_device_id *match;
-+	enum exynos_audss_clk_type variant;
-+
-+	match = of_match_node(exynos_audss_clk_of_match, pdev->dev.of_node);
-+	if (!match)
-+		return -EINVAL;
-+	variant = (enum exynos_audss_clk_type)match->data;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	reg_base = devm_ioremap_resource(&pdev->dev, res);
-@@ -139,6 +162,12 @@ static int exynos_audss_clk_probe(struct platform_device *pdev)
- 				sclk_pcm_p, CLK_SET_RATE_PARENT,
- 				reg_base + ASS_CLK_GATE, 5, 0, &lock);
- 
-+	if (variant == TYPE_EXYNOS5420) {
-+		clk_table[EXYNOS_ADMA] = clk_register_gate(NULL, "adma",
-+				"dout_srp", CLK_SET_RATE_PARENT,
-+				reg_base + ASS_CLK_GATE, 9, 0, &lock);
-+	}
-+
- 	for (i = 0; i < EXYNOS_AUDSS_MAX_CLKS; i++) {
- 		if (IS_ERR(clk_table[i])) {
- 			dev_err(&pdev->dev, "failed to regsiter clock %d\n", i);
-@@ -187,12 +216,6 @@ static int exynos_audss_clk_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id exynos_audss_clk_of_match[] = {
--	{ .compatible = "samsung,exynos4210-audss-clock", },
--	{ .compatible = "samsung,exynos5250-audss-clock", },
--	{},
--};
--
- static struct platform_driver exynos_audss_clk_driver = {
- 	.driver	= {
- 		.name = "exynos-audss-clk",
-diff --git a/include/dt-bindings/clk/exynos-audss-clk.h b/include/dt-bindings/clk/exynos-audss-clk.h
-index 8279f42..0ae6f5a 100644
---- a/include/dt-bindings/clk/exynos-audss-clk.h
-+++ b/include/dt-bindings/clk/exynos-audss-clk.h
-@@ -19,7 +19,8 @@
- #define EXYNOS_SCLK_I2S	7
- #define EXYNOS_PCM_BUS		8
- #define EXYNOS_SCLK_PCM	9
-+#define EXYNOS_ADMA		10
- 
--#define EXYNOS_AUDSS_MAX_CLKS	10
-+#define EXYNOS_AUDSS_MAX_CLKS	11
- 
- #endif
+-rhyland
+
 -- 
-1.8.4
-
+nvpublic
