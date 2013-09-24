@@ -1,67 +1,62 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC] gpio/omap: auto-setup a GPIO when used as an IRQ
-Date: Tue, 24 Sep 2013 08:27:03 -0700
-Message-ID: <20130924152703.GL2684@atomide.com>
-References: <1379860848-29020-1-git-send-email-javier.martinez@collabora.co.uk>
- <CACRpkdb35DouKsZ+9aWfQmER1vmAaK1dR7VXjoFHTLRR+hBezg@mail.gmail.com>
- <524125F4.4060608@collabora.co.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: kirkwood: add S/PDIF support
+Date: Tue, 24 Sep 2013 16:37:01 +0100
+Message-ID: <20130924153701.GF3226@sirena.org.uk>
+References: <20130924124122.64834b2a@armhf>
+ <20130924105127.GB12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <524125F4.4060608@collabora.co.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Jon Hunter <jgchunter@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20130924105127.GB12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Javier Martinez Canillas <javier.martinez@collabora.co.uk> [130923 22:49]:
-> On 09/23/2013 10:15 PM, Linus Walleij wrote:
-> > <javier.martinez@collabora.co.uk> wrote:
-> > - When a second caller calls omap_gpio_request() it should
-> >   be OK as well, but only if the flags corresponds to the
-> >   previously enabled input mode. Else it should be
-> >   disallowed.
-> > 
-> > - The same should happen for _set_gpio_direction() if a pin
-> >   previously set up for IRQ gets a request to be used as
-> >   output.
-> > 
-> > If this cannot be tracked in the driver, it is certainly a candidate
-> > for something that gpiolib should be doing. And then I'm open to
-> > solutions to how we can do that.
-> > 
-> 
-> Ok, this can be tracked in the driver, will add it when posting v2 soon.
-> 
-> > If this needs to be applied pronto to fix the regression I'm
-> > happy with that too, if we add a big boilerplate stating the above
-> > problem and that it needs to be *fixed* at some point.
 
-In the mainline kernel, the regression is happening at least for
-smsc911x using boards, so that's omap3-igep.dtsi and omap3-tobi.dts
-currently. Also MMC card detection for omap4 is failing. Then
-of course there are tons of boards where we don't have the .dts
-files in the mainline kernel yet.
+--+jhVVhN62yS6hEJ8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So maybe let's do a minimal fix for the -rc cycle first?
+On Tue, Sep 24, 2013 at 11:51:27AM +0100, Russell King - ARM Linux wrote:
+> On Tue, Sep 24, 2013 at 12:41:22PM +0200, Jean-Francois Moine wrote:
+> > This patch adds S/PDIF input/output for mvebu DT boards.
 
-Then the extra checks can be queued for the next merge window
-if it gets too intrusive.
+> Right, so if this goes in, then we're completely fucked for doing this
+> the way that Mark apparantly wants it to be done, because once these
+> DT properties go in, they're there to stay.
 
-> > But in either case I want this to be tested on OMAP1 before
-> > I apply it, as in a Tested-by tag.
-> >
-> 
-> Agreed. Even though this is a fix for a long standing issue I prefer it to be
-> tested extensively than applying the patch in a rush just to learn that causes
-> regressions and have to be reverted as it happens last time.
-> 
-> So as you said let's wait until we have a few Tested-by tags by people using
-> different OMAP platforms specially OMAP1.
+I'm not sure that this is in particular conflict with any other way of
+writing things, though it would be redundant.  The best thing would be
+to key this off connecting to DAIs so that people just need to make the
+connections that exist in their system in the device tree.
 
-Yup.
+--+jhVVhN62yS6hEJ8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Regards,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-Tony
+iQIcBAEBAgAGBQJSQbGaAAoJELSic+t+oim9PFkQAIkq41++/nPyaS3YVZsSc8WH
+PybmS8vFrQXrdGK40t008/6h/uGVSFzCajoVkVR2qHFkpXBxGfhZnIEOzV7qhMP8
+iaCEgBelA+JSWcDauuiUkijQCcraLeqXiZwR6I8gIiqnuLjAp+K9Sm3P2oKcxLUW
+3DthUakfDwf3QXbKU3UdZT03uVXMB7Azl56BYagFV9U01T1LYuLH9mH4N9VkRUns
+K9y7cZv9xe53ArWJaH0QShMyH67TM9YOZJQu7irIqp64wU1pCG2qkFLZrEiNcoiT
+ZBWITF++smLszX41NoOKAzangvtVOGMA+XU10S42iO8doo9wKNIaJRLDzQZxS85L
+d8AUB/D0el5OQWDSkbJ4a5TSf7v+dEbyaWbcPaycGY/XiM5mr2fTlnQ7NEqQ8dfv
+rHcwhRmh2pU9sP64anizCtQ0nph4rWj+Pq8ZL0UKv1AQCsnNhVQG39qSD1tGquZR
+MCeTgVNgWaj9YPS4ku2VGRw4yM+zzXrSNuHVpCwK7DibVdp/+y93RjTIjZ726L/2
+NmDv6HJWuCSK1higm8SCf75XK3c90ZQLFQVMdHLgST+pmthRc/C9i25u1ZQW7zC0
+6dXhu43xURzdE5HJKYp67+vUsorl6KL77v943owS2GzY2ld5dYPNeBetKW/7oeAF
+ySpL45ujLYdyDU2LHm/0
+=ut2v
+-----END PGP SIGNATURE-----
+
+--+jhVVhN62yS6hEJ8--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
