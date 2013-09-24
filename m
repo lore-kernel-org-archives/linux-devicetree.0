@@ -1,51 +1,42 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [rtc-linux] [PATCH V3 2/3] pincntrl: add support for AMS AS3722
- pin control driver
-Date: Tue, 24 Sep 2013 22:46:47 +0530
-Message-ID: <5241C8FF.4080708@nvidia.com>
-References: <1380023921-29867-1-git-send-email-ldewangan@nvidia.com> <1380023921-29867-3-git-send-email-ldewangan@nvidia.com> <CACRpkda3m4ipTsS8FZoU1QDwrvwmKFn4awyfXOy2VOiuV63y6A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda3m4ipTsS8FZoU1QDwrvwmKFn4awyfXOy2VOiuV63y6A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Landley <rob@landley.net>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, Florian Lobmaier <florian.lobmaier@ams.com>
+From: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
+Subject: [PATCH 0/3] ARM: S5PC100: move to common clk framework
+Date: Tue, 24 Sep 2013 18:55:23 +0200
+Message-ID: <1380041723-15877-1-git-send-email-m.krawczuk@partner.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kyungmin.park@samsung.com
+Cc: mturquette@linaro.org, t.figa@samsung.com, s.nawrocki@samsung.com, yadi.brar@samsung.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, devicetree@vger.kernel.org, ben-linux@fluff.org, linux-samsung-soc@vger.kernel.org, Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 24 September 2013 06:22 PM, Linus Walleij wrote:
-> On Tue, Sep 24, 2013 at 1:58 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
->> +static int as_pci_to_irq(struct gpio_chip *chip, unsigned offset)
->> +{
->> +       struct as3722_pctrl_info *as_pci = to_as_pci(chip);
->> +
->> +       return as3722_irq_get_virq(as_pci->as3722, offset);
->> +}
->> +
->> +static int as_pci_request(struct gpio_chip *chip, unsigned offset)
->> +{
->> +       struct as3722_pctrl_info *as_pci = to_as_pci(chip);
->> +
->> +       if (as_pci->gpio_control[offset].io_function)
->> +               return -EBUSY;
->> +       return 0;
->> +}
-> Why is this not calling pinctrl_request_gpio(as_pci->chip.base + offset)
-> instead of just checking if we happen to be GPIO and failing if
-> we are not?
->
-> I would implement .free calling pinctrl_free_gpio(gpio) as well.
->
-> See e.g. pinctrl-abx500.c
->
->
+This patch series is the new s5pc100 clock implementation
+(using common clk framework).
 
-Wow, cool, I saw and it is simple,  the gpios callback is wrapper over 
-the pincontrol mux APIs.
+This implementation is compatible with device tree definition and board files.
 
-I also see opportunity to re-factor the 
-request/free/direction_input/direction_output to move to core so that 
-need not to implement locally, the gpio_chip's callback can use directly.
+This patch series is based on linux-next and has been tested on smdkc100 
+board using board file.
 
-Will post once this driver is accepted.
+Mateusz Krawczuk (3):
+  clk: samsung: pll: Add support for PLL6545a and PLL6522x
+  clk: samsung: Add clock driver for s5pc100
+  ARM: s5pc100: Migrate clock handling to Common Clock Framework
+
+ .../bindings/clock/samsung,s5pc100-clock.txt       |  72 +++
+ arch/arm/mach-s5pc100/Kconfig                      |   8 +
+ arch/arm/mach-s5pc100/Makefile                     |   4 +-
+ arch/arm/mach-s5pc100/common.c                     |  23 +-
+ arch/arm/mach-s5pc100/common.h                     |  13 +
+ arch/arm/mach-s5pc100/mach-smdkc100.c              |   3 +-
+ arch/arm/plat-samsung/Kconfig                      |   2 +-
+ drivers/clk/samsung/Makefile                       |   1 +
+ drivers/clk/samsung/clk-pll.c                      |   2 +
+ drivers/clk/samsung/clk-pll.h                      |   2 +
+ drivers/clk/samsung/clk-s5pc100.c                  | 695 +++++++++++++++++++++
+ include/dt-bindings/clock/samsung,s5pc100-clock.h  | 202 ++++++
+ 12 files changed, 1022 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,s5pc100-clock.txt
+ create mode 100644 drivers/clk/samsung/clk-s5pc100.c
+ create mode 100644 include/dt-bindings/clock/samsung,s5pc100-clock.h
+
+-- 
+1.8.1.2
