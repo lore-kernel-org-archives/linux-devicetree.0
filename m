@@ -1,28 +1,34 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: add initial VF610 Cosmic/Cosmic+ board
- support
-Date: Tue, 24 Sep 2013 22:33:06 +0800
-Message-ID: <20130924143304.GC21029@S2101-09.ap.freescale.net>
-References: <1379949284-19936-1-git-send-email-matt.porter@linaro.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [net-next PATCH 0/4] cpsw: support for control module register
+Date: Tue, 24 Sep 2013 10:34:16 -0400 (EDT)
+Message-ID: <20130924.103416.2050021711877592417.davem@davemloft.net>
+References: <1379704841-32693-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1379949284-19936-1-git-send-email-matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1379704841-32693-1-git-send-email-mugunthanvnm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: mugunthanvnm@ti.com
+Cc: netdev@vger.kernel.org, zonque@gmail.com, bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2013 at 11:14:44AM -0400, Matt Porter wrote:
-> Add initial PHYTEC VF610 Cosmic/Cosmic+ board support with
-> UART and FEC enabled.
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Date: Sat, 21 Sep 2013 00:50:37 +0530
+
+> This patch series adds the support for configuring GMII_SEL register
+> of control module to select the phy mode type and also to configure
+> the clock source for RMII phy mode whether to use internal clock or
+> the external clock from the phy itself.
 > 
-> Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Till now CPSW works as this configuration is done in U-Boot and carried
+> over to the kernel. But during suspend/resume Control module tends to
+> lose its configured value for GMII_SEL register in AM33xx PG1.0, so
+> if CPSW is used in RMII or RGMII mode, on resume cpsw is not working
+> as GMII_SEL register lost its configuration values.
+> 
+> The initial version of the patch is done by Daniel Mack but as per
+> Tony's comment he wants it as a seperate driver as it is done in USB
+> control module. I have created a seperate driver for the same.
 
-Applied, thanks.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Series applied, thanks.
