@@ -1,56 +1,49 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/3] of: Add Chunghwa Picture Tubes Ltd. vendor prefix
-Date: Tue, 24 Sep 2013 13:02:38 -0600
-Message-ID: <5241E1CE.6010209@wwwdotorg.org>
-References: <1380012714-19073-1-git-send-email-treding@nvidia.com> <1380012714-19073-2-git-send-email-treding@nvidia.com> <5241CC20.1010800@wwwdotorg.org> <20130924184754.GC9911@mithrandir>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH V3 1/6] clk: exynos-audss: convert to platform device
+Date: Tue, 24 Sep 2013 12:17:01 -0700 (PDT)
+Message-ID: <1706375.1GRhkzSkm0@flatron>
+References: <1379982078-23381-1-git-send-email-abrestic@chromium.org> <1380046016-5811-1-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130924184754.GC9911@mithrandir>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1380046016-5811-1-git-send-email-abrestic@chromium.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Andrew Bresticker <abrestic@chromium.org>, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Tushar Behera <tushar.behera@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Sachin Kamat <sachin.kamat@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Mike Turquette <mturquette@linaro.org>, Rahul Sharma <rahul.sharma@samsung.com>, Padmavathi Venna <padma.v@samsung.com>, Jiri Kosina <jkosina@suse.cz>, Stephen Boyd <sboyd@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Leela
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2013 12:47 PM, Thierry Reding wrote:
-> On Tue, Sep 24, 2013 at 11:30:08AM -0600, Stephen Warren wrote:
->> On 09/24/2013 02:51 AM, Thierry Reding wrote:
->>> Chunghwa Picture Tubes Ltd. isn't listed on the stock exchange
->>> and just Chunghwa is too generic, so use the official
->>> abbreviation "CPTT" as the vendor prefix.
->> 
->> cptt is not very mnemonic. If plain "chungwa" is too generic
->> (could you expand upon that?), would "chungwapt" be better?
+Hi Andrew,
+
+On Tuesday 24 of September 2013 11:06:51 Andrew Bresticker wrote:
+> The Exynos AudioSS clock controller will later be modified to allow
+> input clocks to be specified via device-tree in order to support
+> multiple Exynos SoCs.  This will introduce a dependency on the core
+> SoC clock controller being initialized first so that the AudioSS driver
+> can look up its input clocks, but the order in which clock providers
+> are probed in of_clk_init() is not guaranteed.  Since deferred probing
+> is not supported in of_clk_init() and the AudioSS block is not the core
+> controller, we can initialize it later as a platform device.
 > 
-> Well, there are Chunghwa Post and Chunghwa Telecom. I guess none
-> of these make devices that would ever need to be represented in a
-> device tree, but you never know.
-> 
-> I'm having some trouble understanding the criteria on how to choose
-> a good vendor prefix.
+> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> ---
+> Changes since v2:
+>  - add error handling to probe callback
+>  - fixed ordering of of_clk_{add,del}_provider
+>  - fixed nits from Tomasz and Sylwester
+> Changes since v1:
+>  - add clk_unregister() calls to remove callback
+>  - fixed minor nits from Tomasz
+> ---
+>  drivers/clk/samsung/clk-exynos-audss.c | 109
+> +++++++++++++++++++++++++++------ 1 file changed, 90 insertions(+), 19
+> deletions(-)
 
-I don't think there are any hard/fast rules, which may be the problem!
+For the whole series:
 
-> As I mentioned in another subthread I remember some discussion that
-> concluded that the stock symbol should be used if one existed.
-> That's not the case for Chunghwa so I looked for some sort of 
-> specific abbreviation. cptt is what Chunghwa Picture Tubes uses
-> for their website (http://www.cptt.com.tw) and seemed like a good
-> fit.
+Acked-by: Tomasz Figa <t.figa@samsung.com>
 
-I guess if I search Google for "cptt", the right website is the second
-hit, so perhaps it's not so bad.
+Thanks for addressing all the comments.
 
-> If something mnemonic is preferred, perhaps we should just go with
-> plain "chunghwa". If it turns out that the newspaper or telecom
-> company ever do ship a product that needs a device tree
-> representation we can always come up with a variant then.
-
-That'd probably be fine too. A telecom company at least seems like it
-could easily start making HW, but like you say, we can deal with that
-then!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
