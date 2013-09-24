@@ -1,110 +1,70 @@
-From: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 1/4] i2c: busses: i2c-st: Add ST I2C controller
-Date: Tue, 24 Sep 2013 17:38:34 +0200
-Message-ID: <5241B1FA.6020500@st.com>
-References: <1379498483-4236-1-git-send-email-maxime.coquelin@st.com>
- <1379498483-4236-2-git-send-email-maxime.coquelin@st.com>
- <5240AD6E.4090905@wwwdotorg.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC v2] gpio/omap: auto-setup a GPIO when used as an IRQ
+Date: Tue, 24 Sep 2013 08:40:48 -0700
+Message-ID: <20130924154048.GM2684@atomide.com>
+References: <1380009480-4975-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5240AD6E.4090905-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen GALLIMORE <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, Stuart MENEFY <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Olivier CLERGEAUD <olivier.clergeaud-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1380009480-4975-1-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Jon Hunter <jgchunter@gmail.com>, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, r.sricharan@ti.com, holler@ahsoftware.de
 List-Id: devicetree@vger.kernel.org
 
+* Javier Martinez Canillas <javier.martinez@collabora.co.uk> [130924 01:06]:
+> The OMAP GPIO controller HW requires a pin to be configured in GPIO
+> input mode in order to operate as an interrupt input. Since drivers
+> should not be aware of whether an interrupt pin is also a GPIO or not,
+> the HW should be fully configured/enabled as an IRQ if a driver solely
+> uses IRQ APIs such as request_irq(), and never calls any GPIO-related
+> APIs. As such, add the missing HW setup to the OMAP GPIO controller's
+> irq_chip driver.
+> 
+> Since this bypasses the GPIO subsystem we have to ensure that another
+> caller won't be able to request the same GPIO pin that is used as an
+> IRQ and set its direction as output. Requesting the GPIO and setting
+> its direction as input is allowed though.
 
-On 09/23/2013 11:06 PM, Stephen Warren wrote:
-> On 09/18/2013 04:01 AM, Maxime COQUELIN wrote:
->> This patch adds support to SSC (Synchronous Serial Controller)
->> I2C driver. This IP also supports SPI protocol, but this is not
->> the aim of this driver.
->>
->> This IP is embedded in all ST SoCs for Set-top box platorms, and
->> supports I2C Standard and Fast modes.
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-st.txt b/Documentation/devicetree/bindings/i2c/i2c-st.txt
->> +I2C for ST platforms
-> If the HW block supports both I2C and SPI, the DT binding ought to
-> support that too. It's be best to create a single DT binding that
-> represents the IP block, and include a property that indicates whether
-> the device should operate in I2C or SPI mode.
->
-> I suppose you could reasonably define different compatible values for
-> those two cases. However, the binding should be titled something more
-> like "ST SSC binding, for I2C mode operation" and "ST SSC binding, for
-> SPI mode operation", rather than "I2C for ST platforms", since the HW
-> includes an SSC block, not an I2C block.
-You are right Stephen.
-I will rename the title and change the compatible value as per your 
-recommendation.
+Also please mention the regression that this fixes. So far we know
+that smsc911x for tobi and igep boards in mainline, and also the
+MMC card detect for omap4 boards.
+ 
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -63,6 +63,7 @@ struct gpio_bank {
+>  	struct gpio_chip chip;
+>  	struct clk *dbck;
+>  	u32 mod_usage;
+> +	u32 irq_usage;
+>  	u32 dbck_enable_mask;
+>  	bool dbck_enabled;
+>  	struct device *dev;
+> @@ -86,6 +87,9 @@ struct gpio_bank {
+>  #define GPIO_BIT(bank, gpio) (1 << GPIO_INDEX(bank, gpio))
+>  #define GPIO_MOD_CTRL_BIT	BIT(0)
+>  
+> +#define BANK_USED(bank) (bank->mod_usage || bank->irq_usage)
+> +#define LINE_USED(line, offset) (line & (1 << offset))
 
->> +Required properties :
->> +- compatible : Must be "st,comms-i2c"
->> +- reg : Offset and length of the register set for the device
->> +- interrupts : the interrupt number
-> It's an interrupt specifier, not an interrupt number. The format is
-> defined by the interrupt controller, not this binding.
-Ok. I will change to "the interrupt specifier".
->> +- clocks : phandle to the I2C clock source
-> What about clock-names?
-It will be added in next revision. It will be named "ssc"
->> +Recommended (non-standard) properties :
-> Usually you'd just say "Optional properties:", or perhaps "Recommended
-> properties:". I don't think adding "(non-standard)" serves any purpose.
-Ok. then I will remove all the "non-standard" occurences.
->> +- clock-frequency : Desired I2C bus clock frequency in Hz. Otherwise
->> +  the default 100 kHz frequency will be used. As only Normal and Fast modes
->> +  are supported, possible values are 100000 and 400000.
->> +
->> +Optional (non-standard) properties:
-> Same here.
->
->> +- st,glitches : Enable timing glitch suppression support.
-> That property name doesn't really convey the "enables" that appears in
-> the property description to me...
->
->> +- st,glitch-clk : SCL line timinig glitch suppression value in ns.
->> +- st,glitch-dat : SDA line timinig glitch suppression value in ns.
-> s/timinig/timing/
->
->> +- st,hw-glitches : Enable filter glitch suppression support.
->> +- st,hw-glitch-clk : SCL line filter glitch suppression value in us.
->> +- st,hw-glitch-dat : SDA line filter glitch suppression value in us.
-> Those sound more like runtime configuration rather than HW description.
-> Can you rephrase the descriptions (and property names) more along the
-> lines of HW properties? Perhaps e.g.:
->
-> st,needs-glitch-suppression: The board design needs timing glitch
-> suppression enabled to operate reliably.
->
-> st,min-scl-pulse-width: The minimum valid SCL pulse width that is
-> allowed through the deglitch circuit. In units of ns.
->
-> (I just made up those descriptions to give a feel for the flavor of
-> description that I expect. They likely need some adjustment to reflect
-> whatever they're actually intended to represent in HW).
->
-> What is the difference between "glitch" and "hw-glitch"?
-"hw-glitch" is used to configure the anti-glitch filters.
-It suppresses the pulses with a width lower than x microseconds.
+Hmm this patch is hard to read, maybe break it into two patches?
 
-"glitch" is is used to tune the I2C timing requirements, and has a 
-nanosecond granularity.
-These values are added to default timing values.
-I'm not 100% sure, but it looks like the "samsung,i2c-sda-delay" in the 
-i2c-s3c2410 driver.
+First you could do a patch to prepare thing by introducing
+BANK_USED and LINE_USED.
 
-I agree the names and descriptions are not clear, and even misleading.
-I will come with a clearer implementation, as soon as I get 
-clarification from HW team.
+> +static int gpio_is_input(struct gpio_bank *bank, int mask)
+> +{
+> +	void __iomem *reg = bank->base + bank->regs->direction;
+> +
+> +	return __raw_readl(reg) & mask;
+> +}
 
-Thanks for the review,
-Maxime
+And also move gpio_is_input() around in the first patch.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Then the second patch for the fix would probably be much
+easier to read.
+
+Regards,
+
+Tony
