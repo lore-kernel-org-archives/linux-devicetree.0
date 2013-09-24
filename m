@@ -1,78 +1,76 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch V2] drivers: power: Add support for bq24735 charger
-Date: Tue, 24 Sep 2013 20:31:00 +0200
-Message-ID: <20130924183100.GB9911@mithrandir>
-References: <1379607514-11200-1-git-send-email-rklein@nvidia.com>
- <20130919202706.GB4470@ulmo>
- <523B6257.4040302@nvidia.com>
- <20130920075302.GB8575@ulmo>
- <5241D62E.1060705@nvidia.com>
+Subject: Re: [PATCH 2/3] of: Add Chunghwa Picture Tubes Ltd. vendor prefix
+Date: Tue, 24 Sep 2013 20:47:55 +0200
+Message-ID: <20130924184754.GC9911@mithrandir>
+References: <1380012714-19073-1-git-send-email-treding@nvidia.com>
+ <1380012714-19073-2-git-send-email-treding@nvidia.com>
+ <5241CC20.1010800@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="/e2eDi0V/xtL+Mc8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5241D62E.1060705-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5241CC20.1010800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---neYutvxvOLaeuPCA
+--/e2eDi0V/xtL+Mc8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 24, 2013 at 02:13:02PM -0400, Rhyland Klein wrote:
-> On 9/20/2013 3:53 AM, Thierry Reding wrote:
-> >>>> +     name =3D charger_device->pdata->name;
-> >>>> +     if (!name) {
-> >>>> +             name =3D kasprintf(GFP_KERNEL, "bq24735-%s",
-> >>>> +                              dev_name(&client->dev));
-> >>>
-> >>> Won't the device name already include bq24735 because of the driver
-> >>> name?
-> >>
-> >> In my experience this comes up with a name like "bq24735-5-0009". Thats
-> >> why I added the bq24735 in the beginning, so the name is more descript=
-ive.
-> >=20
-> > Yes, you're right. Perhaps in that case it's even easier to just stick
-> > with a static string such as "bq24735" or "bq24735-charger". It's likely
-> > to be the only device of that type in a machine. If you want to include
-> > the device name, perhaps something like "%s/bq24735" (5-0009/bq24735) is
-> > clearer that 5-0009 is actually the bus-specific name.
-> >=20
+On Tue, Sep 24, 2013 at 11:30:08AM -0600, Stephen Warren wrote:
+> On 09/24/2013 02:51 AM, Thierry Reding wrote:
+> > Chunghwa Picture Tubes Ltd. isn't listed on the stock exchange and just
+> > Chunghwa is too generic, so use the official abbreviation "CPTT" as the
+> > vendor prefix.
 >=20
-> So it turns out if I try to put in a '/' or '\' they are translated to
-> '!' in sysfs, so the name comes out to be '5-0009!bq24735'. Perhaps
-> 'bq24735@5-0009' to still signify that the 5-009 is more of an address
-> than chip name? What do you think Thierry?
+> cptt is not very mnemonic. If plain "chungwa" is too generic (could you
+> expand upon that?), would "chungwapt" be better?
 
-I hadn't thought about that. @ looks like a better separator indeed.
+Well, there are Chunghwa Post and Chunghwa Telecom. I guess none of
+these make devices that would ever need to be represented in a device
+tree, but you never know.
+
+I'm having some trouble understanding the criteria on how to choose a
+good vendor prefix. As I mentioned in another subthread I remember some
+discussion that concluded that the stock symbol should be used if one
+existed. That's not the case for Chunghwa so I looked for some sort of
+specific abbreviation. cptt is what Chunghwa Picture Tubes uses for
+their website (http://www.cptt.com.tw) and seemed like a good fit. If
+something mnemonic is preferred, perhaps we should just go with plain
+"chunghwa". If it turns out that the newspaper or telecom company ever
+do ship a product that needs a device tree representation we can always
+come up with a variant then.
 
 Thierry
 
---neYutvxvOLaeuPCA
+--/e2eDi0V/xtL+Mc8
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.21 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSQdpkAAoJEN0jrNd/PrOhdi8P/2exuCTEB2qONKPn0Ba077aP
-LpSefJRWAAKzNzBtLp64nU7aGjlTU7emD+GHD5j/Z6+XAVSO+5cMQarx5z0wzaxD
-pBWkIzlHcIXhryiiHAatkFutfVKLwIe34XLZa7E3OUDF98DPL8iPckXkqVlAL5bm
-i0ejGws3dDESpwZIV2i3JCMgK8NRHEfMu9KkOShtqGMCSM3CfRinm1daGNYvN2BQ
-Z6TBi06bAOl8AvgvjGM4Y3+uOMGl/18bBV9UQqzk19sAF4F4PhbugSUleMq85x7l
-+zHNvvnqKMxql46sDP8XfuJcBCqHBhKPQGU+wV3MC76cooLZFxRYhV2rFW/XVM+P
-FofVggNG/tyZlTMdKbuwWoCjUY2U378O1ayuwXjyd+WDOff75kBdUA7UFcXG5smj
-ybFTduNurDMM22LDRvAxRIeHV3sX0lo/i5A6kG2/XFhKqq6ho7XmMGyHmAK6vlfd
-PJ7MideVDdvoEmx8Dr+ctc1RLaQ3ZtFK1PksnxTLmPNxHFbf02PV7L3lrLnxspXa
-v+kEm5WlryziNtbub7o3LvBO+9E1xOmLrgEXRtIA+BlcomMIiUl6MVioKlPak0LL
-LOpMUvwsqrbilcB86yExcveZXZ0CKKPrEejgwge1pEN8DstMGgIftAewFrYLcP/M
-OTlWKjcT+SHj+ZGoEIa3
-=pnC3
+iQIcBAEBAgAGBQJSQd5aAAoJEN0jrNd/PrOhaHYP/0wioN7+qz+nVr+Lme/xmk4T
+nQucBk6TZvUs2ya9vGqH+6nowhRmWN3mm/bedlbaHpF6ZtU2/EoZ9ewt3ujWuztW
+t7blRp1BDDWxF/iIjGd0dWRvtM/AI8WkmFCL9pc6Mds6W14oyWLal5GQgPANsEBD
+q/TcWNOGwrtHCdUvPGLPuAWbNvCH3kWXSG0n9FjbtlAZCGtg3KREutL/Bk/YpNCr
+nSHcxKFLFO73T9LSErsry8G3SucDOuvb2vgJ4h1ciUAinIeSN+wyT/5LpWAT+gPO
+i/8SYZRTbaQgUuqrzdaxKaNTIMtQPw/yHbHwS436JPO+1hOf3G2bwUOU+T8KL8NX
+/YFIQVfPJn5BYu6aPUWMlxEaV4I2wIHQym2QuxpAhQuXdR15E184PkrhfoybVL/f
+OiyX8UL6s6Bb4xUEtaxA2seUwq+hSdp1IaPmzMooyhjKsp5nwtR3ESENnQg5LEHP
+yMnQeuIpIND6q973VraaldS/PzUpWIcvoRMr01c6iEWS9UMgDTGfnWHfoebd5ZQN
+Ux+iqAsAmET4s3gK9tJPnRqzgcfYmDimWlh1Bh9JLzG49RQxQErFQnwF0SBGQC6T
+T8FTlF6/6V6+FjQ+vpVJIEz4HRXWi8zVQnlGBQhuTWnB/L8JpYaXrA49lDubVhxE
+9SGeLElGmfRuBZRWHw8C
+=QvfT
 -----END PGP SIGNATURE-----
 
---neYutvxvOLaeuPCA--
+--/e2eDi0V/xtL+Mc8--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
