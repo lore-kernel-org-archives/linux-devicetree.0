@@ -1,78 +1,120 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFCv2 3/3] ARM: dts: N900: Add SSI information
-Date: Tue, 24 Sep 2013 13:10:05 -0700
-Message-ID: <20130924201005.GB8949@atomide.com>
-References: <1379277856-24571-1-git-send-email-sre@debian.org>
- <1379277856-24571-4-git-send-email-sre@debian.org>
- <5240A617.1010208@wwwdotorg.org>
- <20130923234656.GB24781@earth.universe>
- <5241EE47.5050907@wwwdotorg.org>
+From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] dts: socfpga: Add ethernet support on Altera's SOCFPGA platform
+Date: Tue, 24 Sep 2013 16:11:59 -0500
+Message-ID: <1380057120-27108-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5241EE47.5050907@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Paul Walmsley <paul@pwsan.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Stephen Warren <swarren@wwwdotorg.org> [130924 13:03]:
-> On 09/23/2013 05:46 PM, Sebastian Reichel wrote:
-> > Hi,
-> > 
-> > On Mon, Sep 23, 2013 at 02:35:35PM -0600, Stephen Warren wrote:
-> >> On 09/15/2013 02:44 PM, Sebastian Reichel wrote:
-> >>> Add SSI device tree data for OMAP34xx and Nokia N900.
-> 
-> ...
-> >>> +- ti,hwmods:		Name of the hwmod associated to the controller,
-> >>> which +			is "ssi".
-> >> 
-> >> I don't think we should add any more of that, for new bindings.
-> > 
-> > That basically means not adding new drivers until hwmod is
-> > completly removed, since no new drivers not using DT are accepted
-> > anymore.
-> > 
-> > hwmod still holds some information, which are not yet mapped to
-> > DT.
-> 
-> Tony, is defining hwmod properties for new OMAP bindings what everyone
-> is currently doing? I'm not sure how that will work with a stable DT
-> ABI...
-> 
-> I wonder if it makes sense not to define the ti,hwmods property in the
-> binding document (so it doesn't become part of the ABI), but put it
-> into the DTS file simply to make the current Linux code work? I'm not
-> sure if that's any better though.
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-There are still pieces of information in hwmod that is needed for
-PM to work for things like device autoidle and reset. The plan is
-to describe those with Linux generic bindings, but that's going
-to take a while.
+The STMMAC Ethernet controller in SOCFPGA requires setting a register for
+the phy-mode that is outside of the ethernet IP. This register resides in
+the System Manager block. So we define a new DTS binding
+"altr,sysmgr-phy-mask". This binding's property is a bitmask that can be
+used to set the correct register bit.
 
-Clearly once we have those bindings, ti,hwmods is not needed and
-then the problem is how to support old .dtb files..
+Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+CC: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+---
+ .../bindings/net/stmmac-altr-socfpga.txt           |   43 ++++++++++++++++++++
+ arch/arm/boot/dts/socfpga_cyclone5.dts             |   19 +++++++++
+ 2 files changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/stmmac-altr-socfpga.txt
 
-> It would be best to completely define the DT binding so that all
-> required clocks etc. are already present in the DT. That way, the DT
-> ABI won't change once people stop using hwmods. Tony, is that possible
-> on OMAP at present, irrespective of whether those e.g. clock
-> properties will actually be used by Linux?
+diff --git a/Documentation/devicetree/bindings/net/stmmac-altr-socfpga.txt b/Documentation/devicetree/bindings/net/stmmac-altr-socfpga.txt
+new file mode 100644
+index 0000000..f0fa56a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/stmmac-altr-socfpga.txt
+@@ -0,0 +1,43 @@
++* Altera SOCFPGA specific extensions to the STMicroelectronics
++	10/100/1000 Ethernet driver (GMAC)
++
++This file documents an additional property that is required for the Altera
++SOCFPGA implementation of the STMMAC Ethernet driver. Please refer to the core
++properties of the STMMAC driver as documented in stmmac.txt.
++
++Required Properties:
++
++* compatible: should be
++	- "altr,socfpga-stmmac": for controllers with Altera SOCFPGA specific
++		extensions.
++
++* altr,sysmgr-phy-mask: This property contains the bitmask that is needed to
++	set the appropriate register bits for the phy-mode in the System Manager.
++	The value should be:
++		-Ethernet Controller 1 (gmac0) = 0x3
++		-Ethernet Controller 2 (gmac1) = 0xC
++
++Example:
++
++	gmac0: ethernet@ff700000 {
++		compatible = "altr,socfpga-stmmac", "snps,dwmac-3.70a", "snps,dwmac";
++		reg = <0xff700000 0x2000>;
++		interrupts = <0 115 4>;
++		interrupt-names = "macirq"";
++		mac-address = [000000000000]; /* Filled in by U-Boot */
++		phy-mode = "gmii";
++
++		/* PHY Skew settings */
++		rxd0-skew-ps = <0>;
++		rxd0-skew-ps = <0>;
++		rxd1-skew-ps = <0>;
++		rxd2-skew-ps = <0>;
++		rxd3-skew-ps = <0>;
++		txen-skew-ps = <0>;
++		txc-skew-ps = <2600>;
++		rxdv-skew-ps = <0>;
++		rxc-skew-ps = <2000>;
++
++		altr,sysmgr-phy-mask = <0x3>;
++		status = "okay";
++        };
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dts b/arch/arm/boot/dts/socfpga_cyclone5.dts
+index bfed066..44db0e6 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5.dts
+@@ -95,3 +95,22 @@
+ 		};
+ 	};
+ };
++
++&gmac1 {
++	phy-mode = "rgmii";
++	snps,phy-addr = <0xffffffff>; /* probe for phy addr */
++
++	rxd0-skew-ps = <0>;
++	rxd0-skew-ps = <0>;
++	rxd1-skew-ps = <0>;
++	rxd2-skew-ps = <0>;
++	rxd3-skew-ps = <0>;
++	txen-skew-ps = <0>;
++	txc-skew-ps = <2600>;
++	rxdv-skew-ps = <0>;
++	rxc-skew-ps = <2000>;
++
++	altr,sysmgr-phy-mask = <0xC>;
++	status = "okay";
++};
++
+-- 
+1.7.9.5
 
-Unfortunately not doable yet. For v3.13 we should have the
-clock bindings in place, but quite a bit of work still
-remains for the remaining hwmod pieces.
 
-Considering all this, we may be best off dropping ti,hwmods
-binding completely, and populate it based on DT auxdata or
-something similar. That means that old .dtb files won't
-work once we populate things from DT, but at least the binding
-issue would be sorted out.
-
-If anybody has better suggestions, let me know.
-
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
