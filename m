@@ -1,49 +1,76 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH] ASoC: kirkwood: add S/PDIF support
-Date: Tue, 24 Sep 2013 18:32:41 +0200
-Message-ID: <20130924183241.12a97af4@armhf>
-References: <20130924124122.64834b2a@armhf>
-	<20130924105127.GB12758@n2100.arm.linux.org.uk>
+From: Rhyland Klein <rklein@nvidia.com>
+Subject: Re: [Patch V2] drivers: power: Add support for bq24735 charger
+Date: Tue, 24 Sep 2013 12:39:29 -0400
+Message-ID: <5241C041.7020208@nvidia.com>
+References: <1379607514-11200-1-git-send-email-rklein@nvidia.com> <5240B85D.3050803@wwwdotorg.org> <5240BA4A.4010007@nvidia.com> <5240BB2A.8060705@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130924105127.GB12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5240BB2A.8060705@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, Manish Badarkhe <badarkhe.manish@gmail.com>, Darbha Sriharsha <dsriharsha@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Sep 2013 11:51:27 +0100
-Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+On 9/23/2013 6:05 PM, Stephen Warren wrote:
+> On 09/23/2013 04:01 PM, Rhyland Klein wrote:
+>> On 9/23/2013 5:53 PM, Stephen Warren wrote:
+>>> On 09/19/2013 10:18 AM, Rhyland Klein wrote:
+>>>> Adding driver support for bq24735 charger chipset.
+>>>
+>>>> diff --git a/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt
+> 
+>>>> + - ti,charge-current : Used to control and set the charging current. This value
+>>>> +   must follow the below guidelines:
+>>>> +	bit 0 - 5:	Not used
+>>>> +	bit 6:		1 = Adds 64mA of charger current
+>>>> +	bit 7:		1 = Adds 128mA of charger current
+>>>> +	bit 8:		1 = Adds 256mA of charger current
+>>>> +	bit 9:		1 = Adds 512mA of charger current
+>>>> +	bit 10:		1 = Adds 1024mA of charger current
+>>>> +	bit 11:		1 = Adds 2048mA of charger current
+>>>> +	bit 12:		1 = Adds 4096mA of charger current
+>>>> +	bit 13 - 15:	Not used
+>>>
+>>> That's a little odd. Why not just put the number of mA directly into the
+>>> property unshifted?
+>>
+>> This is how the hw register is defined, its the literal number of mA.
+>> This is cleaned up in the upcoming revision.
+> 
+> OK. If you still want to use the raw register encoding, which seems
+> reasonable, why not just say:
+> 
+> ti,charge-current: Value for charge current register as described in the
+> HW documentation.
 
-> On Tue, Sep 24, 2013 at 12:41:22PM +0200, Jean-Francois Moine wrote:
-> > This patch adds S/PDIF input/output for mvebu DT boards.
-> >=20
-> > Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
->=20
-> Right, so if this goes in, then we're completely fucked for doing thi=
-s
-> the way that Mark apparantly wants it to be done, because once these
-> DT properties go in, they're there to stay.
+I had written this for v3:
 
-Indeed!
+- ti,charge-current : Used to control and set the charging current. This
+value must be between 128mA and 8.128A with a 64mA step resolution. The
+POR value is 0x0000h. See spec for more details.
 
-The DT properties I propose just reflect the hardware connections of
-the board. There are only i2s-out and spdif-out in the Cubox, while
-there may be kirkwood boards with, say, only spdif-in and spdif-out.
+Do you think the range is unnecessary or is it fine?
 
-These definitions do not interfere with your DPCM problem: you assume
-i2s-out and spdif-out for the i2s1 dove device, and that is what I
-assume too, but from the DT. Then, the driver does not need to know the
-type of the audio device (Kirkwood or Dove), nor to know if it is the
-first or the second i2s device of the Dove chip.
+> 
+>>>> +   Setting the value to < 128mA or > 8.128A terminates charging.
+>>>
+>>> "terminates charging" is a driver action, not a description of HW. It's
+>>> fine to say that what min/max value should be specified in the property
+>>> for it to be valid, but not what action SW should take in response to that.
+>>
+>> This isn't sw. This is defined in the HW documentation as to what
+>> happens if an invalid value is used.
+> 
+> OK, if the HW documentation already says that, I don't see the need for
+> the DT binding to also say it; I would suggest just removing that text.
+> 
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will remove in v3.
+
+-rhyland
+
+
+-- 
+nvpublic
