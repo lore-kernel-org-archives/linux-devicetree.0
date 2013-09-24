@@ -1,61 +1,109 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: kirkwood: add S/PDIF support
-Date: Tue, 24 Sep 2013 16:37:01 +0100
-Message-ID: <20130924153701.GF3226@sirena.org.uk>
-References: <20130924124122.64834b2a@armhf>
- <20130924105127.GB12758@n2100.arm.linux.org.uk>
+From: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 1/4] i2c: busses: i2c-st: Add ST I2C controller
+Date: Tue, 24 Sep 2013 17:38:34 +0200
+Message-ID: <5241B1FA.6020500@st.com>
+References: <1379498483-4236-1-git-send-email-maxime.coquelin@st.com>
+ <1379498483-4236-2-git-send-email-maxime.coquelin@st.com>
+ <5240AD6E.4090905@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130924105127.GB12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <5240AD6E.4090905-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen GALLIMORE <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, Stuart MENEFY <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Olivier CLERGEAUD <olivier.clergeaud-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---+jhVVhN62yS6hEJ8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 09/23/2013 11:06 PM, Stephen Warren wrote:
+> On 09/18/2013 04:01 AM, Maxime COQUELIN wrote:
+>> This patch adds support to SSC (Synchronous Serial Controller)
+>> I2C driver. This IP also supports SPI protocol, but this is not
+>> the aim of this driver.
+>>
+>> This IP is embedded in all ST SoCs for Set-top box platorms, and
+>> supports I2C Standard and Fast modes.
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-st.txt b/Documentation/devicetree/bindings/i2c/i2c-st.txt
+>> +I2C for ST platforms
+> If the HW block supports both I2C and SPI, the DT binding ought to
+> support that too. It's be best to create a single DT binding that
+> represents the IP block, and include a property that indicates whether
+> the device should operate in I2C or SPI mode.
+>
+> I suppose you could reasonably define different compatible values for
+> those two cases. However, the binding should be titled something more
+> like "ST SSC binding, for I2C mode operation" and "ST SSC binding, for
+> SPI mode operation", rather than "I2C for ST platforms", since the HW
+> includes an SSC block, not an I2C block.
+You are right Stephen.
+I will rename the title and change the compatible value as per your 
+recommendation.
 
-On Tue, Sep 24, 2013 at 11:51:27AM +0100, Russell King - ARM Linux wrote:
-> On Tue, Sep 24, 2013 at 12:41:22PM +0200, Jean-Francois Moine wrote:
-> > This patch adds S/PDIF input/output for mvebu DT boards.
+>> +Required properties :
+>> +- compatible : Must be "st,comms-i2c"
+>> +- reg : Offset and length of the register set for the device
+>> +- interrupts : the interrupt number
+> It's an interrupt specifier, not an interrupt number. The format is
+> defined by the interrupt controller, not this binding.
+Ok. I will change to "the interrupt specifier".
+>> +- clocks : phandle to the I2C clock source
+> What about clock-names?
+It will be added in next revision. It will be named "ssc"
+>> +Recommended (non-standard) properties :
+> Usually you'd just say "Optional properties:", or perhaps "Recommended
+> properties:". I don't think adding "(non-standard)" serves any purpose.
+Ok. then I will remove all the "non-standard" occurences.
+>> +- clock-frequency : Desired I2C bus clock frequency in Hz. Otherwise
+>> +  the default 100 kHz frequency will be used. As only Normal and Fast modes
+>> +  are supported, possible values are 100000 and 400000.
+>> +
+>> +Optional (non-standard) properties:
+> Same here.
+>
+>> +- st,glitches : Enable timing glitch suppression support.
+> That property name doesn't really convey the "enables" that appears in
+> the property description to me...
+>
+>> +- st,glitch-clk : SCL line timinig glitch suppression value in ns.
+>> +- st,glitch-dat : SDA line timinig glitch suppression value in ns.
+> s/timinig/timing/
+>
+>> +- st,hw-glitches : Enable filter glitch suppression support.
+>> +- st,hw-glitch-clk : SCL line filter glitch suppression value in us.
+>> +- st,hw-glitch-dat : SDA line filter glitch suppression value in us.
+> Those sound more like runtime configuration rather than HW description.
+> Can you rephrase the descriptions (and property names) more along the
+> lines of HW properties? Perhaps e.g.:
+>
+> st,needs-glitch-suppression: The board design needs timing glitch
+> suppression enabled to operate reliably.
+>
+> st,min-scl-pulse-width: The minimum valid SCL pulse width that is
+> allowed through the deglitch circuit. In units of ns.
+>
+> (I just made up those descriptions to give a feel for the flavor of
+> description that I expect. They likely need some adjustment to reflect
+> whatever they're actually intended to represent in HW).
+>
+> What is the difference between "glitch" and "hw-glitch"?
+"hw-glitch" is used to configure the anti-glitch filters.
+It suppresses the pulses with a width lower than x microseconds.
 
-> Right, so if this goes in, then we're completely fucked for doing this
-> the way that Mark apparantly wants it to be done, because once these
-> DT properties go in, they're there to stay.
+"glitch" is is used to tune the I2C timing requirements, and has a 
+nanosecond granularity.
+These values are added to default timing values.
+I'm not 100% sure, but it looks like the "samsung,i2c-sda-delay" in the 
+i2c-s3c2410 driver.
 
-I'm not sure that this is in particular conflict with any other way of
-writing things, though it would be redundant.  The best thing would be
-to key this off connecting to DAIs so that people just need to make the
-connections that exist in their system in the device tree.
+I agree the names and descriptions are not clear, and even misleading.
+I will come with a clearer implementation, as soon as I get 
+clarification from HW team.
 
---+jhVVhN62yS6hEJ8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks for the review,
+Maxime
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSQbGaAAoJELSic+t+oim9PFkQAIkq41++/nPyaS3YVZsSc8WH
-PybmS8vFrQXrdGK40t008/6h/uGVSFzCajoVkVR2qHFkpXBxGfhZnIEOzV7qhMP8
-iaCEgBelA+JSWcDauuiUkijQCcraLeqXiZwR6I8gIiqnuLjAp+K9Sm3P2oKcxLUW
-3DthUakfDwf3QXbKU3UdZT03uVXMB7Azl56BYagFV9U01T1LYuLH9mH4N9VkRUns
-K9y7cZv9xe53ArWJaH0QShMyH67TM9YOZJQu7irIqp64wU1pCG2qkFLZrEiNcoiT
-ZBWITF++smLszX41NoOKAzangvtVOGMA+XU10S42iO8doo9wKNIaJRLDzQZxS85L
-d8AUB/D0el5OQWDSkbJ4a5TSf7v+dEbyaWbcPaycGY/XiM5mr2fTlnQ7NEqQ8dfv
-rHcwhRmh2pU9sP64anizCtQ0nph4rWj+Pq8ZL0UKv1AQCsnNhVQG39qSD1tGquZR
-MCeTgVNgWaj9YPS4ku2VGRw4yM+zzXrSNuHVpCwK7DibVdp/+y93RjTIjZ726L/2
-NmDv6HJWuCSK1higm8SCf75XK3c90ZQLFQVMdHLgST+pmthRc/C9i25u1ZQW7zC0
-6dXhu43xURzdE5HJKYp67+vUsorl6KL77v943owS2GzY2ld5dYPNeBetKW/7oeAF
-ySpL45ujLYdyDU2LHm/0
-=ut2v
------END PGP SIGNATURE-----
-
---+jhVVhN62yS6hEJ8--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
