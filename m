@@ -1,48 +1,60 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 2/5] mfd: arizona: Add device tree binding for
-	max_channels_clocked
-Date: Tue, 24 Sep 2013 10:58:03 +0100
-Message-ID: <20130924095803.GO3635@opensource.wolfsonmicro.com>
-References: <1379961043-23762-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <1379961043-23762-2-git-send-email-ckeepax@opensource.wolfsonmicro.com> <5240B4C2.2080600@wwwdotorg.org> <20130923232832.GM21013@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/5] mfd: arizona: Add device tree helper functions
+Date: Tue, 24 Sep 2013 11:20:29 +0100
+Message-ID: <20130924102029.GA3226@sirena.org.uk>
+References: <1379961043-23762-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <5240B464.2010903@wwwdotorg.org>
+ <20130924094937.GN3635@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130923232832.GM21013-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20130924094937.GN3635@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, lee.jones@linaro.org, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2013 at 12:28:32AM +0100, Mark Brown wrote:
-> On Mon, Sep 23, 2013 at 03:38:10PM -0600, Stephen Warren wrote:
-> > On 09/23/2013 12:30 PM, Charles Keepax wrote:
-> 
-> > > +  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
-> > > +    each AIF, useful for I2S systems with multiple data lines being mastered.
-> > > +    If specified three cells must supplied one for each AIF, specify zero for
-> > > +    AIFs that should be handled normally.
-> 
-> > What determines the value of this property? Is it really a definition of
-> > HW, or some kind of run-time configuration/limit? What goes into each of
-> > the 3 cells?
-> 
-> It's hardware, it's other devices wired in parallel on the bus that use
-> the CODEC as a clock master.  Personally I'd have this be set by the
-> ASoC machine driver so it's invisible from a DT point of view, that's
-> what it's really a property of.
 
-I don't have any really problem with setting this from the
-machine driver, I will have a look at doing that.
+--fdj2RfSjLxBAspz7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I think based on the comments here I would suggest that we put
-the first patch in but I need to rethink the other patches and
-decide what is actually OS independant here.
+On Tue, Sep 24, 2013 at 10:49:37AM +0100, Charles Keepax wrote:
 
-Thanks,
-Charles
+> The supply name in the driver is AVDD as is the name for the pin
+> on the datasheet, if you specify it as AVDD1 in device tree the
+> current driver will not load.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This appears to have been a copy and paste error from the wm8994
+> which has 2 AVDD supplies and I believe these docs were based
+> on. I would prefer to update the documentation to match what the
+> driver already expects rather than the other way around.
+
+I suspect it's due to an error in an old version of one of the
+datasheets.
+
+--fdj2RfSjLxBAspz7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSQWdqAAoJELSic+t+oim9NOwP/jiUE/A/DsO9pU6AYfMbNR2j
+N3GApNNDuAytwQcg5wvpG4ucKOXJHvfuCoOeMC/F6+s1GplbJVHn8xQ4cfSUP+WE
+QH7eJSRPHcJL18OvR6iXrN7wKF0ah3D08tWVPSrNHK4aZkMNZLSC9+otRvxZc5qJ
+tt5s5k3t/GlTQ5qbOztU2NB9V4mSZjTm0y4SrBDj1k6oh+SSC9cQvsLoY5tb9Xe2
+iWCBNLECOczs9uC4FWhQFv8smJuIHwCvTTZnD71tUIHg2RSfkzq2iutQdhcIkWtl
+iF0H/FJ1wOmUIlaOa1Fld9tOaSvhsCzmF8nkA5kRYC95F0P0+umt78mlN8yPpCS5
+Y7ZpnQQiiFOLxZVJIVb4mQWHPTlUg0Z2hIyDB2Sh/sMISKpag2FE9AB7WPFgApqk
+wGyxdZxREbZGAkS7vk9PQCp8ex5TrweL15X0h8i5Apf+gCKild1PUMwLxnKMPUhM
+ch7oy7anpAcxcxbsZaYQCZzxPf0eOwku/bWsns+k74B574q7xoyWCZbNd6I2xIEi
+rB9g00YRWGVjzc1qqOn2tvi0zJBPP//LUepG+eUuLQAFO5RgSOn5TPGgtAG8kBOb
+rrpMtf8yHtKxFBE8DmjaEmabbLakuCPCDyjnwD0q7rAV8egRokQcrdr2U2JXCtOy
+rzwh7FYSOXb75V+0ZY/X
+=u9yO
+-----END PGP SIGNATURE-----
+
+--fdj2RfSjLxBAspz7--
