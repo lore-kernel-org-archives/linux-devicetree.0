@@ -1,336 +1,144 @@
-From: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCHv2] arm: dts: omap5: Add status parameter.
-Date: Tue, 24 Sep 2013 12:58:26 +0530
-Message-ID: <1380007706-24062-1-git-send-email-sourav.poddar@ti.com>
+From: Andrey Danin <andrey.danin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] binding for nvec mfd device
+Date: Tue, 24 Sep 2013 11:39:21 +0400
+Message-ID: <1380008361.20958.3.camel@AndreyDanin-LNX>
+References: <1416005.VvfEeGuSWa@ax5200p>
+	 <17687182.lGWlO75r41@fb07-iapwap2.physik.uni-giessen.de>
+	 <5238CE1C.3050107@wwwdotorg.org>
+	 <2112732.zfJtNyCk0i@fb07-iapwap2.physik.uni-giessen.de>
+	 <52406E1E.5040005@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52406E1E.5040005-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch disables devices initially(status = "disabled").
-Devices will only be probed, if the devices are
-present in the board file(status = "okay").
+On Mon, 2013-09-23 at 10:36 -0600, Stephen Warren wrote:
+> On 09/23/2013 08:52 AM, Marc Dietrich wrote:
+> > Am Dienstag, 17. September 2013, 15:48:12 schrieb Stephen Warren:
+> >> On 09/17/2013 01:53 AM, Marc Dietrich wrote:
+> >>> Hi Stephen,
+> >>>
+> >>> Am Mittwoch, 31. Juli 2013, 15:03:14 schrieb Stephen Warren:
+> >>>> The generic I2C bindings already define that the other chips on the I2C
+> >>>> bus appear directly underneath the I2C controller's DT node. Perhaps it
+> >>>> isn't a big issue to change that, since each I2C controller can define
+> >>>> the layout of its own node?
+> >>>>
+> >>>> Anyway, we can probably get away without introducing multiple levels by
+> >>>> adding some more bits or cells into the reg address for I2C child nodes:
+> >>>>
+> >>>> i2c@xxxxxxxx {
+> >>>>
+> >>>> 	compatible = "nvidia,tegra20-i2c";
+> >>>> 	... resources
+> >>>> 	#address-cells = <2>;
+> >>>> 	
+> >>>> 	codec {
+> >>>> 	
+> >>>> 		// 0 means external slave, 0x1c is slave's address
+> >>>> 		reg = <0 0x1c>;
+> >>>> 		...
+> >>>> 	
+> >>>> 	};
+> >>>> 	
+> >>>> 	tegraslave {
+> >>>> 	
+> >>>> 		// 0 means internal slave, 0x80 is controller's address
+> >>>> 		reg = <1 0x80>;
+> >>>> 		...
+> >>>> 	
+> >>>> 	};
+> >>>>
+> >>>> };
+> >>>>
+> >>>> ... where each of those child nodes could be repeated N times. We could
+> >>>> also or in 0x80000000 to the reg values in the child nodes rather than
+> >>>> using a separate cell if we wanted.
+> >>>
+> >>> thinking a little more about this, this is way to complicated.
+> >>
+> >> Really, this seems extremely simple to me.
+> >>
+> >>> "Master" and
+> >>> "Slave" functions are properties of the same i2c controller. Therefore,
+> >>> just adding a small property to the i2c controller node saying "enable
+> >>> slave support" is sufficient, as all the resources are shared (which is
+> >>> another good argument that it is the same device, hence same node). I
+> >>> would just add the slave i2c address, which is all the slave driver
+> >>> needs, e.g.
+> >>
+> >> Perhaps so for this one controller, but we should strive to create a
+> >> binding style that can work with any I2C controller that can be master
+> >> or slave. For a general binding, I think we need to support multiple
+> >> slave addresses. The style above seems to support that with little
+> >> complexity.
+> > 
+> > I have no idea how other implementations may look like. The downstream kernel 
+> > seems to program the slave address in a secondary step after the controller is 
+> > initialized [1]. So every "client" which binds to the slave driver can use its 
+> > own address, but only one client at the same time is allowed. As said before, 
+> > the may also exist devices (!tegra) with multiple slave addresses at the same 
+> > time.
+> > 
+> > Your approach above seems fulfill these properties (what about a single slave 
+> > controller without a master?),
+> 
+> There would simply be a node for the controller, and a single child node
+> for the slave setup, and no child nodes for mastered devices.
+> 
+> > but it will be tricky for the slave to find the
+> > controller resources it needs.
+> 
+> I don't understand this. The resources are only needed by I2C driver,
+> and all come from the I2C driver node. If the I2C driver ends up being
+> split into separate master/slave portions, that information can easily
+> be passed from the main driver probe()/... to those other sub-parts of
+> the driver.
+> 
+> > I'm thinking of an insane (but valid)
+> > configuration where all i2c ports of the SoC are connected together and one 
+> > port plays the master and all others are slaves. In this case we need to add a 
+> > property to the slave node which points to his controller instance.
+> 
+> Why do the slave nodes care where they're mastered from?
+> 
+> I think you'd just have the following
+> 
+> /* master */
+> i2c@xxxxx {
+>     foo@0x40 {
+>         reg = <MASTER 0x40>;
+>         compatible = "nvidia,nvec";
+>     }
+> };
+> 
+> i2c@yyyy {
+>     foo@40 {
+>         reg = <SLAVE 0x40>;
+>         compatible = "nvidia,nvec-slave";
+>     }
+> };
+> 
+> There's no need for the slave child node to know that it is mastered
+> from the Tegra I2C controller; all it cares about is that there is some
+> I2C bus that it needs to respond to transactions upon.
+> 
+> 
+This binding describes only case, when I2C device are connected to I2C
+controller.
 
-Signed-off-by: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
----
-v1->v2:
-change approach to disabling devices in dtsi and
-enable it in respective board file.
- arch/arm/boot/dts/omap5-uevm.dts |   43 ++++++++++++++++++++-----------------
- arch/arm/boot/dts/omap5.dtsi     |   24 +++++++++++++++++++++
- 2 files changed, 47 insertions(+), 20 deletions(-)
+Assume that I2C controller #1 (@xxxxx), I2C controller #2 (@yyyy), and
+nvec I2C master device are connected to same bus.
+How dt must be composed in this case ? Must i2c@xxxxx and i2c@yyyy be in
+parent/child relation (in terms of dt) ?
 
-diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-index 65d7b60..08d6bc1 100644
---- a/arch/arm/boot/dts/omap5-uevm.dts
-+++ b/arch/arm/boot/dts/omap5-uevm.dts
-@@ -235,30 +235,26 @@
- };
- 
- &mmc1 {
-+	status = "okay";
- 	vmmc-supply = <&ldo9_reg>;
- 	bus-width = <4>;
- };
- 
- &mmc2 {
-+	status = "okay";
- 	vmmc-supply = <&vmmcsd_fixed>;
- 	bus-width = <8>;
- 	ti,non-removable;
- };
- 
- &mmc3 {
-+	status = "okay";
- 	bus-width = <4>;
- 	ti,non-removable;
- };
- 
--&mmc4 {
--	status = "disabled";
--};
--
--&mmc5 {
--	status = "disabled";
--};
--
- &i2c1 {
-+	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1_pins>;
- 
-@@ -451,14 +447,19 @@
- };
- 
- &i2c5 {
-+	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c5_pins>;
- 
- 	clock-frequency = <400000>;
- };
- 
--&mcbsp3 {
--	status = "disabled";
-+&mcbsp1 {
-+	status = "okay";
-+};
-+
-+&mcbsp2 {
-+	status = "okay";
- };
- 
- &usbhshost {
-@@ -470,36 +471,38 @@
- 	phys = <0 &hsusb2_phy &hsusb3_phy>;
- };
- 
--&mcspi1 {
--
--};
--
- &mcspi2 {
-+	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mcspi2_pins>;
- };
- 
- &mcspi3 {
-+	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mcspi3_pins>;
- };
- 
- &mcspi4 {
-+	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mcspi4_pins>;
- };
- 
- &uart1 {
--        pinctrl-names = "default";
--        pinctrl-0 = <&uart1_pins>;
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>;
- };
- 
- &uart3 {
--        pinctrl-names = "default";
--        pinctrl-0 = <&uart3_pins>;
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins>;
- };
- 
- &uart5 {
--        pinctrl-names = "default";
--        pinctrl-0 = <&uart5_pins>;
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart5_pins>;
- };
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 8500beb..96aa7ba 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -259,6 +259,7 @@
- 			ti,hwmods = "i2c1";
- 			clocks = <&func_96m_fclk>;
- 			clock-names = "fck";
-+			status = "disabled";
- 		};
- 
- 		i2c2: i2c@48072000 {
-@@ -270,6 +271,7 @@
- 			ti,hwmods = "i2c2";
- 			clocks = <&func_96m_fclk>;
- 			clock-names = "fck";
-+			status = "disabled";
- 		};
- 
- 		i2c3: i2c@48060000 {
-@@ -281,6 +283,7 @@
- 			ti,hwmods = "i2c3";
- 			clocks = <&func_96m_fclk>;
- 			clock-names = "fck";
-+			status = "disabled";
- 		};
- 
- 		i2c4: i2c@4807a000 {
-@@ -292,6 +295,7 @@
- 			ti,hwmods = "i2c4";
- 			clocks = <&func_96m_fclk>;
- 			clock-names = "fck";
-+			status = "disabled";
- 		};
- 
- 		i2c5: i2c@4807c000 {
-@@ -303,6 +307,7 @@
- 			ti,hwmods = "i2c5";
- 			clocks = <&func_96m_fclk>;
- 			clock-names = "fck";
-+			status = "disabled";
- 		};
- 
- 		mcspi1: spi@48098000 {
-@@ -325,6 +330,7 @@
- 			       <&sdma 42>;
- 			dma-names = "tx0", "rx0", "tx1", "rx1",
- 				    "tx2", "rx2", "tx3", "rx3";
-+			status = "disabled";
- 		};
- 
- 		mcspi2: spi@4809a000 {
-@@ -342,6 +348,7 @@
- 			       <&sdma 45>,
- 			       <&sdma 46>;
- 			dma-names = "tx0", "rx0", "tx1", "rx1";
-+			status = "disabled";
- 		};
- 
- 		mcspi3: spi@480b8000 {
-@@ -356,6 +363,7 @@
- 			ti,spi-num-cs = <2>;
- 			dmas = <&sdma 15>, <&sdma 16>;
- 			dma-names = "tx0", "rx0";
-+			status = "disabled";
- 		};
- 
- 		mcspi4: spi@480ba000 {
-@@ -370,6 +378,7 @@
- 			ti,spi-num-cs = <1>;
- 			dmas = <&sdma 70>, <&sdma 71>;
- 			dma-names = "tx0", "rx0";
-+			status = "disabled";
- 		};
- 
- 		uart1: serial@4806a000 {
-@@ -380,6 +389,7 @@
- 			clocks = <&func_48m_fclk>;
- 			clock-names = "fck";
- 			clock-frequency = <48000000>;
-+			status = "disabled";
- 		};
- 
- 		uart2: serial@4806c000 {
-@@ -390,6 +400,7 @@
- 			clocks = <&func_48m_fclk>;
- 			clock-names = "fck";
- 			clock-frequency = <48000000>;
-+                        status = "disabled";
- 		};
- 
- 		uart3: serial@48020000 {
-@@ -400,6 +411,7 @@
- 			clocks = <&func_48m_fclk>;
- 			clock-names = "fck";
- 			clock-frequency = <48000000>;
-+                        status = "disabled";
- 		};
- 
- 		uart4: serial@4806e000 {
-@@ -410,6 +422,7 @@
- 			clocks = <&func_48m_fclk>;
- 			clock-names = "fck";
- 			clock-frequency = <48000000>;
-+			status = "disabled";
- 		};
- 
- 		uart5: serial@48066000 {
-@@ -420,6 +433,7 @@
- 			clocks = <&func_48m_fclk>;
- 			clock-names = "fck";
- 			clock-frequency = <48000000>;
-+			status = "disabled";
- 		};
- 
- 		uart6: serial@48068000 {
-@@ -430,6 +444,7 @@
- 			clocks = <&func_48m_fclk>;
- 			clock-names = "fck";
- 			clock-frequency = <48000000>;
-+			status = "disabled";
- 		};
- 
- 		mmc1: mmc@4809c000 {
-@@ -443,6 +458,7 @@
- 			ti,needs-special-reset;
- 			dmas = <&sdma 61>, <&sdma 62>;
- 			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
- 		mmc2: mmc@480b4000 {
-@@ -455,6 +471,7 @@
- 			ti,needs-special-reset;
- 			dmas = <&sdma 47>, <&sdma 48>;
- 			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
- 		mmc3: mmc@480ad000 {
-@@ -467,6 +484,7 @@
- 			ti,needs-special-reset;
- 			dmas = <&sdma 77>, <&sdma 78>;
- 			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
- 		mmc4: mmc@480d1000 {
-@@ -479,6 +497,7 @@
- 			ti,needs-special-reset;
- 			dmas = <&sdma 57>, <&sdma 58>;
- 			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
- 		mmc5: mmc@480d5000 {
-@@ -491,6 +510,7 @@
- 			ti,needs-special-reset;
- 			dmas = <&sdma 59>, <&sdma 60>;
- 			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
- 		keypad: keypad@4ae1c000 {
-@@ -499,6 +519,7 @@
- 			ti,hwmods = "kbd";
- 			clocks = <&sys_32k_ck>;
- 			clock-names = "fck";
-+                        status = "disabled";
- 		};
- 
- 		mcpdm: mcpdm@40132000 {
-@@ -542,6 +563,7 @@
- 			dmas = <&sdma 33>,
- 			       <&sdma 34>;
- 			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
- 		mcbsp2: mcbsp@40124000 {
-@@ -558,6 +580,7 @@
- 			dmas = <&sdma 17>,
- 			       <&sdma 18>;
- 			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
- 		mcbsp3: mcbsp@40126000 {
-@@ -574,6 +597,7 @@
- 			dmas = <&sdma 19>,
- 			       <&sdma 20>;
- 			dma-names = "tx", "rx";
-+			status = "disabled";
- 		};
- 
- 		mailbox: mailbox@4a0f4000 {
--- 
-1.7.1
+
+p.s. sorry, prev message was not formatted correctly, so I resend it.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
