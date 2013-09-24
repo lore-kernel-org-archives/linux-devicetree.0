@@ -1,49 +1,57 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH V3 1/6] clk: exynos-audss: convert to platform device
-Date: Tue, 24 Sep 2013 12:17:01 -0700 (PDT)
-Message-ID: <1706375.1GRhkzSkm0@flatron>
-References: <1379982078-23381-1-git-send-email-abrestic@chromium.org> <1380046016-5811-1-git-send-email-abrestic@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1380046016-5811-1-git-send-email-abrestic@chromium.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Andrew Bresticker <abrestic@chromium.org>, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Tushar Behera <tushar.behera@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Sachin Kamat <sachin.kamat@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <rob.herring@calxeda.com>, Mike Turquette <mturquette@linaro.org>, Rahul Sharma <rahul.sharma@samsung.com>, Padmavathi Venna <padma.v@samsung.com>, Jiri Kosina <jkosina@suse.cz>, Stephen Boyd <sboyd@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Leela
+From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Subject: [PATCH v2 0/3] ARM: OMAP: convert N950/N9 to DT
+Date: Tue, 24 Sep 2013 22:28:14 +0300
+Message-ID: <1380050897-6605-1-git-send-email-aaro.koskinen@iki.fi>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Hi,
 
-On Tuesday 24 of September 2013 11:06:51 Andrew Bresticker wrote:
-> The Exynos AudioSS clock controller will later be modified to allow
-> input clocks to be specified via device-tree in order to support
-> multiple Exynos SoCs.  This will introduce a dependency on the core
-> SoC clock controller being initialized first so that the AudioSS driver
-> can look up its input clocks, but the order in which clock providers
-> are probed in of_clk_init() is not guaranteed.  Since deferred probing
-> is not supported in of_clk_init() and the AudioSS block is not the core
-> controller, we can initialize it later as a platform device.
-> 
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> ---
-> Changes since v2:
->  - add error handling to probe callback
->  - fixed ordering of of_clk_{add,del}_provider
->  - fixed nits from Tomasz and Sylwester
-> Changes since v1:
->  - add clk_unregister() calls to remove callback
->  - fixed minor nits from Tomasz
-> ---
->  drivers/clk/samsung/clk-exynos-audss.c | 109
-> +++++++++++++++++++++++++++------ 1 file changed, 90 insertions(+), 19
-> deletions(-)
+This adds DTS for N950/N9 and removes the legacy board file.
 
-For the whole series:
+The following patches needs to be applied first:
 
-Acked-by: Tomasz Figa <t.figa@samsung.com>
+   http://marc.info/?l=linux-omap&m=137969869426861&w=2 (the whole series)
+   [PATCH 0/4] Clean up legacy platform data handling for omaps for v3.13
 
-Thanks for addressing all the comments.
+   http://marc.info/?l=linux-omap&m=137970770229676&w=2
+   [PATCH] ARM: OMAP2: gpmc-onenand: fix sync mode setup with DT
 
-Best regards,
-Tomasz
+Change history:
+
+	v2: Replace patch 1 HACK by using pdata-quirks
+
+	v1: http://marc.info/?l=linux-omap&m=137977135411888&w=2
+
+A.
+
+Aaro Koskinen (3):
+  ARM: OMAP2: pdata-quirks: set internal clock source for MMC2 on
+    N950/N9
+  ARM: dts: add minimal DT support for Nokia N950 & N9 phones
+  ARM: OMAP2: delete board-rm680
+
+ arch/arm/boot/dts/Makefile           |   2 +
+ arch/arm/boot/dts/omap3-n9.dts       |  18 ++++
+ arch/arm/boot/dts/omap3-n950-n9.dtsi | 172 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/omap3-n950.dts     |  18 ++++
+ arch/arm/mach-omap2/Kconfig          |   7 --
+ arch/arm/mach-omap2/Makefile         |   1 -
+ arch/arm/mach-omap2/board-rm680.c    | 167 ----------------------------------
+ arch/arm/mach-omap2/pdata-quirks.c   |  16 ++++
+ 8 files changed, 226 insertions(+), 175 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap3-n9.dts
+ create mode 100644 arch/arm/boot/dts/omap3-n950-n9.dtsi
+ create mode 100644 arch/arm/boot/dts/omap3-n950.dts
+ delete mode 100644 arch/arm/mach-omap2/board-rm680.c
+
+-- 
+1.8.4.rc3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
