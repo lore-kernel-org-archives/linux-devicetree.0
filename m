@@ -1,66 +1,32 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v5 0/3] ARM: S5PV210: move to common clk framework
-Date: Tue, 24 Sep 2013 15:04:07 +0200
-Message-ID: <4983756.tzuZRus2Wn@amdc1227>
-References: <1380027009-2239-1-git-send-email-m.krawczuk@partner.samsung.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/6] serial8250-em: convert to clk_prepare/unprepare
+Date: Tue, 24 Sep 2013 06:41:13 -0700
+Message-ID: <20130924134113.GA7246@kroah.com>
+References: <52410F86.4040301@renesas.com>
+ <20130924131039.3c871cad7acb2a068a988d0f@ops.dti.ne.jp>
+ <20130924044432.GD3619@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1380027009-2239-1-git-send-email-m.krawczuk@partner.samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>
-Cc: rjw@sisk.pl, kgene.kim@samsung.com, viresh.kumar@linaro.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, kyungmin.park@samsung.com, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, rob@landley.net, mturquette@linaro.org, tomasz.figa@gmail.com, thomas.abraham@linaro.org, s.nawrocki@samsung.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, t.stanislaws@samsung.com, m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130924044432.GD3619@verge.net.au>
+Sender: linux-serial-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: takasi-y@ops.dti.ne.jp, SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, ben.dooks@codethink.co.uk, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Paul Mundt <lethal@linux-sh.org>, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mateusz,
+On Tue, Sep 24, 2013 at 01:44:32PM +0900, Simon Horman wrote:
+> [ CCed Greg Kroah-Hartman, the serial maintainer for his review ]
+> 
+> On Tue, Sep 24, 2013 at 01:10:39PM +0900, takasi-y@ops.dti.ne.jp wrote:
+> > From: Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>
+> > 
+> > Add calls to clk_prepare and unprepare so that EMMA Mobile EV2 can
+> > migrate to the common clock framework.
+> > 
+> > Signed-off-by: Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>
+> > [takashi.yoshii.ze@renesas.com: edited for conflicts]
+> > Signed-off-by: Takashi Yoshii <takashi.yoshii.zj@renesas.com>
 
-On Tuesday 24 of September 2013 14:50:06 Mateusz Krawczuk wrote:
-> This patch series is the new s5pv210 clock implementation
-> (using common clk framework).
-> 
-> This implementation is compatible with device tree definition and board
-> files.
-> 
-> This patch series is based on linux-next and has been tested on goni and
-> aquila
-> boards using board file.
-> 
-> Since v4:
-> Corrected mux flags for finpll.
-> 
-> Since v3:
-> 
-> Replace s5pv210_clk_register_finpll, by creating mux finpll
-> with xusbxti and xxti as parrents.
-> 
-> 
-> Mateusz Krawczuk (3):
->   clk: samsung: Add clock driver for s5pc110/s5pv210
->   Cpufreq: s5pv210 cpufreq fixes for CCF
->   ARM: s5pv210: Migrate clock handling to Common Clock Framework
-> 
->  .../bindings/clock/samsung,s5pv210-clock.txt       |  75 +++
->  arch/arm/mach-s5pv210/Kconfig                      |   9 +
->  arch/arm/mach-s5pv210/Makefile                     |   4 +-
->  arch/arm/mach-s5pv210/common.c                     |  17 +
->  arch/arm/mach-s5pv210/common.h                     |  10 +
->  arch/arm/mach-s5pv210/mach-goni.c                  |   2 +-
->  arch/arm/mach-s5pv210/mach-smdkv210.c              |   2 +-
->  arch/arm/plat-samsung/Kconfig                      |   2 +-
->  drivers/clk/samsung/Makefile                       |   3 +
->  drivers/clk/samsung/clk-s5pv210.c                  | 673 +++++++++++++++++++++
->  drivers/cpufreq/s5pv210-cpufreq.c                  |   6 +-
->  include/dt-bindings/clock/samsung,s5pv210-clock.h  | 224 +++++++
->  12 files changed, 1019 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/samsung,s5pv210-clock.txt
->  create mode 100644 drivers/clk/samsung/clk-s5pv210.c
->  create mode 100644 include/dt-bindings/clock/samsung,s5pv210-clock.h
-
-For this series:
-
-Acked-by: Tomasz Figa <t.figa@samsung.com>
-
-Best regards,
-Tomasz
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
