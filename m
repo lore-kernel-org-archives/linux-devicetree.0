@@ -1,199 +1,71 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH/RFC v4] ARM: shmobile: armadillo800eva-reference: add
- SDHI and MMCIF interfaces
-Date: Wed, 25 Sep 2013 16:03:28 +0900
-Message-ID: <20130925070328.GH1916@verge.net.au>
-References: <Pine.LNX.4.64.1309231651230.11505@axis700.grange>
- <20130925053636.GD1916@verge.net.au>
+From: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCHv2 0/4] Add DT support for fixed PHYs
+Date: Wed, 25 Sep 2013 09:12:35 +0200
+Message-ID: <CAH9NwWfBGHmZ+HfUndeh18NW+HyZ=c82W=O_4hJSOH-oZuM9jA@mail.gmail.com>
+References: <1378480701-12908-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20130911064248.GI30088@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130925053636.GD1916-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+In-Reply-To: <20130911064248.GI30088-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[ Updated devicetree ML addres ]
+Hi
 
-On Wed, Sep 25, 2013 at 02:36:36PM +0900, Simon Horman wrote:
-> On Mon, Sep 23, 2013 at 05:38:47PM +0200, Guennadi Liakhovetski wrote:
-> > Add SDHI0, SDHI1 and MMCIF interfaces to armadillo800eva-reference with 
-> > regulators and pin configurations.
-> > 
-> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> > 
-> > v4:
-> > 
-> > 1. now that PFC pinctrl is usable with DT, we can use proper regulators 
-> > and pin configurations on armadillo800eva
-> > 
-> > 2. corrected SDHI compatibility strings
-> > 
-> > 3. RFC because I don't know how to enable choosing between CON14 and CON8. 
-> > In .c version this is done by reading GPIO 6. To do the same in DT mode 
-> > we'd probably have to use some run-time DT patching, which isn't possible 
-> > yet, AFAICS.
-> 
-> I agree with your reasoning there, though perhaps Laurent or Magnus
-> have a more enlightened view of things.
-> 
-> To my way of thinking it would be good to merge this change as is,
-> which an appropriate disclaimer about functionality in the changelog
-> above the scissors. But I do not feel strongly about this and I
-> am happy to wait for fuller functionality.
-> 
-> > 
-> >  .../boot/dts/r8a7740-armadillo800eva-reference.dts |   83 ++++++++++++++++++++
-> >  arch/arm/boot/dts/r8a7740.dtsi                     |   33 ++++++++
-> >  2 files changed, 116 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-> > index c638e4a..af15be0 100644
-> > --- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-> > +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-> > @@ -34,6 +34,44 @@
-> >  		regulator-boot-on;
-> >  	};
-> >  
-> > +	vcc_sdhi0: regulator@1 {
-> > +		compatible = "regulator-fixed";
-> > +
-> > +		regulator-name = "SDHI0 Vcc";
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +
-> > +		gpio = <&pfc 75 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +	};
-> > +
-> > +	vcc_sdhi1: regulator@2 {
-> > +		compatible = "regulator-fixed";
-> > +
-> > +		regulator-name = "SDHI1 Vcc";
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +
-> > +		gpio = <&pfc 16 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +	};
-> > +
-> > +	vccq_sdhi0: regulator@3 {
-> > +		compatible = "regulator-gpio";
-> > +
-> > +		regulator-name = "SDHI0 VccQ";
-> > +		regulator-min-microvolt = <1800000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +		vin-supply = <&vcc_sdhi0>;
-> > +
-> > +		enable-gpio = <&pfc 74 GPIO_ACTIVE_HIGH>;
-> > +		gpios = <&pfc 17 GPIO_ACTIVE_HIGH>;
-> > +		states = <3300000 0
-> > +			  1800000 1>;
-> > +
-> > +		enable-active-high;
-> > +	};
-> > +
-> >  	leds {
-> >  		compatible = "gpio-leds";
-> >  		led1 {
-> > @@ -76,4 +114,49 @@
-> >  		renesas,groups = "intc_irq10";
-> >  		renesas,function = "intc";
-> >  	};
-> > +
-> > +	mmc0_pins: mmc0 {
-> > +		renesas,groups = "mmc0_data8_1", "mmc0_ctrl_1";
-> > +		renesas,function = "mmc0";
-> > +	};
-> > +
-> > +	sdhi0_pins: sdhi0 {
-> > +		renesas,groups = "sdhi0_data4", "sdhi0_ctrl", "sdhi0_wp";
-> > +		renesas,function = "sdhi0";
-> > +	};
-> > +
-> > +	sdhi1_pins: sdhi1 {
-> > +		renesas,groups = "sdhi1_data4", "sdhi1_ctrl", "sdhi1_cd", "sdhi1_wp";
-> > +		renesas,function = "sdhi1";
-> > +	};
-> > +};
-> > +
-> > +&mmcif0 {
-> > +	pinctrl-0 = <&mmc0_pins>;
-> > +	pinctrl-names = "default";
-> > +
-> > +	vmmc-supply = <&reg_3p3v>;
-> > +	bus-width = <8>;
-> > +	non-removable;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&sdhi0 {
-> > +	pinctrl-0 = <&sdhi0_pins>;
-> > +	pinctrl-names = "default";
-> > +
-> > +	vmmc-supply = <&vcc_sdhi0>;
-> > +	vqmmc-supply = <&vccq_sdhi0>;
-> > +	bus-width = <4>;
-> > +	broken-cd;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&sdhi1 {
-> > +	pinctrl-0 = <&sdhi1_pins>;
-> > +	pinctrl-names = "default";
-> > +
-> > +	vmmc-supply = <&vcc_sdhi1>;
-> > +	bus-width = <4>;
-> > +	status = "okay";
-> >  };
-> > diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-> > index 44d3d52..018c02d 100644
-> > --- a/arch/arm/boot/dts/r8a7740.dtsi
-> > +++ b/arch/arm/boot/dts/r8a7740.dtsi
-> > @@ -159,4 +159,37 @@
-> >  		status = "disabled";
-> >  		#pwm-cells = <3>;
-> >  	};
-> > +
-> > +	mmcif0: mmcif@e6bd0000 {
-> > +		compatible = "renesas,sh-mmcif";
-> > +		reg = <0xe6bd0000 0x100>;
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 56 4
-> > +				0 57 4>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	sdhi0: sdhi@e6850000 {
-> > +		compatible = "renesas,sdhi-r8a7740";
-> > +		reg = <0xe6850000 0x100>;
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 117 4
-> > +				0 118 4
-> > +				0 119 4>;
-> > +		cap-sd-highspeed;
-> > +		cap-sdio-irq;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	sdhi1: sdhi@e6860000 {
-> > +		compatible = "renesas,sdhi-r8a7740";
-> > +		reg = <0xe6860000 0x100>;
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 121 4
-> > +				0 122 4
-> > +				0 123 4>;
-> > +		cap-sd-highspeed;
-> > +		cap-sdio-irq;
-> > +		status = "disabled";
-> > +	};
-> >  };
-> > -- 
-> > 1.7.2.5
-> > 
+>> Hello,
+>>
+>> Here is a second version of the patch set that adds a Device Tree
+>> binding and the related code to support fixed PHYs. Marked as RFC,
+>> this patch set is obviously not intended for merging in 3.12.
+>>
+>> Since the first version, the changes have been:
+>>
+>>  * Instead of using a 'fixed-link' property inside the Ethernet device
+>>    DT node, with a fairly cryptic succession of integer values, we now
+>>    use a PHY subnode under the Ethernet device DT node, with explicit
+>>    properties to configure the duplex, speed, pause and other PHY
+>>    properties.
+>>
+>>  * The PHY address is automatically allocated by the kernel and no
+>>    longer visible in the Device Tree binding.
+>>
+>>  * The PHY device is created directly when the network driver calls
+>>    of_phy_connect_fixed_link(), and associated to the PHY DT node,
+>>    which allows the existing of_phy_connect() function to work,
+>>    without the need to use the deprecated of_phy_connect_fixed_link().
+>>
+>> The things I am not entirely happy with yet are:
+>>
+>>  * The PHY ID is hardcoded to 0xdeadbeef. Ideally, it should be a
+>>    properly reserved vendor/device identifier, but it isn't clear how
+>>    to get one allocated for this purpose.
+>>
+>>  * The fixed_phy_register() function in drivers/net/phy/fixed.c has
+>>    some OF references. So ideally, I would have preferred to put this
+>>    code in drivers/of/of_mdio.c, but to call get_phy_device(), we need
+>>    a reference to the mii_bus structure that represents the fixed MDIO
+>>    bus.
+>>
+>>  * There is some error management missing in fixed_phy_register(), but
+>>    it can certainly be added easily. This RFC is meant to sort out the
+>>    general idea.
+>
+> +1 for the general idea. This really looks good now. I've not much more
+> to say. Maybe someone from the devicetree corner has a few words for the
+> binding?
+>
+
+I tested the whole series with an I.MX6D board with the FEC driver:
+fec 2188000.ethernet eth0: Freescale FEC PHY driver [Generic PHY]
+(mii_bus:phy_addr=fixed-0:00, irq=-1)
+
+For me binding looks nice and I hope to see this patch series in 3.13.
+
+Tested-by: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+--
+Christian Gmeiner, MSc
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
