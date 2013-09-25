@@ -1,76 +1,70 @@
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
-Subject: Re: [PATCH v10 2/3] DMA: Freescale: Add new 8-channel DMA engine
- device tree nodes
-Date: Wed, 25 Sep 2013 15:35:46 +0800
-Message-ID: <52429252.10009@freescale.com>
-References: <1379499333-4745-1-git-send-email-hongbo.zhang@freescale.com>
- <1379499333-4745-3-git-send-email-hongbo.zhang@freescale.com>
- <524074A7.7000001@wwwdotorg.org> <524169E3.7030408@freescale.com>
- <5241CC60.5070204@wwwdotorg.org>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
+Date: Wed, 25 Sep 2013 11:48:06 +0300
+Message-ID: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <5241CC60.5070204@wwwdotorg.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ian.campbell@citrix.com, pawel.moll@arm.com, vinod.koul@intel.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, djbw@fb.com, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2013 01:31 AM, Stephen Warren wrote:
-> On 09/24/2013 04:30 AM, Hongbo Zhang wrote:
->> On 09/24/2013 01:04 AM, Stephen Warren wrote:
->>> On 09/18/2013 04:15 AM, hongbo.zhang@freescale.com wrote:
->>>> From: Hongbo Zhang <hongbo.zhang@freescale.com>
->>>>
->>>> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this
->>>> patch adds
->>>> the device tree nodes for them.
->>>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->>>> b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
->>>> +Required properties:
->>>> +
->>>> +- compatible        : must include "fsl,elo3-dma"
->>>> +- reg               : DMA General Status Registers, i.e. DGSR0 which
->>>> contains
->>>> +                      status for channel 1~4, and DGSR1 for channel 5~8
->>> Is that a single entry, which is large enough to cover both registers,
->>> or a pair of entries, one per register? Reading the text, I might assume
->>> the former, but looking at the examples, it's the latter.
->> My impression is that I cannot tell it is one larger entry or two
->> entries by reading the description text, but the example gives the answer.
->> Is it so important to specify it is only one entry or entries list?
->> I prefer language as concise as possible, especially for the common
->> properties such as reg and interrupt (eg the reg is implicitly offset
->> and length of registers, can be continuous or not), it is difficult or
->> unnecessary or impossible to describe much details, the example can also
->> work as a complementary description, otherwise no need to put an example
->> in the binding document.
-> The description of the properties should fully describe them. The
-> example is just an example, not a specification of the properties.
->
-It is OK for me to update the description like this:
-reg:    containing two entries for DMA General Status Registers, i.e. 
-DGSR0 which contains + status for channel 1~4, and DGSR1 for channel 5~8
+Hi all,
 
-and let me wait one or more days to see if other reviewers/maintainers 
-have further comments before I send our another iteration.
+Version 7 contains following high level changes:
+- Dropped support for basic bindings from Mike Turquette, instead using
+  vendor specific bindings for all clocks
+- Mux clock + divider clock vendor specific bindings get rid of use
+  of the bit-masks, instead these are generated runtime based on parent
+  clock / divider min/max info, see individual patches for details
+- Added support for dummy_ck nodes, was missing from previous version
+- Fixed support for omap3630
+- Added support for new clock node type: ti,mux-gate-clock (using composite
+  clock type)
+- OMAP4 / OMAP5 only build fixes (compiler flag checks added to some files)
+- most of the of_omap_* calls renamed to of_ti_*
+- Rebased on top of v3.12-rc2
 
-By the way, I know maybe it is difficult, but why not introduce a 
-document of maintaining rules for the dt binding docs? we have dedicated 
-maintainers for this part now. Description language from one submitter 
-cannot satisfy every reviewer/maintainer, for a reg property, is it 
-necessary to say "offset and length", to say "how many entries", to say 
-"register functions and even names"? If there is specific rules (even 
-with good examples), it will be convenient for both submitter and 
-reviewers. Without rules/guidelines, new submitter would like to follow 
-old bad samples.
+Some detailed comments about patch level changes (if no mention, no major
+changes):
+- Patch #1:
+  * removed use of reg-names property, instead registers mapped using
+    compatible string
+  * removed ti,modes property, instead uses DPLL mode flags now
+  * separated AM33XX DPLLs under their own compatible strings
+- Patch #4 & #5: new patches
+- Patch #6: merged basic gate support from Mike to this patch as vendor
+  specific gate clock support
+- Patch #9 & #10: new patches
+- Patch #11: dummy clocks added, USB / ABE DPLL setup ordering changed
+- Patch #14: dummy clocks added
+- Patch #20: dropped usage of reg-names property
+- Patch #21: dummy clocks added
+- Patch #22 & #23: new patches
+- Patch #30: AM35XX clock data added to this patch
+- Patch #31:
+  * dummy clocks added
+  * added missing 3630 clocks
+
+Test branch available here:
+https://github.com/t-kristo/linux-pm.git
+branch: mainline-3.12-rc2-ti-dt-clks-v7
+
+Testing done:
+- am335x-bone : boot only
+- omap5-sevm : boot only
+- dra7-evm : boot only
+- omap3-beagle : boot + suspend/resume (ret + off)
+- omap4-panda-es : boot + suspend/resume
+
+Nishanth has also been doing some tests with omap3-beagle-xm with some WIP
+versions of this branch, but not with this latest one. Nishanth, maybe you
+can provide test results to this one also?
+
+-Tero
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
