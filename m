@@ -1,63 +1,158 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [Patch V2] drivers: power: Add support for bq24735 charger
-Date: Tue, 24 Sep 2013 17:10:19 -0600
-Message-ID: <52421BDB.50303@wwwdotorg.org>
-References: <1379607514-11200-1-git-send-email-rklein@nvidia.com> <5240B85D.3050803@wwwdotorg.org> <5240BA4A.4010007@nvidia.com> <5240BB2A.8060705@wwwdotorg.org> <5241C041.7020208@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5241C041.7020208-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH 1/2] gpio/omap: maintain GPIO and IRQ usage separately
+Date: Wed, 25 Sep 2013 02:36:52 +0200
+Message-ID: <1380069414-2922-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, r.sricharan@ti.com, holler@ahsoftware.de, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2013 10:39 AM, Rhyland Klein wrote:
-> On 9/23/2013 6:05 PM, Stephen Warren wrote:
->> On 09/23/2013 04:01 PM, Rhyland Klein wrote:
->>> On 9/23/2013 5:53 PM, Stephen Warren wrote:
->>>> On 09/19/2013 10:18 AM, Rhyland Klein wrote:
->>>>> Adding driver support for bq24735 charger chipset.
->>>>
->>>>> diff --git a/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt b/Documentation/devicetree/bindings/power_supply/ti,bq24735.txt
->>
->>>>> + - ti,charge-current : Used to control and set the charging current. This value
->>>>> +   must follow the below guidelines:
->>>>> +	bit 0 - 5:	Not used
->>>>> +	bit 6:		1 = Adds 64mA of charger current
->>>>> +	bit 7:		1 = Adds 128mA of charger current
->>>>> +	bit 8:		1 = Adds 256mA of charger current
->>>>> +	bit 9:		1 = Adds 512mA of charger current
->>>>> +	bit 10:		1 = Adds 1024mA of charger current
->>>>> +	bit 11:		1 = Adds 2048mA of charger current
->>>>> +	bit 12:		1 = Adds 4096mA of charger current
->>>>> +	bit 13 - 15:	Not used
->>>>
->>>> That's a little odd. Why not just put the number of mA directly into the
->>>> property unshifted?
->>>
->>> This is how the hw register is defined, its the literal number of mA.
->>> This is cleaned up in the upcoming revision.
->>
->> OK. If you still want to use the raw register encoding, which seems
->> reasonable, why not just say:
->>
->> ti,charge-current: Value for charge current register as described in the
->> HW documentation.
-> 
-> I had written this for v3:
-> 
-> - ti,charge-current : Used to control and set the charging current. This
-> value must be between 128mA and 8.128A with a 64mA step resolution. The
-> POR value is 0x0000h. See spec for more details.
-> 
-> Do you think the range is unnecessary or is it fine?
+The GPIO OMAP controller pins can be used as IRQ and GPIO
+independently so is necessary to keep track GPIO pins and
+IRQ lines usage separately to make sure that the bank will
+always be enabled while being used.
 
-It's probably fine, although I expect unnecessary. I would mention the
-exact register name from the spec, to make searching for it easier.
+Also move gpio_is_input() definition in preparation for the
+next patch that setups the controller's irq_chip driver when
+a caller requests an interrupt line.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+---
+ drivers/gpio/gpio-omap.c | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 0ff4355..a4fe038 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -63,6 +63,7 @@ struct gpio_bank {
+ 	struct gpio_chip chip;
+ 	struct clk *dbck;
+ 	u32 mod_usage;
++	u32 irq_usage;
+ 	u32 dbck_enable_mask;
+ 	bool dbck_enabled;
+ 	struct device *dev;
+@@ -86,6 +87,9 @@ struct gpio_bank {
+ #define GPIO_BIT(bank, gpio) (1 << GPIO_INDEX(bank, gpio))
+ #define GPIO_MOD_CTRL_BIT	BIT(0)
+ 
++#define BANK_USED(bank) (bank->mod_usage || bank->irq_usage)
++#define LINE_USED(line, offset) (line & (1 << offset))
++
+ static int irq_to_gpio(struct gpio_bank *bank, unsigned int gpio_irq)
+ {
+ 	return bank->chip.base + gpio_irq;
+@@ -420,6 +424,13 @@ static int _set_gpio_triggering(struct gpio_bank *bank, int gpio,
+ 	return 0;
+ }
+ 
++static int gpio_is_input(struct gpio_bank *bank, int mask)
++{
++	void __iomem *reg = bank->base + bank->regs->direction;
++
++	return __raw_readl(reg) & mask;
++}
++
+ static int gpio_irq_type(struct irq_data *d, unsigned type)
+ {
+ 	struct gpio_bank *bank = irq_data_get_irq_chip_data(d);
+@@ -427,7 +438,7 @@ static int gpio_irq_type(struct irq_data *d, unsigned type)
+ 	int retval;
+ 	unsigned long flags;
+ 
+-	if (WARN_ON(!bank->mod_usage))
++	if (WARN_ON(!BANK_USED(bank)))
+ 		return -EINVAL;
+ 
+ #ifdef CONFIG_ARCH_OMAP1
+@@ -447,6 +458,7 @@ static int gpio_irq_type(struct irq_data *d, unsigned type)
+ 
+ 	spin_lock_irqsave(&bank->lock, flags);
+ 	retval = _set_gpio_triggering(bank, GPIO_INDEX(bank, gpio), type);
++	bank->irq_usage |= 1 << GPIO_INDEX(bank, gpio);
+ 	spin_unlock_irqrestore(&bank->lock, flags);
+ 
+ 	if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_LEVEL_HIGH))
+@@ -603,7 +615,7 @@ static int omap_gpio_request(struct gpio_chip *chip, unsigned offset)
+ 	 * If this is the first gpio_request for the bank,
+ 	 * enable the bank module.
+ 	 */
+-	if (!bank->mod_usage)
++	if (!BANK_USED(bank))
+ 		pm_runtime_get_sync(bank->dev);
+ 
+ 	spin_lock_irqsave(&bank->lock, flags);
+@@ -619,7 +631,7 @@ static int omap_gpio_request(struct gpio_chip *chip, unsigned offset)
+ 		__raw_writel(__raw_readl(reg) | (1 << offset), reg);
+ 	}
+ 
+-	if (bank->regs->ctrl && !bank->mod_usage) {
++	if (bank->regs->ctrl && !BANK_USED(bank)) {
+ 		void __iomem *reg = bank->base + bank->regs->ctrl;
+ 		u32 ctrl;
+ 
+@@ -654,7 +666,7 @@ static void omap_gpio_free(struct gpio_chip *chip, unsigned offset)
+ 
+ 	bank->mod_usage &= ~(1 << offset);
+ 
+-	if (bank->regs->ctrl && !bank->mod_usage) {
++	if (bank->regs->ctrl && !BANK_USED(bank)) {
+ 		void __iomem *reg = bank->base + bank->regs->ctrl;
+ 		u32 ctrl;
+ 
+@@ -672,7 +684,7 @@ static void omap_gpio_free(struct gpio_chip *chip, unsigned offset)
+ 	 * If this is the last gpio to be freed in the bank,
+ 	 * disable the bank module.
+ 	 */
+-	if (!bank->mod_usage)
++	if (!BANK_USED(bank))
+ 		pm_runtime_put(bank->dev);
+ }
+ 
+@@ -762,8 +774,10 @@ static void gpio_irq_shutdown(struct irq_data *d)
+ 	struct gpio_bank *bank = irq_data_get_irq_chip_data(d);
+ 	unsigned int gpio = irq_to_gpio(bank, d->hwirq);
+ 	unsigned long flags;
++	unsigned offset = GPIO_INDEX(bank, gpio);
+ 
+ 	spin_lock_irqsave(&bank->lock, flags);
++	bank->irq_usage &= ~(1 << offset);
+ 	_reset_gpio(bank, gpio);
+ 	spin_unlock_irqrestore(&bank->lock, flags);
+ }
+@@ -897,13 +911,6 @@ static int gpio_input(struct gpio_chip *chip, unsigned offset)
+ 	return 0;
+ }
+ 
+-static int gpio_is_input(struct gpio_bank *bank, int mask)
+-{
+-	void __iomem *reg = bank->base + bank->regs->direction;
+-
+-	return __raw_readl(reg) & mask;
+-}
+-
+ static int gpio_get(struct gpio_chip *chip, unsigned offset)
+ {
+ 	struct gpio_bank *bank;
+@@ -1400,7 +1407,7 @@ void omap2_gpio_prepare_for_idle(int pwr_mode)
+ 	struct gpio_bank *bank;
+ 
+ 	list_for_each_entry(bank, &omap_gpio_list, node) {
+-		if (!bank->mod_usage || !bank->loses_context)
++		if (!BANK_USED(bank) || !bank->loses_context)
+ 			continue;
+ 
+ 		bank->power_mode = pwr_mode;
+@@ -1414,7 +1421,7 @@ void omap2_gpio_resume_after_idle(void)
+ 	struct gpio_bank *bank;
+ 
+ 	list_for_each_entry(bank, &omap_gpio_list, node) {
+-		if (!bank->mod_usage || !bank->loses_context)
++		if (!BANK_USED(bank) || !bank->loses_context)
+ 			continue;
+ 
+ 		pm_runtime_get_sync(bank->dev);
+-- 
+1.8.4.rc3
