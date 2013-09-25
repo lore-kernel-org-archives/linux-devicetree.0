@@ -1,58 +1,67 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 3/4] tick: broadcast: Deny per-cpu clockevents from
- being broadcast sources
-Date: Wed, 25 Sep 2013 17:11:46 +0200
-Message-ID: <5242FD32.7030008@linaro.org>
-References: <1379530118-22813-1-git-send-email-soren.brinkmann@xilinx.com> <1379530118-22813-4-git-send-email-soren.brinkmann@xilinx.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] arm: zynq: Enable global timer
+Date: Wed, 25 Sep 2013 17:20:43 +0200
+Message-ID: <5242FF4B.6050901@linaro.org>
+References: <1379530118-22813-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1379530118-22813-4-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, Grant Likely <grant.likely@secretlab.ca>, Preeti Murthy <preeti.lkml@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379530118-22813-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Preeti Murthy <preeti.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 09/18/2013 08:48 PM, Soren Brinkmann wrote:
-> On most ARM systems the per-cpu clockevents are truly per-cpu in
-> the sense that they can't be controlled on any other CPU besides
-> the CPU that they interrupt. If one of these clockevents were to
-> become a broadcast source we will run into a lot of trouble
-> because the broadcast source is enabled on the first CPU to go
-> into deep idle (if that CPU suffers from FEAT_C3_STOP) and that
-> could be a different CPU than what the clockevent is interrupting
-> (or even worse the CPU that the clockevent interrupts could be
-> offline).
+> Hi all,
 >=20
-> Theoretically it's possible to support per-cpu clockevents as the
-> broadcast source but so far we haven't needed this and supporting
-> it is rather complicated. Let's just deny the possibility for now
-> until this becomes a reality (let's hope it never does!).
+> here's a v2. I reused the subject from my v1 submission although the =
+focus of
+> this series moved a bit towards the timer subsystem.
+> I replaced Stephen's fix to prevent per cpu devices from becoming
+> the broadcast device with Thomas' proposal, but I kept the original c=
+ommit
+> message. I split the whole approach in small chunks that I found reas=
+onable.
 >=20
-> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-> ---
->  kernel/time/tick-broadcast.c | 1 +
->  1 file changed, 1 insertion(+)
+> In 4/4, I picked up Grant's comment regarding the DT node name.
 >=20
-> diff --git a/kernel/time/tick-broadcast.c b/kernel/time/tick-broadcas=
-t.c
-> index 218bcb5..9532690 100644
-> --- a/kernel/time/tick-broadcast.c
-> +++ b/kernel/time/tick-broadcast.c
-> @@ -70,6 +70,7 @@ static bool tick_check_broadcast_device(struct cloc=
-k_event_device *curdev,
->  					struct clock_event_device *newdev)
->  {
->  	if ((newdev->features & CLOCK_EVT_FEAT_DUMMY) ||
-> +	    (newdev->features & CLOCK_EVT_FEAT_PERCPU) ||
->  	    (newdev->features & CLOCK_EVT_FEAT_C3STOP))
->  		return false;
+> v2:
+>  - drop 1/2 of the original series
+>  - implement preventing per cpu devices from becoming broadcast devic=
+e according
+>    to Thomas' proposal
+>    - introduce new CLOCK_EVT_FEAT_PERCPU flag
+>    - set the flag for the arm_global_timer
+>    - filter per cpu devices based on this flag when choosing the broa=
+dcast
+>      device
+>  - rename DT node to avoid '_'s
 > =20
 >=20
+> Soren Brinkmann (4):
+>   clockchips: Add FEAT_PERCPU clockevent flag
+>   clocksource/arm_global_timer: Set FEAT_PERCPU flag
+>   tick: broadcast: Deny per-cpu clockevents from being broadcast sour=
+ces
+>   arm: zynq: Enable arm_global_timer
+>=20
+>  arch/arm/boot/dts/zynq-7000.dtsi       | 8 ++++++++
+>  arch/arm/mach-zynq/Kconfig             | 1 +
+>  drivers/clocksource/arm_global_timer.c | 3 ++-
+>  include/linux/clockchips.h             | 1 +
+>  kernel/time/tick-broadcast.c           | 1 +
+>  5 files changed, 13 insertions(+), 1 deletion(-)
+
+This patches falls under different maintainer's umbrella.
+
+I acked-by the patches, so if someone is willing to take the patches I
+am ok with that. I am ok also to pick them into my tree with the
+acked-by maintainer. Just let me know ...
+
+Thanks
+  -- Daniel
 
 
 --=20
@@ -62,3 +71,9 @@ k_event_device *curdev,
 =46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
 <http://twitter.com/#!/linaroorg> Twitter |
 <http://www.linaro.org/linaro-blog/> Blog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
