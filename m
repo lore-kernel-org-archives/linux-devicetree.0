@@ -1,75 +1,57 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: [PATCH RESEND REGRESSION] ARM: dts: exynos4210: Work around lack of
- cpufreq regulator lookup
-Date: Wed, 25 Sep 2013 16:10:06 +0200
-Message-ID: <1547192.40oE87agjP@amdc1227>
-References: <1377020136-14838-1-git-send-email-t.figa@samsung.com>
- <2243476.800bKojdAz@amdc1227>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] clockchips: Add FEAT_PERCPU clockevent flag
+Date: Wed, 25 Sep 2013 17:10:18 +0200
+Message-ID: <5242FCDA.5020100@linaro.org>
+References: <1379530118-22813-1-git-send-email-soren.brinkmann@xilinx.com> <1379530118-22813-2-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <2243476.800bKojdAz@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379530118-22813-2-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Preeti Murthy <preeti.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Exynos cpufreq drivers does not support device tree based regulator
-lookup, so it can get the VDD ARM regulator only by its name. To get
-cpufreq working for now, this patch works this around by renaming the
-regulator in board dts files to vdd_arm, which is the name expected by
-the driver.
+On 09/18/2013 08:48 PM, Soren Brinkmann wrote:
+> Add the flag CLOCK_EVT_FEAT_PERCPU which is supposed to be set for pe=
+r
+> cpu clockevent devices.
+>=20
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-This fixes a regression introduced by dropping support of board file
-based bootup of Exynos 4210 boards that rendered cpufreq inoperable on
-Trats and Origen boards.
+Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- arch/arm/boot/dts/exynos4210-origen.dts | 7 ++++++-
- arch/arm/boot/dts/exynos4210-trats.dts  | 7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+> ---
+>  include/linux/clockchips.h | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/include/linux/clockchips.h b/include/linux/clockchips.h
+> index 0857922..493aa02 100644
+> --- a/include/linux/clockchips.h
+> +++ b/include/linux/clockchips.h
+> @@ -60,6 +60,7 @@ enum clock_event_mode {
+>   * Core shall set the interrupt affinity dynamically in broadcast mo=
+de
+>   */
+>  #define CLOCK_EVT_FEAT_DYNIRQ		0x000020
+> +#define CLOCK_EVT_FEAT_PERCPU		0x000040
+> =20
+>  /**
+>   * struct clock_event_device - clock event device descriptor
+>=20
 
-Resending again, since my mail client previously freaked out and reset
-message format to HTML...
 
-diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
-index 382d8c7..46378fe 100644
---- a/arch/arm/boot/dts/exynos4210-origen.dts
-+++ b/arch/arm/boot/dts/exynos4210-origen.dts
-@@ -192,7 +192,12 @@
- 				};
- 
- 				buck1_reg: BUCK1 {
--					regulator-name = "VDD_ARM_1.2V";
-+					/*
-+					* HACK: The real name is VDD_ARM_1.2V,
-+					* but exynos-cpufreq does not support
-+					* DT-based regulator lookup yet.
-+					*/
-+					regulator-name = "vdd_arm";
- 					regulator-min-microvolt = <950000>;
- 					regulator-max-microvolt	= <1350000>;
- 					regulator-always-on;
-diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
-index 1c164f2..63cc571 100644
---- a/arch/arm/boot/dts/exynos4210-trats.dts
-+++ b/arch/arm/boot/dts/exynos4210-trats.dts
-@@ -290,7 +290,12 @@
- 				};
- 
- 				varm_breg: BUCK1 {
--				     regulator-name = "VARM_1.2V_C210";
-+				     /*
-+				      * HACK: The real name is VARM_1.2V_C210,
-+				      * but exynos-cpufreq does not support
-+				      * DT-based regulator lookup yet.
-+				      */
-+				     regulator-name = "vdd_arm";
- 				     regulator-min-microvolt = <900000>;
- 				     regulator-max-microvolt = <1350000>;
- 				     regulator-always-on;
--- 
-1.8.3.2
+--=20
+ <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for=
+ ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
