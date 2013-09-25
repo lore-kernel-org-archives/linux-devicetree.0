@@ -1,61 +1,63 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH V4 3/6] clk: exynos5250: add clock ID for div_pcm0
-Date: Wed, 25 Sep 2013 14:12:49 -0700
-Message-ID: <1380143572-11741-3-git-send-email-abrestic@chromium.org>
-References: <1380046016-5811-1-git-send-email-abrestic@chromium.org>
- <1380143572-11741-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1380143572-11741-1-git-send-email-abrestic@chromium.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-samsung-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Rahul Sharma <rahul.sharma@samsung.com>, Leela Krishna Amudala <l.krishna@samsung.com>, Tushar Behera <tushar.behera@linaro.org>, Doug Anderson <dianders@chromium.org>, Padmavathi Venna <padma.v@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/5] Add Core Divider clock support for Armada 370/XP
+Date: Wed, 25 Sep 2013 18:28:17 -0300
+Message-ID: <1380144502-24109-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <elopez93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There is no gate for the PCM clock input to the AudioSS block, so
-the parent of sclk_pcm is div_pcm0.  Add a clock ID for it so that
-we can reference it in device trees.
+This patchset adds support for a set of clocks available in Armada 370/XP
+known as "Core Divider" clocks.
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
----
- Documentation/devicetree/bindings/clock/exynos5250-clock.txt | 1 +
- drivers/clk/samsung/clk-exynos5250.c                         | 4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+These are a set of gatable clocks, derived from a fixed PLL at
+a configurable ratio. Although this patchset adds support for the more
+general case, we only support one of the clocks, namely the NAND ECC clock.
 
-diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-index 24765c1..67e9a47 100644
---- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-@@ -62,6 +62,7 @@ clock which they consume.
-   div_i2s1		157
-   div_i2s2		158
-   sclk_hdmiphy		159
-+  div_pcm0		160
- 
- 
-    [Peripheral Clock Gates]
-diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
-index adf3234..dec5376 100644
---- a/drivers/clk/samsung/clk-exynos5250.c
-+++ b/drivers/clk/samsung/clk-exynos5250.c
-@@ -108,7 +108,7 @@ enum exynos5250_clks {
- 	sclk_mmc0, sclk_mmc1, sclk_mmc2, sclk_mmc3, sclk_sata, sclk_usb3,
- 	sclk_jpeg, sclk_uart0, sclk_uart1, sclk_uart2, sclk_uart3, sclk_pwm,
- 	sclk_audio1, sclk_audio2, sclk_spdif, sclk_spi0, sclk_spi1, sclk_spi2,
--	div_i2s1, div_i2s2, sclk_hdmiphy,
-+	div_i2s1, div_i2s2, sclk_hdmiphy, div_pcm0,
- 
- 	/* gate clocks */
- 	gscl0 = 256, gscl1, gscl2, gscl3, gscl_wa, gscl_wb, smmu_gscl0,
-@@ -301,7 +301,7 @@ static struct samsung_div_clock exynos5250_div_clks[] __initdata = {
- 	DIV(none, "div_dp", "mout_dp", DIV_DISP1_0, 24, 4),
- 	DIV(none, "div_jpeg", "mout_jpeg", DIV_GEN, 4, 4),
- 	DIV(none, "div_audio0", "mout_audio0", DIV_MAU, 0, 4),
--	DIV(none, "div_pcm0", "sclk_audio0", DIV_MAU, 4, 8),
-+	DIV(div_pcm0, "div_pcm0", "sclk_audio0", DIV_MAU, 4, 8),
- 	DIV(none, "div_sata", "mout_sata", DIV_FSYS0, 20, 4),
- 	DIV(none, "div_usb3", "mout_usb3", DIV_FSYS0, 24, 4),
- 	DIV(none, "div_mmc0", "mout_mmc0", DIV_FSYS1, 0, 4),
+With this infrastructure in place, the addition of the rest of the clocks
+would be fairly easy.
+
+In addition, the NAND clock is added as a fixed-ratio from the NAND ECC clock,
+to model accurately the SoC clock tree.
+
+A pictorical representation of the clock tree would be:
+
+    PLL
+    |
+    |
+    ---------------------
+    |			|
+    |			|
+    NAND ECC clock	...
+    |
+    |
+    NAND clock
+
+This patchset is based on v3.12-rc2. Any opinions are highly appreciated.
+
+Thanks!
+
+Ezequiel Garcia (5):
+  clk: mvebu: Add core-divider clock
+  ARM: mvebu: Add Core Divider clock device-tree binding
+  ARM: mvebu: Add a 2 GHz fixed-clock Armada 370/XP
+  ARM: mvebu: Add the core-divider clock to Armada 370/XP
+  ARM: mvebu: Add NAND clock to Armada 370/XP
+
+ .../bindings/clock/mvebu-corediv-clock.txt         |  19 ++
+ arch/arm/boot/dts/armada-370-xp.dtsi               |  25 +++
+ drivers/clk/mvebu/Kconfig                          |   5 +
+ drivers/clk/mvebu/Makefile                         |   1 +
+ drivers/clk/mvebu/clk-corediv.c                    | 209 +++++++++++++++++++++
+ 5 files changed, 259 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
+ create mode 100644 drivers/clk/mvebu/clk-corediv.c
+
 -- 
-1.8.4
+1.8.1.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
