@@ -1,86 +1,52 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/5] Add Core Divider clock support for Armada 370/XP
-Date: Wed, 25 Sep 2013 18:37:31 -0300
-Message-ID: <20130925213730.GA19371@localhost>
-References: <1380144502-24109-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [ARM attend] Any news on agenda? Device tree documentation discussion
+Date: Wed, 25 Sep 2013 12:33:05 +0200
+Message-ID: <1877784.0NqxWJadn8@avalon>
+References: <F5184659D418E34EA12B1903EE5EF5FD8538E865C1@seldmbx02.corpusers.net> <CAOesGMhVjw0y50McCPPLeFvcr0NNkCO+BszT4zZELWYSgb0-GQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1380144502-24109-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CAOesGMhVjw0y50McCPPLeFvcr0NNkCO+BszT4zZELWYSgb0-GQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <elopez93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Bird, Tim" <Tim.Bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org" <ksummit-2013-discuss-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-(Ccing forgotten mvebu maintainers)
+Hi Olof,
 
-On Wed, Sep 25, 2013 at 06:28:17PM -0300, Ezequiel Garcia wrote:
-> This patchset adds support for a set of clocks available in Armada 37=
-0/XP
-> known as "Core Divider" clocks.
->=20
-> These are a set of gatable clocks, derived from a fixed PLL at
-> a configurable ratio. Although this patchset adds support for the mor=
-e
-> general case, we only support one of the clocks, namely the NAND ECC =
-clock.
->=20
-> With this infrastructure in place, the addition of the rest of the cl=
-ocks
-> would be fairly easy.
->=20
-> In addition, the NAND clock is added as a fixed-ratio from the NAND E=
-CC clock,
-> to model accurately the SoC clock tree.
->=20
-> A pictorical representation of the clock tree would be:
->=20
->     PLL
->     |
->     |
->     ---------------------
->     |			|
->     |			|
->     NAND ECC clock	...
->     |
->     |
->     NAND clock
->=20
-> This patchset is based on v3.12-rc2. Any opinions are highly apprecia=
-ted.
->=20
-> Thanks!
->=20
-> Ezequiel Garcia (5):
->   clk: mvebu: Add core-divider clock
->   ARM: mvebu: Add Core Divider clock device-tree binding
->   ARM: mvebu: Add a 2 GHz fixed-clock Armada 370/XP
->   ARM: mvebu: Add the core-divider clock to Armada 370/XP
->   ARM: mvebu: Add NAND clock to Armada 370/XP
->=20
->  .../bindings/clock/mvebu-corediv-clock.txt         |  19 ++
->  arch/arm/boot/dts/armada-370-xp.dtsi               |  25 +++
->  drivers/clk/mvebu/Kconfig                          |   5 +
->  drivers/clk/mvebu/Makefile                         |   1 +
->  drivers/clk/mvebu/clk-corediv.c                    | 209 +++++++++++=
-++++++++++
->  5 files changed, 259 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-cor=
-ediv-clock.txt
->  create mode 100644 drivers/clk/mvebu/clk-corediv.c
->=20
-> --=20
-> 1.8.1.5
->=20
+(CC'ing Mauro Carvalho Chehab and Hans Verkuil)
 
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+On Thursday 19 September 2013 22:30:16 Olof Johansson wrote:
+> On Wed, Sep 18, 2013 at 2:35 PM, Bird, Tim <Tim.Bird-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org> wrote:
+> > I'm interested in the ARM kernel summit - particularly any
+> > sessions having to do with device tree. Is there an agenda or
+> > session list available for the ARM summit yet?
+> 
+> No, I asked the KS PC a while back for the rough outline (break times,
+> etc), but I'm guessing they might not have them yet either.
+> 
+> > I have other meetings Wednesday (Oct 23), but heard that
+> > there might be device tree sessions on Wednesday afternoon.
+> > If so, and if these are open for me to attend, I would like to know
+> > so I can re-arrange my schedule to attend.
+> 
+> Yes, the general idea is to schedule them on Wed PM, and allow a wider
+> audience at those sessions.
+
+The V4L2 mini-summit will take place on Wednesday October 23rd. As I can't 
+attend both simultaneously, we're trying to draft the agenda to minimize the 
+schedule conflicts between topics that embedded media developers would like to 
+discuss (this affects more than me, there will be several developers invited 
+to both the ARM KS and the V4L2 mini-summit). Getting a rough outline of the 
+ARM KS agenda before the last minute would thus be very appreciated.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
