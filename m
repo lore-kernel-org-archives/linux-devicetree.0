@@ -1,27 +1,56 @@
-From: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch V3] drivers: power: Add support for bq24735 charger
-Date: Wed, 25 Sep 2013 08:59:52 +0530
-Message-ID: <CAKDJKT7gxWhgE3tJSq6vH-WODhy2rFbsbJQgEDSKbzudxBe5zQ@mail.gmail.com>
-References: <1380058785-18748-1-git-send-email-rklein@nvidia.com>
+From: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4 0/4] LP3943 MFD driver for a GPIO expander and a PWM generator
+Date: Wed, 25 Sep 2013 13:22:55 +0900
+Message-ID: <1380082975-6022-1-git-send-email-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380058785-18748-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Darbha Sriharsha <dsriharsha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+LP3943 is an integrated device capable of driving 16 output channels.
+It can be used for GPIO expander and PWM generators.
+LP3493 registers are controlled via the I2C interface.
 
-> +       if (gpio_is_valid(charger->pdata->status_gpio)) {
-> +               ret = devm_gpio_request(&client->dev,
-> +                                       charger->pdata->status_gpio,
-> +                                       name);
-> +               if (ret)
-> +                       dev_err(&client->dev, "Failed GPIO request: %d\n", ret);
+This patch-set consists of four parts - MFD, GPIO, PWM and documents.
 
-This should include GPIO number also to show error with more verbosity.
+Update from v3 to v4:
+  Move the driver description from the documentation to the MFD driver file.
 
-Regards
-Manish Badarkhe
+Milo Kim (4):
+  mfd: add LP3943 MFD driver
+  gpio: add LP3943 I2C GPIO expander driver
+  pwm: add LP3943 PWM driver
+  Documentation: add LP3943 DT bindings and document
+
+ .../devicetree/bindings/gpio/gpio-lp3943.txt       |   37 +++
+ Documentation/devicetree/bindings/mfd/lp3943.txt   |   33 ++
+ .../devicetree/bindings/pwm/pwm-lp3943.txt         |   58 ++++
+ drivers/gpio/Kconfig                               |    8 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-lp3943.c                         |  242 +++++++++++++++
+ drivers/mfd/Kconfig                                |   11 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/lp3943.c                               |  167 +++++++++++
+ drivers/pwm/Kconfig                                |   10 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-lp3943.c                           |  314 ++++++++++++++++++++
+ include/linux/mfd/lp3943.h                         |  114 +++++++
+ 13 files changed, 997 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-lp3943.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/lp3943.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-lp3943.txt
+ create mode 100644 drivers/gpio/gpio-lp3943.c
+ create mode 100644 drivers/mfd/lp3943.c
+ create mode 100644 drivers/pwm/pwm-lp3943.c
+ create mode 100644 include/linux/mfd/lp3943.h
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
