@@ -1,100 +1,123 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v4] dt: update PSCI binding documentation for v0.2
-Date: Wed, 25 Sep 2013 12:34:41 -0700
-Message-ID: <CAOesGMgM2JsWbBOujdiCZdKkHqTRuN0P=OsdKGiyzz6_aiGWSA@mail.gmail.com>
-References: <1379625868-5395-1-git-send-email-robherring2@gmail.com>
-	<CAOesGMjNhYTfPOr5NPEC9GWym-nuFE0hX_6+LW9bTv_E3iXbcQ@mail.gmail.com>
-	<20130920102015.GH17453@e106331-lin.cambridge.arm.com>
-	<CAOesGMid5pgcVD+oCjUr_75tv+C5QtVZt=Vt9kdiT_QPFOrzrg@mail.gmail.com>
-	<CAL_JsqK1LE9rptajTOfvzNd1NQEihJzwm0YtJMzpUz-BhwJg5w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqK1LE9rptajTOfvzNd1NQEihJzwm0YtJMzpUz-BhwJg5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2] powerpc/83xx: gianfar_ptp: select 1588 clock source through dts file
+Date: Wed, 25 Sep 2013 14:38:12 -0500
+Message-ID: <9B020778-D8FB-4D71-9647-4D1505DCAE1E@codeaurora.org>
+References: <1380093863-5388-1-git-send-email-aida.mynzhasova@skitlab.ru>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1380093863-5388-1-git-send-email-aida.mynzhasova@skitlab.ru>
+Sender: netdev-owner@vger.kernel.org
+To: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
+Cc: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, richardcochran@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 25, 2013 at 12:20 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Sep 25, 2013 at 12:15 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->> On Fri, Sep 20, 2013 at 3:20 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->>> On Fri, Sep 20, 2013 at 05:36:51AM +0100, Olof Johansson wrote:
->>>> Hi,
->>>
->>> Hi Olof,
->>>
->>>>
->>>> Just a quick drive-by. Sorry, I don't know the history of previous
->>>> review cycles.
->>>>
->>>>
->>>> On Thu, Sep 19, 2013 at 2:24 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>
->>>> >  Main node optional properties:
->>>> >
->>>> > - - cpu_suspend   : Function ID for CPU_SUSPEND operation
->>>> > + - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
->>>> > +
->>>> > + - cpu_off                : Function ID for CPU_OFF operation
->>>> > +
->>>> > + - cpu_on[-<32|64]        : Function ID for CPU_ON operation
->>>> > +
->>>> > + - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
->>>> >
->>>> > - - cpu_off       : Function ID for CPU_OFF operation
->>>> > + - migrate[-<32|64]       : Function ID for MIGRATE operation
->>>> >
->>>> > - - cpu_on        : Function ID for CPU_ON operation
->>>> > + - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
->>>> >
->>>> > - - migrate       : Function ID for MIGRATE operation
->>>> > + - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
->>>> >
->>>> > + - system_reset           : Function ID for SYSTEM_RESET operation
->>>> > +
->>>> > + - system_off             : Function ID for SYSTEM_OFF operation
->>>>
->>>> All of these should use dashes instead of underscores.
->>>
->>> I also don't like the underscores, but they're an unfortunate historical
->>> artifact that we can't get rid of (at least for cpu_on, cpu_off, and
->>> cpu_suspend).
->>
->> We need to keep those three old ones supported in the driver, but the
->> newer binding can use dashes instead, as long as the kernel also
->> handles the old binding.
->>
->>> Both Xen and kvmtool are already passing DTs to guests which have
->>> underscores in the property names, so it's both a boot ABI and a
->>> userspace ABI.
->>
->> Again, as mentioned on IRC: We've said that bindings are not yet
->> stable until we lock them down, so we will need to adjust accordingly.
->> Once we lock them down, they are stable and part of ABI. But we really
->> don't want to deal with the bad bindings that people came up with
->> without much review, and that's what the whole idea behind cleaning up
->> and then locking them down is all about.
->
-> For some of us, bindings are already in production. Until we have some
-> way to document stable vs. unstable, it is not up to anyone but the
-> users of a binding to define the stability. If the users of a binding
-> can tolerate the change, then it is unstable and can change.
 
-Ok, so why review bindings at all then? Just implement what you want,
-ship it and force it on the rest of us for ever.
+On Sep 25, 2013, at 2:24 AM, Aida Mynzhasova wrote:
 
-> All this boils down to using '_' vs. '-', right? Come on. I'm all for
-> consistency, but let's be practical. There are plenty of documented
-> examples that use '_' starting with device_type.
+> Currently IEEE 1588 timer reference clock source is determined through
+> hard-coded value in gianfar_ptp driver. This patch allows to select ptp
+> clock source by means of device tree file node.
+> 
+> For instance:
+> 
+> 	fsl,cksel = <0>;
+> 
+> for using external (TSEC_TMR_CLK input) high precision timer
+> reference clock.
+> 
+> Other acceptable values:
+> 
+> 	<1> : eTSEC system clock
+> 	<2> : eTSEC1 transmit clock
+> 	<3> : RTC clock input
 
-Next property I add will be called Device_Type then, if we're willing
-to not give a shit about best practices any more. Thanks for setting
-the direction and holding the bar high, Rob!
+Do these value match some register field to select which clk?  If so please add that to the document.
 
+- k
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> When this attribute isn't used, eTSEC system clock will serve as
+> IEEE 1588 timer reference clock.
+> 
+> Signed-off-by: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
+> ---
+> Documentation/devicetree/bindings/net/fsl-tsec-phy.txt | 16 +++++++++++++++-
+> drivers/net/ethernet/freescale/gianfar_ptp.c           |  4 +++-
+> 2 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+> index 2c6be03..eb06059 100644
+> --- a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+> +++ b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+> @@ -86,6 +86,7 @@ General Properties:
+> 
+> Clock Properties:
+> 
+> +  - fsl,cksel        Timer reference clock source.
+>   - fsl,tclk-period  Timer reference clock period in nanoseconds.
+>   - fsl,tmr-prsc     Prescaler, divides the output clock.
+>   - fsl,tmr-add      Frequency compensation value.
+> @@ -97,7 +98,7 @@ Clock Properties:
+>   clock. You must choose these carefully for the clock to work right.
+>   Here is how to figure good values:
+> 
+> -  TimerOsc     = system clock               MHz
+> +  TimerOsc     = selected reference clock   MHz
+>   tclk_period  = desired clock period       nanoseconds
+>   NominalFreq  = 1000 / tclk_period         MHz
+>   FreqDivRatio = TimerOsc / NominalFreq     (must be greater that 1.0)
+> @@ -114,6 +115,18 @@ Clock Properties:
+>   Pulse Per Second (PPS) signal, since this will be offered to the PPS
+>   subsystem to synchronize the Linux clock.
+> 
+> +  "fsl,cksel" property allows to select different reference clock
+> +  sources:
+> +
+> +  <0> - external high precision timer reference clock (TSEC_TMR_CLK
+> +        input is used for this purpose);
+> +  <1> - eTSEC system clock;
+> +  <2> - eTSEC1 transmit clock;
+> +  <3> - RTC clock input.
+> +
+> +  When this attribute is not used, eTSEC system clock will serve as
+> +  IEEE 1588 timer reference clock.
+> +
+> Example:
+> 
+> 	ptp_clock@24E00 {
+> @@ -121,6 +134,7 @@ Example:
+> 		reg = <0x24E00 0xB0>;
+> 		interrupts = <12 0x8 13 0x8>;
+> 		interrupt-parent = < &ipic >;
+> +		fsl,cksel       = <1>;
+> 		fsl,tclk-period = <10>;
+> 		fsl,tmr-prsc    = <100>;
+> 		fsl,tmr-add     = <0x999999A4>;
+> diff --git a/drivers/net/ethernet/freescale/gianfar_ptp.c b/drivers/net/ethernet/freescale/gianfar_ptp.c
+> index 098f133..e006a09 100644
+> --- a/drivers/net/ethernet/freescale/gianfar_ptp.c
+> +++ b/drivers/net/ethernet/freescale/gianfar_ptp.c
+> @@ -452,7 +452,9 @@ static int gianfar_ptp_probe(struct platform_device *dev)
+> 	err = -ENODEV;
+> 
+> 	etsects->caps = ptp_gianfar_caps;
+> -	etsects->cksel = DEFAULT_CKSEL;
+> +
+> +	if (get_of_u32(node, "fsl,cksel", &etsects->cksel))
+> +		etsects->cksel = DEFAULT_CKSEL;
+> 
+> 	if (get_of_u32(node, "fsl,tclk-period", &etsects->tclk_period) ||
+> 	    get_of_u32(node, "fsl,tmr-prsc", &etsects->tmr_prsc) ||
+> -- 
+> 1.8.1.2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
