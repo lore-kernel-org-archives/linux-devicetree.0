@@ -1,115 +1,72 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 1/4] ARM: OMAP2+: cleaned-up DT support of various
- ECC schemes
-Date: Wed, 25 Sep 2013 11:29:11 -0700
-Message-ID: <20130925182911.GB23337@ld-irv-0074.broadcom.com>
-References: <1378986619-26765-1-git-send-email-pekon@ti.com>
- <1378986619-26765-2-git-send-email-pekon@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH] mfd: arizona: Update device tree regulator bindings
+Date: Wed, 25 Sep 2013 19:32:01 +0100
+Message-ID: <20130925183201.GT3226@sirena.org.uk>
+References: <1380131272-16982-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pnDjx0H/VpusRTEI"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1378986619-26765-2-git-send-email-pekon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
-Cc: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1380131272-16982-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: devicetree@vger.kernel.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 05:20:16PM +0530, Pekon Gupta wrote:
-> OMAP NAND driver support multiple ECC scheme, which can used in following
-> different flavours, depending on in-build Hardware engines supported by SoC.
-> 
-> +---------------------------------------+---------------+---------------+
-> | ECC scheme                            |ECC calculation|Error detection|
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_HAMMING_CODE_HW               |H/W (GPMC)     |S/W            |
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W            |
-> |(requires CONFIG_MTD_NAND_ECC_BCH)     |               |               |
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
-> |(requires CONFIG_MTD_NAND_OMAP_BCH &&  |               |               |
-> | ti,elm-id in DT)                      |               |               |
-> +---------------------------------------+---------------+---------------+
-> To optimize footprint of omap2-nand driver, selection of some ECC schemes
-> also require enabling following Kconfigs, in addition to setting appropriate
-> DT bindings
-> - Kconfig:CONFIG_MTD_NAND_ECC_BCH        enables S/W based BCH ECC algorithm
-> - Kconfig:CONFIG_MTD_NAND_OMAP_BCH       enables H/W based BCH ECC algorithm
-> 
-> This patch
-> - updates DT binding for selection of ecc-scheme
-> - updates DT binding for detection of ELM h/w engine
-> - removes following obselete ECC schemes
-> 	OMAP_ECC_HAMMING_CODE_DEFAULT (S/W based 1-bit Hamming ECC)
-> 	OMAP_ECC_HAMMING_CODE_HW_ROMCODE (H/W based 1-bit Hamming ECC scheme)
-> - updates DT binding documentation for mtd/gpmc-nand
-> 
-> Signed-off-by: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/mtd/gpmc-nand.txt          | 14 +++----
->  arch/arm/mach-omap2/board-flash.c                  |  2 +-
->  arch/arm/mach-omap2/gpmc.c                         | 47 +++++++++++++++-------
->  include/linux/platform_data/mtd-nand-omap2.h       | 23 +++++++----
->  4 files changed, 56 insertions(+), 30 deletions(-)
-> 
-...
-> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-> index 9f4795a..6409884 100644
-> --- a/arch/arm/mach-omap2/gpmc.c
-> +++ b/arch/arm/mach-omap2/gpmc.c
-...
-> @@ -1378,12 +1371,36 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
->  	gpmc_nand_data->cs = val;
->  	gpmc_nand_data->of_node = child;
->  
-> -	if (!of_property_read_string(child, "ti,nand-ecc-opt", &s))
-> -		for (val = 0; val < ARRAY_SIZE(nand_ecc_opts); val++)
-> -			if (!strcasecmp(s, nand_ecc_opts[val])) {
-> -				gpmc_nand_data->ecc_opt = val;
-> -				break;
-> -			}
-> +	/* Detect availability of ELM module */
-> +	parp = of_get_property(child, "ti,elm-id", &lenp);
-> +	if ((parp == NULL) && (lenp != (sizeof(void *) * 2))) {
 
-I think && should be ||
+--pnDjx0H/VpusRTEI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +		pr_warn("%s: ti,elm-id property not found\n", __func__);
-> +		gpmc_nand_data->elm_of_node = NULL;
-> +	} else {
-> +		gpmc_nand_data->elm_of_node =
-> +				of_find_node_by_phandle(be32_to_cpup(parp));
-> +	}
-> +	/* select NAND ecc-scheme */
-> +	if (of_property_read_string(child, "ti,nand-ecc-scheme", &s)) {
-> +		pr_err("%s: valid ti,nand-ecc-scheme not found\n", __func__);
-> +		return -ENODEV;
-> +	}
-> +	if (!strcmp(s, "ham1"))
-> +		gpmc_nand_data->ecc_opt = OMAP_ECC_HAMMING_CODE_HW;
-> +	else if (!strcmp(s, "bch4"))
-> +		if (gpmc_nand_data->elm_of_node)
-> +			gpmc_nand_data->ecc_opt = OMAP_ECC_BCH4_CODE_HW;
-> +		else
-> +			gpmc_nand_data->ecc_opt =
-> +				OMAP_ECC_BCH4_CODE_HW_DETECTION_SW;
-> +	else if (!strcmp(s, "bch8"))
-> +		if (gpmc_nand_data->elm_of_node)
-> +			gpmc_nand_data->ecc_opt = OMAP_ECC_BCH8_CODE_HW;
-> +		else
-> +			gpmc_nand_data->ecc_opt =
-> +				OMAP_ECC_BCH8_CODE_HW_DETECTION_SW;
-> +	else
-> +		pr_err("%s: ti,ecc-scheme: invalid property value\n", __func__);
->  
->  	if (!of_property_read_string(child, "ti,nand-xfer-type", &s))
->  		for (val = 0; val < ARRAY_SIZE(nand_xfer_types); val++)
+On Wed, Sep 25, 2013 at 06:47:52PM +0100, Charles Keepax wrote:
 
-Otherwise, I think this patch is OK.
+> This patch creates a sub-node for the codec and attaches the required
+> regulators here using the of_compatible field on the mfd_cell.
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Another issue with the Arizona bindings, I am not sure
+> exactly what the best approach is this patch seems like the
+> "correct" fix, but it does require a change to the binding,
+> although the current binding is non-functional.
+
+No, this is not sensible - what you're doing here is clearly a Linux
+implementation detail. =20
+
+> Alternatively I could simply set the codec of_node to match
+> the mfd one manually in the codec driver which wouldn't need
+> the binding changing but feels a bit like a work around.
+
+That's not clever either, fiddling around with the data structures like
+that is bound to cause referencing problems ("I just freed the device,
+let's clean up all the memory") and general fragility.
+
+> Any thoughts would be greatly appreciated?
+
+You need to do something like arrange for the regulator API to resolve
+attempts to look up regulators on the subnode using the parent, the
+device is virtual after all.
+
+--pnDjx0H/VpusRTEI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSQyweAAoJELSic+t+oim94x4P/0Vlu7TTeBJPh4eB4/jXbaKq
+abD/w2eQNBNDc30li0bqNDgIJHGjjdSTXrRs2t8S1if3cf6IOozsii9JkUeV2La6
+EBPgRrEqUrOuz6BmWJMwSrE5QOOhFScmzbSPo/oORXhVpOuW3EIvFzp7IPZJJfwg
+Wz0Uqg0rZ5ZEQ6XvrMJEt/Nm+1WmwTROGMUttJIBEAZ+JXeLzE6vQiu/FOJokgvH
+ha6Mdn0FB49ZygvTKWDaJ/zuI8JxQHrEQ07A574rZtqThaJB/BfgcEgoeb9Nqw0/
+Vzh6JvlwY1wwIYlyqKT7f3kcN5uJMPSF/HJUwfg5Eef5lVqfH6s4TJfBSpEu4FQc
+tCkEdjgKpgg5MkVq0IToOQEbg+qImCF+mFbU3GDr2VW3cUiaQW7PnQGqPNEedlxu
+ban/RHYMjCSiJiPmq8ZR3J+inx9lSQszUvUMITQBU+UV3slvcVGD8RTwLiokoJ91
+MtPQb5I+QYe9f8mmbUHdmXlh8Wtmp6NuN5DcEfFDSiEHHrkI1KrIKLKqa1k0I9M4
+vV9iTsibhIeo+Nof3n/nblPgQMXxQrfdUAm/Oj6mtwHVDi0M9fcGaOB+Uh7BMM5Y
+3/wnlUAs/hr4PIWBWEu9maUVbfs/8IMaeAVWTFX54aLGRED1HkRzE5KsX3h+pnGR
+AumB/PcGWT3TVTkSre5C
+=kxbZ
+-----END PGP SIGNATURE-----
+
+--pnDjx0H/VpusRTEI--
