@@ -1,109 +1,137 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 1/4] ARM: OMAP2+: cleaned-up DT support of various ECC schemes
-Date: Wed, 25 Sep 2013 17:23:55 -0500
-Message-ID: <CAL_Jsq+XxQ_9ik_P8EPPNSzXiCz6yd-VJLRU668t3jvD-jhyOw@mail.gmail.com>
-References: <1378986619-26765-1-git-send-email-pekon@ti.com>
-	<1378986619-26765-2-git-send-email-pekon@ti.com>
+From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] ARM: dts: AM33XX: Add LCDC info into am335x-evm
+Date: Wed, 25 Sep 2013 17:31:07 -0500
+Message-ID: <20130925223107.GA2494@uda0270506>
+References: <1377274436-3890-1-git-send-email-bparrot@ti.com>
+ <20130903145516.GA30867@uda0270506>
+ <52415B8F.40804@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1378986619-26765-2-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: dedekind1@gmail.com, Olof Johansson <olof@lixom.net>, computersforpeace@gmail.com, dwmw2@infradead.org, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, benoit.cousson@linaro.org, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <52415B8F.40804-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, joelf-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2013 at 6:50 AM, Pekon Gupta <pekon@ti.com> wrote:
-> OMAP NAND driver support multiple ECC scheme, which can used in following
-> different flavours, depending on in-build Hardware engines supported by SoC.
->
-> +---------------------------------------+---------------+---------------+
-> | ECC scheme                            |ECC calculation|Error detection|
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_HAMMING_CODE_HW               |H/W (GPMC)     |S/W            |
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W            |
-> |(requires CONFIG_MTD_NAND_ECC_BCH)     |               |               |
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
-> |(requires CONFIG_MTD_NAND_OMAP_BCH &&  |               |               |
-> | ti,elm-id in DT)                      |               |               |
-> +---------------------------------------+---------------+---------------+
-> To optimize footprint of omap2-nand driver, selection of some ECC schemes
-> also require enabling following Kconfigs, in addition to setting appropriate
-> DT bindings
-> - Kconfig:CONFIG_MTD_NAND_ECC_BCH        enables S/W based BCH ECC algorithm
-> - Kconfig:CONFIG_MTD_NAND_OMAP_BCH       enables H/W based BCH ECC algorithm
->
-> This patch
-> - updates DT binding for selection of ecc-scheme
-> - updates DT binding for detection of ELM h/w engine
-> - removes following obselete ECC schemes
->         OMAP_ECC_HAMMING_CODE_DEFAULT (S/W based 1-bit Hamming ECC)
->         OMAP_ECC_HAMMING_CODE_HW_ROMCODE (H/W based 1-bit Hamming ECC scheme)
-> - updates DT binding documentation for mtd/gpmc-nand
->
-> Signed-off-by: Pekon Gupta <pekon@ti.com>
-> ---
->  .../devicetree/bindings/mtd/gpmc-nand.txt          | 14 +++----
->  arch/arm/mach-omap2/board-flash.c                  |  2 +-
->  arch/arm/mach-omap2/gpmc.c                         | 47 +++++++++++++++-------
->  include/linux/platform_data/mtd-nand-omap2.h       | 23 +++++++----
->  4 files changed, 56 insertions(+), 30 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> index df338cb..958e5d5 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> @@ -21,11 +21,8 @@ Optional properties:
->                                 is wired that way. If not specified, a bus
->                                 width of 8 is assumed.
->
-> - - ti,nand-ecc-opt:            A string setting the ECC layout to use. One of:
-> -
-> -               "sw"            Software method (default)
-> -               "hw"            Hardware method
-> -               "hw-romcode"    gpmc hamming mode method & romcode layout
-> + - ti,nand-ecc-scheme:         A string setting the ECC layout to use. One of:
-> +               "ham1"          1-bit Hamming ecc code
+Hi Benoit,
 
-As has been pointed out, this breaks compatibility which should be
-avoided unless you know the state of use of this binding. I fail to
-see the advantage of using scheme over opt. You could simply add ham1
-here and maintain compatibility. Instead of removing sw, hw, etc. you
-can simply deprecate them or decide that the kernel doesn't support
-those options.
+On Tue, Sep 24, 2013 at 11:29:51AM +0200, Benoit Cousson wrote:
+> Hi Benoit,
+> 
+> On 03/09/2013 16:55, Benoit Parrot wrote:
+> >Hi,
+> >
+> >I have not received any feedback on this patch.
+> >It has been pending since the end of June (first post).
+> >Can I get an estimate when it will be included/accepted?
+> 
+> It looks good to me beside a minor comment below.
+> 
+> Could you just rebase it on my lastest git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git
+> for_3.13/dts branch because it conflicts with the cleanup done by
+> Javier.
+> 
 
-However, since you are willing to break compatibility, then you should
-the generic NAND binding and use nand-ecc-mode adding the values you
-need.
+I was going to rebase it to your for_3.13/dts branch, but Joel Frenandez has 
+already included this patch as part of his most recent submission.
+(http://marc.info/?l=devicetree&m=138014654925217&w=2) so I guess there is no
+need to duplicate the work now.
 
-Documentation/devicetree/bindings/mtd/nand.txt:
-* MTD generic binding
+Let me know if this causes any issue.
 
-- nand-ecc-mode : String, operation mode of the NAND ecc mode.
-  Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
-  "soft_bch".
-- nand-bus-width : 8 or 16 bus width if not present 8
-- nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
+Thanks,
+Benoit
 
-
->                 "bch4"          4-bit BCH ecc code
->                 "bch8"          8-bit BCH ecc code
->
-> @@ -36,8 +33,11 @@ Optional properties:
->                 "prefetch-dma"          Prefetch enabled sDMA mode
->                 "prefetch-irq"          Prefetch enabled irq mode
->
-> - - elm_id:     Specifies elm device node. This is required to support BCH
-> -               error correction using ELM module.
-> + - ti,elm-id:  Specifies pHandle of the ELM devicetree node.
-> +               ELM is an on-chip hardware engine on TI SoC which is used for
-> +               locating ECC errors for BCHx algorithms. SoC devices which have
-> +               ELM hardware engines should specify this device node in .dtsi
-> +               Using ELM for ECC error correction frees some CPU cycles.
-
-While yes, this is better name and documentation, I don't know that
-breaking compatibility is justified.
-
-Rob
+> >
+> >On Fri, Aug 23, 2013 at 11:13:56AM -0500, Benoit Parrot wrote:
+> >>Add LCDC device node in DT for am33xx
+> >>Add LCDC and Panel info in DT for am335x-evm
+> >>
+> >>Changes in v3:
+> >>- rebase to 3.11-rc6
+> >>
+> >>Changes in v2:
+> >>- remove redundant/unnecessary SoC specific setting in the board dts
+> >>
+> >>Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+> >>---
+> >>  arch/arm/boot/dts/am335x-evm.dts |   72 ++++++++++++++++++++++++++++++++++++++
+> >>  arch/arm/boot/dts/am33xx.dtsi    |    9 +++++
+> >>  2 files changed, 81 insertions(+)
+> >>
+> >>diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+> >>index 3aee1a4..b0703f1 100644
+> >>--- a/arch/arm/boot/dts/am335x-evm.dts
+> >>+++ b/arch/arm/boot/dts/am335x-evm.dts
+> >>@@ -149,6 +149,40 @@
+> >>  				0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
+> >>  			>;
+> >>  		};
+> >>+
+> >>+		lcd_pins_s0: lcd_pins_s0 {
+> >>+			pinctrl-single,pins = <
+> >>+				0x20 0x01	/* gpmc_ad8.lcd_data16, OUTPUT | MODE1 */
+> >>+				0x24 0x01	/* gpmc_ad9.lcd_data17, OUTPUT | MODE1 */
+> >>+				0x28 0x01	/* gpmc_ad10.lcd_data18, OUTPUT | MODE1 */
+> >>+				0x2c 0x01	/* gpmc_ad11.lcd_data19, OUTPUT | MODE1 */
+> >>+				0x30 0x01	/* gpmc_ad12.lcd_data20, OUTPUT | MODE1 */
+> >>+				0x34 0x01	/* gpmc_ad13.lcd_data21, OUTPUT | MODE1 */
+> >>+				0x38 0x01	/* gpmc_ad14.lcd_data22, OUTPUT | MODE1 */
+> >>+				0x3c 0x01	/* gpmc_ad15.lcd_data23, OUTPUT | MODE1 */
+> >>+				0xa0 0x00	/* lcd_data0.lcd_data0, OUTPUT | MODE0 */
+> >>+				0xa4 0x00	/* lcd_data1.lcd_data1, OUTPUT | MODE0 */
+> >>+				0xa8 0x00	/* lcd_data2.lcd_data2, OUTPUT | MODE0 */
+> >>+				0xac 0x00	/* lcd_data3.lcd_data3, OUTPUT | MODE0 */
+> >>+				0xb0 0x00	/* lcd_data4.lcd_data4, OUTPUT | MODE0 */
+> >>+				0xb4 0x00	/* lcd_data5.lcd_data5, OUTPUT | MODE0 */
+> >>+				0xb8 0x00	/* lcd_data6.lcd_data6, OUTPUT | MODE0 */
+> >>+				0xbc 0x00	/* lcd_data7.lcd_data7, OUTPUT | MODE0 */
+> >>+				0xc0 0x00	/* lcd_data8.lcd_data8, OUTPUT | MODE0 */
+> >>+				0xc4 0x00	/* lcd_data9.lcd_data9, OUTPUT | MODE0 */
+> >>+				0xc8 0x00	/* lcd_data10.lcd_data10, OUTPUT | MODE0 */
+> >>+				0xcc 0x00	/* lcd_data11.lcd_data11, OUTPUT | MODE0 */
+> >>+				0xd0 0x00	/* lcd_data12.lcd_data12, OUTPUT | MODE0 */
+> >>+				0xd4 0x00	/* lcd_data13.lcd_data13, OUTPUT | MODE0 */
+> >>+				0xd8 0x00	/* lcd_data14.lcd_data14, OUTPUT | MODE0 */
+> >>+				0xdc 0x00	/* lcd_data15.lcd_data15, OUTPUT | MODE0 */
+> >>+				0xe0 0x00	/* lcd_vsync.lcd_vsync, OUTPUT | MODE0 */
+> >>+				0xe4 0x00	/* lcd_hsync.lcd_hsync, OUTPUT | MODE0 */
+> >>+				0xe8 0x00	/* lcd_pclk.lcd_pclk, OUTPUT | MODE0 */
+> >>+				0xec 0x00	/* lcd_ac_bias_en.lcd_ac_bias_en, OUTPUT | MODE0 */
+> >>+			>;
+> >>+		};
+> >>+
+> >>  	};
+> >>
+> >>  	ocp {
+> >>@@ -311,6 +345,10 @@
+> >>  				};
+> >>  			};
+> >>  		};
+> >>+
+> >>+		lcdc: lcdc@4830e000 {
+> >>+			status = "okay";
+> >>+		};
+> >>  	};
+> >>
+> >>  	vbat: fixedregulator@0 {
+> >>@@ -374,6 +412,40 @@
+> >>  		brightness-levels = <0 51 53 56 62 75 101 152 255>;
+> >>  		default-brightness-level = <8>;
+> >>  	};
+> >>+
+> >>+	panel {
+> >>+		compatible = "ti,tilcdc,panel";
+> 
+> Nit: There are a lots of TI here :-)
+> Could you just name it: ti,lcdc,panel ?
+> 
+> Thanks,
+> Benoit
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
