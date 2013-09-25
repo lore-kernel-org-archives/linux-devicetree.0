@@ -1,135 +1,115 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [RFC PATCH] mfd: arizona: Update device tree regulator bindings
-Date: Wed, 25 Sep 2013 18:47:52 +0100
-Message-ID: <1380131272-16982-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, broonie@kernel.org
-Cc: patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] ARM: OMAP2+: cleaned-up DT support of various
+ ECC schemes
+Date: Wed, 25 Sep 2013 11:29:11 -0700
+Message-ID: <20130925182911.GB23337@ld-irv-0074.broadcom.com>
+References: <1378986619-26765-1-git-send-email-pekon@ti.com>
+ <1378986619-26765-2-git-send-email-pekon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1378986619-26765-2-git-send-email-pekon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
+Cc: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The current binding will not be able to locate the regulators DBVDD2,
-DBVDD3, CPVDD, SPKVDDL and SPKVDDR as they are required to be present on
-the CODEC driver of_node but presently are attached to the MFD of_node.
+On Thu, Sep 12, 2013 at 05:20:16PM +0530, Pekon Gupta wrote:
+> OMAP NAND driver support multiple ECC scheme, which can used in following
+> different flavours, depending on in-build Hardware engines supported by SoC.
+> 
+> +---------------------------------------+---------------+---------------+
+> | ECC scheme                            |ECC calculation|Error detection|
+> +---------------------------------------+---------------+---------------+
+> |OMAP_ECC_HAMMING_CODE_HW               |H/W (GPMC)     |S/W            |
+> +---------------------------------------+---------------+---------------+
+> |OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W            |
+> |(requires CONFIG_MTD_NAND_ECC_BCH)     |               |               |
+> +---------------------------------------+---------------+---------------+
+> |OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
+> |(requires CONFIG_MTD_NAND_OMAP_BCH &&  |               |               |
+> | ti,elm-id in DT)                      |               |               |
+> +---------------------------------------+---------------+---------------+
+> To optimize footprint of omap2-nand driver, selection of some ECC schemes
+> also require enabling following Kconfigs, in addition to setting appropriate
+> DT bindings
+> - Kconfig:CONFIG_MTD_NAND_ECC_BCH        enables S/W based BCH ECC algorithm
+> - Kconfig:CONFIG_MTD_NAND_OMAP_BCH       enables H/W based BCH ECC algorithm
+> 
+> This patch
+> - updates DT binding for selection of ecc-scheme
+> - updates DT binding for detection of ELM h/w engine
+> - removes following obselete ECC schemes
+> 	OMAP_ECC_HAMMING_CODE_DEFAULT (S/W based 1-bit Hamming ECC)
+> 	OMAP_ECC_HAMMING_CODE_HW_ROMCODE (H/W based 1-bit Hamming ECC scheme)
+> - updates DT binding documentation for mtd/gpmc-nand
+> 
+> Signed-off-by: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mtd/gpmc-nand.txt          | 14 +++----
+>  arch/arm/mach-omap2/board-flash.c                  |  2 +-
+>  arch/arm/mach-omap2/gpmc.c                         | 47 +++++++++++++++-------
+>  include/linux/platform_data/mtd-nand-omap2.h       | 23 +++++++----
+>  4 files changed, 56 insertions(+), 30 deletions(-)
+> 
+...
+> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+> index 9f4795a..6409884 100644
+> --- a/arch/arm/mach-omap2/gpmc.c
+> +++ b/arch/arm/mach-omap2/gpmc.c
+...
+> @@ -1378,12 +1371,36 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
+>  	gpmc_nand_data->cs = val;
+>  	gpmc_nand_data->of_node = child;
+>  
+> -	if (!of_property_read_string(child, "ti,nand-ecc-opt", &s))
+> -		for (val = 0; val < ARRAY_SIZE(nand_ecc_opts); val++)
+> -			if (!strcasecmp(s, nand_ecc_opts[val])) {
+> -				gpmc_nand_data->ecc_opt = val;
+> -				break;
+> -			}
+> +	/* Detect availability of ELM module */
+> +	parp = of_get_property(child, "ti,elm-id", &lenp);
+> +	if ((parp == NULL) && (lenp != (sizeof(void *) * 2))) {
 
-This patch creates a sub-node for the codec and attaches the required
-regulators here using the of_compatible field on the mfd_cell.
+I think && should be ||
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
-Hi,
+> +		pr_warn("%s: ti,elm-id property not found\n", __func__);
+> +		gpmc_nand_data->elm_of_node = NULL;
+> +	} else {
+> +		gpmc_nand_data->elm_of_node =
+> +				of_find_node_by_phandle(be32_to_cpup(parp));
+> +	}
+> +	/* select NAND ecc-scheme */
+> +	if (of_property_read_string(child, "ti,nand-ecc-scheme", &s)) {
+> +		pr_err("%s: valid ti,nand-ecc-scheme not found\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +	if (!strcmp(s, "ham1"))
+> +		gpmc_nand_data->ecc_opt = OMAP_ECC_HAMMING_CODE_HW;
+> +	else if (!strcmp(s, "bch4"))
+> +		if (gpmc_nand_data->elm_of_node)
+> +			gpmc_nand_data->ecc_opt = OMAP_ECC_BCH4_CODE_HW;
+> +		else
+> +			gpmc_nand_data->ecc_opt =
+> +				OMAP_ECC_BCH4_CODE_HW_DETECTION_SW;
+> +	else if (!strcmp(s, "bch8"))
+> +		if (gpmc_nand_data->elm_of_node)
+> +			gpmc_nand_data->ecc_opt = OMAP_ECC_BCH8_CODE_HW;
+> +		else
+> +			gpmc_nand_data->ecc_opt =
+> +				OMAP_ECC_BCH8_CODE_HW_DETECTION_SW;
+> +	else
+> +		pr_err("%s: ti,ecc-scheme: invalid property value\n", __func__);
+>  
+>  	if (!of_property_read_string(child, "ti,nand-xfer-type", &s))
+>  		for (val = 0; val < ARRAY_SIZE(nand_xfer_types); val++)
 
-Another issue with the Arizona bindings, I am not sure
-exactly what the best approach is this patch seems like the
-"correct" fix, but it does require a change to the binding,
-although the current binding is non-functional.
+Otherwise, I think this patch is OK.
 
-Alternatively I could simply set the codec of_node to match
-the mfd one manually in the codec driver which wouldn't need
-the binding changing but feels a bit like a work around.
-
-Any thoughts would be greatly appreciated?
-
-Thanks,
-Charles
-
-
- Documentation/devicetree/bindings/mfd/arizona.txt |   28 ++++++++++++++++++--
- drivers/mfd/arizona-core.c                        |   15 +++++++++--
- 2 files changed, 37 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index aa609a6..49592b2 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -3,7 +3,7 @@ Wolfson Arizona class audio SoCs
- These devices are audio SoCs with extensive digital capabilites and a range
- of analogue I/O.
- 
--Required properties:
-+Required properties, nodes:
- 
-   - compatible : one of the following chip-specific strings:
- 	"wlf,wm5102"
-@@ -26,10 +26,19 @@ Required properties:
-   - #gpio-cells : Must be 2. The first cell is the pin number and the
-     second cell is used to specify optional parameters (currently unused).
- 
--  - AVDD1-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
--    SPKVDDL-supply, SPKVDDR-supply : power supplies for the device, as covered
-+  - AVDD-supply, DBVDD1-supply : power supplies for the device, as covered
-     in Documentation/devicetree/bindings/regulator/regulator.txt
- 
-+  - codec {} : Represents the audio part of the chip
-+      - compatible : one of the following chip-specific strings:
-+          "wlf,wm5102-codec"
-+          "wlf,wm5110-codec"
-+          "wlf,wm8997-codec"
-+
-+      - DBVDD2-supply, DBVDD3-supply, CPVDD-supply, SPKVDDL-supply,
-+        SPKVDDR-supply : power supplies for the codec, as covered in
-+        Documentation/devicetree/bindings/regulator/regulator.txt
-+
- Optional properties:
- 
-   - wlf,reset : GPIO specifier for the GPIO controlling /RESET
-@@ -60,4 +69,17 @@ codec: wm5102@1a {
- 		0xffffffff,
- 		0xffffffff,
- 	>;
-+
-+	AVDD-supply = <&example_reg>;
-+	DBVDD1-supply = <&example_reg>;
-+
-+	codec {
-+		compatible = "wlf,wm5102-codec";
-+
-+		DBVDD2-supply = <&example_reg>;
-+		DBVDD3-supply = <&example_reg>;
-+		CPVDD-supply = <&example_reg>;
-+		SPKVDDL-supply = <&example_reg>;
-+		SPKVDDR-supply = <&example_reg>;
-+	};
- };
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index 5ac3aa4..10f8ab7 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -575,7 +575,10 @@ static struct mfd_cell wm5102_devs[] = {
- 	{ .name = "arizona-gpio" },
- 	{ .name = "arizona-haptics" },
- 	{ .name = "arizona-pwm" },
--	{ .name = "wm5102-codec" },
-+	{
-+		.name = "wm5102-codec",
-+		.of_compatible = "wlf,wm5102-codec",
-+	},
- };
- 
- static struct mfd_cell wm5110_devs[] = {
-@@ -584,7 +587,10 @@ static struct mfd_cell wm5110_devs[] = {
- 	{ .name = "arizona-gpio" },
- 	{ .name = "arizona-haptics" },
- 	{ .name = "arizona-pwm" },
--	{ .name = "wm5110-codec" },
-+	{
-+		.name = "wm5110-codec",
-+		.of_compatible = "wlf,wm5110-codec",
-+	};
- };
- 
- static struct mfd_cell wm8997_devs[] = {
-@@ -593,7 +599,10 @@ static struct mfd_cell wm8997_devs[] = {
- 	{ .name = "arizona-gpio" },
- 	{ .name = "arizona-haptics" },
- 	{ .name = "arizona-pwm" },
--	{ .name = "wm8997-codec" },
-+	{
-+		.name = "wm8997-codec",
-+		.of_compatible = "wlf,wm8997-codec",
-+	},
- };
- 
- int arizona_dev_init(struct arizona *arizona)
--- 
-1.7.2.5
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
