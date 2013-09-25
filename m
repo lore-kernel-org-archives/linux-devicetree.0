@@ -1,95 +1,99 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] dt: update PSCI binding documentation for v0.2
-Date: Wed, 25 Sep 2013 14:20:58 -0500
-Message-ID: <CAL_JsqK1LE9rptajTOfvzNd1NQEihJzwm0YtJMzpUz-BhwJg5w@mail.gmail.com>
-References: <1379625868-5395-1-git-send-email-robherring2@gmail.com>
-	<CAOesGMjNhYTfPOr5NPEC9GWym-nuFE0hX_6+LW9bTv_E3iXbcQ@mail.gmail.com>
-	<20130920102015.GH17453@e106331-lin.cambridge.arm.com>
-	<CAOesGMid5pgcVD+oCjUr_75tv+C5QtVZt=Vt9kdiT_QPFOrzrg@mail.gmail.com>
+From: "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v6 1/4] ARM: OMAP2+: cleaned-up DT support of various
+ ECC schemes
+Date: Wed, 25 Sep 2013 19:24:26 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA16884@DBDE04.ent.ti.com>
+References: <1378986619-26765-1-git-send-email-pekon@ti.com>
+ <1378986619-26765-2-git-send-email-pekon@ti.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA15ED7@DBDE04.ent.ti.com>
+ <20130925134619.GG10746@radagast>
+ <20130925175527.GA23337@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMid5pgcVD+oCjUr_75tv+C5QtVZt=Vt9kdiT_QPFOrzrg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20130925175527.GA23337-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 25, 2013 at 12:15 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Fri, Sep 20, 2013 at 3:20 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> On Fri, Sep 20, 2013 at 05:36:51AM +0100, Olof Johansson wrote:
->>> Hi,
->>
->> Hi Olof,
->>
->>>
->>> Just a quick drive-by. Sorry, I don't know the history of previous
->>> review cycles.
->>>
->>>
->>> On Thu, Sep 19, 2013 at 2:24 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>> >  Main node optional properties:
->>> >
->>> > - - cpu_suspend   : Function ID for CPU_SUSPEND operation
->>> > + - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
->>> > +
->>> > + - cpu_off                : Function ID for CPU_OFF operation
->>> > +
->>> > + - cpu_on[-<32|64]        : Function ID for CPU_ON operation
->>> > +
->>> > + - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
->>> >
->>> > - - cpu_off       : Function ID for CPU_OFF operation
->>> > + - migrate[-<32|64]       : Function ID for MIGRATE operation
->>> >
->>> > - - cpu_on        : Function ID for CPU_ON operation
->>> > + - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
->>> >
->>> > - - migrate       : Function ID for MIGRATE operation
->>> > + - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
->>> >
->>> > + - system_reset           : Function ID for SYSTEM_RESET operation
->>> > +
->>> > + - system_off             : Function ID for SYSTEM_OFF operation
->>>
->>> All of these should use dashes instead of underscores.
->>
->> I also don't like the underscores, but they're an unfortunate historical
->> artifact that we can't get rid of (at least for cpu_on, cpu_off, and
->> cpu_suspend).
->
-> We need to keep those three old ones supported in the driver, but the
-> newer binding can use dashes instead, as long as the kernel also
-> handles the old binding.
->
->> Both Xen and kvmtool are already passing DTs to guests which have
->> underscores in the property names, so it's both a boot ABI and a
->> userspace ABI.
->
-> Again, as mentioned on IRC: We've said that bindings are not yet
-> stable until we lock them down, so we will need to adjust accordingly.
-> Once we lock them down, they are stable and part of ABI. But we really
-> don't want to deal with the bad bindings that people came up with
-> without much review, and that's what the whole idea behind cleaning up
-> and then locking them down is all about.
+Hi Brian,
 
-For some of us, bindings are already in production. Until we have some
-way to document stable vs. unstable, it is not up to anyone but the
-users of a binding to define the stability. If the users of a binding
-can tolerate the change, then it is unstable and can change.
-Otherwise, it has to be treated as stable especially when there are
-objections to changing it. One way or another, I need to support
-system_reset and system_off because that is what is in firmware. Yes,
-it should have all been documented here first, but it is not like I'm
-just making shit up and documenting after the fact. The binding is
-documented to some extent in the PSCI document itself.
+> 
+> Hi Pekon,
+> 
+> On Wed, Sep 25, 2013 at 08:46:19AM -0500, Felipe Balbi wrote:
+> > + akpm
+> >
+> > On Tue, Sep 24, 2013 at 01:04:05PM -0500, Gupta, Pekon wrote:
+[snip]
+> > >
+> > > Dear Olof and other DT Maintainers,
+> > >
+> > > This patch series has missed multiple merge windows, and
+> > > much of the other development work on mtd/nand/omap
+> > > driver is gated due to this.
+> 
+> Also, to be fair here: you only started CC'ing the appropriate DT
+> people/list around v4, after which you got a (somewhat) prompt and
+> thorough review of the DT bindings. Then several months passed before
+> you addressed the reviews. So the "multiple merge windows" is not
+> entirely to be blamed on others ;)
+> 
+> Brian
 
-All this boils down to using '_' vs. '-', right? Come on. I'm all for
-consistency, but let's be practical. There are plenty of documented
-examples that use '_' starting with device_type.
+Few points I would like to clarify here, *without* pointing anyone..
 
-Rob
+(1) It was Olof's comments which directed me to cc: devicetree-discuss list.
+So wrong list was always cc-ed till v4.
+Refer http://permalink.gmane.org/gmane.linux.ports.arm.kernel/249662
+
+(2) The devicetree list has been updated in MAINTAINER file towards
+end of July (22/July/2013) in following commit. Whereas the patch v4
+was submitted on 2/July/2013. So I wasn't aware of this new DT maillist.
+commit d0fb18c5c0caf2ed0eecf3d0145450ae708ed75a
+Commit:     Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+CommitDate: 2013-07-22
+
+(3) When a maintainer gives a NAK, I expect him to at-least give
+directions on what to change in the patch. There were no comments
+given, neither new patch reviewed by the DT maintainer even after
+sending multiple request directly.
+http://lists.infradead.org/pipermail/linux-mtd/2013-July/047441.html
+http://lists.infradead.org/pipermail/linux-mtd/2013-July/047629.html
+
+Its only when Artem and yourself pitched in by sending a mail to
+new DT mail-list that the DT maintainer reviewed and provided the
+comments for fixes.
+But by that time 3.11-rc6 had already gone past, and so I knew this
+Series cannot go in, so I wanted to wait some more, to see if there
+were any more comments on this. And frankly I was too much
+frustrated by then.
+
+Just to speak my opinion.
+We all understand that maintainers are heavily loaded by tons of
+emails, And reviewing each patch instantly is not possible.
+
+But this load is now passing to developers like me as frustration,
+because most of energy is being spent in re-submitting patches
+again and again, without any proper direction or conclusion.
+And then there is no time and energy left for good work, where
+we can contribute to optimizing frame-works for performance or
+adding new features.
+So I see many good developers distracting away from mainline.
+
+Thus, there should be a mechanism, where such load can be
+distributed, and there are less emails. And developers don't
+have to re-submit patch multiple times, by collecting most reviews
+at once.  This way developer's like me can spend more time in doing
+other constructive things.
+
+Please consider this as constructive feedback, without targeting
+any individual or team.
+
+
+with regards, pekon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
