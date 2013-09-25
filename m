@@ -1,84 +1,61 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: new cpu iteration code...
-Date: Tue, 24 Sep 2013 21:29:59 -0500
-Message-ID: <CAL_JsqKNVqJbn559ruvFHg+FVGt8ou4v_Ntf-HphwxCNXQ7GfQ@mail.gmail.com>
-References: <20130919.133805.1227344435777214810.davem@davemloft.net>
-	<523C7B54.3070706@arm.com>
-	<523F4F6F.8030209@gmail.com>
-	<20130922.162915.1269060096375052591.davem@davemloft.net>
+Subject: [GIT PULL] Devicetree fixes for 3.12
+Date: Tue, 24 Sep 2013 21:53:53 -0500
+Message-ID: <52425041.6030609@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130922.162915.1269060096375052591.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 22, 2013 at 3:29 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
-> From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Date: Sun, 22 Sep 2013 15:13:35 -0500
->
->> On 09/20/2013 11:44 AM, Sudeep KarkadaNagesha wrote:
->>> On 19/09/13 18:38, David Miller wrote:
->>>> From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> Date: Thu, 19 Sep 2013 08:26:04 -0500
->>>>
->>>>> The simple solution here is to just remove the warning. It doesn't
->>>>> appear to me that sparc ever sets the cpu device of_node pointer.
->>>>
->>>> Why wouldn't I want sparc to have this functionality now that the
->>>> code is generically available.
->>>>
->>> Makes sense, but as you mentioned before we need to match other property
->>> names namely "upa-portid", "portid" or "cpuid" for cpu physical id right
->>> ? Are all these 32-bit values ?
->>>
->>>>> Are there any cases on where sparc does have a /cpus node? If so we'd
->>>>> need to make of_get_cpu_node a weak function or depend on a kconfig option.
->>>>
->>>> I already gave a solution to this problem, make the loop iterator be:
->>>>
->>>>     for_each_node_by_type(dp, "cpu")
->>>>
->>>
->>> Does it make sense use this only when /cpus is not found ?
->>> IMHO as the number of node in DT increases(which is the case on ARM
->>> platforms) parsing entire tree may be expensive(which can be avoided in
->>> case /cpus is found)
->>
->> Can't you simply do something like this for the search:
->>
->>       cpus = of_find_node_by_path("/cpus");
->>       if (!cpus && IS_ENABLED(CONFIG_SPARC))
->>               cpus = of_find_node_by_path("/");
->>       if (!cpus) {
->>               pr_warn("Missing cpus node, bailing out\n");
->>               return NULL;
->>       }
->>
->>       for_each_child_of_node(cpus, cpun) {
->
-> This doesn't work either Rob.  Some UltraSPARC-IV systems put the cpu
-> nodes under directories representing the cores.
+Hi Linus,
 
-Okay. Good to know.
-
-> For the third time, the only thing which will work unilaterally is
-> the type base iterator I proposed above.
-
-Now that I understand all the variations, I agree.
-
-> Why is there so much resistence to something which has an extremely
-> high likelyhood of working everywhere and not requiring any ifdef
-> crapola?
-
-Simplifying Sudeep's code a bit while maintaining some level of
-validation of the DT layout was my only goal. I guess that validation
-really needs to be at build time rather than boot time and there is
-some work going on in that area.
+Please pull these 3 DT fixes for 3.12.
 
 Rob
+
+The following changes since commit 4a10c2ac2f368583138b774ca41fac4207911983:
+
+  Linux 3.12-rc2 (2013-09-23 15:41:09 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+
+for you to fetch changes up to 53126a2f679382f3eac370a012290f19c672f088:
+
+  dts: Fix misspelling of Synopsys (2013-09-24 21:13:38 -0500)
+
+----------------------------------------------------------------
+DeviceTree fixes for 3.12
+
+Clean-up to fix some warnings for !OF builds and spelling fixes in docs
+
+- Clean-up openrisc prom.h
+- Fix warnings caused by of_irq.h ifdefs
+- Spelling fix for Synopsys
+
+----------------------------------------------------------------
+Dinh Nguyen (1):
+      dts: Fix misspelling of Synopsys
+
+Rob Herring (2):
+      openrisc: clean-up prom.h
+      of: clean-up ifdefs in of_irq.h
+
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     | 10 ++---
+ .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   | 10 ++---
+ .../{synopsis-dw-mshc.txt => synopsys-dw-mshc.txt} |  8 ++--
+ .../devicetree/bindings/pci/designware-pcie.txt    |  2 +-
+ arch/openrisc/include/asm/prom.h                   | 44
+----------------------
+ include/linux/of_irq.h                             | 20 ++++------
+ 6 files changed, 23 insertions(+), 71 deletions(-)
+ rename Documentation/devicetree/bindings/mmc/{synopsis-dw-mshc.txt =>
+synopsys-dw-mshc.txt} (93%)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
