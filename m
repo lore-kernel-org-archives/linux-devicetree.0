@@ -1,120 +1,53 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] dt: update PSCI binding documentation for v0.2
-Date: Wed, 25 Sep 2013 15:28:36 -0500
-Message-ID: <CAL_JsqKnKz=NW99k13S5pL21nRNpX2dPM3x-EUZckB_mqO4T3g@mail.gmail.com>
-References: <1379625868-5395-1-git-send-email-robherring2@gmail.com>
-	<CAOesGMjNhYTfPOr5NPEC9GWym-nuFE0hX_6+LW9bTv_E3iXbcQ@mail.gmail.com>
-	<20130920102015.GH17453@e106331-lin.cambridge.arm.com>
-	<CAOesGMid5pgcVD+oCjUr_75tv+C5QtVZt=Vt9kdiT_QPFOrzrg@mail.gmail.com>
-	<CAL_JsqK1LE9rptajTOfvzNd1NQEihJzwm0YtJMzpUz-BhwJg5w@mail.gmail.com>
-	<CAOesGMgM2JsWbBOujdiCZdKkHqTRuN0P=OsdKGiyzz6_aiGWSA@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] ARM: OMAP2+: cleaned-up DT support of various ECC schemes
+Date: Wed, 25 Sep 2013 13:33:27 -0700
+Message-ID: <CAOesGMif301iBe9zxHudkC_G9SzPPy1Mj4XYvQ-MY8nmx4wO+A@mail.gmail.com>
+References: <1378986619-26765-1-git-send-email-pekon@ti.com>
+	<1378986619-26765-2-git-send-email-pekon@ti.com>
+	<20980858CB6D3A4BAE95CA194937D5E73EA15ED7@DBDE04.ent.ti.com>
+	<20130925134619.GG10746@radagast>
+	<20130925175527.GA23337@ld-irv-0074.broadcom.com>
+	<20980858CB6D3A4BAE95CA194937D5E73EA16884@DBDE04.ent.ti.com>
+	<20130925200539.GH23337@ld-irv-0074.broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMgM2JsWbBOujdiCZdKkHqTRuN0P=OsdKGiyzz6_aiGWSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20130925200539.GH23337-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>, "benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 25, 2013 at 2:34 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Wed, Sep 25, 2013 at 12:20 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Wed, Sep 25, 2013 at 12:15 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>> On Fri, Sep 20, 2013 at 3:20 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->>>> On Fri, Sep 20, 2013 at 05:36:51AM +0100, Olof Johansson wrote:
->>>>> Hi,
->>>>
->>>> Hi Olof,
->>>>
->>>>>
->>>>> Just a quick drive-by. Sorry, I don't know the history of previous
->>>>> review cycles.
->>>>>
->>>>>
->>>>> On Thu, Sep 19, 2013 at 2:24 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>>
->>>>> >  Main node optional properties:
->>>>> >
->>>>> > - - cpu_suspend   : Function ID for CPU_SUSPEND operation
->>>>> > + - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
->>>>> > +
->>>>> > + - cpu_off                : Function ID for CPU_OFF operation
->>>>> > +
->>>>> > + - cpu_on[-<32|64]        : Function ID for CPU_ON operation
->>>>> > +
->>>>> > + - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
->>>>> >
->>>>> > - - cpu_off       : Function ID for CPU_OFF operation
->>>>> > + - migrate[-<32|64]       : Function ID for MIGRATE operation
->>>>> >
->>>>> > - - cpu_on        : Function ID for CPU_ON operation
->>>>> > + - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
->>>>> >
->>>>> > - - migrate       : Function ID for MIGRATE operation
->>>>> > + - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
->>>>> >
->>>>> > + - system_reset           : Function ID for SYSTEM_RESET operation
->>>>> > +
->>>>> > + - system_off             : Function ID for SYSTEM_OFF operation
->>>>>
->>>>> All of these should use dashes instead of underscores.
->>>>
->>>> I also don't like the underscores, but they're an unfortunate historical
->>>> artifact that we can't get rid of (at least for cpu_on, cpu_off, and
->>>> cpu_suspend).
->>>
->>> We need to keep those three old ones supported in the driver, but the
->>> newer binding can use dashes instead, as long as the kernel also
->>> handles the old binding.
->>>
->>>> Both Xen and kvmtool are already passing DTs to guests which have
->>>> underscores in the property names, so it's both a boot ABI and a
->>>> userspace ABI.
->>>
->>> Again, as mentioned on IRC: We've said that bindings are not yet
->>> stable until we lock them down, so we will need to adjust accordingly.
->>> Once we lock them down, they are stable and part of ABI. But we really
->>> don't want to deal with the bad bindings that people came up with
->>> without much review, and that's what the whole idea behind cleaning up
->>> and then locking them down is all about.
->>
->> For some of us, bindings are already in production. Until we have some
->> way to document stable vs. unstable, it is not up to anyone but the
->> users of a binding to define the stability. If the users of a binding
->> can tolerate the change, then it is unstable and can change.
->
-> Ok, so why review bindings at all then? Just implement what you want,
-> ship it and force it on the rest of us for ever.
+On Wed, Sep 25, 2013 at 1:05 PM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Dealing with 2 versions of PSCI bindings rather than simply extending
-the existing binding will be more pain for the kernel, kvmtool, qemu
-and xen than any benefit of using a hyphen will provide.
+> Olof has given good advice on your DT binding and has (slowly) been
+> responding to other requests for DT review that make it to his list. I
+> see that he hasn't followed up on your changes (this v6), so pinging him
+> (as you did) is probably the correct approach. But please do recognize
+> that the DT list is very high volume, so it's hard to get good timely
+> responses there.
 
-This binding was written by Will Deacon and acked by Arnd and Nicolas
-not to mention the follow-up patches to use it over the last 9 months.
-Hardly a bunch of newbies that don't understand DT. That binding had 3
-postings. No one complained about the underscores then. It is
-precisely because it has been reviewed that I don't think we should be
-changing it. I don't see simply adding additional function ids as
-grounds for redoing the binding. The 32/64 bit calling convention
-handling may be a different discussion which is fine with me. Dealing
-with that was not my goal here.
+I am not a DT mainainer, but sometimes when I see a binding that
+appears to be wrong I speak up. In this case, the binding was one of
+those.
 
->> All this boils down to using '_' vs. '-', right? Come on. I'm all for
->> consistency, but let's be practical. There are plenty of documented
->> examples that use '_' starting with device_type.
->
-> Next property I add will be called Device_Type then, if we're willing
-> to not give a shit about best practices any more. Thanks for setting
-> the direction and holding the bar high, Rob!
+That doesn't mean you should necessarily rely on me for the rest of
+the review, there are several dedicated maintainers right now that
+should be able to spread the load across them, and it is their ack you
+should seek on the binding, not mine.
 
-That's fine, just mark it unstable and we can change it later. I'll
-sit quiet for 9 months first and then complain about it. I'll be
-waiting for your patch to change all the '_' to '-' in all the binding
-docs and dts files. Since everything is unstable, that shouldn't be a
-problem to change. :)
+That being said: this latest version looks good to me. See how much
+simpler the binding got when you stopped trying to describe driver
+behavior and focused on describing hardware? That's the way we want it
+to look like.
 
-Rob
+
+So, I have no more objections to it, and I hope you can get a quick
+review from a DT maintainer on the rest of the binding.
+
+
+-Olof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
