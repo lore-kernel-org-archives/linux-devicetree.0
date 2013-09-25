@@ -1,100 +1,87 @@
-From: "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v6 1/4] ARM: OMAP2+: cleaned-up DT support of various
- ECC schemes
-Date: Wed, 25 Sep 2013 19:24:26 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA16884@DBDE04.ent.ti.com>
-References: <1378986619-26765-1-git-send-email-pekon@ti.com>
- <1378986619-26765-2-git-send-email-pekon@ti.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA15ED7@DBDE04.ent.ti.com>
- <20130925134619.GG10746@radagast>
- <20130925175527.GA23337@ld-irv-0074.broadcom.com>
+From: Matt Porter <matt.porter@linaro.org>
+Subject: Re: [PATCH 1/3] thermal: bcm281xx: Add thermal driver
+Date: Wed, 25 Sep 2013 15:26:13 -0400
+Message-ID: <20130925192609.GB25191@ohporter.com>
+References: <1379958698-7554-1-git-send-email-wendy.ng@broadcom.com>
+ <1379958698-7554-2-git-send-email-wendy.ng@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130925175527.GA23337-bU/DPfM3abD4WzifrMjOTkcViWtcw2C0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1379958698-7554-2-git-send-email-wendy.ng@broadcom.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Wendy Ng <wendy.ng@broadcom.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
-
+On Mon, Sep 23, 2013 at 10:51:36AM -0700, Wendy Ng wrote:
+> This adds the support for reading out temperature from Broadcom bcm281xx
+> SoCs.
 > 
-> Hi Pekon,
+> Signed-off-by: Wendy Ng <wendy.ng@broadcom.com>
+> Reviewed-by: Markus Mayer <mmayer@broadcom.com>
+> Reviewed-by: Christian Daudt <csd@broadcom.com>
+> ---
+>  .../bindings/thermal/bcm-kona-thermal.txt          |   18 +++
+>  drivers/thermal/Kconfig                            |   10 ++
+>  drivers/thermal/Makefile                           |    1 +
+>  drivers/thermal/bcm_thermal.c                      |  170 ++++++++++++++++++++
+>  4 files changed, 199 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+>  create mode 100644 drivers/thermal/bcm_thermal.c
 > 
-> On Wed, Sep 25, 2013 at 08:46:19AM -0500, Felipe Balbi wrote:
-> > + akpm
-> >
-> > On Tue, Sep 24, 2013 at 01:04:05PM -0500, Gupta, Pekon wrote:
-[snip]
-> > >
-> > > Dear Olof and other DT Maintainers,
-> > >
-> > > This patch series has missed multiple merge windows, and
-> > > much of the other development work on mtd/nand/omap
-> > > driver is gated due to this.
-> 
-> Also, to be fair here: you only started CC'ing the appropriate DT
-> people/list around v4, after which you got a (somewhat) prompt and
-> thorough review of the DT bindings. Then several months passed before
-> you addressed the reviews. So the "multiple merge windows" is not
-> entirely to be blamed on others ;)
-> 
-> Brian
+> diff --git a/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+> new file mode 100644
+> index 0000000..acca99e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+> @@ -0,0 +1,18 @@
+> +* Broadcom Kona Thermal Management Unit
+> +
+> +This version is for the BCM281xx family of SoCs.
+> +
+> +Required properties:
+> +- compatible : "brcm,bcm11351-thermal", "brcm,kona-thermal"
+> +- reg : Address range of the thermal register
+> +- thermal-name: this entry must be specified and it will be passed into
+> +thermal_zone_device_register().  This name will also be reported under Hwmon
+> +sysfs 'name' attribute.
+> +
+> +Example:
+> +	thermal@34008000 {
+> +		compatible = "brcm,bcm11351-thermal", "brcm,kona-thermal";
+> +		reg = <0x34008000 0x0024>;
+> +		thermal-name = "bcm_kona_therm";
+> +		status = "disabled";
+> +	};
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index dbfc390..7f823f0 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -134,6 +134,16 @@ config KIRKWOOD_THERMAL
+>  	  Support for the Kirkwood thermal sensor driver into the Linux thermal
+>  	  framework. Only kirkwood 88F6282 and 88F6283 have this sensor.
+>  
+> +config BCM_THERMAL
+> +	tristate "Temperature sensor on Broadcom BCM281xx family of SoCs"
+> +	depends on ARCH_BCM
 
-Few points I would like to clarify here, *without* pointing anyone..
+Hi Wendy,
 
-(1) It was Olof's comments which directed me to cc: devicetree-discuss list.
-So wrong list was always cc-ed till v4.
-Refer http://permalink.gmane.org/gmane.linux.ports.arm.kernel/249662
+I just noticed that, depending on acceptance, this could collide with
+Christian's ARCH_BCM->ARCH_BCM_MOBILE rename that is expected to go into
+3.13. I'm not sure if this series is targeted for 3.13 (due to the discussion
+about Eduardo's subsystem changes that impact it). If it is, you might
+want to rebase on Christian's rename series
+http://www.spinics.net/lists/arm-kernel/msg274963.html and use
+ARCH_BCM_MOBILE here.
 
-(2) The devicetree list has been updated in MAINTAINER file towards
-end of July (22/July/2013) in following commit. Whereas the patch v4
-was submitted on 2/July/2013. So I wasn't aware of this new DT maillist.
-commit d0fb18c5c0caf2ed0eecf3d0145450ae708ed75a
-Commit:     Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-CommitDate: 2013-07-22
+-Matt
 
-(3) When a maintainer gives a NAK, I expect him to at-least give
-directions on what to change in the patch. There were no comments
-given, neither new patch reviewed by the DT maintainer even after
-sending multiple request directly.
-http://lists.infradead.org/pipermail/linux-mtd/2013-July/047441.html
-http://lists.infradead.org/pipermail/linux-mtd/2013-July/047629.html
+> +	default y
+> +	help
+> +	  If you say yes here you get support for TMU (Thermal Management
+> +	  Unit) on Broadcom BCM281xx family of SoCs. This provides thermal
+> +	  monitoring of CPU clusters, graphics, and SoC glue, but does not
+> +	  include monitoring of charger temperature.
 
-Its only when Artem and yourself pitched in by sending a mail to
-new DT mail-list that the DT maintainer reviewed and provided the
-comments for fixes.
-But by that time 3.11-rc6 had already gone past, and so I knew this
-Series cannot go in, so I wanted to wait some more, to see if there
-were any more comments on this. And frankly I was too much
-frustrated by then.
-
-Just to speak my opinion.
-We all understand that maintainers are heavily loaded by tons of
-emails, And reviewing each patch instantly is not possible.
-
-But this load is now passing to developers like me as frustration,
-because most of energy is being spent in re-submitting patches
-again and again, without any proper direction or conclusion.
-And then there is no time and energy left for good work, where
-we can contribute to optimizing frame-works for performance or
-adding new features.
-So I see many good developers distracting away from mainline.
-
-Thus, there should be a mechanism, where such load can be
-distributed, and there are less emails. And developers don't
-have to re-submit patch multiple times, by collecting most reviews
-at once.  This way developer's like me can spend more time in doing
-other constructive things.
-
-Please consider this as constructive feedback, without targeting
-any individual or team.
-
-
-with regards, pekon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
