@@ -1,130 +1,55 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v4] dt: update PSCI binding documentation for v0.2
-Date: Wed, 25 Sep 2013 10:15:32 -0700
-Message-ID: <CAOesGMid5pgcVD+oCjUr_75tv+C5QtVZt=Vt9kdiT_QPFOrzrg@mail.gmail.com>
-References: <1379625868-5395-1-git-send-email-robherring2@gmail.com>
-	<CAOesGMjNhYTfPOr5NPEC9GWym-nuFE0hX_6+LW9bTv_E3iXbcQ@mail.gmail.com>
-	<20130920102015.GH17453@e106331-lin.cambridge.arm.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v6 1/4] ARM: OMAP2+: cleaned-up DT support of various
+ ECC schemes
+Date: Wed, 25 Sep 2013 10:46:09 -0700
+Message-ID: <20130925174609.GU4550@ld-irv-0074.broadcom.com>
+References: <1378986619-26765-1-git-send-email-pekon@ti.com>
+ <1378986619-26765-2-git-send-email-pekon@ti.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA15ED7@DBDE04.ent.ti.com>
+ <20130925134619.GG10746@radagast>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130920102015.GH17453-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130925134619.GG10746@radagast>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: "Gupta, Pekon" <pekon@ti.com>, "olof@lixom.net" <olof@lixom.net>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "tony@atomide.com" <tony@atomide.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "dedekind1@gmail.com" <dedekind1@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 20, 2013 at 3:20 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Fri, Sep 20, 2013 at 05:36:51AM +0100, Olof Johansson wrote:
->> Hi,
->
-> Hi Olof,
->
->>
->> Just a quick drive-by. Sorry, I don't know the history of previous
->> review cycles.
->>
->>
->> On Thu, Sep 19, 2013 at 2:24 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->> >  Main node optional properties:
->> >
->> > - - cpu_suspend   : Function ID for CPU_SUSPEND operation
->> > + - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
->> > +
->> > + - cpu_off                : Function ID for CPU_OFF operation
->> > +
->> > + - cpu_on[-<32|64]        : Function ID for CPU_ON operation
->> > +
->> > + - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
->> >
->> > - - cpu_off       : Function ID for CPU_OFF operation
->> > + - migrate[-<32|64]       : Function ID for MIGRATE operation
->> >
->> > - - cpu_on        : Function ID for CPU_ON operation
->> > + - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
->> >
->> > - - migrate       : Function ID for MIGRATE operation
->> > + - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
->> >
->> > + - system_reset           : Function ID for SYSTEM_RESET operation
->> > +
->> > + - system_off             : Function ID for SYSTEM_OFF operation
->>
->> All of these should use dashes instead of underscores.
->
-> I also don't like the underscores, but they're an unfortunate historical
-> artifact that we can't get rid of (at least for cpu_on, cpu_off, and
-> cpu_suspend).
+On Wed, Sep 25, 2013 at 08:46:19AM -0500, Felipe Balbi wrote:
+> + akpm
+> 
+> On Tue, Sep 24, 2013 at 01:04:05PM -0500, Gupta, Pekon wrote:
+> > 
+> > > 
+> > > This patch
+> > > - updates DT binding for selection of ecc-scheme
+> > > - updates DT binding for detection of ELM h/w engine
+> > > - removes following obselete ECC schemes
+> > > 	OMAP_ECC_HAMMING_CODE_DEFAULT (S/W based 1-bit Hamming
+> > > ECC)
+> > > 	OMAP_ECC_HAMMING_CODE_HW_ROMCODE (H/W based 1-bit
+> > > Hamming ECC scheme)
+> > > - updates DT binding documentation for mtd/gpmc-nand
+> > > 
+> > > Signed-off-by: Pekon Gupta <pekon@ti.com>
+> > > ---
+> > 
+> > Dear Olof and other DT Maintainers,
+> > 
+> > This patch series has missed multiple merge windows, and
+> > much of the other development work on mtd/nand/omap
+> > driver is gated due to this.
+> > So, request you to please review this patch set and Ack it
+> > if all your mentioned concerns are resolved.
 
-We need to keep those three old ones supported in the driver, but the
-newer binding can use dashes instead, as long as the kernel also
-handles the old binding.
+I've been waiting on Olof's response for this one. It seems like you
+addressed his comments well enough for me, although (in line with his
+comments) you are admittedly still breaking the DT ABI for these
+devices. IMO, that's OK given the low quality of the original bindings.
 
-> Both Xen and kvmtool are already passing DTs to guests which have
-> underscores in the property names, so it's both a boot ABI and a
-> userspace ABI.
+I will make my own last pass at this series and push it to l2-mtd.git if
+it looks OK.
 
-Again, as mentioned on IRC: We've said that bindings are not yet
-stable until we lock them down, so we will need to adjust accordingly.
-Once we lock them down, they are stable and part of ABI. But we really
-don't want to deal with the bad bindings that people came up with
-without much review, and that's what the whole idea behind cleaning up
-and then locking them down is all about.
-
-> One aim with this update is to ensure that the new binding maintains a
-> level of forward compatibility for OSs -- the PSCI 0.2 binding needs to
-> be a superset of the existing PSCI binding to allow Xen and KVM to
-> provide PSCI 0.2 functionality without sacrificing the ability to boot
-> older guests (kvmtool could be given a flag to choose what version of
-> PSCI to provide, but I'm not sure that can be done for Xen).
-
-I strongly disagree. The very fact that you don't have the guts to
-call it 1.0 or 2.0 means it's nowhere near stable. :) So, let's take
-this opportunity to clean up the binding and be done with it. Existing
-software that can handle the old binding can do so in the future too,
-but new software (and new device trees) should use the newer binding.
-
-> Given that, I'm not sure if it makes sense to force the rest to have
-> dashes rather than underscores -- it'll leave the binding more
-> inconsistent.
-
-Again, don't mix -- switch everyone over. But make the kernel
-implementation handle dashes for the three legacy properties.
-
-
->> I also wonder if it would be better to move them into a subnode to
->> keep the namespace a bit cleaner.
->
-> For the compatibility reasons above, I don't think we can do this. At
-> least the existing IDs (cpu_on, cpu_off, and cpu_suspend) would need to
-> be described in the psci node rather than a child.
-
-Again, we can change the binding as long as the kernel and the tools
-know what to do with the old bad binding.
-
->> > +Some functions have have separate IDs for 32-bit and 64-bit calling
->> > +conventions. These separate function IDs are described with function names with
->> > +"-64" and "-32" suffixes (e.g. cpu_on-64). Where a function name does not have
->> > +a suffix, the ID may be used with either calling convention depending on the
->> > +CPU state -- AArch32 callers should use the 32-bit calling convention, and
->> > +AArch64 callers should use the 64-bit calling convention.
->>
->> Why not just make them a possible two-element property with <32 64>,
->> or if only one element, same on both? Seems cleaner.
->
-> A 64-bit platform may not have 32-bit call support, and we wouldn't be
-> able to describe that with a <32 64> property format. As it is valid for
-> a 64-bit OS to make 32-bit calls, we need to not describe a 32-bit call
-> ID in that case.
-
-Unless you declare one call id value to mean invalid, and use that to
-indicate where it's not supported. Seems slightly cleaner but I'm not
-going to pick a fight over it. ;-) Either way is fine.
-
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Brian
