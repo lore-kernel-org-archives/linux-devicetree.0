@@ -1,136 +1,217 @@
-From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] ARM: dts: AM33XX: Add LCDC info into am335x-evm
-Date: Wed, 25 Sep 2013 17:31:07 -0500
-Message-ID: <20130925223107.GA2494@uda0270506>
-References: <1377274436-3890-1-git-send-email-bparrot@ti.com>
- <20130903145516.GA30867@uda0270506>
- <52415B8F.40804@baylibre.com>
+From: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCHv4 2/3] ARM: msm: Add support for APQ8074 Dragonboard
+Date: Wed, 25 Sep 2013 15:35:27 -0700
+Message-ID: <5243652F.7090408@codeaurora.org>
+References: <1379992406-3541-1-git-send-email-rvaswani@codeaurora.org> <1379992406-3541-2-git-send-email-rvaswani@codeaurora.org> <4E7868D6-56CB-4AF8-8EBF-069966899C23@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <52415B8F.40804-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <4E7868D6-56CB-4AF8-8EBF-069966899C23-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, joelf-l0cyMroinI0@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Walker <dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+On 9/25/2013 12:49 PM, Kumar Gala wrote:
+> On Sep 23, 2013, at 10:13 PM, Rohit Vaswani wrote:
+>
+>> This patch adds basic board support for APQ8074 Dragonboard
+>> which belongs to the Snapdragon 800 family.
+>> For now, just support a basic machine with device tree.
+>>
+>> Signed-off-by: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>> arch/arm/Kconfig.debug                         |  9 +++++++
+>> arch/arm/boot/dts/Makefile                     |  3 ++-
+>> arch/arm/boot/dts/qcom-apq8074-dragonboard.dts |  6 +++++
+>> arch/arm/boot/dts/qcom-msm8974.dtsi            | 35 ++++++++++++++++++++++++++
+>> arch/arm/include/debug/msm.S                   |  5 ++++
+>> arch/arm/mach-msm/Kconfig                      | 13 ++++++++++
+>> arch/arm/mach-msm/board-dt.c                   |  9 +++++++
+>> 7 files changed, 79 insertions(+), 1 deletion(-)
+>> create mode 100644 arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
+>> create mode 100644 arch/arm/boot/dts/qcom-msm8974.dtsi
+>>
+>> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+>> index e18a6fc..959b2c7 100644
+>> --- a/arch/arm/Kconfig.debug
+>> +++ b/arch/arm/Kconfig.debug
+>> @@ -357,6 +357,15 @@ choice
+>> 		  Say Y here if you want the debug print routines to direct
+>> 		  their output to the serial port on MSM 8960 devices.
+>>
+>> +	config DEBUG_MSM8974_UART
+>> +		bool "Kernel low-level debugging messages via MSM 8974 UART"
+>> +		depends on ARCH_MSM8974
+>> +		select MSM_HAS_DEBUG_UART_HS
+>> +		select DEBUG_MSM_UART
+>> +		help
+>> +		  Say Y here if you want the debug print routines to direct
+>> +		  their output to the serial port on MSM 8974 devices.
+>> +
+> A little surprised you didn't pull this and the ARCH_MSM8974 into its own patch outside of this patch being board support.
 
-On Tue, Sep 24, 2013 at 11:29:51AM +0200, Benoit Cousson wrote:
-> Hi Benoit,
-> 
-> On 03/09/2013 16:55, Benoit Parrot wrote:
-> >Hi,
-> >
-> >I have not received any feedback on this patch.
-> >It has been pending since the end of June (first post).
-> >Can I get an estimate when it will be included/accepted?
-> 
-> It looks good to me beside a minor comment below.
-> 
-> Could you just rebase it on my lastest git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git
-> for_3.13/dts branch because it conflicts with the cleanup done by
-> Javier.
-> 
+Well, its good to have this as part of initial board setup for earlyprintk.
 
-I was going to rebase it to your for_3.13/dts branch, but Joel Frenandez has 
-already included this patch as part of his most recent submission.
-(http://marc.info/?l=devicetree&m=138014654925217&w=2) so I guess there is no
-need to duplicate the work now.
+>
+>> 	config DEBUG_MVEBU_UART
+>> 		bool "Kernel low-level debugging messages via MVEBU UART (old bootloaders)"
+>> 		depends on ARCH_MVEBU
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 000cf76..e71a3ec 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -102,7 +102,8 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) += kirkwood-cloudbox.dtb \
+>> 	kirkwood-openblocks_a6.dtb
+>> dtb-$(CONFIG_ARCH_MARCO) += marco-evb.dtb
+>> dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
+>> -	msm8960-cdp.dtb
+>> +	msm8960-cdp.dtb \
+>> +	qcom-apq8074-dragonboard.dtb
+>> dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
+>> 	armada-370-mirabox.dtb \
+>> 	armada-370-netgear-rn102.dtb \
+>> diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
+>> new file mode 100644
+>> index 0000000..bb6f3c4
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
+>> @@ -0,0 +1,6 @@
+>> +/include/ "qcom-msm8974.dtsi"
+>> +
+>> +/ {
+>> +	model = "Qualcomm APQ8074 Dragonboard";
+>> +	compatible = "qcom,apq8074-dragonboard", "qcom,apq8074";
+>> +};
+>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> new file mode 100644
+>> index 0000000..f04b643
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> @@ -0,0 +1,35 @@
+>> +/dts-v1/;
+>> +
+>> +/include/ "skeleton.dtsi"
+>> +
+>> +/ {
+>> +	model = "Qualcomm MSM8974";
+>> +	compatible = "qcom,msm8974";
+>> +	interrupt-parent = <&intc>;
+>> +
+>> +	soc: soc { };
+> We should have a unit address here:
+>
+> 	  soc: soc@FOOBAR {
+>
+> also, split out the curly braces so any future patches do have to muck with that.
+>
+> 	};
+>
 
-Let me know if this causes any issue.
+Im not sure I understand the reasoning behind the unit address for soc ?
+>> +};
+>> +
+>> +&soc {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <1>;
+>> +	ranges;
+>> +	compatible = "simple-bus";
+>> +
+>> +	intc: interrupt-controller@f9000000 {
+>> +		compatible = "qcom,msm-qgic2";
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <3>;
+>> +		reg = <0xf9000000 0x1000>,
+>> +		      <0xf9002000 0x1000>;
+>> +	};
+>> +
+>> +	timer {
+>> +		compatible = "arm,armv7-timer";
+>> +		interrupts = <1 2 0xf08>,
+>> +			     <1 3 0xf08>,
+>> +			     <1 4 0xf08>,
+>> +			     <1 1 0xf08>;
+>> +		clock-frequency = <19200000>;
+>> +	};
+>> +};
+>> diff --git a/arch/arm/include/debug/msm.S b/arch/arm/include/debug/msm.S
+>> index 9166e1b..9d653d4 100644
+>> --- a/arch/arm/include/debug/msm.S
+>> +++ b/arch/arm/include/debug/msm.S
+>> @@ -46,6 +46,11 @@
+>> #define MSM_DEBUG_UART_PHYS	0x16440000
+>> #endif
+>>
+>> +#ifdef CONFIG_DEBUG_MSM8974_UART
+>> +#define MSM_DEBUG_UART_BASE	0xFA71E000
+>> +#define MSM_DEBUG_UART_PHYS	0xF991E000
+>> +#endif
+>> +
+>> 	.macro	addruart, rp, rv, tmp
+>> #ifdef MSM_DEBUG_UART_PHYS
+>> 	ldr	\rp, =MSM_DEBUG_UART_PHYS
+>> diff --git a/arch/arm/mach-msm/Kconfig b/arch/arm/mach-msm/Kconfig
+>> index 2586c28..086bcb9 100644
+>> --- a/arch/arm/mach-msm/Kconfig
+>> +++ b/arch/arm/mach-msm/Kconfig
+>> @@ -64,6 +64,19 @@ config ARCH_MSM_DT
+>> 	select SPARSE_IRQ
+>> 	select USE_OF
+>>
+>> +config ARCH_MSM8974
+>> +	bool "MSM8974"
+>> +	select ARM_GIC
+>> +	select CPU_V7
+>> +	select HAVE_ARM_ARCH_TIMER
+>> +	select HAVE_SMP
+>> +	select MSM_SCM if SMP
+>> +	select USE_OF
+>> +
+>> +config ARCH_MSM_DT
+>> +	def_bool y
+>> +	depends on (ARCH_MSM8X60 || ARCH_MSM8960 || ARCH_MSM8974)
+>> +
+>> config MSM_HAS_DEBUG_UART_HS
+>> 	bool
+>>
+>> diff --git a/arch/arm/mach-msm/board-dt.c b/arch/arm/mach-msm/board-dt.c
+>> index 266a280..5211e80 100644
+>> --- a/arch/arm/mach-msm/board-dt.c
+>> +++ b/arch/arm/mach-msm/board-dt.c
+>> @@ -26,7 +26,16 @@ static const char * const msm_dt_match[] __initconst = {
+>> 	NULL
+>> };
+>>
+>> +static const char * const apq8074_dt_match[] __initconst = {
+>> +	"qcom,apq8074-dragonboard",
+>> +	NULL
+>> +};
+>> +
+>> DT_MACHINE_START(MSM_DT, "Qualcomm MSM (Flattened Device Tree)")
+>> 	.smp = smp_ops(msm_smp_ops),
+>> 	.dt_compat = msm_dt_match,
+>> MACHINE_END
+>> +
+>> +DT_MACHINE_START(APQ_DT, "Qualcomm MSM (Flattened Device Tree)")
+>> +	.dt_compat = apq8074_dt_match,
+>> +MACHINE_END
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> hosted by The Linux Foundation
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
 
 Thanks,
-Benoit
+Rohit Vaswani
 
-> >
-> >On Fri, Aug 23, 2013 at 11:13:56AM -0500, Benoit Parrot wrote:
-> >>Add LCDC device node in DT for am33xx
-> >>Add LCDC and Panel info in DT for am335x-evm
-> >>
-> >>Changes in v3:
-> >>- rebase to 3.11-rc6
-> >>
-> >>Changes in v2:
-> >>- remove redundant/unnecessary SoC specific setting in the board dts
-> >>
-> >>Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-> >>---
-> >>  arch/arm/boot/dts/am335x-evm.dts |   72 ++++++++++++++++++++++++++++++++++++++
-> >>  arch/arm/boot/dts/am33xx.dtsi    |    9 +++++
-> >>  2 files changed, 81 insertions(+)
-> >>
-> >>diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-> >>index 3aee1a4..b0703f1 100644
-> >>--- a/arch/arm/boot/dts/am335x-evm.dts
-> >>+++ b/arch/arm/boot/dts/am335x-evm.dts
-> >>@@ -149,6 +149,40 @@
-> >>  				0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> >>  			>;
-> >>  		};
-> >>+
-> >>+		lcd_pins_s0: lcd_pins_s0 {
-> >>+			pinctrl-single,pins = <
-> >>+				0x20 0x01	/* gpmc_ad8.lcd_data16, OUTPUT | MODE1 */
-> >>+				0x24 0x01	/* gpmc_ad9.lcd_data17, OUTPUT | MODE1 */
-> >>+				0x28 0x01	/* gpmc_ad10.lcd_data18, OUTPUT | MODE1 */
-> >>+				0x2c 0x01	/* gpmc_ad11.lcd_data19, OUTPUT | MODE1 */
-> >>+				0x30 0x01	/* gpmc_ad12.lcd_data20, OUTPUT | MODE1 */
-> >>+				0x34 0x01	/* gpmc_ad13.lcd_data21, OUTPUT | MODE1 */
-> >>+				0x38 0x01	/* gpmc_ad14.lcd_data22, OUTPUT | MODE1 */
-> >>+				0x3c 0x01	/* gpmc_ad15.lcd_data23, OUTPUT | MODE1 */
-> >>+				0xa0 0x00	/* lcd_data0.lcd_data0, OUTPUT | MODE0 */
-> >>+				0xa4 0x00	/* lcd_data1.lcd_data1, OUTPUT | MODE0 */
-> >>+				0xa8 0x00	/* lcd_data2.lcd_data2, OUTPUT | MODE0 */
-> >>+				0xac 0x00	/* lcd_data3.lcd_data3, OUTPUT | MODE0 */
-> >>+				0xb0 0x00	/* lcd_data4.lcd_data4, OUTPUT | MODE0 */
-> >>+				0xb4 0x00	/* lcd_data5.lcd_data5, OUTPUT | MODE0 */
-> >>+				0xb8 0x00	/* lcd_data6.lcd_data6, OUTPUT | MODE0 */
-> >>+				0xbc 0x00	/* lcd_data7.lcd_data7, OUTPUT | MODE0 */
-> >>+				0xc0 0x00	/* lcd_data8.lcd_data8, OUTPUT | MODE0 */
-> >>+				0xc4 0x00	/* lcd_data9.lcd_data9, OUTPUT | MODE0 */
-> >>+				0xc8 0x00	/* lcd_data10.lcd_data10, OUTPUT | MODE0 */
-> >>+				0xcc 0x00	/* lcd_data11.lcd_data11, OUTPUT | MODE0 */
-> >>+				0xd0 0x00	/* lcd_data12.lcd_data12, OUTPUT | MODE0 */
-> >>+				0xd4 0x00	/* lcd_data13.lcd_data13, OUTPUT | MODE0 */
-> >>+				0xd8 0x00	/* lcd_data14.lcd_data14, OUTPUT | MODE0 */
-> >>+				0xdc 0x00	/* lcd_data15.lcd_data15, OUTPUT | MODE0 */
-> >>+				0xe0 0x00	/* lcd_vsync.lcd_vsync, OUTPUT | MODE0 */
-> >>+				0xe4 0x00	/* lcd_hsync.lcd_hsync, OUTPUT | MODE0 */
-> >>+				0xe8 0x00	/* lcd_pclk.lcd_pclk, OUTPUT | MODE0 */
-> >>+				0xec 0x00	/* lcd_ac_bias_en.lcd_ac_bias_en, OUTPUT | MODE0 */
-> >>+			>;
-> >>+		};
-> >>+
-> >>  	};
-> >>
-> >>  	ocp {
-> >>@@ -311,6 +345,10 @@
-> >>  				};
-> >>  			};
-> >>  		};
-> >>+
-> >>+		lcdc: lcdc@4830e000 {
-> >>+			status = "okay";
-> >>+		};
-> >>  	};
-> >>
-> >>  	vbat: fixedregulator@0 {
-> >>@@ -374,6 +412,40 @@
-> >>  		brightness-levels = <0 51 53 56 62 75 101 152 255>;
-> >>  		default-brightness-level = <8>;
-> >>  	};
-> >>+
-> >>+	panel {
-> >>+		compatible = "ti,tilcdc,panel";
-> 
-> Nit: There are a lots of TI here :-)
-> Could you just name it: ti,lcdc,panel ?
-> 
-> Thanks,
-> Benoit
-> 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
