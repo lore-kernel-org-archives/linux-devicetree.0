@@ -1,48 +1,37 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [RFC PATCH 09/15] ata: ti_sata: Add Texas Instruments SATA Wrapper
- driver
-Date: Wed, 25 Sep 2013 14:49:56 +0200
-Message-ID: <3930265.gHe05HETI5@amdc1032>
-References: <1379595943-14622-1-git-send-email-rogerq@ti.com>
- <1379595943-14622-10-git-send-email-rogerq@ti.com>
- <5608096.0pgFIteLqQ@amdc1032>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v4] PWM: atmel-pwm: add PWM controller driver
+Date: Wed, 25 Sep 2013 15:15:01 +0200
+Message-ID: <5242E1D5.5000503@free-electrons.com>
+References: <1380079664-21959-1-git-send-email-voice.shen@atmel.com> <524290F5.2090406@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-reply-to: <5608096.0pgFIteLqQ@amdc1032>
-Sender: linux-ide-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: balbi@ti.com, bcousson@baylibre.com, tony@atomide.com, balajitk@ti.com, kishon@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tejun Heo <tj@kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <524290F5.2090406@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Bo Shen <voice.shen@atmel.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org, plagnioj@jcrosoft.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, September 25, 2013 02:37:19 PM Bartlomiej Zolnierkiewicz wrote:
+On 25/09/2013 09:29, Nicolas Ferre wrote:
+> On 25/09/2013 05:27, Bo Shen :
+>> Add Atmel PWM controller driver based on PWM framework.
+>>
+>> This is the basic function implementation of Atmel PWM controller.
+>> It can work with PWM based led and backlight.
+>>
+>> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+>
+> It seems simple and nice.
+>
+> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-[...]
+Tested on a sama5d31 board with leds-pwm.
 
-> > +#ifdef CONFIG_PM
-> > +
-> > +static int ti_sata_resume(struct device *dev)
-> > +{
-> > +	pm_runtime_disable(dev);
-> > +	pm_runtime_set_active(dev);
-> > +	pm_runtime_enable(dev);
-> 
-> This doesn't look like a correct ->resume method:
-> * it shouldn't touch runtime PM at all
-> * for each ->resume method there should be a corresponding ->suspend method
-> 
-> Moreover this whole wrapper driver seems strange, why not just add a proper
-> runtime PM support to ahci_platform driver instead?
+Tested-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+>
 
-Hmm, even this shouldn't be needed as this wrapper driver doesn't have
-->runtime_suspend and ->runtime resume methods.
-
-What exactly is the purpose of the existence of this wrapper driver?
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
