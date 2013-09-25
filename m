@@ -1,87 +1,100 @@
-From: Matt Porter <matt.porter@linaro.org>
-Subject: Re: [PATCH 1/3] thermal: bcm281xx: Add thermal driver
-Date: Wed, 25 Sep 2013 15:26:13 -0400
-Message-ID: <20130925192609.GB25191@ohporter.com>
-References: <1379958698-7554-1-git-send-email-wendy.ng@broadcom.com>
- <1379958698-7554-2-git-send-email-wendy.ng@broadcom.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v4] dt: update PSCI binding documentation for v0.2
+Date: Wed, 25 Sep 2013 12:34:41 -0700
+Message-ID: <CAOesGMgM2JsWbBOujdiCZdKkHqTRuN0P=OsdKGiyzz6_aiGWSA@mail.gmail.com>
+References: <1379625868-5395-1-git-send-email-robherring2@gmail.com>
+	<CAOesGMjNhYTfPOr5NPEC9GWym-nuFE0hX_6+LW9bTv_E3iXbcQ@mail.gmail.com>
+	<20130920102015.GH17453@e106331-lin.cambridge.arm.com>
+	<CAOesGMid5pgcVD+oCjUr_75tv+C5QtVZt=Vt9kdiT_QPFOrzrg@mail.gmail.com>
+	<CAL_JsqK1LE9rptajTOfvzNd1NQEihJzwm0YtJMzpUz-BhwJg5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1379958698-7554-2-git-send-email-wendy.ng@broadcom.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Wendy Ng <wendy.ng@broadcom.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqK1LE9rptajTOfvzNd1NQEihJzwm0YtJMzpUz-BhwJg5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2013 at 10:51:36AM -0700, Wendy Ng wrote:
-> This adds the support for reading out temperature from Broadcom bcm281xx
-> SoCs.
-> 
-> Signed-off-by: Wendy Ng <wendy.ng@broadcom.com>
-> Reviewed-by: Markus Mayer <mmayer@broadcom.com>
-> Reviewed-by: Christian Daudt <csd@broadcom.com>
-> ---
->  .../bindings/thermal/bcm-kona-thermal.txt          |   18 +++
->  drivers/thermal/Kconfig                            |   10 ++
->  drivers/thermal/Makefile                           |    1 +
->  drivers/thermal/bcm_thermal.c                      |  170 ++++++++++++++++++++
->  4 files changed, 199 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
->  create mode 100644 drivers/thermal/bcm_thermal.c
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
-> new file mode 100644
-> index 0000000..acca99e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
-> @@ -0,0 +1,18 @@
-> +* Broadcom Kona Thermal Management Unit
-> +
-> +This version is for the BCM281xx family of SoCs.
-> +
-> +Required properties:
-> +- compatible : "brcm,bcm11351-thermal", "brcm,kona-thermal"
-> +- reg : Address range of the thermal register
-> +- thermal-name: this entry must be specified and it will be passed into
-> +thermal_zone_device_register().  This name will also be reported under Hwmon
-> +sysfs 'name' attribute.
-> +
-> +Example:
-> +	thermal@34008000 {
-> +		compatible = "brcm,bcm11351-thermal", "brcm,kona-thermal";
-> +		reg = <0x34008000 0x0024>;
-> +		thermal-name = "bcm_kona_therm";
-> +		status = "disabled";
-> +	};
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index dbfc390..7f823f0 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -134,6 +134,16 @@ config KIRKWOOD_THERMAL
->  	  Support for the Kirkwood thermal sensor driver into the Linux thermal
->  	  framework. Only kirkwood 88F6282 and 88F6283 have this sensor.
->  
-> +config BCM_THERMAL
-> +	tristate "Temperature sensor on Broadcom BCM281xx family of SoCs"
-> +	depends on ARCH_BCM
+On Wed, Sep 25, 2013 at 12:20 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Sep 25, 2013 at 12:15 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>> On Fri, Sep 20, 2013 at 3:20 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> On Fri, Sep 20, 2013 at 05:36:51AM +0100, Olof Johansson wrote:
+>>>> Hi,
+>>>
+>>> Hi Olof,
+>>>
+>>>>
+>>>> Just a quick drive-by. Sorry, I don't know the history of previous
+>>>> review cycles.
+>>>>
+>>>>
+>>>> On Thu, Sep 19, 2013 at 2:24 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>
+>>>> >  Main node optional properties:
+>>>> >
+>>>> > - - cpu_suspend   : Function ID for CPU_SUSPEND operation
+>>>> > + - cpu_suspend[-<32|64]   : Function ID for CPU_SUSPEND operation
+>>>> > +
+>>>> > + - cpu_off                : Function ID for CPU_OFF operation
+>>>> > +
+>>>> > + - cpu_on[-<32|64]        : Function ID for CPU_ON operation
+>>>> > +
+>>>> > + - affinity_info[-<32|64] : Function ID for AFFINITY_INFO operation
+>>>> >
+>>>> > - - cpu_off       : Function ID for CPU_OFF operation
+>>>> > + - migrate[-<32|64]       : Function ID for MIGRATE operation
+>>>> >
+>>>> > - - cpu_on        : Function ID for CPU_ON operation
+>>>> > + - migrate_info_type      : Function ID for MIGRATE_INFO_TYPE operation
+>>>> >
+>>>> > - - migrate       : Function ID for MIGRATE operation
+>>>> > + - migrate_info_up_cpu[-<32|64] : Function ID for MIGRATE_INFO_UP_CPU operation
+>>>> >
+>>>> > + - system_reset           : Function ID for SYSTEM_RESET operation
+>>>> > +
+>>>> > + - system_off             : Function ID for SYSTEM_OFF operation
+>>>>
+>>>> All of these should use dashes instead of underscores.
+>>>
+>>> I also don't like the underscores, but they're an unfortunate historical
+>>> artifact that we can't get rid of (at least for cpu_on, cpu_off, and
+>>> cpu_suspend).
+>>
+>> We need to keep those three old ones supported in the driver, but the
+>> newer binding can use dashes instead, as long as the kernel also
+>> handles the old binding.
+>>
+>>> Both Xen and kvmtool are already passing DTs to guests which have
+>>> underscores in the property names, so it's both a boot ABI and a
+>>> userspace ABI.
+>>
+>> Again, as mentioned on IRC: We've said that bindings are not yet
+>> stable until we lock them down, so we will need to adjust accordingly.
+>> Once we lock them down, they are stable and part of ABI. But we really
+>> don't want to deal with the bad bindings that people came up with
+>> without much review, and that's what the whole idea behind cleaning up
+>> and then locking them down is all about.
+>
+> For some of us, bindings are already in production. Until we have some
+> way to document stable vs. unstable, it is not up to anyone but the
+> users of a binding to define the stability. If the users of a binding
+> can tolerate the change, then it is unstable and can change.
 
-Hi Wendy,
+Ok, so why review bindings at all then? Just implement what you want,
+ship it and force it on the rest of us for ever.
 
-I just noticed that, depending on acceptance, this could collide with
-Christian's ARCH_BCM->ARCH_BCM_MOBILE rename that is expected to go into
-3.13. I'm not sure if this series is targeted for 3.13 (due to the discussion
-about Eduardo's subsystem changes that impact it). If it is, you might
-want to rebase on Christian's rename series
-http://www.spinics.net/lists/arm-kernel/msg274963.html and use
-ARCH_BCM_MOBILE here.
+> All this boils down to using '_' vs. '-', right? Come on. I'm all for
+> consistency, but let's be practical. There are plenty of documented
+> examples that use '_' starting with device_type.
 
--Matt
+Next property I add will be called Device_Type then, if we're willing
+to not give a shit about best practices any more. Thanks for setting
+the direction and holding the bar high, Rob!
 
-> +	default y
-> +	help
-> +	  If you say yes here you get support for TMU (Thermal Management
-> +	  Unit) on Broadcom BCM281xx family of SoCs. This provides thermal
-> +	  monitoring of CPU clusters, graphics, and SoC glue, but does not
-> +	  include monitoring of charger temperature.
 
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
