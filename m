@@ -1,40 +1,43 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 1/2] i2c: qup: Add device tree bindings information
-Date: Thu, 26 Sep 2013 08:04:09 +0300
-Message-ID: <1380171849.4671.13.camel@localhost>
-References: <1377782873-31931-1-git-send-email-iivanov@mm-sol.com>
-	 <3A0F4153-1C55-4008-8EB1-D6FA60D87CEA@codeaurora.org>
-	 <1377797186.30358.14.camel@localhost>
-	 <767E9FBB-2975-4795-9C7E-69E302511FF2@codeaurora.org>
-	 <1378814937.960.37.camel@iivanov-dev.int.mm-sol.com>
-	 <20130910135907.GP808@joshc.qualcomm.com>
-	 <1378824205.960.41.camel@iivanov-dev.int.mm-sol.com>
-	 <20130925160606.GA3377@katana>
+From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v10 2/3] DMA: Freescale: Add new 8-channel DMA engine
+ device tree nodes
+Date: Thu, 26 Sep 2013 13:06:25 +0800
+Message-ID: <5243C0D1.4070808@freescale.com>
+References: <1379499333-4745-1-git-send-email-hongbo.zhang@freescale.com> <1379499333-4745-3-git-send-email-hongbo.zhang@freescale.com> <524074A7.7000001@wwwdotorg.org> <524169E3.7030408@freescale.com> <5241CC60.5070204@wwwdotorg.org> <52429252.10009@freescale.com> <1380159992.24959.248.camel@snotra.buserror.net> <20130926022859.GL9625@voom.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20130925160606.GA3377@katana>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Josh Cartwright <joshc@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, grant.likely@linaro.org, gavidov@codeaurora.org, sdharia@codeaurora.org, alokc@codeaurora.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130926022859.GL9625-1s0os16eZneny3qCrzbmXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/26/2013 10:28 AM, David Gibson wrote:
+> On Wed, Sep 25, 2013 at 08:46:32PM -0500, Scott Wood wrote:
+>> On Wed, 2013-09-25 at 15:35 +0800, Hongbo Zhang wrote:
+>>> By the way, I know maybe it is difficult, but why not introduce a
+>>> document of maintaining rules for the dt binding docs? we have dedicated
+>>> maintainers for this part now. Description language from one submitter
+>>> cannot satisfy every reviewer/maintainer, for a reg property, is it
+>>> necessary to say "offset and length",
+>> Don't say "offset and length".  It's both redundant with the base
+>> definition of the reg property, and overly specific because it makes
+>> assumptions about how the parent node's ranges are set up (sometimes we
+>> want to be that specific, but usually not).
 
-Hi,
+Thanks for your answer Scott.
+In fact my questions are mainly sample questions to file the necessary 
+rules of dt binding.
+> To look at it another way, the format of the 'reg' property is defined
+> by the parent bus's binding, not the binding of the node itself.
+>
+Whatever the rule is, if it is reasonable and accepted, just as I said, 
+we need to file it.
 
-On Wed, 2013-09-25 at 18:06 +0200, Wolfram Sang wrote:
-> > > I agree with Kumar on removing this.  If we decide it is something worth
-> > > keeping, logic to support it doesn't belong in the QUP driver, but in
-> > > the i2c core.
-> > 
-> > I don't have strong objection here, will remove aliases support.
-> 
-> When resubmitting, please test against v3.12-rcX.
-> of_i2c_register_devices() is in the core meanwhile and alias support for
-> of is in the core for a while, too. Check i2c_add_adapter().
 
-Thanks, I will.
-
-Regards,
-Ivan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
