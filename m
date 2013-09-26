@@ -1,78 +1,67 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v10 2/3] DMA: Freescale: Add new 8-channel DMA engine
- device tree nodes
-Date: Thu, 26 Sep 2013 12:28:59 +1000
-Message-ID: <20130926022859.GL9625@voom.redhat.com>
-References: <1379499333-4745-1-git-send-email-hongbo.zhang@freescale.com>
- <1379499333-4745-3-git-send-email-hongbo.zhang@freescale.com>
- <524074A7.7000001@wwwdotorg.org>
- <524169E3.7030408@freescale.com>
- <5241CC60.5070204@wwwdotorg.org>
- <52429252.10009@freescale.com>
- <1380159992.24959.248.camel@snotra.buserror.net>
+From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/2] iio: cm36651: Add CM36651 proximity/light sensor driver
+Date: Thu, 26 Sep 2013 13:17:18 +0900
+Message-ID: <5243B54E.7000804@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Qgd2S+2VS1hsWwXW"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1380159992.24959.248.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Meerwald l <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello all,
 
---Qgd2S+2VS1hsWwXW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for your review. I have revised v2 driver.
+Please give your feedback at that time.
 
-On Wed, Sep 25, 2013 at 08:46:32PM -0500, Scott Wood wrote:
-> On Wed, 2013-09-25 at 15:35 +0800, Hongbo Zhang wrote:
-> > By the way, I know maybe it is difficult, but why not introduce a=20
-> > document of maintaining rules for the dt binding docs? we have dedicate=
-d=20
-> > maintainers for this part now. Description language from one submitter=
-=20
-> > cannot satisfy every reviewer/maintainer, for a reg property, is it=20
-> > necessary to say "offset and length",
->=20
-> Don't say "offset and length".  It's both redundant with the base
-> definition of the reg property, and overly specific because it makes
-> assumptions about how the parent node's ranges are set up (sometimes we
-> want to be that specific, but usually not).
+This patch is the third revision for Capella CM36651 proximity and RGB light sensor driver.
+The driver exposes five channels: Red, Green, Blue, Clear and proximity.
+It also support detection proximity event.
 
-To look at it another way, the format of the 'reg' property is defined
-by the parent bus's binding, not the binding of the node itself.
+This driver supports
+	- Event: rising and falling proximity events.
+	- Reading channel through read_raw callback.
+	- Writing sensor data integration time each channel through write_raw callback.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+v3 changed below:
+	- Revised a binding documentation.
+	- fixed vendor-prefixes documentation in alphabetical order.
+	- Add/ Remove/ Revise some #define register and commands.
+	- Add write_raw callback function for set/get sensor data integration time.
+	- Use IIO_CONST_ATTR API for *_integration_time_available.
+	- Revised some comments and message.
+	- code cleanup
 
---Qgd2S+2VS1hsWwXW
-Content-Type: application/pgp-signature
+>From 51e47f86e8ac9c4acf2ff2b5ede0b392cc3f2837 Mon Sep 17 00:00:00 2001
+From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Date: Thu, 26 Sep 2013 10:34:53 +0900
+Subject: [PATCH 0/2] *** SUBJECT HERE ***
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+*** BLURB HERE ***
 
-iQIcBAEBAgAGBQJSQ5vrAAoJEGw4ysog2bOSOX8P/27knqdD1mcveFLQPRZp92Ch
-8/jLSM0q+JsX9kxNs/Syri7Or7kblg/NhcE4JzlJgFwPVw5QoePwtbnij50azTDD
-mS0414Kbk3DBNOeVvP/WQXD+cSF7bxXIlfhYYtK11m4nZDQZViJ8rGEb+YwDmVR3
-OXDOYoe8l9PjInNwEm/QcW2FWDKgQvNqMlwVlR2uM8EaRo2372S/y1ePgqPSTH1w
-JK8l3ZCYP8Zv5jXVuT7SNFyq9CFOCVFwdf6/eeZMj7bK9qCqKRYA1zo5dTCJnAgT
-RSXajamRYA9A2ScSHPuL9M9w2qFICA2XcaXnovcn0iologxSqLWTxzosYBJ9LF+X
-Rf36rVT5A8eE5DvgAGVtVRQxB8aWvrUG6DplMvjd0/IcxYEfLACAIxFxItv2+jhB
-c9S+U55EAdFeYdHCfjA14YBmGg2EPSb24EcD2Im5LMQVq7RCeEoFl0TRwzUzxTzU
-EhTcDl/G2EKO7si34JUADRYkrTxUVbmafbUygH4AlB/o2atbxECVgFAgE+B8s1xp
-JwaekYU7WDoTz2as2FsMsnAwglZSXM7wVxAoAHCBNPF3kx/Kj0tjt3TfiMbIIQ3y
-xjN4ReWVjmLBDCWlTgjHWkxJyosKuMsgOgPup4Po8vpbQpB6JE67y/W2CnoS0e/T
-IuvJsiD/dGTNak4+Y+he
-=6ZZH
------END PGP SIGNATURE-----
+Beomho Seo (2):
+  iio: cm36651: Add CM36651 proximity/light sensor driver
+  DT: Add documentation for cm36651 proximity/light sensor
 
---Qgd2S+2VS1hsWwXW--
+ .../devicetree/bindings/iio/light/cm36651.txt      |   25 +
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ drivers/iio/light/Kconfig                          |   11 +
+ drivers/iio/light/cm36651.c                        |  715 ++++++++++++++++++++
+ 4 files changed, 752 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/cm36651.txt
+ create mode 100644 drivers/iio/light/cm36651.c
+
+-- 
+1.7.9.5
+
+-- 
+Best Regards,
+
+Beomho Seo, Assistant Engineer
+System S/W Lab., S/W Platform Team, Software Center
+Samsung Electronics
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
