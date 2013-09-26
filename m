@@ -1,159 +1,154 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] MTD: Onenand: Add device tree support for samsung
- onenand
-Date: Thu, 26 Sep 2013 11:59:19 +0100
-Message-ID: <20130926105919.GG2411@e106331-lin.cambridge.arm.com>
-References: <1379941608-5068-1-git-send-email-m.krawczuk@partner.samsung.com>
- <20130923140823.GC16069@e106331-lin.cambridge.arm.com>
- <2086340.RrXQX9ib0T@amdc1227>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v6 0/4] mtd:nand:omap2: clean-up of supported ECC schemes
+Date: Thu, 26 Sep 2013 10:58:56 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA16D07@DBDE04.ent.ti.com>
+References: <1378986619-26765-1-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2086340.RrXQX9ib0T@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rob@landley.net" <rob@landley.net>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1378986619-26765-1-git-send-email-pekon@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: "Rob Herring (robherring2@gmail.com)" <robherring2@gmail.com>, "Mark
+ Rutland (mark.rutland@arm.com)" <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi,
+ Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "olof@lixom.net" <olof@lixom.net>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2013 at 02:00:01PM +0100, Tomasz Figa wrote:
-> Hi Mateusz, Mark,
-
-Hi,
-
 > 
-> On Monday 23 of September 2013 15:08:23 Mark Rutland wrote:
-> > On Mon, Sep 23, 2013 at 02:06:48PM +0100, Mateusz Krawczuk wrote:
-> > > +
-> > > +Required properties:
-> > > +  - compatible: value should be either of the following.
-> > > +      (a) "samsung,s3c6400-onenand",
-> > > +		for onenand controller compatible with s3c6400.
-> > > +      (b) "samsung,s3c6410-onenand",
-> > > +		for onenand controller compatible with s3c6410.
-> > > +      (c) "samsung,s5pc100-onenand",
-> > > +		for onenand controller compatible with s5pc100.
-> > > +      (d) "samsung,s5pc110-onenand",
-> > > +      for s5pc100-like onenand controller used on s5pc110 which supports DMA.
-> > > +
-> > 
-> > As I asked on the last posting, what are the differences between these
-> > implementations?
+> *Changes v5 -> v6*
+> [PATCH 1/4]:
+> 	- updated DT binding for gpmc-nand based on 'Olof Johansson's
+> feedbacks
+> 	http://lists.infradead.org/pipermail/linux-mtd/2013-
+> August/048394.html
+> 	- detection of ELM device via ti,elm-id DT node, moved to gpmc.c
+> driver
+> [PATCH 2/4]
+> 	- removed: support for following obselete ECC schemes
+> 	OMAP_ECC_HAMMING_CODE_DEFAULT (S/W based 1-bit Hamming
+> ECC)
+> 	OMAP_ECC_HAMMING_CODE_HW_ROMCODE (H/W based 1-bit
+> Hamming ECC scheme)
+> 	- updated: using omap_oobinfo as chip->ecc.layout for all ecc-
+> schemes
+> 	- clean: error messages
+> [PATCH 3/4] cleaned to include changes for OMAP_ECC_BCH8_CODE_HW
+> only
+> [PATCH 4/4] updated to include DT property changes
 > 
-> (d) is a completely different controller than (a), (b) and (c). They
-> have completely different register layouts. Also see below.
-
-Ok.
-
 > 
-> > > +Required properties for s5pc110:
-> > > +
-> > > + - reg: the offset and length of the control registers. First region describes
-> > > +	OneNAND interface, second control registers.
-> > 
-> > Also, the complete reg description is a bit confusing. How about
-> > something like:
-> > 
-> >  - reg: two register specifiers:
-> >         [0] - The OneNAND interface
-> > 	[1] - The control registers
+> *Changes v4 -> v5*
+> - Rebased to linux-next
+> IMPORTANT: Need to revert commit fb1585b, [PATCH 2/4] part of previous
+> version
+> 	http://lists.infradead.org/pipermail/linux-mtd/2013-July/047441.html
 > 
-> This looks much better, although I wouldn't be afraid of using words
-> instead of symbols to write this as follows instead:
+> - Swapped PATCH-1 & PATCH-2 to maintain bisectibility & compilation
+> dependency
+> 	http://lists.infradead.org/pipermail/linux-mtd/2013-July/047461.html
 > 
->   - reg: two memory mapped register regions:
->     - first entry: memory mapped OneNAND chip,
->     - second entry: control registers.
-
-I'm also happy with that.
-
+> - PATCH-2: re-ordered call to is_elm_present() for later updates ELM driver
+> 	- dropped changes in include/linux/platform_data/elm.h (not
+> needed)
+> - PATCH-3: re-ordered call to is_elm_present() for later updates ELM driver
+> - Re-formated patch description (replaced tabs with white-spaces)
 > 
-> But... The controller in theory supports more than one OneNAND chip, each
-> mapped at different, so I'd suggest reordering the entries:
 > 
->   - reg: memory mapped register regions:
->     - first entry: control registers.
->     - second entry: memory mapped OneNAND chip 0,
->     - ...
->     - Nth entry: memory mapped OneNAND chip (N-2).
-
-I agree on the reordering, hence the questions I had below.
-
+> *Changes v3 -> v4*
+> (Resent with CC: devicetree-discuss@lists.ozlabs.org)
+> - [Patch 1/3] removed MTD_NAND_OMAP_BCH8 &
+> MTD_NAND_OMAP_BCH4 from nand/Kconfig
+> 	ECC scheme selectable via nand DT (nand-ecc-opt).
+> - [*] rebased for l2-mtd.git
 > 
-> > Do we expect future OneNAND devices which may require more reg entries
-> > to describe?
 > 
-> Nope. In age of eMMC I wouldn't even expect any new OneNAND controller
-> to be handled by these bindings.
-
-Ok.
-
+> *Changes v2 -> v3*
+> (Resent with Author Name fixed)
+> - PATCH-1: re-arranged code to remove redundancy, added
+> NAND_BUSWIDTH_AUTO
+> - PATCH-2: updated nand-ecc-opt DT mapping and Documentation
+> - PATCH-3: code-cleaning + changes to match PATCH-1
+> - PATCH-4 <DROPPED> update DT attribute for ti,nand-ecc-opt
+> 	- received feedback to keep DT mapping independent of linuxism
+> - PATCH-4:<NEW> : ARM: dts: AM33xx: updated default ECC scheme in nand-
+> ecc-opt
+> 	- independent patch for AM335x-evm.dts update based on PATCH-2
 > 
-> > > + - interrupt-parent, interrupts		Onenand memory interrupts
-> > 
-> > As it's a common property, I don't think interrupt-parent needs to
-> > be described.
-> > 
-> > Is there more than one interrupt? What's it called on the manual?
 > 
-> There is one interrupt per OneNAND chip, so this is what should be
-> represented in the binding.
-
-Ah. That should be mentioned explicitly, with the required ordering.
-
+> *Changes v1 -> v2*
+> 	added 	[PATCH 3/4] and [PATCH 4/4]
 > 
-> > > +
-> > > +Required properties for others:
-> > > +
-> > > + - reg: the offset and length of the control registers. First region describes
-> > > +	control registers, second OneNAND interface.
-> > 
-> > Why does the s5pc110 OneNAND binding take its registers in the opposite
-> > order to the rest of these? Can we not fix up the driver first to make
-> > it consistent? Then we only need to describe this once and it's going to
-> > be far less of a headache to support.
 > 
-> Both areas in both "major" hardware variants have completely different
-> meaning:
->  - in case of SoCs earlier or equal to S5PC100, first entry represents
->    controller registers that are used to control various operating
->    parameters, while second entry is a command/data interface, which is
->    used to trigger read/write/etc. operations in the controller and
->    push/pull data through it. In this variant there is no direct mapping
->    of OneNAND chip in CPU address space. This variant supports only
->    one memory chip per controller instance,
->  - in case of S5PC110, each OneNAND chip is directly mapped into CPU
->    address space. In addition there is a block of control registers that
->    are used to configure the interface and control internal DMA engine
->    (which is not present in <= S5PC100 variants). This variant supports
->    multiple memory chips per controller instance (2 in case of S5PV210,
->    but current driver handles only one AFAIK).
-
-Ok. Even with that, I think the suggestion to reorder the reg entries
-above still makes this more consistent, with the controller registers
-first, then an entry per-chip (which is either the chip itself or the
-related command/data interface depending on the particular controller).
-
+> *Patches in this series*
+> [PATCH 1/4]->[PATCH v5 2/4]: clean-up and optimization for supported ECC
+> schemes.
+> [PATCH 2/4]->[PATCH v5 1/4]: add separate DT options each supported ECC
+> scheme.
+> [PATCH 3/4]: update BCH4 ECC implementation (using ELM or using lib/bch.h)
+> [PATCH 4/4]: ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-
+> opt
 > 
-> > > +
-> > > +Clocks:
-> > > + - gate - clock which output is supplied to external OneNAND flash memory.
-> > 
-> > How about the following (without the Clocks header):
-> > 
-> > - clocks: clock-specifiers for the clocks named in clock-names, per the
-> >           common clock bindings.
-> > 
-> > - clock-names: should contain "gate" for the clock to the OneNAND flash
-> >                memory.
-> > 
-> > Is this the only clock that might be necessary on all platforms?
+> After this patch series, omap2-nand driver will supports following ECC
+> schemes:
+> +---------------------------------------+---------------+---------------+
+> | ECC scheme                            |ECC calculation|Error detection|
+> +---------------------------------------+---------------+---------------+
+> |OMAP_ECC_HAMMING_CODE_HW               |H/W (GPMC)     |S/W            |
+> +---------------------------------------+---------------+---------------+
+> |OMAP_ECC_BCH4_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W
+> (lib/bch.h)|
+> |OMAP_ECC_BCH4_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
+> +---------------------------------------+---------------+---------------+
+> |OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W
+> (lib/bch.h)|
+> |OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
+> +---------------------------------------+---------------+---------------+
+> - Selection of OMAP_ECC_BCHx_CODE_HW_DETECTION_SW requires,
+> 	Kconfig: CONFIG_MTD_NAND_ECC_BCH: enables S/W based BCH
+> ECC algorithm.
 > 
-> S3C64xx SoCs have only one OneNAND gate clock per controller.
-> S5PC100 SoC has one IP gate clock and one memory chip gate clock.
-> S5PC110 SoC has one gate that gates both IP and all memory chips.
+> - Selection of OMAP_ECC_BCHx_CODE_HW requires,
+> 	Kconfig: CONFIG_MTD_NAND_OMAP_BCH: enables ELM H/W
+> module.
+> 
+> Pekon Gupta (4):
+>   ARM: OMAP2+: cleaned-up DT support of various ECC schemes
+>   mtd:nand:omap2: clean-up BCHx_HW and BCHx_SW ECC configurations in
+>     device_probe
+>   mtd:nand:omap2: updated support for BCH4 ECC scheme
+>   ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-opt
+> 
+>  .../devicetree/bindings/mtd/gpmc-nand.txt          |  14 +-
+>  arch/arm/boot/dts/am335x-evm.dts                   |   2 +-
+>  arch/arm/mach-omap2/board-flash.c                  |   2 +-
+>  arch/arm/mach-omap2/gpmc.c                         |  47 +-
+>  drivers/mtd/nand/Kconfig                           |  30 +-
+>  drivers/mtd/nand/omap2.c                           | 526 ++++++++++-----------
+>  include/linux/platform_data/mtd-nand-omap2.h       |  18 +-
+>  7 files changed, 309 insertions(+), 330 deletions(-)
+> 
+> --
+> 1.8.1
++ Rob Herring <robherring2@gmail.com>
++ Mark Rutland <mark.rutland@arm.com>
++ Pawel Moll <pawel.moll@arm.com>
++ Ian Campbell <ijc+devicetree@hellion.org.uk>
++ Stephen Warren <swarren@wwwdotorg.org>
 
-Good to know. Thanks for the thorough description.
+CC other DT maintainers, who were missed earlier in mail-chain.
 
-Cheers,
-Mark.
+with regards, pekon
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
