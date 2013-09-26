@@ -1,74 +1,94 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH] mfd: arizona: Update device tree regulator bindings
-Date: Thu, 26 Sep 2013 18:58:43 +0100
-Message-ID: <20130926175843.GS19304@sirena.org.uk>
-References: <1380131272-16982-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20130925183201.GT3226@sirena.org.uk>
- <20130926152941.GQ3635@opensource.wolfsonmicro.com>
+From: Rohit Vaswani <rvaswani@codeaurora.org>
+Subject: Re: [PATCHv4 2/3] ARM: msm: Add support for APQ8074 Dragonboard
+Date: Thu, 26 Sep 2013 11:05:45 -0700
+Message-ID: <52447779.3010908@codeaurora.org>
+References: <1379992406-3541-1-git-send-email-rvaswani@codeaurora.org> <1379992406-3541-2-git-send-email-rvaswani@codeaurora.org> <4E7868D6-56CB-4AF8-8EBF-069966899C23@codeaurora.org> <5243652F.7090408@codeaurora.org> <B0F416B8-042A-49F1-81E9-B217F02AAD1E@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Vy6UCbb9EK60RK4A"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130926152941.GQ3635-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <B0F416B8-042A-49F1-81E9-B217F02AAD1E@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: David Brown <davidb@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 9/26/2013 9:37 AM, Kumar Gala wrote:
+> <snip>
 
---Vy6UCbb9EK60RK4A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
+> @@ -0,0 +1,6 @@
+> +/include/ "qcom-msm8974.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm APQ8074 Dragonboard";
+> +	compatible = "qcom,apq8074-dragonboard", "qcom,apq8074";
+> +};
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> new file mode 100644
+> index 0000000..f04b643
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -0,0 +1,35 @@
+> +/dts-v1/;
+> +
+> +/include/ "skeleton.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm MSM8974";
+> +	compatible = "qcom,msm8974";
+> +	interrupt-parent = <&intc>;
+> +
+> +	soc: soc { };
+>>> We should have a unit address here:
+>>>
+>>> 	  soc: soc@FOOBAR {
+>>>
+>>> also, split out the curly braces so any future patches do have to muck with that.
+>>>
+>>> 	};
+>>>
+>> Im not sure I understand the reasoning behind the unit address for soc ?
+> Its fairly standard practice and there is a fair amount of discussion about the lack of a unit address for memory nodes.
+>
+That still doesn't really answer anything :) - and I couldn't find any 
+discussions about this either.
+I don't see anybody in upstream adding an address to soc except sun.
+What is that address supposed to be for - what does it mean ?
+The soc is way of encapsulating meaningful blocks  for the particular SoC.
 
-On Thu, Sep 26, 2013 at 04:29:41PM +0100, Charles Keepax wrote:
+>
+>>>> +};
+>>>> +
+>>>> +&soc {
+>>>> +	#address-cells = <1>;
+>>>> +	#size-cells = <1>;
+>>>> +	ranges;
+>>>> +	compatible = "simple-bus";
+>>>> +
+>>>> +	intc: interrupt-controller@f9000000 {
+>>>> +		compatible = "qcom,msm-qgic2";
+>>>> +		interrupt-controller;
+>>>> +		#interrupt-cells = <3>;
+>>>> +		reg = <0xf9000000 0x1000>,
+>>>> +		      <0xf9002000 0x1000>;
+>>>> +	};
+>>>> +
+>>>> +	timer {
+>>>> +		compatible = "arm,armv7-timer";
+>>>> +		interrupts = <1 2 0xf08>,
+>>>> +			     <1 3 0xf08>,
+>>>> +			     <1 4 0xf08>,
+>>>> +			     <1 1 0xf08>;
+>>>> +		clock-frequency = <19200000>;
+>>>> +	};
+>>>> +};
+> - k
+>
 
-Please include some context in replies...
 
-> I had considered adding something like a recursive regulator get
-> that works it's way up the tree but this felt rather invasive and
-> most places the user code does the regulator get rather than a
-> framework so the issue is only really likely to crop up with
-> regards to ASoC.
+Thanks,
+Rohit Vaswani
 
-I don't see why this would only be an issue for ASoC - it happens to
-have more helpers for this right now than anything else but I'd hope
-that at some point in the future we can get some of the common patterns
-for holding regulators into the device framework.  You also have the
-potential for this to do the wrong thing if it doesn't happen to be
-talking to an MFD which is doing this since it just unconditionally
-looks at the parent.
-
-I would suggest that rather than unconditionally doing this on lookup
-it'd be easier to do it the other way round and explicitly add mappings
-=66rom the parent to the child when registering the device.  That doesn't
-have the potential to explode and get the wrong thing like this does.
-
---Vy6UCbb9EK60RK4A
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSRHXPAAoJELSic+t+oim9GoEP/R+kdUKCjpb4NQcWXWLQZr04
-UcL3idVMFPFT9nTQiLCYGurt0Rzc+5csSgsDc3GC5LGNKvGuKaSRAYnRKgzCYcZL
-yEvOv70+V+bWci9BnzHxPiYyVsdK0eEeKxOX93Ql/sIjHt38xxFBY63cBwVc1HuK
-j8gCG3YV1I2iz3BkPkNFSILaYCyhdVKhx4UE+mokU+Cy/xsvnNMY3z3L6uYtNa0C
-8GPlYi68ScLG0YjSM8zvlMWPgikoH+WBVMOccf0MZI9cTvyR/mxoSBeoJY5g+ceg
-Qk3WslU0g9v6vAaEN9FDtDbJs6CO9j3G/D99rnnNpNgEDTcOGqNiSTLBtBRKKsbG
-dm8qcVkBkSoTY+qxf3DiLtI15HvMEB7GNl5v2SCo/lwU+x3hB6pKt1FI6I083Lj/
-2kSK/wP0Jw5Z8XOoKpis4oMcfu/UaC+dD1tdhVpStwcSBkXQXk1rTKbMRtSWrUle
-IfV0U43ZnTFYCyZ6avdyzYoezm/UTADMAqa3TZaMIvoeK/EWLQDajNR5FZkPqqEP
-H3wrJJuKgqqDdgFCsfZpqYquwjNcZ2LQlVaMEK4Jp3ws0WFYKUd/jQYRCzNIi56X
-Rn1C2paUpI6ZxTDWUXLp6Si8X8wpYPH/Uq5gAEiUaKTh74Cp9F59Fwbl2DClcumm
-AR+sBnKvWbpY5sWsRESL
-=apjV
------END PGP SIGNATURE-----
-
---Vy6UCbb9EK60RK4A--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation
