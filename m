@@ -1,62 +1,45 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: device tree binding documentation outdated
-Date: Thu, 26 Sep 2013 17:29:47 -0300
-Message-ID: <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
-References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
+From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCHv4 2/3] ARM: msm: Add support for APQ8074 Dragonboard
+Date: Thu, 26 Sep 2013 13:58:08 -0700
+Message-ID: <20130926205808.GA3146@codeaurora.org>
+References: <1379992406-3541-1-git-send-email-rvaswani@codeaurora.org>
+ <1379992406-3541-2-git-send-email-rvaswani@codeaurora.org>
+ <4E7868D6-56CB-4AF8-8EBF-069966899C23@codeaurora.org>
+ <5243652F.7090408@codeaurora.org>
+ <B0F416B8-042A-49F1-81E9-B217F02AAD1E@codeaurora.org>
+ <52447779.3010908@codeaurora.org>
+ <52448852.9050608@codeaurora.org>
+ <50877C70-6066-4E87-9DEA-9F29D098525B@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130926195158.GS12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50877C70-6066-4E87-9DEA-9F29D098525B-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Walker <dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+On Thu, Sep 26, 2013 at 02:33:53PM -0500, Kumar Gala wrote:
 
-On Thu, Sep 26, 2013 at 4:51 PM, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> Can someone please point me at the current documentation for the
-> iMX6DL pinctrl bindings?
-
-Best reference is the mx6dl reference manual (chapter 37 - IOMUXC):
-http://cache.freescale.com/files/32bit/doc/ref_manual/IMX6SDLRM.pdf
-
-> I mean the stuff which looks like this:
+>> "ePAPR 1.1 section 2.2.1.1 "Node Name Requirements" specifies that any
+>> node that has a reg property must include a unit address in its name
+>> with value matching the first entry in its reg property. Conversely, if
+>> a node does not have a reg property, the node name must not include a
+>> unit address."
+>>
+>> The soc node we have does not have a reg property ?
 >
-> #define MX6QDL_PAD_ENET_MDC__ESAI_TX5_RX0           0x1e8 0x5b8 0x858 0x2 0x0
-
-Let me try to decode it:
-
-0x1e8: Offset of IOMUXC_SW_MUX_CTL_PAD_ENET_MDC register
-
-0x5b8: Offset of IOMUXC_SW_PAD_CTL_PAD_ENET_MDC register
-
-0x2: This means that the MUX_MODE field selects the ESAI_TX5_RX0 function
-in this pad
-
-0x0: SELECT_INPUT not used for this pad
-
-> which clearly doesn't match:
+>Not 100% sure what people will decide on this.  There are a number of
+>examples on the PPC side (arch/powerpc/boot/dts) that are soc@ADDR,
+>but they don't typically have "reg" properties at the soc level.
 >
-> Required properties for pin configuration node:
-> - fsl,pins: two integers array, represents a group of pins mux and config
->   setting. The format is fsl,pins = <PIN_FUNC_ID CONFIG>, PIN_FUNC_ID is a
->   pin working on a specific function, which consists of a tuple of
->   <mux_reg conf_reg input_reg mux_val input_val>.  CONFIG is the pad setting
->   value like pull-up on this pin.
->
-> I thought DT was supposed to make bringing up support on new hardware
-> easier, but without documentation, I'm frankly stuffed with the cubox-i,
-> because it's impossible to work out what the right pinctrl settings
-> should be from what seems to be an undocumented pile of random numbers
-> stuffed into DT.
+>Let's go ahead w/o the unit address (as you have it) for now.
 
-Let me know if you need help with the iomux settings for cubox-i.
+What is the address even supposed to mean?  Are we expecting multiple
+'soc' nodes?
 
-Regards,
-
-Fabio Estevam
+David
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
