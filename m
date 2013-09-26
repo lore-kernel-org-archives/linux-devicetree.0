@@ -1,154 +1,274 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH v6 0/4] mtd:nand:omap2: clean-up of supported ECC schemes
-Date: Thu, 26 Sep 2013 10:58:56 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA16D07@DBDE04.ent.ti.com>
-References: <1378986619-26765-1-git-send-email-pekon@ti.com>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: [PATCH/RFC] ARM: shmobile: only enable used I2C interfaces in DT on
+ all Renesas boards
+Date: Thu, 26 Sep 2013 13:06:01 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1309261259490.11968@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1378986619-26765-1-git-send-email-pekon@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: "Rob Herring (robherring2@gmail.com)" <robherring2@gmail.com>, "Mark
- Rutland (mark.rutland@arm.com)" <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi,
- Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "olof@lixom.net" <olof@lixom.net>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> 
-> *Changes v5 -> v6*
-> [PATCH 1/4]:
-> 	- updated DT binding for gpmc-nand based on 'Olof Johansson's
-> feedbacks
-> 	http://lists.infradead.org/pipermail/linux-mtd/2013-
-> August/048394.html
-> 	- detection of ELM device via ti,elm-id DT node, moved to gpmc.c
-> driver
-> [PATCH 2/4]
-> 	- removed: support for following obselete ECC schemes
-> 	OMAP_ECC_HAMMING_CODE_DEFAULT (S/W based 1-bit Hamming
-> ECC)
-> 	OMAP_ECC_HAMMING_CODE_HW_ROMCODE (H/W based 1-bit
-> Hamming ECC scheme)
-> 	- updated: using omap_oobinfo as chip->ecc.layout for all ecc-
-> schemes
-> 	- clean: error messages
-> [PATCH 3/4] cleaned to include changes for OMAP_ECC_BCH8_CODE_HW
-> only
-> [PATCH 4/4] updated to include DT property changes
-> 
-> 
-> *Changes v4 -> v5*
-> - Rebased to linux-next
-> IMPORTANT: Need to revert commit fb1585b, [PATCH 2/4] part of previous
-> version
-> 	http://lists.infradead.org/pipermail/linux-mtd/2013-July/047441.html
-> 
-> - Swapped PATCH-1 & PATCH-2 to maintain bisectibility & compilation
-> dependency
-> 	http://lists.infradead.org/pipermail/linux-mtd/2013-July/047461.html
-> 
-> - PATCH-2: re-ordered call to is_elm_present() for later updates ELM driver
-> 	- dropped changes in include/linux/platform_data/elm.h (not
-> needed)
-> - PATCH-3: re-ordered call to is_elm_present() for later updates ELM driver
-> - Re-formated patch description (replaced tabs with white-spaces)
-> 
-> 
-> *Changes v3 -> v4*
-> (Resent with CC: devicetree-discuss@lists.ozlabs.org)
-> - [Patch 1/3] removed MTD_NAND_OMAP_BCH8 &
-> MTD_NAND_OMAP_BCH4 from nand/Kconfig
-> 	ECC scheme selectable via nand DT (nand-ecc-opt).
-> - [*] rebased for l2-mtd.git
-> 
-> 
-> *Changes v2 -> v3*
-> (Resent with Author Name fixed)
-> - PATCH-1: re-arranged code to remove redundancy, added
-> NAND_BUSWIDTH_AUTO
-> - PATCH-2: updated nand-ecc-opt DT mapping and Documentation
-> - PATCH-3: code-cleaning + changes to match PATCH-1
-> - PATCH-4 <DROPPED> update DT attribute for ti,nand-ecc-opt
-> 	- received feedback to keep DT mapping independent of linuxism
-> - PATCH-4:<NEW> : ARM: dts: AM33xx: updated default ECC scheme in nand-
-> ecc-opt
-> 	- independent patch for AM335x-evm.dts update based on PATCH-2
-> 
-> 
-> *Changes v1 -> v2*
-> 	added 	[PATCH 3/4] and [PATCH 4/4]
-> 
-> 
-> *Patches in this series*
-> [PATCH 1/4]->[PATCH v5 2/4]: clean-up and optimization for supported ECC
-> schemes.
-> [PATCH 2/4]->[PATCH v5 1/4]: add separate DT options each supported ECC
-> scheme.
-> [PATCH 3/4]: update BCH4 ECC implementation (using ELM or using lib/bch.h)
-> [PATCH 4/4]: ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-
-> opt
-> 
-> After this patch series, omap2-nand driver will supports following ECC
-> schemes:
-> +---------------------------------------+---------------+---------------+
-> | ECC scheme                            |ECC calculation|Error detection|
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_HAMMING_CODE_HW               |H/W (GPMC)     |S/W            |
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_BCH4_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W
-> (lib/bch.h)|
-> |OMAP_ECC_BCH4_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W
-> (lib/bch.h)|
-> |OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
-> +---------------------------------------+---------------+---------------+
-> - Selection of OMAP_ECC_BCHx_CODE_HW_DETECTION_SW requires,
-> 	Kconfig: CONFIG_MTD_NAND_ECC_BCH: enables S/W based BCH
-> ECC algorithm.
-> 
-> - Selection of OMAP_ECC_BCHx_CODE_HW requires,
-> 	Kconfig: CONFIG_MTD_NAND_OMAP_BCH: enables ELM H/W
-> module.
-> 
-> Pekon Gupta (4):
->   ARM: OMAP2+: cleaned-up DT support of various ECC schemes
->   mtd:nand:omap2: clean-up BCHx_HW and BCHx_SW ECC configurations in
->     device_probe
->   mtd:nand:omap2: updated support for BCH4 ECC scheme
->   ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-opt
-> 
->  .../devicetree/bindings/mtd/gpmc-nand.txt          |  14 +-
->  arch/arm/boot/dts/am335x-evm.dts                   |   2 +-
->  arch/arm/mach-omap2/board-flash.c                  |   2 +-
->  arch/arm/mach-omap2/gpmc.c                         |  47 +-
->  drivers/mtd/nand/Kconfig                           |  30 +-
->  drivers/mtd/nand/omap2.c                           | 526 ++++++++++-----------
->  include/linux/platform_data/mtd-nand-omap2.h       |  18 +-
->  7 files changed, 309 insertions(+), 330 deletions(-)
-> 
-> --
-> 1.8.1
-+ Rob Herring <robherring2@gmail.com>
-+ Mark Rutland <mark.rutland@arm.com>
-+ Pawel Moll <pawel.moll@arm.com>
-+ Ian Campbell <ijc+devicetree@hellion.org.uk>
-+ Stephen Warren <swarren@wwwdotorg.org>
+Currently all I2C interfaces in all *.dtsi files for various Renesas SoCs
+are enabled by default. Switch them all off and only enable populated I2C
+interfaces in board-specific *.dts files.
 
-CC other DT maintainers, who were missed earlier in mail-chain.
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
 
-with regards, pekon
+RFC because this can break things. E.g. if someone relied on an I2C bus 
+being available and used it from the user-space. Otherwise I don't think 
+it should break anything. Compile-tested all affected .dtb, run-time 
+tested on kzm9g.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+ arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts    |    1 +
+ arch/arm/boot/dts/r8a73a4-ape6evm.dts              |    1 +
+ arch/arm/boot/dts/r8a73a4.dtsi                     |    9 +++++++++
+ .../boot/dts/r8a7740-armadillo800eva-reference.dts |    1 +
+ arch/arm/boot/dts/r8a7740.dtsi                     |    2 ++
+ arch/arm/boot/dts/r8a7779.dtsi                     |    4 ++++
+ arch/arm/boot/dts/sh73a0-kzm9g-reference.dts       |    2 ++
+ arch/arm/boot/dts/sh73a0.dtsi                      |    5 +++++
+ 8 files changed, 25 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts b/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
+index 2b49b05..9443e93 100644
+--- a/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
++++ b/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
+@@ -62,6 +62,7 @@
+ };
+ 
+ &i2c5 {
++	status = "okay";
+ 	vdd_dvfs: max8973@1b {
+ 		compatible = "maxim,max8973";
+ 		reg = <0x1b>;
+diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+index 72f867e..91436b5 100644
+--- a/arch/arm/boot/dts/r8a73a4-ape6evm.dts
++++ b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+@@ -52,6 +52,7 @@
+ };
+ 
+ &i2c5 {
++	status = "okay";
+ 	vdd_dvfs: max8973@1b {
+ 		compatible = "maxim,max8973";
+ 		reg = <0x1b>;
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index 658fcc5..6048825 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -93,6 +93,7 @@
+ 		reg = <0 0xe6500000 0 0x428>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 174 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c1: i2c@e6510000 {
+@@ -102,6 +103,7 @@
+ 		reg = <0 0xe6510000 0 0x428>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 175 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c2: i2c@e6520000 {
+@@ -111,6 +113,7 @@
+ 		reg = <0 0xe6520000 0 0x428>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 176 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c3: i2c@e6530000 {
+@@ -120,6 +123,7 @@
+ 		reg = <0 0xe6530000 0 0x428>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 177 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c4: i2c@e6540000 {
+@@ -129,6 +133,7 @@
+ 		reg = <0 0xe6540000 0 0x428>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 178 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c5: i2c@e60b0000 {
+@@ -138,6 +143,7 @@
+ 		reg = <0 0xe60b0000 0 0x428>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 179 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c6: i2c@e6550000 {
+@@ -147,6 +153,7 @@
+ 		reg = <0 0xe6550000 0 0x428>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 184 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c7: i2c@e6560000 {
+@@ -156,6 +163,7 @@
+ 		reg = <0 0xe6560000 0 0x428>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 185 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c8: i2c@e6570000 {
+@@ -165,6 +173,7 @@
+ 		reg = <0 0xe6570000 0 0x428>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 173 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	mmcif0: mmcif@ee200000 {
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+index 801442b..8b2aab5 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+@@ -62,6 +62,7 @@
+ };
+ 
+ &i2c0 {
++	status = "okay";
+ 	touchscreen: st1232@55 {
+ 		compatible = "sitronix,st1232";
+ 		reg = <0x55>;
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index 44d3d52..868bdde 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -131,6 +131,7 @@
+ 			      0 202 0x4
+ 			      0 203 0x4
+ 			      0 204 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c1: i2c@e6c20000 {
+@@ -143,6 +144,7 @@
+ 			      0 71 0x4
+ 			      0 72 0x4
+ 			      0 73 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	pfc: pfc@e6050000 {
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index ebbe507..912b3a0 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -156,6 +156,7 @@
+ 		reg = <0xffc70000 0x1000>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 79 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c1: i2c@ffc71000 {
+@@ -165,6 +166,7 @@
+ 		reg = <0xffc71000 0x1000>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 82 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c2: i2c@ffc72000 {
+@@ -174,6 +176,7 @@
+ 		reg = <0xffc72000 0x1000>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 80 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c3: i2c@ffc73000 {
+@@ -183,6 +186,7 @@
+ 		reg = <0xffc73000 0x1000>;
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 81 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	pfc: pfc@fffc0000 {
+diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+index 2122306..8ee06dd 100644
+--- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
++++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+@@ -108,6 +108,7 @@
+ };
+ 
+ &i2c0 {
++	status = "okay";
+ 	as3711@40 {
+ 		compatible = "ams,as3711";
+ 		reg = <0x40>;
+@@ -183,6 +184,7 @@
+ &i2c3 {
+ 	pinctrl-0 = <&i2c3_pins>;
+ 	pinctrl-names = "default";
++	status = "okay";
+ };
+ 
+ &mmcif {
+diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+index 3955c76..fcf2688 100644
+--- a/arch/arm/boot/dts/sh73a0.dtsi
++++ b/arch/arm/boot/dts/sh73a0.dtsi
+@@ -135,6 +135,7 @@
+ 			      0 168 0x4
+ 			      0 169 0x4
+ 			      0 170 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c1: i2c@e6822000 {
+@@ -147,6 +148,7 @@
+ 			      0 52 0x4
+ 			      0 53 0x4
+ 			      0 54 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c2: i2c@e6824000 {
+@@ -159,6 +161,7 @@
+ 			      0 172 0x4
+ 			      0 173 0x4
+ 			      0 174 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c3: i2c@e6826000 {
+@@ -171,6 +174,7 @@
+ 			      0 184 0x4
+ 			      0 185 0x4
+ 			      0 186 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	i2c4: i2c@e6828000 {
+@@ -183,6 +187,7 @@
+ 			      0 188 0x4
+ 			      0 189 0x4
+ 			      0 190 0x4>;
++		status = "disabled";
+ 	};
+ 
+ 	mmcif: mmcif@e6bd0000 {
+-- 
+1.7.2.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
