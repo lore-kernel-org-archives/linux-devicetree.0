@@ -1,37 +1,51 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v10 2/3] DMA: Freescale: Add new 8-channel DMA engine
- device tree nodes
-Date: Wed, 25 Sep 2013 20:46:32 -0500
-Message-ID: <1380159992.24959.248.camel@snotra.buserror.net>
-References: <1379499333-4745-1-git-send-email-hongbo.zhang@freescale.com>
-	 <1379499333-4745-3-git-send-email-hongbo.zhang@freescale.com>
-	 <524074A7.7000001@wwwdotorg.org> <524169E3.7030408@freescale.com>
-	 <5241CC60.5070204@wwwdotorg.org> <52429252.10009@freescale.com>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH 1/3] arm: socfpga: Set the SDMMC clock phase in system manager
+Date: Wed, 25 Sep 2013 21:50:07 -0400
+Message-ID: <8761to4ai8.fsf@octavius.laptop.org>
+References: <1378740833-4883-1-git-send-email-dinguyen@altera.com>
+	<1378740833-4883-2-git-send-email-dinguyen@altera.com>
+	<20130914110031.GB15077@amd.pavel.ucw.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <52429252.10009@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hongbo Zhang <hongbo.zhang@freescale.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, ian.campbell@citrix.com, pawel.moll@arm.com, vinod.koul@intel.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, djbw@fb.com, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20130914110031.GB15077@amd.pavel.ucw.cz> (Pavel Machek's message
+	of "Sat, 14 Sep 2013 13:00:31 +0200")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>
+Cc: dinguyen@altera.com, dinh.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-09-25 at 15:35 +0800, Hongbo Zhang wrote:
-> By the way, I know maybe it is difficult, but why not introduce a 
-> document of maintaining rules for the dt binding docs? we have dedicated 
-> maintainers for this part now. Description language from one submitter 
-> cannot satisfy every reviewer/maintainer, for a reg property, is it 
-> necessary to say "offset and length",
+Hi Dinh,
 
-Don't say "offset and length".  It's both redundant with the base
-definition of the reg property, and overly specific because it makes
-assumptions about how the parent node's ranges are set up (sometimes we
-want to be that specific, but usually not).
+On Sat, Sep 14 2013, Pavel Machek wrote:
+>> From: Dinh Nguyen <dinguyen@altera.com>
+>> 
+>> Add functionality in the System Manager to set the SDR settings for the
+>> SD/MMC IP.
+>> 
+>> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+>> Cc: Pavel Machek <pavel@denx.de>
+>
+>> +void socfpga_sysmgr_set_dwmmc_drvsel_smpsel(void)
+>> +{
+>> +	struct device_node *np;
+>> +	u32 timing[2];
+>> +	u32 hs_timing;
+>> +
+>> +	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-dw-mshc");
+>> +	of_property_read_u32_array(np, "samsung,dw-mshc-sdr-timing", timing, 2);
+>> +	hs_timing = SYSMGR_SDMMC_CTRL_SET(timing[0], timing[1]);
+>> +	writel(hs_timing, sys_manager_base_addr + SYSMGR_SDMMCGRP_CTRL_OFFSET);
+>> +}
+>> +EXPORT_SYMBOL(socfpga_sysmgr_set_dwmmc_drvsel_smpsel);
+>
+> To get the abstraction right, would it make sense to have timing
+> parameters as arguments to socfpga_sysmgr_set_dwmmc_drvsel_smpsel(),
+> so that sysmgr code is not walking MMC's device tree directly?
 
-> to say "how many entries", to say "register functions and even names"?
+I think this review comment from Pavel is still open, please reply.
+Thanks,
 
-If there's more than one
-entry/resource/whatever-we-decide-to-call-it-but-let's-pick-something-canonical, then say how many there are and what each one means.
-
--Scott
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
