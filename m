@@ -1,57 +1,48 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 01/21] drivers: remove unnecessary prom.h includes
-Date: Thu, 26 Sep 2013 13:50:36 -0500
-Message-ID: <1380221456-11192-2-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 05/21] openrisc: remove unnecessary prom.h include
+Date: Thu, 26 Sep 2013 13:50:40 -0500
+Message-ID: <1380221456-11192-6-git-send-email-robherring2@gmail.com>
 References: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-can-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bounces@lists.openrisc.net>
 In-Reply-To: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
-Sender: linux-can-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, linux-can@vger.kernel.org, netdev@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux@lists.openrisc.net
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-Remove unnecessary prom.h includes in preparation to remove implicit
-includes of prom.h.
+Remove unnecessary prom.h include in preparation to make prom.h optional.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: linux-can@vger.kernel.org
-Cc: netdev@vger.kernel.org
+Cc: Jonas Bonn <jonas@southpole.se>
+Cc: linux@lists.openrisc.net
 ---
- drivers/net/can/grcan.c                       | 3 ---
- drivers/net/can/sja1000/sja1000_of_platform.c | 1 -
- 2 files changed, 4 deletions(-)
+ arch/openrisc/kernel/prom.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/can/grcan.c b/drivers/net/can/grcan.c
-index 6aa737a..ab506d6 100644
---- a/drivers/net/can/grcan.c
-+++ b/drivers/net/can/grcan.c
-@@ -34,10 +34,7 @@
- #include <linux/io.h>
- #include <linux/can/dev.h>
- #include <linux/spinlock.h>
--
- #include <linux/of_platform.h>
+diff --git a/arch/openrisc/kernel/prom.c b/arch/openrisc/kernel/prom.c
+index a63e768..a915dc7 100644
+--- a/arch/openrisc/kernel/prom.c
++++ b/arch/openrisc/kernel/prom.c
+@@ -37,7 +37,6 @@
+ #include <linux/memblock.h>
+ #include <linux/of_fdt.h>
+ 
 -#include <asm/prom.h>
--
- #include <linux/of_irq.h>
- 
- #include <linux/dma-mapping.h>
-diff --git a/drivers/net/can/sja1000/sja1000_of_platform.c b/drivers/net/can/sja1000/sja1000_of_platform.c
-index 31ad339..047accd 100644
---- a/drivers/net/can/sja1000/sja1000_of_platform.c
-+++ b/drivers/net/can/sja1000/sja1000_of_platform.c
-@@ -44,7 +44,6 @@
- #include <linux/of_platform.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
--#include <asm/prom.h>
- 
- #include "sja1000.h"
- 
+ #include <asm/page.h>
+ #include <asm/processor.h>
+ #include <asm/irq.h>
 -- 
 1.8.1.2
-
