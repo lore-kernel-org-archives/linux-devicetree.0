@@ -1,84 +1,93 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
-Date: Thu, 26 Sep 2013 10:29:10 -0500
-Message-ID: <524452C6.6090801@ti.com>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <52445115.7010800@ti.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [RFC PATCH] mfd: arizona: Update device tree regulator bindings
+Date: Thu, 26 Sep 2013 16:29:41 +0100
+Message-ID: <20130926152941.GQ3635@opensource.wolfsonmicro.com>
+References: <1380131272-16982-1-git-send-email-ckeepax@opensource.wolfsonmicro.com> <20130925183201.GT3226@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52445115.7010800@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.orgBenoit Cousson <bcousson@baylibre.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130925183201.GT3226@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/26/2013 10:21 AM, Nishanth Menon wrote:
-> On 09/25/2013 03:48 AM, Tero Kristo wrote:
-> [...]
->> Test branch available here:
->> https://github.com/t-kristo/linux-pm.git
->> branch: mainline-3.12-rc2-ti-dt-clks-v7
->>
->> Testing done:
->> - am335x-bone : boot only
->> - omap5-sevm : boot only
->> - dra7-evm : boot only
->> - omap3-beagle : boot + suspend/resume (ret + off)
->> - omap4-panda-es : boot + suspend/resume
->>
->> Nishanth has also been doing some tests with omap3-beagle-xm with some WIP
->> versions of this branch, but not with this latest one. Nishanth, maybe you
->> can provide test results to this one also?
-> I rebased the branch on top of benoit's for_3.13/dts merged with
-> v3.12-rc2 tag
-> 45646cd ARM: dts: AM33XX: don't redefine OCP bus and device nodes
-> 
-> All platforms were to MMC filesystem boot (SD card). u-boot used
-> v2013.10-rc3 on all platforms (mainline u-boot).
-> 
-> OMAP3630: Beagle-XM:
-> http://pastebin.pandaboard.org/index.php/view/96577127
-> (needs additional patch
-> -> https://patchwork.kernel.org/patch/2919661/ )
-dependency patch needs rework
-> 
-> OMAP4460: Panda-ES: http://pastebin.pandaboard.org/index.php/view/85143661
-> 
-> OMAP5432: OMAP5-UEVM:
-> http://pastebin.pandaboard.org/index.php/view/91361843
-> (nice to have patch
-> -> https://patchwork.kernel.org/patch/2907761/ )
-Acked,tested, pending merge from  maintainers
-> 
-> AM335x: BeagleBone Black:
-> http://pastebin.pandaboard.org/index.php/view/42000597
-> (needs additional patches:
->  https://patchwork.kernel.org/patch/2902711/
--> merged to Shekar's davinci branch -> pending upstream.
->  https://patchwork.kernel.org/patch/2902711/
-Correction on ^^: should have been:
-https://patchwork.kernel.org/patch/2919661/
-tested, pending ack, merge.
-> )
-> 
-> DRA7: DRA7-EVM: http://pastebin.pandaboard.org/index.php/view/38362805
-> (needs additional patches:
-> -> https://patchwork.kernel.org/patch/2849391/
-> -> https://patchwork.kernel.org/patch/2849601/
-> -> https://patchwork.kernel.org/patch/2849602/
-> -> https://patchwork.kernel.org/patch/2907761/
-All of the above:
-Acked,tested, pending merge from  maintainers
-> )
-> 
-> So, for the entire series:
-> Tested-by: Nishanth Menon <nm@ti.com>
-> 
+Mark,
 
-Maybe Benoit and Tony could help reduce few of these acked patches
-pending merge from having to be cherry-picked by folks.
+What are your thoughts on this approach? I basically add a way to
+specify in the DAPM regulator supply widget that the supply lives
+on the parent rather than the current device. If you like it I
+will send it in as a proper patch.
 
+I had considered adding something like a recursive regulator get
+that works it's way up the tree but this felt rather invasive and
+most places the user code does the regulator get rather than a
+framework so the issue is only really likely to crop up with
+regards to ASoC.
+
+Thanks,
+Charles
+---
+ include/sound/soc-dapm.h  |    2 ++
+ sound/soc/codecs/wm5102.c |   13 +++++++------
+ sound/soc/soc-dapm.c      |    7 ++++++-
+ 3 files changed, 15 insertions(+), 7 deletions(-)
+
+diff --git a/include/sound/soc-dapm.h b/include/sound/soc-dapm.h
+index 27a72d5..f21b261 100644
+--- a/include/sound/soc-dapm.h
++++ b/include/sound/soc-dapm.h
+@@ -360,6 +360,8 @@ struct device;
+ 
+ /* regulator widget flags */
+ #define SND_SOC_DAPM_REGULATOR_BYPASS     0x1     /* bypass when disabled */
++/* use codec parent device for regulator get */
++#define SND_SOC_DAPM_REGULATOR_USE_PARENT 0x2
+ 
+ struct snd_soc_dapm_widget;
+ enum snd_soc_dapm_type;
+diff --git a/sound/soc/codecs/wm5102.c b/sound/soc/codecs/wm5102.c
+index 8bbddc1..ee31f15 100644
+--- a/sound/soc/codecs/wm5102.c
++++ b/sound/soc/codecs/wm5102.c
+@@ -980,12 +980,13 @@ SND_SOC_DAPM_SUPPLY("OPCLK", ARIZONA_OUTPUT_SYSTEM_CLOCK,
+ SND_SOC_DAPM_SUPPLY("ASYNCOPCLK", ARIZONA_OUTPUT_ASYNC_CLOCK,
+ 		    ARIZONA_OPCLK_ASYNC_ENA_SHIFT, 0, NULL, 0),
+ 
+-SND_SOC_DAPM_REGULATOR_SUPPLY("DBVDD2", 0, 0),
+-SND_SOC_DAPM_REGULATOR_SUPPLY("DBVDD3", 0, 0),
+-SND_SOC_DAPM_REGULATOR_SUPPLY("CPVDD", 20, 0),
+-SND_SOC_DAPM_REGULATOR_SUPPLY("MICVDD", 0, SND_SOC_DAPM_REGULATOR_BYPASS),
+-SND_SOC_DAPM_REGULATOR_SUPPLY("SPKVDDL", 0, 0),
+-SND_SOC_DAPM_REGULATOR_SUPPLY("SPKVDDR", 0, 0),
++SND_SOC_DAPM_REGULATOR_SUPPLY("DBVDD2", 0, SND_SOC_DAPM_REGULATOR_USE_PARENT),
++SND_SOC_DAPM_REGULATOR_SUPPLY("DBVDD3", 0, SND_SOC_DAPM_REGULATOR_USE_PARENT),
++SND_SOC_DAPM_REGULATOR_SUPPLY("CPVDD", 20, SND_SOC_DAPM_REGULATOR_USE_PARENT),
++SND_SOC_DAPM_REGULATOR_SUPPLY("MICVDD", 0, SND_SOC_DAPM_REGULATOR_BYPASS |
++					   SND_SOC_DAPM_REGULATOR_USE_PARENT),
++SND_SOC_DAPM_REGULATOR_SUPPLY("SPKVDDL", 0, SND_SOC_DAPM_REGULATOR_USE_PARENT),
++SND_SOC_DAPM_REGULATOR_SUPPLY("SPKVDDR", 0, SND_SOC_DAPM_REGULATOR_USE_PARENT),
+ 
+ SND_SOC_DAPM_SIGGEN("TONE"),
+ SND_SOC_DAPM_SIGGEN("NOISE"),
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index c17c14c..899bd2e 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -3181,7 +3181,12 @@ snd_soc_dapm_new_control(struct snd_soc_dapm_context *dapm,
+ 
+ 	switch (w->id) {
+ 	case snd_soc_dapm_regulator_supply:
+-		w->regulator = devm_regulator_get(dapm->dev, w->name);
++		if (w->on_val & SND_SOC_DAPM_REGULATOR_USE_PARENT)
++			w->regulator = devm_regulator_get(dapm->dev->parent,
++							  w->name);
++		else
++			w->regulator = devm_regulator_get(dapm->dev, w->name);
++
+ 		if (IS_ERR(w->regulator)) {
+ 			ret = PTR_ERR(w->regulator);
+ 			dev_err(dapm->dev, "ASoC: Failed to request %s: %d\n",
 -- 
-Regards,
-Nishanth Menon
+1.7.2.5
