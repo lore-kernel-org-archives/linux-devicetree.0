@@ -1,94 +1,93 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] pwm-backlight: add support for device tree gpio control
-Date: Thu, 26 Sep 2013 13:13:18 +0300
-Message-ID: <524408BE.40402@ti.com>
-References: <1378236372-15711-1-git-send-email-mikedunn@newsguy.com> <20130910172130.GC22111@ulmo> <523056A6.5060000@newsguy.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] arm: zynq: Enable global timer
+Date: Thu, 26 Sep 2013 12:14:17 +0200
+Message-ID: <524408F9.3090702@linaro.org>
+References: <1379530118-22813-1-git-send-email-soren.brinkmann@xilinx.com> <5242FF4B.6050901@linaro.org> <62570dec-da98-42a2-93b9-6ab1f8adb30d@CH1EHSMHS037.ehs.local>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="NDDlI9o5jwvnxTdFENGHAnXjgNLGIg8Vv"
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <523056A6.5060000-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <62570dec-da98-42a2-93b9-6ab1f8adb30d-p/+QeVIcf1AR12DuCexJY7jjLBE8jN/0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Preeti Murthy <preeti.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---NDDlI9o5jwvnxTdFENGHAnXjgNLGIg8Vv
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 11/09/13 14:40, Mike Dunn wrote:
-> On 09/10/2013 10:21 AM, Thierry Reding wrote:
-
->> Do you have a real setup that actually needs multiple GPIOs? Usually
->> such a setup requires some kind of timing or other additional constrai=
-nt
->> which can't be represented by this simple binding.
+On 09/26/2013 10:16 AM, Michal Simek wrote:
+> Hi Daniel,
+>
+> On 09/25/2013 05:20 PM, Daniel Lezcano wrote:
+>> On 09/18/2013 08:48 PM, Soren Brinkmann wrote:
+>>> Hi all,
+>>>
+>>> here's a v2. I reused the subject from my v1 submission although th=
+e focus of
+>>> this series moved a bit towards the timer subsystem.
+>>> I replaced Stephen's fix to prevent per cpu devices from becoming
+>>> the broadcast device with Thomas' proposal, but I kept the original=
+ commit
+>>> message. I split the whole approach in small chunks that I found re=
+asonable.
+>>>
+>>> In 4/4, I picked up Grant's comment regarding the DT node name.
+>>>
+>>> v2:
+>>>   - drop 1/2 of the original series
+>>>   - implement preventing per cpu devices from becoming broadcast de=
+vice according
+>>>     to Thomas' proposal
+>>>     - introduce new CLOCK_EVT_FEAT_PERCPU flag
+>>>     - set the flag for the arm_global_timer
+>>>     - filter per cpu devices based on this flag when choosing the b=
+roadcast
+>>>       device
+>>>   - rename DT node to avoid '_'s
+>>>
+>>>
+>>> Soren Brinkmann (4):
+>>>    clockchips: Add FEAT_PERCPU clockevent flag
+>>>    clocksource/arm_global_timer: Set FEAT_PERCPU flag
+>>>    tick: broadcast: Deny per-cpu clockevents from being broadcast s=
+ources
+>>>    arm: zynq: Enable arm_global_timer
+>>>
+>>>   arch/arm/boot/dts/zynq-7000.dtsi       | 8 ++++++++
+>>>   arch/arm/mach-zynq/Kconfig             | 1 +
+>>>   drivers/clocksource/arm_global_timer.c | 3 ++-
+>>>   include/linux/clockchips.h             | 1 +
+>>>   kernel/time/tick-broadcast.c           | 1 +
+>>>   5 files changed, 13 insertions(+), 1 deletion(-)
 >>
->> Looking at the Palm Treo code it seems like the reason why multiple
->> GPIOs are needed is because one is to enable the backlight, while the
->> other is in fact used to enable the LCD panel.=20
->=20
->=20
-> There are actually four GPIOs involved!  (There is an embarrasingly hor=
-rible
-> hack in arch/arm/mach-pxa/palmtreo.c that handles the others.)  One is =
-almost
-> certainly simply backlight power.  The other three are probably LCD rel=
-ated.
+>> This patches falls under different maintainer's umbrella.
+>>
+>> I acked-by the patches, so if someone is willing to take the patches=
+ I
+>> am ok with that. I am ok also to pick them into my tree with the
+>> acked-by maintainer. Just let me know ...
+>>
+>
+> Yes, please add also this zynq specific patch through your tree.
+>
+> Here is my ACK for that.
+> Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-When you say "power", do you mean the gpio enables a regulator to feed
-power to the backlight? If so, wouldn't that be a regulator, not gpio,
-from the bl driver's point of view?
+Thomas do you mind to ack the patches if you agree with it ?
 
-Generally speaking, this same problem appears in many places, but for
-some reason especially in display. I'm a bit hesitant in adding "free
-form" gpio/regulator support for drivers, as, as Thierry pointed out,
-there are often timing requirements, or sometimes the gpios are
-inverted, or sometimes the gpio is, in fact, a reset gpio, where you'll
-assert the gpio for a short moment only.
-
-I haven't seen new versions for the power sequences framework (without
-DT support), I think it could help us here a bit by simplifying how we
-present the sequences inside the driver. But we still need multiple
-drivers or the same driver supporting multiple devices.
-
-And I also think that the model where we have just one driver for, say,
-backlight may not be enough. There may be multiple hardware components,
-that used together will generate the backlight. And each component
-requires specific management.
-
- Tomi
+Thanks
+   -- Daniel
 
 
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
 
---NDDlI9o5jwvnxTdFENGHAnXjgNLGIg8Vv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSRAi+AAoJEPo9qoy8lh71yKgP/2Ru08KiKVeLi5TJ2a1T4yqH
-6+541TbX0JlvQECfoEJjJ98eZ4eJWGrRwa9Soy3A5WA17CEvM8xk7XXIM/0G8FqE
-mMJbSoIX2ccwseuLMwbYTGuPAsWh9yqZLF7hdDZ3nQV2uET02JYcKBili4iK9vzG
-g2S3J1mrBQPKAKlj90Vyx8EgCOy/735c/oAaSIEF43PHYmao1E1dwChBXm2U86nr
-yFyeDOx6ApVs49jtHQAuXk9lwNccVR/yOP+BLCBQrLm+GD3A0bZApYsn0+YbNoaC
-UFsGiUw0IOByLrCqpDtfr7Z9XkZZT1jVgd+SijD4qIrjkHt/JohBGW4OX9KzaocH
-F27hKzUOaptGewXEtcv0ICYNUdB6O+6sa67O9ngp0+TfXELrhKoxAvwvSIfMTyhi
-WQo5H5BNZ+cW5WSFCfT0/4PXI/PGa+yB0f1U4TWBYz+lYq+cNl+juG7lpzOHRboT
-UFOkbIy9sf3vZVuo+/rmkZHM2WffNNxPxsbw4bGDeWxUZVWdGr+xMx4CgltjN2/c
-GiePDAH853QSogR/ha8emF2RUzYfTJxSW5rq61iCUxMrIqUE03IzQxaZA47Gm+iU
-W6OeKIdaD+osDOEi86RRlBYHX/LA8cPpty8bgWdSX1aVb0hXjW2OvZIahS1LwdOk
-ybLKvLfHHU908D4TVB+Q
-=OehU
------END PGP SIGNATURE-----
-
---NDDlI9o5jwvnxTdFENGHAnXjgNLGIg8Vv--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
