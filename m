@@ -1,81 +1,55 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2] pwm-backlight: allow for non-increasing brightness
- levels
-Date: Thu, 26 Sep 2013 13:03:06 +0300
-Message-ID: <5244065A.8010408@ti.com>
-References: <1379869196-19377-1-git-send-email-mikedunn@newsguy.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys
+ part and Exynos part
+Date: Thu, 26 Sep 2013 15:42:27 +0530
+Message-ID: <5244088B.20807@ti.com>
+References: <000701ce8741$fe47deb0$fad79c10$@samsung.com> <201309242323.55323.arnd@arndb.de> <5243C0E5.7020508@ti.com> <201309261151.42034.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="JqSkcjUv5CLi83pO8sp6jknfCsQTtpieH"
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379869196-19377-1-git-send-email-mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <201309261151.42034.arnd-r2nGTMty4D4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>, 'Sean Cross' <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---JqSkcjUv5CLi83pO8sp6jknfCsQTtpieH
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Arnd,
 
-On 22/09/13 19:59, Mike Dunn wrote:
-> Currently the driver assumes that the values specified in the
-> brightness-levels device tree property increase as they are parsed from=
+On Thursday 26 September 2013 03:21 PM, Arnd Bergmann wrote:
+> On Thursday 26 September 2013, Kishon Vijay Abraham I wrote:
+>> On Wednesday 25 September 2013 02:53 AM, Arnd Bergmann wrote:
+>>> On Monday 23 September 2013, Kishon Vijay Abraham I wrote:
+>>>> Btw if we hadn't programmed inbound translation table, the address will go
+>>>> untranslated (according to the data book). I guess that's how it was working
+>>>> for Jingoo Han.
+>>>>
+>>>> **
+>>>> 3.10.4
+>>>> Inbound iATU Operation
+>>>>
+>>>> When there is no match, then the address is untranslated
+>>>> **
+>>>>
+>>>
+>>> Well, that should work just as well, since you have a 1:1 translation anyway.
+>>> Do you get the same error without the translation?
+>>
+>> Yes. I get the same non-fatal error interrupt in RC.
+> 
+> Ok, then I guess the translation is actually not at fault here but something
+> else. I would recommend looking at the IOMMU as the potential culprit. Maybe
+> having it disabled means that no DMA is going through, rather than all DMA
+> going through untranslated. Another possibility is that the IOMMU is set up
+> so that when disabled, it maps DMA address 0 to the start of RAM, rather
+> than identity mapping DMA address 0x80000000 there. If that's the case,
+> you either have to use the IOMMU, or set up the mapping in the root
+> complex to revert it.
 
-> left to right.  But boards that invert the signal between the PWM outpu=
-t
-> and the backlight will need to specify decreasing brightness-levels.
-> This patch removes the assumption that the last element of the array is=
+Thanks for your inputs. I'll check if that's the problem.
 
-> the maximum value, and instead searches the array for the maximum value=
-
-> and uses that in the duty cycle calculation.
->=20
-> Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-> ---
-> Changelog:
-> v2:=20
-> - commit message reworded; correct line wrap used
-> - 'max_level' variable renamed to 'scale'
-> - loop counter variable type changed to unsigned int
-> - value held in scale changed from array index to actual maximum level
-> - blank lines added around loop for readability
-
-As you said in a previous mail, the code is rather confusing. And, at
-least to me, "scale" sounds an odd name there, especially as it's then
-assigned to "max" local var. But if you and Thierry think this version
-is good, I'll take it.
-
- Tomi
-
-
-
---JqSkcjUv5CLi83pO8sp6jknfCsQTtpieH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJSRAZaAAoJEPo9qoy8lh71H08QAKOqfKF3tAuk7+T0YqErRBXH
-vU+QWetDC/7ZFyBWjIp2GwLgliq66G+vW8l7OLvKMlvIrtjGbBb69eJXrwS/LPkc
-scneOyl1qpNPb8LiJE+ST+kflZFK8DSHLk7TUCeqCIW95RV8Sgf1ydLpGei/Rska
-Vy281SkbeyP0wnF6DjH3yOihpcBLSe95+kBznZJPQZ9AYlwE/VvcLocUIIfE8Ifp
-6X6SDUPyx6ln+K/L8Baw3OFT28j3QwN4qedT5Ld467pf0W2JzIcyu04sbjDXqOin
-sk/1tSsbafy4/oj1LJdD1PTUSlTxT9sBrYeU5omR+MlHuanPN22mHdIw+e5yrlHw
-La3BOwshljs+Gis2/USN3E8l+ZA47EX+4YzAr0mB7n6nsAMIa+i0w58enydXr31G
-5ALMqIzkmPIMxRUl0FY1R+PEMDm3kcXuoE2LTi0UTMsp+xhgsbALYjXlX75YizU2
-gA9LYygHOcvBORRJLNci5owoBHBxXQYmb/pLzlO9WrOEu9ex2ZFGjQ8K7X+Vdu08
-JoWxk8idj2lqm1ibr2AxZo/npDjwzDyukT7Ct1vbYyvdY2KcBli9Kyi0CzYKj0Z7
-k5yN9hvURgTZ3Xl2QLUH6FIflc30pfdIkigzIKdf/ADyvT1nt97K9Ak6cQhQ8H4K
-SgzQ7+4s+mA6kinZL1pG
-=TM7+
------END PGP SIGNATURE-----
-
---JqSkcjUv5CLi83pO8sp6jknfCsQTtpieH--
+Thanks
+Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
