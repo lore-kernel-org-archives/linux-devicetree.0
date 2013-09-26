@@ -1,84 +1,75 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCHv4 2/3] ARM: msm: Add support for APQ8074 Dragonboard
-Date: Thu, 26 Sep 2013 14:33:53 -0500
-Message-ID: <50877C70-6066-4E87-9DEA-9F29D098525B@codeaurora.org>
-References: <1379992406-3541-1-git-send-email-rvaswani@codeaurora.org> <1379992406-3541-2-git-send-email-rvaswani@codeaurora.org> <4E7868D6-56CB-4AF8-8EBF-069966899C23@codeaurora.org> <5243652F.7090408@codeaurora.org> <B0F416B8-042A-49F1-81E9-B217F02AAD1E@codeaurora.org> <52447779.3010908@codeaurora.org> <52448852.9050608@codeaurora.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 0/4] Add Core Divider clock support for Armada 370/XP
+Date: Thu, 26 Sep 2013 16:35:26 -0300
+Message-ID: <1380224130-11868-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52448852.9050608-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Walker <dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <elopez93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds support for a set of clocks available in Armada 370/XP
+known as "Core Divider" clocks.
 
-On Sep 26, 2013, at 2:17 PM, Rohit Vaswani wrote:
+These are a set of gatable clocks, derived from a fixed PLL at
+a configurable ratio. Although this patchset adds support for the more
+general case, we only support one of the clocks, namely the NAND clock.
 
-> On 9/26/2013 11:05 AM, Rohit Vaswani wrote:
->> On 9/26/2013 9:37 AM, Kumar Gala wrote:
->>> <snip>
->> 
->>> +++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
->>> @@ -0,0 +1,6 @@
->>> +/include/ "qcom-msm8974.dtsi"
->>> +
->>> +/ {
->>> +    model = "Qualcomm APQ8074 Dragonboard";
->>> +    compatible = "qcom,apq8074-dragonboard", "qcom,apq8074";
->>> +};
->>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
->>> new file mode 100644
->>> index 0000000..f04b643
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
->>> @@ -0,0 +1,35 @@
->>> +/dts-v1/;
->>> +
->>> +/include/ "skeleton.dtsi"
->>> +
->>> +/ {
->>> +    model = "Qualcomm MSM8974";
->>> +    compatible = "qcom,msm8974";
->>> +    interrupt-parent = <&intc>;
->>> +
->>> +    soc: soc { };
->>>>> We should have a unit address here:
->>>>> 
->>>>>      soc: soc@FOOBAR {
->>>>> 
->>>>> also, split out the curly braces so any future patches do have to muck with that.
->>>>> 
->>>>>    };
->>>>> 
->>>> Im not sure I understand the reasoning behind the unit address for soc ?
->>> Its fairly standard practice and there is a fair amount of discussion about the lack of a unit address for memory nodes.
->>> 
->> That still doesn't really answer anything :) - and I couldn't find any discussions about this either.
->> I don't see anybody in upstream adding an address to soc except sun.
->> What is that address supposed to be for - what does it mean ?
->> The soc is way of encapsulating meaningful blocks  for the particular SoC.
-> 
-> I see the mail from Stephen Warren for adding a check stating that
-> 
-> "ePAPR 1.1 section 2.2.1.1 "Node Name Requirements" specifies that any
-> node that has a reg property must include a unit address in its name
-> with value matching the first entry in its reg property. Conversely, if
-> a node does not have a reg property, the node name must not include a
-> unit address."
-> 
-> The soc node we have does not have a reg property ?
+With this infrastructure in place, the addition of the rest of the clocks
+would be fairly easy.
 
-Not 100% sure what people will decide on this.  There are a number of examples on the PPC side (arch/powerpc/boot/dts) that are soc@ADDR, but they don't typically have "reg" properties at the soc level.
+A pictorical representation of the clock tree would be:
 
-Let's go ahead w/o the unit address (as you have it) for now.
+    PLL
+    |
+    |
+    ---------------------
+    |			|
+    |			|
+    NAND clock		...
 
-- k
+This patchset is based on v3.12-rc2. Any opinions are highly appreciated.
+
+Thanks!
+
+Changes from v1:
+
+  * The most significative change is the simplification of the NAND clock
+    tree. Instead of exposing two clocks: NAND ECC and NAND, we choose a
+    simpler approach and view both clocks as one.
+
+    The only impact these simplification has is that the NAND controller
+    driver will have to divide the rate by two when using it to calculate
+    the timings.
+
+  * A spinlock protecting the enable, disable and set_rate operations is added
+    as noted by Andrew Lunn.
+
+  * The round_rate algorithm was also simplified, as the previous one was rather
+    silly; also noted by Andrew.
+
+  * The size of the 'reg' property was fixed; also noted by Andrew.
+
+  * The exceedingly long macros names have been simplified and some other minor
+    coding style issues have been solved.
+
+Ezequiel Garcia (4):
+  clk: mvebu: Add Core Divider clock
+  ARM: mvebu: Add Core Divider clock device-tree binding
+  ARM: mvebu: Add a 2 GHz fixed-clock Armada 370/XP
+  ARM: mvebu: Add the core-divider clock to Armada 370/XP
+
+ .../bindings/clock/mvebu-corediv-clock.txt         |  19 ++
+ arch/arm/boot/dts/armada-370-xp.dtsi               |  17 ++
+ drivers/clk/mvebu/Kconfig                          |   5 +
+ drivers/clk/mvebu/Makefile                         |   1 +
+ drivers/clk/mvebu/clk-corediv.c                    | 223 +++++++++++++++++++++
+ 5 files changed, 265 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
+ create mode 100644 drivers/clk/mvebu/clk-corediv.c
 
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+1.8.1.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
