@@ -1,71 +1,99 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] pwm-backlight: allow for non-increasing brightness
- levels
-Date: Thu, 26 Sep 2013 13:51:09 +0200
-Message-ID: <20130926115108.GA1680@ulmo>
-References: <1379869196-19377-1-git-send-email-mikedunn@newsguy.com>
- <5244065A.8010408@ti.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v3 1/2] max77693: remove device wakeup from driver
+Date: Thu, 26 Sep 2013 14:00:31 +0200
+Message-ID: <524421DF.4010200@samsung.com>
+References: <1377104014-21910-1-git-send-email-a.hajda@samsung.com>
+ <1377104014-21910-2-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5244065A.8010408-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1377104014-21910-2-git-send-email-a.hajda@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: lee.jones@linaro.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 08/21/2013 06:53 PM, Andrzej Hajda wrote:
+> The patch removes wakeup related code from
+> the driver and plaftorm data - it is already
+> handled by i2c core using I2C_CLIENT_WAKE flag
+> from struct i2c_board_info. As a result MFD
+> itself do not requires platform data.
+>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  drivers/mfd/max77693.c               | 10 ----------
+>  include/linux/mfd/max77693-private.h |  1 -
+>  include/linux/mfd/max77693.h         |  2 --
+>  3 files changed, 13 deletions(-)
+>
+> diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
+> index 9e60fed..27f5da3 100644
+> --- a/drivers/mfd/max77693.c
+> +++ b/drivers/mfd/max77693.c
+> @@ -110,15 +110,9 @@ static int max77693_i2c_probe(struct i2c_client *i2c,
+>  			      const struct i2c_device_id *id)
+>  {
+>  	struct max77693_dev *max77693;
+> -	struct max77693_platform_data *pdata = i2c->dev.platform_data;
+>  	u8 reg_data;
+>  	int ret = 0;
+>  
+> -	if (!pdata) {
+> -		dev_err(&i2c->dev, "No platform data found.\n");
+> -		return -EINVAL;
+> -	}
+> -
+>  	max77693 = devm_kzalloc(&i2c->dev,
+>  			sizeof(struct max77693_dev), GFP_KERNEL);
+>  	if (max77693 == NULL)
+> @@ -138,8 +132,6 @@ static int max77693_i2c_probe(struct i2c_client *i2c,
+>  		return ret;
+>  	}
+>  
+> -	max77693->wakeup = pdata->wakeup;
+> -
+>  	ret = max77693_read_reg(max77693->regmap, MAX77693_PMIC_REG_PMIC_ID2,
+>  				&reg_data);
+>  	if (ret < 0) {
+> @@ -179,8 +171,6 @@ static int max77693_i2c_probe(struct i2c_client *i2c,
+>  	if (ret < 0)
+>  		goto err_mfd;
+>  
+> -	device_init_wakeup(max77693->dev, pdata->wakeup);
+> -
+>  	return ret;
+>  
+>  err_mfd:
+> diff --git a/include/linux/mfd/max77693-private.h b/include/linux/mfd/max77693-private.h
+> index 244fb0d..3e050b9 100644
+> --- a/include/linux/mfd/max77693-private.h
+> +++ b/include/linux/mfd/max77693-private.h
+> @@ -323,7 +323,6 @@ struct max77693_dev {
+>  
+>  	int irq;
+>  	int irq_gpio;
+> -	bool wakeup;
+>  	struct mutex irqlock;
+>  	int irq_masks_cur[MAX77693_IRQ_GROUP_NR];
+>  	int irq_masks_cache[MAX77693_IRQ_GROUP_NR];
+> diff --git a/include/linux/mfd/max77693.h b/include/linux/mfd/max77693.h
+> index 676f0f3..3f3dc45 100644
+> --- a/include/linux/mfd/max77693.h
+> +++ b/include/linux/mfd/max77693.h
+> @@ -64,8 +64,6 @@ struct max77693_muic_platform_data {
+>  };
+>  
+>  struct max77693_platform_data {
+> -	int wakeup;
+> -
+>  	/* regulator data */
+>  	struct max77693_regulator_data *regulators;
+>  	int num_regulators;
 
---3MwIy2ne0vdjdPXF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ping.
 
-On Thu, Sep 26, 2013 at 01:03:06PM +0300, Tomi Valkeinen wrote:
-[...]
-> But if you and Thierry think this version is good, I'll take it.
-
-That sounds like you want to take it through the fbdev tree. Jingoo is
-listed (along with Richard, but he hasn't been responsive to email for
-years) as maintainer for the backlight subsystem. Furthermore back at
-the time when I began working on the PWM subsystem, the backlight sub-
-system was pretty much orphaned, and pwm-backlight was by far the
-biggest user of the PWM subsystem. I adopted the driver at the time
-because it needed to be updated for PWM subsystem changes.
-
-What's the plan going forward? Given the coupling between the PWM
-subsystem and the pwm-backlight driver it might be useful to keep
-maintaining it as part of the PWM subsystem. On the other hand, there's
-some coupling between the driver and the backlight subsystem too.
-
-I have a couple of patches queued up for 3.13 that rework parts of the
-driver, so it'd be good to know how you guys want to handle this.
-
-Thierry
-
---3MwIy2ne0vdjdPXF
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSRB+sAAoJEN0jrNd/PrOhYEMP/inBrydrfknTB2Xy9tPS/haw
-4OY18uao53syGyLxS6Csc9w4rDgjV2AulGMowMVPrmFgO62ZuHDlu8nSMTz6K1ZK
-jp1kBpjIxUhuE0v0dp07UvIjQHrb7TxelmGX+xT7PFZsfflNC97Gitl3EU+M09SS
-p/EBuBFhTEm0/kr4bqFyi7LxDG+5IkH9Cov6PoGQDY0VWXkN01wzya/NW6Y+edSi
-x6K8ddsZyUI+ZjUEJ42z4LkxhSVOEuQYWzl0niEIYEH//UGP+jf7dMrDqM+k0P8T
-L7xE2D4o+RjdzzsG9XJ49lCCgLx8/ipWH0zOidUFF1vv6pvGfiudoka64N6TFj32
-62wakXI9RNCLYPf6Eg6lmr3i1+GQW23br62VR3IAI9zDg7yVSQZWJEnqE/aovaxD
-BgF8zMgSM8fHkO4R9kHTrypYLtOULMbL4y0gFxSjal1JcK1BsAdS4OfFF2bbtJH0
-Ungfsi1YTkeGbpQ+wJv+71k2U+s6wQPg3O/V+vFqt14kPXLhU1hGNAtBpGzpHRY2
-adyXVKUhhyFilAgVsGTOq2ZrT7DQPdMDaR/qRmFm+bD+8/5Q8whru7y5tTgDbsgn
-HXFajMLSwpCkZpW4givj5VStf6kG3UnQIhTgeRgsL2vs1HoX3FHcGqQXRPbez1vN
-b/mU1veSV4IeJqLVJAbc
-=ElDE
------END PGP SIGNATURE-----
-
---3MwIy2ne0vdjdPXF--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Andrzej
