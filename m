@@ -1,111 +1,75 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
-Date: Thu, 26 Sep 2013 13:28:59 +0200
-Message-ID: <20130926132859.04ad4407@armhf>
-References: <20130828113521.35c53365@armhf>
-	<521DCD80.9010105@gmail.com>
-	<20130831125128.0e3a23c7@armhf>
-	<140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com>
-	<20130926101147.217015e1@armhf>
-	<5243F0CE.9000301@gmail.com>
+From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH][resend] leds-gpio: of: led should not be created if its status is disabled
+Date: Thu, 26 Sep 2013 19:27:56 +0800
+Message-ID: <1380194876-25821-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5243F0CE.9000301-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 26 Sep 2013 10:31:10 +0200
-Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+now the leds-gpio driver will create every child led node without
+checking the status is disabled or not.
 
-> On 09/26/2013 10:11 AM, Jean-Francois Moine wrote:
-> > In the Cubox, I changed the audio DT to:
-> >
-> > &i2s1 {
-> > 	status =3D "okay";
-> > 	clocks =3D <&gate_clk 13>, <&si5351 1>;
-> > 	clock-names =3D "internal", "extclk";
-> > 	pinctrl-0 =3D <&pmx_audio1_i2s1_spdifo &pmx_gpio_13_audio1>;
->=20
-> Have you checked that pinmux was configured correctly?
->=20
-> You are missing a
->=20
-> pinctrl-names =3D "default";
->=20
-> to actually execute the above pinmux setting.
+for example, if we have a led node like d3, and its status is disabled:
+	leds {
+		d3 {
+			label = "d3";
+			gpios = <&pioE 24 0>;
+			status = "disabled";
+		};
+	};
 
-Thanks, the pinmux was not set correctly, and I added the "default".
+we except the d3 should not be created. And the gpios should not be
+request as well.
 
-	[snip]
-> What about trying to get 48kHz working first? Does it work with
-> internal DCO and 48kHz? External audio clock should be 256*fs as stat=
-ed
-> in dove datasheet.
+But current driver will create d3 and request its gpio.
 
-I have no input with 48kHz.
+This patch fix this by using for_each_available_child_of_node() and
+of_get_available_child_count() to enumerate all child nodes. So the
+disabled node will be inavailable.
 
-> > For more information, I use i2s input in the tda998x with audio rat=
-e
-> > 96kHz on HDMI output. The sound is fine with the internal dco (test=
-ed
-> > with 44.1kHz only).
->=20
-> Sorry, I don't understand the above "information". How can you have a
-> different input audio rate tested with 44k1 output rate?
+Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+resend this patch based on the patch:
+ - http://www.spinics.net/lists/devicetree/msg05903.html
 
-The internal dco permits only 44.1, 44 and 96 kHz, so, vlc translates
-the input rates smaller than 44.1 kHz to 44.1 kHz.
+ drivers/leds/leds-gpio.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> Have you ever tested your audio equipment with something different th=
-an
-> 48k and 44k1 SPDIF PCM? Are you actually sure it works at all, i.e. d=
-o
-> you have different audio source with SPDIF >48kHz? Can you try optica=
-l
-> SPDIF instead of HDMI?
->=20
-> Just try to narrow it down, currently I cannot see why this behavior
-> should be limited to either si5351 or dove audio alone.
+diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+index e8b01e5..62bfc3a 100644
+--- a/drivers/leds/leds-gpio.c
++++ b/drivers/leds/leds-gpio.c
+@@ -170,11 +170,11 @@ static struct gpio_leds_priv *gpio_leds_create_of(struct platform_device *pdev)
+ 	int count, ret;
+ 
+ 	/* count LEDs in this device, so we know how much to allocate */
+-	count = of_get_child_count(np);
++	count = of_get_available_child_count(np);
+ 	if (!count)
+ 		return ERR_PTR(-ENODEV);
+ 
+-	for_each_child_of_node(np, child)
++	for_each_available_child_of_node(np, child)
+ 		if (of_get_gpio(child, 0) == -EPROBE_DEFER)
+ 			return ERR_PTR(-EPROBE_DEFER);
+ 
+@@ -183,7 +183,7 @@ static struct gpio_leds_priv *gpio_leds_create_of(struct platform_device *pdev)
+ 	if (!priv)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	for_each_child_of_node(np, child) {
++	for_each_available_child_of_node(np, child) {
+ 		struct gpio_led led = {};
+ 		enum of_gpio_flags flags;
+ 		const char *state;
+-- 
+1.7.9.5
 
-I have no optical S/PDIF.
-
-Well, I did more tests:
-
-- i2s or s/pdif input by the tda998x work fine with the internal dco
-
-- the pinmux seems correct:
-
-device f10b4000.audio-controller
-state default
-type MUX_GROUP (2)
-controlling device f10d0200.pin-ctrl
-group mpp_audio1
-function i2s1/spdifo
-
-device f10b4000.audio-controller
-state default
-type MUX_GROUP (2)
-controlling device f10d0200.pin-ctrl
-group mpp13
-function audio1
-
-- I tried both <&si5351 1> and <&si5351 2>, and I get no sound with the
-  external clock.
-
-- when running vlc with the external clock, the flux towards the
-  kirkwood driver is blocked and there is no sound interrupt.
-
- 47:          0  main-interrupt-ctrl  21  kirkwood-i2s
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
