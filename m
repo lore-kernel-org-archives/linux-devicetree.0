@@ -1,52 +1,198 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH v6 1/4] ARM: OMAP2+: cleaned-up DT support of various
- ECC schemes
-Date: Thu, 26 Sep 2013 06:15:17 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA16B22@DBDE04.ent.ti.com>
-References: <1378986619-26765-1-git-send-email-pekon@ti.com>
- <1378986619-26765-2-git-send-email-pekon@ti.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA15ED7@DBDE04.ent.ti.com>
- <20130925134619.GG10746@radagast>
- <20130925175527.GA23337@ld-irv-0074.broadcom.com>
- <20980858CB6D3A4BAE95CA194937D5E73EA16884@DBDE04.ent.ti.com>
- <20130925200539.GH23337@ld-irv-0074.broadcom.com>
+From: Yuvaraj Kumar <yuvaraj.cd@gmail.com>
+Subject: Re: [PATCH V7] ARM: dts: Add dwmmc DT nodes for exynos5420 SOC
+Date: Thu, 26 Sep 2013 12:13:30 +0530
+Message-ID: <CAKuRcOLyEjxGjHR6ff_Fe8sXwKW2Qdm1gOM-YyhMOr0964GLMA@mail.gmail.com>
+References: <1378188001-22216-1-git-send-email-yuvaraj.cd@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20130925200539.GH23337@ld-irv-0074.broadcom.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, "olof@lixom.net" <olof@lixom.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Balbi,
- Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1378188001-22216-1-git-send-email-yuvaraj.cd@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Tomasz Figa <t.figa@samsung.com>, Douglas Anderson <dianders@chromium.org>, Chris Ball <cjb@laptop.org>, Thomas Abraham <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Kukjin,
+ Can you please take this patch to your tree?
 
-> 
-> Anyway, at this point I think your patch series should be nearly
-> complete. I made a few comments on your patches, and I'd imagine you
-> only should need one more revision (v7) before I can accept it to the
-> l2-mtd.git tree.
-> 
-Yes surely I will send next version (v7), but it might take few days.
-As some more feedbacks on [PATCH 1] are pending for final conclusion
-and this needs to be properly re-tested.
+Best Regards
+Yuvaraj
 
-And thanks much to you and Olof for the feedbacks.
-I agree some of Olof's feedbacks on DT bindings gave me new view to
-look at things, And further simplified the NAND driver code.
-
-with regards, pekon
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+On Tue, Sep 3, 2013 at 11:30 AM, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com> wrote:
+> This patch adds the mmc device tree node entries for exynos5420 SOC.
+> Exynos5420 has a different version of DWMMC controller,so a new
+> compatible string is used to distinguish it from the prior SOC's.
+>
+> This patch depends on
+>         [1]mmc: dw_mmc: exynos: configure SMU in exynos5420
+>         [2]mmc: dw_mmc: exynos: Add a new compatible string for exynos5420
+>         [3]mmc: dw_mmc: update binding document exynos-dw-mshc.txt
+>
+> changes since v6:
+>         1.renamed node name to mmc
+>         2.Used compatible string "samsung,exynos5420-dw-mshc"
+>           for controller instance which does not have SMU.
+>         3.Used compatible string "samsung,exynos5420-dw-mshc-smu"
+>           for controller instance which has SMU.
+>
+> changes since v5:
+>         1.removed instance index from node name.
+>         2.changed the node name to mshc.
+>         3.changed the reg property value for mshc_2.
+>
+> changes since v4:
+>         1.Droppped the bypass-smu binding property.
+>         2.Used compatible string "samsung,exynos5250-dw-mshc"
+>           for controller instance which does not have SMU.
+>
+> changes since V3:
+>         1.change fifo-depth size from 0x80 to 0x40
+>         2.Move the below properties
+>                 a.card-detect-delay
+>                 b.samsung,dw-mshc-ciu-div
+>                 c.samsung,dw-mshc-sdr-timing
+>                 d.samsung,dw-mshc-ddr-timing
+>         from SOC dts to board dts file as suggested by Doug Anderson
+>
+> changes since V2:
+>         1.dropped num-slots property from node as its not required
+>           if number of card slots available is 1.
+>
+>         2.Move the below properties
+>                 a.fifo-depth
+>                 b.card-detect-delay
+>                 c.samsung,dw-mshc-ciu-div
+>                 d.samsung,dw-mshc-sdr-timing
+>                 e.samsung,dw-mshc-ddr-timing
+>         from board dts to SOC dts,as these are not board specific properties.
+>
+>         3.Updated the binding document exynos-dw-mshc.txt.
+>
+> changes since V1:
+>         1.disable node by status = disabled in SOC file
+>         2.enable node by status = okay in board specific file
+>
+> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+> ---
+>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   33 +++++++++++++++++
+>  arch/arm/boot/dts/exynos5420.dtsi                  |   39 ++++++++++++++++++++
+>  3 files changed, 74 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> index 6d1c098..84cd56f 100644
+> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> @@ -16,6 +16,8 @@ Required Properties:
+>           specific extensions.
+>         - "samsung,exynos5250-dw-mshc": for controllers with Samsung Exynos5250
+>           specific extensions.
+> +       - "samsung,exynos5420-dw-mshc": for controllers with Samsung Exynos5420
+> +         specific extensions.
+>
+>  * samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
+>    unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
+> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> index bafba25..8df4ddc 100644
+> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> @@ -31,6 +31,39 @@
+>                 };
+>         };
+>
+> +       mmc@12200000 {
+> +               status = "okay";
+> +               broken-cd;
+> +               supports-highspeed;
+> +               card-detect-delay = <200>;
+> +               samsung,dw-mshc-ciu-div = <3>;
+> +               samsung,dw-mshc-sdr-timing = <0 4>;
+> +               samsung,dw-mshc-ddr-timing = <0 2>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+> +
+> +               slot@0 {
+> +                       reg = <0>;
+> +                       bus-width = <8>;
+> +               };
+> +       };
+> +
+> +       mmc@12220000 {
+> +               status = "okay";
+> +               supports-highspeed;
+> +               card-detect-delay = <200>;
+> +               samsung,dw-mshc-ciu-div = <3>;
+> +               samsung,dw-mshc-sdr-timing = <2 3>;
+> +               samsung,dw-mshc-ddr-timing = <1 2>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+> +
+> +               slot@0 {
+> +                       reg = <0>;
+> +                       bus-width = <4>;
+> +               };
+> +       };
+> +
+>         dp-controller@145B0000 {
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&dp_hpd>;
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index d537cd7..897f7f4 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -22,6 +22,9 @@
+>         compatible = "samsung,exynos5420";
+>
+>         aliases {
+> +               mshc0 = &mmc_0;
+> +               mshc1 = &mmc_1;
+> +               mshc2 = &mmc_2;
+>                 pinctrl0 = &pinctrl_0;
+>                 pinctrl1 = &pinctrl_1;
+>                 pinctrl2 = &pinctrl_2;
+> @@ -84,6 +87,42 @@
+>                 clock-names = "mfc";
+>         };
+>
+> +       mmc_0: mmc@12200000 {
+> +               compatible = "samsung,exynos5420-dw-mshc-smu";
+> +               interrupts = <0 75 0>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               reg = <0x12200000 0x2000>;
+> +               clocks = <&clock 351>, <&clock 132>;
+> +               clock-names = "biu", "ciu";
+> +               fifo-depth = <0x40>;
+> +               status = "disabled";
+> +       };
+> +
+> +       mmc_1: mmc@12210000 {
+> +               compatible = "samsung,exynos5420-dw-mshc-smu";
+> +               interrupts = <0 76 0>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               reg = <0x12210000 0x2000>;
+> +               clocks = <&clock 352>, <&clock 133>;
+> +               clock-names = "biu", "ciu";
+> +               fifo-depth = <0x40>;
+> +               status = "disabled";
+> +       };
+> +
+> +       mmc_2: mmc@12220000 {
+> +               compatible = "samsung,exynos5420-dw-mshc";
+> +               interrupts = <0 77 0>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               reg = <0x12220000 0x1000>;
+> +               clocks = <&clock 353>, <&clock 134>;
+> +               clock-names = "biu", "ciu";
+> +               fifo-depth = <0x40>;
+> +               status = "disabled";
+> +       };
+> +
+>         mct@101C0000 {
+>                 compatible = "samsung,exynos4210-mct";
+>                 reg = <0x101C0000 0x800>;
+> --
+> 1.7.9.5
+>
