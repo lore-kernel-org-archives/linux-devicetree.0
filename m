@@ -1,67 +1,72 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 08/21] metag: move setup_machine_fdt declaration from prom.h
-Date: Thu, 26 Sep 2013 13:50:43 -0500
-Message-ID: <1380221456-11192-9-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 11/21] mips: add explicit includes of prom.h
+Date: Thu, 26 Sep 2013 13:50:46 -0500
+Message-ID: <1380221456-11192-12-git-send-email-robherring2@gmail.com>
 References: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, James Hogan <james.hogan@imgtec.com>, linux-metag@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-Move setup_machine_fdt out of prom.h and into asm/setup.h in preparation
-to remove prom.h.
+In preparation of removing prom.h include by of.h, add explicit includes.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: James Hogan <james.hogan@imgtec.com>
-Cc: linux-metag@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org
 ---
- arch/metag/include/asm/prom.h  | 2 --
- arch/metag/include/asm/setup.h | 1 +
- arch/metag/kernel/setup.c      | 1 -
- 3 files changed, 1 insertion(+), 3 deletions(-)
+ arch/mips/lantiq/prom.c           | 1 +
+ arch/mips/mti-sead3/sead3-setup.c | 2 ++
+ arch/mips/ralink/of.c             | 1 +
+ 3 files changed, 4 insertions(+)
 
-diff --git a/arch/metag/include/asm/prom.h b/arch/metag/include/asm/prom.h
-index d2aa35d..e19022c 100644
---- a/arch/metag/include/asm/prom.h
-+++ b/arch/metag/include/asm/prom.h
-@@ -14,10 +14,8 @@
- #ifndef __ASM_METAG_PROM_H
- #define __ASM_METAG_PROM_H
+diff --git a/arch/mips/lantiq/prom.c b/arch/mips/lantiq/prom.c
+index 49c4603..19686c5 100644
+--- a/arch/mips/lantiq/prom.c
++++ b/arch/mips/lantiq/prom.c
+@@ -14,6 +14,7 @@
  
--#include <asm/setup.h>
- #define HAVE_ARCH_DEVTREE_FIXUPS
+ #include <asm/bootinfo.h>
+ #include <asm/time.h>
++#include <asm/prom.h>
  
--extern struct machine_desc *setup_machine_fdt(void *dt);
- extern void copy_fdt(void);
+ #include <lantiq.h>
  
- #endif /* __ASM_METAG_PROM_H */
-diff --git a/arch/metag/include/asm/setup.h b/arch/metag/include/asm/setup.h
-index e13083b..c7aedd4 100644
---- a/arch/metag/include/asm/setup.h
-+++ b/arch/metag/include/asm/setup.h
-@@ -3,6 +3,7 @@
+diff --git a/arch/mips/mti-sead3/sead3-setup.c b/arch/mips/mti-sead3/sead3-setup.c
+index b5059dc..928ba84 100644
+--- a/arch/mips/mti-sead3/sead3-setup.c
++++ b/arch/mips/mti-sead3/sead3-setup.c
+@@ -10,6 +10,8 @@
+ #include <linux/of_fdt.h>
+ #include <linux/bootmem.h>
  
- #include <uapi/asm/setup.h>
++#include <asm/prom.h>
++
+ #include <asm/mips-boards/generic.h>
  
-+extern struct machine_desc *setup_machine_fdt(void *dt);
- void per_cpu_trap_init(unsigned long);
- extern void __init dump_machine_table(void);
- #endif /* _ASM_METAG_SETUP_H */
-diff --git a/arch/metag/kernel/setup.c b/arch/metag/kernel/setup.c
-index c396cd0..5d5c2b8 100644
---- a/arch/metag/kernel/setup.c
-+++ b/arch/metag/kernel/setup.c
-@@ -42,7 +42,6 @@
- #include <asm/mmu.h>
- #include <asm/mmzone.h>
- #include <asm/processor.h>
--#include <asm/prom.h>
- #include <asm/sections.h>
- #include <asm/setup.h>
- #include <asm/traps.h>
+ const char *get_system_type(void)
+diff --git a/arch/mips/ralink/of.c b/arch/mips/ralink/of.c
+index ce38d11..58c4fd52 100644
+--- a/arch/mips/ralink/of.c
++++ b/arch/mips/ralink/of.c
+@@ -21,6 +21,7 @@
+ #include <asm/reboot.h>
+ #include <asm/bootinfo.h>
+ #include <asm/addrspace.h>
++#include <asm/prom.h>
+ 
+ #include "common.h"
+ 
 -- 
 1.8.1.2
