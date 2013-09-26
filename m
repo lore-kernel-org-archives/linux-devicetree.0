@@ -1,109 +1,76 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] pwm-backlight: allow for non-increasing brightness
- levels
-Date: Thu, 26 Sep 2013 14:59:54 +0200
-Message-ID: <20130926125953.GB2141@ulmo>
-References: <1379869196-19377-1-git-send-email-mikedunn@newsguy.com>
- <5244065A.8010408@ti.com>
- <20130926115108.GA1680@ulmo>
- <524423B6.4070609@ti.com>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH v6 4/4] ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-opt
+Date: Thu, 26 Sep 2013 15:26:11 +0200
+Message-ID: <CAAwP0s1J8=_0bz5Cryjuy4EL4Ky9f33Bm6zZ-x+jm=EGh+VGiQ@mail.gmail.com>
+References: <1378986619-26765-1-git-send-email-pekon@ti.com>
+ <1378986619-26765-5-git-send-email-pekon@ti.com> <20130925191559.GF23337@ld-irv-0074.broadcom.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA16D3D@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GID0FwUMdk1T2AWN"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <524423B6.4070609-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EA16D3D@DBDE04.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Gupta, Pekon" <pekon@ti.com>, Benoit Cousson <bcousson@baylibre.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, "olof@lixom.net" <olof@lixom.net>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rob Herring (robherring2@gmail.com)" <robherring2@gmail.com>, "Mark Rutland (mark.rutland@arm.com)" <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 26, 2013 at 1:28 PM, Gupta, Pekon <pekon@ti.com> wrote:
+>> From: Brian Norris [mailto:computersforpeace@gmail.com]
+>>
+>> On Thu, Sep 12, 2013 at 05:20:19PM +0530, Pekon Gupta wrote:
+>> > DT property values for OMAP based gpmc-nand have been updated
+>> > to match changes in commit:
+>> >     6faf096 ARM: OMAP2+: cleaned-up DT support of various ECC
+>> schemes
+>>
+>> Whose commit ID is this? Your patch is not merged yet, so don't use a
+>> commit ID.
+>>
+>> > Refer: Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+>> >
+>> > Signed-off-by: Pekon Gupta <pekon@ti.com>
+>> > ---
+>> >  arch/arm/boot/dts/am335x-evm.dts | 2 +-
+>> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >
+>> > diff --git a/arch/arm/boot/dts/am335x-evm.dts
+>> b/arch/arm/boot/dts/am335x-evm.dts
+>> > index e8ec875..e28a2ac 100644
+>> > --- a/arch/arm/boot/dts/am335x-evm.dts
+>> > +++ b/arch/arm/boot/dts/am335x-evm.dts
+>> > @@ -268,7 +268,7 @@
+>> >                     nand@0,0 {
+>> >                             reg = <0 0 0>; /* CS0, offset 0 */
+>> >                             nand-bus-width = <8>;
+>> > -                           ti,nand-ecc-opt = "bch8";
+>> > +                           ti,nand-ecc-scheme = "bch8";
+>> >                             gpmc,device-nand = "true";
+>> >                             gpmc,device-width = <1>;
+>> >                             gpmc,sync-clk-ps = <0>;
+>>
+>> This change should probably go in patch 1 anyway, when you break the
+>> ABI.
+>>
+> As this patch series touches three different trees..
+> (1) arch/arm/boot/dts/..  maintained by Benoit Cousson (benoit.cousson@linaro.org)
 
---GID0FwUMdk1T2AWN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Pekon,
 
-On Thu, Sep 26, 2013 at 03:08:22PM +0300, Tomi Valkeinen wrote:
-> On 26/09/13 14:51, Thierry Reding wrote:
-> > On Thu, Sep 26, 2013 at 01:03:06PM +0300, Tomi Valkeinen wrote:
-> > [...]
-> >> But if you and Thierry think this version is good, I'll take it.
-> >=20
-> > That sounds like you want to take it through the fbdev tree. Jingoo is
-> > listed (along with Richard, but he hasn't been responsive to email for
-> > years) as maintainer for the backlight subsystem. Furthermore back at
->=20
-> Ah, so they are. I just thought it falls under fbdev, as it's under
-> drivers/video/ =3D).
->=20
-> I don't have any particular "want" to take it through fbdev tree. But I
-> can take it.
->=20
-> > the time when I began working on the PWM subsystem, the backlight sub-
-> > system was pretty much orphaned, and pwm-backlight was by far the
-> > biggest user of the PWM subsystem. I adopted the driver at the time
-> > because it needed to be updated for PWM subsystem changes.
-> >=20
-> > What's the plan going forward? Given the coupling between the PWM
-> > subsystem and the pwm-backlight driver it might be useful to keep
-> > maintaining it as part of the PWM subsystem. On the other hand, there's
-> > some coupling between the driver and the backlight subsystem too.
->=20
-> And backlight is coupled with fbdev... Which is something I don't like.
->=20
-> > I have a couple of patches queued up for 3.13 that rework parts of the
-> > driver, so it'd be good to know how you guys want to handle this.
->=20
-> Well. I'm happy if somebody wants to maintain the backlight side. In
-> fact, I'd be happy if somebody would start restructuring it totally,
-> it's rather messy. The link with fbdev should be removed, and some
-> backlight drivers are actually panel drivers. However, perhaps Common
-> Display Framework is required until it can be fully cleaned.
->=20
-> So... For the time being, I'm fine with merging pwm-backlight via any
-> tree that works best. I'm presuming here that backlight framework and
-> fbdev (for the parts that are relevant for backlight) are not really
-> being changed, so there shouldn't be conflicts.
+Please note that Benoit's current email address is bcousson@baylibre.com.
 
-In that case I'll just take it through the PWM tree as I've done for the
-past year. I have some other changes planned for the PWM framework for
-the near future that'll create dependencies between the PWM tree and the
-pwm-backlight driver, so keeping them in one tree will make it easier to
-merge them.
+I had cc'ed him now with the correct address.
 
-Longer term it probably makes sense, as you say, for someone to take
-over the backlight subsystem completely and give it the love it could
-really use. If Jingoo can do that, it'd be great. Perhaps it'd be a good
-idea to remove Richard as maintainer since he's obviously no longer
-responding to emails. Keeping him Cc'ed on all patches is just
-pointless.
+> (2) arch/arm/mach-omap2/.. maintained by Tony Lindgren (tony@atomide.com)
+> (3) driver/mtd/nand/.. maintained by Brian Norris <computersforpeace@gmail.com>
+>
+> It was observed that there were conflicts usually during final merge,
+> Hence I separated out the patches.
+> However, if all are in sync and the series gets committed in above trees
+> simultaneously, then this conflicts can be avoided.
+> So, if Tony & Benoit are ok then I'll merge this [PATCH 4/4] in [PATCH 1/4].
+>
+> with regards, pekon
+> --
 
-Thierry
-
---GID0FwUMdk1T2AWN
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSRC/JAAoJEN0jrNd/PrOh7FIQAIN4Aw8XIjswMbmLF+kK0el2
-cZSuoyGBvZotfodaUi3/kdMS0nPWIYIsnVgHwqYCTFO37D8eHGwB6T67TwBHnolE
-hDCAWimitmyJa355uU2vodHQ05533Y1TC7NsqCQHIIY5r9889YuYrYKfYol7vB3O
-/5FrzcGaxwrXs0yxtsZa3uT6M6nll9U8eirhNZRwsbqpEDdIKmA0MTtsEMbXClBh
-wv7H81FGwgRwlynwfyrKlW4SEJCC41pDWf+N8ZfNyXIAZO8mmDPDs/NTHiEszmR/
-MEG3r8Pq4UCS1RNM231i3ZLdJebswe0B1nLaOdu/n9e4A3+RddlAepPM5ODtV87h
-b7l23eH1cdj+UAipdW/PParjVzjMvSlWZA0eS1BvOowWTpq0E4hI1igX/Q3zodLD
-lP3ie8xAUeXl2k/KBwPhB9GW1twWt/aEoO/a3g9EX+gCrSvYULi2G55l+3O7QjVO
-Ml6uphCG2mN1GTBoI5PC4FgCUnFl0moB9i6rdgLaLE593GhtnApGC9kQtXzL0VSt
-HwM+C50bkGobp5HFektJn6ApsmQZI8mP0oNVWK6j2zTFhpSlG+BPD4RvJa7A2tgK
-Yalp8OmErU5481iMe3JjEvBG7IRgZCqU4lb+1gt8M2CUGhamaXesz1FXrYwk4yhD
-jYQCRf3wOEzLj6njhiAk
-=3trL
------END PGP SIGNATURE-----
-
---GID0FwUMdk1T2AWN--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
