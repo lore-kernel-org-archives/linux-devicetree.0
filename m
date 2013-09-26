@@ -1,56 +1,100 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v11 2/8] usb: phy: omap-usb2: use the new generic PHY
- framework
-Date: Thu, 26 Sep 2013 11:51:51 -0700
-Message-ID: <20130926185151.GA8689@kroah.com>
-References: <1377063973-22044-1-git-send-email-kishon@ti.com>
- <1377063973-22044-3-git-send-email-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1377063973-22044-3-git-send-email-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, stern@rowland.harvard.edu, grant.likely@linaro.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, george.cherian@ti.com, arnd@arndb.de, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, broonie@kernel.org, akpm@linux-foundation.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH 14/21] of: implement of_node_to_nid as a weak function
+Date: Thu, 26 Sep 2013 13:50:49 -0500
+Message-ID: <1380221456-11192-15-git-send-email-robherring2@gmail.com>
+References: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2013 at 11:16:07AM +0530, Kishon Vijay Abraham I wrote:
-> Used the generic PHY framework API to create the PHY. Now the power off and
-> power on are done in omap_usb_power_off and omap_usb_power_on respectively.
-> The omap-usb2 driver is also moved to driver/phy.
-> 
-> However using the old USB PHY library cannot be completely removed
-> because OTG is intertwined with PHY and moving to the new framework
-> will break OTG. Once we have a separate OTG state machine, we
-> can get rid of the USB PHY library.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Acked-by: Felipe Balbi <balbi@ti.com>
-> ---
->  drivers/phy/Kconfig                   |   12 +++++++++
->  drivers/phy/Makefile                  |    1 +
->  drivers/{usb => }/phy/phy-omap-usb2.c |   45 ++++++++++++++++++++++++++++++---
->  drivers/usb/phy/Kconfig               |   10 --------
->  drivers/usb/phy/Makefile              |    1 -
->  5 files changed, 54 insertions(+), 15 deletions(-)
->  rename drivers/{usb => }/phy/phy-omap-usb2.c (88%)
+From: Rob Herring <rob.herring@calxeda.com>
 
-I tried to apply this to my USB branch, but it fails.
+Implement of_node_to_nid as weak function to remove the dependency on
+asm/prom.h. This is in preparation to make prom.h optional.
 
-Kishon, you were going to refresh this patch series, right?  Please do,
-because as-is, I can't take it.
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+---
+ arch/powerpc/include/asm/prom.h |  7 -------
+ arch/sparc/include/asm/prom.h   |  4 ----
+ drivers/of/base.c               |  7 +++++++
+ include/linux/of.h              | 11 ++++-------
+ 4 files changed, 11 insertions(+), 18 deletions(-)
 
-thanks,
-
-greg k-h
+diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
+index bd215f7..6707c16 100644
+--- a/arch/powerpc/include/asm/prom.h
++++ b/arch/powerpc/include/asm/prom.h
+@@ -42,13 +42,6 @@ extern void kdump_move_device_tree(void);
+ /* cache lookup */
+ struct device_node *of_find_next_cache_node(struct device_node *np);
+ 
+-#ifdef CONFIG_NUMA
+-extern int of_node_to_nid(struct device_node *device);
+-#else
+-static inline int of_node_to_nid(struct device_node *device) { return 0; }
+-#endif
+-#define of_node_to_nid of_node_to_nid
+-
+ extern void of_instantiate_rtc(void);
+ 
+ extern int of_get_ibm_chip_id(struct device_node *np);
+diff --git a/arch/sparc/include/asm/prom.h b/arch/sparc/include/asm/prom.h
+index 67c6257..60c8d7b 100644
+--- a/arch/sparc/include/asm/prom.h
++++ b/arch/sparc/include/asm/prom.h
+@@ -43,10 +43,6 @@ extern int of_getintprop_default(struct device_node *np,
+ 				 const char *name,
+ 				 int def);
+ extern int of_find_in_proplist(const char *list, const char *match, int len);
+-#ifdef CONFIG_NUMA
+-extern int of_node_to_nid(struct device_node *dp);
+-#define of_node_to_nid of_node_to_nid
+-#endif
+ 
+ extern void prom_build_devicetree(void);
+ extern void of_populate_present_mask(void);
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 865d3f6..ced4c06 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -74,6 +74,13 @@ int of_n_size_cells(struct device_node *np)
+ }
+ EXPORT_SYMBOL(of_n_size_cells);
+ 
++#ifdef CONFIG_NUMA
++int __weak of_node_to_nid(struct device_node *np)
++{
++	return numa_node_id();
++}
++#endif
++
+ #if defined(CONFIG_OF_DYNAMIC)
+ /**
+  *	of_node_get - Increment refcount of a node
+diff --git a/include/linux/of.h b/include/linux/of.h
+index f95aee3..4d294a0 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -534,13 +534,10 @@ static inline const char *of_prop_next_string(struct property *prop,
+ #define of_match_node(_matches, _node)	NULL
+ #endif /* CONFIG_OF */
+ 
+-#ifndef of_node_to_nid
+-static inline int of_node_to_nid(struct device_node *np)
+-{
+-	return numa_node_id();
+-}
+-
+-#define of_node_to_nid of_node_to_nid
++#if defined(CONFIG_OF) && defined(CONFIG_NUMA)
++extern int of_node_to_nid(struct device_node *np);
++#else
++static inline int of_node_to_nid(struct device_node *device) { return 0; }
+ #endif
+ 
+ /**
+-- 
+1.8.1.2
