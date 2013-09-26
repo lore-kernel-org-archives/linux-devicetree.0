@@ -1,72 +1,37 @@
 From: Scott Wood <scottwood@freescale.com>
-Subject: Re: Device tree node for Freescale Gianfar PTP reference clock
- source selection
-Date: Wed, 25 Sep 2013 20:30:28 -0500
-Message-ID: <1380159028.24959.243.camel@snotra.buserror.net>
-References: <523FEFCD.70409@skitlab.ru>
+Subject: Re: [PATCH v10 2/3] DMA: Freescale: Add new 8-channel DMA engine
+ device tree nodes
+Date: Wed, 25 Sep 2013 20:46:32 -0500
+Message-ID: <1380159992.24959.248.camel@snotra.buserror.net>
+References: <1379499333-4745-1-git-send-email-hongbo.zhang@freescale.com>
+	 <1379499333-4745-3-git-send-email-hongbo.zhang@freescale.com>
+	 <524074A7.7000001@wwwdotorg.org> <524169E3.7030408@freescale.com>
+	 <5241CC60.5070204@wwwdotorg.org> <52429252.10009@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <523FEFCD.70409@skitlab.ru>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
-Cc: netdev@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>, linuxppc-dev@lists.ozlabs.org, Claudiu Manoil <claudiu.manoil@freescale.com>, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <52429252.10009@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hongbo Zhang <hongbo.zhang@freescale.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, mark.rutland@arm.com, devicetree@vger.kernel.org, ian.campbell@citrix.com, pawel.moll@arm.com, vinod.koul@intel.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, djbw@fb.com, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-09-23 at 11:37 +0400, Aida Mynzhasova wrote:
-> Hi,
-> 
-> Currently, Freescale Gianfar PTP reference clock source is determined 
-> through hard-coded value in gianfar_ptp driver. I don't think that 
-> recompilation of the entire module (or even worse - the kernel) is a god 
-> idea when we want to change one clock source to another. So, I want to 
-> add new device tree binding, which can be used as:
+On Wed, 2013-09-25 at 15:35 +0800, Hongbo Zhang wrote:
+> By the way, I know maybe it is difficult, but why not introduce a 
+> document of maintaining rules for the dt binding docs? we have dedicated 
+> maintainers for this part now. Description language from one submitter 
+> cannot satisfy every reviewer/maintainer, for a reg property, is it 
+> necessary to say "offset and length",
 
-Is this describing the hardware or how you're using it?  If the latter,
-it should be a module parameter or some sort of runtime knob instead.
+Don't say "offset and length".  It's both redundant with the base
+definition of the reg property, and overly specific because it makes
+assumptions about how the parent node's ranges are set up (sometimes we
+want to be that specific, but usually not).
 
-> 	ptp_clock@24E00 {
-> 		compatible = "fsl,etsec-ptp";
-> 		reg = <0x24E00 0xB0>;
-> 		interrupts = <12 0x8 13 0x8>;
-> 		interrupt-parent = < &ipic >;
-> 		fsl,cksel = <0>; /* <-- New entry */
-> 		fsl,tclk-period = <10>;
-> 		fsl,tmr-prsc    = <100>;
-> 		fsl,tmr-add     = <0x999999A4>;
-> 		fsl,tmr-fiper1  = <0x3B9AC9F6>;
-> 		fsl,tmr-fiper2  = <0x00018696>;
-> 		fsl,max-adj     = <659999998>;
-> 	};
-> 
-> fsl,cksel acceptable values:
-> 
-> <0> for external clock;
-> <1> for eTSEC system clock;
-> <2> for eTSEC1 transmit clock;
-> <3> for RTC clock input.
-> 
-> I am new in this mailing list, and as far as I know, I have to discuss 
-> all updates for device tree files here before sending patch, which uses 
-> new attributes.
-> 
-> Also, should I define new bindings in some special way? I want to add 
-> description of cksel attribute in 
-> /Documentation/devicetree/bindings/net/fsl-tsec-phy.txt. Is it enough or 
-> not?
+> to say "how many entries", to say "register functions and even names"?
 
-Assuming this is actually describing how the hardware is wired up, yes,
-that's how you'd document it (making sure that device trees without that
-property are interpreted the same as today).
+If there's more than one
+entry/resource/whatever-we-decide-to-call-it-but-let's-pick-something-canonical, then say how many there are and what each one means.
 
 -Scott
