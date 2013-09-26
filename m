@@ -1,83 +1,72 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] ARM: OMAP2: pdata-quirks: set internal clock
- source for MMC2 on N950/N9
-Date: Wed, 25 Sep 2013 16:26:49 -0700
-Message-ID: <20130925232649.GC8949@atomide.com>
-References: <1380050897-6605-1-git-send-email-aaro.koskinen@iki.fi>
- <1380050897-6605-2-git-send-email-aaro.koskinen@iki.fi>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: Device tree node for Freescale Gianfar PTP reference clock
+ source selection
+Date: Wed, 25 Sep 2013 20:30:28 -0500
+Message-ID: <1380159028.24959.243.camel@snotra.buserror.net>
+References: <523FEFCD.70409@skitlab.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1380050897-6605-2-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <523FEFCD.70409@skitlab.ru>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Aida Mynzhasova <aida.mynzhasova@skitlab.ru>
+Cc: netdev@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>, linuxppc-dev@lists.ozlabs.org, Claudiu Manoil <claudiu.manoil@freescale.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org> [130924 12:36]:
-> Set internal clock source for MMC2 on N950/N9.
+On Mon, 2013-09-23 at 11:37 +0400, Aida Mynzhasova wrote:
+> Hi,
 > 
-> Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+> Currently, Freescale Gianfar PTP reference clock source is determined 
+> through hard-coded value in gianfar_ptp driver. I don't think that 
+> recompilation of the entire module (or even worse - the kernel) is a god 
+> idea when we want to change one clock source to another. So, I want to 
+> add new device tree binding, which can be used as:
 
-Thanks applied into omap-for-v3.13/quirk and pushed
-out.
+Is this describing the hardware or how you're using it?  If the latter,
+it should be a module parameter or some sort of runtime knob instead.
 
-I'll apply the board file removal later on into a separate
-branch, and Benoit can pick the .dts changes.
-
-Regards,
-
-Tony
-
->  arch/arm/mach-omap2/pdata-quirks.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> 	ptp_clock@24E00 {
+> 		compatible = "fsl,etsec-ptp";
+> 		reg = <0x24E00 0xB0>;
+> 		interrupts = <12 0x8 13 0x8>;
+> 		interrupt-parent = < &ipic >;
+> 		fsl,cksel = <0>; /* <-- New entry */
+> 		fsl,tclk-period = <10>;
+> 		fsl,tmr-prsc    = <100>;
+> 		fsl,tmr-add     = <0x999999A4>;
+> 		fsl,tmr-fiper1  = <0x3B9AC9F6>;
+> 		fsl,tmr-fiper2  = <0x00018696>;
+> 		fsl,max-adj     = <659999998>;
+> 	};
 > 
-> diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-> index 52b4bc3..1a7f492 100644
-> --- a/arch/arm/mach-omap2/pdata-quirks.c
-> +++ b/arch/arm/mach-omap2/pdata-quirks.c
-> @@ -16,6 +16,7 @@
->  #include "common.h"
->  #include "common-board-devices.h"
->  #include "dss-common.h"
-> +#include "control.h"
->  
->  struct pdata_init {
->  	const char *compatible;
-> @@ -62,6 +63,17 @@ static inline void omap_init_wl12xx_of(void)
->  }
->  #endif
->  
-> +#ifdef CONFIG_ARCH_OMAP3
-> +static void __init hsmmc2_internal_input_clk(void)
-> +{
-> +	u32 reg;
-> +
-> +	reg = omap_ctrl_readl(OMAP343X_CONTROL_DEVCONF1);
-> +	reg |= OMAP2_MMCSDIO2ADPCLKISEL;
-> +	omap_ctrl_writel(reg, OMAP343X_CONTROL_DEVCONF1);
-> +}
-> +#endif /* CONFIG_ARCH_OMAP3 */
-> +
->  #ifdef CONFIG_ARCH_OMAP4
->  static void __init omap4_sdp_legacy_init(void)
->  {
-> @@ -86,6 +98,10 @@ static void __init omap5_uevm_legacy_init(void)
->  #endif
->  
->  static struct pdata_init pdata_quirks[] __initdata = {
-> +#ifdef CONFIG_ARCH_OMAP3
-> +	{ "nokia,omap3-n9", hsmmc2_internal_input_clk, },
-> +	{ "nokia,omap3-n950", hsmmc2_internal_input_clk, },
-> +#endif
->  #ifdef CONFIG_ARCH_OMAP4
->  	{ "ti,omap4-sdp", omap4_sdp_legacy_init, },
->  	{ "ti,omap4-panda", omap4_panda_legacy_init, },
-> -- 
-> 1.8.4.rc3
+> fsl,cksel acceptable values:
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> <0> for external clock;
+> <1> for eTSEC system clock;
+> <2> for eTSEC1 transmit clock;
+> <3> for RTC clock input.
+> 
+> I am new in this mailing list, and as far as I know, I have to discuss 
+> all updates for device tree files here before sending patch, which uses 
+> new attributes.
+> 
+> Also, should I define new bindings in some special way? I want to add 
+> description of cksel attribute in 
+> /Documentation/devicetree/bindings/net/fsl-tsec-phy.txt. Is it enough or 
+> not?
+
+Assuming this is actually describing how the hardware is wired up, yes,
+that's how you'd document it (making sure that device trees without that
+property are interpreted the same as today).
+
+-Scott
