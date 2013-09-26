@@ -1,63 +1,73 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
-Date: Thu, 26 Sep 2013 10:11:47 +0200
-Message-ID: <20130926101147.217015e1@armhf>
-References: <20130828113521.35c53365@armhf>
-	<521DCD80.9010105@gmail.com>
-	<20130831125128.0e3a23c7@armhf>
-	<140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] arm: zynq: Enable global timer
+Date: Thu, 26 Sep 2013 10:16:45 +0200
+Message-ID: <62570dec-da98-42a2-93b9-6ab1f8adb30d@CH1EHSMHS037.ehs.local>
+References: <1379530118-22813-1-git-send-email-soren.brinkmann@xilinx.com> <5242FF4B.6050901@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <5242FF4B.6050901-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Preeti Murthy <preeti.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 01 Sep 2013 11:26:54 +0200
-Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Daniel,
 
-> Jean-Francois,
-> Sorry for the messy reply, posting from mobile.
->=20
-> Can you please try <&si5351 1>, iirc audio ist connected to it. I wil=
-l also=20
-> look it up later.
+On 09/25/2013 05:20 PM, Daniel Lezcano wrote:
+> On 09/18/2013 08:48 PM, Soren Brinkmann wrote:
+>> Hi all,
+>>
+>> here's a v2. I reused the subject from my v1 submission although the focus of
+>> this series moved a bit towards the timer subsystem.
+>> I replaced Stephen's fix to prevent per cpu devices from becoming
+>> the broadcast device with Thomas' proposal, but I kept the original commit
+>> message. I split the whole approach in small chunks that I found reasonable.
+>>
+>> In 4/4, I picked up Grant's comment regarding the DT node name.
+>>
+>> v2:
+>>  - drop 1/2 of the original series
+>>  - implement preventing per cpu devices from becoming broadcast device according
+>>    to Thomas' proposal
+>>    - introduce new CLOCK_EVT_FEAT_PERCPU flag
+>>    - set the flag for the arm_global_timer
+>>    - filter per cpu devices based on this flag when choosing the broadcast
+>>      device
+>>  - rename DT node to avoid '_'s
+>>  
+>>
+>> Soren Brinkmann (4):
+>>   clockchips: Add FEAT_PERCPU clockevent flag
+>>   clocksource/arm_global_timer: Set FEAT_PERCPU flag
+>>   tick: broadcast: Deny per-cpu clockevents from being broadcast sources
+>>   arm: zynq: Enable arm_global_timer
+>>
+>>  arch/arm/boot/dts/zynq-7000.dtsi       | 8 ++++++++
+>>  arch/arm/mach-zynq/Kconfig             | 1 +
+>>  drivers/clocksource/arm_global_timer.c | 3 ++-
+>>  include/linux/clockchips.h             | 1 +
+>>  kernel/time/tick-broadcast.c           | 1 +
+>>  5 files changed, 13 insertions(+), 1 deletion(-)
+> 
+> This patches falls under different maintainer's umbrella.
+> 
+> I acked-by the patches, so if someone is willing to take the patches I
+> am ok with that. I am ok also to pick them into my tree with the
+> acked-by maintainer. Just let me know ...
+> 
 
-Sebastian,
+Yes, please add also this zynq specific patch through your tree.
 
-In the Cubox, I changed the audio DT to:
+Here is my ACK for that.
+Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-&i2s1 {
-	status =3D "okay";
-	clocks =3D <&gate_clk 13>, <&si5351 1>;
-	clock-names =3D "internal", "extclk";
-	pinctrl-0 =3D <&pmx_audio1_i2s1_spdifo &pmx_gpio_13_audio1>;
-};
+Thanks,
+Michal
 
-and the sound does not get out correctly.
 
-There is no sound at all, except when restarting playing which gives
-some shrill sound for half a second at start time.
-
-I lowered the rate in kirkwood-i2s, setting the clock by (* 128)
-instead of (* 256), and, most of the time, this gives continuous shrill
-and chopped sound at various sample rates (22.05, 32 and 44.1 kHz).
-Lowering the clock to (* 64) gives no sound at all.
-
-=46or more information, I use i2s input in the tda998x with audio rate
-96kHz on HDMI output. The sound is fine with the internal dco (tested
-with 44.1kHz only).
-
-Some idea?
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
