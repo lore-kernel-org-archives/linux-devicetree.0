@@ -1,37 +1,72 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH V3] PCI: exynos: add support for MSI
-Date: Wed, 25 Sep 2013 22:43:23 -0600
-Message-ID: <CAErSpo4ECRheinv_BAG6MMKeftDS-TBD2kTfkTnTo6P_EfOH4g@mail.gmail.com>
-References: <001a01ceaace$013ec980$03bc5c80$%han@samsung.com> <001b01ceba71$62ca02c0$285e0840$%han@samsung.com>
+From: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: RE: [PATCH V2] ARM: dts: Remove DP PHY node from exynos5250.dtsi
+Date: Thu, 26 Sep 2013 13:54:33 +0900
+Message-ID: <02c501ceba74$7e748060$7b5d8120$@org>
+References: <003601cea228$ef97fd30$cec7f790$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <001b01ceba71$62ca02c0$285e0840$%han@samsung.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Pratyush Anand <pratyush.anand@st.com>, Mohit KUMAR <Mohit.KUMAR@st.com>, Siva Reddy Kallam <siva.kallam@samsung.com>, SRIKANTH TUMKUR SHIVANAND <ts.srikanth@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Sean Cross <xobs@kosagi.com>, Kishon Vijay Abraham I <kishon@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <003601cea228$ef97fd30$cec7f790$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-language: ko
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Vikas Sajjan' <vikas.sajjan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Tomasz Figa' <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'devicetree' <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'InKi Dae' <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Ajay kumar' <ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 25, 2013 at 10:32 PM, Jingoo Han <jg1.han@samsung.com> wrote:
-> On Friday, September 06, 2013 3:55 PM, Jingoo Han wrote:
->>
->> This patch adds support for Message Signaled Interrupt in the
->> Exynos PCIe diver using Synopsys designware PCIe core IP.
->>
->> Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
->> Signed-off-by: Srikanth T Shivanand <ts.srikanth@samsung.com>
->> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
->> Cc: Pratyush Anand <pratyush.anand@st.com>
->> Cc: Mohit KUMAR <Mohit.KUMAR@st.com>
->
-> Hi Bjorn Helgaas,
->
-> There is no comment for last 3 weeks.
-> Would you merge this patch to your tree?
+Jingoo Han wrote:
+> 
+> Since DP PHY driver is not yet merged, DP PHY node should be
+> removed from exynos5250.dtsi.
+> 
+> Signed-off-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes since v1:
+> - Removed duplicated properties such as #address-cells, #size-cells.
+> 
+>  arch/arm/boot/dts/exynos5250.dtsi |   13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> b/arch/arm/boot/dts/exynos5250.dtsi
+> index 864ae90..c3d6e3b 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -625,17 +625,14 @@
+>  		interrupts = <0 94 0>;
+>  	};
+> 
+> -	dp_phy: video-phy@10040720 {
+> -		compatible = "samsung,exynos5250-dp-video-phy";
+> -		reg = <0x10040720 4>;
+> -		#phy-cells = <0>;
+> -	};
+> -
+>  	dp-controller@145B0000 {
+>  		clocks = <&clock 342>;
+>  		clock-names = "dp";
+> -		phys = <&dp_phy>;
+> -		phy-names = "dp";
+> +
+> +		dptx-phy {
+> +			reg = <0x10040720>;
+> +			samsung,enable-mask = <1>;
+> +		};
+>  	};
+> 
+>  	fimd@14400000 {
+> --
+> 1.7.10.4
 
-I worked on merging your patches today, which is what prompted my
-message about how to manage the exynos, mvebu, tegra, etc., host
-drivers.  Assuming we come to a consensus about that, they should
-appear in -next by the end of this week.
+OK, this is required only for 3.12 so please re-post patch for enabling DP
+PHY node for 3.13.
 
-Bjorn
+Applied into fixes for 3.12.
+
+Thanks,
+Kukjin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
