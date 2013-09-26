@@ -1,71 +1,56 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 17/21] of: move of_translate_dma_address to of_address.h
-Date: Thu, 26 Sep 2013 13:50:52 -0500
-Message-ID: <1380221456-11192-18-git-send-email-robherring2@gmail.com>
-References: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v11 2/8] usb: phy: omap-usb2: use the new generic PHY
+ framework
+Date: Thu, 26 Sep 2013 11:51:51 -0700
+Message-ID: <20130926185151.GA8689@kroah.com>
+References: <1377063973-22044-1-git-send-email-kishon@ti.com>
+ <1377063973-22044-3-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1377063973-22044-3-git-send-email-kishon@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, stern@rowland.harvard.edu, grant.likely@linaro.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, george.cherian@ti.com, arnd@arndb.de, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, broonie@kernel.org, akpm@linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+On Wed, Aug 21, 2013 at 11:16:07AM +0530, Kishon Vijay Abraham I wrote:
+> Used the generic PHY framework API to create the PHY. Now the power off and
+> power on are done in omap_usb_power_off and omap_usb_power_on respectively.
+> The omap-usb2 driver is also moved to driver/phy.
+> 
+> However using the old USB PHY library cannot be completely removed
+> because OTG is intertwined with PHY and moving to the new framework
+> will break OTG. Once we have a separate OTG state machine, we
+> can get rid of the USB PHY library.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Acked-by: Felipe Balbi <balbi@ti.com>
+> ---
+>  drivers/phy/Kconfig                   |   12 +++++++++
+>  drivers/phy/Makefile                  |    1 +
+>  drivers/{usb => }/phy/phy-omap-usb2.c |   45 ++++++++++++++++++++++++++++++---
+>  drivers/usb/phy/Kconfig               |   10 --------
+>  drivers/usb/phy/Makefile              |    1 -
+>  5 files changed, 54 insertions(+), 15 deletions(-)
+>  rename drivers/{usb => }/phy/phy-omap-usb2.c (88%)
 
-of_translate_dma_address is implemented in common code, so move the
-declaration there too.
+I tried to apply this to my USB branch, but it fails.
 
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: linuxppc-dev@lists.ozlabs.org
----
- arch/powerpc/include/asm/prom.h | 4 ----
- include/linux/of_address.h      | 4 ++++
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Kishon, you were going to refresh this patch series, right?  Please do,
+because as-is, I can't take it.
 
-diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
-index 43fe002..b8774bd 100644
---- a/arch/powerpc/include/asm/prom.h
-+++ b/arch/powerpc/include/asm/prom.h
-@@ -24,10 +24,6 @@
-  * OF address retreival & translation
-  */
- 
--/* Translate a DMA address from device space to CPU space */
--extern u64 of_translate_dma_address(struct device_node *dev,
--				    const __be32 *in_addr);
--
- /* Parse the ibm,dma-window property of an OF node into the busno, phys and
-  * size parameters.
-  */
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index e8a1797..5f6ed6b 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -34,6 +34,10 @@ static inline void of_pci_range_to_resource(struct of_pci_range *range,
- 	res->name = np->full_name;
- }
- 
-+/* Translate a DMA address from device space to CPU space */
-+extern u64 of_translate_dma_address(struct device_node *dev,
-+				    const __be32 *in_addr);
-+
- #ifdef CONFIG_OF_ADDRESS
- extern u64 of_translate_address(struct device_node *np, const __be32 *addr);
- extern bool of_can_translate_address(struct device_node *dev);
--- 
-1.8.1.2
+thanks,
+
+greg k-h
