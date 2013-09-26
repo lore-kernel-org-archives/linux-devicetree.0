@@ -1,68 +1,42 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
-Date: Thu, 26 Sep 2013 10:31:10 +0200
-Message-ID: <5243F0CE.9000301@gmail.com>
-References: <20130828113521.35c53365@armhf> <521DCD80.9010105@gmail.com> <20130831125128.0e3a23c7@armhf> <140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com> <20130926101147.217015e1@armhf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130926101147.217015e1@armhf>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 2/5] ARM: mvebu: Add Core Divider clock device-tree
+ binding
+Date: Thu, 26 Sep 2013 10:36:55 +0200
+Message-ID: <20130926083655.GB18244@lunn.ch>
+References: <1380144502-24109-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130925213730.GA19371@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130925213730.GA19371@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <elopez93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/26/2013 10:11 AM, Jean-Francois Moine wrote:
-> In the Cubox, I changed the audio DT to:
->
-> &i2s1 {
-> 	status = "okay";
-> 	clocks = <&gate_clk 13>, <&si5351 1>;
-> 	clock-names = "internal", "extclk";
-> 	pinctrl-0 = <&pmx_audio1_i2s1_spdifo &pmx_gpio_13_audio1>;
+Hi Ezequiel
 
-Have you checked that pinmux was configured correctly?
++#define CORE_CLOCK_DIVIDER_RATIO_OFFSET		0x8
+...
 
-You are missing a
+reg = readl(corediv->reg + CORE_CLOCK_DIVIDER_RATIO_OFFSET);
 
-pinctrl-names = "default";
+...
 
-to actually execute the above pinmux setting.
++Example:
++
++corediv_clk: corediv-clocks@18740 {
++	      compatible = "marvell,armada-370-corediv-clock";
++	      reg = <0x18740 0x8>;
++	      #clock-cells = <1>;
++	      clocks = <&pll>;
++};
 
-> };
->
-> and the sound does not get out correctly.
->
-> There is no sound at all, except when restarting playing which gives
-> some shrill sound for half a second at start time.
+The reg property seems to be wrong.
 
-Could be clock setup stability issues on si5351. Will check that later
-with a scope, maybe I also check spdif output rate with it too.
-
-> I lowered the rate in kirkwood-i2s, setting the clock by (* 128)
-> instead of (* 256), and, most of the time, this gives continuous shrill
-> and chopped sound at various sample rates (22.05, 32 and 44.1 kHz).
-> Lowering the clock to (* 64) gives no sound at all.
-
-What about trying to get 48kHz working first? Does it work with
-internal DCO and 48kHz? External audio clock should be 256*fs as stated
-in dove datasheet.
-
-> For more information, I use i2s input in the tda998x with audio rate
-> 96kHz on HDMI output. The sound is fine with the internal dco (tested
-> with 44.1kHz only).
-
-Sorry, I don't understand the above "information". How can you have a
-different input audio rate tested with 44k1 output rate?
-
-> Some idea?
-
-Have you ever tested your audio equipment with something different than
-48k and 44k1 SPDIF PCM? Are you actually sure it works at all, i.e. do
-you have different audio source with SPDIF >48kHz? Can you try optical
-SPDIF instead of HDMI?
-
-Just try to narrow it down, currently I cannot see why this behavior
-should be limited to either si5351 or dove audio alone.
-
-Sebastian
+    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
