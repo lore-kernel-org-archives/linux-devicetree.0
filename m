@@ -1,88 +1,73 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/5] Add Core Divider clock support for Armada 370/XP
-Date: Thu, 26 Sep 2013 13:00:11 -0300
-Message-ID: <20130926160010.GD4583@localhost>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 1/5] clk: mvebu: Add core-divider clock
+Date: Thu, 26 Sep 2013 17:56:56 +0200
+Message-ID: <20130926155656.GF18244@lunn.ch>
 References: <1380144502-24109-1-git-send-email-ezequiel.garcia@free-electrons.com>
  <20130925213730.GA19371@localhost>
- <5243E46B.2000406@free-electrons.com>
- <20130926152651.GC4583@localhost>
- <20130926174755.15a65f92@skate>
+ <20130926082404.GA18244@lunn.ch>
+ <20130926151240.GB4583@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130926174755.15a65f92@skate>
+In-Reply-To: <20130926151240.GB4583@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Emilio Lopez <elopez93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <elopez93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2013 at 05:47:55PM +0200, Thomas Petazzoni wrote:
-> Dear Ezequiel Garcia,
->=20
-> On Thu, 26 Sep 2013 12:26:52 -0300, Ezequiel Garcia wrote:
->=20
-> > 3. We hack the NAND driver to consume the NAND ECC, but use the rat=
-e
-> > as the half of it, and forget about the halved-rate NAND clock.
-> > This seems certainly hacky.
->=20
-> Is this really hacky? Since we can't change the rate of one without
-> changing the other, or gating the one without the other, we can also
-> see those two clocks as being an internal business of the NAND hardwa=
-re
-> block. So instead of seeing things as:
->=20
->                         -------------
->  NAND ECC clk    ---->  |           |=20
->      ||                 |  NAND HW  |
->      ||                 |   block   |
->      \/                 |           |
->  NAND clk        ---->  |           |
->                         -------------
->=20
-> You can see things as follows:
->=20
->                         -------------
->                         |           |=20
->                         |  NAND HW  |
->  NAND clk        ---->  |   block   |
->                         |           |
->                         |           |
->                         -------------
->=20
-> and the ECC clock is actually some internal business of the NAND hw
-> block, and therefore handled internally by the NAND driver, as your
-> option (3) suggests.
->=20
-> Since the amount of details that we have about the exact hardware
-> architecture are pretty scarce, I believe this is probably the easies=
-t
-> solution.
->=20
+> > > +	/* Valid ratio are 1:4, 1:5, 1:6 and 1:8 */
+> > > +	u32 div;
+> > > +
+> > > +	div = *parent_rate / rate;
+> > > +	if (div <= 4)
+> > > +	   div = 4;
+> > > +	   else if (div <= 5)
+> > > +	   	div = 5;
+> > > +		else if (div <= 6)
+> > > +		     div = 6;
+> > > +		     else
+> > > +			div = 8;
+> > > +
+> > > +	return *parent_rate / div;
+> > > +}
+> > 
+> > This looks odd. Is not the following clearer?
+> > 
+> > 	div = *parent_rate / rate;
+> > 	if (div < 5)
+> > 	   div = 4;
+> > 	   else if (div > 6)
+> > 		div = 8;
+> > 
+> 
+> Mmmm... no, it's not at all clearer to me.
+> IMHO, the original construction explicitly show the possible ratios:
+> 
+> 	/* If it's smaller than or equal to 4, set to 4 */
+> 	if (div <= 4)
+> 		div = 4;
+> 
+> 	/* Otherwise, if it's between 4 and 5, set to 5 */
+> 	else if (div <= 5)
+> 	 	div = 5;
 
-Hm... could be. Considering the lack of hardware details (as you
-point out) maybe this is indeed the best option.
+If div was a float or double, i would probably agree. But its a u32.
+It cannot be between 4 and 5. It must be 5. So it becomes
 
-And it has the cool advantage of simplfying the clock tree, which
-is unnecessarily complex with the NAND ECC clock -> NAND clock layout.
+ 	if (div <= 4)
+ 		div = 4;
+        else if (div == 5)
+	        div = 5;
+        else if (div == 6)
+                div = 6
+        else 
+	    div = 8
 
-On the other side, Emilio has just pointed out (in private) that there'=
-s
-a flag "CLK_SET_RATE_PARENT" that is meant for these cases.
+Those two middle statements look odd to me...
 
-Anyway, I feel inclined to your suggestion and just forget about the NA=
-ND
-ECC clock for good, which is only confusing.
-
-Thanks,
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+      Andrew
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
