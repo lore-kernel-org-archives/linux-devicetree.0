@@ -1,130 +1,47 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCHv7 30/36] ARM: dts: omap3 clock data
-Date: Thu, 26 Sep 2013 11:06:57 -0500
-Message-ID: <20130926160657.GA6280@kahuna>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
- <1380098922-30340-31-git-send-email-t-kristo@ti.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/5] Add Core Divider clock support for Armada 370/XP
+Date: Thu, 26 Sep 2013 18:12:06 +0200
+Message-ID: <20130926181206.70ef355b@skate>
+References: <1380144502-24109-1-git-send-email-ezequiel.garcia@free-electrons.com>
+	<20130925213730.GA19371@localhost>
+	<5243E46B.2000406@free-electrons.com>
+	<20130926152651.GC4583@localhost>
+	<20130926174755.15a65f92@skate>
+	<20130926160010.GD4583@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1380098922-30340-31-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130926160010.GD4583@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Emilio Lopez <elopez93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11:48-20130925, Tero Kristo wrote:
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index 16420ae..bc11b83 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -533,4 +533,11 @@
->  			ram-bits = <12>;
->  		};
->  	};
-> +
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +		/include/ "omap3xxx-clocks.dtsi"
-> +	};
->  };
-Clocks are introduced towards the tail of the dts -> this has a problem
-associated with it -> device nodes should be able to reference phandle
-like:
+Dear Ezequiel Garcia,
 
-devicex {
-	clocks = <&sys_ck>;
-}
+On Thu, 26 Sep 2013 13:00:11 -0300, Ezequiel Garcia wrote:
 
-Since all the devices on ocp and cpu0 node appears above the definition
-they fail to catch the phandle. instead, moving the clocks node as high
-in the tree as possible resolves this: something like:
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index bc11b83..0b2161d 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -24,6 +24,13 @@
- 		serial2 = &uart3;
- 	};
- 
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		/include/ "omap3xxx-clocks.dtsi"
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -534,10 +541,4 @@
- 		};
- 	};
- 
--	clocks {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges;
--		/include/ "omap3xxx-clocks.dtsi"
--	};
- };
+> Hm... could be. Considering the lack of hardware details (as you
+> point out) maybe this is indeed the best option.
+> 
+> And it has the cool advantage of simplfying the clock tree, which
+> is unnecessarily complex with the NAND ECC clock -> NAND clock layout.
+> 
+> On the other side, Emilio has just pointed out (in private) that
+> there's a flag "CLK_SET_RATE_PARENT" that is meant for these cases.
+> 
+> Anyway, I feel inclined to your suggestion and just forget about the
+> NAND ECC clock for good, which is only confusing.
 
-What do you think of the change? applies for all clock nodes in other
-dtsi as well - I will mark them as I find them.
+Yes, I also believe it's the easiest solution.
 
-Further,
-> diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-> index 5355d61..2ed7c69 100644
-> --- a/arch/arm/boot/dts/omap34xx.dtsi
-> +++ b/arch/arm/boot/dts/omap34xx.dtsi
-> @@ -25,4 +25,123 @@
->  			clock-latency = <300000>; /* From legacy driver */
->  		};
->  	};
-> -};
-> +
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-dont need to state the above two -> already done in omap3.dtsi.
-> +		/include/ "omap34xx-omap36xx-clocks.dtsi"
-> +		/include/ "omap36xx-omap3430es2plus-clocks.dtsi"
-> +		/include/ "omap36xx-am35xx-omap3430es2plus-clocks.dtsi"
-> +	};
-> +};
-[...]
-> \ No newline at end of file
-^^
-[...]
-> diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-> index f8b3765..71fb6fb 100644
-> --- a/arch/arm/boot/dts/omap36xx.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> @@ -35,4 +35,124 @@
->  			clock-frequency = <48000000>;
->  		};
->  	};
-> -};
-> +
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-^^ here as well.
-> +		/include/ "omap36xx-clocks.dtsi"
-> +		/include/ "omap34xx-omap36xx-clocks.dtsi"
-> +		/include/ "omap36xx-omap3430es2plus-clocks.dtsi"
-> +		/include/ "omap36xx-am35xx-omap3430es2plus-clocks.dtsi"
-> +	};
-[...]
-> +};
-> \ No newline at end of file
-^^ this need fix as well.
-
+Thomas
 -- 
-Regards,
-Nishanth Menon
+Thomas Petazzoni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
