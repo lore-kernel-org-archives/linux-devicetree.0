@@ -1,81 +1,53 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 2/3] clk: samsung: Add clock driver for s5pc100
-Date: Thu, 26 Sep 2013 16:00:28 +0200
-Message-ID: <3392871.UAAWoO4asY@amdc1227>
-References: <1380041605-15736-1-git-send-email-m.krawczuk@partner.samsung.com>
- <1380041605-15736-2-git-send-email-m.krawczuk@partner.samsung.com>
- <CAKew6eUgpnqvZUCsWGpqwDXtp6ARmhd-Nw-BXiod8=MK-k0fUA@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/5] ARM: mvebu: Add Core Divider clock device-tree
+ binding
+Date: Thu, 26 Sep 2013 12:04:17 -0300
+Message-ID: <20130926150416.GA4583@localhost>
+References: <1380144502-24109-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130925213730.GA19371@localhost>
+ <20130926083655.GB18244@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAKew6eUgpnqvZUCsWGpqwDXtp6ARmhd-Nw-BXiod8=MK-k0fUA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yadwinder Singh Brar <yadi.brar01@gmail.com>
-Cc: Mateusz Krawczuk <m.krawczuk@partner.samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Yadwinder Singh <yadi.brar@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, rob@landley.net, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, ijc+devicetree@hellion.org.uk, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, ben-linux@fluff.org, s.nawrocki@samsung.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130926083655.GB18244-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <elopez93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yadwinder,
+On Thu, Sep 26, 2013 at 10:36:55AM +0200, Andrew Lunn wrote:
+> Hi Ezequiel
+>=20
+> +#define CORE_CLOCK_DIVIDER_RATIO_OFFSET		0x8
+> ...
+>=20
+> reg =3D readl(corediv->reg + CORE_CLOCK_DIVIDER_RATIO_OFFSET);
+>=20
+> ...
+>=20
+> +Example:
+> +
+> +corediv_clk: corediv-clocks@18740 {
+> +	      compatible =3D "marvell,armada-370-corediv-clock";
+> +	      reg =3D <0x18740 0x8>;
+> +	      #clock-cells =3D <1>;
+> +	      clocks =3D <&pll>;
+> +};
+>=20
+> The reg property seems to be wrong.
+>=20
 
-I haven't reviewed this series yet, but let me clarify some things from
-your comments.
+Mm.. good catch!
 
-On Thursday 26 of September 2013 17:38:58 Yadwinder Singh Brar wrote:
-> > +
-> > +/* Helper macros to define clock arrays. */
-> > +#define FIXED_RATE_CLOCKS(name)        \
-> > +               static struct samsung_fixed_rate_clock name[]
-> > +#define MUX_CLOCKS(name)       \
-> > +               static struct samsung_mux_clock name[]
-> > +#define DIV_CLOCKS(name)       \
-> > +               static struct samsung_div_clock name[]
-> > +#define GATE_CLOCKS(name)      \
-> > +               static struct samsung_gate_clock name[]
-> > +
-> 
-> These macros seems little bit odd in our common practice,
-> perhaps these are making code harder to read below.
-> 
-
-They allow array declaration to fit into single line. I agree that it is
-not particularly easy to read at first sight, but shouldn't really be
-much of nuisance. In addition, most of this driver is based on macros
-like this, e.g. GATE(), MUX(), PNAME(), etc.
-
-> > +PNAME(mout_i2s_2_p) = {
-> > +       "fout_epll",
-> > +       "i2scdclk0",
-> > +       "dout_audio0",
-> > +       "none"
-> > +};
-> > +
-> 
-> Using one line per parent isn't increasing length of file unnecessarily?
-
-I believe this improves readability. Do we really care about size of
-source code that much, over readability?
-
-> > +       ALIAS(SCLK_AUDIO0, "soc-audio.0", "sclk_audio"),
-> > +       ALIAS(SCLK_AUDIO1, "soc-audio.1", "sclk_audio"),
-> > +       ALIAS(SCLK_AUDIO2, "soc-audio.2", "sclk_audio"),
-> > +       ALIAS(KEYIF, NULL, "keypad"),
-> > +
-> > +       ALIAS(MFC, "s5p-mfc", "sclk_mfc"),
-> > +       ALIAS(G2D, "s5p-g2d", "fimg2d"),
-> > +
-> > +};
-> > +
-> 
-> Any reason/hidden advantage for using a separate of ALIAS,
-> instead of using MUX_A/GATE_A ?
-
-Yes, not even hidden. Alias is not a property of clock. One clock can
-have multiple aliases, e.g. the same clock being input to multiple
-devices.
-
-In addition, as soon as we fully move s5pv210 to device tree, the whole
-array of aliases will be dropped, without the need to touch the main
-clock arrays at all.
-
-Best regards,
-Tomasz
+Thanks for the review,
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
