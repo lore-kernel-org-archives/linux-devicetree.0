@@ -1,72 +1,71 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 11/21] mips: add explicit includes of prom.h
-Date: Thu, 26 Sep 2013 13:50:46 -0500
-Message-ID: <1380221456-11192-12-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 17/21] of: move of_translate_dma_address to of_address.h
+Date: Thu, 26 Sep 2013 13:50:52 -0500
+Message-ID: <1380221456-11192-18-git-send-email-robherring2@gmail.com>
 References: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 In-Reply-To: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
+Cc: Grant Likely <grant.likely@linaro.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-In preparation of removing prom.h include by of.h, add explicit includes.
+of_translate_dma_address is implemented in common code, so move the
+declaration there too.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: linuxppc-dev@lists.ozlabs.org
 ---
- arch/mips/lantiq/prom.c           | 1 +
- arch/mips/mti-sead3/sead3-setup.c | 2 ++
- arch/mips/ralink/of.c             | 1 +
- 3 files changed, 4 insertions(+)
+ arch/powerpc/include/asm/prom.h | 4 ----
+ include/linux/of_address.h      | 4 ++++
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/lantiq/prom.c b/arch/mips/lantiq/prom.c
-index 49c4603..19686c5 100644
---- a/arch/mips/lantiq/prom.c
-+++ b/arch/mips/lantiq/prom.c
-@@ -14,6 +14,7 @@
+diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
+index 43fe002..b8774bd 100644
+--- a/arch/powerpc/include/asm/prom.h
++++ b/arch/powerpc/include/asm/prom.h
+@@ -24,10 +24,6 @@
+  * OF address retreival & translation
+  */
  
- #include <asm/bootinfo.h>
- #include <asm/time.h>
-+#include <asm/prom.h>
+-/* Translate a DMA address from device space to CPU space */
+-extern u64 of_translate_dma_address(struct device_node *dev,
+-				    const __be32 *in_addr);
+-
+ /* Parse the ibm,dma-window property of an OF node into the busno, phys and
+  * size parameters.
+  */
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index e8a1797..5f6ed6b 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -34,6 +34,10 @@ static inline void of_pci_range_to_resource(struct of_pci_range *range,
+ 	res->name = np->full_name;
+ }
  
- #include <lantiq.h>
- 
-diff --git a/arch/mips/mti-sead3/sead3-setup.c b/arch/mips/mti-sead3/sead3-setup.c
-index b5059dc..928ba84 100644
---- a/arch/mips/mti-sead3/sead3-setup.c
-+++ b/arch/mips/mti-sead3/sead3-setup.c
-@@ -10,6 +10,8 @@
- #include <linux/of_fdt.h>
- #include <linux/bootmem.h>
- 
-+#include <asm/prom.h>
++/* Translate a DMA address from device space to CPU space */
++extern u64 of_translate_dma_address(struct device_node *dev,
++				    const __be32 *in_addr);
 +
- #include <asm/mips-boards/generic.h>
- 
- const char *get_system_type(void)
-diff --git a/arch/mips/ralink/of.c b/arch/mips/ralink/of.c
-index ce38d11..58c4fd52 100644
---- a/arch/mips/ralink/of.c
-+++ b/arch/mips/ralink/of.c
-@@ -21,6 +21,7 @@
- #include <asm/reboot.h>
- #include <asm/bootinfo.h>
- #include <asm/addrspace.h>
-+#include <asm/prom.h>
- 
- #include "common.h"
- 
+ #ifdef CONFIG_OF_ADDRESS
+ extern u64 of_translate_address(struct device_node *np, const __be32 *addr);
+ extern bool of_can_translate_address(struct device_node *dev);
 -- 
 1.8.1.2
