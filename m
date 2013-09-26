@@ -1,42 +1,52 @@
-From: Maxime COQUELIN <maxime.coquelin@st.com>
-Subject: Re: [PATCH 1/4] i2c: busses: i2c-st: Add ST I2C controller
-Date: Thu, 26 Sep 2013 11:30:23 +0200
-Message-ID: <5243FEAF.4090506@st.com>
-References: <1379498483-4236-1-git-send-email-maxime.coquelin@st.com>
- <1379498483-4236-2-git-send-email-maxime.coquelin@st.com>
- <5240AD6E.4090905@wwwdotorg.org> <5241B1FA.6020500@st.com>
- <20130924155925.GA2995@katana>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v6 1/4] ARM: OMAP2+: cleaned-up DT support of various
+ ECC schemes
+Date: Thu, 26 Sep 2013 09:32:38 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA16BF1@DBDE04.ent.ti.com>
+References: <1378986619-26765-1-git-send-email-pekon@ti.com>
+ <1378986619-26765-2-git-send-email-pekon@ti.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA15ED7@DBDE04.ent.ti.com>
+ <20130925134619.GG10746@radagast>
+ <20130925175527.GA23337@ld-irv-0074.broadcom.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA16884@DBDE04.ent.ti.com>
+ <20130925200539.GH23337@ld-irv-0074.broadcom.com>
+ <CAOesGMif301iBe9zxHudkC_G9SzPPy1Mj4XYvQ-MY8nmx4wO+A@mail.gmail.com>
+ <20130925212903.GI23337@ld-irv-0074.broadcom.com>
+ <20130926091815.GC2411@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130924155925.GA2995@katana>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130926091815.GC2411@e106331-lin.cambridge.arm.com>
 Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Stephen GALLIMORE <stephen.gallimore@st.com>, Stuart MENEFY <stuart.menefy@st.com>, Lee Jones <lee.jones@linaro.org>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Olivier CLERGEAUD <olivier.clergeaud@st.co>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>
+Cc: Olof Johansson <olof@lixom.net>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "tony@atomide.com" <tony@atomide.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "dedekind1@gmail.com" <dedekind1@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Balbi, Felipe" <balbi@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
-On 09/24/2013 05:59 PM, Wolfram Sang wrote:
->> "glitch" is is used to tune the I2C timing requirements, and has a
->> nanosecond granularity.
->> These values are added to default timing values.
->> I'm not 100% sure, but it looks like the "samsung,i2c-sda-delay" in the
->> i2c-s3c2410 driver.
-> For that, we have the generic "i2c-sda-hold-time-ns" property. The s3c
-> driver hasn't been converted to use it, sadly.
->
-Ok, thank you for pointing this out.
-After some checks, this property doesn't match with what is done in this 
-driver.
+> 
+> Pekon, could you please re-send this version of the patches?
+> 
 
-In the v2 series I am sending, I removed the I2C timing tuning as it 
-works on all
-the boards I have tested with.
-I will only keep the anti-glitch filtering, using private properties as 
-I didn't find any generic
-ones that could fit.
+As already there are feedbacks on the patches, so re-sending the
+Patch series might clutter someone else's mailbox.
+Will it be possible for you to fetch the patches from MTD archives?
+else I would send you the patches separately..
 
-Regards,
-Maxime
+I'm attaching the URL from MTD archives for each patch separately,
+and you can follow that thread to see existing comments.
+
+[PATCH v6 0/4] http://lists.infradead.org/pipermail/linux-mtd/2013-September/048613.html
+
+[PATCH v6 1/4] http://lists.infradead.org/pipermail/linux-mtd/2013-September/048611.html
+
+[PATCH v6 2/4] http://lists.infradead.org/pipermail/linux-mtd/2013-September/048612.html
+
+[PATCH v6 3/4] http://lists.infradead.org/pipermail/linux-mtd/2013-September/048615.html
+
+[PATCH v6 3/4] http://lists.infradead.org/pipermail/linux-mtd/2013-September/048614.html
+
+
+with regards, pekon
