@@ -1,61 +1,63 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 28/51] DMA-API: sound: fix dma mask handling in a lot
- of drivers
-Date: Thu, 26 Sep 2013 08:54:25 +0100
-Message-ID: <20130926075425.GX25647@n2100.arm.linux.org.uk>
-References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
- <E1VMm9m-0007ij-ER@rmk-PC.arm.linux.org.uk> <s5h1u4cf2bo.wl%tiwai@suse.de>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
+Date: Thu, 26 Sep 2013 10:11:47 +0200
+Message-ID: <20130926101147.217015e1@armhf>
+References: <20130828113521.35c53365@armhf>
+	<521DCD80.9010105@gmail.com>
+	<20130831125128.0e3a23c7@armhf>
+	<140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <s5h1u4cf2bo.wl%tiwai@suse.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-nvme@lists.infradead.org, Jaroslav Kysela <perex@perex.cz>, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-ide@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, devel@driverdev.osuosl.org, linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, e1000-devel@lists.sourceforge.net, b43-dev@lists.infradead.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Timur Tabi <timur@tabi.org>, Mark Brown <broonie@kernel.org>, dri-devel@lists.freedesktop.org, Ben Dooks <ben-linux@fluff.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, Eric Miao <eric.y.miao@gmail.com>, Sangbeom Kim <sbkim73@sa>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2013 at 09:51:23AM +0200, Takashi Iwai wrote:
-> Hi,
-> 
-> sorry for the lat response, as I've been traveling in the last weeks.
-> 
-> At Thu, 19 Sep 2013 22:53:02 +0100,
-> Russell King wrote:
-> > 
-> > This code sequence is unsafe in modules:
-> > 
-> > static u64 mask = DMA_BIT_MASK(something);
-> > ...
-> > 	if (!dev->dma_mask)
-> > 		dev->dma_mask = &mask;
-> > 
-> > as if a module is reloaded, the mask will be pointing at the original
-> > module's mask address, and this can lead to oopses.  Moreover, they
-> > all follow this with:
-> > 
-> > 	if (!dev->coherent_dma_mask)
-> > 		dev->coherent_dma_mask = mask;
-> > 
-> > where 'mask' is the same value as the statically defined mask, and this
-> > bypasses the architecture's check on whether the DMA mask is possible.
-> > 
-> > Fix these issues by using the new dma_coerce_coherent_and_mask()
-> > function.
-> > 
-> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> 
-> Applied with Mark's ack now.
+On Sun, 01 Sep 2013 11:26:54 +0200
+Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Which is a very stupid thing to do because you won't have
-dma_coerce_coherent_and_mask() in your tree, so all these drivers
-will fail to build for you.
+> Jean-Francois,
+> Sorry for the messy reply, posting from mobile.
+>=20
+> Can you please try <&si5351 1>, iirc audio ist connected to it. I wil=
+l also=20
+> look it up later.
+
+Sebastian,
+
+In the Cubox, I changed the audio DT to:
+
+&i2s1 {
+	status =3D "okay";
+	clocks =3D <&gate_clk 13>, <&si5351 1>;
+	clock-names =3D "internal", "extclk";
+	pinctrl-0 =3D <&pmx_audio1_i2s1_spdifo &pmx_gpio_13_audio1>;
+};
+
+and the sound does not get out correctly.
+
+There is no sound at all, except when restarting playing which gives
+some shrill sound for half a second at start time.
+
+I lowered the rate in kirkwood-i2s, setting the clock by (* 128)
+instead of (* 256), and, most of the time, this gives continuous shrill
+and chopped sound at various sample rates (22.05, 32 and 44.1 kHz).
+Lowering the clock to (* 64) gives no sound at all.
+
+=46or more information, I use i2s input in the tda998x with audio rate
+96kHz on HDMI output. The sound is fine with the internal dco (tested
+with 44.1kHz only).
+
+Some idea?
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
