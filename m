@@ -1,39 +1,42 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: device tree binding documentation outdated
-Date: Thu, 26 Sep 2013 20:51:58 +0100
-Message-ID: <20130926195158.GS12758@n2100.arm.linux.org.uk>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH 00/51] DMA mask changes
+Date: Thu, 26 Sep 2013 22:23:08 +0200
+Message-ID: <CACna6rxkpYzdD8_Jfi22vA2suUa3k-JM65_gCySQpp4crVCoPg@mail.gmail.com>
+References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130919212235.GD12758@n2100.arm.linux.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: alsa-devel@alsa-project.org, b43-dev <b43-dev@lists.infradead.org>, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, e1000-devel@lists.sourceforge.net, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-ide@vger.kernel.org, linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, linux-nvme@lists.infradead.org, linux-omap@vger.kernel.org, linux ppc dev <linuxppc-dev@lists.ozlabs.org>, linux-samsung-soc@vger.kernel.org, Linux SCSI List <linux-scsi@vger.kernel.org>, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, Solarflare linux maintainers <linux-ne>
 List-Id: devicetree@vger.kernel.org
 
-Can someone please point me at the current documentation for the
-iMX6DL pinctrl bindings?
+2013/9/19 Russell King - ARM Linux <linux@arm.linux.org.uk>:
+> This email is only being sent to the mailing lists in question, not t=
+o
+> anyone personally.  The list of individuals is far to great to do tha=
+t.
+> I'm hoping no mailing lists reject the patches based on the number of
+> recipients.
 
-I mean the stuff which looks like this:
+Huh, I think it was enough to send only 3 patches to the b43-dev@. Like=
+:
+[PATCH 01/51] DMA-API: provide a helper to set both DMA and coherent DM=
+A masks
+[PATCH 14/51] DMA-API: net: b43: (...)
+[PATCH 15/51] DMA-API: net: b43legacy: (...)
+;)
 
-#define MX6QDL_PAD_ENET_MDC__ESAI_TX5_RX0           0x1e8 0x5b8 0x858 0x2 0x0
+I believe Joe has some nice script for doing it that way. When fixing
+some coding style / formatting, he sends only related patches to the
+given ML.
 
-which clearly doesn't match:
-
-Required properties for pin configuration node:
-- fsl,pins: two integers array, represents a group of pins mux and config
-  setting. The format is fsl,pins = <PIN_FUNC_ID CONFIG>, PIN_FUNC_ID is a
-  pin working on a specific function, which consists of a tuple of
-  <mux_reg conf_reg input_reg mux_val input_val>.  CONFIG is the pad setting
-  value like pull-up on this pin.
-
-I thought DT was supposed to make bringing up support on new hardware
-easier, but without documentation, I'm frankly stuffed with the cubox-i,
-because it's impossible to work out what the right pinctrl settings
-should be from what seems to be an undocumented pile of random numbers
-stuffed into DT.
-
-Thanks.
+--=20
+Rafa=C5=82
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
