@@ -1,119 +1,63 @@
-From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] DT: Add binding documentation for CM36651
- proximity/light sensor
-Date: Thu, 26 Sep 2013 11:35:25 +0900
-Message-ID: <52439D6D.6030104@samsung.com>
-References: <522D6661.8030000@samsung.com>
- <20130920094010.GG17453@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20130920094010.GG17453-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org" <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "warren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <warren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: socfpga: Set the SDMMC clock phase in system manager
+Date: Wed, 25 Sep 2013 22:00:14 -0500
+Message-ID: <D47AF394-7C05-4CF3-98B6-2D94C63CD389@gmail.com>
+References: <1378740833-4883-1-git-send-email-dinguyen@altera.com> <1378740833-4883-2-git-send-email-dinguyen@altera.com> <20130914110031.GB15077@amd.pavel.ucw.cz> <8761to4ai8.fsf@octavius.laptop.org>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8761to4ai8.fsf-DGHOrqG7t0YzNDMTQreKSUB+6BGkLq7r@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thank you for review.
-I revised on your advice.
-I will send v3 patch in the course of today.
+Hi Chris,
 
-reply about your question inline
+On Sep 25, 2013, at 8:50 PM, Chris Ball wrote:
 
-> On Mon, Sep 09, 2013 at 07:10:41AM +0100, Beomho Seo wrote:
->> This patch add device tree binding documentation for CM36651
->> proximity/light sensor.
->>
->> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iio/light/cm36651.txt      |   24
->> ++++++++++++++++++++
->>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->>  2 files changed, 25 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/light/cm36651.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/light/cm36651.txt
->> b/Documentation/devicetree/bindings/iio/light/cm36651.txt
->> new file mode 100644
->> index 0000000..3a6ba38
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/light/cm36651.txt
->> @@ -0,0 +1,24 @@
->> +* Capella CM36651 I2C Proximity and Color Light sensor
->> +
->> +Required properties:
->> +- compatible: must be "capella,cm36651"
->> +- reg: the I2C address of the device
->> +- interrupts: interrupt to which the chip is connected
+> Hi Dinh,
 > 
-> Nit: I'd prefer something like the below:
+> On Sat, Sep 14 2013, Pavel Machek wrote:
+>>> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>> 
+>>> Add functionality in the System Manager to set the SDR settings for the
+>>> SD/MMC IP.
+>>> 
+>>> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+>> 
+>>> +void socfpga_sysmgr_set_dwmmc_drvsel_smpsel(void)
+>>> +{
+>>> +	struct device_node *np;
+>>> +	u32 timing[2];
+>>> +	u32 hs_timing;
+>>> +
+>>> +	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-dw-mshc");
+>>> +	of_property_read_u32_array(np, "samsung,dw-mshc-sdr-timing", timing, 2);
+>>> +	hs_timing = SYSMGR_SDMMC_CTRL_SET(timing[0], timing[1]);
+>>> +	writel(hs_timing, sys_manager_base_addr + SYSMGR_SDMMCGRP_CTRL_OFFSET);
+>>> +}
+>>> +EXPORT_SYMBOL(socfpga_sysmgr_set_dwmmc_drvsel_smpsel);
+>> 
+>> To get the abstraction right, would it make sense to have timing
+>> parameters as arguments to socfpga_sysmgr_set_dwmmc_drvsel_smpsel(),
+>> so that sysmgr code is not walking MMC's device tree directly?
 > 
-> - interrupts: interrupt-specifier for the sole interrupt generated by
->               the device.
-> 
->> +- vled-supply: regulator for the sensor device, as covered
->> +	       in ../../regulator/regulator.txt
-> 
-> I assume by the name that this is the regulator for the LED that's used
-> alongside the sensor, rather than for the sensor itself?
-> 
-> Is the LED part of the CM36651 unit, or is it external? I couldn't find
-> any documentation for the unit.
-> 
+> I think this review comment from Pavel is still open, please reply.
 
-vled_suppy is the regulator for the IR LED. In order to cm36651 manual, IR_LED part of the cm36651 unit.
+I sent a Rev 2 that addresses this comment on 9/23. Let me know if I need to resend it in case you missed it.
 
->> +
->> +Example:
->> +
->> +	i2c_cm36651: i2c-gpio {
->> +		/* ... */
->> +
->> +		cm36651@18 {
->> +			compatible = "capella,cm36651";
->> +			reg = <0x18>;
->> +			interrupt-parent = <&gpx0>;
->> +			interrupts = <2 0>;
->> +			vled-supply = <&ps_als_reg>;
->> +		};
->> +
->> +		/* ... */
->> +	};
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index ec4d713..044796d 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -17,6 +17,7 @@ brcm	Broadcom Corporation
->>  cavium	Cavium, Inc.
->>  chrp	Common Hardware Reference Platform
->>  cirrus	Cirrus Logic, Inc.
->> +capella	Capella Microsystems, Inc
-> 
-> The vendor prefix looks OK to me. However, it should apper before cavium
-> to maintain the ordering of the file.
-> 
+Thanks,
+Dinh
 > Thanks,
-> Mark.
 > 
->>  cortina	Cortina Systems, Inc.
->>  dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
->>  davicom	DAVICOM Semiconductor, Inc.
->> -- 
->> 1.7.9.5
->>
->> -- 
->> Beomho Seo, Assistant Engineer
->> System S/W Lab., S/W Platform Team, Software Center
->> Samsung Electronics
->>
-> 
+> - Chris.
+> -- 
+> Chris Ball   <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>   <http://printf.net/>
 
-
--- 
-Best Regards,
-
-Beomho Seo, Assistant Engineer
-System S/W Lab., S/W Platform Team, Software Center
-Samsung Electronics
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
