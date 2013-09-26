@@ -1,211 +1,46 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 1/3] usb: dwc3: msm: Add device tree binding
- information
-Date: Thu, 26 Sep 2013 10:46:19 +0100
-Message-ID: <20130926094618.GD2411@e106331-lin.cambridge.arm.com>
-References: <1376992565-22292-1-git-send-email-iivanov@mm-sol.com>
- <1376992565-22292-2-git-send-email-iivanov@mm-sol.com>
- <20130923193148.GN30811@radagast>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys part and Exynos part
+Date: Thu, 26 Sep 2013 11:51:41 +0200
+Message-ID: <201309261151.42034.arnd@arndb.de>
+References: <000701ce8741$fe47deb0$fad79c10$@samsung.com> <201309242323.55323.arnd@arndb.de> <5243C0E5.7020508@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130923193148.GN30811@radagast>
-Sender: linux-doc-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "idos@codeaurora.org" <idos@codeaurora.org>, "mgautam@codeaurora.org" <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5243C0E5.7020508@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Pratyush Anand <pratyush.anand@st.com>, Jingoo Han <jg1.han@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2013 at 08:31:48PM +0100, Felipe Balbi wrote:
-> Hi,
+On Thursday 26 September 2013, Kishon Vijay Abraham I wrote:
+> On Wednesday 25 September 2013 02:53 AM, Arnd Bergmann wrote:
+> > On Monday 23 September 2013, Kishon Vijay Abraham I wrote:
+> >> Btw if we hadn't programmed inbound translation table, the address will go
+> >> untranslated (according to the data book). I guess that's how it was working
+> >> for Jingoo Han.
+> >>
+> >> **
+> >> 3.10.4
+> >> Inbound iATU Operation
+> >>
+> >> When there is no match, then the address is untranslated
+> >> **
+> >>
+> > 
+> > Well, that should work just as well, since you have a 1:1 translation anyway.
+> > Do you get the same error without the translation?
 > 
-> On Tue, Aug 20, 2013 at 12:56:03PM +0300, Ivan T. Ivanov wrote:
-> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> > 
-> > MSM USB3.0 core wrapper consist of USB3.0 IP from Synopsys
-> > (SNPS) and HS, SS PHY's control and configuration registers.
-> > 
-> > It could operate in device mode (SS, HS, FS) and host
-> > mode (SS, HS, FS, LS).
-> > 
-> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> 
-> Any acks for the DT part ? This patch has been pending forever.
+> Yes. I get the same non-fatal error interrupt in RC.
 
-Apologies for the delay. I have a couple of comments that would be nice
-to fix up now.
+Ok, then I guess the translation is actually not at fault here but something
+else. I would recommend looking at the IOMMU as the potential culprit. Maybe
+having it disabled means that no DMA is going through, rather than all DMA
+going through untranslated. Another possibility is that the IOMMU is set up
+so that when disabled, it maps DMA address 0 to the start of RAM, rather
+than identity mapping DMA address 0x80000000 there. If that's the case,
+you either have to use the IOMMU, or set up the mapping in the root
+complex to revert it.
 
-> 
-> > ---
-> >  .../devicetree/bindings/usb/msm-ssusb.txt          |  104 ++++++++++++++++++++
-> >  1 file changed, 104 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/msm-ssusb.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/msm-ssusb.txt b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
-> > new file mode 100644
-> > index 0000000..cacbd3b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
-> > @@ -0,0 +1,104 @@
-> > +MSM SuperSpeed DWC3 USB SoC controller
-> > +
-> > +
-> > +DWC3 Highspeed USB PHY
-> > +======================
-> > +Required properities :
-> > +- compatible : sould be "qcom,dwc3-hsphy";
-
-s/sould/should/
-
-In general, compatible properties are "should contain" rather than
-"should be", as we might have backwards compatible hardware in future.
-
-> > +- reg : offset and length of the register set in the memory map
-> > +- clocks : phandles to clock instances of the device tree nodes
-
-Clocks are referred to be phandle + clock-specifier pairs rather than
-phandles, it would be nice to fix the terminology here
-
-> > +- clock-names :
-> > +	"xo" : External reference clock 19 MHz
-> > +	"sleep_a" : Sleep clock, used when USB3 core goes into low
-> > +	power mode (U3).
-
-I think it would be nicer to say:
-- clocks : A list of phandle + clock-specifier pairs for the clocks
-           listed in clock-names
-- clock-names: Should contain the following:
-               "xo"      - External reference clock (19MHz)
-	       "sleep_a" - Sleep clock used when USB3 core goes into low
-	                   power mode (U3).
-
-I'm not sure we need to describe the frequency of the xo clock -- either
-it's a requriement of the IP and thus doesn't need to be a part of the
-binding, or it's configurable by the driver and thus doesn't need to be
-documented.
-
-> > +<supply-name>-supply : phandle to the regulator device tree node
-> > +Required "supply-name" are:
-> > +	"v1p8" : 1.8v supply for HSPHY
-> > +	"v3p3" : 3.3v supply for HSPHY
-> > +	"vbus" : vbus supply for host mode
-> > +	"vddcx" : vdd supply for HS-PHY digital circuit operation
-
-Any reason for the HSPHY/HS-PHY difference?
-
-I'd list these separately with their full names:
-
-- v1p8-supply: phandle to the regulator for the 1.8v supply to HSPHY.
-- v3p3-supply: phandle to the regulator for the 3.3v supply to HSPHY.
-- vbus-supply: phandle to the regulator for the vbus supply for host
-               mode.
-- vddcx-supply: phandle to the regulator for the vdd supply for HSPHY
-  digital circuit operation.
-
-> > +
-> > +DWC3 Superspeed USB PHY
-> > +=======================
-> > +Required properities :
-> > +- compatible : sould be "qcom,dwc3-ssphy";
-> > +- reg : offset and length of the register set in the memory map
-> > +- clocks : phandles to clock instances of the device tree nodes
-> > +- clock-names :
-> > +	"xo" : External reference clock 19 MHz
-> > +	"ref" : Reference clock - used in host mode.
-> > +<supply-name>-supply : phandle to the regulator device tree node
-> > +Required "supply-name" are:
-> > +	"v1p8" : 1.8v supply for SS-PHY
-> > +	"vddcx" : vdd supply for SS-PHY digital circuit operation
-
-The commments on compatible, clocks, clock-names and the regulators
-apply here.
-
-> > +
-> > +DWC3 controller wrapper
-> > +=======================
-> > +Required properties :
-> > +- compatible : should be "qcom,dwc3"
-> > +- reg : offset and length of the register set in the memory map
-> > +	offset and length of the TCSR register for routing USB
-> > +	signals to either picoPHY0 or picoPHY1.
-> > +- clocks : phandles to clock instances of the device tree nodes
-> > +- clock-names :
-> > +	"core" : Master/Core clock, have to be >= 125 MHz for SS
-> > +	operation and >= 60MHz for HS operation
-> > +	"iface" : System bus AXI clock
-> > +	"sleep" : Sleep clock, used when USB3 core goes into low
-> > +	power mode (U3).
-> > +	"utmi" : Generated by HS-PHY. Used to clock the low power
-> > +	parts of thr HS Link layer.
-> > +Optional properties :
-> > +- gdsc-supply : phandle to the globally distributed switch controller
-> > +  regulator node to the USB controller.
-
-The commments on compatible, clocks, and clock-names apply here too. I
-see the regulator is defined individually :)
-
-I'm fine with the binding itself, I'd just like the documentation fixed
-up.
-
-Cheers,
-Mark.
-
-> > +Required child node:
-> > +A child node must exist to represent the core DWC3 IP block. The name of
-> > +the node is not important. The content of the node is defined in dwc3.txt.
-> > +
-> > +Example device nodes:
-> > +
-> > +	dwc3_hsphy: phy@f92f8800 {
-> > +		compatible = "qcom,dwc3-hsphy";
-> > +		reg = <0xf92f8800 0x30>;
-> > +
-> > +		clocks = <&cxo>, <&usb2a_phy_sleep_cxc>;
-> > +		clock-names = "xo", "sleep_a";
-> > +
-> > +		vbus-supply = <&supply>;
-> > +		vddcx-supply = <&supply>;
-> > +		v1p8-supply = <&supply>;
-> > +		v3p3-supply = <&supply>;
-> > +	};
-> > +
-> > +	dwc3_ssphy: phy@f92f8830 {
-> > +		compatible = "qcom,dwc3-ssphy";
-> > +		reg = <0xf92f8830 0x30>;
-> > +
-> > +		clocks = <&cxo>, <&usb30_mock_utmi_cxc>;
-> > +		clock-names = "xo", "ref";
-> > +
-> > +		vddcx-supply = <&supply>;
-> > +		v1p8-supply = <&supply>;
-> > +	};
-> > +
-> > +	usb@fd4ab000 {
-> > +		compatible = "qcom,dwc3";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		reg = <0xfd4ab000 0x4>;
-> > +
-> > +		clocks = <&usb30_master_cxc>, <&sys_noc_usb3_axi_cxc>,
-> > +				<&usb30_sleep_cxc>, <&usb30_mock_utmi_cxc>;
-> > +		clock-names = "core", "iface", "sleep", "utmi";
-> > +
-> > +		gdsc-supply = <&supply>;
-> > +
-> > +		ranges;
-> > +		dwc3@f9200000 {
-> > +			compatible = "snps,dwc3";
-> > +			reg = <0xf9200000 0xcd00>;
-> > +			interrupts = <0 131 0>;
-> > +			usb-phy = <&dwc3_hsphy>, <&dwc3_ssphy>;
-> > +			tx-fifo-resize;
-> > +		};
-> > +	};
-> > -- 
-> > 1.7.9.5
-> > 
-> 
-> -- 
-> balbi
-
-
+	Arnd
