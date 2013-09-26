@@ -1,68 +1,211 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: new platform for Energy Micro's EFM32 Cortex-M3
- SoCs
-Date: Thu, 26 Sep 2013 11:42:51 +0200
-Message-ID: <20130926094251.GK16106@pengutronix.de>
-References: <1379447884-14025-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <201309172245.25367.arnd@arndb.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 1/3] usb: dwc3: msm: Add device tree binding
+ information
+Date: Thu, 26 Sep 2013 10:46:19 +0100
+Message-ID: <20130926094618.GD2411@e106331-lin.cambridge.arm.com>
+References: <1376992565-22292-1-git-send-email-iivanov@mm-sol.com>
+ <1376992565-22292-2-git-send-email-iivanov@mm-sol.com>
+ <20130923193148.GN30811@radagast>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201309172245.25367.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20130923193148.GN30811@radagast>
+Sender: linux-doc-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "idos@codeaurora.org" <idos@codeaurora.org>, "mgautam@codeaurora.org" <mgautam@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2013 at 10:45:25PM +0200, Arnd Bergmann wrote:
-> On Tuesday 17 September 2013, Uwe Kleine-K=F6nig wrote:
-> >  arch/arm/Kconfig                               |  16 +++-
-> >  arch/arm/Kconfig.debug                         |  16 ++++
-> >  arch/arm/Makefile                              |   1 +
-> >  arch/arm/configs/efm32_defconfig               | 104 +++++++++++++=
-++++++++++++
-> >  arch/arm/mach-efm32/Makefile                   |   1 +
-> >  arch/arm/mach-efm32/Makefile.boot              |   2 +
-> >  arch/arm/mach-efm32/cmu.h                      |  15 ++++
-> >  arch/arm/mach-efm32/common.c                   |  19 +++++
-> >  arch/arm/mach-efm32/common.h                   |   1 +
-> >  arch/arm/mach-efm32/dtmachine.c                |  31 ++++++++
-> >  arch/arm/mach-efm32/include/mach/debug-macro.S |  48 ++++++++++++
-> >  arch/arm/mach-efm32/include/mach/entry-macro.S |   5 ++
-> >  arch/arm/mach-efm32/include/mach/io.h          |   6 ++
-> >  arch/arm/mach-efm32/include/mach/irqs.h        |   6 ++
-> >  arch/arm/mach-efm32/include/mach/timex.h       |   7 ++
->=20
-> You should be able to add NOMMU platforms in combination with CONFIG_=
-MULTIPLATFORM
-> now, which gets rid of most of these files.
-I made that work now and can prepare a patch. I had to drop "depends on
-!ARCH_MULTIPLATFORM" from XIP_KERNEL. That's because my machine only
-works with XIP_KERNEL as it only has 4 MiB of RAM.
+On Mon, Sep 23, 2013 at 08:31:48PM +0100, Felipe Balbi wrote:
+> Hi,
+> 
+> On Tue, Aug 20, 2013 at 12:56:03PM +0300, Ivan T. Ivanov wrote:
+> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > 
+> > MSM USB3.0 core wrapper consist of USB3.0 IP from Synopsys
+> > (SNPS) and HS, SS PHY's control and configuration registers.
+> > 
+> > It could operate in device mode (SS, HS, FS) and host
+> > mode (SS, HS, FS, LS).
+> > 
+> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> 
+> Any acks for the DT part ? This patch has been pending forever.
 
-Also note that for !MMU you need to specify the base address and size o=
-f
-your RAM (DRAM_BASE, DRAM_SIZE) and flash (FLASH_MEM_BASE, FLASH_SIZE).
-So the resulting image is hardly runnable on different machines. (I
-don't know off-hand why these are needed though, maybe this can be
-discussed away.)
+Apologies for the delay. I have a couple of comments that would be nice
+to fix up now.
 
-So ARCH_MULTIPLATFORM is only good as it allows to simplify a few
-things, but the result isn't really multi-platform.
+> 
+> > ---
+> >  .../devicetree/bindings/usb/msm-ssusb.txt          |  104 ++++++++++++++++++++
+> >  1 file changed, 104 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/msm-ssusb.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/msm-ssusb.txt b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
+> > new file mode 100644
+> > index 0000000..cacbd3b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
+> > @@ -0,0 +1,104 @@
+> > +MSM SuperSpeed DWC3 USB SoC controller
+> > +
+> > +
+> > +DWC3 Highspeed USB PHY
+> > +======================
+> > +Required properities :
+> > +- compatible : sould be "qcom,dwc3-hsphy";
 
-Best regards
-Uwe
+s/sould/should/
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In general, compatible properties are "should contain" rather than
+"should be", as we might have backwards compatible hardware in future.
+
+> > +- reg : offset and length of the register set in the memory map
+> > +- clocks : phandles to clock instances of the device tree nodes
+
+Clocks are referred to be phandle + clock-specifier pairs rather than
+phandles, it would be nice to fix the terminology here
+
+> > +- clock-names :
+> > +	"xo" : External reference clock 19 MHz
+> > +	"sleep_a" : Sleep clock, used when USB3 core goes into low
+> > +	power mode (U3).
+
+I think it would be nicer to say:
+- clocks : A list of phandle + clock-specifier pairs for the clocks
+           listed in clock-names
+- clock-names: Should contain the following:
+               "xo"      - External reference clock (19MHz)
+	       "sleep_a" - Sleep clock used when USB3 core goes into low
+	                   power mode (U3).
+
+I'm not sure we need to describe the frequency of the xo clock -- either
+it's a requriement of the IP and thus doesn't need to be a part of the
+binding, or it's configurable by the driver and thus doesn't need to be
+documented.
+
+> > +<supply-name>-supply : phandle to the regulator device tree node
+> > +Required "supply-name" are:
+> > +	"v1p8" : 1.8v supply for HSPHY
+> > +	"v3p3" : 3.3v supply for HSPHY
+> > +	"vbus" : vbus supply for host mode
+> > +	"vddcx" : vdd supply for HS-PHY digital circuit operation
+
+Any reason for the HSPHY/HS-PHY difference?
+
+I'd list these separately with their full names:
+
+- v1p8-supply: phandle to the regulator for the 1.8v supply to HSPHY.
+- v3p3-supply: phandle to the regulator for the 3.3v supply to HSPHY.
+- vbus-supply: phandle to the regulator for the vbus supply for host
+               mode.
+- vddcx-supply: phandle to the regulator for the vdd supply for HSPHY
+  digital circuit operation.
+
+> > +
+> > +DWC3 Superspeed USB PHY
+> > +=======================
+> > +Required properities :
+> > +- compatible : sould be "qcom,dwc3-ssphy";
+> > +- reg : offset and length of the register set in the memory map
+> > +- clocks : phandles to clock instances of the device tree nodes
+> > +- clock-names :
+> > +	"xo" : External reference clock 19 MHz
+> > +	"ref" : Reference clock - used in host mode.
+> > +<supply-name>-supply : phandle to the regulator device tree node
+> > +Required "supply-name" are:
+> > +	"v1p8" : 1.8v supply for SS-PHY
+> > +	"vddcx" : vdd supply for SS-PHY digital circuit operation
+
+The commments on compatible, clocks, clock-names and the regulators
+apply here.
+
+> > +
+> > +DWC3 controller wrapper
+> > +=======================
+> > +Required properties :
+> > +- compatible : should be "qcom,dwc3"
+> > +- reg : offset and length of the register set in the memory map
+> > +	offset and length of the TCSR register for routing USB
+> > +	signals to either picoPHY0 or picoPHY1.
+> > +- clocks : phandles to clock instances of the device tree nodes
+> > +- clock-names :
+> > +	"core" : Master/Core clock, have to be >= 125 MHz for SS
+> > +	operation and >= 60MHz for HS operation
+> > +	"iface" : System bus AXI clock
+> > +	"sleep" : Sleep clock, used when USB3 core goes into low
+> > +	power mode (U3).
+> > +	"utmi" : Generated by HS-PHY. Used to clock the low power
+> > +	parts of thr HS Link layer.
+> > +Optional properties :
+> > +- gdsc-supply : phandle to the globally distributed switch controller
+> > +  regulator node to the USB controller.
+
+The commments on compatible, clocks, and clock-names apply here too. I
+see the regulator is defined individually :)
+
+I'm fine with the binding itself, I'd just like the documentation fixed
+up.
+
+Cheers,
+Mark.
+
+> > +Required child node:
+> > +A child node must exist to represent the core DWC3 IP block. The name of
+> > +the node is not important. The content of the node is defined in dwc3.txt.
+> > +
+> > +Example device nodes:
+> > +
+> > +	dwc3_hsphy: phy@f92f8800 {
+> > +		compatible = "qcom,dwc3-hsphy";
+> > +		reg = <0xf92f8800 0x30>;
+> > +
+> > +		clocks = <&cxo>, <&usb2a_phy_sleep_cxc>;
+> > +		clock-names = "xo", "sleep_a";
+> > +
+> > +		vbus-supply = <&supply>;
+> > +		vddcx-supply = <&supply>;
+> > +		v1p8-supply = <&supply>;
+> > +		v3p3-supply = <&supply>;
+> > +	};
+> > +
+> > +	dwc3_ssphy: phy@f92f8830 {
+> > +		compatible = "qcom,dwc3-ssphy";
+> > +		reg = <0xf92f8830 0x30>;
+> > +
+> > +		clocks = <&cxo>, <&usb30_mock_utmi_cxc>;
+> > +		clock-names = "xo", "ref";
+> > +
+> > +		vddcx-supply = <&supply>;
+> > +		v1p8-supply = <&supply>;
+> > +	};
+> > +
+> > +	usb@fd4ab000 {
+> > +		compatible = "qcom,dwc3";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		reg = <0xfd4ab000 0x4>;
+> > +
+> > +		clocks = <&usb30_master_cxc>, <&sys_noc_usb3_axi_cxc>,
+> > +				<&usb30_sleep_cxc>, <&usb30_mock_utmi_cxc>;
+> > +		clock-names = "core", "iface", "sleep", "utmi";
+> > +
+> > +		gdsc-supply = <&supply>;
+> > +
+> > +		ranges;
+> > +		dwc3@f9200000 {
+> > +			compatible = "snps,dwc3";
+> > +			reg = <0xf9200000 0xcd00>;
+> > +			interrupts = <0 131 0>;
+> > +			usb-phy = <&dwc3_hsphy>, <&dwc3_ssphy>;
+> > +			tx-fifo-resize;
+> > +		};
+> > +	};
+> > -- 
+> > 1.7.9.5
+> > 
+> 
+> -- 
+> balbi
+
+
