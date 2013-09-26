@@ -1,123 +1,75 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/5] clk: mvebu: Add core-divider clock
-Date: Thu, 26 Sep 2013 12:12:41 -0300
-Message-ID: <20130926151240.GB4583@localhost>
-References: <1380144502-24109-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130925213730.GA19371@localhost>
- <20130926082404.GA18244@lunn.ch>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
+Date: Thu, 26 Sep 2013 10:21:57 -0500
+Message-ID: <52445115.7010800@ti.com>
+References: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130926082404.GA18244-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <1380098922-30340-1-git-send-email-t-kristo-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <elopez93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2013 at 10:24:04AM +0200, Andrew Lunn wrote:
-> Hi Ezequiel
->=20
-> > +static int clk_corediv_enable(struct clk_hw *hwclk)
-> > +{
-> > +	struct clk_corediv *corediv =3D to_corediv_clk(hwclk);
-> > +	struct clk_corediv_desc *desc =3D &corediv->desc;
-> > +	u32 reg;
-> > +
-> > +	reg =3D readl(corediv->reg);
-> > +	reg |=3D (BIT(desc->fieldbit) << CORE_CLOCK_DIVIDER_ENABLE_OFFSET=
-);
-> > +	writel(reg, corediv->reg);
-> > +	return 0;
-> > +}
->=20
-> Shouldn't there be spinlocks around these register accesses? At least
-> the core gate clk driver has a spinlock.
->=20
+On 09/25/2013 03:48 AM, Tero Kristo wrote:
+[...]
+> Test branch available here:
+> https://github.com/t-kristo/linux-pm.git
+> branch: mainline-3.12-rc2-ti-dt-clks-v7
+> 
+> Testing done:
+> - am335x-bone : boot only
+> - omap5-sevm : boot only
+> - dra7-evm : boot only
+> - omap3-beagle : boot + suspend/resume (ret + off)
+> - omap4-panda-es : boot + suspend/resume
+> 
+> Nishanth has also been doing some tests with omap3-beagle-xm with some WIP
+> versions of this branch, but not with this latest one. Nishanth, maybe you
+> can provide test results to this one also?
+I rebased the branch on top of benoit's for_3.13/dts merged with
+v3.12-rc2 tag
+45646cd ARM: dts: AM33XX: don't redefine OCP bus and device nodes
 
-Indeed.
+All platforms were to MMC filesystem boot (SD card). u-boot used
+v2013.10-rc3 on all platforms (mainline u-boot).
 
-> > +static long clk_corediv_round_rate(struct clk_hw *hwclk, unsigned =
-long rate,
-> > +	     				          unsigned long *parent_rate)
-> > +{
-> > +	/* Valid ratio are 1:4, 1:5, 1:6 and 1:8 */
-> > +	u32 div;
-> > +
-> > +	div =3D *parent_rate / rate;
-> > +	if (div <=3D 4)
-> > +	   div =3D 4;
-> > +	   else if (div <=3D 5)
-> > +	   	div =3D 5;
-> > +		else if (div <=3D 6)
-> > +		     div =3D 6;
-> > +		     else
-> > +			div =3D 8;
-> > +
-> > +	return *parent_rate / div;
-> > +}
->=20
-> This looks odd. Is not the following clearer?
->=20
-> 	div =3D *parent_rate / rate;
-> 	if (div < 5)
-> 	   div =3D 4;
-> 	   else if (div > 6)
-> 		div =3D 8;
->=20
-> The CodingStyle might require some {} here?
->=20
+OMAP3630: Beagle-XM:
+http://pastebin.pandaboard.org/index.php/view/96577127
+(needs additional patch
+-> https://patchwork.kernel.org/patch/2919661/ )
 
-Mmmm... no, it's not at all clearer to me.
-IMHO, the original construction explicitly show the possible ratios:
+OMAP4460: Panda-ES: http://pastebin.pandaboard.org/index.php/view/85143661
 
-	/* If it's smaller than or equal to 4, set to 4 */
-	if (div <=3D 4)
-		div =3D 4;
+OMAP5432: OMAP5-UEVM:
+http://pastebin.pandaboard.org/index.php/view/91361843
+(nice to have patch
+-> https://patchwork.kernel.org/patch/2907761/ )
 
-	/* Otherwise, if it's between 4 and 5, set to 5 */
-	else if (div <=3D 5)
-	 	div =3D 5;
+AM335x: BeagleBone Black:
+http://pastebin.pandaboard.org/index.php/view/42000597
+(needs additional patches:
+ https://patchwork.kernel.org/patch/2902711/
+ https://patchwork.kernel.org/patch/2902711/
+)
 
-	/* Otherwise, if it's between 5 and 6, set to 6 */
-	else if (div <=3D 6)
-		div =3D 6;
+DRA7: DRA7-EVM: http://pastebin.pandaboard.org/index.php/view/38362805
+(needs additional patches:
+-> https://patchwork.kernel.org/patch/2849391/
+-> https://patchwork.kernel.org/patch/2849601/
+-> https://patchwork.kernel.org/patch/2849602/
+-> https://patchwork.kernel.org/patch/2907761/
+)
 
-	/* Otherwise, if it's bigger than 6, set to 8 */
-	else
-		div =3D 8;
+So, for the entire series:
+Tested-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 
-(And I don't think we need any braces).
-
-Is this not clear?
-
-> +   /*
-> +    * Wait for clocks to settle down, and then clear all the
-> +     * ratios request and the reload request.
-> +      */
-> +      udelay(1000);
-> +      reg &=3D ~(CORE_CLOCK_DIVIDER_RATIO_MASK | CORE_CLOCK_DIVIDER_=
-RATIO_RELOAD);
-> +      writel(reg, corediv->reg);
-> +      udelay(1000);
->=20
->=20
-> Documentation/timers/timers-howto.txt says:=20
->=20
->        SLEEPING FOR ~USECS OR SMALL MSECS ( 10us - 20ms):
->        		* Use usleep_range
->=20
-
-Right, forgot about that as well...
-
-Thanks for the feedback!
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+-- 
+Regards,
+Nishanth Menon
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
