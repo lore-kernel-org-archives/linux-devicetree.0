@@ -1,93 +1,52 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] arm: zynq: Enable global timer
-Date: Thu, 26 Sep 2013 12:14:17 +0200
-Message-ID: <524408F9.3090702@linaro.org>
-References: <1379530118-22813-1-git-send-email-soren.brinkmann@xilinx.com> <5242FF4B.6050901@linaro.org> <62570dec-da98-42a2-93b9-6ab1f8adb30d@CH1EHSMHS037.ehs.local>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/2] regulator: da9210: add Device Tree support
+Date: Thu, 26 Sep 2013 11:18:12 +0100
+Message-ID: <20130926101812.GD19304@sirena.org.uk>
+References: <1378988915-10539-1-git-send-email-g.liakhovetski@gmx.de>
+ <1378988915-10539-3-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <62570dec-da98-42a2-93b9-6ab1f8adb30d-p/+QeVIcf1AR12DuCexJY7jjLBE8jN/0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Preeti Murthy <preeti.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wLAMOaPNJ0fu1fTG"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1378988915-10539-3-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/26/2013 10:16 AM, Michal Simek wrote:
-> Hi Daniel,
->
-> On 09/25/2013 05:20 PM, Daniel Lezcano wrote:
->> On 09/18/2013 08:48 PM, Soren Brinkmann wrote:
->>> Hi all,
->>>
->>> here's a v2. I reused the subject from my v1 submission although th=
-e focus of
->>> this series moved a bit towards the timer subsystem.
->>> I replaced Stephen's fix to prevent per cpu devices from becoming
->>> the broadcast device with Thomas' proposal, but I kept the original=
- commit
->>> message. I split the whole approach in small chunks that I found re=
-asonable.
->>>
->>> In 4/4, I picked up Grant's comment regarding the DT node name.
->>>
->>> v2:
->>>   - drop 1/2 of the original series
->>>   - implement preventing per cpu devices from becoming broadcast de=
-vice according
->>>     to Thomas' proposal
->>>     - introduce new CLOCK_EVT_FEAT_PERCPU flag
->>>     - set the flag for the arm_global_timer
->>>     - filter per cpu devices based on this flag when choosing the b=
-roadcast
->>>       device
->>>   - rename DT node to avoid '_'s
->>>
->>>
->>> Soren Brinkmann (4):
->>>    clockchips: Add FEAT_PERCPU clockevent flag
->>>    clocksource/arm_global_timer: Set FEAT_PERCPU flag
->>>    tick: broadcast: Deny per-cpu clockevents from being broadcast s=
-ources
->>>    arm: zynq: Enable arm_global_timer
->>>
->>>   arch/arm/boot/dts/zynq-7000.dtsi       | 8 ++++++++
->>>   arch/arm/mach-zynq/Kconfig             | 1 +
->>>   drivers/clocksource/arm_global_timer.c | 3 ++-
->>>   include/linux/clockchips.h             | 1 +
->>>   kernel/time/tick-broadcast.c           | 1 +
->>>   5 files changed, 13 insertions(+), 1 deletion(-)
->>
->> This patches falls under different maintainer's umbrella.
->>
->> I acked-by the patches, so if someone is willing to take the patches=
- I
->> am ok with that. I am ok also to pick them into my tree with the
->> acked-by maintainer. Just let me know ...
->>
->
-> Yes, please add also this zynq specific patch through your tree.
->
-> Here is my ACK for that.
-> Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-Thomas do you mind to ack the patches if you agree with it ?
+--wLAMOaPNJ0fu1fTG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks
-   -- Daniel
+On Thu, Sep 12, 2013 at 02:28:35PM +0200, Guennadi Liakhovetski wrote:
+> This patch adds basic Device Tree support to the da9210 regulator driver -
+> with no special properties, since also driver's platform data only contains
+> standard regulator initialisation parameters.
 
+Applied, thanks.
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+--wLAMOaPNJ0fu1fTG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJSRAnhAAoJELSic+t+oim9xI0QAIZTkEKWBSXKdxZRQ0wO1pCV
+cQPdYaIUKx+qbsjHt/yRW3iH9WRM2R0BWuJfEmUkXV87q4Ptw9saXmwPimXWNsIH
+53TXGyxie04MGSvPla9d5VjJbE/k8IAdFGqtiMgL2OUCwKwjZU6DCdx9AEtOUaeJ
+fZt7SqMEpWN6PC2wixke6EmUuUQj+eBSU5Y0cUZDs3QM1/qFbvkViKGdRwfOnZFU
+2m7jHDLYSIc722yu4ZN4OcFj87PGaD6Yj3/8d7f+g5nVtGUCg/3Tib7hm8k/KSq6
+x+XQ/O7yu4w12uuypnV3vXTMyjyRWz0Gk3dgtgbdt+bpAwj5xd/KkbYpKhUTSh/R
+BWnng+d56JQ7WoqZuC9W/bSz9WGerztzGYwxmjQUKAefy4RGVtM3Zm5RJnCOfc3b
+SYBsjgT4nO683yReM/ASSHIZ/QdEOcvKoWIxfj9ly1C1Bi5MH6bmtageggcip8qi
+ChgzGixOqOUp+XGIcpaCk/BMW+eM5DnngRhVwFsfnMsvenJTN1Sro6Try12LGHsH
+XL1ILtmp4ZAs9NzshNPGBeDXF92/6mpy0pjSVUeaIFWlobb14IHjZiAxsdFsqi0o
+PsXWBYbt4cQtJ81frCbdAE+84d9ykgHk0Qg7YLlWynPKZyBb9w3xoTlYGhsYkbya
+wOOjpCa6exmj2/SkaasS
+=v/ZT
+-----END PGP SIGNATURE-----
+
+--wLAMOaPNJ0fu1fTG--
