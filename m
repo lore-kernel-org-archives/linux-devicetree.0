@@ -1,82 +1,68 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 1/5] clk: mvebu: Add core-divider clock
-Date: Thu, 26 Sep 2013 10:24:04 +0200
-Message-ID: <20130926082404.GA18244@lunn.ch>
-References: <1380144502-24109-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130925213730.GA19371@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130925213730.GA19371@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <elopez93-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
+Date: Thu, 26 Sep 2013 10:31:10 +0200
+Message-ID: <5243F0CE.9000301@gmail.com>
+References: <20130828113521.35c53365@armhf> <521DCD80.9010105@gmail.com> <20130831125128.0e3a23c7@armhf> <140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com> <20130926101147.217015e1@armhf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130926101147.217015e1@armhf>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ezequiel
+On 09/26/2013 10:11 AM, Jean-Francois Moine wrote:
+> In the Cubox, I changed the audio DT to:
+>
+> &i2s1 {
+> 	status = "okay";
+> 	clocks = <&gate_clk 13>, <&si5351 1>;
+> 	clock-names = "internal", "extclk";
+> 	pinctrl-0 = <&pmx_audio1_i2s1_spdifo &pmx_gpio_13_audio1>;
 
-> +static int clk_corediv_enable(struct clk_hw *hwclk)
-> +{
-> +	struct clk_corediv *corediv = to_corediv_clk(hwclk);
-> +	struct clk_corediv_desc *desc = &corediv->desc;
-> +	u32 reg;
-> +
-> +	reg = readl(corediv->reg);
-> +	reg |= (BIT(desc->fieldbit) << CORE_CLOCK_DIVIDER_ENABLE_OFFSET);
-> +	writel(reg, corediv->reg);
-> +	return 0;
-> +}
+Have you checked that pinmux was configured correctly?
 
-Shouldn't there be spinlocks around these register accesses? At least
-the core gate clk driver has a spinlock.
+You are missing a
 
-> +static long clk_corediv_round_rate(struct clk_hw *hwclk, unsigned long rate,
-> +	     				          unsigned long *parent_rate)
-> +{
-> +	/* Valid ratio are 1:4, 1:5, 1:6 and 1:8 */
-> +	u32 div;
-> +
-> +	div = *parent_rate / rate;
-> +	if (div <= 4)
-> +	   div = 4;
-> +	   else if (div <= 5)
-> +	   	div = 5;
-> +		else if (div <= 6)
-> +		     div = 6;
-> +		     else
-> +			div = 8;
-> +
-> +	return *parent_rate / div;
-> +}
+pinctrl-names = "default";
 
-This looks odd. Is not the following clearer?
+to actually execute the above pinmux setting.
 
-	div = *parent_rate / rate;
-	if (div < 5)
-	   div = 4;
-	   else if (div > 6)
-		div = 8;
+> };
+>
+> and the sound does not get out correctly.
+>
+> There is no sound at all, except when restarting playing which gives
+> some shrill sound for half a second at start time.
 
-The CodingStyle might require some {} here?
+Could be clock setup stability issues on si5351. Will check that later
+with a scope, maybe I also check spdif output rate with it too.
 
-+   /*
-+    * Wait for clocks to settle down, and then clear all the
-+     * ratios request and the reload request.
-+      */
-+      udelay(1000);
-+      reg &= ~(CORE_CLOCK_DIVIDER_RATIO_MASK | CORE_CLOCK_DIVIDER_RATIO_RELOAD);
-+      writel(reg, corediv->reg);
-+      udelay(1000);
+> I lowered the rate in kirkwood-i2s, setting the clock by (* 128)
+> instead of (* 256), and, most of the time, this gives continuous shrill
+> and chopped sound at various sample rates (22.05, 32 and 44.1 kHz).
+> Lowering the clock to (* 64) gives no sound at all.
 
+What about trying to get 48kHz working first? Does it work with
+internal DCO and 48kHz? External audio clock should be 256*fs as stated
+in dove datasheet.
 
-Documentation/timers/timers-howto.txt says: 
+> For more information, I use i2s input in the tda998x with audio rate
+> 96kHz on HDMI output. The sound is fine with the internal dco (tested
+> with 44.1kHz only).
 
-       SLEEPING FOR ~USECS OR SMALL MSECS ( 10us - 20ms):
-       		* Use usleep_range
+Sorry, I don't understand the above "information". How can you have a
+different input audio rate tested with 44k1 output rate?
 
-	Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Some idea?
+
+Have you ever tested your audio equipment with something different than
+48k and 44k1 SPDIF PCM? Are you actually sure it works at all, i.e. do
+you have different audio source with SPDIF >48kHz? Can you try optical
+SPDIF instead of HDMI?
+
+Just try to narrow it down, currently I cannot see why this behavior
+should be limited to either si5351 or dove audio alone.
+
+Sebastian
