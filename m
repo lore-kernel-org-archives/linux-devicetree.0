@@ -1,35 +1,120 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: Re: [RFC v2] gpio/omap: auto-setup a GPIO when used as an IRQ
-Date: Fri, 27 Sep 2013 23:36:15 +0300
-Message-ID: <20130927203615.GA4572@blackmetal.musicnaut.iki.fi>
-References: <1380009480-4975-1-git-send-email-javier.martinez@collabora.co.uk>
- <5244C0C4.2030004@wwwdotorg.org>
- <52453545.3090504@collabora.co.uk>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Fri, 27 Sep 2013 21:43:09 +0100
+Message-ID: <20130927204309.GJ12758@n2100.arm.linux.org.uk>
+References: <20130926195158.GS12758@n2100.arm.linux.org.uk> <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com> <20130926205906.GT12758@n2100.arm.linux.org.uk> <CAHCPf3u9KyoJiAPv6oc_ZdVBqgix41__RAGRXh8z+d5bXO8fQw@mail.gmail.com> <20130926232907.GV12758@n2100.arm.linux.org.uk> <20130927131554.GB31178@titan.lakedaemon.net> <20130927170552.GC12758@n2100.arm.linux.org.uk> <20130927183101.GE12758@n2100.arm.linux.org.uk> <CAOMZO5Csr-vgsKHahnTcMKu1DfgSToYnoVncAfhYFJid-bwviQ@mail.gmail.com> <CAHCPf3t=rG-sV-kNe5mQjSvs8k0rddv9=tgh+ub=Tt1xObYxVw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <52453545.3090504@collabora.co.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, r.sricharan@ti.com, holler@ahsoftware.de, Paul Walmsley <paul@pwsan.com>, joelf@ti.com
+In-Reply-To: <CAHCPf3t=rG-sV-kNe5mQjSvs8k0rddv9=tgh+ub=Tt1xObYxVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Sep 27, 2013 at 03:16:48PM -0500, Matt Sealey wrote:
+> On Fri, Sep 27, 2013 at 1:52 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Fri, Sep 27, 2013 at 3:31 PM, Russell King - ARM Linux
+> > <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> >> On Fri, Sep 27, 2013 at 06:05:52PM +0100, Russell King - ARM Linux wrote:
+> >
+> >> An interesting data point.  Connect it to a 100mbit switch and it works.
+> >> gigabit and it behaves as above.
+> >>
+> >> So, the question is: does anyone have gigabit networking working on imx6
+> >> with recent DT based kernels?
+> >
+> > Yes, we have Gigabit ethernet working on mx6sabrelite, wandboard,
+> > sabresd boards.
+> >
+> > Does the 3.0.35 kernel work with gigabit on cubox-i? Could this issue
+> > be related to the ar8035 phy fixup code?
+> 
+> The AR8035 has a PHY ID of 0x004dd072 and the code in the i.MX6
+> platform stuff specifies 0x004dd074 - so if it's really an 8035 then
+> it's not being run..
 
-On Fri, Sep 27, 2013 at 09:35:33AM +0200, Javier Martinez Canillas wrote:
-> I cc'ed Aaro Koskinen and Paul Walmsley now which seems to have OMAP1
-> platforms to test. Could you please test [1] and [2] on a OMAP1 board?
+I've had this in my kernel since earlier today, after a previous comment
+about where to add this fixup.  You may notice that I said earlier
+in this thread - around 1pm UK time - that I'd already confirmed that
+*this* fixup function *is* being run, and I even quoted this code in
+that email... :)
 
-[...]
+As for "if it's really" I really have read the numbers off the top of
+the chip and it "really" is an AR8035.  I wouldn't have the data sheet
+and been probing its pads directly.
 
-> [1]: https://patchwork.kernel.org/patch/2937351/
-> [2]: https://patchwork.kernel.org/patch/2937371/
+The phy is mounted between the MX6 (the big chip) and the HDMI connector.
+It's crystal is immediately beside it.
 
-Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+At this point I'm going to say: please do not make the mistake of
+thinking I'm just a software engineer.  I'm not.  I'm a hardware
+engineer who still designs stuff from time to time.
 
-I applied these patches on top of 3.12-rc2 and tested them on Nokia
-770 (OMAP1, Touchscreen & Retu powerbutton GPIO IRQs) and N800 (OMAP2,
-Retu powerbutton). Seems to work fine on both boards.
+diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+index 85a1b51..4da6c68 100644
+--- a/arch/arm/mach-imx/mach-imx6q.c
++++ b/arch/arm/mach-imx/mach-imx6q.c
+@@ -164,6 +164,46 @@ static int ar8031_phy_fixup(struct phy_device *dev)
+ 
+ #define PHY_ID_AR8031	0x004dd074
+ 
++static int ar8035_phy_fixup(struct phy_device *dev)
++{
++	u16 val;
++
++	/* Ar803x phy SmartEEE feature cause link status generates glitch,
++	 * which cause ethernet link down/up issue, so disable SmartEEE
++	 */
++	phy_write(dev, 0xd, 0x3);
++	phy_write(dev, 0xe, 0x805d);
++	phy_write(dev, 0xd, 0x4003);
++
++	val = phy_read(dev, 0xe);
++	phy_write(dev, 0xe, val & ~(1 << 8));
++
++	/* To enable AR8031 output a 125MHz clk from CLK_25M */
++	phy_write(dev, 0xd, 0x7);
++	phy_write(dev, 0xe, 0x8016);
++	phy_write(dev, 0xd, 0x4007);
++
++	val = phy_read(dev, 0xe);
++	val &= 0xffe3;
++	val |= 0x18;
++	phy_write(dev, 0xe, val);
++
++	/* introduce tx clock delay */
++	phy_write(dev, 0x1d, 0x5);
++	val = phy_read(dev, 0x1e);
++	val |= 0x0100;
++	phy_write(dev, 0x1e, val);
++
++	/*check phy power*/
++	val = phy_read(dev, 0x0);
++	if (val & BMCR_PDOWN)
++		phy_write(dev, 0x0, val & ~BMCR_PDOWN);
++
++	return 0;
++}
++
++#define PHY_ID_AR8035 0x004dd072
++
+ static void __init imx6q_enet_phy_init(void)
+ {
+ 	if (IS_BUILTIN(CONFIG_PHYLIB)) {
+@@ -173,6 +213,8 @@ static void __init imx6q_enet_phy_init(void)
+ 				ksz9031rn_phy_fixup);
+ 		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffff,
+ 				ar8031_phy_fixup);
++		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
++				ar8035_phy_fixup);
+ 	}
+ }
+ 
 
-A.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
