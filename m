@@ -1,511 +1,247 @@
-From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Subject: Re: [PATCH v7 3/4] drivers: of: add initialization code for dma
- reserved memory
-Date: Fri, 27 Sep 2013 12:06:06 -0500
-Message-ID: <CAHCPf3sR1oiyVyN9xvXq8mu1UH0CWBknshV4W9cCNLk65pKe3g@mail.gmail.com>
-References: <1377527959-5080-1-git-send-email-m.szyprowski@samsung.com>
-	<1377527959-5080-4-git-send-email-m.szyprowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCHv2 1/9] hwspinlock/core: add common dt bindings and OF helpers
+Date: Fri, 27 Sep 2013 12:14:19 -0500
+Message-ID: <3C582FCF-7A24-48AC-B98B-AF1D18C1E22B@codeaurora.org>
+References: <cover.1379445653.git.s-anna@ti.com> <4df03ac30dcc79132e3acc2e586d0ca99b431258.1379445653.git.s-anna@ti.com> <14DB8294-1148-446A-A6D3-34E66BA8732C@codeaurora.org> <5245B6F9.7030505@ti.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1377527959-5080-4-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <5245B6F9.7030505-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-No comment on advocating re-use of the device_type = "reserved" from
-CHRP that I posted a good while ago?
 
-There is a large amount of extra code going in here. Normalizing the
-/memory node to the spec ('available' property...) and re-using an
-existing specification for reserved regions means less documentation,
-less extra code and more expected behavior.. the memory setup parser
-should be able to find 'reserved' memory from those nodes the same way
-it finds 'memory' and put it in a special place, without screwing up
-the memory node and adding all kinds of new children. At least for
-Snowball PDK BSP kernels, there are a ton of memory reservation kernel
-args required.
+On Sep 27, 2013, at 11:48 AM, Suman Anna wrote:
 
-Setting up regions in the DT per these docs and isn't making this
-easier, but more complicated and wordy... defining new properties when
-the definition of the standard node (and the 'reserved' node) would
-work so well.
+> Kumar,
+> 
+> On 09/27/2013 11:04 AM, Kumar Gala wrote:
+>> 
+>> On Sep 17, 2013, at 2:30 PM, Suman Anna wrote:
+>> 
+>>> All the platform-specific hwlock driver implementations need the
+>>> number of locks and the associated base id for registering the
+>>> locks present within a hwspinlock device with the driver core.
+>>> These two variables are represented by 'hwlock-num-locks' and
+>>> 'hwlock-base-id' properties. The documentation and OF helpers to
+>>> retrieve these common properties have been added to the driver core.
+>>> 
+>>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>>> ---
+>>> .../devicetree/bindings/hwlock/hwlock.txt          | 26 +++++++++
+>>> drivers/hwspinlock/hwspinlock_core.c               | 61 +++++++++++++++++++++-
+>>> include/linux/hwspinlock.h                         | 11 ++--
+>>> 3 files changed, 93 insertions(+), 5 deletions(-)
+>>> create mode 100644 Documentation/devicetree/bindings/hwlock/hwlock.txt
+>>> 
+>>> diff --git a/Documentation/devicetree/bindings/hwlock/hwlock.txt b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+>>> new file mode 100644
+>>> index 0000000..789930e
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+>>> @@ -0,0 +1,26 @@
+>>> +Generic hwlock bindings
+>>> +=======================
+>>> +
+>>> +Generic bindings that are common to all the hwlock platform specific driver
+>>> +implementations, the retrieved values are used for registering the device
+>>> +specific parameters with the hwspinlock core.
+>>> +
+>>> +The validity and need of these common properties may vary from one driver
+>>> +implementation to another. Look through the individual hwlock driver
+>>> +binding documentations for identifying which are mandatory and which are
+>>> +optional for that specific driver.
+>>> +
+>>> +Common properties:
+>>> +- hwlock-base-id:	Base Id for the locks for a particular hwlock device.
+>>> +			This property is used for representing a set of locks
+>>> +			present in a hwlock device with a unique base id in
+>>> +			the driver core. This property is mandatory ONLY if a
+>>> +			SoC has several hwlock devices.
+>>> +
+>>> +			See documentation on struct hwspinlock_pdata in
+>>> +			linux/hwspinlock.h for more details.
+>>> +
+>>> +- hwlock-num-locks:	Number of locks present in a hwlock device. This
+>>> +			property is needed on hwlock devices, where the number
+>>> +			of supported locks within a hwlock device cannot be
+>>> +			read from a register.
 
-Do I have to go dig out the CHRP spec?
+Was meaning to say this before, another reason for hwlock-num-locks is to limit the # of locks available to the processors running linux vs what other processors in the SoC might be using.
 
-On Mon, Aug 26, 2013 at 9:39 AM, Marek Szyprowski
-<m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> This patch adds device tree support for contiguous and reserved memory
-> regions defined in device tree.
->
-> Large memory blocks can be reliably reserved only during early boot.
-> This must happen before the whole memory management subsystem is
-> initialized, because we need to ensure that the given contiguous blocks
-> are not yet allocated by kernel. Also it must happen before kernel
-> mappings for the whole low memory are created, to ensure that there will
-> be no mappings (for reserved blocks) or mapping with special properties
-> can be created (for CMA blocks). This all happens before device tree
-> structures are unflattened, so we need to get reserved memory layout
-> directly from fdt.
->
-> Later, those reserved memory regions are assigned to devices on each
-> device structure initialization.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/memory.txt |  168 +++++++++++++++++++++++++
->  drivers/of/Kconfig                           |    6 +
->  drivers/of/Makefile                          |    1 +
->  drivers/of/of_reserved_mem.c                 |  175 ++++++++++++++++++++++++++
->  drivers/of/platform.c                        |    4 +
->  include/linux/of_reserved_mem.h              |   14 +++
->  6 files changed, 368 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory.txt
->  create mode 100644 drivers/of/of_reserved_mem.c
->  create mode 100644 include/linux/of_reserved_mem.h
->
-> diff --git a/Documentation/devicetree/bindings/memory.txt b/Documentation/devicetree/bindings/memory.txt
-> new file mode 100644
-> index 0000000..eb24693
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory.txt
-> @@ -0,0 +1,168 @@
-> +*** Memory binding ***
-> +
-> +The /memory node provides basic information about the address and size
-> +of the physical memory. This node is usually filled or updated by the
-> +bootloader, depending on the actual memory configuration of the given
-> +hardware.
-> +
-> +The memory layout is described by the following node:
-> +
-> +/ {
-> +       #address-cells = <(n)>;
-> +       #size-cells = <(m)>;
-> +       memory {
-> +               device_type = "memory";
-> +               reg =  <(baseaddr1) (size1)
-> +                       (baseaddr2) (size2)
-> +                       ...
-> +                       (baseaddrN) (sizeN)>;
-> +       };
-> +       ...
-> +};
-> +
-> +A memory node follows the typical device tree rules for "reg" property:
-> +n:             number of cells used to store base address value
-> +m:             number of cells used to store size value
-> +baseaddrX:     defines a base address of the defined memory bank
-> +sizeX:         the size of the defined memory bank
-> +
-> +
-> +More than one memory bank can be defined.
-> +
-> +
-> +*** Reserved memory regions ***
-> +
-> +In /memory/reserved-memory node one can create child nodes describing
-> +particular reserved (excluded from normal use) memory regions. Such
-> +memory regions are usually designed for the special usage by various
-> +device drivers. A good example are contiguous memory allocations or
-> +memory sharing with other operating system on the same hardware board.
-> +Those special memory regions might depend on the board configuration and
-> +devices used on the target system.
-> +
-> +Parameters for each memory region can be encoded into the device tree
-> +with the following convention:
-> +
-> +[(label):] (name) {
-> +       compatible = "linux,contiguous-memory-region", "reserved-memory-region";
-> +       reg = <(address) (size)>;
-> +       (linux,default-contiguous-region);
-> +};
-> +
-> +compatible:    one or more of:
-> +       - "linux,contiguous-memory-region" - enables binding of this
-> +         region to Contiguous Memory Allocator (special region for
-> +         contiguous memory allocations, shared with movable system
-> +         memory, Linux kernel-specific).
-> +       - "reserved-memory-region" - compatibility is defined, given
-> +         region is assigned for exclusive usage for by the respective
-> +         devices.
-> +
-> +reg:   standard property defining the base address and size of
-> +       the memory region
-> +
-> +linux,default-contiguous-region: property indicating that the region
-> +       is the default region for all contiguous memory
-> +       allocations, Linux specific (optional)
-> +
-> +It is optional to specify the base address, so if one wants to use
-> +autoconfiguration of the base address, '0' can be specified as a base
-> +address in the 'reg' property.
-> +
-> +The /memory/reserved-memory node must contain the same #address-cells
-> +and #size-cells value as the root node.
-> +
-> +
-> +*** Device node's properties ***
-> +
-> +Once regions in the /memory/reserved-memory node have been defined, they
-> +may be referenced by other device nodes. Bindings that wish to reference
-> +memory regions should explicitly document their use of the following
-> +property:
-> +
-> +memory-region = <&phandle_to_defined_region>;
-> +
-> +This property indicates that the device driver should use the memory
-> +region pointed by the given phandle.
-> +
-> +
-> +*** Example ***
-> +
-> +This example defines a memory consisting of 4 memory banks. 3 contiguous
-> +regions are defined for Linux kernel, one default of all device drivers
-> +(named contig_mem, placed at 0x72000000, 64MiB), one dedicated to the
-> +framebuffer device (labelled display_mem, placed at 0x78000000, 8MiB)
-> +and one for multimedia processing (labelled multimedia_mem, placed at
-> +0x77000000, 64MiB). 'display_mem' region is then assigned to fb@12300000
-> +device for DMA memory allocations (Linux kernel drivers will use CMA is
-> +available or dma-exclusive usage otherwise). 'multimedia_mem' is
-> +assigned to scaler@12500000 and codec@12600000 devices for contiguous
-> +memory allocations when CMA driver is enabled.
-> +
-> +The reason for creating a separate region for framebuffer device is to
-> +match the framebuffer base address to the one configured by bootloader,
-> +so once Linux kernel drivers starts no glitches on the displayed boot
-> +logo appears. Scaller and codec drivers should share the memory
-> +allocations.
-> +
-> +/ {
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +
-> +       /* ... */
-> +
-> +       memory {
-> +               reg =  <0x40000000 0x10000000
-> +                       0x50000000 0x10000000
-> +                       0x60000000 0x10000000
-> +                       0x70000000 0x10000000>;
-> +
-> +               reserved-memory {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +
-> +                       /*
-> +                        * global autoconfigured region for contiguous allocations
-> +                        * (used only with Contiguous Memory Allocator)
-> +                        */
-> +                       contig_region@0 {
-> +                               compatible = "linux,contiguous-memory-region";
-> +                               reg = <0x0 0x4000000>;
-> +                               linux,default-contiguous-region;
-> +                       };
-> +
-> +                       /*
-> +                        * special region for framebuffer
-> +                        */
-> +                       display_region: region@78000000 {
-> +                               compatible = "linux,contiguous-memory-region", "reserved-memory-region";
-> +                               reg = <0x78000000 0x800000>;
-> +                       };
-> +
-> +                       /*
-> +                        * special region for multimedia processing devices
-> +                        */
-> +                       multimedia_region: region@77000000 {
-> +                               compatible = "linux,contiguous-memory-region";
-> +                               reg = <0x77000000 0x4000000>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       /* ... */
-> +
-> +       fb0: fb@12300000 {
-> +               status = "okay";
-> +               memory-region = <&display_region>;
-> +       };
-> +
-> +       scaler: scaler@12500000 {
-> +               status = "okay";
-> +               memory-region = <&multimedia_region>;
-> +       };
-> +
-> +       codec: codec@12600000 {
-> +               status = "okay";
-> +               memory-region = <&multimedia_region>;
-> +       };
-> +};
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 80e5c13..f7107fa 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -80,4 +80,10 @@ config OF_MTD
->         depends on MTD
->         def_bool y
->
-> +config OF_RESERVED_MEM
-> +       depends on DMA_CMA || (HAVE_GENERIC_DMA_COHERENT && HAVE_MEMBLOCK)
-> +       def_bool y
-> +       help
-> +         Initialization code for DMA reserved memory
-> +
->  endmenu # OF
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index 1f9c0c4..e7e3322 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -10,3 +10,4 @@ obj-$(CONFIG_OF_MDIO) += of_mdio.o
->  obj-$(CONFIG_OF_PCI)   += of_pci.o
->  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
->  obj-$(CONFIG_OF_MTD)   += of_mtd.o
-> +obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> new file mode 100644
-> index 0000000..a754b84
-> --- /dev/null
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -0,0 +1,175 @@
-> +/*
-> + * Device tree based initialization code for reserved memory.
-> + *
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + *             http://www.samsung.com
-> + * Author: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of the
-> + * License or (at your optional) any later version of the license.
-> + */
-> +
-> +#include <asm/dma-contiguous.h>
-> +
-> +#include <linux/memblock.h>
-> +#include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/mm.h>
-> +#include <linux/sizes.h>
-> +#include <linux/mm_types.h>
-> +#include <linux/dma-contiguous.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/of_reserved_mem.h>
-> +
-> +#define MAX_RESERVED_REGIONS   16
-> +struct reserved_mem {
-> +       phys_addr_t             base;
-> +       unsigned long           size;
-> +       struct cma              *cma;
-> +       char                    name[32];
-> +};
-> +static struct reserved_mem reserved_mem[MAX_RESERVED_REGIONS];
-> +static int reserved_mem_count;
-> +
-> +static int __init fdt_scan_reserved_mem(unsigned long node, const char *uname,
-> +                                       int depth, void *data)
-> +{
-> +       struct reserved_mem *rmem = &reserved_mem[reserved_mem_count];
-> +       phys_addr_t base, size;
-> +       int is_cma, is_reserved;
-> +       unsigned long len;
-> +       const char *status;
-> +       __be32 *prop;
-> +
-> +       is_cma = IS_ENABLED(CONFIG_DMA_CMA) &&
-> +              of_flat_dt_is_compatible(node, "linux,contiguous-memory-region");
-> +       is_reserved = of_flat_dt_is_compatible(node, "reserved-memory-region");
-> +
-> +       if (!is_reserved && !is_cma) {
-> +               /* ignore node and scan next one */
-> +               return 0;
-> +       }
-> +
-> +       status = of_get_flat_dt_prop(node, "status", &len);
-> +       if (status && strcmp(status, "okay") != 0) {
-> +               /* ignore disabled node nad scan next one */
-> +               return 0;
-> +       }
-> +
-> +       prop = of_get_flat_dt_prop(node, "reg", &len);
-> +       if (!prop || (len < (dt_root_size_cells + dt_root_addr_cells) *
-> +                            sizeof(__be32))) {
-> +               pr_err("Reserved mem: node %s, incorrect \"reg\" property\n",
-> +                      uname);
-> +               /* ignore node and scan next one */
-> +               return 0;
-> +       }
-> +       base = dt_mem_next_cell(dt_root_addr_cells, &prop);
-> +       size = dt_mem_next_cell(dt_root_size_cells, &prop);
-> +
-> +       if (!size) {
-> +               /* ignore node and scan next one */
-> +               return 0;
-> +       }
-> +
-> +       pr_info("Reserved mem: found %s, memory base %lx, size %ld MiB\n",
-> +               uname, (unsigned long)base, (unsigned long)size / SZ_1M);
-> +
-> +       if (reserved_mem_count == ARRAY_SIZE(reserved_mem))
-> +               return -ENOSPC;
-> +
-> +       rmem->base = base;
-> +       rmem->size = size;
-> +       strlcpy(rmem->name, uname, sizeof(rmem->name));
-> +
-> +       if (is_cma) {
-> +               struct cma *cma;
-> +               if (dma_contiguous_reserve_area(size, base, 0, &cma) == 0) {
-> +                       rmem->cma = cma;
-> +                       reserved_mem_count++;
-> +                       if (of_get_flat_dt_prop(node,
-> +                                               "linux,default-contiguous-region",
-> +                                               NULL))
-> +                               dma_contiguous_set_default(cma);
-> +               }
-> +       } else if (is_reserved) {
-> +               if (memblock_remove(base, size) == 0)
-> +                       reserved_mem_count++;
-> +               else
-> +                       pr_err("Failed to reserve memory for %s\n", uname);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static struct reserved_mem *get_dma_memory_region(struct device *dev)
-> +{
-> +       struct device_node *node;
-> +       const char *name;
-> +       int i;
-> +
-> +       node = of_parse_phandle(dev->of_node, "memory-region", 0);
-> +       if (!node)
-> +               return NULL;
-> +
-> +       name = kbasename(node->full_name);
-> +       for (i = 0; i < reserved_mem_count; i++)
-> +               if (strcmp(name, reserved_mem[i].name) == 0)
-> +                       return &reserved_mem[i];
-> +       return NULL;
-> +}
-> +
-> +/**
-> + * of_reserved_mem_device_init() - assign reserved memory region to given device
-> + *
-> + * This function assign memory region pointed by "memory-region" device tree
-> + * property to the given device.
-> + */
-> +void of_reserved_mem_device_init(struct device *dev)
-> +{
-> +       struct reserved_mem *region = get_dma_memory_region(dev);
-> +       if (!region)
-> +               return;
-> +
-> +       if (region->cma) {
-> +               dev_set_cma_area(dev, region->cma);
-> +               pr_info("Assigned CMA %s to %s device\n", region->name,
-> +                       dev_name(dev));
-> +       } else {
-> +               if (dma_declare_coherent_memory(dev, region->base, region->base,
-> +                   region->size, DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE) != 0)
-> +                       pr_info("Declared reserved memory %s to %s device\n",
-> +                               region->name, dev_name(dev));
-> +       }
-> +}
-> +
-> +/**
-> + * of_reserved_mem_device_release() - release reserved memory device structures
-> + *
-> + * This function releases structures allocated for memory region handling for
-> + * the given device.
-> + */
-> +void of_reserved_mem_device_release(struct device *dev)
-> +{
-> +       struct reserved_mem *region = get_dma_memory_region(dev);
-> +       if (!region && !region->cma)
-> +               dma_release_declared_memory(dev);
-> +}
-> +
-> +/**
-> + * early_init_dt_scan_reserved_mem() - create reserved memory regions
-> + *
-> + * This function grabs memory from early allocator for device exclusive use
-> + * defined in device tree structures. It should be called by arch specific code
-> + * once the early allocator (memblock) has been activated and all other
-> + * subsystems have already allocated/reserved memory.
-> + */
-> +void __init early_init_dt_scan_reserved_mem(void)
-> +{
-> +       of_scan_flat_dt_by_path("/memory/reserved-memory",
-> +                               fdt_scan_reserved_mem, NULL);
-> +}
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index e0a6514..eeca8a5 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -21,6 +21,7 @@
->  #include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
-> +#include <linux/of_reserved_mem.h>
->  #include <linux/platform_device.h>
->
->  const struct of_device_id of_default_bus_match_table[] = {
-> @@ -218,6 +219,8 @@ struct platform_device *of_platform_device_create_pdata(
->         dev->dev.bus = &platform_bus_type;
->         dev->dev.platform_data = platform_data;
->
-> +       of_reserved_mem_device_init(&dev->dev);
-> +
->         /* We do not fill the DMA ops for platform devices by default.
->          * This is currently the responsibility of the platform code
->          * to do such, possibly using a device notifier
-> @@ -225,6 +228,7 @@ struct platform_device *of_platform_device_create_pdata(
->
->         if (of_device_add(dev) != 0) {
->                 platform_device_put(dev);
-> +               of_reserved_mem_device_release(&dev->dev);
->                 return NULL;
->         }
->
-> diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
-> new file mode 100644
-> index 0000000..c841282
-> --- /dev/null
-> +++ b/include/linux/of_reserved_mem.h
-> @@ -0,0 +1,14 @@
-> +#ifndef __OF_RESERVED_MEM_H
-> +#define __OF_RESERVED_MEM_H
-> +
-> +#ifdef CONFIG_OF_RESERVED_MEM
-> +void of_reserved_mem_device_init(struct device *dev);
-> +void of_reserved_mem_device_release(struct device *dev);
-> +void early_init_dt_scan_reserved_mem(void);
-> +#else
-> +static inline void of_reserved_mem_device_init(struct device *dev) { }
-> +static inline void of_reserved_mem_device_release(struct device *dev) { }
-> +static inline void early_init_dt_scan_reserved_mem(void) { }
-> +#endif
-> +
-> +#endif /* __OF_RESERVED_MEM_H */
+
+>>> diff --git a/drivers/hwspinlock/hwspinlock_core.c b/drivers/hwspinlock/hwspinlock_core.c
+>>> index 461a0d7..aec32e7 100644
+>>> --- a/drivers/hwspinlock/hwspinlock_core.c
+>>> +++ b/drivers/hwspinlock/hwspinlock_core.c
+>>> @@ -1,7 +1,7 @@
+>>> /*
+>>> * Hardware spinlock framework
+>>> *
+>>> - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com
+>>> + * Copyright (C) 2010-2013 Texas Instruments Incorporated - http://www.ti.com
+>>> *
+>>> * Contact: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+>>> *
+>>> @@ -27,6 +27,7 @@
+>>> #include <linux/hwspinlock.h>
+>>> #include <linux/pm_runtime.h>
+>>> #include <linux/mutex.h>
+>>> +#include <linux/of.h>
+>>> 
+>>> #include "hwspinlock_internal.h"
+>>> 
+>>> @@ -308,6 +309,64 @@ out:
+>>> }
+>>> 
+>>> /**
+>>> + * of_hwspin_lock_get_base_id() - OF helper to retrieve base id
+>>> + * @dn: device node pointer
+>>> + *
+>>> + * This is an OF helper function that can be called by the underlying
+>>> + * platform-specific implementations, to retrieve the base id for the
+>>> + * set of locks present within a hwspinlock device instance.
+>>> + *
+>>> + * Returns the base id value on success, -ENODEV on generic failure or
+>>> + * an appropriate error code as returned by the OF layer
+>>> + */
+>>> +int of_hwspin_lock_get_base_id(struct device_node *dn)
+>>> +{
+>>> +	unsigned int val;
+>>> +	int ret = -ENODEV;
+>>> +
+>>> +#ifdef CONFIG_OF
+>>> +	if (!dn)
+>>> +		return -ENODEV;
+>> 
+>> Checking !dn is done in of_property_read_u32, so you don't need to duplicate
+> 
+> I have added this specifically since my intention is to differentiate
+> the validity of the node vs the presence of the property within a node.
+> This property may be optional for some platforms and a must for some
+> others, and differentiating would allow the individual driver
+> implementations to make the distinction.
+
+Maybe add a comment for both cases.
+
+> 
+>> 
+>>> +
+>>> +	ret = of_property_read_u32(dn, "hwlock-base-id", &val);
+>>> +	if (!ret)
+>>> +		ret = val;
+>>> +#endif
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(of_hwspin_lock_get_base_id);
+>>> +
+>>> +/**
+>>> + * of_hwspin_lock_get_num_locks() - OF helper to retrieve number of locks
+>>> + * @dn: device node pointer
+>>> + *
+>>> + * This is an OF helper function that can be called by the underlying
+>>> + * platform-specific implementations, to retrieve the number of locks
+>>> + * present within a hwspinlock device instance.
+>>> + *
+>>> + * Returns a positive number of locks on success, -ENODEV on generic
+>>> + * failure or an appropriate error code as returned by the OF layer
+>>> + */
+>>> +int of_hwspin_lock_get_num_locks(struct device_node *dn)
+>>> +{
+>>> +	unsigned int val;
+>>> +	int ret = -ENODEV;
+>>> +
+>>> +#ifdef CONFIG_OF
+>>> +	if (!dn)
+>>> +		return -ENODEV;
+>> 
+>> Checking !dn is done in of_property_read_u32, so you don't need to duplicate
+> 
+> Same comment as above.
+> 
+> regards
+> Suman
+> 
+>> 
+>>> +
+>>> +	ret = of_property_read_u32(dn, "hwlock-num-locks", &val);
+>>> +	if (!ret)
+>>> +		ret = val ? val : -ENODEV;
+>>> +#endif
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(of_hwspin_lock_get_num_locks);
+>>> +
+>>> +/**
+>>> * hwspin_lock_register() - register a new hw spinlock device
+>>> * @bank: the hwspinlock device, which usually provides numerous hw locks
+>>> * @dev: the backing device
+>>> diff --git a/include/linux/hwspinlock.h b/include/linux/hwspinlock.h
+>>> index 3343298..1f6a5b8 100644
+>>> --- a/include/linux/hwspinlock.h
+>>> +++ b/include/linux/hwspinlock.h
+>>> @@ -1,7 +1,7 @@
+>>> /*
+>>> * Hardware spinlock public header
+>>> *
+>>> - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com
+>>> + * Copyright (C) 2010-2013 Texas Instruments Incorporated - http://www.ti.com
+>>> *
+>>> * Contact: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+>>> *
+>>> @@ -26,6 +26,7 @@
+>>> #define HWLOCK_IRQ	0x02	/* Disable interrupts, don't save state */
+>>> 
+>>> struct device;
+>>> +struct device_node;
+>>> struct hwspinlock;
+>>> struct hwspinlock_device;
+>>> struct hwspinlock_ops;
+>>> @@ -60,6 +61,8 @@ struct hwspinlock_pdata {
+>>> 
+>>> #if defined(CONFIG_HWSPINLOCK) || defined(CONFIG_HWSPINLOCK_MODULE)
+>>> 
+>>> +int of_hwspin_lock_get_base_id(struct device_node *dn);
+>>> +int of_hwspin_lock_get_num_locks(struct device_node *dn);
+>>> int hwspin_lock_register(struct hwspinlock_device *bank, struct device *dev,
+>>> 		const struct hwspinlock_ops *ops, int base_id, int num_locks);
+>>> int hwspin_lock_unregister(struct hwspinlock_device *bank);
+>>> @@ -80,9 +83,9 @@ void __hwspin_unlock(struct hwspinlock *, int, unsigned long *);
+>>> * code path get compiled away. This way, if CONFIG_HWSPINLOCK is not
+>>> * required on a given setup, users will still work.
+>>> *
+>>> - * The only exception is hwspin_lock_register/hwspin_lock_unregister, with which
+>>> - * we _do_ want users to fail (no point in registering hwspinlock instances if
+>>> - * the framework is not available).
+>>> + * The only exception is hwspin_lock_register/hwspin_lock_unregister and
+>>> + * associated OF helpers, with which we _do_ want users to fail (no point
+>>> + * in registering hwspinlock instances if the framework is not available).
+>>> *
+>>> * Note: ERR_PTR(-ENODEV) will still be considered a success for NULL-checking
+>>> * users. Others, which care, can still check this with IS_ERR.
+>>> -- 
+>>> 1.8.3.3
+>>> 
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> 
+> 
 > --
-> 1.7.9.5
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
