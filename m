@@ -1,55 +1,40 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: device tree binding documentation outdated
-Date: Fri, 27 Sep 2013 10:51:17 +0800
-Message-ID: <20130927025116.GG25146@S2101-09.ap.freescale.net>
-References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
- <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
- <CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ASoC: generic: Add generic DT based simple codec
+Date: Thu, 26 Sep 2013 21:57:30 -0500
+Message-ID: <CAL_JsqKmfurrCqEYRNqcLRZMU-VjPin2dvK1Q6CMcK4i=+x-8w@mail.gmail.com>
+References: <20130919105437.75e0f0a3@armhf>
+	<5240B07C.6080404@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5240B07C.6080404-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2013 at 11:35:43PM +0200, Linus Walleij wrote:
-> On Thu, Sep 26, 2013 at 10:29 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Thu, Sep 26, 2013 at 4:51 PM, Russell King - ARM Linux
-> 
-> >> I mean the stuff which looks like this:
-> >>
-> >> #define MX6QDL_PAD_ENET_MDC__ESAI_TX5_RX0           0x1e8 0x5b8 0x858 0x2 0x0
-> >
-> > Let me try to decode it:
-> >
-> > 0x1e8: Offset of IOMUXC_SW_MUX_CTL_PAD_ENET_MDC register
-> >
-> > 0x5b8: Offset of IOMUXC_SW_PAD_CTL_PAD_ENET_MDC register
-> >
-> > 0x2: This means that the MUX_MODE field selects the ESAI_TX5_RX0 function
-> > in this pad
-> >
-> > 0x0: SELECT_INPUT not used for this pad
-> 
-> This I guess predates the inctroduction of defines into the DTC,
-> but we can do a lot better now.
-> 
-> Can someone from the i.MX camp take a sweep and convert this
-> to defines in some include/dt-bindings/imx.h or similar file so
-> this thing becomes readable?
+On Mon, Sep 23, 2013 at 4:19 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 09/19/2013 02:54 AM, Jean-Francois Moine wrote:
+>> This patch adds a simple sound codec which is described by the DT.
+>> This codec may be used when no specific codec action is needed.
+>
+>> diff --git a/Documentation/devicetree/bindings/sound/simple-codec.txt b/Documentation/devicetree/bindings/sound/simple-codec.txt
+>
+>> +Device-Tree bindings for the simple codec
+>> +
+>> +Required properties:
+>> +- compatible: should be "linux,simple-codec".
+>
+> We shouldn't have any Linux-specific bindings. It might be reasonable to
+> define a binding for a "simple CODEC", but there's no reason it should
+> be Linux-specific.
 
-We call those macros like MX6QDL_PAD_ENET_MDC__ESAI_TX5_RX0 in
-imx6q-pinfunc.h pin function ID.  It's all about choosing a pinmux
-function (ESAI_TX5_RX0) for given pad (MX6QDL_PAD_ENET_MDC), and
-that's all what users care and need to read from the macro.  The
-decoding of the macro is the register details that users do not care in
-general.  But fsl,pinctrl bindings doc documented these details anyway.
+Further, just define the type of codec h/w. If linux can use its
+simple-codec driver for it, then add a match table entry for said
+codec. Then the DT is future proof when you decide the simple driver
+doesn't really work for that h/w.
 
-Shawn
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
