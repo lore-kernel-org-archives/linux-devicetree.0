@@ -1,126 +1,50 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: device tree binding documentation outdated
-Date: Fri, 27 Sep 2013 16:19:00 +0100
-Message-ID: <20130927151900.GA12758@n2100.arm.linux.org.uk>
-References: <20130926195158.GS12758@n2100.arm.linux.org.uk> <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com> <20130926205906.GT12758@n2100.arm.linux.org.uk> <CAOMZO5Dj7o3qBH2hzPFWjepgpt5XR5qKmQorKS6jH_7=gnY5cg@mail.gmail.com> <20130927121357.GY12758@n2100.arm.linux.org.uk> <20130927132601.GL25146@S2101-09.ap.freescale.net>
-Mime-Version: 1.0
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3] powerpc/83xx: gianfar_ptp: select 1588 clock source through dts file
+Date: Fri, 27 Sep 2013 10:28:01 -0500
+Message-ID: <21CA07A6-8B3D-49E9-8D9A-F63607FAC8EF@kernel.crashing.org>
+References: <1380289227-12029-1-git-send-email-aida.mynzhasova@skitlab.ru>
+Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130927132601.GL25146-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <1380289227-12029-1-git-send-email-aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 09:26:02PM +0800, Shawn Guo wrote:
-> On Fri, Sep 27, 2013 at 01:13:57PM +0100, Russell King - ARM Linux wrote:
-> > There's also this which follows the above:
-> > 
-> > +       /* Set enet clock to 50MHz RMII */
-> > +       enet = clk_get_sys("enet.0", NULL);
-> > +       if (IS_ERR(enet))
-> > +               pr_err("Unable to get enet.0 clock\n");
+
+On Sep 27, 2013, at 8:40 AM, Aida Mynzhasova wrote:
+
+> Currently IEEE 1588 timer reference clock source is determined through
+> hard-coded value in gianfar_ptp driver. This patch allows to select ptp
+> clock source by means of device tree file node.
 > 
-> I can not find clock lookup for "enet.0" in FSL 3.0.35 BSP 4.1.0, so
-> I'm not sure how this works at all.  Can you confirm that by running
-> Rabeeh's kernel to see if you get that error message?
-
-Here . Trying to find clock enet.0 (null)
-Returning clk_lookup at 824f9854
-Here . Trying to find clock (null) esai_clk
-Returning clk_lookup at 824f95ac
-Here . Trying to find clock (null) pll3_pfd_508M
-Returning clk_lookup at 824f919c
-Here . Trying to find clock (null) asrc_clk
-Returning clk_lookup at 824f96ec
-
-So it seems to be able to get that clock.  I'm wondering if it's based
-on BSP 4.0.0 which does have that clock, rather than 4.1.0.
-
-> > +       else {
-> > +               clk_prepare(enet);
-> > +               clk_set_rate(enet, 50000000);
-> > +               clk_enable(enet);
-> > +       }
-> > 
-> > I'm not sure at the moment which clock that refers to, or whether that's
-> > necessary only for the AR8030 (which is used in RMII mode).  The enable
-> > bit seems to be CCM_CCGR1 CG5_OFFSET.
+> For instance:
 > 
-> There are two clocks ENET related, 'enet' (117) and 'enet_ref' (190).
-> The enet is fec internal working clock, and enet_ref is provided by
-> imx6q CCM (Clock Controller Module) on pad ENET_REF_CLK which can
-> generally be used to clock the external PHY.
+> 	fsl,cksel = <0>;
+> 
+> for using external (TSEC_TMR_CLK input) high precision timer
+> reference clock.
+> 
+> Other acceptable values:
+> 
+> 	<1> : eTSEC system clock
+> 	<2> : eTSEC1 transmit clock
+> 	<3> : RTC clock input
+> 
+> When this attribute isn't used, eTSEC system clock will serve as
+> IEEE 1588 timer reference clock.
+> 
+> Signed-off-by: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
+> ---
+> Documentation/devicetree/bindings/net/fsl-tsec-phy.txt | 18 +++++++++++++++++-
+> drivers/net/ethernet/freescale/gianfar_ptp.c           |  4 +++-
+> 2 files changed, 20 insertions(+), 2 deletions(-)
 
-In this case, the phy provides the clock to the IMX6.
+Acked-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-> The CCM_CCGR1_CG5 is clock 'enet', while I think the clock in above
-> code should be 'enet_ref'.  It seems you need to set up
-> MX6QDL_PAD_GPIO_16__ENET_REF_CLK to use the clock though.
-
-Okay, and it seems Rabeeh is setting the enet clock (117) to 50MHz.
-It defaults to 66MHz for me in 3.12-rc1, but I've hacked clk-imx6q.c
-to call clk_set_rate(clk[enet], 50000000).
-
-I've changed the enet_ref clock pinctrl settings to:
-
-        /* ENET_REF_CLK is an output on AR8035 - SION must be set */
-        MX6QDL_PAD_GPIO_16__ENET_REF_CLK        0xc0000000
-(which expands to: 0x214 0x5e4 0x80c 0x2 0x0 0xc0000000)
-
-which in Rabeeh's version corresponds to:
-
-        MX6DL_PAD_GPIO_16__ENET_ANATOP_ETHERNET_REF_OUT,
-(which expands to: IOMUX_PAD(0x05E4, 0x0214, 0x12, 0x080C, 0, NO_PAD_CTRL))
-
-I've been through all the pinctrl settings for this now, taking them
-back to the hex numbers and comparing.  I'm quite certain I have the
-pinctrl settings correct now.
-
-Probing the AR8035, I see that it's generating its 125M clock, as per
-the fixup function, so at least that's working.
-
-I've just enabled the debug in pinctrl-imx.c, and I get this:
-
-imx6dl-pinctrl 20e0000.iomuxc: group(3): enetgrp-4
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE0: 1 0x0001b0b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE1: 1 0x0001b0b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE2: 5 0x000130b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE3: 5 0x80000000
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE4: 1 0x00003000
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE5: 1 0x00003000
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE6: 1 0x00003000
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE7: 1 0x80000000
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE8: 1 0x80000000
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE9: 1 0x80000000
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE10: 18 0x80000000
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE11: 1 0x80000000
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE12: 1 0x0001b0b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE13: 1 0x0001b0b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE14: 1 0x0001b0b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE15: 1 0x0001b0b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE16: 1 0x0001b0b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE17: 1 0x0000a0b1
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_RESERVE18: 1 0x0001b0b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_CSI0_DAT10: 1 0x000130b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_CSI0_DAT11: 1 0x000130b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_CSI0_DAT12: 1 0x0001b0b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_CSI0_DAT13: 1 0x0001b0b0
-imx6dl-pinctrl 20e0000.iomuxc: MX6DL_PAD_CSI0_DAT14: 1 0x000130b0
-...
-brd: module loaded
-loop: module loaded
-imx6dl-pinctrl 20e0000.iomuxc: maps: function enet group enetgrp-4 num 19
-ar8035_phy_fixup()
-libphy: fec_enet_mii_bus: probed
-fec 2188000.ethernet eth0: registered PHC device 0
-
-So where is the pinctrl settings applied - or more to the point, why
-aren't they being applied?  This would probably explain why ethernet
-doesn't work - I mean, if the pinctrl settings are never written to
-the registers...
---
+- k--
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
