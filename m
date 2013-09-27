@@ -1,96 +1,167 @@
 From: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [RFC v2 PATCH 00/14]  iio: STMicroelectronics DT and event support
-Date: Fri, 27 Sep 2013 18:32:04 +0200
-Message-ID: <1380299538-22047-1-git-send-email-l.czerwinski@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [RFC v2 PATCH 03/14] iio: st_gyro: Add dt bindings
+Date: Fri, 27 Sep 2013 18:32:07 +0200
+Message-ID: <1380299538-22047-4-git-send-email-l.czerwinski@samsung.com>
+References: <1380299538-22047-1-git-send-email-l.czerwinski@samsung.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1380299538-22047-1-git-send-email-l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org
 Cc: denis.ciocca-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add OF support for the st_gyro.
 
-This is the second version the patchset that adds device tree and event
-subsystem support for generic st_common library.
+Signed-off-by: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/iio/gyro/st_gyro.h      |   15 +++++++--------
+ drivers/iio/gyro/st_gyro_core.c |    8 +++++---
+ drivers/iio/gyro/st_gyro_i2c.c  |   18 ++++++++++++++++--
+ drivers/iio/gyro/st_gyro_spi.c  |   18 ++++++++++++++++--
+ 4 files changed, 44 insertions(+), 15 deletions(-)
 
-I tested my patches with Exynos4x12 board with device tree.
-I tested sensor LSM330DLC (accelerometer and gyroscope).
-Triggered buffer and events were tested separately for each sensor.
-Generally it works fine.
-
-I couldn't implement event patch for lsm330dlc gyroscope because I
-don't have connected gyroscope INT1 pin to SoC.
-
-My implementation allows to use event system or triggered buffer by
-proper declaration of irqs in device tree/platform data.
-
-This is a follow-up of the previous patch and it includes
-following improvements (Jonathan thanks for the review):
- - new dt bindings, modified according to the suggestions from the thread
-	http://www.spinics.net/lists/linux-iio/msg09646.html
- - add missing EXPORT_SYMBOL
- - remove write to const channel specs in st_accel
- - add global flag which enables event interface to the st_sensors struct
- - corrected various minor bits and bobs
-
-Comments are welcome.
-
-[1] - http://www.spinics.net/lists/linux-iio/msg08883.html
-
-Thanks
-Lukasz
-
-Lukasz Czerwinski (14):
-  iio: st_common: New interrupt interface
-  iio: st_accel: Add dt bindings
-  iio: st_gyro: Add dt bindings
-  iio: st_mang: Add dt bindings
-  iio: st_pressure: Add dt bindings
-  iio: st_common: Add threshold events support
-  iio: st_accel: Add event subsystem to st_accel driver
-  iio: iio_magn: Add event ops
-  iio: st_gyro: Add event ops
-  iio: iio_press: Add event ops
-  Documentation: Add st_magn binding documentation
-  Documentation: Add st_gyro binding documentation
-  Documentation: Add st_pressure binding documentation
-  Documentation: Add st_accel binding documentation
-
- .../iio/accelerometer/st_accelerometer.txt         |   40 ++++
- .../bindings/iio/barometer/st_barometer.txt        |   38 +++
- .../bindings/iio/gyroscope/st_gyroscope.txt        |   38 +++
- .../bindings/iio/magnetometer/st_magnometer.txt    |   33 +++
- drivers/iio/accel/st_accel.h                       |   19 +-
- drivers/iio/accel/st_accel_core.c                  |  106 ++++++++-
- drivers/iio/accel/st_accel_i2c.c                   |   19 +-
- drivers/iio/accel/st_accel_spi.c                   |   19 +-
- drivers/iio/common/st_sensors/st_sensors_core.c    |  245 +++++++++++++++++---
- drivers/iio/common/st_sensors/st_sensors_i2c.c     |   75 +++++-
- drivers/iio/common/st_sensors/st_sensors_spi.c     |   77 +++++-
- drivers/iio/gyro/st_gyro.h                         |   15 +-
- drivers/iio/gyro/st_gyro_core.c                    |   12 +-
- drivers/iio/gyro/st_gyro_i2c.c                     |   18 +-
- drivers/iio/gyro/st_gyro_spi.c                     |   18 +-
- drivers/iio/magnetometer/st_magn.h                 |    3 +-
- drivers/iio/magnetometer/st_magn_core.c            |    9 +-
- drivers/iio/magnetometer/st_magn_i2c.c             |   12 +-
- drivers/iio/magnetometer/st_magn_spi.c             |   12 +-
- drivers/iio/pressure/st_pressure.h                 |    3 +-
- drivers/iio/pressure/st_pressure_core.c            |   14 +-
- drivers/iio/pressure/st_pressure_i2c.c             |   11 +-
- drivers/iio/pressure/st_pressure_spi.c             |   11 +-
- include/linux/iio/common/st_sensors.h              |   87 ++++++-
- include/linux/platform_data/st_sensors_pdata.h     |    2 +
- 25 files changed, 836 insertions(+), 100 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/accelerometer/st_accelerometer.txt
- create mode 100644 Documentation/devicetree/bindings/iio/barometer/st_barometer.txt
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/st_gyroscope.txt
- create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/st_magnometer.txt
-
+diff --git a/drivers/iio/gyro/st_gyro.h b/drivers/iio/gyro/st_gyro.h
+index f8f2bf8..81e5ec3 100644
+--- a/drivers/iio/gyro/st_gyro.h
++++ b/drivers/iio/gyro/st_gyro.h
+@@ -15,24 +15,23 @@
+ #include <linux/iio/common/st_sensors.h>
+ 
+ #define L3G4200D_GYRO_DEV_NAME		"l3g4200d"
+-#define LSM330D_GYRO_DEV_NAME		"lsm330d_gyro"
+-#define LSM330DL_GYRO_DEV_NAME		"lsm330dl_gyro"
+-#define LSM330DLC_GYRO_DEV_NAME		"lsm330dlc_gyro"
++#define LSM330D_GYRO_DEV_NAME		"lsm330d-gyro"
++#define LSM330DL_GYRO_DEV_NAME		"lsm330dl-gyro"
++#define LSM330DLC_GYRO_DEV_NAME		"lsm330dlc-gyro"
+ #define L3GD20_GYRO_DEV_NAME		"l3gd20"
+ #define L3GD20H_GYRO_DEV_NAME		"l3gd20h"
+-#define L3G4IS_GYRO_DEV_NAME		"l3g4is_ui"
+-#define LSM330_GYRO_DEV_NAME		"lsm330_gyro"
++#define L3G4IS_GYRO_DEV_NAME		"l3g4is-ui"
++#define LSM330_GYRO_DEV_NAME		"lsm330-gyro"
+ 
+ /**
+  * struct st_sensors_platform_data - gyro platform data
+  * @drdy_int_pin: DRDY on gyros is available only on INT2 pin.
+  */
+-static const struct st_sensors_platform_data gyro_pdata = {
++static const struct st_sensors_platform_data default_gyro_pdata = {
+ 	.drdy_int_pin = 2,
+ };
+ 
+-int st_gyro_common_probe(struct iio_dev *indio_dev,
+-					struct st_sensors_platform_data *pdata);
++int st_gyro_common_probe(struct iio_dev *indio_dev);
+ void st_gyro_common_remove(struct iio_dev *indio_dev);
+ 
+ #ifdef CONFIG_IIO_BUFFER
+diff --git a/drivers/iio/gyro/st_gyro_core.c b/drivers/iio/gyro/st_gyro_core.c
+index d53d91a..42f45af 100644
+--- a/drivers/iio/gyro/st_gyro_core.c
++++ b/drivers/iio/gyro/st_gyro_core.c
+@@ -302,8 +302,7 @@ static const struct iio_trigger_ops st_gyro_trigger_ops = {
+ #define ST_GYRO_TRIGGER_OPS NULL
+ #endif
+ 
+-int st_gyro_common_probe(struct iio_dev *indio_dev,
+-					struct st_sensors_platform_data *pdata)
++int st_gyro_common_probe(struct iio_dev *indio_dev)
+ {
+ 	struct st_sensor_data *gdata = iio_priv(indio_dev);
+ 	int irq = gdata->get_irq_data_ready(indio_dev);
+@@ -326,7 +325,10 @@ int st_gyro_common_probe(struct iio_dev *indio_dev,
+ 						&gdata->sensor->fs.fs_avl[0];
+ 	gdata->odr = gdata->sensor->odr.odr_avl[0].hz;
+ 
+-	err = st_sensors_init_sensor(indio_dev, pdata);
++	if (!gdata->dev->platform_data && !gdata->dev->of_node)
++		gdata->drdy_int_pin = default_gyro_pdata.drdy_int_pin;
++
++	err = st_sensors_init_sensor(indio_dev);
+ 	if (err < 0)
+ 		return err;
+ 
+diff --git a/drivers/iio/gyro/st_gyro_i2c.c b/drivers/iio/gyro/st_gyro_i2c.c
+index 16b8b8d..9c4245b 100644
+--- a/drivers/iio/gyro/st_gyro_i2c.c
++++ b/drivers/iio/gyro/st_gyro_i2c.c
+@@ -34,8 +34,8 @@ static int st_gyro_i2c_probe(struct i2c_client *client,
+ 
+ 	st_sensors_i2c_configure(indio_dev, client, gdata);
+ 
+-	err = st_gyro_common_probe(indio_dev,
+-				(struct st_sensors_platform_data *)&gyro_pdata);
++	err = st_gyro_common_probe(indio_dev);
++
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -62,10 +62,24 @@ static const struct i2c_device_id st_gyro_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, st_gyro_id_table);
+ 
++#ifdef CONFIG_OF
++static struct of_device_id st_gyro_dt_match[] = {
++	{ .compatible = "st,l3g4200d" },
++	{ .compatible = "st,lsm330d-gyro" },
++	{ .compatible = "st,lsm330dl-gyro" },
++	{ .compatible = "st,lsm330dlc-gyro" },
++	{ .compatible = "st,l3gd20" },
++	{ .compatible = "st,l3gd20h" },
++	{ .compatible = "st,l3g4is-ui" },
++	{ .compatible = "st,lsm330-gyro" },
++};
++#endif
++
+ static struct i2c_driver st_gyro_driver = {
+ 	.driver = {
+ 		.owner = THIS_MODULE,
+ 		.name = "st-gyro-i2c",
++		.of_match_table = of_match_ptr(st_gyro_dt_match),
+ 	},
+ 	.probe = st_gyro_i2c_probe,
+ 	.remove = st_gyro_i2c_remove,
+diff --git a/drivers/iio/gyro/st_gyro_spi.c b/drivers/iio/gyro/st_gyro_spi.c
+index 94763e2..1287af3 100644
+--- a/drivers/iio/gyro/st_gyro_spi.c
++++ b/drivers/iio/gyro/st_gyro_spi.c
+@@ -33,8 +33,8 @@ static int st_gyro_spi_probe(struct spi_device *spi)
+ 
+ 	st_sensors_spi_configure(indio_dev, spi, gdata);
+ 
+-	err = st_gyro_common_probe(indio_dev,
+-				(struct st_sensors_platform_data *)&gyro_pdata);
++	err = st_gyro_common_probe(indio_dev);
++
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -61,10 +61,24 @@ static const struct spi_device_id st_gyro_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, st_gyro_id_table);
+ 
++#ifdef CONFIG_OF
++static struct of_device_id st_gyro_dt_match[] = {
++	{ .compatible = "st,l3g4200d" },
++	{ .compatible = "st,lsm330d-gyro" },
++	{ .compatible = "st,lsm330dl-gyro" },
++	{ .compatible = "st,lsm330dlc-gyro" },
++	{ .compatible = "st,l3gd20" },
++	{ .compatible = "st,l3gd20h" },
++	{ .compatible = "st,l3g4is-ui" },
++	{ .compatible = "st,lsm330-gyro" },
++};
++#endif
++
+ static struct spi_driver st_gyro_driver = {
+ 	.driver = {
+ 		.owner = THIS_MODULE,
+ 		.name = "st-gyro-spi",
++		.of_match_table = of_match_ptr(st_gyro_dt_match),
+ 	},
+ 	.probe = st_gyro_spi_probe,
+ 	.remove = st_gyro_spi_remove,
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
