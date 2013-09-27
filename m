@@ -1,45 +1,41 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [GIT PULL] Devicetree fixes for 3.12
-Date: Fri, 27 Sep 2013 17:02:35 -0500
-Message-ID: <CAL_JsqJuer_xZZWR4GGYTHng51_gL3mqiD+pv_eb7=emPGFe1A@mail.gmail.com>
-References: <52425041.6030609@gmail.com>
-	<CA+55aFxPHaTxixmmMZfKF-RzW4dfz=6o_1E5XR=GJ0qdSVNaxA@mail.gmail.com>
+From: "Wendy Ng" <wendy.ng@broadcom.com>
+Subject: [PATCH v2 0/3] thermal: bcm281xx: Add thermal driver
+Date: Fri, 27 Sep 2013 15:37:31 -0700
+Message-ID: <1380321454-16216-1-git-send-email-wendy.ng@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+55aFxPHaTxixmmMZfKF-RzW4dfz=6o_1E5XR=GJ0qdSVNaxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>, Wendy Ng <wendy.ng@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2013 at 10:14 PM, Linus Torvalds
-<torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> wrote:
-> On Tue, Sep 24, 2013 at 7:53 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->> are available in the git repository at:
->>
->>   git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
->
-> Hmm. Did you mean for me to pull the "devicetree-fixes" tag?
+This patch series adds the support of the thermal driver for Broadcom
+bcm281xx family of SoCs.
 
-Yes, please.
+The change for this version of the patch is to work with the
+ARCH_BCM->ARCH_BCM_MOBILE renaming series as shown in the link below:
+http://www.spinics.net/lists/arm-kernel/msg274963.html
 
-> If so, please say so very explicitly. I don't want to have to search
-> for these things..
->
-> IOW, if that's what you meant, that line should have said
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-> tags/devicetree-fixes
->
-> instead.
+Wendy Ng (3):
+  thermal: bcm281xx: Add thermal driver
+  ARM: bcm281xx: Turn on Thermal and HWMON drivers.
+  ARM: bcm281xx: Add thermal driver to device tree.
 
-That's strange. The tag description was there, but somehow the tag
-name wasn't. Sorry about that.
+ .../bindings/thermal/bcm-kona-thermal.txt          |   18 +++
+ arch/arm/boot/dts/bcm11351-brt.dts                 |    4 +-
+ arch/arm/boot/dts/bcm11351.dtsi                    |    6 +
+ arch/arm/boot/dts/bcm28155-ap.dts                  |    4 +
+ arch/arm/configs/bcm_defconfig                     |    3 +-
+ drivers/thermal/Kconfig                            |   10 ++
+ drivers/thermal/Makefile                           |    1 +
+ drivers/thermal/bcm_thermal.c                      |  170 ++++++++++++++++++++
+ 8 files changed, 214 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
+ create mode 100644 drivers/thermal/bcm_thermal.c
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.7.9.5
+
+
