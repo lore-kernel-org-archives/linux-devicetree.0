@@ -1,84 +1,55 @@
 From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] pwm-backlight: allow for non-increasing brightness
- levels
-Date: Fri, 27 Sep 2013 12:28:21 +0900
-Message-ID: <017a01cebb31$9df90f60$d9eb2e20$%han@samsung.com>
-References: <1379869196-19377-1-git-send-email-mikedunn@newsguy.com>
- <5244065A.8010408@ti.com> <20130926115108.GA1680@ulmo>
- <524423B6.4070609@ti.com>
+Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
+Date: Fri, 27 Sep 2013 12:40:11 +0900
+Message-ID: <017e01cebb33$44fa65b0$ceef3110$%han@samsung.com>
+References: <1379319655-20210-1-git-send-email-xobs@kosagi.com>
+ <1379319655-20210-4-git-send-email-xobs@kosagi.com>
+ <CAJ+vNU32oMZq=jrSCpk_ZjYc08kRBAqhOS8uYfor28gY8WGhnw@mail.gmail.com>
+ <0E83723C55F66F43A6041464FE31119D3F7E6A@039-SN2MPN1-012.039d.mgd.msft.net>
+ <20130927021925.GF25146@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <524423B6.4070609-l0cyMroinI0@public.gmane.org>
+In-reply-to: <20130927021925.GF25146-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 Content-language: ko
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Tomi Valkeinen' <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: 'Mike Dunn' <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, 'Richard Purdie' <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, 'Jean-Christophe Plagniol-Villard' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Grant Likely' <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Rob Herring' <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Robert Jarzmik' <robert.jarzmik-GANU6spQydw@public.gmane.org>, 'Marek Vasut' <marex-ynQEQJNshbs@public.gmane.org>, 'Laurent Pinchart' <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: 'Shawn Guo' <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: 'Zhu Richard-R65037' <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, 'Tim Harvey' <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, 'Sean Cross' <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Sascha Hauer' <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, September 26, 2013 9:08 PM, Tomi Valkeinen wrote:
-> On 26/09/13 14:51, Thierry Reding wrote:
-> > On Thu, Sep 26, 2013 at 01:03:06PM +0300, Tomi Valkeinen wrote:
-> > [...]
-> >> But if you and Thierry think this version is good, I'll take it.
+On Friday, September 27, 2013 11:19 AM, Shawn Guo wrote:
+> On Fri, Sep 27, 2013 at 01:38:39AM +0000, Zhu Richard-R65037 wrote:
+> > Hi Tim:
+> > Thanks for your tests.
+> > Yes, it is. There are some problems when the PCIe switch is used
+> > on the 3.1x kernel at my side too,
+> although the PCIe switch
+> > is ok on FSL imx_3.0.35 kernels.
+> > I'm debugging this issue now, and would summit the patches asap.
 > >
-> > That sounds like you want to take it through the fbdev tree. Jingoo is
-> > listed (along with Richard, but he hasn't been responsive to email for
-> > years) as maintainer for the backlight subsystem. Furthermore back at
 > 
-> Ah, so they are. I just thought it falls under fbdev, as it's under
-> drivers/video/ =).
+> From what I read, it seems Sean's series does not support PCIe switch.
+> At least, he hasn't got any device to test it.  And there is some
+> problem with PCIe switch running the latest kernel, which might not be
+> related to the controller driver.
 > 
-> I don't have any particular "want" to take it through fbdev tree. But I
-> can take it.
+> I suggest we ask Bjorn to merge the v7 I sent yesterday, so that people
+> can have a same base to work on, and add PCIe switch support with
+> incremental patches.   Does that sound good to you, Tim?
 > 
-> > the time when I began working on the PWM subsystem, the backlight sub-
-> > system was pretty much orphaned, and pwm-backlight was by far the
-> > biggest user of the PWM subsystem. I adopted the driver at the time
-> > because it needed to be updated for PWM subsystem changes.
-> >
-> > What's the plan going forward? Given the coupling between the PWM
-> > subsystem and the pwm-backlight driver it might be useful to keep
-> > maintaining it as part of the PWM subsystem. On the other hand, there's
-> > some coupling between the driver and the backlight subsystem too.
-> 
-> And backlight is coupled with fbdev... Which is something I don't like.
 
-+cc Laurent Pinchart,
+Hi Shawn Guo,
 
-Yes, right. 
-The backlight should be de-coupled with fbdev.
-I remember that Laurent Pinchart was doing this patch.
+I agree with your suggestion. :-)
+The PCIe switch support patches can be added later, after the v7 patch for
+i.MX6 PCIe controller driver is merged.
 
-Laurent Pinchart,
-Would you let us know your plan about this? :-)
-
-> 
-> > I have a couple of patches queued up for 3.13 that rework parts of the
-> > driver, so it'd be good to know how you guys want to handle this.
-> 
-> Well. I'm happy if somebody wants to maintain the backlight side. In
-> fact, I'd be happy if somebody would start restructuring it totally,
-> it's rather messy. The link with fbdev should be removed, and some
-> backlight drivers are actually panel drivers. However, perhaps Common
-> Display Framework is required until it can be fully cleaned.
-
-I think that some backlight drivers can be moved to 'Common Display Framework',
-after 'Common Display Framework' is merged.
-But, I am not sure, when it will be completed.
+Also, if the PCIe switch support patches modify the synopsys designware PCIe
+driver (pcie-designware.c), it should be confirmed by other related people.
 
 Best regards,
 Jingoo Han
-
-> 
-> So... For the time being, I'm fine with merging pwm-backlight via any
-> tree that works best. I'm presuming here that backlight framework and
-> fbdev (for the parts that are relevant for backlight) are not really
-> being changed, so there shouldn't be conflicts.
-> 
->  Tomi
-> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
