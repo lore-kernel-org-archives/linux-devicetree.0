@@ -1,101 +1,58 @@
-From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Subject: Re: device tree binding documentation outdated
-Date: Fri, 27 Sep 2013 11:33:19 -0500
-Message-ID: <CAHCPf3tfc9Z14YYm9K0AXNinMDsTwE51_6tbYfyFU7cA8M7MgA@mail.gmail.com>
-References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
-	<CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
-	<CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com>
-	<20130927025116.GG25146@S2101-09.ap.freescale.net>
-	<20130927084504.GW12758@n2100.arm.linux.org.uk>
-	<20130927122814.GK25146@S2101-09.ap.freescale.net>
-	<20130927131225.GA31178@titan.lakedaemon.net>
-	<20130927132107.GZ12758@n2100.arm.linux.org.uk>
-	<20130927133120.GC31178@titan.lakedaemon.net>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] i2c: rcar: Device Tree support and clock
+ improvements
+Date: Fri, 27 Sep 2013 18:42:14 +0200
+Message-ID: <20130927164214.GC3094@katana>
+References: <1378989408-10618-1-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130927133120.GC31178-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bKyqfOwhbdpXa4YI"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1378989408-10618-1-git-send-email-g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 8:31 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> On Fri, Sep 27, 2013 at 02:21:07PM +0100, Russell King - ARM Linux wrote:
->> On Fri, Sep 27, 2013 at 09:12:25AM -0400, Jason Cooper wrote:
->> > I'm currently slogging through the exact same issues for adding imx50
->> > (SanDisk Connect Wireless media Drive).  I thought I was just thick.
->> > It's a relief to know I'm not the only one having trouble with this.
->>
->> I'm coming to the conclusion that it's almost to the point of "vendor
->> lockin" - you have to find someone who understands this stuff to take
->> your hardware description and turn it into a working DT description.
->
-> I don't think it's vendor lock-in, I think Freescale's pinctrl/gpio IP
-> block is just an over-complicated pain in the ass that doesn't lend
-> itself to DT well.
+
+--bKyqfOwhbdpXa4YI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Sep 12, 2013 at 02:36:43PM +0200, Guennadi Liakhovetski wrote:
+> Device Tree support for i2c-rcar isn't too complex, only usual or standard
+> properties are used. Apart from it several clock handling improvements are
+> included in this patch series.
+>=20
+> Developed on top of -next of 12.09.2013
+>=20
+> v2: only DT compatibility strings have been changed.
+
+Applied to for-next, thanks!
 
 
-Me either - device trees aren't vendor lock-in but they ARE a huge
-reminder of how silicon vendors prioritize software development - the
-chip works. The i.MX IOMUX block lends itself VERY well to device
-trees.
+--bKyqfOwhbdpXa4YI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The problem with vendors is when they ship their chips and docs from
-America or Israel or so on, do verification in the UK or Mexico or
-India, hand it to a software team in some far away place like China or
-India and expect everything to just come out all nice and shiny. The
-problem compounds itself when the docs are bad, but in this instance,
-Freescale usually give out REALLY good documentation.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-The issue with this particular block is there have been 5 different
-ways to "do it", originally it was just a list of addresses and values
-in an array, then it got turned into a packed 64-bit magic value which
-was decoded (possibly to reduce stack usage as a function call,
-although it was always inlined...) and then device trees as an
-enumerated index into a hardcoded array in Linux, and a pad settings
-value on top, and now back to addresses and values again. The number
-of possibilities for porting the thing is immense.
+iQIcBAEBAgAGBQJSRbVmAAoJEBQN5MwUoCm2ejEP/RassIuK50Y+aqIIUY8xxqF+
+fKQhVUm4SVuzrd2muvx+U7xRfNOZ//w2wYyOJpgIBW+CYTDDq5TvLVw3ZhtfE0VU
+1Oby/NuBfLO7coEqtCP7tLqhYyR20M66rOUP4Ar90eCIKOq1TIavdobk7IaeahbR
+/OYl7Tu0KBnS42mERXO5lxPN3ODw0zxjrucpJC8ntkGsMmzUcF7NaQwuELTa23QY
+0d6+7StwkNpj9ZXEM1979qDqtHyatx4uaXa6iiXSu8MUgozryqzABbJesRmb8vHL
+GlwogyeHVEFYhPYp3mNuio5bpgzzOLOue3OWtkB1qTDgA4IOB51Lc7KCg20OtxiE
+81QKIhDEtfDALYUWeIYd1FVChjJGD1anOlex+P2bYB2PKvh1/3EoJCjQIeWKjcJ7
+p/1oeaAZZPKUG23OYxSRk1r51rUf8BVcrskrqIjUn+m5fGxvz539gor9/EyM4v4+
+pbhmdZSwL9KE0sGdbZGvMQ6BAPTta9HxMlrA2wsJjbtQGJfJpx6Used0LZjBJIvv
+8kzU2RHlGfJ92fiIKxCNkJRKMZqK/iu2U39IAmLNK9QuklAF2MgreaPKI37ClYN5
+xwKt4OcsqmHI6E6zMxz3R3H63UovJkhMNHIRsRqOusPkbLkqkjyyuSWR4DVqBEnL
+4HlhIibGZ2E3pg6N/tbk
+=PBwo
+-----END PGP SIGNATURE-----
 
-The only way to do it from the manual - or Freescale's IOMUX Tool,
-which is pretty awesome if a little crashy and for Windows - is the 6
-value tuple way.
-
-As an example, this is what I get for the SabreLite Rev A, exported as CSV
-
-~~
-Chip,Package,Board,Board Rev.,Design Version
-i.MX6DQ,BGA,Sabre_Lite,Rev. A,2
-
-Ball,Name,PowerGroup,Instance.Signal,Instance-Alias.Signal-Alias,Comment,Register,Value,
-Register,Value,Register,Value
-A22,SD2_DATA0,NVCC_SD2,audmux.AUD4_RXD,audmux.AUD4_RXD,,0x020E0054,0x00000003,0x020E0368,0x0001B0B0,0x020E07B4,0x00000000
-B22,SD2_DATA3,NVCC_SD2,audmux.AUD4_TXC,audmux.AUD4_TXC,,0x020E035C,0x00000003,0x020E0744,0x0001B0B0,0x020E07C4,0x00000001
-A23,SD2_DATA2,NVCC_SD2,audmux.AUD4_TXD,audmux.AUD4_TXD,,0x020E0050,0x00000003,0x020E0364,0x0001B0B0,0x020E07B8,0x00000000
-E20,SD2_DATA1,NVCC_SD2,audmux.AUD4_TXFS,audmux.AUD4_TXFS,,0x020E004C,0x00000003,0x020E0360,0x0001B0B0,0x020E07C8,0x00000000
-~~
-
-I used the last pin in my example previously in the list. Note the
-0x04c, 0x360 addresses and 0x1b0b0 pad setting (setting the register
-to 0x0 is an instruction to the fsl,pins parsing code to ignore it..
-hence the need for better macros)
-
-It would be incredibly easy to parse the CSV (or XML or..) or
-cross-check the output source code (since it will give you source
-code, if a little obtuse and over excited code) and generate the
-preprocessor headers or even fsl,pins output for any particular board.
-The Name field, Instance prefix, Signal suffix, and register values
-and even the comment from the board designer (if they used the IOMUX
-tool and if they didn't, bop on the nose with a newspaper..) right
-into a device tree.
-
-So, the design tools exist, they're just not being used, or they're
-being misused, or supplemental parsers to extract and generate the
-files don't exist (Shawn, we talked about the docs being generated
-from the RTL and some ability to export them..)
-
-A schema would help, too..
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--bKyqfOwhbdpXa4YI--
