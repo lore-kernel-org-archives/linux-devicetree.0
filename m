@@ -1,74 +1,100 @@
-From: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [RFC v2 PATCH 14/14] Documentation: Add st_accel binding documentation
-Date: Fri, 27 Sep 2013 18:32:18 +0200
-Message-ID: <1380299538-22047-15-git-send-email-l.czerwinski@samsung.com>
-References: <1380299538-22047-1-git-send-email-l.czerwinski@samsung.com>
+From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Fri, 27 Sep 2013 11:33:19 -0500
+Message-ID: <CAHCPf3tfc9Z14YYm9K0AXNinMDsTwE51_6tbYfyFU7cA8M7MgA@mail.gmail.com>
+References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
+	<CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
+	<CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com>
+	<20130927025116.GG25146@S2101-09.ap.freescale.net>
+	<20130927084504.GW12758@n2100.arm.linux.org.uk>
+	<20130927122814.GK25146@S2101-09.ap.freescale.net>
+	<20130927131225.GA31178@titan.lakedaemon.net>
+	<20130927132107.GZ12758@n2100.arm.linux.org.uk>
+	<20130927133120.GC31178@titan.lakedaemon.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1380299538-22047-1-git-send-email-l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20130927133120.GC31178-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org
-Cc: denis.ciocca-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the document for STMicroeletronics Acceleration Sensors
-driver under Documentation/devicetree/bindings/iio/.
+On Fri, Sep 27, 2013 at 8:31 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> On Fri, Sep 27, 2013 at 02:21:07PM +0100, Russell King - ARM Linux wrote:
+>> On Fri, Sep 27, 2013 at 09:12:25AM -0400, Jason Cooper wrote:
+>> > I'm currently slogging through the exact same issues for adding imx50
+>> > (SanDisk Connect Wireless media Drive).  I thought I was just thick.
+>> > It's a relief to know I'm not the only one having trouble with this.
+>>
+>> I'm coming to the conclusion that it's almost to the point of "vendor
+>> lockin" - you have to find someone who understands this stuff to take
+>> your hardware description and turn it into a working DT description.
+>
+> I don't think it's vendor lock-in, I think Freescale's pinctrl/gpio IP
+> block is just an over-complicated pain in the ass that doesn't lend
+> itself to DT well.
 
-Signed-off-by: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../iio/accelerometer/st_accelerometer.txt         |   40 ++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/accelerometer/st_accelerometer.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/accelerometer/st_accelerometer.txt b/Documentation/devicetree/bindings/iio/accelerometer/st_accelerometer.txt
-new file mode 100644
-index 0000000..af70f29
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accelerometer/st_accelerometer.txt
-@@ -0,0 +1,40 @@
-+STMicroelectronics Acceleration Sensors
-+
-+Required properties:
-+
-+  - compatible : value should be one of the following:
-+	(a) "st,lsm330dlhc-accel" for accelerometer in LSM330DLHC
-+	(b) "st,lis3dh" for accelerometer in LIS3DH
-+	(c) "st,lsm330d-accel" for accelerometer in LSM330
-+	(d) "st,lsm330dl-accel" for accelerometer in LSM330DL
-+	(e) "st,lsm330dlc-accel" for accelerometer in LSM330DLC
-+	(f) "st,lsm331dlh" for accelerometer in LSM331DLH
-+	(g) "st,lsm303dl-accel" for accelerometer in LSM303DL
-+	(h) "st,lsm303dlh-accel" for accelerometer in LSM303DLH
-+	(i) "st,lsm303dlm-accel" for accelerometer in LSM303DLM
-+	(j) "st,lsm330-accel" for accelerometer in LMS330
-+
-+  - reg : the I2C address of the accelerometer
-+
-+Optional properties:
-+
-+  - st,drdy-int-pin : redirect DRDY on pin INT1 (1) or pin INT2 (2) (u8)
-+
-+  - interrupts : Interrupt numbers for the ST accelerometers, as an array
-+	in case the accelerometer have more interrupt lines:
-+	<DataReady irq>,
-+	<Event irq>;
-+
-+  - interrupt-names : Array of strings associated with the interrupt numbers
-+
-+Example:
-+
-+lsm330dlc_accel@19 {
-+	compatible = "st,lsm330dlc-accel";
-+	reg = <0x19>;
-+
-+	st,drdy-int-pin = /bits/ 8 <1>;
-+	interrupt-parent = <&gpx0>;
-+	interrupts= <0 0>, <1 0>;
-+	interrupt-names = "event-int". "drdy-int";\
-+};
--- 
-1.7.9.5
+Me either - device trees aren't vendor lock-in but they ARE a huge
+reminder of how silicon vendors prioritize software development - the
+chip works. The i.MX IOMUX block lends itself VERY well to device
+trees.
 
+The problem with vendors is when they ship their chips and docs from
+America or Israel or so on, do verification in the UK or Mexico or
+India, hand it to a software team in some far away place like China or
+India and expect everything to just come out all nice and shiny. The
+problem compounds itself when the docs are bad, but in this instance,
+Freescale usually give out REALLY good documentation.
+
+The issue with this particular block is there have been 5 different
+ways to "do it", originally it was just a list of addresses and values
+in an array, then it got turned into a packed 64-bit magic value which
+was decoded (possibly to reduce stack usage as a function call,
+although it was always inlined...) and then device trees as an
+enumerated index into a hardcoded array in Linux, and a pad settings
+value on top, and now back to addresses and values again. The number
+of possibilities for porting the thing is immense.
+
+The only way to do it from the manual - or Freescale's IOMUX Tool,
+which is pretty awesome if a little crashy and for Windows - is the 6
+value tuple way.
+
+As an example, this is what I get for the SabreLite Rev A, exported as CSV
+
+~~
+Chip,Package,Board,Board Rev.,Design Version
+i.MX6DQ,BGA,Sabre_Lite,Rev. A,2
+
+Ball,Name,PowerGroup,Instance.Signal,Instance-Alias.Signal-Alias,Comment,Register,Value,
+Register,Value,Register,Value
+A22,SD2_DATA0,NVCC_SD2,audmux.AUD4_RXD,audmux.AUD4_RXD,,0x020E0054,0x00000003,0x020E0368,0x0001B0B0,0x020E07B4,0x00000000
+B22,SD2_DATA3,NVCC_SD2,audmux.AUD4_TXC,audmux.AUD4_TXC,,0x020E035C,0x00000003,0x020E0744,0x0001B0B0,0x020E07C4,0x00000001
+A23,SD2_DATA2,NVCC_SD2,audmux.AUD4_TXD,audmux.AUD4_TXD,,0x020E0050,0x00000003,0x020E0364,0x0001B0B0,0x020E07B8,0x00000000
+E20,SD2_DATA1,NVCC_SD2,audmux.AUD4_TXFS,audmux.AUD4_TXFS,,0x020E004C,0x00000003,0x020E0360,0x0001B0B0,0x020E07C8,0x00000000
+~~
+
+I used the last pin in my example previously in the list. Note the
+0x04c, 0x360 addresses and 0x1b0b0 pad setting (setting the register
+to 0x0 is an instruction to the fsl,pins parsing code to ignore it..
+hence the need for better macros)
+
+It would be incredibly easy to parse the CSV (or XML or..) or
+cross-check the output source code (since it will give you source
+code, if a little obtuse and over excited code) and generate the
+preprocessor headers or even fsl,pins output for any particular board.
+The Name field, Instance prefix, Signal suffix, and register values
+and even the comment from the board designer (if they used the IOMUX
+tool and if they didn't, bop on the nose with a newspaper..) right
+into a device tree.
+
+So, the design tools exist, they're just not being used, or they're
+being misused, or supplemental parsers to extract and generate the
+files don't exist (Shawn, we talked about the docs being generated
+from the RTL and some ability to export them..)
+
+A schema would help, too..
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
