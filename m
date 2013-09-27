@@ -1,85 +1,192 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 3/4] watchdog: s3c2410_wdt: parse watchdog dt node to read
- PMU registers adresses
-Date: Fri, 27 Sep 2013 12:12:13 +0200
-Message-ID: <9721965.AJ5fjDQ1RM@amdc1227>
-References: <1379414623-26329-1-git-send-email-l.krishna@samsung.com>
- <1918747.quF8QJoP6D@amdc1032> <3933206.EMuKSi641Y@amdc1227>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v5] media: st-rc: Add ST remote control driver
+Date: Fri, 27 Sep 2013 11:25:50 +0100
+Message-ID: <52455D2E.40607@st.com>
+References: <1380272544-23514-1-git-send-email-srinivas.kandagatla@st.com> <CA+V-a8uiKdhxe5HfC4O-RYVKPi1Z-mVSXYY_TTV8HD4pseMbUw@mail.gmail.com>
+Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <3933206.EMuKSi641Y@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, Doug Anderson <dianders@chromium.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+V-a8uiKdhxe5HfC4O-RYVKPi1Z-mVSXYY_TTV8HD4pseMbUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 23 of September 2013 19:11:11 Tomasz Figa wrote:
-> On Monday 23 of September 2013 19:03:10 Bartlomiej Zolnierkiewicz wrote:
-> > 
-> > Hi,
-> > 
-> > On Wednesday, September 18, 2013 12:20:31 PM Leela Krishna Amudala wrote:
-> > > Tomasz,
-> > > 
-> > > On Wed, Sep 18, 2013 at 10:04 AM, Doug Anderson <dianders@chromium.org> wrote:
-> > > > Tomasz,
-> > > >
-> > > > On Tue, Sep 17, 2013 at 6:30 AM, Tomasz Figa <t.figa@samsung.com> wrote:
-> > > >> I believe this is mandatory on Exynos 5420 and unused on previous SoCs. It
-> > > >> should be handled depending on compatible value.
-> > > >
-> > > > I think at least 5250 needs something similar.  I believe we got away
-> > > > with it in the past since other (non-WDT) code was tweaking with this
-> > > > bit, but that was a little bit gross.  Leela Krishna can correct me if
-> > > > I'm wrong.
-> > > >
-> > > 
-> > > Yes, 5250 also needs this reset-mask-bit, but not required by SoCs
-> > > other than Exynos5xxx.
-> > > Hence I kept it as optional parameter.
-> > > 
-> > > I took care of this code such that it won't break on older SoCs.
-> > > 
-> > > If you notice the code in probe function, I used the check condition
-> > > 
-> > > if (!IS_ERR(wdt->pmu_disable_reg) && !IS_ERR(wdt->pmu_mask_reset_reg)) {
-> > > }
-> > > 
-> > > i.e., if any of the PMU register address is not mentioned in the DT
-> > > node it simply skips reading reset-mask-bit
-> > > and continues execution (which may happen in older SoC DT node).
-> > > 
-> > > ..also, in s3c2410wdt_mask_and_disable_reset() function, below
-> > > condition check is happening
-> > > 
-> > > if (IS_ERR(wdt->pmu_disable_reg) || IS_ERR(wdt->pmu_mask_reset_reg)
-> > >                                 || (wdt->pmu_mask_bit < 0))
-> > >         return;
-> > > 
-> > > i.e., if any of the registers is not specified in DT node simply
-> > > return without programming
-> > > PMU registers(which is true in case of older SoCs).
-> > > 
-> > > If you think this doesn't sounds good way of handling older SoCs.
-> > > I'll add new compatible string for Exynos5xxx and do like what you said. :)
-> > 
-> > Yes, please re-do the code per Tomasz's suggestions.
-> > 
-> > This would also allow you to check return values of devm_ioremap_resource()
-> > calls in the probe method and require them to succeed in order to register
-> > watchdog device (which is unfortunately not what happens currently).
+Thanks Prabhakar,
+>> +config RC_ST
+>> +       tristate "ST remote control receiver"
+>> +       depends on ARCH_STI && RC_CORE
+>> +       help
+>> +        Say Y here if you want support for ST remote control driver
+>> +        which allows both IR and UHF RX.
+>> +        The driver passes raw pluse and space information to the LIRC decoder.
+>> +
+> s/pluse/pulse
 > 
-> Now as I think of it, the driver doesn't seem to reconfigure those PMU
-> registers in any watchdog API callback, only in probe, remove, suspend
-> and resume.
+Yep.. Will fix it..
+[...]
+>> +
+>> +/* Registers */
+>> +#define IRB_SAMPLE_RATE_COMM   0x64    /* sample freq divisor*/
+>> +#define IRB_CLOCK_SEL          0x70    /* clock select       */
+>> +#define IRB_CLOCK_SEL_STATUS   0x74    /* clock status       */
+>> +/* IRB IR/UHF receiver registers */
+>> +#define IRB_RX_ON               0x40   /* pulse time capture */
+>> +#define IRB_RX_SYS              0X44   /* sym period capture */
+>> +#define IRB_RX_INT_EN           0x48   /* IRQ enable (R/W)   */
+>> +#define IRB_RX_INT_STATUS       0x4C   /* IRQ status (R/W)   */
+>> +#define IRB_RX_EN               0x50   /* Receive enablei    */
+> s/enablei/enable
 > 
-> Since we already have PMU "driver" in mach-exynos, which already has
-> suspend/resume syscore ops, what about placing such configuration there
-> instead?
+>> +#define IRB_MAX_SYM_PERIOD      0x54   /* max sym value      */
+>> +#define IRB_RX_INT_CLEAR        0x58   /* overrun status     */
+>> +#define IRB_RX_STATUS           0x6C   /* receive status     */
+>> +#define IRB_RX_NOISE_SUPPR      0x5C   /* noise suppression  */
+>> +#define IRB_RX_POLARITY_INV     0x68   /* polarity inverter  */
+>> +
+> generally smaller case hex letters are preferred
+I will change this.
+[...]
+>> +
+>> +static int st_rc_probe(struct platform_device *pdev)
+>> +{
+>> +       int ret = -EINVAL;
+>> +       struct rc_dev *rdev;
+>> +       struct device *dev = &pdev->dev;
+>> +       struct resource *res;
+>> +       struct st_rc_device *rc_dev;
+>> +       struct device_node *np = pdev->dev.of_node;
+>> +       const char *rx_mode;
+>> +
+>> +       rc_dev = devm_kzalloc(dev, sizeof(struct st_rc_device), GFP_KERNEL);
+>> +
+>> +       if (!rc_dev)
+>> +               return -ENOMEM;
+>> +
+>> +       rdev = rc_allocate_device();
+>> +
+>> +       if (!rdev)
+>> +               return -ENOMEM;
+>> +
+>> +       if (np && !of_property_read_string(np, "rx-mode", &rx_mode)) {
+>> +
+>> +               if (!strcmp(rx_mode, "uhf")) {
+>> +                       rc_dev->rxuhfmode = true;
+>> +               } else if (!strcmp(rx_mode, "infrared")) {
+>> +                       rc_dev->rxuhfmode = false;
+>> +               } else {
+>> +                       dev_err(dev, "Unsupported rx mode [%s]\n", rx_mode);
+>> +                       goto err;
+>> +               }
+>> +
+>> +       } else {
+>> +               goto err;
+>> +       }
+>> +
+>> +       rc_dev->sys_clock = devm_clk_get(dev, NULL);
+>> +       if (IS_ERR(rc_dev->sys_clock)) {
+>> +               dev_err(dev, "System clock not found\n");
+>> +               ret = PTR_ERR(rc_dev->sys_clock);
+>> +               goto err;
+>> +       }
+>> +
+>> +       rc_dev->irq = platform_get_irq(pdev, 0);
+>> +       if (rc_dev->irq < 0) {
+>> +               ret = rc_dev->irq;
+>> +               goto clkerr;
+>> +       }
+>> +
+>> +       ret = -ENODEV;
+> Not required
+yes, its redundant here.
+> 
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       if (!res)
+>> +               goto clkerr;
+>> +
+> This check is not required.
+Ok, I see your point.
+> 
+>> +       rc_dev->base = devm_ioremap_resource(dev, res);
+>> +       if (IS_ERR(rc_dev->base))
+>> +               goto clkerr;
+>> +
+> In case of error assin ret to PTR_ERR(rc_dev->base)
+Yes It makes sense .. I will assign it to ret.
 
-Any opinions on this?
+Also found that there is a typo here.
+It should be a goto err instead of goto clkerr.
 
-Best regards,
-Tomasz
+Will fix that as well in next spin.
+
+> 
+>> +       if (rc_dev->rxuhfmode)
+>> +               rc_dev->rx_base = rc_dev->base + 0x40;
+>> +       else
+>> +               rc_dev->rx_base = rc_dev->base;
+>> +
+>> +       rc_dev->dev = dev;
+>> +       platform_set_drvdata(pdev, rc_dev);
+>> +       st_rc_hardware_init(rc_dev);
+>> +
+>> +       rdev->driver_type = RC_DRIVER_IR_RAW;
+>> +       rdev->allowed_protos = RC_BIT_ALL;
+>> +       /* rx sampling rate is 10Mhz */
+>> +       rdev->rx_resolution = 100;
+>> +       rdev->timeout = US_TO_NS(MAX_SYMB_TIME);
+>> +       rdev->priv = rc_dev;
+>> +       rdev->open = st_rc_open;
+>> +       rdev->close = st_rc_close;
+>> +       rdev->driver_name = IR_ST_NAME;
+>> +       rdev->map_name = RC_MAP_LIRC;
+>> +       rdev->input_name = "ST Remote Control Receiver";
+>> +
+>> +       /* enable wake via this device */
+>> +       device_set_wakeup_capable(dev, true);
+>> +       device_set_wakeup_enable(dev, true);
+>> +
+>> +       ret = rc_register_device(rdev);
+>> +       if (ret < 0)
+>> +               goto clkerr;
+>> +
+>> +       rc_dev->rdev = rdev;
+>> +       if (devm_request_irq(dev, rc_dev->irq, st_rc_rx_interrupt,
+>> +                       IRQF_NO_SUSPEND, IR_ST_NAME, rc_dev) < 0) {
+>> +               dev_err(dev, "IRQ %d register failed\n", rc_dev->irq);
+>> +               ret = -EINVAL;
+>> +               goto rcerr;
+>> +       }
+>> +
+>> +       /**
+>> +        * for LIRC_MODE_MODE2 or LIRC_MODE_PULSE or LIRC_MODE_RAW
+>> +        * lircd expects a long space first before a signal train to sync.
+>> +        */
+>> +       st_rc_send_lirc_timeout(rdev);
+>> +
+>> +       dev_info(dev, "setup in %s mode\n", rc_dev->rxuhfmode ? "UHF" : "IR");
+>> +
+>> +       return ret;
+>> +rcerr:
+>> +       rc_unregister_device(rdev);
+>> +       rdev = NULL;
+>> +clkerr:
+>> +       clk_disable_unprepare(rc_dev->sys_clock);
+>> +err:
+>> +       rc_free_device(rdev);
+>> +       dev_err(dev, "Unable to register device (%d)\n", ret);
+>> +       return ret;
+>> +}
+>> +
+
+thanks,
+srini
+
+
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
