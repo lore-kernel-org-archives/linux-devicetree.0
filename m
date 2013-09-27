@@ -1,82 +1,173 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: device tree binding documentation outdated
-Date: Fri, 27 Sep 2013 20:28:16 +0800
-Message-ID: <20130927122814.GK25146@S2101-09.ap.freescale.net>
-References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
- <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
- <CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com>
- <20130927025116.GG25146@S2101-09.ap.freescale.net>
- <20130927084504.GW12758@n2100.arm.linux.org.uk>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 2/3] pincntrl: add support for AMS AS3722 pin control driver
+Date: Fri, 27 Sep 2013 14:40:07 +0200
+Message-ID: <CACRpkdZc2SGhUJUjVqen3tX5sqfm=PthK42ustAmoWwBsWzHPQ@mail.gmail.com>
+References: <1380044845-7734-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130927084504.GW12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <1380044845-7734-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 09:45:04AM +0100, Russell King - ARM Linux wrote:
-> To me, encountering this for the first time, the documentation is
-> _wrong_ no two ways about it - as I said in my initial email.  Please
-> fix it, or delete it.  Don't leave it in its current crap state.  Bad
-> or misleading documentation is worse than no documentation.
+On Tue, Sep 24, 2013 at 7:47 PM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 
-Ok, I will fix it.
+> The AS3722 is a compact system PMU suitable for mobile phones, tablets etc.
+>
+> Add a driver to support accessing the GPIO, pinmux and pin configuration
+> of 8 GPIO pins found on the AMS AS3722 through pin control driver and
+> gpiolib.
+>
+> The driver will register itself as the pincontrol driver and gpio driver.
+>
+> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes from V1:
+> - Nit cleanups in driver and use module_platform_driver.
+>
+> Changes from V2:
+> - Move the gpio driver from gpio folder to pinctnrl driver and register
+>   driver as pincontrol driver.
+> - Provide pin configuration through pincntrl framework.
+>
+> Changes from V3:
+> - Added gpio ranges and pinctrl_gpio calls.
+> - Used pinctrl_gpio_* calls on gpio chips callback.
+> - Remove dummy function which just return not supported.
+> - Nit cleanups.
 
-> I am a "user" of this crap, and it is _very_ confusing that the
-> documentation is wrong, and the fact that I sent my initial email in
-> this thread is proof that your statement above is wrong.
-> 
-> For instance, "two integers array" is a lie, plain and simple.  Yes, it
-> may be true that what users care about is a macro and a number but that
-> is not a "two integers array".
+This is getting a lot better quickly.
 
-Indeed.  I forgot killing this "two integers array" thing while I was
-updating the document to expands PIN_FUNC_ID as <mux_reg conf_reg
-input_reg mux_val input_val>.
+I'd like someone from devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org to say
+something about the DT bindings, can you convince one of
+the DT custodians to ACK this?
 
-> It would be helpful here to explain that
-> PIN_FUNC refers to a macro in the imx*-pinfunc.h header file, which
-> expands to four or five integers.
+Remaining issues though:
 
-Ok.
+> +This binding uses the following generic properties as defined in
+> +pinctrl-bindings.txt:
+> +
+> +Required: pins
 
-> Bit 31 (or even bit 30) in the config number are not documented
-> either.
+You're not explaining what this property does.
 
-They are documented in fsl,imx-pinctrl.txt.
+Normally the set of pins are defined by the driver, not by the
+device tree, since it's a property of the hardware, i.e. the
+driver defines what hardware we have, and the DT defines
+only how to set it up to do what we want to do.
 
-> All the numbers come into play when you're trying to port a platform,
-> because when you encounter something like this:
-> 
-> +       IOMUX_PAD(0x05E0, 0x0210, 3, 0x0790, 1,
+> +Example:
+> +       as3722: as3722 {
+> +               ....
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+> +
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&as3722_default>;
+> +
+> +               as3722_default: pinmux {
+> +                       gpio0 {
+> +                               pins = "gpio0";
+> +                               function = "gpio";
+> +                               bias-pull-down;
+> +                       };
+> +
+> +                       gpio1_2_4_7 {
+> +                               pins = "gpio1", "gpio2", "gpio4", "gpio7";
+> +                               function = "gpio";
+> +                               bias-pull-up;
+> +                       };
+> +
+> +                       gpio5 {
+> +                               pins = "gpio5";
+> +                               function = "clk32k_out";
+> +                       };
+> +               };
 
-These numbers have been taken care of by the macros in imx*-pinfunc.h.
-You only need to find the corresponding macro for it from the header.
 
->                 PAD_CTL_PKE | PAD_CTL_PUE | \
-> +               PAD_CTL_PUS_100K_DOWN | PAD_CTL_SPEED_LOW |     \
-> +               PAD_CTL_DSE_80ohm | PAD_CTL_SRE_FAST | PAD_CTL_HYS),
+As you see the name "gpio0" thru "gpio5" is quite confusing
+here, as it is referring to pins, not GPIO lines (which is something
+else in Linux).
 
-The CONFIG number has nothing to do with imx*-pinfunc.h.  You will need
-to translate the setting here into the last number of fsl,pins entry.
+I guess you know for sure whatever it is, and if the hardware
+manual names the pins like this then there is not much we can
+do. On most chips the actual pins have better names, like
+chessboard coordinates, "D1" etc on BGAs or other good names.
 
-> you need to be able to find out which of these C macros that corresponds
-> to for the pinfunc.h mess.
-> 
-> As it is, sorting out the pinmuxing on IMX is a nightmare - I've so far
-> spent almost 8 hours on this problem trying to work out what the right
-> way to describe this stuff is in DT, and its far from what I'd call fun.
-> And I've still more to do on this.
-> 
-> Please fix the documentation.
+Can you just inspect your HW docs and verify that your pins
+really have these confusing names?
 
-Yes, will do.
+So it's this:
 
-Shawn
+> +#define AS3722_PIN_GPIO0               0
+> +#define AS3722_PIN_GPIO1               1
+> +#define AS3722_PIN_GPIO2               2
+> +#define AS3722_PIN_GPIO3               3
+> +#define AS3722_PIN_GPIO4               4
+> +#define AS3722_PIN_GPIO5               5
+> +#define AS3722_PIN_GPIO6               6
+> +#define AS3722_PIN_GPIO7               7
+> +#define AS3722_PIN_NUM                 (AS3722_PIN_GPIO7 + 1)
+(...)
+> +static const struct pinctrl_pin_desc as3722_pins_desc[] = {
+> +       PINCTRL_PIN(AS3722_PIN_GPIO0, "gpio0"),
+> +       PINCTRL_PIN(AS3722_PIN_GPIO1, "gpio1"),
+> +       PINCTRL_PIN(AS3722_PIN_GPIO2, "gpio2"),
+> +       PINCTRL_PIN(AS3722_PIN_GPIO3, "gpio3"),
+> +       PINCTRL_PIN(AS3722_PIN_GPIO4, "gpio4"),
+> +       PINCTRL_PIN(AS3722_PIN_GPIO5, "gpio5"),
+> +       PINCTRL_PIN(AS3722_PIN_GPIO6, "gpio6"),
+> +       PINCTRL_PIN(AS3722_PIN_GPIO7, "gpio7"),
+> +};
+> +
+> +static const char * const gpio_groups[] = {
+> +       "gpio0",
+> +       "gpio1",
+> +       "gpio2",
+> +       "gpio3",
+> +       "gpio4",
+> +       "gpio5",
+> +       "gpio6",
+> +       "gpio7",
+> +};
 
+That is really, really confusing.
+
+And this one-pin-per-group:
+
+> +static const struct as3722_pingroup as3722_pingroups[] = {
+> +       AS3722_PINGROUP(gpio0,  GPIO0),
+> +       AS3722_PINGROUP(gpio1,  GPIO1),
+> +       AS3722_PINGROUP(gpio2,  GPIO2),
+> +       AS3722_PINGROUP(gpio3,  GPIO3),
+> +       AS3722_PINGROUP(gpio4,  GPIO4),
+> +       AS3722_PINGROUP(gpio5,  GPIO5),
+> +       AS3722_PINGROUP(gpio6,  GPIO6),
+> +       AS3722_PINGROUP(gpio7,  GPIO7),
+> +};
+
+Also makes my head twist.
+
+But as I said, if they are named like this, then there is
+not much we can do. But maybe we can put in something
+clarifying....
+
+> +static int as3722_gpio_direction_output(struct gpio_chip *chip,
+> +               unsigned offset, int value)
+> +{
+> +       as3722_gpio_set(chip, offset, value);
+> +       return pinctrl_gpio_direction_output(chip->base + offset);
+> +}
+
+Son't you want to set the direction first, then output the value?
+This order is OK with some hardware, I'm just asking...
+
+Overall this is looking very good.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
