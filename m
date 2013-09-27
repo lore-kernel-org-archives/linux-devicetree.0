@@ -1,90 +1,204 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [dtc PATCH V2] Warn on node name unit-address presence/absence
- mismatch
-Date: Fri, 27 Sep 2013 15:17:18 +1000
-Message-ID: <20130927051718.GE2716@voom.fritz.box>
-References: <1379613263-32080-1-git-send-email-swarren@wwwdotorg.org>
- <3D2FE31C-A6BB-4F70-9B3B-C55012CB56B3@codeaurora.org>
- <5244BF7A.4000100@wwwdotorg.org>
- <1380245438.28561.86.camel@pasglop>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v6 1/4] ARM: OMAP2+: cleaned-up DT support of various
+ ECC schemes
+Date: Fri, 27 Sep 2013 06:17:13 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA173C7@DBDE04.ent.ti.com>
+References: <1378986619-26765-1-git-send-email-pekon@ti.com>
+ <1378986619-26765-2-git-send-email-pekon@ti.com>
+ <CAL_Jsq+XxQ_9ik_P8EPPNSzXiCz6yd-VJLRU668t3jvD-jhyOw@mail.gmail.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA16B0D@DBDE04.ent.ti.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EA16CEE@DBDE04.ent.ti.com>
+ <20130926170927.GI2411@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2qXFWqzzG3v1+95a"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1380245438.28561.86.camel@pasglop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20130926170927.GI2411@e106331-lin.cambridge.arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robherring2@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Olof Johansson <olof@lixom.net>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "dedekind1@gmail.com" <dedekind1@gmail.com>, Tony Lindgren <tony@atomide.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi,
+ Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, linux-omap <linux-omap@vger.kernel.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi All,
 
---2qXFWqzzG3v1+95a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So, based on feedbacks from everyone, I could come to following
+conclusions. Please confirm, if those are acceptable ?
 
-On Fri, Sep 27, 2013 at 11:30:38AM +1000, Benjamin Herrenschmidt wrote:
-> On Thu, 2013-09-26 at 17:12 -0600, Stephen Warren wrote:
-> > Well, ePAPR seems pretty specific that unit address and reg are
-> > related,
-> > but says nothing about ranges in the section on node naming, nor about
-> > node naming in the section about ranges.
-> >=20
-> > I'd claim that the existing PPC trees are nonconforming, and should be
-> > fixed too:-)
->=20
-> This is tricky, we should probably fix ePAPR here.
->=20
-> If you have a "soc" bus covering a given range of addresses which it
-> forwards to its children devices but doesn't have per-se its own
-> registers in that area, then it wouldn't have a "reg" property. I would
-> thus argue that in the absence of a "reg" property, if a "ranges" one is
-> present, the "parent address" entry in there is an acceptable substitute
-> for the "reg" property as far as unit addresses are concerned.
+> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> > 
+> On Thu, Sep 26, 2013 at 11:54:39AM +0100, Gupta, Pekon wrote:
+> >
+> > > > From: Rob Herring [mailto:robherring2@gmail.com]
+> > > > > From: Pekon Gupta [mailto:pekon@ti.com]
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> > > > b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> > > > > index df338cb..958e5d5 100644
+> > > > > --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> > > > > +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> > > > > @@ -21,11 +21,8 @@ Optional properties:
+> > > > >                                 is wired that way. If not specified, a bus
+> > > > >                                 width of 8 is assumed.
+> > > > >
+> > > > > - - ti,nand-ecc-opt:            A string setting the ECC layout to use. One of:
+> > > > > -
+> > > > > -               "sw"            Software method (default)
+> > > > > -               "hw"            Hardware method
+> > > > > -               "hw-romcode"    gpmc hamming mode method & romcode
+> > > layout
+> > > > > + - ti,nand-ecc-scheme:         A string setting the ECC layout to use.
+> One of:
+> > > > > +               "ham1"          1-bit Hamming ecc code
+> > > >
+> > > > As has been pointed out, this breaks compatibility which should be
+> > > > avoided unless you know the state of use of this binding. I fail to
+> > > > see the advantage of using scheme over opt. You could simply add
+> ham1
+> > > > here and maintain compatibility. Instead of removing sw, hw, etc. you
+> > > > can simply deprecate them or decide that the kernel doesn't support
+> > > > those options.
+> > > >
+> > > Renaming 'ti,nand-ecc-opt' to 'ti,nand-ecc-scheme' was as per earlier
+> > > comments from Olof. So either way is fine with me. Should I revert
+> > > it back to 'ti,nand-ecc-opt' ?
+> 
+> I think that if the binding is already in use then we shouldn't break
+> it, unless you're _definitely_ the only user.
+> 
+Agreed, would revert back to 'ti,nand-ecc-scheme'
 
-So, that's been accepted practice in fdt world for a while; I think
-ePAPR already permits that, in fact.
 
-> Also don't forget that in real OFW land, the unit address is something
-> that's somewhat bus specific ... for example, PCI uses "dev,fn" rather
-> than the full 96-bit number of the "reg" entry :-)
->=20
-> Another option which would more strictly conform to ePAPR and in fact to
-> of1275 would be to require such bus nodes to have a "reg" property with
-> the address value set to the beginning of the range and the size value
-> set to 0 :-)
->=20
+> > >
+> > > Also, "sw", "hw_romcode" have been deprecated, they are no longer
+> > > supported in driver. So shouldn't they be removed from the
+> documentation
+> > > ?
+> 
+> Deprecated properties should be marked as deprecated, but continue to be
+> documented. That at least prevents the names being repurposed in an
+> incompatible way, and explains to anyone who looks at the document that
+> the proeprty is deprecated rather than simply undocumented.
+>
+Agreed.
+- keep existing values in documentation (sw, hw, hw_romcode) but mark
+  them as deprecated.
+- add new values (ham1, bch4, bch8,..)
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+ 
+> > >
+> > > > However, since you are willing to break compatibility, then you should
+> > > > the generic NAND binding and use nand-ecc-mode adding the values
+> you
+> > > > need.
+> > > >
+> > > > Documentation/devicetree/bindings/mtd/nand.txt:
+> > > > * MTD generic binding
+> > > >
+> > > > - nand-ecc-mode : String, operation mode of the NAND ecc mode.
+> > > >   Supported values are: "none", "soft", "hw", "hw_syndrome",
+> > > > "hw_oob_first",
+> > > >   "soft_bch".
+> > >
+> > > Yes I can use generic 'nand-ecc-mode', But the binding values like
+> > > "soft", "hw", "soft_bch" are too generic to describe the hardware.
+> > > - BCH ECC scheme can itself be of multiple types, bch4/bch8/bch16
+> > >   so "soft_bch" is ambiguous.
+> 
+> It does indeed seem like the generic properties are not generic enough,
+> at least from my quick look other them. However, I am not familiar with
+> NAND, so I may have misunderstood.
+> 
+Would not use generic 'nand-ecc-mode' property, instead continue
+with 'ti,nand-ecc-opt'.
 
---2qXFWqzzG3v1+95a
-Content-Type: application/pgp-signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+> > > - Similarly "soft" and "hw" do not determine the algorithm used
+> > >    like Hamming or BCH.
+> > >
+> > > (a) Should I update the generic binding values (if no one else is using) ?
+> like
+> > > 	sw -> ham1_sw
+> > > 	hw -> ham1_hw
+> > > 	soft_bch-> soft_bch4, soft_bch8
+> 
+> What do the current property names actually correspond to logically? If
+> we did this and there are existing users, the old DTs need to continue
+> functioning.
+> 
+> > > OR
+> > > (b) Should I add newer ones to it (like "ham1", "bch4", "bch8", "bch16") ?
+> > >       keeping the old ones intact. And how should I handle un-supported
+> > >      values, (Is pr_err during kernel probe enough ?).
+> 
+> I think something like this, but with the names from (a) would be
+> preferrable.
+> 
+As Brian pointed, implementation of ecc-scheme can be very different
+from vendor to vendor, and even SoC to SoC within same vendor,
+Thus its difficult to generalize as common DT binding for everyone.
+- Even if we try to do, there would be too many values, out of which
+  only selectable would be applicable for a given SoC.
+- And some platforms might need extra DT information to get driver
+  working, because h/w was designed that way. So it would be mess.
+So, its better not to have a generic ecc-scheme binding, instead let every
+vendor define it specifically.
 
-iQIcBAEBAgAGBQJSRRTdAAoJEGw4ysog2bOS4V8P/3sQ8pCeV10i7RR0u4wEBg7j
-I9r5EVVegLN6svDp97tCrUu9B4DECDchwk4zXjwU4YJ7cnBFVP4dQqzkhfyFTwG6
-9RlzlJV/ewDf9Qpj78jHSUmsAanKR+YmrrfoXa6sDDdvX0wyQW5rmU230c5f4ZBO
-ud/LtpTN01tZct12bccgDLSB+XkmxkYgMgwejuPmi7zz/uTc+VcIrOomFG8YJx+6
-EhTaYcCezu1JicvL67zhiuqhrPJe6llbvcGZwqd3t4CDrNhEHuSYMAKm4xr4dhjC
-6ooWgVpR1rSgCjmzSIXYl7FE2he6s9yk3VIKUW8CH+nlWlPbMK0cyJzlIRjs8Scp
-GJXtH1eMIxO7BAWhtWLI22kUN6cPElnBYUVWYEDYec5msuiASQ3htnsIIk1JI+nW
-O5a0jtA4dydPjnFPbtbHeZ4UuRtEnoyR5Ov7dUzPmwr7UC/HKyApHUVP5my/Xa9f
-+h9atkqHFR9/mDLf9RuRzrhdmEOxc38J05YItDWOPLMPjsYwJKM7D0ShY1AXuoXg
-wqz1Ffs8HW3zdNhF7eklafVVovOGUuUAsMyH1fyiqO18WgnURB/n7Fdnak2l6LHn
-cGgc5vxhiVC0SF76UDI0nMhqByh5HMGQL/XhI5QrlnbHPYYNHQwXpPHkKurjy/Y4
-daM0QMXluNwICjVp86Ib
-=lTKI
------END PGP SIGNATURE-----
+So for TI OMAP NAND driver, I'm continuing to use 'ti,nand-ecc-opt'
+as described above. Is this acceptable ?
 
---2qXFWqzzG3v1+95a--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> > >
+> > > [...]
+> > >
+> > > > > - - elm_id:     Specifies elm device node. This is required to support
+> BCH
+> > > > > -               error correction using ELM module.
+> > > > > + - ti,elm-id:  Specifies pHandle of the ELM devicetree node.
+> > > > > +               ELM is an on-chip hardware engine on TI SoC which is used
+> for
+> > > > > +               locating ECC errors for BCHx algorithms. SoC devices which
+> have
+> > > > > +               ELM hardware engines should specify this device node in
+> .dtsi
+> > > > > +               Using ELM for ECC error correction frees some CPU cycles.
+> > > >
+> > > > While yes, this is better name and documentation, I don't know that
+> > > > breaking compatibility is justified.
+> > > >
+> > > As this is TI specific binding, so manufacturer's name should have been
+> > > included.  But as this was missed while adding this binding, so this should
+> > > be fixed now. (Olof also recommended the same).
+> 
+> We could update the binding to prefer ti,elm-id, and deprecate elm_id
+> while maintaining support in the kernel.
+> 
+Agreed. 
+- would keep elm_id but mark it deprecated in Documentation
+- add new ti,elm-id
+
+> > >
+> > > AFAIK, For TI's NAND OMAP driver, currently there are not many
+> > > end-users are using these bindings from mainline DT kernel.
+> > > So this patch series mainly aims to cleanup NAND driver so that migrate
+> > > to latest DT based kernel from board-file one is easy.
+> > > So changes should be acceptable from end-user's point, its only matter
+> > > of which path to take.
+> > > Request you to please help me finalize this before I resend next patch
+> > > series addressing other comments from Brian.
+> > >
+
+with regards, pekon
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
