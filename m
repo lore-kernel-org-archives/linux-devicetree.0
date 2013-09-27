@@ -1,46 +1,40 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 3/4] watchdog: s3c2410_wdt: parse watchdog dt node to read
- PMU registers adresses
-Date: Fri, 27 Sep 2013 11:48:53 -0700
-Message-ID: <CAD=FV=Wa0BpmE7mQoAk-RC_g9QCCz2T_7=Pd46CDSN8Z9KQ8jg@mail.gmail.com>
-References: <1379414623-26329-1-git-send-email-l.krishna@samsung.com>
-	<2333262.vSzLePxk45@amdc1227>
-	<CAD=FV=WZBrJ5Qhky6VQqfu59LVQcKMTdLa+gJwnnFM85bEzzNQ@mail.gmail.com>
-	<2201944.6vg4a9ttux@flatron>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Fri, 27 Sep 2013 15:52:21 -0300
+Message-ID: <CAOMZO5Csr-vgsKHahnTcMKu1DfgSToYnoVncAfhYFJid-bwviQ@mail.gmail.com>
+References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
+	<CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
+	<20130926205906.GT12758@n2100.arm.linux.org.uk>
+	<CAHCPf3u9KyoJiAPv6oc_ZdVBqgix41__RAGRXh8z+d5bXO8fQw@mail.gmail.com>
+	<20130926232907.GV12758@n2100.arm.linux.org.uk>
+	<20130927131554.GB31178@titan.lakedaemon.net>
+	<20130927170552.GC12758@n2100.arm.linux.org.uk>
+	<20130927183101.GE12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2201944.6vg4a9ttux@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, Leela Krishna Amudala <l.krishna@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, mark.rutland@arm.com, galak <galak@codeaurora.org>, pawel.moll@arm.com, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130927183101.GE12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tomasz,
+On Fri, Sep 27, 2013 at 3:31 PM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Fri, Sep 27, 2013 at 06:05:52PM +0100, Russell King - ARM Linux wrote:
 
-On Fri, Sep 27, 2013 at 11:14 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> So isn't the register in the PMU there to save power in the case that
->> the watchdog timer isn't being used?  How is the PMU "driver" to know
->> whether the watchdog is being used?  Better IMHO that the watchdog
->> driver knows to enable and disable itself as needed, right?
+> An interesting data point.  Connect it to a 100mbit switch and it works.
+> gigabit and it behaves as above.
 >
-> How much power can you save on one low frequency counter? Anyway, those
-> bits look more like reset signal masks to me, unrelated to any power
-> saving and even if, this driver switches them on at probe regardless of
-> whether the watchdog is actually used or not.
+> So, the question is: does anyone have gigabit networking working on imx6
+> with recent DT based kernels?
 
-I don't know for sure how much power it saves if any.  The description
-I have of those fields is also definitely a little on the confusing
-side.  The fact that they are in the PMU leads me to believe that they
-save power, but perhaps that's not the case here.
+Yes, we have Gigabit ethernet working on mx6sabrelite, wandboard,
+sabresd boards.
 
-It still does seem nice to keep watchdog related code in the watchdog
-driver, though...  I guess I could also imagine ordering problems if
-we tweaked this bit in the PMU driver, though I don't have actual
-evidence of this.  Maybe cases where enabling at the wrong time could
-cause spurious watchdog resets depending on how the BIOS left the
-state of things.  It would be unfortunate if we found we needed to
-reach into the watchdog register bank from the PMU driver to "pet" the
-watchdog before enabling it.
-
--Doug
+Does the 3.0.35 kernel work with gigabit on cubox-i? Could this issue
+be related to the ar8035 phy fixup code?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
