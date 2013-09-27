@@ -1,37 +1,53 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] New descriptor-based GPIO interface
-Date: Fri, 27 Sep 2013 14:06:54 +0200
-Message-ID: <CACRpkdbhywp7_wAhOSzdMe==YoCo0mAcy1mJrdW3bURKWLxQeQ@mail.gmail.com>
-References: <1380179668-32288-1-git-send-email-acourbot@nvidia.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Fri, 27 Sep 2013 14:08:01 +0200
+Message-ID: <20130927120801.GU30088@pengutronix.de>
+References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
+ <20130927094902.GX12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380179668-32288-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130927094902.GX12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2013 at 9:14 AM, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+On Fri, Sep 27, 2013 at 10:49:02AM +0100, Russell King - ARM Linux wrote:
+> Here's another instance:
+> 
+> Documentation/devicetree/bindings/net/fsl-fec.txt:
+> 
+> Required properties:
+> - phy-mode : String, operation mode of the PHY interface.
+>   Supported values are: "mii", "gmii", "sgmii", "tbi", "rmii",
+>   "rgmii", "rgmii-id", "rgmii-rxid", "rgmii-txid", "rtbi", "smii".
+> 
+> Is this really required?  Maybe someone can point to where the code
+> makes use of this, because I'm damned if I can find it:
+> 
+> $ grep phy-mode drivers/net/ include/ net/ -r
+> drivers/net/ethernet/marvell/mvneta.c:              dev_err(&pdev->dev, "incorrect phy-mode\n");
+> drivers/net/ethernet/nxp/lpc_eth.c:                                            phy-mode", NULL);
 
-> Here is a proper patch series for the descriptor-based GPIO interface to be
-> merged into -next. It is rebased on your for-next branch and only slightly
-> changed with respect to the RFC I posted earlier, only more thoroughly tested.
-> The documentation part is missing because I need some more time to rework it
-> (I'm on holidays this week but wanted to get the code into -next before 28th),
-> and anyway at this point I just want to make sure that the extra refactoring
-> does not break any existing code.
->
-> My hope is to get this into -next before the 28th so this patchset can be
-> effectively tested, even if the new interfaces are not used yet. Since the old
-> integer-based interface now relies on top of gpiod_, this should provide good
-> coverage for both.
+See of_get_phy_mode() implemented in drivers/net/of_net.c and used in
+the FEC driver.
 
-I've applied it now, but no idea whether it will hit the last -next tree in
-time, hopefully at the very last second ...
+> 
+> "local-mac-address" in the optional properties also falls into this
+> category: only a small handful of network drivers make use of this,
+> and fec is not one of them.
 
-Yours,
-Linus Walleij
+of_get_mac_address(), also in drivers/net/of_net.c
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
