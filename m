@@ -1,62 +1,51 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [RFC v2] gpio/omap: auto-setup a GPIO when used as an IRQ
-Date: Fri, 27 Sep 2013 09:35:33 +0200
-Message-ID: <52453545.3090504@collabora.co.uk>
-References: <1380009480-4975-1-git-send-email-javier.martinez@collabora.co.uk> <5244C0C4.2030004@wwwdotorg.org>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v5] ARM: shmobile: armadillo800eva-reference: add SDHI
+ and MMCIF interfaces
+Date: Fri, 27 Sep 2013 09:57:30 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1309270924190.23205@axis700.grange>
+References: <Pine.LNX.4.64.1309261931340.11968@axis700.grange>
+ <5211142.rSOJTFTEIy@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5244C0C4.2030004@wwwdotorg.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, r.sricharan@ti.com, holler@ahsoftware.de, aaro.koskinen@iki.fi, Paul Walmsley <paul@pwsan.com>, joelf@ti.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5211142.rSOJTFTEIy@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 27 Sep 2013, Laurent Pinchart wrote:
 
-On 09/27/2013 01:18 AM, Stephen Warren wrote:
-> On 09/24/2013 01:58 AM, Javier Martinez Canillas wrote:
->> The OMAP GPIO controller HW requires a pin to be configured in GPIO
->> input mode in order to operate as an interrupt input. Since drivers
->> should not be aware of whether an interrupt pin is also a GPIO or not,
->> the HW should be fully configured/enabled as an IRQ if a driver solely
->> uses IRQ APIs such as request_irq(), and never calls any GPIO-related
->> APIs. As such, add the missing HW setup to the OMAP GPIO controller's
->> irq_chip driver.
->> 
->> Since this bypasses the GPIO subsystem we have to ensure that another
->> caller won't be able to request the same GPIO pin that is used as an
->> IRQ and set its direction as output. Requesting the GPIO and setting
->> its direction as input is allowed though.
+[snip]
+
+> > +	sdhi0: sdhi@e6850000 {
+> > +		compatible = "renesas,sdhi-r8a7740";
+> > +		reg = <0xe6850000 0x100>;
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <0 117 4
 > 
-> FWIW, the concept of this patch,
-> Acked-by: Stephen Warren <swarren@nvidia.com>
-> 
-> I didn't review the code; just skimmed it to see where the new
-> functionality was implemented.
-> 
+> board-armadillo800eva.c doesn't use IRQ 117 for SDHI0. It includes a comment 
+> that mentions "no SH_MOBILE_SDHI_IRQ_CARD_DETECT here". Should it be fixed in 
+> the board file ?
 
-Thanks Stephen,
+No, it shouldn't. On shmobile in .c mode devices like MMC hosts are 
+specified in board files and thus are board-specific. In armadillo800eva 
+the CD line on SDHI0 in the .c mode is used as a GPIO, that's why we don't 
+need to provide the SDHI own CD interrupt.
 
-I split the changes as suggested by Tony and posted as a patch-set and not an
-RFC anymore:
+In DT mode SDHI nodes are specified in an SoC-common .dtsi file, so, we 
+put all resources there, including the CD interrupt. But on 
+armadillo800eva a different pin is used for CD and as long as we didn't 
+have GPIO support in DT we had to use polling here. Now, however, we can 
+specify a CD GPIO. Let me post an updated patch.
 
-[PATCH 1/2] gpio/omap: maintain GPIO and IRQ usage separately [1]
-[PATCH 2/2] gpio/omap: auto-setup a GPIO when used as an IRQ [2]
-
-Linus,
-
-Could you please add Stephen Acked-by when taking the patches and also George
-Cherian Tested-by that sent for this RFC. George it would be great if you can
-also comment on which OMAP platform you had tested.
-
-I cc'ed Aaro Koskinen and Paul Walmsley now which seems to have OMAP1 platforms
-to test. Could you please test [1] and [2] on a OMAP1 board? These patches
-solves a long standing issue we have on OMAP2+ when booting with DT and it would
-be great if you can check that it does not cause regressions on OMAP1 based boards.
-
-Thanks a lot and best regards,
-Javier
-
-[1]: https://patchwork.kernel.org/patch/2937351/
-[2]: https://patchwork.kernel.org/patch/2937371/
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
