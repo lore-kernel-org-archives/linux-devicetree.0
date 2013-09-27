@@ -1,138 +1,75 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCHv4 11/18] arm: dts: add omap4430 thermal data
-Date: Fri, 27 Sep 2013 09:20:31 -0400
-Message-ID: <5245861F.7000109@ti.com>
-References: <1380251605-3804-1-git-send-email-eduardo.valentin@ti.com>
- <1380251605-3804-12-git-send-email-eduardo.valentin@ti.com>
- <20130927122439.GA8360@kahuna>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Fri, 27 Sep 2013 21:26:02 +0800
+Message-ID: <20130927132601.GL25146@S2101-09.ap.freescale.net>
+References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
+ <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
+ <20130926205906.GT12758@n2100.arm.linux.org.uk>
+ <CAOMZO5Dj7o3qBH2hzPFWjepgpt5XR5qKmQorKS6jH_7=gnY5cg@mail.gmail.com>
+ <20130927121357.GY12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6295592945886805334=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130927122439.GA8360@kahuna>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, wni@nvidia.com, durgadoss.r@intel.com, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, lm-sensors@lm-sensors.org, Eduardo Valentin <eduardo.valentin@ti.com>, linux-arm-kernel@lists.infradead.org, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, grant.likely@linaro.org, Russell King <linux@arm.linux.org.uk>, rui.zhang@intel.com, linux-omap@vger.kernel.org, linux@roeck-us.net
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130927121357.GY12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============6295592945886805334==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="1XmnBH6bta5Fi7w00RPEclm3IM4nH8DtB"
+On Fri, Sep 27, 2013 at 01:13:57PM +0100, Russell King - ARM Linux wrote:
+> There's also this which follows the above:
+> 
+> +       /* Set enet clock to 50MHz RMII */
+> +       enet = clk_get_sys("enet.0", NULL);
+> +       if (IS_ERR(enet))
+> +               pr_err("Unable to get enet.0 clock\n");
 
---1XmnBH6bta5Fi7w00RPEclm3IM4nH8DtB
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+I can not find clock lookup for "enet.0" in FSL 3.0.35 BSP 4.1.0, so
+I'm not sure how this works at all.  Can you confirm that by running
+Rabeeh's kernel to see if you get that error message?
 
-On 27-09-2013 08:24, Nishanth Menon wrote:
-> On 23:13-20130926, Eduardo Valentin wrote:
->> This patch changes the dtsi entry on omap4430 to contain
->> the thermal data. This data will enable the passive
->> cooling with CPUfreq cooling device at 100C and the
->> system will do a thermal shutdown at 125C.
->>
->> Cc: "Beno=EEt Cousson" <bcousson@baylibre.com>
->> Cc: Tony Lindgren <tony@atomide.com>
->> Cc: Russell King <linux@arm.linux.org.uk>
->> Cc: linux-omap@vger.kernel.org
->> Cc: devicetree-discuss@lists.ozlabs.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
->> ---
->>  arch/arm/boot/dts/omap443x.dtsi | 10 ++++++++--
->>  1 file changed, 8 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap443x.dtsi b/arch/arm/boot/dts/omap4=
-43x.dtsi
->> index bcf455e..e9c97d6 100644
->> --- a/arch/arm/boot/dts/omap443x.dtsi
->> +++ b/arch/arm/boot/dts/omap443x.dtsi
->> @@ -12,7 +12,7 @@
->> =20
->>  / {
->>  	cpus {
->> -		cpu@0 {
->> +		cpu0: cpu@0 {
->>  			/* OMAP443x variants OPP50-OPPNT */
->>  			operating-points =3D <
->>  				/* kHz    uV */
->> @@ -25,9 +25,15 @@
->>  		};
->>  	};
->> =20
->> -	bandgap {
->> +	thermal-zones{
->> +		#include "omap4-cpu-thermal.dtsi"
->> +	};
->> +
->> +	bandgap: bandgap {
->>  		reg =3D <0x4a002260 0x4
->>  		       0x4a00232C 0x4>;
->>  		compatible =3D "ti,omap4430-bandgap";
->> +
->> +		#thermal-sensor-cells =3D <0>;
-> 2 cents:
-> we might want to move bandgap under ocp?
->=20
+> +       else {
+> +               clk_prepare(enet);
+> +               clk_set_rate(enet, 50000000);
+> +               clk_enable(enet);
+> +       }
+> 
+> I'm not sure at the moment which clock that refers to, or whether that's
+> necessary only for the AR8030 (which is used in RMII mode).  The enable
+> bit seems to be CCM_CCGR1 CG5_OFFSET.
 
-Yes, agreed. But I don't think this change is related to this patch or
-to this series.
+There are two clocks ENET related, 'enet' (117) and 'enet_ref' (190).
+The enet is fec internal working clock, and enet_ref is provided by
+imx6q CCM (Clock Controller Module) on pad ENET_REF_CLK which can
+generally be used to clock the external PHY.
 
-Tks Nishanth
+The CCM_CCGR1_CG5 is clock 'enet', while I think the clock in above
+code should be 'enet_ref'.  It seems you need to set up
+MX6QDL_PAD_GPIO_16__ENET_REF_CLK to use the clock though.
 
->>  	};
->>  };
->> --=20
->> 1.8.2.1.342.gfa7285d
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->=20
+> Even when I work out how that
+> relates to the mass of clock initialisations in
+> arch/arm/mach-imx/clk-imx6q.c, it's virtually impossible to translate
+> that into a DT <&clks N> representation because of this:
+> 
+> enum mx6q_clks {
+>         dummy, ckil, ckih, osc, pll2_pfd0_352m, pll2_pfd1_594m, pll2_pfd2_396m,
+>         pll3_pfd0_720m, pll3_pfd1_540m, pll3_pfd2_508m, pll3_pfd3_454m,
+>         pll2_198m, pll3_120m, pll3_80m, pll3_60m, twd, step, pll1_sw,
+>         periph_pre, periph2_pre, periph_clk2_sel, periph2_clk2_sel, axi_sel,
 
+The imx6q clock was created before DTC macro support is available, so we
+have to cross check Documentation/devicetree/bindings/clock/imx6q-clock.txt
+to interpret the clocks.  The imx6sl clock driver below is an example to
+see how DTC macro helps there.
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
+  arch/arm/mach-imx/clk-imx6sl.c
+  include/dt-bindings/clock/imx6sl-clock.h
 
-Eduardo Valentin
+Shawn
 
-
---1XmnBH6bta5Fi7w00RPEclm3IM4nH8DtB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlJFhh8ACgkQCXcVR3XQvP3I1gD/TM2JMQH3snFBp+F3rhhYaI0c
-cL1CsA6w/FXgJ/kznzUA/12a9HkHD8gpc6UrCJ4T3MvGlhN5+1vzL+xY9UQ3W7+o
-=iERc
------END PGP SIGNATURE-----
-
---1XmnBH6bta5Fi7w00RPEclm3IM4nH8DtB--
-
-
---===============6295592945886805334==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6295592945886805334==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
