@@ -1,42 +1,77 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: device tree binding documentation outdated
-Date: Fri, 27 Sep 2013 09:31:20 -0400
-Message-ID: <20130927133120.GC31178@titan.lakedaemon.net>
-References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
- <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
- <CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com>
- <20130927025116.GG25146@S2101-09.ap.freescale.net>
- <20130927084504.GW12758@n2100.arm.linux.org.uk>
- <20130927122814.GK25146@S2101-09.ap.freescale.net>
- <20130927131225.GA31178@titan.lakedaemon.net>
- <20130927132107.GZ12758@n2100.arm.linux.org.uk>
+From: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] pwm-backlight: add support for device tree gpio control
+Date: Fri, 27 Sep 2013 06:35:31 -0700
+Message-ID: <524589A3.50700@newsguy.com>
+References: <1378236372-15711-1-git-send-email-mikedunn@newsguy.com> <20130910172130.GC22111@ulmo> <523056A6.5060000@newsguy.com> <524408BE.40402@ti.com> <20130926120248.GB1680@ulmo> <524427E5.50403@ti.com> <20130926125020.GA2141@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130927132107.GZ12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <20130926125020.GA2141@ulmo>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 02:21:07PM +0100, Russell King - ARM Linux wrote:
-> On Fri, Sep 27, 2013 at 09:12:25AM -0400, Jason Cooper wrote:
-> > I'm currently slogging through the exact same issues for adding imx50
-> > (SanDisk Connect Wireless media Drive).  I thought I was just thick.
-> > It's a relief to know I'm not the only one having trouble with this.
+On 09/26/2013 05:50 AM, Thierry Reding wrote:
+> On Thu, Sep 26, 2013 at 03:26:13PM +0300, Tomi Valkeinen wrote:
+>> On 26/09/13 15:02, Thierry Reding wrote:
+>>> On Thu, Sep 26, 2013 at 01:13:18PM +0300, Tomi Valkeinen wrote:
+>>>> On 11/09/13 14:40, Mike Dunn wrote:
+>>>>> On 09/10/2013 10:21 AM, Thierry Reding wrote:
+>>>>
+>>>>>> Do you have a real setup that actually needs multiple GPIOs? Usually
+>>>>>> such a setup requires some kind of timing or other additional constraint
+>>>>>> which can't be represented by this simple binding.
+>>>>>>
+>>>>>> Looking at the Palm Treo code it seems like the reason why multiple
+>>>>>> GPIOs are needed is because one is to enable the backlight, while the
+>>>>>> other is in fact used to enable the LCD panel. 
+>>>>>
+>>>>>
+>>>>> There are actually four GPIOs involved!  (There is an embarrasingly horrible
+>>>>> hack in arch/arm/mach-pxa/palmtreo.c that handles the others.)  One is almost
+>>>>> certainly simply backlight power.  The other three are probably LCD related.
+>>>>
+>>>> When you say "power", do you mean the gpio enables a regulator to feed
+>>>> power to the backlight? If so, wouldn't that be a regulator, not gpio,
+>>>> from the bl driver's point of view?
+>>>>
+>>>> Generally speaking, this same problem appears in many places, but for
+>>>> some reason especially in display. I'm a bit hesitant in adding "free
+>>>> form" gpio/regulator support for drivers, as, as Thierry pointed out,
+>>>> there are often timing requirements, or sometimes the gpios are
+>>>> inverted, or sometimes the gpio is, in fact, a reset gpio, where you'll
+>>>> assert the gpio for a short moment only.
+>>>
+>>> I sent out another series a few days ago that somewhat obsoletes this
+>>> patch. What it does is basically add a single enable GPIO that can be
+>>> used to turn the backlight on and off. In a separate patch, support is
+>>> added for a power regulator. The combination of both should be able to
+>>> cover the majority of use-cases.
+>>
+>> But Mike's case required 4 GPIOs? Or can that be reduced to one gpio and
+>> one regulator?
 > 
-> I'm coming to the conclusion that it's almost to the point of "vendor
-> lockin" - you have to find someone who understands this stuff to take
-> your hardware description and turn it into a working DT description.
+> Well, at least for the backlight it only seemed to involve a single
+> GPIO. The other three were probably related to LCD and therefore not
+> really suitable for a backlight driver. Traditionally it has been that
+> the backlight driver handled these things as well (via the callbacks
+> installed by board setup code). While really they should be handled by a
+> separate driver (for the LCD).
 
-I don't think it's vendor lock-in, I think Freescale's pinctrl/gpio IP
-block is just an over-complicated pain in the ass that doesn't lend
-itself to DT well.
 
-thx,
+Yes, this is currently my best guess.  This is reverse-engineered and
+unfortunately I'm not yet able to accurately describe my particular use-case.
+Probably as wacky as anything you can imagine, Thierry :)
 
-Jason.
+The gpio and regulator patches will probably suffice.  Thierry, can you please
+point me to those patches?  I don't see them in your gitorious tree.  If they
+were posted to linux-pwm, I missed them; sorry.
+
+Thanks,
+Mike
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
