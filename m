@@ -1,38 +1,56 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: device tree binding documentation outdated
-Date: Fri, 27 Sep 2013 10:49:02 +0100
-Message-ID: <20130927094902.GX12758@n2100.arm.linux.org.uk>
-References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH V2 1/4] ARM: dts: Fix the watchdog DT node name for Exynos5
+Date: Fri, 27 Sep 2013 15:46:23 +0530
+Message-ID: <1380276986-24131-2-git-send-email-l.krishna@samsung.com>
+References: <1380276986-24131-1-git-send-email-l.krishna@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130926195158.GS12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-reply-to: <1380276986-24131-1-git-send-email-l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Here's another instance:
+Fixes the watchdog DT node name for Exynos5 as per the DT node naming
+convention also update "status" property for Exynos5250 SoC.
 
-Documentation/devicetree/bindings/net/fsl-fec.txt:
+Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos5.dtsi    |    2 +-
+ arch/arm/boot/dts/exynos5250.dtsi |    3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-Required properties:
-- phy-mode : String, operation mode of the PHY interface.
-  Supported values are: "mii", "gmii", "sgmii", "tbi", "rmii",
-  "rgmii", "rgmii-id", "rgmii-rxid", "rgmii-txid", "rtbi", "smii".
+diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+index 074739d..a8bf0c2 100644
+--- a/arch/arm/boot/dts/exynos5.dtsi
++++ b/arch/arm/boot/dts/exynos5.dtsi
+@@ -102,7 +102,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	watchdog {
++	watchdog@101D0000 {
+ 		compatible = "samsung,s3c2410-wdt";
+ 		reg = <0x101D0000 0x100>;
+ 		interrupts = <0 42 0>;
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 7d7cc77..6bb42cf 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -158,9 +158,10 @@
+ 		interrupts = <0 47 0>;
+ 	};
+ 
+-	watchdog {
++	watchdog@101D0000 {
+ 		clocks = <&clock 336>;
+ 		clock-names = "watchdog";
++		status = "okay";
+ 	};
+ 
+ 	g2d@10850000 {
+-- 
+1.7.9.5
 
-Is this really required?  Maybe someone can point to where the code
-makes use of this, because I'm damned if I can find it:
-
-$ grep phy-mode drivers/net/ include/ net/ -r
-drivers/net/ethernet/marvell/mvneta.c:              dev_err(&pdev->dev, "incorrect phy-mode\n");
-drivers/net/ethernet/nxp/lpc_eth.c:                                            phy-mode", NULL);
-
-"local-mac-address" in the optional properties also falls into this
-category: only a small handful of network drivers make use of this,
-and fec is not one of them.
-
-What's the use of documentation if its inaccurate.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
