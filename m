@@ -1,108 +1,140 @@
-From: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
-Subject: [PATCH v3] powerpc/83xx: gianfar_ptp: select 1588 clock source through dts file
-Date: Fri, 27 Sep 2013 17:40:27 +0400
-Message-ID: <1380289227-12029-1-git-send-email-aida.mynzhasova@skitlab.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCHv4 11/18] arm: dts: add omap4430 thermal data
+Date: Fri, 27 Sep 2013 09:42:49 -0400
+Message-ID: <52458B59.8070703@ti.com>
+References: <1380251605-3804-1-git-send-email-eduardo.valentin@ti.com>
+ <1380251605-3804-12-git-send-email-eduardo.valentin@ti.com>
+ <20130927122439.GA8360@kahuna> <5245861F.7000109@ti.com>
+ <CAGo_u6p3pp2EBo_fJE_RJOdrc05OHM-QFgCZFBUW+duhPgOYpw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1152409969966347977=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGo_u6p3pp2EBo_fJE_RJOdrc05OHM-QFgCZFBUW+duhPgOYpw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, dt list <devicetree@vger.kernel.org>, wni@nvidia.com, durgadoss.r@intel.com, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Eduardo Valentin <eduardo.valentin@ti.com>, linux@roeck-us.net, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, rui.zhang@intel.com, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently IEEE 1588 timer reference clock source is determined through
-hard-coded value in gianfar_ptp driver. This patch allows to select ptp
-clock source by means of device tree file node.
+--===============1152409969966347977==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="okDvHLNIenjhDREDRe2cvg6qUKECOqodL"
 
-For instance:
+--okDvHLNIenjhDREDRe2cvg6qUKECOqodL
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-	fsl,cksel = <0>;
+On 27-09-2013 09:26, Nishanth Menon wrote:
+> On Fri, Sep 27, 2013 at 8:20 AM, Eduardo Valentin
+> <eduardo.valentin@ti.com> wrote:
+>> On 27-09-2013 08:24, Nishanth Menon wrote:
+>>> On 23:13-20130926, Eduardo Valentin wrote:
+>>>> This patch changes the dtsi entry on omap4430 to contain
+>>>> the thermal data. This data will enable the passive
+>>>> cooling with CPUfreq cooling device at 100C and the
+>>>> system will do a thermal shutdown at 125C.
+>>>>
+>>>> Cc: "Beno=EEt Cousson" <bcousson@baylibre.com>
+>>>> Cc: Tony Lindgren <tony@atomide.com>
+>>>> Cc: Russell King <linux@arm.linux.org.uk>
+>>>> Cc: linux-omap@vger.kernel.org
+>>>> Cc: devicetree-discuss@lists.ozlabs.org
+>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/omap443x.dtsi | 10 ++++++++--
+>>>>  1 file changed, 8 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/omap443x.dtsi b/arch/arm/boot/dts/oma=
+p443x.dtsi
+>>>> index bcf455e..e9c97d6 100644
+>>>> --- a/arch/arm/boot/dts/omap443x.dtsi
+>>>> +++ b/arch/arm/boot/dts/omap443x.dtsi
+>>>> @@ -12,7 +12,7 @@
+>>>>
+>>>>  / {
+>>>>      cpus {
+>>>> -            cpu@0 {
+>>>> +            cpu0: cpu@0 {
+>>>>                      /* OMAP443x variants OPP50-OPPNT */
+>>>>                      operating-points =3D <
+>>>>                              /* kHz    uV */
+>>>> @@ -25,9 +25,15 @@
+>>>>              };
+>>>>      };
+>>>>
+>>>> -    bandgap {
+>>>> +    thermal-zones{
+>>>> +            #include "omap4-cpu-thermal.dtsi"
+>>>> +    };
+>>>> +
+>>>> +    bandgap: bandgap {
+>>>>              reg =3D <0x4a002260 0x4
+>>>>                     0x4a00232C 0x4>;
+>>>>              compatible =3D "ti,omap4430-bandgap";
+>>>> +
+>>>> +            #thermal-sensor-cells =3D <0>;
+>>> 2 cents:
+>>> we might want to move bandgap under ocp?
+>>>
+>>
+>> Yes, agreed. But I don't think this change is related to this patch or=
 
-for using external (TSEC_TMR_CLK input) high precision timer
-reference clock.
+>> to this series.
+>=20
+> Correct - this comment is not related to the current patch, hence my 2
+> cents ;) - will be nice to have it cleaned up though..
 
-Other acceptable values:
+Yes, it will be cleaned. ;-) Tks.
 
-	<1> : eTSEC system clock
-	<2> : eTSEC1 transmit clock
-	<3> : RTC clock input
+>=20
+> Regards,
+> Nishanth Menon
+>=20
+>=20
 
-When this attribute isn't used, eTSEC system clock will serve as
-IEEE 1588 timer reference clock.
 
-Signed-off-by: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
----
- Documentation/devicetree/bindings/net/fsl-tsec-phy.txt | 18 +++++++++++++++++-
- drivers/net/ethernet/freescale/gianfar_ptp.c           |  4 +++-
- 2 files changed, 20 insertions(+), 2 deletions(-)
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
 
-diff --git a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
-index 2c6be03..d2ea460 100644
---- a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
-@@ -86,6 +86,7 @@ General Properties:
- 
- Clock Properties:
- 
-+  - fsl,cksel        Timer reference clock source.
-   - fsl,tclk-period  Timer reference clock period in nanoseconds.
-   - fsl,tmr-prsc     Prescaler, divides the output clock.
-   - fsl,tmr-add      Frequency compensation value.
-@@ -97,7 +98,7 @@ Clock Properties:
-   clock. You must choose these carefully for the clock to work right.
-   Here is how to figure good values:
- 
--  TimerOsc     = system clock               MHz
-+  TimerOsc     = selected reference clock   MHz
-   tclk_period  = desired clock period       nanoseconds
-   NominalFreq  = 1000 / tclk_period         MHz
-   FreqDivRatio = TimerOsc / NominalFreq     (must be greater that 1.0)
-@@ -114,6 +115,20 @@ Clock Properties:
-   Pulse Per Second (PPS) signal, since this will be offered to the PPS
-   subsystem to synchronize the Linux clock.
- 
-+  Reference clock source is determined by the value, which is holded
-+  in CKSEL bits in TMR_CTRL register. "fsl,cksel" property keeps the
-+  value, which will be directly written in those bits, that is why,
-+  according to reference manual, the next clock sources can be used:
-+
-+  <0> - external high precision timer reference clock (TSEC_TMR_CLK
-+        input is used for this purpose);
-+  <1> - eTSEC system clock;
-+  <2> - eTSEC1 transmit clock;
-+  <3> - RTC clock input.
-+
-+  When this attribute is not used, eTSEC system clock will serve as
-+  IEEE 1588 timer reference clock.
-+
- Example:
- 
- 	ptp_clock@24E00 {
-@@ -121,6 +136,7 @@ Example:
- 		reg = <0x24E00 0xB0>;
- 		interrupts = <12 0x8 13 0x8>;
- 		interrupt-parent = < &ipic >;
-+		fsl,cksel       = <1>;
- 		fsl,tclk-period = <10>;
- 		fsl,tmr-prsc    = <100>;
- 		fsl,tmr-add     = <0x999999A4>;
-diff --git a/drivers/net/ethernet/freescale/gianfar_ptp.c b/drivers/net/ethernet/freescale/gianfar_ptp.c
-index 098f133..e006a09 100644
---- a/drivers/net/ethernet/freescale/gianfar_ptp.c
-+++ b/drivers/net/ethernet/freescale/gianfar_ptp.c
-@@ -452,7 +452,9 @@ static int gianfar_ptp_probe(struct platform_device *dev)
- 	err = -ENODEV;
- 
- 	etsects->caps = ptp_gianfar_caps;
--	etsects->cksel = DEFAULT_CKSEL;
-+
-+	if (get_of_u32(node, "fsl,cksel", &etsects->cksel))
-+		etsects->cksel = DEFAULT_CKSEL;
- 
- 	if (get_of_u32(node, "fsl,tclk-period", &etsects->tclk_period) ||
- 	    get_of_u32(node, "fsl,tmr-prsc", &etsects->tmr_prsc) ||
--- 
-1.8.1.2
+Eduardo Valentin
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--okDvHLNIenjhDREDRe2cvg6qUKECOqodL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlJFi1kACgkQCXcVR3XQvP0QoAEA4MfbQt5xnfzUFjwU/nzb4Ahg
+nKZcdTIocqE6yVs/mg0A+wejPt8TOxTb8Gxy4/HJfD3MgfnLul13qlpnMBWID75d
+=J34r
+-----END PGP SIGNATURE-----
+
+--okDvHLNIenjhDREDRe2cvg6qUKECOqodL--
+
+
+--===============1152409969966347977==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1152409969966347977==--
