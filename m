@@ -1,54 +1,107 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [dtc PATCH V2] Warn on node name unit-address presence/absence mismatch
-Date: Fri, 27 Sep 2013 10:39:08 -0500
-Message-ID: <23CCE8D1-AEB2-42C8-B8C6-0B782117C4C2@codeaurora.org>
-References: <1379613263-32080-1-git-send-email-swarren@wwwdotorg.org> <3D2FE31C-A6BB-4F70-9B3B-C55012CB56B3@codeaurora.org> <5244BF7A.4000100@wwwdotorg.org> <1380245438.28561.86.camel@pasglop>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380245438.28561.86.camel@pasglop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Jon Loeliger <jdl@jdl.com>, David Gibson <david@gibson.dropbear.id.au>, Olof Johansson <olof@lixom.net>, frowand.list@gmail.com, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@nvidia.com>, Rohit Vaswani <rvaswani@codeaurora.org>
+From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Fri, 27 Sep 2013 10:40:03 -0500
+Message-ID: <CAHCPf3tZCTp_-W-BDjCg3=iUfP1GYJYQ+WrV_y-2K98zgg-odA@mail.gmail.com>
+References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
+	<CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
+	<CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com>
+	<20130927025116.GG25146@S2101-09.ap.freescale.net>
+	<20130927084504.GW12758@n2100.arm.linux.org.uk>
+	<20130927122814.GK25146@S2101-09.ap.freescale.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130927122814.GK25146-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Steev Klimaszewski <threeway-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Shawn, Russell,
 
-On Sep 26, 2013, at 8:30 PM, Benjamin Herrenschmidt wrote:
+Okay I have a proposal that might make this much easier. Why not
+redefine the preprocessor macros as follows (one used as an example)
 
-> On Thu, 2013-09-26 at 17:12 -0600, Stephen Warren wrote:
->> Well, ePAPR seems pretty specific that unit address and reg are
->> related,
->> but says nothing about ranges in the section on node naming, nor about
->> node naming in the section about ranges.
->> 
->> I'd claim that the existing PPC trees are nonconforming, and should be
->> fixed too:-)
-> 
-> This is tricky, we should probably fix ePAPR here.
+/* MUX_CTL definitions */
+#define SION    0x10
+#define ALT0    0x0
+#define ALT5   0x5
+#define GPIO ALT5
 
-I'll poke Stuart to see what's going w/updating ePAPR.
+#define SD2_DAT1_MUX 0x04c
+#define SD2_DAT1_INP 0x000
+#define SD2_DAT1_CTL 0x360
+#define SD2_DAT1__SD2_DATA1 0x0 ALT0
+#define SD2_DAT1__SD2_DATA1_PAD 0x1b0b0
+#define SD2_DAT1__GPIO1_IO14 0x0 ALT5
+#define SD2_DAT1__GPIO1_IO14_PAD 0x1b0b0
 
-> If you have a "soc" bus covering a given range of addresses which it
-> forwards to its children devices but doesn't have per-se its own
-> registers in that area, then it wouldn't have a "reg" property. I would
-> thus argue that in the absence of a "reg" property, if a "ranges" one is
-> present, the "parent address" entry in there is an acceptable substitute
-> for the "reg" property as far as unit addresses are concerned.
+#define IOMUX_R(name, function, mux_r, inp_r, pad_r, mux_v, inp_v, pad_v) \
+                         mux_r pad_r inp_r mux_v inp_v pad_v
 
-Either we update the section in general about 'ranges' or at least update the simple-bus binding to state that rules about the node name.
+#define IOMUX_V(name, function, mux_v, inp_v, pad_v) \
+                        name##_MUX name##_CTL name##_INP mux_v inp_v pad_v
 
-> Also don't forget that in real OFW land, the unit address is something
-> that's somewhat bus specific ... for example, PCI uses "dev,fn" rather
-> than the full 96-bit number of the "reg" entry :-)
-> 
-> Another option which would more strictly conform to ePAPR and in fact to
-> of1275 would be to require such bus nodes to have a "reg" property with
-> the address value set to the beginning of the range and the size value
-> set to 0 :-)
+#define IOMUX_P(name, function, pad_v) \
+                        name##_MUX name##_CTL name##_INP
+name##__##function pad_v
 
-- k
+#define IOMUX_F(name, function)  \
+                        name##_MUX name##_CTL name##_INP
+name##__##function name##_##function##_PAD
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Then you can have, in your lists;
+
+fsl,pins = <  IOMUX_R(SD2_DAT1, SD2_DATA1, 0x04c, 0x000, 0x360, 0x0,
+0x0, 0x1b0b0)    // long form, define pad name, function name,
+register offsets, data. function is ignored.
+          //         IOMUX_V(SD2_DAT1, SD2_GPIO1_IO14, 0x0, 0x15,
+0x1b0b0)                          // short form, define pad name,
+function name, data. function is ignored. We didn't use a prebaked ALT
+define since we want to set the SION bit.
+         //         IOMUX_P(SD2_DAT1, SD2_GPIO1_IO14, 0x1b0b0)
+                               // short form, define pad name,
+function name, pad settings.
+         //         IOMUX_F(SD2_DAT1, SD2_DATA1)
+                                              // beginner form, use a
+prebaked value for all of the above. function is used to generate the
+above.
+
+
+Which gives the best of all worlds - you know the pad name, and
+function type at every step. At the point someone is twiddling with
+pad settings that aren't preprovided (or the defaults..) I do not
+believe that it is worthwhile to "hide" the three data values. For the
+uses where a custom board pin name wants to be used, SD2_DAT1,
+SABRESD_WIFI_RST can be used in the IOMUX_V definition to give it some
+meaning, and it will be ignored. In the worst case boards get lists of
+definitions at the top of their .dts which define pin/pad names and
+functions.
+
+I did figure out that the headers are included explicitly by the
+files, so in fact MX6QDL_PAD_BLAH_PREFIX_SD2_DAT1__SD2_DATA1 is
+totally long-form and pointless. As above, fixed.
+
+Also I noticed that none of the headers have guards on them, some of
+the dtsi/dts don't include them and assume lower levels do. That's not
+a great assumption to make.
+
+This way I don't think I need to reorder the fsl,pins numbering at all
+(although it is driving me nuts), and the macro can take into account
+the weird order by normalizing it in the macro definition (as above).
+
+I'll be throwing a patch for this out on the weekend. Can we wait on
+the docs until we can define this properly? I want to ask for
+'approval' first if only because rehashing all these files and
+cross-checking preprocessed output (BTW.. I'll make a patch for
+keeping pre-processed dts output) to compare results will take a VERY
+long time for all these boards, and I won't submit a patch until it's
+done.. maybe I'll start with Babbage since nobody uses it, and then
+commit the Efika MX tree (finally) with the rehash then move to MX53
+(I only have an old Quickstart) and MX6 for Cubox, Utilite, maybe
+SabreSD and SabreLite (== Steev will you be able to test this? Which
+i.MX boards do you have floating at your place?)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
