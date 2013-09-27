@@ -1,125 +1,75 @@
-From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Subject: Re: device tree binding documentation outdated
-Date: Fri, 27 Sep 2013 13:33:35 -0500
-Message-ID: <CAHCPf3sC7bY=p4vpBQFpRUmyPspT_PVjx0rH9cm1ov=SqkO+Vg@mail.gmail.com>
-References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
-	<CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
-	<20130926205906.GT12758@n2100.arm.linux.org.uk>
-	<CAOMZO5Dj7o3qBH2hzPFWjepgpt5XR5qKmQorKS6jH_7=gnY5cg@mail.gmail.com>
-	<20130927121357.GY12758@n2100.arm.linux.org.uk>
-	<20130927132601.GL25146@S2101-09.ap.freescale.net>
-	<20130927151900.GA12758@n2100.arm.linux.org.uk>
-	<CAHCPf3t8=mJn-RCz3C1cY6zqsH9ds8UANKpKx9ZpwPM6WjJt3g@mail.gmail.com>
-	<20130927174916.GD12758@n2100.arm.linux.org.uk>
+From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC v2] gpio/omap: auto-setup a GPIO when used as an IRQ
+Date: Sat, 28 Sep 2013 00:16:20 +0530
+Message-ID: <5245D27C.8080901@ti.com>
+References: <1380009480-4975-1-git-send-email-javier.martinez@collabora.co.uk> <5244C0C4.2030004@wwwdotorg.org> <52453545.3090504@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130927174916.GD12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <52453545.3090504-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jgchunter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, r.sricharan-l0cyMroinI0@public.gmane.org, holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, joelf-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 12:49 PM, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> On Fri, Sep 27, 2013 at 11:52:52AM -0500, Matt Sealey wrote:
->> Russell,
+On 9/27/2013 1:05 PM, Javier Martinez Canillas wrote:
+> On 09/27/2013 01:18 AM, Stephen Warren wrote:
+>> On 09/24/2013 01:58 AM, Javier Martinez Canillas wrote:
+>>> The OMAP GPIO controller HW requires a pin to be configured in GPIO
+>>> input mode in order to operate as an interrupt input. Since drivers
+>>> should not be aware of whether an interrupt pin is also a GPIO or not,
+>>> the HW should be fully configured/enabled as an IRQ if a driver solely
+>>> uses IRQ APIs such as request_irq(), and never calls any GPIO-related
+>>> APIs. As such, add the missing HW setup to the OMAP GPIO controller's
+>>> irq_chip driver.
+>>>
+>>> Since this bypasses the GPIO subsystem we have to ensure that another
+>>> caller won't be able to request the same GPIO pin that is used as an
+>>> IRQ and set its direction as output. Requesting the GPIO and setting
+>>> its direction as input is allowed though.
+>> FWIW, the concept of this patch,
+>> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 >>
->> There is a chicken bit in the IOMUXC GPR1 (IOMUXC+0x4 bit 21, it's on
->> page 1927 of the i.MX6DQRM Rev 1 04/2013) which turns on or off the
->> ENET_REF_CLK loopback. You could need to clear it to make the pad an
->> input to the i.MX6 rather than an output to the PHY.. while it may
->> seem like this removes the need for the SION bit in the pin you want,
->> that's actually also required otherwise the pad mux latch 'sees' the
->> data but the input latch behind it doesn't.
+>> I didn't review the code; just skimmed it to see where the new
+>> functionality was implemented.
 >>
->> There is a great diagram somewhere in the manual (Figure 28-1, right
->> at the top of the GPIO docs) - SION *forces* data (it's the input_on
->> signal in the diagram IIRC) to the gpio data register behind the
->> IOMUX, but the logic behind every muxed pad is almost the same across
->> the SoC.
+> Thanks Stephen,
 >
-> The manual which Fabio pointed me at (iMX 6Solo/6DualLite - IMX6SDLRM.pdf)
-> doesn't correspond - figure 28-1 is something entirely different.
-
-I use the Quad/Dual (not Lite) manual for reference, most of it is
-identical.. I keep forgetting there is another one, sorry.
-
-It's at the top of the GPIO section, though (figure 29-1 in your manual).
-
-> Okay, but from what I'm working from (which works) the order is:
+> I split the changes as suggested by Tony and posted as a patch-set and not an
+> RFC anymore:
 >
-> - Set IOMUXC GPR1 bit 21.
-
-Just to clarify: set or clear? It should be clear if the PHY provides
-the clock to the MAC, and set if the MAC provides the clock to the
-PHY. There can be only one, Highlander!
-
-> - Set ipg/ahb ethernet clock to 50MHz
-
-Hmm.. this might be a touch low, but it's not the issue here. The way
-I recall this working, the IP has a clock (IPG, AHB as above) and
-there is a MAC clock too which you're generating from DIV_SELECT in
-the ENET_PLL. They don't have to be the same..
-
-> - IOMUX settings applied, including setting the reference clock SION bit
-
-Which definitely implies the clock is input to the MAC...
-
-> - Reset lowered, wait 2ms, reset raised
-> - imx6_init_fec(fec_data_rgmii) called
+> [PATCH 1/2] gpio/omap: maintain GPIO and IRQ usage separately [1]
+> [PATCH 2/2] gpio/omap: auto-setup a GPIO when used as an IRQ [2]
 >
-> After that is the time that the phy is configured to supply the 125MHz
-> reference clock into the IMX6.
+> Linus,
 >
-> That order seems to be happening with my 3.12-rc1 kernel, although a
-> little more spread out.
+> Could you please add Stephen Acked-by when taking the patches and also George
+> Cherian Tested-by that sent for this RFC. George it would be great if you can
+> also comment on which OMAP platform you had tested.
 
-If the GPR1 bit isn't set right what you're getting is different
-clocks when they should be sharing the same one... extra edges from
-the internal ref clock (from ENET_PLL by default) might add a couple
-extra bytes here and there if the PHY sends on edges it's clock and
-the MAC receives on edges on the internal clock.
+Tested on dra7xx/evm with GPIO interrupt for pcf gpio expander.
+Tested-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+>
+> I cc'ed Aaro Koskinen and Paul Walmsley now which seems to have OMAP1 platforms
+> to test. Could you please test [1] and [2] on a OMAP1 board? These patches
+> solves a long standing issue we have on OMAP2+ when booting with DT and it would
+> be great if you can check that it does not cause regressions on OMAP1 based boards.
+>
+> Thanks a lot and best regards,
+> Javier
+>
+> [1]: https://patchwork.kernel.org/patch/2937351/
+> [2]: https://patchwork.kernel.org/patch/2937371/
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-In 3.12-ish I see mach-imx/mach-imx6q.c:imx6q_1588_init() is setting
-the bit, which means the reference clock is coming from
-ENET_PLL[DIV_SELECT] and not the pad.
-
-If you set it to 1, it sets pad loopback which means you'd output a
-125MHz clock towards a pad you marked as input to the i.MX6 - the
-IOMUX block will twiddle some internal flops from clock -> output
-block but since it's not hooked to the pad, nothing will come of it.
-But the MAC will use it to latch data over MDIO.
-
-None of the boards in the tree right now seem to use an external PHY
-clock at all, which is why they all work; they provide the PHY clock
-from the i.MX6Q to an RGMII PHY (this is the lowest power way to do
-it!).
-
-This is wrong for you... but I have seen a couple that do it this way.
-There was some terrible confusion with older MX6 tapeouts where this
-bit wasn't documented and using RMII was a complete afterthought...
-the manual reflects it now but I am fairly sure there is a quirk that
-needs addressing.
-
-In theory the i.MX6SL EVK has RMII but I am also fairly sure the
-SoloLite doesn't have the option to use anything but RMII and either
-fortuitous software or chicken-bit-does-nothing-here design is helping
-it out.
-
-I'm gonna go look at the manual some more.. for reference, this is
-also a great design guide - IMX6QD6SDLHDG.pdf (it's on the same site
-as you got the RM). Chapter 12 is comprehensive in it's discussion of
-i.MX6QD[L] and RMII ethernet evil.
-
-Does anyone at Freescale want to donate a SabreSD for Dual or Quad
-(not-lite) and an i.MX6SL EVK this way? I may be able to scrounge up a
-couple CuBox-i units but I think supporting the reference designs is
-worth doing. Also I kind of want/need JTAG access and I am sure
-SolidRun didn't even go so far as putting pads on the PCB...
 
 -- 
-Matt <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+-George
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
