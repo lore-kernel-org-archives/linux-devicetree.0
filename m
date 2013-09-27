@@ -1,7 +1,8 @@
 From: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [RFC v2 PATCH 03/14] iio: st_gyro: Add dt bindings
-Date: Fri, 27 Sep 2013 18:32:07 +0200
-Message-ID: <1380299538-22047-4-git-send-email-l.czerwinski@samsung.com>
+Subject: [RFC v2 PATCH 07/14] iio: st_accel: Add event subsystem to st_accel
+ driver
+Date: Fri, 27 Sep 2013 18:32:11 +0200
+Message-ID: <1380299538-22047-8-git-send-email-l.czerwinski@samsung.com>
 References: <1380299538-22047-1-git-send-email-l.czerwinski@samsung.com>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-reply-to: <1380299538-22047-1-git-send-email-l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
@@ -10,158 +11,185 @@ To: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org
 Cc: denis.ciocca-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add OF support for the st_gyro.
+This patch adds event support for iio st_accel driver.
 
 Signed-off-by: Lukasz Czerwinski <l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/iio/gyro/st_gyro.h      |   15 +++++++--------
- drivers/iio/gyro/st_gyro_core.c |    8 +++++---
- drivers/iio/gyro/st_gyro_i2c.c  |   18 ++++++++++++++++--
- drivers/iio/gyro/st_gyro_spi.c  |   18 ++++++++++++++++--
- 4 files changed, 44 insertions(+), 15 deletions(-)
+ drivers/iio/accel/st_accel_core.c |   96 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 90 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iio/gyro/st_gyro.h b/drivers/iio/gyro/st_gyro.h
-index f8f2bf8..81e5ec3 100644
---- a/drivers/iio/gyro/st_gyro.h
-+++ b/drivers/iio/gyro/st_gyro.h
-@@ -15,24 +15,23 @@
- #include <linux/iio/common/st_sensors.h>
+diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+index 57e63bf..ec5f7ed 100644
+--- a/drivers/iio/accel/st_accel_core.c
++++ b/drivers/iio/accel/st_accel_core.c
+@@ -19,6 +19,7 @@
+ #include <linux/gpio.h>
+ #include <linux/irq.h>
+ #include <linux/iio/iio.h>
++#include <linux/iio/events.h>
+ #include <linux/iio/sysfs.h>
+ #include <linux/iio/trigger.h>
+ #include <linux/iio/buffer.h>
+@@ -68,6 +69,20 @@
+ #define ST_ACCEL_1_DRDY_IRQ_INT1_MASK		0x10
+ #define ST_ACCEL_1_DRDY_IRQ_INT2_MASK		0x08
+ #define ST_ACCEL_1_MULTIREAD_BIT		true
++#define ST_ACCEL_1_EVENT_IRQ_ADDR		0x22
++#define ST_ACCEL_1_EVENT_IRQ_MASK		0x40
++#define ST_ACCEL_1_EVENT_CTRL_REG		0x30
++#define ST_ACCEL_1_EVENT_CTRL_MASK		0xc0
++#define ST_ACCEL_1_EVENT_CTRL_DEFAULT_VAL	0x01
++#define ST_ACCEL_1_THS_REG			0x32
++#define ST_ACCEL_1_EVENT_STATUS_REG		0x31
++#define ST_ACCEL_1_EVENT_STATUS_REG_MASK	0x7f
++#define ST_ACCEL_1_INT1_XL			0
++#define ST_ACCEL_1_INT1_XH			1
++#define ST_ACCEL_1_INT1_YL			2
++#define ST_ACCEL_1_INT1_YH			3
++#define ST_ACCEL_1_INT1_ZL			4
++#define ST_ACCEL_1_INT1_ZH			5
  
- #define L3G4200D_GYRO_DEV_NAME		"l3g4200d"
--#define LSM330D_GYRO_DEV_NAME		"lsm330d_gyro"
--#define LSM330DL_GYRO_DEV_NAME		"lsm330dl_gyro"
--#define LSM330DLC_GYRO_DEV_NAME		"lsm330dlc_gyro"
-+#define LSM330D_GYRO_DEV_NAME		"lsm330d-gyro"
-+#define LSM330DL_GYRO_DEV_NAME		"lsm330dl-gyro"
-+#define LSM330DLC_GYRO_DEV_NAME		"lsm330dlc-gyro"
- #define L3GD20_GYRO_DEV_NAME		"l3gd20"
- #define L3GD20H_GYRO_DEV_NAME		"l3gd20h"
--#define L3G4IS_GYRO_DEV_NAME		"l3g4is_ui"
--#define LSM330_GYRO_DEV_NAME		"lsm330_gyro"
-+#define L3G4IS_GYRO_DEV_NAME		"l3g4is-ui"
-+#define LSM330_GYRO_DEV_NAME		"lsm330-gyro"
+ /* CUSTOM VALUES FOR SENSOR 2 */
+ #define ST_ACCEL_2_WAI_EXP			0x32
+@@ -129,6 +144,19 @@
+ #define ST_ACCEL_3_IG1_EN_MASK			0x08
+ #define ST_ACCEL_3_MULTIREAD_BIT		false
  
- /**
-  * struct st_sensors_platform_data - gyro platform data
-  * @drdy_int_pin: DRDY on gyros is available only on INT2 pin.
-  */
--static const struct st_sensors_platform_data gyro_pdata = {
-+static const struct st_sensors_platform_data default_gyro_pdata = {
- 	.drdy_int_pin = 2,
++#define ST_SENSORS_LSM_ACCEL_EVENT(mod, dir, bit_pos, ths_reg) \
++{ \
++	.bit = bit_pos,\
++	.chan_type = IIO_ACCEL, \
++	.modifier = mod, \
++	.event_type = IIO_EV_TYPE_THRESH, \
++	.direction = dir, \
++	.event_ths_reg = { \
++		.addr = ths_reg, \
++		.mask = 0x7f, \
++	}, \
++}
++
+ static const struct iio_chan_spec st_accel_12bit_channels[] = {
+ 	ST_SENSORS_LSM_CHANNELS(IIO_ACCEL,
+ 			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
+@@ -230,6 +258,46 @@ static const struct st_sensors st_accel_sensors[] = {
+ 			.mask_int1 = ST_ACCEL_1_DRDY_IRQ_INT1_MASK,
+ 			.mask_int2 = ST_ACCEL_1_DRDY_IRQ_INT2_MASK,
+ 		},
++		.event_irq = {
++			.addr = ST_ACCEL_1_EVENT_IRQ_ADDR,
++			.mask = ST_ACCEL_1_EVENT_IRQ_MASK,
++			.event_count = 6,
++			.ctrl_reg = {
++				.addr = ST_ACCEL_1_EVENT_CTRL_REG,
++				.mask = ST_ACCEL_1_EVENT_CTRL_MASK,
++				.val = ST_ACCEL_1_EVENT_CTRL_DEFAULT_VAL,
++			},
++			.status_reg = {
++				.addr = ST_ACCEL_1_EVENT_STATUS_REG,
++				.mask = ST_ACCEL_1_EVENT_STATUS_REG_MASK,
++			},
++			.events = {
++				ST_SENSORS_LSM_ACCEL_EVENT(IIO_MOD_X,
++						IIO_EV_DIR_FALLING,
++						ST_ACCEL_1_INT1_XL,
++						ST_ACCEL_1_THS_REG),
++				ST_SENSORS_LSM_ACCEL_EVENT(IIO_MOD_X,
++						IIO_EV_DIR_RISING,
++						ST_ACCEL_1_INT1_XH,
++						ST_ACCEL_1_THS_REG),
++				ST_SENSORS_LSM_ACCEL_EVENT(IIO_MOD_Y,
++						IIO_EV_DIR_FALLING,
++						ST_ACCEL_1_INT1_YL,
++						ST_ACCEL_1_THS_REG),
++				ST_SENSORS_LSM_ACCEL_EVENT(IIO_MOD_Y,
++						IIO_EV_DIR_RISING,
++						ST_ACCEL_1_INT1_YH,
++						ST_ACCEL_1_THS_REG),
++				ST_SENSORS_LSM_ACCEL_EVENT(IIO_MOD_Z,
++						IIO_EV_DIR_FALLING,
++						ST_ACCEL_1_INT1_ZL,
++						ST_ACCEL_1_THS_REG),
++				ST_SENSORS_LSM_ACCEL_EVENT(IIO_MOD_Z,
++						IIO_EV_DIR_RISING,
++						ST_ACCEL_1_INT1_ZH,
++						ST_ACCEL_1_THS_REG),
++			},
++		},
+ 		.multi_read_bit = ST_ACCEL_1_MULTIREAD_BIT,
+ 		.bootime = 2,
+ 	},
+@@ -437,6 +505,10 @@ static const struct iio_info accel_info = {
+ 	.attrs = &st_accel_attribute_group,
+ 	.read_raw = &st_accel_read_raw,
+ 	.write_raw = &st_accel_write_raw,
++	.read_event_value = &st_sensors_read_event_value,
++	.write_event_value = &st_sensors_write_event_value,
++	.read_event_config = &st_sensors_read_event_config,
++	.write_event_config = &st_sensors_write_event_config,
  };
  
--int st_gyro_common_probe(struct iio_dev *indio_dev,
--					struct st_sensors_platform_data *pdata);
-+int st_gyro_common_probe(struct iio_dev *indio_dev);
- void st_gyro_common_remove(struct iio_dev *indio_dev);
- 
- #ifdef CONFIG_IIO_BUFFER
-diff --git a/drivers/iio/gyro/st_gyro_core.c b/drivers/iio/gyro/st_gyro_core.c
-index d53d91a..42f45af 100644
---- a/drivers/iio/gyro/st_gyro_core.c
-+++ b/drivers/iio/gyro/st_gyro_core.c
-@@ -302,8 +302,7 @@ static const struct iio_trigger_ops st_gyro_trigger_ops = {
- #define ST_GYRO_TRIGGER_OPS NULL
- #endif
- 
--int st_gyro_common_probe(struct iio_dev *indio_dev,
--					struct st_sensors_platform_data *pdata)
-+int st_gyro_common_probe(struct iio_dev *indio_dev)
+ #ifdef CONFIG_IIO_TRIGGER
+@@ -452,7 +524,6 @@ static const struct iio_trigger_ops st_accel_trigger_ops = {
+ int st_accel_common_probe(struct iio_dev *indio_dev)
  {
- 	struct st_sensor_data *gdata = iio_priv(indio_dev);
- 	int irq = gdata->get_irq_data_ready(indio_dev);
-@@ -326,7 +325,10 @@ int st_gyro_common_probe(struct iio_dev *indio_dev,
- 						&gdata->sensor->fs.fs_avl[0];
- 	gdata->odr = gdata->sensor->odr.odr_avl[0].hz;
+ 	struct st_sensor_data *adata = iio_priv(indio_dev);
+-	int irq = adata->get_irq_data_ready(indio_dev);
+ 	int err;
  
--	err = st_sensors_init_sensor(indio_dev, pdata);
-+	if (!gdata->dev->platform_data && !gdata->dev->of_node)
-+		gdata->drdy_int_pin = default_gyro_pdata.drdy_int_pin;
-+
-+	err = st_sensors_init_sensor(indio_dev);
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+@@ -483,13 +554,24 @@ int st_accel_common_probe(struct iio_dev *indio_dev)
  	if (err < 0)
  		return err;
  
-diff --git a/drivers/iio/gyro/st_gyro_i2c.c b/drivers/iio/gyro/st_gyro_i2c.c
-index 16b8b8d..9c4245b 100644
---- a/drivers/iio/gyro/st_gyro_i2c.c
-+++ b/drivers/iio/gyro/st_gyro_i2c.c
-@@ -34,8 +34,8 @@ static int st_gyro_i2c_probe(struct i2c_client *client,
+-	if (irq > 0) {
++	if (adata->get_irq_data_ready(indio_dev) > 0) {
+ 		err = st_sensors_allocate_trigger(indio_dev,
+ 						 ST_ACCEL_TRIGGER_OPS);
+ 		if (err < 0)
+ 			goto st_accel_probe_trigger_error;
+ 	}
  
- 	st_sensors_i2c_configure(indio_dev, client, gdata);
- 
--	err = st_gyro_common_probe(indio_dev,
--				(struct st_sensors_platform_data *)&gyro_pdata);
-+	err = st_gyro_common_probe(indio_dev);
++	if (adata->get_irq_event(indio_dev) > 0) {
++		adata->events_enabled = true;
++		err = st_sensors_request_event_irq(indio_dev);
++		if (err < 0)
++			goto st_accel_request_irq_event_error;
 +
- 	if (err < 0)
- 		return err;
- 
-@@ -62,10 +62,24 @@ static const struct i2c_device_id st_gyro_id_table[] = {
- };
- MODULE_DEVICE_TABLE(i2c, st_gyro_id_table);
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id st_gyro_dt_match[] = {
-+	{ .compatible = "st,l3g4200d" },
-+	{ .compatible = "st,lsm330d-gyro" },
-+	{ .compatible = "st,lsm330dl-gyro" },
-+	{ .compatible = "st,lsm330dlc-gyro" },
-+	{ .compatible = "st,l3gd20" },
-+	{ .compatible = "st,l3gd20h" },
-+	{ .compatible = "st,l3g4is-ui" },
-+	{ .compatible = "st,lsm330-gyro" },
-+};
-+#endif
++		err = st_sensors_enable_events(indio_dev);
++		if (err < 0)
++			goto st_accel_enable_events_error;
++	}
 +
- static struct i2c_driver st_gyro_driver = {
- 	.driver = {
- 		.owner = THIS_MODULE,
- 		.name = "st-gyro-i2c",
-+		.of_match_table = of_match_ptr(st_gyro_dt_match),
- 	},
- 	.probe = st_gyro_i2c_probe,
- 	.remove = st_gyro_i2c_remove,
-diff --git a/drivers/iio/gyro/st_gyro_spi.c b/drivers/iio/gyro/st_gyro_spi.c
-index 94763e2..1287af3 100644
---- a/drivers/iio/gyro/st_gyro_spi.c
-+++ b/drivers/iio/gyro/st_gyro_spi.c
-@@ -33,8 +33,8 @@ static int st_gyro_spi_probe(struct spi_device *spi)
+ 	err = iio_device_register(indio_dev);
+ 	if (err)
+ 		goto st_accel_device_register_error;
+@@ -497,9 +579,11 @@ int st_accel_common_probe(struct iio_dev *indio_dev)
+ 	return 0;
  
- 	st_sensors_spi_configure(indio_dev, spi, gdata);
+ st_accel_device_register_error:
+-	if (irq > 0)
++st_accel_enable_events_error:
++	if (adata->get_irq_data_ready(indio_dev) > 0)
+ 		st_sensors_deallocate_trigger(indio_dev);
+ st_accel_probe_trigger_error:
++st_accel_request_irq_event_error:
+ 	st_accel_deallocate_ring(indio_dev);
  
--	err = st_gyro_common_probe(indio_dev,
--				(struct st_sensors_platform_data *)&gyro_pdata);
-+	err = st_gyro_common_probe(indio_dev);
-+
- 	if (err < 0)
- 		return err;
+ 	return err;
+@@ -511,10 +595,10 @@ void st_accel_common_remove(struct iio_dev *indio_dev)
+ 	struct st_sensor_data *adata = iio_priv(indio_dev);
  
-@@ -61,10 +61,24 @@ static const struct spi_device_id st_gyro_id_table[] = {
- };
- MODULE_DEVICE_TABLE(spi, st_gyro_id_table);
+ 	iio_device_unregister(indio_dev);
+-	if (adata->get_irq_data_ready(indio_dev) > 0)
++	if (adata->get_irq_data_ready(indio_dev) > 0) {
+ 		st_sensors_deallocate_trigger(indio_dev);
+-
+-	st_accel_deallocate_ring(indio_dev);
++		st_accel_deallocate_ring(indio_dev);
++	}
+ }
+ EXPORT_SYMBOL(st_accel_common_remove);
  
-+#ifdef CONFIG_OF
-+static struct of_device_id st_gyro_dt_match[] = {
-+	{ .compatible = "st,l3g4200d" },
-+	{ .compatible = "st,lsm330d-gyro" },
-+	{ .compatible = "st,lsm330dl-gyro" },
-+	{ .compatible = "st,lsm330dlc-gyro" },
-+	{ .compatible = "st,l3gd20" },
-+	{ .compatible = "st,l3gd20h" },
-+	{ .compatible = "st,l3g4is-ui" },
-+	{ .compatible = "st,lsm330-gyro" },
-+};
-+#endif
-+
- static struct spi_driver st_gyro_driver = {
- 	.driver = {
- 		.owner = THIS_MODULE,
- 		.name = "st-gyro-spi",
-+		.of_match_table = of_match_ptr(st_gyro_dt_match),
- 	},
- 	.probe = st_gyro_spi_probe,
- 	.remove = st_gyro_spi_remove,
 -- 
 1.7.9.5
