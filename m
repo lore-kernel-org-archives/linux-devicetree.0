@@ -1,25 +1,44 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: new platform for Energy Micro's EFM32
-	Cortex-M3 SoCs
-Date: Fri, 27 Sep 2013 22:55:23 +0100
-Message-ID: <20130927215523.GO12758@n2100.arm.linux.org.uk>
-References: <1379447884-14025-1-git-send-email-u.kleine-koenig@pengutronix.de> <201309172245.25367.arnd@arndb.de> <20130926094251.GK16106@pengutronix.de> <201309272344.01386.arnd@arndb.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [GIT PULL] Devicetree fixes for 3.12
+Date: Fri, 27 Sep 2013 17:02:35 -0500
+Message-ID: <CAL_JsqJuer_xZZWR4GGYTHng51_gL3mqiD+pv_eb7=emPGFe1A@mail.gmail.com>
+References: <52425041.6030609@gmail.com>
+	<CA+55aFxPHaTxixmmMZfKF-RzW4dfz=6o_1E5XR=GJ0qdSVNaxA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201309272344.01386.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <CA+55aFxPHaTxixmmMZfKF-RzW4dfz=6o_1E5XR=GJ0qdSVNaxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 11:44:01PM +0200, Arnd Bergmann wrote:
-> * Do you need any other patches (unrelated to EFM32) to run NOMMU on a
-> recent kernel? When I last tried, I could not get any NOMMU build to work
-> at all.
+On Tue, Sep 24, 2013 at 10:14 PM, Linus Torvalds
+<torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> wrote:
+> On Tue, Sep 24, 2013 at 7:53 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>> are available in the git repository at:
+>>
+>>   git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+>
+> Hmm. Did you mean for me to pull the "devicetree-fixes" tag?
 
-My Oki platform builds fine.  The core noMMU stuff seems fine.
+Yes, please.
+
+> If so, please say so very explicitly. I don't want to have to search
+> for these things..
+>
+> IOW, if that's what you meant, that line should have said
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+> tags/devicetree-fixes
+>
+> instead.
+
+That's strange. The tag description was there, but somehow the tag
+name wasn't. Sorry about that.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
