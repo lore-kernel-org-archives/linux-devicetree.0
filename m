@@ -1,53 +1,31 @@
-From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] PCI: imx6: Add support for i.MX6 PCIe controller
-Date: Fri, 27 Sep 2013 11:54:40 +0800
-Message-ID: <52450180.2070807@kosagi.com>
-References: <1379319655-20210-1-git-send-email-xobs@kosagi.com> <1379319655-20210-4-git-send-email-xobs@kosagi.com> <CAJ+vNU32oMZq=jrSCpk_ZjYc08kRBAqhOS8uYfor28gY8WGhnw@mail.gmail.com> <0E83723C55F66F43A6041464FE31119D3F7E6A@039-SN2MPN1-012.039d.mgd.msft.net> <20130927021925.GF25146@S2101-09.ap.freescale.net> <017e01cebb33$44fa65b0$ceef3110$%han@samsung.com>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 06/21] arc: remove unnecessary prom.h includes
+Date: Fri, 27 Sep 2013 04:37:12 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA2307514EA7C@IN01WEMBXA.internal.synopsys.com>
+References: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
+ <1380221456-11192-7-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <017e01cebb33$44fa65b0$ceef3110$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Shawn Guo' <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Zhu Richard-R65037' <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, 'Tim Harvey' <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Sascha Hauer' <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/9/13 11:40 AM, Jingoo Han wrote:
-> On Friday, September 27, 2013 11:19 AM, Shawn Guo wrote:
->> On Fri, Sep 27, 2013 at 01:38:39AM +0000, Zhu Richard-R65037 wrote:
->>> Hi Tim:
->>> Thanks for your tests.
->>> Yes, it is. There are some problems when the PCIe switch is used
->>> on the 3.1x kernel at my side too,
->> although the PCIe switch
->>> is ok on FSL imx_3.0.35 kernels.
->>> I'm debugging this issue now, and would summit the patches asap.
->>>
->>  From what I read, it seems Sean's series does not support PCIe switch.
->> At least, he hasn't got any device to test it.  And there is some
->> problem with PCIe switch running the latest kernel, which might not be
->> related to the controller driver.
->>
->> I suggest we ask Bjorn to merge the v7 I sent yesterday, so that people
->> can have a same base to work on, and add PCIe switch support with
->> incremental patches.   Does that sound good to you, Tim?
->>
-> Hi Shawn Guo,
+On 09/27/2013 12:21 AM, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 >
-> I agree with your suggestion. :-)
-> The PCIe switch support patches can be added later, after the v7 patch for
-> i.MX6 PCIe controller driver is merged.
+> Remove unnecessary prom.h includes in preparation to remove prom.h.
 >
-> Also, if the PCIe switch support patches modify the synopsys designware PCIe
-> driver (pcie-designware.c), it should be confirmed by other related people.
->
-Correct.  My series doesn't support PCIe switches mostly because I don't 
-have one to test with.  It would be interesting to see if PCIe switches 
-work with other Designware drivers.
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
----
-Sean
+Acked-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+
+Thx for the continued cleanup.
+-Vineet
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
