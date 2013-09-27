@@ -1,80 +1,51 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM i.MX53: dts: Add TVE to i.MX53-QSB device tree
-Date: Fri, 27 Sep 2013 09:16:44 +0800
-Message-ID: <20130927011643.GB25146@S2101-09.ap.freescale.net>
-References: <1380192374-9531-1-git-send-email-p.zabel@pengutronix.de>
- <1380192374-9531-2-git-send-email-p.zabel@pengutronix.de>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [dtc PATCH V2] Warn on node name unit-address presence/absence
+ mismatch
+Date: Fri, 27 Sep 2013 11:30:38 +1000
+Message-ID: <1380245438.28561.86.camel@pasglop>
+References: <1379613263-32080-1-git-send-email-swarren@wwwdotorg.org>
+	 <3D2FE31C-A6BB-4F70-9B3B-C55012CB56B3@codeaurora.org>
+	 <5244BF7A.4000100@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1380192374-9531-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <5244BF7A.4000100-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2013 at 12:46:14PM +0200, Philipp Zabel wrote:
-> This patch enables the TVE which is driving the VGA connector on i.MX53-QSB.
+On Thu, 2013-09-26 at 17:12 -0600, Stephen Warren wrote:
+> Well, ePAPR seems pretty specific that unit address and reg are
+> related,
+> but says nothing about ranges in the section on node naming, nor about
+> node naming in the section about ranges.
 > 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx53-qsb.dts | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx53-qsb.dts b/arch/arm/boot/dts/imx53-qsb.dts
-> index cf1aef7..3bbedf7 100644
-> --- a/arch/arm/boot/dts/imx53-qsb.dts
-> +++ b/arch/arm/boot/dts/imx53-qsb.dts
-> @@ -173,6 +173,15 @@ memgpu: /memreserve/ 0xb0000000 0x04000000;
->  		};
->  	};
->  
-> +	tve {
-> +		pinctrl_vga_sync_1: vgasync-grp1 {
-> +			fsl,pins = <
-> +				/* VGA_HSYNC, VSYNC with max drive strength */
-> +				MX53_PAD_EIM_OE__IPU_DI1_PIN7 0xe6
-> +				MX53_PAD_EIM_RW__IPU_DI1_PIN8 0xe6
-> +			>;
-> +		};
-> +	};
->  };
->  
->  &uart1 {
-> @@ -280,8 +289,8 @@ memgpu: /memreserve/ 0xb0000000 0x04000000;
->  			};
->  
->  			ldo8_reg: ldo8 {
-> -				regulator-min-microvolt = <1200000>;
-> -				regulator-max-microvolt = <3600000>;
-> +				regulator-min-microvolt = <2750000>;
-> +				regulator-max-microvolt = <2750000>;
+> I'd claim that the existing PPC trees are nonconforming, and should be
+> fixed too:-)
 
-Why this change?
+This is tricky, we should probably fix ePAPR here.
 
-Shawn
+If you have a "soc" bus covering a given range of addresses which it
+forwards to its children devices but doesn't have per-se its own
+registers in that area, then it wouldn't have a "reg" property. I would
+thus argue that in the absence of a "reg" property, if a "ranges" one is
+present, the "parent address" entry in there is an acceptable substitute
+for the "reg" property as far as unit addresses are concerned.
 
->  				regulator-always-on;
->  			};
->  
-> @@ -318,6 +327,13 @@ memgpu: /memreserve/ 0xb0000000 0x04000000;
->  	status = "okay";
->  };
->  
-> +&tve {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_vga_sync_1>;
-> +	dac-supply = <&ldo7_reg>;
-> +	status = "okay";
-> +};
-> +
->  &usbh1 {
->  	vbus-supply = <&reg_usb_vbus>;
->  	phy_type = "utmi";
-> -- 
-> 1.8.4.rc3
-> 
+Also don't forget that in real OFW land, the unit address is something
+that's somewhat bus specific ... for example, PCI uses "dev,fn" rather
+than the full 96-bit number of the "reg" entry :-)
+
+Another option which would more strictly conform to ePAPR and in fact to
+of1275 would be to require such bus nodes to have a "reg" property with
+the address value set to the beginning of the range and the size value
+set to 0 :-)
+
+Cheers,
+Ben
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
