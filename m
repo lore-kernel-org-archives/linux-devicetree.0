@@ -1,106 +1,171 @@
-From: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Subject: Re: device tree binding documentation outdated
-Date: Fri, 27 Sep 2013 10:40:03 -0500
-Message-ID: <CAHCPf3tZCTp_-W-BDjCg3=iUfP1GYJYQ+WrV_y-2K98zgg-odA@mail.gmail.com>
-References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
-	<CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
-	<CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com>
-	<20130927025116.GG25146@S2101-09.ap.freescale.net>
-	<20130927084504.GW12758@n2100.arm.linux.org.uk>
-	<20130927122814.GK25146@S2101-09.ap.freescale.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: "memory" binding issues
+Date: Fri, 27 Sep 2013 10:42:50 -0500
+Message-ID: <CD611795-B45E-4E37-B387-76B5C855DEEA@codeaurora.org>
+References: <1379300274.4098.77.camel@pasglop> <20130918025714.A69D8C42C8F@trevor.secretlab.ca> <1379492496.6148.35.camel@pasglop>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130927122814.GK25146-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <1379492496.6148.35.camel@pasglop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Steev Klimaszewski <threeway-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Shawn, Russell,
 
-Okay I have a proposal that might make this much easier. Why not
-redefine the preprocessor macros as follows (one used as an example)
+On Sep 18, 2013, at 3:21 AM, Benjamin Herrenschmidt wrote:
 
-/* MUX_CTL definitions */
-#define SION    0x10
-#define ALT0    0x0
-#define ALT5   0x5
-#define GPIO ALT5
+> On Tue, 2013-09-17 at 21:57 -0500, Grant Likely wrote:
+> 
+>>> - It provides no indication of what a given region is used for (or used
+>>> by). In the example, "display_region" is a label (thus information that
+>>> is lost) and unless it's referenced by another node there is no good way
+>>> to know what this region is about which is quite annoying.
+>> 
+>> Does this actually matter? In most cases the regions are completely
+>> anonymous until referenced by a specific device and by default the
+>> kernel should not use until it knows what the region is for.
+> 
+> First it's handy for the developer to know for
+> debug/diagnostic/you-name-it purposes. You don't always know what the
+> heck the firmware is doing and there are some cases where such regions
+> exist independently of any specific device.
+> 
+> The ability of the node of the driver to have a phandle pointing to a is
+> indeed a nice feature and that's a good point in favor of making them
+> nodes. But I would be against *requiring* it.
+> 
+> I might have some architecture code that knows that this region is for
+> use by some internal DMA translation cache or god knows what without
+> having a clear device node as the "owner" of the region, there are going
+> to be a few special cases like that and we still want to be able to
+> identify it.
+> 
+> So I would definitely want them named. Guess what ? They are all
+> children of /reserved-memory right ? So their individual name doesn't
+> matter one bit, thus the node name can perfectly well serve that
+> purpose.
+> 
+>> We can however add properties to give the kernel hints on the usage. For
+>> instance, if a regions isn't in use at boot time, then it would be fine
+>> for the kernel to use it for movable pages up until the time a device
+>> asks for the region (ie. CMA regions can be used this way).
+> 
+> Let's not get into something overly Linux-centric though...
+> 
+>>> - The "memory-region" property is a phandle to a "reserved-memory"
+>>> region, this is not intuitive. If anything, the property should have
+>>> been called "reserved-memory-region".
+>> 
+>> Sure. I don't see the problem, but I have no problem changing it if you
+>> feel strongly about it.
+> 
+> Well it all boils down to whether we turn that whole thing into a way to
+> describe arbitrary memory regions (and not just reserved ones), for
+> example, CMA stuff as mentioned above doesn't strictly need to be
+> reserved, in which case, we would call the whole thing /memory-regions
+> and the property could be named the same. In that case we do want a
+> specific property however in each region node to indicate whether it
+> should be strictly reserved or not.
+> 
+> But I would argue against that unless we have a very clear use case,
+> because it's starting to smell a lot like trying to solve world hunger
+> with over engineering :-)
+> 
+>>> - The way the "compatible" property is documented breaks a basic
+>>> premise that the device-tree is a hardware description and not some
+>>> convenient way to pass linux specific kernel parameters accross. It is
+>>> *ok* to pass some linux specific stuff and to make compromise based on
+>>> what a driver generally might expect but the whole business of using
+>>> that to describe what to put in CMA is pushing it pretty far ...
+>> 
+>> I disagree. Originally I had the same reaction, but I've been swayed to
+>> the point of view that setting aside regions is actually a pretty
+>> hardware-centric thing because it describes how the hardware needs to be
+>> used.
+> 
+> I would still not use the "compatible" property for that. Maybe
+> recommended-usage ? Or simply "usage" property with well defined
+> semantics ? "reserved" would be one, "consistent-memory" would be
+> another (not strictly reserved but thrown into the CMA pool at first
+> notice) etc... ?
+> 
+>> I've already used the example of a framebuffer. It may not stricly
+>> be hardware, but it is a description of how the hardware is setup that
+>> the kernel should respect. Similarly, the size and placement of CMA
+>> regions are more than merely a software parameter because they are
+>> defined specifically to support the hardware devices.
+> 
+> Right and the advantage of using a node with a "reg" property here is
+> that a region can actually be made of separate ranges.
+> 
+>>> - The implementation of early_init_dt_scan_reserved_mem() will not work
+>>> on a setup whose /memory node has a unit address (typically /memory@0)
+>> 
+>> Agreed, that should be fixed. It should work regardless of whether or
+>> not the memory node(s) have a unit address.
+>> 
+>>> Now, I'd like to understand why not use the simpler binding originally
+>>> proposed by Jeremy, which had the advantage of proposing a unique name
+>>> per region in the traditional form "vendor,name", which then allows
+>>> drivers to pick up the region directly if they wish to query, remove or
+>>> update it in the tree for example (because they changed the framebuffer
+>>> address for example and want kexec to continue working).
+>> 
+>> Hmmm... I don't follow. How is query/remove/update any more or less
+>> difficult between the two approaches? Updating the reg property should
+>> be doable in-place with both methods, but finding a specific region
+>> associated with a device is explicit in the nodes-and-phandles approach.
+>> (unless the 'name' part of vendor,name is an instance name and the
+>> device node has a property containing the name; ie "acme,framebuffer1",
+>> "acme,framebuffer2", and then in the device node something like:
+>> framebuffer-region = "acme,framebuffer2";)
+>> 
+>>> I don't object to having a node per region, though it seemed unnecessary
+>>> at the time, but in any case, the current binding is crap and need to be
+>>> fixed urgently before its use spreads.
+>> 
+>> It seems to me that the 'top-level' objection is the creation of a new
+>> binding using a node per region. I think it is warrented. If you
+>> disagree strongly then we'll revert the whole series and try again for
+>> v3.13. Otherwise I think the other objections are fixable in this cycle.
+> 
+> No. I don't fundamentally object to using a node per region, it does
+> have some advantages indeed as I have mentioned in a few places.
+> 
+> My main issues are:
+> 
+> - Documentation of the "memory" binding. This is a separate thing that
+> shouldn't have been there and should not document the node without the
+> unit address (it's ok to specify I suppose that it can be ommitted
+> though I don't like it).
+> 
+> - Location. I don't want that under /memory. I have to deal with
+> machines with multiple /memory nodes and regions potentially straddling
+> them.
+> 
+> - The choice of properties for describing, naming and defining their
+> usage. I think we can come to an agreement here.
+> 
+> In fact the use of a node per region is the *least* of my worries :-)
 
-#define SD2_DAT1_MUX 0x04c
-#define SD2_DAT1_INP 0x000
-#define SD2_DAT1_CTL 0x360
-#define SD2_DAT1__SD2_DATA1 0x0 ALT0
-#define SD2_DAT1__SD2_DATA1_PAD 0x1b0b0
-#define SD2_DAT1__GPIO1_IO14 0x0 ALT5
-#define SD2_DAT1__GPIO1_IO14_PAD 0x1b0b0
 
-#define IOMUX_R(name, function, mux_r, inp_r, pad_r, mux_v, inp_v, pad_v) \
-                         mux_r pad_r inp_r mux_v inp_v pad_v
+So where have we gotten on this?
 
-#define IOMUX_V(name, function, mux_v, inp_v, pad_v) \
-                        name##_MUX name##_CTL name##_INP mux_v inp_v pad_v
+It seems we are in agreement that:
+1. reserve memory should be probably be described in nodes
+2. it should be pulled out of the memory node and put at root level
+3. Use reg to describe the memory regions for a given node
 
-#define IOMUX_P(name, function, pad_v) \
-                        name##_MUX name##_CTL name##_INP
-name##__##function pad_v
+Now to figure out about how to convey usage information for the region and possibly driver association.  I agree with Ben that there are probably cases that an associated device node may not exist so that shouldn't be a hard requirement.
 
-#define IOMUX_F(name, function)  \
-                        name##_MUX name##_CTL name##_INP
-name##__##function name##_##function##_PAD
+- k
 
-Then you can have, in your lists;
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-fsl,pins = <  IOMUX_R(SD2_DAT1, SD2_DATA1, 0x04c, 0x000, 0x360, 0x0,
-0x0, 0x1b0b0)    // long form, define pad name, function name,
-register offsets, data. function is ignored.
-          //         IOMUX_V(SD2_DAT1, SD2_GPIO1_IO14, 0x0, 0x15,
-0x1b0b0)                          // short form, define pad name,
-function name, data. function is ignored. We didn't use a prebaked ALT
-define since we want to set the SION bit.
-         //         IOMUX_P(SD2_DAT1, SD2_GPIO1_IO14, 0x1b0b0)
-                               // short form, define pad name,
-function name, pad settings.
-         //         IOMUX_F(SD2_DAT1, SD2_DATA1)
-                                              // beginner form, use a
-prebaked value for all of the above. function is used to generate the
-above.
-
-
-Which gives the best of all worlds - you know the pad name, and
-function type at every step. At the point someone is twiddling with
-pad settings that aren't preprovided (or the defaults..) I do not
-believe that it is worthwhile to "hide" the three data values. For the
-uses where a custom board pin name wants to be used, SD2_DAT1,
-SABRESD_WIFI_RST can be used in the IOMUX_V definition to give it some
-meaning, and it will be ignored. In the worst case boards get lists of
-definitions at the top of their .dts which define pin/pad names and
-functions.
-
-I did figure out that the headers are included explicitly by the
-files, so in fact MX6QDL_PAD_BLAH_PREFIX_SD2_DAT1__SD2_DATA1 is
-totally long-form and pointless. As above, fixed.
-
-Also I noticed that none of the headers have guards on them, some of
-the dtsi/dts don't include them and assume lower levels do. That's not
-a great assumption to make.
-
-This way I don't think I need to reorder the fsl,pins numbering at all
-(although it is driving me nuts), and the macro can take into account
-the weird order by normalizing it in the macro definition (as above).
-
-I'll be throwing a patch for this out on the weekend. Can we wait on
-the docs until we can define this properly? I want to ask for
-'approval' first if only because rehashing all these files and
-cross-checking preprocessed output (BTW.. I'll make a patch for
-keeping pre-processed dts output) to compare results will take a VERY
-long time for all these boards, and I won't submit a patch until it's
-done.. maybe I'll start with Babbage since nobody uses it, and then
-commit the Efika MX tree (finally) with the rehash then move to MX53
-(I only have an old Quickstart) and MX6 for Cubox, Utilite, maybe
-SabreSD and SabreLite (== Steev will you be able to test this? Which
-i.MX boards do you have floating at your place?)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
