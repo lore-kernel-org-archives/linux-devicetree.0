@@ -1,48 +1,56 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 6/6] dts: calxeda: add ARM PSCI binding
-Date: Thu, 26 Sep 2013 21:24:54 -0500
-Message-ID: <1380248694-13388-7-git-send-email-robherring2@gmail.com>
-References: <1380248694-13388-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380248694-13388-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Fri, 27 Sep 2013 10:51:17 +0800
+Message-ID: <20130927025116.GG25146@S2101-09.ap.freescale.net>
+References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
+ <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
+ <CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+On Thu, Sep 26, 2013 at 11:35:43PM +0200, Linus Walleij wrote:
+> On Thu, Sep 26, 2013 at 10:29 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Thu, Sep 26, 2013 at 4:51 PM, Russell King - ARM Linux
+> 
+> >> I mean the stuff which looks like this:
+> >>
+> >> #define MX6QDL_PAD_ENET_MDC__ESAI_TX5_RX0           0x1e8 0x5b8 0x858 0x2 0x0
+> >
+> > Let me try to decode it:
+> >
+> > 0x1e8: Offset of IOMUXC_SW_MUX_CTL_PAD_ENET_MDC register
+> >
+> > 0x5b8: Offset of IOMUXC_SW_PAD_CTL_PAD_ENET_MDC register
+> >
+> > 0x2: This means that the MUX_MODE field selects the ESAI_TX5_RX0 function
+> > in this pad
+> >
+> > 0x0: SELECT_INPUT not used for this pad
+> 
+> This I guess predates the inctroduction of defines into the DTC,
+> but we can do a lot better now.
+> 
+> Can someone from the i.MX camp take a sweep and convert this
+> to defines in some include/dt-bindings/imx.h or similar file so
+> this thing becomes readable?
 
-Add the PSCI binding node for Calxeda SOCs. Only claiming "arm,psci"
-support since there is no agreement on 0.2 binding definition.
+We call those macros like MX6QDL_PAD_ENET_MDC__ESAI_TX5_RX0 in
+imx6q-pinfunc.h pin function ID.  It's all about choosing a pinmux
+function (ESAI_TX5_RX0) for given pad (MX6QDL_PAD_ENET_MDC), and
+that's all what users care and need to read from the macro.  The
+decoding of the macro is the register details that users do not care in
+general.  But fsl,pinctrl bindings doc documented these details anyway.
 
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: devicetree@vger.kernel.org
----
- arch/arm/boot/dts/ecx-common.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Shawn
 
-diff --git a/arch/arm/boot/dts/ecx-common.dtsi b/arch/arm/boot/dts/ecx-common.dtsi
-index e8559b7..bc22557 100644
---- a/arch/arm/boot/dts/ecx-common.dtsi
-+++ b/arch/arm/boot/dts/ecx-common.dtsi
-@@ -19,6 +19,14 @@
- 		bootargs = "console=ttyAMA0";
- 	};
- 
-+	psci {
-+		compatible	= "arm,psci";
-+		method		= "smc";
-+		cpu_suspend	= <0x84000002>;
-+		cpu_off		= <0x84000004>;
-+		cpu_on		= <0x84000006>;
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-1.8.1.2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
