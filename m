@@ -1,60 +1,83 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v11 2/8] usb: phy: omap-usb2: use the new generic PHY
- framework
-Date: Fri, 27 Sep 2013 12:05:41 +0530
-Message-ID: <5245273D.70903@ti.com>
-References: <1377063973-22044-1-git-send-email-kishon@ti.com>
- <1377063973-22044-3-git-send-email-kishon@ti.com>
- <20130926185151.GA8689@kroah.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] pwm-backlight: add support for device tree gpio control
+Date: Fri, 27 Sep 2013 09:55:51 +0300
+Message-ID: <52452BF7.2070606@ti.com>
+References: <1378236372-15711-1-git-send-email-mikedunn@newsguy.com> <20130910172130.GC22111@ulmo> <523056A6.5060000@newsguy.com> <524408BE.40402@ti.com> <20130926120248.GB1680@ulmo> <524427E5.50403@ti.com> <20130926125020.GA2141@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130926185151.GA8689@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, tomasz.figa@gmail.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, stern@rowland.harvard.edu, grant.likely@linaro.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, george.cherian@ti.com, arnd@arndb.de, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, broonie@kernel.org, akpm@linux-foundation.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="HxjO6blm5es6nkSTsNxb16vg49M9Ni0vs"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130926125020.GA2141@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mike Dunn <mikedunn@newsguy.com>, Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jg1.han@samsung.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+--HxjO6blm5es6nkSTsNxb16vg49M9Ni0vs
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Friday 27 September 2013 12:21 AM, Greg KH wrote:
-> On Wed, Aug 21, 2013 at 11:16:07AM +0530, Kishon Vijay Abraham I wrote:
->> Used the generic PHY framework API to create the PHY. Now the power off and
->> power on are done in omap_usb_power_off and omap_usb_power_on respectively.
->> The omap-usb2 driver is also moved to driver/phy.
->>
->> However using the old USB PHY library cannot be completely removed
->> because OTG is intertwined with PHY and moving to the new framework
->> will break OTG. Once we have a separate OTG state machine, we
->> can get rid of the USB PHY library.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> Acked-by: Felipe Balbi <balbi@ti.com>
->> ---
->>  drivers/phy/Kconfig                   |   12 +++++++++
->>  drivers/phy/Makefile                  |    1 +
->>  drivers/{usb => }/phy/phy-omap-usb2.c |   45 ++++++++++++++++++++++++++++++---
->>  drivers/usb/phy/Kconfig               |   10 --------
->>  drivers/usb/phy/Makefile              |    1 -
->>  5 files changed, 54 insertions(+), 15 deletions(-)
->>  rename drivers/{usb => }/phy/phy-omap-usb2.c (88%)
-> 
-> I tried to apply this to my USB branch, but it fails.
-> 
-> Kishon, you were going to refresh this patch series, right?  Please do,
-> because as-is, I can't take it.
+On 26/09/13 15:50, Thierry Reding wrote:
 
-Just sent.
+>> I thought the NAK was for the DT parts, not for the sequences as such.=
+ I
+>> don't remember anyone shooting down the idea of defining power sequenc=
+es
+>> inside a driver.
+>=20
+> Yes, but the DT parts were the primary reason why they were written in
+> the first place. Without DT we can just use the existing hooks to do th=
+e
+> sequencing. There is not much to be gained from power sequences.
 
-Thanks
-Kishon
+Board hooks? Those cannot be used with DT boot.
+
+But yes, the power sequences without DT (or platform data) parts cannot
+handle with board-specific-things. I still think it'd be a very nice
+thing to have inside the drivers. A single driver could more easily
+handle bunch of somewhat similar devices, by specifying power sequences
+in a table, one sequence for each device.
+
+> There is unfortunately always the next crazy setup that one can think
+> of. I personally prefer to support what we have (or at least the
+> majority of that) with something generic and tackle the more exotic
+> setups later on (or when they appear, as the case may be).
+>=20
+> As things stand right now, there's no way to get the simplest panel
+> setup to work properly if you use DT. By adding both an enable GPIO and=
+
+> a power supply regulator we can at least cover the sane use-cases with
+> some sane and pretty simple code.
+
+Sure, no disagreement there.
+
+ Tomi
+
+
+
+--HxjO6blm5es6nkSTsNxb16vg49M9Ni0vs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJSRSv3AAoJEPo9qoy8lh719hMP/1RUUsASGlVzN2sJv6alLJ9P
+aECdmSwcsB5n/+Eb0W+d9T8yDVypV2slJQrwO2tFJ4YmTwqfqlzVNN1QwiNQ4jjB
+mi8D+Eym3e1yI7LlrEX5BvmwUmttgLqxQ/yPVVl4EWLymtXriVqXc7/NQBNdUMG4
+mFGqO+Nd5LORFiTZLY31Oe9UEL/WIOr+Tq/7sX/Uh4vi9h6O/2RoolBgqn2hMCI7
+IMT8/EyRHri/vfu8+OFohQHqyBAEfs/0W8+JcdAmjwg4z9gINjNoeWNBQExO+hAE
+hICcUb54LjAk854mxm2CXBLwfHfrU4MRY5FC9Uo1VIGncY0VQoTkjQAO8rTXTQSB
+AHZRbhHQGhfrO7eODYDQmSX/T85lD1jK3Wuzb0CbcWNw+YrV76aEA3HuFMXStKjf
+X3kNAPi6c52RGfh8TbVTxf3h6taIWr71RNtx0niiFgaK4XEcAaJ23gvUjVvLY2ug
+4g05sHsvl8GuKFeYUASHVwrM7bZytryRWRc83RByAMk/IWiLeI5AiW4WdWKauPiw
+eOWfRs+wMReu+xjhoZAYLUZuNRO13Bz+e7wFxkki4NEC9Mm5PeshLH8vL5CezFvt
+uRSsPqqpngYw+gBlb0XKX9AOPP6ZM04csNzvZpT9SE+8MJvmwFBRuSxRVaR7l8s8
+zV5dI3+jVeRXLmqummzy
+=C/XC
+-----END PGP SIGNATURE-----
+
+--HxjO6blm5es6nkSTsNxb16vg49M9Ni0vs--
