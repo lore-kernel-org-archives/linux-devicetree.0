@@ -1,33 +1,54 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: updating ePAPR
-Date: Fri, 27 Sep 2013 10:37:56 -0500
-Message-ID: <F02F49F7-1214-4DFF-A5E7-5DB33B3BCBD0@codeaurora.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [dtc PATCH V2] Warn on node name unit-address presence/absence mismatch
+Date: Fri, 27 Sep 2013 10:39:08 -0500
+Message-ID: <23CCE8D1-AEB2-42C8-B8C6-0B782117C4C2@codeaurora.org>
+References: <1379613263-32080-1-git-send-email-swarren@wwwdotorg.org> <3D2FE31C-A6BB-4F70-9B3B-C55012CB56B3@codeaurora.org> <5244BF7A.4000100@wwwdotorg.org> <1380245438.28561.86.camel@pasglop>
 Mime-Version: 1.0 (Apple Message framework v1283)
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoder Stuart-B08248 <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1380245438.28561.86.camel@pasglop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Jon Loeliger <jdl@jdl.com>, David Gibson <david@gibson.dropbear.id.au>, Olof Johansson <olof@lixom.net>, frowand.list@gmail.com, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@nvidia.com>, Rohit Vaswani <rvaswani@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Stuart,
 
-Is there any activity to update ePAPR?  If not what would be involved in doing so?
+On Sep 26, 2013, at 8:30 PM, Benjamin Herrenschmidt wrote:
 
-We are having some discussion about unit addresses and what ePAPR says in section 2.2.1.1 "Node Name Requirements" about them.  Technically the soc nodes in most (if not all) PPC dts would be in violation of what is stated here, in addition I don't think the simple-bus binding says anything about node names.
+> On Thu, 2013-09-26 at 17:12 -0600, Stephen Warren wrote:
+>> Well, ePAPR seems pretty specific that unit address and reg are
+>> related,
+>> but says nothing about ranges in the section on node naming, nor about
+>> node naming in the section about ranges.
+>> 
+>> I'd claim that the existing PPC trees are nonconforming, and should be
+>> fixed too:-)
+> 
+> This is tricky, we should probably fix ePAPR here.
 
-Here's a link to some of the discussion:
+I'll poke Stuart to see what's going w/updating ePAPR.
 
-https://lkml.org/lkml/2013/9/19/301
+> If you have a "soc" bus covering a given range of addresses which it
+> forwards to its children devices but doesn't have per-se its own
+> registers in that area, then it wouldn't have a "reg" property. I would
+> thus argue that in the absence of a "reg" property, if a "ranges" one is
+> present, the "parent address" entry in there is an acceptable substitute
+> for the "reg" property as far as unit addresses are concerned.
+
+Either we update the section in general about 'ranges' or at least update the simple-bus binding to state that rules about the node name.
+
+> Also don't forget that in real OFW land, the unit address is something
+> that's somewhat bus specific ... for example, PCI uses "dev,fn" rather
+> than the full 96-bit number of the "reg" entry :-)
+> 
+> Another option which would more strictly conform to ePAPR and in fact to
+> of1275 would be to require such bus nodes to have a "reg" property with
+> the address value set to the beginning of the range and the size value
+> set to 0 :-)
 
 - k
 
 -- 
 Employee of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
