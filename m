@@ -1,49 +1,85 @@
-From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dts: socfpga: Add ethernet support on Altera's SOCFPGA
- platform
-Date: Thu, 26 Sep 2013 22:27:55 -0500
-Message-ID: <5244FB3B.2050906@gmail.com>
-References: <1380057120-27108-1-git-send-email-dinguyen@altera.com> <5244C171.2040705@wwwdotorg.org>
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] pwm-backlight: allow for non-increasing brightness
+ levels
+Date: Fri, 27 Sep 2013 12:28:21 +0900
+Message-ID: <017a01cebb31$9df90f60$d9eb2e20$%han@samsung.com>
+References: <1379869196-19377-1-git-send-email-mikedunn@newsguy.com>
+ <5244065A.8010408@ti.com> <20130926115108.GA1680@ulmo>
+ <524423B6.4070609@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5244C171.2040705-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-reply-to: <524423B6.4070609-l0cyMroinI0@public.gmane.org>
+Content-language: ko
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
-Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: 'Tomi Valkeinen' <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: 'Mike Dunn' <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, 'Richard Purdie' <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, 'Jean-Christophe Plagniol-Villard' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Grant Likely' <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Rob Herring' <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Robert Jarzmik' <robert.jarzmik-GANU6spQydw@public.gmane.org>, 'Marek Vasut' <marex-ynQEQJNshbs@public.gmane.org>, 'Laurent Pinchart' <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Thursday, September 26, 2013 9:08 PM, Tomi Valkeinen wrote:
+> On 26/09/13 14:51, Thierry Reding wrote:
+> > On Thu, Sep 26, 2013 at 01:03:06PM +0300, Tomi Valkeinen wrote:
+> > [...]
+> >> But if you and Thierry think this version is good, I'll take it.
+> >
+> > That sounds like you want to take it through the fbdev tree. Jingoo is
+> > listed (along with Richard, but he hasn't been responsive to email for
+> > years) as maintainer for the backlight subsystem. Furthermore back at
+> 
+> Ah, so they are. I just thought it falls under fbdev, as it's under
+> drivers/video/ =).
+> 
+> I don't have any particular "want" to take it through fbdev tree. But I
+> can take it.
+> 
+> > the time when I began working on the PWM subsystem, the backlight sub-
+> > system was pretty much orphaned, and pwm-backlight was by far the
+> > biggest user of the PWM subsystem. I adopted the driver at the time
+> > because it needed to be updated for PWM subsystem changes.
+> >
+> > What's the plan going forward? Given the coupling between the PWM
+> > subsystem and the pwm-backlight driver it might be useful to keep
+> > maintaining it as part of the PWM subsystem. On the other hand, there's
+> > some coupling between the driver and the backlight subsystem too.
+> 
+> And backlight is coupled with fbdev... Which is something I don't like.
 
-On 9/26/13 6:21 PM, Stephen Warren wrote:
-> On 09/24/2013 03:11 PM, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
->> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->>
->> The STMMAC Ethernet controller in SOCFPGA requires setting a register for
->> the phy-mode that is outside of the ethernet IP. This register resides in
->> the System Manager block. So we define a new DTS binding
->> "altr,sysmgr-phy-mask". This binding's property is a bitmask that can be
->> used to set the correct register bit.
->> diff --git a/Documentation/devicetree/bindings/net/stmmac-altr-socfpga.txt b/Documentation/devicetree/bindings/net/stmmac-altr-socfpga.txt
->> +* altr,sysmgr-phy-mask: This property contains the bitmask that is needed to
->> +	set the appropriate register bits for the phy-mode in the System Manager.
->> +	The value should be:
->> +		-Ethernet Controller 1 (gmac0) = 0x3
->> +		-Ethernet Controller 2 (gmac1) = 0xC
-> Wouldn't you need a phandle to the sysmgr node so that the driver could
-> be located, and a register number within its register block too? Or,
-> does sysmgr know which register to poke? If so, couldn't the API take
-> just a device index rather than a bitmask instead, and calculate the
-> mask itself?
-The function that pokes this register is a platform specific init 
-function call from the driver, so the function knows which register in 
-the the sysmgr to poke. The first byte of the register has controls for 
-both ethernet controllers. I thought it would be better to use a mask to 
-be used to differentiate between each controller.
++cc Laurent Pinchart,
 
-Thanks,
-Dinh
+Yes, right. 
+The backlight should be de-coupled with fbdev.
+I remember that Laurent Pinchart was doing this patch.
+
+Laurent Pinchart,
+Would you let us know your plan about this? :-)
+
+> 
+> > I have a couple of patches queued up for 3.13 that rework parts of the
+> > driver, so it'd be good to know how you guys want to handle this.
+> 
+> Well. I'm happy if somebody wants to maintain the backlight side. In
+> fact, I'd be happy if somebody would start restructuring it totally,
+> it's rather messy. The link with fbdev should be removed, and some
+> backlight drivers are actually panel drivers. However, perhaps Common
+> Display Framework is required until it can be fully cleaned.
+
+I think that some backlight drivers can be moved to 'Common Display Framework',
+after 'Common Display Framework' is merged.
+But, I am not sure, when it will be completed.
+
+Best regards,
+Jingoo Han
+
+> 
+> So... For the time being, I'm fine with merging pwm-backlight via any
+> tree that works best. I'm presuming here that backlight framework and
+> fbdev (for the parts that are relevant for backlight) are not really
+> being changed, so there shouldn't be conflicts.
+> 
+>  Tomi
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
