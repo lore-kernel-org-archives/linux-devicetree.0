@@ -1,94 +1,150 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: dra7-evm: Add mmc2 node for eMMC support
-Date: Fri, 27 Sep 2013 13:28:53 +0530
-Message-ID: <52453ABD.3070906@ti.com>
-References: <1377525218-7655-1-git-send-email-balajitk@ti.com> <1377525218-7655-3-git-send-email-balajitk@ti.com> <52415E41.7050301@baylibre.com> <52430C8A.6040404@ti.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH v6] ARM: shmobile: armadillo800eva-reference: add SDHI and
+ MMCIF interfaces
+Date: Fri, 27 Sep 2013 10:02:57 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1309270957470.23205@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <52430C8A.6040404-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/25/2013 9:47 PM, Balaji T K wrote:
-> On Tuesday 24 September 2013 03:11 PM, Benoit Cousson wrote:
->> + Sekhar
->>
->> Hi Balaji,
->>
->> On 26/08/2013 15:53, Balaji T K wrote:
->>> Add mmc2 dt node to dra7-evm board
->>> and model eMMC vcc as fixed regulator.
->>>
->>> Signed-off-by: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
->>> ---
->>>   arch/arm/boot/dts/dra7-evm.dts |   14 ++++++++++++++
->>>   1 files changed, 14 insertions(+), 0 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/dra7-evm.dts
->>> b/arch/arm/boot/dts/dra7-evm.dts
->>> index a59bbd0..2062724 100644
->>> --- a/arch/arm/boot/dts/dra7-evm.dts
->>> +++ b/arch/arm/boot/dts/dra7-evm.dts
->>> @@ -17,6 +17,13 @@
->>>           device_type = "memory";
->>>           reg = <0x80000000 0x60000000>; /* 1536 MB */
->>>       };
->>> +
->>> +    mmc2_3v3: fixedregulator-mmc2 {
->>> +        compatible = "regulator-fixed";
->>> +        regulator-name = "mmc2_3v3";
->>> +        regulator-min-microvolt = <3300000>;
->>> +        regulator-max-microvolt = <3300000>;
->>> +    };
->>>   };
->>>
->>>   &dra7_pmx_core {
->>> @@ -257,3 +264,10 @@
->>>       vmmc-supply = <&ldo1_reg>;
->>>       bus-width = <4>;
->>>   };
->>> +
->>> +&mmc2 {
->>> +    status = "okay";
->>> +    vmmc-supply = <&mmc2_3v3>;
->>> +    bus-width = <8>;
->>> +    ti,non-removable;
->>
->> Sekhar just posted a series to replace that with a non-TI attribute:
->> non-removable.
->>
->> I'm not sure if this got merged, but it might be good to use the
->> standard attribute instead.
-> 
-> Hi Benoit,
-> 
-> Those patches are not merged yet, standard attribute is good, but few
-> cleanups are needed
-> before ti,non-removable can be replaced by standard non-removable,
-> no_regulator_off_init flag set under ti,non-removable is needed to
-> detect eMMC
-> during boot on OMAP4 devices to keep regulator ON during init. Given
-> that eMMC on dra7-evm
-> is powered by always ON regulator, ti,non-removable and standard
-> attribute will behave same
-> way. Let me know if you want to remove ti,non-removable attribute from
-> this patch.
+Add SDHI0 and MMCIF interfaces to armadillo800eva-reference with
+regulators and pin configurations. SDHI1 is not added yet, because the
+switch, that connects the interface either to an SD slot or to a WiFi
+SDIO card cannot be described in DT yet.
 
-I dont think its an issue if ti,non-removable and non-removable behave
-exactly the same. In fact, it will be confusing if they behave differently.
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+---
 
-I understand there is a need to clean-up the code around
-no_regulator_off_init, but I am hoping that can be kept separate from
-moving to a generic binding. The two clean-ups can be done independent
-of each other.
+v6: specify a CD GPIO for SDHI0
 
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../boot/dts/r8a7740-armadillo800eva-reference.dts |   58 ++++++++++++++++++++
+ arch/arm/boot/dts/r8a7740.dtsi                     |   33 +++++++++++
+ 2 files changed, 91 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+index 8b2aab5..1c56c5e 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+@@ -35,6 +35,33 @@
+ 		regulator-boot-on;
+ 	};
+ 
++	vcc_sdhi0: regulator@1 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "SDHI0 Vcc";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&pfc 75 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	vccq_sdhi0: regulator@2 {
++		compatible = "regulator-gpio";
++
++		regulator-name = "SDHI0 VccQ";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vcc_sdhi0>;
++
++		enable-gpio = <&pfc 74 GPIO_ACTIVE_HIGH>;
++		gpios = <&pfc 17 GPIO_ACTIVE_HIGH>;
++		states = <3300000 0
++			  1800000 1>;
++
++		enable-active-high;
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		led1 {
+@@ -92,8 +119,39 @@
+ 		renesas,groups = "tpu0_to2_1";
+ 		renesas,function = "tpu0";
+ 	};
++
++	mmc0_pins: mmc0 {
++		renesas,groups = "mmc0_data8_1", "mmc0_ctrl_1";
++		renesas,function = "mmc0";
++	};
++
++	sdhi0_pins: sdhi0 {
++		renesas,groups = "sdhi0_data4", "sdhi0_ctrl", "sdhi0_wp";
++		renesas,function = "sdhi0";
++	};
+ };
+ 
+ &tpu {
+ 	status = "okay";
+ };
++
++&mmcif0 {
++	pinctrl-0 = <&mmc0_pins>;
++	pinctrl-names = "default";
++
++	vmmc-supply = <&reg_3p3v>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++};
++
++&sdhi0 {
++	pinctrl-0 = <&sdhi0_pins>;
++	pinctrl-names = "default";
++
++	vmmc-supply = <&vcc_sdhi0>;
++	vqmmc-supply = <&vccq_sdhi0>;
++	bus-width = <4>;
++	cd-gpios = <&pfc 167 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index 868bdde..ae1e230 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -161,4 +161,37 @@
+ 		status = "disabled";
+ 		#pwm-cells = <3>;
+ 	};
++
++	mmcif0: mmcif@e6bd0000 {
++		compatible = "renesas,sh-mmcif";
++		reg = <0xe6bd0000 0x100>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 56 4
++				0 57 4>;
++		status = "disabled";
++	};
++
++	sdhi0: sdhi@e6850000 {
++		compatible = "renesas,sdhi-r8a7740";
++		reg = <0xe6850000 0x100>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 117 4
++				0 118 4
++				0 119 4>;
++		cap-sd-highspeed;
++		cap-sdio-irq;
++		status = "disabled";
++	};
++
++	sdhi1: sdhi@e6860000 {
++		compatible = "renesas,sdhi-r8a7740";
++		reg = <0xe6860000 0x100>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 121 4
++				0 122 4
++				0 123 4>;
++		cap-sd-highspeed;
++		cap-sdio-irq;
++		status = "disabled";
++	};
+ };
+-- 
+1.7.2.5
+
