@@ -1,53 +1,35 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: device tree binding documentation outdated
-Date: Fri, 27 Sep 2013 21:52:03 +0100
-Message-ID: <20130927205203.GL12758@n2100.arm.linux.org.uk>
-References: <20130926195158.GS12758@n2100.arm.linux.org.uk> <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com> <CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com> <20130927025116.GG25146@S2101-09.ap.freescale.net> <20130927084504.GW12758@n2100.arm.linux.org.uk> <20130927122814.GK25146@S2101-09.ap.freescale.net> <20130927131225.GA31178@titan.lakedaemon.net> <20130927132107.GZ12758@n2100.arm.linux.org.uk> <20130927133120.GC31178@titan.lakedaemon.net> <CAHCPf3tfc9Z14YYm9K0AXNinMDsTwE51_6tbYfyFU7cA8M7MgA@mail.gmail.com>
+From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 01/13] [media] exynos5-is: Adding media device driver
+ for exynos5
+Date: Fri, 27 Sep 2013 23:01:26 +0200
+Message-ID: <5245F226.3090903@gmail.com>
+References: <1380279558-21651-1-git-send-email-arun.kk@samsung.com> <1380279558-21651-2-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHCPf3tfc9Z14YYm9K0AXNinMDsTwE51_6tbYfyFU7cA8M7MgA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1380279558-21651-2-git-send-email-arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Arun Kumar K <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kilyeon.im-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arunkk.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 11:33:19AM -0500, Matt Sealey wrote:
-> On Fri, Sep 27, 2013 at 8:31 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> > On Fri, Sep 27, 2013 at 02:21:07PM +0100, Russell King - ARM Linux wrote:
-> >> On Fri, Sep 27, 2013 at 09:12:25AM -0400, Jason Cooper wrote:
-> >> > I'm currently slogging through the exact same issues for adding imx50
-> >> > (SanDisk Connect Wireless media Drive).  I thought I was just thick.
-> >> > It's a relief to know I'm not the only one having trouble with this.
-> >>
-> >> I'm coming to the conclusion that it's almost to the point of "vendor
-> >> lockin" - you have to find someone who understands this stuff to take
-> >> your hardware description and turn it into a working DT description.
-> >
-> > I don't think it's vendor lock-in, I think Freescale's pinctrl/gpio IP
-> > block is just an over-complicated pain in the ass that doesn't lend
-> > itself to DT well.
-> 
-> 
-> Me either - device trees aren't vendor lock-in but they ARE a huge
-> reminder of how silicon vendors prioritize software development - the
-> chip works. The i.MX IOMUX block lends itself VERY well to device
-> trees.
+Hi Arun, Shaik,
 
-The "vendor lock-in" that I'm talking about here is the lock-in to
-the people who created the DT mess in the first place, *not* the
-silicon vendor.
+This patch looks good to me, I have added it to my tree for 3.13, with
+slightly edited patch's description.
 
-If it's extremely difficult to understand how to put together the
-proper DT description because it's just a load of numbers, and the
-knowledge is limited to a few developers, then that makes it really
-difficult for 3rd parties to create their own device tree files.
+I will be sending a pull request to the media tree not earlier than in
+two weeks, thus there is still some time, should anyone have any further
+comments/change requests.
 
-There should be an effort to make writing a DT description as simple
-and easy as possible, and part of that means ensuring that the
-documentation helps people to understand how to do that, and certainly
-doesn't add additional needless to confusion.
+Before applying rest of the series we need an ACK for the patch 02/13
+from a DT binding maintainer.
+
+Thank you for your hard work on this.
+
+Regards,
+Sylwester
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
