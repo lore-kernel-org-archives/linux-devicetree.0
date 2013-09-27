@@ -1,62 +1,41 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH RFC] media: rc: OF: Add Generic bindings for remote-control
-Date: Fri, 27 Sep 2013 14:26:12 +0100
-Message-ID: <52458774.1060909@st.com>
-References: <1380274391-26577-1-git-send-email-srinivas.kandagatla@st.com> <20130927113458.GB18672@e106331-lin.cambridge.arm.com>
-Reply-To: srinivas.kandagatla@st.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: device tree binding documentation outdated
+Date: Fri, 27 Sep 2013 15:29:55 +0200
+Message-ID: <CACRpkdasN9Yg5C0cNM7USncXqRG4Q3n-xRKL0DcnJ-iLCc3pSQ@mail.gmail.com>
+References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
+ <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
+ <CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com>
+ <20130927025116.GG25146@S2101-09.ap.freescale.net>
+ <20130927084504.GW12758@n2100.arm.linux.org.uk>
+ <20130927122814.GK25146@S2101-09.ap.freescale.net>
+ <20130927131225.GA31178@titan.lakedaemon.net>
+ <20130927132107.GZ12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130927113458.GB18672@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Mauro Carvalho Chehab <m.chehab@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130927132107.GZ12758@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Wolfram Sang <wsa@the-dreams.de>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/09/13 12:34, Mark Rutland wrote:
+On Fri, Sep 27, 2013 at 3:21 PM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
 
->> > +	- rx-mode: Can be "infrared" or "uhf". rx-mode should be present iff
->> > +	  the rx pins are wired up.
-> I'm unsure on this. What if the device has multiple receivers that can
-> be independently configured? What if it supports something other than
-> "infrared" or "uhf"? What if a device can only be wired up as
-> "infrared"? 
-> 
-> I'm not sure how generic these are, though we should certainly encourage
-> bindings that can be described this way to be described in the same way.
-> 
->> > +	- tx-mode: Can be "infrared" or "uhf". tx-mode should be present iff
->> > +	  the tx pins are wired up.
-> I have similar concerns here to those for the rx-mode property.
-> 
-Initially rx-mode and tx-mode sounded like more generic properties
-that's the reason I ended up in this route. But after this discussion it
-looks like its not really generic enough to cater all the use cases.
+> I think I'll be bringing up what a disaster this DT stuff is in
+> Edinburgh.
 
-It make sense for me to perfix "st," for these properties in the st-rc
-driver rather than considering them as generic properties.
+I think this topic suggested by Wolfram is spot on:
+http://lists.linuxfoundation.org/pipermail/ksummit-2013-discuss/2013-July/000110.html
 
-> I think what we actually need to document is the process of creating a
-> binding in such a way as to encourage uniformity. Something like the
-> following steps:
-I agree, It will help.. :-)
-> 
-> 1. Look to see if a binding already exists. If so, use it.
-> 
-> 2. Is there a binding for a compatible device? If so, use/extend it.
-> 
-> 3. Is there a binding for a similar (but incompatible) device? Use it as
->    a template, possibly factor out portions into a class binding if
->    those portions are truly general.
-> 
-> 4. Is there a binding for the class of device? If so, build around that,
->    possibly extending it.
-> 
-> 5. If there's nothing relevant, create a binding aiming for as much
->    commonality as possible with other devices of that class that may
->    have bindings later.
-
-Thanks for this little guide...
-
---srini
+Yours,
+Linus Walleij
