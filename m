@@ -1,140 +1,219 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCHv4 11/18] arm: dts: add omap4430 thermal data
-Date: Fri, 27 Sep 2013 09:42:49 -0400
-Message-ID: <52458B59.8070703@ti.com>
-References: <1380251605-3804-1-git-send-email-eduardo.valentin@ti.com>
- <1380251605-3804-12-git-send-email-eduardo.valentin@ti.com>
- <20130927122439.GA8360@kahuna> <5245861F.7000109@ti.com>
- <CAGo_u6p3pp2EBo_fJE_RJOdrc05OHM-QFgCZFBUW+duhPgOYpw@mail.gmail.com>
+From: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Subject: Re: [PATCH RFC] media: rc: OF: Add Generic bindings for remote-control
+Date: Fri, 27 Sep 2013 10:47:19 -0300
+Message-ID: <20130927104719.6637368f@samsung.com>
+References: <1380274391-26577-1-git-send-email-srinivas.kandagatla@st.com>
+ <20130927113458.GB18672@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1152409969966347977=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGo_u6p3pp2EBo_fJE_RJOdrc05OHM-QFgCZFBUW+duhPgOYpw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, dt list <devicetree@vger.kernel.org>, wni@nvidia.com, durgadoss.r@intel.com, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Eduardo Valentin <eduardo.valentin@ti.com>, linux@roeck-us.net, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, rui.zhang@intel.com, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <20130927113458.GB18672@e106331-lin.cambridge.arm.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---===============1152409969966347977==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="okDvHLNIenjhDREDRe2cvg6qUKECOqodL"
+Em Fri, 27 Sep 2013 12:34:58 +0100
+Mark Rutland <mark.rutland@arm.com> escreveu:
 
---okDvHLNIenjhDREDRe2cvg6qUKECOqodL
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+> On Fri, Sep 27, 2013 at 10:33:11AM +0100, Srinivas KANDAGATLA wrote:
+> > From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> > 
+> > This patch attempts to collate generic bindings which can be used by
+> > the remote control hardwares. Currently the list is not long as there
+> > are only 2 drivers which are device tree'd.
+> > 
+> > Mainly this patch tries to document few bindings used by ST IRB driver
+> > which can be generic as well. This document also add fews common
+> > bindings used by most of the drivers like, interrupts, regs, clocks and
+> > pinctrls.
+> > 
+> > This document can also be holding place to describe generic bindings
+> > used in remote controls devices.
+> > 
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> > ---
+> > Hi All, 
+> > Following Stephen Warren's suggestions at https://lkml.org/lkml/2013/9/24/452
+> > this patch is an attempt to document such generic bindings in a common
+> > document.
+> > 
+> > This document currently collates all the generic bindings used with
+> > remote-controls and act as holding place to describe generic bindings for
+> > remote controls.
+> > 
+> > Comments?
+> > 
+> > Thanks,
+> > srini
+> > 
+> >  .../devicetree/bindings/media/remote-control.txt   |   31 ++++++++++++++++++++
+> >  1 files changed, 31 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/media/remote-control.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/remote-control.txt b/Documentation/devicetree/bindings/media/remote-control.txt
+> > new file mode 100644
+> > index 0000000..901ea56
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/remote-control.txt
+> > @@ -0,0 +1,31 @@
+> > +Generic device tree bindings for remote control.
+> > +
+> > +properties:
+> > +	- compatible: Can contain any remote control driver compatible string.
+> > +	  example: "st-comms-irb, "gpio-ir-receiver".
+> 
+> This is more generic than remote control, could this not just be left
+> for the specific binding to describe?
+> 
+> > +	- reg: Base physical address of the controller and length of memory
+> > +	  mapped region.
+> 
+> What if it's on a bus that isn't memory mapped (e.g. i2c, SPI)?
+> 
+> > +	- interrupts: Interrupt-specifier for the sole interrupt generated by
+> > +	  the device. The interrupt specifier format depends on the
+> > +	  interrupt controller parent. Iff the device supports interrupts.
+> 
+> What if it has multiple interrupts, and has interrupts-names?
+> 
+> It might be better to only describe the properties that relate
+> specifically to remote controls, rather than listing all of the generic
+> properties that device tree bidnings may have. That would match the
+> style of the clock bindings.
+> 
+> > +	- rx-mode: Can be "infrared" or "uhf". rx-mode should be present iff
+> > +	  the rx pins are wired up.
+> 
+> I'm unsure on this. What if the device has multiple receivers that can
+> be independently configured? 
 
-On 27-09-2013 09:26, Nishanth Menon wrote:
-> On Fri, Sep 27, 2013 at 8:20 AM, Eduardo Valentin
-> <eduardo.valentin@ti.com> wrote:
->> On 27-09-2013 08:24, Nishanth Menon wrote:
->>> On 23:13-20130926, Eduardo Valentin wrote:
->>>> This patch changes the dtsi entry on omap4430 to contain
->>>> the thermal data. This data will enable the passive
->>>> cooling with CPUfreq cooling device at 100C and the
->>>> system will do a thermal shutdown at 125C.
->>>>
->>>> Cc: "Beno=EEt Cousson" <bcousson@baylibre.com>
->>>> Cc: Tony Lindgren <tony@atomide.com>
->>>> Cc: Russell King <linux@arm.linux.org.uk>
->>>> Cc: linux-omap@vger.kernel.org
->>>> Cc: devicetree-discuss@lists.ozlabs.org
->>>> Cc: linux-arm-kernel@lists.infradead.org
->>>> Cc: linux-kernel@vger.kernel.org
->>>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
->>>> ---
->>>>  arch/arm/boot/dts/omap443x.dtsi | 10 ++++++++--
->>>>  1 file changed, 8 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/omap443x.dtsi b/arch/arm/boot/dts/oma=
-p443x.dtsi
->>>> index bcf455e..e9c97d6 100644
->>>> --- a/arch/arm/boot/dts/omap443x.dtsi
->>>> +++ b/arch/arm/boot/dts/omap443x.dtsi
->>>> @@ -12,7 +12,7 @@
->>>>
->>>>  / {
->>>>      cpus {
->>>> -            cpu@0 {
->>>> +            cpu0: cpu@0 {
->>>>                      /* OMAP443x variants OPP50-OPPNT */
->>>>                      operating-points =3D <
->>>>                              /* kHz    uV */
->>>> @@ -25,9 +25,15 @@
->>>>              };
->>>>      };
->>>>
->>>> -    bandgap {
->>>> +    thermal-zones{
->>>> +            #include "omap4-cpu-thermal.dtsi"
->>>> +    };
->>>> +
->>>> +    bandgap: bandgap {
->>>>              reg =3D <0x4a002260 0x4
->>>>                     0x4a00232C 0x4>;
->>>>              compatible =3D "ti,omap4430-bandgap";
->>>> +
->>>> +            #thermal-sensor-cells =3D <0>;
->>> 2 cents:
->>> we might want to move bandgap under ocp?
->>>
->>
->> Yes, agreed. But I don't think this change is related to this patch or=
+Well, if a given remote controller hardware has more than one independent
+receiver (or transmitter), each one should have its own devnode.
+Likely, two entries at DT.
 
->> to this series.
->=20
-> Correct - this comment is not related to the current patch, hence my 2
-> cents ;) - will be nice to have it cleaned up though..
+> What if it supports something other than
+> "infrared" or "uhf"? What if a device can only be wired up as
+> "infrared"? 
 
-Yes, it will be cleaned. ;-) Tks.
+I would say that a hardware that has both infrared and uhf has actually
+two different devices. So, it should be mapped as two separate devnodes.
 
->=20
-> Regards,
-> Nishanth Menon
->=20
->=20
+> I'm not sure how generic these are, though we should certainly encourage
+> bindings that can be described this way to be described in the same way.
+> 
+> > +	- tx-mode: Can be "infrared" or "uhf". tx-mode should be present iff
+> > +	  the tx pins are wired up.
+> 
+> I have similar concerns here to those for the rx-mode property.
+> 
+> > +
+> > +Optional properties:
+> > +	- linux,rc-map-name: Linux specific remote control map name. Refer to
+> > +	  include/media/rc-map.h for full list of maps.
+> 
+> We shouldn't refer to Linux specifics (i.e. headers) in general in
+> bindings. While it's possible to relax that a bit for linux,*
+> properties, I'd prefer to explicitly list elements in the binding. That
+> prevents the ABI from changing under our feet by someone altering what
+> looks like a completely internal header file.
+
+Well, the remote controller keymaps at include/media/rc-map.h is just a
+bunch of string names, defined as macro to avoid duplicating those names
+everywhere, to avoid typos and to help some userspace parsing logic to get
+all in just one single place. I don't see why the same names couldn't be 
+used on any other OS using DT.
+
+The logic behind include/media/rc-map.h, is that those names are used
+by:
+
+1) kernelspace: in order to locate a keytable with the same name, that
+would be loaded when the device is initialized;
+
+2) userspace: to seek for a keytable with that name, allowing to
+dynamically load the keymap table on userspace, instead of hardwiring
+them on Kernelspace (or replacing the kernel's one by an user-customized
+one).
+
+So, I would simply call it as "keymap-name", keep pointing it to 
+include/media/rc-map.h.
+
+That's said, this is actually a mandatory requirement, as without it,
+the RC core will not be able to load a keytable, and the userspace tool
+won't load the proper keymap, being confused on what to do.
+
+It should be noticed that, from time to time, manufacturers change the
+remote control unit, as those devices are generally manufactured by a
+third part. So, they change, for example, when they get a new BID to
+provide IRs for a cheaper cost, or when they need/want to provide a "deluxe"
+remote, a simplified "thin" one and/or when they need to provide customized
+remotes to some Cable company, for example.
+
+So, it makes sense for it to be mandatory, as only with this information it
+is possible to load the keymap that matches that specific IR unit model.
+
+In other words, I would add this as a mandatory property, with a text
+similar to:
+
+	- keymap-name: Name of the keyboard scancode table used to match 
+	  the remote controller unit model (or model set). Please add it at
+	  include/media/rc-map.h for newer models.
+
+It could be interesting to also warn there that, when the remotes are
+made exclusively to a given hardware vendor, and the entries are not
+incompatible, the same keymap name could be used by more than one remote
+controller unit.
+
+> > +	- pinctrl-names, pinctrl-0: The pincontrol settings to configure muxing
+> > +	  properly for the device pins.
+> > +	- clocks : phandle with clock-specifier pair for the device specified
+> > +	  in compatible.
+> 
+> While devices may have these, they're also more general than remote
+> control devices. I'm not sure that they need to be listed here when they
+> need to be described fully in any binding that needs them anyway,
+> especially as this gives an impression that they are valid for bindings
+> that don't need them.
+> 
+> I think what we actually need to document is the process of creating a
+> binding in such a way as to encourage uniformity. Something like the
+> following steps:
+> 
+> 1. Look to see if a binding already exists. If so, use it.
+> 
+> 2. Is there a binding for a compatible device? If so, use/extend it.
+> 
+> 3. Is there a binding for a similar (but incompatible) device? Use it as
+>    a template, possibly factor out portions into a class binding if
+>    those portions are truly general.
+> 
+> 4. Is there a binding for the class of device? If so, build around that,
+>    possibly extending it.
+> 
+> 5. If there's nothing relevant, create a binding aiming for as much
+>    commonality as possible with other devices of that class that may
+>    have bindings later.
+> 
+> Cheers,
+> Mark.
+> 
+> > +
+> > +example:
+> > +
+> > +	rc: rc@fe518000 {
+> > +		compatible	= "st,comms-irb";
+> > +		reg		= <0xfe518000 0x234>;
+> > +		interrupts	= <0 203 0>;
+> > +		rx-mode		= "infrared";
+> > +	};
+> > -- 
+> > 1.7.6.5
+> > 
+> > 
 
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
+-- 
 
-Eduardo Valentin
-
-
---okDvHLNIenjhDREDRe2cvg6qUKECOqodL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlJFi1kACgkQCXcVR3XQvP0QoAEA4MfbQt5xnfzUFjwU/nzb4Ahg
-nKZcdTIocqE6yVs/mg0A+wejPt8TOxTb8Gxy4/HJfD3MgfnLul13qlpnMBWID75d
-=J34r
------END PGP SIGNATURE-----
-
---okDvHLNIenjhDREDRe2cvg6qUKECOqodL--
-
-
---===============1152409969966347977==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1152409969966347977==--
+Cheers,
+Mauro
