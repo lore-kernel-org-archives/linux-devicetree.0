@@ -1,90 +1,96 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] pwm-backlight: allow for non-increasing brightness
- levels
-Date: Fri, 27 Sep 2013 12:19:35 +0900
-Message-ID: <017601cebb30$642ce050$2c86a0f0$%han@samsung.com>
-References: <1379869196-19377-1-git-send-email-mikedunn@newsguy.com>
- <5244065A.8010408@ti.com> <20130926115108.GA1680@ulmo>
- <524423B6.4070609@ti.com> <20130926125953.GB2141@ulmo>
+From: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
+Subject: [PATCHv4 00/18] device thermal limits represented in device tree nodes (v4)
+Date: Thu, 26 Sep 2013 23:13:07 -0400
+Message-ID: <1380251605-3804-1-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20130926125953.GB2141@ulmo>
-Content-language: ko
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Tomi Valkeinen' <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: 'Mike Dunn' <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, 'Richard Purdie' <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, 'Jean-Christophe Plagniol-Villard' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Grant Likely' <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Rob Herring' <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Robert Jarzmik' <robert.jarzmik-GANU6spQydw@public.gmane.org>, 'Marek Vasut' <marex-ynQEQJNshbs@public.gmane.org>, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, September 26, 2013 10:00 PM, Thierry Reding wrote:
-> On Thu, Sep 26, 2013 at 03:08:22PM +0300, Tomi Valkeinen wrote:
-> > On 26/09/13 14:51, Thierry Reding wrote:
-> > > On Thu, Sep 26, 2013 at 01:03:06PM +0300, Tomi Valkeinen wrote:
-> > > [...]
-> > >> But if you and Thierry think this version is good, I'll take it.
-> > >
-> > > That sounds like you want to take it through the fbdev tree. Jingoo is
-> > > listed (along with Richard, but he hasn't been responsive to email for
-> > > years) as maintainer for the backlight subsystem. Furthermore back at
-> >
-> > Ah, so they are. I just thought it falls under fbdev, as it's under
-> > drivers/video/ =).
-> >
-> > I don't have any particular "want" to take it through fbdev tree. But I
-> > can take it.
-> >
-> > > the time when I began working on the PWM subsystem, the backlight sub-
-> > > system was pretty much orphaned, and pwm-backlight was by far the
-> > > biggest user of the PWM subsystem. I adopted the driver at the time
-> > > because it needed to be updated for PWM subsystem changes.
-> > >
-> > > What's the plan going forward? Given the coupling between the PWM
-> > > subsystem and the pwm-backlight driver it might be useful to keep
-> > > maintaining it as part of the PWM subsystem. On the other hand, there's
-> > > some coupling between the driver and the backlight subsystem too.
-> >
-> > And backlight is coupled with fbdev... Which is something I don't like.
-> >
-> > > I have a couple of patches queued up for 3.13 that rework parts of the
-> > > driver, so it'd be good to know how you guys want to handle this.
-> >
-> > Well. I'm happy if somebody wants to maintain the backlight side. In
-> > fact, I'd be happy if somebody would start restructuring it totally,
-> > it's rather messy. The link with fbdev should be removed, and some
-> > backlight drivers are actually panel drivers. However, perhaps Common
-> > Display Framework is required until it can be fully cleaned.
-> >
-> > So... For the time being, I'm fine with merging pwm-backlight via any
-> > tree that works best. I'm presuming here that backlight framework and
-> > fbdev (for the parts that are relevant for backlight) are not really
-> > being changed, so there shouldn't be conflicts.
-> 
-> In that case I'll just take it through the PWM tree as I've done for the
-> past year. I have some other changes planned for the PWM framework for
-> the near future that'll create dependencies between the PWM tree and the
-> pwm-backlight driver, so keeping them in one tree will make it easier to
-> merge them.
+Hello all,
 
-Yes, I think so.
-I want you to take the patches for pwm-backlight through the PWM tree,
-as you have done.
+Here is the continuation of work of representing hardware thermal properties
+in device tree infrastructure. The present patch series is the fourth version
+of this work. Previous versions were sent as RFCs and can be found here:
+V3: 
+RFCv2: http://lkml.org/lkml/2013/8/23/594
+RFCv1: http://lkml.org/lkml/2013/7/22/319
 
-> 
-> Longer term it probably makes sense, as you say, for someone to take
-> over the backlight subsystem completely and give it the love it could
-> really use. If Jingoo can do that, it'd be great. Perhaps it'd be a good
-> idea to remove Richard as maintainer since he's obviously no longer
-> responding to emails. Keeping him Cc'ed on all patches is just
-> pointless.
+Major difference from V3 is on the parser itself. I have updated the binding
+documentation and improved the code accordingly to previous comments mainly
+from Mark R. and Joe P.
 
-OK, I will send the patch to remove Richard as maintainer.
+The changes on hwmon drivers have been accepted by Guenter, and in this
+series I am including his Acked-by, as I didn't change anything on that side.
 
-I will make a git tree and mailing-list for the backlight subsystem later.
-However, I am not certain when it will be done. :-(
+I also found a bug while using all involved code built as modules, thus
+I have reworked a bit the cooling device registration part. This is why
+there are two new patches in this series (patches 02 and 04).
 
-Best regards,
-Jingoo Han
+Tests were done, just like in V3, on TI OMAP4430, OMAP4460, OMAP5430 and DRA7,
+although this series is not including the DRA7 part (I will be sending separately).
+
+Thanks all who have been contributing reviewing this code.
+
+All best,
+
+Eduardo Valentin (18):
+  thermal: allow registering without .get_temp
+  thermal: core: allow binding via .bind when tzp is present
+  thermal: introduce device tree parser
+  thermal: core: introduce thermal_of_cooling_device_register
+  thermal: cpu_cooling: introduce of_cpufreq_cooling_register
+  cpufreq: cpufreq-cpu0: add dt node parsing for cooling device
+    properties
+  hwmon: lm75: expose to thermal fw via DT nodes
+  hwmon: tmp102: expose to thermal fw via DT nodes
+  thermal: ti-soc-thermal: use thermal DT infrastructure
+  arm: dts: add omap4 CPU thermal data
+  arm: dts: add omap4430 thermal data
+  arm: dts: add omap4460 thermal data
+  arm: dts: add cooling properties on omap4430 cpu node
+  arm: dts: add cooling properties on omap4460 cpu node
+  arm: dts: add omap5 GPU thermal data
+  arm: dts: add omap5 CORE thermal data
+  arm: dts: add omap5 thermal data
+  arm: dts: add cooling properties on omap5 cpu node
+
+ .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   |   7 +
+ .../devicetree/bindings/thermal/thermal.txt        | 537 +++++++++++++
+ arch/arm/boot/dts/omap4-cpu-thermal.dtsi           |  41 +
+ arch/arm/boot/dts/omap443x.dtsi                    |  15 +-
+ arch/arm/boot/dts/omap4460.dtsi                    |  15 +-
+ arch/arm/boot/dts/omap5-core-thermal.dtsi          |  28 +
+ arch/arm/boot/dts/omap5-gpu-thermal.dtsi           |  28 +
+ arch/arm/boot/dts/omap5.dtsi                       |  15 +-
+ drivers/cpufreq/Kconfig                            |   2 +-
+ drivers/cpufreq/cpufreq-cpu0.c                     |  16 +
+ drivers/hwmon/lm75.c                               |  35 +-
+ drivers/hwmon/tmp102.c                             |  19 +
+ drivers/thermal/Kconfig                            |  14 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/cpu_cooling.c                      |  56 +-
+ drivers/thermal/of-thermal.c                       | 845 +++++++++++++++++++++
+ drivers/thermal/thermal_core.c                     |  79 +-
+ drivers/thermal/thermal_core.h                     |   9 +
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c |  77 +-
+ include/dt-bindings/thermal/thermal.h              |  27 +
+ include/linux/cpu_cooling.h                        |  25 +
+ include/linux/thermal.h                            |  32 +-
+ 22 files changed, 1880 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
+ create mode 100644 arch/arm/boot/dts/omap4-cpu-thermal.dtsi
+ create mode 100644 arch/arm/boot/dts/omap5-core-thermal.dtsi
+ create mode 100644 arch/arm/boot/dts/omap5-gpu-thermal.dtsi
+ create mode 100644 drivers/thermal/of-thermal.c
+ create mode 100644 include/dt-bindings/thermal/thermal.h
+
+-- 
+1.8.2.1.342.gfa7285d
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
