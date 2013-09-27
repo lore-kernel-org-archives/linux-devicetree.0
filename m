@@ -1,41 +1,77 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ASoC: generic: Add generic DT based simple codec
-Date: Thu, 26 Sep 2013 21:57:30 -0500
-Message-ID: <CAL_JsqKmfurrCqEYRNqcLRZMU-VjPin2dvK1Q6CMcK4i=+x-8w@mail.gmail.com>
-References: <20130919105437.75e0f0a3@armhf>
-	<5240B07C.6080404@wwwdotorg.org>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [PATCHv4 01/18] thermal: allow registering without .get_temp
+Date: Thu, 26 Sep 2013 23:13:08 -0400
+Message-ID: <1380251605-3804-2-git-send-email-eduardo.valentin@ti.com>
+References: <1380251605-3804-1-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5240B07C.6080404-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1380251605-3804-1-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, wni@nvidia.com
+Cc: grant.likely@linaro.org, durgadoss.r@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2013 at 4:19 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 09/19/2013 02:54 AM, Jean-Francois Moine wrote:
->> This patch adds a simple sound codec which is described by the DT.
->> This codec may be used when no specific codec action is needed.
->
->> diff --git a/Documentation/devicetree/bindings/sound/simple-codec.txt b/Documentation/devicetree/bindings/sound/simple-codec.txt
->
->> +Device-Tree bindings for the simple codec
->> +
->> +Required properties:
->> +- compatible: should be "linux,simple-codec".
->
-> We shouldn't have any Linux-specific bindings. It might be reasonable to
-> define a binding for a "simple CODEC", but there's no reason it should
-> be Linux-specific.
+This patch changes the thermal core driver to allow
+registration of thermal zones without the .get_temp callback.
 
-Further, just define the type of codec h/w. If linux can use its
-simple-codec driver for it, then add a match table entry for said
-codec. Then the DT is future proof when you decide the simple driver
-doesn't really work for that h/w.
+The idea behind this change is to allow lazy registration
+of sensor callbacks.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The thermal zone will be disabled whenever the ops
+does not contain a .get_temp callback. The sysfs interface
+will be returning -EINVAL on any temperature read operation.
+
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+---
+ drivers/thermal/thermal_core.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 4962a6a..8a94300 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -402,7 +402,7 @@ int thermal_zone_get_temp(struct thermal_zone_device *tz, unsigned long *temp)
+ 	enum thermal_trip_type type;
+ #endif
+ 
+-	if (!tz || IS_ERR(tz))
++	if (!tz || IS_ERR(tz) || !tz->ops->get_temp)
+ 		goto exit;
+ 
+ 	mutex_lock(&tz->lock);
+@@ -455,6 +455,9 @@ void thermal_zone_device_update(struct thermal_zone_device *tz)
+ {
+ 	int count;
+ 
++	if (!tz->ops->get_temp)
++		return;
++
+ 	update_temperature(tz);
+ 
+ 	for (count = 0; count < tz->trips; count++)
+@@ -1384,7 +1387,7 @@ struct thermal_zone_device *thermal_zone_device_register(const char *type,
+ 	if (trips > THERMAL_MAX_TRIPS || trips < 0 || mask >> trips)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	if (!ops || !ops->get_temp)
++	if (!ops)
+ 		return ERR_PTR(-EINVAL);
+ 
+ 	if (trips > 0 && (!ops->get_trip_type || !ops->get_trip_temp))
+@@ -1488,6 +1491,9 @@ struct thermal_zone_device *thermal_zone_device_register(const char *type,
+ 
+ 	INIT_DELAYED_WORK(&(tz->poll_queue), thermal_zone_device_check);
+ 
++	if (!tz->ops->get_temp)
++		thermal_zone_device_set_polling(tz, 0);
++
+ 	thermal_zone_device_update(tz);
+ 
+ 	if (!result)
+-- 
+1.8.2.1.342.gfa7285d
+
