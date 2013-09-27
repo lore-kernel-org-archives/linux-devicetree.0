@@ -1,27 +1,149 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH V3] PCI: exynos: add support for MSI
-Date: Fri, 27 Sep 2013 13:09:49 -0600
-Message-ID: <CAErSpo5S873mmFZ=RiRsCbKnz89D5p62AzLkVb80VRp7mjKKFg@mail.gmail.com>
-References: <001a01ceaace$013ec980$03bc5c80$%han@samsung.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2 1/9] hwspinlock/core: add common dt bindings and OF
+ helpers
+Date: Fri, 27 Sep 2013 14:26:00 -0500
+Message-ID: <5245DBC8.4050304@ti.com>
+References: <cover.1379445653.git.s-anna@ti.com> <4df03ac30dcc79132e3acc2e586d0ca99b431258.1379445653.git.s-anna@ti.com> <14DB8294-1148-446A-A6D3-34E66BA8732C@codeaurora.org> <5245B6F9.7030505@ti.com> <3C582FCF-7A24-48AC-B98B-AF1D18C1E22B@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <001a01ceaace$013ec980$03bc5c80$%han@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Pratyush Anand <pratyush.anand@st.com>, Mohit KUMAR <Mohit.KUMAR@st.com>, Siva Reddy Kallam <siva.kallam@samsung.com>, SRIKANTH TUMKUR SHIVANAND <ts.srikanth@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Sean Cross <xobs@kosagi.com>, Kishon Vijay Abraham I <kishon@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3C582FCF-7A24-48AC-B98B-AF1D18C1E22B-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 6, 2013 at 12:54 AM, Jingoo Han <jg1.han@samsung.com> wrote:
-> This patch adds support for Message Signaled Interrupt in the
-> Exynos PCIe diver using Synopsys designware PCIe core IP.
->
-> Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-> Signed-off-by: Srikanth T Shivanand <ts.srikanth@samsung.com>
-> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-> Cc: Pratyush Anand <pratyush.anand@st.com>
-> Cc: Mohit KUMAR <Mohit.KUMAR@st.com>
+Kumar,
 
-Applied to my pci/host-exynos branch for v3.13.  Thanks!
+>>
+>> On 09/27/2013 11:04 AM, Kumar Gala wrote:
+>>>
+>>> On Sep 17, 2013, at 2:30 PM, Suman Anna wrote:
+>>>
+>>>> All the platform-specific hwlock driver implementations need the
+>>>> number of locks and the associated base id for registering the
+>>>> locks present within a hwspinlock device with the driver core.
+>>>> These two variables are represented by 'hwlock-num-locks' and
+>>>> 'hwlock-base-id' properties. The documentation and OF helpers to
+>>>> retrieve these common properties have been added to the driver core.
+>>>>
+>>>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>>>> ---
+>>>> .../devicetree/bindings/hwlock/hwlock.txt          | 26 +++++++++
+>>>> drivers/hwspinlock/hwspinlock_core.c               | 61 +++++++++++++++++++++-
+>>>> include/linux/hwspinlock.h                         | 11 ++--
+>>>> 3 files changed, 93 insertions(+), 5 deletions(-)
+>>>> create mode 100644 Documentation/devicetree/bindings/hwlock/hwlock.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/hwlock/hwlock.txt b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+>>>> new file mode 100644
+>>>> index 0000000..789930e
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+>>>> @@ -0,0 +1,26 @@
+>>>> +Generic hwlock bindings
+>>>> +=======================
+>>>> +
+>>>> +Generic bindings that are common to all the hwlock platform specific driver
+>>>> +implementations, the retrieved values are used for registering the device
+>>>> +specific parameters with the hwspinlock core.
+>>>> +
+>>>> +The validity and need of these common properties may vary from one driver
+>>>> +implementation to another. Look through the individual hwlock driver
+>>>> +binding documentations for identifying which are mandatory and which are
+>>>> +optional for that specific driver.
+>>>> +
+>>>> +Common properties:
+>>>> +- hwlock-base-id:	Base Id for the locks for a particular hwlock device.
+>>>> +			This property is used for representing a set of locks
+>>>> +			present in a hwlock device with a unique base id in
+>>>> +			the driver core. This property is mandatory ONLY if a
+>>>> +			SoC has several hwlock devices.
+>>>> +
+>>>> +			See documentation on struct hwspinlock_pdata in
+>>>> +			linux/hwspinlock.h for more details.
+>>>> +
+>>>> +- hwlock-num-locks:	Number of locks present in a hwlock device. This
+>>>> +			property is needed on hwlock devices, where the number
+>>>> +			of supported locks within a hwlock device cannot be
+>>>> +			read from a register.
+> 
+> Was meaning to say this before, another reason for hwlock-num-locks is to limit the # of locks available to the processors running linux vs what other processors in the SoC might be using.
 
-Bjorn
+Yes, I understand the usecase/scenario since we had a similar need on
+our product. That said, I guess this should be left to the individual
+driver implementation/integration/documentation since this can be
+achieved in different ways and depends on how you partition the
+resources on your system (static partition vs resource reservation at
+linux init time). Mentioning that here begs the question if you are
+gonna use the starting 'n' locks, ending 'n' locks or range of 'n' locks
+beginning in the middle. It would also imply it has to work together
+with the hwlock-base-id as well in the last case. I would prefer to keep
+the documentation generic here.
+
+> 
+> 
+>>>> diff --git a/drivers/hwspinlock/hwspinlock_core.c b/drivers/hwspinlock/hwspinlock_core.c
+>>>> index 461a0d7..aec32e7 100644
+>>>> --- a/drivers/hwspinlock/hwspinlock_core.c
+>>>> +++ b/drivers/hwspinlock/hwspinlock_core.c
+>>>> @@ -1,7 +1,7 @@
+>>>> /*
+>>>> * Hardware spinlock framework
+>>>> *
+>>>> - * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com
+>>>> + * Copyright (C) 2010-2013 Texas Instruments Incorporated - http://www.ti.com
+>>>> *
+>>>> * Contact: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+>>>> *
+>>>> @@ -27,6 +27,7 @@
+>>>> #include <linux/hwspinlock.h>
+>>>> #include <linux/pm_runtime.h>
+>>>> #include <linux/mutex.h>
+>>>> +#include <linux/of.h>
+>>>>
+>>>> #include "hwspinlock_internal.h"
+>>>>
+>>>> @@ -308,6 +309,64 @@ out:
+>>>> }
+>>>>
+>>>> /**
+>>>> + * of_hwspin_lock_get_base_id() - OF helper to retrieve base id
+>>>> + * @dn: device node pointer
+>>>> + *
+>>>> + * This is an OF helper function that can be called by the underlying
+>>>> + * platform-specific implementations, to retrieve the base id for the
+>>>> + * set of locks present within a hwspinlock device instance.
+>>>> + *
+>>>> + * Returns the base id value on success, -ENODEV on generic failure or
+>>>> + * an appropriate error code as returned by the OF layer
+>>>> + */
+>>>> +int of_hwspin_lock_get_base_id(struct device_node *dn)
+>>>> +{
+>>>> +	unsigned int val;
+>>>> +	int ret = -ENODEV;
+>>>> +
+>>>> +#ifdef CONFIG_OF
+>>>> +	if (!dn)
+>>>> +		return -ENODEV;
+>>>
+>>> Checking !dn is done in of_property_read_u32, so you don't need to duplicate
+>>
+>> I have added this specifically since my intention is to differentiate
+>> the validity of the node vs the presence of the property within a node.
+>> This property may be optional for some platforms and a must for some
+>> others, and differentiating would allow the individual driver
+>> implementations to make the distinction.
+> 
+> Maybe add a comment for both cases.
+
+OK, will do.
+
+regards
+Suman
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
