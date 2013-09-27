@@ -1,92 +1,36 @@
-From: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Subject: Re: [PATCH RFC] media: rc: OF: Add Generic bindings for remote-control
-Date: Fri, 27 Sep 2013 10:57:16 -0300
-Message-ID: <20130927105716.64349f02@samsung.com>
-References: <1380274391-26577-1-git-send-email-srinivas.kandagatla@st.com>
- <20130927113458.GB18672@e106331-lin.cambridge.arm.com>
- <52458774.1060909@st.com>
+From: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio/omap: maintain GPIO and IRQ usage separately
+Date: Fri, 27 Sep 2013 16:31 +0200
+Message-ID: <1651688.AIWaNrhZnY@lem-wkst-02>
+References: <1380069414-2922-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <52458774.1060909@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: srinivas.kandagatla@st.com
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1380069414-2922-1-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jon Hunter <jgchunter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, r.sricharan-l0cyMroinI0@public.gmane.org, holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 27 Sep 2013 14:26:12 +0100
-Srinivas KANDAGATLA <srinivas.kandagatla@st.com> escreveu:
-
-> On 27/09/13 12:34, Mark Rutland wrote:
+On Friday 27 September 2013 02:36:52, Javier Martinez Canillas wrote:
+> The GPIO OMAP controller pins can be used as IRQ and GPIO
+> independently so is necessary to keep track GPIO pins and
+> IRQ lines usage separately to make sure that the bank will
+> always be enabled while being used.
 > 
-> >> > +	- rx-mode: Can be "infrared" or "uhf". rx-mode should be present iff
-> >> > +	  the rx pins are wired up.
-> > I'm unsure on this. What if the device has multiple receivers that can
-> > be independently configured? What if it supports something other than
-> > "infrared" or "uhf"? What if a device can only be wired up as
-> > "infrared"? 
-> > 
-> > I'm not sure how generic these are, though we should certainly encourage
-> > bindings that can be described this way to be described in the same way.
-> > 
-> >> > +	- tx-mode: Can be "infrared" or "uhf". tx-mode should be present iff
-> >> > +	  the tx pins are wired up.
-> > I have similar concerns here to those for the rx-mode property.
-> > 
-> Initially rx-mode and tx-mode sounded like more generic properties
-> that's the reason I ended up in this route. But after this discussion it
-> looks like its not really generic enough to cater all the use cases.
+> Also move gpio_is_input() definition in preparation for the
+> next patch that setups the controller's irq_chip driver when
+> a caller requests an interrupt line.
 > 
-> It make sense for me to perfix "st," for these properties in the st-rc
-> driver rather than considering them as generic properties.
+> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-Well, for sure the direction (TX, RX, both) is a generic property.
+For both patches:
 
-I'd say that the level 1 protocol (IR, UHF, Bluetooth, ...) is also a
-generic property. Most remotes are IR, but there are some that are
-bluetooth, and your hardware is using UHF.
+Tested-by: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
 
-Btw, we're even thinking on mapping HDMI-CEC remote controller RX/TX via
-the RC subsystem. So, another L1 protocol would be "hdmi-cec".
-
-Yet, it seems unlikely that the very same remote controller IP would use
-a different protocol for RX and TX, while sharing the same registers.
-
-So, for example, a hardware with "hdmi-cec" and "infrared" will actually
-have two remote controller devices. Eventually, the "infrared" being
-just RX, while "hdmi-cec" being bi-directional.
-
-So, IMHO, this could be mapped as "l1_protocol" ("infrared", "uhf", ...)
-and another one "direction" ("rx", "tx", "bi-directional").
-
-> 
-> > I think what we actually need to document is the process of creating a
-> > binding in such a way as to encourage uniformity. Something like the
-> > following steps:
-> I agree, It will help.. :-)
-> > 
-> > 1. Look to see if a binding already exists. If so, use it.
-> > 
-> > 2. Is there a binding for a compatible device? If so, use/extend it.
-> > 
-> > 3. Is there a binding for a similar (but incompatible) device? Use it as
-> >    a template, possibly factor out portions into a class binding if
-> >    those portions are truly general.
-> > 
-> > 4. Is there a binding for the class of device? If so, build around that,
-> >    possibly extending it.
-> > 
-> > 5. If there's nothing relevant, create a binding aiming for as much
-> >    commonality as possible with other devices of that class that may
-> >    have bindings later.
-> 
-> Thanks for this little guide...
-> 
-> --srini
-
-
--- 
-
-Cheers,
-Mauro
+on an am3359 (which is DT booting).
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
