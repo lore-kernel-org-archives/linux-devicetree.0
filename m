@@ -1,72 +1,92 @@
-From: Arnaud Patard (Rtp) <arnaud.patard@rtp-net.org>
-Subject: Re: device tree binding documentation outdated
-Date: Fri, 27 Sep 2013 15:52:53 +0200
-Message-ID: <87ioxmbccq.fsf@lebrac.rtp-net.org>
-References: <20130926195158.GS12758@n2100.arm.linux.org.uk>
- <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com>
- <CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com>
- <20130927025116.GG25146@S2101-09.ap.freescale.net>
- <20130927084504.GW12758@n2100.arm.linux.org.uk>
- <20130927122814.GK25146@S2101-09.ap.freescale.net>
- <20130927131225.GA31178@titan.lakedaemon.net>
- <20130927132107.GZ12758@n2100.arm.linux.org.uk>
+From: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Subject: Re: [PATCH RFC] media: rc: OF: Add Generic bindings for remote-control
+Date: Fri, 27 Sep 2013 10:57:16 -0300
+Message-ID: <20130927105716.64349f02@samsung.com>
+References: <1380274391-26577-1-git-send-email-srinivas.kandagatla@st.com>
+ <20130927113458.GB18672@e106331-lin.cambridge.arm.com>
+ <52458774.1060909@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130927132107.GZ12758@n2100.arm.linux.org.uk> (Russell King's
- message of "Fri, 27 Sep 2013 14:21:07 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Linus Walleij <linus.walleij@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <52458774.1060909@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: srinivas.kandagatla@st.com
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Russell King - ARM Linux <linux@arm.linux.org.uk> writes:
+Em Fri, 27 Sep 2013 14:26:12 +0100
+Srinivas KANDAGATLA <srinivas.kandagatla@st.com> escreveu:
 
-> On Fri, Sep 27, 2013 at 09:12:25AM -0400, Jason Cooper wrote:
->> I'm currently slogging through the exact same issues for adding imx50
->> (SanDisk Connect Wireless media Drive).  I thought I was just thick.
->> It's a relief to know I'm not the only one having trouble with this.
->
-> I'm coming to the conclusion that it's almost to the point of "vendor
-> lockin" - you have to find someone who understands this stuff to take
-> your hardware description and turn it into a working DT description.
+> On 27/09/13 12:34, Mark Rutland wrote:
+> 
+> >> > +	- rx-mode: Can be "infrared" or "uhf". rx-mode should be present iff
+> >> > +	  the rx pins are wired up.
+> > I'm unsure on this. What if the device has multiple receivers that can
+> > be independently configured? What if it supports something other than
+> > "infrared" or "uhf"? What if a device can only be wired up as
+> > "infrared"? 
+> > 
+> > I'm not sure how generic these are, though we should certainly encourage
+> > bindings that can be described this way to be described in the same way.
+> > 
+> >> > +	- tx-mode: Can be "infrared" or "uhf". tx-mode should be present iff
+> >> > +	  the tx pins are wired up.
+> > I have similar concerns here to those for the rx-mode property.
+> > 
+> Initially rx-mode and tx-mode sounded like more generic properties
+> that's the reason I ended up in this route. But after this discussion it
+> looks like its not really generic enough to cater all the use cases.
+> 
+> It make sense for me to perfix "st," for these properties in the st-rc
+> driver rather than considering them as generic properties.
 
-I don't know imx6 vendor code, but at least on imx5x with mainline, half
-of the job is easy. For instance, in C, there was a tab containing pad
-settings, like that:
-static iomux_v3_cfg_t mx51efika_pads[] = {
-...
-MX51_PAD_EIM_A16__GPIO2_10,
-...
+Well, for sure the direction (TX, RX, both) is a generic property.
 
-and now, it's more :
+I'd say that the level 1 protocol (IR, UHF, Bluetooth, ...) is also a
+generic property. Most remotes are IR, but there are some that are
+bluetooth, and your hardware is using UHF.
 
-fsl,pins = <
-...
-MX51_PAD_EIM_A16__GPIO2_10  0x85
-...
+Btw, we're even thinking on mapping HDMI-CEC remote controller RX/TX via
+the RC subsystem. So, another L1 protocol would be "hdmi-cec".
 
-The real problem is more about finding the 0x85 value, which is not
-easy. Of course, if the code did not use this kind of (imx-specific)
-stuff, it's not suprising that it's hard to convert it.
+Yet, it seems unlikely that the very same remote controller IP would use
+a different protocol for RX and TX, while sharing the same registers.
 
->
-> Still slogging away at the nonfunctional ethernet and still have no
-> idea why it's not working... just going through the pinctrl settings
-> again, this time decoding them right down to the values on both the
-> DT and the working code and comparing.
+So, for example, a hardware with "hdmi-cec" and "infrared" will actually
+have two remote controller devices. Eventually, the "infrared" being
+just RX, while "hdmi-cec" being bi-directional.
 
-There may be also some missing code on the driver side (not related to
-pinctrl). It's already the case for some stuff on imx5x side.
+So, IMHO, this could be mapped as "l1_protocol" ("infrared", "uhf", ...)
+and another one "direction" ("rx", "tx", "bi-directional").
 
-my 2 cents,
-Arnaud
+> 
+> > I think what we actually need to document is the process of creating a
+> > binding in such a way as to encourage uniformity. Something like the
+> > following steps:
+> I agree, It will help.. :-)
+> > 
+> > 1. Look to see if a binding already exists. If so, use it.
+> > 
+> > 2. Is there a binding for a compatible device? If so, use/extend it.
+> > 
+> > 3. Is there a binding for a similar (but incompatible) device? Use it as
+> >    a template, possibly factor out portions into a class binding if
+> >    those portions are truly general.
+> > 
+> > 4. Is there a binding for the class of device? If so, build around that,
+> >    possibly extending it.
+> > 
+> > 5. If there's nothing relevant, create a binding aiming for as much
+> >    commonality as possible with other devices of that class that may
+> >    have bindings later.
+> 
+> Thanks for this little guide...
+> 
+> --srini
+
+
+-- 
+
+Cheers,
+Mauro
