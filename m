@@ -1,76 +1,106 @@
-From: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] pwm-backlight: add support for device tree gpio control
-Date: Fri, 27 Sep 2013 06:35:31 -0700
-Message-ID: <524589A3.50700@newsguy.com>
-References: <1378236372-15711-1-git-send-email-mikedunn@newsguy.com> <20130910172130.GC22111@ulmo> <523056A6.5060000@newsguy.com> <524408BE.40402@ti.com> <20130926120248.GB1680@ulmo> <524427E5.50403@ti.com> <20130926125020.GA2141@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
+Subject: [PATCH v3] powerpc/83xx: gianfar_ptp: select 1588 clock source through dts file
+Date: Fri, 27 Sep 2013 17:40:27 +0400
+Message-ID: <1380289227-12029-1-git-send-email-aida.mynzhasova@skitlab.ru>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130926125020.GA2141@ulmo>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/26/2013 05:50 AM, Thierry Reding wrote:
-> On Thu, Sep 26, 2013 at 03:26:13PM +0300, Tomi Valkeinen wrote:
->> On 26/09/13 15:02, Thierry Reding wrote:
->>> On Thu, Sep 26, 2013 at 01:13:18PM +0300, Tomi Valkeinen wrote:
->>>> On 11/09/13 14:40, Mike Dunn wrote:
->>>>> On 09/10/2013 10:21 AM, Thierry Reding wrote:
->>>>
->>>>>> Do you have a real setup that actually needs multiple GPIOs? Usually
->>>>>> such a setup requires some kind of timing or other additional constraint
->>>>>> which can't be represented by this simple binding.
->>>>>>
->>>>>> Looking at the Palm Treo code it seems like the reason why multiple
->>>>>> GPIOs are needed is because one is to enable the backlight, while the
->>>>>> other is in fact used to enable the LCD panel. 
->>>>>
->>>>>
->>>>> There are actually four GPIOs involved!  (There is an embarrasingly horrible
->>>>> hack in arch/arm/mach-pxa/palmtreo.c that handles the others.)  One is almost
->>>>> certainly simply backlight power.  The other three are probably LCD related.
->>>>
->>>> When you say "power", do you mean the gpio enables a regulator to feed
->>>> power to the backlight? If so, wouldn't that be a regulator, not gpio,
->>>> from the bl driver's point of view?
->>>>
->>>> Generally speaking, this same problem appears in many places, but for
->>>> some reason especially in display. I'm a bit hesitant in adding "free
->>>> form" gpio/regulator support for drivers, as, as Thierry pointed out,
->>>> there are often timing requirements, or sometimes the gpios are
->>>> inverted, or sometimes the gpio is, in fact, a reset gpio, where you'll
->>>> assert the gpio for a short moment only.
->>>
->>> I sent out another series a few days ago that somewhat obsoletes this
->>> patch. What it does is basically add a single enable GPIO that can be
->>> used to turn the backlight on and off. In a separate patch, support is
->>> added for a power regulator. The combination of both should be able to
->>> cover the majority of use-cases.
->>
->> But Mike's case required 4 GPIOs? Or can that be reduced to one gpio and
->> one regulator?
-> 
-> Well, at least for the backlight it only seemed to involve a single
-> GPIO. The other three were probably related to LCD and therefore not
-> really suitable for a backlight driver. Traditionally it has been that
-> the backlight driver handled these things as well (via the callbacks
-> installed by board setup code). While really they should be handled by a
-> separate driver (for the LCD).
+Currently IEEE 1588 timer reference clock source is determined through
+hard-coded value in gianfar_ptp driver. This patch allows to select ptp
+clock source by means of device tree file node.
 
+For instance:
 
-Yes, this is currently my best guess.  This is reverse-engineered and
-unfortunately I'm not yet able to accurately describe my particular use-case.
-Probably as wacky as anything you can imagine, Thierry :)
+	fsl,cksel = <0>;
 
-The gpio and regulator patches will probably suffice.  Thierry, can you please
-point me to those patches?  I don't see them in your gitorious tree.  If they
-were posted to linux-pwm, I missed them; sorry.
+for using external (TSEC_TMR_CLK input) high precision timer
+reference clock.
 
-Thanks,
-Mike
+Other acceptable values:
+
+	<1> : eTSEC system clock
+	<2> : eTSEC1 transmit clock
+	<3> : RTC clock input
+
+When this attribute isn't used, eTSEC system clock will serve as
+IEEE 1588 timer reference clock.
+
+Signed-off-by: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/fsl-tsec-phy.txt | 18 +++++++++++++++++-
+ drivers/net/ethernet/freescale/gianfar_ptp.c           |  4 +++-
+ 2 files changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+index 2c6be03..d2ea460 100644
+--- a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
++++ b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+@@ -86,6 +86,7 @@ General Properties:
+ 
+ Clock Properties:
+ 
++  - fsl,cksel        Timer reference clock source.
+   - fsl,tclk-period  Timer reference clock period in nanoseconds.
+   - fsl,tmr-prsc     Prescaler, divides the output clock.
+   - fsl,tmr-add      Frequency compensation value.
+@@ -97,7 +98,7 @@ Clock Properties:
+   clock. You must choose these carefully for the clock to work right.
+   Here is how to figure good values:
+ 
+-  TimerOsc     = system clock               MHz
++  TimerOsc     = selected reference clock   MHz
+   tclk_period  = desired clock period       nanoseconds
+   NominalFreq  = 1000 / tclk_period         MHz
+   FreqDivRatio = TimerOsc / NominalFreq     (must be greater that 1.0)
+@@ -114,6 +115,20 @@ Clock Properties:
+   Pulse Per Second (PPS) signal, since this will be offered to the PPS
+   subsystem to synchronize the Linux clock.
+ 
++  Reference clock source is determined by the value, which is holded
++  in CKSEL bits in TMR_CTRL register. "fsl,cksel" property keeps the
++  value, which will be directly written in those bits, that is why,
++  according to reference manual, the next clock sources can be used:
++
++  <0> - external high precision timer reference clock (TSEC_TMR_CLK
++        input is used for this purpose);
++  <1> - eTSEC system clock;
++  <2> - eTSEC1 transmit clock;
++  <3> - RTC clock input.
++
++  When this attribute is not used, eTSEC system clock will serve as
++  IEEE 1588 timer reference clock.
++
+ Example:
+ 
+ 	ptp_clock@24E00 {
+@@ -121,6 +136,7 @@ Example:
+ 		reg = <0x24E00 0xB0>;
+ 		interrupts = <12 0x8 13 0x8>;
+ 		interrupt-parent = < &ipic >;
++		fsl,cksel       = <1>;
+ 		fsl,tclk-period = <10>;
+ 		fsl,tmr-prsc    = <100>;
+ 		fsl,tmr-add     = <0x999999A4>;
+diff --git a/drivers/net/ethernet/freescale/gianfar_ptp.c b/drivers/net/ethernet/freescale/gianfar_ptp.c
+index 098f133..e006a09 100644
+--- a/drivers/net/ethernet/freescale/gianfar_ptp.c
++++ b/drivers/net/ethernet/freescale/gianfar_ptp.c
+@@ -452,7 +452,9 @@ static int gianfar_ptp_probe(struct platform_device *dev)
+ 	err = -ENODEV;
+ 
+ 	etsects->caps = ptp_gianfar_caps;
+-	etsects->cksel = DEFAULT_CKSEL;
++
++	if (get_of_u32(node, "fsl,cksel", &etsects->cksel))
++		etsects->cksel = DEFAULT_CKSEL;
+ 
+ 	if (get_of_u32(node, "fsl,tclk-period", &etsects->tclk_period) ||
+ 	    get_of_u32(node, "fsl,tmr-prsc", &etsects->tmr_prsc) ||
+-- 
+1.8.1.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
