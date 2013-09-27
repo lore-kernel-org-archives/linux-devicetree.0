@@ -1,167 +1,66 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v5] ARM: shmobile: armadillo800eva-reference: add SDHI and MMCIF interfaces
-Date: Fri, 27 Sep 2013 02:50:32 +0200
-Message-ID: <5211142.rSOJTFTEIy@avalon>
-References: <Pine.LNX.4.64.1309261931340.11968@axis700.grange>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: Add device tree bindings for i.MX TVE
+Date: Fri, 27 Sep 2013 09:15:06 +0800
+Message-ID: <20130927011504.GA25146@S2101-09.ap.freescale.net>
+References: <1380192374-9531-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.64.1309261931340.11968-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1380192374-9531-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
-
-Thank you for the patch.
-
-On Thursday 26 September 2013 19:43:16 Guennadi Liakhovetski wrote:
-> Add SDHI0 and MMCIF interfaces to armadillo800eva-reference with
-> regulators and pin configurations. SDHI1 is not added yet, because the
-> switch, that connects the interface either to an SD slot or to a WiFi
-> SDIO card cannot be described in DT yet.
+On Thu, Sep 26, 2013 at 12:46:13PM +0200, Philipp Zabel wrote:
+> This patch adds device tree binding documentation for i.MX Television Encoder
+> devices contained in i.MX51 and i.MX53 SoCs.
 > 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
-> 
-> v5: remove SDHI1 until we can properly handle the WiFi / card slot switch.
-> 
->  .../boot/dts/r8a7740-armadillo800eva-reference.dts |   58 +++++++++++++++++
->  arch/arm/boot/dts/r8a7740.dtsi                     |   33 +++++++++++
->  2 files changed, 91 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-> b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts index
-> 8b2aab5..ea2992a 100644
-> --- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-> @@ -35,6 +35,33 @@
->  		regulator-boot-on;
->  	};
-> 
-> +	vcc_sdhi0: regulator@1 {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "SDHI0 Vcc";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpio = <&pfc 75 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +
-> +	vccq_sdhi0: regulator@2 {
-> +		compatible = "regulator-gpio";
-> +
-> +		regulator-name = "SDHI0 VccQ";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&vcc_sdhi0>;
-> +
-> +		enable-gpio = <&pfc 74 GPIO_ACTIVE_HIGH>;
-> +		gpios = <&pfc 17 GPIO_ACTIVE_HIGH>;
-> +		states = <3300000 0
-> +			  1800000 1>;
-> +
-> +		enable-active-high;
-> +	};
-> +
->  	leds {
->  		compatible = "gpio-leds";
->  		led1 {
-> @@ -92,8 +119,39 @@
->  		renesas,groups = "tpu0_to2_1";
->  		renesas,function = "tpu0";
->  	};
-> +
-> +	mmc0_pins: mmc0 {
-> +		renesas,groups = "mmc0_data8_1", "mmc0_ctrl_1";
-> +		renesas,function = "mmc0";
-> +	};
-> +
-> +	sdhi0_pins: sdhi0 {
-> +		renesas,groups = "sdhi0_data4", "sdhi0_ctrl", "sdhi0_wp";
-> +		renesas,function = "sdhi0";
-> +	};
->  };
-> 
->  &tpu {
->  	status = "okay";
->  };
-> +
-> +&mmcif0 {
-> +	pinctrl-0 = <&mmc0_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	vmmc-supply = <&reg_3p3v>;
-> +	bus-width = <8>;
-> +	non-removable;
-> +	status = "okay";
-> +};
-> +
-> +&sdhi0 {
-> +	pinctrl-0 = <&sdhi0_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	vmmc-supply = <&vcc_sdhi0>;
-> +	vqmmc-supply = <&vccq_sdhi0>;
-> +	bus-width = <4>;
-> +	broken-cd;
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-> index 868bdde..ae1e230 100644
-> --- a/arch/arm/boot/dts/r8a7740.dtsi
-> +++ b/arch/arm/boot/dts/r8a7740.dtsi
-> @@ -161,4 +161,37 @@
->  		status = "disabled";
->  		#pwm-cells = <3>;
->  	};
-> +
-> +	mmcif0: mmcif@e6bd0000 {
-> +		compatible = "renesas,sh-mmcif";
-> +		reg = <0xe6bd0000 0x100>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 56 4
-> +				0 57 4>;
-> +		status = "disabled";
-> +	};
-> +
-> +	sdhi0: sdhi@e6850000 {
-> +		compatible = "renesas,sdhi-r8a7740";
-> +		reg = <0xe6850000 0x100>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 117 4
+>  .../devicetree/bindings/video/fsl,imx-tve.txt      | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/fsl,imx-tve.txt
 
-board-armadillo800eva.c doesn't use IRQ 117 for SDHI0. It includes a comment 
-that mentions "no SH_MOBILE_SDHI_IRQ_CARD_DETECT here". Should it be fixed in 
-the board file ?
+Shouldn't this be put into
+Documentation/devicetree/bindings/staging/imx-drm/?
 
-> +				0 118 4
-> +				0 119 4>;
-> +		cap-sd-highspeed;
-> +		cap-sdio-irq;
-> +		status = "disabled";
-> +	};
+Shawn
+
+> 
+> diff --git a/Documentation/devicetree/bindings/video/fsl,imx-tve.txt b/Documentation/devicetree/bindings/video/fsl,imx-tve.txt
+> new file mode 100644
+> index 0000000..77f92d7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/fsl,imx-tve.txt
+> @@ -0,0 +1,23 @@
+> +Freescale i.MX Television Encoder (TVE, TVEv2)
 > +
-> +	sdhi1: sdhi@e6860000 {
-> +		compatible = "renesas,sdhi-r8a7740";
-> +		reg = <0xe6860000 0x100>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 121 4
-> +				0 122 4
-> +				0 123 4>;
-> +		cap-sd-highspeed;
-> +		cap-sdio-irq;
-> +		status = "disabled";
+> +The TVE encoders are contained in i.MX51 and i.MX53 SoCs and can drive analog
+> +output connectors such as VGA, Composite, or S-Video.
+> +
+> +Required properties:
+> +- compatible : "fsl,<soc>-tve", soc should be imx51 or imx53
+> +- reg : Should contain 1 register ranges(address and length)
+> +- interrupts : One interrupt of the fb dev
+> +- clocks, clock-names : Phandles to clocks called "tve" and "di_sel"
+> +  as documented in Documentation/devicetree/bindings/clock/clock-bindings.txt.
+> +  di_sel is a display interface input clock multiplexer, which can
+> +  be parented to the tve_di output clock provided by this device.
+> +
+> +Example:
+> +
+> +	tve: tve@63ff0000 {
+> +		compatible = "fsl,imx53-tve";
+> +		reg = <0x63ff0000 0x1000>;
+> +		interrupts = <92>;
+> +		clocks = <&clks 69>, <&clks 116>;
+> +		clock-names = "tve", "di_sel";
 > +	};
->  };
--- 
-Regards,
-
-Laurent Pinchart
+> -- 
+> 1.8.4.rc3
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
