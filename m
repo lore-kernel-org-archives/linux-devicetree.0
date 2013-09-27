@@ -1,82 +1,67 @@
-From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCHv2 2/9] hwspinlock/omap: add support for dt nodes
-Date: Fri, 27 Sep 2013 12:14:41 -0500
-Message-ID: <9410D22C-8ECC-4A98-9581-A30564FE1B4D@codeaurora.org>
-References: <cover.1379445653.git.s-anna@ti.com> <0fd6a11880894260d627a50b1e35f363625e9b1d.1379445653.git.s-anna@ti.com> <AE597DCC-83D7-4BCD-8990-3D63540F32EA@codeaurora.org> <5245B076.1090008@ti.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Fri, 27 Sep 2013 18:49:16 +0100
+Message-ID: <20130927174916.GD12758@n2100.arm.linux.org.uk>
+References: <20130926195158.GS12758@n2100.arm.linux.org.uk> <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com> <20130926205906.GT12758@n2100.arm.linux.org.uk> <CAOMZO5Dj7o3qBH2hzPFWjepgpt5XR5qKmQorKS6jH_7=gnY5cg@mail.gmail.com> <20130927121357.GY12758@n2100.arm.linux.org.uk> <20130927132601.GL25146@S2101-09.ap.freescale.net> <20130927151900.GA12758@n2100.arm.linux.org.uk> <CAHCPf3t8=mJn-RCz3C1cY6zqsH9ds8UANKpKx9ZpwPM6WjJt3g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5245B076.1090008-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHCPf3t8=mJn-RCz3C1cY6zqsH9ds8UANKpKx9ZpwPM6WjJt3g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Sep 27, 2013, at 11:21 AM, Suman Anna wrote:
-
-> On 09/27/2013 11:06 AM, Kumar Gala wrote:
->> 
->> On Sep 17, 2013, at 2:30 PM, Suman Anna wrote:
->> 
->>> HwSpinlock IP is present only on OMAP4 and other newer SoCs,
->>> which are all device-tree boot only. This patch adds the
->>> base support for parsing the DT nodes, and removes the code
->>> dealing with the traditional platform device instantiation.
->>> 
->>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
->>> ---
->>> .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 31 +++++++++++
->>> arch/arm/mach-omap2/Makefile                       |  3 --
->>> arch/arm/mach-omap2/hwspinlock.c                   | 60 ----------------------
->>> drivers/hwspinlock/omap_hwspinlock.c               | 23 +++++++--
->>> 4 files changed, 50 insertions(+), 67 deletions(-)
->>> create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>> delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
->>> 
->>> diff --git a/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>> new file mode 100644
->>> index 0000000..235b7c5
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
->>> @@ -0,0 +1,31 @@
->>> +OMAP4+ HwSpinlock Driver
->>> +========================
->>> +
->>> +Required properties:
->>> +- compatible:		Currently supports only "ti,omap4-hwspinlock" for
->>> +				OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
->>> +- reg:			Contains the hwspinlock register address range (base
->>> +			address and length)
->>> +- ti,hwmods:		Name of the hwmod associated with the hwspinlock device
->>> +
->>> +Common hwlock properties:
->>> +The following describes the usage of the common hwlock properties (defined in
->>> +Documentation/devicetree/bindings/hwlock/hwlock.txt) on OMAP.
->>> +
->>> +- hwlock-base-id:	There are currently no OMAP SoCs with multiple
->>> +			hwspinlock devices. The OMAP driver uses a default
->>> +			base id value of 0 for the locks present within the
->>> +			single hwspinlock device on all SoCs.
->>> +- hwlock-num-locks:	This property is not required on OMAP SoCs, since the
->>> +			number of locks present within a device can be deduced
->>> +			from the SPINLOCK_SYSSTATUS device register.
->> 
->> If you are going to be explicit about this properties, you should probably be a bit more clear about them NOT being in the OMAP dts because of the reasons you specify.
+On Fri, Sep 27, 2013 at 11:52:52AM -0500, Matt Sealey wrote:
+> Russell,
 > 
-> You mean on the hwlock-base-id? I wanted to document how these
-> properties (do not) apply for OMAP, I will revise the text to be a bit
-> more explicit. Thanks for the review.
+> There is a chicken bit in the IOMUXC GPR1 (IOMUXC+0x4 bit 21, it's on
+> page 1927 of the i.MX6DQRM Rev 1 04/2013) which turns on or off the
+> ENET_REF_CLK loopback. You could need to clear it to make the pad an
+> input to the i.MX6 rather than an output to the PHY.. while it may
+> seem like this removes the need for the SION bit in the pin you want,
+> that's actually also required otherwise the pad mux latch 'sees' the
+> data but the input latch behind it doesn't.
+> 
+> There is a great diagram somewhere in the manual (Figure 28-1, right
+> at the top of the GPIO docs) - SION *forces* data (it's the input_on
+> signal in the diagram IIRC) to the gpio data register behind the
+> IOMUX, but the logic behind every muxed pad is almost the same across
+> the SoC.
 
-I meant for both, I think slightly revised text will help.
+The manual which Fabio pointed me at (iMX 6Solo/6DualLite - IMX6SDLRM.pdf)
+doesn't correspond - figure 28-1 is something entirely different.
 
-- k
+> In essence, the pad control setting needs to be correct (SION set) and
+> that chicken bit correctly cleared, or the clock input never goes into
+> the MAC, because the MAC isn't connected directly to the pad, it's
+> connected to the input latch. The only logic block that can 'really'
+> read the pad latch is the GPIO unit.
+> 
+> Note that you MAY have to cycle the clock or reset the PHY or MAC
+> *after* setting the pin up, otherwise the MAC won't get the clock..
+> it's really a laborious process which isn't described properly in the
+> DT (all it needs is a property to define where it's clock comes from
+> and Do The Right Thing (tm) at driver init.. because this is
+> infuriatingly common on i.MX6 designs, but not so common that everyone
+> needs it)
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Okay, but from what I'm working from (which works) the order is:
 
+- Set IOMUXC GPR1 bit 21.
+- Set ipg/ahb ethernet clock to 50MHz
+- IOMUX settings applied, including setting the reference clock SION bit
+- Reset lowered, wait 2ms, reset raised
+- imx6_init_fec(fec_data_rgmii) called
+
+After that is the time that the phy is configured to supply the 125MHz
+reference clock into the IMX6.
+
+That order seems to be happening with my 3.12-rc1 kernel, although a
+little more spread out.
+
+Thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
