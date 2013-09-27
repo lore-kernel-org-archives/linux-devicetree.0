@@ -1,47 +1,89 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 00/51] DMA mask changes
-Date: Fri, 27 Sep 2013 09:27:04 +0100
-Message-ID: <20130927082703.GZ25647@n2100.arm.linux.org.uk>
-References: <20130919212235.GD12758@n2100.arm.linux.org.uk>
- <CACna6rxkpYzdD8_Jfi22vA2suUa3k-JM65_gCySQpp4crVCoPg@mail.gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Fri, 27 Sep 2013 09:45:04 +0100
+Message-ID: <20130927084504.GW12758@n2100.arm.linux.org.uk>
+References: <20130926195158.GS12758@n2100.arm.linux.org.uk> <CAOMZO5ANsZGcpvmtBE7d0q0E6+f0bE_U8CBF7G2v3xtqoLbqcA@mail.gmail.com> <CACRpkda9HZ4JKnidnJJh-HkhCgtvJwQPQJnv9CZ4iYcQP36_Nw@mail.gmail.com> <20130927025116.GG25146@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACna6rxkpYzdD8_Jfi22vA2suUa3k-JM65_gCySQpp4crVCoPg@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-nvme@lists.infradead.org, linux-ide@vger.kernel.org, "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, linux-samsung-soc@vger.kernel.org, Linux SCSI List <linux-scsi@vger.kernel.org>, e1000-devel@lists.sourceforge.net, b43-dev <b43-dev@lists.infradead.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, Network Development <netdev@vger.kernel.org>, linux-usb@vger.kernel.org, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, linux-crypto@vger.kernel.org, uclinux-dist-devel@black
+In-Reply-To: <20130927025116.GG25146-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBTZXAgMjYsIDIwMTMgYXQgMTA6MjM6MDhQTSArMDIwMCwgUmFmYcWCIE1pxYJlY2tp
-IHdyb3RlOgo+IDIwMTMvOS8xOSBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggPGxpbnV4QGFybS5s
-aW51eC5vcmcudWs+Ogo+ID4gVGhpcyBlbWFpbCBpcyBvbmx5IGJlaW5nIHNlbnQgdG8gdGhlIG1h
-aWxpbmcgbGlzdHMgaW4gcXVlc3Rpb24sIG5vdCB0bwo+ID4gYW55b25lIHBlcnNvbmFsbHkuICBU
-aGUgbGlzdCBvZiBpbmRpdmlkdWFscyBpcyBmYXIgdG8gZ3JlYXQgdG8gZG8gdGhhdC4KPiA+IEkn
-bSBob3Bpbmcgbm8gbWFpbGluZyBsaXN0cyByZWplY3QgdGhlIHBhdGNoZXMgYmFzZWQgb24gdGhl
-IG51bWJlciBvZgo+ID4gcmVjaXBpZW50cy4KPiAKPiBIdWgsIEkgdGhpbmsgaXQgd2FzIGVub3Vn
-aCB0byBzZW5kIG9ubHkgMyBwYXRjaGVzIHRvIHRoZSBiNDMtZGV2QC4gTGlrZToKPiBbUEFUQ0gg
-MDEvNTFdIERNQS1BUEk6IHByb3ZpZGUgYSBoZWxwZXIgdG8gc2V0IGJvdGggRE1BIGFuZCBjb2hl
-cmVudCBETUEgbWFza3MKPiBbUEFUQ0ggMTQvNTFdIERNQS1BUEk6IG5ldDogYjQzOiAoLi4uKQo+
-IFtQQVRDSCAxNS81MV0gRE1BLUFQSTogbmV0OiBiNDNsZWdhY3k6ICguLi4pCj4gOykKPiAKPiBJ
-IGJlbGlldmUgSm9lIGhhcyBzb21lIG5pY2Ugc2NyaXB0IGZvciBkb2luZyBpdCB0aGF0IHdheS4g
-V2hlbiBmaXhpbmcKPiBzb21lIGNvZGluZyBzdHlsZSAvIGZvcm1hdHRpbmcsIGhlIHNlbmRzIG9u
-bHkgcmVsYXRlZCBwYXRjaGVzIHRvIHRoZQo+IGdpdmVuIE1MLgoKSWYgSSBkaWQgdGhhdCwgdGhl
-biB0aGUgbWFpbGluZyBsaXN0cyB3b3VsZCBub3QgZ2V0IHRoZSBmaXJzdCBwYXRjaCwKYmVjYXVz
-ZSBhbG1vc3Qgbm9uZSBvZiB0aGUgbGlzdHMgd291bGQgYmUgcmVmZXJyZWQgdG8gYnkgcGF0Y2gg
-MS4KCk1vcmVvdmVyLCBwZW9wbGUgY29tcGxhaW4gd2hlbiB0aGV5IGRvbid0IGhhdmUgYWNjZXNz
-IHRvIHRoZSBmdWxsCnBhdGNoIHNlcmllcyAtIHRoZXkgYXNzdW1lIHBhdGNoZXMgYXJlIG1pc3Np
-bmcgZm9yIHNvbWUgcmVhc29uLCBhbmQKdGhleSBhc2sgZm9yIHRoZSByZXN0IG9mIHRoZSBzZXJp
-ZXMuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2Et
-ZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFp
-bG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+On Fri, Sep 27, 2013 at 10:51:17AM +0800, Shawn Guo wrote:
+> On Thu, Sep 26, 2013 at 11:35:43PM +0200, Linus Walleij wrote:
+> > On Thu, Sep 26, 2013 at 10:29 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > On Thu, Sep 26, 2013 at 4:51 PM, Russell King - ARM Linux
+> > 
+> > >> I mean the stuff which looks like this:
+> > >>
+> > >> #define MX6QDL_PAD_ENET_MDC__ESAI_TX5_RX0           0x1e8 0x5b8 0x858 0x2 0x0
+> > >
+> > > Let me try to decode it:
+> > >
+> > > 0x1e8: Offset of IOMUXC_SW_MUX_CTL_PAD_ENET_MDC register
+> > >
+> > > 0x5b8: Offset of IOMUXC_SW_PAD_CTL_PAD_ENET_MDC register
+> > >
+> > > 0x2: This means that the MUX_MODE field selects the ESAI_TX5_RX0 function
+> > > in this pad
+> > >
+> > > 0x0: SELECT_INPUT not used for this pad
+> > 
+> > This I guess predates the inctroduction of defines into the DTC,
+> > but we can do a lot better now.
+> > 
+> > Can someone from the i.MX camp take a sweep and convert this
+> > to defines in some include/dt-bindings/imx.h or similar file so
+> > this thing becomes readable?
+> 
+> We call those macros like MX6QDL_PAD_ENET_MDC__ESAI_TX5_RX0 in
+> imx6q-pinfunc.h pin function ID.  It's all about choosing a pinmux
+> function (ESAI_TX5_RX0) for given pad (MX6QDL_PAD_ENET_MDC), and
+> that's all what users care and need to read from the macro.  The
+> decoding of the macro is the register details that users do not care in
+> general.  But fsl,pinctrl bindings doc documented these details anyway.
+
+No Shawn, they don't.
+
+To me, encountering this for the first time, the documentation is
+_wrong_ no two ways about it - as I said in my initial email.  Please
+fix it, or delete it.  Don't leave it in its current crap state.  Bad
+or misleading documentation is worse than no documentation.
+
+I am a "user" of this crap, and it is _very_ confusing that the
+documentation is wrong, and the fact that I sent my initial email in
+this thread is proof that your statement above is wrong.
+
+For instance, "two integers array" is a lie, plain and simple.  Yes, it
+may be true that what users care about is a macro and a number but that
+is not a "two integers array".  It would be helpful here to explain that
+PIN_FUNC refers to a macro in the imx*-pinfunc.h header file, which
+expands to four or five integers.
+
+Bit 31 (or even bit 30) in the config number are not documented
+either.
+
+All the numbers come into play when you're trying to port a platform,
+because when you encounter something like this:
+
++       IOMUX_PAD(0x05E0, 0x0210, 3, 0x0790, 1, PAD_CTL_PKE | PAD_CTL_PUE | \
++               PAD_CTL_PUS_100K_DOWN | PAD_CTL_SPEED_LOW |     \
++               PAD_CTL_DSE_80ohm | PAD_CTL_SRE_FAST | PAD_CTL_HYS),
+
+you need to be able to find out which of these C macros that corresponds
+to for the pinfunc.h mess.
+
+As it is, sorting out the pinmuxing on IMX is a nightmare - I've so far
+spent almost 8 hours on this problem trying to work out what the right
+way to describe this stuff is in DT, and its far from what I'd call fun.
+And I've still more to do on this.
+
+Please fix the documentation.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
