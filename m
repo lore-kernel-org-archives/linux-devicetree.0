@@ -1,104 +1,49 @@
-From: "Wendy Ng" <wendy.ng@broadcom.com>
-Subject: Re: [PATCH 1/3] thermal: bcm281xx: Add thermal driver
-Date: Fri, 27 Sep 2013 15:49:52 -0700
-Message-ID: <52460B90.5060907@broadcom.com>
-References: <1379958698-7554-1-git-send-email-wendy.ng@broadcom.com>
- <1379958698-7554-2-git-send-email-wendy.ng@broadcom.com>
- <20130925192609.GB25191@ohporter.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v12 0/7] PHY framework
+Date: Fri, 27 Sep 2013 17:37:42 -0700
+Message-ID: <20130928003742.GA3659@kroah.com>
+References: <1380263012-9687-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=iso-8859-1;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20130925192609.GB25191@ohporter.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Matt Porter <matt.porter@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1380263012-9687-1-git-send-email-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: swarren@wwwdotorg.org, bcousson@baylibre.com, tony@atomide.com, balbi@ti.com, s.nawrocki@samsung.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, linux@arm.linux.org.uk, jkosina@suse.cz, m.chehab@samsung.com, cesarb@cesarb.net, joe@perches.com, davem@davemloft.net, davidb@codeaurora.org, sameo@linux.intel.com, peter.ujfalusi@ti.com, t-kristo@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, akpm@linux-foundation.org, balajitk@ti.com, george.cherian@ti.com, nsekhar@ti.com, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 27, 2013 at 11:53:24AM +0530, Kishon Vijay Abraham I wrote:
+> Added a generic PHY framework that provides a set of APIs for the PHY drivers
+> to create/destroy a PHY and APIs for the PHY users to obtain a reference to
+> the PHY with or without using phandle.
+> 
+> This framework will be of use only to devices that uses external PHY (PHY
+> functionality is not embedded within the controller).
+> 
+> The intention of creating this framework is to bring the phy drivers spread
+> all over the Linux kernel to drivers/phy to increase code re-use and to
+> increase code maintainability.
+> 
+> Comments to make PHY as bus wasn't done because PHY devices can be part of
+> other bus and making a same device attached to multiple bus leads to bad
+> design.
+> 
+> If the PHY driver has to send notification on connect/disconnect, the PHY
+> driver should make use of the extcon framework. Using this susbsystem
+> to use extcon framwork will have to be analysed.
+> 
+> You can find this patch series @
+> git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git testing
+> 
+> I'll create a new branch *next* once this patch series is finalized. All the
+> PHY driver development that depends on PHY framework can be based on this
+> branch.
+> 
+> Did USB enumeration testing in panda and beagle after applying [1] (needed for
+> non-dt)
 
-On 9/25/2013 12:26 PM, Matt Porter wrote:
-> On Mon, Sep 23, 2013 at 10:51:36AM -0700, Wendy Ng wrote:
->> This adds the support for reading out temperature from Broadcom bcm281xx
->> SoCs.
->>
->> Signed-off-by: Wendy Ng <wendy.ng@broadcom.com>
->> Reviewed-by: Markus Mayer <mmayer@broadcom.com>
->> Reviewed-by: Christian Daudt <csd@broadcom.com>
->> ---
->>   .../bindings/thermal/bcm-kona-thermal.txt          |   18 +++
->>   drivers/thermal/Kconfig                            |   10 ++
->>   drivers/thermal/Makefile                           |    1 +
->>   drivers/thermal/bcm_thermal.c                      |  170 ++++++++++++++++++++
->>   4 files changed, 199 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
->>   create mode 100644 drivers/thermal/bcm_thermal.c
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
->> new file mode 100644
->> index 0000000..acca99e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
->> @@ -0,0 +1,18 @@
->> +* Broadcom Kona Thermal Management Unit
->> +
->> +This version is for the BCM281xx family of SoCs.
->> +
->> +Required properties:
->> +- compatible : "brcm,bcm11351-thermal", "brcm,kona-thermal"
->> +- reg : Address range of the thermal register
->> +- thermal-name: this entry must be specified and it will be passed into
->> +thermal_zone_device_register().  This name will also be reported under Hwmon
->> +sysfs 'name' attribute.
->> +
->> +Example:
->> +	thermal@34008000 {
->> +		compatible = "brcm,bcm11351-thermal", "brcm,kona-thermal";
->> +		reg = <0x34008000 0x0024>;
->> +		thermal-name = "bcm_kona_therm";
->> +		status = "disabled";
->> +	};
->> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
->> index dbfc390..7f823f0 100644
->> --- a/drivers/thermal/Kconfig
->> +++ b/drivers/thermal/Kconfig
->> @@ -134,6 +134,16 @@ config KIRKWOOD_THERMAL
->>   	  Support for the Kirkwood thermal sensor driver into the Linux thermal
->>   	  framework. Only kirkwood 88F6282 and 88F6283 have this sensor.
->>   
->> +config BCM_THERMAL
->> +	tristate "Temperature sensor on Broadcom BCM281xx family of SoCs"
->> +	depends on ARCH_BCM
-> Hi Wendy,
->
-> I just noticed that, depending on acceptance, this could collide with
-> Christian's ARCH_BCM->ARCH_BCM_MOBILE rename that is expected to go into
-> 3.13. I'm not sure if this series is targeted for 3.13 (due to the discussion
-> about Eduardo's subsystem changes that impact it). If it is, you might
-> want to rebase on Christian's rename series
-> http://www.spinics.net/lists/arm-kernel/msg274963.html and use
-> ARCH_BCM_MOBILE here.
->
-> -Matt
-Hi Matt,
+All now applied to my usb-next branch.  Thanks for redoing this many
+times and sticking with it.
 
-I have uploaded v2 of this thermal driver patch series to make it 
-compatible with Christian's
-ARCH_BCM->ARCH_BCM_MOBILE changes.
-
-Thanks for pointing this out!
-
->> +	default y
->> +	help
->> +	  If you say yes here you get support for TMU (Thermal Management
->> +	  Unit) on Broadcom BCM281xx family of SoCs. This provides thermal
->> +	  monitoring of CPU clusters, graphics, and SoC glue, but does not
->> +	  include monitoring of charger temperature.
->
-
--- 
-Best regards,
--Wendy
-
-
+greg k-h
