@@ -1,125 +1,278 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: new platform for Energy Micro's EFM32 Cortex-M3
- SoCs
-Date: Sat, 28 Sep 2013 21:15:11 +0200
-Message-ID: <20130928191511.GA2548@pengutronix.de>
-References: <1379447884-14025-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <201309172245.25367.arnd@arndb.de>
- <20130926094251.GK16106@pengutronix.de>
- <201309272344.01386.arnd@arndb.de>
+From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V5 2/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+Date: Sat, 28 Sep 2013 21:35:47 +0200
+Message-ID: <52472F93.7000205@gmail.com>
+References: <1380396467-29278-1-git-send-email-s.nawrocki@samsung.com> <1380396467-29278-3-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201309272344.01386.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <1380396467-29278-3-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jonathan Austin <jonathan.austin-5wv7dgnIgG8@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kishon-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+(adding missing devicetree mailing list at Cc)
 
-On Fri, Sep 27, 2013 at 11:44:01PM +0200, Arnd Bergmann wrote:
-> On Thursday 26 September 2013, Uwe Kleine-K=F6nig wrote:
-> > I made that work now and can prepare a patch. I had to drop "depend=
-s on
-> > !ARCH_MULTIPLATFORM" from XIP_KERNEL. That's because my machine onl=
-y
-> > works with XIP_KERNEL as it only has 4 MiB of RAM.
->=20
-> Ok, cool. We might run into a few problems with 'make randconfig' and
-> 'make allyesconfig' when it becomes possible to enable XIP_KERNEL the=
-n.
-> IIRC, there is no fundamental reason to disallow XIP_KERNEL with
-> ARCH_MULTIPLATFORM, but I added the dependency because it causes
-> build errors in combination with other options.
-ah, OK. Do you have an idea to fix both?
-=20
-> A few questions from my side, out of curiosity:
->=20
-> * Do you need any other patches (unrelated to EFM32) to run NOMMU on =
-a
-> recent kernel? When I last tried, I could not get any NOMMU build to =
-work
-> at all.
-no, there isn't much needed on top of current mainline. My current wip =
-is at
-
-	git://git.pengutronix.de/git/ukl/linux.git efm32
-
-I don't even rely on all the HACK-patches that are included there. (The
-multi-arch stuff isn't there yet.)
-=20
-> * Do you think 4MB is now a strict lower bound for running a modern
-> kernel? It would be a good data point if we could show that any targe=
-t
-> with less than that is by definition broken and could get removed
-> from the kernel. What is the size of your kernel and user space?
-$ objdump -p vmlinux
-
-vmlinux:     file format elf32-littlearm
-
-Program Header:
-    LOAD off    0x00000000 vaddr 0x88020000 paddr 0x88020000 align 2**1=
-5
-         filesz 0x00000094 memsz 0x0000a9f4 flags rw-
-    LOAD off    0x00008000 vaddr 0x8c000000 paddr 0x8c000000 align 2**1=
-5
-         filesz 0x001679b0 memsz 0x001679b0 flags rwx
-    LOAD off    0x00170000 vaddr 0x88008000 paddr 0x8c1679b0 align 2**1=
-5
-         filesz 0x00018d2c memsz 0x00018d2c flags rw-
-private flags =3D 5000002: [Version5 EABI] [has entry point]
-
-my rootfs (busybox, no init) is 153600 bytes big.
-
-After booting I get:
-
-	/ # free
-		     total         used         free       shared      buffers
-	Mem:          3892         1428         2464            0            0
-	-/+ buffers:               1428         2464
-
-but it doesn't run anything but a busybox shell ATM. Assuming the next
-smaller configuration is 2 MiB of RAM I'd say that machine can maybe
-boot, but cannot do anything sensible after that.
-
-> * What user space are you running? Anything that's easy to build
-> for testing? Should that run with a mach-virt kernel built for
-> ARMv7-A NOMMU?
-There is a BSP publically available at
-
-	http://git-public.pengutronix.de/?p=3DOSELAS.BSP-EnergyMicro-Gecko.git=
-;a=3Dsummary
-
-which also includes a README file. For troubleshooting /join #efm32 on
-freenode.
-=20
-> * An ARMv7-M kernel cannot run on either ARMv4/v5 nor ARMv6/v7-A, rig=
-ht?
-The entry convention is different (ARMv7-M doesn't support the ARM
-instruction set but you need to jump into the kernel in ARM mode for
-v4-v7). Other that that I don't know if there is a problem. Maybe
-Jonathan can say anything here? Or alternatively if you want an efm32
-devboard, just tell me.
-
-> Do you prevent building such a kernel in Kconfig?
-I'm sure my Kconfig magic isn't waterproof. It took me a few tries to
-expand the multiarch architecture selection to make v7-m selectable at
-all.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+On 09/28/2013 09:27 PM, Sylwester Nawrocki wrote:
+> Add a PHY provider driver for the Samsung S5P/Exynos SoC MIPI CSI-2
+> receiver and MIPI DSI transmitter DPHYs.
+>
+> Signed-off-by: Sylwester Nawrocki<s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kyungmin Park<kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes since v4:
+>   - updated to latest version of the PHY framework - removed PHY
+>     labels.
+>
+> The individual driver symbols in drivers/phy/Kconfig should
+> presumably be prefixed with, e.g. PHY_. This is something that
+> perhaps could be done as a follow up patch.
+> ---
+>   .../devicetree/bindings/phy/samsung-phy.txt        |   14 ++
+>   drivers/phy/Kconfig                                |    6 +
+>   drivers/phy/Makefile                               |    7 +-
+>   drivers/phy/phy-exynos-mipi-video.c                |  176 ++++++++++++++++++++
+>   4 files changed, 200 insertions(+), 3 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/phy/samsung-phy.txt
+>   create mode 100644 drivers/phy/phy-exynos-mipi-video.c
+>
+> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> new file mode 100644
+> index 0000000..5ff208c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> @@ -0,0 +1,14 @@
+> +Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY
+> +-------------------------------------------------
+> +
+> +Required properties:
+> +- compatible : should be "samsung,s5pv210-mipi-video-phy";
+> +- reg : offset and length of the MIPI DPHY register set;
+> +- #phy-cells : from the generic phy bindings, must be 1;
+> +
+> +For "samsung,s5pv210-mipi-video-phy" compatible PHYs the second cell in
+> +the PHY specifier identifies the PHY and its meaning is as follows:
+> +  0 - MIPI CSIS 0,
+> +  1 - MIPI DSIM 0,
+> +  2 - MIPI CSIS 1,
+> +  3 - MIPI DSIM 1.
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index ac239ac..0062d7e 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -15,6 +15,12 @@ config GENERIC_PHY
+>   	  phy users can obtain reference to the PHY. All the users of this
+>   	  framework should select this config.
+>
+> +config PHY_EXYNOS_MIPI_VIDEO
+> +	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
+> +	help
+> +	  Support for MIPI CSI-2 and MIPI DSI DPHY found on Samsung S5P
+> +	  and EXYNOS SoCs.
+> +
+>   config OMAP_USB2
+>   	tristate "OMAP USB2 PHY Driver"
+>   	depends on ARCH_OMAP2PLUS
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 0dd8a98..6344053 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -2,6 +2,7 @@
+>   # Makefile for the phy drivers.
+>   #
+>
+> -obj-$(CONFIG_GENERIC_PHY)	+= phy-core.o
+> -obj-$(CONFIG_OMAP_USB2)		+= phy-omap-usb2.o
+> -obj-$(CONFIG_TWL4030_USB)	+= phy-twl4030-usb.o
+> +obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+> +obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+> +obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
+> +obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
+> diff --git a/drivers/phy/phy-exynos-mipi-video.c b/drivers/phy/phy-exynos-mipi-video.c
+> new file mode 100644
+> index 0000000..b73b86a
+> --- /dev/null
+> +++ b/drivers/phy/phy-exynos-mipi-video.c
+> @@ -0,0 +1,176 @@
+> +/*
+> + * Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY driver
+> + *
+> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
+> + * Author: Sylwester Nawrocki<s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include<linux/io.h>
+> +#include<linux/kernel.h>
+> +#include<linux/module.h>
+> +#include<linux/of.h>
+> +#include<linux/of_address.h>
+> +#include<linux/phy/phy.h>
+> +#include<linux/platform_device.h>
+> +#include<linux/spinlock.h>
+> +
+> +/* MIPI_PHYn_CONTROL register offset: n = 0..1 */
+> +#define EXYNOS_MIPI_PHY_CONTROL(n)	((n) * 4)
+> +#define EXYNOS_MIPI_PHY_ENABLE		(1<<  0)
+> +#define EXYNOS_MIPI_PHY_SRESETN		(1<<  1)
+> +#define EXYNOS_MIPI_PHY_MRESETN		(1<<  2)
+> +#define EXYNOS_MIPI_PHY_RESET_MASK	(3<<  1)
+> +
+> +enum exynos_mipi_phy_id {
+> +	EXYNOS_MIPI_PHY_ID_CSIS0,
+> +	EXYNOS_MIPI_PHY_ID_DSIM0,
+> +	EXYNOS_MIPI_PHY_ID_CSIS1,
+> +	EXYNOS_MIPI_PHY_ID_DSIM1,
+> +	EXYNOS_MIPI_PHYS_NUM
+> +};
+> +
+> +#define is_mipi_dsim_phy_id(id) \
+> +	((id) == EXYNOS_MIPI_PHY_ID_DSIM0 || (id) == EXYNOS_MIPI_PHY_ID_DSIM1)
+> +
+> +struct exynos_mipi_video_phy {
+> +	spinlock_t slock;
+> +	struct video_phy_desc {
+> +		struct phy *phy;
+> +		unsigned int index;
+> +	} phys[EXYNOS_MIPI_PHYS_NUM];
+> +	void __iomem *regs;
+> +};
+> +
+> +static int __set_phy_state(struct exynos_mipi_video_phy *state,
+> +			enum exynos_mipi_phy_id id, unsigned int on)
+> +{
+> +	void __iomem *addr;
+> +	u32 reg, reset;
+> +
+> +	addr = state->regs + EXYNOS_MIPI_PHY_CONTROL(id / 2);
+> +
+> +	if (is_mipi_dsim_phy_id(id))
+> +		reset = EXYNOS_MIPI_PHY_MRESETN;
+> +	else
+> +		reset = EXYNOS_MIPI_PHY_SRESETN;
+> +
+> +	spin_lock(&state->slock);
+> +	reg = readl(addr);
+> +	if (on)
+> +		reg |= reset;
+> +	else
+> +		reg&= ~reset;
+> +	writel(reg, addr);
+> +
+> +	/* Clear ENABLE bit only if MRESETN, SRESETN bits are not set. */
+> +	if (on)
+> +		reg |= EXYNOS_MIPI_PHY_ENABLE;
+> +	else if (!(reg&  EXYNOS_MIPI_PHY_RESET_MASK))
+> +		reg&= ~EXYNOS_MIPI_PHY_ENABLE;
+> +
+> +	writel(reg, addr);
+> +	spin_unlock(&state->slock);
+> +	return 0;
+> +}
+> +
+> +#define to_mipi_video_phy(desc) \
+> +	container_of((desc), struct exynos_mipi_video_phy, phys[(desc)->index]);
+> +
+> +static int exynos_mipi_video_phy_power_on(struct phy *phy)
+> +{
+> +	struct video_phy_desc *phy_desc = phy_get_drvdata(phy);
+> +	struct exynos_mipi_video_phy *state = to_mipi_video_phy(phy_desc);
+> +
+> +	return __set_phy_state(state, phy_desc->index, 1);
+> +}
+> +
+> +static int exynos_mipi_video_phy_power_off(struct phy *phy)
+> +{
+> +	struct video_phy_desc *phy_desc = phy_get_drvdata(phy);
+> +	struct exynos_mipi_video_phy *state = to_mipi_video_phy(phy_desc);
+> +
+> +	return __set_phy_state(state, phy_desc->index, 1);
+> +}
+> +
+> +static struct phy *exynos_mipi_video_phy_xlate(struct device *dev,
+> +					struct of_phandle_args *args)
+> +{
+> +	struct exynos_mipi_video_phy *state = dev_get_drvdata(dev);
+> +
+> +	if (WARN_ON(args->args[0]>  EXYNOS_MIPI_PHYS_NUM))
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return state->phys[args->args[0]].phy;
+> +}
+> +
+> +static struct phy_ops exynos_mipi_video_phy_ops = {
+> +	.power_on	= exynos_mipi_video_phy_power_on,
+> +	.power_off	= exynos_mipi_video_phy_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int exynos_mipi_video_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct exynos_mipi_video_phy *state;
+> +	struct device *dev =&pdev->dev;
+> +	struct resource *res;
+> +	struct phy_provider *phy_provider;
+> +	unsigned int i;
+> +
+> +	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
+> +	if (!state)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +
+> +	state->regs = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(state->regs))
+> +		return PTR_ERR(state->regs);
+> +
+> +	dev_set_drvdata(dev, state);
+> +	spin_lock_init(&state->slock);
+> +
+> +	phy_provider = devm_of_phy_provider_register(dev,
+> +					exynos_mipi_video_phy_xlate);
+> +	if (IS_ERR(phy_provider))
+> +		return PTR_ERR(phy_provider);
+> +
+> +	for (i = 0; i<  EXYNOS_MIPI_PHYS_NUM; i++) {
+> +		struct phy *phy = devm_phy_create(dev,
+> +					&exynos_mipi_video_phy_ops, NULL);
+> +		if (IS_ERR(phy)) {
+> +			dev_err(dev, "failed to create PHY %d\n", i);
+> +			return PTR_ERR(phy);
+> +		}
+> +
+> +		state->phys[i].phy = phy;
+> +		state->phys[i].index = i;
+> +		phy_set_drvdata(phy,&state->phys[i]);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id exynos_mipi_video_phy_of_match[] = {
+> +	{ .compatible = "samsung,s5pv210-mipi-video-phy" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, exynos_mipi_video_phy_of_match);
+> +
+> +static struct platform_driver exynos_mipi_video_phy_driver = {
+> +	.probe	= exynos_mipi_video_phy_probe,
+> +	.driver = {
+> +		.of_match_table	= exynos_mipi_video_phy_of_match,
+> +		.name  = "exynos-mipi-video-phy",
+> +		.owner = THIS_MODULE,
+> +	}
+> +};
+> +module_platform_driver(exynos_mipi_video_phy_driver);
+> +
+> +MODULE_DESCRIPTION("Samsung S5P/EXYNOS SoC MIPI CSI-2/DSI PHY driver");
+> +MODULE_AUTHOR("Sylwester Nawrocki<s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
