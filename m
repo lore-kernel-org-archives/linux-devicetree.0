@@ -1,84 +1,48 @@
-From: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] tps65090-charger: Use "IS_ENABLED(CONFIG_OF)" for DT code.
-Date: Sat, 28 Sep 2013 10:02:24 +0530
-Message-ID: <1380342744-4227-1-git-send-email-badarkhe.manish@gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Sat, 28 Sep 2013 09:38:59 +0100
+Message-ID: <20130928083859.GQ12758@n2100.arm.linux.org.uk>
+References: <20130927121357.GY12758@n2100.arm.linux.org.uk> <20130927132601.GL25146@S2101-09.ap.freescale.net> <20130927151900.GA12758@n2100.arm.linux.org.uk> <CAHCPf3t8=mJn-RCz3C1cY6zqsH9ds8UANKpKx9ZpwPM6WjJt3g@mail.gmail.com> <20130927174916.GD12758@n2100.arm.linux.org.uk> <CAHCPf3sC7bY=p4vpBQFpRUmyPspT_PVjx0rH9cm1ov=SqkO+Vg@mail.gmail.com> <20130927190546.GG12758@n2100.arm.linux.org.uk> <CAHCPf3vxGAzTnY360KC7Yt-DB1FB14Sv_Cn7DBTH6HGZ6y=stg@mail.gmail.com> <CAHCPf3sv3wSbUc9QFVhmYsPc1kqiWYRuOMO7rreuiGSrwyepBQ@mail.gmail.com> <20130927202110.GI12758@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130927202110.GI12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+To: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of "#if defined(CONFIG_OF)" use "IS_ENABLED(CONFIG_OF)" option
-for DT code to avoid if-deffery in code.
-Also, arranged header files in alphabetically.
+On Fri, Sep 27, 2013 at 09:21:10PM +0100, Russell King - ARM Linux wrote:
+> On Fri, Sep 27, 2013 at 02:48:16PM -0500, Matt Sealey wrote:
+> > Ignore that. It's not totally wrong but it's weird. This is really
+> > difficult to put into words...
+> > 
+> > GPR1[21] = 0 i.MX6 receives a clock from the PHY. You need to generate
+> > a clock at the PHY as input to the MAC. The MAC won't run until the
+> > PHY is out of reset and the clock is generated. You may need SION set
+> > for RMII depending on the pin...
+> > GPR1[21] = 1 implies we generate a clock from i.MX6 TO the PHY. The
+> > clock is looped back through the pad to the MAC. SION is irrelevant.
+> > 
+> > Still want to know who's clock it is and where it should be going....
+> 
+> As I said, when Rabeeh is around, I will ask questions about this.
+> I'm fairly certain that we don't need _all_ those ethernet pinmux
+> settings (we just need the RGMII ones, and can omit the MII ones.)
+> 
+> Having hacked on this solidly since about 5pm yesterday, I'm not going
+> to spend very much time on this until later next week, or I can talk to
+> Rabeeh.
 
-Signed-off-by: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-:100644 100644 bdd7b9b... 8b9c406... M	drivers/power/tps65090-charger.c
- drivers/power/tps65090-charger.c |   19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+Okay, the answer is that yes, GPR1 bit 21 should be clear on this version
+of the hardware, but there's plans to have the IMX6 generate the clock
+and remove the crystal for the AR8035.
 
-diff --git a/drivers/power/tps65090-charger.c b/drivers/power/tps65090-charger.c
-index bdd7b9b..8b9c406 100644
---- a/drivers/power/tps65090-charger.c
-+++ b/drivers/power/tps65090-charger.c
-@@ -15,15 +15,17 @@
-  * You should have received a copy of the GNU General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
-+#include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/slab.h>
--#include <linux/delay.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/power_supply.h>
-+#include <linux/slab.h>
-+
- #include <linux/mfd/tps65090.h>
- 
- #define TPS65090_REG_INTR_STS	0x00
-@@ -185,10 +187,6 @@ static irqreturn_t tps65090_charger_isr(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--#if defined(CONFIG_OF)
--
--#include <linux/of_device.h>
--
- static struct tps65090_platform_data *
- 		tps65090_parse_dt_charger_data(struct platform_device *pdev)
- {
-@@ -210,13 +208,6 @@ static struct tps65090_platform_data *
- 	return pdata;
- 
- }
--#else
--static struct tps65090_platform_data *
--		tps65090_parse_dt_charger_data(struct platform_device *pdev)
--{
--	return NULL;
--}
--#endif
- 
- static int tps65090_charger_probe(struct platform_device *pdev)
- {
-@@ -228,7 +219,7 @@ static int tps65090_charger_probe(struct platform_device *pdev)
- 
- 	pdata = dev_get_platdata(pdev->dev.parent);
- 
--	if (!pdata && pdev->dev.of_node)
-+	if (IS_ENABLED(CONFIG_OF) && !pdata && pdev->dev.of_node)
- 		pdata = tps65090_parse_dt_charger_data(pdev);
- 
- 	if (!pdata) {
--- 
-1.7.10.4
-
+Now, here's the question for the IMX6 maintainers: how do I avoid having
+GPR1 bit 21 set - it's unconditionally set by imx6q_1588_init() in
+arch/arm/mach-imx/mach-imx6q.c.  Moreover, how do I control this from
+DT?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
