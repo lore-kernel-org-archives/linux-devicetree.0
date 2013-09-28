@@ -1,49 +1,167 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v12 0/7] PHY framework
-Date: Fri, 27 Sep 2013 17:37:42 -0700
-Message-ID: <20130928003742.GA3659@kroah.com>
-References: <1380263012-9687-1-git-send-email-kishon@ti.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v6] ARM: shmobile: armadillo800eva-reference: add SDHI and MMCIF interfaces
+Date: Sat, 28 Sep 2013 03:33:07 +0200
+Message-ID: <6703080.azytcWtciQ@avalon>
+References: <Pine.LNX.4.64.1309270957470.23205@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1380263012-9687-1-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: swarren@wwwdotorg.org, bcousson@baylibre.com, tony@atomide.com, balbi@ti.com, s.nawrocki@samsung.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, linux@arm.linux.org.uk, jkosina@suse.cz, m.chehab@samsung.com, cesarb@cesarb.net, joe@perches.com, davem@davemloft.net, davidb@codeaurora.org, sameo@linux.intel.com, peter.ujfalusi@ti.com, t-kristo@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, akpm@linux-foundation.org, balajitk@ti.com, george.cherian@ti.com, nsekhar@ti.com, rogerq@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.64.1309270957470.23205-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 11:53:24AM +0530, Kishon Vijay Abraham I wrote:
-> Added a generic PHY framework that provides a set of APIs for the PHY drivers
-> to create/destroy a PHY and APIs for the PHY users to obtain a reference to
-> the PHY with or without using phandle.
-> 
-> This framework will be of use only to devices that uses external PHY (PHY
-> functionality is not embedded within the controller).
-> 
-> The intention of creating this framework is to bring the phy drivers spread
-> all over the Linux kernel to drivers/phy to increase code re-use and to
-> increase code maintainability.
-> 
-> Comments to make PHY as bus wasn't done because PHY devices can be part of
-> other bus and making a same device attached to multiple bus leads to bad
-> design.
-> 
-> If the PHY driver has to send notification on connect/disconnect, the PHY
-> driver should make use of the extcon framework. Using this susbsystem
-> to use extcon framwork will have to be analysed.
-> 
-> You can find this patch series @
-> git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git testing
-> 
-> I'll create a new branch *next* once this patch series is finalized. All the
-> PHY driver development that depends on PHY framework can be based on this
-> branch.
-> 
-> Did USB enumeration testing in panda and beagle after applying [1] (needed for
-> non-dt)
+Hi Guennadi,
 
-All now applied to my usb-next branch.  Thanks for redoing this many
-times and sticking with it.
+Thank you for the patch.
 
-greg k-h
+On Friday 27 September 2013 10:02:57 Guennadi Liakhovetski wrote:
+> Add SDHI0 and MMCIF interfaces to armadillo800eva-reference with
+> regulators and pin configurations. SDHI1 is not added yet, because the
+> switch, that connects the interface either to an SD slot or to a WiFi
+> SDIO card cannot be described in DT yet.
+> 
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+> ---
+> 
+> v6: specify a CD GPIO for SDHI0
+> 
+>  .../boot/dts/r8a7740-armadillo800eva-reference.dts |   58 +++++++++++++++++
+>  arch/arm/boot/dts/r8a7740.dtsi                     |   33 +++++++++++
+>  2 files changed, 91 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts index
+> 8b2aab5..1c56c5e 100644
+> --- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> @@ -35,6 +35,33 @@
+>  		regulator-boot-on;
+>  	};
+> 
+> +	vcc_sdhi0: regulator@1 {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "SDHI0 Vcc";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +
+> +		gpio = <&pfc 75 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+> +
+> +	vccq_sdhi0: regulator@2 {
+> +		compatible = "regulator-gpio";
+> +
+> +		regulator-name = "SDHI0 VccQ";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		vin-supply = <&vcc_sdhi0>;
+> +
+> +		enable-gpio = <&pfc 74 GPIO_ACTIVE_HIGH>;
+> +		gpios = <&pfc 17 GPIO_ACTIVE_HIGH>;
+> +		states = <3300000 0
+> +			  1800000 1>;
+> +
+> +		enable-active-high;
+> +	};
+> +
+>  	leds {
+>  		compatible = "gpio-leds";
+>  		led1 {
+> @@ -92,8 +119,39 @@
+>  		renesas,groups = "tpu0_to2_1";
+>  		renesas,function = "tpu0";
+>  	};
+> +
+> +	mmc0_pins: mmc0 {
+> +		renesas,groups = "mmc0_data8_1", "mmc0_ctrl_1";
+> +		renesas,function = "mmc0";
+> +	};
+> +
+> +	sdhi0_pins: sdhi0 {
+> +		renesas,groups = "sdhi0_data4", "sdhi0_ctrl", "sdhi0_wp";
+> +		renesas,function = "sdhi0";
+> +	};
+>  };
+> 
+>  &tpu {
+>  	status = "okay";
+>  };
+> +
+> +&mmcif0 {
+> +	pinctrl-0 = <&mmc0_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	vmmc-supply = <&reg_3p3v>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	status = "okay";
+> +};
+> +
+> +&sdhi0 {
+> +	pinctrl-0 = <&sdhi0_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	vmmc-supply = <&vcc_sdhi0>;
+> +	vqmmc-supply = <&vccq_sdhi0>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&pfc 167 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+> index 868bdde..ae1e230 100644
+> --- a/arch/arm/boot/dts/r8a7740.dtsi
+> +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> @@ -161,4 +161,37 @@
+>  		status = "disabled";
+>  		#pwm-cells = <3>;
+>  	};
+> +
+> +	mmcif0: mmcif@e6bd0000 {
+> +		compatible = "renesas,sh-mmcif";
+> +		reg = <0xe6bd0000 0x100>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 56 4
+> +				0 57 4>;
+> +		status = "disabled";
+> +	};
+> +
+> +	sdhi0: sdhi@e6850000 {
+> +		compatible = "renesas,sdhi-r8a7740";
+> +		reg = <0xe6850000 0x100>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 117 4
+> +				0 118 4
+> +				0 119 4>;
+> +		cap-sd-highspeed;
+> +		cap-sdio-irq;
+> +		status = "disabled";
+> +	};
+> +
+> +	sdhi1: sdhi@e6860000 {
+> +		compatible = "renesas,sdhi-r8a7740";
+> +		reg = <0xe6860000 0x100>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 121 4
+> +				0 122 4
+> +				0 123 4>;
+> +		cap-sd-highspeed;
+> +		cap-sdio-irq;
+> +		status = "disabled";
+> +	};
+>  };
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
