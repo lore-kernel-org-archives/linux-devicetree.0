@@ -1,39 +1,128 @@
-From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] New descriptor-based GPIO interface
-Date: Sat, 28 Sep 2013 19:33:30 +0900
-Message-ID: <CAAVeFuLfUGsmOssWDtm8kf9av=3A_O9Fk8M8HGYF=xqtX8772Q@mail.gmail.com>
-References: <1380179668-32288-1-git-send-email-acourbot@nvidia.com> <CACRpkdbhywp7_wAhOSzdMe==YoCo0mAcy1mJrdW3bURKWLxQeQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
+Date: Sat, 28 Sep 2013 16:27:19 +0200
+Message-ID: <5246E747.6020103@gmail.com>
+References: <20130828113521.35c53365@armhf> <521DCD80.9010105@gmail.com> <20130831125128.0e3a23c7@armhf> <140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com> <20130926101147.217015e1@armhf> <5243F0CE.9000301@gmail.com> <20130926132859.04ad4407@armhf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbhywp7_wAhOSzdMe==YoCo0mAcy1mJrdW3bURKWLxQeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20130926132859.04ad4407@armhf>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 9:06 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Sep 26, 2013 at 9:14 AM, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+On 09/26/2013 01:28 PM, Jean-Francois Moine wrote:
+> On Thu, 26 Sep 2013 10:31:10 +0200
+> Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 09/26/2013 10:11 AM, Jean-Francois Moine wrote:
+>>> In the Cubox, I changed the audio DT to:
+>>>
+>>> &i2s1 {
+>>> 	status = "okay";
+>>> 	clocks = <&gate_clk 13>, <&si5351 1>;
+
+Jean-Francois,
+
+I can confirm the following for CuBox:
+
+AU1_EXTCLK is connected to si5351 clkout 2. For the _current_
+(v3.12-rc1) dove-cubox.dts that means that you'll have to exchange
+the properties for &i2c0/si5351/clkout[12]. If you leave it the way
+it is, clkout2 is not allowed to change the pll inside si5351 and
+only try to get close to the requested clk rate by using output
+dividers. Would be great if you can provide a corresponding patch
+for v3.12 (no need to Cc stable).
+
+Also, as you seem to push kirkwood-i2s DT forward, please get back
+to clkout2 (<&si5351 2>) for the audio node as you did correctly in
+the first place.
+
+With above changes, SPDIF_EN, and forcing kirkwood-i2s to always use
+extclk, I can play SPDIF audio with 44k1 and 48k. Other rates could
+also work, but my audio equipment ignores anything else.
+
+>> What about trying to get 48kHz working first? Does it work with
+>> internal DCO and 48kHz? External audio clock should be 256*fs as stated
+>> in dove datasheet.
 >
->> Here is a proper patch series for the descriptor-based GPIO interface to be
->> merged into -next. It is rebased on your for-next branch and only slightly
->> changed with respect to the RFC I posted earlier, only more thoroughly tested.
->> The documentation part is missing because I need some more time to rework it
->> (I'm on holidays this week but wanted to get the code into -next before 28th),
->> and anyway at this point I just want to make sure that the extra refactoring
->> does not break any existing code.
+> I have no input with 48kHz.
+
+If you use e.g. 'mplayer -ao alsa -srate 48000 music.mp3' you can force
+output audio rate to 48k. I am sure other tools have similar options.
+
+>>> For more information, I use i2s input in the tda998x with audio rate
+>>> 96kHz on HDMI output. The sound is fine with the internal dco (tested
+>>> with 44.1kHz only).
+
+What I am wondering here is, why you want to use i2s at all? On CuBox,
+HDMI transmitter is connected to both i2s and spdif. IIRC, for the
+transmitter it makes no difference if you provide i2s or spdif audio,
+_but_ what you are loosing for sure is pass-through, i.e. sending
+compressed AC3 directly.
+
+Also, on consumer devices anything else than 44k1 and 48k audio is very
+uncommon. Don't expect it to work at all. If you want high quality
+audio, always use pass-through. If you are lucky, your audio equipment
+will also accept mp3 or at least mp2 over it when using HDMI.
+
+>> Sorry, I don't understand the above "information". How can you have a
+>> different input audio rate tested with 44k1 output rate?
+>
+> The internal dco permits only 44.1, 44 and 96 kHz, so, vlc translates
+> the input rates smaller than 44.1 kHz to 44.1 kHz.
+>
+>> Have you ever tested your audio equipment with something different than
+>> 48k and 44k1 SPDIF PCM? Are you actually sure it works at all, i.e. do
+>> you have different audio source with SPDIF >48kHz? Can you try optical
+>> SPDIF instead of HDMI?
 >>
->> My hope is to get this into -next before the 28th so this patchset can be
->> effectively tested, even if the new interfaces are not used yet. Since the old
->> integer-based interface now relies on top of gpiod_, this should provide good
->> coverage for both.
+>> Just try to narrow it down, currently I cannot see why this behavior
+>> should be limited to either si5351 or dove audio alone.
 >
-> I've applied it now, but no idea whether it will hit the last -next tree in
-> time, hopefully at the very last second ...
+> I have no optical S/PDIF.
 
-Crap, looks like it did not make it. :( I hope we can still merge this for 3.13.
+As stated above, if you use SPDIF in for HDMI audio, you get the same
+audio stream.
 
-Alex.
+> Well, I did more tests:
+>
+> - i2s or s/pdif input by the tda998x work fine with the internal dco
+
+Based on the patches you sent me, you do not enable SPDIF playback at
+all. Are you aware of that?
+
+> - the pinmux seems correct:
+>
+> device f10b4000.audio-controller
+> state default
+> type MUX_GROUP (2)
+> controlling device f10d0200.pin-ctrl
+> group mpp_audio1
+> function i2s1/spdifo
+>
+> device f10b4000.audio-controller
+> state default
+> type MUX_GROUP (2)
+> controlling device f10d0200.pin-ctrl
+> group mpp13
+> function audio1
+>
+> - I tried both <&si5351 1> and <&si5351 2>, and I get no sound with the
+>    external clock.
+
+As stated above, with <&si5351 2> I can playback both 44k1 and 48k over
+optical SPDIF. Haven't tested HDMI, but if that doesn't work, it's not
+related to extclk.
+
+Sebastian
+
+> - when running vlc with the external clock, the flux towards the
+>    kirkwood driver is blocked and there is no sound interrupt.
+>
+>   47:          0  main-interrupt-ctrl  21  kirkwood-i2s
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
