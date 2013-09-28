@@ -1,61 +1,40 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v12 0/7] PHY framework
-Date: Sat, 28 Sep 2013 15:12:12 +0530
-Message-ID: <5246A474.90500@ti.com>
-References: <1380263012-9687-1-git-send-email-kishon@ti.com>
- <20130928003742.GA3659@kroah.com>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] New descriptor-based GPIO interface
+Date: Sat, 28 Sep 2013 19:33:30 +0900
+Message-ID: <CAAVeFuLfUGsmOssWDtm8kf9av=3A_O9Fk8M8HGYF=xqtX8772Q@mail.gmail.com>
+References: <1380179668-32288-1-git-send-email-acourbot@nvidia.com> <CACRpkdbhywp7_wAhOSzdMe==YoCo0mAcy1mJrdW3bURKWLxQeQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130928003742.GA3659@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, peter.ujfalusi@ti.com, s.nawrocki@samsung.com, linux@arm.linux.org.uk, sameo@linux.intel.com, ijc+devicetree@hellion.org.uk, davidb@codeaurora.org, cesarb@cesarb.net, devicetree@vger.kernel.org, george.cherian@ti.com, rob@landley.net, pawel.moll@arm.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rogerq@ti.com, balajitk@ti.com, jkosina@suse.cz, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, t-kristo@ti.com, bcousson@baylibre.com, joe@perches.com, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdbhywp7_wAhOSzdMe==YoCo0mAcy1mJrdW3bURKWLxQeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 28 September 2013 06:07 AM, Greg KH wrote:
-> On Fri, Sep 27, 2013 at 11:53:24AM +0530, Kishon Vijay Abraham I wrote:
->> Added a generic PHY framework that provides a set of APIs for the PHY drivers
->> to create/destroy a PHY and APIs for the PHY users to obtain a reference to
->> the PHY with or without using phandle.
+On Fri, Sep 27, 2013 at 9:06 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Sep 26, 2013 at 9:14 AM, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>
+>> Here is a proper patch series for the descriptor-based GPIO interface to be
+>> merged into -next. It is rebased on your for-next branch and only slightly
+>> changed with respect to the RFC I posted earlier, only more thoroughly tested.
+>> The documentation part is missing because I need some more time to rework it
+>> (I'm on holidays this week but wanted to get the code into -next before 28th),
+>> and anyway at this point I just want to make sure that the extra refactoring
+>> does not break any existing code.
 >>
->> This framework will be of use only to devices that uses external PHY (PHY
->> functionality is not embedded within the controller).
->>
->> The intention of creating this framework is to bring the phy drivers spread
->> all over the Linux kernel to drivers/phy to increase code re-use and to
->> increase code maintainability.
->>
->> Comments to make PHY as bus wasn't done because PHY devices can be part of
->> other bus and making a same device attached to multiple bus leads to bad
->> design.
->>
->> If the PHY driver has to send notification on connect/disconnect, the PHY
->> driver should make use of the extcon framework. Using this susbsystem
->> to use extcon framwork will have to be analysed.
->>
->> You can find this patch series @
->> git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git testing
->>
->> I'll create a new branch *next* once this patch series is finalized. All the
->> PHY driver development that depends on PHY framework can be based on this
->> branch.
->>
->> Did USB enumeration testing in panda and beagle after applying [1] (needed for
->> non-dt)
-> 
-> All now applied to my usb-next branch.  Thanks for redoing this many
-> times and sticking with it.
+>> My hope is to get this into -next before the 28th so this patchset can be
+>> effectively tested, even if the new interfaces are not used yet. Since the old
+>> integer-based interface now relies on top of gpiod_, this should provide good
+>> coverage for both.
+>
+> I've applied it now, but no idea whether it will hit the last -next tree in
+> time, hopefully at the very last second ...
 
-Thanks :-)
+Crap, looks like it did not make it. :( I hope we can still merge this for 3.13.
 
--Kishon
+Alex.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
