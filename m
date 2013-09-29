@@ -1,10 +1,8 @@
-From: Duan Fugang-B38611 <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: device tree binding documentation outdated
-Date: Sun, 29 Sep 2013 06:23:39 +0000
-Message-ID: <9848F2DB572E5649BA045B288BE08FBE017115C8@039-SN2MPN1-022.039d.mgd.msft.net>
-References: <20130927132601.GL25146@S2101-09.ap.freescale.net>
- <20130927151900.GA12758@n2100.arm.linux.org.uk>
- <CAHCPf3t8=mJn-RCz3C1cY6zqsH9ds8UANKpKx9ZpwPM6WjJt3g@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Sun, 29 Sep 2013 14:35:17 +0800
+Message-ID: <20130929063515.GC26156@S2101-09.ap.freescale.net>
+References: <CAHCPf3t8=mJn-RCz3C1cY6zqsH9ds8UANKpKx9ZpwPM6WjJt3g@mail.gmail.com>
  <20130927174916.GD12758@n2100.arm.linux.org.uk>
  <CAHCPf3sC7bY=p4vpBQFpRUmyPspT_PVjx0rH9cm1ov=SqkO+Vg@mail.gmail.com>
  <20130927190546.GG12758@n2100.arm.linux.org.uk>
@@ -13,55 +11,27 @@ References: <20130927132601.GL25146@S2101-09.ap.freescale.net>
  <20130927202110.GI12758@n2100.arm.linux.org.uk>
  <20130928083859.GQ12758@n2100.arm.linux.org.uk>
  <20130929061303.GB26156@S2101-09.ap.freescale.net>
+ <9848F2DB572E5649BA045B288BE08FBE017115C8@039-SN2MPN1-022.039d.mgd.msft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130929061303.GB26156-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <9848F2DB572E5649BA045B288BE08FBE017115C8-RL0Hj/+nBVC81RJBUSuqCa4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+To: Duan Fugang-B38611 <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From:  Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Data: Sunday, September 29, 2013 2:13 PM
+On Sun, Sep 29, 2013 at 06:23:39AM +0000, Duan Fugang-B38611 wrote:
+> Shawn, for RGMII mode, RGMII tx_clk cannot get external clock via GPIO_16, only by ENET_REF_CLK PAD.
+> 	 For RMII mode, enet refrenece clock can get external clock via GPIO_16 and RGMII_TX_CTL PADs.
 
-> To: Russell King - ARM Linux
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Fabio Estevam; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Matt Sealey
-> Subject: Re: device tree binding documentation outdated
-> 
-> On Sat, Sep 28, 2013 at 09:38:59AM +0100, Russell King - ARM Linux wrote:
-> > Okay, the answer is that yes, GPR1 bit 21 should be clear on this
-> > version of the hardware, but there's plans to have the IMX6 generate
-> > the clock and remove the crystal for the AR8035.
-> 
-> Be careful, as mentioned in the reply to Matt, in that case, IMX6 can only
-> output the clock on pad GPIO_16, and the clock has to be externally routed
-> back to IMX6 on pad ENET_REF_CLK, so that ENET can get reference clock for
-> RGMII mode.
-> 
-> > Now, here's the question for the IMX6 maintainers: how do I avoid
-> > having
-> > GPR1 bit 21 set - it's unconditionally set by imx6q_1588_init() in
-> > arch/arm/mach-imx/mach-imx6q.c.  Moreover, how do I control this from
-> > DT?
-> 
-> GPR1[21] should be cleared only when there is a clock input on pad
-> GPIO_16 from external phy or oscillator.  Other than that, GPR1[21] should
-> always be set to loop the ENET_PLL clock back to ENET though pad GPIO_16,
-> for at least getting PTP (IEEE 1588) work, even in RGMII mode.
-> 
-> So far, we haven't got any user with that setup (external phy or
-> oscillator generates clock to pad GPIO_16).  When we do, we can add a
-> device tree property for telling that.
+Yes, that's my understanding too.  Please review the following message
+to see if everything stands correct there.
 
-Shawn, for RGMII mode, RGMII tx_clk cannot get external clock via GPIO_16, only by ENET_REF_CLK PAD.
-	 For RMII mode, enet refrenece clock can get external clock via GPIO_16 and RGMII_TX_CTL PADs.
+http://thread.gmane.org/gmane.linux.drivers.devicetree/46115/focus=269646
 
-Thanks,
-Andy
+Shawn
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
