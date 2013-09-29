@@ -1,91 +1,69 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2] pwm-backlight: allow for non-increasing brightness levels
-Date: Sun, 29 Sep 2013 09:03:41 +0200
-Message-ID: <2374392.UQj3ulSGQM@avalon>
-References: <1379869196-19377-1-git-send-email-mikedunn@newsguy.com> <524423B6.4070609@ti.com> <017a01cebb31$9df90f60$d9eb2e20$%han@samsung.com>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] PWM: atmel-pwm: add PWM controller driver
+Date: Sun, 29 Sep 2013 18:02:37 +0800
+Message-ID: <5247FABD.9070405@atmel.com>
+References: <1380079664-21959-1-git-send-email-voice.shen@atmel.com> <5245B7D7.2040405@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <017a01cebb31$9df90f60$d9eb2e20$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <5245B7D7.2040405-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Tomi Valkeinen' <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Mike Dunn' <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, 'Richard Purdie' <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, 'Jean-Christophe Plagniol-Villard' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Grant Likely' <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Rob Herring' <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Robert Jarzmik' <robert.jarzmik-GANU6spQydw@public.gmane.org>, 'Marek Vasut' <marex-ynQEQJNshbs@public.gmane.org>, 'Laurent Pinchart' <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jingoo,
+Hi Alexandre,
 
-On Friday 27 September 2013 12:28:21 Jingoo Han wrote:
-> On Thursday, September 26, 2013 9:08 PM, Tomi Valkeinen wrote:
-> > On 26/09/13 14:51, Thierry Reding wrote:
-> > > On Thu, Sep 26, 2013 at 01:03:06PM +0300, Tomi Valkeinen wrote:
-> > > [...]
-> > > 
-> > >> But if you and Thierry think this version is good, I'll take it.
-> > > 
-> > > That sounds like you want to take it through the fbdev tree. Jingoo is
-> > > listed (along with Richard, but he hasn't been responsive to email for
-> > > years) as maintainer for the backlight subsystem. Furthermore back at
-> > 
-> > Ah, so they are. I just thought it falls under fbdev, as it's under
-> > drivers/video/ =).
-> > 
-> > I don't have any particular "want" to take it through fbdev tree. But I
-> > can take it.
-> > 
-> > > the time when I began working on the PWM subsystem, the backlight sub-
-> > > system was pretty much orphaned, and pwm-backlight was by far the
-> > > biggest user of the PWM subsystem. I adopted the driver at the time
-> > > because it needed to be updated for PWM subsystem changes.
-> > > 
-> > > What's the plan going forward? Given the coupling between the PWM
-> > > subsystem and the pwm-backlight driver it might be useful to keep
-> > > maintaining it as part of the PWM subsystem. On the other hand, there's
-> > > some coupling between the driver and the backlight subsystem too.
-> > 
-> > And backlight is coupled with fbdev... Which is something I don't like.
-> 
-> +cc Laurent Pinchart,
-> 
-> Yes, right.
-> The backlight should be de-coupled with fbdev.
-> I remember that Laurent Pinchart was doing this patch.
-> 
-> Laurent Pinchart,
-> Would you let us know your plan about this? :-)
+On 9/28/2013 00:52, Alexandre Belloni wrote:
+[snip]
 
-My plans include finishing CDF first :-) I thus don't know when I'll have time 
-to tackle this task. Feel free to pick it but. If you do, I would appreciate 
-if you could discuss your ideas with me.
+>> +static int atmel_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+>> +{
+>> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+>> +	int ret;
+>> +
+>> +	ret = clk_enable(atmel_pwm->clk);
+>> +	if (ret) {
+>> +		pr_err("failed to enable pwm clock\n");
+>> +		return ret;
+>> +	}
+>> +
+>
+> This will increment clk->enable_count each time it is called.
 
-> > > I have a couple of patches queued up for 3.13 that rework parts of the
-> > > driver, so it'd be good to know how you guys want to handle this.
-> > 
-> > Well. I'm happy if somebody wants to maintain the backlight side. In
-> > fact, I'd be happy if somebody would start restructuring it totally,
-> > it's rather messy. The link with fbdev should be removed, and some
-> > backlight drivers are actually panel drivers. However, perhaps Common
-> > Display Framework is required until it can be fully cleaned.
-> 
-> I think that some backlight drivers can be moved to 'Common Display
-> Framework', after 'Common Display Framework' is merged.
-> But, I am not sure, when it will be completed.
+Yes, that's true.
 
-Hardware backlight devices don't process video streams, so they don't really 
-belong to CDF, at least to the CDF that we know today. However, a hardware 
-panel device that integrates a backlight would be supported by a CDF driver, 
-which would create a Linux backlight device.
+>> +	atmel_pwm_writel(atmel_pwm, PWM_ENA, 1 << pwm->hwpwm);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void atmel_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+>> +{
+>> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+>> +	u32 val;
+>> +
+>> +	atmel_pwm_writel(atmel_pwm, PWM_DIS, 1 << pwm->hwpwm);
+>> +
+>> +	val = atmel_pwm_readl(atmel_pwm, PWM_SR);
+>> +	if ((val & PWM_SR_ALL_CH_ON) == 0)
+>> +		clk_disable(atmel_pwm->clk);
+>> +}
+>
+> This will decrement clk->enable_count only once there are no pwm enabled
+> anymore.  So in you enable more than one channel, you will never disable
+> the clock. The simple fix is to always call clk_diasble, regardless of
+> the state of the other channels.
 
-> > So... For the time being, I'm fine with merging pwm-backlight via any
-> > tree that works best. I'm presuming here that backlight framework and
-> > fbdev (for the parts that are relevant for backlight) are not really
-> > being changed, so there shouldn't be conflicts.
+Thank for point out this.
 
--- 
-Regards,
+I see you have sent out a patch to fix it (however the other contents of 
+your patch doesn't work). So, do you prefer I send out v5 patch to fix 
+this? or you fix your patch at same time fix this issue?
 
-Laurent Pinchart
-
+Best Regards,
+Bo Shen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
