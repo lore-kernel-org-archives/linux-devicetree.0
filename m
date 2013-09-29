@@ -1,128 +1,83 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: new platform for Energy Micro's EFM32 Cortex-M3 SoCs
-Date: Sun, 29 Sep 2013 21:00:41 +0200
-Message-ID: <201309292100.41701.arnd@arndb.de>
-References: <1379447884-14025-1-git-send-email-u.kleine-koenig@pengutronix.de> <201309272344.01386.arnd@arndb.de> <20130928191511.GA2548@pengutronix.de>
+From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/7] drm/exynos: move hdmiphy related code to hdmiphy
+ driver
+Date: Mon, 30 Sep 2013 00:08:46 +0200
+Message-ID: <5248A4EE.9000708@gmail.com>
+References: <1377845974-28373-1-git-send-email-rahul.sharma@samsung.com> <011901cea941$91853e40$b48fbac0$%dae@samsung.com> <CAOw6vb+32WsEY0px-iZaSv-AYj9NS6OX9hqpH-y6VQ77SpHymw@mail.gmail.com> <00bf01cea9ee$bcda5960$368f0c20$%dae@samsung.com> <CAPdUM4PT4cpXSe6sLgFaQnsycgY9AvYXPtgTMywYT0oePwPWwA@mail.gmail.com> <00ca01cea9f7$f5ee3b50$e1cab1f0$%dae@samsung.com> <CAPdUM4MxLBoiE6DpUbkn2-Sji89RM1+yHeAS1c2OREB+=BfdVg@mail.gmail.com> <00cf01cea9ff$dc9749a0$95c5dce0$%dae@samsung.com> <CAOw6vbLAuJyFU55wP1+Akm6PZepxaS_UuwFYe9LWcM3sKFmWwA@mail.gmail.com> <011601ceaa3e$d08e8b20$71aba160$%dae@samsung.com> <CAPdUM4OoicU76Tw-gkuvAGGvOHM-x1DfYLUEFKa3KaEAtwLAvw@mail.gmail.com> <CAOw6vbLrgigGHdwGQHRWJAF=N-ZaL+6VSyUfP37B-4baU-+jBQ@mail.gmail.com> <CAPdUM4PpFbc9utAsHnqyF9OJdipdgq036fqFM_SeG0O+M3N5jA@mail.gmail
+ .com> <037401ceb2d9$ea596ea0$bf0c4be0$%dae@samsung.com> <CAPdUM4P0mecAGe++QELW_B7KOpABUSFvFTgCddowCM8cqtVvFA@mail.gmail.com> <CAAQKjZPtxLAJOz6573+hEPZokEnvGF8BTMXoxcYUQ8zySAn-OA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130928191511.GA2548-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CAAQKjZPtxLAJOz6573+hEPZokEnvGF8BTMXoxcYUQ8zySAn-OA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jonathan Austin <jonathan.austin-5wv7dgnIgG8@public.gmane.org>
+To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Rahul Sharma <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "sw0312.kim" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "kgene.kim" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Shirish S <shirish-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 28 September 2013, Uwe Kleine-K=F6nig wrote:
-> Hi Arnd,
->=20
-> On Fri, Sep 27, 2013 at 11:44:01PM +0200, Arnd Bergmann wrote:
-> > On Thursday 26 September 2013, Uwe Kleine-K=F6nig wrote:
-> > > I made that work now and can prepare a patch. I had to drop "depe=
-nds on
-> > > !ARCH_MULTIPLATFORM" from XIP_KERNEL. That's because my machine o=
-nly
-> > > works with XIP_KERNEL as it only has 4 MiB of RAM.
-> >=20
-> > Ok, cool. We might run into a few problems with 'make randconfig' a=
-nd
-> > 'make allyesconfig' when it becomes possible to enable XIP_KERNEL t=
-hen.
-> > IIRC, there is no fundamental reason to disallow XIP_KERNEL with
-> > ARCH_MULTIPLATFORM, but I added the dependency because it causes
-> > build errors in combination with other options.
-> ah, OK. Do you have an idea to fix both?
+On 09/28/2013 06:10 PM, Inki Dae wrote:
+>> Any opinion from Device-Tree folks?
+>>
+>> IMO, we should have same consensus on Shirish patches before proceeding.
+>
+> Rahul, it seems that DT people have no interest in this issue. So let's
+> have a consensus about this issue internally.
+>
+> To Mr. Kyungmin, Sylwester, Kukjin Kim, and Tomasz,
+> How about keeping hdmiphy config data in each board dts file?
 
-No, I don't actually remember what problems I ran into. It may be anywh=
-ere
-from trivial to impossible to fix.
+Please don't use HTML and quote only relevant part of e-mails. Otherwise
+there are good chances your messages end up in people's spam box.
 
-> > * Do you think 4MB is now a strict lower bound for running a modern
-> > kernel? It would be a good data point if we could show that any tar=
-get
-> > with less than that is by definition broken and could get removed
-> > from the kernel. What is the size of your kernel and user space?
-> $ objdump -p vmlinux
->=20
-> vmlinux:     file format elf32-littlearm
->=20
-> Program Header:
->     LOAD off    0x00000000 vaddr 0x88020000 paddr 0x88020000 align 2*=
-*15
->          filesz 0x00000094 memsz 0x0000a9f4 flags rw-
->     LOAD off    0x00008000 vaddr 0x8c000000 paddr 0x8c000000 align 2*=
-*15
->          filesz 0x001679b0 memsz 0x001679b0 flags rwx
->     LOAD off    0x00170000 vaddr 0x88008000 paddr 0x8c1679b0 align 2*=
-*15
->          filesz 0x00018d2c memsz 0x00018d2c flags rw-
-> private flags =3D 5000002: [Version5 EABI] [has entry point]
->=20
-> my rootfs (busybox, no init) is 153600 bytes big.
->=20
-> After booting I get:
->=20
-> 	/ # free
-> 		     total         used         free       shared      buffers
-> 	Mem:          3892         1428         2464            0           =
- 0
-> 	-/+ buffers:               1428         2464
->=20
-> but it doesn't run anything but a busybox shell ATM. Assuming the nex=
-t
-> smaller configuration is 2 MiB of RAM I'd say that machine can maybe
-> boot, but cannot do anything sensible after that.
+It often helps to Cc a DT binding maintainer directly.
 
-Ok, thanks for that data! I can still imagine embedded applications whe=
-re
-you have a custom /sbin/init that does just one thing even with 2MB, bu=
-t
-it's good to know that a 4MB system is still basically usable with some
-free memory left for workloads.
+Then, you consider moving the HDMI phy configuration to the device tree.
+As Sean suggested in this thread:
 
-> > * What user space are you running? Anything that's easy to build
-> > for testing? Should that run with a mach-virt kernel built for
-> > ARMv7-A NOMMU?
-> There is a BSP publically available at
->=20
-> 	http://git-public.pengutronix.de/?p=3DOSELAS.BSP-EnergyMicro-Gecko.g=
-it;a=3Dsummary
->=20
-> which also includes a README file. For troubleshooting /join #efm32 o=
-n
-> freenode.
+">> +static struct hdmiphy_config hdmiphy_4210_configs[] = {
+>> +       {
+>> +               .pixel_clock = 27000000,
+>> +               .conf = {
+>> +                       0x01, 0x05, 0x00, 0xD8, 0x10, 0x1C, 0x30, 0x40,
+>> +                       0x6B, 0x10, 0x02, 0x51, 0xDF, 0xF2, 0x54, 0x87,
+>> +                       0x84, 0x00, 0x30, 0x38, 0x00, 0x08, 0x10, 0xE0,
+>> +                       0x22, 0x40, 0xE3, 0x26, 0x00, 0x00, 0x00, 0x00,
+>> +               },
+>> +       },
+[trimmed couple more entries]
+>> +};
+>>
+> Are you aware of the effort to move these to dt? Since these are
+> board-specific values, it seems incorrect to apply them universally.
+> Shirish has uploaded a patch to the chromium review site to push these
+> into dt (https://chromium-review.googlesource.com/#/c/65581). Maybe
+> you can work that into your patch set?"
 
-I've never tried ptxdist, but if that is known to work fine with NOMMU,
-I might just try building the base distro and running it on mach-virt.
+The configuration data is 64 bytes of the register values IIUC. Would it be
+possible to figure out exact meaning of each byte ? Do all of these bytes
+need to be changed per board ? Perhaps we can have per SoC static tables in
+the PHY driver and be overwriting only some of the bytes with values read
+from device tree ?
 
-Does this work with ELF FDPIC or do you need binfmt-flat?
+AFAIR firmware-like binary blobs (register address/value pairs) are not
+supposed to be stored in DT.
 
-> > * An ARMv7-M kernel cannot run on either ARMv4/v5 nor ARMv6/v7-A, r=
-ight?
-> The entry convention is different (ARMv7-M doesn't support the ARM
-> instruction set but you need to jump into the kernel in ARM mode for
-> v4-v7). Other that that I don't know if there is a problem. Maybe
-> Jonathan can say anything here? Or alternatively if you want an efm32
-> devboard, just tell me.
+If there is no detailed documentation for theese PHY configuration tables
+I guess there is no choice but to put these raw 64 bytes in DT. Presumably
+this should be a an required property defined only by board dts, since those
+values are PCB design dependent.
 
-I haven't started a test farm like Olof has yet. I'll have to think abo=
-ut
-whether I want to have my own, but he might also be interested in addin=
-g
-a NOMMU target to his collection.
+However, if not all boards need tweaking this configuration data, then it
+could make sense to define recommended per-SoC tables in the driver and
+overwrite from DT only if it is specified there for a specific board.
+If we can come up with universal configuration for a SoC and selected pixel
+clock frequency then it could likely be better to store that in the driver
+rather than in DT.
 
-> > Do you prevent building such a kernel in Kconfig?
-> I'm sure my Kconfig magic isn't waterproof. It took me a few tries to
-> expand the multiarch architecture selection to make v7-m selectable a=
-t
-> all.
-
-Ok, I can have a look and give you suggestions for how it needs to be
-phrased if it currently allows broken (non-building) combinations.
-
-	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+Thanks,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
