@@ -1,10 +1,8 @@
-From: Shawn Guo <shawn.guo@linaro.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: device tree binding documentation outdated
-Date: Sun, 29 Sep 2013 13:01:04 +0800
-Message-ID: <20130929050101.GA26156@S2101-09.ap.freescale.net>
-References: <CAOMZO5Dj7o3qBH2hzPFWjepgpt5XR5qKmQorKS6jH_7=gnY5cg@mail.gmail.com>
- <20130927121357.GY12758@n2100.arm.linux.org.uk>
- <20130927132601.GL25146@S2101-09.ap.freescale.net>
+Date: Sun, 29 Sep 2013 14:13:05 +0800
+Message-ID: <20130929061303.GB26156@S2101-09.ap.freescale.net>
+References: <20130927132601.GL25146@S2101-09.ap.freescale.net>
  <20130927151900.GA12758@n2100.arm.linux.org.uk>
  <CAHCPf3t8=mJn-RCz3C1cY6zqsH9ds8UANKpKx9ZpwPM6WjJt3g@mail.gmail.com>
  <20130927174916.GD12758@n2100.arm.linux.org.uk>
@@ -12,92 +10,46 @@ References: <CAOMZO5Dj7o3qBH2hzPFWjepgpt5XR5qKmQorKS6jH_7=gnY5cg@mail.gmail.com>
  <20130927190546.GG12758@n2100.arm.linux.org.uk>
  <CAHCPf3vxGAzTnY360KC7Yt-DB1FB14Sv_Cn7DBTH6HGZ6y=stg@mail.gmail.com>
  <CAHCPf3sv3wSbUc9QFVhmYsPc1kqiWYRuOMO7rreuiGSrwyepBQ@mail.gmail.com>
+ <20130927202110.GI12758@n2100.arm.linux.org.uk>
+ <20130928083859.GQ12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAHCPf3sv3wSbUc9QFVhmYsPc1kqiWYRuOMO7rreuiGSrwyepBQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Sealey <neko@bakuhatsu.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Fabio Estevam <festevam@gmail.com>
+In-Reply-To: <20130928083859.GQ12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 02:48:16PM -0500, Matt Sealey wrote:
-> GPR1[21] = 0 i.MX6 receives a clock from the PHY. You need to generate
-> a clock at the PHY as input to the MAC. The MAC won't run until the
-> PHY is out of reset and the clock is generated. You may need SION set
-> for RMII depending on the pin...
-> GPR1[21] = 1 implies we generate a clock from i.MX6 TO the PHY. The
-> clock is looped back through the pad to the MAC. SION is irrelevant.
-> 
-> Still want to know who's clock it is and where it should be going....
+On Sat, Sep 28, 2013 at 09:38:59AM +0100, Russell King - ARM Linux wrote:
+> Okay, the answer is that yes, GPR1 bit 21 should be clear on this version
+> of the hardware, but there's plans to have the IMX6 generate the clock
+> and remove the crystal for the AR8035.
 
-There are some fuzzy around the imx6 ENET reference clock.  I was not
-completely understanding it until I had a talk with the designer.
+Be careful, as mentioned in the reply to Matt, in that case, IMX6 can
+only output the clock on pad GPIO_16, and the clock has to be externally
+routed back to IMX6 on pad ENET_REF_CLK, so that ENET can get reference
+clock for RGMII mode.
 
-The following is a simplified and modified 'Table 23-1. ENET External
-Signals' from reference manual ENET chapter.  I renamed a few things
-(marked with ^^^)to avoid confusion.
+> Now, here's the question for the IMX6 maintainers: how do I avoid having
+> GPR1 bit 21 set - it's unconditionally set by imx6q_1588_init() in
+> arch/arm/mach-imx/mach-imx6q.c.  Moreover, how do I control this from
+> DT?
 
-Signal           Description                             Mode        Pad 
--------------------------------------------------------------------------------------
-ENET_REF_CLK     In RMII mode, this signal is the        RMII        GPIO_16
-                 reference clock for receive, transmit,
-                 and the control interface.
+GPR1[21] should be cleared only when there is a clock input on pad
+GPIO_16 from external phy or oscillator.  Other than that, GPR1[21]
+should always be set to loop the ENET_PLL clock back to ENET though
+pad GPIO_16, for at least getting PTP (IEEE 1588) work, even in RGMII
+mode.
 
-ENET_TX_REF_CLK  Input clock, which provides a timing    MII/RGMII   PAD_ENET_REF_CLK
-        ^^^^     reference for TX_EN, TX_DATA[3:0],         ^^^^^^   ^^^^
-                 and TX_ER.
-
-There are two ENET reference clocks.  One is ENET_REF_CLK which is used
-by RMII and PTP (Precision Time Protocol, IEEE 1588) sampling, and the
-other is ENET_TX_REF_CLK which is used by MII and RGMII.
-
-Clock ENET_REF_CLK can only comes from pad GPIO_16 (RGMII_TX_CTL option
-is ignored in this discussion) with either external PHY/oscillator clock
-input on the pad (GPR1[21] = 0), or internal ENET_PLL output on the pad
-and loop back to ENET_REF_CLK (GPR1[21] = 1) through the pad.
-
-Clock ENET_TX_REF_CLK can only comes from pad PAD_ENET_REF_CLK, which
-can only receives a clock input from external source.  This external
-source can be RGMII PHY, oscillator or pad GPIO_16.  That said, GPR1[21]
-and ENET_PLL do not have any implication on pad PAD_ENET_REF_CLK but
-only GPIO_16.  If a board design wants to have i.MX6Q/DL provide 125MHz
-clock to RGMII PHY, it has to do something the following digram shows.
-
-                         i.MX6Q/DL
-        -------------------------+
-                                 |
-             ENET_PLL            |             +-----------+
-                 |               |             |           |
-                 +-----> GPIO_16 |------+----->| RGMII PHY |
-                            /    |      |      |           |
-            PTP <----------/     |      |      +-----------+
-                                 |      |
-                PAD_ENET_REF_CLK |<-----+
-                 +---/           |
-                 |               |
-                 v               |
-         ENET_TX_REF_CLK         |
-                                 |
-        -------------------------+
-
-The pad GPIO_16 has to be externally routed to PAD_ENET_REF_CLK, so that
-the ENET can get the RGMII reference clock.  There are related
-discussions about that as below.
-
-https://community.freescale.com/message/330757#330757
-https://community.freescale.com/message/350327#350327
-
-Hope it makes the thing a little bit clear.
+So far, we haven't got any user with that setup (external phy or
+oscillator generates clock to pad GPIO_16).  When we do, we can add a
+device tree property for telling that.
 
 Shawn
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
