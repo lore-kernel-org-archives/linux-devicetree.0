@@ -1,41 +1,90 @@
-From: Duan Fugang-B38611 <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: device tree binding documentation outdated
-Date: Sun, 29 Sep 2013 06:47:36 +0000
-Message-ID: <9848F2DB572E5649BA045B288BE08FBE01711637@039-SN2MPN1-022.039d.mgd.msft.net>
-References: <CAHCPf3t8=mJn-RCz3C1cY6zqsH9ds8UANKpKx9ZpwPM6WjJt3g@mail.gmail.com>
- <20130927174916.GD12758@n2100.arm.linux.org.uk>
- <CAHCPf3sC7bY=p4vpBQFpRUmyPspT_PVjx0rH9cm1ov=SqkO+Vg@mail.gmail.com>
- <20130927190546.GG12758@n2100.arm.linux.org.uk>
- <CAHCPf3vxGAzTnY360KC7Yt-DB1FB14Sv_Cn7DBTH6HGZ6y=stg@mail.gmail.com>
- <CAHCPf3sv3wSbUc9QFVhmYsPc1kqiWYRuOMO7rreuiGSrwyepBQ@mail.gmail.com>
- <20130927202110.GI12758@n2100.arm.linux.org.uk>
- <20130928083859.GQ12758@n2100.arm.linux.org.uk>
- <20130929061303.GB26156@S2101-09.ap.freescale.net>
- <9848F2DB572E5649BA045B288BE08FBE017115C8@039-SN2MPN1-022.039d.mgd.msft.net>
- <20130929063515.GC26156@S2101-09.ap.freescale.net>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2] pwm-backlight: allow for non-increasing brightness levels
+Date: Sun, 29 Sep 2013 09:03:41 +0200
+Message-ID: <2374392.UQj3ulSGQM@avalon>
+References: <1379869196-19377-1-git-send-email-mikedunn@newsguy.com> <524423B6.4070609@ti.com> <017a01cebb31$9df90f60$d9eb2e20$%han@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130929063515.GC26156-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <017a01cebb31$9df90f60$d9eb2e20$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: 'Tomi Valkeinen' <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Mike Dunn' <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, 'Richard Purdie' <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, 'Jean-Christophe Plagniol-Villard' <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, 'Grant Likely' <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Rob Herring' <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Robert Jarzmik' <robert.jarzmik-GANU6spQydw@public.gmane.org>, 'Marek Vasut' <marex-ynQEQJNshbs@public.gmane.org>, 'Laurent Pinchart' <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Shawn Guo [mailto:shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
-Sent: Sunday, September 29, 2013 2:35 PM
+Hi Jingoo,
 
-> Yes, that's my understanding too.  Please review the following message to
-> see if everything stands correct there.
+On Friday 27 September 2013 12:28:21 Jingoo Han wrote:
+> On Thursday, September 26, 2013 9:08 PM, Tomi Valkeinen wrote:
+> > On 26/09/13 14:51, Thierry Reding wrote:
+> > > On Thu, Sep 26, 2013 at 01:03:06PM +0300, Tomi Valkeinen wrote:
+> > > [...]
+> > > 
+> > >> But if you and Thierry think this version is good, I'll take it.
+> > > 
+> > > That sounds like you want to take it through the fbdev tree. Jingoo is
+> > > listed (along with Richard, but he hasn't been responsive to email for
+> > > years) as maintainer for the backlight subsystem. Furthermore back at
+> > 
+> > Ah, so they are. I just thought it falls under fbdev, as it's under
+> > drivers/video/ =).
+> > 
+> > I don't have any particular "want" to take it through fbdev tree. But I
+> > can take it.
+> > 
+> > > the time when I began working on the PWM subsystem, the backlight sub-
+> > > system was pretty much orphaned, and pwm-backlight was by far the
+> > > biggest user of the PWM subsystem. I adopted the driver at the time
+> > > because it needed to be updated for PWM subsystem changes.
+> > > 
+> > > What's the plan going forward? Given the coupling between the PWM
+> > > subsystem and the pwm-backlight driver it might be useful to keep
+> > > maintaining it as part of the PWM subsystem. On the other hand, there's
+> > > some coupling between the driver and the backlight subsystem too.
+> > 
+> > And backlight is coupled with fbdev... Which is something I don't like.
 > 
-> http://thread.gmane.org/gmane.linux.drivers.devicetree/46115/focus=269646
+> +cc Laurent Pinchart,
 > 
-Correct.
+> Yes, right.
+> The backlight should be de-coupled with fbdev.
+> I remember that Laurent Pinchart was doing this patch.
+> 
+> Laurent Pinchart,
+> Would you let us know your plan about this? :-)
 
-Thanks,
-Andy
+My plans include finishing CDF first :-) I thus don't know when I'll have time 
+to tackle this task. Feel free to pick it but. If you do, I would appreciate 
+if you could discuss your ideas with me.
+
+> > > I have a couple of patches queued up for 3.13 that rework parts of the
+> > > driver, so it'd be good to know how you guys want to handle this.
+> > 
+> > Well. I'm happy if somebody wants to maintain the backlight side. In
+> > fact, I'd be happy if somebody would start restructuring it totally,
+> > it's rather messy. The link with fbdev should be removed, and some
+> > backlight drivers are actually panel drivers. However, perhaps Common
+> > Display Framework is required until it can be fully cleaned.
+> 
+> I think that some backlight drivers can be moved to 'Common Display
+> Framework', after 'Common Display Framework' is merged.
+> But, I am not sure, when it will be completed.
+
+Hardware backlight devices don't process video streams, so they don't really 
+belong to CDF, at least to the CDF that we know today. However, a hardware 
+panel device that integrates a backlight would be supported by a CDF driver, 
+which would create a Linux backlight device.
+
+> > So... For the time being, I'm fine with merging pwm-backlight via any
+> > tree that works best. I'm presuming here that backlight framework and
+> > fbdev (for the parts that are relevant for backlight) are not really
+> > being changed, so there shouldn't be conflicts.
+
+-- 
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
