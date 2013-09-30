@@ -1,74 +1,107 @@
-From: Xiubo Li <Li.Xiubo@freescale.com>
-Subject: [PATCHv5 4/4] Documentation: Add device tree bindings for Freescale
- FTM PWM.
-Date: Mon, 30 Sep 2013 14:13:31 +0800
-Message-ID: <1380521611-2764-5-git-send-email-Li.Xiubo@freescale.com>
-References: <1380521611-2764-1-git-send-email-Li.Xiubo@freescale.com>
+From: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: RE: [PATCH v7 0/6] ARM: dts: add support for exynos hdmi subsystem
+Date: Mon, 30 Sep 2013 16:51:31 +0900
+Message-ID: <069c01cebdb1$e0e79ee0$a2b6dca0$@org>
+References: <1377784377-28426-1-git-send-email-rahul.sharma@samsung.com>
+ <1620695.hYygFk0Iax@amdc1227>
+ <CAPdUM4N7DeBkO8Dt859toB92SRskBc8wkGDCNJXt4Fz=YXSOBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1380521611-2764-1-git-send-email-Li.Xiubo@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: r65073@freescale.com, thierry.reding@gmail.com
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, linux@arm.linux.org.uk, ian.campbell@citrix.com, pawel.moll@arm.com, swarren@wwwdotorg.org, s.hauer@pengutronix.de, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, devicetree@vger.kernel.org, rob@landley.net, grant.likely@linaro.org, t.figa@samsung.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAPdUM4N7DeBkO8Dt859toB92SRskBc8wkGDCNJXt4Fz=YXSOBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-language: ko
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Rahul Sharma' <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Tomasz Figa' <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: 'Rahul Sharma' <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'linux-samsung-soc' <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "'sw0312.kim'" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Inki Dae' <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Tomasz Figa' <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Sylwester Nawrocki' <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'sunil joshi' <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the Document for Freescale FTM PWM driver under
-Documentation/devicetree/bindings/pwm/.
+Rahul Sharma wrote:
+> 
+> On 29 August 2013 19:05, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> > Hi Rahul,
+> >
+> > On Thursday 29 of August 2013 19:22:51 Rahul Sharma wrote:
+> >> It adds Device tree nodes and clocks information for HDMI subsystem
+> >> for exynos5420 and exynos5250 SoCs. It adds pinctrl node for hdmi
+> >> hpd gpio and update binding documents.
+> >>
+> >> This set is based on kukjin's for-next branch at
+> >> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
+> >>
+> >> v7:
+> >> 1) Minor change in of-documentation.
+> >> 2) Squash gpio pin-ctrl and ddc patch to one patch.
+> >>
+> >> v6:
+> >> 1) Update clock numbers as per change in mux and divider clocks.
+> >> 2) Isolate board changes from SoC patch and add a different patch for
+> >> ddc.
+> >>
+> >> v5:
+> >> 1) Merged Clock addition patch to DT nmde addition patch.
+> >> 2) Add dout_pixel clock for hdmi in place of sclk_pixel.
+> >> 3) Enable mixer node in soc dtsi file.
+> >>
+> >> v4:
+> >> 1) Remove the movement of common properties to Exynos5.dtsi for
+> >> I2C and hdmi subsystem.
+> >> 2) Change the title of the patches.
+> >>
+> >> v3:
+> >> 1) Rebase to kgene for-next based on 3.11-rc1.
+> >> 2) Changes clock numbers as per updated clocks file for
+> >> exyno5250 and exynos5420.
+> >> 3) Dropped Sachin patch as already got merged.
+> >>
+> >> v2:
+> >> 1) Added patch for moving common i2c properties to exynos5.dtsi
+> >> 2) Added patch for moving common hdmi, mixer properties to exynos5.dtsi
+> >> 3) moved hpd pinctrl node to board file.
+> >> 4) Added Sachin's patch to update binding document for hdmi with hpd
+> >> information.
+> >>
+> >> Andrew Bresticker (1):
+> >>   ARM: dts: add i2c device nodes for Exynos5420
+> >>
+> >> Rahul Sharma (4):
+> >>   of/documentation: update with clock information for exynos hdmi
+> >>     subsystem
+> >>   ARM: dts: add clocks to hdmi dt node for exynos5250
+> >>   ARM: dts: add dt nodes for hdmi subsystem for exynos5420
+> >>   ARM: dts: enable hdmi subsystem for exynos5420 smdk board
+> >>
+> >> Sean Paul (1):
+> >>   ARM: dts: add mixer clocks to mixer node for Exynos5250
+> >>
+> >>  .../devicetree/bindings/video/exynos_hdmi.txt      |   14 +++-
+> >>  .../devicetree/bindings/video/exynos_mixer.txt     |    4 ++
+> >>  arch/arm/boot/dts/exynos5250.dtsi                  |    8 ++-
+> >>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   26 +++++++
+> >>  arch/arm/boot/dts/exynos5420.dtsi                  |   75
+> >> ++++++++++++++++++++ 5 files changed, 123 insertions(+), 4 deletions(-)
+> >
+> > The whole series looks good to me now. Thanks for keeping up with all
+> the
+> > comments.
+> 
+> Thanks Tomasz.
+> 
+> >
+> > Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >
+Tomasz, thanks for your review.
+> 
+> Hi Mr. Kim,
+> 
+> Please consider this series for your for-next branch.
+> 
+Yeah, looks good to me as well. Applied this whole series.
 
-Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
----
- .../devicetree/bindings/pwm/pwm-fsl-ftm.txt        | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
+Thanks,
+Kukjin
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-new file mode 100644
-index 0000000..2c6969a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-@@ -0,0 +1,33 @@
-+Freescale FTM PWM controller
-+
-+Required properties:
-+- compatible: Should be "fsl,vf610-ftm-pwm"
-+- reg: Physical base address and length of the controller's registers
-+- #pwm-cells: Should be 3. See pwm.txt in this directory for a description of
-+  the cells format.
-+- clock-names : Includes the following module clock source entries:
-+    "ftm0" (system clock),
-+    "ftm0_fix_sel" (fixed frequency clock),
-+    "ftm0_ext_sel" (external clock)
-+- clocks : Must contain a clock specifier for each entry in clock-names.
-+- fsl,pwm-counter-clk: The FTM PWM counter clock source, should be one of the
-+  entries in clock-names.
-+- pinctrl-names: must contain a "default" entry.
-+- pinctrl-NNN: One property must exist for each entry in pinctrl-names.
-+  See ../pinctrl/pinctrl-bindings.txt for details of the property values.
-+
-+
-+Example:
-+
-+pwm0: pwm@40038000 {
-+		compatible = "fsl,vf610-ftm-pwm";
-+		reg = <0x40038000 0x1000>;
-+		#pwm-cells = <3>;
-+		clock-names = "ftm0", "ftm0_fix_sel", "ftm0_ext_sel";
-+		clocks = <&clks VF610_CLK_FTM0>,
-+			<&clks VF610_CLK_FTM0_FIX_SEL>,
-+			<&clks VF610_CLK_FTM0_EXT_SEL>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pwm0_1>;
-+		fsl,pwm-counter-clk = "ftm0_ext_sel";
-+};
--- 
-1.8.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
