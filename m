@@ -1,90 +1,240 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: new platform for Energy Micro's EFM32 Cortex-M3
- SoCs
-Date: Mon, 30 Sep 2013 17:49:12 +0200
-Message-ID: <20130930154912.GE2548@pengutronix.de>
-References: <1379447884-14025-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <201309272344.01386.arnd@arndb.de>
- <20130928191511.GA2548@pengutronix.de>
- <201309292100.41701.arnd@arndb.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] PM / OPP: extend DT binding to specify phandle of
+ another node for OPP
+Date: Mon, 30 Sep 2013 16:51:45 +0100
+Message-ID: <20130930155145.GC22259@e106331-lin.cambridge.arm.com>
+References: <1379501893-12669-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <1379501893-12669-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <20130930085227.GB19738@e106331-lin.cambridge.arm.com>
+ <52496FAC.7000901@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201309292100.41701.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <52496FAC.7000901-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Jonathan Austin <jonathan.austin-5wv7dgnIgG8@public.gmane.org>, Marc Kleine-Budde <m.kleine-budde-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnd,
+On Mon, Sep 30, 2013 at 01:33:48PM +0100, Sudeep KarkadaNagesha wrote:
+> On 30/09/13 09:52, Mark Rutland wrote:
+> > Hi Sudeep,
+> > 
+> > I have a few comments.
+> > 
+> > On Wed, Sep 18, 2013 at 11:58:11AM +0100, Sudeep KarkadaNagesha wrote:
+> >> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
+> >>
+> >> If more than one similar devices share the same operating points(OPPs)
+> >> being in the same clock domain, currently we need to replicate the
+> >> OPP entries in all the nodes.
+> >>
+> >> This patch extends existing binding by adding a new property named
+> >> 'operating-points-phandle' to specify the phandle in any device node
+> >> pointing to another node which contains the actual OPP tuples.
+> >> This helps to avoid replication if multiple devices share the OPPs.
+> >>
+> >> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> >> Cc: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
+> >> Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> >> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/power/opp.txt | 152 ++++++++++++++++++++++--
+> >>  1 file changed, 140 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> >> index 74499e5..e9fea65 100644
+> >> --- a/Documentation/devicetree/bindings/power/opp.txt
+> >> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> >> @@ -4,22 +4,150 @@ SoCs have a standard set of tuples consisting of frequency and
+> >>  voltage pairs that the device will support per voltage domain. These
+> >>  are called Operating Performance Points or OPPs.
+> >>  
+> >> -Properties:
+> >> +Required Properties:
+> >>  - operating-points: An array of 2-tuples items, and each item consists
+> >>    of frequency and voltage like <freq-kHz vol-uV>.
+> >>  	freq: clock frequency in kHz
+> >>  	vol: voltage in microvolt
+> >>  
+> >> +Optional properties:
+> >> +- operating-points-phandle: phandle to the device tree node which contains
+> >> +	the operating points tuples(recommended to be used if multiple
+> >> +	devices are in the same clock domain and hence share OPPs, as it
+> >> +	avoids replication of OPPs)
+> >> +
+> > 
+> > I assume if you have an operating-points-phandle property,
+> > operating-points it no longer required. That should probably be
+> > described.
+> > 
+> Correct, infact do it make sense to list both operating-points and
+> operating-points-phandle as required property but they are mutually exclusive ?
 
-On Sun, Sep 29, 2013 at 09:00:41PM +0200, Arnd Bergmann wrote:
-> On Saturday 28 September 2013, Uwe Kleine-K=F6nig wrote:
-> > On Fri, Sep 27, 2013 at 11:44:01PM +0200, Arnd Bergmann wrote:
-> > > On Thursday 26 September 2013, Uwe Kleine-K=F6nig wrote:
-> > > > I made that work now and can prepare a patch. I had to drop "de=
-pends on
-> > > > !ARCH_MULTIPLATFORM" from XIP_KERNEL. That's because my machine=
- only
-> > > > works with XIP_KERNEL as it only has 4 MiB of RAM.
-> > >=20
-> > > Ok, cool. We might run into a few problems with 'make randconfig'=
- and
-> > > 'make allyesconfig' when it becomes possible to enable XIP_KERNEL=
- then.
-> > > IIRC, there is no fundamental reason to disallow XIP_KERNEL with
-> > > ARCH_MULTIPLATFORM, but I added the dependency because it causes
-> > > build errors in combination with other options.
-> > ah, OK. Do you have an idea to fix both?
->=20
-> No, I don't actually remember what problems I ran into. It may be any=
-where
-> from trivial to impossible to fix.
-I sent a patch series (without looking much for problems :-).
+That sounds about right to me.
 
-> > There is a BSP publically available at
-> >=20
-> > 	http://git-public.pengutronix.de/?p=3DOSELAS.BSP-EnergyMicro-Gecko=
-=2Egit;a=3Dsummary
-> >=20
-> > which also includes a README file. For troubleshooting /join #efm32=
- on
-> > freenode.
->=20
-> I've never tried ptxdist, but if that is known to work fine with NOMM=
-U,
-> I might just try building the base distro and running it on mach-virt=
-=2E
->=20
-> Does this work with ELF FDPIC or do you need binfmt-flat?
-I use binfmt-flat, but that's because Marc (on Cc: now) created the bas=
-e
-BSP for me that way. I don't know what ELF FDPIC is.
+> 
+> >>  Examples:
+> >>  
+> >> -cpu@0 {
+> >> -	compatible = "arm,cortex-a9";
+> >> -	reg = <0>;
+> >> -	next-level-cache = <&L2>;
+> >> -	operating-points = <
+> >> -		/* kHz    uV */
+> >> -		792000  1100000
+> >> -		396000  950000
+> >> -		198000  850000
+> >> -	>;
+> >> -};
+> >> +1. A uniprocessor system (phandle not required)
+> >> +
+> >> +	cpu0: cpu@0 {
+> >> +		compatible = "arm,cortex-a9";
+> >> +		reg = <0>;
+> >> +		operating-points = <
+> >> +			/* kHz    uV */
+> >> +			792000  1100000
+> >> +			396000  950000
+> >> +			198000  850000
+> >> +		>;
+> >> +	};
+> >> +
+> >> +If more than one device of same type share the same OPPs, for example
+> >> +all the CPUs on a SoC or in a single cluster on a SoC, then we need to
+> >> +avoid replicating the OPPs in all the nodes. We can specify the phandle
+> >> +of the node which contains the OPP tuples
+> > 
+> > This seems a bit out of place given the example immediately below.
+> > 
+> Sorry carried from previous version, will fix it.
 
-> > > Do you prevent building such a kernel in Kconfig?
-> > I'm sure my Kconfig magic isn't waterproof. It took me a few tries =
-to
-> > expand the multiarch architecture selection to make v7-m selectable=
- at
-> > all.
->=20
-> Ok, I can have a look and give you suggestions for how it needs to be
-> phrased if it currently allows broken (non-building) combinations.
-You have the chance now to comment in the respective thread.
+Cheers.
 
-Best regards
-Uwe
+> 
+> >> +
+> >> +2a. Consider a SMP system with 4 CPUs in the same clock domain
+> >> +    (backward compatible style, only CPU0 contains OPP)
+> >> +
+> >> +	cpu0: cpu@0 {
+> >> +		compatible = "arm,cortex-a9";
+> >> +		reg = <0>;
+> >> +		operating-points = <
+> >> +			/* kHz    uV */
+> >> +			792000  1100000
+> >> +			396000  950000
+> >> +			198000  850000
+> >> +		>;
+> >> +	};
+> >> +
+> >> +	cpu1: cpu@1 {
+> >> +		compatible = "arm,cortex-a9";
+> >> +		reg = <1>;
+> >> +	};
+> >> +
+> >> +	cpu2: cpu@2 {
+> >> +		compatible = "arm,cortex-a9";
+> >> +		reg = <2>;
+> >> +	};
+> >> +
+> >> +	cpu3: cpu@3 {
+> >> +		compatible = "arm,cortex-a9";
+> >> +		reg = <3>;
+> >> +	};
+> > 
+> > This "backward compatible style" doesn't seem to actually be described
+> > anywhere, and the paragraph above about phandles makes it somewhat
+> > confusing.
+> > 
+> Not sure if this is needed at all here. I must say there's nothing called
+> backward compatible style, the only reason I added it to tell that existing
+> cpufreq-cpu0 DTs continue to work.
+> 
+> I would say it's more like some agreement with the existing binding and the
+> cpufreq-cpu0 driver. Do it make sense to drop it from here ?
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+It's probably worth adding a paragraph above the example describing
+that, something like:
+
+Some existing DTs describe homogenous SMP systems by only listing the
+OPPs in the cpu@0 node. For compatiblity with existing DTs, an operating
+system may handle this case specially.
+
+> 
+> >> +
+> >> +2b. Consider a SMP system with 4 CPUs in the same clock domain
+> >> +    (using operating-points-phandle)
+> >> +
+> >> +	cpu0: cpu@0 {
+> >> +		compatible = "arm,cortex-a9";
+> >> +		reg = <0>;
+> >> +		operating-points-phandle = <&cpu_opp>;
+> >> +	};
+> >> +
+> >> +	cpu1: cpu@1 {
+> >> +		compatible = "arm,cortex-a9";
+> >> +		reg = <1>;
+> >> +		operating-points-phandle = <&cpu_opp>;
+> >> +	};
+> >> +
+> >> +	cpu2: cpu@2 {
+> >> +		compatible = "arm,cortex-a9";
+> >> +		reg = <2>;
+> >> +		operating-points-phandle = <&cpu_opp>;
+> >> +	};
+> >> +
+> >> +	cpu3: cpu@3 {
+> >> +		compatible = "arm,cortex-a9";
+> >> +		reg = <3>;
+> >> +		operating-points-phandle = <&cpu_opp>;
+> >> +	};
+> >> +
+> >> +	operating_points {
+> >> +		cpu_opp: cpu_opp {
+> >> +			operating-points = <
+> >> +				/* kHz    uV */
+> >> +				792000  1100000
+> >> +				396000  950000
+> >> +				198000  850000
+> >> +			>;
+> >> +		};
+> >> +		... /* other device OPP nodes */
+> >> +	}
+> > 
+> > Is this all inside the /cpus node?
+> > 
+> It can be anywhere, if only cpus share OPPs on a system, it can be placed under
+> /cpus. The idea to put all OPP nodes under one node is just for readibility
+> purposes. As along as phandle is correct it doesn't matter where the exact nodes
+> are. Does this need to be mentioned explicity in the binding ?
+
+I'm not sure what the preferred way of handling container nodes is in
+general. Do we have any examples of existing container nodes (i.e. those
+which aren't devices and don't contain devices) elsewhere?
+
+> 
+> > Is the "operating_points" name important?
+> > 
+> > Are all OPP tables expected to be in the same "operating_points" node?
+> > 
+> No for both the above questions, again just for readibilty I chose that name and
+> placed all OPP nodes under same node in the example, it can be named anything
+> and can be scattered.
+> Again does this need to be mentioned explicity in the binding ?
+
+This would depend on the preferred way of handling container nodes. If
+we want them all in one place, that needs to be documented. If we allow
+them anywhere, that should also be documented (though some guidance
+should probably be given so as to encourage uniform DTs).
+
+Cheers,
+Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
