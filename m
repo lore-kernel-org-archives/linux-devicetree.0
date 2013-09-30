@@ -1,52 +1,208 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] ASoC: generic: Add generic DT based simple codec
-Date: Mon, 30 Sep 2013 10:49:06 -0600
-Message-ID: <5249AB82.60701@wwwdotorg.org>
-References: <20130919105437.75e0f0a3@armhf> <5240B07C.6080404@wwwdotorg.org> <CAL_JsqKmfurrCqEYRNqcLRZMU-VjPin2dvK1Q6CMcK4i=+x-8w@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RFC] media: rc: OF: Add Generic bindings for
+ remote-control
+Date: Mon, 30 Sep 2013 17:51:26 +0100
+Message-ID: <20130930165125.GE22259@e106331-lin.cambridge.arm.com>
+References: <1380274391-26577-1-git-send-email-srinivas.kandagatla@st.com>
+ <20130927113458.GB18672@e106331-lin.cambridge.arm.com>
+ <20130927104719.6637368f@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKmfurrCqEYRNqcLRZMU-VjPin2dvK1Q6CMcK4i=+x-8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130927104719.6637368f-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/26/2013 08:57 PM, Rob Herring wrote:
-> On Mon, Sep 23, 2013 at 4:19 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 09/19/2013 02:54 AM, Jean-Francois Moine wrote:
->>> This patch adds a simple sound codec which is described by the DT.
->>> This codec may be used when no specific codec action is needed.
->>
->>> diff --git a/Documentation/devicetree/bindings/sound/simple-codec.txt b/Documentation/devicetree/bindings/sound/simple-codec.txt
->>
->>> +Device-Tree bindings for the simple codec
->>> +
->>> +Required properties:
->>> +- compatible: should be "linux,simple-codec".
->>
->> We shouldn't have any Linux-specific bindings. It might be reasonable to
->> define a binding for a "simple CODEC", but there's no reason it should
->> be Linux-specific.
+On Fri, Sep 27, 2013 at 02:47:19PM +0100, Mauro Carvalho Chehab wrote:
+> Em Fri, 27 Sep 2013 12:34:58 +0100
+> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> escreveu:
 > 
-> Further, just define the type of codec h/w. If linux can use its
-> simple-codec driver for it, then add a match table entry for said
-> codec. Then the DT is future proof when you decide the simple driver
-> doesn't really work for that h/w.
+> > On Fri, Sep 27, 2013 at 10:33:11AM +0100, Srinivas KANDAGATLA wrote:
+> > > From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> > > 
+> > > This patch attempts to collate generic bindings which can be used by
+> > > the remote control hardwares. Currently the list is not long as there
+> > > are only 2 drivers which are device tree'd.
+> > > 
+> > > Mainly this patch tries to document few bindings used by ST IRB driver
+> > > which can be generic as well. This document also add fews common
+> > > bindings used by most of the drivers like, interrupts, regs, clocks and
+> > > pinctrls.
+> > > 
+> > > This document can also be holding place to describe generic bindings
+> > > used in remote controls devices.
+> > > 
+> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> > > ---
+> > > Hi All, 
+> > > Following Stephen Warren's suggestions at https://lkml.org/lkml/2013/9/24/452
+> > > this patch is an attempt to document such generic bindings in a common
+> > > document.
+> > > 
+> > > This document currently collates all the generic bindings used with
+> > > remote-controls and act as holding place to describe generic bindings for
+> > > remote controls.
+> > > 
+> > > Comments?
+> > > 
+> > > Thanks,
+> > > srini
+> > > 
+> > >  .../devicetree/bindings/media/remote-control.txt   |   31 ++++++++++++++++++++
+> > >  1 files changed, 31 insertions(+), 0 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/remote-control.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/media/remote-control.txt b/Documentation/devicetree/bindings/media/remote-control.txt
+> > > new file mode 100644
+> > > index 0000000..901ea56
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/remote-control.txt
+> > > @@ -0,0 +1,31 @@
+> > > +Generic device tree bindings for remote control.
+> > > +
+> > > +properties:
+> > > +	- compatible: Can contain any remote control driver compatible string.
+> > > +	  example: "st-comms-irb, "gpio-ir-receiver".
+> > 
+> > This is more generic than remote control, could this not just be left
+> > for the specific binding to describe?
+> > 
+> > > +	- reg: Base physical address of the controller and length of memory
+> > > +	  mapped region.
+> > 
+> > What if it's on a bus that isn't memory mapped (e.g. i2c, SPI)?
+> > 
+> > > +	- interrupts: Interrupt-specifier for the sole interrupt generated by
+> > > +	  the device. The interrupt specifier format depends on the
+> > > +	  interrupt controller parent. Iff the device supports interrupts.
+> > 
+> > What if it has multiple interrupts, and has interrupts-names?
+> > 
+> > It might be better to only describe the properties that relate
+> > specifically to remote controls, rather than listing all of the generic
+> > properties that device tree bidnings may have. That would match the
+> > style of the clock bindings.
+> > 
+> > > +	- rx-mode: Can be "infrared" or "uhf". rx-mode should be present iff
+> > > +	  the rx pins are wired up.
+> > 
+> > I'm unsure on this. What if the device has multiple receivers that can
+> > be independently configured? 
+> 
+> Well, if a given remote controller hardware has more than one independent
+> receiver (or transmitter), each one should have its own devnode.
+> Likely, two entries at DT.
 
-The only potential issue with that approach is if the CODEC can be used
-in a "simple" mode where e.g. no control GPIOs, regulator manipulation,
-etc. are required, or in a more complex mode where such things are
-required, you may end up with the device-specific binding being written
-to the simple mode, and hence missing features required for the complex
-mode. Having a separate simple binding prevents the device-specific
-binding from being broken that way.
+Why? If an IP block happens to have support for N connections, that
+doesn't mean that each must be described individually. They likely share
+a bank of registers, and depending on the device they might not even be
+assigned consistently orgranised windows of that register bank.
 
-That said, it's probably better to simply get the device-specific
-binding completely fleshed out and representing all resources the first
-time around, then there's no issue either.
+> 
+> > What if it supports something other than
+> > "infrared" or "uhf"? What if a device can only be wired up as
+> > "infrared"? 
+> 
+> I would say that a hardware that has both infrared and uhf has actually
+> two different devices. So, it should be mapped as two separate devnodes.
 
+I would say that it is still one device, one which happens to have two
+outputs. Just because we want two dev nodes does not mean the dt has to
+be structured as two devices.
+
+> 
+> > I'm not sure how generic these are, though we should certainly encourage
+> > bindings that can be described this way to be described in the same way.
+> > 
+> > > +	- tx-mode: Can be "infrared" or "uhf". tx-mode should be present iff
+> > > +	  the tx pins are wired up.
+> > 
+> > I have similar concerns here to those for the rx-mode property.
+> > 
+> > > +
+> > > +Optional properties:
+> > > +	- linux,rc-map-name: Linux specific remote control map name. Refer to
+> > > +	  include/media/rc-map.h for full list of maps.
+> > 
+> > We shouldn't refer to Linux specifics (i.e. headers) in general in
+> > bindings. While it's possible to relax that a bit for linux,*
+> > properties, I'd prefer to explicitly list elements in the binding. That
+> > prevents the ABI from changing under our feet by someone altering what
+> > looks like a completely internal header file.
+> 
+> Well, the remote controller keymaps at include/media/rc-map.h is just a
+> bunch of string names, defined as macro to avoid duplicating those names
+> everywhere, to avoid typos and to help some userspace parsing logic to get
+> all in just one single place. I don't see why the same names couldn't be 
+> used on any other OS using DT.
+
+To be used by another OS, they should be defined somewhere that's not
+subject to arbitrary changes at any time at the whim of Linux
+developers, without dt-related review.
+
+That's not to say we couldn't use strings the kernel happened to use.
+I'm saying that the names exposed by bindings should be well-defined,
+and should not depend on the current state of a linux-internal header
+file.
+
+I think it would be nicer to have a way of defining the keymap in dt
+anyway, so as to handle the general case and not get into the mess of
+having an arbitrary set of strings we need to constantly update.
+
+> 
+> The logic behind include/media/rc-map.h, is that those names are used
+> by:
+> 
+> 1) kernelspace: in order to locate a keytable with the same name, that
+> would be loaded when the device is initialized;
+
+The kernel uses the strings, so it has them defined in its include path
+somewhere. If dt bindings wish to use the strings, they should be
+defined somewhere. That somewhere should not be a Linux-internal header
+file.
+
+> 
+> 2) userspace: to seek for a keytable with that name, allowing to
+> dynamically load the keymap table on userspace, instead of hardwiring
+> them on Kernelspace (or replacing the kernel's one by an user-customized
+> one).
+
+The name of each table is not exposed to userspace, they are not defined
+under include/uapi. The fact that the names may be used to request other
+data does not change the fact that the kernel has one copy, userspace
+another. The set of strings the kernel understands *is* hard-wired.
+
+> 
+> So, I would simply call it as "keymap-name", keep pointing it to 
+> include/media/rc-map.h.
+> 
+> That's said, this is actually a mandatory requirement, as without it,
+> the RC core will not be able to load a keytable, and the userspace tool
+> won't load the proper keymap, being confused on what to do.
+
+It is possible to handle setting up the mapping within the kernel, or to
+actually describe the general case, something like how gpio-keys works.
+I think that would be preferable.
+
+> 
+> It should be noticed that, from time to time, manufacturers change the
+> remote control unit, as those devices are generally manufactured by a
+> third part. So, they change, for example, when they get a new BID to
+> provide IRs for a cheaper cost, or when they need/want to provide a "deluxe"
+> remote, a simplified "thin" one and/or when they need to provide customized
+> remotes to some Cable company, for example.
+> 
+> So, it makes sense for it to be mandatory, as only with this information it
+> is possible to load the keymap that matches that specific IR unit model.
+
+While it's true that some description is necessary, I do nto believe
+this is the right one.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
