@@ -1,77 +1,50 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
-Date: Mon, 30 Sep 2013 16:41:38 +0200
-Message-ID: <12127401.nFSuWlICDy@avalon>
-References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com> <CA+V-a8u5_rhxTgkVgCbtmGpaZCt2ciu4vABW4t80aSp7csttnw@mail.gmail.com> <CA+V-a8sEPAFz=Jo9LdwRf5QtnY6TFXzSTrtHQuyeb3uSEYCvSQ@mail.gmail.com>
+From: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC PATCH 1/6] DRIVERS: IRQCHIP: IRQ-GIC: Add support for routable
+ irqs
+Date: Mon, 30 Sep 2013 20:30:43 +0530
+Message-ID: <5249921B.5020108@ti.com>
+References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <1380549564-31045-2-git-send-email-r.sricharan@ti.com> <524987A3.4090204@arm.com> <5249890B.7020906@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CA+V-a8sEPAFz=Jo9LdwRf5QtnY6TFXzSTrtHQuyeb3uSEYCvSQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LMML <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>, LDOC <linux-doc@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Hans Verkuil <hans.verkuil@cisco.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Sakari Ailus <sakari.ailus@iki.fi>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5249890B.7020906-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "rnayak-l0cyMroinI0@public.gmane.org" <rnayak-l0cyMroinI0@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+On Monday 30 September 2013 07:52 PM, Santosh Shilimkar wrote:
+> On Monday 30 September 2013 10:16 AM, Marc Zyngier wrote:
+>> On 30/09/13 14:59, Sricharan R wrote:
+>>> In some socs the gic can be preceded by a crossbar IP which
+>>> routes the peripheral interrupts to the gic inputs. The peripheral
+>>> interrupts are associated with a fixed crossbar input line and the
+>>> crossbar routes that to one of the free gic input line.
+>>>
+>>> The DT entries for peripherals provides the fixed crossbar input line
+>>> as its interrupt number and the mapping code should associate this with
+>>> a free gic input line. This patch adds the support inside the gic irqchip
+>>> to handle such routable irqs. The routable irqs are registered in a linear
+>>> domain. The registered routable domain's callback should be implemented
+>>> to get a free irq and to configure the IP to route it.
+>> Isn't this just another chained interrupt controller? How is it GIC
+>> specific?
+>>
+> No it isn't a irq controller rather a event router. Patch is missing
+> reference to the previous discussion. Previous discussion is here [1]
+>
+> Regards,
+> Santosh
+>
+> [1] https://lkml.org/lkml/2013/9/13/413
+>
+Sorry, missed adding that and thanks for pointing it.
 
-On Monday 30 September 2013 18:57:01 Prabhakar Lad wrote:
-> On Mon, Sep 23, 2013 at 8:18 AM, Prabhakar Lad wrote:
-> > On Fri, Sep 20, 2013 at 3:22 PM, Sylwester Nawrocki wrote:
-> >> On 09/20/2013 10:11 AM, Prabhakar Lad wrote:
-> >>> OK I will, just send out a fix up patch which fixes the mismatch between
-> >>> names for the rc-cycle, and later send out a patch which removes the
-> >>> platform data usage for next release with proper DT bindings.
-> >> 
-> >> I think the binding need to be fully corrected now, I just meant to not
-> >> touch the board file, i.e. leave non-dt support unchanged.
-> > 
-> > Ok
-> > 
-> >>> I'm OK with making regulator properties as optional, But still it would
-> >>> change the meaning of what DT is, we know that the VDD/VDD_IO .. etc
-> >>> pins are required properties (but still making them as optional) :-(
-> >>> 
-> >>> I think there might several devices where this situation may arise so
-> >>> just thinking of a alternative solution.
-> >>> 
-> >>> say we have property 'software-regulator' which takes true/false(0/1)
-> >>> If set to true we make the regulators as required property or else we
-> >>> assume it is handled and ignore it ?
-> >> 
-> >> I don't think this is a good idea. You would have to add a similar
-> >> platform data flag for non-dt, it doesn't sound right. I can see two
-> >> options here:
-> >> 
-> >> 1. Make the regulator properties mandatory and, e.g. define a fixed
-> >>    voltage GPIO regulator in DT with an empty 'gpio' property. Then
-> >>    pass a phandle to that regulator in the adv7343 *-supply properties.
-> >>    For non-dt similarly a fixed voltage regulator(s) and voltage
-> >>    supplies  would need to be defined in the board files.
-> >> 
-> >> 2. Make the properties optional and use (devm_)regulator_get_optional()
-> >>    calls in the driver (a recently added function). I must admit I don't
-> >>    fully understand description of this function, it currently looks
-> >>    pretty much same as (devm_)regulator_get(). Thus the driver would
-> >>    need to be handling regulator supplies only when non ERR_PTR() is
-> >>    returned from regulator_get_optional() and otherwise assume a non
-> >>    critical error. There is already quite a few example occurrences of
-> >>    regulator_get_optional() usage.
-> 
-> The same question arises in case of the clock, The adv7343 encoder has two
-> input clocks CLKIN_A and CLKIN_B. I case of da850 EVM the clock source to
-> adv7343 encoder is fixed source which is enabled by default so none of the
-> bridge nor the adv7343 driver cares of the clock to enable/disable. So in
-> this case should I be registering  (v4l2_clk_register() /
-> v4l2_clk_unregister()) a dummy clock in the bridge driver or in the board
-> file ?
-
-The fixed clock (which is a real clock, not a dummy clock) should be 
-registered in board file, preferably using the common clock framework if 
-that's available on your platform.
-
--- 
 Regards,
+ Sricharan
 
-Laurent Pinchart
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
