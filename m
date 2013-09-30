@@ -1,33 +1,39 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/3] of: Add AU Optronics Corporation vendor prefix
-Date: Mon, 30 Sep 2013 15:32:48 +0200
-Message-ID: <1380547970-30449-1-git-send-email-treding@nvidia.com>
+Subject: [PATCH 2/3] of: Add Chunghwa Picture Tubes Ltd. vendor prefix
+Date: Mon, 30 Sep 2013 15:32:49 +0200
+Message-ID: <1380547970-30449-2-git-send-email-treding@nvidia.com>
+References: <1380547970-30449-1-git-send-email-treding@nvidia.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1380547970-30449-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-AU Optronics is listed as AUO on the stock exchange, so use that as the
+Chunghwa Picture Tubes Ltd. isn't listed on the stock exchange and just
+Chunghwa is too generic, so use the official abbreviation "CPTT" as the
 vendor prefix.
 
 Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
+Changes in v2:
+- rename cptt prefix to chunghwa as discussed with Stephen Warren
+
  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 2956800..20a92d4 100644
+index 20a92d4..7f13e35 100644
 --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
 +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -12,6 +12,7 @@ amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
- apm	Applied Micro Circuits Corporation (APM)
- arm	ARM Ltd.
- atmel	Atmel Corporation
-+auo	AU Optronics Corporation
- avago	Avago Technologies
- bosch	Bosch Sensortec GmbH
- brcm	Broadcom Corporation
+@@ -20,6 +20,7 @@ cavium	Cavium, Inc.
+ chrp	Common Hardware Reference Platform
+ cirrus	Cirrus Logic, Inc.
+ cortina	Cortina Systems, Inc.
++chunghwa	Chunghwa Picture Tubes Ltd.
+ dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
+ davicom	DAVICOM Semiconductor, Inc.
+ denx	Denx Software Engineering
 -- 
 1.8.4
 
