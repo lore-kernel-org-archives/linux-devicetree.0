@@ -1,55 +1,95 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/3] of: Add Chunghwa Picture Tubes Ltd. vendor prefix
-Date: Mon, 30 Sep 2013 17:03:16 +0100
-Message-ID: <20130930160316.GD22259@e106331-lin.cambridge.arm.com>
-References: <1380547970-30449-1-git-send-email-treding@nvidia.com>
- <1380547970-30449-2-git-send-email-treding@nvidia.com>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] tps65090-charger: Use "IS_ENABLED(CONFIG_OF)" for DT
+ code.
+Date: Mon, 30 Sep 2013 12:03:40 -0400
+Message-ID: <5249A0DC.9030206@nvidia.com>
+References: <1380342744-4227-1-git-send-email-badarkhe.manish@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1380547970-30449-2-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1380342744-4227-1-git-send-email-badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org" <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2013 at 02:32:49PM +0100, Thierry Reding wrote:
-> Chunghwa Picture Tubes Ltd. isn't listed on the stock exchange and just
-> Chunghwa is too generic, so use the official abbreviation "CPTT" as the
-> vendor prefix.
-
-The changes since v2 mean that the commit messages now describe the
-opposite of the patch.
-
-Cheers,
-Mark.
-
+On 9/28/2013 12:32 AM, Manish Badarkhe wrote:
+> Instead of "#if defined(CONFIG_OF)" use "IS_ENABLED(CONFIG_OF)" option
+> for DT code to avoid if-deffery in code.
+> Also, arranged header files in alphabetically.
 > 
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> Changes in v2:
-> - rename cptt prefix to chunghwa as discussed with Stephen Warren
+> :100644 100644 bdd7b9b... 8b9c406... M	drivers/power/tps65090-charger.c
+>  drivers/power/tps65090-charger.c |   19 +++++--------------
+>  1 file changed, 5 insertions(+), 14 deletions(-)
 > 
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> diff --git a/drivers/power/tps65090-charger.c b/drivers/power/tps65090-charger.c
+> index bdd7b9b..8b9c406 100644
+> --- a/drivers/power/tps65090-charger.c
+> +++ b/drivers/power/tps65090-charger.c
+> @@ -15,15 +15,17 @@
+>   * You should have received a copy of the GNU General Public License
+>   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>   */
+> +#include <linux/delay.h>
+>  #include <linux/err.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/slab.h>
+> -#include <linux/delay.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/power_supply.h>
+> +#include <linux/slab.h>
+> +
+>  #include <linux/mfd/tps65090.h>
+>  
+>  #define TPS65090_REG_INTR_STS	0x00
+> @@ -185,10 +187,6 @@ static irqreturn_t tps65090_charger_isr(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -#if defined(CONFIG_OF)
+> -
+> -#include <linux/of_device.h>
+> -
+>  static struct tps65090_platform_data *
+>  		tps65090_parse_dt_charger_data(struct platform_device *pdev)
+>  {
+> @@ -210,13 +208,6 @@ static struct tps65090_platform_data *
+>  	return pdata;
+>  
+>  }
+> -#else
+> -static struct tps65090_platform_data *
+> -		tps65090_parse_dt_charger_data(struct platform_device *pdev)
+> -{
+> -	return NULL;
+> -}
+> -#endif
+>  
+>  static int tps65090_charger_probe(struct platform_device *pdev)
+>  {
+> @@ -228,7 +219,7 @@ static int tps65090_charger_probe(struct platform_device *pdev)
+>  
+>  	pdata = dev_get_platdata(pdev->dev.parent);
+>  
+> -	if (!pdata && pdev->dev.of_node)
+> +	if (IS_ENABLED(CONFIG_OF) && !pdata && pdev->dev.of_node)
+>  		pdata = tps65090_parse_dt_charger_data(pdev);
+>  
+>  	if (!pdata) {
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 20a92d4..7f13e35 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -20,6 +20,7 @@ cavium	Cavium, Inc.
->  chrp	Common Hardware Reference Platform
->  cirrus	Cirrus Logic, Inc.
->  cortina	Cortina Systems, Inc.
-> +chunghwa	Chunghwa Picture Tubes Ltd.
->  dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
->  davicom	DAVICOM Semiconductor, Inc.
->  denx	Denx Software Engineering
-> -- 
-> 1.8.4
-> 
-> 
+
+LGTM
+Acked-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+-- 
+nvpublic
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
