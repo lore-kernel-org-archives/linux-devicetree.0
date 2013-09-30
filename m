@@ -1,68 +1,85 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM i.MX53: dts: Add TVE to i.MX53-QSB device tree
-Date: Mon, 30 Sep 2013 16:40:08 +0200
-Message-ID: <1380552008.3959.29.camel@pizza.hi.pengutronix.de>
-References: <1380192374-9531-1-git-send-email-p.zabel@pengutronix.de>
-	 <1380192374-9531-2-git-send-email-p.zabel@pengutronix.de>
-	 <20130927011643.GB25146@S2101-09.ap.freescale.net>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH V2] ARM: dts: am335x-boneblack: move fixed regulator to board
+ level
+Date: Mon, 30 Sep 2013 09:40:16 -0500
+Message-ID: <1380552016-23904-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130927011643.GB25146-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Joel Fernandes <joelf@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 27.09.2013, 09:16 +0800 schrieb Shawn Guo:
-> On Thu, Sep 26, 2013 at 12:46:14PM +0200, Philipp Zabel wrote:
-> > This patch enables the TVE which is driving the VGA connector on i.MX53-QSB.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/imx53-qsb.dts | 20 ++++++++++++++++++--
-> >  1 file changed, 18 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx53-qsb.dts b/arch/arm/boot/dts/imx53-qsb.dts
-> > index cf1aef7..3bbedf7 100644
-> > --- a/arch/arm/boot/dts/imx53-qsb.dts
-> > +++ b/arch/arm/boot/dts/imx53-qsb.dts
-> > @@ -173,6 +173,15 @@ memgpu: /memreserve/ 0xb0000000 0x04000000;
-> >  		};
-> >  	};
-> >  
-> > +	tve {
-> > +		pinctrl_vga_sync_1: vgasync-grp1 {
-> > +			fsl,pins = <
-> > +				/* VGA_HSYNC, VSYNC with max drive strength */
-> > +				MX53_PAD_EIM_OE__IPU_DI1_PIN7 0xe6
-> > +				MX53_PAD_EIM_RW__IPU_DI1_PIN8 0xe6
-> > +			>;
-> > +		};
-> > +	};
-> >  };
-> >  
-> >  &uart1 {
-> > @@ -280,8 +289,8 @@ memgpu: /memreserve/ 0xb0000000 0x04000000;
-> >  			};
-> >  
-> >  			ldo8_reg: ldo8 {
-> > -				regulator-min-microvolt = <1200000>;
-> > -				regulator-max-microvolt = <3600000>;
-> > +				regulator-min-microvolt = <2750000>;
-> > +				regulator-max-microvolt = <2750000>;
-> 
-> Why this change?
+3.3V fixed regulator does not belong to TPS node - as a result
+the fixed regulator is never probed and MMC is continually deferred due
+to lack of regulator.
 
-According to the reference manual, the TVDAC supply should be 2.75 V. If
-there are no ill effects if this ldo is actually set to 3.6 V, this
-change could be dropped.
+Move the fixed regulator to be at root of platform.
 
-regards
-Philipp
+Cc: Joel Fernandes <joelf@ti.com>
+Cc: Sekhar Nori <nsekhar@ti.com>
+Cc: Koen Kooi <koen@dominion.thruhere.net>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Nishanth Menon <nm@ti.com>
+Tested-by: Felipe Balbi <balbi@ti.com>
+Tested-by: Balaji T K <balajitk@ti.com>
+---
+V2: no changes - just rebase (carry forward of tested-bys)
+V1: https://patchwork.kernel.org/patch/2912711/
+
+Based on: (benoit's for_3.13/dts branch
+Commit 45646cda707f13fe4a462bf3148f5178f817ef58)
+https://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
+ +
+https://patchwork.kernel.org/patch/2902711/
+
+Test Log:
+Before: http://pastebin.com/jAabNAcS
+After: http://pastebin.com/pDZJKSvW
+ arch/arm/boot/dts/am335x-bone-common.dtsi |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index ff5c3ca..b3e6fcf 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -55,6 +55,13 @@
+ 			default-state = "off";
+ 		};
+ 	};
++
++	vmmcsd_fixed: fixedregulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "vmmcsd_fixed";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
+ };
+ 
+ &am33xx_pinmux {
+@@ -257,13 +264,6 @@
+ 			regulator-always-on;
+ 		};
+ 	};
+-
+-	vmmcsd_fixed: fixedregulator@0 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vmmcsd_fixed";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+ };
+ 
+ &cpsw_emac0 {
+-- 
+1.7.9.5
