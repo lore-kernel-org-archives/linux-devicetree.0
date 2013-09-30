@@ -1,39 +1,130 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] of: Add Panasonic Corporation vendor prefix
-Date: Mon, 30 Sep 2013 15:32:50 +0200
-Message-ID: <1380547970-30449-3-git-send-email-treding@nvidia.com>
-References: <1380547970-30449-1-git-send-email-treding@nvidia.com>
+From: Aggrwal Poonam-B10812 <B10812-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] Device Tree bindings for DSP clusters and DSP CPUs
+Date: Mon, 30 Sep 2013 13:36:41 +0000
+Message-ID: <ACB6D0C0104CFF42A45A5D82A0DD4F3D1522E0F0@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1377076830-24223-1-git-send-email-poonam.aggrwal@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380547970-30449-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1377076830-24223-1-git-send-email-poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use "panasonic" as the vendor prefix for the Panasonic Corporation.
+Please provide your feedback on this.
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
-- use panasonic instead of pc as requested by Mark Rutland
+Regards
+Poonam
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+> -----Original Message-----
+> From: Aggrwal Poonam-B10812
+> Sent: Wednesday, August 21, 2013 2:51 PM
+> To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Aggrwal Poonam-B10812
+> Subject: [PATCH] Device Tree bindings for DSP clusters and DSP CPUs
+> 
+> Binding for DSP CPU clusters and DSP CPUs for Freescale SOCs which have
+> DSP CPUs in addition to PowerPC CPUs. For example B4860.
+> 
+> Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/powerpc/fsl/dsp-cpus.txt   |   78
+> ++++++++++++++++++++
+>  1 files changed, 78 insertions(+), 0 deletions(-)  create mode 100644
+> Documentation/devicetree/bindings/powerpc/fsl/dsp-cpus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dsp-cpus.txt
+> b/Documentation/devicetree/bindings/powerpc/fsl/dsp-cpus.txt
+> new file mode 100644
+> index 0000000..da7f5d4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dsp-cpus.txt
+> @@ -0,0 +1,78 @@
+> +===================================================================
+> +Binding for DSP CPU clusters and DSP CPUs for Freescale SOCs which have
+> +DSP CPUs in addition to PowerPC cpus.
+> +Copyright 2013 Freescale Semiconductor Inc.
+> +
+> +Power Architecture CPUs in Freescale SOCs are represented in device
+> +trees as per the definition in ePAPR.
+> +
+> +Required properties for DSP CPU cluster:
+> +- compatible : should be "fsl,dsp-cluster" or "fsl,sc3900-cluster".
+> +- reg : should contain the cluster index
+> +
+> +Required properties for DSP CPU:
+> +- compatible : should be "fsl,dsp" or "fsl,sc3900".
+> +- reg : should contain index of DSP CPU within the DSP clsuter.
+> +- next-level-cache : should point to the phandle of the next-level L2
+> cache.
+> +
+> +Example for B4860:
+> +B4860 SOC of Freescale has 3 DSP clusters. Each DSP cluster has 2 DSP
+> CPUs each.
+> +The DSP CPUs are SC3900. There is a shared L2 cache per DSP cluster.
+> +	dsp-clusters {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		dsp-cluster0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "fsl,sc3900-cluster";
+> +			reg = <0>;
+> +
+> +			dsp0: dsp@0 {
+> +				compatible = "fsl,sc3900";
+> +				reg = <0>;
+> +				next-level-cache = <&L2_2>;
+> +			};
+> +			dsp1: dsp@1 {
+> +				compatible = "fsl,sc3900";
+> +				reg = <1>;
+> +				next-level-cache = <&L2_2>;
+> +			};
+> +		};
+> +
+> +		dsp-cluster1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "fsl,sc3900-cluster";
+> +			reg = <1>;
+> +
+> +			dsp2: dsp@2 {
+> +				compatible = "fsl,sc3900";
+> +				reg = <2>;
+> +				next-level-cache = <&L2_3>;
+> +			};
+> +			dsp3: dsp@3 {
+> +				compatible = "fsl,sc3900";
+> +				reg = <3>;
+> +				next-level-cache = <&L2_3>;
+> +			};
+> +		};
+> +
+> +		dsp-cluster2 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "fsl,sc3900-cluster";
+> +			reg = <2>;
+> +
+> +			dsp4: dsp@4 {
+> +				compatible = "fsl,sc3900";
+> +				reg = <4>;
+> +				next-level-cache = <&L2_4>;
+> +			};
+> +			dsp5: dsp@5 {
+> +				compatible = "fsl,sc3900";
+> +				reg = <5>;
+> +				next-level-cache = <&L2_4>;
+> +			};
+> +		};
+> +	};
+> --
+> 1.7.4.1
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 7f13e35..c48496a 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -47,6 +47,7 @@ nintendo	Nintendo
- nvidia	NVIDIA
- nxp	NXP Semiconductors
- onnn	ON Semiconductor Corp.
-+panasonic	Panasonic Corporation
- picochip	Picochip Ltd
- powervr	PowerVR (deprecated, use img)
- qca	Qualcomm Atheros, Inc.
--- 
-1.8.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
