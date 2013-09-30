@@ -1,84 +1,242 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH RFC] media: rc: OF: Add Generic bindings for remote-control
-Date: Mon, 30 Sep 2013 09:27:02 +0100
-Message-ID: <524935D6.1010505@st.com>
-References: <1380274391-26577-1-git-send-email-srinivas.kandagatla@st.com> <20130927113458.GB18672@e106331-lin.cambridge.arm.com> <52458774.1060909@st.com> <20130927105716.64349f02@samsung.com>
-Reply-To: srinivas.kandagatla@st.com
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] PM / OPP: extend DT binding to specify phandle of
+ another node for OPP
+Date: Mon, 30 Sep 2013 09:52:27 +0100
+Message-ID: <20130930085227.GB19738@e106331-lin.cambridge.arm.com>
+References: <1379501893-12669-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <1379501893-12669-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130927105716.64349f02@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1379501893-12669-2-git-send-email-Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/09/13 14:57, Mauro Carvalho Chehab wrote:
-> Em Fri, 27 Sep 2013 14:26:12 +0100
-> Srinivas KANDAGATLA <srinivas.kandagatla@st.com> escreveu:
-> 
->> On 27/09/13 12:34, Mark Rutland wrote:
->>
->>>>> +	- rx-mode: Can be "infrared" or "uhf". rx-mode should be present iff
->>>>> +	  the rx pins are wired up.
->>> I'm unsure on this. What if the device has multiple receivers that can
->>> be independently configured? What if it supports something other than
->>> "infrared" or "uhf"? What if a device can only be wired up as
->>> "infrared"? 
->>>
->>> I'm not sure how generic these are, though we should certainly encourage
->>> bindings that can be described this way to be described in the same way.
->>>
->>>>> +	- tx-mode: Can be "infrared" or "uhf". tx-mode should be present iff
->>>>> +	  the tx pins are wired up.
->>> I have similar concerns here to those for the rx-mode property.
->>>
->> Initially rx-mode and tx-mode sounded like more generic properties
->> that's the reason I ended up in this route. But after this discussion it
->> looks like its not really generic enough to cater all the use cases.
->>
->> It make sense for me to perfix "st," for these properties in the st-rc
->> driver rather than considering them as generic properties.
-> 
-> Well, for sure the direction (TX, RX, both) is a generic property.
-> 
-> I'd say that the level 1 protocol (IR, UHF, Bluetooth, ...) is also a
-> generic property. Most remotes are IR, but there are some that are
-> bluetooth, and your hardware is using UHF.
-Yes these are generic.
+Hi Sudeep,
 
+I have a few comments.
+
+On Wed, Sep 18, 2013 at 11:58:11AM +0100, Sudeep KarkadaNagesha wrote:
+> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
 > 
-> Btw, we're even thinking on mapping HDMI-CEC remote controller RX/TX via
-> the RC subsystem. So, another L1 protocol would be "hdmi-cec".
+> If more than one similar devices share the same operating points(OPPs)
+> being in the same clock domain, currently we need to replicate the
+> OPP entries in all the nodes.
 > 
-Ok.
-> Yet, it seems unlikely that the very same remote controller IP would use
-> a different protocol for RX and TX, while sharing the same registers.
-
-ST IRB block has one IR processor which has both TX and RX support and
-one UHF Processor which has RX support only. However the register map
-for all these support is in single IRB IP block.
-
-So the driver can configure the IP as TX in "infrared" and RX in "uhf".
-This is supported in ST IRB IP.
-
-This case can not be represented in a single device tree node with
-l1-protocol and direction properties.
-
-IMHO, having tx-mode and rx-mode or tx-protocol and rx-protocol
-properties will give more flexibility.
-
-What do you think?
-
+> This patch extends existing binding by adding a new property named
+> 'operating-points-phandle' to specify the phandle in any device node
+> pointing to another node which contains the actual OPP tuples.
+> This helps to avoid replication if multiple devices share the OPPs.
 > 
-> So, for example, a hardware with "hdmi-cec" and "infrared" will actually
-> have two remote controller devices. Eventually, the "infrared" being
-> just RX, while "hdmi-cec" being bi-directional.
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
+> Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/power/opp.txt | 152 ++++++++++++++++++++++--
+>  1 file changed, 140 insertions(+), 12 deletions(-)
 > 
-> So, IMHO, this could be mapped as "l1_protocol" ("infrared", "uhf", ...)
-> and another one "direction" ("rx", "tx", "bi-directional").
-> 
+> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> index 74499e5..e9fea65 100644
+> --- a/Documentation/devicetree/bindings/power/opp.txt
+> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> @@ -4,22 +4,150 @@ SoCs have a standard set of tuples consisting of frequency and
+>  voltage pairs that the device will support per voltage domain. These
+>  are called Operating Performance Points or OPPs.
+>  
+> -Properties:
+> +Required Properties:
+>  - operating-points: An array of 2-tuples items, and each item consists
+>    of frequency and voltage like <freq-kHz vol-uV>.
+>  	freq: clock frequency in kHz
+>  	vol: voltage in microvolt
+>  
+> +Optional properties:
+> +- operating-points-phandle: phandle to the device tree node which contains
+> +	the operating points tuples(recommended to be used if multiple
+> +	devices are in the same clock domain and hence share OPPs, as it
+> +	avoids replication of OPPs)
+> +
 
-Thanks,
-srini
+I assume if you have an operating-points-phandle property,
+operating-points it no longer required. That should probably be
+described.
+
+>  Examples:
+>  
+> -cpu@0 {
+> -	compatible = "arm,cortex-a9";
+> -	reg = <0>;
+> -	next-level-cache = <&L2>;
+> -	operating-points = <
+> -		/* kHz    uV */
+> -		792000  1100000
+> -		396000  950000
+> -		198000  850000
+> -	>;
+> -};
+> +1. A uniprocessor system (phandle not required)
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <0>;
+> +		operating-points = <
+> +			/* kHz    uV */
+> +			792000  1100000
+> +			396000  950000
+> +			198000  850000
+> +		>;
+> +	};
+> +
+> +If more than one device of same type share the same OPPs, for example
+> +all the CPUs on a SoC or in a single cluster on a SoC, then we need to
+> +avoid replicating the OPPs in all the nodes. We can specify the phandle
+> +of the node which contains the OPP tuples
+
+This seems a bit out of place given the example immediately below.
+
+> +
+> +2a. Consider a SMP system with 4 CPUs in the same clock domain
+> +    (backward compatible style, only CPU0 contains OPP)
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <0>;
+> +		operating-points = <
+> +			/* kHz    uV */
+> +			792000  1100000
+> +			396000  950000
+> +			198000  850000
+> +		>;
+> +	};
+> +
+> +	cpu1: cpu@1 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <1>;
+> +	};
+> +
+> +	cpu2: cpu@2 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <2>;
+> +	};
+> +
+> +	cpu3: cpu@3 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <3>;
+> +	};
+
+This "backward compatible style" doesn't seem to actually be described
+anywhere, and the paragraph above about phandles makes it somewhat
+confusing.
+
+> +
+> +2b. Consider a SMP system with 4 CPUs in the same clock domain
+> +    (using operating-points-phandle)
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <0>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	cpu1: cpu@1 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <1>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	cpu2: cpu@2 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <2>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	cpu3: cpu@3 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <3>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	operating_points {
+> +		cpu_opp: cpu_opp {
+> +			operating-points = <
+> +				/* kHz    uV */
+> +				792000  1100000
+> +				396000  950000
+> +				198000  850000
+> +			>;
+> +		};
+> +		... /* other device OPP nodes */
+> +	}
+
+Is this all inside the /cpus node?
+
+Is the "operating_points" name important?
+
+Are all OPP tables expected to be in the same "operating_points" node?
+
+Cheers,
+Mark.
+
+> +
+> +3. Consider an AMP(asymmetric multi-processor) sytem with 2 clusters of CPUs.
+> +   Each cluster has 2 CPUs and all the CPUs within the cluster share the clock
+> +   domain.
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a15";
+> +		reg = <0>;
+> +		operating-points-phandle = <&cluster0_opp>;
+> +	};
+> +
+> +	cpu1: cpu@1 {
+> +		compatible = "arm,cortex-a15";
+> +		reg = <1>;
+> +		operating-points-phandle = <&cluster0_opp>;
+> +	};
+> +
+> +	cpu2: cpu@100 {
+> +		compatible = "arm,cortex-a7";
+> +		reg = <100>;
+> +		operating-points-phandle = <&cluster1_opp>;
+> +	};
+> +
+> +	cpu3: cpu@101 {
+> +		compatible = "arm,cortex-a7";
+> +		reg = <101>;
+> +		operating-points-phandle = <&cluster1_opp>;
+> +	};
+> +
+> +	operating_points {
+> +		cluster0_opp: cluster0_opp {
+> +			operating-points = <
+> +				/* kHz    uV */
+> +				792000  1100000
+> +				396000  950000
+> +				198000  850000
+> +			>;
+> +		};
+> +		cluster1_opp: cluster1_opp {
+> +			operating-points = <
+> +				/* kHz    uV */
+> +				792000  950000
+> +				396000  750000
+> +				198000  450000
+> +			>;
+> +		};
+> +		... /* other device OPP nodes */
+> +	}
+> -- 
+> 1.8.1.2
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
