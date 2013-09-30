@@ -1,67 +1,83 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: generic: Add generic DT based simple codec
-Date: Mon, 30 Sep 2013 18:43:19 +0100
-Message-ID: <20130930174319.GG19304@sirena.org.uk>
-References: <20130919105437.75e0f0a3@armhf>
- <5240B07C.6080404@wwwdotorg.org>
- <CAL_JsqKmfurrCqEYRNqcLRZMU-VjPin2dvK1Q6CMcK4i=+x-8w@mail.gmail.com>
- <5249AB82.60701@wwwdotorg.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 3/6] sh: clkfwk: Select sh-/common- clkfwk alternatively
+Date: Mon, 30 Sep 2013 20:40:08 +0200
+Message-ID: <1663688.MHxO4ng5PY@avalon>
+References: <52410F86.4040301@renesas.com> <20130924131206.d57d07f5faa5cb0773fc328c@ops.dti.ne.jp>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0EphSjNCSB1asamE"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5249AB82.60701-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20130924131206.d57d07f5faa5cb0773fc328c@ops.dti.ne.jp>
+Sender: linux-serial-owner@vger.kernel.org
+To: takasi-y@ops.dti.ne.jp
+Cc: SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, ben.dooks@codethink.co.uk, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Simon Horman <horms@verge.net.au>, Paul Mundt <lethal@linux-sh.org>, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Yoshii-san,
 
---0EphSjNCSB1asamE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for the patch.
 
-On Mon, Sep 30, 2013 at 10:49:06AM -0600, Stephen Warren wrote:
+On Tuesday 24 September 2013 13:12:06 takasi-y@ops.dti.ne.jp wrote:
+> Make sh clock framework core depend on HAVE_MACH_CLKDEV, and
+> set it
+> - y on sh for backward compatibility
+> - !CONFIG_COMMON_CLK on sh-mobile
+> This is a preparation for migration to common clock framework
+> from sh clock framework on sh-mobile.
 
-> The only potential issue with that approach is if the CODEC can be used
-> in a "simple" mode where e.g. no control GPIOs, regulator manipulation,
-> etc. are required, or in a more complex mode where such things are
-> required, you may end up with the device-specific binding being written
-> to the simple mode, and hence missing features required for the complex
-> mode. Having a separate simple binding prevents the device-specific
-> binding from being broken that way.
+While I agree with this patch, I believe the use of the HAVE_MACH_CLKDEV 
+configuration option to select whether to compile core.o in is a bit of an 
+abuse. I would have created a new configuration option (SH_CLK_CORE in 
+drivers/sh/Kconfig for instance) as 'def_bool y' that depends on SH || (ARM && 
+!COMMON_CLK).
 
-That would probably indicate a bug in the complex bindings since if the
-simple mode exists then usually that would mean that the bindings for
-the complex mode ought to be specifying things as optional, these things
-are typically just done by strapping pins instead of routing them to the
-CPU.
+However, as all ARCH_SHMOBILE platforms should be converted to the common 
+clock framework, this is only temporary and could be revisited later, so I'm 
+fine with keeping the patch as-is.
 
---0EphSjNCSB1asamE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Signed-off-by: Takashi Yoshii <takashi.yoshii.zj@renesas.com>
+> ---
+>  arch/arm/Kconfig        | 2 +-
+>  arch/sh/Kconfig         | 1 +
+>  drivers/sh/clk/Makefile | 3 +--
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 3f7714d..53044ca 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -650,7 +650,7 @@ config ARCH_SHMOBILE
+>  	select HAVE_ARM_SCU if SMP
+>  	select HAVE_ARM_TWD if SMP
+>  	select HAVE_CLK
+> -	select HAVE_MACH_CLKDEV
+> +	select HAVE_MACH_CLKDEV if !COMMON_CLK
+>  	select HAVE_SMP
+>  	select MIGHT_HAVE_CACHE_L2X0
+>  	select MULTI_IRQ_HANDLER
+> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+> index 224f4bc..f57e47f 100644
+> --- a/arch/sh/Kconfig
+> +++ b/arch/sh/Kconfig
+> @@ -41,6 +41,7 @@ config SUPERH
+>  	select MODULES_USE_ELF_RELA
+>  	select OLD_SIGSUSPEND
+>  	select OLD_SIGACTION
+> +	select HAVE_MACH_CLKDEV
+>  	help
+>  	  The SuperH is a RISC processor targeted for use in embedded systems
+>  	  and consumer electronics; it was also used in the Sega Dreamcast
+> diff --git a/drivers/sh/clk/Makefile b/drivers/sh/clk/Makefile
+> index 5d15ebf..e73b031 100644
+> --- a/drivers/sh/clk/Makefile
+> +++ b/drivers/sh/clk/Makefile
+> @@ -1,3 +1,2 @@
+> -obj-y	:= core.o
+> -
+> +obj-$(CONFIG_HAVE_MACH_CLKDEV)	+= core.o
+>  obj-$(CONFIG_SH_CLK_CPG)	+= cpg.o
+-- 
+Regards,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
+Laurent Pinchart
 
-iQIcBAEBAgAGBQJSSbg0AAoJELSic+t+oim9WokP/35cunBYLfbNVepbijrz7Rmf
-ybeUeVJ/BYziDPYBl9CgvZYyE9F7E1SPhZFNpYYcQ8HtUUslt50kwvpNucay4Ksc
-GYsQ7oEKHMUuZxVXxvAtl5Of8RG3BXHwmzWDjnqy/LDGdV+nUv0WEEBdJxYT+v2F
-7m/caF+7DCHeV2Yg/IYJw0AWz2zHaCkS9P817xad97DOvYFVKDRf5FO/GZ33VWGA
-EmNBHQIu2aaZ2Pj8Cem590tHPCsDz7Bg8bOoIKbbOfiyWDi93zNDVZ/QYy5mINwn
-KtG/yHqVupB6VwpQ1fwtdTqZ3qgOPgwE30/ioB9vg7V2WSL8KF1Dc4dl9I1qLmzV
-yZJQGSN45HRaWt9InmsgdEE3loxLAbgG8DkO1wqiXXFic0cYAz4DldYk0aEWMtwD
-iaQVCaJyEUzY9xBP7AP9+3P8Jj8LxFCCnhTIRbw2fiX0LIik86xGGCZb8H2JRj3M
-sKH+DUQEnaSrXi4T/swlPkKS9WHqD8HRuG3k83qzb1MMMdKOeRTQgS6t15FRe6UU
-lUP4StCDU3r1zZSEAuuLSNrEJwRGGdZ5mokuOq4eqgeOO/lXB+tvvkFu8XQN5+ld
-sjGRAJyISvdoG1YqllzTiI5CtMtTt0/5XJrhlDhWk6+wQcS3v9ADezeeJfiZOZqT
-GsuKREintH/jfaaekRyF
-=5Ztw
------END PGP SIGNATURE-----
-
---0EphSjNCSB1asamE--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
