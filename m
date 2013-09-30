@@ -1,72 +1,43 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH 0/6] DRIVERS: IRQCHIP: Add support for crossbar IP
-Date: Mon, 30 Sep 2013 10:09:53 -0500
-Message-ID: <52499441.1030403@gmail.com>
-References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com>
+From: Joel Fernandes <joelf@ti.com>
+Subject: [PATCH v2 1/9] omap4: dts: Add node for AES
+Date: Mon, 30 Sep 2013 10:12:58 -0500
+Message-ID: <1380553986-15910-2-git-send-email-joelf@ti.com>
+References: <1380553986-15910-1-git-send-email-joelf@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1380549564-31045-1-git-send-email-r.sricharan@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, tglx@linutronix.de, linus.walleij@linaro.org, santosh.shilimkar@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1380553986-15910-1-git-send-email-joelf@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Benoit Cousson <bcousson@baylibre.com>
+Cc: Joel Fernandes <joelf@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, "open list:OMAP DEVICE TREE..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/30/2013 08:59 AM, Sricharan R wrote:
-> Some socs have a large number of interrupts requests to service
-> the needs of its many peripherals and subsystems. All of the interrupt
-> requests lines from the subsystems are not needed at the same
-> time, so they have to be muxed to the controllers appropriately.
-> In such places a interrupt controllers are preceded by an
-> IRQ CROSSBAR that provides flexibility in muxing the device interrupt
-> requests to the controller inputs.
-> 
-> This series models the peripheral interrupts that can be routed through
-> the crossbar to the GIC as 'routable-irqs'. The routable irqs are added
-> in a separate linear domain inside the GIC. The registered routable domain's
-> callback are invoked as a part of the GIC's callback, which in turn should
-> allocate a free irq line and configure the IP accordingly. So every peripheral
-> in the dts files mentions the fixed crossbar number as its interrupt. A free
-> gic line for that gets allocated and configured when the peripheral's interrupt
-> is mapped.
-> 
-> The minimal crossbar driver to track and allocate free GIC lines and configure the
-> crossbar is added here, along with the DT bindings.
+OMAP4 has an AES module that uses the omap-aes crypto driver.
+Add DT entries for the same.
 
-Seems like interrupt-map property is what you need here.
+Signed-off-by: Joel Fernandes <joelf@ti.com>
+---
+ arch/arm/boot/dts/omap4.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-http://devicetree.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
-
-Versatile Express also has an example.
-
-Rob
-
-> 
-> Sricharan R (6):
->   DRIVERS: IRQCHIP: IRQ-GIC: Add support for routable irqs
->   DRIVERS: IRQCHIP: CROSSBAR: Add support for Crossbar IP
->   ARM: DTS: DRA: Add crossbar device binding
->   ARM: DTS: DRA: Replace peripheral interrupt numbers with crossbar
->     inputs.
->   ARM: OMAP4+: Correct Wakeup-gen code to use physical irq number
->   ARM: DRA: Enable Crossbar IP support for DRA7XX
-> 
->  Documentation/devicetree/bindings/arm/gic.txt      |    5 +
->  .../devicetree/bindings/arm/omap/crossbar.txt      |   27 +++
->  arch/arm/boot/dts/dra7.dtsi                        |   98 +++++-----
->  arch/arm/mach-omap2/Kconfig                        |    1 +
->  arch/arm/mach-omap2/omap-wakeupgen.c               |    4 +-
->  arch/arm/mach-omap2/omap4-common.c                 |    4 +
->  drivers/irqchip/Kconfig                            |    8 +
->  drivers/irqchip/Makefile                           |    1 +
->  drivers/irqchip/irq-crossbar.c                     |  195 ++++++++++++++++++++
->  drivers/irqchip/irq-gic.c                          |   57 +++++-
->  include/linux/irqchip/arm-gic.h                    |    8 +-
->  include/linux/irqchip/irq-crossbar.h               |   11 ++
->  12 files changed, 363 insertions(+), 56 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/omap/crossbar.txt
->  create mode 100644 drivers/irqchip/irq-crossbar.c
->  create mode 100644 include/linux/irqchip/irq-crossbar.h
-> 
-
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 45708e1..16a44d6 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -663,5 +663,14 @@
+ 			ram-bits = <12>;
+ 			ti,has-mailbox;
+ 		};
++
++		aes: aes@4b501000 {
++			compatible = "ti,omap4-aes";
++			ti,hwmods = "aes";
++			reg = <0x4b501000 0xa0>;
++			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++			dmas = <&sdma 111>, <&sdma 110>;
++			dma-names = "tx", "rx";
++		};
+ 	};
+ };
+-- 
+1.8.1.2
