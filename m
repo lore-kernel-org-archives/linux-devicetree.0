@@ -1,27 +1,35 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [RFC v2] gpio/omap: auto-setup a GPIO when used as an IRQ
-Date: Mon, 30 Sep 2013 01:23:58 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1309300122450.17980@utopia.booyaka.com>
-References: <1380009480-4975-1-git-send-email-javier.martinez@collabora.co.uk> <5244C0C4.2030004@wwwdotorg.org> <52453545.3090504@collabora.co.uk>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 0/9] omap hwspinlock dt support
+Date: Mon, 30 Sep 2013 03:12:36 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1309300309530.17980@utopia.booyaka.com>
+References: <cover.1379445653.git.s-anna@ti.com> <5245A8CA.4020805@ti.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <52453545.3090504@collabora.co.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, r.sricharan@ti.com, holler@ahsoftware.de, aaro.koskinen@iki.fi, joelf@ti.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5245A8CA.4020805-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Sep 2013, Javier Martinez Canillas wrote:
+Hi
 
-> I cc'ed Aaro Koskinen and Paul Walmsley now which seems to have OMAP1 platforms
-> to test. Could you please test [1] and [2] on a OMAP1 board? These patches
-> solves a long standing issue we have on OMAP2+ when booting with DT and it would
-> be great if you can check that it does not cause regressions on OMAP1 based boards.
+On Fri, 27 Sep 2013, Suman Anna wrote:
 
-Unfortunately my OMAP1 test platform is down at the moment, so am not able 
-to test.  But saw that it passed Aaro's tests, so I'd say that's a pretty 
-good endorsement.
+> Paul,
+> The hwmod data patches needs to be merged only after the respective DT
+> node patches are merged, without which the hwmod entry will not have a
+> base address while enabling and idling (using sysc) the hwmod during
+> hwmod initialization.
+
+Hmm, ideally there shouldn't be a merge dependency here. Could you please 
+send a patch to the hwmod core that logs a warning and skips the operation 
+in these circumstances?  Or maybe just skips the registration of the 
+device?
 
 
 - Paul
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
