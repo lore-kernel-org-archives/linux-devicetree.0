@@ -1,764 +1,209 @@
-From: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 1/2] iio: cm36651: Add CM36651 proximity light/sensor driver
-Date: Mon, 30 Sep 2013 21:12:19 +0900
-Message-ID: <52496AA3.1010200@samsung.com>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Subject: Re: [PATCH 1/3] PM / OPP: extend DT binding to specify phandle of
+ another node for OPP
+Date: Mon, 30 Sep 2013 13:33:48 +0100
+Message-ID: <52496FAC.7000901@arm.com>
+References: <1379501893-12669-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1379501893-12669-2-git-send-email-Sudeep.KarkadaNagesha@arm.com> <20130930085227.GB19738@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Meerwald l <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20130930085227.GB19738@e106331-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On 30/09/13 09:52, Mark Rutland wrote:
+> Hi Sudeep,
+> 
+> I have a few comments.
+> 
+> On Wed, Sep 18, 2013 at 11:58:11AM +0100, Sudeep KarkadaNagesha wrote:
+>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>>
+>> If more than one similar devices share the same operating points(OPPs)
+>> being in the same clock domain, currently we need to replicate the
+>> OPP entries in all the nodes.
+>>
+>> This patch extends existing binding by adding a new property named
+>> 'operating-points-phandle' to specify the phandle in any device node
+>> pointing to another node which contains the actual OPP tuples.
+>> This helps to avoid replication if multiple devices share the OPPs.
+>>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Cc: Stephen Warren <swarren@wwwdotorg.org>
+>> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+>> Cc: Nishanth Menon <nm@ti.com>
+>> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>> ---
+>>  Documentation/devicetree/bindings/power/opp.txt | 152 ++++++++++++++++++++++--
+>>  1 file changed, 140 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+>> index 74499e5..e9fea65 100644
+>> --- a/Documentation/devicetree/bindings/power/opp.txt
+>> +++ b/Documentation/devicetree/bindings/power/opp.txt
+>> @@ -4,22 +4,150 @@ SoCs have a standard set of tuples consisting of frequency and
+>>  voltage pairs that the device will support per voltage domain. These
+>>  are called Operating Performance Points or OPPs.
+>>  
+>> -Properties:
+>> +Required Properties:
+>>  - operating-points: An array of 2-tuples items, and each item consists
+>>    of frequency and voltage like <freq-kHz vol-uV>.
+>>  	freq: clock frequency in kHz
+>>  	vol: voltage in microvolt
+>>  
+>> +Optional properties:
+>> +- operating-points-phandle: phandle to the device tree node which contains
+>> +	the operating points tuples(recommended to be used if multiple
+>> +	devices are in the same clock domain and hence share OPPs, as it
+>> +	avoids replication of OPPs)
+>> +
+> 
+> I assume if you have an operating-points-phandle property,
+> operating-points it no longer required. That should probably be
+> described.
+> 
+Correct, infact do it make sense to list both operating-points and
+operating-points-phandle as required property but they are mutually exclusive ?
 
-This patch add a new driver for Capella CM36651 proximity and RGB sensor.
+>>  Examples:
+>>  
+>> -cpu@0 {
+>> -	compatible = "arm,cortex-a9";
+>> -	reg = <0>;
+>> -	next-level-cache = <&L2>;
+>> -	operating-points = <
+>> -		/* kHz    uV */
+>> -		792000  1100000
+>> -		396000  950000
+>> -		198000  850000
+>> -	>;
+>> -};
+>> +1. A uniprocessor system (phandle not required)
+>> +
+>> +	cpu0: cpu@0 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <0>;
+>> +		operating-points = <
+>> +			/* kHz    uV */
+>> +			792000  1100000
+>> +			396000  950000
+>> +			198000  850000
+>> +		>;
+>> +	};
+>> +
+>> +If more than one device of same type share the same OPPs, for example
+>> +all the CPUs on a SoC or in a single cluster on a SoC, then we need to
+>> +avoid replicating the OPPs in all the nodes. We can specify the phandle
+>> +of the node which contains the OPP tuples
+> 
+> This seems a bit out of place given the example immediately below.
+> 
+Sorry carried from previous version, will fix it.
 
-Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/iio/light/Kconfig   |   11 +
- drivers/iio/light/cm36651.c |  704 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 715 insertions(+)
- create mode 100644 drivers/iio/light/cm36651.c
+>> +
+>> +2a. Consider a SMP system with 4 CPUs in the same clock domain
+>> +    (backward compatible style, only CPU0 contains OPP)
+>> +
+>> +	cpu0: cpu@0 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <0>;
+>> +		operating-points = <
+>> +			/* kHz    uV */
+>> +			792000  1100000
+>> +			396000  950000
+>> +			198000  850000
+>> +		>;
+>> +	};
+>> +
+>> +	cpu1: cpu@1 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <1>;
+>> +	};
+>> +
+>> +	cpu2: cpu@2 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <2>;
+>> +	};
+>> +
+>> +	cpu3: cpu@3 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <3>;
+>> +	};
+> 
+> This "backward compatible style" doesn't seem to actually be described
+> anywhere, and the paragraph above about phandles makes it somewhat
+> confusing.
+> 
+Not sure if this is needed at all here. I must say there's nothing called
+backward compatible style, the only reason I added it to tell that existing
+cpufreq-cpu0 DTs continue to work.
 
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index 0a25ae6..f98c2b5 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -27,6 +27,17 @@ config APDS9300
- 	 To compile this driver as a module, choose M here: the
- 	 module will be called apds9300.
- 
-+config CM36651
-+	depends on I2C
-+	tristate "CM36651 driver"
-+	help
-+	 Say Y here if you use cm36651.
-+	 This option enables proximity & RGB sensor using
-+	 Capella cm36651 device driver.
-+
-+	 To compile this driver as a module, choose M here:
-+	 the module will be called cm36651.
-+
- config GP2AP020A00F
- 	tristate "Sharp GP2AP020A00F Proximity/ALS sensor"
- 	depends on I2C
-diff --git a/drivers/iio/light/cm36651.c b/drivers/iio/light/cm36651.c
-new file mode 100644
-index 0000000..9597170
---- /dev/null
-+++ b/drivers/iio/light/cm36651.c
-@@ -0,0 +1,704 @@
-+/*
-+ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-+ * Author: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General Public License version 2, as published
-+ * by the Free Software Foundation.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/i2c.h>
-+#include <linux/mutex.h>
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/events.h>
-+
-+/* Slave address 0x19 for PS of 7 bit addressing protocol for I2C */
-+#define CM36651_I2C_ADDR_PS		0x19
-+
-+/* Ambient light sensor */
-+#define CM36651_CS_CONF1		0x00
-+#define CM36651_CS_CONF2		0x01
-+#define CM36651_ALS_WH_M		0x02
-+#define CM36651_ALS_WH_L		0x03
-+#define CM36651_ALS_WL_M		0x04
-+#define CM36651_ALS_WL_L		0x05
-+#define CM36651_CS_CONF3		0x06
-+#define CM36651_CS_CONF_REG_NUM	0x02
-+
-+/* Proximity sensor */
-+#define CM36651_PS_CONF1		0x00
-+#define CM36651_PS_THD			0x01
-+#define CM36651_PS_CANC		0x02
-+#define CM36651_PS_CONF2		0x03
-+#define CM36651_PS_REG_NUM		0x04
-+
-+/* CS_CONF1 command code */
-+#define CM36651_ALS_ENABLE		0x00
-+#define CM36651_ALS_DISABLE		0x01
-+#define CM36651_ALS_INT_EN		0x02
-+#define CM36651_ALS_THRES		0x04
-+
-+/* CS_CONF2 command code */
-+#define CM36651_CS_CONF2_DEFAULT_BIT	0x08
-+
-+/* CS_CONF3 channel integration time */
-+#define CM36651_CS_IT1			0x00 /* Integration time 80000 usec */
-+#define CM36651_CS_IT2			0x40 /* Integration time 160000 usec */
-+#define CM36651_CS_IT3			0x80 /* Integration time 320000 usec */
-+#define CM36651_CS_IT4			0xC0 /* Integration time 640000 usec */
-+
-+/* PS_CONF1 command code */
-+#define CM36651_PS_ENABLE		0x00
-+#define CM36651_PS_DISABLE		0x01
-+#define CM36651_PS_INT_EN		0x02
-+#define CM36651_PS_PERS2		0x04
-+#define CM36651_PS_PERS3		0x08
-+#define CM36651_PS_PERS4		0x0C
-+
-+/* PS_CONF1 command code: integration time */
-+#define CM36651_PS_IT1			0x00 /* Integration time 320 usec */
-+#define CM36651_PS_IT2			0x10 /* Integration time 420 usec */
-+#define CM36651_PS_IT3			0x20 /* Integration time 520 usec */
-+#define CM36651_PS_IT4			0x30 /* Integration time 640 usec */
-+
-+/* PS_CONF1 command code: duty ratio */
-+#define CM36651_PS_DR1			0x00 /* Duty ratio 1/80 */
-+#define CM36651_PS_DR2			0x40 /* Duty ratio 1/160 */
-+#define CM36651_PS_DR3			0x80 /* Duty ratio 1/320 */
-+#define CM36651_PS_DR4			0xC0 /* Duty ratio 1/640 */
-+
-+/* PS_THD command code */
-+#define CM36651_PS_INITIAL_THD		0x09
-+
-+/* PS_CANC command code */
-+#define CM36651_PS_CANC_DEFAULT	0x00
-+
-+/* PS_CONF2 command code */
-+#define CM36651_PS_HYS1		0x00
-+#define CM36651_PS_HYS2		0x01
-+#define CM36651_PS_SMART_PERS_EN	0x02
-+#define CM36651_PS_MS			0x10
-+
-+#define CM36651_CS_INT_TIME_AVAIL	"80000 160000 320000 640000"
-+#define CM36651_PS_INT_TIME_AVAIL	"320 420 520 640"
-+
-+
-+enum cm36651_operation_mode {
-+	CM36651_LIGHT_EN,
-+	CM36651_PROXIMITY_EN,
-+	CM36651_PROXIMITY_EV_EN,
-+};
-+
-+enum cm36651_light_channel_idx {
-+	CM36651_LIGHT_CHANNEL_IDX_RED,
-+	CM36651_LIGHT_CHANNEL_IDX_GREEN,
-+	CM36651_LIGHT_CHANNEL_IDX_BLUE,
-+	CM36651_LIGHT_CHANNEL_IDX_CLEAR,
-+};
-+
-+enum cm36651_command {
-+	CM36651_CMD_READ_RAW_LIGHT,
-+	CM36651_CMD_READ_RAW_PROXIMITY,
-+	CM36651_CMD_PROX_EV_EN,
-+	CM36651_CMD_PROX_EV_DIS,
-+};
-+
-+enum cm36651_proximity_event {
-+	CM36651_CLOSE_PROXIMITY,
-+	CM36651_FAR_PROXIMITY,
-+};
-+
-+static const u8 cm36651_cs_reg[2] = {
-+	CM36651_CS_CONF1,
-+	CM36651_CS_CONF2,
-+};
-+
-+static const u8 cm36651_ps_reg[4] = {
-+	CM36651_PS_CONF1,
-+	CM36651_PS_THD,
-+	CM36651_PS_CANC,
-+	CM36651_PS_CONF2,
-+};
-+
-+struct cm36651_data {
-+	const struct cm36651_platform_data *pdata;
-+	struct i2c_client *client;
-+	struct i2c_client *ps_client;
-+	struct mutex lock;
-+	struct regulator *vled_reg;
-+	unsigned long flags;
-+	int cs_int_time[4];
-+	int ps_int_time;
-+	u8 cs_ctrl_regs[2];
-+	u8 ps_ctrl_regs[4];
-+	u16 color[4];
-+};
-+
-+static int cm36651_setup_reg(struct cm36651_data *cm36651)
-+{
-+	struct i2c_client *client = cm36651->client;
-+	struct i2c_client *ps_client = cm36651->ps_client;
-+	int i, ret;
-+
-+	/* CS initialization */
-+	cm36651->cs_ctrl_regs[CM36651_CS_CONF1] = CM36651_ALS_ENABLE |
-+							CM36651_ALS_THRES;
-+	cm36651->cs_ctrl_regs[CM36651_CS_CONF2] = CM36651_CS_CONF2_DEFAULT_BIT;
-+
-+	for (i = 0; i < CM36651_CS_CONF_REG_NUM; i++) {
-+		ret = i2c_smbus_write_byte_data(client, cm36651_cs_reg[i],
-+						cm36651->cs_ctrl_regs[i]);
-+		if (ret < 0)
-+			goto err_setup_reg;
-+	}
-+
-+	/* PS initialization */
-+	cm36651->ps_ctrl_regs[CM36651_PS_CONF1] = CM36651_PS_ENABLE |
-+					CM36651_PS_PERS4 | CM36651_PS_IT4;
-+	cm36651->ps_ctrl_regs[CM36651_PS_THD] = CM36651_PS_INITIAL_THD;
-+	cm36651->ps_ctrl_regs[CM36651_PS_CANC] = CM36651_PS_CANC_DEFAULT;
-+	cm36651->ps_ctrl_regs[CM36651_PS_CONF2] = CM36651_PS_HYS2 |
-+				CM36651_PS_SMART_PERS_EN | CM36651_PS_MS;
-+
-+	for (i = 0; i < CM36651_PS_REG_NUM; i++) {
-+		ret = i2c_smbus_write_byte_data(ps_client, cm36651_ps_reg[i],
-+						cm36651->ps_ctrl_regs[i]);
-+		if (ret < 0)
-+			goto err_setup_reg;
-+	}
-+
-+	/* Set shutdown mode */
-+	ret = i2c_smbus_write_byte_data(client, CM36651_CS_CONF1,
-+						CM36651_ALS_DISABLE);
-+	if (ret < 0)
-+		goto err_setup_reg;
-+
-+	ret = i2c_smbus_write_byte_data(cm36651->ps_client,
-+				CM36651_PS_CONF1, CM36651_PS_DISABLE);
-+	if (ret < 0)
-+		goto err_setup_reg;
-+
-+	return 0;
-+
-+err_setup_reg:
-+	dev_err(&client->dev, "Register setup failed: %d\n", ret);
-+	return ret;
-+}
-+
-+static int cm36651_read_output(struct cm36651_data *cm36651,
-+				struct iio_chan_spec const *chan, int *val)
-+{
-+	struct i2c_client *client = cm36651->client;
-+	int ret = -EINVAL;
-+
-+	switch (chan->type) {
-+	case IIO_LIGHT:
-+		*val = i2c_smbus_read_word_data(client, chan->address);
-+		if (val < 0)
-+			goto read_err;
-+
-+		ret = i2c_smbus_write_byte_data(client, CM36651_CS_CONF1,
-+							CM36651_ALS_DISABLE);
-+		if (ret < 0)
-+			goto write_err;
-+
-+		ret = IIO_VAL_INT;
-+		break;
-+	case IIO_PROXIMITY:
-+		*val = i2c_smbus_read_byte(cm36651->ps_client);
-+		if (val < 0)
-+			goto read_err;
-+
-+		ret = i2c_smbus_write_byte_data(cm36651->ps_client,
-+					CM36651_PS_CONF1, CM36651_PS_DISABLE);
-+		if (ret < 0)
-+			goto write_err;
-+
-+		ret = IIO_VAL_INT;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return ret;
-+
-+read_err:
-+	dev_err(&client->dev, "Register read failed\n");
-+	return ret;
-+
-+write_err:
-+	dev_err(&client->dev, "Register write failed\n");
-+	return ret;
-+}
-+
-+static irqreturn_t cm36651_irq_handler(int irq, void *data)
-+{
-+	struct iio_dev *indio_dev = data;
-+	struct cm36651_data *cm36651 = iio_priv(indio_dev);
-+	struct i2c_client *client = cm36651->client;
-+	int ev_dir, val, ret;
-+	u64 ev_code;
-+
-+	ret = i2c_smbus_read_byte(cm36651->ps_client);
-+	if (ret < 0) {
-+		dev_err(&client->dev,
-+				"%s: Data read failed: %d\n", __func__, ret);
-+		return IRQ_HANDLED;
-+	}
-+
-+	if (ret < CM36651_PS_INITIAL_THD) {
-+		ev_dir = IIO_EV_DIR_RISING;
-+		val = CM36651_FAR_PROXIMITY;
-+	} else {
-+		ev_dir = IIO_EV_DIR_FALLING;
-+		val = CM36651_CLOSE_PROXIMITY;
-+	}
-+
-+	ev_code = IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY,
-+				CM36651_CMD_READ_RAW_PROXIMITY,
-+				IIO_EV_TYPE_THRESH, ev_dir);
-+
-+	iio_push_event(indio_dev, ev_code, iio_get_time_ns());
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int cm36651_set_operation_mode(struct cm36651_data *cm36651, int cmd)
-+{
-+	struct i2c_client *client = cm36651->client;
-+	struct i2c_client *ps_client = cm36651->ps_client;
-+	int ret = -EINVAL;
-+
-+	switch (cmd) {
-+	case CM36651_CMD_READ_RAW_LIGHT:
-+		ret = i2c_smbus_write_byte_data(client, CM36651_CS_CONF1,
-+				cm36651->cs_ctrl_regs[CM36651_CS_CONF1]);
-+		break;
-+	case CM36651_CMD_READ_RAW_PROXIMITY:
-+		ret = i2c_smbus_write_byte_data(ps_client, CM36651_PS_CONF1,
-+				cm36651->ps_ctrl_regs[CM36651_PS_CONF1]);
-+		break;
-+	case CM36651_CMD_PROX_EV_EN:
-+		if (test_bit(CM36651_PROXIMITY_EV_EN, &cm36651->flags)) {
-+			dev_err(&client->dev,
-+				"Already proximity event enable state\n");
-+			return ret;
-+		}
-+		set_bit(CM36651_PROXIMITY_EV_EN, &cm36651->flags);
-+
-+		ret = i2c_smbus_write_byte_data(ps_client,
-+			cm36651_ps_reg[CM36651_PS_CONF1],
-+			CM36651_PS_INT_EN | CM36651_PS_PERS4 | CM36651_PS_IT4);
-+		if (ret < 0)
-+			goto write_err;
-+
-+		enable_irq(client->irq);
-+		break;
-+	case CM36651_CMD_PROX_EV_DIS:
-+		if (!test_bit(CM36651_PROXIMITY_EV_EN, &cm36651->flags)) {
-+			dev_err(&client->dev,
-+				"Already proximity event disable state\n");
-+			return ret;
-+		}
-+		clear_bit(CM36651_PROXIMITY_EV_EN, &cm36651->flags);
-+		disable_irq(client->irq);
-+		ret = i2c_smbus_write_byte_data(ps_client,
-+					CM36651_PS_CONF1, CM36651_PS_DISABLE);
-+		break;
-+	}
-+
-+	if (ret < 0)
-+		dev_err(&client->dev, "Write register failed\n");
-+
-+	return ret;
-+
-+write_err:
-+	dev_err(&client->dev, "Proximity enable event failed\n");
-+	return ret;
-+}
-+
-+static int cm36651_read_channel(struct cm36651_data *cm36651,
-+				struct iio_chan_spec const *chan, int *val)
-+{
-+	struct i2c_client *client = cm36651->client;
-+	int cmd, ret;
-+
-+	if (chan->type == IIO_LIGHT)
-+		cmd = CM36651_CMD_READ_RAW_LIGHT;
-+	else if (chan->type == IIO_PROXIMITY)
-+		cmd = CM36651_CMD_READ_RAW_PROXIMITY;
-+	else
-+		return -EINVAL;
-+
-+	ret = cm36651_set_operation_mode(cm36651, cmd);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "CM36651 set operation mode failed\n");
-+		return ret;
-+	}
-+	/* Delay for work after enable operation */
-+	msleep(50);
-+	ret = cm36651_read_output(cm36651, chan, val);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "CM36651 read output failed\n");
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static int cm36651_read_int_time(struct cm36651_data *cm36651,
-+				struct iio_chan_spec const *chan, int *val)
-+{
-+	switch (chan->type) {
-+	case IIO_LIGHT:
-+		if (cm36651->cs_int_time[chan->address] == CM36651_CS_IT1)
-+			*val = 80000;
-+		else if (cm36651->cs_int_time[chan->address] == CM36651_CS_IT2)
-+			*val = 160000;
-+		else if (cm36651->cs_int_time[chan->address] == CM36651_CS_IT3)
-+			*val = 320000;
-+		else if (cm36651->cs_int_time[chan->address] == CM36651_CS_IT4)
-+			*val = 640000;
-+		else
-+			return -EINVAL;
-+		break;
-+	case IIO_PROXIMITY:
-+		if (cm36651->ps_int_time == CM36651_PS_IT1)
-+			*val = 320;
-+		else if (cm36651->ps_int_time == CM36651_PS_IT2)
-+			*val = 420;
-+		else if (cm36651->ps_int_time == CM36651_PS_IT3)
-+			*val = 520;
-+		else if (cm36651->ps_int_time == CM36651_PS_IT4)
-+			*val = 640;
-+		else
-+			return -EINVAL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return IIO_VAL_INT_PLUS_MICRO;
-+}
-+
-+static int cm36651_write_int_time(struct cm36651_data *cm36651,
-+				struct iio_chan_spec const *chan, int val)
-+{
-+	struct i2c_client *client = cm36651->client;
-+	struct i2c_client *ps_client = cm36651->ps_client;
-+	int int_time, ret;
-+
-+	switch (chan->type) {
-+	case IIO_LIGHT:
-+		if (val == 80000)
-+			int_time = CM36651_CS_IT1;
-+		else if (val == 160000)
-+			int_time = CM36651_CS_IT2;
-+		else if (val == 320000)
-+			int_time = CM36651_CS_IT3;
-+		else if (val == 640000)
-+			int_time = CM36651_CS_IT4;
-+		else
-+			return -EINVAL;
-+
-+		ret = i2c_smbus_write_byte_data(client, CM36651_CS_CONF3,
-+					   int_time >> 2 * (chan->address));
-+		if (ret < 0) {
-+			dev_err(&client->dev, "CS integration time write failed\n");
-+			return ret;
-+		}
-+		cm36651->cs_int_time[chan->address] = int_time;
-+		break;
-+	case IIO_PROXIMITY:
-+		if (val == 320)
-+			int_time = CM36651_PS_IT1;
-+		else if (val == 420)
-+			int_time = CM36651_PS_IT2;
-+		else if (val == 520)
-+			int_time = CM36651_PS_IT3;
-+		else if (val == 640)
-+			int_time = CM36651_PS_IT4;
-+		else
-+			return -EINVAL;
-+
-+		ret = i2c_smbus_write_byte_data(ps_client,
-+						CM36651_PS_CONF1, int_time);
-+		if (ret < 0) {
-+			dev_err(&client->dev, "PS integration time write failed\n");
-+			return ret;
-+		}
-+		cm36651->ps_int_time = int_time;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int cm36651_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int *val, int *val2, long mask)
-+{
-+	struct cm36651_data *cm36651 = iio_priv(indio_dev);
-+	int ret;
-+
-+	mutex_lock(&cm36651->lock);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = cm36651_read_channel(cm36651, chan, val);
-+		break;
-+	case IIO_CHAN_INFO_INT_TIME:
-+		ret = cm36651_read_int_time(cm36651, chan, val);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	mutex_unlock(&cm36651->lock);
-+
-+	return ret;
-+}
-+
-+static int cm36651_write_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     int val, int val2, long mask)
-+{
-+	struct cm36651_data *cm36651 = iio_priv(indio_dev);
-+	struct i2c_client *client = cm36651->client;
-+	int ret = -EINVAL;
-+
-+	if (mask == IIO_CHAN_INFO_INT_TIME) {
-+		ret = cm36651_write_int_time(cm36651, chan, val);
-+		if (ret < 0)
-+			dev_err(&client->dev, "Integration time write failed\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static int cm36651_read_prox_thresh(struct iio_dev *indio_dev,
-+					u64 event_code, int *val)
-+{
-+	struct cm36651_data *cm36651 = iio_priv(indio_dev);
-+
-+	*val = cm36651->ps_ctrl_regs[CM36651_PS_THD];
-+
-+	return 0;
-+}
-+
-+static int cm36651_write_prox_thresh(struct iio_dev *indio_dev,
-+					u64 event_code, int val)
-+{
-+	struct cm36651_data *cm36651 = iio_priv(indio_dev);
-+	struct i2c_client *client = cm36651->client;
-+	int ret;
-+
-+	if (val < 3 || val > 255)
-+		return -EINVAL;
-+
-+	cm36651->ps_ctrl_regs[CM36651_PS_THD] = val;
-+	ret = i2c_smbus_write_byte_data(cm36651->ps_client, CM36651_PS_THD,
-+					cm36651->ps_ctrl_regs[CM36651_PS_THD]);
-+
-+	if (ret < 0) {
-+		dev_err(&client->dev, "PS threshold write failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cm36651_write_prox_event_config(struct iio_dev *indio_dev,
-+					u64 event_code, int state)
-+{
-+	struct cm36651_data *cm36651 = iio_priv(indio_dev);
-+	int cmd, ret = -EINVAL;
-+
-+	mutex_lock(&cm36651->lock);
-+
-+	cmd = state ? CM36651_CMD_PROX_EV_EN : CM36651_CMD_PROX_EV_DIS;
-+	ret = cm36651_set_operation_mode(cm36651, cmd);
-+
-+	mutex_unlock(&cm36651->lock);
-+
-+	return ret;
-+}
-+
-+static int cm36651_read_prox_event_config(struct iio_dev *indio_dev,
-+							u64 event_code)
-+{
-+	struct cm36651_data *cm36651 = iio_priv(indio_dev);
-+	int event_en = -EINVAL;
-+
-+	mutex_lock(&cm36651->lock);
-+
-+	event_en = test_bit(CM36651_PROXIMITY_EV_EN, &cm36651->flags);
-+
-+	mutex_unlock(&cm36651->lock);
-+
-+	return event_en;
-+}
-+
-+#define CM36651_LIGHT_CHANNEL(_color, _idx) {		\
-+	.type = IIO_LIGHT,				\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |	\
-+			BIT(IIO_CHAN_INFO_INT_TIME),	\
-+	.address = _idx,				\
-+	.modified = 1,					\
-+	.channel2 = IIO_MOD_LIGHT_##_color,		\
-+}							\
-+
-+static const struct iio_chan_spec cm36651_channels[] = {
-+	{
-+		.type = IIO_PROXIMITY,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				BIT(IIO_CHAN_INFO_INT_TIME),
-+		.event_mask = IIO_EV_BIT(IIO_EV_TYPE_THRESH, IIO_EV_DIR_EITHER)
-+	},
-+	CM36651_LIGHT_CHANNEL(RED, CM36651_LIGHT_CHANNEL_IDX_RED),
-+	CM36651_LIGHT_CHANNEL(GREEN, CM36651_LIGHT_CHANNEL_IDX_GREEN),
-+	CM36651_LIGHT_CHANNEL(BLUE, CM36651_LIGHT_CHANNEL_IDX_BLUE),
-+	CM36651_LIGHT_CHANNEL(CLEAR, CM36651_LIGHT_CHANNEL_IDX_CLEAR),
-+};
-+
-+static IIO_CONST_ATTR(in_illuminance_integration_time_available,
-+					CM36651_CS_INT_TIME_AVAIL);
-+static IIO_CONST_ATTR(in_proximity_integration_time_available,
-+					CM36651_PS_INT_TIME_AVAIL);
-+
-+static struct attribute *cm36651_attributes[] = {
-+	&iio_const_attr_in_illuminance_integration_time_available.dev_attr.attr,
-+	&iio_const_attr_in_proximity_integration_time_available.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group cm36651_attribute_group = {
-+	.attrs = cm36651_attributes
-+};
-+
-+static const struct iio_info cm36651_info = {
-+	.driver_module		= THIS_MODULE,
-+	.read_raw		= &cm36651_read_raw,
-+	.write_raw		= &cm36651_write_raw,
-+	.read_event_value	= &cm36651_read_prox_thresh,
-+	.write_event_value	= &cm36651_write_prox_thresh,
-+	.read_event_config	= &cm36651_read_prox_event_config,
-+	.write_event_config	= &cm36651_write_prox_event_config,
-+	.attrs			= &cm36651_attribute_group,
-+};
-+
-+static int cm36651_probe(struct i2c_client *client,
-+			     const struct i2c_device_id *id)
-+{
-+	struct cm36651_data *cm36651;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*cm36651));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	cm36651 = iio_priv(indio_dev);
-+
-+	cm36651->vled_reg = devm_regulator_get(&client->dev, "vled");
-+	if (IS_ERR(cm36651->vled_reg)) {
-+		dev_err(&client->dev, "get regulator vled failed\n");
-+		return PTR_ERR(cm36651->vled_reg);
-+	}
-+
-+	ret = regulator_enable(cm36651->vled_reg);
-+	if (ret) {
-+		dev_err(&client->dev, "enable regulator vled failed\n");
-+		return ret;
-+	}
-+
-+	i2c_set_clientdata(client, indio_dev);
-+
-+	cm36651->client = client;
-+	cm36651->ps_client = i2c_new_dummy(client->adapter,
-+						CM36651_I2C_ADDR_PS);
-+	mutex_init(&cm36651->lock);
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->channels = cm36651_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(cm36651_channels);
-+	indio_dev->info = &cm36651_info;
-+	indio_dev->name = id->name;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	ret = cm36651_setup_reg(cm36651);
-+	if (ret) {
-+		dev_err(&client->dev, "%s: setup register failed\n", __func__);
-+		return ret;
-+	}
-+
-+	ret = request_threaded_irq(client->irq, NULL, cm36651_irq_handler,
-+				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING
-+				| IRQF_ONESHOT,	"cm36651_proximity", indio_dev);
-+	if (ret) {
-+		dev_err(&client->dev, "%s: request irq failed\n", __func__);
-+		goto error_disable_reg;
-+	}
-+	disable_irq(client->irq);
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret) {
-+		dev_err(&client->dev, "%s: regist device failed\n", __func__);
-+		goto error_free_irq;
-+	}
-+
-+	return 0;
-+
-+error_free_irq:
-+	free_irq(client->irq, indio_dev);
-+error_disable_reg:
-+	regulator_disable(cm36651->vled_reg);
-+	return ret;
-+}
-+
-+static int cm36651_remove(struct i2c_client *client)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct cm36651_data *cm36651 = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+	regulator_disable(cm36651->vled_reg);
-+	free_irq(client->irq, indio_dev);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id cm36651_id[] = {
-+	{ "cm36651", 0 },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(i2c, cm36651_id);
-+
-+static const struct of_device_id cm36651_of_match[] = {
-+	{ .compatible = "capella,cm36651" },
-+	{ }
-+};
-+
-+static struct i2c_driver cm36651_driver = {
-+	.driver = {
-+		.name	= "cm36651",
-+		.of_match_table = of_match_ptr(cm36651_of_match),
-+		.owner	= THIS_MODULE,
-+	},
-+	.probe		= cm36651_probe,
-+	.remove		= cm36651_remove,
-+	.id_table	= cm36651_id,
-+};
-+
-+module_i2c_driver(cm36651_driver);
-+
-+MODULE_AUTHOR("Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-+MODULE_DESCRIPTION("CM36651 proximity/ambient light sensor driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+I would say it's more like some agreement with the existing binding and the
+cpufreq-cpu0 driver. Do it make sense to drop it from here ?
 
--- 
-Best Regards,
+>> +
+>> +2b. Consider a SMP system with 4 CPUs in the same clock domain
+>> +    (using operating-points-phandle)
+>> +
+>> +	cpu0: cpu@0 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <0>;
+>> +		operating-points-phandle = <&cpu_opp>;
+>> +	};
+>> +
+>> +	cpu1: cpu@1 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <1>;
+>> +		operating-points-phandle = <&cpu_opp>;
+>> +	};
+>> +
+>> +	cpu2: cpu@2 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <2>;
+>> +		operating-points-phandle = <&cpu_opp>;
+>> +	};
+>> +
+>> +	cpu3: cpu@3 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <3>;
+>> +		operating-points-phandle = <&cpu_opp>;
+>> +	};
+>> +
+>> +	operating_points {
+>> +		cpu_opp: cpu_opp {
+>> +			operating-points = <
+>> +				/* kHz    uV */
+>> +				792000  1100000
+>> +				396000  950000
+>> +				198000  850000
+>> +			>;
+>> +		};
+>> +		... /* other device OPP nodes */
+>> +	}
+> 
+> Is this all inside the /cpus node?
+> 
+It can be anywhere, if only cpus share OPPs on a system, it can be placed under
+/cpus. The idea to put all OPP nodes under one node is just for readibility
+purposes. As along as phandle is correct it doesn't matter where the exact nodes
+are. Does this need to be mentioned explicity in the binding ?
 
-Beomho Seo, Assistant Engineer
-System S/W Lab., S/W Platform Team, Software Center
-Samsung Electronics
+> Is the "operating_points" name important?
+> 
+> Are all OPP tables expected to be in the same "operating_points" node?
+> 
+No for both the above questions, again just for readibilty I chose that name and
+placed all OPP nodes under same node in the example, it can be named anything
+and can be scattered.
+Again does this need to be mentioned explicity in the binding ?
+
+Regards,
+Sudeep
+
