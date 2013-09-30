@@ -1,35 +1,84 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCHv5 0/4] Add Freescale FTM PWM driver.
-Date: Mon, 30 Sep 2013 10:20:58 +0200
-Message-ID: <20130930082058.GB30088@pengutronix.de>
-References: <1380521611-2764-1-git-send-email-Li.Xiubo@freescale.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH RFC] media: rc: OF: Add Generic bindings for remote-control
+Date: Mon, 30 Sep 2013 09:27:02 +0100
+Message-ID: <524935D6.1010505@st.com>
+References: <1380274391-26577-1-git-send-email-srinivas.kandagatla@st.com> <20130927113458.GB18672@e106331-lin.cambridge.arm.com> <52458774.1060909@st.com> <20130927105716.64349f02@samsung.com>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1380521611-2764-1-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: r65073@freescale.com, thierry.reding@gmail.com, swarren@wwwdotorg.org, t.figa@samsung.com, grant.likely@linaro.org, linux@arm.linux.org.uk, rob@landley.net, ian.campbell@citrix.com, mark.rutland@arm.com, pawel.moll@arm.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130927105716.64349f02@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2013 at 02:13:27PM +0800, Xiubo Li wrote:
-> Hello,
+On 27/09/13 14:57, Mauro Carvalho Chehab wrote:
+> Em Fri, 27 Sep 2013 14:26:12 +0100
+> Srinivas KANDAGATLA <srinivas.kandagatla@st.com> escreveu:
 > 
-> This patch series is the Freescale FTM PWM implementation. And there are 8 channels most supported by the FTM PWM. This implementation is only compatible with device tree definition.
+>> On 27/09/13 12:34, Mark Rutland wrote:
+>>
+>>>>> +	- rx-mode: Can be "infrared" or "uhf". rx-mode should be present iff
+>>>>> +	  the rx pins are wired up.
+>>> I'm unsure on this. What if the device has multiple receivers that can
+>>> be independently configured? What if it supports something other than
+>>> "infrared" or "uhf"? What if a device can only be wired up as
+>>> "infrared"? 
+>>>
+>>> I'm not sure how generic these are, though we should certainly encourage
+>>> bindings that can be described this way to be described in the same way.
+>>>
+>>>>> +	- tx-mode: Can be "infrared" or "uhf". tx-mode should be present iff
+>>>>> +	  the tx pins are wired up.
+>>> I have similar concerns here to those for the rx-mode property.
+>>>
+>> Initially rx-mode and tx-mode sounded like more generic properties
+>> that's the reason I ended up in this route. But after this discussion it
+>> looks like its not really generic enough to cater all the use cases.
+>>
+>> It make sense for me to perfix "st," for these properties in the st-rc
+>> driver rather than considering them as generic properties.
 > 
-> This patch series is based on linux-next and has been tested on Vybrid VF610 Tower board using device tree.
+> Well, for sure the direction (TX, RX, both) is a generic property.
+> 
+> I'd say that the level 1 protocol (IR, UHF, Bluetooth, ...) is also a
+> generic property. Most remotes are IR, but there are some that are
+> bluetooth, and your hardware is using UHF.
+Yes these are generic.
 
-Looks good to me now. Thanks for fixing.
+> 
+> Btw, we're even thinking on mapping HDMI-CEC remote controller RX/TX via
+> the RC subsystem. So, another L1 protocol would be "hdmi-cec".
+> 
+Ok.
+> Yet, it seems unlikely that the very same remote controller IP would use
+> a different protocol for RX and TX, while sharing the same registers.
 
-For the series:
+ST IRB block has one IR processor which has both TX and RX support and
+one UHF Processor which has RX support only. However the register map
+for all these support is in single IRB IP block.
 
-Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
+So the driver can configure the IP as TX in "infrared" and RX in "uhf".
+This is supported in ST IRB IP.
 
-Sascha
+This case can not be represented in a single device tree node with
+l1-protocol and direction properties.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+IMHO, having tx-mode and rx-mode or tx-protocol and rx-protocol
+properties will give more flexibility.
+
+What do you think?
+
+> 
+> So, for example, a hardware with "hdmi-cec" and "infrared" will actually
+> have two remote controller devices. Eventually, the "infrared" being
+> just RX, while "hdmi-cec" being bi-directional.
+> 
+> So, IMHO, this could be mapped as "l1_protocol" ("infrared", "uhf", ...)
+> and another one "direction" ("rx", "tx", "bi-directional").
+> 
+
+Thanks,
+srini
