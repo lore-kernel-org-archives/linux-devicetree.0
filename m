@@ -1,68 +1,91 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 01/21] drivers: remove unnecessary prom.h includes
-Date: Mon, 30 Sep 2013 15:23:22 +0200
-Message-ID: <52497B4A.2020409@pengutronix.de>
-References: <1380221456-11192-1-git-send-email-robherring2@gmail.com> <1380221456-11192-2-git-send-email-robherring2@gmail.com> <52492E4F.2020701@pengutronix.de> <52497A6E.5010908@gmail.com>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH] media: i2c: adv7343: fix the DT binding properties
+Date: Mon, 30 Sep 2013 18:57:01 +0530
+Message-ID: <CA+V-a8sEPAFz=Jo9LdwRf5QtnY6TFXzSTrtHQuyeb3uSEYCvSQ@mail.gmail.com>
+References: <1379073471-7244-1-git-send-email-prabhakar.csengg@gmail.com>
+ <523395DC.5080009@wwwdotorg.org>
+ <CA+V-a8sVyJ1TrTSiaj8vpaD+f_qJ5Hp287E3HuHJ_pRzzmdAvg@mail.gmail.com>
+ <523730A8.9060201@wwwdotorg.org>
+ <CA+V-a8vY-qsdUoUUH=3HOg-UAZZPujOLPHFC_udNWFtksgzRRA@mail.gmail.com>
+ <523B554A.2030701@gmail.com>
+ <CA+V-a8s3PYr7qem6m8au0E7N2Xb_gD37_8uLcdXZjeHppBaC6g@mail.gmail.com>
+ <523C1AE0.9020603@samsung.com>
+ <CA+V-a8u5_rhxTgkVgCbtmGpaZCt2ciu4vABW4t80aSp7csttnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="7V7bqdqEoSOLFc2OvX8r5N8QO3a5281aj"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <52497A6E.5010908@gmail.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Wolfgang Grandegger <wg@grandegger.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CA+V-a8u5_rhxTgkVgCbtmGpaZCt2ciu4vABW4t80aSp7csttnw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, LDOC <linux-doc@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Rob Herring <rob.herring@calxeda.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Landley <rob@landley.net>, Sakari Ailus <sakari.ailus@iki.fi>, Ian Campbell <ijc+devicetree@hellion.org.uk>, LAK <linux-arm-kernel@lists.infradead.org>, LMML <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---7V7bqdqEoSOLFc2OvX8r5N8QO3a5281aj
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi All,
 
-On 09/30/2013 03:19 PM, Rob Herring wrote:
-> On 09/30/2013 02:54 AM, Marc Kleine-Budde wrote:
->> On 09/26/2013 08:50 PM, Rob Herring wrote:
->>> From: Rob Herring <rob.herring@calxeda.com>
->>>
->>> Remove unnecessary prom.h includes in preparation to remove implicit
->>> includes of prom.h.
->>>
->>> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
->>> Cc: Wolfgang Grandegger <wg@grandegger.com>
->>> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
->>> Cc: linux-can@vger.kernel.org
->>> Cc: netdev@vger.kernel.org
+On Mon, Sep 23, 2013 at 8:18 AM, Prabhakar Lad
+<prabhakar.csengg@gmail.com> wrote:
+> Hi Sylwester,
+>
+> On Fri, Sep 20, 2013 at 3:22 PM, Sylwester Nawrocki
+> <s.nawrocki@samsung.com> wrote:
+>> Hi Prabhakar,
 >>
->> Applied to linux-can-next/testing, it will be included in my next pull=
+>> On 09/20/2013 10:11 AM, Prabhakar Lad wrote:
+>>> OK I will, just send out a fix up patch which fixes the mismatch between
+>>> names for the rc-cycle, and later send out a patch which removes the
+>>> platform data usage for next release with proper DT bindings.
+>>
+>> I think the binding need to be fully corrected now, I just meant to not
+>> touch the board file, i.e. leave non-dt support unchanged.
+>>
+> Ok
+>
+>>> I'm OK with making regulator properties as optional, But still it would
+>>> change the meaning of what DT is, we know that the VDD/VDD_IO .. etc
+>>> pins are required properties (but still making them as optional) :-(
+>>>
+>>> I think there might several devices where this situation may arise so
+>>> just thinking of a alternative solution.
+>>>
+>>> say we have property 'software-regulator' which takes true/false(0/1)
+>>> If set to true we make the regulators as required property or else we
+>>> assume it is handled and ignore it ?
+>>
+>> I don't think this is a good idea. You would have to add a similar platform
+>> data flag for non-dt, it doesn't sound right. I can see two options here:
+>>
+>> 1. Make the regulator properties mandatory and, e.g. define a fixed
+>>    voltage GPIO regulator in DT with an empty 'gpio' property. Then
+>>    pass a phandle to that regulator in the adv7343 *-supply properties.
+>>    For non-dt similarly a fixed voltage regulator(s) and voltage
+>>    supplies  would need to be defined in the board files.
+>>
+>> 2. Make the properties optional and use (devm_)regulator_get_optional()
+>>    calls in the driver (a recently added function). I must admit I don't
+>>    fully understand description of this function, it currently looks
+>>    pretty much same as (devm_)regulator_get(). Thus the driver would
+>>    need to be handling regulator supplies only when non ERR_PTR() is
+>>    returned from regulator_get_optional() and otherwise assume a non
+>>    critical error. There is already quite a few example occurrences of
+>>    regulator_get_optional() usage.
+>>
+The same question arises in case of the clock, The adv7343 encoder has
+two input clocks CLKIN_A and CLKIN_B. I case of da850 EVM the
+clock source to adv7343 encoder is fixed source which is enabled
+by default so none of the bridge nor the adv7343 driver cares of the
+clock to enable/disable.
+So in this case should I be registering  (v4l2_clk_register() /
+v4l2_clk_unregister())
+a dummy clock in the bridge driver or in the board file ?
 
->> request to David Miller.
->=20
-> Please don't apply this. The whole series needs to be applied together.=
-
-> This patch is a dependency for the rest of the series.
-
-Okay, then add my Acked-by to this patch.
-
-Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---7V7bqdqEoSOLFc2OvX8r5N8QO3a5281aj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlJJe0oACgkQjTAFq1RaXHN9pwCfVsN6WRkRPfEbHYiqSYOYWZ8O
-CD4An03DCJm2LZtQwWmB4BQkTodid83l
-=S39I
------END PGP SIGNATURE-----
-
---7V7bqdqEoSOLFc2OvX8r5N8QO3a5281aj--
+Regards,
+--Prabhakar Lad
