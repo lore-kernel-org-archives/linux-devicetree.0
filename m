@@ -1,46 +1,56 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v2] powerpc/83xx: gianfar_ptp: select 1588 clock source
- through dts file
-Date: Mon, 30 Sep 2013 14:50:56 -0400 (EDT)
-Message-ID: <20130930.145056.669909746688674911.davem@davemloft.net>
-References: <1380093863-5388-1-git-send-email-aida.mynzhasova@skitlab.ru>
+From: rkuo <rkuo@codeaurora.org>
+Subject: Re: [PATCH 07/21] hexagon: remove unnecessary prom.h includes
+Date: Mon, 30 Sep 2013 15:21:12 -0500
+Message-ID: <20130930202112.GA4839@codeaurora.org>
+References: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
+ <1380221456-11192-8-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380093863-5388-1-git-send-email-aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-hexagon-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1380221456-11192-8-git-send-email-robherring2@gmail.com>
+Sender: linux-hexagon-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-hexagon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
-Date: Wed, 25 Sep 2013 11:24:23 +0400
+On Thu, Sep 26, 2013 at 01:50:42PM -0500, Rob Herring wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
+> 
+> Hexagon does not have a prom.h header, so it is probably broken with
+> CONFIG_OF enabled. In any case, remove unnecessary prom.h include in
+> preparation to make prom.h optional.
+> 
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+> Cc: Richard Kuo <rkuo@codeaurora.org>
+> Cc: linux-hexagon@vger.kernel.org
+> ---
+>  arch/hexagon/kernel/setup.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/arch/hexagon/kernel/setup.c b/arch/hexagon/kernel/setup.c
+> index 29d1f1b..0e7c1db 100644
+> --- a/arch/hexagon/kernel/setup.c
+> +++ b/arch/hexagon/kernel/setup.c
+> @@ -32,9 +32,6 @@
+>  #include <asm/hexagon_vm.h>
+>  #include <asm/vm_mmu.h>
+>  #include <asm/time.h>
+> -#ifdef CONFIG_OF
+> -#include <asm/prom.h>
+> -#endif
+>  
+>  char cmd_line[COMMAND_LINE_SIZE];
+>  static char default_command_line[COMMAND_LINE_SIZE] __initdata = CONFIG_CMDLINE;
+> -- 
+> 1.8.1.2
+> 
 
-> Currently IEEE 1588 timer reference clock source is determined through
-> hard-coded value in gianfar_ptp driver. This patch allows to select ptp
-> clock source by means of device tree file node.
-> 
-> For instance:
-> 
-> 	fsl,cksel = <0>;
-> 
-> for using external (TSEC_TMR_CLK input) high precision timer
-> reference clock.
-> 
-> Other acceptable values:
-> 
-> 	<1> : eTSEC system clock
-> 	<2> : eTSEC1 transmit clock
-> 	<3> : RTC clock input
-> 
-> When this attribute isn't used, eTSEC system clock will serve as
-> IEEE 1588 timer reference clock.
-> 
-> Signed-off-by: Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>
+Acked-by: Richard Kuo <rkuo@codeaurora.org>
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
