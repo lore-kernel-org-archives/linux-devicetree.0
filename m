@@ -1,50 +1,68 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [RFC PATCH 1/6] DRIVERS: IRQCHIP: IRQ-GIC: Add support for routable
- irqs
-Date: Mon, 30 Sep 2013 15:28:36 +0100
-Message-ID: <52498A94.7090009@arm.com>
-References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <1380549564-31045-2-git-send-email-r.sricharan@ti.com> <524987A3.4090204@arm.com> <5249890B.7020906@ti.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM i.MX53: dts: Add TVE to i.MX53-QSB device tree
+Date: Mon, 30 Sep 2013 16:40:08 +0200
+Message-ID: <1380552008.3959.29.camel@pizza.hi.pengutronix.de>
+References: <1380192374-9531-1-git-send-email-p.zabel@pengutronix.de>
+	 <1380192374-9531-2-git-send-email-p.zabel@pengutronix.de>
+	 <20130927011643.GB25146@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5249890B.7020906@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Sricharan R <r.sricharan@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tony@atomide.com" <tony@atomide.com>, "rnayak@ti.com" <rnayak@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Rutland <Mark.Rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130927011643.GB25146-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/09/13 15:22, Santosh Shilimkar wrote:
-> On Monday 30 September 2013 10:16 AM, Marc Zyngier wrote:
->> On 30/09/13 14:59, Sricharan R wrote:
->>> In some socs the gic can be preceded by a crossbar IP which
->>> routes the peripheral interrupts to the gic inputs. The peripheral
->>> interrupts are associated with a fixed crossbar input line and the
->>> crossbar routes that to one of the free gic input line.
->>>
->>> The DT entries for peripherals provides the fixed crossbar input line
->>> as its interrupt number and the mapping code should associate this with
->>> a free gic input line. This patch adds the support inside the gic irqchip
->>> to handle such routable irqs. The routable irqs are registered in a linear
->>> domain. The registered routable domain's callback should be implemented
->>> to get a free irq and to configure the IP to route it.
->>
->> Isn't this just another chained interrupt controller? How is it GIC
->> specific?
->>
-> No it isn't a irq controller rather a event router. Patch is missing
-> reference to the previous discussion. Previous discussion is here [1]
+Am Freitag, den 27.09.2013, 09:16 +0800 schrieb Shawn Guo:
+> On Thu, Sep 26, 2013 at 12:46:14PM +0200, Philipp Zabel wrote:
+> > This patch enables the TVE which is driving the VGA connector on i.MX53-QSB.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/imx53-qsb.dts | 20 ++++++++++++++++++--
+> >  1 file changed, 18 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx53-qsb.dts b/arch/arm/boot/dts/imx53-qsb.dts
+> > index cf1aef7..3bbedf7 100644
+> > --- a/arch/arm/boot/dts/imx53-qsb.dts
+> > +++ b/arch/arm/boot/dts/imx53-qsb.dts
+> > @@ -173,6 +173,15 @@ memgpu: /memreserve/ 0xb0000000 0x04000000;
+> >  		};
+> >  	};
+> >  
+> > +	tve {
+> > +		pinctrl_vga_sync_1: vgasync-grp1 {
+> > +			fsl,pins = <
+> > +				/* VGA_HSYNC, VSYNC with max drive strength */
+> > +				MX53_PAD_EIM_OE__IPU_DI1_PIN7 0xe6
+> > +				MX53_PAD_EIM_RW__IPU_DI1_PIN8 0xe6
+> > +			>;
+> > +		};
+> > +	};
+> >  };
+> >  
+> >  &uart1 {
+> > @@ -280,8 +289,8 @@ memgpu: /memreserve/ 0xb0000000 0x04000000;
+> >  			};
+> >  
+> >  			ldo8_reg: ldo8 {
+> > -				regulator-min-microvolt = <1200000>;
+> > -				regulator-max-microvolt = <3600000>;
+> > +				regulator-min-microvolt = <2750000>;
+> > +				regulator-max-microvolt = <2750000>;
 > 
-> Regards,
-> Santosh
-> 
-> [1] https://lkml.org/lkml/2013/9/13/413
+> Why this change?
 
-Right. I need to go and understand that bit first.
+According to the reference manual, the TVDAC supply should be 2.75 V. If
+there are no ill effects if this ldo is actually set to 3.6 V, this
+change could be dropped.
 
-Thanks Santosh.
+regards
+Philipp
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
