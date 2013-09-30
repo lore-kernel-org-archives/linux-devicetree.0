@@ -1,209 +1,108 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RFC] media: rc: OF: Add Generic bindings for
- remote-control
-Date: Mon, 30 Sep 2013 17:51:26 +0100
-Message-ID: <20130930165125.GE22259@e106331-lin.cambridge.arm.com>
-References: <1380274391-26577-1-git-send-email-srinivas.kandagatla@st.com>
- <20130927113458.GB18672@e106331-lin.cambridge.arm.com>
- <20130927104719.6637368f@samsung.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 3/4] watchdog: s3c2410_wdt: parse watchdog dt node to read
+ PMU registers adresses
+Date: Mon, 30 Sep 2013 09:54:33 -0700
+Message-ID: <CAD=FV=U35jtZBMjx3te9+2brd0KDQHJr0c6u8y1ucQtDQfMTDQ@mail.gmail.com>
+References: <1379414623-26329-1-git-send-email-l.krishna@samsung.com>
+	<2201944.6vg4a9ttux@flatron>
+	<CAD=FV=Wa0BpmE7mQoAk-RC_g9QCCz2T_7=Pd46CDSN8Z9KQ8jg@mail.gmail.com>
+	<13147351.I7ksvhO9sb@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130927104719.6637368f-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <13147351.I7ksvhO9sb@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, Leela Krishna Amudala <l.krishna@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, mark.rutland@arm.com, galak <galak@codeaurora.org>, pawel.moll@arm.com, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2013 at 02:47:19PM +0100, Mauro Carvalho Chehab wrote:
-> Em Fri, 27 Sep 2013 12:34:58 +0100
-> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> escreveu:
-> 
-> > On Fri, Sep 27, 2013 at 10:33:11AM +0100, Srinivas KANDAGATLA wrote:
-> > > From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> > > 
-> > > This patch attempts to collate generic bindings which can be used by
-> > > the remote control hardwares. Currently the list is not long as there
-> > > are only 2 drivers which are device tree'd.
-> > > 
-> > > Mainly this patch tries to document few bindings used by ST IRB driver
-> > > which can be generic as well. This document also add fews common
-> > > bindings used by most of the drivers like, interrupts, regs, clocks and
-> > > pinctrls.
-> > > 
-> > > This document can also be holding place to describe generic bindings
-> > > used in remote controls devices.
-> > > 
-> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> > > ---
-> > > Hi All, 
-> > > Following Stephen Warren's suggestions at https://lkml.org/lkml/2013/9/24/452
-> > > this patch is an attempt to document such generic bindings in a common
-> > > document.
-> > > 
-> > > This document currently collates all the generic bindings used with
-> > > remote-controls and act as holding place to describe generic bindings for
-> > > remote controls.
-> > > 
-> > > Comments?
-> > > 
-> > > Thanks,
-> > > srini
-> > > 
-> > >  .../devicetree/bindings/media/remote-control.txt   |   31 ++++++++++++++++++++
-> > >  1 files changed, 31 insertions(+), 0 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/remote-control.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/remote-control.txt b/Documentation/devicetree/bindings/media/remote-control.txt
-> > > new file mode 100644
-> > > index 0000000..901ea56
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/remote-control.txt
-> > > @@ -0,0 +1,31 @@
-> > > +Generic device tree bindings for remote control.
-> > > +
-> > > +properties:
-> > > +	- compatible: Can contain any remote control driver compatible string.
-> > > +	  example: "st-comms-irb, "gpio-ir-receiver".
-> > 
-> > This is more generic than remote control, could this not just be left
-> > for the specific binding to describe?
-> > 
-> > > +	- reg: Base physical address of the controller and length of memory
-> > > +	  mapped region.
-> > 
-> > What if it's on a bus that isn't memory mapped (e.g. i2c, SPI)?
-> > 
-> > > +	- interrupts: Interrupt-specifier for the sole interrupt generated by
-> > > +	  the device. The interrupt specifier format depends on the
-> > > +	  interrupt controller parent. Iff the device supports interrupts.
-> > 
-> > What if it has multiple interrupts, and has interrupts-names?
-> > 
-> > It might be better to only describe the properties that relate
-> > specifically to remote controls, rather than listing all of the generic
-> > properties that device tree bidnings may have. That would match the
-> > style of the clock bindings.
-> > 
-> > > +	- rx-mode: Can be "infrared" or "uhf". rx-mode should be present iff
-> > > +	  the rx pins are wired up.
-> > 
-> > I'm unsure on this. What if the device has multiple receivers that can
-> > be independently configured? 
-> 
-> Well, if a given remote controller hardware has more than one independent
-> receiver (or transmitter), each one should have its own devnode.
-> Likely, two entries at DT.
+Tomasz,
 
-Why? If an IP block happens to have support for N connections, that
-doesn't mean that each must be described individually. They likely share
-a bank of registers, and depending on the device they might not even be
-assigned consistently orgranised windows of that register bank.
+On Sat, Sep 28, 2013 at 6:49 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>> On Fri, Sep 27, 2013 at 11:14 AM, Tomasz Figa <tomasz.figa@gmail.com>
+> wrote:
+>> >> So isn't the register in the PMU there to save power in the case that
+>> >> the watchdog timer isn't being used?  How is the PMU "driver" to know
+>> >> whether the watchdog is being used?  Better IMHO that the watchdog
+>> >> driver knows to enable and disable itself as needed, right?
+>> >
+>> > How much power can you save on one low frequency counter? Anyway,
+>> > those
+>> > bits look more like reset signal masks to me, unrelated to any power
+>> > saving and even if, this driver switches them on at probe regardless
+>> > of
+>> > whether the watchdog is actually used or not.
+>>
+>> I don't know for sure how much power it saves if any.  The description
+>> I have of those fields is also definitely a little on the confusing
+>> side.  The fact that they are in the PMU leads me to believe that they
+>> save power, but perhaps that's not the case here.
+>>
+>> It still does seem nice to keep watchdog related code in the watchdog
+>> driver, though...
+>
+> For me, this thing looks more related to PMU than watchdog, since the code
+> writes to PMU registers and does this only on system power state
+> transitions, i.e. once per boot, suspend, resume and shutdown.
 
-> 
-> > What if it supports something other than
-> > "infrared" or "uhf"? What if a device can only be wired up as
-> > "infrared"? 
-> 
-> I would say that a hardware that has both infrared and uhf has actually
-> two different devices. So, it should be mapped as two separate devnodes.
+I wonder if there is any reason that it shouldn't be put in the
+s3c2410wdt_start() and s3c2410wdt_stop() functions?
 
-I would say that it is still one device, one which happens to have two
-outputs. Just because we want two dev nodes does not mean the dt has to
-be structured as two devices.
 
-> 
-> > I'm not sure how generic these are, though we should certainly encourage
-> > bindings that can be described this way to be described in the same way.
-> > 
-> > > +	- tx-mode: Can be "infrared" or "uhf". tx-mode should be present iff
-> > > +	  the tx pins are wired up.
-> > 
-> > I have similar concerns here to those for the rx-mode property.
-> > 
-> > > +
-> > > +Optional properties:
-> > > +	- linux,rc-map-name: Linux specific remote control map name. Refer to
-> > > +	  include/media/rc-map.h for full list of maps.
-> > 
-> > We shouldn't refer to Linux specifics (i.e. headers) in general in
-> > bindings. While it's possible to relax that a bit for linux,*
-> > properties, I'd prefer to explicitly list elements in the binding. That
-> > prevents the ABI from changing under our feet by someone altering what
-> > looks like a completely internal header file.
-> 
-> Well, the remote controller keymaps at include/media/rc-map.h is just a
-> bunch of string names, defined as macro to avoid duplicating those names
-> everywhere, to avoid typos and to help some userspace parsing logic to get
-> all in just one single place. I don't see why the same names couldn't be 
-> used on any other OS using DT.
+>> I guess I could also imagine ordering problems if
+>> we tweaked this bit in the PMU driver, though I don't have actual
+>> evidence of this.  Maybe cases where enabling at the wrong time could
+>> cause spurious watchdog resets depending on how the BIOS left the
+>> state of things.
+>
+> Even if you put this code in watchdog driver you don't have any warranties
+> that the firmware leaves both the watchdog and PMU bits sets correctly.
+> I'm not sure what would be the point of firmware existence if you can't
+> trust it to set up at least the basic working environment for you and I
+> consider watchdog to be part of such.
 
-To be used by another OS, they should be defined somewhere that's not
-subject to arbitrary changes at any time at the whim of Linux
-developers, without dt-related review.
+I trust it to leave the system in some state that is safe.  ...but I
+don't trust the firmware of all exynos-based products to have the same
+idea of what "safe" is.  I could imagine some of them disabling the
+watchdog before booting linux by tweaking the settings in the PMU (and
+leaving the reset of the watchdog configured and running) and some of
+them disabling the watchdog by leaving the PMU settings alone and
+turning off the enable bit.  I could also imagine some of them
+actually leaving the watchdog fully configured and running to try to
+catch the case where the kernel crashes at bootup.  I don't know of
+any official rules here, which means that the kernel needs to be
+flexible enough.
 
-That's not to say we couldn't use strings the kernel happened to use.
-I'm saying that the names exposed by bindings should be well-defined,
-and should not depend on the current state of a linux-internal header
-file.
 
-I think it would be nicer to have a way of defining the keymap in dt
-anyway, so as to handle the general case and not get into the mess of
-having an arbitrary set of strings we need to constantly update.
+>> It would be unfortunate if we found we needed to
+>> reach into the watchdog register bank from the PMU driver to "pet" the
+>> watchdog before enabling it.
+>
+> If you find any such need in future, then with the solution I proposed
+> there will be no problem in changing things to be done as you and Leela
+> propose. The other way around would not be that simple, because the
+> introduced binding would still have to be supported and the code touching
+> PMU would have to be kept in watchdog code...
+>
+> However, if you really insist on handling this in watchdog driver,
 
-> 
-> The logic behind include/media/rc-map.h, is that those names are used
-> by:
-> 
-> 1) kernelspace: in order to locate a keytable with the same name, that
-> would be loaded when the device is initialized;
+I certainly don't insist.  I have not contributed nearly enough to the
+community to insist on anything.  At this point I'm merely stating my
+opinion.  Feel free to take it into consideration or ignore it.  I
+will not be offended if you choose to ignore my opinion here.  It is
+really up to Leela Krishna and the maintainer of the subsystem if I
+understand correctly.
 
-The kernel uses the strings, so it has them defined in its include path
-somewhere. If dt bindings wish to use the strings, they should be
-defined somewhere. That somewhere should not be a Linux-internal header
-file.
 
-> 
-> 2) userspace: to seek for a keytable with that name, allowing to
-> dynamically load the keymap table on userspace, instead of hardwiring
-> them on Kernelspace (or replacing the kernel's one by an user-customized
-> one).
+> please
+> consider using something smarter to access the PMU. I believe that device
+> node of watchdog should not represent parts of PMU, which should be
+> represented as a separate node instead.
 
-The name of each table is not exposed to userspace, they are not defined
-under include/uapi. The fact that the names may be used to request other
-data does not change the fact that the kernel has one copy, userspace
-another. The set of strings the kernel understands *is* hard-wired.
+We've already had this discussion before.  Assuming I'm understanding
+him correctly, Olof weighed in and suggested that he preferred to do
+the simpler thing in this case (AKA: what Leela Krishna is doing):
 
-> 
-> So, I would simply call it as "keymap-name", keep pointing it to 
-> include/media/rc-map.h.
-> 
-> That's said, this is actually a mandatory requirement, as without it,
-> the RC core will not be able to load a keytable, and the userspace tool
-> won't load the proper keymap, being confused on what to do.
+http://www.spinics.net/lists/devicetree/msg00812.html
 
-It is possible to handle setting up the mapping within the kernel, or to
-actually describe the general case, something like how gpio-keys works.
-I think that would be preferable.
-
-> 
-> It should be noticed that, from time to time, manufacturers change the
-> remote control unit, as those devices are generally manufactured by a
-> third part. So, they change, for example, when they get a new BID to
-> provide IRs for a cheaper cost, or when they need/want to provide a "deluxe"
-> remote, a simplified "thin" one and/or when they need to provide customized
-> remotes to some Cable company, for example.
-> 
-> So, it makes sense for it to be mandatory, as only with this information it
-> is possible to load the keymap that matches that specific IR unit model.
-
-While it's true that some description is necessary, I do nto believe
-this is the right one.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Doug
