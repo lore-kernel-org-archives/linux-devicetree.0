@@ -1,209 +1,181 @@
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Subject: Re: [PATCH 1/3] PM / OPP: extend DT binding to specify phandle of
- another node for OPP
-Date: Mon, 30 Sep 2013 13:33:48 +0100
-Message-ID: <52496FAC.7000901@arm.com>
-References: <1379501893-12669-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1379501893-12669-2-git-send-email-Sudeep.KarkadaNagesha@arm.com> <20130930085227.GB19738@e106331-lin.cambridge.arm.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v9 09/13] [media] exynos5-fimc-is: Add the hardware pipeline
+ control
+Date: Mon, 30 Sep 2013 14:43:40 +0200
+Message-ID: <524971FC.5030907@xs4all.nl>
+References: <1380279558-21651-1-git-send-email-arun.kk@samsung.com> <1380279558-21651-10-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20130930085227.GB19738@e106331-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1380279558-21651-10-git-send-email-arun.kk@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, swarren@wwwdotorg.org, mark.rutland@arm.com, Pawel.Moll@arm.com, galak@codeaurora.org, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 30/09/13 09:52, Mark Rutland wrote:
-> Hi Sudeep,
+On 09/27/2013 12:59 PM, Arun Kumar K wrote:
+> This patch adds the crucial hardware pipeline control for the
+> fimc-is driver. All the subdev nodes will call this pipeline
+> interfaces to reach the hardware. Responsibilities of this module
+> involves configuring and maintaining the hardware pipeline involving
+> multiple sub-ips like ISP, DRC, Scalers, ODC, 3DNR, FD etc.
 > 
-> I have a few comments.
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> Signed-off-by: Kilyeon Im <kilyeon.im@samsung.com>
+> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1708 ++++++++++++++++++++
+>  .../media/platform/exynos5-is/fimc-is-pipeline.h   |  129 ++
+>  2 files changed, 1837 insertions(+)
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+>  create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
 > 
-> On Wed, Sep 18, 2013 at 11:58:11AM +0100, Sudeep KarkadaNagesha wrote:
->> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
->>
->> If more than one similar devices share the same operating points(OPPs)
->> being in the same clock domain, currently we need to replicate the
->> OPP entries in all the nodes.
->>
->> This patch extends existing binding by adding a new property named
->> 'operating-points-phandle' to specify the phandle in any device node
->> pointing to another node which contains the actual OPP tuples.
->> This helps to avoid replication if multiple devices share the OPPs.
->>
->> Cc: Rob Herring <rob.herring@calxeda.com>
->> Cc: Pawel Moll <pawel.moll@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Cc: Stephen Warren <swarren@wwwdotorg.org>
->> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
->> Cc: Nishanth Menon <nm@ti.com>
->> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
->> ---
->>  Documentation/devicetree/bindings/power/opp.txt | 152 ++++++++++++++++++++++--
->>  1 file changed, 140 insertions(+), 12 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
->> index 74499e5..e9fea65 100644
->> --- a/Documentation/devicetree/bindings/power/opp.txt
->> +++ b/Documentation/devicetree/bindings/power/opp.txt
->> @@ -4,22 +4,150 @@ SoCs have a standard set of tuples consisting of frequency and
->>  voltage pairs that the device will support per voltage domain. These
->>  are called Operating Performance Points or OPPs.
->>  
->> -Properties:
->> +Required Properties:
->>  - operating-points: An array of 2-tuples items, and each item consists
->>    of frequency and voltage like <freq-kHz vol-uV>.
->>  	freq: clock frequency in kHz
->>  	vol: voltage in microvolt
->>  
->> +Optional properties:
->> +- operating-points-phandle: phandle to the device tree node which contains
->> +	the operating points tuples(recommended to be used if multiple
->> +	devices are in the same clock domain and hence share OPPs, as it
->> +	avoids replication of OPPs)
->> +
-> 
-> I assume if you have an operating-points-phandle property,
-> operating-points it no longer required. That should probably be
-> described.
-> 
-Correct, infact do it make sense to list both operating-points and
-operating-points-phandle as required property but they are mutually exclusive ?
+> diff --git a/drivers/media/platform/exynos5-is/fimc-is-pipeline.c b/drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+> new file mode 100644
+> index 0000000..a73d952
+> --- /dev/null
+> +++ b/drivers/media/platform/exynos5-is/fimc-is-pipeline.c
 
->>  Examples:
->>  
->> -cpu@0 {
->> -	compatible = "arm,cortex-a9";
->> -	reg = <0>;
->> -	next-level-cache = <&L2>;
->> -	operating-points = <
->> -		/* kHz    uV */
->> -		792000  1100000
->> -		396000  950000
->> -		198000  850000
->> -	>;
->> -};
->> +1. A uniprocessor system (phandle not required)
->> +
->> +	cpu0: cpu@0 {
->> +		compatible = "arm,cortex-a9";
->> +		reg = <0>;
->> +		operating-points = <
->> +			/* kHz    uV */
->> +			792000  1100000
->> +			396000  950000
->> +			198000  850000
->> +		>;
->> +	};
->> +
->> +If more than one device of same type share the same OPPs, for example
->> +all the CPUs on a SoC or in a single cluster on a SoC, then we need to
->> +avoid replicating the OPPs in all the nodes. We can specify the phandle
->> +of the node which contains the OPP tuples
-> 
-> This seems a bit out of place given the example immediately below.
-> 
-Sorry carried from previous version, will fix it.
+<snip>
 
->> +
->> +2a. Consider a SMP system with 4 CPUs in the same clock domain
->> +    (backward compatible style, only CPU0 contains OPP)
->> +
->> +	cpu0: cpu@0 {
->> +		compatible = "arm,cortex-a9";
->> +		reg = <0>;
->> +		operating-points = <
->> +			/* kHz    uV */
->> +			792000  1100000
->> +			396000  950000
->> +			198000  850000
->> +		>;
->> +	};
->> +
->> +	cpu1: cpu@1 {
->> +		compatible = "arm,cortex-a9";
->> +		reg = <1>;
->> +	};
->> +
->> +	cpu2: cpu@2 {
->> +		compatible = "arm,cortex-a9";
->> +		reg = <2>;
->> +	};
->> +
->> +	cpu3: cpu@3 {
->> +		compatible = "arm,cortex-a9";
->> +		reg = <3>;
->> +	};
-> 
-> This "backward compatible style" doesn't seem to actually be described
-> anywhere, and the paragraph above about phandles makes it somewhat
-> confusing.
-> 
-Not sure if this is needed at all here. I must say there's nothing called
-backward compatible style, the only reason I added it to tell that existing
-cpufreq-cpu0 DTs continue to work.
+> +int fimc_is_pipeline_open(struct fimc_is_pipeline *pipeline,
+> +			struct fimc_is_sensor *sensor)
+> +{
+> +	struct fimc_is *is = pipeline->is;
+> +	struct is_region *region;
+> +	unsigned long index[2] = {0};
+> +	int ret;
+> +
+> +	if (!sensor)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&pipeline->pipe_lock);
+> +
+> +	if (test_bit(PIPELINE_OPEN, &pipeline->state)) {
+> +		dev_err(pipeline->dev, "Pipeline already open\n");
+> +		ret = -EINVAL;
+> +		goto err_exit;
+> +	}
+> +
+> +	pipeline->fcount = 0;
+> +	pipeline->sensor = sensor;
+> +
+> +	if (is->num_pipelines == 0) {
+> +		/* Init memory */
+> +		ret = fimc_is_pipeline_initmem(pipeline);
+> +		if (ret) {
+> +			dev_err(pipeline->dev, "Pipeline memory init failed\n");
+> +			goto err_exit;
+> +		}
+> +
+> +		/* Load firmware */
+> +		ret = fimc_is_pipeline_load_firmware(pipeline);
+> +		if (ret) {
+> +			dev_err(pipeline->dev, "Firmware load failed\n");
+> +			goto err_fw;
+> +		}
+> +
+> +		/* Power ON */
+> +		ret = fimc_is_pipeline_power(pipeline, 1);
+> +		if (ret) {
+> +			dev_err(pipeline->dev, "A5 power on failed\n");
+> +			goto err_fw;
+> +		}
+> +
+> +		/* Wait for FW Init to complete */
+> +		ret = fimc_is_itf_wait_init_state(&is->interface);
+> +		if (ret) {
+> +			dev_err(pipeline->dev, "FW init failed\n");
+> +			goto err_fw;
+> +		}
+> +	}
+> +
+> +	/* Open Sensor */
+> +	region = pipeline->is_region;
+> +	ret = fimc_is_itf_open_sensor(&is->interface,
+> +			pipeline->instance,
+> +			sensor->drvdata->id,
+> +			sensor->i2c_bus,
+> +			pipeline->minfo->shared.paddr);
+> +	if (ret) {
+> +		dev_err(pipeline->dev, "Open sensor failed\n");
+> +		goto err_exit;
+> +	}
+> +
+> +	/* Load setfile */
+> +	ret = fimc_is_pipeline_setfile(pipeline);
+> +	if (ret)
+> +		goto err_exit;
+> +
+> +	/* Stream off */
+> +	ret = fimc_is_itf_stream_off(&is->interface, pipeline->instance);
+> +	if (ret)
+> +		goto err_exit;
+> +
+> +	/* Process off */
+> +	ret = fimc_is_itf_process_off(&is->interface, pipeline->instance);
+> +	if (ret)
+> +		goto err_exit;
+> +
+> +	if (is->num_pipelines == 0) {
+> +		/* Copy init params to FW region */
+> +		memset(&region->parameter, 0x0, sizeof(struct is_param_region));
+> +
+> +		memcpy(&region->parameter.sensor, &init_sensor_param,
+> +				sizeof(struct sensor_param));
 
-I would say it's more like some agreement with the existing binding and the
-cpufreq-cpu0 driver. Do it make sense to drop it from here ?
+How about:
 
->> +
->> +2b. Consider a SMP system with 4 CPUs in the same clock domain
->> +    (using operating-points-phandle)
->> +
->> +	cpu0: cpu@0 {
->> +		compatible = "arm,cortex-a9";
->> +		reg = <0>;
->> +		operating-points-phandle = <&cpu_opp>;
->> +	};
->> +
->> +	cpu1: cpu@1 {
->> +		compatible = "arm,cortex-a9";
->> +		reg = <1>;
->> +		operating-points-phandle = <&cpu_opp>;
->> +	};
->> +
->> +	cpu2: cpu@2 {
->> +		compatible = "arm,cortex-a9";
->> +		reg = <2>;
->> +		operating-points-phandle = <&cpu_opp>;
->> +	};
->> +
->> +	cpu3: cpu@3 {
->> +		compatible = "arm,cortex-a9";
->> +		reg = <3>;
->> +		operating-points-phandle = <&cpu_opp>;
->> +	};
->> +
->> +	operating_points {
->> +		cpu_opp: cpu_opp {
->> +			operating-points = <
->> +				/* kHz    uV */
->> +				792000  1100000
->> +				396000  950000
->> +				198000  850000
->> +			>;
->> +		};
->> +		... /* other device OPP nodes */
->> +	}
-> 
-> Is this all inside the /cpus node?
-> 
-It can be anywhere, if only cpus share OPPs on a system, it can be placed under
-/cpus. The idea to put all OPP nodes under one node is just for readibility
-purposes. As along as phandle is correct it doesn't matter where the exact nodes
-are. Does this need to be mentioned explicity in the binding ?
+		region->parameter.sensor = init_sensor_param;
 
-> Is the "operating_points" name important?
-> 
-> Are all OPP tables expected to be in the same "operating_points" node?
-> 
-No for both the above questions, again just for readibilty I chose that name and
-placed all OPP nodes under same node in the example, it can be named anything
-and can be scattered.
-Again does this need to be mentioned explicity in the binding ?
+Shorter and type-safe.
+
+Ditto for the memcpy's below.
+
+> +		memcpy(&region->parameter.isp, &init_isp_param,
+> +				sizeof(struct isp_param));
+> +		memcpy(&region->parameter.drc, &init_drc_param,
+> +				sizeof(struct drc_param));
+> +		memcpy(&region->parameter.scalerc, &init_scalerc_param,
+> +				sizeof(struct scalerc_param));
+> +		memcpy(&region->parameter.odc, &init_odc_param,
+> +				sizeof(struct odc_param));
+> +		memcpy(&region->parameter.dis, &init_dis_param,
+> +				sizeof(struct dis_param));
+> +		memcpy(&region->parameter.tdnr, &init_tdnr_param,
+> +				sizeof(struct tdnr_param));
+> +		memcpy(&region->parameter.scalerp, &init_scalerp_param,
+> +				sizeof(struct scalerp_param));
+> +		memcpy(&region->parameter.fd, &init_fd_param,
+> +				sizeof(struct fd_param));
+> +		wmb();
+> +
+> +		/* Set all init params to FW */
+> +		index[0] = 0xffffffff;
+> +		index[1] = 0xffffffff;
+> +		ret = fimc_is_itf_set_param(&is->interface, pipeline->instance,
+> +				index[0], index[1]);
+> +		if (ret) {
+> +			dev_err(pipeline->dev, "%s failed\n", __func__);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	/* Set state to OPEN */
+> +	set_bit(PIPELINE_OPEN, &pipeline->state);
+> +	is->num_pipelines++;
+> +
+> +	mutex_unlock(&pipeline->pipe_lock);
+> +	return 0;
+> +
+> +err_fw:
+> +	fimc_is_pipeline_freemem(pipeline);
+> +err_exit:
+> +	mutex_unlock(&pipeline->pipe_lock);
+> +	return ret;
+> +}
 
 Regards,
-Sudeep
 
+	Hans
