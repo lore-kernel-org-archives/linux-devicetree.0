@@ -1,78 +1,67 @@
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Subject: [PATCH v2 2/5] PM / OPP: add support to specify phandle of another node for OPP
-Date: Tue,  1 Oct 2013 14:32:59 +0100
-Message-ID: <1380634382-15609-3-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Sudeep.KarkadaNagesha@arm.com, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Nishanth Menon <nm@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH 0/6] DRIVERS: IRQCHIP: Add support for crossbar IP
+Date: Tue, 01 Oct 2013 08:48:00 -0500
+Message-ID: <524AD290.207@gmail.com>
+References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <52499441.1030403@gmail.com> <524AAE69.8060703@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <524AAE69.8060703@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, tglx@linutronix.de, linus.walleij@linaro.org, santosh.shilimkar@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+On 10/01/2013 06:13 AM, Sricharan R wrote:
+> Hi,
+> 
+> On Monday 30 September 2013 08:39 PM, Rob Herring wrote:
+>> On 09/30/2013 08:59 AM, Sricharan R wrote:
+>>> Some socs have a large number of interrupts requests to service
+>>> the needs of its many peripherals and subsystems. All of the interrupt
+>>> requests lines from the subsystems are not needed at the same
+>>> time, so they have to be muxed to the controllers appropriately.
+>>> In such places a interrupt controllers are preceded by an
+>>> IRQ CROSSBAR that provides flexibility in muxing the device interrupt
+>>> requests to the controller inputs.
+>>>
+>>> This series models the peripheral interrupts that can be routed through
+>>> the crossbar to the GIC as 'routable-irqs'. The routable irqs are added
+>>> in a separate linear domain inside the GIC. The registered routable domain's
+>>> callback are invoked as a part of the GIC's callback, which in turn should
+>>> allocate a free irq line and configure the IP accordingly. So every peripheral
+>>> in the dts files mentions the fixed crossbar number as its interrupt. A free
+>>> gic line for that gets allocated and configured when the peripheral's interrupt
+>>> is mapped.
+>>>
+>>> The minimal crossbar driver to track and allocate free GIC lines and configure the
+>>> crossbar is added here, along with the DT bindings.
+>> Seems like interrupt-map property is what you need here.
+>>
+>> http://devicetree.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
+>>
+>> Versatile Express also has an example.
+>    OK, but the idea was not to tie up the crossbar<->interrupt numbers at the
+>    DTS level, but to assign it dynamically during runtime. This was one of the
+>   comments that came up with first crossbar support patches, which was assigning a
+>   interrupt line to crossbar number in the DTS and setting it up in crossbar probe.
 
-Currently we need to replicate the OPP entries in all the nodes even
-though they share OPPs being in the same clock domain.
+Is there an actual usecase on a single h/w design that you run out of
+interrupts and it is a user decision which interrupts to use?
 
-Few drivers like cpufreq depend on physical cpu0 node to specify the
-OPPs and only that node is referred irrespective of the logical cpu
-accessing it. Alternatively to support cpuhotplug path, few drivers
-parse all the cpu nodes for OPPs. Instead we can specify the phandle
-of the node which contains the OPP tuples.
+You could fill in the interrupt-map at run-time. It would have to be
+early (bootloader or early kernel init) and can't be at request_irq time.
 
-This patch adds support to the new property 'operating-points-phandle'
-which specifies the phandle pointing to another node which contains the
-actual OPP tuples.
+>     https://lkml.org/lkml/2013/7/18/416
+> 
+>    Since this approach of assigning in DTS was opposed, we moved to IRQCHIP and
+>    that did not go as well. Finally was asked to handle this as a part of GIC driver with
+>    a separate domain.
+>    
+>   http://www.spinics.net/lists/linux-omap/msg97085.html
 
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Nishanth Menon <nm@ti.com>
-Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
----
- drivers/base/power/opp.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+This has nothing to do with the GIC, so it does not belong there.
 
-diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
-index ef89897..bb6ff64 100644
---- a/drivers/base/power/opp.c
-+++ b/drivers/base/power/opp.c
-@@ -708,12 +708,20 @@ struct srcu_notifier_head *opp_get_notifier(struct device *dev)
- int of_init_opp_table(struct device *dev)
- {
- 	const struct property *prop;
-+	struct device_node *opp_node;
- 	const __be32 *val;
- 	int nr;
- 
--	prop = of_find_property(dev->of_node, "operating-points", NULL);
--	if (!prop)
-+	opp_node = of_parse_phandle(dev->of_node,
-+					"operating-points-phandle", 0);
-+	if (!opp_node) /* if no OPP phandle, search for OPPs in current node */
-+		opp_node = dev->of_node;
-+	prop = of_find_property(opp_node, "operating-points", NULL);
-+	if (!prop) {
-+		dev_warn(dev, "node %s missing operating-points property\n",
-+							opp_node->full_name);
- 		return -ENODEV;
-+	}
- 	if (!prop->value)
- 		return -ENODATA;
- 
-@@ -740,6 +748,9 @@ int of_init_opp_table(struct device *dev)
- 		nr -= 2;
- 	}
- 
-+	if (opp_node != dev->of_node)
-+		of_node_put(opp_node);
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(of_init_opp_table);
--- 
-1.8.1.2
+Rob
 
