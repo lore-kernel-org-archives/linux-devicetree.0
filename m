@@ -1,43 +1,32 @@
-From: Jon Loeliger <jdl@jdl.com>
-Subject: Re: [RFC 00/15] Device Tree schemas and validation
-Date: Tue, 01 Oct 2013 10:17:53 -0500
-Message-ID: <E1VR1hx-0000C1-6J@jdl.com>
-References: <1380041541-17529-1-git-send-email-bcousson@baylibre.com> <524A8289.3050107@baylibre.com> <524ACB76.1010001@gmail.com> <524AE4FB.4080906@baylibre.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-reply-to: <524AE4FB.4080906@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, swarren@wwwdotorg.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, olof@lixom.net, devicetree@vger.kernel.org, tomasz.figa@gmail.com, grant.likely@secretlab.ca, khilman@linaro.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fparent@baylibre.com
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [RFC, v2] documentation/devicetree: Move DT bindigns from gpio
+ to watchdog
+Date: Tue, 1 Oct 2013 09:18:35 -0700
+Message-ID: <20131001161835.GA14449@roeck-us.net>
+References: <1377601837-18989-1-git-send-email-johannes.thumshirn@men.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1377601837-18989-1-git-send-email-johannes.thumshirn@men.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: johannes.thumshirn@men.de
+Cc: Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Wim Van Sebroeck <wim@iguana.be>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Hi Rob,
+On Tue, Aug 27, 2013 at 07:10:37PM -0000, johannes.thumshirn@men.de wrote:
+> I accidently put the devicetree bindings for the MEN A21 watchdog driver in
+> Documentation/devicetree/bindings/gpio instead of
+> Documentation/devicetree/bindings/watchdog, this patch addresses this error.
 > 
-> On 01/10/2013 15:17, Rob Herring wrote:
-> > On 10/01/2013 03:06 AM, Benoit Cousson wrote:
-> >> + more DT maintainers folks
-> >>
-> >> Hi all,
-> >>
-> >> I know this is mostly boring user space code, but I was expecting a
-> >> little bit of comments about at least the bindings syntax:-(
-> >>
-> >> I'd like to know if this is the right direction and if it worth pursuing
-> >> in that direction.
-> >>
-> >> The idea was to have at least some base for further discussion during
-> >> ARM KS 2013.
-> >>
-> >> I feel alone :-(
-> >>
-> >> If you have any comment, go ahead!
-
-
-Benoit,
-
-Sorry, I meant to ask earlier but forgot.
-Shouldn't this development be based on the
-upstream DTC repository and not the in-kernel
-copy of the DTC?
-
-Thanks,
-jdl
+> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@men.de>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Ian Campbell <ian.campbell@citrix.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: Wim Van Sebroeck <wim@iguana.be>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> 
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
