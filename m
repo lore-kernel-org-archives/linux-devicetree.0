@@ -1,108 +1,93 @@
-From: Mauro Carvalho Chehab <m.chehab@samsung.com>
-Subject: Re: [PATCH RFC] media: rc: OF: Add Generic bindings for remote-control
-Date: Tue, 01 Oct 2013 11:49:49 -0300
-Message-ID: <20131001114949.5a26dd70.m.chehab@samsung.com>
-References: <1380274391-26577-1-git-send-email-srinivas.kandagatla@st.com>
- <20130927113458.GB18672@e106331-lin.cambridge.arm.com>
- <52458774.1060909@st.com> <20130927105716.64349f02@samsung.com>
- <524935D6.1010505@st.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH 0/6] DRIVERS: IRQCHIP: Add support for crossbar IP
+Date: Tue, 01 Oct 2013 09:53:46 -0500
+Message-ID: <524AE1FA.2050104@gmail.com>
+References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <52499441.1030403@gmail.com> <524AAE69.8060703@ti.com> <524AD290.207@gmail.com> <524AD4B7.7040700@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <524935D6.1010505@st.com>
+In-Reply-To: <524AD4B7.7040700@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: srinivas.kandagatla@st.com
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: tglx@linutronix.de, Sricharan R <r.sricharan@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Em Mon, 30 Sep 2013 09:27:02 +0100
-Srinivas KANDAGATLA <srinivas.kandagatla@st.com> escreveu:
+On 10/01/2013 08:57 AM, Santosh Shilimkar wrote:
+> On Tuesday 01 October 2013 09:48 AM, Rob Herring wrote:
+>> On 10/01/2013 06:13 AM, Sricharan R wrote:
+>>> Hi,
+>>>
+>>> On Monday 30 September 2013 08:39 PM, Rob Herring wrote:
+>>>> On 09/30/2013 08:59 AM, Sricharan R wrote:
+>>>>> Some socs have a large number of interrupts requests to service
+>>>>> the needs of its many peripherals and subsystems. All of the interrupt
+>>>>> requests lines from the subsystems are not needed at the same
+>>>>> time, so they have to be muxed to the controllers appropriately.
+>>>>> In such places a interrupt controllers are preceded by an
+>>>>> IRQ CROSSBAR that provides flexibility in muxing the device interrupt
+>>>>> requests to the controller inputs.
+>>>>>
+>>>>> This series models the peripheral interrupts that can be routed through
+>>>>> the crossbar to the GIC as 'routable-irqs'. The routable irqs are added
+>>>>> in a separate linear domain inside the GIC. The registered routable domain's
+>>>>> callback are invoked as a part of the GIC's callback, which in turn should
+>>>>> allocate a free irq line and configure the IP accordingly. So every peripheral
+>>>>> in the dts files mentions the fixed crossbar number as its interrupt. A free
+>>>>> gic line for that gets allocated and configured when the peripheral's interrupt
+>>>>> is mapped.
+>>>>>
+>>>>> The minimal crossbar driver to track and allocate free GIC lines and configure the
+>>>>> crossbar is added here, along with the DT bindings.
+>>>> Seems like interrupt-map property is what you need here.
+>>>>
+>>>> http://devicetree.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
+>>>>
+>>>> Versatile Express also has an example.
+>>>    OK, but the idea was not to tie up the crossbar<->interrupt numbers at the
+>>>    DTS level, but to assign it dynamically during runtime. This was one of the
+>>>   comments that came up with first crossbar support patches, which was assigning a
+>>>   interrupt line to crossbar number in the DTS and setting it up in crossbar probe.
+>>
+>> Is there an actual usecase on a single h/w design that you run out of
+>> interrupts and it is a user decision which interrupts to use?
+>>
+> Yes. There are 240 peripheral interrupts connected out of which 160 can
+> be used in this specific case. 
 
-> On 27/09/13 14:57, Mauro Carvalho Chehab wrote:
-> > Em Fri, 27 Sep 2013 14:26:12 +0100
-> > Srinivas KANDAGATLA <srinivas.kandagatla@st.com> escreveu:
-> > 
-> >> On 27/09/13 12:34, Mark Rutland wrote:
-> >>
-> >>>>> +	- rx-mode: Can be "infrared" or "uhf". rx-mode should be present iff
-> >>>>> +	  the rx pins are wired up.
-> >>> I'm unsure on this. What if the device has multiple receivers that can
-> >>> be independently configured? What if it supports something other than
-> >>> "infrared" or "uhf"? What if a device can only be wired up as
-> >>> "infrared"? 
-> >>>
-> >>> I'm not sure how generic these are, though we should certainly encourage
-> >>> bindings that can be described this way to be described in the same way.
-> >>>
-> >>>>> +	- tx-mode: Can be "infrared" or "uhf". tx-mode should be present iff
-> >>>>> +	  the tx pins are wired up.
-> >>> I have similar concerns here to those for the rx-mode property.
-> >>>
-> >> Initially rx-mode and tx-mode sounded like more generic properties
-> >> that's the reason I ended up in this route. But after this discussion it
-> >> looks like its not really generic enough to cater all the use cases.
-> >>
-> >> It make sense for me to perfix "st," for these properties in the st-rc
-> >> driver rather than considering them as generic properties.
-> > 
-> > Well, for sure the direction (TX, RX, both) is a generic property.
-> > 
-> > I'd say that the level 1 protocol (IR, UHF, Bluetooth, ...) is also a
-> > generic property. Most remotes are IR, but there are some that are
-> > bluetooth, and your hardware is using UHF.
-> Yes these are generic.
-> 
-> > 
-> > Btw, we're even thinking on mapping HDMI-CEC remote controller RX/TX via
-> > the RC subsystem. So, another L1 protocol would be "hdmi-cec".
-> > 
-> Ok.
-> > Yet, it seems unlikely that the very same remote controller IP would use
-> > a different protocol for RX and TX, while sharing the same registers.
-> 
-> ST IRB block has one IR processor which has both TX and RX support and
-> one UHF Processor which has RX support only. However the register map
-> for all these support is in single IRB IP block.
-> 
-> So the driver can configure the IP as TX in "infrared" and RX in "uhf".
-> This is supported in ST IRB IP.
-> 
-> This case can not be represented in a single device tree node with
-> l1-protocol and direction properties.
-> 
-> IMHO, having tx-mode and rx-mode or tx-protocol and rx-protocol
-> properties will give more flexibility.
-> 
-> What do you think?
+Yes, I understand the SOC connections. That does not answer my question.
+The 240 interrupts are likely to be limited to fewer by board design,
+pinmuxing, etc.
 
-Yeah, if they're using the same registers, then your proposal works
-better.
+How do you handle the 161st interrupt request? Will never happen? Just
+rely on the random driver probe ordering?
 
-I would prefer to not call it as just protocol, as IR has an
-upper layer protocol that defines how the bits are encoded, e. g.
-RC5, RC6, NEC, SONY, ..., with is what we generally call as protocol
-on rc-core. 
+>> You could fill in the interrupt-map at run-time. It would have to be
+>> early (bootloader or early kernel init) and can't be at request_irq time.
+>>
+> Well all options are tried before coming up to the $subject solution.
+> It was suggested by Thomas in the last review.
+>  
+>>>     https://lkml.org/lkml/2013/7/18/416
+>>>
+>>>    Since this approach of assigning in DTS was opposed, we moved to IRQCHIP and
+>>>    that did not go as well. Finally was asked to handle this as a part of GIC driver with
+>>>    a separate domain.
+>>>    
+>>>   http://www.spinics.net/lists/linux-omap/msg97085.html
+>>
+>> This has nothing to do with the GIC, so it does not belong there.
+>>
+> Well the router makes connections from peripheral to GIC. Thomas can
+> better explain it but I think since its doing irq routing for GIC on
+> a given hardware, I don't see any issue having some generic map/unmap
+> function in GIC. The actual implementation is still outside of GIC.
 
-A proper naming for it is hard to find. Well, for IR/UHF, it is actually
-specifying the medium, but for Bluetooth, HDMI-CEC, it defines a
-protocol stack to be used, with covers not only the physical layer of
-the OSI model.
+I read Thomas' reply as don't put this crap in his code.
 
-Perhaps the better would be to call it as: tx-proto-stack/rx-proto-stack.
+You can call it generic, but it is not. It is specific to the GIC and
+looks like an abuse of irqdomains to me. Look where the function
+declaration for register_routable_domain_ops is.
 
-> 
-> > 
-> > So, for example, a hardware with "hdmi-cec" and "infrared" will actually
-> > have two remote controller devices. Eventually, the "infrared" being
-> > just RX, while "hdmi-cec" being bi-directional.
-> > 
-> > So, IMHO, this could be mapped as "l1_protocol" ("infrared", "uhf", ...)
-> > and another one "direction" ("rx", "tx", "bi-directional").
-> > 
-> 
-> Thanks,
-> srini
+Rob
 
-Regards,
-Mauro
