@@ -1,26 +1,43 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] of: Add AU Optronics Corporation vendor prefix
-Date: Tue, 01 Oct 2013 10:02:03 -0600
-Message-ID: <524AF1FB.8030903@wwwdotorg.org>
-References: <1380610441-23830-1-git-send-email-treding@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380610441-23830-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jon Loeliger <jdl@jdl.com>
+Subject: Re: [RFC 00/15] Device Tree schemas and validation
+Date: Tue, 01 Oct 2013 10:17:53 -0500
+Message-ID: <E1VR1hx-0000C1-6J@jdl.com>
+References: <1380041541-17529-1-git-send-email-bcousson@baylibre.com> <524A8289.3050107@baylibre.com> <524ACB76.1010001@gmail.com> <524AE4FB.4080906@baylibre.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-reply-to: <524AE4FB.4080906@baylibre.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>
+Cc: Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, swarren@wwwdotorg.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, olof@lixom.net, devicetree@vger.kernel.org, tomasz.figa@gmail.com, grant.likely@secretlab.ca, khilman@linaro.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fparent@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2013 12:53 AM, Thierry Reding wrote:
-> AU Optronics is listed as AUO on the stock exchange, so use that as the
-> vendor prefix.
+> Hi Rob,
+> 
+> On 01/10/2013 15:17, Rob Herring wrote:
+> > On 10/01/2013 03:06 AM, Benoit Cousson wrote:
+> >> + more DT maintainers folks
+> >>
+> >> Hi all,
+> >>
+> >> I know this is mostly boring user space code, but I was expecting a
+> >> little bit of comments about at least the bindings syntax:-(
+> >>
+> >> I'd like to know if this is the right direction and if it worth pursuing
+> >> in that direction.
+> >>
+> >> The idea was to have at least some base for further discussion during
+> >> ARM KS 2013.
+> >>
+> >> I feel alone :-(
+> >>
+> >> If you have any comment, go ahead!
 
-The series,
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Benoit,
+
+Sorry, I meant to ask earlier but forgot.
+Shouldn't this development be based on the
+upstream DTC repository and not the in-kernel
+copy of the DTC?
+
+Thanks,
+jdl
