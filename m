@@ -1,32 +1,65 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RFC, v2] documentation/devicetree: Move DT bindigns from gpio
- to watchdog
-Date: Tue, 1 Oct 2013 09:18:35 -0700
-Message-ID: <20131001161835.GA14449@roeck-us.net>
-References: <1377601837-18989-1-git-send-email-johannes.thumshirn@men.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+Subject: [PATCH 0/6] Exynos 5410 Dual cluster support
+Date: Tue, 01 Oct 2013 20:17:01 +0400
+Message-ID: <1380644227-12244-1-git-send-email-v.tyrtov@samsung.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1377601837-18989-1-git-send-email-johannes.thumshirn@men.de>
 Sender: linux-doc-owner@vger.kernel.org
-To: johannes.thumshirn@men.de
-Cc: Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Wim Van Sebroeck <wim@iguana.be>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@samsung.com>, Tyrtov Vyacheslav <v.tyrtov@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 27, 2013 at 07:10:37PM -0000, johannes.thumshirn@men.de wrote:
-> I accidently put the devicetree bindings for the MEN A21 watchdog driver in
-> Documentation/devicetree/bindings/gpio instead of
-> Documentation/devicetree/bindings/watchdog, this patch addresses this error.
-> 
-> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@men.de>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Ian Campbell <ian.campbell@citrix.com>
-> Cc: Rob Landley <rob@landley.net>
-> Cc: Wim Van Sebroeck <wim@iguana.be>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+The series of patches represent support of Exynos 5410 SoC
+    
+The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture.
+Patches allow all 8 CPU cores (4 x A7 and 4 x A15) to run at the same time
+    
+Patches add new platform description, support of clock controller,
+dual cluster support, device tree for Exynos 5410 and minor fixes (CCI, MCT)
+   
+Has been builded on v3.12-rc3.
+Has been tested on Exynos 5410 reference board (smdk5410_defconfig).
+    
+Thanks,
+	Vyacheslav.
+
+Tarek Dakhran (6):
+  ARM: EXYNOS: Add support for EXYNOS5410 SoC
+  clk: exynos5410: register clocks using common clock framework
+  ARM: EXYNOS: add Exynos Dual Cluster Support
+  ARM: dts: Add initial device tree support for EXYNOS5410
+  ARM: EXYNOS: Minor fixes to enable EXYNOS5410 support
+  ARM: smdk5410_defconfig: add defconfig for smdk5410
+
+ .../devicetree/bindings/clock/exynos5410-clock.txt |  72 ++++++
+ arch/arm/Kconfig                                   |   2 +-
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/exynos5410-smdk5410.dts          |  67 +++++
+ arch/arm/boot/dts/exynos5410.dtsi                  | 189 ++++++++++++++
+ arch/arm/configs/smdk5410_defconfig                | 134 ++++++++++
+ arch/arm/mach-exynos/Kconfig                       |  10 +
+ arch/arm/mach-exynos/Makefile                      |   2 +
+ arch/arm/mach-exynos/common.c                      |  18 ++
+ arch/arm/mach-exynos/edcs.c                        | 217 ++++++++++++++++
+ arch/arm/mach-exynos/edcs.h                        |  41 +++
+ arch/arm/mach-exynos/edcs_status.c                 | 110 +++++++++
+ arch/arm/mach-exynos/include/mach/map.h            |   1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |   1 +
+ arch/arm/plat-samsung/include/plat/cpu.h           |   8 +
+ drivers/bus/arm-cci.c                              |   7 +
+ drivers/clk/samsung/Makefile                       |   1 +
+ drivers/clk/samsung/clk-exynos5410.c               | 274 +++++++++++++++++++++
+ drivers/clocksource/exynos_mct.c                   |   8 +-
+ drivers/irqchip/exynos-combiner.c                  |  12 +-
+ 20 files changed, 1172 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/exynos5410-clock.txt
+ create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
+ create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
+ create mode 100644 arch/arm/configs/smdk5410_defconfig
+ create mode 100644 arch/arm/mach-exynos/edcs.c
+ create mode 100644 arch/arm/mach-exynos/edcs.h
+ create mode 100644 arch/arm/mach-exynos/edcs_status.c
+ create mode 100644 drivers/clk/samsung/clk-exynos5410.c
+
+-- 
+1.8.1.5
+
