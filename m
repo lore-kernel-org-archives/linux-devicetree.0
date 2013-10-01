@@ -1,142 +1,225 @@
-Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from fw-tnat.cambridge.arm.com ([217.140.96.21]:52861 "EHLO
-	cam-smtp0.cambridge.arm.com" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1751350Ab3IFOah (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 6 Sep 2013 10:30:37 -0400
-Date: Fri, 6 Sep 2013 15:30:26 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/2] usb: samsung: Update Exynos EHCI/OHCI bindings
- documentation
-Message-ID: <20130906143026.GV18206@e106331-lin.cambridge.arm.com>
-References: <1377776006-22972-1-git-send-email-sachin.kamat@linaro.org>
-MIME-Version: 1.0
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 1/3] irqchip: irq-dove: Add PMU interrupt controller.
+Date: Mon, 30 Sep 2013 20:54:41 -0400
+Message-ID: <20131001005441.GM31178@titan.lakedaemon.net>
+References: <1380577122-8841-1-git-send-email-andrew@lunn.ch>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1377776006-22972-1-git-send-email-sachin.kamat@linaro.org>
-Sender: devicetree-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "patches@linaro.org" <patches@linaro.org>
-List-ID: <devicetree@vger.kernel.org>
+In-Reply-To: <1380577122-8841-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
-Hi,
+Thomas et al,
 
-On Thu, Aug 29, 2013 at 12:33:25PM +0100, Sachin Kamat wrote:
-> Updated the document as per the latest implementation.
-> While at it also fixed some trivial typos.
+Once you folks are happy with this driver, I can take patches 2 and 3
+(the dove dts changes).  We have quite a bit of flux in those files this
+window.
+
+thx,
+
+Jason.
+
+On Mon, Sep 30, 2013 at 11:38:40PM +0200, Andrew Lunn wrote:
+> Dove has a Power Management Unit with its own interrupt
+> controller. This is chained on the main interrupt controller.  Add a
+> driver, making use of generic chip where possible.
 > 
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> ---
-> Changes since v1:
-> * Updated review comments from Stephen Warren regarding the wording
-> and some styling.
-> ---
->  .../devicetree/bindings/usb/exynos-usb.txt         |   29 ++++++++++----------
->  1 file changed, 15 insertions(+), 14 deletions(-)
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> index d967ba1..56468f7 100644
-> --- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> @@ -5,13 +5,14 @@ The device node has following properties.
+> cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> cc: pawel.moll-5wv7dgnIgG8@public.gmane.org
+> cc: mark.rutland-5wv7dgnIgG8@public.gmane.org
+> cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+> cc: ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
+> ---
+>  .../interrupt-controller/marvell,dove-pmu-intc.txt |  17 +++
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-dove.c                         | 127 +++++++++++++++++++++
+>  3 files changed, 145 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,dove-pmu-intc.txt
+>  create mode 100644 drivers/irqchip/irq-dove.c
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,dove-pmu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,dove-pmu-intc.txt
+> new file mode 100644
+> index 0000000..1feb582
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,dove-pmu-intc.txt
+> @@ -0,0 +1,17 @@
+> +Marvell Dove Power Management Unit interrupt controller
+> +
+> +Required properties:
+> +- compatible: shall be "marvell,dove-pmu-intc"
+> +- reg: base address of PMU interrupt registers starting with CAUSE register
+> +- interrupts: PMU interrupt of the main interrupt controller
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #interrupt-cells: number of cells to encode an interrupt source, shall be 1
+> +
+> +Example:
+> +	pmu_intc: pmu-interrupt-ctrl@d0050 {
+> +		compatible = "marvell,dove-pmu-intc";
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		reg = <0xd0050 0x8>;
+> +		interrupts = <33>;
+> +	};
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index c60b901..f743006 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -1,6 +1,7 @@
+>  obj-$(CONFIG_IRQCHIP)			+= irqchip.o
 >  
->  EHCI
->  Required properties:
-> - - compatible: should be "samsung,exynos4210-ehci" for USB 2.0
-> -   EHCI controller in host mode.
-> + - compatible: should be one of the following for USB 2.0 EHCI controller:
-> +	(a) "samsung,exynos5440-ehci" for Exynos5440 SoC
-> +	(b) "samsung,exynos4210-ehci" for all other Exynos4 and 5 SoCs
->   - reg: physical base address of the controller and length of memory mapped
->     region.
-> - - interrupts: interrupt number to the cpu.
-> - - clocks: from common clock binding: handle to usb clock.
-> - - clock-names: from common clock binding: Shall be "usbhost".
-> + - interrupts: interrupt number to the CPU.
-
-If this is going to be reorganised, can we fix the terminology?
-Interrupts are defined by interrupt-specifiers:
-
- - interrupts: a single interrupt-specifier for the sole interrupt
-               generated by the device.
-
-> + - clocks: from common clock binding: handle to USB clock.
-> + - clock-names: shall be "usbhost".
-
-Similarly:
-
- - clocks: phandle amd clock-specifier pair for the clocks listed in
-   clock-names.
- - clock-names: shall contain "usbhost" for the USB clock.
-
->  
->  Optional properties:
->   - samsung,vbus-gpio:  if present, specifies the GPIO that
-> @@ -23,7 +24,7 @@ Example:
->  		compatible = "samsung,exynos4210-ehci";
->  		reg = <0x12110000 0x100>;
->  		interrupts = <0 71 0>;
-> -		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
-> +		samsung,vbus-gpio = <&gpx2 6 0>;
-
-Why does the gpio in the example need to be changed in this way?
-
->  
->  		clocks = <&clock 285>;
->  		clock-names = "usbhost";
-> @@ -31,13 +32,14 @@ Example:
->  
->  OHCI
->  Required properties:
-> - - compatible: should be "samsung,exynos4210-ohci" for USB 2.0
-> -   OHCI companion controller in host mode.
-> + - compatible: should be one of the following for USB 2.0 OHCI controller:
-> +	(a) "samsung,exynos5440-ohci" for Exynos5440 SoC
-> +	(b) "samsung,exynos4210-ohci" for all other Exynos4 and 5 SoCs
->   - reg: physical base address of the controller and length of memory mapped
->     region.
-> - - interrupts: interrupt number to the cpu.
-> - - clocks: from common clock binding: handle to usb clock.
-> - - clock-names: from common clock binding: Shall be "usbhost".
-> + - interrupts: interrupt number to the CPU.
-> + - clocks: from common clock binding: handle to USB clock.
-> + - clock-names: shall be "usbhost".
-
-Similarly it would be nice to fix up the terminology here.
-
->  
->  Example:
->  	usb@12120000 {
-> @@ -53,12 +55,11 @@ DWC3
->  Required properties:
->   - compatible: should be "samsung,exynos5250-dwusb3" for USB 3.0 DWC3
->  	       controller.
-> - - #address-cells, #size-cells : should be '1' if the device has sub-nodes
-> -				 with 'reg' property.
-> + - #address-cells, #size-cells: should be '1'.
->   - ranges: allows valid 1:1 translation between child's address space and
->  	   parent's address space
-
-Huh? What if I'm on an LPAE system. I can't necessarily have both an
-empty ranges property (for 1:1 translation) and #address-cells = <1>,
-#size-cells = <1>. That's just broken.
-
-Is the driver relying on this, or does it just require some valid
-ranges, #address-cells, and #size-cells that the Linux infrastructure
-can already handle?
-
-As far as I an see, this should be something like:
-
-- #address-cells: as required to describe any child nodes.
-
-- #size-cells: as required to describe any child nodes.
-
-- ranges: as required to map any child nodes to the parent address space.
-
->   - clocks: Clock IDs array as required by the controller.
-> - - clock-names: names of clocks correseponding to IDs in the clock property
-> + - clock-names: shall be "usbdrd30".
-
-It would be nice to fix up the terminology here too.
-
-Thanks,
-Mark.
+>  obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
+> +obj-$(CONFIG_ARCH_DOVE)			+= irq-dove.o
+>  obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
+>  obj-$(CONFIG_ARCH_MMP)			+= irq-mmp.o
+>  obj-$(CONFIG_ARCH_MVEBU)		+= irq-armada-370-xp.o
+> diff --git a/drivers/irqchip/irq-dove.c b/drivers/irqchip/irq-dove.c
+> new file mode 100644
+> index 0000000..de66f02
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-dove.c
+> @@ -0,0 +1,127 @@
+> +/*
+> + * Marvell Dove SoCs PMU IRQ chip driver.
+> + *
+> + * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <asm/exception.h>
+> +#include <asm/mach/irq.h>
+> +
+> +#include "irqchip.h"
+> +
+> +#define DOVE_PMU_IRQ_CAUSE	0x00
+> +#define DOVE_PMU_IRQ_MASK	0x04
+> +
+> +static void dove_pmu_irq_handler(unsigned int irq, struct irq_desc *desc)
+> +{
+> +	struct irq_domain *d = irq_get_handler_data(irq);
+> +	struct irq_chip_generic *gc = irq_get_domain_generic_chip(d, 0);
+> +	u32 stat = readl_relaxed(gc->reg_base + DOVE_PMU_IRQ_CAUSE) &
+> +		   gc->mask_cache;
+> +
+> +	while (stat) {
+> +		u32 hwirq = ffs(stat) - 1;
+> +
+> +		generic_handle_irq(irq_find_mapping(d, gc->irq_base + hwirq));
+> +		stat &= ~(1 << hwirq);
+> +	}
+> +}
+> +
+> +static void pmu_irq_ack(struct irq_data *d)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> +	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+> +	u32 mask = ~d->mask;
+> +
+> +	/*
+> +	 * The PMU mask register is not RW0C: it is RW.	 This means that
+> +	 * the bits take whatever value is written to them; if you write
+> +	 * a '1', you will set the interrupt.
+> +	 *
+> +	 * Unfortunately this means there is NO race free way to clear
+> +	 * these interrupts.
+> +	 *
+> +	 * So, let's structure the code so that the window is as small as
+> +	 * possible.
+> +	 */
+> +	irq_gc_lock(gc);
+> +
+> +	mask &= irq_reg_readl(gc->reg_base +  ct->regs.ack);
+> +	irq_reg_writel(mask, gc->reg_base +  ct->regs.ack);
+> +	irq_gc_unlock(gc);
+> +}
+> +
+> +static int __init dove_pmu_irq_init(struct device_node *np,
+> +				    struct device_node *parent)
+> +{
+> +	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+> +	struct resource r;
+> +	struct irq_domain *domain;
+> +	struct irq_chip_generic *gc;
+> +	int ret, irq, nrirqs = 7;
+> +
+> +	domain = irq_domain_add_linear(np, nrirqs,
+> +				       &irq_generic_chip_ops, NULL);
+> +	if (!domain) {
+> +		pr_err("%s: unable to add irq domain\n", np->name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = irq_alloc_domain_generic_chips(domain, nrirqs, 1, np->name,
+> +			     handle_level_irq, clr, 0, IRQ_GC_INIT_MASK_CACHE);
+> +	if (ret) {
+> +		pr_err("%s: unable to alloc irq domain gc\n", np->name);
+> +		return ret;
+> +	}
+> +
+> +	ret = of_address_to_resource(np, 0, &r);
+> +	if (ret) {
+> +		pr_err("%s: unable to get resource\n", np->name);
+> +		return ret;
+> +	}
+> +
+> +	if (!request_mem_region(r.start, resource_size(&r), np->name)) {
+> +		pr_err("%s: unable to request mem region\n", np->name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* Map the parent interrupt for the chained handler */
+> +	irq = irq_of_parse_and_map(np, 0);
+> +	if (irq <= 0) {
+> +		pr_err("%s: unable to parse irq\n", np->name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	gc = irq_get_domain_generic_chip(domain, 0);
+> +	gc->reg_base = ioremap(r.start, resource_size(&r));
+> +	if (!gc->reg_base) {
+> +		pr_err("%s: unable to map resource\n", np->name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	gc->chip_types[0].regs.ack = DOVE_PMU_IRQ_CAUSE;
+> +	gc->chip_types[0].regs.mask = DOVE_PMU_IRQ_MASK;
+> +	gc->chip_types[0].chip.irq_ack = pmu_irq_ack;
+> +	gc->chip_types[0].chip.irq_mask = irq_gc_mask_clr_bit;
+> +	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_set_bit;
+> +
+> +	/* mask and clear all interrupts */
+> +	writel(0, gc->reg_base + DOVE_PMU_IRQ_MASK);
+> +	writel(0, gc->reg_base + DOVE_PMU_IRQ_CAUSE);
+> +
+> +	irq_set_handler_data(irq, domain);
+> +	irq_set_chained_handler(irq, dove_pmu_irq_handler);
+> +
+> +	return 0;
+> +}
+> +IRQCHIP_DECLARE(dove_pmu_intc,
+> +		"marvell,dove-pmu-intc", dove_pmu_irq_init);
+> -- 
+> 1.8.4.rc3
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
