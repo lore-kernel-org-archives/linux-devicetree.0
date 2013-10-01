@@ -1,43 +1,47 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 05/10] ARM: SAMSUNG: Initialize PWM backlight enable_gpio
- field
-Date: Tue, 01 Oct 2013 12:31:04 -0600
-Message-ID: <524B14E8.5040302@wwwdotorg.org>
-References: <1379972467-11243-1-git-send-email-treding@nvidia.com> <1379972467-11243-6-git-send-email-treding@nvidia.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [PATCH 0/7] DRA7: DT thermal support
+Date: Tue, 1 Oct 2013 14:32:17 -0400
+Message-ID: <1380652344-18819-1-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1379972467-11243-6-git-send-email-treding@nvidia.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Guan Xuetao <gxt@mprc.pku.edu.cn>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, openezx-devel@lists.openezx.org, linux-samsung-soc@vger.kernel.org, linux-sh@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, grant.likely@linaro.org
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2013 03:41 PM, Thierry Reding wrote:
-> The GPIO API defines 0 as being a valid GPIO number, so this field needs
-> to be initialized explicitly.
+Hello all,
 
->  static void __init smdkv210_map_io(void)
+This is a complementary patch series with themal DT support for DRA7.
 
-> @@ -70,6 +70,7 @@ static struct samsung_bl_drvdata samsung_dfl_bl_data __initdata = {
->  		.max_brightness = 255,
->  		.dft_brightness = 255,
->  		.pwm_period_ns  = 78770,
-> +		.enable_gpio    = -1,
->  		.init           = samsung_bl_init,
->  		.exit           = samsung_bl_exit,
->  	},
-> @@ -121,6 +122,10 @@ void __init samsung_bl_set(struct samsung_bl_gpio_info *gpio_info,
->  		samsung_bl_data->lth_brightness = bl_data->lth_brightness;
->  	if (bl_data->pwm_period_ns)
->  		samsung_bl_data->pwm_period_ns = bl_data->pwm_period_ns;
-> +	if (bl_data->enable_gpio)
-> +		samsung_bl_data->enable_gpio = bl_data->enable_gpio;
-> +	if (bl_data->enable_gpio_flags)
-> +		samsung_bl_data->enable_gpio_flags = bl_data->enable_gpio_flags;
+Although this work depends on the thermal dt parser work [1], I decided
+to share it before hand. It also depends on DRA7 DT base port support,
+which I fetched from Rajendra's tree [2].
 
-Won't this cause the core pwm_bl driver to request/manipulate the GPIO,
-whereas this driver already does that inside the samsung_bl_init/exit
-callbacks? I think you either need to adjust those callbacks, or not set
-the new standard GPIO property in samsung_bl_data.
+This patch series has been runtime tested on DRA7-evm.
+
+All best,
+
+[1] - https://lkml.org/lkml/2013/9/26/787
+[2] - git://github.com/rrnayak/linux.git out-of-tree/dra-integrated-v3
+
+Eduardo Valentin (7):
+  arm: dts: add dra7 DSPEVE thermal data
+  arm: dts: add dra7 IVA thermal data
+  arm: dts: dra7: add bandgap entry
+  arm: dts: add cooling properties on dra7 cpu node
+  arm: dts: dra7: add thermal data
+  arm: dts: add tmp102 i2c sensor node on dra7-evm
+  arm: dts: add thermal zones info on tmp102 for DRA7-EVM
+
+ arch/arm/boot/dts/dra7-dspeve-thermal.dtsi | 28 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/dra7-evm.dts             | 23 +++++++++++++++++++++++
+ arch/arm/boot/dts/dra7-iva-thermal.dtsi    | 28 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/dra7.dtsi                | 27 ++++++++++++++++++++++++++-
+ 4 files changed, 105 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/dra7-dspeve-thermal.dtsi
+ create mode 100644 arch/arm/boot/dts/dra7-iva-thermal.dtsi
+
+-- 
+1.8.2.1.342.gfa7285d
+
