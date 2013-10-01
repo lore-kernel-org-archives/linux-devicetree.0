@@ -1,90 +1,80 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 10/10] pwm-backlight: Allow backlight to remain disabled
- on boot
-Date: Tue, 01 Oct 2013 12:50:51 -0600
-Message-ID: <524B198B.3010609@wwwdotorg.org>
-References: <1379972467-11243-1-git-send-email-treding@nvidia.com> <1379972467-11243-11-git-send-email-treding@nvidia.com>
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm: dts: socfpga: Change some types of gate-clk
+ type to periph-clk type
+Date: Tue, 1 Oct 2013 14:15:16 -0500
+Message-ID: <1380654916.13502.1.camel@linux-builds1>
+References: <1379435486-25981-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1379972467-11243-11-git-send-email-treding@nvidia.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Guan Xuetao <gxt@mprc.pku.edu.cn>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, openezx-devel@lists.openezx.org, linux-samsung-soc@vger.kernel.org, linux-sh@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1379435486-25981-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2013 03:41 PM, Thierry Reding wrote:
-> The default for backlight devices is to be enabled immediately when
-> registering with the backlight core. This can be useful for setups that
-> use a simple framebuffer device and where the backlight cannot otherwise
-> be hooked up to the panel.
+Hi,
+
+Just wondering if I can get any comments on this patch set?
+
+Thanks,
+Dinh
+On Tue, 2013-09-17 at 11:31 -0500, Dinh Nguyen wrote:
+> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 > 
-> However, when dealing with more complex setups, such as those of recent
-> ARM SoCs, this can be problematic. Since the backlight is usually setup
-> separately from the display controller, the probe order is not usually
-> deterministic. That can lead to situations where the backlight will be
-> powered up and the panel will show an uninitialized framebuffer.
+> Some of the clocks that were designated gate-clk did not have a gate, so
+> change those clocks to be of periph-clk type.
 > 
-> Furthermore, subsystems such as DRM have advanced functionality to set
-> the power mode of a panel. In order to allow such setups to power up the
-> panel at exactly the right moment, a way is needed to prevent the
-> backlight core from powering the backlight up automatically when it is
-> registered.
+> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> ---
+>  arch/arm/boot/dts/socfpga.dtsi |    7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> This commit introduces a new boot_off field in the platform data (and
-> also implements getting the same information from device tree). When set
-> the initial backlight power mode will be set to "off".
-
-> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-
-> +  - backlight-boot-off: keep the backlight disabled on boot
-
-A few thoughts:
-
-1) Does this property indicate that:
-
-a) The current state of the backlight at boot. In which case, this will
-need bootloader involvement to modify the value in the DT at boot time
-based on whether the bootloader turned on the backlight:-(
-
-b) That the driver should not turn on the backlight immediately? That
-seems to describe driver behaviour more than HW. Is it appropriate to
-put that into DT?
-
-Your suggestion to make the backlight not turn on by default might be a
-better fix?
-
-2) Should the driver instead attempt to read the current state of the
-GPIO output to determine whether the backlight is on? This may not be
-possible on all HW.
-
-3) Doesn't the following code in probe() (added in a previous patch)
-need to be updated?
-
-> +	if (gpio_is_valid(pb->enable_gpio)) {
-> +		if (pb->enable_gpio_flags & PWM_BACKLIGHT_GPIO_ACTIVE_LOW)
-> +			gpio_set_value(pb->enable_gpio, 0);
-> +		else
-> +			gpio_set_value(pb->enable_gpio, 1);
-> +	}
-
-... That assumes that the backlight is on at boot, and hence presumably
-after this patch still always turns on the backlight, only to turn it
-off very quickly once the following code in this patch executes:
-
-(and perhaps we also need to avoid turning the backlight off then on if
-it was already on at boot)
-
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-
-> @@ -318,6 +320,12 @@ static int pwm_backlight_probe(struct platform_device *pdev)
->  	}
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index 1ee6079..acd6c3a 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -245,14 +245,14 @@
 >  
->  	bl->props.brightness = data->dft_brightness;
-> +
-> +	if (data->boot_off)
-> +		bl->props.power = FB_BLANK_POWERDOWN;
-> +	else
-> +		bl->props.power = FB_BLANK_UNBLANK;
+>  				mpu_periph_clk: mpu_periph_clk {
+>  					#clock-cells = <0>;
+> -					compatible = "altr,socfpga-gate-clk";
+> +					compatible = "altr,socfpga-perip-clk";
+>  					clocks = <&mpuclk>;
+>  					fixed-divider = <4>;
+>  					};
+>  
+>  				mpu_l2_ram_clk: mpu_l2_ram_clk {
+>  					#clock-cells = <0>;
+> -					compatible = "altr,socfpga-gate-clk";
+> +					compatible = "altr,socfpga-perip-clk";
+>  					clocks = <&mpuclk>;
+>  					fixed-divider = <2>;
+>  					};
+> @@ -266,8 +266,9 @@
+>  
+>  				l3_main_clk: l3_main_clk {
+>  					#clock-cells = <0>;
+> -					compatible = "altr,socfpga-gate-clk";
+> +					compatible = "altr,socfpga-perip-clk";
+>  					clocks = <&mainclk>;
+> +					fixed-divider = <1>;
+>  					};
+>  
+>  				l3_mp_clk: l3_mp_clk {
 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
