@@ -1,171 +1,179 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] irqchip: irq-dove: Add PMU interrupt controller.
-Date: Tue, 01 Oct 2013 13:22:41 +0200
-Message-ID: <524AB081.5030505@gmail.com>
-References: <1380577122-8841-1-git-send-email-andrew@lunn.ch>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 4/6] ARM: shmobile: emev2: Define SMU clock DT bindings
+Date: Tue, 01 Oct 2013 13:36:33 +0200
+Message-ID: <21574726.tiJa6Opb1k@avalon>
+References: <52410F86.4040301@renesas.com> <20130924131331.0e9a5f830f531655b2ea0ebe@ops.dti.ne.jp> <20130924045215.GE3619@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380577122-8841-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <20130924045215.GE3619-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
-Cc: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, Shinya Kuribayashi <shinya.kuribayashi.px-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Mundt <lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/30/2013 11:38 PM, Andrew Lunn wrote:
-> Dove has a Power Management Unit with its own interrupt
-> controller. This is chained on the main interrupt controller.  Add a
-> driver, making use of generic chip where possible.
->
-> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Hi Yoshii-san and Simon,
 
-Andrew,
+On Tuesday 24 September 2013 13:52:15 Simon Horman wrote:
+> [ Cc Laurent ]
+> 
+> On Tue, Sep 24, 2013 at 01:13:31PM +0900, takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org wrote:
+> > Device tree clock binding document for EMMA Mobile EV2 SMU.
+> > Following nodes are defined to describe clock tree.
+> > - renesas,emev2-smu
+> > - renesas,emev2-smu-clkdiv
+> > - renesas,emev2-smu-gclk
+> 
+> I realise this has been entirely consistent in the past and
+> even as recently as Linus' pre v3.12-rc2 master branch.
+> However, after some recent discussion we are now trying to make our
+> compatibility strings consistently of the form renesas,<unit>-<soc>.
+> 
+> With this in mind I believe the strings should be:
+> 
+> - renesas,smu-emev2
+> - renesas,smu-clkdiv-emev2
+> - renesas,smu-gclk-emev2
+> 
+> To be honest I am not quite sure about the "-clkdiv" and "-gclk"
+> bits and I would appreciate some review from others.
 
-thanks for providing pmu irq driver. I also tested the whole patch set
-with the RTC driver example on CuBox:
+I don't have access to the EMEV2 datasheet so my ability to comment on this is 
+somehow limited. However, given that the clock hardware is very SoC-specific, 
+it might make sense to keep the names proposed by Yoshii-san. This would be 
+consistent with the other clock bindings.
 
-Tested-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> I have CCed Laurent as he may have some advice to offer here.
+> 
+> > These bindings are designed manually based on
+> > 
+> >  19UH0037EJ1000_SMU : System Management Unit User's Manual
+> > 
+> > Signed-off-by: Takashi Yoshii <takashi.yoshii.zj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> > 
+> >  .../devicetree/bindings/clock/emev2-clock.txt      | 99 +++++++++++++++++
+> >  1 file changed, 99 insertions(+)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/clock/emev2-clock.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/emev2-clock.txt
+> > b/Documentation/devicetree/bindings/clock/emev2-clock.txt new file mode
+> > 100644
+> > index 0000000..f8649eb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/emev2-clock.txt
+> > @@ -0,0 +1,99 @@
+> > +Device tree Clock bindings for Renesas EMMA Mobile EV2
+> > +
+> > +This binding uses the common clock binding.
+> > +
+> > +* SMU
+> > +System Management Unit described in user's manual R19UH0037EJ1000_SMU.
+> > +This is not a clock provider, but clocks under SMU depend on it.
+> > +
+> > +Required properties:
+> > +- compatible: Should be "renesas,emev2-smu"
+> > +- reg: Address and Size of SMU registers
+> > +
+> > +* SMU_CLKDIV
+> > +Function block with an input mux and a divider, which corresponds to
+> > +"Serial clock generator" in fig."Clock System Overview" of the manual,
+> > +and "xxx frequency division setting register" (XXXCLKDIV) registers.
+> > +This makes internal (neither input nor output) clock that is provided
+> > +to input of xxxGCLK block.
+> > +
+> > +Required properties:
+> > +- compatible: Should be "renesas,emev2-smu-clkdiv"
+> > +- reg: Byte offset from SMU base and Bit position in the register
+> > +- clocks: Parent clocks. Input clocks as described in clock-bindings.txt
+> > +- #clock-cells: Should be <0>
+> > +
+> > +* SMU_GCLK
+> > +Clock gating node shown as "Clock stop processing block" in the
+> > +fig."Clock System Overview" of the manual.
+> > +Registers are "xxx clock gate control register" (XXXGCLKCTRL).
+> > +
+> > +Required properties:
+> > +- compatible: Should be "renesas,emev2-smu-gclk"
+> > +- reg: Byte offset from SMU base and Bit position in the register
+> > +- clocks: Input clock as described in clock-bindings.txt
+> > +- #clock-cells: Should be <0>
+> > +
+> > +Example of provider:
+> > +
+> > +usia_u0_sclkdiv: usia_u0_sclkdiv {
+> > +	compatible = "renesas,emev2-smu-clkdiv";
+> > +	reg = <0x610 0>;
 
-Anyway, I have one little nit below.
+Is the registers space really 0 bytes long ?
 
-[...]
-> diff --git a/drivers/irqchip/irq-dove.c b/drivers/irqchip/irq-dove.c
-> new file mode 100644
-> index 0000000..de66f02
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-dove.c
-> @@ -0,0 +1,127 @@
-> +/*
-> + * Marvell Dove SoCs PMU IRQ chip driver.
-> + *
-> + * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <asm/exception.h>
-> +#include <asm/mach/irq.h>
-> +
-> +#include "irqchip.h"
-> +
-> +#define DOVE_PMU_IRQ_CAUSE	0x00
-> +#define DOVE_PMU_IRQ_MASK	0x04
-> +
-> +static void dove_pmu_irq_handler(unsigned int irq, struct irq_desc *desc)
-> +{
-> +	struct irq_domain *d = irq_get_handler_data(irq);
-> +	struct irq_chip_generic *gc = irq_get_domain_generic_chip(d, 0);
-> +	u32 stat = readl_relaxed(gc->reg_base + DOVE_PMU_IRQ_CAUSE) &
-> +		   gc->mask_cache;
-> +
-> +	while (stat) {
-> +		u32 hwirq = ffs(stat) - 1;
-> +
-> +		generic_handle_irq(irq_find_mapping(d, gc->irq_base + hwirq));
-> +		stat &= ~(1 << hwirq);
-> +	}
-> +}
-> +
-> +static void pmu_irq_ack(struct irq_data *d)
-> +{
-> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-> +	struct irq_chip_type *ct = irq_data_get_chip_type(d);
-> +	u32 mask = ~d->mask;
-> +
-> +	/*
-> +	 * The PMU mask register is not RW0C: it is RW.	 This means that
-> +	 * the bits take whatever value is written to them; if you write
-> +	 * a '1', you will set the interrupt.
-> +	 *
-> +	 * Unfortunately this means there is NO race free way to clear
-> +	 * these interrupts.
-> +	 *
-> +	 * So, let's structure the code so that the window is as small as
-> +	 * possible.
-> +	 */
-> +	irq_gc_lock(gc);
-> +
+> > +	clocks = <&pll3_fo>, <&pll4_fo>, <&pll1_fo>, <&osc1_fo>;
+> > +	#clock-cells = <0>;
+> > +};
+> > +
+> > +usia_u0_sclk: usia_u0_sclk {
+> > +	compatible = "renesas,emev2-smu-gclk";
+> > +	reg = <0x4a0 1>;
+> > +	clocks = <&usia_u0_sclkdiv>;
+> > +	#clock-cells = <0>;
+> > +};
+> > +
+> > +Example of consumer:
+> > +
+> > +uart@e1020000 {
+> > +	compatible = "renesas,em-uart";
+> > +	reg = <0xe1020000 0x38>;
+> > +	interrupts = <0 8 0>;
+> > +	clocks = <&usia_u0_sclk>;
+> > +	clock-names = "sclk";
+> > +};
+> > +
+> > +Example of clock-tree description:
+> > +
+> > + This describes a clock path in the clock tree
+> > +  c32ki -> pll3_fo -> usia_u0_sclkdiv -> usia_u0_sclk
+> > +
+> > +smu {
+> > +	compatible = "renesas,emev2-smu";
+> > +	reg = <0xe0110000 0x10000>;
+> > +	#address-cells = <2>;
+> > +	#size-cells = <0>;
+> > +
+> > +	c32ki: c32ki {
+> > +		compatible = "fixed-clock";
+> > +		clock-frequency = <32768>;
+> > +		#clock-cells = <0>;
+> > +	};
+> > +	pll3_fo: pll3_fo {
+> > +		compatible = "fixed-factor-clock";
+> > +		clocks = <&c32ki>;
+> > +		clock-div = <1>;
+> > +		clock-mult = <7000>;
+> > +		#clock-cells = <0>;
+> > +	};
+> > +	usia_u0_sclkdiv: usia_u0_sclkdiv {
+> > +		compatible = "renesas,emev2-smu-clkdiv";
+> > +		reg = <0x610 0>;
+> > +		clocks = <&pll3_fo>;
+> > +		#clock-cells = <0>;
+> > +	};
+> > +	usia_u0_sclk: usia_u0_sclk {
+> > +		compatible = "renesas,emev2-smu-gclk";
+> > +		reg = <0x4a0 1>;
+> > +		clocks = <&usia_u0_sclkdiv>;
+> > +		#clock-cells = <0>;
+> > +	};
+> > +};
+> > +
 
-nit: superfluous empty line
+There's an extra blank line at the end of the file.
 
-> +	mask &= irq_reg_readl(gc->reg_base +  ct->regs.ack);
-> +	irq_reg_writel(mask, gc->reg_base +  ct->regs.ack);
-> +	irq_gc_unlock(gc);
-> +}
-> +
-> +static int __init dove_pmu_irq_init(struct device_node *np,
-> +				    struct device_node *parent)
-> +{
-> +	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-> +	struct resource r;
-> +	struct irq_domain *domain;
-> +	struct irq_chip_generic *gc;
-> +	int ret, irq, nrirqs = 7;
-> +
-> +	domain = irq_domain_add_linear(np, nrirqs,
-> +				       &irq_generic_chip_ops, NULL);
-> +	if (!domain) {
-> +		pr_err("%s: unable to add irq domain\n", np->name);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = irq_alloc_domain_generic_chips(domain, nrirqs, 1, np->name,
-> +			     handle_level_irq, clr, 0, IRQ_GC_INIT_MASK_CACHE);
-> +	if (ret) {
-> +		pr_err("%s: unable to alloc irq domain gc\n", np->name);
-> +		return ret;
-> +	}
-> +
-> +	ret = of_address_to_resource(np, 0, &r);
-> +	if (ret) {
-> +		pr_err("%s: unable to get resource\n", np->name);
-> +		return ret;
-> +	}
-> +
-> +	if (!request_mem_region(r.start, resource_size(&r), np->name)) {
-> +		pr_err("%s: unable to request mem region\n", np->name);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/* Map the parent interrupt for the chained handler */
-> +	irq = irq_of_parse_and_map(np, 0);
-> +	if (irq <= 0) {
-> +		pr_err("%s: unable to parse irq\n", np->name);
-> +		return -EINVAL;
-> +	}
-> +
-> +	gc = irq_get_domain_generic_chip(domain, 0);
-> +	gc->reg_base = ioremap(r.start, resource_size(&r));
-> +	if (!gc->reg_base) {
-> +		pr_err("%s: unable to map resource\n", np->name);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	gc->chip_types[0].regs.ack = DOVE_PMU_IRQ_CAUSE;
-> +	gc->chip_types[0].regs.mask = DOVE_PMU_IRQ_MASK;
-> +	gc->chip_types[0].chip.irq_ack = pmu_irq_ack;
-> +	gc->chip_types[0].chip.irq_mask = irq_gc_mask_clr_bit;
-> +	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_set_bit;
-> +
-> +	/* mask and clear all interrupts */
-> +	writel(0, gc->reg_base + DOVE_PMU_IRQ_MASK);
-> +	writel(0, gc->reg_base + DOVE_PMU_IRQ_CAUSE);
-> +
-> +	irq_set_handler_data(irq, domain);
-> +	irq_set_chained_handler(irq, dove_pmu_irq_handler);
-> +
-> +	return 0;
-> +}
-> +IRQCHIP_DECLARE(dove_pmu_intc,
-> +		"marvell,dove-pmu-intc", dove_pmu_irq_init);
->
+-- 
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
