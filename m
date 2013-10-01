@@ -1,44 +1,98 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v5 1/3] usb: dwc3: msm: Add device tree binding
- information
-Date: Tue, 01 Oct 2013 15:08:30 +0300
-Message-ID: <1380629310.30666.22.camel@iivanov-dev.int.mm-sol.com>
-References: <1377091786-5613-1-git-send-email-iivanov@mm-sol.com>
-	 <1377091786-5613-2-git-send-email-iivanov@mm-sol.com>
-	 <20130923193224.GO30811@radagast>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 5/6] clk: emev2: Add support for emev2 SMU clocks with DT
+Date: Tue, 01 Oct 2013 14:27:51 +0200
+Message-ID: <690317658.gaTDz3TliP@avalon>
+References: <52410F86.4040301@renesas.com> <20130924131542.f865fad4dec98e024c0d4676@ops.dti.ne.jp> <CANqRtoRD35Ei31PK8a_TOp=2uiYPCoaJuDb6tyZtQL8s0PavNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130923193224.GO30811@radagast>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoRD35Ei31PK8a_TOp=2uiYPCoaJuDb6tyZtQL8s0PavNw@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: takasi-y@ops.dti.ne.jp, SH-Linux <linux-sh@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Simon Horman <horms@verge.net.au>, Paul Mundt <lethal@linux-sh.org>, Mike Turquette <mturquette@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Yoshii-san,
 
-Hi,
+Thank you for the patch.
 
-On Mon, 2013-09-23 at 14:32 -0500, Felipe Balbi wrote: 
-> Hi,
+(CC'ing LAMK as a generic CCF question follows)
+
+On Tuesday 01 October 2013 18:15:26 Magnus Damm wrote:
+> On Tue, Sep 24, 2013 at 1:15 PM,  <takasi-y@ops.dti.ne.jp> wrote:
+> > Common clock framework version of emev2 clock support.
+> > smu_clkdiv and smu_gclk are handled.
+> > So far, reparent is not implemented, and is fixed to index #0.
+> > SMU and small numbers of clocks are described in emev2.dtsi.
+> > 
+> > That function and numbers of clocks are equivalent to current
+> > sh-clkfwk version. It is just enough to run kzm9d-reference.
+> > 
+> > Signed-off-by: Takashi Yoshii <takashi.yoshii.zj@renesas.com>
+> > ---
+> > 
+> >  arch/arm/boot/dts/emev2.dtsi     |  84 +++++++++++++++++++++++++++++++
+> >  drivers/clk/Makefile             |   2 +
+> >  drivers/clk/shmobile/Makefile    |   5 ++
+> >  drivers/clk/shmobile/clk-emev2.c | 104 ++++++++++++++++++++++++++++++++++
+> >  4 files changed, 195 insertions(+)
+> >  create mode 100644 drivers/clk/shmobile/Makefile
+> >  create mode 100644 drivers/clk/shmobile/clk-emev2.c
 > 
-> On Wed, Aug 21, 2013 at 04:29:44PM +0300, Ivan T. Ivanov wrote:
-> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> > 
-> > MSM USB3.0 core wrapper consist of USB3.0 IP from Synopsys
-> > (SNPS) and HS, SS PHY's control and configuration registers.
-> > 
-> > It could operate in device mode (SS, HS, FS) and host
-> > mode (SS, HS, FS, LS).
-> > 
-> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> Hi Yoshii-san,
 > 
-> and here's a new version from same patch
+> Thanks for your efforts on this. I'm very pleased to see that you describe
+> the clock topology using DT.
 
-The only difference is that references to "dwc3" are replaced with
-just "dw" in USB PHY drivers and file names. This is to indicate
-that the PHY's are DesignWare, but not necessarily related to
-DWC3 IP core. If you prefer I could keep old abbreviation.
+What is the generally accepted practice when an IP core provides a large 
+number of clocks, with either one register or one register bit dedicated to 
+each clock ? Should each clock be described as one DT node, or should the IP 
+core be described by a single DT node ?
 
-Thanks, 
-Ivan
+I also see both platforms using CLK_OF_DECLARE and platforms calling a clock 
+init function provided by drivers/clk/<platform>.c in the SoC setup code in 
+arch/arm/. What is the preferred practice there ?
+
+> In general I think your patch looks fine, but I have some comment related to
+> the multiplatform integration, please see below.
+> 
+> > diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> > index 7b11106..3e64ac4 100644
+> > --- a/drivers/clk/Makefile
+> > +++ b/drivers/clk/Makefile
+> > @@ -32,6 +32,8 @@ obj-$(CONFIG_ARCH_VT8500)     += clk-vt8500.o
+> > 
+> >  obj-$(CONFIG_ARCH_ZYNQ)                += zynq/
+> >  obj-$(CONFIG_ARCH_TEGRA)       += tegra/
+> >  obj-$(CONFIG_PLAT_SAMSUNG)     += samsung/
+> > 
+> > +obj-$(CONFIG_ARCH_SHMOBILE)    += shmobile/
+> > +obj-$(CONFIG_ARCH_SHMOBILE_MULTI)      += shmobile/
+> 
+> Here I believe it is enough that you only use
+> CONFIG_ARCH_SHMOBILE_MULTI. Building common clocks to coexist with the
+> old legacy board code does not make any sense IMO. If you think it
+> makes sense for some reason, please explain why. =)
+> 
+> > diff --git a/drivers/clk/shmobile/Makefile b/drivers/clk/shmobile/Makefile
+> > new file mode 100644
+> > index 0000000..6a26eb6
+> > --- /dev/null
+> > +++ b/drivers/clk/shmobile/Makefile
+> > @@ -0,0 +1,5 @@
+> > +ifeq ($(CONFIG_COMMON_CLK), y)
+> > +obj-$(CONFIG_ARCH_EMEV2)       += clk-emev2.o
+> > +endif
+> 
+> I don't think you would need the above ifeq/endif wrapper if you only
+> used CONFIG_ARCH_SHMOBILE_MULTI above.
+> 
+> Apart from that it looks good to me. And, yes, I have tested this on
+> my KZM9D board together with multiplatform and it works very well!
+
+-- 
+Regards,
+
+Laurent Pinchart
+
