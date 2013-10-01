@@ -1,41 +1,70 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 3/3] of: Add Panasonic Corporation vendor prefix
-Date: Tue,  1 Oct 2013 08:54:01 +0200
-Message-ID: <1380610441-23830-3-git-send-email-treding@nvidia.com>
-References: <1380610441-23830-1-git-send-email-treding@nvidia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380610441-23830-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 1/2] gpio/omap: maintain GPIO and IRQ usage separately
+Date: Tue, 01 Oct 2013 09:34:24 +0200
+Message-ID: <524A7B00.4010001@collabora.co.uk>
+References: <1380069414-2922-1-git-send-email-javier.martinez@collabora.co.uk> <87r4cajfx0.fsf@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <87r4cajfx0.fsf@linaro.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Kevin Hilman <khilman@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Lars Poeschel <larsi@wh2.tu-dresden.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Balaji T K <balajitk@ti.com>, Tony Lindgren <tony@atomide.com>, Jon Hunter <jgchunter@gmail.com>, linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, r.sricharan@ti.com, holler@ahsoftware.de
 List-Id: devicetree@vger.kernel.org
 
-Use "panasonic" as the vendor prefix for the Panasonic Corporation.
+On 09/27/2013 08:08 PM, Kevin Hilman wrote:
+> Javier Martinez Canillas <javier.martinez@collabora.co.uk> writes:
+> 
+>> The GPIO OMAP controller pins can be used as IRQ and GPIO
+>> independently so is necessary to keep track GPIO pins and
+>> IRQ lines usage separately to make sure that the bank will
+>> always be enabled while being used.
+>>
+>> Also move gpio_is_input() definition in preparation for the
+>> next patch that setups the controller's irq_chip driver when
+>> a caller requests an interrupt line.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> 
+> I'm fine with this appproach.  For both patches:
+> 
+> Reviewed-by: Kevin Hilman <khilman@linaro.org>
+> 
+> Also, I gave it a spin across a handful of OMAP boards using v3.12-rc2 +
+> these 2 patches.
+> 
+> Boot tested successfully with DT boot:
+> 
+> omap3530/beagle
+> omap3730/beagle-xm
+> omap3530/overo (Tobi w/GPIO IRQ networking)
+> omap3730/overo STORM (w/GPIO IRQ for networking)
+> am335x/beaglebone
+> am335x/beaglebone black
+> omap4430/panda
+> omap4460/panda-es
+> omap5912/OSK (omap1)
+> 
+> I also verified non-DT boot on the OMAP3 platforms that still support
+> legacy boot.
+> 
+> So feel free to also add
+> 
+> Tested-by: Kevin Hilman <khilman@linaro.org>
+> 
+> Thanks for your persistence in getting a fix for this upstream.
+> 
+> Kevin
+> 
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
-- use panasonic instead of pc as requested by Mark Rutland
+Thanks a lot Kevin for testing on so many boards.
 
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Linus,
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 7f13e35..c48496a 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -47,6 +47,7 @@ nintendo	Nintendo
- nvidia	NVIDIA
- nxp	NXP Semiconductors
- onnn	ON Semiconductor Corp.
-+panasonic	Panasonic Corporation
- picochip	Picochip Ltd
- powervr	PowerVR (deprecated, use img)
- qca	Qualcomm Atheros, Inc.
--- 
-1.8.4
+Since this patch-set doesn't cause any regression and fix a long standing issue
+on OMAP, do you think that it would be possible to include on the -rc series as
+a bugfix or do you prefer to wait until 3.13?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks a lot and best regards,
+Javier
