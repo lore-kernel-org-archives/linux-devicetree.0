@@ -1,62 +1,40 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH] tpm: Add support for Atmel I2C TPMs
-Date: Tue, 1 Oct 2013 12:00:27 -0600
-Message-ID: <20131001180027.GB1649@obsidianresearch.com>
-References: <20130911205807.GA21467@obsidianresearch.com>
- <CADUykeorCx+YY1mF4DazXAmmnS=ocjdxeT2mHRsRxmJv04LFSQ@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 01/10] pwm-backlight: Refactor backlight power on/off
+Date: Tue, 01 Oct 2013 12:26:07 -0600
+Message-ID: <524B13BF.7080902@wwwdotorg.org>
+References: <1379972467-11243-1-git-send-email-treding@nvidia.com> <1379972467-11243-2-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CADUykeorCx+YY1mF4DazXAmmnS=ocjdxeT2mHRsRxmJv04LFSQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1379972467-11243-2-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Teddy Reed <teddy.reed-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Leonidas Da Silva Barbosa <leosilva-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Ashley Lai <ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org>, Rajiv Andrade <mail-ZlhrYzitvtWsTnJN9+BGXg@public.gmane.org>, Peter Huewe <peter.huewe-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guan Xuetao <gxt-TG0Ac1+ktVePQbnJrJN+5g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openezx-devel-ZwoEplunGu3n3BO9LpVK+9i2O/JbrIOy@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 01, 2013 at 12:43:42AM -0600, Teddy Reed wrote:
->    Looks great, thanks again Jason!
->    Also, if anyone would like some TSSOP AT97SC3204T's, please email me
->    and I will send you a few along with breakouts and programmable crystal
->    so you can test/play/break/etc, no charge, but I'd rather only ship
->    within the USA.
->    Signed-off-by: Teddy Reed <teddy-KaFzXBG2u9Ng9hUCZPvPmw@public.gmane.org>
+On 09/23/2013 03:40 PM, Thierry Reding wrote:
+> In preparation for adding an optional regulator and enable GPIO to the
+> driver, split the power on and power off sequences into separate
+> functions to reduce code duplication at the multiple call sites.
 
-Thanks Teddy,
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
 
-I've updated the series with the revised commit message:
-https://github.com/jgunthorpe/linux/commit/4378757fbf7771ffecc3b8779856dcc938f45234
+> +static void pwm_backlight_power_off(struct pwm_bl_data *pb)
+> +{
+> +	pwm_disable(pb->pwm);
 
-tpm: Add support for Atmel I2C TPMs
-This is based on the work of Teddy Reed <teddy-KaFzXBG2u9Ng9hUCZPvPmw@public.gmane.org> published
-on GitHub:
- https://github.com/theopolis/tpm-i2c-atmel.git
- 34894b9
+Both the call-sites you're replacing do the following before pwm_disable():
 
-That driver was never merged, I have taken it as a starting port,
-forward ported, tested and revised the driver:
- - Make it broadly textually similar to the Infineon and Nuvoton I2C
-   driver
- - Place everything in a format suitable for mainline inclusion
- - Use high level I2C functions i2c_master_send and
-   i2c_master_recv for data xfer
- - Use the timeout system from the core code, by faking out a status
-   register
- - Only I2C transfer the number of bytes in the reply, not a fixed
-   message size.
- - checkpatch cleanups
- - Testing on ARM Kirkwood, with this device tree, using a
-   AT97SC3204T-X1A180
-        tpm@29 {
-                compatible = "atmel,at97sc3204t";
-                reg = <0x29>;
-        };
+		pwm_config(pb->pwm, 0, pb->period);
 
-Signed-off-by: Teddy Reed <teddy-KaFzXBG2u9Ng9hUCZPvPmw@public.gmane.org>
-[jgg: revised and tested]
-Signed-off-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+While I agree that probably shouldn't be necessary, I think it's at
+least worth mentioning that in the commit description just to make it
+obvious that it was a deliberate change. Splitting that change into a
+separate patch might be reasonable in order to keep refactoring and
+functional changes separate, although perhaps it's not worth it.
 
-Jason
+There are also a couple unrelated whitespace changes thrown in here.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
