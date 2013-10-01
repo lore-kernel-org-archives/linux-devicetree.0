@@ -1,251 +1,84 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: [PATCH] drivers: misc: add gpio wakeup driver
-Date: Tue,  1 Oct 2013 15:55:19 +0200
-Message-ID: <1380635719-31171-1-git-send-email-zonque@gmail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, broonie@kernel.org, gregkh@linuxfoundation.org, Daniel Mack <zonque@gmail.com>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC PATCH 0/6] DRIVERS: IRQCHIP: Add support for crossbar IP
+Date: Tue, 1 Oct 2013 09:57:11 -0400
+Message-ID: <524AD4B7.7040700@ti.com>
+References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com> <52499441.1030403@gmail.com> <524AAE69.8060703@ti.com> <524AD290.207@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <524AD290.207-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Cc: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a very simple driver that enables GPIO lines as wakeup
-sources. It only operates on information passed in via DT, and depends
-on CONFIG_OF && CONFIG_PM_SLEEP. It can for example be used to connect
-wake-on-LAN (WOL) signals or other electric wakeup networks.
-
-The driver accepts a list of GPIO nodes and claims them along with their
-interrupt line. During suspend, the interrupts will be enabled and
-selected as wakeup source. The driver doesn't do anything else with the
-GPIO lines, and will ignore occured interrupts silently.
-
-Signed-off-by: Daniel Mack <zonque@gmail.com>
----
- .../devicetree/bindings/misc/gpio-wakeup.txt       |  16 ++
- drivers/misc/Kconfig                               |   8 +
- drivers/misc/Makefile                              |   1 +
- drivers/misc/gpio-wakeup.c                         | 162 +++++++++++++++++++++
- 4 files changed, 187 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/gpio-wakeup.txt
- create mode 100644 drivers/misc/gpio-wakeup.c
-
-diff --git a/Documentation/devicetree/bindings/misc/gpio-wakeup.txt b/Documentation/devicetree/bindings/misc/gpio-wakeup.txt
-new file mode 100644
-index 0000000..6aacd0f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/gpio-wakeup.txt
-@@ -0,0 +1,16 @@
-+GPIO WAKEUP DRIVER BINDINGS
-+
-+Required:
-+
-+	compatible:	Must be "gpio-wakeup"
-+	gpios:		At list of GPIO nodes that are enabled as wakeup
-+			sources.
-+
-+
-+Example:
-+
-+	wake_up {
-+		compatible = "gpio-wakeup";
-+		gpios = <&gpio0 19 0>;
-+	};
-+
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 8dacd4c..c089280 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -528,6 +528,14 @@ config SRAM
- 	  the genalloc API. It is supposed to be used for small on-chip SRAM
- 	  areas found on many SoCs.
+On Tuesday 01 October 2013 09:48 AM, Rob Herring wrote:
+> On 10/01/2013 06:13 AM, Sricharan R wrote:
+>> Hi,
+>>
+>> On Monday 30 September 2013 08:39 PM, Rob Herring wrote:
+>>> On 09/30/2013 08:59 AM, Sricharan R wrote:
+>>>> Some socs have a large number of interrupts requests to service
+>>>> the needs of its many peripherals and subsystems. All of the interrupt
+>>>> requests lines from the subsystems are not needed at the same
+>>>> time, so they have to be muxed to the controllers appropriately.
+>>>> In such places a interrupt controllers are preceded by an
+>>>> IRQ CROSSBAR that provides flexibility in muxing the device interrupt
+>>>> requests to the controller inputs.
+>>>>
+>>>> This series models the peripheral interrupts that can be routed through
+>>>> the crossbar to the GIC as 'routable-irqs'. The routable irqs are added
+>>>> in a separate linear domain inside the GIC. The registered routable domain's
+>>>> callback are invoked as a part of the GIC's callback, which in turn should
+>>>> allocate a free irq line and configure the IP accordingly. So every peripheral
+>>>> in the dts files mentions the fixed crossbar number as its interrupt. A free
+>>>> gic line for that gets allocated and configured when the peripheral's interrupt
+>>>> is mapped.
+>>>>
+>>>> The minimal crossbar driver to track and allocate free GIC lines and configure the
+>>>> crossbar is added here, along with the DT bindings.
+>>> Seems like interrupt-map property is what you need here.
+>>>
+>>> http://devicetree.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
+>>>
+>>> Versatile Express also has an example.
+>>    OK, but the idea was not to tie up the crossbar<->interrupt numbers at the
+>>    DTS level, but to assign it dynamically during runtime. This was one of the
+>>   comments that came up with first crossbar support patches, which was assigning a
+>>   interrupt line to crossbar number in the DTS and setting it up in crossbar probe.
+> 
+> Is there an actual usecase on a single h/w design that you run out of
+> interrupts and it is a user decision which interrupts to use?
+>
+Yes. There are 240 peripheral interrupts connected out of which 160 can
+be used in this specific case. 
  
-+config GPIO_WAKEUP
-+	tristate "GPIO wakeup driver"
-+	depends on PM_SLEEP && OF
-+	help
-+	  Say Y to build a driver that can wake up a system from GPIO
-+	  lines. See Documentation/devicetree/bindings/gpio-wakeup.txt
-+	  for binding details.
-+
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index c235d5b..ee4df84 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -53,3 +53,4 @@ obj-$(CONFIG_INTEL_MEI)		+= mei/
- obj-$(CONFIG_VMWARE_VMCI)	+= vmw_vmci/
- obj-$(CONFIG_LATTICE_ECP3_CONFIG)	+= lattice-ecp3-config.o
- obj-$(CONFIG_SRAM)		+= sram.o
-+obj-$(CONFIG_GPIO_WAKEUP)	+= gpio-wakeup.o
-diff --git a/drivers/misc/gpio-wakeup.c b/drivers/misc/gpio-wakeup.c
-new file mode 100644
-index 0000000..3c1ef88
---- /dev/null
-+++ b/drivers/misc/gpio-wakeup.c
-@@ -0,0 +1,162 @@
-+/*
-+ * Driver to select GPIO lines as wakeup sources from DT.
-+ *
-+ * Copyright 2013 Daniel Mack
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/module.h>
-+
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/pm.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/gpio.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_gpio.h>
-+
-+struct gpio_wakeup_priv {
-+	unsigned int count;
-+	unsigned int irq[0];
-+};
-+
-+static irqreturn_t gpio_wakeup_isr(int irq, void *dev_id)
-+{
-+	return IRQ_HANDLED;
-+}
-+
-+static int gpio_wakeup_probe(struct platform_device *pdev)
-+{
-+	int ret, count, i;
-+	struct gpio_wakeup_priv *priv;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+
-+	if (!np)
-+		return -EINVAL;
-+
-+	count = of_gpio_count(np);
-+	if (count == 0)
-+		return -EINVAL;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv) +
-+				 sizeof(int) * count, GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < count; i++) {
-+		unsigned int gpio, irq;
-+
-+		priv->irq[i] = -EINVAL;
-+
-+		gpio = of_get_gpio(np, i);
-+		if (gpio < 0) {
-+			dev_warn(dev, "Unable to get gpio #%d\n", i);
-+			continue;
-+		}
-+
-+		irq = gpio_to_irq(gpio);
-+		if (irq < 0) {
-+			dev_warn(dev, "Can't map GPIO %d to an IRQ\n", gpio);
-+			continue;
-+		}
-+
-+		ret = devm_gpio_request_one(dev, gpio, GPIOF_IN, pdev->name);
-+		if (ret < 0) {
-+			dev_warn(dev, "Unable to request GPIO %d: %d\n",
-+				 gpio, ret);
-+			continue;
-+		}
-+
-+		ret = devm_request_irq(dev, irq, gpio_wakeup_isr,
-+				       IRQF_TRIGGER_RISING |
-+				       IRQF_TRIGGER_FALLING,
-+				       pdev->name, NULL);
-+		if (ret < 0) {
-+			dev_warn(dev, "Unable to request IRQ %d\n", irq);
-+			continue;
-+		}
-+
-+		disable_irq(irq);
-+		priv->irq[i] = irq;
-+
-+		dev_info(dev, "Adding GPIO %d (IRQ %d) to wakeup sources\n",
-+			 gpio, irq);
-+	}
-+
-+	priv->count = count;
-+	device_init_wakeup(dev, 1);
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+}
-+
-+static int gpio_wakeup_suspend(struct device *dev)
-+{
-+	struct gpio_wakeup_priv *priv = dev_get_drvdata(dev);
-+	int i;
-+
-+	for (i = 0; i < priv->count; i++)
-+		if (priv->irq[i] >= 0) {
-+			enable_irq(priv->irq[i]);
-+			enable_irq_wake(priv->irq[i]);
-+		}
-+
-+	return 0;
-+}
-+
-+static int gpio_wakeup_resume(struct device *dev)
-+{
-+	struct gpio_wakeup_priv *priv = dev_get_drvdata(dev);
-+	int i;
-+
-+	for (i = 0; i < priv->count; i++)
-+		if (priv->irq[i] >= 0) {
-+			disable_irq_wake(priv->irq[i]);
-+			disable_irq(priv->irq[i]);
-+		}
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(gpio_wakeup_pm_ops,
-+			 gpio_wakeup_suspend, gpio_wakeup_resume);
-+
-+static struct of_device_id gpio_wakeup_of_match[] = {
-+	{ .compatible = "gpio-wakeup", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, gpio_wakeup_of_match);
-+
-+static struct platform_driver gpio_wakeup_driver = {
-+	.probe	= gpio_wakeup_probe,
-+	.driver	= {
-+		.name	= "gpio-wakeup",
-+		.owner	= THIS_MODULE,
-+		.pm	= &gpio_wakeup_pm_ops,
-+		.of_match_table = of_match_ptr(gpio_wakeup_of_match),
-+	}
-+};
-+
-+static int __init gpio_wakeup_init(void)
-+{
-+	return platform_driver_register(&gpio_wakeup_driver);
-+}
-+
-+static void __exit gpio_wakeup_exit(void)
-+{
-+	platform_driver_unregister(&gpio_wakeup_driver);
-+}
-+
-+late_initcall(gpio_wakeup_init);
-+module_exit(gpio_wakeup_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Daniel Mack <zonque@gmail.com>");
-+MODULE_DESCRIPTION("Driver to wake up systems from GPIOs");
-+MODULE_ALIAS("platform:gpio-wakeup");
--- 
-1.8.3.1
+> You could fill in the interrupt-map at run-time. It would have to be
+> early (bootloader or early kernel init) and can't be at request_irq time.
+>
+Well all options are tried before coming up to the $subject solution.
+It was suggested by Thomas in the last review.
+ 
+>>     https://lkml.org/lkml/2013/7/18/416
+>>
+>>    Since this approach of assigning in DTS was opposed, we moved to IRQCHIP and
+>>    that did not go as well. Finally was asked to handle this as a part of GIC driver with
+>>    a separate domain.
+>>    
+>>   http://www.spinics.net/lists/linux-omap/msg97085.html
+> 
+> This has nothing to do with the GIC, so it does not belong there.
+> 
+Well the router makes connections from peripheral to GIC. Thomas can
+better explain it but I think since its doing irq routing for GIC on
+a given hardware, I don't see any issue having some generic map/unmap
+function in GIC. The actual implementation is still outside of GIC.
 
+Regards,
+Sasntosh
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
