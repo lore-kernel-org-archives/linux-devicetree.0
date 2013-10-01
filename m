@@ -1,340 +1,249 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V3 1/3] mfd: add support for AMS AS3722 PMIC
-Date: Tue, 1 Oct 2013 12:46:48 +0100
-Message-ID: <20131001114648.GM9048@lee--X1>
-References: <1380023921-29867-1-git-send-email-ldewangan@nvidia.com>
- <1380023921-29867-2-git-send-email-ldewangan@nvidia.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] usb: dwc3: msm: Add device tree binding
+ information
+Date: Tue, 01 Oct 2013 14:47:06 +0300
+Message-ID: <1380628026.30666.7.camel@iivanov-dev.int.mm-sol.com>
+References: <1376992565-22292-1-git-send-email-iivanov@mm-sol.com>
+	 <1376992565-22292-2-git-send-email-iivanov@mm-sol.com>
+	 <20130923193148.GN30811@radagast>
+	 <20130926094618.GD2411@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1380023921-29867-2-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, Florian Lobmaier <florian.lobmaier@ams.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130926094618.GD2411-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "idos-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <idos-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Sep 2013, Laxman Dewangan wrote:
 
-> The AMS AS3722 is a compact system PMU suitable for mobile phones,
+Hi, I am sorry for delay answer.
 
-s/AMS/ams
+On Thu, 2013-09-26 at 10:46 +0100, Mark Rutland wrote: 
+> On Mon, Sep 23, 2013 at 08:31:48PM +0100, Felipe Balbi wrote:
+> > Hi,
+> > 
+> > On Tue, Aug 20, 2013 at 12:56:03PM +0300, Ivan T. Ivanov wrote:
+> > > From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > > 
+> > > MSM USB3.0 core wrapper consist of USB3.0 IP from Synopsys
+> > > (SNPS) and HS, SS PHY's control and configuration registers.
+> > > 
+> > > It could operate in device mode (SS, HS, FS) and host
+> > > mode (SS, HS, FS, LS).
+> > > 
+> > > Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > 
+> > Any acks for the DT part ? This patch has been pending forever.
+> 
+> Apologies for the delay. I have a couple of comments that would be nice
+> to fix up now.
+> 
+> > 
+> > > ---
+> > >  .../devicetree/bindings/usb/msm-ssusb.txt          |  104 ++++++++++++++++++++
+> > >  1 file changed, 104 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/usb/msm-ssusb.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/usb/msm-ssusb.txt b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
+> > > new file mode 100644
+> > > index 0000000..cacbd3b
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
+> > > @@ -0,0 +1,104 @@
+> > > +MSM SuperSpeed DWC3 USB SoC controller
+> > > +
+> > > +
+> > > +DWC3 Highspeed USB PHY
+> > > +======================
+> > > +Required properities :
+> > > +- compatible : sould be "qcom,dwc3-hsphy";
+> 
+> s/sould/should/
+> 
+> In general, compatible properties are "should contain" rather than
+> "should be", as we might have backwards compatible hardware in future.
 
-> tablets etc. It has 4 DC/DC step-down regulators, 3 DC/DC step-down
-> controller, 11 LDOs, RTC, automatic battery, temperature and
-> over-current monitoring, 8 GPIOs, ADC and watchdog.
->=20
-> Add MFD core driver for the AS3722 to support core functionality.
->=20
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Signed-off-by: Florian Lobmaier <florian.lobmaier@ams.com>
-> ---
-> Changes from V1:=20
-> - Remove compatible string from DT for subnode.
-> - Nit cleanups in driver and use module_i2c_driver
->=20
-> Changes from V2:
-> - Change DT file to reflect the changes in gpio/pincntrl driver.
->   Now there is no extra subnode.
->=20
->  Documentation/devicetree/bindings/mfd/as3722.txt |   52 +++
+Ok.
 
-You need an Ack from the Device Tree guys for this.
+> 
+> > > +- reg : offset and length of the register set in the memory map
+> > > +- clocks : phandles to clock instances of the device tree nodes
+> 
+> Clocks are referred to be phandle + clock-specifier pairs rather than
+> phandles, it would be nice to fix the terminology here
 
-I see a few nits in the formatting of the document too.
+Ok.
 
->  drivers/mfd/Kconfig                              |   12 +
->  drivers/mfd/Makefile                             |    1 +
->  drivers/mfd/as3722.c                             |  448 ++++++++++++=
-++++++++++
->  include/linux/mfd/as3722.h                       |  423 ++++++++++++=
-++++++++
->  5 files changed, 936 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/as3722.txt
->  create mode 100644 drivers/mfd/as3722.c
->  create mode 100644 include/linux/mfd/as3722.h
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/as3722.txt b/Docum=
-entation/devicetree/bindings/mfd/as3722.txt
-> new file mode 100644
-> index 0000000..8e1b97c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/as3722.txt
-> @@ -0,0 +1,52 @@
-> +* AMS AS3722 Power management IC.
+> 
+> > > +- clock-names :
+> > > +	"xo" : External reference clock 19 MHz
+> > > +	"sleep_a" : Sleep clock, used when USB3 core goes into low
+> > > +	power mode (U3).
+> 
+> I think it would be nicer to say:
+> - clocks : A list of phandle + clock-specifier pairs for the clocks
+>            listed in clock-names
+> - clock-names: Should contain the following:
+>                "xo"      - External reference clock (19MHz)
+> 	       "sleep_a" - Sleep clock used when USB3 core goes into low
+> 	                   power mode (U3).
+> 
+> I'm not sure we need to describe the frequency of the xo clock -- either
+> it's a requriement of the IP and thus doesn't need to be a part of the
+> binding, or it's configurable by the driver and thus doesn't need to be
+> documented.
 
-s/AMS/ams
+Ok. will remove explicit numbers here.
 
-> +Required properties:
-> +-------------------
-> +- compatible : Must be "ams,as3722".
+> 
+> > > +<supply-name>-supply : phandle to the regulator device tree node
+> > > +Required "supply-name" are:
+> > > +	"v1p8" : 1.8v supply for HSPHY
+> > > +	"v3p3" : 3.3v supply for HSPHY
+> > > +	"vbus" : vbus supply for host mode
+> > > +	"vddcx" : vdd supply for HS-PHY digital circuit operation
+> 
+> Any reason for the HSPHY/HS-PHY difference?
 
-               ^--- Space here
+No, just lack of attention from my side.
 
-> +- reg:  I2C device address.
+> 
+> I'd list these separately with their full names:
+> 
+> - v1p8-supply: phandle to the regulator for the 1.8v supply to HSPHY.
+> - v3p3-supply: phandle to the regulator for the 3.3v supply to HSPHY.
+> - vbus-supply: phandle to the regulator for the vbus supply for host
+>                mode.
+> - vddcx-supply: phandle to the regulator for the vdd supply for HSPHY
+>   digital circuit operation.
+> 
 
-        ^--- But no Space here and an extra one after ':'.
+ok.
 
-> +- interrupt-controller : AS3722 has its own internal IRQs
-> +- #interrupt-cells : should be set to 2 for IRQ number and flags
+> > > +
+> > > +DWC3 Superspeed USB PHY
+> > > +=======================
+> > > +Required properities :
+> > > +- compatible : sould be "qcom,dwc3-ssphy";
+> > > +- reg : offset and length of the register set in the memory map
+> > > +- clocks : phandles to clock instances of the device tree nodes
+> > > +- clock-names :
+> > > +	"xo" : External reference clock 19 MHz
+> > > +	"ref" : Reference clock - used in host mode.
+> > > +<supply-name>-supply : phandle to the regulator device tree node
+> > > +Required "supply-name" are:
+> > > +	"v1p8" : 1.8v supply for SS-PHY
+> > > +	"vddcx" : vdd supply for SS-PHY digital circuit operation
+> 
+> The commments on compatible, clocks, clock-names and the regulators
+> apply here.
 
-                        ^--- Uppercase                 Fullstop ---^
 
-> +  The first cell is the IRQ number.
-> +  The second cell is the flags, encoded as the trigger masks from
-> +	Documentation/devicetree/bindings/interrupts.txt, using
-> +	the #defines found in dt-bindings/irq.
+ok
 
-All DTS files should be using the #defines, no need to specify that.
+> 
+> > > +
+> > > +DWC3 controller wrapper
+> > > +=======================
+> > > +Required properties :
+> > > +- compatible : should be "qcom,dwc3"
+> > > +- reg : offset and length of the register set in the memory map
+> > > +	offset and length of the TCSR register for routing USB
+> > > +	signals to either picoPHY0 or picoPHY1.
+> > > +- clocks : phandles to clock instances of the device tree nodes
+> > > +- clock-names :
+> > > +	"core" : Master/Core clock, have to be >= 125 MHz for SS
+> > > +	operation and >= 60MHz for HS operation
+> > > +	"iface" : System bus AXI clock
+> > > +	"sleep" : Sleep clock, used when USB3 core goes into low
+> > > +	power mode (U3).
+> > > +	"utmi" : Generated by HS-PHY. Used to clock the low power
+> > > +	parts of thr HS Link layer.
+> > > +Optional properties :
+> > > +- gdsc-supply : phandle to the globally distributed switch controller
+> > > +  regulator node to the USB controller.
+> 
+> The commments on compatible, clocks, and clock-names apply here too. I
+> see the regulator is defined individually :)
+> 
+> I'm fine with the binding itself, I'd just like the documentation fixed
+> up.
+> 
 
-> +- interrupt-parent : The parent interrupt controller.
-> +
-> +Optional properties:
-> +-------------------
-> +- gpio-controller: Marks the device node as a GPIO controller.
-> +- #gpio-cells: Number of GPIO cells. Refer
-> +	Documentation/devicetree/bindings/gpio/gpio.txt
-> +- pinctrl-names: It is define in the
+Thanks, 
+Ivan
 
-s/define/defined
+> Cheers,
+> Mark.
+> 
+> > > +Required child node:
+> > > +A child node must exist to represent the core DWC3 IP block. The name of
+> > > +the node is not important. The content of the node is defined in dwc3.txt.
+> > > +
+> > > +Example device nodes:
+> > > +
+> > > +	dwc3_hsphy: phy@f92f8800 {
+> > > +		compatible = "qcom,dwc3-hsphy";
+> > > +		reg = <0xf92f8800 0x30>;
+> > > +
+> > > +		clocks = <&cxo>, <&usb2a_phy_sleep_cxc>;
+> > > +		clock-names = "xo", "sleep_a";
+> > > +
+> > > +		vbus-supply = <&supply>;
+> > > +		vddcx-supply = <&supply>;
+> > > +		v1p8-supply = <&supply>;
+> > > +		v3p3-supply = <&supply>;
+> > > +	};
+> > > +
+> > > +	dwc3_ssphy: phy@f92f8830 {
+> > > +		compatible = "qcom,dwc3-ssphy";
+> > > +		reg = <0xf92f8830 0x30>;
+> > > +
+> > > +		clocks = <&cxo>, <&usb30_mock_utmi_cxc>;
+> > > +		clock-names = "xo", "ref";
+> > > +
+> > > +		vddcx-supply = <&supply>;
+> > > +		v1p8-supply = <&supply>;
+> > > +	};
+> > > +
+> > > +	usb@fd4ab000 {
+> > > +		compatible = "qcom,dwc3";
+> > > +		#address-cells = <1>;
+> > > +		#size-cells = <1>;
+> > > +		reg = <0xfd4ab000 0x4>;
+> > > +
+> > > +		clocks = <&usb30_master_cxc>, <&sys_noc_usb3_axi_cxc>,
+> > > +				<&usb30_sleep_cxc>, <&usb30_mock_utmi_cxc>;
+> > > +		clock-names = "core", "iface", "sleep", "utmi";
+> > > +
+> > > +		gdsc-supply = <&supply>;
+> > > +
+> > > +		ranges;
+> > > +		dwc3@f9200000 {
+> > > +			compatible = "snps,dwc3";
+> > > +			reg = <0xf9200000 0xcd00>;
+> > > +			interrupts = <0 131 0>;
+> > > +			usb-phy = <&dwc3_hsphy>, <&dwc3_ssphy>;
+> > > +			tx-fifo-resize;
+> > > +		};
+> > > +	};
+> > > -- 
+> > > 1.7.9.5
+> > > 
+> > 
+> > -- 
+> > balbi
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-> +	Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-> +
-> +Example:
-> +--------
-> +ams3722 {
-> +	compatible =3D "ams,as3722";
-> +	reg =3D <0x48>
 
-Missing ';'.
-
-> +
-> +	interrupt-parent =3D <&intc>;
-> +	interrupt-controller;
-> +	#interrupt-cells =3D <2>;
-> +
-> +	gpio-controller;
-> +	#gpio-cells =3D <2>;
-> +
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&as3722_default>;
-> +
-> +	as3722_default: pinmux {
-> +		/*
-> +		 * Default pinmux setting.
-> +		 * Refer document bindings/pinctrl/pinctrl-as3722.txt
-
-s/Refer/Refer to
-
-> +		 */
-> +	}
-> +
-> +	regulators {
-> +		/*
-> +		 * Regulator related properties
-> +		 * Refer document bindings/regulator/as3722-regulator.txt
-> +		 */
-> +	};
-> +};
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 914c3d1..694d226 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -27,6 +27,18 @@ config MFD_AS3711
->  	help
->  	  Support for the AS3711 PMIC from AMS
-
-s/ams/AMS
-
-> +config MFD_AS3722
-> +	bool "AMS AS3722 Power Management IC"
-
-s/ams/AMS
-
-etc etc ...
-
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	select REGMAP_IRQ
-> +	depends on I2C && OF
-> +	help
-> +	  The AMS AS3722 is a compact system PMU suitable for mobile phones=
-,
-> +	  tablet etc. It has 4 DC/DC step-down regulators, 3 DC/DC step-dow=
-n
-
-s/tablet/tablets
-
-> +	  controller, 11 LDOs, RTC, automatic battery, temperature and
-
-s/controller/controllers
-
-> +	  over current monitoring, GPIOs, ADC, watchdog.
-
-=2E.. and a watchdog.
-
-> +
->  config PMIC_ADP5520
->  	bool "Analog Devices ADP5520/01 MFD PMIC Core Support"
->  	depends on I2C=3Dy
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 15b905c..d8c2ba1 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -162,3 +162,4 @@ obj-$(CONFIG_MFD_LM3533)	+=3D lm3533-core.o lm353=
-3-ctrlbank.o
->  obj-$(CONFIG_VEXPRESS_CONFIG)	+=3D vexpress-config.o vexpress-sysreg=
-=2Eo
->  obj-$(CONFIG_MFD_RETU)		+=3D retu-mfd.o
->  obj-$(CONFIG_MFD_AS3711)	+=3D as3711.o
-> +obj-$(CONFIG_MFD_AS3722)	+=3D as3722.o
-> diff --git a/drivers/mfd/as3722.c b/drivers/mfd/as3722.c
-> new file mode 100644
-> index 0000000..4d54c00
-> --- /dev/null
-> +++ b/drivers/mfd/as3722.c
-> @@ -0,0 +1,448 @@
-> +/*
-> + * Core driver for AMS AS3722 PMICs
-> + *
-> + * Copyright (C) 2013 ams AG
-
-s/ams/AMS
-
-<snip>
-
-> +static int as3722_i2c_of_probe(struct i2c_client *i2c,
-> +			struct as3722 *as3722)
-> +{
-> +	struct device_node *np =3D i2c->dev.of_node;
-> +	struct irq_data *irq_data;
-> +
-> +	if (!np) {
-> +		dev_err(&i2c->dev, "Device is not having of_node\n");
-
-En Anglais?
-
-"Device Tree not found"
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	irq_data =3D irq_get_irq_data(i2c->irq);
-> +	if (!irq_data) {
-> +		dev_err(&i2c->dev, "Invalid IRQ: %d\n", i2c->irq);
-> +		return -EINVAL;
-> +	}
-> +
-> +	as3722->en_intern_int_pullup =3D of_property_read_bool(np,
-> +					"ams,enable-internal-int-pullup");
-> +	as3722->en_intern_i2c_pullup =3D of_property_read_bool(np,
-> +					"ams,enable-internal-i2c-pullup");
-
-Not sure what this means, or if it's been discussed before, but aren't
-there generic bindings for these?
-
-> +	as3722->irq_flags =3D irqd_get_trigger_type(irq_data);
-> +	dev_dbg(&i2c->dev, "Irq flag is 0x%08lx\n", as3722->irq_flags);
-
-"IRQ flags are"
-
-> +	return 0;
-> +}
-> +
-> +static int as3722_i2c_probe(struct i2c_client *i2c,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct as3722 *as3722;
-> +	unsigned long irq_flags;
-> +	int ret;
-> +
-> +	as3722 =3D devm_kzalloc(&i2c->dev, sizeof(struct as3722), GFP_KERNE=
-L);
-> +	if (!as3722)
-> +		return -ENOMEM;
-> +
-> +	as3722->dev =3D &i2c->dev;
-> +	as3722->chip_irq =3D i2c->irq;
-> +	i2c_set_clientdata(i2c, as3722);
-> +
-> +	ret =3D as3722_i2c_of_probe(i2c, as3722);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	as3722->regmap =3D devm_regmap_init_i2c(i2c, &as3722_regmap_config)=
-;
-> +	if (IS_ERR(as3722->regmap)) {
-> +		ret =3D PTR_ERR(as3722->regmap);
-> +		dev_err(&i2c->dev, "regmap_init failed with err: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret =3D as3722_check_device_id(as3722);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	irq_flags =3D as3722->irq_flags | IRQF_ONESHOT;
-> +	ret =3D regmap_add_irq_chip(as3722->regmap, as3722->chip_irq,
-> +			irq_flags, -1, &as3722_irq_chip,
-> +			&as3722->irq_data);
-> +	if (ret < 0) {
-> +		dev_err(as3722->dev, "regmap_add_irq failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret =3D as3722_configure_pullups(as3722);
-> +	if (ret < 0)
-> +		goto scrub;
-> +
-> +	ret =3D mfd_add_devices(&i2c->dev, -1, as3722_devs,
-> +			ARRAY_SIZE(as3722_devs), NULL, 0,
-> +			regmap_irq_get_domain(as3722->irq_data));
-> +	if (ret) {
-> +		dev_err(as3722->dev, "mfd_add_devices() failed: %d\n", ret);
-
-Not keen on function names in error messages.
-
-"Failed to add MFD devices"
-
-> +		goto scrub;
-> +	}
-> +
-> +	dev_dbg(as3722->dev, "AS3722 core driver initialized successfully\n=
-");
-> +	return 0;
-
-'/n' here please.
-
-> +scrub:
-> +	regmap_del_irq_chip(as3722->chip_irq, as3722->irq_data);
-> +	return ret;
-> +}
-> +
-> +static int as3722_i2c_remove(struct i2c_client *i2c)
-> +{
-> +	struct as3722 *as3722 =3D i2c_get_clientdata(i2c);
-> +
-> +	mfd_remove_devices(as3722->dev);
-> +	regmap_del_irq_chip(as3722->chip_irq, as3722->irq_data);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id as3722_of_match[] =3D {
-> +	{ .compatible =3D "ams,as3722", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, as3722_of_match);
-> +
-> +static const struct i2c_device_id as3722_i2c_id[] =3D {
-> +	{ "as3722", 0 },
-> +	{}
-
-Use the same format throughout, pick '{},' or '{}' for both structs. I
-suggest the former.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
