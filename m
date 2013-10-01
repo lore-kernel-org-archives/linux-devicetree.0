@@ -1,194 +1,65 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 8/9] Staging/iio/adc/touchscreen/MXS: provide devicetree
- adaption
-Date: Tue, 01 Oct 2013 12:14:04 +0100
-Message-ID: <524AAE7C.50702@kernel.org>
-References: <1379946998-23041-1-git-send-email-jbe@pengutronix.de> <1379946998-23041-9-git-send-email-jbe@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1379946998-23041-9-git-send-email-jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v3 0/4] Add I2C support to ST SoCs
+Date: Tue,  1 Oct 2013 12:29:11 +0200
+Message-ID: <1380623351-3614-1-git-send-email-maxime.coquelin@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: stephen.gallimore-qxv4g6HH51o@public.gmane.org, stuart.menefy-qxv4g6HH51o@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/13 15:36, Juergen Beisert wrote:
-> This is an RFC for the new touchscreen properties.
-> 
-> Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> CC: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> CC: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
-> CC: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> CC: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> CC: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
-> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Applied to the togreg branch of iio.git
+The goal of this series is to add I2C support to ST SoCs.
+The DT definition is added for STiH415 and STiH416 SoCs on
+B2000 and B2020 boards.
 
-Thanks,
-> ---
->  .../bindings/staging/iio/adc/mxs-lradc.txt         | 36 ++++++++++++--
->  arch/arm/boot/dts/imx28-evk.dts                    |  4 ++
->  drivers/staging/iio/adc/mxs-lradc.c                | 57 ++++++++++++++--------
->  3 files changed, 71 insertions(+), 26 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> index 4688205..ee05dc3 100644
-> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> @@ -1,7 +1,8 @@
->  * Freescale i.MX28 LRADC device driver
->  
->  Required properties:
-> -- compatible: Should be "fsl,imx28-lradc"
-> +- compatible: Should be "fsl,imx23-lradc" for i.MX23 SoC and "fsl,imx28-lradc"
-> +              for i.MX28 SoC
->  - reg: Address and length of the register set for the device
->  - interrupts: Should contain the LRADC interrupts
->  
-> @@ -9,13 +10,38 @@ Optional properties:
->  - fsl,lradc-touchscreen-wires: Number of wires used to connect the touchscreen
->                                 to LRADC. Valid value is either 4 or 5. If this
->                                 property is not present, then the touchscreen is
-> -                               disabled.
-> +                               disabled. 5 wires is valid for i.MX28 SoC only.
-> +- fsl,ave-ctrl: number of samples per direction to calculate an average value.
-> +                Allowed value is 1 ... 31, default is 4
-> +- fsl,ave-delay: delay between consecutive samples. Allowed value is
-> +                 1 ... 2047. It is used if 'fsl,ave-ctrl' > 1, counts at
-> +                 2 kHz and its default is 2 (= 1 ms)
-> +- fsl,settling: delay between plate switch to next sample. Allowed value is
-> +                1 ... 2047. It counts at 2 kHz and its default is
-> +                10 (= 5 ms)
->  
-> -Examples:
-> +Example for i.MX23 SoC:
-> +
-> +	lradc@80050000 {
-> +		compatible = "fsl,imx23-lradc";
-> +		reg = <0x80050000 0x2000>;
-> +		interrupts = <36 37 38 39 40 41 42 43 44>;
-> +		status = "okay";
-> +		fsl,lradc-touchscreen-wires = <4>;
-> +		fsl,ave-ctrl = <4>;
-> +		fsl,ave-delay = <2>;
-> +		fsl,settling = <10>;
-> +	};
-> +
-> +Example for i.MX28 SoC:
->  
->  	lradc@80050000 {
->  		compatible = "fsl,imx28-lradc";
->  		reg = <0x80050000 0x2000>;
-> -		interrupts = <10 14 15 16 17 18 19
-> -				20 21 22 23 24 25>;
-> +		interrupts = <10 14 15 16 17 18 19 20 21 22 23 24 25>;
-> +		status = "okay";
-> +		fsl,lradc-touchscreen-wires = <5>;
-> +		fsl,ave-ctrl = <4>;
-> +		fsl,ave-delay = <2>;
-> +		fsl,settling = <10>;
->  	};
-> diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
-> index 15715d9..aa33393 100644
-> --- a/arch/arm/boot/dts/imx28-evk.dts
-> +++ b/arch/arm/boot/dts/imx28-evk.dts
-> @@ -183,6 +183,10 @@
->  
->  			lradc@80050000 {
->  				status = "okay";
-> +				fsl,lradc-touchscreen-wires = <4>;
-> +				fsl,ave-ctrl = <4>;
-> +				fsl,ave-delay = <2>;
-> +				fsl,settling = <10>;
->  			};
->  
->  			i2c0: i2c@80058000 {
-> diff --git a/drivers/staging/iio/adc/mxs-lradc.c b/drivers/staging/iio/adc/mxs-lradc.c
-> index aa1f337..dbc0af6 100644
-> --- a/drivers/staging/iio/adc/mxs-lradc.c
-> +++ b/drivers/staging/iio/adc/mxs-lradc.c
-> @@ -1230,10 +1230,45 @@ MODULE_DEVICE_TABLE(of, mxs_lradc_dt_ids);
->  static int mxs_lradc_probe_touchscreen(struct mxs_lradc *lradc,
->  						struct device_node *lradc_node)
->  {
-> -	/* TODO retrieve from device tree */
-> +	int ret;
-> +	u32 ts_wires = 0, adapt;
-> +
-> +	ret = of_property_read_u32(lradc_node, "fsl,lradc-touchscreen-wires",
-> +				&ts_wires);
-> +	if (ret)
-> +		return -ENODEV; /* touchscreen feature disabled */
-> +
-> +	switch (ts_wires) {
-> +	case 4:
-> +		lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_4WIRE;
-> +		break;
-> +	case 5:
-> +		if (lradc->soc == IMX28_LRADC) {
-> +			lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_5WIRE;
-> +			break;
-> +		}
-> +		/* fall through an error message for i.MX23 */
-> +	default:
-> +		dev_err(lradc->dev,
-> +			"Unsupported number of touchscreen wires (%d)\n",
-> +			ts_wires);
-> +		return -EINVAL;
-> +	}
-> +
->  	lradc->over_sample_cnt = 4;
-> +	ret = of_property_read_u32(lradc_node, "fsl,ave-ctrl", &adapt);
-> +	if (ret == 0)
-> +		lradc->over_sample_cnt = adapt;
-> +
->  	lradc->over_sample_delay = 2;
-> +	ret = of_property_read_u32(lradc_node, "fsl,ave-delay", &adapt);
-> +	if (ret == 0)
-> +		lradc->over_sample_delay = adapt;
-> +
->  	lradc->settling_delay = 10;
-> +	ret = of_property_read_u32(lradc_node, "fsl,settling", &adapt);
-> +	if (ret == 0)
-> +		lradc->settling_delay = adapt;
->  
->  	return 0;
->  }
-> @@ -1249,7 +1284,6 @@ static int mxs_lradc_probe(struct platform_device *pdev)
->  	struct mxs_lradc *lradc;
->  	struct iio_dev *iio;
->  	struct resource *iores;
-> -	uint32_t ts_wires = 0;
->  	int ret = 0, touch_ret;
->  	int i;
->  
-> @@ -1275,25 +1309,6 @@ static int mxs_lradc_probe(struct platform_device *pdev)
->  
->  	touch_ret = mxs_lradc_probe_touchscreen(lradc, node);
->  
-> -	/* Check if touchscreen is enabled in DT. */
-> -	ret = of_property_read_u32(node, "fsl,lradc-touchscreen-wires",
-> -				&ts_wires);
-> -	if (ret)
-> -		dev_info(dev, "Touchscreen not enabled.\n");
-> -	else if (ts_wires == 4)
-> -		lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_4WIRE;
-> -	else if (ts_wires == 5)
-> -		lradc->use_touchscreen = MXS_LRADC_TOUCHSCREEN_5WIRE;
-> -	else
-> -		dev_warn(dev, "Unsupported number of touchscreen wires (%d)\n",
-> -				ts_wires);
-> -
-> -	if ((lradc->soc == IMX23_LRADC) && (ts_wires == 5)) {
-> -		dev_warn(dev, "No support for 5 wire touches on i.MX23\n");
-> -		dev_warn(dev, "Falling back to 4 wire\n");
-> -		ts_wires = 4;
-> -	}
-> -
->  	/* Grab all IRQ sources */
->  	for (i = 0; i < of_cfg->irq_count; i++) {
->  		lradc->irq[i] = platform_get_irq(pdev, i);
-> 
+The series has been tested working on STiH416-B2020 board.
+It applies on top of v3.12-rc3.
+
+Changes since v2:
+  - Create generic DT property for Anti-glitch filtering configuration
+  - Sort i2c-st entries in Makefile and Kconfig
+  - Various cosmetics changes
+  - Return IRQ_NONE in case of spurious interrupt
+  - Use INIT_COMPLETION instead of init_completion in st_i2c_xfer_msg
+  - Simplify st_i2c_xfer as proposed by Wolfram
+  - Fix PM ops issues
+  - Change author name to myself and fix license to GPL v2
+  - Inclu .h file content into the .c file
+
+Changes since v1:
+  - Anti-glitch filtering simplified (Only HW Anti-glitch is kept)
+  - Update I2C timings to comply with I2C specification
+  - Handle spurious interrupts properly
+  - DT binding updates taking into account Stephen's comments
+  - Use "clock-names" property to comply with GCF
+  - DT cosmetic changes reported by Lee and Gabriel 
+
+Signed-off-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+
+Maxime Coquelin (4):
+  i2c: busses: i2c-st: Add ST I2C controller
+  ARM: STi: Supply I2C configuration to STiH416 SoC
+  ARM: STi: Supply I2C configuration to STiH415 SoC
+  ARM: STi: Add I2C config to B2000 and B2020 boards
+
+ Documentation/devicetree/bindings/i2c/i2c-st.txt |   34 +
+ arch/arm/boot/dts/stih415-pinctrl.dtsi           |   36 +
+ arch/arm/boot/dts/stih415.dtsi                   |   53 ++
+ arch/arm/boot/dts/stih416-pinctrl.dtsi           |   35 +
+ arch/arm/boot/dts/stih416.dtsi                   |   53 ++
+ arch/arm/boot/dts/stih41x-b2000.dtsi             |    9 +
+ arch/arm/boot/dts/stih41x-b2020.dtsi             |   22 +
+ drivers/i2c/busses/Kconfig                       |   10 +
+ drivers/i2c/busses/Makefile                      |    1 +
+ drivers/i2c/busses/i2c-st.c                      |  867 ++++++++++++++++++++++
+ 10 files changed, 1120 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-st.txt
+ create mode 100644 drivers/i2c/busses/i2c-st.c
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
