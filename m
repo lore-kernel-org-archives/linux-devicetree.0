@@ -1,78 +1,70 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] DT: Add documentation for cm36651 proximity/light
- sensor
-Date: Tue, 01 Oct 2013 22:27:14 +0100
-Message-ID: <524B3E32.1000809@kernel.org>
-References: <524AC65E.8030407@samsung.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V4 2/3] pincntrl: add support for AMS AS3722 pin control
+ driver
+Date: Tue, 01 Oct 2013 14:30:26 -0600
+Message-ID: <524B30E2.4000704@wwwdotorg.org>
+References: <1380044845-7734-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <524AC65E.8030407-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Meerwald l <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1380044845-7734-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: lee.jones@linaro.org, sameo@linux.intel.com, broonie@kernel.org, linus.walleij@linaro.org, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, rob.herring@calxeda.com, mark.rutland@arm.com, pawel.moll@arm.com, rob@landley.net, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/13 13:55, Beomho Seo wrote:
+On 09/24/2013 11:47 AM, Laxman Dewangan wrote:
+> The AS3722 is a compact system PMU suitable for mobile phones, tablets etc.
 > 
-> This patch adds device tree binding documentation for CM36651 proximity/light sensor.
+> Add a driver to support accessing the GPIO, pinmux and pin configuration
+> of 8 GPIO pins found on the AMS AS3722 through pin control driver and
+> gpiolib.
 > 
-> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/light/cm36651.txt      |   26 ++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  2 files changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/cm36651.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/cm36651.txt b/Documentation/devicetree/bindings/iio/light/cm36651.txt
-> new file mode 100644
-> index 0000000..3dd4efb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/cm36651.txt
-> @@ -0,0 +1,26 @@
-> +* Capella CM36651 I2C Proximity and Color Light sensor
+> The driver will register itself as the pincontrol driver and gpio driver.
+
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-as3722.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-as3722.txt
+
+> +AMS AS3722 Pincontrol
+
+This binding document doesn't appear to define any compatible value. I
+think there should be one binding document per compatible value, rather
+than splitting up the documentation of a particular binding into lots of
+different files. As such, shouldn't this documentation all be part of
+Documentation/devicetree/bindings/regulator/as3722-regulator.txt?
+
+> +DT node contains the different subnode for pin control to represent
+
+Which "DT node"? This paragraph doesn't make much sense...
+
+> +different states. Each of these subnodes represents some desired
+> +configuration for a list of pins. This configuration can include the
+> +mux function to select on those pin(s), and various pin configuration
+> +parameters, such as pull-up, open drain.
+
+I think that paragraph is meant to say the following, as part of
+as3722-regulator.txt:
+
+==========
+Optional sub-nodes:
+
+- pinmux: Represents the pinmux configuration of the AS3722 GPIO pins.
+This node contains pin configuration nodes, as defined by
+pinctrl-bindings.txt
+==========
+
+(and then go on to describe the required/optional properties within the
+pin configuration nodes)
+
+> +Valid values for pin names are:
+
+I would say "pin property" rather than "pin names" here, to make it
+obvious where these values are used.
+
+> +	gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gpio7
 > +
-> +Required properties:
-> +- compatible: must be "capella,cm36651"
-> +- reg: the I2C address of the device
-> +- interrupts: interrupt-specifier for the sole interrupt
-> +	      generated by the device
-> +- vled-supply: regulator for the IR LED. IR_LED is a part
-> +	      of the cm36651 for proximity detection.
-> +	      as covered in ../../regulator/regulator.txt
-Trivial but:
-As covered in
-> +
-> +Example:
-> +
-> +	i2c_cm36651: i2c-gpio {
-> +		/* ... */
-> +
-> +		cm36651@18 {
-> +			compatible = "capella,cm36651";
-> +			reg = <0x18>;
-> +			interrupt-parent = <&gpx0>;
-> +			interrupts = <2 0>;
-> +			vled-supply = <&ps_als_reg>;
-> +		};
-> +
-> +		/* ... */
-> +	};
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 2956800..04eab45 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -15,6 +15,7 @@ atmel	Atmel Corporation
->  avago	Avago Technologies
->  bosch	Bosch Sensortec GmbH
->  brcm	Broadcom Corporation
-> +capella	Capella Microsystems, Inc
->  cavium	Cavium, Inc.
->  chrp	Common Hardware Reference Platform
->  cirrus	Cirrus Logic, Inc.
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +Valid value of function names are:
+
+Similarly, "function property" here. (and values for not value of).
+
+Other than that, this binding looks reasonable.
