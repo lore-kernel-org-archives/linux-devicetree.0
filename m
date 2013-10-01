@@ -1,759 +1,135 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: [PATCHv0,RESEND] Add support for Intersil ISL12057 I2C RTC/Alarm chip
-Date: Tue, 01 Oct 2013 22:21:01 +0200
-Message-ID: <87ob787nf6.fsf@natisbad.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 08/10] pwm-backlight: Use new enable_gpio field
+Date: Tue, 1 Oct 2013 22:49:26 +0200
+Message-ID: <20131001204925.GC9201@ulmo.nvidia.com>
+References: <1379972467-11243-1-git-send-email-treding@nvidia.com>
+ <1379972467-11243-9-git-send-email-treding@nvidia.com>
+ <524B16E8.5080506@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RIYY1s2vRbPFwWeW"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <524B16E8.5080506@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Guan Xuetao <gxt@mprc.pku.edu.cn>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, openezx-devel@lists.openezx.org, linux-samsung-soc@vger.kernel.org, linux-sh@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Netgear ReadyNAS 102 (Armada 370-base) NAS includes an Intersil ISL12057
-I2C RTC/Alarm chip. As part of an effort to get full support for the NAS
-in mainline kernel, I wrote a driver for the chip based on ISL1208 one
-developed by Hebert Valerio Riedel. The patch below is an updated resend
-of the one I submitted on August 3 (i.e. holidays), but got no reply
-for. See
+--RIYY1s2vRbPFwWeW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  https://groups.google.com/forum/#!topic/rtc-linux/ypqMloOezj0
+On Tue, Oct 01, 2013 at 12:39:36PM -0600, Stephen Warren wrote:
+> On 09/23/2013 03:41 PM, Thierry Reding wrote:
+> > Make use of the new enable_gpio field and allow it to be set from DT as
+> > well. Now that all legacy users of platform data have been converted to
+> > initialize this field to an invalid value, it is safe to use the field
+> > from the driver.
+>=20
+> > diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-back=
+light.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight=
+=2Etxt
+>=20
+> >  Optional properties:
+>=20
+> > +  - enable-gpios: a list of GPIOs to enable and disable the backlight
+>=20
+> That seems to imply that multiple GPIOs are legal. Was that intended? If
+> not, I would suggest:
+>=20
+> - enable-gpios: contains a single GPIO specifier for the GPIO which
+> 		enables/disables the backlight. See [1] for the format.
+>=20
+> > =20
+> >  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+> + [1]: Documentation/devicetree/bindings/gpio/gpio.txt
 
-If possible, I would like to be able to get it mainline in 3.13, and
-pushed required DT bindings for ReadyNAS 102 to avoid the NAS to wake up
-in the 70s.
+Yes, that sounds better. Indeed only a single GPIO is supported. Adding
+more than one would require representing the timing between the two and
+that will take us back to where we left off with the power sequences.
 
-Setting and retrieving time works as expected at startup and shutdown.
-Also, alarm bit is set in status register when the alarm is triggered.
+> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight=
+/pwm_bl.c
+>=20
+> > @@ -51,12 +55,27 @@ static void pwm_backlight_power_on(struct pwm_bl_da=
+ta *pb, int brightness,
+> >  		     pb->lth_brightness;
+> > =20
+> >  	pwm_config(pb->pwm, duty_cycle, pb->period);
+> > +
+> > +	if (gpio_is_valid(pb->enable_gpio)) {
+> > +		if (pb->enable_gpio_flags & PWM_BACKLIGHT_GPIO_ACTIVE_LOW)
+> > +			gpio_set_value(pb->enable_gpio, 0);
+> > +		else
+> > +			gpio_set_value(pb->enable_gpio, 1);
+> > +	}
+>=20
+> Feel completely free to ignore this, but when the difference in two
+> code-paths is solely in function parameters, I prefer to calculate the
+> parameter inside the if statement, then call the function outside the
+> conditional code, to highlight the common/different parts:
+>=20
+> int value;
+>=20
+> /* or an if statement for the next 1 line, if you don't like ?: */
+> value =3D (pb->enable_gpio_flags & PWM_BACKLIGHT_GPIO_ACTIVE_LOW) ? 0 : 1;
+> gpio_set_value((pb->enable_gpio, value);
 
-Some things worth mentioning:
- - on my platform, the Alarm IRQ is not connected to the SoC but to a
-   power chip, so I cannot test the alarm IRQ handling code of the
-   patch. I'd be happy to get feedback if someone has the same hardware.
- - nonetheless, when the alarm is set and the NAS is powered off, it
-   gets woken up, i.e. the alarm setting code does work.
- - trying to interact w/ the clock using userland tools (Debian jessie)
-   makes me wonder what I missed:
+I actually tried that, but it looked cluttered, so I opted for the
+alternative. Not that this matters all that much, because beginning with
+3.13 the GPIO subsystem should be able to handle the active low flag
+internally using the new gpiod_*() API. I plan on converting the driver
+to use that during the next cycle.
 
-   root@humble:/sys/class/rtc/rtc0# hwclock -r
-   hwclock: select() to /dev/rtc0 to wait for clock tick timed out: Success
-  
-   root@humble:/tmp# gcc rtctest.c 
-   root@humble:/tmp# ./a.out 
-  
-                          RTC Driver Test Example.
-  
-    Counting 5 update (1/sec) interrupts from reading /dev/rtc0:
-  
-    [ nothing happens ]
-  
-    I tried and find some documentation on the topic to understand where
-    the issue comes from but found nothing obvious.
+> > @@ -148,11 +168,10 @@ static int pwm_backlight_parse_dt(struct device *=
+dev,
+>=20
+> > +	data->enable_gpio =3D of_get_named_gpio_flags(node, "enable-gpios", 0,
+> > +						    &flags);
+> > +	if (gpio_is_valid(data->enable_gpio) && (flags & OF_GPIO_ACTIVE_LOW))
+> > +		data->enable_gpio_flags |=3D PWM_BACKLIGHT_GPIO_ACTIVE_LOW;
+>=20
+> This doesn't seem to handle deferred probe correctly; I would expect
+> something more like:
+>=20
+> 	data->enable_gpio =3D of_get_named_gpio_flags(...);
+> 	if (data->enable_gpio =3D=3D -EPROBE_DEFERRED)
+> 		return data->enable_gpio;
+> 	if (gpio_is_valid(...))
+> 		...
+> 	return 0;
+>=20
+> I suppose it's possible that the value filters down to
+> gpio_request_one() and this actually does work out OK, but that feels
+> very accidental/implicit to me.
 
-I intend to provide some documentation in next round and fix reported
-issues. Additionally, I wonder why ISL1208 code has no specific mutex
-protection for access and changes. I also followed that path in attached
-driver but I guess this is something that should be improved.
+Yes, I think it does indeed propagate to gpio_request_one(), but you're
+right, it should be caught explicitly.
 
-Comments welcome,
+Thierry
 
-Cheers,
+--RIYY1s2vRbPFwWeW
+Content-Type: application/pgp-signature
 
-a+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
 
-Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
----
- drivers/rtc/Kconfig        |   9 +
- drivers/rtc/Makefile       |   1 +
- drivers/rtc/rtc-isl12057.c | 641 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 651 insertions(+)
- create mode 100644 drivers/rtc/rtc-isl12057.c
+iQIcBAEBAgAGBQJSSzVVAAoJEN0jrNd/PrOhNh0P/iIzsxuvFEo9B4ZEhLN7DYDh
+vX/9LIfVXFZIwrx8ID8HDPG2LbSnZ+Z4pxVvPdYS99Buci2Qb9q8CtoZW02E7SZd
+7cW++UrdnDShub81afs3M+39IwLfqdAIGjmlbCx19fVEeoZbm53K/bOQkNRGNPke
+N4akydvbuzA71RBIQd2oadwPezmVCo9RuVr1S299VgSp8zYPOGpmpqc9UWpxMnay
+xj20eCy+WHCslBs7AL6rI+lYtQT0sK1XrxuwnjXAsXD5XBRe7PRD+Qy36hJL/KzZ
+OuXeoZMOyE0wG/fDSTQpqn/lvYXvi0wSrf8SLhkU9gHFPHQ28pn91/vf4ow5oeW/
+oYdUNb28xJTDbzsUaemy0SzENRLNK2ri/b70pWNLs/hrQ3fIwenaQI/6rOvdQ1P8
+fGTrRB69fbQGpiUSTh5zWSpNmovhdU9SG98wQvGFswQ9CPYE/uCnofet106dDSQc
+81pho5bZWVuQ9LCITP03b9w6s4DrzEiFBcC6BKXUE19w+Z0/i3GAbTGkkztSyrCu
+y+0YSkXqvwmdComtBV5oIgkSI48+NAyYcpE7SaWdwI+arkru/c1aTvsfNvQyqsXA
+FWZuwO+oe3ArV32vM59i58gJwpkeJ1Hw1ZJeYelIWsFUBRQmNS7tSRRflCDB0uyw
+6UFVAxfserLZmKPQi2Vl
+=4zYP
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 9654aa3..cfdc45b 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -294,6 +294,15 @@ config RTC_DRV_ISL12022
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-isl12022.
- 
-+config RTC_DRV_ISL12057
-+       tristate "Intersil ISL12057"
-+       help
-+	  If you say yes here you get support for the Intersil ISL12057
-+	  I2C RTC/Calendar chip.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rtc-isl12057.
-+
- config RTC_DRV_X1205
- 	tristate "Xicor/Intersil X1205"
- 	help
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 2dff3d2..e3bc3d5 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -57,6 +57,7 @@ obj-$(CONFIG_RTC_DRV_HID_SENSOR_TIME) += rtc-hid-sensor-time.o
- obj-$(CONFIG_RTC_DRV_IMXDI)	+= rtc-imxdi.o
- obj-$(CONFIG_RTC_DRV_ISL1208)	+= rtc-isl1208.o
- obj-$(CONFIG_RTC_DRV_ISL12022)	+= rtc-isl12022.o
-+obj-$(CONFIG_RTC_DRV_ISL12057)  += rtc-isl12057.o
- obj-$(CONFIG_RTC_DRV_JZ4740)	+= rtc-jz4740.o
- obj-$(CONFIG_RTC_DRV_LP8788)	+= rtc-lp8788.o
- obj-$(CONFIG_RTC_DRV_LPC32XX)	+= rtc-lpc32xx.o
-diff --git a/drivers/rtc/rtc-isl12057.c b/drivers/rtc/rtc-isl12057.c
-new file mode 100644
-index 0000000..7bc6465
---- /dev/null
-+++ b/drivers/rtc/rtc-isl12057.c
-@@ -0,0 +1,641 @@
-+/*
-+ * rtc-isl12057 - Driver for Intersil ISL12057 I2C Real Time Clock/Calendar
-+ *
-+ * Copyright (C) 2013, Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-+ *
-+ * This work is largely based on Intersil ISL1208 driver developed by
-+ * Hebert Valerio Riedel <hvr-mXXj517/zsQ@public.gmane.org>.
-+ *
-+ * Detailed datasheet on which this development is based is available here:
-+ *
-+ *  http://natisbad.org/NAS2/refs/ISL12057.pdf
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/rtc.h>
-+#include <linux/i2c.h>
-+#include <linux/bcd.h>
-+#include <linux/rtc.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+
-+#define DRV_NAME "rtc-isl12057"
-+#define DRV_VERSION "0.1"
-+
-+/* RTC section */
-+#define ISL12057_REG_RTC_SC     0x00 /* Seconds */
-+#define ISL12057_REG_RTC_MN     0x01 /* Minutes */
-+#define ISL12057_REG_RTC_HR     0x02 /* Hours */
-+#define ISL12057_REG_RTC_HR_PM  (1<<5) /* AM/PM bit in 12h format */
-+#define ISL12057_REG_RTC_HR_MIL (1<<6) /* 24h/12h format */
-+#define ISL12057_REG_RTC_DW     0x03 /* Day of the Week */
-+#define ISL12057_REG_RTC_DT     0x04 /* Date */
-+#define ISL12057_REG_RTC_MO     0x05 /* Month */
-+#define ISL12057_REG_RTC_YR     0x06 /* Year */
-+#define ISL12057_RTC_SEC_LEN    7
-+
-+/* Alarm 1 section */
-+#define ISL12057_REG_A1_SC      0x07 /* Alarm 1 Seconds */
-+#define ISL12057_REG_A1_MN      0x08 /* Alarm 1 Minutes */
-+#define ISL12057_REG_A1_HR      0x09 /* Alarm 1 Hours */
-+#define ISL12057_REG_A1_HR_PM   (1<<5) /* AM/PM bit in 12h format */
-+#define ISL12057_REG_A1_HR_MIL  (1<<6) /* 24h/12h format */
-+#define ISL12057_REG_A1_DWDT    0x0A /* Alarm 1 Date / Day of the week */
-+#define ISL12057_REG_A1_DWDT_B  (1<<6) /* DW / DT selection bit */
-+#define ISL12057_A1_SEC_LEN     4
-+
-+/* Alarm 2 section */
-+#define ISL12057_REG_A2_MN      0x0B /* Alarm 2 Minutes */
-+#define ISL12057_REG_A2_HR      0x0C /* Alarm 2 Hours */
-+#define ISL12057_REG_A2_DWDT    0x0D /* Alarm 2 Date / Day of the week */
-+#define ISL12057_A2_SEC_LEN     3
-+
-+/* Control/Status registers */
-+#define ISL12057_REG_INT        0x0E
-+#define ISL12057_REG_INT_A1IE   (1<<0) /* Alarm 1 interrupt enable bit */
-+#define ISL12057_REG_INT_A2IE   (1<<1) /* Alarm 2 interrupt enable bit */
-+#define ISL12057_REG_INT_INTCN  (1<<2) /* Interrupt control enable bit */
-+#define ISL12057_REG_INT_RS1    (1<<3) /* Freq out control bit 1 */
-+#define ISL12057_REG_INT_RS2    (1<<4) /* Freq out control bit 2 */
-+#define ISL12057_REG_INT_EOSC   (1<<7) /* Oscillator enable bit */
-+
-+#define ISL12057_REG_SR         0x0F
-+#define ISL12057_REG_SR_A1F     (1<<0) /* Alarm 1 interrupt bit */
-+#define ISL12057_REG_SR_A2F     (1<<1) /* Alarm 2 interrupt bit */
-+#define ISL12057_REG_SR_OSF     (1<<7) /* Oscillator failure bit */
-+
-+/* Register memory map length */
-+#define ISL12057_MEM_MAP_LEN    0x10
-+
-+static struct i2c_driver isl12057_driver;
-+
-+/* block read */
-+static int isl12057_i2c_read_regs(struct i2c_client *client, u8 reg, u8 buf[],
-+				  unsigned len)
-+{
-+	struct i2c_msg msgs[2] = {
-+		{
-+			.addr = client->addr,
-+			.len = sizeof(u8),
-+			.buf = buf
-+		},
-+		{
-+			.addr = client->addr,
-+			.flags = I2C_M_RD,
-+			.len = len,
-+			.buf = buf
-+		}
-+	};
-+	int ret;
-+
-+	BUG_ON(reg > ISL12057_REG_SR);
-+	BUG_ON(reg + len > ISL12057_REG_SR + 1);
-+
-+	ret = i2c_transfer(client->adapter, msgs, 2);
-+	if (ret <= 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/* block write */
-+static int isl12057_i2c_set_regs(struct i2c_client *client, u8 reg,
-+				 u8 const buf[], unsigned len)
-+{
-+	u8 i2c_buf[ISL12057_MEM_MAP_LEN + 1];
-+	struct i2c_msg msgs[1] = {
-+		{
-+			.addr = client->addr,
-+			.len = len + 1,
-+			.buf = i2c_buf
-+		}
-+	};
-+	int ret;
-+
-+	BUG_ON(reg > ISL12057_REG_SR);
-+	BUG_ON(reg + len > ISL12057_REG_SR + 1);
-+
-+	i2c_buf[0] = reg;
-+	memcpy(&i2c_buf[1], &buf[0], len);
-+
-+	ret = i2c_transfer(client->adapter, msgs, 1);
-+	if (ret <= 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Try and match register bits w/ fixed null values to see whether we
-+ * are dealing with an ISL12057.
-+ */
-+static int isl12057_i2c_validate_client(struct i2c_client *client)
-+{
-+	u8 regs[ISL12057_MEM_MAP_LEN] = { 0, };
-+	u8 mask[ISL12057_MEM_MAP_LEN] = { 0x80, 0x80, 0x80, 0xf8,
-+					  0xc0, 0x60, 0x00, 0x00,
-+					  0x00, 0x00, 0x00, 0x00,
-+					  0x00, 0x00, 0x60, 0x7c };
-+	int ret, i;
-+
-+	ret = isl12057_i2c_read_regs(client, 0, regs, ISL12057_MEM_MAP_LEN);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < ISL12057_MEM_MAP_LEN; ++i) {
-+		if (regs[i] & mask[i])	/* check if bits are cleared */
-+			return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static int isl12057_rtc_toggle_alarm(struct i2c_client *client, int enable)
-+{
-+	int ir;
-+
-+	ir = i2c_smbus_read_byte_data(client, ISL12057_REG_INT);
-+	if (ir < 0) {
-+		dev_err(&client->dev, "%s: reading INT failed\n", __func__);
-+		return ir;
-+	}
-+
-+	if (enable)
-+		ir |=  ISL12057_REG_INT_A1IE;
-+	else
-+		ir &= ~ISL12057_REG_INT_A1IE;
-+
-+	ir = i2c_smbus_write_byte_data(client, ISL12057_REG_INT, ir);
-+	if (ir < 0) {
-+		dev_err(&client->dev, "%s: writing INT failed\n", __func__);
-+		return ir;
-+	}
-+
-+	return 0;
-+}
-+
-+static int isl12057_i2c_read_time(struct i2c_client *client,
-+				  struct rtc_time *tm)
-+{
-+	u8 regs[ISL12057_RTC_SEC_LEN] = { 0, };
-+	int ret;
-+
-+	ret = i2c_smbus_read_byte_data(client, ISL12057_REG_SR);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "%s: reading SR failed\n", __func__);
-+		return ret;
-+	}
-+
-+	ret = isl12057_i2c_read_regs(client, ISL12057_REG_RTC_SC, regs,
-+				     ISL12057_RTC_SEC_LEN);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "%s: reading RTC section failed\n",
-+			__func__);
-+		return ret;
-+	}
-+
-+	tm->tm_sec  = bcd2bin(regs[ISL12057_REG_RTC_SC]);
-+	tm->tm_min  = bcd2bin(regs[ISL12057_REG_RTC_MN]);
-+	tm->tm_hour = bcd2bin(regs[ISL12057_REG_RTC_HR] & 0x3f);
-+	tm->tm_mday = bcd2bin(regs[ISL12057_REG_RTC_DT]);
-+	tm->tm_wday = bcd2bin(regs[ISL12057_REG_RTC_DW]) - 1; /* starts at 1 */
-+	tm->tm_mon  = bcd2bin(regs[ISL12057_REG_RTC_MO]) - 1; /* starts at 1 */
-+	tm->tm_year = bcd2bin(regs[ISL12057_REG_RTC_YR]) + 100;
-+
-+	return 0;
-+}
-+
-+static int isl12057_i2c_read_alarm(struct i2c_client *client,
-+				   struct rtc_wkalrm *alarm)
-+{
-+	struct rtc_time rtc_tm, *alarm_tm = &alarm->time;
-+	u8 regs[ISL12057_A1_SEC_LEN] = { 0, };
-+	unsigned long rtc_secs, alarm_secs;
-+	int ir, ret;
-+
-+	ret = isl12057_i2c_read_regs(client, ISL12057_REG_A1_SC, regs,
-+				     ISL12057_A1_SEC_LEN);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "%s: reading alarm section failed\n",
-+			__func__);
-+		return ret;
-+	}
-+
-+	alarm_tm->tm_sec  = bcd2bin(regs[0] & 0x7f);
-+	alarm_tm->tm_min  = bcd2bin(regs[1] & 0x7f);
-+	alarm_tm->tm_hour = bcd2bin(regs[2] & 0x3f);
-+	alarm_tm->tm_mday = bcd2bin(regs[3] & 0x3f);
-+	alarm_tm->tm_wday = -1;
-+
-+	/*
-+	 * The alarm section does not store year/month. We use the ones in rtc
-+	 * section as a basis and increment month and then year if needed to get
-+	 * alarm after current time.
-+	 */
-+	ret = isl12057_i2c_read_time(client, &rtc_tm);
-+	if (ret)
-+		return ret;
-+	alarm_tm->tm_year = rtc_tm.tm_year;
-+	alarm_tm->tm_mon = rtc_tm.tm_mon;
-+
-+	ret = rtc_tm_to_time(&rtc_tm, &rtc_secs);
-+	if (ret)
-+		return ret;
-+
-+	ret = rtc_tm_to_time(alarm_tm, &alarm_secs);
-+	if (ret)
-+		return ret;
-+
-+	if (alarm_secs < rtc_secs) {
-+		if (alarm_tm->tm_mon == 11) {
-+			alarm_tm->tm_mon = 0;
-+			alarm_tm->tm_year += 1;
-+		} else {
-+			alarm_tm->tm_mon += 1;
-+		}
-+	}
-+
-+	ir = i2c_smbus_read_byte_data(client, ISL12057_REG_INT);
-+	if (ir < 0) {
-+		dev_err(&client->dev, "%s: reading INT failed\n", __func__);
-+		return ir;
-+	}
-+	alarm->enabled = !!(ir & ISL12057_REG_INT_A1IE);
-+
-+	return 0;
-+}
-+
-+static int isl12057_i2c_set_alarm(struct i2c_client *client,
-+				  struct rtc_wkalrm *alarm)
-+{
-+	struct rtc_time *alarm_tm = &alarm->time;
-+	u8 regs[ISL12057_A1_SEC_LEN] = { 0, };
-+	unsigned long rtc_secs, alarm_secs;
-+	struct rtc_time rtc_tm;
-+	int ret, sr, enable = 1;
-+
-+	ret = isl12057_i2c_read_time(client, &rtc_tm);
-+	if (ret)
-+		return ret;
-+
-+	ret = rtc_tm_to_time(&rtc_tm, &rtc_secs);
-+	if (ret)
-+		return ret;
-+
-+	ret = rtc_tm_to_time(alarm_tm, &alarm_secs);
-+	if (ret)
-+		return ret;
-+
-+	/* If alarm time is before current time, disable the alarm */
-+	if (!alarm->enabled || alarm_secs <= rtc_secs) {
-+		enable = 0;
-+	} else {
-+		/*
-+		 * Chip only support alarms up to one month in the future. Let's
-+		 * return an error if we get something after that limit.
-+		 * Comparison is done by incrementing rtc_tm month field by one
-+		 * and checking alarm value is still below.
-+		 */
-+		if (rtc_tm.tm_mon == 11) { /* handle year wrapping */
-+			rtc_tm.tm_mon = 0;
-+			rtc_tm.tm_year += 1;
-+		} else {
-+			rtc_tm.tm_mon += 1;
-+		}
-+
-+		ret = rtc_tm_to_time(&rtc_tm, &rtc_secs);
-+		if (ret)
-+			return ret;
-+
-+		if (alarm_secs > rtc_secs) {
-+			dev_err(&client->dev,
-+				"%s: limit is one month in the future\n",
-+				__func__);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	/* Disable the alarm before modifying it */
-+	sr = i2c_smbus_read_byte_data(client, ISL12057_REG_SR);
-+	if (sr < 0) {
-+		dev_err(&client->dev, "%s: reading SR failed\n", __func__);
-+		return sr;
-+	}
-+
-+	if (sr & ISL12057_REG_SR_A1F) {
-+		sr &= ~ISL12057_REG_SR_A1F;
-+		sr = i2c_smbus_write_byte_data(client, ISL12057_REG_SR, sr);
-+		if (sr < 0) {
-+			dev_err(&client->dev, "%s: writing SR failed\n",
-+				__func__);
-+			return sr;
-+		}
-+	}
-+
-+	/* Program alarm registers */
-+	regs[0] = bin2bcd(alarm_tm->tm_sec);
-+	regs[1] = bin2bcd(alarm_tm->tm_min);
-+	regs[2] = bin2bcd(alarm_tm->tm_hour);
-+	regs[3] = bin2bcd(alarm_tm->tm_mday);
-+
-+	ret = isl12057_i2c_set_regs(client, ISL12057_REG_A1_SC, regs,
-+				    ISL12057_A1_SEC_LEN);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "%s: writing ALARM section failed\n",
-+			__func__);
-+		return ret;
-+	}
-+
-+	/* Enable or disable alarm */
-+	ret = isl12057_rtc_toggle_alarm(client, enable);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int isl12057_i2c_set_time(struct i2c_client *client,
-+				 struct rtc_time const *tm)
-+{
-+	u8 regs[ISL12057_RTC_SEC_LEN] = { 0, };
-+	int sr;
-+
-+	/*
-+	 * The clock has an 8 bit wide bcd-coded register for the year.
-+	 * tm_year is an offset from 1900 and we are interested in the
-+	 * 2000-2099 range, so any value less than 100 is invalid.
-+	 */
-+	if (tm->tm_year < 100)
-+		return -EINVAL;
-+
-+	regs[ISL12057_REG_RTC_SC] = bin2bcd(tm->tm_sec);
-+	regs[ISL12057_REG_RTC_MN] = bin2bcd(tm->tm_min);
-+	regs[ISL12057_REG_RTC_HR] = bin2bcd(tm->tm_hour); /* 24-hour format */
-+	regs[ISL12057_REG_RTC_DT] = bin2bcd(tm->tm_mday);
-+	regs[ISL12057_REG_RTC_MO] = bin2bcd(tm->tm_mon + 1);
-+	regs[ISL12057_REG_RTC_YR] = bin2bcd(tm->tm_year - 100);
-+	regs[ISL12057_REG_RTC_DW] = bin2bcd(tm->tm_wday + 1);
-+
-+	/* write RTC registers */
-+	sr = isl12057_i2c_set_regs(client, 0, regs, ISL12057_RTC_SEC_LEN);
-+	if (sr < 0) {
-+		dev_err(&client->dev, "%s: writing RTC section failed\n",
-+			__func__);
-+		return sr;
-+	}
-+
-+	return 0;
-+}
-+
-+
-+static int isl12057_rtc_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	return isl12057_i2c_read_time(to_i2c_client(dev), tm);
-+}
-+
-+static int isl12057_rtc_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	return isl12057_i2c_set_time(to_i2c_client(dev), tm);
-+}
-+
-+static int isl12057_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+{
-+	return isl12057_i2c_read_alarm(to_i2c_client(dev), alarm);
-+}
-+
-+static int isl12057_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+{
-+	return isl12057_i2c_set_alarm(to_i2c_client(dev), alarm);
-+}
-+
-+static int isl12057_rtc_proc(struct device *dev, struct seq_file *seq)
-+{
-+	struct i2c_client *const client = to_i2c_client(dev);
-+	int sr, ir;
-+
-+	/* Status register */
-+	sr = i2c_smbus_read_byte_data(client, ISL12057_REG_SR);
-+	if (sr < 0) {
-+		dev_err(&client->dev, "%s: reading SR failed\n", __func__);
-+		return sr;
-+	}
-+
-+	seq_printf(seq, "status_reg\t:%s%s%s (0x%.2x)\n",
-+		   (sr & ISL12057_REG_SR_OSF) ? " OSF" : "",
-+		   (sr & ISL12057_REG_SR_A1F) ? " A1F" : "",
-+		   (sr & ISL12057_REG_SR_A2F) ? " A2F" : "", sr);
-+
-+	/* Control register */
-+	ir = i2c_smbus_read_byte_data(client, ISL12057_REG_INT);
-+	if (ir < 0) {
-+		dev_err(&client->dev, "%s: reading INT failed\n", __func__);
-+		return ir;
-+	}
-+
-+	seq_printf(seq, "status_reg\t:%s%s%s%s%s%s (0x%.2x)\n",
-+		   (ir & ISL12057_REG_INT_A1IE) ?  " A1IE"  : "",
-+		   (ir & ISL12057_REG_INT_A2IE) ?  " A2IE"  : "",
-+		   (ir & ISL12057_REG_INT_INTCN) ? " INTCN" : "",
-+		   (ir & ISL12057_REG_INT_RS1) ?   " RS1"   : "",
-+		   (ir & ISL12057_REG_INT_RS2) ?   " RS2"   : "",
-+		   (ir & ISL12057_REG_INT_EOSC) ?  " EOSC"  : "", ir);
-+
-+	return 0;
-+}
-+
-+static int isl12057_rtc_alarm_irq_enable(struct device *dev,
-+					 unsigned int enabled)
-+{
-+	return isl12057_rtc_toggle_alarm(to_i2c_client(dev), enabled);
-+}
-+
-+static irqreturn_t isl12057_rtc_interrupt(int irq, void *data)
-+{
-+	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
-+	struct i2c_client *client = data;
-+	struct rtc_device *rtc = i2c_get_clientdata(client);
-+	int handled = 0, sr = -1, err;
-+
-+	/*
-+	 * I2C reads get NAK'ed if we read straight away after an interrupt?
-+	 * Using a mdelay/msleep didn't seem to help either, so we work around
-+	 * this by continually trying to read the register for a short time.
-+	 */
-+	while (1) {
-+		sr = i2c_smbus_read_byte_data(client, ISL12057_REG_SR);
-+		if (sr >= 0)
-+			break;
-+
-+		if (time_after(jiffies, timeout)) {
-+			dev_err(&client->dev, "%s: reading SR failed\n",
-+				__func__);
-+			return sr;
-+		}
-+	}
-+
-+	if (sr & ISL12057_REG_SR_A1F) {
-+		dev_dbg(&client->dev, "alarm!\n");
-+
-+		rtc_update_irq(rtc, 1, RTC_IRQF | RTC_AF);
-+
-+		/* Clear the alarm */
-+		sr &= ~ISL12057_REG_SR_A1F;
-+		sr = i2c_smbus_write_byte_data(client, ISL12057_REG_SR, sr);
-+		if (sr < 0)
-+			dev_err(&client->dev, "%s: writing SR failed\n",
-+				__func__);
-+		else
-+			handled = 1;
-+
-+		/* Disable the alarm */
-+		err = isl12057_rtc_toggle_alarm(client, 0);
-+		if (err)
-+			return err;
-+	}
-+
-+	return handled ? IRQ_HANDLED : IRQ_NONE;
-+}
-+
-+static const struct rtc_class_ops isl12057_rtc_ops = {
-+	.read_time = isl12057_rtc_read_time,
-+	.set_time = isl12057_rtc_set_time,
-+	.read_alarm = isl12057_rtc_read_alarm,
-+	.set_alarm = isl12057_rtc_set_alarm,
-+	.alarm_irq_enable = isl12057_rtc_alarm_irq_enable,
-+	.proc = isl12057_rtc_proc,
-+};
-+
-+static int isl12057_probe(struct i2c_client *client,
-+			  const struct i2c_device_id *id)
-+{
-+	struct rtc_device *rtc;
-+	int ret = 0;
-+
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-+		return -ENODEV;
-+
-+	if (isl12057_i2c_validate_client(client) < 0)
-+		return -ENODEV;
-+
-+	dev_info(&client->dev, "chip found, driver version " DRV_VERSION "\n");
-+
-+	if (client->irq > 0) {
-+		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-+						isl12057_rtc_interrupt,
-+						IRQF_SHARED|IRQF_ONESHOT,
-+						DRV_NAME, client);
-+		if (!ret) {
-+			device_init_wakeup(&client->dev, 1);
-+			enable_irq_wake(client->irq);
-+		} else {
-+			dev_err(&client->dev,
-+				"Unable to request irq %d, no alarm support\n",
-+				client->irq);
-+			client->irq = 0;
-+		}
-+	}
-+
-+	rtc = devm_rtc_device_register(&client->dev, DRV_NAME,
-+				       &isl12057_rtc_ops, THIS_MODULE);
-+	if (IS_ERR(rtc)) {
-+		ret = PTR_ERR(rtc);
-+		goto exit_free_irq;
-+	}
-+
-+	i2c_set_clientdata(client, rtc);
-+
-+	/* Enable oscillator if not already running */
-+	ret = i2c_smbus_read_byte_data(client, ISL12057_REG_INT);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "reading control reg failed\n");
-+		goto exit_free_irq;
-+	}
-+	if (ret & ISL12057_REG_INT_EOSC) {
-+		ret &= ~ISL12057_REG_INT_EOSC; /* 0 means enabled */
-+		ret = i2c_smbus_write_byte_data(client, ISL12057_REG_INT, ret);
-+		if (ret < 0) {
-+			dev_err(&client->dev, "writing control reg failed\n");
-+			goto exit_free_irq;
-+		}
-+	}
-+
-+	/* Clear oscillator failure and alarm bit if needed */
-+	ret = i2c_smbus_read_byte_data(client, ISL12057_REG_SR);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "reading status reg failed\n");
-+		goto exit_free_irq;
-+	}
-+	if (ret & (ISL12057_REG_SR_OSF | ISL12057_REG_SR_A1F)) {
-+		ret &= ~(ISL12057_REG_SR_OSF | ISL12057_REG_SR_A1F);
-+		ret = i2c_smbus_write_byte_data(client, ISL12057_REG_SR, ret);
-+		if (ret < 0) {
-+			dev_err(&client->dev, "writing status reg failed\n");
-+			goto exit_free_irq;
-+		}
-+	}
-+
-+	return 0;
-+
-+exit_free_irq:
-+	if (client->irq)
-+		free_irq(client->irq, client);
-+
-+	return ret;
-+}
-+
-+static int isl12057_remove(struct i2c_client *client)
-+{
-+	struct rtc_device *rtc = i2c_get_clientdata(client);
-+
-+	rtc_device_unregister(rtc);
-+	if (client->irq)
-+		free_irq(client->irq, client);
-+
-+	return 0;
-+}
-+
-+
-+#ifdef CONFIG_OF
-+static struct of_device_id isl12057_dt_match[] = {
-+	{ .compatible = "isil,isl12057" },
-+	{ },
-+};
-+#endif
-+
-+static const struct i2c_device_id isl12057_id[] = {
-+	{ "isl12057", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, isl12057_id);
-+
-+static struct i2c_driver isl12057_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(isl12057_dt_match),
-+	},
-+	.probe	  = isl12057_probe,
-+	.remove	  = isl12057_remove,
-+	.id_table = isl12057_id,
-+};
-+
-+module_i2c_driver(isl12057_driver);
-+
-+MODULE_AUTHOR("Arnaud EBALARD <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>");
-+MODULE_DESCRIPTION("Intersil ISL12057 RTC/Alarm driver");
-+MODULE_VERSION(DRV_VERSION);
-+MODULE_LICENSE("GPL");
--- 
-1.8.4.rc3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--RIYY1s2vRbPFwWeW--
