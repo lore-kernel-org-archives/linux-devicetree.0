@@ -1,37 +1,77 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5] clk: si570: Add a driver for SI570 oscillators
-Date: Wed, 2 Oct 2013 16:22:33 -0700
-Message-ID: <89416404-18a4-4059-97e0-a8bdd339e1b7@AM1EHSMHS013.ehs.local>
-References: <1379806839-13762-1-git-send-email-soren.brinkmann@xilinx.com>
- <b625092b-682c-4072-85a6-9f9d7f378ec0@VA3EHSMHS043.ehs.local>
- <20131002231751.4343.81234@quantum>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [RFC 00/15] Device Tree schemas and validation
+Date: Thu, 3 Oct 2013 09:38:59 +1000
+Message-ID: <20131002233859.GB29875@voom.fritz.box>
+References: <1380041541-17529-1-git-send-email-bcousson@baylibre.com>
+ <524A8289.3050107@baylibre.com>
+ <524ACB76.1010001@gmail.com>
+ <524AE4FB.4080906@baylibre.com>
+ <CAL_JsqJ31TGFJCSeSOqgee=OLVfSUTAYdF4nSn7X2DiCequVAw@mail.gmail.com>
+ <20131002135450.GH6506@voom.fritz.box>
+ <20131002180841.GG27287@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20131002231751.4343.81234@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20131002180841.GG27287@sirena.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <tomasz.figa@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, fparent@baylibre.com, Benoit Cousson <bcousson@baylibre.com>, Olof Johansson <olof@lixom.net>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 02, 2013 at 04:17:51PM -0700, Mike Turquette wrote:
-> Quoting S=C3=B6ren Brinkmann (2013-10-02 10:20:38)
-> > Hi Mike,
-> >=20
-> > could you please comment on this/apply it to clk-next?
+
+--dTy3Mrz/UPE2dbVg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Oct 02, 2013 at 07:08:41PM +0100, Mark Brown wrote:
+> On Wed, Oct 02, 2013 at 11:54:50PM +1000, David Gibson wrote:
+> > On Tue, Oct 01, 2013 at 03:54:20PM -0500, Rob Herring wrote:
 >=20
-> It looks good and is in the queue. Will show up in clk-next in a few
-> days.
+> > > I would expect the schema to replace
+> > > Documentation/devicetree/bindings/* over time. I think the thing that
+> > > needs to be worked out here is how to add free form multi-line text.
+>=20
+> > I'm not convinced that's a realistic goal.  As I see it, the
+> > fundamental difference between a binding document and a formal schema
+> > is that a binding defines both the syntax required of a node, and its
+> > semantics, whereas a schema defines only syntax - the semantics still
+> > need to be defined somewhere.
+>=20
+> So long as the schema lets you include free form text to define the
+> semantics I'm not sure there's an incompatibility there - the same
+> document can cover both.
 
-Thanks, Mike.
+True, there's no reason the machine-readable schema and human-readable
+documentation can't be contained in the same file.
 
-	S=C3=B6ren
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
+--dTy3Mrz/UPE2dbVg
+Content-Type: application/pgp-signature
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSTK6TAAoJEGw4ysog2bOSnEoP/26N9hpmK9OXk1FyPYmarpqn
+LvBXmno3c3Xlpzhr8KQMtKd5BQGnk8vj8HeAHM2qZ1Ndjz9EeVcl0ZZyKg4SkgZW
+YAg7mTs4xMQI//f/a8iWr/xPlpJ8a6i0+RIgWXIa3iQCVJFIK5Xh8g05YE0u6B0U
+qwSsjyFhTll93dMLoH4/d/KERT2kP2UfQQVfyDnK/VyR/i7YwUtfmo4nlRlptApx
+q4bjMLjGyXS81aOKPu6ogmNo5Kxdqszv9gnDT34mKVNI6k4EtIz/QLivNqIWjWmN
+9ixQiekyWEAkRV0MRy7xeemsu87uBQA9ngMvAVOmYr6Zyw4ELT8YgbqEutpGdw5O
+T9+c2uN6eyOU4G1qsq6DJfgQcxELIitD7sitoSUGLOksDYid2pUdJTU13j+qFavj
+JPvevm1u1YloVEqFqDmXPtQ+CnwnACl3ZO/tbrxo0VE8AKhxONNFYupqcUjnnkr+
+OV73GsW2H4/V2PdT0M9WBub8+RemPTAI+Y5dkEhgTBATT4G4t3JzHt4+eWQw/cwD
+pH3/HmxRjSAnywEZNxdIEBtVoJdb/u8iIeTlMeOjvpuWTpEzKeVEiPzQo61SjepP
+nIx7DI+ZZv8IHDL7O3fBXmlXwYAf7SKnsvViTB6pzcQlV47HYgCrM9P2cPcjxl3D
+VFt6hNEYaR4emrdx+NGd
+=27PK
+-----END PGP SIGNATURE-----
+
+--dTy3Mrz/UPE2dbVg--
