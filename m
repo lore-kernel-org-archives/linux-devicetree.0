@@ -1,51 +1,84 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 4/6] ARM: shmobile: emev2: Define SMU clock DT bindings
-Date: Wed, 2 Oct 2013 10:28:37 +0900
-Message-ID: <20131002012837.GA29457@verge.net.au>
-References: <52410F86.4040301@renesas.com>
- <20130924131331.0e9a5f830f531655b2ea0ebe@ops.dti.ne.jp>
- <20130924045215.GE3619@verge.net.au>
- <21574726.tiJa6Opb1k@avalon>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCH 3/7] arm: dts: dra7: add bandgap entry
+Date: Tue, 1 Oct 2013 21:28:07 -0400
+Message-ID: <524B76A7.101@ti.com>
+References: <1380652344-18819-1-git-send-email-eduardo.valentin@ti.com> <1380652344-18819-4-git-send-email-eduardo.valentin@ti.com> <20131001224645.GC11451@kahuna>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <21574726.tiJa6Opb1k@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: takasi-y@ops.dti.ne.jp, SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, ben.dooks@codethink.co.uk, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, Paul Mundt <lethal@linux-sh.org>, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="Vo1ERtetX9QxKm2uHovL9jc0UFaGJSDol"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20131001224645.GC11451@kahuna>
+Sender: linux-pm-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob.herring@calxeda.com, linux@roeck-us.net, rui.zhang@intel.com, grant.likely@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 01, 2013 at 01:36:33PM +0200, Laurent Pinchart wrote:
-> Hi Yoshii-san and Simon,
-> 
-> On Tuesday 24 September 2013 13:52:15 Simon Horman wrote:
-> > [ Cc Laurent ]
-> > 
-> > On Tue, Sep 24, 2013 at 01:13:31PM +0900, takasi-y@ops.dti.ne.jp wrote:
-> > > Device tree clock binding document for EMMA Mobile EV2 SMU.
-> > > Following nodes are defined to describe clock tree.
-> > > - renesas,emev2-smu
-> > > - renesas,emev2-smu-clkdiv
-> > > - renesas,emev2-smu-gclk
-> > 
-> > I realise this has been entirely consistent in the past and
-> > even as recently as Linus' pre v3.12-rc2 master branch.
-> > However, after some recent discussion we are now trying to make our
-> > compatibility strings consistently of the form renesas,<unit>-<soc>.
-> > 
-> > With this in mind I believe the strings should be:
-> > 
-> > - renesas,smu-emev2
-> > - renesas,smu-clkdiv-emev2
-> > - renesas,smu-gclk-emev2
-> > 
-> > To be honest I am not quite sure about the "-clkdiv" and "-gclk"
-> > bits and I would appreciate some review from others.
-> 
-> I don't have access to the EMEV2 datasheet so my ability to comment on this is 
-> somehow limited. However, given that the clock hardware is very SoC-specific, 
-> it might make sense to keep the names proposed by Yoshii-san. This would be 
-> consistent with the other clock bindings.
+--Vo1ERtetX9QxKm2uHovL9jc0UFaGJSDol
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Laurent. If that seems fine by you then it is fine by me.
+On 01-10-2013 18:46, Nishanth Menon wrote:
+> On 14:32-20131001, Eduardo Valentin wrote:
+>> This patch adds bandgap IP entry on DRA7 dtsi device tree file.
+>>
+>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+>> ---
+>>  arch/arm/boot/dts/dra7.dtsi | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi=
+
+>> index 3a746c2..4e9b159 100644
+>> --- a/arch/arm/boot/dts/dra7.dtsi
+>> +++ b/arch/arm/boot/dts/dra7.dtsi
+>> @@ -53,6 +53,18 @@
+>>  		};
+>>  	};
+>> =20
+>> +	bandgap: bandgap {
+> 	would you like to follow bandgap: bandgap@4a0021e0 convention?
+> Also, could you move it under ocp?
+> I already commented about this previously here:=20
+> https://lkml.org/lkml/2013/9/27/300
+
+yes, this can be done.
+
+>=20
+>> +		reg =3D <0x4a0021e0 0xc
+>> +			0x4a00232c 0xc
+>> +			0x4a002380 0x2c
+>> +			0x4a0023C0 0x3c
+>> +			0x4a002564 0x8
+>> +			0x4a002574 0x50>;
+>> +		compatible =3D "ti,dra752-bandgap";
+>> +		interrupts =3D <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
+>> +		#thermal-sensor-cells =3D <1>;
+>> +	};
+>> +
+>>  	gic: interrupt-controller@48211000 {
+>>  		compatible =3D "arm,cortex-a15-gic";
+>>  		interrupt-controller;
+
+
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
+
+
+--Vo1ERtetX9QxKm2uHovL9jc0UFaGJSDol
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlJLdqcACgkQCXcVR3XQvP3eSAEAnybI5nl+eEfPcvdDtXgBxaiC
+19sq+S1czdf5bTxo0bABAP3Jl/r8PdsojZbCUyDyxP5kjqdHNmWlTnmj1BxkADJ/
+=jDIx
+-----END PGP SIGNATURE-----
+
+--Vo1ERtetX9QxKm2uHovL9jc0UFaGJSDol--
