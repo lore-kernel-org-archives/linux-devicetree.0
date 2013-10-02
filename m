@@ -1,30 +1,21 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: proposal: create a separate devicetree-meta mailing list
-Date: Wed, 02 Oct 2013 10:02:25 -0600
-Message-ID: <524C4391.8090609@wwwdotorg.org>
-References: <60BA5429A0E1584BA3633194F6F993B50E8FEF85@NA-MBX-03.mgc.mentorg.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] pinctrl: palmas: remove pin config BIAS_PULL_PIN_DEFAULT
+ support
+Date: Wed, 02 Oct 2013 10:11:31 -0600
+Message-ID: <524C45B3.8010109@wwwdotorg.org>
+References: <1380713832-24488-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <60BA5429A0E1584BA3633194F6F993B50E8FEF85-0dz9ie/QGrnnlEkxMdpx1dQH9K4/4qFeAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Chaiken, Alison" <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1380713832-24488-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: linus.walleij@linaro.org, swarren@nvidia.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
-On 10/02/2013 12:30 AM, Chaiken, Alison wrote:
-> I propose that we create a new devicetree-meta mailing list to discuss schemas,
-> dtc, new DT repository, new maintainers' responsibilities and similar questions
-> that relate to policy and tools.  After the proposed split, messages about
-> settings for particular hardware would stay in this device-tree mailing list.
-> Messages in the new mailing list would logically be CC'ed here, but messages
-> from this list should not be CC'ed to the meta list, as discussions of policy
-> should be kept separate so that they don't get lost in the chatter.
+On 10/02/2013 05:37 AM, Laxman Dewangan wrote:
+> Palmas devices do not support the default bias configuration
+> and hence removing this option from valid pin config parameters.
 
-My feeling is that would fragment the discussion too much.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Stephen Warren <swarren@nvidia.com>
