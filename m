@@ -1,125 +1,169 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [RESEND PATCHv2] watchdog: dw: Enable OF support for DW watchdog
- timer.
-Date: Wed, 2 Oct 2013 12:27:43 -0700
-Message-ID: <20131002192743.GA4695@roeck-us.net>
-References: <1380739472-26172-1-git-send-email-dinguyen@altera.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 2/6] clk: exynos5410: register clocks using common clock framework
+Date: Wed, 02 Oct 2013 22:32:14 +0200
+Message-ID: <5525634.OHrUpYtaZv@flatron>
+References: <1380644227-12244-1-git-send-email-v.tyrtov@samsung.com> <1380644227-12244-3-git-send-email-v.tyrtov@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1380739472-26172-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1380644227-12244-3-git-send-email-v.tyrtov@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Vyacheslav Tyrtov <v.tyrtov@samsung.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Tarek Dakhran <t.dakhran@samsung.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-samsung-soc@vger.kernel.org, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Naour Romain <romain.naour@openwide.fr>, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 02, 2013 at 01:44:32PM -0500, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
-> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Hi Vyacheslav, Tarek,
+
+On Tuesday 01 of October 2013 20:17:03 Vyacheslav Tyrtov wrote:
+> From: Tarek Dakhran <t.dakhran@samsung.com>
 > 
-> Add device tree support to the DW watchdog timer.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> v2:
-> - Use of_match_ptr() for of_match_table
-> ---
->  .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
->  drivers/watchdog/dw_wdt.c                          |    8 ++++++++
->  2 files changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> new file mode 100644
-> index 0000000..29e150b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> @@ -0,0 +1,16 @@
-> +Synopsys Designware Watchdog Timer
-> +
+> The EXYNOS5410 clocks are statically listed and registered
+> using the Samsung specific common clock helper functions.
+[snip]
 > +Required Properties:
 > +
-> +- Compatiblity	: "snps,dw-wdt"
-> +- reg		: Base address of the watchdog timer register.
+> +- comptible: should be one of the following.
+> +  - "samsung,exynos5410-clock" - controller compatible with Exynos5410
+> SoC. +
+
+nit: There is only one compatible value supported by this driver, so "one 
+of the following" sounds a bit strange.
+
+> +- reg: physical base address of the controller and length of memory
+> mapped +  region.
 > +
-> +Example:
+> +- #clock-cells: should be 1.
+[snip]
+> +  mct			315
+> +  mmc0			351
+> +  mmc1			352
+> +  mmc2			353
 > +
-> +	watchdog0: wd@ffd02000 {
-> +		compatible = "snps,dw-wdt";
-> +		reg = <0xffd02000 0x1000>;
-> +		interrupts = <0 171 4>;
-> +		clocks = <&per_base_clk>;
-> +		status = "okay";
+
+As Bart already mentioned, it would be better to use preprocessor macros 
+to define all the clock IDs, like it is done in s3c64xx clock driver and 
+after applying Andrzej Hajda's patchs on all Exynos clock drivers.
+
+> +Example 1: An example of a clock controller node is listed below.
+> +
+> +	clock: clock-controller@0x10010000 {
+> +		compatible = "samsung,exynos5410-clock";
+> +		reg = <0x10010000 0x30000>;
+> +		#clock-cells = <1>;
 > +	};
-> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-> index 2037669..a720f9b 100644
-> --- a/drivers/watchdog/dw_wdt.c
-> +++ b/drivers/watchdog/dw_wdt.c
-> @@ -29,6 +29,7 @@
->  #include <linux/miscdevice.h>
->  #include <linux/module.h>
->  #include <linux/moduleparam.h>
-> +#include <linux/of.h>
->  #include <linux/pm.h>
->  #include <linux/platform_device.h>
->  #include <linux/spinlock.h>
-> @@ -343,12 +344,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct of_device_id dw_wdt_of_match[] = {
-> +	{ .compatible = "snps,dw-wdt", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
+[snip]
+> +PNAME(mpll_user_p)	= { "fin_pll", "sclk_mpll", };
+> +PNAME(bpll_user_p)	= { "fin_pll", "sclk_bpll", };
+> +PNAME(mpll_bpll_p)	= { "sclk_mpll_muxed", "sclk_bpll_muxed", };
 > +
->  static struct platform_driver dw_wdt_driver = {
->  	.probe		= dw_wdt_drv_probe,
->  	.remove		= dw_wdt_drv_remove,
->  	.driver		= {
->  		.name	= "dw_wdt",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(dw_wdt_of_match),
+> +
+> +
+> +PNAME(group_main)	= {	"fin_pll", "fin_pll",
+> +				"sclk_hdmi27m", "sclk_dptxphty",
+> +				"sclk_usbhost20phy", "sclk_hdmiphy",
+> +				"sclk_mpll_bpll", "sclk_epll",
+> +				"sclk_vpll", "sclk_cpll" };
 
-There is a separate set of patches from Sachin, removing unnecessary
-uses of of_match_ptr() from various watchdog drivers. Sachin's argument
-is that it does not make sense to use of_match_ptr if the function
-it points to (dw_wdt_of_match in this case) is always compiled
-unconditionally anyway.
+All mux inputs must be specified in parent lists, even those unused. This 
+is, if a mux has 4-bit selector, then all 2^4 inputs must be specified, 
+with unused ones set to "none". Otherwise this would lead to out of bound 
+accesses from clock code.
 
-Your comments suggest that you actually _added_ of_match_ptr() in v2 of this
-patch, even though dw_wdt_of_match always exists and of_match_ptr is thus
-technically unnecessary.
+> +
+> +/* fixed rate clocks generated outside the soc */
+> +struct samsung_fixed_rate_clock exynos5410_fixed_rate_ext_clks[]
+> __initdata = {
 
-Not that I really care one way or another, but can we get an authoritative
-answer what subsystem maintainers are supposed to accept ?
+static
 
-Thanks,
-Guenter
+> +	FRATE(fin_pll, "fin_pll", NULL, CLK_IS_ROOT, 0),
+> +};
+> +
+> +struct samsung_mux_clock exynos5410_mux_clks[] __initdata = {
 
->  #ifdef CONFIG_PM
->  		.pm	= &dw_wdt_pm_ops,
->  #endif /* CONFIG_PM */
-> -- 
-> 1.7.9.5
-> 
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+static
+
+> +	MUX_A(none, "mout_apll", apll_p, SRC_CPU, 0, 1, "mout_apll"),
+> +	MUX_A(none, "mout_cpu", mout_cpu_p, SRC_CPU, 16, 1, "mout_cpu"),
+> +
+> +	MUX_A(none, "mout_kpll", kpll_p, SRC_KFC, 0, 1, "mout_kpll"),
+> +	MUX_A(none, "mout_kfc", mout_kfc_p, SRC_KFC, 16, 1, "mout_kfc"),
+
+Do you actually need aliases for the four clocks above?
+
+> +	MUX(none, "sclk_mpll", mpll_p, SRC_CPERI1, 8, 1),
+> +	MUX(none, "sclk_mpll_muxed", mpll_user_p, SRC_TOP2, 20, 1),
+[snip]
+> +	DIV_A(none, "div_acp", "div_arm2", DIV_CPU0, 8, 3, "cpu_arm_clk"),
+> +	DIV_A(none, "div_cpud", "div_arm2", DIV_CPU0, 4, 3, 
+"cpu_aclk_cpud"),
+> +	DIV_A(none, "div_atb", "div_arm2", DIV_CPU0, 16, 3, "cpu_atclk"),
+> +	DIV_A(none, "pclk_dbg", "div_arm2", DIV_CPU0, 20, 3, 
+"cpu_pclk_dbg"),
+> +
+> +
+> +	DIV_A(none, "div_kfc", "mout_kfc", DIV_KFC0, 0, 3, "kfc_arm_clk"),
+> +	DIV_A(none, "div_aclk", "div_kfc", DIV_KFC0, 4, 3, 
+"kfc_aclk_cpud"),
+> +	DIV_A(none, "div_pclk", "div_kfc", DIV_KFC0, 20, 3, 
+"kfc_pclk_dbg"),
+
+Same here.
+
+> +
+> +
+> +	DIV(none, "aclk66_pre", "sclk_mpll_muxed", DIV_TOP1, 24, 3),
+> +	DIV(none, "aclk66", "aclk66_pre", DIV_TOP0, 0, 3),
+[snip]
+> +struct samsung_gate_clock exynos5410_gate_clks[] __initdata = {
+
+static
+
+> +
+> +	GATE(mct, "mct", "aclk66", GATE_IP_PERIS, 18, 0, 0),
+[snip]
+> +static struct samsung_pll_clock exynos5410_plls[nr_plls] __initdata = {
+> +	[apll] = PLL(pll_35xx, fout_apll, "fout_apll", "fin_pll", 0x0,
+> +		0x100, NULL),
+> +	[cpll] = PLL(pll_35xx, fout_mpll, "fout_cpll", "fin_pll", 0x10020,
+> +		0x10120, NULL),
+> +	[mpll] = PLL(pll_35xx, fout_mpll, "fout_mpll", "fin_pll", 0x4000,
+> +		0x4100, NULL),
+> +	[bpll] = PLL(pll_35xx, fout_bpll, "fout_bpll", "fin_pll", 0x20010,
+> +		0x20110, NULL),
+> +	[kpll] = PLL(pll_35xx, fout_kpll, "fout_kpll", "fin_pll", 0x28000,
+> +		0x28100, NULL),
+
+nit: It would be better if the magic register offsets above were defined 
+as preprocessor macros as other registers used in this driver.
+
+> +};
+> +
+> +static struct of_device_id ext_clk_match[] __initdata = {
+> +	{ .compatible = "samsung,exynos5410-oscclk", .data = (void *)0, },
+> +	{ },
+> +};
+
+Please consider using generic fixed rate clock bindings.
+
+> +DEFINE_SPINLOCK(int_div_lock);
+
+This does not seem to be used anywhere.
+
+> +
+> +/* register exynos5410 clocks */
+> +void __init exynos5410_clk_init(struct device_node *np)
+
+static
+
+> +{
+> +	void __iomem *reg_base;
+> +
+> +	if (np) {
+
+This check is redundant, since this function can be only called from 
+of_clk_init() with a valid pointer to device tree node.
+
+Best regards,
+Tomasz
