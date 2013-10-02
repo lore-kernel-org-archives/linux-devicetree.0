@@ -1,87 +1,87 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 1/4] i2c: busses: i2c-st: Add ST I2C controller
-Date: Wed, 2 Oct 2013 11:02:57 +0200
-Message-ID: <20131002090257.GA3059@katana>
-References: <1380623952-4252-1-git-send-email-maxime.coquelin@st.com>
- <1380623952-4252-2-git-send-email-maxime.coquelin@st.com>
- <524B346C.8070607@wwwdotorg.org>
- <524BDB00.3010508@st.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [RFC 00/15] Device Tree schemas and validation
+Date: Wed, 2 Oct 2013 18:24:02 +1000
+Message-ID: <20131002082402.GE6506@voom.fritz.box>
+References: <1380041541-17529-1-git-send-email-bcousson@baylibre.com>
+ <524A8289.3050107@baylibre.com>
+ <524ACB76.1010001@gmail.com>
+ <524AE4FB.4080906@baylibre.com>
+ <E1VR1hx-0000C1-6J@jdl.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
-Return-path: <linux-doc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="//IivP0gvsAy3Can"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <524BDB00.3010508@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime COQUELIN <maxime.coquelin@st.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Stephen GALLIMORE <stephen.gallimore@st.com>, Stuart MENEFY <stuart.menefy@st.com>, Lee Jones <lee.jones@linaro.org>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>
+In-Reply-To: <E1VR1hx-0000C1-6J@jdl.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Loeliger <jdl@jdl.com>
+Cc: Benoit Cousson <bcousson@baylibre.com>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, swarren@wwwdotorg.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, olof@lixom.net, devicetree@vger.kernel.org, tomasz.figa@gmail.com, grant.likely@secretlab.ca, khilman@linaro.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fparent@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
 
---ReaqsoxgOBHFXBhH
+--//IivP0gvsAy3Can
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-
-> >> +Optional properties :
-> >> +- i2c-min-scl-pulse-width-us : The minimum valid SCL pulse width that=
- is allowed
-> >> +  through the deglitch circuit. In units of us.
-> >> +- i2c-min-sda-pulse-width-us : The minimum valid SDA pulse width that=
- is allowed
-> >> +  through the deglitch circuit. In units of us.
-> > Are those properties specific to this binding, or intended to be
-> > generic? If specific to this binding, a vendor prefix should be present
-> > in the property name. If not, you probably want to document the
-> > properties in some common file.
-> Ok.
-> In last revision, I put this properties as specific to this binding.
-> Wolfram proposed to make this generic, but it looks like this IP is the=
-=20
-> only one
-> needing such properties.
+On Tue, Oct 01, 2013 at 10:17:53AM -0500, Jon Loeliger wrote:
+> > Hi Rob,
+> >=20
+> > On 01/10/2013 15:17, Rob Herring wrote:
+> > > On 10/01/2013 03:06 AM, Benoit Cousson wrote:
+> > >> + more DT maintainers folks
+> > >>
+> > >> Hi all,
+> > >>
+> > >> I know this is mostly boring user space code, but I was expecting a
+> > >> little bit of comments about at least the bindings syntax:-(
+> > >>
+> > >> I'd like to know if this is the right direction and if it worth purs=
+uing
+> > >> in that direction.
+> > >>
+> > >> The idea was to have at least some base for further discussion during
+> > >> ARM KS 2013.
+> > >>
+> > >> I feel alone :-(
+> > >>
+> > >> If you have any comment, go ahead!
 >=20
-> Wolfram, what would you advise?
+>=20
+> Benoit,
+>=20
+> Sorry, I meant to ask earlier but forgot.
+> Shouldn't this development be based on the
+> upstream DTC repository and not the in-kernel
+> copy of the DTC?
 
-It might be the only SoC now, but I could imagine that other will have
-something similar in the future. I am not perfectly sure, though. So, I
-asked for opinions from DT experts when I suggested those bindings. We
-could start with vendor specific bindings and generalize them later if
-similar ones appear. Yet my experience is that old drivers rarely get
-converted to the new bindings.
+Absolutely.  Please work against upstream dtc.
 
-> If you still prefer to make this properties generics, in which file shoul=
-d I
-> document it? I don't see any common i2c binding document for now.
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-Yeah, it is missing sadly. That's on my todo-list, like many other
-things...
-
-Regards,
-
-   Wolfram
-
---ReaqsoxgOBHFXBhH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--//IivP0gvsAy3Can
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSS+FBAAoJEBQN5MwUoCm2/scP/1bT7YqvhOtcIKhtOTu1pgXT
-NFSg8K2wWjukKx3QdrRsg5TvjHqjLJnOoS/H9nOWods1reZp4tVqH1EvemCh5koF
-+1F/PCCGm6vI9eiqBd0c2RTN4xPgZAyaXNnPVneDn91SCQY5ZizqFYHDN+PfmLtg
-XR5/g6FjxnPv05ifxKpprR9LCHFUd3r76GVGSp2fm+LiPxv135IaO2i5aUegu1Ht
-Bkq3UatMoteCD4C1kkW1V+f1RQ94r5JzKWfMRuGKMRATOpnxs4+Ipdt7nRqTbxVL
-ytHRxZxz/hE8Ia1CAhgsGynz8SmQxfHTZXhVEYeuFHbIQs+dlauMFC1XiE718jux
-5+VTDOdrvbicC8gzn8erYf/348vSPFN3tNyZep5CbRBZrxi4DmwiRUr6MjpXyX8D
-293XfEax0zw2E9w8jDKGDoCBVtaXTqINFpDwOP10YuF0DCK+2B6QNJrboD4zRo3R
-0jfEvJrtfQPDwgu+RSH0jJxlRmWMC9y1EkytoWHu5TzlMm4wQe8zp9gzam8zT86K
-mAaeXx5F1OO1RwKdW16v5NbIaziE9hlgwCMwRAV0iQW3apTk/mwtddP2tTzyHtL/
-Nc6mIHTN3tv8M6S39TUMGVBAwAJrDYIRnv7qjfUwEspdcMy2VuwAoofsc3w8dA6+
-aZcGCNVQSAx8fzQU4/G8
-=LuFj
+iQIcBAEBAgAGBQJSS9giAAoJEGw4ysog2bOSLJEQAI5TlHUc2Usu4IN6X46R5Mk3
+szZcs6WTYxClXW1JeiOESqwJsTdVGvzv1n9GrmgXg+Vmd/jAPaFymh6XljvCoJOv
+socVqYUFcqdfpPOqFjYbYXbAiAkqyJSZVcVX3XZeFM815KzmqUimXEwaYW7UEbEJ
+OGE2iy55Bsv7FLQpTBLv22ZTK3KOMimMpOJmVcmwYcqyopB3CUJKxWdNs4IhJlyg
+V70SZGcXAWrL6nntWfrhjMmpNNleHaiHEqYiz9eGBqq8/RAlxh4YSyjwknahpOBy
+Vo2sPulrxaxeoLhdgbbdOCXtWnBidov98aI++dMo/D5U2w4+A1mTN+/uOEAWg5Xw
+p9BUDYv011RPIzffxJAy55Ewhm7E8zJad2zlmRi2FlUQ6fYIb3pfvvc1JMlIguxh
+oysUH++RMO4OUWZftUmm5I5/6Q3PBtLOFeTQyLDrJzk8jUMZvd3lTraWLuviSMPA
++rDtLybzfA6edyXA3mEzJTsRq1FF5M7HmAt9p5GXD4MoeqfSEEHhoXvUpQaUrgNQ
+kBJACwSN7R80OhVh3e+m7sRV8EbRE2X9HdcKA4fVes2ge07jzqp1OQtK8j+4Nabt
+y5wCPHiAO4YLl0EebcPcuHl6Y+frnXcSGNv3uZYn5Ly1eeLlLd6Y7BKx594TAOkM
+AZFIy+90Jw7bZj+PO2zK
+=cLga
 -----END PGP SIGNATURE-----
 
---ReaqsoxgOBHFXBhH--
+--//IivP0gvsAy3Can--
