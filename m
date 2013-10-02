@@ -1,115 +1,62 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv0,RESEND] Add support for Intersil ISL12057 I2C
- RTC/Alarm chip
-Date: Wed, 2 Oct 2013 12:14:23 +0100
-Message-ID: <20131002111423.GO22259@e106331-lin.cambridge.arm.com>
-References: <87ob787nf6.fsf@natisbad.org>
+From: Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH 3/6] ARM: EXYNOS: add Exynos Dual Cluster Support
+Date: Wed, 2 Oct 2013 14:05:50 +0100
+Message-ID: <20131002130550.GB3407@localhost.localdomain>
+References: <1380644227-12244-1-git-send-email-v.tyrtov@samsung.com>
+ <1380644227-12244-4-git-send-email-v.tyrtov@samsung.com>
+ <alpine.LFD.2.03.1310011451390.21228@syhkavp.arg>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <87ob787nf6.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.03.1310011451390.21228@syhkavp.arg>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-samsung-soc@vger.kernel.org, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Tarek Dakhran <t.dakhran@samsung.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Landley <rob@landley.net>, Heiko Stuebner <heiko@sntech.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Naour Romain <romain.naour@openwide.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 01, 2013 at 09:21:01PM +0100, Arnaud Ebalard wrote:
-> Hi,
+On Tue, Oct 01, 2013 at 03:55:24PM -0400, Nicolas Pitre wrote:
+> On Tue, 1 Oct 2013, Vyacheslav Tyrtov wrote:
 > 
-> Netgear ReadyNAS 102 (Armada 370-base) NAS includes an Intersil ISL12057
-> I2C RTC/Alarm chip. As part of an effort to get full support for the NAS
-> in mainline kernel, I wrote a driver for the chip based on ISL1208 one
-> developed by Hebert Valerio Riedel. The patch below is an updated resend
-> of the one I submitted on August 3 (i.e. holidays), but got no reply
-> for. See
-> 
->   https://groups.google.com/forum/#!topic/rtc-linux/ypqMloOezj0
-> 
-> If possible, I would like to be able to get it mainline in 3.13, and
-> pushed required DT bindings for ReadyNAS 102 to avoid the NAS to wake up
-> in the 70s.
-> 
-> Setting and retrieving time works as expected at startup and shutdown.
-> Also, alarm bit is set in status register when the alarm is triggered.
-> 
-> Some things worth mentioning:
->  - on my platform, the Alarm IRQ is not connected to the SoC but to a
->    power chip, so I cannot test the alarm IRQ handling code of the
->    patch. I'd be happy to get feedback if someone has the same hardware.
->  - nonetheless, when the alarm is set and the NAS is powered off, it
->    gets woken up, i.e. the alarm setting code does work.
->  - trying to interact w/ the clock using userland tools (Debian jessie)
->    makes me wonder what I missed:
-> 
->    root@humble:/sys/class/rtc/rtc0# hwclock -r
->    hwclock: select() to /dev/rtc0 to wait for clock tick timed out: Success
-> 
->    root@humble:/tmp# gcc rtctest.c
->    root@humble:/tmp# ./a.out
-> 
->                           RTC Driver Test Example.
-> 
->     Counting 5 update (1/sec) interrupts from reading /dev/rtc0:
-> 
->     [ nothing happens ]
-> 
->     I tried and find some documentation on the topic to understand where
->     the issue comes from but found nothing obvious.
+> > From: Tarek Dakhran <t.dakhran@samsung.com>
 
-Forgive me if I'm mistaken, but you mentioned above that interrupts
-aren't wired up on your platform, and judging by the output the test
-program seems to be relying on them.
-
-> 
-> I intend to provide some documentation in next round and fix reported
-> issues. Additionally, I wonder why ISL1208 code has no specific mutex
-> protection for access and changes. I also followed that path in attached
-> driver but I guess this is something that should be improved.
-
-The devicetree binding must go in when the driver is added, rather than
-later.
-
-Given the above known issue, I think that should be fixed up before the
-driver gets merged -- 
-If this driver has known issues then should those not be fixed before
-merging it?
-
-> 
-> Comments welcome,
-> 
-> Cheers,
-> 
-> a+
-> 
-> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-> ---
->  drivers/rtc/Kconfig        |   9 +
->  drivers/rtc/Makefile       |   1 +
->  drivers/rtc/rtc-isl12057.c | 641 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 651 insertions(+)
->  create mode 100644 drivers/rtc/rtc-isl12057.c
- 
 [...]
 
-> +#ifdef CONFIG_OF
-> +static struct of_device_id isl12057_dt_match[] = {
-> +       { .compatible = "isil,isl12057" },
-> +       { },
-> +};
-> +#endif
+> > +	kfs_use_count[cpu][cluster]++;
+> > +	if (kfs_use_count[cpu][cluster] == 1) {
+> > +		++core_count[cluster];
+> > +		if (core_count[cluster] == 1) {
+> > +			ret = exynos_cluster_power_up(cluster);
+> > +			if (ret) {
+> > +				pr_err("%s: cluster %u power up error\n",
+> > +					__func__, cluster);
+> > +				return ret;
+> > +			}
+> > +			__cci_control_port_by_index(MAX_NR_CLUSTERS
+> > +					 - cluster, true);
+> 
+> This is wrong and very racy.  The state machine implemented in 
+> mcpm-head.S is there already to handle proper synchronization for you.  
 
-It looks like this is a simple device with only an interrupt (no clocks,
-regulators, other elements), so that can go under
-Documentation/devicetree/bindings/i2c/trivial-devices.txt.
+Maybe this issue didn't make itself obvious yet due to the lack of
+suspend support.
 
-Also, the "isil" vendor prefix doesn't seem to be documented. Could you
-please create a patch adding it to
-Documentation/devicetree/bindings/vendor-prefixes.txt?
+Moving the CCI maintenance to power_up_setup() is essential for suspend/
+resume to work, because then CPUs can power up randomly in response to
+interrupts -- exynos_lock is not sufficient protection in that case.
 
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The TC2 code should provide a good example of what to do.
+
+[...]
+
+Cheers
+---Dave
