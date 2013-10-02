@@ -1,62 +1,71 @@
-From: Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH 3/6] ARM: EXYNOS: add Exynos Dual Cluster Support
-Date: Wed, 2 Oct 2013 14:05:50 +0100
-Message-ID: <20131002130550.GB3407@localhost.localdomain>
-References: <1380644227-12244-1-git-send-email-v.tyrtov@samsung.com>
- <1380644227-12244-4-git-send-email-v.tyrtov@samsung.com>
- <alpine.LFD.2.03.1310011451390.21228@syhkavp.arg>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 09/10] usb: dwc3: omap: manage "usb_otg_ss_refclk960m"
+ clock
+Date: Wed, 2 Oct 2013 08:11:14 -0500
+Message-ID: <20131002131113.GM1476@radagast>
+References: <1379508542-22389-1-git-send-email-rogerq@ti.com>
+ <1379508542-22389-10-git-send-email-rogerq@ti.com>
+ <52403E02.4070208@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VsILLG6PYTzZlkGF"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.03.1310011451390.21228@syhkavp.arg>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-samsung-soc@vger.kernel.org, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Tarek Dakhran <t.dakhran@samsung.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Landley <rob@landley.net>, Heiko Stuebner <heiko@sntech.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Naour Romain <romain.naour@openwide.fr>
+In-Reply-To: <52403E02.4070208-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 01, 2013 at 03:55:24PM -0400, Nicolas Pitre wrote:
-> On Tue, 1 Oct 2013, Vyacheslav Tyrtov wrote:
-> 
-> > From: Tarek Dakhran <t.dakhran@samsung.com>
+--VsILLG6PYTzZlkGF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[...]
+On Mon, Sep 23, 2013 at 04:11:30PM +0300, Roger Quadros wrote:
+> Hi Felipe,
+>=20
+> On 09/18/2013 03:49 PM, Roger Quadros wrote:
+> > "usb_otg_ss_refclk960m" is an optional functional clock to the
+> > UBS_OTG_SS module. So manage it in the driver.
+> >=20
+>=20
+> Just realized that "usb_otg_ss_refclk960m" is in fact functional clock to=
+ the=20
+> PHY and not USB_OTG_SS module. The name is misleading.
+>=20
+> So please ignore patch 9 and 10.
 
-> > +	kfs_use_count[cpu][cluster]++;
-> > +	if (kfs_use_count[cpu][cluster] == 1) {
-> > +		++core_count[cluster];
-> > +		if (core_count[cluster] == 1) {
-> > +			ret = exynos_cluster_power_up(cluster);
-> > +			if (ret) {
-> > +				pr_err("%s: cluster %u power up error\n",
-> > +					__func__, cluster);
-> > +				return ret;
-> > +			}
-> > +			__cci_control_port_by_index(MAX_NR_CLUSTERS
-> > +					 - cluster, true);
-> 
-> This is wrong and very racy.  The state machine implemented in 
-> mcpm-head.S is there already to handle proper synchronization for you.  
+ignored. All others are fine, right ?
 
-Maybe this issue didn't make itself obvious yet due to the lack of
-suspend support.
+--=20
+balbi
 
-Moving the CCI maintenance to power_up_setup() is essential for suspend/
-resume to work, because then CPUs can power up randomly in response to
-interrupts -- exynos_lock is not sufficient protection in that case.
+--VsILLG6PYTzZlkGF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The TC2 code should provide a good example of what to do.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-[...]
+iQIcBAEBAgAGBQJSTBtvAAoJEIaOsuA1yqRElrEP/RpfWjYvTQ92g8sDYn4vjtX0
+kZmQtEI/Vt68K8UHL+o/Yfxo7IrhclNFm4rrjkQCIh2rj15K06N/jlaos/RzXd4D
+5S4scBTAcsYdWBVhVS519E1C3lWR2DIMSr86F4xqrzvjt9nWvyWAK6jE9ReJ+ocU
+WndBtqP0uqJfH8b+OXTrjiigdRPJ+JPTMKBwZ4rb4qoELVyI+JCnSKS84VTEyTOJ
+BLFv2z0grFPGIN2ggUKF2MGVHRJ/yqZ77bS99rJUyiNonxYox3Ahk249skiz2/5x
+qSnv0oIClsPHSsF8FvhAkpNvZq+BZKSh+k7qO7ZJFWpq/YwxudLDTV4OWY8IAAuw
+b77yHRYE+ieLYg8oGFYrTjhsn0n2GLtbSbyA4MHiOO5UuEmkAM8N3JsZq8kQ9vB8
+D1lTQHK6oRCpk1BnoxCf3CmK1AsWLipm8ZJePqNSucuAfE8YMV74s4/F66DnAbDg
+iim65zyaL6DxSXmJ0YVuRbp/RuYELJvCqnKuT9rPcjdoV/H5qC7TAy3p4iZhu6o0
+5B3LHINu7Gp42AqrPE2b+ll1qpsTDr4Ssp2PAwztuJ5u1WQEH7N41qdhD5jLf/zX
+cB9HhIzdbqEReykKYqBAltE0eH4L06kU67eKn2GON4wandqvO4G4xbMaPCoiLZ0H
+/zyTdWtPez5UPBhT2OUE
+=EXQS
+-----END PGP SIGNATURE-----
 
-Cheers
----Dave
+--VsILLG6PYTzZlkGF--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
