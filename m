@@ -1,101 +1,58 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: [PATCH 4/5] drm/exynos: Initialize ptn3460 if present
-Date: Tue,  1 Oct 2013 19:40:59 -0400
-Message-ID: <1380670860-17621-5-git-send-email-seanpaul@chromium.org>
-References: <1380670860-17621-1-git-send-email-seanpaul@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380670860-17621-1-git-send-email-seanpaul@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, inki.dae@samsung.com
-Cc: airlied@linux.ie, Sean Paul <seanpaul@chromium.org>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: RE: [PATCH v2 00/12] clk/exynos convert clock IDs to macros
+Date: Tue, 01 Oct 2013 18:09:53 -0700
+Message-ID: <20131002010953.9338.23436@quantum>
+References: <1378462361-13680-1-git-send-email-a.hajda@samsung.com>
+ <8412301.YP2zzplWoe@amdc1227>
+ <070001ceafa5$d4d81a40$7e884ec0$%kim@samsung.com>
+ <523716C9.3000204@samsung.com> <20130916193709.27384.86101@quantum>
+ <06c101cebdc5$75a83d10$60f8b730$%kim@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <06c101cebdc5$75a83d10$60f8b730$%kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Sylwester Nawrocki' <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: 'Tomasz Figa' <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Andrzej Hajda' <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Kyungmin Park' <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'devicetree' <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'linux-samsung-soc' <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds code to look for the ptn3460 in the device tree file on
-exynos initialization. If ptn node is found, the driver will initialize
-the ptn3460 driver and skip creating a DP connector (since the bridge
-driver will register its own connector).
+Quoting Kukjin Kim (2013-09-30 03:11:41)
+> Mike Turquette wrote:
+> > 
+> > Quoting Sylwester Nawrocki (2013-09-16 07:33:45)
+> > > On 09/12/2013 12:50 PM, Kukjin Kim wrote:
+> > > > Well...I'm not sure changing to use macro is better or not at this
+> > moment...
+> > >
+> > > I think it is. ;) It's really less error prone to have symbolic names
+> > instead
+> > > of the plain numbers. The clock ids are defined in one place and it is
+> > more
+> > > clear what a clock is by looking at symbolic name. It's especially
+> > annoying
+> > > to use plain numbers where are are many clock in a single node, like 10
+> > or
+> > > more. What are you main concerns with this ?
+> > 
+> > I think having the symbolic names is a win for readability.
+> > 
+> Hmm...since Mike who is a maintainer for ccf agrees with Sylwester's opinion, so I agree. Actually, I had no strong objection on this but still I'm not sure using macro is really better because sometimes the name doesn't give readability really I think though.
+> 
+> Mike, can you give me your ack on clk stuff?
 
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
----
- drivers/gpu/drm/exynos/exynos_drm_core.c | 44 +++++++++++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
+Yes, but I was thinking to take this change through the clk tree. The
+new branch based on -rc3 will be published tonight.
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_core.c b/drivers/gpu/drm/exynos/exynos_drm_core.c
-index 1bef6dc..9cf4476 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_core.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_core.c
-@@ -12,7 +12,9 @@
-  * option) any later version.
-  */
- 
-+#include <linux/of_i2c.h>
- #include <drm/drmP.h>
-+#include <drm/bridge/ptn3460.h>
- #include "exynos_drm_drv.h"
- #include "exynos_drm_encoder.h"
- #include "exynos_drm_connector.h"
-@@ -20,6 +22,40 @@
- 
- static LIST_HEAD(exynos_drm_subdrv_list);
- 
-+struct bridge_init {
-+	struct i2c_client *client;
-+	struct device_node *node;
-+};
-+
-+static bool find_bridge(const char *name, struct bridge_init *bridge)
-+{
-+	bridge->client = NULL;
-+	bridge->node = of_find_node_by_name(NULL, name);
-+	if (!bridge->node)
-+		return false;
-+
-+	bridge->client = of_find_i2c_device_by_node(bridge->node);
-+	if (!bridge->client)
-+		return false;
-+
-+	return true;
-+}
-+
-+/* returns the number of bridges attached */
-+static int exynos_drm_attach_lcd_bridge(struct drm_device *dev,
-+		struct drm_encoder *encoder)
-+{
-+	struct bridge_init bridge;
-+	int ret;
-+
-+	if (find_bridge("ptn3460-bridge", &bridge)) {
-+		ret = ptn3460_init(dev, encoder, bridge.client, bridge.node);
-+		if (!ret)
-+			return 1;
-+	}
-+	return 0;
-+}
-+
- static int exynos_drm_create_enc_conn(struct drm_device *dev,
- 					struct exynos_drm_subdrv *subdrv)
- {
-@@ -36,6 +72,13 @@ static int exynos_drm_create_enc_conn(struct drm_device *dev,
- 		DRM_ERROR("failed to create encoder\n");
- 		return -EFAULT;
- 	}
-+	subdrv->encoder = encoder;
-+
-+	if (subdrv->manager->display_ops->type == EXYNOS_DISPLAY_TYPE_LCD) {
-+		ret = exynos_drm_attach_lcd_bridge(dev, encoder);
-+		if (ret)
-+			return 0;
-+	}
- 
- 	/*
- 	 * create and initialize a connector for this sub driver and
-@@ -48,7 +91,6 @@ static int exynos_drm_create_enc_conn(struct drm_device *dev,
- 		goto err_destroy_encoder;
- 	}
- 
--	subdrv->encoder = encoder;
- 	subdrv->connector = connector;
- 
- 	return 0;
--- 
-1.8.4
+Let me know if it causes problems for you for me to take it.
+
+Regards,
+Mike
+
+> 
+> Thanks,
+> Kukjin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
