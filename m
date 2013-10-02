@@ -1,102 +1,90 @@
-From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [RESEND PATCHv2] watchdog: dw: Enable OF support for DW watchdog timer.
-Date: Wed, 2 Oct 2013 13:44:32 -0500
-Message-ID: <1380739472-26172-1-git-send-email-dinguyen@altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v2 0/9] Add support for MSM's mmio clocks
+Date: Wed,  2 Oct 2013 12:06:57 -0700
+Message-ID: <1380740826-29457-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Saravana Kannan <skannan@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+The first 3 patches are generic clock framework patches. They add support for
+regmap and for setting the rate and the parent at the same time based on
+patches from James Hogan's remuxing set_rate series.
 
-Add device tree support to the DW watchdog timer.
+After that we add MSM clock hardware support and SoC specific drivers. The DT
+node additions will be sent through the MSM maintainers once these patches are
+accepted. The GCC 8974 driver is mostly finished but I didn't do the full
+treatment on 8960 just yet.
 
-Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-v2:
-- Use of_match_ptr() for of_match_table
----
- .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
- drivers/watchdog/dw_wdt.c                          |    8 ++++++++
- 2 files changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+Changes since v1:
 
-diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-new file mode 100644
-index 0000000..29e150b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-@@ -0,0 +1,16 @@
-+Synopsys Designware Watchdog Timer
-+
-+Required Properties:
-+
-+- Compatiblity	: "snps,dw-wdt"
-+- reg		: Base address of the watchdog timer register.
-+
-+Example:
-+
-+	watchdog0: wd@ffd02000 {
-+		compatible = "snps,dw-wdt";
-+		reg = <0xffd02000 0x1000>;
-+		interrupts = <0 171 4>;
-+		clocks = <&per_base_clk>;
-+		status = "okay";
-+	};
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index 2037669..a720f9b 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -29,6 +29,7 @@
- #include <linux/miscdevice.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-+#include <linux/of.h>
- #include <linux/pm.h>
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
-@@ -343,12 +344,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id dw_wdt_of_match[] = {
-+	{ .compatible = "snps,dw-wdt", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
-+
- static struct platform_driver dw_wdt_driver = {
- 	.probe		= dw_wdt_drv_probe,
- 	.remove		= dw_wdt_drv_remove,
- 	.driver		= {
- 		.name	= "dw_wdt",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(dw_wdt_of_match),
- #ifdef CONFIG_PM
- 		.pm	= &dw_wdt_pm_ops,
- #endif /* CONFIG_PM */
+ * Rewrote binding to use #clock-cells=1
+ * Reworked library components (pll, rcg, branch) to use regmap
+ * Dropped common clock framework patches that did DT parsing
+ * New patches for regmap support in common clock framework
+
+Some starter questions:
+
+ 1) The clock controller is also a reset and power domain controller.
+    Should we put that code in the drivers under drivers/clk/msm?
+
+ 2) Should the directory be renamed to qcom to match the binding?
+
+ 3) What is the right place for clock dt binding #defines? clk/ or clock/?
+
+Stephen Boyd (9):
+  clk: Allow drivers to pass in a regmap
+  clk: Add regmap core helpers for enable/disable/is_enabled
+  clk: Add set_rate_and_parent() op
+  clk: msm: Add support for phase locked loops (PLLs)
+  clk: msm: Add support for root clock generators (RCGs)
+  clk: msm: Add support for branches/gate clocks
+  clk: msm: Add support for MSM8960's global clock controller (GCC)
+  clk: msm: Add support for MSM8960's multimedia clock controller (MMCC)
+  clk: msm: Add support for MSM8974's global clock controller (GCC)
+
+ Documentation/clk.txt                              |    3 +
+ .../devicetree/bindings/clock/qcom,gcc.txt         |   20 +
+ .../devicetree/bindings/clock/qcom,mmcc.txt        |   19 +
+ drivers/clk/Kconfig                                |    2 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk.c                                  |  156 +-
+ drivers/clk/msm/Kconfig                            |   29 +
+ drivers/clk/msm/Makefile                           |   10 +
+ drivers/clk/msm/clk-branch.c                       |  153 ++
+ drivers/clk/msm/clk-branch.h                       |   50 +
+ drivers/clk/msm/clk-pll.c                          |  147 ++
+ drivers/clk/msm/clk-pll.h                          |   45 +
+ drivers/clk/msm/clk-rcg.c                          |  491 ++++
+ drivers/clk/msm/clk-rcg.h                          |  149 ++
+ drivers/clk/msm/clk-rcg2.c                         |  272 +++
+ drivers/clk/msm/gcc-8960.c                         |  381 +++
+ drivers/clk/msm/gcc-8974.c                         | 2488 ++++++++++++++++++++
+ drivers/clk/msm/mmcc-8960.c                        |  297 +++
+ include/dt-bindings/clk/msm-gcc-8960.h             |   28 +
+ include/dt-bindings/clk/msm-gcc-8974.h             |  154 ++
+ include/dt-bindings/clk/msm-mmcc-8960.h            |   24 +
+ include/linux/clk-provider.h                       |   35 +
+ 22 files changed, 4935 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+ create mode 100644 drivers/clk/msm/Kconfig
+ create mode 100644 drivers/clk/msm/Makefile
+ create mode 100644 drivers/clk/msm/clk-branch.c
+ create mode 100644 drivers/clk/msm/clk-branch.h
+ create mode 100644 drivers/clk/msm/clk-pll.c
+ create mode 100644 drivers/clk/msm/clk-pll.h
+ create mode 100644 drivers/clk/msm/clk-rcg.c
+ create mode 100644 drivers/clk/msm/clk-rcg.h
+ create mode 100644 drivers/clk/msm/clk-rcg2.c
+ create mode 100644 drivers/clk/msm/gcc-8960.c
+ create mode 100644 drivers/clk/msm/gcc-8974.c
+ create mode 100644 drivers/clk/msm/mmcc-8960.c
+ create mode 100644 include/dt-bindings/clk/msm-gcc-8960.h
+ create mode 100644 include/dt-bindings/clk/msm-gcc-8974.h
+ create mode 100644 include/dt-bindings/clk/msm-mmcc-8960.h
+
 -- 
-1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
