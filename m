@@ -1,37 +1,55 @@
-From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of/of_reserved_mem.c: fix typo
-Date: Wed,  2 Oct 2013 14:48:29 +0530
-Message-ID: <1380705509-25429-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [RFC 00/15] Device Tree schemas and validation
+Date: Wed, 02 Oct 2013 11:25:01 +0200
+Message-ID: <524BE66D.7060308@baylibre.com>
+References: <1380041541-17529-1-git-send-email-bcousson@baylibre.com> <524A8289.3050107@baylibre.com> <524ACB76.1010001@gmail.com> <524AE4FB.4080906@baylibre.com> <E1VR1hx-0000C1-6J@jdl.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <E1VR1hx-0000C1-6J@jdl.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Loeliger <jdl@jdl.com>
+Cc: Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, swarren@wwwdotorg.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, olof@lixom.net, devicetree@vger.kernel.org, tomasz.figa@gmail.com, grant.likely@secretlab.ca, khilman@linaro.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fparent@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Jon,
 
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/of_reserved_mem.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 01/10/2013 17:17, Jon Loeliger wrote:
+>> Hi Rob,
+>>
+>> On 01/10/2013 15:17, Rob Herring wrote:
+>>> On 10/01/2013 03:06 AM, Benoit Cousson wrote:
+>>>> + more DT maintainers folks
+>>>>
+>>>> Hi all,
+>>>>
+>>>> I know this is mostly boring user space code, but I was expecting a
+>>>> little bit of comments about at least the bindings syntax:-(
+>>>>
+>>>> I'd like to know if this is the right direction and if it worth pursuing
+>>>> in that direction.
+>>>>
+>>>> The idea was to have at least some base for further discussion during
+>>>> ARM KS 2013.
+>>>>
+>>>> I feel alone :-(
+>>>>
+>>>> If you have any comment, go ahead!
+>
+>
+> Benoit,
+>
+> Sorry, I meant to ask earlier but forgot.
+> Shouldn't this development be based on the
+> upstream DTC repository and not the in-kernel
+> copy of the DTC?
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 0fe40c7..c7a1ea3 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -54,7 +54,7 @@ static int __init fdt_scan_reserved_mem(unsigned long node, const char *uname,
- 
- 	status = of_get_flat_dt_prop(node, "status", &len);
- 	if (status && strcmp(status, "okay") != 0) {
--		/* ignore disabled node nad scan next one */
-+		/* ignore disabled node and scan next one */
- 		return 0;
- 	}
- 
--- 
-1.7.9.5
+Eventually, yes, but here the main point is to discuss the schema that 
+will be used to defined bindings.
+In that case, the DTC patches code are mostly a proof of concept using 
+the Linux kernel as example.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Benoit
+
