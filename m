@@ -1,61 +1,40 @@
-From: Mark Brown <broonie@kernel.org>
+From: Daniel Mack <zonque@gmail.com>
 Subject: Re: [PATCH] drivers: misc: add gpio wakeup driver
-Date: Wed, 2 Oct 2013 11:57:23 +0100
-Message-ID: <20131002105723.GA27287@sirena.org.uk>
-References: <1380635719-31171-1-git-send-email-zonque@gmail.com>
- <CAOMZO5Aq5-bdY3yTD3DqjUVVrTPHZodb7_vfLQcvxfJRXNok4w@mail.gmail.com>
- <524AD693.6000304@gmail.com>
+Date: Wed, 02 Oct 2013 13:02:13 +0200
+Message-ID: <524BFD35.5040100@gmail.com>
+References: <1380635719-31171-1-git-send-email-zonque@gmail.com> <CAOMZO5Aq5-bdY3yTD3DqjUVVrTPHZodb7_vfLQcvxfJRXNok4w@mail.gmail.com> <524AD693.6000304@gmail.com> <20131002105723.GA27287@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <524AD693.6000304@gmail.com>
+In-Reply-To: <20131002105723.GA27287@sirena.org.uk>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Daniel Mack <zonque@gmail.com>
+To: Mark Brown <broonie@kernel.org>
 Cc: Fabio Estevam <festevam@gmail.com>, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
+On 02.10.2013 12:57, Mark Brown wrote:
+> On Tue, Oct 01, 2013 at 04:05:07PM +0200, Daniel Mack wrote:
+>> On 01.10.2013 16:01, Fabio Estevam wrote:
+> 
+>>> Isn't it the same as the existing 'gpio-key,wakeup' ?
+> 
+>> Of course, I know the gpio-input driver can provide similar
+>> functionality. My intention was just provide a way to wake up the system
+>> without registering an input device for signals nobody is interested in
+>> eventually.
+> 
+>> Don't know if that's reason enough to add a new driver though.
+> 
+> It does seem somewhat sensible - the signal might not have a sensible
+> representation as an input device and the gpio-keys binding needs one.
+> 
 
---zYM0uCDKw75PZbzx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+That was my intention as well, yes. Also, a system that does not have
+any input devices could in theory disable CONFIG_INPUT alltogether. Not
+sure how realisitic that scenario really is nowadays, but using the gpio
+input driver for purpose of just waking up on LAN seems somewhat abusive.
 
-On Tue, Oct 01, 2013 at 04:05:07PM +0200, Daniel Mack wrote:
-> On 01.10.2013 16:01, Fabio Estevam wrote:
 
-> > Isn't it the same as the existing 'gpio-key,wakeup' ?
+Daniel
 
-> Of course, I know the gpio-input driver can provide similar
-> functionality. My intention was just provide a way to wake up the system
-> without registering an input device for signals nobody is interested in
-> eventually.
-
-> Don't know if that's reason enough to add a new driver though.
-
-It does seem somewhat sensible - the signal might not have a sensible
-representation as an input device and the gpio-keys binding needs one.
-
---zYM0uCDKw75PZbzx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSS/wQAAoJELSic+t+oim90O4P/i90PuSF3MvjZ7Bp/BMERHIH
-RGMQiwqCXGpjNKNpXb8WuBPJQM1QWYWkOO2CJjOB9u/IkdI9j039TOSbNlucnkrL
-iE/H6ymOksi2jxnrWrSSra04gdBtTgvx8xBnnLfA4seTgiuvwcd4Zw1HwbTeLgHs
-n+14YjMZOE7R6DfvHSww/Cn5aQFX+xN5vq5zmpE4I7S9EnOKavpBstrGONabqjBu
-V8vH3jq/NjGcReAc6xrKGWpVCxlGO3oCJ0psFZQG0P09DthOemOyo90rc06+1YPb
-eLWGAbs3oKlI+qhEqUfVOnQhMdMH/tdNXNLG2LW1q+Wu0L8KEWWG09Ey2Nuqt8bR
-Hs41ic/bBSIqolrmCyzArtTMqQ/r/8yLUDMVmwjpg4wq/qPhzkPe/Jb8IP7x1L8Y
-179JtnfQmRkEDh4N9yCPOEuZ4Krhd6Y4lPrpTLb0mlLD+1LBmU2l1Z1KCuR61S9J
-JO2sGI/F3j2LA/YtJIrBp1oAja34gobz/ToGR6hBijfb6dLd3ghQ1z2MTtQwHjmG
-T1AUcP63nuMZJ4Y3TH66m2QcEtiUTUlKELu0Yz9Cx2mZHnnj8XOwYVT0A8jmvQP7
-m1dDi/8zH1AlL20meu1viJllKk+pT5ZjwcmdvGqbS2L2MgZpB6t6++dYVCZEL+y3
-42iv4o5xJdi2UlE0nQea
-=1poh
------END PGP SIGNATURE-----
-
---zYM0uCDKw75PZbzx--
