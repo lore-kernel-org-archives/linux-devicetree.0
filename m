@@ -1,84 +1,87 @@
-From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH][resend] leds-gpio: of: led should not be created if its
- status is disabled
-Date: Wed, 2 Oct 2013 14:14:22 -0700
-Message-ID: <CAK5ve-K6wcVPxND8LGHki3ybLYVWEapmkRUfR=N6YH=i4Bssfw@mail.gmail.com>
-References: <1380194876-25821-1-git-send-email-josh.wu@atmel.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 3/5] drm/bridge: Add PTN3460 bridge driver
+Date: Wed, 2 Oct 2013 14:20:42 -0700
+Message-ID: <CAOesGMjWi3Bk+OtfWjkgHqLk+Zb7cHRjS9S0AfpcPU3UqB+UTw@mail.gmail.com>
+References: <1380670860-17621-1-git-send-email-seanpaul@chromium.org>
+	<1380670860-17621-4-git-send-email-seanpaul@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380194876-25821-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1380670860-17621-4-git-send-email-seanpaul@chromium.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sean Paul <seanpaul@chromium.org>
+Cc: dri-devel@lists.freedesktop.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Inki Dae <inki.dae@samsung.com>, airlied@linux.ie
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2013 at 4:27 AM, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> now the leds-gpio driver will create every child led node without
-> checking the status is disabled or not.
->
-> for example, if we have a led node like d3, and its status is disabled:
->         leds {
->                 d3 {
->                         label = "d3";
->                         gpios = <&pioE 24 0>;
->                         status = "disabled";
->                 };
->         };
->
-> we except the d3 should not be created. And the gpios should not be
-> request as well.
->
-> But current driver will create d3 and request its gpio.
->
-> This patch fix this by using for_each_available_child_of_node() and
-> of_get_available_child_count() to enumerate all child nodes. So the
-> disabled node will be inavailable.
->
-Applied to -devel branch of my tree,
-Thanks,
--Bryan
+Hi,
 
 
-> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+On Tue, Oct 1, 2013 at 4:40 PM, Sean Paul <seanpaul@chromium.org> wrote:
+> This patch adds a drm_bridge driver for the PTN3460 DisplayPort to LVDS
+> bridge chip.
+>
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
 > ---
-> resend this patch based on the patch:
->  - http://www.spinics.net/lists/devicetree/msg05903.html
->
->  drivers/leds/leds-gpio.c |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-> index e8b01e5..62bfc3a 100644
-> --- a/drivers/leds/leds-gpio.c
-> +++ b/drivers/leds/leds-gpio.c
-> @@ -170,11 +170,11 @@ static struct gpio_leds_priv *gpio_leds_create_of(struct platform_device *pdev)
->         int count, ret;
->
->         /* count LEDs in this device, so we know how much to allocate */
-> -       count = of_get_child_count(np);
-> +       count = of_get_available_child_count(np);
->         if (!count)
->                 return ERR_PTR(-ENODEV);
->
-> -       for_each_child_of_node(np, child)
-> +       for_each_available_child_of_node(np, child)
->                 if (of_get_gpio(child, 0) == -EPROBE_DEFER)
->                         return ERR_PTR(-EPROBE_DEFER);
->
-> @@ -183,7 +183,7 @@ static struct gpio_leds_priv *gpio_leds_create_of(struct platform_device *pdev)
->         if (!priv)
->                 return ERR_PTR(-ENOMEM);
->
-> -       for_each_child_of_node(np, child) {
-> +       for_each_available_child_of_node(np, child) {
->                 struct gpio_led led = {};
->                 enum of_gpio_flags flags;
->                 const char *state;
-> --
-> 1.7.9.5
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+[...]
+
+> +Example:
+> +       ptn3460-bridge@20 {
+
+Nit: Name is usually generic device name, i.e. "lvds-bridge" or
+something like that.
+
+> +               compatible = "nxp,ptn3460";
+> +               reg = <0x20>;
+> +               powerdown-gpio = <&gpy2 5 1 0 0>;
+> +               reset-gpio = <&gpx1 5 1 0 0>;
+> +               edid-emulation = <5>;
+> +       };
+
+[...]
+
+
+> diff --git a/include/drm/bridge/ptn3460.h b/include/drm/bridge/ptn3460.h
+> new file mode 100644
+> index 0000000..157ffa1
+> --- /dev/null
+> +++ b/include/drm/bridge/ptn3460.h
+> @@ -0,0 +1,36 @@
+> +/*
+> + * Copyright (C) 2013 Google, Inc.
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#ifndef _DRM_BRIDGE_PTN3460_H_
+> +#define _DRM_BRIDGE_PTN3460_H_
+> +
+> +struct drm_device;
+> +struct drm_encoder;
+> +struct i2c_client;
+> +struct device_node;
+> +
+> +#ifdef CONFIG_DRM_PTN3460
+> +
+> +int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
+> +               struct i2c_client *client, struct device_node *node);
+> +#else
+> +
+> +int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
+> +               struct i2c_client *client, struct device_node *node)
+
+This should be static inline int ptn3460_init(...)
+
+> +{
+> +       return 0;
+> +}
+
+
+-0Olof
