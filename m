@@ -1,66 +1,102 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC 00/15] Device Tree schemas and validation
-Date: Wed, 2 Oct 2013 19:08:41 +0100
-Message-ID: <20131002180841.GG27287@sirena.org.uk>
-References: <1380041541-17529-1-git-send-email-bcousson@baylibre.com>
- <524A8289.3050107@baylibre.com>
- <524ACB76.1010001@gmail.com>
- <524AE4FB.4080906@baylibre.com>
- <CAL_JsqJ31TGFJCSeSOqgee=OLVfSUTAYdF4nSn7X2DiCequVAw@mail.gmail.com>
- <20131002135450.GH6506@voom.fritz.box>
+From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: [RESEND PATCHv2] watchdog: dw: Enable OF support for DW watchdog timer.
+Date: Wed, 2 Oct 2013 13:44:32 -0500
+Message-ID: <1380739472-26172-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z+pzSjdB7cqptWpS"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20131002135450.GH6506@voom.fritz.box>
-Sender: linux-omap-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <tomasz.figa@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, fparent@baylibre.com, Benoit Cousson <bcousson@baylibre.com>, Olof Johansson <olof@lixom.net>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
---z+pzSjdB7cqptWpS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Add device tree support to the DW watchdog timer.
 
-On Wed, Oct 02, 2013 at 11:54:50PM +1000, David Gibson wrote:
-> On Tue, Oct 01, 2013 at 03:54:20PM -0500, Rob Herring wrote:
+Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+v2:
+- Use of_match_ptr() for of_match_table
+---
+ .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
+ drivers/watchdog/dw_wdt.c                          |    8 ++++++++
+ 2 files changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
 
-> > I would expect the schema to replace
-> > Documentation/devicetree/bindings/* over time. I think the thing that
-> > needs to be worked out here is how to add free form multi-line text.
+diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+new file mode 100644
+index 0000000..29e150b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+@@ -0,0 +1,16 @@
++Synopsys Designware Watchdog Timer
++
++Required Properties:
++
++- Compatiblity	: "snps,dw-wdt"
++- reg		: Base address of the watchdog timer register.
++
++Example:
++
++	watchdog0: wd@ffd02000 {
++		compatible = "snps,dw-wdt";
++		reg = <0xffd02000 0x1000>;
++		interrupts = <0 171 4>;
++		clocks = <&per_base_clk>;
++		status = "okay";
++	};
+diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+index 2037669..a720f9b 100644
+--- a/drivers/watchdog/dw_wdt.c
++++ b/drivers/watchdog/dw_wdt.c
+@@ -29,6 +29,7 @@
+ #include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
++#include <linux/of.h>
+ #include <linux/pm.h>
+ #include <linux/platform_device.h>
+ #include <linux/spinlock.h>
+@@ -343,12 +344,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id dw_wdt_of_match[] = {
++	{ .compatible = "snps,dw-wdt", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
++
+ static struct platform_driver dw_wdt_driver = {
+ 	.probe		= dw_wdt_drv_probe,
+ 	.remove		= dw_wdt_drv_remove,
+ 	.driver		= {
+ 		.name	= "dw_wdt",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(dw_wdt_of_match),
+ #ifdef CONFIG_PM
+ 		.pm	= &dw_wdt_pm_ops,
+ #endif /* CONFIG_PM */
+-- 
+1.7.9.5
 
-> I'm not convinced that's a realistic goal.  As I see it, the
-> fundamental difference between a binding document and a formal schema
-> is that a binding defines both the syntax required of a node, and its
-> semantics, whereas a schema defines only syntax - the semantics still
-> need to be defined somewhere.
 
-So long as the schema lets you include free form text to define the
-semantics I'm not sure there's an incompatibility there - the same
-document can cover both.
-
---z+pzSjdB7cqptWpS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSTGEmAAoJELSic+t+oim9AcIP/0P2kS3rVyZaWAN+CwvZQeGL
-DTfOvx92yl1cY8fguQCPMvsUs44XMrx+m+xIloxmL5v6TXNpm2rSNESTHsmYsgEF
-rAwCfApz3eFSg0wfa7OKhuvGebPuPyod1KRorge2wlZdn09aVtpWQjLFAhx/xpUs
-ULpVDpTjWgcCSIMfNPZdRdPjKokImoHIYCY2lMmozizJm0kMsqMmo3zA8WNKzWbo
-lXYsQ0CyKs2RGKTkRXGCPSyWkgeJl7VEss9cvq92C3sSmnt7/VTsoAR7fo/mdU/b
-YDXVD1O+ZAm2ogTvYasIBNljYWh89jq4y7yH8I0BWH50NtzJdOKsmrpd0GJCa3qM
-GGsTnil0nMLftXdZIQDUkr8m79VdEBv03hcMdCGdZmLejBKL+lWZgQKZzIeR7tph
-ZUXRz12WtqVnUBgIz0lTV8tNcE2Q2WwN2/Lv0hdIaCHnPk+/ur0Uig8OR8Za4hi4
-w2VKuxwGW2roLbof91/W8xn2LhhJQ8CPPy7LbbnDyXR9Rs4/XPv3D54bM5sdo2i5
-k0n6EwDaYjJtELTM/E1QUxMvgKNj+ryqOBYs6X3EU57w4hJnqYXiN4cPrY0x264w
-4OQtUZyfmGK5hQ1IVn0UvKpjJ0NyLQ+sAri6p/JMvAH2FoBHhZ5nFjenO2iaxQzP
-yVaq6kOeCfRytSnHdIP+
-=AUeA
------END PGP SIGNATURE-----
-
---z+pzSjdB7cqptWpS--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
