@@ -1,70 +1,124 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: device tree binding documentation outdated
-Date: Wed, 2 Oct 2013 20:33:16 +0100
-Message-ID: <20131002193316.GR12758@n2100.arm.linux.org.uk>
-References: <20130927151900.GA12758@n2100.arm.linux.org.uk> <CAHCPf3t8=mJn-RCz3C1cY6zqsH9ds8UANKpKx9ZpwPM6WjJt3g@mail.gmail.com> <20130927174916.GD12758@n2100.arm.linux.org.uk> <CAHCPf3sC7bY=p4vpBQFpRUmyPspT_PVjx0rH9cm1ov=SqkO+Vg@mail.gmail.com> <20130927190546.GG12758@n2100.arm.linux.org.uk> <CAHCPf3vxGAzTnY360KC7Yt-DB1FB14Sv_Cn7DBTH6HGZ6y=stg@mail.gmail.com> <CAHCPf3sv3wSbUc9QFVhmYsPc1kqiWYRuOMO7rreuiGSrwyepBQ@mail.gmail.com> <20130927202110.GI12758@n2100.arm.linux.org.uk> <20130928083859.GQ12758@n2100.arm.linux.org.uk> <20130929061303.GB26156@S2101-09.ap.freescale.net>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [RESEND PATCHv2] watchdog: dw: Enable OF support for DW watchdog
+ timer.
+Date: Wed, 2 Oct 2013 12:27:43 -0700
+Message-ID: <20131002192743.GA4695@roeck-us.net>
+References: <1380739472-26172-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130929061303.GB26156-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <1380739472-26172-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 29, 2013 at 02:13:05PM +0800, Shawn Guo wrote:
-> On Sat, Sep 28, 2013 at 09:38:59AM +0100, Russell King - ARM Linux wrote:
-> > Okay, the answer is that yes, GPR1 bit 21 should be clear on this version
-> > of the hardware, but there's plans to have the IMX6 generate the clock
-> > and remove the crystal for the AR8035.
+On Wed, Oct 02, 2013 at 01:44:32PM -0500, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 > 
-> Be careful, as mentioned in the reply to Matt, in that case, IMX6 can
-> only output the clock on pad GPIO_16, and the clock has to be externally
-> routed back to IMX6 on pad ENET_REF_CLK, so that ENET can get reference
-> clock for RGMII mode.
-
-Let me repeat that in case it was unclear.
-
-The AR8035 on the current boards has a 25MHz crystal, and the AR8035 is
-*currently* required to be programmed to generate a 125MHz clock back to
-the IMX6 for the transmit timings.
-
-In future, and on the real cubox-i, this crystal will not be present, and
-it will be required that the IMX6 generates the 25MHz clock for the
-AR8035.
-
-So, for the _existing_ hardware, it is _required_ that the AR8035
-generates the transmit clock, and this is fed in on GPIO 16 as
-ENET_REF_CLK.  This means that SION for this *must* be set and
-GPR1 bit 21 *must* be clear.
-
-So:
-
-> > Now, here's the question for the IMX6 maintainers: how do I avoid having
-> > GPR1 bit 21 set - it's unconditionally set by imx6q_1588_init() in
-> > arch/arm/mach-imx/mach-imx6q.c.  Moreover, how do I control this from
-> > DT?
+> Add device tree support to the DW watchdog timer.
 > 
-> GPR1[21] should be cleared only when there is a clock input on pad
-> GPIO_16 from external phy or oscillator.  Other than that, GPR1[21]
-> should always be set to loop the ENET_PLL clock back to ENET though
-> pad GPIO_16, for at least getting PTP (IEEE 1588) work, even in RGMII
-> mode.
+> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> v2:
+> - Use of_match_ptr() for of_match_table
+> ---
+>  .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
+>  drivers/watchdog/dw_wdt.c                          |    8 ++++++++
+>  2 files changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
 > 
-> So far, we haven't got any user with that setup (external phy or
-> oscillator generates clock to pad GPIO_16).  When we do, we can add a
-> device tree property for telling that.
+> diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> new file mode 100644
+> index 0000000..29e150b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> @@ -0,0 +1,16 @@
+> +Synopsys Designware Watchdog Timer
+> +
+> +Required Properties:
+> +
+> +- Compatiblity	: "snps,dw-wdt"
+> +- reg		: Base address of the watchdog timer register.
+> +
+> +Example:
+> +
+> +	watchdog0: wd@ffd02000 {
+> +		compatible = "snps,dw-wdt";
+> +		reg = <0xffd02000 0x1000>;
+> +		interrupts = <0 171 4>;
+> +		clocks = <&per_base_clk>;
+> +		status = "okay";
+> +	};
+> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> index 2037669..a720f9b 100644
+> --- a/drivers/watchdog/dw_wdt.c
+> +++ b/drivers/watchdog/dw_wdt.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/miscdevice.h>
+>  #include <linux/module.h>
+>  #include <linux/moduleparam.h>
+> +#include <linux/of.h>
+>  #include <linux/pm.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/spinlock.h>
+> @@ -343,12 +344,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id dw_wdt_of_match[] = {
+> +	{ .compatible = "snps,dw-wdt", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
+> +
+>  static struct platform_driver dw_wdt_driver = {
+>  	.probe		= dw_wdt_drv_probe,
+>  	.remove		= dw_wdt_drv_remove,
+>  	.driver		= {
+>  		.name	= "dw_wdt",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = of_match_ptr(dw_wdt_of_match),
 
-We need a property for this if we wish to support the carrier-1 development
-board that Solid-run sent out to a load of developers last week.  If not,
-I guess those guys like Olof will find that they won't have properly
-configured ethernet support on their boards they've received in mainline
-kernels.
+There is a separate set of patches from Sachin, removing unnecessary
+uses of of_match_ptr() from various watchdog drivers. Sachin's argument
+is that it does not make sense to use of_match_ptr if the function
+it points to (dw_wdt_of_match in this case) is always compiled
+unconditionally anyway.
 
-I think that as a fair number of key kernel developers now have this
-board with this requirement, we need to have this DT property provided
-even though the final cubox-i will not require it.
+Your comments suggest that you actually _added_ of_match_ptr() in v2 of this
+patch, even though dw_wdt_of_match always exists and of_match_ptr is thus
+technically unnecessary.
+
+Not that I really care one way or another, but can we get an authoritative
+answer what subsystem maintainers are supposed to accept ?
+
+Thanks,
+Guenter
+
+>  #ifdef CONFIG_PM
+>  		.pm	= &dw_wdt_pm_ops,
+>  #endif /* CONFIG_PM */
+> -- 
+> 1.7.9.5
+> 
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
