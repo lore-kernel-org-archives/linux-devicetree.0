@@ -1,63 +1,30 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 04/10] ARM: OMAP2+: usb-host: Adapt to USB phy-nop
- RESET line changes
-Date: Wed, 2 Oct 2013 13:20:04 +0300
-Message-ID: <524BF354.3000502@ti.com>
-References: <1380012836-29900-1-git-send-email-rogerq@ti.com> <1380012836-29900-5-git-send-email-rogerq@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/3] New descriptor-based GPIO interface
+Date: Wed, 2 Oct 2013 12:32:17 +0200
+Message-ID: <CACRpkdZDwKq-3MgY4O5m5_MTfigdcxzHFwXn=KxjvL+AaG+7VQ@mail.gmail.com>
+References: <1380179668-32288-1-git-send-email-acourbot@nvidia.com>
+	<CACRpkdbhywp7_wAhOSzdMe==YoCo0mAcy1mJrdW3bURKWLxQeQ@mail.gmail.com>
+	<CAAVeFuLfUGsmOssWDtm8kf9av=3A_O9Fk8M8HGYF=xqtX8772Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380012836-29900-5-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: Roger Quadros <rogerq@ti.com>, balbi@ti.com, bcousson@baylibre.com, p.zabel@pengutronix.de, broonie@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAAVeFuLfUGsmOssWDtm8kf9av=3A_O9Fk8M8HGYF=xqtX8772Q@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Alexandre Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Sat, Sep 28, 2013 at 12:33 PM, Alexandre Courbot <gnurou@gmail.com> wrote:
+> On Fri, Sep 27, 2013 at 9:06 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
 
-On 09/24/2013 11:53 AM, Roger Quadros wrote:
-> The USB phy-nop nop driver expects the RESET line information
-> to be sent as a GPIO number via platform data. Adapt to that.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> I've applied it now, but no idea whether it will hit the last -next tree in
+>> time, hopefully at the very last second ...
+>
+> Crap, looks like it did not make it. :( I hope we can still merge this for 3.13.
 
-Need your Ack on this one as well.
+As you noticed we have pretty extensive build coverage so as long as we're
+not patching around in the entire kernel we can be pretty sure that patches
+are fine to go if we queue them up in the GPIO tree so don't worry.
 
-cheers,
--roger
-
-> ---
->  arch/arm/mach-omap2/usb-host.c |   11 +----------
->  1 files changed, 1 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap2/usb-host.c b/arch/arm/mach-omap2/usb-host.c
-> index 78ac1c2..10855eb 100644
-> --- a/arch/arm/mach-omap2/usb-host.c
-> +++ b/arch/arm/mach-omap2/usb-host.c
-> @@ -460,8 +460,7 @@ int usbhs_init_phys(struct usbhs_phy_data *phy, int num_phys)
->  		memset(&nop_pdata, 0, sizeof(nop_pdata));
->  		if (gpio_is_valid(phy->vcc_gpio))
->  			nop_pdata.needs_vcc = true;
-> -		if (gpio_is_valid(phy->reset_gpio))
-> -			nop_pdata.needs_reset = true;
-> +		nop_pdata.gpio_reset = phy->reset_gpio;
->  		nop_pdata.type = USB_PHY_TYPE_USB2;
->  
->  		/* create a NOP PHY device */
-> @@ -483,14 +482,6 @@ int usbhs_init_phys(struct usbhs_phy_data *phy, int num_phys)
->  
->  		usb_bind_phy("ehci-omap.0", phy->port - 1, phy_id);
->  
-> -		/* Do we need RESET regulator ? */
-> -		if (gpio_is_valid(phy->reset_gpio)) {
-> -			scnprintf(rail_name, MAX_STR,
-> -					"hsusb%d_reset", phy->port);
-> -			usbhs_add_regulator(rail_name, phy_id, "reset",
-> -						phy->reset_gpio, 1);
-> -		}
-> -
->  		/* Do we need VCC regulator ? */
->  		if (gpio_is_valid(phy->vcc_gpio)) {
->  			scnprintf(rail_name, MAX_STR, "hsusb%d_vcc", phy->port);
-> 
+Yours,
+Linus Walleij
