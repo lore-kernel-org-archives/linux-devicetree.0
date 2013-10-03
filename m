@@ -1,673 +1,508 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/6] pinctrl: single: Add support for wake-up interrupts
-Date: Thu, 3 Oct 2013 10:50:39 -0700
-Message-ID: <20131003175039.GL8949@atomide.com>
-References: <20131003054104.8941.88857.stgit@localhost>
- <20131003054221.8941.87801.stgit@localhost>
+From: boris brezillon <b.brezillon@overkiz.com>
+Subject: Re: [PATCH 1/4] watchdog: at91sam9_wdt: better watchdog support
+Date: Thu, 03 Oct 2013 19:55:04 +0200
+Message-ID: <524DAF78.5040609@overkiz.com>
+References: <1380802761-32279-1-git-send-email-b.brezillon@overkiz.com> <1380802761-32279-2-git-send-email-b.brezillon@overkiz.com> <20131003173105.GC31605@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131003054221.8941.87801.stgit@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Prakash Manjunathappa <prakash.pm-l0cyMroinI0@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131003173105.GC31605@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Wim Van Sebroeck <wim@iguana.be>, Fabio Porcedda <fabio.porcedda@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Guenter Roeck <groeck7@gmail.com>, Yang Wenyou <wenyou.yang@atmel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [131002 22:51]:
-> --- a/drivers/pinctrl/pinctrl-single.c
-> +++ b/drivers/pinctrl/pinctrl-single.c
-> +/**
-> + * pcs_irq_set() - enables or disables an interrupt
-> + *
-> + * Note that this currently assumes one interrupt per pinctrl
-> + * register that is typically used for wake-up events.
-> + */
-> +static inline void pcs_irq_set(struct pcs_soc_data *pcs_soc,
-> +			       int irq, const bool enable)
-> +{
-> +	struct pcs_device *pcs;
-> +	struct list_head *pos;
-> +	unsigned mask;
-> +
-> +	pcs =3D container_of(pcs_soc, struct pcs_device, socdata);
-> +	list_for_each(pos, &pcs->irqs) {
-> +		struct pcs_interrupt *pcswi;
-> +		unsigned soc_mask;
-> +
-> +		pcswi =3D list_entry(pos, struct pcs_interrupt, node);
-> +		if (irq !=3D pcswi->hwirq)
-> +			continue;
+Hi Guenter,
 
-Oops, this should be pcswi->irq instead, otherwise this will
-never match. And it just happened to work for me as I had
-the wake-up flags set from the bootloader..
+On 03/10/2013 19:31, Guenter Roeck wrote:
+> On Thu, Oct 03, 2013 at 02:19:18PM +0200, Boris BREZILLON wrote:
+>> The at91sam9 watchdog timer can only be configured once, and the current
+>> implementation tries to configure it in a static way:
+>> - 2 seconds timeout
+>> - wdt restart every 500ms
+>>
+>> If the timer has already been configured with different values, it returns an
+>> error and do not create any watchdog device.
+>>
+>> This is not critical if the watchdog is disabled, but if it has been enabled with
+>> different timeout values it will lead to a SoC reset.
+>>
+>> This patch series tries to address this issue by adapting the heartbeat value
+>> according the WDT timer config:
+>> - it first tries to configure the timer as requested.
+>> - if it fails it fallbacks to the current config, adapting its heartbeat timer
+>> to the needs
+>>
+>> This patch series also move to a dynamically allocated at91wdt device instead
+>> of the static instance.
+>>
+>> It adds a new at91 wdt type: software. This new type make use of the at91 wdt
+>> interrupt to trigger a software reboot.
+>>
+>> Finally it adds several properties to the device tree bindings.
+>>
+>> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+> Hi Boris,
+>
+> deeper dive this time ...
+>
+>> ---
+>>   drivers/watchdog/at91sam9_wdt.c |  300 ++++++++++++++++++++++++++++-----------
+>>   1 file changed, 217 insertions(+), 83 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/at91sam9_wdt.c b/drivers/watchdog/at91sam9_wdt.c
+>> index be37dde..8f44528 100644
+>> --- a/drivers/watchdog/at91sam9_wdt.c
+>> +++ b/drivers/watchdog/at91sam9_wdt.c
+>> @@ -19,11 +19,13 @@
+>>   
+>>   #include <linux/errno.h>
+>>   #include <linux/init.h>
+>> +#include <linux/interrupt.h>
+>>   #include <linux/io.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/module.h>
+>>   #include <linux/moduleparam.h>
+>>   #include <linux/platform_device.h>
+>> +#include <linux/reboot.h>
+>>   #include <linux/types.h>
+>>   #include <linux/watchdog.h>
+>>   #include <linux/jiffies.h>
+>> @@ -31,22 +33,33 @@
+>>   #include <linux/bitops.h>
+>>   #include <linux/uaccess.h>
+>>   #include <linux/of.h>
+>> +#include <linux/of_irq.h>
+>>   
+>>   #include "at91sam9_wdt.h"
+>>   
+>>   #define DRV_NAME "AT91SAM9 Watchdog"
+>>   
+>> -#define wdt_read(field) \
+>> -	__raw_readl(at91wdt_private.base + field)
+>> -#define wdt_write(field, val) \
+>> -	__raw_writel((val), at91wdt_private.base + field)
+>> +#define wdt_read(wdt, field) \
+>> +	__raw_readl((wdt)->base + (field))
+>> +#define wdt_write(wtd, field, val) \
+>> +	__raw_writel((val), (wdt)->base + (field))
+>>   
+>>   /* AT91SAM9 watchdog runs a 12bit counter @ 256Hz,
+>>    * use this to convert a watchdog
+>>    * value from/to milliseconds.
+>>    */
+>> -#define ms_to_ticks(t)	(((t << 8) / 1000) - 1)
+>> -#define ticks_to_ms(t)	(((t + 1) * 1000) >> 8)
+>> +#define ticks_to_hz_rounddown(t)	((((t) + 1) * HZ) >> 8)
+>> +#define ticks_to_hz_roundup(t)		(((((t) + 1) * HZ) + 255) >> 8)
+>> +#define ticks_to_secs(t)		(((t) + 1) >> 8)
+>> +#define secs_to_ticks(s)		(((s) << 8) - 1)
+>> +
+>> +#define WDT_MR_RESET	0x3FFF2FFF
+>> +
+>> +/* Watchdog max counter value in ticks */
+>> +#define WDT_COUNTER_MAX_TICKS	0xFFF
+>> +
+>> +/* Watchdog max delta/value in secs */
+>> +#define WDT_COUNTER_MAX_SECS	ticks_to_secs(WDT_COUNTER_MAX_TICKS)
+>>   
+>>   /* Hardware timeout in seconds */
+>>   #define WDT_HW_TIMEOUT 2
+>> @@ -66,23 +79,40 @@ module_param(nowayout, bool, 0);
+>>   MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started "
+>>   	"(default=" __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+>>   
+>> -static struct watchdog_device at91_wdt_dev;
+>> -static void at91_ping(unsigned long data);
+>> -
+>> -static struct {
+>> +#define to_wdt(wdd) container_of(wdd, struct at91wdt, wdd)
+>> +struct at91wdt {
+>> +	struct watchdog_device wdd;
+>>   	void __iomem *base;
+>>   	unsigned long next_heartbeat;	/* the next_heartbeat for the timer */
+>>   	struct timer_list timer;	/* The timer that pings the watchdog */
+>> -} at91wdt_private;
+>> +	u32 mr;
+>> +	u32 mr_mask;
+>> +	unsigned long heartbeat;	/* WDT heartbeat in jiffies */
+>> +	bool nowayout;
+>> +	unsigned int irq;
+>> +};
+>>   
+>>   /* ......................................................................... */
+>>   
+>> +static irqreturn_t wdt_interrupt(int irq, void *dev_id)
+>> +{
+>> +	struct at91wdt *wdt = (struct at91wdt *)dev_id;
+>> +
+>> +	if (wdt_read(wdt, AT91_WDT_SR)) {
+>> +		pr_crit("at91sam9 WDT software reset\n");
+>> +		emergency_restart();
+>> +		pr_crit("Reboot didn't ?????\n");
+>> +	}
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>>   /*
+>>    * Reload the watchdog timer.  (ie, pat the watchdog)
+>>    */
+>> -static inline void at91_wdt_reset(void)
+>> +static inline void at91_wdt_reset(struct at91wdt *wdt)
+>>   {
+>> -	wdt_write(AT91_WDT_CR, AT91_WDT_KEY | AT91_WDT_WDRSTT);
+>> +	wdt_write(wdt, AT91_WDT_CR, AT91_WDT_KEY | AT91_WDT_WDRSTT);
+>>   }
+>>   
+>>   /*
+>> @@ -90,26 +120,20 @@ static inline void at91_wdt_reset(void)
+>>    */
+>>   static void at91_ping(unsigned long data)
+>>   {
+>> -	if (time_before(jiffies, at91wdt_private.next_heartbeat) ||
+>> -	    (!watchdog_active(&at91_wdt_dev))) {
+>> -		at91_wdt_reset();
+>> -		mod_timer(&at91wdt_private.timer, jiffies + WDT_TIMEOUT);
+>> +	struct at91wdt *wdt = (struct at91wdt *)data;
+>> +	if (time_before(jiffies, wdt->next_heartbeat) ||
+>> +	    !watchdog_active(&wdt->wdd)) {
+>> +		at91_wdt_reset(wdt);
+>> +		mod_timer(&wdt->timer, jiffies + wdt->heartbeat);
+>>   	} else
+>>   		pr_crit("I will reset your machine !\n");
+>>   }
+>>   
+>>   static int at91_wdt_ping(struct watchdog_device *wdd)
+>>   {
+>> +	struct at91wdt *wdt = to_wdt(wdd);
+>>   	/* calculate when the next userspace timeout will be */
+>> -	at91wdt_private.next_heartbeat = jiffies + wdd->timeout * HZ;
+>> -	return 0;
+>> -}
+>> -
+>> -static int at91_wdt_start(struct watchdog_device *wdd)
+>> -{
+>> -	/* calculate the next userspace timeout and modify the timer */
+>> -	at91_wdt_ping(wdd);
+>> -	mod_timer(&at91wdt_private.timer, jiffies + WDT_TIMEOUT);
+>> +	wdt->next_heartbeat = jiffies + wdd->timeout * HZ;
+>>   	return 0;
+>>   }
+>>   
+>> @@ -125,36 +149,84 @@ static int at91_wdt_set_timeout(struct watchdog_device *wdd, unsigned int new_ti
+> at91_wdt_set_timeout only sets the new timeout but does not update
+> next_heartbeat. That is ok if the timeout decreases, but if it is
+> increased (say, from 1 second to 1 minute) it might result in a missed
+> ping as userspace will subsequently believe that the new (larger)
+> timeout was accepted by the driver. So I think you should also call
+> at91_wdt_ping here or set wdt->next_heartbeat directly.
+Absolutely, I'll call at91_wdt_ping (or start as it will be renamed).
 
-> +		soc_mask =3D pcs_soc->irq_enable_mask;
-> +		raw_spin_lock(&pcs->lock);
-> +		mask =3D pcs->read(pcswi->reg);
-> +		if (enable)
-> +			mask &=3D ~soc_mask;
-> +		else
-> +			mask |=3D soc_mask;
-> +		pcs->write(mask, pcswi->reg);
-> +		raw_spin_unlock(&pcs->lock);
-> +	}
-> +}
+>>   	return 0;
+>>   }
+>>   
+>> -/*
+>> - * Set the watchdog time interval in 1/256Hz (write-once)
+>> - * Counter is 12 bit.
+>> - */
+>> -static int at91_wdt_settimeout(unsigned int timeout)
+>> +static int at91_wdt_init(struct platform_device *pdev, struct at91wdt *wdt)
+>>   {
+>> -	unsigned int reg;
+>> -	unsigned int mr;
+>> -
+>> -	/* Check if disabled */
+>> -	mr = wdt_read(AT91_WDT_MR);
+>> -	if (mr & AT91_WDT_WDDIS) {
+>> -		pr_err("sorry, watchdog is disabled\n");
+>> -		return -EIO;
+>> +	u32 tmp;
+>> +	u32 delta;
+>> +	u32 value;
+>> +	int err;
+>> +	u32 mask = wdt->mr_mask;
+>> +	unsigned long min_heartbeat = 1;
+>> +
+>> +	tmp = wdt_read(wdt, AT91_WDT_MR);
+>> +	if ((tmp & mask) != (wdt->mr & mask)) {
+>> +		if (tmp == WDT_MR_RESET) {
+>> +			wdt_write(wdt, AT91_WDT_MR, wdt->mr);
+>> +			tmp = wdt_read(wdt, AT91_WDT_MR);
+>> +		}
+>>   	}
+>>   
+>> -	/*
+>> -	 * All counting occurs at SLOW_CLOCK / 128 = 256 Hz
+>> -	 *
+>> -	 * Since WDV is a 12-bit counter, the maximum period is
+>> -	 * 4096 / 256 = 16 seconds.
+>> -	 */
+>> -	reg = AT91_WDT_WDRSTEN	/* causes watchdog reset */
+>> -		/* | AT91_WDT_WDRPROC	causes processor reset only */
+>> -		| AT91_WDT_WDDBGHLT	/* disabled in debug mode */
+>> -		| AT91_WDT_WDD		/* restart at any time */
+>> -		| (timeout & AT91_WDT_WDV);  /* timer value */
+>> -	wdt_write(AT91_WDT_MR, reg);
+>> +	if (tmp & AT91_WDT_WDDIS) {
+>> +		if (wdt->mr & AT91_WDT_WDDIS)
+>> +			return 0;
+>> +		dev_err(wdt->wdd.parent, "watchdog is disabled\n");
+> Took me a while to get why you use "wdt->wdd.parent" :).
+> I would just have passed the 'dev' argument. Your call, though.
 
-And then the if (enable) mask needs to be swapped around for
-this to work when the wake up events are not set by the
-bootloader :)
+I can't use wdt->wdd.dev, because the watchdog device is not registered yet,
+but I can use &pdev->dev instead.
+What do you prefer ?
 
-> +static void pcs_irq_chain_handler(unsigned int irq, struct irq_desc =
-*desc)
-> +{
-> +	struct pcs_soc_data *pcs_soc =3D irq_desc_get_handler_data(desc);
-> +	struct irq_chip *chip;
-> +	int res;
-> +
-> +	chip =3D irq_get_chip(irq);
-> +	chained_irq_enter(chip, desc);
-> +	res =3D pcs_irq_handle(pcs_soc);
-> +	if (!res)
-> +		handle_bad_irq(irq, desc);
-> +	chained_irq_exit(chip, desc);
-> +
-> +	return;
-> +}
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	value = tmp & AT91_WDT_WDV;
+>> +	delta = (tmp & AT91_WDT_WDD) >> 16;
+>> +
+>> +	if (delta < value)
+>> +		min_heartbeat = ticks_to_hz_roundup(value - delta);
+>> +
+>> +	wdt->heartbeat = ticks_to_hz_rounddown(value);
+>> +	if (!wdt->heartbeat) {
+>> +		dev_err(wdt->wdd.parent,
+>> +			"heartbeat is too small for the system to handle it correctly\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (wdt->heartbeat < min_heartbeat + 3) {
+>> +		wdt->heartbeat = min_heartbeat;
+>> +		dev_warn(wdt->wdd.parent,
+>> +			 "min heartbeat and max heartbeat might be too close for the system to handle it correctly\n");
+>> +		if (wdt->heartbeat < 4)
+>> +			dev_warn(wdt->wdd.parent,
+>> +				 "heartbeat might be too small for the system to handle it correctly\n");
+>> +	} else
+>> +		wdt->heartbeat -= 4;
+> That means heartbeat can be 0, correct (if min_heartbeat == 1) ?
+Yes, this is a mistake. It should be
 
-Looks like handle_bad_irq is not exported for modules, so I've
-just made it into a comment for now.
+if (wdt->heartbeat < min_heartbeat + 4) {
+...
+}
 
-> +	/* FIXME: Test rmmod */
+> Will that work ?
+Absolutely not :)
+I'll fix it.
 
-And this can be removed now, I've briefly tested it as a
-loadable module by not claiming any pins.
+>
+>> +
+>> +	if ((tmp & AT91_WDT_WDFIEN) && wdt->irq) {
+>> +		err = request_irq(wdt->irq, wdt_interrupt,
+>> +				  IRQF_SHARED | IRQF_IRQPOLL,
+>> +				  pdev->name, wdt);
+>> +		if (err)
+>> +			return err;
+>> +	}
+>> +
+>> +	if ((tmp & wdt->mr_mask) != (wdt->mr & wdt->mr_mask))
+>> +		dev_warn(wdt->wdd.parent,
+>> +			 "watchdog already configured differently (mr = %x expecting %x)\n",
+>> +			 tmp & wdt->mr_mask, wdt->mr & wdt->mr_mask);
+>> +
+>> +	setup_timer(&wdt->timer, at91_ping, (unsigned long)wdt);
+>> +	mod_timer(&wdt->timer, jiffies + wdt->heartbeat);
+>> +
+>> +	/* Try to set timeout from device tree first */
+>> +	if (watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev))
+>> +		watchdog_init_timeout(&wdt->wdd, heartbeat, &pdev->dev);
+>> +	watchdog_set_nowayout(&wdt->wdd, wdt->nowayout);
+>> +	err = watchdog_register_device(&wdt->wdd);
+>> +	if (err)
+>> +		goto out_stop_timer;
+>> +
+>> +	wdt->next_heartbeat = jiffies + wdt->wdd.timeout * HZ;
+>>   
+>>   	return 0;
+>> +
+>> +out_stop_timer:
+>> +	del_timer(&wdt->timer);
+>> +	return err;
+>>   }
+>>   
+>>   /* ......................................................................... */
+>> @@ -167,63 +239,125 @@ static const struct watchdog_info at91_wdt_info = {
+>>   
+>>   static const struct watchdog_ops at91_wdt_ops = {
+>>   	.owner =	THIS_MODULE,
+>> -	.start =	at91_wdt_start,
+>> +	.start =	at91_wdt_ping,
+>>   	.stop =		at91_wdt_stop,
+>>   	.ping =		at91_wdt_ping,
+> Notpick, but you don't need both start and ping. If both are the same, providing
+> start is sufficient. Given this, it might be cleaner to name the function
+> at91_wdt_start and not provide ping.
+I'll change this too.
 
-Updated patch below,
+Thanks, for catching these bugs.
 
-Tony
+Regards,
 
-8<---------------------
+Boris
 
-=46rom: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Date: Wed, 2 Oct 2013 21:39:40 -0700
-Subject: [PATCH] pinctrl: single: Add support for wake-up interrupts
-MIME-Version: 1.0
-Content-Type: text/plain; charset=3DUTF-8
-Content-Transfer-Encoding: 8bit
+>>   	.set_timeout =	at91_wdt_set_timeout,
+>>   };
+>>   
+>> -static struct watchdog_device at91_wdt_dev = {
+>> -	.info =		&at91_wdt_info,
+>> -	.ops =		&at91_wdt_ops,
+>> -	.timeout =	WDT_HEARTBEAT,
+>> -	.min_timeout =	1,
+>> -	.max_timeout =	0xFFFF,
+>> -};
+>> +#if defined(CONFIG_OF)
+>> +static int of_at91wdt_init(struct device_node *np, struct at91wdt *wdt)
+>> +{
+>> +	u32 min = 0;
+>> +	u32 max = WDT_COUNTER_MAX_SECS;
+>> +	const char *tmp;
+>> +
+>> +	/* Get the interrupts property */
+>> +	wdt->irq = irq_of_parse_and_map(np, 0);
+>> +	if (!wdt->irq)
+>> +		dev_warn(wdt->wdd.parent, "failed to get IRQ from DT\n");
+>> +
+>> +	if (!of_property_read_u32_index(np, "atmel,max-heartbeat-sec", 0,
+>> +					&max)) {
+>> +		if (!max || max > WDT_COUNTER_MAX_SECS)
+>> +			max = WDT_COUNTER_MAX_SECS;
+>> +
+>> +		if (!of_property_read_u32_index(np, "atmel,min-heartbeat-sec",
+>> +						0, &min)) {
+>> +			if (min >= max)
+>> +				min = max - 1;
+>> +		}
+>> +	}
+>> +
+>> +	min = secs_to_ticks(min);
+>> +	max = secs_to_ticks(max);
+>> +
+>> +	wdt->mr_mask = 0x3FFFFFFF;
+>> +	wdt->mr = 0;
+>> +	if (!of_property_read_string(np, "atmel,watchdog-type", &tmp) &&
+>> +	    !strcmp(tmp, "software")) {
+>> +		wdt->mr |= AT91_WDT_WDFIEN;
+>> +		wdt->mr_mask &= ~AT91_WDT_WDRPROC;
+>> +	} else
+>> +		wdt->mr |= AT91_WDT_WDRSTEN;
+>> +
+>> +	if (!of_property_read_string(np, "atmel,reset-type", &tmp) &&
+>> +	    !strcmp(tmp, "proc"))
+>> +		wdt->mr |= AT91_WDT_WDRPROC;
+>> +
+>> +	if (of_property_read_bool(np, "atmel,disable")) {
+>> +		wdt->mr |= AT91_WDT_WDDIS;
+>> +		wdt->mr_mask &= AT91_WDT_WDDIS;
+>> +	}
+>> +
+>> +	if (of_property_read_bool(np, "atmel,idle-halt"))
+>> +		wdt->mr |= AT91_WDT_WDIDLEHLT;
+>> +
+>> +	if (of_property_read_bool(np, "atmel,dbg-halt"))
+>> +		wdt->mr |= AT91_WDT_WDDBGHLT;
+>> +
+>> +	wdt->mr |= max | ((max - min) << 16);
+>> +
+>> +	return 0;
+>> +}
+>> +#else
+>> +static inline int of_at91wdt_init(struct device_node *np, struct at91wdt *wdt)
+>> +{
+>> +	return 0;
+>> +}
+>> +#endif
+>>   
+>>   static int __init at91wdt_probe(struct platform_device *pdev)
+>>   {
+>>   	struct resource	*r;
+>> -	int res;
+>> +	int err;
+>> +	struct at91wdt *wdt;
+>>   
+>> -	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> -	if (!r)
+>> -		return -ENODEV;
+>> -	at91wdt_private.base = ioremap(r->start, resource_size(r));
+>> -	if (!at91wdt_private.base) {
+>> -		dev_err(&pdev->dev, "failed to map registers, aborting.\n");
+>> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+>> +	if (!wdt)
+>>   		return -ENOMEM;
+>> -	}
+>>   
+>> -	at91_wdt_dev.parent = &pdev->dev;
+>> -	watchdog_init_timeout(&at91_wdt_dev, heartbeat, &pdev->dev);
+>> -	watchdog_set_nowayout(&at91_wdt_dev, nowayout);
+>> +	wdt->mr = (WDT_HW_TIMEOUT * 256) | AT91_WDT_WDRSTEN | AT91_WDT_WDD |
+>> +		  AT91_WDT_WDDBGHLT | AT91_WDT_WDIDLEHLT;
+>> +	wdt->mr_mask = 0x3FFFFFFF;
+>> +	wdt->nowayout = nowayout;
+>> +	wdt->wdd.parent = &pdev->dev;
+>> +	wdt->wdd.info = &at91_wdt_info;
+>> +	wdt->wdd.ops = &at91_wdt_ops;
+>> +	wdt->wdd.timeout = WDT_HEARTBEAT;
+>> +	wdt->wdd.min_timeout = 1;
+>> +	wdt->wdd.max_timeout = 0xFFFF;
+>>   
+>> -	/* Set watchdog */
+>> -	res = at91_wdt_settimeout(ms_to_ticks(WDT_HW_TIMEOUT * 1000));
+>> -	if (res)
+>> -		return res;
+>> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	wdt->base = devm_ioremap_resource(&pdev->dev, r);
+>> +	if (IS_ERR(wdt->base))
+>> +		return PTR_ERR(wdt->base);
+>> +
+>> +	if (pdev->dev.of_node) {
+>> +		err = of_at91wdt_init(pdev->dev.of_node, wdt);
+>> +		if (err)
+>> +			return err;
+>> +	}
+>>   
+>> -	res = watchdog_register_device(&at91_wdt_dev);
+>> -	if (res)
+>> -		return res;
+>> +	err = at91_wdt_init(pdev, wdt);
+>> +	if (err)
+>> +		return err;
+>>   
+>> -	at91wdt_private.next_heartbeat = jiffies + at91_wdt_dev.timeout * HZ;
+>> -	setup_timer(&at91wdt_private.timer, at91_ping, 0);
+>> -	mod_timer(&at91wdt_private.timer, jiffies + WDT_TIMEOUT);
+>> +	platform_set_drvdata(pdev, wdt);
+>>   
+>>   	pr_info("enabled (heartbeat=%d sec, nowayout=%d)\n",
+>> -		at91_wdt_dev.timeout, nowayout);
+>> +		wdt->wdd.timeout, wdt->nowayout);
+>>   
+>>   	return 0;
+>>   }
+>>   
+>>   static int __exit at91wdt_remove(struct platform_device *pdev)
+>>   {
+>> -	watchdog_unregister_device(&at91_wdt_dev);
+>> +	struct at91wdt *wdt = platform_get_drvdata(pdev);
+>> +	watchdog_unregister_device(&wdt->wdd);
+>>   
+>>   	pr_warn("I quit now, hardware will probably reboot!\n");
+>> -	del_timer(&at91wdt_private.timer);
+>> +	del_timer(&wdt->timer);
+>>   
+>>   	return 0;
+>>   }
+>> -- 
+>> 1.7.9.5
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
 
-The pin control registers can have interrupts for example
-for device wake-up. These interrupts can be treated as a
-chained interrupt controller as suggested earlier by
-Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>.
-
-This patch adds support for interrupts in a way that
-should be pretty generic, and works for the omaps that
-support wake-up interrupts. On omaps, there's an
-interrupt enable and interrupt status bit for each pin.
-The two pinctrl domains on omaps share a single interrupt
-from the PRM chained interrupt handler. Support for
-other similar hardware should be easy to add.
-
-Note that this patch does not attempt to handle the
-wake-up interrupts automatically unlike the earlier
-patches. This patch allows the device drivers to do
-a request_irq() on the wake-up pins as needed. I'll
-try to do also a separate generic patch for handling
-the wake-up events automatically.
-
-Also note that as this patch makes the pinctrl-single
-an irq controller, the current bindings need some
-extra trickery to use interrupts from two different
-interrupt controllers for the same driver. So it
-might be worth waiting a little on the patches
-enabling the wake-up interrupts from drivers as there
-should be a generic way to handle it coming. And also
-there's been discussion of interrupts-extended binding
-for using interrupts from multiple interrupt controllers.
-
-In any case, this patch should be ready to go allowing
-handling the wake-up interrupts in a generic way, or
-separately from the device drivers.
-
-Cc: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: Prakash Manjunathappa <prakash.pm-l0cyMroinI0@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Beno=C3=AEt Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.t=
-xt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
-index 5a02e30..7069a0b 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
-@@ -72,6 +72,13 @@ Optional properties:
- 		/* pin base, nr pins & gpio function */
- 		pinctrl-single,gpio-range =3D <&range 0 3 0 &range 3 9 1>;
-=20
-+- interrupt-controller : standard interrupt controller binding if usin=
-g
-+  interrupts for wake-up events for example. In this case pinctrl-sing=
-le
-+  is set up as a chained interrupt controller and the wake-up interrup=
-ts
-+  can be requested by the drivers using request_irq().
-+
-+- #interrupt-cells : standard interrupt binding if using interrupts
-+
- This driver assumes that there is only one register for each pin (unle=
-ss the
- pinctrl-single,bit-per-mux is set), and uses the common pinctrl bindin=
-gs as
- specified in the pinctrl-bindings.txt document in this directory.
-@@ -121,6 +128,8 @@ pmx_core: pinmux@4a100040 {
- 	reg =3D <0x4a100040 0x0196>;
- 	#address-cells =3D <1>;
- 	#size-cells =3D <0>;
-+	#interrupt-cells =3D <1>;
-+	interrupt-controller;
- 	pinctrl-single,register-width =3D <16>;
- 	pinctrl-single,function-mask =3D <0xffff>;
- };
-@@ -131,6 +140,8 @@ pmx_wkup: pinmux@4a31e040 {
- 	reg =3D <0x4a31e040 0x0038>;
- 	#address-cells =3D <1>;
- 	#size-cells =3D <0>;
-+	#interrupt-cells =3D <1>;
-+	interrupt-controller;
- 	pinctrl-single,register-width =3D <16>;
- 	pinctrl-single,function-mask =3D <0xffff>;
- };
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl=
--single.c
-index f88d3d1..dad65df 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -15,10 +15,14 @@
- #include <linux/slab.h>
- #include <linux/err.h>
- #include <linux/list.h>
-+#include <linux/interrupt.h>
-+
-+#include <linux/irqchip/chained_irq.h>
-=20
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/of_address.h>
-+#include <linux/of_irq.h>
-=20
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/pinctrl/pinmux.h>
-@@ -152,9 +156,15 @@ struct pcs_name {
- /**
-  * struct pcs_soc_data - SoC specific settings
-  * @flags:	initial SoC specific PCS_FEAT_xxx values
-+ * @irq:	optional interrupt for the controller
-+ * @irq_enable_mask:	optional SoC specific interrupt enable mask
-+ * @irq_status_mask:	optional SoC specific interrupt status mask
-  */
- struct pcs_soc_data {
- 	unsigned flags;
-+	int irq;
-+	unsigned irq_enable_mask;
-+	unsigned irq_status_mask;
- };
-=20
- /**
-@@ -165,6 +175,7 @@ struct pcs_soc_data {
-  * @dev:	device entry
-  * @pctl:	pin controller device
-  * @flags:	mask of PCS_FEAT_xxx values
-+ * @lock:	spinlock for register access
-  * @mutex:	mutex protecting the lists
-  * @width:	bits per mux register
-  * @fmask:	function register mask
-@@ -179,6 +190,9 @@ struct pcs_soc_data {
-  * @pingroups:	list of pingroups
-  * @functions:	list of functions
-  * @gpiofuncs:	list of gpio functions
-+ * @irqs:	list of interrupt registers
-+ * @chip:	chip container for this instance
-+ * @domain:	IRQ domain for this instance
-  * @ngroups:	number of pingroups
-  * @nfuncs:	number of functions
-  * @desc:	pin controller descriptor
-@@ -192,7 +206,11 @@ struct pcs_device {
- 	struct device *dev;
- 	struct pinctrl_dev *pctl;
- 	unsigned flags;
-+#define PCS_QUIRK_SHARED_IRQ	(1 << 2)
-+#define PCS_FEAT_IRQ		(1 << 1)
- #define PCS_FEAT_PINCONF	(1 << 0)
-+	struct pcs_soc_data socdata;
-+	raw_spinlock_t lock;
- 	struct mutex mutex;
- 	unsigned width;
- 	unsigned fmask;
-@@ -208,6 +226,9 @@ struct pcs_device {
- 	struct list_head pingroups;
- 	struct list_head functions;
- 	struct list_head gpiofuncs;
-+	struct list_head irqs;
-+	struct irq_chip chip;
-+	struct irq_domain *domain;
- 	unsigned ngroups;
- 	unsigned nfuncs;
- 	struct pinctrl_desc desc;
-@@ -215,6 +236,8 @@ struct pcs_device {
- 	void (*write)(unsigned val, void __iomem *reg);
- };
-=20
-+#define PCS_QUIRK_HAS_SHARED_IRQ	(pcs->flags & PCS_QUIRK_SHARED_IRQ)
-+#define PCS_HAS_IRQ		(pcs->flags & PCS_FEAT_IRQ)
- #define PCS_HAS_PINCONF		(pcs->flags & PCS_FEAT_PINCONF)
-=20
- static int pcs_pinconf_get(struct pinctrl_dev *pctldev, unsigned pin,
-@@ -440,9 +463,11 @@ static int pcs_enable(struct pinctrl_dev *pctldev,=
- unsigned fselector,
-=20
- 	for (i =3D 0; i < func->nvals; i++) {
- 		struct pcs_func_vals *vals;
-+		unsigned long flags;
- 		unsigned val, mask;
-=20
- 		vals =3D &func->vals[i];
-+		raw_spin_lock_irqsave(&pcs->lock, flags);
- 		val =3D pcs->read(vals->reg);
-=20
- 		if (pcs->bits_per_mux)
-@@ -453,6 +478,7 @@ static int pcs_enable(struct pinctrl_dev *pctldev, =
-unsigned fselector,
- 		val &=3D ~mask;
- 		val |=3D (vals->val & mask);
- 		pcs->write(val, vals->reg);
-+		raw_spin_unlock_irqrestore(&pcs->lock, flags);
- 	}
-=20
- 	return 0;
-@@ -494,13 +520,16 @@ static void pcs_disable(struct pinctrl_dev *pctld=
-ev, unsigned fselector,
-=20
- 	for (i =3D 0; i < func->nvals; i++) {
- 		struct pcs_func_vals *vals;
-+		unsigned long flags;
- 		unsigned val;
-=20
- 		vals =3D &func->vals[i];
-+		raw_spin_lock_irqsave(&pcs->lock, flags);
- 		val =3D pcs->read(vals->reg);
- 		val &=3D ~pcs->fmask;
- 		val |=3D pcs->foff << pcs->fshift;
- 		pcs->write(val, vals->reg);
-+		raw_spin_unlock_irqrestore(&pcs->lock, flags);
- 	}
- }
-=20
-@@ -1451,11 +1480,33 @@ static void pcs_free_pingroups(struct pcs_devic=
-e *pcs)
- }
-=20
- /**
-+ * pcs_irq_free() - free interrupt
-+ * @pcs: pcs driver instance
-+ */
-+static void pcs_irq_free(struct pcs_device *pcs)
-+{
-+	struct pcs_soc_data *pcs_soc =3D &pcs->socdata;
-+
-+	if (pcs_soc->irq < 0)
-+		return;
-+
-+	if (pcs->domain)
-+		irq_domain_remove(pcs->domain);
-+
-+	if (PCS_QUIRK_HAS_SHARED_IRQ)
-+		free_irq(pcs_soc->irq, pcs_soc);
-+	else
-+		irq_set_chained_handler(pcs_soc->irq, NULL);
-+}
-+
-+/**
-  * pcs_free_resources() - free memory used by this driver
-  * @pcs: pcs driver instance
-  */
- static void pcs_free_resources(struct pcs_device *pcs)
- {
-+	pcs_irq_free(pcs);
-+
- 	if (pcs->pctl)
- 		pinctrl_unregister(pcs->pctl);
-=20
-@@ -1504,6 +1555,256 @@ static int pcs_add_gpio_func(struct device_node=
- *node, struct pcs_device *pcs)
- 	}
- 	return ret;
- }
-+/**
-+ * @reg:	virtual address of interrupt register
-+ * @hwirq:	hardware irq number
-+ * @irq:	virtual irq number
-+ * @node:	list node
-+ */
-+struct pcs_interrupt {
-+	void __iomem *reg;
-+	irq_hw_number_t hwirq;
-+	unsigned int irq;
-+	struct list_head node;
-+};
-+
-+/**
-+ * pcs_irq_set() - enables or disables an interrupt
-+ *
-+ * Note that this currently assumes one interrupt per pinctrl
-+ * register that is typically used for wake-up events.
-+ */
-+static inline void pcs_irq_set(struct pcs_soc_data *pcs_soc,
-+			       int irq, const bool enable)
-+{
-+	struct pcs_device *pcs;
-+	struct list_head *pos;
-+	unsigned mask;
-+
-+	pcs =3D container_of(pcs_soc, struct pcs_device, socdata);
-+	list_for_each(pos, &pcs->irqs) {
-+		struct pcs_interrupt *pcswi;
-+		unsigned soc_mask;
-+
-+		pcswi =3D list_entry(pos, struct pcs_interrupt, node);
-+		if (irq !=3D pcswi->irq)
-+			continue;
-+
-+		soc_mask =3D pcs_soc->irq_enable_mask;
-+		raw_spin_lock(&pcs->lock);
-+		mask =3D pcs->read(pcswi->reg);
-+		if (enable)
-+			mask |=3D soc_mask;
-+		else
-+			mask &=3D ~soc_mask;
-+		pcs->write(mask, pcswi->reg);
-+		raw_spin_unlock(&pcs->lock);
-+	}
-+}
-+
-+/**
-+ * pcs_irq_mask() - mask pinctrl interrupt
-+ * @d: interrupt data
-+ */
-+static void pcs_irq_mask(struct irq_data *d)
-+{
-+	struct pcs_soc_data *pcs_soc =3D irq_data_get_irq_chip_data(d);
-+
-+	pcs_irq_set(pcs_soc, d->irq, false);
-+}
-+
-+/**
-+ * pcs_irq_unmask() - unmask pinctrl interrupt
-+ * @d: interrupt data
-+ */
-+static void pcs_irq_unmask(struct irq_data *d)
-+{
-+	struct pcs_soc_data *pcs_soc =3D irq_data_get_irq_chip_data(d);
-+
-+	pcs_irq_set(pcs_soc, d->irq, true);
-+}
-+
-+/**
-+ * pcs_irq_set_wake() - toggle the suspend and resume wake up
-+ * @d: interrupt data
-+ * @state: wake-up state
-+ *
-+ * Note that this should be called only for suspend and resume.
-+ * For runtime PM, the wake-up events should be enabled by default.
-+ */
-+static int pcs_irq_set_wake(struct irq_data *d, unsigned int state)
-+{
-+	if (state)
-+		pcs_irq_unmask(d);
-+	else
-+		pcs_irq_mask(d);
-+
-+	return 0;
-+}
-+
-+/**
-+ * pcs_irq_handle() - common interrupt handler
-+ * @pcs_irq: interrupt data
-+ *
-+ * Note that this currently assumes we have one interrupt bit per
-+ * mux register. This interrupt is typically used for wake-up events.
-+ * For more complex interrupts different handlers can be specified.
-+ */
-+static int pcs_irq_handle(struct pcs_soc_data *pcs_soc)
-+{
-+	struct pcs_device *pcs;
-+	struct list_head *pos;
-+	int count =3D 0;
-+
-+	pcs =3D container_of(pcs_soc, struct pcs_device, socdata);
-+	list_for_each(pos, &pcs->irqs) {
-+		struct pcs_interrupt *pcswi;
-+		unsigned mask;
-+
-+		pcswi =3D list_entry(pos, struct pcs_interrupt, node);
-+		raw_spin_lock(&pcs->lock);
-+		mask =3D pcs->read(pcswi->reg);
-+		raw_spin_unlock(&pcs->lock);
-+		if (mask & pcs_soc->irq_status_mask) {
-+			generic_handle_irq(irq_find_mapping(pcs->domain,
-+							    pcswi->hwirq));
-+			count++;
-+		}
-+	}
-+
-+	return count;
-+}
-+
-+/**
-+ * pcs_irq_handler() - handler for the shared interrupt case
-+ * @irq: interrupt
-+ * @d: data
-+ *
-+ * Use this for cases where multiple instances of
-+ * pinctrl-single share a single interrupt like on omaps.
-+ */
-+static irqreturn_t pcs_irq_handler(int irq, void *d)
-+{
-+	struct pcs_soc_data *pcs_soc =3D d;
-+
-+	return pcs_irq_handle(pcs_soc) ? IRQ_HANDLED : IRQ_NONE;
-+}
-+
-+/**
-+ * pcs_irq_handle() - handler for the dedicated chained interrupt case
-+ * @irq: interrupt
-+ * @desc: interrupt descriptor
-+ *
-+ * Use this if you have a separate interrupt for each
-+ * pinctrl-single instance.
-+ */
-+static void pcs_irq_chain_handler(unsigned int irq, struct irq_desc *d=
-esc)
-+{
-+	struct pcs_soc_data *pcs_soc =3D irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip;
-+	int res;
-+
-+	chip =3D irq_get_chip(irq);
-+	chained_irq_enter(chip, desc);
-+	res =3D pcs_irq_handle(pcs_soc);
-+	/* REVISIT: export and add handle_bad_irq(irq, desc)? */
-+	chained_irq_exit(chip, desc);
-+
-+	return;
-+}
-+
-+static int pcs_irqdomain_map(struct irq_domain *d, unsigned int irq,
-+			     irq_hw_number_t hwirq)
-+{
-+	struct pcs_soc_data *pcs_soc =3D d->host_data;
-+	struct pcs_device *pcs;
-+	struct pcs_interrupt *pcswi;
-+
-+	pcs =3D container_of(pcs_soc, struct pcs_device, socdata);
-+	pcswi =3D devm_kzalloc(pcs->dev, sizeof(*pcswi), GFP_KERNEL);
-+	if (!pcswi)
-+		return -ENOMEM;
-+
-+	pcswi->reg =3D pcs->base + hwirq;
-+	pcswi->hwirq =3D hwirq;
-+	pcswi->irq =3D irq;
-+
-+	mutex_lock(&pcs->mutex);
-+	list_add_tail(&pcswi->node, &pcs->irqs);
-+	mutex_unlock(&pcs->mutex);
-+
-+	irq_set_chip_data(irq, pcs_soc);
-+	irq_set_chip_and_handler(irq, &pcs->chip,
-+				 handle_level_irq);
-+	set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
-+
-+	return 0;
-+}
-+
-+static struct irq_domain_ops pcs_irqdomain_ops =3D {
-+	.map =3D pcs_irqdomain_map,
-+	.xlate =3D irq_domain_xlate_onecell,
-+};
-+
-+/**
-+ * pcs_irq_init_chained_handler() - set up a chained interrupt handler
-+ * @pcs: pcs driver instance
-+ * @np: device node pointer
-+ */
-+static int pcs_irq_init_chained_handler(struct pcs_device *pcs,
-+					struct device_node *np)
-+{
-+	struct pcs_soc_data *pcs_soc =3D &pcs->socdata;
-+	const char *name =3D "pinctrl";
-+	int num_irqs;
-+
-+	if (!pcs_soc->irq_enable_mask ||
-+	    !pcs_soc->irq_status_mask) {
-+		pcs_soc->irq =3D -1;
-+		return -EINVAL;
-+	}
-+
-+	INIT_LIST_HEAD(&pcs->irqs);
-+	pcs->chip.name =3D name;
-+	pcs->chip.irq_ack =3D pcs_irq_mask;
-+	pcs->chip.irq_mask =3D pcs_irq_mask;
-+	pcs->chip.irq_unmask =3D pcs_irq_unmask;
-+	pcs->chip.irq_set_wake =3D pcs_irq_set_wake;
-+
-+	if (PCS_QUIRK_HAS_SHARED_IRQ) {
-+		int res;
-+
-+		res =3D request_irq(pcs_soc->irq, pcs_irq_handler,
-+				  IRQF_SHARED | IRQF_NO_SUSPEND,
-+				  name, pcs_soc);
-+		if (res) {
-+			pcs_soc->irq =3D -1;
-+			return res;
-+		}
-+	} else {
-+		irq_set_handler_data(pcs_soc->irq, pcs_soc);
-+		irq_set_chained_handler(pcs_soc->irq,
-+					pcs_irq_chain_handler);
-+	}
-+
-+	/*
-+	 * We can use the register offset as the hardirq
-+	 * number as irq_domain_add_simple maps them lazily.
-+	 * This way we can easily support more than one
-+	 * interrupt per function if needed.
-+	 */
-+	num_irqs =3D pcs->size;
-+
-+	pcs->domain =3D irq_domain_add_simple(np, num_irqs, 0,
-+					    &pcs_irqdomain_ops,
-+					    pcs_soc);
-+	if (!pcs->domain) {
-+		irq_set_chained_handler(pcs_soc->irq, NULL);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-=20
- #ifdef CONFIG_PM
- static int pinctrl_single_suspend(struct platform_device *pdev,
-@@ -1549,12 +1850,14 @@ static int pcs_probe(struct platform_device *pd=
-ev)
- 		return -ENOMEM;
- 	}
- 	pcs->dev =3D &pdev->dev;
-+	raw_spin_lock_init(&pcs->lock);
- 	mutex_init(&pcs->mutex);
- 	INIT_LIST_HEAD(&pcs->pingroups);
- 	INIT_LIST_HEAD(&pcs->functions);
- 	INIT_LIST_HEAD(&pcs->gpiofuncs);
- 	soc =3D match->data;
- 	pcs->flags =3D soc->flags;
-+	memcpy(&pcs->socdata, soc, sizeof(*soc));
-=20
- 	PCS_GET_PROP_U32("pinctrl-single,register-width", &pcs->width,
- 			 "register width not specified\n");
-@@ -1642,6 +1945,16 @@ static int pcs_probe(struct platform_device *pde=
-v)
- 	if (ret < 0)
- 		goto free;
-=20
-+	pcs->socdata.irq =3D irq_of_parse_and_map(np, 0);
-+	if (pcs->socdata.irq)
-+		pcs->flags |=3D PCS_FEAT_IRQ;
-+
-+	if (PCS_HAS_IRQ) {
-+		ret =3D pcs_irq_init_chained_handler(pcs, np);
-+		if (ret < 0)
-+			dev_warn(pcs->dev, "initialized with no interrupts\n");
-+	}
-+
- 	dev_info(pcs->dev, "%i pins at pa %p size %u\n",
- 		 pcs->desc.npins, pcs->base, pcs->size);
-=20
-@@ -1665,6 +1978,12 @@ static int pcs_remove(struct platform_device *pd=
-ev)
- 	return 0;
- }
-=20
-+static const struct pcs_soc_data pinctrl_single_omap_wkup =3D {
-+	.flags =3D PCS_QUIRK_SHARED_IRQ,
-+	.irq_enable_mask =3D (1 << 14),	/* OMAP_WAKEUP_EN */
-+	.irq_status_mask =3D (1 << 15),	/* OMAP_WAKEUP_EVENT */
-+};
-+
- static const struct pcs_soc_data pinctrl_single =3D {
- };
-=20
-@@ -1673,6 +1992,9 @@ static const struct pcs_soc_data pinconf_single =3D=
- {
- };
-=20
- static struct of_device_id pcs_of_match[] =3D {
-+	{ .compatible =3D "ti,omap3-padconf", .data =3D &pinctrl_single_omap_=
-wkup },
-+	{ .compatible =3D "ti,omap4-padconf", .data =3D &pinctrl_single_omap_=
-wkup },
-+	{ .compatible =3D "ti,omap5-padconf", .data =3D &pinctrl_single_omap_=
-wkup },
- 	{ .compatible =3D "pinctrl-single", .data =3D &pinctrl_single },
- 	{ .compatible =3D "pinconf-single", .data =3D &pinconf_single },
- 	{ },
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
