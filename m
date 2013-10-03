@@ -1,152 +1,56 @@
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Subject: Re: [PATCH v2 2/5] PM / OPP: add support to specify phandle of another
- node for OPP
-Date: Thu, 03 Oct 2013 16:39:58 +0100
-Message-ID: <524D8FCE.2030200@arm.com>
-References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1380634382-15609-3-git-send-email-Sudeep.KarkadaNagesha@arm.com> <524AFC52.8080201@arm.com> <524D7D1C.30207@ti.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v7 09/10] usb: dwc3: omap: manage "usb_otg_ss_refclk960m"
+ clock
+Date: Thu, 3 Oct 2013 08:41:44 -0700
+Message-ID: <20131003154144.GA18189@kroah.com>
+References: <1379508542-22389-1-git-send-email-rogerq@ti.com>
+ <1379508542-22389-10-git-send-email-rogerq@ti.com>
+ <52403E02.4070208@ti.com>
+ <20131002131113.GM1476@radagast>
+ <524C22A1.30200@ti.com>
+ <20131003122941.GD3230@radagast>
+ <524D8516.8000107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <524D7D1C.30207@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <524D8516.8000107-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/10/13 15:20, Nishanth Menon wrote:
-> On 10/01/2013 11:46 AM, Sudeep KarkadaNagesha wrote:
->> On 01/10/13 14:32, Sudeep KarkadaNagesha wrote:
-[...]
->> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
->>
->> Currently we need to replicate the OPP entries in all the nodes even
->> though they share OPPs being in the same clock domain.
->>
->> Few drivers like cpufreq depend on physical cpu0 node to specify the
->> OPPs and only that node is referred irrespective of the logical cpu
->> accessing it. Alternatively to support cpuhotplug path, few drivers
->> parse all the cpu nodes for OPPs. Instead we can specify the phandle
->> of the node which contains the OPP tuples.
->>
->> This patch adds support to the new property 'operating-points-phandle'
->> which specifies the phandle pointing to another node which contains the
->> actual OPP tuples.
->>
->> Cc: Rob Herring <rob.herring@calxeda.com>
->> Cc: Pawel Moll <pawel.moll@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Stephen Warren <swarren@wwwdotorg.org>
->> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
->> Cc: Nishanth Menon <nm@ti.com>
->> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
->> ---
->>  drivers/base/power/opp.c | 34 +++++++++++++++++++++++++---------
->>  1 file changed, 25 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
->> index ef89897..cd4dbb3 100644
->> --- a/drivers/base/power/opp.c
->> +++ b/drivers/base/power/opp.c
->> @@ -708,14 +708,25 @@ struct srcu_notifier_head *opp_get_notifier(struct device
->> *dev)
-> ^^
-> <minor crib>
-> When reposting, could you avoid having word wrap? - kinda hard to get
-> https://patchwork.kernel.org/patch/2971091/ to apply clean :(
-> 
-> wget -O a.patch 'https://patchwork.kernel.org/patch/2971091/mbox/'
-> patch -p1< a.patch --dry-run
-> patching file drivers/base/power/opp.c
-> patch: **** malformed patch at line 143: *dev)
-> 
-> also when i look at the mbox patch, I see it split up.. did not dig in
-> why.. manually fixed it up.
+On Thu, Oct 03, 2013 at 05:54:14PM +0300, Roger Quadros wrote:
+> On 10/03/2013 03:29 PM, Felipe Balbi wrote:
+> > Hi,
+> > 
+> > On Wed, Oct 02, 2013 at 04:41:53PM +0300, Roger Quadros wrote:
+> >> On 10/02/2013 04:11 PM, Felipe Balbi wrote:
+> >>> On Mon, Sep 23, 2013 at 04:11:30PM +0300, Roger Quadros wrote:
+> >>>> Hi Felipe,
+> >>>>
+> >>>> On 09/18/2013 03:49 PM, Roger Quadros wrote:
+> >>>>> "usb_otg_ss_refclk960m" is an optional functional clock to the
+> >>>>> UBS_OTG_SS module. So manage it in the driver.
+> >>>>>
+> >>>>
+> >>>> Just realized that "usb_otg_ss_refclk960m" is in fact functional clock to the 
+> >>>> PHY and not USB_OTG_SS module. The name is misleading.
+> >>>>
+> >>>> So please ignore patch 9 and 10.
+> >>>
+> >>> ignored. All others are fine, right ?
+> >>>
+> >> Yes. But I might have to rebase this on top of Phy framework stuff.
+> > 
+> > alright, Greg already took the PHY framework, so maybe we need to just
+> > give him my Acked-by and he takes the patches directly as I don't have
+> > PYH framework.
+> > 
+> OK. I'll resend this series to Greg in a while.
 
-Sorry for this, since I replied over my original patch(didn't use git mail)
-I messed it up. It won't happen again :)
-
-> </minor crib>
-> 
-> minor comments follow (other than squashing it with patch #1)
->>  int of_init_opp_table(struct device *dev)
->>  {
->>  	const struct property *prop;
->> +	struct device_node *opp_node;
->>  	const __be32 *val;
->> -	int nr;
->> -
->> -	prop = of_find_property(dev->of_node, "operating-points", NULL);
->> -	if (!prop)
->> -		return -ENODEV;
->> -	if (!prop->value)
->> -		return -ENODATA;
->> +	int nr, ret = 0;
->> +
->> +	opp_node = of_parse_phandle(dev->of_node,
->> +					"operating-points-phandle", 0);
->> +	if (!opp_node) /* if no OPP phandle, search for OPPs in current node */
-> If you do not have a strong opinion, could you move the comment above
-> the if?
->> +		opp_node = dev->of_node;
-> add an eol here.
->> +	prop = of_find_property(opp_node, "operating-points", NULL);
->> +	if (!prop) {
->> +		dev_warn(dev, "node %s missing operating-points property\n",
->> +							opp_node->full_name);
-> ^^ align the opp_node->full_name to the d in dev in dev_warn(dev?
-> Checkpatch.sh --strict reports
-> CHECK: Alignment should match open parenthesis
-> #57: FILE: drivers/base/power/opp.c:722:
-> +		dev_warn(dev, "node %s missing operating-points property\n",
-> +							opp_node->full_name);
-> 
-> total: 0 errors, 0 warnings, 1 checks, 53 lines checked
-> 
-All the other coding style comments and checkpatch errors reported in all the
-patches are now fixed. I will post the next version once I get response for DT
-binding updates from DT maintainers.
-
-> 
->> +		ret = -ENODEV;
->> +		goto put_node;
->> +	}
->> +	if (!prop->value) {
->> +		ret = -ENODATA;
->> +		goto put_node;
->> +	}
->>
->>  	/*
->>  	 * Each OPP is a set of tuples consisting of frequency and
->> @@ -724,7 +735,8 @@ int of_init_opp_table(struct device *dev)
->>  	nr = prop->length / sizeof(u32);
->>  	if (nr % 2) {
->>  		dev_err(dev, "%s: Invalid OPP list\n", __func__);
->> -		return -EINVAL;
->> +		ret = -EINVAL;
->> +		goto put_node;
->>  	}
->>
->>  	val = prop->value;
->> @@ -740,7 +752,11 @@ int of_init_opp_table(struct device *dev)
->>  		nr -= 2;
->>  	}
->>
->> -	return 0;
->> +put_node:
->> +	if (opp_node != dev->of_node)
->> +		of_node_put(opp_node);
->> +
->> +	return ret;
->>  }
->>  EXPORT_SYMBOL_GPL(of_init_opp_table);
->>  #endif
->>
-> other than that, please feel free to add
-> Acked-by: Nishanth Menon <nm@ti.com>
-> 
-Thanks for the review.
-
-Regards,
-Sudeep
-
+It looks like you did, but forgot Felipe's ack :(
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
