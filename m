@@ -1,76 +1,107 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] PM / OPP: check for existing OPP list when initialising
- from device tree
-Date: Thu, 3 Oct 2013 09:25:01 -0500
-Message-ID: <524D7E3D.4050705@ti.com>
-References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1380634382-15609-4-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+From: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 05/10] ARM: dts: omap3-beagle: Use reset-gpios for
+ hsusb2_reset
+Date: Thu, 03 Oct 2013 16:25:03 +0200
+Message-ID: <524D7E3F.6010609@baylibre.com>
+References: <1380012836-29900-1-git-send-email-rogerq@ti.com> <1380012836-29900-6-git-send-email-rogerq@ti.com> <524D483D.9040907@ti.com> <524D5D88.9020308@baylibre.com> <524D74A5.7010604@baylibre.com> <524D780C.1090708@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380634382-15609-4-git-send-email-Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <524D780C.1090708-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2013 08:33 AM, Sudeep KarkadaNagesha wrote:
-> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
-> 
-> CPUs are registered as devices and their OPPs can be initialised from
-> the device tree. Whenever CPUs are hotplugged out, the corresponding
-> cpu devices are not removed. As a result all their OPPs remain intact
-> even when they are offlined.
-> 
-> But when they are hotplugged back-in, the cpufreq along with other cpu
-> related subsystem gets re-initialised. Since its almost same as secondary
-> cpu being brought up, no special consideration is taken in the hotplug
-> path. This may result in cpufreq trying to initialise the OPPs again though
-> the cpu device already contains the OPPs.
-> 
-> This patch checks if there exist an OPP list associated with the device,
-> before attempting to initialise it.
-> 
-> Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> Cc: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
-> Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/base/power/opp.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
-> index bb6ff64..05b2ebf 100644
-> --- a/drivers/base/power/opp.c
-> +++ b/drivers/base/power/opp.c
-> @@ -709,9 +709,15 @@ int of_init_opp_table(struct device *dev)
->  {
->  	const struct property *prop;
->  	struct device_node *opp_node;
-> +	struct device_opp *dev_opp;
->  	const __be32 *val;
->  	int nr;
->  
-> +	/* Check for existing list for 'dev' */
-> +	dev_opp = find_device_opp(dev);
-> +	if (!IS_ERR(dev_opp))
-> +		return -EEXIST; /* Device OPP already initialized */
-in the interest of remaining code, Prefer comments not inline with
-code -> example if additional logic gets added later on in the if
-condition, someone'd have to move that comment over, instead, prefer
-it embedded before the if check as a line of it's own.
-> +
->  	opp_node = of_parse_phandle(dev->of_node,
->  					"operating-points-phandle", 0);
->  	if (!opp_node) /* if no OPP phandle, search for OPPs in current node */
-> 
+On 03/10/2013 15:58, Roger Quadros wrote:
+> Hi Benoit,
+>
+> On 10/03/2013 04:44 PM, Benoit Cousson wrote:
+>> On 03/10/2013 14:05, Benoit Cousson wrote:
+>>> Hi Roger,
+>>>
+>>> Yes, I will. I've been waiting for these ones for so long :-)
+>>
+>> In fact it does not apply correctly on my for_3.13/dts branch :-(
+>>
+>> error: arch/arm/boot/dts/omap3-beagle.dts: patch does not apply
+>> Patch failed at 0004 ARM: dts: omap3-beagle: Make USB host pin naming consistent
+>>
+>> Could you rebase it?
+>
+> Looks like it was already applied before. Could you please skip that and use the rest?
+> I've checked that the remaining patches apply fine on top of your for_3.13/dts
+> branch.
 
-other than that,
-Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Indeed, it was already there :-)
 
--- 
-Regards,
-Nishanth Menon
+Sorry for the noise.
+
+Benoit
+
+>
+> cheers,
+> -roger
+>
+>>>
+>>> On 03/10/2013 12:34, Roger Quadros wrote:
+>>>> Hi Benoit,
+>>>>
+>>>> Could you please take the device tree related patches [5 to 10] in
+>>>> this series?
+>>>> Thanks.
+>>>>
+>>>> cheers,
+>>>> -roger
+>>>>
+>>>> On 09/24/2013 11:53 AM, Roger Quadros wrote:
+>>>>> We no longer need to model the RESET line as a regulator since
+>>>>> the USB phy-nop driver accepts "reset-gpios" property.
+>>>>>
+>>>>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>>>>> ---
+>>>>>    arch/arm/boot/dts/omap3-beagle.dts |   13 +------------
+>>>>>    1 files changed, 1 insertions(+), 12 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/omap3-beagle.dts
+>>>>> b/arch/arm/boot/dts/omap3-beagle.dts
+>>>>> index dfd8310..71bde47 100644
+>>>>> --- a/arch/arm/boot/dts/omap3-beagle.dts
+>>>>> +++ b/arch/arm/boot/dts/omap3-beagle.dts
+>>>>> @@ -44,17 +44,6 @@
+>>>>>            };
+>>>>>        };
+>>>>>
+>>>>> -    /* HS USB Port 2 RESET */
+>>>>> -    hsusb2_reset: hsusb2_reset_reg {
+>>>>> -        compatible = "regulator-fixed";
+>>>>> -        regulator-name = "hsusb2_reset";
+>>>>> -        regulator-min-microvolt = <3300000>;
+>>>>> -        regulator-max-microvolt = <3300000>;
+>>>>> -        gpio = <&gpio5 19 0>;    /* gpio_147 */
+>>>>> -        startup-delay-us = <70000>;
+>>>>> -        enable-active-high;
+>>>>> -    };
+>>>>> -
+>>>>>        /* HS USB Port 2 Power */
+>>>>>        hsusb2_power: hsusb2_power_reg {
+>>>>>            compatible = "regulator-fixed";
+>>>>> @@ -68,7 +57,7 @@
+>>>>>        /* HS USB Host PHY on PORT 2 */
+>>>>>        hsusb2_phy: hsusb2_phy {
+>>>>>            compatible = "usb-nop-xceiv";
+>>>>> -        reset-supply = <&hsusb2_reset>;
+>>>>> +        reset-gpios = <&gpio5 19 GPIO_ACTIVE_LOW>;    /* gpio_147 */
+>>>>>            vcc-supply = <&hsusb2_power>;
+>>>>>        };
+>>>>>
+>>>>>
+>>>>
+>>>
+>>
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
