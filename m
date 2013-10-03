@@ -1,74 +1,97 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 0/4] SoCFPGA: dts cleanups and SoCkit support
-Date: Thu, 3 Oct 2013 18:51:47 +0200
-Message-ID: <20131003165147.GC14042@pengutronix.de>
-References: <1380699333-558-1-git-send-email-s.trumtrar@pengutronix.de>
- <1380813121.7464.18.camel@linux-builds1>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] Documentation: arm: add UEFI support documentation
+Date: Thu, 3 Oct 2013 19:18:02 +0200
+Message-ID: <20131003171800.GC1557@rocoto.smurfnet.nu>
+References: <1380799481-5470-1-git-send-email-leif.lindholm@linaro.org>
+ <1380799481-5470-2-git-send-email-leif.lindholm@linaro.org>
+ <524D9726.6080501@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1380813121.7464.18.camel@linux-builds1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <524D9726.6080501-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 03, 2013 at 10:12:01AM -0500, Dinh Nguyen wrote:
-> On Wed, 2013-10-02 at 09:35 +0200, Steffen Trumtrar wrote:
-> > Hi!
-> > 
-> > This series includes some minor cleanups (indentation and clock labels) and
-> > reorders the socfpga dts hierarchy from
-> > 	socfpga.dtsi
-> > 	-> socfpga_$board.dts
-> > 	-> socfpga_$otherboard.dts
-> > to
-> > 	socfpga.dtsi
-> > 	-> socfpga_cyclone5.dtsi
-> > 	--> socfpga_cyclone5_$board.dts
-> > 	--> socfpga_cyclone5_$otherboard.dts
-> > 
-> > The Socfpga is a SoC with an FPGA on board. This FPGA does not have to be a
-> > Cyclone5.
-> > The current socfpga_cyclone5.dts is however not specific to a SoC with this
-> > combination, but describes one specific board: the Altera Cyclone5 Development Kit.
-> > Therefore, I propose moving the common stuff to socfpga_cyclone5.dtsi as long as
-> > it is as easy as now.
-> > 
-> > Finally, the series adds minimal support for the terasic SoCkit.
-> > 
-> > BTW: It seems there is no official maintainer(tree) for the socfpga dt stuff.
-> > So, I rebased onto next-20130927.
+On Thu, Oct 03, 2013 at 11:11:18AM -0500, Rob Herring wrote:
+> Adding devicetree list since you are defining bindings...
 > 
-> I've pretty much Acked this whole series, with the minor comment of a
-> baudrate change.
+> > +with CONFIG_OF.
+> > +
+> > +It parses the FDT /chosen node for the following parameters:
 > 
-
-Thank you!
-
-> I think Rob had mentioned in a another patch(that since the patch
-> doesn't involve a binding change, it may not get too many comments), and
-> since this patch series is not making a binding change at all, comments
-> may not come, but we still need an Ack from a DTS binding maintainer
-> before the arm-soc maintainer(s) will take it.
+> DT bindings should be documented in Documentation/devicetree/bindings.
 > 
+> I also wonder if this would be more appropriately placed in a /firmware
+> node.
 
-Hm, I don't think we need that here, as this is really just reordering
-and doesn't change any API or binding at all. We need someone responsible
-for arch/arm/boot/dts to take it (as there is no maintainer for socfpga*.dts(i),
-yet). The arm-soc maintainers than get it from the dts maintainer.
-I guess with your ACK there shouldn't be any more problems. But, we'll see.
+This is information passed to the kernel by the bootloader - not
+system descriptiont - so I don't quite see why it needs different
+treatment from initrd and bootargs.
 
-Thanks,
-Steffen
+Feedback on v1 was:
+https://lkml.org/lkml/2013/6/26/378
+and
+https://lkml.org/lkml/2013/6/27/420
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't really mind either way, but the current layout is now used
+across 3 sets of kernel patches, so we need to reach some sort of
+consensus. Interested parties so far: me, you, Grant, Arnd, Mark.
+
+> > +- 'linux,efi-mmap':
+> > +  The EFI memory map as an embedded property. (required)
+> > +  An array of type EFI_MEMORY_DESCRIPTOR as described by the UEFI
+> > +  specification, current version described in Linux by efi_memory_desc_t.
+> 
+> Is that too complex to describe here?
+ 
+No, just felt a bit redundant, and also not architecture-specific.
+
+> > +  The memory map is represented in little-endian, not DT, byte order.
+> > +  This map needs to contain at least the regions to be preserved for runtime
+> > +  services, but would normally just be the map retreieved by calling UEFI
+> > +  GetMemoryMap() immediately before ExitBootServices().
+> > +- 'linux,efi-mmap-desc-size':
+> > +  Size of each descriptor in the memory map. (override default)
+> 
+> 32-bit value?
+
+Value as returned by the above mentioned GetMemoryMap().
+Defined in UEFI specification (and <linux/efi.h>) as 32-bit (native
+int). But yes, I can be explicit.
+
+> > +- 'linux,efi-mmap-desc-ver':
+> > +  Memory descriptor format version. (override default)
+> 
+> String? Number?
+ 
+Value as returned by the above mentioned GetMemoryMap().
+Defined in the UEFI specification as 32-bit (uint32), not
+architecture specific. And I can add that too.
+
+> Are these all generated by UEFI at runtime or could they be statically
+> set in a platform's DTB?
+
+Generated at runtime.
+This is not the platform memory map, this is the UEFI memory map,
+which tells us which regions we need to preserve for runtime
+services, ACPI and such.
+
+> How would other OS's get this information? Is this really linux specific?
+
+The way it is passed through DT is. Other operating systems might keep
+boot services running for longer, and make calls into UEFI later, so
+not needing to cache the data. Since boot services means the timer
+interrupt is active, the ARM Linux boot protocol effectively prohibits
+this.
+
+Many of these questions are about generic UEFI mechanisms.
+If they need to be documented outside the UEFI specification,
+Documentation/arm is not the right place for it.
+
+If you want, I could give a basic Documentation/uefi.txt a shot.
+
+/
+    Leif
