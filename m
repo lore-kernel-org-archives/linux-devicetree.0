@@ -1,13 +1,13 @@
 From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Subject: [PATCH 1/6] ARM: dts: Fix pinctrl mask for omap3
-Date: Wed, 02 Oct 2013 22:16:57 -0700
-Message-ID: <20131003051657.8444.97429.stgit@localhost>
-References: <20131003051049.8444.16913.stgit@localhost>
+Date: Wed, 02 Oct 2013 22:42:11 -0700
+Message-ID: <20131003054211.8941.9679.stgit@localhost>
+References: <20131003054104.8941.88857.stgit@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131003051049.8444.16913.stgit@localhost>
+In-Reply-To: <20131003054104.8941.88857.stgit@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
