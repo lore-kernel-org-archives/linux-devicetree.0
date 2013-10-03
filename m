@@ -1,71 +1,76 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
-Date: Thu, 3 Oct 2013 18:17:16 +0200
-Message-ID: <20131003181716.6d03d576@armhf>
-References: <20130828113521.35c53365@armhf>
-	<521DCD80.9010105@gmail.com>
-	<20130831125128.0e3a23c7@armhf>
-	<140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com>
-	<20130926101147.217015e1@armhf>
-	<5243F0CE.9000301@gmail.com>
-	<20130926132859.04ad4407@armhf>
-	<5246E747.6020103@gmail.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: socfpga: dts: Move common nodes to cyclone5 dtsi
+Date: Thu, 3 Oct 2013 18:37:43 +0200
+Message-ID: <20131003163743.GB14042@pengutronix.de>
+References: <1380699333-558-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1380699333-558-2-git-send-email-s.trumtrar@pengutronix.de>
+ <1380812321.7464.7.camel@linux-builds1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5246E747.6020103-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1380812321.7464.7.camel@linux-builds1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 28 Sep 2013 16:27:19 +0200
-Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Dinh,
 
-> Jean-Francois,
->=20
-> I can confirm the following for CuBox:
->=20
-> AU1_EXTCLK is connected to si5351 clkout 2. For the _current_
-> (v3.12-rc1) dove-cubox.dts that means that you'll have to exchange
-> the properties for &i2c0/si5351/clkout[12]. If you leave it the way
-> it is, clkout2 is not allowed to change the pll inside si5351 and
-> only try to get close to the requested clk rate by using output
-> dividers. Would be great if you can provide a corresponding patch
-> for v3.12 (no need to Cc stable).
->=20
-> Also, as you seem to push kirkwood-i2s DT forward, please get back
-> to clkout2 (<&si5351 2>) for the audio node as you did correctly in
-> the first place.
->=20
-> With above changes, SPDIF_EN, and forcing kirkwood-i2s to always use
-> extclk, I can play SPDIF audio with 44k1 and 48k. Other rates could
-> also work, but my audio equipment ignores anything else.
+On Thu, Oct 03, 2013 at 09:58:41AM -0500, Dinh Nguyen wrote:
+> On Wed, 2013-10-02 at 09:35 +0200, Steffen Trumtrar wrote:
+> > +/include/ "socfpga_cyclone5.dtsi"
+> > +
+> > +/ {
+> > +	model = "Altera SOCFPGA Cyclone V SoC Development Kit";
+> > +	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> > +
+> > +	chosen {
+> > +		bootargs = "console=ttyS0,57600";
+> 
+> Thanks for doing this. It looks good. While you're at it can you make
+> this 115200? 57600 was early in the bring-up stage.
+> 
 
-Sebastian,
+I can also completely remove this. The question is: does u-boot need this
+line or does it add this line itself?
+We added basic support for SoCFPGA to barebox (well, it will go live with the
+october release AFAIK. With SoCKit and SoCrates boards) and we normally do not
+need to put the bootargs in the DT. So, I would be okay to remove this line
+OR if u-boot uses it, change it to 115200. What do you think?
 
-Thanks for your change. I can now get audio at 44.1, 32 and 22.05 kHz
-on HDMI with the external clock (via i2s, but s/pdif and other rates
-should work too).
+> > +	};
+> > +
+> > +	memory {
+> > +		name = "memory";
+> > +		device_type = "memory";
+> > +		reg = <0x0 0x40000000>; /* 1GB */
+> > +	};
+> > +
+> > +	aliases {
+> > +		/* this allow the ethaddr uboot environmnet variable contents
+> > +		 * to be added to the gmac1 device tree blob.
+> > +		 */
+> > +		ethernet0 = &gmac1;
+> > +	};
+> > +};
+> 
+> With the change to 115200,
+> 
+> Acked-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> 
 
-	[snip]
-> What I am wondering here is, why you want to use i2s at all? On CuBox=
-,
-> HDMI transmitter is connected to both i2s and spdif. IIRC, for the
-> transmitter it makes no difference if you provide i2s or spdif audio,
-> _but_ what you are loosing for sure is pass-through, i.e. sending
-> compressed AC3 directly.
-	[snip]
+Thanks.
 
-It seems that my patch about adding s/pdif to the kirkwood audio driver
-has not been accepted yet...
+Regards,
+Steffen
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
