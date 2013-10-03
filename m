@@ -1,90 +1,152 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v8 4/8] usb: phy: omap-usb3: Don't use omap_get_control_dev()
-Date: Thu, 3 Oct 2013 18:12:33 +0300
-Message-ID: <1380813157-22311-5-git-send-email-rogerq@ti.com>
-References: <1380813157-22311-1-git-send-email-rogerq@ti.com>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Subject: Re: [PATCH v2 2/5] PM / OPP: add support to specify phandle of another
+ node for OPP
+Date: Thu, 03 Oct 2013 16:39:58 +0100
+Message-ID: <524D8FCE.2030200@arm.com>
+References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1380634382-15609-3-git-send-email-Sudeep.KarkadaNagesha@arm.com> <524AFC52.8080201@arm.com> <524D7D1C.30207@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1380813157-22311-1-git-send-email-rogerq@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, balbi@ti.com
-Cc: devicetree@vger.kernel.org, george.cherian@ti.com, sergei.shtylyov@cogentembedded.com, tony@atomide.com, bigeasy@linutronix.de, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, thomas.langer@lantiq.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <524D7D1C.30207@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>
 List-Id: devicetree@vger.kernel.org
 
-omap_get_control_dev() is being deprecated as it doesn't support
-multiple instances. As control device is present only from OMAP4
-onwards which supports DT only, we use phandles to get the
-reference to the control device.
+On 03/10/13 15:20, Nishanth Menon wrote:
+> On 10/01/2013 11:46 AM, Sudeep KarkadaNagesha wrote:
+>> On 01/10/13 14:32, Sudeep KarkadaNagesha wrote:
+[...]
+>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>>
+>> Currently we need to replicate the OPP entries in all the nodes even
+>> though they share OPPs being in the same clock domain.
+>>
+>> Few drivers like cpufreq depend on physical cpu0 node to specify the
+>> OPPs and only that node is referred irrespective of the logical cpu
+>> accessing it. Alternatively to support cpuhotplug path, few drivers
+>> parse all the cpu nodes for OPPs. Instead we can specify the phandle
+>> of the node which contains the OPP tuples.
+>>
+>> This patch adds support to the new property 'operating-points-phandle'
+>> which specifies the phandle pointing to another node which contains the
+>> actual OPP tuples.
+>>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Stephen Warren <swarren@wwwdotorg.org>
+>> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+>> Cc: Nishanth Menon <nm@ti.com>
+>> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>> ---
+>>  drivers/base/power/opp.c | 34 +++++++++++++++++++++++++---------
+>>  1 file changed, 25 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
+>> index ef89897..cd4dbb3 100644
+>> --- a/drivers/base/power/opp.c
+>> +++ b/drivers/base/power/opp.c
+>> @@ -708,14 +708,25 @@ struct srcu_notifier_head *opp_get_notifier(struct device
+>> *dev)
+> ^^
+> <minor crib>
+> When reposting, could you avoid having word wrap? - kinda hard to get
+> https://patchwork.kernel.org/patch/2971091/ to apply clean :(
+> 
+> wget -O a.patch 'https://patchwork.kernel.org/patch/2971091/mbox/'
+> patch -p1< a.patch --dry-run
+> patching file drivers/base/power/opp.c
+> patch: **** malformed patch at line 143: *dev)
+> 
+> also when i look at the mbox patch, I see it split up.. did not dig in
+> why.. manually fixed it up.
 
-As we don't support non-DT boot, we just bail out on probe
-if device node is not present.
+Sorry for this, since I replied over my original patch(didn't use git mail)
+I messed it up. It won't happen again :)
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/usb/phy/phy-omap-usb3.c |   26 ++++++++++++++++++++------
- 1 files changed, 20 insertions(+), 6 deletions(-)
+> </minor crib>
+> 
+> minor comments follow (other than squashing it with patch #1)
+>>  int of_init_opp_table(struct device *dev)
+>>  {
+>>  	const struct property *prop;
+>> +	struct device_node *opp_node;
+>>  	const __be32 *val;
+>> -	int nr;
+>> -
+>> -	prop = of_find_property(dev->of_node, "operating-points", NULL);
+>> -	if (!prop)
+>> -		return -ENODEV;
+>> -	if (!prop->value)
+>> -		return -ENODATA;
+>> +	int nr, ret = 0;
+>> +
+>> +	opp_node = of_parse_phandle(dev->of_node,
+>> +					"operating-points-phandle", 0);
+>> +	if (!opp_node) /* if no OPP phandle, search for OPPs in current node */
+> If you do not have a strong opinion, could you move the comment above
+> the if?
+>> +		opp_node = dev->of_node;
+> add an eol here.
+>> +	prop = of_find_property(opp_node, "operating-points", NULL);
+>> +	if (!prop) {
+>> +		dev_warn(dev, "node %s missing operating-points property\n",
+>> +							opp_node->full_name);
+> ^^ align the opp_node->full_name to the d in dev in dev_warn(dev?
+> Checkpatch.sh --strict reports
+> CHECK: Alignment should match open parenthesis
+> #57: FILE: drivers/base/power/opp.c:722:
+> +		dev_warn(dev, "node %s missing operating-points property\n",
+> +							opp_node->full_name);
+> 
+> total: 0 errors, 0 warnings, 1 checks, 53 lines checked
+> 
+All the other coding style comments and checkpatch errors reported in all the
+patches are now fixed. I will post the next version once I get response for DT
+binding updates from DT maintainers.
 
-diff --git a/drivers/usb/phy/phy-omap-usb3.c b/drivers/usb/phy/phy-omap-usb3.c
-index 0824be4..0c6ba29 100644
---- a/drivers/usb/phy/phy-omap-usb3.c
-+++ b/drivers/usb/phy/phy-omap-usb3.c
-@@ -26,6 +26,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/delay.h>
- #include <linux/usb/omap_control_usb.h>
-+#include <linux/of_platform.h>
- 
- #define	PLL_STATUS		0x00000004
- #define	PLL_GO			0x00000008
-@@ -196,8 +197,14 @@ static int omap_usb3_init(struct usb_phy *x)
- 
- static int omap_usb3_probe(struct platform_device *pdev)
- {
--	struct omap_usb			*phy;
--	struct resource			*res;
-+	struct omap_usb *phy;
-+	struct resource *res;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *control_node;
-+	struct platform_device *control_pdev;
-+
-+	if (!node)
-+		return -EINVAL;
- 
- 	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
- 	if (!phy) {
-@@ -239,11 +246,18 @@ static int omap_usb3_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	phy->control_dev = omap_get_control_dev();
--	if (IS_ERR(phy->control_dev)) {
--		dev_dbg(&pdev->dev, "Failed to get control device\n");
--		return -ENODEV;
-+	control_node = of_parse_phandle(node, "ctrl-module", 0);
-+	if (!control_node) {
-+		dev_err(&pdev->dev, "Failed to get control device phandle\n");
-+		return -EINVAL;
- 	}
-+	control_pdev = of_find_device_by_node(control_node);
-+	if (!control_pdev) {
-+		dev_err(&pdev->dev, "Failed to get control device\n");
-+		return -EINVAL;
-+	}
-+
-+	phy->control_dev = &control_pdev->dev;
- 
- 	omap_control_usb_phy_power(phy->control_dev, 0);
- 	usb_add_phy_dev(&phy->phy);
--- 
-1.7.4.1
+> 
+>> +		ret = -ENODEV;
+>> +		goto put_node;
+>> +	}
+>> +	if (!prop->value) {
+>> +		ret = -ENODATA;
+>> +		goto put_node;
+>> +	}
+>>
+>>  	/*
+>>  	 * Each OPP is a set of tuples consisting of frequency and
+>> @@ -724,7 +735,8 @@ int of_init_opp_table(struct device *dev)
+>>  	nr = prop->length / sizeof(u32);
+>>  	if (nr % 2) {
+>>  		dev_err(dev, "%s: Invalid OPP list\n", __func__);
+>> -		return -EINVAL;
+>> +		ret = -EINVAL;
+>> +		goto put_node;
+>>  	}
+>>
+>>  	val = prop->value;
+>> @@ -740,7 +752,11 @@ int of_init_opp_table(struct device *dev)
+>>  		nr -= 2;
+>>  	}
+>>
+>> -	return 0;
+>> +put_node:
+>> +	if (opp_node != dev->of_node)
+>> +		of_node_put(opp_node);
+>> +
+>> +	return ret;
+>>  }
+>>  EXPORT_SYMBOL_GPL(of_init_opp_table);
+>>  #endif
+>>
+> other than that, please feel free to add
+> Acked-by: Nishanth Menon <nm@ti.com>
+> 
+Thanks for the review.
+
+Regards,
+Sudeep
+
