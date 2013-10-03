@@ -1,117 +1,71 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 1/3] Documentation: arm: add UEFI support documentation
-Date: Thu, 03 Oct 2013 11:11:18 -0500
-Message-ID: <524D9726.6080501@gmail.com>
-References: <1380799481-5470-1-git-send-email-leif.lindholm@linaro.org> <1380799481-5470-2-git-send-email-leif.lindholm@linaro.org>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
+Date: Thu, 3 Oct 2013 18:17:16 +0200
+Message-ID: <20131003181716.6d03d576@armhf>
+References: <20130828113521.35c53365@armhf>
+	<521DCD80.9010105@gmail.com>
+	<20130831125128.0e3a23c7@armhf>
+	<140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com>
+	<20130926101147.217015e1@armhf>
+	<5243F0CE.9000301@gmail.com>
+	<20130926132859.04ad4407@armhf>
+	<5246E747.6020103@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380799481-5470-2-git-send-email-leif.lindholm@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, roy.franz@linaro.org, linux-efi@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, matt.fleming@intel.com, msalter@redhat.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5246E747.6020103-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adding devicetree list since you are defining bindings...
+On Sat, 28 Sep 2013 16:27:19 +0200
+Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On 10/03/2013 06:24 AM, Leif Lindholm wrote:
-> This patch provides documentation of the [U]EFI runtime services and
-> configuration features.
-> 
-> Cc: linux-doc@vger.kernel.org
-> Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-> Acked-by: Rob Landley <rob@landley.net>
-> ---
->  Documentation/arm/00-INDEX |    3 +++
->  Documentation/arm/uefi.txt |   47 ++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 50 insertions(+)
->  create mode 100644 Documentation/arm/uefi.txt
-> 
-> diff --git a/Documentation/arm/00-INDEX b/Documentation/arm/00-INDEX
-> index 4978456..87e01d1 100644
-> --- a/Documentation/arm/00-INDEX
-> +++ b/Documentation/arm/00-INDEX
-> @@ -36,3 +36,6 @@ nwfpe/
->  	- NWFPE floating point emulator documentation
->  swp_emulation
->  	- SWP/SWPB emulation handler/logging description
-> +
-> +uefi.txt
-> +	- [U]EFI configuration and runtime services documentation
-> diff --git a/Documentation/arm/uefi.txt b/Documentation/arm/uefi.txt
-> new file mode 100644
-> index 0000000..e6e4d41
-> --- /dev/null
-> +++ b/Documentation/arm/uefi.txt
-> @@ -0,0 +1,47 @@
-> +UEFI, the Unified Extensible Firmware Interface is a speifcication
-> +governing the behaviours of compatible firmware interfaces. It is
-> +maintained by the UEFI Forum - http://www.uefi.org/.
-> +
-> +Since UEFI is an evolution of its predecessor 'EFI', the terms EFI and
-> +UEFI are used somewhat interchangeably in this document and associated
-> +source code.
-> +
-> +The implementation depends on receiving the UEFI runtime memory map and a
-> +pointer to the System Table in a Flattened Device Tree - so is only available
-> +with CONFIG_OF.
-> +
-> +It parses the FDT /chosen node for the following parameters:
+> Jean-Francois,
+>=20
+> I can confirm the following for CuBox:
+>=20
+> AU1_EXTCLK is connected to si5351 clkout 2. For the _current_
+> (v3.12-rc1) dove-cubox.dts that means that you'll have to exchange
+> the properties for &i2c0/si5351/clkout[12]. If you leave it the way
+> it is, clkout2 is not allowed to change the pll inside si5351 and
+> only try to get close to the requested clk rate by using output
+> dividers. Would be great if you can provide a corresponding patch
+> for v3.12 (no need to Cc stable).
+>=20
+> Also, as you seem to push kirkwood-i2s DT forward, please get back
+> to clkout2 (<&si5351 2>) for the audio node as you did correctly in
+> the first place.
+>=20
+> With above changes, SPDIF_EN, and forcing kirkwood-i2s to always use
+> extclk, I can play SPDIF audio with 44k1 and 48k. Other rates could
+> also work, but my audio equipment ignores anything else.
 
-DT bindings should be documented in Documentation/devicetree/bindings.
+Sebastian,
 
-I also wonder if this would be more appropriately placed in a /firmware
-node.
+Thanks for your change. I can now get audio at 44.1, 32 and 22.05 kHz
+on HDMI with the external clock (via i2s, but s/pdif and other rates
+should work too).
 
-> +- 'linux,efi-system-table':
-> +  Physical address of the system table. (required)
-> +  64-bit value since an ARMv7 plattform may support LPAE, and to facilitate
-> +  code sharing with arm64. Top 32 bits will be ignored, since UEFI specification
-> +  mandates a 1:1 mapping of all RAM.
-> +- 'linux,efi-mmap':
-> +  The EFI memory map as an embedded property. (required)
-> +  An array of type EFI_MEMORY_DESCRIPTOR as described by the UEFI
-> +  specification, current version described in Linux by efi_memory_desc_t.
+	[snip]
+> What I am wondering here is, why you want to use i2s at all? On CuBox=
+,
+> HDMI transmitter is connected to both i2s and spdif. IIRC, for the
+> transmitter it makes no difference if you provide i2s or spdif audio,
+> _but_ what you are loosing for sure is pass-through, i.e. sending
+> compressed AC3 directly.
+	[snip]
 
-Is that too complex to describe here?
+It seems that my patch about adding s/pdif to the kirkwood audio driver
+has not been accepted yet...
 
-> +  The memory map is represented in little-endian, not DT, byte order.
-> +  This map needs to contain at least the regions to be preserved for runtime
-> +  services, but would normally just be the map retreieved by calling UEFI
-> +  GetMemoryMap() immediately before ExitBootServices().
-> +- 'linux,efi-mmap-desc-size':
-> +  Size of each descriptor in the memory map. (override default)
-
-32-bit value?
-
-> +- 'linux,efi-mmap-desc-ver':
-> +  Memory descriptor format version. (override default)
-
-String? Number?
-
-Are these all generated by UEFI at runtime or could they be statically
-set in a platform's DTB?
-
-How would other OS's get this information? Is this really linux specific?
-
-Rob
-
-> +
-> +It also depends on early_memremap() to parse the UEFI configuration tables.
-> +
-> +For actually enabling [U]EFI support, enable:
-> +- CONFIG_EFI=y
-> +- CONFIG_EFI_VARS=y or m
-> +
-> +After the kernel has mapped the required regions into its address space,
-> +a SetVirtualAddressMap() call is made into UEFI in order to update
-> +relocations. This call must be performed with all the code in a 1:1
-> +mapping. This implementation achieves this by temporarily disabling the
-> +MMU for the duration of this call. This can only be done safely:
-> +- before secondary CPUs are brought online.
-> +- after early_initcalls have completed, since it uses setup_mm_for_reboot().
-> +
-> +For verbose debug messages, specify 'uefi_debug' on the kernel command
-> +line.
-> 
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
