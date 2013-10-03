@@ -1,44 +1,85 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] iio: cm36651: Add CM36651 proximity/light sensor
-Date: Thu, 03 Oct 2013 10:36:28 +0200
-Message-ID: <524D2C8C.3010502@metafoo.de>
-References: <524AC65C.20400@samsung.com> <524B3E0D.3040803@kernel.org>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 00/21] of: prom.h clean-up and removal
+Date: Thu, 3 Oct 2013 09:33:42 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA2307514F2CE@IN01WEMBXA.internal.synopsys.com>
+References: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
+ <C2D7FE5348E1B147BCA15975FBA2307514EA98@IN01WEMBXA.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <524B3E0D.3040803-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org" <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Meerwald l <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset=Windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2013 11:26 PM, Jonathan Cameron wrote:
-> On 10/01/13 13:55, Beomho Seo wrote:
+[Trimmed CC list a bit]
+
+On 09/27/2013 10:26 AM, Vineet Gupta wrote:
+> On 09/27/2013 12:21 AM, Rob Herring wrote:
+>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 >>
->> This patch adds a new driver for Capella CM36651 proximity and RGB sensor.
+>> This is the second series of clean-up for architecture DT code. The =
+first
+>> series is here [1].
 >>
->> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> A couple of little points inline. In short, some unnecessary
-> variable initializations (bad idea as they may hide real bugs)
-> and you should use IRQF_DISABLED if you really do need to have
-> the interrupt disabled.
+>> As the number of DT enabled architectures has grown, there has been =
+a lot
+>> of copy/paste duplication of prom.h. The include ordering for prom.h=
+ is
+>> complex and has resulted in many implicit includes. This series clea=
+ns up
+>> prom.h and removes the dependency of prom.h includes in the core DT =
+code
+>> on all architectures except sparc. This removes prom.h on several
+>> architectures and makes it an architecture specific include on the r=
+est.
+>>
+>> Compiled on arm, arm64, microblaze, mips, openrisc, powerpc, sparc,
+>> xtensa. Mostly defconfigs and some allyesconfigs. The 0-day builder =
+has
+>> also caught some issues.
+>>
+>> A branch with both series is available here:
+>> git://sources.calxeda.com/kernel/linux.git dt-cleanup
+>>
+> I gave the latest branch a spin - everything looks good except for a =
+build warning
+> - and given the const qualifier in the API, I reckon most (if not all=
+) would see that.
+>
+> It seems this was introduced in first series but maybe I failed to no=
+tice then as
+> I'm sure I booted that code too.
+>
+> ------------------>8-----------------------------
+>   CC      arch/arc/kernel/devtree.o
+> arch/arc/kernel/devtree.c: In function =91setup_machine_fdt=92:
+> arch/arc/kernel/devtree.c:50:8: warning: assignment discards =91const=
+=92 qualifier
+> from pointer target type [enabled by default]
+>   mdesc =3D of_flat_dt_match_machine(NULL, arch_get_next_mach);
+>         ^
+> ------------------>8-----------------------------
+>
+> ARM propagates the const to callers - upto setup_arch(), but that mig=
+ht not work
+> for us as we use it to setup a global @machine_desc which is then use=
+d to dispatch
+> the callbacks in platform APIs. Semantically it's good if it is const=
+ but that
+> would require making it local and propagating to all the users - not =
+worth the
+> trouble I suppose.
+>
+> What say you !
 
-IRQF_DISABLED actually does something else (or well did something else,
-these days it's a no-op and shouldn't be used). But yea, a flag that keeps
-the interrupt disabled would be nice.
+Ping ?
 
-> 
-> Also, sorry if I missed an explanation, but I can't see why you need
-> the enable and disable on the interrupt.  As you explicitly turn the
-> interrupt on by writing to a device register why would an interrupt
-> occur at any other time?  Convention is normally to not do the disabling
-> of the irq unless it is actually necessary.  It complicates
-> the code for no gain.
 
-Yep, I don't see any reason why the code actually has to use
-enable_irq/disable_irq. Unless there is a problem with the chip that it
-tends to generate lots of spurious interrupts. In that case this should be
-documented in the code though.
-
-- Lars
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
