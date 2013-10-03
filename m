@@ -1,122 +1,39 @@
 From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH v4 3/4] ARM: at91/dt: add sam9 watchdog default options to SoCs
-Date: Thu,  3 Oct 2013 21:04:42 +0200
-Message-ID: <1380827083-6872-4-git-send-email-b.brezillon@overkiz.com>
+Subject: [PATCH v4 4/4] ARM: at91/dt: add watchdog properties to kizbox board
+Date: Thu,  3 Oct 2013 21:04:43 +0200
+Message-ID: <1380827083-6872-5-git-send-email-b.brezillon@overkiz.com>
 References: <1380827083-6872-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1380827083-6872-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Wim Van Sebroeck <wim@iguana.be>, Fabio Porcedda <fabio.porcedda@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Guenter Roeck <groeck7@gmail.com>, Yang Wenyou <wenyou.yang@atmel.com>
 Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>
 List-Id: devicetree@vger.kernel.org
 
-Set default watchdog options in every SoC compatible with the sam9 watchdog.
+Add watchdog specific config for kizbox board.
 
 Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
 ---
- arch/arm/boot/dts/at91sam9260.dtsi |    5 +++++
- arch/arm/boot/dts/at91sam9263.dtsi |    5 +++++
- arch/arm/boot/dts/at91sam9g45.dtsi |    5 +++++
- arch/arm/boot/dts/at91sam9n12.dtsi |    5 +++++
- arch/arm/boot/dts/at91sam9x5.dtsi  |    5 +++++
- arch/arm/boot/dts/sama5d3.dtsi     |    5 +++++
- 6 files changed, 30 insertions(+)
+ arch/arm/boot/dts/kizbox.dts |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index 56ee828..997901f 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -648,6 +648,11 @@
- 			watchdog@fffffd40 {
- 				compatible = "atmel,at91sam9260-wdt";
- 				reg = <0xfffffd40 0x10>;
-+				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
-+				atmel,watchdog-type = "hardware";
-+				atmel,reset-type = "all";
-+				atmel,dbg-halt;
-+				atmel,idle-halt;
- 				status = "disabled";
+diff --git a/arch/arm/boot/dts/kizbox.dts b/arch/arm/boot/dts/kizbox.dts
+index 02df191..928f6ee 100644
+--- a/arch/arm/boot/dts/kizbox.dts
++++ b/arch/arm/boot/dts/kizbox.dts
+@@ -53,6 +53,12 @@
+ 				status = "okay";
  			};
+ 
++			watchdog@fffffd40 {
++				timeout-sec = <15>;
++				atmel,max-heartbeat-sec = <16>;
++				atmel,min-heartbeat-sec = <0>;
++				status = "okay";
++			};
  		};
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index d5bd65f..45fb0a4 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -523,6 +523,11 @@
- 			watchdog@fffffd40 {
- 				compatible = "atmel,at91sam9260-wdt";
- 				reg = <0xfffffd40 0x10>;
-+				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
-+				atmel,watchdog-type = "hardware";
-+				atmel,reset-type = "all";
-+				atmel,dbg-halt;
-+				atmel,idle-halt;
- 				status = "disabled";
- 			};
  
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index c3e5148..16534c7 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -639,6 +639,11 @@
- 			watchdog@fffffd40 {
- 				compatible = "atmel,at91sam9260-wdt";
- 				reg = <0xfffffd40 0x10>;
-+				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
-+				atmel,watchdog-type = "hardware";
-+				atmel,reset-type = "all";
-+				atmel,dbg-halt;
-+				atmel,idle-halt;
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index 9fb7ffd..eaef94b 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -537,6 +537,11 @@
- 			watchdog@fffffe40 {
- 				compatible = "atmel,at91sam9260-wdt";
- 				reg = <0xfffffe40 0x10>;
-+				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
-+				atmel,watchdog-type = "hardware";
-+				atmel,reset-type = "all";
-+				atmel,dbg-halt;
-+				atmel,idle-halt;
- 				status = "disabled";
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index e74dc15..6d31fd7 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -820,6 +820,11 @@
- 			watchdog@fffffe40 {
- 				compatible = "atmel,at91sam9260-wdt";
- 				reg = <0xfffffe40 0x10>;
-+				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
-+				atmel,watchdog-type = "hardware";
-+				atmel,reset-type = "all";
-+				atmel,dbg-halt;
-+				atmel,idle-halt;
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index b7f4961..3a17a3e 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -891,6 +891,11 @@
- 			watchdog@fffffe40 {
- 				compatible = "atmel,at91sam9260-wdt";
- 				reg = <0xfffffe40 0x10>;
-+				interrupts = <4 IRQ_TYPE_LEVEL_HIGH 7>;
-+				atmel,watchdog-type = "hardware";
-+				atmel,reset-type = "all";
-+				atmel,dbg-halt;
-+				atmel,idle-halt;
- 				status = "disabled";
- 			};
- 
+ 		nand0: nand@40000000 {
 -- 
 1.7.9.5
+
