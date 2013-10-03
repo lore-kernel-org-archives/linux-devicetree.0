@@ -1,420 +1,80 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH] clk: palmas: add clock driver for palmas
-Date: Thu, 3 Oct 2013 18:00:07 +0530
-Message-ID: <1380803407-15196-1-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: mturquette@linaro.org
-Cc: broonie@linaro.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, grant.likely@linaro.org, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Laxman Dewangan <ldewangan@nvidia.com>
+From: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/4] watchdog: at91sam9_wdt: handle already configured wdt
+Date: Thu,  3 Oct 2013 14:19:17 +0200
+Message-ID: <1380802761-32279-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <groeck7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yang Wenyou <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Palmas devices has two clock output CLK32K_KG and CLK32K_KG_AUDIO
-which can be nebale/disable through software.
+Hello,
 
-Add clock driver support for the Palmas 32k clocks.
+This patch series is a porposal to enhance the sam9 watchdog timer support.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
- .../devicetree/bindings/clock/clk-palmas.txt       |   45 +++
- drivers/clk/Kconfig                                |    7 +
- drivers/clk/Makefile                               |    1 +
- drivers/clk/clk-palmas.c                           |  306 ++++++++++++++++++++
- 4 files changed, 359 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/clk-palmas.txt
- create mode 100644 drivers/clk/clk-palmas.c
+The at91sam9 watchdog timer can only be configured once, and the current
+implementation tries to configure it in a static way:
+- 2 seconds timeout
+- wdt restart every 500ms
 
-diff --git a/Documentation/devicetree/bindings/clock/clk-palmas.txt b/Documentation/devicetree/bindings/clock/clk-palmas.txt
-new file mode 100644
-index 0000000..c247538
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/clk-palmas.txt
-@@ -0,0 +1,45 @@
-+* Palmas 32KHz clocks *
-+
-+Palmas device has two clock output pins for 32KHz, KG and KG_AUDIO.
-+
-+This binding uses the common clock binding ./clock-bindings.txt.
-+
-+Clock 32KHz KG is output 0 of the driver and clock 32KHz is output 1.
-+
-+Required properties:
-+- compatible : shall be "ti,palmas-clk".
-+- #clock-cells : from common clock binding; shall be set to 1.
-+
-+Optional subnode:
-+	The clock node has optional subnode to provide the init configuration of
-+	clocks like boot enable, sleep control.
-+
-+	The subnode name is fixed and it should be
-+		clk32k_kg for the 32KHz KG clock.
-+		clk32k_kg_audio for the 32KHz KG_AUDIO clock.
-+
-+	Optional subnode properties:
-+	ti,clock-boot-enable: Enable clock at the time of booting.
-+	ti,external-sleep-control: The clock is enable/disabled by state
-+		of external enable input pins ENABLE, ENABLE2 and NSLEEP.
-+		The valid value for the external pins are:
-+			1 for ENABLE1
-+			2 for ENABLE2
-+			3 for NSLEEP.
-+		Option 0 or missing this property means the clock is
-+		enabled/disabled via register access and these pins do
-+		not have any control.
-+
-+Example:
-+	clock {
-+		compatible = "ti,palmas-clk";
-+		#clock-cells = <1>;
-+		clk32k_kg {
-+			ti,clock-boot-enable;
-+			ti,external-sleep-control = <3>;
-+		};
-+
-+		clk32k_kg_audio {
-+			ti,clock-boot-enable;
-+		};
-+	};
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 279407a..6b8c233 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -93,6 +93,13 @@ config CLK_PPC_CORENET
- 	  This adds the clock driver support for Freescale PowerPC corenet
- 	  platforms using common clock framework.
- 
-+config COMMON_CLK_PALMAS
-+	tristate "Clock driver for TI Palmas devices"
-+	depends on MFD_PALMAS
-+	---help---
-+	  This driver supports TI Palmas devices 32KHz output KG and KG_AUDIO
-+	  using common clock framework.
-+
- endmenu
- 
- source "drivers/clk/mvebu/Kconfig"
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 7b11106..32e04cf 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -43,3 +43,4 @@ obj-$(CONFIG_COMMON_CLK_SI5351) += clk-si5351.o
- obj-$(CONFIG_COMMON_CLK_S2MPS11) += clk-s2mps11.o
- obj-$(CONFIG_CLK_TWL6040)	+= clk-twl6040.o
- obj-$(CONFIG_CLK_PPC_CORENET)	+= clk-ppc-corenet.o
-+obj-$(CONFIG_COMMON_CLK_PALMAS)	+= clk-palmas.o
-diff --git a/drivers/clk/clk-palmas.c b/drivers/clk/clk-palmas.c
-new file mode 100644
-index 0000000..4d34d36
---- /dev/null
-+++ b/drivers/clk/clk-palmas.c
-@@ -0,0 +1,306 @@
-+/*
-+ * Clock driver for Palmas device.
-+ *
-+ * Copyright (c) 2013, NVIDIA Corporation.
-+ *
-+ * Author: Laxman Dewangan <ldewangan@nvidia.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any kind,
-+ * whether express or implied; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-+ * General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-+ * 02111-1307, USA
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk-provider.h>
-+#include <linux/mfd/palmas.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+enum PALMAS_CLOCK32K {
-+	PALMAS_CLOCK32KG,
-+	PALMAS_CLOCK32KG_AUDIO,
-+
-+	/* Last entry */
-+	PALMAS_CLOCK32K_NR,
-+};
-+
-+struct palmas_clks;
-+
-+struct palmas_clk32k_desc {
-+	const char *clk_name;
-+	unsigned int control_reg;
-+	unsigned int enable_mask;
-+	unsigned int sleep_mask;
-+	unsigned int sleep_reqstr_id;
-+};
-+
-+struct palmas_clock_info {
-+	struct clk *clk;
-+	struct clk_hw hw;
-+	struct palmas_clk32k_desc *clk_desc;
-+	struct palmas_clks *palmas_clk;
-+	int ext_control_pin;
-+	bool boot_enable;
-+};
-+
-+struct palmas_clks {
-+	struct device *dev;
-+	struct palmas *palmas;
-+	struct palmas_clock_info clk_info[PALMAS_CLOCK32K_NR];
-+};
-+
-+static struct palmas_clk32k_desc palmas_clk32k_descs[] = {
-+	{
-+		.clk_name = "clk32k_kg",
-+		.control_reg = PALMAS_CLK32KG_CTRL,
-+		.enable_mask = PALMAS_CLK32KG_CTRL_MODE_ACTIVE,
-+		.sleep_mask = PALMAS_CLK32KG_CTRL_MODE_SLEEP,
-+		.sleep_reqstr_id = PALMAS_EXTERNAL_REQSTR_ID_CLK32KG,
-+	}, {
-+		.clk_name = "clk32k_kg_audio",
-+		.control_reg = PALMAS_CLK32KGAUDIO_CTRL,
-+		.enable_mask = PALMAS_CLK32KG_CTRL_MODE_ACTIVE,
-+		.sleep_mask = PALMAS_CLK32KG_CTRL_MODE_SLEEP,
-+		.sleep_reqstr_id = PALMAS_EXTERNAL_REQSTR_ID_CLK32KGAUDIO,
-+	},
-+};
-+
-+static inline struct palmas_clock_info *to_palmas_clks_info(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct palmas_clock_info, hw);
-+}
-+
-+static int palmas_clks_prepare(struct clk_hw *hw)
-+{
-+	struct palmas_clock_info *cinfo = to_palmas_clks_info(hw);
-+	struct palmas_clks *palmas_clks = cinfo->palmas_clk;
-+	int ret;
-+
-+	if (cinfo->ext_control_pin)
-+		return 0;
-+
-+	ret = palmas_update_bits(palmas_clks->palmas, PALMAS_RESOURCE_BASE,
-+			cinfo->clk_desc->control_reg,
-+			cinfo->clk_desc->enable_mask,
-+			cinfo->clk_desc->enable_mask);
-+	if (ret < 0)
-+		dev_err(palmas_clks->dev, "Reg 0x%02x update failed, %d\n",
-+			cinfo->clk_desc->control_reg, ret);
-+
-+	return ret;
-+}
-+
-+static void palmas_clks_unprepare(struct clk_hw *hw)
-+{
-+	struct palmas_clock_info *cinfo = to_palmas_clks_info(hw);
-+	struct palmas_clks *palmas_clks = cinfo->palmas_clk;
-+	int ret;
-+
-+	if (cinfo->ext_control_pin)
-+		return;
-+
-+	ret = palmas_update_bits(palmas_clks->palmas, PALMAS_RESOURCE_BASE,
-+			cinfo->clk_desc->control_reg,
-+			cinfo->clk_desc->enable_mask, 0);
-+	if (ret < 0)
-+		dev_err(palmas_clks->dev, "Reg 0x%02x update failed, %d\n",
-+			cinfo->clk_desc->control_reg, ret);
-+
-+}
-+
-+static int palmas_clks_is_enabled(struct clk_hw *hw)
-+{
-+	struct palmas_clock_info *cinfo = to_palmas_clks_info(hw);
-+	struct palmas_clks *palmas_clks = cinfo->palmas_clk;
-+	int ret;
-+	u32 val;
-+
-+	if (cinfo->ext_control_pin)
-+		return 1;
-+
-+	ret = palmas_read(palmas_clks->palmas, PALMAS_RESOURCE_BASE,
-+			cinfo->clk_desc->control_reg, &val);
-+	if (ret < 0) {
-+		dev_err(palmas_clks->dev, "Reg 0x%02x read failed, %d\n",
-+				cinfo->clk_desc->control_reg, ret);
-+		return ret;
-+	}
-+	return !!(val & cinfo->clk_desc->enable_mask);
-+}
-+
-+static struct clk_ops palmas_clks_ops = {
-+	.prepare	= palmas_clks_prepare,
-+	.unprepare	= palmas_clks_unprepare,
-+	.is_enabled	= palmas_clks_is_enabled,
-+};
-+
-+static struct clk_init_data palmas_clks_hw_init[PALMAS_CLOCK32K_NR] = {
-+	[PALMAS_CLOCK32KG] = {
-+		.name = "clk32k_kg",
-+		.ops = &palmas_clks_ops,
-+		.flags = CLK_IS_ROOT | CLK_IGNORE_UNUSED,
-+	},
-+	[PALMAS_CLOCK32KG_AUDIO] = {
-+		.name = "clk32k_kg_audio",
-+		.ops = &palmas_clks_ops,
-+		.flags = CLK_IS_ROOT | CLK_IGNORE_UNUSED,
-+	},
-+};
-+
-+static int palmas_clks_get_clk_data(struct platform_device *pdev,
-+	struct palmas_clks *palmas_clks)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *child;
-+	struct palmas_clock_info *cinfo;
-+	unsigned int prop;
-+	int ret;
-+	int i;
-+
-+	for (i = 0; i < PALMAS_CLOCK32K_NR; ++i) {
-+		child = of_get_child_by_name(node,
-+				palmas_clk32k_descs[i].clk_name);
-+		if (!child)
-+			continue;
-+
-+		cinfo = &palmas_clks->clk_info[i];
-+		cinfo->boot_enable = of_property_read_bool(child,
-+						"ti,clock-boot-enable");
-+		ret = of_property_read_u32(child, "ti,external-sleep-control",
-+					&prop);
-+		if (!ret) {
-+			switch (prop) {
-+			case 1:
-+				prop = PALMAS_EXT_CONTROL_ENABLE1;
-+				break;
-+			case 2:
-+				prop = PALMAS_EXT_CONTROL_ENABLE2;
-+				break;
-+			case 3:
-+				prop = PALMAS_EXT_CONTROL_NSLEEP;
-+				break;
-+			default:
-+				WARN_ON(1);
-+				dev_warn(&pdev->dev,
-+					"%s: Invalid ext control option: %u\n",
-+					child->name, prop);
-+				prop = 0;
-+				break;
-+			}
-+			cinfo->ext_control_pin = prop;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int palmas_clks_init_configure(struct palmas_clock_info *cinfo)
-+{
-+	struct palmas_clks *palmas_clks = cinfo->palmas_clk;
-+	int ret;
-+	unsigned int val = 0;
-+	unsigned int mask;
-+
-+	if (cinfo->boot_enable || cinfo->ext_control_pin)
-+		val |= cinfo->clk_desc->enable_mask;
-+
-+	mask = cinfo->clk_desc->enable_mask |
-+			cinfo->clk_desc->sleep_mask;
-+
-+	ret = palmas_update_bits(palmas_clks->palmas, PALMAS_RESOURCE_BASE,
-+			cinfo->clk_desc->control_reg, mask, val);
-+	if (ret < 0) {
-+		dev_err(palmas_clks->dev, "Reg 0x%02x update failed, %d\n",
-+			cinfo->clk_desc->control_reg, ret);
-+		return ret;
-+	}
-+
-+	if (cinfo->ext_control_pin) {
-+		ret = palmas_ext_control_req_config(palmas_clks->palmas,
-+				cinfo->clk_desc->sleep_reqstr_id,
-+				cinfo->ext_control_pin, true);
-+		if (ret < 0) {
-+			dev_err(palmas_clks->dev,
-+				"Ext config for %s failed, %d\n",
-+				cinfo->clk_desc->clk_name, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int palmas_clks_probe(struct platform_device *pdev)
-+{
-+	struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
-+	struct palmas_clock_info *cinfo;
-+	struct palmas_clks *palmas_clks;
-+	struct clk *clk;
-+	int i, ret;
-+
-+	palmas_clks = devm_kzalloc(&pdev->dev, sizeof(*palmas_clks),
-+				GFP_KERNEL);
-+	if (!palmas_clks)
-+		return -ENOMEM;
-+
-+	palmas_clks_get_clk_data(pdev, palmas_clks);
-+	platform_set_drvdata(pdev, palmas_clks);
-+
-+	palmas_clks->dev = &pdev->dev;
-+	palmas_clks->palmas = palmas;
-+
-+	for (i = 0; i < PALMAS_CLOCK32K_NR; i++) {
-+		cinfo = &palmas_clks->clk_info[i];
-+		cinfo->clk_desc = &palmas_clk32k_descs[i];
-+		cinfo->hw.init = &palmas_clks_hw_init[i];
-+		cinfo->palmas_clk = palmas_clks;
-+		clk = devm_clk_register(&pdev->dev, &cinfo->hw);
-+		if (IS_ERR(clk)) {
-+			ret = PTR_ERR(clk);
-+			dev_err(&pdev->dev, "Fail to register clock %s, %d\n",
-+				palmas_clk32k_descs[i].clk_name, ret);
-+			return ret;
-+		}
-+
-+		cinfo->clk = clk;
-+		palmas_clks_init_configure(cinfo);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct of_device_id of_palmas_clks_match_tbl[] = {
-+	{ .compatible = "ti,palmas-clk", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_palmas_clks_match_tbl);
-+
-+static struct platform_driver palmas_clks_driver = {
-+	.driver = {
-+		.name = "palmas-clk",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_palmas_clks_match_tbl,
-+	},
-+	.probe = palmas_clks_probe,
-+};
-+
-+module_platform_driver(palmas_clks_driver);
-+
-+MODULE_DESCRIPTION("Clock driver for Palmas Series Devices");
-+MODULE_ALIAS("platform:palmas-clk");
-+MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-+MODULE_LICENSE("GPL v2");
+If the timer has already been configured with different values, it returns an
+error and do not create any watchdog device.
+
+This is not critical if the watchdog is disabled, but if it has been enabled
+with different timeout values it will lead to a SoC reset.
+
+This patch series tries to address this issue by adapting the heartbeat value
+according the WDT timer config:
+- it first tries to configure the timer as requested.
+- if it fails it fallbacks to the current config, adapting its heartbeat timer
+to the needs
+
+This patch series also move to a dynamically allocated at91wdt device instead
+of the static instance. I'm not sure this is the best solution, so please tell
+me if you prefer to keep static instance of watchdog.
+
+It adds a new at91 wdt type: software. This new type make use of the at91 wdt
+interrupt to trigger a software reboot.
+
+Finally it adds several properties to the device tree bindings.
+
+Best Regards,
+Boris
+
+Changes since v2:
+ - fix documentation
+ - rework the heartbeat computation to get a more flexible behaviour
+ - fix xx_to_yy macros
+ - modify warning and error messages
+ - remove unneeded parenthesis in arithmetic operations
+ - use devm functions to map io memory
+ - remove unneeded devm_kfree calls
+
+Change since v1:
+ - fix typo in documentaion
+ - fix irq dt definition for sama5d3 SoC
+
+Boris BREZILLON (4):
+  watchdog: at91sam9_wdt: better watchdog support
+  watchdog: at91sam9_wdt: update device tree doc
+  ARM: at91/dt: add sam9 watchdog default options to SoCs
+  ARM: at91/dt: add watchdog properties to kizbox board
+
+ .../devicetree/bindings/watchdog/atmel-wdt.txt     |   30 +-
+ arch/arm/boot/dts/at91sam9260.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9263.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9n12.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |    5 +
+ arch/arm/boot/dts/kizbox.dts                       |    6 +
+ arch/arm/boot/dts/sama5d3.dtsi                     |    5 +
+ drivers/watchdog/at91sam9_wdt.c                    |  301 ++++++++++++++------
+ 9 files changed, 282 insertions(+), 85 deletions(-)
+
 -- 
-1.7.1.1
+1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
