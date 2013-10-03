@@ -1,50 +1,32 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 09/10] usb: dwc3: omap: manage "usb_otg_ss_refclk960m"
- clock
-Date: Thu, 3 Oct 2013 17:54:14 +0300
-Message-ID: <524D8516.8000107@ti.com>
-References: <1379508542-22389-1-git-send-email-rogerq@ti.com> <1379508542-22389-10-git-send-email-rogerq@ti.com> <52403E02.4070208@ti.com> <20131002131113.GM1476@radagast> <524C22A1.30200@ti.com> <20131003122941.GD3230@radagast>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131003122941.GD3230@radagast>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH 0/2] Add support for Qualcomm's PRNG
+Date: Thu,  3 Oct 2013 17:52:33 +0300
+Message-ID: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/2013 03:29 PM, Felipe Balbi wrote:
-> Hi,
-> 
-> On Wed, Oct 02, 2013 at 04:41:53PM +0300, Roger Quadros wrote:
->> On 10/02/2013 04:11 PM, Felipe Balbi wrote:
->>> On Mon, Sep 23, 2013 at 04:11:30PM +0300, Roger Quadros wrote:
->>>> Hi Felipe,
->>>>
->>>> On 09/18/2013 03:49 PM, Roger Quadros wrote:
->>>>> "usb_otg_ss_refclk960m" is an optional functional clock to the
->>>>> UBS_OTG_SS module. So manage it in the driver.
->>>>>
->>>>
->>>> Just realized that "usb_otg_ss_refclk960m" is in fact functional clock to the 
->>>> PHY and not USB_OTG_SS module. The name is misleading.
->>>>
->>>> So please ignore patch 9 and 10.
->>>
->>> ignored. All others are fine, right ?
->>>
->> Yes. But I might have to rebase this on top of Phy framework stuff.
-> 
-> alright, Greg already took the PHY framework, so maybe we need to just
-> give him my Acked-by and he takes the patches directly as I don't have
-> PYH framework.
-> 
-OK. I'll resend this series to Greg in a while.
+This patch set adds hardware RNG driver wich is used to control the
+Qualcomm's PRNG hardware block.
+The first patch document the DT bindings needed to sucessfuly probe
+the driver and the second patch adds the driver.
 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Comments are welecome!
+
+Stanimir Varbanov (2):
+  ARM: DT: msm: Add Qualcomm's PRNG driver binding document
+  hwrng: msm: Add PRNG support for MSM SoC's
+
+ .../devicetree/bindings/rng/qcom,prng.txt          |  17 ++
+ drivers/char/hw_random/Kconfig                     |  12 ++
+ drivers/char/hw_random/Makefile                    |   1 +
+ drivers/char/hw_random/msm-rng.c                   | 211 +++++++++++++++++++++
+ 4 files changed, 241 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/qcom,prng.txt
+ create mode 100644 drivers/char/hw_random/msm-rng.c
+
+-- 
+1.8.3.1
+
