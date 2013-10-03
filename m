@@ -1,36 +1,61 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH] arm: Fix conversion to early_init_dt_scan() for non-DT platforms
-Date: Thu, 3 Oct 2013 09:39:45 -0700
-Message-ID: <CAOesGMgJS7Ou1Y6i9O+_A-+dkHCXGaX_eDMw5zrEDi-40V0pew@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] arm: Fix conversion to early_init_dt_scan() for non-DT
+ platforms
+Date: Thu, 03 Oct 2013 11:37:52 -0500
+Message-ID: <524D9D60.7000804@gmail.com>
 References: <1380804633-14130-1-git-send-email-broonie@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380804633-14130-1-git-send-email-broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1380804633-14130-1-git-send-email-broonie@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Mark Brown <broonie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 3, 2013 at 5:50 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> From: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
+On 10/03/2013 07:50 AM, Mark Brown wrote:
+> From: Mark Brown <broonie@linaro.org>
+> 
 > Commit 67a964490bfd14 (arm: use early_init_dt_scan) in the OF tree in
 > -next converts ARM to use early_init_dt_scan(), factoring out some common
 > code. However it ignores the return value of the function meaning that on
 > non-DT platforms the kernel fails to boot as it attempts to configure
 > itself using DT.
->
+> 
 > Fix this by adding the appropriate return value check.
->
-> Signed-off-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Hm, I thought I had reported this to Rob and he had fixed it already.
-Is a stale version of the patches in the DT tree?
+I have this fixed already in my tree. I had not pushed out my -next
+branch with the fix, but have done so now.
 
+Rob
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Signed-off-by: Mark Brown <broonie@linaro.org>
+> ---
+>  arch/arm/kernel/devtree.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+> index 04050f7..67f4ebe 100644
+> --- a/arch/arm/kernel/devtree.c
+> +++ b/arch/arm/kernel/devtree.c
+> @@ -198,7 +198,8 @@ const struct machine_desc * __init setup_machine_fdt(unsigned int dt_phys)
+>  	if (!dt_phys)
+>  		return NULL;
+>  
+> -	early_init_dt_scan(phys_to_virt(dt_phys));
+> +	if (!early_init_dt_scan(phys_to_virt(dt_phys)))
+> +		return NULL;
+>  
+>  	/* Search the mdescs for the 'best' compatible value match */
+>  	dt_root = of_get_flat_dt_root();
+> 
