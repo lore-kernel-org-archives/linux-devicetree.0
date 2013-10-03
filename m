@@ -1,33 +1,96 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: "memory" binding issues
-Date: Thu, 3 Oct 2013 10:04:47 -0500
-Message-ID: <36039DDA-9013-49D3-A6FD-4C38060C2501@codeaurora.org>
-References: <1379300274.4098.77.camel@pasglop> <20130918025714.A69D8C42C8F@trevor.secretlab.ca> <1379492496.6148.35.camel@pasglop> <CD611795-B45E-4E37-B387-76B5C855DEEA@codeaurora.org>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CD611795-B45E-4E37-B387-76B5C855DEEA@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree@vger.kernel.org, Linux Kernel list <linux-kernel@vger.kernel.org>, m.szyprowski@samsung.com, swarren@nvidia.com, rob.herring@calxeda.com
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: socfpga: dts: fix s2f_* clock name
+Date: Thu, 3 Oct 2013 10:05:20 -0500
+Message-ID: <1380812720.7464.11.camel@linux-builds1>
+References: <1380699333-558-1-git-send-email-s.trumtrar@pengutronix.de>
+	 <1380699333-558-5-git-send-email-s.trumtrar@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1380699333-558-5-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> So where have we gotten on this?
+On Wed, 2013-10-02 at 09:35 +0200, Steffen Trumtrar wrote:
+> The s2f_* clocks are called h2f_* in the datasheets.
+> Rename them accordingly in the socfpga.dtsi.
 > 
-> It seems we are in agreement that:
-> 1. reserve memory should be probably be described in nodes
-> 2. it should be pulled out of the memory node and put at root level
-> 3. Use reg to describe the memory regions for a given node
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/socfpga.dtsi | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 > 
-> Now to figure out about how to convey usage information for the region and possibly driver association.  I agree with Ben that there are probably cases that an associated device node may not exist so that shouldn't be a hard requirement.
-> 
-> - k
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index 587096e..e245924 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -147,7 +147,7 @@
+>  							reg = <0x58>;
+>  						};
+>  
+> -						cfg_s2f_usr0_clk: cfg_s2f_usr0_clk {
+> +						cfg_h2f_usr0_clk: cfg_h2f_usr0_clk {
+>  							#clock-cells = <0>;
+>  							compatible = "altr,socfpga-perip-clk";
+>  							clocks = <&main_pll>;
+> @@ -198,7 +198,7 @@
+>  							reg = <0x98>;
+>  						};
+>  
+> -						s2f_usr1_clk: s2f_usr1_clk {
+> +						h2f_usr1_clk: h2f_usr1_clk {
+>  							#clock-cells = <0>;
+>  							compatible = "altr,socfpga-perip-clk";
+>  							clocks = <&periph_pll>;
+> @@ -235,7 +235,7 @@
+>  							reg = <0xD0>;
+>  						};
+>  
+> -						s2f_usr2_clk: s2f_usr2_clk {
+> +						h2f_usr2_clk: h2f_usr2_clk {
+>  							#clock-cells = <0>;
+>  							compatible = "altr,socfpga-perip-clk";
+>  							clocks = <&sdram_pll>;
+> @@ -335,14 +335,14 @@
+>  					cfg_clk: cfg_clk {
+>  						#clock-cells = <0>;
+>  						compatible = "altr,socfpga-gate-clk";
+> -						clocks = <&cfg_s2f_usr0_clk>;
+> +						clocks = <&cfg_h2f_usr0_clk>;
+>  						clk-gate = <0x60 8>;
+>  					};
+>  
+> -					s2f_user0_clk: s2f_user0_clk {
+> +					h2f_user0_clk: h2f_user0_clk {
+>  						#clock-cells = <0>;
+>  						compatible = "altr,socfpga-gate-clk";
+> -						clocks = <&cfg_s2f_usr0_clk>;
+> +						clocks = <&cfg_h2f_usr0_clk>;
+>  						clk-gate = <0x60 9>;
+>  					};
+>  
+> @@ -400,10 +400,10 @@
+>  						div-reg = <0xa8 0 24>;
+>  					};
+>  
+> -					s2f_user1_clk: s2f_user1_clk {
+> +					h2f_user1_clk: h2f_user1_clk {
+>  						#clock-cells = <0>;
+>  						compatible = "altr,socfpga-gate-clk";
+> -						clocks = <&s2f_usr1_clk>;
+> +						clocks = <&h2f_usr1_clk>;
+>  						clk-gate = <0xa0 7>;
+>  					};
+>  
 
-So I think we should revert the patches as we don't seem to be getting anywhere both on discussion or code updates and the v3.12-rc's keep moving along.
+Acked-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-- k
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
