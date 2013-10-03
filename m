@@ -1,169 +1,93 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/2] hwrng: msm: Add PRNG support for MSM SoC's
-Date: Thu, 03 Oct 2013 12:25:37 -0700
-Message-ID: <524DC4B1.4050100@codeaurora.org>
-References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <1380811955-18085-3-git-send-email-svarbanov@mm-sol.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: new cpu iteration code...
+Date: Thu, 3 Oct 2013 21:11:55 +0100
+Message-ID: <CACxGe6soxNN6TjDw9h15c39FHzyGzY1OZX9cZ8FRQ_k4PinYvw@mail.gmail.com>
+References: <20130919.133805.1227344435777214810.davem@davemloft.net>
+ <523C7B54.3070706@arm.com> <523F4F6F.8030209@gmail.com> <20130922.162915.1269060096375052591.davem@davemloft.net>
+ <CAL_JsqKNVqJbn559ruvFHg+FVGt8ou4v_Ntf-HphwxCNXQ7GfQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1380811955-18085-3-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKNVqJbn559ruvFHg+FVGt8ou4v_Ntf-HphwxCNXQ7GfQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/13 07:52, Stanimir Varbanov wrote:
-> +#define PRNG_CONFIG_MASK	0x00000002
-> +#define PRNG_CONFIG_HW_ENABLE	BIT(1)
+On Wed, Sep 25, 2013 at 3:29 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Sun, Sep 22, 2013 at 3:29 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
+>> From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Date: Sun, 22 Sep 2013 15:13:35 -0500
+>>
+>>> On 09/20/2013 11:44 AM, Sudeep KarkadaNagesha wrote:
+>>>> On 19/09/13 18:38, David Miller wrote:
+>>>>> From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>> Date: Thu, 19 Sep 2013 08:26:04 -0500
+>>>>>
+>>>>>> The simple solution here is to just remove the warning. It doesn't
+>>>>>> appear to me that sparc ever sets the cpu device of_node pointer.
+>>>>>
+>>>>> Why wouldn't I want sparc to have this functionality now that the
+>>>>> code is generically available.
+>>>>>
+>>>> Makes sense, but as you mentioned before we need to match other property
+>>>> names namely "upa-portid", "portid" or "cpuid" for cpu physical id right
+>>>> ? Are all these 32-bit values ?
+>>>>
+>>>>>> Are there any cases on where sparc does have a /cpus node? If so we'd
+>>>>>> need to make of_get_cpu_node a weak function or depend on a kconfig option.
+>>>>>
+>>>>> I already gave a solution to this problem, make the loop iterator be:
+>>>>>
+>>>>>     for_each_node_by_type(dp, "cpu")
+>>>>>
+>>>>
+>>>> Does it make sense use this only when /cpus is not found ?
+>>>> IMHO as the number of node in DT increases(which is the case on ARM
+>>>> platforms) parsing entire tree may be expensive(which can be avoided in
+>>>> case /cpus is found)
+>>>
+>>> Can't you simply do something like this for the search:
+>>>
+>>>       cpus = of_find_node_by_path("/cpus");
+>>>       if (!cpus && IS_ENABLED(CONFIG_SPARC))
+>>>               cpus = of_find_node_by_path("/");
+>>>       if (!cpus) {
+>>>               pr_warn("Missing cpus node, bailing out\n");
+>>>               return NULL;
+>>>       }
+>>>
+>>>       for_each_child_of_node(cpus, cpun) {
+>>
+>> This doesn't work either Rob.  Some UltraSPARC-IV systems put the cpu
+>> nodes under directories representing the cores.
+>
+> Okay. Good to know.
+>
+>> For the third time, the only thing which will work unilaterally is
+>> the type base iterator I proposed above.
+>
+> Now that I understand all the variations, I agree.
+>
+>> Why is there so much resistence to something which has an extremely
+>> high likelyhood of working everywhere and not requiring any ifdef
+>> crapola?
+>
+> Simplifying Sudeep's code a bit while maintaining some level of
+> validation of the DT layout was my only goal. I guess that validation
+> really needs to be at build time rather than boot time and there is
+> some work going on in that area.
 
-These two are the same so please drop the PRNG_CONFIG_MASK define and
-just use the PRNG_CONFIG_HW_ENABLE define.
+Still need a solution here in short order. Sundeep, are you working on
+a fixup patch?
 
-> +#define PRNG_STATUS_DATA_AVAIL	BIT(0)
-> +
-> +#define MAX_HW_FIFO_DEPTH	16
-> +#define MAX_HW_FIFO_SIZE	(MAX_HW_FIFO_DEPTH * 4)
-> +#define WORD_SZ			4
-> +
-> +struct msm_rng {
-> +	void __iomem *base;
-> +	struct clk *clk;
-> +};
-> +
-> +static int msm_rng_enable(struct msm_rng *rng, int enable)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(rng->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (enable) {
-> +		/* Enable PRNG only if it is not already enabled */
-> +		val = readl_relaxed(rng->base + PRNG_CONFIG);
-> +		if (val & PRNG_CONFIG_HW_ENABLE)
-> +			goto already_enabled;
-> +
-> +		/* PRNG is not enabled */
-> +		val = readl_relaxed(rng->base + PRNG_LFSR_CFG);
-> +		val &= ~PRNG_LFSR_CFG_MASK;
-> +		val |= PRNG_LFSR_CFG_CLOCKS;
-> +		writel(val, rng->base + PRNG_LFSR_CFG);
-> +
-> +		val = readl_relaxed(rng->base + PRNG_CONFIG);
-> +		val &= ~PRNG_CONFIG_MASK;
-> +		val |= PRNG_CONFIG_HW_ENABLE;
-> +		writel(val, rng->base + PRNG_CONFIG);
+I can remove the warning as a short term fix, but to make the function
+useful generally then there needs to be a way for the architecture to
+tell the core what property name to use for CPU ids. The ugly powerpc
+exception that is in there should be reworked at the same time.
 
-This could just be
-
-		val = readl_relaxed(rng->base + PRNG_CONFIG);
-		val |= PRNG_CONFIG_HW_ENABLE;
-		writel(val, rng->base + PRNG_CONFIG);
-
-
-> +	} else {
-> +		val = readl_relaxed(rng->base + PRNG_CONFIG);
-> +		val &= ~PRNG_CONFIG_MASK;
-> +		writel(val, rng->base + PRNG_CONFIG);
-> +	}
-> +
-> +already_enabled:
-> +	clk_disable_unprepare(rng->clk);
-> +	return 0;
-> +}
-> +
-[...]
-> +static int msm_rng_probe(struct platform_device *pdev)
-> +{
-> +	struct msm_rng *rng;
-> +	struct device_node *np;
-> +	struct resource res;
-> +	int ret;
-> +
-> +	np = of_node_get(pdev->dev.of_node);
-> +	if (!np)
-> +		return -ENODEV;
-
-This is unnecessary.
-
-> +
-> +	rng = devm_kzalloc(&pdev->dev, sizeof(*rng), GFP_KERNEL);
-> +	if (!rng) {
-> +		ret = -ENOMEM;
-> +		goto err_exit;
-> +	}
-> +
-> +	ret = of_address_to_resource(np, 0, &res);
-> +	if (ret)
-> +		goto err_exit;
-
-We should just do
-
-  res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-  rng->base = devm_ioremap_resource(&pdev->dev, res);
-  if (IS_ERR(rng->base))
-            return PTR_ERR(rng->base);
-
-> +
-> +	rng->base = devm_ioremap_resource(&pdev->dev, &res);
-> +	if (IS_ERR(rng->base)) {
-> +		ret = PTR_ERR(rng->base);
-> +		goto err_exit;
-> +	}
-> +
-> +	rng->clk = devm_clk_get(&pdev->dev, "prng");
-> +	if (IS_ERR(rng->clk)) {
-> +		ret = PTR_ERR(rng->clk);
-> +		goto err_exit;
-> +	}
-> +
-> +	msm_rng_ops.priv = (unsigned long) rng;
-> +	ret = hwrng_register(&msm_rng_ops);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "failed to register hwrng\n");
-> +
-> +err_exit:
-
-Doing all that should make this goto exit path unnecessary.
-
-> +	of_node_put(np);
-> +	return ret;
-> +}
-> +
-> +static int msm_rng_remove(struct platform_device *pdev)
-> +{
-> +	hwrng_unregister(&msm_rng_ops);
-> +	return 0;
-> +}
-> +
-> +static struct of_device_id msm_rng_of_match[] = {
-
-const?
-
-> +	{ .compatible = "qcom,prng", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, msm_rng_of_match);
-> +
-> +static struct platform_driver msm_rng_driver = {
-> +	.probe = msm_rng_probe,
-> +	.remove = msm_rng_remove,
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = of_match_ptr(msm_rng_of_match),
-> +	}
-> +};
-> +module_platform_driver(msm_rng_driver);
-> +
-> +MODULE_AUTHOR("The Linux Foundation");
-> +MODULE_DESCRIPTION("Qualcomm MSM random number generator driver");
-> +MODULE_LICENSE("GPL v2");
-
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
