@@ -1,107 +1,131 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH 4/6] thermal: exynos: Replace SOC_ARCH_EXYNOS with SOC_ARCH_EXYNOS5250
-Date: Thu, 3 Oct 2013 18:08:45 -0400
-Message-ID: <524DEAED.4030905@ti.com>
-References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com> <1380010102-25817-5-git-send-email-l.majewski@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH|RFC] of: let of_match_device() always return best match
+Date: Thu, 03 Oct 2013 17:23:46 -0500
+Message-ID: <524DEE72.7080400@gmail.com>
+References: <1380826284-18381-1-git-send-email-mkl@pengutronix.de> <524DD5A6.6020204@gmail.com> <524DE6DB.1070003@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="V8GaVGtHSjeacEeEBNBxR66VnrkDC7eFq"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1380010102-25817-5-git-send-email-l.majewski@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <eduardo.valentin@ti.com>, Amit Daniel Kachhap <amit.daniel@samsung.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Linux PM list <linux-pm@vger.kernel.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <524DE6DB.1070003-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---V8GaVGtHSjeacEeEBNBxR66VnrkDC7eFq
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On 10/03/2013 04:51 PM, Marc Kleine-Budde wrote:
+> On 10/03/2013 10:37 PM, Rob Herring wrote:
+>> On 10/03/2013 01:51 PM, Marc Kleine-Budde wrote:
+>>> The function of_match_device() should tell if a struct device
+>>> matches an of_device_id list and return the specific entry of
+>>> that table matches the device best.
+>>> 
+>>> The underlying __of_match_node() implements the wrong search
+>>> algorithm. It iterates over the list of of_device_ids,
+>>> comparing the first compatible with _all_ compatibles of the
+>>> struct device, then the second compatible of of_device_id and
+>>> so on.
+>>> 
+>>> This leads to a problem, if the device has more than one
+>>> compatible that match the of_device_id list. The implemented
+>>> search algorithm may find not the "best" match. As the
+>>> compatible list in the device is sorted from most to least 
+>>> specific.
+>>> 
+>>> For example:
+>>> 
+>>> The imx28.dtsi gives this compatible string for its CAN core:
+>>> 
+>>>> compatible = "fsl,imx28-flexcan", "fsl,p1010-flexcan";
+>>> 
+>>> The flexcan driver defines:
+>>> 
+>>>> static const struct of_device_id flexcan_of_match[] = { {
+>>>> .compatible = "fsl,p1010-flexcan", .data =
+>>>> &fsl_p1010_devtype_data, }, { .compatible =
+>>>> "fsl,imx28-flexcan", .data = &fsl_imx28_devtype_data, }, {
+>>>> .compatible = "fsl,imx6q-flexcan", .data =
+>>>> &fsl_imx6q_devtype_data, }, { /* sentinel */ }, };
+>>> 
+>>> The "p1010" was the first Freescale SoC with the flexcan core.
+>>> But this SoC has a bug, so a workaround has to be enabled in
+>>> the driver. The mx28 has this bug fixed, so we don't need this
+>>> quite costly workaround.
+>>> 
+>>> The __of_match_node() will compare:
+>>> 
+>>> from  of_device_id		from device fsl,p1010-flexcan
+>>> fsl,imx28-flexcan fsl,p1010-flexcan		fsl,p1010-flexcan	->
+>>> MATCH
+>>> 
+>>> The of_match_device() function as it currently is implemented
+>>> will always return p1010 not the mx28.
+>>> 
+>>> This patch fixes the problem by exchanging outer and inner
+>>> loop. The first compatible of a device is compared against all
+>>> compatible from the of_device_id list, then the second device
+>>> compatible and so on.
+>> 
+>> This has been an issue for some time. A fix has been attempted
+>> before and reverted if you look at the git history:
+> 
+> ..should have done this before creating the patch.
+> 
+>> commit bc51b0c22cebf5c311a6f1895fcca9f78efd0478 Author: Linus
+>> Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> Date:   Tue Jul 10
+>> 12:49:32 2012 -0700
+>> 
+>> Revert "of: match by compatible property first"
+>> 
+>> This reverts commit 107a84e61cdd3406c842a0e4be7efffd3a05dba6.
+>> 
+>> Meelis Roos reports a regression since 3.5-rc5 that stops Sun
+>> Fire V100 and Sun Netra X1 sparc64 machines from booting, hanging
+>> after enabling serial console.  He bisected it to commit
+>> 107a84e61cdd.
+>> 
+>> Rob Herring explains: "The problem is match combinations of
+>> compatible plus name and/or type fail to match correctly.  I have
+>> a fix for this, but given how late it is for 3.5 I think it is
+>> best to revert this for now.  There could be other cases that
+>> rely on the current although wrong behavior.  I will post an
+>> updated version for 3.6."
+>> 
+>> Bisected-and-reported-by: Meelis Roos <mroos-Y27EyoLml9s@public.gmane.org> 
+>> Requested-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org> Cc: Thierry
+>> Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> Cc: Grant Likely
+>> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> Signed-off-by: Linus Torvalds
+>> <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+>> 
+>> There was also a fix attempted for this and the discussion here:
+>> 
+>> http://www.mail-archive.com/linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg60163.html
+>>
+>>
+>> 
+You patch would hit the same issues I believe.
+> 
+> Yes probably, are the OF patterns from the failing sparcs
+> available somewhere, so that we can test a better implementation?
 
-On 24-09-2013 04:08, Lukasz Majewski wrote:
-> The TMU data definition is now separated to Exynos4412 and Exynos5250.
->=20
-> Now SOC_ARCH_EXYNOS only refers to Exynos5250. Hence the name
-> SOC_ARCH_EXYNOS has been changed to SOC_ARCH_EXYNOS5250.
->=20
+Not that I'm aware of. It appeared to be the serial driver. It may be
+evident looking at the sparc serial driver match table.
 
-How about merging this one with patch 02?
+> I'll rearrange the drivers instead. BTW: what about the patch you 
+> mentioned in the above revert?
 
-> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> ---
->  drivers/thermal/samsung/exynos_tmu.c      |    4 ++--
->  drivers/thermal/samsung/exynos_tmu.h      |    2 +-
->  drivers/thermal/samsung/exynos_tmu_data.c |    2 +-
->  3 files changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/sam=
-sung/exynos_tmu.c
-> index 21b89e4..037cd46 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.c
-> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> @@ -632,9 +632,9 @@ static int exynos_tmu_probe(struct platform_device =
-*pdev)
->  	if (ret)
->  		return ret;
-> =20
-> -	if (pdata->type =3D=3D SOC_ARCH_EXYNOS ||
-> -	    pdata->type =3D=3D SOC_ARCH_EXYNOS4210 ||
-> +	if (pdata->type =3D=3D SOC_ARCH_EXYNOS4210 ||
->  	    pdata->type =3D=3D SOC_ARCH_EXYNOS4412 ||
-> +	    pdata->type =3D=3D SOC_ARCH_EXYNOS5250 ||
->  	    pdata->type =3D=3D SOC_ARCH_EXYNOS5440)
->  		data->soc =3D pdata->type;
->  	else {
-> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/sam=
-sung/exynos_tmu.h
-> index db37df0..b42ece4 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.h
-> +++ b/drivers/thermal/samsung/exynos_tmu.h
-> @@ -42,7 +42,7 @@ enum calibration_mode {
->  enum soc_type {
->  	SOC_ARCH_EXYNOS4210 =3D 1,
->  	SOC_ARCH_EXYNOS4412,
-> -	SOC_ARCH_EXYNOS,
-> +	SOC_ARCH_EXYNOS5250,
->  	SOC_ARCH_EXYNOS5440,
->  };
-> =20
-> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/therma=
-l/samsung/exynos_tmu_data.c
-> index bd08093..188223f 100644
-> --- a/drivers/thermal/samsung/exynos_tmu_data.c
-> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
-> @@ -183,7 +183,7 @@ struct exynos_tmu_init_data const exynos4412_defaul=
-t_tmu_data =3D {
->  struct exynos_tmu_init_data const exynos5250_default_tmu_data =3D {
->  	.tmu_data =3D {
->  		{ EXYNOS4412_TMU_DATA,
-> -		.type =3D SOC_ARCH_EXYNOS,
-> +		.type =3D SOC_ARCH_EXYNOS5250,
->  		},
->  	},
->  	.tmu_count =3D 1,
->=20
+My position has been we should change the driver ordering, but others
+have disagreed.
+
+Scott had some issues with my patch and my assumptions may not be
+right. Probably re-applying the original patch plus Scott's fix is the
+right answer. We just need to review the combined change closely to
+ensure we maintain current behavior where needed.
+
+Rob
 
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
---V8GaVGtHSjeacEeEBNBxR66VnrkDC7eFq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlJN6vAACgkQCXcVR3XQvP2zOAD+KHplqiVgYO/xoivdybLo7bRc
-iyf16hw1pQan8fN1KJoA/jbk+7ABAF7565vSu1XVjl4TPxfDNbeKYJ5TN99JOVEw
-=MhCh
------END PGP SIGNATURE-----
-
---V8GaVGtHSjeacEeEBNBxR66VnrkDC7eFq--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
