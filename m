@@ -1,121 +1,371 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [RFC 00/15] Device Tree schemas and validation
-Date: Thu, 03 Oct 2013 08:52:13 +0200
-Message-ID: <524D141D.3020807@baylibre.com>
-References: <1380041541-17529-1-git-send-email-bcousson@baylibre.com> <524A8289.3050107@baylibre.com> <524ACB76.1010001@gmail.com> <524AE4FB.4080906@baylibre.com> <CAL_JsqJ31TGFJCSeSOqgee=OLVfSUTAYdF4nSn7X2DiCequVAw@mail.gmail.com> <20131002135450.GH6506@voom.fritz.box>
+From: Shirish S <shirish@chromium.org>
+Subject: Re: [PATCH 1/7] drm/exynos: move hdmiphy related code to hdmiphy
+	driver
+Date: Thu, 3 Oct 2013 07:58:37 +0530
+Message-ID: <CAHvYUDC1GprC1xQcCSdRvSafe_yyihDsrzrTvfS-Ey-hELOgjA@mail.gmail.com>
+References: <1377845974-28373-1-git-send-email-rahul.sharma@samsung.com>
+	<011901cea941$91853e40$b48fbac0$%dae@samsung.com>
+	<CAOw6vb+32WsEY0px-iZaSv-AYj9NS6OX9hqpH-y6VQ77SpHymw@mail.gmail.com>
+	<00bf01cea9ee$bcda5960$368f0c20$%dae@samsung.com>
+	<CAPdUM4PT4cpXSe6sLgFaQnsycgY9AvYXPtgTMywYT0oePwPWwA@mail.gmail.com>
+	<00ca01cea9f7$f5ee3b50$e1cab1f0$%dae@samsung.com>
+	<CAPdUM4MxLBoiE6DpUbkn2-Sji89RM1+yHeAS1c2OREB+=BfdVg@mail.gmail.com>
+	<00cf01cea9ff$dc9749a0$95c5dce0$%dae@samsung.com>
+	<CAOw6vbLAuJyFU55wP1+Akm6PZepxaS_UuwFYe9LWcM3sKFmWwA@mail.gmail.com>
+	<011601ceaa3e$d08e8b20$71aba160$%dae@samsung.com>
+	<CAPdUM4OoicU76Tw-gkuvAGGvOHM-x1DfYLUEFKa3KaEAtwLAvw@mail.gmail.com>
+	<CAOw6vbLrgigGHdwGQHRWJAF=N-ZaL+6VSyUfP37B-4baU-+jBQ@mail.gmail.com>
+	<CAPdUM4PpFbc9utAsHnqyF9OJdipdgq036fqFM_SeG0O+M3N5jA@mail.gmail.com>
+	<037401ceb2d9$ea596ea0$bf0c4be0$%dae@samsung.com>
+	<CAPdUM4P0mecAGe++QELW_B7KOpABUSFvFTgCddowCM8cqtVvFA@mail.gmail.com>
+	<CAAQKjZPtxLAJOz6573+hEPZokEnvGF8BTMXoxcYUQ8zySAn-OA@mail.gmail.com>
+	<5248A4EE.9000708@samsung.com> <gmail.com@samsung.com>
+	<5248A4EE.9000708@gmail.com>
+	<053c01cebe60$2fe5a4c0$8fb0ee40$%dae@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131002135450.GH6506@voom.fritz.box>
-Sender: linux-omap-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Kevin Hilman <khilman@linaro.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, fparent@baylibre.com
+Content-Type: multipart/mixed; boundary="===============0631252555=="
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-Reply-To: <053c01cebe60$2fe5a4c0$8fb0ee40$%dae@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "sw0312.kim" <sw0312.kim@samsung.com>, sunil joshi <joshi@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, "kgene.kim" <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kumar Gala <galak@codeaurora.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2013 15:54, David Gibson wrote:
-> On Tue, Oct 01, 2013 at 03:54:20PM -0500, Rob Herring wrote:
->> On Tue, Oct 1, 2013 at 10:06 AM, Benoit Cousson <bcousson@baylibre.com> wrote:
->>> Hi Rob,
->>>
->>>
->>> On 01/10/2013 15:17, Rob Herring wrote:
->>>>
->>>> On 10/01/2013 03:06 AM, Benoit Cousson wrote:
->>>>>
->>>>> + more DT maintainers folks
->>>>>
->>>>> Hi all,
->>>>>
->>>>> I know this is mostly boring user space code, but I was expecting a
->>>>> little bit of comments about at least the bindings syntax:-(
->>>>>
->>>>> I'd like to know if this is the right direction and if it worth pursuing
->>>>> in that direction.
->>>>>
->>>>> The idea was to have at least some base for further discussion during
->>>>> ARM KS 2013.
->>>>>
->>>>> I feel alone :-(
->>>>>
->>>>> If you have any comment, go ahead!
->>>>
->>>>
->>>> Thanks for taking this on!
->>>>
->>>> This is interesting approach using the dts syntax,
->>>
->>>
->>> Well, this was discussed a little bit on the list, and it has the big
->>> advantage of re-using the parser already included in DTC for free.
->>> In term or readability, it avoids to re-defining a brand new syntax for
->>> people who are already familiar with the DTS one.
->>>
->>>
->>>> but I worry that the
->>>> validation will only be as good as the schema written and the review of
->>>> the schema.
->>>
->>>
->>> Well, sure, but unfortunately, that will always be the case :-(
->>> The bindings definition being quite open, there is no easy way to ensure
->>> proper schema / bindings without careful review of the schema. There is no
->>> such thing as a free beer... Unfortunately :-)
->>>
->>>
->>>> I think the schema needs to define the binding rather than
->>>> define the checks. Then the schema can feed the validation checks.
->>>
->>>
->>>> This format does not seem to me as easily being able to generate
->>>> documentation from the schema which I believe is one of the goals.
->>>
->>>
->>> Indeed, but I think is it easy to generate any kind of readable format for
->>> the documentation purpose if needed from the actual format.
->>> Otherwise, we should consider a schema format based on kerneldoc type of
->>> syntax to improve readability. I'm just afraid it will become harder then to
->>> define complex schema.
->>>
->>> BTW, what kind of documentation are you expecting here? Is is a text that
->>> can be added on top of each schema?
->>
->> I would expect the schema to replace
->> Documentation/devicetree/bindings/* over time. I think the thing that
->> needs to be worked out here is how to add free form multi-line text.
+--===============0631252555==
+Content-Type: multipart/alternative; boundary=f46d044283c07ae7fc04e7ccf1f8
+
+--f46d044283c07ae7fc04e7ccf1f8
+Content-Type: text/plain; charset=ISO-8859-1
+
+Hi,
+First of all sorry for the late response,
+
+
+On Tue, Oct 1, 2013 at 10:09 AM, Inki Dae <inki.dae@samsung.com> wrote:
+
 >
-> I'm not convinced that's a realistic goal.  As I see it, the
-> fundamental difference between a binding document and a formal schema
-> is that a binding defines both the syntax required of a node, and its
-> semantics, whereas a schema defines only syntax - the semantics still
-> need to be defined somewhere.
 >
+> > -----Original Message-----
+> > From: Sylwester Nawrocki [mailto:sylvester.nawrocki@gmail.com]
+> > Sent: Monday, September 30, 2013 7:09 AM
+> > To: Inki Dae
+> > Cc: Rahul Sharma; devicetree@vger.kernel.org; linux-samsung-soc;
+> > sw0312.kim; sunil joshi; dri-devel; kgene.kim; Shirish S; Sylwester
+> > Nawrocki; Rahul Sharma; Stephen Warren; Mark Rutland; Kumar Gala; Pawel
+> > Moll; Rob Herring; Sean Paul
+> > Subject: Re: [PATCH 1/7] drm/exynos: move hdmiphy related code to hdmiphy
+> > driver
+> >
+> > On 09/28/2013 06:10 PM, Inki Dae wrote:
+> > >> Any opinion from Device-Tree folks?
+> > >>
+> > >> IMO, we should have same consensus on Shirish patches before
+> proceeding.
+> > >
+> > > Rahul, it seems that DT people have no interest in this issue. So let's
+> > > have a consensus about this issue internally.
+> > >
+> > > To Mr. Kyungmin, Sylwester, Kukjin Kim, and Tomasz,
+> > > How about keeping hdmiphy config data in each board dts file?
+> >
+> > Please don't use HTML and quote only relevant part of e-mails. Otherwise
+> > there are good chances your messages end up in people's spam box.
+> >
+>
+> Ah, I missed checking text mode. Sorry about this. :)
+>
+>
+>
+> > It often helps to Cc a DT binding maintainer directly.
+> >
+>
+> Good idea.
+>
+> > Then, you consider moving the HDMI phy configuration to the device tree.
+> > As Sean suggested in this thread:
+> >
+>
+> Right.
+>
+> > ">> +static struct hdmiphy_config hdmiphy_4210_configs[] = {
+> > >> +       {
+> > >> +               .pixel_clock = 27000000,
+> > >> +               .conf = {
+> > >> +                       0x01, 0x05, 0x00, 0xD8, 0x10, 0x1C, 0x30,
+> 0x40,
+> > >> +                       0x6B, 0x10, 0x02, 0x51, 0xDF, 0xF2, 0x54,
+> 0x87,
+> > >> +                       0x84, 0x00, 0x30, 0x38, 0x00, 0x08, 0x10,
+> 0xE0,
+> > >> +                       0x22, 0x40, 0xE3, 0x26, 0x00, 0x00, 0x00,
+> 0x00,
+> > >> +               },
+> > >> +       },
+> > [trimmed couple more entries]
+> > >> +};
+> > >>
+> > > Are you aware of the effort to move these to dt? Since these are
+> > > board-specific values, it seems incorrect to apply them universally.
+> > > Shirish has uploaded a patch to the chromium review site to push these
+> > > into dt (https://chromium-review.googlesource.com/#/c/65581). Maybe
+> > > you can work that into your patch set?"
+> >
+> > The configuration data is 64 bytes of the register values IIUC. Would it
+> > be
+> > possible to figure out exact meaning of each byte ? Do all of these bytes
+>
+> Right, but the user manual doesn't describe that enough so we might need to
+> inquire for what it means to design team.
+>
+> > need to be changed per board ? Perhaps we can have per SoC static tables
+> > in
+> > the PHY driver and be overwriting only some of the bytes with values read
+> > from device tree ?
+> >
+> > AFAIR firmware-like binary blobs (register address/value pairs) are not
+> > supposed to be stored in DT.
+> >
+> > If there is no detailed documentation for theese PHY configuration tables
+> > I guess there is no choice but to put these raw 64 bytes in DT.
+> Presumably
+> > this should be a an required property defined only by board dts, since
+> > those
+> > values are PCB design dependent.
+> >
+> > However, if not all boards need tweaking this configuration data, then it
+> > could make sense to define recommended per-SoC tables in the driver and
+> > overwrite from DT only if it is specified there for a specific board.
+> > If we can come up with universal configuration for a SoC and selected
+> > pixel
+> > clock frequency then it could likely be better to store that in the
+> driver
+> > rather than in DT.
+> >
+>
+> Thanks you your opinion. However, we need to make sure how we take care of
+> the PHY configuration values. So I will have two steps to merge this pages
+> set.
+>
+> To Rahul,
+> Could you post only your patch set regardless of Shirish's patch? I will
+> merge your patch set first because as is, Exynos drm hdmi driver is broken.
+> And, we need more discussions about Shirish patch. So I will not merge this
+> patch until we have a consensus about it.
+>
+> To Shirish,
+> For your patch, it seems that you need to make sure to figure out exact
+> meaning of each byte of the PHY configuration values first. Maybe you need
+> to inquire for that to hardware or design team. And please separate the
+> values into common and specific parts if needed.
+>
+> Agreed, I shall request our hardware team to provide description about the
+phy values, and will update the patch, once i receive the same.
 
-Mmm, I do not really understand what is missing in the following schema 
-in term of semantic compared to the original interrupt-controller bindings?
 
-     interrupt-controller {
-         description = "Identifies the node as an interrupt controller";
-         is-required;
-         type = "bool";
-     };
+>
+> Thanks,
+> Inki Dae
+>
+> > --
+> > Thanks,
+> > Sylwester
+>
+> Thanks,
+Shirish S
 
-     #interrupt-cells {
-         description = "Specifies the number of cells needed to encode an
-                        interrupt source. The type shall be a <u32>
-                        and the value shall be 1.
-                        The cell contains the interrupt number
-                        in the range [0-128].";
-         is-required;
-         type = "integer";
-         value = <1>;
-     };
+--f46d044283c07ae7fc04e7ccf1f8
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-As soon as you have a description you can keep the content of the 
-original binding. But on top of that, you do have the schema validation 
-information.
+<div dir=3D"ltr">Hi,<div>First of all sorry for the late response,<br><div =
+class=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On Tue, Oct 1, 201=
+3 at 10:09 AM, Inki Dae <span dir=3D"ltr">&lt;<a href=3D"mailto:inki.dae@sa=
+msung.com" target=3D"_blank">inki.dae@samsung.com</a>&gt;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div class=3D"im"><br>
+<br>
+&gt; -----Original Message-----<br>
+&gt; From: Sylwester Nawrocki [mailto:<a href=3D"mailto:sylvester.nawrocki@=
+gmail.com">sylvester.nawrocki@gmail.com</a>]<br>
+&gt; Sent: Monday, September 30, 2013 7:09 AM<br>
+&gt; To: Inki Dae<br>
+</div><div class=3D"im">&gt; Cc: Rahul Sharma; <a href=3D"mailto:devicetree=
+@vger.kernel.org">devicetree@vger.kernel.org</a>; linux-samsung-soc;<br>
+&gt; sw0312.kim; sunil joshi; dri-devel; kgene.kim; Shirish S; Sylwester<br=
+>
+&gt; Nawrocki; Rahul Sharma; Stephen Warren; Mark Rutland; Kumar Gala; Pawe=
+l<br>
+&gt; Moll; Rob Herring; Sean Paul<br>
+&gt; Subject: Re: [PATCH 1/7] drm/exynos: move hdmiphy related code to hdmi=
+phy<br>
+&gt; driver<br>
+&gt;<br>
+</div><div class=3D"im">&gt; On 09/28/2013 06:10 PM, Inki Dae wrote:<br>
+&gt; &gt;&gt; Any opinion from Device-Tree folks?<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;&gt; IMO, we should have same consensus on Shirish patches before<=
+br>
+proceeding.<br>
+&gt; &gt;<br>
+&gt; &gt; Rahul, it seems that DT people have no interest in this issue. So=
+ let&#39;s<br>
+&gt; &gt; have a consensus about this issue internally.<br>
+&gt; &gt;<br>
+&gt; &gt; To Mr. Kyungmin, Sylwester, Kukjin Kim, and Tomasz,<br>
+&gt; &gt; How about keeping hdmiphy config data in each board dts file?<br>
+&gt;<br>
+&gt; Please don&#39;t use HTML and quote only relevant part of e-mails. Oth=
+erwise<br>
+&gt; there are good chances your messages end up in people&#39;s spam box.<=
+br>
+&gt;<br>
+<br>
+</div>Ah, I missed checking text mode. Sorry about this. :)<br>
+<div class=3D"im"><br>
+<br>
+<br>
+&gt; It often helps to Cc a DT binding maintainer directly.<br>
+&gt;<br>
+<br>
+</div>Good idea.<br>
+<div class=3D"im"><br>
+&gt; Then, you consider moving the HDMI phy configuration to the device tre=
+e.<br>
+&gt; As Sean suggested in this thread:<br>
+&gt;<br>
+<br>
+</div>Right.<br>
+<div class=3D"im"><br>
+&gt; &quot;&gt;&gt; +static struct hdmiphy_config hdmiphy_4210_configs[] =
+=3D {<br>
+&gt; &gt;&gt; + =A0 =A0 =A0 {<br>
+&gt; &gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .pixel_clock =3D 27000000,<br>
+&gt; &gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .conf =3D {<br>
+&gt; &gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0x01, 0x05, 0x0=
+0, 0xD8, 0x10, 0x1C, 0x30, 0x40,<br>
+&gt; &gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0x6B, 0x10, 0x0=
+2, 0x51, 0xDF, 0xF2, 0x54, 0x87,<br>
+&gt; &gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0x84, 0x00, 0x3=
+0, 0x38, 0x00, 0x08, 0x10, 0xE0,<br>
+&gt; &gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 0x22, 0x40, 0xE=
+3, 0x26, 0x00, 0x00, 0x00, 0x00,<br>
+&gt; &gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 },<br>
+&gt; &gt;&gt; + =A0 =A0 =A0 },<br>
+&gt; [trimmed couple more entries]<br>
+&gt; &gt;&gt; +};<br>
+&gt; &gt;&gt;<br>
+&gt; &gt; Are you aware of the effort to move these to dt? Since these are<=
+br>
+&gt; &gt; board-specific values, it seems incorrect to apply them universal=
+ly.<br>
+&gt; &gt; Shirish has uploaded a patch to the chromium review site to push =
+these<br>
+&gt; &gt; into dt (<a href=3D"https://chromium-review.googlesource.com/#/c/=
+65581" target=3D"_blank">https://chromium-review.googlesource.com/#/c/65581=
+</a>). Maybe<br>
+&gt; &gt; you can work that into your patch set?&quot;<br>
+&gt;<br>
+&gt; The configuration data is 64 bytes of the register values IIUC. Would =
+it<br>
+&gt; be<br>
+&gt; possible to figure out exact meaning of each byte ? Do all of these by=
+tes<br>
+<br>
+</div>Right, but the user manual doesn&#39;t describe that enough so we mig=
+ht need to<br>
+inquire for what it means to design team.<br>
+<div class=3D"im"><br>
+&gt; need to be changed per board ? Perhaps we can have per SoC static tabl=
+es<br>
+&gt; in<br>
+&gt; the PHY driver and be overwriting only some of the bytes with values r=
+ead<br>
+&gt; from device tree ?<br>
+&gt;<br>
+&gt; AFAIR firmware-like binary blobs (register address/value pairs) are no=
+t<br>
+&gt; supposed to be stored in DT.<br>
+&gt;<br>
+&gt; If there is no detailed documentation for theese PHY configuration tab=
+les<br>
+&gt; I guess there is no choice but to put these raw 64 bytes in DT. Presum=
+ably<br>
+&gt; this should be a an required property defined only by board dts, since=
+<br>
+&gt; those<br>
+&gt; values are PCB design dependent.<br>
+&gt;<br>
+&gt; However, if not all boards need tweaking this configuration data, then=
+ it<br>
+&gt; could make sense to define recommended per-SoC tables in the driver an=
+d<br>
+&gt; overwrite from DT only if it is specified there for a specific board.<=
+br>
+&gt; If we can come up with universal configuration for a SoC and selected<=
+br>
+&gt; pixel<br>
+&gt; clock frequency then it could likely be better to store that in the dr=
+iver<br>
+&gt; rather than in DT.<br>
+&gt;<br>
+<br>
+</div>Thanks you your opinion. However, we need to make sure how we take ca=
+re of<br>
+the PHY configuration values. So I will have two steps to merge this pages<=
+br>
+set.<br>
+<br>
+To Rahul,<br>
+Could you post only your patch set regardless of Shirish&#39;s patch? I wil=
+l<br>
+merge your patch set first because as is, Exynos drm hdmi driver is broken.=
+<br>
+And, we need more discussions about Shirish patch. So I will not merge this=
+<br>
+patch until we have a consensus about it.<br>
+<br>
+To Shirish,<br>
+For your patch, it seems that you need to make sure to figure out exact<br>
+meaning of each byte of the PHY configuration values first. Maybe you need<=
+br>
+to inquire for that to hardware or design team. And please separate the<br>
+values into common and specific parts if needed.<br>
+<br></blockquote><div style>Agreed, I shall request our hardware team to pr=
+ovide description about the phy values, and will update the patch, once i=
+=A0receive=A0the same.</div><div style>=A0</div><blockquote class=3D"gmail_=
+quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1=
+ex">
 
-I'm not sure to understand your point. Could you elaborate?
+<br>
+Thanks,<br>
+Inki Dae<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+&gt; --<br>
+&gt; Thanks,<br>
+&gt; Sylwester<br>
+<br>
+</font></span></blockquote></div>Thanks,</div></div><div class=3D"gmail_ext=
+ra">Shirish S</div></div>
 
-Regards,
-Benoit
+--f46d044283c07ae7fc04e7ccf1f8--
+
+--===============0631252555==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0631252555==--
