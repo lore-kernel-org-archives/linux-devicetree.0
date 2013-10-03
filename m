@@ -1,49 +1,38 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH] of: fix unnecessary warning on missing /cpus node
-Date: Thu,  3 Oct 2013 21:12:29 +0100
-Message-ID: <1380831149-15764-1-git-send-email-grant.likely@linaro.org>
+From: "Tim Kryger" <tim.kryger@linaro.org>
+Subject: [PATCH 0/6] Update Kona drivers to use clocks
+Date: Thu, 3 Oct 2013 13:13:08 -0700
+Message-ID: <1380831194-27238-1-git-send-email-tim.kryger@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, David Miller <davem@davemloft.net>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Rob Herring <rob.herring@calxeda.com>
+To: Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>
+Cc: Tim Kryger <tim.kryger@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Not all DT platforms have all the cpus collected under a /cpus node.
-That just happens to be a details of FDT, ePAPR and PowerPC platforms.
-Sparc does something different, but unfortunately the current code
-complains with a warning if /cpus isn't there. This became a problem
-with commit f86e4718, "driver/core cpu: initialize of_node in cpu's
-device structure", which caused the function to get called for all
-architectures.
+This series declares the clocks present on bcm11351 (aka bcm281xx) SoCs
+to be fixed at the rates configured by development bootloaders and then
+updates the Kona drivers to make use of clock calls where appropriate.
 
-This commit is a temporary fix to fail silently if the cpus node isn't
-present. A proper fix will come later to allow arch code to provide a
-custom mechanism for decoding the CPU hwid if the 'reg' property isn't
-appropriate.
+This patch series depends on the following three commits being present:
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Cc: David Miller <davem@davemloft.net>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Cc: Rob Herring <rob.herring@calxeda.com>
----
- drivers/of/base.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+https://lkml.org/lkml/2013/9/18/409
+https://lkml.org/lkml/2013/9/20/305
+http://www.spinics.net/lists/arm-kernel/msg274973.html
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 865d3f6..7d4c70f 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -303,10 +303,8 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
- 	struct device_node *cpun, *cpus;
- 
- 	cpus = of_find_node_by_path("/cpus");
--	if (!cpus) {
--		pr_warn("Missing cpus node, bailing out\n");
-+	if (!cpus)
- 		return NULL;
--	}
- 
- 	for_each_child_of_node(cpus, cpun) {
- 		if (of_node_cmp(cpun->type, "cpu"))
+Tim Kryger (6):
+  ARM: dts: Declare clocks as fixed on bcm11351
+  ARM: dts: Specify clocks for UARTs on bcm11351
+  ARM: dts: Specify clocks for SDHCIs on bcm11351
+  clocksource: kona: Add basic use of external clock
+  ARM: dts: Specify clocks for timer on bcm11351
+  mmc: sdhci-bcm-kona: Add basic use of clocks
+
+ arch/arm/boot/dts/bcm11351.dtsi      | 111 +++++++++++++++++++++++++++++++++--
+ drivers/clocksource/bcm_kona_timer.c |  14 ++++-
+ drivers/mmc/host/sdhci-bcm-kona.c    |  30 +++++++++-
+ 3 files changed, 145 insertions(+), 10 deletions(-)
+
 -- 
-1.8.1.2
+1.8.0.1
