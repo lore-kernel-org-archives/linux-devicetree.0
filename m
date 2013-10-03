@@ -1,36 +1,31 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] cpufreq: arm_big_little_dt: return success if OPP
- list already exists
-Date: Thu, 3 Oct 2013 10:24:44 +0530
-Message-ID: <CAKohpokm=B2K3PhxPqtnTkv7dCxEwgR6JAUKi2-QitiQACDkEw@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 4/5] cpufreq: arm_big_little_dt: enhance OPP error checking
+Date: Thu, 3 Oct 2013 10:25:12 +0530
+Message-ID: <CAKohpon+b1rAYj2+UDhm=abAy7a1XOc1GhLd=RkPVKP-d8fPeQ@mail.gmail.com>
 References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-	<1380634382-15609-6-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+	<1380634382-15609-5-git-send-email-Sudeep.KarkadaNagesha@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380634382-15609-6-git-send-email-Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
-Cc: "cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1380634382-15609-5-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>
 List-Id: devicetree@vger.kernel.org
 
 On 1 October 2013 19:03, Sudeep KarkadaNagesha
-<Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org> wrote:
-> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
+<Sudeep.KarkadaNagesha@arm.com> wrote:
+> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 >
-> of_init_opp_table returns -EEXIST if an OPP list is already associated
-> with the device, before attempting to re-initialise it. In such cases,
-> dt_init_opp_table must return success as OPP table is initialised.
+> Since the OPPs can be specified either through 'operating-points'
+> as tuples or through 'operating-points-phandle' as phandle to the
+> node containing tuples, we need to check for both the properties.
 >
-> Cc: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
-> Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
+> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 > ---
->  drivers/cpufreq/arm_big_little_dt.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/cpufreq/arm_big_little_dt.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
