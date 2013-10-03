@@ -1,85 +1,104 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 00/21] of: prom.h clean-up and removal
-Date: Thu, 3 Oct 2013 09:33:42 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA2307514F2CE@IN01WEMBXA.internal.synopsys.com>
-References: <1380221456-11192-1-git-send-email-robherring2@gmail.com>
- <C2D7FE5348E1B147BCA15975FBA2307514EA98@IN01WEMBXA.internal.synopsys.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v8 0/8] phy: omap-usb: Support multiple instances and new types
+Date: Thu, 3 Oct 2013 12:58:58 +0300
+Message-ID: <1380794346-30185-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[Trimmed CC list a bit]
+Hi,
 
-On 09/27/2013 10:26 AM, Vineet Gupta wrote:
-> On 09/27/2013 12:21 AM, Rob Herring wrote:
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> This is the second series of clean-up for architecture DT code. The =
-first
->> series is here [1].
->>
->> As the number of DT enabled architectures has grown, there has been =
-a lot
->> of copy/paste duplication of prom.h. The include ordering for prom.h=
- is
->> complex and has resulted in many implicit includes. This series clea=
-ns up
->> prom.h and removes the dependency of prom.h includes in the core DT =
-code
->> on all architectures except sparc. This removes prom.h on several
->> architectures and makes it an architecture specific include on the r=
-est.
->>
->> Compiled on arm, arm64, microblaze, mips, openrisc, powerpc, sparc,
->> xtensa. Mostly defconfigs and some allyesconfigs. The 0-day builder =
-has
->> also caught some issues.
->>
->> A branch with both series is available here:
->> git://sources.calxeda.com/kernel/linux.git dt-cleanup
->>
-> I gave the latest branch a spin - everything looks good except for a =
-build warning
-> - and given the const qualifier in the API, I reckon most (if not all=
-) would see that.
->
-> It seems this was introduced in first series but maybe I failed to no=
-tice then as
-> I'm sure I booted that code too.
->
-> ------------------>8-----------------------------
->   CC      arch/arc/kernel/devtree.o
-> arch/arc/kernel/devtree.c: In function =91setup_machine_fdt=92:
-> arch/arc/kernel/devtree.c:50:8: warning: assignment discards =91const=
-=92 qualifier
-> from pointer target type [enabled by default]
->   mdesc =3D of_flat_dt_match_machine(NULL, arch_get_next_mach);
->         ^
-> ------------------>8-----------------------------
->
-> ARM propagates the const to callers - upto setup_arch(), but that mig=
-ht not work
-> for us as we use it to setup a global @machine_desc which is then use=
-d to dispatch
-> the callbacks in platform APIs. Semantically it's good if it is const=
- but that
-> would require making it local and propagating to all the users - not =
-worth the
-> trouble I suppose.
->
-> What say you !
+This patchset does the following:
 
-Ping ?
+* Get rid of omap_control_usb platform data as we support DT only.
 
+* Restructure and add support for new PHY types. We now support the following
+four types
+
+ TYPE_OTGHS - if it has otghs_control mailbox register (e.g. on OMAP4)
+ TYPE_USB2 - if it has Power down bit in control_dev_conf register. e.g. USB2 PHY
+ TYPE_PIPE3 - if it has DPLL and individual Rx & Tx power control. e.g. USB3 PHY or SATA PHY
+ TYPE_DRA7USB2 - if it has both power down and power aux registers. e.g. USB2 PHY on DRA7
+
+* Get rid of "ti,type" DT property and introduce compatible strings for each type.
+
+* Have only one power control API "omap_control_usb_phy_power()" instead of a
+different one for each PHY type.
+
+* Get rid of omap_get_control_dev() so that we can support multiple instances
+of the control device. We take advantage of the fact that omap control USB device
+is only present on OMAP4 onwards and hence only supports DT boot. The users
+of control USB device can get a reference to it from the device node's phandle.
+
+Patches are based on greg/usb-next.
+
+Smoke tested on OMAP4 panda with MUSB in gadget mode (g_zero).
+
+You can find the patches in branch
+ usb-control-module
+in git tree
+ git://github.com/rogerq/linux.git
+
+v8:
+- Rebased on top of greg/usb-next to avoid conflicts
+- Removed patches 9 and 10 as they are not applicable
+
+v7:
+- Rebased on v3.12-rc1
+- Updated DT compatibility ID for better readability
+- Renamed TYPE_OMAP4 to TYPE_OTGHS, TYPE_USB3 to TYPE_PIPE3 and TYPE_DRA7 to
+  TYPE_DRA7USB2
+
+v6:
+- addressed review comment about usage of control_usb before allocation.
+
+v5:
+- fixed whitespace alignment issues.
+
+v4:
+- removed "ti,has-mailbox" from omap-usb binding document example.
+
+v3:
+- return -EINVAL instead of -ENODEV on probe failure.
+- pass device type data through of_device_id table.
+- get rid of "ti,mailbox" property and "has_mailbox" from musb platform data.
+
+v2:
+- get rid of "ti,type" property and introduce compatible strings for each device type.
+
+cheers,
+-roger
+
+Roger Quadros (8):
+  usb: phy: omap-control: Get rid of platform data
+  usb: phy: omap: Add new device types and remove
+    omap_control_usb3_phy_power()
+  usb: phy: omap-usb2: Don't use omap_get_control_dev()
+  usb: phy: omap-usb3: Don't use omap_get_control_dev()
+  usb: musb: omap2430: Don't use omap_get_control_dev()
+  ARM: dts: omap4: update omap-control-usb nodes
+  usb: phy: omap: get rid of omap_get_control_dev()
+  ARM: dts: omap5: update omap-control-usb node
+
+ Documentation/devicetree/bindings/usb/omap-usb.txt |   34 ++--
+ arch/arm/boot/dts/omap4.dtsi                       |   20 ++-
+ arch/arm/boot/dts/omap5.dtsi                       |   20 ++-
+ drivers/phy/phy-omap-usb2.c                        |   31 +++-
+ drivers/usb/musb/omap2430.c                        |   25 ++-
+ drivers/usb/phy/phy-omap-control.c                 |  208 ++++++++++---------
+ drivers/usb/phy/phy-omap-usb3.c                    |   32 +++-
+ include/linux/usb/musb.h                           |    2 -
+ include/linux/usb/omap_control_usb.h               |   33 ++--
+ 9 files changed, 220 insertions(+), 185 deletions(-)
+
+-- 
+1.7.4.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
