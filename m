@@ -1,132 +1,83 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH|RFC] of: let of_match_device() always return best match
-Date: Thu,  3 Oct 2013 20:51:24 +0200
-Message-ID: <1380826284-18381-1-git-send-email-mkl@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, "kernel@pengutronix.de" <kernel@pengutronix.de>, Marc Kleine-Budde <mkl@pengutronix.de>
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH v4 0/4] watchdog: at91sam9_wdt: handle already configured wdt
+Date: Thu,  3 Oct 2013 21:04:39 +0200
+Message-ID: <1380827083-6872-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Wim Van Sebroeck <wim@iguana.be>, Fabio Porcedda <fabio.porcedda@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Guenter Roeck <groeck7@gmail.com>, Yang Wenyou <wenyou.yang@atmel.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>
 List-Id: devicetree@vger.kernel.org
 
-The function of_match_device() should tell if a struct device matches an
-of_device_id list and return the specific entry of that table matches the
-device best.
+Hello,
 
-The underlying __of_match_node() implements the wrong search algorithm. It
-iterates over the list of of_device_ids, comparing the first compatible with
-_all_ compatibles of the struct device, then the second compatible of
-of_device_id and so on.
+This patch series is a porposal to enhance the sam9 watchdog timer support.
 
-This leads to a problem, if the device has more than one compatible that match
-the of_device_id list. The implemented search algorithm may find not the "best"
-match. As the compatible list in the device is sorted from most to least
-specific.
+The at91sam9 watchdog timer can only be configured once, and the current
+implementation tries to configure it in a static way:
+- 2 seconds timeout
+- wdt restart every 500ms
 
-For example:
+If the timer has already been configured with different values, it returns an
+error and do not create any watchdog device.
 
-The imx28.dtsi gives this compatible string for its CAN core:
+This is not critical if the watchdog is disabled, but if it has been enabled
+with different timeout values it will lead to a SoC reset.
 
-> 	compatible = "fsl,imx28-flexcan", "fsl,p1010-flexcan";
+This patch series tries to address this issue by adapting the heartbeat value
+according the WDT timer config:
+- it first tries to configure the timer as requested.
+- if it fails it fallbacks to the current config, adapting its heartbeat timer
+to the needs
 
-The flexcan driver defines:
+This patch series also move to a dynamically allocated at91wdt device instead
+of the static instance. I'm not sure this is the best solution, so please tell
+me if you prefer to keep static instance of watchdog.
 
-> static const struct of_device_id flexcan_of_match[] = {
-> 	{ .compatible = "fsl,p1010-flexcan", .data = &fsl_p1010_devtype_data, },
-> 	{ .compatible = "fsl,imx28-flexcan", .data = &fsl_imx28_devtype_data, },
-> 	{ .compatible = "fsl,imx6q-flexcan", .data = &fsl_imx6q_devtype_data, },
-> 	{ /* sentinel */ },
-> };
+It adds a new at91 wdt type: software. This new type make use of the at91 wdt
+interrupt to trigger a software reboot.
 
-The "p1010" was the first Freescale SoC with the flexcan core. But this SoC has
-a bug, so a workaround has to be enabled in the driver. The mx28 has this bug
-fixed, so we don't need this quite costly workaround.
+Finally it adds several properties to the device tree bindings.
 
-The __of_match_node() will compare:
+Best Regards,
+Boris
 
-    from  of_device_id		from device
-    fsl,p1010-flexcan		fsl,imx28-flexcan
-    fsl,p1010-flexcan		fsl,p1010-flexcan	-> MATCH
+Changes since v3:
+ - fix a bug in heartbeat time computation
+ - fix a bug in at91_wdt_set_timeout when new timeout is bigger than the old
+   one
+ - rename at91_wdt_ping into at91_wdt_start
+ - remove unneeded ping callback assignment
 
-The of_match_device() function as it currently is implemented will always
-return p1010 not the mx28.
+Changes since v2:
+ - fix documentation
+ - rework the heartbeat computation to get a more flexible behaviour
+ - fix xx_to_yy macros
+ - modify warning and error messages
+ - remove unneeded parenthesis in arithmetic operations
+ - use devm functions to map io memory
+ - remove unneeded devm_kfree calls
 
-This patch fixes the problem by exchanging outer and inner loop. The first
-compatible of a device is compared against all compatible from the of_device_id
-list, then the second device compatible and so on.
+Change since v1:
+ - fix typo in documentaion
+ - fix irq dt definition for sama5d3 SoC
 
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
----
- drivers/of/base.c | 40 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 35 insertions(+), 5 deletions(-)
+Boris BREZILLON (4):
+  watchdog: at91sam9_wdt: better watchdog support
+  watchdog: at91sam9_wdt: update device tree doc
+  ARM: at91/dt: add sam9 watchdog default options to SoCs
+  ARM: at91/dt: add watchdog properties to kizbox board
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 865d3f6..5bff2fe 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -349,6 +349,35 @@ static int __of_device_is_compatible(const struct device_node *device,
- 	return 0;
- }
- 
-+/** Returns the specific of_device_id, if the it matches one of the
-+ * strings in the device's "compatible" property
-+ */
-+static
-+const struct of_device_id *__of_device_matches_compatible(const struct device_node *device,
-+							  const struct of_device_id *matches)
-+{
-+	const struct of_device_id *m;
-+	const char* cp;
-+	int cplen, l;
-+
-+	cp = __of_get_property(device, "compatible", &cplen);
-+	if (cp == NULL)
-+		return NULL;
-+	while (cplen > 0) {
-+		m = matches;
-+		while (m->compatible[0]) {
-+			if (of_compat_cmp(cp, m->compatible, strlen(m->compatible)) == 0)
-+				return m;
-+			m++;
-+		}
-+		l = strlen(cp) + 1;
-+		cp += l;
-+		cplen -= l;
-+	}
-+
-+	return NULL;
-+}
-+
- /** Checks if the given "compat" string matches one of the strings in
-  * the device's "compatible" property
-  */
-@@ -717,22 +746,23 @@ const struct of_device_id *__of_match_node(const struct of_device_id *matches,
- {
- 	if (!matches)
- 		return NULL;
--
--	while (matches->name[0] || matches->type[0] || matches->compatible[0]) {
-+	while (matches->name[0] || matches->type[0]) {
- 		int match = 1;
-+
- 		if (matches->name[0])
- 			match &= node->name
- 				&& !strcmp(matches->name, node->name);
- 		if (matches->type[0])
- 			match &= node->type
- 				&& !strcmp(matches->type, node->type);
--		if (matches->compatible[0])
--			match &= __of_device_is_compatible(node,
--							   matches->compatible);
- 		if (match)
- 			return matches;
- 		matches++;
- 	}
-+
-+	if (matches->compatible[0])
-+		return __of_device_matches_compatible(node, matches);
-+
- 	return NULL;
- }
- 
+ .../devicetree/bindings/watchdog/atmel-wdt.txt     |   30 +-
+ arch/arm/boot/dts/at91sam9260.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9263.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9n12.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |    5 +
+ arch/arm/boot/dts/kizbox.dts                       |    6 +
+ arch/arm/boot/dts/sama5d3.dtsi                     |    5 +
+ drivers/watchdog/at91sam9_wdt.c                    |  305 ++++++++++++++------
+ 9 files changed, 285 insertions(+), 86 deletions(-)
+
 -- 
-1.8.4.rc3
+1.7.9.5
+
