@@ -1,181 +1,121 @@
-From: Chander Kashyap <chander.kashyap@linaro.org>
-Subject: Re: [PATCH 5/6] ARM: EXYNOS: Minor fixes to enable EXYNOS5410 support
-Date: Thu, 3 Oct 2013 11:46:39 +0530
-Message-ID: <CANuQgHGd=YkGZ4peimcmq53SHBah7DNRD6HK4_M-rYFqu8GaaA@mail.gmail.com>
-References: <1380644227-12244-1-git-send-email-v.tyrtov@samsung.com>
-	<1380644227-12244-6-git-send-email-v.tyrtov@samsung.com>
-	<2780639.2cMZyXdSOA@flatron>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [RFC 00/15] Device Tree schemas and validation
+Date: Thu, 03 Oct 2013 08:52:13 +0200
+Message-ID: <524D141D.3020807@baylibre.com>
+References: <1380041541-17529-1-git-send-email-bcousson@baylibre.com> <524A8289.3050107@baylibre.com> <524ACB76.1010001@gmail.com> <524AE4FB.4080906@baylibre.com> <CAL_JsqJ31TGFJCSeSOqgee=OLVfSUTAYdF4nSn7X2DiCequVAw@mail.gmail.com> <20131002135450.GH6506@voom.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2780639.2cMZyXdSOA@flatron>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Vyacheslav Tyrtov <v.tyrtov@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Naour Romain <romain.naour@openwide.fr>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Tarek Dakhran <t.dakhran@samsu>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131002135450.GH6506@voom.fritz.box>
+Sender: linux-omap-owner@vger.kernel.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Kevin Hilman <khilman@linaro.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, fparent@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On 3 October 2013 02:37, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Vyacheslav, Tarek,
->
-> On Tuesday 01 of October 2013 20:17:06 Vyacheslav Tyrtov wrote:
->> From: Tarek Dakhran <t.dakhran@samsung.com>
+On 02/10/2013 15:54, David Gibson wrote:
+> On Tue, Oct 01, 2013 at 03:54:20PM -0500, Rob Herring wrote:
+>> On Tue, Oct 1, 2013 at 10:06 AM, Benoit Cousson <bcousson@baylibre.com> wrote:
+>>> Hi Rob,
+>>>
+>>>
+>>> On 01/10/2013 15:17, Rob Herring wrote:
+>>>>
+>>>> On 10/01/2013 03:06 AM, Benoit Cousson wrote:
+>>>>>
+>>>>> + more DT maintainers folks
+>>>>>
+>>>>> Hi all,
+>>>>>
+>>>>> I know this is mostly boring user space code, but I was expecting a
+>>>>> little bit of comments about at least the bindings syntax:-(
+>>>>>
+>>>>> I'd like to know if this is the right direction and if it worth pursuing
+>>>>> in that direction.
+>>>>>
+>>>>> The idea was to have at least some base for further discussion during
+>>>>> ARM KS 2013.
+>>>>>
+>>>>> I feel alone :-(
+>>>>>
+>>>>> If you have any comment, go ahead!
+>>>>
+>>>>
+>>>> Thanks for taking this on!
+>>>>
+>>>> This is interesting approach using the dts syntax,
+>>>
+>>>
+>>> Well, this was discussed a little bit on the list, and it has the big
+>>> advantage of re-using the parser already included in DTC for free.
+>>> In term or readability, it avoids to re-defining a brand new syntax for
+>>> people who are already familiar with the DTS one.
+>>>
+>>>
+>>>> but I worry that the
+>>>> validation will only be as good as the schema written and the review of
+>>>> the schema.
+>>>
+>>>
+>>> Well, sure, but unfortunately, that will always be the case :-(
+>>> The bindings definition being quite open, there is no easy way to ensure
+>>> proper schema / bindings without careful review of the schema. There is no
+>>> such thing as a free beer... Unfortunately :-)
+>>>
+>>>
+>>>> I think the schema needs to define the binding rather than
+>>>> define the checks. Then the schema can feed the validation checks.
+>>>
+>>>
+>>>> This format does not seem to me as easily being able to generate
+>>>> documentation from the schema which I believe is one of the goals.
+>>>
+>>>
+>>> Indeed, but I think is it easy to generate any kind of readable format for
+>>> the documentation purpose if needed from the actual format.
+>>> Otherwise, we should consider a schema format based on kerneldoc type of
+>>> syntax to improve readability. I'm just afraid it will become harder then to
+>>> define complex schema.
+>>>
+>>> BTW, what kind of documentation are you expecting here? Is is a text that
+>>> can be added on top of each schema?
 >>
->> Configure ARM_NR_BANKS as 16 for EXYNOS SoC.
->> Enable cci_control_port_by_index for ACE_PORT.
->> Add additional irqs for Exynos MCT.
->> Set irq base as 256 for EXYNOS5410 SoC.
->>
->> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
->> ---
->>  arch/arm/Kconfig                  |  2 +-
->>  drivers/bus/arm-cci.c             |  7 +++++++
->>  drivers/clocksource/exynos_mct.c  |  8 +++++++-
->>  drivers/irqchip/exynos-combiner.c | 12 +++++++++++-
->>  4 files changed, 26 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> index 3f7714d..7f88896 100644
->> --- a/arch/arm/Kconfig
->> +++ b/arch/arm/Kconfig
->> @@ -1080,7 +1080,7 @@ source arch/arm/mm/Kconfig
->>
->>  config ARM_NR_BANKS
->>       int
->> -     default 16 if ARCH_EP93XX
->> +     default 16 if ARCH_EP93XX || ARCH_EXYNOS
+>> I would expect the schema to replace
+>> Documentation/devicetree/bindings/* over time. I think the thing that
+>> needs to be worked out here is how to add free form multi-line text.
 >
-> Could you explain why this is needed, please?
+> I'm not convinced that's a realistic goal.  As I see it, the
+> fundamental difference between a binding document and a formal schema
+> is that a binding defines both the syntax required of a node, and its
+> semantics, whereas a schema defines only syntax - the semantics still
+> need to be defined somewhere.
 >
->>       default 8
->>
->>  config IWMMXT
->> diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
->> index 2009266..f2f5df1 100644
->> --- a/drivers/bus/arm-cci.c
->> +++ b/drivers/bus/arm-cci.c
->> @@ -363,8 +363,15 @@ int notrace __cci_control_port_by_index(u32 port,
->> bool enable) * interface (ie cci_disable_port_by_cpu(); control by
->> general purpose * indexing is therefore disabled for ACE ports.
->>        */
->> +
->> +     /*
->> +      * Using this way to enable cci_port on EXYNOS5410 SoC
->> +      */
->> +
->> +#ifndef CONFIG_SOC_EXYNOS5410
->>       if (ports[port].type == ACE_PORT)
->>               return -EPERM;
->> +#endif
->
-> Huh? Could you explain a) why this is needed b) why this can't be detected
-> at runtime? Any new code being added must be ready for multiplatform
-> builds and this clearly isn't.
->
-> I'd recommend extending the CCI binding with a boolean property that makes
-> the driver bypass this check, but I'd like to see an answer to question a)
-> first.
->
->>
->>       cci_port_control(port, enable);
->>       return 0;
->> diff --git a/drivers/clocksource/exynos_mct.c
->> b/drivers/clocksource/exynos_mct.c index 5b34768..33884d7 100644
->> --- a/drivers/clocksource/exynos_mct.c
->> +++ b/drivers/clocksource/exynos_mct.c
->> @@ -71,6 +71,12 @@ enum {
->>       MCT_L1_IRQ,
->>       MCT_L2_IRQ,
->>       MCT_L3_IRQ,
 
->> +#ifdef CONFIG_ARM_CCI
->> +     MCT_L4_IRQ,
->> +     MCT_L5_IRQ,
->> +     MCT_L6_IRQ,
->> +     MCT_L7_IRQ,
->> +#endif
+Mmm, I do not really understand what is missing in the following schema 
+in term of semantic compared to the original interrupt-controller bindings?
 
-The above change is not required as patches are already submitted to
-boot all eight cores, which include this change also.
+     interrupt-controller {
+         description = "Identifies the node as an interrupt controller";
+         is-required;
+         type = "bool";
+     };
 
->
-> This #ifdef is useless.
->
-> Basically this whole enum is, as it is a remnant of legacy non-DT support,
-> but it is a material for separate patch.
->
->>       MCT_NR_IRQS,
->>  };
->>
->> @@ -406,7 +412,7 @@ static int exynos4_local_timer_setup(struct
->> clock_event_device *evt) mevt = container_of(evt, struct
->> mct_clock_event_device, evt);
->>
->>       mevt->base = EXYNOS4_MCT_L_BASE(cpu);
->> -     sprintf(mevt->name, "mct_tick%d", cpu);
->> +     snprintf(mevt->name, 10, "mct_tick%d", cpu);
->
-> Is this really necessary to enable EXYNOS5410 support?
->
->>
->>       evt->name = mevt->name;
->>       evt->cpumask = cpumask_of(cpu);
->> diff --git a/drivers/irqchip/exynos-combiner.c
->> b/drivers/irqchip/exynos-combiner.c index 868ed40..2e056fc 100644
->> --- a/drivers/irqchip/exynos-combiner.c
->> +++ b/drivers/irqchip/exynos-combiner.c
->> @@ -18,6 +18,7 @@
->>  #include <linux/of_address.h>
->>  #include <linux/of_irq.h>
->>  #include <asm/mach/irq.h>
->> +#include <plat/cpu.h>
->>
->>  #include "irqchip.h"
->>
->> @@ -66,6 +67,11 @@ static void combiner_handle_cascade_irq(unsigned int
->> irq, struct irq_desc *desc) struct irq_chip *chip = irq_get_chip(irq);
->>       unsigned int cascade_irq, combiner_irq;
->>       unsigned long status;
->> +     if (unlikely(!chip || !chip_data)) {
->> +             printk_once(KERN_ALERT "%s: Chip not found for IRQ %d\n"
->> +                             , __func__, irq);
->> +             return;
->> +     }
->
-> What is the reason for this change?
->
->>
->>       chained_irq_enter(chip, desc);
->>
->> @@ -226,7 +232,11 @@ static int __init combiner_of_init(struct
->> device_node *np, * get their IRQ from DT, remove this in order to get
->> dynamic * allocation.
->>        */
->> -     irq_base = 160;
->> +
->> +     if (soc_is_exynos5410())
->> +             irq_base = 256;
->> +     else
->> +             irq_base = 160;
->>
->>       combiner_init(combiner_base, np, max_nr, irq_base);
->
-> There was a patch floating on the ML, possibly already merged, removing
-> static IRQ base assignment for combiner (which is a remnant of legacy non-
-> DT support) and moving the driver to normal linear IRQ domain. That patch
-> is what you need instead of this change.
+     #interrupt-cells {
+         description = "Specifies the number of cells needed to encode an
+                        interrupt source. The type shall be a <u32>
+                        and the value shall be 1.
+                        The cell contains the interrupt number
+                        in the range [0-128].";
+         is-required;
+         type = "integer";
+         value = <1>;
+     };
 
-That's right Tomasz. Patch is already merged.
->
-> Best regards,
-> Tomasz
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As soon as you have a description you can keep the content of the 
+original binding. But on top of that, you do have the schema validation 
+information.
 
+I'm not sure to understand your point. Could you elaborate?
 
-
--- 
-with warm regards,
-Chander Kashyap
+Regards,
+Benoit
