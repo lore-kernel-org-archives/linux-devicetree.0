@@ -1,79 +1,226 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v7 09/10] usb: dwc3: omap: manage "usb_otg_ss_refclk960m"
- clock
-Date: Thu, 3 Oct 2013 07:29:41 -0500
-Message-ID: <20131003122941.GD3230@radagast>
-References: <1379508542-22389-1-git-send-email-rogerq@ti.com>
- <1379508542-22389-10-git-send-email-rogerq@ti.com>
- <52403E02.4070208@ti.com>
- <20131002131113.GM1476@radagast>
- <524C22A1.30200@ti.com>
-Reply-To: <balbi@ti.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2 1/5] PM / OPP: extend DT binding to specify phandle
+ of another node for OPP
+Date: Thu, 3 Oct 2013 07:40:03 -0500
+Message-ID: <524D65A3.5090906@ti.com>
+References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1380634382-15609-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="47eKBCiAZYFK5l32"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <524C22A1.30200@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: balbi@ti.com, bcousson@baylibre.com, tony@atomide.com, george.cherian@ti.com, kishon@ti.com, bigeasy@linutronix.de, sergei.shtylyov@cogentembedded.com, thomas.langer@lantiq.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1380634382-15609-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>
 List-Id: devicetree@vger.kernel.org
 
---47eKBCiAZYFK5l32
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/01/2013 08:32 AM, Sudeep KarkadaNagesha wrote:
+> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> 
+> If more than one similar devices share the same operating points(OPPs)
+> being in the same clock domain, currently we need to replicate the
+> OPP entries in all the nodes.
+> 
+> This patch extends existing binding by adding a new property named
+> 'operating-points-phandle' to specify the phandle in any device node
+> pointing to another node which contains the actual OPP tuples.
+> This helps to avoid replication if multiple devices share the OPPs.
+> 
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+> Cc: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> ---
+>  Documentation/devicetree/bindings/power/opp.txt | 161 ++++++++++++++++++++++--
+>  1 file changed, 149 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> index 74499e5..f59b878 100644
+> --- a/Documentation/devicetree/bindings/power/opp.txt
+> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> @@ -4,22 +4,159 @@ SoCs have a standard set of tuples consisting of frequency and
+>  voltage pairs that the device will support per voltage domain. These
+>  are called Operating Performance Points or OPPs.
+>  
+> -Properties:
+> +Required Properties:
+>  - operating-points: An array of 2-tuples items, and each item consists
+>    of frequency and voltage like <freq-kHz vol-uV>.
+>  	freq: clock frequency in kHz
+>  	vol: voltage in microvolt
+>  
+> +- operating-points-phandle: phandle to the device tree node which contains
+> +	the operating points tuples(recommended to be used if multiple
+> +	devices are in the same clock domain and hence share OPPs, as it
+> +	avoids replication of OPPs)
+> +
+> +  operating-points and operating-points-phandle are mutually exclusive, only
+> +  one of them can be present in any device node.
+> +
+>  Examples:
+>  
+> -cpu@0 {
+> -	compatible = "arm,cortex-a9";
+> -	reg = <0>;
+> -	next-level-cache = <&L2>;
+> -	operating-points = <
+> -		/* kHz    uV */
+> -		792000  1100000
+> -		396000  950000
+> -		198000  850000
+> -	>;
+> -};
+> +1. A uniprocessor system (phandle not required)
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <0>;
+> +		operating-points = <
+> +			/* kHz    uV */
+> +			792000  1100000
+> +			396000  950000
+> +			198000  850000
+> +		>;
+> +	};
+> +
+> +2a. Consider a SMP system with 4 CPUs in the same clock domain(no phandle)
+> +    Some existing DTs describe homogenous SMP systems by only listing the
+> +    OPPs in the cpu@0 node. For compatiblity with existing DTs, an
+> +    operating system may handle this case specially.
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <0>;
+> +		operating-points = <
+> +			/* kHz    uV */
+> +			792000  1100000
+> +			396000  950000
+> +			198000  850000
+> +		>;
+> +	};
+> +
+> +	cpu1: cpu@1 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <1>;
+> +	};
+> +
+> +	cpu2: cpu@2 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <2>;
+> +	};
+> +
+> +	cpu3: cpu@3 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <3>;
+> +	};
+> +
+> +2b. Consider a SMP system with 4 CPUs in the same clock domain(with phandle)
+> +    If more than one device of same type share the same OPPs, for example
+> +    all the CPUs on a SoC or in a single cluster on a SoC, then we can avoid
+> +    replicating the OPPs in all the nodes. We can specify the phandle of
+> +    the node which contains the OPP tuples instead.
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <0>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	cpu1: cpu@1 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <1>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	cpu2: cpu@2 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <2>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	cpu3: cpu@3 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <3>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	opps-table {
+> +		cpu_opp: cpu_opp {
+> +			operating-points = <
+> +				/* kHz    uV */
+> +				792000  1100000
+> +				396000  950000
+> +				198000  850000
+> +			>;
+> +		};
+> +		... /* other device OPP nodes */
+> +	}
+> +
+> +4. Consider an AMP(asymmetric multi-processor) sytem with 2 clusters of
+> +   CPUs. Each cluster has 2 CPUs and all the CPUs within the cluster share
+> +   the clock domain.
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a15";
+> +		reg = <0>;
+> +		operating-points-phandle = <&cluster0_opp>;
+> +	};
+> +
+> +	cpu1: cpu@1 {
+> +		compatible = "arm,cortex-a15";
+> +		reg = <1>;
+> +		operating-points-phandle = <&cluster0_opp>;
+> +	};
+> +
+> +	cpu2: cpu@100 {
+> +		compatible = "arm,cortex-a7";
+> +		reg = <100>;
+> +		operating-points-phandle = <&cluster1_opp>;
+> +	};
+> +
+> +	cpu3: cpu@101 {
+> +		compatible = "arm,cortex-a7";
+> +		reg = <101>;
+> +		operating-points-phandle = <&cluster1_opp>;
+> +	};
+> +
+> +	opps-table {
+> +		cluster0_opp: cluster0_opp {
+> +			operating-points = <
+> +				/* kHz    uV */
+> +				792000  1100000
+> +				396000  950000
+> +				198000  850000
+> +			>;
+> +		};
+Style comment - add an EOL
+> +		cluster1_opp: cluster1_opp {
+> +			operating-points = <
+> +				/* kHz    uV */
+> +				792000  950000
+> +				396000  750000
+> +				198000  450000
+> +			>;
+> +		};
+> +		... /* other device OPP nodes */
+> +	}
+> +
+> +Container Node
+> +--------------
+> +	- It's highly recommended to place all the shared OPPs under single
+> +	  node for consistency and better readability
+> +	- It's quite similar to clocks or pinmux container nodes
+> +	- In the above examples, "opps-table" is the container node
+> 
 
-Hi,
+in short, I love this - thanks for doing this.
 
-On Wed, Oct 02, 2013 at 04:41:53PM +0300, Roger Quadros wrote:
-> On 10/02/2013 04:11 PM, Felipe Balbi wrote:
-> > On Mon, Sep 23, 2013 at 04:11:30PM +0300, Roger Quadros wrote:
-> >> Hi Felipe,
-> >>
-> >> On 09/18/2013 03:49 PM, Roger Quadros wrote:
-> >>> "usb_otg_ss_refclk960m" is an optional functional clock to the
-> >>> UBS_OTG_SS module. So manage it in the driver.
-> >>>
-> >>
-> >> Just realized that "usb_otg_ss_refclk960m" is in fact functional clock=
- to the=20
-> >> PHY and not USB_OTG_SS module. The name is misleading.
-> >>
-> >> So please ignore patch 9 and 10.
-> >=20
-> > ignored. All others are fine, right ?
-> >=20
-> Yes. But I might have to rebase this on top of Phy framework stuff.
+However, could you squash this to patch #2 -> having implementation
+and binding together is better for git log history.
 
-alright, Greg already took the PHY framework, so maybe we need to just
-give him my Acked-by and he takes the patches directly as I don't have
-PYH framework.
-
---=20
-balbi
-
---47eKBCiAZYFK5l32
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSTWM1AAoJEIaOsuA1yqREMUgQAIviVIGCPe+ngvEcQTJaBK6E
-FQJR50vbaNyTTKRhtn7O8dyHLfZvK82Z/U3n3OkSMicrkv80lljSRRk/3XqjITjs
-GLUCOVlrYifvRSN1ome/wDkpe4bLsu5OfpT0b5yPmU4FUo3pNt8DYdoWWDFaHJkG
-CrWs7MDRHYAz7VO/ZOTvR+jmWES+QeHtMxwwPDCabeXBjTTzeO5/hE5KN8Qg+bbe
-K+kY6d1RZlUq0rnmenwyFtICPvh9A/l7ehDJJSNcpmdg5BXfolKnqllnK3qcm/eF
-pbfEr/Lk9/ZhDZYo74JrCnoBtd91++DTrWxryi1SDQr5wGaG2AFRZQrXi1FN4XVU
-Ak6FtUrWmeyttM9JkC853SF9FeyxcAVtwL1iBK0WHgspAlo5664Uqp5lShU1U5lc
-XilOMUkjVELs9k31kH+rOtGbJRcQr+sZGPVgHb2qFSy5bilKTlOEXiGC6yUNpPtU
-fsY+F7antDA+cgyYAL/b7alLf/9vSLJY/2injHGh87ry5u2szGtL1qbU68RpTRAw
-7jJuss61cQLXJOn6Ym+5icl2l/Wp67Y559SuV7pNYDSw9pHR4zU2UoCGtoTD5A5r
-aWIkz8LVJPEsY8nNTWPLxUamrIG2fb1goTitbOPWDb8ojsLSdoFetmntzWdfLwWB
-bF1/XQBtFfz+WePXUeWX
-=dkxk
------END PGP SIGNATURE-----
-
---47eKBCiAZYFK5l32--
+-- 
+Regards,
+Nishanth Menon
