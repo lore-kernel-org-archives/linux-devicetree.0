@@ -1,79 +1,63 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH v2 0/9] ARM: dts: DT data for OMAP platforms for v3.13
-Date: Thu, 03 Oct 2013 15:25:12 +0200
-Message-ID: <524D7038.9070303@baylibre.com>
-References: <1380553986-15910-1-git-send-email-joelf@ti.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH 0/6] thermal: exynos: Fixes for v3.12
+Date: Thu, 03 Oct 2013 15:29:47 +0200
+Message-ID: <20131003152947.7c39a16b@amdc308.digital.local>
+References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1380553986-15910-1-git-send-email-joelf@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Joel Fernandes <joelf@ti.com>
-Cc: Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <eduardo.valentin@ti.com>, Amit Daniel Kachhap <amit.daniel@samsung.com>
+Cc: Lukasz Majewski <l.majewski@samsung.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Linux PM list <linux-pm@vger.kernel.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-+ DT list and DT maintainers.
+Dear All,
 
-Hi Joel,
+> This patch series is divided into two parts:
+> 1. Device tree node definition and enabelement for TMU at Exynos4412
+> (Trats2) 2. Exynos thermal subsystem regressions for v3.12-rc1.
+> Several commits were necessary to properly fix regression for TMU
+> test MUX address setting after reset.
 
-Thanks for the update. It looks good to me.
+Zhang or Eduardo - will you find time to review those changes?
+They have already been reviewed by Amit.
 
-For the new bindings added below;
+Now we have -rc3 and there is no feedback for regression/critical
+patches (posted for -rc1).
 
- >   .../devicetree/bindings/crypto/omap-aes.txt        | 34 ++++++++++
- >   .../devicetree/bindings/crypto/omap-sham.txt       | 31 +++++++++
+> 
+> Test HW:
+> - Exynos4412 - TRATS2 board (Linux v3.12-rc1)
+> 
+> Lukasz Majewski (6):
+>   thermal: exynos: fix: Return from exynos_report_trigger() when
+>     therm_dev is NULL
+>   thermal: exynos: Provide separate TMU data for Exynos4412
+>   thermal: exynos: Provide initial setting for TMU's test MUX address
+>     at Exynos4412
+>   thermal: exynos: Replace SOC_ARCH_EXYNOS with SOC_ARCH_EXYNOS5250
+>   ARM: dts: exynos4x12: Device tree node definition for TMU on
+>     Exynos4x12
+>   ARM: dts: exynos4412-trats2: Enable TMU support at Trats2
+> 
+>  arch/arm/boot/dts/exynos4412-trats2.dts         |    5 +++++
+>  arch/arm/boot/dts/exynos4x12.dtsi               |   10 +++++++++
+>  drivers/thermal/samsung/exynos_thermal_common.c |    2 +-
+>  drivers/thermal/samsung/exynos_tmu.c            |   12 +++++++----
+>  drivers/thermal/samsung/exynos_tmu.h            |    3 ++-
+>  drivers/thermal/samsung/exynos_tmu_data.c       |   26
+> +++++++++++++++++------
+> drivers/thermal/samsung/exynos_tmu_data.h       |   13 +++++++++++- 7
+> files changed, 58 insertions(+), 13 deletions(-)
+> 
 
-I will need the acked-by from one of the DT maintainers.
 
-Regards,
-Benoit
 
-On 30/09/2013 17:12, Joel Fernandes wrote:
-> Following series is a collection of dts patches for the below features:
-> crypto:
->   aes, sha on am335x
->   aes, des on am437x
->   aes, des on omap4
-> display:
->    beaglebone black HDMI
->    am335x-evm panel
->
-> Series is based on Benoit Cousson's for_3.13/dts branch (commit sha 45646cd)
-> Available at: git@github.com:joelagnel/linux-kernel.git (branch for-benoit)
->
-> v2 changes:
->   - Fixed hex capitalization
->   - Dropped interrupt-parent property and use macros
->
-> Benoit Parrot (1):
->    ARM: dts: AM33XX: Add LCDC info into am335x-evm
->
-> Darren Etheridge (1):
->    dts: boneblack: add pinmux and hdmi node to enable display
->
-> Joel Fernandes (5):
->    omap4: dts: Add node for AES
->    omap4: dts: Add node for DES3DES module
->    am33xx: dts: Fix AES interrupt number
->    ARM: am437x: dts: Add AES node for am437x
->    ARM: am437x: dts: Add DES node for am437x
->
-> Mark A. Greer (2):
->    ARM: dts: Add SHAM data and documentation for AM33XX
->    ARM: dts: Add AES data and documentation for AM33XX
->
->   .../devicetree/bindings/crypto/omap-aes.txt        | 34 ++++++++++
->   .../devicetree/bindings/crypto/omap-sham.txt       | 31 +++++++++
->   arch/arm/boot/dts/am335x-bone.dts                  |  8 +++
->   arch/arm/boot/dts/am335x-boneblack.dts             | 48 +++++++++++++
->   arch/arm/boot/dts/am335x-evm.dts                   | 79 ++++++++++++++++++++++
->   arch/arm/boot/dts/am335x-evmsk.dts                 |  8 +++
->   arch/arm/boot/dts/am33xx.dtsi                      | 28 ++++++++
->   arch/arm/boot/dts/am4372.dtsi                      | 14 ++++
->   arch/arm/boot/dts/omap4.dtsi                       | 18 +++++
->   9 files changed, 268 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/crypto/omap-aes.txt
->   create mode 100644 Documentation/devicetree/bindings/crypto/omap-sham.txt
->
+-- 
+Best regards,
 
+Lukasz Majewski
+
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
