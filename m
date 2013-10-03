@@ -1,55 +1,39 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 2/6] serial8250-em: convert to clk_prepare/unprepare
-Date: Thu, 3 Oct 2013 11:30:42 +0900
-Message-ID: <20131003023042.GB27371@verge.net.au>
-References: <4895580.Leadr2OAf1@avalon>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 03/10] ARM: OMAP2+: omap-usb-host: Get rid of
+ platform_data from struct usbhs_phy_data
+Date: Wed, 2 Oct 2013 21:03:12 -0700
+Message-ID: <20131003040311.GH8949@atomide.com>
+References: <1380012836-29900-1-git-send-email-rogerq@ti.com>
+ <1380012836-29900-4-git-send-email-rogerq@ti.com>
+ <524BF332.4080303@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4895580.Leadr2OAf1@avalon>
- <20130924134113.GA7246-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, Shinya Kuribayashi <shinya.kuribayashi.px-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Mundt <lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <524BF332.4080303@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: balbi@ti.com, bcousson@baylibre.com, p.zabel@pengutronix.de, broonie@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2013 at 06:41:13AM -0700, Greg Kroah-Hartman wrote:
-> On Tue, Sep 24, 2013 at 01:44:32PM +0900, Simon Horman wrote:
-> > [ CCed Greg Kroah-Hartman, the serial maintainer for his review ]
+* Roger Quadros <rogerq@ti.com> [131002 03:27]:
+> Hi Tony,
+> 
+> On 09/24/2013 11:53 AM, Roger Quadros wrote:
+> > The platform data bits can be inferred from the other members of
+> > struct usbhs_phy_data. So get rid of the platform_data member.
 > > 
-> > On Tue, Sep 24, 2013 at 01:10:39PM +0900, takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org wrote:
-> > > From: Shinya Kuribayashi <shinya.kuribayashi.px-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> > > 
-> > > Add calls to clk_prepare and unprepare so that EMMA Mobile EV2 can
-> > > migrate to the common clock framework.
-> > > 
-> > > Signed-off-by: Shinya Kuribayashi <shinya.kuribayashi.px-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> > > [takashi.yoshii.ze-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org: edited for conflicts]
-> > > Signed-off-by: Takashi Yoshii <takashi.yoshii.zj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> > Build the platform data for the PHY device in usbhs_init_phys() instead.
+> > 
+> > Signed-off-by: Roger Quadros <rogerq@ti.com>
 > 
-> Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> 
+> Could you please Ack this if OK?
 
-On Mon, Sep 30, 2013 at 05:25:40PM +0200, Laurent Pinchart wrote:
-> Hi Yoshii-san,
-> 
-> Thank you for the patch.
-> 
-> On Tuesday 24 September 2013 13:10:39 takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org wrote:
-> > From: Shinya Kuribayashi <shinya.kuribayashi.px-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> > 
-> > Add calls to clk_prepare and unprepare so that EMMA Mobile EV2 can
-> > migrate to the common clock framework.
-> > 
-> > Signed-off-by: Shinya Kuribayashi <shinya.kuribayashi.px-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> > [takashi.yoshii.ze-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org: edited for conflicts]
-> > Signed-off-by: Takashi Yoshii <takashi.yoshii.zj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> 
-> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+This should be OK for you guys to queue. You should coordinate
+the .dts changes with Benoit though. It might be best to have
+this branch as an immutable branch against -rc3 that we can
+all merge in as needed.
 
-Thanks, I have queued this up in the serial branch of the renesas tree.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For this patch:
+
+Acked-by: Tony Lindgren <tony@atomide.com>
