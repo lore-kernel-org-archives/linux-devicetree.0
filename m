@@ -1,52 +1,34 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] clk: palmas: add clock driver for palmas
-Date: Fri, 4 Oct 2013 17:41:39 +0100
-Message-ID: <20131004164139.GR27287@sirena.org.uk>
-References: <1380803407-15196-1-git-send-email-ldewangan@nvidia.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: new cpu iteration code...
+Date: Fri, 04 Oct 2013 13:29:41 -0400 (EDT)
+Message-ID: <20131004.132941.1017308214868848075.davem@davemloft.net>
+References: <CACxGe6soxNN6TjDw9h15c39FHzyGzY1OZX9cZ8FRQ_k4PinYvw@mail.gmail.com>
+	<20131003.172451.54508059414505899.davem@davemloft.net>
+	<CACxGe6u+L1JBg+1XAmLtxC+CdW1Uo39r8=czQxij0bPai6XO-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mFWIsQnH1d6uRhsN"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1380803407-15196-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: mturquette@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, rob@landley.net, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6u+L1JBg+1XAmLtxC+CdW1Uo39r8=czQxij0bPai6XO-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Fri, 4 Oct 2013 11:27:48 +0100
 
---mFWIsQnH1d6uRhsN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Thu, Oct 3, 2013 at 10:24 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
+>>
+>> Can people on powerpc/arm/etc. give this a spin?  This works on my
+>> T4-2 sparc64 box.
+> 
+> The code looks fine. I'll give it a spin on ARM. I'm assuming that
+> this can wait for v3.13 if I commit the fix to suppress the warning,
+> correct?
 
-On Thu, Oct 03, 2013 at 06:00:07PM +0530, Laxman Dewangan wrote:
-
-> +	Optional subnode properties:
-> +	ti,clock-boot-enable: Enable clock at the time of booting.
-
-Shouldn't this be a generic clock subsystem thing?  It seems like
-something that might be desired for nearly any clock.
-
---mFWIsQnH1d6uRhsN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.21 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSTu+/AAoJELSic+t+oim9az0P/20MerOyWxGDPAZfT30L2CyO
-B4iLKyxbxfZ8q3lodmC9jRVCysbCRHbKBXRn/DGYOeK+ig/3lv8Persc79uKWI8s
-G4TvJiXuQpVwQRyXnjUpW/bCGu7h2Syesv1Q0Joxa3MhegQyGVG7YNfkKxHaISzF
-MS2P8LLumzkYEaJnZs4o4k9dqmsPZdzgKextmYVzXMfQFT49Uv91sHdjxbfiXNZf
-wU/oeb4F7Ieko4+FPwyJfPIeUeVGpnMzmB++jkIl2bw5qpHRfCLB6WxBbppjV/G6
-5Ic37Cj3LLeZECE3Ap9YRuCgteqOn61c2jcBf4vGj0xWp2uLcoCt8J+WyMSSMLJ+
-WX1siXg1myLLDXePnosGdCryv7xG8SbNEN9yffwOcgtCUHL3jfBAS03wrqC438HX
-xgli7O48w2SidYRZY0D7DoGIzkNFaCc7VcZZosUnX9WFHSpv8xRBw2sut3pfLERS
-cVu1aGB7DN0wvTLMLg+jqikXmSwVZt4y4nzX8WIaRTfw8m0I7JqYHhtyKMdVudVz
-UkF8FhSg6oY/+7xIhVAO2Dhu5ngTxw4hn8VrK8ktxbqAhAMdLlA/Zu8vlqE+lM9m
-C55TeACVk6+4GQA5VDT8wYY+TNz7gJcm2ws7v/ptbuAoTWnM0/u4SGXwnhlrBeep
-OHsjtECxnqomP2ydqg0G
-=ZSv7
------END PGP SIGNATURE-----
-
---mFWIsQnH1d6uRhsN--
+I'd rather a new piece of generic code be implemented properly.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
