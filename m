@@ -1,31 +1,113 @@
 From: Mike Turquette <mturquette@linaro.org>
 Subject: Re: [PATCH] clk: palmas: add clock driver for palmas
-Date: Fri, 04 Oct 2013 12:35:45 -0700
-Message-ID: <20131004193545.4343.15596@quantum>
+Date: Fri, 04 Oct 2013 12:35:17 -0700
+Message-ID: <20131004193517.4343.96145@quantum>
 References: <1380803407-15196-1-git-send-email-ldewangan@nvidia.com>
- <20131004164139.GR27287@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131004164139.GR27287@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, rob@landley.net, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1380803407-15196-1-git-send-email-ldewangan@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, broonie@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, Laxman Dewangan <ldewangan@nvidia.com>, rob@landley.net, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Mark Brown (2013-10-04 09:41:39)
-> On Thu, Oct 03, 2013 at 06:00:07PM +0530, Laxman Dewangan wrote:
-> 
-> > +     Optional subnode properties:
-> > +     ti,clock-boot-enable: Enable clock at the time of booting.
-> 
-> Shouldn't this be a generic clock subsystem thing?  It seems like
-> something that might be desired for nearly any clock.
+Quoting Laxman Dewangan (2013-10-03 05:30:07)
+> +static struct clk_ops palmas_clks_ops = {
+> +       .prepare        = palmas_clks_prepare,
+> +       .unprepare      = palmas_clks_unprepare,
+> +       .is_enabled     = palmas_clks_is_enabled,
 
-The best solution is to have a driver claim the clock with clk_get and
-enable it with clk_prepare_enable. I gave more detail in my reply to
-Laxman.
+Use .is_prepared if a call to clk_prepare for your clock will start
+generating a signal. No need for .is_enabled since you do not define
+your own .enable & .disable callbacks.
+
+> +};
+> +
+> +static struct clk_init_data palmas_clks_hw_init[PALMAS_CLOCK32K_NR] = {
+> +       [PALMAS_CLOCK32KG] = {
+> +               .name = "clk32k_kg",
+> +               .ops = &palmas_clks_ops,
+> +               .flags = CLK_IS_ROOT | CLK_IGNORE_UNUSED,
+> +       },
+> +       [PALMAS_CLOCK32KG_AUDIO] = {
+> +               .name = "clk32k_kg_audio",
+> +               .ops = &palmas_clks_ops,
+> +               .flags = CLK_IS_ROOT | CLK_IGNORE_UNUSED,
+> +       },
+> +};
+> +
+> +static int palmas_clks_get_clk_data(struct platform_device *pdev,
+> +       struct palmas_clks *palmas_clks)
+> +{
+> +       struct device_node *node = pdev->dev.of_node;
+> +       struct device_node *child;
+> +       struct palmas_clock_info *cinfo;
+> +       unsigned int prop;
+> +       int ret;
+> +       int i;
+> +
+> +       for (i = 0; i < PALMAS_CLOCK32K_NR; ++i) {
+> +               child = of_get_child_by_name(node,
+> +                               palmas_clk32k_descs[i].clk_name);
+> +               if (!child)
+> +                       continue;
+> +
+> +               cinfo = &palmas_clks->clk_info[i];
+> +               cinfo->boot_enable = of_property_read_bool(child,
+> +                                               "ti,clock-boot-enable");
+> +               ret = of_property_read_u32(child, "ti,external-sleep-control",
+> +                                       &prop);
+> +               if (!ret) {
+> +                       switch (prop) {
+> +                       case 1:
+> +                               prop = PALMAS_EXT_CONTROL_ENABLE1;
+> +                               break;
+> +                       case 2:
+> +                               prop = PALMAS_EXT_CONTROL_ENABLE2;
+> +                               break;
+> +                       case 3:
+> +                               prop = PALMAS_EXT_CONTROL_NSLEEP;
+> +                               break;
+> +                       default:
+> +                               WARN_ON(1);
+> +                               dev_warn(&pdev->dev,
+> +                                       "%s: Invalid ext control option: %u\n",
+> +                                       child->name, prop);
+> +                               prop = 0;
+> +                               break;
+> +                       }
+> +                       cinfo->ext_control_pin = prop;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int palmas_clks_init_configure(struct palmas_clock_info *cinfo)
+> +{
+> +       struct palmas_clks *palmas_clks = cinfo->palmas_clk;
+> +       int ret;
+> +       unsigned int val = 0;
+> +       unsigned int mask;
+> +
+> +       if (cinfo->boot_enable || cinfo->ext_control_pin)
+> +               val |= cinfo->clk_desc->enable_mask;
+
+So if the ti,clock-boot-enable property exists then a clock signal will
+be generated by palmas but the Linux clock tree representation won't
+know it. This is bad.
+
+Better to call clk_get and clk_prepare_enable here instead of cheating
+and directly writing to the register.
 
 Regards,
 Mike
