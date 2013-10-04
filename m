@@ -1,69 +1,39 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v7 09/10] usb: dwc3: omap: manage "usb_otg_ss_refclk960m"
- clock
-Date: Fri, 4 Oct 2013 06:23:29 -0700
-Message-ID: <20131004132329.GA25648@kroah.com>
-References: <1379508542-22389-1-git-send-email-rogerq@ti.com>
- <1379508542-22389-10-git-send-email-rogerq@ti.com>
- <52403E02.4070208@ti.com>
- <20131002131113.GM1476@radagast>
- <524C22A1.30200@ti.com>
- <20131003122941.GD3230@radagast>
- <524D8516.8000107@ti.com>
- <20131003154144.GA18189@kroah.com>
- <524E9C70.8050303@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: integrator: pass parent IRQ to the SIC
+Date: Fri,  4 Oct 2013 15:27:02 +0200
+Message-ID: <1380893222-7716-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <524E9C70.8050303-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 04, 2013 at 01:46:08PM +0300, Roger Quadros wrote:
-> Greg,
-> 
-> On 10/03/2013 06:41 PM, Greg KH wrote:
-> > On Thu, Oct 03, 2013 at 05:54:14PM +0300, Roger Quadros wrote:
-> >> On 10/03/2013 03:29 PM, Felipe Balbi wrote:
-> >>> Hi,
-> >>>
-> >>> On Wed, Oct 02, 2013 at 04:41:53PM +0300, Roger Quadros wrote:
-> >>>> On 10/02/2013 04:11 PM, Felipe Balbi wrote:
-> >>>>> On Mon, Sep 23, 2013 at 04:11:30PM +0300, Roger Quadros wrote:
-> >>>>>> Hi Felipe,
-> >>>>>>
-> >>>>>> On 09/18/2013 03:49 PM, Roger Quadros wrote:
-> >>>>>>> "usb_otg_ss_refclk960m" is an optional functional clock to the
-> >>>>>>> UBS_OTG_SS module. So manage it in the driver.
-> >>>>>>>
-> >>>>>>
-> >>>>>> Just realized that "usb_otg_ss_refclk960m" is in fact functional clock to the 
-> >>>>>> PHY and not USB_OTG_SS module. The name is misleading.
-> >>>>>>
-> >>>>>> So please ignore patch 9 and 10.
-> >>>>>
-> >>>>> ignored. All others are fine, right ?
-> >>>>>
-> >>>> Yes. But I might have to rebase this on top of Phy framework stuff.
-> >>>
-> >>> alright, Greg already took the PHY framework, so maybe we need to just
-> >>> give him my Acked-by and he takes the patches directly as I don't have
-> >>> PYH framework.
-> >>>
-> >> OK. I'll resend this series to Greg in a while.
-> > 
-> > It looks like you did, but forgot Felipe's ack :(
-> > 
-> I was under the impression that Felipe will explicitly give his Ack there.
-> Should I resend with his Acked-bys?
+The SIC is cascaded off the PIC, so specify this in the device tree.
 
-No need, I took the patches yesterday, you should have seen the
-automated emails, right?
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/integratorcp.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-greg k-h
+diff --git a/arch/arm/boot/dts/integratorcp.dts b/arch/arm/boot/dts/integratorcp.dts
+index ff1aea0..f0ab05f 100644
+--- a/arch/arm/boot/dts/integratorcp.dts
++++ b/arch/arm/boot/dts/integratorcp.dts
+@@ -48,8 +48,11 @@
+ 		valid-mask = <0x00000007>;
+ 	};
+ 
++	/* The SIC is cascaded off IRQ 26 on the PIC */
+ 	sic: sic@ca000000 {
+ 		compatible = "arm,versatile-fpga-irq";
++		interrupt-parent = <&pic>;
++		interrupts = <26>;
+ 		#interrupt-cells = <1>;
+ 		interrupt-controller;
+ 		reg = <0xca000000 0x100>;
+-- 
+1.8.3.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
