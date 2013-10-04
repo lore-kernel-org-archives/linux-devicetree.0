@@ -1,85 +1,93 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
-Date: Fri, 4 Oct 2013 18:34:39 +0300
-Message-ID: <524EE00F.7010208@ti.com>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: device tree binding documentation outdated
+Date: Fri, 4 Oct 2013 23:45:39 +0800
+Message-ID: <20131004154536.GB2734@S2101-09.ap.freescale.net>
+References: <20130927174916.GD12758@n2100.arm.linux.org.uk>
+ <CAHCPf3sC7bY=p4vpBQFpRUmyPspT_PVjx0rH9cm1ov=SqkO+Vg@mail.gmail.com>
+ <20130927190546.GG12758@n2100.arm.linux.org.uk>
+ <CAHCPf3vxGAzTnY360KC7Yt-DB1FB14Sv_Cn7DBTH6HGZ6y=stg@mail.gmail.com>
+ <CAHCPf3sv3wSbUc9QFVhmYsPc1kqiWYRuOMO7rreuiGSrwyepBQ@mail.gmail.com>
+ <20130927202110.GI12758@n2100.arm.linux.org.uk>
+ <20130928083859.GQ12758@n2100.arm.linux.org.uk>
+ <20130929061303.GB26156@S2101-09.ap.freescale.net>
+ <20131002193316.GR12758@n2100.arm.linux.org.uk>
+ <20131002234911.GD12758@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380098922-30340-1-git-send-email-t-kristo-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131002234911.GD12758-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Oct 03, 2013 at 12:49:11AM +0100, Russell King - ARM Linux wrote:
+> RGMII mode.
+> 
+> In current hardware, the phy has its own 25MHz crystal.  This provides
+> the phy with its clocks, and the phy itself contains a PLL, which it
+> uses to generate 125MHz.
+> 
+> The phy can be (and is) configured to generate this 125MHz clock on
+> the CLK_25M pin, which is connected to the IMX6 ENET_REF_CLK pad (V22
+> ball).
+> 
+> Hence, we have in DT:
+> 	MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK
+> 
+> So far, so good. 
+> 
+> 
+> On current hardware, GPIO 16 is not connected to anything except some
+> 0402 resistor pads where the resistor is not fitted.  On future hardware,
+> the above crystal will be removed, and the appropriate 0402 resistor
+> placed to supply a clock provided on GPIO 16 to the phy.
+> 
+> Hence, to support both hardware configurations transparently, GPIO 16
+> should be configured to generate a 25MHz clock for use by the phy.
 
-Just a gentle reminder, anybody have any comments on this series or 
-should we start queuing stuff?
+On AR8035 XTLI pin?  Here is what I read from AR8035 data sheet.
 
--Tero
+XTLI (Analog input signal): Crystal oscillator input. Requires a 27 pF
+capacitor to GND.  Support external 25 MHz, 1.2V swing clock input
+through this pin.
 
-On 09/25/2013 11:48 AM, Tero Kristo wrote:
-> Hi all,
->
-> Version 7 contains following high level changes:
-> - Dropped support for basic bindings from Mike Turquette, instead using
->    vendor specific bindings for all clocks
-> - Mux clock + divider clock vendor specific bindings get rid of use
->    of the bit-masks, instead these are generated runtime based on parent
->    clock / divider min/max info, see individual patches for details
-> - Added support for dummy_ck nodes, was missing from previous version
-> - Fixed support for omap3630
-> - Added support for new clock node type: ti,mux-gate-clock (using composite
->    clock type)
-> - OMAP4 / OMAP5 only build fixes (compiler flag checks added to some files)
-> - most of the of_omap_* calls renamed to of_ti_*
-> - Rebased on top of v3.12-rc2
->
-> Some detailed comments about patch level changes (if no mention, no major
-> changes):
-> - Patch #1:
->    * removed use of reg-names property, instead registers mapped using
->      compatible string
->    * removed ti,modes property, instead uses DPLL mode flags now
->    * separated AM33XX DPLLs under their own compatible strings
-> - Patch #4 & #5: new patches
-> - Patch #6: merged basic gate support from Mike to this patch as vendor
->    specific gate clock support
-> - Patch #9 & #10: new patches
-> - Patch #11: dummy clocks added, USB / ABE DPLL setup ordering changed
-> - Patch #14: dummy clocks added
-> - Patch #20: dropped usage of reg-names property
-> - Patch #21: dummy clocks added
-> - Patch #22 & #23: new patches
-> - Patch #30: AM35XX clock data added to this patch
-> - Patch #31:
->    * dummy clocks added
->    * added missing 3630 clocks
->
-> Test branch available here:
-> https://github.com/t-kristo/linux-pm.git
-> branch: mainline-3.12-rc2-ti-dt-clks-v7
->
-> Testing done:
-> - am335x-bone : boot only
-> - omap5-sevm : boot only
-> - dra7-evm : boot only
-> - omap3-beagle : boot + suspend/resume (ret + off)
-> - omap4-panda-es : boot + suspend/resume
->
-> Nishanth has also been doing some tests with omap3-beagle-xm with some WIP
-> versions of this branch, but not with this latest one. Nishanth, maybe you
-> can provide test results to this one also?
->
-> -Tero
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+XTLO (Analog output signal): Crystal oscillator output; 27 pF to GND.
+
+Will AR8035 just work if we provide a digital 25Mhz clock (from GPIO_16)
+on its XTLI pin?
+
+Shawn
+
+> This apparantly is done by configuring the PLL on the IMX6 to 25MHz and
+> getting it to output it on this pin, and that is done in the freescale
+> BSP by this pin control setting:
+> 
+> 	MX6DL_PAD_GPIO_16__ENET_ANATOP_ETHERNET_REF_OUT
+> 
+> Now, if you look up that in the 4.1.0 BSP:
+> 
+> #define MX6DL_PAD_GPIO_16__ENET_ANATOP_ETHERNET_REF_OUT                        \
+> 		IOMUX_PAD(0x05E4, 0x0214, 0x12, 0x080C, 0, NO_PAD_CTRL)
+> 
+> and that says to write 0x12 to 0x20e0000 + 0x214 - the
+> IOMUXC_SW_MUX_CTL_PAD_GPIO16 register.  This name clearly implies that
+> the IMX6 is _outputting_ the reference clock.  The register values here
+> selects MUX_MODE 2 (ENET_REF_CLK) _with_ SION set.  There is no
+> configuration in this BSP for GPIO 16 in mux mode 2 without SION set.
+> 
+> However, because we want this pad to produce a clock from the internal
+> PLL, GPR1 bit 21 has to be set.  Remember - the ENET_TX_CLK is configured
+> to come from the ENET_REF_CLK pad, not GPIO 16.
+> 
+> So, I contend that it _is_ valid to have both GPIO 16 SION set and GPR1
+> bit 21 set.
+> 
+> All in all, we don't want to clear GPR1 bit 21 ever on the Cubox-i SOM.
+> 
+> Whether SION should be set or not is another - separate - issue.  All
+> we really care about is getting GPIO 16 providing a 25MHz clock.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
