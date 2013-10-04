@@ -1,82 +1,52 @@
-From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: [PATCH v7 2/5] ARM: tegra: add support for Trusted Foundations
-Date: Fri, 4 Oct 2013 09:37:12 -0700
-Message-ID: <1380904635-18113-3-git-send-email-acourbot@nvidia.com>
-References: <1380904635-18113-1-git-send-email-acourbot@nvidia.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] clk: palmas: add clock driver for palmas
+Date: Fri, 4 Oct 2013 17:41:39 +0100
+Message-ID: <20131004164139.GR27287@sirena.org.uk>
+References: <1380803407-15196-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1380904635-18113-1-git-send-email-acourbot@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Dave Martin <Dave.Martin@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>
-Cc: gnurou@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mFWIsQnH1d6uRhsN"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1380803407-15196-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: mturquette@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, rob@landley.net, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Register the firmware operations for Trusted Foundations if the device
-tree indicates it is active on the device.
 
-Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
----
- Documentation/devicetree/bindings/arm/tegra.txt | 5 +++++
- arch/arm/mach-tegra/Kconfig                     | 1 +
- arch/arm/mach-tegra/common.c                    | 2 ++
- 3 files changed, 8 insertions(+)
+--mFWIsQnH1d6uRhsN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
-index ed9c853..8e51884 100644
---- a/Documentation/devicetree/bindings/arm/tegra.txt
-+++ b/Documentation/devicetree/bindings/arm/tegra.txt
-@@ -32,3 +32,8 @@ board-specific compatible values:
-   nvidia,whistler
-   toradex,colibri_t20-512
-   toradex,iris
-+
-+Trusted Foundations
-+-------------------------------------------
-+Tegra supports the Trusted Foundation secure monitor. See the
-+"tl,trusted-foundations" binding's documentation for more details.
-diff --git a/arch/arm/mach-tegra/Kconfig b/arch/arm/mach-tegra/Kconfig
-index 67a76f2..4e51278 100644
---- a/arch/arm/mach-tegra/Kconfig
-+++ b/arch/arm/mach-tegra/Kconfig
-@@ -2,6 +2,7 @@ config ARCH_TEGRA
- 	bool "NVIDIA Tegra" if ARCH_MULTI_V7
- 	select ARCH_HAS_CPUFREQ
- 	select ARCH_REQUIRE_GPIOLIB
-+	select ARCH_SUPPORTS_TRUSTED_FOUNDATIONS
- 	select ARM_GIC
- 	select CLKDEV_LOOKUP
- 	select CLKSRC_MMIO
-diff --git a/arch/arm/mach-tegra/common.c b/arch/arm/mach-tegra/common.c
-index 94a119a..b405e45 100644
---- a/arch/arm/mach-tegra/common.c
-+++ b/arch/arm/mach-tegra/common.c
-@@ -27,6 +27,7 @@
- #include <linux/clk-provider.h>
- 
- #include <asm/hardware/cache-l2x0.h>
-+#include <asm/trusted_foundations.h>
- 
- #include "board.h"
- #include "common.h"
-@@ -99,6 +100,7 @@ static void __init tegra_init_cache(void)
- 
- void __init tegra_init_early(void)
- {
-+	of_register_trusted_foundations();
- 	tegra_cpu_reset_handler_init();
- 	tegra_apb_io_init();
- 	tegra_init_fuse();
--- 
-1.8.4
+On Thu, Oct 03, 2013 at 06:00:07PM +0530, Laxman Dewangan wrote:
+
+> +	Optional subnode properties:
+> +	ti,clock-boot-enable: Enable clock at the time of booting.
+
+Shouldn't this be a generic clock subsystem thing?  It seems like
+something that might be desired for nearly any clock.
+
+--mFWIsQnH1d6uRhsN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.21 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSTu+/AAoJELSic+t+oim9az0P/20MerOyWxGDPAZfT30L2CyO
+B4iLKyxbxfZ8q3lodmC9jRVCysbCRHbKBXRn/DGYOeK+ig/3lv8Persc79uKWI8s
+G4TvJiXuQpVwQRyXnjUpW/bCGu7h2Syesv1Q0Joxa3MhegQyGVG7YNfkKxHaISzF
+MS2P8LLumzkYEaJnZs4o4k9dqmsPZdzgKextmYVzXMfQFT49Uv91sHdjxbfiXNZf
+wU/oeb4F7Ieko4+FPwyJfPIeUeVGpnMzmB++jkIl2bw5qpHRfCLB6WxBbppjV/G6
+5Ic37Cj3LLeZECE3Ap9YRuCgteqOn61c2jcBf4vGj0xWp2uLcoCt8J+WyMSSMLJ+
+WX1siXg1myLLDXePnosGdCryv7xG8SbNEN9yffwOcgtCUHL3jfBAS03wrqC438HX
+xgli7O48w2SidYRZY0D7DoGIzkNFaCc7VcZZosUnX9WFHSpv8xRBw2sut3pfLERS
+cVu1aGB7DN0wvTLMLg+jqikXmSwVZt4y4nzX8WIaRTfw8m0I7JqYHhtyKMdVudVz
+UkF8FhSg6oY/+7xIhVAO2Dhu5ngTxw4hn8VrK8ktxbqAhAMdLlA/Zu8vlqE+lM9m
+C55TeACVk6+4GQA5VDT8wYY+TNz7gJcm2ws7v/ptbuAoTWnM0/u4SGXwnhlrBeep
+OHsjtECxnqomP2ydqg0G
+=ZSv7
+-----END PGP SIGNATURE-----
+
+--mFWIsQnH1d6uRhsN--
