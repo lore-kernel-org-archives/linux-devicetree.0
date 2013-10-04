@@ -1,33 +1,37 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: new cpu iteration code...
-Date: Fri, 04 Oct 2013 13:29:41 -0400 (EDT)
-Message-ID: <20131004.132941.1017308214868848075.davem@davemloft.net>
-References: <CACxGe6soxNN6TjDw9h15c39FHzyGzY1OZX9cZ8FRQ_k4PinYvw@mail.gmail.com>
-	<20131003.172451.54508059414505899.davem@davemloft.net>
-	<CACxGe6u+L1JBg+1XAmLtxC+CdW1Uo39r8=czQxij0bPai6XO-Q@mail.gmail.com>
+From: Theodore Ts'o <tytso-3s7WtUTddSA@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add support for Qualcomm's PRNG
+Date: Fri, 4 Oct 2013 14:10:05 -0400
+Message-ID: <20131004181005.GA7022@thunk.org>
+References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com>
+ <20131003165130.GA11974@thunk.org>
+ <524EEB96.6040707@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6u+L1JBg+1XAmLtxC+CdW1Uo39r8=czQxij0bPai6XO-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <524EEB96.6040707-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-F6s6mLieUQo7FNHlEwC/lvQIK84fMopw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Fri, 4 Oct 2013 11:27:48 +0100
-
-> On Thu, Oct 3, 2013 at 10:24 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
->>
->> Can people on powerpc/arm/etc. give this a spin?  This works on my
->> T4-2 sparc64 box.
+On Fri, Oct 04, 2013 at 07:23:50PM +0300, Stanimir Varbanov wrote:
+> I guess that it should follow NIST 800-90 recommendation, but I'm not
+> aware what DRBG mechanism is used.
 > 
-> The code looks fine. I'll give it a spin on ARM. I'm assuming that
-> this can wait for v3.13 if I commit the fix to suppress the warning,
-> correct?
+> To be honest I really don't know the hardware implementation details. I
+> put PRNG abbreviation in the cover letter just because I saw that
+> defines for register offsets are prefixed with PRNG_*. I could rename
+> all occurrences of PRNG to RNG. Is that will be enough to avoid confusions?
 
-I'd rather a new piece of generic code be implemented properly.
+If that's what the Qualcomm documentation uses, maybe we should stick
+with it, and add some explanatory comments.  Is there any
+documentation for this block that is public that you can either send
+me a a pointer to?
+
+Thanks,
+
+					- Ted
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
