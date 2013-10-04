@@ -1,23 +1,27 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v5 3/4] ARM: at91/dt: add sam9 watchdog default options
- to SoCs
-Date: Fri, 4 Oct 2013 15:31:25 -0700
-Message-ID: <20131004223125.GC3685@roeck-us.net>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v5 4/4] ARM: at91/dt: add watchdog properties to kizbox
+ board
+Date: Fri, 4 Oct 2013 15:32:26 -0700
+Message-ID: <20131004223226.GD3685@roeck-us.net>
 References: <1380871455-7324-1-git-send-email-b.brezillon@overkiz.com>
- <1380871455-7324-4-git-send-email-b.brezillon@overkiz.com>
+ <1380871455-7324-5-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1380871455-7324-4-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Wim Van Sebroeck <wim@iguana.be>, Fabio Porcedda <fabio.porcedda@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Guenter Roeck <groeck7@gmail.com>, Yang Wenyou <wenyou.yang@atmel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org
+In-Reply-To: <1380871455-7324-5-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <groeck7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yang Wenyou <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 04, 2013 at 09:24:14AM +0200, Boris BREZILLON wrote:
-> Set default watchdog options in every SoC compatible with the sam9 watchdog.
+On Fri, Oct 04, 2013 at 09:24:15AM +0200, Boris BREZILLON wrote:
+> Add watchdog specific config for kizbox board.
 > 
-> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
