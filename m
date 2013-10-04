@@ -1,59 +1,94 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 09/10] usb: dwc3: omap: manage "usb_otg_ss_refclk960m"
- clock
-Date: Fri, 4 Oct 2013 13:46:08 +0300
-Message-ID: <524E9C70.8050303@ti.com>
-References: <1379508542-22389-1-git-send-email-rogerq@ti.com> <1379508542-22389-10-git-send-email-rogerq@ti.com> <52403E02.4070208@ti.com> <20131002131113.GM1476@radagast> <524C22A1.30200@ti.com> <20131003122941.GD3230@radagast> <524D8516.8000107@ti.com> <20131003154144.GA18189@kroah.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 4/6] thermal: exynos: Replace SOC_ARCH_EXYNOS with
+ SOC_ARCH_EXYNOS5250
+Date: Fri, 04 Oct 2013 12:47:19 +0200
+Message-ID: <2265935.YcHunKd7UC@amdc1032>
+References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
+ <524DEAED.4030905@ti.com> <20131004122330.47e21d24@amdc308.digital.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131003154144.GA18189-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20131004122330.47e21d24@amdc308.digital.local>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Zhang Rui <rui.zhang@intel.com>, Amit Daniel Kachhap <amit.daniel@samsung.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Linux PM list <linux-pm@vger.kernel.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Greg,
-
-On 10/03/2013 06:41 PM, Greg KH wrote:
-> On Thu, Oct 03, 2013 at 05:54:14PM +0300, Roger Quadros wrote:
->> On 10/03/2013 03:29 PM, Felipe Balbi wrote:
->>> Hi,
->>>
->>> On Wed, Oct 02, 2013 at 04:41:53PM +0300, Roger Quadros wrote:
->>>> On 10/02/2013 04:11 PM, Felipe Balbi wrote:
->>>>> On Mon, Sep 23, 2013 at 04:11:30PM +0300, Roger Quadros wrote:
->>>>>> Hi Felipe,
->>>>>>
->>>>>> On 09/18/2013 03:49 PM, Roger Quadros wrote:
->>>>>>> "usb_otg_ss_refclk960m" is an optional functional clock to the
->>>>>>> UBS_OTG_SS module. So manage it in the driver.
->>>>>>>
->>>>>>
->>>>>> Just realized that "usb_otg_ss_refclk960m" is in fact functional clock to the 
->>>>>> PHY and not USB_OTG_SS module. The name is misleading.
->>>>>>
->>>>>> So please ignore patch 9 and 10.
->>>>>
->>>>> ignored. All others are fine, right ?
->>>>>
->>>> Yes. But I might have to rebase this on top of Phy framework stuff.
->>>
->>> alright, Greg already took the PHY framework, so maybe we need to just
->>> give him my Acked-by and he takes the patches directly as I don't have
->>> PYH framework.
->>>
->> OK. I'll resend this series to Greg in a while.
+On Friday, October 04, 2013 12:23:30 PM Lukasz Majewski wrote:
+> Hi Eduardo,
 > 
-> It looks like you did, but forgot Felipe's ack :(
+> > On 24-09-2013 04:08, Lukasz Majewski wrote:
+> > > The TMU data definition is now separated to Exynos4412 and
+> > > Exynos5250.
+> > > 
+> > > Now SOC_ARCH_EXYNOS only refers to Exynos5250. Hence the name
+> > > SOC_ARCH_EXYNOS has been changed to SOC_ARCH_EXYNOS5250.
+> > > 
+> > 
+> > How about merging this one with patch 02?
 > 
-I was under the impression that Felipe will explicitly give his Ack there.
-Should I resend with his Acked-bys?
+> I wanted to show how the work was logically split - patch 02
+> extracts Exynos4412 from Exynos5250. Then this patch changes the name.
+> 
+> I will merge those two patches. No problem.
 
-cheers,
--roger
+Oh, well. Looking at the patch #2 again the merge can be done without
+sacrificing backportability.
+
+Best regards,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> > 
+> > > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> > > ---
+> > >  drivers/thermal/samsung/exynos_tmu.c      |    4 ++--
+> > >  drivers/thermal/samsung/exynos_tmu.h      |    2 +-
+> > >  drivers/thermal/samsung/exynos_tmu_data.c |    2 +-
+> > >  3 files changed, 4 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/thermal/samsung/exynos_tmu.c
+> > > b/drivers/thermal/samsung/exynos_tmu.c index 21b89e4..037cd46 100644
+> > > --- a/drivers/thermal/samsung/exynos_tmu.c
+> > > +++ b/drivers/thermal/samsung/exynos_tmu.c
+> > > @@ -632,9 +632,9 @@ static int exynos_tmu_probe(struct
+> > > platform_device *pdev) if (ret)
+> > >  		return ret;
+> > >  
+> > > -	if (pdata->type == SOC_ARCH_EXYNOS ||
+> > > -	    pdata->type == SOC_ARCH_EXYNOS4210 ||
+> > > +	if (pdata->type == SOC_ARCH_EXYNOS4210 ||
+> > >  	    pdata->type == SOC_ARCH_EXYNOS4412 ||
+> > > +	    pdata->type == SOC_ARCH_EXYNOS5250 ||
+> > >  	    pdata->type == SOC_ARCH_EXYNOS5440)
+> > >  		data->soc = pdata->type;
+> > >  	else {
+> > > diff --git a/drivers/thermal/samsung/exynos_tmu.h
+> > > b/drivers/thermal/samsung/exynos_tmu.h index db37df0..b42ece4 100644
+> > > --- a/drivers/thermal/samsung/exynos_tmu.h
+> > > +++ b/drivers/thermal/samsung/exynos_tmu.h
+> > > @@ -42,7 +42,7 @@ enum calibration_mode {
+> > >  enum soc_type {
+> > >  	SOC_ARCH_EXYNOS4210 = 1,
+> > >  	SOC_ARCH_EXYNOS4412,
+> > > -	SOC_ARCH_EXYNOS,
+> > > +	SOC_ARCH_EXYNOS5250,
+> > >  	SOC_ARCH_EXYNOS5440,
+> > >  };
+> > >  
+> > > diff --git a/drivers/thermal/samsung/exynos_tmu_data.c
+> > > b/drivers/thermal/samsung/exynos_tmu_data.c index bd08093..188223f
+> > > 100644 --- a/drivers/thermal/samsung/exynos_tmu_data.c
+> > > +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+> > > @@ -183,7 +183,7 @@ struct exynos_tmu_init_data const
+> > > exynos4412_default_tmu_data = { struct exynos_tmu_init_data const
+> > > exynos5250_default_tmu_data = { .tmu_data = {
+> > >  		{ EXYNOS4412_TMU_DATA,
+> > > -		.type = SOC_ARCH_EXYNOS,
+> > > +		.type = SOC_ARCH_EXYNOS5250,
+> > >  		},
+> > >  	},
+> > >  	.tmu_count = 1,
