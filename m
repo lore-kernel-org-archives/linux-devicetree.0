@@ -1,54 +1,58 @@
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 0/2] move of_find_next_cache_node to DT core
-Date: Fri, 04 Oct 2013 11:42:49 +0100
-Message-ID: <524E9BA9.4000506@arm.com>
-References: <1379501585-12532-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <20130918145116.D53A5C42CDF@trevor.secretlab.ca> <5239D26E.5090505@arm.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 09/10] usb: dwc3: omap: manage "usb_otg_ss_refclk960m"
+ clock
+Date: Fri, 4 Oct 2013 13:46:08 +0300
+Message-ID: <524E9C70.8050303@ti.com>
+References: <1379508542-22389-1-git-send-email-rogerq@ti.com> <1379508542-22389-10-git-send-email-rogerq@ti.com> <52403E02.4070208@ti.com> <20131002131113.GM1476@radagast> <524C22A1.30200@ti.com> <20131003122941.GD3230@radagast> <524D8516.8000107@ti.com> <20131003154144.GA18189@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5239D26E.5090505-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20131003154144.GA18189-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.langer-th3ZBGNqt+7QT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Greg,
 
-On 18/09/13 17:18, Sudeep KarkadaNagesha wrote:
-> On 18/09/13 15:51, Grant Likely wrote:
->> On Wed, 18 Sep 2013 11:53:03 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org> wrote:
->>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha-5wv7dgnIgG8@public.gmane.org>
->>>
+On 10/03/2013 06:41 PM, Greg KH wrote:
+> On Thu, Oct 03, 2013 at 05:54:14PM +0300, Roger Quadros wrote:
+>> On 10/03/2013 03:29 PM, Felipe Balbi wrote:
 >>> Hi,
 >>>
->>> The cache bindings are generic and used by many other architectures
->>> apart from PPC. These patches fixes and move the existing definition
->>> of of_find_next_cache_node to DT common code.
+>>> On Wed, Oct 02, 2013 at 04:41:53PM +0300, Roger Quadros wrote:
+>>>> On 10/02/2013 04:11 PM, Felipe Balbi wrote:
+>>>>> On Mon, Sep 23, 2013 at 04:11:30PM +0300, Roger Quadros wrote:
+>>>>>> Hi Felipe,
+>>>>>>
+>>>>>> On 09/18/2013 03:49 PM, Roger Quadros wrote:
+>>>>>>> "usb_otg_ss_refclk960m" is an optional functional clock to the
+>>>>>>> UBS_OTG_SS module. So manage it in the driver.
+>>>>>>>
+>>>>>>
+>>>>>> Just realized that "usb_otg_ss_refclk960m" is in fact functional clock to the 
+>>>>>> PHY and not USB_OTG_SS module. The name is misleading.
+>>>>>>
+>>>>>> So please ignore patch 9 and 10.
+>>>>>
+>>>>> ignored. All others are fine, right ?
+>>>>>
+>>>> Yes. But I might have to rebase this on top of Phy framework stuff.
 >>>
->>> Regards,
->>> Sudeep
->>
->> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>
->> However, do you have a user for this function on other architectures
->> yet? I'd like to see a user for the function in the same patch series..
->>
+>>> alright, Greg already took the PHY framework, so maybe we need to just
+>>> give him my Acked-by and he takes the patches directly as I don't have
+>>> PYH framework.
+>>>
+>> OK. I'll resend this series to Greg in a while.
 > 
-> Yes I have posted an RFC[1] following this series implementing cacheinfo
-> for ARM similar to x86 implementation. I was not sure if it's good idea
-> to combine it as its still initial RFC version.
+> It looks like you did, but forgot Felipe's ack :(
 > 
+I was under the impression that Felipe will explicitly give his Ack there.
+Should I resend with his Acked-bys?
 
-Do you prefer to have this a independent change or to go with the cache topology
-support patches[1] on ARM ?
-
-Regards,
-Sudeep
-
-[1] https://lkml.org/lkml/2013/9/18/340
-
-
+cheers,
+-roger
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
