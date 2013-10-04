@@ -1,67 +1,89 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/2] input: rotary-encoder: Add 'on-each-step' to
- binding documentation
-Date: Fri, 4 Oct 2013 14:19:56 +0100
-Message-ID: <20131004131956.GE6999@e106331-lin.cambridge.arm.com>
-References: <1380891203-17617-1-git-send-email-ezequiel@vanguardiasur.com.ar>
- <1380891203-17617-3-git-send-email-ezequiel@vanguardiasur.com.ar>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1380891203-17617-3-git-send-email-ezequiel@vanguardiasur.com.ar>
-Sender: linux-input-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Daniel Mack <zonque@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] irqchip: versatile FPGA: support cascaded interrupts from DT
+Date: Fri,  4 Oct 2013 15:25:06 +0200
+Message-ID: <1380893106-7550-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 04, 2013 at 01:53:23PM +0100, Ezequiel Garcia wrote:
-> The driver now supports a new mode to handle the interruptions generated
-> by the device: on this new mode an input event is generated on each step
-> (i.e. on each IRQ). Therefore, add a new DT property, to select the
-> mode: 'rotary-encoder,on-each-step'.
-> 
-> Cc: Daniel Mack <zonque@gmail.com>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-> ---
-> I'm not at all happy with this DT binding as it's way to customized
-> for the current driver. For instance, if we want to support mapping
-> key events (or better arbitrary linux-input event types) it seems
-> there's no easy way to fix the binding.
-> 
-> Maybe a better way of handling the different 'modes' is through
-> compatible strings?
+The Versatile FPGA interrupt controller supports cascading interrupts,
+i.e. that its output is connected to the input of another interrupt
+controller. This makes it possible to pass a parent interrupt from
+the device tree and print it in the boot log if applicable.
 
-I'd prefer not to have more pseudo-devices in DT, and would prefer not
-to have compatible strings that boil down to driver options. We end up
-just embedding a tonne of Linux-specific driver configuration in the DT
-rather than describing hardware.
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+TGLX: I can take this through ARM SoC if you're happy with it
+and prefer it that way, but it merges just as fine as it is on
+the IRQ tree.
+---
+ .../devicetree/bindings/arm/versatile-fpga-irq.txt        |  5 +++++
+ drivers/irqchip/irq-versatile-fpga.c                      | 15 +++++++++++++--
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
-That said, I'm not sure what the best solution is here.
-
-> 
-> I'm not really sure, so I hope the DT guys have some comment on this.
-> 
->  Documentation/devicetree/bindings/input/rotary-encoder.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> index 3315495..b89e38d 100644
-> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> @@ -15,6 +15,7 @@ Optional properties:
->  - rotary-encoder,rollover: Automatic rollove when the rotary value becomes
->    greater than the specified steps or smaller than 0. For absolute axis only.
->  - rotary-encoder,half-period: Makes the driver work on half-period mode.
-> +- rotary-encoder,on-each-step: Makes the driver send an event on each step.
-
-Could this not be something requested at runtime?
-
-Could you explain what you want to achieve with this? -- what events do
-you want to occur when, to be handled in what way?
-
-Cheers,
-Mark.
+diff --git a/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt b/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
+index 9989eda..c9cf605 100644
+--- a/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
++++ b/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
+@@ -29,3 +29,8 @@ pic: pic@14000000 {
+         clear-mask = <0xffffffff>;
+         valid-mask = <0x003fffff>;
+ };
++
++Optional properties:
++- interrupts: if the FPGA IRQ controller is cascaded, i.e. if its IRQ
++  output is simply connected to the input of another IRQ controller,
++  then the parent IRQ shall be specified in this property.
+diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
+index 47a52ab..3ae2bb8 100644
+--- a/drivers/irqchip/irq-versatile-fpga.c
++++ b/drivers/irqchip/irq-versatile-fpga.c
+@@ -9,6 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_irq.h>
+ 
+ #include <asm/exception.h>
+ #include <asm/mach/irq.h>
+@@ -167,8 +168,12 @@ void __init fpga_irq_init(void __iomem *base, const char *name, int irq_start,
+ 			f->used_irqs++;
+ 		}
+ 
+-	pr_info("FPGA IRQ chip %d \"%s\" @ %p, %u irqs\n",
++	pr_info("FPGA IRQ chip %d \"%s\" @ %p, %u irqs",
+ 		fpga_irq_id, name, base, f->used_irqs);
++	if (parent_irq != -1)
++		pr_cont(", parent IRQ: %d\n", parent_irq);
++	else
++		pr_cont("\n");
+ 
+ 	fpga_irq_id++;
+ }
+@@ -180,6 +185,7 @@ int __init fpga_irq_of_init(struct device_node *node,
+ 	void __iomem *base;
+ 	u32 clear_mask;
+ 	u32 valid_mask;
++	int parent_irq;
+ 
+ 	if (WARN_ON(!node))
+ 		return -ENODEV;
+@@ -193,7 +199,12 @@ int __init fpga_irq_of_init(struct device_node *node,
+ 	if (of_property_read_u32(node, "valid-mask", &valid_mask))
+ 		valid_mask = 0;
+ 
+-	fpga_irq_init(base, node->name, 0, -1, valid_mask, node);
++	/* Some chips are cascaded from a parent IRQ */
++	parent_irq = irq_of_parse_and_map(node, 0);
++	if (!parent_irq)
++		parent_irq = -1;
++
++	fpga_irq_init(base, node->name, 0, parent_irq, valid_mask, node);
+ 
+ 	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
+ 	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
+-- 
+1.8.3.1
