@@ -1,97 +1,199 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH 4/6] thermal: exynos: Replace SOC_ARCH_EXYNOS with
- SOC_ARCH_EXYNOS5250
-Date: Fri, 04 Oct 2013 12:23:30 +0200
-Message-ID: <20131004122330.47e21d24@amdc308.digital.local>
-References: <1380010102-25817-1-git-send-email-l.majewski@samsung.com>
- <1380010102-25817-5-git-send-email-l.majewski@samsung.com>
- <524DEAED.4030905@ti.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: new cpu iteration code...
+Date: Fri, 4 Oct 2013 11:27:48 +0100
+Message-ID: <CACxGe6u+L1JBg+1XAmLtxC+CdW1Uo39r8=czQxij0bPai6XO-Q@mail.gmail.com>
+References: <20130922.162915.1269060096375052591.davem@davemloft.net>
+ <CAL_JsqKNVqJbn559ruvFHg+FVGt8ou4v_Ntf-HphwxCNXQ7GfQ@mail.gmail.com>
+ <CACxGe6soxNN6TjDw9h15c39FHzyGzY1OZX9cZ8FRQ_k4PinYvw@mail.gmail.com> <20131003.172451.54508059414505899.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <524DEAED.4030905@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Amit Daniel Kachhap <amit.daniel@samsung.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Linux PM list <linux-pm@vger.kernel.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Lukasz Majewski <l.majewski@majess.pl>, linux-kernel <linux-kernel@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131003.172451.54508059414505899.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
+On Thu, Oct 3, 2013 at 10:24 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
+>
+> Can people on powerpc/arm/etc. give this a spin?  This works on my
+> T4-2 sparc64 box.
 
-> On 24-09-2013 04:08, Lukasz Majewski wrote:
-> > The TMU data definition is now separated to Exynos4412 and
-> > Exynos5250.
-> > 
-> > Now SOC_ARCH_EXYNOS only refers to Exynos5250. Hence the name
-> > SOC_ARCH_EXYNOS has been changed to SOC_ARCH_EXYNOS5250.
-> > 
-> 
-> How about merging this one with patch 02?
+The code looks fine. I'll give it a spin on ARM. I'm assuming that
+this can wait for v3.13 if I commit the fix to suppress the warning,
+correct?
 
-I wanted to show how the work was logically split - patch 02
-extracts Exynos4412 from Exynos5250. Then this patch changes the name.
+g.
 
-I will merge those two patches. No problem.
-
-> 
-> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> > ---
-> >  drivers/thermal/samsung/exynos_tmu.c      |    4 ++--
-> >  drivers/thermal/samsung/exynos_tmu.h      |    2 +-
-> >  drivers/thermal/samsung/exynos_tmu_data.c |    2 +-
-> >  3 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/thermal/samsung/exynos_tmu.c
-> > b/drivers/thermal/samsung/exynos_tmu.c index 21b89e4..037cd46 100644
-> > --- a/drivers/thermal/samsung/exynos_tmu.c
-> > +++ b/drivers/thermal/samsung/exynos_tmu.c
-> > @@ -632,9 +632,9 @@ static int exynos_tmu_probe(struct
-> > platform_device *pdev) if (ret)
-> >  		return ret;
-> >  
-> > -	if (pdata->type == SOC_ARCH_EXYNOS ||
-> > -	    pdata->type == SOC_ARCH_EXYNOS4210 ||
-> > +	if (pdata->type == SOC_ARCH_EXYNOS4210 ||
-> >  	    pdata->type == SOC_ARCH_EXYNOS4412 ||
-> > +	    pdata->type == SOC_ARCH_EXYNOS5250 ||
-> >  	    pdata->type == SOC_ARCH_EXYNOS5440)
-> >  		data->soc = pdata->type;
-> >  	else {
-> > diff --git a/drivers/thermal/samsung/exynos_tmu.h
-> > b/drivers/thermal/samsung/exynos_tmu.h index db37df0..b42ece4 100644
-> > --- a/drivers/thermal/samsung/exynos_tmu.h
-> > +++ b/drivers/thermal/samsung/exynos_tmu.h
-> > @@ -42,7 +42,7 @@ enum calibration_mode {
-> >  enum soc_type {
-> >  	SOC_ARCH_EXYNOS4210 = 1,
-> >  	SOC_ARCH_EXYNOS4412,
-> > -	SOC_ARCH_EXYNOS,
-> > +	SOC_ARCH_EXYNOS5250,
-> >  	SOC_ARCH_EXYNOS5440,
-> >  };
-> >  
-> > diff --git a/drivers/thermal/samsung/exynos_tmu_data.c
-> > b/drivers/thermal/samsung/exynos_tmu_data.c index bd08093..188223f
-> > 100644 --- a/drivers/thermal/samsung/exynos_tmu_data.c
-> > +++ b/drivers/thermal/samsung/exynos_tmu_data.c
-> > @@ -183,7 +183,7 @@ struct exynos_tmu_init_data const
-> > exynos4412_default_tmu_data = { struct exynos_tmu_init_data const
-> > exynos5250_default_tmu_data = { .tmu_data = {
-> >  		{ EXYNOS4412_TMU_DATA,
-> > -		.type = SOC_ARCH_EXYNOS,
-> > +		.type = SOC_ARCH_EXYNOS5250,
-> >  		},
-> >  	},
-> >  	.tmu_count = 1,
-> > 
-> 
-> 
-
-
-
--- 
-Best regards,
-
-Lukasz Majewski
-
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+>
+> --------------------
+> of: Make cpu node handling more portable.
+>
+> Use for_each_node_by_type() to iterate all cpu nodes in the
+> system.
+>
+> Provide and overridable function arch_find_n_match_cpu_physical_id,
+> which sees if the given device node matches 'cpu' and if so sets
+> '*thread' when non-NULL to the cpu thread number within the core.
+>
+> The default implementation behaves the same as the existing code.
+>
+> Add a sparc64 implementation.
+>
+> Signed-off-by: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+>
+> diff --git a/arch/sparc/kernel/prom_64.c b/arch/sparc/kernel/prom_64.c
+> index d397d7f..6b39125 100644
+> --- a/arch/sparc/kernel/prom_64.c
+> +++ b/arch/sparc/kernel/prom_64.c
+> @@ -373,6 +373,59 @@ static const char *get_mid_prop(void)
+>         return (tlb_type == spitfire ? "upa-portid" : "portid");
+>  }
+>
+> +bool arch_find_n_match_cpu_physical_id(struct device_node *cpun,
+> +                                      int cpu, unsigned int *thread)
+> +{
+> +       const char *mid_prop = get_mid_prop();
+> +       int this_cpu_id;
+> +
+> +       /* On hypervisor based platforms we interrogate the 'reg'
+> +        * property.  On everything else we look for a 'upa-portis',
+> +        * 'portid', or 'cpuid' property.
+> +        */
+> +
+> +       if (tlb_type == hypervisor) {
+> +               struct property *prop = of_find_property(cpun, "reg", NULL);
+> +               u32 *regs;
+> +
+> +               if (!prop) {
+> +                       pr_warn("CPU node missing reg property\n");
+> +                       return false;
+> +               }
+> +               regs = prop->value;
+> +               this_cpu_id = regs[0] & 0x0fffffff;
+> +       } else {
+> +               this_cpu_id = of_getintprop_default(cpun, mid_prop, -1);
+> +
+> +               if (this_cpu_id < 0) {
+> +                       mid_prop = "cpuid";
+> +                       this_cpu_id = of_getintprop_default(cpun, mid_prop, -1);
+> +               }
+> +               if (this_cpu_id < 0) {
+> +                       pr_warn("CPU node missing cpu ID property\n");
+> +                       return false;
+> +               }
+> +       }
+> +       if (this_cpu_id == cpu) {
+> +               if (thread) {
+> +                       int proc_id = cpu_data(cpu).proc_id;
+> +
+> +                       /* On sparc64, the cpu thread information is obtained
+> +                        * either from OBP or the machine description.  We've
+> +                        * actually probed this information already long before
+> +                        * this interface gets called so instead of interrogating
+> +                        * both the OF node and the MDESC again, just use what
+> +                        * we discovered already.
+> +                        */
+> +                       if (proc_id < 0)
+> +                               proc_id = 0;
+> +                       *thread = proc_id;
+> +               }
+> +               return true;
+> +       }
+> +       return false;
+> +}
+> +
+>  static void *of_iterate_over_cpus(void *(*func)(struct device_node *, int, int), int arg)
+>  {
+>         struct device_node *dp;
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 865d3f6..e4c9945 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -280,6 +280,31 @@ static bool __of_find_n_match_cpu_property(struct device_node *cpun,
+>         return false;
+>  }
+>
+> +/*
+> + * arch_find_n_match_cpu_physical_id - See if the given device node is
+> + * for the cpu corresponding to logical cpu 'cpu'.  Return true if so,
+> + * else false.  If 'thread' is non-NULL, the local thread number within the
+> + * core is returned in it.
+> + */
+> +bool __weak arch_find_n_match_cpu_physical_id(struct device_node *cpun,
+> +                                             int cpu, unsigned int *thread)
+> +{
+> +       /* Check for non-standard "ibm,ppc-interrupt-server#s" property
+> +        * for thread ids on PowerPC. If it doesn't exist fallback to
+> +        * standard "reg" property.
+> +        */
+> +       if (IS_ENABLED(CONFIG_PPC) &&
+> +           __of_find_n_match_cpu_property(cpun,
+> +                                          "ibm,ppc-interrupt-server#s",
+> +                                          cpu, thread))
+> +               return true;
+> +
+> +       if (__of_find_n_match_cpu_property(cpun, "reg", cpu, thread))
+> +               return true;
+> +
+> +       return false;
+> +}
+> +
+>  /**
+>   * of_get_cpu_node - Get device node associated with the given logical CPU
+>   *
+> @@ -300,26 +325,10 @@ static bool __of_find_n_match_cpu_property(struct device_node *cpun,
+>   */
+>  struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
+>  {
+> -       struct device_node *cpun, *cpus;
+> -
+> -       cpus = of_find_node_by_path("/cpus");
+> -       if (!cpus) {
+> -               pr_warn("Missing cpus node, bailing out\n");
+> -               return NULL;
+> -       }
+> +       struct device_node *cpun;
+>
+> -       for_each_child_of_node(cpus, cpun) {
+> -               if (of_node_cmp(cpun->type, "cpu"))
+> -                       continue;
+> -               /* Check for non-standard "ibm,ppc-interrupt-server#s" property
+> -                * for thread ids on PowerPC. If it doesn't exist fallback to
+> -                * standard "reg" property.
+> -                */
+> -               if (IS_ENABLED(CONFIG_PPC) &&
+> -                       __of_find_n_match_cpu_property(cpun,
+> -                               "ibm,ppc-interrupt-server#s", cpu, thread))
+> -                       return cpun;
+> -               if (__of_find_n_match_cpu_property(cpun, "reg", cpu, thread))
+> +       for_each_node_by_type(cpun, "cpu") {
+> +               if (arch_find_n_match_cpu_physical_id(cpun, cpu, thread))
+>                         return cpun;
+>         }
+>         return NULL;
+> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+> index 801ff9e..fbd25c3 100644
+> --- a/include/linux/cpu.h
+> +++ b/include/linux/cpu.h
+> @@ -18,6 +18,7 @@
+>  #include <linux/cpumask.h>
+>
+>  struct device;
+> +struct device_node;
+>
+>  struct cpu {
+>         int node_id;            /* The node which contains the CPU */
+> @@ -29,6 +30,8 @@ extern int register_cpu(struct cpu *cpu, int num);
+>  extern struct device *get_cpu_device(unsigned cpu);
+>  extern bool cpu_is_hotpluggable(unsigned cpu);
+>  extern bool arch_match_cpu_phys_id(int cpu, u64 phys_id);
+> +extern bool arch_find_n_match_cpu_physical_id(struct device_node *cpun,
+> +                                             int cpu, unsigned int *thread);
+>
+>  extern int cpu_add_dev_attr(struct device_attribute *attr);
+>  extern void cpu_remove_dev_attr(struct device_attribute *attr);
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
