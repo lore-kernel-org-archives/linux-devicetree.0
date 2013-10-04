@@ -1,65 +1,46 @@
-From: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v7 5/6] ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-opt
-Date: Sat, 5 Oct 2013 01:19:47 +0530
-Message-ID: <1380916188-24206-6-git-send-email-pekon@ti.com>
-References: <1380916188-24206-1-git-send-email-pekon@ti.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/6] ARM: EXYNOS: add Exynos Dual Cluster Support
+Date: Fri, 4 Oct 2013 15:51:31 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1310041543090.3023@syhkavp.arg>
+References: <1380644227-12244-1-git-send-email-v.tyrtov@samsung.com> <1380644227-12244-4-git-send-email-v.tyrtov@samsung.com> <20131002125458.GA3407@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380916188-24206-1-git-send-email-pekon-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20131002125458.GA3407-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mark.rutland-5wv7dgnIgG8@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
+To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Cc: Vyacheslav Tyrtov <v.tyrtov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Tarek Dakhran <t.dakhran-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Naour Romain <romain.naour-oid7hba3+9NWj0EZb7rXcA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DT property values for OMAP based gpmc-nand have been updated
-to match changes in commit:
-	6faf096 ARM: OMAP2+: cleaned-up DT support of various ECC schemes
-Refer: Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+On Wed, 2 Oct 2013, Dave Martin wrote:
 
-Signed-off-by: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am335x-evm.dts   | 3 +--
- arch/arm/boot/dts/omap3430-sdp.dts | 2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
+> On Tue, Oct 01, 2013 at 08:17:04PM +0400, Vyacheslav Tyrtov wrote:
+> > +static int exynos_power_up(unsigned int cpu, unsigned int cluster)
+> > +{
+> > +     int ret;
+> > +     local_irq_disable();
+> 
+> Should there be a local_fiq_disable() here also?
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index e8ec875..1aee6ac 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -269,7 +269,6 @@
- 				reg = <0 0 0>; /* CS0, offset 0 */
- 				nand-bus-width = <8>;
- 				ti,nand-ecc-opt = "bch8";
--				gpmc,device-nand = "true";
- 				gpmc,device-width = <1>;
- 				gpmc,sync-clk-ps = <0>;
- 				gpmc,cs-on-ns = <0>;
-@@ -296,7 +295,7 @@
- 
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				elm_id = <&elm>;
-+				ti,elm-id = <&elm>;
- 
- 				/* MTD partition table */
- 				partition@0 {
-diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
-index e2249bc..501f863 100644
---- a/arch/arm/boot/dts/omap3430-sdp.dts
-+++ b/arch/arm/boot/dts/omap3430-sdp.dts
-@@ -105,7 +105,7 @@
- 		reg = <1 0 0x08000000>;
- 		nand-bus-width = <8>;
- 
--		ti,nand-ecc-opt = "sw";
-+		ti,nand-ecc-opt = "ham1";
- 		gpmc,cs-on-ns = <0>;
- 		gpmc,cs-rd-off-ns = <36>;
- 		gpmc,cs-wr-off-ns = <36>;
--- 
-1.8.1
+No.  In fact this is paired with
 
+> > +     arch_spin_lock(&exynos_lock);
+
+to create the equivalent of a arch_spin_lock_irq().  And the reason is:
+
+/*
+ * We can't use regular spinlocks. In the switcher case, it is possible
+ * for an outbound CPU to call power_down() after its inbound counterpart
+ * is already live using the same logical CPU number which trips lockdep
+ * debugging.
+ */
+
+Otherwise we simply would have used spin_lock_irq().
+
+No FIQs are supposed to ever race with this code.
+
+
+Nicolas
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
