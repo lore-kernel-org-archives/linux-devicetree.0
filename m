@@ -1,56 +1,88 @@
-From: takasi-y-nDL5PR/MsHhHfZP73Gtkiw@public.gmane.org
-Subject: Re: [PATCH 5/6] clk: emev2: Add support for emev2 SMU clocks with
- DT
-Date: Fri, 4 Oct 2013 14:44:43 +0900
-Message-ID: <20131004144443.a7590dd81b8901ef264e488f@ops.dti.ne.jp>
-References: <52410F86.4040301@renesas.com>
-	<20130924131542.f865fad4dec98e024c0d4676@ops.dti.ne.jp>
-	<CANqRtoRD35Ei31PK8a_TOp=2uiYPCoaJuDb6tyZtQL8s0PavNw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANqRtoRD35Ei31PK8a_TOp=2uiYPCoaJuDb6tyZtQL8s0PavNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Shinya Kuribayashi <shinya.kuribayashi.px-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Paul Mundt <lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH v5 0/4] watchdog: at91sam9_wdt: handle already configured wdt
+Date: Fri,  4 Oct 2013 09:24:11 +0200
+Message-ID: <1380871455-7324-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Wim Van Sebroeck <wim@iguana.be>, Fabio Porcedda <fabio.porcedda@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Guenter Roeck <groeck7@gmail.com>, Yang Wenyou <wenyou.yang@atmel.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Magnus,
-Thank you for your commnets.
+Hello,
 
-> > +obj-$(CONFIG_ARCH_SHMOBILE)    += shmobile/
-> > +obj-$(CONFIG_ARCH_SHMOBILE_MULTI)      += shmobile/
-> 
-> Here I believe it is enough that you only use
-> CONFIG_ARCH_SHMOBILE_MULTI. ...
+This patch series is a porposal to enhance the sam9 watchdog timer support.
 
-That is because it supports three configuration,
-1. MULTI + KZM9D_REFERENCE + COMMON_CLK
-2. KZM9D_REFERENCE + COMMON_CLK
-3. KZM9D
-but,
+The at91sam9 watchdog timer can only be configured once, and the current
+implementation tries to configure it in a static way:
+- 2 seconds timeout
+- wdt restart every 500ms
 
-> ... Building common clocks to coexist with the
-> old legacy board code does not make any sense IMO. ...
-I think so, too.
-And from the view of testing, having smaller variants is better.
-# easier :)
+If the timer has already been configured with different values, it returns an
+error and do not create any watchdog device.
 
-> > +ifeq ($(CONFIG_COMMON_CLK), y)
-> > +obj-$(CONFIG_ARCH_EMEV2)       += clk-emev2.o
-> > +endif
-> 
-> I don't think you would need the above ifeq/endif wrapper if you only
-> used CONFIG_ARCH_SHMOBILE_MULTI above.
-Right.
+This is not critical if the watchdog is disabled, but if it has been enabled
+with different timeout values it will lead to a SoC reset.
 
-Anyway, because you have make kzm9d-reference things simpler,
-now we don't need to worry about it.
+This patch series tries to address this issue by adapting the heartbeat value
+according the WDT timer config:
+- it first tries to configure the timer as requested.
+- if it fails it fallbacks to the current config, adapting its heartbeat timer
+to the needs
 
-Thanks,
-/yoshii
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch series also move to a dynamically allocated at91wdt device instead
+of the static instance. I'm not sure this is the best solution, so please tell
+me if you prefer to keep static instance of watchdog.
+
+It adds a new at91 wdt type: software. This new type make use of the at91 wdt
+interrupt to trigger a software reboot.
+
+Finally it adds several properties to the device tree bindings.
+
+Best Regards,
+Boris
+
+Changes since v4:
+ - fix coding style issues
+ - remove unneeded watchdog_active test
+
+Changes since v3:
+ - fix a bug in heartbeat time computation
+ - fix a bug in at91_wdt_set_timeout when new timeout is bigger than the old
+   one
+ - rename at91_wdt_ping into at91_wdt_start
+ - remove unneeded ping callback assignment
+
+Changes since v2:
+ - fix documentation
+ - rework the heartbeat computation to get a more flexible behaviour
+ - fix xx_to_yy macros
+ - modify warning and error messages
+ - remove unneeded parenthesis in arithmetic operations
+ - use devm functions to map io memory
+ - remove unneeded devm_kfree calls
+
+Change since v1:
+ - fix typo in documentaion
+ - fix irq dt definition for sama5d3 SoC
+
+
+Boris BREZILLON (4):
+  watchdog: at91sam9_wdt: better watchdog support
+  watchdog: at91sam9_wdt: update device tree doc
+  ARM: at91/dt: add sam9 watchdog default options to SoCs
+  ARM: at91/dt: add watchdog properties to kizbox board
+
+ .../devicetree/bindings/watchdog/atmel-wdt.txt     |   30 +-
+ arch/arm/boot/dts/at91sam9260.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9263.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9n12.dtsi                 |    5 +
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |    5 +
+ arch/arm/boot/dts/kizbox.dts                       |    6 +
+ arch/arm/boot/dts/sama5d3.dtsi                     |    5 +
+ drivers/watchdog/at91sam9_wdt.c                    |  309 ++++++++++++++------
+ 9 files changed, 287 insertions(+), 88 deletions(-)
+
+-- 
+1.7.9.5
+
