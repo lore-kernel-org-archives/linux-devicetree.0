@@ -1,105 +1,50 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 14/21] of: implement of_node_to_nid as a weak function
-Date: Fri, 04 Oct 2013 11:33:50 +0100
-Message-ID: <20131004103351.706ABC42354@trevor.secretlab.ca>
-References: <1380221456-11192-1-git-send-email-robherring2@gmail.com> <1380221456-11192-15-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380221456-11192-15-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <rob.herring@calxeda.com>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: new cpu iteration code...
+Date: Fri, 04 Oct 2013 11:34:24 +0100
+Message-ID: <524E99B0.9070805@arm.com>
+References: <20130922.162915.1269060096375052591.davem@davemloft.net>	<CAL_JsqKNVqJbn559ruvFHg+FVGt8ou4v_Ntf-HphwxCNXQ7GfQ@mail.gmail.com>	<CACxGe6soxNN6TjDw9h15c39FHzyGzY1OZX9cZ8FRQ_k4PinYvw@mail.gmail.com> <20131003.172451.54508059414505899.davem@davemloft.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131003.172451.54508059414505899.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 26 Sep 2013 13:50:49 -0500, Rob Herring <robherring2@gmail.com> wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> Implement of_node_to_nid as weak function to remove the dependency on
-> asm/prom.h. This is in preparation to make prom.h optional.
-> 
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Hi David,
 
-Acked-by: Grant Likely <grant.likely@linaro.org>
+I tested this on ARM platform(Vexpress TC2). You can add my tested by.
 
-> ---
->  arch/powerpc/include/asm/prom.h |  7 -------
->  arch/sparc/include/asm/prom.h   |  4 ----
->  drivers/of/base.c               |  7 +++++++
->  include/linux/of.h              | 11 ++++-------
->  4 files changed, 11 insertions(+), 18 deletions(-)
+Regards,
+Sudeep
+
+On 03/10/13 22:24, David Miller wrote:
 > 
-> diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
-> index bd215f7..6707c16 100644
-> --- a/arch/powerpc/include/asm/prom.h
-> +++ b/arch/powerpc/include/asm/prom.h
-> @@ -42,13 +42,6 @@ extern void kdump_move_device_tree(void);
->  /* cache lookup */
->  struct device_node *of_find_next_cache_node(struct device_node *np);
->  
-> -#ifdef CONFIG_NUMA
-> -extern int of_node_to_nid(struct device_node *device);
-> -#else
-> -static inline int of_node_to_nid(struct device_node *device) { return 0; }
-> -#endif
-> -#define of_node_to_nid of_node_to_nid
-> -
->  extern void of_instantiate_rtc(void);
->  
->  extern int of_get_ibm_chip_id(struct device_node *np);
-> diff --git a/arch/sparc/include/asm/prom.h b/arch/sparc/include/asm/prom.h
-> index 67c6257..60c8d7b 100644
-> --- a/arch/sparc/include/asm/prom.h
-> +++ b/arch/sparc/include/asm/prom.h
-> @@ -43,10 +43,6 @@ extern int of_getintprop_default(struct device_node *np,
->  				 const char *name,
->  				 int def);
->  extern int of_find_in_proplist(const char *list, const char *match, int len);
-> -#ifdef CONFIG_NUMA
-> -extern int of_node_to_nid(struct device_node *dp);
-> -#define of_node_to_nid of_node_to_nid
-> -#endif
->  
->  extern void prom_build_devicetree(void);
->  extern void of_populate_present_mask(void);
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 865d3f6..ced4c06 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -74,6 +74,13 @@ int of_n_size_cells(struct device_node *np)
->  }
->  EXPORT_SYMBOL(of_n_size_cells);
->  
-> +#ifdef CONFIG_NUMA
-> +int __weak of_node_to_nid(struct device_node *np)
-> +{
-> +	return numa_node_id();
-> +}
-> +#endif
-> +
->  #if defined(CONFIG_OF_DYNAMIC)
->  /**
->   *	of_node_get - Increment refcount of a node
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index f95aee3..4d294a0 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -534,13 +534,10 @@ static inline const char *of_prop_next_string(struct property *prop,
->  #define of_match_node(_matches, _node)	NULL
->  #endif /* CONFIG_OF */
->  
-> -#ifndef of_node_to_nid
-> -static inline int of_node_to_nid(struct device_node *np)
-> -{
-> -	return numa_node_id();
-> -}
-> -
-> -#define of_node_to_nid of_node_to_nid
-> +#if defined(CONFIG_OF) && defined(CONFIG_NUMA)
-> +extern int of_node_to_nid(struct device_node *np);
-> +#else
-> +static inline int of_node_to_nid(struct device_node *device) { return 0; }
->  #endif
->  
->  /**
-> -- 
-> 1.8.1.2
+> Can people on powerpc/arm/etc. give this a spin?  This works on my
+> T4-2 sparc64 box.
 > 
+> --------------------
+> of: Make cpu node handling more portable.
+> 
+> Use for_each_node_by_type() to iterate all cpu nodes in the
+> system.
+> 
+> Provide and overridable function arch_find_n_match_cpu_physical_id,
+> which sees if the given device node matches 'cpu' and if so sets
+> '*thread' when non-NULL to the cpu thread number within the core.
+> 
+> The default implementation behaves the same as the existing code.
+> 
+> Add a sparc64 implementation.
+> 
+> Signed-off-by: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+> 
+Tested-by: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
