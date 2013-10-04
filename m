@@ -1,38 +1,54 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of/of_reserved_mem.c: fix typo
-Date: Fri, 04 Oct 2013 18:46:02 +0100
-Message-ID: <20131004174602.1EA8FC428B6@trevor.secretlab.ca>
-References: <1380705509-25429-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380705509-25429-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: new cpu iteration code...
+Date: Fri, 04 Oct 2013 18:27:46 +0100
+Message-ID: <20131004172746.69301C427E9@trevor.secretlab.ca>
+References: <20130922.162915.1269060096375052591.davem@davemloft.net> <CAL_JsqKNVqJbn559ruvFHg+FVGt8ou4v_Ntf-HphwxCNXQ7GfQ@mail.gmail.com> <CACxGe6soxNN6TjDw9h15c39FHzyGzY1OZX9cZ8FRQ_k4PinYvw@mail.gmail.com> <20131003.172451.54508059414505899.davem@davemloft.net> <524E99B0.9070805@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <524E99B0.9070805-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  2 Oct 2013 14:48:29 +0530, Prabhakar Lad <prabhakar.csengg@gmail.com> wrote:
-> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+On Fri, 04 Oct 2013 11:34:24 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi David,
 > 
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> I tested this on ARM platform(Vexpress TC2). You can add my tested by.
+> 
+> Regards,
+> Sudeep
+> 
+> On 03/10/13 22:24, David Miller wrote:
+> > 
+> > Can people on powerpc/arm/etc. give this a spin?  This works on my
+> > T4-2 sparc64 box.
+> > 
+> > --------------------
+> > of: Make cpu node handling more portable.
+> > 
+> > Use for_each_node_by_type() to iterate all cpu nodes in the
+> > system.
+> > 
+> > Provide and overridable function arch_find_n_match_cpu_physical_id,
+> > which sees if the given device node matches 'cpu' and if so sets
+> > '*thread' when non-NULL to the cpu thread number within the core.
+> > 
+> > The default implementation behaves the same as the existing code.
+> > 
+> > Add a sparc64 implementation.
+> > 
+> > Signed-off-by: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+> > 
+> Tested-by: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
 
-Applied, thanks.
-> ---
->  drivers/of/of_reserved_mem.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 0fe40c7..c7a1ea3 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -54,7 +54,7 @@ static int __init fdt_scan_reserved_mem(unsigned long node, const char *uname,
->  
->  	status = of_get_flat_dt_prop(node, "status", &len);
->  	if (status && strcmp(status, "okay") != 0) {
-> -		/* ignore disabled node nad scan next one */
-> +		/* ignore disabled node and scan next one */
->  		return 0;
->  	}
->  
-> -- 
-> 1.7.9.5
-> 
+I've applied it to my tree and I'll keep an eye out if it causes any
+breakage on PowerPC or ARM.
+
+Can someone from PowerPC land give it a spin? I don't have any powerpc
+hardware anymore.
+
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
