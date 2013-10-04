@@ -1,77 +1,46 @@
-From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 3/3] ARM: davinci: da850 evm: add GPIO pinumux entries DT
-	node
-Date: Fri, 4 Oct 2013 21:33:16 +0530
-Message-ID: <1380902596-4693-4-git-send-email-sujithkv@ti.com>
-References: <1380902596-4693-1-git-send-email-sujithkv@ti.com>
+From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add support for Qualcomm's PRNG
+Date: Fri, 04 Oct 2013 19:23:50 +0300
+Message-ID: <524EEB96.6040707@mm-sol.com>
+References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <20131003165130.GA11974@thunk.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1380902596-4693-1-git-send-email-sujithkv-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, LDOC <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131003165130.GA11974-AKGzg7BKzIDYtjvyW6yDsg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Theodore Ts'o <tytso-3s7WtUTddSA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-F6s6mLieUQo7FNHlEwC/lvQIK84fMopw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
+Hi Ted,
 
-Add GPIO DT node and pinmux entries for DA850 EVM. GPIO is
-configurable differently on different boards. So add GPIO
-pinmuxing in dts file.
+On 10/03/2013 07:51 PM, Theodore Ts'o wrote:
+> On Thu, Oct 03, 2013 at 05:52:33PM +0300, Stanimir Varbanov wrote:
+>> This patch set adds hardware RNG driver wich is used to control the
+>> Qualcomm's PRNG hardware block.
+>> The first patch document the DT bindings needed to sucessfuly probe
+>> the driver and the second patch adds the driver.
+> 
+> Is this really a PRNG (pseudo-random number generator)?  What are the
+> guarantees which Qualcomm is providing for the PRNG?  If it's really a
+> PRNG such as AES(i++, NSA_KEY), then kudo to Qualcomm for being
+> honest.
+> 
+> If it is supposed to be (or at least claimed to be) a secure random
+> number generator ala RDRAND suitable for use in cryptographic
+> applications, calling it a PRNG is going to be a bit misleading.
 
-Signed-off-by: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/da850-evm.dts |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+I guess that it should follow NIST 800-90 recommendation, but I'm not
+aware what DRBG mechanism is used.
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 588ce58..f82c129 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -17,6 +17,21 @@
- 	soc {
- 		pmx_core: pinmux@1c14120 {
- 			status = "okay";
-+
-+			gpio_pins: pinmux_gpio_pins {
-+				pinctrl-single,bits = <
-+					/* GPIO2_4 GPIO2_6 */
-+					0x18 0x00008080 0x0000f0f0
-+					/* GPIO2_8 GPIO2_15 */
-+					0x14 0x80000008 0xf000000f
-+					/* GPIO3_12 GPIO3_13 */
-+					0x1C 0x00008800 0x0000ff00
-+					/* GPIO4_0 GPIO4_1 */
-+					0x28 0x88000000 0xff000000
-+					/* GPIO6_9 GPIO6_10 GPIO6_13 */
-+					0x34 0x08800800 0x0ff00f00
-+				>;
-+			};
- 		};
- 		serial0: serial@1c42000 {
- 			status = "okay";
-@@ -101,6 +116,11 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&mii_pins>;
- 		};
-+		gpio: gpio@1e26000 {
-+			status = "okay";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&gpio_pins>;
-+		};
- 	};
- 	nand_cs3@62000000 {
- 		status = "okay";
--- 
-1.7.9.5
+To be honest I really don't know the hardware implementation details. I
+put PRNG abbreviation in the cover letter just because I saw that
+defines for register offsets are prefixed with PRNG_*. I could rename
+all occurrences of PRNG to RNG. Is that will be enough to avoid confusions?
+
+regadrs,
+Stan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
