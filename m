@@ -1,46 +1,182 @@
-From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/2] Add support for Qualcomm's PRNG
-Date: Fri, 04 Oct 2013 19:23:50 +0300
-Message-ID: <524EEB96.6040707@mm-sol.com>
-References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <20131003165130.GA11974@thunk.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH 2/2] hwrng: msm: Add PRNG support for MSM SoC's
+Date: Fri, 04 Oct 2013 19:31:10 +0300
+Message-ID: <524EED4E.8090505@mm-sol.com>
+References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <1380811955-18085-3-git-send-email-svarbanov@mm-sol.com> <524DC4B1.4050100@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131003165130.GA11974-AKGzg7BKzIDYtjvyW6yDsg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Theodore Ts'o <tytso-3s7WtUTddSA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-F6s6mLieUQo7FNHlEwC/lvQIK84fMopw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <524DC4B1.4050100@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ted,
+Hi Stephen,
 
-On 10/03/2013 07:51 PM, Theodore Ts'o wrote:
-> On Thu, Oct 03, 2013 at 05:52:33PM +0300, Stanimir Varbanov wrote:
->> This patch set adds hardware RNG driver wich is used to control the
->> Qualcomm's PRNG hardware block.
->> The first patch document the DT bindings needed to sucessfuly probe
->> the driver and the second patch adds the driver.
+Thanks for the quick review!
+
+On 10/03/2013 10:25 PM, Stephen Boyd wrote:
+> On 10/03/13 07:52, Stanimir Varbanov wrote:
+>> +#define PRNG_CONFIG_MASK	0x00000002
+>> +#define PRNG_CONFIG_HW_ENABLE	BIT(1)
 > 
-> Is this really a PRNG (pseudo-random number generator)?  What are the
-> guarantees which Qualcomm is providing for the PRNG?  If it's really a
-> PRNG such as AES(i++, NSA_KEY), then kudo to Qualcomm for being
-> honest.
+> These two are the same so please drop the PRNG_CONFIG_MASK define and
+> just use the PRNG_CONFIG_HW_ENABLE define.
 > 
-> If it is supposed to be (or at least claimed to be) a secure random
-> number generator ala RDRAND suitable for use in cryptographic
-> applications, calling it a PRNG is going to be a bit misleading.
 
-I guess that it should follow NIST 800-90 recommendation, but I'm not
-aware what DRBG mechanism is used.
+OK I will drop the mask and rework the code related to it.
 
-To be honest I really don't know the hardware implementation details. I
-put PRNG abbreviation in the cover letter just because I saw that
-defines for register offsets are prefixed with PRNG_*. I could rename
-all occurrences of PRNG to RNG. Is that will be enough to avoid confusions?
+>> +#define PRNG_STATUS_DATA_AVAIL	BIT(0)
+>> +
+>> +#define MAX_HW_FIFO_DEPTH	16
+>> +#define MAX_HW_FIFO_SIZE	(MAX_HW_FIFO_DEPTH * 4)
+>> +#define WORD_SZ			4
+>> +
+>> +struct msm_rng {
+>> +	void __iomem *base;
+>> +	struct clk *clk;
+>> +};
+>> +
+>> +static int msm_rng_enable(struct msm_rng *rng, int enable)
+>> +{
+>> +	u32 val;
+>> +	int ret;
+>> +
+>> +	ret = clk_prepare_enable(rng->clk);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (enable) {
+>> +		/* Enable PRNG only if it is not already enabled */
+>> +		val = readl_relaxed(rng->base + PRNG_CONFIG);
+>> +		if (val & PRNG_CONFIG_HW_ENABLE)
+>> +			goto already_enabled;
+>> +
+>> +		/* PRNG is not enabled */
+>> +		val = readl_relaxed(rng->base + PRNG_LFSR_CFG);
+>> +		val &= ~PRNG_LFSR_CFG_MASK;
+>> +		val |= PRNG_LFSR_CFG_CLOCKS;
+>> +		writel(val, rng->base + PRNG_LFSR_CFG);
+>> +
+>> +		val = readl_relaxed(rng->base + PRNG_CONFIG);
+>> +		val &= ~PRNG_CONFIG_MASK;
+>> +		val |= PRNG_CONFIG_HW_ENABLE;
+>> +		writel(val, rng->base + PRNG_CONFIG);
+> 
+> This could just be
+> 
+> 		val = readl_relaxed(rng->base + PRNG_CONFIG);
+> 		val |= PRNG_CONFIG_HW_ENABLE;
+> 		writel(val, rng->base + PRNG_CONFIG);
+> 
+> 
+>> +	} else {
+>> +		val = readl_relaxed(rng->base + PRNG_CONFIG);
+>> +		val &= ~PRNG_CONFIG_MASK;
+>> +		writel(val, rng->base + PRNG_CONFIG);
+>> +	}
+>> +
+>> +already_enabled:
+>> +	clk_disable_unprepare(rng->clk);
+>> +	return 0;
+>> +}
+>> +
+> [...]
+>> +static int msm_rng_probe(struct platform_device *pdev)
+>> +{
+>> +	struct msm_rng *rng;
+>> +	struct device_node *np;
+>> +	struct resource res;
+>> +	int ret;
+>> +
+>> +	np = of_node_get(pdev->dev.of_node);
+>> +	if (!np)
+>> +		return -ENODEV;
+> 
+> This is unnecessary.
 
-regadrs,
+I used this call because CONFIG_OF_DYNAMIC could be enabled at some
+time. Isn't that possible? I saw that of_node_get|put is used in .probe
+on few places in drivers.
+
+> 
+>> +
+>> +	rng = devm_kzalloc(&pdev->dev, sizeof(*rng), GFP_KERNEL);
+>> +	if (!rng) {
+>> +		ret = -ENOMEM;
+>> +		goto err_exit;
+>> +	}
+>> +
+>> +	ret = of_address_to_resource(np, 0, &res);
+>> +	if (ret)
+>> +		goto err_exit;
+> 
+> We should just do
+> 
+>   res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   rng->base = devm_ioremap_resource(&pdev->dev, res);
+>   if (IS_ERR(rng->base))
+>             return PTR_ERR(rng->base);
+> 
+>> +
+>> +	rng->base = devm_ioremap_resource(&pdev->dev, &res);
+>> +	if (IS_ERR(rng->base)) {
+>> +		ret = PTR_ERR(rng->base);
+>> +		goto err_exit;
+>> +	}
+>> +
+>> +	rng->clk = devm_clk_get(&pdev->dev, "prng");
+>> +	if (IS_ERR(rng->clk)) {
+>> +		ret = PTR_ERR(rng->clk);
+>> +		goto err_exit;
+>> +	}
+>> +
+>> +	msm_rng_ops.priv = (unsigned long) rng;
+>> +	ret = hwrng_register(&msm_rng_ops);
+>> +	if (ret)
+>> +		dev_err(&pdev->dev, "failed to register hwrng\n");
+>> +
+>> +err_exit:
+> 
+> Doing all that should make this goto exit path unnecessary.
+> 
+>> +	of_node_put(np);
+>> +	return ret;
+>> +}
+>> +
+>> +static int msm_rng_remove(struct platform_device *pdev)
+>> +{
+>> +	hwrng_unregister(&msm_rng_ops);
+>> +	return 0;
+>> +}
+>> +
+>> +static struct of_device_id msm_rng_of_match[] = {
+> 
+> const?
+> 
+>> +	{ .compatible = "qcom,prng", },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, msm_rng_of_match);
+>> +
+>> +static struct platform_driver msm_rng_driver = {
+>> +	.probe = msm_rng_probe,
+>> +	.remove = msm_rng_remove,
+>> +	.driver = {
+>> +		.name = KBUILD_MODNAME,
+>> +		.owner = THIS_MODULE,
+>> +		.of_match_table = of_match_ptr(msm_rng_of_match),
+>> +	}
+>> +};
+>> +module_platform_driver(msm_rng_driver);
+>> +
+>> +MODULE_AUTHOR("The Linux Foundation");
+>> +MODULE_DESCRIPTION("Qualcomm MSM random number generator driver");
+>> +MODULE_LICENSE("GPL v2");
+> 
+> 
+
+regards,
 Stan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
