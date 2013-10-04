@@ -1,58 +1,38 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of: irq: Pass trigger type in IRQ resource flags
-Date: Fri, 04 Oct 2013 18:42:19 +0100
-Message-ID: <20131004174219.4EAA3C427FD@trevor.secretlab.ca>
-References: <1380390771-4620-1-git-send-email-tomasz.figa@gmail.com>
+Subject: Re: [PATCH] of/of_reserved_mem.c: fix typo
+Date: Fri, 04 Oct 2013 18:46:02 +0100
+Message-ID: <20131004174602.1EA8FC428B6@trevor.secretlab.ca>
+References: <1380705509-25429-1-git-send-email-prabhakar.csengg@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380390771-4620-1-git-send-email-tomasz.figa@gmail.com>
+In-Reply-To: <1380705509-25429-1-git-send-email-prabhakar.csengg@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Tomasz Figa <tomasz.figa@gmail.com>
+To: Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 28 Sep 2013 19:52:51 +0200, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Some drivers might rely on availability of trigger flags in IRQ
-> resource, for example to configure the hardware for particular interrupt
-> type. However current code creating IRQ resources from data in device
-> tree does not configure trigger flags in resulting resources.
+On Wed,  2 Oct 2013 14:48:29 +0530, Prabhakar Lad <prabhakar.csengg@gmail.com> wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 > 
-> This patch tries to solve the problem, based on the fact that
-> irq_of_parse_and_map() configures the trigger based on DT interrupt
-> specifier and IRQD_TRIGGER_* flags are consistent with IORESOURCE_IRQ_*,
-> and we can get correct trigger flags by calling irqd_get_trigger_type()
-> after mapping the interrupt.
-> 
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
 Applied, thanks.
-
-g.
-
 > ---
->  drivers/of/irq.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/of/of_reserved_mem.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 1752988..12742d0 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -356,6 +356,16 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
->  		r->start = r->end = irq;
->  		r->flags = IORESOURCE_IRQ;
->  		r->name = name ? name : dev->full_name;
-> +
-> +		/*
-> +		 * Some drivers might rely on availability of trigger flags
-> +		 * in IRQ resource. Since irq_of_parse_and_map() configures the
-> +		 * trigger based on interrupt specifier and IRQD_TRIGGER_*
-> +		 * flags are consistent with IORESOURCE_IRQ_*, we can get
-> +		 * trigger type that was just set and pass it through resource
-> +		 * flags as well.
-> +		 */
-> +		r->flags |= irqd_get_trigger_type(irq_get_irq_data(irq));
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index 0fe40c7..c7a1ea3 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -54,7 +54,7 @@ static int __init fdt_scan_reserved_mem(unsigned long node, const char *uname,
+>  
+>  	status = of_get_flat_dt_prop(node, "status", &len);
+>  	if (status && strcmp(status, "okay") != 0) {
+> -		/* ignore disabled node nad scan next one */
+> +		/* ignore disabled node and scan next one */
+>  		return 0;
 >  	}
 >  
->  	return irq;
 > -- 
-> 1.8.3.2
+> 1.7.9.5
 > 
