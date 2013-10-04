@@ -1,55 +1,67 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH 2/2] ARM: dts: am335x-evm, am335x-evmsdk: switch mmc1
- to 4-bit mode
-Date: Fri, 04 Oct 2013 15:02:08 +0200
-Message-ID: <524EBC50.20207@baylibre.com>
-References: <1380281710-12728-1-git-send-email-balajitk@ti.com> <1380281710-12728-2-git-send-email-balajitk@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 2/2] input: rotary-encoder: Add 'on-each-step' to
+ binding documentation
+Date: Fri, 4 Oct 2013 14:19:56 +0100
+Message-ID: <20131004131956.GE6999@e106331-lin.cambridge.arm.com>
+References: <1380891203-17617-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+ <1380891203-17617-3-git-send-email-ezequiel@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1380281710-12728-2-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, tony@atomide.com, linux-arm-kernel@lists.infradead.org, nm@ti.com, koen@dominion.thruhere.net
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1380891203-17617-3-git-send-email-ezequiel@vanguardiasur.com.ar>
+Sender: linux-input-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Daniel Mack <zonque@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Balaji,
-
-On 27/09/2013 13:35, Balaji T K wrote:
-> set bus-width to make SD card operate in 4 bit mode.
->
-> Signed-off-by: Balaji T K <balajitk@ti.com>
+On Fri, Oct 04, 2013 at 01:53:23PM +0100, Ezequiel Garcia wrote:
+> The driver now supports a new mode to handle the interruptions generated
+> by the device: on this new mode an input event is generated on each step
+> (i.e. on each IRQ). Therefore, add a new DT property, to select the
+> mode: 'rotary-encoder,on-each-step'.
+> 
+> Cc: Daniel Mack <zonque@gmail.com>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
 > ---
-> based on git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.13/dts
->
->   arch/arm/boot/dts/am335x-evm.dts   |    1 +
->   arch/arm/boot/dts/am335x-evmsk.dts |    1 +
->   2 files changed, 2 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-> index 23b0a3e..028ca09 100644
-> --- a/arch/arm/boot/dts/am335x-evm.dts
-> +++ b/arch/arm/boot/dts/am335x-evm.dts
-> @@ -521,4 +521,5 @@
->   &mmc1 {
->   	status = "okay";
->   	vmmc-supply = <&vmmc_reg>;
-> +	bus-width = <4>;
->   };
-> diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-> index bc93895..563a2b1 100644
-> --- a/arch/arm/boot/dts/am335x-evmsk.dts
-> +++ b/arch/arm/boot/dts/am335x-evmsk.dts
-> @@ -423,4 +423,5 @@
->   &mmc1 {
->   	status = "okay";
->   	vmmc-supply = <&vmmc_reg>;
-> +	bus-width = <4>;
->   };
->
+> I'm not at all happy with this DT binding as it's way to customized
+> for the current driver. For instance, if we want to support mapping
+> key events (or better arbitrary linux-input event types) it seems
+> there's no easy way to fix the binding.
+> 
+> Maybe a better way of handling the different 'modes' is through
+> compatible strings?
 
-Thanks, I'll apply it for 3.13.
+I'd prefer not to have more pseudo-devices in DT, and would prefer not
+to have compatible strings that boil down to driver options. We end up
+just embedding a tonne of Linux-specific driver configuration in the DT
+rather than describing hardware.
 
-Regards,
-Benoit
+That said, I'm not sure what the best solution is here.
+
+> 
+> I'm not really sure, so I hope the DT guys have some comment on this.
+> 
+>  Documentation/devicetree/bindings/input/rotary-encoder.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> index 3315495..b89e38d 100644
+> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> @@ -15,6 +15,7 @@ Optional properties:
+>  - rotary-encoder,rollover: Automatic rollove when the rotary value becomes
+>    greater than the specified steps or smaller than 0. For absolute axis only.
+>  - rotary-encoder,half-period: Makes the driver work on half-period mode.
+> +- rotary-encoder,on-each-step: Makes the driver send an event on each step.
+
+Could this not be something requested at runtime?
+
+Could you explain what you want to achieve with this? -- what events do
+you want to occur when, to be handled in what way?
+
+Cheers,
+Mark.
