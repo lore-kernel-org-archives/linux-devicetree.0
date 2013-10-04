@@ -1,199 +1,105 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: new cpu iteration code...
-Date: Fri, 4 Oct 2013 11:27:48 +0100
-Message-ID: <CACxGe6u+L1JBg+1XAmLtxC+CdW1Uo39r8=czQxij0bPai6XO-Q@mail.gmail.com>
-References: <20130922.162915.1269060096375052591.davem@davemloft.net>
- <CAL_JsqKNVqJbn559ruvFHg+FVGt8ou4v_Ntf-HphwxCNXQ7GfQ@mail.gmail.com>
- <CACxGe6soxNN6TjDw9h15c39FHzyGzY1OZX9cZ8FRQ_k4PinYvw@mail.gmail.com> <20131003.172451.54508059414505899.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131003.172451.54508059414505899.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 14/21] of: implement of_node_to_nid as a weak function
+Date: Fri, 04 Oct 2013 11:33:50 +0100
+Message-ID: <20131004103351.706ABC42354@trevor.secretlab.ca>
+References: <1380221456-11192-1-git-send-email-robherring2@gmail.com> <1380221456-11192-15-git-send-email-robherring2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1380221456-11192-15-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 3, 2013 at 10:24 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
->
-> Can people on powerpc/arm/etc. give this a spin?  This works on my
-> T4-2 sparc64 box.
+On Thu, 26 Sep 2013 13:50:49 -0500, Rob Herring <robherring2@gmail.com> wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
+> 
+> Implement of_node_to_nid as weak function to remove the dependency on
+> asm/prom.h. This is in preparation to make prom.h optional.
+> 
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 
-The code looks fine. I'll give it a spin on ARM. I'm assuming that
-this can wait for v3.13 if I commit the fix to suppress the warning,
-correct?
+Acked-by: Grant Likely <grant.likely@linaro.org>
 
-g.
-
->
-> --------------------
-> of: Make cpu node handling more portable.
->
-> Use for_each_node_by_type() to iterate all cpu nodes in the
-> system.
->
-> Provide and overridable function arch_find_n_match_cpu_physical_id,
-> which sees if the given device node matches 'cpu' and if so sets
-> '*thread' when non-NULL to the cpu thread number within the core.
->
-> The default implementation behaves the same as the existing code.
->
-> Add a sparc64 implementation.
->
-> Signed-off-by: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
->
-> diff --git a/arch/sparc/kernel/prom_64.c b/arch/sparc/kernel/prom_64.c
-> index d397d7f..6b39125 100644
-> --- a/arch/sparc/kernel/prom_64.c
-> +++ b/arch/sparc/kernel/prom_64.c
-> @@ -373,6 +373,59 @@ static const char *get_mid_prop(void)
->         return (tlb_type == spitfire ? "upa-portid" : "portid");
->  }
->
-> +bool arch_find_n_match_cpu_physical_id(struct device_node *cpun,
-> +                                      int cpu, unsigned int *thread)
-> +{
-> +       const char *mid_prop = get_mid_prop();
-> +       int this_cpu_id;
-> +
-> +       /* On hypervisor based platforms we interrogate the 'reg'
-> +        * property.  On everything else we look for a 'upa-portis',
-> +        * 'portid', or 'cpuid' property.
-> +        */
-> +
-> +       if (tlb_type == hypervisor) {
-> +               struct property *prop = of_find_property(cpun, "reg", NULL);
-> +               u32 *regs;
-> +
-> +               if (!prop) {
-> +                       pr_warn("CPU node missing reg property\n");
-> +                       return false;
-> +               }
-> +               regs = prop->value;
-> +               this_cpu_id = regs[0] & 0x0fffffff;
-> +       } else {
-> +               this_cpu_id = of_getintprop_default(cpun, mid_prop, -1);
-> +
-> +               if (this_cpu_id < 0) {
-> +                       mid_prop = "cpuid";
-> +                       this_cpu_id = of_getintprop_default(cpun, mid_prop, -1);
-> +               }
-> +               if (this_cpu_id < 0) {
-> +                       pr_warn("CPU node missing cpu ID property\n");
-> +                       return false;
-> +               }
-> +       }
-> +       if (this_cpu_id == cpu) {
-> +               if (thread) {
-> +                       int proc_id = cpu_data(cpu).proc_id;
-> +
-> +                       /* On sparc64, the cpu thread information is obtained
-> +                        * either from OBP or the machine description.  We've
-> +                        * actually probed this information already long before
-> +                        * this interface gets called so instead of interrogating
-> +                        * both the OF node and the MDESC again, just use what
-> +                        * we discovered already.
-> +                        */
-> +                       if (proc_id < 0)
-> +                               proc_id = 0;
-> +                       *thread = proc_id;
-> +               }
-> +               return true;
-> +       }
-> +       return false;
-> +}
-> +
->  static void *of_iterate_over_cpus(void *(*func)(struct device_node *, int, int), int arg)
->  {
->         struct device_node *dp;
+> ---
+>  arch/powerpc/include/asm/prom.h |  7 -------
+>  arch/sparc/include/asm/prom.h   |  4 ----
+>  drivers/of/base.c               |  7 +++++++
+>  include/linux/of.h              | 11 ++++-------
+>  4 files changed, 11 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
+> index bd215f7..6707c16 100644
+> --- a/arch/powerpc/include/asm/prom.h
+> +++ b/arch/powerpc/include/asm/prom.h
+> @@ -42,13 +42,6 @@ extern void kdump_move_device_tree(void);
+>  /* cache lookup */
+>  struct device_node *of_find_next_cache_node(struct device_node *np);
+>  
+> -#ifdef CONFIG_NUMA
+> -extern int of_node_to_nid(struct device_node *device);
+> -#else
+> -static inline int of_node_to_nid(struct device_node *device) { return 0; }
+> -#endif
+> -#define of_node_to_nid of_node_to_nid
+> -
+>  extern void of_instantiate_rtc(void);
+>  
+>  extern int of_get_ibm_chip_id(struct device_node *np);
+> diff --git a/arch/sparc/include/asm/prom.h b/arch/sparc/include/asm/prom.h
+> index 67c6257..60c8d7b 100644
+> --- a/arch/sparc/include/asm/prom.h
+> +++ b/arch/sparc/include/asm/prom.h
+> @@ -43,10 +43,6 @@ extern int of_getintprop_default(struct device_node *np,
+>  				 const char *name,
+>  				 int def);
+>  extern int of_find_in_proplist(const char *list, const char *match, int len);
+> -#ifdef CONFIG_NUMA
+> -extern int of_node_to_nid(struct device_node *dp);
+> -#define of_node_to_nid of_node_to_nid
+> -#endif
+>  
+>  extern void prom_build_devicetree(void);
+>  extern void of_populate_present_mask(void);
 > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 865d3f6..e4c9945 100644
+> index 865d3f6..ced4c06 100644
 > --- a/drivers/of/base.c
 > +++ b/drivers/of/base.c
-> @@ -280,6 +280,31 @@ static bool __of_find_n_match_cpu_property(struct device_node *cpun,
->         return false;
+> @@ -74,6 +74,13 @@ int of_n_size_cells(struct device_node *np)
 >  }
->
-> +/*
-> + * arch_find_n_match_cpu_physical_id - See if the given device node is
-> + * for the cpu corresponding to logical cpu 'cpu'.  Return true if so,
-> + * else false.  If 'thread' is non-NULL, the local thread number within the
-> + * core is returned in it.
-> + */
-> +bool __weak arch_find_n_match_cpu_physical_id(struct device_node *cpun,
-> +                                             int cpu, unsigned int *thread)
+>  EXPORT_SYMBOL(of_n_size_cells);
+>  
+> +#ifdef CONFIG_NUMA
+> +int __weak of_node_to_nid(struct device_node *np)
 > +{
-> +       /* Check for non-standard "ibm,ppc-interrupt-server#s" property
-> +        * for thread ids on PowerPC. If it doesn't exist fallback to
-> +        * standard "reg" property.
-> +        */
-> +       if (IS_ENABLED(CONFIG_PPC) &&
-> +           __of_find_n_match_cpu_property(cpun,
-> +                                          "ibm,ppc-interrupt-server#s",
-> +                                          cpu, thread))
-> +               return true;
-> +
-> +       if (__of_find_n_match_cpu_property(cpun, "reg", cpu, thread))
-> +               return true;
-> +
-> +       return false;
+> +	return numa_node_id();
 > +}
+> +#endif
 > +
+>  #if defined(CONFIG_OF_DYNAMIC)
 >  /**
->   * of_get_cpu_node - Get device node associated with the given logical CPU
->   *
-> @@ -300,26 +325,10 @@ static bool __of_find_n_match_cpu_property(struct device_node *cpun,
->   */
->  struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
->  {
-> -       struct device_node *cpun, *cpus;
+>   *	of_node_get - Increment refcount of a node
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index f95aee3..4d294a0 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -534,13 +534,10 @@ static inline const char *of_prop_next_string(struct property *prop,
+>  #define of_match_node(_matches, _node)	NULL
+>  #endif /* CONFIG_OF */
+>  
+> -#ifndef of_node_to_nid
+> -static inline int of_node_to_nid(struct device_node *np)
+> -{
+> -	return numa_node_id();
+> -}
 > -
-> -       cpus = of_find_node_by_path("/cpus");
-> -       if (!cpus) {
-> -               pr_warn("Missing cpus node, bailing out\n");
-> -               return NULL;
-> -       }
-> +       struct device_node *cpun;
->
-> -       for_each_child_of_node(cpus, cpun) {
-> -               if (of_node_cmp(cpun->type, "cpu"))
-> -                       continue;
-> -               /* Check for non-standard "ibm,ppc-interrupt-server#s" property
-> -                * for thread ids on PowerPC. If it doesn't exist fallback to
-> -                * standard "reg" property.
-> -                */
-> -               if (IS_ENABLED(CONFIG_PPC) &&
-> -                       __of_find_n_match_cpu_property(cpun,
-> -                               "ibm,ppc-interrupt-server#s", cpu, thread))
-> -                       return cpun;
-> -               if (__of_find_n_match_cpu_property(cpun, "reg", cpu, thread))
-> +       for_each_node_by_type(cpun, "cpu") {
-> +               if (arch_find_n_match_cpu_physical_id(cpun, cpu, thread))
->                         return cpun;
->         }
->         return NULL;
-> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-> index 801ff9e..fbd25c3 100644
-> --- a/include/linux/cpu.h
-> +++ b/include/linux/cpu.h
-> @@ -18,6 +18,7 @@
->  #include <linux/cpumask.h>
->
->  struct device;
-> +struct device_node;
->
->  struct cpu {
->         int node_id;            /* The node which contains the CPU */
-> @@ -29,6 +30,8 @@ extern int register_cpu(struct cpu *cpu, int num);
->  extern struct device *get_cpu_device(unsigned cpu);
->  extern bool cpu_is_hotpluggable(unsigned cpu);
->  extern bool arch_match_cpu_phys_id(int cpu, u64 phys_id);
-> +extern bool arch_find_n_match_cpu_physical_id(struct device_node *cpun,
-> +                                             int cpu, unsigned int *thread);
->
->  extern int cpu_add_dev_attr(struct device_attribute *attr);
->  extern void cpu_remove_dev_attr(struct device_attribute *attr);
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -#define of_node_to_nid of_node_to_nid
+> +#if defined(CONFIG_OF) && defined(CONFIG_NUMA)
+> +extern int of_node_to_nid(struct device_node *np);
+> +#else
+> +static inline int of_node_to_nid(struct device_node *device) { return 0; }
+>  #endif
+>  
+>  /**
+> -- 
+> 1.8.1.2
+> 
