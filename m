@@ -1,36 +1,34 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH RFC 0/2] Initial Solid Run Cubox-i carrier-1 support
-Date: Sat, 5 Oct 2013 12:21:47 +0100
-Message-ID: <20131005112147.GX12758@n2100.arm.linux.org.uk>
+From: oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+Subject: [PATCH] ARM: sunxi: dts: preliminary cubietruck support
+Date: Sat,  5 Oct 2013 17:17:26 +0200
+Message-ID: <1380986247-29112-1-git-send-email-oliver+list@schinagl.nl>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDDZ7YMYRMGBBYO3YCJAKGQE4R4AEDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Oliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is where I am at the moment with the SolidRun Cubox-i Carrier-1
-board support with v3.12-rc3.  What's included and tested here is:
+From: Oliver Schinagl <oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 
-- Consumer IR
-- SD card slot
-- AR8035 ethernet phy
-- HDMI DDC I2C
-- USB
+A new cubieboard has been introduced, the cubietruck. I did try to also add emac support, but that didn't work well with the included RTL8211E Gbit PHY so I ommited that for now (it doesn't work with u-boot either).
 
-What isn't included:
-- RTC (commented out) since the chip is not fitted to developer boards yet
-- HDMI output
-- SPDIF output
-- Audio output (codec not fitted)
-- Wireless (not fitted)
+I tested the uart0 port and the LEDS which all seemed to work as expected.
 
-I'm sending this out as an RFC as it's not at the point for merging, but
-those with the developer board should find it useful to get their boards
-up and running with recent kernels.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Oliver Schinagl (1):
+  ARM: sunxi: dts: Add support for the cubieboard3, the CubieTruck
+
+ arch/arm/boot/dts/Makefile                 |  1 +
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 60 ++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+
+-- 
+1.8.1.5
