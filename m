@@ -1,26 +1,42 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] ARM: at91/dt: add watchdog properties to kizbox
- board
-Date: Fri, 4 Oct 2013 15:32:26 -0700
-Message-ID: <20131004223226.GD3685@roeck-us.net>
-References: <1380871455-7324-1-git-send-email-b.brezillon@overkiz.com>
- <1380871455-7324-5-git-send-email-b.brezillon@overkiz.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM i.MX53: dts: Add TVE to i.MX53-QSB device tree
+Date: Sat, 5 Oct 2013 09:58:47 +0800
+Message-ID: <20131005015845.GC2734@S2101-09.ap.freescale.net>
+References: <1380192374-9531-1-git-send-email-p.zabel@pengutronix.de>
+ <1380192374-9531-2-git-send-email-p.zabel@pengutronix.de>
+ <20130927011643.GB25146@S2101-09.ap.freescale.net>
+ <1380552008.3959.29.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1380871455-7324-5-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1380552008.3959.29.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <groeck7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yang Wenyou <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 04, 2013 at 09:24:15AM +0200, Boris BREZILLON wrote:
-> Add watchdog specific config for kizbox board.
+On Mon, Sep 30, 2013 at 04:40:08PM +0200, Philipp Zabel wrote:
+> > > @@ -280,8 +289,8 @@ memgpu: /memreserve/ 0xb0000000 0x04000000;
+> > >  			};
+> > >  
+> > >  			ldo8_reg: ldo8 {
+> > > -				regulator-min-microvolt = <1200000>;
+> > > -				regulator-max-microvolt = <3600000>;
+> > > +				regulator-min-microvolt = <2750000>;
+> > > +				regulator-max-microvolt = <2750000>;
+> > 
+> > Why this change?
 > 
-> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+> According to the reference manual, the TVDAC supply should be 2.75 V. If
+> there are no ill effects if this ldo is actually set to 3.6 V, this
+> change could be dropped.
 
-Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+So you either add a comment in commit log for the change or drop the
+change.
+
+Shawn
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
