@@ -1,112 +1,74 @@
-From: oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
-Subject: [PATCH] ARM: sunxi: dts: Add support for the
- cubieboard3, the CubieTruck
-Date: Sat,  5 Oct 2013 17:17:27 +0200
-Message-ID: <1380986247-29112-2-git-send-email-oliver+list@schinagl.nl>
-References: <1380986247-29112-1-git-send-email-oliver+list@schinagl.nl>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH|RFC] of: let of_match_device() always return best match
+Date: Sat, 5 Oct 2013 14:46:52 -0300
+Message-ID: <CAOMZO5BekS_BvJzrt8vM1=7LjsiO=3hKL=mMfTjxkO3aZ4qwRQ@mail.gmail.com>
+References: <1380826284-18381-1-git-send-email-mkl@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDDZ7YMYRMGBBYW3YCJAKGQERA5LZFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1380986247-29112-1-git-send-email-oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1380826284-18381-1-git-send-email-mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Hi Marc,
 
-Cubieboard3, CT
+On Thu, Oct 3, 2013 at 3:51 PM, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
 
-Signed-off-by: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                 |  1 +
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 60 ++++++++++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+> For example:
+>
+> The imx28.dtsi gives this compatible string for its CAN core:
+>
+>>       compatible = "fsl,imx28-flexcan", "fsl,p1010-flexcan";
+>
+> The flexcan driver defines:
+>
+>> static const struct of_device_id flexcan_of_match[] = {
+>>       { .compatible = "fsl,p1010-flexcan", .data = &fsl_p1010_devtype_data, },
+>>       { .compatible = "fsl,imx28-flexcan", .data = &fsl_imx28_devtype_data, },
+>>       { .compatible = "fsl,imx6q-flexcan", .data = &fsl_imx6q_devtype_data, },
+>>       { /* sentinel */ },
+>> };
+>
+> The "p1010" was the first Freescale SoC with the flexcan core. But this SoC has
+> a bug, so a workaround has to be enabled in the driver. The mx28 has this bug
+> fixed, so we don't need this quite costly workaround.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index cc0f1fb..171e6c7 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -232,6 +232,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += \
- 	sun5i-a13-olinuxino.dtb \
- 	sun6i-a31-colombus.dtb \
- 	sun7i-a20-cubieboard2.dtb \
-+	sun7i-a20-cubietruck.dtb \
- 	sun7i-a20-olinuxino-micro.dtb
- dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb \
- 	tegra20-iris-512.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-new file mode 100644
-index 0000000..0167afe
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -0,0 +1,60 @@
-+/*
-+ * Copyright 2013 Oliver Schinagl
-+ *
-+ * Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+/include/ "sun7i-a20.dtsi"
-+
-+/ {
-+	model = "Cubietech Cubietruck";
-+	compatible = "cubietech,cubietech", "allwinner,sun7i-a20";
-+
-+	soc@01c00000 {
-+		pinctrl@01c20800 {
-+			led_pins_cubietruck: led_pins@0 {
-+				allwinner,pins = "PH7", "PH11", "PH20", "PH21";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+		};
-+
-+		uart0: serial@01c28000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart0_pins_a>;
-+			status = "okay";
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins_cubietruck>;
-+
-+		blue {
-+			label = "cubietruck:blue:usr";
-+			gpios = <&pio 7 21 0>;
-+		};
-+		orange {
-+			label = "cubietruck:orange:usr";
-+			gpios = <&pio 7 20 0>;
-+		};
-+		white {
-+			label = "cubietruck:white:usr";
-+			gpios = <&pio 7 11 0>;
-+		};
-+		green {
-+			label = "cubietruck:green:usr";
-+			gpios = <&pio 7 7 0>;
-+		};
-+	};
-+};
--- 
-1.8.1.5
+What about defining in imx28.dtsi:
+compatible = "fsl,imx28-flexcan".
+
+and the in the flexcan driver we could do the same as in the fec_main driver:
+
+static struct platform_device_id fec_devtype[] = {
+    {
+        /* keep it for coldfire */
+        .name = DRIVER_NAME,
+        .driver_data = 0,
+    }, {
+        .name = "imx25-fec",
+        .driver_data = FEC_QUIRK_USE_GASKET,
+    }, {
+        .name = "imx27-fec",
+        .driver_data = 0,
+    }, {
+        .name = "imx28-fec",
+        .driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_SWAP_FRAME,
+    }, {
+        .name = "imx6q-fec",
+        .driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
+                FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
+                FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR006358,
+    }, {
+        .name = "mvf600-fec",
+        .driver_data = FEC_QUIRK_ENET_MAC,
+    }, {
+        /* sentinel */
+    }
+};
+
+So that we know which SoC needs to have the workaround applied or not.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
