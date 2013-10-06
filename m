@@ -1,30 +1,70 @@
-From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 0/5] ARM: support for Trusted Foundations secure monito
-Date: Sun, 6 Oct 2013 11:11:48 -0700
-Message-ID: <5251A7E4.8080204@nvidia.com>
-References: <1380904635-18113-1-git-send-email-acourbot@nvidia.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: RE: RE: [PATCH v2 00/12] clk/exynos convert clock IDs to macros
+Date: Sun, 06 Oct 2013 13:27:09 -0700
+Message-ID: <20131006202709.32214.75572@quantum>
+References: <1378462361-13680-1-git-send-email-a.hajda@samsung.com>
+ <8412301.YP2zzplWoe@amdc1227>
+ <070001ceafa5$d4d81a40$7e884ec0$%kim@samsung.com>
+ <523716C9.3000204@samsung.com> <20130916193709.27384.86101@quantum>
+ <06c101cebdc5$75a83d10$60f8b730$%kim@samsung.com>
+ <20131002010953.9338.23436@quantum>
+ <0d8901cec170$f7230b50$e56921f0$%kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380904635-18113-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <0d8901cec170$f7230b50$e56921f0$%kim@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>
+Cc: 'Tomasz Figa' <t.figa@samsung.com>, 'Andrzej Hajda' <a.hajda@samsung.com>, linux-arm-kernel@lists.infradead.org, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'devicetree' <devicetree@vger.kernel.org>, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/04/2013 09:37 AM, Alexandre Courbot wrote:
-> Hopefully final version of this patchset. If I'm not mistaken the last thing
-> that prevents Stephen from merging it is Russel's Ack. Russel, could you check
-> it?
+Quoting Kukjin Kim (2013-10-04 19:16:56)
+> Mike Turquette wrote:
+> > 
+> > Quoting Kukjin Kim (2013-09-30 03:11:41)
+> > > Mike Turquette wrote:
+> > > >
+> > > > Quoting Sylwester Nawrocki (2013-09-16 07:33:45)
+> > > > > On 09/12/2013 12:50 PM, Kukjin Kim wrote:
+> > > > > > Well...I'm not sure changing to use macro is better or not at this
+> > > > moment...
+> > > > >
+> > > > > I think it is. ;) It's really less error prone to have symbolic
+> > names
+> > > > instead
+> > > > > of the plain numbers. The clock ids are defined in one place and it
+> > is
+> > > > more
+> > > > > clear what a clock is by looking at symbolic name. It's especially
+> > > > annoying
+> > > > > to use plain numbers where are are many clock in a single node, like
+> > 10
+> > > > or
+> > > > > more. What are you main concerns with this ?
+> > > >
+> > > > I think having the symbolic names is a win for readability.
+> > > >
+> > > Hmm...since Mike who is a maintainer for ccf agrees with Sylwester's
+> > opinion, so I agree. Actually, I had no strong objection on this but still
+> > I'm not sure using macro is really better because sometimes the name
+> > doesn't give readability really I think though.
+> > >
+> > > Mike, can you give me your ack on clk stuff?
+> > 
+> > Yes, but I was thinking to take this change through the clk tree. The
+> > new branch based on -rc3 will be published tonight.
+> > 
+> > Let me know if it causes problems for you for me to take it.
+> > 
+> Uhm, I think dt changes can make ugly conflicts because of spread dt changing?
 
-Oops.
+Sure, go ahead and take the patches then.
 
-s/Russel/Russell/g, with apologies for the continuous misspelling. m(__)m
+Acked-by: Mike Turquette <mturquette@linaro.org>
 
-Alex.
+Regards,
+Mike
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> - Kukjin
