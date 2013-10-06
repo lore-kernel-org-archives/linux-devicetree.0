@@ -1,43 +1,48 @@
 From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH v6 2/2] mmc: sdhci-msm: Initial support for MSM chipsets
-Date: Sat, 5 Oct 2013 22:51:32 -0700
-Message-ID: <CAJAp7OjvU2mi_TDiA5d-ut-Q9fHvKSbW_LfdpQGSTprsyPDU0g@mail.gmail.com>
-References: <1380301041-26405-1-git-send-email-gdjakov@mm-sol.com>
-	<1380301041-26405-3-git-send-email-gdjakov@mm-sol.com>
+Subject: Re: [PATCH RFC v2 3/5] spmi: add generic SPMI controller binding documentation
+Date: Sat, 5 Oct 2013 23:11:36 -0700
+Message-ID: <CAJAp7Oi-bPytsLtsppdanOi_p0Y5vfBriGB-B5by7w5Z7SGU-Q@mail.gmail.com>
+References: <cover.1377202730.git.joshc@codeaurora.org>
+	<e42576b69ef3d4e624fbfa2f32f6f79a931b55d6.1377202730.git.joshc@codeaurora.org>
+	<5217DB0C.7000101@wwwdotorg.org>
+	<20130827170120.GR4035@joshc.qualcomm.com>
+	<521D2047.8030300@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1380301041-26405-3-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: linux-mmc@vger.kernel.org, Chris Ball <cjb@laptop.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, Subhash Jadavani <subhashj@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <521D2047.8030300@wwwdotorg.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Josh Cartwright <joshc@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Sagar Dharia <sdharia@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Michael Bohan <mbohan@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Georgi,
+On Tue, Aug 27, 2013 at 2:55 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 08/27/2013 11:01 AM, Josh Cartwright wrote:
+> ...
+> cell 0 - address type (0: master, 1: unique ID, 2: group ID, ...)
 
-Thanks for working on this, unfortunately it seems like I need to port
-the rpm regulators to be able to test this.
-But I did find that...
+I think it would make sense to have the master id as a property of the
+bus, as you could consider this to indicate different buses and then
+usid, gsid and base being part of the reg.
 
-On Fri, Sep 27, 2013 at 9:57 AM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
-> ...
-> +static irqreturn_t sdhci_msm_pwr_irq(int irq, void *data)
-> +{
-> +       struct sdhci_msm_host *msm_host = (struct sdhci_msm_host *)data;
-> ...
-> +static int sdhci_msm_probe(struct platform_device *pdev)
-> +{
-> +       struct sdhci_host *host;
-> +       struct sdhci_msm_host *msm_host;
-> ...
-> +       ret = devm_request_threaded_irq(&pdev->dev, msm_host->pwr_irq, NULL,
-> +                                       sdhci_msm_pwr_irq, IRQF_ONESHOT,
-> +                                       dev_name(&pdev->dev), host);
-> ...
+> cell 1 - address value
 
-...sdhci_msm_pwr_irq() expects the data pointer to be msm_host, not
-sdhci_host, so right now I only get a panic. So I suspect you mean
-msm_host as the last param here.
+I did hack up Josh patchset to read a reg touple of <usid, base>
+instead of just usid. I stored the second value in the spmi_device
+struct for easy access, but maybe it should be done like on
+codeaurora; in a resource?
+I believe this looks nice, but as I haven't read the mipi spec I
+wonder, will there be a case where you don't have an offset/base?
+Should it just be made optional?
+
+Can we make the address <usid, [base]> and have the code populate a
+resource based on a reg-names property? That way it would be possible
+to extend it to support gsid in case we want to (would require
+reg-names though).
+
+
+With the hack to Josh's patchset I quickly ported qpnp-revision and
+qpnp-vibrator, and it seems to work quite nicely.
 
 Regards,
 Bjorn
