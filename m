@@ -1,171 +1,185 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCHv0,RESEND] Add support for Intersil ISL12057 I2C RTC/Alarm chip
-Date: Sun, 06 Oct 2013 22:58:11 +0200
-Message-ID: <87zjqmi0bg.fsf@natisbad.org>
-References: <87ob787nf6.fsf@natisbad.org>
-	<20131002111423.GO22259@e106331-lin.cambridge.arm.com>
+From: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v10 00/20] iommu/exynos: Fixes and Enhancements of System MMU
+	driver with DT
+Date: Mon, 07 Oct 2013 10:52:12 +0900
+Message-ID: <20131007105212.1c2a9e29166ff4b4a33468f8@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "grant.likely@linaro.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring@calxeda.com" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "rtc-linux@googlegroups.com" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Samsung SOC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Prathyush <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Subash Patel <supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Antonios Motakis <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The current exynos-iommu(System MMU) driver does not work autonomously
+since it is lack of support for power management of peripheral blocks.
+For example, MFC device driver must ensure that its System MMU is disabled
+before MFC block is power-down not to invalidate IOTLB in the System MMU
+when I/O memory mapping is changed. Because a System MMU resides in the
+same H/W block, access to control registers of System MMU while the H/W
+block is turned off must be prohibited.
 
-Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
+This set of changes solves the above problem with setting each System MMUs
+as the parent of the device which owns the System MMU to receive the
+information when the device is turned off or turned on.
 
-> On Tue, Oct 01, 2013 at 09:21:01PM +0100, Arnaud Ebalard wrote:
->> Hi,
->> 
->> Netgear ReadyNAS 102 (Armada 370-base) NAS includes an Intersil ISL12057
->> I2C RTC/Alarm chip. As part of an effort to get full support for the NAS
->> in mainline kernel, I wrote a driver for the chip based on ISL1208 one
->> developed by Hebert Valerio Riedel. The patch below is an updated resend
->> of the one I submitted on August 3 (i.e. holidays), but got no reply
->> for. See
->> 
->>   https://groups.google.com/forum/#!topic/rtc-linux/ypqMloOezj0
->> 
->> If possible, I would like to be able to get it mainline in 3.13, and
->> pushed required DT bindings for ReadyNAS 102 to avoid the NAS to wake up
->> in the 70s.
->> 
->> Setting and retrieving time works as expected at startup and shutdown.
->> Also, alarm bit is set in status register when the alarm is triggered.
->> 
->> Some things worth mentioning:
->>  - on my platform, the Alarm IRQ is not connected to the SoC but to a
->>    power chip, so I cannot test the alarm IRQ handling code of the
->>    patch. I'd be happy to get feedback if someone has the same hardware.
->>  - nonetheless, when the alarm is set and the NAS is powered off, it
->>    gets woken up, i.e. the alarm setting code does work.
->>  - trying to interact w/ the clock using userland tools (Debian jessie)
->>    makes me wonder what I missed:
->> 
->>    root@humble:/sys/class/rtc/rtc0# hwclock -r
->>    hwclock: select() to /dev/rtc0 to wait for clock tick timed out: Success
->> 
->>    root@humble:/tmp# gcc rtctest.c
->>    root@humble:/tmp# ./a.out
->> 
->>                           RTC Driver Test Example.
->> 
->>     Counting 5 update (1/sec) interrupts from reading /dev/rtc0:
->> 
->>     [ nothing happens ]
->> 
->>     I tried and find some documentation on the topic to understand where
->>     the issue comes from but found nothing obvious.
->
-> Forgive me if I'm mistaken, but you mentioned above that interrupts
-> aren't wired up on your platform, and judging by the output the test
-> program seems to be relying on them.
+Another big change to the driver is the support for devicetree.
+The bindings for System MMU is described in
+Documentation/devicetree/bindings/arm/samsung/system-mmu.txt
 
-This is correct. I spent some more time digging about what I should do
-an it's not very clear to me. I found some informative elements about
-IRQ handling and RTC in
+In addition, this patchset also includes several bug fixes and enhancements
+of the current driver.
 
- commit c9f5c7e7a8 rtc: rtc-spear: Provide flag for no support of UIE mode
- commit 4a649903f9 rtc: Provide flag for rtc devices that don't support UIE
+Change log:
+v10:
+- Rebased on the following branches
+  git.linaro.org/git-ro/people/mturquette/linux.git/clk-next
+  git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git/for-next
+  git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git/next
+  git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/master (3.12-rc3)
+- Set parent clock to all System MMU clocks.
+- Add clock and DT descriptos for Exynos5420
+- Modified error handling in exynos_iommu_init()
+- Split "iommu/exynos: support for device tree" patch into the following 6 patches
+  iommu/exynos: handle only one instance of System MMU
+  iommu/exynos: always enable runtime PM
+  iommu/exynos: always use a single clock descriptor
+  iommu/exynos: remove dbgname from drvdata of a System MMU
+  iommu/exynos: use managed driver helper functions
+  iommu/exynos: support for device tree
+- Remove 'interrupt-names' and 'status' properties from DT
+- Change n:1 relationship between master:System MMU into 1:1 relationship.
+- Removed custom fault handler and print the status of System MMU
+  whenever System MMU fault is occurred.
+- Post Antonios Motakis's commit together:
+  "iommu/exynos: add devices attached to the System MMU to an IOMMU group"
 
-So I modified the driver to have uie_unsupported set to 1 for testing. This
-makes hwclock happy but does not please rtctest.c, because commit
-4a649903f9 modified the interface to have -EINVAL returned.
+v9:
+- Rebased on the following branches
+  git.linaro.org/git-ro/people/mturquette/linux.git/clk-next
+  git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git/samsung-next
+  git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/master (3.11-rc4)
+- Split "add bus notifier for registering System MMU" into 5 patches
+- Call clk_prepare() that was missing in v8.
+- Fixed base address of sysmmu_tv in exynos4210.dtsi
+- BUG_ON() instead of return -EADDRINUSE when trying mapping on an mapped area
+- Moved camif_top to 317 in drivers/clk/samsung/clk-exynos5250.c
+- Removed 'iommu' property from 'codec'(mfc) node
+- Does not make 'master' clock to be the parent of 'sysmmu' clock.
+   'master' clock is enabled before accessing control registers of System MMU
+   and disabled after the access.
 
-root@humble:/tmp# hwclock -r
-Sun 06 Oct 2013 09:38:12 PM CEST  -0.107813 seconds
-root@humble:/tmp# ./a.out 
+v8:
+- Reordered patch list: moved "change rwloc to spinlock" to the last.
+- Fixed remained bug in "fix page table maintenance".
+- Always return 0 from exynos_iommu_attach_device().
+- Removed prefetch buffer setting when System MMU is enabled
+  due to the restriction of prefetch buffers:
+  A prefetch buffer must not hit from more than one DMA.
+  For instance with GScalers, if a single prefetch buffer is initialized
+  with 0x0 ~ 0xFFFFFFFF and a GScaler works on source buffer at 0x10000000
+  and target buffer @ 0x20000000, the System MMU may be got deadlock.
+  Clients must initialize prefetch buffers with custom function defined
+  in exynos-iommu drivers whenever they need to enable prefetch buffers.
+- The clock of System MMU has no relationship with the clock of its master H/W.
+  The clock of master H/W is always enabled when exynos-iommu driver needs to
+  access MMIO area and disabled as soon as the access finishes.
+- Removed err_page variable used in exynos_iommu_unmap() in the previous patch
+  "fix page table maintenance".
+- Split a big patch "add bus notifier for registering System MMU".
+   Extracted the following 2 patches: 9/12 and 10/12.
+- And some additional fixes...
 
-                        RTC Driver Test Example.
+v7:
+- Rebased on the stable 3.10
+- Registered PM domains and gate clocks with DT
+- Changed connection method between a System MMU and its master H/W
+   'mmu-master' property in the node of System MMU
+   --> 'iommu' property in the node of master H/W
+- Marking device descriptor of master H/W of a System MMU with bus notifier.
+- Power management (PM_RUNTIME, PM_SLEEP) of System MMUs with gpd_dev_ops
+   of Generic IO Powerdomain. gpd_dev_ops are set to the master H/Ws
+   before they are probed in the bus notifier.
+- Removed additional debugging features like debugfs entries and
+   version names.
+- Removed support for advanced features of System MMU 3.2 and 3.3
+   the current IOMMU API cannot handle the feature
+  (A kind of L2 TLB that fetches several consequence page table entries.
+   It must be initialized by the driver of master H/W whenever it works.)
 
-RTC_UIE_ON ioctl: Invalid argument
+v6:
+- Rebased on the branch, next/iommu-exynos of
+  git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
 
+v5:
+- new bugfix: patch 01
+- Reordered patches
+  * patch 01 ~ 05: Bugfix and enhancements of the existing driver
+  * patch 06 ~ 10: Device Tree support and callbacks for power management
+  * patch 11     : System MMU 3.2 and 3.3 support
+  * patch 12 ~ 14: Debugging features
+- Additional code compaction
 
-Even if I modify the code to pass the UIE related test
-(i.e. s/ENOTTY/EINVAL/) then I get stuck on RTC_AIE_ON
-test. 
+v4:
+- Remove Change-Id from v3 patches
+- Change the order of the third and the first patch
+  Thanks to Kukjin Kim.
+- Fix memory leak when allocating and assigning exynos_iommu_owner to client
+  device if the client device has multiple System MMUs.
+  Thanks to Rahul Sharma.
 
+v3:
+- Fix prefetch buffer flag definition for System MMU 3.3 (patch 10/12)
+- Fix incorrect setting for SET_RUNTIME_PM_OPS (patch 09/12)
+  Thanks to Prathyush.
 
-Anyway, to come back to my initial issue, I thinks my problem is that
-the ReadyNAS 102 has the ISL 12057 Alarm IRQ pin connected to a power
-chip instead of the SoC, i.e. there is no way for the SoC to get
-interrupts from the chips and the RTC interface does not seem (at least
-to me) to provide a trivial whay to handle that. As I am unable to
-understand what I should do and not do from the documentation, I am
-basically asking RTC experts for guidelines on what to do.
+v2:
+- Split the patch to iommu/exynos into 9 patches
+- Support for System MMU 3.3
+- Some code compaction
 
-One solution^Wworkaround would be for me to completely remove the alarm
-related code (at least initially) and provide a basic driver that only
-support the clock function of the chip. Alarm support could then be
-added later by someone with an IRQ pin routed to its SoC.
+Patch summary:
+[PATCH 01/20] iommu/exynos: do not include removed header
+[PATCH 02/20] iommu/exynos: add missing cache flush for removed page table entries
+[PATCH 03/20] iommu/exynos: change error handling when page table update is failed
+[PATCH 04/20] iommu/exynos: fix L2TLB invalidation
+[PATCH 05/20] iommu/exynos: allocate lv2 page table from own slab
+[PATCH 06/20] iommu/exynos: always enable runtime PM
+[PATCH 07/20] iommu/exynos: always use a single clock descriptor
+[PATCH 08/20] iommu/exynos: remove dbgname from drvdata of a System MMU
+[PATCH 09/20] iommu/exynos: use managed device helper functions
+[PATCH 10/20] clk: exynos: add gate clock descriptions of System MMU
+[PATCH 11/20] ARM: dts: Add description of System MMU of Exynos SoCs
+[PATCH 12/20] iommu/exynos: support for device tree
+[PATCH 13/20] iommu/exynos: gating clocks of master H/W
+[PATCH 14/20] iommu/exynos: remove custom fault handler
+[PATCH 15/20] iommu/exynos: remove calls to Runtime PM API functions
+[PATCH 16/20] iommu/exynos: turn on useful configuration options
+[PATCH 17/20] iommu/exynos: add support for power management subsystems.
+[PATCH 18/20] iommu/exynos: change rwlock to spinlock
+[PATCH 19/20] iommu/exynos: return 0 if iommu_attach_device() successes
+[PATCH 20/20] iommu/exynos: add devices attached to the System MMU to an IOMMU group
 
-Another possible path could be to provide some DT (i.e. OF) knob in order
-to make ISL 12057 code (or possibly generic RTC code) aware that alarm
-IRQ are indeed supported by the chip but not routed to the processor
-itself. Regarding the IRQ handling code, care should be taken in that
-case to review it as I cannot test it myself.
-
-
->> I intend to provide some documentation in next round and fix reported
->> issues. Additionally, I wonder why ISL1208 code has no specific mutex
->> protection for access and changes. I also followed that path in attached
->> driver but I guess this is something that should be improved.
->
-> The devicetree binding must go in when the driver is added, rather than
-> later.
-
-As soon as I know what should be fixed I will write some documentation
-if needed. As you write below, if the driver remains as is (trivial
-interface), it will not be needed. On the contrary, if some DT knob is
-needed, I will provide documentation once the code in a next round of
-the patch set.
-
-
-> Given the above known issue, I think that should be fixed up before the
-> driver gets merged -- 
-> If this driver has known issues then should those not be fixed before
-> merging it?
-
-I don't think the driver has issues per se. All the problems come from
-the fact that the platform I have does not have the chip alarm interrupt
-line routed to the SoC:
-
- - someone with an ISL 12057 with a routed alarm interrupt pin could
-   test the IRQ-related code of the driver; otherwise, that code - based
-   on ISL 1208 one - should be carefully reviewed.
- - some direction is needed about RTC interface in order to be able to
-   express the fact that the chip supports setting an alarm which can
-   trigger an interrupt at a given time but that this interrupt is for
-   someone else than the SoC.
-
-
->> +#ifdef CONFIG_OF
->> +static struct of_device_id isl12057_dt_match[] = {
->> +       { .compatible = "isil,isl12057" },
->> +       { },
->> +};
->> +#endif
->
-> It looks like this is a simple device with only an interrupt (no clocks,
-> regulators, other elements), so that can go under
-> Documentation/devicetree/bindings/i2c/trivial-devices.txt.
-
-Will do that if the interface remains as is.
-
-
-> Also, the "isil" vendor prefix doesn't seem to be documented. Could you
-> please create a patch adding it to
-> Documentation/devicetree/bindings/vendor-prefixes.txt?
-
-will do. I went for "isil" because it is the stock ticker symbol for
-Intersil (FWIW, https://lkml.org/lkml/2013/7/11/170).
-
-Cheers,
-
-a+
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Diffstats:
+ .../devicetree/bindings/clock/exynos5250-clock.txt |   28 +
+ .../devicetree/bindings/clock/exynos5420-clock.txt |    3 +
+ .../bindings/iommu/samsung,exynos4210-sysmmu.txt   |   76 ++
+ arch/arm/boot/dts/exynos4.dtsi                     |  105 ++
+ arch/arm/boot/dts/exynos4210.dtsi                  |   21 +
+ arch/arm/boot/dts/exynos4x12.dtsi                  |   82 ++
+ arch/arm/boot/dts/exynos5250.dtsi                  |  262 +++++
+ arch/arm/boot/dts/exynos5420.dtsi                  |  296 ++++++
+ drivers/clk/samsung/clk-exynos5250.c               |   49 +-
+ drivers/clk/samsung/clk-exynos5420.c               |   12 +-
+ drivers/iommu/Kconfig                              |    5 +-
+ drivers/iommu/exynos-iommu.c                       | 1033 +++++++++++++-------
+ 12 files changed, 1585 insertions(+), 387 deletions(-)
