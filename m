@@ -1,62 +1,102 @@
-From: Matt Porter <matt.porter@linaro.org>
-Subject: [PATCH 0/5] USB Device Controller support for BCM281xx
-Date: Mon,  7 Oct 2013 06:12:27 -0400
-Message-ID: <1381140752-312-1-git-send-email-matt.porter@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>
-Cc: Paul Zimmerman <paulz@synopsys.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
+From: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 5/5] ARM: dts: add usb udc support to bcm281xx
+Date: Mon,  7 Oct 2013 06:12:32 -0400
+Message-ID: <1381140752-312-6-git-send-email-matt.porter@linaro.org>
+References: <1381140752-312-1-git-send-email-matt.porter@linaro.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381140752-312-1-git-send-email-matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
+Cc: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds USB Device Controller support for the Broadcom
-BCM281xx family of parts. BCM281xx contains a DWC2 OTG block and
-s3c-hsotg is used to support UDC operation.
+Adds USB OTG/Control/PHY and clock support to BCM281xx and enables
+UDC support on the bcm11351-brt and bcm28155-ap boards.
 
-Parts 1-2 allows s3c-hsotg to build on non-Samsung platforms and
-adds support for a configurable UTMI PHY width. s3c-hsotg is extended
-to also support the dwc2 binding as that binding should describe the
-hardware independently of there being two different drivers (dwc2 in
-staging and s3c-hsotg) for the same device.
+Signed-off-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm11351-brt.dts | 10 ++++++++++
+ arch/arm/boot/dts/bcm11351.dtsi    | 21 +++++++++++++++++++++
+ arch/arm/boot/dts/bcm28155-ap.dts  | 12 ++++++++++++
+ 3 files changed, 43 insertions(+)
 
-Parts 3-4 add a PHY control driver for the Broadcom USB control block
-as well as a PHY driver that calls the exported API from the control
-driver. This approach is borrowed directly from the phy-omap-control.c
-driver.
-
-Patch 5 adds the DT nodes to enable UDC support on both BCM281xx boards
-in the kernel.
-
-This series depends on the "Update Kona drivers to use clocks" series
-(https://lkml.org/lkml/2013/10/3/645). The dependencies noted for that
-series are already queued for 3.13.
-
-Matt Porter (5):
-  usb: gadget: s3c-hsotg: enable build for other platforms
-  usb: gadget: s3c-hsotg: support configurable UTMI PHY width
-  usb: phy: add Broadcom Kona USB control driver
-  usb: phy: add Broadcom Kona USB PHY driver
-  ARM: dts: add usb udc support to bcm281xx
-
- Documentation/devicetree/bindings/staging/dwc2.txt |   4 +
- .../devicetree/bindings/usb/bcm-kona-usb-ctrl.txt  |  12 ++
- .../devicetree/bindings/usb/bcm-kona-usb-phy.txt   |  10 ++
- arch/arm/boot/dts/bcm11351-brt.dts                 |  10 ++
- arch/arm/boot/dts/bcm11351.dtsi                    |  21 +++
- arch/arm/boot/dts/bcm28155-ap.dts                  |  12 ++
- drivers/usb/gadget/Kconfig                         |   7 +-
- drivers/usb/gadget/s3c-hsotg.c                     |  20 ++-
- drivers/usb/gadget/s3c-hsotg.h                     |   1 +
- drivers/usb/phy/Kconfig                            |  12 ++
- drivers/usb/phy/Makefile                           |   2 +
- drivers/usb/phy/bcm-kona-usb.h                     |  31 +++++
- drivers/usb/phy/phy-bcm-kona-ctrl.c                | 151 +++++++++++++++++++++
- drivers/usb/phy/phy-bcm-kona-usb2.c                |  99 ++++++++++++++
- 14 files changed, 385 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/bcm-kona-usb-ctrl.txt
- create mode 100644 Documentation/devicetree/bindings/usb/bcm-kona-usb-phy.txt
- create mode 100644 drivers/usb/phy/bcm-kona-usb.h
- create mode 100644 drivers/usb/phy/phy-bcm-kona-ctrl.c
- create mode 100644 drivers/usb/phy/phy-bcm-kona-usb2.c
-
+diff --git a/arch/arm/boot/dts/bcm11351-brt.dts b/arch/arm/boot/dts/bcm11351-brt.dts
+index 9d36eb4..5a269c7 100644
+--- a/arch/arm/boot/dts/bcm11351-brt.dts
++++ b/arch/arm/boot/dts/bcm11351-brt.dts
+@@ -43,5 +43,15 @@
+ 		status = "okay";
+ 	};
+ 
++	usbotg@3f120000 {
++		status = "okay";
++	};
+ 
++	usbctl@3f130000 {
++		status = "okay";
++	};
++
++	usbphy {
++		status = "okay";
++	};
+ };
+diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+index 22aef21..1c647f2 100644
+--- a/arch/arm/boot/dts/bcm11351.dtsi
++++ b/arch/arm/boot/dts/bcm11351.dtsi
+@@ -227,4 +227,25 @@
+ 			#clock-cells = <0>;
+ 		};
+ 	};
++
++	usbotg: usbotg@3f120000 {
++		compatible = "snps,dwc2";
++		reg = <0x3f120000 0x10000>;
++		interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&usb_otg_ahb_clk>;
++		clock-names = "otg";
++		snps,phy-utmi-width = <8>;
++		status = "disabled";
++	};
++
++	usbctl: usbctl@3f130000 {
++		compatible = "brcm,kona-ctrl-usb";
++		reg = <0x3f130000 0x28>;
++		status = "disabled";
++	};
++
++	usbphy: usbphy {
++		compatible = "brcm,kona-usb2";
++		status = "disabled";
++	};
+ };
+diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
+index 96ae67a..7b1b741 100644
+--- a/arch/arm/boot/dts/bcm28155-ap.dts
++++ b/arch/arm/boot/dts/bcm28155-ap.dts
+@@ -42,4 +42,16 @@
+ 		max-frequency = <48000000>;
+ 		status = "okay";
+ 	};
++
++	usbotg@3f120000 {
++		status = "okay";
++	};
++
++	usbctl@3f130000 {
++		status = "okay";
++	};
++
++	usbphy {
++		status = "okay";
++	};
+ };
 -- 
 1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
