@@ -1,462 +1,459 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH 1/3] thermal: bcm281xx: Add thermal driver
-Date: Mon, 7 Oct 2013 10:52:07 -0400
-Message-ID: <5252CA97.6060601@ti.com>
-References: <1379958698-7554-1-git-send-email-wendy.ng@broadcom.com> <1379958698-7554-2-git-send-email-wendy.ng@broadcom.com> <52408648.7040301@ti.com> <5240C42A.3030705@broadcom.com> <5240D2CC.1070403@ti.com> <524F3E6D.1010308@broadcom.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v3 03/19] clk: at91: add PMC base support
+Date: Mon, 7 Oct 2013 17:07:19 +0200
+Message-ID: <5252CE27.6060905@atmel.com>
+References: <1375937608-3773-1-git-send-email-b.brezillon@overkiz.com> <1375938066-3889-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="UHB5ILQCIB4LlukNFCeoWLB5rDsghgLlb"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <524F3E6D.1010308@broadcom.com>
+In-Reply-To: <1375938066-3889-1-git-send-email-b.brezillon@overkiz.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wendy Ng <wendy.ng@broadcom.com>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Mark Rutland <Mark.Rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Markus Mayer <mmayer@broadcom.com>
+To: Boris BREZILLON <b.brezillon@overkiz.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---UHB5ILQCIB4LlukNFCeoWLB5rDsghgLlb
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On 08/08/2013 07:01, Boris BREZILLON :
+> This patch adds at91 PMC (Power Management Controller) base support.
+>
+> All at91 clocks managed by the PMC unit will use this framework.
+>
+> This framework provides the following fonctionalities:
+> - define a new struct at91_pmc to hide PMC internals (lock, PMC memory
+>    mapping, irq domain, ...)
+> - read/write helper functions (pmc_read/write) to access PMC registers
+> - lock/unlock helper functions (pmc_lock/unlock) to lock/unlock access to
+>    pmc registers
+> - a new irq domain and its associated irq chip to request PMC specific
+>    interrupts (useful for clk prepare callbacks)
+>
+> The PMC unit is declared as a dt clk provider (CLK_OF_DECLARE), and every
+> clk using this framework will declare a table of of_at91_clk_init_cb_t
+> and add it to the pmc_clk_ids table.
+>
+> When the pmc dt clock setup function is called (by of_clk_init function),
+> it triggers the registration of every supported child clk (those matching
+> the definitions in pmc_clk_ids).
+>
+> This patch copies at91_pmc_base (memory mapping) and at91sam9_idle
+> (function) from arch/arm/mach-at91/clock.c (which is not compiled if
+> COMMON_CLK_AT91 is enabled).
+>
+> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+> ---
+>   drivers/clk/Makefile      |    1 +
+>   drivers/clk/at91/Makefile |    5 +
+>   drivers/clk/at91/pmc.c    |  298 +++++++++++++++++++++++++++++++++++++++++++++
+>   drivers/clk/at91/pmc.h    |   58 +++++++++
+>   4 files changed, 362 insertions(+)
+>   create mode 100644 drivers/clk/at91/Makefile
+>   create mode 100644 drivers/clk/at91/pmc.c
+>   create mode 100644 drivers/clk/at91/pmc.h
+>
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index 4038c2b..c256a20 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -32,6 +32,7 @@ obj-$(CONFIG_ARCH_VT8500)	+= clk-vt8500.o
+>   obj-$(CONFIG_ARCH_ZYNQ)		+= zynq/
+>   obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+>   obj-$(CONFIG_PLAT_SAMSUNG)	+= samsung/
+> +obj-$(CONFIG_COMMON_CLK_AT91)	+= at91/
+>
+>   obj-$(CONFIG_X86)		+= x86/
+>
+> diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
+> new file mode 100644
+> index 0000000..1d4fb21
+> --- /dev/null
+> +++ b/drivers/clk/at91/Makefile
+> @@ -0,0 +1,5 @@
+> +#
+> +# Makefile for at91 specific clk
+> +#
+> +
+> +obj-y += pmc.o
+> diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
+> new file mode 100644
+> index 0000000..f6bd03d
+> --- /dev/null
+> +++ b/drivers/clk/at91/pmc.c
+> @@ -0,0 +1,298 @@
+> +/*
+> + * drivers/clk/at91/pmc.c
+> + *
+> + *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/clk/at91_pmc.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_irq.h>
+> +
+> +#include <asm/proc-fns.h>
+> +
+> +#include "pmc.h"
+> +
+> +void __iomem *at91_pmc_base;
+> +EXPORT_SYMBOL_GPL(at91_pmc_base);
+> +
+> +void at91sam9_idle(void)
+> +{
+> +	at91_pmc_write(AT91_PMC_SCDR, AT91_PMC_PCK);
+> +	cpu_do_idle();
+> +}
+> +
+> +static void pmc_irq_mask(struct irq_data *d)
+> +{
+> +	struct at91_pmc *pmc = irq_data_get_irq_chip_data(d);
+> +
+> +	pmc_write(pmc, AT91_PMC_IDR, 1 << d->hwirq);
+> +}
+> +
+> +static void pmc_irq_unmask(struct irq_data *d)
+> +{
+> +	struct at91_pmc *pmc = irq_data_get_irq_chip_data(d);
+> +
+> +	pmc_write(pmc, AT91_PMC_IER, 1 << d->hwirq);
+> +}
+> +
+> +static int pmc_irq_set_type(struct irq_data *d, unsigned type)
+> +{
+> +	if (type != IRQ_TYPE_LEVEL_HIGH) {
+> +		pr_warn("PMC: type not supported (support only IRQ_TYPE_LEVEL_HIGH type)\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct irq_chip pmc_irq = {
+> +	.name = "PMC",
+> +	.irq_disable = pmc_irq_mask,
+> +	.irq_mask = pmc_irq_mask,
+> +	.irq_unmask = pmc_irq_unmask,
+> +	.irq_set_type = pmc_irq_set_type,
+> +};
+> +
+> +static struct lock_class_key pmc_lock_class;
+> +
+> +static int pmc_irq_map(struct irq_domain *h, unsigned int virq,
+> +		       irq_hw_number_t hw)
+> +{
+> +	struct at91_pmc	*pmc = h->host_data;
+> +
+> +	irq_set_lockdep_class(virq, &pmc_lock_class);
+> +
+> +	irq_set_chip_and_handler(virq, &pmc_irq,
+> +				 handle_level_irq);
+> +	set_irq_flags(virq, IRQF_VALID);
+> +	irq_set_chip_data(virq, pmc);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pmc_irq_domain_xlate(struct irq_domain *d,
+> +				struct device_node *ctrlr,
+> +				const u32 *intspec, unsigned int intsize,
+> +				irq_hw_number_t *out_hwirq,
+> +				unsigned int *out_type)
+> +{
+> +	struct at91_pmc *pmc = d->host_data;
+> +	const struct at91_pmc_caps *caps = pmc->caps;
+> +
+> +	if (WARN_ON(intsize < 2))
+> +		return -EINVAL;
+> +	*out_hwirq = intspec[0];
+> +	*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
+> +
+> +	if (!(caps->available_irqs & (1 << *out_hwirq)))
+> +		return -EINVAL;
+> +
+> +	if (*out_type != IRQ_TYPE_LEVEL_HIGH)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct irq_domain_ops pmc_irq_ops = {
+> +	.map	= pmc_irq_map,
+> +	.xlate	= pmc_irq_domain_xlate,
+> +};
+> +
+> +static irqreturn_t pmc_irq_handler(int irq, void *data)
+> +{
+> +	struct at91_pmc *pmc = (struct at91_pmc *)data;
+> +	unsigned long sr;
+> +	int n;
+> +
+> +	sr = pmc_read(pmc, AT91_PMC_SR) & pmc_read(pmc, AT91_PMC_IMR);
+> +	if (!sr)
+> +		return IRQ_NONE;
+> +
+> +	for_each_set_bit(n, &sr, BITS_PER_LONG)
+> +		generic_handle_irq(irq_find_mapping(pmc->irqdomain, n));
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static const struct at91_pmc_caps at91rm9200_caps = {
+> +	.available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | AT91_PMC_LOCKB |
+> +			  AT91_PMC_MCKRDY | AT91_PMC_PCK0RDY |
+> +			  AT91_PMC_PCK1RDY | AT91_PMC_PCK2RDY |
+> +			  AT91_PMC_PCK3RDY,
+> +};
+> +
+> +static const struct at91_pmc_caps at91sam9260_caps = {
+> +	.available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | AT91_PMC_LOCKB |
+> +			  AT91_PMC_MCKRDY | AT91_PMC_PCK0RDY |
+> +			  AT91_PMC_PCK1RDY,
+> +};
+> +
+> +static const struct at91_pmc_caps at91sam9g45_caps = {
+> +	.available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | AT91_PMC_MCKRDY |
+> +			  AT91_PMC_LOCKU | AT91_PMC_PCK0RDY |
+> +			  AT91_PMC_PCK1RDY,
+> +};
+> +
+> +static const struct at91_pmc_caps at91sam9n12_caps = {
+> +	.available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | AT91_PMC_LOCKB |
+> +			  AT91_PMC_MCKRDY | AT91_PMC_PCK0RDY |
+> +			  AT91_PMC_PCK1RDY | AT91_PMC_MOSCSELS |
+> +			  AT91_PMC_MOSCRCS | AT91_PMC_CFDEV,
+> +};
+> +
+> +static const struct at91_pmc_caps at91sam9x5_caps = {
+> +	.available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | AT91_PMC_MCKRDY |
+> +			  AT91_PMC_LOCKU | AT91_PMC_PCK0RDY |
+> +			  AT91_PMC_PCK1RDY | AT91_PMC_MOSCSELS |
+> +			  AT91_PMC_MOSCRCS | AT91_PMC_CFDEV,
+> +};
+> +
+> +static const struct at91_pmc_caps at91sam9g35_caps = {
+> +	.available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | AT91_PMC_MCKRDY |
+> +			  AT91_PMC_PCK0RDY | AT91_PMC_PCK1RDY |
+> +			  AT91_PMC_MOSCSELS | AT91_PMC_MOSCRCS |
+> +			  AT91_PMC_CFDEV,
 
-On 04-10-2013 18:17, Wendy Ng wrote:
-> Hello Eduardo,
->=20
+9g35 is part of 9x5 series. It is not different from its other fellow SoCs.
+(but it is true that the datasheet has changed recently in relation with 
+this missing LOCKU bit ;-) ).
 
-Hello Wendy,
+So I suspect that we can remove all definitions of at91sam9g35 and merge 
+them with 9x5 ones (including compatibility string).
 
-> I have rebased my work on the top of yours and tried out the new way of=
+> +};
+> +
+> +static const struct at91_pmc_caps sama5d3_caps = {
+> +	.available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | AT91_PMC_MCKRDY |
+> +			  AT91_PMC_LOCKU | AT91_PMC_PCK0RDY |
+> +			  AT91_PMC_PCK1RDY | AT91_PMC_PCK2RDY |
+> +			  AT91_PMC_MOSCSELS | AT91_PMC_MOSCRCS |
+> +			  AT91_PMC_CFDEV,
+> +};
+> +
+> +static struct at91_pmc *__init at91_pmc_init(struct device_node *np,
+> +					     void __iomem *regbase, int virq,
+> +					     const struct at91_pmc_caps *caps)
+> +{
+> +	struct at91_pmc *pmc;
+> +
+> +	if (!regbase || !virq ||  !caps)
+> +		return NULL;
+> +
+> +	at91_pmc_base = regbase;
+> +
+> +	pmc = kzalloc(sizeof(*pmc), GFP_KERNEL);
+> +	if (!pmc)
+> +		return NULL;
+> +
+> +	spin_lock_init(&pmc->lock);
+> +	pmc->regbase = regbase;
+> +	pmc->virq = virq;
+> +	pmc->caps = caps;
+> +
+> +	pmc->irqdomain = irq_domain_add_linear(np, 32, &pmc_irq_ops, pmc);
+> +
+> +	if (!pmc->irqdomain)
+> +		goto out_free_pmc;
+> +
+> +	pmc_write(pmc, AT91_PMC_IDR, 0xffffffff);
+> +	if (request_irq(pmc->virq, pmc_irq_handler, IRQF_SHARED, "pmc", pmc))
+> +		goto out_remove_irqdomain;
+> +
+> +	return pmc;
+> +
+> +out_remove_irqdomain:
+> +	irq_domain_remove(pmc->irqdomain);
+> +out_free_pmc:
+> +	kfree(pmc);
+> +
+> +	return NULL;
+> +}
+> +
+> +static const struct of_device_id pmc_clk_ids[] __initdata = {
+> +	{ /*sentinel*/ }
+> +};
+> +
+> +static void __init of_at91_pmc_setup(struct device_node *np,
+> +				     const struct at91_pmc_caps *caps)
+> +{
+> +	struct at91_pmc *pmc;
+> +	struct device_node *childnp;
+> +	void (*clk_setup)(struct device_node *, struct at91_pmc *);
+> +	const struct of_device_id *clk_id;
+> +	void __iomem *regbase = of_iomap(np, 0);
+> +	int virq;
+> +
+> +	if (!regbase)
+> +		return;
+> +
+> +	virq = irq_of_parse_and_map(np, 0);
+> +	if (!virq)
+> +		return;
+> +
+> +	pmc = at91_pmc_init(np, regbase, virq, caps);
+> +	if (!pmc)
+> +		return;
+> +	for_each_child_of_node(np, childnp) {
+> +		clk_id = of_match_node(pmc_clk_ids, childnp);
+> +		if (!clk_id)
+> +			continue;
+> +		clk_setup = clk_id->data;
+> +		clk_setup(childnp, pmc);
+> +	}
+> +}
+> +
+> +static void __init of_at91rm9200_pmc_setup(struct device_node *np)
+> +{
+> +	of_at91_pmc_setup(np, &at91rm9200_caps);
+> +}
+> +CLK_OF_DECLARE(at91rm9200_clk_main, "atmel,at91rm9200-pmc",
+> +	       of_at91rm9200_pmc_setup);
+> +
+> +static void __init of_at91sam9260_pmc_setup(struct device_node *np)
+> +{
+> +	of_at91_pmc_setup(np, &at91sam9260_caps);
+> +}
+> +CLK_OF_DECLARE(at91sam9260_clk_main, "atmel,at91sam9260-pmc",
+> +	       of_at91sam9260_pmc_setup);
+> +
+> +static void __init of_at91sam9g45_pmc_setup(struct device_node *np)
+> +{
+> +	of_at91_pmc_setup(np, &at91sam9g45_caps);
+> +}
+> +CLK_OF_DECLARE(at91sam9g45_clk_main, "atmel,at91sam9g45-pmc",
+> +	       of_at91sam9g45_pmc_setup);
+> +
+> +static void __init of_at91sam9n12_pmc_setup(struct device_node *np)
+> +{
+> +	of_at91_pmc_setup(np, &at91sam9n12_caps);
+> +}
+> +CLK_OF_DECLARE(at91sam9n12_clk_main, "atmel,at91sam9n12-pmc",
+> +	       of_at91sam9n12_pmc_setup);
+> +
+> +static void __init of_at91sam9x5_pmc_setup(struct device_node *np)
+> +{
+> +	of_at91_pmc_setup(np, &at91sam9x5_caps);
+> +}
+> +CLK_OF_DECLARE(at91sam9x5_clk_main, "atmel,at91sam9x5-pmc",
+> +	       of_at91sam9x5_pmc_setup);
+> +
+> +static void __init of_at91sam9g35_pmc_setup(struct device_node *np)
+> +{
+> +	of_at91_pmc_setup(np, &at91sam9g35_caps);
+> +}
+> +CLK_OF_DECLARE(at91sam9g35_clk_main, "atmel,at91sam9g35-pmc",
+> +	       of_at91sam9g35_pmc_setup);
 
-> registering the thermal zone.    The new method is certainly making
-> things easier for me to create a new thermal zone device driver.  But I=
+Ditto.
 
-> have some questions and I hope to hear back from you before I upload my=
-
-> new patch set that is based on your changes.
-
-Great that you gave it a shot. Thanks for that.
-
->=20
-> 1. I found that the hwmon sysfs interface is no longer created when I
-> call thermal_zone_of_sensor_register() to register my thermal sensor.  =
-I
-> believe it is because you purposely hard-coded 'no_hwmon' to true. =20
-> Would it be possible to let the users to control this option as part of=
-
-> the sensor register function?
-
-Hmmm.. I also thought of allowing the thermal to hwmon interface
-configurable. But the interface gets created in different path from the
-sensor registration, which makes things a bit harder. The zones are
-probed while parsing the DT file. While the sensors get linked,
-thermal_zone_of_sensor_register(), typically when sensors are probed.
-
-Do you have a real use case for using the thermal to hwmon interface?
-Durgadoss (original author) and Rui were considering deprecating and
-finally removing it. If yes, it is time to rise your voice here.
-
->=20
-> 2. The of_thermal_get_temp() output parameter 'temp' is an unsigned
-> value in order to conforms with the thermal framework 'get_temp'
-> function prototype.  But the new sensor interface 'get_temp' callback
-> function (defined in __thermal_zone struct) expects 'temp' to be
-> signed.  So technically, a negative value can be returned from the
-> underlying sensor function.  Should some checks be added to
-> of_thermal_get_temp() to ensure that a negative value (i.e. a very larg=
-e
-> unsigned value) won't be passed back to the thermal framework?  Or
-> should the 'get_temp' function prototype in __thermal_zone struct be
-> changed with 'unsigned' temperature value and it will be the
-> responsibility of the underlying function to do the check?
->=20
-
-I could for sure, add a warning inside of_thermal_get_temp(). But in
-general, I believe the thermal framework has to cover for signed
-temperature values, even if typical usage is on positive temperature
-range. Mainly for correct temperature representation.
-
-
-> 3. Your documentation (thermal.txt) seems to suggest that the
-> 'cooling-attachments' are one of the required properties for
-> 'thermal-zones' node in the device tree binding files.  However, I don'=
-t
-
-Hmm... That was not the intention.
-
-> have any cooling device ready in my current patch series yet and
-> therefore I tried to leave out the 'cooling-attachments' node from the
-> 'thermal-zones' node.  It seems to be working just find and I can
-> register the sensor and read out the temperature once the target
-> platform has been booted up.  Is this your expectation that people can
-> leave the 'cooling-attachments' node out?    I want to make sure I can
-> still submit a new patch set for this series with just the functionalit=
-y
-> of reading out the temperature from the thermal sensor.
-
-So, let me try to clarify a couple of things. First thing is that the
-cooling-attachments has been renamed to cooling-maps, just a new naming
-convention.  Also, there are thermal zones that do not have
-cooling-maps, they just describe thermal shutdown by software, thermal
-zones with only CRITICAL trip points, for instance. For this reason,
-thermal zones must be probed properly without cooling-maps. I need to
-double check the documentation in this case, I believe.
-
->=20
-> Thanks,
-> -Wendy
->=20
-> On 9/23/2013 4:46 PM, Eduardo Valentin wrote:
->> On 23-09-2013 18:43, Wendy Ng wrote:
->>> On 9/23/2013 11:19 AM, Eduardo Valentin wrote:
->>>> On 23-09-2013 13:51, Wendy Ng wrote:
->>>>> This adds the support for reading out temperature from Broadcom
->>>>> bcm281xx
->>>>> SoCs.
->>>>>
->>>>> Signed-off-by: Wendy Ng <wendy.ng@broadcom.com>
->>>>> Reviewed-by: Markus Mayer <mmayer@broadcom.com>
->>>>> Reviewed-by: Christian Daudt <csd@broadcom.com>
->>>>> ---
->>>>>    .../bindings/thermal/bcm-kona-thermal.txt          |   18 +++
->>>>>    drivers/thermal/Kconfig                            |   10 ++
->>>>>    drivers/thermal/Makefile                           |    1 +
->>>>>    drivers/thermal/bcm_thermal.c                      |  170
->>>>> ++++++++++++++++++++
->>>>>    4 files changed, 199 insertions(+)
->>>>>    create mode 100644
->>>>> Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
->>>>>    create mode 100644 drivers/thermal/bcm_thermal.c
->>>>>
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
->>>>> b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.txt
->>>>> new file mode 100644
->>>>> index 0000000..acca99e
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/thermal/bcm-kona-thermal.tx=
-t
->>>>> @@ -0,0 +1,18 @@
->>>>> +* Broadcom Kona Thermal Management Unit
->>>>> +
->>>>> +This version is for the BCM281xx family of SoCs.
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible : "brcm,bcm11351-thermal", "brcm,kona-thermal"
->>>>> +- reg : Address range of the thermal register
->>>>> +- thermal-name: this entry must be specified and it will be passed=
-
->>>>> into
->>>>> +thermal_zone_device_register().  This name will also be reported
->>>>> under Hwmon
->>>>> +sysfs 'name' attribute.
->>>>> +
->>>>> +Example:
->>>>> +    thermal@34008000 {
->>>>> +        compatible =3D "brcm,bcm11351-thermal", "brcm,kona-thermal=
-";
->>>>> +        reg =3D <0x34008000 0x0024>;
->>>>> +        thermal-name =3D "bcm_kona_therm";
->>>>> +        status =3D "disabled";
->>>>> +    };
->>>>> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
->>>>> index dbfc390..7f823f0 100644
->>>>> --- a/drivers/thermal/Kconfig
->>>>> +++ b/drivers/thermal/Kconfig
->>>>> @@ -134,6 +134,16 @@ config KIRKWOOD_THERMAL
->>>>>          Support for the Kirkwood thermal sensor driver into the Li=
-nux
->>>>> thermal
->>>>>          framework. Only kirkwood 88F6282 and 88F6283 have this
->>>>> sensor.
->>>>>    +config BCM_THERMAL
->>>>> +    tristate "Temperature sensor on Broadcom BCM281xx family of So=
-Cs"
->>>>> +    depends on ARCH_BCM
->>>>> +    default y
->>>>> +    help
->>>>> +      If you say yes here you get support for TMU (Thermal Managem=
-ent
->>>>> +      Unit) on Broadcom BCM281xx family of SoCs. This provides
->>>>> thermal
->>>>> +      monitoring of CPU clusters, graphics, and SoC glue, but does=
-
->>>>> not
->>>>> +      include monitoring of charger temperature.
->>>>> +
->>>>>    config DOVE_THERMAL
->>>>>        tristate "Temperature sensor on Marvell Dove SoCs"
->>>>>        depends on ARCH_DOVE
->>>>> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
->>>>> index 584b363..3ea8c1c 100644
->>>>> --- a/drivers/thermal/Makefile
->>>>> +++ b/drivers/thermal/Makefile
->>>>> @@ -21,6 +21,7 @@ obj-$(CONFIG_SPEAR_THERMAL)    +=3D spear_thermal=
-=2Eo
->>>>>    obj-$(CONFIG_RCAR_THERMAL)    +=3D rcar_thermal.o
->>>>>    obj-$(CONFIG_KIRKWOOD_THERMAL)  +=3D kirkwood_thermal.o
->>>>>    obj-y                +=3D samsung/
->>>>> +obj-$(CONFIG_BCM_THERMAL)       +=3D bcm_thermal.o
->>>>>    obj-$(CONFIG_DOVE_THERMAL)      +=3D dove_thermal.o
->>>>>    obj-$(CONFIG_DB8500_THERMAL)    +=3D db8500_thermal.o
->>>>>    obj-$(CONFIG_ARMADA_THERMAL)    +=3D armada_thermal.o
->>>>> diff --git a/drivers/thermal/bcm_thermal.c
->>>>> b/drivers/thermal/bcm_thermal.c
->>>>> new file mode 100644
->>>>> index 0000000..131d3c4
->>>>> --- /dev/null
->>>>> +++ b/drivers/thermal/bcm_thermal.c
->>>>> @@ -0,0 +1,170 @@
->>>>> +/*
->>>>> + * Copyright 2013 Broadcom Corporation.
->>>>> + *
->>>>> + * This program is free software; you can redistribute it and/or
->>>>> modify
->>>>> + * it under the terms of the GNU General Public License, version 2=
-,
->>>>> + * as published by the Free Software Foundation (the "GPL").
->>>>> + *
->>>>> + * This program is distributed in the hope that it will be useful,=
-
->>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>>>> + * GNU General Public License for more details.
->>>>> + *
->>>>> + * A copy of the GPL is available at
->>>>> http://www.broadcom.com/licenses/GPLv2.php,
->>>>> + * or by writing to the Free Software Foundation, Inc.,
->>>>> + * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
->>>>> + */
->>>>> +
->>>>> +/**
->>>>> +*  Broadcom Thermal Management Unit - bcm_tmu
->>>>> +*/
->>>>> +#include <linux/module.h>
->>>>> +#include <linux/err.h>
->>>>> +#include <linux/kernel.h>
->>>>> +#include <linux/platform_device.h>
->>>>> +#include <linux/io.h>
->>>>> +#include <linux/thermal.h>
->>>>> +#include <linux/of.h>
->>>>> +
->>>>> +/* From TMON Register Database */
->>>>> +#define TMON_TEMP_VAL_OFFSET            0x0000001c
->>>>> +#define TMON_TEMP_VAL_TEMP_VAL_SHIFT        0
->>>>> +#define TMON_TEMP_VAL_TEMP_VAL_MASK        0x000003ff
->>>>> +
->>>>> +/* Broadcom Thermal Zone Device Structure */
->>>>> +struct bcm_thermal_zone_priv {
->>>>> +    char name[THERMAL_NAME_LENGTH];
->>>>> +    void __iomem *base;
->>>>> +};
->>>>> +
->>>>> +/* Temperature conversion function for TMON block */
->>>>> +static long raw_to_mcelsius(u32 raw)
->>>>> +{
->>>>> +    /*
->>>>> +     * According to Broadcom internal Analog Module Specification
->>>>> +     * the formula for converting TMON block output to temperature=
- in
->>>>> +     * degree Celsius is:
->>>>> +     *    T =3D 428 - (0.561 * raw)
->>>>> +     * Note: the valid operating range for the TMON block is -40C =
-to
->>>>> 125C
->>>>> +     */
->>>>> +    return 428000 - (561 * (long)raw);
->>>>> +}
->>>>> +
->>>>> +/* Get temperature callback function for thermal zone */
->>>>> +static int bcm_get_temp(struct thermal_zone_device *thermal,
->>>>> +            unsigned long *temp)
->>>>> +{
->>>>> +    u32 raw;
->>>>> +    long mcelsius;
->>>>> +    struct bcm_thermal_zone_priv *priv =3D thermal->devdata;
->>>>> +
->>>>> +    if (!priv) {
->>>>> +        pr_err("%s: thermal zone number %d devdata not
->>>>> initialized.\n",
->>>>> +            __func__, thermal->id);
->>>>> +        return -EINVAL;
->>>>> +    }
->>>>> +
->>>>> +    raw =3D (readl(priv->base + TMON_TEMP_VAL_OFFSET)
->>>>> +        & TMON_TEMP_VAL_TEMP_VAL_MASK) >>
->>>>> TMON_TEMP_VAL_TEMP_VAL_SHIFT;
->>>>> +
->>>>> +    pr_debug("%s: thermal zone number %d raw temp 0x%x\n", __func_=
-_,
->>>>> +        thermal->id, raw);
->>>>> +
->>>>> +    mcelsius =3D raw_to_mcelsius(raw);
->>>>> +
->>>>> +    /*
->>>>> +     * Since 'mcelsius' might be negative, we need to limit it to
->>>>> smallest
->>>>> +     * unsigned value before returning it to thermal framework.
->>>>> +     */
->>>>> +    if (mcelsius < 0)
->>>>> +        *temp =3D 0;
->>>>> +    else
->>>>> +        *temp =3D mcelsius;
->>>>> +
->>>>> +    pr_debug("%s: thermal zone number %d final temp %d\n", __func_=
-_,
->>>>> +        thermal->id, (int) *temp);
->>>>> +
->>>>> +    return 0;
->>>>> +}
->>>>> +
->>>>> +/* Operation callback functions for thermal zone */
->>>>> +static struct thermal_zone_device_ops bcm_dev_ops =3D {
->>>>> +    .get_temp =3D bcm_get_temp,
->>>>> +};
->>>>> +
->>>>> +static const struct of_device_id bcm_tmu_match_table[] =3D {
->>>>> +    { .compatible =3D "brcm,kona-thermal" },
->>>>> +    {},
->>>>> +};
->>>>> +MODULE_DEVICE_TABLE(of, bcm_tmu_match_table);
->>>>> +
->>>>> +static int bcm_tmu_probe(struct platform_device *pdev)
->>>>> +{
->>>>> +    struct thermal_zone_device *thermal =3D NULL;
->>>>> +    struct bcm_thermal_zone_priv *priv;
->>>>> +    struct resource *res;
->>>>> +    const char *str;
->>>>> +
->>>>> +    priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->>>>> +    if (!priv) {
->>>>> +        dev_err(&pdev->dev, "Failed to malloc priv.\n");
->>>>> +        return -ENOMEM;
->>>>> +    }
->>>>> +
->>>>> +    /* Obtain the tmu name from device tree file */
->>>>> +    if (of_property_read_string(pdev->dev.of_node, "thermal-name",=
-
->>>> Hello Wendy,
->>>>
->>>> I would prefer we wait until the work for thermal data [1] gets
->>>> accepted
->>>> before accepting this driver, specially because you are adding devic=
-e
->>>> specific DT entry to help in your registration with the thermal
->>>> framework. With the mentioned work you wont need it at all.
->>>>
->>>> All best,
->>>>
->>>> [1] - http://lkml.org/lkml/2013/9/15/122
->>> Hello Eduardo,
->>>
->>> Since your changes are quite extensive, would you recommend me to get=
-
->>> your 16 patches into my local workspace and try to integrate the code=
-
->>> from my patches on the top of your patches at this time?  Or should I=
-
->>> wait until your patches get accepted.
->> Hello again Wendy,
->>
->> The only part I am concerned is the device tree entry you are creating=
-
->> for your device/driver. That could be obsolete in near future with the=
-
->> work I am doing currently.
->>
->> The work is, as you mentioned, quite extensive, but should make things=
-
->> easier for device driver writer. If you want, of course, it would be
->> great if you could rebase your work on top of mine and try it out on
->> your side and let me know the outcome.
->>
->> Comments on the proposed binding and documentation is also welcome. Le=
-t
->> me know if there is something that it is not clear.
->>
->>> Thanks,
->>> -Wendy
->>>>> +            &str) =3D=3D 0) {
->>>>> +        strlcpy(priv->name, str, sizeof(priv->name));
->>>>> +    } else {
->>>>> +        dev_err(&pdev->dev, "Failed to get thermal-name from DT.\n=
-");
->>>>> +        return -EINVAL;
->>>>> +    }
->>>>> +
->>>>> +    res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>>> +    priv->base =3D devm_ioremap_resource(&pdev->dev, res);
->>>>> +    if (IS_ERR(priv->base))
->>>>> +        return PTR_ERR(priv->base);
->>>>> +
->>>>> +    thermal =3D thermal_zone_device_register(priv->name, 0, 0, pri=
-v,
->>>>> +                        &bcm_dev_ops, NULL, 0, 0);
->>>>> +    if (IS_ERR(thermal)) {
->>>>> +        dev_err(&pdev->dev,
->>>>> +            "Failed to register Broadcom thermal zone device.\n");=
-
->>>>> +        return PTR_ERR(thermal);
->>>>> +    }
->>>>> +
->>>>> +    platform_set_drvdata(pdev, thermal);
->>>>> +
->>>>> +    dev_info(&pdev->dev, "Broadcom Thermal Monitor Initialized.\n"=
-);
->>>>> +
->>>>> +    return 0;
->>>>> +}
->>>>> +
->>>>> +static int bcm_tmu_remove(struct platform_device *pdev)
->>>>> +{
->>>>> +    struct thermal_zone_device *broadcom_thermal =3D
->>>>> +        platform_get_drvdata(pdev);
->>>>> +
->>>>> +    thermal_zone_device_unregister(broadcom_thermal);
->>>>> +
->>>>> +    dev_info(&pdev->dev, "Broadcom Thermal Monitor
->>>>> Uninitialized.\n");
->>>>> +
->>>>> +    return 0;
->>>>> +}
->>>>> +
->>>>> +static struct platform_driver bcm_tmu_driver =3D {
->>>>> +    .driver =3D {
->>>>> +        .name =3D "bcm-thermal",
->>>>> +        .owner =3D THIS_MODULE,
->>>>> +        .of_match_table =3D bcm_tmu_match_table,
->>>>> +    },
->>>>> +    .probe =3D bcm_tmu_probe,
->>>>> +    .remove =3D bcm_tmu_remove,
->>>>> +};
->>>>> +
->>>>> +module_platform_driver(bcm_tmu_driver);
->>>>> +
->>>>> +MODULE_DESCRIPTION("Broadcom Thermal Driver");
->>>>> +MODULE_AUTHOR("Broadcom");
->>>>> +MODULE_LICENSE("GPL v2");
->>>>> +MODULE_ALIAS("platform:bcm-thermal");
->>>>>
->>
->=20
+> +
+> +static void __init of_sama5d3_pmc_setup(struct device_node *np)
+> +{
+> +	of_at91_pmc_setup(np, &sama5d3_caps);
+> +}
+> +CLK_OF_DECLARE(sama5d3_clk_main, "atmel,sama5d3-pmc",
+> +	       of_sama5d3_pmc_setup);
+> diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+> new file mode 100644
+> index 0000000..b7e8397
+> --- /dev/null
+> +++ b/drivers/clk/at91/pmc.h
+> @@ -0,0 +1,58 @@
+> +/*
+> + * drivers/clk/at91/pmc.h
+> + *
+> + *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#ifndef __PMC_H_
+> +#define __PMC_H_
+> +
+> +#include <linux/io.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/spinlock.h>
+> +
+> +struct clk_range {
+> +	unsigned long min;
+> +	unsigned long max;
+> +};
+> +
+> +#define CLK_RANGE(MIN, MAX) {.min = MIN, .max = MAX,}
+> +
+> +struct at91_pmc_caps {
+> +	u32 available_irqs;
+> +};
+> +
+> +struct at91_pmc {
+> +	void __iomem *regbase;
+> +	int virq;
+> +	spinlock_t lock;
+> +	const struct at91_pmc_caps *caps;
+> +	struct irq_domain *irqdomain;
+> +};
+> +
+> +static inline void pmc_lock(struct at91_pmc *pmc)
+> +{
+> +	spin_lock(&pmc->lock);
+> +}
+> +
+> +static inline void pmc_unlock(struct at91_pmc *pmc)
+> +{
+> +	spin_unlock(&pmc->lock);
+> +}
+> +
+> +static inline u32 pmc_read(struct at91_pmc *pmc, int offset)
+> +{
+> +	return readl_relaxed(pmc->regbase + offset);
+> +}
+> +
+> +static inline void pmc_write(struct at91_pmc *pmc, int offset, u32 value)
+> +{
+> +	return writel_relaxed(value, pmc->regbase + offset);
+> +}
+> +
+> +#endif /* __PMC_H_ */
+>
 
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
---UHB5ILQCIB4LlukNFCeoWLB5rDsghgLlb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlJSyp8ACgkQCXcVR3XQvP1y7gD9EEwaT/daEC/ZDHrkMD5pmfLJ
-jSXu8BVdekfjqeWYZwAA/2r/E6Mtr85n/KiJfmFHwqNPOKhPRR/AYqeMkkQgdSR7
-=V57S
------END PGP SIGNATURE-----
-
---UHB5ILQCIB4LlukNFCeoWLB5rDsghgLlb--
+-- 
+Nicolas Ferre
