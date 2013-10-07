@@ -1,115 +1,72 @@
-From: "Tim Kryger" <tim.kryger@linaro.org>
-Subject: [PATCH v2 6/6] mmc: sdhci-bcm-kona: Add basic use of clocks
-Date: Mon, 7 Oct 2013 11:24:00 -0700
-Message-ID: <1381170240-23227-7-git-send-email-tim.kryger@linaro.org>
-References: <1381170240-23227-1-git-send-email-tim.kryger@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
+Date: Mon, 7 Oct 2013 12:03:22 -0700
+Message-ID: <20131007190322.GY8949@atomide.com>
+References: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
+ <524EE00F.7010208@ti.com>
+ <20131007021556.GV8949@atomide.com>
+ <52525642.8010307@ti.com>
+ <20131007154103.GW8949@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1381170240-23227-1-git-send-email-tim.kryger@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christian Daudt <bcm@fixthebug.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>
-Cc: devicetree@vger.kernel.org, patches@linaro.org, Tim Kryger <tim.kryger@linaro.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20131007154103.GW8949@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the external clock needed by the host controller during the
-probe and disable it during the remove.
+* Tony Lindgren <tony@atomide.com> [131007 08:49]:
+> * Tero Kristo <t-kristo@ti.com> [131006 23:43]:
+> > On 10/07/2013 05:15 AM, Tony Lindgren wrote:
+> > >* Tero Kristo <t-kristo@ti.com> [131004 08:42]:
+> > >>Hi,
+> > >>
+> > >>Just a gentle reminder, anybody have any comments on this series or
+> > >>should we start queuing stuff?
+> > >
+> > >Well omap4 seems to work for me just fine, and omap3 in legacy
+> > >mode. But looks like omap3 device tree based booting is breaking
+> > >after I pulled in your test branch. I get the following on
+> > >3630 based dm3730.
+> > 
+> > Uart4 breaks because of the issue with basic DT blobs. You need at
+> > least this patch:
+> > 
+> > http://linux-kernel.2935.n7.nabble.com/RFC-PATCH-ARM-OMAP3630-Add-generic-machine-descriptor-td722791.html
+> > 
+> > ... from Nishanth to get it to work right. Otherwise the clock init
+> > tries to use omap3430 clock data for omap3630 which leaves uart4
+> > nodes out.
+> 
+> OK thanks yes that solves it, I was missing the compatible flag
+> for my not quite ready test boards (3730-evm and zoom3).
+> I'll apply Nishant's fix with some changes.
+> 
+> Then for this series, once you have the necessary acks, can you
+> please split into following two separate immutable branches
+> against v3.12-rc3:
+> 
+> 1. clock code changes
+> 
+> 2. dts changes
+> 
+> Then those can be pulled in as needed by Benoit, Mike and I.
 
-Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
-Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-Reviewed-by: Matt Porter <matt.porter@linaro.org>
----
- drivers/mmc/host/sdhci-bcm-kona.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-bcm-kona.c b/drivers/mmc/host/sdhci-bcm-kona.c
-index 85472d3..91db099 100644
---- a/drivers/mmc/host/sdhci-bcm-kona.c
-+++ b/drivers/mmc/host/sdhci-bcm-kona.c
-@@ -54,6 +54,7 @@
+And Paul too natuarlly if these patches conflict with stuff
+that's he's merging. And assuming Paul is OK with these patches
+in general.
  
- struct sdhci_bcm_kona_dev {
- 	struct mutex	write_lock; /* protect back to back writes */
-+	struct clk	*external_clk;
- };
- 
- 
-@@ -252,11 +253,29 @@ static int sdhci_bcm_kona_probe(struct platform_device *pdev)
- 	mmc_of_parse(host->mmc);
- 
- 	if (!host->mmc->f_max) {
--		dev_err(&pdev->dev, "Missing max-freq for SDHCI cfg\n");
-+		dev_err(dev, "Missing max-freq for SDHCI cfg\n");
- 		ret = -ENXIO;
- 		goto err_pltfm_free;
- 	}
- 
-+	/* Get and enable the external clock */
-+	kona_dev->external_clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(kona_dev->external_clk)) {
-+		dev_err(dev, "Failed to get external clock\n");
-+		ret = PTR_ERR(kona_dev->external_clk);
-+		goto err_pltfm_free;
-+	}
-+
-+	if (clk_set_rate(kona_dev->external_clk, host->mmc->f_max) != 0) {
-+		dev_err(dev, "Failed to set rate external clock\n");
-+		goto err_pltfm_free;
-+	}
-+
-+	if (clk_prepare_enable(kona_dev->external_clk) != 0) {
-+		dev_err(dev, "Failed to enable external clock\n");
-+		goto err_pltfm_free;
-+	}
-+
- 	dev_dbg(dev, "non-removable=%c\n",
- 		(host->mmc->caps & MMC_CAP_NONREMOVABLE) ? 'Y' : 'N');
- 	dev_dbg(dev, "cd_gpio %c, wp_gpio %c\n",
-@@ -271,7 +290,7 @@ static int sdhci_bcm_kona_probe(struct platform_device *pdev)
- 
- 	ret = sdhci_bcm_kona_sd_reset(host);
- 	if (ret)
--		goto err_pltfm_free;
-+		goto err_clk_disable;
- 
- 	sdhci_bcm_kona_sd_init(host);
- 
-@@ -307,6 +326,9 @@ err_remove_host:
- err_reset:
- 	sdhci_bcm_kona_sd_reset(host);
- 
-+err_clk_disable:
-+	clk_disable_unprepare(kona_dev->external_clk);
-+
- err_pltfm_free:
- 	sdhci_pltfm_free(pdev);
- 
-@@ -317,6 +339,8 @@ err_pltfm_free:
- static int __exit sdhci_bcm_kona_remove(struct platform_device *pdev)
- {
- 	struct sdhci_host *host = platform_get_drvdata(pdev);
-+	struct sdhci_pltfm_host *pltfm_priv = sdhci_priv(host);
-+	struct sdhci_bcm_kona_dev *kona_dev = sdhci_pltfm_priv(pltfm_priv);
- 	int dead;
- 	u32 scratch;
- 
-@@ -326,6 +350,8 @@ static int __exit sdhci_bcm_kona_remove(struct platform_device *pdev)
- 		dead = 1;
- 	sdhci_remove_host(host, dead);
- 
-+	clk_disable_unprepare(kona_dev->external_clk);
-+
- 	sdhci_free_host(host);
- 
- 	return 0;
--- 
-1.8.0.1
+> For the whole series, I think this quite nicely removes some
+> nasty kernel data dependencies for omaps, so feel free to add:
+>
+> Acked-by: Tony Lindgren <tony@atomide.com>
+> 
+> Regards,
+> 
+> Tony
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
