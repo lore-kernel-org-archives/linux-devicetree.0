@@ -1,71 +1,62 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 04/19] clk: at91: add PMC macro file for dt definitions
-Date: Mon, 7 Oct 2013 17:17:57 +0200
-Message-ID: <5252D0A5.60304@atmel.com>
-References: <1375937608-3773-1-git-send-email-b.brezillon@overkiz.com> <1375938270-3965-1-git-send-email-b.brezillon@overkiz.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
+Date: Mon, 7 Oct 2013 08:41:03 -0700
+Message-ID: <20131007154103.GW8949@atomide.com>
+References: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
+ <524EE00F.7010208@ti.com>
+ <20131007021556.GV8949@atomide.com>
+ <52525642.8010307@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1375938270-3965-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52525642.8010307@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/08/2013 07:04, Boris BREZILLON :
-> This patch adds a new macro file for PMC macros.
->
-> This macro file includes the definitions of SR (status register) bit
-> offsets and will be use to reference PMC irqs.
->
-> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-> ---
->   include/dt-bindings/clk/at91/common/pmc.h |   20 ++++++++++++++++++++
->   1 file changed, 20 insertions(+)
->   create mode 100644 include/dt-bindings/clk/at91/common/pmc.h
->
-> diff --git a/include/dt-bindings/clk/at91/common/pmc.h b/include/dt-bindings/clk/at91/common/pmc.h
-> new file mode 100644
-> index 0000000..edc51d6
-> --- /dev/null
-> +++ b/include/dt-bindings/clk/at91/common/pmc.h
-> @@ -0,0 +1,20 @@
-> +/*
-> + * This header provides constants for AT91 pmc status.
-> + *
-> + * The constants defined in this header are being used in dts.
+* Tero Kristo <t-kristo@ti.com> [131006 23:43]:
+> On 10/07/2013 05:15 AM, Tony Lindgren wrote:
+> >* Tero Kristo <t-kristo@ti.com> [131004 08:42]:
+> >>Hi,
+> >>
+> >>Just a gentle reminder, anybody have any comments on this series or
+> >>should we start queuing stuff?
+> >
+> >Well omap4 seems to work for me just fine, and omap3 in legacy
+> >mode. But looks like omap3 device tree based booting is breaking
+> >after I pulled in your test branch. I get the following on
+> >3630 based dm3730.
+> 
+> Uart4 breaks because of the issue with basic DT blobs. You need at
+> least this patch:
+> 
+> http://linux-kernel.2935.n7.nabble.com/RFC-PATCH-ARM-OMAP3630-Add-generic-machine-descriptor-td722791.html
+> 
+> ... from Nishanth to get it to work right. Otherwise the clock init
+> tries to use omap3430 clock data for omap3630 which leaves uart4
+> nodes out.
 
-It is better to add one line about license: for example:
+OK thanks yes that solves it, I was missing the compatible flag
+for my not quite ready test boards (3730-evm and zoom3).
+I'll apply Nishant's fix with some changes.
 
-  * Licensed under GPLv2 or later.
+Then for this series, once you have the necessary acks, can you
+please split into following two separate immutable branches
+against v3.12-rc3:
 
+1. clock code changes
 
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLK_AT91_PMC_H
-> +#define _DT_BINDINGS_CLK_AT91_PMC_H
-> +
-> +#define AT91_PMC_MOSCS		0		/* MOSCS Flag */
-> +#define AT91_PMC_LOCKA		1		/* PLLA Lock */
-> +#define AT91_PMC_LOCKB		2		/* PLLB Lock */
-> +#define AT91_PMC_MCKRDY		3		/* Master Clock */
-> +#define AT91_PMC_LOCKU		6		/* UPLL Lock */
-> +#define AT91_PMC_PCKRDY(id)	(8 + id)	/* Programmable Clock */
+2. dts changes
 
-I prefer with parenthesis around "id" (8 + (id))
+Then those can be pulled in as needed by Benoit, Mike and I.
 
-> +#define AT91_PMC_MOSCSELS	16		/* Main Oscillator Selection */
-> +#define AT91_PMC_MOSCRCS	17		/* Main On-Chip RC */
-> +#define AT91_PMC_CFDEV		18		/* Clock Failure Detector Event */
-> +
-> +#endif
->
+For the whole series, I think this quite nicely removes some
+nasty kernel data dependencies for omaps, so feel free to add:
 
+Acked-by: Tony Lindgren <tony@atomide.com>
 
--- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Tony
