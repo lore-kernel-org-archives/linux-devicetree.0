@@ -1,478 +1,229 @@
-From: boris brezillon <b.brezillon@overkiz.com>
-Subject: Re: [PATCH v3 03/19] clk: at91: add PMC base support
-Date: Mon, 07 Oct 2013 17:57:49 +0200
-Message-ID: <5252D9FD.7080303@overkiz.com>
-References: <1375937608-3773-1-git-send-email-b.brezillon@overkiz.com> <1375938066-3889-1-git-send-email-b.brezillon@overkiz.com> <5252CE27.6060905@atmel.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 1/5] PM / OPP: extend DT binding to specify phandle
+ of another node for OPP
+Date: Mon, 07 Oct 2013 11:01:23 -0500
+Message-ID: <5252DAD3.6040903@gmail.com>
+References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1380634382-15609-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5252CE27.6060905@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1380634382-15609-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Nicolas,
+On 10/01/2013 08:32 AM, Sudeep KarkadaNagesha wrote:
+> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> 
+> If more than one similar devices share the same operating points(OPPs)
+> being in the same clock domain, currently we need to replicate the
+> OPP entries in all the nodes.
+> 
+> This patch extends existing binding by adding a new property named
+> 'operating-points-phandle' to specify the phandle in any device node
+> pointing to another node which contains the actual OPP tuples.
+> This helps to avoid replication if multiple devices share the OPPs.
+> 
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+> Cc: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> ---
+>  Documentation/devicetree/bindings/power/opp.txt | 161 ++++++++++++++++++++++--
+>  1 file changed, 149 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> index 74499e5..f59b878 100644
+> --- a/Documentation/devicetree/bindings/power/opp.txt
+> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> @@ -4,22 +4,159 @@ SoCs have a standard set of tuples consisting of frequency and
+>  voltage pairs that the device will support per voltage domain. These
+>  are called Operating Performance Points or OPPs.
+>  
+> -Properties:
+> +Required Properties:
+>  - operating-points: An array of 2-tuples items, and each item consists
+>    of frequency and voltage like <freq-kHz vol-uV>.
+>  	freq: clock frequency in kHz
+>  	vol: voltage in microvolt
+>  
+> +- operating-points-phandle: phandle to the device tree node which contains
+> +	the operating points tuples(recommended to be used if multiple
+> +	devices are in the same clock domain and hence share OPPs, as it
+> +	avoids replication of OPPs)
+> +
+> +  operating-points and operating-points-phandle are mutually exclusive, only
+> +  one of them can be present in any device node.
+> +
+>  Examples:
+>  
+> -cpu@0 {
+> -	compatible = "arm,cortex-a9";
+> -	reg = <0>;
+> -	next-level-cache = <&L2>;
+> -	operating-points = <
+> -		/* kHz    uV */
+> -		792000  1100000
+> -		396000  950000
+> -		198000  850000
+> -	>;
+> -};
+> +1. A uniprocessor system (phandle not required)
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <0>;
+> +		operating-points = <
+> +			/* kHz    uV */
+> +			792000  1100000
+> +			396000  950000
+> +			198000  850000
+> +		>;
+> +	};
+> +
+> +2a. Consider a SMP system with 4 CPUs in the same clock domain(no phandle)
+> +    Some existing DTs describe homogenous SMP systems by only listing the
+> +    OPPs in the cpu@0 node. For compatiblity with existing DTs, an
+> +    operating system may handle this case specially.
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <0>;
+> +		operating-points = <
+> +			/* kHz    uV */
+> +			792000  1100000
+> +			396000  950000
+> +			198000  850000
+> +		>;
+> +	};
+> +
+> +	cpu1: cpu@1 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <1>;
+> +	};
+> +
+> +	cpu2: cpu@2 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <2>;
+> +	};
+> +
+> +	cpu3: cpu@3 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <3>;
+> +	};
+> +
+> +2b. Consider a SMP system with 4 CPUs in the same clock domain(with phandle)
+> +    If more than one device of same type share the same OPPs, for example
+> +    all the CPUs on a SoC or in a single cluster on a SoC, then we can avoid
+> +    replicating the OPPs in all the nodes. We can specify the phandle of
+> +    the node which contains the OPP tuples instead.
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <0>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	cpu1: cpu@1 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <1>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	cpu2: cpu@2 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <2>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	cpu3: cpu@3 {
+> +		compatible = "arm,cortex-a9";
+> +		reg = <3>;
+> +		operating-points-phandle = <&cpu_opp>;
+> +	};
+> +
+> +	opps-table {
+> +		cpu_opp: cpu_opp {
+> +			operating-points = <
+> +				/* kHz    uV */
+> +				792000  1100000
+> +				396000  950000
+> +				198000  850000
+> +			>;
+> +		};
+> +		... /* other device OPP nodes */
 
-On 07/10/2013 17:07, Nicolas Ferre wrote:
-> On 08/08/2013 07:01, Boris BREZILLON :
->> This patch adds at91 PMC (Power Management Controller) base support.
->>
->> All at91 clocks managed by the PMC unit will use this framework.
->>
->> This framework provides the following fonctionalities:
->> - define a new struct at91_pmc to hide PMC internals (lock, PMC memory
->>    mapping, irq domain, ...)
->> - read/write helper functions (pmc_read/write) to access PMC registers
->> - lock/unlock helper functions (pmc_lock/unlock) to lock/unlock 
->> access to
->>    pmc registers
->> - a new irq domain and its associated irq chip to request PMC specific
->>    interrupts (useful for clk prepare callbacks)
->>
->> The PMC unit is declared as a dt clk provider (CLK_OF_DECLARE), and 
->> every
->> clk using this framework will declare a table of of_at91_clk_init_cb_t
->> and add it to the pmc_clk_ids table.
->>
->> When the pmc dt clock setup function is called (by of_clk_init 
->> function),
->> it triggers the registration of every supported child clk (those 
->> matching
->> the definitions in pmc_clk_ids).
->>
->> This patch copies at91_pmc_base (memory mapping) and at91sam9_idle
->> (function) from arch/arm/mach-at91/clock.c (which is not compiled if
->> COMMON_CLK_AT91 is enabled).
->>
->> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
->> ---
->>   drivers/clk/Makefile      |    1 +
->>   drivers/clk/at91/Makefile |    5 +
->>   drivers/clk/at91/pmc.c    |  298 
->> +++++++++++++++++++++++++++++++++++++++++++++
->>   drivers/clk/at91/pmc.h    |   58 +++++++++
->>   4 files changed, 362 insertions(+)
->>   create mode 100644 drivers/clk/at91/Makefile
->>   create mode 100644 drivers/clk/at91/pmc.c
->>   create mode 100644 drivers/clk/at91/pmc.h
->>
->> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
->> index 4038c2b..c256a20 100644
->> --- a/drivers/clk/Makefile
->> +++ b/drivers/clk/Makefile
->> @@ -32,6 +32,7 @@ obj-$(CONFIG_ARCH_VT8500)    += clk-vt8500.o
->>   obj-$(CONFIG_ARCH_ZYNQ)        += zynq/
->>   obj-$(CONFIG_ARCH_TEGRA)    += tegra/
->>   obj-$(CONFIG_PLAT_SAMSUNG)    += samsung/
->> +obj-$(CONFIG_COMMON_CLK_AT91)    += at91/
->>
->>   obj-$(CONFIG_X86)        += x86/
->>
->> diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
->> new file mode 100644
->> index 0000000..1d4fb21
->> --- /dev/null
->> +++ b/drivers/clk/at91/Makefile
->> @@ -0,0 +1,5 @@
->> +#
->> +# Makefile for at91 specific clk
->> +#
->> +
->> +obj-y += pmc.o
->> diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
->> new file mode 100644
->> index 0000000..f6bd03d
->> --- /dev/null
->> +++ b/drivers/clk/at91/pmc.c
->> @@ -0,0 +1,298 @@
->> +/*
->> + * drivers/clk/at91/pmc.c
->> + *
->> + *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/clkdev.h>
->> +#include <linux/clk/at91_pmc.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/io.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/irq.h>
->> +#include <linux/irqchip/chained_irq.h>
->> +#include <linux/irqdomain.h>
->> +#include <linux/of_irq.h>
->> +
->> +#include <asm/proc-fns.h>
->> +
->> +#include "pmc.h"
->> +
->> +void __iomem *at91_pmc_base;
->> +EXPORT_SYMBOL_GPL(at91_pmc_base);
->> +
->> +void at91sam9_idle(void)
->> +{
->> +    at91_pmc_write(AT91_PMC_SCDR, AT91_PMC_PCK);
->> +    cpu_do_idle();
->> +}
->> +
->> +static void pmc_irq_mask(struct irq_data *d)
->> +{
->> +    struct at91_pmc *pmc = irq_data_get_irq_chip_data(d);
->> +
->> +    pmc_write(pmc, AT91_PMC_IDR, 1 << d->hwirq);
->> +}
->> +
->> +static void pmc_irq_unmask(struct irq_data *d)
->> +{
->> +    struct at91_pmc *pmc = irq_data_get_irq_chip_data(d);
->> +
->> +    pmc_write(pmc, AT91_PMC_IER, 1 << d->hwirq);
->> +}
->> +
->> +static int pmc_irq_set_type(struct irq_data *d, unsigned type)
->> +{
->> +    if (type != IRQ_TYPE_LEVEL_HIGH) {
->> +        pr_warn("PMC: type not supported (support only 
->> IRQ_TYPE_LEVEL_HIGH type)\n");
->> +        return -EINVAL;
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> +static struct irq_chip pmc_irq = {
->> +    .name = "PMC",
->> +    .irq_disable = pmc_irq_mask,
->> +    .irq_mask = pmc_irq_mask,
->> +    .irq_unmask = pmc_irq_unmask,
->> +    .irq_set_type = pmc_irq_set_type,
->> +};
->> +
->> +static struct lock_class_key pmc_lock_class;
->> +
->> +static int pmc_irq_map(struct irq_domain *h, unsigned int virq,
->> +               irq_hw_number_t hw)
->> +{
->> +    struct at91_pmc    *pmc = h->host_data;
->> +
->> +    irq_set_lockdep_class(virq, &pmc_lock_class);
->> +
->> +    irq_set_chip_and_handler(virq, &pmc_irq,
->> +                 handle_level_irq);
->> +    set_irq_flags(virq, IRQF_VALID);
->> +    irq_set_chip_data(virq, pmc);
->> +
->> +    return 0;
->> +}
->> +
->> +static int pmc_irq_domain_xlate(struct irq_domain *d,
->> +                struct device_node *ctrlr,
->> +                const u32 *intspec, unsigned int intsize,
->> +                irq_hw_number_t *out_hwirq,
->> +                unsigned int *out_type)
->> +{
->> +    struct at91_pmc *pmc = d->host_data;
->> +    const struct at91_pmc_caps *caps = pmc->caps;
->> +
->> +    if (WARN_ON(intsize < 2))
->> +        return -EINVAL;
->> +    *out_hwirq = intspec[0];
->> +    *out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
->> +
->> +    if (!(caps->available_irqs & (1 << *out_hwirq)))
->> +        return -EINVAL;
->> +
->> +    if (*out_type != IRQ_TYPE_LEVEL_HIGH)
->> +        return -EINVAL;
->> +
->> +    return 0;
->> +}
->> +
->> +static struct irq_domain_ops pmc_irq_ops = {
->> +    .map    = pmc_irq_map,
->> +    .xlate    = pmc_irq_domain_xlate,
->> +};
->> +
->> +static irqreturn_t pmc_irq_handler(int irq, void *data)
->> +{
->> +    struct at91_pmc *pmc = (struct at91_pmc *)data;
->> +    unsigned long sr;
->> +    int n;
->> +
->> +    sr = pmc_read(pmc, AT91_PMC_SR) & pmc_read(pmc, AT91_PMC_IMR);
->> +    if (!sr)
->> +        return IRQ_NONE;
->> +
->> +    for_each_set_bit(n, &sr, BITS_PER_LONG)
->> +        generic_handle_irq(irq_find_mapping(pmc->irqdomain, n));
->> +
->> +    return IRQ_HANDLED;
->> +}
->> +
->> +static const struct at91_pmc_caps at91rm9200_caps = {
->> +    .available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | 
->> AT91_PMC_LOCKB |
->> +              AT91_PMC_MCKRDY | AT91_PMC_PCK0RDY |
->> +              AT91_PMC_PCK1RDY | AT91_PMC_PCK2RDY |
->> +              AT91_PMC_PCK3RDY,
->> +};
->> +
->> +static const struct at91_pmc_caps at91sam9260_caps = {
->> +    .available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | 
->> AT91_PMC_LOCKB |
->> +              AT91_PMC_MCKRDY | AT91_PMC_PCK0RDY |
->> +              AT91_PMC_PCK1RDY,
->> +};
->> +
->> +static const struct at91_pmc_caps at91sam9g45_caps = {
->> +    .available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | 
->> AT91_PMC_MCKRDY |
->> +              AT91_PMC_LOCKU | AT91_PMC_PCK0RDY |
->> +              AT91_PMC_PCK1RDY,
->> +};
->> +
->> +static const struct at91_pmc_caps at91sam9n12_caps = {
->> +    .available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | 
->> AT91_PMC_LOCKB |
->> +              AT91_PMC_MCKRDY | AT91_PMC_PCK0RDY |
->> +              AT91_PMC_PCK1RDY | AT91_PMC_MOSCSELS |
->> +              AT91_PMC_MOSCRCS | AT91_PMC_CFDEV,
->> +};
->> +
->> +static const struct at91_pmc_caps at91sam9x5_caps = {
->> +    .available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | 
->> AT91_PMC_MCKRDY |
->> +              AT91_PMC_LOCKU | AT91_PMC_PCK0RDY |
->> +              AT91_PMC_PCK1RDY | AT91_PMC_MOSCSELS |
->> +              AT91_PMC_MOSCRCS | AT91_PMC_CFDEV,
->> +};
->> +
->> +static const struct at91_pmc_caps at91sam9g35_caps = {
->> +    .available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | 
->> AT91_PMC_MCKRDY |
->> +              AT91_PMC_PCK0RDY | AT91_PMC_PCK1RDY |
->> +              AT91_PMC_MOSCSELS | AT91_PMC_MOSCRCS |
->> +              AT91_PMC_CFDEV,
->
-> 9g35 is part of 9x5 series. It is not different from its other fellow 
-> SoCs.
-> (but it is true that the datasheet has changed recently in relation 
-> with this missing LOCKU bit ;-) ).
->
-> So I suspect that we can remove all definitions of at91sam9g35 and 
-> merge them with 9x5 ones (including compatibility string).
->
-Sure, I will remove 9g35 specific definitions
+But this is a subnode of /cpus. IMO, OPPs should be located near what
+they control.
 
->> +};
->> +
->> +static const struct at91_pmc_caps sama5d3_caps = {
->> +    .available_irqs = AT91_PMC_MOSCS | AT91_PMC_LOCKA | 
->> AT91_PMC_MCKRDY |
->> +              AT91_PMC_LOCKU | AT91_PMC_PCK0RDY |
->> +              AT91_PMC_PCK1RDY | AT91_PMC_PCK2RDY |
->> +              AT91_PMC_MOSCSELS | AT91_PMC_MOSCRCS |
->> +              AT91_PMC_CFDEV,
->> +};
->> +
->> +static struct at91_pmc *__init at91_pmc_init(struct device_node *np,
->> +                         void __iomem *regbase, int virq,
->> +                         const struct at91_pmc_caps *caps)
->> +{
->> +    struct at91_pmc *pmc;
->> +
->> +    if (!regbase || !virq ||  !caps)
->> +        return NULL;
->> +
->> +    at91_pmc_base = regbase;
->> +
->> +    pmc = kzalloc(sizeof(*pmc), GFP_KERNEL);
->> +    if (!pmc)
->> +        return NULL;
->> +
->> +    spin_lock_init(&pmc->lock);
->> +    pmc->regbase = regbase;
->> +    pmc->virq = virq;
->> +    pmc->caps = caps;
->> +
->> +    pmc->irqdomain = irq_domain_add_linear(np, 32, &pmc_irq_ops, pmc);
->> +
->> +    if (!pmc->irqdomain)
->> +        goto out_free_pmc;
->> +
->> +    pmc_write(pmc, AT91_PMC_IDR, 0xffffffff);
->> +    if (request_irq(pmc->virq, pmc_irq_handler, IRQF_SHARED, "pmc", 
->> pmc))
->> +        goto out_remove_irqdomain;
->> +
->> +    return pmc;
->> +
->> +out_remove_irqdomain:
->> +    irq_domain_remove(pmc->irqdomain);
->> +out_free_pmc:
->> +    kfree(pmc);
->> +
->> +    return NULL;
->> +}
->> +
->> +static const struct of_device_id pmc_clk_ids[] __initdata = {
->> +    { /*sentinel*/ }
->> +};
->> +
->> +static void __init of_at91_pmc_setup(struct device_node *np,
->> +                     const struct at91_pmc_caps *caps)
->> +{
->> +    struct at91_pmc *pmc;
->> +    struct device_node *childnp;
->> +    void (*clk_setup)(struct device_node *, struct at91_pmc *);
->> +    const struct of_device_id *clk_id;
->> +    void __iomem *regbase = of_iomap(np, 0);
->> +    int virq;
->> +
->> +    if (!regbase)
->> +        return;
->> +
->> +    virq = irq_of_parse_and_map(np, 0);
->> +    if (!virq)
->> +        return;
->> +
->> +    pmc = at91_pmc_init(np, regbase, virq, caps);
->> +    if (!pmc)
->> +        return;
->> +    for_each_child_of_node(np, childnp) {
->> +        clk_id = of_match_node(pmc_clk_ids, childnp);
->> +        if (!clk_id)
->> +            continue;
->> +        clk_setup = clk_id->data;
->> +        clk_setup(childnp, pmc);
->> +    }
->> +}
->> +
->> +static void __init of_at91rm9200_pmc_setup(struct device_node *np)
->> +{
->> +    of_at91_pmc_setup(np, &at91rm9200_caps);
->> +}
->> +CLK_OF_DECLARE(at91rm9200_clk_main, "atmel,at91rm9200-pmc",
->> +           of_at91rm9200_pmc_setup);
->> +
->> +static void __init of_at91sam9260_pmc_setup(struct device_node *np)
->> +{
->> +    of_at91_pmc_setup(np, &at91sam9260_caps);
->> +}
->> +CLK_OF_DECLARE(at91sam9260_clk_main, "atmel,at91sam9260-pmc",
->> +           of_at91sam9260_pmc_setup);
->> +
->> +static void __init of_at91sam9g45_pmc_setup(struct device_node *np)
->> +{
->> +    of_at91_pmc_setup(np, &at91sam9g45_caps);
->> +}
->> +CLK_OF_DECLARE(at91sam9g45_clk_main, "atmel,at91sam9g45-pmc",
->> +           of_at91sam9g45_pmc_setup);
->> +
->> +static void __init of_at91sam9n12_pmc_setup(struct device_node *np)
->> +{
->> +    of_at91_pmc_setup(np, &at91sam9n12_caps);
->> +}
->> +CLK_OF_DECLARE(at91sam9n12_clk_main, "atmel,at91sam9n12-pmc",
->> +           of_at91sam9n12_pmc_setup);
->> +
->> +static void __init of_at91sam9x5_pmc_setup(struct device_node *np)
->> +{
->> +    of_at91_pmc_setup(np, &at91sam9x5_caps);
->> +}
->> +CLK_OF_DECLARE(at91sam9x5_clk_main, "atmel,at91sam9x5-pmc",
->> +           of_at91sam9x5_pmc_setup);
->> +
->> +static void __init of_at91sam9g35_pmc_setup(struct device_node *np)
->> +{
->> +    of_at91_pmc_setup(np, &at91sam9g35_caps);
->> +}
->> +CLK_OF_DECLARE(at91sam9g35_clk_main, "atmel,at91sam9g35-pmc",
->> +           of_at91sam9g35_pmc_setup);
->
-> Ditto.
->
->> +
->> +static void __init of_sama5d3_pmc_setup(struct device_node *np)
->> +{
->> +    of_at91_pmc_setup(np, &sama5d3_caps);
->> +}
->> +CLK_OF_DECLARE(sama5d3_clk_main, "atmel,sama5d3-pmc",
->> +           of_sama5d3_pmc_setup);
->> diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
->> new file mode 100644
->> index 0000000..b7e8397
->> --- /dev/null
->> +++ b/drivers/clk/at91/pmc.h
->> @@ -0,0 +1,58 @@
->> +/*
->> + * drivers/clk/at91/pmc.h
->> + *
->> + *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + */
->> +
->> +#ifndef __PMC_H_
->> +#define __PMC_H_
->> +
->> +#include <linux/io.h>
->> +#include <linux/irqdomain.h>
->> +#include <linux/spinlock.h>
->> +
->> +struct clk_range {
->> +    unsigned long min;
->> +    unsigned long max;
->> +};
->> +
->> +#define CLK_RANGE(MIN, MAX) {.min = MIN, .max = MAX,}
->> +
->> +struct at91_pmc_caps {
->> +    u32 available_irqs;
->> +};
->> +
->> +struct at91_pmc {
->> +    void __iomem *regbase;
->> +    int virq;
->> +    spinlock_t lock;
->> +    const struct at91_pmc_caps *caps;
->> +    struct irq_domain *irqdomain;
->> +};
->> +
->> +static inline void pmc_lock(struct at91_pmc *pmc)
->> +{
->> +    spin_lock(&pmc->lock);
->> +}
->> +
->> +static inline void pmc_unlock(struct at91_pmc *pmc)
->> +{
->> +    spin_unlock(&pmc->lock);
->> +}
->> +
->> +static inline u32 pmc_read(struct at91_pmc *pmc, int offset)
->> +{
->> +    return readl_relaxed(pmc->regbase + offset);
->> +}
->> +
->> +static inline void pmc_write(struct at91_pmc *pmc, int offset, u32 
->> value)
->> +{
->> +    return writel_relaxed(value, pmc->regbase + offset);
->> +}
->> +
->> +#endif /* __PMC_H_ */
->>
->
->
+
+> +	}
+> +
+> +4. Consider an AMP(asymmetric multi-processor) sytem with 2 clusters of
+> +   CPUs. Each cluster has 2 CPUs and all the CPUs within the cluster share
+> +   the clock domain.
+> +
+> +	cpu0: cpu@0 {
+> +		compatible = "arm,cortex-a15";
+> +		reg = <0>;
+> +		operating-points-phandle = <&cluster0_opp>;
+> +	};
+> +
+> +	cpu1: cpu@1 {
+> +		compatible = "arm,cortex-a15";
+> +		reg = <1>;
+> +		operating-points-phandle = <&cluster0_opp>;
+> +	};
+> +
+> +	cpu2: cpu@100 {
+> +		compatible = "arm,cortex-a7";
+> +		reg = <100>;
+> +		operating-points-phandle = <&cluster1_opp>;
+> +	};
+> +
+> +	cpu3: cpu@101 {
+> +		compatible = "arm,cortex-a7";
+> +		reg = <101>;
+> +		operating-points-phandle = <&cluster1_opp>;
+> +	};
+> +
+> +	opps-table {
+> +		cluster0_opp: cluster0_opp {
+
+Why not use the cpu topology? Then the operating point can apply to
+cores based on the position in the topology. You don't even need a
+phandle in that case. You can look for OPPs in either a cpu node or in
+the topology.
+
+
+> +			operating-points = <
+> +				/* kHz    uV */
+> +				792000  1100000
+> +				396000  950000
+> +				198000  850000
+> +			>;
+> +		};
+> +		cluster1_opp: cluster1_opp {
+> +			operating-points = <
+> +				/* kHz    uV */
+> +				792000  950000
+> +				396000  750000
+> +				198000  450000
+> +			>;
+> +		};
+> +		... /* other device OPP nodes */
+> +	}
+> +
+> +Container Node
+> +--------------
+> +	- It's highly recommended to place all the shared OPPs under single
+> +	  node for consistency and better readability
+> +	- It's quite similar to clocks or pinmux container nodes
+> +	- In the above examples, "opps-table" is the container node
+> 
+
