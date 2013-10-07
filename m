@@ -1,77 +1,118 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 23/29] openrisc: remove unnecessary prom.c
-	includes
-Date: Mon,  7 Oct 2013 11:29:31 -0500
-Message-ID: <1381163377-21044-24-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 16/29] mips: use early_init_dt_scan
+Date: Mon,  7 Oct 2013 11:29:24 -0500
+Message-ID: <1381163377-21044-17-git-send-email-robherring2@gmail.com>
 References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-bounces@lists.openrisc.net>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
-List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
-List-Archive: <http://lists.openrisc.net/pipermail/linux>
-List-Post: <mailto:linux@lists.openrisc.net>
-List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
-List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
-Sender: linux-bounces@lists.openrisc.net
-Errors-To: linux-bounces@lists.openrisc.net
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux@lists.openrisc.net
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-It appears openrisc prom.c was just copied from another arch with a
-bunch of unnecessary includes. Remove all the unecessary ones.
+Convert mips to use new early_init_dt_scan function.
+
+Remove early_init_dt_scan_memory_arch
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Jonas Bonn <jonas@southpole.se>
-Cc: linux@lists.openrisc.net
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org
+Acked-by: John Crispin <blogic@openwrt.org>
 ---
- arch/openrisc/kernel/prom.c | 22 ----------------------
- 1 file changed, 22 deletions(-)
+ arch/mips/include/asm/prom.h |  3 ---
+ arch/mips/kernel/prom.c      | 39 +++------------------------------------
+ 2 files changed, 3 insertions(+), 39 deletions(-)
 
-diff --git a/arch/openrisc/kernel/prom.c b/arch/openrisc/kernel/prom.c
-index 2aae474..6a44340 100644
---- a/arch/openrisc/kernel/prom.c
-+++ b/arch/openrisc/kernel/prom.c
-@@ -18,34 +18,12 @@
-  *
-  */
- 
--#include <stdarg.h>
--#include <linux/kernel.h>
--#include <linux/string.h>
- #include <linux/init.h>
--#include <linux/threads.h>
--#include <linux/spinlock.h>
+diff --git a/arch/mips/include/asm/prom.h b/arch/mips/include/asm/prom.h
+index 1e7e096..e3dbd0e 100644
+--- a/arch/mips/include/asm/prom.h
++++ b/arch/mips/include/asm/prom.h
+@@ -17,9 +17,6 @@
  #include <linux/types.h>
--#include <linux/pci.h>
--#include <linux/stringify.h>
--#include <linux/delay.h>
--#include <linux/initrd.h>
--#include <linux/bitops.h>
--#include <linux/module.h>
--#include <linux/kexec.h>
--#include <linux/debugfs.h>
--#include <linux/irq.h>
- #include <linux/memblock.h>
+ #include <asm/bootinfo.h>
+ 
+-extern int early_init_dt_scan_memory_arch(unsigned long node,
+-	const char *uname, int depth, void *data);
+-
+ extern void device_tree_init(void);
+ 
+ static inline unsigned long pci_address_to_pio(phys_addr_t address)
+diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
+index 0fa0b69..67a4c53 100644
+--- a/arch/mips/kernel/prom.c
++++ b/arch/mips/kernel/prom.c
+@@ -17,8 +17,6 @@
+ #include <linux/debugfs.h>
+ #include <linux/of.h>
  #include <linux/of_fdt.h>
+-#include <linux/of_irq.h>
+-#include <linux/of_platform.h>
  
--#include <asm/prom.h>
  #include <asm/page.h>
--#include <asm/processor.h>
--#include <asm/irq.h>
--#include <linux/io.h>
--#include <asm/mmu.h>
--#include <asm/pgtable.h>
--#include <asm/sections.h>
--#include <asm/setup.h>
+ #include <asm/prom.h>
+@@ -40,13 +38,6 @@ char *mips_get_machine_name(void)
+ }
  
- void __init early_init_devtree(void *params)
+ #ifdef CONFIG_OF
+-int __init early_init_dt_scan_memory_arch(unsigned long node,
+-					  const char *uname, int depth,
+-					  void *data)
+-{
+-	return early_init_dt_scan_memory(node, uname, depth, data);
+-}
+-
+ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
  {
+ 	return add_memory_region(base, size, BOOT_MEM_RAM);
+@@ -78,36 +69,12 @@ int __init early_init_dt_scan_model(unsigned long node,	const char *uname,
+ 	return 0;
+ }
+ 
+-void __init early_init_devtree(void *params)
+-{
+-	/* Setup flat device-tree pointer */
+-	initial_boot_params = params;
+-
+-	/* Retrieve various informations from the /chosen node of the
+-	 * device-tree, including the platform type, initrd location and
+-	 * size, and more ...
+-	 */
+-	of_scan_flat_dt(early_init_dt_scan_chosen, arcs_cmdline);
+-
+-
+-	/* Scan memory nodes */
+-	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+-	of_scan_flat_dt(early_init_dt_scan_memory_arch, NULL);
+-
+-	/* try to load the mips machine name */
+-	of_scan_flat_dt(early_init_dt_scan_model, NULL);
+-}
+-
+ void __init __dt_setup_arch(struct boot_param_header *bph)
+ {
+-	if (be32_to_cpu(bph->magic) != OF_DT_HEADER) {
+-		pr_err("DTB has bad magic, ignoring builtin OF DTB\n");
+-
++	if (!early_init_dt_scan(bph))
+ 		return;
+-	}
+-
+-	initial_boot_params = bph;
+ 
+-	early_init_devtree(initial_boot_params);
++	/* try to load the mips machine name */
++	of_scan_flat_dt(early_init_dt_scan_model, NULL);
+ }
+ #endif
 -- 
 1.8.1.2
