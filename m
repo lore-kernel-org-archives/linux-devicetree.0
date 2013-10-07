@@ -1,168 +1,62 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v6 3/3] usb: dwc3: Add Qualcomm DWC3 glue layer driver
-Date: Mon, 07 Oct 2013 12:28:01 +0300
-Message-ID: <52527EA1.8060600@mm-sol.com>
-References: <1381131897-13910-1-git-send-email-iivanov@mm-sol.com> <1381131897-13910-4-git-send-email-iivanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381131897-13910-4-git-send-email-iivanov@mm-sol.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: balbi@ti.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Matt Porter <matt.porter@linaro.org>
+Subject: [PATCH 0/5] USB Device Controller support for BCM281xx
+Date: Mon,  7 Oct 2013 06:12:27 -0400
+Message-ID: <1381140752-312-1-git-send-email-matt.porter@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>
+Cc: Paul Zimmerman <paulz@synopsys.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ivan,
+This series adds USB Device Controller support for the Broadcom
+BCM281xx family of parts. BCM281xx contains a DWC2 OTG block and
+s3c-hsotg is used to support UDC operation.
 
-Minor comments below.
+Parts 1-2 allows s3c-hsotg to build on non-Samsung platforms and
+adds support for a configurable UTMI PHY width. s3c-hsotg is extended
+to also support the dwc2 binding as that binding should describe the
+hardware independently of there being two different drivers (dwc2 in
+staging and s3c-hsotg) for the same device.
 
-On 10/07/2013 10:44 AM, Ivan T. Ivanov wrote:
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> 
-> DWC3 glue layer is hardware layer around Synopsys DesignWare
-> USB3 core. Its purpose is to supply Synopsys IP with required
-> clocks, voltages and interface it with the rest of the SoC.
-> 
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-> ---
->  drivers/usb/dwc3/Kconfig    |    8 +++
->  drivers/usb/dwc3/Makefile   |    1 +
->  drivers/usb/dwc3/dwc3-msm.c |  168 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 177 insertions(+)
->  create mode 100644 drivers/usb/dwc3/dwc3-msm.c
-> 
-> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-> index 70fc430..4c7b5a4 100644
-> --- a/drivers/usb/dwc3/Kconfig
-> +++ b/drivers/usb/dwc3/Kconfig
-> @@ -59,6 +59,14 @@ config USB_DWC3_EXYNOS
->  	  Recent Exynos5 SoCs ship with one DesignWare Core USB3 IP inside,
->  	  say 'Y' or 'M' if you have one such device.
->  
-> +config USB_DWC3_MSM
-> +       tristate "Qualcomm MSM/APQ Platforms"
-> +       default USB_DWC3
-> +       select USB_MSM_DWC3_PHYS
-> +       help
-> +         Recent Qualcomm SoCs ship with one DesignWare Core USB3 IP inside,
-> +         say 'Y' or 'M' if you have one such device.
-> +
->  config USB_DWC3_PCI
->  	tristate "PCIe-based Platforms"
->  	depends on PCI
-> diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
-> index dd17601..a90de66 100644
-> --- a/drivers/usb/dwc3/Makefile
-> +++ b/drivers/usb/dwc3/Makefile
-> @@ -31,4 +31,5 @@ endif
->  
->  obj-$(CONFIG_USB_DWC3_OMAP)		+= dwc3-omap.o
->  obj-$(CONFIG_USB_DWC3_EXYNOS)		+= dwc3-exynos.o
-> +obj-$(CONFIG_USB_DWC3_MSM)		+= dwc3-msm.o
->  obj-$(CONFIG_USB_DWC3_PCI)		+= dwc3-pci.o
-> diff --git a/drivers/usb/dwc3/dwc3-msm.c b/drivers/usb/dwc3/dwc3-msm.c
-> new file mode 100644
-> index 0000000..1d73f92
-> --- /dev/null
-> +++ b/drivers/usb/dwc3/dwc3-msm.c
-> @@ -0,0 +1,168 @@
-> +/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/usb/phy.h>
-> +
-> +struct dwc3_msm {
-> +	struct device		*dev;
-> +
-> +	struct clk		*core_clk;
-> +	struct clk		*iface_clk;
-> +	struct clk		*sleep_clk;
-> +	struct clk		*utmi_clk;
-> +
-> +	struct regulator	*gdsc;
-> +};
-> +
-> +static int dwc3_msm_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct dwc3_msm *mdwc;
-> +	struct resource *res;
-> +	void __iomem *tcsr;
-> +	int ret = 0;
-> +
-> +	mdwc = devm_kzalloc(&pdev->dev, sizeof(*mdwc), GFP_KERNEL);
-> +	if (!mdwc)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, mdwc);
-> +
-> +	mdwc->dev = &pdev->dev;
-> +
-> +	mdwc->gdsc = devm_regulator_get(mdwc->dev, "gdsc");
-> +
-> +	mdwc->core_clk = devm_clk_get(mdwc->dev, "core");
-> +	if (IS_ERR(mdwc->core_clk)) {
-> +		dev_dbg(mdwc->dev, "failed to get core clock\n");
-> +		return PTR_ERR(mdwc->core_clk);
-> +	}
-> +
-> +	mdwc->iface_clk = devm_clk_get(mdwc->dev, "iface");
-> +	if (IS_ERR(mdwc->iface_clk)) {
-> +		dev_dbg(mdwc->dev, "failed to get iface clock\n");
-> +		return PTR_ERR(mdwc->iface_clk);
-> +	}
-> +
-> +	mdwc->sleep_clk = devm_clk_get(mdwc->dev, "sleep");
-> +	if (IS_ERR(mdwc->sleep_clk)) {
-> +		dev_dbg(mdwc->dev, "failed to get sleep clock\n");
-> +		return  PTR_ERR(mdwc->sleep_clk);
-> +	}
-> +
-> +	mdwc->utmi_clk = devm_clk_get(mdwc->dev, "utmi");
-> +	if (IS_ERR(mdwc->utmi_clk)) {
-> +		dev_dbg(mdwc->dev, "failed to get utmi clock\n");
-> +		return  PTR_ERR(mdwc->utmi_clk);
-> +	}
+Parts 3-4 add a PHY control driver for the Broadcom USB control block
+as well as a PHY driver that calls the exported API from the control
+driver. This approach is borrowed directly from the phy-omap-control.c
+driver.
 
-I'm not sure that those dev_dbg() are useful at all.
+Patch 5 adds the DT nodes to enable UDC support on both BCM281xx boards
+in the kernel.
 
-> +
-> +	if (!IS_ERR(mdwc->gdsc)) {
-> +		ret = regulator_enable(mdwc->gdsc);
-> +		if (ret)
-> +			dev_err(mdwc->dev, "cannot enable gdsc\n");
-> +	}
-> +
-> +	/*
-> +	 * DWC3 Core requires its CORE CLK (aka master / bus clk) to
-> +	 * run at 125Mhz in SSUSB mode and >60MHZ for HSUSB mode.
-> +	 */
-> +	clk_set_rate(mdwc->core_clk, 125000000);
-> +	clk_prepare_enable(mdwc->core_clk);
-> +	clk_prepare_enable(mdwc->iface_clk);
-> +	clk_prepare_enable(mdwc->sleep_clk);
-> +	clk_prepare_enable(mdwc->utmi_clk);
+This series depends on the "Update Kona drivers to use clocks" series
+(https://lkml.org/lkml/2013/10/3/645). The dependencies noted for that
+series are already queued for 3.13.
 
-All function calls above could return errors. Aren't those clocks fatal?
+Matt Porter (5):
+  usb: gadget: s3c-hsotg: enable build for other platforms
+  usb: gadget: s3c-hsotg: support configurable UTMI PHY width
+  usb: phy: add Broadcom Kona USB control driver
+  usb: phy: add Broadcom Kona USB PHY driver
+  ARM: dts: add usb udc support to bcm281xx
 
-regadrs,
-Stan
+ Documentation/devicetree/bindings/staging/dwc2.txt |   4 +
+ .../devicetree/bindings/usb/bcm-kona-usb-ctrl.txt  |  12 ++
+ .../devicetree/bindings/usb/bcm-kona-usb-phy.txt   |  10 ++
+ arch/arm/boot/dts/bcm11351-brt.dts                 |  10 ++
+ arch/arm/boot/dts/bcm11351.dtsi                    |  21 +++
+ arch/arm/boot/dts/bcm28155-ap.dts                  |  12 ++
+ drivers/usb/gadget/Kconfig                         |   7 +-
+ drivers/usb/gadget/s3c-hsotg.c                     |  20 ++-
+ drivers/usb/gadget/s3c-hsotg.h                     |   1 +
+ drivers/usb/phy/Kconfig                            |  12 ++
+ drivers/usb/phy/Makefile                           |   2 +
+ drivers/usb/phy/bcm-kona-usb.h                     |  31 +++++
+ drivers/usb/phy/phy-bcm-kona-ctrl.c                | 151 +++++++++++++++++++++
+ drivers/usb/phy/phy-bcm-kona-usb2.c                |  99 ++++++++++++++
+ 14 files changed, 385 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/bcm-kona-usb-ctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/bcm-kona-usb-phy.txt
+ create mode 100644 drivers/usb/phy/bcm-kona-usb.h
+ create mode 100644 drivers/usb/phy/phy-bcm-kona-ctrl.c
+ create mode 100644 drivers/usb/phy/phy-bcm-kona-usb2.c
 
+-- 
+1.8.4
