@@ -1,104 +1,30 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 1/6] mtd: nand: omap: combine different flavours of
- 1-bit hamming ecc schemes
-Date: Mon, 7 Oct 2013 12:27:28 +0100
-Message-ID: <20131007112728.GA15365@e106331-lin.cambridge.arm.com>
-References: <1380916188-24206-1-git-send-email-pekon@ti.com>
- <1380916188-24206-2-git-send-email-pekon@ti.com>
+From: Erik Faye-Lund <kusmabite-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 08/27] drm/tegra: gr2d: Miscellaneous cleanups
+Date: Mon, 7 Oct 2013 13:34:44 +0200
+Message-ID: <CABPQNSbkS40_jyGz14s08+x3e+-pxnfy90V7pzAOfiqUF2ma2g@mail.gmail.com>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-9-git-send-email-treding@nvidia.com>
+Reply-To: kusmabite-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1380916188-24206-2-git-send-email-pekon@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: "robherring2@gmail.com" <robherring2@gmail.com>, "olof@lixom.net" <olof@lixom.net>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "balbi@ti.com" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381134884-5816-9-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 04, 2013 at 08:49:43PM +0100, Pekon Gupta wrote:
-> OMAP NAND driver currently supports multiple flavours of 1-bit Hamming
-> ecc-scheme, like:
-> - OMAP_ECC_HAMMING_CODE_DEFAULT
-> 	1-bit hamming ecc code using software library
-> - OMAP_ECC_HAMMING_CODE_HW
-> 	1-bit hamming ecc-code using GPMC h/w engine
-> - OMAP_ECC_HAMMING_CODE_HW_ROMCODE
-> 	1-bit hamming ecc-code using GPMC h/w engin with ecc-layout compatible
-> 	to ROM code.
-> 
-> This patch combines above multiple ecc-schemes into single implementation:
-> - OMAP_ECC_HAM1_CODE_HW
-> 	1-bit hamming ecc-code using GPMC h/w engine with ROM-code compatible
-> 	ecc-layout.
+On Mon, Oct 7, 2013 at 10:34 AM, Thierry Reding
+<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Rework the address table code for the host1x firewall. The previous
+> implementation allocated a bitfield but didn't check for a valid pointer
+> so it could potentially crash.
 
-If I have my NAND formatted with one of the existing ECC schemes (e.g.
-OMAP_ECC_HAMMING_CODE_DEFAULT) will it work with the new
-OMAP_ECC_HAM1_CODE_HW scheme?
+I don't think it could crash. The bitmaps was allocated as a 256-bit
+field, and the register offset gets AND'ed with 0xFF before being
+looked up. What am I missing?
 
-Are they all compatible?
+> Furthermore setting up a bitfield makes
+> the code more complex than it needs to be.
 
-> 
-> Signed-off-by: Pekon Gupta <pekon@ti.com>
-> ---
->  Documentation/devicetree/bindings/mtd/gpmc-nand.txt | 8 ++++----
->  arch/arm/mach-omap2/board-flash.c                   | 2 +-
->  arch/arm/mach-omap2/gpmc.c                          | 4 +---
->  drivers/mtd/nand/omap2.c                            | 9 +++------
->  include/linux/platform_data/mtd-nand-omap2.h        | 6 +-----
->  5 files changed, 10 insertions(+), 19 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> index df338cb..25ee232 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> @@ -22,10 +22,10 @@ Optional properties:
->  				width of 8 is assumed.
->  
->   - ti,nand-ecc-opt:		A string setting the ECC layout to use. One of:
-> -
-> -		"sw"		Software method (default)
-> -		"hw"		Hardware method
-> -		"hw-romcode"	gpmc hamming mode method & romcode layout
-> +		"sw"		<deprecated> use "ham1" instead
-> +		"hw"		<deprecated> use "ham1" instead
-> +		"hw-romcode"	<deprecated> use "ham1" instead
-> +		"ham1"		1-bit Hamming ecc code
->  		"bch4"		4-bit BCH ecc code
->  		"bch8"		8-bit BCH ecc code
->  
-> diff --git a/arch/arm/mach-omap2/board-flash.c b/arch/arm/mach-omap2/board-flash.c
-> index fc20a61..ac82512 100644
-> --- a/arch/arm/mach-omap2/board-flash.c
-> +++ b/arch/arm/mach-omap2/board-flash.c
-> @@ -142,7 +142,7 @@ __init board_nand_init(struct mtd_partition *nand_parts, u8 nr_parts, u8 cs,
->  	board_nand_data.nr_parts	= nr_parts;
->  	board_nand_data.devsize		= nand_type;
->  
-> -	board_nand_data.ecc_opt = OMAP_ECC_HAMMING_CODE_DEFAULT;
-> +	board_nand_data.ecc_opt = OMAP_ECC_BCH8_CODE_HW;
->  	gpmc_nand_init(&board_nand_data, gpmc_t);
->  }
->  #endif /* CONFIG_MTD_NAND_OMAP2 || CONFIG_MTD_NAND_OMAP2_MODULE */
-> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-> index 9f4795a..1c45b72 100644
-> --- a/arch/arm/mach-omap2/gpmc.c
-> +++ b/arch/arm/mach-omap2/gpmc.c
-> @@ -1342,9 +1342,7 @@ static void __maybe_unused gpmc_read_timings_dt(struct device_node *np,
->  #ifdef CONFIG_MTD_NAND
->  
->  static const char * const nand_ecc_opts[] = {
-> -	[OMAP_ECC_HAMMING_CODE_DEFAULT]		= "sw",
-> -	[OMAP_ECC_HAMMING_CODE_HW]		= "hw",
-> -	[OMAP_ECC_HAMMING_CODE_HW_ROMCODE]	= "hw-romcode",
-> +	[OMAP_ECC_HAM1_CODE_HW]			= "ham1",
->  	[OMAP_ECC_BCH4_CODE_HW]			= "bch4",
->  	[OMAP_ECC_BCH8_CODE_HW]			= "bch8",
-
-Won't this break existing dts which have "sw", "hw", or "hw-romcode"?
-
-Someone may try to use a new kernel with an old dt, and we marked them
-as deprecated, not removed.
-
-Thanks,
-Mark.
+Doesn't this perform worse than the current implementation? Going from
+1 to 13 checks per write sounds less than ideal to me...
