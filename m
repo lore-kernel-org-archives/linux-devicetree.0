@@ -1,273 +1,60 @@
-From: Matt Porter <matt.porter@linaro.org>
-Subject: [PATCH 3/5] usb: phy: add Broadcom Kona USB control driver
-Date: Mon,  7 Oct 2013 06:12:30 -0400
-Message-ID: <1381140752-312-4-git-send-email-matt.porter@linaro.org>
-References: <1381140752-312-1-git-send-email-matt.porter@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381140752-312-1-git-send-email-matt.porter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christian Daudt <bcm@fixthebug.org>
-Cc: Paul Zimmerman <paulz@synopsys.com>, Linux USB List <linux-usb@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Linaro Patches <patches@linaro.org>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: omap3-igep0020: Add HS USB Host support
+Date: Mon, 7 Oct 2013 12:22:03 +0200
+Message-ID: <CAAwP0s0XHN+ynMH2Mrn4oNuDo1js86wY2vxkZ=+MG_2=Sgrt9Q@mail.gmail.com>
+References: <1380931479-16142-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1380931479-16142-3-git-send-email-javier.martinez@collabora.co.uk>
+ <525271D5.9070009@ti.com> <525275C8.2050208@collabora.co.uk>
+ <5252799A.5030301@ti.com> <52527B21.5040602@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <52527B21.5040602@collabora.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Roger Quadros <rogerq@ti.com>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Broadcom BCM281xx parts have a PHY control block that
-operates in conjunction with the DWC2 USB OTG. This driver
-exposes an API that allows control of power/reset for a
-connected USB PHY.
+On Mon, Oct 7, 2013 at 11:13 AM, Javier Martinez Canillas
+<javier.martinez@collabora.co.uk> wrote:
+> On 10/07/2013 11:06 AM, Roger Quadros wrote:
+>>>
+>>> Well that's a very good question indeed.
+>>>
+>>> The thing is that the IGEP0030 is a Computer-on-Module [1] that is used in
+>>> conjunction with expansion boards and some of them have USB HOST support such as
+>>> IGEP Paris [2] and IGEP Berlin [3].
+>>>
+>>> Support for this expansion boards is still not in mainline but there are plans
+>>> to add them using Device Tree overlays [4] once/if this land on mainline.
+>>>
+>>
+>> Why would your boards need Device Tree overlays? From the looks of it, the configuration
+>> of SOM + base board don't seem to change at runtime.
+>>
+>
+> Indeed, a static configuration (DTS) would be enough now that I think about it.
+>
 
-Signed-off-by: Matt Porter <matt.porter@linaro.org>
-Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
-Reviewed-by: Tim Kryger <tim.kryger@linaro.org>
----
- .../devicetree/bindings/usb/bcm-kona-usb-ctrl.txt  |  12 ++
- drivers/usb/phy/Kconfig                            |   5 +
- drivers/usb/phy/Makefile                           |   1 +
- drivers/usb/phy/bcm-kona-usb.h                     |  31 +++++
- drivers/usb/phy/phy-bcm-kona-ctrl.c                | 151 +++++++++++++++++++++
- 5 files changed, 200 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/bcm-kona-usb-ctrl.txt
- create mode 100644 drivers/usb/phy/bcm-kona-usb.h
- create mode 100644 drivers/usb/phy/phy-bcm-kona-ctrl.c
+Hi Roger,
 
-diff --git a/Documentation/devicetree/bindings/usb/bcm-kona-usb-ctrl.txt b/Documentation/devicetree/bindings/usb/bcm-kona-usb-ctrl.txt
-new file mode 100644
-index 0000000..98163f6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/bcm-kona-usb-ctrl.txt
-@@ -0,0 +1,12 @@
-+BROADCOM KONA USB CONTROL
-+
-+Required properties:
-+ - compatible: brcm,kona-ctrl-usb
-+ - reg: offset and length of the USB control registers
-+
-+Example:
-+
-+	usbctl: usbctl@3f130000 {
-+		compatible = "brcm,kona-ctrl-usb";
-+		reg = <0x3f130000 0x28>;
-+	};
-diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-index d5589f9..2b7b4f1 100644
---- a/drivers/usb/phy/Kconfig
-+++ b/drivers/usb/phy/Kconfig
-@@ -100,6 +100,11 @@ config AM335X_PHY_USB
- 	  This driver provides PHY support for that phy which part for the
- 	  AM335x SoC.
- 
-+config BCM_KONA_CTRL_USB
-+	tristate
-+	help
-+	  Enable this to support the Broadcom Kona USB control block
-+
- config SAMSUNG_USBPHY
- 	tristate
- 	help
-diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
-index 2135e85..98c545e 100644
---- a/drivers/usb/phy/Makefile
-+++ b/drivers/usb/phy/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_NOP_USB_XCEIV)		+= phy-generic.o
- obj-$(CONFIG_OMAP_CONTROL_USB)		+= phy-omap-control.o
- obj-$(CONFIG_AM335X_CONTROL_USB)	+= phy-am335x-control.o
- obj-$(CONFIG_AM335X_PHY_USB)		+= phy-am335x.o
-+obj-$(CONFIG_BCM_KONA_CTRL_USB)		+= phy-bcm-kona-ctrl.o
- obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
- obj-$(CONFIG_OMAP_USB3)			+= phy-omap-usb3.o
- obj-$(CONFIG_SAMSUNG_USBPHY)		+= phy-samsung-usb.o
-diff --git a/drivers/usb/phy/bcm-kona-usb.h b/drivers/usb/phy/bcm-kona-usb.h
-new file mode 100644
-index 0000000..4563dd6
---- /dev/null
-+++ b/drivers/usb/phy/bcm-kona-usb.h
-@@ -0,0 +1,31 @@
-+/*
-+ * bcm_kona_usb.h -- Broadcom Kona USB header file
-+ *
-+ * Copyright (C) 2013 Linaro Limited
-+ * Matt Porter <matt.porter@linaro.org>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __BCM_KONA_USB_H
-+#define __BCM_KONA_USB_H
-+
-+#include <linux/usb/phy.h>
-+
-+struct bcm_kona_usb {
-+	struct usb_phy phy;
-+	struct device *dev;
-+	struct device *ctrl_dev;
-+};
-+
-+extern struct device *bcm_kona_get_ctrl_dev(void);
-+extern void bcm_kona_ctrl_usb_phy_power(struct device *, int);
-+
-+#endif /* __BCM_KONA_USB_H */
-diff --git a/drivers/usb/phy/phy-bcm-kona-ctrl.c b/drivers/usb/phy/phy-bcm-kona-ctrl.c
-new file mode 100644
-index 0000000..d2936b6
---- /dev/null
-+++ b/drivers/usb/phy/phy-bcm-kona-ctrl.c
-@@ -0,0 +1,151 @@
-+/*
-+ * phy-bcm-kona-ctrl.c - Broadcom Kona USB Control Driver
-+ *
-+ * Based on phy-omap-control.c
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * Copyright (C) 2013 Linaro Limited
-+ * Matt Porter <matt.porter@linaro.org>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/clk.h>
-+
-+#include "bcm-kona-usb.h"
-+
-+#define OTGCTL_OTGSTAT2		(1 << 31)
-+#define OTGCTL_OTGSTAT1		(1 << 30)
-+#define OTGCTL_PRST_N_SW	(1 << 11)
-+#define OTGCTL_HRESET_N		(1 << 10)
-+#define OTGCTL_UTMI_LINE_STATE1	(1 << 9)
-+#define OTGCTL_UTMI_LINE_STATE0	(1 << 8)
-+
-+#define P1CTL_SOFT_RESET	(1 << 1)
-+#define P1CTL_NON_DRIVING	(1 << 0)
-+
-+struct bcm_kona_usb_ctrl_regs {
-+	u32 ctrl;
-+	u32 cfg;
-+	u32 p1ctl;
-+	u32 status;
-+	u32 bc_cfg;
-+	u32 tp_in;
-+	u32 tp_out;
-+	u32 phy_ctrl;
-+	u32 usbreg;
-+	u32 usbproben;
-+};
-+
-+struct bcm_kona_ctrl_usb {
-+	struct device *dev;
-+	struct bcm_kona_usb_ctrl_regs *regs;
-+};
-+
-+static struct bcm_kona_ctrl_usb *ctrl_usb;
-+
-+/**
-+ * bcm_kona_ctrl_dev - returns the device pointer for this control device
-+ *
-+ * This API should be called to get the device pointer for the Kona USB
-+ * control device. This device pointer should be used when calling the
-+ * exported bcm_kona_ctrl_usb_phy_power() API.
-+ */
-+struct device *bcm_kona_get_ctrl_dev(void)
-+{
-+	if (!ctrl_usb)
-+		return ERR_PTR(-ENODEV);
-+
-+	return ctrl_usb->dev;
-+}
-+EXPORT_SYMBOL_GPL(bcm_kona_get_ctrl_dev);
-+
-+/**
-+ * bcm_kona_ctrl_usb_phy_power - power on/off the phy using control module reg
-+ * @dev: the control module device
-+ * @on: 0 or 1, based on powering on or off the PHY
-+ */
-+void bcm_kona_ctrl_usb_phy_power(struct device *dev, int on)
-+{
-+	struct bcm_kona_ctrl_usb *ctrl = dev_get_drvdata(dev);
-+	u32 val;
-+
-+	val = readl(&ctrl->regs->ctrl);
-+	if (on) {
-+		/* Configure and power PHY */
-+		val &= ~(OTGCTL_OTGSTAT2 | OTGCTL_OTGSTAT1 |
-+			 OTGCTL_UTMI_LINE_STATE1 | OTGCTL_UTMI_LINE_STATE0);
-+		val |= OTGCTL_PRST_N_SW | OTGCTL_HRESET_N;
-+		writel(val, &ctrl->regs->ctrl);
-+
-+		/* Soft reset PHY */
-+		val = readl(&ctrl->regs->p1ctl);
-+		val &= ~P1CTL_NON_DRIVING;
-+		val |= P1CTL_SOFT_RESET;
-+		writel(val, &ctrl->regs->p1ctl);
-+		writel(val & ~P1CTL_SOFT_RESET, &ctrl->regs->p1ctl);
-+		/* Reset needs to be asserted for 2ms */
-+		mdelay(2);
-+		writel(val | P1CTL_SOFT_RESET, &ctrl->regs->p1ctl);
-+	} else {
-+		val &= ~(OTGCTL_PRST_N_SW | OTGCTL_HRESET_N);
-+		writel(val, &ctrl->regs->ctrl);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(bcm_kona_ctrl_usb_phy_power);
-+
-+static int bcm_kona_ctrl_usb_probe(struct platform_device *pdev)
-+{
-+	struct resource	*res;
-+
-+	ctrl_usb = devm_kzalloc(&pdev->dev, sizeof(*ctrl_usb), GFP_KERNEL);
-+	if (!ctrl_usb) {
-+		dev_err(&pdev->dev, "unable to alloc memory for control usb\n");
-+		return -ENOMEM;
-+	}
-+
-+	ctrl_usb->dev = &pdev->dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	ctrl_usb->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(ctrl_usb->regs))
-+		return PTR_ERR(ctrl_usb->regs);
-+
-+	dev_set_drvdata(ctrl_usb->dev, ctrl_usb);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm_kona_ctrl_usb_id_table[] = {
-+	{ .compatible = "brcm,kona-ctrl-usb" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, bcm_kona_ctrl_usb_id_table);
-+
-+static struct platform_driver bcm_kona_ctrl_usb_driver = {
-+	.probe		= bcm_kona_ctrl_usb_probe,
-+	.driver		= {
-+		.name	= "bcm-kona-ctrl-usb",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(bcm_kona_ctrl_usb_id_table),
-+	},
-+};
-+
-+module_platform_driver(bcm_kona_ctrl_usb_driver);
-+
-+MODULE_ALIAS("platform:bcm-kona-ctrl-usb");
-+MODULE_AUTHOR("Matt Porter");
-+MODULE_DESCRIPTION("Broadcom Kona USB Control Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.8.4
+Now that I had coffee I remember why I think that even when Device
+Tree overlays are not strictly required for a SOM + base board it
+could be handy to use. If we use a static configuration (DTB) then the
+same firmware can't be used by any IGEP COM Module user. She would
+have to choose a DTB to pass to the kernel on boot.
+
+While using DT overlays the same firmware that provides a minimal DTB
+can be used regardless of the base board used (as long as there are
+all the needed fragment/overlays hooks in the DTS).
+
+After all the SOM has a NAND flash memory and a uSD/MMC slot so a
+minimal DTB is needed to boot and the support for all the peripherals
+present on the base board can be added by triggering a device tree
+overlay load from user-space.
+
+Or maybe I'm misunderstanding the use case for DT overlays since I had
+just read about it but I don't have practical experience with it.
+
+Thanks a lot and best regards,
+Javier
