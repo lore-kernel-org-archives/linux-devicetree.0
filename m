@@ -1,90 +1,141 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 12/29] arm64: use early_init_dt_scan
-Date: Mon,  7 Oct 2013 11:29:20 -0500
-Message-ID: <1381163377-21044-13-git-send-email-robherring2@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH v2 19/29] of: create default
+	early_init_dt_add_memory_arch
+Date: Mon,  7 Oct 2013 11:29:27 -0500
+Message-ID: <1381163377-21044-20-git-send-email-robherring2@gmail.com>
 References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381163377-21044-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bounces@lists.openrisc.net>
+In-Reply-To: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Michal Simek <monstr@monstr.eu>, Catalin Marinas <catalin.marinas@arm.com>, linux@lists.openrisc.net, Will Deacon <will.deacon@arm.com>, Rob Herring <rob.herring@calxeda.com>, microblaze-uclinux@itee.uq.edu.au, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Rob Herring <rob.herring@calxeda.com>
 
-Convert arm64 to use new early_init_dt_scan function.
+Create a weak version of early_init_dt_add_memory_arch which uses
+memblock. This will unify all architectures except ones with custom
+memory bank structs.
 
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Michal Simek <monstr@monstr.eu>
+Cc: Jonas Bonn <jonas@southpole.se>
+Acked-by: Grant Likely <grant.likely@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: microblaze-uclinux@itee.uq.edu.au
+Cc: linux@lists.openrisc.net
+Cc: devicetree@vger.kernel.org
 ---
- arch/arm64/kernel/setup.c | 31 +++----------------------------
- 1 file changed, 3 insertions(+), 28 deletions(-)
+ arch/arm64/kernel/setup.c     | 18 ------------------
+ arch/microblaze/kernel/prom.c |  5 -----
+ arch/openrisc/kernel/prom.c   |  6 ------
+ drivers/of/fdt.c              | 19 +++++++++++++++++++
+ 4 files changed, 19 insertions(+), 29 deletions(-)
 
 diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 055cfb8..4a5f624 100644
+index 4a5f624..7feb0c9 100644
 --- a/arch/arm64/kernel/setup.c
 +++ b/arch/arm64/kernel/setup.c
-@@ -124,37 +124,19 @@ static void __init setup_processor(void)
- 
- static void __init setup_machine_fdt(phys_addr_t dt_phys)
- {
--	struct boot_param_header *devtree;
- 	unsigned long dt_root;
- 
--	/* Check we have a non-NULL DT pointer */
--	if (!dt_phys) {
--		early_print("\n"
--			"Error: NULL or invalid device tree blob\n"
--			"The dtb must be 8-byte aligned and passed in the first 512MB of memory\n"
--			"\nPlease check your bootloader.\n");
--
--		while (true)
--			cpu_relax();
--
--	}
--
--	devtree = phys_to_virt(dt_phys);
--
--	/* Check device tree validity */
--	if (be32_to_cpu(devtree->magic) != OF_DT_HEADER) {
-+	if (!dt_phys || !early_init_dt_scan(phys_to_virt(dt_phys))) {
- 		early_print("\n"
- 			"Error: invalid device tree blob at physical address 0x%p (virtual address 0x%p)\n"
--			"Expected 0x%x, found 0x%x\n"
-+			"The dtb must be 8-byte aligned and passed in the first 512MB of memory\n"
- 			"\nPlease check your bootloader.\n",
--			dt_phys, devtree, OF_DT_HEADER,
--			be32_to_cpu(devtree->magic));
-+			dt_phys, phys_to_virt(dt_phys));
- 
- 		while (true)
- 			cpu_relax();
- 	}
- 
--	initial_boot_params = devtree;
- 	dt_root = of_get_flat_dt_root();
- 
- 	machine_name = of_get_flat_dt_prop(dt_root, "model", NULL);
-@@ -163,13 +145,6 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
- 	if (!machine_name)
- 		machine_name = "<unknown>";
+@@ -147,24 +147,6 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
  	pr_info("Machine: %s\n", machine_name);
--
--	/* Retrieve various information from the /chosen node */
--	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
--	/* Initialize {size,address}-cells info */
--	of_scan_flat_dt(early_init_dt_scan_root, NULL);
--	/* Setup memory, calling early_init_dt_add_memory_arch */
--	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
  }
  
- void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+-void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+-{
+-	base &= PAGE_MASK;
+-	size &= PAGE_MASK;
+-	if (base + size < PHYS_OFFSET) {
+-		pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
+-			   base, base + size);
+-		return;
+-	}
+-	if (base < PHYS_OFFSET) {
+-		pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
+-			   base, PHYS_OFFSET);
+-		size -= PHYS_OFFSET - base;
+-		base = PHYS_OFFSET;
+-	}
+-	memblock_add(base, size);
+-}
+-
+ /*
+  * Limit the memory size that was specified via FDT.
+  */
+diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
+index e13686e..951e4d6 100644
+--- a/arch/microblaze/kernel/prom.c
++++ b/arch/microblaze/kernel/prom.c
+@@ -41,11 +41,6 @@
+ #include <asm/sections.h>
+ #include <asm/pci-bridge.h>
+ 
+-void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+-{
+-	memblock_add(base, size);
+-}
+-
+ #ifdef CONFIG_EARLY_PRINTK
+ static char *stdout;
+ 
+diff --git a/arch/openrisc/kernel/prom.c b/arch/openrisc/kernel/prom.c
+index fbed459..6dbcaa8 100644
+--- a/arch/openrisc/kernel/prom.c
++++ b/arch/openrisc/kernel/prom.c
+@@ -47,12 +47,6 @@
+ #include <asm/sections.h>
+ #include <asm/setup.h>
+ 
+-void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+-{
+-	size &= PAGE_MASK;
+-	memblock_add(base, size);
+-}
+-
+ void __init early_init_devtree(void *params)
+ {
+ 	early_init_dt_scan(params);
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index bfbfda5..5bc55b6 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -775,6 +775,25 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ }
+ 
+ #ifdef CONFIG_HAVE_MEMBLOCK
++void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
++{
++	const u64 phys_offset = __pa(PAGE_OFFSET);
++	base &= PAGE_MASK;
++	size &= PAGE_MASK;
++	if (base + size < phys_offset) {
++		pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
++			   base, base + size);
++		return;
++	}
++	if (base < phys_offset) {
++		pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
++			   base, phys_offset);
++		size -= phys_offset - base;
++		base = phys_offset;
++	}
++	memblock_add(base, size);
++}
++
+ /*
+  * called from unflatten_device_tree() to bootstrap devicetree itself
+  * Architectures can override this definition if memblock isn't used
 -- 
 1.8.1.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
