@@ -1,56 +1,93 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: [PATCH 2/2] ARM: dts: dra7-evm: Add mmc2 node for eMMC support
-Date: Mon, 7 Oct 2013 21:55:04 +0530
-Message-ID: <1381163104-6318-2-git-send-email-balajitk@ti.com>
-References: <1381163104-6318-1-git-send-email-balajitk@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH v2 02/29] openrisc: use boot_command_line instead
+	of private cmd_line
+Date: Mon,  7 Oct 2013 11:29:10 -0500
+Message-ID: <1381163377-21044-3-git-send-email-robherring2@gmail.com>
+References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381163104-6318-1-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: bcousson@baylibre.com, devicetree@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, tony@atomide.com, linux-arm-kernel@lists.infradead.org, Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bounces@lists.openrisc.net>
+In-Reply-To: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux@lists.openrisc.net
 List-Id: devicetree@vger.kernel.org
 
-Add mmc2 dt node to dra7-evm board
-and model eMMC vcc as fixed regulator.
+From: Rob Herring <rob.herring@calxeda.com>
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
+Save some pointless copying of the kernel command line and just use
+boot_command_line instead. The DT code already handles CONFIG_CMDLINE,
+so a separate copy is not needed.
+
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Cc: Jonas Bonn <jonas@southpole.se>
+Cc: linux@lists.openrisc.net
+Reviewed-by: Grant Likely <grant.likely@linaro.org>
 ---
-Rebase to for_3.13/dts
-and removed ti,non-removable
+ arch/openrisc/kernel/prom.c  | 7 +------
+ arch/openrisc/kernel/setup.c | 4 +---
+ 2 files changed, 2 insertions(+), 9 deletions(-)
 
- arch/arm/boot/dts/dra7-evm.dts |   13 +++++++++++++
- 1 files changed, 13 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index 65cd15a..3abf5f4 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -17,6 +17,13 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x60000000>; /* 1536 MB */
- 	};
-+
-+	mmc2_3v3: fixedregulator-mmc2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "mmc2_3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
- };
+diff --git a/arch/openrisc/kernel/prom.c b/arch/openrisc/kernel/prom.c
+index a63e768..bf3fd05 100644
+--- a/arch/openrisc/kernel/prom.c
++++ b/arch/openrisc/kernel/prom.c
+@@ -47,8 +47,6 @@
+ #include <asm/sections.h>
+ #include <asm/setup.h>
  
- &dra7_pmx_core {
-@@ -256,3 +263,9 @@
- 	vmmc-supply = <&ldo1_reg>;
- 	bus-width = <4>;
- };
-+
-+&mmc2 {
-+	status = "okay";
-+	vmmc-supply = <&mmc2_3v3>;
-+	bus-width = <8>;
-+};
+-extern char cmd_line[COMMAND_LINE_SIZE];
+-
+ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+ {
+ 	size &= PAGE_MASK;
+@@ -67,15 +65,12 @@ void __init early_init_devtree(void *params)
+ 	 * device-tree, including the platform type, initrd location and
+ 	 * size, TCE reserve, and more ...
+ 	 */
+-	of_scan_flat_dt(early_init_dt_scan_chosen, cmd_line);
++	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
+ 
+ 	/* Scan memory nodes and rebuild MEMBLOCKs */
+ 	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+ 	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+ 
+-	/* Save command line for /proc/cmdline and then parse parameters */
+-	strlcpy(boot_command_line, cmd_line, COMMAND_LINE_SIZE);
+-
+ 	memblock_allow_resize();
+ 
+ 	/* We must copy the flattend device tree from init memory to regular
+diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
+index d7359ff..719c5c8 100644
+--- a/arch/openrisc/kernel/setup.c
++++ b/arch/openrisc/kernel/setup.c
+@@ -50,8 +50,6 @@
+ 
+ #include "vmlinux.h"
+ 
+-char __initdata cmd_line[COMMAND_LINE_SIZE] = CONFIG_CMDLINE;
+-
+ static unsigned long __init setup_memory(void)
+ {
+ 	unsigned long bootmap_size;
+@@ -316,7 +314,7 @@ void __init setup_arch(char **cmdline_p)
+ 		conswitchp = &dummy_con;
+ #endif
+ 
+-	*cmdline_p = cmd_line;
++	*cmdline_p = boot_command_line;
+ 
+ 	printk(KERN_INFO "OpenRISC Linux -- http://openrisc.net\n");
+ }
 -- 
-1.7.5.4
-
+1.8.1.2
