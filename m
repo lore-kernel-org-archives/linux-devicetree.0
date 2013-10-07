@@ -1,97 +1,79 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v2 12/12] pwm-backlight: Allow backlight to remain disabled on boot
-Date: Mon,  7 Oct 2013 13:37:46 +0200
-Message-ID: <1381145866-445-13-git-send-email-treding@nvidia.com>
-References: <1381145866-445-1-git-send-email-treding@nvidia.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381145866-445-1-git-send-email-treding@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Guan Xuetao <gxt@mprc.pku.edu.cn>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v7 5/6] ARM: dts: AM33xx: updated default ECC scheme in
+ nand-ecc-opt
+Date: Mon, 7 Oct 2013 12:40:30 +0100
+Message-ID: <20131007114029.GC15365@e106331-lin.cambridge.arm.com>
+References: <1380916188-24206-1-git-send-email-pekon@ti.com>
+ <1380916188-24206-6-git-send-email-pekon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1380916188-24206-6-git-send-email-pekon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pekon Gupta <pekon@ti.com>
+Cc: "robherring2@gmail.com" <robherring2@gmail.com>, "olof@lixom.net" <olof@lixom.net>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "balbi@ti.com" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The default for backlight devices is to be enabled immediately when
-registering with the backlight core. This can be useful for setups that
-use a simple framebuffer device and where the backlight cannot otherwise
-be hooked up to the panel.
+On Fri, Oct 04, 2013 at 08:49:47PM +0100, Pekon Gupta wrote:
+> DT property values for OMAP based gpmc-nand have been updated
+> to match changes in commit:
+> 	6faf096 ARM: OMAP2+: cleaned-up DT support of various ECC schemes
+> Refer: Documentation/devicetree/bindings/mtd/gpmc-nand.txt
 
-However, when dealing with more complex setups, such as those of recent
-ARM SoCs, this can be problematic. Since the backlight is usually setup
-separately from the display controller, the probe order is not usually
-deterministic. That can lead to situations where the backlight will be
-powered up and the panel will show an uninitialized framebuffer.
+Doesn't this mean these dts were broken between the changes to the
+driver and the changes to the dts?
 
-Furthermore, subsystems such as DRM have advanced functionality to set
-the power mode of a panel. In order to allow such setups to power up the
-panel at exactly the right moment, a way is needed to prevent the
-backlight core from powering the backlight up automatically when it is
-registered.
+I think the existing properties need to continue to be supoprted for
+backwards compatibility. The dts can be fixed up to have the preferred
+binding style, but they shouldn't _have_ to be modified to continue to
+function...
 
-This commit introduces a new boot_off field in the platform data (and
-also implements getting the same information from device tree). When set
-the initial backlight power mode will be set to "off".
+Thanks,
+Mark.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Note: Perhaps it would be more useful to make this the default behaviour
-in the backlight core? Many other subsystems and frameworks assume that
-a resource is off unless explicitly enabled.
-
- .../devicetree/bindings/video/backlight/pwm-backlight.txt         | 1 +
- drivers/video/backlight/pwm_bl.c                                  | 8 ++++++++
- include/linux/pwm_backlight.h                                     | 2 ++
- 3 files changed, 11 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-index 764db86..65e001a 100644
---- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-+++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-@@ -17,6 +17,7 @@ Optional properties:
-                "pwms" property (see PWM binding[0])
-   - enable-gpios: contains a single GPIO specifier for the GPIO which enables
-                   and disables the backlight (see GPIO binding[1])
-+  - backlight-boot-off: keep the backlight disabled on boot
- 
- [0]: Documentation/devicetree/bindings/pwm/pwm.txt
- [1]: Documentation/devicetree/bindings/gpio/gpio.txt
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index eec6c98..cd87ecb 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -194,6 +194,8 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 	if (gpio_is_valid(data->enable_gpio) && (flags & OF_GPIO_ACTIVE_LOW))
- 		data->enable_gpio_flags |= PWM_BACKLIGHT_GPIO_ACTIVE_LOW;
- 
-+	data->boot_off = of_property_read_bool(node, "backlight-boot-off");
-+
- 	return 0;
- }
- 
-@@ -325,6 +327,12 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 	}
- 
- 	bl->props.brightness = data->dft_brightness;
-+
-+	if (data->boot_off)
-+		bl->props.power = FB_BLANK_POWERDOWN;
-+	else
-+		bl->props.power = FB_BLANK_UNBLANK;
-+
- 	backlight_update_status(bl);
- 
- 	platform_set_drvdata(pdev, bl);
-diff --git a/include/linux/pwm_backlight.h b/include/linux/pwm_backlight.h
-index 2de2e27..ea4a239 100644
---- a/include/linux/pwm_backlight.h
-+++ b/include/linux/pwm_backlight.h
-@@ -18,6 +18,8 @@ struct platform_pwm_backlight_data {
- 	unsigned int *levels;
- 	int enable_gpio;
- 	unsigned long enable_gpio_flags;
-+	bool boot_off;
-+
- 	int (*init)(struct device *dev);
- 	int (*notify)(struct device *dev, int brightness);
- 	void (*notify_after)(struct device *dev, int brightness);
--- 
-1.8.4
+> 
+> Signed-off-by: Pekon Gupta <pekon@ti.com>
+> ---
+>  arch/arm/boot/dts/am335x-evm.dts   | 3 +--
+>  arch/arm/boot/dts/omap3430-sdp.dts | 2 +-
+>  2 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+> index e8ec875..1aee6ac 100644
+> --- a/arch/arm/boot/dts/am335x-evm.dts
+> +++ b/arch/arm/boot/dts/am335x-evm.dts
+> @@ -269,7 +269,6 @@
+>  				reg = <0 0 0>; /* CS0, offset 0 */
+>  				nand-bus-width = <8>;
+>  				ti,nand-ecc-opt = "bch8";
+> -				gpmc,device-nand = "true";
+>  				gpmc,device-width = <1>;
+>  				gpmc,sync-clk-ps = <0>;
+>  				gpmc,cs-on-ns = <0>;
+> @@ -296,7 +295,7 @@
+>  
+>  				#address-cells = <1>;
+>  				#size-cells = <1>;
+> -				elm_id = <&elm>;
+> +				ti,elm-id = <&elm>;
+>  
+>  				/* MTD partition table */
+>  				partition@0 {
+> diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
+> index e2249bc..501f863 100644
+> --- a/arch/arm/boot/dts/omap3430-sdp.dts
+> +++ b/arch/arm/boot/dts/omap3430-sdp.dts
+> @@ -105,7 +105,7 @@
+>  		reg = <1 0 0x08000000>;
+>  		nand-bus-width = <8>;
+>  
+> -		ti,nand-ecc-opt = "sw";
+> +		ti,nand-ecc-opt = "ham1";
+>  		gpmc,cs-on-ns = <0>;
+>  		gpmc,cs-rd-off-ns = <36>;
+>  		gpmc,cs-wr-off-ns = <36>;
+> -- 
+> 1.8.1
+> 
+> 
