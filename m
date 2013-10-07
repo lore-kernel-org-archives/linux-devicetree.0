@@ -1,38 +1,55 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V2] clk: palmas: add clock driver for palmas
-Date: Mon, 7 Oct 2013 19:53:29 +0530
-Message-ID: <5252C3E1.5010509@nvidia.com>
-References: <1381154751-4565-1-git-send-email-ldewangan@nvidia.com>
+From: Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH 3/6] ARM: EXYNOS: add Exynos Dual Cluster Support
+Date: Mon, 7 Oct 2013 15:03:49 +0100
+Message-ID: <20131007140343.GA12030@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381154751-4565-1-git-send-email-ldewangan@nvidia.com>
+Content-Disposition: inline
 Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "mturquette@linaro.org" <mturquette@linaro.org>, "broonie@linaro.org" <broonie@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@nvidia.com>
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-samsung-soc@vger.kernel.org, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Tarek Dakhran <t.dakhran@samsung.com>, Thomas Gleixner <tglx@linutronix.de>, Naour Romain <romain.naour@openwide.fr>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 07 October 2013 07:35 PM, Laxman Dewangan wrote:
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -43,3 +43,5 @@ obj-$(CONFIG_COMMON_CLK_SI5351) += clk-si5351.o
->   obj-$(CONFIG_COMMON_CLK_S2MPS11) += clk-s2mps11.o
->   obj-$(CONFIG_CLK_TWL6040)	+= clk-twl6040.o
->   obj-$(CONFIG_CLK_PPC_CORENET)	+= clk-ppc-corenet.o
-> +obj-$(CONFIG_COMMON_CLK_PALMAS)	+= clk-palmas.o
-> +obj-y += clk-test.o
->
+On Fri, Oct 04, 2013 at 03:51:31PM -0400, Nicolas Pitre wrote:
+> On Wed, 2 Oct 2013, Dave Martin wrote:
+> 
+> > On Tue, Oct 01, 2013 at 08:17:04PM +0400, Vyacheslav Tyrtov wrote:
+> > > +static int exynos_power_up(unsigned int cpu, unsigned int cluster)
+> > > +{
+> > > +     int ret;
+> > > +     local_irq_disable();
+> > 
+> > Should there be a local_fiq_disable() here also?
+> 
+> No.  In fact this is paired with
+> 
+> > > +     arch_spin_lock(&exynos_lock);
+> 
+> to create the equivalent of a arch_spin_lock_irq().  And the reason is:
+> 
+> /*
+>  * We can't use regular spinlocks. In the switcher case, it is possible
+>  * for an outbound CPU to call power_down() after its inbound counterpart
+>  * is already live using the same logical CPU number which trips lockdep
+>  * debugging.
+>  */
+> 
+> Otherwise we simply would have used spin_lock_irq().
 
-Sorry, silly mistake, the line
+Duh, of course.  Looks like I suffered temporary brain failure there.
 
-+obj-y += clk-test.o
+> No FIQs are supposed to ever race with this code.
 
-is not require. This was done for testing only.
+There is an anomaly though: FIQ and external abort don't seem to get
+explicitly masked anywhere, either on the suspend or powerdown paths.
+Sometimes either or both remains unmasked (I tried some trace in the
+TC2 MCPM backend to confirm this.)
 
-I will respin the patch but wait for some more feedback if any to add on 
-next version.
+Looks like a possible omission in the arch/arm/ suspend and shutdown
+code, rather than a problem specific to MCPM.
 
-Thanks,
-Laxman
+Shouldn't be an issue for this series, though.
 
+Cheers
+---Dave
