@@ -1,68 +1,39 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 15/29] microblaze: use early_init_dt_scan
-Date: Mon,  7 Oct 2013 11:29:23 -0500
-Message-ID: <1381163377-21044-16-git-send-email-robherring2@gmail.com>
-References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, microblaze-uclinux@itee.uq.edu.au
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH 0/2] ARM: dts: OMAP: standardize SoC specific bindings
+Date: Mon, 7 Oct 2013 11:49:41 -0500
+Message-ID: <1381164584-4008-1-git-send-email-nm@ti.com>
+References: <523C9D8B.2000701@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <523C9D8B.2000701@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Felipe <balbi@ti.com>, Olof Johansson <olof@lixom.net>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+This is a respin of [1] based on of Olof's comments to introduce a
+generic SoC binding. This standardizes the binding definitions for
+SoCs based on existing "implied" bindings and based on existing usage
+in arch/arm/mach-omap2/soc.h. Eventually we should be able to get rid
+of soc_is_xyz() functions and allow machine descriptors to seamlessly
+handle the deltas.
 
-Convert microblaze to use new early_init_dt_scan function.
+The series is based on [2] and was triggered primarily due to the bug
+seen with [3] - clock dts conversion.
 
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Tested-by: Michal Simek <monstr@monstr.eu>
-Cc: microblaze-uclinux@itee.uq.edu.au
----
- arch/microblaze/kernel/prom.c  | 17 +++--------------
- arch/microblaze/kernel/setup.c |  2 +-
- 2 files changed, 4 insertions(+), 15 deletions(-)
+Nishanth Menon (2):
+  Documentation: dt: OMAP: standardize SoC naming definition
+  ARM: dts: omap3-beagle: use 3630 definitions
 
-diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
-index 0c4453f..e13686e 100644
---- a/arch/microblaze/kernel/prom.c
-+++ b/arch/microblaze/kernel/prom.c
-@@ -106,21 +106,10 @@ void __init early_init_devtree(void *params)
- {
- 	pr_debug(" -> early_init_devtree(%p)\n", params);
- 
--	/* Setup flat device-tree pointer */
--	initial_boot_params = params;
-+	early_init_dt_scan(params);
-+	if (!strlen(boot_command_line))
-+		strlcpy(boot_command_line, cmd_line, COMMAND_LINE_SIZE);
- 
--	/* Retrieve various informations from the /chosen node of the
--	 * device-tree, including the platform type, initrd location and
--	 * size, TCE reserve, and more ...
--	 */
--	of_scan_flat_dt(early_init_dt_scan_chosen, cmd_line);
--
--	/* Scan memory nodes and rebuild MEMBLOCKs */
--	of_scan_flat_dt(early_init_dt_scan_root, NULL);
--	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
--
--	/* Save command line for /proc/cmdline and then parse parameters */
--	strlcpy(boot_command_line, cmd_line, COMMAND_LINE_SIZE);
- 	parse_early_param();
- 
- 	memblock_allow_resize();
-diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setup.c
-index 0775e03..6c4efba 100644
---- a/arch/microblaze/kernel/setup.c
-+++ b/arch/microblaze/kernel/setup.c
-@@ -50,7 +50,7 @@ char cmd_line[COMMAND_LINE_SIZE] __attribute__ ((section(".data")));
- 
- void __init setup_arch(char **cmdline_p)
- {
--	*cmdline_p = cmd_line;
-+	*cmdline_p = boot_command_line;
- 
- 	console_verbose();
- 
+ .../devicetree/bindings/arm/omap/omap.txt          |   45 ++++++++++++++++++++
+ arch/arm/boot/dts/omap3-beagle-xm.dts              |    2 +-
+ arch/arm/mach-omap2/board-generic.c                |   23 ++++++++++
+ 3 files changed, 69 insertions(+), 1 deletion(-)
+
+[1] https://patchwork.kernel.org/patch/2919661/
+[2] https://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
+[3] http://marc.info/?t=138009899400001&r=1&w=2
 -- 
-1.8.1.2
+1.7.9.5
+
