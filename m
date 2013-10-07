@@ -1,155 +1,145 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
-Date: Mon, 7 Oct 2013 09:35:46 +0300
-Message-ID: <52525642.8010307@ti.com>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com> <524EE00F.7010208@ti.com> <20131007021556.GV8949@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131007021556.GV8949@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 1/3] usb: dwc3: msm: Add device tree binding information
+Date: Mon,  7 Oct 2013 10:44:55 +0300
+Message-ID: <1381131897-13910-2-git-send-email-iivanov@mm-sol.com>
+References: <1381131897-13910-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381131897-13910-1-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, idos-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mgautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2013 05:15 AM, Tony Lindgren wrote:
-> * Tero Kristo <t-kristo@ti.com> [131004 08:42]:
->> Hi,
->>
->> Just a gentle reminder, anybody have any comments on this series or
->> should we start queuing stuff?
->
-> Well omap4 seems to work for me just fine, and omap3 in legacy
-> mode. But looks like omap3 device tree based booting is breaking
-> after I pulled in your test branch. I get the following on
-> 3630 based dm3730.
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 
-Uart4 breaks because of the issue with basic DT blobs. You need at least 
-this patch:
+MSM USB3.0 core wrapper consist of USB3.0 IP from Synopsys
+(SNPS) and HS, SS PHY's control and configuration registers.
 
-http://linux-kernel.2935.n7.nabble.com/RFC-PATCH-ARM-OMAP3630-Add-generic-machine-descriptor-td722791.html
+It could operate in device mode (SS, HS, FS) and host
+mode (SS, HS, FS, LS).
 
-... from Nishanth to get it to work right. Otherwise the clock init 
-tries to use omap3430 clock data for omap3630 which leaves uart4 nodes out.
+Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/usb/msm-ssusb.txt          |  105 ++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/msm-ssusb.txt
 
--Tero
+diff --git a/Documentation/devicetree/bindings/usb/msm-ssusb.txt b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
+new file mode 100644
+index 0000000..a71bf00
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
+@@ -0,0 +1,105 @@
++MSM SuperSpeed DWC3 USB SoC controller
++
++
++MSM DW Highspeed USB PHY
++========================
++Required properities:
++- compatible:	should contain "qcom,dw-hsphy";
++- reg:			offset and length of the register set in the memory map
++- clocks:		A list of phandle + clock-specifier pairs for the
++				clocks listed in clock-names
++- clock-names:	Should contain the following:
++  "xo"			External reference clock
++  "sleep_a"		Sleep clock, used when USB3 core goes into low
++				power mode (U3).
++- v1p8-supply:	phandle to the regulator for the 1.8v supply to HSPHY.
++- v3p3-supply:	phandle to the regulator for the 3.3v supply to HSPHY.
++- vbus-supply:	phandle to the regulator for the vbus supply for host
++		mode.
++- vddcx-supply: phandle to the regulator for the vdd supply for HSPHY
++                digital circuit operation.
++
++MSM DW Superspeed USB PHY
++=========================
++Required properities:
++- compatible:	should contain "qcom,dw-ssphy";
++- reg:			offset and length of the register set in the memory map
++- clocks:		A list of phandle + clock-specifier pairs for the
++				clocks listed in clock-names
++- clock-names:	Should contain the following:
++  "xo"			External reference clock
++  "ref"			Reference clock - used in host mode.
++- v1p8-supply:	phandle to the regulator for the 1.8v supply to HSPHY.
++- vddcx-supply: phandle to the regulator for the vdd supply for HSPHY
++                digital circuit operation.
++
++MSM DWC3 controller wrapper
++===========================
++Required properties:
++- compatible:	should contain "qcom,dwc3"
++- reg:			offset and length of the TCSR register for routing USB
++				signals to either picoPHY0 or picoPHY1.
++- clocks:		A list of phandle + clock-specifier pairs for the
++				clocks listed in clock-names
++- clock-names:	Should contain the following:
++  "core"		Master/Core clock, have to be >= 125 MHz for SS
++				operation and >= 60MHz for HS operation
++  "iface"		System bus AXI clock
++  "sleep"		Sleep clock, used when USB3 core goes into low
++				power mode (U3).
++  "utmi"		Generated by HSPHY. Used to clock the low power
++				parts of thr HS Link layer.
++Optional regulator:
++- gdsc-supply:	phandle to the regulator from globally distributed
++				switch controller
++Required child node:
++A child node must exist to represent the core DWC3 IP block. The name of
++the node is not important. The content of the node is defined in dwc3.txt.
++
++Example device nodes:
++
++	dw_hsphy: phy@f92f8800 {
++		compatible = "qcom,dw-hsphy";
++		reg = <0xf92f8800 0x30>;
++
++		clocks = <&cxo>, <&usb2a_phy_sleep_cxc>;
++		clock-names = "xo", "sleep_a";
++
++		vbus-supply = <&supply>;
++		vddcx-supply = <&supply>;
++		v1p8-supply = <&supply>;
++		v3p3-supply = <&supply>;
++	};
++
++	dw_ssphy: phy@f92f8830 {
++		compatible = "qcom,dw-ssphy";
++		reg = <0xf92f8830 0x30>;
++
++		clocks = <&cxo>, <&usb30_mock_utmi_cxc>;
++		clock-names = "xo", "ref";
++
++		vddcx-supply = <&supply>;
++		v1p8-supply = <&supply>;
++	};
++
++	usb@fd4ab000 {
++		compatible = "qcom,dwc3";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0xfd4ab000 0x4>;
++
++		clocks = <&usb30_master_cxc>, <&sys_noc_usb3_axi_cxc>,
++				<&usb30_sleep_cxc>, <&usb30_mock_utmi_cxc>;
++		clock-names = "core", "iface", "sleep", "utmi";
++
++		gdsc-supply = <&supply>;
++
++		ranges;
++		dwc3@f9200000 {
++			compatible = "snps,dwc3";
++			reg = <0xf9200000 0xcd00>;
++			interrupts = <0 131>;
++			usb-phy = <&dw_hsphy>, <&dw_ssphy>;
++			tx-fifo-resize;
++		};
++	};
+-- 
+1.7.9.5
 
->
-> Regards,
->
-> Tony
->
->
-> [    0.187652] omap_hwmod: uart4: cannot clk_get main_clk uart4_fck
-> [    0.187713] omap_hwmod: uart4: cannot _init_clocks
-> [    0.187713] ------------[ cut here ]------------
-> [    0.187774] WARNING: CPU: 0 PID: 1 at arch/arm/mach-omap2/omap_hwmod.c:2434 _init+0x6c/0x80()
-> [    0.187774] omap_hwmod: uart4: couldn't init clocks
-> [    0.187774] Modules linked in:
-> [    0.187805] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.12.0-rc2-00020-gdea1778-dirty #791
-> [    0.187866] [<c001cd54>] (unwind_backtrace+0x0/0xf4) from [<c0018e80>] (show_stack+0x14/0x1c)
-> [    0.187896] [<c0018e80>] (show_stack+0x14/0x1c) from [<c0554400>] (dump_stack+0x6c/0x9c)
-> [    0.187927] [<c0554400>] (dump_stack+0x6c/0x9c) from [<c00488a8>] (warn_slowpath_common+0x64/0x84)
-> [    0.187957] [<c00488a8>] (warn_slowpath_common+0x64/0x84) from [<c004895c>] (warn_slowpath_fmt+0x30/0x40)
-> [    0.187988] [<c004895c>] (warn_slowpath_fmt+0x30/0x40) from [<c07a4bec>] (_init+0x6c/0x80)
-> [    0.188018] [<c07a4bec>] (_init+0x6c/0x80) from [<c002e068>] (omap_hwmod_for_each+0x50/0x64)
-> [    0.188049] [<c002e068>] (omap_hwmod_for_each+0x50/0x64) from [<c07a5440>] (__omap_hwmod_setup_all+0x34/0x4c)
-> [    0.188079] [<c07a5440>] (__omap_hwmod_setup_all+0x34/0x4c) from [<c00087ac>] (do_one_initcall+0x2c/0x150)
-> [    0.188110] [<c00087ac>] (do_one_initcall+0x2c/0x150) from [<c0797508>] (do_basic_setup+0x94/0xd0)
-> [    0.188140] [<c0797508>] (do_basic_setup+0x94/0xd0) from [<c07975c0>] (kernel_init_freeable+0x7c/0x120)
-> [    0.188171] [<c07975c0>] (kernel_init_freeable+0x7c/0x120) from [<c05526b4>] (kernel_init+0xc/0x164)
-> [    0.188201] [<c05526b4>] (kernel_init+0xc/0x164) from [<c00149c8>] (ret_from_fork+0x14/0x2c)
-> [    0.188415] ---[ end trace 1b75b31a2719ed1c ]---
->
-> [    0.810241] ------------[ cut here ]------------
-> [    0.810302] WARNING: CPU: 0 PID: 1 at arch/arm/mach-omap2/omap_hwmod.c:2126 _enable+0x254/0x280()
-> [    0.810302] omap_hwmod: timer12: enabled state can only be entered from initialized, idle, or disabled state
-> [    0.810333] Modules linked in:
-> [    0.810363] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W    3.12.0-rc2-00020-gdea1778-dirty #791
-> [    0.810394] [<c001cd54>] (unwind_backtrace+0x0/0xf4) from [<c0018e80>] (show_stack+0x14/0x1c)
-> [    0.810424] [<c0018e80>] (show_stack+0x14/0x1c) from [<c0554400>] (dump_stack+0x6c/0x9c)
-> [    0.810455] [<c0554400>] (dump_stack+0x6c/0x9c) from [<c00488a8>] (warn_slowpath_common+0x64/0x84)
-> [    0.810485] [<c00488a8>] (warn_slowpath_common+0x64/0x84) from [<c004895c>] (warn_slowpath_fmt+0x30/0x40)
-> [    0.810516] [<c004895c>] (warn_slowpath_fmt+0x30/0x40) from [<c003085c>] (_enable+0x254/0x280)
-> [    0.810546] [<c003085c>] (_enable+0x254/0x280) from [<c00308b0>] (omap_hwmod_enable+0x28/0x40)
-> [    0.810577] [<c00308b0>] (omap_hwmod_enable+0x28/0x40) from [<c0030f8c>] (omap_device_enable+0x3c/0x80)
-> [    0.810607] [<c0030f8c>] (omap_device_enable+0x3c/0x80) from [<c0030fe0>] (_od_runtime_resume+0x10/0x1c)
-> [    0.810638] [<c0030fe0>] (_od_runtime_resume+0x10/0x1c) from [<c036e120>] (__rpm_callback+0x2c/0x80)
-> [    0.810668] [<c036e120>] (__rpm_callback+0x2c/0x80) from [<c036e198>] (rpm_callback+0x24/0x78)
-> [    0.810699] [<c036e198>] (rpm_callback+0x24/0x78) from [<c036f444>] (rpm_resume+0x3c0/0x60c)
-> [    0.810729] [<c036f444>] (rpm_resume+0x3c0/0x60c) from [<c036f970>] (__pm_runtime_resume+0x4c/0x68)
-> [    0.810760] [<c036f970>] (__pm_runtime_resume+0x4c/0x68) from [<c0044954>] (omap_dm_timer_probe+0x234/0x334)
-> [    0.810791] [<c0044954>] (omap_dm_timer_probe+0x234/0x334) from [<c03659ac>] (platform_drv_probe+0x1c/0x24)
-> [    0.810821] [<c03659ac>] (platform_drv_probe+0x1c/0x24) from [<c03645e4>] (really_probe+0x70/0x200)
-> [    0.810852] [<c03645e4>] (really_probe+0x70/0x200) from [<c03647a8>] (driver_probe_device+0x34/0x50)
-> [    0.810852] [<c03647a8>] (driver_probe_device+0x34/0x50) from [<c0364858>] (__driver_attach+0x94/0x98)
-> [    0.810882] [<c0364858>] (__driver_attach+0x94/0x98) from [<c0362cd4>] (bus_for_each_dev+0x74/0x98)
-> [    0.810913] [<c0362cd4>] (bus_for_each_dev+0x74/0x98) from [<c0363510>] (bus_add_driver+0xe8/0x278)
-> [    0.810943] [<c0363510>] (bus_add_driver+0xe8/0x278) from [<c0364e30>] (driver_register+0x5c/0xf8)
-> [    0.810974] [<c0364e30>] (driver_register+0x5c/0xf8) from [<c00087ac>] (do_one_initcall+0x2c/0x150)
-> [    0.811004] [<c00087ac>] (do_one_initcall+0x2c/0x150) from [<c0797508>] (do_basic_setup+0x94/0xd0)
-> [    0.811035] [<c0797508>] (do_basic_setup+0x94/0xd0) from [<c07975c0>] (kernel_init_freeable+0x7c/0x120)
-> [    0.811065] [<c07975c0>] (kernel_init_freeable+0x7c/0x120) from [<c05526b4>] (kernel_init+0xc/0x164)
-> [    0.811096] [<c05526b4>] (kernel_init+0xc/0x164) from [<c00149c8>] (ret_from_fork+0x14/0x2c)
-> [    0.811126] ---[ end trace 1b75b31a2719ed1d ]---
->
-> [    0.811889] ------------[ cut here ]------------
-> [    0.811920] WARNING: CPU: 0 PID: 46 at arch/arm/mach-omap2/omap_hwmod.c:2224 _idle+0xd4/0xf8()
-> [    0.811920] omap_hwmod: timer12: idle state can only be entered from enabled state
-> [    0.811950] Modules linked in:
-> [    0.811981] CPU: 0 PID: 46 Comm: kworker/0:1 Tainted: G        W    3.12.0-rc2-00020-gdea1778-dirty #791
-> [    0.812011] Workqueue: pm pm_runtime_work
-> [    0.812042] [<c001cd54>] (unwind_backtrace+0x0/0xf4) from [<c0018e80>] (show_stack+0x14/0x1c)
-> [    0.812072] [<c0018e80>] (show_stack+0x14/0x1c) from [<c0554400>] (dump_stack+0x6c/0x9c)
-> [    0.812103] [<c0554400>] (dump_stack+0x6c/0x9c) from [<c00488a8>] (warn_slowpath_common+0x64/0x84)
-> [    0.812133] [<c00488a8>] (warn_slowpath_common+0x64/0x84) from [<c004895c>] (warn_slowpath_fmt+0x30/0x40)
-> [    0.812164] [<c004895c>] (warn_slowpath_fmt+0x30/0x40) from [<c003099c>] (_idle+0xd4/0xf8)
-> [    0.812194] [<c003099c>] (_idle+0xd4/0xf8) from [<c0030c9c>] (omap_hwmod_idle+0x28/0x3c)
-> [    0.812225] [<c0030c9c>] (omap_hwmod_idle+0x28/0x3c) from [<c0030e6c>] (omap_device_idle+0x3c/0x80)
-> [    0.812225] [<c0030e6c>] (omap_device_idle+0x3c/0x80) from [<c0030ed0>] (_od_runtime_suspend+0x20/0x2c)
-> [    0.812255] [<c0030ed0>] (_od_runtime_suspend+0x20/0x2c) from [<c036e120>] (__rpm_callback+0x2c/0x80)
-> [    0.812286] [<c036e120>] (__rpm_callback+0x2c/0x80) from [<c036e198>] (rpm_callback+0x24/0x78)
-> [    0.812316] [<c036e198>] (rpm_callback+0x24/0x78) from [<c036e5bc>] (rpm_suspend+0xf4/0x5e4)
-> [    0.812347] [<c036e5bc>] (rpm_suspend+0xf4/0x5e4) from [<c036fb78>] (pm_runtime_work+0x80/0xa4)
-> [    0.812377] [<c036fb78>] (pm_runtime_work+0x80/0xa4) from [<c0064058>] (process_one_work+0x204/0x594)
-> [    0.812408] [<c0064058>] (process_one_work+0x204/0x594) from [<c0064530>] (worker_thread+0x148/0x480)
-> [    0.812438] [<c0064530>] (worker_thread+0x148/0x480) from [<c0069c20>] (kthread+0xa0/0xac)
-> [    0.812469] [<c0069c20>] (kthread+0xa0/0xac) from [<c00149c8>] (ret_from_fork+0x14/0x2c)
-> [    0.812499] ---[ end trace 1b75b31a2719ed1e ]---
->
->
-> [    2.595031] ------------[ cut here ]------------
-> [    2.599945] WARNING: CPU: 0 PID: 1 at arch/arm/mach-omap2/omap_hwmod.c:2126 _enable+0x254/0x280()
-> [    2.609313] omap_hwmod: uart4: enabled state can only be entered from initialized, idle, or disabled state
-> [    2.619506] Modules linked in:
-> [    2.622772] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W    3.12.0-rc2-00020-gdea1778-dirty #791
-> [    2.632537] [<c001cd54>] (unwind_backtrace+0x0/0xf4) from [<c0018e80>] (show_stack+0x14/0x1c)
-> [    2.641540] [<c0018e80>] (show_stack+0x14/0x1c) from [<c0554400>] (dump_stack+0x6c/0x9c)
-> [    2.650115] [<c0554400>] (dump_stack+0x6c/0x9c) from [<c00488a8>] (warn_slowpath_common+0x64/0x84)
-> [    2.659576] [<c00488a8>] (warn_slowpath_common+0x64/0x84) from [<c004895c>] (warn_slowpath_fmt+0x30/0x40)
-> [    2.669708] [<c004895c>] (warn_slowpath_fmt+0x30/0x40) from [<c003085c>] (_enable+0x254/0x280)
-> [    2.678802] [<c003085c>] (_enable+0x254/0x280) from [<c00308b0>] (omap_hwmod_enable+0x28/0x40)
-> [    2.687927] [<c00308b0>] (omap_hwmod_enable+0x28/0x40) from [<c0030f8c>] (omap_device_enable+0x3c/0x80)
-> [    2.697875] [<c0030f8c>] (omap_device_enable+0x3c/0x80) from [<c0030fe0>] (_od_runtime_resume+0x10/0x1c)
-> [    2.707916] [<c0030fe0>] (_od_runtime_resume+0x10/0x1c) from [<c036e120>] (__rpm_callback+0x2c/0x80)
-> [    2.717559] [<c036e120>] (__rpm_callback+0x2c/0x80) from [<c036e198>] (rpm_callback+0x24/0x78)
-> [    2.726684] [<c036e198>] (rpm_callback+0x24/0x78) from [<c036f444>] (rpm_resume+0x3c0/0x60c)
-> [    2.735595] [<c036f444>] (rpm_resume+0x3c0/0x60c) from [<c036f970>] (__pm_runtime_resume+0x4c/0x68)
-> [    2.745178] [<c036f970>] (__pm_runtime_resume+0x4c/0x68) from [<c035ae30>] (serial_omap_probe+0x294/0x4fc)
-> [    2.755401] [<c035ae30>] (serial_omap_probe+0x294/0x4fc) from [<c03659ac>] (platform_drv_probe+0x1c/0x24)
-> [    2.765502] [<c03659ac>] (platform_drv_probe+0x1c/0x24) from [<c03645e4>] (really_probe+0x70/0x200)
-> [    2.775054] [<c03645e4>] (really_probe+0x70/0x200) from [<c03647a8>] (driver_probe_device+0x34/0x50)
-> [    2.784729] [<c03647a8>] (driver_probe_device+0x34/0x50) from [<c0364858>] (__driver_attach+0x94/0x98)
-> [    2.794555] [<c0364858>] (__driver_attach+0x94/0x98) from [<c0362cd4>] (bus_for_each_dev+0x74/0x98)
-> [    2.804138] [<c0362cd4>] (bus_for_each_dev+0x74/0x98) from [<c0363510>] (bus_add_driver+0xe8/0x278)
-> [    2.813690] [<c0363510>] (bus_add_driver+0xe8/0x278) from [<c0364e30>] (driver_register+0x5c/0xf8)
-> [    2.823181] [<c0364e30>] (driver_register+0x5c/0xf8) from [<c07d0028>] (serial_omap_init+0x28/0x44)
-> [    2.832763] [<c07d0028>] (serial_omap_init+0x28/0x44) from [<c00087ac>] (do_one_initcall+0x2c/0x150)
-> [    2.842407] [<c00087ac>] (do_one_initcall+0x2c/0x150) from [<c0797508>] (do_basic_setup+0x94/0xd0)
-> [    2.851898] [<c0797508>] (do_basic_setup+0x94/0xd0) from [<c07975c0>] (kernel_init_freeable+0x7c/0x120)
-> [    2.861846] [<c07975c0>] (kernel_init_freeable+0x7c/0x120) from [<c05526b4>] (kernel_init+0xc/0x164)
-> [    2.871490] [<c05526b4>] (kernel_init+0xc/0x164) from [<c00149c8>] (ret_from_fork+0x14/0x2c)
-> [    2.880432] ---[ end trace 1b75b31a2719ed1f ]---
->
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
