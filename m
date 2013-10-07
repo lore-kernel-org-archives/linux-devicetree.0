@@ -1,82 +1,118 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 21/29] arm64: set initrd_start/initrd_end for fdt scan
-Date: Mon,  7 Oct 2013 11:29:29 -0500
-Message-ID: <1381163377-21044-22-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 24/29] of: introduce common FDT machine related functions
+Date: Mon,  7 Oct 2013 11:29:32 -0500
+Message-ID: <1381163377-21044-25-git-send-email-robherring2@gmail.com>
 References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-In order to unify the initrd scanning for DT across architectures, make
-arm64 use initrd_start and initrd_end instead of the physical addresses.
+Introduce common of_flat_dt_match_machine and
+of_flat_dt_get_machine_name functions to unify architectures' handling
+of machine level model and compatible properties.
+
+Several architectures match the root compatible string with an arch
+specific list of machine descriptors duplicating the same search
+algorithm. Create a common implementation with a simple architecture
+specific hook to iterate over each machine's match table.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Acked-by: Grant Likely <grant.likely@linaro.org>
 ---
- arch/arm64/mm/init.c | 24 ++++++------------------
- 1 file changed, 6 insertions(+), 18 deletions(-)
+ drivers/of/fdt.c       | 60 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_fdt.h |  4 ++++
+ 2 files changed, 64 insertions(+)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index de2de5d..8261f4e 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -39,17 +39,9 @@
- 
- #include "mm.h"
- 
--static unsigned long phys_initrd_start __initdata = 0;
--static unsigned long phys_initrd_size __initdata = 0;
--
- phys_addr_t memstart_addr __read_mostly = 0;
- 
--void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
--{
--	phys_initrd_start = start;
--	phys_initrd_size = end - start;
--}
--
-+#ifdef CONFIG_BLK_DEV_INITRD
- static int __init early_initrd(char *p)
- {
- 	unsigned long start, size;
-@@ -59,12 +51,13 @@ static int __init early_initrd(char *p)
- 	if (*endp == ',') {
- 		size = memparse(endp + 1, NULL);
- 
--		phys_initrd_start = start;
--		phys_initrd_size = size;
-+		initrd_start = (unsigned long)__va(start);
-+		initrd_end = (unsigned long)__va(start + size);
- 	}
- 	return 0;
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 5f4cc88..5c47910 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -619,6 +619,66 @@ int __init of_scan_flat_dt_by_path(const char *path,
+ 		return ret;
  }
- early_param("initrd", early_initrd);
-+#endif
  
- #define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
- 
-@@ -137,13 +130,8 @@ void __init arm64_memblock_init(void)
- 	/* Register the kernel text, kernel data and initrd with memblock */
- 	memblock_reserve(__pa(_text), _end - _text);
++const char * __init of_flat_dt_get_machine_name(void)
++{
++	const char *name;
++	unsigned long dt_root = of_get_flat_dt_root();
++
++	name = of_get_flat_dt_prop(dt_root, "model", NULL);
++	if (!name)
++		name = of_get_flat_dt_prop(dt_root, "compatible", NULL);
++	return name;
++}
++
++/**
++ * of_flat_dt_match_machine - Iterate match tables to find matching machine.
++ *
++ * @default_match: A machine specific ptr to return in case of no match.
++ * @get_next_compat: callback function to return next compatible match table.
++ *
++ * Iterate through machine match tables to find the best match for the machine
++ * compatible string in the FDT.
++ */
++const void * __init of_flat_dt_match_machine(const void *default_match,
++		const void * (*get_next_compat)(const char * const**))
++{
++	const void *data = NULL;
++	const void *best_data = default_match;
++	const char *const *compat;
++	unsigned long dt_root;
++	unsigned int best_score = ~1, score = 0;
++
++	dt_root = of_get_flat_dt_root();
++	while ((data = get_next_compat(&compat))) {
++		score = of_flat_dt_match(dt_root, compat);
++		if (score > 0 && score < best_score) {
++			best_data = data;
++			best_score = score;
++		}
++	}
++	if (!best_data) {
++		const char *prop;
++		long size;
++
++		pr_err("\n unrecognized device tree list:\n[ ");
++
++		prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
++		if (prop) {
++			while (size > 0) {
++				printk("'%s' ", prop);
++				size -= strlen(prop) + 1;
++				prop += strlen(prop) + 1;
++			}
++		}
++		printk("]\n\n");
++		return NULL;
++	}
++
++	pr_info("Machine model: %s\n", of_flat_dt_get_machine_name());
++
++	return best_data;
++}
++
  #ifdef CONFIG_BLK_DEV_INITRD
--	if (phys_initrd_size) {
--		memblock_reserve(phys_initrd_start, phys_initrd_size);
--
--		/* Now convert initrd to virtual addresses */
--		initrd_start = __phys_to_virt(phys_initrd_start);
--		initrd_end = initrd_start + phys_initrd_size;
--	}
-+	if (initrd_start)
-+		memblock_reserve(__virt_to_phys(initrd_start), initrd_end - initrd_start);
- #endif
+ /**
+  * early_init_dt_check_for_initrd - Decode initrd location from flat tree
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index b365f5a..dfaa1de 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -108,6 +108,10 @@ extern int early_init_dt_scan_root(unsigned long node, const char *uname,
  
- 	/*
+ extern bool early_init_dt_scan(void *params);
+ 
++extern const char *of_flat_dt_get_machine_name(void);
++extern const void *of_flat_dt_match_machine(const void *default_match,
++		const void * (*get_next_compat)(const char * const**));
++
+ /* Other Prototypes */
+ extern void unflatten_device_tree(void);
+ extern void unflatten_and_copy_device_tree(void);
 -- 
 1.8.1.2
