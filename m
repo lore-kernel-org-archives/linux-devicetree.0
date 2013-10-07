@@ -1,189 +1,272 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH] clk: new driver for efm32 SoC
-Date: Mon, 07 Oct 2013 14:23:54 -0700
-Message-ID: <20131007212354.7445.84276@quantum>
-References: <1376510693-12491-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RESEND PATCH v3 03/11] ASoC: davinci-mcasp: Add
+ DMA register locations to DT
+Date: Mon, 7 Oct 2013 22:47:18 +0100
+Message-ID: <20131007214718.GA2976@kartoffel>
+References: <cover.1379590035.git.jsarha@ti.com>
+ <66bdda0c0b75d737d649260b9ec10f9f870c20cd.1379590036.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1376510693-12491-1-git-send-email-u.kleine-koenig@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <66bdda0c0b75d737d649260b9ec10f9f870c20cd.1379590036.git.jsarha@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: jsarha@ti.com
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "joelf@ti.com" <joelf@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "Hebbar,
+ Gururaja" <gururaja.hebbar@ti.com>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, Darren Etheridge <detheridge@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBVd2UgS2xlaW5lLUvDtm5pZyAoMjAxMy0wOC0xNCAxMzowNDo1MykKPiBTaWduZWQt
-b2ZmLWJ5OiBVd2UgS2xlaW5lLUvDtm5pZyA8dS5rbGVpbmUta29lbmlnQHBlbmd1dHJvbml4LmRl
-Pgo+IC0tLQo+IEhlbGxvLAo+IAo+IEknbSBub3Qgc3VyZSBpZiB0aGVyZSBpcyBhIG5hbWluZyBj
-b252ZW50aW9uIGZvciAjZGVmaW5lcyBpbiBoZWFkZXJzIGJlbG93Cj4gZHQtYmluZGluZ3MuIEkg
-bmFtZWQgbXkgY2xvY2tzIGNsa18kbmFtZWZyb21yZWZlcmVuY2VtYW51YWwgdG8gaGF2ZSBzb21l
-Cj4gbmFtZXNwYWNpbmcuCj4gCj4gVGhlIGNsb2NrIHN0dWZmIG9uIHRoZSBkaWZmZXJlbnQgdmFy
-aWFudHMgb2YgZWZtMzIgYXJlIHNpbWlsYXIsIGJ1dAo+IGRpZmZlcmVudCBlbm91Z2ggdG8gbm90
-IGJlIGFibGUgdG8gdXNlIHRoZSBzYW1lIGRyaXZlciwgc28gdGhpcyBpcyBvbmx5Cj4gZm9yIHRo
-ZSBHaWFudCBHZWNrbyAoZWZtMzJnZykgdmFyaWFudCwgc3RpbGwgSSB1c2VkICJlZm0zMiIgaW4g
-c29tZQo+IHBsYWNlcyBiZWNhdXNlIHRoZSBvdGhlciB2YXJpYW50cyB3b3VsZCBmaXQgdGhlcmUs
-IHRvby4gKEZvcgo+IGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svZWZtMzItY211LmggSSB3b3Vs
-ZCBuZWVkIHNvbWUgI2lmZGVmcywgaXMgdGhhdAo+IE9LIG9yIHNob3VsZCB0aGUgbmFtZSBvZiB0
-aGUgZGVmaW5lcyBpbmNsdWRlIGVmbTMyZ2c/IChUaGF0IHdvdWxkIG1ha2UKPiB0aGUgbmFtZXMg
-c3RpbGwgbG9uZ2VyIGFuZCBzbyBtb3JlIHVnbHkuKSkKClRoZSBEVCBleHBlcnRzIHNob3VsZCB3
-ZWlnaCBpbiBvbiBoYXZpbmcgI2lmZGVmJ3MgaW4gdGhlIGhlYWRlciwgYnV0IEkKdGhpbmsgd2Ug
-c2hvdWxkIGF2b2lkIHRoYXQuIEJldHRlciB0byBleHBsaWNpdGx5IGxpc3QgdGhlIGNsb2NrcyBm
-b3IgdGhlCnZhcmlhbnQgdXNlZC4gWW91IGNhbiBhZGQgImdnIiB0byB0aGlzIG9yIG5vdCwgSSBk
-b24ndCBjYXJlLCBidXQgdGhlCmZ1dHVyZSB2YXJpYW50cyB3aWxsIG5lZWQgc29tZSBzdWZmaXgs
-IG9yIG1heWJlIHRoZWlyIG93biBoZWFkZXIuCgpJJ20gaGFwcHkgd2l0aCB0aGlzIHBhdGNoIGFu
-ZCBjYW4gdGFrZSBpdCBmb3IgMy4xMy4gQ2FyZSB0byBhZGQgYQpjaGFuZ2Vsb2c/CgpSZWdhcmRz
-LApNaWtlCgo+IAo+IEJlc3QgcmVnYXJkcwo+IFV3ZQo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5k
-aW5ncy9jbG9jay9lZm0zMi1jbG9jay50eHQgICAgICB8IDExICsrKwo+ICBkcml2ZXJzL2Nsay9N
-YWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxICsKPiAgZHJpdmVycy9j
-bGsvY2xrLWVmbTMyZ2cuYyAgICAgICAgICAgICAgICAgICAgICAgICAgfCA3OSArKysrKysrKysr
-KysrKysrKysrKysrCj4gIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svZWZtMzItY211LmggICAg
-ICAgICAgICAgIHwgNDIgKysrKysrKysrKysrCj4gIGluY2x1ZGUvbGludXgvY2xrL2VmbTMyLmgg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDYgKysKPiAgNSBmaWxlcyBjaGFuZ2VkLCAxMzkg
-aW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Nsb2NrL2VmbTMyLWNsb2NrLnR4dAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9jbGsvY2xrLWVmbTMyZ2cuYwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9k
-dC1iaW5kaW5ncy9jbG9jay9lZm0zMi1jbXUuaAo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVk
-ZS9saW51eC9jbGsvZWZtMzIuaAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvY2xvY2svZWZtMzItY2xvY2sudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2VmbTMyLWNsb2NrLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0Cj4gaW5kZXggMDAwMDAwMC4uMjYzZDI5Mwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svZWZtMzItY2xvY2sudHh0Cj4gQEAg
-LTAsMCArMSwxMSBAQAo+ICsqIENsb2NrIGJpbmRpbmdzIGZvciBFbmVyZ3kgTWljcm8gZWZtMzIg
-R2lhbnQgR2Vja28ncyBDbG9jayBNYW5hZ2VtZW50IFVuaXQKPiArCj4gK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJlZm0zMmdnLGNtdSIKPiArLSByZWc6
-IEJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQKPiArLSBpbnRlcnJ1
-cHRzOiBJbnRlcnJ1cHQgdXNlZCBieSB0aGUgQ01VCj4gKy0gI2Nsb2NrLWNlbGxzOiBTaG91bGQg
-YmUgPDE+Cj4gKwo+ICtUaGUgY2xvY2sgY29uc3VtZXIgc2hvdWxkIHNwZWNpZnkgdGhlIGRlc2ly
-ZWQgY2xvY2sgYnkgaGF2aW5nIHRoZSBjbG9jayBJRCBpbgo+ICtpdHMgImNsb2NrcyIgcGhhbmRs
-ZSBjZWxsLiBUaGUgaGVhZGVyIGVmbTMyLWNsay5oIGNvbnRhaW5zIGEgbGlzdCBvZiBhdmFpbGFi
-bGUKPiArSURzLgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9NYWtlZmlsZSBiL2RyaXZlcnMv
-Y2xrL01ha2VmaWxlCj4gaW5kZXggNDAzOGMyYi4uOTlkOWFkMCAxMDA2NDQKPiAtLS0gYS9kcml2
-ZXJzL2Nsay9NYWtlZmlsZQo+ICsrKyBiL2RyaXZlcnMvY2xrL01ha2VmaWxlCj4gQEAgLTExLDYg
-KzExLDcgQEAgb2JqLSQoQ09ORklHX0NPTU1PTl9DTEspICAgICAgKz0gY2xrLWNvbXBvc2l0ZS5v
-Cj4gIAo+ICAjIFNvQ3Mgc3BlY2lmaWMKPiAgb2JqLSQoQ09ORklHX0FSQ0hfQkNNMjgzNSkgICAg
-ICs9IGNsay1iY20yODM1Lm8KPiArb2JqLSQoQ09ORklHX0FSQ0hfRUZNMzIpICAgICAgICs9IGNs
-ay1lZm0zMmdnLm8KPiAgb2JqLSQoQ09ORklHX0FSQ0hfTk9NQURJSykgICAgICs9IGNsay1ub21h
-ZGlrLm8KPiAgb2JqLSQoQ09ORklHX0FSQ0hfSElHSEJBTkspICAgICs9IGNsay1oaWdoYmFuay5v
-Cj4gIG9iai0kKENPTkZJR19BUkNIX05TUElSRSkgICAgICArPSBjbGstbnNwaXJlLm8KPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9jbGsvY2xrLWVmbTMyZ2cuYyBiL2RyaXZlcnMvY2xrL2Nsay1lZm0z
-MmdnLmMKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjJlNjM1ODQKPiAt
-LS0gL2Rldi9udWxsCj4gKysrIGIvZHJpdmVycy9jbGsvY2xrLWVmbTMyZ2cuYwo+IEBAIC0wLDAg
-KzEsNzkgQEAKPiArI2luY2x1ZGUgPGxpbnV4L2Nsay5oPgo+ICsjaW5jbHVkZSA8bGludXgvaW8u
-aD4KPiArI2luY2x1ZGUgPGxpbnV4L2Nsay1wcm92aWRlci5oPgo+ICsjaW5jbHVkZSA8bGludXgv
-b2YuaD4KPiArI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4KPiArCj4gKyNpbmNsdWRlIDxk
-dC1iaW5kaW5ncy9jbG9jay9lZm0zMi1jbXUuaD4KPiArCj4gKyNkZWZpbmUgQ01VX0hGUEVSQ0xL
-RU4wICAgICAgICAgICAgICAgIDB4NDQKPiArCj4gK3N0YXRpYyBzdHJ1Y3QgY2xrICpjbGtbMzdd
-Owo+ICtzdGF0aWMgc3RydWN0IGNsa19vbmVjZWxsX2RhdGEgY2xrX2RhdGEgPSB7Cj4gKyAgICAg
-ICAuY2xrcyA9IGNsaywKPiArICAgICAgIC5jbGtfbnVtID0gQVJSQVlfU0laRShjbGspLAo+ICt9
-Owo+ICsKPiAraW50IF9faW5pdCBlZm0zMmdnX2Nsa19pbml0KHZvaWQpCj4gK3sKPiArICAgICAg
-IGludCBpOwo+ICsgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpucDsKPiArICAgICAgIHZvaWQg
-X19pb21lbSAqYmFzZTsKPiArCj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShj
-bGspOyArK2kpCj4gKyAgICAgICAgICAgICAgIGNsa1tpXSA9IEVSUl9QVFIoLUVOT0VOVCk7Cj4g
-Kwo+ICsgICAgICAgbnAgPSBvZl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCAiZWZt
-MzJnZyxjbXUiKTsKPiArICAgICAgIGlmICghbnApIHsKPiArICAgICAgICAgICAgICAgcHJfd2Fy
-bigiTm8gZWZtMzJnZyxjbXUgbm9kZSBmb3VuZCBpbiBkZXZpY2UgdHJlZVxuIik7Cj4gKyAgICAg
-ICAgICAgICAgIHJldHVybiAtRU5PRU5UOwo+ICsgICAgICAgfQo+ICsKPiArICAgICAgIGJhc2Ug
-PSBvZl9pb21hcChucCwgMCk7Cj4gKyAgICAgICBpZiAoIWJhc2UpIHsKPiArICAgICAgICAgICAg
-ICAgcHJfd2FybigiRmFpbGVkIHRvIG1hcCBhZGRyZXNzIHJhbmdlIGZvciBlZm0zMmdnLGNtdSBu
-b2RlXG4iKTsKPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FQUREUk5PVEFWQUlMOwo+ICsgICAg
-ICAgfQo+ICsKPiArICAgICAgIGNsa1tjbGtfSEZYT10gPSBjbGtfcmVnaXN0ZXJfZml4ZWRfcmF0
-ZShOVUxMLCAiSEZYTyIsIE5VTEwsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgQ0xLX0lTX1JP
-T1QsIDQ4MDAwMDAwKTsKPiArCj4gKyAgICAgICBjbGtbY2xrX0hGUEVSQ0xLVVNBUlQwXSA9IGNs
-a19yZWdpc3Rlcl9nYXRlKE5VTEwsICJIRlBFUkNMSy5VU0FSVDAiLAo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICJIRlhPIiwgMCwgYmFzZSArIENNVV9IRlBFUkNMS0VOMCwgMCwgMCwgTlVMTCk7
-Cj4gKyAgICAgICBjbGtbY2xrX0hGUEVSQ0xLVVNBUlQxXSA9IGNsa19yZWdpc3Rlcl9nYXRlKE5V
-TEwsICJIRlBFUkNMSy5VU0FSVDEiLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICJIRlhPIiwg
-MCwgYmFzZSArIENNVV9IRlBFUkNMS0VOMCwgMSwgMCwgTlVMTCk7Cj4gKyAgICAgICBjbGtbY2xr
-X0hGUEVSQ0xLVVNBUlQyXSA9IGNsa19yZWdpc3Rlcl9nYXRlKE5VTEwsICJIRlBFUkNMSy5VU0FS
-VDIiLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICJIRlhPIiwgMCwgYmFzZSArIENNVV9IRlBF
-UkNMS0VOMCwgMiwgMCwgTlVMTCk7Cj4gKyAgICAgICBjbGtbY2xrX0hGUEVSQ0xLVUFSVDBdID0g
-Y2xrX3JlZ2lzdGVyX2dhdGUoTlVMTCwgIkhGUEVSQ0xLLlVBUlQwIiwKPiArICAgICAgICAgICAg
-ICAgICAgICAgICAiSEZYTyIsIDAsIGJhc2UgKyBDTVVfSEZQRVJDTEtFTjAsIDMsIDAsIE5VTEwp
-Owo+ICsgICAgICAgY2xrW2Nsa19IRlBFUkNMS1VBUlQxXSA9IGNsa19yZWdpc3Rlcl9nYXRlKE5V
-TEwsICJIRlBFUkNMSy5VQVJUMSIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIkhGWE8iLCAw
-LCBiYXNlICsgQ01VX0hGUEVSQ0xLRU4wLCA0LCAwLCBOVUxMKTsKPiArICAgICAgIGNsa1tjbGtf
-SEZQRVJDTEtUSU1FUjBdID0gY2xrX3JlZ2lzdGVyX2dhdGUoTlVMTCwgIkhGUEVSQ0xLLlRJTUVS
-MCIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIkhGWE8iLCAwLCBiYXNlICsgQ01VX0hGUEVS
-Q0xLRU4wLCA1LCAwLCBOVUxMKTsKPiArICAgICAgIGNsa1tjbGtfSEZQRVJDTEtUSU1FUjFdID0g
-Y2xrX3JlZ2lzdGVyX2dhdGUoTlVMTCwgIkhGUEVSQ0xLLlRJTUVSMSIsCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgIkhGWE8iLCAwLCBiYXNlICsgQ01VX0hGUEVSQ0xLRU4wLCA2LCAwLCBOVUxM
-KTsKPiArICAgICAgIGNsa1tjbGtfSEZQRVJDTEtUSU1FUjJdID0gY2xrX3JlZ2lzdGVyX2dhdGUo
-TlVMTCwgIkhGUEVSQ0xLLlRJTUVSMiIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIkhGWE8i
-LCAwLCBiYXNlICsgQ01VX0hGUEVSQ0xLRU4wLCA3LCAwLCBOVUxMKTsKPiArICAgICAgIGNsa1tj
-bGtfSEZQRVJDTEtUSU1FUjNdID0gY2xrX3JlZ2lzdGVyX2dhdGUoTlVMTCwgIkhGUEVSQ0xLLlRJ
-TUVSMyIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIkhGWE8iLCAwLCBiYXNlICsgQ01VX0hG
-UEVSQ0xLRU4wLCA4LCAwLCBOVUxMKTsKPiArICAgICAgIGNsa1tjbGtfSEZQRVJDTEtBQ01QMF0g
-PSBjbGtfcmVnaXN0ZXJfZ2F0ZShOVUxMLCAiSEZQRVJDTEsuQUNNUDAiLAo+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICJIRlhPIiwgMCwgYmFzZSArIENNVV9IRlBFUkNMS0VOMCwgOSwgMCwgTlVM
-TCk7Cj4gKyAgICAgICBjbGtbY2xrX0hGUEVSQ0xLQUNNUDFdID0gY2xrX3JlZ2lzdGVyX2dhdGUo
-TlVMTCwgIkhGUEVSQ0xLLkFDTVAxIiwKPiArICAgICAgICAgICAgICAgICAgICAgICAiSEZYTyIs
-IDAsIGJhc2UgKyBDTVVfSEZQRVJDTEtFTjAsIDEwLCAwLCBOVUxMKTsKPiArICAgICAgIGNsa1tj
-bGtfSEZQRVJDTEtJMkMwXSA9IGNsa19yZWdpc3Rlcl9nYXRlKE5VTEwsICJIRlBFUkNMSy5JMkMw
-IiwKPiArICAgICAgICAgICAgICAgICAgICAgICAiSEZYTyIsIDAsIGJhc2UgKyBDTVVfSEZQRVJD
-TEtFTjAsIDExLCAwLCBOVUxMKTsKPiArICAgICAgIGNsa1tjbGtfSEZQRVJDTEtJMkMxXSA9IGNs
-a19yZWdpc3Rlcl9nYXRlKE5VTEwsICJIRlBFUkNMSy5JMkMxIiwKPiArICAgICAgICAgICAgICAg
-ICAgICAgICAiSEZYTyIsIDAsIGJhc2UgKyBDTVVfSEZQRVJDTEtFTjAsIDEyLCAwLCBOVUxMKTsK
-PiArICAgICAgIGNsa1tjbGtfSEZQRVJDTEtHUElPXSA9IGNsa19yZWdpc3Rlcl9nYXRlKE5VTEws
-ICJIRlBFUkNMSy5HUElPIiwKPiArICAgICAgICAgICAgICAgICAgICAgICAiSEZYTyIsIDAsIGJh
-c2UgKyBDTVVfSEZQRVJDTEtFTjAsIDEzLCAwLCBOVUxMKTsKPiArICAgICAgIGNsa1tjbGtfSEZQ
-RVJDTEtWQ01QXSA9IGNsa19yZWdpc3Rlcl9nYXRlKE5VTEwsICJIRlBFUkNMSy5WQ01QIiwKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAiSEZYTyIsIDAsIGJhc2UgKyBDTVVfSEZQRVJDTEtFTjAs
-IDE0LCAwLCBOVUxMKTsKPiArICAgICAgIGNsa1tjbGtfSEZQRVJDTEtQUlNdID0gY2xrX3JlZ2lz
-dGVyX2dhdGUoTlVMTCwgIkhGUEVSQ0xLLlBSUyIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-IkhGWE8iLCAwLCBiYXNlICsgQ01VX0hGUEVSQ0xLRU4wLCAxNSwgMCwgTlVMTCk7Cj4gKyAgICAg
-ICBjbGtbY2xrX0hGUEVSQ0xLQURDMF0gPSBjbGtfcmVnaXN0ZXJfZ2F0ZShOVUxMLCAiSEZQRVJD
-TEsuQURDMCIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIkhGWE8iLCAwLCBiYXNlICsgQ01V
-X0hGUEVSQ0xLRU4wLCAxNiwgMCwgTlVMTCk7Cj4gKyAgICAgICBjbGtbY2xrX0hGUEVSQ0xLREFD
-MF0gPSBjbGtfcmVnaXN0ZXJfZ2F0ZShOVUxMLCAiSEZQRVJDTEsuREFDMCIsCj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgIkhGWE8iLCAwLCBiYXNlICsgQ01VX0hGUEVSQ0xLRU4wLCAxNywgMCwg
-TlVMTCk7Cj4gKwo+ICsgICAgICAgcmV0dXJuIG9mX2Nsa19hZGRfcHJvdmlkZXIobnAsIG9mX2Ns
-a19zcmNfb25lY2VsbF9nZXQsICZjbGtfZGF0YSk7Cj4gK30KPiBkaWZmIC0tZ2l0IGEvaW5jbHVk
-ZS9kdC1iaW5kaW5ncy9jbG9jay9lZm0zMi1jbXUuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3MvY2xv
-Y2svZWZtMzItY211LmgKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLmIy
-MWI5MWUKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9l
-Zm0zMi1jbXUuaAo+IEBAIC0wLDAgKzEsNDIgQEAKPiArI2lmbmRlZiBfX0RUX0JJTkRJTkdTX0NM
-T0NLX0VGTTMyX0NNVV9ICj4gKyNkZWZpbmUgX19EVF9CSU5ESU5HU19DTE9DS19FRk0zMl9DTVVf
-SAo+ICsKPiArI2RlZmluZSBjbGtfSEZYTyAgICAgICAgICAgICAgIDAKPiArI2RlZmluZSBjbGtf
-SEZSQ08gICAgICAgICAgICAgIDEKPiArI2RlZmluZSBjbGtfTEZYTyAgICAgICAgICAgICAgIDIK
-PiArI2RlZmluZSBjbGtfTEZSQ08gICAgICAgICAgICAgIDMKPiArI2RlZmluZSBjbGtfVUxGUkNP
-ICAgICAgICAgICAgIDQKPiArI2RlZmluZSBjbGtfQVVYSEZSQ08gICAgICAgICAgIDUKPiArI2Rl
-ZmluZSBjbGtfSEZDTEtOT0RJViAgICAgICAgIDYKPiArI2RlZmluZSBjbGtfSEZDTEsgICAgICAg
-ICAgICAgIDcKPiArI2RlZmluZSBjbGtfSEZQRVJDTEsgICAgICAgICAgIDgKPiArI2RlZmluZSBj
-bGtfSEZDT1JFQ0xLICAgICAgICAgIDkKPiArI2RlZmluZSBjbGtfTEZBQ0xLICAgICAgICAgICAg
-IDEwCj4gKyNkZWZpbmUgY2xrX0xGQkNMSyAgICAgICAgICAgICAxMQo+ICsjZGVmaW5lIGNsa19X
-RE9HQ0xLICAgICAgICAgICAgMTIKPiArI2RlZmluZSBjbGtfSEZDT1JFQ0xLRE1BICAgICAgIDEz
-Cj4gKyNkZWZpbmUgY2xrX0hGQ09SRUNMS0FFUyAgICAgICAxNAo+ICsjZGVmaW5lIGNsa19IRkNP
-UkVDTEtVU0JDICAgICAgMTUKPiArI2RlZmluZSBjbGtfSEZDT1JFQ0xLVVNCICAgICAgIDE2Cj4g
-KyNkZWZpbmUgY2xrX0hGQ09SRUNMS0xFICAgICAgICAgICAgICAgIDE3Cj4gKyNkZWZpbmUgY2xr
-X0hGQ09SRUNMS0VCSSAgICAgICAxOAo+ICsjZGVmaW5lIGNsa19IRlBFUkNMS1VTQVJUMCAgICAg
-MTkKPiArI2RlZmluZSBjbGtfSEZQRVJDTEtVU0FSVDEgICAgIDIwCj4gKyNkZWZpbmUgY2xrX0hG
-UEVSQ0xLVVNBUlQyICAgICAyMQo+ICsjZGVmaW5lIGNsa19IRlBFUkNMS1VBUlQwICAgICAgMjIK
-PiArI2RlZmluZSBjbGtfSEZQRVJDTEtVQVJUMSAgICAgIDIzCj4gKyNkZWZpbmUgY2xrX0hGUEVS
-Q0xLVElNRVIwICAgICAyNAo+ICsjZGVmaW5lIGNsa19IRlBFUkNMS1RJTUVSMSAgICAgMjUKPiAr
-I2RlZmluZSBjbGtfSEZQRVJDTEtUSU1FUjIgICAgIDI2Cj4gKyNkZWZpbmUgY2xrX0hGUEVSQ0xL
-VElNRVIzICAgICAyNwo+ICsjZGVmaW5lIGNsa19IRlBFUkNMS0FDTVAwICAgICAgMjgKPiArI2Rl
-ZmluZSBjbGtfSEZQRVJDTEtBQ01QMSAgICAgIDI5Cj4gKyNkZWZpbmUgY2xrX0hGUEVSQ0xLSTJD
-MCAgICAgICAzMAo+ICsjZGVmaW5lIGNsa19IRlBFUkNMS0kyQzEgICAgICAgMzEKPiArI2RlZmlu
-ZSBjbGtfSEZQRVJDTEtHUElPICAgICAgIDMyCj4gKyNkZWZpbmUgY2xrX0hGUEVSQ0xLVkNNUCAg
-ICAgICAzMwo+ICsjZGVmaW5lIGNsa19IRlBFUkNMS1BSUyAgICAgICAgICAgICAgICAzNAo+ICsj
-ZGVmaW5lIGNsa19IRlBFUkNMS0FEQzAgICAgICAgMzUKPiArI2RlZmluZSBjbGtfSEZQRVJDTEtE
-QUMwICAgICAgIDM2Cj4gKwo+ICsjZW5kaWYgLyogX19EVF9CSU5ESU5HU19DTE9DS19FRk0zMl9D
-TVVfSCAqLwo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2Nsay9lZm0zMi5oIGIvaW5jbHVk
-ZS9saW51eC9jbGsvZWZtMzIuaAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAw
-MC4uNDAzMmRjMAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9pbmNsdWRlL2xpbnV4L2Nsay9lZm0z
-Mi5oCj4gQEAgLTAsMCArMSw2IEBACj4gKyNpZm5kZWYgX19MSU5VWF9DTEtfRUZNMzJfSF9fCj4g
-KyNkZWZpbmUgX19MSU5VWF9DTEtfRUZNMzJfSF9fCj4gKwo+ICtpbnQgZWZtMzJnZ19jbGtfaW5p
-dCh2b2lkKTsKPiArCj4gKyNlbmRpZiAvKiBfX0xJTlVYX0NMS19FRk0zMl9IX18gKi8KPiAtLSAK
-PiAxLjguNC5yYzAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+Hello,
+
+On Thu, Sep 26, 2013 at 08:18:28PM +0100, Jyri Sarha wrote:
+> This patch adds DMA register location to mcasp DT bindings. On am33xx
+> SoCs the McASP registers are mapped trough L4 interconnect, which is
+> not accessible by the DMA controller, so McASP data port is mapped
+> trough L3 to a different location.
+> 
+> Signed-off-by: Hebbar, Gururaja <gururaja.hebbar@ti.com>
+> Signed-off-by: Darren Etheridge <detheridge@ti.com>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  .../bindings/sound/davinci-mcasp-audio.txt         |    8 ++-
+>  sound/soc/davinci/davinci-mcasp.c                  |   59 +++++++++++++-------
+>  2 files changed, 46 insertions(+), 21 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
+> index 374e145..63b67ae 100644
+> --- a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
+> +++ b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
+> @@ -6,7 +6,11 @@ Required properties:
+>  	"ti,da830-mcasp-audio"	: for both DA830 & DA850 platforms
+>  	"ti,omap2-mcasp-audio"	: for OMAP2 platforms (TI81xx, AM33xx)
+>  
+> -- reg : Should contain McASP registers offset and length
+> +- reg : Should contain McASP registers address and length for mpu and
+> +	optionally for dma controller access.
+> +- reg-names : The mandatory reg-range must be named "mpu" and the optional DMA
+> +	      reg-range must be named "dma". For backward compatibility it is
+> +	      good to keep "mpu" first in the list.
+
+I've never heard the term "reg-range" before. The should probably be something
+like "reg entry". How about something like the following instead:
+
+- reg: Should contain reg specifiers for the entries in the reg-names property.
+
+- reg-names: Should contain:
+	     * "mpu" for the main registers (required). For compatibility with
+	       existing software, it is recommended this is the first entry.
+	     * "dma" for the DMA registers (optional).
+
+That way we don't end up describing each reg entry twice.
+
+I have some questions however. I took a look at the McASP (TMS320C6000)
+reference guide, and the registers appeared to all be in one contiguous bank,
+and "mpu" and "dma" don't appear to be names of particular registers or names
+of banks of particular registers. Am I looking in the wrong place? Is there
+up-to-date documentation I can look at?
+
+Why are these split across two reg entries, and which particular registers do
+they actually cover?
+
+I have some concern about the description of other properties too. If we're
+going to amend the binding, they should be fixed up too.
+
+>  - interrupts : Interrupt number for McASP
+
+The device also seems to be able to generate multiple interrupts -- which
+interrupt does this actually cover?
+
+The driver doesn't seem to use it (by a grep of irq|interrupt). Have I missed
+something?
+
+>  - op-mode : I2S/DIT ops mode.
+
+What type is this?
+
+What are valid values?
+
+>  - tdm-slots : Slots for TDM operation.
+
+Here too. This description is completely opaque.
+
+Taking a look at the version in kernel sources this appears to be a list of
+values, in groups of four?
+
+What is the format of this property?
+
+> @@ -15,7 +19,6 @@ Required properties:
+>  		to "num-serializer" parameter. Each entry is a number indication
+>  		serializer pin direction. (0 - INACTIVE, 1 - TX, 2 - RX)
+>  
+> -
+>  Optional properties:
+>  
+>  - ti,hwmods : Must be "mcasp<n>", n is controller instance starting 0
+> @@ -31,6 +34,7 @@ mcasp0: mcasp0@1d00000 {
+>  	#address-cells = <1>;
+>  	#size-cells = <0>;
+
+Why does this have #address-cells and #size-cells? There are no children in the
+example.
+
+>  	reg = <0x100000 0x3000>;
+> +	reg-names "mpu";
+>  	interrupts = <82 83>;
+>  	op-mode = <0>;		/* MCASP_IIS_MODE */
+>  	tdm-slots = <2>;
+
+A few questions from a brief skim of the documentation:
+
+There seem to be external clocks (AHCLKR and ACLKR), but they aren't described.
+Are we always able to use an internal clock instead? Is no external reference
+clock needed?
+
+The err_release_clk label in the error path confuses me -- which clock(s) does
+the preceding pm_runtime_get ensure remains active? One internal to the McASP?
+
+It looks like some pins can be used as GPIO -- is there not a need for something
+like pinctrl for configuring this?
+
+Cheers,
+Mark.
+
+> diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
+> index 32ddb7f..a056fc5 100644
+> --- a/sound/soc/davinci/davinci-mcasp.c
+> +++ b/sound/soc/davinci/davinci-mcasp.c
+> @@ -1001,18 +1001,40 @@ static const struct snd_soc_component_driver davinci_mcasp_component = {
+>  	.name		= "davinci-mcasp",
+>  };
+>  
+> +/* Some HW specific values and defaults. The rest is filled in from DT. */
+> +static struct snd_platform_data dm646x_mcasp_pdata = {
+> +	.tx_dma_offset = 0x400,
+> +	.rx_dma_offset = 0x400,
+> +	.asp_chan_q = EVENTQ_0,
+> +	.version = MCASP_VERSION_1,
+> +};
+> +
+> +static struct snd_platform_data da830_mcasp_pdata = {
+> +	.tx_dma_offset = 0x2000,
+> +	.rx_dma_offset = 0x2000,
+> +	.asp_chan_q = EVENTQ_0,
+> +	.version = MCASP_VERSION_2,
+> +};
+> +
+> +static struct snd_platform_data omap2_mcasp_pdata = {
+> +	.tx_dma_offset = 0,
+> +	.rx_dma_offset = 0,
+> +	.asp_chan_q = EVENTQ_0,
+> +	.version = MCASP_VERSION_3,
+> +};
+> +
+>  static const struct of_device_id mcasp_dt_ids[] = {
+>  	{
+>  		.compatible = "ti,dm646x-mcasp-audio",
+> -		.data = (void *)MCASP_VERSION_1,
+> +		.data = &dm646x_mcasp_pdata,
+>  	},
+>  	{
+>  		.compatible = "ti,da830-mcasp-audio",
+> -		.data = (void *)MCASP_VERSION_2,
+> +		.data = &da830_mcasp_pdata,
+>  	},
+>  	{
+>  		.compatible = "ti,omap2-mcasp-audio",
+> -		.data = (void *)MCASP_VERSION_3,
+> +		.data = &omap2_mcasp_pdata,
+>  	},
+>  	{ /* sentinel */ }
+>  };
+> @@ -1035,20 +1057,13 @@ static struct snd_platform_data *davinci_mcasp_set_pdata_from_of(
+>  		pdata = pdev->dev.platform_data;
+>  		return pdata;
+>  	} else if (match) {
+> -		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> -		if (!pdata) {
+> -			ret = -ENOMEM;
+> -			goto nodata;
+> -		}
+> +		pdata = (struct snd_platform_data *) match->data;
+>  	} else {
+>  		/* control shouldn't reach here. something is wrong */
+>  		ret = -EINVAL;
+>  		goto nodata;
+>  	}
+>  
+> -	if (match->data)
+> -		pdata->version = (u8)((int)match->data);
+> -
+>  	ret = of_property_read_u32(np, "op-mode", &val);
+>  	if (ret >= 0)
+>  		pdata->op_mode = val;
+> @@ -1145,10 +1160,15 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> -	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mpu");
+>  	if (!mem) {
+> -		dev_err(&pdev->dev, "no mem resource?\n");
+> -		return -ENODEV;
+> +		dev_warn(dev->dev,
+> +			 "\"mpu\" mem resource not found, using index 0\n");
+> +		mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		if (!mem) {
+> +			dev_err(&pdev->dev, "no mem resource?\n");
+> +			return -ENODEV;
+> +		}
+>  	}
+>  
+>  	ioarea = devm_request_mem_region(&pdev->dev, mem->start,
+> @@ -1182,13 +1202,16 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
+>  	dev->rxnumevt = pdata->rxnumevt;
+>  	dev->dev = &pdev->dev;
+>  
+> +	dma = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dma");
+> +	if (!dma)
+> +		dma = mem;
+> +
+>  	dma_data = &dev->dma_params[SNDRV_PCM_STREAM_PLAYBACK];
+>  	dma_data->asp_chan_q = pdata->asp_chan_q;
+>  	dma_data->ram_chan_q = pdata->ram_chan_q;
+>  	dma_data->sram_pool = pdata->sram_pool;
+>  	dma_data->sram_size = pdata->sram_size_playback;
+> -	dma_data->dma_addr = (dma_addr_t) (pdata->tx_dma_offset +
+> -							mem->start);
+> +	dma_data->dma_addr = dma->start + pdata->tx_dma_offset;
+>  
+>  	/* first TX, then RX */
+>  	res = platform_get_resource(pdev, IORESOURCE_DMA, 0);
+> @@ -1205,8 +1228,7 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
+>  	dma_data->ram_chan_q = pdata->ram_chan_q;
+>  	dma_data->sram_pool = pdata->sram_pool;
+>  	dma_data->sram_size = pdata->sram_size_capture;
+> -	dma_data->dma_addr = (dma_addr_t)(pdata->rx_dma_offset +
+> -							mem->start);
+> +	dma_data->dma_addr = dma->start + pdata->rx_dma_offset;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_DMA, 1);
+>  	if (!res) {
+> @@ -1266,4 +1288,3 @@ module_platform_driver(davinci_mcasp_driver);
+>  MODULE_AUTHOR("Steve Chen");
+>  MODULE_DESCRIPTION("TI DAVINCI McASP SoC Interface");
+>  MODULE_LICENSE("GPL");
+> -
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
