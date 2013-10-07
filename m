@@ -1,78 +1,152 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 09/29] of: Introduce common early_init_dt_scan
-Date: Mon,  7 Oct 2013 11:29:17 -0500
-Message-ID: <1381163377-21044-10-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 28/29] metag: use common of_flat_dt_match_machine
+Date: Mon,  7 Oct 2013 11:29:36 -0500
+Message-ID: <1381163377-21044-29-git-send-email-robherring2@gmail.com>
 References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, James Hogan <james.hogan@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-Most architectures scan the all the same items early in the FDT and none
-are really architecture specific. Create a common early_init_dt_scan to
-unify the early scan of root, memory, and chosen nodes in the flattened
-DT.
+Convert metag to use the common of_flat_dt_get_machine_name function.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Acked-by: Grant Likely <grant.likely@linaro.org>
+[james.hogan: fix missing arch_get_next_mach and const mismatch]
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: James Hogan <james.hogan@imgtec.com>
 ---
- drivers/of/fdt.c       | 26 ++++++++++++++++++++++++++
- include/linux/of_fdt.h |  2 ++
- 2 files changed, 28 insertions(+)
+ arch/metag/include/asm/mach/arch.h |  2 +-
+ arch/metag/include/asm/prom.h      |  2 +-
+ arch/metag/kernel/devtree.c        | 60 ++++++++++++--------------------------
+ arch/metag/kernel/setup.c          |  2 +-
+ 4 files changed, 22 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 5177616..bfbfda5 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -785,6 +785,32 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
- }
- #endif
+diff --git a/arch/metag/include/asm/mach/arch.h b/arch/metag/include/asm/mach/arch.h
+index 12c5664..433f946 100644
+--- a/arch/metag/include/asm/mach/arch.h
++++ b/arch/metag/include/asm/mach/arch.h
+@@ -53,7 +53,7 @@ struct machine_desc {
+ /*
+  * Current machine - only accessible during boot.
+  */
+-extern struct machine_desc *machine_desc;
++extern const struct machine_desc *machine_desc;
  
-+bool __init early_init_dt_scan(void *params)
+ /*
+  * Machine type table - also only accessible during boot
+diff --git a/arch/metag/include/asm/prom.h b/arch/metag/include/asm/prom.h
+index d2aa35d..9f67cbf 100644
+--- a/arch/metag/include/asm/prom.h
++++ b/arch/metag/include/asm/prom.h
+@@ -17,7 +17,7 @@
+ #include <asm/setup.h>
+ #define HAVE_ARCH_DEVTREE_FIXUPS
+ 
+-extern struct machine_desc *setup_machine_fdt(void *dt);
++extern const struct machine_desc *setup_machine_fdt(void *dt);
+ extern void copy_fdt(void);
+ 
+ #endif /* __ASM_METAG_PROM_H */
+diff --git a/arch/metag/kernel/devtree.c b/arch/metag/kernel/devtree.c
+index 68c2fee..18dd7ae 100644
+--- a/arch/metag/kernel/devtree.c
++++ b/arch/metag/kernel/devtree.c
+@@ -34,6 +34,19 @@ void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+ 	return alloc_bootmem_align(size, align);
+ }
+ 
++static const void * __init arch_get_next_mach(const char *const **match)
 +{
-+	if (!params)
-+		return false;
++	static const struct machine_desc *mdesc = __arch_info_begin;
++	const struct machine_desc *m = mdesc;
 +
-+	/* Setup flat device-tree pointer */
-+	initial_boot_params = params;
++	if (m >= __arch_info_end)
++		return NULL;
 +
-+	/* check device tree validity */
-+	if (be32_to_cpu(initial_boot_params->magic) != OF_DT_HEADER) {
-+		initial_boot_params = NULL;
-+		return false;
-+	}
-+
-+	/* Retrieve various information from the /chosen node */
-+	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
-+
-+	/* Initialize {size,address}-cells info */
-+	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-+
-+	/* Setup memory, calling early_init_dt_add_memory_arch */
-+	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
-+
-+	return true;
++	mdesc++;
++	*match = m->dt_compat;
++	return m;
 +}
 +
  /**
-  * unflatten_device_tree - create tree of device_nodes from flat blob
-  *
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 58c28a8..73e1651 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -116,6 +116,8 @@ extern void early_init_dt_setup_initrd_arch(u64 start, u64 end);
- extern int early_init_dt_scan_root(unsigned long node, const char *uname,
- 				   int depth, void *data);
+  * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
+  * @dt:		virtual address pointer to dt blob
+@@ -41,53 +54,18 @@ void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+  * If a dtb was passed to the kernel, then use it to choose the correct
+  * machine_desc and to setup the system.
+  */
+-struct machine_desc * __init setup_machine_fdt(void *dt)
++const struct machine_desc * __init setup_machine_fdt(void *dt)
+ {
+-	struct machine_desc *mdesc, *mdesc_best = NULL;
+-	unsigned int score, mdesc_score = ~1;
+-	unsigned long dt_root;
+-	const char *model;
++	const struct machine_desc *mdesc;
  
-+extern bool early_init_dt_scan(void *params);
-+
- /* Other Prototypes */
- extern void unflatten_device_tree(void);
- extern void unflatten_and_copy_device_tree(void);
+ 	/* check device tree validity */
+ 	if (!early_init_dt_scan(dt))
+ 		return NULL;
+ 
+-	/* Search the mdescs for the 'best' compatible value match */
+-	dt_root = of_get_flat_dt_root();
+-
+-	for_each_machine_desc(mdesc) {
+-		score = of_flat_dt_match(dt_root, mdesc->dt_compat);
+-		if (score > 0 && score < mdesc_score) {
+-			mdesc_best = mdesc;
+-			mdesc_score = score;
+-		}
+-	}
+-	if (!mdesc_best) {
+-		const char *prop;
+-		long size;
+-
+-		pr_err("\nError: unrecognized/unsupported device tree compatible list:\n[ ");
+-
+-		prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
+-		if (prop) {
+-			while (size > 0) {
+-				printk("'%s' ", prop);
+-				size -= strlen(prop) + 1;
+-				prop += strlen(prop) + 1;
+-			}
+-		}
+-		printk("]\n\n");
+-
++	mdesc = of_flat_dt_match_machine(NULL, arch_get_next_mach);
++	if (!mdesc)
+ 		dump_machine_table(); /* does not return */
+-	}
+-
+-	model = of_get_flat_dt_prop(dt_root, "model", NULL);
+-	if (!model)
+-		model = of_get_flat_dt_prop(dt_root, "compatible", NULL);
+-	if (!model)
+-		model = "<unknown>";
+-	pr_info("Machine: %s, model: %s\n", mdesc_best->name, model);
+-
+-	return mdesc_best;
++	pr_info("Machine name: %s\n", mdesc->name);
+ 
++	return mdesc;
+ }
+diff --git a/arch/metag/kernel/setup.c b/arch/metag/kernel/setup.c
+index 2c697d3..92cc119 100644
+--- a/arch/metag/kernel/setup.c
++++ b/arch/metag/kernel/setup.c
+@@ -115,7 +115,7 @@ extern u32 __dtb_start[];
+ extern struct console dash_console;
+ #endif
+ 
+-struct machine_desc *machine_desc __initdata;
++const struct machine_desc *machine_desc __initdata;
+ 
+ /*
+  * Map a Linux CPU number to a hardware thread ID
 -- 
 1.8.1.2
