@@ -1,13 +1,13 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 06/29] x86: use unflatten_and_copy_device_tree
-Date: Mon,  7 Oct 2013 11:29:14 -0500
-Message-ID: <1381163377-21044-7-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 08/29] metag: use unflatten_and_copy_device_tree
+Date: Mon,  7 Oct 2013 11:29:16 -0500
+Message-ID: <1381163377-21044-9-git-send-email-robherring2@gmail.com>
 References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, James Hogan <james.hogan@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
@@ -16,58 +16,52 @@ Use the common unflatten_and_copy_device_tree to copy the built-in FDT
 out of init section.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
+Cc: James Hogan <james.hogan@imgtec.com>
 ---
- arch/x86/kernel/devicetree.c | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
+ arch/metag/kernel/devtree.c | 16 ----------------
+ arch/metag/kernel/setup.c   |  4 +---
+ 2 files changed, 1 insertion(+), 19 deletions(-)
 
-diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
-index 376dc78..0db805c 100644
---- a/arch/x86/kernel/devicetree.c
-+++ b/arch/x86/kernel/devicetree.c
-@@ -230,7 +230,7 @@ static void __init dtb_apic_setup(void)
- static void __init x86_flattree_get_config(void)
- {
- 	u32 size, map_len;
--	void *new_dtb;
-+	struct boot_param_header *dt;
+diff --git a/arch/metag/kernel/devtree.c b/arch/metag/kernel/devtree.c
+index 7cd0252..049af56 100644
+--- a/arch/metag/kernel/devtree.c
++++ b/arch/metag/kernel/devtree.c
+@@ -94,21 +94,5 @@ struct machine_desc * __init setup_machine_fdt(void *dt)
+ 	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
  
- 	if (!initial_dtb)
- 		return;
-@@ -238,24 +238,17 @@ static void __init x86_flattree_get_config(void)
- 	map_len = max(PAGE_SIZE - (initial_dtb & ~PAGE_MASK),
- 			(u64)sizeof(struct boot_param_header));
+ 	return mdesc_best;
+-}
  
--	initial_boot_params = early_memremap(initial_dtb, map_len);
--	size = be32_to_cpu(initial_boot_params->totalsize);
-+	dt = early_memremap(initial_dtb, map_len);
-+	size = be32_to_cpu(dt->totalsize);
- 	if (map_len < size) {
--		early_iounmap(initial_boot_params, map_len);
--		initial_boot_params = early_memremap(initial_dtb, size);
-+		early_iounmap(dt, map_len);
-+		dt = early_memremap(initial_dtb, size);
- 		map_len = size;
- 	}
- 
--	new_dtb = alloc_bootmem(size);
--	memcpy(new_dtb, initial_boot_params, size);
--	early_iounmap(initial_boot_params, map_len);
--
--	initial_boot_params = new_dtb;
--
--	/* root level address cells */
--	of_scan_flat_dt(early_init_dt_scan_root, NULL);
--
--	unflatten_device_tree();
-+	initial_boot_params = dt;
-+	unflatten_and_copy_device_tree();
-+	early_iounmap(dt, map_len);
+-/**
+- * copy_fdt - Copy device tree into non-init memory.
+- *
+- * We must copy the flattened device tree blob into non-init memory because the
+- * unflattened device tree will reference the strings in it directly.
+- */
+-void __init copy_fdt(void)
+-{
+-	void *alloc = early_init_dt_alloc_memory_arch(
+-			be32_to_cpu(initial_boot_params->totalsize), 0x40);
+-	if (alloc) {
+-		memcpy(alloc, initial_boot_params,
+-		       be32_to_cpu(initial_boot_params->totalsize));
+-		initial_boot_params = alloc;
+-	}
  }
- #else
- static inline void x86_flattree_get_config(void) { }
+diff --git a/arch/metag/kernel/setup.c b/arch/metag/kernel/setup.c
+index c396cd0..2c697d3 100644
+--- a/arch/metag/kernel/setup.c
++++ b/arch/metag/kernel/setup.c
+@@ -408,9 +408,7 @@ void __init setup_arch(char **cmdline_p)
+ 	cpu_2_hwthread_id[smp_processor_id()] = hard_processor_id();
+ 	hwthread_id_2_cpu[hard_processor_id()] = smp_processor_id();
+ 
+-	/* Copy device tree blob into non-init memory before unflattening */
+-	copy_fdt();
+-	unflatten_device_tree();
++	unflatten_and_copy_device_tree();
+ 
+ #ifdef CONFIG_SMP
+ 	smp_init_cpus();
 -- 
 1.8.1.2
