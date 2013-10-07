@@ -1,45 +1,66 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2 19/29] of: create default
- early_init_dt_add_memory_arch
-Date: Mon, 7 Oct 2013 17:32:20 +0100
-Message-ID: <20131007163220.GJ32012@arm.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH v2 27/29] arm64: use common of_flat_dt_get_machine_name
+Date: Mon,  7 Oct 2013 11:29:35 -0500
+Message-ID: <1381163377-21044-28-git-send-email-robherring2@gmail.com>
 References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
-	<1381163377-21044-20-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-bounces@lists.openrisc.net>
-Content-Disposition: inline
-In-Reply-To: <1381163377-21044-20-git-send-email-robherring2@gmail.com>
-List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
-List-Archive: <http://lists.openrisc.net/pipermail/linux>
-List-Post: <mailto:linux@lists.openrisc.net>
-List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
-List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
-Sender: linux-bounces@lists.openrisc.net
-Errors-To: linux-bounces@lists.openrisc.net
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, "microblaze-uclinux@itee.uq.edu.au" <microblaze-uclinux@itee.uq.edu.au>, "linux@openrisc.net" <linux@openrisc.net>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 07, 2013 at 05:29:27PM +0100, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> Create a weak version of early_init_dt_add_memory_arch which uses
-> memblock. This will unify all architectures except ones with custom
-> memory bank structs.
-> 
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Jonas Bonn <jonas@southpole.se>
-> Acked-by: Grant Likely <grant.likely@linaro.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: microblaze-uclinux@itee.uq.edu.au
-> Cc: linux@lists.openrisc.net
-> Cc: devicetree@vger.kernel.org
+From: Rob Herring <rob.herring@calxeda.com>
 
+Convert arm64 to use the common of_flat_dt_get_machine_name function.
+
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ arch/arm64/kernel/setup.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 7feb0c9..a4ed2d3 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -124,8 +124,6 @@ static void __init setup_processor(void)
+ 
+ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ {
+-	unsigned long dt_root;
+-
+ 	if (!dt_phys || !early_init_dt_scan(phys_to_virt(dt_phys))) {
+ 		early_print("\n"
+ 			"Error: invalid device tree blob at physical address 0x%p (virtual address 0x%p)\n"
+@@ -137,14 +135,7 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ 			cpu_relax();
+ 	}
+ 
+-	dt_root = of_get_flat_dt_root();
+-
+-	machine_name = of_get_flat_dt_prop(dt_root, "model", NULL);
+-	if (!machine_name)
+-		machine_name = of_get_flat_dt_prop(dt_root, "compatible", NULL);
+-	if (!machine_name)
+-		machine_name = "<unknown>";
+-	pr_info("Machine: %s\n", machine_name);
++	machine_name = of_flat_dt_get_machine_name();
+ }
+ 
+ /*
+-- 
+1.8.1.2
