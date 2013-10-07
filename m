@@ -1,112 +1,73 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 00/29] Early flattened DT init consolidation
-Date: Mon,  7 Oct 2013 11:29:08 -0500
-Message-ID: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 06/29] x86: use unflatten_and_copy_device_tree
+Date: Mon,  7 Oct 2013 11:29:14 -0500
+Message-ID: <1381163377-21044-7-git-send-email-robherring2@gmail.com>
+References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Chris Zankel <chris@zankel.net>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, James Hogan <james.hogan@imgtec.com>, Jonas Bonn <jonas@southpole.se>, Mark Salter <msalter@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, Michal Simek <monstr@monstr.eu>, Paul Mackerras <paulus@samba.org>, Ralf Baechle <ralf@linux-mips.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Vineet Gupta <vgupta@synopsys.com>, Will Deacon <will.deacon@arm.com>, x86@kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-This is the first of 2 series to do some consolidation of per
-architecture Device Tree code. We now have 12 architectures with DT
-support. As new architectures have been added, much of the DT related
-code for the early flattened DT scanning has been duplicated. Yet little
-of this code is architecture specific. This series has 4 main parts:
+Use the common unflatten_and_copy_device_tree to copy the built-in FDT
+out of init section.
 
-- Create a common function to copy built-in dtb's out of init section
-- Create a single, common function to scan the FDT
-- Removal of early_init_dt_setup_initrd_arch
-- Create common functions for machine matching with DT
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+---
+ arch/x86/kernel/devicetree.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
-The entire series with prom.h clean-up series is available here:
-git://sources.calxeda.com/kernel/linux.git dt-cleanup
-
-Compiled on arm, arm64, microblaze, mips, openrisc, powerpc, sparc,
-xtensa.
-
-Version 1 of this series is here:
-http://www.spinics.net/lists/devicetree/msg04865.html
-
-The prom.h clean-up series is here:
-http://www.spinics.net/lists/devicetree/msg06175.html
-
-Changes in v2:
-- Rebase to v3.12-rc3
-- add arm64 sanity checks to default early_init_dt_add_memory_arch
-- drop x86 and metag from common early_init_dt_add_memory_arch
-- move metag early_init_dt_scan support to separate patch
-- metag fixes from James Hogan
-- Add NULL checks in early_init_dt_scan
-- Document proper use of unflatten_and_copy_device_tree
-- fix section mismatches with of_flat_dt_get_machine_name
-- fix non-DT boot on ARM
-
-Rob
-
-
-Rob Herring (29):
-  c6x: use boot_command_line instead of private c6x_command_line
-  openrisc: use boot_command_line instead of private cmd_line
-  of: create unflatten_and_copy_device_tree
-  arc: use unflatten_and_copy_device_tree
-  openrisc: use unflatten_and_copy_device_tree
-  x86: use unflatten_and_copy_device_tree
-  xtensa: use unflatten_and_copy_device_tree
-  metag: use unflatten_and_copy_device_tree
-  of: Introduce common early_init_dt_scan
-  arc: use early_init_dt_scan
-  arm: use early_init_dt_scan
-  arm64: use early_init_dt_scan
-  c6x: use early_init_dt_scan
-  metag: use early_init_dt_scan
-  microblaze: use early_init_dt_scan
-  mips: use early_init_dt_scan
-  openrisc: use early_init_dt_scan
-  xtensa: use early_init_dt_scan
-  of: create default early_init_dt_add_memory_arch
-  arm: set initrd_start/initrd_end for fdt scan
-  arm64: set initrd_start/initrd_end for fdt scan
-  of: remove early_init_dt_setup_initrd_arch
-  openrisc: remove unnecessary prom.c includes
-  of: introduce common FDT machine related functions
-  arc: use common of_flat_dt_match_machine
-  arm: use common of_flat_dt_match_machine
-  arm64: use common of_flat_dt_get_machine_name
-  metag: use common of_flat_dt_match_machine
-  mips: use common of_flat_dt_get_machine_name
-
- arch/arc/include/asm/mach_desc.h   |   1 -
- arch/arc/kernel/devtree.c          |  94 +++++--------------------
- arch/arc/kernel/setup.c            |   3 +-
- arch/arc/mm/init.c                 |   7 --
- arch/arm/kernel/devtree.c          |  58 ++++++----------
- arch/arm/mm/init.c                 |  13 ++--
- arch/arm64/kernel/setup.c          |  60 ++--------------
- arch/arm64/mm/init.c               |  24 ++-----
- arch/c6x/include/asm/setup.h       |   2 -
- arch/c6x/kernel/devicetree.c       |  29 --------
- arch/c6x/kernel/setup.c            |  13 +---
- arch/c6x/kernel/vmlinux.lds.S      |   6 --
- arch/metag/include/asm/mach/arch.h |   2 +-
- arch/metag/include/asm/prom.h      |   2 +-
- arch/metag/kernel/devtree.c        |  83 ++++++----------------
- arch/metag/kernel/setup.c          |   6 +-
- arch/metag/mm/init.c               |   9 ---
- arch/microblaze/kernel/prom.c      |  31 +--------
- arch/microblaze/kernel/setup.c     |   2 +-
- arch/mips/include/asm/prom.h       |   3 -
- arch/mips/kernel/prom.c            |  60 +---------------
- arch/openrisc/kernel/prom.c        |  70 +------------------
- arch/openrisc/kernel/setup.c       |   6 +-
- arch/powerpc/kernel/prom.c         |   9 ---
- arch/x86/kernel/devicetree.c       |  32 +++------
- arch/xtensa/kernel/setup.c         |  55 ++++-----------
- drivers/of/fdt.c                   | 138 ++++++++++++++++++++++++++++++++++++-
- include/linux/of_fdt.h             |  18 +++--
- 28 files changed, 256 insertions(+), 580 deletions(-)
-
+diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+index 376dc78..0db805c 100644
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -230,7 +230,7 @@ static void __init dtb_apic_setup(void)
+ static void __init x86_flattree_get_config(void)
+ {
+ 	u32 size, map_len;
+-	void *new_dtb;
++	struct boot_param_header *dt;
+ 
+ 	if (!initial_dtb)
+ 		return;
+@@ -238,24 +238,17 @@ static void __init x86_flattree_get_config(void)
+ 	map_len = max(PAGE_SIZE - (initial_dtb & ~PAGE_MASK),
+ 			(u64)sizeof(struct boot_param_header));
+ 
+-	initial_boot_params = early_memremap(initial_dtb, map_len);
+-	size = be32_to_cpu(initial_boot_params->totalsize);
++	dt = early_memremap(initial_dtb, map_len);
++	size = be32_to_cpu(dt->totalsize);
+ 	if (map_len < size) {
+-		early_iounmap(initial_boot_params, map_len);
+-		initial_boot_params = early_memremap(initial_dtb, size);
++		early_iounmap(dt, map_len);
++		dt = early_memremap(initial_dtb, size);
+ 		map_len = size;
+ 	}
+ 
+-	new_dtb = alloc_bootmem(size);
+-	memcpy(new_dtb, initial_boot_params, size);
+-	early_iounmap(initial_boot_params, map_len);
+-
+-	initial_boot_params = new_dtb;
+-
+-	/* root level address cells */
+-	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+-
+-	unflatten_device_tree();
++	initial_boot_params = dt;
++	unflatten_and_copy_device_tree();
++	early_iounmap(dt, map_len);
+ }
+ #else
+ static inline void x86_flattree_get_config(void) { }
 -- 
 1.8.1.2
