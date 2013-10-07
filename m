@@ -1,209 +1,34 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v3 00/19] ARM: at91: move to common clk framework
-Date: Mon, 07 Oct 2013 13:06:00 -0700
-Message-ID: <20131007200600.7445.23876@quantum>
-References: <1375937608-3773-1-git-send-email-b.brezillon@overkiz.com>
- <52134321.8000806@overkiz.com>
+From: Mark Salter <msalter@redhat.com>
+Subject: Re: [PATCH v2 01/29] c6x: use boot_command_line instead of private
+ c6x_command_line
+Date: Mon, 07 Oct 2013 16:12:29 -0400
+Message-ID: <1381176749.17503.62.camel@deneb.redhat.com>
+References: <1381163377-21044-1-git-send-email-robherring2@gmail.com>
+	 <1381163377-21044-2-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52134321.8000806@overkiz.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Boris BREZILLON <b.brezillon@overkiz.com>, Josh Wu <josh.wu@atmel.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Felipe Balbi <balbi@ti.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1381163377-21044-2-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, linux-c6x-dev@linux-c6x.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting boris brezillon (2013-08-20 03:21:21)
-> Hello Mike,
+On Mon, 2013-10-07 at 11:29 -0500, Rob Herring wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
 > 
-> Could you take a look at this patch series ?
+> Save some pointless copying of the kernel command line and just use
+> boot_command_line instead.
 > 
-> I'd like to have your opinion on some key points:
+> Also remove default_command_line as it is not referenced anywhere, and
+> the DT code already handles the default command line.
 > 
-> - at91 clk dt bindings
-> - in some clk_prepare (pll clks, main clk) callbacks I make use of 
-> wait_event to wait for an interrupt.
->    Should I do it this way or instead use the cpu_relax function ?
-
-wait_event requires a workqueue, which is fine if your work fits
-naturally into that model. Otherwise cpu_relax can be used with your own
-loop if you prefer, which seems to be a common busy-wait mechanism.
-
-How long do you expect to wait for your condition to change in hardware?
-How quickly do you want to respond to that condition once the interrupt
-has been handled?
-
-I don't really care but I guess others might have strong opinions.
-
-> - some clks define clk_prepare but not clk_enable (enabling work is done 
-> in clk_prepare).
-
-That's great, just make sure to provide .is_prepared for those clocks.
-Likewise if you populate .enable & .disable callbacks then also provide
-a .is_enabled callback.
-
->    Is it okay to leave this callback empty and rely on the default 
-> behaviour (enable count increment) ?
-
-Yes.
-
-The rest of my comments I'll put in replies to the patches.
-
-Thanks,
-Mike
-
-> - at91 clk implemetation in its whole
-> 
-> 
-> Best Regards,
-> 
-> Boris
-> 
-> On 08/08/2013 06:53, Boris BREZILLON wrote:
-> > Hello,
-> >
-> > This patch series is the 3rd version of the new at91 clock implementation
-> > (using common clk framework).
-> >
-> > Most of the clock provided by the PMC (Power Management Controller) are
-> > implemented :
-> > - main clock (main oscillator)
-> > - pll clocks
-> > - master clock
-> > - programmable clocks
-> > - utmi clock
-> > - peripheral clocks
-> > - system clocks
-> >
-> > This implementation is only compatible with device tree definition.
-> > The goal is to define the whole clock tree in the device tree.
-> >
-> > Please feel free to comment the dt bindinds.
-> >
-> > This patch series is based on linux-next and has been tested on sama5d31ek
-> > board using device tree. It compiles for other SoCs and both with and
-> > but it has not been tested (Richard, I did not add your Tested-by because
-> > a lot of things have changed since v2).
-> >
-> > BTW could other people test it on other boards (I only have a kizbox and
-> > a sama5d31ek dev kit).
-> >
-> > Best Regards,
-> > Boris
-> >
-> > Changes since v2:
-> >   - fix several bugs in clk implementations
-> >   - drop non-dt boards support
-> >   - split the series to ease review and tests:
-> >     * 1 patch series for new clk implementations (this series)
-> >     * 1 patch series to move each at91 SoC to common clk framework (coming soon)
-> >   - modify dt-bindings (add atmel,clk- prefix to atmel specific properties)
-> >   - add clk macros for dt-bindings
-> >   - add pmc framework (helper function to access pmc registers)
-> >   - add interrupt support to enable passive wait in clk_prepare functions
-> >
-> > Changes since v1:
-> >   - fix bugs in pll, programmable and system clock implementations
-> >     (wrong bit position).
-> >   - add usb clock configuration support (ohci and udc drivers +
-> >     clk_lookup for non dt boards)
-> >   - rework of the system clock interfaces (no need to define a parent clock,
-> >     system clock is a gate with no rate info)
-> >   - change system, peripheral and programmable clk dt bindings (1 master node
-> >     and multiple child nodes each defining a system/peripheral or prog clock)
-> >   - fix bugs in sama5 dt definition
-> >
-> > Boris BREZILLON (19):
-> >    ARM: at91: move at91_pmc.h to include/linux/clk/at91_pmc.h
-> >    ARM: at91: add Kconfig options for common clk support
-> >    clk: at91: add PMC base support
-> >    clk: at91: add PMC macro file for dt definitions
-> >    clk: at91: add PMC main clock
-> >    clk: at91: add PMC pll clocks
-> >    clk: at91: add pll id macros for pll dt bindings
-> >    clk: at91: add PMC master clock
-> >    clk: at91: add PMC system clocks
-> >    ARM: at91/dt: add system clk id definitions in dt-bindings include
-> >      dir
-> >    clk: at91: add PMC peripheral clocks
-> >    clk: at91: add peripheral clk macros for peripheral clk dt bindings
-> >    clk: at91: add PMC programmable clocks
-> >    clk: at91: add PMC utmi clock
-> >    clk: at91: add PMC usb clock
-> >    clk: at91: add PMC smd clock
-> >    clk: at91: add PMC clk device tree binding doc.
-> >    ARM: at91: move pit timer to common clk framework
-> >    ARM: at91: add new compatible strings for pmc driver
-> >
-> >   .../devicetree/bindings/clock/at91-clock.txt       |  312 ++++++++++++
-> >   arch/arm/mach-at91/Kconfig                         |   44 ++
-> >   arch/arm/mach-at91/Kconfig.non_dt                  |    6 +
-> >   arch/arm/mach-at91/Makefile                        |    2 +-
-> >   arch/arm/mach-at91/at91rm9200.c                    |    2 +-
-> >   arch/arm/mach-at91/at91sam9260.c                   |    2 +-
-> >   arch/arm/mach-at91/at91sam9261.c                   |    2 +-
-> >   arch/arm/mach-at91/at91sam9263.c                   |    2 +-
-> >   arch/arm/mach-at91/at91sam926x_time.c              |   14 +-
-> >   arch/arm/mach-at91/at91sam9g45.c                   |    2 +-
-> >   arch/arm/mach-at91/at91sam9n12.c                   |    2 +-
-> >   arch/arm/mach-at91/at91sam9rl.c                    |    2 +-
-> >   arch/arm/mach-at91/at91sam9x5.c                    |    2 +-
-> >   arch/arm/mach-at91/clock.c                         |    8 +-
-> >   arch/arm/mach-at91/generic.h                       |    3 +-
-> >   arch/arm/mach-at91/pm.c                            |    2 +-
-> >   arch/arm/mach-at91/pm_slowclock.S                  |    2 +-
-> >   arch/arm/mach-at91/sama5d3.c                       |    2 +-
-> >   arch/arm/mach-at91/setup.c                         |    8 +-
-> >   drivers/clk/Makefile                               |    1 +
-> >   drivers/clk/at91/Makefile                          |   12 +
-> >   drivers/clk/at91/clk-main.c                        |  171 +++++++
-> >   drivers/clk/at91/clk-master.c                      |  386 +++++++++++++++
-> >   drivers/clk/at91/clk-peripheral.c                  |  401 ++++++++++++++++
-> >   drivers/clk/at91/clk-pll.c                         |  506 ++++++++++++++++++++
-> >   drivers/clk/at91/clk-plldiv.c                      |  137 ++++++
-> >   drivers/clk/at91/clk-programmable.c                |  419 ++++++++++++++++
-> >   drivers/clk/at91/clk-smd.c                         |  171 +++++++
-> >   drivers/clk/at91/clk-system.c                      |  191 ++++++++
-> >   drivers/clk/at91/clk-usb.c                         |  323 +++++++++++++
-> >   drivers/clk/at91/clk-utmi.c                        |  161 +++++++
-> >   drivers/clk/at91/pmc.c                             |  387 +++++++++++++++
-> >   drivers/clk/at91/pmc.h                             |  111 +++++
-> >   drivers/usb/gadget/atmel_usba_udc.c                |    2 +-
-> >   .../dt-bindings/clk/at91/at91rm9200/clk-system.h   |   16 +
-> >   .../dt-bindings/clk/at91/at91sam9261/clk-system.h  |   15 +
-> >   .../clk/at91/at91sam9x5/clk-peripheral.h           |   15 +
-> >   include/dt-bindings/clk/at91/common/clk-pll.h      |   13 +
-> >   include/dt-bindings/clk/at91/common/clk-system.h   |   21 +
-> >   include/dt-bindings/clk/at91/common/pmc.h          |   20 +
-> >   .../include/mach => include/linux/clk}/at91_pmc.h  |    4 +-
-> >   41 files changed, 3882 insertions(+), 20 deletions(-)
-> >   create mode 100644 Documentation/devicetree/bindings/clock/at91-clock.txt
-> >   create mode 100644 drivers/clk/at91/Makefile
-> >   create mode 100644 drivers/clk/at91/clk-main.c
-> >   create mode 100644 drivers/clk/at91/clk-master.c
-> >   create mode 100644 drivers/clk/at91/clk-peripheral.c
-> >   create mode 100644 drivers/clk/at91/clk-pll.c
-> >   create mode 100644 drivers/clk/at91/clk-plldiv.c
-> >   create mode 100644 drivers/clk/at91/clk-programmable.c
-> >   create mode 100644 drivers/clk/at91/clk-smd.c
-> >   create mode 100644 drivers/clk/at91/clk-system.c
-> >   create mode 100644 drivers/clk/at91/clk-usb.c
-> >   create mode 100644 drivers/clk/at91/clk-utmi.c
-> >   create mode 100644 drivers/clk/at91/pmc.c
-> >   create mode 100644 drivers/clk/at91/pmc.h
-> >   create mode 100644 include/dt-bindings/clk/at91/at91rm9200/clk-system.h
-> >   create mode 100644 include/dt-bindings/clk/at91/at91sam9261/clk-system.h
-> >   create mode 100644 include/dt-bindings/clk/at91/at91sam9x5/clk-peripheral.h
-> >   create mode 100644 include/dt-bindings/clk/at91/common/clk-pll.h
-> >   create mode 100644 include/dt-bindings/clk/at91/common/clk-system.h
-> >   create mode 100644 include/dt-bindings/clk/at91/common/pmc.h
-> >   rename {arch/arm/mach-at91/include/mach => include/linux/clk}/at91_pmc.h (98%)
-> >
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+> Cc: Mark Salter <msalter@redhat.com>
+> Cc: Aurelien Jacquiot <a-jacquiot@ti.com>
+> Cc: linux-c6x-dev@linux-c6x.org
+> Reviewed-by: Grant Likely <grant.likely@linaro.org>
+> ---
+Tested and
+Acked-by: Mark Salter <msalter@redhat.com>
