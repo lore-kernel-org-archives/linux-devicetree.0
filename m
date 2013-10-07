@@ -1,73 +1,69 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v2 03/12] pwm-backlight: Track enable state
-Date: Mon,  7 Oct 2013 13:37:37 +0200
-Message-ID: <1381145866-445-4-git-send-email-treding@nvidia.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 01/12] pwm-backlight: Improve readability
+Date: Mon,  7 Oct 2013 13:37:35 +0200
+Message-ID: <1381145866-445-2-git-send-email-treding@nvidia.com>
 References: <1381145866-445-1-git-send-email-treding@nvidia.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381145866-445-1-git-send-email-treding@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Guan Xuetao <gxt@mprc.pku.edu.cn>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381145866-445-1-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guan Xuetao <gxt-TG0Ac1+ktVePQbnJrJN+5g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Follow up patches will add support for more complex means of powering
-the backlight on and off such as using a regulator. To prevent calls to
-the regulator API from becoming unbalanced, keep track of the enabled
-state internally.
+Add more blank lines to increase readability. While at it, remove a
+trailing blank line at the end of the file.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/video/backlight/pwm_bl.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/video/backlight/pwm_bl.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index ab9d5e6..4053efb 100644
+index 1fea627..774bce3 100644
 --- a/drivers/video/backlight/pwm_bl.c
 +++ b/drivers/video/backlight/pwm_bl.c
-@@ -27,6 +27,7 @@ struct pwm_bl_data {
- 	unsigned int		period;
- 	unsigned int		lth_brightness;
- 	unsigned int		*levels;
-+	bool			enabled;
- 	int			(*notify)(struct device *,
- 					  int brightness);
- 	void			(*notify_after)(struct device *,
-@@ -40,6 +41,9 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb, int brightness,
- {
- 	int duty_cycle, err;
- 
-+	if (pb->enabled)
-+		return;
+@@ -269,8 +269,10 @@ static int pwm_backlight_remove(struct platform_device *pdev)
+ 	backlight_device_unregister(bl);
+ 	pwm_config(pb->pwm, 0, pb->period);
+ 	pwm_disable(pb->pwm);
 +
- 	if (pb->levels) {
- 		duty_cycle = pb->levels[brightness];
- 		max = pb->levels[max];
-@@ -52,12 +56,18 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb, int brightness,
- 
- 	pwm_config(pb->pwm, duty_cycle, pb->period);
- 	pwm_enable(pb->pwm);
-+	pb->enabled = true;
+ 	if (pb->exit)
+ 		pb->exit(&pdev->dev);
++
+ 	return 0;
  }
  
- static void pwm_backlight_power_off(struct pwm_bl_data *pb)
- {
-+	if (!pb->enabled)
-+		return;
+@@ -282,10 +284,13 @@ static int pwm_backlight_suspend(struct device *dev)
+ 
+ 	if (pb->notify)
+ 		pb->notify(pb->dev, 0);
 +
  	pwm_config(pb->pwm, 0, pb->period);
  	pwm_disable(pb->pwm);
 +
-+	pb->enabled = false;
+ 	if (pb->notify_after)
+ 		pb->notify_after(pb->dev, 0);
++
+ 	return 0;
  }
  
- static int pwm_backlight_update_status(struct backlight_device *bl)
-@@ -216,6 +226,7 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 	pb->check_fb = data->check_fb;
- 	pb->exit = data->exit;
- 	pb->dev = &pdev->dev;
-+	pb->enabled = false;
+@@ -294,6 +299,7 @@ static int pwm_backlight_resume(struct device *dev)
+ 	struct backlight_device *bl = dev_get_drvdata(dev);
  
- 	pb->pwm = devm_pwm_get(&pdev->dev, NULL);
- 	if (IS_ERR(pb->pwm)) {
+ 	backlight_update_status(bl);
++
+ 	return 0;
+ }
+ #endif
+@@ -317,4 +323,3 @@ module_platform_driver(pwm_backlight_driver);
+ MODULE_DESCRIPTION("PWM based Backlight Driver");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("platform:pwm-backlight");
+-
 -- 
 1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
