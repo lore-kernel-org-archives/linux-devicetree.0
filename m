@@ -1,133 +1,106 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 2/6] ARM: OMAP2+: cleaned-up DT support of various
- ECC schemes
-Date: Mon, 7 Oct 2013 12:35:48 +0100
-Message-ID: <20131007113547.GB15365@e106331-lin.cambridge.arm.com>
-References: <1380916188-24206-1-git-send-email-pekon@ti.com>
- <1380916188-24206-3-git-send-email-pekon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1380916188-24206-3-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: "robherring2@gmail.com" <robherring2@gmail.com>, "olof@lixom.net" <olof@lixom.net>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "balbi@ti.com" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 00/12] pwm-backlight: Add GPIO and power supply support
+Date: Mon,  7 Oct 2013 13:37:34 +0200
+Message-ID: <1381145866-445-1-git-send-email-treding@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Guan Xuetao <gxt-TG0Ac1+ktVePQbnJrJN+5g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 04, 2013 at 08:49:44PM +0100, Pekon Gupta wrote:
-> OMAP NAND driver support multiple ECC scheme, which can used in following
-> different flavours, depending on in-build Hardware engines supported by SoC.
-> 
-> +---------------------------------------+---------------+---------------+
-> | ECC scheme                            |ECC calculation|Error detection|
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_HAM1_CODE_HW                  |H/W (GPMC)     |S/W            |
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_BCH8_CODE_HW_DETECTION_SW     |H/W (GPMC)     |S/W            |
-> |(requires CONFIG_MTD_NAND_ECC_BCH)     |               |               |
-> +---------------------------------------+---------------+---------------+
-> |OMAP_ECC_BCH8_CODE_HW                  |H/W (GPMC)     |H/W (ELM)      |
-> |(requires CONFIG_MTD_NAND_OMAP_BCH &&  |               |               |
-> | ti,elm-id in DT)                      |               |               |
-> +---------------------------------------+---------------+---------------+
-> To optimize footprint of omap2-nand driver, selection of some ECC schemes
-> also require enabling following Kconfigs, in addition to setting appropriate
-> DT bindings
-> - Kconfig:CONFIG_MTD_NAND_ECC_BCH        error detection done in software
-> - Kconfig:CONFIG_MTD_NAND_OMAP_BCH       error detection done by h/w engine
-> 
-> DT binding updates in this patch are:
-> - ti,elm-id: replaces elm_id
-> - ti,nand-ecc-opts: supported values ham1, bch4, and bch8
-> 	selection of h/w or s/w implementation depends on ti,elm-id
-> 
-> Signed-off-by: Pekon Gupta <pekon@ti.com>
-> ---
->  .../devicetree/bindings/mtd/gpmc-nand.txt          |  8 +++-
->  arch/arm/mach-omap2/gpmc.c                         | 47 ++++++++++++++++------
->  include/linux/platform_data/mtd-nand-omap2.h       | 14 +++++--
->  3 files changed, 52 insertions(+), 17 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> index 25ee232..7785666 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> @@ -36,8 +36,12 @@ Optional properties:
->  		"prefetch-dma"		Prefetch enabled sDMA mode
->  		"prefetch-irq"		Prefetch enabled irq mode
->  
-> - - elm_id:	Specifies elm device node. This is required to support BCH
-> - 		error correction using ELM module.
-> + - elm_id:	<deprecated> use "ti,elm-id" instead
-> + - ti,elm-id:	Specifies pHandle of the ELM devicetree node.
+This series adds the ability to specify a GPIO and a power supply to
+enable a backlight.
 
-s/pHandle/phandle/
+Patch 1 adds some blank lines to make the code look less cluttered in
+various places.
 
-> +		ELM is an on-chip hardware engine on TI SoC which is used for
-> +		locating ECC errors for BCHx algorithms. SoC devices which have
-> +		ELM hardware engines should specify this device node in .dtsi
-> +		Using ELM for ECC error correction frees some CPU cycles.
->  
->  For inline partiton table parsing (optional):
->  
-> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-> index 1c45b72..5a607fa 100644
-> --- a/arch/arm/mach-omap2/gpmc.c
-> +++ b/arch/arm/mach-omap2/gpmc.c
-> @@ -1341,12 +1341,6 @@ static void __maybe_unused gpmc_read_timings_dt(struct device_node *np,
->  
->  #ifdef CONFIG_MTD_NAND
->  
-> -static const char * const nand_ecc_opts[] = {
-> -	[OMAP_ECC_HAM1_CODE_HW]			= "ham1",
-> -	[OMAP_ECC_BCH4_CODE_HW]			= "bch4",
-> -	[OMAP_ECC_BCH8_CODE_HW]			= "bch8",
-> -};
-> -
->  static const char * const nand_xfer_types[] = {
->  	[NAND_OMAP_PREFETCH_POLLED]		= "prefetch-polled",
->  	[NAND_OMAP_POLLED]			= "polled",
-> @@ -1361,6 +1355,8 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
->  	const char *s;
->  	struct gpmc_timings gpmc_t;
->  	struct omap_nand_platform_data *gpmc_nand_data;
-> +	const __be32 *phandle;
+Patch 2 refactors the power on and power off sequences into separate
+functions in preparation for subsequent patches.
 
-I don't think you need this. With of_parse_phandle you should never need
-to see the raw phandle value.
+Patch 3 adds functionality to track the on/off state of the backlight.
+This is required by subsequent patches to make sure that enabling and
+disabling used resources remains balanced.
 
-> +	int lenp;
->  
->  	if (of_property_read_u32(child, "reg", &val) < 0) {
->  		dev_err(&pdev->dev, "%s has no 'reg' property\n",
-> @@ -1376,12 +1372,39 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
->  	gpmc_nand_data->cs = val;
->  	gpmc_nand_data->of_node = child;
->  
-> -	if (!of_property_read_string(child, "ti,nand-ecc-opt", &s))
-> -		for (val = 0; val < ARRAY_SIZE(nand_ecc_opts); val++)
-> -			if (!strcasecmp(s, nand_ecc_opts[val])) {
-> -				gpmc_nand_data->ecc_opt = val;
-> -				break;
-> -			}
-> +	/* Detect availability of ELM module */
-> +	phandle = of_get_property(child, "ti,elm-id", &lenp);
-> +	if ((phandle == NULL) || (lenp != sizeof(void *))) {
-> +		pr_warn("%s: ti,elm-id property not found\n", __func__);
-> +		gpmc_nand_data->elm_of_node = NULL;
-> +	} else {
-> +		gpmc_nand_data->elm_of_node =
-> +				of_find_node_by_phandle(be32_to_cpup(phandle));
-> +	}
+Patch 4 adds an optional GPIO to enable a backlight. This patch only
+includes the field within the platform data so that it can be properly
+setup before actually being put to use.
 
-Use of_parse_handle rather than open-coding it:
+Patches 5 to 9 convert all users of the pwm-backlight driver to use the
+new field. For most of them, this just initializes the field to -1,
+marking the field as unused.
 
-	gpmc_nand_data->elm_of_node = 
-		of_parse_phandle(child, "ti,elm-id", 0);
+Patch 10 uses the new field within the pwm-backlight driver and at the
+same time allows it to be parsed from device tree.
 
-Was "elm_id" ever handled previously? I don't see any code handling it
-being remove or modified.
+Patch 11 implements support for an optional power supply. This relies on
+the regulator core to return a dummy regulator when no supply has been
+otherwise setup so the driver doesn't have to handle that specially nor
+require all users to be updated.
 
-Thanks,
-Mark.
+Patch 12 adds a way to keep a backlight turned off at boot. This is
+useful when hooking up a backlight with a subsystem such as DRM which
+has more explicit semantics as to when a backlight should be turned on.
+
+Due to the dependencies within the series, I propose to take all these
+patches through the PWM tree, so I'll need acks from OMAP, PXA, Samsung,
+shmobile and Unicore32 maintainers.
+
+Thierry
+
+Thierry Reding (12):
+  pwm-backlight: Improve readability
+  pwm-backlight: Refactor backlight power on/off
+  pwm-backlight: Track enable state
+  pwm-backlight: Add optional enable GPIO
+  ARM: OMAP: Initialize PWM backlight enable_gpio field
+  ARM: pxa: Initialize PWM backlight enable_gpio field
+  ARM: SAMSUNG: Initialize PWM backlight enable_gpio field
+  ARM: shmobile: Initialize PWM backlight enable_gpio field
+  unicore32: Initialize PWM backlight enable_gpio field
+  pwm-backlight: Use new enable_gpio field
+  pwm-backlight: Add power supply support
+  pwm-backlight: Allow backlight to remain disabled on boot
+
+ .../bindings/video/backlight/pwm-backlight.txt     |   8 ++
+ arch/arm/mach-omap2/board-zoom-peripherals.c       |   1 +
+ arch/arm/mach-pxa/cm-x300.c                        |   1 +
+ arch/arm/mach-pxa/colibri-pxa270-income.c          |   1 +
+ arch/arm/mach-pxa/ezx.c                            |   1 +
+ arch/arm/mach-pxa/hx4700.c                         |   1 +
+ arch/arm/mach-pxa/lpd270.c                         |   1 +
+ arch/arm/mach-pxa/magician.c                       |   1 +
+ arch/arm/mach-pxa/mainstone.c                      |   1 +
+ arch/arm/mach-pxa/mioa701.c                        |   1 +
+ arch/arm/mach-pxa/palm27x.c                        |   1 +
+ arch/arm/mach-pxa/palmtc.c                         |  35 +----
+ arch/arm/mach-pxa/palmte2.c                        |   1 +
+ arch/arm/mach-pxa/pcm990-baseboard.c               |   1 +
+ arch/arm/mach-pxa/raumfeld.c                       |   1 +
+ arch/arm/mach-pxa/tavorevb.c                       |   2 +
+ arch/arm/mach-pxa/viper.c                          |   1 +
+ arch/arm/mach-pxa/z2.c                             |   2 +
+ arch/arm/mach-pxa/zylonite.c                       |   1 +
+ arch/arm/mach-s3c24xx/mach-h1940.c                 |   1 +
+ arch/arm/mach-s3c24xx/mach-rx1950.c                |   1 +
+ arch/arm/mach-s3c64xx/mach-crag6410.c              |   1 +
+ arch/arm/mach-s3c64xx/mach-hmt.c                   |   1 +
+ arch/arm/mach-s3c64xx/mach-smartq.c                |   1 +
+ arch/arm/mach-s3c64xx/mach-smdk6410.c              |   1 +
+ arch/arm/mach-s5p64x0/mach-smdk6440.c              |   1 +
+ arch/arm/mach-s5p64x0/mach-smdk6450.c              |   1 +
+ arch/arm/mach-s5pc100/mach-smdkc100.c              |   1 +
+ arch/arm/mach-s5pv210/mach-smdkv210.c              |   1 +
+ arch/arm/mach-shmobile/board-armadillo800eva.c     |   1 +
+ arch/arm/plat-samsung/dev-backlight.c              |   5 +
+ arch/unicore32/kernel/puv3-nb0916.c                |   1 +
+ drivers/video/backlight/pwm_bl.c                   | 149 ++++++++++++++++-----
+ include/linux/pwm_backlight.h                      |   7 +
+ 34 files changed, 171 insertions(+), 64 deletions(-)
+
+-- 
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
