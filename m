@@ -1,69 +1,45 @@
 From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v6 0/3] DWC3 USB support for Qualcomm platform
-Date: Mon,  7 Oct 2013 10:44:54 +0300
-Message-ID: <1381131897-13910-1-git-send-email-iivanov@mm-sol.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] usb: dwc3: msm: Add device tree binding
+ information
+Date: Mon, 07 Oct 2013 10:57:04 +0300
+Message-ID: <1381132624.24031.45.camel@iivanov-dev.int.mm-sol.com>
+References: <1377091786-5613-1-git-send-email-iivanov@mm-sol.com>
+	 <1377091786-5613-2-git-send-email-iivanov@mm-sol.com>
+	 <20131004143151.GD16059@radagast>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131004143151.GD16059@radagast>
+Sender: linux-omap-owner@vger.kernel.org
 To: balbi@ti.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-Hi,
+Hi Felipe,
 
-This is sixth version of MSM USB3 drivers patches.
+On Fri, 2013-10-04 at 09:31 -0500, Felipe Balbi wrote: 
+> On Wed, Aug 21, 2013 at 04:29:44PM +0300, Ivan T. Ivanov wrote:
+> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > 
+> > MSM USB3.0 core wrapper consist of USB3.0 IP from Synopsys
+> > (SNPS) and HS, SS PHY's control and configuration registers.
+> > 
+> > It could operate in device mode (SS, HS, FS) and host
+> > mode (SS, HS, FS, LS).
+> > 
+> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> 
+> these patches were sent *ages* and nobody from DT mailing list has
+> reviewed. Unless someone steps up now, I'll be queueing these patches
+> next week.
+> 
 
-Changes since v5:
-* devicetree bindings descriptions fixes 
-* Fixed NULL pointer dereferences in dev_prink's
-* Removed extra space in "sleep " clock name
+Please take v6 of the patch set, which I have just posted. 
+They contain several fixes and I have also added ACK from
+Stephen Warren for DT part.
 
-Changes since v4:
-* Substitute references to "wc3" with just "dw" in USB PHY drivers and
-  file names. This is to indicate that the PHY's are DesignWare, but
-  not necessarily related to DWC3 IP core. 
+Thanks, 
+Ivan
 
-Changes since v3:
-* Remove "_clk" suffix from clock names
-* Clarify required child node for qcom,dwc3
-* Fix comments in functions headers
-* Use dbg instead err in drivers probe functions.
-
-Changes since v2:
-* Several improvements in devicetree bindings description
-* Disable regulators in glue layer if there is error during 
-  ioremap.
-
-Changes since first version:
-* Split devicetree bindings description file to separate patch
-* Address comments for device bindings description
-* Fix typo in 'gdsc' requlator name.
-
-These patches add basic support for USB3.0 controllers found
-on MSM platforms. USB3.0 core is based on Synopsys DesignWare 
-SuperSpeed IP. 
-
-Generated on top of Felipe 'testing' branch.
-
-Ivan T. Ivanov (3):
-  usb: dwc3: msm: Add device tree binding information
-  usb: phy: Add Qualcomm SS-USB and HS-USB drivers for DW PHY's
-  usb: dwc3: Add Qualcomm DWC3 glue layer driver
-
- .../devicetree/bindings/usb/msm-ssusb.txt          |  105 ++++++
- drivers/usb/dwc3/Kconfig                           |    8 +
- drivers/usb/dwc3/Makefile                          |    1 +
- drivers/usb/dwc3/dwc3-msm.c                        |  168 +++++++++
- drivers/usb/phy/Kconfig                            |   11 +
- drivers/usb/phy/Makefile                           |    2 +
- drivers/usb/phy/phy-msm-dw-hs.c                    |  329 +++++++++++++++++
- drivers/usb/phy/phy-msm-dw-ss.c                    |  375 ++++++++++++++++++++
- 8 files changed, 999 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/msm-ssusb.txt
- create mode 100644 drivers/usb/dwc3/dwc3-msm.c
- create mode 100644 drivers/usb/phy/phy-msm-dw-hs.c
- create mode 100644 drivers/usb/phy/phy-msm-dw-ss.c
-
--- 
-1.7.9.5
