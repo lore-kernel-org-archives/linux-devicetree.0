@@ -1,54 +1,65 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: new cpu iteration code...
-Date: Fri, 04 Oct 2013 18:27:46 +0100
-Message-ID: <20131004172746.69301C427E9@trevor.secretlab.ca>
-References: <20130922.162915.1269060096375052591.davem@davemloft.net> <CAL_JsqKNVqJbn559ruvFHg+FVGt8ou4v_Ntf-HphwxCNXQ7GfQ@mail.gmail.com> <CACxGe6soxNN6TjDw9h15c39FHzyGzY1OZX9cZ8FRQ_k4PinYvw@mail.gmail.com> <20131003.172451.54508059414505899.davem@davemloft.net> <524E99B0.9070805@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <524E99B0.9070805-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v7 5/6] ARM: dts: AM33xx: updated default ECC scheme in
+ nand-ecc-opt
+Date: Mon, 7 Oct 2013 12:14:02 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EA1F483@DBDE04.ent.ti.com>
+References: <1380916188-24206-1-git-send-email-pekon@ti.com>
+ <1380916188-24206-6-git-send-email-pekon@ti.com>
+ <20131007114029.GC15365@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131007114029.GC15365@e106331-lin.cambridge.arm.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>
+Cc: "robherring2@gmail.com" <robherring2@gmail.com>, "olof@lixom.net" <olof@lixom.net>, "dedekind1@gmail.com" <dedekind1@gmail.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 04 Oct 2013 11:34:24 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi David,
+> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> > On Fri, Oct 04, 2013 at 08:49:47PM +0100, Pekon Gupta wrote:
+> > DT property values for OMAP based gpmc-nand have been updated
+> > to match changes in commit:
+> > 	6faf096 ARM: OMAP2+: cleaned-up DT support of various ECC
+> schemes
+> > Refer: Documentation/devicetree/bindings/mtd/gpmc-nand.txt
 > 
-> I tested this on ARM platform(Vexpress TC2). You can add my tested by.
+Sorry that's an old commit. I probably missed out updating the commit log.
+So please ignore it here, I should remove that from commit log.
+
+
+> Doesn't this mean these dts were broken between the changes to the
+> driver and the changes to the dts?
 > 
-> Regards,
-> Sudeep
+But the DTS updates are kept separate from driver updates because
+- DTS updates go into "Benoit's tree" or "Tony's tree"
+- whereas driver updates go into MTD tree.
+So, it was suggested in earlier patch revisions that I keep the driver
+and the DTS patches separate, so that there is no merge conflict
+between the trees when they are finally accepted.
+
+
+> I think the existing properties need to continue to be supoprted for
+> backwards compatibility. The dts can be fixed up to have the preferred
+> binding style, but they shouldn't _have_ to be modified to continue to
+> function...
 > 
-> On 03/10/13 22:24, David Miller wrote:
-> > 
-> > Can people on powerpc/arm/etc. give this a spin?  This works on my
-> > T4-2 sparc64 box.
-> > 
-> > --------------------
-> > of: Make cpu node handling more portable.
-> > 
-> > Use for_each_node_by_type() to iterate all cpu nodes in the
-> > system.
-> > 
-> > Provide and overridable function arch_find_n_match_cpu_physical_id,
-> > which sees if the given device node matches 'cpu' and if so sets
-> > '*thread' when non-NULL to the cpu thread number within the core.
-> > 
-> > The default implementation behaves the same as the existing code.
-> > 
-> > Add a sparc64 implementation.
-> > 
-> > Signed-off-by: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-> > 
-> Tested-by: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
+However, there should be a way to remove legacy code which can
+no longer be maintained. Here following ecc-schemes are such
+legacy code, which are neither supported nor encouraged
+to use since long time.
+- OMAP_ECC_CODE_HAMMING_HW,
+- OMAP_ECC_CODE_HAMMING_DEFAULT,
+- OMAP_ECC_CODE_HAMMING_HW_ROMCODE
 
-I've applied it to my tree and I'll keep an eye out if it causes any
-breakage on PowerPC or ARM.
+Also backward compatibility is maintained by keeping a common
+symbol for all 3 above implementations OMAP_ECC_CODE_HAM1_HW
+I don't think there is a point to continue keeping these  symbols
+in kernel driver if they are unused, and make driver bulky and unreadable.
 
-Can someone from PowerPC land give it a spin? I don't have any powerpc
-hardware anymore.
+In actual it shouldn't matter to user what symbols I use inside
+the driver, what matters is backward compatibility right ?
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+with regards, pekon
