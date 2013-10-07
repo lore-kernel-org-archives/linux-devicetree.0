@@ -1,37 +1,38 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 1/1] ARM: dts: omap3:  Adapt USB OTG to generic PHY framework
-Date: Mon, 7 Oct 2013 16:49:41 +0300
-Message-ID: <5252BBF5.1060406@ti.com>
-References: <1381152493-28055-1-git-send-email-rogerq@ti.com> <1381152493-28055-2-git-send-email-rogerq@ti.com> <5252B9C7.5040109@linutronix.de>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V2] clk: palmas: add clock driver for palmas
+Date: Mon, 7 Oct 2013 19:53:29 +0530
+Message-ID: <5252C3E1.5010509@nvidia.com>
+References: <1381154751-4565-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5252B9C7.5040109@linutronix.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, kishon@ti.com
-Cc: bcousson@baylibre.com, pavel@ucw.cz, aaro.koskinen@iki.fi, marek@goldelico.com, balbi@ti.com, tony@atomide.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381154751-4565-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: "mturquette@linaro.org" <mturquette@linaro.org>, "broonie@linaro.org" <broonie@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2013 04:40 PM, Sebastian Andrzej Siewior wrote:
-> On 10/07/2013 03:28 PM, Roger Quadros wrote:
->> The generic PHY framewrok expects different properties than the
->> old USB PHY framework. Supply those properties.
->>
->> Fixes USB OTG port on GAT04 and N900 after the Generic PHY framework was
->> merged in greg/usb-next. [1]
-> 
-> Would it be much pain (and do we want this at all) to add a fallback
-> into the kernel or at least a printk pointing out to update the .dts
-> for two releases or so? So the user does not need to spent hours to
-> figure out why it suddenly stopped working.
-> 
+On Monday 07 October 2013 07:35 PM, Laxman Dewangan wrote:
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -43,3 +43,5 @@ obj-$(CONFIG_COMMON_CLK_SI5351) += clk-si5351.o
+>   obj-$(CONFIG_COMMON_CLK_S2MPS11) += clk-s2mps11.o
+>   obj-$(CONFIG_CLK_TWL6040)	+= clk-twl6040.o
+>   obj-$(CONFIG_CLK_PPC_CORENET)	+= clk-ppc-corenet.o
+> +obj-$(CONFIG_COMMON_CLK_PALMAS)	+= clk-palmas.o
+> +obj-y += clk-test.o
+>
 
-I agree with you. 
+Sorry, silly mistake, the line
 
-Also, figuring out which kernel configs to enable for
-USB OTG to work on OMAP is a pain in itself to the user.
++obj-y += clk-test.o
 
-cheers,
--roger
+is not require. This was done for testing only.
+
+I will respin the patch but wait for some more feedback if any to add on 
+next version.
+
+Thanks,
+Laxman
 
