@@ -1,121 +1,173 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V3] ARM: OMAP3: Fix hardware detection for omap3630 when booted with device tree
-Date: Mon, 7 Oct 2013 15:43:49 -0500
-Message-ID: <1381178629-13488-1-git-send-email-nm@ti.com>
-References: <20131007192009.GA8949@atomide.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: sunxi: dts: Add support for the
+ cubieboard3, the CubieTruck
+Date: Mon, 7 Oct 2013 22:44:09 +0200
+Message-ID: <20131007204409.GB3041@lukather>
+References: <1380986247-29112-1-git-send-email-oliver+list@schinagl.nl>
+ <1380986247-29112-2-git-send-email-oliver+list@schinagl.nl>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131007192009.GA8949@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Felipe <balbi@ti.com>, Olof Johansson <olof@lixom.net>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBUF2ZSJAKGQEANWZFNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1380986247-29112-2-git-send-email-oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SoC family definitions at the moment are reactive to board needs
-as a result, beagle-xm would matchup with ti,omap3 which invokes
-omap3430_init_early instead of omap3630_init_early. Obviously, this is
-the wrong behavior.
 
-With clock node dts conversion, we get the following warnings as a
-result and 3630 based platforms fails to boot (uart4 clocks are only
-present in OMAP3630 and not present in OMAP3430):
+--+g7M9IMkV8truYOl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-...
-omap_hwmod: uart4: cannot clk_get main_clk uart4_fck
-omap_hwmod: uart4: cannot _init_clocks
+Hi Oliver,
 
-WARNING: CPU: 0 PID: 1 at arch/arm/mach-omap2/omap_hwmod.c:2434
-_init+0x6c/0x80()
-omap_hwmod: uart4: couldn't init clocks
-...
+On Sat, Oct 05, 2013 at 05:17:27PM +0200, oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org wrote:
+> From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>=20
+> Cubieboard3, CT
 
-WARNING: CPU: 0 PID: 1 at arch/arm/mach-omap2/omap_hwmod.c:2126
-_enable+0x254/0x280()
-omap_hwmod: timer12: enabled state can only be entered from
-initialized, idle, or disabled state
-...
+Please change the commit log to something meaningful.
 
-WARNING: CPU: 0 PID: 46 at arch/arm/mach-omap2/omap_hwmod.c:2224
-_idle+0xd4/0xf8()
-omap_hwmod: timer12: idle state can only be entered from enabled state
+> Signed-off-by: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile                 |  1 +
+>  arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 60 ++++++++++++++++++++++++=
+++++++
+>  2 files changed, 61 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+>=20
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index cc0f1fb..171e6c7 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -232,6 +232,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D \
+>  	sun5i-a13-olinuxino.dtb \
+>  	sun6i-a31-colombus.dtb \
+>  	sun7i-a20-cubieboard2.dtb \
+> +	sun7i-a20-cubietruck.dtb \
+>  	sun7i-a20-olinuxino-micro.dtb
+>  dtb-$(CONFIG_ARCH_TEGRA) +=3D tegra20-harmony.dtb \
+>  	tegra20-iris-512.dtb \
+> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/d=
+ts/sun7i-a20-cubietruck.dts
+> new file mode 100644
+> index 0000000..0167afe
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+> @@ -0,0 +1,60 @@
+> +/*
+> + * Copyright 2013 Oliver Schinagl
+> + *
+> + * Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/dts-v1/;
+> +/include/ "sun7i-a20.dtsi"
+> +
+> +/ {
+> +	model =3D "Cubietech Cubietruck";
+> +	compatible =3D "cubietech,cubietech", "allwinner,sun7i-a20";
 
-WARNING: CPU: 0 PID: 1 at arch/arm/mach-omap2/omap_hwmod.c:2126
-_enable+0x254/0x280()
-omap_hwmod: uart4: enabled state can only be entered from
-initialized, idle, or disabled state
+cubietech,cubietruck :)
 
-So, add specific compatiblity for 3630 to allow match for Beagle-XM
-platform.
+> +
+> +	soc@01c00000 {
+> +		pinctrl@01c20800 {
+> +			led_pins_cubietruck: led_pins@0 {
+> +				allwinner,pins =3D "PH7", "PH11", "PH20", "PH21";
+> +				allwinner,function =3D "gpio_out";
+> +				allwinner,drive =3D <0>;
+> +				allwinner,pull =3D <0>;
+> +			};
+> +		};
+> +
+> +		uart0: serial@01c28000 {
+> +			pinctrl-names =3D "default";
+> +			pinctrl-0 =3D <&uart0_pins_a>;
+> +			status =3D "okay";
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&led_pins_cubietruck>;
+> +
+> +		blue {
+> +			label =3D "cubietruck:blue:usr";
+> +			gpios =3D <&pio 7 21 0>;
+> +		};
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
+Newline
 
-Changes in V3 (since v2):
-	- Fix typo in dts :(
+> +		orange {
+> +			label =3D "cubietruck:orange:usr";
+> +			gpios =3D <&pio 7 20 0>;
+> +		};
 
-V2: https://patchwork.kernel.org/patch/2999111/
-	- based on v3.12-rc4 tag
-	- Update based on Tony's review comments.
+Ditto.
 
-V1: http://marc.info/?l=linux-omap&m=138117342909375&w=2
+> +		white {
+> +			label =3D "cubietruck:white:usr";
+> +			gpios =3D <&pio 7 11 0>;
+> +		};
 
-RFC: https://patchwork.kernel.org/patch/2919661/
+Ditto.
 
- arch/arm/boot/dts/omap3-beagle-xm.dts |    2 +-
- arch/arm/mach-omap2/board-generic.c   |   19 +++++++++++++++++++
- 2 files changed, 20 insertions(+), 1 deletion(-)
+> +		green {
+> +			label =3D "cubietruck:green:usr";
+> +			gpios =3D <&pio 7 7 0>;
+> +		};
+> +	};
+> +};
+> --=20
+> 1.8.1.5
+>=20
 
-diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-index 0c514dc..2816bf6 100644
---- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-+++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-@@ -11,7 +11,7 @@
- 
- / {
- 	model = "TI OMAP3 BeagleBoard xM";
--	compatible = "ti,omap3-beagle-xm", "ti,omap3-beagle", "ti,omap3";
-+	compatible = "ti,omap3-beagle-xm", "ti,omap36xx", "ti,omap3";
- 
- 	cpus {
- 		cpu@0 {
-diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-index 39c7838..4fe5b9c 100644
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -113,6 +113,7 @@ MACHINE_END
- #ifdef CONFIG_ARCH_OMAP3
- static const char *omap3_boards_compat[] __initdata = {
- 	"ti,omap3",
-+	"ti,omap343x",
- 	NULL,
- };
- 
-@@ -129,6 +130,24 @@ DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattened Device Tree)")
- 	.restart	= omap3xxx_restart,
- MACHINE_END
- 
-+static const char *omap36xx_boards_compat[] __initdata = {
-+	"ti,omap36xx",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(OMAP36XX_DT, "Generic OMAP36xx (Flattened Device Tree)")
-+	.reserve	= omap_reserve,
-+	.map_io		= omap3_map_io,
-+	.init_early	= omap3630_init_early,
-+	.init_irq	= omap_intc_of_init,
-+	.handle_irq	= omap3_intc_handle_irq,
-+	.init_machine	= omap_generic_init,
-+	.init_late	= omap3_init_late,
-+	.init_time	= omap3_sync32k_timer_init,
-+	.dt_compat	= omap36xx_boards_compat,
-+	.restart	= omap3xxx_restart,
-+MACHINE_END
-+
- static const char *omap3_gp_boards_compat[] __initdata = {
- 	"ti,omap3-beagle",
- 	"timll,omap3-devkit8000",
--- 
-1.7.9.5
+Thanks!
+Maxime
 
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--+g7M9IMkV8truYOl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSUx0ZAAoJEBx+YmzsjxAgvfUQAMAjplnrQfTPeeCCep4OQQMu
+lxFpbmBQ+Um3c1+nex7Y1WpKyR0KIAdh6XW+EQQpMvuLIkzmX4m+EoI7LCPMqt2T
+Ct6xL+3qrGD6ifHRgf2irtjFnQMWICP8iskegQcre3Y4hA4eij3jCsKMCA5XTVoI
+J1/I7FxdHFAAlxEpbBDojE6cLpZtx5DvIMM60Trsy+9udFL10hGVzoaSNTFT1H0B
+yVZ7OYiY9Cf3YG7HZwGNWL1aGSzbVSWMviO1MrUyl8It4W9F/VfWl/LcHn/FQAGD
+WP4/GyJ2byGoHFUQpYGOsWn4MckvJqCP2UxUcaVeRLystr03xWVIdr6I9uUCCg+d
+G5/MqVhDGwfTHx2T//RKERjsnmZP9GYPNcbKHKW74IwLJzohXxjXRWkYabNleqH2
+ULh7tfwN4bh46+63ZGG8QxWFu9Sg46hPbJ0rG+ETk7qgWuQein0ngcJag3PREC1Z
+VN7cW7xmM1ukyRGkNuhQ+OCxo2QZTA+1MJf+Dq+r2Dgo7Uwqm4M/Lp8rf7PgFniy
+d1JB072Y5ZVg1zo8U1N5e/IA3njWMpbJrpn9J9JQTtwl9PRtL6DTnafMiq+tEt7Q
+sxl79UCxQq+vzWIcVCqXOfYMGeIu/HEXkUbjq3lfz0WVBs23ll63TET2GfuNbBsP
+oBzp3DPWb3JxLY5V8JBl
+=4MLT
+-----END PGP SIGNATURE-----
+
+--+g7M9IMkV8truYOl--
