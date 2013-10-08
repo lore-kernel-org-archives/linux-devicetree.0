@@ -1,27 +1,78 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFCv3 0/7] OMAP SSI driver
-Date: Tue, 8 Oct 2013 10:28:15 -0700
-Message-ID: <20131008172815.GA8313@atomide.com>
-References: <1381091235-18293-1-git-send-email-sre@debian.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V3] clk: palmas: add clock driver for palmas
+Date: Tue, 8 Oct 2013 12:33:17 -0500
+Message-ID: <525441DD.2090109@ti.com>
+References: <1381238480-18852-1-git-send-email-ldewangan@nvidia.com> <525408B3.1000107@ti.com> <5254193A.70104@nvidia.com> <52542F69.30407@ti.com> <52543C1B.3000403@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1381091235-18293-1-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, =?utf-8?Q?'Beno=C3=AEt?= Cousson' <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Pali =?utf-8?Q?Roh=C3=A1r'?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?J9CY0LLQsNC50LvQviDQlNC40LzQuNGC0YDQvtCyJw==?= <freemangord>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52543C1B.3000403@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Laxman Dewangan <ldewangan@nvidia.com>
+Cc: "mturquette@linaro.org" <mturquette@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "broonie@linaro.org" <broonie@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, J Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> [131006 13:36]:
-> Hi,
+On 10/08/2013 12:08 PM, Stephen Warren wrote:
+> On 10/08/2013 10:14 AM, Nishanth Menon wrote:
+>> On 10/08/2013 09:39 AM, Laxman Dewangan wrote:
+>>> Thanks Nishanth for review.
+>>>
+>>> On Tuesday 08 October 2013 06:59 PM, Nishanth Menon wrote:
+>>>> On 10/08/2013 08:21 AM, Laxman Dewangan wrote:
+>>>>> Palmas devices has two clock output CLK32K_KG and CLK32K_KG_AUDIO
+>>>> not all palmas devices have 2 clocks - example: tps659038
+>>>
+>>> This is for generic palmas and I have seen it for TPS65913, TPS65914, 
+>>> TPS80036. If the generic one is not compatible then it need to add  
+>>> device specific and at that time, it is require to update the binding 
+>>> document accordingly.
+>>
+>> ?? you do have two clocks inside the device they should be represented
+>> as two compatible entities - that simplifies everyone's life.
 > 
-> Here is the third round of the OMAP SSI driver patches.
+> I think the terminology you're using here is quite confusing.
+> 
+> Are you talking about having two different compatible values for two
+> different HW designs, where those different designs implement different
+> sets of clocks (which makes sense), or two different DT nodes for two
+> different clocks (which IMHO doesn't always, unless those different
+> clocks *truly* are separate IP blocks with completely independent
+> register regions, and where those IP blocks are likely to be re-used
+> as-is in other chips).
+> 
+clk32k and clk32k_audio are two different resources and since these
+are two different resource instances - a "compatible" matching an
+actual device is my suggestion.
 
-Thanks for updating these, they look good to me now:
+clk32k and clk32k_audio are two different resources because they have
+their specific set of controls registers and may even be independently
+present in a Palmas variant.
 
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To highlight this: The example of tps659038 where clk32k is not
+present, but clk32k_audio is present (and happens to be disabled by
+default - thanks to an OTP on the chip - on platform like DRA7-evm, it
+is used to for 32k clk for wlan -currently hacked in u-boot using
+plain i2c writes[1] - yes it is yucky).
+
+Obviously, there are many ways to implement this. based on the current
+implementation, it indicates that if i create a node with
+"ti,palmas-clk" -i'd create two clocks - that is wrong for tps659038.
+
+Now (with the current approach), if I have to create a one clock for
+tps659038, i have to fix the for adding clock providers, add up
+"ti,tps659038-clk" etc.. it is doable - but IMHO, I dont need to do it
+with only the relevant nodes in dts.
+
+Further, it has no way to indicate that device X uses clock Y using
+clocks =<&xyz> either.
+
+[1] DRA7-evm u-boot hack.
+i2c dev 0
+i2c probe
+i2c mw 0x58 0xfb 0x2b (select secondary function for GPIO_5)
+i2c mw 0x58 0xd5 0x01 (enable audio clock)
+
+-- 
+Regards,
+Nishanth Menon
