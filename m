@@ -1,55 +1,84 @@
-From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10] dmaengine: Add MOXA ART DMA engine driver
-Date: Tue, 8 Oct 2013 11:53:36 +0200
-Message-ID: <CACmBeS1tYwJBGscOSC=F=oup_+WfYOZMW-Xu-UmD65KuKNxfQA@mail.gmail.com>
-References: <1381151633-8576-1-git-send-email-jonas.jensen@gmail.com>
-	<1381155034-11254-1-git-send-email-jonas.jensen@gmail.com>
-	<20131007151212.GF15365@e106331-lin.cambridge.arm.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 13/27] drm/tegra: Move subdevice infrastructure to
+ host1x
+Date: Tue, 8 Oct 2013 11:52:26 +0200
+Message-ID: <20131008095226.GB19633@ulmo.nvidia.com>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com>
+ <1381134884-5816-14-git-send-email-treding@nvidia.com>
+ <5253A563.1060409@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131007151212.GF15365-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "djbw-b10kYP2dOMg@public.gmane.org" <djbw-b10kYP2dOMg@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FkmkrVfFsRoUs1wW"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5253A563.1060409-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7 October 2013 17:12, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> Sorry I didn't notice this previously, but "moxa" isn't in
-> Documentation/devicetree/bindings/vendor-prefixes.txt (despite several
-> bindings using it). Could you cook up a separate patch to add an entry
-> for Moxa, please?
 
-Yes, I'll submit a separate patch.
+--FkmkrVfFsRoUs1wW
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Also, given the SoC is called "ART" it's a shame that we're calling this
-> "moxa,moxart-dma" rather than "moxa,art-dma". We already have precedent
-> for "moxart" in bindings though, so changing that's likely to lead to
-> more problems.
+On Tue, Oct 08, 2013 at 09:25:39AM +0300, Terje Bergstr=C3=B6m wrote:
+> On 07.10.2013 11:34, Thierry Reding wrote:
+> > The Tegra DRM driver currently uses some infrastructure to defer the DRM
+> > core initialization until all required devices have registered. The same
+> > infrastructure can potentially be used by any other driver that requires
+> > more than a single sub-device of the host1x module.
+> >=20
+> > Make the infrastructure more generic and keep only the DRM specific code
+> > in the DRM part of the driver. Eventually this will make it easy to move
+> > the DRM driver part back to the DRM subsystem.
+>=20
+> Do we need the host1x_client/tegra_drm_client concept outside DRM? You
+> separated the two in an earlier patch, but the whole structure is there
+> because of limitation in DRM. Shouldn't we keep management of drm
+> clients entirely inside drm?
 
-Sorry about that, I think the "moxart" contraction was suggested and
-has been sticky ever since.
+The DRM specific parts are still all managed within the DRM driver.
+However the host1x_client API, and specifically the method in which
+sub-devices can be registered (host1x_client to host1x_device) is
+completely subsystem agnostic.
 
-It's at least a little appropriate because the physical chip text
-reads "MOXA ART" (photo):
+That part can be used subsequently by things such as a V4L2 driver
+to achieve the same thing we've done with Tegra DRM, namely to use
+several sub-devices collectively to provide the functionality of a
+"composite" device (VI/CSI).
 
-https://lh4.googleusercontent.com/-A-2FXDrObU8/UMcMc_K2vEI/AAAAAAAABwg/ldaLZ7ps1P4/w1331-h998-no/UC-7112-LX-picture4.jpg
+> Second, do we need an own drm_bus for host1x clients? Does it bring
+> something drm_platform doesn't? I couldn't see any immediate difference
+> between the two.
 
-Currently three drivers in linux-next use the name with accompanying
-device tree bindings.
-Considering the amount of patches required, can we keep the name, please?
+The difference is in that we pass in a host1x_device, which is not a
+platform device, but really just a wrapped struct device. That in turn
+provides the whole composite device infrastructure. So, no, it can't be
+done with drm_platform.
 
-> Sorry for yet more pendantry, but could we instead have:
->
->  - interrupts: Should contain an interrupt-specifier for the sole
->                interrupt generated by the device.
+Thierry
 
-Fixed in v11.
+--FkmkrVfFsRoUs1wW
+Content-Type: application/pgp-signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-Regards,
-Jonas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJSU9XaAAoJEN0jrNd/PrOh8n0QALK4piwuTv6VCR4pN/vQuYi4
+mwPKgKDkmkKVSIgHg6aVqFVLn3JRgYpOZNnuCRNHINmkv0lQ/T+QiJtaid1XYIe5
+z5wFE2zIQ4Gm3AQmyzMVVSeovV6CSoEBwJxrpgw97PX/KRQeRR4ewQth9hDZfz8W
+sOM06iyKC+oBrCevME2wx46KVBJgq53KvW9gJ/p3CLyN8fkZLH9l+9gtD5oKlXFm
+2TAlENM7eIIC5x3RDOwq6u48kXAgCg/B9tteodpj8iYJvJK6Ma1Nue2Dg13avom+
+jvL599L0hPJywQr4wEX/NJHgw90BrDg0poMiXdq2JKd9eriHWTb6BxrAd2NH5Jv1
+Gub3KrIgOuzNQKwV7BaWVDcmZ490Vei4SsVeWb1tRT2K9JD3Gu+avBi6YjUcnO6u
+jUiVOnsb7TmAPBi0XDmuW0i3Ase9bBMIPoi+UHjACqujSiUfoNZuC/krQw2ub7kg
+zH62Sy23BSipEqoDN/o/+eN94kenQ9idtPKUzXA6+b3mMsZyNT7BdSie7mhqZZeE
+BTxgzXLtdhD+kbKV/dJDxum3W8afEjZSmNQ4IxTxo3lo5SgATuivwHeTlUf9VTCP
+7akeDqCx9hwo/BhlYbFG5JrDiXK2/tdVjmQybI9M2Jm4nC0yVFTfOTQFQeubpGs+
+qfMeQx6nZexL7wSXsd0g
+=ApRC
+-----END PGP SIGNATURE-----
+
+--FkmkrVfFsRoUs1wW--
