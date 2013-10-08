@@ -1,116 +1,96 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V2] clk: palmas: add clock driver for palmas
-Date: Tue, 8 Oct 2013 15:15:12 +0100
-Message-ID: <20131008141512.GE1412@e106331-lin.cambridge.arm.com>
-References: <1381154751-4565-1-git-send-email-ldewangan@nvidia.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC v4] ARM: shmobile: armadillo800eva-reference: add SDHI and MMCIF interfaces
+Date: Tue, 08 Oct 2013 16:32 +0200
+Message-ID: <6196420.hT4Bm78gzA@avalon>
+References: <Pine.LNX.4.64.1309231651230.11505@axis700.grange> <138071238.VjAY8SX7B8@avalon> <CACRpkdac_Efc7Vh0_m11zWuB0pgQzVnvy2kBjhn5KGhwwv1oDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1381154751-4565-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "mturquette@linaro.org" <mturquette@linaro.org>, "broonie@linaro.org" <broonie@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "swarren@nvidia.com" <swarren@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdac_Efc7Vh0_m11zWuB0pgQzVnvy2kBjhn5KGhwwv1oDw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 07, 2013 at 03:05:51PM +0100, Laxman Dewangan wrote:
-> Palmas devices has two clock output CLK32K_KG and CLK32K_KG_AUDIO
-> which can be nebale/disable through software.
+Hi Linus (and Guennadi and Grant, there are questions for your below),
+
+On Tuesday 08 October 2013 13:19:04 Linus Walleij wrote:
+> On Mon, Sep 30, 2013 at 1:10 PM, Laurent Pinchart wrote:
+> > Hi Linus,
+> > 
+> > [Updated the devicetree mailing list e-mail address]
+> > 
+> > On Monday 30 September 2013 01:20:46 Linus Walleij wrote:
+> >> On Sun, Sep 29, 2013 at 8:49 AM, Laurent Pinchart wrote:
+> >> > On Friday 27 September 2013 16:08:31 Linus Walleij wrote:
+> >> >> Can't you just locate the node using of_find_node_by_path()
+> >> >> or whatever and then use this:
+> >> >> int of_update_property(struct device_node *np, struct property
+> >> >> *newprop)?
+> >> > 
+> >> > Where can I do that ? I need the PFC/GPIO devices to have been probed,
+> >> > so board init isn't an option, but I also need the device to be enabled
+> >> > not to have been probed yet.
+> >> > 
+> >> > One option would be to use a bus notifier to find out when the PFC/GPIO
+> >> > devices are available, and extend of_update_property() with a
+> >> > notification mechanism (either generic, or specific to the enabled
+> >> > propery) to detect when a device gets enabled and probe it.
+> >> 
+> >> Argh that sounds awfully complicated...
+> >> 
+> >> I would consider doing this right inside the PCF/GPIO driver right at the
+> >> end of its probe function. As it is related to pins anyway... or is that
+> >> too ugly?
+> > 
+> > As a reminder, we need to decide whether to register an SDHI (SD
+> > controller) device or a WiFi module device, and thus configure pinmuxing
+> > appropriately, based on the state of a GPIO connected to a
+> > user-accessible switch. This behaviour is board-specific, not
+> > SoC-specific. That's why I believe the code should be in board code.
 > 
-> Add clock driver support for the Palmas 32k clocks.
+> Hm, I might have misunderstood this earlier, so if the board code is
+> going to register *either* SDHI *or* WIFI, both as some kind of
+> struct device then as you say:
+>
+> > The board has two connectors (MMC/SD 1
+> > and wifi module) that are not usable concurrently. The user can select
+> > which connector to use through a hardware switch that existing board code
+> > reads at init time (...)
 > 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
-> Changes from V1:
-> - Call prepare if the clk is needed for boot-enable or sleep control.
-> - change is_enabled to is_prepared.
-> - Added ops palmas_clks_recalc_rate.
-> - Added of_clk_add_provider().
+> So depending on what you read there you're going to register a struct device
+> named mmc0 or wifi0 or something, then you just register the pin control
+> tables for both cases and the apropriate default state will be selected by
+> the device core right before the device driver gets probed. (grep for
+> pinctrl_bind_pins). It is perfectly fine to have unused pin states in the
+> table.
 > 
->  .../devicetree/bindings/clock/clk-palmas.txt       |   45 +++
->  drivers/clk/Kconfig                                |    7 +
->  drivers/clk/Makefile                               |    2 +
->  drivers/clk/clk-palmas.c                           |  336 ++++++++++++++++++++
->  4 files changed, 390 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/clk-palmas.txt
->  create mode 100644 drivers/clk/clk-palmas.c
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/clk-palmas.txt b/Documentation/devicetree/bindings/clock/clk-palmas.txt
-> new file mode 100644
-> index 0000000..c247538
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/clk-palmas.txt
-> @@ -0,0 +1,45 @@
-> +* Palmas 32KHz clocks *
-> +
-> +Palmas device has two clock output pins for 32KHz, KG and KG_AUDIO.
-> +
-> +This binding uses the common clock binding ./clock-bindings.txt.
-> +
-> +Clock 32KHz KG is output 0 of the driver and clock 32KHz is output 1.
-> +
-> +Required properties:
-> +- compatible : shall be "ti,palmas-clk".
-> +- #clock-cells : from common clock binding; shall be set to 1.
+> Then the problem is unrelated to pin control and more about how to register
+> these devices, nothing to do with pin control.
 
-It would make sense to describe the value values here, rather than
-above.
+Correct.
 
-> +
-> +Optional subnode:
-> +       The clock node has optional subnode to provide the init configuration of
-> +       clocks like boot enable, sleep control.
-> +
-> +       The subnode name is fixed and it should be
-> +               clk32k_kg for the 32KHz KG clock.
-> +               clk32k_kg_audio for the 32KHz KG_AUDIO clock.
-> +
-> +       Optional subnode properties:
-> +       ti,clock-boot-enable: Enable clock at the time of booting.
+> Such as if they should both be marked as "disabled" in the DT and activated
+> by the kernel, or registered by adding a platform device or something...
 
-Why is this needed?
+I believe a way to mark a disabled device as enabled from board code would be 
+interesting. The function could be called from a platform bus notifier that 
+reacts on the GPIO device being probed. It's a bit of a corner case, but it 
+doesn't sound too hackish to me.
 
-If drivers need clocks, they should request them. If they don't
-currently, that's a bug in the driver.
+Grant, would you be fine with such a mechanism ? The devices would be marked 
+with status = "disabled" in DT and a new function would be added to enable 
+them. That function would modify the DT status to "okay" and trigger device 
+registration.
 
-> +       ti,external-sleep-control: The clock is enable/disabled by state
-> +               of external enable input pins ENABLE, ENABLE2 and NSLEEP.
-> +               The valid value for the external pins are:
-> +                       1 for ENABLE1
-> +                       2 for ENABLE2
-> +                       3 for NSLEEP.
-> +               Option 0 or missing this property means the clock is
-> +               enabled/disabled via register access and these pins do
-> +               not have any control.
+> But I guess I got it wrong?
 
-What actually drives these pins to control the clock?
+I believe you got it right. At least your understanding matches mine :-) 
+Guennadi, could you please confirm ?
 
-> +
-> +Example:
-> +       clock {
-> +               compatible = "ti,palmas-clk";
-> +               #clock-cells = <1>;
-> +               clk32k_kg {
-> +                       ti,clock-boot-enable;
-> +                       ti,external-sleep-control = <3>;
-> +               };
-> +
-> +               clk32k_kg_audio {
-> +                       ti,clock-boot-enable;
-> +               };
-> +       };
+-- 
+Regards,
 
-How does the palmas-clk driver control these? No description of
-registers, gpio, or any other component that could be used for control
-is dfined.
+Laurent Pinchart
 
-Is the palmas-clk intended to be a subnode of the palmas mfd (the
-palmas-rtc binding example suggests this)? It seems odd to describe
-components of a device separately with no linkage between them.
-
-I also note that the palmas MFD appears to be an I2C slave, but the
-binding doesn't define that (which makes it somewhat confuding for
-someone unfamiliar with the hardware).
-
-Thanks,
-Mark.
