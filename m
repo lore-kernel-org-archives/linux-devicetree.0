@@ -1,79 +1,40 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH/RFC v4] ARM: shmobile: armadillo800eva-reference: add SDHI
- and MMCIF interfaces
-Date: Tue, 8 Oct 2013 13:19:04 +0200
-Message-ID: <CACRpkdac_Efc7Vh0_m11zWuB0pgQzVnvy2kBjhn5KGhwwv1oDw@mail.gmail.com>
-References: <Pine.LNX.4.64.1309231651230.11505@axis700.grange>
-	<2318676.bdc47MCX2p@avalon>
-	<CACRpkdbtQy16waQnp2Os0bx5f0AGigHJysMcJnga+FsMEN27iA@mail.gmail.com>
-	<138071238.VjAY8SX7B8@avalon>
+Subject: Re: [RFC PATCH 1/6] DRIVERS: IRQCHIP: IRQ-GIC: Add support for
+ routable irqs
+Date: Tue, 8 Oct 2013 13:23:00 +0200
+Message-ID: <CACRpkdac5iPqwv2Wb2uksn=cYtS0r=1+tSr4Cre2Xun0JBKzpA@mail.gmail.com>
+References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com>
+	<1380549564-31045-2-git-send-email-r.sricharan@ti.com>
+	<524987A3.4090204@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <138071238.VjAY8SX7B8@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <524987A3.4090204@arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Sricharan R <r.sricharan@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "santosh.shilimkar@ti.com" <santosh.shilimkar@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tony@atomide.com" <tony@atomide.com>, "rnayak@ti.com" <rnayak@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Rutland <Mark.Rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2013 at 1:10 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> Hi Linus,
->
-> [Updated the devicetree mailing list e-mail address]
->
-> On Monday 30 September 2013 01:20:46 Linus Walleij wrote:
->> On Sun, Sep 29, 2013 at 8:49 AM, Laurent Pinchart wrote:
->> > On Friday 27 September 2013 16:08:31 Linus Walleij wrote:
->> >> Can't you just locate the node using of_find_node_by_path()
->> >> or whatever and then use this:
->> >> int of_update_property(struct device_node *np, struct property *newprop)?
->> >
->> > Where can I do that ? I need the PFC/GPIO devices to have been probed, so
->> > board init isn't an option, but I also need the device to be enabled not
->> > to have been probed yet.
->> >
->> > One option would be to use a bus notifier to find out when the PFC/GPIO
->> > devices are available, and extend of_update_property() with a notification
->> > mechanism (either generic, or specific to the enabled propery) to detect
->> > when a device gets enabled and probe it.
+On Mon, Sep 30, 2013 at 4:16 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> On 30/09/13 14:59, Sricharan R wrote:
+>> In some socs the gic can be preceded by a crossbar IP which
+>> routes the peripheral interrupts to the gic inputs. The peripheral
+>> interrupts are associated with a fixed crossbar input line and the
+>> crossbar routes that to one of the free gic input line.
 >>
->> Argh that sounds awfully complicated...
->>
->> I would consider doing this right inside the PCF/GPIO driver right at the
->> end of its probe function. As it is related to pins anyway... or is that too
->> ugly?
+>> The DT entries for peripherals provides the fixed crossbar input line
+>> as its interrupt number and the mapping code should associate this with
+>> a free gic input line. This patch adds the support inside the gic irqchip
+>> to handle such routable irqs. The routable irqs are registered in a linear
+>> domain. The registered routable domain's callback should be implemented
+>> to get a free irq and to configure the IP to route it.
 >
-> As a reminder, we need to decide whether to register an SDHI (SD controller)
-> device or a WiFi module device, and thus configure pinmuxing appropriately,
-> based on the state of a GPIO connected to a user-accessible switch. This
-> behaviour is board-specific, not SoC-specific. That's why I believe the code
-> should be in board code.
+> Isn't this just another chained interrupt controller? How is it GIC
+> specific?
 
-Hm, I might have misunderstood this earlier, so if the board code is
-going to register *either* SDHI *or* WIFI, both as some kind of
-struct device then as you say:
-
-> The board has two connectors (MMC/SD 1
-> and wifi module) that are not usable concurrently. The user can select which
-> connector to use through a hardware switch that existing board code reads at
-> init time (...)
-
-So depending on what you read there you're going to register a
-struct device named mmc0 or wifi0 or something, then you just register
-the pin control tables for both cases and the apropriate default state
-will be selected by the device core right before the device driver
-gets probed. (grep for pinctrl_bind_pins). It is perfectly fine to have
-unused pin states in the table.
-
-Then the problem is unrelated to pin control and more about how
-to register these devices, nothing to do with pin control.
-
-Such as if they should both be marked as "disabled" in the DT and
-activated by the kernel, or registered by adding a platform device
-or something...
-
-But I guess I got it wrong?
+I thought so from the beginning but I was dead wrong, as pointed out
+by tglx it is basically a hardware .map function, so its usecase will map
+to the irqdomain .map/.unmap so to say.
 
 Yours,
 Linus Walleij
