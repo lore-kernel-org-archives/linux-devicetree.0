@@ -1,250 +1,480 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 1/8] irqchip: add DesignWare APB ICTL interrupt controller
-Date: Tue,  8 Oct 2013 14:24:26 +0200
-Message-ID: <1381235073-17134-2-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: boris brezillon <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 17/19] clk: at91: add PMC clk device tree binding doc.
+Date: Tue, 08 Oct 2013 14:37:36 +0200
+Message-ID: <5253FC90.1000808@overkiz.com>
+References: <1375937608-3773-1-git-send-email-b.brezillon@overkiz.com> <1375946357-9775-1-git-send-email-b.brezillon@overkiz.com> <5253D3FA.5060602@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5253D3FA.5060602-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds an irqchip driver and corresponding devicetree binding for the
-secondary interrupt controllers based on Synopsys DesignWare IP dw_apb_ictl.
+On 08/10/2013 11:44, Nicolas Ferre wrote:
+> On 08/08/2013 09:19, Boris BREZILLON :
+>> This patch adds new at91 clks dt bindings documentation.
+>>
+>> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/clock/at91-clock.txt       |  312 
+>> ++++++++++++++++++++
+>>   1 file changed, 312 insertions(+)
+>>   create mode 100644 
+>> Documentation/devicetree/bindings/clock/at91-clock.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt 
+>> b/Documentation/devicetree/bindings/clock/at91-clock.txt
+>> new file mode 100644
+>> index 0000000..04739da
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+>> @@ -0,0 +1,312 @@
+>> +Device Tree Clock bindings for arch-at91
+>> +
+>> +This binding uses the common clock binding[1].
+>> +
+>> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +
+>> +Required properties:
+>> +- compatible : shall be one of the following:
+>> +    "atmel,at91rm9200-pmc" or
+>> +    "atmel,at91sam9g45-pmc" or
+>> +    "atmel,at91sam9n12-pmc" or
+>> +    "atmel,at91sam9x5-pmc" or
+>> +    "atmel,at91sam9g35-pmc" or
+>
+> Already said in previous patches: 9g35 is not different from the 9x5: 
+> it was a bug in the older datasheet.
+I'll drop it.
+>
+>> +    "atmel,sama5d3-pmc":
+>> +        at91 PMC (Power Management Controller)
+>> +        All at91 specific clocks (clocks defined below) must be child
+>> +        node of the PMC node.
+>> +
+>> +    "atmel,at91rm9200-clk-main":
+>> +        at91 main oscillator
+>> +
+>> +    "atmel,at91rm9200-clk-master" or
+>> +    "atmel,at91sam9x5-clk-master":
+>> +        at91 master clock
+>> +
+>> +    "atmel,at91sam9x5-clk-peripheral" or
+>> +    "atmel,at91rm9200-clk-peripheral":
+>> +        at91 peripheral clocks
+>> +
+>> +    "atmel,at91rm9200-clk-pll" or
+>> +    "atmel,at91sam9g45-clk-pll" or
+>> +    "atmel,at91sam9g20-clk-pllb" or
+>> +    "atmel,sama5d3-clk-pll":
+>> +        at91 pll clocks
+>> +
+>> +    "atmel,at91sam9x5-clk-plldiv":
+>> +        at91 plla divisor
+>> +
+>> +    "atmel,at91rm9200-clk-programmable" or
+>> +    "atmel,at91sam9g45-clk-programmable" or
+>> +    "atmel,at91sam9x5-clk-programmable":
+>> +        at91 programmable clocks
+>> +
+>> +    "atmel,at91sam9x5-clk-smd":
+>> +        at91 SMD (Soft Modem) clock
+>> +
+>> +    "atmel,at91rm9200-clk-system":
+>> +        at91 system clocks
+>> +
+>> +    "atmel,at91rm9200-clk-usb" or
+>> +    "atmel,at91sam9x5-clk-usb":
+>> +        at91 usb clock
+>> +
+>> +    "atmel,at91sam9x5-clk-utmi":
+>> +        at91 utmi clock
+>> +
+>> +Required properties for PMC node:
+>> +- reg : defines the IO memory reserved for the PMC.
+>> +- interrupts : shall be set to PMC interrupt line.
+>> +- interrupt-controller : tell that the PMC is an interrupt controller
+>> +- #interrupt-cells : must be set to 2. The first cell encodes the 
+>> interrupt id
+>
+> Please add more information about these values.
+>
+The first cell encodes the clk/interrupt id, which is represented by the 
+bit position in the PMC_SR register:
+  - MAIN clk = 0
+  - PLLA = 1
+  - ...
+>
+>> +             the second cell encodes the interrupt type.
+>
+> Here also: is it always the same type that shall be given? Following 
+> which rule? What are the allowed values?
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
----
-Changelog:
-RFCv1->RFCv2:
-- added copyright reference
+Yes it's always IRQ_TYPE_LEVEL_HIGH, maybe I should just define one cell 
+and drop the irq type cell.
+>
+>
+>> +For example:
+>> +     pmc: pmc@fffffc00 {
+>> +        compatible = "atmel,sama5d3-pmc";
+>> +        interrupts = <AT91_ID_SYS IRQ_TYPE_LEVEL_HIGH 7>;
+>
+> It is an habit not to use macro names in device tree examples (even if 
+> it is true that it is more readable).
 
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- .../interrupt-controller/snps,dw-apb-ictl.txt      |   29 ++++
- drivers/irqchip/Kconfig                            |    4 +
- drivers/irqchip/Makefile                           |    1 +
- drivers/irqchip/irq-dw-apb-ictl.c                  |  142 ++++++++++++++++++++
- 4 files changed, 176 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
- create mode 100644 drivers/irqchip/irq-dw-apb-ictl.c
+I'll use numerical values instead of macros (anyway, the AT91_ID_XX will 
+be dropped).
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
-new file mode 100644
-index 0000000..7ccd1ba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
-@@ -0,0 +1,29 @@
-+Synopsys DesignWare APB interrupt controller (dw_apb_ictl)
-+
-+Synopsys DesignWare provides interrupt controller IP for APB known as
-+dw_apb_ictl. The IP is used as secondary interrupt controller in some SoCs with
-+APB bus, e.g. Marvell Armada 1500.
-+
-+Required properties:
-+- compatible: shall be "snps,dw-apb-ictl"
-+- reg: base address of interrupt registers starting with ENABLE_LOW register
-+- interrupt-controller: identifies the node as an interrupt controller
-+- #interrupt-cells: number of cells to encode an interrupt source, shall be 1
-+- interrupts: interrupt reference to primary interrupt controller
-+- interrupt-parent: (optional) reference specific primary interrupt controller
-+
-+The interrupt sources map to the corresponding bits in the interrupt
-+registers, i.e.
-+- 0 maps to bit 0 of low interrupts,
-+- 1 maps to bit 1 of low interrupts,
-+- 32 maps to bit 0 of high interrupts, and so on.
-+
-+Example:
-+	aic: interrupt-controller@3000 {
-+		compatible = "snps,dw-apb-ictl";
-+		reg = <0x3000 0xc00>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 3792a1a..940638d 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -30,6 +30,10 @@ config ARM_VIC_NR
- 	  The maximum number of VICs available in the system, for
- 	  power management.
- 
-+config DW_APB_ICTL
-+	bool
-+	select IRQ_DOMAIN
-+
- config IMGPDC_IRQ
- 	bool
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index c60b901..6427323 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_ARCH_MMP)			+= irq-mmp.o
- obj-$(CONFIG_ARCH_MVEBU)		+= irq-armada-370-xp.o
- obj-$(CONFIG_ARCH_MXS)			+= irq-mxs.o
- obj-$(CONFIG_ARCH_S3C24XX)		+= irq-s3c24xx.o
-+obj-$(CONFIG_DW_APB_ICTL)		+= irq-dw-apb-ictl.o
- obj-$(CONFIG_METAG)			+= irq-metag-ext.o
- obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
- obj-$(CONFIG_ARCH_MOXART)		+= irq-moxart.o
-diff --git a/drivers/irqchip/irq-dw-apb-ictl.c b/drivers/irqchip/irq-dw-apb-ictl.c
-new file mode 100644
-index 0000000..bbcacee
---- /dev/null
-+++ b/drivers/irqchip/irq-dw-apb-ictl.c
-@@ -0,0 +1,142 @@
-+/*
-+ * Synopsys DW APB ICTL irqchip driver.
-+ *
-+ * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-+ *
-+ * based on GPL'ed 2.6 kernel sources
-+ *  (c) Marvell International Ltd.
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+#include "irqchip.h"
-+
-+#define APB_INT_ENABLE_L	0x00
-+#define APB_INT_ENABLE_H	0x04
-+#define APB_INT_MASK_L		0x08
-+#define APB_INT_MASK_H		0x0c
-+#define APB_INT_FINALSTATUS_L	0x30
-+#define APB_INT_FINALSTATUS_H	0x34
-+
-+static void dw_apb_ictl_handler(unsigned int irq, struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = irq_get_chip(irq);
-+	struct irq_chip_generic *gc = irq_get_handler_data(irq);
-+	struct irq_domain *d = gc->private;
-+	u32 stat;
-+	int n;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	for (n = 0; n < gc->num_ct; n++) {
-+		stat = readl_relaxed(gc->reg_base +
-+				     APB_INT_FINALSTATUS_L + 4 * n);
-+		while (stat) {
-+			u32 hwirq = ffs(stat) - 1;
-+			generic_handle_irq(irq_find_mapping(d,
-+					    gc->irq_base + hwirq + 32 * n));
-+			stat &= ~(1 << hwirq);
-+		}
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static int __init dw_apb_ictl_init(struct device_node *np,
-+				   struct device_node *parent)
-+{
-+	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-+	struct resource r;
-+	struct irq_domain *domain;
-+	struct irq_chip_generic *gc;
-+	void __iomem *iobase;
-+	int ret, nrirqs, irq;
-+	u32 reg;
-+
-+	/* Map the parent interrupt for the chained handler */
-+	irq = irq_of_parse_and_map(np, 0);
-+	if (irq <= 0) {
-+		pr_err("%s: unable to parse irq\n", np->name);
-+		return -EINVAL;
-+	}
-+
-+	ret = of_address_to_resource(np, 0, &r);
-+	if (ret) {
-+		pr_err("%s: unable to get resource\n", np->name);
-+		return ret;
-+	}
-+
-+	if (!request_mem_region(r.start, resource_size(&r), np->name)) {
-+		pr_err("%s: unable to request mem region\n", np->name);
-+		return -ENOMEM;
-+	}
-+
-+	iobase = ioremap(r.start, resource_size(&r));
-+	if (!iobase) {
-+		pr_err("%s: unable to map resource\n", np->name);
-+		return -ENOMEM;
-+	}
-+
-+	/*
-+	 * DW IP can be configured to allow 2-64 irqs. We can determine
-+	 * the number of irqs supported by writing into enable register
-+	 * and look for bits not set, as corresponding flip-flops will
-+	 * have been removed by sythesis tool.
-+	 */
-+
-+	/* mask and enable all interrupts */
-+	writel(~0, iobase + APB_INT_MASK_L);
-+	writel(~0, iobase + APB_INT_MASK_H);
-+	writel(~0, iobase + APB_INT_ENABLE_L);
-+	writel(~0, iobase + APB_INT_ENABLE_H);
-+
-+	reg = readl(iobase + APB_INT_ENABLE_H);
-+	if (reg)
-+		nrirqs = 32 + fls(reg);
-+	else
-+		nrirqs = fls(readl(iobase + APB_INT_ENABLE_L));
-+
-+	domain = irq_domain_add_linear(np, nrirqs,
-+				       &irq_generic_chip_ops, NULL);
-+	if (!domain) {
-+		pr_err("%s: unable to add irq domain\n", np->name);
-+		return -ENOMEM;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(domain, 32, (nrirqs > 32) ? 2 : 1,
-+					     np->name, handle_level_irq, clr, 0,
-+					     IRQ_GC_INIT_MASK_CACHE);
-+	if (ret) {
-+		pr_err("%s: unable to alloc irq domain gc\n", np->name);
-+		return ret;
-+	}
-+
-+	gc = irq_get_domain_generic_chip(domain, 0);
-+	gc->private = domain;
-+	gc->reg_base = iobase;
-+
-+	gc->chip_types[0].regs.mask = APB_INT_MASK_L;
-+	gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
-+	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
-+
-+	if (nrirqs > 32) {
-+		gc->chip_types[1].regs.mask = APB_INT_MASK_H;
-+		gc->chip_types[1].chip.irq_mask = irq_gc_mask_set_bit;
-+		gc->chip_types[1].chip.irq_unmask = irq_gc_mask_clr_bit;
-+	}
-+
-+	irq_set_handler_data(irq, gc);
-+	irq_set_chained_handler(irq, dw_apb_ictl_handler);
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(dw_apb_ictl,
-+		"snps,dw-apb-ictl", dw_apb_ictl_init);
--- 
-1.7.10.4
+>
+>> +        interrupt-controller;
+>> +        #interrupt-cells = <2>;
+>> +
+>> +        /* put at91 clocks here */
+>> +    };
+>> +
+>> +Required properties for main clock:
+>> +- interrupt-parent : must reference the PMC node.
+>> +- interrupts : shall be set to "<AT91_PMC_MOSCS IRQ_TYPE_LEVEL_HIGH>".
+>
+> Ditto. Here you can use the numerical value and also specify the macro 
+> name. But the numerical value should prevail.
+Okay
+
+>
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- clocks (optional if clock-frequency is provided) : shall be the 
+>> slow clock
+>> +    phandle. This clock is used to compute the main clock rate if
+>> +    "clock-frequency" is not provided.
+>> +- clock-frequency: the main oscillator frequency.Prefer the use of
+>
+> Nit. one white space missing
+>
+>> +    "clock-frequency" over automatic clock rate computation.
+>
+>
+>> +
+>> +For example:
+>> +    main: mainck {
+>> +        compatible = "atmel,at91rm9200-clk-main";
+>> +        interrupt-parent = <&pmc>;
+>> +        interrupts = <AT91_PMC_MOSCS IRQ_TYPE_LEVEL_HIGH>;
+>
+> Ditto
+>
+>> +        #clock-cells = <0>;
+>> +        clocks = <&ck32k>;
+>> +        clock-frequency = <18432000>;
+>> +    };
+>> +
+>> +Required properties for master clock:
+>> +- interrupt-parent : must reference the PMC node.
+>> +- interrupts : shall be set to "<AT91_PMC_MCKRDY IRQ_TYPE_LEVEL_HIGH>".
+>
+> Ditto
+>
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- clocks : shall be the master clock sources (see atmel datasheet) 
+>> phandles.
+>> +    e.g. "<&ck32k>, <&main>, <&plla>, <&pllb>".
+>> +- atmel,clk-output-range : minimum and maximum clock frequency (two u32
+>> +               fields).
+>> +       e.g. output = <0 133000000>; <=> 0 to 133MHz.
+>> +- atmel,clk-divisors : master clock divisors table (four u32 fields).
+>> +        0 <=> reserved value.
+>> +        e.g. divisors = <1 2 4 6>;
+>> +- atmel,master-clk-have-div3-pres : some SoC use the reserved value 
+>> 7 in the
+>> +                    PRES field as CLOCK_DIV3 (e.g sam9x5).
+>
+> I will check with care the master clock driver as this one is pretty 
+> picky about changes that could affect it! Note that in previous clock 
+> implementation we did not touched the MCK configuration, we were only 
+> reading it...
+>
+> Anyway, let's keep this binding but make sure that driver is written 
+> with extreme care ;-)
+>
+>> +
+>> +For example:
+>> +    mck: mck {
+>> +        compatible = "atmel,at91rm9200-clk-master";
+>> +        interrupt-parent = <&pmc>;
+>> +        interrupts = <AT91_PMC_MCKRDY IRQ_TYPE_LEVEL_HIGH>;
+>> +        #clock-cells = <0>;
+>> +        atmel,clk-output-range = <0 133000000>;
+>> +        atmel,clk-divisors = <1 2 4 0>;
+>> +    };
+>> +
+>> +Required properties for peripheral clocks:
+>> +- #clock-cells : from common clock binding; shall be set to 1. The 
+>> second cell
+>> +    is used to encode the peripheral id. Peripheral ids are defined in
+>> +    atmel's SoC datasheets.
+>> +- clocks : shall be the master clock phandle.
+>> +    e.g. clocks = <&mck>;
+>> +- name: device tree node describing a specific system clock.
+>> +    * atmel,clk-id: peripheral id. Peripheral id macros should be used.
+>
+> No. Please use raw numbers. We will not switch to macros for these 
+> peripheral IDs.
+Sure, I'll change this.
+>
+>> +    * atmel,clk-default-divisor (optional, only available for
+>> +      "atmel,at91sam9x5-clk-peripheral"): sam9x5 and sama5d3 SoC 
+>> provides
+>> +      configurable peripheral clock divisor. If you define this 
+>> property
+>> +      (u32), the default divisor will be applied when enabling
+>> +      peripheral clock. If not provided the peripheral clock is not
+>> +      divided.
+>> +
+>> +For example:
+>> +    periph: periphck {
+>> +        compatible = "atmel,at91sam9x5-clk-peripheral";
+>> +        #clock-cells = <1>;
+>> +        clocks = <&mck>;
+>> +
+>> +        pioA_clk {
+>> +            atmel,clk-id = <AT91SAM9X5_ID_PIOA>;
+>
+> Ditto.
+>
+>> +            atmel,clk-default-divisor = <1>;
+>> +        };
+>> +
+>> +        pioB_clk {
+>> +            atmel,clk-id = <AT91SAM9X5_ID_PIOB>;
+>> +            atmel,clk-default-divisor = <2>;
+>> +        };
+>> +    };
+>> +
+>> +
+>> +Required properties for pll clocks:
+>> +- interrupt-parent : must reference the PMC node.
+>> +- interrupts : shall be set to "<AT91_PMC_LOCKA IRQ_TYPE_LEVEL_HIGH>".
+>
+> Ditto
+>
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- clocks : shall be the main clock phandle.
+>> +- atmel,clk-id : pll id. PLL id macros should be used.
+>
+> No macros here, simply raw numbers. So this mean that we must have 
+> some documentation of these numbers.
+>
+>> +- atmel,clk-input-range : minimum and maximum source clock frequency 
+>> (two u32
+>> +              fields).
+>> +      e.g. input = <1 32000000>; <=> 1 to 32MHz.
+>> +- #atmel,pll-clk-output-range-cells : number of cells reserved for 
+>> pll output
+>> +                      range description. Sould be set to 2, 3
+>> +                      or 4.
+>> +    * 1st and 2nd cells represent the frequency range (min-max).
+>> +    * 3rd cell is optional and represents the OUT field value for 
+>> the given
+>> +      range.
+>> +    * 4th cell is optional and represents the ICPLL field (PLLICPR
+>> +      register)
+>> +- atmel,pll-clk-output-ranges : pll output frequency ranges + 
+>> optional parameter
+>> +                depending on #atmel,pll-output-range-cells
+>> +                property value.
+>> +
+>> +For example:
+>> +    plla: pllack {
+>> +        compatible = "atmel,at91sam9g45-clk-pll";
+>> +        interrupt-parent = <&pmc>;
+>> +        interrupts = <AT91_PMC_LOCKA IRQ_TYPE_LEVEL_HIGH>;
+>> +        #clock-cells = <0>;
+>> +        clocks = <&main>;
+>> +        atmel,clk-id = <AT91_PLLA_CLK>;
+>> +        atmel,clk-input-range = <2000000 32000000>;
+>> +        #atmel,pll-clk-output-range-cells = <4>;
+>> +        atmel,pll-clk-output-ranges = <74500000 800000000 0 0
+>> +                           69500000 750000000 1 0
+>> +                           64500000 700000000 2 0
+>> +                           59500000 650000000 3 0
+>> +                           54500000 600000000 0 1
+>> +                           49500000 550000000 1 1
+>> +                           44500000 500000000 2 1
+>> +                           40000000 450000000 3 1>;
+>> +    };
+>> +
+>> +Required properties for plldiv clocks:
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- clocks : shall be the plla clock phandle.
+>> +
+>> +For example:
+>> +    plladiv: plladivck {
+>> +        compatible = "atmel,at91sam9x5-clk-plldiv";
+>> +        #clock-cells = <0>;
+>> +        clocks = <&plla>;
+>> +    };
+>
+> Maybe a little explanation about this clock. It is a fixed divided 
+> (how many times?) clock issued from the specified clock.
+
+It is a fixed clock divider (by 2) and AFAIK clk parent must be plla.
+I'll add more precision about this clk.
+
+>
+>> +
+>> +Required properties for programmable clocks:
+>> +- interrupt-parent : must reference the PMC node.
+>> +- #clock-cells : from common clock binding; shall be set to 1. The 
+>> second cell
+>> +    is used to encode the programmable clock id.
+>> +    Peripheral ids are in atmel's SoC
+>> +    datasheets.
+>> +- clocks : shall be the programmable clock source phandles.
+>> +    e.g. clocks = <&clk32k>, <&main>, <&plla>, <&pllb>;
+>> +- name: device tree node describing a specific prog clock.
+>> +    * atmel,clk-id : programmable clock id (register offset from  PCKx
+>> +             register).
+>> +    * interrupts : shall be set to
+>> +               "<AT91_PMC_PCKRDY(id) IRQ_TYPE_LEVEL_HIGH>".
+>
+> Ditto
+>
+>> +
+>> +For example:
+>> +    prog: progck {
+>> +        compatible = "atmel,at91sam9g45-clk-programmable";
+>> +        interrupt-parent = <&pmc>;
+>> +        #clock-cells = <1>;
+>> +        clocks = <&clk32k>, <&main>, <&plladiv>, <&utmi>, <&mck>;
+>> +
+>> +        prog0 {
+>> +            atmel,clk-id = <0>;
+>> +            interrupts = <AT91_PMC_PCKRDY(0) IRQ_TYPE_LEVEL_HIGH>;
+>
+> Ditto
+>
+>> +        };
+>> +
+>> +        prog1 {
+>> +            atmel,clk-id = <1>;
+>> +            interrupts = <AT91_PMC_PCKRDY(1) IRQ_TYPE_LEVEL_HIGH>;
+>> +        };
+>> +    };
+>> +
+>> +
+>> +Required properties for smd clock:
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- clocks : shall be the smd clock source phandles.
+>> +    e.g. clocks = <&plladiv>, <&utmi>;
+>> +
+>> +For example:
+>> +    smd: smdck {
+>> +        compatible = "atmel,at91sam9x5-clk-smd";
+>> +        #clock-cells = <0>;
+>> +        clocks = <&plladiv>, <&utmi>;
+>> +    };
+>> +
+>> +Required properties for system clocks:
+>> +- #clock-cells : from common clock binding; shall be set to 1. The 
+>> second cell
+>> +    is used to encode the system clock id (bit used in SCER/SCDR 
+>> register).
+>> +- name: device tree node describing a specific system clock.
+>> +    * id: system clock id (bit position in SCER/SCDR/SCSR registers).
+>> +          System clock id macros should be used.
+>
+> Ditto
+>
+>> +
+>> +For example:
+>> +    system: systemck {
+>> +        compatible = "atmel,at91rm9200-clk-system";
+>> +        #clock-cells = <1>;
+>> +
+>> +        ddrck {
+>> +            atmel,clk-id = <AT91_DDRCK_SYS_CLK>;
+>> +        };
+>> +
+>> +        uhpck {
+>> +            atmel,clk-id = <AT91_UHP_SYS_CLK>;
+>> +        };
+>> +
+>> +        udpck {
+>> +            atmel,clk-id = <AT91_UDP_SYS_CLK>;
+>> +        };
+>> +    };
+>> +
+>> +
+>> +Required properties for usb clock:
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- clocks : shall be the smd clock source phandles.
+>> +    e.g. clocks = <&pllb>;
+>> +- atmel,clk-divisors (only available for "atmel,at91rm9200-clk-usb"):
+>> +    usb clock divisor table.
+>> +    e.g. divisors = <1 2 4 0>;
+>> +- atmel,usb-clk-src0-unused (only available for 
+>> "atmel,at91sam9x5-clk-usb"):
+>> +    Some SoC (sam9n12) use usb source 0 to disable the usb clock.
+>
+> I am not sure that we should use a special case for this device.
+> The enable/disable is still done by system clock register set.
+>
+> It is true that this bit is defined differently but just because the 
+> only source for this clock is pllb.
+
+Yes, but at least, I need to know that I must add one to the clock 
+parent id when I set the USBS field in the PMC_USB register.
+Or I can drop the atmel,usb-clk-src0-unused property and  just add a new 
+"atmel,at91sam9n12-clk-usb" compatible string,
+which might be a better solution here.
+
+Tell me what you'd prefer.
+>
+>> +
+>> +For example:
+>> +    usb: usbck {
+>> +        compatible = "atmel,at91sam9x5-clk-usb";
+>> +        #clock-cells = <0>;
+>> +        clocks = <&plladiv>, <&utmi>;
+>> +    };
+>> +
+>> +    usb: usbck {
+>> +        compatible = "atmel,at91rm9200-clk-usb";
+>> +        #clock-cells = <0>;
+>> +        clocks = <&pllb>;
+>> +        atmel,clk-divisors = <1 2 4 0>;
+>> +    };
+>> +
+>> +
+>> +Required properties for utmi clock:
+>> +- interrupt-parent : must reference the PMC node.
+>> +- interrupts : shall be set to "<AT91_PMC_LOCKU IRQ_TYPE_LEVEL_HIGH>".
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- clocks : shall be the main clock source phandle.
+>> +
+>> +For example:
+>> +    utmi: utmick {
+>> +        compatible = "atmel,at91sam9x5-clk-utmi";
+>> +        interrupt-parent = <&pmc>;
+>> +        interrupts = <AT91_PMC_LOCKU IRQ_TYPE_LEVEL_HIGH>;
+>> +        #clock-cells = <0>;
+>> +        clocks = <&main>;
+>> +    };
+>>
+>
+> Many things in this patch that will have incident in driver code. I 
+> will try to be coherent when I review the driver patches ;-)
+>
+> Anyway, all this seem good!
+>
+> Bye,
+
+Thanks for the detailed review.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
