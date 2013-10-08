@@ -1,57 +1,43 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] clocksource: Provide timekeeping for efm32 SoCs
-Date: Tue, 08 Oct 2013 13:30:15 +0200
-Message-ID: <5253ECC7.30700@linaro.org>
-References: <1380830189-21553-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [RESEND PATCH v3 10/11] ARM/dts: am33xx: mcasp:
+ Add new dma register location to reg-property
+Date: Tue, 8 Oct 2013 14:35:32 +0300
+Message-ID: <5253EE04.6040704@ti.com>
+References: <cover.1379590035.git.jsarha@ti.com>
+ <c7a2c57b695804f52927ed5fd865bc8a9988335a.1379590036.git.jsarha@ti.com>
+ <20131007220030.GD2976@kartoffel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380830189-21553-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20131007220030.GD2976@kartoffel>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "joelf@ti.com" <joelf@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "Hebbar,
+ Gururaja" <gururaja.hebbar@ti.com>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, Darren Etheridge <detheridge@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/2013 09:56 PM, Uwe Kleine-K=C3=B6nig wrote:
-> An efm32 features 4 16-bit timers with a 10-bit prescaler. This drive=
-r
-> provides clocksource and clock event device using one timer instance
-> each.
+On 10/08/2013 01:00 AM, Mark Rutland wrote:
+> For consistency with reg and other composite value properties, I'd prefer that
+> each entry in the list were individually bracketed:
 >
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-
-Applied to my tree for 3.13
-
-Thanks !
-   -- Daniel
-
-> Changes since (implicit) v1, sent with
-> Message-id:1379324644-20934-1-git-send-email-u.kleine-koenig@pengutro=
-nix.de:
+> 			dmas = <&edma 8>,
+> 			       <&edma 9>;
 >
->   - drop unused #defines
->   - add __init to efm32_clocksource_init
->   - fix indention
->   - add a comment describing the reason for the construct in efm32_ti=
-mer_init
->   - add device tree binding document
->     I created a new directory "timer" below the binding directory.
 
-Why do you say you created a new directory ?
+Makes sense. I'll do that. Thanks!
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+> It would also be nice if interrupts were written this way.
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+I'll change that too.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Jyri
