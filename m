@@ -1,130 +1,128 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v7 1/5] ARM: add basic support for Trusted Foundations
-Date: Tue, 08 Oct 2013 10:17:18 +0200
-Message-ID: <5253BF8E.4050802@monstr.eu>
-References: <1380904635-18113-1-git-send-email-acourbot@nvidia.com> <1380904635-18113-2-git-send-email-acourbot@nvidia.com>
-Reply-To: monstr@monstr.eu
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
+Date: Tue, 8 Oct 2013 11:17:55 +0300
+Message-ID: <5253BFB3.9040807@ti.com>
+References: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
+ <20131008054034.7445.48080@quantum>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="BDpjDvjmMN2UQURjhm38bdHVcwUhd0upd"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1380904635-18113-2-git-send-email-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Dave Martin <Dave.Martin@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, gnurou@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20131008054034.7445.48080@quantum>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---BDpjDvjmMN2UQURjhm38bdHVcwUhd0upd
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On 10/08/2013 08:40 AM, Mike Turquette wrote:
+> Quoting Tero Kristo (2013-09-25 01:48:06)
+>> Hi all,
+>>
+>> Version 7 contains following high level changes:
+>> - Dropped support for basic bindings from Mike Turquette, instead using
+>>    vendor specific bindings for all clocks
+>> - Mux clock + divider clock vendor specific bindings get rid of use
+>>    of the bit-masks, instead these are generated runtime based on parent
+>>    clock / divider min/max info, see individual patches for details
+>> - Added support for dummy_ck nodes, was missing from previous version
+>> - Fixed support for omap3630
+>> - Added support for new clock node type: ti,mux-gate-clock (using composite
+>>    clock type)
+>> - OMAP4 / OMAP5 only build fixes (compiler flag checks added to some files)
+>> - most of the of_omap_* calls renamed to of_ti_*
+>> - Rebased on top of v3.12-rc2
+>
+> Hi Tero,
+>
+> I had one really minor request for one of the patches, otherwise I'm
+> pretty happy with this series and I can take in the clock parts for
+> 3.13. A few general comments:
 
-Hi,
+Yea, I'll add the is_enabled check to the APLL and repost.
 
-On 10/04/2013 06:37 PM, Alexandre Courbot wrote:
-> Trusted Foundations is a TrustZone-based secure monitor for ARM that
-> can be invoked using the same SMC-based API on all supported
-> platforms. This patch adds initial basic support for Trusted
-> Foundations using the ARM firmware API. Current features are limited
-> to the ability to boot secondary processors.
->=20
-> Note: The API followed by Trusted Foundations does *not* follow the SMC=
+>
+> 1) I think I mentioned some time back that it would be
+> wise to put a disclaimer at the top of each DT binding description
+> stating something to the effect: "Binding status: Unstable - ABI
+> compatibility may be broken in the future". Are you OK merging these
+> bindings as-is without that kind of a disclaimer?
 
-> calling conventions. It has nothing to do with PSCI neither and is only=
+Well, personally I don't mind, but if you think this would be good, I'll 
+add this to next rev.
 
-> relevant to devices that use Trusted Foundations (like most Tegra-based=
+> 2) I hope to see the clockdomain stuff go away in the future. I'm OK to
+> take it for now to aid in this DT transition but I would like some
+> commitment that it will not stay in drivers/clk/omap forever. I guess
+> for clockdomain you'll need to figure out how to handle those in a
+> generic driver way.
 
-> retail devices).
->=20
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
-> ---
->  .../arm/firmware/tl,trusted-foundations.txt        | 17 +++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  arch/arm/Kconfig                                   |  2 +
->  arch/arm/Makefile                                  |  1 +
->  arch/arm/firmware/Kconfig                          | 28 ++++++++
->  arch/arm/firmware/Makefile                         |  1 +
->  arch/arm/firmware/trusted_foundations.c            | 77 ++++++++++++++=
-++++++++
->  arch/arm/include/asm/trusted_foundations.h         | 64 ++++++++++++++=
-++++
->  8 files changed, 191 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/firmware/tl,t=
-rusted-foundations.txt
->  create mode 100644 arch/arm/firmware/Kconfig
->  create mode 100644 arch/arm/firmware/Makefile
->  create mode 100644 arch/arm/firmware/trusted_foundations.c
->  create mode 100644 arch/arm/include/asm/trusted_foundations.h
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/firmware/tl,trusted-=
-foundations.txt b/Documentation/devicetree/bindings/arm/firmware/tl,trust=
-ed-foundations.txt
-> new file mode 100644
-> index 0000000..3954bbd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundat=
-ions.txt
-> @@ -0,0 +1,17 @@
-> +Trusted Foundations
-> +
-> +Boards that use the Trusted Foundations secure monitor can signal its
-> +presence by declaring a node compatible with "tl,trusted-foundations"
-> +under the root node.
-> +
-> +Required properties:
-> +- compatible : "tl,trusted-foundations"
-> +- version-major : major version number of Trusted Foundations firmware=
+I think the clockdomain stuff should be possible to move to wherever CM 
+driver is going to move. drivers/power/omap/... or something maybe. I 
+have been starting some initial work on the CM driver cleanup for this 
+purpose.
 
-> +- version-minor: minor version number of Trusted Foundations firmware
-> +
-> +Example:
-> +	firmware {
-> +		compatible =3D "tl,trusted-foundations";
-> +		version-major =3D <2>;
-> +		version-minor =3D <8>;
-> +	};
+> 3) Same concern as above but for the DT clkdev alias stuff. I guess
+> you'll need to make all of the dependent drivers play nice with DT. Do
+> you plan to remove it within a reasonable timeframe? It would be a nice
+> reduction in LoC and more importantly it would mean that drivers were
+> using clkdev in a more-correct fashion.
 
-This is just another example how to add sw description to dts.
-I have briefly looked at tegra20.dtsi and there are IPs like timer, intc,=
- etc
-which are in the DTS without any bus.
+This is probably harder, I think Tony is better to comment here, but my 
+idea is that in the worst case we can just break non-conforming drivers 
+by dropping the clkdev tables if nothing else helps. :) Most of the 
+tables are currently needed by hwmod, and there are already patches 
+around for adding DT clock support for hwmods, so once these go in, we 
+can at least reduce the table sizes considerably already.
 
-Add this firmware node to the root is just +1 case to this mess
-but IMHO will be good to have specific DT part which will be used for
-this sw setting which are coming to DTS all the time.
+-Tero
 
-Grant, Rob: Where is the proper location for these type of description?
-
-Thanks,
-Michal
-
-
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---BDpjDvjmMN2UQURjhm38bdHVcwUhd0upd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlJTv48ACgkQykllyylKDCEYkwCeLioWKoeGiaYBx648ugD2OS+U
-rcIAn1v7siGeDBSfU5yRm9YORfSs+hSO
-=ZRPE
------END PGP SIGNATURE-----
-
---BDpjDvjmMN2UQURjhm38bdHVcwUhd0upd--
+>
+> Regards,
+> Mike
+>
+>>
+>> Some detailed comments about patch level changes (if no mention, no major
+>> changes):
+>> - Patch #1:
+>>    * removed use of reg-names property, instead registers mapped using
+>>      compatible string
+>>    * removed ti,modes property, instead uses DPLL mode flags now
+>>    * separated AM33XX DPLLs under their own compatible strings
+>> - Patch #4 & #5: new patches
+>> - Patch #6: merged basic gate support from Mike to this patch as vendor
+>>    specific gate clock support
+>> - Patch #9 & #10: new patches
+>> - Patch #11: dummy clocks added, USB / ABE DPLL setup ordering changed
+>> - Patch #14: dummy clocks added
+>> - Patch #20: dropped usage of reg-names property
+>> - Patch #21: dummy clocks added
+>> - Patch #22 & #23: new patches
+>> - Patch #30: AM35XX clock data added to this patch
+>> - Patch #31:
+>>    * dummy clocks added
+>>    * added missing 3630 clocks
+>>
+>> Test branch available here:
+>> https://github.com/t-kristo/linux-pm.git
+>> branch: mainline-3.12-rc2-ti-dt-clks-v7
+>>
+>> Testing done:
+>> - am335x-bone : boot only
+>> - omap5-sevm : boot only
+>> - dra7-evm : boot only
+>> - omap3-beagle : boot + suspend/resume (ret + off)
+>> - omap4-panda-es : boot + suspend/resume
+>>
+>> Nishanth has also been doing some tests with omap3-beagle-xm with some WIP
+>> versions of this branch, but not with this latest one. Nishanth, maybe you
+>> can provide test results to this one also?
+>>
+>> -Tero
