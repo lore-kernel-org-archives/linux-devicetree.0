@@ -1,26 +1,58 @@
-From: =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 08/27] drm/tegra: gr2d: Miscellaneous cleanups
-Date: Tue, 8 Oct 2013 08:48:48 +0300
-Message-ID: <52539CC0.3020901@nvidia.com>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-9-git-send-email-treding@nvidia.com> <CABPQNSbkS40_jyGz14s08+x3e+-pxnfy90V7pzAOfiqUF2ma2g@mail.gmail.com> <20131007121452.GA8324@ulmo.nvidia.com> <CABPQNSb52HmS-2T=MUXteMFc1tndHdvtUnZqsVsPKjP1Dy6Esw@mail.gmail.com> <CABPQNSZGyuS3wAvJ8fFj=LMXxFJz9x_sKqEWW7QbiqC1gneLKw@mail.gmail.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH v2 3/3] ARM: shmobile: kzm9d: Use common clock framework
+Date: Tue, 8 Oct 2013 14:52:47 +0900
+Message-ID: <CANqRtoTPoR8Lt67Bo-BC9DxdN_+XH5uEGBetYGHMnrmjYk-21w@mail.gmail.com>
+References: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
+	<20131008143403.c11f294c8a1701a2ab3bc5fd@ops.dti.ne.jp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABPQNSZGyuS3wAvJ8fFj=LMXxFJz9x_sKqEWW7QbiqC1gneLKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "kusmabite-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kusmabite-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131008143403.c11f294c8a1701a2ab3bc5fd@ops.dti.ne.jp>
+Sender: linux-kernel-owner@vger.kernel.org
+To: takasi-y@ops.dti.ne.jp
+Cc: SH-Linux <linux-sh@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07.10.2013 16:02, Erik Faye-Lund wrote:
-> So the question is really how the hardware treats writes to
-> non-existent registers. My guess would be that they are simply not
-> recorded, and if that's the case it doesn't matter what we do. And
-> doing an unconditional AND is faster than doing a bit-test followed by
-> a conditional branch.
+On Tue, Oct 8, 2013 at 2:34 PM,  <takasi-y@ops.dti.ne.jp> wrote:
+> Use common clock framework version of clock
+>  drivers/clk/shmobile/clk-emev2.c
+> instead of sh-clkfwk version
+>  arch/arm/mach-shmobile/clock-emev2.c
+> when it is configured as a part of multi-platform.
+>
+> Signed-off-by: Takashi Yoshii <takasi-y@ops.dti.ne.jp>
+> ---
+>  arch/arm/mach-shmobile/board-kzm9d-reference.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm/mach-shmobile/board-kzm9d-reference.c b/arch/arm/mach-shmobile/board-kzm9d-reference.c
+> index 054d8d5..853003c 100644
+> --- a/arch/arm/mach-shmobile/board-kzm9d-reference.c
+> +++ b/arch/arm/mach-shmobile/board-kzm9d-reference.c
+> @@ -20,15 +20,14 @@
+>
+>  #include <linux/init.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/clk-provider.h>
+>  #include <mach/emev2.h>
+>  #include <mach/common.h>
+>  #include <asm/mach/arch.h>
+>
+>  static void __init kzm9d_add_standard_devices(void)
+>  {
+> -       if (!IS_ENABLED(CONFIG_COMMON_CLK))
+> -               emev2_clock_init();
+> -
+> +       of_clk_init(NULL);
 
-Hardware ignores writes to non-existent registers. Sometimes
-non-existent registers are taken into use in future versions, though.
+Hi Yoshii-san,
 
-Terje
+Thanks, this looks very good. It is the correct way now when
+renesas-devel-20131008 includes the following series:
+[PATCH 00/05] ARM: shmobile: KZM9D Multiplatform update
+
+Acked-by: Magnus Damm <damm@opensource.se>
+
+Cheers,
+
+/ magnus
