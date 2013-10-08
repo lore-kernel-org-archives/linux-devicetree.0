@@ -1,299 +1,83 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 16/19] clk: at91: add PMC smd clock
-Date: Tue, 8 Oct 2013 18:22:22 +0200
-Message-ID: <5254313E.90007@atmel.com>
-References: <1375937608-3773-1-git-send-email-b.brezillon@overkiz.com> <1375946243-9736-1-git-send-email-b.brezillon@overkiz.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v3 18/19] ARM: at91: move pit timer to common clk framework
+Date: Tue, 8 Oct 2013 18:28:23 +0200
+Message-ID: <525432A7.9030104@atmel.com>
+References: <1375937608-3773-1-git-send-email-b.brezillon@overkiz.com> <1375949844-10545-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1375946243-9736-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1375949844-10545-1-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon@overkiz.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/08/2013 09:17, Boris BREZILLON :
-> This patch adds at91 smd (Soft Modem) clock implementation using common clk
-> framework.
+On 08/08/2013 10:17, Boris BREZILLON :
+> Use device tree to get the source clock of the PIT (Periodic Interval Timer).
+> If the clock is not found in device tree (or dt is not enabled) we'll try to
+> get it using clk_lookup definitions.
 >
-> Not used by any driver right now.
->
-> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+
 > ---
->   arch/arm/mach-at91/Kconfig |    5 ++
->   drivers/clk/at91/Makefile  |    1 +
->   drivers/clk/at91/clk-smd.c |  171 ++++++++++++++++++++++++++++++++++++++++++++
->   drivers/clk/at91/pmc.c     |    7 ++
->   drivers/clk/at91/pmc.h     |    5 ++
->   5 files changed, 189 insertions(+)
->   create mode 100644 drivers/clk/at91/clk-smd.c
+>   arch/arm/mach-at91/at91sam926x_time.c |   14 +++++++++++++-
+>   1 file changed, 13 insertions(+), 1 deletion(-)
 >
-> diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-> index b76dc4c..97033f7 100644
-> --- a/arch/arm/mach-at91/Kconfig
-> +++ b/arch/arm/mach-at91/Kconfig
-> @@ -39,6 +39,9 @@ config AT91_SAM9G45_RESET
->   config AT91_SAM9_TIME
->   	bool
+> diff --git a/arch/arm/mach-at91/at91sam926x_time.c b/arch/arm/mach-at91/at91sam926x_time.c
+> index 3a4bc2e..8ac976a 100644
+> --- a/arch/arm/mach-at91/at91sam926x_time.c
+> +++ b/arch/arm/mach-at91/at91sam926x_time.c
+> @@ -39,6 +39,7 @@
+>   static u32 pit_cycle;		/* write-once */
+>   static u32 pit_cnt;		/* access only w/system irq blocked */
+>   static void __iomem *pit_base_addr __read_mostly;
+> +static struct clk *mck;
 >
-> +config HAVE_AT91_SMD
-> +	bool
-> +
->   config SOC_AT91SAM9
->   	bool
->   	select AT91_SAM9_TIME
-> @@ -85,6 +88,7 @@ config SOC_SAMA5D3
->   	select HAVE_AT91_DBGU1
->   	select AT91_USE_OLD_CLK
->   	select HAVE_AT91_UTMI
-> +	select HAVE_AT91_SMD
->   	select HAVE_AT91_USB_CLK
->   	help
->   	  Select this if you are using one of Atmel's SAMA5D3 family SoC.
-> @@ -157,6 +161,7 @@ config SOC_AT91SAM9X5
->   	select SOC_AT91SAM9
->   	select AT91_USE_OLD_CLK
->   	select HAVE_AT91_UTMI
-> +	select HAVE_AT91_SMD
->   	select HAVE_AT91_USB_CLK
->   	help
->   	  Select this if you are using one of Atmel's AT91SAM9x5 family SoC.
-> diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-> index 61db058..0e92b71 100644
-> --- a/drivers/clk/at91/Makefile
-> +++ b/drivers/clk/at91/Makefile
-> @@ -9,3 +9,4 @@ obj-y += clk-system.o clk-peripheral.o
->   obj-$(CONFIG_AT91_PROGRAMMABLE_CLOCKS)	+= clk-programmable.o
->   obj-$(CONFIG_HAVE_AT91_UTMI)		+= clk-utmi.o
->   obj-$(CONFIG_HAVE_AT91_USB_CLK)		+= clk-usb.o
-> +obj-$(CONFIG_HAVE_AT91_SMD)		+= clk-smd.o
-> diff --git a/drivers/clk/at91/clk-smd.c b/drivers/clk/at91/clk-smd.c
-> new file mode 100644
-> index 0000000..a7cf14a
-> --- /dev/null
-> +++ b/drivers/clk/at91/clk-smd.c
-> @@ -0,0 +1,171 @@
-> +/*
-> + * drivers/clk/at91/clk-smd.c
-> + *
-> + *  Copyright (C) 2013 Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/clk/at91_pmc.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/io.h>
-> +
-> +#include "pmc.h"
-> +
-> +#define SMD_SOURCE_MAX		2
-> +
-> +#define to_at91sam9x5_clk_smd(hw) \
-> +	container_of(hw, struct at91sam9x5_clk_smd, hw)
-> +struct at91sam9x5_clk_smd {
-> +	struct clk_hw hw;
-> +	struct at91_pmc *pmc;
-> +};
-> +
-> +static unsigned long at91sam9x5_clk_smd_recalc_rate(struct clk_hw *hw,
-> +						    unsigned long parent_rate)
-> +{
-> +	u32 tmp;
-> +	u8 smddiv;
-> +	struct at91sam9x5_clk_smd *smd = to_at91sam9x5_clk_smd(hw);
-> +	struct at91_pmc *pmc = smd->pmc;
-> +
-> +	tmp = pmc_read(pmc, AT91_PMC_SMD);
-> +	smddiv = (tmp & AT91_PMC_SMD_DIV) >> 8;
-
-
-> +	return parent_rate / (smddiv + 1);
-> +}
-> +
-> +static long at91sam9x5_clk_smd_round_rate(struct clk_hw *hw, unsigned long rate,
-> +					  unsigned long *parent_rate)
-> +{
-> +	unsigned long div;
-> +	unsigned long bestrate;
-> +	unsigned long tmp;
-> +
-> +	if (rate >= *parent_rate)
-> +		return *parent_rate;
-> +
-> +	div = *parent_rate / rate;
-> +	if (div > 15)
-
-
-> +		return *parent_rate / 16;
-
-
-> +
-> +	bestrate = *parent_rate / div;
-> +	tmp = *parent_rate / (div + 1);
-> +	if (bestrate - rate > rate - tmp)
-> +		bestrate = tmp;
-> +
-> +	return bestrate;
-> +}
-> +
-> +static int at91sam9x5_clk_smd_set_parent(struct clk_hw *hw, u8 index)
-> +{
-> +	u32 tmp;
-> +	struct at91sam9x5_clk_smd *smd = to_at91sam9x5_clk_smd(hw);
-> +	struct at91_pmc *pmc = smd->pmc;
-> +
-> +	if (index > 1)
-> +		return -EINVAL;
-> +	tmp = pmc_read(pmc, AT91_PMC_SMD) & ~AT91_PMC_SMDS;
-> +	if (index)
-> +		tmp |= AT91_PMC_SMDS;
-> +	pmc_write(pmc, AT91_PMC_SMD, tmp);
-> +	return 0;
-> +}
-> +
-> +static u8 at91sam9x5_clk_smd_get_parent(struct clk_hw *hw)
-> +{
-> +	struct at91sam9x5_clk_smd *smd = to_at91sam9x5_clk_smd(hw);
-> +	struct at91_pmc *pmc = smd->pmc;
-> +
-> +	return pmc_read(pmc, AT91_PMC_SMD) & AT91_PMC_SMDS;
-> +}
-> +
-> +static int at91sam9x5_clk_smd_set_rate(struct clk_hw *hw, unsigned long rate,
-> +				       unsigned long parent_rate)
-> +{
-> +	u32 tmp;
-> +	struct at91sam9x5_clk_smd *smd = to_at91sam9x5_clk_smd(hw);
-> +	struct at91_pmc *pmc = smd->pmc;
-> +	unsigned long div = parent_rate / rate;
-> +
-> +	if (parent_rate % rate || div < 1 || div > 16)
-
-> +		return -EINVAL;
-> +	tmp = pmc_read(pmc, AT91_PMC_SMD) & ~AT91_PMC_SMD_DIV;
-> +	tmp |= (div - 1) << 8;
-
-
-> +	pmc_write(pmc, AT91_PMC_SMD, tmp);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct clk_ops at91sam9x5_smd_ops = {
-> +	.recalc_rate = at91sam9x5_clk_smd_recalc_rate,
-> +	.round_rate = at91sam9x5_clk_smd_round_rate,
-> +	.get_parent = at91sam9x5_clk_smd_get_parent,
-> +	.set_parent = at91sam9x5_clk_smd_set_parent,
-> +	.set_rate = at91sam9x5_clk_smd_set_rate,
-> +};
-> +
-> +static struct clk * __init
-> +at91sam9x5_clk_register_smd(struct at91_pmc *pmc, const char *name,
-> +			    const char **parent_names, u8 num_parents)
-> +{
-> +	struct at91sam9x5_clk_smd *smd;
-> +	struct clk *clk = NULL;
-> +	struct clk_init_data init;
-> +
-> +	smd = kzalloc(sizeof(*smd), GFP_KERNEL);
-> +	if (!smd)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	init.name = name;
-> +	init.ops = &at91sam9x5_smd_ops;
-> +	init.parent_names = parent_names;
-> +	init.num_parents = num_parents;
-> +	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE;
-> +
-> +	smd->hw.init = &init;
-> +	smd->pmc = pmc;
-> +
-> +	clk = clk_register(NULL, &smd->hw);
-> +
-> +	if (IS_ERR(clk))
-> +		kfree(smd);
-> +
-> +	return clk;
-> +}
-> +
-> +void __init of_at91sam9x5_clk_smd_setup(struct device_node *np,
-> +					struct at91_pmc *pmc)
-> +{
-> +	struct clk *clk;
-> +	int i;
-> +	int num_parents;
-> +	const char *parent_names[SMD_SOURCE_MAX];
-> +	const char *name = np->name;
-> +
-> +	num_parents = of_count_phandle_with_args(np, "clocks", "#clock-cells");
-> +	if (num_parents <= 0 || num_parents >= SMD_SOURCE_MAX)
-> +		return;
-> +
-> +	for (i = 0; i < num_parents; i++) {
-> +		parent_names[i] = of_clk_get_parent_name(np, i);
-> +		if (!parent_names[i])
-> +			return;
-> +	}
-> +
-> +	of_property_read_string(np, "clock-output-names", &name);
-> +
-> +	clk = at91sam9x5_clk_register_smd(pmc, name, parent_names,
-> +					  num_parents);
-> +
-
-
-> +	if (IS_ERR(clk))
-> +		return;
-> +
-> +	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +}
-> diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-> index e46de3d..0a731c8 100644
-> --- a/drivers/clk/at91/pmc.c
-> +++ b/drivers/clk/at91/pmc.c
-> @@ -298,6 +298,13 @@ static const struct of_device_id pmc_clk_ids[] __initdata = {
->   		.data = of_at91sam9x5_clk_usb_setup,
->   	},
->   #endif
-> +	/* SMD clock */
-> +#if defined(CONFIG_HAVE_AT91_SMD)
-> +	{
-> +		.compatible = "atmel,at91sam9x5-clk-smd",
-> +		.data = of_at91sam9x5_clk_smd_setup,
-> +	},
-> +#endif
->   	{ /*sentinel*/ }
->   };
+>   static inline unsigned int pit_read(unsigned int reg_offset)
+>   {
+> @@ -195,10 +196,14 @@ static int __init of_at91sam926x_pit_init(void)
+>   	if (!pit_base_addr)
+>   		goto node_err;
 >
-> diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-> index b2efff5..43f2516 100644
-> --- a/drivers/clk/at91/pmc.h
-> +++ b/drivers/clk/at91/pmc.h
-> @@ -103,4 +103,9 @@ extern void __init of_at91sam9x5_clk_usb_setup(struct device_node *np,
->   					       struct at91_pmc *pmc);
->   #endif
->
-> +#if defined(CONFIG_HAVE_AT91_SMD)
-> +extern void __init of_at91sam9x5_clk_smd_setup(struct device_node *np,
-> +					       struct at91_pmc *pmc);
-> +#endif
+> +	mck = of_clk_get(np, 0);
 > +
->   #endif /* __PMC_H_ */
+>   	/* Get the interrupts property */
+>   	ret = irq_of_parse_and_map(np, 0);
+>   	if (!ret) {
+>   		pr_crit("AT91: PIT: Unable to get IRQ from DT\n");
+> +		if (!IS_ERR(mck))
+> +			clk_put(mck);
+>   		goto ioremap_err;
+>   	}
+>   	at91sam926x_pit_irq.irq = ret;
+> @@ -230,6 +235,8 @@ void __init at91sam926x_pit_init(void)
+>   	unsigned	bits;
+>   	int		ret;
+>
+> +	mck = ERR_PTR(-ENOENT);
+> +
+>   	/* For device tree enabled device: initialize here */
+>   	of_at91sam926x_pit_init();
+>
+> @@ -237,7 +244,12 @@ void __init at91sam926x_pit_init(void)
+>   	 * Use our actual MCK to figure out how many MCK/16 ticks per
+>   	 * 1/HZ period (instead of a compile-time constant LATCH).
+>   	 */
+> -	pit_rate = clk_get_rate(clk_get(NULL, "mck")) / 16;
+> +	if (IS_ERR(mck))
+> +		mck = clk_get(NULL, "mck");
+> +
+> +	if (IS_ERR(mck))
+> +		panic("AT91: PIT: Unable to get mck clk\n");
+> +	pit_rate = clk_get_rate(mck) / 16;
+>   	pit_cycle = (pit_rate + HZ/2) / HZ;
+>   	WARN_ON(((pit_cycle - 1) & ~AT91_PIT_PIV) != 0);
+>
 >
 
 
 -- 
 Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
