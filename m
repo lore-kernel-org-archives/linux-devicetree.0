@@ -1,128 +1,125 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
-Date: Tue, 8 Oct 2013 11:17:55 +0300
-Message-ID: <5253BFB3.9040807@ti.com>
-References: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
- <20131008054034.7445.48080@quantum>
+From: oliver+list-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
+Subject: [PATCH v2] ARM: sunxi: dts: Add support for the
+ cubieboard3, the CubieTruck
+Date: Tue,  8 Oct 2013 10:22:32 +0200
+Message-ID: <1381220552-3123-1-git-send-email-oliver+list@schinagl.nl>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20131008054034.7445.48080@quantum>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@linaro.org>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDDZ7YMYRMGBBJUCZ6JAKGQEYPOT7KI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/2013 08:40 AM, Mike Turquette wrote:
-> Quoting Tero Kristo (2013-09-25 01:48:06)
->> Hi all,
->>
->> Version 7 contains following high level changes:
->> - Dropped support for basic bindings from Mike Turquette, instead using
->>    vendor specific bindings for all clocks
->> - Mux clock + divider clock vendor specific bindings get rid of use
->>    of the bit-masks, instead these are generated runtime based on parent
->>    clock / divider min/max info, see individual patches for details
->> - Added support for dummy_ck nodes, was missing from previous version
->> - Fixed support for omap3630
->> - Added support for new clock node type: ti,mux-gate-clock (using composite
->>    clock type)
->> - OMAP4 / OMAP5 only build fixes (compiler flag checks added to some files)
->> - most of the of_omap_* calls renamed to of_ti_*
->> - Rebased on top of v3.12-rc2
->
-> Hi Tero,
->
-> I had one really minor request for one of the patches, otherwise I'm
-> pretty happy with this series and I can take in the clock parts for
-> 3.13. A few general comments:
+From: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 
-Yea, I'll add the is_enabled check to the APLL and repost.
+Cubietech introduced a new cubieboard, the CubieTruck. This board added
+more output connectors and features 2 GiB of RAM and a Gigabit PHY.
 
->
-> 1) I think I mentioned some time back that it would be
-> wise to put a disclaimer at the top of each DT binding description
-> stating something to the effect: "Binding status: Unstable - ABI
-> compatibility may be broken in the future". Are you OK merging these
-> bindings as-is without that kind of a disclaimer?
+Tested are are uart0 and LEDS which both work as expected.
 
-Well, personally I don't mind, but if you think this would be good, I'll 
-add this to next rev.
+Signed-off-by: Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+---
+Changes since previous version:
 
-> 2) I hope to see the clockdomain stuff go away in the future. I'm OK to
-> take it for now to aid in this DT transition but I would like some
-> commitment that it will not stay in drivers/clk/omap forever. I guess
-> for clockdomain you'll need to figure out how to handle those in a
-> generic driver way.
+* It's a cubietruck, not a cubietech
+* add more whitespaces
+* add proper commit log
 
-I think the clockdomain stuff should be possible to move to wherever CM 
-driver is going to move. drivers/power/omap/... or something maybe. I 
-have been starting some initial work on the CM driver cleanup for this 
-purpose.
+Thanks,
+Oliver
 
-> 3) Same concern as above but for the DT clkdev alias stuff. I guess
-> you'll need to make all of the dependent drivers play nice with DT. Do
-> you plan to remove it within a reasonable timeframe? It would be a nice
-> reduction in LoC and more importantly it would mean that drivers were
-> using clkdev in a more-correct fashion.
+ arch/arm/boot/dts/Makefile                 |  1 +
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 63 ++++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-cubietruck.dts
 
-This is probably harder, I think Tony is better to comment here, but my 
-idea is that in the worst case we can just break non-conforming drivers 
-by dropping the clkdev tables if nothing else helps. :) Most of the 
-tables are currently needed by hwmod, and there are already patches 
-around for adding DT clock support for hwmods, so once these go in, we 
-can at least reduce the table sizes considerably already.
-
--Tero
-
->
-> Regards,
-> Mike
->
->>
->> Some detailed comments about patch level changes (if no mention, no major
->> changes):
->> - Patch #1:
->>    * removed use of reg-names property, instead registers mapped using
->>      compatible string
->>    * removed ti,modes property, instead uses DPLL mode flags now
->>    * separated AM33XX DPLLs under their own compatible strings
->> - Patch #4 & #5: new patches
->> - Patch #6: merged basic gate support from Mike to this patch as vendor
->>    specific gate clock support
->> - Patch #9 & #10: new patches
->> - Patch #11: dummy clocks added, USB / ABE DPLL setup ordering changed
->> - Patch #14: dummy clocks added
->> - Patch #20: dropped usage of reg-names property
->> - Patch #21: dummy clocks added
->> - Patch #22 & #23: new patches
->> - Patch #30: AM35XX clock data added to this patch
->> - Patch #31:
->>    * dummy clocks added
->>    * added missing 3630 clocks
->>
->> Test branch available here:
->> https://github.com/t-kristo/linux-pm.git
->> branch: mainline-3.12-rc2-ti-dt-clks-v7
->>
->> Testing done:
->> - am335x-bone : boot only
->> - omap5-sevm : boot only
->> - dra7-evm : boot only
->> - omap3-beagle : boot + suspend/resume (ret + off)
->> - omap4-panda-es : boot + suspend/resume
->>
->> Nishanth has also been doing some tests with omap3-beagle-xm with some WIP
->> versions of this branch, but not with this latest one. Nishanth, maybe you
->> can provide test results to this one also?
->>
->> -Tero
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index cc0f1fb..171e6c7 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -232,6 +232,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += \
+ 	sun5i-a13-olinuxino.dtb \
+ 	sun6i-a31-colombus.dtb \
+ 	sun7i-a20-cubieboard2.dtb \
++	sun7i-a20-cubietruck.dtb \
+ 	sun7i-a20-olinuxino-micro.dtb
+ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb \
+ 	tegra20-iris-512.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+new file mode 100644
+index 0000000..8a1009d
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+@@ -0,0 +1,63 @@
++/*
++ * Copyright 2013 Oliver Schinagl
++ *
++ * Oliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/dts-v1/;
++/include/ "sun7i-a20.dtsi"
++
++/ {
++	model = "Cubietech Cubietruck";
++	compatible = "cubietech,cubietruck", "allwinner,sun7i-a20";
++
++	soc@01c00000 {
++		pinctrl@01c20800 {
++			led_pins_cubietruck: led_pins@0 {
++				allwinner,pins = "PH7", "PH11", "PH20", "PH21";
++				allwinner,function = "gpio_out";
++				allwinner,drive = <0>;
++				allwinner,pull = <0>;
++			};
++		};
++
++		uart0: serial@01c28000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins_a>;
++			status = "okay";
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_cubietruck>;
++
++		blue {
++			label = "cubietruck:blue:usr";
++			gpios = <&pio 7 21 0>;
++		};
++
++		orange {
++			label = "cubietruck:orange:usr";
++			gpios = <&pio 7 20 0>;
++		};
++
++		white {
++			label = "cubietruck:white:usr";
++			gpios = <&pio 7 11 0>;
++		};
++
++		green {
++			label = "cubietruck:green:usr";
++			gpios = <&pio 7 7 0>;
++		};
++	};
++};
+-- 
+1.8.1.5
