@@ -1,90 +1,80 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v3 2/2] ARM: Dove: Add the audio device to the Cubox DT
-Date: Tue, 8 Oct 2013 20:56:17 +0200
-Message-ID: <20131008205617.079142b6@armhf>
-References: <20131008194232.7d74b9e6@armhf>
-	<525448DE.5030004@gmail.com>
-	<20131008181647.GW5402@titan.lakedaemon.net>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [RFC] Architecture independent pcibios?
+Date: Tue, 8 Oct 2013 12:58:00 -0600
+Message-ID: <CAErSpo5UuYp9CmBtmwP1jmnTvGPDSP=upDakA21C+mWggLhPBQ@mail.gmail.com>
+References: <20131008144211.GA25231@e102652-lin.cambridge.arm.com>
+	<CAErSpo5=sUJDZGm+zHw+b1h_a1YYbaGBshAutAoPBZYUCRbYkw@mail.gmail.com>
+	<20131008171343.GB25606@e102652-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131008181647.GW5402-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20131008171343.GB25606@e102652-lin.cambridge.arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <monstr@monstr.eu>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch activates the audio device of the Cubox.
+On 10/8/13, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> On Tue, Oct 08, 2013 at 05:32:57PM +0100, Bjorn Helgaas wrote:
+>> [+cc Grant, Rob, devicetree list]
+>>
+>> On Tue, Oct 8, 2013 at 8:42 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+>> > Hello,
+>> >
+>> > I am working on adding PCIe support for a new architecture and looking
+>> > at various existing implementations of pcibios functions I've realised
+>> > that some architectures share a lot of common code. As I don't like to
+>> > repeat the pattern again without any good reasons, I am wondering if
+>> > there is any appetite for carving out those common functions into
+>> > a generic place under drivers/pci/pcibios.c where they can be reused.
+>> >
+>> > Things that I am specifically looking at are
+>> > pcibios_{alloc,free}_controller,
+>> > pci_process_bridge_OF_ranges and anything that will make adding support
+>> > for PCI/PCIe in a new architecture easier. Candidates for promoting
+>> > to a generic place are the functions found in both powerpc and
+>> > microblaze
+>> > as they seem to be mostly identical, they support DT bindings and are
+>> > 64bits ready.
+>>
+>> I'm very much in favor of unifying code to reduce duplication across
+>> architectures.
+>>
+>> In general, the pcibios_*() interfaces are things used by the PCI core
+>> (drivers/pci) but implemented by the architecture.  The specific cases
+>> you mentioned are not actually used by the PCI core, so my inclination
+>> would be to name them something else and possibly put them somewhere
+>> other than drivers/pci.
+>
+> There are at least a handful of architectures that seem to share the same
+> implementation for most (all?) of the pcibios_*() functions. (PowerPC and
+> microblaze the most obvious offenders, x86 to a certain extent).
 
-The audio flow (pin mpp_audio1) is output on both I2S and S/PDIF.
+Yes.  We've unified some of these by putting the generic version in
+drivers/pci as a weak function.
 
-The third si5351 clock (#2, pin mpp13) is used as the external clock.
+>> I wonder if pci_process_bridge_OF_ranges() would fit somewhere in
+>> drivers/of?  The implementations I looked at are mostly concerned with
+>> parsing OF resources, and they don't have much to do with PCI
+>> directly.
+>
+> Andrew Murray did sent a patch that was placing
+> pci_process_bridge_OF_ranges()
+> in the drivers/of. I can update that, as I have taken over his work.
+>
+>>
+>> pcibios_alloc_controller() is implemented by microblaze, powerpc, and
+>> xtensa.  Each of those arches defines its own "struct pci_controller",
+>> so it won't be completely trivial to unify this.  I tried to start
+>> some unification with the "struct pci_host_bridge" in the core, but
+>> haven't made much progress there.
+>
+> Do you have anything that you could share? I would pretty much like to take
+> on that as well, as I don't want to create yet another
+> "struct pci_controller." BTW, powerpc and microblaze again share a very
+> similarly looking structure.
 
-Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
----
-Jason,
+No, I don't have any code (or plans).  I think pci_domain_nr() and
+pcibus_to_node() should be pretty easy to start unifying.  I'd be
+thrilled if you started pushing on this.
 
-this patch replaces the previous patch v2 2/2
-
-v3:
-- move the pins declaration to dove.dtsi (Sebastian Hesselbarth)
----
- arch/arm/boot/dts/dove.dtsi      | 10 ++++++++++
- arch/arm/boot/dts/dove-cubox.dts |  8 ++++++++
- 2 files changed, 18 insertions(+)
-
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index e177e66..772b15e 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -227,6 +227,11 @@
- 				marvell,function =3D "gpio";
- 			};
-=20
-+			pmx_audio1_extclk: pmx-audio1-extclk {
-+				marvell,pins =3D "mpp13";
-+				marvell,function =3D "audio1";
-+			};
-+
- 			pmx_gpio_14: pmx-gpio-14 {
- 				marvell,pins =3D "mpp14";
- 				marvell,function =3D "gpio";
-@@ -302,6 +307,11 @@
- 				marvell,function =3D "gpio";
- 			};
-=20
-+			pmx_audio1_i2s1_spdifo: pmx-audio1-i2s1-spdifo {
-+				marvell,pins =3D "mpp_audio1";
-+				marvell,function =3D "i2s1/spdifo";
-+			};
-+
- 			pmx_spi0: pmx-spi0 {
- 				marvell,pins =3D "mpp_spi0";
- 				marvell,function =3D "spi0";
-diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-=
-cubox.dts
-index 022646e..78b0057 100644
---- a/arch/arm/boot/dts/dove-cubox.dts
-+++ b/arch/arm/boot/dts/dove-cubox.dts
-@@ -132,3 +132,11 @@
- 		reg =3D <0>;
- 	};
- };
-+
-+&audio1 {
-+	status =3D "okay";
-+	clocks =3D <&gate_clk 13>, <&si5351 2>;
-+	clock-names =3D "internal", "extclk";
-+	pinctrl-0 =3D <&pmx_audio1_i2s1_spdifo &pmx_audio1_extclk>;
-+	pinctrl-names =3D "default";
-+};
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
