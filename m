@@ -1,59 +1,74 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: omap3-beagle: use 3630 definitions
-Date: Tue, 8 Oct 2013 13:01:26 -0500
-Message-ID: <52544876.8000904@ti.com>
-References: <523C9D8B.2000701@ti.com> <1381164584-4008-1-git-send-email-nm@ti.com> <1381164584-4008-3-git-send-email-nm@ti.com> <20131007192009.GA8949@atomide.com> <20131008174721.GH13128@radagast>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: Dove: Add the audio device to the Cubox DT
+Date: Tue, 08 Oct 2013 20:03:10 +0200
+Message-ID: <525448DE.5030004@gmail.com>
+References: <20131008194232.7d74b9e6@armhf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20131008174721.GH13128@radagast>
-Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com, Tony Lindgren <tony@atomide.com>
-Cc: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131008194232.7d74b9e6@armhf>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/2013 12:47 PM, Felipe Balbi wrote:
-> Hi,
-> 
-> On Mon, Oct 07, 2013 at 12:20:09PM -0700, Tony Lindgren wrote:
->> * Nishanth Menon <nm@ti.com> [131007 09:57]:
->>> beagle-xm currently would matchup with ti,omap3 which invokes
->>> omap3430_init_early instead of omap3630_init_early. So add
->>> compatiblity for 3630 to allow match
->>>
->>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>> ---
->>>  arch/arm/boot/dts/omap3-beagle-xm.dts |    2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
->>> index 0f7cfc5..2079e22 100644
->>> --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
->>> +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
->>> @@ -11,7 +11,7 @@
->>>  
->>>  / {
->>>  	model = "TI OMAP3 BeagleBoard xM";
->>> -	compatible = "ti,omap3-beagle-xm", "ti,omap3-beagle", "ti,omap3";
->>> +	compatible = "ti,omap3-beagle-xm", "ti,omap363x", "ti,omap3-beagle", "ti,omap3";
->>>  
->>>  	cpus {
->>>  		cpu@0 {
->>
->> This compatible string looks hacky.. How about just make it
->>
->> "ti,omap3-beagle-xm", "ti,omap363x", "ti,omap3";
->>
->> How about just leave out "ti,omap3-beagle" here?
-> 
-> ti,omap3-beagle was already part of the original file, we can definitely
-> remove but I'd expect us to maintain support for that string
-> indefinitely should anybody continue to use older dtbs.
-> 
-it already is supported (we still have a beagleboard) - the current
-patch rev does nothing to break existing code or bindings.
+On 10/08/2013 07:42 PM, Jean-Francois Moine wrote:
+> This patch activates the audio device of the Cubox.
+>
+> The audio flow (pin mpp_audio1) is output on both I2S and S/PDIF.
+>
+> The third si5351 clock (#2, pin mpp13) is used as the external clock.
+>
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/dove-cubox.dts | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-cubox.dts
+> index 022646e..bb38a24 100644
+> --- a/arch/arm/boot/dts/dove-cubox.dts
+> +++ b/arch/arm/boot/dts/dove-cubox.dts
+> @@ -132,3 +132,23 @@
+>   		reg = <0>;
+>   	};
+>   };
+> +
+> +&pinctrl {
+> +	pmx_gpio_13_audio1: pmx-gpio-13-audio1 {
 
--- 
-Regards,
-Nishanth Menon
+Jean-Francois,
+
+please name the node "pmx_audio1_extclk: pmx-audio1-extclk"
+and move both to the corresponding section in dove.dtsi.
+We can reuse them on other Dove boards for sure.
+
+> +		marvell,pins = "mpp13";
+> +		marvell,function = "audio1";
+> +	};
+> +
+> +	pmx_audio1_i2s1_spdifo: pmx-audio1-i2s1-spdifo {
+> +		marvell,pins = "mpp_audio1";
+> +		marvell,function = "i2s1/spdifo";
+> +	};
+> +};
+> +
+> +&audio1 {
+> +	status = "okay";
+> +	clocks = <&gate_clk 13>, <&si5351 2>;
+> +	clock-names = "internal", "extclk";
+> +	pinctrl-0 = <&pmx_audio1_i2s1_spdifo &pmx_gpio_13_audio1>;
+
+The above needs updated phandles then.
+
+Otherwise,
+
+Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+> +	pinctrl-names = "default";
+> +};
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
