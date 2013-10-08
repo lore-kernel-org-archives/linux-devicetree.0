@@ -1,96 +1,118 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC v4] ARM: shmobile: armadillo800eva-reference: add SDHI and MMCIF interfaces
-Date: Tue, 08 Oct 2013 16:32 +0200
-Message-ID: <6196420.hT4Bm78gzA@avalon>
-References: <Pine.LNX.4.64.1309231651230.11505@axis700.grange> <138071238.VjAY8SX7B8@avalon> <CACRpkdac_Efc7Vh0_m11zWuB0pgQzVnvy2kBjhn5KGhwwv1oDw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdac_Efc7Vh0_m11zWuB0pgQzVnvy2kBjhn5KGhwwv1oDw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH 1/2] clk/zynq/clkc: Add 'fclk-enable' feature
+Date: Tue,  8 Oct 2013 07:36:11 -0700
+Message-ID: <1381242972-14752-1-git-send-email-soren.brinkmann@xilinx.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Michal Simek <michal.simek@xilinx.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus (and Guennadi and Grant, there are questions for your below),
+In some use cases Zynq's FPGA clocks are used as static clock
+generators for IP in the FPGA part of the SOC for which no Linux driver
+exists and would control those clocks. To avoid automatic
+gating of these clocks in such cases a new property - fclk-enable - is
+added to the clock controller's DT description to accomodate such use
+cases. It's value is a bitmask, where a set bit results in enabling
+the corresponding FCLK through the clkc.
 
-On Tuesday 08 October 2013 13:19:04 Linus Walleij wrote:
-> On Mon, Sep 30, 2013 at 1:10 PM, Laurent Pinchart wrote:
-> > Hi Linus,
-> > 
-> > [Updated the devicetree mailing list e-mail address]
-> > 
-> > On Monday 30 September 2013 01:20:46 Linus Walleij wrote:
-> >> On Sun, Sep 29, 2013 at 8:49 AM, Laurent Pinchart wrote:
-> >> > On Friday 27 September 2013 16:08:31 Linus Walleij wrote:
-> >> >> Can't you just locate the node using of_find_node_by_path()
-> >> >> or whatever and then use this:
-> >> >> int of_update_property(struct device_node *np, struct property
-> >> >> *newprop)?
-> >> > 
-> >> > Where can I do that ? I need the PFC/GPIO devices to have been probed,
-> >> > so board init isn't an option, but I also need the device to be enabled
-> >> > not to have been probed yet.
-> >> > 
-> >> > One option would be to use a bus notifier to find out when the PFC/GPIO
-> >> > devices are available, and extend of_update_property() with a
-> >> > notification mechanism (either generic, or specific to the enabled
-> >> > propery) to detect when a device gets enabled and probe it.
-> >> 
-> >> Argh that sounds awfully complicated...
-> >> 
-> >> I would consider doing this right inside the PCF/GPIO driver right at the
-> >> end of its probe function. As it is related to pins anyway... or is that
-> >> too ugly?
-> > 
-> > As a reminder, we need to decide whether to register an SDHI (SD
-> > controller) device or a WiFi module device, and thus configure pinmuxing
-> > appropriately, based on the state of a GPIO connected to a
-> > user-accessible switch. This behaviour is board-specific, not
-> > SoC-specific. That's why I believe the code should be in board code.
-> 
-> Hm, I might have misunderstood this earlier, so if the board code is
-> going to register *either* SDHI *or* WIFI, both as some kind of
-> struct device then as you say:
->
-> > The board has two connectors (MMC/SD 1
-> > and wifi module) that are not usable concurrently. The user can select
-> > which connector to use through a hardware switch that existing board code
-> > reads at init time (...)
-> 
-> So depending on what you read there you're going to register a struct device
-> named mmc0 or wifi0 or something, then you just register the pin control
-> tables for both cases and the apropriate default state will be selected by
-> the device core right before the device driver gets probed. (grep for
-> pinctrl_bind_pins). It is perfectly fine to have unused pin states in the
-> table.
-> 
-> Then the problem is unrelated to pin control and more about how to register
-> these devices, nothing to do with pin control.
+FPGA clocks are handled following the rules below:
 
-Correct.
+If an FCLK is not enabled by bootloaders, that FCLK will be disabled in
+Linux. Drivers can enable and control it through the CCF as usual.
 
-> Such as if they should both be marked as "disabled" in the DT and activated
-> by the kernel, or registered by adding a platform device or something...
+If an FCLK is enabled by bootloaders AND the corresponding bit in the
+'fclk-enable' DT property is set, that FCLK will be enabled by the clkc,
+resulting in an off by one reference count for that clock. Ensuring it
+will always be running.
 
-I believe a way to mark a disabled device as enabled from board code would be 
-interesting. The function could be called from a platform bus notifier that 
-reacts on the GPIO device being probed. It's a bit of a corner case, but it 
-doesn't sound too hackish to me.
+The default value for 'fclk-enable' is '0xf' (all FCLK's enabled by the
+bootloader are enabled through the clkc.
 
-Grant, would you be fine with such a mechanism ? The devices would be marked 
-with status = "disabled" in DT and a new function would be added to enable 
-them. That function would modify the DT status to "okay" and trigger device 
-registration.
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+---
+ .../devicetree/bindings/clock/zynq-7000.txt          |  4 ++++
+ drivers/clk/zynq/clkc.c                              | 20 +++++++++++++++++---
+ 2 files changed, 21 insertions(+), 3 deletions(-)
 
-> But I guess I got it wrong?
-
-I believe you got it right. At least your understanding matches mine :-) 
-Guennadi, could you please confirm ?
-
+diff --git a/Documentation/devicetree/bindings/clock/zynq-7000.txt b/Documentation/devicetree/bindings/clock/zynq-7000.txt
+index d99af878f5d7..11fdd146ec83 100644
+--- a/Documentation/devicetree/bindings/clock/zynq-7000.txt
++++ b/Documentation/devicetree/bindings/clock/zynq-7000.txt
+@@ -22,6 +22,10 @@ Required properties:
+ Optional properties:
+  - clocks : as described in the clock bindings
+  - clock-names : as described in the clock bindings
++ - fclk-enable : Bit mask to enable FCLKs in cases no proper CCF compatible
++		 driver is available. Bit [0..3] correspond to FCLK0..FCLK3. The
++		 corresponding FCLK will only be enabled if it is actually
++		 running at boot time. (default = 0xf)
+ 
+ Clock inputs:
+ The following strings are optional parameters to the 'clock-names' property in
+diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
+index 10772aa72e4e..a36fc0f47634 100644
+--- a/drivers/clk/zynq/clkc.c
++++ b/drivers/clk/zynq/clkc.c
+@@ -102,9 +102,10 @@ static const char *swdt_ext_clk_input_names[] __initdata = {"swdt_ext_clk"};
+ 
+ static void __init zynq_clk_register_fclk(enum zynq_clk fclk,
+ 		const char *clk_name, void __iomem *fclk_ctrl_reg,
+-		const char **parents)
++		const char **parents, int enable)
+ {
+ 	struct clk *clk;
++	u32 enable_reg;
+ 	char *mux_name;
+ 	char *div0_name;
+ 	char *div1_name;
+@@ -147,6 +148,12 @@ static void __init zynq_clk_register_fclk(enum zynq_clk fclk,
+ 	clks[fclk] = clk_register_gate(NULL, clk_name,
+ 			div1_name, CLK_SET_RATE_PARENT, fclk_gate_reg,
+ 			0, CLK_GATE_SET_TO_DISABLE, fclk_gate_lock);
++	enable_reg = readl(fclk_gate_reg) & 1;
++	if (enable & !enable_reg) {
++		if (clk_prepare_enable(clks[fclk]))
++			pr_warn("%s: FCLK%u enable failed\n", __func__,
++					fclk - fclk0);
++	}
+ 	kfree(mux_name);
+ 	kfree(div0_name);
+ 	kfree(div1_name);
+@@ -213,6 +220,7 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 	int ret;
+ 	struct clk *clk;
+ 	char *clk_name;
++	unsigned int fclk_enable;
+ 	const char *clk_output_name[clk_max];
+ 	const char *cpu_parents[4];
+ 	const char *periph_parents[4];
+@@ -247,6 +255,10 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 	ps_clk = clk_register_fixed_rate(NULL, "ps_clk", NULL, CLK_IS_ROOT,
+ 			tmp);
+ 
++	ret = of_property_read_u32(np, "fclk-enable", &fclk_enable);
++	if (ret)
++		fclk_enable = 0xf;
++
+ 	/* PLLs */
+ 	clk = clk_register_zynq_pll("armpll_int", "ps_clk", SLCR_ARMPLL_CTRL,
+ 			SLCR_PLL_STATUS, 0, &armpll_lock);
+@@ -340,10 +352,12 @@ static void __init zynq_clk_setup(struct device_node *np)
+ 	clk_prepare_enable(clks[dci]);
+ 
+ 	/* Peripheral clocks */
+-	for (i = fclk0; i <= fclk3; i++)
++	for (i = fclk0; i <= fclk3; i++) {
++		int enable = !!(fclk_enable & BIT(i - fclk0));
+ 		zynq_clk_register_fclk(i, clk_output_name[i],
+ 				SLCR_FPGA0_CLK_CTRL + 0x10 * (i - fclk0),
+-				periph_parents);
++				periph_parents, enable);
++	}
+ 
+ 	zynq_clk_register_periph_clk(lqspi, 0, clk_output_name[lqspi], NULL,
+ 			SLCR_LQSPI_CLK_CTRL, periph_parents, 0);
 -- 
-Regards,
-
-Laurent Pinchart
+1.8.4
 
