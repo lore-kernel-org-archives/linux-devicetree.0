@@ -1,40 +1,25 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH 1/6] DRIVERS: IRQCHIP: IRQ-GIC: Add support for
- routable irqs
-Date: Tue, 8 Oct 2013 13:23:00 +0200
-Message-ID: <CACRpkdac5iPqwv2Wb2uksn=cYtS0r=1+tSr4Cre2Xun0JBKzpA@mail.gmail.com>
-References: <1380549564-31045-1-git-send-email-r.sricharan@ti.com>
-	<1380549564-31045-2-git-send-email-r.sricharan@ti.com>
-	<524987A3.4090204@arm.com>
+Subject: Re: [PATCH] pinctrl: palmas: remove pin config BIAS_PULL_PIN_DEFAULT support
+Date: Tue, 8 Oct 2013 13:28:21 +0200
+Message-ID: <CACRpkdY8wsFGpAKs5U3SCatdbNpzqr+u+oRLSZt81Qx8-EWJHw@mail.gmail.com>
+References: <1380713832-24488-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <524987A3.4090204@arm.com>
+In-Reply-To: <1380713832-24488-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Sricharan R <r.sricharan@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "santosh.shilimkar@ti.com" <santosh.shilimkar@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tony@atomide.com" <tony@atomide.com>, "rnayak@ti.com" <rnayak@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Rutland <Mark.Rutland@arm.com>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Stephen Warren <swarren@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2013 at 4:16 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> On 30/09/13 14:59, Sricharan R wrote:
->> In some socs the gic can be preceded by a crossbar IP which
->> routes the peripheral interrupts to the gic inputs. The peripheral
->> interrupts are associated with a fixed crossbar input line and the
->> crossbar routes that to one of the free gic input line.
->>
->> The DT entries for peripherals provides the fixed crossbar input line
->> as its interrupt number and the mapping code should associate this with
->> a free gic input line. This patch adds the support inside the gic irqchip
->> to handle such routable irqs. The routable irqs are registered in a linear
->> domain. The registered routable domain's callback should be implemented
->> to get a free irq and to configure the IP to route it.
->
-> Isn't this just another chained interrupt controller? How is it GIC
-> specific?
+On Wed, Oct 2, 2013 at 1:37 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 
-I thought so from the beginning but I was dead wrong, as pointed out
-by tglx it is basically a hardware .map function, so its usecase will map
-to the irqdomain .map/.unmap so to say.
+> Palmas devices do not support the default bias configuration
+> and hence removing this option from valid pin config parameters.
+>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+
+Patch applied with Stephen's ACK.
 
 Yours,
 Linus Walleij
