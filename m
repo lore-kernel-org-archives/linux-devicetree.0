@@ -1,112 +1,40 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v4 10/10] ARM/dts: am335x-evmsk: Audio support
-Date: Tue, 8 Oct 2013 22:36:41 +0300
-Message-ID: <f389f285899dce8aa7651e79dc26d8f8748a4525.1381259962.git.jsarha@ti.com>
-References: <cover.1381259962.git.jsarha@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <cover.1381259962.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, broonie@kernel.org, mark.rutland@arm.com, joelf@ti.com, Peter Ujfalusi <peter.ujfalusi@ti.com>, Jyri Sarha <jsarha@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] MAINTAINERS: remove swarren from DT bindings
+Date: Tue,  8 Oct 2013 14:25:43 -0600
+Message-ID: <1381263943-13878-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-AM335x EVM-SK have only support for audio playback (stereo jack on the
-board) via tlv320aic3106 codec connected to McASP1.
-Enable the support for audio playback on the board:
-- McASP1 configuration
-- tlv320aic3106 configuration
-- Machine driver.
+I'm afraid I'm rather burned out w.r.t. DT bindings. As has probably
+been evident, I don't have and haven't made the time to review many
+recently. As such, remove myself from that MAINTAINERS entry.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/am335x-evmsk.dts |   51 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index 4f339fa..27aa42f 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -158,6 +158,15 @@
- 				0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
- 			>;
- 		};
-+
-+		mcasp1_pins: mcasp1_pins {
-+			pinctrl-single,pins = <
-+				0x10c (PIN_INPUT_PULLDOWN | MUX_MODE4) /* mii1_crs.mcasp1_aclkx */
-+				0x110 (PIN_INPUT_PULLDOWN | MUX_MODE4) /* mii1_rxerr.mcasp1_fsx */
-+				0x108 (PIN_OUTPUT_PULLDOWN | MUX_MODE4) /* mii1_col.mcasp1_axr2 */
-+				0x144 (PIN_INPUT_PULLDOWN | MUX_MODE4) /* rmii1_ref_clk.mcasp1_axr3 */
-+			>;
-+		};
- 	};
- 
- 	ocp {
-@@ -206,6 +215,18 @@
- 				st,max-limit-y = <550>;
- 				st,max-limit-z = <750>;
- 			};
-+
-+			tlv320aic3106: tlv320aic3106@1b {
-+				compatible = "ti,tlv320aic3106";
-+				reg = <0x1b>;
-+				status = "okay";
-+
-+				/* Regulators */
-+				AVDD-supply = <&vaux2_reg>;
-+				IOVDD-supply = <&vaux2_reg>;
-+				DRVDD-supply = <&vaux2_reg>;
-+				DVDD-supply = <&vbat>;
-+			};
- 		};
- 
- 		musb: usb@47400000 {
-@@ -233,6 +254,17 @@
- 				pinctrl-0 = <&ecap2_pins>;
- 			};
- 		};
-+
-+		sound {
-+			compatible = "ti,da830-evm-audio";
-+			ti,model = "AM335x-EVMSK";
-+			ti,audio-codec = <&tlv320aic3106>;
-+			ti,mcasp-controller = <&mcasp1>;
-+			ti,codec-clock-rate = <24576000>;
-+			ti,audio-routing =
-+				"Headphone Jack",       "HPLOUT",
-+				"Headphone Jack",       "HPROUT";
-+		};
- 	};
- 
- 	vbat: fixedregulator@0 {
-@@ -419,3 +451,22 @@
- 	phy_id = <&davinci_mdio>, <1>;
- 	phy-mode = "rgmii-txid";
- };
-+
-+&mcasp1 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&mcasp1_pins>;
-+
-+		status = "okay";
-+
-+		op-mode = <0>;          /* MCASP_IIS_MODE */
-+		tdm-slots = <2>;
-+		/* 16 serializer */
-+		serial-dir = <  /* 0: INACTIVE, 1: TX, 2: RX */
-+			0 0 1 2
-+			0 0 0 0
-+			0 0 0 0
-+			0 0 0 0
-+		>;
-+		tx-num-evt = <1>;
-+		rx-num-evt = <1>;
-+};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8a0cbf3..120c335 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6155,7 +6155,6 @@ OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+ M:	Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+ M:	Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+ M:	Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+-M:	Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+ M:	Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+ L:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:	Maintained
 -- 
-1.7.9.5
+1.8.1.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
