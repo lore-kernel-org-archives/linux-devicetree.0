@@ -1,67 +1,29 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] ARM: dts: Update arch timer node with clock frequency
-Date: Tue, 8 Oct 2013 15:15:47 -0700
-Message-ID: <CAOesGMgaDB0ZK7LU+vZmXkpTXaMKbuNgT+vuaRbzypwtZ9eouA@mail.gmail.com>
-References: <1379499113-20342-1-git-send-email-yuvaraj.cd@samsung.com>
-	<3887347.Oxs1qQnt5k@flatron>
-	<20130923141504.GD16069@e106331-lin.cambridge.arm.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 3/5] clk: tegra124: Add common clk IDs to clk-id.h
+Date: Tue, 08 Oct 2013 16:29:00 -0600
+Message-ID: <5254872C.9010307@wwwdotorg.org>
+References: <1380878014-22088-1-git-send-email-pdeschrijver@nvidia.com> <1380878014-22088-4-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130923141504.GD16069@e106331-lin.cambridge.arm.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Marc Zyngier <marc.zyngier@arm.com>, Tony Lindgren <tony@atomide.com>, Sean Paul <seanpaul@chromium.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1380878014-22088-4-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[Adding Tony, who reported a mainline booting issue, and Sean who
-helped me track this down]
+On 10/04/2013 03:12 AM, Peter De Schrijver wrote:
+> Tegra124 introduces a number of a new clocks. Introduce the corresponding
+> the IDs for them.
 
-On Mon, Sep 23, 2013 at 7:15 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Sat, Sep 21, 2013 at 04:24:59PM +0100, Tomasz Figa wrote:
->> Hi Yuvaraj,
->>
->> On Wednesday 18 of September 2013 15:41:53 Yuvaraj Kumar C D wrote:
->> > Without the "clock-frequency" property in arch timer node, could able
->> > to see the below crash dump.
->> [snip]
->> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi
->> > b/arch/arm/boot/dts/exynos5250.dtsi index 7d7cc77..668ce5d 100644
->> > --- a/arch/arm/boot/dts/exynos5250.dtsi
->> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> > @@ -96,6 +96,7 @@
->> >                          <1 14 0xf08>,
->> >                          <1 11 0xf08>,
->> >                          <1 10 0xf08>;
->> > +           clock-frequency = <24000000>;
->>
->> Shouldn't it rather come from some clock provided by some clock controller
->> instead?
->>
->> The frequency would be then retrieved using clk_get_rate() on a clock
->> received by clk_get(), specified in device tree using generic clock
->> bindings.
->
-> If the bootloader has initialised the generic timer correctly, the
-> CNTFRQ register should contain the clock frequency, independent of any
-> external clock.
+> diff --git a/drivers/clk/tegra/clk-id.h b/drivers/clk/tegra/clk-id.h
 
-So, we just sat here to bisect a problem on the Samsung Chromebook
-where we hit exactly this problem. The read-only firmware on the
-device does not set CNTFRQ at boot, so this fails.
+> +	tegra124_clk_isp,
 
-Apparantly the u-boot that comes with Arndale sets it, so I haven't
-seen this error on that platform.
-
-> Having the bootloader set CNTFRQ is by far the preferable solution, it
-> is architected for this purpose.
-
-Unfortunately there is now real hardware out there that needs this due
-to firmware bugs / missing features, so there's little other choice.
-:(
-
-I'll pick this patch up in the fixes branch for 3.12, unless someone
-complains loudly.
-
-
--Olof
+Why does that one clock have a "tegra124_" name prefix, whereas all the
+rest are just "tegra_"?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
