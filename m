@@ -1,255 +1,153 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 2/4] mmc: omap_hsmmc: Enable SDIO IRQ.
-Date: Tue, 8 Oct 2013 11:11:41 -0500
-Message-ID: <20131008161131.GD13128@radagast>
-References: <1380971830-21492-1-git-send-email-afenkart@gmail.com>
- <1380971830-21492-3-git-send-email-afenkart@gmail.com>
-Reply-To: <balbi@ti.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V3] clk: palmas: add clock driver for palmas
+Date: Tue, 8 Oct 2013 11:14:33 -0500
+Message-ID: <52542F69.30407@ti.com>
+References: <1381238480-18852-1-git-send-email-ldewangan@nvidia.com> <525408B3.1000107@ti.com> <5254193A.70104@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gDGSpKKIBgtShtf+"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1380971830-21492-3-git-send-email-afenkart@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Andreas Fenkart <afenkart@gmail.com>
-Cc: Chris Ball <cjb@laptop.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Felipe Balbi <balbi@ti.com>, Balaji T K <balajitk@ti.com>, zonque@gmail.com, devicetree-discuss@lists.ozlabs.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5254193A.70104@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: "mturquette@linaro.org" <mturquette@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "broonie@linaro.org" <broonie@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, J Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
---gDGSpKKIBgtShtf+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/08/2013 09:39 AM, Laxman Dewangan wrote:
+> Thanks Nishanth for review.
+> 
+> On Tuesday 08 October 2013 06:59 PM, Nishanth Menon wrote:
+>> On 10/08/2013 08:21 AM, Laxman Dewangan wrote:
+>>> Palmas devices has two clock output CLK32K_KG and CLK32K_KG_AUDIO
+>> not all palmas devices have 2 clocks - example: tps659038
+> 
+> This is for generic palmas and I have seen it for TPS65913, TPS65914, 
+> TPS80036. If the generic one is not compatible then it need to add  
+> device specific and at that time, it is require to update the binding 
+> document accordingly.
 
-Hi,
+?? you do have two clocks inside the device they should be represented
+as two compatible entities - that simplifies everyone's life.
 
-On Sat, Oct 05, 2013 at 01:17:08PM +0200, Andreas Fenkart wrote:
-> For now, only support SDIO interrupt if we are booted with
-> DT. This is because some platforms need special quirks. And
-> we don't want to add new legacy mux platform init code
-> callbacks any longer as we are moving to DT based booting
-> anyways.
->=20
-> Broken hardware, missing the swakueup line, should fallback
-> to polling, by setting 'ti,quirk-swakup-missing' in the
-> device tree. Otherwise pending SDIO IRQ are not detected
-> while in suspend. This affects am33xx processors.
->=20
-> Signed-off-by: Andreas Fenkart <afenkart@gmail.com>
+> 
+>>           |    7 +
+>>   drivers/clk/Makefile                               |    1 +
+>>   drivers/clk/clk-palmas.c                           |  340 ++++++++++++++++++++
+>>
+>> http://www.spinics.net/lists/devicetree/msg04855.html
+>> Do we do 2 patches now? one seperate for binding and implementation?
+>> What is our current preference now a days?
+> 
+> Currently it is implementation + binding doc in one patch.
+> 
+>>
+>>>   Palmas device has two clock output pins for 32KHz, KG and KG_AUDIO.
+>>> +
+>>> +This binding uses the common clock binding ./clock-bindings.txt.
+>> proper link would be to provide
+>> Documentation/devicetree/bindings/clock/clock-bindings.txt ?
+> 
+> Hmm, other patch I got feedback from DT maintainers to do not use the 
+> absolute path as document directory may change
+> 
+>>> +
+>>> +Clock 32KHz KG is output 0 of the driver and clock 32KHz is output 1.
+>>> +
+>>> +Required properties:
+>>> +- compatible : shall be "ti,palmas-clk".
+>> To handle variants of Palmas chips in production, you'd want to be
+>> specific here clk32k_kg and clk32k_kg_audio.
+> 
+> The compatible is the device sub module level, not the clock level. Same 
+> thing we are following on regulators.
 
-I still think this patch needs to be splitted, see below.
+not exactly the same problem as regulator IMHO here.
 
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index 94d6dc8..53beac4 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -130,6 +130,7 @@ static void apply_clk_hack(struct device *dev)
->  #define TC_EN			(1 << 1)
->  #define BWR_EN			(1 << 4)
->  #define BRR_EN			(1 << 5)
-> +#define CIRQ_EN			(1 << 8)
->  #define ERR_EN			(1 << 15)
->  #define CTO_EN			(1 << 16)
->  #define CCRC_EN			(1 << 17)
-> @@ -210,6 +211,10 @@ struct omap_hsmmc_host {
->  	int			reqs_blocked;
->  	int			use_reg;
->  	int			req_in_progress;
-> +	int                     flags;
-> +#define HSMMC_RUNTIME_SUSPENDED	(1 << 0)        /* Runtime suspended */
-> +#define HSMMC_SDIO_IRQ_ENABLED	(1 << 1)        /* SDIO irq enabled */
-> +
->  	struct omap_hsmmc_next	next_data;
->  	struct	omap_mmc_platform_data	*pdata;
->  };
-> @@ -490,27 +495,40 @@ static void omap_hsmmc_stop_clock(struct omap_hsmmc=
-_host *host)
->  static void omap_hsmmc_enable_irq(struct omap_hsmmc_host *host,
->  				  struct mmc_command *cmd)
->  {
-> -	unsigned int irq_mask;
-> +	u32 irq_mask =3D INT_EN_MASK;
-> +	unsigned long flags;
-> =20
->  	if (host->use_dma)
-> -		irq_mask =3D INT_EN_MASK & ~(BRR_EN | BWR_EN);
-> -	else
-> -		irq_mask =3D INT_EN_MASK;
-> +		irq_mask &=3D ~(BRR_EN | BWR_EN);
+> 
+> 
+>>
+>>> +
+>>> +     Optional subnode properties:
+>>> +     ti,clock-boot-enable: Enable clock at the time of booting.
+>> Dumb question: Why is this needed? should'nt relevant drivers do a
+>> clk_get to enable the relevant clocks?
+> 
+> If some board needs this clock to be always available for rest of system 
+> to work without any specific driver then this flag is useful.
 
-is this a bugfix ? should it be sent as a separate patch ?
+that is the wrong way of using this.
 
-> =20
->  	/* Disable timeout for erases */
->  	if (cmd->opcode =3D=3D MMC_ERASE)
->  		irq_mask &=3D ~DTO_EN;
-> =20
-> +	spin_lock_irqsave(&host->irq_lock, flags);
+> 
+> 
+>>
+>>> +     ti,external-sleep-control: The clock is enable/disabled by state
+>>> +             of external enable input pins ENABLE, ENABLE2 and NSLEEP.
+>>> +             The valid value for the external pins are:
+>>> +                     1 for ENABLE1
+>>> +                     2 for ENABLE2
+>>> +                     3 for NSLEEP.
+>> could we not have macros for readability?
+> 
+> I am thinking of adding the palmas for dt-binding and then change on 
+> multiple places. I will post patches for this.
+> the patch will go on dt tree as include/dt-bindings and then on 
+> documents file and then on actually DTS. I will work towards this but 
+> scoping out of this patch.
+> 
+> 
 
-why do you need this new locking here ? register acesses are atomic,
-right ? If you really do need the locking, should it be a separate patch
-as well ?
+why not do it here? and provide explanation - we dont want to deal
+with backward compatible dtbs etc later on.
 
->  	OMAP_HSMMC_WRITE(host->base, STAT, STAT_CLEAR);
->  	OMAP_HSMMC_WRITE(host->base, ISE, irq_mask);
-> +
-> +	/* latch pending CIRQ, but don't signal */
-> +	if (host->flags & HSMMC_SDIO_IRQ_ENABLED)
-> +		irq_mask |=3D CIRQ_EN;
+>>
+>>> +
+>>> +
+>>> +enum PALMAS_CLOCK32K {
+>>> +     PALMAS_CLOCK32KG,
+>>> +     PALMAS_CLOCK32KG_AUDIO,
+>>> +
+>>> +     /* Last entry */
+>>> +     PALMAS_CLOCK32K_NR,
+>>> +};
+>> you should be able to get rid of this entirely
+> 
+> Probably yes but it is easy to read (atleast for me).
 
-why do you need this ? Looks like it should be yet another patch.
-> =20
->  static void omap_hsmmc_disable_irq(struct omap_hsmmc_host *host)
->  {
-> -	OMAP_HSMMC_WRITE(host->base, ISE, 0);
-> -	OMAP_HSMMC_WRITE(host->base, IE, 0);
-> +	u32 irq_mask =3D 0;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&host->irq_lock, flags);
-> +	/* no transfer running, need to signal cirq if */
+you can get rid of it entirely by using appropriate matches.
 
-if... ?
+> 
+> 
+>>
+>> +             cinfo->clk = clk;
+>> +             palmas_clks->clk_data.clks[i] = clk;
+>> +             palmas_clks->clk_data.clk_num++;
+>> +             palmas_clks_init_configure(cinfo);
+>> we dont handle error here?
+> 
+> Intentionally I ignore error, just print and continue the registration.
 
-> +	if (host->flags & HSMMC_SDIO_IRQ_ENABLED)
-> +		irq_mask |=3D CIRQ_EN;
-> +	OMAP_HSMMC_WRITE(host->base, ISE, irq_mask);
+not acceptable: since the failure indicates setups are broken, adding
+a provider is not valid even, sorry, NAK as a result.
 
-the whole fiddling with STAT and ISE registers look very bogus to me
-(even on current state before this patch). We shouldn't be clearing
-pending IRQ events here, right ? We could miss IRQs due to that.
+> 
+> 
+>>
+>>> +
+>>> +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
+>>> +MODULE_LICENSE("GPL v2");
+>>>
+>> I wonder if we can simplify this with CLK_OF_DECLARE - I suppose it
+>> wont work if of_clk_init(NULL); was invoked previously.
+> 
+> This driver has dependency over the mfd driver and hence until mfd 
+> driver invoked and get registered, this driver should not be called. The 
+> platform driver registration is done in mfd.
+> As per my understanding and referring the other code, CLK_OF_DECLARE is 
+> useful if there is no such dependency. Please correct me if this is not 
+> true.
+> 
+that is what i was wondering - since it is a clock source....
 
-> @@ -1067,8 +1085,12 @@ static irqreturn_t omap_hsmmc_irq(int irq, void *d=
-ev_id)
->  	int status;
-> =20
->  	status =3D OMAP_HSMMC_READ(host->base, STAT);
-> -	while (status & INT_EN_MASK && host->req_in_progress) {
-> -		omap_hsmmc_do_irq(host, status);
-> +	while (status & (INT_EN_MASK | CIRQ_EN)) {
-
-why don't enable CIRQ_EN in INT_EN_MASK directly ?
-
-> +		if (host->req_in_progress)
-> +			omap_hsmmc_do_irq(host, status);
-> +
-> +		if (status & CIRQ_EN)
-> +			mmc_signal_sdio_irq(host->mmc);
-> =20
->  		/* Flush posted write */
->  		status =3D OMAP_HSMMC_READ(host->base, STAT);
-> @@ -1583,6 +1605,42 @@ static void omap_hsmmc_init_card(struct mmc_host *=
-mmc, struct mmc_card *card)
->  		mmc_slot(host).init_card(card);
->  }
-> =20
-> +static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
-> +{
-> +	struct omap_hsmmc_host *host =3D mmc_priv(mmc);
-> +	u32 irq_mask;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&host->irq_lock, flags);
-> +
-> +	if (enable)
-> +		host->flags |=3D HSMMC_SDIO_IRQ_ENABLED;
-> +	else
-> +		host->flags &=3D ~HSMMC_SDIO_IRQ_ENABLED;
-> +
-> +	/* if statement here with followup patch */
-> +	{
-> +		irq_mask =3D OMAP_HSMMC_READ(host->base, ISE);
-> +		if (enable)
-> +			irq_mask |=3D CIRQ_EN;
-> +		else
-> +			irq_mask &=3D ~CIRQ_EN;
-
-perhaps combine this branch with previous one ?
-
-> +		OMAP_HSMMC_WRITE(host->base, IE, irq_mask);
-> +
-> +		/*
-> +		 * if enable, piggy back on current request
-> +		 * but always disable
-> +		 */
-> +		if (!host->req_in_progress || !enable)
-> +			OMAP_HSMMC_WRITE(host->base, ISE, irq_mask);
-> +
-> +		/* flush posted write */
-> +		OMAP_HSMMC_READ(host->base, IE);
-> +	}
-> +
-> +	spin_unlock_irqrestore(&host->irq_lock, flags);
-> +}
-> +
->  static void omap_hsmmc_conf_bus_power(struct omap_hsmmc_host *host)
->  {
->  	u32 hctl, capa, value;
-> @@ -1635,7 +1693,7 @@ static const struct mmc_host_ops omap_hsmmc_ops =3D=
- {
->  	.get_cd =3D omap_hsmmc_get_cd,
->  	.get_ro =3D omap_hsmmc_get_ro,
->  	.init_card =3D omap_hsmmc_init_card,
-> -	/* NYET -- enable_sdio_irq */
-> +	.enable_sdio_irq =3D omap_hsmmc_enable_sdio_irq,
->  };
-> =20
->  #ifdef CONFIG_DEBUG_FS
-> @@ -1833,6 +1891,7 @@ static int omap_hsmmc_probe(struct platform_device =
-*pdev)
->  	host->dma_ch	=3D -1;
->  	host->irq	=3D irq;
->  	host->slot_id	=3D 0;
-> +	host->flags	=3D 0;
-
-why do you need to zero-initialize flags here ? another bug ?
-
-> @@ -2023,6 +2082,22 @@ static int omap_hsmmc_probe(struct platform_device=
- *pdev)
->  		dev_warn(&pdev->dev,
->  			"pins are not configured from the driver\n");
-> =20
-> +	/*
-> +	 * For now, only support SDIO interrupt if we are booted with
-> +	 * DT. This is because some platforms need special quirks. And
-> +	 * we don't want to add new legacy mux platform init code
-> +	 * callbacks any longer as we are moving to DT based booting
-> +	 * anyways.
-> +	 */
-> +	if (match) {
-
-isn't if (dev->of.node) a better check here ?
-
-> +		mmc->caps |=3D MMC_CAP_SDIO_IRQ;
-> +		if (of_find_property(host->dev->of_node,
-> +				     "ti,quirk-swakeup-missing", NULL)) {
-
-looks like a SW configuration to me. Can't you figure this out by
-reading the revision register ?
-
---=20
-balbi
-
---gDGSpKKIBgtShtf+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSVC69AAoJEIaOsuA1yqRE41UQAKZeGqXWVCE6w/jXxSOie7Ao
-72qctozT7OgyGC6b7BbhYDR1VVBj/c3HYQ3o8iVDvUi/QCMHHGrif4m7QBWOxjcv
-EyydPwHg1IVywuIkzQGsOeMxiNM6+ZhWpFqpOIt0+ZpH+hx5VSzz+KiArC3ubIrS
-DsV+pFDe3AlZcuku16tCb9IOsTwsJdUoAZ87IFHpBygnGt6X3BXL4Y8c+TkR+xiX
-2L/DAWlSVCnqtnNl7LinfO+jFkGULQqo02NdL6DitH7kfKFx2OzSUWmnasR1OSC3
-a6qVyR9zYOQzHR2fUidGRJ6fEZMdgwGEkEsjqtIld0p4bm7G+FeOwwJVH5C3rvQG
-kKsTulA5It9aZ+lDTpsQRyHGDohUbx5vpV346VD7DINaa1nOrZ59qzqrvnsfm5VL
-KEczzktTWURP8tcuQjAQ7cJ+sVaL4Nj/+Le8zxtVwM5TIazyRR/GgoC1owYwFVqT
-KPDcZJxh7ZVJSgwWctPAGStF4eFzb7ujoHXFG6USpOfD6C6Z2T/PgTiKh8UViwZj
-KlrvBtPipyY17tIrWdMfGwvUjFJKSTUWbMvfUuSDBVsO1MemiwXrd9J+2G5tsOfS
-v3J7Ije4isS8rJZSWisOOJbbJYjUIOxtk6l7j0rQXff9BoTckWsHHZ4cz2cKZlZl
-exDJXTDStQjo8AEHpsQA
-=VwqB
------END PGP SIGNATURE-----
-
---gDGSpKKIBgtShtf+--
+-- 
+Regards,
+Nishanth Menon
