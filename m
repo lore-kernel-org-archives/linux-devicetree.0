@@ -1,284 +1,510 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: [PATCH 01/03] Make non-linear GPIO ranges accesible from gpiolib
-Date: Tue,  8 Oct 2013 14:25:20 +0200
-Message-ID: <1381235122-23730-1-git-send-email-christian.ruppert@abilis.com>
-References: <20131008122145.GA21985@ab42.lan>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131008122145.GA21985@ab42.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Christian Ruppert <christian.ruppert@abilis.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V3] clk: palmas: add clock driver for palmas
+Date: Tue, 8 Oct 2013 08:29:23 -0500
+Message-ID: <525408B3.1000107@ti.com>
+References: <1381238480-18852-1-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1381238480-18852-1-git-send-email-ldewangan@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, mturquette@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, swarren@nvidia.com, pawel.moll@arm.com, broonie@linaro.org, J Keerthy <j-keerthy@ti.com>, ijc+devicetree@hellion.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, rob@landley.net, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the infrastructure required to register non-linear gpio
-ranges through gpiolib and the standard GPIO device tree bindings.
+On 10/08/2013 08:21 AM, Laxman Dewangan wrote:
+> Palmas devices has two clock output CLK32K_KG and CLK32K_KG_AUDIO
+not all palmas devices have 2 clocks - example: tps659038
+> which can be enable/disable through software.
 
-Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
----
- Documentation/devicetree/bindings/gpio/gpio.txt |   40 +++++++++++++++++++
- drivers/gpio/gpiolib-of.c                       |   36 +++++++++++++----
- drivers/gpio/gpiolib.c                          |   47 +++++++++++++++++++++++
- drivers/pinctrl/core.c                          |   23 +++++++++++
- include/asm-generic/gpio.h                      |   10 +++++
- include/linux/gpio.h                            |    9 ++++
- include/linux/pinctrl/pinctrl.h                 |    3 +
- 7 files changed, 160 insertions(+), 8 deletions(-)
+> 
+> Add clock driver support for the Palmas 32KHz clocks.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+> Changes from V1: 
+> - Call prepare if the clk is needed for boot-enable or sleep control.
+> - change is_enabled to is_prepared.
+> - Added ops palmas_clks_recalc_rate.
+> - Added of_clk_add_provider().
+> 
+> Changes from V2:
+> - Convert magic number to defines.
+> 
+>  .../devicetree/bindings/clock/clk-palmas.txt       |   45 +++
+>  drivers/clk/Kconfig                                |    7 +
+>  drivers/clk/Makefile                               |    1 +
+>  drivers/clk/clk-palmas.c                           |  340 ++++++++++++++++++++
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index d933af3..da0e7fb 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -112,3 +112,43 @@ where,
- Here, a single GPIO controller has GPIOs 0..9 routed to pin controller
- pinctrl1's pins 20..29, and GPIOs 10..19 routed to pin controller pinctrl2's
- pins 50..59.
-+
-+In addition, named groups of pins can be mapped to pin groups of a given
-+pin controller using the gpio-ranges property as described below:
-+
-+	gpio-range-list ::= <single-gpio-range> [gpio-range-list]
-+	single-gpio-range ::= <numeric-gpio-range> | <named-gpio-range>
-+	numeric-gpio-range ::=
-+			<pinctrl-phandle> <gpio-base> <pinctrl-base> <count>
-+	named-gpio-range ::= <pinctrl-phandle> <gpio-base> '<0 0>'
-+	pinctrl-phanle : phandle to pin controller node.
-+	gpio-base : Base GPIO ID in the GPIO controller
-+	pinctrl-base : Base pinctrl pin ID in the pin controller
-+	count : The number of GPIOs/pins in this range
-+
-+In this case, the property gpio-ranges-group-names contains one string for
-+every single-gpio-range in gpio-ranges:
-+	gpiorange-names-list ::= <gpiorange-name> [gpiorange-names-list]
-+	gpiorange-name : Name of the pingroup associated to the GPIO range in
-+			the respective pin controller.
-+
-+Example:
-+
-+	gpio_pio_i: gpio-controller@14B0 {
-+		#gpio-cells = <2>;
-+		compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
-+		reg = <0x1480 0x18>;
-+		gpio-controller;
-+		gpio-ranges =			<&pinctrl1 0 20 10>,
-+						<&pinctrl2 10 0 0>,
-+						<&pinctrl1 15 0 10>,
-+						<&pinctrl2 25 0 0>;
-+		gpio-ranges-group-names =	"",
-+						"foo",
-+						"",
-+						"bar";
-+	};
-+
-+Here, three GPIO ranges are defined wrt. two pin controllers. pinctrl1 GPIO
-+ranges are defined using pin numbers whereas the GPIO ranges wrt. pinctrl2
-+are named "foo" and "bar".
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 665f953..07a7b81 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -189,6 +189,7 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
- 	struct of_phandle_args pinspec;
- 	struct pinctrl_dev *pctldev;
- 	int index = 0, ret;
-+	const char *name;
- 
- 	if (!np)
- 		return;
-@@ -203,14 +204,33 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
- 		if (!pctldev)
- 			break;
- 
--		ret = gpiochip_add_pin_range(chip,
--					     pinctrl_dev_get_devname(pctldev),
--					     pinspec.args[0],
--					     pinspec.args[1],
--					     pinspec.args[2]);
--
--		if (ret)
--			break;
-+		if (pinspec.args[2]) {
-+			/* npins != 0: linear range */
-+			ret = gpiochip_add_pin_range(chip,
-+					pinctrl_dev_get_devname(pctldev),
-+					pinspec.args[0],
-+					pinspec.args[1],
-+					pinspec.args[2]);
-+			if (ret)
-+				break;
-+		} else {
-+			/* npins == 0: special range */
-+			if (pinspec.args[1]) {
-+				pr_err("%s: Illegal gpio-range format.\n",
-+					np->full_name);
-+				break;
-+			}
-+			ret = of_property_read_string_index(np,
-+						"gpio-ranges-group-names",
-+						index, &name);
-+			if (ret)
-+				break;
-+
-+			ret = gpiochip_add_pingroup_range(chip, pctldev,
-+						pinspec.args[0], name);
-+			if (ret)
-+				break;
-+		}
- 	}
- }
- 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index ff0fd65..c75002b 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1320,6 +1320,53 @@ EXPORT_SYMBOL_GPL(gpiochip_find);
- #ifdef CONFIG_PINCTRL
- 
- /**
-+ * gpiochip_add_pingroup_range() - add a range for GPIO <-> pin mapping
-+ * @chip: the gpiochip to add the range for
-+ * @pinctrl: the dev_name() of the pin controller to map to
-+ * @gpio_offset: the start offset in the current gpio_chip number space
-+ * @pin_group: name of the pin group inside the pin controller
-+ */
-+int gpiochip_add_pingroup_range(struct gpio_chip *chip,
-+			struct pinctrl_dev *pctldev,
-+			unsigned int gpio_offset, const char *pin_group)
-+{
-+	struct gpio_pin_range *pin_range;
-+	int ret;
-+
-+	pin_range = kzalloc(sizeof(*pin_range), GFP_KERNEL);
-+	if (!pin_range) {
-+		pr_err("%s: GPIO chip: failed to allocate pin ranges\n",
-+				chip->label);
-+		return -ENOMEM;
-+	}
-+
-+	/* Use local offset as range ID */
-+	pin_range->range.id = gpio_offset;
-+	pin_range->range.gc = chip;
-+	pin_range->range.name = chip->label;
-+	pin_range->range.base = chip->base + gpio_offset;
-+	pin_range->pctldev = pctldev;
-+
-+	ret = pinctrl_add_gpio_pingrp_range(pctldev, &pin_range->range,
-+						pin_group);
-+	if (ret < 0) {
-+		pr_err("%s: GPIO chip: could not create pin range %s\n",
-+		       chip->label, pin_group);
-+		return ret;
-+	}
-+
-+	pr_debug("GPIO chip %s: created GPIO range %d->%d ==> %s PINGRP %s\n",
-+		 chip->label, gpio_offset,
-+		 gpio_offset + pin_range->range.npins - 1,
-+		 pinctrl_dev_get_devname(pctldev), pin_group);
-+
-+	list_add_tail(&pin_range->node, &chip->pin_ranges);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(gpiochip_add_pingroup_range);
-+
-+/**
-  * gpiochip_add_pin_range() - add a range for GPIO <-> pin mapping
-  * @chip: the gpiochip to add the range for
-  * @pinctrl_name: the dev_name() of the pin controller to map to
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 2a00239..52e2e6f 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -456,6 +456,29 @@ struct pinctrl_dev *pinctrl_find_and_add_gpio_range(const char *devname,
- }
- EXPORT_SYMBOL_GPL(pinctrl_find_and_add_gpio_range);
- 
-+int pinctrl_add_gpio_pingrp_range(struct pinctrl_dev *pctldev,
-+				struct pinctrl_gpio_range *range,
-+				char *pin_group)
-+{
-+	const struct pinctrl_ops *pctlops = pctldev->desc->pctlops;
-+	int group_selector, ret;
-+
-+	group_selector = pinctrl_get_group_selector(pctldev, pin_group);
-+	if (group_selector < 0)
-+		return group_selector;
-+
-+	ret = pctlops->get_group_pins(pctldev, group_selector,
-+				&range->pins,
-+				&range->npins);
-+	if (ret < 0)
-+		return ret;
-+
-+	pinctrl_add_gpio_range(pctldev, range);
-+	return 0;
-+
-+}
-+EXPORT_SYMBOL_GPL(pinctrl_add_gpio_pingrp_range);
-+
- /**
-  * pinctrl_find_gpio_range_from_pin() - locate the GPIO range for a pin
-  * @pctldev: the pin controller device to look in
-diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
-index bde6469..523f405 100644
---- a/include/asm-generic/gpio.h
-+++ b/include/asm-generic/gpio.h
-@@ -228,6 +228,9 @@ struct gpio_pin_range {
- int gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- 			   unsigned int gpio_offset, unsigned int pin_offset,
- 			   unsigned int npins);
-+int gpiochip_add_pingroup_range(struct gpio_chip *chip,
-+			struct pinctrl_dev *pctldev,
-+			unsigned int gpio_offset, const char *pin_group);
- void gpiochip_remove_pin_ranges(struct gpio_chip *chip);
- 
- #else
-@@ -239,6 +242,13 @@ gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- {
- 	return 0;
- }
-+static inline int
-+gpiochip_add_pingroup_range(struct gpio_chip *chip,
-+			struct pinctrl_dev *pctldev,
-+			unsigned int gpio_offset, const char *pin_group)
-+{
-+	return 0;
-+}
- 
- static inline void
- gpiochip_remove_pin_ranges(struct gpio_chip *chip)
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 552e3f4..234b32f 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -220,6 +220,15 @@ gpiochip_add_pin_range(struct gpio_chip *chip, const char *pinctl_name,
- 	return -EINVAL;
- }
- 
-+static inline int
-+gpiochip_add_pingroup_range(struct gpio_chip *chip,
-+			struct pinctrl_dev *pctldev,
-+			unsigned int gpio_offset, const char *pin_group)
-+{
-+	WARN_ON(1);
-+	return -EINVAL;
-+}
-+
- static inline void
- gpiochip_remove_pin_ranges(struct gpio_chip *chip)
- {
-diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
-index 5979147..47ab2fb 100644
---- a/include/linux/pinctrl/pinctrl.h
-+++ b/include/linux/pinctrl/pinctrl.h
-@@ -141,6 +141,9 @@ extern void pinctrl_remove_gpio_range(struct pinctrl_dev *pctldev,
- 
- extern struct pinctrl_dev *pinctrl_find_and_add_gpio_range(const char *devname,
- 		struct pinctrl_gpio_range *range);
-+extern int pinctrl_add_gpio_pingrp_range(struct pinctrl_dev *pctldev,
-+					struct pinctrl_gpio_range *range,
-+					char *pin_group);
- extern struct pinctrl_gpio_range *
- pinctrl_find_gpio_range_from_pin(struct pinctrl_dev *pctldev,
- 				 unsigned int pin);
+
+http://www.spinics.net/lists/devicetree/msg04855.html
+Do we do 2 patches now? one seperate for binding and implementation?
+What is our current preference now a days?
+
+>  4 files changed, 393 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/clk-palmas.txt
+>  create mode 100644 drivers/clk/clk-palmas.c
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/clk-palmas.txt b/Documentation/devicetree/bindings/clock/clk-palmas.txt
+> new file mode 100644
+> index 0000000..c247538
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/clk-palmas.txt
+> @@ -0,0 +1,45 @@
+> +* Palmas 32KHz clocks *
+> +
+> +Palmas device has two clock output pins for 32KHz, KG and KG_AUDIO.
+> +
+> +This binding uses the common clock binding ./clock-bindings.txt.
+proper link would be to provide
+Documentation/devicetree/bindings/clock/clock-bindings.txt ?
+> +
+> +Clock 32KHz KG is output 0 of the driver and clock 32KHz is output 1.
+> +
+> +Required properties:
+> +- compatible : shall be "ti,palmas-clk".
+To handle variants of Palmas chips in production, you'd want to be
+specific here clk32k_kg and clk32k_kg_audio.
+
+> +- #clock-cells : from common clock binding; shall be set to 1.
+> +
+> +Optional subnode:
+> +	The clock node has optional subnode to provide the init configuration of
+> +	clocks like boot enable, sleep control.
+> +
+> +	The subnode name is fixed and it should be
+> +		clk32k_kg for the 32KHz KG clock.
+> +		clk32k_kg_audio for the 32KHz KG_AUDIO clock.
+> +
+> +	Optional subnode properties:
+> +	ti,clock-boot-enable: Enable clock at the time of booting.
+
+Dumb question: Why is this needed? should'nt relevant drivers do a
+clk_get to enable the relevant clocks?
+
+> +	ti,external-sleep-control: The clock is enable/disabled by state
+> +		of external enable input pins ENABLE, ENABLE2 and NSLEEP.
+> +		The valid value for the external pins are:
+> +			1 for ENABLE1
+> +			2 for ENABLE2
+> +			3 for NSLEEP.
+could we not have macros for readability?
+
+> +		Option 0 or missing this property means the clock is
+> +		enabled/disabled via register access and these pins do
+> +		not have any control.
+> +
+> +Example:
+> +	clock {
+> +		compatible = "ti,palmas-clk";
+> +		#clock-cells = <1>;
+> +		clk32k_kg {
+> +			ti,clock-boot-enable;
+> +			ti,external-sleep-control = <3>;
+> +		};
+> +
+> +		clk32k_kg_audio {
+> +			ti,clock-boot-enable;
+> +		};
+> +	};
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 279407a..6b8c233 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -93,6 +93,13 @@ config CLK_PPC_CORENET
+>  	  This adds the clock driver support for Freescale PowerPC corenet
+>  	  platforms using common clock framework.
+>  
+> +config COMMON_CLK_PALMAS
+> +	tristate "Clock driver for TI Palmas devices"
+> +	depends on MFD_PALMAS
+> +	---help---
+> +	  This driver supports TI Palmas devices 32KHz output KG and KG_AUDIO
+> +	  using common clock framework.
+> +
+>  endmenu
+>  
+>  source "drivers/clk/mvebu/Kconfig"
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index 7b11106..32e04cf 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -43,3 +43,4 @@ obj-$(CONFIG_COMMON_CLK_SI5351) += clk-si5351.o
+>  obj-$(CONFIG_COMMON_CLK_S2MPS11) += clk-s2mps11.o
+>  obj-$(CONFIG_CLK_TWL6040)	+= clk-twl6040.o
+>  obj-$(CONFIG_CLK_PPC_CORENET)	+= clk-ppc-corenet.o
+> +obj-$(CONFIG_COMMON_CLK_PALMAS)	+= clk-palmas.o
+> diff --git a/drivers/clk/clk-palmas.c b/drivers/clk/clk-palmas.c
+> new file mode 100644
+> index 0000000..3e070b2
+> --- /dev/null
+> +++ b/drivers/clk/clk-palmas.c
+> @@ -0,0 +1,340 @@
+> +/*
+> + * Clock driver for Palmas device.
+> + *
+> + * Copyright (c) 2013, NVIDIA Corporation.
+> + *
+> + * Author: Laxman Dewangan <ldewangan@nvidia.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation version 2.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any kind,
+> + * whether express or implied; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+> + * General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, write to the Free Software
+> + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+> + * 02111-1307, USA
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/mfd/palmas.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +enum PALMAS_CLOCK32K {
+> +	PALMAS_CLOCK32KG,
+> +	PALMAS_CLOCK32KG_AUDIO,
+> +
+> +	/* Last entry */
+> +	PALMAS_CLOCK32K_NR,
+> +};
+you should be able to get rid of this entirely
+
+> +
+> +#define PALMAS_CLOCK_DT_EXT_CONTROL_ENABLE1	1
+> +#define PALMAS_CLOCK_DT_EXT_CONTROL_ENABLE2	2
+> +#define PALMAS_CLOCK_DT_EXT_CONTROL_NSLEEP	3
+> +
+> +struct palmas_clks;
+> +
+> +struct palmas_clk32k_desc {
+> +	const char *clk_name;
+> +	unsigned int control_reg;
+> +	unsigned int enable_mask;
+> +	unsigned int sleep_mask;
+> +	unsigned int sleep_reqstr_id;
+> +};
+> +
+> +struct palmas_clock_info {
+> +	struct clk *clk;
+> +	struct clk_hw hw;
+> +	struct palmas_clk32k_desc *clk_desc;
+> +	struct palmas_clks *palmas_clk;
+> +	int ext_control_pin;
+> +	bool boot_enable;
+> +};
+> +
+> +struct palmas_clks {
+> +	struct device *dev;
+> +	struct palmas *palmas;
+> +	struct clk_onecell_data clk_data;
+> +	struct palmas_clock_info clk_info[PALMAS_CLOCK32K_NR];
+
+> +};
+> +
+> +static struct palmas_clk32k_desc palmas_clk32k_descs[] = {
+> +	{
+> +		.clk_name = "clk32k_kg",
+> +		.control_reg = PALMAS_CLK32KG_CTRL,
+> +		.enable_mask = PALMAS_CLK32KG_CTRL_MODE_ACTIVE,
+> +		.sleep_mask = PALMAS_CLK32KG_CTRL_MODE_SLEEP,
+> +		.sleep_reqstr_id = PALMAS_EXTERNAL_REQSTR_ID_CLK32KG,
+> +	}, {
+> +		.clk_name = "clk32k_kg_audio",
+> +		.control_reg = PALMAS_CLK32KGAUDIO_CTRL,
+> +		.enable_mask = PALMAS_CLK32KG_CTRL_MODE_ACTIVE,
+> +		.sleep_mask = PALMAS_CLK32KG_CTRL_MODE_SLEEP,
+> +		.sleep_reqstr_id = PALMAS_EXTERNAL_REQSTR_ID_CLK32KGAUDIO,
+> +	},
+> +};
+> +
+> +static inline struct palmas_clock_info *to_palmas_clks_info(struct clk_hw *hw)
+> +{
+> +	return container_of(hw, struct palmas_clock_info, hw);
+> +}
+> +
+> +static unsigned long palmas_clks_recalc_rate(struct clk_hw *hw,
+> +	unsigned long parent_rate)
+> +{
+> +	return 32768;
+> +}
+> +
+> +static int palmas_clks_prepare(struct clk_hw *hw)
+> +{
+> +	struct palmas_clock_info *cinfo = to_palmas_clks_info(hw);
+> +	struct palmas_clks *palmas_clks = cinfo->palmas_clk;
+> +	int ret;
+> +
+> +	ret = palmas_update_bits(palmas_clks->palmas, PALMAS_RESOURCE_BASE,
+> +			cinfo->clk_desc->control_reg,
+> +			cinfo->clk_desc->enable_mask,
+> +			cinfo->clk_desc->enable_mask);
+> +	if (ret < 0)
+> +		dev_err(palmas_clks->dev, "Reg 0x%02x update failed, %d\n",
+> +			cinfo->clk_desc->control_reg, ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static void palmas_clks_unprepare(struct clk_hw *hw)
+> +{
+> +	struct palmas_clock_info *cinfo = to_palmas_clks_info(hw);
+> +	struct palmas_clks *palmas_clks = cinfo->palmas_clk;
+> +	int ret;
+> +
+> +	/*
+> +	 * Clock can be disabled through external pin if it is externally
+> +	 * controlled.
+> +	 */
+> +	if (cinfo->ext_control_pin)
+> +		return;
+> +
+> +	ret = palmas_update_bits(palmas_clks->palmas, PALMAS_RESOURCE_BASE,
+> +			cinfo->clk_desc->control_reg,
+> +			cinfo->clk_desc->enable_mask, 0);
+> +	if (ret < 0)
+> +		dev_err(palmas_clks->dev, "Reg 0x%02x update failed, %d\n",
+> +			cinfo->clk_desc->control_reg, ret);
+> +
+> +}
+> +
+> +static int palmas_clks_is_prepared(struct clk_hw *hw)
+> +{
+> +	struct palmas_clock_info *cinfo = to_palmas_clks_info(hw);
+> +	struct palmas_clks *palmas_clks = cinfo->palmas_clk;
+> +	int ret;
+> +	u32 val;
+> +
+> +	if (cinfo->ext_control_pin)
+> +		return 1;
+> +
+> +	ret = palmas_read(palmas_clks->palmas, PALMAS_RESOURCE_BASE,
+> +			cinfo->clk_desc->control_reg, &val);
+> +	if (ret < 0) {
+> +		dev_err(palmas_clks->dev, "Reg 0x%02x read failed, %d\n",
+> +				cinfo->clk_desc->control_reg, ret);
+> +		return ret;
+> +	}
+> +	return !!(val & cinfo->clk_desc->enable_mask);
+> +}
+> +
+> +static struct clk_ops palmas_clks_ops = {
+> +	.prepare	= palmas_clks_prepare,
+> +	.unprepare	= palmas_clks_unprepare,
+> +	.is_prepared	= palmas_clks_is_prepared,
+> +	.recalc_rate	= palmas_clks_recalc_rate,
+> +};
+> +
+> +static struct clk_init_data palmas_clks_hw_init[PALMAS_CLOCK32K_NR] = {
+> +	[PALMAS_CLOCK32KG] = {
+> +		.name = "clk32k_kg",
+> +		.ops = &palmas_clks_ops,
+> +		.flags = CLK_IS_ROOT | CLK_IGNORE_UNUSED,
+> +	},
+> +	[PALMAS_CLOCK32KG_AUDIO] = {
+> +		.name = "clk32k_kg_audio",
+> +		.ops = &palmas_clks_ops,
+> +		.flags = CLK_IS_ROOT | CLK_IGNORE_UNUSED,
+> +	},
+> +};
+
+if we had two compatible properties, then we would not need this.
+
+> +
+> +static int palmas_clks_get_clk_data(struct platform_device *pdev,
+> +	struct palmas_clks *palmas_clks)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct device_node *child;
+> +	struct palmas_clock_info *cinfo;
+> +	unsigned int prop;
+> +	int ret;
+> +	int i;
+> +
+> +	for (i = 0; i < PALMAS_CLOCK32K_NR; ++i) {
+> +		child = of_get_child_by_name(node,
+> +				palmas_clk32k_descs[i].clk_name);
+> +		if (!child)
+> +			continue;
+> +
+> +		cinfo = &palmas_clks->clk_info[i];
+> +		cinfo->boot_enable = of_property_read_bool(child,
+> +						"ti,clock-boot-enable");
+> +		ret = of_property_read_u32(child, "ti,external-sleep-control",
+> +					&prop);
+> +		if (!ret) {
+> +			switch (prop) {
+> +			case PALMAS_CLOCK_DT_EXT_CONTROL_ENABLE1:
+> +				prop = PALMAS_EXT_CONTROL_ENABLE1;
+> +				break;
+> +			case PALMAS_CLOCK_DT_EXT_CONTROL_ENABLE2:
+> +				prop = PALMAS_EXT_CONTROL_ENABLE2;
+> +				break;
+> +			case PALMAS_CLOCK_DT_EXT_CONTROL_NSLEEP:
+> +				prop = PALMAS_EXT_CONTROL_NSLEEP;
+> +				break;
+> +			default:
+> +				WARN_ON(1);
+> +				dev_warn(&pdev->dev,
+> +					"%s: Invalid ext control option: %u\n",
+> +					child->name, prop);
+> +				prop = 0;
+> +				break;
+> +			}
+> +			cinfo->ext_control_pin = prop;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int palmas_clks_init_configure(struct palmas_clock_info *cinfo)
+> +{
+> +	struct palmas_clks *palmas_clks = cinfo->palmas_clk;
+> +	int ret;
+> +
+> +	if (cinfo->boot_enable || cinfo->ext_control_pin) {
+> +		ret = clk_prepare(cinfo->clk);
+> +		if (ret < 0) {
+> +			dev_err(palmas_clks->dev,
+> +				"Clock prep failed, %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = palmas_update_bits(palmas_clks->palmas, PALMAS_RESOURCE_BASE,
+> +			cinfo->clk_desc->control_reg,
+> +			cinfo->clk_desc->sleep_mask, 0);
+> +	if (ret < 0) {
+> +		dev_err(palmas_clks->dev, "Reg 0x%02x update failed, %d\n",
+> +			cinfo->clk_desc->control_reg, ret);
+> +		return ret;
+> +	}
+> +
+> +	if (cinfo->ext_control_pin) {
+> +		ret = palmas_ext_control_req_config(palmas_clks->palmas,
+> +				cinfo->clk_desc->sleep_reqstr_id,
+> +				cinfo->ext_control_pin, true);
+> +		if (ret < 0) {
+> +			dev_err(palmas_clks->dev,
+> +				"Ext config for %s failed, %d\n",
+> +				cinfo->clk_desc->clk_name, ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int palmas_clks_probe(struct platform_device *pdev)
+> +{
+> +	struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
+> +	struct palmas_clock_info *cinfo;
+> +	struct palmas_clks *palmas_clks;
+> +	struct clk *clk;
+> +	int i, ret;
+> +
+> +	palmas_clks = devm_kzalloc(&pdev->dev, sizeof(*palmas_clks),
+> +				GFP_KERNEL);
+> +	if (!palmas_clks)
+> +		return -ENOMEM;
+> +
+> +	palmas_clks->clk_data.clks = devm_kzalloc(&pdev->dev,
+> +			PALMAS_CLOCK32K_NR * sizeof(palmas_clks->clk_data.clks),
+> +			GFP_KERNEL);
+> +	if (!palmas_clks->clk_data.clks)
+> +		return -ENOMEM;
+> +
+> +	palmas_clks_get_clk_data(pdev, palmas_clks);
+> +	platform_set_drvdata(pdev, palmas_clks);
+> +
+> +	palmas_clks->dev = &pdev->dev;
+> +	palmas_clks->palmas = palmas;
+> +
+> +	for (i = 0; i < PALMAS_CLOCK32K_NR; i++) {
+> +		cinfo = &palmas_clks->clk_info[i];
+> +		cinfo->clk_desc = &palmas_clk32k_descs[i];
+> +		cinfo->hw.init = &palmas_clks_hw_init[i];
+> +		cinfo->palmas_clk = palmas_clks;
+> +		clk = devm_clk_register(&pdev->dev, &cinfo->hw);
+> +		if (IS_ERR(clk)) {
+> +			ret = PTR_ERR(clk);
+> +			dev_err(&pdev->dev, "Fail to register clock %s, %d\n",
+> +				palmas_clk32k_descs[i].clk_name, ret);
+> +			return ret;
+> +		}
+> +
+> +		cinfo->clk = clk;
+> +		palmas_clks->clk_data.clks[i] = clk;
+> +		palmas_clks->clk_data.clk_num++;
+> +		palmas_clks_init_configure(cinfo);
+
+we dont handle error here?
+
+> +	}
+> +
+> +	ret = of_clk_add_provider(pdev->dev.of_node, of_clk_src_simple_get,
+> +			&palmas_clks->clk_data);
+> +	if (ret < 0)
+> +		dev_err(&pdev->dev, "Fail to add clock driver, %d\n", ret);
+> +	return ret;
+> +}
+> +
+> +static int palmas_clks_remove(struct platform_device *pdev)
+> +{
+> +	of_clk_del_provider(pdev->dev.of_node);
+> +	return 0;
+> +}
+> +
+> +static struct of_device_id of_palmas_clks_match_tbl[] = {
+> +	{ .compatible = "ti,palmas-clk", },
+you could use match_data to map required data into the system..
+
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, of_palmas_clks_match_tbl);
+> +
+> +static struct platform_driver palmas_clks_driver = {
+> +	.driver = {
+> +		.name = "palmas-clk",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = of_palmas_clks_match_tbl,
+> +	},
+> +	.probe = palmas_clks_probe,
+> +	.remove = palmas_clks_remove,
+> +};
+> +
+> +module_platform_driver(palmas_clks_driver);
+> +
+> +MODULE_DESCRIPTION("Clock driver for Palmas Series Devices");
+> +MODULE_ALIAS("platform:palmas-clk");
+> +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
+> +MODULE_LICENSE("GPL v2");
+> 
+
+I wonder if we can simplify this with CLK_OF_DECLARE - I suppose it
+wont work if of_clk_init(NULL); was invoked previously.
+
 -- 
-1.7.1
+Regards,
+Nishanth Menon
