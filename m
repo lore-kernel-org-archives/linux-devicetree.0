@@ -1,72 +1,41 @@
-From: Majunath Goudar <csmanjuvijay@gmail.com>
-Subject: [PATCH] VEXPRESS: Fix VEXPRESS implicit declarations dependence errors.
-Date: Tue,  8 Oct 2013 16:11:35 +0530
-Message-ID: <1381228895-24814-1-git-send-email-csmanjuvijay@gmail.com>
+From: Erik Faye-Lund <kusmabite-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 08/27] drm/tegra: gr2d: Miscellaneous cleanups
+Date: Tue, 8 Oct 2013 13:11:11 +0200
+Message-ID: <CABPQNSY=fgvjep7J6XSAxD4xox5Dxy8P8O=t44AeS1Dtq0_XYw@mail.gmail.com>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com>
+ <1381134884-5816-9-git-send-email-treding@nvidia.com> <CABPQNSbkS40_jyGz14s08+x3e+-pxnfy90V7pzAOfiqUF2ma2g@mail.gmail.com>
+ <20131007121452.GA8324@ulmo.nvidia.com> <CABPQNSb52HmS-2T=MUXteMFc1tndHdvtUnZqsVsPKjP1Dy6Esw@mail.gmail.com>
+ <CABPQNSZGyuS3wAvJ8fFj=LMXxFJz9x_sKqEWW7QbiqC1gneLKw@mail.gmail.com> <52539CC0.3020901@nvidia.com>
+Reply-To: kusmabite-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: nataraja.km@lge.com, Majunath Goudar <csmanjuvijay@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52539CC0.3020901-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a of_find_node_by_phandle() and of_get_next_parent()
-function declaration dependence on"#ifdef CONFIG_OF" in "include/linux/=
-of.h"
-else part return inline dummy implementations (returning NULL). Without
-this patch,build system can lead to issues. This was discovered during
-randconfig testing,in which VEXPRESS_CONFIG was enabled w/o CONFIG_OF
-being enabled,leading to the following error:
+On Tue, Oct 8, 2013 at 7:48 AM, Terje Bergstr=F6m <tbergstrom-DDmLM1+adcphl2p70BpVqQ@public.gmane.org=
+m> wrote:
+> On 07.10.2013 16:02, Erik Faye-Lund wrote:
+>> So the question is really how the hardware treats writes to
+>> non-existent registers. My guess would be that they are simply not
+>> recorded, and if that's the case it doesn't matter what we do. And
+>> doing an unconditional AND is faster than doing a bit-test followed =
+by
+>> a conditional branch.
+>
+> Hardware ignores writes to non-existent registers. Sometimes
+> non-existent registers are taken into use in future versions, though.
 
-CC      drivers/mfd/vexpress-config.o
-drivers/mfd/vexpress-config.c: In function =E2=80=98__vexpress_config_f=
-unc_get=E2=80=99:
-drivers/mfd/vexpress-config.c:117:4: error: implicit declaration of fun=
-ction
-=E2=80=98of_find_node_by_phandle=E2=80=99 [-Werror=3Dimplicit-function-=
-declaration]
-    bridge_node =3D of_find_node_by_phandle(
-    ^
-drivers/mfd/vexpress-config.c:117:16: warning: assignment makes pointer=
- from
-integer without a cast [enabled by default]
-    bridge_node =3D of_find_node_by_phandle(
+Right. That might be a motivation to treat non-existent registers as
+errors. But then I start to wonder about "holes" in the pointer
+address space should be treated differently. For instance, from the
+TRM it looks like registers 0x3 - 0x8, 0xe, 0x15 and 0x42 are
+undefined for T20. If writes to registers beyond 0x4c fails, shouldn't
+these also fail? Or are somehow guaranteed that these holes will never
+be plugged? Are they simply missing from the TRM?
 
-Signed-off-by: Manjunath Goudar <csmanjuvijay@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- include/linux/of.h |    9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/include/linux/of.h b/include/linux/of.h
-index f95aee3..968787d 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -340,6 +340,15 @@ int of_device_is_stdout_path(struct device_node *d=
-n);
-=20
- #else /* CONFIG_OF */
-=20
-+static inline struct device_node *of_find_node_by_phandle(phandle hand=
-le)
-+{
-+	return NULL;
-+}
-+static inline struct device_node *of_get_next_parent(struct device_nod=
-e *node)
-+{
-+	return NULL;
-+}
-+
- static inline const char* of_node_full_name(struct device_node *np)
- {
- 	return "<no-node>";
---=20
-1.7.9.5
+I dunno...
