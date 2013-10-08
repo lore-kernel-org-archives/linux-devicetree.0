@@ -1,58 +1,121 @@
-From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC] Architecture independent pcibios?
-Date: Tue, 8 Oct 2013 10:32:57 -0600
-Message-ID: <CAErSpo5=sUJDZGm+zHw+b1h_a1YYbaGBshAutAoPBZYUCRbYkw@mail.gmail.com>
-References: <20131008144211.GA25231@e102652-lin.cambridge.arm.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 3/8] ARM: l2x0: add Marvell Tauros3 compatible
+Date: Tue, 08 Oct 2013 18:33:23 +0200
+Message-ID: <525433D3.2090906@free-electrons.com>
+References: <1381235073-17134-1-git-send-email-sebastian.hesselbarth@gmail.com> <1381235073-17134-4-git-send-email-sebastian.hesselbarth@gmail.com> <20131008134100.GD1412@e106331-lin.cambridge.arm.com> <52542D64.5010800@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131008144211.GA25231-CibnQJhq84/ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <52542D64.5010800@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-[+cc Grant, Rob, devicetree list]
+On 08/10/2013 18:05, Sebastian Hesselbarth wrote:
+> On 10/08/2013 03:41 PM, Mark Rutland wrote:
+>> On Tue, Oct 08, 2013 at 01:24:28PM +0100, Sebastian Hesselbarth wrote:
+>>> This add a compatible for the Marvell Tauros3 cache controller which
+>>> is compatible with l2x0 cache controllers. While updating the binding
+>>> documentation, clean up the list of possible compatibles.
+>>>
+>>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>>> ---
+> [...]
+>>> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+>>> index c0c7626..a1d0cbd 100644
+>>> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+>>> @@ -7,20 +7,20 @@ The ARM L2 cache representation in the device tree should be done as follows:
+>>>   Required properties:
+>>>
+>>>   - compatible : should be one of:
+>>> -	"arm,pl310-cache"
+>>> -	"arm,l220-cache"
+>>> -	"arm,l210-cache"
+>>> -	"marvell,aurora-system-cache": Marvell Controller designed to be
+>>> +  "arm,pl310-cache"
+>>> +  "arm,l220-cache"
+>>> +  "arm,l210-cache"
+>>> +  "bcm,bcm11351-a2-pl310-cache": DEPRECATED by "brcm,bcm11351-a2-pl310-cache"
+>>> +  "brcm,bcm11351-a2-pl310-cache": For Broadcom bcm11351 chipset where an
+>>> +     offset needs to be added to the address before passing down to the L2
+>>> +     cache controller
+>>> +  "marvell,aurora-system-cache": Marvell Controller designed to be
+>>>        compatible with the ARM one, with system cache mode (meaning
+>>>        maintenance operations on L1 are broadcasted to the L2 and L2
+>>>        performs the same operation).
+>>> -	"marvell,"aurora-outer-cache: Marvell Controller designed to be
+>>> -	 compatible with the ARM one with outer cache mode.
+>>> -	"brcm,bcm11351-a2-pl310-cache": For Broadcom bcm11351 chipset where an
+>>> -	offset needs to be added to the address before passing down to the L2
+>>> -	cache controller
+>>> -	"bcm,bcm11351-a2-pl310-cache": DEPRECATED by
+>>> -	                               "brcm,bcm11351-a2-pl310-cache"
+>>> +  "marvell,aurora-outer-cache": Marvell Controller designed to be
+>>> +     compatible with the ARM one with outer cache mode.
+>>> +  "marvell,tauros3-cache": Marvell Tauros3 cache controller.
+>>
+>> How does the tauros3 cache differ from the other caches supported by the
+>> l2x0 driver?
+> 
+> [added Gregory to Cc]
+> 
+> Good question. I cannot say at this time. I would have guessed that l2cc
+> on Armada 1500 and Armada 370/XP are more or less the same, as both use
+> Marvell's PJ4B CPU. Maybe, Gregory or Thomas can shed some light into
+> this.
+> 
+>>>   - cache-unified : Specifies the cache is a unified cache.
+>>>   - cache-level : Should be set to 2 for a level 2 cache.
+>>>   - reg : Physical base address and size of cache controller's memory mapped
+>>> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+>>> index 447da6f..90c776e 100644
+>>> --- a/arch/arm/mm/cache-l2x0.c
+>>> +++ b/arch/arm/mm/cache-l2x0.c
+>>> @@ -929,6 +929,7 @@ static const struct of_device_id l2x0_ids[] __initconst = {
+>>>   	  .data = (void *)&aurora_no_outer_data},
+>>>   	{ .compatible = "marvell,aurora-outer-cache",
+>>>   	  .data = (void *)&aurora_with_outer_data},
+>>> +	{ .compatible = "marvell,tauros3-cache", .data = (void *)&l2x0_data },
+>>
+>> Are we intending to handle this differently later?
+>>
+>> Or is it 100% compatible with the pl210 or pl220? We could just require
+>> an entry later in the compatible string list instead...
+> 
+> No public documentation, no clear answer.
+> 
+> Tauros3 isn't 100% compatible with any of the ARM l2cc above, it has
+> additional "features" or "bugs" - call it whatever you want.
+> 
+> I am not an l2cc expert, but basically I see two options:
+> a) use (possibly) wrong existing compatible in current mv88de3100.dtsi
+>     now and fix later.
+> b) add tauros3 compatible now and add (possible) quirks/marvell-specific
+>     properties later.
+> 
+> IMHO b) is very likely to happen as l2x0_of_init in patch 8/8 already 
+> sets bits, I wasn't able to verify in public ARM l2cc docu.
 
-On Tue, Oct 8, 2013 at 8:42 AM, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hello,
->
-> I am working on adding PCIe support for a new architecture and looking
-> at various existing implementations of pcibios functions I've realised
-> that some architectures share a lot of common code. As I don't like to
-> repeat the pattern again without any good reasons, I am wondering if
-> there is any appetite for carving out those common functions into
-> a generic place under drivers/pci/pcibios.c where they can be reused.
->
-> Things that I am specifically looking at are pcibios_{alloc,free}_controller,
-> pci_process_bridge_OF_ranges and anything that will make adding support
-> for PCI/PCIe in a new architecture easier. Candidates for promoting
-> to a generic place are the functions found in both powerpc and microblaze
-> as they seem to be mostly identical, they support DT bindings and are
-> 64bits ready.
+I agree with Sebastian. I don't have more information that Sebastian, but
+as it is definitely a different controller of the ones from ARM, it should
+have its own compatible string. Then latter when we will discover new feature
+and/or bugs, we will be able to manage them without requiring people to update
+their dtb. If I understood well it is the philosophy behind the device tree.
 
-I'm very much in favor of unifying code to reduce duplication across
-architectures.
+Regards,
 
-In general, the pcibios_*() interfaces are things used by the PCI core
-(drivers/pci) but implemented by the architecture.  The specific cases
-you mentioned are not actually used by the PCI core, so my inclination
-would be to name them something else and possibly put them somewhere
-other than drivers/pci.
+> 
+> But again, I am very open for suggestions here.
+> 
+> Sebastian
+> 
 
-I wonder if pci_process_bridge_OF_ranges() would fit somewhere in
-drivers/of?  The implementations I looked at are mostly concerned with
-parsing OF resources, and they don't have much to do with PCI
-directly.
 
-pcibios_alloc_controller() is implemented by microblaze, powerpc, and
-xtensa.  Each of those arches defines its own "struct pci_controller",
-so it won't be completely trivial to unify this.  I tried to start
-some unification with the "struct pci_host_bridge" in the core, but
-haven't made much progress there.
-
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
