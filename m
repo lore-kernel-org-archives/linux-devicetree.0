@@ -1,193 +1,63 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH V4 1/6] clk: exynos-audss: convert to platform device
-Date: Tue, 8 Oct 2013 09:53:02 -0700
-Message-ID: <CAL1qeaE2Y2EkRtbGQUqsxyci6PSSNihObPju-xquy39fV4zOMw@mail.gmail.com>
-References: <1380046016-5811-1-git-send-email-abrestic@chromium.org>
-	<1380143572-11741-1-git-send-email-abrestic@chromium.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC] Architecture independent pcibios?
+Date: Tue, 08 Oct 2013 11:55:18 -0500
+Message-ID: <525438F6.3090600@gmail.com>
+References: <20131008144211.GA25231@e102652-lin.cambridge.arm.com> <CAErSpo5=sUJDZGm+zHw+b1h_a1YYbaGBshAutAoPBZYUCRbYkw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1380143572-11741-1-git-send-email-abrestic@chromium.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, Jiri Kosina <jkosina@suse.cz>, Rahul Sharma <rahul.sharma@samsung.com>, Leela Krishna Amudala <l.krishna@samsung.com>, Tushar Behera <tushar.behera@linaro.org>, Doug Anderson <dianders@chromium.org>, Padmavathi Venna <padma.v@samsung.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Bresticker <abrestic@chromium.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAErSpo5=sUJDZGm+zHw+b1h_a1YYbaGBshAutAoPBZYUCRbYkw@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <monstr@monstr.eu>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike and Kukjin,
+On 10/08/2013 11:32 AM, Bjorn Helgaas wrote:
+> [+cc Grant, Rob, devicetree list]
+> 
+> On Tue, Oct 8, 2013 at 8:42 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+>> Hello,
+>>
+>> I am working on adding PCIe support for a new architecture and looking
+>> at various existing implementations of pcibios functions I've realised
+>> that some architectures share a lot of common code. As I don't like to
+>> repeat the pattern again without any good reasons, I am wondering if
+>> there is any appetite for carving out those common functions into
+>> a generic place under drivers/pci/pcibios.c where they can be reused.
+>>
+>> Things that I am specifically looking at are pcibios_{alloc,free}_controller,
+>> pci_process_bridge_OF_ranges and anything that will make adding support
+>> for PCI/PCIe in a new architecture easier. Candidates for promoting
+>> to a generic place are the functions found in both powerpc and microblaze
+>> as they seem to be mostly identical, they support DT bindings and are
+>> 64bits ready.
+> 
+> I'm very much in favor of unifying code to reduce duplication across
+> architectures.
+> 
+> In general, the pcibios_*() interfaces are things used by the PCI core
+> (drivers/pci) but implemented by the architecture.  The specific cases
+> you mentioned are not actually used by the PCI core, so my inclination
+> would be to name them something else and possibly put them somewhere
+> other than drivers/pci.
+> 
+> I wonder if pci_process_bridge_OF_ranges() would fit somewhere in
+> drivers/of?  The implementations I looked at are mostly concerned with
+> parsing OF resources, and they don't have much to do with PCI
+> directly.
 
-Any decisions regarding this patchset?  I believe all comments have
-been addressed.
+This was being done until Ben weighed in:
 
-Thanks,
-Andrew
+https://lkml.org/lkml/2013/5/4/103
 
-On Wed, Sep 25, 2013 at 2:12 PM, Andrew Bresticker
-<abrestic@chromium.org> wrote:
-> The Exynos AudioSS clock controller will later be modified to allow
-> input clocks to be specified via device-tree in order to support
-> multiple Exynos SoCs.  This will introduce a dependency on the core
-> SoC clock controller being initialized first so that the AudioSS driver
-> can look up its input clocks, but the order in which clock providers
-> are probed in of_clk_init() is not guaranteed.  Since deferred probing
-> is not supported in of_clk_init() and the AudioSS block is not the core
-> controller, we can initialize it later as a platform device.
->
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> Acked-by: Tomasz Figa <t.figa@samsung.com>
-> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes since v3:
->  - __init -> __exit for module exit function
->  - fixed nits from Sylwester
-> Changes since v2:
->  - add error handling to probe callback
->  - fixed ordering of of_clk_{add,del}_provider
->  - fixed nits from Tomasz and Sylwester
-> Changes since v1:
->  - add clk_unregister() calls to remove callback
->  - fixed minor nits from Tomasz
-> ---
->  drivers/clk/samsung/clk-exynos-audss.c | 104 ++++++++++++++++++++++++++++-----
->  1 file changed, 88 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/clk/samsung/clk-exynos-audss.c b/drivers/clk/samsung/clk-exynos-audss.c
-> index 39b40aa..742dabc 100644
-> --- a/drivers/clk/samsung/clk-exynos-audss.c
-> +++ b/drivers/clk/samsung/clk-exynos-audss.c
-> @@ -14,6 +14,8 @@
->  #include <linux/clk-provider.h>
->  #include <linux/of_address.h>
->  #include <linux/syscore_ops.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
->
->  #include <dt-bindings/clk/exynos-audss-clk.h>
->
-> @@ -62,24 +64,26 @@ static struct syscore_ops exynos_audss_clk_syscore_ops = {
->  #endif /* CONFIG_PM_SLEEP */
->
->  /* register exynos_audss clocks */
-> -static void __init exynos_audss_clk_init(struct device_node *np)
-> +static int exynos_audss_clk_probe(struct platform_device *pdev)
->  {
-> -       reg_base = of_iomap(np, 0);
-> -       if (!reg_base) {
-> -               pr_err("%s: failed to map audss registers\n", __func__);
-> -               return;
-> +       int i, ret = 0;
-> +       struct resource *res;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       reg_base = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(reg_base)) {
-> +               dev_err(&pdev->dev, "failed to map audss registers\n");
-> +               return PTR_ERR(reg_base);
->         }
->
-> -       clk_table = kzalloc(sizeof(struct clk *) * EXYNOS_AUDSS_MAX_CLKS,
-> +       clk_table = devm_kzalloc(&pdev->dev,
-> +                               sizeof(struct clk *) * EXYNOS_AUDSS_MAX_CLKS,
->                                 GFP_KERNEL);
-> -       if (!clk_table) {
-> -               pr_err("%s: could not allocate clk lookup table\n", __func__);
-> -               return;
-> -       }
-> +       if (!clk_table)
-> +               return -ENOMEM;
->
->         clk_data.clks = clk_table;
->         clk_data.clk_num = EXYNOS_AUDSS_MAX_CLKS;
-> -       of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
->
->         clk_table[EXYNOS_MOUT_AUDSS] = clk_register_mux(NULL, "mout_audss",
->                                 mout_audss_p, ARRAY_SIZE(mout_audss_p),
-> @@ -123,13 +127,81 @@ static void __init exynos_audss_clk_init(struct device_node *np)
->                                 "div_pcm0", CLK_SET_RATE_PARENT,
->                                 reg_base + ASS_CLK_GATE, 5, 0, &lock);
->
-> +       for (i = 0; i < clk_data.clk_num; i++) {
-> +               if (IS_ERR(clk_table[i])) {
-> +                       dev_err(&pdev->dev, "failed to register clock %d\n", i);
-> +                       ret = PTR_ERR(clk_table[i]);
-> +                       goto unregister;
-> +               }
-> +       }
-> +
-> +       ret = of_clk_add_provider(pdev->dev.of_node, of_clk_src_onecell_get,
-> +                                       &clk_data);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "failed to add clock provider\n");
-> +               goto unregister;
-> +       }
-> +
->  #ifdef CONFIG_PM_SLEEP
->         register_syscore_ops(&exynos_audss_clk_syscore_ops);
->  #endif
->
-> -       pr_info("Exynos: Audss: clock setup completed\n");
-> +       dev_info(&pdev->dev, "setup completed\n");
-> +
-> +       return 0;
-> +
-> +unregister:
-> +       for (i = 0; i < clk_data.clk_num; i++) {
-> +               if (!IS_ERR(clk_table[i]))
-> +                       clk_unregister(clk_table[i]);
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static int exynos_audss_clk_remove(struct platform_device *pdev)
-> +{
-> +       int i;
-> +
-> +       of_clk_del_provider(pdev->dev.of_node);
-> +
-> +       for (i = 0; i < clk_data.clk_num; i++) {
-> +               if (!IS_ERR(clk_table[i]))
-> +                       clk_unregister(clk_table[i]);
-> +       }
-> +
-> +       return 0;
->  }
-> -CLK_OF_DECLARE(exynos4210_audss_clk, "samsung,exynos4210-audss-clock",
-> -               exynos_audss_clk_init);
-> -CLK_OF_DECLARE(exynos5250_audss_clk, "samsung,exynos5250-audss-clock",
-> -               exynos_audss_clk_init);
-> +
-> +static const struct of_device_id exynos_audss_clk_of_match[] = {
-> +       { .compatible = "samsung,exynos4210-audss-clock", },
-> +       { .compatible = "samsung,exynos5250-audss-clock", },
-> +       {},
-> +};
-> +
-> +static struct platform_driver exynos_audss_clk_driver = {
-> +       .driver = {
-> +               .name = "exynos-audss-clk",
-> +               .owner = THIS_MODULE,
-> +               .of_match_table = exynos_audss_clk_of_match,
-> +       },
-> +       .probe = exynos_audss_clk_probe,
-> +       .remove = exynos_audss_clk_remove,
-> +};
-> +
-> +static int __init exynos_audss_clk_init(void)
-> +{
-> +       return platform_driver_register(&exynos_audss_clk_driver);
-> +}
-> +core_initcall(exynos_audss_clk_init);
-> +
-> +static void __exit exynos_audss_clk_exit(void)
-> +{
-> +       platform_driver_unregister(&exynos_audss_clk_driver);
-> +}
-> +module_exit(exynos_audss_clk_exit);
-> +
-> +MODULE_AUTHOR("Padmavathi Venna <padma.v@samsung.com>");
-> +MODULE_DESCRIPTION("Exynos Audio Subsystem Clock Controller");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:exynos-audss-clk");
-> --
-> 1.8.4
->
+Rob
+
+> pcibios_alloc_controller() is implemented by microblaze, powerpc, and
+> xtensa.  Each of those arches defines its own "struct pci_controller",
+> so it won't be completely trivial to unify this.  I tried to start
+> some unification with the "struct pci_host_bridge" in the core, but
+> haven't made much progress there.
+> 
+> Bjorn
+> 
