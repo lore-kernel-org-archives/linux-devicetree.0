@@ -1,59 +1,230 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V2] clk: palmas: add clock driver for palmas
-Date: Tue, 8 Oct 2013 18:45:05 +0530
-Message-ID: <52540559.6030406@nvidia.com>
-References: <1381154751-4565-1-git-send-email-ldewangan@nvidia.com> <20131008010237.7445.32387@quantum>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Subject: Re: [PATCH v2 1/5] PM / OPP: extend DT binding to specify phandle
+ of another node for OPP
+Date: Tue, 08 Oct 2013 13:55:16 +0100
+Message-ID: <525400B4.8060203@arm.com>
+References: <1380634382-15609-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1380634382-15609-2-git-send-email-Sudeep.KarkadaNagesha@arm.com> <5252DAD3.6040903@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20131008010237.7445.32387@quantum>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: "broonie@linaro.org" <broonie@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <5252DAD3.6040903@gmail.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 08 October 2013 06:32 AM, Mike Turquette wrote:
-> Quoting Laxman Dewangan (2013-10-07 07:05:51)
->> +               if (!ret) {
->> +                       switch (prop) {
->> +                       case 1:
->> +                               prop = PALMAS_EXT_CONTROL_ENABLE1;
->> +                               break;
->> +                       case 2:
->> +                               prop = PALMAS_EXT_CONTROL_ENABLE2;
->> +                               break;
->> +                       case 3:
->> +                               prop = PALMAS_EXT_CONTROL_NSLEEP;
->> +                               break;
-> Can magic numbers be replaced with defines?
-Fine, will do in V3.
+On 07/10/13 17:01, Rob Herring wrote:
+> On 10/01/2013 08:32 AM, Sudeep KarkadaNagesha wrote:
+>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>>
+>> If more than one similar devices share the same operating points(OPPs)
+>> being in the same clock domain, currently we need to replicate the
+>> OPP entries in all the nodes.
+>>
+>> This patch extends existing binding by adding a new property named
+>> 'operating-points-phandle' to specify the phandle in any device node
+>> pointing to another node which contains the actual OPP tuples.
+>> This helps to avoid replication if multiple devices share the OPPs.
+>>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Stephen Warren <swarren@wwwdotorg.org>
+>> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+>> Cc: Nishanth Menon <nm@ti.com>
+>> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>> ---
+>>  Documentation/devicetree/bindings/power/opp.txt | 161 ++++++++++++++++++++++--
+>>  1 file changed, 149 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+>> index 74499e5..f59b878 100644
+>> --- a/Documentation/devicetree/bindings/power/opp.txt
+>> +++ b/Documentation/devicetree/bindings/power/opp.txt
+>> @@ -4,22 +4,159 @@ SoCs have a standard set of tuples consisting of frequency and
+>>  voltage pairs that the device will support per voltage domain. These
+>>  are called Operating Performance Points or OPPs.
+>>  
+>> -Properties:
+>> +Required Properties:
+>>  - operating-points: An array of 2-tuples items, and each item consists
+>>    of frequency and voltage like <freq-kHz vol-uV>.
+>>  	freq: clock frequency in kHz
+>>  	vol: voltage in microvolt
+>>  
+>> +- operating-points-phandle: phandle to the device tree node which contains
+>> +	the operating points tuples(recommended to be used if multiple
+>> +	devices are in the same clock domain and hence share OPPs, as it
+>> +	avoids replication of OPPs)
+>> +
+>> +  operating-points and operating-points-phandle are mutually exclusive, only
+>> +  one of them can be present in any device node.
+>> +
+>>  Examples:
+>>  
+>> -cpu@0 {
+>> -	compatible = "arm,cortex-a9";
+>> -	reg = <0>;
+>> -	next-level-cache = <&L2>;
+>> -	operating-points = <
+>> -		/* kHz    uV */
+>> -		792000  1100000
+>> -		396000  950000
+>> -		198000  850000
+>> -	>;
+>> -};
+>> +1. A uniprocessor system (phandle not required)
+>> +
+>> +	cpu0: cpu@0 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <0>;
+>> +		operating-points = <
+>> +			/* kHz    uV */
+>> +			792000  1100000
+>> +			396000  950000
+>> +			198000  850000
+>> +		>;
+>> +	};
+>> +
+>> +2a. Consider a SMP system with 4 CPUs in the same clock domain(no phandle)
+>> +    Some existing DTs describe homogenous SMP systems by only listing the
+>> +    OPPs in the cpu@0 node. For compatiblity with existing DTs, an
+>> +    operating system may handle this case specially.
+>> +
+>> +	cpu0: cpu@0 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <0>;
+>> +		operating-points = <
+>> +			/* kHz    uV */
+>> +			792000  1100000
+>> +			396000  950000
+>> +			198000  850000
+>> +		>;
+>> +	};
+>> +
+>> +	cpu1: cpu@1 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <1>;
+>> +	};
+>> +
+>> +	cpu2: cpu@2 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <2>;
+>> +	};
+>> +
+>> +	cpu3: cpu@3 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <3>;
+>> +	};
+>> +
+>> +2b. Consider a SMP system with 4 CPUs in the same clock domain(with phandle)
+>> +    If more than one device of same type share the same OPPs, for example
+>> +    all the CPUs on a SoC or in a single cluster on a SoC, then we can avoid
+>> +    replicating the OPPs in all the nodes. We can specify the phandle of
+>> +    the node which contains the OPP tuples instead.
+>> +
+>> +	cpu0: cpu@0 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <0>;
+>> +		operating-points-phandle = <&cpu_opp>;
+>> +	};
+>> +
+>> +	cpu1: cpu@1 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <1>;
+>> +		operating-points-phandle = <&cpu_opp>;
+>> +	};
+>> +
+>> +	cpu2: cpu@2 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <2>;
+>> +		operating-points-phandle = <&cpu_opp>;
+>> +	};
+>> +
+>> +	cpu3: cpu@3 {
+>> +		compatible = "arm,cortex-a9";
+>> +		reg = <3>;
+>> +		operating-points-phandle = <&cpu_opp>;
+>> +	};
+>> +
+>> +	opps-table {
+>> +		cpu_opp: cpu_opp {
+>> +			operating-points = <
+>> +				/* kHz    uV */
+>> +				792000  1100000
+>> +				396000  950000
+>> +				198000  850000
+>> +			>;
+>> +		};
+>> +		... /* other device OPP nodes */
+> 
+> But this is a subnode of /cpus. IMO, OPPs should be located near what
+> they control.
+> 
+No, the idea was to group all the shared OPPs in a container node like clocks or
+pinmux. So opps-table in above example need not be subnode of /cpus.
 
->
->
-> +
-> +       ret = palmas_update_bits(palmas_clks->palmas, PALMAS_RESOURCE_BASE,
-> +                       cinfo->clk_desc->control_reg,
-> +                       cinfo->clk_desc->sleep_mask, 0);
-> What does this call to palmas_update_bits do?
+> 
+>> +	}
+>> +
+>> +4. Consider an AMP(asymmetric multi-processor) sytem with 2 clusters of
+>> +   CPUs. Each cluster has 2 CPUs and all the CPUs within the cluster share
+>> +   the clock domain.
+>> +
+>> +	cpu0: cpu@0 {
+>> +		compatible = "arm,cortex-a15";
+>> +		reg = <0>;
+>> +		operating-points-phandle = <&cluster0_opp>;
+>> +	};
+>> +
+>> +	cpu1: cpu@1 {
+>> +		compatible = "arm,cortex-a15";
+>> +		reg = <1>;
+>> +		operating-points-phandle = <&cluster0_opp>;
+>> +	};
+>> +
+>> +	cpu2: cpu@100 {
+>> +		compatible = "arm,cortex-a7";
+>> +		reg = <100>;
+>> +		operating-points-phandle = <&cluster1_opp>;
+>> +	};
+>> +
+>> +	cpu3: cpu@101 {
+>> +		compatible = "arm,cortex-a7";
+>> +		reg = <101>;
+>> +		operating-points-phandle = <&cluster1_opp>;
+>> +	};
+>> +
+>> +	opps-table {
+>> +		cluster0_opp: cluster0_opp {
+> 
+> Why not use the cpu topology? Then the operating point can apply to
+> cores based on the position in the topology. You don't even need a
+> phandle in that case. You can look for OPPs in either a cpu node or in
+> the topology.
+> 
+Agreed but few thoughts behind this binding:
 
-This APIs update the selected bits based on mask. This is wrapper over 
-the regmap_update_bits() to provide the interface at the Palmas register 
-access.
-The palmas registers are paged on different i2c address and offset. The 
-i2c address and offset is decided based on base_address and offset.
-This APIs does all calculation to get the correct i2c slave address and 
-offset address based on argument.
+1. OPPs are not just cpu specific:
+   How do we share OPPs for 2 devices in the same clock domain ?
+   Also moving the OPP into cpu-topo makes parsing specific to cpu.
+   Currently the OPP library fetches the of_node from the device struct
+   which is applicable to any devices.
 
->> +static int palmas_clks_remove(struct platform_device *pdev)
->> +{
->> +       of_clk_del_provider(pdev->dev.of_node);
-> I'll be taking Sylwester's clock deregistration series after he
-> publishes the next version, so if you want to call clk_unregister here
-> (based on the new call) you could.
->
-> If you want to add that in a later patch it is OK.
+2. Should cpu topology(i.e. cpu-map) just contain the topology info ? and
+   phandles to these nodes should be used to setup any affinity ?
 
-Thanks for pointing me this changes. I like to add this on my follow on 
-(later) patch, not on this. -- 1.7.1.1
+3. As part of RFC[1][2], it was also discussed that on some SoCs we need
+   multiple OPP profiles/options which it provides but only one of them can
+   be used based on the board design. phandle to OPP will also help resolve
+   that issue.
+
+Let me know your thoughts.
+
+Regards,
+Sudeep
+
+[1] http://www.spinics.net/lists/cpufreq/msg06556.html
+[2] http://www.spinics.net/lists/cpufreq/msg06685.html
 
