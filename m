@@ -1,90 +1,39 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: omap3-beagle: use 3630 definitions
-Date: Tue, 8 Oct 2013 12:47:21 -0500
-Message-ID: <20131008174721.GH13128@radagast>
-References: <523C9D8B.2000701@ti.com>
- <1381164584-4008-1-git-send-email-nm@ti.com>
- <1381164584-4008-3-git-send-email-nm@ti.com>
- <20131007192009.GA8949@atomide.com>
-Reply-To: <balbi@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] ARM: Dove: Add audio to the DT
+Date: Tue, 8 Oct 2013 13:54:23 -0400
+Message-ID: <20131008175423.GT5402@titan.lakedaemon.net>
+References: <20131008194055.00fc93c2@armhf>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Q59ABw34pTSIagmi"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20131007192009.GA8949@atomide.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Nishanth Menon <nm@ti.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Felipe <balbi@ti.com>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20131008194055.00fc93c2@armhf>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Q59ABw34pTSIagmi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Jean-Francois,
 
-Hi,
+On Tue, Oct 08, 2013 at 07:40:55PM +0200, Jean-Francois Moine wrote:
+> This patch series adds audio DT to the Dove boards and activates the
+> Cubox audio device.
+> 
+> Full audio in the Cubox will work when the DT extension of the generic
+> simple audio card will be complete.
+> 
+> v2:
+> - dove.dtsi: change the audio controller compatible string to
+> 	"marvell,dove-audio" (Thomas Petazzoni)
+> - dove-cubox: add the external clock (Sebastian Hesselbarth)
 
-On Mon, Oct 07, 2013 at 12:20:09PM -0700, Tony Lindgren wrote:
-> * Nishanth Menon <nm@ti.com> [131007 09:57]:
-> > beagle-xm currently would matchup with ti,omap3 which invokes
-> > omap3430_init_early instead of omap3630_init_early. So add
-> > compatiblity for 3630 to allow match
-> >=20
-> > Signed-off-by: Nishanth Menon <nm@ti.com>
-> > ---
-> >  arch/arm/boot/dts/omap3-beagle-xm.dts |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/=
-omap3-beagle-xm.dts
-> > index 0f7cfc5..2079e22 100644
-> > --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-> > +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-> > @@ -11,7 +11,7 @@
-> > =20
-> >  / {
-> >  	model =3D "TI OMAP3 BeagleBoard xM";
-> > -	compatible =3D "ti,omap3-beagle-xm", "ti,omap3-beagle", "ti,omap3";
-> > +	compatible =3D "ti,omap3-beagle-xm", "ti,omap363x", "ti,omap3-beagle"=
-, "ti,omap3";
-> > =20
-> >  	cpus {
-> >  		cpu@0 {
->=20
-> This compatible string looks hacky.. How about just make it
->=20
-> "ti,omap3-beagle-xm", "ti,omap363x", "ti,omap3";
->=20
-> How about just leave out "ti,omap3-beagle" here?
+Thanks for turning this around so quickly.  Sebastian, if I could get
+your Acked-by on this series, I'll pull it in.
 
-ti,omap3-beagle was already part of the original file, we can definitely
-remove but I'd expect us to maintain support for that string
-indefinitely should anybody continue to use older dtbs.
+thx,
 
---=20
-balbi
-
---Q59ABw34pTSIagmi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSVEUpAAoJEIaOsuA1yqRE+e4P/iuHK5dZhvKv6lLuXQ2KVOz+
-/IfwTBSGZ82mBCsZWXxvgvr95Px/3/Bn8jJ4dbVcmHhJgDfefbp0p4gm3d+lfdwK
-4xB+bjFhHq3T3o1qsAyN5b44ZPXy1RG+C5TSu1ZIQYPJVTZYDaztvphpuAfXBtpw
-AXokzaOBrlfrt1g7Qc0FAqyyjiYwMeLnhR6uCls+oWKN6M3GSvglcjOkeRX8wEzM
-OmPYoPTKX3hPbwL9Ino9s4NjymlntsbXWTso2+6teUIVjr9hr0ckAOFBcte4FoE5
-1rBztO9lyzfS1EyP91Qx1o1bVo7T5w2+QaKzXY+gccKfvsakaojO78rcxThGe7Uq
-CbFzk+bhCPUxXFKXVT45bHSMsfPj/qPHJ5ZxxE2zEeGaxnni50RIAyo82oxc+8T+
-709xSMuymK3qD/g8dw8C6MTwMsyZXU7rL6d3CKVsMzUnAkKn5GUNFelaztzTDs9c
-BZ0zD/xTBthrTIevUaTzBSIY8aUkME2TPZmS0MILsOeJwfHXC7A8VG/+V4scHVYr
-lOMFBe69RExzCE8Ifr8otMg88b08THdCuXO6/nR1tiVGNVOGUHgzFfwvsGbRSTmZ
-rSD9EXCZbbPnOS27xGVJVbSWZgkkEirKKRLAX99N+AJlfaHlEJyoHTVQm1KAEEpa
-EEGN+S5D3O7uo21UbuGS
-=9rTN
------END PGP SIGNATURE-----
-
---Q59ABw34pTSIagmi--
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
