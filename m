@@ -1,36 +1,28 @@
-From: =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 13/27] drm/tegra: Move subdevice infrastructure to
- host1x
-Date: Tue, 8 Oct 2013 09:25:39 +0300
-Message-ID: <5253A563.1060409@nvidia.com>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-14-git-send-email-treding@nvidia.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [RESEND PATCH v3 04/11] ASoC: davinci-mcasp: Extract DMA channels
+ directly from DT
+Date: Tue, 8 Oct 2013 10:05:03 +0300
+Message-ID: <5253AE9F.3000500@ti.com>
+References: <cover.1379590035.git.jsarha@ti.com> <dc7012e1c2ae59c35eedd9328139f1060048b395.1379590036.git.jsarha@ti.com> <20131007215323.GB2976@kartoffel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381134884-5816-14-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131007215323.GB2976@kartoffel>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "joelf@ti.com" <joelf@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07.10.2013 11:34, Thierry Reding wrote:
-> The Tegra DRM driver currently uses some infrastructure to defer the DRM
-> core initialization until all required devices have registered. The same
-> infrastructure can potentially be used by any other driver that requires
-> more than a single sub-device of the host1x module.
-> 
-> Make the infrastructure more generic and keep only the DRM specific code
-> in the DRM part of the driver. Eventually this will make it easy to move
-> the DRM driver part back to the DRM subsystem.
+On 10/08/2013 12:53 AM, Mark Rutland wrote:
+> On Thu, Sep 26, 2013 at 08:18:29PM +0100, Jyri Sarha wrote:
+>> >Extract DMA channels directly from DT as they can not be found from
+>> >platform resources anymore. This is a work-around until davinci audio
+>> >driver is updated to use dmaengine.
+> How long will this conversion take?
+>
 
-Do we need the host1x_client/tegra_drm_client concept outside DRM? You
-separated the two in an earlier patch, but the whole structure is there
-because of limitation in DRM. Shouldn't we keep management of drm
-clients entirely inside drm?
+That is uncertain, definitely not in time for v3.13.
 
-Second, do we need an own drm_bus for host1x clients? Does it bring
-something drm_platform doesn't? I couldn't see any immediate difference
-between the two.
-
-Terje
+Best regards,
+Jyri
