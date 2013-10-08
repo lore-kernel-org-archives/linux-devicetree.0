@@ -1,39 +1,70 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] ARM: Dove: Add audio to the DT
-Date: Tue, 8 Oct 2013 13:54:23 -0400
-Message-ID: <20131008175423.GT5402@titan.lakedaemon.net>
-References: <20131008194055.00fc93c2@armhf>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
+Date: Tue, 8 Oct 2013 19:59:49 +0200
+Message-ID: <20131008195949.0673f83e@armhf>
+References: <20130828113521.35c53365@armhf>
+	<521DCD80.9010105@gmail.com>
+	<20130831125128.0e3a23c7@armhf>
+	<140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com>
+	<20130926101147.217015e1@armhf>
+	<5243F0CE.9000301@gmail.com>
+	<20130926132859.04ad4407@armhf>
+	<5246E747.6020103@gmail.com>
+	<20131003181716.6d03d576@armhf>
+	<20131008161145.GJ5402@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131008194055.00fc93c2@armhf>
+In-Reply-To: <20131008161145.GJ5402-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jean-Francois,
+On Tue, 8 Oct 2013 12:11:45 -0400
+Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
 
-On Tue, Oct 08, 2013 at 07:40:55PM +0200, Jean-Francois Moine wrote:
-> This patch series adds audio DT to the Dove boards and activates the
-> Cubox audio device.
-> 
-> Full audio in the Cubox will work when the DT extension of the generic
-> simple audio card will be complete.
-> 
-> v2:
-> - dove.dtsi: change the audio controller compatible string to
-> 	"marvell,dove-audio" (Thomas Petazzoni)
-> - dove-cubox: add the external clock (Sebastian Hesselbarth)
+> Jean-Francois,
+>=20
+> On Thu, Oct 03, 2013 at 06:17:16PM +0200, Jean-Francois Moine wrote:
+> > It seems that my patch about adding s/pdif to the kirkwood audio dr=
+iver
+> > has not been accepted yet...
+>=20
+> Looking over that conversation does not give the impression that
+> concerns were resolved.  I'm a little short on time atm, all I can ad=
+d
+> definitively is that I agree with Thomas wrt the compatible strings.
+> They should be named after the first compatible IP block (in this cas=
+e,
+> kirkwood).
+>=20
+> Please submit a fix for v3.12-rc cleaning up what Mark Brown accepted=
+ so
+> we don't have to maintain it indefinitely, and we'll see if we can wo=
+rk
+> out the rest in fairly short order.  Posting a new version of series
+> would help kick off that conversation... ;-)
 
-Thanks for turning this around so quickly.  Sebastian, if I could get
-your Acked-by on this series, I'll pull it in.
+Jason,
 
-thx,
+Thank you, I had forgotten this patch series. New submit done.
 
-Jason.
+As it is a new development, it may go to 3.13. The compatible string
+has been updated by Thomas and it is present in 3.12-rc1.
+
+In my quoted message, I was thinking about the patch:
+
+[PATCH] ASoC: kirkwood: add S/PDIF support
+
+dated 24 Sep 2013.
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
