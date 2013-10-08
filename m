@@ -1,46 +1,31 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v2 1/3] clk: emev2: Add support for emev2 SMU clocks with DT
-Date: Tue, 8 Oct 2013 14:58:08 +0900
-Message-ID: <CANqRtoRZM=5FYG7+fq5c+TQEuHtJRmcGP1CmMq5kO5Ayvg=W6w@mail.gmail.com>
-References: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
-	<20131008143217.0611fba0c0d27d9c622759f3@ops.dti.ne.jp>
+From: =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 06/27] gpu: host1x: Cleanup includes
+Date: Tue, 8 Oct 2013 08:59:58 +0300
+Message-ID: <52539F5E.1060005@nvidia.com>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-7-git-send-email-treding@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131008143217.0611fba0c0d27d9c622759f3@ops.dti.ne.jp>
-Sender: linux-kernel-owner@vger.kernel.org
-To: takasi-y@ops.dti.ne.jp
-Cc: SH-Linux <linux-sh@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1381134884-5816-7-git-send-email-treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 8, 2013 at 2:32 PM,  <takasi-y@ops.dti.ne.jp> wrote:
-> Device tree clock binding document for EMMA Mobile EV2 SMU,
-> And Common clock framework based implementation of it.
-> Following nodes are defined to describe clock tree.
-> - renesas,emev2-smu
-> - renesas,emev2-smu-clkdiv
-> - renesas,emev2-smu-gclk
->
-> These bindings are designed manually based on
->  19UH0037EJ1000_SMU : System Management Unit User's Manual
->
-> So far, reparent is not implemented, and is fixed to index #0.
-> Clock tree description is not included, and should be provided
-> by device-tree.
->
-> Signed-off-by: Takashi Yoshii <takasi-y@ops.dti.ne.jp>
-> ---
->  .../devicetree/bindings/clock/emev2-clock.txt      |  98 +++++++++++++++++++
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/shmobile/Makefile                      |   3 +
->  drivers/clk/shmobile/clk-emev2.c                   | 104 +++++++++++++++++++++
->  4 files changed, 206 insertions(+)
+On 07.10.2013 11:34, Thierry Reding wrote:
+> Most of the included files are either not required or already included
+> by some other header file.
 
-Thanks for cleaning up the Makefile bits, Yoshii-san.
+What's the general policy? I personally feel that each source file
+should #include all the header files it needs, and should not rely on
+header files #including other header files.
 
-This patch and the bindings look fine to me from a SoC point of view.
-Using these together with the topology information in emev2.dtsi makes
-it possible for us to use CCF and multiplatform as expected on the
-EMEV2 SoC.
+This way if header file A stops needing header file B, we don't need to
+go and fix all users of header file A that assume B is included.
 
-Acked-by: Magnus Damm <damm@opensource.se>
+I've been hit by this multiple times in Linux kernel - sometimes some
+header files just assume another header file is #included and refuses to
+compile it it isn't.
+
+Terje
