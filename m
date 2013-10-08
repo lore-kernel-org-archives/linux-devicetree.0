@@ -1,53 +1,21 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH] ARM: dts: omap5-uevm: mark TWL6037 as system-power-controller
-Date: Wed, 09 Oct 2013 00:40:10 +0200
-Message-ID: <525489CA.10906@baylibre.com>
-References: <1379617896-15213-1-git-send-email-nm@ti.com> <52542813.7020208@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 0/5] Tegra124 clock support
+Date: Tue, 08 Oct 2013 16:31:25 -0600
+Message-ID: <525487BD.9060704@wwwdotorg.org>
+References: <1380878014-22088-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52542813.7020208@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1380878014-22088-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nishanth,
+On 10/04/2013 03:12 AM, Peter De Schrijver wrote:
+> This series introduces support for the Tegra124 CAR clocks.
+> Based on '[PATCH v2 00/12] Introduce common infra for tegra clocks'
 
-On 08/10/2013 17:43, Nishanth Menon wrote:
-> On 09/19/2013 02:11 PM, Nishanth Menon wrote:
->> This allows the palmas pm_power_off to kick in on power off command
->> and switch off the board.
->>
->> Signed-off-by: Nishanth Menon <nm@ti.com>
->> ---
->> Based on: (benoit's for_3.13/dts branch)
->> https://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
->> This uses the support introduced by:
->> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=b81eec09a484c588ead035003ce7555ca8a9963a
->>
->>   arch/arm/boot/dts/omap5-uevm.dts |    1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
->> index da25a14..8227386 100644
->> --- a/arch/arm/boot/dts/omap5-uevm.dts
->> +++ b/arch/arm/boot/dts/omap5-uevm.dts
->> @@ -271,6 +271,7 @@
->>   		reg = <0x48>;
->>   		interrupt-controller;
->>   		#interrupt-cells = <2>;
->> +		ti,system-power-controller;
->>
->>   		extcon_usb3: palmas_usb {
->>   			compatible = "ti,palmas-usb-vid";
->>
-> Gentle ping.
-> patchworks link: https://patchwork.kernel.org/patch/2913111/
-
-I've just applied it and pushed it to my branch.
-
-Thanks,
-Benoit
-
+Aside from the couple issues I already mentioned, the series,
+Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
