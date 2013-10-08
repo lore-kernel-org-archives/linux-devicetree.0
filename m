@@ -1,131 +1,75 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: integrator: get the LM interrupts from DT
-Date: Tue, 8 Oct 2013 10:44:29 +0100
-Message-ID: <20131008094429.GC28972@e106331-lin.cambridge.arm.com>
-References: <1380816177-3046-1-git-send-email-linus.walleij@linaro.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 06/27] gpu: host1x: Cleanup includes
+Date: Tue, 8 Oct 2013 11:45:54 +0200
+Message-ID: <20131008094553.GA19633@ulmo.nvidia.com>
+References: <1381134884-5816-1-git-send-email-treding@nvidia.com>
+ <1381134884-5816-7-git-send-email-treding@nvidia.com>
+ <52539F5E.1060005@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1380816177-3046-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <52539F5E.1060005-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[adding devicetree to Cc]
 
-Hi Linus,
+--PEIAKu/WMn1b1Hv9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I missed this because I was neither Cc'd directly or through the
-devicetree list. Please Cc devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org for DT patches in
-future.
+On Tue, Oct 08, 2013 at 08:59:58AM +0300, Terje Bergstr=C3=B6m wrote:
+> On 07.10.2013 11:34, Thierry Reding wrote:
+> > Most of the included files are either not required or already included
+> > by some other header file.
+>=20
+> What's the general policy? I personally feel that each source file
+> should #include all the header files it needs, and should not rely on
+> header files #including other header files.
+>=20
+> This way if header file A stops needing header file B, we don't need to
+> go and fix all users of header file A that assume B is included.
+>=20
+> I've been hit by this multiple times in Linux kernel - sometimes some
+> header files just assume another header file is #included and refuses to
+> compile it it isn't.
 
-On Thu, Oct 03, 2013 at 05:02:57PM +0100, Linus Walleij wrote:
-> The OF/DT boot path needs to get the LM (Logical Module)
-> IRQs from the device tree for coherency. This augments the
-> DT syscon node to contain these IRQs and alter the DT LM
-> code to get them from there.
-> 
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/arm-boards | 20 ++++++++++++++++++++
->  arch/arm/boot/dts/integratorap.dts               |  3 +++
->  arch/arm/mach-integrator/integrator_ap.c         |  2 +-
->  3 files changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/arm-boards b/Documentation/devicetree/bindings/arm/arm-boards
-> index db5858e..06e5370 100644
-> --- a/Documentation/devicetree/bindings/arm/arm-boards
-> +++ b/Documentation/devicetree/bindings/arm/arm-boards
-> @@ -9,9 +9,29 @@ Required properties (in root node):
->  
->  FPGA type interrupt controllers, see the versatile-fpga-irq binding doc.
->  
-> +Required nodes:
-> +
->  In the root node the Integrator/CP must have a /cpcon node pointing
->  to the CP control registers, and the Integrator/AP must have a
->  /syscon node pointing to the Integrator/AP system controller.
-> +The AP syscon node must include the logical module interrupts,
+Explicit includes are probably the safest route when dealing with
+headers from include/linux, which can be volatile. However, in this case
+any of the general header files are already included by driver private
+header files, which are not subject to the same volatility. Or when they
+change we'll see breakage immediately because pretty much everything
+about the driver will be rebuilt.
 
-s/logical/logic/ (and below)
+It even has the advantage that if a file in include/linux or include/drm
+changes in a way that breaks compilation, we only have to change one of
+the driver private headers instead of all source files.
 
-> +example:
-> +
-> +/dts-v1/;
-> +/include/ "integrator.dtsi"
-> +
-> +/ {
-> +	model = "ARM Integrator/AP";
-> +	compatible = "arm,integrator-ap";
-> +
-> +	syscon {
-> +		/* AP system controller registers */
-> +		reg = <0x11000000 0x100>;
-> +		interrupt-parent = <&pic>;
-> +		/* These are the logical module IRQs */
-> +		interrupts = <9 10 11 12>;
+Thierry
 
-What order are these interrupts in? I assume ascending, starting at
-module 0, but it would be nice to state that.
+--PEIAKu/WMn1b1Hv9
+Content-Type: application/pgp-signature
 
-Also, could you please bracket entries in lists individually? It makes
-it easy to read lists of composite values (interrupts, clocks, dmas),
-regardless of how many cells an entry takes:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-		interrupts = <9>, <10>, <11>, <12>;
+iQIcBAEBAgAGBQJSU9RRAAoJEN0jrNd/PrOhXSQQAMExcBmDDKYpwZXm6AIanWgb
+MX1afk5PQhnD6/hJBfpWJ8HDlI71B6ntTlQLhQo6t5BSoPXyoanRw6PITnd/6gW5
+2hLwtv3iRO1YZE9KfZ5iuXsTA39IIv8SHGY8c5Y0ZYkWQbhMDso8hNTtsM0ngcid
+kRU0nOpD2djtAVPCN1kQgyLtcxo8Y2q0WY7u/D+o2ghVZxOEc36C+UXWo+on/M9y
+0EHPPQ4zs4JBfex6EqPpBeHKxG33fveDydZKnBN3eMZdktDTJ6RPr+7IC0cWOtti
+RQAcFo0uJeKwISUQ07DYcsIWOjre+BQjBR5jIs65tLMUNFaNOtmacNx+i39gAU2P
+NLqiwk+rknu3kzVUuPwQsnR/8tI6T4bY/zgmiyS0QgpcanOn05PjR1cIhzBdDCk7
++qnWxDFKnu3ptiQ4BSBspU3z1xnn3NyOeSQG5gcfkFxaoP5iyjEo438x5MhFLsvh
+YSUXWMq4iQi7mFWChBrckMXR3GqvdQ1+rwYYHjmNhU2/X/BATEwAd6HIKuf4orD+
+3all3Do3hXXDgsUVIVl6GJc598ensy6lXfVQiTYN4nyUOBOkXxZi++/182+tXLrW
+r20ew4Cpq79OnimysfVBvnHg+7/Oo4mdpTH6rpHDVQpqjzKA7a+EHl6I5Cie+0qx
+gB1NI1KloKDycLSydrWt
+=mQC1
+-----END PGP SIGNATURE-----
 
-> +	};
-> +};
->  
->  
->  ARM Versatile Application and Platform Baseboards
-> diff --git a/arch/arm/boot/dts/integratorap.dts b/arch/arm/boot/dts/integratorap.dts
-> index b6b82ec..7c8925f 100644
-> --- a/arch/arm/boot/dts/integratorap.dts
-> +++ b/arch/arm/boot/dts/integratorap.dts
-> @@ -21,6 +21,9 @@
->  	syscon {
->  		/* AP system controller registers */
->  		reg = <0x11000000 0x100>;
-> +		interrupt-parent = <&pic>;
-> +		/* These are the logical module IRQs */
-> +		interrupts = <9 10 11 12>;
-
-Same here.
-
-Otherwise, this looks ok to me.
-
-Cheers,
-Mark.
-
->  	};
->  
->  	timer0: timer@13000000 {
-> diff --git a/arch/arm/mach-integrator/integrator_ap.c b/arch/arm/mach-integrator/integrator_ap.c
-> index d9e95e6..f5fbd8a 100644
-> --- a/arch/arm/mach-integrator/integrator_ap.c
-> +++ b/arch/arm/mach-integrator/integrator_ap.c
-> @@ -541,7 +541,7 @@ static void __init ap_init_of(void)
->  		lmdev->resource.start = 0xc0000000 + 0x10000000 * i;
->  		lmdev->resource.end = lmdev->resource.start + 0x0fffffff;
->  		lmdev->resource.flags = IORESOURCE_MEM;
-> -		lmdev->irq = IRQ_AP_EXPINT0 + i;
-> +		lmdev->irq = irq_of_parse_and_map(syscon, i);
->  		lmdev->id = i;
->  
->  		lm_device_register(lmdev);
-> -- 
-> 1.8.3.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--PEIAKu/WMn1b1Hv9--
