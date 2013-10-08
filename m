@@ -1,83 +1,130 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v2 00/16] Exynos clock clean-up for 3.12
-Date: Tue, 08 Oct 2013 10:14:42 +0200
-Message-ID: <1420472.dtQcHAW6Qs@amdn883>
-References: <1377536951-9307-1-git-send-email-t.figa@samsung.com>
- <1920907.Hu7ncHu6EC@amdc1227> <20131008055730.7445.77726@quantum>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v7 1/5] ARM: add basic support for Trusted Foundations
+Date: Tue, 08 Oct 2013 10:17:18 +0200
+Message-ID: <5253BF8E.4050802@monstr.eu>
+References: <1380904635-18113-1-git-send-email-acourbot@nvidia.com> <1380904635-18113-2-git-send-email-acourbot@nvidia.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20131008055730.7445.77726@quantum>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Tomasz Figa <t.figa@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Thomas Abraham <thomas.abraham@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Tushar Behera <tushar.behera@linaro.org>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Doug Anderson <dianders@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="BDpjDvjmMN2UQURjhm38bdHVcwUhd0upd"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1380904635-18113-2-git-send-email-acourbot@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>, Dave Martin <Dave.Martin@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@linaro.org>, gnurou@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--BDpjDvjmMN2UQURjhm38bdHVcwUhd0upd
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Monday 07 of October 2013 22:57:30 Mike Turquette wrote:
-> Quoting Tomasz Figa (2013-08-30 06:51:20)
-> 
-> > Hi Mike,
-> > 
-> > On Monday 26 of August 2013 19:08:55 Tomasz Figa wrote:
-> > > This series fixes various functional and non-functional (e.g. stylistic)
-> > > issues in Common Clock Framework drivers for Samsung Exynos SoCs. See
-> > > particular patches for more detailed descriptions.
-> > > 
-> > > Changes since v1:
-> > > [http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg21665.
-> > > h
-> > > 
-> > > tml] - Addressed comments from Yadwinder Singh Brar:
-> > >    - added missing __initdata keywords,
-> > >    - various typoes fixed,
-> > >    - other minor stylistic improvements.
-> > > 
-> > > Tomasz Figa (16):
-> > >   pwm: samsung: Update DT bindings documentation to cover clocks
-> > >   ARM: dts: exynos4: Specify PWM clocks in PWM node
-> > >   clocksource: samsung_pwm_timer: Get clock from device tree
-> > >   clk: samsung: exynos4: Use separate aliases for cpufreq related clocks
-> > >   clk: samsung: Modify _get_rate() helper to use __clk_lookup()
-> > >   clk: samsung: exynos4: Remove unused static clkdev aliases
-> > >   clk: samsung: exynos4: Remove checks for DT node
-> > >   clk: samsung: exynos4: Rename exynos4_plls to exynos4x12_plls
-> > >   clk: samsung: pll: Use new registration method for PLL45xx
-> > >   clk: samsung: pll: Add support for rate configuration of PLL45xx
-> > >   clk: samsung: pll: Use new registration method for PLL46xx
-> > >   clk: samsung: pll: Add support for rate configuration of PLL46xx
-> > >   clk: samsung: exynos4: Reorder registration of mout_vpllsrc
-> > >   clk: samsung: exynos4: Register PLL rate tables for Exynos4210
-> > >   clk: samsung: exynos4: Register PLL rate tables for Exynos4x12
-> > >   clk: samsung: exynos5250: Simplify registration of PLL rate tables
-> > >  
-> > >  .../devicetree/bindings/pwm/pwm-samsung.txt        |  12 +
-> > >  arch/arm/boot/dts/exynos4.dtsi                     |   2 +
-> > >  drivers/clk/samsung/clk-exynos4.c                  | 539
-> > > 
-> > > ++++++++++++--------- drivers/clk/samsung/clk-exynos5250.c
-> > > 
-> > > |  12 +-
-> > >  
-> > >  drivers/clk/samsung/clk-exynos5440.c               |   2 +-
-> > >  drivers/clk/samsung/clk-pll.c                      | 285 ++++++++---
-> > >  drivers/clk/samsung/clk-pll.h                      |  59 ++-
-> > >  drivers/clk/samsung/clk.c                          |  10 +-
-> > >  drivers/clocksource/samsung_pwm_timer.c            |  12 +-
-> > >  9 files changed, 602 insertions(+), 331 deletions(-)
-> > 
-> > Any chance to still have this merged for 3.12? AFAIK this should apply
-> > cleanly on your clk-next without any dependencies from other trees.
-> 
-> Sorry, this came a bit too late for 3.12. But just in time for 3.13!
+Hi,
 
-Oh, that's a shame...
+On 10/04/2013 06:37 PM, Alexandre Courbot wrote:
+> Trusted Foundations is a TrustZone-based secure monitor for ARM that
+> can be invoked using the same SMC-based API on all supported
+> platforms. This patch adds initial basic support for Trusted
+> Foundations using the ARM firmware API. Current features are limited
+> to the ability to boot secondary processors.
+>=20
+> Note: The API followed by Trusted Foundations does *not* follow the SMC=
 
-> Can you refresh this based on clk-next?
+> calling conventions. It has nothing to do with PSCI neither and is only=
 
-Fortunately you have already merged this series and it's present in 3.12. ;)
+> relevant to devices that use Trusted Foundations (like most Tegra-based=
 
-Best regards,
-Tomasz
+> retail devices).
+>=20
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> ---
+>  .../arm/firmware/tl,trusted-foundations.txt        | 17 +++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  arch/arm/Kconfig                                   |  2 +
+>  arch/arm/Makefile                                  |  1 +
+>  arch/arm/firmware/Kconfig                          | 28 ++++++++
+>  arch/arm/firmware/Makefile                         |  1 +
+>  arch/arm/firmware/trusted_foundations.c            | 77 ++++++++++++++=
+++++++++
+>  arch/arm/include/asm/trusted_foundations.h         | 64 ++++++++++++++=
+++++
+>  8 files changed, 191 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/firmware/tl,t=
+rusted-foundations.txt
+>  create mode 100644 arch/arm/firmware/Kconfig
+>  create mode 100644 arch/arm/firmware/Makefile
+>  create mode 100644 arch/arm/firmware/trusted_foundations.c
+>  create mode 100644 arch/arm/include/asm/trusted_foundations.h
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/firmware/tl,trusted-=
+foundations.txt b/Documentation/devicetree/bindings/arm/firmware/tl,trust=
+ed-foundations.txt
+> new file mode 100644
+> index 0000000..3954bbd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundat=
+ions.txt
+> @@ -0,0 +1,17 @@
+> +Trusted Foundations
+> +
+> +Boards that use the Trusted Foundations secure monitor can signal its
+> +presence by declaring a node compatible with "tl,trusted-foundations"
+> +under the root node.
+> +
+> +Required properties:
+> +- compatible : "tl,trusted-foundations"
+> +- version-major : major version number of Trusted Foundations firmware=
+
+> +- version-minor: minor version number of Trusted Foundations firmware
+> +
+> +Example:
+> +	firmware {
+> +		compatible =3D "tl,trusted-foundations";
+> +		version-major =3D <2>;
+> +		version-minor =3D <8>;
+> +	};
+
+This is just another example how to add sw description to dts.
+I have briefly looked at tegra20.dtsi and there are IPs like timer, intc,=
+ etc
+which are in the DTS without any bus.
+
+Add this firmware node to the root is just +1 case to this mess
+but IMHO will be good to have specific DT part which will be used for
+this sw setting which are coming to DTS all the time.
+
+Grant, Rob: Where is the proper location for these type of description?
+
+Thanks,
+Michal
+
+
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--BDpjDvjmMN2UQURjhm38bdHVcwUhd0upd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlJTv48ACgkQykllyylKDCEYkwCeLioWKoeGiaYBx648ugD2OS+U
+rcIAn1v7siGeDBSfU5yRm9YORfSs+hSO
+=ZRPE
+-----END PGP SIGNATURE-----
+
+--BDpjDvjmMN2UQURjhm38bdHVcwUhd0upd--
