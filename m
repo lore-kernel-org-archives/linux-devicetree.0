@@ -1,117 +1,305 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: All device tree bindings need maintainer ack or just the
- 'interesting' ones.
-Date: Tue, 8 Oct 2013 09:47:48 +0100
-Message-ID: <20131008084748.GB28972@e106331-lin.cambridge.arm.com>
-References: <52345182.1080609@kernel.org>
- <52372F2B.3030504@gmail.com>
- <20130917081003.GU16984@lee--X1>
- <20130917112433.GB26737@e106331-lin.cambridge.arm.com>
- <20130917120730.GW16984@lee--X1>
- <20130917133025.GD26737@e106331-lin.cambridge.arm.com>
- <20130917134841.GX16984@lee--X1>
- <20130918135803.GG26737@e106331-lin.cambridge.arm.com>
- <20130918151119.59DB1C42CDF@trevor.secretlab.ca>
- <523DB3E6.3040804@jic23.retrosnub.co.uk>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [RESEND PATCH v3 03/11] ASoC: davinci-mcasp: Add DMA register
+ locations to DT
+Date: Tue, 8 Oct 2013 12:13:59 +0300
+Message-ID: <5253CCD7.2080606@ti.com>
+References: <cover.1379590035.git.jsarha@ti.com> <66bdda0c0b75d737d649260b9ec10f9f870c20cd.1379590036.git.jsarha@ti.com> <20131007214718.GA2976@kartoffel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <523DB3E6.3040804-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131007214718.GA2976@kartoffel>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "broonie@kernel.org" <broonie@kernel.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "joelf@ti.com" <joelf@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, Darren Etheridge <detheridge@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 21, 2013 at 03:57:42PM +0100, Jonathan Cameron wrote:
-> On 09/18/13 16:11, Grant Likely wrote:
-> > On Wed, 18 Sep 2013 14:58:04 +0100, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> >> On Tue, Sep 17, 2013 at 02:48:41PM +0100, Lee Jones wrote:
-> >>> On Tue, 17 Sep 2013, Mark Rutland wrote:
-> >>>
-> >>>> On Tue, Sep 17, 2013 at 01:07:30PM +0100, Lee Jones wrote:
-> >>>>> On Tue, 17 Sep 2013, Mark Rutland wrote:
-> >>>>>
-> >>>>>> On Tue, Sep 17, 2013 at 09:10:03AM +0100, Lee Jones wrote:
-> >>>>>>>>> http://marc.info/?l=linux-iio&m=137881790217809&w=2
-> >>>>>>>> Looks reasonable. My only comment is '-' is preferred over '_'.
-> >>>>>>> Ah, in the node name you mean. Yes, I can change that.
-> >>>>>>>
-> >>>>>>> The compatible string has to stay the same however, as it has to match
-> >>>>>>> the device name which can't be changed due to possible userspace
-> >>>>>>> breakage.
-> >>>>>> I'm not sure I follow why the compatible string must be identical to the
-> >>>>>> name appearing to userspace.
-> >>>>> It doesn't. It has to be identical to the device name, which I'm
-> >>>>> guessing is used when populating sysfs.
-> >>>> I still don't understand why the device name must be identical to the
-> >>>> compatible string.
-> >>>>
-> >>>> The string "st,lsm303dlh_magn" (with the "st," prefix) appears nowhere
-> >>>> in v3.12-rc1
-> >>> You're looking at an old patchset. We found out that the Snowball
-> >>> schematic was actually incorrect and we have a LSM303DLHC.
-> >>>
-> >>> git grep -i lsm303dlhc_magn v3.12-rc1
-> >>>   drivers/iio/magnetometer/st_magn.h:
-> >>>     #define LSM303DLHC_MAGN_DEV_NAME   "lsm303dlhc_magn"
-> >>>
-> >>>> and the compatible string in the dt doesn't seem to get
-> >>>> assigned to the device in the i2c core or in
-> >>>> drivers/iio/magnetometer/st_magn_i2c.c.
-> >>> It does:
-> >>>   drivers/i2c/busses/*.c: of_i2c_register_devices();
-> >>>   drivers/of/of_i2c.c:    |-> of_modalias_node();
-> >>>                             |-> i2c_new_device();
-> >> Ah, I see.
-> >>
-> >> I thought the return of of_modalias_node was only used to *guess* the
-> >> module which might need to be loaded, rather than also being exposed to
-> >> userspace as the device name.
-> >>
-> >> We've got a leak of Linux implementation details into the dt here, and I
-> >> don't like it. Thanks to the combination of of_i2c_register device's use
-> >> of of_modalias_node, and i2c_device_match using the id table after
-> >> failing to use dt, any driver with a i2c_device_id name implicitly
-> >> defines a dt binding for "${ARBITRARY_PREFIX},name". The same is true
-> >> for SPI drivers using spi_device_id. This turns what looks like a Linux
-> >> internal value into an ABI facing bootloader software.
-> >>
-> >> Judging by a quick and dirty grep [1], as of v3.12-rc1 there are ~930
-> >> suffixes which *may* be accepted with an arbitrary prefix as an I2C
-> >> compatible string, of which ~750 do not appear in
-> >> Documentation/devicetree. For SPI there are just over 400, of which just
-> >> under 400 aren't documented. Both these counts include drivers that may
-> >> never be built for DT platforms, as I've not filtered the results.
-> >>
-> >> Some drivers have an of_match_table (e.g. i2c-hid has a single
-> >> "hid-over-i2c" entry), but if the I2C core fails to match in the
-> >> of_match_table it'll still carry on and match the stripped compatible
-> >> against the i2c_device_id table (where it'll happily match
-> >> "${VENDOR},hid"). I think if a driver has an of_match_table and we fail
-> >> to match with of_match_device we should fail rather than falling back to
-> >> the id table.
-> >>
-> >> In the i2c-hid case, I can't see how the "hid-over-i2c" variant can ever
-> >> work -- of_i2c_register_devices will skip over devices where the
-> >> compatible string doesn't contain a ','. So our documented compatible
-> >> string isn't usable, while an undocumented one is...
-> > I do appologies for the i2c of_modalias_node mess. At the time is was a
-> > quick hack to make it each to bind nodes to i2c devices without changing
-> > the drivers. At the time there wasn't much support for device tree. Now
-> > it is just painfull.
-> My understanding from this discussion is that we don't really have a way to
-> back out the existing naming (with _ instead of the preferred -) from
-> these bindings without breaking existing ABI.
-> 
-> Hence, shall I apply the patches that at least document that the ABI we are
-> stuck with? (e.g. http://www.spinics.net/lists/devicetree/msg04808.html
-> [PATCH 07/20] Documentation: dt: iio: Add binding for LPS001WP )
+On 10/08/2013 12:47 AM, Mark Rutland wrote:
+> Hello,
+Hi!
+I am not the author of this driver so my knowledge may have gaps, when 
+it comes to details I have not touched yet. Anyway, I do my best to 
+address your comments.
 
-It does seem like that's the only thing we can do here. Yes please.
+...
+>> -- reg : Should contain McASP registers offset and length
+>> +- reg : Should contain McASP registers address and length for mpu and
+>> +	optionally for dma controller access.
+>> +- reg-names : The mandatory reg-range must be named "mpu" and the optional DMA
+>> +	      reg-range must be named "dma". For backward compatibility it is
+>> +	      good to keep "mpu" first in the list.
+>
+> I've never heard the term "reg-range" before. The should probably be something
+> like "reg entry". How about something like the following instead:
+>
+Well, an address and length describes a "range", but if it is not 
+commonly used term, there is no need to use it here either.
 
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> - reg: Should contain reg specifiers for the entries in the reg-names property.
+>
+> - reg-names: Should contain:
+> 	     * "mpu" for the main registers (required). For compatibility with
+> 	       existing software, it is recommended this is the first entry.
+> 	     * "dma" for the DMA registers (optional).
+>
+> That way we don't end up describing each reg entry twice.
+
+The both contain the same information, but your version is certainly 
+easier to read. I'll take it. Thanks!
+
+>
+> I have some questions however. I took a look at the McASP (TMS320C6000)
+> reference guide, and the registers appeared to all be in one contiguous bank,
+> and "mpu" and "dma" don't appear to be names of particular registers or names
+> of banks of particular registers. Am I looking in the wrong place? Is there
+> up-to-date documentation I can look at?
+>
+> Why are these split across two reg entries, and which particular registers do
+> they actually cover?
+
+The need for two different register properties does not come from McASP 
+IP, but from SoC design. On AM33XX the McASP registers are mapped for 
+MPU through L4 bus, which is no accessible to the DMA controller. The 
+McASP data port registers are mapped trough L3 buss to a different 
+address for DMA controller. Maybe the second register property could be 
+called to "dat" instead of "dma" since only data port registers are 
+mapped trough that address.
+
+>
+> I have some concern about the description of other properties too. If we're
+> going to amend the binding, they should be fixed up too.
+>
+>>   - interrupts : Interrupt number for McASP
+>
+> The device also seems to be able to generate multiple interrupts -- which
+> interrupt does this actually cover?
+>
+> The driver doesn't seem to use it (by a grep of irq|interrupt). Have I missed
+> something?
+>
+
+No you have not. A later patch in this set make the interrupt property 
+optional and adds "tx" and "rx" interrupt-names:
+http://mailman.alsa-project.org/pipermail/alsa-devel/2013-September/066732.html
+
+>>   - op-mode : I2S/DIT ops mode.
+>
+> What type is this?
+
+That property selects whether McASP is working in I2S mode or in 
+Integrated Digital audio interface Transmitter (DIT) mode for S/PDIF, 
+IEC60958-1, AES-3 formats.
+
+>
+> What are valid values?
+
+0 and 1. I'll document those. Thanks.
+
+>>   - tdm-slots : Slots for TDM operation.
+>
+> Here too. This description is completely opaque.
+>
+
+I am not absolutely sure here. I'll check the details and try to come up 
+with a better description.
+
+Talking about num-serializer and serial-dir property here...
+
+> Taking a look at the version in kernel sources this appears to be a list of
+> values, in groups of four?
+>
+> What is the format of this property?
+>
+>> @@ -15,7 +19,6 @@ Required properties:
+>>   		to "num-serializer" parameter. Each entry is a number indication
+>>   		serializer pin direction. (0 - INACTIVE, 1 - TX, 2 - RX)
+>>
+>> -
+
+The McASP can have up to 16 serializers for selecting data pin usage. 
+The numbers have been grouped into 4x4 matrix only for better 
+readability. BTW, the num-serializers property is redundant and it will 
+be removed in the next version of the patch series.
+
+>>   Optional properties:
+>>
+>>   - ti,hwmods : Must be "mcasp<n>", n is controller instance starting 0
+>> @@ -31,6 +34,7 @@ mcasp0: mcasp0@1d00000 {
+>>   	#address-cells = <1>;
+>>   	#size-cells = <0>;
+>
+> Why does this have #address-cells and #size-cells? There are no children in the
+> example.
+>
+
+I removed those from the actual dts file, but forgot to do so here. I'll 
+fix that. Thanks!
+
+>>   	reg = <0x100000 0x3000>;
+>> +	reg-names "mpu";
+>>   	interrupts = <82 83>;
+>>   	op-mode = <0>;		/* MCASP_IIS_MODE */
+>>   	tdm-slots = <2>;
+>
+> A few questions from a brief skim of the documentation:
+>
+> There seem to be external clocks (AHCLKR and ACLKR), but they aren't described.
+> Are we always able to use an internal clock instead? Is no external reference
+> clock needed?
+
+As far as I understand the choice is to use either McASP internal clock 
+or codec provided clock. The selection is made by the machine/platform 
+driver by calling snd_soc_dai_set_fmt() and applying the required bits 
+in SND_SOC_DAIFMT_MASTER_MASK. I guess the choice may not always be HW 
+specific.
+
+>
+> The err_release_clk label in the error path confuses me -- which clock(s) does
+> the preceding pm_runtime_get ensure remains active? One internal to the McASP?
+>
+
+I guess that is really up to machine/platform driver that configures dapm.
+
+> It looks like some pins can be used as GPIO -- is there not a need for something
+> like pinctrl for configuring this?
+>
+
+That is true, but since driver does not support it and there is no 
+example of GPIO usage, no guess work has been done about the required DT 
+properties.
+
+> Cheers,
+> Mark.
+>
+>> diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
+>> index 32ddb7f..a056fc5 100644
+>> --- a/sound/soc/davinci/davinci-mcasp.c
+>> +++ b/sound/soc/davinci/davinci-mcasp.c
+>> @@ -1001,18 +1001,40 @@ static const struct snd_soc_component_driver davinci_mcasp_component = {
+>>   	.name		= "davinci-mcasp",
+>>   };
+>>
+>> +/* Some HW specific values and defaults. The rest is filled in from DT. */
+>> +static struct snd_platform_data dm646x_mcasp_pdata = {
+>> +	.tx_dma_offset = 0x400,
+>> +	.rx_dma_offset = 0x400,
+>> +	.asp_chan_q = EVENTQ_0,
+>> +	.version = MCASP_VERSION_1,
+>> +};
+>> +
+>> +static struct snd_platform_data da830_mcasp_pdata = {
+>> +	.tx_dma_offset = 0x2000,
+>> +	.rx_dma_offset = 0x2000,
+>> +	.asp_chan_q = EVENTQ_0,
+>> +	.version = MCASP_VERSION_2,
+>> +};
+>> +
+>> +static struct snd_platform_data omap2_mcasp_pdata = {
+>> +	.tx_dma_offset = 0,
+>> +	.rx_dma_offset = 0,
+>> +	.asp_chan_q = EVENTQ_0,
+>> +	.version = MCASP_VERSION_3,
+>> +};
+>> +
+>>   static const struct of_device_id mcasp_dt_ids[] = {
+>>   	{
+>>   		.compatible = "ti,dm646x-mcasp-audio",
+>> -		.data = (void *)MCASP_VERSION_1,
+>> +		.data = &dm646x_mcasp_pdata,
+>>   	},
+>>   	{
+>>   		.compatible = "ti,da830-mcasp-audio",
+>> -		.data = (void *)MCASP_VERSION_2,
+>> +		.data = &da830_mcasp_pdata,
+>>   	},
+>>   	{
+>>   		.compatible = "ti,omap2-mcasp-audio",
+>> -		.data = (void *)MCASP_VERSION_3,
+>> +		.data = &omap2_mcasp_pdata,
+>>   	},
+>>   	{ /* sentinel */ }
+>>   };
+>> @@ -1035,20 +1057,13 @@ static struct snd_platform_data *davinci_mcasp_set_pdata_from_of(
+>>   		pdata = pdev->dev.platform_data;
+>>   		return pdata;
+>>   	} else if (match) {
+>> -		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+>> -		if (!pdata) {
+>> -			ret = -ENOMEM;
+>> -			goto nodata;
+>> -		}
+>> +		pdata = (struct snd_platform_data *) match->data;
+>>   	} else {
+>>   		/* control shouldn't reach here. something is wrong */
+>>   		ret = -EINVAL;
+>>   		goto nodata;
+>>   	}
+>>
+>> -	if (match->data)
+>> -		pdata->version = (u8)((int)match->data);
+>> -
+>>   	ret = of_property_read_u32(np, "op-mode", &val);
+>>   	if (ret >= 0)
+>>   		pdata->op_mode = val;
+>> @@ -1145,10 +1160,15 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
+>>   		return -EINVAL;
+>>   	}
+>>
+>> -	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mpu");
+>>   	if (!mem) {
+>> -		dev_err(&pdev->dev, "no mem resource?\n");
+>> -		return -ENODEV;
+>> +		dev_warn(dev->dev,
+>> +			 "\"mpu\" mem resource not found, using index 0\n");
+>> +		mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +		if (!mem) {
+>> +			dev_err(&pdev->dev, "no mem resource?\n");
+>> +			return -ENODEV;
+>> +		}
+>>   	}
+>>
+>>   	ioarea = devm_request_mem_region(&pdev->dev, mem->start,
+>> @@ -1182,13 +1202,16 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
+>>   	dev->rxnumevt = pdata->rxnumevt;
+>>   	dev->dev = &pdev->dev;
+>>
+>> +	dma = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dma");
+>> +	if (!dma)
+>> +		dma = mem;
+>> +
+>>   	dma_data = &dev->dma_params[SNDRV_PCM_STREAM_PLAYBACK];
+>>   	dma_data->asp_chan_q = pdata->asp_chan_q;
+>>   	dma_data->ram_chan_q = pdata->ram_chan_q;
+>>   	dma_data->sram_pool = pdata->sram_pool;
+>>   	dma_data->sram_size = pdata->sram_size_playback;
+>> -	dma_data->dma_addr = (dma_addr_t) (pdata->tx_dma_offset +
+>> -							mem->start);
+>> +	dma_data->dma_addr = dma->start + pdata->tx_dma_offset;
+>>
+>>   	/* first TX, then RX */
+>>   	res = platform_get_resource(pdev, IORESOURCE_DMA, 0);
+>> @@ -1205,8 +1228,7 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
+>>   	dma_data->ram_chan_q = pdata->ram_chan_q;
+>>   	dma_data->sram_pool = pdata->sram_pool;
+>>   	dma_data->sram_size = pdata->sram_size_capture;
+>> -	dma_data->dma_addr = (dma_addr_t)(pdata->rx_dma_offset +
+>> -							mem->start);
+>> +	dma_data->dma_addr = dma->start + pdata->rx_dma_offset;
+>>
+>>   	res = platform_get_resource(pdev, IORESOURCE_DMA, 1);
+>>   	if (!res) {
+>> @@ -1266,4 +1288,3 @@ module_platform_driver(davinci_mcasp_driver);
+>>   MODULE_AUTHOR("Steve Chen");
+>>   MODULE_DESCRIPTION("TI DAVINCI McASP SoC Interface");
+>>   MODULE_LICENSE("GPL");
+>> -
+>> --
+>> 1.7.9.5
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+
