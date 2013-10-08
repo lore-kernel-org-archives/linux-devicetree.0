@@ -1,277 +1,97 @@
-From: takasi-y@ops.dti.ne.jp
-Subject: [PATCH v2 1/3] clk: emev2: Add support for emev2 SMU clocks with DT
-Date: Tue, 8 Oct 2013 14:32:17 +0900
-Message-ID: <20131008143217.0611fba0c0d27d9c622759f3@ops.dti.ne.jp>
-References: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
+Date: Mon, 07 Oct 2013 22:40:34 -0700
+Message-ID: <20131008054034.7445.48080@quantum>
+References: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
-Sender: linux-kernel-owner@vger.kernel.org
-To: SH-Linux <linux-sh@vger.kernel.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, ben.dooks@codethink.co.uk, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, bcousson@baylibre.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Device tree clock binding document for EMMA Mobile EV2 SMU,
-And Common clock framework based implementation of it.
-Following nodes are defined to describe clock tree.
-- renesas,emev2-smu
-- renesas,emev2-smu-clkdiv
-- renesas,emev2-smu-gclk
+Quoting Tero Kristo (2013-09-25 01:48:06)
+> Hi all,
+> 
+> Version 7 contains following high level changes:
+> - Dropped support for basic bindings from Mike Turquette, instead using
+>   vendor specific bindings for all clocks
+> - Mux clock + divider clock vendor specific bindings get rid of use
+>   of the bit-masks, instead these are generated runtime based on parent
+>   clock / divider min/max info, see individual patches for details
+> - Added support for dummy_ck nodes, was missing from previous version
+> - Fixed support for omap3630
+> - Added support for new clock node type: ti,mux-gate-clock (using composite
+>   clock type)
+> - OMAP4 / OMAP5 only build fixes (compiler flag checks added to some files)
+> - most of the of_omap_* calls renamed to of_ti_*
+> - Rebased on top of v3.12-rc2
 
-These bindings are designed manually based on
- 19UH0037EJ1000_SMU : System Management Unit User's Manual
+Hi Tero,
 
-So far, reparent is not implemented, and is fixed to index #0.
-Clock tree description is not included, and should be provided
-by device-tree.
+I had one really minor request for one of the patches, otherwise I'm
+pretty happy with this series and I can take in the clock parts for
+3.13. A few general comments:
 
-Signed-off-by: Takashi Yoshii <takasi-y@ops.dti.ne.jp>
----
- .../devicetree/bindings/clock/emev2-clock.txt      |  98 +++++++++++++++++++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/shmobile/Makefile                      |   3 +
- drivers/clk/shmobile/clk-emev2.c                   | 104 +++++++++++++++++++++
- 4 files changed, 206 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/emev2-clock.txt
- create mode 100644 drivers/clk/shmobile/Makefile
- create mode 100644 drivers/clk/shmobile/clk-emev2.c
+1) I think I mentioned some time back that it would be
+wise to put a disclaimer at the top of each DT binding description
+stating something to the effect: "Binding status: Unstable - ABI
+compatibility may be broken in the future". Are you OK merging these
+bindings as-is without that kind of a disclaimer?
 
-diff --git a/Documentation/devicetree/bindings/clock/emev2-clock.txt b/Documentation/devicetree/bindings/clock/emev2-clock.txt
-new file mode 100644
-index 0000000..60bbb1a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/emev2-clock.txt
-@@ -0,0 +1,98 @@
-+Device tree Clock bindings for Renesas EMMA Mobile EV2
-+
-+This binding uses the common clock binding.
-+
-+* SMU
-+System Management Unit described in user's manual R19UH0037EJ1000_SMU.
-+This is not a clock provider, but clocks under SMU depend on it.
-+
-+Required properties:
-+- compatible: Should be "renesas,emev2-smu"
-+- reg: Address and Size of SMU registers
-+
-+* SMU_CLKDIV
-+Function block with an input mux and a divider, which corresponds to
-+"Serial clock generator" in fig."Clock System Overview" of the manual,
-+and "xxx frequency division setting register" (XXXCLKDIV) registers.
-+This makes internal (neither input nor output) clock that is provided
-+to input of xxxGCLK block.
-+
-+Required properties:
-+- compatible: Should be "renesas,emev2-smu-clkdiv"
-+- reg: Byte offset from SMU base and Bit position in the register
-+- clocks: Parent clocks. Input clocks as described in clock-bindings.txt
-+- #clock-cells: Should be <0>
-+
-+* SMU_GCLK
-+Clock gating node shown as "Clock stop processing block" in the
-+fig."Clock System Overview" of the manual.
-+Registers are "xxx clock gate control register" (XXXGCLKCTRL).
-+
-+Required properties:
-+- compatible: Should be "renesas,emev2-smu-gclk"
-+- reg: Byte offset from SMU base and Bit position in the register
-+- clocks: Input clock as described in clock-bindings.txt
-+- #clock-cells: Should be <0>
-+
-+Example of provider:
-+
-+usia_u0_sclkdiv: usia_u0_sclkdiv {
-+	compatible = "renesas,emev2-smu-clkdiv";
-+	reg = <0x610 0>;
-+	clocks = <&pll3_fo>, <&pll4_fo>, <&pll1_fo>, <&osc1_fo>;
-+	#clock-cells = <0>;
-+};
-+
-+usia_u0_sclk: usia_u0_sclk {
-+	compatible = "renesas,emev2-smu-gclk";
-+	reg = <0x4a0 1>;
-+	clocks = <&usia_u0_sclkdiv>;
-+	#clock-cells = <0>;
-+};
-+
-+Example of consumer:
-+
-+uart@e1020000 {
-+	compatible = "renesas,em-uart";
-+	reg = <0xe1020000 0x38>;
-+	interrupts = <0 8 0>;
-+	clocks = <&usia_u0_sclk>;
-+	clock-names = "sclk";
-+};
-+
-+Example of clock-tree description:
-+
-+ This describes a clock path in the clock tree
-+  c32ki -> pll3_fo -> usia_u0_sclkdiv -> usia_u0_sclk
-+
-+smu@e0110000 {
-+	compatible = "renesas,emev2-smu";
-+	reg = <0xe0110000 0x10000>;
-+	#address-cells = <2>;
-+	#size-cells = <0>;
-+
-+	c32ki: c32ki {
-+		compatible = "fixed-clock";
-+		clock-frequency = <32768>;
-+		#clock-cells = <0>;
-+	};
-+	pll3_fo: pll3_fo {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&c32ki>;
-+		clock-div = <1>;
-+		clock-mult = <7000>;
-+		#clock-cells = <0>;
-+	};
-+	usia_u0_sclkdiv: usia_u0_sclkdiv {
-+		compatible = "renesas,emev2-smu-clkdiv";
-+		reg = <0x610 0>;
-+		clocks = <&pll3_fo>;
-+		#clock-cells = <0>;
-+	};
-+	usia_u0_sclk: usia_u0_sclk {
-+		compatible = "renesas,emev2-smu-gclk";
-+		reg = <0x4a0 1>;
-+		clocks = <&usia_u0_sclkdiv>;
-+		#clock-cells = <0>;
-+	};
-+};
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 7b11106..d25da26 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -32,6 +32,7 @@ obj-$(CONFIG_ARCH_VT8500)	+= clk-vt8500.o
- obj-$(CONFIG_ARCH_ZYNQ)		+= zynq/
- obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
- obj-$(CONFIG_PLAT_SAMSUNG)	+= samsung/
-+obj-$(CONFIG_ARCH_SHMOBILE_MULTI)	+= shmobile/
- 
- obj-$(CONFIG_X86)		+= x86/
- 
-diff --git a/drivers/clk/shmobile/Makefile b/drivers/clk/shmobile/Makefile
-new file mode 100644
-index 0000000..2240730
---- /dev/null
-+++ b/drivers/clk/shmobile/Makefile
-@@ -0,0 +1,3 @@
-+obj-$(CONFIG_ARCH_EMEV2)	+= clk-emev2.o
-+# for emply built-in.o
-+obj-n	:= dummy
-diff --git a/drivers/clk/shmobile/clk-emev2.c b/drivers/clk/shmobile/clk-emev2.c
-new file mode 100644
-index 0000000..6c7c929
---- /dev/null
-+++ b/drivers/clk/shmobile/clk-emev2.c
-@@ -0,0 +1,104 @@
-+/*
-+ * EMMA Mobile EV2 common clock framework support
-+ *
-+ * Copyright (C) 2013 Takashi Yoshii <takashi.yoshii.ze@renesas.com>
-+ * Copyright (C) 2012 Magnus Damm
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-+ */
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+/* EMEV2 SMU registers */
-+#define USIAU0_RSTCTRL 0x094
-+#define USIBU1_RSTCTRL 0x0ac
-+#define USIBU2_RSTCTRL 0x0b0
-+#define USIBU3_RSTCTRL 0x0b4
-+#define STI_RSTCTRL 0x124
-+#define STI_CLKSEL 0x688
-+
-+static DEFINE_SPINLOCK(lock);
-+
-+/* not pretty, but hey */
-+void __iomem *smu_base;
-+
-+static void __init emev2_smu_write(unsigned long value, int offs)
-+{
-+	BUG_ON(!smu_base || (offs >= PAGE_SIZE));
-+	writel_relaxed(value, smu_base + offs);
-+}
-+
-+static const struct of_device_id smu_id[] __initconst = {
-+	{ .compatible = "renesas,emev2-smu", },
-+	{},
-+};
-+
-+static void __init emev2_smu_init(void)
-+{
-+	struct device_node *np;
-+
-+	np = of_find_matching_node(NULL, smu_id);
-+	BUG_ON(!np);
-+	smu_base = of_iomap(np, 0);
-+	BUG_ON(!smu_base);
-+	of_node_put(np);
-+
-+	/* setup STI timer to run on 32.768 kHz and deassert reset */
-+	emev2_smu_write(0, STI_CLKSEL);
-+	emev2_smu_write(1, STI_RSTCTRL);
-+
-+	/* deassert reset for UART0->UART3 */
-+	emev2_smu_write(2, USIAU0_RSTCTRL);
-+	emev2_smu_write(2, USIBU1_RSTCTRL);
-+	emev2_smu_write(2, USIBU2_RSTCTRL);
-+	emev2_smu_write(2, USIBU3_RSTCTRL);
-+}
-+
-+static void __init emev2_smu_clkdiv_init(struct device_node *np)
-+{
-+	u32 reg[2];
-+	struct clk *clk;
-+	const char *parent_name = of_clk_get_parent_name(np, 0);
-+	if (WARN_ON(of_property_read_u32_array(np, "reg", reg, 2)))
-+		return;
-+	if (!smu_base)
-+		emev2_smu_init();
-+	clk = clk_register_divider(NULL, np->name, parent_name, 0,
-+				   smu_base + reg[0], reg[1], 8, 0, &lock);
-+	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+	clk_register_clkdev(clk, np->name, NULL);
-+	pr_debug("## %s %s %p\n", __func__, np->name, clk);
-+}
-+CLK_OF_DECLARE(emev2_smu_clkdiv, "renesas,emev2-smu-clkdiv",
-+		emev2_smu_clkdiv_init);
-+
-+static void __init emev2_smu_gclk_init(struct device_node *np)
-+{
-+	u32 reg[2];
-+	struct clk *clk;
-+	const char *parent_name = of_clk_get_parent_name(np, 0);
-+	if (WARN_ON(of_property_read_u32_array(np, "reg", reg, 2)))
-+		return;
-+	if (!smu_base)
-+		emev2_smu_init();
-+	clk = clk_register_gate(NULL, np->name, parent_name, 0,
-+				smu_base + reg[0], reg[1], 0, &lock);
-+	of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+	clk_register_clkdev(clk, np->name, NULL);
-+	pr_debug("## %s %s %p\n", __func__, np->name, clk);
-+}
-+CLK_OF_DECLARE(emev2_smu_gclk, "renesas,emev2-smu-gclk", emev2_smu_gclk_init);
--- 
-1.8.1.5
+2) I hope to see the clockdomain stuff go away in the future. I'm OK to
+take it for now to aid in this DT transition but I would like some
+commitment that it will not stay in drivers/clk/omap forever. I guess
+for clockdomain you'll need to figure out how to handle those in a
+generic driver way.
+
+3) Same concern as above but for the DT clkdev alias stuff. I guess
+you'll need to make all of the dependent drivers play nice with DT. Do
+you plan to remove it within a reasonable timeframe? It would be a nice
+reduction in LoC and more importantly it would mean that drivers were
+using clkdev in a more-correct fashion.
+
+Regards,
+Mike
+
+> 
+> Some detailed comments about patch level changes (if no mention, no major
+> changes):
+> - Patch #1:
+>   * removed use of reg-names property, instead registers mapped using
+>     compatible string
+>   * removed ti,modes property, instead uses DPLL mode flags now
+>   * separated AM33XX DPLLs under their own compatible strings
+> - Patch #4 & #5: new patches
+> - Patch #6: merged basic gate support from Mike to this patch as vendor
+>   specific gate clock support
+> - Patch #9 & #10: new patches
+> - Patch #11: dummy clocks added, USB / ABE DPLL setup ordering changed
+> - Patch #14: dummy clocks added
+> - Patch #20: dropped usage of reg-names property
+> - Patch #21: dummy clocks added
+> - Patch #22 & #23: new patches
+> - Patch #30: AM35XX clock data added to this patch
+> - Patch #31:
+>   * dummy clocks added
+>   * added missing 3630 clocks
+> 
+> Test branch available here:
+> https://github.com/t-kristo/linux-pm.git
+> branch: mainline-3.12-rc2-ti-dt-clks-v7
+> 
+> Testing done:
+> - am335x-bone : boot only
+> - omap5-sevm : boot only
+> - dra7-evm : boot only
+> - omap3-beagle : boot + suspend/resume (ret + off)
+> - omap4-panda-es : boot + suspend/resume
+> 
+> Nishanth has also been doing some tests with omap3-beagle-xm with some WIP
+> versions of this branch, but not with this latest one. Nishanth, maybe you
+> can provide test results to this one also?
+> 
+> -Tero
