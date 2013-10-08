@@ -1,91 +1,218 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] VEXPRESS: Fix VEXPRESS implicit declarations dependence
- errors.
-Date: Tue, 08 Oct 2013 08:07:20 -0500
-Message-ID: <52540388.8090709@gmail.com>
-References: <1381228895-24814-1-git-send-email-csmanjuvijay@gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RESEND v5 1/2] PWM: PXA: add device tree support to PWM
+ driver
+Date: Tue, 8 Oct 2013 15:12:15 +0200
+Message-ID: <20131008131214.GA12839@ulmo.nvidia.com>
+References: <1379791174-2369-1-git-send-email-mikedunn@newsguy.com>
+ <1379791174-2369-2-git-send-email-mikedunn@newsguy.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381228895-24814-1-git-send-email-csmanjuvijay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1379791174-2369-2-git-send-email-mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Majunath Goudar <csmanjuvijay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nataraja.km-Hm3cg6mZ9cc@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/2013 05:41 AM, Majunath Goudar wrote:
-> This patch adds a of_find_node_by_phandle() and of_get_next_parent()
-> function declaration dependence on"#ifdef CONFIG_OF" in "include/linu=
-x/of.h"
-> else part return inline dummy implementations (returning NULL). Witho=
-ut
-> this patch,build system can lead to issues. This was discovered durin=
-g
-> randconfig testing,in which VEXPRESS_CONFIG was enabled w/o CONFIG_OF
-> being enabled,leading to the following error:
 
-What is blocking making VExpress DT only?
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The subject should reflect the subsystem you are changing and the
-description is missing spaces at a minimum.
-
-Rob
-
+On Sat, Sep 21, 2013 at 12:19:33PM -0700, Mike Dunn wrote:
+> This patch adds device tree support to the PXA's PWM driver.  Nothing
+> needs to be extracted from the device tree node by the PWM device.
+> Client devices need only specify the period; the per-chip index is
+> implicitly zero because one device node must be present for each PWM
+> output in use.  This approach is more convenient due to the wide
+> variability in the number of PWM channels present across the various PXA
+> variants, and is made possible by the fact that the register sets for
+> each PWM channel are segregated from each other.  An of_xlate() method
+> is added to parse this single-cell node.  The existing ID table is
+> reused for the match table data.
 >=20
-> CC      drivers/mfd/vexpress-config.o
-> drivers/mfd/vexpress-config.c: In function =E2=80=98__vexpress_config=
-_func_get=E2=80=99:
-> drivers/mfd/vexpress-config.c:117:4: error: implicit declaration of f=
-unction
-> =E2=80=98of_find_node_by_phandle=E2=80=99 [-Werror=3Dimplicit-functio=
-n-declaration]
->     bridge_node =3D of_find_node_by_phandle(
->     ^
-> drivers/mfd/vexpress-config.c:117:16: warning: assignment makes point=
-er from
-> integer without a cast [enabled by default]
->     bridge_node =3D of_find_node_by_phandle(
+> Tested on a Palm Treo 680 (both platform data and DT cases).
 >=20
-> Signed-off-by: Manjunath Goudar <csmanjuvijay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
 > ---
->  include/linux/of.h |    9 +++++++++
->  1 file changed, 9 insertions(+)
+>  Documentation/devicetree/bindings/pwm/pxa-pwm.txt | 30 +++++++++++++
+>  drivers/pwm/pwm-pxa.c                             | 52 +++++++++++++++++=
++++++-
+>  2 files changed, 81 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+
+This looks good to me, but I'd like to get an Acked-by: from one of the
+device tree bindings maintainers.
+
+Thierry
+
 >=20
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index f95aee3..968787d 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -340,6 +340,15 @@ int of_device_is_stdout_path(struct device_node =
-*dn);
-> =20
->  #else /* CONFIG_OF */
-> =20
-> +static inline struct device_node *of_find_node_by_phandle(phandle ha=
-ndle)
-> +{
-> +	return NULL;
+> diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Document=
+ation/devicetree/bindings/pwm/pxa-pwm.txt
+> new file mode 100644
+> index 0000000..5ae9f1e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
+> @@ -0,0 +1,30 @@
+> +Marvell PWM controller
+> +
+> +Required properties:
+> +- compatible: should be one or more of:
+> +  - "marvell,pxa250-pwm"
+> +  - "marvell,pxa270-pwm"
+> +  - "marvell,pxa168-pwm"
+> +  - "marvell,pxa910-pwm"
+> +- reg: Physical base address and length of the registers used by the PWM=
+ channel
+> +  Note that one device instance must be created for each PWM that is use=
+d, so the
+> +  length covers only the register window for one PWM output, not that of=
+ the
+> +  entire PWM controller.  Currently length is 0x10 for all supported dev=
+ices.
+> +- #pwm-cells: Should be 1.  This cell is used to specify the period in
+> +  nanoseconds.
+> +
+> +Example PWM device node:
+> +
+> +pwm0: pwm@40b00000 {
+> +	compatible =3D "marvell,pxa250-pwm";
+> +	reg =3D <0x40b00000 0x10>;
+> +	#pwm-cells =3D <1>;
+> +};
+> +
+> +Example PWM client node:
+> +
+> +backlight {
+> +	compatible =3D "pwm-backlight";
+> +	pwms =3D <&pwm0 5000000>;
+> +	...
 > +}
-> +static inline struct device_node *of_get_next_parent(struct device_n=
-ode *node)
+> diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
+> index a4d2164..e928cc8 100644
+> --- a/drivers/pwm/pwm-pxa.c
+> +++ b/drivers/pwm/pwm-pxa.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/io.h>
+>  #include <linux/pwm.h>
+> +#include <linux/of_device.h>
+> =20
+>  #include <asm/div64.h>
+> =20
+> @@ -124,6 +125,45 @@ static struct pwm_ops pxa_pwm_ops =3D {
+>  	.owner =3D THIS_MODULE,
+>  };
+> =20
+> +#ifdef CONFIG_OF
+> +/*
+> + * Device tree users must create one device instance for each pwm channe=
+l.
+> + * Hence we dispense with the HAS_SECONDARY_PWM and "tell" the original =
+driver
+> + * code that this is a single channel pxa25x-pwm.  Currently all devices=
+ are
+> + * supported identically.
+> + */
+> +static struct of_device_id pwm_of_match[] =3D {
+> +	{ .compatible =3D "marvell,pxa250-pwm", .data =3D &pwm_id_table[0]},
+> +	{ .compatible =3D "marvell,pxa270-pwm", .data =3D &pwm_id_table[0]},
+> +	{ .compatible =3D "marvell,pxa168-pwm", .data =3D &pwm_id_table[0]},
+> +	{ .compatible =3D "marvell,pxa910-pwm", .data =3D &pwm_id_table[0]},
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pwm_of_match);
+> +#else
+> +static struct of_device_id *pwm_of_match;
+> +#endif
+> +
+> +static const struct platform_device_id *pxa_pwm_get_id_dt(struct device =
+*dev)
 > +{
-> +	return NULL;
+> +	const struct of_device_id *id =3D of_match_device(pwm_of_match, dev);
+> +	return id ? id->data : NULL;
 > +}
 > +
->  static inline const char* of_node_full_name(struct device_node *np)
+> +static struct pwm_device *
+> +pxa_pwm_of_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
+> +{
+> +	struct pwm_device *pwm;
+> +
+> +	pwm =3D pwm_request_from_chip(pc, 0, NULL);
+> +	if (IS_ERR(pwm))
+> +		return pwm;
+> +
+> +	pwm_set_period(pwm, args->args[0]);
+> +
+> +	return pwm;
+> +}
+> +
+>  static int pwm_probe(struct platform_device *pdev)
 >  {
->  	return "<no-node>";
+>  	const struct platform_device_id *id =3D platform_get_device_id(pdev);
+> @@ -131,6 +171,12 @@ static int pwm_probe(struct platform_device *pdev)
+>  	struct resource *r;
+>  	int ret =3D 0;
+> =20
+> +	if (IS_ENABLED(CONFIG_OF) && id =3D=3D NULL)
+> +		id =3D pxa_pwm_get_id_dt(&pdev->dev);
+> +
+> +	if (id =3D=3D NULL)
+> +		return -EINVAL;
+> +
+>  	pwm =3D devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
+>  	if (pwm =3D=3D NULL) {
+>  		dev_err(&pdev->dev, "failed to allocate memory\n");
+> @@ -145,7 +191,10 @@ static int pwm_probe(struct platform_device *pdev)
+>  	pwm->chip.ops =3D &pxa_pwm_ops;
+>  	pwm->chip.base =3D -1;
+>  	pwm->chip.npwm =3D (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1;
+> -
+> +	if (IS_ENABLED(CONFIG_OF)) {
+> +		pwm->chip.of_xlate =3D pxa_pwm_of_xlate;
+> +		pwm->chip.of_pwm_n_cells =3D 1;
+> +	}
+>  	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	pwm->mmio_base =3D devm_ioremap_resource(&pdev->dev, r);
+>  	if (IS_ERR(pwm->mmio_base))
+> @@ -176,6 +225,7 @@ static struct platform_driver pwm_driver =3D {
+>  	.driver		=3D {
+>  		.name	=3D "pxa25x-pwm",
+>  		.owner	=3D THIS_MODULE,
+> +		.of_match_table	=3D of_match_ptr(pwm_of_match),
+>  	},
+>  	.probe		=3D pwm_probe,
+>  	.remove		=3D pwm_remove,
+> --=20
+> 1.8.1.5
 >=20
 
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSVASuAAoJEN0jrNd/PrOhPkoP/0w8bW6w7KuSRaaWYyk4Bd66
+2sh0gC1AQOr6nDnPlHesCQEHAalwIionWJvutwD8LSpm5BdMPPIlfHu1hggM5Ua6
+nCLieJi/srGjcpV9xQx8Vx3q9Kc54PtSZ9lZMCwWb1Em47dSOkrlXNs3AILZj23i
+fJrwClmLNrr6D1mbJhj0m9fnjan1weI5iIGMSZATHk0qjk6oS72RdS8S1DUWXzO7
+1B9psO3MKBGjSmgKeUYwUB5WeBFLsGesNw3VB5o1QmyU7ybFJX6tT1FIfr/svKVx
+Vp/4JnRagsCiDbXEzAUl+p0LgPhKbOPiosQxhimh3+QbVWzLTcw2ngwTx/GKwxi2
+482GqSxW0+ByaM0bxdm8+45/tFBj5zu2iwly5cqGkcg9ncC5qADsuejIYu+tDNWC
+W/qhYm2Dup+3ZMgkzIrFxQCT0vMWwSrRVik/ljL9wbgKSTVSv4Dc76zxtcBfgd1S
+aPCi0b+JQ7g+ndmXTGec0T43hd+S2G0oeS4DuU5qnGu0tGvckUa1ta4NKe+Gjqir
+yaniZtCNPYy1gU1ZlzaChws0xSVighzkjBLFM/gnL/9ym59oZWbcApPim6VyrUx4
+V1wbR4m9tEIgHv7B7zXyV/gPXUmQRiDCxgCNwwCdKXUZtyUjN5pLzPLZwWiqi/S0
+g76O+KW86Scb50CX75qU
+=YL/a
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
