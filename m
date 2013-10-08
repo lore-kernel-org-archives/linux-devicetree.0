@@ -1,83 +1,60 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v3 18/19] ARM: at91: move pit timer to common clk framework
-Date: Tue, 8 Oct 2013 18:28:23 +0200
-Message-ID: <525432A7.9030104@atmel.com>
-References: <1375937608-3773-1-git-send-email-b.brezillon@overkiz.com> <1375949844-10545-1-git-send-email-b.brezillon@overkiz.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 19/19] ARM: at91: add new compatible strings for pmc
+ driver
+Date: Tue, 8 Oct 2013 18:29:44 +0200
+Message-ID: <525432F8.9060600@atmel.com>
+References: <1375937608-3773-1-git-send-email-b.brezillon@overkiz.com> <1375949965-10586-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1375949844-10545-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Andrew Victor <linux@maxim.org.za>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Josh Wu <josh.wu@atmel.com>, Richard Genoud <richard.genoud@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1375949965-10586-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/08/2013 10:17, Boris BREZILLON :
-> Use device tree to get the source clock of the PIT (Periodic Interval Timer).
-> If the clock is not found in device tree (or dt is not enabled) we'll try to
-> get it using clk_lookup definitions.
+On 08/08/2013 10:19, Boris BREZILLON :
+> This patch adds new compatible string for PMC node to prepare the
+> transition to common clk.
 >
-> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
-
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-
+> These compatible string come from pmc driver in clk subsystem and are
+> needed to provide new device tree compatibility with old at91 clks
+> (device tree using common clks will use the new compatible strings).
+>
+> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
 > ---
->   arch/arm/mach-at91/at91sam926x_time.c |   14 +++++++++++++-
->   1 file changed, 13 insertions(+), 1 deletion(-)
+>   arch/arm/mach-at91/clock.c |    6 ++++++
+>   1 file changed, 6 insertions(+)
 >
-> diff --git a/arch/arm/mach-at91/at91sam926x_time.c b/arch/arm/mach-at91/at91sam926x_time.c
-> index 3a4bc2e..8ac976a 100644
-> --- a/arch/arm/mach-at91/at91sam926x_time.c
-> +++ b/arch/arm/mach-at91/at91sam926x_time.c
-> @@ -39,6 +39,7 @@
->   static u32 pit_cycle;		/* write-once */
->   static u32 pit_cnt;		/* access only w/system irq blocked */
->   static void __iomem *pit_base_addr __read_mostly;
-> +static struct clk *mck;
->
->   static inline unsigned int pit_read(unsigned int reg_offset)
->   {
-> @@ -195,10 +196,14 @@ static int __init of_at91sam926x_pit_init(void)
->   	if (!pit_base_addr)
->   		goto node_err;
->
-> +	mck = of_clk_get(np, 0);
-> +
->   	/* Get the interrupts property */
->   	ret = irq_of_parse_and_map(np, 0);
->   	if (!ret) {
->   		pr_crit("AT91: PIT: Unable to get IRQ from DT\n");
-> +		if (!IS_ERR(mck))
-> +			clk_put(mck);
->   		goto ioremap_err;
->   	}
->   	at91sam926x_pit_irq.irq = ret;
-> @@ -230,6 +235,8 @@ void __init at91sam926x_pit_init(void)
->   	unsigned	bits;
->   	int		ret;
->
-> +	mck = ERR_PTR(-ENOENT);
-> +
->   	/* For device tree enabled device: initialize here */
->   	of_at91sam926x_pit_init();
->
-> @@ -237,7 +244,12 @@ void __init at91sam926x_pit_init(void)
->   	 * Use our actual MCK to figure out how many MCK/16 ticks per
->   	 * 1/HZ period (instead of a compile-time constant LATCH).
->   	 */
-> -	pit_rate = clk_get_rate(clk_get(NULL, "mck")) / 16;
-> +	if (IS_ERR(mck))
-> +		mck = clk_get(NULL, "mck");
-> +
-> +	if (IS_ERR(mck))
-> +		panic("AT91: PIT: Unable to get mck clk\n");
-> +	pit_rate = clk_get_rate(mck) / 16;
->   	pit_cycle = (pit_rate + HZ/2) / HZ;
->   	WARN_ON(((pit_cycle - 1) & ~AT91_PIT_PIV) != 0);
+> diff --git a/arch/arm/mach-at91/clock.c b/arch/arm/mach-at91/clock.c
+> index 5f02aea..4d4463a 100644
+> --- a/arch/arm/mach-at91/clock.c
+> +++ b/arch/arm/mach-at91/clock.c
+> @@ -884,6 +884,12 @@ static int __init at91_pmc_init(unsigned long main_clock)
+>   #if defined(CONFIG_OF)
+>   static struct of_device_id pmc_ids[] = {
+>   	{ .compatible = "atmel,at91rm9200-pmc" },
+> +	{ .compatible = "atmel,at91sam9260-pmc" },
+> +	{ .compatible = "atmel,at91sam9g45-pmc" },
+> +	{ .compatible = "atmel,at91sam9n12-pmc" },
+> +	{ .compatible = "atmel,at91sam9x5-pmc" },
+> +	{ .compatible = "atmel,at91sam9g35-pmc" },
+
+With removal of this compatibility string:
+
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+> +	{ .compatible = "atmel,sama5d3-pmc" },
+>   	{ /*sentinel*/ }
+>   };
 >
 >
 
 
 -- 
 Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
