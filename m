@@ -1,84 +1,76 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 13/27] drm/tegra: Move subdevice infrastructure to
- host1x
-Date: Tue, 8 Oct 2013 11:52:26 +0200
-Message-ID: <20131008095226.GB19633@ulmo.nvidia.com>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com>
- <1381134884-5816-14-git-send-email-treding@nvidia.com>
- <5253A563.1060409@nvidia.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 5/6] ARM: integrator: move CM base into device tree
+Date: Tue, 8 Oct 2013 10:56:40 +0100
+Message-ID: <20131008095639.GE28972@e106331-lin.cambridge.arm.com>
+References: <1380816228-3209-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FkmkrVfFsRoUs1wW"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <5253A563.1060409-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Terje =?utf-8?Q?Bergstr=C3=B6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1380816228-3209-1-git-send-email-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+[adding devicetree to Cc]
 
---FkmkrVfFsRoUs1wW
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Oct 03, 2013 at 05:03:48PM +0100, Linus Walleij wrote:
+> This moves the core module (CM) control base into the device
+> tree. It is a simple memory range of 0x200 bytes. Move the
+> cm header down into the machine directory and unexport the
+> cm_control() symbol as no modules are using it.
+> 
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/arm-boards |  17 +++-
+>  arch/arm/boot/dts/integrator.dtsi                |   5 +
+>  arch/arm/mach-integrator/cm.h                    |  40 ++++++++
+>  arch/arm/mach-integrator/core.c                  | 120 +++++++++++++++--------
+>  arch/arm/mach-integrator/include/mach/cm.h       |  38 -------
+>  arch/arm/mach-integrator/integrator_ap.c         |   6 +-
+>  arch/arm/mach-integrator/integrator_cp.c         |   3 +-
+>  arch/arm/mach-integrator/leds.c                  |   3 +-
+>  8 files changed, 142 insertions(+), 90 deletions(-)
+>  create mode 100644 arch/arm/mach-integrator/cm.h
+>  delete mode 100644 arch/arm/mach-integrator/include/mach/cm.h
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/arm-boards b/Documentation/devicetree/bindings/arm/arm-boards
+> index 06e5370..1a2a81d 100644
+> --- a/Documentation/devicetree/bindings/arm/arm-boards
+> +++ b/Documentation/devicetree/bindings/arm/arm-boards
+> @@ -10,11 +10,15 @@ Required properties (in root node):
+>  FPGA type interrupt controllers, see the versatile-fpga-irq binding doc.
+> 
+>  Required nodes:
+> +- core-module: the root node to the Integrator platforms must have
+> +  a core-module with regs and the compatible-string
+> +  "arm,core-module-integrator"
 
-On Tue, Oct 08, 2013 at 09:25:39AM +0300, Terje Bergstr=C3=B6m wrote:
-> On 07.10.2013 11:34, Thierry Reding wrote:
-> > The Tegra DRM driver currently uses some infrastructure to defer the DRM
-> > core initialization until all required devices have registered. The same
-> > infrastructure can potentially be used by any other driver that requires
-> > more than a single sub-device of the host1x module.
-> >=20
-> > Make the infrastructure more generic and keep only the DRM specific code
-> > in the DRM part of the driver. Eventually this will make it easy to move
-> > the DRM driver part back to the DRM subsystem.
->=20
-> Do we need the host1x_client/tegra_drm_client concept outside DRM? You
-> separated the two in an earlier patch, but the whole structure is there
-> because of limitation in DRM. Shouldn't we keep management of drm
-> clients entirely inside drm?
+s/compatible-string/compatible string/
 
-The DRM specific parts are still all managed within the DRM driver.
-However the host1x_client API, and specifically the method in which
-sub-devices can be registered (host1x_client to host1x_device) is
-completely subsystem agnostic.
+What are the regs -- one entry, or several?
 
-That part can be used subsequently by things such as a V4L2 driver
-to achieve the same thing we've done with Tegra DRM, namely to use
-several sub-devices collectively to provide the functionality of a
-"composite" device (VI/CSI).
+What do they correspond to?
 
-> Second, do we need an own drm_bus for host1x clients? Does it bring
-> something drm_platform doesn't? I couldn't see any immediate difference
-> between the two.
+How big are they?
 
-The difference is in that we pass in a host1x_device, which is not a
-platform device, but really just a wrapped struct device. That in turn
-provides the whole composite device infrastructure. So, no, it can't be
-done with drm_platform.
+> +- cpcon/syscon: the root node the Integrator/CP must have a /cpcon
+> +  node pointing to the CP control registers, and the Integrator/AP
+> +  must have a /syscon node pointing to the Integrator/AP system
+> +  controller. The AP syscon node must include the logical module
+> +  interrupts.
 
-Thierry
+It's a shame we can't fix this up to have a compatible string...
 
---FkmkrVfFsRoUs1wW
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSU9XaAAoJEN0jrNd/PrOh8n0QALK4piwuTv6VCR4pN/vQuYi4
-mwPKgKDkmkKVSIgHg6aVqFVLn3JRgYpOZNnuCRNHINmkv0lQ/T+QiJtaid1XYIe5
-z5wFE2zIQ4Gm3AQmyzMVVSeovV6CSoEBwJxrpgw97PX/KRQeRR4ewQth9hDZfz8W
-sOM06iyKC+oBrCevME2wx46KVBJgq53KvW9gJ/p3CLyN8fkZLH9l+9gtD5oKlXFm
-2TAlENM7eIIC5x3RDOwq6u48kXAgCg/B9tteodpj8iYJvJK6Ma1Nue2Dg13avom+
-jvL599L0hPJywQr4wEX/NJHgw90BrDg0poMiXdq2JKd9eriHWTb6BxrAd2NH5Jv1
-Gub3KrIgOuzNQKwV7BaWVDcmZ490Vei4SsVeWb1tRT2K9JD3Gu+avBi6YjUcnO6u
-jUiVOnsb7TmAPBi0XDmuW0i3Ase9bBMIPoi+UHjACqujSiUfoNZuC/krQw2ub7kg
-zH62Sy23BSipEqoDN/o/+eN94kenQ9idtPKUzXA6+b3mMsZyNT7BdSie7mhqZZeE
-BTxgzXLtdhD+kbKV/dJDxum3W8afEjZSmNQ4IxTxo3lo5SgATuivwHeTlUf9VTCP
-7akeDqCx9hwo/BhlYbFG5JrDiXK2/tdVjmQybI9M2Jm4nC0yVFTfOTQFQeubpGs+
-qfMeQx6nZexL7wSXsd0g
-=ApRC
------END PGP SIGNATURE-----
-
---FkmkrVfFsRoUs1wW--
+Cheers,
+Mark.
