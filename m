@@ -1,38 +1,150 @@
-From: =?ISO-8859-1?Q?Terje_Bergstr=F6m?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 08/27] drm/tegra: gr2d: Miscellaneous cleanups
-Date: Tue, 8 Oct 2013 08:36:12 +0300
-Message-ID: <525399CC.6080808@nvidia.com>
-References: <1381134884-5816-1-git-send-email-treding@nvidia.com> <1381134884-5816-9-git-send-email-treding@nvidia.com> <CABPQNSbkS40_jyGz14s08+x3e+-pxnfy90V7pzAOfiqUF2ma2g@mail.gmail.com> <20131007121452.GA8324@ulmo.nvidia.com> <5252AE8C.9090609@nvidia.com> <CABPQNSa59hBU__yjQMZsdEghpSwH1ayJYiD6HrBrhABicgzxuA@mail.gmail.com>
+From: takasi-y@ops.dti.ne.jp
+Subject: [PATCH v2 2/3] ARM: shmobile: emev2: Add clock tree description in
+ DT
+Date: Tue, 8 Oct 2013 14:33:07 +0900
+Message-ID: <20131008143307.9270bd3307a0524d89088c2a@ops.dti.ne.jp>
+References: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABPQNSa59hBU__yjQMZsdEghpSwH1ayJYiD6HrBrhABicgzxuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "kusmabite-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kusmabite-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
+Sender: linux-sh-owner@vger.kernel.org
+To: SH-Linux <linux-sh@vger.kernel.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, ben.dooks@codethink.co.uk, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07.10.2013 16:05, Erik Faye-Lund wrote:
-> On Mon, Oct 7, 2013 at 2:52 PM, Terje Bergstr=F6m <tbergstrom@nvidia.=
-com> wrote:
->> AND 0xff is necessary, because the same registers are mirrored in
->> multiple contexts. AND removes the offset coming from context, and
->> leaves just the plain register offset.
-> The offsets in the commands don't have enough bits to reach over to
-> the next context. The contexts are repeated at multiples of 0x4000,
-> and 0xFFF is the largest encodable offset. So I don't really thing th=
-e
-> AND is needed for *that* purpose.
+Add minimum clock tree description to .dts file.
+This provides same set of clocks as current sh-clkfwk version .c
+code does.
 
-Well, that was embarrassing. Of course that is true. You can access all
-registers via MMIO or with SETCLASS to correct context. But that was
-still the reason I used when I wrote that 0xff, so it's bogus.
+Signed-off-by: Takashi Yoshii <takasi-y@ops.dti.ne.jp>
+---
+ arch/arm/boot/dts/emev2.dtsi | 84 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
 
-Real fix is to do what Thierry already did: limit the bitmap to max
-register number we're interested in, and have a if() to fail fast if
-register number falls outside that range.
-
-Even better, get IOMMU up and running.
-
-Terje
+diff --git a/arch/arm/boot/dts/emev2.dtsi b/arch/arm/boot/dts/emev2.dtsi
+index 9063a44..df1d4cd 100644
+--- a/arch/arm/boot/dts/emev2.dtsi
++++ b/arch/arm/boot/dts/emev2.dtsi
+@@ -52,34 +52,118 @@
+ 			     <0 121 4>;
+ 	};
+ 
++	smu@e0110000 {
++		compatible = "renesas,emev2-smu";
++		reg = <0xe0110000 0x10000>;
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		c32ki: c32ki {
++			compatible = "fixed-clock";
++			clock-frequency = <32768>;
++			#clock-cells = <0>;
++		};
++		pll3_fo: pll3_fo {
++			compatible = "fixed-factor-clock";
++			clocks = <&c32ki>;
++			clock-div = <1>;
++			clock-mult = <7000>;
++			#clock-cells = <0>;
++		};
++		usia_u0_sclkdiv: usia_u0_sclkdiv {
++			compatible = "renesas,emev2-smu-clkdiv";
++			reg = <0x610 0>;
++			clocks = <&pll3_fo>;
++			#clock-cells = <0>;
++		};
++		usib_u1_sclkdiv: usib_u1_sclkdiv {
++			compatible = "renesas,emev2-smu-clkdiv";
++			reg = <0x65c 0>;
++			clocks = <&pll3_fo>;
++			#clock-cells = <0>;
++		};
++		usib_u2_sclkdiv: usib_u2_sclkdiv {
++			compatible = "renesas,emev2-smu-clkdiv";
++			reg = <0x65c 16>;
++			clocks = <&pll3_fo>;
++			#clock-cells = <0>;
++		};
++		usib_u3_sclkdiv: usib_u3_sclkdiv {
++			compatible = "renesas,emev2-smu-clkdiv";
++			reg = <0x660 0>;
++			clocks = <&pll3_fo>;
++			#clock-cells = <0>;
++		};
++		usia_u0_sclk: usia_u0_sclk {
++			compatible = "renesas,emev2-smu-gclk";
++			reg = <0x4a0 1>;
++			clocks = <&usia_u0_sclkdiv>;
++			#clock-cells = <0>;
++		};
++		usib_u1_sclk: usib_u1_sclk {
++			compatible = "renesas,emev2-smu-gclk";
++			reg = <0x4b8 1>;
++			clocks = <&usib_u1_sclkdiv>;
++			#clock-cells = <0>;
++		};
++		usib_u2_sclk: usib_u2_sclk {
++			compatible = "renesas,emev2-smu-gclk";
++			reg = <0x4bc 1>;
++			clocks = <&usib_u2_sclkdiv>;
++			#clock-cells = <0>;
++		};
++		usib_u3_sclk: usib_u3_sclk {
++			compatible = "renesas,emev2-smu-gclk";
++			reg = <0x4c0 1>;
++			clocks = <&usib_u3_sclkdiv>;
++			#clock-cells = <0>;
++		};
++		sti_sclk: sti_sclk {
++			compatible = "renesas,emev2-smu-gclk";
++			reg = <0x528 1>;
++			clocks = <&c32ki>;
++			#clock-cells = <0>;
++		};
++	};
++
+ 	sti@e0180000 {
+ 		compatible = "renesas,em-sti";
+ 		reg = <0xe0180000 0x54>;
+ 		interrupts = <0 125 0>;
++		clocks = <&sti_sclk>;
++		clock-names = "sclk";
+ 	};
+ 
+ 	uart@e1020000 {
+ 		compatible = "renesas,em-uart";
+ 		reg = <0xe1020000 0x38>;
+ 		interrupts = <0 8 0>;
++		clocks = <&usia_u0_sclk>;
++		clock-names = "sclk";
+ 	};
+ 
+ 	uart@e1030000 {
+ 		compatible = "renesas,em-uart";
+ 		reg = <0xe1030000 0x38>;
+ 		interrupts = <0 9 0>;
++		clocks = <&usib_u1_sclk>;
++		clock-names = "sclk";
+ 	};
+ 
+ 	uart@e1040000 {
+ 		compatible = "renesas,em-uart";
+ 		reg = <0xe1040000 0x38>;
+ 		interrupts = <0 10 0>;
++		clocks = <&usib_u2_sclk>;
++		clock-names = "sclk";
+ 	};
+ 
+ 	uart@e1050000 {
+ 		compatible = "renesas,em-uart";
+ 		reg = <0xe1050000 0x38>;
+ 		interrupts = <0 11 0>;
++		clocks = <&usib_u3_sclk>;
++		clock-names = "sclk";
+ 	};
+ 
+ 	gpio0: gpio@e0050000 {
+-- 
+1.8.1.5
