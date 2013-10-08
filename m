@@ -1,61 +1,59 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: Dove: Add the audio device to the Cubox DT
-Date: Tue, 8 Oct 2013 14:00:43 -0400
-Message-ID: <20131008180043.GU5402@titan.lakedaemon.net>
-References: <521DCD80.9010105@gmail.com>
- <20130831125128.0e3a23c7@armhf>
- <140d8d8a23f.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com>
- <20130926101147.217015e1@armhf>
- <5243F0CE.9000301@gmail.com>
- <20130926132859.04ad4407@armhf>
- <5246E747.6020103@gmail.com>
- <20131003181716.6d03d576@armhf>
- <20131008161145.GJ5402@titan.lakedaemon.net>
- <20131008195949.0673f83e@armhf>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: omap3-beagle: use 3630 definitions
+Date: Tue, 8 Oct 2013 13:01:26 -0500
+Message-ID: <52544876.8000904@ti.com>
+References: <523C9D8B.2000701@ti.com> <1381164584-4008-1-git-send-email-nm@ti.com> <1381164584-4008-3-git-send-email-nm@ti.com> <20131007192009.GA8949@atomide.com> <20131008174721.GH13128@radagast>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20131008195949.0673f83e@armhf>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20131008174721.GH13128@radagast>
+Sender: linux-omap-owner@vger.kernel.org
+To: balbi@ti.com, Tony Lindgren <tony@atomide.com>
+Cc: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 08, 2013 at 07:59:49PM +0200, Jean-Francois Moine wrote:
-> On Tue, 8 Oct 2013 12:11:45 -0400
-> Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+On 10/08/2013 12:47 PM, Felipe Balbi wrote:
+> Hi,
 > 
-> > Jean-Francois,
-> > 
-> > On Thu, Oct 03, 2013 at 06:17:16PM +0200, Jean-Francois Moine wrote:
-> > > It seems that my patch about adding s/pdif to the kirkwood audio driver
-> > > has not been accepted yet...
-> > 
-> > Looking over that conversation does not give the impression that
-> > concerns were resolved.  I'm a little short on time atm, all I can add
-> > definitively is that I agree with Thomas wrt the compatible strings.
-> > They should be named after the first compatible IP block (in this case,
-> > kirkwood).
-> > 
-> > Please submit a fix for v3.12-rc cleaning up what Mark Brown accepted so
-> > we don't have to maintain it indefinitely, and we'll see if we can work
-> > out the rest in fairly short order.  Posting a new version of series
-> > would help kick off that conversation... ;-)
+> On Mon, Oct 07, 2013 at 12:20:09PM -0700, Tony Lindgren wrote:
+>> * Nishanth Menon <nm@ti.com> [131007 09:57]:
+>>> beagle-xm currently would matchup with ti,omap3 which invokes
+>>> omap3430_init_early instead of omap3630_init_early. So add
+>>> compatiblity for 3630 to allow match
+>>>
+>>> Signed-off-by: Nishanth Menon <nm@ti.com>
+>>> ---
+>>>  arch/arm/boot/dts/omap3-beagle-xm.dts |    2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
+>>> index 0f7cfc5..2079e22 100644
+>>> --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
+>>> +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
+>>> @@ -11,7 +11,7 @@
+>>>  
+>>>  / {
+>>>  	model = "TI OMAP3 BeagleBoard xM";
+>>> -	compatible = "ti,omap3-beagle-xm", "ti,omap3-beagle", "ti,omap3";
+>>> +	compatible = "ti,omap3-beagle-xm", "ti,omap363x", "ti,omap3-beagle", "ti,omap3";
+>>>  
+>>>  	cpus {
+>>>  		cpu@0 {
+>>
+>> This compatible string looks hacky.. How about just make it
+>>
+>> "ti,omap3-beagle-xm", "ti,omap363x", "ti,omap3";
+>>
+>> How about just leave out "ti,omap3-beagle" here?
 > 
-> Jason,
+> ti,omap3-beagle was already part of the original file, we can definitely
+> remove but I'd expect us to maintain support for that string
+> indefinitely should anybody continue to use older dtbs.
 > 
-> Thank you, I had forgotten this patch series. New submit done.
-> 
-> As it is a new development, it may go to 3.13. The compatible string
-> has been updated by Thomas and it is present in 3.12-rc1.
+it already is supported (we still have a beagleboard) - the current
+patch rev does nothing to break existing code or bindings.
 
-ok, great!
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Nishanth Menon
