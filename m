@@ -1,85 +1,70 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ARM: dts: Update arch timer node with clock frequency
-Date: Wed, 9 Oct 2013 09:25:51 +0100
-Message-ID: <20131009082551.GC4981@e106331-lin.cambridge.arm.com>
-References: <1379499113-20342-1-git-send-email-yuvaraj.cd@samsung.com>
- <3887347.Oxs1qQnt5k@flatron>
- <20130923141504.GD16069@e106331-lin.cambridge.arm.com>
- <CAOesGMgaDB0ZK7LU+vZmXkpTXaMKbuNgT+vuaRbzypwtZ9eouA@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v4 08/10] ARM/dts: am33xx: mcasp: Add location for data
+ port registers to reg-property
+Date: Wed, 9 Oct 2013 11:29:44 +0300
+Message-ID: <525513F8.1040103@ti.com>
+References: <cover.1381259962.git.jsarha@ti.com> <37c7ee5f2eab24df86baba1bd36da66c5a637744.1381259962.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMgaDB0ZK7LU+vZmXkpTXaMKbuNgT+vuaRbzypwtZ9eouA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Tony Lindgren <tony@atomide.com>, Sean Paul <seanpaul@chromium.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <37c7ee5f2eab24df86baba1bd36da66c5a637744.1381259962.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, broonie@kernel.org, mark.rutland@arm.com, joelf@ti.com, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, Darren Etheridge <detheridge@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 08, 2013 at 11:15:47PM +0100, Olof Johansson wrote:
-> [Adding Tony, who reported a mainline booting issue, and Sean who
-> helped me track this down]
-> 
-> On Mon, Sep 23, 2013 at 7:15 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Sat, Sep 21, 2013 at 04:24:59PM +0100, Tomasz Figa wrote:
-> >> Hi Yuvaraj,
-> >>
-> >> On Wednesday 18 of September 2013 15:41:53 Yuvaraj Kumar C D wrote:
-> >> > Without the "clock-frequency" property in arch timer node, could able
-> >> > to see the below crash dump.
-> >> [snip]
-> >> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi
-> >> > b/arch/arm/boot/dts/exynos5250.dtsi index 7d7cc77..668ce5d 100644
-> >> > --- a/arch/arm/boot/dts/exynos5250.dtsi
-> >> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> >> > @@ -96,6 +96,7 @@
-> >> >                          <1 14 0xf08>,
-> >> >                          <1 11 0xf08>,
-> >> >                          <1 10 0xf08>;
-> >> > +           clock-frequency = <24000000>;
-> >>
-> >> Shouldn't it rather come from some clock provided by some clock controller
-> >> instead?
-> >>
-> >> The frequency would be then retrieved using clk_get_rate() on a clock
-> >> received by clk_get(), specified in device tree using generic clock
-> >> bindings.
-> >
-> > If the bootloader has initialised the generic timer correctly, the
-> > CNTFRQ register should contain the clock frequency, independent of any
-> > external clock.
-> 
-> So, we just sat here to bisect a problem on the Samsung Chromebook
-> where we hit exactly this problem. The read-only firmware on the
-> device does not set CNTFRQ at boot, so this fails.
+On 10/08/2013 10:36 PM, Jyri Sarha wrote:
+> This patch adds a second tuple to reg property. The new property tupl=
+e
+> describes the memory location for data port registers mapped trough
+> L3 bus on am33xx. The both property tuples are named accordingly in
+> the reg-names property.
+>=20
+> Signed-off-by: Hebbar, Gururaja <gururaja.hebbar@ti.com>
+> Signed-off-by: Darren Etheridge <detheridge@ti.com>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  arch/arm/boot/dts/am33xx.dtsi |    8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx=
+=2Edtsi
+> index 22659e7..c8ba19e 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -671,7 +671,9 @@
+>  		mcasp0: mcasp@48038000 {
+>  			compatible =3D "ti,omap2-mcasp-audio";
+>  			ti,hwmods =3D "mcasp0";
+> -			reg =3D <0x48038000 0x2000>;
+> +			reg =3D <0x48038000 0x2000>,
+> +			      <0x46400000 0x400000>;
 
-Ouch. That's a shame.
+mcasp0 data port is at 0x46000000. 0x46400000 is for mcasp1.
 
-A chained bootloader (like the KVM guys are using) should be able to set
-CNTFRQ, so as long as any chained loader actually does that this won't
-cause that to blow up...
+> +			reg-names =3D "mpu", "dat";
+>  			interrupts =3D <80>, <81>;
+>  			interrupts-names =3D "tx", "rx";
+>  			status =3D "disabled";
+> @@ -683,7 +685,9 @@
+>  		mcasp1: mcasp@4803C000 {
+>  			compatible =3D "ti,omap2-mcasp-audio";
+>  			ti,hwmods =3D "mcasp1";
+> -			reg =3D <0x4803C000 0x2000>;
+> +			reg =3D <0x4803C000 0x2000>,
+> +			      <0x46400000 0x400000>;
+> +			reg-names =3D "mpu", "dat";
+>  			interrupts =3D <82>, <83>;
+>  			interrupts-names =3D "tx", "rx";
+>  			status =3D "disabled";
+>=20
 
-> 
-> Apparantly the u-boot that comes with Arndale sets it, so I haven't
-> seen this error on that platform.
-> 
-> > Having the bootloader set CNTFRQ is by far the preferable solution, it
-> > is architected for this purpose.
-> 
-> Unfortunately there is now real hardware out there that needs this due
-> to firmware bugs / missing features, so there's little other choice.
-> :(
 
-Indeed :(
-
-> 
-> I'll pick this patch up in the fixes branch for 3.12, unless someone
-> complains loudly.
-
-Could you please add a note to the dts regarding why we actually need
-this? It would be nice to maintain the impression that this is not the
-preferred way of doing things...
-
-Cheers,
-Mark.
+--=20
+P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
