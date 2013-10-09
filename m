@@ -1,47 +1,80 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] PCI: designware: Add irq_create_mapping()
-Date: Wed, 9 Oct 2013 14:35:50 +0530
-Message-ID: <52551C6E.1040404@ti.com>
-References: <000401cec4c6$dc415180$94c3f480$%han@samsung.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [RFC] Architecture independent pcibios?
+Date: Wed, 9 Oct 2013 10:09:23 +0100
+Message-ID: <20131009090923.GE25606@e102652-lin.cambridge.arm.com>
+References: <20131008144211.GA25231@e102652-lin.cambridge.arm.com>
+ <CAErSpo5=sUJDZGm+zHw+b1h_a1YYbaGBshAutAoPBZYUCRbYkw@mail.gmail.com>
+ <525438F6.3090600@gmail.com>
+ <1381264135.645.230.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <000401cec4c6$dc415180$94c3f480$%han@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1381264135.645.230.camel@pasglop>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <monstr@monstr.eu>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jingoo,
+On Tue, Oct 08, 2013 at 09:28:55PM +0100, Benjamin Herrenschmidt wrote:
+> On Tue, 2013-10-08 at 11:55 -0500, Rob Herring wrote:
+>=20
+> > > I wonder if pci_process_bridge_OF_ranges() would fit somewhere in
+> > > drivers/of?  The implementations I looked at are mostly concerned=
+ with
+> > > parsing OF resources, and they don't have much to do with PCI
+> > > directly.
+> >=20
+> > This was being done until Ben weighed in:
+> >=20
+> > https://lkml.org/lkml/2013/5/4/103
+>=20
+> Well, I proposed an alternative (better) approach which I of course h=
+ad
+> no time to actually implement yet :-)
 
-On Wednesday 09 October 2013 01:39 PM, Jingoo Han wrote:
-> Without irq_create_mapping(), the correct irq number cannot be
-> provided. In this case, it makes problem such as NULL deference.
-> Thus, irq_create_mapping() should be added for MSI.
-> 
-> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
-> Tested on Exynos5440.
-> 
->  drivers/pci/host/pcie-designware.c |   10 ++++------
->  drivers/pci/host/pcie-designware.h |    1 +
->  2 files changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-> index 8963017..e536bb6 100644
-> --- a/drivers/pci/host/pcie-designware.c
-> +++ b/drivers/pci/host/pcie-designware.c
-> @@ -237,6 +237,8 @@ static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
->  		}
->  	}
->  
-> +	pp->msi_irq_start = irq_create_mapping(pp->irq_domain, 0);
-> +
+In order to avoid any confusion, could you please point me again to the
+relevant message(s) where you proposed your approach?
 
-I think irq_create_mapping should be done for all the MSI irq lines instead of
-only the first line. So you might have to do for MAX_MSI_IRQS lines.
+>=20
+> I have done the changes I needed to do to powerpc
+> pci_process_bridge_OF_ranges so it would be possible to move that now=
+ to
+> a generic place, but I still think it's not a great idea. It means th=
+e
+> pci_controller structure with its resources will have to become gener=
+ic
+> which somewhat overlaps with the pci_host_bridge that Bjorn introduce=
+d,
+> so that's really not great.
+>=20
+> I still think an arch with DT and simpler PCI code that powerpc could
+> start looking at the transition to a better model that I hinted at...
 
-Thanks
-Kishon
+As tempting as it is to start anew and with a cleaner code, I am wary
+that porting the existing platforms to the new code will take longer
+that way. My intentions are to make the (probably infrequent) task of
+adding a new architecture to the PCI infrastructure a simple and
+straighforward task. But adding code for my platform is no guarantee
+that new ones will have an easier job.
+
+Best regards,
+Liviu
+
+>=20
+> Cheers,
+> Ben.
+>=20
+>=20
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
