@@ -1,57 +1,99 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V6 09/15] ARM: dts: OMAP5: Add CPU OPP table
-Date: Wed, 9 Oct 2013 18:30:09 -0500
-Message-ID: <1381361414-8851-8-git-send-email-nm@ti.com>
-References: <1381354144-7134-1-git-send-email-nm@ti.com>
- <1381361414-8851-1-git-send-email-nm@ti.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v7 1/5] ARM: add basic support for Trusted Foundations
+Date: Wed, 9 Oct 2013 16:45:41 -0700
+Message-ID: <CAOesGMjtHBft71nJUEc7K+2UA_LiWBOVWpbYvJDOnF=NLepLLw@mail.gmail.com>
+References: <1380904635-18113-1-git-send-email-acourbot@nvidia.com>
+	<1380904635-18113-2-git-send-email-acourbot@nvidia.com>
+	<5253BF8E.4050802@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1381361414-8851-1-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, J Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5253BF8E.4050802-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: J Keerthy <j-keerthy@ti.com>
+On Tue, Oct 8, 2013 at 1:17 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
+> Hi,
+>
+> On 10/04/2013 06:37 PM, Alexandre Courbot wrote:
+>> Trusted Foundations is a TrustZone-based secure monitor for ARM that
+>> can be invoked using the same SMC-based API on all supported
+>> platforms. This patch adds initial basic support for Trusted
+>> Foundations using the ARM firmware API. Current features are limited
+>> to the ability to boot secondary processors.
+>>
+>> Note: The API followed by Trusted Foundations does *not* follow the SMC
+>> calling conventions. It has nothing to do with PSCI neither and is only
+>> relevant to devices that use Trusted Foundations (like most Tegra-based
+>> retail devices).
+>>
+>> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../arm/firmware/tl,trusted-foundations.txt        | 17 +++++
+>>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>>  arch/arm/Kconfig                                   |  2 +
+>>  arch/arm/Makefile                                  |  1 +
+>>  arch/arm/firmware/Kconfig                          | 28 ++++++++
+>>  arch/arm/firmware/Makefile                         |  1 +
+>>  arch/arm/firmware/trusted_foundations.c            | 77 ++++++++++++++++++++++
+>>  arch/arm/include/asm/trusted_foundations.h         | 64 ++++++++++++++++++
+>>  8 files changed, 191 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
+>>  create mode 100644 arch/arm/firmware/Kconfig
+>>  create mode 100644 arch/arm/firmware/Makefile
+>>  create mode 100644 arch/arm/firmware/trusted_foundations.c
+>>  create mode 100644 arch/arm/include/asm/trusted_foundations.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
+>> new file mode 100644
+>> index 0000000..3954bbd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
+>> @@ -0,0 +1,17 @@
+>> +Trusted Foundations
+>> +
+>> +Boards that use the Trusted Foundations secure monitor can signal its
+>> +presence by declaring a node compatible with "tl,trusted-foundations"
+>> +under the root node.
+>> +
+>> +Required properties:
+>> +- compatible : "tl,trusted-foundations"
+>> +- version-major : major version number of Trusted Foundations firmware
+>> +- version-minor: minor version number of Trusted Foundations firmware
+>> +
+>> +Example:
+>> +     firmware {
+>> +             compatible = "tl,trusted-foundations";
+>> +             version-major = <2>;
+>> +             version-minor = <8>;
+>> +     };
+>
+> This is just another example how to add sw description to dts.
+> I have briefly looked at tegra20.dtsi and there are IPs like timer, intc, etc
+> which are in the DTS without any bus.
+>
+> Add this firmware node to the root is just +1 case to this mess
+> but IMHO will be good to have specific DT part which will be used for
+> this sw setting which are coming to DTS all the time.
+>
+> Grant, Rob: Where is the proper location for these type of description?
 
-Add DT OPP table for OMAP54xx family of devices. This data is
-decoded by OF with of_init_opp_table() helper function.
+Usually we've been using the /firmware hierarchy for these kind of things.
 
-The data is based on OMAP543x ES2.0 DM Operating Condition Addendum
-Version 0.6(April 2013)
+Chrome OS uses /firmware/chromeos for some of the information passing
+from FW to the OS.
 
-NOTE: The voltage and frequency values work well only on NOM samples
-and are supposed to work properly only with ABB/AVS for ALL OPPs.
+You might want a separate node under /firmware for this, since this is
+"just" the secure runtime portion of things, there might be need to
+add things for/from the bootloader too.
 
-TODO: Add SPEED BIN OPP after ABB and AVS support so the cpufreq works
-on all samples seamlessly. Clock node is pending alignment for clock
-dts conversion
 
-[nm@ti.com: sync to latest and fixes]
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: J Keerthy <j-keerthy@ti.com>
----
- arch/arm/boot/dts/omap5.dtsi |    7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 2e83e24..4be15e0 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -37,6 +37,13 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a15";
- 			reg = <0x0>;
-+
-+			operating-points = <
-+				/* kHz    uV */
-+				500000  880000
-+				1000000 1060000
-+				1500000 1250000
-+			>;
- 		};
- 		cpu@1 {
- 			device_type = "cpu";
--- 
-1.7.9.5
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
