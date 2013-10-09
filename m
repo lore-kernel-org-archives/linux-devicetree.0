@@ -1,81 +1,34 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: [PATCH] PCI: designware: Add irq_create_mapping()
-Date: Wed, 09 Oct 2013 17:09:21 +0900
-Message-ID: <000401cec4c6$dc415180$94c3f480$%han@samsung.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 4/5] clk: tegra124: Add new peripheral clocks
+Date: Wed, 9 Oct 2013 11:11:23 +0300
+Message-ID: <20131009081123.GB3973@tbergstrom-lnx.Nvidia.com>
+References: <1380878014-22088-1-git-send-email-pdeschrijver@nvidia.com>
+ <1380878014-22088-5-git-send-email-pdeschrijver@nvidia.com>
+ <525487C7.6080103@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Bjorn Helgaas' <bhelgaas@google.com>
-Cc: 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <525487C7.6080103-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Without irq_create_mapping(), the correct irq number cannot be
-provided. In this case, it makes problem such as NULL deference.
-Thus, irq_create_mapping() should be added for MSI.
+On Wed, Oct 09, 2013 at 12:31:35AM +0200, Stephen Warren wrote:
+> On 10/04/2013 03:12 AM, Peter De Schrijver wrote:
+> > Tegra124 introduces a number of new peripheral clocks. This patch adds those
+> > to the common peripheral clock code.
+> 
+> Don't you need to add AFC[0..5] in this patch and/or patch 5?
 
-Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
----
-Tested on Exynos5440.
+AFC[0..5] are reset only nodes afaik. Up to now, we haven't done that.
+The goal is to include them once we move to the reset framework.
 
- drivers/pci/host/pcie-designware.c |   10 ++++------
- drivers/pci/host/pcie-designware.h |    1 +
- 2 files changed, 5 insertions(+), 6 deletions(-)
+Cheers,
 
-diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-index 8963017..e536bb6 100644
---- a/drivers/pci/host/pcie-designware.c
-+++ b/drivers/pci/host/pcie-designware.c
-@@ -237,6 +237,8 @@ static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
- 		}
- 	}
- 
-+	pp->msi_irq_start = irq_create_mapping(pp->irq_domain, 0);
-+
- 	irq = (pp->msi_irq_start + pos0);
- 
- 	if ((irq + no_irqs) > (pp->msi_irq_start + MAX_MSI_IRQS-1))
-@@ -372,8 +374,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
- 	struct of_pci_range_parser parser;
- 	u32 val;
- 
--	struct irq_domain *irq_domain;
--
- 	if (of_pci_range_parser_init(&parser, np)) {
- 		dev_err(pp->dev, "missing ranges property\n");
- 		return -EINVAL;
-@@ -441,15 +441,13 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
- 	}
- 
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
--		irq_domain = irq_domain_add_linear(pp->dev->of_node,
-+		pp->irq_domain = irq_domain_add_linear(pp->dev->of_node,
- 					MAX_MSI_IRQS, &msi_domain_ops,
- 					&dw_pcie_msi_chip);
--		if (!irq_domain) {
-+		if (!pp->irq_domain) {
- 			dev_err(pp->dev, "irq domain init failed\n");
- 			return -ENXIO;
- 		}
--
--		pp->msi_irq_start = irq_find_mapping(irq_domain, 0);
- 	}
- 
- 	if (pp->ops->host_init)
-diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
-index faccbbf..240fc11 100644
---- a/drivers/pci/host/pcie-designware.h
-+++ b/drivers/pci/host/pcie-designware.h
-@@ -50,6 +50,7 @@ struct pcie_port {
- 	int			msi_irq_start;
- 	unsigned long		msi_data;
- 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
-+	struct irq_domain	*irq_domain;
- };
- 
- struct pcie_host_ops {
--- 
-1.7.10.4
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
