@@ -1,34 +1,57 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 4/5] clk: tegra124: Add new peripheral clocks
-Date: Wed, 9 Oct 2013 11:11:23 +0300
-Message-ID: <20131009081123.GB3973@tbergstrom-lnx.Nvidia.com>
-References: <1380878014-22088-1-git-send-email-pdeschrijver@nvidia.com>
- <1380878014-22088-5-git-send-email-pdeschrijver@nvidia.com>
- <525487C7.6080103@wwwdotorg.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v4 09/10] ARM/dts: am335x-evm: Add audio support for am335x-evm.dts
+Date: Wed, 9 Oct 2013 11:12:11 +0300
+Message-ID: <52550FDB.4010401@ti.com>
+References: <cover.1381259962.git.jsarha@ti.com> <1acef783bb6add9598add8214edd70f15e66e4ad.1381259962.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <525487C7.6080103-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1acef783bb6add9598add8214edd70f15e66e4ad.1381259962.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, broonie@kernel.org, mark.rutland@arm.com, joelf@ti.com, Darren Etheridge <detheridge@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2013 at 12:31:35AM +0200, Stephen Warren wrote:
-> On 10/04/2013 03:12 AM, Peter De Schrijver wrote:
-> > Tegra124 introduces a number of new peripheral clocks. This patch adds those
-> > to the common peripheral clock code.
-> 
-> Don't you need to add AFC[0..5] in this patch and/or patch 5?
+Hi Jyri,
 
-AFC[0..5] are reset only nodes afaik. Up to now, we haven't done that.
-The goal is to include them once we move to the reset framework.
+On 10/08/2013 10:36 PM, Jyri Sarha wrote:
+> @@ -407,6 +442,25 @@
+> =20
+>  #include "tps65910.dtsi"
+> =20
+> +&mcasp1 {
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&am335x_evm_audio_pins>;
+> +
+> +		status =3D "okay";
+> +
+> +		op-mode =3D <0>;          /* MCASP_IIS_MODE */
+> +		tdm-slots =3D <2>;
+> +		/* 16 serializer */
+> +		serial-dir =3D <  /* 0: INACTIVE, 1: TX, 2: RX */
+> +			0 0 1 2
+> +			0 0 0 0
+> +			0 0 0 0
+> +			0 0 0 0
+> +		>;
 
-Cheers,
+The McASP on AM335x have only 4 serializers.
 
-Peter.
+> +		tx-num-evt =3D <1>;
+> +		rx-num-evt =3D <1>;
+> +};
+> +
+>  &tps {
+>  	vcc1-supply =3D <&vbat>;
+>  	vcc2-supply =3D <&vbat>;
+>=20
+
+
+--=20
+P=E9ter
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
