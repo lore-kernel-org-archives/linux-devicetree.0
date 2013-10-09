@@ -1,61 +1,83 @@
-From: <y@dflp33.itg.ti.com>
-Subject: [PATCH v4.1 08/10] ARM/dts: am33xx: mcasp: Add location for data port registers to reg-property
-Date: Wed, 9 Oct 2013 15:44:34 +0300
-Message-ID: <9643.4214887724$1381322724@news.gmane.org>
-References: <525513F8.1040103@ti.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH 1/6] ARM: at91: prepare sama5 dt boards transition to
+ common clk
+Date: Wed, 9 Oct 2013 15:04:21 +0200
+Message-ID: <52555455.7080605@atmel.com>
+References: <1375951572-10829-1-git-send-email-b.brezillon@overkiz.com> <1375953654-11168-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <525513F8.1040103-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joelf-l0cyMroinI0@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1375953654-11168-1-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon@overkiz.com>, Russell King <linux@arm.linux.org.uk>, Andrew Victor <linux@maxim.org.za>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+On 08/08/2013 11:20, Boris BREZILLON :
+> This patch prepare the transition to common clk for sama5 dt boards by
+> replacing the timer init callback.
+>
+> Clocks registration cannot be done in early init callback (as formerly done
+> by the old clk implementation) because it requires dynamic allocation
+> which is not ready yet during early init.
+>
+> In the other hand, at91 clocks must be registered before
+> at91sam926x_pit_init is called because PIT (Periodic Interval Timer) driver
+> request the master clk (mck).
+>
+> A new function (at91sama5_dt_timer_init) is created to fullfil these needs.
+> This function registers all at91 clks using the dt definition before
+> calling the PIT init function.
+> The device tree clock registration is enabled only if common clk is
+> selected. Else the old clk registration is been done during
+> at91_dt_initialize call.
+>
+> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
 
-This patch adds a second tuple to reg property. The new property tuple
-describes the memory location for data port registers mapped trough
-L3 bus on am33xx. The both property tuples are named accordingly in
-the reg-names property.
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-Signed-off-by: Hebbar, Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am33xx.dtsi |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+> ---
+>   arch/arm/mach-at91/board-dt-sama5.c |   10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/mach-at91/board-dt-sama5.c b/arch/arm/mach-at91/board-dt-sama5.c
+> index ad95f6a..10b6913 100644
+> --- a/arch/arm/mach-at91/board-dt-sama5.c
+> +++ b/arch/arm/mach-at91/board-dt-sama5.c
+> @@ -16,6 +16,7 @@
+>   #include <linux/of_irq.h>
+>   #include <linux/of_platform.h>
+>   #include <linux/phy.h>
+> +#include <linux/clk-provider.h>
+>
+>   #include <asm/setup.h>
+>   #include <asm/irq.h>
+> @@ -26,6 +27,13 @@
+>   #include "at91_aic.h"
+>   #include "generic.h"
+>
+> +static void __init sama5_dt_timer_init(void)
+> +{
+> +#if defined(CONFIG_COMMON_CLK)
+> +	of_clk_init(NULL);
+> +#endif
+> +	at91sam926x_pit_init();
+> +}
+>
+>   static const struct of_device_id irq_of_match[] __initconst = {
+>
+> @@ -77,7 +85,7 @@ static const char *sama5_dt_board_compat[] __initdata = {
+>
+>   DT_MACHINE_START(sama5_dt, "Atmel SAMA5 (Device Tree)")
+>   	/* Maintainer: Atmel */
+> -	.init_time	= at91sam926x_pit_init,
+> +	.init_time	= sama5_dt_timer_init,
+>   	.map_io		= at91_map_io,
+>   	.handle_irq	= at91_aic5_handle_irq,
+>   	.init_early	= at91_dt_initialize,
+>
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 22659e7..4a86762 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -671,7 +671,9 @@
- 		mcasp0: mcasp@48038000 {
- 			compatible = "ti,omap2-mcasp-audio";
- 			ti,hwmods = "mcasp0";
--			reg = <0x48038000 0x2000>;
-+			reg = <0x48038000 0x2000>,
-+			      <0x46000000 0x400000>;
-+			reg-names = "mpu", "dat";
- 			interrupts = <80>, <81>;
- 			interrupts-names = "tx", "rx";
- 			status = "disabled";
-@@ -683,7 +685,9 @@
- 		mcasp1: mcasp@4803C000 {
- 			compatible = "ti,omap2-mcasp-audio";
- 			ti,hwmods = "mcasp1";
--			reg = <0x4803C000 0x2000>;
-+			reg = <0x4803C000 0x2000>,
-+			      <0x46400000 0x400000>;
-+			reg-names = "mpu", "dat";
- 			interrupts = <82>, <83>;
- 			interrupts-names = "tx", "rx";
- 			status = "disabled";
+
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Nicolas Ferre
