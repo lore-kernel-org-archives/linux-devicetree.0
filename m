@@ -1,49 +1,85 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 2/2] hwrng: msm: Add PRNG support for MSM SoC's
-Date: Wed, 09 Oct 2013 11:23:43 +0300
-Message-ID: <5255128F.8090107@mm-sol.com>
-References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <1380811955-18085-3-git-send-email-svarbanov@mm-sol.com> <524DC4B1.4050100@codeaurora.org> <524EED4E.8090505@mm-sol.com> <524EEEC5.7090803@codeaurora.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] ARM: dts: Update arch timer node with clock frequency
+Date: Wed, 9 Oct 2013 09:25:51 +0100
+Message-ID: <20131009082551.GC4981@e106331-lin.cambridge.arm.com>
+References: <1379499113-20342-1-git-send-email-yuvaraj.cd@samsung.com>
+ <3887347.Oxs1qQnt5k@flatron>
+ <20130923141504.GD16069@e106331-lin.cambridge.arm.com>
+ <CAOesGMgaDB0ZK7LU+vZmXkpTXaMKbuNgT+vuaRbzypwtZ9eouA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <524EEEC5.7090803@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMgaDB0ZK7LU+vZmXkpTXaMKbuNgT+vuaRbzypwtZ9eouA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Tony Lindgren <tony@atomide.com>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Tue, Oct 08, 2013 at 11:15:47PM +0100, Olof Johansson wrote:
+> [Adding Tony, who reported a mainline booting issue, and Sean who
+> helped me track this down]
+> 
+> On Mon, Sep 23, 2013 at 7:15 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Sat, Sep 21, 2013 at 04:24:59PM +0100, Tomasz Figa wrote:
+> >> Hi Yuvaraj,
+> >>
+> >> On Wednesday 18 of September 2013 15:41:53 Yuvaraj Kumar C D wrote:
+> >> > Without the "clock-frequency" property in arch timer node, could able
+> >> > to see the below crash dump.
+> >> [snip]
+> >> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> >> > b/arch/arm/boot/dts/exynos5250.dtsi index 7d7cc77..668ce5d 100644
+> >> > --- a/arch/arm/boot/dts/exynos5250.dtsi
+> >> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> >> > @@ -96,6 +96,7 @@
+> >> >                          <1 14 0xf08>,
+> >> >                          <1 11 0xf08>,
+> >> >                          <1 10 0xf08>;
+> >> > +           clock-frequency = <24000000>;
+> >>
+> >> Shouldn't it rather come from some clock provided by some clock controller
+> >> instead?
+> >>
+> >> The frequency would be then retrieved using clk_get_rate() on a clock
+> >> received by clk_get(), specified in device tree using generic clock
+> >> bindings.
+> >
+> > If the bootloader has initialised the generic timer correctly, the
+> > CNTFRQ register should contain the clock frequency, independent of any
+> > external clock.
+> 
+> So, we just sat here to bisect a problem on the Samsung Chromebook
+> where we hit exactly this problem. The read-only firmware on the
+> device does not set CNTFRQ at boot, so this fails.
 
-On 10/04/2013 07:37 PM, Stephen Boyd wrote:
-> On 10/04/13 09:31, Stanimir Varbanov wrote:
->>
->>>> +static int msm_rng_probe(struct platform_device *pdev)
->>>> +{
->>>> +	struct msm_rng *rng;
->>>> +	struct device_node *np;
->>>> +	struct resource res;
->>>> +	int ret;
->>>> +
->>>> +	np = of_node_get(pdev->dev.of_node);
->>>> +	if (!np)
->>>> +		return -ENODEV;
->>> This is unnecessary.
->> I used this call because CONFIG_OF_DYNAMIC could be enabled at some
->> time. Isn't that possible? I saw that of_node_get|put is used in .probe
->> on few places in drivers.
-> 
-> So far we aren't selecting that config on ARM.
-> 
-> If you look at of_device_alloc() you'll see
-> 
->     dev->dev.of_node = of_node_get(np);
-> 
-> so any platform devices created from of_platform_populate won't have
-> their of_node go away.
+Ouch. That's a shame.
 
-Thanks for the pointers, it makes sense. I'll remove the calls to
-of_node_get|put.
+A chained bootloader (like the KVM guys are using) should be able to set
+CNTFRQ, so as long as any chained loader actually does that this won't
+cause that to blow up...
 
-regards,
-Stan
+> 
+> Apparantly the u-boot that comes with Arndale sets it, so I haven't
+> seen this error on that platform.
+> 
+> > Having the bootloader set CNTFRQ is by far the preferable solution, it
+> > is architected for this purpose.
+> 
+> Unfortunately there is now real hardware out there that needs this due
+> to firmware bugs / missing features, so there's little other choice.
+> :(
+
+Indeed :(
+
+> 
+> I'll pick this patch up in the fixes branch for 3.12, unless someone
+> complains loudly.
+
+Could you please add a note to the dts regarding why we actually need
+this? It would be nice to maintain the impression that this is not the
+preferred way of doing things...
+
+Cheers,
+Mark.
