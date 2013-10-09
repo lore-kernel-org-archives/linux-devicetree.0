@@ -1,30 +1,42 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 4/5] clk: tegra124: Add new peripheral clocks
-Date: Wed, 09 Oct 2013 10:00:18 -0600
-Message-ID: <52557D92.9050200@wwwdotorg.org>
-References: <1380878014-22088-1-git-send-email-pdeschrijver@nvidia.com> <1380878014-22088-5-git-send-email-pdeschrijver@nvidia.com> <525487C7.6080103@wwwdotorg.org> <20131009081123.GB3973@tbergstrom-lnx.Nvidia.com>
+From: Theodore Ts'o <tytso@mit.edu>
+Subject: Re: [PATCH 0/2] Add support for Qualcomm's PRNG
+Date: Wed, 9 Oct 2013 12:03:38 -0400
+Message-ID: <20131009160338.GD1198@thunk.org>
+References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com>
+ <20131003165130.GA11974@thunk.org>
+ <524EEB96.6040707@mm-sol.com>
+ <20131004181005.GA7022@thunk.org>
+ <52556C4E.9000604@mm-sol.com>
+ <52557137.5050200@zytor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20131009081123.GB3973-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52557137.5050200@zytor.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.hengli.com.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2013 02:11 AM, Peter De Schrijver wrote:
-> On Wed, Oct 09, 2013 at 12:31:35AM +0200, Stephen Warren wrote:
->> On 10/04/2013 03:12 AM, Peter De Schrijver wrote:
->>> Tegra124 introduces a number of new peripheral clocks. This patch adds those
->>> to the common peripheral clock code.
->>
->> Don't you need to add AFC[0..5] in this patch and/or patch 5?
-> 
-> AFC[0..5] are reset only nodes afaik. Up to now, we haven't done that.
-> The goal is to include them once we move to the reset framework.
+On Wed, Oct 09, 2013 at 08:07:35AM -0700, H. Peter Anvin wrote:
+> There needs to be an architecturally guaranteed lower bound on the
+> entropic content for this to be at all useful.  However, the hwrandom
+> interface is currently expecting fully entropic output (which is almost
+> certainly bogus... consider the PowerPC random number generator[1]) and
+> so using it for a PRNG output is directly wrong.  
 
-No, we've always added clock entries for all reset-only clocks into the
-clock driver. Since the port to the reset framework is not available
-yet, we need to continue to do this. Otherwise, we won't be able to
-upstream audio support.
+You can specify as a command-line argument (-H) to rngd the entropy
+per bit of input data.  So if you think an entropy source isn't great,
+but has some uncertainty, you could do pass to rngd "-H 0.5" or maybe
+even "-H 0.1".
+
+Maybe it would be nice to have /dev/hwrandom export the quality of its
+output, but the reality is that most hardware devices don't document
+or export via some programmatic interface how well or how poorly their
+hwrng really might be.  And even if they did, most people, who don't
+have access to scanning electronic microscopes and nanometer probes,
+and the ability to decrypt, reverse engineer, and decompile firmware,
+couldn't know for sure whether or not to believe the claims of the
+hardware or the hardware manufacturer anyway.
+
+							- Ted
