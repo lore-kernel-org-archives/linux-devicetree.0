@@ -1,83 +1,74 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH 1/6] ARM: at91: prepare sama5 dt boards transition to
- common clk
-Date: Wed, 9 Oct 2013 15:04:21 +0200
-Message-ID: <52555455.7080605@atmel.com>
-References: <1375951572-10829-1-git-send-email-b.brezillon@overkiz.com> <1375953654-11168-1-git-send-email-b.brezillon@overkiz.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/6] ARM: at91: prepare common clk transition for sama5d3
+ SoC
+Date: Wed, 9 Oct 2013 15:05:32 +0200
+Message-ID: <5255549C.4050009@atmel.com>
+References: <1375951572-10829-1-git-send-email-b.brezillon@overkiz.com> <1375953690-11207-1-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1375953654-11168-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>, Russell King <linux@arm.linux.org.uk>, Andrew Victor <linux@maxim.org.za>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1375953690-11207-1-git-send-email-b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/08/2013 11:20, Boris BREZILLON :
-> This patch prepare the transition to common clk for sama5 dt boards by
-> replacing the timer init callback.
+On 08/08/2013 11:21, Boris BREZILLON :
+> This patch enclose sama5d3 old clk registration in
+> "#if defined(CONFIG_OLD_CLK_AT91) #endif" sections.
 >
-> Clocks registration cannot be done in early init callback (as formerly done
-> by the old clk implementation) because it requires dynamic allocation
-> which is not ready yet during early init.
->
-> In the other hand, at91 clocks must be registered before
-> at91sam926x_pit_init is called because PIT (Periodic Interval Timer) driver
-> request the master clk (mck).
->
-> A new function (at91sama5_dt_timer_init) is created to fullfil these needs.
-> This function registers all at91 clks using the dt definition before
-> calling the PIT init function.
-> The device tree clock registration is enabled only if common clk is
-> selected. Else the old clk registration is been done during
-> at91_dt_initialize call.
->
-> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+> Signed-off-by: Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
 
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+And... do not forget to remove completely the code when transition is 
+done (ie: in "[PATCH 6/6] ARM: at91/dt: remove old main clk definition 
+from sama5d3xcm.dtsi").
+
 
 > ---
->   arch/arm/mach-at91/board-dt-sama5.c |   10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
+>   arch/arm/mach-at91/sama5d3.c |    6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
 >
-> diff --git a/arch/arm/mach-at91/board-dt-sama5.c b/arch/arm/mach-at91/board-dt-sama5.c
-> index ad95f6a..10b6913 100644
-> --- a/arch/arm/mach-at91/board-dt-sama5.c
-> +++ b/arch/arm/mach-at91/board-dt-sama5.c
-> @@ -16,6 +16,7 @@
->   #include <linux/of_irq.h>
->   #include <linux/of_platform.h>
->   #include <linux/phy.h>
-> +#include <linux/clk-provider.h>
+> diff --git a/arch/arm/mach-at91/sama5d3.c b/arch/arm/mach-at91/sama5d3.c
+> index 0003949..3426098 100644
+> --- a/arch/arm/mach-at91/sama5d3.c
+> +++ b/arch/arm/mach-at91/sama5d3.c
+> @@ -19,9 +19,10 @@
 >
->   #include <asm/setup.h>
->   #include <asm/irq.h>
-> @@ -26,6 +27,13 @@
->   #include "at91_aic.h"
+>   #include "soc.h"
 >   #include "generic.h"
+> -#include "clock.h"
+>   #include "sam9_smc.h"
 >
-> +static void __init sama5_dt_timer_init(void)
-> +{
-> +#if defined(CONFIG_COMMON_CLK)
-> +	of_clk_init(NULL);
+> +#if defined(CONFIG_OLD_CLK_AT91)
+> +#include "clock.h"
+>   /* --------------------------------------------------------------------
+>    *  Clocks
+>    * -------------------------------------------------------------------- */
+> @@ -361,6 +362,7 @@ static void __init sama5d3_register_clocks(void)
+>   	clk_register(&pck1);
+>   	clk_register(&pck2);
+>   }
 > +#endif
-> +	at91sam926x_pit_init();
-> +}
 >
->   static const struct of_device_id irq_of_match[] __initconst = {
+>   /* --------------------------------------------------------------------
+>    *  AT91SAM9x5 processor initialization
+> @@ -373,5 +375,7 @@ static void __init sama5d3_map_io(void)
 >
-> @@ -77,7 +85,7 @@ static const char *sama5_dt_board_compat[] __initdata = {
->
->   DT_MACHINE_START(sama5_dt, "Atmel SAMA5 (Device Tree)")
->   	/* Maintainer: Atmel */
-> -	.init_time	= at91sam926x_pit_init,
-> +	.init_time	= sama5_dt_timer_init,
->   	.map_io		= at91_map_io,
->   	.handle_irq	= at91_aic5_handle_irq,
->   	.init_early	= at91_dt_initialize,
+>   AT91_SOC_START(sama5d3)
+>   	.map_io = sama5d3_map_io,
+> +#if defined(CONFIG_OLD_CLK_AT91)
+>   	.register_clocks = sama5d3_register_clocks,
+> +#endif
+>   AT91_SOC_END
 >
 
 
 -- 
 Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
