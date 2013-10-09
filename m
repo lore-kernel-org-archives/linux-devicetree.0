@@ -1,62 +1,76 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v2 3/3] ARM: shmobile: kzm9d: Use common clock framework
-Date: Wed, 9 Oct 2013 13:59:46 +0900
-Message-ID: <CANqRtoQs+31mv0ZULOd3SGshkBkvp-kGoaVOSb10+Ncdp+WNXw@mail.gmail.com>
-References: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
-	<20131008143403.c11f294c8a1701a2ab3bc5fd@ops.dti.ne.jp>
-	<20131009034057.GO15065@verge.net.au>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH V3] PCI: exynos: add support for MSI
+Date: Wed, 09 Oct 2013 14:07:36 +0900
+Message-ID: <000001cec4ad$78640450$692c0cf0$%han@samsung.com>
+References: <001a01ceaace$013ec980$03bc5c80$%han@samsung.com>
+ <5253A4DA.7090306@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20131009034057.GO15065@verge.net.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: takasi-y@ops.dti.ne.jp, SH-Linux <linux-sh@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5253A4DA.7090306@ti.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Kishon Vijay Abraham I' <kishon@ti.com>
+Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Tuesday, October 08, 2013 3:23 PM, Kishon Vijay Abraham I wrote:
+> On Friday 06 September 2013 12:24 PM, Jingoo Han wrote:
+> > This patch adds support for Message Signaled Interrupt in the
+> > Exynos PCIe diver using Synopsys designware PCIe core IP.
+> >
+> > Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
+> > Signed-off-by: Srikanth T Shivanand <ts.srikanth@samsung.com>
+> > Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+> > Cc: Pratyush Anand <pratyush.anand@st.com>
+> > Cc: Mohit KUMAR <Mohit.KUMAR@st.com>
+> > ---
 
-On Wed, Oct 9, 2013 at 12:40 PM, Simon Horman <horms@verge.net.au> wrote:
-> On Tue, Oct 08, 2013 at 02:34:03PM +0900, takasi-y@ops.dti.ne.jp wrote:
->> Use common clock framework version of clock
->>  drivers/clk/shmobile/clk-emev2.c
->> instead of sh-clkfwk version
->>  arch/arm/mach-shmobile/clock-emev2.c
->> when it is configured as a part of multi-platform.
->>
->> Signed-off-by: Takashi Yoshii <takasi-y@ops.dti.ne.jp>
->
-> Thanks.
->
-> I plan to add this patch to a new topic branch,
-> topic/emev2-common-clock, in the renesas tree and
-> queue it up from there for inclusion in mainline
-> if/when the first patch of this series is accepted
-> by Mike Turquette.
+[.....]
 
-Thanks for picking up patches, Simon.
+> >  int __init dw_pcie_host_init(struct pcie_port *pp)
+> >  {
+> >  	struct device_node *np = pp->dev->of_node;
+> > @@ -157,6 +372,8 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+> >  	struct of_pci_range_parser parser;
+> >  	u32 val;
+> >
+> > +	struct irq_domain *irq_domain;
+> > +
+> >  	if (of_pci_range_parser_init(&parser, np)) {
+> >  		dev_err(pp->dev, "missing ranges property\n");
+> >  		return -EINVAL;
+> > @@ -223,6 +440,18 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+> >  		return -EINVAL;
+> >  	}
+> >
+> > +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> > +		irq_domain = irq_domain_add_linear(pp->dev->of_node,
+> > +					MAX_MSI_IRQS, &msi_domain_ops,
+> > +					&dw_pcie_msi_chip);
+> > +		if (!irq_domain) {
+> > +			dev_err(pp->dev, "irq domain init failed\n");
+> > +			return -ENXIO;
+> > +		}
+> > +
+> > +		pp->msi_irq_start = irq_find_mapping(irq_domain, 0);
+> 
+> Where is the irq_create_mapping done for this irq domain? Is that not needed?
+> Without that I'm not getting the correct irq number.
 
-I think you can simply merge this patch after the following series:
+Oh, you're right.
+irq_create_mapping() is necessary!
 
-[PATCH 00/05] ARM: shmobile: KZM9D Multiplatform update
+Without irq_create_mapping(), it makes the ugly NULL deference
+when two PCIe controllers are used on Exynos5440.
+It is my mistake.
 
-There are no build time dependencies on patch 1 and 2 so this patch
-can be merged independently. Regarding run-time operation, the
-multiplatform series above makes KZM9D DT reference only build for
-multiplatform, and in such case CCF is required.
+I will add irq_create_mapping() to dw_msi_setup_irq(), as tegra PCIe driver
+did. I will send the patch, soon.
 
-So if you want to keep KZM9D DT reference working until Mike Turquette
-accepts the CCF bits, then I recommend you to wait with "[PATCH 00/05]
-ARM: shmobile: KZM9D Multiplatform update" until all EMEV2 CCF bits
-have been merged.
+I really appreciate your comment. :-)
+Thank you.
 
-Another way is to merge "[PATCH 00/05] ARM: shmobile: KZM9D
-Multiplatform update" before the EMEV2 CCF bits, but if so you may as
-well merge this patch as well IMO. This
-multiplatform-update-series-merge-before-CCF plan will result in
-untestable KZM9D DT reference until EMEV2 CCF is merged. Either way is
-fine with me.
-
-Cheers,
-
-/ magnus
+Best regards,
+Jingoo Han
