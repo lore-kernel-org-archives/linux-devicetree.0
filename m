@@ -1,111 +1,49 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v4.2 09/10] ARM/dts: am335x-evm: Add audio support for am335x-evm.dts
-Date: Wed, 9 Oct 2013 17:32:54 +0300
-Message-ID: <1381329174-9556-1-git-send-email-jsarha@ti.com>
-References: <1381322701-8851-1-git-send-email-jsarha@ti.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH 0/2] Add support for Qualcomm's PRNG
+Date: Wed, 09 Oct 2013 17:46:38 +0300
+Message-ID: <52556C4E.9000604@mm-sol.com>
+References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <20131003165130.GA11974@thunk.org> <524EEB96.6040707@mm-sol.com> <20131004181005.GA7022@thunk.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381322701-8851-1-git-send-email-jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, broonie@kernel.org, mark.rutland@arm.com, joelf@ti.com, Darren Etheridge <detheridge@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Jyri Sarha <jsarha@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131004181005.GA7022@thunk.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Theodore Ts'o <tytso@mit.edu>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.hengli.com.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Darren Etheridge <detheridge@ti.com>
+Hi Ted,
 
-Adds sound, tlv320aic3106, mcasp1, and am335x_evm_audio_pin nodes.
+On 10/04/2013 09:10 PM, Theodore Ts'o wrote:
+> On Fri, Oct 04, 2013 at 07:23:50PM +0300, Stanimir Varbanov wrote:
+>> I guess that it should follow NIST 800-90 recommendation, but I'm not
+>> aware what DRBG mechanism is used.
+>>
+>> To be honest I really don't know the hardware implementation details. I
+>> put PRNG abbreviation in the cover letter just because I saw that
+>> defines for register offsets are prefixed with PRNG_*. I could rename
+>> all occurrences of PRNG to RNG. Is that will be enough to avoid confusions?
+> 
+> If that's what the Qualcomm documentation uses, maybe we should stick
+> with it, and add some explanatory comments.  Is there any
+> documentation for this block that is public that you can either send
+> me a a pointer to?
 
-Signed-off-by: Darren Etheridge <detheridge@ti.com>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- arch/arm/boot/dts/am335x-evm.dts |   51 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+No, there is no public documentation for the block. Here is the driver
+documentation which I used as a base [1].
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index e8ec875..814b3e9 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -149,6 +149,16 @@
- 				0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
- 			>;
- 		};
-+
-+		am335x_evm_audio_pins: am335x_evm_audio_pins {
-+			pinctrl-single,pins = <
-+				0x10c (PIN_INPUT_PULLDOWN | MUX_MODE4) /* mii1_rx_dv.mcasp1_aclkx */
-+				0x110 (PIN_INPUT_PULLDOWN | MUX_MODE4) /* mii1_txd3.mcasp1_fsx */
-+				0x108 (PIN_OUTPUT_PULLDOWN | MUX_MODE4) /* mii1_col.mcasp1_axr2 */
-+				0x144 (PIN_INPUT_PULLDOWN | MUX_MODE4) /* rmii1_ref_clk.mcasp1_axr3 */
-+			>;
-+		};
-+
- 	};
- 
- 	ocp {
-@@ -244,6 +254,18 @@
- 				compatible = "ti,tmp275";
- 				reg = <0x48>;
- 			};
-+
-+			tlv320aic3106: tlv320aic3106@1b {
-+				compatible = "ti,tlv320aic3106";
-+				reg = <0x1b>;
-+				status = "okay";
-+
-+				/* Regulators */
-+				AVDD-supply = <&vaux2_reg>;
-+				IOVDD-supply = <&vaux2_reg>;
-+				DRVDD-supply = <&vaux2_reg>;
-+				DVDD-supply = <&vbat>;
-+			};
- 		};
- 
- 		elm: elm@48080000 {
-@@ -340,6 +362,19 @@
- 				};
- 			};
- 		};
-+
-+		sound {
-+			compatible = "ti,da830-evm-audio";
-+			ti,model = "AM335x-EVM";
-+			ti,audio-codec = <&tlv320aic3106>;
-+			ti,mcasp-controller = <&mcasp1>;
-+			ti,codec-clock-rate = <12000000>;
-+			ti,audio-routing =
-+				"Headphone Jack",       "HPLOUT",
-+				"Headphone Jack",       "HPROUT",
-+				"LINE1L",               "Line In",
-+				"LINE1R",               "Line In";
-+		};
- 	};
- 
- 	vbat: fixedregulator@0 {
-@@ -407,6 +442,22 @@
- 
- #include "tps65910.dtsi"
- 
-+&mcasp1 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&am335x_evm_audio_pins>;
-+
-+		status = "okay";
-+
-+		op-mode = <0>;          /* MCASP_IIS_MODE */
-+		tdm-slots = <2>;
-+		/* 4 serializers */
-+		serial-dir = <  /* 0: INACTIVE, 1: TX, 2: RX */
-+			0 0 1 2
-+		>;
-+		tx-num-evt = <1>;
-+		rx-num-evt = <1>;
-+};
-+
- &tps {
- 	vcc1-supply = <&vbat>;
- 	vcc2-supply = <&vbat>;
--- 
-1.7.9.5
+My guess was that - if it is PRNG (got from hardware description link
+above) than according to wiki [2] it is also known as a deterministic
+random bit generator (DRBG). The recommendation for RNG using DRBG is
+NIST 800-90.
 
+Of course I could be wrong, so I can add a comment that this is just a
+guess and we shouldn't over-reliance on this.
+
+regards,
+Stan
+
+[1]
+https://www.codeaurora.org/cgit/quic/la/kernel/msm/tree/Documentation/arm/msm/msm_rng-driver.txt?h=jb_3.2.1
+
+[2] http://en.wikipedia.org/wiki/Pseudorandom_number_generator
