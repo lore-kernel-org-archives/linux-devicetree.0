@@ -1,146 +1,70 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv2 2/9] hwspinlock/omap: add support for dt nodes
-Date: Wed, 9 Oct 2013 22:46:38 +0100
-Message-ID: <20131009214638.GB2322@kartoffel>
-References: <cover.1379445653.git.s-anna@ti.com>
- <0fd6a11880894260d627a50b1e35f363625e9b1d.1379445653.git.s-anna@ti.com>
- <AE597DCC-83D7-4BCD-8990-3D63540F32EA@codeaurora.org>
- <20131001084015.GH22259@e106331-lin.cambridge.arm.com>
- <524CEE9F.8060407@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] ARM: dts: Update arch timer node with clock frequency
+Date: Wed, 9 Oct 2013 16:48:32 -0500
+Message-ID: <CAL_JsqK5C6N6vYMp=yR-Qi3oKZZrp07SYZaWmv4c23gsq-zxnA@mail.gmail.com>
+References: <1379499113-20342-1-git-send-email-yuvaraj.cd@samsung.com>
+	<3887347.Oxs1qQnt5k@flatron>
+	<20130923141504.GD16069@e106331-lin.cambridge.arm.com>
+	<CAOesGMgaDB0ZK7LU+vZmXkpTXaMKbuNgT+vuaRbzypwtZ9eouA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <524CEE9F.8060407-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMgaDB0ZK7LU+vZmXkpTXaMKbuNgT+vuaRbzypwtZ9eouA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Marc Zyngier <marc.zyngier@arm.com>, Tony Lindgren <tony@atomide.com>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 03, 2013 at 05:12:15AM +0100, Suman Anna wrote:
-> Hi Mark,
-> 
-> > On Fri, Sep 27, 2013 at 05:06:38PM +0100, Kumar Gala wrote:
-> >>
-> >> On Sep 17, 2013, at 2:30 PM, Suman Anna wrote:
-> >>
-> >>> HwSpinlock IP is present only on OMAP4 and other newer SoCs,
-> >>> which are all device-tree boot only. This patch adds the
-> >>> base support for parsing the DT nodes, and removes the code
-> >>> dealing with the traditional platform device instantiation.
-> >>>
-> >>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> >>> ---
-> >>> .../devicetree/bindings/hwlock/omap-hwspinlock.txt | 31 +++++++++++
-> >>> arch/arm/mach-omap2/Makefile                       |  3 --
-> >>> arch/arm/mach-omap2/hwspinlock.c                   | 60 ----------------------
-> >>> drivers/hwspinlock/omap_hwspinlock.c               | 23 +++++++--
-> >>> 4 files changed, 50 insertions(+), 67 deletions(-)
-> >>> create mode 100644 Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
-> >>> delete mode 100644 arch/arm/mach-omap2/hwspinlock.c
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
-> >>> new file mode 100644
-> >>> index 0000000..235b7c5
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/hwlock/omap-hwspinlock.txt
-> >>> @@ -0,0 +1,31 @@
-> >>> +OMAP4+ HwSpinlock Driver
-> >>> +========================
-> >>> +
-> >>> +Required properties:
-> >>> +- compatible:		Currently supports only "ti,omap4-hwspinlock" for
-> >>> +				OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
-> > 
-> > "Currently supports" is not something I expect to see in a binding
-> > document. That sounds like a description of the driver rather than the
-> > binding.
-> > 
-> > How similar are these hardware modules? What are the differences?
-> 
-> The IP is almost the same, they all have the same revision id. The
-> number of locks (each represented by a register) though vary from one
-> SoC to another (OMAP4, OMAP5, DRA7 have same number of locks, and
-> AM33xx/AM43xx have a different number). The number of locks is directly
-> read by the driver from a module register. There is no separate .data
-> associated with the of_device_id table, so I used a single compatible
-> property for all the SoCs.
+On Tue, Oct 8, 2013 at 5:15 PM, Olof Johansson <olof@lixom.net> wrote:
+> [Adding Tony, who reported a mainline booting issue, and Sean who
+> helped me track this down]
+>
+> On Mon, Sep 23, 2013 at 7:15 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> On Sat, Sep 21, 2013 at 04:24:59PM +0100, Tomasz Figa wrote:
+>>> Hi Yuvaraj,
+>>>
+>>> On Wednesday 18 of September 2013 15:41:53 Yuvaraj Kumar C D wrote:
+>>> > Without the "clock-frequency" property in arch timer node, could able
+>>> > to see the below crash dump.
+>>> [snip]
+>>> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+>>> > b/arch/arm/boot/dts/exynos5250.dtsi index 7d7cc77..668ce5d 100644
+>>> > --- a/arch/arm/boot/dts/exynos5250.dtsi
+>>> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>>> > @@ -96,6 +96,7 @@
+>>> >                          <1 14 0xf08>,
+>>> >                          <1 11 0xf08>,
+>>> >                          <1 10 0xf08>;
+>>> > +           clock-frequency = <24000000>;
+>>>
+>>> Shouldn't it rather come from some clock provided by some clock controller
+>>> instead?
+>>>
+>>> The frequency would be then retrieved using clk_get_rate() on a clock
+>>> received by clk_get(), specified in device tree using generic clock
+>>> bindings.
+>>
+>> If the bootloader has initialised the generic timer correctly, the
+>> CNTFRQ register should contain the clock frequency, independent of any
+>> external clock.
+>
+> So, we just sat here to bisect a problem on the Samsung Chromebook
+> where we hit exactly this problem. The read-only firmware on the
+> device does not set CNTFRQ at boot, so this fails.
+>
+> Apparantly the u-boot that comes with Arndale sets it, so I haven't
+> seen this error on that platform.
+>
+>> Having the bootloader set CNTFRQ is by far the preferable solution, it
+>> is architected for this purpose.
+>
+> Unfortunately there is now real hardware out there that needs this due
+> to firmware bugs / missing features, so there's little other choice.
+> :(
+>
+> I'll pick this patch up in the fixes branch for 3.12, unless someone
+> complains loudly.
 
-Ok. Probeability is good, it keeps these simpler :)
+Perhaps the subject should say something about this only applying to exynos.
 
-I think This can be reworded to say "should contain" rather than "currently
-supports only":
-
-- compatible:		Should contain "ti,omap4-hwspinlock" for
-			OMAP44xx, OMAP54xx, AM33xx, AM43xx, or DRA7xx SoCs
-
-That way the binding allows for a future backwards-compatible variant, and
-doesn't mention the current level of support in Linux.
-
-> 
-> > 
-> >>> +- reg:			Contains the hwspinlock register address range (base
-> >>> +			address and length)
-> > 
-> > Is there only one register bank for the hwlock module?
-> 
-> The lock registers start at a certain offset (0x800) within the module
-> register space, and the offsets for various registers are identical
-> between all SoCs.
-
-What are the other registers within the module? Are they shared with other
-devices, or are they simply unused by the hwspinlock driver?
-
-> 
-> > 
-> >>> +- ti,hwmods:		Name of the hwmod associated with the hwspinlock device
-> >>> +
-> >>> +Common hwlock properties:
-> >>> +The following describes the usage of the common hwlock properties (defined in
-> >>> +Documentation/devicetree/bindings/hwlock/hwlock.txt) on OMAP.
-> >>> +
-> >>> +- hwlock-base-id:	There are currently no OMAP SoCs with multiple
-> >>> +			hwspinlock devices. The OMAP driver uses a default
-> >>> +			base id value of 0 for the locks present within the
-> >>> +			single hwspinlock device on all SoCs.
-> > 
-> > 
-> > Driver details should not leak into bindngs...
-> 
-> OK, will remove the info on driver details.
-> 
-> > 
-> > As mentioned in the other patch, I don't think this is the way to handle
-> > this. I think we need a phandle + args representation.
-> 
-> This is an optional parameter for now and I was going to revise the
-> description based on comments from Kumar Gala on this thread, but I will
-> wait and adjust this based on the outcome on the first patch.
-
-Ok.
-
-> 
-> > 
-> >>> +- hwlock-num-locks:	This property is not required on OMAP SoCs, since the
-> >>> +			number of locks present within a device can be deduced
-> >>> +			from the SPINLOCK_SYSSTATUS device register.
-> > 
-> > Huh? Why define this property at all here if we don't need it and don't
-> > use it?
-> > 
-> > The common document should state that specific bindings may use it and
-> > should explicitly state if they do, rather than stating they don't...
-> 
-> Yeah, I wasn't sure how to go about the split between the common file
-> and the platform-specific bindings. I will clean this up and revise the
-> common bindings.
-
-Ok.
-
-Cheers,
-Mark.
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
