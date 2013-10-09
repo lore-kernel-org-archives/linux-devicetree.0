@@ -1,54 +1,47 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2 1/2] ARM: dts: dra7-evm: Add mmc1 node for micro-sd
- support
-Date: Wed, 9 Oct 2013 08:14:40 -0500
-Message-ID: <525556C0.1060100@ti.com>
-References: <1381163104-6318-1-git-send-email-balajitk@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ARM: Dove: Add the audio device to the Cubox DT
+Date: Wed, 9 Oct 2013 09:21:49 -0400
+Message-ID: <20131009132149.GA5402@titan.lakedaemon.net>
+References: <20131008194232.7d74b9e6@armhf>
+ <525448DE.5030004@gmail.com>
+ <20131008181647.GW5402@titan.lakedaemon.net>
+ <20131008205617.079142b6@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381163104-6318-1-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>, bcousson@baylibre.com, devicetree@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, tony@atomide.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20131008205617.079142b6@armhf>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2013 11:25 AM, Balaji T K wrote:
-> Add mmc1 dt node to dra7-evm board.
-> Input for ldo1 regulator is controlled by gpio 5 of pcf8575 chip (0x21)
-> on i2c1 bus. When dt support for gpio-pcf857x is available, input supply
-> will be modelled as cascaded regulator.
+On Tue, Oct 08, 2013 at 08:56:17PM +0200, Jean-Francois Moine wrote:
+> This patch activates the audio device of the Cubox.
 > 
-> Signed-off-by: Balaji T K <balajitk@ti.com>
+> The audio flow (pin mpp_audio1) is output on both I2S and S/PDIF.
+> 
+> The third si5351 clock (#2, pin mpp13) is used as the external clock.
+> 
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
 > ---
-> Rebase to for_3.13/dts
+> Jason,
 > 
->  arch/arm/boot/dts/dra7-evm.dts |    6 ++++++
->  1 files changed, 6 insertions(+), 0 deletions(-)
+> this patch replaces the previous patch v2 2/2
 > 
-> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-> index fbbe406..65cd15a 100644
-> --- a/arch/arm/boot/dts/dra7-evm.dts
-> +++ b/arch/arm/boot/dts/dra7-evm.dts
-> @@ -250,3 +250,9 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&uart3_pins>;
->  };
-> +
-> +&mmc1 {
-> +	status = "okay";
-> +	vmmc-supply = <&ldo1_reg>;
-> +	bus-width = <4>;
-> +};
-> 
-boot tested on DRA7-EVM
-voltage rail is correct based on schematics(rev d1) too
-(LDO1->MMC1_3V3->SDcard).
+> v3:
+> - move the pins declaration to dove.dtsi (Sebastian Hesselbarth)
+> ---
+>  arch/arm/boot/dts/dove.dtsi      | 10 ++++++++++
+>  arch/arm/boot/dts/dove-cubox.dts |  8 ++++++++
+>  2 files changed, 18 insertions(+)
 
-Reviewed-by: Nishanth Menon <nm@ti.com>
-Tested-by: Nishanth Menon <nm@ti.com>
+Applied to mvebu/dt with Sebastian's Ack
 
--- 
-Regards,
-Nishanth Menon
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
