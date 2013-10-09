@@ -1,37 +1,65 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv2 4/9] ARM: OMAP5: hwmod data: Add spinlock data
-Date: Wed, 9 Oct 2013 12:49:03 -0500
-Message-ID: <5255970F.1060307@ti.com>
-References: <cover.1379445653.git.s-anna@ti.com> <9812d9a19f9a52021dcae4b4fef50f10f2c21202.1379445653.git.s-anna@ti.com> <alpine.DEB.2.02.1310090712440.30199@utopia.booyaka.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/5] drm/bridge: Add PTN3460 bridge driver
+Date: Wed, 9 Oct 2013 19:29:05 +0100
+Message-ID: <20131009182905.GY21581@sirena.org.uk>
+References: <1380670860-17621-1-git-send-email-seanpaul@chromium.org>
+ <1380670860-17621-4-git-send-email-seanpaul@chromium.org>
+ <CAAQKjZN_r-=-sj=Vb-o-KUS4ab5=cjCq1ni3VZeMeVc3NL=MMg@mail.gmail.com>
+ <CAOw6vbLiJLLKn=gb1=j5TBeM0ijEK13+goG-=mw7MZTyNT1kpQ@mail.gmail.com>
+ <CAAQKjZPwyKCpju4Ndd+MB_aN24-zA5xTHFsFsun2617h7YT6dw@mail.gmail.com>
+ <CAOesGMgKastzdFHYQzyL8gxkBN=86wFZ4jbgP8BHxfkOuZvJxg@mail.gmail.com>
+ <CAAQKjZMhovKLxNfnXnbF-6diM2zF1cWyi+xHGyL3v83vBh4p6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1310090712440.30199-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RJZzeD23Ed8sO2FB"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAQKjZMhovKLxNfnXnbF-6diM2zF1cWyi+xHGyL3v83vBh4p6g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Olof Johansson <olof@lixom.net>, Sean Paul <seanpaul@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2013 02:12 AM, Paul Walmsley wrote:
-> On Tue, 17 Sep 2013, Suman Anna wrote:
-> 
->> Add the hwmod data for the spinlock IP in OMAP5 SoC.
->> This is needed to be able to enable the OMAP spinlock
->> support for OMAP5.
->>
->> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> 
-> Thanks, queued.  You can omit this one from future reposts of this series.
-> 
 
-Thanks. I will be reposting the series (soon), and will omit this patch
-and the AM335 sysc patch in the repost.
+--RJZzeD23Ed8sO2FB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-regards
-Suman
+On Fri, Oct 04, 2013 at 11:05:48AM +0900, Inki Dae wrote:
+> 2013/10/4 Olof Johansson <olof@lixom.net>:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > "If PD_N is LOW, then the device is in Deep power-down completely,
+> > even if supply rail is ON; for the device to be able to operate, the
+> > PD_N pin must be HIGH."
+
+> I still think the pin could be replaced with a regulator. But
+> lvds-bridge node has "powerdown-gpio" property - it say this board
+> will use gpio pin - specific to board.  So it seems no problem.
+
+No, don't model things that aren't regulators as regulators - it's just
+confusing from a usability standpoint and causes breakage when the pins
+don't behave like regulators.
+
+--RJZzeD23Ed8sO2FB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSVaBuAAoJELSic+t+oim9t9YP/2zdxi1e2TqVNIcxbbSYUvWy
+LySnpmymlG/Sh3k86KJwkDd+2X7kq8xm8T2hfx6SgKPw/hNFBfMvJc5rh7r0Z9d0
+Jb+kpEVEDNaLpZBHN9HN6yejQ3aMoy1NEIgkGlqmGNUG8NQmNq0nDBCmTysGpoA0
+xes+miLMs5WXRK/kpA2r/J9FnOEhlNxM5i8budaqcbJAeLRTo3ePqavTW9AGPXWH
+TLruZFFu71/UgLMDRYny42lOCdcagNZJn6/gDNEvreIaObDSZJ7kxHO41/F/to45
+gEskdwyzgfZ25M+I7pMuFlIzaBWsGtjQlSc7PVJcplCVd7KOTvtfsN+FeOzhHVHr
+s5oVn6q+kO97Hg1Al1B49wRtQFban0K42ZD717iV4nUEnMmeVlqdSz5AvjSvUK5g
+Pc52RRManESWdaSB+R3/1ZctPQZxGZMy+fCjl51+3dfJnfsWUhxE4YJBkp4hNz9v
+ooEVBPASa8VdD/KqObGyQzP74SpPuKHRfNRbSVf84I0TY0oERn/rS/xxJo2uhqWv
+8dhkS3RzfJqxVtEHSLQxbgRgKcN2vfGTb6X/VVyikA6vyfR0luvUYbu/qK3g/9ux
+JRS6HeZtkZLBN4FT08Mj46zPJMrqFSHfalXI8jY+oxPJwbLx5WifbvhlakjvjMKP
+jtx5H7T/C1tB5SGc9y3f
+=GFIi
+-----END PGP SIGNATURE-----
+
+--RJZzeD23Ed8sO2FB--
