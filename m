@@ -1,128 +1,71 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 1/3 v4] thermal: samsung: correct the fall interrupt en,
- status bit fields
-Date: Wed, 09 Oct 2013 16:03:54 +0200
-Message-ID: <2386580.3V2pzai3k2@amdc1032>
-References: <1378268629-2886-3-git-send-email-ch.naveen@samsung.com>
- <1381320509-23967-1-git-send-email-ch.naveen@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: phandle entries will be applied sequentially
+Date: Wed, 9 Oct 2013 16:14:15 +0200
+Message-ID: <CACRpkdaZra5HASUzL4uUb-xgCY665SQmDMHmxrDQzuNDy=mBbQ@mail.gmail.com>
+References: <1381297324-19006-1-git-send-email-shawn.guo@linaro.org>
+	<CACRpkdazPK6SNg9PdWCrjB8nwho1rCueumJWAN=STXdN1zNnMA@mail.gmail.com>
+	<20131009124425.GG25034@n2100.arm.linux.org.uk>
+	<CACRpkda3J4cCTnFaQFrmZ=box6EeJ8WQZpuQpi2p_BFX+W2vuw@mail.gmail.com>
+	<20131009134529.GH25034@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1381320509-23967-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: linux-pm@vger.kernel.org, naveenkrishna.ch@gmail.com, rui.zhang@intel.com, eduardo.valentin@ti.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, amit.daniel@samsung.com, kgene.kim@samsung.com, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20131009134529.GH25034-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 9, 2013 at 3:45 PM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
 
-Hi,
+> Right, so that means doing this:
+>
+>                         pinctrl_usdhc1_1: usdhc1grp-1 {
+>                                 fsl,pins = <
+> ...
+>                                         MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17059
+> ...
+>                                 >;
+>                         };
+>
+>                         pinctrl_usdhc1_1_dat3cd: usdhc1grp-3 {
+>                                 fsl,pins = <
+>                                         MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x13059
+>                                 >;
+>                         };
+>
+> and then:
+>
+>         pinctrl-0 = <&pinctrl_usdhc1_1 &pinctrl_usdhc1_1_dat3cd>;
+>
+> can result in either "MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17059" or
+> "MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x13059" being the final configuration
+> for that pin.
 
-All patches (#1-#3) look good to me, FWIW you can add:
+I'm uncertain about the device tree case. I guess it is indeed
+an array of handles indexed [0,1], the framework will only
+send that array down to the driver, no strings attached.
 
-	Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> What that means is that for any pinctrl setting, pins to be configured
+> must be mentioned exactly once and once only.
 
-Please note that (at least) patch #3 conflicts with Lukasz's EXYNOS4412
-fixup patchset:
+Either that (and the above does seem very ambigous) or the driver
+need to combine and handle the conflicting configurations,
+maintaining a state for the pin and so on ...
 
-	https://lkml.org/lkml/2013/10/9/35
+This seems like two *complete* configs fighting over the same pin
+rather than two complementary configs that we could | together
+and write, and that is indeed ambigous. The array passed to
+the config function is supposed to be individual settings like
+[ pull-up, schmitt-trigger ] not two complete sets of config.
 
-It is up to Eduardo to resolve this but it probably would be better to
-merge EXYNOS4412 fixes first and then add EXYNOS5420 support. This would
-require you to port patch #3 over Lukasz's patchset though.
+The generic pin config binding is luckily  more clear than this
+i.MX-specific handling.
 
-Best regards,
+Yours,
+Linus Walleij
 --
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
-On Wednesday, October 09, 2013 05:38:27 PM Naveen Krishna Chatradhi wrote:
-> The FALL interrupt related en, status bits are available at an offset of
-> 16 on INTEN, INTSTAT registers and at an offset of
-> 12 on INTCLEAR register.
-> 
-> This patch corrects the same for exyns5250 and exynos5440
-> 
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> ---
-> Changes since v1:
-> Changes since v2:
-> Changes since v3:
->   None
-> 
->  drivers/thermal/samsung/exynos_tmu.c      |    2 +-
->  drivers/thermal/samsung/exynos_tmu.h      |    2 ++
->  drivers/thermal/samsung/exynos_tmu_data.c |    2 ++
->  drivers/thermal/samsung/exynos_tmu_data.h |    3 ++-
->  4 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-> index b43afda..af69209 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.c
-> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> @@ -265,7 +265,7 @@ skip_calib_data:
->  				data->base + reg->threshold_th1);
->  
->  		writel((reg->inten_rise_mask << reg->inten_rise_shift) |
-> -			(reg->inten_fall_mask << reg->inten_fall_shift),
-> +			(reg->inten_fall_mask << reg->intclr_fall_shift),
->  				data->base + reg->tmu_intclear);
->  
->  		/* if last threshold limit is also present */
-> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
-> index b364c9e..7c6c34a 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.h
-> +++ b/drivers/thermal/samsung/exynos_tmu.h
-> @@ -134,6 +134,7 @@ enum soc_type {
->   * @inten_fall3_shift: shift bits of falling 3 interrupt bits.
->   * @tmu_intstat: Register containing the interrupt status values.
->   * @tmu_intclear: Register for clearing the raised interrupt status.
-> + * @intclr_fall_shift: shift bits for interrupt clear fall 0
->   * @emul_con: TMU emulation controller register.
->   * @emul_temp_shift: shift bits of emulation temperature.
->   * @emul_time_shift: shift bits of emulation time.
-> @@ -204,6 +205,7 @@ struct exynos_tmu_registers {
->  	u32	tmu_intstat;
->  
->  	u32	tmu_intclear;
-> +	u32	intclr_fall_shift;
->  
->  	u32	emul_con;
->  	u32	emul_temp_shift;
-> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
-> index 9002499..23fea23 100644
-> --- a/drivers/thermal/samsung/exynos_tmu_data.c
-> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
-> @@ -122,6 +122,7 @@ static const struct exynos_tmu_registers exynos5250_tmu_registers = {
->  	.inten_fall0_shift = EXYNOS_TMU_INTEN_FALL0_SHIFT,
->  	.tmu_intstat = EXYNOS_TMU_REG_INTSTAT,
->  	.tmu_intclear = EXYNOS_TMU_REG_INTCLEAR,
-> +	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
->  	.emul_con = EXYNOS_EMUL_CON,
->  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
->  	.emul_time_shift = EXYNOS_EMUL_TIME_SHIFT,
-> @@ -210,6 +211,7 @@ static const struct exynos_tmu_registers exynos5440_tmu_registers = {
->  	.inten_fall0_shift = EXYNOS5440_TMU_INTEN_FALL0_SHIFT,
->  	.tmu_intstat = EXYNOS5440_TMU_S0_7_IRQ,
->  	.tmu_intclear = EXYNOS5440_TMU_S0_7_IRQ,
-> +	.intclr_fall_shift = EXYNOS_TMU_CLEAR_FALL_INT_SHIFT,
->  	.tmu_irqstatus = EXYNOS5440_TMU_IRQ_STATUS,
->  	.emul_con = EXYNOS5440_TMU_S0_7_DEBUG,
->  	.emul_temp_shift = EXYNOS_EMUL_DATA_SHIFT,
-> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
-> index dc7feb5..8788a87 100644
-> --- a/drivers/thermal/samsung/exynos_tmu_data.h
-> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
-> @@ -69,9 +69,10 @@
->  #define EXYNOS_TMU_RISE_INT_MASK	0x111
->  #define EXYNOS_TMU_RISE_INT_SHIFT	0
->  #define EXYNOS_TMU_FALL_INT_MASK	0x111
-> -#define EXYNOS_TMU_FALL_INT_SHIFT	12
-> +#define EXYNOS_TMU_FALL_INT_SHIFT	16
->  #define EXYNOS_TMU_CLEAR_RISE_INT	0x111
->  #define EXYNOS_TMU_CLEAR_FALL_INT	(0x111 << 12)
-> +#define EXYNOS_TMU_CLEAR_FALL_INT_SHIFT	12
->  #define EXYNOS_TMU_TRIP_MODE_SHIFT	13
->  #define EXYNOS_TMU_TRIP_MODE_MASK	0x7
->  #define EXYNOS_TMU_THERM_TRIP_EN_SHIFT	12
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
