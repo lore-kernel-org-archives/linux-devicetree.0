@@ -1,53 +1,57 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: phandle entries will be applied sequentially
-Date: Wed, 9 Oct 2013 13:44:25 +0100
-Message-ID: <20131009124425.GG25034@n2100.arm.linux.org.uk>
-References: <1381297324-19006-1-git-send-email-shawn.guo@linaro.org> <CACRpkdazPK6SNg9PdWCrjB8nwho1rCueumJWAN=STXdN1zNnMA@mail.gmail.com>
+From: <y@dflp33.itg.ti.com>
+Subject: [PATCH v4.1 08/10] ARM/dts: am33xx: mcasp: Add location for data port registers to reg-property
+Date: Wed, 9 Oct 2013 15:44:34 +0300
+Message-ID: <32448.7835089259$1381322718@news.gmane.org>
+References: <525513F8.1040103@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdazPK6SNg9PdWCrjB8nwho1rCueumJWAN=STXdN1zNnMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <525513F8.1040103@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, broonie@kernel.org, mark.rutland@arm.com, joelf@ti.com, Jyri Sarha <jsarha@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, Darren Etheridge <detheridge@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2013 at 02:40:49PM +0200, Linus Walleij wrote:
-> NAK this this a Linux kernel implementation detail. Sherman Yin
-> fixed this up so the drivers does not have to imply any sequence
-> semantic for this.
-> 
-> Study commit 03b054e9696c3cbd3d5905ec96da15acd0a2fe8d
-> "pinctrl: Pass all configs to driver on pin_config_set()"
-> 
-> It is perfectly legal for a driver to accumulate the settings into
-> e.g. a single register write if it can, e.g.:
-> 
-> u32 val = 0;
-> 
-> for (i = 0; i < num_configs; i++) {
->   switch() {
->   FOO:
->      val |= 1;
->      break;
->    BAR:
->      val |= 2:
->      break;
->    BAZ:
->      val |=4;
->      break;
-> };
-> 
-> writel(val, base+pinreg);
-> 
-> I.e. the driver may choose to apply configs sequentially, but that is
-> not at all necessary.
+From: Jyri Sarha <jsarha@ti.com>
 
-So, just to be clear, what you're saying is that specifying two settings
-in a pinctrl declaration which provide different values results in
-undefined behaviour?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch adds a second tuple to reg property. The new property tuple
+describes the memory location for data port registers mapped trough
+L3 bus on am33xx. The both property tuples are named accordingly in
+the reg-names property.
+
+Signed-off-by: Hebbar, Gururaja <gururaja.hebbar@ti.com>
+Signed-off-by: Darren Etheridge <detheridge@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ arch/arm/boot/dts/am33xx.dtsi |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 22659e7..4a86762 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -671,7 +671,9 @@
+ 		mcasp0: mcasp@48038000 {
+ 			compatible = "ti,omap2-mcasp-audio";
+ 			ti,hwmods = "mcasp0";
+-			reg = <0x48038000 0x2000>;
++			reg = <0x48038000 0x2000>,
++			      <0x46000000 0x400000>;
++			reg-names = "mpu", "dat";
+ 			interrupts = <80>, <81>;
+ 			interrupts-names = "tx", "rx";
+ 			status = "disabled";
+@@ -683,7 +685,9 @@
+ 		mcasp1: mcasp@4803C000 {
+ 			compatible = "ti,omap2-mcasp-audio";
+ 			ti,hwmods = "mcasp1";
+-			reg = <0x4803C000 0x2000>;
++			reg = <0x4803C000 0x2000>,
++			      <0x46400000 0x400000>;
++			reg-names = "mpu", "dat";
+ 			interrupts = <82>, <83>;
+ 			interrupts-names = "tx", "rx";
+ 			status = "disabled";
+-- 
+1.7.9.5
+
