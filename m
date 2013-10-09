@@ -1,80 +1,111 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [RFC] Architecture independent pcibios?
-Date: Wed, 9 Oct 2013 10:09:23 +0100
-Message-ID: <20131009090923.GE25606@e102652-lin.cambridge.arm.com>
-References: <20131008144211.GA25231@e102652-lin.cambridge.arm.com>
- <CAErSpo5=sUJDZGm+zHw+b1h_a1YYbaGBshAutAoPBZYUCRbYkw@mail.gmail.com>
- <525438F6.3090600@gmail.com>
- <1381264135.645.230.camel@pasglop>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/4] ARM: pinctrl: Add Broadcom Capri pinctrl driver
+Date: Wed, 9 Oct 2013 11:10:22 +0200
+Message-ID: <CACRpkdZah4fFuJL2Vh5JmbBCgnekg8MKqMWHzeheOx3N1Kzwng@mail.gmail.com>
+References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
+	<1380846199-12829-4-git-send-email-syin@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1381264135.645.230.camel@pasglop>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <monstr@monstr.eu>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1380846199-12829-4-git-send-email-syin@broadcom.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sherman Yin <syin@broadcom.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Matt Porter <matt.porter@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 08, 2013 at 09:28:55PM +0100, Benjamin Herrenschmidt wrote:
-> On Tue, 2013-10-08 at 11:55 -0500, Rob Herring wrote:
->=20
-> > > I wonder if pci_process_bridge_OF_ranges() would fit somewhere in
-> > > drivers/of?  The implementations I looked at are mostly concerned=
- with
-> > > parsing OF resources, and they don't have much to do with PCI
-> > > directly.
-> >=20
-> > This was being done until Ben weighed in:
-> >=20
-> > https://lkml.org/lkml/2013/5/4/103
->=20
-> Well, I proposed an alternative (better) approach which I of course h=
-ad
-> no time to actually implement yet :-)
+On Fri, Oct 4, 2013 at 2:23 AM, Sherman Yin <syin@broadcom.com> wrote:
 
-In order to avoid any confusion, could you please point me again to the
-relevant message(s) where you proposed your approach?
+> Adds pinctrl driver for Broadcom Capri (BCM281xx) SoCs.
+>
+> Signed-off-by: Sherman Yin <syin@broadcom.com>
+> Reviewed-by: Christian Daudt <bcm@fixthebug.org>
+> Reviewed-by: Matt Porter <matt.porter@linaro.org>
+(...)
 
->=20
-> I have done the changes I needed to do to powerpc
-> pci_process_bridge_OF_ranges so it would be possible to move that now=
- to
-> a generic place, but I still think it's not a great idea. It means th=
-e
-> pci_controller structure with its resources will have to become gener=
-ic
-> which somewhat overlaps with the pci_host_bridge that Bjorn introduce=
-d,
-> so that's really not great.
->=20
-> I still think an arch with DT and simpler PCI code that powerpc could
-> start looking at the transition to a better model that I hinted at...
+> +config PINCTRL_CAPRI
+> +       bool "Broadcom Capri pinctrl driver"
+> +       select PINMUX
+> +       select PINCONF
+> +       help
+> +         Say Y here to support Broadcom Capri pinctrl driver, which is used for
+> +         the BCM281xx SoC family, including BCM11130, BCM11140, BCM11351,
+> +         BCM28145, and BCM28155 SoCs.  This driver requires the pinctrl
+> +         framework.  GPIO is provided by a separate GPIO driver.
 
-As tempting as it is to start anew and with a cleaner code, I am wary
-that porting the existing platforms to the new code will take longer
-that way. My intentions are to make the (probably infrequent) task of
-adding a new architecture to the PCI infrastructure a simple and
-straighforward task. But adding code for my platform is no guarantee
-that new ones will have an easier job.
+As mentioned this should be selecting and using GENERIC_PINCONF.
+Basically I want that to happen before we look further at this code.
 
-Best regards,
-Liviu
+(But I'll take a quick glance anyway...)
 
->=20
-> Cheers,
-> Ben.
->=20
->=20
->=20
+> +#define CAPRI_PINCONF_PACK(val, mask)     (((val) << 16) | ((mask) & 0xffff))
+> +#define CAPRI_PINCONF_UNPACK_VAL(conf)    ((conf) >> 16)
+> +#define CAPRI_PINCONF_UNPACK_MASK(conf)   ((conf) & 0xffff)
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+This custom horror goes away by using the macros from genric pin config
+<linux/pinctrl/pinconf-generic.h> instead.
+
+> +static const struct capri_cfg_param capri_pinconf_params[] = {
+> +       {"brcm,hysteresis",     CAPRI_PINCONF_PARAM_HYST},
+> +       {"brcm,pull",           CAPRI_PINCONF_PARAM_PULL},
+> +       {"brcm,slew",           CAPRI_PINCONF_PARAM_SLEW},
+> +       {"brcm,input_dis",      CAPRI_PINCONF_PARAM_INPUT_DIS},
+> +       {"brcm,drive_str",      CAPRI_PINCONF_PARAM_DRV_STR},
+> +       {"brcm,pull_up_str",    CAPRI_PINCONF_PARAM_PULL_UP_STR},
+> +       {"brcm,mode",           CAPRI_PINCONF_PARAM_MODE},
+> +};
+
+As well as all this stuff...
+
+> +/* Standard pin register */
+
+Add some more elaborate explanation here. I am half-guessing that
+most of the registers are laid out like this and then there are
+two exceptions, then write that right here in the comment.
+
+(BTW: this is a HW/driver detail and should not be written in the
+device tree doc as was done in patch 2)
+
+> +/* Macro to update reg with new pin config param */
+> +#define CAPRI_PIN_REG_SET(reg, type, param, val)                       \
+> +       (((reg) & ~CAPRI_ ## type ## _PIN_REG_ ## param ## _MASK)       \
+> +       | (((val) << CAPRI_ ## type ## _PIN_REG_ ## param ## _SHIFT)    \
+> +       & CAPRI_ ## type ## _PIN_REG_ ## param ## _MASK))
+
+No thanks.
+
+Rewrite this into a static inline which has the same effect when
+compiling, but produces *WAY* more readable code than this
+horrid thing. Plus you can type the arguments.
+
+> +#define _PIN(offset)                   (offset)
+
+This macro isn't exactly useful.
+
+> +/*
+> + * Pin number definition.  The order here must be the same as defined in the
+> + * PADCTRLREG block in the RDB.
+> + */
+> +#define CAPRI_PIN_ADCSYNC              _PIN(0)
+
+If it's just going to be like that, then skip the _PIN() macro.
+
+> +/* Process the pin configuration node */
+> +static int capri_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+> +                                       struct device_node *pnode,
+> +                                       struct pinctrl_map **map,
+> +                                       unsigned *nmaps)
+> +{
+
+Make use of these from pinctrl-utils.c:
+pinctrl_utils_reserve_map()
+pinctrl_utils_add_map_mux()
+pinctrl_utils_add_map_configs()
+pinctrl_utils_dt_free_map()
+
+Then you get rid of another big chunk of boilerplate code.
+
+After these changes the driver will be much smaller and
+cleaner and we can take a closer look.
+
+Yours,
+Linus Walleij
