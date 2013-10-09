@@ -1,103 +1,89 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [RFC] Architecture independent pcibios?
-Date: Wed, 09 Oct 2013 21:37:48 +1100
-Message-ID: <1381315068.4330.1.camel@pasglop>
-References: <20131008144211.GA25231@e102652-lin.cambridge.arm.com>
-	 <CAErSpo5=sUJDZGm+zHw+b1h_a1YYbaGBshAutAoPBZYUCRbYkw@mail.gmail.com>
-	 <525438F6.3090600@gmail.com> <1381264135.645.230.camel@pasglop>
-	 <20131009090923.GE25606@e102652-lin.cambridge.arm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 3/3] ARM: shmobile: kzm9d: Use common clock framework
+Date: Wed, 9 Oct 2013 19:39:18 +0900
+Message-ID: <20131009103915.GB17869@verge.net.au>
+References: <20131008143040.52f36df8edb7ab63224d8433@ops.dti.ne.jp>
+ <20131008143403.c11f294c8a1701a2ab3bc5fd@ops.dti.ne.jp>
+ <20131009034057.GO15065@verge.net.au>
+ <CANqRtoQs+31mv0ZULOd3SGshkBkvp-kGoaVOSb10+Ncdp+WNXw@mail.gmail.com>
+ <20131009065438.GA7220@verge.net.au>
+ <CANqRtoSGFEjcBPDAtq3YCDbkiFCftyr8b=qniYqyMafng=zurw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20131009090923.GE25606@e102652-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <monstr@monstr.eu>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANqRtoSGFEjcBPDAtq3YCDbkiFCftyr8b=qniYqyMafng=zurw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: takasi-y@ops.dti.ne.jp, SH-Linux <linux-sh@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Shinya Kuribayashi <shinya.kuribayashi.px@renesas.com>, Mike Turquette <mturquette@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-10-09 at 10:09 +0100, Liviu Dudau wrote:
-> On Tue, Oct 08, 2013 at 09:28:55PM +0100, Benjamin Herrenschmidt wrot=
-e:
-> > On Tue, 2013-10-08 at 11:55 -0500, Rob Herring wrote:
+On Wed, Oct 09, 2013 at 04:29:56PM +0900, Magnus Damm wrote:
+> Hi Simon,
+> 
+> On Wed, Oct 9, 2013 at 3:54 PM, Simon Horman <horms@verge.net.au> wrote:
+> > On Wed, Oct 09, 2013 at 01:59:46PM +0900, Magnus Damm wrote:
+> >> Hi Simon,
+> >>
+> >> On Wed, Oct 9, 2013 at 12:40 PM, Simon Horman <horms@verge.net.au> wrote:
+> >> > On Tue, Oct 08, 2013 at 02:34:03PM +0900, takasi-y@ops.dti.ne.jp wrote:
+> >> >> Use common clock framework version of clock
+> >> >>  drivers/clk/shmobile/clk-emev2.c
+> >> >> instead of sh-clkfwk version
+> >> >>  arch/arm/mach-shmobile/clock-emev2.c
+> >> >> when it is configured as a part of multi-platform.
+> >> >>
+> >> >> Signed-off-by: Takashi Yoshii <takasi-y@ops.dti.ne.jp>
+> >> >
+> >> > Thanks.
+> >> >
+> >> > I plan to add this patch to a new topic branch,
+> >> > topic/emev2-common-clock, in the renesas tree and
+> >> > queue it up from there for inclusion in mainline
+> >> > if/when the first patch of this series is accepted
+> >> > by Mike Turquette.
+> >>
+> >> Thanks for picking up patches, Simon.
+> >>
+> >> I think you can simply merge this patch after the following series:
+> >>
+> >> [PATCH 00/05] ARM: shmobile: KZM9D Multiplatform update
 > >
-> > > > I wonder if pci_process_bridge_OF_ranges() would fit somewhere =
-in
-> > > > drivers/of?  The implementations I looked at are mostly concern=
-ed with
-> > > > parsing OF resources, and they don't have much to do with PCI
-> > > > directly.
-> > >
-> > > This was being done until Ben weighed in:
-> > >
-> > > https://lkml.org/lkml/2013/5/4/103
+> > This is already queued up.
+> 
+> Yes, I know, thanks for that. I tried to explain the dependency in the
+> 00/00 cover letter but I will try to be more clear next time!
+> 
+> >> There are no build time dependencies on patch 1 and 2 so this patch
+> >> can be merged independently. Regarding run-time operation, the
+> >> multiplatform series above makes KZM9D DT reference only build for
+> >> multiplatform, and in such case CCF is required.
+> >>
+> >> So if you want to keep KZM9D DT reference working until Mike Turquette
+> >> accepts the CCF bits, then I recommend you to wait with "[PATCH 00/05]
+> >> ARM: shmobile: KZM9D Multiplatform update" until all EMEV2 CCF bits
+> >> have been merged.
+> >>
+> >> Another way is to merge "[PATCH 00/05] ARM: shmobile: KZM9D
+> >> Multiplatform update" before the EMEV2 CCF bits, but if so you may as
+> >> well merge this patch as well IMO. This
+> >> multiplatform-update-series-merge-before-CCF plan will result in
+> >> untestable KZM9D DT reference until EMEV2 CCF is merged. Either way is
+> >> fine with me.
 > >
-> > Well, I proposed an alternative (better) approach which I of course=
- had
-> > no time to actually implement yet :-)
->=20
-> In order to avoid any confusion, could you please point me again to t=
-he
-> relevant message(s) where you proposed your approach?
+> > I am mainly concerned that the bindings may change before
+> > they are finally merged. And I thought it would be nice to avoid
+> > having to fix up the usage of the bindings if they change.
+> 
+> Sure, but the code in this patch looks like it simply starts DT CCF
+> probing regardless of what the bindings look like. So I don't think
+> you will have to worry about actual bindings detail.
+> 
+> > But I'm happy to just queue-up patches 2 and 3 of this series
+> > now if you prefer.
+> 
+> Well, I meant patch 3 only. Patch 1 and 2 are tied together by dependencies. =)
 
-The one pointed to by the above URL ?
+Thanks, I understand now.
 
-> > I have done the changes I needed to do to powerpc
-> > pci_process_bridge_OF_ranges so it would be possible to move that n=
-ow to
-> > a generic place, but I still think it's not a great idea. It means =
-the
-> > pci_controller structure with its resources will have to become gen=
-eric
-> > which somewhat overlaps with the pci_host_bridge that Bjorn introdu=
-ced,
-> > so that's really not great.
-> >
-> > I still think an arch with DT and simpler PCI code that powerpc cou=
-ld
-> > start looking at the transition to a better model that I hinted at.=
-=2E.
->=20
-> As tempting as it is to start anew and with a cleaner code, I am wary
-> that porting the existing platforms to the new code will take longer
-> that way. My intentions are to make the (probably infrequent) task of
-> adding a new architecture to the PCI infrastructure a simple and
-> straighforward task. But adding code for my platform is no guarantee
-> that new ones will have an easier job.
-
-It still makes little sense to generalize a pci_controller with
-resources & offset on top of the generic pci_host_bridge with apertures=
-=2E
-
-Ben.
-
-> Best regards,
-> Liviu
->=20
-> >
-> > Cheers,
-> > Ben.
-> >
-> >
-> >
->=20
-> --
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> | I would like to |
-> | fix the world,  |
-> | but they're not |
-> | giving me the   |
->  \ source code!  /
->   ---------------
->     =C2=AF\_(=E3=83=84)_/=C2=AF
->=20
-> -- IMPORTANT NOTICE: The contents of this email and any attachments a=
-re confidential and may also be privileged. If you are not the intended=
- recipient, please notify the sender immediately and do not disclose th=
-e contents to any other person, use it for any purpose, or store or cop=
-y the information in any medium.  Thank you.
->=20
-> ARM Limited, Registered office 110 Fulbourn Road, Cambridge CB1 9NJ, =
-Registered in England & Wales, Company No:  2557590
-> ARM Holdings plc, Registered office 110 Fulbourn Road, Cambridge CB1 =
-9NJ, Registered in England & Wales, Company No:  2548782
+I'll queue-up 3/3.
