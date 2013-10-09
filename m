@@ -1,115 +1,79 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [RFC] Architecture independent pcibios?
-Date: Wed, 9 Oct 2013 11:45:54 +0100
-Message-ID: <20131009104553.GI25606@e102652-lin.cambridge.arm.com>
-References: <20131008144211.GA25231@e102652-lin.cambridge.arm.com>
- <CAErSpo5=sUJDZGm+zHw+b1h_a1YYbaGBshAutAoPBZYUCRbYkw@mail.gmail.com>
- <525438F6.3090600@gmail.com>
- <1381264135.645.230.camel@pasglop>
- <20131009090923.GE25606@e102652-lin.cambridge.arm.com>
- <1381315068.4330.1.camel@pasglop>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH] PCI: designware: Add irq_create_mapping()
+Date: Wed, 09 Oct 2013 19:49:15 +0900
+Message-ID: <000c01cec4dd$32d92070$988b6150$%han@samsung.com>
+References: <000401cec4c6$dc415180$94c3f480$%han@samsung.com>
+ <52551C6E.1040404@ti.com> <003901cec4d0$5d83e650$188bb2f0$%han@samsung.com>
+ <5255266B.6040809@ti.com> <000501cec4d7$1233a3f0$369aebd0$%han@samsung.com>
+ <52552F84.2020901@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1381315068.4330.1.camel@pasglop>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <monstr@monstr.eu>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <52552F84.2020901@ti.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Kishon Vijay Abraham I' <kishon@ti.com>
+Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2013 at 11:37:48AM +0100, Benjamin Herrenschmidt wrote:
-> On Wed, 2013-10-09 at 10:09 +0100, Liviu Dudau wrote:
-> > On Tue, Oct 08, 2013 at 09:28:55PM +0100, Benjamin Herrenschmidt wr=
-ote:
-> > > On Tue, 2013-10-08 at 11:55 -0500, Rob Herring wrote:
-> > >
-> > > > > I wonder if pci_process_bridge_OF_ranges() would fit somewher=
-e in
-> > > > > drivers/of?  The implementations I looked at are mostly conce=
-rned with
-> > > > > parsing OF resources, and they don't have much to do with PCI
-> > > > > directly.
-> > > >
-> > > > This was being done until Ben weighed in:
-> > > >
-> > > > https://lkml.org/lkml/2013/5/4/103
-> > >
-> > > Well, I proposed an alternative (better) approach which I of cour=
-se had
-> > > no time to actually implement yet :-)
-> >=20
-> > In order to avoid any confusion, could you please point me again to=
- the
-> > relevant message(s) where you proposed your approach?
->=20
-> The one pointed to by the above URL ?
->=20
-> > > I have done the changes I needed to do to powerpc
-> > > pci_process_bridge_OF_ranges so it would be possible to move that=
- now to
-> > > a generic place, but I still think it's not a great idea. It mean=
-s the
-> > > pci_controller structure with its resources will have to become g=
-eneric
-> > > which somewhat overlaps with the pci_host_bridge that Bjorn intro=
-duced,
-> > > so that's really not great.
-> > >
-> > > I still think an arch with DT and simpler PCI code that powerpc c=
-ould
-> > > start looking at the transition to a better model that I hinted a=
-t...
-> >=20
-> > As tempting as it is to start anew and with a cleaner code, I am wa=
-ry
-> > that porting the existing platforms to the new code will take longe=
-r
-> > that way. My intentions are to make the (probably infrequent) task =
-of
-> > adding a new architecture to the PCI infrastructure a simple and
-> > straighforward task. But adding code for my platform is no guarante=
-e
-> > that new ones will have an easier job.
->=20
-> It still makes little sense to generalize a pci_controller with
-> resources & offset on top of the generic pci_host_bridge with apertur=
-es.
+On Wednesday, October 09, 2013 7:27 PM, Kishon Vijay Abraham I wrote:
+> On Wednesday 09 October 2013 03:35 PM, Jingoo Han wrote:
+> > On Wednesday, October 09, 2013 6:48 PM, Kishon Vijay Abraham I wrote:
+> >> On Wednesday 09 October 2013 02:47 PM, Jingoo Han wrote:
+> >>> On Wednesday, October 09, 2013 6:06 PM, Kishon Vijay Abraham I wrote:
+> >>>> On Wednesday 09 October 2013 01:39 PM, Jingoo Han wrote:
+> >>>>> Without irq_create_mapping(), the correct irq number cannot be
+> >>>>> provided. In this case, it makes problem such as NULL deference.
+> >>>>> Thus, irq_create_mapping() should be added for MSI.
+> >>>>>
+> >>>>> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+> >>>>> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> >>>>> ---
+> >>>>> Tested on Exynos5440.
+> >>>>>
+> >>>>>  drivers/pci/host/pcie-designware.c |   10 ++++------
+> >>>>>  drivers/pci/host/pcie-designware.h |    1 +
+> >>>>>  2 files changed, 5 insertions(+), 6 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> >>>>> index 8963017..e536bb6 100644
+> >>>>> --- a/drivers/pci/host/pcie-designware.c
+> >>>>> +++ b/drivers/pci/host/pcie-designware.c
+> >>>>> @@ -237,6 +237,8 @@ static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
+> >>>>>  		}
+> >>>>>  	}
+> >>>>>
+> >>>>> +	pp->msi_irq_start = irq_create_mapping(pp->irq_domain, 0);
+> >>>>> +
+> >>>>
+> >>>> I think irq_create_mapping should be done for all the MSI irq lines instead of
+> >>>> only the first line. So you might have to do for MAX_MSI_IRQS lines.
+> >>
+> >> Maybe it should be only till MAX_MSI_IRQS-1?
+> 
+> I meant something like this,
+> 
+> 	for (i = 0; i < MAX_MSI_IRQS; i++)
+> 		irq_create_mapping(pp->irq_domain, i);
+>
+> That didn't give me any issues though.
 
-Agreed. I'm looking on how to move functions that use pci_controller to
-use pci_host_bridge.
+However, no driver calls irq_create_mapping() like this.
+For example, Tegra PCI driver gives 'hwirq' as single offset value
+to irq_create_mapping() without any loop.
 
-Semantic question: what is the perceived difference between a pci_contr=
-oller
-and a pci_host_bridge? Are they just historical naming artifacts of the
-same concept? (person A deciding to do a cleanup of the code and picks =
-a
-new name in order not to upset the old APIs)
+static int tegra_msi_setup_irq(struct msi_chip *chip, struct pci_dev *pdev,
+                               struct msi_desc *desc)
+{
+	hwirq = tegra_msi_alloc(msi);
+	irq = irq_create_mapping(msi->domain, hwirq);
+
+Maybe, the following can be used, it uses 'pos0' as the offset value.
+
+	pp->msi_irq_start = irq_create_mapping(pp->irq_domain, pos0);
+	irq = pp->msi_irq_start;
+
 
 Best regards,
-Liviu
-
->=20
-> Ben.
->=20
-> > Best regards,
-> > Liviu
-> >=20
-> > >
-> > > Cheers,
-> > > Ben.
-> > >
-> > >
-> > >
-> >=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Jingoo Han
