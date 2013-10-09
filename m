@@ -1,84 +1,59 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [RFC] Architecture independent pcibios?
-Date: Wed, 9 Oct 2013 17:23:00 +0100
-Message-ID: <20131009162300.GK25606@e102652-lin.cambridge.arm.com>
-References: <20131008144211.GA25231@e102652-lin.cambridge.arm.com>
- <CAErSpo5=sUJDZGm+zHw+b1h_a1YYbaGBshAutAoPBZYUCRbYkw@mail.gmail.com>
- <525438F6.3090600@gmail.com>
- <1381264135.645.230.camel@pasglop>
- <20131009090923.GE25606@e102652-lin.cambridge.arm.com>
- <1381315068.4330.1.camel@pasglop>
- <20131009104553.GI25606@e102652-lin.cambridge.arm.com>
- <CAErSpo6ujYmoOz4RMo3ATEJ+REMPiz6oR2pEUn=jW5GMDEB+Yw@mail.gmail.com>
+From: "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH 0/2] Add support for Qualcomm's PRNG
+Date: Wed, 09 Oct 2013 09:24:00 -0700
+Message-ID: <52558320.9090603@zytor.com>
+References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <20131003165130.GA11974@thunk.org> <524EEB96.6040707@mm-sol.com> <20131004181005.GA7022@thunk.org> <52556C4E.9000604@mm-sol.com> <52557137.5050200@zytor.com> <20131009160338.GD1198@thunk.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo6ujYmoOz4RMo3ATEJ+REMPiz6oR2pEUn=jW5GMDEB+Yw@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robherring2@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Michal Simek <monstr@monstr.eu>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131009160338.GD1198@thunk.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Theodore Ts'o <tytso@mit.edu>, Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.hengli.com.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 09, 2013 at 03:30:35PM +0100, Bjorn Helgaas wrote:
-> On Wed, Oct 9, 2013 at 4:45 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
-te:
->=20
-> > Semantic question: what is the perceived difference between a pci_c=
-ontroller
-> > and a pci_host_bridge? Are they just historical naming artifacts of=
- the
-> > same concept? (person A deciding to do a cleanup of the code and pi=
-cks a
-> > new name in order not to upset the old APIs)
->=20
-> pci_controller is a typical name for the arch-dependent PCI host
-> bridge structure.  Some arches use different names, e.g.,
-> pci_sys_data, pci_hba_data, pci_channel, etc.
->=20
-> When I added support in the PCI core for host bridge address
-> translation, e.g., ACPI _TRA, I named the core structure
-> pci_host_bridge.
->=20
-> Some of the stuff in pci_controller and similar arch-dependent
-> structures could probably be moved into pci_host_bridge, given
-> appropriate PCI core interfaces to supply the information (or maybe
-> pcibios_*() functions the core could use to retrieve it).  But I doub=
-t
-> we could completely remove the arch-dependent structures.
+On 10/09/2013 09:03 AM, Theodore Ts'o wrote:
+> On Wed, Oct 09, 2013 at 08:07:35AM -0700, H. Peter Anvin wrote:
+>> There needs to be an architecturally guaranteed lower bound on the
+>> entropic content for this to be at all useful.  However, the hwrandom
+>> interface is currently expecting fully entropic output (which is almost
+>> certainly bogus... consider the PowerPC random number generator[1]) and
+>> so using it for a PRNG output is directly wrong.  
+> 
+> You can specify as a command-line argument (-H) to rngd the entropy
+> per bit of input data.  So if you think an entropy source isn't great,
+> but has some uncertainty, you could do pass to rngd "-H 0.5" or maybe
+> even "-H 0.1".
+> 
+> Maybe it would be nice to have /dev/hwrandom export the quality of its
+> output, but the reality is that most hardware devices don't document
+> or export via some programmatic interface how well or how poorly their
+> hwrng really might be.  And even if they did, most people, who don't
+> have access to scanning electronic microscopes and nanometer probes,
+> and the ability to decrypt, reverse engineer, and decompile firmware,
+> couldn't know for sure whether or not to believe the claims of the
+> hardware or the hardware manufacturer anyway.
+> 
 
-How about this as a battle plan:
+There is no -H option in upstream rngd.  It might be in the Debian fork,
+but the Debian fork has serious other problems.  I don't understand how
+that would work with the FIPS tests in rngd, unless of course the FIPS
+tests are so weak they are pointless anyway (they are
 
-  - create a "generic pci_controller struct" (actual name to be picked =
-later)
-    that parses the DT for ranges and creates the relevant
-    pci_host_bridge_windows, then calls pci_scan_root_bus()
+/dev/hwrng should definitely export it rather than having to have the
+*user* enter that data... the user has even less opportunity than the
+vendor and driver maintainer to get this even remotely right, I fear.
 
-  - provide some weak function definitions that arch-dependent code
-    can override for the cases where the "generic pci_controller struct=
-"
-    version does not fit the bill.
+It is really problematic when there isn't even anything to hang things
+off, and perhaps a real question is if we even should have drivers for
+devices where there isn't any kind of documentation given, or if we
+should derate them substantially.
 
-Best regards,
-Liviu
+The RDRAND code in rngd already has cryptographic (AES) data reduction
+and we might want to extend that code to be able to derate other data
+sources.
 
+Or we should just move this into a kernel thread and let the pool do that...
 
->=20
-> Bjorn
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
-in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+	-hpa
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
