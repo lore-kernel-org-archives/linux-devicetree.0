@@ -1,49 +1,131 @@
-From: "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH 0/2] Add support for Qualcomm's PRNG
-Date: Wed, 09 Oct 2013 08:07:35 -0700
-Message-ID: <52557137.5050200@zytor.com>
-References: <1380811955-18085-1-git-send-email-svarbanov@mm-sol.com> <20131003165130.GA11974@thunk.org> <524EEB96.6040707@mm-sol.com> <20131004181005.GA7022@thunk.org> <52556C4E.9000604@mm-sol.com>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [PATCH v2 2/5] ARM: dts: omap: Add new bindings for OMAP
+Date: Wed, 09 Oct 2013 17:13:44 +0200
+Message-ID: <525572A8.9060401@baylibre.com>
+References: <1381313521-10422-1-git-send-email-rnayak@ti.com> <1381313521-10422-3-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <52556C4E.9000604@mm-sol.com>
+In-Reply-To: <1381313521-10422-3-git-send-email-rnayak@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Theodore Ts'o <tytso@mit.edu>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.hengli.com.au>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>, paul@pwsan.com, tony@atomide.com
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2013 07:46 AM, Stanimir Varbanov wrote:
-> 
-> No, there is no public documentation for the block. Here is the driver
-> documentation which I used as a base [1].
-> 
-> My guess was that - if it is PRNG (got from hardware description link
-> above) than according to wiki [2] it is also known as a deterministic
-> random bit generator (DRBG). The recommendation for RNG using DRBG is
-> NIST 800-90.
-> 
-> Of course I could be wrong, so I can add a comment that this is just a
-> guess and we shouldn't over-reliance on this.
-> 
+Hi Rajendra,
 
-There needs to be an architecturally guaranteed lower bound on the
-entropic content for this to be at all useful.  However, the hwrandom
-interface is currently expecting fully entropic output (which is almost
-certainly bogus... consider the PowerPC random number generator[1]) and
-so using it for a PRNG output is directly wrong.  This is part of why
-RDRAND support is implemented directly in rngd so that we can do the
-required cryptographic data reduction to produce fully entropic output.
+On 09/10/2013 12:11, Rajendra Nayak wrote:
+> On OMAP we have co-processor IPs, memory controllers,
+> GPIOs which control regulators and power switches to
+> PMIC, and SoC internal Bus IPs, some or most of which
+> should either not be reset or idled or both at init.
+> (In some cases there are erratas which prevent an IP
+> from being reset)
+> Have a way to pass this information from DT.
 
-	-hpa
+Did you get some acked-by from the DT maintainers?
+Every new bindings must be carefully reviewed now.
 
+Regards,
+Benoit
 
-
-[1] which has a known first-order bias which they "correct" for by
-XORing two datums together in a very simple data reduction step.
-However, if their random source has bias it is extremely likely it also
-has nonzero correlations, which require stronger reductions.  It would
-make a lot more sense to feed this data into the random pools but
-derated at a lower entropy level.  This would be useful for RDRAND as well.
-
+>
+> Update the am33xx/omap4 and omap5 dtsi files with the
+> new bindings for modules which either should not be
+> idled. reset or both. A later patch would cleanup the
+> same information that exists today as part of the hwmod
+> data files.
+>
+> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+> ---
+>   .../devicetree/bindings/arm/omap/omap.txt          |    3 ++-
+>   arch/arm/boot/dts/am33xx.dtsi                      |    2 ++
+>   arch/arm/boot/dts/omap4.dtsi                       |    3 +++
+>   arch/arm/boot/dts/omap5.dtsi                       |    2 ++
+>   4 files changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
+> index 91b7049..808c154 100644
+> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
+> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
+> @@ -21,7 +21,8 @@ Required properties:
+>   Optional properties:
+>   - ti,no_idle_on_suspend: When present, it prevents the PM to idle the module
+>     during suspend.
+> -
+> +- ti,no-reset-on-init: When present, the module should not be reset at init
+> +- ti,no-idle-on-init: When present, the module should not be idled at init
+>
+>   Example:
+>
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index f9c5da9..ec33ea0 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -607,6 +607,7 @@
+>   			reg = <0x44d00000 0x4000	/* M3 UMEM */
+>   			       0x44d80000 0x2000>;	/* M3 DMEM */
+>   			ti,hwmods = "wkup_m3";
+> +			ti,no-reset-on-init;
+>   		};
+>
+>   		elm: elm@48080000 {
+> @@ -637,6 +638,7 @@
+>   		gpmc: gpmc@50000000 {
+>   			compatible = "ti,am3352-gpmc";
+>   			ti,hwmods = "gpmc";
+> +			ti,no-idle-on-init;
+>   			reg = <0x50000000 0x2000>;
+>   			interrupts = <100>;
+>   			gpmc,num-cs = <7>;
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index 22d9f2b..e8fe797 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -214,6 +214,7 @@
+>   			gpmc,num-cs = <8>;
+>   			gpmc,num-waitpins = <4>;
+>   			ti,hwmods = "gpmc";
+> +			ti,no-idle-on-init;
+>   		};
+>
+>   		uart1: serial@4806a000 {
+> @@ -492,6 +493,7 @@
+>   			reg = <0x4c000000 0x100>;
+>   			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+>   			ti,hwmods = "emif1";
+> +			ti,no-idle-on-init;
+>   			phy-type = <1>;
+>   			hw-caps-read-idle-ctrl;
+>   			hw-caps-ll-interface;
+> @@ -503,6 +505,7 @@
+>   			reg = <0x4d000000 0x100>;
+>   			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
+>   			ti,hwmods = "emif2";
+> +			ti,no-idle-on-init;
+>   			phy-type = <1>;
+>   			hw-caps-read-idle-ctrl;
+>   			hw-caps-ll-interface;
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index 7cdea1b..a9d49df 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -607,6 +607,7 @@
+>   		emif1: emif@0x4c000000 {
+>   			compatible	= "ti,emif-4d5";
+>   			ti,hwmods	= "emif1";
+> +			ti,no-idle-on-init;
+>   			phy-type	= <2>; /* DDR PHY type: Intelli PHY */
+>   			reg = <0x4c000000 0x400>;
+>   			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -618,6 +619,7 @@
+>   		emif2: emif@0x4d000000 {
+>   			compatible	= "ti,emif-4d5";
+>   			ti,hwmods	= "emif2";
+> +			ti,no-idle-on-init;
+>   			phy-type	= <2>; /* DDR PHY type: Intelli PHY */
+>   			reg = <0x4d000000 0x400>;
+>   			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
+>
 
