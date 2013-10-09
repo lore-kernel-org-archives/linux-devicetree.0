@@ -1,39 +1,47 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] pinctrl: Add void * to pinctrl_pin_desc
-Date: Wed, 9 Oct 2013 10:55:27 +0200
-Message-ID: <CACRpkdaMODd9=fZPC+-FMJ1tWw95DBGjsu4DEzKqrNhGpYSARA@mail.gmail.com>
-References: <1380846199-12829-1-git-send-email-syin@broadcom.com>
-	<1380846199-12829-2-git-send-email-syin@broadcom.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH] PCI: designware: Add irq_create_mapping()
+Date: Wed, 9 Oct 2013 14:35:50 +0530
+Message-ID: <52551C6E.1040404@ti.com>
+References: <000401cec4c6$dc415180$94c3f480$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1380846199-12829-2-git-send-email-syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <000401cec4c6$dc415180$94c3f480$%han@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 4, 2013 at 2:23 AM, Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+Hi Jingoo,
 
-> drv_data is added to the pinctrl_pin_desc for drivers to define additional
-> driver-specific per-pin data.
->
-> Signed-off-by: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>
-> Reviewed-by: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Wednesday 09 October 2013 01:39 PM, Jingoo Han wrote:
+> Without irq_create_mapping(), the correct irq number cannot be
+> provided. In this case, it makes problem such as NULL deference.
+> Thus, irq_create_mapping() should be added for MSI.
+> 
+> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
-> Change-Id: I78b2c44b93d88b04897fd0af80ffce213e338d6b
+> Tested on Exynos5440.
+> 
+>  drivers/pci/host/pcie-designware.c |   10 ++++------
+>  drivers/pci/host/pcie-designware.h |    1 +
+>  2 files changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> index 8963017..e536bb6 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -237,6 +237,8 @@ static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
+>  		}
+>  	}
+>  
+> +	pp->msi_irq_start = irq_create_mapping(pp->irq_domain, 0);
+> +
 
-Why are you giving me this funky Gerrit stuff along with the patch?
-It's not like I have any use for it, and anything below the three
-dashes will be deleted when applying.
+I think irq_create_mapping should be done for all the MSI irq lines instead of
+only the first line. So you might have to do for MAX_MSI_IRQS lines.
 
-The patch is OK but won't be applied until some driver is
-using it (i.e. this BRCM one...)
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
