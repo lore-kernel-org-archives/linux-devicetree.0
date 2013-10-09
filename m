@@ -1,77 +1,129 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 02/03] pinmux: Add TB10x pinmux driver
-Date: Wed, 9 Oct 2013 14:30:46 +0200
-Message-ID: <CACRpkdZdELan7OyMjt4KOi=q-v1xkSaNZNyZ7AnOBY1R=SoW3w@mail.gmail.com>
-References: <20131008122145.GA21985@ab42.lan>
-	<1381235122-23730-2-git-send-email-christian.ruppert@abilis.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: [PATCH V2] PCI: designware: Add irq_create_mapping()
+Date: Wed, 09 Oct 2013 21:32:12 +0900
+Message-ID: <000a01cec4eb$942dc7f0$bc8957d0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381235122-23730-2-git-send-email-christian.ruppert@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Bjorn Helgaas' <bhelgaas@google.com>
+Cc: 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 8, 2013 at 2:25 PM, Christian Ruppert
-<christian.ruppert@abilis.com> wrote:
+From: Pratyush Anand <pratyush.anand@st.com>
 
-> The pinmux driver of the Abilis Systems TB10x platform based on ARC700 CPUs.
-> Used to control the pinmux and is a prerequisite for the GPIO driver.
->
-> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-> Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Without irq_create_mapping(), the correct irq number cannot be
+provided. In this case, it makes problems such as NULL deference.
+Thus, irq_create_mapping() should be added for MSI.
 
-Overall this is looking pretty nice!
+Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
+Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+---
+Tested on Exynos5440.
 
-> +static int tb10x_dt_node_to_map(struct pinctrl_dev *pctl,
-> +                               struct device_node *np_config,
-> +                               struct pinctrl_map **map, unsigned *num_maps)
-> +{
-> +       struct pinctrl_map *m;
-> +       const char *string;
-> +
-> +       if (of_property_read_string(np_config, "abilis,function", &string)) {
-> +               pr_err("%s: No abilis,function property in device tree.\n",
-> +                       np_config->full_name);
-> +               return -EINVAL;
-> +       }
-> +
-> +       m = kzalloc(sizeof(struct pinctrl_map), GFP_KERNEL);
-> +       if (!m)
-> +               return -ENOMEM;
+ drivers/pci/host/pcie-designware.c |   25 +++++++++++++------------
+ drivers/pci/host/pcie-designware.h |    2 +-
+ 2 files changed, 14 insertions(+), 13 deletions(-)
 
-Could you make use of:
-
-#include "pinctrl-utils.h"
-
-pinctrl_utils_reserve_map()
-pinctrl_utils_add_map_mux()
-pinctrl_utils_dt_free_map()
-
-?
-
-> +static int tb10x_gpio_request_enable(struct pinctrl_dev *pctl,
-> +                                       struct pinctrl_gpio_range *range,
-> +                                       unsigned pin)
-> +{
-> +       struct tb10x_pinctrl *state = pinctrl_dev_get_drvdata(pctl);
-> +       int muxport = -1;
-> +       int muxmode = -1;
-> +       int i;
-> +
-> +       mutex_lock(&state->mutex);
-> +
-> +       /* Figure out to which port the requested GPIO belongs and how to
-> +        * configure that port.
-> +        * This loop also checks for pin conflicts between GPIOs and other
-> +        * functions.
-> +        */
-
-/*
- * I really like all comments with a blank
- * line at the top and bottom like this.
- */
-
-Yours,
-Linus Walleij
+diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+index 8963017..92d58fd 100644
+--- a/drivers/pci/host/pcie-designware.c
++++ b/drivers/pci/host/pcie-designware.c
+@@ -157,7 +157,7 @@ static struct irq_chip dw_msi_irq_chip = {
+ void dw_handle_msi_irq(struct pcie_port *pp)
+ {
+ 	unsigned long val;
+-	int i, pos;
++	int i, pos, irq;
+ 
+ 	for (i = 0; i < MAX_MSI_CTRLS; i++) {
+ 		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS + i * 12, 4,
+@@ -165,8 +165,9 @@ void dw_handle_msi_irq(struct pcie_port *pp)
+ 		if (val) {
+ 			pos = 0;
+ 			while ((pos = find_next_bit(&val, 32, pos)) != 32) {
+-				generic_handle_irq(pp->msi_irq_start
+-					+ (i * 32) + pos);
++				irq = irq_find_mapping(pp->irq_domain,
++						i * 32 + pos);
++				generic_handle_irq(irq);
+ 				pos++;
+ 			}
+ 		}
+@@ -237,9 +238,8 @@ static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
+ 		}
+ 	}
+ 
+-	irq = (pp->msi_irq_start + pos0);
+-
+-	if ((irq + no_irqs) > (pp->msi_irq_start + MAX_MSI_IRQS-1))
++	irq = irq_find_mapping(pp->irq_domain, pos0);
++	if (!irq)
+ 		goto no_valid_irq;
+ 
+ 	i = 0;
+@@ -270,6 +270,7 @@ static void clear_irq(unsigned int irq)
+ 	struct irq_desc *desc;
+ 	struct msi_desc *msi;
+ 	struct pcie_port *pp;
++	struct irq_data *data = irq_get_irq_data(irq);
+ 
+ 	/* get the port structure */
+ 	desc = irq_to_desc(irq);
+@@ -280,7 +281,7 @@ static void clear_irq(unsigned int irq)
+ 		return;
+ 	}
+ 
+-	pos = irq - pp->msi_irq_start;
++	pos = data->hwirq;
+ 
+ 	irq_free_desc(irq);
+ 
+@@ -371,8 +372,7 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+ 	struct of_pci_range range;
+ 	struct of_pci_range_parser parser;
+ 	u32 val;
+-
+-	struct irq_domain *irq_domain;
++	int i;
+ 
+ 	if (of_pci_range_parser_init(&parser, np)) {
+ 		dev_err(pp->dev, "missing ranges property\n");
+@@ -441,15 +441,16 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+ 	}
+ 
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+-		irq_domain = irq_domain_add_linear(pp->dev->of_node,
++		pp->irq_domain = irq_domain_add_linear(pp->dev->of_node,
+ 					MAX_MSI_IRQS, &msi_domain_ops,
+ 					&dw_pcie_msi_chip);
+-		if (!irq_domain) {
++		if (!pp->irq_domain) {
+ 			dev_err(pp->dev, "irq domain init failed\n");
+ 			return -ENXIO;
+ 		}
+ 
+-		pp->msi_irq_start = irq_find_mapping(irq_domain, 0);
++		for (i = 0; i < MAX_MSI_IRQS; i++)
++			irq_create_mapping(pp->irq_domain, i);
+ 	}
+ 
+ 	if (pp->ops->host_init)
+diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
+index faccbbf..1bf9fc5 100644
+--- a/drivers/pci/host/pcie-designware.h
++++ b/drivers/pci/host/pcie-designware.h
+@@ -47,7 +47,7 @@ struct pcie_port {
+ 	u32			lanes;
+ 	struct pcie_host_ops	*ops;
+ 	int			msi_irq;
+-	int			msi_irq_start;
++	struct irq_domain	*irq_domain;
+ 	unsigned long		msi_data;
+ 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
+ };
+-- 
+1.7.10.4
