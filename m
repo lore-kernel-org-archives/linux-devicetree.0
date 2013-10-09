@@ -1,108 +1,58 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: [PATCH v2 4/5] ARM: OMAP2+: hwmod: Cleanup usage of HWMOD_INIT_NO_RESET and HWMOD_INIT_NO_IDLE
-Date: Wed, 9 Oct 2013 15:42:00 +0530
-Message-ID: <1381313521-10422-5-git-send-email-rnayak@ti.com>
-References: <1381313521-10422-1-git-send-email-rnayak@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH] PCI: designware: Add irq_create_mapping()
+Date: Wed, 9 Oct 2013 15:57:16 +0530
+Message-ID: <52552F84.2020901@ti.com>
+References: <000401cec4c6$dc415180$94c3f480$%han@samsung.com> <52551C6E.1040404@ti.com> <003901cec4d0$5d83e650$188bb2f0$%han@samsung.com> <5255266B.6040809@ti.com> <000501cec4d7$1233a3f0$369aebd0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381313521-10422-1-git-send-email-rnayak@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: bcousson@baylibre.com, paul@pwsan.com, tony@atomide.com
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rajendra Nayak <rnayak@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <000501cec4d7$1233a3f0$369aebd0$%han@samsung.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With DT bindings to specify which devices should not be idled and reset
-at init being in place, and the corresponding dtsi files for am33xx/omap4
-and omap5 updated using those bindings, we can now clean up hwmod internal
-flags for HWMOD_INIT_NO_RESET and HWMOD_INIT_NO_IDLE which were infact used
-to specify the exact same information.
+On Wednesday 09 October 2013 03:35 PM, Jingoo Han wrote:
+> On Wednesday, October 09, 2013 6:48 PM, Kishon Vijay Abraham I wrote:
+>> On Wednesday 09 October 2013 02:47 PM, Jingoo Han wrote:
+>>> On Wednesday, October 09, 2013 6:06 PM, Kishon Vijay Abraham I wrote:
+>>>> On Wednesday 09 October 2013 01:39 PM, Jingoo Han wrote:
+>>>>> Without irq_create_mapping(), the correct irq number cannot be
+>>>>> provided. In this case, it makes problem such as NULL deference.
+>>>>> Thus, irq_create_mapping() should be added for MSI.
+>>>>>
+>>>>> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+>>>>> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>> ---
+>>>>> Tested on Exynos5440.
+>>>>>
+>>>>>  drivers/pci/host/pcie-designware.c |   10 ++++------
+>>>>>  drivers/pci/host/pcie-designware.h |    1 +
+>>>>>  2 files changed, 5 insertions(+), 6 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+>>>>> index 8963017..e536bb6 100644
+>>>>> --- a/drivers/pci/host/pcie-designware.c
+>>>>> +++ b/drivers/pci/host/pcie-designware.c
+>>>>> @@ -237,6 +237,8 @@ static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
+>>>>>  		}
+>>>>>  	}
+>>>>>
+>>>>> +	pp->msi_irq_start = irq_create_mapping(pp->irq_domain, 0);
+>>>>> +
+>>>>
+>>>> I think irq_create_mapping should be done for all the MSI irq lines instead of
+>>>> only the first line. So you might have to do for MAX_MSI_IRQS lines.
+>>
+>> Maybe it should be only till MAX_MSI_IRQS-1?
 
-For GPMC, the HWMOD_INIT_NO_RESET flag seems to be added in hwmod not due to
-any errata around the GPMC IP, but rather because any timings
-set by the bootloader are not being correctly programmed by the kernel.
-This seems like something that needs to be fixed as part of GPMC driver
-in the kernel, and hence the flag is left as is in hwmod, which can be
-removed once the driver does what its expected to.
+I meant something like this,
 
-Signed-off-by: Rajendra Nayak <rnayak@ti.com>
----
- arch/arm/mach-omap2/omap_hwmod_33xx_data.c |    4 ++--
- arch/arm/mach-omap2/omap_hwmod_44xx_data.c |    4 +---
- arch/arm/mach-omap2/omap_hwmod_54xx_data.c |    2 --
- 3 files changed, 3 insertions(+), 7 deletions(-)
+	for (i = 0; i < MAX_MSI_IRQS; i++)
+		irq_create_mapping(pp->irq_domain, i);
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-index 2815a91..e8dc72d 100644
---- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-@@ -198,7 +198,7 @@ static struct omap_hwmod am33xx_wkup_m3_hwmod = {
- 	.class		= &am33xx_wkup_m3_hwmod_class,
- 	.clkdm_name	= "l4_wkup_aon_clkdm",
- 	/* Keep hardreset asserted */
--	.flags		= HWMOD_INIT_NO_RESET | HWMOD_NO_IDLEST,
-+	.flags		= HWMOD_NO_IDLEST,
- 	.main_clk	= "dpll_core_m4_div2_ck",
- 	.prcm		= {
- 		.omap4	= {
-@@ -932,7 +932,7 @@ static struct omap_hwmod am33xx_gpmc_hwmod = {
- 	.name		= "gpmc",
- 	.class		= &am33xx_gpmc_hwmod_class,
- 	.clkdm_name	= "l3s_clkdm",
--	.flags		= (HWMOD_INIT_NO_IDLE | HWMOD_INIT_NO_RESET),
-+	.flags		= HWMOD_INIT_NO_RESET,
- 	.main_clk	= "l3s_gclk",
- 	.prcm		= {
- 		.omap4	= {
-diff --git a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
-index 1e5b12c..a507a70 100644
---- a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
-@@ -914,7 +914,6 @@ static struct omap_hwmod omap44xx_emif1_hwmod = {
- 	.name		= "emif1",
- 	.class		= &omap44xx_emif_hwmod_class,
- 	.clkdm_name	= "l3_emif_clkdm",
--	.flags		= HWMOD_INIT_NO_IDLE,
- 	.main_clk	= "ddrphy_ck",
- 	.prcm = {
- 		.omap4 = {
-@@ -930,7 +929,6 @@ static struct omap_hwmod omap44xx_emif2_hwmod = {
- 	.name		= "emif2",
- 	.class		= &omap44xx_emif_hwmod_class,
- 	.clkdm_name	= "l3_emif_clkdm",
--	.flags		= HWMOD_INIT_NO_IDLE,
- 	.main_clk	= "ddrphy_ck",
- 	.prcm = {
- 		.omap4 = {
-@@ -1184,7 +1182,7 @@ static struct omap_hwmod omap44xx_gpmc_hwmod = {
- 	 * the kernel from the board file or DT data.
- 	 * HWMOD_INIT_NO_RESET should be removed ASAP.
- 	 */
--	.flags		= HWMOD_INIT_NO_IDLE | HWMOD_INIT_NO_RESET,
-+	.flags		= HWMOD_INIT_NO_RESET,
- 	.prcm = {
- 		.omap4 = {
- 			.clkctrl_offs = OMAP4_CM_L3_2_GPMC_CLKCTRL_OFFSET,
-diff --git a/arch/arm/mach-omap2/omap_hwmod_54xx_data.c b/arch/arm/mach-omap2/omap_hwmod_54xx_data.c
-index e3caee1..e47f24d 100644
---- a/arch/arm/mach-omap2/omap_hwmod_54xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_54xx_data.c
-@@ -352,7 +352,6 @@ static struct omap_hwmod omap54xx_emif1_hwmod = {
- 	.name		= "emif1",
- 	.class		= &omap54xx_emif_hwmod_class,
- 	.clkdm_name	= "emif_clkdm",
--	.flags		= HWMOD_INIT_NO_IDLE,
- 	.main_clk	= "dpll_core_h11x2_ck",
- 	.prcm = {
- 		.omap4 = {
-@@ -368,7 +367,6 @@ static struct omap_hwmod omap54xx_emif2_hwmod = {
- 	.name		= "emif2",
- 	.class		= &omap54xx_emif_hwmod_class,
- 	.clkdm_name	= "emif_clkdm",
--	.flags		= HWMOD_INIT_NO_IDLE,
- 	.main_clk	= "dpll_core_h11x2_ck",
- 	.prcm = {
- 		.omap4 = {
--- 
-1.7.9.5
+That didn't give me any issues though.
 
+Thanks
+Kishon
