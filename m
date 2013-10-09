@@ -1,641 +1,163 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] iio: at91: introduce touch screen support in iio
- adc driver
-Date: Wed, 09 Oct 2013 21:14:16 +0100
-Message-ID: <5255B918.2020705@kernel.org>
-References: <1381204136-32322-1-git-send-email-josh.wu@atmel.com> <1381204136-32322-4-git-send-email-josh.wu@atmel.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv7 00/36] ARM: OMAP: clock data conversion to DT
+Date: Wed, 9 Oct 2013 12:22:35 -0700
+Message-ID: <20131009192235.GD8313@atomide.com>
+References: <1380098922-30340-1-git-send-email-t-kristo@ti.com>
+ <524EE00F.7010208@ti.com>
+ <20131007021556.GV8949@atomide.com>
+ <52525642.8010307@ti.com>
+ <20131007154103.GW8949@atomide.com>
+ <20131007190322.GY8949@atomide.com>
+ <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1381204136-32322-4-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1310091551540.30199@utopia.booyaka.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: Tero Kristo <t-kristo@ti.com>, mturquette@linaro.org, linux-omap@vger.kernel.org, nm@ti.com, khilman@linaro.org, pdeschrijver@nvidia.com, rnayak@ti.com, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, swarren@nvidia.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/13 04:48, Josh Wu wrote:
-> AT91 ADC hardware integrate touch screen support. So this patch add touch
-> screen support for at91 adc iio driver.
-> To enable touch screen support in adc, you need to add the dt parameters:
->   1. which type of touch are used? (4 or 5 wires), sample period time.
->   2. correct pressure detect threshold value.
+* Paul Walmsley <paul@pwsan.com> [131009 12:04]:
+> On Mon, 7 Oct 2013, Tony Lindgren wrote:
 > 
-> In the meantime, since touch screen will use a interal period trigger of adc,
-> so it is conflict to other hardware triggers. Driver will disable the hardware
-> trigger support if touch screen is enabled.
+> > And assuming Paul is OK with these patches in general.
 > 
-> This driver has been tested in AT91SAM9X5-EK and SAMA5D3x-EK.
+> Actually, I have several concerns with this series, as you and I 
+> discussed.  Some of us have been talking them over with other folks for 
+> the past few months to try to figure out what to do.  Most of the concerns 
+> have fairly easy technical solutions, but we shouldn't merge these patches 
+> until they're resolved.
 > 
-> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Hi Josh.  I am not going to take this for now both because I want to have
-a close read of it when I have more time and because I want input from
-Dmitry on this one.
+> The issues are:
+> 
+> 1. whether the clock data should go into DT
+> 2. what the right place for DT clock data is in the DT
+> 3. whether it makes sense to merge "experimental" DT bindings in this case
+> 4. where clockdomain data belongs
+> 
+> The first issue - and the one I'm least concerned about - is that, in my 
+> view, it still does not make technical sense to move this data into DT.  
+> This is chip-level hardware data that never needs to be changed by board 
+> designers or end users.  Adding it to DT is going to result in a boot-time 
+> cost (due to DT parse overhead) and additional memory consumption for very 
+> little benefit, compared to an implementation that places this data into a 
+> dynamically loadable module.  For some users, the boot-time bloat is a big 
+> deal: the example that's been mentioned to me recently is an automotive 
+> back-up camera that needs to cold-boot to complete functionality in a few 
+> hundred microseconds.
+> 
+> However, according to some other upstream maintainers, Linus's goal is to 
+> move most of the device-specific static data out of the kernel tree, into 
+> DT files (in the ARM case).  If that non-technical constraint is indeed 
+> the dominant consideration, then I agree that moving this data to DT is 
+> the only viable course of action.
 
-Thanks,
+I've been advocating that any combination of dt defined clocks, loadable
+module clocks and clocks loaded via /lib/firmware should be allowed.
 
-Jonathan
-> ---
->  .../devicetree/bindings/arm/atmel-adc.txt          |    7 +
->  arch/arm/mach-at91/include/mach/at91_adc.h         |   34 ++
->  drivers/iio/adc/at91_adc.c                         |  388 ++++++++++++++++++--
->  3 files changed, 405 insertions(+), 24 deletions(-)
+That allows mapping just the bootime clocks in DT, or all the clocks
+in DT depending what suits the use case.
+
+And yes, based on the flames I've received over the years, Linus clearly
+wants the SoC specific data out of the kernel. And there's already a lot
+of the SoC specific data that's now building up in various linux generic
+frameworks..
+
+> The second issue concerns where the SoC clock nodes should go in the DT.  
+> In these patches, the clock data has been encoded in a large "clocks" node 
+> off the top level.  This is almost certainly not the right thing to do 
+> from a device hardware point of view.  These clocks don't exist as 
+> standalone devices with their own address spaces decoded on the 
+> interconnect.  In all of the SoC cases that I'm aware of, clock control 
+> registers are part of larger IP blocks.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/atmel-adc.txt b/Documentation/devicetree/bindings/arm/atmel-adc.txt
-> index 0e65e01..d106146 100644
-> --- a/Documentation/devicetree/bindings/arm/atmel-adc.txt
-> +++ b/Documentation/devicetree/bindings/arm/atmel-adc.txt
-> @@ -23,6 +23,13 @@ Optional properties:
->  		       resolution will be used.
->    - atmel,adc-sleep-mode: Boolean to enable sleep mode when no conversion
->    - atmel,adc-sample-hold-time: Sample and Hold Time in microseconds
-> +  - atmel,adc-ts-wires: Number of touch screen wires. Should be 4 or 5. If this
-> +                        value is set, then adc driver will enable touch screen
-> +                        support.
-> +    NOTE: when adc touch screen enabled, the adc hardware trigger will be
-> +          disabled. Since touch screen will occupied the trigger register.
-> +  - atmel,adc-ts-pressure-threshold: a pressure threshold for touchscreen. It
-> +                                     make touch detect more precision.
->   
->  Optional trigger Nodes:
->    - Required properties:
-> diff --git a/arch/arm/mach-at91/include/mach/at91_adc.h b/arch/arm/mach-at91/include/mach/at91_adc.h
-> index 048a57f..c287307 100644
-> --- a/arch/arm/mach-at91/include/mach/at91_adc.h
-> +++ b/arch/arm/mach-at91/include/mach/at91_adc.h
-> @@ -60,14 +60,48 @@
->  #define AT91_ADC_IER		0x24		/* Interrupt Enable Register */
->  #define AT91_ADC_IDR		0x28		/* Interrupt Disable Register */
->  #define AT91_ADC_IMR		0x2C		/* Interrupt Mask Register */
-> +#define		AT91_ADC_IER_PEN	(1 << 29)
-> +#define		AT91_ADC_IER_NOPEN	(1 << 30)
-> +#define		AT91_ADC_IER_XRDY	(1 << 20)
-> +#define		AT91_ADC_IER_YRDY	(1 << 21)
-> +#define		AT91_ADC_IER_PRDY	(1 << 22)
-> +#define		AT91_ADC_ISR_PENS	(1 << 31)
->  
->  #define AT91_ADC_CHR(n)		(0x30 + ((n) * 4))	/* Channel Data Register N */
->  #define		AT91_ADC_DATA		(0x3ff)
->  
->  #define AT91_ADC_CDR0_9X5	(0x50)			/* Channel Data Register 0 for 9X5 */
->  
-> +#define AT91_ADC_ACR		0x94	/* Analog Control Register */
-> +#define		AT91_ADC_ACR_PENDETSENS	(0x3 << 0)	/* pull-up resistor */
-> +
-> +#define AT91_ADC_TSMR		0xB0
-> +#define		AT91_ADC_TSMR_TSMODE	(3 << 0)	/* Touch Screen Mode */
-> +#define			AT91_ADC_TSMR_TSMODE_NONE		(0 << 0)
-> +#define			AT91_ADC_TSMR_TSMODE_4WIRE_NO_PRESS	(1 << 0)
-> +#define			AT91_ADC_TSMR_TSMODE_4WIRE_PRESS	(2 << 0)
-> +#define			AT91_ADC_TSMR_TSMODE_5WIRE		(3 << 0)
-> +#define		AT91_ADC_TSMR_TSAV	(3 << 4)	/* Averages samples */
-> +#define			AT91_ADC_TSMR_TSAV_(x)		((x) << 4)
-> +#define		AT91_ADC_TSMR_SCTIM	(0x0f << 16)	/* Switch closure time */
-> +#define		AT91_ADC_TSMR_PENDBC	(0x0f << 28)	/* Pen Debounce time */
-> +#define			AT91_ADC_TSMR_PENDBC_(x)	((x) << 28)
-> +#define		AT91_ADC_TSMR_NOTSDMA	(1 << 22)	/* No Touchscreen DMA */
-> +#define		AT91_ADC_TSMR_PENDET_DIS	(0 << 24)	/* Pen contact detection disable */
-> +#define		AT91_ADC_TSMR_PENDET_ENA	(1 << 24)	/* Pen contact detection enable */
-> +
-> +#define AT91_ADC_TSXPOSR	0xB4
-> +#define AT91_ADC_TSYPOSR	0xB8
-> +#define AT91_ADC_TSPRESSR	0xBC
-> +
->  #define AT91_ADC_TRGR_9260	AT91_ADC_MR
->  #define AT91_ADC_TRGR_9G45	0x08
->  #define AT91_ADC_TRGR_9X5	0xC0
->  
-> +/* Trigger Register bit field */
-> +#define		AT91_ADC_TRGR_TRGPER	(0xffff << 16)
-> +#define			AT91_ADC_TRGR_TRGPER_(x)	((x) << 16)
-> +#define		AT91_ADC_TRGR_TRGMOD	(0x7 << 0)
-> +#define			AT91_ADC_TRGR_MOD_PERIOD_TRIG	(5 << 0)
-> +
->  #endif
-> diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
-> index 22cf61d2..68ddd7f 100644
-> --- a/drivers/iio/adc/at91_adc.c
-> +++ b/drivers/iio/adc/at91_adc.c
-> @@ -11,6 +11,7 @@
->  #include <linux/clk.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
-> +#include <linux/input.h>
->  #include <linux/interrupt.h>
->  #include <linux/jiffies.h>
->  #include <linux/kernel.h>
-> @@ -39,7 +40,23 @@
->  #define at91_adc_writel(st, reg, val) \
->  	(writel_relaxed(val, st->reg_base + reg))
->  
-> +#define DRIVER_NAME		"at91_adc"
-> +#define MAX_POS_BITS		12
-> +
-> +#define TOUCH_SAMPLE_PERIOD_US		2000	/* 2ms */
-> +#define TOUCH_PEN_DETECT_DEBOUNCE_US	200
-> +
->  struct at91_adc_caps {
-> +	bool	has_ts;		/* Support touch screen */
-> +	bool	has_tsmr;	/* only at91sam9x5, sama5d3 have TSMR reg */
-> +	/*
-> +	 * Numbers of sampling data will be averaged. Can be 0~3.
-> +	 * Hardware can average (2 ^ ts_filter_average) sample data.
-> +	 */
-> +	u8	ts_filter_average;
-> +	/* Pen Detection input pull-up resistor, can be 0~3 */
-> +	u8	ts_pen_detect_sensitivity;
-> +
->  	/* startup time calculate function */
->  	u32 (*calc_startup_ticks)(u8 startup_time, u32 adc_clk_khz);
->  
-> @@ -47,6 +64,12 @@ struct at91_adc_caps {
->  	struct at91_adc_reg_desc registers;
->  };
->  
-> +enum atmel_adc_ts_type {
-> +	ATMEL_ADC_TOUCHSCREEN_NONE = 0,
-> +	ATMEL_ADC_TOUCHSCREEN_4WIRE = 4,
-> +	ATMEL_ADC_TOUCHSCREEN_5WIRE = 5,
-> +};
-> +
->  struct at91_adc_state {
->  	struct clk		*adc_clk;
->  	u16			*buffer;
-> @@ -71,6 +94,26 @@ struct at91_adc_state {
->  	bool			low_res;	/* the resolution corresponds to the lowest one */
->  	wait_queue_head_t	wq_data_avail;
->  	struct at91_adc_caps	*caps;
-> +
-> +	/*
-> +	 * Following ADC channels are shared by touchscreen:
-> +	 *
-> +	 * CH0 -- Touch screen XP/UL
-> +	 * CH1 -- Touch screen XM/UR
-> +	 * CH2 -- Touch screen YP/LL
-> +	 * CH3 -- Touch screen YM/Sense
-> +	 * CH4 -- Touch screen LR(5-wire only)
-> +	 *
-> +	 * The bitfields below represents the reserved channel in the
-> +	 * touchscreen mode.
-> +	 */
-> +#define CHAN_MASK_TOUCHSCREEN_4WIRE	(0xf << 0)
-> +#define CHAN_MASK_TOUCHSCREEN_5WIRE	(0x1f << 0)
-> +	enum atmel_adc_ts_type	touchscreen_type;
-> +	struct input_dev	*ts_input;
-> +
-> +	u16			ts_sample_period_val;
-> +	u32			ts_pressure_threshold;
->  };
->  
->  static irqreturn_t at91_adc_trigger_handler(int irq, void *p)
-> @@ -105,14 +148,10 @@ static irqreturn_t at91_adc_trigger_handler(int irq, void *p)
->  	return IRQ_HANDLED;
->  }
->  
-> -static irqreturn_t at91_adc_eoc_trigger(int irq, void *private)
-> +/* Handler for classic adc channel eoc trigger */
-> +void handle_adc_eoc_trigger(int irq, struct iio_dev *idev)
->  {
-> -	struct iio_dev *idev = private;
->  	struct at91_adc_state *st = iio_priv(idev);
-> -	u32 status = at91_adc_readl(st, st->registers->status_register);
-> -
-> -	if (!(status & st->registers->drdy_mask))
-> -		return IRQ_HANDLED;
->  
->  	if (iio_buffer_enabled(idev)) {
->  		disable_irq_nosync(irq);
-> @@ -122,6 +161,115 @@ static irqreturn_t at91_adc_eoc_trigger(int irq, void *private)
->  		st->done = true;
->  		wake_up_interruptible(&st->wq_data_avail);
->  	}
-> +}
-> +
-> +static int at91_ts_sample(struct at91_adc_state *st)
-> +{
-> +	unsigned int xscale, yscale, reg, z1, z2;
-> +	unsigned int x, y, pres, xpos, ypos;
-> +	unsigned int rxp = 1;
-> +	unsigned int factor = 1000;
-> +	struct iio_dev *idev = iio_priv_to_dev(st);
-> +
-> +	unsigned int xyz_mask_bits = st->res;
-> +	unsigned int xyz_mask = (1 << xyz_mask_bits) - 1;
-> +
-> +	/* calculate position */
-> +	/* x position = (x / xscale) * max, max = 2^MAX_POS_BITS - 1 */
-> +	reg = at91_adc_readl(st, AT91_ADC_TSXPOSR);
-> +	xpos = reg & xyz_mask;
-> +	x = (xpos << MAX_POS_BITS) - xpos;
-> +	xscale = (reg >> 16) & xyz_mask;
-> +	if (xscale == 0) {
-> +		dev_err(&idev->dev, "Error: xscale == 0!\n");
-> +		return -1;
-> +	}
-> +	x /= xscale;
-> +
-> +	/* y position = (y / yscale) * max, max = 2^MAX_POS_BITS - 1 */
-> +	reg = at91_adc_readl(st, AT91_ADC_TSYPOSR);
-> +	ypos = reg & xyz_mask;
-> +	y = (ypos << MAX_POS_BITS) - ypos;
-> +	yscale = (reg >> 16) & xyz_mask;
-> +	if (yscale == 0) {
-> +		dev_err(&idev->dev, "Error: yscale == 0!\n");
-> +		return -1;
-> +	}
-> +	y /= yscale;
-> +
-> +	/* calculate the pressure */
-> +	reg = at91_adc_readl(st, AT91_ADC_TSPRESSR);
-> +	z1 = reg & xyz_mask;
-> +	z2 = (reg >> 16) & xyz_mask;
-> +
-> +	if (z1 != 0)
-> +		pres = rxp * (x * factor / 1024) * (z2 * factor / z1 - factor)
-> +			/ factor;
-> +	else
-> +		pres = st->ts_pressure_threshold;	/* no pen contacted */
-> +
-> +	dev_dbg(&idev->dev, "xpos = %d, xscale = %d, ypos = %d, yscale = %d, z1 = %d, z2 = %d, press = %d\n",
-> +				xpos, xscale, ypos, yscale, z1, z2, pres);
-> +
-> +	if (pres < st->ts_pressure_threshold) {
-> +		dev_dbg(&idev->dev, "x = %d, y = %d, pressure = %d\n",
-> +					x, y, pres / factor);
-> +		input_report_abs(st->ts_input, ABS_X, x);
-> +		input_report_abs(st->ts_input, ABS_Y, y);
-> +		input_report_abs(st->ts_input, ABS_PRESSURE, pres);
-> +		input_report_key(st->ts_input, BTN_TOUCH, 1);
-> +		input_sync(st->ts_input);
-> +	} else {
-> +		dev_dbg(&idev->dev, "pressure too low: not reporting\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t at91_adc_interrupt(int irq, void *private)
-> +{
-> +	struct iio_dev *idev = private;
-> +	struct at91_adc_state *st = iio_priv(idev);
-> +	u32 status = at91_adc_readl(st, st->registers->status_register);
-> +	const uint32_t ts_data_irq_mask =
-> +		AT91_ADC_IER_XRDY |
-> +		AT91_ADC_IER_YRDY |
-> +		AT91_ADC_IER_PRDY;
-> +
-> +	if (status & st->registers->drdy_mask)
-> +		handle_adc_eoc_trigger(irq, idev);
-> +
-> +	if (status & AT91_ADC_IER_PEN) {
-> +		at91_adc_writel(st, AT91_ADC_IDR, AT91_ADC_IER_PEN);
-> +		at91_adc_writel(st, AT91_ADC_IER, AT91_ADC_IER_NOPEN |
-> +			ts_data_irq_mask);
-> +		/* Set up period trigger for sampling */
-> +		at91_adc_writel(st, st->registers->trigger_register,
-> +			AT91_ADC_TRGR_MOD_PERIOD_TRIG |
-> +			AT91_ADC_TRGR_TRGPER_(st->ts_sample_period_val));
-> +	} else if (status & AT91_ADC_IER_NOPEN) {
-> +		at91_adc_writel(st, st->registers->trigger_register, 0);
-> +		at91_adc_writel(st, AT91_ADC_IDR, AT91_ADC_IER_NOPEN |
-> +			ts_data_irq_mask);
-> +		at91_adc_writel(st, AT91_ADC_IER, AT91_ADC_IER_PEN);
-> +
-> +		input_report_key(st->ts_input, BTN_TOUCH, 0);
-> +		input_sync(st->ts_input);
-> +	} else if ((status & ts_data_irq_mask) == ts_data_irq_mask) {
-> +		/* Now all touchscreen data is ready */
-> +
-> +		if (status & AT91_ADC_ISR_PENS) {
-> +			/* validate data by pen contact */
-> +			at91_ts_sample(st);
-> +		} else {
-> +			/* triggered by event that is no pen contact, just read
-> +			 * them to clean the interrupt and discard all.
-> +			 */
-> +			at91_adc_readl(st, AT91_ADC_TSXPOSR);
-> +			at91_adc_readl(st, AT91_ADC_TSYPOSR);
-> +			at91_adc_readl(st, AT91_ADC_TSPRESSR);
-> +		}
-> +	}
->  
->  	return IRQ_HANDLED;
->  }
-> @@ -131,6 +279,16 @@ static int at91_adc_channel_init(struct iio_dev *idev)
->  	struct at91_adc_state *st = iio_priv(idev);
->  	struct iio_chan_spec *chan_array, *timestamp;
->  	int bit, idx = 0;
-> +	unsigned long rsvd_mask = 0;
-> +
-> +	/* If touchscreen is enable, then reserve the adc channels */
-> +	if (st->touchscreen_type == ATMEL_ADC_TOUCHSCREEN_4WIRE)
-> +		rsvd_mask = CHAN_MASK_TOUCHSCREEN_4WIRE;
-> +	else if (st->touchscreen_type == ATMEL_ADC_TOUCHSCREEN_5WIRE)
-> +		rsvd_mask = CHAN_MASK_TOUCHSCREEN_5WIRE;
-> +
-> +	/* set up the channel mask to reserve touchscreen channels */
-> +	st->channels_mask &= ~rsvd_mask;
->  
->  	idev->num_channels = bitmap_weight(&st->channels_mask,
->  					   st->num_channels) + 1;
-> @@ -479,6 +637,39 @@ static u32 calc_startup_ticks_9x5(u8 startup_time, u32 adc_clk_khz)
->  
->  static const struct of_device_id at91_adc_dt_ids[];
->  
-> +static int at91_adc_probe_dt_ts(struct device_node *node,
-> +	struct at91_adc_state *st, struct device *dev)
-> +{
-> +	int ret;
-> +	u32 prop;
-> +
-> +	ret = of_property_read_u32(node, "atmel,adc-ts-wires", &prop);
-> +	if (ret) {
-> +		dev_info(dev, "ADC Touch screen is disabled.\n");
-> +		return 0;
-> +	}
-> +
-> +	switch (prop) {
-> +	case 4:
-> +	case 5:
-> +		st->touchscreen_type = prop;
-> +		break;
-> +	default:
-> +		dev_err(dev, "Unsupported number of touchscreen wires (%d). Should be 4 or 5.\n", prop);
-> +		return -EINVAL;
-> +	}
-> +
-> +	prop = 0;
-> +	of_property_read_u32(node, "atmel,adc-ts-pressure-threshold", &prop);
-> +	st->ts_pressure_threshold = prop;
-> +	if (st->ts_pressure_threshold) {
-> +		return 0;
-> +	} else {
-> +		dev_err(dev, "Invalid pressure threshold for the touchscreen\n");
-> +		return -EINVAL;
-> +	}
-> +}
-> +
->  static int at91_adc_probe_dt(struct at91_adc_state *st,
->  			     struct platform_device *pdev)
->  {
-> @@ -560,6 +751,12 @@ static int at91_adc_probe_dt(struct at91_adc_state *st,
->  		i++;
->  	}
->  
-> +	/* Check if touchscreen is supported. */
-> +	if (st->caps->has_ts)
-> +		return at91_adc_probe_dt_ts(node, st, &idev->dev);
-> +	else
-> +		dev_info(&idev->dev, "not support touchscreen in the adc compatible string.\n");
-> +
->  	return 0;
->  
->  error_ret:
-> @@ -591,6 +788,114 @@ static const struct iio_info at91_adc_info = {
->  	.read_raw = &at91_adc_read_raw,
->  };
->  
-> +/* Touchscreen related functions */
-> +static int atmel_ts_open(struct input_dev *dev)
-> +{
-> +	struct at91_adc_state *st = input_get_drvdata(dev);
-> +
-> +	at91_adc_writel(st, AT91_ADC_IER, AT91_ADC_IER_PEN);
-> +	return 0;
-> +}
-> +
-> +static void atmel_ts_close(struct input_dev *dev)
-> +{
-> +	struct at91_adc_state *st = input_get_drvdata(dev);
-> +
-> +	at91_adc_writel(st, AT91_ADC_IDR, AT91_ADC_IER_PEN);
-> +}
-> +
-> +static int at91_ts_hw_init(struct at91_adc_state *st, u32 adc_clk_khz)
-> +{
-> +	u32 reg = 0, pendbc;
-> +	int i = 0;
-> +
-> +	if (st->touchscreen_type == ATMEL_ADC_TOUCHSCREEN_4WIRE)
-> +		reg = AT91_ADC_TSMR_TSMODE_4WIRE_PRESS;
-> +	else
-> +		reg = AT91_ADC_TSMR_TSMODE_5WIRE;
-> +
-> +	/* a Pen Detect Debounce Time is necessary for the ADC Touch to avoid
-> +	 * pen detect noise.
-> +	 * The formula is : Pen Detect Debounce Time = (2 ^ pendbc) / ADCClock
-> +	 */
-> +	pendbc = round_up(TOUCH_PEN_DETECT_DEBOUNCE_US * adc_clk_khz / 1000, 1);
-> +
-> +	while (pendbc >> ++i)
-> +		;	/* Empty! Find the shift offset */
-> +	if (abs(pendbc - (1 << i)) < abs(pendbc - (1 << (i - 1))))
-> +		pendbc = i;
-> +	else
-> +		pendbc = i - 1;
-> +
-> +	if (st->caps->has_tsmr) {
-> +		reg |= AT91_ADC_TSMR_TSAV_(st->caps->ts_filter_average)
-> +				& AT91_ADC_TSMR_TSAV;
-> +		reg |= AT91_ADC_TSMR_PENDBC_(pendbc) & AT91_ADC_TSMR_PENDBC;
-> +		reg |= AT91_ADC_TSMR_NOTSDMA;
-> +		reg |= AT91_ADC_TSMR_PENDET_ENA;
-> +		reg |= 0x03 << 8;	/* TSFREQ, need bigger than TSAV */
-> +
-> +		at91_adc_writel(st, AT91_ADC_TSMR, reg);
-> +	} else {
-> +		/* TODO: for 9g45 which has no TSMR */
-> +	}
-> +
-> +	/* Change adc internal resistor value for better pen detection,
-> +	 * default value is 100 kOhm.
-> +	 * 0 = 200 kOhm, 1 = 150 kOhm, 2 = 100 kOhm, 3 = 50 kOhm
-> +	 * option only available on ES2 and higher
-> +	 */
-> +	at91_adc_writel(st, AT91_ADC_ACR, st->caps->ts_pen_detect_sensitivity
-> +			& AT91_ADC_ACR_PENDETSENS);
-> +
-> +	/* Sample Peroid Time = (TRGPER + 1) / ADCClock */
-> +	st->ts_sample_period_val = round_up((TOUCH_SAMPLE_PERIOD_US *
-> +			adc_clk_khz / 1000) - 1, 1);
-> +
-> +	return 0;
-> +}
-> +
-> +static int at91_ts_register(struct at91_adc_state *st,
-> +		struct platform_device *pdev)
-> +{
-> +	struct input_dev *input;
-> +	struct iio_dev *idev = iio_priv_to_dev(st);
-> +	int ret;
-> +
-> +	input = input_allocate_device();
-> +	if (!input) {
-> +		dev_err(&idev->dev, "Failed to allocate TS device!\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	input->name = DRIVER_NAME;
-> +	input->id.bustype = BUS_HOST;
-> +	input->dev.parent = &pdev->dev;
-> +	input->open = atmel_ts_open;
-> +	input->close = atmel_ts_close;
-> +
-> +	__set_bit(EV_ABS, input->evbit);
-> +	__set_bit(EV_KEY, input->evbit);
-> +	__set_bit(BTN_TOUCH, input->keybit);
-> +	input_set_abs_params(input, ABS_X, 0, (1 << MAX_POS_BITS) - 1, 0, 0);
-> +	input_set_abs_params(input, ABS_Y, 0, (1 << MAX_POS_BITS) - 1, 0, 0);
-> +	input_set_abs_params(input, ABS_PRESSURE, 0, 0xffffff, 0, 0);
-> +
-> +	st->ts_input = input;
-> +	input_set_drvdata(input, st);
-> +
-> +	ret = input_register_device(input);
-> +	if (ret)
-> +		input_free_device(st->ts_input);
-> +
-> +	return ret;
-> +}
-> +
-> +static void at91_ts_unregister(struct at91_adc_state *st)
-> +{
-> +	input_unregister_device(st->ts_input);
-> +}
-> +
->  static int at91_adc_probe(struct platform_device *pdev)
->  {
->  	unsigned int prsc, mstrclk, ticks, adc_clk, adc_clk_khz, shtim;
-> @@ -642,7 +947,7 @@ static int at91_adc_probe(struct platform_device *pdev)
->  	at91_adc_writel(st, AT91_ADC_CR, AT91_ADC_SWRST);
->  	at91_adc_writel(st, AT91_ADC_IDR, 0xFFFFFFFF);
->  	ret = request_irq(st->irq,
-> -			  at91_adc_eoc_trigger,
-> +			  at91_adc_interrupt,
->  			  0,
->  			  pdev->dev.driver->name,
->  			  idev);
-> @@ -687,6 +992,10 @@ static int at91_adc_probe(struct platform_device *pdev)
->  	mstrclk = clk_get_rate(st->clk);
->  	adc_clk = clk_get_rate(st->adc_clk);
->  	adc_clk_khz = adc_clk / 1000;
-> +
-> +	dev_dbg(&pdev->dev, "Master clock is set as: %d Hz, adc_clk should set as: %d Hz\n",
-> +		mstrclk, adc_clk);
-> +
->  	prsc = (mstrclk / (2 * adc_clk)) - 1;
->  
->  	if (!st->startup_time) {
-> @@ -723,30 +1032,52 @@ static int at91_adc_probe(struct platform_device *pdev)
->  	init_waitqueue_head(&st->wq_data_avail);
->  	mutex_init(&st->lock);
->  
-> -	ret = at91_adc_buffer_init(idev);
-> -	if (ret < 0) {
-> -		dev_err(&pdev->dev, "Couldn't initialize the buffer.\n");
-> -		goto error_disable_adc_clk;
-> -	}
-> +	/*
-> +	 * Since touch screen will set trigger register as period trigger. So
-> +	 * when touch screen is enabled, then we have to disable hardware
-> +	 * trigger for classic adc.
-> +	 */
-> +	if (!st->touchscreen_type) {
-> +		ret = at91_adc_buffer_init(idev);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "Couldn't initialize the buffer.\n");
-> +			goto error_disable_adc_clk;
-> +		}
->  
-> -	ret = at91_adc_trigger_init(idev);
-> -	if (ret < 0) {
-> -		dev_err(&pdev->dev, "Couldn't setup the triggers.\n");
-> -		goto error_unregister_buffer;
-> +		ret = at91_adc_trigger_init(idev);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "Couldn't setup the triggers.\n");
-> +			at91_adc_buffer_remove(idev);
-> +			goto error_disable_adc_clk;
-> +		}
-> +	} else {
-> +		if (!st->caps->has_tsmr) {
-> +			dev_err(&pdev->dev, "We don't support non-TSMR adc\n");
-> +			goto error_disable_adc_clk;
-> +		}
-> +
-> +		ret = at91_ts_register(st, pdev);
-> +		if (ret)
-> +			goto error_disable_adc_clk;
-> +
-> +		at91_ts_hw_init(st, adc_clk_khz);
->  	}
->  
->  	ret = iio_device_register(idev);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "Couldn't register the device.\n");
-> -		goto error_remove_triggers;
-> +		goto error_iio_device_register;
->  	}
->  
->  	return 0;
->  
-> -error_remove_triggers:
-> -	at91_adc_trigger_remove(idev);
-> -error_unregister_buffer:
-> -	at91_adc_buffer_remove(idev);
-> +error_iio_device_register:
-> +	if (!st->touchscreen_type) {
-> +		at91_adc_trigger_remove(idev);
-> +		at91_adc_buffer_remove(idev);
-> +	} else {
-> +		at91_ts_unregister(st);
-> +	}
->  error_disable_adc_clk:
->  	clk_disable_unprepare(st->adc_clk);
->  error_disable_clk:
-> @@ -762,8 +1093,12 @@ static int at91_adc_remove(struct platform_device *pdev)
->  	struct at91_adc_state *st = iio_priv(idev);
->  
->  	iio_device_unregister(idev);
-> -	at91_adc_trigger_remove(idev);
-> -	at91_adc_buffer_remove(idev);
-> +	if (!st->touchscreen_type) {
-> +		at91_adc_trigger_remove(idev);
-> +		at91_adc_buffer_remove(idev);
-> +	} else {
-> +		at91_ts_unregister(st);
-> +	}
->  	clk_disable_unprepare(st->adc_clk);
->  	clk_disable_unprepare(st->clk);
->  	free_irq(st->irq, idev);
-> @@ -786,6 +1121,7 @@ static struct at91_adc_caps at91sam9260_caps = {
->  };
->  
->  static struct at91_adc_caps at91sam9g45_caps = {
-> +	.has_ts = true,
->  	.calc_startup_ticks = calc_startup_ticks_9260,	/* same as 9260 */
->  	.num_channels = 8,
->  	.registers = {
-> @@ -799,6 +1135,10 @@ static struct at91_adc_caps at91sam9g45_caps = {
->  };
->  
->  static struct at91_adc_caps at91sam9x5_caps = {
-> +	.has_ts = true,
-> +	.has_tsmr = true,
-> +	.ts_filter_average = 3,
-> +	.ts_pen_detect_sensitivity = 2,
->  	.calc_startup_ticks = calc_startup_ticks_9x5,
->  	.num_channels = 12,
->  	.registers = {
-> @@ -825,7 +1165,7 @@ static struct platform_driver at91_adc_driver = {
->  	.probe = at91_adc_probe,
->  	.remove = at91_adc_remove,
->  	.driver = {
-> -		   .name = "at91_adc",
-> +		   .name = DRIVER_NAME,
->  		   .of_match_table = of_match_ptr(at91_adc_dt_ids),
->  	},
->  };
+> For example, in the OMAP case, most of the system integration clock 
+> control registers are part of the OMAP-specific PRCM block, PRM block, or 
+> CM block.  Then there are other device-specific clocks, like DSS PLLs or 
+> UART dividers.  The control registers for these are generally located in 
+> the subsystem or device IP block itself, and are inaccessible when the 
+> subsystem or IP block is disabled.  These device-specific clocks belong to 
+> the IP block, not the SoC integration.  So, for example, if two SoCs use 
+> the same IP block, then the clock registers, and their offsets from the IP 
+> block address space base, are likely to be identical.
 > 
+> So in my view, the right things to do here are to:
+> 
+> 1. associate SoC DT clock data with the device node that contains the 
+>    clock control registers
+> 
+> 2. specify relative offsets for clock registers from the start of
+>    the IP block address range, rather than absolute addresses for clock 
+>    registers
+> 
+> 3. place the responsibility for registering clocks into the IP block 
+>    drivers themselves
+> 
+> This naturally separates clocks into per-IP block DT files.  It also 
+> provides the CCF with an easy way to ensure that the device that 
+> encloses the clock is enabled and accessible by the CPU core, before 
+> trying to access registers inside.
+> 
+> Similarly, non-SoC off-chip clock data (such as for dedicated I2C PLLs) 
+> should also be associated with their I2C device node.
+> 
+> Making these changes to Tero's existing patches should be relatively 
+> straightforward, based on what I've seen.
+
+Yes that's a valid concern and makes sense to me. It also it seems that
+moving clocks around with this approach does not break the binding ABI.
+ 
+> Regarding the third issue: let's postulate for the moment that the clock 
+> binding issues that I mention in #2 above are ignored (ha!), and that the 
+> existing DT clock data is merged.  These bindings are currently marked as 
+> "Unstable - ABI compatibility may be broken in the future".  What happens 
+> if, when we meet to discuss clock bindings at the kernel summit, we decide 
+> that significant changes are needed?  We could easily wind up with kernels 
+> that won't boot at all when used with newer DT data.
+> 
+> Not to mention, merging such a large amount of code and data before the 
+> bindings are stable will increase the risk of massive churn as the 
+> bindings evolve towards stability.
+> 
+> So IMHO, the way to fix this is to consider the clock data to be IP-block 
+> specific, as mentioned in #2.  Then there's no need for global clock 
+> bindings for the SoC clock cases.
+> 
+> Otherwise, it seems prudent to at least wait until the global clock 
+> bindings are no longer marked as unstable.  The whole DT migration was 
+> predicated on the ideas of reducing churn in the Linux codebase, and 
+> preserving forward compatibility for DT data.  We shouldn't discard these 
+> goals just to merge something a little sooner.
+
+Mike suggested using ti specific bindings as the generic bindings may not
+be ready for quite some time. In any case, these bindings seem like they
+can be easily supported in the long run no matter what happens with the
+Linux generic clock bindings.
+ 
+> The fourth issue is where the clockdomain data should go.  The basic issue 
+> here is that the notion of "clockdomains" here is completely 
+> OMAP-specific.  OMAP clockdomains demarcate a group of clocks or IP blocks 
+> that share the same automatic idle behavior, controlled by their enclosing 
+> IP block (e.g., PRCM, PRM, CM, etc.).  Clockdomains are also used in the 
+> OMAP kernel code to link the clocks to their enclosing power domains, 
+> voltage rail control, etc.
+> 
+> So since these are OMAP PRCM/CM/PRM-specific constructs, the right place 
+> for OMAP clockdomain data is underneath the OMAP-specific CM/PRCM DT 
+> nodes.  Again this should be an easy change to Tero's existing patches.
+
+I believe Mike has made it a requirement that the clockdomains will be
+moved out of the clock code in follow up patches.
+
+> So hey, if you've made it this far, thanks for reading.  My sense is that 
+> implementing #2 and #4 are relatively straightforward.  
+> 
+> Also, since this seems to have been a problem for some folks in the past, 
+> I want to make clear that I think both Mike and Tero have been doing good 
+> jobs on the CCF and OMAP clock patches so far.
+
+Yes I agree.
+
+Tony
