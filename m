@@ -1,28 +1,81 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 2/2] i2c designware add support of I2C standard mode
-Date: Wed, 9 Oct 2013 10:56:33 +0300
-Message-ID: <20131009075632.GR3521@intel.com>
-References: <20130828153429.GB7066@ab42.lan>
- <1381244455-3836-2-git-send-email-romainba@abilis.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: [PATCH] PCI: designware: Add irq_create_mapping()
+Date: Wed, 09 Oct 2013 17:09:21 +0900
+Message-ID: <000401cec4c6$dc415180$94c3f480$%han@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1381244455-3836-2-git-send-email-romainba@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Landley <rob@landley.net>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, Vineet Gupta <vgupta@synopsys.com>, Christian Ruppert <christian.ruppert@abilis.com>, Chiau Ee Chew <chiau.ee.chew@intel.com>, Shinya Kuribayashi <skuribay@pobox.com>, Jean Delvare <khali@linux-fr.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Romain Baeriswyl <romainba@abilis.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Bjorn Helgaas' <bhelgaas@google.com>
+Cc: 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 08, 2013 at 05:00:55PM +0200, Romain Baeriswyl wrote:
-> Some legacy devices support ony I2C standard mode at 100kHz. 
-> This patch allows to select the standard mode through the DTS 
-> with the use of the existing clock-frequency parameter.
-> 
-> When clock-frequency parameter is not set, the fast mode is selected.
-> Only when the parameter is set at 100000, the standard mode is selected.
-> 
-> Signed-off-by: Romain Baeriswyl <romainba@abilis.com>
-> Reviewed-by: Christian Ruppert <christian.ruppert@abilis.com>
+Without irq_create_mapping(), the correct irq number cannot be
+provided. In this case, it makes problem such as NULL deference.
+Thus, irq_create_mapping() should be added for MSI.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+---
+Tested on Exynos5440.
+
+ drivers/pci/host/pcie-designware.c |   10 ++++------
+ drivers/pci/host/pcie-designware.h |    1 +
+ 2 files changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+index 8963017..e536bb6 100644
+--- a/drivers/pci/host/pcie-designware.c
++++ b/drivers/pci/host/pcie-designware.c
+@@ -237,6 +237,8 @@ static int assign_irq(int no_irqs, struct msi_desc *desc, int *pos)
+ 		}
+ 	}
+ 
++	pp->msi_irq_start = irq_create_mapping(pp->irq_domain, 0);
++
+ 	irq = (pp->msi_irq_start + pos0);
+ 
+ 	if ((irq + no_irqs) > (pp->msi_irq_start + MAX_MSI_IRQS-1))
+@@ -372,8 +374,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+ 	struct of_pci_range_parser parser;
+ 	u32 val;
+ 
+-	struct irq_domain *irq_domain;
+-
+ 	if (of_pci_range_parser_init(&parser, np)) {
+ 		dev_err(pp->dev, "missing ranges property\n");
+ 		return -EINVAL;
+@@ -441,15 +441,13 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+ 	}
+ 
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+-		irq_domain = irq_domain_add_linear(pp->dev->of_node,
++		pp->irq_domain = irq_domain_add_linear(pp->dev->of_node,
+ 					MAX_MSI_IRQS, &msi_domain_ops,
+ 					&dw_pcie_msi_chip);
+-		if (!irq_domain) {
++		if (!pp->irq_domain) {
+ 			dev_err(pp->dev, "irq domain init failed\n");
+ 			return -ENXIO;
+ 		}
+-
+-		pp->msi_irq_start = irq_find_mapping(irq_domain, 0);
+ 	}
+ 
+ 	if (pp->ops->host_init)
+diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
+index faccbbf..240fc11 100644
+--- a/drivers/pci/host/pcie-designware.h
++++ b/drivers/pci/host/pcie-designware.h
+@@ -50,6 +50,7 @@ struct pcie_port {
+ 	int			msi_irq_start;
+ 	unsigned long		msi_data;
+ 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
++	struct irq_domain	*irq_domain;
+ };
+ 
+ struct pcie_host_ops {
+-- 
+1.7.10.4
