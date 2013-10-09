@@ -1,33 +1,23 @@
 From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH v2 1/5] ARM: OMAP2+: hwmod: cleanup HWMOD_INIT_NO_RESET
- usage
-Date: Wed, 9 Oct 2013 14:55:21 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1310091455020.30199@utopia.booyaka.com>
-References: <1381313521-10422-1-git-send-email-rnayak@ti.com> <1381313521-10422-2-git-send-email-rnayak@ti.com>
+Subject: Re: [RESEND PATCH V2 2/2] ARM: AM33xx: hwmod: Add RNG module data
+Date: Wed, 9 Oct 2013 15:03:39 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1310091503110.30199@utopia.booyaka.com>
+References: <1377780731-3648-1-git-send-email-lokeshvutla@ti.com> <1377780731-3648-3-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1381313521-10422-2-git-send-email-rnayak@ti.com>
+In-Reply-To: <1377780731-3648-3-git-send-email-lokeshvutla@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: bcousson@baylibre.com, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: bcousson@baylibre.com, tony@atomide.com, rnayak@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 9 Oct 2013, Rajendra Nayak wrote:
+On Thu, 29 Aug 2013, Lokesh Vutla wrote:
 
-> For modules/IPs/hwmods which do not have
-> -1- sys->class->reset()
-> and
-> -2- hardreset lines
-> and
-> -3- No way to do an ocp reset (no sysc control)
-> the flag 'HWMOD_INIT_NO_RESET' is not much useful.
+> Add RNG hwmod data for AM33xx SoC.
 > 
-> Cleanup all such instances across various hwmod data files.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 
 Thanks, queued.
-
 
 - Paul
